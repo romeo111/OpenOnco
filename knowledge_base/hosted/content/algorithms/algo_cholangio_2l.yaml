@@ -4,15 +4,16 @@ applicable_to_line_of_therapy: 2
 purpose: >
   2L+ routing for advanced / metastatic biliary tract / cholangiocarcinoma
   post-chemo (gem+cis ± durvalumab) progression. Driver-mutation routing:
-  (1) FGFR2 fusion → pemigatinib (FIGHT-202; step 1);
+  (1) FGFR2 fusion → pemigatinib (FIGHT-202; step 1; NCCN Cat 1);
   (2) IDH1 hotspot mutation → ivosidenib (ClarIDHy; step 12; NCCN Cat 1);
-  (3) Default non-driver → FOLFOX (ABC-06; step 2; NCCN Cat 1).
-  Pending branches: BRAF V600E (dab+tram; ROAR), HER2-amp (T-DXd),
-  MSI-H (pembrolizumab) — not yet modeled.
+  (3) BRAF V600E mutation → dabrafenib+trametinib (ROAR; step 13; NCCN Cat 2A);
+  (4) Default non-driver → FOLFOX (ABC-06; step 2; NCCN Cat 1).
+  Pending branches: HER2-amp (T-DXd), MSI-H/dMMR (pembrolizumab) — not yet modeled.
 
 output_indications:
   - IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
   - IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
+  - IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM
   - IND-CHOLANGIO-2L-FOLFOX-ABC06
 
 default_indication: IND-CHOLANGIO-2L-FOLFOX-ABC06
@@ -50,8 +51,27 @@ decision_tree:
         if bilirubin >3× ULN. Ukraine: not registered — named-patient import only;
         FOLFOX as accessible alternative when ivosidenib unavailable.
     if_false:
-      next_step: 2
+      next_step: 13
     notes: "Step 12 added 2026-05-04 (Workstream BB): IDH1-mut intrahepatic CCA → ivosidenib. Gap (2) CLOSED."
+
+  # Step 13 — BRAF V600E mutation (~5% intrahepatic CCA; rare in perihilar/distal).
+  # Dabrafenib 150 mg BID + trametinib 2 mg/day (ROAR; Subbiah 2020 JCO;
+  # ORR 51%; DCR 84%; mPFS 9 mo; mOS 14.5 mo; NCCN Cat 2A).
+  # UA: dab+tram registered + NSZU for melanoma/NSCLC; CCA off-label MDT request.
+  - step: 13
+    evaluate:
+      any_of:
+        - condition: "BRAF V600E mutation confirmed by NGS or PCR on tissue or liquid biopsy"
+    if_true:
+      result: IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM
+      notes: >
+        BRAF V600E CCA: dabrafenib 150 mg BID + trametinib 2 mg/day (ROAR; Subbiah 2020
+        JCO; ORR 51%; DCR 84%; mPFS 9 mo; mOS 14.5 mo; NCCN Cat 2A). LVEF ≥50% required.
+        Pyrexia ~50% — antipyretic protocol mandatory. Ukraine: off-label for CCA; MDT
+        request required; accessible if approved (NSZU-funded for melanoma/NSCLC).
+    if_false:
+      next_step: 2
+    notes: "Step 13 added 2026-05-04 (Workstream BC): BRAF V600E CCA → dab+tram (ROAR). Gap (4) CLOSED."
 
   # Step 2 — default 2L non-driver: FOLFOX (ABC-06; Lamarca 2021 JCO;
   # mOS 6.2 vs 5.3 mo HR 0.69 p=0.031; NCCN Cat 1). Replaces gem+cis
@@ -84,11 +104,11 @@ reviewer_signoffs: 0
 notes: >
   UPDATED 2026-05-04 (Workstream AY): IND-CHOLANGIO-2L-FOLFOX-ABC06 authored and
   wired at step 2 as proper default for non-driver 2L BTC/CCA. Gap (1) CLOSED.
-  UPDATED 2026-05-04 (Workstream BB): IND-CHOLANGIO-2L-IDH1-IVOSIDENIB + DRUG-IVOSIDENIB
-  + REG-IVOSIDENIB-CHOLANGIO authored; wired at step 12 (ClarIDHy; mPFS HR 0.37;
-  mOS HR 0.79 crossover-adjusted ~0.49; NCCN Cat 1). Gap (2) CLOSED.
+  UPDATED 2026-05-04 (Workstream BB): IND-CHOLANGIO-2L-IDH1-IVOSIDENIB wired at step 12.
+  Gap (2) CLOSED.
+  UPDATED 2026-05-04 (Workstream BC): IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM wired at step 13
+  (ROAR; Subbiah 2020 JCO; ORR 51%; mPFS 9 mo; NCCN Cat 2A). Gap (4) CLOSED.
   OOS / wiring gaps:
   (3) HER2-amp T-DXd (DESTINY-PanTumor02) / tucatinib-trastuzumab — not yet modeled.
-  (4) BRAF V600E dabrafenib+trametinib (ROAR) — not yet modeled.
-  (5) MSI-H pembrolizumab (KEYNOTE-158) — not yet modeled.
+  (5) MSI-H/dMMR pembrolizumab (KEYNOTE-158) — not yet modeled.
   Out-of-scope: locoregional (radioembolization, TACE, SBRT) — outside KB scope.

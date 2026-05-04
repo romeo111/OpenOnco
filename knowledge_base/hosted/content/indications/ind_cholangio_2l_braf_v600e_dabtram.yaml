@@ -1,0 +1,181 @@
+id: IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Intrahepatic CCA (iCCA) predominantly — BRAF V600E mutation occurs in ~5% iCCA; also test perihilar/distal CCA and gallbladder carcinoma (rare)"
+    - "Advanced / metastatic biliary tract cancer (BTC) — not surgically resectable"
+    - "Disease progression on or after 1L gemcitabine + cisplatin (± durvalumab per TOPAZ-1)"
+    - "ECOG PS 0-2 (ROAR enrolled ECOG 0-2)"
+    - "Adequate organ function: AST/ALT ≤5× ULN, bilirubin ≤1.5× ULN (biliary drainage if obstructed), CrCl ≥30 mL/min"
+    - "LVEF ≥50% (trametinib cardiotoxicity)"
+    - "No prior BRAF or MEK inhibitor therapy"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-BRAF-V600E-MUT
+      required: true
+      value_constraint: "BRAF V600E mutation confirmed by validated assay (PCR, NGS, or Sanger); V600K/D/R less common in CCA and not prospectively validated"
+  biomarker_requirements_excluded:
+    - "BRAF wildtype — dab+tram inactive; IND-CHOLANGIO-2L-FOLFOX-ABC06 as default"
+    - "FGFR2 fusion/rearrangement → IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB preferred (ORR 36%; NCCN Cat 1)"
+    - "IDH1 hotspot mutation → IND-CHOLANGIO-2L-IDH1-IVOSIDENIB preferred if accessible (NCCN Cat 1)"
+    - "LVEF <50%: trametinib cardiac toxicity; cardiology assessment required"
+    - "Active skin conditions (dermatologist evaluation for cutaneous SCC risk)"
+    - "Active biliary obstruction without drainage (bilirubin >1.5× ULN)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ROAR enrolled ECOG 0-2. Dabrafenib + trametinib is an oral combination with
+      predictable toxicity profile (pyrexia ~50%, rash ~40%, fatigue ~30%). Appropriate
+      for patients who cannot tolerate IV chemotherapy. Pyrexia requires patient education
+      and antipyretic protocol. Cardiac monitoring (LVEF at baseline and periodic).
+      BRAF V600E in CCA is uncommon (~5% iCCA) — comprehensive NGS recommended to identify
+      this rare but highly targetable mutation.
+
+recommended_regimen: REG-DABRAFENIB-TRAMETINIB-NSCLC
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      FOLFOX (IND-CHOLANGIO-2L-FOLFOX-ABC06): appropriate if dabrafenib+trametinib
+      inaccessible (Ukraine: dabrafenib NSZU-funded for melanoma/NSCLC; CCA = off-label
+      with possible named-patient access). NCCN Cat 1 for non-driver CCA but inferior
+      to targeted therapy for BRAF V600E tumors (ORR FOLFOX ~5% vs dab+tram ORR ~51%).
+  - regimen_id: null
+    description: >
+      Vemurafenib monotherapy (BRAF V600E inhibitor): inferior to combination (paradoxical
+      RAF activation without MEKi); not recommended for CCA.
+  - regimen_id: null
+    description: >
+      Clinical trial enrollment: BRAF V600E CCA is rare; trial referral preferred for
+      combination strategies (BRAFi+MEKi+anti-PD-1, new generation BRAFi, etc.).
+
+concurrent_therapy:
+  - "Pyrexia protocol: acetaminophen 500-1000 mg PO q6h PRN during fever; hold dabrafenib if ≥38.5°C; restart at same or reduced dose when afebrile ≥24h"
+  - "LVEF monitoring: echocardiogram at baseline, at 1 month, then q3 months (trametinib cardiomyopathy)"
+  - "Biliary drain maintenance: ERCP or PTC stent if biliary obstruction present"
+  - "Dermatology referral: cutaneous SCC risk with BRAF inhibitor — baseline skin exam, q3 months"
+  - "Ophthalmology referral: trametinib retinal vein occlusion, uveitis — report visual changes immediately"
+
+followed_by:
+  - "Continue dab+tram until disease progression or unacceptable toxicity (no fixed cycle number)"
+  - "Response assessment CT q8-10 weeks; CA 19-9 + CEA trending"
+  - "After dab+tram failure: FOLFOX (if not given); MSI-H pembrolizumab (if MSI testing not done); clinical trial; BSC"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~51% (ROAR basket; Subbiah 2020 JCO; CCA cohort n=43)"
+  disease_control_rate: "~84% (ROAR CCA cohort)"
+  median_dor_months: "~9.0 months (ROAR CCA cohort; ongoing responders at analysis)"
+  median_pfs_months: "~9.0 months (ROAR CCA cohort)"
+  median_os_months: "~14.5 months (ROAR CCA cohort update; Subbiah 2023)"
+  notes: >
+    ROAR basket trial (Subbiah 2020 JCO; 2023 Cancer update; n=43 CCA cohort):
+    Dabrafenib 150 mg BID + trametinib 2 mg/day in BRAF V600E+ advanced/metastatic BTC.
+    ORR 51% (investigator-assessed; CR 5%, PR 46%); DCR 84%; mDOR 9.0 months;
+    mPFS 9.0 months; mOS 14.5 months (2023 update).
+    NCCN Hepatobiliary 2025 Category 2A (consistent evidence but small n=43 basket cohort;
+    not a randomized trial — no comparator arm).
+    Basket trial design limitation: small CCA cohort; no direct comparator to FOLFOX;
+    historical comparison only. However, ORR 51% vs FOLFOX ~5% is highly clinically
+    meaningful for this rare molecular subtype.
+    BRAF V600E in CCA: ~5% intrahepatic CCA, rarer in perihilar/distal. Comprehensive
+    NGS at 1L/2L transition is essential to identify this actionable target.
+
+hard_contraindications:
+  - "BRAF wildtype — combination inactive; no benefit"
+  - "LVEF <50%: trametinib cardiomyopathy risk; absolute contraindication"
+  - "Active skin disease or prior cutaneous SCC with BRAF inhibitor history"
+  - "ECOG PS ≥3 (performance status precludes benefit)"
+  - "Biliary obstruction with bilirubin >1.5× ULN without drainage — metabolic clearance impaired"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "FGFR2 fusion confirmed → IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB (ORR 36%; NCCN Cat 1 — takes precedence)"
+  - condition: "IDH1 mutation confirmed (without FGFR2) → IND-CHOLANGIO-2L-IDH1-IVOSIDENIB (NCCN Cat 1)"
+  - condition: "Dab+tram inaccessible for CCA (UA: off-label) → IND-CHOLANGIO-2L-FOLFOX-ABC06"
+  - condition: "LVEF decline >10% from baseline to <50%: hold trametinib; cardiology review"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "BRAF V600E mutation: NGS or PCR on tissue or liquid biopsy — mandatory"
+  - "LVEF: echocardiogram at baseline; repeat at 1 month then q3 months"
+  - "CT chest/abdomen/pelvis: baseline staging + q8-10 weeks response"
+  - "Bilirubin: <1.5× ULN before starting; ERCP/PTC stent if needed"
+  - "Comprehensive molecular profiling: FGFR2 fusion + IDH1 hotspot must be excluded/confirmed first (higher-priority targets)"
+
+desired_tests:
+  - "Dermatology baseline skin exam: cutaneous SCC surveillance (BRAFi class effect)"
+  - "Ophthalmology baseline: retinal vein occlusion, uveitis risk (trametinib)"
+  - "CA 19-9 + CEA baseline: response monitoring"
+  - "Blood pressure: dabrafenib + trametinib can cause hypertension — baseline and monitoring"
+  - "LFTs weekly × 4 weeks: hepatotoxicity surveillance (particularly in patients with pre-existing liver disease/CCA)"
+
+rationale: >
+  BRAF V600E mutations drive oncogenesis via constitutive MAPK pathway activation
+  (RAS → RAF → MEK → ERK cascade). In CCA, BRAF V600E is present in ~5% of iCCA
+  tumors. The combination of BRAFi (dabrafenib) + MEKi (trametinib) is required:
+  single-agent BRAFi causes paradoxical RAF activation in BRAF-WT cells; MEKi
+  prevents this and provides additive anti-tumor activity.
+
+  ROAR basket trial (Subbiah 2020 JCO; 2023 Cancer update):
+  Phase 2, single-arm basket in BRAF V600E+ solid tumors. CCA cohort n=43:
+  ORR 51%; DCR 84%; mDOR 9 months; mPFS 9 months; mOS 14.5 months (2023 update).
+  This is the largest prospective dataset for BRAF V600E CCA; no randomized trial
+  exists. NCCN Category 2A reflects single-arm data but clinically significant ORR.
+
+  Molecular hierarchy for 2L CCA:
+  FGFR2 fusion (NCCN Cat 1) → IDH1 (NCCN Cat 1) → BRAF V600E (NCCN Cat 2A) →
+  MSI-H/dMMR pembrolizumab → HER2-amp → default FOLFOX.
+  Note: FGFR2 and IDH1 mutations rarely co-occur with BRAF V600E; comprehensive
+  profiling determines priority.
+
+  Ukraine: dabrafenib (Tafinlar) is registered and NSZU-reimbursed for melanoma and
+  NSCLC BRAF V600E indications. CCA is an off-label indication — MDT request for
+  compassionate/off-label use required. Accessibility better than ivosidenib (not
+  registered) but requires individual MDT approval for CCA.
+
+rationale_ua: >
+  BRAF V600E (~5% iCCA): дабрафеніб 150 мг × 2/день + траметиніб 2 мг/день (ROAR;
+  Subbiah 2020 JCO; n=43 ХКА): ORR 51%, DCR 84%, медіана ВБП 9 міс, мОС 14.5 міс.
+  NCCN кат.2A. Механізм: BRAFi+MEKi — блокада конститутивної BRAF V600E → MEK → ERK
+  сигналізації. Комбінація обов'язкова (монотерапія BRAFi — парадоксальна активація).
+  В Україні: дабрафеніб (Тафінлар) + траметиніб зареєстровані + НСЗУ для меланоми/НДРЛ;
+  при ХКА — off-label, MDT запит. ЕхоКГ до + q3 міс (траметиніб: кардіотоксичність).
+  Пірексія ~50% — протокол з ацетамінофеном, навчання пацієнта. Виключити FGFR2-злиття
+  та IDH1-мутацію перед призначенням (вищий пріоритет при наявності).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Hepatobiliary 2025 Category 2A: dabrafenib + trametinib for BRAF V600E-mutant
+      previously-treated biliary tract cancer (ROAR basket; Subbiah 2020 JCO; ORR 51%
+      CCA cohort; single-arm Phase 2).
+  - source_id: SRC-ESMO-BTC-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO BTC 2023: dabrafenib + trametinib recommended for BRAF V600E-mutant BTC;
+      molecular profiling mandatory for all patients at 2L.
+
+do_not_do:
+  - "Без підтвердження BRAF V600E: дабрафеніб+траметиніб неактивні при BRAF-WT; молекулярний скринінг спочатку"
+  - "Монотерапія BRAF-інгібітором (без MEKi): парадоксальна активація RAF → гірший результат; комбінація ОБОВ'ЯЗКОВА"
+  - "Без ЕхоКГ: траметиніб → кардіоміопатія; ФВЛШ вихідна + q3 міс"
+  - "При FGFR2-злитті або IDH1-мутації: ці цілі мають пріоритет (NCCN Cat 1 vs Cat 2A для BRAF)"
+  - "Пірексія без протоколу: ~50% пацієнтів мають пропасницю; навчання + ацетамінофен протокол до початку"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
