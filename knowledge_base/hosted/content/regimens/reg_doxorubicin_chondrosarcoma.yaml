@@ -23,5 +23,43 @@ sources:
   - SRC-NCCN-SARCOMA
 
 reviewer_signoffs: 0
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Doxorubicin monotherapy palliative for advanced chondrosarcoma.
+# Anthracycline: cardio + cytopenia + alopecia + nausea + vesicant.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Випадіння волосся, помірна нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SARCOMA
+  - trigger_ua: "Червоне забарвлення сечі 1-2 дні після інфузії"
+    action_ua: "Очікувано від доксорубіцину — нешкідливо"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SARCOMA
+  - trigger_ua: "Болючість, почервоніння або пухирі в місці інфузії"
+    action_ua: "Звертайтесь у лікарню негайно — підозра на екстравазацію (виток препарату)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-SARCOMA
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Задишка при підйомі сходами або в стані спокою, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — антрацикліни впливають на серце"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SARCOMA
+  - trigger_ua: "Сильна задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-SARCOMA
+
 notes: >
   STUB scaffold. Dosing summary only.

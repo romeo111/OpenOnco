@@ -48,6 +48,42 @@ sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Capecitabine palliative monotherapy for frail mCRC. Oral 5-FU prodrug;
+# HFS + diarrhea + DPYD risk dominant; goal is symptom balance.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, лущення, легка болючість на долонях і стопах"
+    action_ua: "HFS — крем з сечовиною; уникайте тертя і гарячої води"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Виражений біль на долонях / стопах, що заважає ходити"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна пауза в препараті"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Більше 4-5 рідких випорожнень на день"
+    action_ua: "Подзвоніть у клініку того ж дня — почніть лоперамід, питний режим"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Біль у грудях, серцебиття під час прийому препарату"
+    action_ua: "Звертайтесь у лікарню негайно — рідкісний кардіотоксичний побічний 5-ФУ-проліків"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-COLON-2025
+
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >

@@ -33,6 +33,7 @@ from typing import Optional, Union
 
 import yaml
 
+from ._actionability import _biomarker_keys_match, _extract_variant
 from ._ask_doctor import select_questions as _select_ask_doctor_questions
 from ._citation_guard import (
     needs_guard as _citation_needs_guard,
@@ -439,6 +440,14 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "actionability_empty":         {"uk": "Не знайдено клінічно значущих варіантів у цьому профілі.",
                                     "en": "No clinically actionable variants matched in this profile."},
     "actionability_gene_level":    {"uk": "(гено-рівень)", "en": "(gene-level)"},
+    "actionability_covered_heading":   {"uk": "✅ Покриті біомаркери (знайдено в KB)",
+                                        "en": "✅ Covered biomarkers (matched in KB)"},
+    "actionability_uncovered_heading": {"uk": "⚠️ Не враховані при побудові плану",
+                                        "en": "⚠️ Not included in plan"},
+    "actionability_uncovered_th_status": {"uk": "Статус", "en": "Status"},
+    "actionability_uncovered_negative":  {"uk": "Виключено (негативний)", "en": "Excluded (negative)"},
+    "actionability_uncovered_unmatched": {"uk": "Немає в KB — рекомендуйте лікарю уточнити",
+                                          "en": "Not in KB — ask clinician to verify"},
     # Experimental options (clinical-trial track)
     "exp_heading":                 {"uk": "Експериментальні опції (клінічні дослідження)",
                                     "en": "Experimental options (clinical trials)"},
@@ -2002,6 +2011,20 @@ def _render_variant_actionability(
     matching BMA cells, render a single placeholder row — the section
     is always present so HCPs see that the lookup ran.
 
+    The section is split into two visual sub-sections:
+    - ✅ Covered biomarkers: patient biomarkers that matched a BMA cell,
+      shown with full ESCAT detail so the HCP can verify what the engine
+      acted on.
+    - ⚠️ Not included in plan: biomarkers present in the patient profile
+      that were either negative (excluded by design) or positive but
+      absent from the KB (unmatched). This makes the coverage gap
+      explicit for verification.
+
+    The split is computed purely from `plan.patient_snapshot["biomarkers"]`
+    and `plan.variant_actionability` — no schema changes required.
+    Falls back to a single table (no sub-headers) when the patient
+    snapshot has no biomarkers field (older plan shapes / tests).
+
     PR5 citation-presence guard: each BMA hit row gets a status check on
     its `primary_sources` + `evidence_sources`. WARN mode prepends a
     `❓ без цитати` badge to the biomarker cell; STRICT mode replaces
@@ -2009,6 +2032,33 @@ def _render_variant_actionability(
     """
     hits = list(getattr(plan, "variant_actionability", None) or [])
 
+    # ── Biomarker audit: classify patient profile into covered / uncovered ──
+    snap = getattr(plan, "patient_snapshot", None) or {}
+    patient_biomarkers: dict = (
+        snap.get("biomarkers") if isinstance(snap, dict) else {}
+    ) or {}
+
+    # Which patient keys matched at least one hit?
+    covered_keys: set[str] = set()
+    for pk in patient_biomarkers:
+        for hit in hits:
+            if _biomarker_keys_match(pk, hit.biomarker_id):
+                covered_keys.add(pk)
+                break
+
+    uncovered_rows: list[dict] = []
+    for key, raw_value in patient_biomarkers.items():
+        if key in covered_keys:
+            continue
+        variant = _extract_variant(raw_value)
+        uncovered_rows.append({
+            "key": key,
+            "reason": "negative" if variant is None else "unmatched",
+        })
+
+    show_audit = bool(patient_biomarkers)  # only split when snapshot is available
+
+    # ── Build covered hits table ────────────────────────────────────────────
     th = (
         "<thead><tr>"
         f"<th>{_h(_t('actionability_th_biomarker', target_lang))}</th>"
@@ -2096,11 +2146,58 @@ def _render_variant_actionability(
                 "</tr>"
             )
 
+    covered_table = (
+        f'<table class="actionability-table">{th}<tbody>{"".join(rows)}</tbody></table>'
+    )
+
+    # ── Build uncovered table ───────────────────────────────────────────────
+    uncovered_html = ""
+    if show_audit and uncovered_rows:
+        unc_th = (
+            "<thead><tr>"
+            f"<th>{_h(_t('actionability_th_biomarker', target_lang))}</th>"
+            f"<th>{_h(_t('actionability_uncovered_th_status', target_lang))}</th>"
+            "</tr></thead>"
+        )
+        unc_rows: list[str] = []
+        for row in uncovered_rows:
+            reason_key = f"actionability_uncovered_{row['reason']}"
+            status_cls = f"biomarker-status-{row['reason']}"
+            unc_rows.append(
+                "<tr>"
+                f'<td><span class="gene">{_h(row["key"])}</span></td>'
+                f'<td><span class="{status_cls}">{_h(_t(reason_key, target_lang))}</span></td>'
+                "</tr>"
+            )
+        uncovered_html = (
+            '<div class="biomarker-subsection uncovered">'
+            f'<div class="biomarker-subsection-header">'
+            f'{_h(_t("actionability_uncovered_heading", target_lang))}'
+            f'</div>'
+            f'<table class="actionability-table uncovered-table">'
+            f'{unc_th}<tbody>{"".join(unc_rows)}</tbody></table>'
+            f'</div>'
+        )
+
+    # ── Assemble section ────────────────────────────────────────────────────
+    if show_audit and uncovered_html:
+        covered_html = (
+            '<div class="biomarker-subsection covered">'
+            f'<div class="biomarker-subsection-header">'
+            f'{_h(_t("actionability_covered_heading", target_lang))}'
+            f'</div>'
+            f'{covered_table}'
+            f'</div>'
+        )
+    else:
+        covered_html = covered_table
+
     return (
         '<section class="variant-actionability">'
         f'<h2>{_h(_t("actionability_heading", target_lang))}</h2>'
         f'<div class="section-sub">{_h(_t("actionability_sub", target_lang))}</div>'
-        f'<table class="actionability-table">{th}<tbody>{"".join(rows)}</tbody></table>'
+        f'{covered_html}'
+        f'{uncovered_html}'
         '</section>'
     )
 

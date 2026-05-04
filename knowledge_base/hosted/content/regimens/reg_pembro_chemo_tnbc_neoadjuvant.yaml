@@ -49,6 +49,59 @@ ukraine_availability:
   notes: "Pembrolizumab registered; TNBC neoadjuvant indication reimbursement varies. Chemo backbone reimbursed. Out-of-pocket for pembro adds significant cost; clinical-review queue item."
 
 sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-EARLY-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# KEYNOTE-522 neoadjuvant: pembro + carbo/paclitaxel × 4 → pembro + AC × 4.
+# Mixes IO irAEs with platinum + anthracycline + cyclophosphamide.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Випадіння волосся, помірна нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Поколювання у пальцях рук і ніг"
+    action_ua: "Очікувано від паклітакселу — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Шкірний свербіж, помірна втома"
+    action_ua: "Очікувано від пембролізумабу — зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Жовтяниця, темна сеча"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Виражена слабкість, постійна спрага"
+    action_ua: "Подзвоніть у клініку того ж дня — щитоподібна реакція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Задишка при підйомі сходами або в стані спокою"
+    action_ua: "Подзвоніть у клініку того ж дня — антрацикліни впливають на серце"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Тяжка діарея, сильна задишка або біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+
 last_reviewed:
 notes: >
   KEYNOTE-522: pCR + EFS benefit in stage II-III TNBC (regardless of

@@ -41,6 +41,42 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-PTCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Brentuximab vedotin maintenance post-ASCT for ALCL. CD30 ADC;
+# peripheral neuropathy signature + neutropenia + rare PML/pancreatitis.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання у пальцях рук і ніг"
+    action_ua: "Занотовуйте інтенсивність — вираженість має бути обговорена з лікарем"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Виражене оніміння або слабкість у руках чи ногах, що погіршується"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози або пауза"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильний біль у верхній частині живота, що віддає в спину"
+    action_ua: "Подзвоніть у клініку того ж дня — рідкісний побічний — панкреатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Сплутаність свідомості, проблеми з мовою, рухами"
+    action_ua: "Звертайтесь у лікарню негайно — рідкісний неврологічний побічний"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   Adapted from AETHERA (Moskowitz 2015 cHL) — extrapolated to systemic

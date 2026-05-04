@@ -54,6 +54,43 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-HODGKIN-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Modified ABVD (doxorubicin + vinblastine only) for HL with severe
+# hepatic impairment. Anthracycline cardio + cytopenia + vinca neuropathy.
+# Hepatic decompensation overlay critical. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Випадіння волосся, помірна нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Поколювання у пальцях рук і ніг"
+    action_ua: "Очікувано від вінбластину — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Закреп на 3+ дні, біль у животі"
+    action_ua: "Подзвоніть у клініку того ж дня — кишкова непрохідність від вінбластину"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Поглиблення жовтяниці, набряки живота, сплутаність"
+    action_ua: "Звертайтесь у лікарню негайно — погіршення печінкової недостатності"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Задишка при підйомі сходами або в стані спокою, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — антрацикліни впливають на серце"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >

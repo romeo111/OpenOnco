@@ -43,6 +43,36 @@ sources:
   - SRC-NCCN-MELANOMA-2025
   - SRC-ESMO-MELANOMA-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pembrolizumab mono advanced melanoma (KEYNOTE-006). PD-1: standard irAE —
+# colitis / pneumonitis / hepatitis / endocrinopathy. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Легкий свербіж шкіри"
+    action_ua: "Очікувано — зволожувач; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Помірна діарея (3-4 рідких випорожнення на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Нова задишка або кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний пневмоніт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Жовтяниця, виражена слабкість"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-30"
 reviewer_signoffs: []
 notes: >

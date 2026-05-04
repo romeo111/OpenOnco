@@ -58,6 +58,36 @@ sources:
   - SRC-NCCN-MPN-2025
   - SRC-MOMENTUM-VERSTOVSEK-2023
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Momelotinib for MF with anemia (MOMENTUM). JAK1/JAK2/ACVR1: cytopenia
+# + hepatotox + peripheral neuropathy + HBV reactivation. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Поколювання або оніміння у руках чи ногах"
+    action_ua: "Занотовуйте і повідомте лікаря на прийомі — периферична нейропатія"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-MOMENTUM-VERSTOVSEK-2023
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кровотеча з ясен, синці без причини"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Жовтяниця, темна сеча"
+    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність або реактивація HBV"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-MOMENTUM-VERSTOVSEK-2023
+
 last_reviewed: "2026-04-25"
 notes: >
   JAK1/JAK2 + ACVR1 inhibitor — distinguishes from ruxolitinib by

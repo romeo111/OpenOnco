@@ -91,6 +91,49 @@ sources:
   - SRC-NCCN-MPN-2025
   - SRC-DIPSS-PLUS-GANGAT-2011
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Allo-HCT for high-risk PMF with JAKi bridging. Same allo-HCT toxicity
+# pattern (GVHD + infection + VOD); during JAKi bridging — cytopenia +
+# rebound on taper. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, що триває тижнями після виписки"
+    action_ua: "Очікувано — кістковий мозок відновлюється повільно; відпочивайте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Лихоманка вище 38°C — у будь-який час після кондиціонування"
+    action_ua: "Звертайтесь у лікарню негайно — інфекція на тлі тривалої нейтропенії"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Висип на шкірі (особливо долоні, стопи), діарея, жовтяниця"
+    action_ua: "Подзвоніть у клініку того ж дня — реакція трансплантат-проти-господаря"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Жовтяниця, набір ваги, біль у правому підребер'ї перші 30 днів"
+    action_ua: "Звертайтесь у лікарню негайно — вено-оклюзивне ускладнення"
+    urgency: er_now
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Раптове повернення симптомів селезінки (біль, набряк живота, лихоманка) під час відміни руксолітинібу"
+    action_ua: "Подзвоніть у клініку того ж дня — синдром відміни JAKi"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Сильний біль у животі, нудота, кров у стільці"
+    action_ua: "Звертайтесь у лікарню негайно — РТПХ кишечника або інфекція"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки можливого сепсису"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   AlloHCT remains the ONLY curative option for PMF. Mandatory

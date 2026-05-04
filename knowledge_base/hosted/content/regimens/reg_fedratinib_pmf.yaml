@@ -60,6 +60,42 @@ sources:
   - SRC-NCCN-MPN-2025
   - SRC-JAKARTA2-HARRISON-2017
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Fedratinib for ruxolitinib-resistant PMF. Boxed warning: Wernicke
+# encephalopathy. GI toxicity + cytopenia dominant. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, помірна діарея — у перші тижні"
+    action_ua: "Приймайте призначені протиблювотні; лоперамід для діареї; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Сплутаність свідомості, проблеми з координацією, рухи очей"
+    action_ua: "Звертайтесь у лікарню негайно — підозра на енцефалопатію Верніке (фатальна без лікування)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+      - SRC-JAKARTA2-HARRISON-2017
+  - trigger_ua: "Тяжка діарея або блювання, що не дозволяє пити"
+    action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення, дефіциту тіаміну"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-JAKARTA2-HARRISON-2017
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кровотеча з ясен, з носа, синці без причини"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Selective JAK2 inhibitor for MF post-ruxolitinib failure or

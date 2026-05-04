@@ -4,10 +4,10 @@ line_of_therapy: 1
 title: "HCV-asociated Marginal Zone Lymphoma — first line"
 
 intro: >
-  Опитувальник для підтвердженої HCV-асоційованої MZL у пацієнта без
-  попереднього лікування лімфоми. Заповнення займає 5-7 хвилин. Поля
-  позначені як CRITICAL — обов'язкові; без них engine видасть warning
-  замість Plan.
+  Questionnaire for confirmed HCV-associated MZL in a patient without
+  prior lymphoma treatment. Completion takes 5-7 minutes. Fields
+  marked CRITICAL are required; without them the engine will issue a
+  warning instead of a Plan.
 
 # Engine-required scaffolding that the form fills automatically — not
 # asked from the clinician. ICD-O-3 9699/3 = Extranodal MZL of MALT
@@ -18,160 +18,160 @@ fixed_fields:
   line_of_therapy: 1
 
 groups:
-  - title: "Демографія + загальний стан"
-    description: "Базовий портрет пацієнта."
+  - title: "Demographics + general status"
+    description: "Basic patient profile."
     questions:
       - field: patient_id
-        label: "ID пацієнта (synthetic)"
+        label: "Patient ID (synthetic)"
         type: text
         impact: required
-        helper: "Будь-який неперсональний ID — для збереження в історії."
+        helper: "Any non-personal ID — for session history."
         default_value: "VIRTUAL-001"
 
       - field: demographics.age
-        label: "Вік"
+        label: "Age"
         type: integer
         impact: required
         range_min: 18
         range_max: 110
-        units: "років"
+        units: "years"
         triggers:
-          - "filter:age_max constraints на BR-aggressive (немає для HCV-MZL, але впливає на frailty)"
-        helper: "Вплив непрямий — старші 75 з більшою ймовірністю отримають антивірусний-only трек."
+          - "filter:age_max constraints on BR-aggressive (none for HCV-MZL, but affects frailty assessment)"
+        helper: "Indirect effect — patients ≥75 more likely to receive antiviral-only track."
 
       - field: demographics.sex
-        label: "Стать"
+        label: "Sex"
         type: enum
         impact: optional
         options:
-          - {value: "male", label: "Чоловіча"}
-          - {value: "female", label: "Жіноча"}
-        helper: "Не впливає на алгоритм HCV-MZL 1L. Запитується для render layer."
+          - {value: "male", label: "Male"}
+          - {value: "female", label: "Female"}
+        helper: "Does not affect the HCV-MZL 1L algorithm. Collected for the render layer."
 
       - field: demographics.ecog
         label: "ECOG Performance Status"
         type: enum
         impact: critical
         options:
-          - {value: 0, label: "0 — повністю активний"}
-          - {value: 1, label: "1 — обмеження тяжкої фізичної активності"}
-          - {value: 2, label: "2 — самостійний у самообслуговуванні, ходить >50% часу"}
-          - {value: 3, label: "3 — обмежений у самообслуговуванні"}
-          - {value: 4, label: "4 — повністю прикутий до ліжка"}
+          - {value: 0, label: "0 — fully active"}
+          - {value: 1, label: "1 — restricted in strenuous activity"}
+          - {value: 2, label: "2 — ambulatory and capable of self-care, up >50% of time"}
+          - {value: 3, label: "3 — limited self-care"}
+          - {value: 4, label: "4 — fully bedridden"}
         triggers:
-          - "filter:ecog_max=2 у IND-HCV-MZL-1L-BR-AGGRESSIVE"
+          - "filter:ecog_max=2 in IND-HCV-MZL-1L-BR-AGGRESSIVE"
         helper: >
-          ECOG > 2 виключає BR-aggressive track — engine не запропонує
-          chemo, тільки antiviral monotherapy.
+          ECOG > 2 excludes BR-aggressive track — engine will not propose
+          chemo, only antiviral monotherapy.
 
       - field: demographics.fit_for_chemoimmunotherapy
-        label: "Придатність до хіміоімунотерапії"
+        label: "Eligible for chemoimmunotherapy"
         type: boolean
         impact: required
         triggers:
           - "filter:IND-HCV-MZL-1L-BR-AGGRESSIVE applicable_to"
         helper: >
-          Лікар оцінює загальну fit (комoрбідності, кардіо- і ниркова функція,
-          dialogo з пацієнтом). False → BR-aggressive track filter'иться.
+          Clinician assesses overall fitness (comorbidities, cardiac and renal
+          function, discussion with patient). False → BR-aggressive track is filtered out.
 
-  - title: "HCV статус (defining biomarker)"
-    description: "HCV є етіологічним driver'ом для цієї лімфоми."
+  - title: "HCV status (defining biomarker)"
+    description: "HCV is the etiological driver of this lymphoma."
     questions:
       - field: "biomarkers.BIO-HCV-RNA"
         label: "HCV RNA (PCR)"
         type: enum
         impact: critical
         options:
-          - {value: "positive", label: "Позитивний (active infection)"}
-          - {value: "negative", label: "Негативний (cleared)"}
+          - {value: "positive", label: "Positive (active infection)"}
+          - {value: "negative", label: "Negative (cleared)"}
         triggers:
-          - "select:IND-HCV-MZL-1L-ANTIVIRAL якщо positive + indolent"
-          - "select:IND-HCV-MZL-1L-BR-AGGRESSIVE якщо negative або bulky"
+          - "select:IND-HCV-MZL-1L-ANTIVIRAL if positive + indolent"
+          - "select:IND-HCV-MZL-1L-BR-AGGRESSIVE if negative or bulky"
         helper: >
-          HCV RNA positive — основа для antiviral-first track. Якщо negative,
-          engine fallback'ить на BR-aggressive (стандартний approach без
-          eтіологічного інструменту).
+          HCV RNA positive — basis for antiviral-first track. If negative,
+          engine falls back to BR-aggressive (standard approach without
+          etiological tool).
 
       - field: "findings.HCV RNA positive"
-        label: "HCV RNA positive (boolean — для engine clause)"
+        label: "HCV RNA positive (boolean — for engine clause)"
         type: boolean
         impact: critical
         helper: >
-          Технічне поле що дублює biomarker для evaluation. Заповнюється
-          автоматично з попереднього питання — true якщо positive.
+          Technical field duplicating the biomarker for evaluation. Auto-filled
+          from the previous question — true if positive.
         when: "biomarkers.BIO-HCV-RNA == 'positive'"
 
       - field: demographics.decompensated_cirrhosis
-        label: "Декомпенсований цироз?"
+        label: "Decompensated cirrhosis?"
         type: boolean
         impact: critical
         triggers:
           - "RF-DECOMP-CIRRHOSIS"
           - "ci:CI-DECOMP-CIRRHOSIS-GLEC"
         helper: >
-          Child-Pugh B/C — блокує glecaprevir/pibrentasvir DAA. Engine
-          обере sof/vel + RBV альтернативу (якщо HCV positive) АБО
-          відкладе антивірусну терапію до hepatology consultation.
+          Child-Pugh B/C — blocks glecaprevir/pibrentasvir DAA. Engine
+          will select sof/vel + RBV alternative (if HCV positive) OR
+          defer antiviral therapy pending hepatology consultation.
 
   - title: "Tumor burden + phenotype"
-    description: "Чи indolent / bulky / aggressive — основа для вибору track."
+    description: "Whether indolent / bulky / aggressive — basis for track selection."
     questions:
       - field: "findings.dominant_nodal_mass_cm"
-        label: "Найбільший нодальний масив (см)"
+        label: "Largest nodal mass (cm)"
         type: float
         impact: critical
         range_min: 0
         range_max: 30
-        units: "см"
+        units: "cm"
         triggers:
-          - "RF-BULKY-DISEASE при ≥7 см → switches на BR-aggressive"
+          - "RF-BULKY-DISEASE at ≥7 cm → switches to BR-aggressive"
         helper: >
-          Bulky (≥ 7 см) = автоматично BR-aggressive track навіть
-          при HCV positive. Antiviral-only недостатньо швидко reduce
+          Bulky (≥7 cm) = automatically BR-aggressive track even
+          if HCV positive. Antiviral-only is too slow to reduce
           tumor burden.
 
       - field: "findings.mediastinal_ratio"
-        label: "Медіастинально-торакальне співвідношення (mediastinal mass / thoracic diameter)"
+        label: "Mediastinal-thoracic ratio (mediastinal mass / thoracic diameter)"
         type: float
         impact: recommended
         range_min: 0
         range_max: 1
         triggers:
-          - "RF-BULKY-DISEASE при ≥0.33 (alternative bulky criterion)"
-        helper: "Альтернативний критерій bulky disease — за CT thorax."
+          - "RF-BULKY-DISEASE at ≥0.33 (alternative bulky criterion)"
+        helper: "Alternative bulky disease criterion — by CT thorax."
         default_value: 0
 
       - field: "findings.symptomatic_b_symptoms_severe"
-        label: "Тяжкі B-симптоми (febr. >38°C, drenching night sweats, weight loss >10% за 6 міс)?"
+        label: "Severe B-symptoms (fever >38°C, drenching night sweats, weight loss >10% over 6 months)?"
         type: boolean
         impact: critical
         triggers:
           - "RF-BULKY-DISEASE alternative trigger"
         helper: >
-          Severe B-symptoms — relative indication для chemotherapy
-          навіть без bulky.
+          Severe B-symptoms — relative indication for chemotherapy
+          even without bulky disease.
 
       - field: "findings.Indolent presentation (non-bulky, asymptomatic or minimally symptomatic)"
-        label: "Indolent presentation (підсумок: non-bulky + min symptoms)?"
+        label: "Indolent presentation (summary: non-bulky + minimal symptoms)?"
         type: boolean
         impact: critical
         helper: >
-          Технічне поле для algorithm clause. True якщо НЕ bulky AND НЕ
-          severe B-symptoms. Заповнюється автоматично з попередніх питань.
+          Technical field for algorithm clause. True if NOT bulky AND NOT
+          severe B-symptoms. Auto-filled from preceding questions.
 
-  - title: "Гістологія + transformation risk"
-    description: "Виключення трансформації в DLBCL."
+  - title: "Histology + transformation risk"
+    description: "Exclude transformation to DLBCL."
     questions:
       - field: "findings.biopsy_shows_dlbcl"
-        label: "Біопсія показує DLBCL transformation?"
+        label: "Biopsy shows DLBCL transformation?"
         type: boolean
         impact: critical
         triggers:
           - "RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION → BR-aggressive obligatory"
         helper: >
-          Якщо trasformation в DLBCL підтверджено — engine видає попередження
-          і відсилає на DLBCL-specific Algorithm (не HCV-MZL). Поки що
-          fallback — BR-aggressive як safest option.
+          If transformation to DLBCL is confirmed — engine issues a warning
+          and redirects to the DLBCL-specific algorithm (not HCV-MZL). Currently
+          fallback — BR-aggressive as safest option.
         default_value: false
 
       - field: "findings.ldh_ratio_to_uln"
@@ -181,48 +181,48 @@ groups:
         range_min: 0.5
         range_max: 10
         triggers:
-          - "RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION при ratio ≥ 2"
-        helper: "LDH > 2× ULN — surrogate marker трансформації."
+          - "RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION at ratio ≥ 2"
+        helper: "LDH > 2× ULN — surrogate marker of transformation."
         default_value: 1.0
 
       - field: "findings.clinical_progression_weeks"
-        label: "Клінічний прогрес за останні X тижнів (rapid worsening)?"
+        label: "Clinical progression over last X weeks (rapid worsening)?"
         type: integer
         impact: optional
         range_min: 0
         range_max: 200
-        units: "тижнів"
+        units: "weeks"
         helper: >
-          Час від notice'у нової маси / симптомів до visit. <12 тижнів +
-          high LDH = підозра на transformation.
+          Time from first notice of new mass / symptoms to visit. <12 weeks +
+          high LDH = suspicion of transformation.
         default_value: 52
 
-  - title: "HBV скринінг (mandatory if anti-CD20 planned)"
-    description: "Будь-який BR-aggressive містить rituximab → HBV reactivation risk."
+  - title: "HBV screening (mandatory if anti-CD20 planned)"
+    description: "Any BR-aggressive regimen contains rituximab → HBV reactivation risk."
     questions:
       - field: "findings.hbsag"
         label: "HBsAg"
         type: enum
         impact: critical
         options:
-          - {value: "negative", label: "Негативний"}
-          - {value: "positive", label: "Позитивний"}
+          - {value: "negative", label: "Negative"}
+          - {value: "positive", label: "Positive"}
         triggers:
           - "RF-HBV-COINFECTION → entecavir prophylaxis required"
         helper: >
-          HBsAg positive без prophylaxis — заборона на rituximab. Engine
-          активує CI-HBV-NO-PROPHYLAXIS contraindication.
+          HBsAg positive without prophylaxis — rituximab is contraindicated. Engine
+          activates CI-HBV-NO-PROPHYLAXIS contraindication.
 
       - field: "findings.anti_hbc_total"
         label: "Anti-HBc total"
         type: enum
         impact: required
         options:
-          - {value: "negative", label: "Негативний"}
-          - {value: "positive", label: "Позитивний (occult / past infection)"}
+          - {value: "negative", label: "Negative"}
+          - {value: "positive", label: "Positive (occult / past infection)"}
         triggers:
           - "RF-HBV-COINFECTION (occult HBV)"
-        helper: "Anti-HBc+ HBsAg- = occult HBV → monitoring + prophylaxis за NCCN."
+        helper: "Anti-HBc+ HBsAg- = occult HBV → monitoring + prophylaxis per NCCN."
 
 sources:
   - SRC-NCCN-BCELL-2025

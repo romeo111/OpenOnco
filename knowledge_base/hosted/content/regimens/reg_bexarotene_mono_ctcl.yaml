@@ -45,6 +45,37 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-CTCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Bexarotene full-dose monotherapy for r/r CTCL. RXR retinoid;
+# hypertriglyceridemia (frequently >400) + central hypothyroidism +
+# pancreatitis risk dominant. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Сухість шкіри, помірна втома, головний біль"
+    action_ua: "Очікувано — зволожувач, питний режим"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Постійне відчуття холоду, набір ваги, виражена слабкість"
+    action_ua: "Подзвоніть у клініку того ж дня — щитоподібна реакція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Сильний біль у верхній частині живота, що віддає в спину, нудота"
+    action_ua: "Звертайтесь у лікарню негайно — підозра на панкреатит від тригліцеридів"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — лейкопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, темна сеча"
+    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   Duvic 2001 (Arch Dermatol) — ORR 45-55% in r/r CTCL. Triglyceride
