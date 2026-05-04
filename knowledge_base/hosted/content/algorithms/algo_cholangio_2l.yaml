@@ -9,7 +9,8 @@ purpose: >
   (3) BRAF V600E mutation → dabrafenib+trametinib (ROAR; step 13; NCCN Cat 2A);
   (4) MSI-H/dMMR → pembrolizumab (KEYNOTE-158; step 14; NCCN Cat 2A);
   (5) HER2 IHC3+/2+ISH+ → trastuzumab deruxtecan (DESTINY-PanTumor02; step 15; NCCN Cat 2A);
-  (6) Default non-driver → FOLFOX (ABC-06; step 2; NCCN Cat 1).
+  (6) NTRK1/2/3 fusion → larotrectinib (NAVIGATE; step 16; NCCN Cat 2A);
+  (7) Default non-driver → FOLFOX (ABC-06; step 2; NCCN Cat 1).
 
 output_indications:
   - IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
@@ -17,6 +18,7 @@ output_indications:
   - IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM
   - IND-CHOLANGIO-2L-MSI-H-PEMBROLIZUMAB
   - IND-CHOLANGIO-2L-HER2-TDXD
+  - IND-CHOLANGIO-2L-NTRK-LAROTRECTINIB
   - IND-CHOLANGIO-2L-FOLFOX-ABC06
 
 default_indication: IND-CHOLANGIO-2L-FOLFOX-ABC06
@@ -113,12 +115,35 @@ decision_tree:
         Any new respiratory symptoms → immediately hold T-DXd + urgent CT. Ukraine: off-label
         for BTC; MDT compassionate use request required; not NSZU-funded for this indication.
     if_false:
+      next_step: 16
+    notes: "Step 15 added 2026-05-04 (Workstream BH): HER2+ BTC → T-DXd (DESTINY-PanTumor02; NCCN Cat 2A). Gap (3) CLOSED. If_false → step 16 (NTRK) updated 2026-05-04 (Workstream CD)."
+
+  # Step 16 — NTRK1/2/3 gene fusion (~1-2% BTC; all histotypes).
+  # Larotrectinib 100 mg PO BID (NAVIGATE; Drilon 2018 NEJM;
+  # ORR 75% pooled; FDA tumor-agnostic approval 2018; NCCN Cat 2A).
+  # RNA-NGS preferred (highest sensitivity for fusion detection).
+  # UA: not registered; named-patient Bayer or cross-border EU.
+  - step: 16
+    evaluate:
+      any_of:
+        - condition: "NTRK1, NTRK2, or NTRK3 gene fusion confirmed by RNA-NGS (preferred) or DNA-NGS fusion-aware panel or TRK IHC (pan-TRK) with confirmatory NGS or FISH break-apart"
+    if_true:
+      result: IND-CHOLANGIO-2L-NTRK-LAROTRECTINIB
+      notes: >
+        NTRK fusion BTC: larotrectinib 100 mg PO BID continuous (REG-LAROTRECTINIB-PANTUMOR;
+        NAVIGATE Drilon 2018 NEJM; pooled ORR 75%; CR 13%; 1-year DOR 71%; FDA tumor-agnostic
+        2018; NCCN Cat 2A). RNA-NGS mandatory — standard exome/hotspot panels miss most fusions.
+        CYP3A4 DDI review before starting. Biliary drainage mandatory if bilirubin >3× ULN.
+        Ukraine: larotrectinib not registered — named-patient Bayer pathway or cross-border EU
+        (МОЗ наказ 988). If inaccessible: IND-CHOLANGIO-2L-FOLFOX-ABC06.
+        At progression: rebiopsy for NTRK kinase domain resistance (G595R, G667C) → repotrectinib.
+    if_false:
       next_step: 2
-    notes: "Step 15 added 2026-05-04 (Workstream BH): HER2+ BTC → T-DXd (DESTINY-PanTumor02; NCCN Cat 2A). Gap (3) CLOSED."
+    notes: "Step 16 added 2026-05-04 (Workstream CD): NTRK1/2/3 fusion BTC → larotrectinib (NAVIGATE; ORR 75%; NCCN Cat 2A). Gap CLOSED. If_false → step 2 (FOLFOX default)."
 
   # Step 2 — default 2L non-driver: FOLFOX (ABC-06; Lamarca 2021 JCO;
   # mOS 6.2 vs 5.3 mo HR 0.69 p=0.031; NCCN Cat 1). Reached only after
-  # FGFR2/IDH1/BRAF V600E/MSI-H/HER2 steps all negative.
+  # FGFR2/IDH1/BRAF V600E/MSI-H/HER2/NTRK steps all negative.
   # Comprehensive molecular profiling MANDATORY at or before 2L start.
   - step: 2
     evaluate:
@@ -127,7 +152,7 @@ decision_tree:
     if_true:
       result: IND-CHOLANGIO-2L-FOLFOX-ABC06
       notes: >
-        2L non-driver BTC/CCA (FGFR2/IDH1/BRAF V600E/MSI-H/HER2 all negative):
+        2L non-driver BTC/CCA (FGFR2/IDH1/BRAF V600E/MSI-H/HER2/NTRK all negative):
         mFOLFOX (REG-FOLFOX; oxaliplatin 85 mg/m² d1 + 5-FU 2400 mg/m² 46h q14d;
         ABC-06 Lamarca 2021 JCO; mOS 6.2 mo HR 0.69 p=0.031; NCCN Cat 1).
         Comprehensive molecular profiling (FGFR2, IDH1, BRAF, HER2, MSI, NTRK)
@@ -155,6 +180,9 @@ notes: >
   (KEYNOTE-158; Bang 2020 AoO; ORR ~41%; NCCN Cat 2A). Gap (5) CLOSED.
   UPDATED 2026-05-04 (Workstream BH): IND-CHOLANGIO-2L-HER2-TDXD authored and wired at step 15
   (DESTINY-PanTumor02; Shitara 2023 NEJM; BTC n=22 ORR 36.4%; NCCN Cat 2A). Gap (3) CLOSED.
-  All documented 2L driver gaps now CLOSED. Driver cascade complete: FGFR2→IDH1→BRAF V600E→MSI-H→HER2→FOLFOX.
+  UPDATED 2026-05-04 (Workstream CD): IND-CHOLANGIO-2L-NTRK-LAROTRECTINIB authored and
+  wired at step 16 (NAVIGATE; Drilon 2018 NEJM; ORR 75% pooled; NCCN Cat 2A).
+  Step 15 if_false updated from next_step: 2 → next_step: 16. Gap CLOSED.
+  All documented 2L driver gaps now CLOSED. Driver cascade complete:
+  FGFR2 → IDH1 → BRAF V600E → MSI-H → HER2 → NTRK → FOLFOX.
   OOS: locoregional (radioembolization, TACE, SBRT) — outside KB scope.
-  NTRK fusion (larotrectinib; tumor-agnostic; ~1-2% BTC) — not yet modeled; low prevalence, similar approach to MSI-H track.

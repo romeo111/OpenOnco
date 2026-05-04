@@ -1,0 +1,191 @@
+id: IND-CHOLANGIO-2L-NTRK-LAROTRECTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced or metastatic biliary tract cancer / cholangiocarcinoma (intrahepatic, perihilar, distal, or gallbladder)"
+    - "Disease progression on or after ≥1 prior line of systemic therapy (gem+cis ± durvalumab)"
+    - "NTRK1, NTRK2, or NTRK3 gene fusion confirmed (RNA-NGS preferred; DNA-NGS fusion-aware panel or IHC acceptable)"
+    - "ECOG PS 0-2"
+    - "Adequate hepatic function: bilirubin ≤1.5× ULN (or ≤3× ULN with biliary obstruction managed by drainage); ALT/AST ≤5× ULN"
+    - "Adequate renal function: CrCl ≥30 mL/min"
+  biomarker_requirements_required:
+    - "NTRK fusion: NTRK1/2/3 gene rearrangement confirmed by RNA-NGS (preferred for sensitivity; detects novel partners) or DNA-NGS fusion-aware panel or FISH break-apart or TRK IHC pan-TRK (ETV6/NTRK3) with confirmatory NGS. Prevalence ~1-2% BTC overall."
+  biomarker_requirements_excluded:
+    - "NTRK fusion NOT detected: no mechanism for TRK inhibitor activity; proceed to FOLFOX default"
+    - "Known NTRK kinase domain resistance mutation (G595R, G667C) from prior NTRK inhibitor: larotrectinib has reduced activity; consider repotrectinib or clinical trial"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG 3 patients: larotrectinib is well-tolerated orally (low toxicity profile);
+      may consider with MDT discussion. ECOG 4: goals-of-care discussion preferred over
+      active treatment.
+
+recommended_regimen: REG-LAROTRECTINIB-PANTUMOR
+alternative_regimens:
+  - regimen_id: IND-CHOLANGIO-2L-FOLFOX-ABC06
+    description: >
+      mFOLFOX (oxaliplatin + 5-FU; ABC-06; mOS 6.2 mo; NCCN Cat 1) — use when
+      NTRK fusion cannot be confirmed (NGS unavailable) or larotrectinib inaccessible
+      (not UA-registered). FOLFOX does not exploit NTRK biology.
+
+concurrent_therapy:
+  - "No premedication required for larotrectinib"
+  - "Anti-infective prophylaxis not routinely required (low immunosuppression)"
+  - "Biliary drainage: maintain adequate drainage if bilirubin >3× ULN — high bilirubin predicts hepatic AEs"
+  - "CYP3A4 drug interaction review mandatory: larotrectinib is a CYP3A4 substrate; strong inhibitors (azoles, clarithromycin) increase AUC; strong inducers (rifampicin, carbamazepine) reduce AUC >50%"
+  - "Liver function tests monthly for first 3 months, then every 2-3 cycles"
+
+followed_by:
+  - "CT chest/abdomen/pelvis q8-12 weeks for response assessment (RECIST 1.1)"
+  - "Continue until disease progression or unacceptable toxicity"
+  - "At progression: rebiopsy recommended (NTRK kinase domain resistance mutations — G595R, G667C — emerge in ~50% of acquired resistance)"
+  - "Post-larotrectinib progression with confirmed NTRK resistance mutation: repotrectinib (next-gen TRK inhibitor with activity against resistance mutations) or clinical trial"
+  - "If NTRK resistance mutation absent at progression: consider rechallenge or IND-CHOLANGIO-2L-FOLFOX-ABC06"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~75% (pooled NAVIGATE/SCOUT/phase-1 across solid tumors; BTC-specific n<20)"
+  complete_response: "~15-20% (pooled; BTC-specific numbers limited by cohort size)"
+  median_pfs_months: "~11 months (pooled; BTC-specific data immature due to small cohort)"
+  notes: >
+    PRIMARY EVIDENCE: NAVIGATE (Drilon 2018 NEJM) + SCOUT + expanded basket:
+    - Pooled analysis n=55 (primary NEJM analysis): ORR 75% (IRC); CR 13%; PR 62%
+    - 17 tumor types represented; durable responses (1-year DOR ~71%)
+    - FDA tumor-agnostic approval November 2018; EMA approval September 2019
+
+    BTC/CHOLANGIOCARCINOMA-SPECIFIC DATA:
+    - BTC is represented in NAVIGATE with small cohort (~5-15 patients depending
+      on publication date); ORR within BTC cohort has been reported as ~50-75%
+      in published subgroup analyses
+    - NTRK fusion prevalence in BTC ~1-2% (lower than NSCLC, higher than colorectal);
+      intrahepatic CCA slightly higher prevalence than perihilar/distal
+
+    COMPARISON TO FOLFOX (IND-CHOLANGIO-2L-FOLFOX-ABC06):
+    mFOLFOX ORR ~5% (ABC-06; Lamarca 2021 JCO). Larotrectinib ORR ~75% in
+    NTRK-fusion tumors represents a 10-15× improvement — consistent with other
+    molecular driver-targeted therapies in BTC (FGFR2 pemigatinib ORR 36%,
+    IDH1 ivosidenib ORR 2.4% but with DCR benefit).
+
+    NCCN HEPATOBILIARY 2025: larotrectinib is a Category 2A recommended agent
+    for NTRK fusion-positive cholangiocarcinoma/BTC. Tumor-agnostic FDA approval
+    supports use across all solid tumors with NTRK fusion.
+
+hard_contraindications:
+  - "NTRK fusion NEGATIVE: no therapeutic target; do not use without confirmed fusion"
+  - "Strong CYP3A4 inhibitors that cannot be discontinued (voriconazole, posaconazole): larotrectinib AUC increases substantially — dose-reduce to 75 mg BID or switch to FOLFOX"
+  - "Strong CYP3A4 inducers that cannot be stopped (rifampicin, carbamazepine, phenytoin): larotrectinib AUC reduced >50% → subtherapeutic"
+  - "Child-Pugh C: not studied; hepatic impairment data limited — avoid or use with extreme caution"
+
+red_flags_triggering_alternative:
+  - condition: "NTRK fusion not confirmed (NGS panel unavailable or did not include fusion detection) → IND-CHOLANGIO-2L-FOLFOX-ABC06 pending NGS result; re-route to larotrectinib if fusion confirmed later"
+  - condition: "Larotrectinib inaccessible in Ukraine (not registered; named-patient pathway failed) → IND-CHOLANGIO-2L-FOLFOX-ABC06"
+  - condition: "NTRK kinase domain resistance mutation at progression → repotrectinib (if accessible) or clinical trial"
+  - condition: "Grade ≥3 hepatotoxicity unresolved after dose hold → permanent discontinuation; IND-CHOLANGIO-2L-FOLFOX-ABC06"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "RNA-NGS fusion panel (preferred for NTRK) — tissue or liquid biopsy; detects NTRK1/2/3 fusions including novel partners"
+  - "DNA-NGS comprehensive panel (if RNA-NGS unavailable): fusion-aware panel required; standard exome-style NGS misses many fusions"
+  - "Serum bilirubin + direct bilirubin — biliary obstruction assessment (affects dosing strategy)"
+  - TEST-CECT-CAP
+  - "CA 19-9 (baseline for response monitoring in CCA)"
+
+desired_tests:
+  - "TRK IHC (pan-TRK antibody): screening tool — positive IHC warrants confirmatory NGS; negative IHC has high NPV for NTRK3 but can miss NTRK1/2"
+  - "FISH break-apart NTRK: alternative confirmation method if NGS unavailable"
+  - "Biliary drainage imaging: MRCP or CT — confirm drainage adequacy before starting"
+
+rationale: >
+  Larotrectinib (Vitrakvi) for NTRK fusion-positive relapsed/refractory
+  cholangiocarcinoma/biliary tract cancer — tumor-agnostic TRK kinase
+  inhibitor with high activity in NTRK-rearranged solid tumors.
+
+  MOLECULAR BASIS:
+  NTRK1, NTRK2, NTRK3 genes encode TRKA, TRKB, TRKC receptor tyrosine kinases.
+  Chromosomal rearrangements creating oncogenic NTRK fusions (gene X → NTRK)
+  lead to constitutively active TRK signaling → uncontrolled proliferation.
+  In BTC, NTRK fusions occur in ~1-2% of cases, most commonly NTRK1/3;
+  ETV6-NTRK3 is the most well-characterized fusion (originally described in
+  secretory breast carcinoma; now known across multiple tumor types).
+
+  Larotrectinib is a highly selective, ATP-competitive TRKA/B/C inhibitor
+  with minimal off-target kinase activity → very favorable tolerability.
+  Unlike entrectinib (which also inhibits ROS1 and ALK), larotrectinib is
+  purely TRK-selective.
+
+  NAVIGATE EVIDENCE:
+  Drilon et al. 2018 NEJM — pooled basket trial (n=55 primary analysis;
+  expanded cohort published later): ORR 75% by IRC, CR 13%, median DOR not
+  reached at 8 months, 1-year DOR rate ~71%. FDA tumor-agnostic approval
+  2018 — the first tumor-agnostic TKI approval.
+
+  WHY LAROTRECTINIB OVER ENTRECTINIB IN BTC:
+  Both are FDA tumor-agnostic for NTRK fusion+ solid tumors. Larotrectinib
+  preferred because:
+  1. Longer follow-up data and more mature efficacy/safety dataset
+  2. Better tolerability (lower CNS AE rate than entrectinib)
+  3. No meaningful CNS metastasis concern in standard BTC management
+  Entrectinib remains an acceptable alternative (STARTRK-2 data; NCCN Cat 2A).
+
+  UKRAINE CONTEXT:
+  Larotrectinib NOT registered in Ukraine as of 2026. Access options:
+  1. Bayer named-patient program
+  2. Cross-border access from EU under МОЗ наказ 988 (cross-border provisions)
+  3. Clinical trial enrollment if available
+  4. If inaccessible: FOLFOX (IND-CHOLANGIO-2L-FOLFOX-ABC06) as default
+  NGS testing for NTRK fusions available at major UA oncogenomics labs
+  (confirmed capability at Kyiv, Kharkiv centers as of 2025-2026).
+
+rationale_ua: >
+  Ларотректиніб 100 мг PO BID безперервно для NTRK-фузіонно-позитивної
+  холангіокарциноми / раку жовчовивідних шляхів ≥2L (NTRK1/2/3 злиття,
+  пухлинно-агностична FDA-реєстрація 2018; NCCN Cat 2A).
+  NAVIGATE (Drilon 2018 NEJM): ЧВ 75% по всіх солідних пухлинах; підгрупа
+  ЖВШ обмежена (<20 пацієнтів), але ефективність підтверджена.
+  ОБОВ'ЯЗКОВО: RNA-NGS підтвердження злиття NTRK1/2/3 перед призначенням;
+  DNA-NGS (fusion-aware) якщо RNA-NGS недоступний.
+  В Україні: ларотректиніб не зареєстрований → доступ через програму
+  named-patient Bayer або транскордонний. При недоступності → FOLFOX.
+  Перевірте CYP3A4-взаємодії перед призначенням.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не застосовувати без підтвердженого NTRK-злиття — без молекулярного базису препарат неефективний"
+  - "Не використовувати стандартний exome NGS замість fusion-aware панелі — більшість злиттів NTRK будуть пропущені"
+  - "Сильні інгібітори CYP3A4 (позаконазол, вориконазол, кларитроміцин) → знизити дозу або змінити схему"
+  - "Не ігнорувати жовтяницю або підвищення АЛТ/АСТ ≥Grade 3 — затримайте ларотректиніб до відновлення"
+  - "Не продовжувати без моніторингу ЛФТ щомісячно протягом перших 3 місяців"
+
+sources:
+  - source_id: SRC-NAVIGATE-DRILON-2018
+    position: supports
+    relevant_quote_paraphrase: >
+      Drilon et al. NEJM 2018 (NAVIGATE/SCOUT/phase-1 pooled):
+      ORR 75% (IRC) in 55 patients across 17 tumor types with NTRK fusion;
+      CR 13%, median DOR not reached at 9.4 mo, 1-year DOR rate 71%.
+      FDA tumor-agnostic approval November 2018. Larotrectinib highly
+      selective for TRKA/B/C; excellent tolerability (Grade ≥3 AE ~15%).
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Hepatobiliary Cancers 2025: larotrectinib (Category 2A)
+      for NTRK fusion-positive biliary tract cancer / cholangiocarcinoma
+      as a subsequent-line option. RNA-NGS testing recommended for
+      fusion detection given higher sensitivity vs DNA-NGS.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
