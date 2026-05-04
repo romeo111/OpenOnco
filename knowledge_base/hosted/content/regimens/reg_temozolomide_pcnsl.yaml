@@ -1,0 +1,74 @@
+id: REG-TEMOZOLOMIDE-PCNSL
+name: "Temozolomide (± rituximab) for relapsed/refractory PCNSL"
+name_ua: "Темозоломід (± ритуксимаб) для рецидивної/рефрактерної ПЛЦНС"
+alternate_names: ["TMZ PCNSL", "R-TMZ PCNSL", "temozolomide PCNSL"]
+components:
+  - drug_id: DRUG-TEMOZOLOMIDE
+    dose: "150 mg/m² PO once daily days 1-5"
+    schedule: "Days 1-5 of each 28-day cycle"
+    route: PO
+    notes: >
+      Standard 5-day q28d schedule (same as recurrent GBM; established
+      for PCNSL in Enting 2004 and Reni 2004 series). Dose escalation
+      to 200 mg/m² d1-5 q28d if cycle 1 tolerated without Grade ≥3 toxicity
+      (per GBM dose-escalation protocol — applies in PCNSL at MDT discretion).
+      Take on empty stomach or with light meal; avoid high-fat meal (reduces
+      peak concentration). Antiemetic prophylaxis mandatory (emetic risk
+      moderate — NK1 antagonist preferred).
+      MGMT testing optional in PCNSL (not required for dosing; exploratory).
+  - drug_id: DRUG-RITUXIMAB
+    dose: "375 mg/m² IV day 1 (optional add-on when CD20-positive + accessible)"
+    schedule: "Day 1 q28d (MDT decision; optional)"
+    route: IV
+    optional: true
+    notes: >
+      Rituximab add-on (R-TMZ) when CD20-positive histology confirmed and
+      rituximab accessible. Evidence from Reni 2004 Cancer series (R-TMZ;
+      n=15; ORR 53%) vs TMZ mono (Enting 2004; ORR ~31%).
+      If rituximab inaccessible or CD20-negative → TMZ monotherapy alone.
+      HBV reactivation screening mandatory before rituximab (HBsAg + anti-HBc).
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity; no fixed cap; continue in responders up to 6-12 cycles (MDT)"
+toxicity_profile: low
+premedication:
+  - "Ondansetron 8 mg PO or IV 30 min before temozolomide (moderate emetogenic potential)"
+  - "Dexamethasone 4 mg PO if antiemetic escalation needed"
+  - "Rituximab (if used): acetaminophen 650 mg + diphenhydramine 25-50 mg IV pre-infusion (IRR prophylaxis)"
+mandatory_supportive_care:
+  - "PJP prophylaxis: TMP-SMX 160/800 mg PO 3×/week for duration of treatment (temozolomide-induced lymphopenia; rituximab additive immunosuppression)"
+  - "CBC q2 weeks cycle 1, then q4 weeks: temozolomide → delayed myelosuppression nadir at day 21-28"
+  - "LFT + CMP baseline and q2 cycles: temozolomide → hepatotoxicity (usually mild)"
+  - "HBV screening (HBsAg + anti-HBc) before any rituximab-containing cycle; entecavir 0.5 mg/day if reactive"
+dose_adjustments:
+  - condition: "ANC <1.5×10⁹/L or PLT <100×10⁹/L on day 1 of next cycle"
+    modification: "Delay cycle 1 week; if recovery insufficient by day 35 → reduce TMZ to 125 mg/m²/day"
+  - condition: "Grade ≥3 non-hematologic toxicity (nausea/vomiting despite antiemetics, hepatotoxicity)"
+    modification: "Hold until Grade ≤1; restart at 125 mg/m²/day if Grade ≥3 recurs"
+  - condition: "CrCl 30-60 mL/min"
+    modification: "No dose adjustment required for temozolomide (primarily hepatic elimination); rituximab no adjustment"
+  - condition: "CrCl <30 mL/min"
+    modification: "Temozolomide can be used cautiously (less renally cleared than most alkylating agents); rituximab no adjustment"
+drug_interactions:
+  - "Valproic acid: induces CYP3A4, slightly reduces TMZ AUC (~5%); clinically minor but monitor"
+  - "CYP1A2/3A4 enzyme inducers (phenytoin, carbamazepine, phenobarbital): used in CNS tumor patients; may increase TMZ metabolism — monitor seizure control and ANC"
+  - "Antiemetics: serotonin syndrome risk with concurrent serotoninergic agents at high antiemetic doses — monitor"
+notes: >
+  Temozolomide for r/r PCNSL — positioned as third-line oral salvage when both
+  ibrutinib (BTKi; iLOC ORR 52%) and R² (lenalidomide+rituximab; ORR 36%) are
+  inaccessible or contraindicated. NCCN CNS 2025 Category 2B.
+
+  EVIDENCE BASE:
+  - Enting et al. 2004 (J Neurooncol): TMZ mono in r/r PCNSL; n=13; ORR ~31%;
+    mDOR ~5 months; well-tolerated; oral convenience
+  - Reni et al. 2004 (Cancer): R-TMZ (rituximab + TMZ) in r/r PCNSL; n=15;
+    ORR ~53%; mOS ~14 months in responders; combination preferred when CD20+
+
+  KEY BBB ADVANTAGE: Temozolomide is highly lipophilic; oral bioavailability ~100%;
+  CNS penetration ~20-40% of plasma levels — adequate for PCNSL tumor exposure.
+  This is superior to many IV chemotherapy agents that poorly cross the BBB.
+
+  UKRAINE ACCESS: Temozolomide registered and NSZU-reimbursed for brain tumors
+  (GBM/glioma). Off-label use for PCNSL (CNS lymphoma, not glioma) generally
+  accessible through brain tumor funding pathway with MDT authorization.
+
+last_reviewed: "2026-05-04"

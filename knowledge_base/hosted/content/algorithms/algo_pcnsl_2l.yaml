@@ -6,6 +6,7 @@ output_indications:
 - IND-PCNSL-2L-RMPV-SALVAGE
 - IND-PCNSL-2L-IBRUTINIB
 - IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB
+- IND-PCNSL-2L-TEMOZOLOMIDE
 default_indication: IND-PCNSL-2L-RMPV-SALVAGE
 alternative_indication: IND-PCNSL-2L-IBRUTINIB
 decision_tree:
@@ -52,14 +53,34 @@ decision_tree:
       CRITICAL: No therapeutic anticoagulation (ICH risk); CYP3A4 inhibitor interactions
       (azole antifungals → reduce ibrutinib to 140 mg/day).
   if_false:
+    next_step: 221
+  notes: "Step 22 updated 2026-05-04 (Workstream CG): ibrutinib-inaccessible path now routes to step 221 (R² access sub-gate) instead of direct R² result. R² remains the primary fallback; temozolomide added when R² also inaccessible/contraindicated."
+- step: 221
+  # Sub-step: R² (lenalidomide+rituximab) accessibility and eligibility check.
+  # R² requires: CD20+ histology, CrCl ≥30, REMS feasible, lenalidomide accessible.
+  # If R² not feasible → temozolomide (oral, BBB-penetrant, NSZU-funded for CNS tumors in UA).
+  evaluate:
+    all_of:
+      - condition: "CD20-positive histology confirmed AND CrCl ≥30 mL/min AND lenalidomide accessible (REMS feasible + formulary available) AND no prior lenalidomide failure"
+  if_true:
     result: IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB
     notes: >
-      Ibrutinib inaccessible (not registered in Ukraine as of 2026) OR prior ibrutinib
-      progression: R² (lenalidomide 20 mg/day d1-21 + rituximab 375 mg/m² d1 q28d;
-      REG-LENALIDOMIDE-RITUXIMAB-PCNSL; REAL/Rubenstein JCO 2018; ORR ~36%; NCCN Cat 2A).
-      Distinct mechanism (IMiD+CD20) from BTKi — active in ibrutinib-inaccessible setting.
-      MANDATORY: REMS enrollment + monthly pregnancy test; DVT prophylaxis; PJP prophylaxis.
-  notes: "Step 22 added 2026-05-04 (Workstream BR): ibrutinib access gate. R² (IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB) wired as ibrutinib-inaccessible fallback. Gap (2) CLOSED. Free-text access condition; MDT-evaluated."
+      Ibrutinib inaccessible but R² feasible: lenalidomide 20 mg/day d1-21 +
+      rituximab 375 mg/m² d1 q28d (REG-LENALIDOMIDE-RITUXIMAB-PCNSL; REAL/Rubenstein
+      JCO 2018; ORR ~36%; NCCN Cat 2A). Distinct IMiD+CD20 mechanism — active in
+      ibrutinib-inaccessible setting. MANDATORY: REMS enrollment + monthly pregnancy
+      test; DVT prophylaxis (aspirin/LMWH); PJP prophylaxis (TMP-SMX).
+  if_false:
+    result: IND-PCNSL-2L-TEMOZOLOMIDE
+    notes: >
+      Ibrutinib inaccessible AND R² not feasible (CD20-negative, CrCl <30, REMS
+      unavailable, lenalidomide inaccessible, or prior lenalidomide failure):
+      temozolomide 150 mg/m² PO d1-5 q28d ± rituximab (REG-TEMOZOLOMIDE-PCNSL;
+      Enting 2004 J Neurooncol; Reni 2004 Cancer; ORR ~31-53%; NCCN Cat 2B).
+      BBB-penetrant oral alkylating agent; NSZU-funded for brain tumors in Ukraine.
+      Add rituximab if CD20+ and accessible (R-TMZ; ORR ~53%).
+      PJP prophylaxis (TMP-SMX) mandatory; antiemetic before each TMZ dose.
+  notes: "Step 221 added 2026-05-04 (Workstream CG): R² eligibility/access sub-gate. R² if feasible; temozolomide (IND-PCNSL-2L-TEMOZOLOMIDE) if R² also inaccessible or contraindicated. Gap (4) CLOSED."
 - step: 3
   evaluate:
     all_of:
@@ -90,6 +111,8 @@ sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ILOC-SOUSSAIN-2019
 last_reviewed: '2026-05-04'
-notes: 'UPDATED 2026-05-04 (Workstream BR): IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB authored and wired at step 22 as ibrutinib-inaccessible fallback (REAL/Rubenstein JCO 2018; lenalidomide 20 mg/day d1-21 + rituximab 375 mg/m² d1 q28d; ORR ~36%; NCCN Cat 2A). Gap (2) CLOSED. Steps 1 and 2 if_true now route to step 22 (ibrutinib access gate). ROUTING SUMMARY: (1) HD-MTX-contraindicated/frail → step 22 (ibrutinib or R²); (2) MTX-refractory/early relapse → step 22 (ibrutinib or R²); (3) MTX-sensitive late relapse → R-MPV salvage; (fallback) → R-MPV salvage. UKRAINE: ibrutinib not registered for PCNSL → R² is the default ibrutinib-inaccessible path. OOS / wiring gaps: (1) IND-PCNSL-2L-AUTOSCT-CONSOLIDATION — not modeled. (3) WBRT palliative — ECOG ≥3; MDT free-text. (4) Temozolomide ± rituximab — not modeled. (5) PD-1 inhibitors — case series only. (6) Re-biopsy mandatory if imaging atypical. (7) reviewer_signoffs: 0.
+notes: 'UPDATED 2026-05-04 (Workstream BR): IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB authored and wired at step 22 as ibrutinib-inaccessible fallback (REAL/Rubenstein JCO 2018; lenalidomide 20 mg/day d1-21 + rituximab 375 mg/m² d1 q28d; ORR ~36%; NCCN Cat 2A). Gap (2) CLOSED. Steps 1 and 2 if_true now route to step 22 (ibrutinib access gate). ROUTING SUMMARY: (1) HD-MTX-contraindicated/frail → step 22 → step 221 (ibrutinib → R² → temozolomide); (2) MTX-refractory/early relapse → step 22 → step 221; (3) MTX-sensitive late relapse → R-MPV salvage; (fallback) → R-MPV salvage. UKRAINE: ibrutinib not registered for PCNSL → R² is the primary ibrutinib-inaccessible path; temozolomide (NSZU-funded for CNS tumors) is the R²-inaccessible fallback.
+  UPDATED 2026-05-04 (Workstream CG): IND-PCNSL-2L-TEMOZOLOMIDE authored and wired at step 221 (DRUG-TEMOZOLOMIDE; REG-TEMOZOLOMIDE-PCNSL; Enting 2004 J Neurooncol + Reni 2004 Cancer; ORR ~31-53%; NCCN Cat 2B). Step 22 if_false now routes to step 221 (R² access gate); step 221 if_false → temozolomide. Gap (4) CLOSED.
+  Remaining wiring gaps: (1) IND-PCNSL-2L-AUTOSCT-CONSOLIDATION — not modeled. (3) WBRT palliative — ECOG ≥3; MDT free-text. (5) PD-1 inhibitors — case series only; not guideline-standard. (6) Re-biopsy mandatory if imaging atypical.
 
   '
