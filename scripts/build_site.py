@@ -471,11 +471,24 @@ def bundle_examples(output_dir: Path) -> dict:
     """
     payload = []
     manifest = []
+    unique_icd_to_disease_id = _unique_questionnaire_icd_to_disease_id_map()
     for c in CASES:
         p = EXAMPLES / c.file
         if not p.exists():
             continue
         ex_json = json.loads(p.read_text(encoding="utf-8"))
+        disease = ex_json.get("disease", {}) if isinstance(ex_json, dict) else {}
+        disease_icd = disease.get("icd_o_3_morphology")
+        disease_id = (
+            disease.get("id")
+            or ex_json.get("disease_id")
+            or unique_icd_to_disease_id.get(str(disease_icd))
+        )
+        if disease_id and isinstance(ex_json, dict):
+            ex_json.setdefault("disease_id", disease_id)
+            disease = ex_json.setdefault("disease", {})
+            if isinstance(disease, dict):
+                disease.setdefault("id", disease_id)
         # Both UA and EN labels travel in the manifest so the inlined
         # JS constant on /try.html (UA) vs /ukr/try.html — wait, EN is
         # at root → /try.html serves EN labels — can pick the right
@@ -485,6 +498,7 @@ def bundle_examples(output_dir: Path) -> dict:
             "case_id": c.case_id,
             "label": c.label_ua,
             "label_en": label_en,
+            "disease_id": disease_id,
             "file": c.file,
             "json": ex_json,
         })
@@ -492,10 +506,8 @@ def bundle_examples(output_dir: Path) -> dict:
             "case_id": c.case_id,
             "label": c.label_ua,
             "label_en": label_en,
-            "disease_icd": (
-                ex_json.get("disease", {}).get("icd_o_3_morphology")
-                if isinstance(ex_json, dict) else None
-            ),
+            "disease_id": disease_id,
+            "disease_icd": disease_icd,
         })
     out = output_dir / "examples.json"
     out.write_text(
@@ -644,9 +656,9 @@ def bundle_questionnaires(output_dir: Path) -> dict:
     JSON file at docs/questionnaires.json + thin manifest for /try.html.
 
     Manifest carries only the dropdown-needed fields (id + title +
-    disease_icd) — ~30× smaller than the full payload — so /try.html
-    populates dropdowns instantly. Full payload is lazy-fetched only
-    after the user selects a questionnaire.
+    disease_id + disease_icd) — ~30× smaller than the full payload — so
+    /try.html populates dropdowns instantly. Full payload is lazy-fetched
+    only after the user selects a questionnaire.
 
     Each questionnaire is post-processed by `_inject_common_screening`
     so universal fields (LVEF, TB, child-pugh, etc.) appear without
@@ -666,6 +678,7 @@ def bundle_questionnaires(output_dir: Path) -> dict:
                     manifest.append({
                         "id": data.get("id"),
                         "title": data.get("title"),
+                        "disease_id": data.get("disease_id"),
                         "disease_icd": (
                             (data.get("fixed_fields") or {})
                             .get("disease", {})
@@ -1268,6 +1281,38 @@ def _questionnaire_icd_o_3_codes() -> set:
     return codes
 
 
+def _unique_questionnaire_icd_to_disease_id_map() -> dict[str, str]:
+    """Return ICD→disease_id only for ICDs that identify exactly one
+    try-page questionnaire disease.
+
+    Several oncology entities share broad morphology codes (8070/3,
+    8140/3, 8500/3, 9680/3, 9699/3). Those codes are useful as secondary
+    hints but must not be promoted to disease_id for example filtering,
+    otherwise the try page can show an HNSCC example under cervical, etc.
+    """
+    qsrc = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "questionnaires"
+    by_icd: dict[str, set[str]] = {}
+    if not qsrc.is_dir():
+        return {}
+    import yaml as _yaml
+    for path in qsrc.glob("*.yaml"):
+        try:
+            data = _yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        did = (data or {}).get("disease_id")
+        code = (
+            ((data or {}).get("fixed_fields") or {}).get("disease") or {}
+        ).get("icd_o_3_morphology")
+        if did and code:
+            by_icd.setdefault(str(code), set()).add(str(did).upper())
+    return {
+        code: next(iter(dids))
+        for code, dids in by_icd.items()
+        if len(dids) == 1
+    }
+
+
 def _case_has_questionnaire(case: CaseEntry, codes: set) -> bool:
     """True if the case's example JSON has a disease ICD-O-3 code that
     matches a curated questionnaire."""
@@ -1662,9 +1707,8 @@ def render_try(
     {'Fill in a short questionnaire for a specific disease — the in-browser engine (Pyodide) shows you immediately which fields move the plan. <strong>No real patient data.</strong> Drafts are stored in your browser localStorage.' if target_lang == 'en' else 'Заповни короткий опитувальник по конкретній хворобі — engine у браузері (Pyodide) одразу показує які поля тригерять зміну плану. <strong>Жодних реальних пацієнтських даних.</strong> Чернетка зберігається у browser localStorage.'}
   </p>
 
-  <!-- Top status banner — prominent, sticky-ish, animated while loading
-       so the user sees that something is happening even when the engine
-       is mid-fetch. Mirrors the smaller #status in the sidebar. -->
+  <!-- Top status banner stays for loading/warnings. Success messages live in
+       the lower status area so examples do not push the questionnaire down. -->
   <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
     <span class="status-top-spinner" aria-hidden="true"></span>
     <span class="status-top-text">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</span>
@@ -1741,7 +1785,6 @@ def render_try(
 
   <div class="quest-grid">
     <section class="quest-form-pane" id="formPane">
-      <div id="questIntro" class="quest-intro" hidden></div>
       <div id="exampleLockBanner" class="example-lock-banner" hidden>
         <div class="elb-text">
           <strong>📋 {'Example loaded.' if target_lang == 'en' else 'Завантажено приклад.'}</strong>
@@ -1755,6 +1798,7 @@ def render_try(
       <div id="questEmpty" class="quest-empty">
         {'Pick a disease from the list above to start the questionnaire.' if target_lang == 'en' else 'Оберіть хворобу зі списку вище, щоб почати опитування.'}
       </div>
+      <div id="questIntro" class="quest-intro" hidden></div>
     </section>
 
     <section class="quest-form-pane" id="jsonPane" hidden>
@@ -2008,7 +2052,7 @@ let activeExampleCaseId = null;
 function setStatus(msg, kind = 'info', topMode = 'auto') {{
   status.textContent = msg;
   status.dataset.kind = kind;
-  // Mirror to the prominent top banner.
+  // Mirror important transient states to the prominent top banner.
   //  topMode='busy'  → spinner, blue
   //  topMode='ok'    → green ✓
   //  topMode='warn'  → amber
@@ -2017,7 +2061,7 @@ function setStatus(msg, kind = 'info', topMode = 'auto') {{
   if (!statusTop || !statusTopText) return;
   let mode = topMode;
   if (mode === 'auto') {{
-    if (kind === 'ok') mode = 'ok';
+    if (kind === 'ok') mode = 'hide';
     else if (kind === 'warn') mode = 'warn';
     else if (!msg) mode = 'hide';
     else mode = 'busy';
@@ -3381,25 +3425,29 @@ async function loadAssets() {{
 }}
 
 // ── Examples filtering by selected disease ────────────────────────────────
-// We narrow the example dropdown to those whose disease.icd_o_3_morphology
-// matches the active questionnaire — otherwise the picker overwhelms with
-// 35 cases for which we don't have a form.
+// We narrow the example dropdown to the active questionnaire disease.
+// Match by disease_id first: ICD-O morphology is not unique enough
+// (e.g. 8070/3 spans cervical, esophageal, and HNSCC examples).
 function repopulateExamples(activeQuestIdx) {{
   // Filter from manifest only — no need to await full examples payload
-  // just to populate a dropdown (manifest carries label + disease_icd).
-  const wantCode = activeQuestIdx == null
+  // just to populate a dropdown (manifest carries label + disease_id).
+  const activeQuestManifest = activeQuestIdx == null
     ? null
-    : (QUESTIONNAIRES_MANIFEST[activeQuestIdx] || {{}}).disease_icd;
+    : (QUESTIONNAIRES_MANIFEST[activeQuestIdx] || {{}});
+  const wantDiseaseId = activeQuestManifest && activeQuestManifest.disease_id;
+  const wantCode = activeQuestManifest && activeQuestManifest.disease_icd;
   exampleSelect.innerHTML = '';
   const placeholder = document.createElement('option');
   placeholder.value = '';
-  placeholder.textContent = wantCode == null
+  placeholder.textContent = wantDiseaseId == null && wantCode == null
     ? '{"— select an example —" if target_lang == "en" else "— оберіть приклад —"}'
     : '{"— select an example for this disease —" if target_lang == "en" else "— оберіть приклад для цієї хвороби —"}';
   exampleSelect.appendChild(placeholder);
   let n = 0;
   EXAMPLES_MANIFEST.forEach((ex, i) => {{
-    if (wantCode != null) {{
+    if (wantDiseaseId != null) {{
+      if (ex.disease_id !== wantDiseaseId) return;
+    }} else if (wantCode != null) {{
       if (ex.disease_icd !== wantCode) return;
     }}
     const opt = document.createElement('option');
@@ -3408,7 +3456,7 @@ function repopulateExamples(activeQuestIdx) {{
     exampleSelect.appendChild(opt);
     n++;
   }});
-  if (wantCode != null && n === 0) {{
+  if ((wantDiseaseId != null || wantCode != null) && n === 0) {{
     const noneOpt = document.createElement('option');
     noneOpt.value = '';
     noneOpt.disabled = true;
@@ -3440,9 +3488,16 @@ diseaseSelect.addEventListener('change', async () => {{
 }});
 
 function findQuestionnaireForProfile(profile) {{
-  // Match by ICD-O-3 morphology — manifest carries disease_icd, no need
-  // to wait for full questionnaires payload.
-  const code = profile && profile.disease && profile.disease.icd_o_3_morphology;
+  // Match by explicit disease_id first, then ICD-O-3 morphology. The
+  // disease_id path is required for diseases with shared ICD-O codes.
+  const disease = profile && profile.disease ? profile.disease : {{}};
+  const diseaseId = (disease.id || (profile && profile.disease_id) || '').toString();
+  if (diseaseId.startsWith('DIS-')) {{
+    const normalized = diseaseId.toUpperCase();
+    const byId = QUESTIONNAIRES_MANIFEST.findIndex(q => q.disease_id === normalized);
+    if (byId >= 0) return byId;
+  }}
+  const code = disease.icd_o_3_morphology;
   if (!code) return -1;
   return QUESTIONNAIRES_MANIFEST.findIndex(q => q.disease_icd === code);
 }}
