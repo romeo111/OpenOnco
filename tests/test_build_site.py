@@ -16,6 +16,7 @@ import zipfile
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.build_site import CASES, build_site
 
@@ -243,6 +244,52 @@ def test_examples_payload_matches_cases(site_dir: Path):
         assert isinstance(entry["json"], dict)
         # Engine-required top-level fields exist for non-diagnostic patients
         # (diagnostic patients have a different shape)
+
+
+def test_try_examples_cover_every_questionnaire_disease(site_dir: Path):
+    """Every disease shown in /try.html must have at least one disease-owned
+    example in the picker.
+
+    The picker must not rely on ICD-O morphology alone: several distinct
+    diseases share broad morphology codes, so the thin manifests carry
+    disease_id and the JS filters on that first.
+    """
+    examples = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
+    questionnaires = json.loads((site_dir / "questionnaires.json").read_text(encoding="utf-8"))
+
+    example_disease_ids = {
+        entry.get("disease_id")
+        for entry in examples
+        if entry.get("disease_id")
+    }
+    questionnaire_disease_ids = {
+        q.get("disease_id")
+        for q in questionnaires
+        if q.get("disease_id")
+    }
+    hosted_disease_ids = {
+        (yaml.safe_load(path.read_text(encoding="utf-8")) or {}).get("id")
+        for path in Path("knowledge_base/hosted/content/diseases").glob("*.yaml")
+    }
+    hosted_disease_ids.discard(None)
+
+    assert hosted_disease_ids <= questionnaire_disease_ids
+    assert questionnaire_disease_ids <= example_disease_ids
+    for entry in examples:
+        did = entry.get("disease_id")
+        if did not in questionnaire_disease_ids:
+            continue
+        profile = entry.get("json") or {}
+        profile_did = (
+            (profile.get("disease") or {}).get("id")
+            or profile.get("disease_id")
+        )
+        assert profile_did == did, entry["case_id"]
+
+    html = (site_dir / "try.html").read_text(encoding="utf-8")
+    assert '"disease_id":' in html
+    assert "ex.disease_id !== wantDiseaseId" in html
+    assert "ICD-O morphology is not unique enough" in html
 
 
 # ── Per-case files ────────────────────────────────────────────────────────
