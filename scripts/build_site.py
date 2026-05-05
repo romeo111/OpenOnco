@@ -1707,9 +1707,8 @@ def render_try(
     {'Fill in a short questionnaire for a specific disease — the in-browser engine (Pyodide) shows you immediately which fields move the plan. <strong>No real patient data.</strong> Drafts are stored in your browser localStorage.' if target_lang == 'en' else 'Заповни короткий опитувальник по конкретній хворобі — engine у браузері (Pyodide) одразу показує які поля тригерять зміну плану. <strong>Жодних реальних пацієнтських даних.</strong> Чернетка зберігається у browser localStorage.'}
   </p>
 
-  <!-- Top status banner — prominent, sticky-ish, animated while loading
-       so the user sees that something is happening even when the engine
-       is mid-fetch. Mirrors the smaller #status in the sidebar. -->
+  <!-- Top status banner stays for loading/warnings. Success messages live in
+       the lower status area so examples do not push the questionnaire down. -->
   <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
     <span class="status-top-spinner" aria-hidden="true"></span>
     <span class="status-top-text">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</span>
@@ -1786,7 +1785,6 @@ def render_try(
 
   <div class="quest-grid">
     <section class="quest-form-pane" id="formPane">
-      <div id="questIntro" class="quest-intro" hidden></div>
       <div id="exampleLockBanner" class="example-lock-banner" hidden>
         <div class="elb-text">
           <strong>📋 {'Example loaded.' if target_lang == 'en' else 'Завантажено приклад.'}</strong>
@@ -1800,6 +1798,7 @@ def render_try(
       <div id="questEmpty" class="quest-empty">
         {'Pick a disease from the list above to start the questionnaire.' if target_lang == 'en' else 'Оберіть хворобу зі списку вище, щоб почати опитування.'}
       </div>
+      <div id="questIntro" class="quest-intro" hidden></div>
     </section>
 
     <section class="quest-form-pane" id="jsonPane" hidden>
@@ -2053,7 +2052,7 @@ let activeExampleCaseId = null;
 function setStatus(msg, kind = 'info', topMode = 'auto') {{
   status.textContent = msg;
   status.dataset.kind = kind;
-  // Mirror to the prominent top banner.
+  // Mirror important transient states to the prominent top banner.
   //  topMode='busy'  → spinner, blue
   //  topMode='ok'    → green ✓
   //  topMode='warn'  → amber
@@ -2062,7 +2061,7 @@ function setStatus(msg, kind = 'info', topMode = 'auto') {{
   if (!statusTop || !statusTopText) return;
   let mode = topMode;
   if (mode === 'auto') {{
-    if (kind === 'ok') mode = 'ok';
+    if (kind === 'ok') mode = 'hide';
     else if (kind === 'warn') mode = 'warn';
     else if (!msg) mode = 'hide';
     else mode = 'busy';
