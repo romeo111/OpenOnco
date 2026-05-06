@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IDH1 / IDH2 mutation status - OpenOnco</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+.kb-page { padding-top: 34px; }
+.kb-page h1 { font-family: var(--font-display); font-size: 38px; color: var(--green-900); margin-bottom: 10px; }
+.kb-page h2 { font-family: var(--font-display); color: var(--green-900); font-size: 24px; margin: 30px 0 12px; }
+.kb-page h3 { color: var(--green-900); font-size: 17px; margin: 18px 0 8px; }
+.kb-lead { color: var(--gray-700); font-size: 16px; max-width: 880px; margin-bottom: 22px; }
+.kb-breadcrumb { font-size: 13px; margin-bottom: 12px; color: var(--gray-500); }
+.kb-info-box { background: white; border: 1px solid var(--green-100); border-left: 5px solid var(--green-700); border-radius: 7px; padding: 13px 15px; color: var(--gray-700); margin: 18px 0 20px; max-width: 920px; }
+.kb-info-box strong { color: var(--green-900); }
+.kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
+.kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
+.kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
+.kb-search-label { display: block; font-weight: 700; margin-bottom: 7px; }
+.kb-search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: stretch; }
+.kb-search { width: 100%; border: 1px solid var(--gray-200); border-radius: 7px; padding: 13px 14px; font-size: 16px; background: white; }
+.kb-search-btn { min-width: 118px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 7px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+.kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 22px; }
+.kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
+.kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
+.kb-results { display: grid; gap: 8px; }
+.kb-result { display: grid; grid-template-columns: 105px 1fr auto; gap: 10px; align-items: baseline; background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 12px; text-decoration: none; color: var(--gray-900); }
+.kb-result:hover { border-color: var(--green-600); }
+.kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
+.kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
+.kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
+.kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
+.kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
+.kb-muted { color: var(--gray-500); }
+.kb-entity ul { padding-left: 22px; }
+.kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
+.kb-faq { margin-top: 36px; }
+.kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
+.kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
+@media (max-width: 700px) {
+  .kb-search-row { grid-template-columns: 1fr; }
+  .kb-search-btn { min-height: 44px; }
+  .kb-result { grid-template-columns: 1fr; }
+  .kb-result small { grid-column: auto; }
+  .kb-facts th { width: auto; display: block; border-bottom: 0; }
+  .kb-facts td { display: block; }
+}
+</style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="brand-line"><a class="brand-mini" href="/">OpenOnco</a></div>
+    <nav class="top-nav">
+      <a href="/">Home</a>
+      <a href="/kb.html" class="active">KB Search</a>
+      <a href="/diseases.html">Diseases</a>
+      <a href="/gallery.html">Examples</a>
+      <a href="/capabilities.html">Capabilities</a>
+      <a href="/specs.html">Specs</a>
+    </nav>
+    <div class="top-right"><a class="btn-cta-try" href="/try.html">Try it</a></div>
+  </header>
+  <main class="kb-page kb-entity">
+  <p class="kb-breadcrumb"><a href="/kb.html">KB Search</a> / Biomarker</p>
+  <h1>IDH1 / IDH2 mutation status</h1>
+  <p class="kb-lead">Deterministic view of the source YAML entity. Clinical authority remains with the cited source IDs and reviewer sign-off state.</p>
+  <table class="kb-facts"><tr><th>ID</th><td><code>BIO-IDH-MUTATION</code></td></tr>
+<tr><th>Type</th><td>Biomarker</td></tr>
+<tr><th>Aliases</th><td>IDH mutation, IDH-mutant, Статус мутацій IDH1 / IDH2</td></tr>
+<tr><th>Status</th><td>reviewed 2026-04-26</td></tr>
+<tr><th>File</th><td><code>knowledge_base/hosted/content/biomarkers/bio_idh_mutation.yaml</code></td></tr>
+<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="EANO Guidelines on Diagnosis and Treatment of Diffuse Gliomas of Adulthood"><code>SRC-EANO-GBM-2024</code></span> <span class="kb-chip" title="NCCN Central Nervous System Cancers"><code>SRC-NCCN-CNS-2025</code></span></td></tr></table>
+  <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>gene_mutation</td></tr>
+<tr><th>Mutation details</th><td>{&quot;functional_impact&quot;: &quot;neomorphic — produces oncometabolite 2-HG, alters DNA + histone methylation&quot;, &quot;gene&quot;: &quot;IDH1, IDH2&quot;, &quot;hotspots&quot;: [&quot;IDH1 R132H/C/G/L/S&quot;, &quot;IDH2 R140Q/W, R172K/G/M/W/S&quot;], &quot;variant_type&quot;: &quot;missense (gain-of-function)&quot;}</td></tr>
+<tr><th>Measurement</th><td>{&quot;method&quot;: &quot;IHC (R132H-specific antibody for screening) + NGS/PCR for non-canonical variants&quot;, &quot;units&quot;: &quot;categorical: IDH-mutant (specify variant) | IDH-WT&quot;}</td></tr>
+<tr><th>Related biomarkers</th><td><span class="kb-muted">None declared</span></td></tr></table>
+  
+  <h2>Used By</h2>
+<h3>Actionability</h3><ul><li><code>BMA-IDH-MUTATION-GLIOMA-LOW-GRADE</code> - IDH1/IDH2 mutation is the defining molecular feature of WHO grade 2 (and 3) diffuse gliom... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh_mutation_glioma_low_grade.yaml)</span></li><li><code>BMA-IDH1-R132-CHOLANGIO</code> - IDH1 R132 hotspot mutations occur in ~13-20% of intrahepatic cholangiocarcinoma and are F... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132_cholangio.yaml)</span></li><li><code>BMA-IDH1-R132C-AML</code> - IDH1 R132C — same therapeutic implications as R132H; ivosidenib targets all R132 variants. <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132c_aml.yaml)</span></li><li><code>BMA-IDH1-R132C-GBM</code> - IDH1 R132C in glioma — non-canonical; same therapeutic implications as R132H (vorasidenib... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132c_gbm.yaml)</span></li><li><code>BMA-IDH1-R132G-AML</code> - IDH1 R132G — covered by IDH1-mut label (any R132). <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132g_aml.yaml)</span></li><li><code>BMA-IDH1-R132G-GBM</code> - IDH1 R132G — covered by IDH-mut glioma vorasidenib label. <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132g_gbm.yaml)</span></li><li><code>BMA-IDH1-R132H-AML</code> - IDH1 R132 mutations (~6-10% of AML). Ivosidenib monotherapy (AGILE, Montesinos et al. NEJ... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132h_aml.yaml)</span></li><li><code>BMA-IDH1-R132H-B-ALL</code> - IDH1 mutation in B-ALL is rare. Tissue-agnostic ivosidenib not approved in lymphoid; per... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132h_b_all.yaml)</span></li><li><code>BMA-IDH1-R132H-DLBCL-NOS</code> - IDH1 R132H in DLBCL is exceptional (&lt;1%). No targeted therapy in this indication; per usu... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132h_dlbcl_nos.yaml)</span></li><li><code>BMA-IDH1-R132H-GBM</code> - IDH1 R132H — defines IDH-mutant astrocytoma (WHO 2021 grade 2-4) and oligodendroglioma (w... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132h_gbm.yaml)</span></li><li><code>BMA-IDH1-R132H-MDS-HR</code> - IDH1 R132 in MDS — ivosidenib monotherapy active (DiNardo et al. JCO 2021 — ORR 75% MDS,... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132h_mds_hr.yaml)</span></li><li><code>BMA-IDH1-R132H-MDS-LR</code> - IDH1 R132 in MDS — ivosidenib monotherapy active (DiNardo et al. JCO 2021 — ORR 75% MDS,... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132h_mds_lr.yaml)</span></li><li><code>BMA-IDH1-R132L-AML</code> - IDH1 R132L — covered by IDH1-mut label. <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132l_aml.yaml)</span></li><li><code>BMA-IDH1-R132L-GBM</code> - IDH1 R132L — covered by vorasidenib. <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132l_gbm.yaml)</span></li><li><code>BMA-IDH1-R132S-AML</code> - IDH1 R132S — covered by IDH1-mut label. <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132s_aml.yaml)</span></li><li><code>BMA-IDH1-R132S-GBM</code> - IDH1 R132S — covered by vorasidenib. <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132s_gbm.yaml)</span></li><li><code>BMA-IDH2-R140Q-AITL</code> - IDH2 R140Q in AITL — much less common than R172 in T-cell lymphoma (myeloid pattern). Ena... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh2_r140q_aitl.yaml)</span></li><li><code>BMA-IDH2-R140Q-AML</code> - IDH2 R140Q (~5-9% of AML). Enasidenib (IDHIFA, AG221-C-001 Stein et al. Blood 2017) FDA-a... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh2_r140q_aml.yaml)</span></li><li><code>BMA-IDH2-R140Q-DLBCL-NOS</code> - IDH2 R140Q in DLBCL is exceptional (&lt;1%). No targeted therapy in this indication; per usu... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh2_r140q_dlbcl_nos.yaml)</span></li><li><code>BMA-IDH2-R140Q-MDS-HR</code> - IDH2 R140Q in MDS — enasidenib monotherapy active in MDS (NCT01915498, DiNardo et al. Blo... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh2_r140q_mds_hr.yaml)</span></li><li><code>BMA-IDH2-R140Q-MDS-LR</code> - IDH2 R140Q in MDS — enasidenib monotherapy active in MDS (NCT01915498, DiNardo et al. Blo... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh2_r140q_mds_lr.yaml)</span></li><li><code>BMA-IDH2-R140Q-T-ALL</code> - IDH2 mutation in T-ALL is rare. Standard T-ALL protocol; enasidenib off-label R/R conside... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh2_r140q_t_all.yaml)</span></li><li><code>BMA-IDH2-R172K-AITL</code> - IDH2 R172 mutations occur in ~30% of AITL (TFH-derived PTCL). Enasidenib monotherapy acti... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh2_r172k_aitl.yaml)</span></li><li><code>BMA-IDH2-R172K-AML</code> - IDH2 R172K — slightly different metabolic profile but same enasidenib indication. <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh2_r172k_aml.yaml)</span></li><li><code>BMA-IDH2-R172K-MDS-HR</code> - IDH2 R172K in MDS — same enasidenib rationale as R140Q. <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh2_r172k_mds_hr.yaml)</span></li><li><code>BMA-IDH2-R172K-MDS-LR</code> - IDH2 R172K in MDS — same enasidenib rationale as R140Q. <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_idh2_r172k_mds_lr.yaml)</span></li></ul>
+<h3>Biomarker</h3><ul><li><code>BIO-IDH1-R132C</code> - IDH1 R132C mutation (glioma / cholangiocarcinoma / AML) <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_idh1_r132c.yaml)</span></li><li><code>BIO-IDH1-R132G</code> - IDH1 R132G mutation (glioma / AML) <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_idh1_r132g.yaml)</span></li><li><code>BIO-IDH1-R132H</code> - IDH1 R132H mutation (glioma / AML) <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_idh1_r132h.yaml)</span></li><li><code>BIO-IDH2-R140Q</code> - IDH2 R140Q mutation (AML) <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_idh2_r140q.yaml)</span></li><li><code>BIO-IDH2-R172K</code> - IDH2 R172K mutation (AML) <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_idh2_r172k.yaml)</span></li></ul>
+<h3>Diseases</h3><ul><li><code>DIS-CHOLANGIOCARCINOMA</code> - Cholangiocarcinoma (bile duct cancer) <span class="kb-muted">(knowledge_base/hosted/content/diseases/cholangiocarcinoma.yaml)</span></li><li><code>DIS-CHONDROSARCOMA</code> - Chondrosarcoma <span class="kb-muted">(knowledge_base/hosted/content/diseases/chondrosarcoma.yaml)</span></li><li><code>DIS-GLIOMA-LOW-GRADE</code> - Low-grade glioma (LGG, WHO grade 2 — IDH-mutant) <span class="kb-muted">(knowledge_base/hosted/content/diseases/glioma_low_grade.yaml)</span></li></ul>
+<h3>Indications</h3><ul><li><code>IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT</code> - IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_gbm_newly_diagnosed_elderly_hyport.yaml)</span></li><li><code>IND-GBM-NEWLY-DIAGNOSED-ELDERLY-TMZ</code> - IND-GBM-NEWLY-DIAGNOSED-ELDERLY-TMZ <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_gbm_newly_diagnosed_elderly_tmz.yaml)</span></li><li><code>IND-GBM-NEWLY-DIAGNOSED-STUPP</code> - IND-GBM-NEWLY-DIAGNOSED-STUPP <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_gbm_newly_diagnosed_stupp.yaml)</span></li></ul>
+<h3>Questionnaires</h3><ul><li><code>QUEST-GBM-1L-STUB</code> - Glioblastoma — first line (auto-generated STUB) <span class="kb-muted">(knowledge_base/hosted/content/questionnaires/quest_gbm_1l.yaml)</span></li></ul>
+<h3>Red flag</h3><ul><li><code>RF-CHONDROSARCOMA-HIGH-RISK-BIOLOGY</code> - Adverse subtype or molecular feature in chondrosarcoma: dedifferentiated subtype (high-gr... <span class="kb-muted">(knowledge_base/hosted/content/redflags/rf_chondrosarcoma_high_risk_biology.yaml)</span></li></ul>
+</main>
+</body>
+</html>

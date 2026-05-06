@@ -35,7 +35,7 @@ def test_static_assets_present(site_dir: Path):
     # CSD-9C dropped monolithic openonco-engine.zip — replaced by core + per-disease + index.
     for f in (".nojekyll", "CNAME", "style.css", "index.html", "gallery.html",
               "try.html", "openonco-engine-core.zip", "openonco-engine-index.json",
-              "examples.json"):
+              "examples.json", "kb.html", "kb_search_index.json"):
         assert (site_dir / f).exists(), f"missing {f}"
 
 

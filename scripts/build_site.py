@@ -62,6 +62,7 @@ from knowledge_base.clients.ctgov_client import search_trials
 from knowledge_base import __version__ as OPENONCO_VERSION
 from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
 from knowledge_base.stats import collect_stats
+from scripts.build_kb_wiki import build_kb_wiki
 from scripts.site_cases import CASE_CATEGORIES, CASES, GALLERY_EXCLUDED_CASE_IDS, CaseEntry
 from scripts.site_styles import STYLESHEET as _STYLE_CSS
 
@@ -803,6 +804,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
     {extra_links}
+    <a href="/kb.html"{cls("kb")}>KB Search</a>
     <a href="{gallery_path}"{cls("gallery")}>{labels['gallery']}</a>
     <a href="https://github.com/{GH_REPO}" target="_blank" rel="noopener">GitHub</a>
   </nav>
@@ -7135,8 +7137,14 @@ def _build_all_cases_parallel(output_dir: Path) -> tuple[list[dict], list[dict]]
     if n_workers <= 1 or len(tasks) <= 2:
         results = [_build_one_case_worker(t) for t in tasks]
     else:
-        with ProcessPoolExecutor(max_workers=n_workers) as ex:
-            results = list(ex.map(_build_one_case_worker, tasks, chunksize=4))
+        try:
+            with ProcessPoolExecutor(max_workers=n_workers) as ex:
+                results = list(ex.map(_build_one_case_worker, tasks, chunksize=4))
+        except (OSError, PermissionError):
+            # Some sandboxed Windows runners forbid multiprocessing pipe
+            # creation. Serial rendering is slower but keeps the static build
+            # deterministic and usable in restricted environments.
+            results = [_build_one_case_worker(t) for t in tasks]
 
     uk = [r for r in results if r["lang"] == "uk"]
     en = [r for r in results if r["lang"] == "en"]
@@ -7273,6 +7281,7 @@ def build_site(output_dir: Path) -> dict:
 
     case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
     disease_coverage_payload = bundle_disease_coverage(output_dir)
+    kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
 
     return {
         "output_dir": str(output_dir),
@@ -7284,6 +7293,7 @@ def build_site(output_dir: Path) -> dict:
         "examples_payload": examples_payload,
         "questionnaires_payload": questionnaires_payload,
         "disease_coverage_payload": disease_coverage_payload,
+        "kb_wiki_payload": kb_wiki_payload,
         "landing_assets": landing_assets,
     }
 
