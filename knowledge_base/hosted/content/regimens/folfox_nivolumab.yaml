@@ -17,8 +17,8 @@ components:
     schedule: "Day 1 bolus, day 1-2 CIV"
     route: IV
   - drug_id: DRUG-NIVOLUMAB
-    dose: "240 mg IV q2w (alternatively 480 mg IV q4w)"
-    schedule: "IV day 1 of each 14-d cycle"
+    dose: "360 mg IV q3w (CheckMate-649 primary protocol; FDA-approved flat-dose alternatives 240 mg IV q2w or 480 mg IV q4w)"
+    schedule: "Primary: 360 mg q3w aligned with XELOX 21-d cycle. Alternatives: 240 mg q2w aligned with FOLFOX 14-d cycle (day 1) or 480 mg q4w (every other FOLFOX cycle)"
     route: IV
 
 cycle_length_days: 14
@@ -88,11 +88,24 @@ between_visit_watchpoints:
 last_reviewed: "2026-04-26"
 
 notes: >
-  CheckMate-649: FOLFOX + nivo in PD-L1 CPS ≥5 (per FDA label) — mOS
-  benefit. Pembrolizumab + chemo (KEYNOTE-859) is a label-equivalent
-  alternative without strict CPS gating but practical CPS ≥1 cutoff.
-  HER2+ patients route to trastuzumab + chemo instead.
+  CheckMate-649: FOLFOX/XELOX + nivolumab. Canonical trial protocol used
+  nivolumab 360 mg IV q3w (aligned with XELOX 21-d cycle); FDA-approved
+  flat-dose alternatives 240 mg q2w (aligned with FOLFOX 14-d cycle) or
+  480 mg q4w (every other FOLFOX cycle). Primary endpoint at CPS ≥5 (mOS
+  14.4 vs 11.1, HR 0.71); preserved benefit at CPS 1-4 (HR 0.78).
+  Indication value_constraint reconciled to CPS ≥1 in GI-2 B1 chunk
+  (2026-05-04-2030); jurisdictional split (FDA: any CPS; EMA: ≥5;
+  NCCN v3.2025 + ESMO 2024: ≥1) surfaced via indication's
+  known_controversies block. Pembrolizumab + chemo (KEYNOTE-859) is a
+  label-equivalent alternative. HER2+ patients route to trastuzumab + chemo.
 notes_ua: >
-  CheckMate-649: FOLFOX + nivo in PD-L1 CPS ≥5 (per FDA label) — mOS виграш. пембролізумаб + chemo (KEYNOTE-859) is a label-еквівалентний alternative without strict CPS gating but practical CPS ≥1 cutoff. HER2+ patients route to трастузумаб + chemo instead.
+  CheckMate-649: FOLFOX/XELOX + ніволумаб. Канонічний протокол трайлу —
+  ніволумаб 360 мг в/в q3w (узгоджено з XELOX 21-денним циклом); FDA-схвалені
+  альтернативи фіксованої дози 240 мг q2w (узгоджено з FOLFOX 14-денним
+  циклом) або 480 мг q4w (кожен другий цикл FOLFOX). Первинна кінцева точка
+  при CPS ≥5 (мОВ 14.4 проти 11.1, HR 0.71); збережена користь при CPS 1-4
+  (HR 0.78). Поріг indication узгоджено до CPS ≥1 (chunk GI-2 B1, 2026-05-04-2030).
+  Пембролізумаб + хіміо (KEYNOTE-859) — альтернатива з еквівалентним лейблом.
+  HER2+ маршрутизуються на трастузумаб + хіміо.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
