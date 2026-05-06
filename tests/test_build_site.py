@@ -18,7 +18,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.build_site import CASES, GALLERY_EXCLUDED_CASE_IDS, build_site
+from scripts.build_site import CASES, GALLERY_EXCLUDED_CASE_IDS, build_site, render_diseases
 
 
 @pytest.fixture(scope="module")
@@ -38,6 +38,21 @@ def test_static_assets_present(site_dir: Path):
               "examples.json", "kb.html", "kb_search_index.json",
               "ukr/kb.html", "ukr/kb_search_index.json"):
         assert (site_dir / f).exists(), f"missing {f}"
+
+
+def test_ukrainian_diseases_page_localized_and_clean():
+    html = render_diseases(None, target_lang="uk")
+
+    assert "Недрібноклітинний рак легені" in html
+    assert "Біомарк." in html
+    assert "Преп." in html
+    assert "Показ." in html
+    assert "Трив. озн." in html
+    assert "STUB" not in html
+    assert "Hand-authored" not in html
+    assert "Clinical Co-Lead" not in html
+    assert "Сер. верифікація" not in html
+    assert html.index("Позначення в таблиці") < html.index("Покриття за хворобами")
 
 
 def test_cname_binds_custom_domain(site_dir: Path):
