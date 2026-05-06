@@ -2597,11 +2597,26 @@ def render_plan_html(
 
     plan = plan_result.plan
     if plan is None:
+        warnings = plan_result.warnings or []
+        if warnings:
+            warning_items = "".join(
+                f"<li><code>{_h(w)}</code></li>" for w in warnings
+            )
+            warning_html = (
+                "<p><strong>Engine details:</strong></p>"
+                f"<ul style='line-height:1.65'>{warning_items}</ul>"
+            )
+        else:
+            warning_html = (
+                "<p><strong>Engine details:</strong> "
+                "No specific warning was returned by the engine.</p>"
+            )
         return _doc_shell(
             "OpenOnco — no indications found",
             "<div style='padding:2rem 2.5rem;font-family:system-ui,sans-serif;max-width:52rem'>"
             "<h2 style='color:#c0392b;margin-top:0'>⚠ No treatment plan generated</h2>"
             "<p>The engine matched <strong>no active indications</strong> for this patient profile.</p>"
+            f"{warning_html}"
             "<p><strong>Common causes:</strong></p>"
             "<ul style='line-height:1.8'>"
             "<li>Disease not yet covered — check <a href='/diseases.html'>disease coverage</a></li>"

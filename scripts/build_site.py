@@ -1729,7 +1729,12 @@ def render_try(
        the lower status area so examples do not push the questionnaire down. -->
   <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
     <span class="status-top-spinner" aria-hidden="true"></span>
-    <span class="status-top-text">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</span>
+    <span class="status-top-body">
+      <span class="status-top-text">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</span>
+      <span class="status-top-progress" aria-hidden="true">
+        <span id="statusTopProgress" class="status-top-progress-fill"></span>
+      </span>
+    </span>
   </div>
 
   <div class="quest-toolbar" data-step-label="{'1. Pick a disease and (optionally) an example' if target_lang == 'en' else '1. Оберіть хворобу та (опційно) приклад'}">
@@ -1873,7 +1878,7 @@ def render_try(
         </button>
       </div>
 
-      <div id="status" class="status">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</div>
+      <div id="status" class="status is-busy">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</div>
       <div id="error" class="error" hidden></div>
     </aside>
   </div>
@@ -1963,6 +1968,7 @@ const STORAGE_KEY = 'openonco-try-draft-v1';
 const status = document.getElementById('status');
 const statusTop = document.getElementById('statusTop');
 const statusTopText = statusTop ? statusTop.querySelector('.status-top-text') : null;
+const statusTopProgress = document.getElementById('statusTopProgress');
 const errorBox = document.getElementById('error');
 const runBtn = document.getElementById('runBtn');
 const formatBtn = document.getElementById('formatBtn');
@@ -2102,15 +2108,30 @@ function setStatus(msg, kind = 'info', topMode = 'auto') {{
     else mode = 'busy';
   }}
   if (mode === 'hide' || !msg) {{
+    status.classList.remove('is-busy');
     statusTop.hidden = true;
+    clearLoadingProgress();
     return;
   }}
+  status.classList.toggle('is-busy', mode === 'busy');
   statusTop.hidden = false;
   statusTopText.textContent = msg;
   statusTop.dataset.kind = kind;
   statusTop.classList.toggle('is-busy', mode === 'busy');
   statusTop.classList.toggle('is-ok', mode === 'ok');
   statusTop.classList.toggle('is-warn', mode === 'warn');
+  if (mode !== 'busy') clearLoadingProgress();
+}}
+function setLoadingProgress(percent) {{
+  if (!statusTop || !statusTopProgress) return;
+  const pct = Math.max(0, Math.min(100, Number(percent) || 0));
+  statusTop.classList.add('has-progress');
+  statusTopProgress.style.setProperty('--status-progress', pct + '%');
+}}
+function clearLoadingProgress() {{
+  if (!statusTop || !statusTopProgress) return;
+  statusTop.classList.remove('has-progress');
+  statusTopProgress.style.removeProperty('--status-progress');
 }}
 function setError(msg) {{
   if (msg) {{
@@ -3062,6 +3083,7 @@ async function loadCoreBundle() {{
     throw new Error('Bundle index missing core entry — cannot load engine');
   }}
   setStatus('{"Loading the engine core (~1.4 MB)…" if target_lang == "en" else "Завантажую ядро двигуна (~1.4 МБ)…"}');
+  setLoadingProgress(62);
   const ver = bundleIndex.core_version || '';
   const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
@@ -3108,6 +3130,7 @@ async function loadDiseaseModule(diseaseId) {{
   }}
 
   setStatus('{"Loading module " if target_lang == "en" else "Завантажую модуль "}' + diseaseId + '…');
+  setLoadingProgress(86);
   const url = '/' + relUrl + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
   if (!r.ok) throw new Error('Disease module fetch HTTP ' + r.status + ' for ' + diseaseId);
@@ -3155,6 +3178,7 @@ async function ensureEngine() {{
     stage = 'pyodide';
     initStageStart(stage);
     setStatus('{"Loading Pyodide…" if target_lang == "en" else "Завантажую Pyodide…"}');
+    setLoadingProgress(18);
     await yieldToBrowser(50);
     const _loadPyodide = await ensurePyodideLoader();
     pyodide = await _loadPyodide({{indexURL: "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/"}});
@@ -3163,6 +3187,7 @@ async function ensureEngine() {{
     stage = 'pydeps';
     initStageStart(stage);
     setStatus('{"Installing pydantic + pyyaml…" if target_lang == "en" else "Встановлюю pydantic + pyyaml…"}');
+    setLoadingProgress(36);
     await yieldToBrowser(50);
     await pyodide.loadPackage(['micropip']);
     await yieldToBrowser();
@@ -3175,6 +3200,7 @@ await micropip.install(['pydantic', 'pyyaml'])
     stage = 'bundle';
     initStageStart(stage);
     setStatus('{"Loading the OpenOnco engine…" if target_lang == "en" else "Завантажую двигун OpenOnco…"}');
+    setLoadingProgress(54);
     await yieldToBrowser(50);
     // CSD-6E + CSD-9C: lazy-load core bundle (~1.4 MB). Monolithic
     // fallback retired (CSD-9C 2026-04-27) — the index + core + per-
@@ -3186,6 +3212,7 @@ await micropip.install(['pydantic', 'pyyaml'])
     stage = 'validate';
     initStageStart(stage);
     setStatus('{"Verifying the KB…" if target_lang == "en" else "Перевіряю базу…"}');
+    setLoadingProgress(78);
     await yieldToBrowser(50);
     const validationSummary = await pyodide.runPythonAsync(`
 from pathlib import Path
@@ -3206,6 +3233,7 @@ _summary
 `);
     initStageDone(stage);
     enginReady = true;
+    setLoadingProgress(100);
     if (validationSummary === 'ok') {{
       setStatus('{"Engine ready ✓" if target_lang == "en" else "Двигун готовий ✓"}', 'ok');
     }} else {{
@@ -3275,6 +3303,7 @@ async function runEngine() {{
     }}
     initStageStart('generate');
     setStatus('{"Building a personalised plan…" if target_lang == "en" else "Будую персональний план…"}');
+    setLoadingProgress(92);
     await yieldToBrowser(30);
     const _ooTPython = performance.now();
     try {{
@@ -3463,6 +3492,7 @@ function saveManifestsToCache() {{
 }}
 
 async function loadAssets() {{
+  setLoadingProgress(18);
   // Populate dropdowns from manifests — instant, no network fetch.
   diseaseSelect.innerHTML = '<option value="">{"— select —" if target_lang == "en" else "— оберіть —"}</option>';
   QUESTIONNAIRES_MANIFEST.forEach((q, i) => {{
@@ -3472,10 +3502,12 @@ async function loadAssets() {{
     diseaseSelect.appendChild(opt);
   }});
   saveManifestsToCache();
+  setLoadingProgress(55);
 
   // Examples selector — initial population shows all; narrows once a
   // disease is picked.
   repopulateExamples(null);
+  setLoadingProgress(72);
 
   // Restore draft. If the full questionnaire payload is unavailable, keep
   // the page usable from the inlined manifest instead of leaving the boot
@@ -3489,6 +3521,7 @@ async function loadAssets() {{
       try {{
         await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
           diseaseSelect.value = idx;
+          setLoadingProgress(82);
           // Draft restore needs full data — lazy-fetch now
           const fullList = await ensureQuestionnaires();
           renderForm(fullList[idx]);
@@ -3531,7 +3564,6 @@ async function loadAssets() {{
     updateRunBtnEnabled();
     updateImpactPanelLocal();
   }}
-
   // Engine is fully lazy now — Pyodide loads only when the user clicks
   // «Згенерувати». Form interaction stays Pyodide-free and snappy.
 }}
