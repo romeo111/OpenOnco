@@ -1,0 +1,82 @@
+id: BIO-MUM1-IHC
+names:
+  preferred: "MUM1/IRF4 IHC (Multiple Myeloma oncogene 1)"
+  synonyms:
+    - "IRF4 IHC"
+    - "MUM1 immunohistochemistry"
+    - "Interferon Regulatory Factor 4"
+    - "MUM1/IRF4 protein expression"
+
+biomarker_type: protein_expression_ihc
+
+mutation_details:
+  gene_symbol: IRF4
+  gene_id_ncbi: 3662
+  note: >
+    IRF4/MUM1 is a transcription factor expressed in post-germinal center B-cells,
+    plasma cells, T-cells (activated), and NK-cells. In DLBCL: MUM1 positivity
+    (>30% of tumor cells) in the Hans algorithm Step 3 context indicates non-GCB/ABC
+    subtype. Nuclear staining pattern.
+
+measurement:
+  method: >
+    IHC on FFPE biopsy. Anti-MUM1/IRF4 antibody (clone MUM1p).
+    Nuclear staining. Cut-off: >30% positive tumor cell nuclei = MUM1 positive.
+    Hans algorithm Step 3: when CD10 negative AND BCL6 positive — MUM1 determines
+    final COO: MUM1 >30% → non-GCB; MUM1 ≤30% → GCB.
+
+specimen_requirements:
+  tissue_type: "FFPE lymph node or extranodal biopsy"
+
+interpretation_notes: >
+  Hans algorithm Step 3 (final step):
+  Input: CD10- AND BCL6+ DLBCL
+  → MUM1 >30% → non-GCB (ABC) subtype
+  → MUM1 ≤30% → GCB subtype
+
+  Other hematologic contexts:
+  - Multiple myeloma / plasma cell neoplasms: MUM1/IRF4 strongly positive
+    (plasma cell differentiation marker)
+  - MALT lymphoma: variably positive
+  - ALCL: T-cell origin may express MUM1 (IRF4 rearrangement in ALCL subset —
+    see BIO-IRF4-REARRANGEMENT; poor prognosis in pediatric ALCL)
+  - Hairy cell leukemia: MUM1 negative (helps DDx vs HCL-variant)
+  - Cutaneous T-cell lymphoma: MUM1/IRF4 rearrangement = DUSP22/IRF4 in ALCL,
+    ALK-negative, associated with favorable prognosis (different from IRF4 protein IHC)
+
+  Note: MUM1/IRF4 IHC (protein) ≠ IRF4/MUM1 rearrangement/translocation (FISH/FISH).
+  This BIO records protein expression, not chromosomal events.
+
+related_biomarkers:
+  - BIO-CD10-IHC
+  - BIO-BCL6-IHC
+  - BIO-DLBCL-COO-HANS
+  - BIO-CD30-IHC
+
+external_ids:
+  hugo_gene_id: "3662"
+
+sources:
+  - source_id: SRC-NCCN-B-CELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-Cell Lymphomas 2025: Hans algorithm completion requires MUM1 IHC
+      as the final discriminator in BCL6+/CD10- DLBCL for GCB vs non-GCB assignment.
+
+notes: >
+  MUM1/IRF4 IHC completes the Hans algorithm for DLBCL COO classification.
+  The Hans algorithm has ~80% concordance with GEP (Lymph2Cx) for GCB/non-GCB
+  classification. Non-GCB DLBCL (by Hans) has historically worse prognosis with
+  R-CHOP and is the target of emerging combination therapies (e.g., lenalidomide
+  + R-CHOP = R²-CHOP in the Phoenix trial — showed benefit in young/fit non-GCB,
+  particularly non-GCB by COO). The Hans IHC panel (CD10, BCL6, MUM1) is recommended
+  in all DLBCL where molecular COO profiling is not available.
+
+notes_ua: >
+  MUM1/IRF4 IHC — крок 3 алгоритму Hans для ДВКЛ. Позитивність >30% при BCL6+/CD10-
+  = не-ГЦБ (АВС) підтип. АВС-ДВКЛ: гірший прогноз при R-CHOP; цільова група для
+  R²-CHOP (ленолідомід+R-CHOP). Також маркер плазматично-клітинної диференціації (ММ).
+
+last_reviewed: "2026-05-05"
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

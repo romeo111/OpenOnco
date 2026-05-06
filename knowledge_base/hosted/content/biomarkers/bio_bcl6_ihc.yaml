@@ -1,0 +1,79 @@
+id: BIO-BCL6-IHC
+names:
+  preferred: "BCL6 IHC (protein expression)"
+  synonyms:
+    - "BCL6 immunohistochemistry"
+    - "BCL-6 IHC"
+    - "BCL6 protein"
+    - "B-cell lymphoma 6 protein"
+
+biomarker_type: protein_expression_ihc
+
+mutation_details:
+  gene_symbol: BCL6
+  gene_id_ncbi: 604
+  note: >
+    BCL6 is a transcriptional repressor essential for germinal center (GC) B-cell
+    development. BCL6 IHC detects nuclear protein expression (not rearrangement).
+    Positive = nuclear staining. Threshold: >30% nuclear positivity typically
+    used as cut-off for GC-origin classification (Hans algorithm).
+    Note: BIO-BCL6-REARRANGEMENT is a distinct biomarker (chromosomal translocation
+    detected by FISH) — different from BCL6 protein expression by IHC.
+
+measurement:
+  method: >
+    IHC on FFPE biopsy. Anti-BCL6 antibody (clone PG-B6p). Nuclear staining scored
+    as % positive tumor cells. Hans algorithm threshold: >30% nuclei positive = BCL6+.
+    Automated scoring on digital pathology platforms increasingly used.
+
+specimen_requirements:
+  tissue_type: "FFPE lymph node or extranodal biopsy"
+
+interpretation_notes: >
+  Hans algorithm (Hans et al. Blood 2004) for DLBCL cell-of-origin classification:
+  Step 1: CD10 IHC — if ≥30% positive → GCB subtype
+  Step 2: if CD10 negative → BCL6 IHC — if <30% positive → non-GCB
+  Step 3: if BCL6 ≥30% → MUM1 IHC — if ≤30% MUM1 positive → GCB
+                                       → if >30% MUM1 positive → non-GCB
+  Clinical relevance:
+  - GCB-DLBCL: better prognosis with R-CHOP; potential benefit from PI3K/BCL2 inhibitors
+  - Non-GCB (ABC subtype): worse prognosis; lenalidomide + R-CHOP (R²-CHOP) in trials
+  - PCNSL: virtually all ABC/non-GCB; immunomodulatory regimens preferred
+  Also used in: FL (BCL6+ by definition), AITL, BL (BCL6+), HGBL-DH (BCL6 rearrangement
+  separate).
+
+related_biomarkers:
+  - BIO-CD10-IHC
+  - BIO-MUM1-IHC
+  - BIO-DLBCL-COO-HANS
+  - BIO-BCL6-REARRANGEMENT
+  - BIO-MYC-REARRANGEMENT
+
+external_ids:
+  hugo_gene_id: "604"
+
+sources:
+  - source_id: SRC-NCCN-B-CELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-Cell Lymphomas 2025: Hans algorithm IHC (CD10, BCL6, MUM1) recommended
+      for DLBCL COO classification when GEP not available; GCB vs non-GCB guides
+      prognosis and emerging treatment selection.
+
+notes: >
+  BCL6 IHC is a core component of the Hans algorithm for DLBCL cell-of-origin
+  classification. While gene expression profiling (GEP, Lymph2Cx assay) is the
+  reference standard for GCB/ABC classification, Hans IHC is widely used in
+  resource-limited settings (concordance with GEP ~80%). BCL6 protein expression
+  is distinct from BCL6 chromosomal rearrangement (t(3;v) translocations detected
+  by FISH) — both exist independently. BCL6 rearrangement occurs in ~25-35% of DLBCL
+  and may be present in either GCB or non-GCB subtypes.
+
+notes_ua: >
+  BCL6 IHC є компонентом алгоритму Hans для класифікації ДВКЛ за походженням клітин
+  (ГЦБ vs не-ГЦБ). Поріг позитивності: >30% ядер. Слід відрізняти від перебудови
+  BCL6 (FISH). ГЦБ-підтип = кращий прогноз при R-CHOP.
+
+last_reviewed: "2026-05-05"
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

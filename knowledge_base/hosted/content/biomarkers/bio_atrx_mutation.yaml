@@ -1,0 +1,88 @@
+id: BIO-ATRX-MUTATION
+names:
+  preferred: "ATRX mutation / ATRX loss (IHC)"
+  synonyms:
+    - "ATRX loss of expression"
+    - "ATRX IHC loss"
+    - "ATRX inactivation"
+    - "ATRX null"
+    - "alpha-thalassemia mental retardation X-linked mutation"
+
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene_symbol: ATRX
+  gene_id_ncbi: 546
+  note: >
+    ATRX (chromatin remodeling helicase) loss-of-function mutations are found in
+    ~70-80% of IDH-mutant astrocytomas (grade 2-4) and are characteristic of the
+    astrocytoma lineage. ATRX mutations are MUTUALLY EXCLUSIVE with 1p/19q codeletion
+    — ATRX loss defines astrocytoma, while 1p/19q codeletion defines oligodendroglioma.
+    ATRX mutations correlate with Alternative Lengthening of Telomeres (ALT) mechanism.
+    IHC (loss of nuclear ATRX expression) is the routine clinical surrogate — concordance
+    with sequencing ~95% for truncating mutations; missense variants may retain IHC.
+
+measurement:
+  method: >
+    IHC on FFPE brain tumor tissue (ATRX antibody, rabbit anti-ATRX e.g. Sigma HPA001906).
+    Loss of nuclear staining in tumor cells with retained expression in stromal cells /
+    endothelium (internal positive control) = ATRX loss (abnormal).
+    Preserved nuclear staining = ATRX intact (normal).
+    IMPORTANT: endothelial cells / neurons must show positive staining to interpret tumor
+    ATRX loss as true loss vs technical failure.
+    NGS panel: recommended when IHC is equivocal or when comprehensive molecular profiling
+    is performed.
+
+specimen_requirements:
+  tissue_type: "FFPE brain tumor tissue"
+  notes: >
+    Should be co-tested with IDH mutation (IHC ± sequencing), 1p/19q FISH, and
+    TP53 IHC as part of integrated glioma molecular panel per WHO CNS 2021.
+
+interpretation_notes: >
+  Clinically actionable context:
+  1. IDH-mutant + ATRX loss + TP53 aberrant = Astrocytoma, IDH-mutant (WHO grade 2-4).
+     — Standard treatment: RT + temozolomide (high-risk LGG) or RT + TMZ (grade 3-4).
+     — ATRX loss is AGAINST oligodendroglioma diagnosis (cannot have both 1p/19q
+       codeletion and ATRX loss as a rule).
+  2. IDH-wildtype + ATRX loss: uncommon; consider pediatric diffuse midline glioma
+     (H3K27M-altered) — requires additional workup (H3K27M IHC).
+  3. Diagnostic utility: in the absence of 1p/19q FISH, combined ATRX + TP53 IHC
+     can be used as a surrogate for astrocytoma lineage (sensitivity ~75%).
+
+related_biomarkers:
+  - BIO-IDH1-R132H
+  - BIO-IDH-MUTATION
+  - BIO-1P19Q-CODELETION
+  - BIO-TP53-IHC
+  - BIO-TERT
+  - BIO-CDKN2A
+
+external_ids:
+  hugo_gene_id: "10535"
+
+sources:
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN CNS 2025: ATRX IHC and TP53 IHC integral to glioma subclassification
+      per WHO CNS 2021; ATRX loss + IDH mutation = astrocytoma lineage (no 1p/19q testing
+      strictly required when ATRX clearly lost and 1p/19q FISH equivocal).
+
+notes: >
+  WHO CNS 5th edition (2021) uses ATRX as a key classifier for adult diffuse gliomas.
+  Clinical impact: astrocytoma has worse prognosis than oligodendroglioma (IDH-mut/1p19q-codel)
+  but better than GBM (IDH-wildtype). For grade 3 astrocytoma: RT + TMZ is standard (RTOG 9813
+  / analogous to CATNON for grade 3). For grade 4 astrocytoma IDH-mutant (formerly "secondary
+  GBM"): Stupp + RT is standard (same as IDH-wildtype GBM, though prognosis better). ATRX
+  loss associates with ALT telomere lengthening — potential future therapeutic target.
+
+notes_ua: >
+  ATRX-втрата (IHC або сиквенс) разом з IDH-мутацією = астроцитома (WHO 2021).
+  Взаємовиключне з кодельцією 1p/19q (остання = олігодендрогліома). TP53-аберантна
+  IHC зазвичай супроводжує ATRX-втрату при астроцитомі. Клінічне значення:
+  прогноз гірший, ніж олігодендрогліома, лікування: ПТ + темозоломід.
+
+last_reviewed: "2026-05-05"
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
