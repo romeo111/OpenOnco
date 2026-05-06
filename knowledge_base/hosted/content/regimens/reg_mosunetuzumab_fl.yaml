@@ -1,41 +1,51 @@
 id: REG-MOSUNETUZUMAB-FL
-name: "Mosunetuzumab IV step-up (8 cycles, 21-day; up to 17 if not in CR by C8) — r/r FL"
-name_ua: "Мосунетузумаб IV step-up (8 циклів, 21 день; до 17 якщо не CR після C8) — рефрактерна/рецидивна ФЛ"
+name: "Mosunetuzumab IV step-up (8 cycles, 21-day; up to 17 if not in CR by C8) —
+  r/r FL"
+name_ua: "Мосунетузумаб IV step-up (8 циклів, 21 день; до 17 якщо не CR після C8)
+  — рефрактерна/рецидивна ФЛ"
 alternate_names: ["Mosun mono", "GO29781 regimen", "Lunsumio FL"]
 
 components:
-  - drug_id: DRUG-MOSUNETUZUMAB
-    dose: "Cycle 1: 1 mg day 1, 2 mg day 8, 60 mg day 15. Cycle 2: 60 mg day 1. Cycles 3-8 (or up to 17): 30 mg day 1."
-    schedule: "IV per step-up schedule, 21-day cycles; max 8 cycles (extend to 17 if no CR by C8)"
-    route: IV
+- drug_id: DRUG-MOSUNETUZUMAB
+  dose: "Cycle 1: 1 mg day 1, 2 mg day 8, 60 mg day 15. Cycle 2: 60 mg day 1. Cycles
+    3-8 (or up to 17): 30 mg day 1."
+  schedule: "IV per step-up schedule, 21-day cycles; max 8 cycles (extend to 17 if
+    no CR by C8)"
+  route: IV
 
 cycle_length_days: 21
 total_cycles: "8 (extend to 17 if no CR by C8); time-limited"
 toxicity_profile: moderate
 
 premedication:
-  - "Cycle 1 day 1, 8, 15: dexamethasone 20 mg IV + diphenhydramine 50 mg IV + acetaminophen 650 mg PO 30-60 min pre-infusion (CRS prophylaxis during step-up)"
-  - "After cycle 2 (if no Grade ≥2 CRS): pre-medication may be downgraded"
-  - "Tumor lysis prophylaxis (allopurinol + hydration) for high-burden disease cycle 1"
+- "Cycle 1 day 1, 8, 15: dexamethasone 20 mg IV + diphenhydramine 50 mg IV + acetaminophen
+  650 mg PO 30-60 min pre-infusion (CRS prophylaxis during step-up)"
+- "After cycle 2 (if no Grade ≥2 CRS): pre-medication may be downgraded"
+- "Tumor lysis prophylaxis (allopurinol + hydration) for high-burden disease cycle
+  1"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-TLS-PROPHYLAXIS
+- SUP-PJP-PROPHYLAXIS
+- SUP-TLS-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "CRS Grade 2 (hypotension responsive to fluids OR hypoxia <40% O₂)"
-    modification: "Hold infusion; supportive care + IV fluids; tocilizumab 8 mg/kg IV (max 800 mg) if no improvement in 24h; resume at lower dose level after resolution"
-    rationale: "Cytokine release predominantly in cycle 1 step-up — tocilizumab IL-6R blockade rescue"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "CRS Grade 3-4"
-    modification: "Hold permanently if Grade 4; ICU; tocilizumab + dexamethasone 10 mg IV q6h ± methylprednisolone 1 g/day; resume cautiously after Grade 4 only on case-by-case"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Neutropenia ANC <1000"
-    modification: "Hold; G-CSF support; resume on ANC ≥1000"
-  - condition: "Severe hepatic impairment (Child-Pugh C)"
-    modification: "Avoid; no dose adjustment data"
-  - condition: "Active uncontrolled infection"
-    modification: "Defer until resolved"
+- condition: "CRS Grade 2 (hypotension responsive to fluids OR hypoxia <40% O₂)"
+  modification: "Hold infusion; supportive care + IV fluids; tocilizumab 8 mg/kg IV
+    (max 800 mg) if no improvement in 24h; resume at lower dose level after resolution"
+  rationale: "Cytokine release predominantly in cycle 1 step-up — tocilizumab IL-6R
+    blockade rescue"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "CRS Grade 3-4"
+  modification: "Hold permanently if Grade 4; ICU; tocilizumab + dexamethasone 10
+    mg IV q6h ± methylprednisolone 1 g/day; resume cautiously after Grade 4 only on
+    case-by-case"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Neutropenia ANC <1000"
+  modification: "Hold; G-CSF support; resume on ANC ≥1000"
+- condition: "Severe hepatic impairment (Child-Pugh C)"
+  modification: "Avoid; no dose adjustment data"
+- condition: "Active uncontrolled infection"
+  modification: "Defer until resolved"
 
 ukraine_availability:
   all_components_registered: false
@@ -49,40 +59,41 @@ ukraine_availability:
     constraint.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-FL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-FL-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Mosunetuzumab CD20×CD3 bispecific for R/R FL 3L+. Lower CRS rates
 # than DLBCL bispecifics (less aggressive disease). STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, зниження апетиту після інфузій"
-    action_ua: "Очікувано — занотовуйте інтенсивність"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна температура у перші 1-2 цикли"
-    action_ua: "Подзвоніть у клініку того ж дня — навіть невелика лихоманка може бути першою ознакою CRS"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 1-21"
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка, кашель або інша інфекція"
-    action_ua: "Подзвоніть у клініку того ж дня — імуносупресія від анти-CD20"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Розмиття мови, плутаність свідомості"
-    action_ua: "Звертайтесь у лікарню негайно — можлива нейротоксичність"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Висока лихоманка, низький тиск, прискорене серцебиття"
-    action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого CRS"
-    urgency: er_now
-    cycle_day_window: "Day 1-21"
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома, зниження апетиту після інфузій"
+  action_ua: "Очікувано — занотовуйте інтенсивність"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна температура у перші 1-2 цикли"
+  action_ua: "Подзвоніть у клініку того ж дня — навіть невелика лихоманка може бути
+    першою ознакою CRS"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 1-21"
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка, кашель або інша інфекція"
+  action_ua: "Подзвоніть у клініку того ж дня — імуносупресія від анти-CD20"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Розмиття мови, плутаність свідомості"
+  action_ua: "Звертайтесь у лікарню негайно — можлива нейротоксичність"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Висока лихоманка, низький тиск, прискорене серцебиття"
+  action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого CRS"
+  urgency: er_now
+  cycle_day_window: "Day 1-21"
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -95,6 +106,11 @@ notes: >
   vs CAR-T (one-shot, complex logistics) and tazemetostat (oral but
   lower CR rate). Boxed CRS warning, not BBW.
 notes_ua: >
-  GO29781 (Budde 2022): р/р FL after ≥2 prior lines (медіана 3 prior lines, 69% double-рефрактерний) — ORR 80%, CR 60%, медіана DOR 22.8 міс., mPFS 17.9 mo. Time-limited (max 17 цикли) vs continuous BTKi. CRS переважно цикл 1 step-up; Grade ≥3 ~2% — far below CAR-T. цикл 1 госпіталізація (for моніторинг after step-up doses) стандарт; subsequent цикли outpatient. Ambulatory option vs CAR-T (one-shot, complex logistics) and tazemetostat (oral but lower CR rate). Boxed CRS warning, not BBW.
+  GO29781 (Budde 2022): р/р FL after ≥2 prior lines (медіана 3 prior lines, 69% double-рефрактерний)
+  — ORR 80%, CR 60%, медіана DOR 22.8 міс., mPFS 17.9 mo. Time-limited (max 17 цикли)
+  vs continuous BTKi. CRS переважно цикл 1 step-up; Grade ≥3 ~2% — far below CAR-T.
+  цикл 1 госпіталізація (for моніторинг after step-up doses) стандарт; subsequent
+  цикли outpatient. Ambulatory option vs CAR-T (one-shot, complex logistics) and tazemetostat
+  (oral but lower CR rate). Boxed CRS warning, not BBW.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

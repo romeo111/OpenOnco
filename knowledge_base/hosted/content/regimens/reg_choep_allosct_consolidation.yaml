@@ -1,5 +1,6 @@
 id: REG-CHOEP-ALLOSCT-CONSOLIDATION
-name: "CHOEP × 6 + allogeneic SCT consolidation in CR1 (fit transplant-eligible PTCL NOS)"
+name: "CHOEP × 6 + allogeneic SCT consolidation in CR1 (fit transplant-eligible PTCL
+  NOS)"
 name_ua: "CHOEP × 6 + алогенна ТКМ в CR1 (придатні до трансплантації PTCL NOS)"
 alternate_names: ["CHOEP-alloSCT", "Aggressive 1L PTCL NOS"]
 
@@ -8,84 +9,95 @@ components: []  # phases supersede; kept empty for back-compat with downstream
                 # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
 
 phases:
-  - name: induction
-    purpose_ua: "індукція CHOEP × 6 циклів — анти-CD20-незалежний CHOP+етопозид режим для досягнення CR1 в фіт-молодих PTCL NOS"
-    purpose_en: "induction CHOEP × 6 cycles — CHOP + etoposide regimen to achieve CR1 in fit younger PTCL NOS"
-    duration: "~18 weeks (6 × 21-day cycles)"
-    timing_relative_to: "absolute"
-    optional: false
-    components:
-      - drug_id: DRUG-CYCLOPHOSPHAMIDE
-        dose: "750 mg/m²"
-        schedule: "IV day 1 of each 21-day cycle × 6 (induction)"
-        route: IV
-      - drug_id: DRUG-DOXORUBICIN
-        dose: "50 mg/m²"
-        schedule: "IV day 1 each cycle × 6"
-        route: IV
-      - drug_id: DRUG-VINCRISTINE
-        dose: "1.4 mg/m² (cap 2 mg)"
-        schedule: "IV day 1 each cycle × 6"
-        route: IV
-      - drug_id: DRUG-ETOPOSIDE
-        dose: "100 mg/m²"
-        schedule: "IV days 1-3 each cycle × 6"
-        route: IV
-      - drug_id: DRUG-PREDNISONE
-        dose: "100 mg"
-        schedule: "PO days 1-5 each cycle × 6"
-        route: PO
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-ESMO-PTCL-2024
-  - name: conditioning_allohct
-    purpose_ua: "кондиціонування перед ало-ТГСК — RIC (Flu/Mel або Flu/Bu2) для старших/коморбідних, мієлоаблятивне для молодших фіт-пацієнтів; інституційно специфічне"
-    purpose_en: "conditioning before allo-HCT — RIC (Flu/Mel or Flu/Bu2) for older/comorbid; myeloablative for fit younger; institution-specific"
-    duration: "single conditioning regimen (institution-specific) before HCT"
-    timing_relative_to: "previous_phase_completion"
-    optional: false
-    components: []  # Conditioning regimen is institution-specific (RIC vs MA);
+- name: induction
+  purpose_ua: "індукція CHOEP × 6 циклів — анти-CD20-незалежний CHOP+етопозид режим
+    для досягнення CR1 в фіт-молодих PTCL NOS"
+  purpose_en: "induction CHOEP × 6 cycles — CHOP + etoposide regimen to achieve CR1
+    in fit younger PTCL NOS"
+  duration: "~18 weeks (6 × 21-day cycles)"
+  timing_relative_to: "absolute"
+  optional: false
+  components:
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "750 mg/m²"
+    schedule: "IV day 1 of each 21-day cycle × 6 (induction)"
+    route: IV
+  - drug_id: DRUG-DOXORUBICIN
+    dose: "50 mg/m²"
+    schedule: "IV day 1 each cycle × 6"
+    route: IV
+  - drug_id: DRUG-VINCRISTINE
+    dose: "1.4 mg/m² (cap 2 mg)"
+    schedule: "IV day 1 each cycle × 6"
+    route: IV
+  - drug_id: DRUG-ETOPOSIDE
+    dose: "100 mg/m²"
+    schedule: "IV days 1-3 each cycle × 6"
+    route: IV
+  - drug_id: DRUG-PREDNISONE
+    dose: "100 mg"
+    schedule: "PO days 1-5 each cycle × 6"
+    route: PO
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+- name: conditioning_allohct
+  purpose_ua: "кондиціонування перед ало-ТГСК — RIC (Flu/Mel або Flu/Bu2) для старших/коморбідних,
+    мієлоаблятивне для молодших фіт-пацієнтів; інституційно специфічне"
+  purpose_en: "conditioning before allo-HCT — RIC (Flu/Mel or Flu/Bu2) for older/comorbid;
+    myeloablative for fit younger; institution-specific"
+  duration: "single conditioning regimen (institution-specific) before HCT"
+  timing_relative_to: "previous_phase_completion"
+  optional: false
+  components: []    # Conditioning regimen is institution-specific (RIC vs MA);
                    # not enumerated as drug components here (placeholder per
                    # plan-doc §5 Group D)
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-ESMO-PTCL-2024
-  - name: allohct
-    purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — консолідація CR1 з донором (sibling > matched unrelated > haploidentical)"
-    purpose_en: "allogeneic hematopoietic cell transplant — consolidation in CR1 (sibling > matched unrelated > haploidentical donor)"
-    duration: "single transplant procedure"
-    timing_relative_to: "previous_phase_completion"
-    optional: false
-    components: []  # AlloHCT — pathway placeholder, no drug components
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-ESMO-PTCL-2024
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+- name: allohct
+  purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — консолідація
+    CR1 з донором (sibling > matched unrelated > haploidentical)"
+  purpose_en: "allogeneic hematopoietic cell transplant — consolidation in CR1 (sibling
+    > matched unrelated > haploidentical donor)"
+  duration: "single transplant procedure"
+  timing_relative_to: "previous_phase_completion"
+  optional: false
+  components: []    # AlloHCT — pathway placeholder, no drug components
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
 
 cycle_length_days: 21
-total_cycles: "6 induction → restage by PET-CT → if CR1 in fit transplant-eligible: alloSCT consolidation (RIC or myeloablative based on age + comorbidity)"
+total_cycles: "6 induction → restage by PET-CT → if CR1 in fit transplant-eligible:
+  alloSCT consolidation (RIC or myeloablative based on age + comorbidity)"
 toxicity_profile: very-high
 
 premedication:
-  - "Standard CHOEP premedications + TLS prophylaxis"
-  - "Pre-transplant workup: HLA typing patient + sibling/related/unrelated donor search; pre-transplant viral PCRs (CMV/HHV-6/HBV/HCV/HIV); cardiac/pulmonary fitness; psychosocial assessment"
+- "Standard CHOEP premedications + TLS prophylaxis"
+- "Pre-transplant workup: HLA typing patient + sibling/related/unrelated donor search;
+  pre-transplant viral PCRs (CMV/HHV-6/HBV/HCV/HIV); cardiac/pulmonary fitness; psychosocial
+  assessment"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-TLS-PROPHYLAXIS
-  - SUP-ANTIEMETIC-PREMED
-  - SUP-GCSF-NEUTROPENIA
+- SUP-PJP-PROPHYLAXIS
+- SUP-TLS-PROPHYLAXIS
+- SUP-ANTIEMETIC-PREMED
+- SUP-GCSF-NEUTROPENIA
 monitoring_schedule_id: MON-R-CHOP-REGIMEN
 
 dose_adjustments:
-  - condition: "Age >65 OR ECOG ≥2 at induction"
-    modification: "CHOP without etoposide for induction; alloSCT consolidation generally NOT pursued — proceed to autoSCT or maintenance"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Failure to achieve CR after induction (PR or PD)"
-    modification: "Salvage chemoimmuno (ICE / DHAP-style) → re-restage → alloSCT only if subsequent CR (PR pre-alloSCT poor outcome)"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Grade ≥2 peripheral neuropathy"
-    modification: "Reduce vincristine; consider non-vincristine regimen"
-  - condition: "Cumulative anthracycline >300 mg/m²"
-    modification: "Echo + LVEF check; cap at 450-500 mg/m² lifetime"
+- condition: "Age >65 OR ECOG ≥2 at induction"
+  modification: "CHOP without etoposide for induction; alloSCT consolidation generally
+    NOT pursued — proceed to autoSCT or maintenance"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Failure to achieve CR after induction (PR or PD)"
+  modification: "Salvage chemoimmuno (ICE / DHAP-style) → re-restage → alloSCT only
+    if subsequent CR (PR pre-alloSCT poor outcome)"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Grade ≥2 peripheral neuropathy"
+  modification: "Reduce vincristine; consider non-vincristine regimen"
+- condition: "Cumulative anthracycline >300 mg/m²"
+  modification: "Echo + LVEF check; cap at 450-500 mg/m² lifetime"
 
 ukraine_availability:
   all_components_registered: true
@@ -99,50 +111,50 @@ ukraine_availability:
     re-induction needed.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-PTCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-PTCL-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # CHOEP × 6 induction → allo-HCT consolidation for fit transplant-eligible
 # PTCL NOS in CR1. Induction has CHOP toxicities + etoposide cytopenia;
 # transplant phase has GVHD + infection signature. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Випадіння волосся, помірна нудота"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Поколювання у пальцях рук і ніг"
-    action_ua: "Очікувано від вінкристину — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Закреп на 3+ дні, біль у животі під час циклу"
-    action_ua: "Подзвоніть у клініку того ж дня — кишкова непрохідність від вінкристину"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Висип на шкірі (особливо долоні, стопи), діарея, жовтяниця після трансплантації"
-    action_ua: "Подзвоніть у клініку того ж дня — реакція трансплантат-проти-господаря"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Задишка при підйомі сходами, набряки"
-    action_ua: "Подзвоніть у клініку того ж дня — антрацикліни впливають на серце"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
-    action_ua: "Звертайтесь у лікарню негайно — ознаки сепсису"
-    urgency: er_now
-    sources:
-      - SRC-CTCAE-V5
+- trigger_ua: "Випадіння волосся, помірна нудота"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Поколювання у пальцях рук і ніг"
+  action_ua: "Очікувано від вінкристину — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Закреп на 3+ дні, біль у животі під час циклу"
+  action_ua: "Подзвоніть у клініку того ж дня — кишкова непрохідність від вінкристину"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Висип на шкірі (особливо долоні, стопи), діарея, жовтяниця після трансплантації"
+  action_ua: "Подзвоніть у клініку того ж дня — реакція трансплантат-проти-господаря"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Задишка при підйомі сходами, набряки"
+  action_ua: "Подзвоніть у клініку того ж дня — антрацикліни впливають на серце"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+  action_ua: "Звертайтесь у лікарню негайно — ознаки сепсису"
+  urgency: er_now
+  sources:
+  - SRC-CTCAE-V5
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -156,6 +168,12 @@ notes: >
   Donor selection critical — sibling > matched unrelated > haploidentical;
   GVHD prophylaxis individualized.
 notes_ua: >
-  стандарт intensification for fit younger придатний до трансплантації PTCL NOS. Per Nordic NLG-T-01 + retrospective registry дані: CHOEP перевершує CHOP in younger T-cell patients; алоТГСК консолідація in CR1 dramatically покращує long-term PFS for poor-risk PTCL NOS (mature дані from EBMT registries). аутоТГСК alternative considered but загалом поступається for PTCL NOS (vs B-cell NHL where аутоТГСК is durable). RIC алоТГСК for older fit; myeloablative for younger. Donor selection critical — sibling > matched unrelated > haploidentical; GVHD prophylaxis individualized.
+  стандарт intensification for fit younger придатний до трансплантації PTCL NOS. Per
+  Nordic NLG-T-01 + retrospective registry дані: CHOEP перевершує CHOP in younger
+  T-cell patients; алоТГСК консолідація in CR1 dramatically покращує long-term PFS
+  for poor-risk PTCL NOS (mature дані from EBMT registries). аутоТГСК alternative
+  considered but загалом поступається for PTCL NOS (vs B-cell NHL where аутоТГСК is
+  durable). RIC алоТГСК for older fit; myeloablative for younger. Donor selection
+  critical — sibling > matched unrelated > haploidentical; GVHD prophylaxis individualized.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

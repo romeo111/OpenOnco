@@ -25,7 +25,8 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Clear-cell (conventional) RCC confirmed on pathology"
+        - {finding: histology, value: clear_cell_rcc}
+        - {finding: histology, value: clear_cell}
     if_true:
       next_step: 2
     if_false:
@@ -64,19 +65,20 @@ decision_tree:
       notes: "IMDC favorable + ECOG 2 or limited fitness: pembro+axi preferred (KEYNOTE-426 includes ECOG 0-2; less TKI toxicity than lenv+pembro)."
 
   # Step 4 — IMDC intermediate/poor. All 4 preferred regimens eligible.
-  # Route based on ipilimumab eligibility and patient profile.
+  # Route based on ipilimumab eligibility. Proxy: active_autoimmune_disease absent/false.
+  # Structured gate replaces prior free-text condition (unevaluable by engine).
   - step: 4
     evaluate:
       all_of:
-        - condition: "No active autoimmune disease; no prior transplant; ECOG 0-1"
-        - condition: "Ipi-eligible (no significant autoimmune history, patient accepts 4-dose ipi induction)"
+        - {finding: active_autoimmune_disease, value: false}
     if_true:
       result: IND-RCC-METASTATIC-1L-NIVO-IPI
       notes: >
-        IMDC intermediate/poor + ipi-eligible: nivo+ipi preferred (CheckMate-214;
-        mOS 56 mo in int/poor; 48% ORR; durable responses including complete remissions).
-        ICI+TKI alternatives (pembro+axi, lenv+pembro, nivo+cabo) are equally valid
-        if patient/MDT prefers TKI-containing regimen or ipi not suitable.
+        IMDC intermediate/poor + ipi-eligible (no active autoimmune disease):
+        nivo+ipi preferred (CheckMate-214; mOS 56 mo in int/poor; 48% ORR;
+        durable complete remissions). ICI+TKI alternatives (pembro+axi,
+        lenv+pembro, nivo+cabo) equally valid if patient/MDT prefers TKI
+        or prior-transplant / autoimmune history.
     if_false:
       next_step: 5
 

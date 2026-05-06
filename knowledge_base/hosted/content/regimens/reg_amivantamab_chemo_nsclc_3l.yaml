@@ -1,106 +1,117 @@
 id: REG-AMIVANTAMAB-CHEMO
 name: "Amivantamab + Carboplatin + Pemetrexed (NSCLC EGFR-mut post-osimertinib, MARIPOSA-2)"
-name_ua: "Амівантамаб + Карбоплатин + Пеметрексед (НДРЛ EGFR-мут після осимертинібу, MARIPOSA-2)"
+name_ua: "Амівантамаб + Карбоплатин + Пеметрексед (НДРЛ EGFR-мут після осимертинібу,
+  MARIPOSA-2)"
 alternate_names:
-  - "Ami-chemo"
-  - "MARIPOSA-2 chemo arm"
+- "Ami-chemo"
+- "MARIPOSA-2 chemo arm"
 
 components:
-  - drug_id: DRUG-AMIVANTAMAB
-    dose: "<80 kg: 1050 mg IV; ≥80 kg: 1400 mg IV (loading split D1/D2 of cycle 1, then weekly C1, then q3w from C2)"
-    schedule: "Cycle 1 weekly (D1/D2 split, then D8, D15); cycle 2 onward day 1 of each 21-day cycle"
-    route: IV
-  - drug_id: DRUG-CARBOPLATIN
-    dose: "AUC 5"
-    schedule: "day 1 of each 21-day cycle × 4 cycles"
-    route: IV
-    duration: "4 cycles"
-  - drug_id: DRUG-PEMETREXED
-    dose: "500 mg/m² IV"
-    schedule: "day 1 of each 21-day cycle; continue beyond 4 cycles as maintenance"
-    route: IV
+- drug_id: DRUG-AMIVANTAMAB
+  dose: "<80 kg: 1050 mg IV; ≥80 kg: 1400 mg IV (loading split D1/D2 of cycle 1, then
+    weekly C1, then q3w from C2)"
+  schedule: "Cycle 1 weekly (D1/D2 split, then D8, D15); cycle 2 onward day 1 of each
+    21-day cycle"
+  route: IV
+- drug_id: DRUG-CARBOPLATIN
+  dose: "AUC 5"
+  schedule: "day 1 of each 21-day cycle × 4 cycles"
+  route: IV
+  duration: "4 cycles"
+- drug_id: DRUG-PEMETREXED
+  dose: "500 mg/m² IV"
+  schedule: "day 1 of each 21-day cycle; continue beyond 4 cycles as maintenance"
+  route: IV
 
 cycle_length_days: 21
-total_cycles: "Carboplatin × 4 cycles; amivantamab + pemetrexed continue until progression / unacceptable toxicity"
+total_cycles: "Carboplatin × 4 cycles; amivantamab + pemetrexed continue until progression
+  / unacceptable toxicity"
 toxicity_profile: severe
 
 premedication:
-  - "Amivantamab (cycle-1 day-1): IV dexamethasone 10-20 mg + diphenhydramine 25-50 mg + acetaminophen 650-1000 mg before infusion"
-  - "Pemetrexed: folic acid 400-1000 µg PO daily (start 7d before, continue throughout) + vitamin B12 1000 µg IM q9w + dexamethasone 4 mg PO BID days -1, 0, +1"
-  - "Carboplatin: standard antiemetic (5HT3 + dexamethasone)"
+- "Amivantamab (cycle-1 day-1): IV dexamethasone 10-20 mg + diphenhydramine 25-50
+  mg + acetaminophen 650-1000 mg before infusion"
+- "Pemetrexed: folic acid 400-1000 µg PO daily (start 7d before, continue throughout)
+  + vitamin B12 1000 µg IM q9w + dexamethasone 4 mg PO BID days -1, 0, +1"
+- "Carboplatin: standard antiemetic (5HT3 + dexamethasone)"
 mandatory_supportive_care:
-  - SUP-ANTIEMETIC-PREMED
+- SUP-ANTIEMETIC-PREMED
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Severe infusion reaction to amivantamab IV"
-    modification: "Switch to SC formulation (amivantamab-vmjw + hyaluronidase, ~5 min SC) — IRR rate ~13% SC vs ~65% IV"
-    source_refs: [SRC-NCCN-NSCLC-2025]
-  - condition: "ILD / pneumonitis G≥2"
-    modification: "Hold amivantamab; CT chest + corticosteroids; permanent discontinuation if G≥3"
-    source_refs: [SRC-NCCN-NSCLC-2025]
-  - condition: "VTE (combined ami + chemo: ~10-15% rate)"
-    modification: "Therapeutic anticoagulation; do not routinely discontinue amivantamab"
-    rationale: "Prophylactic LMWH or DOAC for first 4 months recommended in MARIPOSA-2"
-    source_refs: [SRC-NCCN-NSCLC-2025]
-  - condition: "EGFR-class skin toxicity G≥2"
-    modification: "Doxycycline 100 mg PO BID prophylactic; topical clindamycin + emollients; reduce ami if persistent G3"
-  - condition: "CrCl <45 mL/min"
-    modification: "Pemetrexed contraindicated (CrCl <45); carboplatin AUC dose-adjusted by Calvert formula"
-    source_refs: [SRC-NCCN-NSCLC-2025]
+- condition: "Severe infusion reaction to amivantamab IV"
+  modification: "Switch to SC formulation (amivantamab-vmjw + hyaluronidase, ~5 min
+    SC) — IRR rate ~13% SC vs ~65% IV"
+  source_refs: [SRC-NCCN-NSCLC-2025]
+- condition: "ILD / pneumonitis G≥2"
+  modification: "Hold amivantamab; CT chest + corticosteroids; permanent discontinuation
+    if G≥3"
+  source_refs: [SRC-NCCN-NSCLC-2025]
+- condition: "VTE (combined ami + chemo: ~10-15% rate)"
+  modification: "Therapeutic anticoagulation; do not routinely discontinue amivantamab"
+  rationale: "Prophylactic LMWH or DOAC for first 4 months recommended in MARIPOSA-2"
+  source_refs: [SRC-NCCN-NSCLC-2025]
+- condition: "EGFR-class skin toxicity G≥2"
+  modification: "Doxycycline 100 mg PO BID prophylactic; topical clindamycin + emollients;
+    reduce ami if persistent G3"
+- condition: "CrCl <45 mL/min"
+  modification: "Pemetrexed contraindicated (CrCl <45); carboplatin AUC dose-adjusted
+    by Calvert formula"
+  source_refs: [SRC-NCCN-NSCLC-2025]
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "Амівантамаб НЕ зареєстрований в Україні (drlz.com.ua станом на 2026-04-27). Доступ — EAP J&J / cross-border (EU) / self-pay. Carboplatin + pemetrexed — реімбурсуються."
+  notes: "Амівантамаб НЕ зареєстрований в Україні (drlz.com.ua станом на 2026-04-27).
+    Доступ — EAP J&J / cross-border (EU) / self-pay. Carboplatin + pemetrexed — реімбурсуються."
 
 sources:
-  - SRC-NCCN-NSCLC-2025
-  - SRC-ESMO-NSCLC-METASTATIC-2024
+- SRC-NCCN-NSCLC-2025
+- SRC-ESMO-NSCLC-METASTATIC-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Amivantamab + carbo + pemetrexed for EGFR-mut NSCLC 3L+
 # (MARIPOSA-2). Combines ami rash/IRR/VTE with chemo cytopenia +
 # pemetrexed mucositis. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Акнеформний висип на обличчі"
-    action_ua: "Очікувано на амівантамабі — використовуйте призначені креми"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Запалення навколо нігтів"
-    action_ua: "Поширене — носіть м'яке взуття"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Помірний мукозит, нудота"
-    action_ua: "Полоскання порожнини рота; протиблювотні"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — карбо нейтропенія"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-NCCN-NSCLC-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Біль або припухлість в одній нозі"
-    action_ua: "Подзвоніть у клініку того ж дня — амівантамаб підвищує ризик тромбозу"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Тяжка реакція на інфузію амівантамабу"
-    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
-    urgency: er_now
-    cycle_day_window: "First infusion"
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Раптова задишка, біль у грудях"
-    action_ua: "Звертайтесь у лікарню негайно — PE або пневмоніт"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Акнеформний висип на обличчі"
+  action_ua: "Очікувано на амівантамабі — використовуйте призначені креми"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Запалення навколо нігтів"
+  action_ua: "Поширене — носіть м'яке взуття"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Помірний мукозит, нудота"
+  action_ua: "Полоскання порожнини рота; протиблювотні"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — карбо нейтропенія"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Біль або припухлість в одній нозі"
+  action_ua: "Подзвоніть у клініку того ж дня — амівантамаб підвищує ризик тромбозу"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Тяжка реакція на інфузію амівантамабу"
+  action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+  urgency: er_now
+  cycle_day_window: "First infusion"
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Раптова задишка, біль у грудях"
+  action_ua: "Звертайтесь у лікарню негайно — PE або пневмоніт"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-NSCLC-2025
 
 last_reviewed: "2026-04-27"
 reviewers: []

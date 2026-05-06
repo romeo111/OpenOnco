@@ -1,33 +1,36 @@
 id: REG-BRENTUXIMAB-MAINTENANCE-CHL
 name: "Brentuximab vedotin maintenance post-ASCT for high-risk cHL (AETHERA, 16 cycles)"
-name_ua: "Брентуксимаб ведотин maintenance після ASCT для високоризикової cHL (AETHERA, 16 циклів)"
+name_ua: "Брентуксимаб ведотин maintenance після ASCT для високоризикової cHL (AETHERA,
+  16 циклів)"
 alternate_names: ["BV maintenance", "AETHERA regimen"]
 
 components:
-  - drug_id: DRUG-BRENTUXIMAB-VEDOTIN
-    dose: "1.8 mg/kg (max 180 mg)"
-    schedule: "IV every 21 days × 16 cycles, starting 30-45 days post-ASCT"
-    route: IV
+- drug_id: DRUG-BRENTUXIMAB-VEDOTIN
+  dose: "1.8 mg/kg (max 180 mg)"
+  schedule: "IV every 21 days × 16 cycles, starting 30-45 days post-ASCT"
+  route: IV
 
 cycle_length_days: 21
 total_cycles: "16 cycles (~12 months) starting 30-45 days post-ASCT"
 toxicity_profile: moderate
 
-premedication: ["Antihistamine + acetaminophen before infusion (especially first 2 doses)"]
+premedication: ["Antihistamine + acetaminophen before infusion (especially first 2
+    doses)"]
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
+- SUP-PJP-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Grade ≥2 peripheral neuropathy"
-    modification: "Hold; reduce to 1.2 mg/kg on resume; discontinue if Grade ≥3"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Grade ≥4 neutropenia"
-    modification: "Hold until recovery; G-CSF support if recurrent; reduce dose"
-  - condition: "Pre-existing Grade ≥2 neuropathy from pre-ASCT therapy"
-    modification: "Generally NOT eligible for maintenance — risk-benefit unfavorable; surveillance only"
-  - condition: "Any active infection at start"
-    modification: "Defer until resolved"
+- condition: "Grade ≥2 peripheral neuropathy"
+  modification: "Hold; reduce to 1.2 mg/kg on resume; discontinue if Grade ≥3"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Grade ≥4 neutropenia"
+  modification: "Hold until recovery; G-CSF support if recurrent; reduce dose"
+- condition: "Pre-existing Grade ≥2 neuropathy from pre-ASCT therapy"
+  modification: "Generally NOT eligible for maintenance — risk-benefit unfavorable;
+    surveillance only"
+- condition: "Any active infection at start"
+  modification: "Defer until resolved"
 
 ukraine_availability:
   all_components_registered: true
@@ -39,39 +42,39 @@ ukraine_availability:
     domestically.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-HODGKIN-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-HODGKIN-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Brentuximab maintenance after autoSCT for high-risk cHL (AETHERA).
 # Same BV pattern: neuropathy, IRR. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
-    action_ua: "Брентуксимаб нейропатія — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна втома"
-    action_ua: "Очікувано"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Поколювання стає сильним болем"
-    action_ua: "Подзвоніть у клініку того ж дня — корекція дози"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Тяжка реакція на інфузію"
-    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
-    urgency: er_now
-    cycle_day_window: "Day 1 of cycle 1"
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Поколювання або оніміння в кистях/стопах"
+  action_ua: "Брентуксимаб нейропатія — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома"
+  action_ua: "Очікувано"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Поколювання стає сильним болем"
+  action_ua: "Подзвоніть у клініку того ж дня — корекція дози"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Тяжка реакція на інфузію"
+  action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+  urgency: er_now
+  cycle_day_window: "Day 1 of cycle 1"
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -85,6 +88,13 @@ notes: >
   patient-selection criterion — Grade ≥2 = practically non-eligible.
   Funding gap in UA — fundraising pathway often required.
 notes_ua: >
-  AETHERA дослідження (Moskowitz 2015, спостереження 2018): post-ASCT cHL with високого ризику features (primary рефрактерний, рецидив <12 mo from 1L, extranodal хвороба at рецидив) randomized to BV підтримка × 16 цикли vs placebo — 5-y PFS 59% проти 41% (HR 0.52). FDA-схвалений для post-ASCT cHL високого ризику підтримка. особливо relevant for primary-рефрактерний cHL where стандарт сальвадж + ASCT alone has high рецидив rates. Pre-existing периферична нейропатія is dominant patient-selection criterion — Grade ≥2 = practically non-eligible. Funding gap in UA — fundraising pathway часто обов'язковий.
+  AETHERA дослідження (Moskowitz 2015, спостереження 2018): post-ASCT cHL with високого
+  ризику features (primary рефрактерний, рецидив <12 mo from 1L, extranodal хвороба
+  at рецидив) randomized to BV підтримка × 16 цикли vs placebo — 5-y PFS 59% проти
+  41% (HR 0.52). FDA-схвалений для post-ASCT cHL високого ризику підтримка. особливо
+  relevant for primary-рефрактерний cHL where стандарт сальвадж + ASCT alone has high
+  рецидив rates. Pre-existing периферична нейропатія is dominant patient-selection
+  criterion — Grade ≥2 = practically non-eligible. Funding gap in UA — fundraising
+  pathway часто обов'язковий.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

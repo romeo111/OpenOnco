@@ -1,101 +1,117 @@
 id: REGIMEN-LISOCEL-DLBCL-3L
 name: "Lisocabtagene maraleucel (liso-cel) CAR-T for r/r LBCL ≥3L (TRANSCEND NHL 001)"
-name_ua: "Лісокабтаген маралейцел (liso-cel) CAR-T для р/р великоклітинної B-клітинної лімфоми у ≥3-й лінії (TRANSCEND NHL 001)"
+name_ua: "Лісокабтаген маралейцел (liso-cel) CAR-T для р/р великоклітинної B-клітинної
+  лімфоми у ≥3-й лінії (TRANSCEND NHL 001)"
 alternate_names:
-  - "Liso-cel 3L"
-  - "Breyanzi 3L"
-  - "TRANSCEND NHL 001 regimen"
-  - "JCAR017 r/r DLBCL"
+- "Liso-cel 3L"
+- "Breyanzi 3L"
+- "TRANSCEND NHL 001 regimen"
+- "JCAR017 r/r DLBCL"
 
 components: []  # phases supersede; kept empty for back-compat with downstream
                 # consumers that still iterate `components` directly
                 # (regimen-phases-refactor PR3 — plan-doc 2026-04-28 §4 + §5).
 
 phases:
-  - name: lymphodepletion
-    purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин (Flu/Cy days -5 to -3 per TRANSCEND protocol)"
-    purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment (Flu/Cy days -5 to -3 per TRANSCEND protocol)"
-    duration: "3 days, days -5 to -3"
-    timing_relative_to: "main_infusion"
-    timing_offset_days: -5
-    optional: false
-    components:
-      - drug_id: DRUG-FLUDARABINE
-        dose: "30 mg/m² IV daily × 3 days (lymphodepleting conditioning)"
-        schedule: "Days -5 to -3 before liso-cel infusion"
-        route: IV
-      - drug_id: DRUG-CYCLOPHOSPHAMIDE
-        dose: "300 mg/m² IV daily × 3 days (lymphodepleting conditioning)"
-        schedule: "Days -5 to -3 before liso-cel infusion"
-        route: IV
-    sources:
-      - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
-      - SRC-NCCN-BCELL-2025
-  - name: main
-    purpose_ua: "основна CAR-T інфузія (defined 1:1 CD4:CD8 composition)"
-    purpose_en: "main CAR-T infusion (defined 1:1 CD4:CD8 composition)"
-    duration: "single infusion"
-    timing_relative_to: "absolute"
-    optional: false
-    components:
-      - drug_id: DRUG-LISOCABTAGENE-MARALEUCEL
-        dose: "Target 100 × 10⁶ CAR+ viable T cells (50 × 10⁶ CD8+ component + 50 × 10⁶ CD4+ component, separately manufactured then administered sequentially)"
-        schedule: "Single IV infusion day 0, 2-7 days after lymphodepletion completion; CD8 component infused first, followed by CD4 component"
-        route: IV
-    sources:
-      - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
-      - SRC-NCCN-BCELL-2025
+- name: lymphodepletion
+  purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин (Flu/Cy days
+    -5 to -3 per TRANSCEND protocol)"
+  purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment (Flu/Cy
+    days -5 to -3 per TRANSCEND protocol)"
+  duration: "3 days, days -5 to -3"
+  timing_relative_to: "main_infusion"
+  timing_offset_days: -5
+  optional: false
+  components:
+  - drug_id: DRUG-FLUDARABINE
+    dose: "30 mg/m² IV daily × 3 days (lymphodepleting conditioning)"
+    schedule: "Days -5 to -3 before liso-cel infusion"
+    route: IV
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "300 mg/m² IV daily × 3 days (lymphodepleting conditioning)"
+    schedule: "Days -5 to -3 before liso-cel infusion"
+    route: IV
+  sources:
+  - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+  - SRC-NCCN-BCELL-2025
+- name: main
+  purpose_ua: "основна CAR-T інфузія (defined 1:1 CD4:CD8 composition)"
+  purpose_en: "main CAR-T infusion (defined 1:1 CD4:CD8 composition)"
+  duration: "single infusion"
+  timing_relative_to: "absolute"
+  optional: false
+  components:
+  - drug_id: DRUG-LISOCABTAGENE-MARALEUCEL
+    dose: "Target 100 × 10⁶ CAR+ viable T cells (50 × 10⁶ CD8+ component + 50 × 10⁶
+      CD4+ component, separately manufactured then administered sequentially)"
+    schedule: "Single IV infusion day 0, 2-7 days after lymphodepletion completion;
+      CD8 component infused first, followed by CD4 component"
+    route: IV
+  sources:
+  - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+  - SRC-NCCN-BCELL-2025
 
 cycle_length_days:
-total_cycles: "Single infusion procedure; no maintenance; bridge chemotherapy permitted during 3-4 week manufacturing window for active disease"
+total_cycles: "Single infusion procedure; no maintenance; bridge chemotherapy permitted
+  during 3-4 week manufacturing window for active disease"
 
 toxicity_profile: severe
 
 premedication:
-  - "Acetaminophen 650 mg PO + diphenhydramine 25-50 mg IV/PO 30-60 min pre-infusion"
-  - "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + may impair efficacy"
-  - "Confirm REMS / FACT-JACIE accreditation of administering centre"
-  - "Tocilizumab on-site (≥2 doses) BEFORE liso-cel infusion — mandatory for CRS rescue"
-  - "Bridging chemotherapy permitted during 3-4 week manufacturing window for active disease (avoid corticosteroids; coordinate with treating CAR-T centre)"
-  - "Pre-CAR-T infectious workup (HBV / HCV / HIV / CMV / TB) + ECHO + brain MRI"
-  - "Pre-conditioning hospitalisation + ICU bed availability + caregiver-presence-for-4-weeks-post-infusion"
-  - "Confirm CD19 expression on tumour (CD19 IHC or flow on baseline biopsy; CD19+ at original diagnosis sufficient)"
+- "Acetaminophen 650 mg PO + diphenhydramine 25-50 mg IV/PO 30-60 min pre-infusion"
+- "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + may impair
+  efficacy"
+- "Confirm REMS / FACT-JACIE accreditation of administering centre"
+- "Tocilizumab on-site (≥2 doses) BEFORE liso-cel infusion — mandatory for CRS rescue"
+- "Bridging chemotherapy permitted during 3-4 week manufacturing window for active
+  disease (avoid corticosteroids; coordinate with treating CAR-T centre)"
+- "Pre-CAR-T infectious workup (HBV / HCV / HIV / CMV / TB) + ECHO + brain MRI"
+- "Pre-conditioning hospitalisation + ICU bed availability + caregiver-presence-for-4-weeks-post-infusion"
+- "Confirm CD19 expression on tumour (CD19 IHC or flow on baseline biopsy; CD19+ at
+  original diagnosis sufficient)"
 
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-HBV-PROPHYLAXIS
-  - SUP-IVIG-HYPOGAMMA
-
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
+- SUP-IVIG-HYPOGAMMA
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "CRS Grade 1 (fever ≥38°C without hypotension/hypoxia)"
-    modification: "Supportive care, antipyretics; hold liso-cel-related interventions; consider tocilizumab if persistent >24-48h"
-    rationale: "TRANSCEND any-grade CRS ~42%, Grade ≥3 only ~2% — generally manageable"
-    source_refs:
-      - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
-  - condition: "CRS Grade 2-3"
-    modification: "Tocilizumab 8 mg/kg IV (max 800 mg) ± dexamethasone 10 mg IV q6h; ICU monitoring for Grade 3"
-    rationale: "IL-6R blockade is first-line; corticosteroids reserved for refractory or higher-grade events"
-    source_refs:
-      - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
-      - SRC-NCCN-BCELL-2025
-  - condition: "ICANS Grade ≥2"
-    modification: "Dexamethasone 10 mg IV q6h; intensify (methylprednisolone 1 g/day) for Grade 3-4; anakinra for refractory; ICU"
-    rationale: "TRANSCEND any-grade ICANS ~30%, Grade ≥3 ~10% — relatively favourable vs other anti-CD19 CAR-T products"
-    source_refs:
-      - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
-  - condition: "Active uncontrolled infection at planned infusion"
-    modification: "Defer liso-cel until controlled — lymphodepletion + CRS in active infection = high mortality"
-    rationale: "Absolute pre-infusion contraindication"
-    source_refs:
-      - SRC-NCCN-BCELL-2025
-  - condition: "Persistent severe cytopenia >Day +30"
-    modification: "G-CSF support; transfusions; consider IVIG for IgG <400 + recurrent infections"
-    rationale: "On-target B-cell aplasia + delayed marrow recovery common; symptomatic hypogammaglobulinaemia treated with IVIG q3-4wk"
-    source_refs:
-      - SRC-NCCN-BCELL-2025
+- condition: "CRS Grade 1 (fever ≥38°C without hypotension/hypoxia)"
+  modification: "Supportive care, antipyretics; hold liso-cel-related interventions;
+    consider tocilizumab if persistent >24-48h"
+  rationale: "TRANSCEND any-grade CRS ~42%, Grade ≥3 only ~2% — generally manageable"
+  source_refs:
+  - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+- condition: "CRS Grade 2-3"
+  modification: "Tocilizumab 8 mg/kg IV (max 800 mg) ± dexamethasone 10 mg IV q6h;
+    ICU monitoring for Grade 3"
+  rationale: "IL-6R blockade is first-line; corticosteroids reserved for refractory
+    or higher-grade events"
+  source_refs:
+  - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+  - SRC-NCCN-BCELL-2025
+- condition: "ICANS Grade ≥2"
+  modification: "Dexamethasone 10 mg IV q6h; intensify (methylprednisolone 1 g/day)
+    for Grade 3-4; anakinra for refractory; ICU"
+  rationale: "TRANSCEND any-grade ICANS ~30%, Grade ≥3 ~10% — relatively favourable
+    vs other anti-CD19 CAR-T products"
+  source_refs:
+  - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+- condition: "Active uncontrolled infection at planned infusion"
+  modification: "Defer liso-cel until controlled — lymphodepletion + CRS in active
+    infection = high mortality"
+  rationale: "Absolute pre-infusion contraindication"
+  source_refs:
+  - SRC-NCCN-BCELL-2025
+- condition: "Persistent severe cytopenia >Day +30"
+  modification: "G-CSF support; transfusions; consider IVIG for IgG <400 + recurrent
+    infections"
+  rationale: "On-target B-cell aplasia + delayed marrow recovery common; symptomatic
+    hypogammaglobulinaemia treated with IVIG q3-4wk"
+  source_refs:
+  - SRC-NCCN-BCELL-2025
 
 ukraine_availability:
   all_components_registered: false
@@ -112,55 +128,56 @@ ukraine_availability:
     referring centre.
 
 sources:
-  - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Lisocabtagene maraleucel CD19 CAR-T for r/r DLBCL 3L+ (TRANSCEND
 # NHL-001). 4-1BB construct → lower CRS/ICANS rates than axi-cel.
 # Outpatient feasible at experienced centres. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, зниження апетиту"
-    action_ua: "Очікувано — занотовуйте інтенсивність"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна температура, легкий головний біль протягом перших 1-2 тижнів"
-    action_ua: "Подзвоніть у клініку того ж дня — навіть невелика лихоманка може бути першою ознакою CRS"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 1-21"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
-  - trigger_ua: "Розмиття мови, плутаність, утруднене писання — навіть легке"
-    action_ua: "Звертайтесь у лікарню негайно — можлива ICANS"
-    urgency: er_now
-    cycle_day_window: "Day 1-30"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
-  - trigger_ua: "Висока лихоманка, низький тиск, прискорене серцебиття"
-    action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого CRS"
-    urgency: er_now
-    cycle_day_window: "Day 1-21"
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Раптова сильна задишка"
-    action_ua: "Звертайтесь у лікарню негайно — можливий тяжкий CRS"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Судомний напад, втрата свідомості"
-    action_ua: "Звертайтесь у лікарню негайно — тяжкий ICANS"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Часті інфекції протягом місяців після CAR-T"
-    action_ua: "Подзвоніть у клініку того ж дня — B-cell aplasia триває роки"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома, зниження апетиту"
+  action_ua: "Очікувано — занотовуйте інтенсивність"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна температура, легкий головний біль протягом перших 1-2 тижнів"
+  action_ua: "Подзвоніть у клініку того ж дня — навіть невелика лихоманка може бути
+    першою ознакою CRS"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 1-21"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+- trigger_ua: "Розмиття мови, плутаність, утруднене писання — навіть легке"
+  action_ua: "Звертайтесь у лікарню негайно — можлива ICANS"
+  urgency: er_now
+  cycle_day_window: "Day 1-30"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+- trigger_ua: "Висока лихоманка, низький тиск, прискорене серцебиття"
+  action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого CRS"
+  urgency: er_now
+  cycle_day_window: "Day 1-21"
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Раптова сильна задишка"
+  action_ua: "Звертайтесь у лікарню негайно — можливий тяжкий CRS"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Судомний напад, втрата свідомості"
+  action_ua: "Звертайтесь у лікарню негайно — тяжкий ICANS"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Часті інфекції протягом місяців після CAR-T"
+  action_ua: "Подзвоніть у клініку того ж дня — B-cell aplasia триває роки"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-05-01"
 
@@ -180,6 +197,19 @@ notes: >
   patients given lower G≥3 CRS/ICANS rates). For 2L primary-refractory or
   early-relapse (<12 mo) DLBCL see REGIMEN-LISOCEL-DLBCL-2L (TRANSFORM).
 notes_ua: >
-  CD19 CAR-T (4-1BB костимуляція) з визначеним співвідношенням CD4:CD8 = 1:1 для рецидивної/рефрактерної великоклітинної B-клітинної лімфоми (DLBCL NOS, HGBL включно з double/triple-hit, ПМЛБК, FL grade 3B, трансформована індолентна НХЛ) після ≥2 попередніх ліній системної терапії. TRANSCEND NHL 001 (Abramson et al., Lancet 2020): ORR 73%, ПВ 53%, стійка відповідь ≥1 рік у ~40%; сприятливий профіль CRS/ICANS порівняно з іншими anti-CD19 CAR-T (CRS будь-якого ступеня 42% / G≥3 2%; ICANS будь-якого ступеня 30% / G≥3 10%). Спеціальні попередження в інструкції: CRS, ICANS, вторинне Т-клітинне злоякісне новоутворення (клас-маркер FDA 2024). REMS / FACT-JACIE-акредитований центр обов'язковий. Присутність опікуна протягом 4 тижнів після інфузії — стандарт. Аксікабтаген цилолейцел (REG-CAR-T-AXICEL) та тисагенлеклеуцел — альтернативні CD19 CAR-T продукти у 3L+; послідовність залежить від локальної доступності та профілю токсичності (ліcо-cel часто бажаний для старших/коморбідних пацієнтів через нижчу частоту CRS/ICANS G≥3). Для 2L первинно рефрактерної або раннього рецидиву (<12 міс) DLBCL — див. REGIMEN-LISOCEL-DLBCL-2L (TRANSFORM).
+  CD19 CAR-T (4-1BB костимуляція) з визначеним співвідношенням CD4:CD8 = 1:1 для рецидивної/рефрактерної
+  великоклітинної B-клітинної лімфоми (DLBCL NOS, HGBL включно з double/triple-hit,
+  ПМЛБК, FL grade 3B, трансформована індолентна НХЛ) після ≥2 попередніх ліній системної
+  терапії. TRANSCEND NHL 001 (Abramson et al., Lancet 2020): ORR 73%, ПВ 53%, стійка
+  відповідь ≥1 рік у ~40%; сприятливий профіль CRS/ICANS порівняно з іншими anti-CD19
+  CAR-T (CRS будь-якого ступеня 42% / G≥3 2%; ICANS будь-якого ступеня 30% / G≥3 10%).
+  Спеціальні попередження в інструкції: CRS, ICANS, вторинне Т-клітинне злоякісне
+  новоутворення (клас-маркер FDA 2024). REMS / FACT-JACIE-акредитований центр обов'язковий.
+  Присутність опікуна протягом 4 тижнів після інфузії — стандарт. Аксікабтаген цилолейцел
+  (REG-CAR-T-AXICEL) та тисагенлеклеуцел — альтернативні CD19 CAR-T продукти у 3L+;
+  послідовність залежить від локальної доступності та профілю токсичності (ліcо-cel
+  часто бажаний для старших/коморбідних пацієнтів через нижчу частоту CRS/ICANS G≥3).
+  Для 2L первинно рефрактерної або раннього рецидиву (<12 міс) DLBCL — див. REGIMEN-LISOCEL-DLBCL-2L
+  (TRANSFORM).
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

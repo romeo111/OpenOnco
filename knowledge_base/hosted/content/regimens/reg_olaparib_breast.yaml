@@ -1,13 +1,15 @@
 id: REG-OLAPARIB-BREAST
-name: "Olaparib monotherapy (BRCA-mutant HER2- breast: metastatic OR adjuvant high-risk early)"
-name_ua: "Олапариб моно (BRCA-мутант HER2- РМЗ: метастаз АБО ад'ювант ранній високого ризику)"
+name: "Olaparib monotherapy (BRCA-mutant HER2- breast: metastatic OR adjuvant high-risk
+  early)"
+name_ua: "Олапариб моно (BRCA-мутант HER2- РМЗ: метастаз АБО ад'ювант ранній високого
+  ризику)"
 alternate_names: ["OlympiAD regimen", "OlympiA regimen"]
 
 components:
-  - drug_id: DRUG-OLAPARIB
-    dose: "300 mg PO BID continuous"
-    schedule: "Until progression (metastatic) or 1 year (OlympiA adjuvant)"
-    route: PO
+- drug_id: DRUG-OLAPARIB
+  dose: "300 mg PO BID continuous"
+  schedule: "Until progression (metastatic) or 1 year (OlympiA adjuvant)"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "Adjuvant: 12; Metastatic: continuous until progression"
@@ -15,14 +17,14 @@ toxicity_profile: moderate
 
 premedication: []
 mandatory_supportive_care:
-  - SUP-BONE-HEALTH-PROSTATE
+- SUP-BONE-HEALTH-PROSTATE
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Anemia G≥2"
-    modification: "Hold; reduce stepwise to 250 → 200 mg BID"
-  - condition: "Pneumonitis suspect"
-    modification: "Hold; pulmonology evaluation"
+- condition: "Anemia G≥2"
+  modification: "Hold; reduce stepwise to 250 → 200 mg BID"
+- condition: "Pneumonitis suspect"
+  modification: "Hold; pulmonology evaluation"
 
 ukraine_availability:
   all_components_registered: true
@@ -36,37 +38,37 @@ sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
 # adjuvant high-risk HER2- (OlympiA). PARPi pattern from olaparib-
 # ovarian. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, особливо в перші тижні"
-    action_ua: "Очікувано — занотовуйте інтенсивність"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Помірна нудота, зниження апетиту"
-    action_ua: "Часто проходить через 2-3 місяці — приймайте призначені протиблювотні"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Виражена втома, задишка при невеликому навантаженні"
-    action_ua: "Подзвоніть у клініку того ж дня — олапариб може спричиняти анемію"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BREAST-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Незвичні синці, кровотеча ясен"
-    action_ua: "Подзвоніть у клініку того ж дня — олапариб може знижувати тромбоцити"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Раптова задишка, новий сухий кашель"
-    action_ua: "Звертайтесь у лікарню негайно — рідко олапариб може спричиняти пневмоніт"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BREAST-2025
+- trigger_ua: "Помірна втома, особливо в перші тижні"
+  action_ua: "Очікувано — занотовуйте інтенсивність"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Помірна нудота, зниження апетиту"
+  action_ua: "Часто проходить через 2-3 місяці — приймайте призначені протиблювотні"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Виражена втома, задишка при невеликому навантаженні"
+  action_ua: "Подзвоніть у клініку того ж дня — олапариб може спричиняти анемію"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Незвичні синці, кровотеча ясен"
+  action_ua: "Подзвоніть у клініку того ж дня — олапариб може знижувати тромбоцити"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Раптова задишка, новий сухий кашель"
+  action_ua: "Звертайтесь у лікарню негайно — рідко олапариб може спричиняти пневмоніт"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BREAST-2025
 
 last_reviewed:
 notes: >
@@ -75,6 +77,8 @@ notes: >
   (TNBC stage II+ OR HR+/HER2- pCP-3 OR ≥4 nodes). Germline BRCA
   testing required pre-start.
 notes_ua: >
-  OlympiAD: PFS виграш in BRCA-mutant HER2- метастатичний. OlympiA: iDFS + OS виграш in ад'ювантний BRCA-mutant високого ризику early breast (TNBC stage II+ OR HR+/HER2- pCP-3 або ≥4 nodes). герміногенний BRCA testing обов'язковий pre-start.
+  OlympiAD: PFS виграш in BRCA-mutant HER2- метастатичний. OlympiA: iDFS + OS виграш
+  in ад'ювантний BRCA-mutant високого ризику early breast (TNBC stage II+ OR HR+/HER2-
+  pCP-3 або ≥4 nodes). герміногенний BRCA testing обов'язковий pre-start.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

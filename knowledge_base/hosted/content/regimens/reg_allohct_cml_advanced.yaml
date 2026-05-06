@@ -1,81 +1,98 @@
 id: REG-ALLOHCT-CML-ADVANCED
-name: "Allogeneic hematopoietic cell transplant for CML blast crisis OR multi-TKI failure"
-name_ua: "Алогенна трансплантація кровотворних клітин для CML бластного кризу або провалу кількох ТКІ"
+name: "Allogeneic hematopoietic cell transplant for CML blast crisis OR multi-TKI
+  failure"
+name_ua: "Алогенна трансплантація кровотворних клітин для CML бластного кризу або
+  провалу кількох ТКІ"
 alternate_names:
-  - "AlloHCT CML"
-  - "Allogeneic SCT advanced CML"
+- "AlloHCT CML"
+- "Allogeneic SCT advanced CML"
 
 components: []  # phases supersede; kept empty for back-compat with downstream
                 # consumers that still iterate `components` directly. PR3 of
                 # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
 
 phases:
-  - name: conditioning
-    purpose_ua: "кондиціонування перед ало-ТГСК — мієлоаблятивне (Bu/Cy або Cy/TBI) для фіт-молодих; редукованої інтенсивності (Flu/Mel) для старших; включає цитарабін за інституційним протоколом дні -7 до -1"
-    purpose_en: "conditioning before allo-HCT — myeloablative (Bu/Cy or Cy/TBI) for fit younger; reduced-intensity (Flu/Mel) for older; cytarabine per institutional protocol days -7 to -1"
-    duration: "7 days, days -7 to -1 before HCT"
-    timing_relative_to: "main_infusion"
-    timing_offset_days: -7
-    optional: false
-    components:
-      - drug_id: DRUG-CYTARABINE
-        dose: "Conditioning regimen (variable per institution): typically myeloablative (Bu/Cy or Cy/TBI) for fit younger; reduced-intensity (Flu/Mel) for older"
-        schedule: "Pre-transplant conditioning days -7 to -1"
-        route: IV
-    sources:
-      - SRC-NCCN-MPN-2025
-      - SRC-ELN-CML-2020
-  - name: allohct
-    purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — єдина куративна опція в бластному кризі CML або після провалу кількох ТКІ; пост-ТГСК підтримка ТКІ ≥2 років"
-    purpose_en: "allogeneic hematopoietic cell transplant (allo-HCT) — only curative option for CML blast crisis or multi-TKI failure; post-HCT TKI maintenance ≥2 years"
-    duration: "single transplant procedure"
-    timing_relative_to: "previous_phase_completion"
-    optional: false
-    components: []  # AlloHCT — pathway placeholder, no drug components
-    sources:
-      - SRC-NCCN-MPN-2025
-      - SRC-ELN-CML-2020
+- name: conditioning
+  purpose_ua: "кондиціонування перед ало-ТГСК — мієлоаблятивне (Bu/Cy або Cy/TBI)
+    для фіт-молодих; редукованої інтенсивності (Flu/Mel) для старших; включає цитарабін
+    за інституційним протоколом дні -7 до -1"
+  purpose_en: "conditioning before allo-HCT — myeloablative (Bu/Cy or Cy/TBI) for
+    fit younger; reduced-intensity (Flu/Mel) for older; cytarabine per institutional
+    protocol days -7 to -1"
+  duration: "7 days, days -7 to -1 before HCT"
+  timing_relative_to: "main_infusion"
+  timing_offset_days: -7
+  optional: false
+  components:
+  - drug_id: DRUG-CYTARABINE
+    dose: "Conditioning regimen (variable per institution): typically myeloablative
+      (Bu/Cy or Cy/TBI) for fit younger; reduced-intensity (Flu/Mel) for older"
+    schedule: "Pre-transplant conditioning days -7 to -1"
+    route: IV
+  sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+- name: allohct
+  purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — єдина куративна
+    опція в бластному кризі CML або після провалу кількох ТКІ; пост-ТГСК підтримка
+    ТКІ ≥2 років"
+  purpose_en: "allogeneic hematopoietic cell transplant (allo-HCT) — only curative
+    option for CML blast crisis or multi-TKI failure; post-HCT TKI maintenance ≥2
+    years"
+  duration: "single transplant procedure"
+  timing_relative_to: "previous_phase_completion"
+  optional: false
+  components: []    # AlloHCT — pathway placeholder, no drug components
+  sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
 
 cycle_length_days:
-total_cycles: "Single transplant procedure; post-HCT TKI maintenance (typically dasatinib or imatinib) for ≥2 years per institution"
+total_cycles: "Single transplant procedure; post-HCT TKI maintenance (typically dasatinib
+  or imatinib) for ≥2 years per institution"
 
 toxicity_profile: severe
 
 premedication:
-  - "Donor identification (HLA-matched sibling > matched unrelated > haplo > cord)"
-  - "Pre-transplant comorbidity assessment (HCT-CI)"
-  - "Active disease control (cytoreduce CML to optimal molecular response if feasible) before transplant"
-  - "TKI continuation through conditioning when blast crisis"
-  - "Standard infectious disease + organ-function workup"
+- "Donor identification (HLA-matched sibling > matched unrelated > haplo > cord)"
+- "Pre-transplant comorbidity assessment (HCT-CI)"
+- "Active disease control (cytoreduce CML to optimal molecular response if feasible)
+  before transplant"
+- "TKI continuation through conditioning when blast crisis"
+- "Standard infectious disease + organ-function workup"
 
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-HBV-PROPHYLAXIS
-
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Blast crisis active disease at transplant"
-    modification: "Cytoreduce with TKI ± chemotherapy (lymphoid blast: hyper-CVAD-like; myeloid blast: 7+3-like) before transplant; outcomes substantially worse if active disease at HCT"
-    rationale: "Disease-status at HCT is dominant predictor of post-HCT survival"
-    source_refs:
-      - SRC-NCCN-MPN-2025
-      - SRC-ELN-CML-2020
-  - condition: "Older / comorbid (HCT-CI ≥3, age >55)"
-    modification: "Reduced-intensity conditioning (RIC); haplo or matched-unrelated donor acceptable"
-    rationale: "Lower TRM with RIC; comparable disease control in CML-CP"
-    source_refs:
-      - SRC-NCCN-MPN-2025
+- condition: "Blast crisis active disease at transplant"
+  modification: "Cytoreduce with TKI ± chemotherapy (lymphoid blast: hyper-CVAD-like;
+    myeloid blast: 7+3-like) before transplant; outcomes substantially worse if active
+    disease at HCT"
+  rationale: "Disease-status at HCT is dominant predictor of post-HCT survival"
+  source_refs:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+- condition: "Older / comorbid (HCT-CI ≥3, age >55)"
+  modification: "Reduced-intensity conditioning (RIC); haplo or matched-unrelated
+    donor acceptable"
+  rationale: "Lower TRM with RIC; comparable disease control in CML-CP"
+  source_refs:
+  - SRC-NCCN-MPN-2025
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "AlloHCT performed at limited Ukrainian centers (Kyiv Institute of Hematology + few others); international referral common for adult CML. Donor registry coverage limited. Conditioning chemotherapy components (cytarabine etc.) registered + НСЗУ-reimbursed."
+  notes: "AlloHCT performed at limited Ukrainian centers (Kyiv Institute of Hematology
+    + few others); international referral common for adult CML. Donor registry coverage
+    limited. Conditioning chemotherapy components (cytarabine etc.) registered + НСЗУ-reimbursed."
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-ELN-CML-2020
+- SRC-NCCN-MPN-2025
+- SRC-ELN-CML-2020
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Allogeneic HCT for advanced CML. Highly intensive — entire course
@@ -83,38 +100,40 @@ sources:
 # Signature: GVHD (acute + chronic), prolonged immunosuppression,
 # infections (CMV, EBV, fungal). STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Виражена втома, що триває місяцями"
-    action_ua: "Очікувано — кістковий мозок і імунна система відновлюються повільно"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Висип, що поширюється; діарея; жовтяниця — у перші 100 днів"
-    action_ua: "Подзвоніть у клініку того ж дня — можлива гостра GVHD; рання оцінка критична"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 1-100"
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Лихоманка вище 38°C — у будь-який час до 1 року після SCT"
-    action_ua: "Звертайтесь у лікарню негайно — глибока імуносупресія, ризик опортуністичних інфекцій"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-MPN-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Тяжка діарея або кровотеча з кишківника"
-    action_ua: "Звертайтесь у лікарню негайно — тяжка GVHD кишківника"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті"
-    action_ua: "Подзвоніть у клініку того ж дня — можлива GVHD печінки або VOD"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Сухість очей, рота; склероподібні зміни шкіри — після 100 днів"
-    action_ua: "Занотовуйте — ознаки можливої хронічної GVHD; обговоріть на візиті"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-MPN-2025
+- trigger_ua: "Виражена втома, що триває місяцями"
+  action_ua: "Очікувано — кістковий мозок і імунна система відновлюються повільно"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Висип, що поширюється; діарея; жовтяниця — у перші 100 днів"
+  action_ua: "Подзвоніть у клініку того ж дня — можлива гостра GVHD; рання оцінка
+    критична"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 1-100"
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Лихоманка вище 38°C — у будь-який час до 1 року після SCT"
+  action_ua: "Звертайтесь у лікарню негайно — глибока імуносупресія, ризик опортуністичних
+    інфекцій"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Тяжка діарея або кровотеча з кишківника"
+  action_ua: "Звертайтесь у лікарню негайно — тяжка GVHD кишківника"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Жовтяниця, біль у правому верхньому квадранті"
+  action_ua: "Подзвоніть у клініку того ж дня — можлива GVHD печінки або VOD"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Сухість очей, рота; склероподібні зміни шкіри — після 100 днів"
+  action_ua: "Занотовуйте — ознаки можливої хронічної GVHD; обговоріть на візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-MPN-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -127,6 +146,11 @@ notes: >
   this entity is a placeholder pointing to alloHCT pathway, not a
   fully specified chemotherapy regimen.
 notes_ua: >
-  AlloHCT remains the only curative option for CML in blast crisis or after multi-TKI failure without понатиніб/асциминіб access. Outcomes найкращий with optimal контроль хвороби pre-HCT (target ≥CCyR or MMR). Post-HCT TKI підтримка (типово дазатиніб or іматиніб) for ≥2 years зменшує рецидив. STUB — pending Co-Lead sign-off. Conditioning схема selection institution-specific — this сутність is a placeholder pointing to alloHCT pathway, not a fully specified хіміотерапія схема.
+  AlloHCT remains the only curative option for CML in blast crisis or after multi-TKI
+  failure without понатиніб/асциминіб access. Outcomes найкращий with optimal контроль
+  хвороби pre-HCT (target ≥CCyR or MMR). Post-HCT TKI підтримка (типово дазатиніб
+  or іматиніб) for ≥2 years зменшує рецидив. STUB — pending Co-Lead sign-off. Conditioning
+  схема selection institution-specific — this сутність is a placeholder pointing to
+  alloHCT pathway, not a fully specified хіміотерапія схема.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

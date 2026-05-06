@@ -5,16 +5,15 @@ applicable_to:
   disease_id: DIS-BREAST
   line_of_therapy: 1
   stage_requirements:
-    - "Locally recurrent unresectable or metastatic (stage IV) triple-negative breast cancer (TNBC)"
-    - "ER <1%, PR <1%, HER2 0/1+ (or HER2 2+ and FISH non-amplified)"
-    - "PD-L1 CPS ≥10 by FDA-approved 22C3 pharmDx assay (REQUIRED)"
-    - "No prior chemotherapy for metastatic disease (treatment-naive for 1L)"
-    - "If prior neoadjuvant chemo: acceptable if disease-free interval >6 months"
+  - "Locally recurrent unresectable or metastatic (stage IV) triple-negative breast cancer (TNBC)"
+  - "ER <1%, PR <1%, HER2 0/1+ (or HER2 2+ and FISH non-amplified)"
+  - "PD-L1 CPS ≥10 by FDA-approved 22C3 pharmDx assay (REQUIRED)"
+  - "No prior chemotherapy for metastatic disease (treatment-naive for 1L)"
+  - "If prior neoadjuvant chemo: acceptable if disease-free interval >6 months"
   biomarker_requirements_required:
-    - biomarker_id: BIO-PDL1-CPS
-      value_constraint: "CPS ≥10 by 22C3 pharmDx — required for OS benefit per KEYNOTE-355"
-  biomarker_requirements_excluded:
-    - "BRCA1/2 germline or somatic pathogenic mutation — use IND-BREAST-BRCA-POS-MET-PARPI (olaparib or talazoparib preferred 1L)"
+  - biomarker_id: BIO-PDL1-CPS
+    value_constraint: "CPS ≥10 by 22C3 pharmDx — required for OS benefit per KEYNOTE-355"
+  biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 1
     notes: "KEYNOTE-355 enrolled ECOG 0-1"
@@ -22,8 +21,8 @@ applicable_to:
 recommended_regimen: REG-PEMBRO-CHEMO-TNBC-MET
 concurrent_therapy: []
 followed_by:
-  - "After 6-8 cycles of pembrolizumab+chemo: pembrolizumab monotherapy maintenance q3w up to 35 cycles (2 years) total"
-  - "CT CAP response assessment q9 weeks"
+- "After 6-8 cycles of pembrolizumab+chemo: pembrolizumab monotherapy maintenance q3w up to 35 cycles (2 years) total"
+- "CT CAP response assessment q9 weeks"
 
 evidence_level: high
 strength_of_recommendation: strong
@@ -35,32 +34,17 @@ expected_outcomes:
   overall_survival: "~23.0 vs 16.1 months (HR 0.73 for CPS ≥10; Cortes NEJM 2022)"
   notes: "CPS <10 subgroup: OS HR 0.86 (not statistically significant) — pembro not beneficial for CPS <10"
 
-hard_contraindications:
-  - "PD-L1 CPS <10 (pembrolizumab benefit NOT demonstrated — do NOT add pembrolizumab)"
-  - "Active autoimmune disease requiring systemic immunosuppression"
-  - "Prior anti-PD-(L)1 therapy (neoadjuvant pembrolizumab within 6 months)"
-
+hard_contraindications: []
 red_flags_triggering_alternative:
-  - {'condition': 'BRCA1/2 mutation: olaparib or talazoparib preferred 1L (OlympiAD/EMBRACA)'}
-  - {'condition': 'CPS <10: chemotherapy alone without pembrolizumab is standard'}
-  - RF-BREAST-INFECTION-SCREENING
-  - RF-PAN-BRCA-SOMATIC-PARPI-CANDIDATE
-
+- RF-BREAST-INFECTION-SCREENING
+- RF-PAN-BRCA-SOMATIC-PARPI-CANDIDATE
 required_tests:
-  - TEST-CT-CAP
-  - TEST-CBC
-  - TEST-CMP
-  - TEST-LFT
-  - "PD-L1 CPS by 22C3 pharmDx (MANDATORY)"
-  - "BRCA1/2 germline testing (MANDATORY for all mTNBC)"
-  - TEST-TSH
-  - "Cortisol baseline (pembrolizumab endocrine monitoring)"
-
-desired_tests:
-  - "HER2 by IHC + FISH (rule out HER2-low for T-DXd consideration at progression)"
-  - "Somatic BRCA testing (comprehensive tumor NGS)"
-  - "Germline BRCA if not done (genetic counseling)"
-
+- TEST-CT-CAP
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-TSH
+desired_tests: []
 rationale: >
   KEYNOTE-355 (Cortes 2020 Lancet, Cortes 2022 NEJM; n=847): pembrolizumab + nab-paclitaxel,
   paclitaxel, or gemcitabine-carboplatin vs placebo + chemo in 1L mTNBC.
@@ -84,24 +68,24 @@ ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 
 sources:
-  - source_id: SRC-KEYNOTE-355-CORTES-2020
-    position: supports
-    relevant_quote_paraphrase: "KEYNOTE-355 (n=847): CPS ≥10 subgroup mOS 23.0 vs 16.1 months (HR 0.73, p=0.0185); mPFS 9.7 vs 5.6 months (HR 0.65) — NCCN Category 1 for CPS ≥10 mTNBC 1L"
+- source_id: SRC-KEYNOTE-355-CORTES-2020
+  position: supports
+  relevant_quote_paraphrase: "KEYNOTE-355 (n=847): CPS ≥10 subgroup mOS 23.0 vs 16.1 months (HR 0.73, p=0.0185); mPFS 9.7 vs 5.6 months (HR 0.65) — NCCN Category 1 for CPS ≥10 mTNBC 1L"
 
 do_not_do:
-  - "НІКОЛИ не призначати пембролізумаб при CPS <10 — відсутня OS перевага; тільки токсичність"
-  - "Не призначати без тестування BRCA1/2 — BRCA-мутовані пацієнти мають кращу відповідь на PARPi"
-  - "Не використовувати атезолізумаб при TNBC — FDA відкликала реєстрацію у серпні 2021"
-  - "Не застосовувати схему при стадії I-III (неоад'ювантній) — використовувати KEYNOTE-522 протокол"
+- "НІКОЛИ не призначати пембролізумаб при CPS <10 — відсутня OS перевага; тільки токсичність"
+- "Не призначати без тестування BRCA1/2 — BRCA-мутовані пацієнти мають кращу відповідь на PARPi"
+- "Не використовувати атезолізумаб при TNBC — FDA відкликала реєстрацію у серпні 2021"
+- "Не застосовувати схему при стадії I-III (неоад'ювантній) — використовувати KEYNOTE-522 протокол"
 
 known_controversies:
-  - topic: "PARPi vs immunochemotherapy 1L for BRCA-mutated mTNBC"
-    positions:
-      - position: "PARPi (olaparib/talazoparib) preferred 1L for BRCA-mutated mTNBC — higher ORR, better tolerability, biomarker-selected"
-        sources: [SRC-NCCN-BREAST-2025]
-      - position: "Pembrolizumab+chemo acceptable even for BRCA-mutated if CPS ≥10 — some data that ICI+PARP combination in trial"
-    our_default: "BRCA-mutated: PARPi 1L preferred; pembro+chemo 2L after PARPi"
-    rationale: "BRCA mutation drives specific vulnerability to PARPi; ICI should be reserved for BRCA-WT"
+- topic: "PARPi vs immunochemotherapy 1L for BRCA-mutated mTNBC"
+  positions:
+  - position: "PARPi (olaparib/talazoparib) preferred 1L for BRCA-mutated mTNBC — higher ORR, better tolerability, biomarker-selected"
+    sources: [SRC-NCCN-BREAST-2025]
+  - position: "Pembrolizumab+chemo acceptable even for BRCA-mutated if CPS ≥10 — some data that ICI+PARP combination in trial"
+  our_default: "BRCA-mutated: PARPi 1L preferred; pembro+chemo 2L after PARPi"
+  rationale: "BRCA mutation drives specific vulnerability to PARPi; ICI should be reserved for BRCA-WT"
 
 time_critical: false
 last_reviewed: "2026-05-04"

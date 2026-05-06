@@ -2,48 +2,53 @@ id: REG-LENALIDOMIDE-MAINTENANCE
 name: "Lenalidomide maintenance post-ASCT (CALGB 100104 / IFM 2005-02 schedule)"
 name_ua: "Підтримуюча терапія леналідомідом після ASCT (CALGB 100104 / IFM 2005-02)"
 alternate_names:
-  - "Len maintenance"
-  - "R-maintenance"
-  - "CALGB 100104 protocol"
+- "Len maintenance"
+- "R-maintenance"
+- "CALGB 100104 protocol"
 
 components:
-  - drug_id: DRUG-LENALIDOMIDE
-    dose: "10 mg PO daily (start 90-100 days post-ASCT); escalate to 15 mg after 3 months if tolerated"
-    schedule: "Continuous PO daily until progression OR unacceptable toxicity"
-    route: PO
+- drug_id: DRUG-LENALIDOMIDE
+  dose: "10 mg PO daily (start 90-100 days post-ASCT); escalate to 15 mg after 3 months
+    if tolerated"
+  schedule: "Continuous PO daily until progression OR unacceptable toxicity"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "Continuous until progression / intolerance / patient preference"
 toxicity_profile: low-moderate
 
 premedication:
-  - "Aspirin 81-100 mg PO daily for VTE prophylaxis (LMWH if higher VTE risk profile)"
-  - "Confirm two reliable contraceptive methods (women of reproductive potential) — REMS / iPLEDGE-equivalent program required"
+- "Aspirin 81-100 mg PO daily for VTE prophylaxis (LMWH if higher VTE risk profile)"
+- "Confirm two reliable contraceptive methods (women of reproductive potential) —
+  REMS / iPLEDGE-equivalent program required"
 mandatory_supportive_care:
-  - SUP-MM-VTE-PROPHYLAXIS
-  - SUP-MM-BONE-PROTECTION
+- SUP-MM-VTE-PROPHYLAXIS
+- SUP-MM-BONE-PROTECTION
 monitoring_schedule_id: MON-VRD-REGIMEN
 
 dose_adjustments:
-  - condition: "ANC <1000 OR platelets <50K"
-    modification: "Hold; resume at next-lower dose (10 mg → 5 mg → 5 mg every other day) on count recovery"
-    rationale: "Cumulative myelosuppression during prolonged maintenance"
-    source_refs: [SRC-NCCN-MM-2025]
-  - condition: "CrCl 30-60 mL/min"
-    modification: "10 mg PO daily (do not escalate to 15)"
-    rationale: "Lenalidomide ~80% renally cleared"
-    source_refs: [SRC-NCCN-MM-2025]
-  - condition: "CrCl <30 mL/min (no dialysis)"
-    modification: "5 mg PO daily; consider every-other-day dosing"
-    rationale: "Major exposure increase"
-    source_refs: [SRC-NCCN-MM-2025]
-  - condition: "Second primary malignancy detected"
-    modification: "Discontinue maintenance + workup the SPM; risk-benefit of continued maintenance assessed individually"
-    rationale: "CALGB 100104 + IFM 2005-02 reported elevated SPM rate (~5-7% absolute increase) — counseling required"
-    source_refs: [SRC-NCCN-MM-2025]
-  - condition: "Grade ≥2 diarrhea persistent"
-    modification: "Bile-acid sequestrant (cholestyramine); hold dose if Grade ≥3"
-    rationale: "Lenalidomide-induced bile-acid malabsorption-pattern diarrhea is treatable"
+- condition: "ANC <1000 OR platelets <50K"
+  modification: "Hold; resume at next-lower dose (10 mg → 5 mg → 5 mg every other
+    day) on count recovery"
+  rationale: "Cumulative myelosuppression during prolonged maintenance"
+  source_refs: [SRC-NCCN-MM-2025]
+- condition: "CrCl 30-60 mL/min"
+  modification: "10 mg PO daily (do not escalate to 15)"
+  rationale: "Lenalidomide ~80% renally cleared"
+  source_refs: [SRC-NCCN-MM-2025]
+- condition: "CrCl <30 mL/min (no dialysis)"
+  modification: "5 mg PO daily; consider every-other-day dosing"
+  rationale: "Major exposure increase"
+  source_refs: [SRC-NCCN-MM-2025]
+- condition: "Second primary malignancy detected"
+  modification: "Discontinue maintenance + workup the SPM; risk-benefit of continued
+    maintenance assessed individually"
+  rationale: "CALGB 100104 + IFM 2005-02 reported elevated SPM rate (~5-7% absolute
+    increase) — counseling required"
+  source_refs: [SRC-NCCN-MM-2025]
+- condition: "Grade ≥2 diarrhea persistent"
+  modification: "Bile-acid sequestrant (cholestyramine); hold dose if Grade ≥3"
+  rationale: "Lenalidomide-induced bile-acid malabsorption-pattern diarrhea is treatable"
 
 ukraine_availability:
   all_components_registered: true
@@ -51,45 +56,46 @@ ukraine_availability:
   notes: "Lenalidomide reimbursed via НСЗУ for myeloma; maintenance indication covered."
 
 sources:
-  - SRC-NCCN-MM-2025
-  - SRC-ESMO-MM-2023
+- SRC-NCCN-MM-2025
+- SRC-ESMO-MM-2023
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Lenalidomide maintenance post-ASCT for MM. Long-term oral.
 # Cytopenia (especially neutropenia) + thrombosis + secondary
 # malignancy risk + diarrhea. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна діарея або помірна втома"
-    action_ua: "Часто проходить — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-MM-2025
-  - trigger_ua: "Помірний висип"
-    action_ua: "Зустрічається — використовуйте зволожувач"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-MM-2025
-  - trigger_ua: "Біль або припухлість в одній нозі"
-    action_ua: "Подзвоніть у клініку того ж дня — леналідомід підвищує ризик тромбозу; антикоагулянти зазвичай призначаються профілактично"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-MM-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Виражений висип з пухирями"
-    action_ua: "Подзвоніть у клініку того ж дня — рідко тяжкі шкірні реакції"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-MM-2025
-  - trigger_ua: "Раптова задишка, біль у грудях"
-    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-MM-2025
+- trigger_ua: "Помірна діарея або помірна втома"
+  action_ua: "Часто проходить — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-MM-2025
+- trigger_ua: "Помірний висип"
+  action_ua: "Зустрічається — використовуйте зволожувач"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-MM-2025
+- trigger_ua: "Біль або припухлість в одній нозі"
+  action_ua: "Подзвоніть у клініку того ж дня — леналідомід підвищує ризик тромбозу;
+    антикоагулянти зазвичай призначаються профілактично"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-MM-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Виражений висип з пухирями"
+  action_ua: "Подзвоніть у клініку того ж дня — рідко тяжкі шкірні реакції"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-MM-2025
+- trigger_ua: "Раптова задишка, біль у грудях"
+  action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-MM-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -101,6 +107,11 @@ notes: >
   Stop indefinitely on progression; ixazomib OR bortezomib maintenance
   alternatives for high-risk cytogenetics (separate Regimen entities).
 notes_ua: >
-  CALGB 100104 (McCarthy 2012; updated 2017): post-ASCT леналідомід підтримка vs placebo покращений mPFS (46 проти 27 міс.) AND mOS (113 проти 84 міс., HR 0.72). IFM 2005-02 confirmed PFS виграш. NCCN Cat 1 for all-comers post-ASCT. Counsel patient on second primary злоякісне новоутворення risk (~5-7% absolute збільшення, mostly skin + AML/MDS) BEFORE consent. Stop indefinitely on прогресування; іксазоміб OR бортезоміб підтримка alternatives for високого ризику cytogenetics (separate схема entities).
+  CALGB 100104 (McCarthy 2012; updated 2017): post-ASCT леналідомід підтримка vs placebo
+  покращений mPFS (46 проти 27 міс.) AND mOS (113 проти 84 міс., HR 0.72). IFM 2005-02
+  confirmed PFS виграш. NCCN Cat 1 for all-comers post-ASCT. Counsel patient on second
+  primary злоякісне новоутворення risk (~5-7% absolute збільшення, mostly skin + AML/MDS)
+  BEFORE consent. Stop indefinitely on прогресування; іксазоміб OR бортезоміб підтримка
+  alternatives for високого ризику cytogenetics (separate схема entities).
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

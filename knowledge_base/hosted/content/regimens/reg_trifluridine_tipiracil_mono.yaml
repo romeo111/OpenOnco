@@ -4,10 +4,10 @@ name_ua: "Трифлуридин-тіпірацил моно (RECOURSE, 3L+ мК
 alternate_names: ["TAS-102 mono", "Lonsurf mono", "FTD/TPI"]
 
 components:
-  - drug_id: DRUG-TRIFLURIDINE-TIPIRACIL
-    dose: "35 mg/m² PO BID (rounded to nearest 5 mg)"
-    schedule: "Days 1-5 + days 8-12 of each 28-day cycle"
-    route: PO
+- drug_id: DRUG-TRIFLURIDINE-TIPIRACIL
+  dose: "35 mg/m² PO BID (rounded to nearest 5 mg)"
+  schedule: "Days 1-5 + days 8-12 of each 28-day cycle"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "Until progression / unacceptable toxicity"
@@ -16,22 +16,23 @@ toxicity_profile: moderate
 
 premedication: []
 mandatory_supportive_care:
-  - SUP-GCSF-NEUTROPENIA
-monitoring_schedule_id: null
+- SUP-GCSF-NEUTROPENIA
+monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "ANC <500 OR febrile neutropenia OR platelets <50K"
-    modification: "Hold dose; resume at next lower dose level (30 → 25 → 20 mg/m² BID); discontinue if intolerable at 20 mg/m²"
-    source_refs: [SRC-NCCN-COLON-2025]
-  - condition: "CrCl 30-59 mL/min (moderate renal impairment)"
-    modification: "Reduce starting dose to 20 mg/m² BID"
-    source_refs: [SRC-NCCN-COLON-2025]
-  - condition: "CrCl <30 mL/min (severe renal impairment)"
-    modification: "AVOID — insufficient safety data"
-  - condition: "Hepatic impairment Child-Pugh B/C"
-    modification: "AVOID — insufficient safety data"
-  - condition: "Non-hematologic toxicity Grade 3+"
-    modification: "Hold until ≤Grade 1, resume at next lower dose level"
+- condition: "ANC <500 OR febrile neutropenia OR platelets <50K"
+  modification: "Hold dose; resume at next lower dose level (30 → 25 → 20 mg/m² BID);
+    discontinue if intolerable at 20 mg/m²"
+  source_refs: [SRC-NCCN-COLON-2025]
+- condition: "CrCl 30-59 mL/min (moderate renal impairment)"
+  modification: "Reduce starting dose to 20 mg/m² BID"
+  source_refs: [SRC-NCCN-COLON-2025]
+- condition: "CrCl <30 mL/min (severe renal impairment)"
+  modification: "AVOID — insufficient safety data"
+- condition: "Hepatic impairment Child-Pugh B/C"
+  modification: "AVOID — insufficient safety data"
+- condition: "Non-hematologic toxicity Grade 3+"
+  modification: "Hold until ≤Grade 1, resume at next lower dose level"
 
 ukraine_availability:
   all_components_registered: true
@@ -47,38 +48,38 @@ sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
 # Trifluridine-tipiracil (TAS-102) for mCRC 3L+ (RECOURSE). Oral
 # fluoropyrimidine. Cytopenia + GI dominate. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна нудота, втома"
-    action_ua: "Приймайте препарат після їжі; занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-COLON-2025
-  - trigger_ua: "Помірна діарея або запор"
-    action_ua: "Занотовуйте, обговоріть на наступному візиті"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — TAS-102 дає значну нейтропенію"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 14-21"
-    sources:
-      - SRC-NCCN-COLON-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Незвичні синці, кровотеча ясен"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль тромбоцитів"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Тяжка діарея (≥6 разів на день, з кров'ю)"
-    action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Сепсис: лихоманка з ознобом, плутаність свідомості"
-    action_ua: "Звертайтесь у лікарню негайно"
-    urgency: er_now
-    sources:
-      - SRC-CTCAE-V5
+- trigger_ua: "Помірна нудота, втома"
+  action_ua: "Приймайте препарат після їжі; занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-COLON-2025
+- trigger_ua: "Помірна діарея або запор"
+  action_ua: "Занотовуйте, обговоріть на наступному візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — TAS-102 дає значну нейтропенію"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 14-21"
+  sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Незвичні синці, кровотеча ясен"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль тромбоцитів"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Тяжка діарея (≥6 разів на день, з кров'ю)"
+  action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Сепсис: лихоманка з ознобом, плутаність свідомості"
+  action_ua: "Звертайтесь у лікарню негайно"
+  urgency: er_now
+  sources:
+  - SRC-CTCAE-V5
 
 last_reviewed: "2026-04-27"
 

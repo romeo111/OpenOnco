@@ -6,35 +6,32 @@ applicable_to:
   disease_state: mCRPC
   line_of_therapy: 2
   stage_requirements:
-    - "Metastatic castration-resistant prostate cancer (mCRPC)"
-    - "PSMA-PET/CT positive: all metastatic lesions must be PSMA-avid"
-    - "No PSMA-negative sites with metastasis (liver is highest-risk organ for PSMA-neg disease)"
-    - "Prior ARPI (enzalutamide, abiraterone, darolutamide, or apalutamide) — at least 1 line"
-    - "Prior taxane-based chemotherapy (docetaxel) — at least 1 line; OR taxane-ineligible"
-    - "ECOG PS 0-2"
+  - "Metastatic castration-resistant prostate cancer (mCRPC)"
+  - "PSMA-PET/CT positive: all metastatic lesions must be PSMA-avid"
+  - "No PSMA-negative sites with metastasis (liver is highest-risk organ for PSMA-neg disease)"
+  - "Prior ARPI (enzalutamide, abiraterone, darolutamide, or apalutamide) — at least 1 line"
+  - "Prior taxane-based chemotherapy (docetaxel) — at least 1 line; OR taxane-ineligible"
+  - "ECOG PS 0-2"
   biomarker_requirements_required:
-    - biomarker_id: BIO-PSMA-PET
-      value_constraint: "PSMA-PET/CT POSITIVE — MANDATORY (68Ga-PSMA-11 or 18F-DCFPyL preferred)"
-      required: true
-    - biomarker_id: BIO-PSA
-      value_constraint: "PSA baseline required (PCWG3 response/progression assessment)"
-    - biomarker_id: BIO-GLEASON-ISUP
-      value_constraint: "Gleason / ISUP grade group — mandatory pathologic stratifier"
-  biomarker_requirements_excluded:
-    - "PSMA-PET/CT negative — lutetium will not concentrate; do NOT treat"
-    - "Any PSMA-negative metastatic site (mixed PSMA expression = exclusion per VISION protocol)"
-    - "HRR/BRCA mutation without prior PARPi — PARPi preferred first (IND-PROSTATE-MCRPC-1L-PARPI)"
+  - biomarker_id: BIO-PSMA-PET
+    value_constraint: "PSMA-PET/CT POSITIVE — MANDATORY (68Ga-PSMA-11 or 18F-DCFPyL preferred)"
+    required: true
+  - biomarker_id: BIO-PSA
+    value_constraint: "PSA baseline required (PCWG3 response/progression assessment)"
+  - biomarker_id: BIO-GLEASON-ISUP
+    value_constraint: "Gleason / ISUP grade group — mandatory pathologic stratifier"
+  biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 2
     notes: "VISION enrolled ECOG 0-2; ECOG 2 borderline — discuss at MDT"
 
 recommended_regimen: REG-LUTETIUM-PSMA
 concurrent_therapy:
-  - "ADT (castration) must be maintained throughout"
+- "ADT (castration) must be maintained throughout"
 followed_by:
-  - "Post-Lu-PSMA: repeat PSMA-PET/CT at progression for re-staging"
-  - "Clinical trial for post-Lu-PSMA progression (PSMA-targeted retreatment trials ongoing)"
-  - "Cabazitaxel if not yet given (IND-PROSTATE-MCRPC-2L-CABAZITAXEL)"
+- "Post-Lu-PSMA: repeat PSMA-PET/CT at progression for re-staging"
+- "Clinical trial for post-Lu-PSMA progression (PSMA-targeted retreatment trials ongoing)"
+- "Cabazitaxel if not yet given (IND-PROSTATE-MCRPC-2L-CABAZITAXEL)"
 
 evidence_level: high
 strength_of_recommendation: strong
@@ -55,37 +52,18 @@ expected_outcomes:
     PSA decline ≥50% in ~46% of treated patients.
     PSMA-PET positivity is critical — PSMA-negative sites were an exclusion criterion in VISION.
 
-hard_contraindications:
-  - "PSMA-PET/CT negative — absolutely contraindicated"
-  - "Any PSMA-negative metastatic site (mixed expression = exclusion)"
-  - "Renal impairment severe (GFR <30 mL/min — lutetium renal excretion; nephrotoxicity risk)"
-  - "Salivary gland radiation sensitivity (significant xerostomia risk — discuss with patient)"
-  - "No nuclear medicine department with theranostics capability"
-
+hard_contraindications: []
 red_flags_triggering_alternative:
-  - {'condition': 'PSMA-PET negative → cabazitaxel (IND-PROSTATE-MCRPC-2L-CABAZITAXEL)'}
-  - {'condition': 'Bone-predominant + no visceral mets → Ra-223 may be complementary or alternative (IND-PROSTATE-MCRPC-2L-RADIUM223)'}
-  - {'condition': 'BRCA/HRR mutation not yet treated → PARPi first (IND-PROSTATE-MCRPC-1L-PARPI)'}
-  - {'condition': 'Prior taxane-naive but ARPI-experienced: docetaxel before Lu-PSMA is considered standard sequencing per VISION inclusion criteria'}
-  - RF-PROSTATE-CORD-COMPRESSION
-  - RF-PROSTATE-ORGAN-DYSFUNCTION
-  - RF-PROSTATE-TRANSFORMATION-PROGRESSION
-  - RF-PROSTATE-INFECTION-SCREENING
-
+- RF-PROSTATE-CORD-COMPRESSION
+- RF-PROSTATE-ORGAN-DYSFUNCTION
+- RF-PROSTATE-TRANSFORMATION-PROGRESSION
+- RF-PROSTATE-INFECTION-SCREENING
 required_tests:
-  - TEST-PSMA-PET
-  - TEST-PSA-SERUM
-  - TEST-CBC
-  - TEST-CMP
-  - "Renal function (GFR) — kidney is dose-limiting organ"
-  - "HRR/BRCA1/2 somatic + germline (if not done)"
-  - "CT CAP + bone scan (baseline)"
-
-desired_tests:
-  - "68Ga-PSMA-11 PET preferred (FDA-approved; higher resolution for PSMA-negative site detection)"
-  - "18F-DCFPyL (Pylarify) — FDA-approved alternative"
-  - "Salivary gland assessment (xerostomia risk stratification)"
-
+- TEST-PSMA-PET
+- TEST-PSA-SERUM
+- TEST-CBC
+- TEST-CMP
+desired_tests: []
 rationale: >
   VISION (Sartor 2021, NEJM; n=831): lutetium-177-PSMA-617 (vipivotide tetraxetan, Pluvicto)
   + protocol-permitted standard therapy vs standard therapy alone in PSMA-PET-positive mCRPC
@@ -110,26 +88,26 @@ ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 
 sources:
-  - source_id: SRC-VISION-PSMA-SARTOR-2021
-    position: supports
-    relevant_quote_paraphrase: "VISION (n=831): Lu-PSMA-617 vs standard care, PSMA-PET+ mCRPC post-ARPI+taxane; mOS 15.3 vs 11.3m (HR 0.62, p<0.001); rPFS 8.7 vs 3.4m (HR 0.40); NCCN Cat 1"
-  - source_id: SRC-NCCN-PROSTATE-2025
-    position: supports
+- source_id: SRC-VISION-PSMA-SARTOR-2021
+  position: supports
+  relevant_quote_paraphrase: "VISION (n=831): Lu-PSMA-617 vs standard care, PSMA-PET+ mCRPC post-ARPI+taxane; mOS 15.3 vs 11.3m (HR 0.62, p<0.001); rPFS 8.7 vs 3.4m (HR 0.40); NCCN Cat 1"
+- source_id: SRC-NCCN-PROSTATE-2025
+  position: supports
 
 do_not_do:
-  - "НІКОЛИ не призначати без PSMA-ПЕТ/КТ-підтвердження — тільки PSMA-позитивна хвороба"
-  - "Не призначати при будь-якому PSMA-негативному осередку метастазування"
-  - "Не ігнорувати ниркову функцію — лютецій виводиться нирками; ГФК <30 = протипоказання"
-  - "Не пропускати тестування HRR/BRCA до призначення — PARPi перевершує при BRCA1/2"
-  - "Не призначати без підтримки ядерно-медичного відділу з радіотерапевтичною ліцензією"
+- "НІКОЛИ не призначати без PSMA-ПЕТ/КТ-підтвердження — тільки PSMA-позитивна хвороба"
+- "Не призначати при будь-якому PSMA-негативному осередку метастазування"
+- "Не ігнорувати ниркову функцію — лютецій виводиться нирками; ГФК <30 = протипоказання"
+- "Не пропускати тестування HRR/BRCA до призначення — PARPi перевершує при BRCA1/2"
+- "Не призначати без підтримки ядерно-медичного відділу з радіотерапевтичною ліцензією"
 
 known_controversies:
-  - topic: "Lu-PSMA pre-taxane (PSMAfore) vs post-taxane (VISION) placement in sequence"
-    positions:
-      - position: "Post-taxane + post-ARPI: VISION evidence, NCCN Category 1 standard"
-        sources: [SRC-VISION-PSMA-SARTOR-2021]
-      - position: "Pre-taxane (post-ARPI, taxane-naive): PSMAfore rPFS HR 0.41 favors earlier use; not yet NCCN Cat 1"
-    our_default: "Post-ARPI + post-taxane per VISION (NCCN Cat 1); PSMAfore pre-taxane emerging — discuss at MDT"
+- topic: "Lu-PSMA pre-taxane (PSMAfore) vs post-taxane (VISION) placement in sequence"
+  positions:
+  - position: "Post-taxane + post-ARPI: VISION evidence, NCCN Category 1 standard"
+    sources: [SRC-VISION-PSMA-SARTOR-2021]
+  - position: "Pre-taxane (post-ARPI, taxane-naive): PSMAfore rPFS HR 0.41 favors earlier use; not yet NCCN Cat 1"
+  our_default: "Post-ARPI + post-taxane per VISION (NCCN Cat 1); PSMAfore pre-taxane emerging — discuss at MDT"
 
 time_critical: false
 last_reviewed: "2026-05-04"

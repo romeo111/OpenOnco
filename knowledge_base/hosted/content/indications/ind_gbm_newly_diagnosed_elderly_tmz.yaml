@@ -5,17 +5,17 @@ applicable_to:
   disease_id: DIS-GBM
   line_of_therapy: 1
   stage_requirements:
-    - "Newly-diagnosed glioblastoma (IDH-WT, WHO grade 4)"
-    - "Age ≥ 70 OR KPS < 60 / ECOG ≥ 2 (frail for full Stupp)"
-    - "Post maximal safe resection OR biopsy-only"
+  - "Newly-diagnosed glioblastoma (IDH-WT, WHO grade 4)"
+  - "Age ≥ 70 OR KPS < 60 / ECOG ≥ 2 (frail for full Stupp)"
+  - "Post maximal safe resection OR biopsy-only"
   biomarker_requirements_required:
-    - biomarker_id: BIO-MGMT-METHYLATION
-      required: true
-      value_constraint: "MGMT promoter methylated — TMZ-alone benefit concentrated in methylated patients (Nordic: mOS 7.0 mo vs 5.2 mo in ≥70; MGMT-methylated HR 0.35). MGMT-unmethylated ≥70: prefer hypofractionated RT (see IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT)"
+  - biomarker_id: BIO-MGMT-METHYLATION
+    required: true
+    value_constraint: "MGMT promoter methylated — TMZ-alone benefit concentrated in methylated patients (Nordic: mOS 7.0 mo vs 5.2 mo in ≥70; MGMT-methylated HR 0.35). MGMT-unmethylated ≥70: prefer hypofractionated RT (see IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT)"
   biomarker_requirements_excluded:
-    - biomarker_id: BIO-IDH-MUTATION
-      required: true
-      value_constraint: "IDH-mutant — reclassified as astrocytoma IDH-mutant grade 4 (not GBM by WHO 2021); different prognosis and management"
+  - biomarker_id: BIO-IDH-MUTATION
+    required: true
+    value_constraint: "IDH-mutant — reclassified as astrocytoma IDH-mutant grade 4 (not GBM by WHO 2021); different prognosis and management"
   demographic_constraints:
     age_min: 70
     ecog_max: 3
@@ -32,27 +32,13 @@ expected_outcomes:
   overall_survival_median: "mOS ~7-9 mo in elderly GBM with TMZ alone (Nordic; MGMT-methylated: ~10 mo)"
   notes: "Nordic trial ≥70 subgroup: TMZ vs standard RT mOS 7.0 vs 5.2 mo (HR 0.35). CCTG CE.6: hypoRT + TMZ for all elderly (methylated benefit greatest)."
 
-hard_contraindications:
-  - "MGMT-unmethylated GBM ≥70 — minimal TMZ benefit; prefer hypofractionated RT alone"
-  - "Severe hepatic impairment (TMZ hepatotoxic)"
-  - "Severe myelosuppression at baseline"
-  - "IDH-mutant — reclassify, different disease"
-
+hard_contraindications: []
 red_flags_triggering_alternative:
-  - RF-GBM-INTRACRANIAL-PRESSURE-EMERGENCY
-  - RF-GBM-TRANSFORMATION-PROGRESSION
+- RF-GBM-INTRACRANIAL-PRESSURE-EMERGENCY
+- RF-GBM-TRANSFORMATION-PROGRESSION
 
-required_tests:
-  - "MRI brain with contrast (baseline; post-resection within 48h)"
-  - "MGMT methylation status (mandatory — drives treatment choice in elderly)"
-  - "IDH mutation status (mandatory — WHO 2021 classification)"
-  - "CBC, LFTs, creatinine baseline"
-
-desired_tests:
-  - "KPS / ECOG performance status formal assessment"
-  - "Geriatric assessment (frailty scoring)"
-  - "NGS comprehensive panel (TERT, EGFR, CDKN2A — prognostic)"
-
+required_tests: []
+desired_tests: []
 rationale: >
   Nordic trial (Malmström 2012, Lancet Oncol): in GBM patients ≥70, TMZ alone
   was superior to standard RT 60 Gy (mOS 7.0 vs 5.2 mo, HR 0.35 in ≥70).
@@ -71,20 +57,20 @@ ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 
 sources:
-  - source_id: SRC-NORDIC-GBM-MALMSTROM-2012
-    position: supports
-  - source_id: SRC-CCTG-CE6-PERRY-2017
-    position: supports
-  - source_id: SRC-NCCN-CNS-2025
-    position: supports
-  - source_id: SRC-EANO-GBM-2024
-    position: supports
+- source_id: SRC-NORDIC-GBM-MALMSTROM-2012
+  position: supports
+- source_id: SRC-CCTG-CE6-PERRY-2017
+  position: supports
+- source_id: SRC-NCCN-CNS-2025
+  position: supports
+- source_id: SRC-EANO-GBM-2024
+  position: supports
 
 do_not_do:
-  - "Do NOT use TMZ alone in MGMT-unmethylated GBM ≥70 — minimal benefit; prefer hypofractionated RT"
-  - "Do NOT use full Stupp (60 Gy/30 fx) in patients ≥70 or KPS <60 — excessive toxicity"
-  - "Do NOT skip MGMT testing before choosing TMZ vs RT — this is the key biomarker in elderly"
-  - "Do NOT skip PJP prophylaxis (co-trimoxazole) — lymphopenia risk applies to TMZ mono too"
+- "Do NOT use TMZ alone in MGMT-unmethylated GBM ≥70 — minimal benefit; prefer hypofractionated RT"
+- "Do NOT use full Stupp (60 Gy/30 fx) in patients ≥70 or KPS <60 — excessive toxicity"
+- "Do NOT skip MGMT testing before choosing TMZ vs RT — this is the key biomarker in elderly"
+- "Do NOT skip PJP prophylaxis (co-trimoxazole) — lymphopenia risk applies to TMZ mono too"
 
 last_reviewed: "2026-05-04"
 notes: >

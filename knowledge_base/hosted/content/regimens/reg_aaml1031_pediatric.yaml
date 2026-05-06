@@ -1,109 +1,133 @@
 id: REG-AAML1031-PEDIATRIC
-name: "AAML1031-style induction (Cytarabine + Daunorubicin + Etoposide, pediatric AML 1L)"
-name_ua: "AAML1031-style індукція (Цитарабін + Даунорубіцин + Етопозид, педіатричний AML 1L)"
+name: "AAML1031-style induction (Cytarabine + Daunorubicin + Etoposide, pediatric
+  AML 1L)"
+name_ua: "AAML1031-style індукція (Цитарабін + Даунорубіцин + Етопозид, педіатричний
+  AML 1L)"
 alternate_names:
-  - "ADE 10+3+5"
-  - "AAML1031 induction I"
-  - "Pediatric ADE induction"
+- "ADE 10+3+5"
+- "AAML1031 induction I"
+- "Pediatric ADE induction"
 
 components:
-  - drug_id: DRUG-CYTARABINE
-    dose: "100 mg/m² IV q12h × 10 days (days 1-10)"
-    schedule: "Days 1-10 of induction (continuous q12h dosing)"
-    route: IV
-  - drug_id: DRUG-DAUNORUBICIN
-    dose: "50 mg/m² IV"
-    schedule: "Days 1, 3, 5 of induction"
-    route: IV
-  - drug_id: DRUG-ETOPOSIDE
-    dose: "100 mg/m² IV"
-    schedule: "Days 1-5 of induction"
-    route: IV
+- drug_id: DRUG-CYTARABINE
+  dose: "100 mg/m² IV q12h × 10 days (days 1-10)"
+  schedule: "Days 1-10 of induction (continuous q12h dosing)"
+  route: IV
+- drug_id: DRUG-DAUNORUBICIN
+  dose: "50 mg/m² IV"
+  schedule: "Days 1, 3, 5 of induction"
+  route: IV
+- drug_id: DRUG-ETOPOSIDE
+  dose: "100 mg/m² IV"
+  schedule: "Days 1-5 of induction"
+  route: IV
 
 cycle_length_days: 28
-total_cycles: "1-2 induction cycles per response (BMA day 21-28); risk-stratified consolidation × 3-4 cycles (high-dose cytarabine ± mitoxantrone-cytarabine); allogeneic HSCT for high-risk per AAML1031 risk-group definitions"
+total_cycles: "1-2 induction cycles per response (BMA day 21-28); risk-stratified
+  consolidation × 3-4 cycles (high-dose cytarabine ± mitoxantrone-cytarabine); allogeneic
+  HSCT for high-risk per AAML1031 risk-group definitions"
 toxicity_profile: severe
 
 premedication:
-  - "Antiemetic — high emetogenicity: 5HT3 (palonosetron OR ondansetron 0.15 mg/kg IV q8h) + dexamethasone (age-adjusted) + NK1 (aprepitant if age ≥12)"
-  - "TLS prophylaxis: allopurinol OR rasburicase (mandatory if WBC >50K or bulky disease); aggressive IV hydration ≥3L/m²/day"
-  - "PJP prophylaxis: TMP-SMX 5 mg/kg/day in 2 doses, 3 consecutive days/week (start before induction nadir)"
-  - "Antifungal prophylaxis: posaconazole OR voriconazole (voriconazole avoid if vincristine concurrent; posaconazole pediatric-formulation preferred)"
-  - "HSV prophylaxis: acyclovir 250 mg/m² IV q8h OR 400 mg PO BID"
-  - "Cytarabine eye drops: dexamethasone 0.1% ophthalmic 1-2 drops q4h while awake during HD-cytarabine consolidation (not standard induction dose)"
-  - "Ondansetron eye drops not applicable; standard CINV"
+- "Antiemetic — high emetogenicity: 5HT3 (palonosetron OR ondansetron 0.15 mg/kg IV
+  q8h) + dexamethasone (age-adjusted) + NK1 (aprepitant if age ≥12)"
+- "TLS prophylaxis: allopurinol OR rasburicase (mandatory if WBC >50K or bulky disease);
+  aggressive IV hydration ≥3L/m²/day"
+- "PJP prophylaxis: TMP-SMX 5 mg/kg/day in 2 doses, 3 consecutive days/week (start
+  before induction nadir)"
+- "Antifungal prophylaxis: posaconazole OR voriconazole (voriconazole avoid if vincristine
+  concurrent; posaconazole pediatric-formulation preferred)"
+- "HSV prophylaxis: acyclovir 250 mg/m² IV q8h OR 400 mg PO BID"
+- "Cytarabine eye drops: dexamethasone 0.1% ophthalmic 1-2 drops q4h while awake during
+  HD-cytarabine consolidation (not standard induction dose)"
+- "Ondansetron eye drops not applicable; standard CINV"
 mandatory_supportive_care:
-  - SUP-TLS-PROPHYLAXIS
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-GCSF-NEUTROPENIA
+- SUP-TLS-PROPHYLAXIS
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-GCSF-NEUTROPENIA
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Down syndrome AML (DS-AML)"
-    modification: "Use ML-DS-specific protocol (AAML1531-style: reduced cytarabine intensity, no anthracycline cap reduction); DS-AML is biologically distinct (GATA1-mutant), requires lower-intensity therapy with excellent outcomes"
-    rationale: "DS-AML has higher cure rate with reduced-intensity therapy; standard AAML1031 dosing causes excess toxicity"
-    source_refs: [SRC-NCCN-AML-2025]
-  - condition: "Cumulative anthracycline approaching 300 mg/m² doxorubicin-equivalent"
-    modification: "Plan consolidation without further anthracycline; LVEF assessment; consider dexrazoxane if anthracycline unavoidable"
-    source_refs: [SRC-NCCN-AML-2025]
-  - condition: "Renal/hepatic dysfunction"
-    modification: "Dose-modify per institutional pediatric oncology protocol; cytarabine renal-adjusted at high doses (consolidation), not standard induction; daunorubicin reduced if bilirubin elevated"
-  - condition: "FLT3-ITD positive (high-allelic-ratio)"
-    modification: "Add midostaurin 30 mg/m² PO BID days 8-21 (AAML18P1-style FLT3 add-on); plan for alloHCT in CR1"
-    rationale: "FLT3-ITD high-AR confers high-risk; FLT3 inhibitor + alloHCT improves outcome"
-    source_refs: [SRC-NCCN-AML-2025]
-  - condition: "CD33+ (most pediatric AML) and ELN-favorable / intermediate cytogenetics"
-    modification: "Consider gemtuzumab ozogamicin 3 mg/m² (max 4.5 mg) IV days 1, 4, 7 of induction (AAML0531/AAML1031-style GO add-on; ALFA-0701-equivalent dose-fractionation); EFS benefit"
-    source_refs: [SRC-NCCN-AML-2025]
-  - condition: "Severe + prolonged febrile neutropenia"
-    modification: "Empirical broad-spectrum antibiotics (anti-Pseudomonal beta-lactam ± vancomycin); G-CSF support; antifungal coverage if persistent fever ≥4-7 days on antibiotics"
+- condition: "Down syndrome AML (DS-AML)"
+  modification: "Use ML-DS-specific protocol (AAML1531-style: reduced cytarabine intensity,
+    no anthracycline cap reduction); DS-AML is biologically distinct (GATA1-mutant),
+    requires lower-intensity therapy with excellent outcomes"
+  rationale: "DS-AML has higher cure rate with reduced-intensity therapy; standard
+    AAML1031 dosing causes excess toxicity"
+  source_refs: [SRC-NCCN-AML-2025]
+- condition: "Cumulative anthracycline approaching 300 mg/m² doxorubicin-equivalent"
+  modification: "Plan consolidation without further anthracycline; LVEF assessment;
+    consider dexrazoxane if anthracycline unavoidable"
+  source_refs: [SRC-NCCN-AML-2025]
+- condition: "Renal/hepatic dysfunction"
+  modification: "Dose-modify per institutional pediatric oncology protocol; cytarabine
+    renal-adjusted at high doses (consolidation), not standard induction; daunorubicin
+    reduced if bilirubin elevated"
+- condition: "FLT3-ITD positive (high-allelic-ratio)"
+  modification: "Add midostaurin 30 mg/m² PO BID days 8-21 (AAML18P1-style FLT3 add-on);
+    plan for alloHCT in CR1"
+  rationale: "FLT3-ITD high-AR confers high-risk; FLT3 inhibitor + alloHCT improves
+    outcome"
+  source_refs: [SRC-NCCN-AML-2025]
+- condition: "CD33+ (most pediatric AML) and ELN-favorable / intermediate cytogenetics"
+  modification: "Consider gemtuzumab ozogamicin 3 mg/m² (max 4.5 mg) IV days 1, 4,
+    7 of induction (AAML0531/AAML1031-style GO add-on; ALFA-0701-equivalent dose-fractionation);
+    EFS benefit"
+  source_refs: [SRC-NCCN-AML-2025]
+- condition: "Severe + prolonged febrile neutropenia"
+  modification: "Empirical broad-spectrum antibiotics (anti-Pseudomonal beta-lactam
+    ± vancomycin); G-CSF support; antifungal coverage if persistent fever ≥4-7 days
+    on antibiotics"
 
 ukraine_availability:
   all_components_registered: true
   all_components_reimbursed: true
-  notes: "Цитарабін, даунорубіцин, етопозид — реімбурсуються НСЗУ для педіатричного AML; standard 1L. Гемтузумаб озогаміцин (опціональне додавання для CD33+/cytogenetic-фаворабел) НЕ зареєстрований в Україні (доступ EAP Pfizer / cross-border)."
+  notes: "Цитарабін, даунорубіцин, етопозид — реімбурсуються НСЗУ для педіатричного
+    AML; standard 1L. Гемтузумаб озогаміцин (опціональне додавання для CD33+/cytogenetic-фаворабел)
+    НЕ зареєстрований в Україні (доступ EAP Pfizer / cross-border)."
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ESMO-AML-2020
+- SRC-NCCN-AML-2025
+- SRC-ESMO-AML-2020
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # AAML1031 pediatric AML 1L. Same induction toxicity as adult 7+3 +
 # pediatric-specific concerns (growth, fertility, late effects).
 # STUB pending §6.1 signoff. Watchpoints written for the parent.
 between_visit_watchpoints:
-  - trigger_ua: "Виражена втома у дитини, що триває тижнями"
-    action_ua: "Очікувано — кістковий мозок відновлюється повільно; занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Випадання волосся"
-    action_ua: "Очікувано — повертається після курсу"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Лихоманка вище 38°C у дитини"
-    action_ua: "Звертайтесь у лікарню негайно — на тлі тривалої нейтропенії інфекція може швидко переходити у сепсис"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-AML-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Незвичні синці, кровотеча ясен або носа у дитини"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Нова задишка при невеликому навантаженні"
-    action_ua: "Подзвоніть у клініку того ж дня — антрациклін впливає на серце"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
-    action_ua: "Звертайтесь у лікарню негайно — ознаки сепсису"
-    urgency: er_now
-    sources:
-      - SRC-CTCAE-V5
+- trigger_ua: "Виражена втома у дитини, що триває тижнями"
+  action_ua: "Очікувано — кістковий мозок відновлюється повільно; занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Випадання волосся"
+  action_ua: "Очікувано — повертається після курсу"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Лихоманка вище 38°C у дитини"
+  action_ua: "Звертайтесь у лікарню негайно — на тлі тривалої нейтропенії інфекція
+    може швидко переходити у сепсис"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-AML-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Незвичні синці, кровотеча ясен або носа у дитини"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Нова задишка при невеликому навантаженні"
+  action_ua: "Подзвоніть у клініку того ж дня — антрациклін впливає на серце"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+  action_ua: "Звертайтесь у лікарню негайно — ознаки сепсису"
+  urgency: er_now
+  sources:
+  - SRC-CTCAE-V5
 
 last_reviewed: "2026-04-27"
 reviewers: []

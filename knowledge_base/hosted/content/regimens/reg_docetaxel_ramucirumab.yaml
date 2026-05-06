@@ -2,46 +2,48 @@ id: REG-DOCETAXEL-RAMUCIRUMAB
 name: "Docetaxel + Ramucirumab (REVEL) — 2L+ NSCLC post-platinum / post-ICI"
 name_ua: "Доцетаксель + Рамуцирумаб (REVEL) — 2L+ НДРЛ після платини / ICI"
 alternate_names:
-  - "Doc-Ram"
-  - "REVEL regimen"
+- "Doc-Ram"
+- "REVEL regimen"
 
 components:
-  - drug_id: DRUG-DOCETAXEL
-    dose: "75 mg/m²"
-    schedule: "IV day 1 of each 21-day cycle"
-    route: IV
-  - drug_id: DRUG-RAMUCIRUMAB
-    dose: "10 mg/kg"
-    schedule: "IV day 1 of each 21-day cycle"
-    route: IV
+- drug_id: DRUG-DOCETAXEL
+  dose: "75 mg/m²"
+  schedule: "IV day 1 of each 21-day cycle"
+  route: IV
+- drug_id: DRUG-RAMUCIRUMAB
+  dose: "10 mg/kg"
+  schedule: "IV day 1 of each 21-day cycle"
+  route: IV
 
 cycle_length_days: 21
-total_cycles: "Until progression or unacceptable toxicity (typically 6+ cycles for responders)"
+total_cycles: "Until progression or unacceptable toxicity (typically 6+ cycles for
+  responders)"
 toxicity_profile: severe
 
 premedication:
-  - "Pre-docetaxel: dexamethasone 8 mg PO BID × 3 days starting day before infusion (fluid retention + hypersensitivity prevention)"
-  - "Antiemetics — moderate-emetogenic prophylaxis"
+- "Pre-docetaxel: dexamethasone 8 mg PO BID × 3 days starting day before infusion
+  (fluid retention + hypersensitivity prevention)"
+- "Antiemetics — moderate-emetogenic prophylaxis"
 mandatory_supportive_care:
-  - SUP-GCSF-NEUTROPENIA  # primary G-CSF prophylaxis if febrile neutropenia history
+- SUP-GCSF-NEUTROPENIA
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Hypertension Grade ≥2 (SBP ≥150 OR DBP ≥100)"
-    modification: "Optimize antihypertensives; hold ramucirumab if uncontrolled"
-    source_refs: [SRC-NCCN-NSCLC-2025]
-  - condition: "Proteinuria >2 g/24h"
-    modification: "Hold ramucirumab until <2 g/24h"
-    source_refs: [SRC-NCCN-NSCLC-2025]
-  - condition: "Recent / planned major surgery"
-    modification: "Hold ramucirumab ≥28 days pre-op + ≥28 days post-op until wound healing"
-    source_refs: [SRC-NCCN-NSCLC-2025]
-  - condition: "Grade 4 neutropenia OR febrile neutropenia"
-    modification: "Reduce docetaxel to 60 mg/m²; G-CSF prophylaxis"
-  - condition: "Grade ≥2 peripheral neuropathy"
-    modification: "Reduce docetaxel; consider switch to single-agent or alternate cytotoxic"
-  - condition: "Active hemoptysis OR recent GI bleed / ulcer"
-    modification: "Discontinue ramucirumab"
+- condition: "Hypertension Grade ≥2 (SBP ≥150 OR DBP ≥100)"
+  modification: "Optimize antihypertensives; hold ramucirumab if uncontrolled"
+  source_refs: [SRC-NCCN-NSCLC-2025]
+- condition: "Proteinuria >2 g/24h"
+  modification: "Hold ramucirumab until <2 g/24h"
+  source_refs: [SRC-NCCN-NSCLC-2025]
+- condition: "Recent / planned major surgery"
+  modification: "Hold ramucirumab ≥28 days pre-op + ≥28 days post-op until wound healing"
+  source_refs: [SRC-NCCN-NSCLC-2025]
+- condition: "Grade 4 neutropenia OR febrile neutropenia"
+  modification: "Reduce docetaxel to 60 mg/m²; G-CSF prophylaxis"
+- condition: "Grade ≥2 peripheral neuropathy"
+  modification: "Reduce docetaxel; consider switch to single-agent or alternate cytotoxic"
+- condition: "Active hemoptysis OR recent GI bleed / ulcer"
+  modification: "Discontinue ramucirumab"
 
 ukraine_availability:
   all_components_registered: true
@@ -53,52 +55,52 @@ ukraine_availability:
     fallback when ramucirumab funding unavailable.
 
 sources:
-  - SRC-NCCN-NSCLC-2025
-  - SRC-ESMO-NSCLC-METASTATIC-2024
+- SRC-NCCN-NSCLC-2025
+- SRC-ESMO-NSCLC-METASTATIC-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Docetaxel + ramucirumab for NSCLC 2L (REVEL). Adds anti-VEGFR2
 # bleeding/proteinuria/HTN to docetaxel cytopenia + neuropathy.
 # STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
-    action_ua: "Доцетаксел може спричиняти нейропатію — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Випадання волосся, втома, легка нудота"
-    action_ua: "Очікувано — приймайте призначені протиблювотні; волосся повертається"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
-    action_ua: "Рамуцирумаб може підвищувати тиск"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-NCCN-NSCLC-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Кров у сечі або сеча, що піниться"
-    action_ua: "Подзвоніть у клініку того ж дня — рамуцирумаб впливає на нирки"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Кровохаркання або значна кровотеча"
-    action_ua: "Звертайтесь у лікарню негайно — рамуцирумаб підвищує ризик кровотеч"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Сильна реакція на інфузію"
-    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
-    urgency: er_now
-    cycle_day_window: "Day 1 of cycle 1"
-    sources:
-      - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Поколювання або оніміння в кистях/стопах"
+  action_ua: "Доцетаксел може спричиняти нейропатію — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Випадання волосся, втома, легка нудота"
+  action_ua: "Очікувано — приймайте призначені протиблювотні; волосся повертається"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+  action_ua: "Рамуцирумаб може підвищувати тиск"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Кров у сечі або сеча, що піниться"
+  action_ua: "Подзвоніть у клініку того ж дня — рамуцирумаб впливає на нирки"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Кровохаркання або значна кровотеча"
+  action_ua: "Звертайтесь у лікарню негайно — рамуцирумаб підвищує ризик кровотеч"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Сильна реакція на інфузію"
+  action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+  urgency: er_now
+  cycle_day_window: "Day 1 of cycle 1"
+  sources:
+  - SRC-NCCN-NSCLC-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -111,6 +113,12 @@ notes: >
   profile minus VEGFR2 toxicity. Hypertension + bleeding management
   + 28-day pre/post-surgery hold mandatory.
 notes_ua: >
-  REVEL дослідження (Garon 2014): 2L NSCLC (post-platinum, mostly pre-ICI era) — доцетаксел + рамуцирумаб vs доцетаксел mOS 10.5 проти 9.1 міс. (HR 0.86); modest absolute виграш but PFS gain 4.5 проти 3.0 міс., ORR 23% проти 14%. In modern post-ICI+chemo failure setting, doc-ram remains rational 2L cytotoxic option. Single-agent доцетаксел is прийнятний alternative without рамуцирумаб — співставний профіль безпеки minus VEGFR2 токсичність. гіпертензія + bleeding management + 28-day pre/post-surgery утримати обов'язковий.
+  REVEL дослідження (Garon 2014): 2L NSCLC (post-platinum, mostly pre-ICI era) — доцетаксел
+  + рамуцирумаб vs доцетаксел mOS 10.5 проти 9.1 міс. (HR 0.86); modest absolute виграш
+  but PFS gain 4.5 проти 3.0 міс., ORR 23% проти 14%. In modern post-ICI+chemo failure
+  setting, doc-ram remains rational 2L cytotoxic option. Single-agent доцетаксел is
+  прийнятний alternative without рамуцирумаб — співставний профіль безпеки minus VEGFR2
+  токсичність. гіпертензія + bleeding management + 28-day pre/post-surgery утримати
+  обов'язковий.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

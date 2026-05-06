@@ -3,75 +3,72 @@ name: "Nivolumab + cabozantinib (RCC, 1L)"
 name_ua: "Ніволумаб + кабозантиніб (НКК, 1L)"
 alternate_names: ["CheckMate-9ER", "nivo+cabo RCC"]
 components:
-  - drug_id: DRUG-NIVOLUMAB
-    dose: "240 mg IV q2w (or 480 mg IV q4w)"
-    schedule: "Until progression or max 2 years"
-    route: IV
-  - drug_id: DRUG-CABOZANTINIB
-    dose: "40 mg PO daily"
-    schedule: "Continuous daily dosing (note: 40 mg in combination — lower than 60 mg monotherapy)"
-    route: PO
+- drug_id: DRUG-NIVOLUMAB
+  dose: "240 mg IV q2w (or 480 mg IV q4w)"
+  schedule: "Until progression or max 2 years"
+  route: IV
+- drug_id: DRUG-CABOZANTINIB
+  dose: "40 mg PO daily"
+  schedule: "Continuous daily dosing (note: 40 mg in combination — lower than 60 mg monotherapy)"
+  route: PO
 cycle_length_days: 28
 total_cycles: "Until progression or max ~24 cycles nivolumab; cabozantinib continues until progression"
 toxicity_profile: severe
 premedication: []
-mandatory_supportive_care:
-  - "Blood pressure monitoring (hypertension G3-4 ~15%)"
-  - "Thyroid function q12w"
-  - "LFTs baseline and periodically"
+mandatory_supportive_care: []
 monitoring_schedule_id:
 dose_adjustments:
-  - condition: "Grade 3-4 cabozantinib-related AE"
-    modification: "Hold cabozantinib; reduce to 20 mg on resumption (40→20 mg only one step)"
-  - condition: "Immune-mediated AE G≥2 from nivolumab"
-    modification: "Hold nivolumab; corticosteroids for G≥3"
-  - condition: "Grade 4 AE or recurrent G3 requiring >12w hold"
-    modification: "Permanently discontinue nivolumab"
+- condition: "Grade 3-4 cabozantinib-related AE"
+  modification: "Hold cabozantinib; reduce to 20 mg on resumption (40→20 mg only one step)"
+- condition: "Immune-mediated AE G≥2 from nivolumab"
+  modification: "Hold nivolumab; corticosteroids for G≥3"
+- condition: "Grade 4 AE or recurrent G3 requiring >12w hold"
+  modification: "Permanently discontinue nivolumab"
 ukraine_availability:
   all_components_registered: true
   all_components_reimbursed: false
   notes: "Both registered in Ukraine. Out-of-pocket for most patients."
 sources:
-  - SRC-CHECKMATE9ER-CHOUEIRI-2021
-  - SRC-NCCN-KIDNEY-2025
-  - SRC-ESMO-RCC-2024
+- SRC-CHECKMATE9ER-CHOUEIRI-2021
+- SRC-NCCN-KIDNEY-2025
+- SRC-ESMO-RCC-2024
 
 between_visit_watchpoints:
-  - trigger_ua: "Підвищений кров'яний тиск (≥150/100)"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція гіпотензивних"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Діарея більше 4 разів на день або кров'яний стілець"
-    action_ua: "Подзвоніть у клініку — може бути токсичність кабозантинібу або імунний коліт; раннє розрізнення важливе"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Болючість або виразки в роті (стоматит)"
-    action_ua: "Поширений від кабозантинібу — полощіть рот, м'яка їжа"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Жовтяниця або потемніння сечі"
-    action_ua: "Зверніться до лікарні — можливий імунний гепатит або токсичність кабозантинібу"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Нова задишка або сухий кашель"
-    action_ua: "Подзвоніть у клініку — можливий пневмоніт"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Гострий біль у животі"
-    action_ua: "Зверніться до лікарні негайно — ризик перфорації"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Синдром долоня-стопа (болюча шкіра на руках і ногах)"
-    action_ua: "Повідомте клініку — знизьте навантаження на стопи, використовуйте м'яке взуття та зволожувач"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Підвищений кров'яний тиск (≥150/100)"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція гіпотензивних"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Діарея більше 4 разів на день або кров'яний стілець"
+  action_ua: "Подзвоніть у клініку — може бути токсичність кабозантинібу або імунний коліт; раннє розрізнення важливе"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Болючість або виразки в роті (стоматит)"
+  action_ua: "Поширений від кабозантинібу — полощіть рот, м'яка їжа"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Жовтяниця або потемніння сечі"
+  action_ua: "Зверніться до лікарні — можливий імунний гепатит або токсичність кабозантинібу"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Нова задишка або сухий кашель"
+  action_ua: "Подзвоніть у клініку — можливий пневмоніт"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Гострий біль у животі"
+  action_ua: "Зверніться до лікарні негайно — ризик перфорації"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Синдром долоня-стопа (болюча шкіра на руках і ногах)"
+  action_ua: "Повідомте клініку — знизьте навантаження на стопи, використовуйте м'яке взуття та зволожувач"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-KIDNEY-2025
 
 last_reviewed: "2026-05-03"
 notes: >

@@ -23,41 +23,31 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: ecog
+  - finding: ecog
+    threshold: 2
+    comparator: ">="
+  - finding: performance_status_ecog
+    threshold: 2
+    comparator: ">="
+  - all_of:
+    - finding: age
+      threshold: 70
+      comparator: ">="
+    - finding: comorbidity_count
       threshold: 2
       comparator: ">="
-    - finding: performance_status_ecog
-      threshold: 2
-      comparator: ">="
-    - all_of:
-        - finding: age
-          threshold: 70
-          comparator: ">="
-        - finding: comorbidity_count
-          threshold: 2
-          comparator: ">="
 
 clinical_direction: de-escalate
 
 shifts_algorithm:
-  - ALGO-RCC-METASTATIC-1L
+- ALGO-RCC-METASTATIC-1L
 
 relevant_diseases:
-  - DIS-RCC
+- DIS-RCC
 
 sources:
-  - source_id: SRC-NCCN-KIDNEY-2025
-    position: supports
-    relevant_quote_paraphrase: >
-      NCCN Kidney 2025: lenvatinib+pembrolizumab has higher G3-4 toxicity profile
-      than pembro+axi or nivo+cabo; ECOG 2 patients may better tolerate
-      nivolumab+ipilimumab or pembro+axitinib combinations.
-  - source_id: SRC-CLEAR-MOTZER-2021
-    position: supports
-    relevant_quote_paraphrase: >
-      CLEAR (KEYNOTE-581): lenv+pembro G3-4 AEs 71.8% vs sunitinib 58.8%;
-      dose modifications required in 68.8% on lenv+pembro arm.
-
+- SRC-NCCN-KIDNEY-2025
+- SRC-CLEAR-MOTZER-2021
 notes: >
   In the CLEAR trial, lenvatinib+pembrolizumab had the highest ORR (~71%) but also
   the highest G3-4 toxicity (71.8%) and dose modification rate (68.8%) of the

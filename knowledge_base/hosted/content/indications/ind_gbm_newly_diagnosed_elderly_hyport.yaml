@@ -5,23 +5,21 @@ applicable_to:
   disease_id: DIS-GBM
   line_of_therapy: 1
   stage_requirements:
-    - "Newly-diagnosed glioblastoma (IDH-WT, WHO grade 4)"
-    - "Age ≥ 65 OR KPS < 60 / ECOG ≥ 2 (frail for full Stupp)"
-    - "Post maximal safe resection OR biopsy-only"
+  - "Newly-diagnosed glioblastoma (IDH-WT, WHO grade 4)"
+  - "Age ≥ 65 OR KPS < 60 / ECOG ≥ 2 (frail for full Stupp)"
+  - "Post maximal safe resection OR biopsy-only"
   biomarker_requirements_required: []
   biomarker_requirements_excluded:
-    - biomarker_id: BIO-IDH-MUTATION
-      required: true
-      value_constraint: "IDH-mutant — reclassify per WHO 2021"
+  - biomarker_id: BIO-IDH-MUTATION
+    required: true
+    value_constraint: "IDH-mutant — reclassify per WHO 2021"
   demographic_constraints:
     age_min: 65
     ecog_max: 3
 
 recommended_regimen: REG-HYPOFRACTIONATED-RT-GBM
 concurrent_therapy:
-  - regimen_id: REG-TMZ-MONO
-    condition: "Add TMZ if MGMT-methylated (CCTG CE.6 OS benefit HR 0.67 overall; methylated HR ~0.51)"
-    notes: "Concurrent TMZ 75 mg/m²/d with hypoRT, then adjuvant TMZ 150-200 mg/m²/d D1-5 q28d × up to 12 cycles"
+- 'REG-TMZ-MONO: Add TMZ if MGMT-methylated (CCTG CE.6 OS benefit HR 0.67 overall; methylated HR ~0.51) Concurrent TMZ 75 mg/m²/d with hypoRT, then adjuvant TMZ 150-200 mg/m²/d D1-5 q28d × up to 12 cycles'
 followed_by: []
 
 evidence_level: high
@@ -32,25 +30,13 @@ expected_outcomes:
   overall_survival_median: "mOS 9.3 mo (hypoRT + TMZ) vs 7.6 mo (hypoRT alone; CCTG CE.6, n=562, ≥65 yrs)"
   notes: "CCTG CE.6: HR 0.67 (p<0.001). Nordic: hypoRT 34 Gy/10 non-inferior to 60 Gy/30. Best in MGMT-methylated (mOS 13.5 vs 7.7 mo with vs without TMZ)."
 
-hard_contraindications:
-  - "Active systemic infection preventing RT"
-  - "IDH-mutant — different disease category (WHO 2021)"
-  - "KPS <30 or very short expected survival (<4 weeks) — BSC preferred"
-
+hard_contraindications: []
 red_flags_triggering_alternative:
-  - RF-GBM-INTRACRANIAL-PRESSURE-EMERGENCY
-  - RF-GBM-TRANSFORMATION-PROGRESSION
+- RF-GBM-INTRACRANIAL-PRESSURE-EMERGENCY
+- RF-GBM-TRANSFORMATION-PROGRESSION
 
-required_tests:
-  - "MRI brain with contrast (post-resection baseline)"
-  - "MGMT methylation status (drives concurrent TMZ decision)"
-  - "IDH mutation status"
-  - "CBC, LFTs baseline (TMZ if concurrent)"
-
-desired_tests:
-  - "KPS formal assessment"
-  - "RT planning CT (for simulation)"
-
+required_tests: []
+desired_tests: []
 rationale: >
   CCTG CE.6 (Perry 2017, NEJM N=562, ≥65 yrs): hypofractionated RT 40 Gy/15 fx
   + concurrent/adjuvant TMZ vs hypoRT alone. mOS 9.3 vs 7.6 mo (HR 0.67, p<0.001).
@@ -69,21 +55,21 @@ ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 
 sources:
-  - source_id: SRC-CCTG-CE6-PERRY-2017
-    position: supports
-  - source_id: SRC-NORDIC-GBM-MALMSTROM-2012
-    position: supports
-  - source_id: SRC-NCCN-CNS-2025
-    position: supports
-  - source_id: SRC-EANO-GBM-2024
-    position: supports
+- source_id: SRC-CCTG-CE6-PERRY-2017
+  position: supports
+- source_id: SRC-NORDIC-GBM-MALMSTROM-2012
+  position: supports
+- source_id: SRC-NCCN-CNS-2025
+  position: supports
+- source_id: SRC-EANO-GBM-2024
+  position: supports
 
 do_not_do:
-  - "Do NOT use full Stupp 60 Gy/30 fx in patients ≥70 or KPS <60 — unacceptable toxicity in elderly"
-  - "Do NOT omit TMZ without first checking MGMT status — methylated patients benefit significantly"
-  - "Do NOT skip MGMT testing — drives concurrent TMZ decision"
-  - "Do NOT start RT without post-resection MRI (within 48h of surgery)"
-  - "Do NOT delay RT beyond 6 weeks post-surgery"
+- "Do NOT use full Stupp 60 Gy/30 fx in patients ≥70 or KPS <60 — unacceptable toxicity in elderly"
+- "Do NOT omit TMZ without first checking MGMT status — methylated patients benefit significantly"
+- "Do NOT skip MGMT testing — drives concurrent TMZ decision"
+- "Do NOT start RT without post-resection MRI (within 48h of surgery)"
+- "Do NOT delay RT beyond 6 weeks post-surgery"
 
 last_reviewed: "2026-05-04"
 notes: >

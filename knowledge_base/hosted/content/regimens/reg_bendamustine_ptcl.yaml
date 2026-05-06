@@ -4,36 +4,36 @@ name_ua: "Бендамустин монотерапія 90 мг/м² дні 1+2 
 alternate_names: ["Bendamustine mono PTCL", "BENTLY-style"]
 
 components:
-  - drug_id: DRUG-BENDAMUSTINE
-    dose: "90 mg/m² IV"
-    schedule: "Days 1 and 2 of each 21-day cycle, up to 6 cycles or until progression"
-    route: IV
+- drug_id: DRUG-BENDAMUSTINE
+  dose: "90 mg/m² IV"
+  schedule: "Days 1 and 2 of each 21-day cycle, up to 6 cycles or until progression"
+  route: IV
 
 cycle_length_days: 21
 total_cycles: "Up to 6 (longer if sustained response + tolerability)"
 toxicity_profile: moderate
 
 premedication:
-  - "5-HT3 antagonist + dexamethasone before each infusion"
-  - "Hydration + allopurinol cycle 1 if high-burden disease"
+- "5-HT3 antagonist + dexamethasone before each infusion"
+- "Hydration + allopurinol cycle 1 if high-burden disease"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-ANTIEMETIC-PREMED
+- SUP-PJP-PROPHYLAXIS
+- SUP-ANTIEMETIC-PREMED
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "FIB-4 >3.25 OR compensated cirrhosis"
-    modification: "Reduce bendamustine to 70 mg/m² days 1+2"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "CrCl 30-60"
-    modification: "Reduce bendamustine to 70 mg/m²"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "ANC <1000 OR platelets <75K cycle start"
-    modification: "Delay cycle ≥7 days; G-CSF support if recurrent"
-  - condition: "Grade ≥3 myelosuppression after cycle"
-    modification: "Reduce to 70 mg/m²; G-CSF support next cycle"
-  - condition: "Severe infection during cycle"
-    modification: "Hold; treat infection; resume at 70 mg/m²"
+- condition: "FIB-4 >3.25 OR compensated cirrhosis"
+  modification: "Reduce bendamustine to 70 mg/m² days 1+2"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "CrCl 30-60"
+  modification: "Reduce bendamustine to 70 mg/m²"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "ANC <1000 OR platelets <75K cycle start"
+  modification: "Delay cycle ≥7 days; G-CSF support if recurrent"
+- condition: "Grade ≥3 myelosuppression after cycle"
+  modification: "Reduce to 70 mg/m²; G-CSF support next cycle"
+- condition: "Severe infection during cycle"
+  modification: "Hold; treat infection; resume at 70 mg/m²"
 
 ukraine_availability:
   all_components_registered: true
@@ -46,40 +46,41 @@ ukraine_availability:
     brentuximab not accessible.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-PTCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-PTCL-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Bendamustine monotherapy for relapsed PTCL. Same as BR pattern but
 # without rituximab IRR. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, помірна нудота"
-    action_ua: "Зустрічається — приймайте призначені протиблювотні"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка вище 38°C — особливо на 14-21 день"
-    action_ua: "Подзвоніть у клініку того ж дня — бендамустин дає глибоку тривалу нейтропенію"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 14-21"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Висип у вигляді почервонілих плям, які злущуються"
-    action_ua: "Подзвоніть у клініку того ж дня — рідко бендамустин може спричиняти тяжкі шкірні реакції"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Незвичні синці, кровотеча ясен"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Сепсис: лихоманка з ознобом, плутаність свідомості"
-    action_ua: "Звертайтесь у лікарню негайно"
-    urgency: er_now
-    sources:
-      - SRC-CTCAE-V5
+- trigger_ua: "Помірна втома, помірна нудота"
+  action_ua: "Зустрічається — приймайте призначені протиблювотні"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка вище 38°C — особливо на 14-21 день"
+  action_ua: "Подзвоніть у клініку того ж дня — бендамустин дає глибоку тривалу нейтропенію"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 14-21"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Висип у вигляді почервонілих плям, які злущуються"
+  action_ua: "Подзвоніть у клініку того ж дня — рідко бендамустин може спричиняти
+    тяжкі шкірні реакції"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Незвичні синці, кровотеча ясен"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Сепсис: лихоманка з ознобом, плутаність свідомості"
+  action_ua: "Звертайтесь у лікарню негайно"
+  urgency: er_now
+  sources:
+  - SRC-CTCAE-V5
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -92,6 +93,11 @@ notes: >
   Often used as bridge to allo / autoSCT in transplant-eligible
   responders.
 notes_ua: >
-  BENTLY дослідження (Damaj 2013): р/р PTCL — ORR 50%, CR 28% in mixed cohort (incl ALCL, AITL, PTCL NOS). Useful broad сальвадж option, особливо when brentuximab not accessible. Alkylator-driven mechanism, distinct from HDAC / ALK TKI / brentuximab — useful in heavily pretreated. AITL subgroup особливо responsive. HBV screening + entecavir prophylaxis if HBsAg+ or anti-HBc+ обов'язковий (immunosuppression risk). часто used as bridge to allo / аутоТГСК in придатний до трансплантації responders.
+  BENTLY дослідження (Damaj 2013): р/р PTCL — ORR 50%, CR 28% in mixed cohort (incl
+  ALCL, AITL, PTCL NOS). Useful broad сальвадж option, особливо when brentuximab not
+  accessible. Alkylator-driven mechanism, distinct from HDAC / ALK TKI / brentuximab
+  — useful in heavily pretreated. AITL subgroup особливо responsive. HBV screening
+  + entecavir prophylaxis if HBsAg+ or anti-HBc+ обов'язковий (immunosuppression risk).
+  часто used as bridge to allo / аутоТГСК in придатний до трансплантації responders.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

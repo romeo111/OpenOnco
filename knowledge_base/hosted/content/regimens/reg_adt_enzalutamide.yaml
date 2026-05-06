@@ -4,14 +4,14 @@ name_ua: "АДТ + ензалутамід (безперервно)"
 alternate_names: ["ENZAMET-style", "PREVAIL regimen", "AFFIRM regimen"]
 
 components:
-  - drug_id: DRUG-LEUPROLIDE
-    dose: "11.25 mg IM q3 months"
-    schedule: "Continuous"
-    route: IM
-  - drug_id: DRUG-ENZALUTAMIDE
-    dose: "160 mg PO daily"
-    schedule: "Continuous"
-    route: PO
+- drug_id: DRUG-LEUPROLIDE
+  dose: "11.25 mg IM q3 months"
+  schedule: "Continuous"
+  route: IM
+- drug_id: DRUG-ENZALUTAMIDE
+  dose: "160 mg PO daily"
+  schedule: "Continuous"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "Continuous until progression or unacceptable toxicity"
@@ -19,14 +19,14 @@ toxicity_profile: low-moderate
 
 premedication: []
 mandatory_supportive_care:
-  - SUP-BONE-HEALTH-PROSTATE
+- SUP-BONE-HEALTH-PROSTATE
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "History of seizures"
-    modification: "Avoid enzalutamide (alternative: apalutamide / darolutamide)"
-  - condition: "Severe hepatic impairment (Child-Pugh C)"
-    modification: "Reduce to 80 mg PO daily"
+- condition: "History of seizures"
+  modification: "Avoid enzalutamide (alternative: apalutamide / darolutamide)"
+- condition: "Severe hepatic impairment (Child-Pugh C)"
+  modification: "Reduce to 80 mg PO daily"
 
 ukraine_availability:
   all_components_registered: true
@@ -40,41 +40,44 @@ sources: [SRC-NCCN-PROSTATE-2025, SRC-ESMO-PROSTATE-2024]
 # falls, hot flashes, rare seizure, hypertension, BMD loss + ADT
 # cardiometabolic. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Гарячі припливи, втома, втрата лібідо"
-    action_ua: "Очікувані ефекти від ADT — занотовуйте, обговоріть на візиті"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-  - trigger_ua: "Запаморочення, особливо при вставанні"
-    action_ua: "Поширене на ензалутамід — вставайте повільно, занотовуйте частоту"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
-    action_ua: "Ензалутамід може підвищувати тиск — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-  - trigger_ua: "Падіння з можливою травмою"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка причини; ризик падінь на ензалутамід підвищений"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-  - trigger_ua: "Сильна слабкість, постійна спрага, втрата ваги"
-    action_ua: "Подзвоніть у клініку того ж дня — можливі метаболічні зміни на тлі ADT"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-  - trigger_ua: "Раптовий судомний напад"
-    action_ua: "Звертайтесь у лікарню негайно — ензалутамід рідко може знижувати поріг судом, особливо при метастазах у мозок"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-  - trigger_ua: "Раптовий сильний головний біль, порушення зору або мовлення, слабкість в одній стороні тіла"
-    action_ua: "Звертайтесь у лікарню негайно — ADT підвищує ризик інсульту"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Гарячі припливи, втома, втрата лібідо"
+  action_ua: "Очікувані ефекти від ADT — занотовуйте, обговоріть на візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Запаморочення, особливо при вставанні"
+  action_ua: "Поширене на ензалутамід — вставайте повільно, занотовуйте частоту"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+  action_ua: "Ензалутамід може підвищувати тиск — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Падіння з можливою травмою"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка причини; ризик падінь
+    на ензалутамід підвищений"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Сильна слабкість, постійна спрага, втрата ваги"
+  action_ua: "Подзвоніть у клініку того ж дня — можливі метаболічні зміни на тлі ADT"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Раптовий судомний напад"
+  action_ua: "Звертайтесь у лікарню негайно — ензалутамід рідко може знижувати поріг
+    судом, особливо при метастазах у мозок"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Раптовий сильний головний біль, порушення зору або мовлення, слабкість
+    в одній стороні тіла"
+  action_ua: "Звертайтесь у лікарню негайно — ADT підвищує ризик інсульту"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-PROSTATE-2025
 
 last_reviewed:
 notes: >
@@ -82,6 +85,8 @@ notes: >
   AFFIRM: post-docetaxel mCRPC. Most CNS penetration of ARPIs — cognitive
   AEs more common in elderly.
 notes_ua: >
-  ENZAMET усталений виграш in mHSPC. PREVAIL: 1L mCRPC vs ADT-mono. AFFIRM: post-доцетаксел mCRPC. найбільш проникнення в ЦНС of ARPIs — cognitive AEs more поширений in літнього віку.
+  ENZAMET усталений виграш in mHSPC. PREVAIL: 1L mCRPC vs ADT-mono. AFFIRM: post-доцетаксел
+  mCRPC. найбільш проникнення в ЦНС of ARPIs — cognitive AEs more поширений in літнього
+  віку.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

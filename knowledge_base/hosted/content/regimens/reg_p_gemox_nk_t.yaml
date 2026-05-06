@@ -1,50 +1,52 @@
 id: REG-P-GEMOX-NK-T
 name: "P-GEMOX (pegaspargase + gemcitabine + oxaliplatin) for NK/T-cell nasal lymphoma"
-name_ua: "P-GEMOX (пегаспаргаза + гемцитабін + оксаліплатин) для NK/T-клітинної назальної лімфоми"
+name_ua: "P-GEMOX (пегаспаргаза + гемцитабін + оксаліплатин) для NK/T-клітинної назальної
+  лімфоми"
 alternate_names: ["P-GEMOX", "PEG-GEMOX"]
 
 components:
-  - drug_id: DRUG-L-ASPARAGINASE  # PEG-asparaginase (pegaspargase) used here when available; standard L-asparaginase as fallback
-    dose: "PEG-asparaginase 2000 IU/m² IM day 1 (preferred); OR L-asparaginase 6000 IU/m² IM days 1, 3, 5"
-    schedule: "day 1 (PEG) or days 1, 3, 5 (L-asp)"
-    route: IM
-  - drug_id: DRUG-GEMCITABINE
-    dose: "1000 mg/m²"
-    schedule: "IV days 1 and 8 of every 21-day cycle"
-    route: IV
-  - drug_id: DRUG-OXALIPLATIN
-    dose: "130 mg/m²"
-    schedule: "IV day 1 of every 21-day cycle"
-    route: IV
+- drug_id: DRUG-L-ASPARAGINASE    # PEG-asparaginase (pegaspargase) used here when available; standard L-asparaginase as fallback
+  dose: "PEG-asparaginase 2000 IU/m² IM day 1 (preferred); OR L-asparaginase 6000
+    IU/m² IM days 1, 3, 5"
+  schedule: "day 1 (PEG) or days 1, 3, 5 (L-asp)"
+  route: IM
+- drug_id: DRUG-GEMCITABINE
+  dose: "1000 mg/m²"
+  schedule: "IV days 1 and 8 of every 21-day cycle"
+  route: IV
+- drug_id: DRUG-OXALIPLATIN
+  dose: "130 mg/m²"
+  schedule: "IV day 1 of every 21-day cycle"
+  route: IV
 
 cycle_length_days: 21
 total_cycles: "4-6 cycles induction; concurrent RT 50 Gy for localized stage I/II"
 toxicity_profile: high
 
 premedication:
-  - "Asparaginase hypersensitivity testing before first dose"
-  - "Antithrombin III monitoring (asparaginase risk of thrombosis)"
-  - "Antiemetic (5-HT3 + dexamethasone)"
-  - "Hydration"
+- "Asparaginase hypersensitivity testing before first dose"
+- "Antithrombin III monitoring (asparaginase risk of thrombosis)"
+- "Antiemetic (5-HT3 + dexamethasone)"
+- "Hydration"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-GCSF-NEUTROPENIA
-  - SUP-ANTIEMETIC-PREMED
-
+- SUP-PJP-PROPHYLAXIS
+- SUP-GCSF-NEUTROPENIA
+- SUP-ANTIEMETIC-PREMED
 dose_adjustments:
-  - condition: "Asparaginase hypersensitivity"
-    modification: "Switch from L-asparaginase to PEG-asparaginase (or vice versa); discontinue if both intolerated"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Coagulopathy / bleeding"
-    modification: "Hold asparaginase; FFP / antithrombin replacement; reassess after"
-  - condition: "Pancreatitis suspected"
-    modification: "Stop asparaginase permanently; do not rechallenge"
-  - condition: "Grade ≥3 peripheral neuropathy from oxaliplatin"
-    modification: "Reduce oxaliplatin to 100 mg/m²; discontinue if Grade 4"
-  - condition: "CrCl 30-50"
-    modification: "Reduce oxaliplatin 25%; reduce gemcitabine 25%"
-  - condition: "Grade ≥3 hematologic toxicity"
-    modification: "Hold day 8 gemcitabine if ANC <1.0 or platelets <75; G-CSF support"
+- condition: "Asparaginase hypersensitivity"
+  modification: "Switch from L-asparaginase to PEG-asparaginase (or vice versa); discontinue
+    if both intolerated"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Coagulopathy / bleeding"
+  modification: "Hold asparaginase; FFP / antithrombin replacement; reassess after"
+- condition: "Pancreatitis suspected"
+  modification: "Stop asparaginase permanently; do not rechallenge"
+- condition: "Grade ≥3 peripheral neuropathy from oxaliplatin"
+  modification: "Reduce oxaliplatin to 100 mg/m²; discontinue if Grade 4"
+- condition: "CrCl 30-50"
+  modification: "Reduce oxaliplatin 25%; reduce gemcitabine 25%"
+- condition: "Grade ≥3 hematologic toxicity"
+  modification: "Hold day 8 gemcitabine if ANC <1.0 or platelets <75; G-CSF support"
 
 ukraine_availability:
   all_components_registered: true
@@ -57,44 +59,47 @@ ukraine_availability:
     where L-asparaginase supply is intermittent.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-PTCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-PTCL-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # P-GEMOX for NK/T-cell lymphoma. Asparaginase: pancreatitis (no rechallenge)
 # + coagulopathy/thrombosis. Oxaliplatin: neuropathy + cold sensitivity.
 # STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Поколювання або оніміння у пальцях після оксаліплатину"
-    action_ua: "Очікувано від оксаліплатину — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Підвищена чутливість до холоду (металевий смак, оніміння від холодних предметів)"
-    action_ua: "Уникайте холодного в перші 5 днів після інфузії — гострий нейросенсорний ефект оксаліплатину; занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Раптовий сильний біль у животі (оперізуючий, в центрі або зліва)"
-    action_ua: "Звертайтесь у лікарню негайно — панкреатит від аспарагінази (повторне призначення заборонено)"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Кровотеча з ясен, виражені синці, кров у сечі"
-    action_ua: "Звертайтесь у лікарню негайно — порушення згортання крові від аспарагінази"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Різкий набряк або біль у нозі чи руці, почервоніння"
-    action_ua: "Звертайтесь у лікарню негайно — тромбоз від аспарагінази"
-    urgency: er_now
-    sources:
-      - SRC-ESMO-PTCL-2024
+- trigger_ua: "Поколювання або оніміння у пальцях після оксаліплатину"
+  action_ua: "Очікувано від оксаліплатину — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Підвищена чутливість до холоду (металевий смак, оніміння від холодних
+    предметів)"
+  action_ua: "Уникайте холодного в перші 5 днів після інфузії — гострий нейросенсорний
+    ефект оксаліплатину; занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Раптовий сильний біль у животі (оперізуючий, в центрі або зліва)"
+  action_ua: "Звертайтесь у лікарню негайно — панкреатит від аспарагінази (повторне
+    призначення заборонено)"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Кровотеча з ясен, виражені синці, кров у сечі"
+  action_ua: "Звертайтесь у лікарню негайно — порушення згортання крові від аспарагінази"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Різкий набряк або біль у нозі чи руці, почервоніння"
+  action_ua: "Звертайтесь у лікарню негайно — тромбоз від аспарагінази"
+  urgency: er_now
+  sources:
+  - SRC-ESMO-PTCL-2024
 
 last_reviewed: "2026-04-27"
 notes: >
@@ -106,6 +111,10 @@ notes: >
   gemcitabine + pegaspargase) is a related modified regimen with
   similar efficacy.
 notes_ua: >
-  Wang 2013 (лейкоз) — P-GEMOX in р/р NK/T-cell лімфома ORR ~80%, CR ~50%; співставний з SMILE with less токсичність. Asparaginase remains essential for activity (P-glycoprotein-bypass mechanism shared with SMILE). For localized stage I/II — concurrent CRT with RT 50 Gy + 2-3 цикли. DDGP (dexamethasone + цисплатин + гемцитабін + pegaspargase) is a related modified схема with подібний ефективність.
+  Wang 2013 (лейкоз) — P-GEMOX in р/р NK/T-cell лімфома ORR ~80%, CR ~50%; співставний
+  з SMILE with less токсичність. Asparaginase remains essential for activity (P-glycoprotein-bypass
+  mechanism shared with SMILE). For localized stage I/II — concurrent CRT with RT
+  50 Gy + 2-3 цикли. DDGP (dexamethasone + цисплатин + гемцитабін + pegaspargase)
+  is a related modified схема with подібний ефективність.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

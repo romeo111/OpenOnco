@@ -26,38 +26,32 @@ definition_ua: >
 trigger:
   type: composite_clinical
   any_of:
-    - finding: bilirubin_uln_x
-      threshold: 2.0
-      comparator: ">"
-    - finding: creatinine_clearance_ml_min
-      threshold: 30
-      comparator: "<"
-    - finding: absolute_neutrophil_count_k_ul
-      threshold: 1.0
-      comparator: "<"
-    - finding: platelets_k_ul
-      threshold: 75
-      comparator: "<"
-    - finding: ecog
-      threshold: 3
-      comparator: ">="
+  - finding: bilirubin_uln_x
+    threshold: 2.0
+    comparator: ">"
+  - finding: creatinine_clearance_ml_min
+    threshold: 30
+    comparator: "<"
+  - finding: absolute_neutrophil_count_k_ul
+    threshold: 1.0
+    comparator: "<"
+  - finding: platelets_k_ul
+    threshold: 75
+    comparator: "<"
+  - finding: ecog
+    threshold: 3
+    comparator: ">="
 
 clinical_direction: de-escalate
 
 shifts_algorithm:
-  - ALGO-PDAC-METASTATIC-1L
+- ALGO-PDAC-METASTATIC-1L
 
 relevant_diseases:
-  - DIS-PDAC
+- DIS-PDAC
 
 sources:
-  - source_id: SRC-NCCN-PANCREATIC-2025
-    position: supports
-    relevant_quote_paraphrase: >
-      NCCN Pancreatic 2025: biliary decompression required before 2L chemotherapy
-      in obstructive jaundice; nal-IRI + 5-FU eligibility requires adequate hepatic
-      function (bilirubin ≤2× ULN per NAPOLI-1 eligibility).
-
+- SRC-NCCN-PANCREATIC-2025
 notes: >
   PDAC has a high rate of biliary obstruction (~80% of pancreatic head cancers),
   making hepatic dysfunction the most clinically relevant organ-dysfunction trigger

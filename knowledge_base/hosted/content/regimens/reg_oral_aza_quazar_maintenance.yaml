@@ -1,79 +1,91 @@
 id: REG-ORAL-AZA-QUAZAR-MAINTENANCE
-name: "Oral azacitidine (CC-486 / Onureg) maintenance — AML CR1, transplant-ineligible (QUAZAR AML-001)"
-name_ua: "Пероральний азацитидин (CC-486 / Onureg) — підтримуюча терапія AML у CR1 для нетрансплантат-кандидатів (QUAZAR AML-001)"
+name: "Oral azacitidine (CC-486 / Onureg) maintenance — AML CR1, transplant-ineligible
+  (QUAZAR AML-001)"
+name_ua: "Пероральний азацитидин (CC-486 / Onureg) — підтримуюча терапія AML у CR1
+  для нетрансплантат-кандидатів (QUAZAR AML-001)"
 alternate_names:
-  - "Onureg maintenance"
-  - "CC-486"
-  - "QUAZAR maintenance"
+- "Onureg maintenance"
+- "CC-486"
+- "QUAZAR maintenance"
 
 components:
-  - drug_id: DRUG-AZACITIDINE
-    dose: "300 mg PO once daily × 14 days of each 28-day cycle (oral formulation only — IV/SC azacitidine is NOT bioequivalent and must NOT be substituted)"
-    schedule: "PO daily days 1-14 every 28 days, started within 4 months of CR/CRi achievement; continue until progression / unacceptable toxicity"
-    route: PO
+- drug_id: DRUG-AZACITIDINE
+  dose: "300 mg PO once daily × 14 days of each 28-day cycle (oral formulation only
+    — IV/SC azacitidine is NOT bioequivalent and must NOT be substituted)"
+  schedule: "PO daily days 1-14 every 28 days, started within 4 months of CR/CRi achievement;
+    continue until progression / unacceptable toxicity"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "Continuous until relapse / unacceptable toxicity"
 toxicity_profile: low-moderate
 
 premedication:
-  - "Antiemetic prophylaxis days 1-14 (low-moderate emetogenic; ondansetron 8 mg PO before dose)"
-  - "Pre-cycle CBC + CMP; recheck on day 15 + monthly"
+- "Antiemetic prophylaxis days 1-14 (low-moderate emetogenic; ondansetron 8 mg PO
+  before dose)"
+- "Pre-cycle CBC + CMP; recheck on day 15 + monthly"
 mandatory_supportive_care:
-  - SUP-HBV-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "ANC <0.5 × 10⁹/L OR platelets <50 × 10⁹/L during maintenance"
-    modification: "Hold; resume at 200 mg PO daily × 14 d on count recovery; if recurrent, shorten schedule to 7 days"
-    rationale: "Cumulative myelosuppression; QUAZAR protocol allowed reduction to 200 mg or shortening to 7 days"
-    source_refs:
-      - SRC-QUAZAR-WEI-2020
-      - SRC-NCCN-AML-2025
-  - condition: "Grade ≥3 GI toxicity (diarrhea, nausea/vomiting refractory to antiemetics)"
-    modification: "Hold; resume on resolution; if recurrent, shorten to 7-day schedule per cycle"
-    rationale: "GI toxicity is the most common grade ≥3 non-hematologic AE in QUAZAR"
-    source_refs:
-      - SRC-QUAZAR-WEI-2020
-  - condition: "Severe hepatic impairment (Child-Pugh C)"
-    modification: "Avoid"
-    rationale: "Limited data; hepatic clearance contribution"
-    source_refs:
-      - SRC-NCCN-AML-2025
+- condition: "ANC <0.5 × 10⁹/L OR platelets <50 × 10⁹/L during maintenance"
+  modification: "Hold; resume at 200 mg PO daily × 14 d on count recovery; if recurrent,
+    shorten schedule to 7 days"
+  rationale: "Cumulative myelosuppression; QUAZAR protocol allowed reduction to 200
+    mg or shortening to 7 days"
+  source_refs:
+  - SRC-QUAZAR-WEI-2020
+  - SRC-NCCN-AML-2025
+- condition: "Grade ≥3 GI toxicity (diarrhea, nausea/vomiting refractory to antiemetics)"
+  modification: "Hold; resume on resolution; if recurrent, shorten to 7-day schedule
+    per cycle"
+  rationale: "GI toxicity is the most common grade ≥3 non-hematologic AE in QUAZAR"
+  source_refs:
+  - SRC-QUAZAR-WEI-2020
+- condition: "Severe hepatic impairment (Child-Pugh C)"
+  modification: "Avoid"
+  rationale: "Limited data; hepatic clearance contribution"
+  source_refs:
+  - SRC-NCCN-AML-2025
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "Oral azacitidine (Onureg) is NOT yet registered in Ukraine; SC/IV azacitidine is registered but is NOT a bioequivalent substitute (QUAZAR was strictly with oral CC-486 formulation). Access via clinical trial / named-patient programs only at present. SC azacitidine cannot be used as a substitute for QUAZAR maintenance."
+  notes: "Oral azacitidine (Onureg) is NOT yet registered in Ukraine; SC/IV azacitidine
+    is registered but is NOT a bioequivalent substitute (QUAZAR was strictly with
+    oral CC-486 formulation). Access via clinical trial / named-patient programs only
+    at present. SC azacitidine cannot be used as a substitute for QUAZAR maintenance."
 
 sources:
-  - SRC-QUAZAR-WEI-2020
-  - SRC-NCCN-AML-2025
+- SRC-QUAZAR-WEI-2020
+- SRC-NCCN-AML-2025
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Oral azacitidine (Onureg) AML maintenance (QUAZAR). GI dominant
 # (nausea/diarrhea days 1-14) + cytopenia. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Нудота, блювання у дні прийому таблеток (1-14 дні циклу)"
-    action_ua: "Очікувано — приймайте призначені протиблювотні за 30 хв до таблетки; занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-QUAZAR-WEI-2020
-  - trigger_ua: "Помірна втома"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Тяжка діарея або блювання, що заважає пити та їсти"
-    action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-QUAZAR-WEI-2020
+- trigger_ua: "Нудота, блювання у дні прийому таблеток (1-14 дні циклу)"
+  action_ua: "Очікувано — приймайте призначені протиблювотні за 30 хв до таблетки;
+    занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-QUAZAR-WEI-2020
+- trigger_ua: "Помірна втома"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Тяжка діарея або блювання, що заважає пити та їсти"
+  action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-QUAZAR-WEI-2020
 
 last_reviewed: "2026-04-27"
 notes: >
@@ -86,6 +98,12 @@ notes: >
   this maintenance indication. Ukraine access major barrier (not
   registered as Onureg). STUB — requires Clinical Co-Lead signoff.
 notes_ua: >
-  QUAZAR AML-001 (Wei 2020): oral азацитидин 300 mg PO daily × 14 d / 28-d цикл vs placebo as підтримка after CR/CRi після індукції ± консолідація in AML patients ≥55 years not придатний для HCT. міс. 24.7 проти 14.8 місяців (HR 0.69, p<0.001), mRFS 10.2 проти 4.8 місяців. схвалений FDA Sep 2020 as Onureg. Critical: oral CC-486 is NOT bioequivalent to SC/IV азацитидин — only the oral formulation has this підтримка показання. Ukraine access major barrier (not registered as Onureg). STUB — requires Clinical Co-Lead signoff.
+  QUAZAR AML-001 (Wei 2020): oral азацитидин 300 mg PO daily × 14 d / 28-d цикл vs
+  placebo as підтримка after CR/CRi після індукції ± консолідація in AML patients
+  ≥55 years not придатний для HCT. міс. 24.7 проти 14.8 місяців (HR 0.69, p<0.001),
+  mRFS 10.2 проти 4.8 місяців. схвалений FDA Sep 2020 as Onureg. Critical: oral CC-486
+  is NOT bioequivalent to SC/IV азацитидин — only the oral formulation has this підтримка
+  показання. Ukraine access major barrier (not registered as Onureg). STUB — requires
+  Clinical Co-Lead signoff.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
