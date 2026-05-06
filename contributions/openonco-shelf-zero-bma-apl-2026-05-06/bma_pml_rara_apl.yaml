@@ -1,0 +1,64 @@
+id: BMA-PML-RARA-APL
+biomarker_id: BIO-PML-RARA-FUSION
+variant_qualifier: classic PML-RARA fusion
+disease_id: DIS-APL
+escat_tier: IA
+evidence_summary: >
+  PML-RARA is the defining lesion of APL and directly predicts sensitivity to
+  differentiation/degradation therapy with ATRA plus arsenic trioxide. Existing
+  OpenOnco APL algorithms already route low/intermediate-risk patients to
+  ATRA+ATO and high-risk patients to ATRA+ATO plus idarubicin, anchored on ELN
+  APL guidance, NCCN AML guidance, and APL0406.
+regulatory_approval:
+  fda:
+  - Arsenic trioxide and tretinoin are established APL agents; exact label wording
+    should be verified during clinical signoff.
+  ema: []
+  ukraine:
+  - ATRA and arsenic trioxide are represented in OpenOnco as UA-accessible APL
+    drugs; reimbursement pathway requires local verification at use time.
+recommended_combinations:
+- ATRA + arsenic trioxide for low/intermediate-risk APL.
+- ATRA + arsenic trioxide + idarubicin or AIDA-style therapy for high-risk APL.
+contraindicated_monotherapy:
+- ATRA monotherapy as definitive therapy.
+primary_sources:
+- SRC-ELN-APL-2019
+- SRC-NCCN-AML-2025
+- SRC-APL0406-LOCOCO-2013
+last_verified: '2026-05-06'
+evidence_sources:
+- source: SRC-ELN-APL-2019
+  level: guideline
+  evidence_ids:
+  - APL diagnosis and frontline treatment recommendations
+  direction: Supports
+  significance: Sensitivity/Response
+  note: ELN positions APL as PML-RARA-driven and treats ATRA/ATO-based therapy as
+    central disease-directed treatment.
+- source: SRC-APL0406-LOCOCO-2013
+  level: phase-3
+  evidence_ids:
+  - APL0406 low/intermediate-risk APL
+  direction: Supports
+  significance: Sensitivity/Response
+  note: ATRA+ATO established chemotherapy-free frontline therapy for low/intermediate-risk
+    APL in the existing source stub.
+actionability_review_required: true
+review_status: pending_clinical_signoff
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: codex
+notes: >
+  This BMA is intended as the top-level APL actionability cell. It should not
+  be used to imply autonomous emergency ATRA initiation; OpenOnco remains a
+  tumor-board support tool after initial stabilization.
+_contribution:
+  chunk_id: openonco-shelf-zero-bma-apl-2026-05-06
+  contributor: codex
+  submission_date: '2026-05-06'
+  ai_tool: codex
+  ai_model: gpt-5
+  target_action: new
+  target_entity_id: BMA-PML-RARA-APL
+  notes_for_reviewer: New defining APL BMA; check final ESCAT tier and wording before
+    hosted upsert.
