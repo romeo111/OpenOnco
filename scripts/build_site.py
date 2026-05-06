@@ -796,6 +796,9 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     ua_tag, ua_attr = ("span", "") if is_uk else ("a", f' href="{lang_switch_href}"')
     en_tag, en_attr = ("a", f' href="{lang_switch_href}"') if is_uk else ("span", "")
 
+    kb_href = "/ukr/kb.html" if target_lang == "uk" else "/kb.html"
+    kb_label = "Пошук у KB" if target_lang == "uk" else "KB Search"
+
     return f"""<header class="top-bar">
   <div class="brand-line">
     <a href="{home_path}" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
@@ -804,7 +807,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
     {extra_links}
-    <a href="/kb.html"{cls("kb")}>KB Search</a>
+    <a href="{kb_href}"{cls("kb")}>{kb_label}</a>
     <a href="{gallery_path}"{cls("gallery")}>{labels['gallery']}</a>
     <a href="https://github.com/{GH_REPO}" target="_blank" rel="noopener">GitHub</a>
   </nav>
