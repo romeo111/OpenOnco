@@ -19,10 +19,21 @@ strength_of_recommendation: strong
 nccn_category: "1"
 
 expected_outcomes:
-  overall_response_rate: "Adjuvant — assessed by DFS not response"
-  complete_response: "n/a (post-resection)"
-  progression_free_survival: "5-yr DFS ~70-75% stage III low-risk; ~55-65% high-risk"
-  overall_survival_5y: "5-yr OS ~75-85% (depends on sub-stage + tumor biology)"
+  overall_response_rate:
+    value: "Adjuvant — assessed by DFS not response (no ORR endpoint in MOSAIC)"
+    source: SRC-MOSAIC-ANDRE-2004
+    notes: "Adjuvant post-resection setting; DFS/OS are the clinically meaningful endpoints"
+  complete_response:
+    value: "n/a (post-resection, R0; CR not applicable in adjuvant context)"
+    source: SRC-MOSAIC-ANDRE-2004
+  progression_free_survival:
+    value: "5-yr DFS ~70-75% stage III low-risk (T1-3 N1); ~55-65% high-risk (T4/N2)"
+    source: SRC-MOSAIC-ANDRE-2004
+    notes: "MOSAIC 6-yr DFS 78.2% vs 72.9% (FOLFOX4 vs 5-FU/LV); substage risk grouping per IDEA collaboration"
+  overall_survival_5y:
+    value: "5-yr OS ~75-85% (depends on sub-stage + tumor biology)"
+    source: SRC-MOSAIC-ANDRE-2004
+    notes: "MOSAIC 6-yr OS 78.5% vs 76.0% (HR 0.84, NS); André 2009 JCO 5-yr OS update; substage variation substantial"
 
 hard_contraindications: []
 red_flags_triggering_alternative:
@@ -42,6 +53,9 @@ rationale_ua: >
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 sources:
+  - source_id: SRC-MOSAIC-ANDRE-2004
+    position: supports
+    relevant_quote_paraphrase: "MOSAIC: FOLFOX4 vs 5-FU/LV adjuvant stage II-III colon cancer; 6-yr DFS 78.2% vs 72.9% (HR 0.84); 6-yr OS 78.5% vs 76.0% (HR 0.84); established FOLFOX as stage III adjuvant standard"
   - source_id: SRC-NCCN-COLON-2025
     position: supports
   - source_id: SRC-ESMO-COLON-2024
