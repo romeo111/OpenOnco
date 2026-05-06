@@ -47,7 +47,11 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   display: flex; justify-content: space-between; align-items: center;
 }
 .brand-line { display: flex; align-items: center; gap: 12px; margin-right: 28px; }
+.brand-logo {
+  display: block; width: 30px; height: 30px; flex: 0 0 30px;
+}
 .brand-mini {
+  display: inline-flex; align-items: center; gap: 9px;
   font-family: var(--font-display); font-size: 26px;
   color: var(--green-100); text-decoration: none;
   letter-spacing: 0.2px;
@@ -152,6 +156,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   .top-bar { flex-wrap: wrap; gap: 8px; }
   .brand-line { margin-right: 0; }
   .brand-mini { font-size: 22px; }
+  .brand-logo { width: 26px; height: 26px; flex-basis: 26px; }
   .top-nav { order: 3; flex-basis: 100%; margin: 0; justify-content: center; }
   .top-right { gap: 8px; }
   .lang-switch { font-size: 10px; }

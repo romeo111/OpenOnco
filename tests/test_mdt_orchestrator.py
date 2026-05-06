@@ -297,6 +297,26 @@ def test_data_quality_lists_unevaluated_red_flags():
 # ── Infographic-alignment fixes ───────────────────────────────────────────
 
 
+def test_data_quality_includes_doctor_action_details():
+    patient = _patient("patient_zero_indolent.json")
+    findings = dict(patient.get("findings") or {})
+    findings.pop("hbsag", None)
+    patient = {**patient, "findings": findings}
+
+    plan_result = generate_plan(patient, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(patient, plan_result, kb_root=KB_ROOT)
+
+    details = mdt.data_quality_summary.get("missing_field_details") or []
+    hbsag = next(d for d in details if d["field"] == "hbsag")
+    assert hbsag["label"] == "HBsAg"
+    assert hbsag["label_uk"] == "HBsAg"
+    assert hbsag["severity"] == "critical"
+    assert hbsag["owner_role"] == "infectious_disease_hepatology"
+    assert "Order or document HBsAg" in hbsag["doctor_action"]
+    assert "Призначити або задокументувати HBsAg" in hbsag["doctor_action_uk"]
+    assert mdt.data_quality_summary["status"] == "incomplete_for_mdt_review"
+
+
 def test_aggregation_summary_populated():
     """Per spec §2.3, every MDT brief carries an explicit aggregation_summary
     (the infographic step 2: 'AI-агрегація'). Smoke-check core counters."""
@@ -370,6 +390,104 @@ def test_molecular_geneticist_triggers_on_genomic_biomarker():
         if r.role_id == "molecular_geneticist"
     )
     assert "BIO-TEST-BRAF-V600E" in mg.linked_findings
+
+
+def test_missing_required_biomarker_surfaces_coverage_and_open_question():
+    """A required biomarker absent from the patient profile must be visible
+    in data_quality_summary and become an MDT-owned open question.
+
+    This is intentionally render-time/data-quality only: it must not change
+    the selected track or default_indication_id.
+    """
+
+    patient = _patient("patient_zero_indolent.json")
+    plan_result = generate_plan(patient, kb_root=KB_ROOT)
+    before_default = plan_result.default_indication_id
+    default = next(t for t in plan_result.plan.tracks if t.is_default)
+    base_ind = dict(default.indication_data or {})
+    applicable = dict(base_ind.get("applicable_to") or {})
+    applicable["biomarker_requirements_required"] = list(
+        applicable.get("biomarker_requirements_required") or []
+    ) + [{"biomarker_id": "BIO-TEST-BRAF-V600E", "required": True, "value_constraint": "V600E"}]
+    base_ind["applicable_to"] = applicable
+    default.indication_data = base_ind
+
+    from knowledge_base.engine import mdt_orchestrator as _mod
+
+    real_load = _mod.load_content
+
+    def fake_load(root):
+        result = real_load(root)
+        result.entities_by_id["BIO-TEST-BRAF-V600E"] = {
+            "type": "biomarkers",
+            "data": {
+                "id": "BIO-TEST-BRAF-V600E",
+                "biomarker_type": "gene_mutation",
+                "names": {"preferred": "BRAF V600E (test)"},
+                "mutation_details": {"gene": "BRAF"},
+            },
+            "path": None,
+        }
+        return result
+
+    _mod.load_content = fake_load
+    try:
+        mdt = orchestrate_mdt(patient, plan_result, kb_root=KB_ROOT)
+    finally:
+        _mod.load_content = real_load
+
+    assert plan_result.default_indication_id == before_default
+    coverage = mdt.data_quality_summary["biomarker_coverage"]
+    missing_ids = {m["biomarker_id"] for m in coverage["missing"]}
+    assert "BIO-TEST-BRAF-V600E" in missing_ids
+    missing = next(m for m in coverage["missing"] if m["biomarker_id"] == "BIO-TEST-BRAF-V600E")
+    assert missing["owner_role"] == "molecular_geneticist"
+    assert missing["default_track"] is True
+
+    q = next(q for q in mdt.open_questions if q.id == "OQ-BIOMARKER-TEST-BRAF-V600E")
+    assert q.owner_role == "molecular_geneticist"
+    assert q.blocking is True
+    assert "BIO-TEST-BRAF-V600E" in q.linked_findings
+
+
+def test_nested_clinical_record_fields_count_for_biomarker_coverage():
+    """Structured case records should satisfy MDT coverage checks.
+
+    DLBCL examples keep COO, BCL2, HBV, HCV, and HIV in clinical_record
+    rather than duplicating every observation in top-level biomarkers.
+    """
+
+    patient = _patient("patient_dlbcl_low_ipi.json")
+    plan_result = generate_plan(patient, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(patient, plan_result, kb_root=KB_ROOT)
+
+    coverage = mdt.data_quality_summary["biomarker_coverage"]
+    assert coverage["required_missing"] == 0
+    assert coverage["coverage_percent"] == 100
+    assert {m["biomarker_id"] for m in coverage["missing"]} == set()
+
+
+def test_talk_tree_orders_blocking_questions_first():
+    patient = _patient("patient_zero_indolent.json")
+    findings = dict(patient.get("findings") or {})
+    findings.pop("hbsag", None)
+    findings.pop("anti_hbc_total", None)
+    patient = {**patient, "findings": findings}
+
+    plan_result = generate_plan(patient, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(patient, plan_result, kb_root=KB_ROOT)
+
+    assert mdt.talk_tree
+    assert mdt.talk_tree[0].blocking is True
+    assert mdt.talk_tree[0].linked_questions
+    assert mdt.talk_tree[0].owner_role in {
+        "infectious_disease_hepatology",
+        "pathologist",
+        "molecular_geneticist",
+    }
+    d = mdt.to_dict()
+    assert "talk_tree" in d
+    assert d["talk_tree"][0]["step"] == 1
 
 
 def test_role_catalog_covers_infographic_team_composition():

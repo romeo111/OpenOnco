@@ -62,7 +62,7 @@ from knowledge_base.clients.ctgov_client import search_trials
 from knowledge_base import __version__ as OPENONCO_VERSION
 from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
 from knowledge_base.stats import collect_stats
-from scripts.site_cases import CASE_CATEGORIES, CASES, CaseEntry
+from scripts.site_cases import CASE_CATEGORIES, CASES, GALLERY_EXCLUDED_CASE_IDS, CaseEntry
 from scripts.site_styles import STYLESHEET as _STYLE_CSS
 
 
@@ -797,7 +797,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
 
     return f"""<header class="top-bar">
   <div class="brand-line">
-    <a href="{home_path}" class="brand-mini">OpenOnco</a>
+    <a href="{home_path}" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
     <span class="brand-version" title="Released {OPENONCO_RELEASE_DATE}">v{OPENONCO_VERSION} · {OPENONCO_RELEASE_DATE}</span>
   </div>
   <nav class="top-nav">
@@ -1425,10 +1425,12 @@ def render_gallery(*, target_lang: str = "en") -> str:
     import html as _html
     is_en = target_lang == "en"
     case_path_prefix = "/cases/" if is_en else "/ukr/cases/"
-    n_cases = len(CASES)
-
     quest_codes = _questionnaire_icd_o_3_codes()
-    case_meta = _gallery_case_disease_meta()
+    case_meta = [
+        m for m in _gallery_case_disease_meta()
+        if m["case"].case_id not in GALLERY_EXCLUDED_CASE_IDS
+    ]
+    n_cases = len(case_meta)
 
     # Group cases by disease_id, preserving CASES order within each group.
     grouped: dict[str, dict] = {}
@@ -3810,7 +3812,9 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         'align-items:center;font-family:Source Sans 3,sans-serif;}'
         '.oo-topbar-host .brand-line{display:flex;align-items:center;'
         'gap:12px;margin-right:28px;}'
-        '.oo-topbar-host .brand-mini{font-family:Playfair Display,Georgia,serif;'
+        '.oo-topbar-host .brand-logo{display:block;width:30px;height:30px;flex:0 0 30px;}'
+        '.oo-topbar-host .brand-mini{display:inline-flex;align-items:center;gap:9px;'
+        'font-family:Playfair Display,Georgia,serif;'
         'font-size:26px;color:#dcfce7;text-decoration:none;letter-spacing:.2px;}'
         '.oo-topbar-host .brand-version{font-family:JetBrains Mono,monospace;'
         'font-size:10.5px;color:#dcfce7;opacity:.55;'
@@ -3861,6 +3865,7 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         '@media (max-width:700px){'
         '.oo-topbar-host .top-bar{flex-wrap:wrap;gap:8px;}'
         '.oo-topbar-host .top-nav{order:3;flex-basis:100%;margin:0;justify-content:center;}'
+        '.oo-topbar-host .brand-logo{width:26px;height:26px;flex-basis:26px;}'
         '.oo-topbar-host .btn-cta-try{min-width:120px;padding:8px 14px;font-size:13px;}'
         '}'
         '</style>\n'
@@ -7118,7 +7123,14 @@ def _build_all_cases_parallel(output_dir: Path) -> tuple[list[dict], list[dict]]
 
     tasks = [(c, output_dir, "uk") for c in CASES] + \
             [(c, output_dir, "en") for c in CASES]
-    n_workers = min(os.cpu_count() or 4, 8)
+    env_workers = os.environ.get("OPENONCO_BUILD_WORKERS")
+    if env_workers:
+        try:
+            n_workers = max(1, int(env_workers))
+        except ValueError:
+            n_workers = min(os.cpu_count() or 4, 8)
+    else:
+        n_workers = min(os.cpu_count() or 4, 8)
 
     if n_workers <= 1 or len(tasks) <= 2:
         results = [_build_one_case_worker(t) for t in tasks]
@@ -7174,11 +7186,12 @@ def _copy_landing_assets(output_dir: Path) -> list[str]:
         if src.exists():
             shutil.copyfile(src, output_dir / name)
             copied.append(name)
-    # favicon.svg lives directly under docs/ (committed) — preserve on --clean
-    favicon_src = REPO_ROOT / "docs" / "favicon.svg"
-    if favicon_src.exists() and favicon_src.resolve() != (output_dir / "favicon.svg").resolve():
-        shutil.copyfile(favicon_src, output_dir / "favicon.svg")
-        copied.append("favicon.svg")
+    # Small brand SVGs live directly under docs/ (committed) - preserve on --clean.
+    for asset_name in ("favicon.svg", "logo.svg"):
+        asset_src = REPO_ROOT / "docs" / asset_name
+        if asset_src.exists() and asset_src.resolve() != (output_dir / asset_name).resolve():
+            shutil.copyfile(asset_src, output_dir / asset_name)
+            copied.append(asset_name)
     return copied
 
 

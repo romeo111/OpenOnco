@@ -347,3 +347,55 @@ def test_render_target_lang_preserves_entity_ids_and_doses():
     html = render_plan_html(plan, mdt=None, target_lang="en")
     for token in ("DIS-HCV-MZL", "IND-HCV-MZL-1L-ANTIVIRAL", "SRC-NCCN-BCELL-2025"):
         assert token in html, f"localization swallowed entity ID '{token}'"
+
+
+def test_treatment_plan_renders_biomarker_coverage_in_mdt():
+    p = _patient("patient_zero_indolent.json")
+    plan = generate_plan(p, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
+    html = render_plan_html(plan, mdt=mdt, target_lang="en")
+
+    assert "Biomarker coverage:" in html
+    assert "biomarker_coverage" not in html
+
+
+def test_treatment_plan_renders_doctor_facing_data_quality_actions():
+    p = _patient("patient_zero_indolent.json")
+    findings = dict(p.get("findings") or {})
+    findings.pop("hbsag", None)
+    p = {**p, "findings": findings}
+    plan = generate_plan(p, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
+    html = render_plan_html(plan, mdt=mdt, target_lang="en")
+
+    assert "Incomplete for MDT sign-off" in html
+    assert "Missing data for doctor action" in html
+    assert "HBsAg" in html
+    assert "Order or document HBsAg" in html
+
+
+def test_treatment_plan_renders_ukrainian_data_quality_actions():
+    p = _patient("patient_zero_indolent.json")
+    findings = dict(p.get("findings") or {})
+    findings.pop("hbsag", None)
+    p = {**p, "findings": findings}
+    plan = generate_plan(p, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
+    html = render_plan_html(plan, mdt=mdt, target_lang="uk")
+
+    assert "Якість даних" in html
+    assert "Неповно для підписання MDT" in html
+    assert "Відсутні дані для дії лікаря" in html
+    assert "Призначити або задокументувати HBsAg" in html
+    assert "Missing data for doctor action" not in html
+
+
+def test_treatment_plan_renders_mdt_talk_tree():
+    p = _patient("patient_zero_indolent.json")
+    plan = generate_plan(p, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
+    html = render_plan_html(plan, mdt=mdt)
+
+    assert "MDT talk tree" in html
+    assert "<th>Owner</th>" in html
+    assert "<th>Action</th>" in html
