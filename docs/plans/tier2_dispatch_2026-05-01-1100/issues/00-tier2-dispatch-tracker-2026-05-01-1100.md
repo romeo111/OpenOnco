@@ -10,13 +10,13 @@ Tier-2 roadmap reference: `docs/plans/biomarker_expansion_tier2_roadmap_2026-05-
 
 Check off each as it lands on master.
 
-- [ ] [W7] tier2-bio-heme-2026-05-01-001
-- [ ] [W7] tier2-bio-hereditary-2026-05-01-002
-- [ ] [W7] tier2-bio-prostate-2026-05-01-003
-- [ ] [W7] tier2-bio-emerging-targeted-2026-05-01-004
-- [ ] [W7] tier2-bio-melanoma-rare-2026-05-01-005
-- [ ] [W7] tier2-bio-pdl1-clones-2026-05-01-006
-- [ ] [W7] tier2-bio-followup-2026-05-01-007
+- [x] [W7] tier2-bio-heme-2026-05-01-001 — all 6 manifest IDs pre-exist on origin/master (commit 91e821329)
+- [x] [W7] tier2-bio-hereditary-2026-05-01-002 — all 5 manifest IDs pre-exist on origin/master (commit 91e821329)
+- [/] [W7] tier2-bio-prostate-2026-05-01-003 — bio_ar_amplification+bio_tmprss2_erg_fusion pre-exist; authoring bio_dmmr_prostate.yaml
+- [/] [W7] tier2-bio-emerging-targeted-2026-05-01-004 — bio_nrg1_fusion+bio_braf_class_ii_iii+bio_her2_ultralow pre-exist; authoring bio_esr1_y537s_d538g+bio_akt1_e17k+bio_cdkn2a_loss
+- [x] [W7] tier2-bio-melanoma-rare-2026-05-01-005 — all 4 manifest IDs pre-exist on origin/master (commit 91e821329)
+- [x] [W7] tier2-bio-pdl1-clones-2026-05-01-006 — all 4 manifest IDs pre-exist on origin/master (commit 91e821329)
+- [x] [W7] tier2-bio-followup-2026-05-01-007 — no-op: bio_lynch_panel_split exists as composite; individual split not needed
 - [ ] [W8] tier2-drug-heme-bispecific-cart-2026-05-01-008
 - [ ] [W8] tier2-drug-heme-liso-cel-2026-05-01-009
 - [ ] [W8] tier2-drug-breast-nsclc-emerging-2026-05-01-010
