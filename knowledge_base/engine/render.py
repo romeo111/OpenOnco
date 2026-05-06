@@ -2215,6 +2215,38 @@ def _is_resistance_entry(direction, significance) -> bool:
     return False
 
 
+_EVIDENCE_LANE_LABELS = {
+    "standard_care": "Standard care",
+    "molecular_evidence_option": "Molecular evidence option",
+    "resistance_or_avoidance_signal": "Resistance or avoidance signal",
+    "trial_research_option": "Trial or research option",
+    "insufficient_evidence": "Insufficient evidence",
+}
+
+
+def _source_ref_get(es, key: str, default=None):
+    if isinstance(es, dict):
+        return es.get(key, default)
+    return getattr(es, key, default)
+
+
+def _evidence_lane_for_source_ref(es, is_resistance: bool) -> str:
+    lane = _source_ref_get(es, "evidence_lane")
+    if lane in _EVIDENCE_LANE_LABELS:
+        return lane
+    if is_resistance:
+        return "resistance_or_avoidance_signal"
+    source = str(_source_ref_get(es, "source", "") or "").upper()
+    level = str(_source_ref_get(es, "level", "") or "").upper()
+    if source == "SRC-CIVIC":
+        if level in {"A", "B"}:
+            return "molecular_evidence_option"
+        if level in {"C", "D", "E"}:
+            return "trial_research_option"
+        return "insufficient_evidence"
+    return "standard_care"
+
+
 def _format_evidence_sources(
     evidence_sources: list, primary_sources: Optional[list] = None
 ) -> str:
@@ -2236,26 +2268,20 @@ def _format_evidence_sources(
          for non-OncoKB) as citation cards without a level, plus a note
          pointing to the Phase-2-of-CIViC-pivot re-cite roadmap.
     """
-    items: list[str] = []
+    lane_items: dict[str, list[str]] = {lane: [] for lane in _EVIDENCE_LANE_LABELS}
     seen: set = set()
     for es in (evidence_sources or []):
-        if isinstance(es, dict):
-            source = es.get("source") or ""
-            level = es.get("level") or ""
-            direction = es.get("direction")
-            significance = es.get("significance")
-            evidence_ids = es.get("evidence_ids") or []
-        else:
-            source = getattr(es, "source", "") or ""
-            level = getattr(es, "level", "") or ""
-            direction = getattr(es, "direction", None)
-            significance = getattr(es, "significance", None)
-            evidence_ids = getattr(es, "evidence_ids", None) or []
+        source = _source_ref_get(es, "source", "") or ""
+        level = _source_ref_get(es, "level", "") or ""
+        direction = _source_ref_get(es, "direction")
+        significance = _source_ref_get(es, "significance")
+        evidence_ids = _source_ref_get(es, "evidence_ids", None) or []
         if not source or _is_skipped_source(source):
             continue
         is_resistance = _is_resistance_entry(direction, significance)
+        lane = _evidence_lane_for_source_ref(es, is_resistance)
         # Dedupe key — collapse same source+level+resistance-flag rows.
-        key = (str(source).upper(), str(level).upper(), is_resistance)
+        key = (lane, str(source).upper(), str(level).upper(), is_resistance)
         if key in seen:
             continue
         seen.add(key)
@@ -2294,12 +2320,24 @@ def _format_evidence_sources(
             else ""
         )
 
-        items.append(
+        lane_items[lane].append(
             f'<li>{source_label}: Level {_h(level)}{badge}{suffix}</li>'
         )
 
-    if items:
-        return f'<ul class="evidence-sources">{"".join(items)}</ul>'
+    rendered_lanes: list[str] = []
+    for lane, label in _EVIDENCE_LANE_LABELS.items():
+        items = lane_items[lane]
+        if not items:
+            continue
+        rendered_lanes.append(
+            f'<div class="evidence-lane evidence-lane--{_h(lane)}">'
+            f'<div class="evidence-lane-title">{_h(label)}</div>'
+            f'<ul class="evidence-sources">{"".join(items)}</ul>'
+            "</div>"
+        )
+
+    if rendered_lanes:
+        return "".join(rendered_lanes)
 
     # Fallback: promote primary_sources (sans OncoKB) into citation cards
     # so the cell still surfaces something meaningful for the 18 J-drafts

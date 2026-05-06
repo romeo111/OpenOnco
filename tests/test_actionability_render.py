@@ -161,6 +161,41 @@ def test_format_keeps_distinct_levels_separate():
     assert "Level D" in out
 
 
+def test_format_groups_civic_support_as_molecular_evidence_option():
+    es = [{"source": "SRC-CIVIC", "level": "A", "evidence_ids": ["100"]}]
+    out = _format_evidence_sources(es)
+    assert "Molecular evidence option" in out
+    assert "evidence-lane--molecular_evidence_option" in out
+
+
+def test_format_respects_persisted_lane_metadata():
+    es = [
+        {
+            "source": "SRC-CIVIC",
+            "level": "B",
+            "evidence_lane": "standard_care",
+            "evidence_ids": ["100"],
+        }
+    ]
+    out = _format_evidence_sources(es)
+    assert "Standard care" in out
+    assert "Molecular evidence option" not in out
+
+
+def test_format_groups_resistance_lane():
+    es = [
+        {
+            "source": "SRC-CIVIC",
+            "level": "B",
+            "direction": "Does Not Support",
+            "significance": "Sensitivity/Response",
+        }
+    ]
+    out = _format_evidence_sources(es)
+    assert "Resistance or avoidance signal" in out
+    assert "evidence-lane--resistance_or_avoidance_signal" in out
+
+
 def test_format_fallback_when_only_oncokb_in_evidence_sources():
     """A BMA with ONLY SRC-ONCOKB → fallback engages, primary_sources
     rendered (sans OncoKB)."""

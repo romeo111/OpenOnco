@@ -55,6 +55,15 @@ from knowledge_base.engine.actionability_types import (  # noqa: E402
     ActionabilityQuery,
     ActionabilityResult,
 )
+from knowledge_base.engine.civic_evidence_lanes import (  # noqa: E402
+    classify_civic_evidence_item,
+    classify_civic_evidence_source_ref,
+    standard_care_confirming_source_ids,
+    summarize_lanes,
+)
+from knowledge_base.engine.civic_disease_matcher import (  # noqa: E402
+    civic_entry_matches_disease,
+)
 from knowledge_base.engine.civic_variant_matcher import (  # noqa: E402
     matches_civic_entry,
 )
@@ -69,6 +78,7 @@ CIVIC_SNAPSHOT_PATH = (
 )
 BIO_DIR = _REPO_ROOT / "knowledge_base" / "hosted" / "content" / "biomarkers"
 BMA_DIR = _REPO_ROOT / "knowledge_base" / "hosted" / "content" / "biomarker_actionability"
+DISEASE_DIR = _REPO_ROOT / "knowledge_base" / "hosted" / "content" / "diseases"
 REPORT_PATH = _REPO_ROOT / "docs" / "reviews" / "bma-civic-rebuild-2026-04-27.md"
 SOURCE_TOKEN = "SRC-CIVIC"
 NOTE_PREFIX = "Auto-added Phase 3-N from CIViC snapshot 2026-04-25"
@@ -92,6 +102,7 @@ class BMAOutcome:
     legacy_oncokb_level: Optional[str]
     review_required: bool
     file_modified: bool  # this run wrote this file
+    lanes_present: tuple[str, ...] = ()
 
 
 # ── BIO index ────────────────────────────────────────────────────────────
@@ -114,6 +125,17 @@ def build_bio_lookup_index() -> dict[str, tuple[str, str]]:
             variant = lookup.get("variant")
             if gene and variant:
                 out[str(bio_id)] = (str(gene), str(variant))
+    return out
+
+
+def build_disease_index() -> dict[str, dict[str, Any]]:
+    """Glob disease YAMLs; return {DIS-ID: raw disease data}."""
+    out: dict[str, dict[str, Any]] = {}
+    for path in sorted(DISEASE_DIR.glob("*.yaml")):
+        with path.open("r", encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+        if isinstance(data, dict) and data.get("id"):
+            out[str(data["id"])] = data
     return out
 
 
@@ -187,14 +209,21 @@ def _is_resistance_bucket(direction: str, significance: str) -> bool:
 def _build_evidence_entry(
     bucket_entries: list[dict[str, Any]],
     bucket_key: tuple[str, str, str],
+    standard_care_source_ids: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     level, direction, significance = bucket_key
     ids = [str(e["id"]) for e in bucket_entries if e.get("id") is not None]
     drugs = _collect_drugs(bucket_entries)
     drug_str = ", ".join(drugs) if drugs else "(no therapy attached)"
+    lane = classify_civic_evidence_item(
+        bucket_entries[0],
+        standard_care_confirmed=bool(standard_care_source_ids),
+        standard_care_source_ids=standard_care_source_ids,
+    ).lane.value
     return {
         "source": SOURCE_TOKEN,
         "level": level,
+        "evidence_lane": lane,
         "evidence_ids": ids,
         "direction": direction or None,
         "significance": significance or None,
@@ -256,6 +285,7 @@ def _yaml_dump(path: Path, data: dict[str, Any]) -> None:
 def process_bma(
     path: Path,
     bio_lookup: dict[str, tuple[str, str]],
+    disease_index: dict[str, dict[str, Any]],
     raw_civic_items: list[dict[str, Any]],
     client: SnapshotCIViCClient,
     dry_run: bool,
@@ -316,10 +346,13 @@ def process_bma(
     legacy_lvl = _legacy_oncokb_level(cleaned_existing)
     review_required = bool(data.get("actionability_review_required"))
 
-    def _civic_summary(entries: list[dict[str, Any]]) -> tuple[int, tuple[str, ...], bool]:
+    def _civic_summary(
+        entries: list[dict[str, Any]],
+    ) -> tuple[int, tuple[str, ...], bool, tuple[str, ...]]:
         n = 0
         levels: list[str] = []
         any_resistance = False
+        lane_decisions = []
         for ent in entries:
             if not isinstance(ent, dict):
                 continue
@@ -328,16 +361,17 @@ def process_bma(
             n += 1
             lvl = str(ent.get("level") or "?")
             levels.append(lvl)
+            lane_decisions.append(classify_civic_evidence_source_ref(ent))
             if _is_resistance_bucket(
                 str(ent.get("direction") or ""),
                 str(ent.get("significance") or ""),
             ):
                 any_resistance = True
-        return n, tuple(levels), any_resistance
+        return n, tuple(levels), any_resistance, summarize_lanes(lane_decisions)
 
     lookup = bio_lookup.get(biomarker_id)
     if lookup is None:
-        n_total, lvls_present, has_res = _civic_summary(cleaned_existing)
+        n_total, lvls_present, has_res, lanes_present = _civic_summary(cleaned_existing)
         return BMAOutcome(
             bma_id=bma_id,
             biomarker_id=biomarker_id,
@@ -352,6 +386,7 @@ def process_bma(
             legacy_oncokb_level=legacy_lvl,
             review_required=review_required,
             file_modified=False,
+            lanes_present=lanes_present,
         )
     gene, variant = lookup
 
@@ -371,7 +406,7 @@ def process_bma(
             result_or_err.error_kind,
             result_or_err.detail,
         )
-        n_total, lvls_present, has_res = _civic_summary(cleaned_existing)
+        n_total, lvls_present, has_res, lanes_present = _civic_summary(cleaned_existing)
         return BMAOutcome(
             bma_id=bma_id,
             biomarker_id=biomarker_id,
@@ -386,11 +421,12 @@ def process_bma(
             legacy_oncokb_level=legacy_lvl,
             review_required=review_required,
             file_modified=False,
+            lanes_present=lanes_present,
         )
 
-    matched = _matched_civic_entries(raw_civic_items, gene, variant)
-    if not matched:
-        n_total, lvls_present, has_res = _civic_summary(cleaned_existing)
+    all_matched = _matched_civic_entries(raw_civic_items, gene, variant)
+    if not all_matched:
+        n_total, lvls_present, has_res, lanes_present = _civic_summary(cleaned_existing)
         return BMAOutcome(
             bma_id=bma_id,
             biomarker_id=biomarker_id,
@@ -405,6 +441,31 @@ def process_bma(
             legacy_oncokb_level=legacy_lvl,
             review_required=review_required,
             file_modified=False,
+            lanes_present=lanes_present,
+        )
+
+    matched = [
+        entry
+        for entry in all_matched
+        if civic_entry_matches_disease(entry, disease_index.get(disease_id))
+    ]
+    if not matched:
+        n_total, lvls_present, has_res, lanes_present = _civic_summary(cleaned_existing)
+        return BMAOutcome(
+            bma_id=bma_id,
+            biomarker_id=biomarker_id,
+            gene=gene,
+            variant=variant,
+            disease_id=disease_id,
+            skip_reason="civic_no_disease_matched_evidence",
+            civic_entries_added=0,
+            civic_entries_total=n_total,
+            civic_levels_present=lvls_present,
+            has_resistance=has_res,
+            legacy_oncokb_level=legacy_lvl,
+            review_required=review_required,
+            file_modified=False,
+            lanes_present=lanes_present,
         )
 
     # Bucket
@@ -413,14 +474,18 @@ def process_bma(
         buckets[_bucket_key(e)].append(e)
 
     existing = _existing_civic_buckets(cleaned_existing)
+    standard_care_source_ids = standard_care_confirming_source_ids(
+        cleaned_existing,
+        data.get("primary_sources") or (),
+    )
     new_entries: list[dict[str, Any]] = []
     for bkey, entries in buckets.items():
         if bkey in existing:
             continue
-        new_entries.append(_build_evidence_entry(entries, bkey))
+        new_entries.append(_build_evidence_entry(entries, bkey, standard_care_source_ids))
 
     if not new_entries:
-        n_total, lvls_present, has_res = _civic_summary(cleaned_existing)
+        n_total, lvls_present, has_res, lanes_present = _civic_summary(cleaned_existing)
         return BMAOutcome(
             bma_id=bma_id,
             biomarker_id=biomarker_id,
@@ -435,6 +500,7 @@ def process_bma(
             legacy_oncokb_level=legacy_lvl,
             review_required=review_required,
             file_modified=False,
+            lanes_present=lanes_present,
         )
 
     # Append, preserve order: legacy first, new CIViC after.
@@ -446,7 +512,7 @@ def process_bma(
     if not dry_run:
         _yaml_dump(path, data)
 
-    n_total, lvls_present, has_res = _civic_summary(cleaned_existing)
+    n_total, lvls_present, has_res, lanes_present = _civic_summary(cleaned_existing)
     return BMAOutcome(
         bma_id=bma_id,
         biomarker_id=biomarker_id,
@@ -461,6 +527,7 @@ def process_bma(
         legacy_oncokb_level=legacy_lvl,
         review_required=True,
         file_modified=not dry_run,
+        lanes_present=lanes_present,
     )
 
 
@@ -483,6 +550,9 @@ def write_report(outcomes: list[BMAOutcome], dry_run: bool) -> None:
         o for o in outcomes if o.skip_reason == "biomarker_not_actionable_for_civic_lookup"
     ]
     no_civic = [o for o in outcomes if o.skip_reason == "civic_no_evidence"]
+    no_disease_match = [
+        o for o in outcomes if o.skip_reason == "civic_no_disease_matched_evidence"
+    ]
     idempotent = [
         o for o in outcomes if o.skip_reason == "civic_already_recorded_idempotent"
     ]
@@ -532,6 +602,10 @@ def write_report(outcomes: list[BMAOutcome], dry_run: bool) -> None:
         f"**{len(no_civic)}**"
     )
     lines.append(
+        f"- BMAs unmodified - CIViC evidence exists only for another disease: "
+        f"**{len(no_disease_match)}**"
+    )
+    lines.append(
         f"- BMAs unmodified — CIViC evidence already present (idempotent): "
         f"**{len(idempotent)}**"
     )
@@ -550,18 +624,20 @@ def write_report(outcomes: list[BMAOutcome], dry_run: bool) -> None:
     lines.append("## Per-BMA detail (BMAs carrying CIViC evidence)")
     lines.append("")
     lines.append(
-        "| BMA-ID | biomarker | (gene, variant) | CIViC entries (total) | added this run | levels | "
-        "resistance | review_required |"
+        "| BMA-ID | biomarker | (gene, variant) | CIViC entries (total) | "
+        "added this run | levels | lanes | resistance | review_required |"
     )
     lines.append(
-        "|---|---|---|---|---|---|---|---|"
+        "|---|---|---|---|---|---|---|---|---|"
     )
     for o in sorted(bmas_with_civic, key=lambda x: x.bma_id):
         levels = ", ".join(sorted(set(o.civic_levels_present)))
+        lanes = ", ".join(o.lanes_present)
         lines.append(
             f"| {_md_escape(o.bma_id)} | {_md_escape(o.biomarker_id)} | "
             f"({_md_escape(o.gene or '')}, {_md_escape(o.variant or '')}) | "
             f"{o.civic_entries_total} | {o.civic_entries_added} | {levels} | "
+            f"{_md_escape(lanes)} | "
             f"{'yes' if o.has_resistance else 'no'} | "
             f"{'yes' if o.review_required else 'no'} |"
         )
@@ -702,6 +778,9 @@ def main(argv: list[str] | None = None) -> int:
 
     _LOG.info("Building BIO actionability_lookup index…")
     bio_lookup = build_bio_lookup_index()
+    _LOG.info("Building Disease index...")
+    disease_index = build_disease_index()
+    _LOG.info("  -> %d diseases", len(disease_index))
     _LOG.info("  → %d BIOs with actionability_lookup", len(bio_lookup))
 
     _LOG.info("Loading raw CIViC snapshot for ID-level resolution…")
@@ -722,7 +801,14 @@ def main(argv: list[str] | None = None) -> int:
     for path in bma_paths:
         try:
             outcomes.append(
-                process_bma(path, bio_lookup, raw_items, client, args.dry_run)
+                process_bma(
+                    path,
+                    bio_lookup,
+                    disease_index,
+                    raw_items,
+                    client,
+                    args.dry_run,
+                )
             )
         except Exception as exc:
             _LOG.exception("BMA %s: unexpected error — %s", path.name, exc)
