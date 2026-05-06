@@ -802,7 +802,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     return f"""<header class="top-bar">
   <div class="brand-line">
     <a href="{home_path}" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
-    <span class="brand-version" title="Released {OPENONCO_RELEASE_DATE}">v{OPENONCO_VERSION} · {OPENONCO_RELEASE_DATE}</span>
+    <span class="brand-version" title="Released {OPENONCO_RELEASE_DATE}">v{OPENONCO_VERSION} &middot; {OPENONCO_RELEASE_DATE}</span>
   </div>
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
@@ -1445,8 +1445,11 @@ def render_gallery(*, target_lang: str = "en") -> str:
             "disease_id": did,
             "label_ua": m["label_ua"],
             "label_en": m["label_en"],
+            "icds": set(),
             "items": [],
         })
+        if m.get("icd"):
+            bucket["icds"].add(str(m["icd"]))
         bucket["items"].append({**m, "default_order": i})
     # Sort diseases alphabetically by display label (UA primary).
     sort_key = "label_en" if is_en else "label_ua"
@@ -1471,14 +1474,22 @@ def render_gallery(*, target_lang: str = "en") -> str:
         label = d[sort_key]
         n = len(d["items"])
         n_word = _examples_word(n)
-        # data-search holds both UA + EN labels lowercased so the search
+        icds = sorted(str(code) for code in d.get("icds", []) if code)
+        icd_text = ", ".join(icds[:3])
+        icd_suffix = f" +{len(icds) - 3}" if len(icds) > 3 else ""
+        icd_html = (
+            f'<span class="dt-icd">ICD-O-3 {_html.escape(icd_text + icd_suffix)}</span>'
+            if icds else ""
+        )
+        # data-search holds UA + EN labels and ICD-O-3 codes so the search
         # box works regardless of the page's render language.
-        search_blob = (d["label_ua"] + " " + d["label_en"]).lower()
+        search_blob = " ".join([d["label_ua"], d["label_en"], *icds]).lower()
         disease_tiles.append(
             f'<button type="button" class="disease-tile" '
             f'data-disease-id="{_html.escape(d["disease_id"])}" '
             f'data-search="{_html.escape(search_blob)}">'
             f'<span class="dt-label">{_html.escape(label)}</span>'
+            f'{icd_html}'
             f'<span class="dt-count">{n} {n_word}</span>'
             f'</button>'
         )
@@ -1534,7 +1545,7 @@ def render_gallery(*, target_lang: str = "en") -> str:
             f'target="_blank" rel="noopener">open an issue</a>.'
         )
         page_title = "Sample cases"
-        search_ph = "Search disease…"
+        search_ph = "Search disease or ICD-O-3…"
         back_label = "← All diseases"
         empty_label = "No diseases match your search."
     else:
@@ -1547,7 +1558,7 @@ def render_gallery(*, target_lang: str = "en") -> str:
             f'target="_blank" rel="noopener">відкрий issue</a>.'
         )
         page_title = "Готові приклади"
-        search_ph = "Шукати хворобу…"
+        search_ph = "Шукати хворобу або ICD-O-3…"
         back_label = "← Усі хвороби"
         empty_label = "Жодна хвороба не підходить під запит."
 
@@ -6372,6 +6383,8 @@ _DISEASES_PAGE_LABELS = {
         "th_fill": "Fill %", "th_ver": "Ver %",
         "yes": "✓", "no": "—",
         "metrics_title": "Метрики",
+        "search_placeholder": "Шукати хворобу або ICD-10 код…",
+        "search_empty": "Жодна хвороба не підходить під запит.",
         "metrics": [
             "<b>#Bio</b> — distinct biomarkers, на які посилаються Indications + Regimens цієї хвороби",
             "<b>#Drug</b> — distinct drugs у regimens цієї хвороби",
@@ -6414,6 +6427,8 @@ _DISEASES_PAGE_LABELS = {
         "th_fill": "Fill %", "th_ver": "Ver %",
         "yes": "✓", "no": "—",
         "metrics_title": "Metric definitions",
+        "search_placeholder": "Search disease or ICD-10 code…",
+        "search_empty": "No diseases match your search.",
         "metrics": [
             "<b>#Bio</b> — distinct biomarkers referenced by this disease's Indications + Regimens",
             "<b>#Drug</b> — distinct drugs in this disease's regimens",
@@ -6445,8 +6460,12 @@ def _disease_row_html(r: dict, lbl: dict) -> str:
     ver_class = "ver-high" if r["verified_pct"] >= 60 else ("ver-mid" if r["verified_pct"] >= 1 else "ver-low")
     short_id = r["id"].replace("DIS-", "")
     name = (r["name"] or "")[:48]
+    search_blob = " ".join(
+        str(part) for part in (r.get("id"), r.get("name"), r.get("family"), r.get("icd10"))
+        if part
+    ).lower()
     return (
-        '<tr>'
+        f'<tr data-search="{html.escape(search_blob)}">'
         f'<td><strong>{html.escape(short_id)}</strong> <span class="dis-name">{html.escape(name)}</span></td>'
         f'<td class="mono">{html.escape(r["icd10"] or "")}</td>'
         f'<td class="num">{r["n_bios"]}</td>'
@@ -6557,6 +6576,7 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 .dis-summary .card {{ background: var(--gray-50); border-left: 3px solid var(--green-600); padding: 10px 14px; border-radius: 4px; }}
 .dis-summary .card .v {{ font-family: var(--font-display); font-size: 22px; color: var(--green-800); }}
 .dis-summary .card .k {{ font-size: 12px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }}
+.dis-matrix-search {{ margin: 2px 0 18px; max-width: 680px; }}
 .dis-family {{ margin: 28px 0; }}
 .dis-family h2 {{ margin-bottom: 8px; }}
 .dis-family .fam-count {{ font-size: 14px; color: var(--gray-500); font-weight: normal; }}
@@ -6605,6 +6625,14 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
       <div class="card"><div class="k">{lbl['sum_algo_2l']}</div><div class="v">{n_algo_2l}/{n}</div></div>
     </div>
 
+    <div class="disease-search-row dis-matrix-search">
+      <input type="search" id="matrixSearch" class="disease-search"
+             placeholder="{_html.escape(lbl['search_placeholder'])}" autocomplete="off"
+             aria-label="{_html.escape(lbl['search_placeholder'])}">
+      <span class="disease-search-count" id="matrixSearchCount">{n}</span>
+    </div>
+    <p class="disease-empty" id="matrixEmpty" hidden>{_html.escape(lbl['search_empty'])}</p>
+
     {''.join(family_blocks)}
 
     <div class="dis-metrics">
@@ -6618,6 +6646,37 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
     <p class="dis-footer-data">{lbl['footer_data']} <a href="/disease_coverage.json">/disease_coverage.json</a></p>
   </section>
 </main>
+<script>
+(function() {{
+  var input = document.getElementById("matrixSearch");
+  if (!input) return;
+  var families = Array.prototype.slice.call(document.querySelectorAll(".dis-family"));
+  var count = document.getElementById("matrixSearchCount");
+  var empty = document.getElementById("matrixEmpty");
+
+  function applySearch() {{
+    var q = (input.value || "").trim().toLowerCase();
+    var visible = 0;
+    families.forEach(function(section) {{
+      var sectionVisible = 0;
+      var rows = Array.prototype.slice.call(section.querySelectorAll("tbody tr"));
+      rows.forEach(function(row) {{
+        var blob = row.dataset.search || "";
+        var match = !q || blob.indexOf(q) !== -1;
+        row.style.display = match ? "" : "none";
+        if (match) sectionVisible++;
+      }});
+      section.hidden = sectionVisible === 0;
+      visible += sectionVisible;
+    }});
+    count.textContent = visible;
+    empty.hidden = visible !== 0;
+  }}
+
+  input.addEventListener("input", applySearch);
+  applySearch();
+}})();
+</script>
 </body>
 </html>
 """
