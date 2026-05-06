@@ -1,0 +1,80 @@
+id: RF-PDAC-ORGAN-DYSFUNCTION
+category: organ-dysfunction
+severity: critical
+priority: 90
+
+definition: >
+  Pancreatic ductal adenocarcinoma (PDAC) patient with baseline organ dysfunction
+  precluding standard 2L chemotherapy (nal-IRI+5-FU, FOLFOX, gemcitabine monotherapy):
+  - Hepatic: bilirubin >2× ULN at 2L initiation (biliary obstruction common in PDAC;
+    nal-IRI requires hepatic metabolism via UGT1A1 — biliary obstruction raises
+    risk of severe toxicity; stent/drain to decompress before chemotherapy)
+  - Renal: CrCl <30 mL/min (5-FU hydration; irinotecan renally excreted metabolites)
+  - Hematologic: ANC <1.0 × 10^9/L or platelets <75 × 10^9/L (myelosuppression
+    limits cytotoxic eligibility)
+  - Cardiac: ECOG ≥ 3 or Karnofsky <60 (nal-IRI + 5-FU requires adequate PS)
+
+definition_ua: >
+  Пацієнт з ПДПЗЗ та базовою дисфункцією органів, що унеможливлює стандартну
+  хіміотерапію 2L (нал-ІРІ+5-ФУ, FOLFOX, монотерапія гемцитабіном):
+  - Печінкова: білірубін >2× ВМН (обструкція жовчних шляхів часта при ПДПЗЗ;
+    нал-ІРІ метаболізується UGT1A1 — потрібна декомпресія стентом/дренажем перед ХТ)
+  - Ниркова: КлКр <30 мл/хв
+  - Гематологічна: АНК <1.0 або тромбоцити <75 × 10^9/л
+  - ECOG ≥ 3 або KPS <60
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: bilirubin_uln_x
+      threshold: 2.0
+      comparator: ">"
+    - finding: creatinine_clearance_ml_min
+      threshold: 30
+      comparator: "<"
+    - finding: absolute_neutrophil_count_k_ul
+      threshold: 1.0
+      comparator: "<"
+    - finding: platelets_k_ul
+      threshold: 75
+      comparator: "<"
+    - finding: ecog
+      threshold: 3
+      comparator: ">="
+
+clinical_direction: de-escalate
+
+shifts_algorithm: []
+
+relevant_diseases:
+  - DIS-PDAC
+
+sources:
+  - source_id: SRC-NCCN-PANCREATIC-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Pancreatic 2025: biliary decompression required before 2L chemotherapy
+      in obstructive jaundice; nal-IRI + 5-FU eligibility requires adequate hepatic
+      function (bilirubin ≤2× ULN per NAPOLI-1 eligibility).
+
+notes: >
+  PDAC has a high rate of biliary obstruction (~80% of pancreatic head cancers),
+  making hepatic dysfunction the most clinically relevant organ-dysfunction trigger
+  for this disease. UGT1A1 polymorphism (especially UGT1A1*28 homozygous) further
+  elevates nal-IRI toxicity in the context of impaired biliary clearance.
+  If biliary obstruction is the cause: consider endoscopic or percutaneous stent
+  placement 1–2 weeks before initiating nal-IRI-based therapy. FOLFOX (oxaliplatin
+  + 5-FU) is the common alternative — oxaliplatin primarily renally cleared,
+  better suited when hepatic dysfunction is the barrier.
+
+notes_ua: >
+  Обструкція жовчних шляхів (~80% раку голівки підшлункової залози) є
+  найважливішим тригером печінкової дисфункції при ПДПЗЗ. UGT1A1*28 гомозигота
+  підвищує ризик токсичності нал-ІРІ. Якщо причина — обструкція: ендоскопічне
+  або черезшкірне стентування за 1-2 тижні до ХТ. FOLFOX — краща альтернатива
+  при печінковій дисфункції.
+
+draft: false
+last_reviewed: "2026-05-05"
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
