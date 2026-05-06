@@ -3412,7 +3412,10 @@ async function ensureQuestionnaires() {{
   if (questionnaires) return questionnaires;
   if (!_questionnairesPromise) {{
     _questionnairesPromise = fetch('/questionnaires.json')
-      .then(r => r.json())
+      .then(r => {{
+        if (!r.ok) throw new Error('questionnaires.json HTTP ' + r.status);
+        return r.json();
+      }})
       .then(data => {{ questionnaires = data; return data; }});
   }}
   return _questionnairesPromise;
@@ -3421,7 +3424,10 @@ async function ensureExamples() {{
   if (examples) return examples;
   if (!_examplesPromise) {{
     _examplesPromise = fetch('/examples.json')
-      .then(r => r.json())
+      .then(r => {{
+        if (!r.ok) throw new Error('examples.json HTTP ' + r.status);
+        return r.json();
+      }})
       .then(data => {{ examples = data; return data; }});
   }}
   return _examplesPromise;
@@ -3457,38 +3463,57 @@ async function loadAssets() {{
   // disease is picked.
   repopulateExamples(null);
 
-  // Restore draft
+  // Restore draft. If the full questionnaire payload is unavailable, keep
+  // the page usable from the inlined manifest instead of leaving the boot
+  // banner stuck on "Loading questionnaires…".
   const draft = loadDraft();
+  let draftRestored = false;
+  let draftRestoreFailed = false;
   if (draft && draft.questId) {{
     const idx = QUESTIONNAIRES_MANIFEST.findIndex(q => q.id === draft.questId);
     if (idx >= 0) {{
-      await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
-        diseaseSelect.value = idx;
-        // Draft restore needs full data — lazy-fetch now
-        const fullList = await ensureQuestionnaires();
-        renderForm(fullList[idx]);
-        repopulateExamples(idx);
-        // Apply saved answers
-        if (draft.answers) {{
-          for (const [field, val] of Object.entries(draft.answers)) {{
-            const inp = formPane.querySelector(`[data-field="${{CSS.escape(field)}}"]`);
-            if (!inp) continue;
-            if (typeof val === 'boolean') inp.value = String(val);
-            else if (inp.dataset.type === 'enum') inp.value = JSON.stringify(val);
-            else inp.value = val;
-            answers[field] = val;
+      try {{
+        await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
+          diseaseSelect.value = idx;
+          // Draft restore needs full data — lazy-fetch now
+          const fullList = await ensureQuestionnaires();
+          renderForm(fullList[idx]);
+          repopulateExamples(idx);
+          // Apply saved answers
+          if (draft.answers) {{
+            for (const [field, val] of Object.entries(draft.answers)) {{
+              const inp = formPane.querySelector(`[data-field="${{CSS.escape(field)}}"]`);
+              if (!inp) continue;
+              if (typeof val === 'boolean') inp.value = String(val);
+              else if (inp.dataset.type === 'enum') inp.value = JSON.stringify(val);
+              else inp.value = val;
+              answers[field] = val;
+            }}
           }}
-        }}
-        if (draft.jsonText) textarea.value = draft.jsonText;
-        if (draft.mode === 'json') setMode('json');
-        setStatus('{"Draft restored ✓ Click «Generate» when you are ready." if target_lang == "en" else "Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий."}', 'ok');
-        updateRunBtnEnabled();
-        updateImpactPanelLocal();
-      }});
+          if (draft.jsonText) textarea.value = draft.jsonText;
+          if (draft.mode === 'json') setMode('json');
+          setStatus('{"Draft restored ✓ Click «Generate» when you are ready." if target_lang == "en" else "Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий."}', 'ok');
+          updateRunBtnEnabled();
+          updateImpactPanelLocal();
+          draftRestored = true;
+        }});
+      }} catch (e) {{
+        draftRestoreFailed = true;
+        console.warn('[OpenOnco] failed to restore saved draft:', e);
+        setError('{"Could not restore the saved draft: " if target_lang == "en" else "Не вдалося відновити чернетку: "}' + (e.message || e));
+        diseaseSelect.value = '';
+        renderForm(null);
+        repopulateExamples(null);
+      }}
     }}
-  }} else {{
+  }}
+  if (!draftRestored) {{
     // Initial load done — hide the top busy banner; sidebar still shows hint.
-    setStatus('{"Pick a disease from the list to start." if target_lang == "en" else "Оберіть хворобу зі списку, щоб почати."}', 'info', 'hide');
+    if (draftRestoreFailed) {{
+      setStatus('{"Saved draft could not be restored. Pick a disease to start again." if target_lang == "en" else "Чернетку не вдалося відновити. Оберіть хворобу, щоб почати знову."}', 'warn', 'warn');
+    }} else {{
+      setStatus('{"Pick a disease from the list to start." if target_lang == "en" else "Оберіть хворобу зі списку, щоб почати."}', 'info', 'hide');
+    }}
     updateRunBtnEnabled();
     updateImpactPanelLocal();
   }}
