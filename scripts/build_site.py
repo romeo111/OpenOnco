@@ -62,6 +62,7 @@ from knowledge_base.clients.ctgov_client import search_trials
 from knowledge_base import __version__ as OPENONCO_VERSION
 from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
 from knowledge_base.stats import collect_stats
+from scripts.audit_clinical_gaps import write_outputs as write_clinical_gap_outputs
 from scripts.build_kb_wiki import build_kb_wiki
 from scripts.site_cases import CASE_CATEGORIES, CASES, GALLERY_EXCLUDED_CASE_IDS, CaseEntry
 from scripts.site_styles import STYLESHEET as _STYLE_CSS
@@ -5056,6 +5057,7 @@ def _render_capabilities_uk(stats) -> str:
           <tr><td>Хірургія планів</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
           <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Поки що hard-coded на режимах; не auto-refresh з НСЗУ — окремий backlog</td></tr>
           <tr><td>Reviewer dual-signoff</td><td>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</td><td>Більшість контенту — STUB. Capacity план: {stats.reviewer_signoffs_total} → ≥85% verified — це наша основна bottleneck-метрика, описана у kb_coverage_strategy v0.2</td></tr>
+          <tr><td>Clinical gap audit</td><td><a href="/ukr/clinical-gaps.html">live dashboard</a></td><td>Build-generated audit for sign-off, solid-tumour 2L+, surgery/radiation structure, supportive care, and drug indication tracking.</td></tr>
         </tbody>
       </table>
       <div class="callout">
@@ -6218,6 +6220,7 @@ def _render_capabilities_en(stats) -> str:
           <tr><td>Surgical oncology plans</td><td>not modelled</td><td>Surgical-oncology indications absent</td></tr>
           <tr><td>NHSU formulary live feed</td><td>static flag</td><td>Currently hard-coded on regimens; not auto-refreshed from NHSU — separate backlog</td></tr>
           <tr><td>Reviewer dual-signoff</td><td>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</td><td>Most content is STUB. Capacity plan: {stats.reviewer_signoffs_total} → ≥85% verified — our main bottleneck metric, described in kb_coverage_strategy v0.2</td></tr>
+          <tr><td>Clinical gap audit</td><td><a href="/clinical-gaps.html">live dashboard</a></td><td>Build-generated audit for sign-off, solid-tumour 2L+, surgery/radiation structure, supportive care, and drug indication tracking.</td></tr>
         </tbody>
       </table>
       <div class="callout">
@@ -7479,6 +7482,7 @@ def build_site(output_dir: Path) -> dict:
     case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
     disease_coverage_payload = bundle_disease_coverage(output_dir)
     kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
+    clinical_gap_payload = write_clinical_gap_outputs(output_dir)
 
     return {
         "output_dir": str(output_dir),
@@ -7491,6 +7495,7 @@ def build_site(output_dir: Path) -> dict:
         "questionnaires_payload": questionnaires_payload,
         "disease_coverage_payload": disease_coverage_payload,
         "kb_wiki_payload": kb_wiki_payload,
+        "clinical_gap_payload": clinical_gap_payload,
         "landing_assets": landing_assets,
     }
 

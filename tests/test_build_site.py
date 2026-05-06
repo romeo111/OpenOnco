@@ -36,7 +36,9 @@ def test_static_assets_present(site_dir: Path):
     for f in (".nojekyll", "CNAME", "style.css", "index.html", "gallery.html",
               "try.html", "openonco-engine-core.zip", "openonco-engine-index.json",
               "examples.json", "kb.html", "kb_search_index.json",
-              "ukr/kb.html", "ukr/kb_search_index.json"):
+              "ukr/kb.html", "ukr/kb_search_index.json",
+              "clinical-gaps.html", "ukr/clinical-gaps.html",
+              "audits/clinical_gap_audit.md", "audits/clinical_gap_audit.json"):
         assert (site_dir / f).exists(), f"missing {f}"
 
 
