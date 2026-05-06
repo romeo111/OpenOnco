@@ -392,3 +392,124 @@ Bottlenecks: (1) §17 2-reviewer wait (calendar, not work) — start Day 1;
 - CheckMate-trial usage scan: full-tree grep for `SRC-CHECKMATE`,
   `CheckMate`, `checkmate` across `knowledge_base/hosted/content/`.
 - Source-of-record: this document.
+
+---
+
+## 12. Post-W0 corrections (added 2026-05-04, after W0-1/W0-2/W0-3 merged)
+
+Three findings surfaced during W0 dispatch that invalidate parts of this
+plan as originally written. Captured here as a post-mortem so subsequent
+phases (A, B, C, D) act on the corrected understanding.
+
+### 12.1 Coverage audit was partially wrong: esoph 1L exists
+
+This document §1.2.1 said "esoph metastatic ~30% — Only 2L SCC + 2L
+adeno-PD-L1; **no 1L indication at all**."
+
+That is **incorrect**. `git ls knowledge_base/hosted/content/indications/`
+on `origin/master` shows:
+
+- `ind_esoph_metastatic_1l_pembro_chemo.yaml` — KEYNOTE-590 covered
+- `ind_esoph_metastatic_1l_nivo_chemo_scc.yaml` — CheckMate-648 (chemo + nivo arm) covered
+- `algorithms/algo_esoph_metastatic_1l.yaml` — algorithm tree exists
+
+**Phase A1 redux scope** — what actually remains to add:
+
+- `ind_esoph_metastatic_1l_scc_ipi_nivo` — CheckMate-648 ipi + nivo arm only (chemo + nivo arm already covered)
+- `ind_esoph_metastatic_1l_her2_trastuzumab_chemo` — ToGA extrapolation
+- `ind_esoph_metastatic_1l_her2_low_t_dxd` — DESTINY-Gastric04 extrapolation
+- Companion regimens for the 3 above
+
+Drops 2 indications and 1 regimen from original A1 scope. **A1 is roughly
+half the size originally planned.**
+
+### 12.2 Manifest collision: hyphenation inconsistency
+
+W0-2 agent stopped on collision: 2 of 7 manifest IDs (`SRC-CHECKMATE-648-DOKI-2022`,
+`SRC-KEYNOTE-590-SUN-2021`) already exist as `SRC-CHECKMATE648-DOKI-2022` /
+`SRC-KEYNOTE590-SUN-2021` (no hyphen between trial name and number).
+
+KB-wide naming inconsistency observed: some sources use `keynote006`,
+some `keynote_826`, some hyphenated. Resolution: **drop the 2
+collisions from W0-2 manifest** (they're already cited 3× each); defer
+KB-wide normalisation to a future renormalisation chunk.
+
+**Add to renormalisation backlog:**
+- `SRC-CHECKMATE648-DOKI-2022` → `SRC-CHECKMATE-648-DOKI-2022`
+- `SRC-KEYNOTE590-SUN-2021` → `SRC-KEYNOTE-590-SUN-2021`
+- Audit any other source IDs without hyphens for consistency
+
+### 12.3 Manifest defect: OMEC-1 year wrong
+
+W0-2 agent flagged: manifest ID `SRC-OMEC-1-KROESE-2018` references a
+non-existent paper. The actual OMEC-1 Delphi consensus is Kroese 2023
+(PMID 36947929). 2018 paper does not exist.
+
+Agent preserved manifest ID verbatim per brief, with year-mismatch
+flagged in source YAML `notes` field.
+
+**Add to renormalisation backlog:**
+- `SRC-OMEC-1-KROESE-2018` → `SRC-OMEC-1-KROESE-2023` (rename file + ID)
+- Verify any future references use corrected ID
+
+### 12.4 Schema field naming defect in this plan's chunk-issue templates
+
+Original W0 chunk-issue bodies (this doc §4.1) listed required fields:
+
+```
+kind: trial
+clinical_trial_registration: NCT-...
+```
+
+**These fields do NOT exist** in `knowledge_base/schemas/source.py`. The
+actual schema convention (matching `src_keynote189_gandhi_2018.yaml`,
+`src_adaura_wu_2020.yaml`, etc.):
+
+```
+source_type: rct_publication   # for trials
+source_type: guideline         # for consensus papers / guidelines
+notes: |
+  ...narrative description with NCT-XXXXXXXX embedded inline...
+```
+
+Both W0-1 and W0-2 agents adapted to actual schema (W0-3 didn't need to
+because no new files). **Update all chunk-issue templates in this plan
+(§4.1, §4.2, §4.3) and the q_axis_dispatch_template_2026-05-01.md
+sister document before dispatching A/B/C/D.**
+
+### 12.5 Pre-commit hooks not configured in repo
+
+Plan §6 R6 mitigation referenced `pre-commit run --all-files` as a
+quality gate. Both W0 agents reported `.pre-commit-config.yaml` does
+not exist in repo. Quality gate effectively reduces to:
+
+```
+C:/Python312/python.exe -m knowledge_base.validation.cli   # ok=True, 0 schema, 0 contract regressions
+C:/Python312/python.exe -m pytest tests/test_<scope>.py     # green
+```
+
+Update chunk-issue templates accordingly.
+
+### 12.6 Pre-existing baseline failures
+
+Both `test_seed_loads_without_errors` and a regimen-schema-error pattern
+in `regimens/reg_bep_gct.yaml` etc. fail on baseline `origin/master`.
+Agents must verify pytest-fail count is **identical pre/post**, not
+**zero**.
+
+KB validator schema errors: 91 baseline (concentrated in regimens/
+files from prior chunks). New work must not *increase* this count.
+
+### 12.7 Net effect on remaining phases
+
+| Phase | Original scope | Revised scope (post-W0) |
+|---|---|---|
+| A1 esoph 1L met | 5 NEW indications + 3 regimens | **3 NEW** indications (CM-648 ipi+nivo, HER2-positive 1L × 2) + 1-2 regimens — half the work |
+| A2 BMA expansion | unchanged | unchanged (no overlap with W0 findings) |
+| B1 CPS+nivo patch | 3-file edit | unchanged (race with W0-3 already serialised — W0-3 merged, B1 dispatchable now) |
+| §17 PROPOSAL | unchanged | unchanged (still blocking C-block) |
+| C1-C5 multimodal | unchanged scope | unchanged scope; templates need schema-field corrections |
+| D1 algorithms | extend `algo_gastric_metastatic_1l` + new `algo_gastric_periop` + new `algo_esoph_metastatic_1l` | extend × 2 only — `algo_esoph_metastatic_1l` ALREADY EXISTS (just needs CM-648 ipi+nivo branch added) |
+
+**Estimate impact:** -2 chunks-worth of work (A1 reduced by half; D1 reduced).
+Total wave probably 10-12 chunks instead of 12.
