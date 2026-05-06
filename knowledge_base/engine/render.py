@@ -342,7 +342,7 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "skills_optional":             {"uk": "Скіли (optional) — опціональні",
                                     "en": "Skills (optional)"},
     "mdt_brief":                   {"uk": "MDT brief", "en": "MDT brief"},
-    "open_questions":              {"uk": "Open questions", "en": "Open questions"},
+    "open_questions":              {"uk": "Питання для обговорення", "en": "Discussion questions"},
     "data_quality":                {"uk": "Якість даних", "en": "Data quality"},
     "dq_status_complete":          {"uk": "Готово до розгляду MDT", "en": "Complete for MDT review"},
     "dq_status_caveats":           {"uk": "Можна використовувати з застереженнями", "en": "Usable with caveats"},
@@ -412,7 +412,7 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "ci_label":                    {"uk": "Hard contraindications", "en": "Hard contraindications"},
     "reason_label":                {"uk": "Reason", "en": "Reason"},
     # Skill catalog
-    "skill_catalog_prefix":        {"uk": "Skill catalog", "en": "Skill catalog"},
+    "skill_catalog_prefix":        {"uk": "Технічні метадані MDT skills", "en": "Technical MDT skill metadata"},
     "skill_catalog_active_in":     {"uk": "активовано в цьому плані", "en": "activated in this plan"},
     "skill_catalog_legend":        {"uk": "Усі зареєстровані віртуальні спеціалісти. ✓ — активовано для цього кейсу; ○ — не активовано (доступні для інших клінічних сценаріїв).",
                                     "en": "All registered virtual specialists. ✓ — activated for this case; ○ — not activated (available for other clinical scenarios)."},
@@ -781,27 +781,6 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
     # `_localize_html` is a no-op for them. If a UA-translated form is
     # ever desired, add keys to `_UI_STRINGS` and route through `_t`.
 
-    def _skill_meta_html(r) -> str:
-        """One-line metadata strip showing skill version + last-reviewed
-        date + sign-off status — so a clinician verifying changes can see
-        at a glance which version of which skill produced this row."""
-        s = r.skill
-        if s is None:
-            return ""
-        status_cls = "pill--reviewed" if s.review_status == "reviewed" else "pill--stub"
-        status_label = "REVIEWED" if s.review_status == "reviewed" else "STUB"
-        lead = _h(s.clinical_lead) if s.clinical_lead else "TBD"
-        return (
-            '<div class="skill-meta">'
-            f'<span class="pill">skill: <code>{_h(s.skill_id)}</code></span>'
-            f'<span class="pill">v{_h(s.version)}</span>'
-            f'<span class="pill">reviewed {_h(s.last_reviewed)}</span>'
-            f'<span class="pill {status_cls}">{status_label}</span>'
-            f'<span class="pill">sign-offs: {s.signoffs}</span>'
-            f'<span class="pill">lead: {lead}</span>'
-            "</div>"
-        )
-
     def _role_block(label: str, badge_cls: str, roles) -> str:
         if not roles:
             return ""
@@ -818,7 +797,6 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
                 f'<span class="badge {badge_cls}">{_h(r.priority)}</span>'
                 f'<div class="role-reason">{_h_t(r.reason, target_lang)}</div>'
                 f"{qs}"
-                f"{_skill_meta_html(r)}"
                 f"</li>"
             )
         return (
@@ -826,15 +804,25 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
             f'<ul class="role-list">{"".join(items)}</ul>'
         )
 
-    parts.append(_role_block(
-        _t("skills_required", target_lang),
-        "badge--required", mdt.required_roles))
-    parts.append(_role_block(
-        _t("skills_recommended", target_lang),
-        "badge--recommended", mdt.recommended_roles))
-    parts.append(_role_block(
-        _t("skills_optional", target_lang),
-        "badge--optional", mdt.optional_roles))
+    qs = mdt.open_questions
+    if qs:
+        blocking = sum(1 for q in qs if q.blocking)
+        items = []
+        for q in qs:
+            cls = " blocking" if q.blocking else ""
+            tag = '<span class="badge badge--blocking">BLOCKING</span> ' if q.blocking else ""
+            items.append(
+                f'<li class="{cls.strip()}">'
+                f'<div class="q-id">{tag}{_h(q.id)}</div>'
+                f'<div class="q-text">{_h_t(q.question, target_lang)}</div>'
+                f'<div class="q-rationale">{_h_t(q.rationale, target_lang)}</div>'
+                f'<div class="q-owner">→ {_h(q.owner_role)}</div>'
+                f"</li>"
+            )
+        parts.append(
+            f"<h3>{_h(_t('open_questions', target_lang))} ({len(qs)}, {blocking} blocking)</h3>"
+            f'<ul class="q-list q-list--featured">{"".join(items)}</ul>'
+        )
 
     talk_tree = getattr(mdt, "talk_tree", []) or []
     if talk_tree:
@@ -869,25 +857,15 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
             f'{more_txt}'
         )
 
-    qs = mdt.open_questions
-    if qs:
-        blocking = sum(1 for q in qs if q.blocking)
-        items = []
-        for q in qs:
-            cls = " blocking" if q.blocking else ""
-            tag = '<span class="badge badge--blocking">BLOCKING</span> ' if q.blocking else ""
-            items.append(
-                f'<li class="{cls.strip()}">'
-                f'<div class="q-id">{tag}{_h(q.id)}</div>'
-                f'<div class="q-text">{_h_t(q.question, target_lang)}</div>'
-                f'<div class="q-rationale">{_h_t(q.rationale, target_lang)}</div>'
-                f'<div class="q-owner">→ {_h(q.owner_role)}</div>'
-                f"</li>"
-            )
-        parts.append(
-            f"<h3>Open questions ({len(qs)}, {blocking} blocking)</h3>"
-            f'<ul class="q-list">{"".join(items)}</ul>'
-        )
+    parts.append(_role_block(
+        _t("skills_required", target_lang),
+        "badge--required", mdt.required_roles))
+    parts.append(_role_block(
+        _t("skills_recommended", target_lang),
+        "badge--recommended", mdt.recommended_roles))
+    parts.append(_role_block(
+        _t("skills_optional", target_lang),
+        "badge--optional", mdt.optional_roles))
 
     dq = mdt.data_quality_summary or {}
     crit = dq.get("missing_critical_fields") or []
@@ -1074,9 +1052,9 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
             "</tr>"
         )
     parts.append(
-        '<div class="skill-catalog">'
-        f'<h3>{_h(_t("skill_catalog_prefix", target_lang))} '
-        f'({len(activated_ids)}/{len(full)} {_h(_t("skill_catalog_active_in", target_lang))})</h3>'
+        '<details class="skill-catalog">'
+        f'<summary>{_h(_t("skill_catalog_prefix", target_lang))} '
+        f'({len(activated_ids)}/{len(full)} {_h(_t("skill_catalog_active_in", target_lang))})</summary>'
         f'<div class="section-sub">{_h(_t("skill_catalog_legend", target_lang))}</div>'
         '<table><thead><tr>'
         f'<th>{_h(_t("th_specialist", target_lang))}</th>'
@@ -1088,7 +1066,7 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
         "</tr></thead><tbody>"
         f'{"".join(catalog_rows)}'
         "</tbody></table>"
-        "</div>"
+        "</details>"
     )
 
     return (
