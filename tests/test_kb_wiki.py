@@ -38,8 +38,11 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     assert counts["Actionability"] >= 400
 
     assert (wiki_dir / "kb.html").exists()
+    assert (wiki_dir / "ukr" / "kb.html").exists()
     assert (wiki_dir / "kb_search_index.json").exists()
+    assert (wiki_dir / "ukr" / "kb_search_index.json").exists()
     assert (wiki_dir / "kb" / "drugs" / "drug-rituximab.html").exists()
+    assert (wiki_dir / "ukr" / "kb" / "drugs" / "drug-rituximab.html").exists()
     assert (wiki_dir / "kb" / "biomarkers" / "bio-egfr-l858r.html").exists()
     assert (
         wiki_dir
@@ -59,6 +62,13 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     assert 'id="kbSearchBtn"' in kb_home
     assert "Source-grounded browser" in kb_home
     assert ">Search</button>" in kb_home
+
+    uk_kb_home = (wiki_dir / "ukr" / "kb.html").read_text(encoding="utf-8")
+    assert 'lang="uk"' in uk_kb_home
+    assert "Пошук у базі знань" in uk_kb_home
+    assert "Браузер, прив’язаний до джерел" in uk_kb_home
+    assert ">Шукати</button>" in uk_kb_home
+    assert "FAQ для клініцистів" in uk_kb_home
 
 
 def test_kb_search_index_exposes_provenance_and_reverse_refs(wiki_payload: dict):
@@ -90,3 +100,14 @@ def test_redflag_page_shows_origin_logic_and_usage(wiki_dir: Path):
     assert "SRC-NCCN-BCELL-2025" in page
     assert "Used By" in page
     assert "ALGO-HCV-MZL-1L" in page
+
+    uk_page = (
+        wiki_dir
+        / "ukr"
+        / "kb"
+        / "redflags"
+        / "rf-aggressive-histology-transformation.html"
+    ).read_text(encoding="utf-8")
+    assert "Походження тривожної ознаки" in uk_page
+    assert "Логіка спрацьовування" in uk_page
+    assert "Де використовується" in uk_page

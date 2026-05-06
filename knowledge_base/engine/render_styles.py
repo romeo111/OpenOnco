@@ -196,6 +196,23 @@ a.lab-chip:hover { text-decoration: underline; }
 .q-list li.blocking {
     border-left-color: var(--red-alert); background: var(--red-bg);
 }
+.q-list--featured {
+    margin: 8px 0 18px;
+}
+.q-list--featured li {
+    background: #fff;
+    border: 1px solid var(--green-200);
+    border-left: 4px solid var(--green-600);
+    box-shadow: 0 4px 14px rgba(6, 78, 59, 0.06);
+}
+.q-list--featured li.blocking {
+    border-color: var(--red-alert);
+    border-left-color: var(--red-alert);
+}
+.q-list--featured .q-text {
+    font-size: 15px;
+    font-weight: 600;
+}
 .q-list .q-id {
     font-family: var(--font-mono); font-size: 11px;
     color: var(--gray-500); margin-bottom: 4px;
@@ -345,20 +362,18 @@ a.lab-chip:hover { text-decoration: underline; }
     border-left: 2px solid var(--gray-200); padding-left: 12px;
 }
 
-/* Skill metadata badge inline with each role */
-.skill-meta {
-    font-family: var(--font-mono); font-size: 10px;
-    color: var(--gray-500); margin-top: 4px;
-    display: flex; flex-wrap: wrap; gap: 10px;
-}
-.skill-meta .pill {
-    padding: 1px 6px; border-radius: 3px; background: var(--gray-100);
-}
-.skill-meta .pill--reviewed { background: var(--green-100); color: var(--green-700); }
-.skill-meta .pill--stub { background: var(--amber-bg); color: var(--amber); }
-
 /* Skill catalog block */
-.skill-catalog { margin-top: 18px; }
+.skill-catalog {
+    margin-top: 18px;
+    border-top: 1px dashed var(--green-200);
+    padding-top: 10px;
+}
+.skill-catalog summary {
+    cursor: pointer;
+    color: var(--gray-700);
+    font-size: 13px;
+    font-weight: 600;
+}
 .skill-catalog table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .skill-catalog th {
     text-align: left; padding: 6px 8px; background: var(--gray-100);

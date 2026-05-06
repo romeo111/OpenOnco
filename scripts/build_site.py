@@ -796,15 +796,18 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     ua_tag, ua_attr = ("span", "") if is_uk else ("a", f' href="{lang_switch_href}"')
     en_tag, en_attr = ("a", f' href="{lang_switch_href}"') if is_uk else ("span", "")
 
+    kb_href = "/ukr/kb.html" if target_lang == "uk" else "/kb.html"
+    kb_label = "Пошук у KB" if target_lang == "uk" else "KB Search"
+
     return f"""<header class="top-bar">
   <div class="brand-line">
     <a href="{home_path}" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
-    <span class="brand-version" title="Released {OPENONCO_RELEASE_DATE}">v{OPENONCO_VERSION} · {OPENONCO_RELEASE_DATE}</span>
+    <span class="brand-version" title="Released {OPENONCO_RELEASE_DATE}">v{OPENONCO_VERSION} &middot; {OPENONCO_RELEASE_DATE}</span>
   </div>
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
     {extra_links}
-    <a href="/kb.html"{cls("kb")}>KB Search</a>
+    <a href="{kb_href}"{cls("kb")}>{kb_label}</a>
     <a href="{gallery_path}"{cls("gallery")}>{labels['gallery']}</a>
     <a href="https://github.com/{GH_REPO}" target="_blank" rel="noopener">GitHub</a>
   </nav>
@@ -1442,8 +1445,11 @@ def render_gallery(*, target_lang: str = "en") -> str:
             "disease_id": did,
             "label_ua": m["label_ua"],
             "label_en": m["label_en"],
+            "icds": set(),
             "items": [],
         })
+        if m.get("icd"):
+            bucket["icds"].add(str(m["icd"]))
         bucket["items"].append({**m, "default_order": i})
     # Sort diseases alphabetically by display label (UA primary).
     sort_key = "label_en" if is_en else "label_ua"
@@ -1468,14 +1474,22 @@ def render_gallery(*, target_lang: str = "en") -> str:
         label = d[sort_key]
         n = len(d["items"])
         n_word = _examples_word(n)
-        # data-search holds both UA + EN labels lowercased so the search
+        icds = sorted(str(code) for code in d.get("icds", []) if code)
+        icd_text = ", ".join(icds[:3])
+        icd_suffix = f" +{len(icds) - 3}" if len(icds) > 3 else ""
+        icd_html = (
+            f'<span class="dt-icd">ICD-O-3 {_html.escape(icd_text + icd_suffix)}</span>'
+            if icds else ""
+        )
+        # data-search holds UA + EN labels and ICD-O-3 codes so the search
         # box works regardless of the page's render language.
-        search_blob = (d["label_ua"] + " " + d["label_en"]).lower()
+        search_blob = " ".join([d["label_ua"], d["label_en"], *icds]).lower()
         disease_tiles.append(
             f'<button type="button" class="disease-tile" '
             f'data-disease-id="{_html.escape(d["disease_id"])}" '
             f'data-search="{_html.escape(search_blob)}">'
             f'<span class="dt-label">{_html.escape(label)}</span>'
+            f'{icd_html}'
             f'<span class="dt-count">{n} {n_word}</span>'
             f'</button>'
         )
@@ -1531,7 +1545,7 @@ def render_gallery(*, target_lang: str = "en") -> str:
             f'target="_blank" rel="noopener">open an issue</a>.'
         )
         page_title = "Sample cases"
-        search_ph = "Search disease…"
+        search_ph = "Search disease or ICD-O-3…"
         back_label = "← All diseases"
         empty_label = "No diseases match your search."
     else:
@@ -1544,7 +1558,7 @@ def render_gallery(*, target_lang: str = "en") -> str:
             f'target="_blank" rel="noopener">відкрий issue</a>.'
         )
         page_title = "Готові приклади"
-        search_ph = "Шукати хворобу…"
+        search_ph = "Шукати хворобу або ICD-O-3…"
         back_label = "← Усі хвороби"
         empty_label = "Жодна хвороба не підходить під запит."
 
@@ -1715,7 +1729,12 @@ def render_try(
        the lower status area so examples do not push the questionnaire down. -->
   <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
     <span class="status-top-spinner" aria-hidden="true"></span>
-    <span class="status-top-text">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</span>
+    <span class="status-top-body">
+      <span class="status-top-text">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</span>
+      <span class="status-top-progress" aria-hidden="true">
+        <span id="statusTopProgress" class="status-top-progress-fill"></span>
+      </span>
+    </span>
   </div>
 
   <div class="quest-toolbar" data-step-label="{'1. Pick a disease and (optionally) an example' if target_lang == 'en' else '1. Оберіть хворобу та (опційно) приклад'}">
@@ -1859,7 +1878,7 @@ def render_try(
         </button>
       </div>
 
-      <div id="status" class="status">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</div>
+      <div id="status" class="status is-busy">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</div>
       <div id="error" class="error" hidden></div>
     </aside>
   </div>
@@ -1949,6 +1968,7 @@ const STORAGE_KEY = 'openonco-try-draft-v1';
 const status = document.getElementById('status');
 const statusTop = document.getElementById('statusTop');
 const statusTopText = statusTop ? statusTop.querySelector('.status-top-text') : null;
+const statusTopProgress = document.getElementById('statusTopProgress');
 const errorBox = document.getElementById('error');
 const runBtn = document.getElementById('runBtn');
 const formatBtn = document.getElementById('formatBtn');
@@ -2088,15 +2108,30 @@ function setStatus(msg, kind = 'info', topMode = 'auto') {{
     else mode = 'busy';
   }}
   if (mode === 'hide' || !msg) {{
+    status.classList.remove('is-busy');
     statusTop.hidden = true;
+    clearLoadingProgress();
     return;
   }}
+  status.classList.toggle('is-busy', mode === 'busy');
   statusTop.hidden = false;
   statusTopText.textContent = msg;
   statusTop.dataset.kind = kind;
   statusTop.classList.toggle('is-busy', mode === 'busy');
   statusTop.classList.toggle('is-ok', mode === 'ok');
   statusTop.classList.toggle('is-warn', mode === 'warn');
+  if (mode !== 'busy') clearLoadingProgress();
+}}
+function setLoadingProgress(percent) {{
+  if (!statusTop || !statusTopProgress) return;
+  const pct = Math.max(0, Math.min(100, Number(percent) || 0));
+  statusTop.classList.add('has-progress');
+  statusTopProgress.style.setProperty('--status-progress', pct + '%');
+}}
+function clearLoadingProgress() {{
+  if (!statusTop || !statusTopProgress) return;
+  statusTop.classList.remove('has-progress');
+  statusTopProgress.style.removeProperty('--status-progress');
 }}
 function setError(msg) {{
   if (msg) {{
@@ -3048,6 +3083,7 @@ async function loadCoreBundle() {{
     throw new Error('Bundle index missing core entry — cannot load engine');
   }}
   setStatus('{"Loading the engine core (~1.4 MB)…" if target_lang == "en" else "Завантажую ядро двигуна (~1.4 МБ)…"}');
+  setLoadingProgress(62);
   const ver = bundleIndex.core_version || '';
   const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
@@ -3094,6 +3130,7 @@ async function loadDiseaseModule(diseaseId) {{
   }}
 
   setStatus('{"Loading module " if target_lang == "en" else "Завантажую модуль "}' + diseaseId + '…');
+  setLoadingProgress(86);
   const url = '/' + relUrl + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
   if (!r.ok) throw new Error('Disease module fetch HTTP ' + r.status + ' for ' + diseaseId);
@@ -3141,6 +3178,7 @@ async function ensureEngine() {{
     stage = 'pyodide';
     initStageStart(stage);
     setStatus('{"Loading Pyodide…" if target_lang == "en" else "Завантажую Pyodide…"}');
+    setLoadingProgress(18);
     await yieldToBrowser(50);
     const _loadPyodide = await ensurePyodideLoader();
     pyodide = await _loadPyodide({{indexURL: "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/"}});
@@ -3149,6 +3187,7 @@ async function ensureEngine() {{
     stage = 'pydeps';
     initStageStart(stage);
     setStatus('{"Installing pydantic + pyyaml…" if target_lang == "en" else "Встановлюю pydantic + pyyaml…"}');
+    setLoadingProgress(36);
     await yieldToBrowser(50);
     await pyodide.loadPackage(['micropip']);
     await yieldToBrowser();
@@ -3161,6 +3200,7 @@ await micropip.install(['pydantic', 'pyyaml'])
     stage = 'bundle';
     initStageStart(stage);
     setStatus('{"Loading the OpenOnco engine…" if target_lang == "en" else "Завантажую двигун OpenOnco…"}');
+    setLoadingProgress(54);
     await yieldToBrowser(50);
     // CSD-6E + CSD-9C: lazy-load core bundle (~1.4 MB). Monolithic
     // fallback retired (CSD-9C 2026-04-27) — the index + core + per-
@@ -3172,6 +3212,7 @@ await micropip.install(['pydantic', 'pyyaml'])
     stage = 'validate';
     initStageStart(stage);
     setStatus('{"Verifying the KB…" if target_lang == "en" else "Перевіряю базу…"}');
+    setLoadingProgress(78);
     await yieldToBrowser(50);
     const validationSummary = await pyodide.runPythonAsync(`
 from pathlib import Path
@@ -3192,6 +3233,7 @@ _summary
 `);
     initStageDone(stage);
     enginReady = true;
+    setLoadingProgress(100);
     if (validationSummary === 'ok') {{
       setStatus('{"Engine ready ✓" if target_lang == "en" else "Двигун готовий ✓"}', 'ok');
     }} else {{
@@ -3261,6 +3303,7 @@ async function runEngine() {{
     }}
     initStageStart('generate');
     setStatus('{"Building a personalised plan…" if target_lang == "en" else "Будую персональний план…"}');
+    setLoadingProgress(92);
     await yieldToBrowser(30);
     const _ooTPython = performance.now();
     try {{
@@ -3449,6 +3492,7 @@ function saveManifestsToCache() {{
 }}
 
 async function loadAssets() {{
+  setLoadingProgress(18);
   // Populate dropdowns from manifests — instant, no network fetch.
   diseaseSelect.innerHTML = '<option value="">{"— select —" if target_lang == "en" else "— оберіть —"}</option>';
   QUESTIONNAIRES_MANIFEST.forEach((q, i) => {{
@@ -3458,10 +3502,12 @@ async function loadAssets() {{
     diseaseSelect.appendChild(opt);
   }});
   saveManifestsToCache();
+  setLoadingProgress(55);
 
   // Examples selector — initial population shows all; narrows once a
   // disease is picked.
   repopulateExamples(null);
+  setLoadingProgress(72);
 
   // Restore draft. If the full questionnaire payload is unavailable, keep
   // the page usable from the inlined manifest instead of leaving the boot
@@ -3472,12 +3518,13 @@ async function loadAssets() {{
   if (draft && draft.questId) {{
     const idx = QUESTIONNAIRES_MANIFEST.findIndex(q => q.id === draft.questId);
     if (idx >= 0) {{
-      try {{
-        await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
-          diseaseSelect.value = idx;
-          // Draft restore needs full data — lazy-fetch now
-          const fullList = await ensureQuestionnaires();
-          renderForm(fullList[idx]);
+        try {{
+          await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
+            diseaseSelect.value = idx;
+            setLoadingProgress(82);
+            // Draft restore needs full data — lazy-fetch now
+            const fullList = await ensureQuestionnaires();
+            renderForm(fullList[idx]);
           repopulateExamples(idx);
           // Apply saved answers
           if (draft.answers) {{
@@ -3517,7 +3564,6 @@ async function loadAssets() {{
     updateRunBtnEnabled();
     updateImpactPanelLocal();
   }}
-
   // Engine is fully lazy now — Pyodide loads only when the user clicks
   // «Згенерувати». Form interaction stays Pyodide-free and snappy.
 }}
@@ -6372,49 +6418,44 @@ _DISEASES_PAGE_LABELS = {
         "title": "Хвороби · OpenOnco",
         "h1": "Хвороби в базі знань",
         "lead": (
-            "Покриття OpenOnco по 65 онкологічних діагнозах: біомаркери, "
-            "препарати, indications/regimens/RedFlags, наявність алгоритму та "
-            "опитувальника, % наповненості і % верифікації Clinical Co-Lead."
+            "Покриття OpenOnco за {n} онкологічними діагнозами: біомаркери, "
+            "препарати, показання, режими, тривожні ознаки, алгоритми та "
+            "практична наповненість бази знань."
         ),
         "sum_diseases": "Усього діагнозів",
         "sum_avg_fill": "Сер. наповненість",
-        "sum_avg_ver": "Сер. верифікація",
-        "sum_with_signed": "З ≥1 верифікованим indication",
-        "sum_quest_real": "Hand-authored questionnaires",
-        "sum_quest_stub": "STUB questionnaires",
         "sum_algo_1l": "З 1L алгоритмом",
         "sum_algo_2l": "З 2L+ алгоритмом",
         "fam_lymphoid": "Лімфоїдна гематологія",
         "fam_myeloid": "Мієлоїдна гематологія",
         "fam_solid": "Солідні пухлини",
         "th_disease": "Хвороба", "th_icd": "ICD-10",
-        "th_bio": "Bio", "th_drug": "Drug",
-        "th_ind": "Ind", "th_reg": "Reg", "th_rf": "RF",
-        "th_1l": "1L", "th_2l": "2L", "th_quest": "Quest",
-        "th_fill": "Fill %", "th_ver": "Ver %",
+        "th_bio": "Біомарк.", "th_drug": "Преп.",
+        "th_ind": "Показ.", "th_reg": "Режими", "th_rf": "Трив. озн.",
+        "th_1l": "1L", "th_2l": "2L+", "th_quest": "Опитувальник",
+        "th_fill": "Наповн.", "th_ver": "Вериф.",
         "yes": "✓", "no": "—",
-        "metrics_title": "Метрики",
+        "metrics_title": "Позначення в таблиці",
+        "search_placeholder": "Шукати хворобу або ICD-10 код…",
+        "search_empty": "Жодна хвороба не підходить під запит.",
         "metrics": [
-            "<b>#Bio</b> — distinct biomarkers, на які посилаються Indications + Regimens цієї хвороби",
-            "<b>#Drug</b> — distinct drugs у regimens цієї хвороби",
-            "<b>#Ind / #Reg / #RF</b> — Indications / Regimens / RedFlags для цієї хвороби",
-            "<b>1L / 2L</b> — наявність Algorithm для першої / другої+ лінії",
-            "<b>Quest</b> — ✓ hand-authored / STUB auto-generated / — відсутній",
-            "<b>Fill %</b> — composite з 8 ентити-типів: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup",
-            "<b>Ver %</b> — % indications цієї хвороби з reviewer_signoffs ≥ 2 (CHARTER §6.1)",
+            "<b>Біомаркери / Препарати</b> — кількість унікальних сутностей, які використовуються у правилах цієї хвороби.",
+            "<b>Показання / Режими / Тривожні ознаки</b> — кількість відповідних записів у базі знань.",
+            "<b>1L / 2L+</b> — наявність алгоритму для першої або другої й наступних ліній лікування.",
+            "<b>Опитувальник</b> — ✓ якщо для хвороби є ручний клінічний опитувальник; — якщо його ще немає.",
+            "<b>Наповненість</b> — зведена оцінка за ключовими типами сутностей: показання, режими, біомаркери, препарати, тривожні ознаки, алгоритм, опитувальник і workup.",
+            "<b>Верифікація</b> — частка показань із достатньою кількістю клінічних sign-off за правилами проєкту.",
         ],
-        "verified_note": (
-            "<b>Ver % переважно 0%</b> — діє dev-mode signoff exemption "
-            "(<code>project_charter_dev_mode_exemptions</code>) до призначення "
-            "Clinical Co-Leads. Це навмисно, не bug."
-        ),
+        "verified_note": "",
+        "table_title": "Покриття за хворобами",
+        "avg_label": "середнє",
         "footer_data": "Дані оновлюються при кожному build_site.py запуску. JSON snapshot:",
     },
     "en": {
         "title": "Diseases · OpenOnco",
         "h1": "Diseases in the Knowledge Base",
         "lead": (
-            "OpenOnco coverage across 65 oncology diagnoses: biomarkers, "
+            "OpenOnco coverage across {n} oncology diagnoses: biomarkers, "
             "drugs, indications/regimens/RedFlags, algorithm and questionnaire "
             "presence, % fill and % Clinical Co-Lead verification."
         ),
@@ -6436,6 +6477,8 @@ _DISEASES_PAGE_LABELS = {
         "th_fill": "Fill %", "th_ver": "Ver %",
         "yes": "✓", "no": "—",
         "metrics_title": "Metric definitions",
+        "search_placeholder": "Search disease or ICD-10 code…",
+        "search_empty": "No diseases match your search.",
         "metrics": [
             "<b>#Bio</b> — distinct biomarkers referenced by this disease's Indications + Regimens",
             "<b>#Drug</b> — distinct drugs in this disease's regimens",
@@ -6450,25 +6493,118 @@ _DISEASES_PAGE_LABELS = {
             "(<code>project_charter_dev_mode_exemptions</code>) is in effect "
             "until Clinical Co-Leads are appointed. This is intentional, not a bug."
         ),
+        "table_title": "Disease coverage",
+        "avg_label": "avg",
         "footer_data": "Data refreshes on every build_site.py run. JSON snapshot:",
     },
 }
 
 
-def _disease_row_html(r: dict, lbl: dict) -> str:
+_DISEASE_UK_NAMES = {
+    "DIS-AITL": "Ангіоімунобластна Т-клітинна лімфома",
+    "DIS-ALCL": "Системна анапластична великоклітинна лімфома",
+    "DIS-AML": "Гострий мієлоїдний лейкоз",
+    "DIS-ANAL-SCC": "Плоскоклітинний рак анального каналу",
+    "DIS-APL": "Гострий промієлоцитарний лейкоз",
+    "DIS-ATLL": "Лейкоз/лімфома дорослих Т-клітин",
+    "DIS-B-ALL": "B-лімфобластний лейкоз/лімфома",
+    "DIS-BCC": "Базальноклітинна карцинома",
+    "DIS-BREAST": "Інвазивний рак молочної залози",
+    "DIS-BURKITT": "Лімфома Беркітта",
+    "DIS-CERVICAL": "Рак шийки матки",
+    "DIS-CHL": "Класична лімфома Годжкіна",
+    "DIS-CHOLANGIOCARCINOMA": "Холангіокарцинома",
+    "DIS-CHONDROSARCOMA": "Хондросаркома",
+    "DIS-CLL": "Хронічний лімфоцитарний лейкоз / мала лімфоцитарна лімфома",
+    "DIS-CML": "Хронічний мієлоїдний лейкоз",
+    "DIS-CRC": "Колоректальна карцинома",
+    "DIS-DLBCL-NOS": "Дифузна великоклітинна B-клітинна лімфома, NOS",
+    "DIS-EATL": "Ентеропатій-асоційована Т-клітинна лімфома",
+    "DIS-ENDOMETRIAL": "Рак ендометрія",
+    "DIS-EPITHELIOID-SARCOMA": "Епітеліоїдна саркома",
+    "DIS-ESOPHAGEAL": "Рак стравоходу",
+    "DIS-ET": "Есенціальна тромбоцитемія",
+    "DIS-FL": "Фолікулярна лімфома",
+    "DIS-GASTRIC": "Аденокарцинома шлунка та гастроезофагеального переходу",
+    "DIS-GBM": "Гліобластома",
+    "DIS-GI-NET": "Нейроендокринна пухлина ШКТ",
+    "DIS-GIST": "Гастроінтестинальна стромальна пухлина",
+    "DIS-GLIOMA-LOW-GRADE": "Гліома низького ступеня злоякісності",
+    "DIS-GRANULOSA-CELL": "Гранульозоклітинна пухлина яєчника дорослого типу",
+    "DIS-HCC": "Гепатоцелюлярна карцинома",
+    "DIS-HCL": "Волосатоклітинний лейкоз",
+    "DIS-HCV-MZL": "HCV-асоційована лімфома маргінальної зони",
+    "DIS-HGBL-DH": "Високозлоякісна B-клітинна лімфома з double-hit / triple-hit",
+    "DIS-HNSCC": "Плоскоклітинний рак голови та шиї",
+    "DIS-HSTCL": "Гепатоспленічна Т-клітинна лімфома",
+    "DIS-IFS": "Інфантильна фібросаркома",
+    "DIS-IMT": "Запальна міофібробластична пухлина",
+    "DIS-JMML": "Ювенільний мієломоноцитарний лейкоз",
+    "DIS-LAM": "Лімфангіолейоміоматоз",
+    "DIS-MASTOCYTOSIS": "Просунутий системний мастоцитоз",
+    "DIS-MCL": "Мантійноклітинна лімфома",
+    "DIS-MDS-HR": "Мієлодиспластичні синдроми високого ризику",
+    "DIS-MDS-LR": "Мієлодиспластичні синдроми низького ризику",
+    "DIS-MELANOMA": "Меланома шкіри",
+    "DIS-MENINGIOMA": "Менінгіома",
+    "DIS-MESOTHELIOMA": "Злоякісна мезотеліома",
+    "DIS-MF-SEZARY": "Грибоподібний мікоз / синдром Сезарі",
+    "DIS-MM": "Множинна мієлома",
+    "DIS-MPNST": "Злоякісна пухлина оболонки периферичного нерва",
+    "DIS-MTC": "Медулярна карцинома щитоподібної залози",
+    "DIS-NK-T-NASAL": "Екстранодальна NK/T-клітинна лімфома, назальний тип",
+    "DIS-NLPBL": "Нодулярна лімфоцитарно-переважна B-клітинна лімфома",
+    "DIS-NODAL-MZL": "Нодальна лімфома маргінальної зони",
+    "DIS-NSCLC": "Недрібноклітинний рак легені",
+    "DIS-OVARIAN": "Рак яєчника",
+    "DIS-PCNSL": "Первинна лімфома ЦНС",
+    "DIS-PDAC": "Протокова аденокарцинома підшлункової залози",
+    "DIS-PMBCL": "Первинна медіастинальна великоклітинна B-клітинна лімфома",
+    "DIS-PMF": "Первинний мієлофіброз",
+    "DIS-PNET": "Нейроендокринна пухлина підшлункової залози",
+    "DIS-PROSTATE": "Аденокарцинома передміхурової залози",
+    "DIS-PTCL-NOS": "Периферична Т-клітинна лімфома, NOS",
+    "DIS-PTLD": "Посттрансплантаційне лімфопроліферативне захворювання",
+    "DIS-PV": "Справжня поліцитемія",
+    "DIS-RCC": "Нирковоклітинна карцинома",
+    "DIS-SALIVARY": "Карцинома слинних залоз",
+    "DIS-SCLC": "Дрібноклітинний рак легені",
+    "DIS-SOFT-TISSUE-SARCOMA": "Саркома м'яких тканин",
+    "DIS-SPLENIC-MZL": "Селезінкова лімфома маргінальної зони",
+    "DIS-T-ALL": "T-лімфобластний лейкоз/лімфома",
+    "DIS-T-PLL": "T-клітинний пролімфоцитарний лейкоз",
+    "DIS-TESTICULAR-GCT": "Герміногенна пухлина яєчка",
+    "DIS-TGCT": "Теносиновіальна гігантоклітинна пухлина",
+    "DIS-THYROID-ANAPLASTIC": "Анапластична карцинома щитоподібної залози",
+    "DIS-THYROID-PAPILLARY": "Папілярна карцинома щитоподібної залози",
+    "DIS-UROTHELIAL": "Уротеліальна карцинома",
+    "DIS-WM": "Макроглобулінемія Вальденстрема / лімфоплазмоцитарна лімфома",
+}
+
+
+def _disease_display_name(r: dict, target_lang: str) -> str:
+    if target_lang == "uk":
+        return _DISEASE_UK_NAMES.get(r["id"], r["name"] or "")
+    return r["name"] or ""
+
+
+def _disease_row_html(r: dict, lbl: dict, target_lang: str) -> str:
     yes, no = lbl["yes"], lbl["no"]
     algo_1l = yes if r["algo_1l"] else no
     algo_2l = yes if r["algo_2l"] else no
-    if r["has_quest"]:
-        quest = "STUB" if r["is_stub_quest"] else yes
-    else:
-        quest = no
+    has_real_questionnaire = r["has_quest"] and not r["is_stub_quest"]
+    quest = yes if has_real_questionnaire else no
     fill_class = "fill-high" if r["fill_pct"] >= 75 else ("fill-mid" if r["fill_pct"] >= 50 else "fill-low")
     ver_class = "ver-high" if r["verified_pct"] >= 60 else ("ver-mid" if r["verified_pct"] >= 1 else "ver-low")
     short_id = r["id"].replace("DIS-", "")
-    name = (r["name"] or "")[:48]
+    display_name = _disease_display_name(r, target_lang)
+    name = display_name[:64]
+    search_blob = " ".join(
+        str(part) for part in (r.get("id"), display_name, r.get("name"), r.get("family"), r.get("icd10"))
+        if part
+    ).lower()
     return (
-        '<tr>'
+        f'<tr data-search="{html.escape(search_blob)}">'
         f'<td><strong>{html.escape(short_id)}</strong> <span class="dis-name">{html.escape(name)}</span></td>'
         f'<td class="mono">{html.escape(r["icd10"] or "")}</td>'
         f'<td class="num">{r["n_bios"]}</td>'
@@ -6478,7 +6614,7 @@ def _disease_row_html(r: dict, lbl: dict) -> str:
         f'<td class="num">{r["n_rfs"]}</td>'
         f'<td class="ck">{algo_1l}</td>'
         f'<td class="ck">{algo_2l}</td>'
-        f'<td class="ck quest-cell quest-{("stub" if r["is_stub_quest"] else "real" if r["has_quest"] else "none")}">{quest}</td>'
+        f'<td class="ck quest-cell quest-{("real" if has_real_questionnaire else "none")}">{quest}</td>'
         f'<td class="num pct {fill_class}"><strong>{r["fill_pct"]}%</strong></td>'
         f'<td class="num pct {ver_class}">{r["verified_pct"]}%</td>'
         '</tr>'
@@ -6497,12 +6633,9 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 
     n = len(rows)
     avg_fill = round(sum(r["fill_pct"] for r in rows) / max(1, n), 1)
-    avg_ver = round(sum(r["verified_pct"] for r in rows) / max(1, n), 1)
-    n_signed = sum(1 for r in rows if r["verified_pct"] > 0)
-    n_quest_real = sum(1 for r in rows if r["has_quest"] and not r["is_stub_quest"])
-    n_quest_stub = sum(1 for r in rows if r["has_quest"] and r["is_stub_quest"])
     n_algo_1l = sum(1 for r in rows if r["algo_1l"])
     n_algo_2l = sum(1 for r in rows if r["algo_2l"])
+    lead_text = lbl["lead"].format(n=n)
 
     # Group by family
     by_family: dict[str, list[dict]] = {
@@ -6524,8 +6657,8 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
         flist = by_family.get(fam_key) or []
         if not flist:
             continue
-        flist_sorted = sorted(flist, key=lambda x: (-x["fill_pct"], x["name"]))
-        rows_html = "\n".join(_disease_row_html(r, lbl) for r in flist_sorted)
+        flist_sorted = sorted(flist, key=lambda x: (-x["fill_pct"], _disease_display_name(x, target_lang)))
+        rows_html = "\n".join(_disease_row_html(r, lbl, target_lang) for r in flist_sorted)
         f_fill = round(sum(r["fill_pct"] for r in flist) / max(1, len(flist)), 1)
         f_ver = round(sum(r["verified_pct"] for r in flist) / max(1, len(flist)), 1)
         family_blocks.append(f"""
@@ -6550,7 +6683,7 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 {rows_html}
     </tbody>
     <tfoot><tr>
-      <td colspan="10"><em>avg</em></td>
+      <td colspan="10"><em>{lbl.get("avg_label", "avg")}</em></td>
       <td class="num pct"><em>{f_fill}%</em></td>
       <td class="num pct"><em>{f_ver}%</em></td>
     </tr></tfoot>
@@ -6559,6 +6692,8 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 """)
 
     metrics_li = "\n".join(f"<li>{m}</li>" for m in lbl["metrics"])
+    verified_note = lbl.get("verified_note") or ""
+    verified_note_html = f'<div class="verified-note">{verified_note}</div>' if verified_note else ""
 
     top_bar = _render_top_bar(
         active="diseases", target_lang=target_lang,
@@ -6579,11 +6714,12 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 .dis-summary .card {{ background: var(--gray-50); border-left: 3px solid var(--green-600); padding: 10px 14px; border-radius: 4px; }}
 .dis-summary .card .v {{ font-family: var(--font-display); font-size: 22px; color: var(--green-800); }}
 .dis-summary .card .k {{ font-size: 12px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }}
+.dis-matrix-search {{ margin: 2px 0 18px; max-width: 680px; }}
 .dis-family {{ margin: 28px 0; }}
 .dis-family h2 {{ margin-bottom: 8px; }}
 .dis-family .fam-count {{ font-size: 14px; color: var(--gray-500); font-weight: normal; }}
 .dis-table {{ width: 100%; border-collapse: collapse; font-size: 12.5px; }}
-.dis-table th {{ background: var(--green-700); color: white; padding: 6px 8px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }}
+.dis-table th {{ background: var(--green-700); color: white; padding: 6px 8px; text-align: left; font-weight: 600; font-size: 11px; text-transform: none; letter-spacing: 0; line-height: 1.15; }}
 .dis-table td {{ padding: 6px 8px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }}
 .dis-table tr:nth-child(even) td {{ background: var(--gray-50); }}
 .dis-table tfoot td {{ background: var(--gray-100); font-style: italic; color: var(--gray-700); }}
@@ -6598,12 +6734,12 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 .dis-table .pct.ver-high {{ color: #166534; background: #ecfdf5; }}
 .dis-table .pct.ver-mid {{ color: #b45309; }}
 .dis-table .pct.ver-low {{ color: var(--gray-500); }}
-.quest-cell.quest-stub {{ color: #b45309; font-size: 10px; font-family: var(--font-mono); }}
 .quest-cell.quest-real {{ color: #166534; font-weight: 600; }}
 .quest-cell.quest-none {{ color: var(--gray-500); }}
-.dis-metrics {{ background: var(--gray-50); padding: 16px 20px; border-radius: 6px; margin-top: 28px; font-size: 13px; }}
+.dis-metrics {{ background: var(--gray-50); padding: 16px 20px; border-radius: 6px; margin: 18px 0 24px; font-size: 13px; }}
 .dis-metrics ul {{ padding-left: 20px; line-height: 1.7; }}
 .dis-metrics .verified-note {{ background: #fef3c7; border-left: 3px solid #d97706; padding: 10px 14px; margin-top: 12px; border-radius: 4px; color: #92400e; }}
+.dis-table-title {{ margin-top: 26px; }}
 .dis-footer-data {{ font-size: 12px; color: var(--gray-500); margin-top: 20px; }}
 .dis-footer-data a {{ font-family: var(--font-mono); }}
 @media (max-width: 800px) {{ .dis-summary {{ grid-template-columns: repeat(2, 1fr); }} .dis-table {{ font-size: 11px; }} }}
@@ -6614,32 +6750,68 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 <main>
   <section class="info-page">
     <h1>{_html.escape(lbl['h1'])}</h1>
-    <p class="lead">{_html.escape(lbl['lead'])}</p>
-
-    <div class="dis-summary">
-      <div class="card"><div class="k">{lbl['sum_diseases']}</div><div class="v">{n}</div></div>
-      <div class="card"><div class="k">{lbl['sum_avg_fill']}</div><div class="v">{avg_fill}%</div></div>
-      <div class="card"><div class="k">{lbl['sum_avg_ver']}</div><div class="v">{avg_ver}%</div></div>
-      <div class="card"><div class="k">{lbl['sum_with_signed']}</div><div class="v">{n_signed}/{n}</div></div>
-      <div class="card"><div class="k">{lbl['sum_quest_real']}</div><div class="v">{n_quest_real}</div></div>
-      <div class="card"><div class="k">{lbl['sum_quest_stub']}</div><div class="v">{n_quest_stub}</div></div>
-      <div class="card"><div class="k">{lbl['sum_algo_1l']}</div><div class="v">{n_algo_1l}/{n}</div></div>
-      <div class="card"><div class="k">{lbl['sum_algo_2l']}</div><div class="v">{n_algo_2l}/{n}</div></div>
-    </div>
-
-    {''.join(family_blocks)}
+    <p class="lead">{_html.escape(lead_text)}</p>
 
     <div class="dis-metrics">
       <h3>{lbl['metrics_title']}</h3>
       <ul>
         {metrics_li}
       </ul>
-      <div class="verified-note">{lbl['verified_note']}</div>
+      {verified_note_html}
     </div>
+
+    <div class="dis-summary">
+      <div class="card"><div class="k">{lbl['sum_diseases']}</div><div class="v">{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_avg_fill']}</div><div class="v">{avg_fill}%</div></div>
+      <div class="card"><div class="k">{lbl['sum_algo_1l']}</div><div class="v">{n_algo_1l}/{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_algo_2l']}</div><div class="v">{n_algo_2l}/{n}</div></div>
+    </div>
+
+    <div class="disease-search-row dis-matrix-search">
+      <input type="search" id="matrixSearch" class="disease-search"
+             placeholder="{_html.escape(lbl['search_placeholder'])}" autocomplete="off"
+             aria-label="{_html.escape(lbl['search_placeholder'])}">
+      <span class="disease-search-count" id="matrixSearchCount">{n}</span>
+    </div>
+    <p class="disease-empty" id="matrixEmpty" hidden>{_html.escape(lbl['search_empty'])}</p>
+
+    <h2 class="dis-table-title">{lbl.get('table_title', 'Disease coverage')}</h2>
+    {''.join(family_blocks)}
 
     <p class="dis-footer-data">{lbl['footer_data']} <a href="/disease_coverage.json">/disease_coverage.json</a></p>
   </section>
 </main>
+<script>
+(function() {{
+  var input = document.getElementById("matrixSearch");
+  if (!input) return;
+  var families = Array.prototype.slice.call(document.querySelectorAll(".dis-family"));
+  var count = document.getElementById("matrixSearchCount");
+  var empty = document.getElementById("matrixEmpty");
+
+  function applySearch() {{
+    var q = (input.value || "").trim().toLowerCase();
+    var visible = 0;
+    families.forEach(function(section) {{
+      var sectionVisible = 0;
+      var rows = Array.prototype.slice.call(section.querySelectorAll("tbody tr"));
+      rows.forEach(function(row) {{
+        var blob = row.dataset.search || "";
+        var match = !q || blob.indexOf(q) !== -1;
+        row.style.display = match ? "" : "none";
+        if (match) sectionVisible++;
+      }});
+      section.hidden = sectionVisible === 0;
+      visible += sectionVisible;
+    }});
+    count.textContent = visible;
+    empty.hidden = visible !== 0;
+  }}
+
+  input.addEventListener("input", applySearch);
+  applySearch();
+}})();
+</script>
 </body>
 </html>
 """
