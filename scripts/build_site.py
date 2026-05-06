@@ -1921,8 +1921,8 @@ def render_try(
 <div id="generatingOverlay" class="generating-overlay" hidden role="dialog" aria-live="polite" aria-modal="true">
   <div class="generating-card">
     <div class="generating-spinner" aria-hidden="true"></div>
-    <h3>{'Generating plan…' if target_lang == 'en' else 'Генерую план…'}</h3>
-    <p>{'Hold on 5–15 s. Fields are locked so the result matches the current input.' if target_lang == 'en' else 'Зачекай 5–15 с. Поля заблоковано, щоб результат відповідав поточному вводу.'}</p>
+    <h3 id="generatingTitle">{'Generating plan…' if target_lang == 'en' else 'Генерую план…'}</h3>
+    <p id="generatingLead">{'Hold on 5–15 s. Fields are locked so the result matches the current input.' if target_lang == 'en' else 'Зачекай 5–15 с. Поля заблоковано, щоб результат відповідав поточному вводу.'}</p>
     <p class="generating-hint" id="generatingHint">{'Starting the engine…' if target_lang == 'en' else 'Запускаю двигун…'}</p>
   </div>
 </div>
@@ -1982,6 +1982,8 @@ const impactSelected = document.getElementById('impactSelected');
 const impactSelectedText = document.getElementById('impactSelectedText');
 const impactWarnings = document.getElementById('impactWarnings');
 const generatingOverlay = document.getElementById('generatingOverlay');
+const generatingTitle = document.getElementById('generatingTitle');
+const generatingLead = document.getElementById('generatingLead');
 const generatingHint = document.getElementById('generatingHint');
 const mainTryEl = document.querySelector('main.try-page');
 const initOverlay = document.getElementById('initOverlay');
@@ -2012,6 +2014,9 @@ let activeQuest = null;      // currently selected questionnaire
 let generating = false;      // true while runEngine is mid-flight; blocks
                              // input via <main inert> + overlay so the
                              // rendered plan matches a stable snapshot
+let uiBusy = false;          // true while a user-triggered async load is
+                             // in flight; blocks pointer/keyboard input
+                             // with the same modal overlay
 let previewToken = 0;        // bumped on each runLivePreview start AND on
                              // runEngine start; stale results are discarded
 let answers = {{}};          // {{dotted_path: value}}
@@ -2024,6 +2029,18 @@ let lastPreviewResult = null;    // most recent preview result, fed to
                                  // what-if when its (longer) timer fires
 const PREVIEW_DEBOUNCE_MS = 400;
 const WHATIF_DEBOUNCE_MS = 1500;
+
+const UI_LOCK_TEXT = {{
+  generateTitle: '{"Generating plan…" if target_lang == "en" else "Генерую план…"}',
+  generateLead: '{"Hold on 5–15 s. Fields are locked so the result matches the current input." if target_lang == "en" else "Зачекай 5–15 с. Поля заблоковано, щоб результат відповідав поточному вводу."}',
+  loadingTitle: '{"Loading…" if target_lang == "en" else "Завантаження…"}',
+  loadingLead: '{"Please wait. Actions are locked until loading finishes." if target_lang == "en" else "Зачекайте. Дії заблоковано, доки завантаження не завершиться."}',
+  diseaseHint: '{"Loading the questionnaire…" if target_lang == "en" else "Завантажую опитувальник…"}',
+  exampleHint: '{"Loading the example and plan…" if target_lang == "en" else "Завантажую приклад і план…"}',
+  planHint: '{"Loading the plan view…" if target_lang == "en" else "Завантажую перегляд плану…"}',
+  qrHint: '{"Loading profile from QR…" if target_lang == "en" else "Завантажую профіль із QR…"}',
+  renderHint: '{"Rendering the plan view…" if target_lang == "en" else "Перемальовую перегляд плану…"}',
+}};
 
 // Initial render language follows the page lang (EN on /try.html, UA on
 // /ukr/try.html). User can switch via the buttons in the result toolbar
@@ -2142,6 +2159,7 @@ function downloadPdf() {{
   // Browser-native print → "Save as PDF" works on every modern browser.
   // The render layer ships A4-print-friendly CSS (@page + @media print)
   // so the iframe content paginates cleanly without any extra deps.
+  if (uiBusy || generating) return;
   if (planSource == null) return;
   // Modal must be visible so iframe contentWindow is fully laid out and
   // print() picks up the right document.
@@ -2159,12 +2177,13 @@ async function switchResultMode(newMode) {{
   if (newMode === currentResultMode) return;
   if (modePatientBtn.disabled && newMode === 'patient') return;
   if (!pyodide || planSource !== 'generated') return;
-  modeClinicianBtn.disabled = true;
-  modePatientBtn.disabled = true;
-  try {{
-    pyodide.globals.set('_target_lang', currentResultLang);
-    pyodide.globals.set('_target_mode', newMode);
-    const html = await pyodide.runPythonAsync(`
+  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
+    modeClinicianBtn.disabled = true;
+    modePatientBtn.disabled = true;
+    try {{
+      pyodide.globals.set('_target_lang', currentResultLang);
+      pyodide.globals.set('_target_mode', newMode);
+      const html = await pyodide.runPythonAsync(`
 if _oo_mode == 'diagnostic':
     # Patient mode is treatment-only per PATIENT_MODE_SPEC §3 — fall back
     # to the clinician diagnostic brief regardless of mode toggle.
@@ -2175,18 +2194,20 @@ else:
     )
 html
 `);
-    resultFrame.removeAttribute('src');
-    resultFrame.srcdoc = html;
-    currentResultMode = newMode;
-    highlightModeButtons();
-  }} catch (e) {{
-    setError('Re-render failed: ' + (e.message || e));
-  }} finally {{
-    refreshModeButtonAvailability();
-  }}
+      resultFrame.removeAttribute('src');
+      resultFrame.srcdoc = html;
+      currentResultMode = newMode;
+      highlightModeButtons();
+    }} catch (e) {{
+      setError('Re-render failed: ' + (e.message || e));
+    }} finally {{
+      refreshModeButtonAvailability();
+    }}
+  }});
 }}
 
 function downloadHtml() {{
+  if (uiBusy || generating) return;
   if (planSource == null) return;
   let html = resultFrame.srcdoc;
   if (!html) {{
@@ -2218,19 +2239,24 @@ async function switchResultLang(newLang) {{
     // Pre-built case file: just swap the iframe src to the matching
     // language variant. EN at /cases/<id>.html, UA at /ukr/cases/<id>.html.
     if (!activeExampleCaseId) return;
-    resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + '.html';
-    currentResultLang = newLang;
-    highlightLangButtons();
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {{
+      const frameReady = waitForFrameLoad();
+      resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + '.html';
+      currentResultLang = newLang;
+      highlightLangButtons();
+      await frameReady;
+    }});
     return;
   }}
   if (!pyodide) return;
-  // Disable buttons during re-render so user can't double-click
-  langUaBtn.disabled = true;
-  langEnBtn.disabled = true;
-  try {{
-    pyodide.globals.set('_target_lang', newLang);
-    pyodide.globals.set('_target_mode', currentResultMode);
-    const html = await pyodide.runPythonAsync(`
+  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
+    // Disable buttons during re-render so user can't double-click
+    langUaBtn.disabled = true;
+    langEnBtn.disabled = true;
+    try {{
+      pyodide.globals.set('_target_lang', newLang);
+      pyodide.globals.set('_target_mode', currentResultMode);
+      const html = await pyodide.runPythonAsync(`
 if _oo_mode == 'diagnostic':
     html = render_diagnostic_brief_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
 else:
@@ -2239,19 +2265,37 @@ else:
     )
 html
 `);
-    resultFrame.removeAttribute('src');
-    resultFrame.srcdoc = html;
-    currentResultLang = newLang;
-    highlightLangButtons();
-  }} catch (e) {{
-    setError('Re-render failed: ' + (e.message || e));
-  }} finally {{
-    langUaBtn.disabled = false;
-    langEnBtn.disabled = false;
-  }}
+      resultFrame.removeAttribute('src');
+      resultFrame.srcdoc = html;
+      currentResultLang = newLang;
+      highlightLangButtons();
+    }} catch (e) {{
+      setError('Re-render failed: ' + (e.message || e));
+    }} finally {{
+      langUaBtn.disabled = false;
+      langEnBtn.disabled = false;
+    }}
+  }});
 }}
 
-function loadExamplePlan(caseId) {{
+function waitForFrameLoad(timeoutMs = 12000) {{
+  if (!resultFrame) return Promise.resolve();
+  return new Promise(resolve => {{
+    let done = false;
+    const finish = () => {{
+      if (done) return;
+      done = true;
+      resultFrame.removeEventListener('load', finish);
+      resultFrame.removeEventListener('error', finish);
+      resolve();
+    }};
+    resultFrame.addEventListener('load', finish);
+    resultFrame.addEventListener('error', finish);
+    setTimeout(finish, timeoutMs);
+  }});
+}}
+
+async function loadExamplePlan(caseId) {{
   // Show the pre-built case HTML for the just-loaded example so the user
   // sees a plan immediately — without spinning up Pyodide and without
   // pretending the engine just ran. Generate stays disabled until the
@@ -2259,6 +2303,7 @@ function loadExamplePlan(caseId) {{
   if (!caseId) return;
   activeExampleCaseId = caseId;
   resultFrame.removeAttribute('srcdoc');
+  const frameReady = waitForFrameLoad();
   resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/') + caseId + '.html';
   planSource = 'example';
   planDirty = false;
@@ -2273,6 +2318,7 @@ function loadExamplePlan(caseId) {{
   modalPdfBtn.disabled = false;
   modalHtmlBtn.disabled = false;
   openPlanModal();
+  await frameReady;
 }}
 
 function clearPlanState() {{
@@ -2300,6 +2346,10 @@ planModal.addEventListener('click', (ev) => {{
   if (ev.target === planModal) closePlanModal();
 }});
 document.addEventListener('keydown', (ev) => {{
+  if ((generating || uiBusy) && ev.key === 'Escape') {{
+    ev.preventDefault();
+    return;
+  }}
   if (ev.key === 'Escape' && !planModal.hidden) closePlanModal();
 }});
 langUaBtn.addEventListener('click', () => switchResultLang('uk'));
@@ -2354,7 +2404,7 @@ function updateRunBtnEnabled() {{
   if (mode === 'form') hasInput = !!activeQuest;
   else hasInput = textarea.value.trim().length > 0;
   const planFresh = planSource !== null && !planDirty;
-  runBtn.disabled = !hasInput || planFresh;
+  runBtn.disabled = uiBusy || generating || !hasInput || planFresh;
 }}
 
 // Mark the currently-shown plan as out-of-sync with the current input.
@@ -3275,18 +3325,35 @@ html
   }}
 }}
 
-function setGeneratingUI(on, hint) {{
+function setGeneratingUI(on, hint, title, lead) {{
   generatingOverlay.hidden = !on;
   // <main inert> hard-blocks pointer + keyboard focus on every interactive
   // element inside (form fields, toolbar, runBtn). The overlay is a sibling
   // of <main>, so it stays interactive — but we don't currently put any
   // controls in it (no cancel — Pyodide runPythonAsync is not interruptable).
   if (mainTryEl) mainTryEl.inert = on;
+  if (on && generatingTitle) generatingTitle.textContent = title || UI_LOCK_TEXT.generateTitle;
+  if (on && generatingLead) generatingLead.textContent = lead || UI_LOCK_TEXT.generateLead;
   if (on && hint) setGeneratingHint(hint);
 }}
 
 function setGeneratingHint(text) {{
   if (generatingHint) generatingHint.textContent = text;
+}}
+
+async function withUiLock(title, lead, hint, task) {{
+  if (uiBusy || generating) return;
+  uiBusy = true;
+  updateRunBtnEnabled();
+  setGeneratingUI(true, hint, title, lead);
+  await yieldToBrowser(16);
+  try {{
+    return await task();
+  }} finally {{
+    uiBusy = false;
+    setGeneratingUI(false);
+    updateRunBtnEnabled();
+  }}
 }}
 
 // ── Init overlay (one-time engine load with named stages) ─────────────────
@@ -3393,27 +3460,29 @@ async function loadAssets() {{
   if (draft && draft.questId) {{
     const idx = QUESTIONNAIRES_MANIFEST.findIndex(q => q.id === draft.questId);
     if (idx >= 0) {{
-      diseaseSelect.value = idx;
-      // Draft restore needs full data — lazy-fetch now
-      const fullList = await ensureQuestionnaires();
-      renderForm(fullList[idx]);
-      repopulateExamples(idx);
-      // Apply saved answers
-      if (draft.answers) {{
-        for (const [field, val] of Object.entries(draft.answers)) {{
-          const inp = formPane.querySelector(`[data-field="${{CSS.escape(field)}}"]`);
-          if (!inp) continue;
-          if (typeof val === 'boolean') inp.value = String(val);
-          else if (inp.dataset.type === 'enum') inp.value = JSON.stringify(val);
-          else inp.value = val;
-          answers[field] = val;
+      await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
+        diseaseSelect.value = idx;
+        // Draft restore needs full data — lazy-fetch now
+        const fullList = await ensureQuestionnaires();
+        renderForm(fullList[idx]);
+        repopulateExamples(idx);
+        // Apply saved answers
+        if (draft.answers) {{
+          for (const [field, val] of Object.entries(draft.answers)) {{
+            const inp = formPane.querySelector(`[data-field="${{CSS.escape(field)}}"]`);
+            if (!inp) continue;
+            if (typeof val === 'boolean') inp.value = String(val);
+            else if (inp.dataset.type === 'enum') inp.value = JSON.stringify(val);
+            else inp.value = val;
+            answers[field] = val;
+          }}
         }}
-      }}
-      if (draft.jsonText) textarea.value = draft.jsonText;
-      if (draft.mode === 'json') setMode('json');
-      setStatus('{"Draft restored ✓ Click «Generate» when you are ready." if target_lang == "en" else "Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий."}', 'ok');
-      updateRunBtnEnabled();
-      updateImpactPanelLocal();
+        if (draft.jsonText) textarea.value = draft.jsonText;
+        if (draft.mode === 'json') setMode('json');
+        setStatus('{"Draft restored ✓ Click «Generate» when you are ready." if target_lang == "en" else "Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий."}', 'ok');
+        updateRunBtnEnabled();
+        updateImpactPanelLocal();
+      }});
     }}
   }} else {{
     // Initial load done — hide the top busy banner; sidebar still shows hint.
@@ -3469,24 +3538,26 @@ function repopulateExamples(activeQuestIdx) {{
 
 // ── Event wiring ──────────────────────────────────────────────────────────
 diseaseSelect.addEventListener('change', async () => {{
-  const i = diseaseSelect.value;
-  // Switching disease invalidates whatever plan was on screen — there is
-  // no longer any example or generated plan that matches the new form.
-  clearPlanState();
-  if (i === '') {{
-    renderForm(null);
-    repopulateExamples(null);
+  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
+    const i = diseaseSelect.value;
+    // Switching disease invalidates whatever plan was on screen — there is
+    // no longer any example or generated plan that matches the new form.
+    clearPlanState();
+    if (i === '') {{
+      renderForm(null);
+      repopulateExamples(null);
+      updateRunBtnEnabled();
+      return;
+    }}
+    const idx = parseInt(i, 10);
+    const fullList = await ensureQuestionnaires();
+    renderForm(fullList[idx]);
+    repopulateExamples(idx);
+    exampleSelect.value = '';
+    saveDraft();
     updateRunBtnEnabled();
-    return;
-  }}
-  const idx = parseInt(i, 10);
-  const fullList = await ensureQuestionnaires();
-  renderForm(fullList[idx]);
-  repopulateExamples(idx);
-  exampleSelect.value = '';
-  saveDraft();
-  updateRunBtnEnabled();
-  updateImpactPanelLocal();
+    updateImpactPanelLocal();
+  }});
 }});
 
 function findQuestionnaireForProfile(profile) {{
@@ -3534,45 +3605,47 @@ function populateFormFromProfile(quest, profile) {{
 }}
 
 exampleSelect.addEventListener('change', async () => {{
-  const i = exampleSelect.value;
-  if (i === '') return;
-  const fullExamples = await ensureExamples();
-  const ex = fullExamples[parseInt(i, 10)];
-  setError(null);
-  // Prefer form mode: find a questionnaire that matches this example's
-  // disease and populate it. Fall back to JSON view only when no
-  // matching questionnaire exists (most diseases don't have one yet).
-  const qIdx = findQuestionnaireForProfile(ex.json);
-  if (qIdx >= 0) {{
-    diseaseSelect.value = qIdx;
-    const fullList = await ensureQuestionnaires();
-    renderForm(fullList[qIdx]);
-    repopulateExamples(qIdx);
-    exampleSelect.value = i;
-    populateFormFromProfile(fullList[qIdx], ex.json);
-    setMode('form');
-    // Lock filled fields and reveal the personalize banner so the user
-    // can opt-in to editing the example's data.
-    lockFilledFields();
-    showExampleLockBanner();
-    // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
-    textarea.value = JSON.stringify(buildProfile(), null, 2);
-    // Show the pre-built case plan in the modal — the example IS already
-    // a generated plan, so we display it directly instead of pretending
-    // Generate would do new work.
-    loadExamplePlan(ex.case_id);
-    setStatus('{'Example loaded ✓ Plan shown — edit any field to generate your own.' if target_lang == 'en' else 'Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.'}', 'ok');
-  }} else {{
-    setMode('json');
-    textarea.value = JSON.stringify(ex.json, null, 2);
-    // No questionnaire match: still show the prebuilt plan if a case file
-    // exists for this example.
-    if (ex.case_id) loadExamplePlan(ex.case_id);
-    setStatus('{"Example loaded as JSON (no questionnaire for this disease yet)" if target_lang == "en" else "Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)"}', 'ok');
-  }}
-  saveDraft();
-  updateRunBtnEnabled();
-  updateImpactPanelLocal();
+  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.exampleHint, async () => {{
+    const i = exampleSelect.value;
+    if (i === '') return;
+    const fullExamples = await ensureExamples();
+    const ex = fullExamples[parseInt(i, 10)];
+    setError(null);
+    // Prefer form mode: find a questionnaire that matches this example's
+    // disease and populate it. Fall back to JSON view only when no
+    // matching questionnaire exists (most diseases don't have one yet).
+    const qIdx = findQuestionnaireForProfile(ex.json);
+    if (qIdx >= 0) {{
+      diseaseSelect.value = qIdx;
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[qIdx]);
+      repopulateExamples(qIdx);
+      exampleSelect.value = i;
+      populateFormFromProfile(fullList[qIdx], ex.json);
+      setMode('form');
+      // Lock filled fields and reveal the personalize banner so the user
+      // can opt-in to editing the example's data.
+      lockFilledFields();
+      showExampleLockBanner();
+      // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
+      textarea.value = JSON.stringify(buildProfile(), null, 2);
+      // Show the pre-built case plan in the modal — the example IS already
+      // a generated plan, so we display it directly instead of pretending
+      // Generate would do new work.
+      await loadExamplePlan(ex.case_id);
+      setStatus('{'Example loaded ✓ Plan shown — edit any field to generate your own.' if target_lang == 'en' else 'Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.'}', 'ok');
+    }} else {{
+      setMode('json');
+      textarea.value = JSON.stringify(ex.json, null, 2);
+      // No questionnaire match: still show the prebuilt plan if a case file
+      // exists for this example.
+      if (ex.case_id) await loadExamplePlan(ex.case_id);
+      setStatus('{"Example loaded as JSON (no questionnaire for this disease yet)" if target_lang == "en" else "Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)"}', 'ok');
+    }}
+    saveDraft();
+    updateRunBtnEnabled();
+    updateImpactPanelLocal();
+  }});
 }});
 
 const personalizeBtn = document.getElementById('personalizeBtn');
@@ -3631,6 +3704,7 @@ async function loadFromUrlHash() {{
   if (!token) return;
 
   try {{
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.qrHint, async () => {{
     // urlsafe-base64 → bytes (re-add padding) → gunzip → JSON
     const padded = token + '='.repeat((-token.length) & 3);
     const binStr = atob(padded.replace(/-/g, '+').replace(/_/g, '/'));
@@ -3666,6 +3740,7 @@ async function loadFromUrlHash() {{
     banner.textContent = '{"✓ Profile loaded from QR code. Click «Generate» to build the plan, or edit any field." if target_lang == "en" else "✓ Профіль завантажено з QR-коду. Натисніть «Згенерувати», щоб побудувати план, або відредагуйте поля."}';
     mainTryEl.parentNode.insertBefore(banner, mainTryEl);
     setStatus('{"Profile loaded from QR ✓" if target_lang == "en" else "Профіль із QR завантажено ✓"}', 'ok');
+    }});
   }} catch (err) {{
     console.error('Failed to decode case token:', err);
     const banner = document.createElement('div');
