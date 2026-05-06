@@ -22,10 +22,20 @@ evidence_level: high
 strength_of_recommendation: strong
 nccn_category: '1'
 expected_outcomes:
-  overall_response_rate: ~80% during initial response phase (FLAURA)
-  complete_response: ~3% (deep CR rare)
-  progression_free_survival: Median PFS ~18.9 mo (FLAURA Soria 2018, Ramalingam 2020 update)
-  overall_survival_5y: Median OS ~38.6 mo vs ~31.8 mo with 1st-gen TKI (FLAURA OS update)
+  overall_response_rate:
+    value: "~80% during initial response phase (FLAURA)"
+    source: SRC-FLAURA-SORIA-2018
+  complete_response:
+    value: "~3% (deep CR rare)"
+    source: SRC-FLAURA-SORIA-2018
+  progression_free_survival:
+    value: "Median PFS ~18.9 mo (FLAURA Soria 2018, Ramalingam 2020 update)"
+    source: SRC-FLAURA-SORIA-2018
+    notes: "Ramalingam 2020 NEJM OS final update; original mPFS 18.9 vs 10.2 mo (HR 0.46) from Soria 2018"
+  overall_survival_5y:
+    value: "Median OS ~38.6 mo vs ~31.8 mo with 1st-gen TKI (FLAURA OS update, Ramalingam 2020)"
+    source: SRC-FLAURA-SORIA-2018
+    notes: "Final OS analysis Ramalingam NEJM 2020 (HR 0.80, p=0.046); source anchored to FLAURA Soria 2018 which covers both analyses"
 hard_contraindications: []
 red_flags_triggering_alternative:
   - RF-NSCLC-TRANSFORMATION-PROGRESSION
@@ -43,6 +53,9 @@ rationale_ua: >-
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 sources:
+  - source_id: SRC-FLAURA-SORIA-2018
+    position: supports
+    relevant_quote_paraphrase: "FLAURA: osimertinib vs 1st-gen TKI 1L EGFR-mutant advanced NSCLC; mPFS 18.9 vs 10.2 mo (HR 0.46); final OS 38.6 vs 31.8 mo (HR 0.80, Ramalingam 2020 update)"
   - source_id: SRC-NCCN-NSCLC-2025
     position: supports
     relevant_quote_paraphrase: Osimertinib continuous is Category 1 preferred 1L therapy for EGFR ex19del/L858R advanced NSCLC per FLAURA; continue until progression or intolerable toxicity
