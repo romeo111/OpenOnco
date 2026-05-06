@@ -1,0 +1,50 @@
+id: BMA-DLL3-EXPRESSION-SCLC
+biomarker_id: BIO-DLL3-EXPRESSION
+variant_qualifier: "DLL3-expressing relapsed or refractory SCLC"
+disease_id: DIS-SCLC
+escat_tier: IIB
+evidence_summary: >
+  DLL3 is a therapeutic target in SCLC, and the hosted SCLC source notes
+  tarlatamab as a DLL3-targeted bispecific option in relapsed or refractory
+  SCLC. The hosted SCLC 2L algorithm does not yet model tarlatamab as an output
+  indication, so this sidecar is review-required and should not displace
+  lurbinectedin, topotecan, platinum rechallenge, or clinical-trial routing.
+regulatory_approval:
+  fda:
+    - "tarlatamab - relapsed or refractory extensive-stage SCLC after platinum-based chemotherapy"
+  ema: []
+  ukraine: []
+recommended_combinations:
+  - "tarlatamab for eligible relapsed/refractory SCLC after platinum-based therapy where registered and accessible"
+  - "clinical trial preferred at SCLC recurrence when available"
+contraindicated_monotherapy:
+  - "Do not use DLL3 expression to bypass performance-status and chemotherapy-free-interval gates in relapsed SCLC."
+  - "Do not start DLL3-targeted therapy without cytokine-release and neurotoxicity monitoring capability."
+primary_sources:
+  - SRC-NCCN-SCLC-2025
+last_verified: "2026-05-06"
+evidence_sources:
+  - source: SRC-NCCN-SCLC-2025
+    level: "guideline context / emerging targeted option"
+    evidence_ids:
+      - BIO-DLL3-EXPRESSION
+      - ALGO-SCLC-2L
+    direction: Supports
+    significance: Sensitivity/Response
+    evidence_lane: molecular_evidence_option
+    note: "Hosted SCLC source lists tarlatamab as DLL3-targeted 2L+ therapy, but algorithm output still needs dedicated modeling."
+actionability_review_required: true
+notes: >
+  Keep review-required until a dedicated SCLC tarlatamab indication/regimen and
+  access logic are modeled.
+_contribution:
+  chunk_id: openonco-shelf-thin-bma-ptld-pv-sclc-2026-05-06
+  contributor: codex
+  submission_date: "2026-05-06"
+  ai_tool: codex
+  ai_model: gpt-5
+  target_action: new
+  target_entity_id: BMA-DLL3-EXPRESSION-SCLC
+  notes_for_reviewer: >
+    New review-required DLL3 SCLC sidecar to flag missing tarlatamab pathway
+    modeling.
