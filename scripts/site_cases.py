@@ -38,6 +38,33 @@ class CaseEntry:
     summary_en: str = ""
 
 
+GALLERY_EXCLUDED_CASE_IDS: set[str] = {
+    # These generated examples currently render "No treatment plan generated".
+    # Keep the underlying case HTML for debugging, but do not advertise them
+    # in the public examples gallery as usable plans.
+    "auto-bcc",
+    "auto-epithelioid_sarcoma",
+    "auto-glioma_low_grade",
+    "auto-granulosa_cell",
+    "auto-jmml",
+    "auto-lam",
+    "auto-meningioma",
+    "auto-rcc",
+    "auto-tgct",
+    "cll-post-btki",
+    "dlbcl-chemorefractory-cart",
+    "eatl-relapsed-post-choep",
+    "mm-triple-class-refractory",
+    "rcc-imdc-fav-axi-pembro",
+    "rcc-imdc-int-nivo-ipi",
+    "variant-rcc-biomarker-act",
+    "variant-rcc-frail",
+    "variant-rcc-high-risk",
+    "variant-rcc-infection-hbv",
+    "variant-rcc-organ-dysf",
+}
+
+
 CASE_CATEGORIES: list[tuple[str, str, str]] = [
     # (key, ua_label, en_label) — order = display order in filter chips
     ("b_aggressive",   "B-клітинні агресивні",   "B-cell aggressive"),

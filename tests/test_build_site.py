@@ -3,7 +3,7 @@
 Builds the full site into a tmp dir and asserts the structural contract:
 
 - public landing (no auth gate) with hero + numerical metrics + Watson cmp
-- public gallery with all CASE entries
+- public gallery with all publishable CASE entries
 - try.html wired to Pyodide + example loader
 - per-case files keep back-link + feedback link, no auth gate
 - no real-patient data leaks
@@ -18,7 +18,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.build_site import CASES, build_site
+from scripts.build_site import CASES, GALLERY_EXCLUDED_CASE_IDS, build_site
 
 
 @pytest.fixture(scope="module")
@@ -135,12 +135,17 @@ def test_landing_drops_charter_eyebrow(site_dir: Path):
 # ── Gallery page ──────────────────────────────────────────────────────────
 
 
-def test_gallery_is_public_with_all_cases(site_dir: Path):
+def test_gallery_is_public_with_publishable_cases(site_dir: Path):
     html = (site_dir / "gallery.html").read_text(encoding="utf-8")
     assert "openOncoUser" not in html, "auth gate must be removed from gallery"
-    assert html.count('class="case-card"') == len(CASES)
-    for c in CASES:
+    public_cases = [c for c in CASES if c.case_id not in GALLERY_EXCLUDED_CASE_IDS]
+    assert html.count('class="case-card"') == len(public_cases)
+    assert "No treatment plan generated" not in html
+    for c in public_cases:
         assert f"cases/{c.case_id}.html" in html
+    for c in CASES:
+        if c.case_id in GALLERY_EXCLUDED_CASE_IDS:
+            assert f"cases/{c.case_id}.html" not in html
     # Stats widget intentionally dropped from /gallery.html in commit 6234fe9b
     # (UA-leak cleanup on the EN gallery surface).
     # Feedback path

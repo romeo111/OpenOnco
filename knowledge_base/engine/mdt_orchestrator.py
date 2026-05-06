@@ -123,6 +123,20 @@ class OpenQuestion:
 
 
 @dataclass
+class MDTTalkTreeNode:
+    step: int
+    owner_role: str
+    topic: str
+    action: str
+    blocking: bool = False
+    linked_questions: list[str] = field(default_factory=list)
+    linked_findings: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
+@dataclass
 class MDTOrchestrationResult:
     patient_id: Optional[str]
     plan_id: Optional[str]
@@ -131,6 +145,7 @@ class MDTOrchestrationResult:
     recommended_roles: list[MDTRequiredRole] = field(default_factory=list)
     optional_roles: list[MDTRequiredRole] = field(default_factory=list)
     open_questions: list[OpenQuestion] = field(default_factory=list)
+    talk_tree: list[MDTTalkTreeNode] = field(default_factory=list)
     data_quality_summary: dict = field(default_factory=dict)
     aggregation_summary: dict = field(default_factory=dict)
     warnings: list[str] = field(default_factory=list)
@@ -157,6 +172,7 @@ class MDTOrchestrationResult:
             "recommended_roles": [r.to_dict() for r in self.recommended_roles],
             "optional_roles": [r.to_dict() for r in self.optional_roles],
             "open_questions": [q.to_dict() for q in self.open_questions],
+            "talk_tree": [n.to_dict() for n in self.talk_tree],
             "data_quality_summary": dict(self.data_quality_summary),
             "aggregation_summary": dict(self.aggregation_summary),
             "warnings": list(self.warnings),
@@ -171,11 +187,58 @@ class MDTOrchestrationResult:
 
 def _flatten_findings(patient: dict) -> dict[str, Any]:
     out: dict[str, Any] = {}
+    out.update(_flatten_nested_observations(patient.get("clinical_record") or {}))
     out.update(patient.get("findings") or {})
     for k, v in (patient.get("biomarkers") or {}).items():
         out.setdefault(k, v)
     for k, v in (patient.get("demographics") or {}).items():
         out.setdefault(k, v)
+    return out
+
+
+def _normalize_observation_key(key: str) -> str:
+    normalized = []
+    previous_was_sep = False
+    for ch in key.strip():
+        if ch.isalnum():
+            normalized.append(ch.lower())
+            previous_was_sep = False
+        elif not previous_was_sep:
+            normalized.append("_")
+            previous_was_sep = True
+    return "".join(normalized).strip("_")
+
+
+def _flatten_nested_observations(value: Any, prefix: tuple[str, ...] = ()) -> dict[str, Any]:
+    """Expose nested clinical_record observations as lookup keys for MDT QA.
+
+    The planner intentionally reads only normalized top-level fields. This
+    helper is narrower: it lets data-quality checks see existing structured
+    record values so we do not ask the MDT to provide data already present.
+    """
+    out: dict[str, Any] = {}
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if isinstance(key, str):
+                out.update(_flatten_nested_observations(child, (*prefix, key)))
+        return out
+    if isinstance(value, list):
+        if value:
+            joined_key = "_".join(_normalize_observation_key(part) for part in prefix)
+            if joined_key:
+                out[joined_key] = value
+        for idx, child in enumerate(value):
+            out.update(_flatten_nested_observations(child, (*prefix, str(idx))))
+        return out
+    if value in (None, "") or not prefix:
+        return out
+
+    leaf = prefix[-1]
+    leaf_norm = _normalize_observation_key(leaf)
+    path_norm = "_".join(_normalize_observation_key(part) for part in prefix)
+    for key in (leaf, leaf.lower(), leaf_norm, path_norm):
+        if key:
+            out.setdefault(key, value)
     return out
 
 
@@ -199,6 +262,231 @@ def _truthy(findings: dict[str, Any], key: str) -> bool:
     if isinstance(v, str):
         return v.strip().lower() in {"positive", "yes", "true", "+"}
     return bool(v)
+
+
+def _biomarker_id_from_requirement(req: Any) -> Optional[str]:
+    if isinstance(req, str):
+        return req
+    if isinstance(req, dict):
+        return req.get("biomarker_id")
+    return None
+
+
+def _biomarker_requirement_constraint(req: Any) -> Optional[str]:
+    if not isinstance(req, dict):
+        return None
+    for key in ("value_constraint", "value"):
+        v = req.get(key)
+        if isinstance(v, str) and v.strip():
+            return v.strip()
+    return None
+
+
+def _talk_topic(question_id: str) -> str:
+    if question_id.startswith("OQ-BIOMARKER-"):
+        return "Biomarker status"
+    if "HBV" in question_id or "HCV" in question_id or "FIBROSIS" in question_id:
+        return "Infection / hepatic safety"
+    if "CD20" in question_id or "PATH" in question_id or "DIFFERENTIAL" in question_id:
+        return "Pathology confirmation"
+    if "STAGING" in question_id or "LDH" in question_id:
+        return "Staging / disease burden"
+    if "DRUG-AVAILABILITY" in question_id:
+        return "Access feasibility"
+    return "Open question"
+
+
+def _build_talk_tree(
+    required_roles: list[MDTRequiredRole],
+    recommended_roles: list[MDTRequiredRole],
+    optional_roles: list[MDTRequiredRole],
+    open_questions: list[OpenQuestion],
+) -> list[MDTTalkTreeNode]:
+    """Convert role activation + open questions into an ordered MDT script.
+
+    The tree is deterministic and informational. It gives the tumor board a
+    discussion order but does not alter engine-selected tracks.
+    """
+    nodes: list[MDTTalkTreeNode] = []
+    step = 1
+
+    sorted_questions = sorted(
+        open_questions,
+        key=lambda q: (not q.blocking, q.owner_role, q.id),
+    )
+    for q in sorted_questions:
+        nodes.append(MDTTalkTreeNode(
+            step=step,
+            owner_role=q.owner_role,
+            topic=_talk_topic(q.id),
+            action=q.question,
+            blocking=q.blocking,
+            linked_questions=[q.id],
+            linked_findings=list(q.linked_findings),
+        ))
+        step += 1
+
+    question_owners = {q.owner_role for q in open_questions}
+    for role in [*required_roles, *recommended_roles, *optional_roles]:
+        if role.role_id in question_owners:
+            continue
+        if role.priority == "optional":
+            continue
+        nodes.append(MDTTalkTreeNode(
+            step=step,
+            owner_role=role.role_id,
+            topic="Specialist review",
+            action=role.reason,
+            blocking=False,
+            linked_questions=[],
+            linked_findings=list(role.linked_findings),
+        ))
+        step += 1
+
+    return nodes
+
+
+def _biomarker_data(biomarker_id: str, entities: dict) -> dict:
+    return (entities.get(biomarker_id, {}).get("data") or {}) if entities else {}
+
+
+def _biomarker_label(biomarker_id: str, entities: dict) -> str:
+    data = _biomarker_data(biomarker_id, entities)
+    names = data.get("names") or {}
+    return names.get("preferred") or biomarker_id
+
+
+def _biomarker_owner_role(biomarker_id: str, entities: dict) -> str:
+    data = _biomarker_data(biomarker_id, entities)
+    biomarker_type = data.get("biomarker_type") or ""
+    return _BIOMARKER_OWNER_BY_TYPE.get(biomarker_type, "medical_oncologist")
+
+
+def _biomarker_candidate_fields(biomarker_id: str, entities: dict) -> list[str]:
+    """Return likely patient-profile keys for a BIO-* requirement.
+
+    Patient fixtures are not fully normalized yet: some use `BIO-*`, some
+    use gene symbols, and some use clinical field names like
+    `cd20_ihc_status`. This intentionally broad matcher is for data-quality
+    display only; it never changes treatment selection.
+    """
+    data = _biomarker_data(biomarker_id, entities)
+    candidates: list[str] = [biomarker_id]
+    stripped = biomarker_id[4:] if biomarker_id.upper().startswith("BIO-") else biomarker_id
+    candidates.extend([stripped, stripped.lower(), stripped.lower().replace("-", "_")])
+    norm = stripped.lower().replace("-", "_")
+    candidates.extend([f"{norm}_status", f"{norm}_result"])
+    candidates.extend(_BIOMARKER_FIELD_ALIASES.get(biomarker_id, ()))
+
+    mutation = data.get("mutation_details") or {}
+    external = data.get("external_ids") or {}
+    lookup = data.get("actionability_lookup") or {}
+    for v in (
+        mutation.get("gene"),
+        external.get("hgnc_symbol"),
+        lookup.get("gene"),
+    ):
+        if isinstance(v, str) and v.strip():
+            candidates.extend([v.strip(), v.strip().lower()])
+
+    # Deduplicate while preserving order.
+    seen: set[str] = set()
+    out: list[str] = []
+    for c in candidates:
+        if not isinstance(c, str) or not c.strip():
+            continue
+        key = c.strip()
+        low = key.lower()
+        if low in seen:
+            continue
+        seen.add(low)
+        out.append(key)
+    return out
+
+
+def _has_biomarker_value(
+    findings: dict[str, Any],
+    biomarker_id: str,
+    entities: dict,
+) -> tuple[bool, Optional[str]]:
+    for key in _biomarker_candidate_fields(biomarker_id, entities):
+        if _has(findings, key):
+            return True, key
+    return False, None
+
+
+def _collect_biomarker_coverage(
+    plan_result: PlanResult,
+    findings: dict[str, Any],
+    entities: dict,
+) -> dict:
+    """Summarize treatment-track biomarker requirements for MDT review.
+
+    This is a data-quality object, not a selection input. It reports which
+    required biomarkers are known/missing and which track(s) depend on them.
+    """
+    requirements: dict[str, dict] = {}
+    if not plan_result.plan:
+        return {
+            "required_total": 0,
+            "required_known": 0,
+            "required_missing": 0,
+            "known": [],
+            "missing": [],
+        }
+
+    for track in plan_result.plan.tracks:
+        indication = track.indication_data or {}
+        applicable = indication.get("applicable_to") or {}
+        for req in applicable.get("biomarker_requirements_required") or []:
+            biomarker_id = _biomarker_id_from_requirement(req)
+            if not biomarker_id:
+                continue
+            entry = requirements.setdefault(
+                biomarker_id,
+                {
+                    "biomarker_id": biomarker_id,
+                    "label": _biomarker_label(biomarker_id, entities),
+                    "value_constraint": _biomarker_requirement_constraint(req),
+                    "owner_role": _biomarker_owner_role(biomarker_id, entities),
+                    "tracks": [],
+                    "default_track": False,
+                    "known": False,
+                    "matched_field": None,
+                },
+            )
+            if not entry.get("value_constraint"):
+                entry["value_constraint"] = _biomarker_requirement_constraint(req)
+            track_ref = track.indication_id or indication.get("id") or track.label or "track"
+            if track_ref not in entry["tracks"]:
+                entry["tracks"].append(track_ref)
+            if track.is_default:
+                entry["default_track"] = True
+
+    for entry in requirements.values():
+        known, matched = _has_biomarker_value(findings, entry["biomarker_id"], entities)
+        entry["known"] = known
+        entry["matched_field"] = matched
+
+    known_entries = sorted(
+        (e for e in requirements.values() if e["known"]),
+        key=lambda e: e["biomarker_id"],
+    )
+    missing_entries = sorted(
+        (e for e in requirements.values() if not e["known"]),
+        key=lambda e: (not e.get("default_track"), e["biomarker_id"]),
+    )
+    total = len(requirements)
+    known_count = len(known_entries)
+    pct = round((known_count / total) * 100) if total else 100
+    return {
+        "required_total": total,
+        "required_known": known_count,
+        "required_missing": len(missing_entries),
+        "coverage_percent": pct,
+        "known": known_entries,
+        "missing": missing_entries,
+    }
 
 
 def _is_lymphoma(disease: Optional[dict]) -> bool:
@@ -259,6 +547,41 @@ _ACTIONABLE_GENOMIC_TYPES = {
     "msi_status",
     "tmb",
     "methylation",
+}
+
+_BIOMARKER_OWNER_BY_TYPE = {
+    "gene_mutation": "molecular_geneticist",
+    "fusion": "molecular_geneticist",
+    "gene_fusion": "molecular_geneticist",
+    "amplification": "molecular_geneticist",
+    "deletion": "molecular_geneticist",
+    "copy_number": "molecular_geneticist",
+    "msi_status": "molecular_geneticist",
+    "tmb": "molecular_geneticist",
+    "methylation": "molecular_geneticist",
+    "protein_expression_ihc": "pathologist",
+    "protein_serology": "infectious_disease_hepatology",
+    "viral_load": "infectious_disease_hepatology",
+    "tumor_marker": "medical_oncologist",
+    "imaging": "radiologist",
+}
+
+_BIOMARKER_FIELD_ALIASES = {
+    "BIO-BCL2-EXPRESSION-IHC": ("bcl2", "bcl2_ihc", "bcl2_expression"),
+    "BIO-CD79B-IHC": ("cd79b", "cd79b_ihc"),
+    "BIO-CD20-IHC": ("cd20_ihc_status", "cd20_ihc", "cd20"),
+    "BIO-CD30-IHC": ("cd30_ihc_status", "cd30_ihc", "cd30"),
+    "BIO-CD52-IHC": ("cd52_ihc_status", "cd52_ihc", "cd52"),
+    "BIO-DLBCL-COO-HANS": ("cell_of_origin_hans", "cell_of_origin"),
+    "BIO-DLBCL-IPI": ("ipi_score", "ipi", "international_prognostic_index"),
+    "BIO-FL-FLIPI": ("flipi", "flipi_score"),
+    "BIO-HBV-STATUS": ("hbsag", "anti_hbc_total", "hbv_status"),
+    "BIO-HCV-STATUS": ("hcv_status", "hcv_known_positive", "anti_hcv"),
+    "BIO-HIV-STATUS": ("hiv", "hiv_status", "hiv_serology"),
+    "BIO-HCV-RNA": ("hcv_rna_positive", "hcv_rna_status", "hcv_rna"),
+    "BIO-EBV-DNA": ("ebv_dna", "ebv_dna_status", "ebv_viral_load"),
+    "BIO-PSA": ("psa", "psa_ng_ml"),
+    "BIO-PD-L1": ("pdl1", "pd_l1", "pdl1_tps", "pd_l1_tps"),
 }
 
 
@@ -576,6 +899,7 @@ def _apply_open_question_rules(
     plan_result: PlanResult,
     findings: dict[str, Any],
     disease_data: Optional[dict],
+    entities: dict,
 ) -> list[OpenQuestion]:
     questions: list[OpenQuestion] = []
 
@@ -691,6 +1015,41 @@ def _apply_open_question_rules(
             linked_findings=sorted(set(non_reimbursed)),
         ))
 
+    # Q7 - any selected/alternative track requires a biomarker absent from
+    # the patient profile. Default-track gaps are blocking; alternative-track
+    # gaps are non-blocking but still assigned to the MDT owner.
+    existing_question_ids = {q.id for q in questions}
+    coverage = _collect_biomarker_coverage(plan_result, findings, entities)
+    for missing in coverage.get("missing") or []:
+        biomarker_id = missing["biomarker_id"]
+        qid = "OQ-BIOMARKER-" + "".join(
+            ch if ch.isalnum() else "-" for ch in biomarker_id.replace("BIO-", "")
+        ).strip("-").upper()
+        if qid in existing_question_ids:
+            continue
+        owner = missing.get("owner_role") or "medical_oncologist"
+        label = missing.get("label") or biomarker_id
+        tracks = ", ".join(missing.get("tracks") or [])
+        constraint = missing.get("value_constraint")
+        constraint_txt = f" Expected value: {constraint}." if constraint else ""
+        is_blocking = bool(missing.get("default_track"))
+        questions.append(OpenQuestion(
+            id=qid,
+            question=(
+                f"What is the status of {label} ({biomarker_id})? "
+                f"It is required by track(s): {tracks}.{constraint_txt}"
+            ),
+            owner_role=owner,
+            blocking=is_blocking,
+            rationale=(
+                "A treatment-track biomarker requirement is missing from the "
+                "patient profile; the MDT should verify the test result, method, "
+                "specimen, and date before relying on this option."
+            ),
+            linked_findings=[biomarker_id],
+        ))
+        existing_question_ids.add(qid)
+
     return questions
 
 
@@ -709,6 +1068,105 @@ _RECOMMENDED_FIELDS_LYMPHOMA = (
     "ecog",
     "pet_ct_date",
 )
+
+_DATA_QUALITY_FIELD_DETAILS = {
+    "cd20_ihc_status": {
+        "label": "CD20 IHC status",
+        "label_uk": "Статус CD20 за ІГХ",
+        "owner_role": "pathologist",
+        "why_it_matters": "Confirms CD20-directed therapy is biologically appropriate.",
+        "why_it_matters_uk": "Підтверджує, що CD20-спрямована терапія біологічно обгрунтована.",
+        "doctor_action": "Verify CD20 IHC result, specimen, method, and report date.",
+        "doctor_action_uk": "Перевірити результат CD20 ІГХ, матеріал, метод і дату звіту.",
+    },
+    "hbsag": {
+        "label": "HBsAg",
+        "label_uk": "HBsAg",
+        "owner_role": "infectious_disease_hepatology",
+        "why_it_matters": "Identifies active HBV infection and prophylaxis need before anti-CD20 or other immunosuppressive therapy.",
+        "why_it_matters_uk": "Виявляє активну HBV-інфекцію та потребу в профілактиці перед anti-CD20 або іншою імуносупресивною терапією.",
+        "doctor_action": "Order or document HBsAg before treatment start.",
+        "doctor_action_uk": "Призначити або задокументувати HBsAg до початку лікування.",
+    },
+    "anti_hbc_total": {
+        "label": "Total anti-HBc",
+        "label_uk": "anti-HBc total",
+        "owner_role": "infectious_disease_hepatology",
+        "why_it_matters": "Detects prior HBV exposure and reactivation risk.",
+        "why_it_matters_uk": "Виявляє перенесений контакт з HBV і ризик реактивації.",
+        "doctor_action": "Order or document total anti-HBc and decide prophylaxis/monitoring.",
+        "doctor_action_uk": "Призначити або задокументувати anti-HBc total і визначити профілактику/моніторинг.",
+    },
+    "lugano_stage": {
+        "label": "Lugano stage",
+        "label_uk": "Стадія Lugano",
+        "owner_role": "radiologist",
+        "why_it_matters": "Defines lymphoma extent and supports tumor-burden and response-assessment decisions.",
+        "why_it_matters_uk": "Визначає поширеність лімфоми та підтримує оцінку пухлинного навантаження і відповіді.",
+        "doctor_action": "Document Lugano stage from PET/CT or contrast CT staging.",
+        "doctor_action_uk": "Задокументувати стадію Lugano за PET/CT або контрастним CT.",
+    },
+    "ldh_ratio_to_uln": {
+        "label": "LDH ratio to ULN",
+        "label_uk": "LDH відносно ВМН",
+        "owner_role": "medical_oncologist",
+        "why_it_matters": "Supports prognostic scoring and aggressive-biology flags.",
+        "why_it_matters_uk": "Потрібно для прогностичних індексів і прапорців агресивної біології.",
+        "doctor_action": "Enter LDH with local upper limit of normal.",
+        "doctor_action_uk": "Внести LDH разом із локальною верхньою межею норми.",
+    },
+    "fib4_index": {
+        "label": "FIB-4 liver fibrosis index",
+        "label_uk": "Індекс фіброзу печінки FIB-4",
+        "owner_role": "infectious_disease_hepatology",
+        "why_it_matters": "Screens hepatic fibrosis risk before hepatotoxic therapy or antiviral coordination.",
+        "why_it_matters_uk": "Скринінгує ризик фіброзу печінки перед гепатотоксичною терапією або координацією противірусного лікування.",
+        "doctor_action": "Calculate FIB-4 from age, AST, ALT, and platelet count.",
+        "doctor_action_uk": "Розрахувати FIB-4 за віком, AST, ALT і кількістю тромбоцитів.",
+    },
+    "ecog": {
+        "label": "ECOG performance status",
+        "label_uk": "Функціональний статус ECOG",
+        "owner_role": "medical_oncologist",
+        "why_it_matters": "Constrains treatment intensity and eligibility for intensive regimens.",
+        "why_it_matters_uk": "Обмежує інтенсивність лікування та придатність до інтенсивних режимів.",
+        "doctor_action": "Record ECOG PS assessed at treatment decision visit.",
+        "doctor_action_uk": "Задокументувати ECOG PS на візиті прийняття рішення щодо лікування.",
+    },
+    "pet_ct_date": {
+        "label": "PET/CT date",
+        "label_uk": "Дата PET/CT",
+        "owner_role": "radiologist",
+        "why_it_matters": "Shows whether baseline staging is recent enough for treatment planning and later response comparison.",
+        "why_it_matters_uk": "Показує, чи базове стадіювання достатньо актуальне для планування лікування і подальшого порівняння відповіді.",
+        "doctor_action": "Document baseline PET/CT date or explain alternative staging modality.",
+        "doctor_action_uk": "Задокументувати дату базового PET/CT або пояснити альтернативний метод стадіювання.",
+    },
+}
+
+
+def _missing_field_detail(
+    field: str,
+    severity: Literal["critical", "recommended"],
+    field_unlocks: dict[str, list[str]],
+) -> dict:
+    meta = _DATA_QUALITY_FIELD_DETAILS.get(field, {})
+    return {
+        "field": field,
+        "label": meta.get("label") or field,
+        "label_uk": meta.get("label_uk") or meta.get("label") or field,
+        "severity": severity,
+        "owner_role": meta.get("owner_role") or "medical_oncologist",
+        "why_it_matters": meta.get("why_it_matters") or (
+            "Required for complete MDT review of this plan."
+        ),
+        "why_it_matters_uk": meta.get("why_it_matters_uk") or (
+            "Потрібно для повного розгляду цього плану на MDT."
+        ),
+        "doctor_action": meta.get("doctor_action") or f"Verify and document {field}.",
+        "doctor_action_uk": meta.get("doctor_action_uk") or f"Перевірити та задокументувати {field}.",
+        "blocked_red_flags": list(field_unlocks.get(field) or []),
+    }
 
 
 def _trigger_referenced_fields(trigger: Any) -> list[str]:
@@ -786,6 +1244,7 @@ def _data_quality(
     findings: dict[str, Any],
     disease_data: Optional[dict],
     entities: dict,
+    plan_result: Optional[PlanResult] = None,
 ) -> dict:
     is_lymphoma = _is_lymphoma(disease_data)
     critical = list(_CRITICAL_FIELDS_LYMPHOMA) if is_lymphoma else []
@@ -797,13 +1256,60 @@ def _data_quality(
     field_unlocks = _field_unlocks_map(
         missing_critical + missing_recommended, disease_data, entities
     )
+    biomarker_coverage = (
+        _collect_biomarker_coverage(plan_result, findings, entities)
+        if plan_result is not None
+        else {}
+    )
+    missing_default_biomarkers = sum(
+        1 for item in biomarker_coverage.get("missing", [])
+        if item.get("default_track")
+    )
+    missing_field_details = [
+        *[
+            _missing_field_detail(field, "critical", field_unlocks)
+            for field in missing_critical
+        ],
+        *[
+            _missing_field_detail(field, "recommended", field_unlocks)
+            for field in missing_recommended
+        ],
+    ]
+    if missing_default_biomarkers:
+        status = "incomplete_for_default_track"
+        doctor_summary = (
+            "Default-track review is incomplete until required biomarker gaps "
+            "are resolved."
+        )
+    elif missing_critical:
+        status = "incomplete_for_mdt_review"
+        doctor_summary = (
+            "MDT sign-off is incomplete until critical clinical data gaps are "
+            "resolved."
+        )
+    elif missing_recommended or unevaluated or biomarker_coverage.get("required_missing", 0):
+        status = "usable_with_caveats"
+        doctor_summary = (
+            "No critical default-track gap was found, but the MDT should "
+            "review the listed caveats before final sign-off."
+        )
+    else:
+        status = "complete_for_mdt_review"
+        doctor_summary = (
+            "Required MDT data checks are complete for the current case profile."
+        )
 
     return {
+        "status": status,
+        "doctor_summary": doctor_summary,
         "missing_critical_fields": missing_critical,
         "missing_recommended_fields": missing_recommended,
+        "missing_field_details": missing_field_details,
         "ambiguous_findings": [],
         "unevaluated_red_flags": unevaluated,
         "field_unlocks": field_unlocks,
+        "biomarker_coverage": biomarker_coverage,
+        "missing_default_biomarkers": missing_default_biomarkers,
         "fields_present_count": sum(1 for v in findings.values() if v not in (None, "")),
         "fields_expected_count": len(critical) + len(recommended),
     }
@@ -1172,8 +1678,8 @@ def orchestrate_mdt(
     )
 
     roles = _apply_role_rules(patient, plan_result, findings, disease_data, entities)
-    questions = _apply_open_question_rules(patient, plan_result, findings, disease_data)
-    quality = _data_quality(findings, disease_data, entities)
+    questions = _apply_open_question_rules(patient, plan_result, findings, disease_data, entities)
+    quality = _data_quality(findings, disease_data, entities, plan_result)
     fired = _collect_fired_red_flags(plan_result)
     aggregation = _build_aggregation_summary(plan_result, entities, questions, fired)
 
@@ -1193,6 +1699,7 @@ def orchestrate_mdt(
     optional = sorted(
         [r for r in roles if r.priority == "optional"], key=lambda r: r.role_id
     )
+    talk_tree = _build_talk_tree(required, recommended, optional, questions)
 
     provenance = _bootstrap_provenance(plan_result, required, recommended, optional, questions)
 
@@ -1219,6 +1726,7 @@ def orchestrate_mdt(
         recommended_roles=recommended,
         optional_roles=optional,
         open_questions=questions,
+        talk_tree=talk_tree,
         data_quality_summary=quality,
         aggregation_summary=aggregation,
         warnings=warnings,
@@ -1261,6 +1769,7 @@ def _orchestrate_mdt_diagnostic(
     required = sorted([r for r in roles if r.priority == "required"], key=lambda r: r.role_id)
     recommended = sorted([r for r in roles if r.priority == "recommended"], key=lambda r: r.role_id)
     optional = sorted([r for r in roles if r.priority == "optional"], key=lambda r: r.role_id)
+    talk_tree = _build_talk_tree(required, recommended, optional, questions)
 
     # Diagnostic data quality: missing critical fields list mirrors what
     # DQ1-DQ3 actually test for + a couple of demographic essentials.
@@ -1342,6 +1851,7 @@ def _orchestrate_mdt_diagnostic(
         recommended_roles=recommended,
         optional_roles=optional,
         open_questions=questions,
+        talk_tree=talk_tree,
         data_quality_summary=quality,
         aggregation_summary=aggregation,
         warnings=warnings + list(diag_result.warnings),
@@ -1352,6 +1862,7 @@ def _orchestrate_mdt_diagnostic(
 __all__ = [
     "MDTOrchestrationResult",
     "MDTRequiredRole",
+    "MDTTalkTreeNode",
     "OpenQuestion",
     "orchestrate_mdt",
 ]

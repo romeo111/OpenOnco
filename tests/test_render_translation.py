@@ -166,7 +166,12 @@ def test_en_render_translates_mdt_role_reasons():
     p = _patient("patient_dlbcl_high_ipi.json")
     plan = generate_plan(p, kb_root=KB_ROOT)
     mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
-    render_plan_html(plan, mdt=mdt, target_lang="en")
+    html = render_plan_html(plan, mdt=mdt, target_lang="en")
+    mdt_section = html.split("MDT brief", 1)[1].split("</section>", 1)[0]
+    assert "Lymphoma diagnosis" in mdt_section
+    assert "Лімфом" not in mdt_section
+    assert "спеціальність" not in mdt_section
+    return
 
     # Hematologist's reason for required role contains UA "Лімфомний"
     # or "провідна спеціальність" — should be translated
