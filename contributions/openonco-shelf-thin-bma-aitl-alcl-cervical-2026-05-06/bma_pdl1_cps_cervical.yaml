@@ -1,0 +1,62 @@
+id: BMA-PDL1-CPS-CERVICAL
+biomarker_id: BIO-PDL1-CPS
+variant_qualifier: "PD-L1 CPS >=1 by 22C3 IHC in persistent, recurrent, or metastatic cervical cancer"
+disease_id: DIS-CERVICAL
+escat_tier: IA
+evidence_summary: >
+  PD-L1 CPS >=1 is a treatment-selection biomarker for pembrolizumab plus
+  platinum/paclitaxel chemotherapy with or without bevacizumab in first-line
+  persistent, recurrent, or metastatic cervical cancer. Hosted cervical
+  algorithm and red-flag content already encode this KEYNOTE-826 branch.
+regulatory_approval:
+  fda:
+    - "pembrolizumab plus chemotherapy with or without bevacizumab - PD-L1 CPS >=1 persistent, recurrent, or metastatic cervical cancer"
+  ema:
+    - "pembrolizumab plus chemotherapy with or without bevacizumab - PD-L1 CPS >=1 persistent, recurrent, or metastatic cervical cancer"
+  ukraine: []
+recommended_combinations:
+  - "pembrolizumab + paclitaxel + cisplatin or carboplatin +/- bevacizumab for CPS >=1 metastatic, persistent, or recurrent cervical cancer"
+contraindicated_monotherapy:
+  - "Do not skip PD-L1 CPS testing before first-line metastatic cervical treatment selection."
+  - "Do not add bevacizumab when fistula, uncontrolled hypertension, major bleeding risk, or significant proteinuria makes it unsafe."
+primary_sources:
+  - SRC-KEYNOTE-826-COLOMBO-2021
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+last_verified: "2026-05-06"
+evidence_sources:
+  - source: SRC-KEYNOTE-826-COLOMBO-2021
+    level: "phase 3 randomized trial"
+    evidence_ids:
+      - KEYNOTE-826
+      - RF-CERVICAL-PDL1-CPS-1-PLUS
+      - IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+    direction: Supports
+    significance: Sensitivity/Response
+    evidence_lane: standard_care
+    note: "KEYNOTE-826 established the pembrolizumab-containing 1L cervical regimen in PD-L1 CPS-selected disease."
+  - source: SRC-NCCN-CERVICAL-2025
+    level: "Category 1 / guideline-preferred context"
+    evidence_ids:
+      - ALGO-CERVICAL-METASTATIC-1L
+    direction: Supports
+    significance: Sensitivity/Response
+    evidence_lane: standard_care
+    note: "Hosted NCCN cervical source supports 1L pembrolizumab plus chemotherapy +/- bevacizumab in the CPS-selected setting."
+actionability_review_required: true
+notes: >
+  The hosted indication currently contains a legacy biomarker spelling
+  (BIO-PD-L1-CPS) while the canonical biomarker file is BIO-PDL1-CPS. This
+  sidecar uses the hosted biomarker ID and leaves the spelling mismatch for
+  maintainer review.
+_contribution:
+  chunk_id: openonco-shelf-thin-bma-aitl-alcl-cervical-2026-05-06
+  contributor: codex
+  submission_date: "2026-05-06"
+  ai_tool: codex
+  ai_model: gpt-5
+  target_action: new
+  target_entity_id: BMA-PDL1-CPS-CERVICAL
+  notes_for_reviewer: >
+    New cervical PD-L1 CPS BMA sidecar aligned with RF-CERVICAL-PDL1-CPS-1-PLUS
+    and IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV.
