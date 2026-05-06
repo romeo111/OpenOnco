@@ -1,7 +1,9 @@
 {
   "patient_id": "ESOPH-CROSS-CM577-001",
   "comment": "Synthetic resectable distal esophageal adenocarcinoma, cT3N1M0, Barrett-driven, ECOG 1, no severe dysphagia. Engine routes ALGO-ESOPH-RESECTABLE-1L step 1 (resectable + ECOG-fit) → IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT (carboplatin+paclitaxel weekly + RT 41.4 Gy, 5-yr OS ~47%, NCCN cat 1). KB drift: ALGO-ESOPH-RESECTABLE-1L only emits CROSS-NEOADJUVANT; IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS (CheckMate-577 adjuvant nivolumab × 1y for ypT+/ypN+ residual, DFS 22 vs 11 mo) is not wired into algorithm output_indications, so engine surfaces only the neoadjuvant phase. Findings include not_pcr / residual disease flags so a future revise-step (line 2) could reach the adjuvant IND once ALGO is extended (PROPOSAL §17 phasing).",
-  "disease": {"id": "DIS-ESOPHAGEAL"},
+  "disease": {
+    "id": "DIS-ESOPHAGEAL"
+  },
   "line_of_therapy": 1,
   "biomarkers": {
     "BIO-HER2-SOLID": "negative",
@@ -36,6 +38,17 @@
     "anti_hbc_total": "negative",
     "hcv_status": "negative",
     "hiv_status": "negative",
-    "autoimmune_disease_active": false
+    "autoimmune_disease_active": false,
+    "active_tb": "absent",
+    "cannot_swallow_saliva": "absent",
+    "charlson_score": "absent",
+    "peritoneal_carcinomatosis_with_ascites": "absent",
+    "post_cross_pcr_negative": "absent",
+    "rapid_decline_first_cycle": "absent",
+    "recurrent_aspiration_pneumonia": "absent",
+    "tracheoesophageal_fistula": "absent",
+    "weight_loss_pct_3mo": "absent",
+    "ypN_residual": "absent",
+    "ypT_residual": "absent"
   }
 }

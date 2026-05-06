@@ -1,7 +1,9 @@
 {
   "patient_id": "SCLC-LS-001",
   "comment": "Synthetic limited-stage SCLC, female 62, heavy ex-smoker, ECOG 1, disease confined to right hemithorax encompassable in single tolerable RT field, no distant metastases, brain MRI clear. CLINICAL TARGET: IND-SCLC-LIMITED-1L (REG-EP-CONCURRENT-RT-SCLC-LIMITED, CONVERT 60 Gy once-daily, mOS ~27 mo). KB-DRIFT NOTE 1: ALGO-SCLC-1L step 1 evaluates a free-text 'Limited-stage' condition with no matching disease-scoped RedFlag; the algorithm itself flags this in its notes ('Flag for RF authoring'). Engine therefore cannot detect limited stage from findings and falls through to default IND-SCLC-EXTENSIVE-1L (durvalumab/CASPIAN); IND-SCLC-LIMITED-1L surfaces as alternative-track for HCP consideration. KB-DRIFT NOTE 2 (CHARTER §17): radiotherapy is not modellable in current schema — REG-EP-CONCURRENT-RT-SCLC-LIMITED references concurrent thoracic RT in its name/notes but RT itself is not a structured Drug component, so the rendered Plan surfaces only the chemo backbone (etoposide+platinum). The case is published to make both gaps visible to KB authors and tumor-board reviewers.",
-  "disease": {"id": "DIS-SCLC"},
+  "disease": {
+    "id": "DIS-SCLC"
+  },
   "line_of_therapy": 1,
   "biomarkers": {},
   "demographics": {
@@ -41,6 +43,23 @@
     "autoimmune_disease_active": false,
     "paraneoplastic_syndrome": false,
     "siadh": false,
-    "lambert_eaton": false
+    "lambert_eaton": false,
+    "active_tb": "absent",
+    "active_uncontrolled_infection": "absent",
+    "brain_metastases": "absent",
+    "brain_metastases_symptomatic": "absent",
+    "child_pugh_class": "absent",
+    "cushing_paraneoplastic": "absent",
+    "distended_neck_veins": "absent",
+    "facial_upper_extremity_edema": "absent",
+    "latent_tb": "absent",
+    "ldh_ratio_to_uln": "absent",
+    "limbic_encephalitis": "absent",
+    "liver_metastases_bulky": "absent",
+    "new_seizure": "absent",
+    "raised_intracranial_pressure": "absent",
+    "sclc_extensive_stage": "absent",
+    "sclc_molecular_subtype": "absent",
+    "svc_syndrome_present": "absent"
   }
 }

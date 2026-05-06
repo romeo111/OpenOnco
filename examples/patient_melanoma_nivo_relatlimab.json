@@ -1,7 +1,9 @@
 {
   "patient_id": "MELANOMA-NIVO-RELATLIMAB-001",
   "comment": "Synthetic Stage IV cutaneous melanoma, 82F, ECOG 2, BRAF V600E confirmed by NGS. 1L received dabrafenib+trametinib (visceral-crisis biology) with progression at 11 mo — IO-naive at 2L. Age 82 + ECOG 2 + baseline limited-cutaneous psoriasis make ipi+nivo Grade 3-4 irAE risk (~50%) prohibitive. KB DRIFT NOTE: plan anchor was '1L nivolumab+relatlimab fixed-dose (RELATIVITY-047)' but at this KB baseline the only nivo+rela indication is IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB scoped to line_of_therapy=2 IO-naive post-BRAFi (RELATIVITY-047 was 1L per FDA; KB positions it as 2L IO-alternative for ipi-frail patients, off-label per indication notes). Case modeled at 2L accordingly. Engine routes ALGO-MELANOMA-METASTATIC-2L step 1 (KIT absent) → step 2 (RF-MELANOMA-IO-RESISTANT absent — IO-naive) → step 4 (RF-MELANOMA-BRAF-V600-ACTIONABLE fires) → step 41 (free-text ipi+nivo unfit — falls through) → step 5 (RF-MELANOMA-FRAILTY-AGE fires age≥80 + ECOG≥2) → IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB. UA access caveat: relatlimab unregistered — named-patient import pathway required.",
-  "disease": {"id": "DIS-MELANOMA"},
+  "disease": {
+    "id": "DIS-MELANOMA"
+  },
   "line_of_therapy": 2,
   "biomarkers": {
     "BIO-BRAF-V600E": "positive",
@@ -17,7 +19,11 @@
     "histology": "cutaneous_melanoma",
     "stage": "IV",
     "stage_iv": true,
-    "metastatic_sites": ["liver", "lung", "lymph_node"],
+    "metastatic_sites": [
+      "liver",
+      "lung",
+      "lymph_node"
+    ],
     "brain_mets": false,
     "symptomatic_cns_metastases": false,
     "ldh_uln_x": 1.6,
@@ -28,7 +34,9 @@
     "nras_mutation": false,
     "kit_mutation": false,
     "prior_lines": 1,
-    "prior_therapy": ["dabrafenib_trametinib"],
+    "prior_therapy": [
+      "dabrafenib_trametinib"
+    ],
     "prior_brafi_meki_received": true,
     "prior_io_received": false,
     "progression_on_brafi_meki": true,
@@ -48,6 +56,33 @@
     "anti_hbc_total": "negative",
     "hcv_status": "negative",
     "hiv_status": "negative",
-    "pregnancy_status": "not_applicable"
+    "pregnancy_status": "not_applicable",
+    "active_tb": "absent",
+    "active_uncontrolled_infection": "absent",
+    "anatomic_site": "absent",
+    "bap1_ihc": "absent",
+    "bap1_mutation": "absent",
+    "bap1_nuclear_staining": "absent",
+    "bap1_status": "absent",
+    "braf_v600_status": "absent",
+    "braf_v600k_mutation": "absent",
+    "child_pugh_class": "absent",
+    "io_response_status": "absent",
+    "kit_exon11": "absent",
+    "kit_exon13": "absent",
+    "kit_status": "absent",
+    "ldh_x_uln": "absent",
+    "melanoma_subtype": "absent",
+    "nf1_lof": "absent",
+    "nf1_mutation": "absent",
+    "nf1_status": "absent",
+    "nras_q61": "absent",
+    "nras_status": "absent",
+    "primary_site": "absent",
+    "progression_on_io": "absent",
+    "resection_status": "absent",
+    "stage_iii": "absent",
+    "tumor_subtype": "absent",
+    "wide_local_excision_completed": "absent"
   }
 }

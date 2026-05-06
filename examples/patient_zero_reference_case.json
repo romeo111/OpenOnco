@@ -1,16 +1,13 @@
 {
   "patient_id": "REFERENCE-CASE-0001",
   "comment": "Synthetic HCV-MZL reference case per specs/REFERENCE_CASE_SPECIFICATION.md §2. NOT real patient data — fully synthesized for acceptance testing of the §1.3 critical structural criteria. Engine-required fields at top; the clinical_record block carries the spec-§2 patient profile template populated with realistic synthetic values, kept alongside so render layers and downstream tooling can read it.",
-
   "disease": {
     "icd_o_3_morphology": "9699/3"
   },
   "line_of_therapy": 1,
-
   "biomarkers": {
     "BIO-HCV-RNA": "positive"
   },
-
   "demographics": {
     "age": 49,
     "sex": "male",
@@ -18,7 +15,6 @@
     "decompensated_cirrhosis": false,
     "fit_for_chemoimmunotherapy": true
   },
-
   "findings": {
     "dominant_nodal_mass_cm": 5.3,
     "mediastinal_ratio": 0.12,
@@ -29,9 +25,16 @@
     "HCV RNA positive": true,
     "Indolent presentation (non-bulky, asymptomatic or minimally symptomatic)": true,
     "hbsag": "negative",
-    "anti_hbc_total": "negative"
+    "anti_hbc_total": "negative",
+    "child_pugh_class": "absent",
+    "cirrhosis_present": "absent",
+    "comorbidity_count": "absent",
+    "fit_for_combination_chemo": "absent",
+    "cd20_ihc_status": "positive",
+    "lugano_stage": "II",
+    "fib4_index": 1.2,
+    "pet_ct_date": "2026-04-15"
   },
-
   "clinical_record": {
     "demographics": {
       "patient_id": "REFERENCE-CASE-0001",
@@ -131,17 +134,32 @@
           "bulky_by_criteria": false
         },
         "lymph_nodes": [
-          {"station": "Ia", "size_mm": 10, "suspicious": true},
-          {"station": "IIa", "size_mm": 14, "suspicious": true}
+          {
+            "station": "Ia",
+            "size_mm": 10,
+            "suspicious": true
+          },
+          {
+            "station": "IIa",
+            "size_mm": 14,
+            "suspicious": true
+          }
         ],
         "bone_destruction": false,
         "CNS_involvement": false
       }
     },
     "comorbidities_and_meds": {
-      "comorbidities": ["chronic HCV (E11 — managed)", "mild hypertension (I10)"],
-      "current_medications": ["amlodipine 5 mg daily"],
-      "allergies": ["none documented"],
+      "comorbidities": [
+        "chronic HCV (E11 — managed)",
+        "mild hypertension (I10)"
+      ],
+      "current_medications": [
+        "amlodipine 5 mg daily"
+      ],
+      "allergies": [
+        "none documented"
+      ],
       "prior_cancer_treatments": []
     },
     "symptoms_and_concerns": {

@@ -1,7 +1,9 @@
 {
   "patient_id": "MELANOMA-ADJ-PEMBRO-STAGE3-001",
   "comment": "Synthetic Stage III resected cutaneous melanoma, 54M, ECOG 0, primary 3.2 mm Breslow with ulceration on the upper back, sentinel lymph node biopsy positive (1/3 nodes, single 2 mm metastasis), completed wide local excision + completion lymph-node dissection per surgeon judgment. BRAF V600E negative by NGS. Anchor target: KEYNOTE-054 adjuvant pembrolizumab × 12 months (12-mo recurrence-free benefit HR 0.57). KB DRIFT NOTE: at this KB baseline the melanoma KB has no adjuvant Stage III indication or algorithm — only ALGO-MELANOMA-METASTATIC-1L and ALGO-MELANOMA-METASTATIC-2L exist (gap explicitly noted in melanoma.yaml stage_strata stage_iii_regional vs the 1L/2L algorithms which are stage_iv only). Engine still resolves to ALGO-MELANOMA-METASTATIC-1L (the only line=1 melanoma algorithm) → step 0 (KIT absent) → step 1 (BRAF-V600-ACTIONABLE absent) → IND-MELANOMA-METASTATIC-1L-NIVO-IPI default. The metastatic-1L recommendation surfaced is NOT clinically appropriate for this resected Stage III patient — case carried for routing observability + to motivate a future ALGO-MELANOMA-ADJUVANT + IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III addition (KEYNOTE-054 adjuvant pembro × 12 mo). Engine smoke gates pass. MDT review required to override engine output until adjuvant track is wired.",
-  "disease": {"id": "DIS-MELANOMA"},
+  "disease": {
+    "id": "DIS-MELANOMA"
+  },
   "line_of_therapy": 1,
   "biomarkers": {
     "BIO-BRAF-V600E": "negative",
@@ -50,6 +52,31 @@
     "anti_hbc_total": "negative",
     "hcv_status": "negative",
     "hiv_status": "negative",
-    "pregnancy_status": "not_applicable"
+    "pregnancy_status": "not_applicable",
+    "active_tb": "absent",
+    "active_uncontrolled_infection": "absent",
+    "anatomic_site": "absent",
+    "bap1_ihc": "absent",
+    "bap1_mutation": "absent",
+    "bap1_nuclear_staining": "absent",
+    "bap1_status": "absent",
+    "braf_mutation": "absent",
+    "braf_v600_status": "absent",
+    "braf_v600k_mutation": "absent",
+    "child_pugh_class": "absent",
+    "io_response_status": "absent",
+    "kit_exon11": "absent",
+    "kit_exon13": "absent",
+    "kit_status": "absent",
+    "ldh_x_uln": "absent",
+    "melanoma_subtype": "absent",
+    "nf1_lof": "absent",
+    "nf1_mutation": "absent",
+    "nf1_status": "absent",
+    "nras_q61": "absent",
+    "nras_status": "absent",
+    "primary_site": "absent",
+    "progression_on_io": "absent",
+    "tumor_subtype": "absent"
   }
 }

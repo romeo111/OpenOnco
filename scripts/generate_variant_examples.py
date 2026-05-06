@@ -41,6 +41,9 @@ from scripts.generate_auto_examples import (  # noqa: E402
     _category_for,
     _representative_biomarker,
 )
+from scripts.example_redflag_quality import (  # noqa: E402
+    enrich_profile_for_gallery_quality,
+)
 from knowledge_base.engine import (  # noqa: E402
     generate_diagnostic_brief,
     generate_plan,
@@ -264,6 +267,10 @@ def main() -> int:
 
         for var_name, builder, var_desc_ua, var_desc_en in VARIANTS:
             profile = builder(disease_id, bio_id, bio_value)
+            profile, _added = enrich_profile_for_gallery_quality(
+                profile,
+                kb_root=KB_ROOT,
+            )
             ok, msg = _verify(profile)
             if not ok:
                 failed.append((disease_id, var_name, msg))

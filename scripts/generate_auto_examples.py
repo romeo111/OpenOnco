@@ -29,6 +29,9 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.disease_coverage_matrix import per_disease_metrics  # noqa: E402
+from scripts.example_redflag_quality import (  # noqa: E402
+    enrich_profile_for_gallery_quality,
+)
 from knowledge_base.validation.loader import load_content  # noqa: E402
 
 
@@ -231,6 +234,10 @@ def main() -> int:
             continue
 
         profile = _build_minimal_profile(r["id"], load.entities_by_id, r["fill_pct"])
+        profile, _added = enrich_profile_for_gallery_quality(
+            profile,
+            kb_root=REPO_ROOT / "knowledge_base" / "hosted" / "content",
+        )
         path.write_text(json.dumps(profile, indent=2, ensure_ascii=False), encoding="utf-8")
         written += 1
         print(f"  + {path.name:40s} ({r['fill_pct']}% fill)")

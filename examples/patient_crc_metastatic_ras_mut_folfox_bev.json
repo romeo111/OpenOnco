@@ -1,7 +1,9 @@
 {
   "patient_id": "CRC-MET-RAS-MUT-1L-001",
   "comment": "Synthetic metastatic CRC, 64M, ECOG 1, right-sided cecal primary, KRAS exon 2 G12V mutated (RAS-mutant excludes anti-EGFR per PRIME post-hoc), BRAF-WT, MSS. Engine routes ALGO-CRC-METASTATIC-1L step 1 (no MSI-H) → step 2 (RF-CRC-RAS-WT does NOT fire because kras_mutation=true) → step 3 (no BRAF V600E) → step 4 (no frailty) → if_false default = IND-CRC-METASTATIC-1L-FOLFOX-BEV (FOLFOX + bevacizumab, NO16966/CALGB-80405 RAS-mut analysis). RF-CRC-RAS-MUTANT also fires (de-escalate direction = anti-EGFR removed from option set) but does not branch the algorithm. Right-sided + RAS-mut canonical bev+chemo target population.",
-  "disease": {"id": "DIS-CRC"},
+  "disease": {
+    "id": "DIS-CRC"
+  },
   "line_of_therapy": 1,
   "biomarkers": {
     "BIO-MSI-STATUS": "stable",
@@ -20,7 +22,10 @@
     "histology": "adenocarcinoma",
     "stage": "IV",
     "stage_iv": true,
-    "metastatic_sites": ["liver", "peritoneum"],
+    "metastatic_sites": [
+      "liver",
+      "peritoneum"
+    ],
     "liver_lesion_count": 4,
     "largest_lesion_cm": 5.2,
     "msi_status": "stable",
@@ -43,6 +48,20 @@
     "hbsag": "negative",
     "anti_hbc_total": "negative",
     "hcv_status": "negative",
-    "hiv_status": "negative"
+    "hiv_status": "negative",
+    "active_tb": "absent",
+    "albumin_g_dl": "absent",
+    "cea_doubling_4_8wk": "absent",
+    "charlson_score": "absent",
+    "comorbidity_count": "absent",
+    "complete_bowel_obstruction": "absent",
+    "her2_ihc": "absent",
+    "her2_ish": "absent",
+    "her2_status": "absent",
+    "ldh_doubling_4_8wk": "absent",
+    "massive_lower_gi_bleed": "absent",
+    "new_peritoneal_carcinomatosis_with_obstruction": "absent",
+    "perforation_with_peritonitis": "absent",
+    "relapse_within_6mo_adjuvant": "absent"
   }
 }
