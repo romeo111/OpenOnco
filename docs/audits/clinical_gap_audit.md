@@ -1,6 +1,6 @@
 # Clinical gap audit
 
-Generated: `2026-05-07T18:41:02Z`
+Generated: `2026-05-07T19:19:52Z`
 
 This is a coverage/governance audit, not a clinical recommendation set.
 It makes the five largest known gaps measurable and repeatable.
@@ -9,7 +9,7 @@ It makes the five largest known gaps measurable and repeatable.
 
 | Gap | Current | Target | Status |
 |---|---:|---|---|
-| Clinical sign-off | 15/1860 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
+| Clinical sign-off | 15/1861 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
 | Solid tumor 2L+ coverage | 22/42 solid diseases have a 2L+ algorithm; 24/42 have a 2L+ indication | Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication. | `coverage_gap` |
 | Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 405 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
 | Supportive-care depth | 140/355 regimens have mandatory supportive care (39.4%); 41 have monitoring; 314 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
