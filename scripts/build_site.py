@@ -43,6 +43,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 import shutil
 import sys
 import zipfile
@@ -702,6 +703,40 @@ def _inject_common_screening(quest: dict) -> dict:
     return {**quest, "groups": groups}
 
 
+_STUB_TITLE_NOTICE_RE = re.compile(r"\s*\(auto-generated STUB\)\s*", re.IGNORECASE)
+
+
+def _clean_questionnaire_title(title: object) -> str:
+    """Public display title without internal scaffold notices."""
+    cleaned = _STUB_TITLE_NOTICE_RE.sub("", str(title or "")).strip()
+    return cleaned.replace("HCV-asociated", "HCV-associated")
+
+
+def _stringify_code(code: object) -> str:
+    if isinstance(code, list):
+        return ", ".join(str(item) for item in code if item)
+    return str(code or "").strip()
+
+
+def _questionnaire_display_titles(
+    data: dict,
+    disease_names_by_id: dict[str, dict],
+) -> dict[str, str]:
+    title_en = _clean_questionnaire_title(data.get("title"))
+    names = disease_names_by_id.get(data.get("disease_id")) or {}
+    disease_uk = names.get("ukrainian")
+    if not disease_uk:
+        return {"title_en": title_en, "title_uk": title_en}
+
+    if "— newly diagnosed (1L)" in title_en:
+        title_uk = f"{disease_uk} — вперше діагностована (1L)"
+    elif "— first line" in title_en:
+        title_uk = f"{disease_uk} — перша лінія"
+    else:
+        title_uk = disease_uk
+    return {"title_en": title_en, "title_uk": title_uk}
+
+
 def bundle_questionnaires(output_dir: Path) -> dict:
     """Pre-render all curated Questionnaire YAML files to a single
     JSON file at docs/questionnaires.json + thin manifest for /try.html.
@@ -720,21 +755,39 @@ def bundle_questionnaires(output_dir: Path) -> dict:
     manifest = []
     if qsrc.is_dir():
         import yaml as _yaml
+        disease_names_by_id = {}
+        disease_codes_by_id = {}
+        dsrc = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "diseases"
+        if dsrc.is_dir():
+            for dpath in sorted(dsrc.glob("*.yaml")):
+                try:
+                    disease = _yaml.safe_load(dpath.read_text(encoding="utf-8"))
+                    if isinstance(disease, dict) and disease.get("id"):
+                        disease_names_by_id[disease["id"]] = disease.get("names") or {}
+                        disease_codes_by_id[disease["id"]] = disease.get("codes") or {}
+                except Exception:
+                    continue
         for path in sorted(qsrc.glob("*.yaml")):
             try:
                 data = _yaml.safe_load(path.read_text(encoding="utf-8"))
                 if isinstance(data, dict):
                     data = _inject_common_screening(data)
+                    display_titles = _questionnaire_display_titles(data, disease_names_by_id)
+                    disease_codes = disease_codes_by_id.get(data.get("disease_id")) or {}
+                    disease_icd = (
+                        (data.get("fixed_fields") or {})
+                        .get("disease", {})
+                        .get("icd_o_3_morphology")
+                    )
+                    data = {**data, "title": display_titles["title_en"]}
                     payload.append(data)
                     manifest.append({
                         "id": data.get("id"),
                         "title": data.get("title"),
+                        **display_titles,
                         "disease_id": data.get("disease_id"),
-                        "disease_icd": (
-                            (data.get("fixed_fields") or {})
-                            .get("disease", {})
-                            .get("icd_o_3_morphology")
-                        ),
+                        "icd_10": _stringify_code(disease_codes.get("icd_10")),
+                        "disease_icd": disease_icd,
                     })
             except Exception:
                 continue
@@ -2190,10 +2243,22 @@ def render_try(
   <script>
   (function() {{
     try {{
-      var raw = localStorage.getItem('openonco-manifests-v1');
+      localStorage.removeItem('openonco-manifests-v1');
+      var raw = localStorage.getItem('openonco-manifests-v2');
       if (!raw) return;
       var data = JSON.parse(raw);
       var ds = document.getElementById('diseaseSelect');
+      function cleanCachedQuestionnaireTitle(q) {{
+        if (!q) return '';
+        var title = {'(q.title_en || q.title || "")' if target_lang == 'en' else '(q.title_uk || q.title_en || q.title || "")'};
+        var stubNotice = 'auto-generated ' + 'STUB';
+        title = String(title).replace(new RegExp('\\\\s*\\\\(' + stubNotice + '\\\\)\\\\s*', 'ig'), '').trim();
+        var icd10 = q.icd_10 ? String(q.icd_10).trim() : '';
+        var icdo3 = q.disease_icd ? String(q.disease_icd).trim() : '';
+        if (icd10) return title + ' · ICD-10 ' + icd10;
+        if (icdo3) return title + ' · ICD-O-3 ' + icdo3;
+        return title;
+      }}
       if (ds && data && Array.isArray(data.questionnaires)) {{
         var frag = document.createDocumentFragment();
         var ph = document.createElement('option');
@@ -2202,7 +2267,7 @@ def render_try(
         data.questionnaires.forEach(function(q, i) {{
           var opt = document.createElement('option');
           opt.value = i;
-          opt.textContent = q.title;
+          opt.textContent = cleanCachedQuestionnaireTitle(q);
           frag.appendChild(opt);
         }});
         ds.innerHTML = '';
@@ -2438,6 +2503,7 @@ let offlineCacheFailed = 0;
 // Build-time manifests — instant dropdown population, no fetch.
 const QUESTIONNAIRES_MANIFEST = {qm_json};
 const EXAMPLES_MANIFEST = {em_json};
+const PAGE_LANG = '{target_lang}';
 let questionnaires = null;   // lazy-fetched from /questionnaires.json on first need
 let examples = null;         // lazy-fetched from /examples.json on first need
 let _questionnairesPromise = null;
@@ -2478,7 +2544,7 @@ const UI_LOCK_TEXT = {{
 // Initial render language follows the page lang (EN on /try.html, UA on
 // /ukr/try.html). User can switch via the buttons in the result toolbar
 // without re-running the engine — Pyodide caches _oo_result/_oo_mdt.
-let currentResultLang = '{target_lang}';
+let currentResultLang = PAGE_LANG;
 
 // Audience mode for the plan render — 'clinician' (default, full tumor-
 // board brief) or 'patient' (plain-UA simplified report). Per
@@ -2886,6 +2952,19 @@ function escHtml(s) {{
   return String(s).replace(/[&<>"']/g, c => ({{
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   }})[c]);
+}}
+
+function questionnaireDisplayTitle(q) {{
+  if (!q) return '';
+  const title = (PAGE_LANG === 'uk'
+    ? (q.title_uk || q.title_en || q.title)
+    : (q.title_en || q.title)
+  ) || '';
+  const icd10 = q.icd_10 ? String(q.icd_10).trim() : '';
+  const icdo3 = q.disease_icd ? String(q.disease_icd).trim() : '';
+  if (icd10) return `${{title}} · ICD-10 ${{icd10}}`;
+  if (icdo3) return `${{title}} · ICD-O-3 ${{icdo3}}`;
+  return title;
 }}
 
 function saveDraft() {{
@@ -4024,9 +4103,10 @@ async function ensureExamples() {{
 // warmup at the top of the script body, written by loadAssets after a
 // successful boot so the next cold visit can paint dropdowns from
 // localStorage even before the new HTML's inline manifest is parsed.
-const MANIFEST_CACHE_KEY = 'openonco-manifests-v1';
+const MANIFEST_CACHE_KEY = 'openonco-manifests-v2';
 function saveManifestsToCache() {{
   try {{
+    localStorage.removeItem('openonco-manifests-v1');
     localStorage.setItem(MANIFEST_CACHE_KEY, JSON.stringify({{
       ts: Date.now(),
       questionnaires: QUESTIONNAIRES_MANIFEST,
@@ -4042,7 +4122,7 @@ async function loadAssets() {{
   QUESTIONNAIRES_MANIFEST.forEach((q, i) => {{
     const opt = document.createElement('option');
     opt.value = i;
-    opt.textContent = q.title;
+    opt.textContent = questionnaireDisplayTitle(q);
     diseaseSelect.appendChild(opt);
   }});
   saveManifestsToCache();
