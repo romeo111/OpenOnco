@@ -814,11 +814,35 @@ Remaining regimen-specific blockers are now concrete missing Drug entities:
 `DRUG-CABAZITAXEL`, `DRUG-MESNA`, `DRUG-NAL-IRI`,
 `DRUG-MITOMYCIN-C`, and `DRUG-PAZOPANIB`.
 
+### 13.11 V1 missing-drug slice completed
+
+The second V1 slice adds thin Drug entities for the five concrete component
+refs surfaced by the legacy-regimen compatibility layer:
+
+- `DRUG-CABAZITAXEL`
+- `DRUG-MESNA`
+- `DRUG-NAL-IRI`
+- `DRUG-MITOMYCIN-C`
+- `DRUG-PAZOPANIB`
+
+These are intentionally minimal source-aware records. They unblock regimen
+materialization and referential integrity, but they are not complete drug
+monographs. Detailed Ukraine availability and full label metadata remain
+future curation work.
+
+Validation impact:
+
+| Metric | After compatibility slice | After missing-drug slice |
+|---|---:|---:|
+| Global schema errors | 65 | 65 |
+| Global ref errors | 154 | 148 |
+| Contract errors | 0 | 0 |
+| Regimen ref errors | 6 | 0 |
+
 Next V1 slice:
 
-1. Add or reconcile those five Drug entities with source-aware clinical
-   metadata.
-2. Then attack indication ref errors, because 90 of the remaining 154 ref
-   errors are in `indications/`.
+1. Attack indication ref errors, because 90 of the remaining 148 ref errors
+   are in `indications/`.
+2. Then resolve algorithm refs, which account for 50 remaining errors.
 3. Keep PWA work behind this gate; installability should not make a partially
    valid KB feel production-ready.

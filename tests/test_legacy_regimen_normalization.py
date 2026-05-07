@@ -115,3 +115,16 @@ def test_loader_warns_on_legacy_supportive_care_text(tmp_path: Path) -> None:
     assert any("legacy free text" in msg for _path, msg in result.contract_warnings)
     assert any("SUP-MISSING" in msg for _path, msg in result.ref_errors)
     assert not any("CBC before each cycle" in msg for _path, msg in result.ref_errors)
+
+
+def test_hosted_regimen_component_drug_refs_resolve() -> None:
+    clear_load_cache()
+
+    result = load_content(Path("knowledge_base/hosted/content"))
+
+    regimen_drug_ref_errors = [
+        (path, msg)
+        for path, msg in result.ref_errors
+        if path.parts[-2] == "regimens" and "components[" in msg
+    ]
+    assert regimen_drug_ref_errors == []

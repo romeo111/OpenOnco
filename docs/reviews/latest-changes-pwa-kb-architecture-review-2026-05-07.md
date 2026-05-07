@@ -63,6 +63,20 @@ V1 compatibility follow-up in this branch reduced the global validation debt wit
 
 The warning increase is intentional: legacy free-text `mandatory_supportive_care` entries are now reported as authoring warnings instead of blocking as unresolved SupportiveCare IDs. True `SUP-*` typos still fail referential integrity.
 
+V1 drug-entity follow-up in the next commit resolved the remaining regimen
+component blockers:
+
+| Check | After compatibility | After missing-drug slice |
+|---|---:|---:|
+| Referential errors | 154 | 148 |
+| Regimen referential errors | 6 | 0 |
+| Contract errors | 0 | 0 |
+
+The five added Drug entities are intentionally thin: `DRUG-CABAZITAXEL`,
+`DRUG-MESNA`, `DRUG-NAL-IRI`, `DRUG-MITOMYCIN-C`, and `DRUG-PAZOPANIB`.
+They make existing regimens materializable, while detailed availability and
+full monograph metadata remain future curation work.
+
 The existing debt is still a release-management problem. A PWA or service worker will make stale/invalid KB states more persistent on client devices, so the deploy gate should distinguish:
 
 - block deploy on schema/ref errors in release-scoped content,
@@ -125,7 +139,7 @@ The right PWA role is: offline-capable viewer/generator for synthetic or locally
 ## Recommended next steps
 
 1. Add a release gate report that fails on schema/ref errors and prints a short per-directory summary.
-2. Add the five missing Drug entities still referenced by now-loadable regimens: `DRUG-CABAZITAXEL`, `DRUG-MESNA`, `DRUG-NAL-IRI`, `DRUG-MITOMYCIN-C`, and `DRUG-PAZOPANIB`.
+2. Tackle indication ref errors next; they now account for 90 of 148 remaining ref errors.
 3. Split generated docs refreshes from clinical KB PRs where practical.
 4. Add `manifest.webmanifest`, install icons, and minimal PWA metadata after validation debt is under control.
 5. Refactor `try.html` into external JS modules while keeping the static GitHub Pages deployment model.
