@@ -2154,6 +2154,19 @@ def render_try(
     <button id="resetBtn" class="btn btn-secondary qt-reset">{'Clear' if target_lang == 'en' else 'Очистити'}</button>
   </div>
 
+  <div class="quest-readiness" id="questReadiness">
+    <div class="quest-readiness-head">
+      <span>{'Questionnaire readiness' if target_lang == 'en' else 'Готовність анкети'}</span>
+      <span class="quest-readiness-score"><span id="progressText">0 / 0</span> · <span id="progressPct">0%</span></span>
+    </div>
+    <div class="impact-bar" aria-hidden="true">
+      <div class="impact-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="quest-readiness-critical" id="readinessCriticalText">
+      {'Pick a disease to start.' if target_lang == 'en' else 'Оберіть хворобу, щоб почати.'}
+    </div>
+  </div>
+
   <!-- Early-paint warmup: a tiny synchronous script that runs before the
        module-script below. Populates dropdowns from a localStorage cache
        (written on the previous successful boot) so repeat visitors see
@@ -2232,35 +2245,6 @@ def render_try(
     </section>
 
     <aside class="quest-side">
-      <div class="quest-impact-card">
-        <h3>{'Plan impact' if target_lang == 'en' else 'Імпакт на план'}</h3>
-        <div class="impact-progress">
-          <div class="impact-bar">
-            <div class="impact-bar-fill" id="progressFill"></div>
-          </div>
-          <div class="impact-stats">
-            <span id="progressText">0 / 0</span>
-            <span class="impact-pct" id="progressPct">0%</span>
-          </div>
-        </div>
-        <div class="impact-section" id="impactMissingCritical">
-          <h4>⚠️ {'Critical fields without an answer' if target_lang == 'en' else 'Критичні поля без відповіді'}</h4>
-          <ul></ul>
-        </div>
-        <div class="impact-section" id="impactRedflags">
-          <h4>🚩 {'Red flags triggered' if target_lang == 'en' else 'Red flags активовано'}</h4>
-          <ul></ul>
-        </div>
-        <div class="impact-section" id="impactSelected">
-          <h4>📋 {'Current default' if target_lang == 'en' else 'Поточний default'}</h4>
-          <p id="impactSelectedText">—</p>
-        </div>
-        <div class="impact-section" id="impactWarnings" hidden>
-          <h4>⚙️ Engine warnings</h4>
-          <ul></ul>
-        </div>
-      </div>
-
       <div class="quest-build-card" id="buildCard">
         <div class="build-card-head">
           <h3>{'Build' if target_lang == 'en' else 'Збірка'}</h3>
@@ -2414,11 +2398,7 @@ const modeJsonBtn = document.getElementById('modeJsonBtn');
 const progressFill = document.getElementById('progressFill');
 const progressText = document.getElementById('progressText');
 const progressPct = document.getElementById('progressPct');
-const impactMissingCritical = document.getElementById('impactMissingCritical');
-const impactRedflags = document.getElementById('impactRedflags');
-const impactSelected = document.getElementById('impactSelected');
-const impactSelectedText = document.getElementById('impactSelectedText');
-const impactWarnings = document.getElementById('impactWarnings');
+const readinessCriticalText = document.getElementById('readinessCriticalText');
 const coreVersionEl = document.getElementById('coreVersion');
 const diseaseVersionEl = document.getElementById('diseaseVersion');
 const cacheStateEl = document.getElementById('cacheState');
@@ -3399,20 +3379,13 @@ function renderWhatIfMarks(results) {{
   }}
 }}
 
-// Local-only impact panel update — runs WITHOUT Pyodide so form interaction
-// stays snappy. Computes progress + missing critical fields directly from
-// the questionnaire schema. Engine-dependent sections (red flags, indication)
-// show "click Generate" placeholders. Replaces the auto-fired runLivePreview
-// path which was costing 4–5 s per keystroke once KB grew past ~30 diseases.
+// Local-only readiness update — runs WITHOUT Pyodide so form interaction
+// stays snappy. It only keeps the essential pre-generation signal visible:
+// completion progress and missing critical fields.
 function updateImpactPanelLocal() {{
   if (!activeQuest) {{
     setProgress(0, 0);
-    impactMissingCritical.querySelector('ul').innerHTML = '';
-    impactRedflags.querySelector('ul').innerHTML =
-      '<li class="muted">{"Click «Generate» to see red flags" if target_lang == "en" else "Натисни «Згенерувати», щоб побачити red flags"}</li>';
-    impactSelectedText.innerHTML =
-      '<span class="muted">{"— pick a disease and fill the form —" if target_lang == "en" else "— оберіть хворобу і заповніть форму —"}</span>';
-    impactWarnings.hidden = true;
+    setReadinessCritical([]);
     return;
   }}
   let total = 0, filled = 0;
@@ -3429,17 +3402,7 @@ function updateImpactPanelLocal() {{
     }}
   }}
   setProgress(filled, total);
-  const ul = impactMissingCritical.querySelector('ul');
-  ul.innerHTML = missing.length
-    ? missing.map(m =>
-        `<li><strong>${{escHtml(m.label)}}</strong> <span class="muted">(${{escHtml(m.group)}})</span></li>`
-      ).join('')
-    : '<li class="muted">{"All critical fields filled ✓" if target_lang == "en" else "Усі critical поля заповнені ✓"}</li>';
-  impactRedflags.querySelector('ul').innerHTML =
-    '<li class="muted">{"Click «Generate» to see red flags" if target_lang == "en" else "Натисни «Згенерувати», щоб побачити red flags"}</li>';
-  impactSelectedText.innerHTML =
-    '<span class="muted">{"Click «Generate» to see the recommended Indication" if target_lang == "en" else "Натисни «Згенерувати», щоб побачити рекомендований Indication"}</span>';
-  impactWarnings.hidden = true;
+  setReadinessCritical(missing);
 }}
 
 function setProgress(filled, total) {{
@@ -3449,63 +3412,31 @@ function setProgress(filled, total) {{
   progressFill.style.width = `${{pct}}%`;
 }}
 
+function setReadinessCritical(missing) {{
+  if (!readinessCriticalText) return;
+  if (!activeQuest) {{
+    readinessCriticalText.textContent = '{"Pick a disease to start." if target_lang == "en" else "Оберіть хворобу, щоб почати."}';
+    readinessCriticalText.dataset.kind = 'idle';
+    return;
+  }}
+  if (!missing || !missing.length) {{
+    readinessCriticalText.textContent = '{"Critical fields filled ✓" if target_lang == "en" else "Критичні поля заповнені ✓"}';
+    readinessCriticalText.dataset.kind = 'ok';
+    return;
+  }}
+  const preview = missing.slice(0, 2).map(m => m.label).join(', ');
+  const extra = missing.length > 2 ? ' +' + (missing.length - 2) : '';
+  readinessCriticalText.textContent = '{"Missing critical fields:" if target_lang == "en" else "Бракує критичних полів:"} ' + preview + extra;
+  readinessCriticalText.dataset.kind = 'warn';
+}}
+
 function updateImpactPanel(result) {{
   if (!result) {{
-    impactMissingCritical.querySelector('ul').innerHTML = '';
-    impactRedflags.querySelector('ul').innerHTML = '';
-    impactSelectedText.textContent = '—';
-    impactWarnings.hidden = true;
+    updateImpactPanelLocal();
     return;
   }}
   setProgress(result.filled_count, result.total_questions);
-
-  const miss = result.missing_critical || [];
-  impactMissingCritical.querySelector('ul').innerHTML = miss.length
-    ? miss.map(m => `<li><strong>${{escHtml(m.label)}}</strong> <span class="muted">(${{escHtml(m.group)}})</span></li>`).join('')
-    : '<li class="muted">{"All critical fields filled ✓" if target_lang == "en" else "Усі critical поля заповнені ✓"}</li>';
-
-  const rfs = result.fired_redflags || [];
-  const rfDetail = result.fired_redflags_detail || [];
-  // Build detail-keyed map so we can join id -> {{definition, sources}}
-  const detailById = {{}};
-  for (const d of rfDetail) detailById[d.id] = d;
-
-  const dirEmoji = {{
-    'hold': '🛑', 'intensify': '⚡', 'de-escalate': '🔻', 'investigate': '🔍'
-  }};
-
-  impactRedflags.querySelector('ul').innerHTML = rfs.length
-    ? rfs.map(r => {{
-        const d = detailById[r] || {{}};
-        const defn = d.definition_ua || d.definition || '';
-        const dir = d.clinical_direction || '';
-        const emoji = dirEmoji[dir] || '';
-        const sources = (d.sources || []).map(
-          s => `<span class="rf-src-chip">${{escHtml(s)}}</span>`
-        ).join('');
-        return `<li class="rf-fired-item">
-          <div class="rf-fired-head"><code>${{escHtml(r)}}</code> ${{emoji}}
-            <span class="rf-dir rf-dir-${{escHtml(dir)}}">${{escHtml(dir)}}</span></div>
-          ${{defn ? `<div class="rf-fired-defn">${{escHtml(defn)}}</div>` : ''}}
-          ${{sources ? `<div class="rf-fired-srcs">${{sources}}</div>` : ''}}
-        </li>`;
-      }}).join('')
-    : '<li class="muted">{"No RedFlag triggered yet" if target_lang == "en" else "Жодного RedFlag поки не активовано"}</li>';
-
-  impactSelectedText.innerHTML = result.would_select_indication
-    ? `<code>${{escHtml(result.would_select_indication)}}</code>`
-    : '{"— (not enough data to choose)" if target_lang == "en" else "— (бракує даних для вибору)"}';
-
-  if ((result.warnings || []).length) {{
-    impactWarnings.hidden = false;
-    impactWarnings.querySelector('ul').innerHTML =
-      result.warnings.map(w => `<li>${{escHtml(w)}}</li>`).join('');
-  }} else {{
-    impactWarnings.hidden = true;
-  }}
-  // ready_to_generate is advisory — don't block the button on it; the
-  // user can still try to generate even with missing critical fields
-  // and the engine will surface the gaps.
+  setReadinessCritical(result.missing_critical || []);
 }}
 
 // ── Bundle lazy-load (CSD-6E + CSD-9C) ────────────────────────────────────
