@@ -348,6 +348,83 @@ def _walk_profile_ids(value: Any) -> tuple[set[str], set[str]]:
     return biomarker_ids, drug_ids
 
 
+_NON_BLOCKING_UNSUPPORTED_HINTS = (
+    "disease",
+    "diagnosis",
+    "dis-*",
+    "imaging",
+    "performance status",
+    "metric",
+    "treatment modality",
+    "modality",
+    "drug class",
+    "class mentioned",
+    "class",
+    "no specific",
+    "non-specific",
+    "not a drug/biomarker",
+    "not a biomarker/drug",
+    "not drugs/biomarkers",
+    "not biomarkers/drugs",
+    "not mappable",
+    "mapped separately",
+    "combined phrasing",
+    "not a distinct vocabulary entry",
+    "captured as bio-",
+)
+
+
+_NON_BLOCKING_BIOMARKER_MENTIONS = {
+    "cdx2",
+    "ck7",
+    "ck19",
+    "ck20",
+    "gata3",
+    "heppar1",
+    "ki67",
+    "ki 67",
+    "microsatellite stable",
+    "mss",
+    "napsin",
+    "napsin a",
+    "p40",
+    "p53",
+    "p63",
+    "pax8",
+    "smad4",
+    "ttf1",
+    "ttf 1",
+    "ttf-1",
+    "wt1",
+}
+
+
+def _is_non_blocking_biomarker_mention(mention: str) -> bool:
+    norm = _normalize_term(mention)
+    compact = re.sub(r"[^a-z0-9]+", "", norm)
+    if norm in _NON_BLOCKING_BIOMARKER_MENTIONS or compact in _NON_BLOCKING_BIOMARKER_MENTIONS:
+        return True
+    if "met" in norm and ("exon 14" in norm or "exon14" in norm):
+        return True
+    return False
+
+
+def _is_blocking_unsupported_mention(item: dict[str, str]) -> bool:
+    text = str(item.get("text") or "").strip()
+    haystack = " ".join(
+        str(item.get(key) or "").casefold()
+        for key in ("type", "kind", "category", "reason", "note", "text")
+    )
+    upper = text.upper()
+    if upper.startswith("BIO-") or upper.startswith("DRUG-"):
+        return True
+    if _is_non_blocking_biomarker_mention(text):
+        return False
+    if any(hint in haystack for hint in _NON_BLOCKING_UNSUPPORTED_HINTS):
+        return False
+    return any(token in haystack for token in ("biomarker", "drug", "medicine", "preparat"))
+
+
 def _validate_extracted_case(extraction: dict[str, Any], patient: dict[str, Any]) -> InputValidation:
     vocab = _clinical_vocabulary()
     unknown_biomarkers: set[str] = set()
@@ -358,6 +435,8 @@ def _validate_extracted_case(extraction: dict[str, Any], patient: dict[str, Any]
     unknown_drugs.update(sorted(profile_drugs - vocab.drug_ids))
 
     for mention in extraction.get("mentioned_biomarkers") or []:
+        if _is_non_blocking_biomarker_mention(str(mention)):
+            continue
         if not _known_term(
             str(mention),
             ids=vocab.biomarker_ids,
@@ -375,15 +454,22 @@ def _validate_extracted_case(extraction: dict[str, Any], patient: dict[str, Any]
         ):
             unknown_drugs.add(str(mention))
 
-    unsupported = tuple(
+    unsupported_items = tuple(
         item for item in (extraction.get("unsupported_mentions") or [])
         if isinstance(item, dict) and str(item.get("text") or "").strip()
+    )
+    unsupported = tuple(item for item in unsupported_items if _is_blocking_unsupported_mention(item))
+    unsupported_warnings = tuple(
+        f"Non-blocking unsupported mention: {item.get('text')}"
+        for item in unsupported_items
+        if item not in unsupported
     )
     return InputValidation(
         ok=not unknown_biomarkers and not unknown_drugs and not unsupported,
         unknown_biomarkers=tuple(sorted(unknown_biomarkers)),
         unknown_drugs=tuple(sorted(unknown_drugs)),
         unsupported_mentions=unsupported,
+        warnings=unsupported_warnings,
     )
 
 
@@ -638,7 +724,10 @@ def extract_case(case_text: str, *, locale: str = "uk") -> dict[str, Any]:
         "uncertainty in missing_profile_fields. Only map biomarkers and drugs "
         "to the supplied OpenOnco vocabulary. If the user mentions a biomarker "
         "or drug that is not in the vocabulary, do not invent an ID and list it "
-        "in unsupported_mentions. Return strict JSON only."
+        "in unsupported_mentions. If a combined clinical phrase is fully covered "
+        "by separate vocabulary entries, such as MMR retained plus MSS, map the "
+        "separate entries and do not list the combined phrase as unsupported. "
+        "Return strict JSON only."
     )
     user = json.dumps(
         {
@@ -988,7 +1077,7 @@ def answer_clinical_question(case_text: str, *, locale: str = "uk") -> dict[str,
         "warnings": engine.warnings[:20],
         "error": engine.error,
     }
-    answer["input_validation"] = {"ok": True}
+    answer["input_validation"] = {"ok": True, "warnings": list(validation.warnings)}
     return answer
 
 

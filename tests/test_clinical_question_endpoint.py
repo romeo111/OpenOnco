@@ -144,6 +144,115 @@ def test_pancreatic_case_overrides_erroneous_gastric_extraction(monkeypatch):
     assert out["patient_profile"]["disease"]["id"] == "DIS-PDAC"
 
 
+def test_lineage_ihc_and_captured_met_ex14_do_not_block(monkeypatch):
+    extraction = {
+        "case_summary": "Metastatic lung adenocarcinoma with EGFR exon 19 deletion.",
+        "clinical_question": "First line",
+        "answer_options": [],
+        "patient_profile_json": json.dumps(
+            {
+                "patient_id": "TEST-NSCLC-IHC",
+                "disease": {"id": "DIS-NSCLC"},
+                "line_of_therapy": 1,
+                "biomarkers": {
+                    "BIO-EGFR-MUTATION": "exon 19 deletion",
+                    "BIO-MET": "not detected",
+                },
+            }
+        ),
+        "mentioned_biomarkers": ["TTF-1", "Napsin A", "p40", "MET exon14"],
+        "mentioned_drugs": [],
+        "unsupported_mentions": [
+            {
+                "text": "MET exon14",
+                "reason": "Vocabulary contains MET alterations (BIO-MET) but not a specific MET exon 14 skipping biomarker term; captured as BIO-MET with detail.",
+            },
+            {"text": "TTF-1", "reason": "Not present as a biomarker/IHC item in provided OpenOnco vocabulary."},
+            {"text": "Napsin A", "reason": "Not present as a biomarker/IHC item in provided OpenOnco vocabulary."},
+            {"text": "p40", "reason": "Not present as a biomarker/IHC item in provided OpenOnco vocabulary."},
+        ],
+        "missing_profile_fields": [],
+        "confidence_notes": [],
+    }
+    engine = cq.EngineSummary(mode="treatment", ok=True, payload={"tracks": []}, warnings=[])
+
+    monkeypatch.setattr(cq, "extract_case", lambda case_text, locale="uk": extraction)
+    monkeypatch.setattr(cq, "run_engine", lambda patient: engine)
+    monkeypatch.setattr(
+        cq,
+        "compose_answer",
+        lambda **kwargs: {
+            "status": "answered",
+            "direct_answer": "ok",
+            "selected_options": [],
+            "rationale": [],
+            "clarifying_questions": [],
+            "engine_limitations": [],
+            "safety_note": cq.DISCLAIMER_UK,
+            "confidence": "medium",
+        },
+    )
+
+    out = cq.answer_clinical_question("lung adenocarcinoma ttf-1 napsin p40 met exon14", locale="uk")
+
+    assert out["status"] == "answered"
+    assert out["input_validation"]["ok"] is True
+    assert out["input_validation"]["warnings"]
+
+
+def test_combined_mmr_mss_phrase_does_not_block(monkeypatch):
+    extraction = {
+        "case_summary": "Gastric cancer, MMR retained / MSS.",
+        "clinical_question": "First line",
+        "answer_options": [],
+        "patient_profile_json": json.dumps(
+            {
+                "patient_id": "TEST-GASTRIC-MMR-MSS",
+                "disease": {"id": "DIS-GASTRIC"},
+                "line_of_therapy": 1,
+                "biomarkers": {
+                    "BIO-DMMR-IHC": "retained",
+                    "BIO-MSI-STATUS": "MSS",
+                },
+            }
+        ),
+        "mentioned_biomarkers": ["MMR", "MSS"],
+        "mentioned_drugs": [],
+        "unsupported_mentions": [
+            {
+                "text": "MMR retained / MSS",
+                "reason": "Mapped separately to BIO-DMMR-IHC (MMR) and BIO-MSI-STATUS (MSS); the combined phrasing itself is not a distinct vocabulary entry.",
+            }
+        ],
+        "missing_profile_fields": [],
+        "confidence_notes": [],
+    }
+    engine = cq.EngineSummary(mode="treatment", ok=True, payload={"tracks": []}, warnings=[])
+
+    monkeypatch.setattr(cq, "extract_case", lambda case_text, locale="uk": extraction)
+    monkeypatch.setattr(cq, "run_engine", lambda patient: engine)
+    monkeypatch.setattr(
+        cq,
+        "compose_answer",
+        lambda **kwargs: {
+            "status": "answered",
+            "direct_answer": "ok",
+            "selected_options": [],
+            "rationale": [],
+            "clarifying_questions": [],
+            "engine_limitations": [],
+            "safety_note": cq.DISCLAIMER_UK,
+            "confidence": "medium",
+        },
+    )
+
+    out = cq.answer_clinical_question("gastric cancer MMR retained / MSS", locale="uk")
+
+    assert out["status"] == "answered"
+    assert out["input_validation"]["ok"] is True
+    assert out["input_validation"]["warnings"]
+
+
 def test_handle_json_request_serializes_errors(monkeypatch):
     monkeypatch.setattr(
         cq,
