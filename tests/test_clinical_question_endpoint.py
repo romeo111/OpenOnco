@@ -253,6 +253,20 @@ def test_combined_mmr_mss_phrase_does_not_block(monkeypatch):
     assert out["input_validation"]["warnings"]
 
 
+def test_descriptive_idh_wildtype_does_not_block_validation():
+    extraction = {
+        "mentioned_biomarkers": ["IDH-wildtype"],
+        "mentioned_drugs": [],
+        "unsupported_mentions": [],
+    }
+    patient = {"disease": {"id": "DIS-GBM"}, "biomarkers": ["IDH-wildtype"]}
+
+    validation = cq._validate_extracted_case(extraction, patient)
+
+    assert validation.ok is True
+    assert validation.unknown_biomarkers == ()
+
+
 def test_crc_metastatic_state_routes_to_metastatic_algorithm():
     patient = {
         "patient_id": "TEST-CRC-METASTATIC-ROUTE",

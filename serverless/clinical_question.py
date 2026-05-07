@@ -481,7 +481,13 @@ def _validate_extracted_case(extraction: dict[str, Any], patient: dict[str, Any]
     unknown_drugs: set[str] = set()
 
     profile_biomarkers, profile_drugs = _walk_profile_ids(patient)
-    unknown_biomarkers.update(sorted(profile_biomarkers - vocab.biomarker_ids))
+    unknown_biomarkers.update(
+        sorted(
+            biomarker
+            for biomarker in (profile_biomarkers - vocab.biomarker_ids)
+            if not _is_non_blocking_biomarker_mention(biomarker)
+        )
+    )
     unknown_drugs.update(sorted(profile_drugs - vocab.drug_ids))
 
     for mention in extraction.get("mentioned_biomarkers") or []:
