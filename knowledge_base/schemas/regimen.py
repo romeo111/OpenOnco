@@ -18,12 +18,83 @@ that author `phases:` explicitly are left as-is — `components` and
 `phases` are independent on input; the auto-wrap is one-way only.
 """
 
+import re
 from typing import Literal, Optional
 
 from pydantic import Field, field_validator, model_validator
 
 from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
 from .base import Base, UkraineRegistration
+
+
+_LEGACY_DRUG_ID_ALIASES = {
+    "DRG-FLUOROURACIL": "DRUG-5-FLUOROURACIL",
+    "DRG-RADIUM223": "DRUG-RADIUM-223",
+}
+
+
+def _normalize_legacy_drug_id(drug_id: object) -> object:
+    if not isinstance(drug_id, str):
+        return drug_id
+    if drug_id in _LEGACY_DRUG_ID_ALIASES:
+        return _LEGACY_DRUG_ID_ALIASES[drug_id]
+    if drug_id.startswith("DRG-"):
+        return f"DRUG-{drug_id[4:]}"
+    return drug_id
+
+
+def _legacy_name_from_id(regimen_id: object) -> str:
+    if not isinstance(regimen_id, str) or not regimen_id:
+        return "Legacy regimen"
+    label = regimen_id
+    if label.startswith("REG-"):
+        label = label[4:]
+    return re.sub(r"[-_]+", " ", label).strip() or regimen_id
+
+
+def normalize_legacy_regimen_payload(raw: object) -> object:
+    """Normalize pre-schema regimen YAML into the canonical in-memory shape.
+
+    Older generated regimen files used `agents:` instead of `components:`,
+    `DRG-*` drug IDs, `total_planned_cycles`, and often lacked `name`. Keep
+    that content loadable while preserving unresolved references for genuinely
+    missing Drug entities.
+    """
+    if not isinstance(raw, dict):
+        return raw
+
+    normalized = dict(raw)
+
+    if not normalized.get("name"):
+        normalized["name"] = _legacy_name_from_id(normalized.get("id"))
+
+    if "total_cycles" not in normalized and "total_planned_cycles" in normalized:
+        normalized["total_cycles"] = normalized.get("total_planned_cycles")
+    if "total_cycles" in normalized and normalized.get("total_cycles") is not None:
+        normalized["total_cycles"] = str(normalized.get("total_cycles"))
+
+    if not normalized.get("components") and isinstance(normalized.get("agents"), list):
+        components: list[dict] = []
+        for agent in normalized.get("agents") or []:
+            if not isinstance(agent, dict):
+                continue
+            comp = dict(agent)
+            comp["drug_id"] = _normalize_legacy_drug_id(comp.get("drug_id"))
+            components.append(comp)
+        normalized["components"] = components
+    else:
+        components = []
+        for comp in normalized.get("components") or []:
+            if not isinstance(comp, dict):
+                components.append(comp)
+                continue
+            new_comp = dict(comp)
+            new_comp["drug_id"] = _normalize_legacy_drug_id(new_comp.get("drug_id"))
+            components.append(new_comp)
+        if components:
+            normalized["components"] = components
+
+    return normalized
 
 
 class RegimenComponent(Base):
@@ -135,6 +206,11 @@ class Regimen(Base):
     @classmethod
     def _migrate_signoffs(cls, v):
         return _migrate_int_signoffs(v)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_legacy_shape(cls, v):
+        return normalize_legacy_regimen_payload(v)
 
     @model_validator(mode="after")
     def _auto_wrap_legacy_components(self) -> "Regimen":

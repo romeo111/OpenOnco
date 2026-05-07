@@ -778,3 +778,47 @@ Implementation follow-up completed in this branch:
 - Implemented esophageal D1-thin routing for already-authored A1 indications:
   `IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO` and
   `IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO`.
+
+### 13.10 V1 validation-debt slice completed
+
+The first V1 slice is implementation health, not new clinical KB content.
+It addresses the old generated regimen shape that blocked full KB loading.
+
+Implemented:
+
+- `Regimen` schema now accepts legacy `agents:` payloads and normalizes them
+  to canonical `components:` in memory.
+- Legacy `DRG-*` component IDs are mapped to current `DRUG-*` IDs, including
+  special cases where the canonical ID is not a direct prefix replacement:
+  `DRG-FLUOROURACIL` -> `DRUG-5-FLUOROURACIL` and
+  `DRG-RADIUM223` -> `DRUG-RADIUM-223`.
+- Legacy `total_planned_cycles` is copied to `total_cycles`.
+- Regimens missing `name` receive a deterministic fallback from their `REG-*`
+  ID so they can materialize in Plans.
+- Loader stores the normalized in-memory payload, so downstream engine and
+  render code see canonical `components`.
+- Legacy free-text `mandatory_supportive_care` entries now produce contract
+  warnings instead of ref errors; real `SUP-*` IDs remain strict references.
+
+Validation impact:
+
+| Metric | Before | After |
+|---|---:|---:|
+| Global schema errors | 91 | 65 |
+| Global ref errors | 179 | 154 |
+| Contract errors | 0 | 0 |
+| Regimen schema errors | 26 | 0 |
+| Regimen ref errors | 22 | 6 |
+
+Remaining regimen-specific blockers are now concrete missing Drug entities:
+`DRUG-CABAZITAXEL`, `DRUG-MESNA`, `DRUG-NAL-IRI`,
+`DRUG-MITOMYCIN-C`, and `DRUG-PAZOPANIB`.
+
+Next V1 slice:
+
+1. Add or reconcile those five Drug entities with source-aware clinical
+   metadata.
+2. Then attack indication ref errors, because 90 of the remaining 154 ref
+   errors are in `indications/`.
+3. Keep PWA work behind this gate; installability should not make a partially
+   valid KB feel production-ready.

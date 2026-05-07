@@ -16,6 +16,7 @@ import yaml
 from pydantic import ValidationError
 
 from knowledge_base.schemas import ENTITY_BY_DIR
+from knowledge_base.schemas.regimen import normalize_legacy_regimen_payload
 
 
 # Which fields on which entity types carry IDs that must resolve elsewhere.
@@ -320,6 +321,9 @@ def _load_content_impl(
                 result.schema_errors.append((path, "Root is not a mapping"))
                 continue
 
+            if entity_dir == "regimens":
+                raw = normalize_legacy_regimen_payload(raw)
+
             try:
                 model.model_validate(raw)
             except ValidationError as e:
@@ -400,6 +404,13 @@ def _load_content_impl(
             for i, comp in enumerate(data.get("components") or []):
                 check_ref(path, comp.get("drug_id"), "drugs", f"components[{i}].drug_id")
             for sid in data.get("mandatory_supportive_care") or []:
+                if isinstance(sid, str) and not sid.startswith("SUP-"):
+                    result.contract_warnings.append((
+                        path,
+                        "mandatory_supportive_care[] carries legacy free text; "
+                        f"convert to a SUP-* SupportiveCare entity when authored: {sid!r}",
+                    ))
+                    continue
                 check_ref(path, sid, "supportive_care", "mandatory_supportive_care[]")
             # PR4 — dose_adjustments[].source_refs[] are SRC-* citations.
             # Drafts skip resolution because authors leave SRC-TODO placeholders.

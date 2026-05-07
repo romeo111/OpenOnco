@@ -50,6 +50,19 @@ A full KB load with the bundled Python runtime produced:
 
 Important nuance: filtering the validator output to the newly changed GI-2 KB files found no schema errors, no referential errors, no contract errors, and no contract warnings for those files. The latest GI-2 files are not the source of the current global validation debt.
 
+V1 compatibility follow-up in this branch reduced the global validation debt without adding new clinical KB content:
+
+| Check | Before V1 compatibility | After V1 compatibility |
+|---|---:|---:|
+| Schema errors | 91 | 65 |
+| Referential errors | 179 | 154 |
+| Contract errors | 0 | 0 |
+| Contract warnings | 217 | 238 |
+| Regimen schema errors | 26 | 0 |
+| Regimen referential errors | 22 | 6 |
+
+The warning increase is intentional: legacy free-text `mandatory_supportive_care` entries are now reported as authoring warnings instead of blocking as unresolved SupportiveCare IDs. True `SUP-*` typos still fail referential integrity.
+
 The existing debt is still a release-management problem. A PWA or service worker will make stale/invalid KB states more persistent on client devices, so the deploy gate should distinguish:
 
 - block deploy on schema/ref errors in release-scoped content,
@@ -79,6 +92,8 @@ This does not change the PWA architecture recommendation. It reinforces it: the 
 Follow-up implemented in this branch: the loader now rejects Algorithms that route to active treatment tracks with `recommended_regimen: null`, unless the Indication uses an explicit non-regimen `plan_track`. Existing no-regimen routed records were reclassified as `surveillance`, `local_therapy`, or `transplant` as appropriate.
 
 Second follow-up implemented: `ALGO-ESOPH-METASTATIC-1L` now exposes the already-authored A1 indications for ESCC chemo-sparing ipi+nivo and HER2-positive EAC/GEJ Siewert I trastuzumab+chemo. Gastric FGFR2b remains intentionally unrouted because its indication still has no regimen.
+
+Third follow-up implemented: the loader and Regimen schema now normalize legacy generated regimen YAML in memory (`agents:` -> `components:`, `DRG-*` -> `DRUG-*`, `total_planned_cycles` -> `total_cycles`, and fallback names from `REG-*` IDs). This keeps old source-controlled content ingestible while still surfacing genuinely missing Drug entities as ref errors.
 
 ## PWA implications
 
@@ -110,11 +125,12 @@ The right PWA role is: offline-capable viewer/generator for synthetic or locally
 ## Recommended next steps
 
 1. Add a release gate report that fails on schema/ref errors and prints a short per-directory summary.
-2. Split generated docs refreshes from clinical KB PRs where practical.
-3. Add `manifest.webmanifest`, install icons, and minimal PWA metadata after validation debt is under control.
-4. Refactor `try.html` into external JS modules while keeping the static GitHub Pages deployment model.
-5. Add a visible build/version panel in the try page: core bundle hash, disease bundle hash, release date, and offline/cache status.
-6. For future contributor editing, create a "draft contribution" flow that exports YAML/patches for PR review instead of writing canonical KB from the PWA.
+2. Add the five missing Drug entities still referenced by now-loadable regimens: `DRUG-CABAZITAXEL`, `DRUG-MESNA`, `DRUG-NAL-IRI`, `DRUG-MITOMYCIN-C`, and `DRUG-PAZOPANIB`.
+3. Split generated docs refreshes from clinical KB PRs where practical.
+4. Add `manifest.webmanifest`, install icons, and minimal PWA metadata after validation debt is under control.
+5. Refactor `try.html` into external JS modules while keeping the static GitHub Pages deployment model.
+6. Add a visible build/version panel in the try page: core bundle hash, disease bundle hash, release date, and offline/cache status.
+7. For future contributor editing, create a "draft contribution" flow that exports YAML/patches for PR review instead of writing canonical KB from the PWA.
 
 ## Decision
 
