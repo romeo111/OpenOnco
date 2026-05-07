@@ -1774,6 +1774,11 @@ def render_ask(*, target_lang: str = "en") -> str:
     empty_msg = "Paste a clinical situation first." if is_en else "Спочатку встав клінічну ситуацію."
     loading_msg = "Structuring case and running engine..." if is_en else "Структурую кейс і запускаю engine..."
     error_msg = "Request failed" if is_en else "Запит не вдався"
+    static_endpoint_msg = (
+        "This public page is static. Deploy the server adapter and paste its API URL in Endpoint; local dev can use /api/clinical-question."
+        if is_en else
+        "Ця публічна сторінка статична. Розгорніть серверний адаптер і вставте його API URL в Endpoint; локально можна використовувати /api/clinical-question."
+    )
     limit_msg = (
         "You have used all 3 free-text questions in this browser."
         if is_en else
@@ -1802,6 +1807,7 @@ def render_ask(*, target_lang: str = "en") -> str:
         [{"title": title, "text": text} for title, text in examples],
         ensure_ascii=False,
     ).replace("</", "<\\/")
+    static_endpoint_msg_json = json.dumps(static_endpoint_msg, ensure_ascii=False)
     return f"""<!DOCTYPE html>
 <html lang="{'en' if is_en else 'uk'}">
 <head>
@@ -1846,8 +1852,9 @@ def render_ask(*, target_lang: str = "en") -> str:
     <section class="ask-panel">
       <label class="qt-label">
         {endpoint_label}
-        <input id="endpointInput" value="/api/clinical-question" spellcheck="false">
+        <input id="endpointInput" value="" placeholder="/api/clinical-question" spellcheck="false">
       </label>
+      <p id="endpointHint" class="ask-muted">{static_endpoint_msg}</p>
       <label class="qt-label" style="margin-top:12px">
         {case_label}
         <textarea id="caseText" spellcheck="true" placeholder="{html.escape(placeholder)}"></textarea>
@@ -1890,8 +1897,11 @@ def render_ask(*, target_lang: str = "en") -> str:
   const examplesRoot = document.getElementById('askExamples');
   const planLinkWrap = document.getElementById('planGeneratorLinkWrap');
   const planLink = document.getElementById('planGeneratorLink');
+  const DEFAULT_ENDPOINT = '/api/clinical-question';
+  const STATIC_ENDPOINT_MSG = {static_endpoint_msg_json};
   const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
   if (configured) endpointInput.value = configured;
+  else if (['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) endpointInput.value = DEFAULT_ENDPOINT;
 
   function getUserId() {{
     let id = localStorage.getItem(USER_KEY);
@@ -2078,7 +2088,11 @@ def render_ask(*, target_lang: str = "en") -> str:
     result.textContent = '';
     planLinkWrap.classList.remove('is-visible');
     try {{
-      const endpoint = endpointInput.value.trim() || '/api/clinical-question';
+      const endpoint = endpointInput.value.trim();
+      if (!endpoint) {{
+        status.textContent = STATIC_ENDPOINT_MSG;
+        return;
+      }}
       const payload = await postClinicalQuestion(endpoint, {{ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() }});
       if (typeof payload.questions_used === 'number') setCount(payload.questions_used);
       else setCount(getCount() + 1);

@@ -62,8 +62,9 @@
     <section class="ask-panel">
       <label class="qt-label">
         Endpoint
-        <input id="endpointInput" value="/api/clinical-question" spellcheck="false">
+        <input id="endpointInput" value="" placeholder="/api/clinical-question" spellcheck="false">
       </label>
+      <p id="endpointHint" class="ask-muted">Ця публічна сторінка статична. Розгорніть серверний адаптер і вставте його API URL в Endpoint; локально можна використовувати /api/clinical-question.</p>
       <label class="qt-label" style="margin-top:12px">
         Клінічна ситуація
         <textarea id="caseText" spellcheck="true" placeholder="62-річний пацієнт із метастатичним раком шлунка, HER2-негативний, MSS, PD-L1 CPS 25. Яка оптимальна перша лінія?"></textarea>
@@ -106,8 +107,11 @@
   const examplesRoot = document.getElementById('askExamples');
   const planLinkWrap = document.getElementById('planGeneratorLinkWrap');
   const planLink = document.getElementById('planGeneratorLink');
+  const DEFAULT_ENDPOINT = '/api/clinical-question';
+  const STATIC_ENDPOINT_MSG = "Ця публічна сторінка статична. Розгорніть серверний адаптер і вставте його API URL в Endpoint; локально можна використовувати /api/clinical-question.";
   const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
   if (configured) endpointInput.value = configured;
+  else if (['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) endpointInput.value = DEFAULT_ENDPOINT;
 
   function getUserId() {
     let id = localStorage.getItem(USER_KEY);
@@ -294,7 +298,11 @@
     result.textContent = '';
     planLinkWrap.classList.remove('is-visible');
     try {
-      const endpoint = endpointInput.value.trim() || '/api/clinical-question';
+      const endpoint = endpointInput.value.trim();
+      if (!endpoint) {
+        status.textContent = STATIC_ENDPOINT_MSG;
+        return;
+      }
       const payload = await postClinicalQuestion(endpoint, { case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() });
       if (typeof payload.questions_used === 'number') setCount(payload.questions_used);
       else setCount(getCount() + 1);
