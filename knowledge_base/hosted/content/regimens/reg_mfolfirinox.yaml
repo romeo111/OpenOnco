@@ -1,0 +1,159 @@
+# REG-MFOLFIRINOX — modified FOLFIRINOX per PRODIGE-24/CCTG PA.6
+# (Conroy 2018, NEJM). Distinct entity from REG-FOLFIRINOX because the
+# adjuvant protocol diverges from ACCORD-11 metastatic FOLFIRINOX in two
+# ways:
+#   1. Irinotecan reduced from 180 → 150 mg/m²
+#   2. 5-FU bolus omitted (CIV only)
+# Modeling these as a separate regimen lets the §17 adjuvant phase point
+# at the actual study protocol rather than carrying a "use modified
+# variant" caveat on REG-FOLFIRINOX.
+id: REG-MFOLFIRINOX
+name: "mFOLFIRINOX (modified FOLFIRINOX, PRODIGE-24 protocol)"
+name_ua: "mFOLFIRINOX (модифікований FOLFIRINOX, протокол PRODIGE-24)"
+alternate_names:
+  - "Modified FOLFIRINOX"
+  - "PRODIGE-24 adjuvant regimen"
+  - "CCTG PA.6 regimen"
+
+components:
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "85 mg/m²"
+    schedule: "IV day 1 every 14d"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m²"
+    schedule: "IV day 1"
+    route: IV
+  - drug_id: DRUG-IRINOTECAN
+    dose: "150 mg/m²"
+    schedule: "IV day 1 (reduced from 180 mg/m² of full FOLFIRINOX)"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "2400 mg/m² CIV over 46h (NO bolus — key modification vs full FOLFIRINOX)"
+    schedule: "Day 1-2 CIV"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "12 cycles (PRODIGE-24 adjuvant protocol — fixed duration, not until-progression)"
+
+toxicity_profile: severe
+
+premedication: ["5-HT3 + dexamethasone + atropine for cholinergic syndrome (irinotecan)"]
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "UGT1A1 *28/*28 homozygous"
+    modification: "Reduce irinotecan to 120 mg/m² (mFOLFIRINOX baseline already 150)"
+    rationale: "Severe neutropenia + diarrhea risk"
+    source_refs: [SRC-NCCN-PANCREATIC-2025]
+  - condition: "Bilirubin 1.5-3 ULN"
+    modification: "Reduce irinotecan 25-50%"
+    source_refs: [SRC-NCCN-PANCREATIC-2025]
+  - condition: "Bilirubin >3 ULN"
+    modification: "Hold irinotecan; consider gemcitabine-based adjuvant alternative"
+    source_refs: [SRC-NCCN-PANCREATIC-2025]
+  - condition: "Grade 3 diarrhea"
+    modification: "Loperamide intensive; reduce irinotecan and 5-FU 25% on next cycle"
+  - condition: "Grade 3+ neuropathy"
+    modification: "Hold or reduce oxaliplatin; complete cycles with 5-FU/LV/irinotecan if needed"
+  - condition: "Persistent grade 2+ neuropathy at cycle 6-8"
+    modification: "Discontinue oxaliplatin; continue 5-FU/LV/irinotecan to complete 12 cycles per PRODIGE-24"
+    rationale: "PRODIGE-24 allowed oxaliplatin discontinuation while preserving fluoropyrimidine + irinotecan backbone"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "All four components NSZU-funded; G-CSF primary prophylaxis recommended (febrile-neutropenia ~3% in mFOLFIRINOX vs ~10% in full FOLFIRINOX, but cumulative over 12 adjuvant cycles)."
+
+sources: [SRC-PRODIGE-24-CONROY-2018, SRC-NCCN-PANCREATIC-2025, SRC-ESMO-PANCREATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# mFOLFIRINOX is the standard adjuvant PDAC regimen for fit ECOG 0-1
+# patients post-resection. Lower-toxicity variant of FOLFIRINOX (no 5-FU
+# bolus, irinotecan 150 not 180) but cumulative 12-cycle adjuvant course
+# means oxaliplatin-induced neuropathy is the dominant late toxicity.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Оксаліплатин — занотовуйте інтенсивність; кумулятивна нейропатія за 12 циклів — основна причина припинення оксаліплатину"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+  - trigger_ua: "Чутливість до холоду, дискомфорт у горлі від холодного"
+    action_ua: "Очікувано перші 3-5 днів циклу — уникайте холодного"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-5"
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+  - trigger_ua: "Випадання волосся (на 2-3 тижні)"
+    action_ua: "Очікувано — волосся повертається після завершення курсу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+  - trigger_ua: "Помірна нудота, помірна діарея"
+    action_ua: "Приймайте призначені протиблювотні і лоперамід; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея — більше 6 разів на день, з кров'ю або сильним болем"
+    action_ua: "Подзвоніть у клініку того ж дня — іринотекан може спричиняти небезпечну діарею; потрібна корекція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C — особливо на 7-14 день циклу"
+    action_ua: "Подзвоніть у клініку того ж дня — ризик фебрильної нейтропенії накопичується протягом 12 циклів"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Поколювання стає сильним болем, заважає ходити або тримати дрібні предмети"
+    action_ua: "Подзвоніть у клініку того ж дня — нейропатія Grade 2+ потребує зниження або припинення оксаліплатину"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+  - trigger_ua: "Раптова виражена слабкість, тяжке зневоднення (запаморочення стоячи, мала кількість сечі)"
+    action_ua: "Звертайтесь у лікарню негайно — потрібна інфузійна терапія, можливо термінова"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки сепсису на тлі нейтропенії"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+
+last_reviewed: "2026-05-08"
+
+notes: >
+  PRODIGE-24/CCTG PA.6 (Conroy 2018, NEJM): modified FOLFIRINOX
+  (oxaliplatin 85, leucovorin 400, irinotecan 150 — REDUCED from 180 of
+  ACCORD-11 — and 5-FU 2400 mg/m² CIV over 46h with NO bolus) × 12 cycles
+  vs gemcitabine monotherapy adjuvant after R0/R1 resected PDAC (n=493).
+  Median DFS 21.6 vs 12.8 mo (HR 0.58, p<0.001); median OS 54.4 vs 35.0 mo
+  (HR 0.64). Grade 3-4 toxicity 75.9% (mFOLFIRINOX) vs 52.9% (gem) — higher
+  but tolerable in fit ECOG 0-1 patients. Established mFOLFIRINOX as the
+  preferred adjuvant standard, superseding gemcitabine monotherapy.
+
+  Two key modifications vs full FOLFIRINOX (REG-FOLFIRINOX): irinotecan
+  150 mg/m² (not 180) and 5-FU bolus OMITTED. These reduce mucositis and
+  cumulative febrile-neutropenia risk over the 12-cycle adjuvant course.
+notes_ua: >
+  PRODIGE-24/CCTG PA.6 (Conroy 2018, NEJM): модифікований FOLFIRINOX
+  (оксаліплатин 85, лейковорин 400, іринотекан 150 — ЗНИЖЕНО зі 180 в
+  ACCORD-11 — та 5-ФУ 2400 мг/м² CIV за 46 год БЕЗ болюсу) × 12 циклів
+  vs гемцитабін у монорежимі ад'ювантно після R0/R1 резекції PDAC (n=493).
+  Медіана БХВ 21.6 vs 12.8 міс (HR 0.58, p<0.001); медіана ЗВ 54.4 vs 35.0
+  міс (HR 0.64). Toxicity Grade 3-4 75.9% (mFOLFIRINOX) vs 52.9% (gem).
+  Встановив mFOLFIRINOX як ад'ювантний стандарт у фіт-пацієнтів ECOG 0-1
+  після резекції PDAC, замінивши гемцитабін у монорежимі.
+
+  Дві ключові модифікації vs повний FOLFIRINOX (REG-FOLFIRINOX):
+  іринотекан 150 мг/м² (не 180) і 5-ФУ болюс ВИДАЛЕНО. Знижують мукозит
+  і кумулятивну фебрильну нейтропенію за 12 ад'ювантних циклів.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
