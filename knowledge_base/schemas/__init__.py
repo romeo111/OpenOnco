@@ -19,10 +19,21 @@ from .diagnostic import (
 )
 from .disease import Disease
 from .drug import Drug
+from .drug_indication import (
+    DrugIndication,
+    RegulatoryLabelRecord,
+    ReimbursementRecord,
+)
 from .experimental_option import ExperimentalOption, ExperimentalTrial
 from .indication import Indication
 from .mdt_skill import MdtSkill
 from .monitoring import MonitoringSchedule
+from .modality import (
+    ModalityTiming,
+    RadiationDose,
+    RadiationModality,
+    SurgeryModality,
+)
 from .plan import (
     AccessMatrix,
     AccessMatrixRow,
@@ -54,6 +65,7 @@ from .test import Test
 ENTITY_BY_DIR: dict[str, type] = {
     "diseases": Disease,
     "drugs": Drug,
+    "drug_indications": DrugIndication,
     "regimens": Regimen,
     "indications": Indication,
     "biomarkers": Biomarker,
@@ -68,6 +80,8 @@ ENTITY_BY_DIR: dict[str, type] = {
     "workups": DiagnosticWorkup,
     "questionnaires": Questionnaire,
     "access_pathways": AccessPathway,
+    "surgery": SurgeryModality,
+    "radiation": RadiationModality,
     "mdt_skills": MdtSkill,
     "reviewers": ReviewerProfile,
 }
@@ -86,6 +100,7 @@ __all__ = [
     "DiagnosticWorkup",
     "Disease",
     "Drug",
+    "DrugIndication",
     "ENTITY_BY_DIR",
     "ExperimentalOption",
     "ExperimentalTrial",
@@ -93,6 +108,7 @@ __all__ = [
     "IHCPanel",
     "Indication",
     "MdtSkill",
+    "ModalityTiming",
     "MonitoringSchedule",
     "Plan",
     "PlanAnnotation",
@@ -101,15 +117,20 @@ __all__ = [
     "Question",
     "QuestionOption",
     "Questionnaire",
+    "RadiationDose",
+    "RadiationModality",
     "RedFlag",
     "Regimen",
     "RegimenComponent",
     "RegimenPhase",
     "RegulatoryApproval",
+    "RegulatoryLabelRecord",
+    "ReimbursementRecord",
     "ReviewerProfile",
     "ReviewerSignoff",
     "SignOffScope",
     "Source",
+    "SurgeryModality",
     "SupportiveCare",
     "SuspicionSnapshot",
     "Test",

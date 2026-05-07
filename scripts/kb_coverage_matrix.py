@@ -91,8 +91,11 @@ def main() -> int:
     inds = load_all("indications")
     rfs = load_all("redflags")
     drugs = load_all("drugs")
+    drug_inds = load_all("drug_indications")
     sources = load_all("sources")
     regimens = load_all("regimens")
+    surgery = load_all("surgery")
+    radiation = load_all("radiation")
     questionnaires = load_all("questionnaires")
     biomarkers = load_all("biomarkers")
     algorithms = load_all("algorithms")
@@ -181,7 +184,9 @@ def main() -> int:
 
     total_entities = (
         len(diseases) + len(bmas) + len(inds) + len(rfs) + len(drugs)
-        + len(sources) + len(regimens) + len(biomarkers) + len(algorithms)
+        + len(drug_inds) + len(sources) + len(regimens) + len(surgery)
+        + len(radiation) + len(questionnaires) + len(biomarkers)
+        + len(algorithms)
     )
 
     bmas_with_escat = sum(1 for b in bmas if b.get("escat_tier") in ESCAT_TIERS)
@@ -227,6 +232,28 @@ def main() -> int:
         if (d.get("regulatory_status", {}) or {})
             .get("ukraine_registration", {}).get("registered") is True
     )
+
+    drug_inds_label_known = sum(
+        1 for d in drug_inds
+        if d.get("label_status")
+        and d.get("label_status") != "unknown_pending_review"
+    )
+    drug_inds_reimb_known = sum(
+        1 for d in drug_inds
+        if d.get("reimbursement_status")
+        and d.get("reimbursement_status") != "unknown_pending_review"
+    )
+    drug_inds_unknown_label = len(drug_inds) - drug_inds_label_known
+    drug_inds_unknown_reimb = len(drug_inds) - drug_inds_reimb_known
+
+    surgery_with_sources = sum(
+        1 for s in surgery if s.get("source_refs") or s.get("sources")
+    )
+    radiation_with_sources = sum(
+        1 for r in radiation if r.get("source_refs") or r.get("sources")
+    )
+    surgery_without_sources = len(surgery) - surgery_with_sources
+    radiation_without_sources = len(radiation) - radiation_with_sources
 
     # ESCAT tier distribution
     escat_dist: Counter[str] = Counter()
@@ -278,7 +305,10 @@ def main() -> int:
     lines.append(f"| Indications | {len(inds)} |")
     lines.append(f"| Red flags | {len(rfs)} |")
     lines.append(f"| Drugs | {len(drugs)} |")
+    lines.append(f"| Drug indications | {len(drug_inds)} |")
     lines.append(f"| Regimens | {len(regimens)} |")
+    lines.append(f"| Surgery modalities | {len(surgery)} |")
+    lines.append(f"| Radiation modalities | {len(radiation)} |")
     lines.append(f"| Sources | {len(sources)} |")
     lines.append(f"| Biomarkers | {len(biomarkers)} |")
     lines.append(f"| Algorithms | {len(algorithms)} |")
@@ -304,6 +334,26 @@ def main() -> int:
     lines.append(f"| Sources current_as_of <365d | {src_recent} | {len(sources)} | {safe_pct(src_recent, len(sources))} |")
     lines.append(f"| Drugs UA-registered | {drugs_ua_registered} | {len(drugs)} | {safe_pct(drugs_ua_registered, len(drugs))} |")
     lines.append(f"| Drugs NSZU-reimbursed | {drugs_nszu} | {len(drugs)} | {safe_pct(drugs_nszu, len(drugs))} |")
+    lines.append(
+        "| Drug indications with known label status | "
+        f"{drug_inds_label_known} | {len(drug_inds)} | "
+        f"{safe_pct(drug_inds_label_known, len(drug_inds))} |"
+    )
+    lines.append(
+        "| Drug indications with known reimbursement status | "
+        f"{drug_inds_reimb_known} | {len(drug_inds)} | "
+        f"{safe_pct(drug_inds_reimb_known, len(drug_inds))} |"
+    )
+    lines.append(
+        "| Surgery modalities with source refs | "
+        f"{surgery_with_sources} | {len(surgery)} | "
+        f"{safe_pct(surgery_with_sources, len(surgery))} |"
+    )
+    lines.append(
+        "| Radiation modalities with source refs | "
+        f"{radiation_with_sources} | {len(radiation)} | "
+        f"{safe_pct(radiation_with_sources, len(radiation))} |"
+    )
     lines.append("")
 
     # ===== ESCAT distribution =====
@@ -419,6 +469,19 @@ def main() -> int:
     lines.append(f"- **{len(bmas_without_civic)}** BMAs without CIViC evidence_sources")
     lines.append(f"- **{len(inds_without_outcomes)}** indications without `expected_outcomes` block")
     lines.append(f"- **{len(rfs_without_sources)}** redflags without `sources` block")
+    lines.append(f"- **{drug_inds_unknown_label}** drug indications with unknown label status")
+    lines.append(
+        f"- **{drug_inds_unknown_reimb}** drug indications with unknown "
+        "reimbursement status"
+    )
+    lines.append(
+        f"- **{surgery_without_sources}** surgery modality records without "
+        "source refs"
+    )
+    lines.append(
+        f"- **{radiation_without_sources}** radiation modality records "
+        "without source refs"
+    )
     lines.append("")
 
     # ===== Footer =====
@@ -441,7 +504,12 @@ def main() -> int:
 
     OUT.write_text("\n".join(lines), encoding="utf-8")
     print(f"Wrote {OUT.relative_to(REPO_ROOT)}")
-    print(f"  diseases={len(diseases)}  BMA={len(bmas)}  IND={len(inds)}  RF={len(rfs)}  drugs={len(drugs)}  sources={len(sources)}")
+    print(
+        f"  diseases={len(diseases)}  BMA={len(bmas)}  IND={len(inds)}  "
+        f"RF={len(rfs)}  drugs={len(drugs)}  DIND={len(drug_inds)}  "
+        f"surgery={len(surgery)}  radiation={len(radiation)}  "
+        f"sources={len(sources)}"
+    )
     print(f"  diseases-with-zero-BMA={len(diseases_no_bma)}  no-RF={len(diseases_no_rf)}  no-IND={len(diseases_no_indication)}")
     print(f"  BMAs-without-ESCAT={len(bmas_without_escat)}  BMAs-without-CIViC={len(bmas_without_civic)}")
     return 0

@@ -62,6 +62,7 @@ def test_dict_shape_outcome_value_loads_full_record():
             "progression_free_survival": {
                 "value": "5.5 months",
                 "source": "SRC-KEYNOTE-006",
+                "source_refs": ["SRC-KEYNOTE-006-UPDATE"],
                 "confidence_interval": "95% CI 4.7-6.5",
                 "median_followup_months": 33.7,
             }
@@ -71,6 +72,7 @@ def test_dict_shape_outcome_value_loads_full_record():
     assert isinstance(pfs, OutcomeValue)
     assert pfs.value == "5.5 months"
     assert pfs.source == "SRC-KEYNOTE-006"
+    assert pfs.source_refs == ["SRC-KEYNOTE-006-UPDATE"]
     assert pfs.confidence_interval == "95% CI 4.7-6.5"
     assert pfs.median_followup_months == pytest.approx(33.7)
 

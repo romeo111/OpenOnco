@@ -50,6 +50,7 @@ class OutcomeValue(Base):
 
     value: str
     source: str
+    source_refs: list[str] = Field(default_factory=list)
     confidence_interval: Optional[str] = None  # e.g. "95% CI 4.7-6.5"
     median_followup_months: Optional[float] = None
 
@@ -85,7 +86,7 @@ class ExpectedOutcomes(Base):
     progression_free_survival: Optional[OutcomeValue] = None
     overall_survival_5y: Optional[OutcomeValue] = None
     overall_survival_median: Optional[OutcomeValue] = None  # Phase 2 (new)
-    disease_free_survival_hr: Optional[OutcomeValue] = None  # Phase 2 (new — adjuvant)
+    disease_free_survival_hr: Optional[OutcomeValue] = None  # Phase 2 (new - adjuvant)
     hcv_cure_rate_svr12: Optional[OutcomeValue] = None
     # extra='allow' (inherited from Base) handles disease-specific fields
 

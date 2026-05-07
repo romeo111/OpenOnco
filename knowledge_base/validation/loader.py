@@ -31,6 +31,18 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
         ("applicable_to.disease_id", "diseases"),
         # sources is list[Citation]; handled specially
     ],
+    "drug_indications": [
+        ("drug_id", "drugs"),
+        ("disease_id", "diseases"),
+        ("indication_id", "indications"),
+        ("regimen_id", "regimens"),
+    ],
+    "surgery": [
+        ("disease_id", "diseases"),
+    ],
+    "radiation": [
+        ("disease_id", "diseases"),
+    ],
     "regimens": [
         # components list handled specially (list of RegimenComponent.drug_id)
         ("monitoring_schedule_id", "monitoring"),
@@ -81,6 +93,9 @@ REVIEWER_SIGNOFF_TYPES: tuple[str, ...] = (
     "regimens",
     "redflags",
     "biomarker_actionability",
+    "drug_indications",
+    "surgery",
+    "radiation",
 )
 
 
@@ -432,6 +447,41 @@ def _load_content_impl(
                 check_ref(path, sid, "tests", "required_tests[]")
             for sid in data.get("desired_tests") or []:
                 check_ref(path, sid, "tests", "desired_tests[]")
+            expected_outcomes = data.get("expected_outcomes") or {}
+            if isinstance(expected_outcomes, dict):
+                for fname, outcome in expected_outcomes.items():
+                    if not isinstance(outcome, dict):
+                        continue
+                    for key in ("source", "source_id"):
+                        sid = outcome.get(key)
+                        if isinstance(sid, str):
+                            check_ref(
+                                path,
+                                sid,
+                                "sources",
+                                f"expected_outcomes.{fname}.{key}",
+                            )
+                    for key in ("source_refs", "sources"):
+                        refs = outcome.get(key) or []
+                        if not isinstance(refs, list):
+                            continue
+                        for j, sid in enumerate(refs):
+                            if isinstance(sid, str):
+                                check_ref(
+                                    path,
+                                    sid,
+                                    "sources",
+                                    f"expected_outcomes.{fname}.{key}[{j}]",
+                                )
+                            elif isinstance(sid, dict):
+                                nested = sid.get("source_id") or sid.get("source")
+                                if isinstance(nested, str):
+                                    check_ref(
+                                        path,
+                                        nested,
+                                        "sources",
+                                        f"expected_outcomes.{fname}.{key}[{j}]",
+                                    )
         elif etype == "contraindications":
             for sid in data.get("affects_indications") or []:
                 check_ref(path, sid, "indications", "affects_indications[]")
@@ -478,6 +528,36 @@ def _load_content_impl(
             roles_block = data.get("triggers_mdt_roles") or {}
             # role IDs are NOT validated against KB entities — they're a
             # closed enum in mdt_orchestrator._ROLE_CATALOG, not KB content
+        elif etype == "drug_indications":
+            for i, row in enumerate(data.get("regulatory_statuses") or []):
+                if not isinstance(row, dict):
+                    continue
+                for j, sid in enumerate(row.get("source_refs") or []):
+                    check_ref(
+                        path,
+                        sid,
+                        "sources",
+                        f"regulatory_statuses[{i}].source_refs[{j}]",
+                    )
+            for i, row in enumerate(data.get("reimbursement_statuses") or []):
+                if not isinstance(row, dict):
+                    continue
+                for j, sid in enumerate(row.get("source_refs") or []):
+                    check_ref(
+                        path,
+                        sid,
+                        "sources",
+                        f"reimbursement_statuses[{i}].source_refs[{j}]",
+                    )
+            for j, sid in enumerate(data.get("evidence_source_refs") or []):
+                check_ref(path, sid, "sources", f"evidence_source_refs[{j}]")
+        elif etype in {"surgery", "radiation"}:
+            for j, sid in enumerate(data.get("indication_ids") or []):
+                check_ref(path, sid, "indications", f"indication_ids[{j}]")
+            for j, sid in enumerate(data.get("required_tests") or []):
+                check_ref(path, sid, "tests", f"required_tests[{j}]")
+            for j, sid in enumerate(data.get("source_refs") or []):
+                check_ref(path, sid, "sources", f"source_refs[{j}]")
 
         # Generic top-level sources list (lots of entities have it).
         # Drafts skip ref-check on sources because authors leave SRC-TODO

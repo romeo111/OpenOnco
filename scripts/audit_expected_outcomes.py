@@ -72,6 +72,7 @@ duplicating the bucketing logic.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from collections import defaultdict
@@ -91,6 +92,8 @@ AUDIT_DIR = REPO_ROOT / "docs" / "audits"
 AUDIT_DATE = "2026-05-01"
 MAIN_OUT = AUDIT_DIR / f"expected_outcomes_traceability_{AUDIT_DATE}.md"
 APPENDIX_OUT = AUDIT_DIR / f"expected_outcomes_traceability_{AUDIT_DATE}_by_disease.md"
+BACKLOG_OUT = AUDIT_DIR / f"expected_outcomes_traceability_{AUDIT_DATE}_backlog.json"
+LEGACY_UNCITED_SOURCE_ID = "SRC-LEGACY-UNCITED"
 
 # Schema-declared `expected_outcomes` fields (knowledge_base/schemas/indication.py
 # `ExpectedOutcomes`). Anything else found inside the block is "extra".
@@ -99,6 +102,8 @@ SCHEMA_OUTCOME_FIELDS = (
     "complete_response",
     "progression_free_survival",
     "overall_survival_5y",
+    "overall_survival_median",
+    "disease_free_survival_hr",
     "hcv_cure_rate_svr12",
 )
 
@@ -380,6 +385,7 @@ class FieldClassification:
     bucket: str  # cited | probably-cited | uncited | absent
     value_excerpt: str = ""
     matched_via: str = ""
+    remediation_hint: str = ""
 
     @property
     def is_present(self) -> bool:
@@ -476,6 +482,43 @@ def _extract_source_ids(text: str) -> set[str]:
     return {m.group(0).upper() for m in _SRC_ID_RE.finditer(text)}
 
 
+def _extract_structured_source_ids(value: object) -> set[str]:
+    """Return explicit source IDs from native OutcomeValue-shaped dicts.
+
+    The Phase-2 schema lets an outcome be authored as:
+
+        progression_free_survival:
+          value: "..."
+          source: SRC-...
+          source_refs: [SRC-..., SRC-...]
+
+    Older audits only searched rendered text, which missed the intent of
+    this native shape. Keep the extractor narrow so arbitrary nested prose
+    still goes through the existing regex path.
+    """
+    if not isinstance(value, dict):
+        return set()
+
+    out: set[str] = set()
+    for key in ("source", "source_id"):
+        raw = value.get(key)
+        if isinstance(raw, str) and raw.upper().startswith("SRC-"):
+            out.add(raw.upper())
+
+    for key in ("source_refs", "sources"):
+        raw_list = value.get(key) or []
+        if not isinstance(raw_list, list):
+            continue
+        for item in raw_list:
+            if isinstance(item, str) and item.upper().startswith("SRC-"):
+                out.add(item.upper())
+            elif isinstance(item, dict):
+                sid = item.get("source_id") or item.get("source")
+                if isinstance(sid, str) and sid.upper().startswith("SRC-"):
+                    out.add(sid.upper())
+    return out
+
+
 def _extract_trial_numbers(text: str) -> set[str]:
     return {m.group(0) for m in _NUMBER_RE.finditer(text)}
 
@@ -507,12 +550,37 @@ def classify_value(
     sibling_haystack: str,
     indication_source_ids: set[str],
     source_titles: dict[str, str],
+    structured_source_ids: set[str] | None = None,
 ) -> tuple[str, str]:
     """Return (bucket, matched_via)."""
     full_text = f"{value_text} {sibling_haystack}".strip()
+    explicit = {sid.upper() for sid in (structured_source_ids or set())}
+    known_source_ids = set(source_titles)
+
+    if (
+        LEGACY_UNCITED_SOURCE_ID in explicit
+        or LEGACY_UNCITED_SOURCE_ID in _extract_source_ids(full_text)
+    ):
+        return "uncited", "legacy placeholder source"
+
+    explicit_overlap = explicit & indication_source_ids
+    if explicit_overlap:
+        return "cited", f"OutcomeValue.source: {sorted(explicit_overlap)[0]}"
+
+    explicit_known = explicit & known_source_ids
+    if explicit_known:
+        return (
+            "probably-cited",
+            f"OutcomeValue.source not in indication.sources: {sorted(explicit_known)[0]}",
+        )
+
+    if explicit:
+        return "probably-cited", f"OutcomeValue.source unresolved: {sorted(explicit)[0]}"
 
     # 1. Direct SRC-* mention that's in this indication's sources?
     src_hits = _extract_source_ids(full_text)
+    if LEGACY_UNCITED_SOURCE_ID in src_hits:
+        return "uncited", "legacy placeholder source"
     overlap = src_hits & indication_source_ids
     if overlap:
         return "cited", f"SRC-id hit: {sorted(overlap)[0]}"
@@ -537,6 +605,32 @@ def classify_value(
         return "probably-cited", f"SRC-id (not in indication.sources): {sorted(src_hits)[0]}"
 
     return "uncited", ""
+
+
+def _remediation_hint(bucket: str, matched_via: str) -> str:
+    if bucket in {"cited", "absent"}:
+        return ""
+    if "legacy placeholder" in matched_via:
+        return (
+            "Replace SRC-LEGACY-UNCITED with the real pivotal-trial or "
+            "guideline Source ID after clinician/source review."
+        )
+    if "not in indication.sources" in matched_via:
+        return (
+            "Confirm the source supports this exact outcome, then add it to "
+            "Indication.sources or correct the outcome-level source."
+        )
+    if "unresolved" in matched_via:
+        return "Create/fix the Source entity before accepting this outcome anchor."
+    if bucket == "probably-cited":
+        return (
+            "Resolve the trial hint to a concrete SRC-* ID and author the "
+            "outcome as an OutcomeValue dict."
+        )
+    return (
+        "Trace this value to a specific publication/guideline Source and "
+        "replace the scalar with an OutcomeValue dict."
+    )
 
 
 def classify_indication(
@@ -605,11 +699,13 @@ def classify_indication(
             )
             continue
         text = _value_to_text(v)
+        structured_source_ids = _extract_structured_source_ids(v)
         bucket, matched_via = classify_value(
             value_text=text,
             sibling_haystack=sibling_haystack,
             indication_source_ids=source_ids,
             source_titles=source_titles,
+            structured_source_ids=structured_source_ids,
         )
         excerpt = text if len(text) <= 120 else text[:117] + "..."
         stats.classifications.append(
@@ -620,6 +716,7 @@ def classify_indication(
                 bucket=bucket,
                 value_excerpt=excerpt,
                 matched_via=matched_via,
+                remediation_hint=_remediation_hint(bucket, matched_via),
             )
         )
 
@@ -1043,10 +1140,10 @@ def render_main(
 def _render_disease_detail(stats_for_disease: list[IndicationStats]) -> list[str]:
     out: list[str] = []
     out.append(
-        "| Indication | Field | Bucket | Matched via | Value excerpt |"
+        "| Indication | Field | Bucket | Matched via | Remediation | Value excerpt |"
     )
-    out.append("|---|---|---|---|---|")
-    rows: list[tuple[str, str, str, str, str]] = []
+    out.append("|---|---|---|---|---|---|")
+    rows: list[tuple[str, str, str, str, str, str]] = []
     for s in sorted(stats_for_disease, key=lambda x: x.indication_id):
         for c in s.classifications:
             if c.bucket == "absent":
@@ -1059,11 +1156,12 @@ def _render_disease_detail(stats_for_disease: list[IndicationStats]) -> list[str
                     c.field_name,
                     c.bucket,
                     c.matched_via or "—",
+                    (c.remediation_hint or "review only").replace("\n", " ").replace("|", "\\|"),
                     (c.value_excerpt or "").replace("\n", " ").replace("|", "\\|"),
                 )
             )
     if not rows:
-        out.append("| _(no populated outcome fields)_ | | | | |")
+        out.append("| _(no populated outcome fields)_ | | | | | |")
         return out
     for r in rows:
         out.append("| " + " | ".join(r) + " |")
@@ -1151,6 +1249,41 @@ def disease_outcomes_cited_pct() -> dict[str, float]:
     return {did: r.outcomes_cited_pct for did, r in rollups.items()}
 
 
+def build_remediation_backlog(all_stats: list[IndicationStats]) -> list[dict]:
+    """Machine-readable backlog for Phase-3 outcome-citation work.
+
+    The markdown audit is readable, but hard to assign in chunks. This JSON
+    output lets contributors filter by disease, bucket, or indication and
+    work only the highest-value uncited cells.
+    """
+    rows: list[dict] = []
+    priority_by_bucket = {"uncited": 0, "probably-cited": 1}
+    for stats in all_stats:
+        for c in stats.classifications:
+            if c.bucket not in priority_by_bucket:
+                continue
+            rows.append(
+                {
+                    "disease_id": c.disease_id,
+                    "indication_id": c.indication_id,
+                    "field_name": c.field_name,
+                    "bucket": c.bucket,
+                    "matched_via": c.matched_via,
+                    "remediation_hint": c.remediation_hint,
+                    "value_excerpt": c.value_excerpt,
+                }
+            )
+    return sorted(
+        rows,
+        key=lambda r: (
+            priority_by_bucket.get(r["bucket"], 9),
+            r["disease_id"],
+            r["indication_id"],
+            r["field_name"],
+        ),
+    )
+
+
 # ── Main ────────────────────────────────────────────────────────────────────
 
 
@@ -1205,9 +1338,24 @@ def main(argv: list[str] | None = None) -> int:
 
     main_md = render_main(all_stats, rollups, disease_names, APPENDIX_OUT)
     appendix_md = render_appendix(all_stats, rollups, disease_names, worst3_ids)
+    backlog = build_remediation_backlog(all_stats)
 
     MAIN_OUT.write_text(main_md, encoding="utf-8")
     APPENDIX_OUT.write_text(appendix_md, encoding="utf-8")
+    BACKLOG_OUT.write_text(
+        json.dumps(
+            {
+                "audit_date": AUDIT_DATE,
+                "generated_by": "scripts/audit_expected_outcomes.py",
+                "target": ">=90% strict-cited populated outcome values",
+                "rows": backlog,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
 
     skipped = [
         path
@@ -1217,7 +1365,9 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"Wrote {MAIN_OUT.relative_to(REPO_ROOT)}")
     print(f"Wrote {APPENDIX_OUT.relative_to(REPO_ROOT)}")
+    print(f"Wrote {BACKLOG_OUT.relative_to(REPO_ROOT)}")
     print(f"Indications audited: {len(all_stats)}")
+    print(f"Backlog rows: {len(backlog)}")
     if skipped:
         print(f"Skipped (unparseable YAML): {len(skipped)}")
         for p in skipped:
