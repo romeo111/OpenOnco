@@ -228,7 +228,8 @@ def main():
         did = dis.get("id", "")
         codes = dis.get("codes", {})
         icd10 = codes.get("icd_10", "")
-        icd_o3 = codes.get("icd_o_3_morphology", "")
+        # Prefer ICD-O-4 if available, fall back to ICD-O-3
+        icd_o3 = codes.get("icdo4_code") or codes.get("icd_o_3_morphology", "")
         names = dis.get("names", {})
         name_ua = names.get("ukrainian") or names.get("preferred") or did
 
@@ -279,12 +280,11 @@ def main():
         for bid in sorted(bm_req_all.keys()):
             bm = bm_map.get(bid, {})
             bm_names = bm.get("names", {})
-            bm_ua = bm_names.get("ukrainian") or bm_names.get("preferred") or bid
-            vc = bm_req_all[bid]
-            if vc:
-                bm_parts.append(f"{bm_ua} ({truncate(vc, 60)})")
-            else:
-                bm_parts.append(bm_ua)
+            # Fallback: clean ID if biomarker not found in KB
+            fallback = bid.replace("BIO-", "").replace("-", " ").title()
+            bm_ua = bm_names.get("ukrainian") or bm_names.get("preferred") or fallback
+            # Ukrainian name only — no English value_constraint in МОЗ document
+            bm_parts.append(bm_ua)
 
         placeholder = "— (підлягає визначенню)"
 
@@ -366,7 +366,7 @@ def main():
 
     # Table header
     lines.append(
-        "| № | ICD-O-3 | ICD-10 | Нозологія | "
+        "| № | ICD-O-4 | ICD-10 | Нозологія | "
         "Загальноклінічні та серологічні | "
         "ІГХ та морфологія | "
         "Молекулярна генетика | "
