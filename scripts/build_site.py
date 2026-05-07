@@ -2138,23 +2138,39 @@ def render_gallery(*, target_lang: str = "en") -> str:
 
 def render_ask(*, target_lang: str = "en") -> str:
     is_en = target_lang == "en"
-    title = "Tumor board question" if is_en else "Питання для tumor board"
+    title = "Tumor board question" if is_en else "Запит до tumor board"
+    kicker = "OpenOnco AI draft" if is_en else "OpenOnco AI-чернетка"
     lead = (
-        "Paste an exam-style oncology vignette in natural language. The server adapter "
-        "asks ChatGPT to structure the case, runs the OpenOnco rule engine, then returns "
-        "an answer, alternatives, or clarifying questions."
+        "Paste an oncology vignette in natural language. ChatGPT structures the case, "
+        "OpenOnco checks it against the rule engine, and the page returns an answer, "
+        "reasonable alternatives, or clarifying questions."
         if is_en else
-        "Встав клінічну ситуацію своїми словами. Серверний адаптер просить ChatGPT "
-        "структурувати кейс, запускає OpenOnco rule engine, а потім повертає відповідь, "
-        "альтернативи або уточнюючі питання."
+        "Опишіть онкологічну клінічну ситуацію своїми словами. ChatGPT структурує кейс, "
+        "OpenOnco звіряє його з алгоритмами, а сторінка повертає відповідь, обґрунтовані "
+        "альтернативи або уточнювальні питання."
     )
-    endpoint_label = "Endpoint" if is_en else "Endpoint"
+    endpoint_label = "API endpoint" if is_en else "API endpoint"
     case_label = "Clinical situation" if is_en else "Клінічна ситуація"
     run_label = "Answer with OpenOnco" if is_en else "Відповісти через OpenOnco"
     clear_label = "Clear" if is_en else "Очистити"
-    examples_title = "Examples" if is_en else "Приклади запиту"
+    examples_title = "Example prompts" if is_en else "Приклади формату"
     use_example_label = "Use" if is_en else "Вставити"
-    quota_label = "Questions used" if is_en else "Використано питань"
+    quota_label = "Questions used" if is_en else "Використано запитів"
+    quota_hero_label = "free-text questions per browser" if is_en else "текстові запити на браузер"
+    wait_label = "Typical wait" if is_en else "Орієнтовне очікування"
+    wait_value = "30-90 sec" if is_en else "30-90 с"
+    progress_idle = "Ready for a clinical question" if is_en else "Готово до клінічного запиту"
+    progress_idle_eta = "Usually 30-90 sec" if is_en else "Зазвичай 30-90 с"
+    progress_step_1 = "Structuring case" if is_en else "Структурую кейс"
+    progress_step_2 = "Matching OpenOnco algorithms" if is_en else "Зіставляю з алгоритмами OpenOnco"
+    progress_step_3 = "Checking biomarkers and options" if is_en else "Перевіряю біомаркери й опції"
+    progress_step_4 = "Writing answer" if is_en else "Формую відповідь"
+    progress_done = "Answer is ready" if is_en else "Відповідь готова"
+    progress_failed = "Request stopped" if is_en else "Запит зупинено"
+    progress_done_eta = "Done" if is_en else "Готово"
+    progress_failed_eta = "Check the message below" if is_en else "Перевірте повідомлення нижче"
+    progress_eta_prefix = "approx." if is_en else "ще приблизно"
+    progress_eta_unit = "s" if is_en else "с"
     plan_link_label = "Open in plan generator" if is_en else "Відкрити в генераторі планів"
     plan_link_hint = (
         "Good KB match found. The structured profile can be opened in the in-browser plan generator."
@@ -2171,13 +2187,13 @@ def render_ask(*, target_lang: str = "en") -> str:
         if is_en else
         "62-річний пацієнт із метастатичним раком шлунка, HER2-негативний, MSS, PD-L1 CPS 25. Яка оптимальна перша лінія?"
     )
-    empty_msg = "Paste a clinical situation first." if is_en else "Спочатку встав клінічну ситуацію."
-    loading_msg = "Structuring case and running engine..." if is_en else "Структурую кейс і запускаю engine..."
+    empty_msg = "Paste a clinical situation first." if is_en else "Спочатку вставте клінічну ситуацію."
+    loading_msg = "Analyzing the case. This usually takes under 90 seconds." if is_en else "Аналізую кейс. Зазвичай це займає до 90 секунд."
     error_msg = "Request failed" if is_en else "Запит не вдався"
     endpoint_unavailable_msg = (
         "The clinical-question API did not return JSON. This public site is static unless a server adapter is deployed; use the browser plan generator or enter a working API endpoint."
         if is_en else
-        "Clinical-question API не повернув JSON. Публічний сайт статичний, доки не задеплоєно серверний адаптер; скористайся браузерним генератором планів або вкажи робочий API endpoint."
+        "Clinical-question API не повернув JSON. Публічний сайт статичний, доки не розгорнуто серверний адаптер; скористайтеся браузерним генератором планів або вкажіть робочий API endpoint."
     )
     invalid_json_msg = (
         "Invalid JSON response from the clinical-question API"
@@ -2187,12 +2203,12 @@ def render_ask(*, target_lang: str = "en") -> str:
     limit_msg = (
         "You have used all 3 free-text questions in this browser."
         if is_en else
-        "У цьому браузері вже використано всі 3 free-text питання."
+        "У цьому браузері вже використано всі 3 текстові запити."
     )
     safety = (
         "Do not paste real identifiable patient data. This is a tumor-board draft, not autonomous medical advice."
         if is_en else
-        "Не вставляй реальні ідентифіковані дані пацієнта. Це чернетка для tumor board, не автономна медична порада."
+        "Не вставляйте реальні персональні дані пацієнта. Це чернетка для tumor board, а не автономна медична порада."
     )
     examples = [
         (
@@ -2222,36 +2238,71 @@ def render_ask(*, target_lang: str = "en") -> str:
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 <style>
-.ask-grid {{ display:grid; grid-template-columns:minmax(0, 0.9fr) minmax(0, 1.1fr); gap:18px; align-items:start; }}
-.ask-panel {{ border:1px solid var(--line); border-radius:8px; background:#fff; padding:16px; }}
-.ask-panel textarea {{ width:100%; min-height:280px; resize:vertical; font:14px/1.45 var(--mono); }}
+.ask-hero {{ display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:22px; align-items:end; margin-bottom:22px; }}
+.ask-kicker {{ margin:0 0 8px; color:#0f766e; font-weight:800; letter-spacing:0; text-transform:uppercase; font-size:12px; }}
+.ask-hero h1 {{ margin-bottom:10px; }}
+.ask-hero-meter {{ display:grid; grid-template-columns:repeat(2, minmax(112px, 1fr)); gap:10px; min-width:260px; }}
+.ask-stat {{ border:1px solid #d6e4de; background:#f8fbf8; border-radius:8px; padding:12px; }}
+.ask-stat strong {{ display:block; color:#073b22; font-size:24px; line-height:1; margin-bottom:5px; }}
+.ask-stat span {{ color:#53605a; font-size:13px; line-height:1.25; }}
+.ask-grid {{ display:grid; grid-template-columns:minmax(0, 0.92fr) minmax(0, 1.08fr); gap:18px; align-items:start; }}
+.ask-panel {{ border:1px solid #dbe7df; border-radius:8px; background:#fff; padding:18px; box-shadow:0 14px 38px rgba(9, 44, 27, 0.08); }}
+.ask-panel h2 {{ font-size:22px; }}
+.ask-endpoint {{ padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; }}
+.ask-endpoint input {{ margin-top:6px; font-size:12px; color:#475569; }}
+.ask-panel textarea {{ width:100%; min-height:310px; resize:vertical; font:14px/1.5 var(--mono); border-color:#cbd5e1; border-radius:8px; background:#fbfdfc; }}
+.ask-panel textarea:focus, .ask-panel input:focus {{ outline:2px solid rgba(20, 118, 82, 0.22); border-color:#0f766e; }}
 .ask-panel input {{ width:100%; }}
-.ask-actions {{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }}
-.ask-result {{ white-space:pre-wrap; font:14px/1.5 var(--mono); background:#0f172a; color:#e5e7eb; border-radius:8px; padding:14px; min-height:340px; overflow:auto; }}
-.ask-muted {{ color:var(--muted); font-size:14px; }}
+.ask-actions {{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }}
+.ask-actions .btn {{ min-height:42px; }}
+.ask-result {{ white-space:pre-wrap; font:14px/1.55 var(--mono); background:#102018; color:#ecfdf5; border:1px solid #244d38; border-radius:8px; padding:16px; min-height:380px; overflow:auto; box-shadow:inset 0 1px 0 rgba(255,255,255,0.06); }}
+.ask-result:empty::before {{ content:""; display:block; min-height:1px; }}
+.ask-muted {{ color:#647067; font-size:14px; }}
 .ask-examples {{ display:grid; gap:10px; margin:12px 0 14px; }}
-.ask-example {{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; border:1px solid var(--line); border-radius:8px; padding:10px; background:#f8fafc; }}
-.ask-example-title {{ font-weight:700; margin-bottom:4px; }}
-.ask-example-text {{ color:var(--muted); font-size:13px; line-height:1.35; }}
-.ask-quota {{ display:flex; justify-content:space-between; gap:10px; margin-top:10px; font-size:13px; color:var(--muted); }}
+.ask-example {{ display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; border:1px solid #dbe7df; border-radius:8px; padding:12px; background:#f8fbf8; }}
+.ask-example-title {{ font-weight:800; margin-bottom:4px; color:#073b22; }}
+.ask-example-text {{ color:#56635c; font-size:13px; line-height:1.38; }}
+.ask-quota {{ display:flex; justify-content:space-between; gap:10px; margin-top:12px; font-size:13px; color:#56635c; }}
+.ask-quota strong {{ color:#073b22; }}
+.ask-progress {{ margin-top:14px; padding:14px; border:1px solid #cfe5d8; border-radius:8px; background:#f7fcf8; }}
+.ask-progress-head {{ display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:10px; font-size:14px; }}
+.ask-progress-head strong {{ color:#073b22; }}
+.ask-progress-head span {{ color:#53605a; font-size:13px; white-space:nowrap; }}
+.ask-progress-track {{ height:12px; overflow:hidden; border-radius:999px; background:#dfe9e2; box-shadow:inset 0 1px 2px rgba(15, 23, 42, 0.12); }}
+.ask-progress-fill {{ width:0%; height:100%; border-radius:999px; background:linear-gradient(90deg, #0f766e, #22c55e, #f59e0b); transition:width 420ms ease; }}
+.ask-progress.is-running .ask-progress-fill {{ box-shadow:0 0 18px rgba(34, 197, 94, 0.45); }}
+.ask-progress-steps {{ display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; padding:0; margin:12px 0 0; list-style:none; }}
+.ask-progress-steps li {{ min-height:42px; padding:8px; border-radius:8px; background:#eef6f0; color:#647067; font-size:12px; line-height:1.25; border:1px solid transparent; }}
+.ask-progress-steps li.is-active {{ border-color:#0f766e; background:#e7f7ee; color:#073b22; font-weight:800; }}
+.ask-progress-steps li.is-done {{ background:#dcfce7; color:#14532d; }}
 .ask-plan-link {{ display:none; margin-bottom:12px; padding:12px; border:1px solid #b7e4c7; background:#f0fdf4; border-radius:8px; }}
 .ask-plan-link.is-visible {{ display:block; }}
 .ask-plan-link p {{ margin:0 0 8px; color:#166534; font-size:14px; }}
-@media (max-width: 900px) {{ .ask-grid {{ grid-template-columns:1fr; }} }}
-@media (max-width: 520px) {{ .ask-example {{ grid-template-columns:1fr; }} }}
+@media (max-width: 900px) {{ .ask-hero, .ask-grid {{ grid-template-columns:1fr; }} .ask-hero-meter {{ min-width:0; }} }}
+@media (max-width: 640px) {{ .ask-hero-meter, .ask-progress-steps {{ grid-template-columns:1fr 1fr; }} }}
+@media (max-width: 520px) {{ .ask-example {{ grid-template-columns:1fr; }} .ask-progress-head {{ display:block; }} .ask-progress-head span {{ display:block; margin-top:4px; }} }}
 </style>
 </head>
 <body>
 {_render_top_bar(active="ask", target_lang=target_lang, lang_switch_href=_lang_switch_href("ask", target_lang))}
 
 <main class="try-page">
-  <h1>{html.escape(title)}</h1>
-  <p class="lead">{lead}</p>
-  <p class="ask-muted">{safety}</p>
+  <div class="ask-hero">
+    <div>
+      <p class="ask-kicker">{kicker}</p>
+      <h1>{html.escape(title)}</h1>
+      <p class="lead">{lead}</p>
+      <p class="ask-muted">{safety}</p>
+    </div>
+    <div class="ask-hero-meter" aria-label="{quota_label}">
+      <div class="ask-stat"><strong>3</strong><span>{quota_hero_label}</span></div>
+      <div class="ask-stat"><strong>{wait_value}</strong><span>{wait_label}</span></div>
+    </div>
+  </div>
 
   <div class="ask-grid">
     <section class="ask-panel">
-      <label class="qt-label">
+      <label class="qt-label ask-endpoint">
         {endpoint_label}
         <input id="endpointInput" value="/api/clinical-question" spellcheck="false">
       </label>
@@ -2266,6 +2317,21 @@ def render_ask(*, target_lang: str = "en") -> str:
       <div class="ask-actions">
         <button id="askBtn" class="btn">{run_label}</button>
         <button id="clearAskBtn" class="btn btn-secondary">{clear_label}</button>
+      </div>
+      <div id="askProgress" class="ask-progress" aria-live="polite">
+        <div class="ask-progress-head">
+          <strong id="progressLabel">{progress_idle}</strong>
+          <span id="progressEta">{progress_idle_eta}</span>
+        </div>
+        <div class="ask-progress-track" aria-hidden="true">
+          <div id="progressFill" class="ask-progress-fill"></div>
+        </div>
+        <ol class="ask-progress-steps">
+          <li id="progressStep1" class="is-active">{progress_step_1}</li>
+          <li id="progressStep2">{progress_step_2}</li>
+          <li id="progressStep3">{progress_step_3}</li>
+          <li id="progressStep4">{progress_step_4}</li>
+        </ol>
       </div>
       <p id="askStatus" class="ask-muted" role="status" aria-live="polite"></p>
     </section>
@@ -2299,6 +2365,24 @@ def render_ask(*, target_lang: str = "en") -> str:
   const examplesRoot = document.getElementById('askExamples');
   const planLinkWrap = document.getElementById('planGeneratorLinkWrap');
   const planLink = document.getElementById('planGeneratorLink');
+  const progressBox = document.getElementById('askProgress');
+  const progressFill = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+  const progressEta = document.getElementById('progressEta');
+  const progressSteps = [
+    document.getElementById('progressStep1'),
+    document.getElementById('progressStep2'),
+    document.getElementById('progressStep3'),
+    document.getElementById('progressStep4')
+  ];
+  const PROGRESS_COPY = [
+    {{ at: 0, label: '{progress_step_1}' }},
+    {{ at: 34, label: '{progress_step_2}' }},
+    {{ at: 64, label: '{progress_step_3}' }},
+    {{ at: 86, label: '{progress_step_4}' }}
+  ];
+  let progressTimer = null;
+  let progressStartedAt = 0;
   const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
   if (configured) {{
     endpointInput.value = configured;
@@ -2334,6 +2418,50 @@ def render_ask(*, target_lang: str = "en") -> str:
     quotaUsed.textContent = String(used);
     askBtn.disabled = used >= MAX_QUESTIONS;
     if (used >= MAX_QUESTIONS) status.textContent = '{limit_msg}';
+  }}
+
+  function setProgress(percent, label, eta, activeIndex) {{
+    const pct = Math.max(0, Math.min(100, Math.round(percent)));
+    progressFill.style.width = pct + '%';
+    progressLabel.textContent = label;
+    progressEta.textContent = eta;
+    progressSteps.forEach((step, idx) => {{
+      step.classList.toggle('is-active', idx === activeIndex);
+      step.classList.toggle('is-done', idx < activeIndex || pct >= 100);
+    }});
+  }}
+
+  function resetProgress() {{
+    if (progressTimer) window.clearInterval(progressTimer);
+    progressTimer = null;
+    progressBox.classList.remove('is-running');
+    setProgress(0, '{progress_idle}', '{progress_idle_eta}', 0);
+  }}
+
+  function startProgress() {{
+    resetProgress();
+    progressBox.classList.add('is-running');
+    progressStartedAt = Date.now();
+    const durationMs = 90000;
+    const tick = () => {{
+      const elapsed = Date.now() - progressStartedAt;
+      const pct = Math.min(92, 8 + (elapsed / durationMs) * 84);
+      let activeIndex = 0;
+      PROGRESS_COPY.forEach((step, idx) => {{
+        if (pct >= step.at) activeIndex = idx;
+      }});
+      const remainingSec = Math.max(10, Math.ceil((durationMs - elapsed) / 1000));
+      setProgress(pct, PROGRESS_COPY[activeIndex].label, '{progress_eta_prefix} ' + remainingSec + ' {progress_eta_unit}', activeIndex);
+    }};
+    tick();
+    progressTimer = window.setInterval(tick, 900);
+  }}
+
+  function finishProgress(ok) {{
+    if (progressTimer) window.clearInterval(progressTimer);
+    progressTimer = null;
+    progressBox.classList.remove('is-running');
+    setProgress(ok ? 100 : 0, ok ? '{progress_done}' : '{progress_failed}', ok ? '{progress_done_eta}' : '{progress_failed_eta}', ok ? 3 : 0);
   }}
 
   function renderExamples() {{
@@ -2460,6 +2588,7 @@ def render_ask(*, target_lang: str = "en") -> str:
     status.textContent = '{loading_msg}';
     result.textContent = '';
     planLinkWrap.classList.remove('is-visible');
+    startProgress();
     try {{
       const resp = await fetch(endpointInput.value.trim() || DEFAULT_ENDPOINT, {{
         method: 'POST',
@@ -2473,10 +2602,12 @@ def render_ask(*, target_lang: str = "en") -> str:
       result.textContent = renderPayload(payload);
       await updatePlanGeneratorLink(payload);
       status.textContent = payload.status || 'ok';
+      finishProgress(true);
     }} catch (err) {{
       status.textContent = '{error_msg}: ' + err.message;
       result.textContent = '';
       planLinkWrap.classList.remove('is-visible');
+      finishProgress(false);
     }} finally {{
       updateQuota();
     }}
@@ -2486,10 +2617,12 @@ def render_ask(*, target_lang: str = "en") -> str:
     result.textContent = '';
     status.textContent = '';
     planLinkWrap.classList.remove('is-visible');
+    resetProgress();
   }});
   renderExamples();
   getUserId();
   updateQuota();
+  resetProgress();
 }})();
 </script>
 </body>

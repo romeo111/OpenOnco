@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · Питання для tumor board</title>
+<title>OpenOnco · Запит до tumor board</title>
 <!-- openonco-seo:start -->
 <meta name="description" content="Форма OpenOnco для структурованих клінічних питань і feedback.">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -17,38 +17,64 @@
 <link rel="alternate" hreflang="x-default" href="https://openonco.info/">
 <meta property="og:site_name" content="OpenOnco">
 <meta property="og:type" content="website">
-<meta property="og:title" content="OpenOnco · Питання для tumor board">
+<meta property="og:title" content="OpenOnco · Запит до tumor board">
 <meta property="og:description" content="Форма OpenOnco для структурованих клінічних питань і feedback.">
 <meta property="og:url" content="https://openonco.info/ukr/ask.html">
 <meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OpenOnco · Питання для tumor board">
+<meta name="twitter:title" content="OpenOnco · Запит до tumor board">
 <meta name="twitter:description" content="Форма OpenOnco для структурованих клінічних питань і feedback.">
 <meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Питання для tumor board","description":"Форма OpenOnco для структурованих клінічних питань і feedback.","url":"https://openonco.info/ukr/ask.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/ask.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Запит до tumor board","description":"Форма OpenOnco для структурованих клінічних питань і feedback.","url":"https://openonco.info/ukr/ask.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/ask.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 <style>
-.ask-grid { display:grid; grid-template-columns:minmax(0, 0.9fr) minmax(0, 1.1fr); gap:18px; align-items:start; }
-.ask-panel { border:1px solid var(--line); border-radius:8px; background:#fff; padding:16px; }
-.ask-panel textarea { width:100%; min-height:280px; resize:vertical; font:14px/1.45 var(--mono); }
+.ask-hero { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:22px; align-items:end; margin-bottom:22px; }
+.ask-kicker { margin:0 0 8px; color:#0f766e; font-weight:800; letter-spacing:0; text-transform:uppercase; font-size:12px; }
+.ask-hero h1 { margin-bottom:10px; }
+.ask-hero-meter { display:grid; grid-template-columns:repeat(2, minmax(112px, 1fr)); gap:10px; min-width:260px; }
+.ask-stat { border:1px solid #d6e4de; background:#f8fbf8; border-radius:8px; padding:12px; }
+.ask-stat strong { display:block; color:#073b22; font-size:24px; line-height:1; margin-bottom:5px; }
+.ask-stat span { color:#53605a; font-size:13px; line-height:1.25; }
+.ask-grid { display:grid; grid-template-columns:minmax(0, 0.92fr) minmax(0, 1.08fr); gap:18px; align-items:start; }
+.ask-panel { border:1px solid #dbe7df; border-radius:8px; background:#fff; padding:18px; box-shadow:0 14px 38px rgba(9, 44, 27, 0.08); }
+.ask-panel h2 { font-size:22px; }
+.ask-endpoint { padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; }
+.ask-endpoint input { margin-top:6px; font-size:12px; color:#475569; }
+.ask-panel textarea { width:100%; min-height:310px; resize:vertical; font:14px/1.5 var(--mono); border-color:#cbd5e1; border-radius:8px; background:#fbfdfc; }
+.ask-panel textarea:focus, .ask-panel input:focus { outline:2px solid rgba(20, 118, 82, 0.22); border-color:#0f766e; }
 .ask-panel input { width:100%; }
-.ask-actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
-.ask-result { white-space:pre-wrap; font:14px/1.5 var(--mono); background:#0f172a; color:#e5e7eb; border-radius:8px; padding:14px; min-height:340px; overflow:auto; }
-.ask-muted { color:var(--muted); font-size:14px; }
+.ask-actions { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+.ask-actions .btn { min-height:42px; }
+.ask-result { white-space:pre-wrap; font:14px/1.55 var(--mono); background:#102018; color:#ecfdf5; border:1px solid #244d38; border-radius:8px; padding:16px; min-height:380px; overflow:auto; box-shadow:inset 0 1px 0 rgba(255,255,255,0.06); }
+.ask-result:empty::before { content:""; display:block; min-height:1px; }
+.ask-muted { color:#647067; font-size:14px; }
 .ask-examples { display:grid; gap:10px; margin:12px 0 14px; }
-.ask-example { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; border:1px solid var(--line); border-radius:8px; padding:10px; background:#f8fafc; }
-.ask-example-title { font-weight:700; margin-bottom:4px; }
-.ask-example-text { color:var(--muted); font-size:13px; line-height:1.35; }
-.ask-quota { display:flex; justify-content:space-between; gap:10px; margin-top:10px; font-size:13px; color:var(--muted); }
+.ask-example { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; border:1px solid #dbe7df; border-radius:8px; padding:12px; background:#f8fbf8; }
+.ask-example-title { font-weight:800; margin-bottom:4px; color:#073b22; }
+.ask-example-text { color:#56635c; font-size:13px; line-height:1.38; }
+.ask-quota { display:flex; justify-content:space-between; gap:10px; margin-top:12px; font-size:13px; color:#56635c; }
+.ask-quota strong { color:#073b22; }
+.ask-progress { margin-top:14px; padding:14px; border:1px solid #cfe5d8; border-radius:8px; background:#f7fcf8; }
+.ask-progress-head { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:10px; font-size:14px; }
+.ask-progress-head strong { color:#073b22; }
+.ask-progress-head span { color:#53605a; font-size:13px; white-space:nowrap; }
+.ask-progress-track { height:12px; overflow:hidden; border-radius:999px; background:#dfe9e2; box-shadow:inset 0 1px 2px rgba(15, 23, 42, 0.12); }
+.ask-progress-fill { width:0%; height:100%; border-radius:999px; background:linear-gradient(90deg, #0f766e, #22c55e, #f59e0b); transition:width 420ms ease; }
+.ask-progress.is-running .ask-progress-fill { box-shadow:0 0 18px rgba(34, 197, 94, 0.45); }
+.ask-progress-steps { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; padding:0; margin:12px 0 0; list-style:none; }
+.ask-progress-steps li { min-height:42px; padding:8px; border-radius:8px; background:#eef6f0; color:#647067; font-size:12px; line-height:1.25; border:1px solid transparent; }
+.ask-progress-steps li.is-active { border-color:#0f766e; background:#e7f7ee; color:#073b22; font-weight:800; }
+.ask-progress-steps li.is-done { background:#dcfce7; color:#14532d; }
 .ask-plan-link { display:none; margin-bottom:12px; padding:12px; border:1px solid #b7e4c7; background:#f0fdf4; border-radius:8px; }
 .ask-plan-link.is-visible { display:block; }
 .ask-plan-link p { margin:0 0 8px; color:#166534; font-size:14px; }
-@media (max-width: 900px) { .ask-grid { grid-template-columns:1fr; } }
-@media (max-width: 520px) { .ask-example { grid-template-columns:1fr; } }
+@media (max-width: 900px) { .ask-hero, .ask-grid { grid-template-columns:1fr; } .ask-hero-meter { min-width:0; } }
+@media (max-width: 640px) { .ask-hero-meter, .ask-progress-steps { grid-template-columns:1fr 1fr; } }
+@media (max-width: 520px) { .ask-example { grid-template-columns:1fr; } .ask-progress-head { display:block; } .ask-progress-head span { display:block; margin-top:4px; } }
 </style>
 </head>
 <body>
@@ -73,14 +99,23 @@
 </header>
 
 <main class="try-page">
-  <h1>Питання для tumor board</h1>
-  <p class="lead">Встав клінічну ситуацію своїми словами. Серверний адаптер просить ChatGPT структурувати кейс, запускає OpenOnco rule engine, а потім повертає відповідь, альтернативи або уточнюючі питання.</p>
-  <p class="ask-muted">Не вставляй реальні ідентифіковані дані пацієнта. Це чернетка для tumor board, не автономна медична порада.</p>
+  <div class="ask-hero">
+    <div>
+      <p class="ask-kicker">OpenOnco AI-чернетка</p>
+      <h1>Запит до tumor board</h1>
+      <p class="lead">Опишіть онкологічну клінічну ситуацію своїми словами. ChatGPT структурує кейс, OpenOnco звіряє його з алгоритмами, а сторінка повертає відповідь, обґрунтовані альтернативи або уточнювальні питання.</p>
+      <p class="ask-muted">Не вставляйте реальні персональні дані пацієнта. Це чернетка для tumor board, а не автономна медична порада.</p>
+    </div>
+    <div class="ask-hero-meter" aria-label="Використано запитів">
+      <div class="ask-stat"><strong>3</strong><span>текстові запити на браузер</span></div>
+      <div class="ask-stat"><strong>30-90 с</strong><span>Орієнтовне очікування</span></div>
+    </div>
+  </div>
 
   <div class="ask-grid">
     <section class="ask-panel">
-      <label class="qt-label">
-        Endpoint
+      <label class="qt-label ask-endpoint">
+        API endpoint
         <input id="endpointInput" value="/api/clinical-question" spellcheck="false">
       </label>
       <label class="qt-label" style="margin-top:12px">
@@ -88,17 +123,32 @@
         <textarea id="caseText" spellcheck="true" placeholder="62-річний пацієнт із метастатичним раком шлунка, HER2-негативний, MSS, PD-L1 CPS 25. Яка оптимальна перша лінія?"></textarea>
       </label>
       <div class="ask-quota">
-        <span>Використано питань</span>
+        <span>Використано запитів</span>
         <strong><span id="quotaUsed">0</span> / 3</strong>
       </div>
       <div class="ask-actions">
         <button id="askBtn" class="btn">Відповісти через OpenOnco</button>
         <button id="clearAskBtn" class="btn btn-secondary">Очистити</button>
       </div>
+      <div id="askProgress" class="ask-progress" aria-live="polite">
+        <div class="ask-progress-head">
+          <strong id="progressLabel">Готово до клінічного запиту</strong>
+          <span id="progressEta">Зазвичай 30-90 с</span>
+        </div>
+        <div class="ask-progress-track" aria-hidden="true">
+          <div id="progressFill" class="ask-progress-fill"></div>
+        </div>
+        <ol class="ask-progress-steps">
+          <li id="progressStep1" class="is-active">Структурую кейс</li>
+          <li id="progressStep2">Зіставляю з алгоритмами OpenOnco</li>
+          <li id="progressStep3">Перевіряю біомаркери й опції</li>
+          <li id="progressStep4">Формую відповідь</li>
+        </ol>
+      </div>
       <p id="askStatus" class="ask-muted" role="status" aria-live="polite"></p>
     </section>
     <section class="ask-panel">
-      <h2 style="margin-top:0">Приклади запиту</h2>
+      <h2 style="margin-top:0">Приклади формату</h2>
       <div id="askExamples" class="ask-examples"></div>
       <div id="planGeneratorLinkWrap" class="ask-plan-link">
         <p>Є добрий збіг із KB. Структурований профіль можна відкрити в браузерному генераторі планів.</p>
@@ -127,6 +177,24 @@
   const examplesRoot = document.getElementById('askExamples');
   const planLinkWrap = document.getElementById('planGeneratorLinkWrap');
   const planLink = document.getElementById('planGeneratorLink');
+  const progressBox = document.getElementById('askProgress');
+  const progressFill = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+  const progressEta = document.getElementById('progressEta');
+  const progressSteps = [
+    document.getElementById('progressStep1'),
+    document.getElementById('progressStep2'),
+    document.getElementById('progressStep3'),
+    document.getElementById('progressStep4')
+  ];
+  const PROGRESS_COPY = [
+    { at: 0, label: 'Структурую кейс' },
+    { at: 34, label: 'Зіставляю з алгоритмами OpenOnco' },
+    { at: 64, label: 'Перевіряю біомаркери й опції' },
+    { at: 86, label: 'Формую відповідь' }
+  ];
+  let progressTimer = null;
+  let progressStartedAt = 0;
   const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
   if (configured) {
     endpointInput.value = configured;
@@ -161,7 +229,51 @@
     const used = getCount();
     quotaUsed.textContent = String(used);
     askBtn.disabled = used >= MAX_QUESTIONS;
-    if (used >= MAX_QUESTIONS) status.textContent = 'У цьому браузері вже використано всі 3 free-text питання.';
+    if (used >= MAX_QUESTIONS) status.textContent = 'У цьому браузері вже використано всі 3 текстові запити.';
+  }
+
+  function setProgress(percent, label, eta, activeIndex) {
+    const pct = Math.max(0, Math.min(100, Math.round(percent)));
+    progressFill.style.width = pct + '%';
+    progressLabel.textContent = label;
+    progressEta.textContent = eta;
+    progressSteps.forEach((step, idx) => {
+      step.classList.toggle('is-active', idx === activeIndex);
+      step.classList.toggle('is-done', idx < activeIndex || pct >= 100);
+    });
+  }
+
+  function resetProgress() {
+    if (progressTimer) window.clearInterval(progressTimer);
+    progressTimer = null;
+    progressBox.classList.remove('is-running');
+    setProgress(0, 'Готово до клінічного запиту', 'Зазвичай 30-90 с', 0);
+  }
+
+  function startProgress() {
+    resetProgress();
+    progressBox.classList.add('is-running');
+    progressStartedAt = Date.now();
+    const durationMs = 90000;
+    const tick = () => {
+      const elapsed = Date.now() - progressStartedAt;
+      const pct = Math.min(92, 8 + (elapsed / durationMs) * 84);
+      let activeIndex = 0;
+      PROGRESS_COPY.forEach((step, idx) => {
+        if (pct >= step.at) activeIndex = idx;
+      });
+      const remainingSec = Math.max(10, Math.ceil((durationMs - elapsed) / 1000));
+      setProgress(pct, PROGRESS_COPY[activeIndex].label, 'ще приблизно ' + remainingSec + ' с', activeIndex);
+    };
+    tick();
+    progressTimer = window.setInterval(tick, 900);
+  }
+
+  function finishProgress(ok) {
+    if (progressTimer) window.clearInterval(progressTimer);
+    progressTimer = null;
+    progressBox.classList.remove('is-running');
+    setProgress(ok ? 100 : 0, ok ? 'Відповідь готова' : 'Запит зупинено', ok ? 'Готово' : 'Перевірте повідомлення нижче', ok ? 3 : 0);
   }
 
   function renderExamples() {
@@ -265,7 +377,7 @@
     const text = await resp.text();
     if (!contentType.includes('application/json')) {
       const endpoint = endpointInput.value.trim() || DEFAULT_ENDPOINT;
-      throw new Error('Clinical-question API не повернув JSON. Публічний сайт статичний, доки не задеплоєно серверний адаптер; скористайся браузерним генератором планів або вкажи робочий API endpoint. Endpoint: ' + endpoint + '. HTTP ' + resp.status + '.');
+      throw new Error('Clinical-question API не повернув JSON. Публічний сайт статичний, доки не розгорнуто серверний адаптер; скористайтеся браузерним генератором планів або вкажіть робочий API endpoint. Endpoint: ' + endpoint + '. HTTP ' + resp.status + '.');
     }
     try {
       return text ? JSON.parse(text) : {};
@@ -276,18 +388,19 @@
 
   askBtn.addEventListener('click', async () => {
     if (getCount() >= MAX_QUESTIONS) {
-      status.textContent = 'У цьому браузері вже використано всі 3 free-text питання.';
+      status.textContent = 'У цьому браузері вже використано всі 3 текстові запити.';
       return;
     }
     const text = caseText.value.trim();
     if (!text) {
-      status.textContent = 'Спочатку встав клінічну ситуацію.';
+      status.textContent = 'Спочатку вставте клінічну ситуацію.';
       return;
     }
     askBtn.disabled = true;
-    status.textContent = 'Структурую кейс і запускаю engine...';
+    status.textContent = 'Аналізую кейс. Зазвичай це займає до 90 секунд.';
     result.textContent = '';
     planLinkWrap.classList.remove('is-visible');
+    startProgress();
     try {
       const resp = await fetch(endpointInput.value.trim() || DEFAULT_ENDPOINT, {
         method: 'POST',
@@ -301,10 +414,12 @@
       result.textContent = renderPayload(payload);
       await updatePlanGeneratorLink(payload);
       status.textContent = payload.status || 'ok';
+      finishProgress(true);
     } catch (err) {
       status.textContent = 'Запит не вдався: ' + err.message;
       result.textContent = '';
       planLinkWrap.classList.remove('is-visible');
+      finishProgress(false);
     } finally {
       updateQuota();
     }
@@ -314,10 +429,12 @@
     result.textContent = '';
     status.textContent = '';
     planLinkWrap.classList.remove('is-visible');
+    resetProgress();
   });
   renderExamples();
   getUserId();
   updateQuota();
+  resetProgress();
 })();
 </script>
 </body>
