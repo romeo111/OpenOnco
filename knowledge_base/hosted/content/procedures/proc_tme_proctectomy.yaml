@@ -1,0 +1,88 @@
+# Total mesorectal excision (TME) — §17.1 Surgery entity (RATIFIED
+# 2026-05-07). Lands as the surgery phase (phase 3) of
+# IND-RECTAL-TNT-SHORT-COURSE-RAPIDO (chunk
+# gi3-c3-rectal-tnt-rapido-2026-05-08-2100). The standard-of-care
+# resection for locally advanced rectal cancer per Heald (1982 / 1986)
+# pioneered the technique; now NCCN v.4.2025 category 1 + ESMO 2024.
+id: SUR-TME-PROCTECTOMY
+names:
+  preferred: "Proctectomy with total mesorectal excision (TME)"
+  ukrainian: "Проктектомія з тотальною мезоректальною ексцизією (TME)"
+  english: "Proctectomy with total mesorectal excision"
+  synonyms:
+    - "TME proctectomy"
+    - "Low anterior resection with TME (LAR-TME)"
+    - "Abdominoperineal resection with TME (APR-TME)"
+    - "Total mesorectal excision"
+    - "Heald TME"
+
+# Free-string per §17.1 sketch — surgical taxonomy not enum'd in v0.1.
+# `proctectomy_with_tme` is the canonical type; whether the specific
+# resection is low anterior (sphincter-preserving) or abdominoperineal
+# (with permanent end-colostomy) is tumor-location driven (≥1-2 cm
+# distal margin determines feasibility of LAR vs APR).
+type: proctectomy_with_tme
+intent: curative
+
+target_organ: rectum
+applicable_diseases:
+  - DIS-CRC
+
+# Operative mortality from large-volume centers; TME is technically
+# demanding and surgical-volume gradient is reproducible.
+operative_mortality_pct: "1-3% in high-volume centers; up to 5% in low-volume centers"
+
+common_complications:
+  - name: "Anastomotic leak (after sphincter-preserving LAR)"
+    frequency: "8-15%"
+  - name: "Postoperative ileus / small-bowel obstruction"
+    frequency: "5-10%"
+  - name: "Wound infection (perineal wound after APR)"
+    frequency: "10-30% APR; 3-5% LAR"
+  - name: "Urinary dysfunction (autonomic nerve injury)"
+    frequency: "10-30% transient; 5-10% persistent"
+  - name: "Sexual dysfunction (erectile / ejaculatory; dyspareunia)"
+    frequency: "20-40% transient; 10-25% persistent"
+  - name: "Low anterior resection syndrome (LARS) — bowel-frequency / urgency / incontinence"
+    frequency: "40-60% mild-moderate; 10-20% severe"
+  - name: "Permanent stoma (after APR or failed coloanal anastomosis)"
+    frequency: "Universal after APR; 5-15% after attempted LAR"
+  - name: "Pelvic abscess / sepsis"
+    frequency: "3-7%"
+
+sources:
+  - SRC-RAPIDO-BAHADOER-2021
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-CRC-2024
+
+last_reviewed: "2026-05-08"
+notes: >
+  Total mesorectal excision (TME, Heald 1982/1986) — sharp-dissection
+  removal of the rectum with intact mesorectal envelope along the
+  anatomic perimesorectal plane — is the global standard for resectable
+  rectal adenocarcinoma per NCCN v.4.2025 and ESMO 2024. By preserving
+  the mesorectal fascia intact, TME minimizes circumferential resection
+  margin (CRM) positivity (the single strongest local-recurrence driver)
+  and removes regional nodal disease en bloc. Local recurrence rates
+  dropped from 25-40% (pre-TME conventional dissection) to 4-8% in
+  TME-trained centers. Combined with neoadjuvant therapy (CRT, SCRT, or
+  TNT regimens like RAPIDO), 5-year local control is now 90%+ in major
+  centers.
+
+  LAR vs APR decision is tumor-location driven: low rectal tumors
+  invading levators / external anal sphincter / within 1-2 cm of dentate
+  line require APR with permanent end-colostomy; mid- and high-rectal
+  tumors with adequate distal margin (≥1-2 cm fresh) are amenable to
+  sphincter-preserving LAR with coloanal or colorectal anastomosis. A
+  diverting loop ileostomy is commonly used to protect low pelvic
+  anastomoses, reversed at 8-12 weeks post-op pending integrity check
+  (water-soluble contrast enema).
+
+  Surgical timing within RAPIDO TNT: TME proctectomy follows the
+  induction-chemotherapy phase (CAPOX × 6 or FOLFOX × 9 cycles after
+  SCRT 25 Gy / 5 fx), ~22-26 weeks from SCRT start. This delayed-surgery
+  pattern allows tumor downstaging and is biologically distinct from
+  the historical Polish short-course (immediate post-RT surgery within
+  ~7 days). Watch-and-wait (non-operative management for clinical
+  complete response) is an emerging alternative in expert centers but
+  remains MDT-consensus / trial-based, not standard of care.
