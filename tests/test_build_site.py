@@ -35,7 +35,7 @@ def test_static_assets_present(site_dir: Path):
     # CSD-9C dropped monolithic openonco-engine.zip — replaced by core + per-disease + index.
     for f in (".nojekyll", "CNAME", "style.css", "index.html", "gallery.html",
               "try.html", "openonco-engine-core.zip", "openonco-engine-index.json",
-              "examples.json", "kb.html", "kb_search_index.json",
+              "examples.json", "manifest.webmanifest", "kb.html", "kb_search_index.json",
               "ukr/kb.html", "ukr/kb_search_index.json",
               "clinical-gaps.html", "ukr/clinical-gaps.html",
               "audits/clinical_gap_audit.md", "audits/clinical_gap_audit.json"):
@@ -192,6 +192,26 @@ def test_try_page_wires_pyodide_and_form(site_dir: Path):
     assert "openonco-engine-index.json" in html
     # Example dropdown source
     assert "examples.json" in html
+
+
+def test_try_page_has_pwa_manifest_and_build_status(site_dir: Path):
+    html = (site_dir / "try.html").read_text(encoding="utf-8")
+    ua_html = (site_dir / "ukr" / "try.html").read_text(encoding="utf-8")
+    manifest = json.loads((site_dir / "manifest.webmanifest").read_text(encoding="utf-8"))
+
+    assert 'rel="manifest" href="/manifest.webmanifest"' in html
+    assert 'name="theme-color" content="#0a2e1a"' in html
+    assert 'id="buildCard"' in html
+    assert 'id="coreVersion"' in html
+    assert 'id="diseaseVersion"' in html
+    assert 'id="cacheState"' in html
+    assert 'id="offlineState"' in html
+    assert 'rel="manifest" href="/manifest.webmanifest"' in ua_html
+
+    assert manifest["start_url"] == "/try.html"
+    assert manifest["display"] == "standalone"
+    assert manifest["theme_color"] == "#0a2e1a"
+    assert any(icon["src"] == "/logo.svg" for icon in manifest["icons"])
 
 
 # ── Engine bundle (Pyodide-loadable zip) ──────────────────────────────────

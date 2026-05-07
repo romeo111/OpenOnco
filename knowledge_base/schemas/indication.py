@@ -275,7 +275,103 @@ class Indication(Base):
     reviewer_signoffs: list[ReviewerSignoff] = Field(default_factory=list)
     notes: Optional[str] = None
 
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_legacy_shape(cls, v):
+        return normalize_legacy_indication_payload(v)
+
     @field_validator("reviewer_signoffs", mode="before")
     @classmethod
     def _migrate_signoffs(cls, v):
         return _migrate_int_signoffs(v)
+
+
+def _legacy_biomarker_requirement(value: object, *, required: bool) -> object:
+    if not isinstance(value, str):
+        return value
+    return {
+        "biomarker_id": "LEGACY-FREE-TEXT",
+        "required": required,
+        "value_constraint": value,
+    }
+
+
+def _note_append(notes: object, prefix: str, values: list[str]) -> str:
+    base = notes if isinstance(notes, str) else ""
+    addition = f"{prefix}: " + " | ".join(values)
+    return f"{base}\n{addition}".strip() if base else addition
+
+
+def normalize_legacy_indication_payload(raw: object) -> object:
+    """Normalize older rich Indication YAML into the current strict schema.
+
+    Several generated indication files used prose objects in fields that later
+    became FK-only lists. Preserve that authoring context in `notes`, but keep
+    the actual FK fields strict so the loader can still catch real IDs.
+    """
+    if not isinstance(raw, dict):
+        return raw
+
+    normalized = dict(raw)
+
+    if normalized.get("strength_of_recommendation") == "moderate":
+        normalized["strength_of_recommendation"] = "conditional"
+
+    sources = []
+    for source in normalized.get("sources") or []:
+        if isinstance(source, dict) and source.get("position") == "background":
+            source = dict(source)
+            source["position"] = "context"
+        sources.append(source)
+    if sources:
+        normalized["sources"] = sources
+
+    applicable = normalized.get("applicable_to")
+    if isinstance(applicable, dict):
+        applicable = dict(applicable)
+        for field_name, required in (
+            ("biomarker_requirements_required", True),
+            ("biomarker_requirements_excluded", False),
+        ):
+            applicable[field_name] = [
+                _legacy_biomarker_requirement(item, required=required)
+                for item in applicable.get(field_name) or []
+            ]
+        normalized["applicable_to"] = applicable
+
+    if isinstance(normalized.get("concurrent_therapy"), list):
+        concurrent: list[str] = []
+        legacy_notes: list[str] = []
+        for item in normalized.get("concurrent_therapy") or []:
+            if isinstance(item, str):
+                concurrent.append(item)
+            elif isinstance(item, dict):
+                regimen_id = item.get("regimen_id")
+                if isinstance(regimen_id, str):
+                    concurrent.append(regimen_id)
+                legacy_notes.append(str(item))
+        normalized["concurrent_therapy"] = concurrent
+        if legacy_notes:
+            normalized["notes"] = _note_append(
+                normalized.get("notes"),
+                "Legacy concurrent therapy details",
+                legacy_notes,
+            )
+
+    if isinstance(normalized.get("red_flags_triggering_alternative"), list):
+        red_flags: list[str] = []
+        legacy_notes = []
+        for item in normalized.get("red_flags_triggering_alternative") or []:
+            if isinstance(item, str):
+                red_flags.append(item)
+            elif isinstance(item, dict):
+                legacy_notes.append(str(item))
+        normalized["red_flags_triggering_alternative"] = red_flags
+        if legacy_notes:
+            normalized["notes"] = _note_append(
+                normalized.get("notes"),
+                "Legacy alternative-trigger prose",
+                legacy_notes,
+            )
+
+    return normalized

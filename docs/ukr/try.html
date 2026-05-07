@@ -6,6 +6,9 @@
 <title>OpenOnco · Спробувати</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0a2e1a">
+<meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -176,6 +179,19 @@
         </div>
       </div>
 
+      <div class="quest-build-card" id="buildCard">
+        <div class="build-card-head">
+          <h3>Збірка</h3>
+          <span id="pwaInstallState" class="build-state">Браузер</span>
+        </div>
+        <dl class="build-meta">
+          <div><dt>Core</dt><dd id="coreVersion">v2fb5901526b5</dd></div>
+          <div><dt>Хвороба</dt><dd id="diseaseVersion">—</dd></div>
+          <div><dt>Кеш</dt><dd id="cacheState">Перевіряю…</dd></div>
+          <div><dt>Offline</dt><dd id="offlineState">Мережа потрібна для першого запуску</dd></div>
+        </dl>
+      </div>
+
       <div class="try-actions quest-cta">
         <button id="runBtn" class="btn btn-primary" disabled>
           Згенерувати повний Plan
@@ -314,6 +330,11 @@ const impactRedflags = document.getElementById('impactRedflags');
 const impactSelected = document.getElementById('impactSelected');
 const impactSelectedText = document.getElementById('impactSelectedText');
 const impactWarnings = document.getElementById('impactWarnings');
+const coreVersionEl = document.getElementById('coreVersion');
+const diseaseVersionEl = document.getElementById('diseaseVersion');
+const cacheStateEl = document.getElementById('cacheState');
+const offlineStateEl = document.getElementById('offlineState');
+const pwaInstallStateEl = document.getElementById('pwaInstallState');
 const generatingOverlay = document.getElementById('generatingOverlay');
 const generatingTitle = document.getElementById('generatingTitle');
 const generatingLead = document.getElementById('generatingLead');
@@ -451,6 +472,33 @@ function setError(msg) {
   } else {
     errorBox.hidden = true;
     errorBox.textContent = '';
+  }
+}
+
+function setText(el, value) {
+  if (el) el.textContent = value;
+}
+
+async function refreshBuildPanel(diseaseId = null) {
+  const online = navigator.onLine !== false;
+  setText(offlineStateEl, online
+    ? 'Онлайн'
+    : 'Offline - лише кешовані bundle');
+
+  const swControlled = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
+  setText(cacheStateEl, swControlled
+    ? 'Service worker активний'
+    : 'Кеш браузера очікує');
+  setText(pwaInstallStateEl, window.matchMedia('(display-mode: standalone)').matches
+    ? 'Встановлено'
+    : 'Браузер');
+
+  if (bundleIndex) {
+    setText(coreVersionEl, 'v' + (bundleIndex.core_version || '2fb5901526b5'));
+    if (diseaseId) {
+      const dver = (bundleIndex.disease_versions || {})[diseaseId];
+      setText(diseaseVersionEl, dver ? diseaseId + ' / v' + dver : diseaseId + ' / core');
+    }
   }
 }
 
@@ -1351,6 +1399,7 @@ async function loadBundleIndex() {
       const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now());
       if (!r.ok) throw new Error('Index fetch HTTP ' + r.status);
       bundleIndex = await r.json();
+      refreshBuildPanel().catch(() => {});
       return bundleIndex;
     } catch (e) {
       lastErr = e;
@@ -1412,12 +1461,16 @@ async function loadCoreBundle() {
 // time per slot and drop silently on quota errors.
 async function loadDiseaseModule(diseaseId) {
   if (!diseaseId) return;
-  if (loadedDiseases.has(diseaseId)) return;
+  if (loadedDiseases.has(diseaseId)) {
+    refreshBuildPanel(diseaseId).catch(() => {});
+    return;
+  }
   if (!bundleIndex || !bundleIndex.diseases) return;
   const relUrl = bundleIndex.diseases[diseaseId];
   if (!relUrl) {
     // Disease has no per-disease bundle — its content is fully in core.
     loadedDiseases.add(diseaseId);
+    refreshBuildPanel(diseaseId).catch(() => {});
     return;
   }
   const ver = (bundleIndex.disease_versions || {})[diseaseId] || '';
@@ -1432,6 +1485,7 @@ async function loadDiseaseModule(diseaseId) {
       for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
       pyodide.unpackArchive(u8.buffer, 'zip');
       loadedDiseases.add(diseaseId);
+      refreshBuildPanel(diseaseId).catch(() => {});
       console.log('[OO] disease module ' + diseaseId + ' loaded from localStorage cache');
       return;
     }
@@ -1449,6 +1503,7 @@ async function loadDiseaseModule(diseaseId) {
   await yieldToBrowser();
   pyodide.unpackArchive(buf, 'zip');
   loadedDiseases.add(diseaseId);
+  refreshBuildPanel(diseaseId).catch(() => {});
 
   // Re-validate after merge so the next generate_plan() sees the new YAMLs.
   // apply_disease_module() drops the loader cache; cheap enough to run on
@@ -2147,6 +2202,14 @@ window.addEventListener('hashchange', loadFromUrlHash);
 // ICD-O-3 codes before the user clicks Generate. Best-effort, never
 // blocks UI.
 loadBundleIndex().catch(() => {});
+refreshBuildPanel().catch(() => {});
+window.addEventListener('online', () => refreshBuildPanel().catch(() => {}));
+window.addEventListener('offline', () => refreshBuildPanel().catch(() => {}));
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    refreshBuildPanel().catch(() => {});
+  });
+}
 
 // CSD-6E polish: register the cache-first service worker so repeat
 // visits skip the network for the engine bundle entirely. Best-effort
@@ -2154,9 +2217,12 @@ loadBundleIndex().catch(() => {});
 // mode, ITP, file://, etc.).
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((e) => {
-      console.warn('[OpenOnco] service worker registration failed:', e);
-    });
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => refreshBuildPanel().catch(() => {}))
+      .catch((e) => {
+        console.warn('[OpenOnco] service worker registration failed:', e);
+        refreshBuildPanel().catch(() => {});
+      });
   });
 }
 </script>

@@ -51,6 +51,7 @@ OpenOnco automates the chore work. The clinician gets a **drafted plan with ever
 git clone https://github.com/romeo111/OpenOnco.git
 cd OpenOnco
 pip install -e .
+python scripts/audit_validator.py --human
 pytest tests/
 ```
 

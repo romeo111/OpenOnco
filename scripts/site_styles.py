@@ -1048,6 +1048,41 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   font-family: var(--font-display); font-size: 18px;
   color: var(--green-900); margin-bottom: 14px;
 }
+.quest-build-card {
+  background: white; border: 1px solid var(--gray-200);
+  border-radius: 8px; padding: 14px 16px;
+}
+.build-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 10px;
+}
+.build-card-head h3 {
+  font-family: var(--font-display); font-size: 16px;
+  color: var(--green-900); margin: 0;
+}
+.build-state {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--green-800); background: var(--green-50);
+  border: 1px solid var(--green-100); border-radius: 4px;
+  padding: 3px 6px; white-space: nowrap;
+}
+.build-meta {
+  display: grid; gap: 8px; margin: 0;
+}
+.build-meta div {
+  display: grid; grid-template-columns: 74px 1fr; gap: 8px;
+  align-items: baseline;
+}
+.build-meta dt {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.6px; text-transform: uppercase;
+  color: var(--gray-500);
+}
+.build-meta dd {
+  margin: 0; min-width: 0; overflow-wrap: anywhere;
+  font-family: var(--font-mono); font-size: 11px; color: var(--gray-800);
+}
 .impact-progress { margin-bottom: 16px; }
 .impact-bar {
   background: var(--gray-100); height: 8px; border-radius: 4px;

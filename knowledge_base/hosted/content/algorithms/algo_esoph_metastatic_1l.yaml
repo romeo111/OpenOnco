@@ -63,14 +63,26 @@ decision_tree:
   # existing step 1 (chemo+nivo SCC arm) when chemo_spare_preference is not set.
   - step: 10
     evaluate:
-      all_of:
-        - finding: "histology"
-          value: "squamous"
-        - finding: "pdl1_cps"
-          threshold: 1
-          comparator: ">="
-        - finding: "chemo_spare_preference"
-          value: true
+      any_of:
+        - condition: "ESCC CPS >=1 chemo-sparing preference"
+        - all_of:
+            - any_of:
+                - finding: "histology"
+                  value: "squamous"
+                - condition: "histology_escc"
+            - any_of:
+                - finding: "pdl1_cps"
+                  threshold: 1
+                  comparator: ">="
+                - condition: "PD-L1 CPS >= 1 (22C3 or 28-8 assay)"
+                - condition: "PD-L1 CPS ≥ 1 (22C3 or 28-8 assay)"
+                - condition: "ESCC CPS >=1"
+            - any_of:
+                - finding: "chemo_spare_preference"
+                  value: true
+                - condition: "Chemo-sparing preference"
+                - condition: "Chemo unsuitable but ICI eligible"
+                - condition: "chemo_sparing_preference"
     if_true:
       result: IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO
       notes: >
@@ -89,10 +101,18 @@ decision_tree:
   - step: 11
     evaluate:
       all_of:
-        - finding: "histology"
-          value: "adeno"
-        - finding: "her2_status"
-          value: "positive"
+        - any_of:
+            - finding: "histology"
+              value: "adeno"
+            - condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
+            - condition: "histology_adenocarcinoma"
+        - any_of:
+            - finding: "her2_status"
+              value: "positive"
+            - condition: "HER2-positive adenocarcinoma"
+            - condition: "HER2-positive"
+            - condition: "BIO-HER2-SOLID positive"
+            - condition: "her2_positive"
     if_true:
       result: IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO
       notes: >
@@ -112,6 +132,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "Stage IV (metastatic) OR unresectable locally advanced esophageal carcinoma"
+        - condition: "metastatic_or_unresectable"
     if_true:
       next_step: 2
     if_false:
@@ -125,6 +146,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "Squamous-cell carcinoma (ESCC) histology"
+        - condition: "histology_escc"
     if_true:
       next_step: 3
     if_false:
@@ -159,8 +181,12 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
-        - condition: "PD-L1 CPS ≥ 10"
+        - any_of:
+            - condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
+            - condition: "histology_adenocarcinoma"
+        - any_of:
+            - condition: "PD-L1 CPS >= 10"
+            - condition: "PD-L1 CPS ≥ 10"
     if_true:
       result: IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO
       notes: >
