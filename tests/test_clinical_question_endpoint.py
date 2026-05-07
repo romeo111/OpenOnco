@@ -96,6 +96,54 @@ def test_answer_flow_passes_engine_summary_to_presenter(monkeypatch):
     assert out["patient_profile"]["disease"]["id"] == "DIS-GASTRIC"
 
 
+def test_pancreatic_case_overrides_erroneous_gastric_extraction(monkeypatch):
+    extraction = {
+        "case_summary": "Metastatic pancreatic adenocarcinoma, ECOG 1, normal bilirubin.",
+        "clinical_question": "First-line systemic therapy options",
+        "answer_options": [],
+        "patient_profile_json": json.dumps(
+            {
+                "patient_id": "TEST-PDAC-NORMALIZE",
+                "disease": {"id": "DIS-GASTRIC", "suspicion": "Pancreatic adenocarcinoma"},
+                "line_of_therapy": 1,
+                "biomarkers": {},
+            }
+        ),
+        "mentioned_biomarkers": [],
+        "mentioned_drugs": [],
+        "unsupported_mentions": [],
+        "missing_profile_fields": [],
+        "confidence_notes": [],
+    }
+    engine = cq.EngineSummary(mode="treatment", ok=True, payload={"tracks": []}, warnings=[])
+
+    monkeypatch.setattr(cq, "extract_case", lambda case_text, locale="uk": extraction)
+    monkeypatch.setattr(cq, "run_engine", lambda patient: engine)
+
+    def fake_compose_answer(**kwargs):
+        assert kwargs["patient"]["disease"]["id"] == "DIS-PDAC"
+        return {
+            "status": "answered",
+            "direct_answer": "ok",
+            "selected_options": [],
+            "rationale": [],
+            "clarifying_questions": [],
+            "engine_limitations": [],
+            "safety_note": cq.DISCLAIMER_UK,
+            "confidence": "medium",
+        }
+
+    monkeypatch.setattr(cq, "compose_answer", fake_compose_answer)
+
+    out = cq.answer_clinical_question(
+        "66-річний пацієнт із метастатичною аденокарциномою підшлункової залози, ECOG 1.",
+        locale="uk",
+    )
+
+    assert out["status"] == "answered"
+    assert out["patient_profile"]["disease"]["id"] == "DIS-PDAC"
+
+
 def test_handle_json_request_serializes_errors(monkeypatch):
     monkeypatch.setattr(
         cq,

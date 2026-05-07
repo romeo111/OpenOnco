@@ -677,6 +677,72 @@ def _safe_json_object(text: str) -> dict[str, Any]:
     return data
 
 
+_DISEASE_ID_ALIASES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "DIS-PDAC",
+        (
+            "pdac",
+            "pancreatic adenocarcinoma",
+            "pancreatic ductal adenocarcinoma",
+            "metastatic pancreatic cancer",
+            "метастатичною аденокарциномою підшлункової",
+            "аденокарциномою підшлункової",
+            "рак підшлункової",
+            "раком підшлункової",
+        ),
+    ),
+    ("DIS-GBM", ("glioblastoma", "gbm", "гліобласт")),
+    ("DIS-NSCLC", ("nsclc", "non-small cell lung", "недрібноклітин", "недрiбнокл")),
+    ("DIS-CRC", ("colorectal", "colon cancer", "рак ободов", "рак товст", "crc")),
+    (
+        "DIS-GASTRIC",
+        ("gastric cancer", "gastric adenocarcinoma", "stomach cancer", "рак шлун"),
+    ),
+)
+
+
+def _infer_disease_id_from_text(text: str) -> str | None:
+    norm = _normalize_term(text)
+    for disease_id, aliases in _DISEASE_ID_ALIASES:
+        if any(_normalize_term(alias) in norm for alias in aliases):
+            return disease_id
+    return None
+
+
+def _has_primary_disease_signal(text: str, disease_id: str) -> bool:
+    norm = _normalize_term(text)
+    for candidate_id, aliases in _DISEASE_ID_ALIASES:
+        if candidate_id != disease_id:
+            continue
+        return any(_normalize_term(alias) in norm for alias in aliases)
+    return False
+
+
+def _normalize_extracted_patient(
+    patient: dict[str, Any],
+    extraction: dict[str, Any],
+    *,
+    case_text: str = "",
+) -> dict[str, Any]:
+    disease = patient.get("disease")
+    if not isinstance(disease, dict):
+        disease = {}
+        patient["disease"] = disease
+    disease_id = str(disease.get("id") or "").upper()
+    text_blob = " ".join(_iter_strings({
+        "case_text": case_text,
+        "extraction": extraction.get("case_summary"),
+        "clinical_question": extraction.get("clinical_question"),
+        "disease": disease,
+        "pathology": patient.get("pathology"),
+    }))
+    inferred = _infer_disease_id_from_text(text_blob)
+    if inferred and (not disease_id.startswith("DIS-") or inferred != disease_id):
+        if not disease_id.startswith("DIS-") or not _has_primary_disease_signal(case_text, disease_id):
+            disease["id"] = inferred
+    return patient
+
+
 def _track_summary(track: Any) -> dict[str, Any]:
     regimen = getattr(track, "regimen_data", None) or {}
     return {
@@ -894,6 +960,7 @@ def answer_clinical_question(case_text: str, *, locale: str = "uk") -> dict[str,
 
     extraction = extract_case(case_text, locale=locale)
     patient = _safe_json_object(extraction["patient_profile_json"])
+    patient = _normalize_extracted_patient(patient, extraction, case_text=case_text)
     validation = _validate_extracted_case(extraction, patient)
     if not validation.ok:
         answer = _validation_clarification(validation, locale=locale)
