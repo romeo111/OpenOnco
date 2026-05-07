@@ -19,7 +19,13 @@ from .diagnostic import (
 )
 from .disease import Disease
 from .drug import Drug
-from .experimental_option import ExperimentalOption, ExperimentalTrial
+from .experimental_option import (
+    BiomarkerStratification,
+    DesignFlag,
+    ExperimentalOption,
+    ExperimentalTrial,
+    TrialOutlook,
+)
 from .indication import Indication
 from .mdt_skill import MdtSkill
 from .monitoring import MonitoringSchedule
@@ -87,9 +93,12 @@ __all__ = [
     "Disease",
     "Drug",
     "ENTITY_BY_DIR",
+    "BiomarkerStratification",
+    "DesignFlag",
     "ExperimentalOption",
     "ExperimentalTrial",
     "FDAComplianceMetadata",
+    "TrialOutlook",
     "IHCPanel",
     "Indication",
     "MdtSkill",

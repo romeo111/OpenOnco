@@ -517,6 +517,20 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
                                           "Дані ctgov можуть відставати від поточного статусу UA-сайтів.",
                                     "en": "Verify recruitment status directly with the trial site. "
                                           "ctgov data can lag behind current UA-site status."},
+    # Trial outlook — per-trial structured signals (CHARTER §8.3 invariant:
+    # render-time only, engine never reads these back)
+    "exp_th_outlook":              {"uk": "Сигнали", "en": "Signals"},
+    "exp_outlook_enriched":        {"uk": "Біомаркер: збагачено",
+                                    "en": "Biomarker: enriched"},
+    "exp_outlook_unclear":         {"uk": "Біомаркер: неоднозначно",
+                                    "en": "Biomarker: unclear"},
+    "exp_outlook_phase1":          {"uk": "Лише фаза 1", "en": "Phase 1 only"},
+    "exp_outlook_small_n":         {"uk": "Малий набір (N<50)",
+                                    "en": "Small N (<50)"},
+    "exp_outlook_surrogate":       {"uk": "Сурогатна кінцева точка",
+                                    "en": "Surrogate endpoint only"},
+    "exp_outlook_single_country":  {"uk": "Одна країна",
+                                    "en": "Single country"},
     # Access matrix
     "matrix_heading":              {"uk": "Доступність опцій в Україні",
                                     "en": "Option availability in Ukraine"},
@@ -1655,6 +1669,82 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
 # ── Experimental-options track (Phase C) ─────────────────────────────────
 
 
+_OUTLOOK_FLAG_KEYS = {
+    "phase1_only": "exp_outlook_phase1",
+    "small_enrollment": "exp_outlook_small_n",
+    "surrogate_endpoint_only": "exp_outlook_surrogate",
+    "single_country": "exp_outlook_single_country",
+}
+
+
+def _render_trial_outlook(outlook, notes_index: dict[str, str], target_lang: str) -> str:
+    """Render a `TrialOutlook` as a sequence of badges. Returns "—" when
+    the outlook is None (older cached trials) or has no surfaceable
+    signals. Each badge gets a `title` tooltip from `outlook.notes`
+    where one is available — index by partial substring match because
+    `notes` is a parallel free-text list, not a per-flag dict."""
+    if outlook is None:
+        return "—"
+
+    parts: list[str] = []
+
+    if outlook.biomarker_stratification == "enriched":
+        label = _t("exp_outlook_enriched", target_lang)
+        title = notes_index.get("enriched", label)
+        parts.append(
+            f'<span class="badge badge--strat-enriched" title="{_h(title)}">'
+            f'{_h(label)}</span>'
+        )
+    elif outlook.biomarker_stratification == "unclear":
+        label = _t("exp_outlook_unclear", target_lang)
+        title = notes_index.get("unclear", label)
+        parts.append(
+            f'<span class="badge badge--strat-unclear" title="{_h(title)}">'
+            f'{_h(label)}</span>'
+        )
+    # "open_label" intentionally renders nothing — it's the absence of signal.
+
+    for flag in outlook.design_flags:
+        key = _OUTLOOK_FLAG_KEYS.get(flag)
+        if key is None:
+            continue
+        label = _t(key, target_lang)
+        title = notes_index.get(flag, label)
+        parts.append(
+            f'<span class="badge badge--design-flag" title="{_h(title)}">'
+            f'{_h(label)}</span>'
+        )
+
+    return " ".join(parts) if parts else "—"
+
+
+def _outlook_notes_index(outlook) -> dict[str, str]:
+    """Build a {flag_or_strat -> note} lookup from `outlook.notes`.
+
+    `notes` is a parallel list authored by `engine.trial_outlook.score_trial`
+    in a fixed order: stratification note (if any) first, then one note
+    per design flag. We match heuristically on substring tokens so the
+    tooltip surfaces the original explanation."""
+    if outlook is None:
+        return {}
+    idx: dict[str, str] = {}
+    for note in outlook.notes:
+        low = note.lower()
+        if "inclusion criteria reference" in low:
+            idx["enriched"] = note
+        elif "partial biomarker" in low or "exclusion" in low:
+            idx["unclear"] = note
+        elif "phase 1" in low:
+            idx["phase1_only"] = note
+        elif "target enrollment" in low:
+            idx["small_enrollment"] = note
+        elif "surrogate" in low:
+            idx["surrogate_endpoint_only"] = note
+        elif "single-country" in low:
+            idx["single_country"] = note
+    return idx
+
+
 def _render_experimental_options(option, target_lang: str = "uk") -> str:
     """Render the clinical-trial track surfaced after engine selection.
 
@@ -1704,6 +1794,9 @@ def _render_experimental_options(option, target_lang: str = "uk") -> str:
             ua_badge = '<span class="badge badge--ua" title="Site present in Ukraine">UA</span>'
         elig = t.inclusion_summary or ""
         elig_short = (elig[:140] + "…") if len(elig) > 140 else elig
+        outlook_cell = _render_trial_outlook(
+            t.outlook, _outlook_notes_index(t.outlook), target_lang
+        )
         rows.append(
             "<tr>"
             f'<td class="trial-nct"><a href="https://clinicaltrials.gov/study/{_h(t.nct_id)}" '
@@ -1713,6 +1806,7 @@ def _render_experimental_options(option, target_lang: str = "uk") -> str:
             f'<td class="trial-status">{_h(t.status)}</td>'
             f'<td class="trial-sponsor">{_h(t.sponsor or "—")}</td>'
             f'<td class="trial-ua">{ua_badge or "—"}</td>'
+            f'<td class="trial-outlook">{outlook_cell}</td>'
             f'<td class="trial-elig">{_h(elig_short)}</td>'
             "</tr>"
         )
@@ -1732,6 +1826,7 @@ def _render_experimental_options(option, target_lang: str = "uk") -> str:
         f'<th>{_h(_t("exp_th_status", target_lang))}</th>'
         f'<th>{_h(_t("exp_th_sponsor", target_lang))}</th>'
         f'<th>{_h(_t("exp_th_ua", target_lang))}</th>'
+        f'<th>{_h(_t("exp_th_outlook", target_lang))}</th>'
         f'<th>{_h(_t("exp_th_eligibility", target_lang))}</th>'
         '</tr></thead>'
         f'<tbody>{"".join(rows)}</tbody>'
