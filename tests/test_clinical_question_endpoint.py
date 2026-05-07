@@ -253,6 +253,22 @@ def test_combined_mmr_mss_phrase_does_not_block(monkeypatch):
     assert out["input_validation"]["warnings"]
 
 
+def test_crc_metastatic_state_routes_to_metastatic_algorithm():
+    patient = {
+        "patient_id": "TEST-CRC-METASTATIC-ROUTE",
+        "disease": {"id": "DIS-CRC"},
+        "disease_state": "metastatic",
+        "line_of_therapy": 1,
+        "biomarkers": {"BIO-MSI-STATUS": "MSS"},
+        "findings": {"metastases": True},
+    }
+
+    engine = cq.run_engine(patient)
+
+    assert engine.ok is True
+    assert engine.payload["algorithm_id"] == "ALGO-CRC-METASTATIC-1L"
+
+
 def test_handle_json_request_serializes_errors(monkeypatch):
     monkeypatch.setattr(
         cq,

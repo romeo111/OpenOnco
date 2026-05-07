@@ -371,31 +371,61 @@ _NON_BLOCKING_UNSUPPORTED_HINTS = (
     "combined phrasing",
     "not a distinct vocabulary entry",
     "captured as bio-",
+    "procedure is not represented",
+    "surgical procedure",
+    "regimen name not present",
+    "single drug concept",
+    "components would require",
 )
 
 
 _NON_BLOCKING_BIOMARKER_MENTIONS = {
+    "brca1",
     "cdx2",
     "ck7",
     "ck19",
     "ck20",
+    "dpd",
+    "dpyd",
+    "ecog",
+    "er",
+    "estrogen receptor",
+    "ebv",
+    "ebv negative",
     "gata3",
     "heppar1",
+    "hrd",
+    "idh",
+    "idh wildtype",
+    "idh-wildtype",
+    "ish",
+    "ish negative",
+    "bilirubin",
     "ki67",
     "ki 67",
     "microsatellite stable",
+    "mmr intact",
+    "mmr retained",
     "mss",
+    "nst",
     "napsin",
     "napsin a",
     "p40",
     "p53",
     "p63",
+    "palb2",
     "pax8",
+    "pr",
+    "progesterone receptor",
     "smad4",
     "ttf1",
     "ttf 1",
     "ttf-1",
+    "\u0432\u0456\u0441\u0446\u0435\u0440\u0430\u043b\u044c\u043d\u0438\u0439 \u043a\u0440\u0438\u0437",
+    "\u043f\u0435\u0440\u0441\u043d\u0435\u043f\u043e\u0434\u0456\u0431",
+    "who ps",
     "wt1",
+    "білірубін",
 }
 
 
@@ -404,7 +434,23 @@ def _is_non_blocking_biomarker_mention(mention: str) -> bool:
     compact = re.sub(r"[^a-z0-9]+", "", norm)
     if norm in _NON_BLOCKING_BIOMARKER_MENTIONS or compact in _NON_BLOCKING_BIOMARKER_MENTIONS:
         return True
+    if re.search(r"\b(brca1|cdx2|ck7|ck20|dpd|dpyd|ebv|er|hrd|idh|lauren|nst|p53|palb2|pr|signet|smad4)\b", norm):
+        return True
+    if any(token in norm for token in ("ascites", "peritoneal", "visceral crisis", "\u0456\u043d\u0432\u0430\u0437\u0438\u0432\u043d\u0430 \u043a\u0430\u0440\u0446\u0438\u043d\u043e\u043c\u0430", "\u0432\u0456\u0441\u0446\u0435\u0440\u0430\u043b\u044c\u043d", "\u043f\u0435\u0440\u0438\u0442\u043e\u043d\u0435", "\u0430\u0441\u0446\u0438\u0442")):
+        return True
+    if "msi" in norm and "mmr" in norm:
+        return True
+    if "braf" in norm and any(token in norm for token in ("wild type", "wt", "negative")):
+        return True
+    if any(token in norm for token in ("ecog", "who ps", "bilirubin", "білірубін")):
+        return True
+    if "mmr" in norm and any(token in norm for token in ("intact", "retained", "proficient", "pmmr", "збереж")):
+        return True
     if "met" in norm and ("exon 14" in norm or "exon14" in norm):
+        return True
+    if "nras" in norm and any(token in norm for token in ("wild type", "wt", "дикого тип", "negative", "негатив")):
+        return True
+    if "her2" in norm and any(token in norm for token in ("negative", "негатив", "ihc 0", "non-amplified", "not amplified", "неампліф")):
         return True
     return False
 
@@ -418,7 +464,11 @@ def _is_blocking_unsupported_mention(item: dict[str, str]) -> bool:
     upper = text.upper()
     if upper.startswith("BIO-") or upper.startswith("DRUG-"):
         return True
+    if upper in {"FOLFOX", "CAPOX", "FOLFIRINOX"}:
+        return False
     if _is_non_blocking_biomarker_mention(text):
+        return False
+    if any(token in _normalize_term(text) for token in ("antiepileptic", "\u043f\u0440\u043e\u0442\u0438\u0435\u043f\u0456\u043b\u0435\u043f\u0442\u0438\u0447", "resection", "\u0440\u0435\u0437\u0435\u043a\u0446", "steroid", "\u0441\u0442\u0435\u0440\u043e\u0457\u0434", "pharmacogenomic", "\u0444\u0430\u0440\u043c\u0430\u043a\u043e\u0433\u0435\u043d\u043e\u043c", "\u0444\u0430\u0440\u043c\u0430\u043a\u0430\u0433\u0435\u043d\u043e\u043c", "\u0444\u0442\u043e\u0440\u043f\u0456\u0440\u0438\u043c\u0456\u0434", "ema/fda", "regulatory", "esmo", "guideline")):
         return False
     if any(hint in haystack for hint in _NON_BLOCKING_UNSUPPORTED_HINTS):
         return False
@@ -790,7 +840,44 @@ _DISEASE_ID_ALIASES: tuple[tuple[str, tuple[str, ...]], ...] = (
 )
 
 
+_DISEASE_ID_ALIASES = _DISEASE_ID_ALIASES + (
+    ("DIS-GBM", ("gliobastoma",)),
+    ("DIS-NSCLC", ("lung adenocarcinoma", "lung cancer", "\u0440\u0430\u043a \u043b\u0435\u0433\u0435\u043d", "\u043b\u0435\u0433\u0435\u043d\u0435\u0432")),
+    ("DIS-BREAST", ("breast cancer", "breast carcinoma", "\u0440\u0430\u043a \u043c\u043e\u043b\u043e\u0447\u043d\u043e", "\u043c\u043e\u043b\u043e\u0447\u043d\u043e\u0457 \u0437\u0430\u043b\u043e\u0437")),
+    ("DIS-GASTRIC", ("gastrc cancer",)),
+    (
+        "DIS-CRC",
+        (
+            "colon adenocarcinoma",
+            "\u0430\u0434\u0435\u043d\u043e\u043a\u0430\u0440\u0446\u0438\u043d\u043e\u043c\u043e\u044e \u043e\u0431\u043e\u0434\u043e\u0432",
+            "cecal cancer",
+            "cecum cancer",
+            "\u0440\u0430\u043a \u0441\u043b\u0456\u043f",
+            "\u0441\u043b\u0456\u043f\u0430 \u043a\u0438\u0448",
+        ),
+    ),
+    ("DIS-OVARIAN", ("ovarian cancer", "ovarian carcinoma", "\u0440\u0430\u043a \u044f\u0454\u0447\u043d\u0438\u043a", "\u044f\u0454\u0447\u043d\u0438\u043a")),
+)
+
+
+def _looks_like_cup_text(text: str) -> bool:
+    norm = _normalize_term(text)
+    return any(
+        token in norm
+        for token in (
+            "cancer of unknown primary",
+            "carcinoma of unknown primary",
+            "cup",
+            "unknown primary",
+            "\u0431\u0435\u0437 \u043f\u0435\u0440\u0432\u0438\u043d",
+            "\u043f\u0435\u0440\u0432\u0438\u043d\u043d\u043e\u0433\u043e \u0432\u043e\u0433\u043d\u0438\u0449\u0430",
+        )
+    )
+
+
 def _infer_disease_id_from_text(text: str) -> str | None:
+    if _looks_like_cup_text(text):
+        return None
     norm = _normalize_term(text)
     for disease_id, aliases in _DISEASE_ID_ALIASES:
         if any(_normalize_term(alias) in norm for alias in aliases):
@@ -805,6 +892,65 @@ def _has_primary_disease_signal(text: str, disease_id: str) -> bool:
             continue
         return any(_normalize_term(alias) in norm for alias in aliases)
     return False
+
+
+def _infer_disease_state_from_text(text: str) -> str | None:
+    norm = _normalize_term(text)
+    if any(
+        token in norm
+        for token in (
+            "metastatic",
+            "metastases",
+            "metastasis",
+            "stage iv",
+            "unresectable metast",
+            "\u043d\u0435\u0440\u0435\u0437\u0435\u043a\u0442\u0430\u0431\u0435\u043b\u044c\u043d",
+            "\u043c\u0435\u0442\u0430\u0441\u0442\u0430\u0437",
+            "\u043c\u0435\u0442\u0430\u0441\u0442\u0430\u0442\u0438\u0447",
+            "нерезектабельн",
+            "метастаз",
+            "метастатич",
+        )
+    ):
+        return "metastatic"
+    if any(token in norm for token in ("\u043f\u0456\u0441\u043b\u044f \u0440\u0435\u0437\u0435\u043a\u0446", "\u0430\u0434'\u044e\u0432\u0430\u043d\u0442", "\u0430\u0434\u2019\u044e\u0432\u0430\u043d\u0442")):
+        return "adjuvant"
+    if any(token in norm for token in ("adjuvant", "resected", "після резекц", "ад'ювант", "ад’ювант")):
+        return "adjuvant"
+    return None
+
+
+def _coerce_line_of_therapy(value: Any) -> int | None:
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    text = _normalize_term(value)
+    if not text:
+        return None
+    if re.search(r"\b(3|third|3l)\b", text) or "third line" in text:
+        return 3
+    if re.search(r"\b(2|second|2l)\b", text) or "second line" in text:
+        return 2
+    if re.search(r"\b(1|first|1l)\b", text) or "first line" in text:
+        return 1
+    return None
+
+
+def _infer_line_of_therapy_from_text(text: str) -> int | None:
+    norm = _normalize_term(text)
+    if not norm:
+        return None
+    if re.search(r"\b(3l|third[- ]line|third line)\b", norm) or ("трет" in norm and "ліні" in norm):
+        return 3
+    if re.search(r"\b(2l|second[- ]line|second line)\b", norm) or ("друг" in norm and "ліні" in norm):
+        return 2
+    if re.search(r"\b(1l|first[- ]line|first line)\b", norm) or ("перш" in norm and "ліні" in norm):
+        return 1
+    match = re.search(r"\b([123])\s*-?\s*(st|nd|rd|ша|га|тя)?\s*ліні", norm)
+    if match:
+        return int(match.group(1))
+    return None
 
 
 def _normalize_extracted_patient(
@@ -826,9 +972,28 @@ def _normalize_extracted_patient(
         "pathology": patient.get("pathology"),
     }))
     inferred = _infer_disease_id_from_text(text_blob)
+    if _looks_like_cup_text(text_blob):
+        disease["id"] = None
+        disease_id = ""
     if inferred and (not disease_id.startswith("DIS-") or inferred != disease_id):
         if not disease_id.startswith("DIS-") or not _has_primary_disease_signal(case_text, disease_id):
             disease["id"] = inferred
+            disease_id = inferred
+    explicit_line = _infer_line_of_therapy_from_text(text_blob)
+    line = explicit_line if explicit_line is not None else _coerce_line_of_therapy(patient.get("line_of_therapy"))
+    if line is not None:
+        patient["line_of_therapy"] = line
+    inferred_state = _infer_disease_state_from_text(text_blob)
+    disease_state = patient.get("disease_state")
+    if inferred_state:
+        patient["disease_state"] = inferred_state
+    elif isinstance(disease_state, dict):
+        if disease_state.get("metastatic") is True:
+            patient["disease_state"] = "metastatic"
+        elif disease_state.get("adjuvant") is True or disease_state.get("resected") is True:
+            patient["disease_state"] = "adjuvant"
+        else:
+            patient["disease_state"] = None
     return patient
 
 
