@@ -186,7 +186,7 @@
           <span id="pwaInstallState" class="build-state">Браузер</span>
         </div>
         <dl class="build-meta">
-          <div><dt>Core</dt><dd id="coreVersion">v0c0ea5969675</dd></div>
+          <div><dt>Core</dt><dd id="coreVersion">v86f7f50fddac</dd></div>
           <div><dt>Хвороба</dt><dd id="diseaseVersion">—</dd></div>
           <div><dt>Кеш</dt><dd id="cacheState">Перевіряю…</dd></div>
           <div><dt>Offline</dt><dd id="offlineState">Мережа потрібна для першого запуску</dd></div>
@@ -536,7 +536,7 @@ async function refreshBuildPanel(diseaseId = null) {
     : 'Браузер');
 
   if (bundleIndex) {
-    setText(coreVersionEl, 'v' + (bundleIndex.core_version || '0c0ea5969675'));
+    setText(coreVersionEl, 'v' + (bundleIndex.core_version || '86f7f50fddac'));
     if (offlineCacheTotal <= 0) {
       const total = offlineBundleUrls().length;
       setOfflineCacheProgress(0, total, 0);
@@ -1932,27 +1932,36 @@ function yieldToBrowser(ms) {
 // Lazy-loaders for full questionnaire/example data. Dropdowns populate
 // instantly from the build-time manifests above; the full ~870 KB payload
 // is fetched only after the user picks something.
+function fetchJsonWithTimeout(url, label, timeoutMs = 10000) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { signal: controller.signal })
+    .then(r => {
+      if (!r.ok) throw new Error(label + ' HTTP ' + r.status);
+      return r.json();
+    })
+    .catch(e => {
+      if (e && e.name === 'AbortError') throw new Error(label + ' timed out');
+      throw e;
+    })
+    .finally(() => window.clearTimeout(timer));
+}
+
 async function ensureQuestionnaires() {
   if (questionnaires) return questionnaires;
   if (!_questionnairesPromise) {
-    _questionnairesPromise = fetch('/questionnaires.json')
-      .then(r => {
-        if (!r.ok) throw new Error('questionnaires.json HTTP ' + r.status);
-        return r.json();
-      })
-      .then(data => { questionnaires = data; return data; });
+    _questionnairesPromise = fetchJsonWithTimeout('/questionnaires.json', 'questionnaires.json')
+      .then(data => { questionnaires = data; return data; })
+      .catch(e => { _questionnairesPromise = null; throw e; });
   }
   return _questionnairesPromise;
 }
 async function ensureExamples() {
   if (examples) return examples;
   if (!_examplesPromise) {
-    _examplesPromise = fetch('/examples.json')
-      .then(r => {
-        if (!r.ok) throw new Error('examples.json HTTP ' + r.status);
-        return r.json();
-      })
-      .then(data => { examples = data; return data; });
+    _examplesPromise = fetchJsonWithTimeout('/examples.json', 'examples.json')
+      .then(data => { examples = data; return data; })
+      .catch(e => { _examplesPromise = null; throw e; });
   }
   return _examplesPromise;
 }
