@@ -393,6 +393,8 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
                                     "en": "Active surveillance (watch-and-wait)"},
     "track_palliative":            {"uk": "Паліативний план", "en": "Palliative plan"},
     "track_trial":                 {"uk": "План у рамках клінічного дослідження", "en": "Clinical-trial-only plan"},
+    "track_local_therapy":         {"uk": "Локальна терапія", "en": "Local therapy plan"},
+    "track_transplant":            {"uk": "Трансплантаційний план", "en": "Transplant plan"},
     # Document headers
     "doc_label_plan":              {"uk": "OpenOnco · Treatment Plan", "en": "OpenOnco · Treatment Plan"},
     "doc_title_plan_prefix":       {"uk": "План лікування", "en": "Treatment plan"},

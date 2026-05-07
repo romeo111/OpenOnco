@@ -60,6 +60,8 @@ _TRACK_LABELS_UA = {
     "surveillance": "Активне спостереження (watch-and-wait)",
     "palliative": "Паліативний план",
     "trial": "План у рамках клінічного дослідження",
+    "local_therapy": "Локальна терапія",
+    "transplant": "Трансплантаційний план",
 }
 _TRACK_LABELS_EN = {
     "standard": "Standard plan",
@@ -67,6 +69,8 @@ _TRACK_LABELS_EN = {
     "surveillance": "Active surveillance (watch-and-wait)",
     "palliative": "Palliative plan",
     "trial": "Clinical-trial-only plan",
+    "local_therapy": "Local therapy plan",
+    "transplant": "Transplant plan",
 }
 
 

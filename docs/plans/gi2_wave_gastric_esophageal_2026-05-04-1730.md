@@ -513,3 +513,268 @@ files from prior chunks). New work must not *increase* this count.
 
 **Estimate impact:** -2 chunks-worth of work (A1 reduced by half; D1 reduced).
 Total wave probably 10-12 chunks instead of 12.
+
+---
+
+## 13. Post-A1/A2 revision (added 2026-05-07, after #408/#409 merged)
+
+Latest committed state through `adc073474` changes the remaining plan in
+three material ways:
+
+1. A1 is partially delivered, but the HER2-low/DG04 item was correctly
+   stopped because the source is HER2-positive 2L gastric/GEJ, not HER2-low.
+2. A2 is partially delivered, but the FGFR2b indication is not executable
+   by the Plan engine yet because it has `recommended_regimen: null` and
+   no algorithm branch.
+3. D1 is now more urgent than originally framed: the KB contains new
+   indications that are valid entities but invisible to patient routing
+   until algorithms are updated.
+
+### 13.1 Delivered since post-W0
+
+| Item | Status | Notes |
+|---|---|---|
+| `IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO` | delivered + routed | Uses new `REG-IPI-NIVO-ESOPH-SCC`; esoph 1L chemo-sparing branch implemented in this branch. |
+| `REG-IPI-NIVO-ESOPH-SCC` | delivered | Correctly avoids reusing melanoma/RCC ipi+nivo dose patterns. |
+| `IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO` | delivered + routed | Reuses `REG-TRASTUZUMAB-CHEMO-TOGA`; esoph 1L HER2+ adeno branch implemented in this branch. |
+| `BIO-FGFR2B-IHC` | delivered | Distinct from FGFR2 amplification; appropriate protein-IHC biomarker. |
+| `BMA-FGFR2B-MEMBRANE-GASTRIC` | delivered | ESCAT IIA / moderate confidence; still requires clinical signoff. |
+| `IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB` | delivered as stub | `recommended_regimen: null`; not ready for engine routing. |
+| `BMA-EBV-POSITIVE-GASTRIC` | delivered | Explanatory/subtype-router BMA; primary-source backfill still needed. |
+
+Validator delta reported in the commits and rechecked locally: the new
+GI-2 files do not add schema, referential-integrity, or contract-warning
+regressions. Global baseline remains non-green (`schema=91`, `ref=179`,
+`contract_warnings=217`).
+
+### 13.2 Corrected deferrals
+
+The following original A1/A2 items should not be dispatched as written:
+
+| Original item | Revised decision |
+|---|---|
+| `ind_esoph_metastatic_1l_her2_low_t_dxd` | Keep deferred. DG04 is HER2-positive 2L gastric/GEJ post-trastuzumab, not HER2-low esophageal 1L. |
+| `bma_her2_low_gastric` | Keep deferred until a true HER2-low gastric primary source exists. Do not use DG04 for HER2-low. |
+| gastric/esophageal TROP2 BMAs | Keep skipped. No phase-3 actionable data for this wave. |
+| separate `bio_ebv.yaml` | Keep skipped. `BIO-EBV-STATUS` already exists. |
+| separate `bma_cldn18_2_gej_esoph_adeno` | Keep skipped unless a future branch needs a distinct esophageal/GEJ routing entity. Existing gastric/GEJ CLDN18.2 coverage already mentions GEJ. |
+
+### 13.3 New immediate blockers
+
+#### Blocker 1 - bemarituzumab regimen missing
+
+`IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB` intentionally has:
+
+```
+recommended_regimen: null
+```
+
+This keeps validation stable but prevents meaningful Plan materialization.
+Before D1 routes any patient to this indication, create a dedicated regimen:
+
+- `REG-BEMARITUZUMAB-MFOLFOX6`
+- file: `knowledge_base/hosted/content/regimens/reg_bemarituzumab_mfolfox6.yaml`
+- components: bemarituzumab + mFOLFOX6 backbone
+- mandatory supportive/monitoring note: baseline and serial ophthalmology
+- status: draft / pending clinical signoff
+- source caveat: FIGHT phase 2 + FORTITUDE-101 stub until final phase-3 publication
+
+If the regimen cannot be authored with enough source support, D1 must not
+route to the indication; keep it surfaced only through BMA/actionability.
+
+#### Blocker 2 - esophageal 1L algorithm is stale
+
+`ALGO-ESOPH-METASTATIC-1L` currently outputs only:
+
+- `IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC`
+- `IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO`
+
+It must be extended to include:
+
+- `IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO`
+- `IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO`
+
+Minimum branch behavior:
+
+- ESCC + CPS >=1 + chemo-sparing preference / chemo unsuitability ->
+  `IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO`
+- ESCC + rapid response/high-burden preference -> keep
+  `IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC`
+- EAC/GEJ Siewert I + HER2-positive -> route to
+  `IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO`
+- EAC/GEJ Siewert I + HER2-negative/unknown -> existing pembro+chemo path
+
+Do not add the HER2-low T-DXd branch until the source issue is resolved.
+
+#### Blocker 3 - gastric 1L algorithm does not know FGFR2b
+
+`ALGO-GASTRIC-METASTATIC-1L` currently routes HER2, CLDN18.2, and PD-L1
+but not FGFR2b. Add FGFR2b only after `REG-BEMARITUZUMAB-MFOLFOX6` exists.
+
+Proposed priority order:
+
+1. HER2-positive -> TOGA / HER2 track
+2. MSI-H -> pembro branch when dedicated indication exists
+3. CLDN18.2-positive HER2-negative -> zolbetuximab branch
+4. FGFR2b-positive HER2-negative MSI-stable CLDN18.2-negative -> bemarituzumab branch
+5. PD-L1 CPS >=1 HER2-negative -> FOLFOX+nivo branch
+
+For dual CLDN18.2+/FGFR2b+ cases, keep CLDN18.2 ahead of FGFR2b until
+FORTITUDE-101 final phase-3 data is available, matching the controversy
+block in the new FGFR2b indication.
+
+### 13.4 Revised remaining chunks
+
+| Chunk | Status | Scope now |
+|---|---|---|
+| A1-redux | mostly done | Only unresolved item is HER2-low/DG04 clarification; no implementation until source intent is corrected. |
+| A2-redux | mostly done | Only unresolved items are primary-source backfill for EBV/FIGHT/FORTITUDE and the bemarituzumab regimen. |
+| B1 | done earlier | CPS/nivo reconciliation already landed in prior commits; no new B1 chunk needed unless validator/audit finds regression. |
+| B2 regimen-fill | NEW | Add `REG-BEMARITUZUMAB-MFOLFOX6` or explicitly freeze the FGFR2b indication as BMA-only. |
+| D1-thin | partially done | Esoph 1L branches are implemented for already-authored ipi+nivo and HER2+ adeno indications. Gastric FGFR2b remains deferred until B2 lands. |
+| S1 source cleanup | NEXT/parallel | Fix source-id hygiene and TODO stubs: OMEC year, CheckMate/KEYNOTE hyphenation backlog, FORTITUDE/FIGHT source maturity, EBV primary sources. |
+| V1 validation debt | NEXT/parallel | Reduce global baseline errors enough that release gates can distinguish new regressions from old debt. |
+| C1-C5 | still blocked | No change: multimodal/periop/surgery/RT/OMEC remains blocked by §17 schema ratification. |
+
+### 13.5 Updated execution order
+
+Recommended order from the current HEAD:
+
+1. **B2 regimen-fill decision**: either author `REG-BEMARITUZUMAB-MFOLFOX6`
+   or mark FGFR2b indication "not routable until regimen exists".
+2. **D1-thin algorithms**:
+   - done: `ALGO-ESOPH-METASTATIC-1L` now routes ipi+nivo for ESCC CPS>=1
+     chemo-sparing profiles and trastuzumab+chemo for HER2+ EAC/GEJ Siewert I;
+   - update `ALGO-GASTRIC-METASTATIC-1L` for FGFR2b only if B2 is complete.
+3. **S1 source cleanup**:
+   - mature `SRC-FORTITUDE-101` and add/confirm FIGHT source support;
+   - add EBV primary sources if BMA remains in the actionability layer;
+   - schedule source ID normalisation separately from clinical logic.
+4. **V1 validation debt burn-down**:
+   - target changed-domain files first (`regimens`, `indications`, `sources`);
+   - keep baseline-count reporting in every chunk until full green is realistic.
+5. **§17 ratification** before C1-C5:
+   - do not dispatch FLOT/CROSS/MIE/OMEC implementation until schema is ratified.
+
+### 13.6 Revised estimates
+
+| Scope | Previous estimate | Revised estimate |
+|---|---:|---:|
+| Remaining non-§17 work | 3-5 chunks | 3-4 chunks (`B2`, `D1-thin`, `S1`, optional `V1-slice`) |
+| Remaining §17-blocked work | 5 chunks | unchanged |
+| Calendar risk | §17 + clinical signoff | unchanged, but D1-thin can ship before §17 |
+| Highest-risk next chunk | A2 BMA expansion | now `B2` if regimen data is thin; otherwise `D1-thin` |
+
+### 13.7 Acceptance criteria for the next chunk
+
+For `B2`:
+
+- Adds no schema/ref/contract regressions against current baseline.
+- Does not invent a full registration claim for bemarituzumab.
+- Keeps access pathway explicit: trial / named-patient / charitable only.
+- Includes ophthalmology monitoring in regimen notes or linked monitoring.
+
+For `D1-thin`:
+
+- Adds new output indications to algorithm `output_indications`.
+- Adds deterministic branches for ESCC ipi+nivo and HER2+ EAC.
+- Does not route to FGFR2b bemarituzumab unless `recommended_regimen` is non-null.
+- Adds/updates focused tests covering at least:
+  - ESCC CPS>=1 chemo-sparing profile -> ipi+nivo;
+  - HER2+ EAC -> trastuzumab+chemo;
+  - HER2-negative EAC -> existing pembro+chemo;
+  - FGFR2b+ gastric behavior gated by the B2 decision.
+
+### 13.8 Implementation reality check: no runtime database population
+
+After reading the implementation, this plan must not assume there is a
+mutable runtime "database" that can be filled from the PWA, engine, or
+agent workflow.
+
+Actual storage model:
+
+- Canonical KB is Git-tracked YAML under `knowledge_base/hosted/content/`.
+- The browser receives generated immutable bundles from `scripts/build_site.py`
+  (`openonco-engine-core.zip` + per-disease zips).
+- `patient_plans/` persistence is gitignored local JSON/JSONL for generated
+  Plan artifacts and provenance events only; it is not KB storage.
+- `scripts/tasktorrent/upsert_contributions.py` is maintainer-only mechanical
+  sidecar upsert after review. It defaults to dry-run and does not enforce
+  clinical signoff itself.
+- `legacy/storage/research_db.py` is an old SQLite autoresearch store, not
+  the active OpenOnco KB.
+
+Therefore "fill the database" is not an available operation in the current
+architecture. Any new Regimen/Indication/BMA is a source-controlled clinical
+content change, not a runtime DB write.
+
+#### No-KB-fill mode
+
+If the current operating constraint is "do not add more canonical KB content",
+then the remaining plan changes as follows:
+
+| Item | Previous plan | No-KB-fill decision |
+|---|---|---|
+| `REG-BEMARITUZUMAB-MFOLFOX6` | Add as B2 regimen-fill | Do not add. Keep FGFR2b surfaced as BMA/actionability only. |
+| `IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB` | Route after regimen exists | Do not route. It has `recommended_regimen: null`; routing would create a Plan track without regimen materialization. |
+| Gastric FGFR2b algorithm branch | Add after B2 | Defer. Algorithm must not select an unroutable indication. |
+| Esophageal ipi+nivo / HER2+ branches | Add in D1-thin | Allowed only as integration of already-merged KB entities, not new content authoring. |
+| Source cleanup / TODO stubs | S1 source cleanup | Defer unless it is fixing existing broken references required for validation gates. |
+| Validation debt | V1 | Still valid, because this is implementation health, not KB expansion. |
+
+Under no-KB-fill mode, the next implementation-safe step is:
+
+1. Update `ALGO-ESOPH-METASTATIC-1L` to expose already-existing delivered
+   indications (`SCC-IPI-NIVO`, `HER2-TRASTUZUMAB-CHEMO`) if this is
+   considered routing integration rather than new clinical content. **Done in
+   this branch.**
+2. Add tests proving the new branches are deterministic and do not regress
+   existing ESCC/EAC defaults.
+3. Leave gastric FGFR2b as render-time actionability context only until a
+   reviewed regimen entity exists.
+4. Add a guard/test that no Algorithm can route to an Indication with
+   `recommended_regimen: null` unless its `plan_track` is explicitly
+   `trial`, `surveillance`, or another non-regimen track.
+
+This replaces "populate the database" with "make existing authored entities
+reachable safely, and prevent unroutable authored entities from entering
+Plan selection."
+
+### 13.9 Coverage/normalization document check
+
+Reviewing the nearby coverage and normalization documents does not change the
+no-runtime-DB conclusion, but it tightens how the next GI-2 work should be
+framed.
+
+`contributions/drug-class-normalization/normalization_report.yaml` is a
+negative-finding audit: all 216 hosted Drug `drug_class` values were checked
+and no actionable normalization clusters were found. Do not schedule GI-2 work
+around drug-class cleanup unless a new audit finds concrete violations.
+
+`docs/kb-coverage-strategy.md` and `docs/kb-coverage-matrix.md` do affect this
+plan. They require future chunks to name the exact coverage cell they move and
+to separate field presence from verified clinical quality. For the current GI-2
+slice:
+
+- A `recommended_regimen: null` indication can improve content presence, but
+  it must not be counted as route-ready Plan behavior.
+- Algorithm work should be declared as routing integration for already-authored
+  entities, not as broad coverage-fill.
+- Any PWA display should expose verification/signoff/freshness state next to
+  GI-2 recommendations, especially while global validation debt remains.
+- Speculative cleanup chunks should start with an audit threshold, matching the
+  drug-class normalization lesson.
+
+Implementation follow-up completed in this branch:
+
+- Added a loader contract that blocks any Algorithm from routing to an active
+  treatment Indication with `recommended_regimen: null`.
+- Kept explicit non-regimen tracks allowed (`surveillance`, `local_therapy`,
+  `transplant`, `trial`, `palliative`, and adjacent procedural/supportive
+  tracks).
+- Reclassified existing routed no-regimen active tracks:
+  `IND-MF-EARLY-1L-SKIN-DIRECTED` -> `local_therapy` and
+  `IND-GCT-SALVAGE-2L-HDCT-ASCT` -> `transplant`.
+- Implemented esophageal D1-thin routing for already-authored A1 indications:
+  `IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO` and
+  `IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO`.

@@ -538,6 +538,7 @@ def _load_content_impl(
     # Pass 3: entity-contract checks (semantics beyond schema)
     _check_redflag_contracts(result)
     _check_source_precedence_policy(result)
+    _check_algorithm_regimen_routing_contracts(result)
 
     return result
 
@@ -634,6 +635,76 @@ _VALID_PRECEDENCE_POLICIES = {
     "national_floor_only",
     "secondary_evidence_base",
 }
+
+_NON_REGIMEN_PLAN_TRACKS = {
+    "surveillance",
+    "trial",
+    "palliative",
+    "local_therapy",
+    "transplant",
+    "procedure",
+    "supportive_care",
+    "diagnostic",
+    "active_surveillance",
+}
+
+
+def _collect_algorithm_indication_refs(algo: dict) -> set[str]:
+    """Collect all Indication IDs an Algorithm can route or advertise."""
+    refs: set[str] = set()
+    for ind_id in algo.get("output_indications") or []:
+        if isinstance(ind_id, str):
+            refs.add(ind_id)
+    for key in ("default_indication", "alternative_indication"):
+        ind_id = algo.get(key)
+        if isinstance(ind_id, str):
+            refs.add(ind_id)
+
+    def walk(node) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key in {"result", "then_indication"} and isinstance(value, str):
+                    refs.add(value)
+                else:
+                    walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(algo.get("decision_tree") or [])
+    return refs
+
+
+def _check_algorithm_regimen_routing_contracts(result: LoadResult) -> None:
+    """Algorithms must not route active treatment tracks without a Regimen.
+
+    Non-regimen tracks are allowed for authored observation, palliative,
+    transplant/procedure, trial-only, and local-therapy workflows. Active
+    `standard` / `aggressive` tracks need a concrete `recommended_regimen`
+    so Plan materialization cannot silently produce an empty treatment row.
+    """
+    for algo_id, info in result.entities_by_id.items():
+        if info["type"] != "algorithms":
+            continue
+        algo = info["data"]
+        path = info["path"]
+        for ind_id in sorted(_collect_algorithm_indication_refs(algo)):
+            ind_info = result.entities_by_id.get(ind_id)
+            if not ind_info or ind_info["type"] != "indications":
+                continue
+            ind = ind_info["data"]
+            if ind.get("recommended_regimen"):
+                continue
+            plan_track = ind.get("plan_track")
+            if plan_track in _NON_REGIMEN_PLAN_TRACKS:
+                continue
+            result.contract_errors.append((
+                path,
+                f"{algo_id}: routes to {ind_id} with recommended_regimen=null "
+                f"and plan_track={plan_track!r}. Use an explicit non-regimen "
+                f"plan_track ({sorted(_NON_REGIMEN_PLAN_TRACKS)}) or author "
+                "a Regimen before routing.",
+            ))
 
 
 def _check_source_precedence_policy(result: LoadResult) -> None:
