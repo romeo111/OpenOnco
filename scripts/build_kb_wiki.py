@@ -806,11 +806,18 @@ def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, loc
         f'<div class="kb-count"><span>{count}</span>{html.escape(label)}</div>'
         for label, count in counts.items()
     )
+    filter_keys_by_label = {
+        label: key
+        for label, key in zip(
+            counts,
+            ("diseases", "drugs", "biomarkers", "redflags", "biomarker_actionability"),
+        )
+    }
     filter_buttons = "\n      ".join(
         [
-            f'<button type="button" data-kind="">{html.escape(t["all"])}</button>',
+            f'<button type="button" data-kind-key="">{html.escape(t["all"])}</button>',
             *(
-                f'<button type="button" data-kind="{html.escape(label)}">{html.escape(label)}</button>'
+                f'<button type="button" data-kind-key="{html.escape(filter_keys_by_label[label])}">{html.escape(label)}</button>'
                 for label in counts
             ),
         ]
@@ -835,17 +842,21 @@ def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, loc
   </section>
   <section>
     <div id="kbResults" class="kb-results"></div>
+    <div id="kbPagination" class="kb-pagination" aria-label="Result pages"></div>
   </section>
   {faq}
 </main>
 <script>
 const KB_ENTRIES = {json.dumps(entries, ensure_ascii=False)};
-const KB_COPY = {json.dumps({"no_matches": t["no_matches"], "used_by": t["used_by"]}, ensure_ascii=False)};
+const KB_COPY = {json.dumps({"no_matches": t["no_matches"], "used_by": t["used_by"], "page": "Page" if locale == "en" else "Сторінка", "of": "of" if locale == "en" else "з", "results": "results" if locale == "en" else "результатів", "previous": "Previous" if locale == "en" else "Назад", "next": "Next" if locale == "en" else "Далі"}, ensure_ascii=False)};
+const PAGE_SIZE = 50;
 const searchInput = document.getElementById('kbSearch');
 const searchButton = document.getElementById('kbSearchBtn');
 const results = document.getElementById('kbResults');
-const filterButtons = Array.from(document.querySelectorAll('[data-kind]'));
-let activeKind = '';
+const pagination = document.getElementById('kbPagination');
+const filterButtons = Array.from(document.querySelectorAll('[data-kind-key]'));
+let activeKindKey = '';
+let currentPage = 1;
 
 function escapeHtml(value) {{
   return String(value || '').replace(/[&<>"']/g, ch => ({{
@@ -873,17 +884,21 @@ function renderResults() {{
   const q = (searchInput.value || '').trim().toLowerCase();
   const terms = q.split(/\\s+/).filter(Boolean);
   const ranked = KB_ENTRIES
-    .filter(e => !activeKind || e.kind === activeKind)
+    .filter(e => !activeKindKey || e.kind_key === activeKindKey)
     .map(e => [scoreEntry(e, terms), e])
     .filter(pair => terms.length === 0 ? true : pair[0] >= 0)
     .sort((a, b) => b[0] - a[0] || a[1].title.localeCompare(b[1].title))
-    .slice(0, 80)
     .map(pair => pair[1]);
   if (!ranked.length) {{
     results.innerHTML = `<p class="kb-muted">${{escapeHtml(KB_COPY.no_matches)}}</p>`;
+    pagination.innerHTML = '';
     return;
   }}
-  results.innerHTML = ranked.map(e => `
+  const totalPages = Math.ceil(ranked.length / PAGE_SIZE);
+  currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const pageEntries = ranked.slice(start, start + PAGE_SIZE);
+  results.innerHTML = pageEntries.map(e => `
     <a class="kb-result" href="${{e.url}}">
       <span class="kb-kind">${{escapeHtml(e.kind)}}</span>
       <strong>${{escapeHtml(e.title)}}</strong>
@@ -891,22 +906,40 @@ function renderResults() {{
       <small>${{escapeHtml(e.subtitle)}} | ${{escapeHtml(KB_COPY.used_by)}} ${{e.used_by_count}}</small>
     </a>
   `).join('');
+  pagination.innerHTML = totalPages > 1 ? `
+    <button type="button" data-page="prev" ${{currentPage === 1 ? 'disabled' : ''}}>${{escapeHtml(KB_COPY.previous)}}</button>
+    <span>${{escapeHtml(KB_COPY.page)}} ${{currentPage}} ${{escapeHtml(KB_COPY.of)}} ${{totalPages}} · ${{ranked.length}} ${{escapeHtml(KB_COPY.results)}}</span>
+    <button type="button" data-page="next" ${{currentPage === totalPages ? 'disabled' : ''}}>${{escapeHtml(KB_COPY.next)}}</button>
+  ` : '';
 }}
 
 filterButtons.forEach(btn => btn.addEventListener('click', () => {{
-  activeKind = btn.dataset.kind || '';
+  activeKindKey = btn.dataset.kindKey || '';
+  currentPage = 1;
   filterButtons.forEach(b => b.classList.toggle('active', b === btn));
   renderResults();
 }}));
-searchInput.addEventListener('input', renderResults);
+searchInput.addEventListener('input', () => {{
+  currentPage = 1;
+  renderResults();
+}});
 searchInput.addEventListener('keydown', event => {{
   if (event.key === 'Enter') {{
     event.preventDefault();
+    currentPage = 1;
     renderResults();
     results.scrollIntoView({{ block: 'start', behavior: 'smooth' }});
   }}
 }});
 searchButton.addEventListener('click', () => {{
+  currentPage = 1;
+  renderResults();
+  results.scrollIntoView({{ block: 'start', behavior: 'smooth' }});
+}});
+pagination.addEventListener('click', event => {{
+  const btn = event.target.closest('[data-page]');
+  if (!btn) return;
+  currentPage += btn.dataset.page === 'next' ? 1 : -1;
   renderResults();
   results.scrollIntoView({{ block: 'start', behavior: 'smooth' }});
 }});
@@ -1014,6 +1047,9 @@ KB_CSS = """
 .kb-result:hover { border-color: var(--green-600); }
 .kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
 .kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px 0 4px; color: var(--gray-700); }
+.kb-pagination button { border: 1px solid var(--gray-200); background: white; color: var(--green-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; font-weight: 700; }
+.kb-pagination button:disabled { color: var(--gray-500); cursor: not-allowed; opacity: .65; }
 .kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
 .kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
 .kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
@@ -1029,6 +1065,7 @@ KB_CSS = """
   .kb-search-btn { min-height: 44px; }
   .kb-result { grid-template-columns: 1fr; }
   .kb-result small { grid-column: auto; }
+  .kb-pagination { flex-wrap: wrap; }
   .kb-facts th { width: auto; display: block; border-bottom: 0; }
   .kb-facts td { display: block; }
 }
