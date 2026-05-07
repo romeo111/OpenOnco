@@ -11,6 +11,7 @@ purpose: >
 output_indications:
   - IND-GASTRIC-METASTATIC-1L-HER2-TOGA
   - IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB
+  - IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB
   - IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
 
 default_indication: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
@@ -41,8 +42,33 @@ decision_tree:
     if_true:
       result: IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB
     if_false:
-      next_step: 3
+      next_step: 10
     notes: "CLDN18.2 branch added W1.B2 (2026-04-30). MSI-H pembrolizumab branch still pending — surfaces via known_controversies in indication."
+
+  # Step 10 (D1 chunk gi2-d1-algo-extensions-2026-05-07-2030) — FGFR2b+ HER2-
+  # non-positive → bemarituzumab + mFOLFOX6 (FORTITUDE-101 phase 3 / FIGHT phase
+  # 2). FGFR2b IHC 2+/3+ ≥10% threshold. Positioned between CLDN18.2 (step 2)
+  # and PD-L1 CPS (step 3) per indication-level hierarchy: HER2+ TOGA → CLDN18.2+
+  # zolbetuximab (phase 3 FDA-approved) → FGFR2b+ bemarituzumab (phase 3 emerging,
+  # FORTITUDE-101 ESMO 2025 LBA10) → PD-L1 CPS+ chemo+nivo (CheckMate-649). Falls
+  # through to step 3 (PD-L1 CPS) when FGFR2b-negative.
+  - step: 10
+    evaluate:
+      all_of:
+        - finding: "fgfr2b_status"
+          value: "positive"
+        - {finding: her2_status, value: negative}
+    if_true:
+      result: IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB
+    if_false:
+      next_step: 3
+    notes: >
+      D1 chunk new branch — FGFR2b+ (IHC 2+/3+ ≥10%) HER2-non-positive routes to
+      bemarituzumab + mFOLFOX6 (FORTITUDE-101 phase 3 mOS 17.9 vs 12.5 mo at
+      primary analysis HR 0.61, attenuated to HR 0.82 at descriptive follow-up;
+      FIGHT phase 2 mOS 19.2 vs 13.5 mo HR 0.60). HER2+ pre-routed at step 1
+      (TOGA supersedes); CLDN18.2+ pre-routed at step 2 (zolbetuximab supersedes
+      until FORTITUDE-101 vs SPOTLIGHT/GLOW head-to-head data emerges).
 
   # Step 3 — HER2- + PD-L1 CPS ≥1 → FOLFOX+nivo (CheckMate-649). Note:
   # FDA strict label is CPS ≥5; EMA broader label is CPS ≥1.
