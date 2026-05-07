@@ -513,3 +513,88 @@ files from prior chunks). New work must not *increase* this count.
 
 **Estimate impact:** -2 chunks-worth of work (A1 reduced by half; D1 reduced).
 Total wave probably 10-12 chunks instead of 12.
+
+---
+
+## 13. Phase A final outcome (added 2026-05-07)
+
+Phase A (W0 sources + A1 indications + A2 BMA + B1 reconciliation + W0-4/W0-5
+extensions + bemfill housekeeping) **landed in master across 11 squash-merged PRs**.
+Phase C (multimodal — FLOT periop / CROSS phasing / MIE / oligomet) remains
+**§17-blocked** per #394. Phase D (algorithms) flagged for follow-up (engine-side
+extensions only — no clinical content).
+
+### 13.1 PR ledger
+
+| PR | Commit | Chunk |
+|---|---|---|
+| #396 | `ad90099b` | W0-1 gastric trial sources × 8 |
+| #397 | `b6f49b26` | W0-3 CheckMate-649 propagation |
+| #398 | `3cac0fe8` | W0-2 esoph trial sources × 5 |
+| #401 | `09359087` | B1 CPS reconciliation + canonical nivo q3w |
+| #402 | `1017fe5c` | Plan doc + post-W0 corrections |
+| #404 | `92744023` | W0-4 DESTINY-Gastric04 source |
+| #408 | `bce7a093` | A1-redux esoph 1L (2 indications + 1 regimen) |
+| #409 | `adc07347` | A2 BMA expansion (3 BMAs + 1 bio + 1 indication) |
+| #414 | `397dbc0b` | W0-5 EBV gastric primary sources + BMA upgrade |
+| #416 | `0593eb5d` | bemfill (regimen + FORTITUDE-101 stub upgrade) |
+| #417 | `eaa2b906` | A1-extension HER2-positive 2L T-DXd repurpose |
+
+### 13.2 Net KB additions
+
+| Category | Count | IDs |
+|---|---|---|
+| Sources NEW | 17 | ToGA-Bang-2010, FLOT4-Al-Batran-2019, KEYNOTE-859-Rha-2023, DESTINY-Gastric01-Shitara-2020, DESTINY-Gastric04-Shitara-2025, SPOTLIGHT-Shitara-2023, GLOW-Shah-2023, RAINBOW-Wilke-2014, RENAISSANCE-AIO-FLOT5, CROSS-van-Hagen-2012, CheckMate-577-Kelly-2021, TIME-Biere-2012, ROBOT-van-der-Sluis-2019, OMEC-1-Kroese-2018-→-actually-2023, TCGA-Gastric-Bass-2014, Kim-Pembro-EBV-NatMed-2018, FORTITUDE-101-stub-upgrade |
+| Sources cited (propagation) | 4 | CheckMate-649 across indication / regimen / RF + EBV BMA real-source upgrade |
+| Indications NEW | 4 | esoph SCC ipi+nivo, esoph HER2+ trastuzumab+chemo, gastric 1L FGFR2b bemarituzumab, esoph 2L HER2+ T-DXd |
+| Indications EDIT | 2 | gastric 2L HER2+ T-DXd (DG-04 outcomes added), gastric 1L PD-L1 (CPS≥1 + magnitude_of_benefit + jurisdictional split) |
+| Regimens NEW | 2 | reg_ipi_nivo_esoph_scc, reg_bemarituzumab_mfolfox6 |
+| Regimens EDIT | 1 | folfox_nivolumab (canonical 360 q3w added) |
+| BMAs NEW | 3 | FGFR2b-membrane gastric (ESCAT IIA), EBV-positive gastric (ESCAT IIIA), HER2-low gastric tier-1 EXPLICITLY DROPPED |
+| Biomarkers NEW | 1 | BIO-FGFR2B-IHC |
+| RFs EDIT | 1 | rf_gastric_pdl1_cps_1_plus (jurisdictional split) |
+
+### 13.3 Spec defects caught by agents (5 total)
+
+Plan was authored as orchestrator's best understanding. Across the 11 chunks, agents
+honest-reported **5 distinct spec defects**, refused to invent / fabricate, and
+either deferred-with-rationale or auto-corrected within scope:
+
+| # | Defect | Origin | Caught by | Resolution |
+|---|---|---|---|---|
+| 1 | DG-04 covers HER2-low | §4.2 line 201 | A1 + A2 (independent runs) | Repurposed to HER2-positive 2L (A1-ext); HER2-low dropped from wave (no 2026 phase-3 evidence) |
+| 2 | OMEC-1 manifest year 2018 | W0-2 manifest | W0-2 agent | ID preserved verbatim with year-mismatch flag in `notes:`; rename queued in #400 backlog |
+| 3 | Schema fields `kind:` / `clinical_trial_registration:` invented | §4.1 chunk template | W0-2 + B1 | Real schema uses `source_type:` + NCT in `notes:` prose; templates updated post-mortem |
+| 4 | Kim NatMed PMID `29983499` | W0-5 manifest | W0-5 agent | Corrected to canonical `30013197` (real Kim ST et al., DOI 10.1038/s41591-018-0101-z) |
+| 5 | Kim paper described as KEYNOTE-012 sub-analysis | W0-5 description | W0-5 agent | Real paper is independent Samsung Medical Center phase-2 (n=61); description rewritten |
+
+Pattern that worked:
+- Mandatory schema-discovery step (read `schemas/*.py` + 2-3 existing entity templates first)
+- Canonical-citation verification via WebFetch / NCBI E-utilities (PubMed MCP was permission-denied)
+- Hard rule "DO NOT invent fields" with free-text fallback in `notes:`
+- Honest-reporting expectation in commit messages + PR bodies (e.g., bemfill explicitly flagged +1 ref error as expected DRUG-BEMARITUZUMAB unresolved)
+- `actionability_review_required: true` on all tier-1 BMAs (Phase 1.5 schema clinical-signoff gate)
+
+### 13.4 Items deferred / not landed
+
+| Item | Reason |
+|---|---|
+| HER2-low gastric / esoph T-DXd | No phase-3 evidence in 2026 (DESTINY-Gastric02 not yet published; DESTINY-Breast04 is breast-only). Hold for DG-02 readout. |
+| KEYNOTE-061 EBV+ subset | Not separately citable at landmark grade per W0-5; flagged in `bma_ebv_positive_gastric.notes:` as future ingest |
+| `DRUG-BEMARITUZUMAB` drug stub | Same pre-existing pattern as `DRUG-PAZOPANIB`; deferred to drug-stub housekeeping chunk (+1 ref error in bemfill PR — expected) |
+| Source-ID hyphenation normalisation | #400 backlog (CHECKMATE648 vs CHECKMATE-648; KEYNOTE590 vs KEYNOTE-590; OMEC-1 year-mismatch rename) |
+| Phase C (multimodal — FLOT periop / CROSS phasing / definitive CRT / MIE/RAMIE / oligomet) | §17 PROPOSAL not ratified (#394). Requires human spec-author + 2/3 Clinical Co-Leads signoff per CHARTER §6.1. |
+| Phase D (algorithms) | Engine-side extensions to `algo_esoph_metastatic_1l` (CM-648 ipi+nivo branch + HER2-positive adeno branch + HER2-positive 2L branch). Not blocking for clinical content. |
+| Two Clinical Co-Lead signoff on tier-1 BMAs | All 3 new BMAs have `actionability_review_required: true` per Phase 1.5 — awaiting CHARTER §6.1 review. |
+
+### 13.5 Estimate vs actual
+
+| Metric | Original (full wave with §17) | Phase-A actual |
+|---|---|---|
+| Chunks | 11-14 | 11 |
+| Agent-hours | 30-65 | ~14 (lots of synchronous gates + WebFetch lookups) |
+| PRs | 11-14 | 11 |
+| Calendar-days | 6-16 | 3 (2026-05-04 through 2026-05-07) |
+
+Phase-A (no §17 dependency) ran cleanly under estimate. Phase C blocked indefinitely
+on §17 ratification (human-in-the-loop calendar gate, not a work gate).
