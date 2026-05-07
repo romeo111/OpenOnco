@@ -479,8 +479,7 @@ def render_html(report: dict[str, Any], *, target_lang: str = "en") -> str:
   <nav class="top-nav">
     <a href="{nav_prefix or '/'}">Home</a>
     <a href="{nav_prefix}/capabilities.html">Capabilities</a>
-    <a href="{nav_prefix}/diseases.html">Diseases</a>
-    <a href="{nav_prefix}/kb.html">KB Search</a>
+    <a href="{nav_prefix}/kb.html">Onco Wiki</a>
   </nav>
 </header>
 <main>

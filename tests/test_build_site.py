@@ -23,6 +23,7 @@ from scripts.build_site import (
     GALLERY_EXCLUDED_CASE_IDS,
     GALLERY_FEATURED_CASE_IDS,
     build_site,
+    _render_top_bar,
     render_diseases,
 )
 
@@ -449,6 +450,21 @@ def test_try_cta_is_separate_action_button(site_dir: Path):
     # Top reading-nav must not include the try link as a plain entry —
     # CTA lives in the right cluster, separated visually
     assert 'class="top-right"' in html
+
+
+def test_top_nav_uses_single_onco_wiki_entry():
+    """Diseases stay addressable by URL, but the top menu has one wiki entry."""
+    for html in (
+        _render_top_bar(active="home", target_lang="en"),
+        _render_top_bar(active="diseases", target_lang="en"),
+        _render_top_bar(active="home", target_lang="uk"),
+        _render_top_bar(active="diseases", target_lang="uk"),
+    ):
+        nav = html.split('<nav class="top-nav">', 1)[1].split("</nav>", 1)[0]
+        assert "Onco Wiki" in nav
+        assert "KB Search" not in nav
+        assert 'href="/diseases.html"' not in nav
+        assert 'href="/ukr/diseases.html"' not in nav
 
 
 def test_en_pages_load_stylesheet_via_root_relative_path(site_dir: Path):

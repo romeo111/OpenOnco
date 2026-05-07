@@ -801,7 +801,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
                     lang_switch_href: str = "/ukr/") -> str:
     """Top navigation bar with:
     - brand on the left → links to home
-    - reading-only nav (Home, Diseases, Capabilities, Specs UA-only,
+    - reading-only nav (Home, Onco Wiki, Capabilities, Specs UA-only,
       Examples, GitHub) in the middle
     - language switcher (UA / EN toggle) on the right
     - prominent CTA "Try it" button on the far right (action, not reading)
@@ -826,13 +826,11 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
-            f'<a href="/ukr/diseases.html"{cls("diseases")}>Хвороби</a>'
             f'<a href="/ukr/capabilities.html"{cls("capabilities")}>Можливості</a>'
             f'<a href="/ukr/specs.html"{cls("specs")}>Специфікації</a>'
         )
     else:  # target_lang == "en"
         extra_links = (
-            f'<a href="/diseases.html"{cls("diseases")}>Diseases</a>'
             f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>'
             f'<a href="/specs.html"{cls("specs")}>Specs</a>'
         )
@@ -848,7 +846,8 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     en_tag, en_attr = ("a", f' href="{lang_switch_href}"') if is_uk else ("span", "")
 
     kb_href = "/ukr/kb.html" if target_lang == "uk" else "/kb.html"
-    kb_label = "Пошук у KB" if target_lang == "uk" else "KB Search"
+    kb_label = "Onco Wiki"
+    kb_active_attr = ' class="active"' if active in {"kb", "diseases"} else ""
 
     return f"""<header class="top-bar">
   <div class="brand-line">
@@ -858,7 +857,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
     {extra_links}
-    <a href="{kb_href}"{cls("kb")}>{kb_label}</a>
+    <a href="{kb_href}"{kb_active_attr}>{kb_label}</a>
     <a href="{ask_path}"{cls("ask")}>{labels['ask']}</a>
     <a href="{gallery_path}"{cls("gallery")}>{labels['gallery']}</a>
     <a href="https://github.com/{GH_REPO}" target="_blank" rel="noopener">GitHub</a>
@@ -7001,7 +7000,7 @@ def _build_disease_coverage_rows() -> list[dict]:
 _DISEASES_PAGE_LABELS = {
     "uk": {
         "title": "Хвороби · OpenOnco",
-        "h1": "Хвороби в базі знань",
+        "h1": "Хвороби в Onco Wiki",
         "lead": (
             "Покриття OpenOnco за {n} онкологічними діагнозами: біомаркери, "
             "препарати, показання, режими, тривожні ознаки, алгоритми та "
@@ -7038,7 +7037,7 @@ _DISEASES_PAGE_LABELS = {
     },
     "en": {
         "title": "Diseases · OpenOnco",
-        "h1": "Diseases in the Knowledge Base",
+        "h1": "Diseases in Onco Wiki",
         "lead": (
             "OpenOnco coverage across {n} oncology diagnoses: biomarkers, "
             "drugs, indications/regimens/RedFlags, algorithm and questionnaire "

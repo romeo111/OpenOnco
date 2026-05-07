@@ -35,13 +35,13 @@ T = {
         "specs_href": "/specs.html",
         "try_href": "/try.html",
         "home": "Home",
-        "kb_search": "KB Search",
+        "kb_search": "Onco Wiki",
         "diseases": "Diseases",
         "gallery": "Examples",
         "capabilities": "Capabilities",
         "specs": "Specs",
         "try_it": "Try it",
-        "page_title": "KB Search",
+        "page_title": "Onco Wiki",
         "lead": (
             "Search diseases, drugs, biomarkers, red flags, and biomarker "
             "actionability. Results are generated directly from the YAML "
@@ -54,11 +54,11 @@ T = {
             "free-text LLM answers. Open an entity to see source IDs, review "
             "status, file provenance, and where it is used."
         ),
-        "search_label": "Search the clinical KB",
+        "search_label": "Search Onco Wiki",
         "search_placeholder": "Try NSCLC, rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
         "search_button": "Search",
         "all": "All",
-        "no_matches": "No matching KB entities.",
+        "no_matches": "No matching Onco Wiki entries.",
         "used_by": "used by",
         "clinician_faq": "Clinician FAQ",
         "faq_prescribe_q": "Does OpenOnco prescribe treatment?",
@@ -104,13 +104,13 @@ T = {
         "specs_href": "/ukr/specs.html",
         "try_href": "/ukr/try.html",
         "home": "Головна",
-        "kb_search": "Пошук у KB",
+        "kb_search": "Onco Wiki",
         "diseases": "Хвороби",
         "gallery": "Приклади",
         "capabilities": "Можливості",
         "specs": "Специфікації",
         "try_it": "Спробувати",
-        "page_title": "Пошук у базі знань",
+        "page_title": "Onco Wiki",
         "lead": (
             "Шукайте хвороби, препарати, біомаркери, тривожні ознаки та "
             "клінічну застосовність біомаркерів. Результати генеруються "
@@ -123,11 +123,11 @@ T = {
             "а не з довільних відповідей LLM. Відкрийте сутність, щоб побачити "
             "source ID, статус рев’ю, походження файлу та місця використання."
         ),
-        "search_label": "Пошук у клінічній KB",
+        "search_label": "Пошук в Onco Wiki",
         "search_placeholder": "Спробуйте NSCLC, rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
         "search_button": "Шукати",
         "all": "Усе",
-        "no_matches": "Сутностей KB за цим запитом не знайдено.",
+        "no_matches": "Записів Onco Wiki за цим запитом не знайдено.",
         "used_by": "використовується у",
         "clinician_faq": "FAQ для клініцистів",
         "faq_prescribe_q": "Чи призначає OpenOnco лікування?",
@@ -513,7 +513,6 @@ def _page_shell(title: str, body: str, *, active: str = "kb", locale: str = "en"
     <nav class="top-nav">
       <a href="{t["home_href"]}">{html.escape(t["home"])}</a>
       <a href="{t["kb_href"]}"{active_attr}>{html.escape(t["kb_search"])}</a>
-      <a href="{t["diseases_href"]}">{html.escape(t["diseases"])}</a>
       <a href="{t["gallery_href"]}">{html.escape(t["gallery"])}</a>
       <a href="{t["capabilities_href"]}">{html.escape(t["capabilities"])}</a>
       <a href="{t["specs_href"]}">{html.escape(t["specs"])}</a>
