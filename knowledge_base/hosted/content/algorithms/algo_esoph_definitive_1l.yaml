@@ -1,0 +1,94 @@
+# ALGO-ESOPH-DEFINITIVE-1L — chunk gi2-d2-algo-extensions-phase-c-
+# 2026-05-08-1300. Routes esophageal squamous-cell carcinoma (SCC)
+# patients who are unresectable (cT4b invasion of adjacent structures),
+# medically inoperable (cardiopulmonary or comorbidity contraindications,
+# M0), or who decline surgery to definitive concurrent chemoradiation
+# (IND-ESOPH-DEFINITIVE-CRT-SCC: weekly carboplatin + paclitaxel +
+# 50.4 Gy / 28 fx per RTOG 85-01 / NCCN 2025). Distinct from
+# ALGO-ESOPH-RESECTABLE-1L (CROSS neoadjuvant + esophagectomy),
+# ALGO-ESOPH-METASTATIC-1L (stage IV systemic), and
+# ALGO-ESOPHAGEAL-ADJUVANT-1L (post-CROSS-non-pCR nivolumab).
+#
+# applicable_to_disease_state: "unresectable_definitive" disambiguates
+# this from the metastatic and resectable algorithms (state-agnostic) —
+# patients without disease_state continue to land on existing algorithms
+# (load-order behavior preserved per _find_algorithm fallback rules).
+id: ALGO-ESOPH-DEFINITIVE-1L
+applicable_to_disease: DIS-ESOPHAGEAL
+applicable_to_line_of_therapy: 1
+applicable_to_disease_state: unresectable_definitive
+purpose: >
+  Algorithm for unresectable / medically inoperable esophageal squamous-
+  cell carcinoma. Step 1 routes SCC histology + (cT4b OR M0 medically
+  inoperable OR patient declines surgery) to definitive concurrent CRT
+  (IND-ESOPH-DEFINITIVE-CRT-SCC). Adenocarcinoma in this disease_state
+  is not separately modeled — most EAC patients are surgical candidates
+  via CROSS or, if metastatic, route via ALGO-ESOPH-METASTATIC-1L.
+
+output_indications:
+  - IND-ESOPH-DEFINITIVE-CRT-SCC
+
+default_indication: IND-ESOPH-DEFINITIVE-CRT-SCC
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Squamous histology + (T4b OR medically inoperable OR
+  # patient declines surgery) → definitive CRT. The histology + reason-
+  # for-non-surgery clauses are wired with a finding-keyed structure
+  # where possible (histology=squamous via the same `histology` finding
+  # used by ALGO-ESOPH-METASTATIC-1L step 10/11 D1 branches; T4b /
+  # medically_inoperable / patient_declines_surgery as MDT-text
+  # conditions where no finding-keyed lookups exist yet).
+  - step: 1
+    evaluate:
+      all_of:
+        - finding: histology
+          value: squamous
+        - any_of:
+            - condition: "cT4b — unresectable due to invasion of adjacent structures"
+            - condition: "M0 medically inoperable (cardiopulmonary or comorbidity contraindications)"
+            - condition: "Patient declines surgery"
+    if_true:
+      result: IND-ESOPH-DEFINITIVE-CRT-SCC
+      notes: >
+        RTOG 85-01 (Herskovic NEJM 1992) established concurrent
+        cisplatin + 5-FU + 50 Gy superior to RT alone (2-yr OS 38%
+        vs 10%). Modern NCCN/ESMO preferred regimen: weekly
+        carboplatin AUC 2 + paclitaxel 50 mg/m² + 50.4 Gy / 28 fx
+        (1.8 Gy/fx). NCCN v3.2025 category 1. §17 phased indication —
+        single-phase chemoradiation; the RadiationCourse
+        RC-DEFINITIVE-ESOPH-SCC owns the concurrent chemo regimen
+        reference (REG-CARBO-PACLI-CONCURRENT-RT-ESOPH) per planning
+        doc §2.3 XOR rule.
+    if_false:
+      result: IND-ESOPH-DEFINITIVE-CRT-SCC
+      notes: >
+        Fallback: when finding-keyed histology=squamous does not
+        evaluate True (e.g. histology unknown / not yet captured),
+        indication still defaults to definitive CRT — the indication's
+        demographic_constraints (histology=squamous_cell_carcinoma,
+        ecog_max: 2) and red_flags_triggering_alternative
+        (RF-ESOPH-SEVERE-DYSPHAGIA-ASPIRATION) handle exclusion
+        surfacing at render time. Adenocarcinoma patients in this
+        disease_state should route via MDT review — out of v0.1
+        scope (definitive CRT for adeno is uncommon; CROSS-then-
+        surgery is preferred when feasible).
+    notes: "D2 chunk routing — squamous histology gate uses finding-keyed lookup (consistent with D1 ALGO-ESOPH-METASTATIC-1L step 10/11 branches). T4b / medically_inoperable / patient_declines_surgery remain MDT-text conditions; no concrete finding-keyed lookups exist for these in the questionnaire layer yet (D1 honest-finding pattern). Default fallback routes all definitive_state patients to CRT — adenocarcinoma exclusion handled at indication-level demographic_constraints."
+
+sources:
+  - SRC-RTOG-8501-HERSKOVIC-1992
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-ESMO-ESOPHAGEAL-2024
+
+last_reviewed: "2026-05-08"
+notes: >
+  D2 chunk gi2-d2-algo-extensions-phase-c-2026-05-08-1300 — first
+  routing for IND-ESOPH-DEFINITIVE-CRT-SCC (Phase C C3 indication
+  using §17 RadiationCourse for the chemoradiation phase). Algorithm
+  scope is intentionally narrow: SCC + unresectable / medically
+  inoperable / declines surgery → definitive CRT. Out-of-scope:
+  definitive CRT for adenocarcinoma (rare; case-by-case MDT, route
+  via metastatic algorithm or CROSS as appropriate); salvage
+  esophagectomy for persistent / recurrent disease post-definitive-
+  CRT (separate indication path); proton-beam RT alternatives
+  (NRG-GI006 NCCN-acceptable but not separately modeled).
