@@ -122,6 +122,4 @@ The same engine ships in-browser via Pyodide — see
 
 Idle capacity in Claude Code, Codex, Cursor, or ChatGPT? Take a
 structured chunk of work from the queue and open a PR — full guide at
-[`docs/contributing/CONTRIBUTOR_QUICKSTART.md`](../docs/contributing/CONTRIBUTOR_QUICKSTART.md)
-or the public landing page
-[openonco.info/contribute.html](https://openonco.info/contribute.html).
+[`docs/contributing/CONTRIBUTOR_QUICKSTART.md`](../docs/contributing/CONTRIBUTOR_QUICKSTART.md).
