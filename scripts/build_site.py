@@ -913,12 +913,6 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
             ("2–4 hours → 5 minutes",
              "Less time on manual NCCN/ESMO/MoH cross-checking, more patients seen. "
              "Fewer missed contraindications, less harm."),
-            ("No black box",
-             "An LLM is not the decision-maker — a declarative rule engine is, with "
-             "public code and a public KB. Plans are built <strong>without external LLM "
-             "calls</strong>; only scientific databases (PubMed, ClinicalTrials.gov, "
-             "DailyMed, openFDA, CIViC) are queried. The clinician sees every &laquo;why&raquo; "
-             "alongside every &laquo;what&raquo;."),
             ("Biomarkers you won&rsquo;t miss",
              "TP53, CD30, MYD88, eGFR, hepatic function — every flag automatically "
              "rewrites the plan: contraindications, dose adjustments, supportive care, "
@@ -930,45 +924,11 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
              "Each drug in the plan is tagged: whether it is registered in Ukraine "
              "(MoH) and whether it is reimbursed by the state medical-guarantees "
              "programme (NHSU). The clinician immediately sees what is free, what is "
-             "by prescription, and what has to be sourced separately. Access is "
-             "<strong>metadata shown next to the recommendation</strong>, not a filter "
-             "— regimen choice is driven by evidence, not by registration status."),
+             "by prescription, and what has to be sourced separately."),
             ("Patient-friendly simplified report",
              "A separate mode generates a plain-language version of the plan for the "
              "patient: no Latin, no acronyms, with explanations of why each step was "
-             "chosen and what to watch for between visits. Same plan, two voices — "
-             "clinical for the oncologist, human for the patient."),
-            ("Free, open, forever",
-             "MIT-style. No paywall, no restrictions for public hospitals. Open-source "
-             "means it can&rsquo;t quietly disappear or be locked behind investors "
-             "tomorrow."),
-            ("Ready for patients today",
-             f"{n_diseases} diseases, {n_redflags} red flags, {n_indications} indications, "
-             f"{n_regimens} regimens, {n_algorithms} treatment algorithms — clinical sign-off "
-             "received. The first real-patient plans were rated strong by practising "
-             "oncologists. The KB grows weekly, but it is already the densest open "
-             "evidence-to-plan layer for Ukrainian oncology that exists. No reason to wait."),
-            ("CIViC actionability — fully open, fully citable",
-             "Our biomarker-to-drug evidence layer comes from <strong>CIViC (CC0)</strong>, "
-             "the Clinical Interpretation of Variants in Cancer at WashU — not OncoKB "
-             "(closed, non-commercial-only). The engine reads a nightly YAML snapshot, "
-             "matches variants <strong>fusion-aware</strong> (BCR::ABL1, KMT2A rearrangements, "
-             "etc.), renders ESCAT-tier as the eye-level signal with CIViC evidence rating "
-             "underneath. A monthly CI refresh diffs upstream changes — no silent drift."),
-            ("Per-disease coverage matrix — public, honest",
-             f"<a href=\"/diseases.html\"><strong>/diseases.html</strong></a> shows, for each "
-             f"of the {n_diseases} diseases, exactly what we have: biomarker counts, drugs, "
-             "indications, regimens, red flags, 1L/2L algorithm checkmarks, questionnaire "
-             "status, fill% and verified%. Grouped by lymphoid heme / myeloid heme / solid "
-             "tumours. Same data also exposed as <code>disease_coverage.json</code> for "
-             "machine consumption. No «trust us, it's in there» — see the matrix."),
-            ("Verify our algorithms with your AI tokens",
-             "The remaining bottleneck isn't code — it's two-reviewer sign-off on each "
-             "Indication. <strong>TaskTorrent</strong> is our distributed-AI contribution "
-             "shelf: maintainer publishes structured chunks (~100k–300k tokens of work each), "
-             "your AI agent (Claude Code, Codex, Cursor, ChatGPT) takes one and opens a PR "
-             "in 1–3 hours. No clinical expertise needed — you trigger structured drafting; "
-             "clinical co-leads sign off. <a href=\"/contribute.html\"><strong>How to start →</strong></a>"),
+             "chosen and what to watch for between visits."),
         ]
         why_today_foot = (
             "Every missed biomarker can cost a life. Every hour of manual cross-checking "
@@ -1056,12 +1016,15 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
             ("2–4 години → 5 хвилин",
              "Лікар витрачає менше часу на чорнову звірку NCCN/ESMO/МОЗ і встигає "
              "прийняти більше пацієнтів. Менше пропущених контраіндикацій — менше шкоди."),
-            ("Жодного &laquo;чорного ящика&raquo;",
-             "Не LLM вирішує лікування, а декларативний rule engine із публічним кодом "
-             "і публічною KB. План будується <strong>без викликів зовнішніх LLM</strong> "
-             "— лише запити в наукові бази (PubMed, ClinicalTrials.gov, DailyMed, "
-             "openFDA, CIViC). Лікар бачить кожне &laquo;чому&raquo; поряд із кожним "
-             "&laquo;що&raquo;."),
+            ("Сумісність з Наказом МОЗ №473 від 07.04.2026",
+             "Діагноз і стадіювання у плані формуються відповідно до «Методичних "
+             "рекомендацій щодо кодування та формування онкологічного діагнозу», "
+             "затверджених цим наказом. Підтримуються всі три основні додатки: "
+             "<strong>Додаток 1</strong> — таблиці відповідності TNM і стадій за "
+             "UICC/AJCC; <strong>Додаток 2</strong> — довідник стадіювання; "
+             "<strong>Додаток 3</strong> — методика кодування (ICD-O-3, локалізація, "
+             "морфологія). Кожна стадія, морфологічний код і код локалізації у плані — "
+             "у тих самих класифікаторах, що їх вимагає МОЗ."),
             ("Біомаркери, які не пропустиш",
              "TP53, CD30, MYD88, eGFR, печінкова функція — кожен прапорець автоматично "
              "переписує план: контраіндикації, корекція дози, supportive care, моніторинг."),
@@ -1071,47 +1034,11 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
             ("Реєстрація МОЗ та покриття НСЗУ — поряд із кожним препаратом",
              "Кожен препарат у плані позначений: чи зареєстрований в Україні (МОЗ) і чи "
              "покривається державною програмою медичних гарантій (НСЗУ). Лікар одразу "
-             "бачить, що доступно безкоштовно, що — за рецептом, а що доведеться шукати "
-             "окремо. Доступність — це <strong>метадані поряд із рекомендацією</strong>, "
-             "а не фільтр: вибір режиму керується доказами, а не реєстраційним статусом."),
+             "бачить, що доступно безкоштовно, що — за рецептом, а що доведеться шукати окремо."),
             ("Спрощений звіт для пацієнта",
              "Окремий режим генерує версію плану зрозумілою мовою для пацієнта: без "
              "латини, без абревіатур, з поясненням, чому призначено саме це і на що "
-             "звертати увагу між візитами. Той самий план, дві мови — клінічна для лікаря, "
-             "людська для пацієнта."),
-            ("Безкоштовно, відкрито, назавжди",
-             "MIT-style. Без paywall, без обмежень для державних лікарень. Open-source "
-             "гарантує, що завтра воно нікуди не зникне і його не &laquo;закриють&raquo; "
-             "інвестори."),
-            ("Готово до пацієнтів сьогодні",
-             f"{n_diseases} діагнозів, {n_redflags} червоних прапорців, {n_indications} "
-             f"індикацій, {n_regimens} режимів, {n_algorithms} алгоритмів лікування — "
-             "клінічний sign-off отриманий. Перші реальні плани вже верифіковані "
-             "практикуючими онкологами як сильні. KB росте щотижня, але це вже найщільніший "
-             "відкритий шар «доказ → план» для української онкології, що існує. Немає сенсу чекати."),
-            ("CIViC actionability — повністю відкрита, повністю citable",
-             "Шар biomarker→drug evidence ми взяли з <strong>CIViC (CC0)</strong> — "
-             "Clinical Interpretation of Variants in Cancer (WashU), а не з OncoKB "
-             "(закритий, non-commercial-only). Engine читає nightly YAML snapshot, "
-             "матчить варіанти <strong>fusion-aware</strong> (BCR::ABL1, KMT2A "
-             "rearrangements тощо), рендерить ESCAT-tier як головний сигнал з CIViC "
-             "evidence rating під ним. Monthly CI refresh diff-ить upstream — без "
-             "тихого дрейфу."),
-            ("Per-disease coverage matrix — публічна і чесна",
-             f"<a href=\"/ukr/diseases.html\"><strong>/ukr/diseases.html</strong></a> показує для "
-             f"кожної з {n_diseases} хвороб, що саме у нас є: counts по біомаркерах, "
-             "препаратах, показаннях, режимах, red flags, checkmarks для алгоритмів 1L/2L, "
-             "статус анкети, fill% і verified%. Згрупована за лімфоїдною / мієлоїдною "
-             "гематологією і солідними пухлинами. Ті ж дані доступні машинно як "
-             "<code>disease_coverage.json</code>. Без «там же є щось» — є матриця."),
-            ("Верифікувати наші алгоритми токенами вашого AI",
-             "Залишковий bottleneck — не код, а two-reviewer sign-off на кожній Indication. "
-             "<strong>TaskTorrent</strong> — наша полка розподілених AI-контрибуцій: "
-             "maintainer публікує structured chunks (~100k–300k токенів роботи кожен), "
-             "ваш AI-агент (Claude Code, Codex, Cursor, ChatGPT) бере один і відкриває PR "
-             "за 1-3 години. Клінічна експертиза не потрібна — ви тригерите structured "
-             "drafting; clinical co-leads потім signoff'ять. "
-             "<a href=\"/ukr/contribute.html\"><strong>Як почати →</strong></a>"),
+             "звертати увагу між візитами."),
         ]
         why_today_foot = (
             "Кожен пропущений біомаркер може коштувати життя. Кожна година ручного "
