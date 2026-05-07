@@ -123,6 +123,8 @@ Second follow-up implemented: `ALGO-ESOPH-METASTATIC-1L` now exposes the already
 
 Third follow-up implemented: the loader and Regimen schema now normalize legacy generated regimen YAML in memory (`agents:` -> `components:`, `DRG-*` -> `DRUG-*`, `total_planned_cycles` -> `total_cycles`, and fallback names from `REG-*` IDs). This keeps old source-controlled content ingestible while still surfacing genuinely missing Drug entities as ref errors.
 
+Fourth follow-up implemented: CI now uses `scripts/audit_validator.py --human` as the release gate. The gate fails on schema, referential-integrity, or loader contract errors; scheduled audit state, metrics, and issue planning now track contract regressions explicitly.
+
 ## PWA implications
 
 The project is already close to a PWA-compatible delivery model:
@@ -144,7 +146,7 @@ The right PWA role is: offline-capable viewer/generator for synthetic or locally
 
 ## Risks
 
-1. **Global validation debt.** Even though the latest GI-2 files validate cleanly, the repo currently has global schema/ref debt. This should be paid down before presenting the PWA as a durable clinical KB client.
+1. **Authoring-warning debt.** Global schema/ref/contract validation is now clean, but 524 loader warnings remain. These should be worked down before presenting the PWA as a durable clinical KB client.
 2. **Generated-doc churn.** The daily refresh touches over a thousand files. This is acceptable for GitHub Pages deployment, but it makes human review harder. Future PRs should keep source KB changes separate from generated refreshes when possible.
 3. **`try.html` maintainability.** The page is already doing UI state, Pyodide boot, lazy bundle fetch, localStorage, modal rendering, and service-worker registration. That is tolerable now, but it will become the main PWA bottleneck.
 4. **Client cache semantics.** Service-worker cache rotation is hash-stamped, which is good. The UI still needs to make update state obvious so clinicians/contributors know which KB build they are using.
@@ -152,14 +154,13 @@ The right PWA role is: offline-capable viewer/generator for synthetic or locally
 
 ## Recommended next steps
 
-1. Add a release gate report that fails on schema/ref/contract errors and prints a short per-directory summary.
-2. Split generated docs refreshes from clinical KB PRs where practical.
-3. Add `manifest.webmanifest`, install icons, and minimal PWA metadata now that structural validation is clean.
-4. Refactor `try.html` into external JS modules while keeping the static GitHub Pages deployment model.
-5. Add a visible build/version panel in the try page: core bundle hash, disease bundle hash, release date, and offline/cache status.
-6. For future contributor editing, create a "draft contribution" flow that exports YAML/patches for PR review instead of writing canonical KB from the PWA.
-7. Work down the 524 warnings by priority: convert legacy free-text tests/contraindications/supportive care into authored entities, then review draft RedFlags.
+1. Split generated docs refreshes from clinical KB PRs where practical.
+2. Add `manifest.webmanifest`, install icons, and minimal PWA metadata now that structural validation is clean.
+3. Refactor `try.html` into external JS modules while keeping the static GitHub Pages deployment model.
+4. Add a visible build/version panel in the try page: core bundle hash, disease bundle hash, release date, and offline/cache status.
+5. For future contributor editing, create a "draft contribution" flow that exports YAML/patches for PR review instead of writing canonical KB from the PWA.
+6. Work down the 524 warnings by priority: convert legacy free-text tests/contraindications/supportive care into authored entities, then review draft RedFlags.
 
 ## Decision
 
-Proceed with the PWA direction, but keep the canonical KB pipeline outside the browser. The latest changes reinforce the correct architecture: declarative KB growth plus generated browser bundles. The blocking issue for a more serious PWA release is not the GI-2 change set; it is the outstanding global validation debt and the need to modularize the try-page runtime.
+Proceed with the PWA direction, but keep the canonical KB pipeline outside the browser. The latest changes reinforce the correct architecture: declarative KB growth plus generated browser bundles. The blocking issue for a more serious PWA release is not the GI-2 change set; it is the remaining warning debt, visible bundle/cache versioning, and the need to modularize the try-page runtime.
