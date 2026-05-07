@@ -700,6 +700,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   box-shadow: 0 1px 4px rgba(2,132,199,0.10);
   transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
 }
+.status-top[hidden] { display: none; }
 .status-top.is-ok {
   background: var(--green-50); color: var(--green-800); border-color: var(--green-500);
 }

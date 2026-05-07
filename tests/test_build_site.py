@@ -233,6 +233,8 @@ def test_try_page_has_pwa_manifest_and_build_status(site_dir: Path):
     assert html.index('id="runBtn"') < html.index('id="buildCard"')
     assert "function updateWorkflowControls()" in html
     assert "actionLocked" in html
+    assert ".status-top[hidden] { display: none; }" in (site_dir / "style.css").read_text(encoding="utf-8")
+    assert "statusTopText.textContent = ''" in html
     assert 'class="quest-impact-card"' not in html
     assert 'rel="manifest" href="/manifest.webmanifest"' in ua_html
 

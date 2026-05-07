@@ -2521,6 +2521,8 @@ function setStatus(msg, kind = 'info', topMode = 'auto') {{
   if (mode === 'hide' || !msg) {{
     status.classList.remove('is-busy');
     statusTop.hidden = true;
+    statusTop.classList.remove('is-busy', 'is-ok', 'is-warn', 'has-progress');
+    statusTopText.textContent = '';
     clearLoadingProgress();
     return;
   }}
