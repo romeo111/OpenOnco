@@ -88,7 +88,14 @@ def _disease_id_from_yaml(zf: zipfile.ZipFile, info: zipfile.ZipInfo) -> str | N
     m = re.search(r"applicable_to\s*:\s*\n[\s\S]{0,200}?disease_id\s*:\s*(DIS-[A-Z0-9_-]+)", head)
     if m:
         return m.group(1).upper()
-    # relevant_diseases for redflags — pick first listed disease (skip "*")
+    # relevant_diseases for redflags — pick first listed disease (skip "*").
+    # Handles inline [DIS-X] and block-list format.
+    m = re.search(r"relevant_diseases\s*:\s*\[([^\]]+)\]", head)
+    if m:
+        for tok in m.group(1).split(","):
+            tok = tok.strip()
+            if tok.upper().startswith("DIS-"):
+                return tok.upper()
     m = re.search(r"relevant_diseases\s*:\s*\n((?:\s*-\s*\S+\s*\n)+)", head)
     if m:
         block = m.group(1)
