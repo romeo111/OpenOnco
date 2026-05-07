@@ -143,6 +143,24 @@ def _signoff_label(reviewer_id: str) -> str:
     return _load_reviewer_labels().get(reviewer_id, reviewer_id)
 
 
+@functools.lru_cache(maxsize=1)
+def _load_defined_bio_ids() -> frozenset:
+    """Return frozenset of BIO-* ids defined in biomarkers/. Cached."""
+    repo_root = Path(__file__).resolve().parent.parent.parent
+    bio_dir = repo_root / "knowledge_base" / "hosted" / "content" / "biomarkers"
+    if not bio_dir.is_dir():
+        return frozenset()
+    ids: set[str] = set()
+    for p in bio_dir.glob("*.yaml"):
+        try:
+            data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        except yaml.YAMLError:
+            continue
+        if isinstance(data, dict) and data.get("id"):
+            ids.add(str(data["id"]).upper())
+    return frozenset(ids)
+
+
 def _render_signoff_badge(entity_data: Optional[dict]) -> str:
     """Render a clinician-mode sign-off badge. 0/1/≥2 sign-offs."""
     if not isinstance(entity_data, dict):
@@ -488,6 +506,8 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "actionability_uncovered_negative":  {"uk": "Виключено (негативний)", "en": "Excluded (negative)"},
     "actionability_uncovered_unmatched": {"uk": "Немає в KB — рекомендуйте лікарю уточнити",
                                           "en": "Not in KB — ask clinician to verify"},
+    "actionability_uncovered_bio_exists": {"uk": "BIO-визначення є в KB; ESCAT BMA-запис відсутній — уточніть у лікаря",
+                                           "en": "BIO definition in KB; no ESCAT BMA entry — verify with clinician"},
     # Experimental options (clinical-trial track)
     "exp_heading":                 {"uk": "Експериментальні опції (клінічні дослідження)",
                                     "en": "Experimental options (clinical trials)"},
@@ -2392,15 +2412,19 @@ def _render_variant_actionability(
                 covered_keys.add(pk)
                 break
 
+    defined_bio_ids = _load_defined_bio_ids()
     uncovered_rows: list[dict] = []
     for key, raw_value in patient_biomarkers.items():
         if key in covered_keys:
             continue
         variant = _extract_variant(raw_value)
-        uncovered_rows.append({
-            "key": key,
-            "reason": "negative" if variant is None else "unmatched",
-        })
+        if variant is None:
+            reason = "negative"
+        elif str(key).upper() in defined_bio_ids:
+            reason = "bio_exists"
+        else:
+            reason = "unmatched"
+        uncovered_rows.append({"key": key, "reason": reason})
 
     show_audit = bool(patient_biomarkers)  # only split when snapshot is available
 

@@ -1,0 +1,48 @@
+id: BMA-PDL1-CPS-GASTRIC
+biomarker_id: BIO-PDL1-CPS
+variant_qualifier:
+disease_id: DIS-GASTRIC
+escat_tier: IA
+evidence_summary: >
+  PD-L1 CPS is a continuous IHC score used as an eligibility threshold for ICI-containing
+  regimens in metastatic gastric/GEJ adenocarcinoma. Thresholds vary by regimen:
+  CPS ≥5 — nivolumab + fluoropyrimidine + platinum (CheckMate-649; mOS 14.4 vs 11.1 mo,
+  HR 0.71 in CPS≥5 subgroup); CPS ≥1 — nivolumab + chemo as broader population (CM-649);
+  CPS ≥1 — pembrolizumab + trastuzumab + chemo for HER2+ disease (KEYNOTE-811, covered
+  separately in BMA-HER2-AMP-GASTRIC). Per NCCN and ESMO 2024, PD-L1 CPS testing by
+  IHC 22C3 pharmDx is mandatory prior to 1L treatment selection. Threshold-gated
+  indication selection is performed by the algorithm layer (IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI);
+  this BMA entry surfaces ESCAT tier context for tumor-board discussion only.
+evidence_summary_ua: >
+  PD-L1 CPS — неперервний IHC-показник, що використовується як поріг відбору для схем
+  з ICI при метастатичній аденокарциномі шлунка/ГЕЗ. Пороги залежать від схеми:
+  CPS ≥5 — нівалумаб + фторпіримідин + платина (CheckMate-649); CPS ≥1 — нівалумаб +
+  хімія (більш широка популяція); CPS ≥1 — пембролізумаб + трастузумаб + хімія для HER2+
+  (KEYNOTE-811, покрито BMA-HER2-AMP-GASTRIC). Тестування PD-L1 CPS (IHC 22C3)
+  обов'язкове до вибору 1Л терапії (NCCN і ESMO 2024). Порогове відбіркове рішення
+  виконується рушієм алгоритму; цей BMA-запис відображає контекст ESCAT лише для
+  обговорення на тумор-борді.
+regulatory_approval:
+  fda:
+  - nivolumab + fluoropyrimidine + platinum — CPS≥5 metastatic gastric/GEJ 1L (FDA approved 2021)
+  - pembrolizumab + trastuzumab + chemo — HER2+ CPS≥1 metastatic gastric/GEJ 1L (FDA approved 2021)
+  ema:
+  - nivolumab + chemo — metastatic gastric/GEJ 1L with CPS assessment (EMA approved 2022)
+  ukraine: []
+recommended_combinations:
+- nivolumab + fluoropyrimidine + platinum (CPS≥5, 1L per SRC-NCCN-GASTRIC-2025, SRC-ESMO-GASTRIC-2024)
+- nivolumab + FOLFOX/XELOX (CPS≥1 broader population per SRC-CHECKMATE-649-JANJIGIAN-2022)
+primary_sources:
+- SRC-NCCN-GASTRIC-2025
+- SRC-ESMO-GASTRIC-2024
+- SRC-CHECKMATE-649-JANJIGIAN-2022
+evidence_sources: []
+last_verified: '2026-05-07'
+actionability_review_required: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Variant_qualifier is null (gene-level) — CPS is a continuous score; specific threshold
+  gating (CPS≥5 vs ≥1) is enforced by the indication layer, not this BMA cell. This entry
+  exists to prevent the render layer from showing "Not in KB" for a well-defined, FDA-approved
+  biomarker. KEYNOTE-811 evidence is attributable to BMA-HER2-AMP-GASTRIC to avoid overlap.

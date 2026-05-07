@@ -557,6 +557,11 @@ a.lab-chip:hover { text-decoration: underline; }
     background: var(--gray-100); color: var(--gray-600);
     font-family: var(--font-mono); font-size: 11px;
 }
+.biomarker-status-bio_exists {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    background: #dbeafe; color: #1e40af;
+    font-family: var(--font-mono); font-size: 11px;
+}
 .biomarker-status-unmatched {
     display: inline-block; padding: 2px 8px; border-radius: 4px;
     background: #fef3c7; color: #92400e;
