@@ -749,16 +749,16 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 _NAV_LABELS = {
     "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →",
-           "diseases": "Хвороби", "specs": "Специфікації"},
+           "diseases": "Хвороби", "specs": "Специфікації", "ask": "Tumor board Q"},
     "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →",
-           "diseases": "Diseases", "specs": "Specs"},
+           "diseases": "Diseases", "specs": "Specs", "ask": "Tumor board Q"},
 }
 
 
 def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> str:
     """Build the URL the language-toggle should point to.
 
-    page_kind: 'home' | 'gallery' | 'try' | 'case' | 'capabilities' | 'contribute' | 'diseases'
+    page_kind: 'home' | 'gallery' | 'try' | 'ask' | 'case' | 'capabilities' | 'contribute' | 'diseases'
     target_lang: UA-side render asks where the EN mirror lives;
                  EN-side render asks where the UA mirror lives.
 
@@ -771,6 +771,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "home":         return "/"
         if page_kind == "gallery":      return "/gallery.html"
         if page_kind == "try":          return "/try.html"
+        if page_kind == "ask":          return "/ask.html"
         if page_kind == "case":         return f"/cases/{case_id}.html"
         if page_kind == "capabilities": return "/capabilities.html"
         if page_kind == "diseases":     return "/diseases.html"
@@ -781,6 +782,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "home":         return f"{uk_prefix}/"
         if page_kind == "gallery":      return f"{uk_prefix}/gallery.html"
         if page_kind == "try":          return f"{uk_prefix}/try.html"
+        if page_kind == "ask":          return f"{uk_prefix}/ask.html"
         if page_kind == "case":         return f"{uk_prefix}/cases/{case_id}.html"
         if page_kind == "capabilities": return f"{uk_prefix}/capabilities.html"
         if page_kind == "diseases":     return f"{uk_prefix}/diseases.html"
@@ -809,6 +811,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     home_path = "/ukr/" if target_lang == "uk" else "/"
     gallery_path = "/ukr/gallery.html" if target_lang == "uk" else "/gallery.html"
     try_path = "/ukr/try.html" if target_lang == "uk" else "/try.html"
+    ask_path = "/ukr/ask.html" if target_lang == "uk" else "/ask.html"
 
     # Capabilities now folds in the former Limitations section. The Specs
     # page is now rendered in both languages — the underlying markdown specs
@@ -850,6 +853,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
     {extra_links}
     <a href="{kb_href}"{cls("kb")}>{kb_label}</a>
+    <a href="{ask_path}"{cls("ask")}>{labels['ask']}</a>
     <a href="{gallery_path}"{cls("gallery")}>{labels['gallery']}</a>
     <a href="https://github.com/{GH_REPO}" target="_blank" rel="noopener">GitHub</a>
   </nav>
@@ -1722,6 +1726,338 @@ def render_gallery(*, target_lang: str = "en") -> str:
   }}
   window.addEventListener("hashchange", applyHash);
   applyHash();
+}})();
+</script>
+</body>
+</html>
+"""
+
+
+# ── Clinical question page (optional LLM adapter) ─────────────────────────
+
+
+def render_ask(*, target_lang: str = "en") -> str:
+    is_en = target_lang == "en"
+    title = "Tumor board question" if is_en else "Питання для tumor board"
+    lead = (
+        "Paste an exam-style oncology vignette in natural language. The server adapter "
+        "asks ChatGPT to structure the case, runs the OpenOnco rule engine, then returns "
+        "an answer, alternatives, or clarifying questions."
+        if is_en else
+        "Встав клінічну ситуацію своїми словами. Серверний адаптер просить ChatGPT "
+        "структурувати кейс, запускає OpenOnco rule engine, а потім повертає відповідь, "
+        "альтернативи або уточнюючі питання."
+    )
+    endpoint_label = "Endpoint" if is_en else "Endpoint"
+    case_label = "Clinical situation" if is_en else "Клінічна ситуація"
+    run_label = "Answer with OpenOnco" if is_en else "Відповісти через OpenOnco"
+    clear_label = "Clear" if is_en else "Очистити"
+    examples_title = "Examples" if is_en else "Приклади запиту"
+    use_example_label = "Use" if is_en else "Вставити"
+    quota_label = "Questions used" if is_en else "Використано питань"
+    plan_link_label = "Open in plan generator" if is_en else "Відкрити в генераторі планів"
+    plan_link_hint = (
+        "Good KB match found. The structured profile can be opened in the in-browser plan generator."
+        if is_en else
+        "Є добрий збіг із KB. Структурований профіль можна відкрити в браузерному генераторі планів."
+    )
+    plan_link_error = (
+        "Plan-generator link could not be created in this browser."
+        if is_en else
+        "Не вдалося створити посилання на генератор планів у цьому браузері."
+    )
+    placeholder = (
+        "62-year-old patient with metastatic gastric cancer, HER2-negative, MSS, PD-L1 CPS 25. What is the optimal first line?"
+        if is_en else
+        "62-річний пацієнт із метастатичним раком шлунка, HER2-негативний, MSS, PD-L1 CPS 25. Яка оптимальна перша лінія?"
+    )
+    empty_msg = "Paste a clinical situation first." if is_en else "Спочатку встав клінічну ситуацію."
+    loading_msg = "Structuring case and running engine..." if is_en else "Структурую кейс і запускаю engine..."
+    error_msg = "Request failed" if is_en else "Запит не вдався"
+    limit_msg = (
+        "You have used all 3 free-text questions in this browser."
+        if is_en else
+        "У цьому браузері вже використано всі 3 free-text питання."
+    )
+    safety = (
+        "Do not paste real identifiable patient data. This is a tumor-board draft, not autonomous medical advice."
+        if is_en else
+        "Не вставляй реальні ідентифіковані дані пацієнта. Це чернетка для tumor board, не автономна медична порада."
+    )
+    examples = [
+        (
+            "Gastric 1L",
+            "62-річний пацієнт із метастатичним раком шлунка, поширений перитонеальний канцероматоз. Гістологія: недиференційована аденокарцинома з перснеподібними клітинами, MSS, HER2-негативний, PD-L1 CPS = 25. Яка оптимальна перша лінія лікування?"
+        ),
+        (
+            "GBM supportive",
+            "30-річний чоловік із гліобластомою лівої тім'яної частки 2 см, ECOG 1, без супутньої патології, судом не було. Що НЕ входить до лікування: резекція, радіотерапія, стероїди, темозоломід чи профілактичні протиепілептичні?"
+        ),
+        (
+            "CUP poor PS",
+            "74-річна жінка, множинні метастази в печінці, низькодиференційована аденокарцинома без первинного вогнища, PET-негативна, WHO PS 3. Яка найбільш доцільна тактика?"
+        ),
+    ]
+    examples_json = json.dumps(
+        [{"title": title, "text": text} for title, text in examples],
+        ensure_ascii=False,
+    ).replace("</", "<\\/")
+    return f"""<!DOCTYPE html>
+<html lang="{'en' if is_en else 'uk'}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · {html.escape(title)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+<style>
+.ask-grid {{ display:grid; grid-template-columns:minmax(0, 0.9fr) minmax(0, 1.1fr); gap:18px; align-items:start; }}
+.ask-panel {{ border:1px solid var(--line); border-radius:8px; background:#fff; padding:16px; }}
+.ask-panel textarea {{ width:100%; min-height:280px; resize:vertical; font:14px/1.45 var(--mono); }}
+.ask-panel input {{ width:100%; }}
+.ask-actions {{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }}
+.ask-result {{ white-space:pre-wrap; font:14px/1.5 var(--mono); background:#0f172a; color:#e5e7eb; border-radius:8px; padding:14px; min-height:340px; overflow:auto; }}
+.ask-muted {{ color:var(--muted); font-size:14px; }}
+.ask-examples {{ display:grid; gap:10px; margin:12px 0 14px; }}
+.ask-example {{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; border:1px solid var(--line); border-radius:8px; padding:10px; background:#f8fafc; }}
+.ask-example-title {{ font-weight:700; margin-bottom:4px; }}
+.ask-example-text {{ color:var(--muted); font-size:13px; line-height:1.35; }}
+.ask-quota {{ display:flex; justify-content:space-between; gap:10px; margin-top:10px; font-size:13px; color:var(--muted); }}
+.ask-plan-link {{ display:none; margin-bottom:12px; padding:12px; border:1px solid #b7e4c7; background:#f0fdf4; border-radius:8px; }}
+.ask-plan-link.is-visible {{ display:block; }}
+.ask-plan-link p {{ margin:0 0 8px; color:#166534; font-size:14px; }}
+@media (max-width: 900px) {{ .ask-grid {{ grid-template-columns:1fr; }} }}
+@media (max-width: 520px) {{ .ask-example {{ grid-template-columns:1fr; }} }}
+</style>
+</head>
+<body>
+{_render_top_bar(active="ask", target_lang=target_lang, lang_switch_href=_lang_switch_href("ask", target_lang))}
+
+<main class="try-page">
+  <h1>{html.escape(title)}</h1>
+  <p class="lead">{lead}</p>
+  <p class="ask-muted">{safety}</p>
+
+  <div class="ask-grid">
+    <section class="ask-panel">
+      <label class="qt-label">
+        {endpoint_label}
+        <input id="endpointInput" value="/api/clinical-question" spellcheck="false">
+      </label>
+      <label class="qt-label" style="margin-top:12px">
+        {case_label}
+        <textarea id="caseText" spellcheck="true" placeholder="{html.escape(placeholder)}"></textarea>
+      </label>
+      <div class="ask-quota">
+        <span>{quota_label}</span>
+        <strong><span id="quotaUsed">0</span> / 3</strong>
+      </div>
+      <div class="ask-actions">
+        <button id="askBtn" class="btn">{run_label}</button>
+        <button id="clearAskBtn" class="btn btn-secondary">{clear_label}</button>
+      </div>
+      <p id="askStatus" class="ask-muted" role="status" aria-live="polite"></p>
+    </section>
+    <section class="ask-panel">
+      <h2 style="margin-top:0">{examples_title}</h2>
+      <div id="askExamples" class="ask-examples"></div>
+      <div id="planGeneratorLinkWrap" class="ask-plan-link">
+        <p>{plan_link_hint}</p>
+        <a id="planGeneratorLink" class="btn" href="try.html">{plan_link_label}</a>
+      </div>
+      <div id="askResult" class="ask-result"></div>
+    </section>
+  </div>
+</main>
+
+<script>
+(function() {{
+  const ASK_EXAMPLES = {examples_json};
+  const MAX_QUESTIONS = 3;
+  const USER_KEY = 'openonco-ask-user-id-v1';
+  const COUNT_KEY = 'openonco-ask-count-v1';
+  const endpointInput = document.getElementById('endpointInput');
+  const caseText = document.getElementById('caseText');
+  const askBtn = document.getElementById('askBtn');
+  const clearBtn = document.getElementById('clearAskBtn');
+  const status = document.getElementById('askStatus');
+  const result = document.getElementById('askResult');
+  const quotaUsed = document.getElementById('quotaUsed');
+  const examplesRoot = document.getElementById('askExamples');
+  const planLinkWrap = document.getElementById('planGeneratorLinkWrap');
+  const planLink = document.getElementById('planGeneratorLink');
+  const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
+  if (configured) endpointInput.value = configured;
+
+  function getUserId() {{
+    let id = localStorage.getItem(USER_KEY);
+    if (!id) {{
+      const browserCrypto = window.crypto || window.msCrypto;
+      const suffix = (browserCrypto && browserCrypto.randomUUID) ? browserCrypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
+      id = 'ask-' + suffix;
+      localStorage.setItem(USER_KEY, id);
+    }}
+    return id;
+  }}
+
+  function getCount() {{
+    const n = Number(localStorage.getItem(COUNT_KEY) || '0');
+    return Number.isFinite(n) && n > 0 ? Math.min(n, MAX_QUESTIONS) : 0;
+  }}
+
+  function setCount(n) {{
+    localStorage.setItem(COUNT_KEY, String(Math.min(Math.max(n, 0), MAX_QUESTIONS)));
+    updateQuota();
+  }}
+
+  function updateQuota() {{
+    const used = getCount();
+    quotaUsed.textContent = String(used);
+    askBtn.disabled = used >= MAX_QUESTIONS;
+    if (used >= MAX_QUESTIONS) status.textContent = '{limit_msg}';
+  }}
+
+  function renderExamples() {{
+    examplesRoot.innerHTML = '';
+    ASK_EXAMPLES.forEach((ex) => {{
+      const row = document.createElement('div');
+      row.className = 'ask-example';
+      const body = document.createElement('div');
+      const title = document.createElement('div');
+      title.className = 'ask-example-title';
+      title.textContent = ex.title;
+      const text = document.createElement('div');
+      text.className = 'ask-example-text';
+      text.textContent = ex.text;
+      body.appendChild(title);
+      body.appendChild(text);
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-secondary';
+      btn.type = 'button';
+      btn.textContent = '{use_example_label}';
+      btn.addEventListener('click', () => {{
+        caseText.value = ex.text;
+        caseText.focus();
+      }});
+      row.appendChild(body);
+      row.appendChild(btn);
+      examplesRoot.appendChild(row);
+    }});
+  }}
+
+  function renderPayload(payload) {{
+    const lines = [];
+    if (payload.direct_answer) lines.push(payload.direct_answer);
+    if (payload.selected_options && payload.selected_options.length) {{
+      lines.push('');
+      lines.push('Options:');
+      payload.selected_options.forEach(o => lines.push('- ' + (o.label ? o.label + '. ' : '') + o.text));
+    }}
+    if (payload.rationale && payload.rationale.length) {{
+      lines.push('');
+      lines.push('Rationale:');
+      payload.rationale.forEach(x => lines.push('- ' + x));
+    }}
+    if (payload.clarifying_questions && payload.clarifying_questions.length) {{
+      lines.push('');
+      lines.push('Clarifying questions:');
+      payload.clarifying_questions.forEach(x => lines.push('- ' + x));
+    }}
+    if (payload.engine_limitations && payload.engine_limitations.length) {{
+      lines.push('');
+      lines.push('Engine limitations:');
+      payload.engine_limitations.forEach(x => lines.push('- ' + x));
+    }}
+    if (payload.safety_note) {{
+      lines.push('');
+      lines.push(payload.safety_note);
+    }}
+    return lines.join('\\n') || JSON.stringify(payload, null, 2);
+  }}
+
+  function canOpenInPlanGenerator(payload) {{
+    return !!(
+      payload &&
+      payload.status === 'answered' &&
+      payload.patient_profile &&
+      payload.engine_summary &&
+      payload.engine_summary.ok === true &&
+      payload.engine_summary.mode === 'treatment'
+    );
+  }}
+
+  async function profileToHash(profile) {{
+    const json = JSON.stringify(profile);
+    if (!('CompressionStream' in window)) throw new Error('CompressionStream unavailable');
+    const stream = new Blob([json], {{ type: 'application/json' }}).stream().pipeThrough(new CompressionStream('gzip'));
+    const bytes = new Uint8Array(await new Response(stream).arrayBuffer());
+    let binary = '';
+    const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) {{
+      binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+    }}
+    return btoa(binary).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');
+  }}
+
+  async function updatePlanGeneratorLink(payload) {{
+    planLinkWrap.classList.remove('is-visible');
+    planLink.removeAttribute('href');
+    if (!canOpenInPlanGenerator(payload)) return;
+    try {{
+      const token = await profileToHash(payload.patient_profile);
+      planLink.href = 'try.html#p=' + token;
+      planLinkWrap.classList.add('is-visible');
+    }} catch (err) {{
+      console.warn('Plan-generator link failed:', err);
+      status.textContent = '{plan_link_error}';
+    }}
+  }}
+
+  askBtn.addEventListener('click', async () => {{
+    if (getCount() >= MAX_QUESTIONS) {{
+      status.textContent = '{limit_msg}';
+      return;
+    }}
+    const text = caseText.value.trim();
+    if (!text) {{
+      status.textContent = '{empty_msg}';
+      return;
+    }}
+    askBtn.disabled = true;
+    status.textContent = '{loading_msg}';
+    result.textContent = '';
+    planLinkWrap.classList.remove('is-visible');
+    try {{
+      const resp = await fetch(endpointInput.value.trim() || '/api/clinical-question', {{
+        method: 'POST',
+        headers: {{ 'Content-Type': 'application/json' }},
+        body: JSON.stringify({{ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() }})
+      }});
+      const payload = await resp.json();
+      if (!resp.ok) throw new Error(payload.message || ('HTTP ' + resp.status));
+      if (typeof payload.questions_used === 'number') setCount(payload.questions_used);
+      else setCount(getCount() + 1);
+      result.textContent = renderPayload(payload);
+      await updatePlanGeneratorLink(payload);
+      status.textContent = payload.status || 'ok';
+    }} catch (err) {{
+      status.textContent = '{error_msg}: ' + err.message;
+      result.textContent = '';
+      planLinkWrap.classList.remove('is-visible');
+    }} finally {{
+      updateQuota();
+    }}
+  }});
+  clearBtn.addEventListener('click', () => {{
+    caseText.value = '';
+    result.textContent = '';
+    status.textContent = '';
+    planLinkWrap.classList.remove('is-visible');
+  }});
+  renderExamples();
+  getUserId();
+  updateQuota();
 }})();
 </script>
 </body>
@@ -7683,6 +8019,8 @@ def build_site(output_dir: Path) -> dict:
             questionnaires_manifest=questionnaires_manifest,
             examples_manifest=examples_manifest,
         ), encoding="utf-8")
+    (output_dir / "ask.html").write_text(
+        render_ask(target_lang="en"), encoding="utf-8")
 
     # ── UA build (mirror at /ukr/) ──
     # Specs catalog page is rendered in both locales — the underlying
@@ -7706,6 +8044,8 @@ def build_site(output_dir: Path) -> dict:
             questionnaires_manifest=questionnaires_manifest,
             examples_manifest=examples_manifest,
         ), encoding="utf-8")
+    (output_dir / "ukr" / "ask.html").write_text(
+        render_ask(target_lang="uk"), encoding="utf-8")
 
     case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
     disease_coverage_payload = bundle_disease_coverage(output_dir)

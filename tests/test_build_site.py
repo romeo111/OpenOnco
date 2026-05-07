@@ -34,7 +34,7 @@ def site_dir(tmp_path_factory) -> Path:
 def test_static_assets_present(site_dir: Path):
     # CSD-9C dropped monolithic openonco-engine.zip — replaced by core + per-disease + index.
     for f in (".nojekyll", "CNAME", "style.css", "index.html", "gallery.html",
-              "try.html", "openonco-engine-core.zip", "openonco-engine-index.json",
+              "try.html", "ask.html", "openonco-engine-core.zip", "openonco-engine-index.json",
               "examples.json", "manifest.webmanifest", "kb.html", "kb_search_index.json",
               "ukr/kb.html", "ukr/kb_search_index.json",
               "clinical-gaps.html", "ukr/clinical-gaps.html",
@@ -136,7 +136,7 @@ def test_landing_how_section_uses_dataflow_stages(site_dir: Path):
 
 def test_top_bar_drops_tester_pill(site_dir: Path):
     """Per user direction: 'Тестувальник · OSS preview' pill removed from header."""
-    for page in ("index.html", "gallery.html", "try.html"):
+    for page in ("index.html", "gallery.html", "try.html", "ask.html"):
         html = (site_dir / page).read_text(encoding="utf-8")
         assert "Тестувальник · OSS preview" not in html, (
             f"tester pill still in {page} header"
@@ -217,6 +217,27 @@ def test_try_page_has_pwa_manifest_and_build_status(site_dir: Path):
     assert manifest["display"] == "standalone"
     assert manifest["theme_color"] == "#0a2e1a"
     assert any(icon["src"] == "/logo.svg" for icon in manifest["icons"])
+
+
+def test_ask_page_wires_clinical_question_endpoint(site_dir: Path):
+    """Optional ChatGPT adapter: free-text case goes to a server endpoint,
+    not directly to OpenAI from the browser."""
+    html = (site_dir / "ask.html").read_text(encoding="utf-8")
+    assert 'id="caseText"' in html
+    assert 'id="endpointInput"' in html
+    assert 'id="askBtn"' in html
+    assert "/api/clinical-question" in html
+    assert "OPENONCO_CLINICAL_QUESTION_ENDPOINT" in html
+    assert "openonco-ask-user-id-v1" in html
+    assert "MAX_QUESTIONS = 3" in html
+    assert 'id="askExamples"' in html
+    assert 'id="planGeneratorLink"' in html
+    assert "CompressionStream" in html
+    assert "try.html#p=" in html
+    assert "engine_summary.ok === true" in html
+    assert "questions_used" in html
+    assert "OPENAI_API_KEY" not in html
+    assert "api.openai.com" not in html
 
 
 # ── Engine bundle (Pyodide-loadable zip) ──────────────────────────────────
@@ -367,7 +388,7 @@ def test_case_files_have_back_link_and_no_auth(site_dir: Path):
 def test_en_mirror_built_alongside_ua(site_dir: Path):
     """Every public page has a /ukr/ counterpart so the language toggle
     can navigate between them without 404."""
-    for page in ("index.html", "gallery.html", "try.html"):
+    for page in ("index.html", "gallery.html", "try.html", "ask.html"):
         assert (site_dir / "ukr" / page).exists(), f"missing ukr/{page}"
     assert (site_dir / "ukr").is_dir()
     assert (site_dir / "ukr" / "cases").is_dir()
@@ -380,7 +401,7 @@ def test_en_mirror_built_alongside_ua(site_dir: Path):
 
 def test_lang_switch_present_on_every_top_level_page(site_dir: Path):
     """Toggle in the top bar lets the user flip EN↔UA on landing/gallery/try."""
-    for page in ("index.html", "gallery.html", "try.html"):
+    for page in ("index.html", "gallery.html", "try.html", "ask.html"):
         en = (site_dir / page).read_text(encoding="utf-8")
         ua = (site_dir / "ukr" / page).read_text(encoding="utf-8")
         # Toggle markup
