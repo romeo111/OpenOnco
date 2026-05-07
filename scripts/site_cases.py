@@ -62,6 +62,15 @@ GALLERY_EXCLUDED_CASE_IDS: set[str] = {
     "variant-rcc-high-risk",
     "variant-rcc-infection-hbv",
     "variant-rcc-organ-dysf",
+    # No ESCAT-tier BMA triggered; plan produces no biomarker actionability
+    # context — hidden to keep gallery focused on ESCAT-rich demonstrators.
+    "hcc-atezo-bev-imbrave150",
+    "hcc-durva-treme-stride",
+    "breast-brca-germline-olaparib",
+    "cervical-locally-advanced",
+    # Adjuvant case: no ESCAT tiers, and free-text step conditions cause
+    # engine to fall back to stage-2 indication for a stage-3 patient.
+    "crc-stage-iii-adjuvant-folfox",
 }
 
 
@@ -5288,10 +5297,10 @@ CASES: list[CaseEntry] = [
         case_id="crc-stage-iii-adjuvant-folfox",
         file="patient_crc_stage_iii_adjuvant_folfox.json",
         label_ua="CRC · stage III adjuvant FOLFOX (MOSAIC)",
-        summary_ua="Stage III після резекції. Drift: KB не має adjuvant CRC algo; engine default = mCRC FOLFOX+bev (анкер MOSAIC у comment).",
+        summary_ua="Stage III після резекції (R0), 62F, MSI-S/BRAF-WT. Engine: disease_state=adjuvant → ALGO-CRC-ADJUVANT. Крок 1 умова free-text (нееvalуйована) → fallback до IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX; клінічний анкер MOSAIC у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="CRC · stage III adjuvant FOLFOX (MOSAIC)",
-        summary_en="Stage III after resection. Drift: KB has no adjuvant CRC algo; engine default = mCRC FOLFOX+bev (MOSAIC anchor in comment).",
+        summary_en="Stage III after curative resection (R0), 62F, MSI-S/BRAF-WT. Engine: disease_state=adjuvant → ALGO-CRC-ADJUVANT. Step 1 free-text condition unevaluable → fallback to IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX; MOSAIC clinical anchor in comment.",
     ),
     CaseEntry(
         case_id="crc-mcrc-ras-wt-left-folfox-cetux",

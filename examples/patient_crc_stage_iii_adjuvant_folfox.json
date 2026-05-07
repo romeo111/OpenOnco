@@ -1,7 +1,8 @@
 {
   "patient_id": "CRC-STAGE3-ADJ-001",
-  "comment": "Synthetic stage III colon adenocarcinoma, post-curative resection (R0), 62F, ECOG 0, intended adjuvant FOLFOX 6 mo (MOSAIC). KB DRIFT: there is currently NO adjuvant CRC algorithm in knowledge_base/hosted/content/algorithms/ — only ALGO-CRC-METASTATIC-1L and ALGO-CRC-METASTATIC-2L exist. The engine matches algorithms strictly by (disease_id, line_of_therapy), so a CRC line=1 patient — adjuvant or metastatic — routes through ALGO-CRC-METASTATIC-1L and surfaces metastatic 1L tracks. The intended IND-CRC-ADJUVANT-STAGE3-FOLFOX never appears (it is in NO algorithm's output_indications). Engine actually routes step 4 default → IND-CRC-METASTATIC-1L-FOLFOX-BEV (clinically wrong for adjuvant; bevacizumab is not standard adjuvant per NSABP-C-08). This case is preserved as an audit artifact demonstrating the wired-vs-intended gap; the comment is the load-bearing piece, not the rendered plan. Fix requires authoring algo_crc_adjuvant.yaml referencing IND-CRC-ADJUVANT-STAGE3-FOLFOX (Phase-2 KB work, out of scope here).",
+  "comment": "Synthetic stage III colon adenocarcinoma, post-curative resection (R0), 62F, ECOG 0, intended adjuvant FOLFOX 6 mo (MOSAIC). disease_state=adjuvant routes to ALGO-CRC-ADJUVANT (step 1 stage gate → IND-CRC-ADJUVANT-STAGE3-FOLFOX). MSI-S/BRAF-WT → no ICI modification (NCCN category 1 for MSS stage III adjuvant FOLFOX).",
   "disease": {"id": "DIS-CRC"},
+  "disease_state": "adjuvant",
   "line_of_therapy": 1,
   "biomarkers": {
     "BIO-MSI-STATUS": "stable",
