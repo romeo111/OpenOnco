@@ -1,46 +1,82 @@
 id: ALGO-PDAC-METASTATIC-1L
 applicable_to_disease: DIS-PDAC
 applicable_to_line_of_therapy: 1
-purpose: 'Algorithm for PDAC metastatic 1L. ECOG 0-1 + bilirubin-resolved → FOLFIRINOX (preferred for fit patients; better OS but more toxic). Frail / ECOG ≥2 → gem-nab-pac de-escalation. BRCA-germline maintenance (POLO) follows ≥16 weeks platinum-induction without progression.
+purpose: >
+  Algorithm for PDAC metastatic 1L. ECOG 0-1 + bilirubin-resolved →
+  FOLFIRINOX (preferred for fit patients; better OS but more toxic) or
+  NALIRIFOX (NAPOLI-3, alternative-preferred for fit patients with
+  liposomal-irinotecan access). Frail / ECOG ≥2 → gem-nab-pac de-
+  escalation. BRCA-germline maintenance (POLO) follows ≥16 weeks
+  platinum-induction without progression.
 
-  '
 output_indications:
-- IND-PDAC-METASTATIC-1L-FOLFIRINOX
-- IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
-- IND-PDAC-MAINTENANCE-OLAPARIB-BRCA
-default_indication: IND-PDAC-METASTATIC-1L-FOLFIRINOX
-alternative_indication: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
-decision_tree:
-- step: 2
-  evaluate:
-    any_of:
-    - red_flag: RF-PDAC-FRAILTY-AGE
-  if_true:
-    result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
-  if_false:
-    next_step: 3
-- step: 3
-  evaluate:
-    all_of:
-    - red_flag: RF-FITNESS-ECOG-FIT
-    - red_flag: RF-PDAC-FIT-FOR-FOLFIRINOX
-  if_true:
-    result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
-  if_false:
-    result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
-  notes: "Wired via RF-FITNESS-ECOG-FIT (universal) AND RF-PDAC-FIT-FOR-FOLFIRINOX (W5c chunk 2026-04-30 — bilirubin_uln_x <=1.5 AND ecog <=1 AND age <=75 per PRODIGE-4 inclusion). Both required (all_of) for FOLFIRINOX intensification; failure on either gate routes to gem-nab-pac default."
-- step: 4
-  evaluate:
-    any_of:
-    - red_flag: RF-PDAC-HIGH-RISK-BIOLOGY
-  if_true:
-    result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
-  if_false:
-    result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
-sources:
-- SRC-NCCN-PANCREATIC-2025
-- SRC-ESMO-PANCREATIC-2024
-last_reviewed: '2026-04-26'
-notes: '3-arm algorithm: FOLFIRINOX (default fit) / gem-nab-pac (frail) / olaparib-maintenance (BRCA-germline post-platinum). NALIRIFOX (NAPOLI-3) emerging as 1L alternative — separate Indication when added.
+  - IND-PDAC-METASTATIC-1L-FOLFIRINOX
+  - IND-PDAC-METASTATIC-1L-NALIRIFOX
+  - IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
+  - IND-PDAC-MAINTENANCE-OLAPARIB-BRCA
 
-  '
+default_indication: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+alternative_indication: IND-PDAC-METASTATIC-1L-NALIRIFOX
+
+decision_tree:
+  # Step 2 — Frailty / age gate. Frail or older patients de-escalate
+  # to gem-nab-pac (MPACT) regardless of biomarker / fit-for-FOLFIRINOX
+  # status.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-PDAC-FRAILTY-AGE
+    if_true:
+      result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
+    if_false:
+      next_step: 3
+
+  # Step 3 — FOLFIRINOX fitness gate (ECOG ≤1 + bilirubin ≤1.5×ULN +
+  # age ≤75 per PRODIGE-4 inclusion). Failure on either gate routes to
+  # gem-nab-pac default.
+  - step: 3
+    evaluate:
+      all_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-PDAC-FIT-FOR-FOLFIRINOX
+    if_true:
+      result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+      notes: >
+        FOLFIRINOX (Conroy NEJM 2011 / PRODIGE-4) — mOS 11.1 vs 6.8 mo
+        vs gem mono (HR 0.57). Default for fit ECOG 0-1 + bilirubin-
+        resolved + age ≤75. NALIRIFOX (NAPOLI-3) is the alternative-
+        preferred regimen for the same fitness profile when liposomal
+        irinotecan access is available.
+    if_false:
+      result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
+    notes: "Wired via RF-FITNESS-ECOG-FIT (universal) AND RF-PDAC-FIT-FOR-FOLFIRINOX (W5c chunk 2026-04-30 — bilirubin_uln_x <=1.5 AND ecog <=1 AND age <=75 per PRODIGE-4 inclusion). Both required (all_of) for FOLFIRINOX intensification; failure on either gate routes to gem-nab-pac default. NALIRIFOX (D2 chunk 2026-05-08) shares the same fitness criteria — surfaces as alternative track at render time per output_indications + alternative_indication."
+
+  # Step 4 — high-risk biology marker (no clinical effect on routing
+  # at this point; FOLFIRINOX remains default for fit patients).
+  # Preserved for future BRCA-germline / driver-mutation routing.
+  - step: 4
+    evaluate:
+      any_of:
+        - red_flag: RF-PDAC-HIGH-RISK-BIOLOGY
+    if_true:
+      result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+    if_false:
+      result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+
+sources:
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-ESMO-PANCREATIC-2024
+  - SRC-NAPOLI-3-WAINBERG-2024
+
+last_reviewed: '2026-05-08'
+notes: >
+  4-arm algorithm: FOLFIRINOX (default fit per PRODIGE-4) / NALIRIFOX
+  (alternative fit per NAPOLI-3) / gem-nab-pac (frail per MPACT) /
+  olaparib-maintenance (BRCA-germline post-platinum per POLO).
+  D2 chunk gi3-d2-algo-extensions-2026-05-08-2300 — added NALIRIFOX
+  to output_indications and alternative_indication (surfaces as
+  alternative track at render time). NALIRIFOX shares the FOLFIRINOX
+  fitness gate (ECOG ≤1, bilirubin ≤1.5×ULN, age ≤75); selection
+  between FOLFIRINOX and NALIRIFOX is access-driven (liposomal
+  irinotecan availability) — both are NCCN cat 1 for fit metastatic
+  PDAC 1L.

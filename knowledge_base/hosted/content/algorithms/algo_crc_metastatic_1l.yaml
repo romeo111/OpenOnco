@@ -2,11 +2,17 @@ id: ALGO-CRC-METASTATIC-1L
 applicable_to_disease: DIS-CRC
 applicable_to_line_of_therapy: 1
 purpose: >
-  Select 1L regimen for metastatic colorectal cancer (mCRC) based on
-  MSI-H status (treatment-defining), then RAS/BRAF + tumor sidedness
-  (NCCN/ESMO algorithm), then frailty (de-escalate).
+  Select 1L regimen for metastatic colorectal cancer (mCRC). Step 0
+  (D2 chunk gi3-d2-algo-extensions-2026-05-08-2300) gates the liver-
+  only oligometastatic track first — RF-CRC-OLIGOMET-LIVER-DEFINITION
+  fires when ≤3 liver-confined mets + controllable primary + ECOG 0-1
+  + amenable to local therapy (resection / SBRT / ablation). Otherwise
+  falls through to the standard biomarker hierarchy: MSI-H/dMMR
+  (treatment-defining), then RAS/BRAF + tumor sidedness (NCCN/ESMO),
+  then frailty (de-escalate).
 
 output_indications:
+  - IND-CRC-OLIGOMET-LIVER-LIMITED
   - IND-CRC-METASTATIC-1L-MSI-H-PEMBRO
   - IND-CRC-METASTATIC-1L-RAS-WT-LEFT
   - IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
@@ -16,6 +22,38 @@ default_indication: IND-CRC-METASTATIC-1L-RAS-WT-LEFT
 alternative_indication: IND-CRC-METASTATIC-1L-FOLFOX-BEV
 
 decision_tree:
+  # Step 0 (D2 chunk gi3-d2-algo-extensions-2026-05-08-2300) —
+  # RF-CRC-OLIGOMET-LIVER-DEFINITION gate. When patient meets liver-
+  # only oligometastatic criteria (≤3 liver lesions confined to liver,
+  # controllable primary, ECOG 0-1, all sites amenable to local therapy
+  # — resection / SBRT / ablation), route to systemic-plus-local
+  # oligomet track (induction systemic → restaging → metastasis-
+  # directed local therapy → adjuvant systemic). Falls through to the
+  # standard 1L metastatic biomarker hierarchy when the RF does not
+  # fire (>3 liver mets, extra-hepatic disease, peritoneal involvement,
+  # ECOG ≥2, etc.).
+  - step: 0
+    evaluate:
+      any_of:
+        - red_flag: RF-CRC-OLIGOMET-LIVER-DEFINITION
+    if_true:
+      result: IND-CRC-OLIGOMET-LIVER-LIMITED
+      notes: >
+        Liver-limited oligometastatic CRC (RF-CRC-OLIGOMET-LIVER-DEFINITION):
+        ≤3 liver lesions + ECOG 0-1 + controllable primary + all sites
+        amenable to local therapy (R0-resectable, SBRT-eligible, or
+        ablation-amenable). Aggressive plan track — induction systemic
+        chemo (FOLFOX or FOLFOXIRI ± bev/EGFRi per biomarker) →
+        restaging → metastasis-directed local therapy → adjuvant
+        systemic continuation. NCCN v3.2025 supports curative-intent
+        approach for liver-limited mCRC (CALGB-80405 / FIRE-3
+        derivative cohorts). Confidence: moderate (no dedicated
+        randomized trial; consensus-driven from observational and
+        post-hoc analyses).
+    if_false:
+      next_step: 1
+    notes: "D2 chunk new branch — prepended oligomet step gates the standard biomarker hierarchy. Fires only when RF-CRC-OLIGOMET-LIVER-DEFINITION composite trigger evaluates True (≤3 liver lesions + ECOG≤1 + primary controllable + all sites amenable + no extra-hepatic disease). MSI-H, RAS/BRAF biomarkers continue to inform the systemic backbone selected in the induction phase but do NOT override the oligomet track at routing-time."
+
   # Step 1 — MSI-H/dMMR overrides everything (KEYNOTE-177).
   - step: 1
     evaluate:
@@ -96,14 +134,22 @@ sources:
   - SRC-TRIBE-LOUPAKIS-2014
   - SRC-TRIBE2-CREMOLINI-2020
 
-last_reviewed: "2026-05-03"
+last_reviewed: "2026-05-08"
 notes: >
-  Algorithm covering 4 indications: MSI-H pembro (1L standard), RAS-WT
-  left-sided cetux (CALGB-80405), FOLFOXIRI+bev for fit BRAF V600E or
-  high-burden conversion intent (TRIBE/TRIBE2), FOLFOX+bev default.
-  Still missing (deferred): HER2+ trastuzumab+tucatinib (MOUNTAINEER —
-  2L, already authored), regorafenib/TAS-102 3L+, palliative 5-FU/LV
-  mono for frail patients.
+  D2 chunk gi3-d2-algo-extensions-2026-05-08-2300 — prepended step 0
+  oligomet-liver gate (RF-CRC-OLIGOMET-LIVER-DEFINITION → IND-CRC-
+  OLIGOMET-LIVER-LIMITED) before the standard biomarker hierarchy.
+  Mirrors the GI-2 D2 ALGO-GASTRIC-METASTATIC-1L step-0 oligomet
+  pattern (PR #446 — RF-OLIGOMET-DEFINITION → IND-GASTRIC-OLIGOMET-
+  SYSTEMIC-PLUS-LOCAL).
+
+  Algorithm covering 5 indications: liver-limited oligomet curative
+  (D2 step 0), MSI-H pembro (1L standard), RAS-WT left-sided cetux
+  (CALGB-80405), FOLFOXIRI+bev for fit BRAF V600E or high-burden
+  conversion intent (TRIBE/TRIBE2), FOLFOX+bev default. Still missing
+  (deferred): HER2+ trastuzumab+tucatinib (MOUNTAINEER — 2L, already
+  authored), regorafenib/TAS-102 3L+, palliative 5-FU/LV mono for
+  frail patients.
 
   Frailty (step 5) routes to FOLFOX+bev — clinically dose-modified or
   palliative-intent 5-FU/LV mono is more appropriate but awaits dedicated

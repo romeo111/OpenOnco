@@ -4,7 +4,10 @@ applicable_to_line_of_therapy: 1
 purpose: >
   Select adjuvant chemotherapy regimen for resected stage II-III colon cancer
   based on MMR status (treatment-defining gate for stage II), stage/risk
-  grouping (T/N substage), and regimen preference (FOLFOX vs CAPOX).
+  grouping (T/N substage per IDEA), and regimen preference (FOLFOX vs CAPOX).
+  IDEA-stratified routing (D2 chunk gi3-d2-algo-extensions-2026-05-08-2300):
+  Stage III low-risk (T1-3 N1) → 3-mo CapOx preferred; Stage III high-risk
+  (T4 OR N2) or Stage II high-risk → 6-mo oxaliplatin-based.
   Rectal cancer with prior neoadjuvant CRT/TNT follows a separate pathway
   (pending schema extension — not addressed here).
 
@@ -67,8 +70,11 @@ decision_tree:
     if_true:
       next_step: 5
 
-  # Step 5 — Stage III: IDEA risk group determines duration.
-  # Step 5a — Stage III low-risk → CAPOX 3 months preferred (IDEA).
+  # Step 5 — Stage III IDEA stratification — low-risk (T1-3 N1) → 3-mo CapOx
+  # preferred. IDEA collaboration (Grothey NEJM 2018; Sobrero JCO 2018)
+  # demonstrated 3 mo CapOx non-inferior to 6 mo for low-risk stage III
+  # with substantially less neuropathy (G≥2 14% vs 45%). NCCN v3.2025
+  # endorses 3-mo CapOx as preferred for low-risk T1-3 N1 stage III.
   - step: 5
     evaluate:
       all_of:
@@ -77,19 +83,26 @@ decision_tree:
     if_true:
       result: IND-CRC-ADJUVANT-STAGE3-CAPOX
       notes: >
-        Low-risk stage III (T1-3 N1): 3-month CAPOX is preferred (IDEA
-        non-inferiority; 68% less neuropathy). FOLFOX 6 months is the
+        IDEA-stratified low-risk stage III (T1-3 N1) — 3-month CAPOX
+        is preferred (IDEA non-inferiority; HR 1.01 for DFS, 68% less
+        grade ≥2 neuropathy than 6-month). FOLFOX 6 months is the
         alternative if capecitabine contraindicated (CrCl <30) or patient
-        strongly prefers IV. FOLFOX 3 months is inferior to 6 months —
-        do not use shortened FOLFOX for low-risk stage III.
+        strongly prefers IV. FOLFOX 3 months is INFERIOR to 6 months —
+        do not use shortened FOLFOX for low-risk stage III. Per
+        IND-CRC-ADJUVANT-STAGE3-CAPOX known_controversies, document
+        IDEA-defined T1-3 N1 status in the rationale.
     if_false:
       next_step: 6
 
-  # Step 6 — Stage III high-risk OR Stage II high-risk → 6 months oxaliplatin-based.
+  # Step 6 — Stage III high-risk OR Stage II high-risk → 6 months
+  # oxaliplatin-based. Stage III high-risk (T4 OR N2) per IDEA showed
+  # 6 mo SUPERIOR to 3 mo (DFS HR 1.12 favoring 6 mo); 6-mo regimen
+  # is the clear standard for this cohort. Stage II high-risk also
+  # recommended 6-mo per CALGB / MOSAIC.
   - step: 6
     evaluate:
       any_of:
-        - condition: "Stage III high-risk: T4 or N2"
+        - condition: "Stage III high-risk: T4 or N2 (per IDEA stratification)"
         - condition: "Stage II high-risk (T4 OR adverse features, MSS)"
     if_true:
       next_step: 7
@@ -105,11 +118,13 @@ decision_tree:
     if_false:
       result: IND-CRC-ADJUVANT-STAGE3-CAPOX
       notes: >
-        High-risk stage III or stage II high-risk: CAPOX 6 months (8 cycles)
-        or FOLFOX 6 months (12 cycles) — equivalent efficacy.
-        CAPOX preferred for patient convenience (oral PO, no port for pump).
-        For stage II high-risk: IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX
-        also applies (same regimen, different indication ID).
+        IDEA-stratified high-risk stage III (T4 OR N2) or stage II
+        high-risk: CAPOX 6 months (8 cycles) preferred per IDEA + ESMO
+        2024 (or FOLFOX 6 months / 12 cycles equivalent if oral not
+        tolerated). For stage II high-risk: IND-CRC-ADJUVANT-STAGE2-
+        HIGHRISK-FOLFOX also applies (same regimen, different indication
+        ID). 6-month duration is non-negotiable for T4 or N2 — IDEA
+        showed 3-mo CapOx INFERIOR for this cohort (DFS HR 1.12).
 
 sources:
   - SRC-MOSAIC-ANDRE-2004
@@ -117,8 +132,15 @@ sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
 
-last_reviewed: "2026-05-03"
+last_reviewed: "2026-05-08"
 notes: >
+  D2 chunk gi3-d2-algo-extensions-2026-05-08-2300 — sharpened IDEA
+  stratification language: low-risk (T1-3 N1) → 3-mo CapOx preferred,
+  high-risk (T4 OR N2) → 6-mo CapOx required (3-mo INFERIOR per IDEA
+  per-protocol pooled analysis). The structural routing was already
+  in place pre-D2 — this revision tightens the rationale text to
+  surface the IDEA stratification explicitly per refactor lesson §10.5
+  (notes-level concretization without changing list ordering).
   Colon cancer adjuvant algorithm only. Rectal cancer adjuvant (post-CRT
   or post-TNT) is pending separate schema work — the step-logic for rectal
   differs (oxaliplatin duration already consumed by induction; capecitabine
