@@ -228,6 +228,13 @@ def test_try_page_has_pwa_manifest_and_build_status(site_dir: Path):
     assert "fetchJsonWithTimeout" in html
     assert 'id="questReadiness"' in html
     assert 'id="readinessCriticalText"' in html
+    assert 'class="try-actions quest-cta quest-actions-top"' in html
+    assert html.index('id="questReadiness"') < html.index('id="runBtn"') < html.index('class="quest-grid"')
+    assert html.index('id="runBtn"') < html.index('id="buildCard"')
+    assert "function updateWorkflowControls()" in html
+    assert "actionLocked" in html
+    assert ".status-top[hidden] { display: none; }" in (site_dir / "style.css").read_text(encoding="utf-8")
+    assert "statusTopText.textContent = ''" in html
     assert 'class="quest-impact-card"' not in html
     assert 'rel="manifest" href="/manifest.webmanifest"' in ua_html
 
@@ -377,6 +384,32 @@ def test_try_examples_cover_every_questionnaire_disease(site_dir: Path):
     assert '"disease_id":' in html
     assert "ex.disease_id !== wantDiseaseId" in html
     assert "ICD-O morphology is not unique enough" in html
+
+
+def test_try_questionnaire_dropdown_titles_are_public_and_localized(site_dir: Path):
+    en_html = (site_dir / "try.html").read_text(encoding="utf-8")
+    uk_html = (site_dir / "ukr" / "try.html").read_text(encoding="utf-8")
+
+    assert '"title_en": "Invasive breast cancer — first line"' in en_html
+    assert '"title_en": "HCV-associated Marginal Zone Lymphoma — first line"' in en_html
+    assert '"icd_10": "C50"' in en_html
+    assert "ICD-10 ${icd10}" in en_html
+    assert "openonco-manifests-v2" in en_html
+    assert "getItem('openonco-manifests-v2')" in en_html
+    assert "removeItem('openonco-manifests-v1')" in en_html
+    assert "auto-generated STUB" not in en_html
+    assert "q.title_uk || q.title_en || q.title" in uk_html
+    assert '"title_uk": "Інвазивний рак молочної залози — перша лінія"' in uk_html
+    assert '"icd_10": "C50"' in uk_html
+    assert "auto-generated STUB" not in uk_html
+
+    qsrc = Path("knowledge_base/hosted/content/questionnaires")
+    assert not any(
+        "auto-generated STUB" in line
+        for path in qsrc.glob("*.yaml")
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.startswith("title:")
+    )
 
 
 # ── Per-case files ────────────────────────────────────────────────────────

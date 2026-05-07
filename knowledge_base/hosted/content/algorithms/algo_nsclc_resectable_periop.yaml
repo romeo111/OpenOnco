@@ -1,0 +1,55 @@
+id: ALGO-NSCLC-RESECTABLE-PERIOP
+applicable_to_disease: DIS-NSCLC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select perioperative systemic regimen for resectable stage II–IIIB NSCLC.
+  Routes driver-negative patients (no EGFR/ALK) to perioperative pembrolizumab
+  (KEYNOTE-671: neoadj pembro+chemo x4 → lobectomy → adj pembro x13).
+  EGFR/ALK-positive patients require TKI-based adjuvant (not yet modelled in KB).
+
+output_indications:
+  - IND-NSCLC-PERIOPERATIVE-PEMBRO
+
+default_indication: IND-NSCLC-PERIOPERATIVE-PEMBRO
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
+        - red_flag: RF-NSCLC-ALK-FUSION-ACTIONABLE
+    if_true:
+      result: null
+      notes: >
+        EGFR sensitizing mutation or ALK fusion detected: pembrolizumab-based
+        perioperative therapy is not standard. For EGFR ex19del/L858R: osimertinib
+        80 mg QD x3 years adjuvant (ADAURA: DFS HR 0.20 stage II-IIIA; NCCN Cat 1).
+        Not yet modelled in KB. Refer to MDT for targeted adjuvant discussion.
+    if_false:
+      next_step: 2
+
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Resectable stage II, IIIA, or IIIB (T3-4N2M0) NSCLC eligible for anatomic resection"
+    if_true:
+      result: IND-NSCLC-PERIOPERATIVE-PEMBRO
+      notes: >
+        Perioperative pembrolizumab: neoadjuvant pembro 200 mg IV q3w + histology-appropriate
+        platinum-doublet x4 cycles → curative-intent anatomic resection (lobectomy preferred) →
+        adjuvant pembro 200 mg IV q3w x13 cycles. KEYNOTE-671: pEFS HR 0.58 (p<0.001);
+        major pathological response 30.2% vs 11.0%. Chemo: carbo+paclitaxel (squamous);
+        carbo+pemetrexed (non-squamous).
+    if_false:
+      result: null
+      notes: >
+        Stage IA or unresectable NSCLC: not within KN-671 scope. Route to
+        ALGO-NSCLC-METASTATIC-1L for stage IV, or stage III definitive CRT pathway.
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-05-09"
+notes: >
+  Perioperative NSCLC routing: driver-negative stage II-IIIB only.
+  Single modelled indication: IND-NSCLC-PERIOPERATIVE-PEMBRO (KN-671).
+  EGFR adj (ADAURA) and atezo adj (IMpower010) handled by ALGO-NSCLC-ADJUVANT.

@@ -1,0 +1,134 @@
+id: IND-MM-3L-ISA-KD
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MM
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed or refractory multiple myeloma after ≥2 prior lines of therapy including a PI and an IMiD"
+    - "No prior carfilzomib exposure (IKEMA eligibility: carfilzomib-naive at enrollment)"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ISA-KD-MM-3L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  progression_free_survival:
+    value: "PFS HR 0.531 (95% CI 0.318-0.889; p=0.0014) Isa-Kd vs Kd — IKEMA interim analysis; 18-month PFS ~68% vs ~50%"
+    source: SRC-IKEMA-MOREAU-2021
+  overall_response_rate:
+    value: "ORR 86.6% Isa-Kd vs 82.9% Kd (IKEMA)"
+    source: SRC-IKEMA-MOREAU-2021
+  complete_response:
+    value: "sCR/CR 39.7% Isa-Kd vs 27.6% Kd; MRD negativity (10^-5) 29.6% vs 13.0%"
+    source: SRC-IKEMA-MOREAU-2021
+  mrd_negativity_rate:
+    value: "MRD negativity rate (10^-5 threshold): 29.6% Isa-Kd vs 13.0% Kd (IKEMA)"
+    source: SRC-IKEMA-MOREAU-2021
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-MM-RENAL-DYSFUNCTION
+  - RF-MM-HIGH-RISK-CYTOGENETICS
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-IMMUNOGLOBULINS
+  - TEST-SPEP-UPEP
+  - TEST-FREE-LIGHT-CHAINS
+  - TEST-FISH-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-ECHO
+  - TEST-HBV-SEROLOGY
+  - TEST-DAT-COOMBS
+desired_tests:
+  - TEST-WHOLE-BODY-MRI
+
+rationale: >
+  Isa-Kd (isatuximab + carfilzomib + dexamethasone) for r/r MM after ≥2 prior
+  lines including a PI and an IMiD, in patients who are carfilzomib-naive. The
+  IKEMA trial (Moreau 2021) demonstrated a significant PFS benefit over Kd alone
+  (HR 0.531; p=0.0014). Isatuximab (anti-CD38 mAb) adds a third mechanism of
+  action to PI + steroid backbone, similar to DKd (CANDOR) with daratumumab.
+  Carfilzomib represents a PI switch from bortezomib/ixazomib used in prior lines.
+  MRD negativity at 29.6% in IKEMA reflects depth of response. Near-equivalent
+  to DKd; choice depends on drug access. Both anti-CD38 agents require DAT/Coombs
+  baseline before cycle 1 due to crossmatch interference.
+
+rationale_ua: >
+  Isa-Kd (ізатуксимаб + карфілзоміб + дексаметазон) для р/р ММ після ≥2 ліній
+  терапії, включаючи ІП та IMiD, у пацієнтів без попереднього карфілзомібу.
+  Дослідження IKEMA (Moreau 2021) продемонструвало значну перевагу PFS над Kd
+  (HR 0.531; p=0.0014). Ізатуксимаб (анти-CD38 моноклональне антитіло) додає
+  третій механізм дії до комбінації ІП + стероїд, аналогічно DKd (CANDOR).
+  Карфілзоміб — перемикання ІП від бортезомібу/іксазомібу попередніх ліній.
+  Негативність MRD 29.6% у IKEMA відображає глибину відповіді. Вибір між
+  Isa-Kd та DKd залежить від доступності препаратів в Україні.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-IKEMA-MOREAU-2021
+    position: supports
+    relevant_quote_paraphrase: "IKEMA: Isa-Kd vs Kd in r/r MM ≥2 prior lines — PFS HR 0.531 (p=0.0014), ORR 86.6%, MRD negativity 29.6%"
+  - source_id: SRC-NCCN-MM-2025
+    position: supports
+    relevant_quote_paraphrase: "Isa-Kd is a Category 1 preferred regimen for r/r MM after ≥2 prior lines in carfilzomib-naive patients; NCCN MM guideline"
+  - source_id: SRC-EHA-EMN-MM-2025
+    position: supports
+    relevant_quote_paraphrase: "Anti-CD38 + carfilzomib + dexamethasone (Isa-Kd or DKd) recommended for r/r MM including in later-line carfilzomib-naive patients"
+
+known_controversies:
+  - topic: "Isa-Kd vs DKd for 3L r/r MM (no head-to-head data)"
+    positions:
+      - position: "Isa-Kd (IKEMA): HR 0.531; weekly-to-biweekly isatuximab schedule; may have simpler infusion burden in cycles 2+"
+        sources: [SRC-IKEMA-MOREAU-2021]
+      - position: "DKd (CANDOR): HR 0.59 in a broader population (1-3 prior lines); also Category 1 NCCN; daratumumab SC formulation available"
+        sources: [SRC-NCCN-MM-2025]
+    our_default: "Choose based on drug access and formulary availability; no clinical basis to prefer one over the other absent comparative data"
+    rationale: "Both are anti-CD38 + Kd combinations with similar PFS benefit; UA access determines choice"
+
+do_not_do:
+  - "НЕ застосовувати при попередньому використанні карфілзомібу — популяція IKEMA була карфілзоміб-naive; безпека та ефективність при повторному призначенні КФЗ не підтверджена в рамках цього дослідження."
+  - "НЕ застосовувати при ECOG PS ≥3 — пацієнти з тяжким загальним станом виключені з IKEMA; відповідь і токсичність непередбачувані."
+  - "НЕ призначати без базового ECG + ECHO та контрольованого АТ — карфілзоміб має 5-7% частоту серцевих ускладнень."
+  - "НЕ пропускати базовий DAT/Coombs + фенотипування еритроцитів ДО першого ізатуксимабу — анти-CD38 інтерферує з перехресною сумісністю крові на місяці."
+  - "НЕ починати без скринінгу HBV + профілактики ентекавіром при HBsAg+ або anti-HBc+."
+  - "НЕ пропускати в/в гідратацію (250-500 мл пре/пост) для першого карфілзомібу — ризик TLS + ГНН найвищий у 1-му циклі."
+  - "НЕ підтверджувати план без верифікованого шляху фінансування — ні ізатуксимаб, ні карфілзоміб не відшкодовуються НСЗУ."
+  - "НЕ ескалувати карфілзоміб до повної дози (56 mg/m²) без ступінчастого підвищення (20 mg/m² дні 1-2 циклу 1)."
+
+do_not_do_en:
+  - "Do not use with prior carfilzomib exposure — IKEMA enrolled carfilzomib-naive patients; efficacy and safety on re-challenge not established by this trial."
+  - "Do not use in ECOG PS ≥3 — patients with poor performance status were excluded from IKEMA; response and toxicity unpredictable."
+  - "Do not prescribe without baseline ECG + ECHO + controlled hypertension — carfilzomib has 5-7% rate of cardiac AE."
+  - "Do not skip baseline DAT/Coombs + red-cell phenotyping BEFORE first isatuximab — anti-CD38 interferes with crossmatch for months."
+  - "Do not start without HBV screening + entecavir prophylaxis in HBsAg+ or anti-HBc+."
+  - "Do not skip IV hydration (250-500 mL pre/post) for the first carfilzomib — TLS + AKI risk highest cycle 1."
+  - "Do not confirm plan without verified funding pathway — neither isatuximab nor carfilzomib are reimbursed by NSZU."
+  - "Do not escalate carfilzomib to full dose (56 mg/m²) without cycle-1 step-up (20 mg/m² days 1-2)."
+
+time_critical: false
+last_reviewed: "2026-05-07"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 3L for r/r MM
+  after ≥2 prior lines (PI + IMiD) in carfilzomib-naive patients.
+  Based on IKEMA (Moreau 2021, NEJM 385:427-440). NCCN Category 1.
+  Near-equivalent to DKd (CANDOR) — both anti-CD38 + Kd combinations;
+  choice is access-driven. No UA NSZU reimbursement for either isatuximab
+  or carfilzomib.
