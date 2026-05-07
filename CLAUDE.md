@@ -11,9 +11,9 @@ patient profile → receives two alternative treatment plans (standard +
 aggressive) with full source citations. Plans refresh as new data arrives
 (new labs, doctor decisions, updated guidelines).
 
-**Status:** v0.1 draft. Specifications-first phase; KB + rule engine
-implementation in progress. CIViC-primary actionability pivot in flight
-(2026-04-27).
+**Status:** v0.1 draft. KB expansion waves GI-2, GI-3, PUL, HEME-1 complete
+(2026-05-09). CIViC-primary actionability pivot phases 2-5 still pending.
+Rule engine + render in progress.
 
 ## Source of truth hierarchy
 
@@ -233,8 +233,9 @@ worktree merge conflict at integration time.
 ## Current state (as of 2026-05-04)
 
 - All six specs drafted at v0.1. Specs naming locked: OpenOnco.
-- KB scale: **78 diseases, 435 biomarker_actionability, 170 biomarkers, 335
-  sources, 241 drugs, 390 indications, 469 redflags.**
+- KB scale: **78 diseases, 438 biomarker_actionability, 173 biomarkers, 377
+  sources, 251 drugs, 420 indications, 510 redflags, 355 regimens, 140
+  algorithms, 7 surgery procedures, 5 radiation courses.** (updated 2026-05-09)
 - API clients live under `knowledge_base/clients/`.
 - RedFlag quality phases 1-7 done (2026-04-25/26): clinical sign-off received.
 - 9-agent parallel run (2026-04-27 morning): ~73 biomarkers tagged with
