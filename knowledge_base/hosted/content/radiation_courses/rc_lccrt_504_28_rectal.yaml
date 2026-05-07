@@ -31,22 +31,16 @@ schedule: "1.8 Gy/fx × 5 fx/week (Mon-Fri) × 5.5 weeks; concurrent with capeci
 # PO BID on RT days during the 5.5-week 50.4 Gy / 28 fx course (Conroy
 # 2021, Lancet Oncology; standard NCCN/ESMO long-course CRT chemo
 # backbone). Setting `concurrent_chemo_regimen` is the canonical §17
-# pattern (mirrors RC-CROSS-NEOADJ → REG-CARBOPLATIN-PACLITAXEL-WEEKLY),
-# but no `REG-CAPECITABINE-825-CRT-CONCURRENT` entity exists in the KB
-# yet — only `REG-CAPECITABINE-PALLIATIVE` (1000 mg/m² BID days 1-14 / 21d
-# for ECOG 3-4 mCRC), which is the WRONG dose, schedule, and clinical
-# context. Cross-linking to that entity would mislead the engine and
-# render layer. Therefore `concurrent_chemo_regimen:` is left explicitly
-# null with this comment as the audit trail; the concurrent backbone is
-# fully captured in `schedule:` above and in `notes:` below. Follow-up:
-# author a dedicated `REG-CAPECITABINE-CRT-CONCURRENT` regimen entity
-# (825 mg/m² PO BID on RT days only, no fixed cycle structure — paired
-# with the RadiationCourse) and back-fill this FK in a future chunk.
-# This mirrors the RC-SCRT-25-5-RECTAL precedent (RAPIDO short-course)
-# which also leaves `concurrent_chemo_regimen:` null, but for the
-# different reason that RAPIDO uses RT-first sequential (no concurrent
-# chemo) rather than missing-entity.
-concurrent_chemo_regimen:
+# pattern (mirrors RC-CROSS-NEOADJ → REG-CARBOPLATIN-PACLITAXEL-WEEKLY).
+# Linked to REG-CAPECITABINE-CRT-CONCURRENT — see that regimen entity for
+# full schedule, dose-modification table, DPYD/CrCl gating, and source
+# citations. The 825 mg/m² PO BID on-RT-days-only schedule is paired with
+# the 50.4 Gy / 28 fx RT course (~5.5 weeks at 5 fx/week) and is held on
+# weekends and any RT-off days. Distinct from RC-SCRT-25-5-RECTAL (RAPIDO
+# short-course), which leaves `concurrent_chemo_regimen:` null because
+# RAPIDO uses RT-first sequential delivery (no concurrent chemo) rather
+# than missing-entity.
+concurrent_chemo_regimen: REG-CAPECITABINE-CRT-CONCURRENT
 
 intent: neoadjuvant
 
