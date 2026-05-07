@@ -1,10 +1,18 @@
 """Indication entity — KNOWLEDGE_SCHEMA_SPECIFICATION §7. The central
 clinical recommendation unit: disease + line of therapy + patient
-applicability → recommended regimen, with full provenance."""
+applicability → recommended regimen, with full provenance.
 
+`Indication.phases` (added 2026-05-07 — KNOWLEDGE_SCHEMA_SPECIFICATION §17
+ratified) decomposes a single line of therapy into ordered phases
+(neoadjuvant → surgery → adjuvant for periop FLOT / CROSS, induction →
+maintenance for sequential systemic, etc.). Opt-in: existing indications
+without `phases:` continue to work unchanged.
+"""
+
+from enum import Enum
 from typing import Optional
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 
 from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
 from .base import Base, Citation, EvidenceLevel, StrengthOfRecommendation
@@ -119,6 +127,93 @@ class KnownControversy(Base):
     rationale: Optional[str] = None
 
 
+# ── §17 phased indications (RATIFIED 2026-05-07) ─────────────────────────────
+
+
+class IndicationPhaseStage(str, Enum):
+    """Phase position within a single line of therapy.
+
+    `neoadjuvant` / `surgery` / `adjuvant` come straight from §17.1; the
+    `induction` / `maintenance` / `definitive` extensions (planning doc
+    §2.2) cover sequential systemic regimens (induction-then-maintenance
+    in NSCLC, MPN) and unresectable definitive CRT (esophageal squamous,
+    head-and-neck) that don't fit the neoadj-surgery-adj pattern.
+    """
+
+    NEOADJUVANT = "neoadjuvant"
+    SURGERY = "surgery"
+    ADJUVANT = "adjuvant"
+    INDUCTION = "induction"
+    MAINTENANCE = "maintenance"
+    DEFINITIVE = "definitive"
+
+
+class IndicationPhaseType(str, Enum):
+    """Modality of the phase. Drives which foreign key (regimen_id /
+    surgery_id / radiation_id) is expected to be populated.
+
+    Extensions over §17.1 (planning doc §2.2): `targeted_therapy` and
+    `immunotherapy` separated from generic `chemotherapy` because phased
+    indications often interleave them (e.g., induction chemo →
+    consolidation IO; CROSS = chemoradiation modality, not chemo+radiation
+    as separate phases).
+    """
+
+    CHEMOTHERAPY = "chemotherapy"
+    SURGERY = "surgery"
+    RADIATION = "radiation"
+    CHEMORADIATION = "chemoradiation"
+    TARGETED_THERAPY = "targeted_therapy"
+    IMMUNOTHERAPY = "immunotherapy"
+
+
+class IndicationPhase(Base):
+    """One ordered phase inside an Indication (§17.1 ratified 2026-05-07).
+
+    Foreign-key invariant: exactly ONE of `regimen_id` / `surgery_id` /
+    `radiation_id` must be non-null per phase. Enforced by the
+    `_exactly_one_fk` model validator below; loader-side ref-integrity
+    additionally checks that the populated ID resolves to the right entity
+    type (planning doc §2.4 rules 1-4).
+
+    `cycles` and `duration_weeks` are alternatives — `cycles` for
+    chemo/targeted/IO, `duration_weeks` for radiation or surgical recovery
+    where the cycle concept doesn't apply. Both Optional; render layer
+    falls back to `notes:`-style description when neither is set.
+    """
+
+    phase: IndicationPhaseStage
+    type: IndicationPhaseType
+
+    regimen_id: Optional[str] = None
+    surgery_id: Optional[str] = None
+    radiation_id: Optional[str] = None
+
+    cycles: Optional[int] = None
+    duration_weeks: Optional[int] = None
+
+    @model_validator(mode="after")
+    def _exactly_one_fk(self) -> "IndicationPhase":
+        """Exactly ONE of regimen_id / surgery_id / radiation_id must be set.
+
+        Schema-level pre-check — ref-integrity (does the ID actually
+        resolve to a Regimen / Surgery / RadiationCourse?) lives in the
+        loader per existing-pattern. This validator catches the structural
+        XOR violation before the loader is ever called.
+        """
+        populated = sum(
+            1
+            for fk in (self.regimen_id, self.surgery_id, self.radiation_id)
+            if fk is not None
+        )
+        if populated != 1:
+            raise ValueError(
+                f"IndicationPhase requires exactly one of regimen_id / "
+                f"surgery_id / radiation_id to be set (found {populated})"
+            )
+        return self
+
+
 class Indication(Base):
     id: str
     applicable_to: IndicationApplicability
@@ -126,6 +221,14 @@ class Indication(Base):
     recommended_regimen: Optional[str] = None  # Regimen ID
     concurrent_therapy: list[str] = Field(default_factory=list)
     followed_by: list[str] = Field(default_factory=list)  # next-line Indication IDs
+
+    # §17 phased indications — opt-in (RATIFIED 2026-05-07). When populated,
+    # `phases` describes the ordered intra-line sequence (neoadj → surgery →
+    # adj for periop FLOT/CROSS, induction → maintenance for sequential
+    # systemic, etc.). Engine pass-through to PlanTrack.indication_data and
+    # render-layer phased timeline are deferred to Phase C readiness work
+    # (planning doc §2.7).
+    phases: Optional[list[IndicationPhase]] = None
 
     evidence_level: Optional[EvidenceLevel] = None
     strength_of_recommendation: Optional[StrengthOfRecommendation] = None

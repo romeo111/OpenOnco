@@ -67,6 +67,13 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
         # required_tests handled specially (list of Test IDs)
     ],
     "reviewers": [],
+    # §17 ratified 2026-05-07 — Surgery + RadiationCourse first-class entities.
+    "procedures": [
+        # applicable_diseases handled specially (list of Disease IDs)
+    ],
+    "radiation_courses": [
+        ("concurrent_chemo_regimen", "regimens"),
+    ],
 }
 
 
@@ -432,6 +439,39 @@ def _load_content_impl(
                 check_ref(path, sid, "tests", "required_tests[]")
             for sid in data.get("desired_tests") or []:
                 check_ref(path, sid, "tests", "desired_tests[]")
+            # §17 ratified 2026-05-07 — phased indications. Each phase's
+            # populated FK (regimen_id / surgery_id / radiation_id) must
+            # resolve to its target entity type (planning doc §2.4 rules
+            # 1-3). The Pydantic model validator on IndicationPhase already
+            # enforced exactly-one-FK; here we only check ref-integrity of
+            # whichever was set.
+            for i, phase in enumerate(data.get("phases") or []):
+                if not isinstance(phase, dict):
+                    continue
+                if phase.get("regimen_id") is not None:
+                    check_ref(
+                        path, phase["regimen_id"], "regimens",
+                        f"phases[{i}].regimen_id",
+                    )
+                if phase.get("surgery_id") is not None:
+                    check_ref(
+                        path, phase["surgery_id"], "procedures",
+                        f"phases[{i}].surgery_id",
+                    )
+                if phase.get("radiation_id") is not None:
+                    check_ref(
+                        path, phase["radiation_id"], "radiation_courses",
+                        f"phases[{i}].radiation_id",
+                    )
+        elif etype == "procedures":
+            # §17 ratified 2026-05-07 — Surgery.applicable_diseases must
+            # resolve to Disease entities (planning doc §2.4 rule 5).
+            for i, did in enumerate(data.get("applicable_diseases") or []):
+                if isinstance(did, str):
+                    check_ref(
+                        path, did, "diseases",
+                        f"applicable_diseases[{i}]",
+                    )
         elif etype == "contraindications":
             for sid in data.get("affects_indications") or []:
                 check_ref(path, sid, "indications", "affects_indications[]")
