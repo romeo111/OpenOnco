@@ -1,0 +1,194 @@
+id: IND-PDAC-LAPC-CHEMORADIATION
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PDAC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Locally advanced unresectable PDAC (T4: celiac axis or SMA >180 deg encasement, or unreconstructable SMV/portal vein involvement)"
+    - "M0 (no distant metastases)"
+    - "No progression after ~6 cycles of induction FOLFIRINOX or mFOLFIRINOX"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+# §17 phased indication. Two-phase induction → consolidation CRT for locally
+# advanced unresectable PDAC (LAPC). Phase 1: induction systemic chemo
+# (FOLFIRINOX preferred for fit ECOG 0-1; mFOLFIRINOX equivalent-fidelity
+# alternative for slightly less-fit or institutional preference). Phase 2:
+# definitive consolidation chemoradiation via RC-LAPC-CHEMORADIATION-PDAC,
+# whose `concurrent_chemo_regimen` is explicitly null pending
+# REG-CAPECITABINE-CRT-CONCURRENT authoring (mirrors C4 rectal LCCRT
+# pattern; concurrent capecitabine 825 mg/m^2 PO BID on RT days fully
+# captured in RC schedule + notes). XOR rule per planning doc §2.3
+# permits exactly ONE of regimen_id / surgery_id / radiation_id per phase.
+phases:
+  - phase: induction
+    type: chemotherapy
+    regimen_id: REG-FOLFIRINOX
+    cycles: 6
+  - phase: definitive
+    type: chemoradiation
+    radiation_id: RC-LAPC-CHEMORADIATION-PDAC
+    duration_weeks: 6
+
+# `recommended_regimen` left null — both phases are first-class entries in
+# `phases:` (planning doc §2.3 design choice for §17 phased indications).
+# The induction regimen (REG-FOLFIRINOX) and consolidation RadiationCourse
+# (RC-LAPC-CHEMORADIATION-PDAC) are discoverable via the phases list.
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_survival_median: "median OS ~15-19 mo (LAP07 induction-then-CRT arm 15.2 mo; CONKO-007 maturing); no OS benefit vs continued chemo (LAP07 HR 1.03, p=0.83)"
+  progression_free_survival: "median PFS ~9-11 mo from induction start; local progression rate at 1y reduced (LAP07: 32% CRT vs 46% chemo, p=0.03)"
+  overall_response_rate: "induction-phase response ~30-35% (FOLFIRINOX in LAPC); R0 conversion to surgery ~25-30% post-CRT (CONKO-007)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-LFT
+  - TEST-CBC
+
+desired_tests:
+  - TEST-CT-PET
+
+actionability_review_required: true
+
+rationale: >
+  Locally advanced unresectable PDAC (LAPC) — T4 disease with celiac/SMA
+  >180 degrees encasement or unreconstructable venous involvement, M0,
+  ECOG 0-1 — is treated with induction systemic chemotherapy (FOLFIRINOX
+  or mFOLFIRINOX × ~6 cycles) followed by definitive consolidation
+  chemoradiation in patients without progression. The sequencing is
+  driven by PDAC biology: distant micrometastatic disease is the
+  dominant failure mode (~70% at 2y), so induction chemo both treats
+  occult metastases and selects out rapidly progressive patients who
+  would not benefit from local CRT.
+
+  LAP07 (Hammel 2016, JAMA, n=449) showed NO overall-survival benefit
+  for consolidation CRT vs continued chemo (median OS 15.2 vs 16.5 mo,
+  HR 1.03, p=0.83), but a meaningful reduction in local progression
+  (32% vs 46%, p=0.03) and 6-month treatment-free interval extension.
+  CONKO-007 (Fietkau ASCO 2022, results maturing) extended this
+  question to FOLFIRINOX-induction + CRT vs continued FOLFIRINOX —
+  similarly no OS benefit, improved local control, and ~25-30% R0
+  conversion to surgery in the consolidation arm. NCCN v.4.2025 lists
+  CRT as category 2A preferred-alternative after induction chemo for
+  LAPC patients without progression (NCCN-PANC-3); ESMO 2024 gives a
+  conditional recommendation at moderate evidence level.
+
+  Evidence-level moderate (not high) because LAP07 was OS-negative and
+  the durable benefit is local-control + treatment-free interval rather
+  than survival; strength conditional because patient selection (induction-
+  responder, no progression, fit for CRT toxicity, controlled biliary
+  obstruction) heavily moderates expected benefit. Alternative paths
+  for LAPC patients who progress through induction or who are unfit
+  for CRT: continued systemic chemo (FOLFIRINOX maintenance, gem-nab-pac,
+  capecitabine), best supportive care, or trial enrollment.
+
+rationale_ua: >
+  Локально-поширений нерезектабельний рак підшлункової залози (LAPC) —
+  T4 з охопленням >180 градусів черевного стовбура / верхньої брижової
+  артерії або неможливою реконструкцією судин, M0, ECOG 0-1 — лікується
+  індукційною системною хіміотерапією (FOLFIRINOX або mFOLFIRINOX × ~6
+  циклів) з подальшою радикальною консолідаційною хіміопроменевою
+  терапією у пацієнтів без прогресії. Послідовність обумовлена біологією
+  PDAC: дистантні мікрометастази — домінантний механізм невдачі (~70%
+  за 2 роки), тому індукційна хіміотерапія одночасно лікує приховані
+  метастази і відбирає пацієнтів зі швидко прогресуючим захворюванням,
+  яким локальна ХПТ не принесе користі.
+
+  LAP07 (Hammel 2016, JAMA, n=449) НЕ показав переваги загальної
+  виживаності для консолідаційної ХПТ vs продовжена хіміотерапія
+  (медіана ЗВ 15.2 vs 16.5 міс, HR 1.03, p=0.83), але показав значуще
+  зниження локальної прогресії (32% vs 46%, p=0.03) і подовження
+  безлікувального інтервалу на 6 міс. CONKO-007 (Fietkau ASCO 2022,
+  результати дозрівають) розширив це питання до FOLFIRINOX-індукція
+  + ХПТ vs продовжений FOLFIRINOX — також без переваги ЗВ, покращений
+  локальний контроль, і ~25-30% R0-конверсії до хірургії в
+  консолідаційній групі. NCCN v.4.2025 вказує ХПТ як категорія 2A
+  переважна-альтернатива після індукційної хіміотерапії для LAPC без
+  прогресії (NCCN-PANC-3); ESMO 2024 — умовна рекомендація на рівні
+  доказів moderate.
+
+  Рівень доказів moderate (не high), оскільки LAP07 був ЗВ-негативним,
+  і тривала користь — це локальний контроль + безлікувальний інтервал,
+  а не виживаність; сила рекомендації умовна, оскільки відбір пацієнтів
+  (відповідь на індукцію, відсутність прогресії, придатність до
+  токсичності ХПТ, контрольована біліарна обструкція) значно модерує
+  очікувану користь. Альтернативи для LAPC-пацієнтів, які прогресують
+  через індукцію або непридатні до ХПТ: продовжена системна хіміотерапія
+  (підтримуючий FOLFIRINOX, gem-nab-pac, капецитабін), найкращий
+  підтримуючий догляд, або включення в клінічне дослідження.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-PANCREATIC-2025
+    position: supports
+  - source_id: SRC-ESMO-PANCREATIC-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT proceed to consolidation CRT in patients who progressed through induction chemo — distant disease dominates the prognosis; CRT toxicity adds no survival benefit (LAP07 negative)"
+  - "Do NOT initiate induction FOLFIRINOX without resolved jaundice (bilirubin <1.5-2 ULN) — irinotecan hepatotoxic; biliary stenting first per RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS"
+  - "Do NOT use FOLFIRINOX in PS >=2 — substantial Grade 3-4 toxicity; mFOLFIRINOX or gem-based induction preferable in marginal-fit"
+  - "Do NOT skip DPYD pre-screening before consolidation CRT capecitabine — DPYD variants cause severe-fatal radiosensitization toxicity even at 50% dose reduction (CPIC)"
+  - "Do NOT escalate RT dose beyond 50.4 Gy / 28 fx — no evidence of OS benefit at higher doses; pancreatic OARs (duodenum, stomach, kidneys, small bowel) become dose-limiting"
+  - "Do NOT skip restaging CT after induction before initiating consolidation CRT — selecting out progression-during-induction patients is the entire point of the induction-then-CRT sequence"
+
+do_not_do_en:
+  - "Do NOT proceed to consolidation CRT in patients who progressed through induction chemo — distant disease dominates the prognosis; CRT toxicity adds no survival benefit (LAP07 negative)"
+  - "Do NOT initiate induction FOLFIRINOX without resolved jaundice (bilirubin <1.5-2 ULN) — irinotecan hepatotoxic; biliary stenting first per RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS"
+  - "Do NOT use FOLFIRINOX in PS >=2 — substantial Grade 3-4 toxicity; mFOLFIRINOX or gem-based induction preferable in marginal-fit"
+  - "Do NOT skip DPYD pre-screening before consolidation CRT capecitabine — DPYD variants cause severe-fatal radiosensitization toxicity even at 50% dose reduction (CPIC)"
+  - "Do NOT escalate RT dose beyond 50.4 Gy / 28 fx — no evidence of OS benefit at higher doses; pancreatic OARs (duodenum, stomach, kidneys, small bowel) become dose-limiting"
+  - "Do NOT skip restaging CT after induction before initiating consolidation CRT — selecting out progression-during-induction patients is the entire point of the induction-then-CRT sequence"
+
+last_reviewed: "2026-05-08"
+notes: >
+  §17 phased indication — 2-phase induction → consolidation CRT for
+  locally advanced unresectable PDAC (LAPC). Phase 1 induction
+  REG-FOLFIRINOX × 6 cycles (mFOLFIRINOX equivalent-fidelity
+  alternative for marginal-fit; not modeled as a separate phase entry
+  here — render layer surfaces both via REG-FOLFIRINOX/REG-MFOLFIRINOX
+  comment). Phase 2 definitive consolidation chemoradiation via
+  RC-LAPC-CHEMORADIATION-PDAC (50.4 Gy / 28 fx, intent: definitive,
+  concurrent_chemo_regimen explicitly null pending
+  REG-CAPECITABINE-CRT-CONCURRENT authoring — same gap as C4 rectal
+  LCCRT, to be backfilled in dedicated chunk; concurrent capecitabine
+  825 mg/m^2 PO BID on RT days fully captured in RC schedule + notes).
+
+  LAP07 (Hammel JAMA 2016) and CONKO-007 (Fietkau ASCO 2022) source
+  stubs deferred — neither pivotal-trial source exists in the KB yet;
+  primary citations route through SRC-NCCN-PANCREATIC-2025 and
+  SRC-ESMO-PANCREATIC-2024 which themselves cite both trials and
+  carry the consensus-recommendation evidence chain. Future chunk
+  should author the LAP07-Hammel-2016 and CONKO-007-Fietkau-2022
+  source stubs and back-fill direct citations into rationale and RC
+  notes.
+
+  Evidence-level moderate + strength conditional + NCCN 2A: LAP07
+  was OS-negative; durable benefit is local-control + treatment-free
+  interval; CRT consolidation is preferred-alternative (not category 1)
+  in patients selected by induction response. Patient-selection red
+  flags: progression through induction, biliary obstruction, ECOG >=2
+  trigger alternative paths (continued chemo, BSC, trial).
+
+  Resectable / borderline-resectable PDAC (where neoadjuvant CRT is
+  intent=neoadjuvant — bridge to surgery) is a separate indication
+  path (not modeled here). Metastatic PDAC 1L is
+  IND-PDAC-METASTATIC-1L-FOLFIRINOX. R0 conversion (~25-30% post-CRT
+  per CONKO-007) transitions patients to a separate adjuvant pathway
+  (also not modeled here).
