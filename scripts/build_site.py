@@ -4014,27 +4014,36 @@ function yieldToBrowser(ms) {{
 // Lazy-loaders for full questionnaire/example data. Dropdowns populate
 // instantly from the build-time manifests above; the full ~870 KB payload
 // is fetched only after the user picks something.
+function fetchJsonWithTimeout(url, label, timeoutMs = 10000) {{
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, {{ signal: controller.signal }})
+    .then(r => {{
+      if (!r.ok) throw new Error(label + ' HTTP ' + r.status);
+      return r.json();
+    }})
+    .catch(e => {{
+      if (e && e.name === 'AbortError') throw new Error(label + ' timed out');
+      throw e;
+    }})
+    .finally(() => window.clearTimeout(timer));
+}}
+
 async function ensureQuestionnaires() {{
   if (questionnaires) return questionnaires;
   if (!_questionnairesPromise) {{
-    _questionnairesPromise = fetch('/questionnaires.json')
-      .then(r => {{
-        if (!r.ok) throw new Error('questionnaires.json HTTP ' + r.status);
-        return r.json();
-      }})
-      .then(data => {{ questionnaires = data; return data; }});
+    _questionnairesPromise = fetchJsonWithTimeout('/questionnaires.json', 'questionnaires.json')
+      .then(data => {{ questionnaires = data; return data; }})
+      .catch(e => {{ _questionnairesPromise = null; throw e; }});
   }}
   return _questionnairesPromise;
 }}
 async function ensureExamples() {{
   if (examples) return examples;
   if (!_examplesPromise) {{
-    _examplesPromise = fetch('/examples.json')
-      .then(r => {{
-        if (!r.ok) throw new Error('examples.json HTTP ' + r.status);
-        return r.json();
-      }})
-      .then(data => {{ examples = data; return data; }});
+    _examplesPromise = fetchJsonWithTimeout('/examples.json', 'examples.json')
+      .then(data => {{ examples = data; return data; }})
+      .catch(e => {{ _examplesPromise = null; throw e; }});
   }}
   return _examplesPromise;
 }}
