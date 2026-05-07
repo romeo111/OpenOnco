@@ -1926,7 +1926,14 @@ def render_try(
           <div><dt>{'Disease' if target_lang == 'en' else 'Хвороба'}</dt><dd id="diseaseVersion">—</dd></div>
           <div><dt>{'Cache' if target_lang == 'en' else 'Кеш'}</dt><dd id="cacheState">{'Checking…' if target_lang == 'en' else 'Перевіряю…'}</dd></div>
           <div><dt>{'Offline' if target_lang == 'en' else 'Offline'}</dt><dd id="offlineState">{'Network required for first launch' if target_lang == 'en' else 'Мережа потрібна для першого запуску'}</dd></div>
+          <div><dt>{'Modules' if target_lang == 'en' else 'Модулі'}</dt><dd id="offlineModulesState">{'Waiting for index' if target_lang == 'en' else 'Чекаю індекс'}</dd></div>
         </dl>
+        <div class="offline-cache-progress" id="offlineCacheProgress">
+          <div class="offline-cache-bar" id="offlineCacheBar" role="progressbar" aria-label="{'Offline module cache progress' if target_lang == 'en' else 'Прогрес офлайн-кешу модулів'}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="offline-cache-fill" id="offlineCacheFill"></div>
+          </div>
+          <div class="offline-cache-text" id="offlineCacheText">{'Offline cache not started' if target_lang == 'en' else 'Офлайн-кеш ще не запущено'}</div>
+        </div>
       </div>
 
       <div class="try-actions quest-cta">
@@ -2072,6 +2079,10 @@ const diseaseVersionEl = document.getElementById('diseaseVersion');
 const cacheStateEl = document.getElementById('cacheState');
 const offlineStateEl = document.getElementById('offlineState');
 const pwaInstallStateEl = document.getElementById('pwaInstallState');
+const offlineModulesStateEl = document.getElementById('offlineModulesState');
+const offlineCacheBarEl = document.getElementById('offlineCacheBar');
+const offlineCacheFillEl = document.getElementById('offlineCacheFill');
+const offlineCacheTextEl = document.getElementById('offlineCacheText');
 const generatingOverlay = document.getElementById('generatingOverlay');
 const generatingTitle = document.getElementById('generatingTitle');
 const generatingLead = document.getElementById('generatingLead');
@@ -2094,6 +2105,10 @@ const CORE_BUNDLE_URL = '/openonco-engine-core.zip';
 let bundleIndex = null;
 let coreBundleLoaded = false;
 const loadedDiseases = new Set();
+let offlineCacheStarted = false;
+let offlineCacheDone = 0;
+let offlineCacheTotal = 0;
+let offlineCacheFailed = 0;
 // Build-time manifests — instant dropdown population, no fetch.
 const QUESTIONNAIRES_MANIFEST = {qm_json};
 const EXAMPLES_MANIFEST = {em_json};
@@ -2216,6 +2231,32 @@ function setText(el, value) {{
   if (el) el.textContent = value;
 }}
 
+function setOfflineCacheProgress(done, total, failed = 0) {{
+  offlineCacheDone = done;
+  offlineCacheTotal = total;
+  offlineCacheFailed = failed;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  if (offlineCacheBarEl) offlineCacheBarEl.setAttribute('aria-valuenow', String(pct));
+  if (offlineCacheFillEl) offlineCacheFillEl.style.width = pct + '%';
+  if (offlineCacheTextEl) {{
+    if (total <= 0) {{
+      offlineCacheTextEl.textContent = '{"Offline cache not started" if target_lang == "en" else "Офлайн-кеш ще не запущено"}';
+    }} else if (done >= total && failed === 0) {{
+      offlineCacheTextEl.textContent = '{"All modules cached for offline use" if target_lang == "en" else "Усі модулі збережено для офлайну"}';
+    }} else if (done >= total) {{
+      offlineCacheTextEl.textContent = '{"Cached with some failed modules" if target_lang == "en" else "Кеш готовий частково, є помилки"}' + ' (' + failed + ')';
+    }} else {{
+      offlineCacheTextEl.textContent = '{"Caching modules" if target_lang == "en" else "Кешую модулі"}' + ' ' + done + ' / ' + total;
+    }}
+  }}
+  if (offlineModulesStateEl) {{
+    if (total <= 0) setText(offlineModulesStateEl, '{"Waiting for index" if target_lang == "en" else "Чекаю індекс"}');
+    else if (done >= total && failed === 0) setText(offlineModulesStateEl, '{"Ready offline" if target_lang == "en" else "Офлайн готовий"}');
+    else if (done >= total) setText(offlineModulesStateEl, '{"Partial cache" if target_lang == "en" else "Частковий кеш"}');
+    else setText(offlineModulesStateEl, Math.round((done / total) * 100) + '%');
+  }}
+}}
+
 async function refreshBuildPanel(diseaseId = null) {{
   const online = navigator.onLine !== false;
   setText(offlineStateEl, online
@@ -2232,6 +2273,10 @@ async function refreshBuildPanel(diseaseId = null) {{
 
   if (bundleIndex) {{
     setText(coreVersionEl, 'v' + (bundleIndex.core_version || '{bundle_version or "unknown"}'));
+    if (offlineCacheTotal <= 0) {{
+      const total = offlineBundleUrls().length;
+      setOfflineCacheProgress(0, total, 0);
+    }}
     if (diseaseId) {{
       const dver = (bundleIndex.disease_versions || {{}})[diseaseId];
       setText(diseaseVersionEl, dver ? diseaseId + ' / v' + dver : diseaseId + ' / core');
@@ -3150,6 +3195,75 @@ async function loadBundleIndex() {{
   throw new Error('Bundle index unavailable: ' + (lastErr && lastErr.message || lastErr));
 }}
 
+function offlineBundleUrls() {{
+  if (!bundleIndex) return [];
+  const urls = [];
+  if (bundleIndex.core) {{
+    const ver = bundleIndex.core_version || '';
+    urls.push('/' + bundleIndex.core + (ver ? '?v=' + ver : ''));
+  }}
+  const diseases = bundleIndex.diseases || {{}};
+  const versions = bundleIndex.disease_versions || {{}};
+  Object.keys(diseases).sort().forEach((diseaseId) => {{
+    const rel = diseases[diseaseId];
+    if (!rel) return;
+    const ver = versions[diseaseId] || '';
+    urls.push('/' + rel + (ver ? '?v=' + ver : ''));
+  }});
+  return urls;
+}}
+
+async function cacheAllBundlesForOffline() {{
+  if (offlineCacheStarted) return;
+  offlineCacheStarted = true;
+  await loadBundleIndex();
+  const urls = offlineBundleUrls();
+  setOfflineCacheProgress(0, urls.length, 0);
+  if (!urls.length) return;
+  if (!('caches' in window)) {{
+    setText(offlineModulesStateEl, '{"Cache unavailable" if target_lang == "en" else "Кеш недоступний"}');
+    return;
+  }}
+  if (navigator.onLine === false) {{
+    setText(offlineModulesStateEl, '{"Offline now" if target_lang == "en" else "Зараз офлайн"}');
+    return;
+  }}
+
+  const cacheName = 'openonco-bundle-l2-' + (bundleIndex.core_version || 'v1');
+  const cache = await caches.open(cacheName);
+  let done = 0;
+  let failed = 0;
+  for (const url of urls) {{
+    try {{
+      const cached = await cache.match(url, {{ ignoreSearch: true }});
+      if (!cached) {{
+        const resp = await fetch(url);
+        if (!resp || !resp.ok) throw new Error('HTTP ' + (resp && resp.status));
+        await cache.put(url, resp.clone());
+      }}
+    }} catch (e) {{
+      failed += 1;
+      console.warn('[OpenOnco] offline cache failed for ' + url + ':', e);
+    }} finally {{
+      done += 1;
+      setOfflineCacheProgress(done, urls.length, failed);
+      await yieldToBrowser(10);
+    }}
+  }}
+}}
+
+function scheduleOfflineCacheWarmup() {{
+  const run = () => cacheAllBundlesForOffline().catch((e) => {{
+    console.warn('[OpenOnco] offline cache warmup failed:', e);
+    setText(offlineModulesStateEl, '{"Cache failed" if target_lang == "en" else "Кеш не вдався"}');
+  }});
+  if ('requestIdleCallback' in window) {{
+    window.requestIdleCallback(run, {{ timeout: 3000 }});
+  }} else {{
+    window.setTimeout(run, 1500);
+  }}
+}}
+
 // Resolve a disease_id from whatever the patient profile / form gives us.
 // Order: explicit disease.id (or top-level disease_id) → active
 // questionnaire's disease_id → ICD-O-3 morphology → null.
@@ -3938,7 +4052,7 @@ window.addEventListener('hashchange', loadFromUrlHash);
 // it's tiny (~5 KB) and lets resolveDiseaseId() pre-resolve from
 // ICD-O-3 codes before the user clicks Generate. Best-effort, never
 // blocks UI.
-loadBundleIndex().catch(() => {{}});
+loadBundleIndex().then(() => scheduleOfflineCacheWarmup()).catch(() => {{}});
 refreshBuildPanel().catch(() => {{}});
 window.addEventListener('online', () => refreshBuildPanel().catch(() => {{}}));
 window.addEventListener('offline', () => refreshBuildPanel().catch(() => {{}}));
