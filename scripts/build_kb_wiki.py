@@ -495,9 +495,28 @@ def _clean_html(text: str) -> str:
     return "\n".join(line.rstrip() for line in text.splitlines()) + "\n"
 
 
-def _page_shell(title: str, body: str, *, active: str = "kb", locale: str = "en") -> str:
+def _shared_top_bar(*, active: str = "kb", locale: str = "en", lang_switch_href: str | None = None) -> str:
+    from scripts.build_site import _render_top_bar
+
+    target_lang = "uk" if locale == "uk" else "en"
+    if lang_switch_href is None:
+        lang_switch_href = "/kb.html" if target_lang == "uk" else "/ukr/kb.html"
+    return _render_top_bar(
+        active=active,
+        target_lang=target_lang,
+        lang_switch_href=lang_switch_href,
+    )
+
+
+def _page_shell(
+    title: str,
+    body: str,
+    *,
+    active: str = "kb",
+    locale: str = "en",
+    lang_switch_href: str | None = None,
+) -> str:
     t = T[locale]
-    active_attr = ' class="active"' if active == "kb" else ""
     return f"""<!doctype html>
 <html lang="{html.escape(t["html_lang"])}">
 <head>
@@ -508,17 +527,7 @@ def _page_shell(title: str, body: str, *, active: str = "kb", locale: str = "en"
   <style>{KB_CSS}</style>
 </head>
 <body>
-  <header class="top-bar">
-    <div class="brand-line"><a class="brand-mini" href="{t["home_href"]}">OpenOnco</a></div>
-    <nav class="top-nav">
-      <a href="{t["home_href"]}">{html.escape(t["home"])}</a>
-      <a href="{t["kb_href"]}"{active_attr}>{html.escape(t["kb_search"])}</a>
-      <a href="{t["gallery_href"]}">{html.escape(t["gallery"])}</a>
-      <a href="{t["capabilities_href"]}">{html.escape(t["capabilities"])}</a>
-      <a href="{t["specs_href"]}">{html.escape(t["specs"])}</a>
-    </nav>
-    <div class="top-right"><a class="btn-cta-try" href="{t["try_href"]}">{html.escape(t["try_it"])}</a></div>
-  </header>
+  {_shared_top_bar(active=active, locale=locale, lang_switch_href=lang_switch_href)}
   {body}
 </body>
 </html>
@@ -668,7 +677,13 @@ def render_entity_page(
   {notes_html}
   {_reverse_ref_section(entity, reverse_refs, locale=locale)}
 </main>"""
-    return _page_shell(f"{entity.title}", body, locale=locale)
+    switch_locale = "en" if locale == "uk" else "uk"
+    return _page_shell(
+        f"{entity.title}",
+        body,
+        locale=locale,
+        lang_switch_href="/" + _entity_url(entity, switch_locale),
+    )
 
 
 def _search_entry(entity: KbEntity, reverse_refs: dict[str, list[KbEntity]], *, locale: str = "en") -> dict[str, Any]:

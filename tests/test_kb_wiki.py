@@ -61,16 +61,24 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     kb_home = (wiki_dir / "kb.html").read_text(encoding="utf-8")
     assert 'class="kb-info-box"' in kb_home
     assert 'id="kbSearchBtn"' in kb_home
+    assert 'class="brand-logo"' in kb_home
+    assert 'class="brand-version"' in kb_home
+    assert 'class="lang-switch"' in kb_home
     assert "<h1>Onco Wiki</h1>" in kb_home
     assert 'href="/diseases.html">Diseases</a>' not in kb_home
+    assert 'href="/ask.html">Tumor board Q</a>' in kb_home
     assert "Source-grounded browser" in kb_home
     assert 'data-kind="Disease"' in kb_home
     assert ">Search</button>" in kb_home
 
     uk_kb_home = (wiki_dir / "ukr" / "kb.html").read_text(encoding="utf-8")
     assert 'lang="uk"' in uk_kb_home
+    assert 'class="brand-logo"' in uk_kb_home
+    assert 'class="brand-version"' in uk_kb_home
+    assert 'class="lang-switch"' in uk_kb_home
     assert "<h1>Onco Wiki</h1>" in uk_kb_home
     assert 'href="/ukr/diseases.html">Хвороби</a>' not in uk_kb_home
+    assert 'href="/ukr/ask.html">Tumor board Q</a>' in uk_kb_home
     assert "Браузер, прив’язаний до джерел" in uk_kb_home
     assert ">Шукати</button>" in uk_kb_home
     assert "FAQ для клініцистів" in uk_kb_home
