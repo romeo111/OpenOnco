@@ -177,14 +177,11 @@ main.home-main {
   padding-right: 24px;
 }
 .home-hero {
-  min-height: min(620px, 72vh);
+  min-height: min(600px, 70vh);
   display: flex;
   align-items: center;
-  background-image:
-    linear-gradient(90deg, rgba(8, 24, 37, .90) 0%, rgba(8, 24, 37, .75) 48%, rgba(8, 24, 37, .28) 100%),
-    url('/MDT-light.png');
-  background-size: cover;
-  background-position: center;
+  background:
+    linear-gradient(135deg, #081825 0%, #0b2f35 52%, #12301f 100%);
   color: white;
 }
 .home-hero-inner {
@@ -223,11 +220,13 @@ main.home-main {
   color: rgba(255,255,255,.68);
 }
 .home-carousel {
-  max-width: 760px;
+  width: 100%;
+  max-width: 1100px;
   margin-top: 34px;
 }
 .home-carousel-tabs {
-  display: inline-grid;
+  display: grid;
+  width: 100%;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 3px;
   padding: 4px;
@@ -244,7 +243,6 @@ main.home-main {
   color: rgba(255,255,255,.74);
   font: 700 13px var(--font-sans);
   padding: 9px 14px;
-  min-width: 132px;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -255,7 +253,7 @@ main.home-main {
 }
 .home-carousel-track {
   position: relative;
-  min-height: 335px;
+  min-height: 300px;
 }
 .home-carousel-slide {
   position: absolute;
@@ -268,7 +266,7 @@ main.home-main {
   border: 1px solid rgba(255,255,255,.16);
   border-top: 4px solid #38bdf8;
   border-radius: 8px;
-  padding: 22px 24px;
+  padding: 24px 28px;
   box-shadow: 0 18px 45px rgba(0,0,0,.24);
 }
 .home-carousel-slide:nth-child(2) { border-top-color: var(--amber); }
@@ -478,8 +476,7 @@ main.home-main {
 }
 @media (max-width: 700px) {
   .home-hero {
-    min-height: 68vh;
-    background-position: 58% center;
+    min-height: auto;
   }
   .home-hero-inner {
     padding: 52px 24px 56px;
@@ -504,7 +501,7 @@ main.home-main {
     font-size: 12px;
   }
   .home-carousel-track {
-    min-height: 430px;
+    min-height: 405px;
   }
   .home-carousel-slide {
     padding: 18px 18px;
@@ -2011,9 +2008,9 @@ main.home-main {
 
 /* Page footer */
 .page-foot {
-  margin-top: 36px; padding-top: 18px;
+  margin-top: 18px; padding-top: 10px;
   border-top: 1px solid var(--gray-200);
-  font-size: 12px; color: var(--gray-500);
+  font-size: 11px; line-height: 1.35; color: var(--gray-500);
 }
 .page-foot a { color: var(--green-700); }
 

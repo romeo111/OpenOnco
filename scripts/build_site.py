@@ -514,6 +514,26 @@ def write_web_manifest(output_dir: Path) -> dict:
     return {"path": "manifest.webmanifest", "start_url": manifest["start_url"]}
 
 
+def _public_case_entries() -> list[CaseEntry]:
+    """Cases safe to expose through gallery, examples, and static case pages."""
+    return [c for c in CASES if c.case_id not in GALLERY_EXCLUDED_CASE_IDS]
+
+
+def _remove_excluded_case_pages(output_dir: Path) -> int:
+    """Delete stale generated pages for hidden auto-stub cases."""
+    removed = 0
+    for case_id in sorted(GALLERY_EXCLUDED_CASE_IDS):
+        for rel_path in (
+            Path("cases") / f"{case_id}.html",
+            Path("ukr") / "cases" / f"{case_id}.html",
+        ):
+            path = output_dir / rel_path
+            if path.exists():
+                path.unlink()
+                removed += 1
+    return removed
+
+
 def bundle_examples(output_dir: Path) -> dict:
     """Write docs/examples.json — array of {label, json} entries used as
     the 'Load example' dropdown on try.html.
@@ -525,7 +545,7 @@ def bundle_examples(output_dir: Path) -> dict:
     payload = []
     manifest = []
     unique_icd_to_disease_id = _unique_questionnaire_icd_to_disease_id_map()
-    for c in CASES:
+    for c in _public_case_entries():
         p = EXAMPLES / c.file
         if not p.exists():
             continue
@@ -1208,12 +1228,17 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
   function restart() {{
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     clearInterval(timer);
-    timer = window.setInterval(() => show(active + 1), 7000);
+    timer = window.setInterval(() => show(active + 1), 5000);
   }}
 
   tabs.forEach((tab, i) => tab.addEventListener('click', () => show(i, true)));
-  root.addEventListener('mouseenter', () => clearInterval(timer));
-  root.addEventListener('mouseleave', restart);
+  document.addEventListener('visibilitychange', () => {{
+    if (document.hidden) {{
+      clearInterval(timer);
+    }} else {{
+      restart();
+    }}
+  }});
   restart();
 }})();
 </script>
@@ -8451,8 +8476,9 @@ def _build_all_cases_parallel(output_dir: Path) -> tuple[list[dict], list[dict]]
     import os
     from concurrent.futures import ProcessPoolExecutor
 
-    tasks = [(c, output_dir, "uk") for c in CASES] + \
-            [(c, output_dir, "en") for c in CASES]
+    public_cases = _public_case_entries()
+    tasks = [(c, output_dir, "uk") for c in public_cases] + \
+            [(c, output_dir, "en") for c in public_cases]
     env_workers = os.environ.get("OPENONCO_BUILD_WORKERS")
     if env_workers:
         try:
@@ -8540,6 +8566,7 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / "CNAME").write_text(CUSTOM_DOMAIN + "\n", encoding="utf-8")
     (output_dir / "style.css").write_text(_STYLE_CSS, encoding="utf-8")
     landing_assets = _copy_landing_assets(output_dir)
+    excluded_case_pages_removed = _remove_excluded_case_pages(output_dir)
 
     stats = collect_stats()
 
@@ -8637,6 +8664,7 @@ def build_site(output_dir: Path) -> dict:
         "clinical_gap_payload": clinical_gap_payload,
         "discovery_payload": discovery_payload,
         "landing_assets": landing_assets,
+        "excluded_case_pages_removed": excluded_case_pages_removed,
     }
 
 

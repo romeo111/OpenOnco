@@ -1,20 +1,20 @@
 {
-  "generated_at_utc": "2026-05-07T16:55:56Z",
-  "kb_root": "C:\\Users\\805\\.codex\\worktrees\\da52\\cancer-autoresearch\\knowledge_base\\hosted\\content",
+  "generated_at_utc": "2026-05-07T18:41:02Z",
+  "kb_root": "C:\\Users\\805\\.codex\\worktrees\\dd7d\\cancer-autoresearch\\knowledge_base\\hosted\\content",
   "entity_counts": {
     "diseases": 78,
     "drugs": 251,
-    "regimens": 350,
-    "indications": 415,
+    "regimens": 355,
+    "indications": 418,
     "biomarkers": 173,
     "biomarker_actionability": 438,
     "contraindications": 12,
     "redflags": 510,
-    "algorithms": 136,
+    "algorithms": 139,
     "tests": 115,
     "supportive_care": 13,
     "monitoring": 8,
-    "sources": 374,
+    "sources": 377,
     "workups": 24,
     "questionnaires": 78,
     "mdt_skills": 16,
@@ -22,10 +22,10 @@
     "procedures": 7,
     "radiation_courses": 5
   },
-  "loader_ok": true,
+  "loader_ok": false,
   "loader_error_counts": {
-    "schema_errors": 0,
-    "ref_errors": 0,
+    "schema_errors": 2,
+    "ref_errors": 7,
     "contract_errors": 0,
     "contract_warnings": 524
   },
@@ -33,7 +33,7 @@
     {
       "id": "clinical_signoff",
       "title": "Clinical sign-off",
-      "current": "15/1849 signoff-eligible entities reviewed (0.8%)",
+      "current": "15/1860 signoff-eligible entities reviewed (0.8%)",
       "target": ">=85% reviewed before public guideline-grade claims",
       "status": "blocked_on_reviewers",
       "blocker": "Cannot be fixed by code; requires qualified Clinical Co-Lead review.",
@@ -41,19 +41,19 @@
       "details": {
         "by_type": {
           "indications": {
-            "total": 415,
+            "total": 418,
             "reviewed": 15,
-            "gap": 400
+            "gap": 403
           },
           "algorithms": {
-            "total": 136,
+            "total": 139,
             "reviewed": 0,
-            "gap": 136
+            "gap": 139
           },
           "regimens": {
-            "total": 350,
+            "total": 355,
             "reviewed": 0,
-            "gap": 350
+            "gap": 355
           },
           "redflags": {
             "total": 510,
@@ -71,7 +71,7 @@
     {
       "id": "solid_2l_plus",
       "title": "Solid tumor 2L+ coverage",
-      "current": "21/42 solid diseases have a 2L+ algorithm; 23/42 have a 2L+ indication",
+      "current": "22/42 solid diseases have a 2L+ algorithm; 24/42 have a 2L+ indication",
       "target": "Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication.",
       "status": "coverage_gap",
       "blocker": "Missing disease-by-disease 2L+ algorithm/indication authoring queue.",
@@ -90,6 +90,7 @@
           "DIS-HCC",
           "DIS-HNSCC",
           "DIS-MELANOMA",
+          "DIS-MESOTHELIOMA",
           "DIS-NSCLC",
           "DIS-OVARIAN",
           "DIS-PDAC",
@@ -115,6 +116,7 @@
           "DIS-HCC",
           "DIS-HNSCC",
           "DIS-MELANOMA",
+          "DIS-MESOTHELIOMA",
           "DIS-NSCLC",
           "DIS-OVARIAN",
           "DIS-PDAC",
@@ -180,10 +182,6 @@
             "name": "Meningioma"
           },
           {
-            "id": "DIS-MESOTHELIOMA",
-            "name": "Malignant mesothelioma"
-          },
-          {
             "id": "DIS-MPNST",
             "name": "Malignant peripheral nerve sheath tumor"
           },
@@ -217,7 +215,7 @@
     {
       "id": "surgery_radiation_structure",
       "title": "Surgery/radiation detail",
-      "current": "structured surgery entities: no; structured radiation entities: no; 402 indications mention surgery/radiation in text",
+      "current": "structured surgery entities: no; structured radiation entities: no; 405 indications mention surgery/radiation in text",
       "target": "Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields.",
       "status": "schema_gap",
       "blocker": "Current KB carries surgery/radiation mostly as prose inside indications.",
@@ -275,6 +273,7 @@
           "IND-NLPBL-1L-RITUXIMAB-MONO",
           "IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB",
           "IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL",
+          "IND-NSCLC-ADJUVANT-ATEZO-PDL1POS",
           "IND-NSCLC-PERIOPERATIVE-PEMBRO",
           "IND-OVARIAN-2L-PLAT-RES-PLD-BEV",
           "IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV",
@@ -382,24 +381,24 @@
           "IND-CHOLANGIO-2L-FUTIBATINIB",
           "IND-CHOLANGIO-2L-HER2-ZANIDATAMAB"
         ],
-        "mention_count": 402
+        "mention_count": 405
       }
     },
     {
       "id": "supportive_care_depth",
       "title": "Supportive-care depth",
-      "current": "138/350 regimens have mandatory supportive care (39.4%); 40 have monitoring; 309 have dose adjustments",
+      "current": "140/355 regimens have mandatory supportive care (39.4%); 41 have monitoring; 314 have dose adjustments",
       "target": "Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage.",
       "status": "coverage_gap",
       "blocker": "Supportive-care records exist, but regimen attachment is incomplete.",
       "next_action": "Audit high-toxicity regimens first, then fill missing regimen attachments.",
       "details": {
-        "regimens_total": 350,
-        "with_mandatory_supportive_care": 138,
-        "with_premedication": 255,
-        "with_monitoring": 40,
-        "with_dose_adjustments": 309,
-        "with_between_visit_watchpoints": 250,
+        "regimens_total": 355,
+        "with_mandatory_supportive_care": 140,
+        "with_premedication": 258,
+        "with_monitoring": 41,
+        "with_dose_adjustments": 314,
+        "with_between_visit_watchpoints": 252,
         "missing_mandatory_supportive_care": [
           "REG-2GEN-TKI-CML",
           "REG-5FU-LV-BEV-CKD-MODIFIED",
@@ -414,6 +413,7 @@
           "REG-AMIVANTAMAB-MONO-NSCLC-EX20INS",
           "REG-ANAGRELIDE-ET",
           "REG-ASCIMINIB-CML",
+          "REG-ATEZO-ADJUVANT-NSCLC",
           "REG-ATEZO-BEV",
           "REG-AVAPRITINIB-ADVSM-1L",
           "REG-AVAPRITINIB-GIST-1L",
@@ -519,23 +519,22 @@
           "REG-MIRVETUXIMAB-OVARIAN",
           "REG-MOGAMULIZUMAB",
           "REG-NAL-IRI-5FU-LV-PDAC",
-          "REG-NALIRIFOX",
-          "REG-NIGRO-MMC-5FU-RT"
+          "REG-NALIRIFOX"
         ]
       }
     },
     {
       "id": "drug_indication_tracking",
       "title": "Drug indication and off-label tracking",
-      "current": "773 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status",
+      "current": "776 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status",
       "target": "Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance.",
       "status": "schema_gap",
       "blocker": "No first-class drug_indications entity directory/schema is present.",
       "next_action": "Introduce a drug_indications entity, then backfill from existing indications/regimens.",
       "details": {
         "drug_indications_schema_present": false,
-        "inferred_drug_disease_indication_pairs": 773,
-        "pairs_with_indication_evidence_context": 773,
+        "inferred_drug_disease_indication_pairs": 776,
+        "pairs_with_indication_evidence_context": 776,
         "explicit_label_status_pairs": 0,
         "sample_pairs": [
           {
@@ -647,6 +646,11 @@
             "drug_id": "DRUG-ABIRATERONE",
             "disease_id": "DIS-PROSTATE",
             "indication_id": "IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET"
+          },
+          {
+            "drug_id": "DRUG-ACALABRUTINIB",
+            "disease_id": "DIS-CLL",
+            "indication_id": "IND-CLL-1L-AVO"
           },
           {
             "drug_id": "DRUG-ACALABRUTINIB",
@@ -772,6 +776,11 @@
             "drug_id": "DRUG-ATEZOLIZUMAB",
             "disease_id": "DIS-HCC",
             "indication_id": "IND-HCC-SYSTEMIC-1L-ATEZO-BEV"
+          },
+          {
+            "drug_id": "DRUG-ATEZOLIZUMAB",
+            "disease_id": "DIS-NSCLC",
+            "indication_id": "IND-NSCLC-ADJUVANT-ATEZO-PDL1POS"
           },
           {
             "drug_id": "DRUG-ATO",
@@ -927,16 +936,6 @@
             "drug_id": "DRUG-BENDAMUSTINE",
             "disease_id": "DIS-NODAL-MZL",
             "indication_id": "IND-NMZL-2L-BR"
-          },
-          {
-            "drug_id": "DRUG-BENDAMUSTINE",
-            "disease_id": "DIS-SPLENIC-MZL",
-            "indication_id": "IND-SMZL-2L-BR"
-          },
-          {
-            "drug_id": "DRUG-BEVACIZUMAB",
-            "disease_id": "DIS-CERVICAL",
-            "indication_id": "IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV"
           }
         ]
       }

@@ -331,8 +331,12 @@ def test_engine_bundle_excludes_heavy_unused_subtrees(site_dir: Path):
 def test_examples_payload_matches_cases(site_dir: Path):
     payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
     case_ids_payload = {e["case_id"] for e in payload}
-    case_ids_expected = {c.case_id for c in CASES}
+    case_ids_expected = {
+        c.case_id for c in CASES
+        if c.case_id not in GALLERY_EXCLUDED_CASE_IDS
+    }
     assert case_ids_payload == case_ids_expected
+    assert not (case_ids_payload & GALLERY_EXCLUDED_CASE_IDS)
     # Each entry has a parseable patient JSON
     for entry in payload:
         assert isinstance(entry["json"], dict)
@@ -420,6 +424,9 @@ def test_case_files_have_back_link_and_no_auth(site_dir: Path):
     # UA back-link "Назад до галереї" lives at /ukr/cases/<id>.html.
     for c in CASES:
         path = site_dir / "cases" / f"{c.case_id}.html"
+        if c.case_id in GALLERY_EXCLUDED_CASE_IDS:
+            assert not path.exists(), f"excluded case file leaked: {path.name}"
+            continue
         assert path.exists(), f"case file missing: {path.name}"
         html = path.read_text(encoding="utf-8")
         assert html.startswith("<!DOCTYPE html>")
@@ -445,7 +452,11 @@ def test_en_mirror_built_alongside_ua(site_dir: Path):
     assert (site_dir / "ukr" / "cases").is_dir()
     # Every EN case has a UA counterpart at /ukr/cases/
     for c in CASES:
-        assert (site_dir / "ukr" / "cases" / f"{c.case_id}.html").exists(), (
+        path = site_dir / "ukr" / "cases" / f"{c.case_id}.html"
+        if c.case_id in GALLERY_EXCLUDED_CASE_IDS:
+            assert not path.exists(), f"excluded UA case file leaked: {path.name}"
+            continue
+        assert path.exists(), (
             f"missing ukr/cases/{c.case_id}.html"
         )
 

@@ -155,12 +155,17 @@
   function restart() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     clearInterval(timer);
-    timer = window.setInterval(() => show(active + 1), 7000);
+    timer = window.setInterval(() => show(active + 1), 5000);
   }
 
   tabs.forEach((tab, i) => tab.addEventListener('click', () => show(i, true)));
-  root.addEventListener('mouseenter', () => clearInterval(timer));
-  root.addEventListener('mouseleave', restart);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearInterval(timer);
+    } else {
+      restart();
+    }
+  });
   restart();
 })();
 </script>

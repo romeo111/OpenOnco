@@ -851,7 +851,7 @@ def _patch_featured_ids() -> None:
         marker
         + "    # Public gallery is intentionally small: these curated cases demonstrate\n"
         + "    # the CIViC/ESCAT actionability layer better than hundreds of auto\n"
-        + "    # stubs. The full CASES list still feeds try.html examples.json.\n"
+        + "    # stubs. Hidden auto-stub cases are excluded from try.html examples too.\n"
         + "".join(f"    {_json_string(case_id)},\n" for case_id in SHOWCASE_IDS)
         + "}"
     )

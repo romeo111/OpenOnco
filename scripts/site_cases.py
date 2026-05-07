@@ -67,7 +67,7 @@ GALLERY_EXCLUDED_CASE_IDS: set[str] = {
 GALLERY_FEATURED_CASE_IDS: set[str] = {
     # Public gallery is intentionally small: these curated cases demonstrate
     # the CIViC/ESCAT actionability layer better than hundreds of auto
-    # stubs. The full CASES list still feeds try.html examples.json.
+    # stubs. Hidden auto-stub cases are excluded from try.html examples too.
     "showcase-nsclc-alk-fusion-1l",
     "showcase-crc-braf-v600e-2l",
     "showcase-breast-pik3ca-h1047r-2l",
