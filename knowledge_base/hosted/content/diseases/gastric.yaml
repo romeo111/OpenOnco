@@ -43,6 +43,19 @@ reviewers: []
 
 metadata:
   proposal_status: full
+  # §17 Surgery entity references (added 2026-05-08, chunk
+  # gi2-c1-flot-periop-gastric). Free-form list pointing to procedures
+  # canonically recognised for this disease — Disease has no canonical
+  # `procedure_options` field in v0.1; this lives under metadata per
+  # `extra='allow'` and CLAUDE.md "do not invent fields" guidance.
+  # Intended consumers: render layer (procedure-context surfacing),
+  # MDT note builder, future periop algorithm extensions.
+  procedure_options:
+    - surgery_id: SUR-D2-LYMPHADENECTOMY
+      role: "Curative resection — pairs with periop FLOT (IND-GASTRIC-PERIOP-FLOT4) for resectable / locally advanced potentially resectable disease"
+      sources:
+        - SRC-NCCN-GASTRIC-2025
+        - SRC-ESMO-GASTRIC-2024
 
 notes: >
   Scaffolded for Phase GI-1: 1 RF (emergency GI-bleed/obstruction),

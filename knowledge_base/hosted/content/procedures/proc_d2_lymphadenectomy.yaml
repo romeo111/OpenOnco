@@ -1,0 +1,60 @@
+# D2 lymphadenectomy with subtotal/total gastrectomy — §17.1 Surgery entity
+# (RATIFIED 2026-05-07). First clinical-content procedure landing in the
+# GI-2 wave (chunk gi2-c1-flot-periop-gastric-2026-05-08-0900). Referenced
+# from `IND-GASTRIC-PERIOP-FLOT4.phases[1].surgery_id`.
+id: SUR-D2-LYMPHADENECTOMY
+names:
+  preferred: "Gastrectomy with D2 lymphadenectomy"
+  ukrainian: "Гастректомія з D2-лімфаденектомією"
+  english: "Gastrectomy with D2 lymphadenectomy"
+  synonyms:
+    - "D2 gastrectomy"
+    - "Subtotal gastrectomy with D2 nodal dissection"
+    - "Total gastrectomy with D2 nodal dissection"
+
+# Free-string per §17.1 sketch — surgical taxonomy not enum'd in v0.1.
+type: gastrectomy_with_d2_lymphadenectomy
+intent: curative
+
+target_organ: stomach
+applicable_diseases:
+  - DIS-GASTRIC
+
+# Operative mortality from large-volume centers; D2 has historical
+# excess morbidity vs D1 in older Western trials, but reproducible
+# survival benefit in centers with surgical-volume gradient is
+# established (Songun 2010 Dutch D1D2 15-yr; Sasako 2008 JCOG9501).
+operative_mortality_pct: "1-3% in high-volume centers; 5-10% in low-volume centers"
+
+common_complications:
+  - name: "Anastomotic leak (esophagojejunostomy or gastrojejunostomy)"
+    frequency: "5-10%"
+  - name: "Postoperative pancreatic fistula"
+    frequency: "3-7%"
+  - name: "Pulmonary complications (pneumonia, pleural effusion)"
+    frequency: "10-15%"
+  - name: "Wound infection"
+    frequency: "5-10%"
+  - name: "Postoperative bleeding requiring intervention"
+    frequency: "1-3%"
+  - name: "Dumping syndrome (late, after subtotal/total gastrectomy)"
+    frequency: "20-40% mild; 1-5% severe"
+  - name: "Vitamin B12 deficiency (late, after total gastrectomy)"
+    frequency: "Universal — lifelong replacement required"
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+
+last_reviewed: "2026-05-07"
+notes: >
+  D2 lymphadenectomy (regional + extraperigastric nodes; stations 1-12,
+  excluding splenectomy/distal pancreatectomy unless tumor invades) is
+  the global standard for resectable gastric/GEJ adenocarcinoma per
+  NCCN v3.2025 and ESMO 2024. Surgical-volume gradient is reproducible:
+  high-volume centers (>15-25 gastrectomies/yr) show 30-day mortality
+  ~1-3% with the survival benefit demonstrated in JCOG9501 (Sasako 2008)
+  and the Dutch D1D2 15-yr follow-up (Songun 2010 — Lancet Oncol). Total
+  vs subtotal choice is tumor-location driven (proximal/diffuse → total;
+  distal/intestinal → subtotal). Pairs with neoadjuvant + adjuvant FLOT
+  in the periop sequence (Al-Batran 2019) — see IND-GASTRIC-PERIOP-FLOT4.
