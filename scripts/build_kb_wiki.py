@@ -516,6 +516,8 @@ def _page_shell(
     locale: str = "en",
     lang_switch_href: str | None = None,
 ) -> str:
+    from scripts.site_head import SITE_FAVICON_LINK, SITE_FONT_LINK
+
     t = T[locale]
     return f"""<!doctype html>
 <html lang="{html.escape(t["html_lang"])}">
@@ -523,6 +525,8 @@ def _page_shell(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{html.escape(title)} - OpenOnco</title>
+  {SITE_FONT_LINK}
+  {SITE_FAVICON_LINK}
   <link rel="stylesheet" href="/style.css">
   <style>{KB_CSS}</style>
 </head>

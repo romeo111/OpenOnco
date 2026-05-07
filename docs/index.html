@@ -3,7 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco — Open-source CDS for oncology</title>
+<title>OpenOnco — oncology decisions you can audit</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/">
+<link rel="alternate" hreflang="en" href="https://openonco.info/">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco — oncology decisions you can audit">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/">
+<meta property="og:image" content="https://openonco.info/MDT.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpenOnco — oncology decisions you can audit">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="twitter:image" content="https://openonco.info/MDT.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco — oncology decisions you can audit","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/"}}</script>
+<!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -15,15 +39,13 @@
 <header class="top-bar">
   <div class="brand-line">
     <a href="/" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
-    <span class="brand-version" title="Released 2026-05-06">v0.1.4 &middot; 2026-05-06</span>
   </div>
   <nav class="top-nav">
     <a href="/" class="active">Home</a>
-    <a href="/capabilities.html">Capabilities</a><a href="/specs.html">Specs</a>
+    <a href="/capabilities.html">Capabilities</a>
     <a href="/kb.html">Onco Wiki</a>
     <a href="/ask.html">Tumor board Q</a>
-    <a href="/gallery.html">Examples</a>
-    <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
+    <a href="/about.html">About</a>
   </nav>
   <div class="top-right">
     <div class="lang-switch" role="group" aria-label="Language">
@@ -34,154 +56,70 @@
   </div>
 </header>
 
-<main>
-  <section class="hero">
-    <div class="hero-content">
-      <h1>Open-source infrastructure for oncology clinical decision-making</h1>
-      <p class="hero-sub">
-        Get clear, evidence-based treatment strategies in minutes. Upload a patient profile to receive standard and aggressive options, built on global clinical guidelines and references. Transparent and based on internationally recognized standards.
-      </p>
+<main class="home-main">
+  <section class="home-hero">
+    <div class="home-hero-inner">
+      <p class="home-kicker">Open-source clinical decision support</p>
+      <h1>OpenOnco</h1>
+      <p class="home-sub">A clinician-facing oncology workbench that turns a structured patient profile into cited standard and trial-aware treatment plans. The engine is rules-first, transparent, and built for review by oncologists.</p>
       <div class="cta-row">
-        <a class="btn btn-primary" href="/try.html">Try with a virtual patient →</a>
-        <a class="btn btn-secondary" href="/gallery.html">See examples</a>
+        <a class="btn btn-primary" href="/try.html">Build a virtual plan</a>
+        <a class="btn btn-secondary" href="/kb.html">Explore the knowledge base</a>
       </div>
-    </div>
-  </section>
-
-  <section class="how">
-    <h2>Why it matters and how it works</h2>
-    <p class="how-lead">
-      To prescribe a treatment, an oncologist or clinical pharmacologist spends 2–4&nbsp;hours of manual work: opening the NCCN PDF, cross-checking the ESMO guideline, re-reading the MoH protocol, verifying the national formulary for drug availability, looking up renal/hepatic dose adjustments, adding supportive care, remembering vaccinations and opportunistic-infection prophylaxis. Every time, for every patient, from scratch. Any missed contraindication can cost a life.
-    </p>
-    <p class="how-lead">
-      OpenOnco automates the grunt work: <strong>the logic is the same as a classic multidisciplinary team (MDT)</strong>, augmented by an analytical layer. Several specialists around the patient, case discussion, an agreed plan, return to the case when new data arrives. We simply formalize this as a structured engine — each &laquo;virtual specialist&raquo; is a versioned module with its own rules and source list. The clinician receives a ready draft plan with all citations and only verifies and tunes it for the specific patient.
-    </p>
-
-    <div class="trust-strip" role="note">
-      <div class="trust-pill trust-pill--no">
-        <span class="trust-pill-mark">×</span>
-        <span class="trust-pill-text"><strong>AI is not the doctor.</strong> No LLM decides what to prescribe — clinical logic runs in a declarative rule engine.</span>
-      </div>
-      <div class="trust-pill trust-pill--no">
-        <span class="trust-pill-mark">×</span>
-        <span class="trust-pill-text"><strong>No external LLM calls</strong> when a plan is built. Every algorithm is open and auditable line-by-line on GitHub.</span>
-      </div>
-      <div class="trust-pill trust-pill--yes">
-        <span class="trust-pill-mark">✓</span>
-        <span class="trust-pill-text">Lookups go <strong>only to scientific databases</strong>: PubMed, ClinicalTrials.gov, DailyMed, openFDA, CIViC (CC0), NCCN/ESMO/EHA/ASH/BSH, MoH.</span>
-      </div>
-    </div>
-
-    <div class="dataflow" aria-label="OpenOnco — data flow from patient profile to two treatment plans">
-      <div class="dataflow-stage" data-stage="1">
-        <div class="dataflow-num">01 · INPUT</div>
-        <div class="dataflow-title">Patient profile</div>
-        <div class="dataflow-body">
-          FHIR R4 / mCODE: diagnosis, stage, histology, biomarkers, labs, prior lines, comorbidities.
-          <div class="biomarker-row" aria-label="Example patient biomarkers">
-            <span class="biomarker">CD30+</span>
-            <span class="biomarker">BCL2/MYC</span>
-            <span class="biomarker">TP53</span>
-            <span class="biomarker">IPI 4</span>
-            <span class="biomarker">eGFR 42</span>
-          </div>
+      <p class="home-note">No real patient data. Synthetic examples only. Informational support, not a medical device.</p>
+      <div class="home-carousel" data-home-carousel aria-label="Audience">
+        <div class="home-carousel-tabs" role="tablist" aria-label="Audience">
+        <button type="button" class="home-carousel-tab is-active" data-home-slide="doctor" aria-controls="home-slide-doctor" aria-selected="true">For clinicians</button>
+        <button type="button" class="home-carousel-tab" data-home-slide="investor" aria-controls="home-slide-investor" aria-selected="false">For investors</button>
+        <button type="button" class="home-carousel-tab" data-home-slide="lab" aria-controls="home-slide-lab" aria-selected="false">For laboratories</button>
+        <button type="button" class="home-carousel-tab" data-home-slide="patient" aria-controls="home-slide-patient" aria-selected="false">For patients</button>
         </div>
-      </div>
-      <div class="dataflow-arrow" aria-hidden="true">→</div>
-      <div class="dataflow-stage" data-stage="2">
-        <div class="dataflow-num">02 · VERIFY</div>
-        <div class="dataflow-title">Open-standards verification</div>
-        <div class="dataflow-body">
-          Every diagnosis code, lab value, dose and drug is grounded in a public international standard. No closed vocabularies.
-          <div class="std-row" aria-label="Open standards used for verification">
-            <span class="std-pill">ICD-O-3</span>
-            <span class="std-pill">LOINC</span>
-            <span class="std-pill">RxNorm</span>
-            <span class="std-pill">ATC</span>
-            <span class="std-pill">CTCAE v5</span>
-            <span class="std-pill">NCCN</span>
-            <span class="std-pill">ESMO</span>
-            <span class="std-pill">MoH</span>
-          </div>
-        </div>
-      </div>
-      <div class="dataflow-arrow" aria-hidden="true">→</div>
-      <div class="dataflow-stage" data-stage="3">
-        <div class="dataflow-num">03 · BIOMARKERS</div>
-        <div class="dataflow-title">Red flags, dose adjustments, links</div>
-        <div class="dataflow-body">
-          A declarative rule engine surfaces risks, auto-adjusts dosing, and wires biomarker → drug → monitoring connections.
-          <ul class="flow-list">
-            <li><span class="rf-tag rf-red">RF</span> 474 red flags across 78 diseases</li>
-            <li><span class="rf-tag rf-amber">DOSE</span> renal / hepatic / age / weight adjustments</li>
-            <li><span class="rf-tag rf-teal">LINK</span> biomarker ↔ regimen ↔ monitoring</li>
+        <div class="home-carousel-track">
+        <article class="home-carousel-slide is-active" id="home-slide-doctor" data-home-panel="doctor">
+          <p class="home-carousel-eyebrow">Clinical workflow</p>
+          <h2>From structured case facts to a cited plan draft.</h2>
+          <p>OpenOnco gives the oncologist a transparent second layer for MDT prep: standard and aggressive tracks, red flags, dose context, source IDs and review status in one view.</p>
+          <ul>
+            <li>Two-track treatment plan: guideline-grade and trial-aware</li>
+            <li>Biomarker, renal, hepatic and infection risks surfaced before sign-off</li>
+            <li>Every branch remains auditable by source and YAML provenance</li>
           </ul>
+          <a class="home-carousel-cta" href="/try.html">Build a virtual plan →</a>
+        </article>
+        <article class="home-carousel-slide" id="home-slide-investor" data-home-panel="investor">
+          <p class="home-carousel-eyebrow">Infrastructure thesis</p>
+          <h2>A governed open layer for oncology decision infrastructure.</h2>
+          <p>The asset is not a chatbot wrapper. It is a growing clinical knowledge graph, rules engine, public specification stack and distribution path for hospitals, labs and AI-assisted contributors.</p>
+          <ul>
+            <li>Public corpus, rules engine and specs evolve as separate auditable assets</li>
+            <li>Clear non-device CDS positioning and visible clinical review gates</li>
+            <li>Open corpus creates trust, auditability and ecosystem leverage</li>
+          </ul>
+          <a class="home-carousel-cta" href="/about.html">Review the project →</a>
+        </article>
+        <article class="home-carousel-slide" id="home-slide-lab" data-home-panel="lab">
+          <p class="home-carousel-eyebrow">Molecular handoff</p>
+          <h2>Make biomarker reports immediately actionable for the care team.</h2>
+          <p>A lab can hand clinicians a structured bridge from NGS and pathology findings to disease-specific actionability, trial-aware options and patient-profile prefill without exposing private data on the public site.</p>
+          <ul>
+            <li>Variant and biomarker context connects to disease, regimen and monitoring</li>
+            <li>QR/profile handoff can prefill the browser-side plan builder</li>
+            <li>CIViC-derived evidence remains citable and inspectable</li>
+          </ul>
+          <a class="home-carousel-cta" href="/kb.html">Explore actionability →</a>
+        </article>
+        <article class="home-carousel-slide" id="home-slide-patient" data-home-panel="patient">
+          <p class="home-carousel-eyebrow">Patient-facing explanation</p>
+          <h2>A clearer version of the plan to discuss with the doctor.</h2>
+          <p>OpenOnco can render the same clinical logic in plain language: what the plan is trying to do, why tests and biomarkers matter, and what questions the patient should bring back to the oncology team.</p>
+          <ul>
+            <li>Plain-language summary without changing the clinician-owned decision</li>
+            <li>Helps patients understand biomarkers, monitoring and warning signs</li>
+            <li>Keeps the doctor as the final authority for treatment choices</li>
+          </ul>
+          <a class="home-carousel-cta" href="/try.html">See a patient-friendly plan →</a>
+        </article>
         </div>
-      </div>
-      <div class="dataflow-arrow" aria-hidden="true">→</div>
-      <div class="dataflow-stage" data-stage="4">
-        <div class="dataflow-num">04 · OUTPUT</div>
-        <div class="dataflow-title">Two plans with full citations</div>
-        <div class="dataflow-body">
-          <strong>Standard</strong> (guideline-grade) + <strong>aggressive</strong> (trials with higher efficacy). Every claim is a versioned citation. Plans refresh automatically as new data arrives.
-        </div>
-      </div>
-    </div>
-
-    <div class="why-today">
-      <h3 class="why-today-h">Why start using it today</h3>
-      <div class="why-today-grid">
-        <div class="why-card">
-          <div class="why-card-h">2–4 hours → 5 minutes</div>
-          <p>Less time on manual NCCN/ESMO/MoH cross-checking, more patients seen. Fewer missed contraindications, less harm.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card-h">No black box</div>
-          <p>An LLM is not the decision-maker — a declarative rule engine is, with public code and a public KB. Plans are built <strong>without external LLM calls</strong>; only scientific databases (PubMed, ClinicalTrials.gov, DailyMed, openFDA, CIViC) are queried. The clinician sees every &laquo;why&raquo; alongside every &laquo;what&raquo;.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card-h">Biomarkers you won&rsquo;t miss</div>
-          <p>TP53, CD30, MYD88, eGFR, hepatic function — every flag automatically rewrites the plan: contraindications, dose adjustments, supportive care, monitoring.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card-h">New data → instant re-check</div>
-          <p>Fresh labs or clinician decisions update both plans automatically — no need to re-sweep all the sources by hand.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card-h">MoH registration & NHSU coverage next to every drug</div>
-          <p>Each drug in the plan is tagged: whether it is registered in Ukraine (MoH) and whether it is reimbursed by the state medical-guarantees programme (NHSU). The clinician immediately sees what is free, what is by prescription, and what has to be sourced separately. Access is <strong>metadata shown next to the recommendation</strong>, not a filter — regimen choice is driven by evidence, not by registration status.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card-h">Patient-friendly simplified report</div>
-          <p>A separate mode generates a plain-language version of the plan for the patient: no Latin, no acronyms, with explanations of why each step was chosen and what to watch for between visits. Same plan, two voices — clinical for the oncologist, human for the patient.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card-h">Free, open, forever</div>
-          <p>MIT-style. No paywall, no restrictions for public hospitals. Open-source means it can&rsquo;t quietly disappear or be locked behind investors tomorrow.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card-h">Ready for patients today</div>
-          <p>78 diseases, 474 red flags, 415 indications, 350 regimens, 136 treatment algorithms — clinical sign-off received. The first real-patient plans were rated strong by practising oncologists. The KB grows weekly, but it is already the densest open evidence-to-plan layer for Ukrainian oncology that exists. No reason to wait.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card-h">CIViC actionability — fully open, fully citable</div>
-          <p>Our biomarker-to-drug evidence layer comes from <strong>CIViC (CC0)</strong>, the Clinical Interpretation of Variants in Cancer at WashU — not OncoKB (closed, non-commercial-only). The engine reads a nightly YAML snapshot, matches variants <strong>fusion-aware</strong> (BCR::ABL1, KMT2A rearrangements, etc.), renders ESCAT-tier as the eye-level signal with CIViC evidence rating underneath. A monthly CI refresh diffs upstream changes — no silent drift.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card-h">Per-disease coverage matrix — public, honest</div>
-          <p><a href="/diseases.html"><strong>/diseases.html</strong></a> shows, for each of the 78 diseases, exactly what we have: biomarker counts, drugs, indications, regimens, red flags, 1L/2L algorithm checkmarks, questionnaire status, fill% and verified%. Grouped by lymphoid heme / myeloid heme / solid tumours. Same data also exposed as <code>disease_coverage.json</code> for machine consumption. No «trust us, it's in there» — see the matrix.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card-h">Verify our algorithms with your AI tokens</div>
-          <p>The remaining bottleneck isn't code — it's two-reviewer sign-off on each Indication. <strong>TaskTorrent</strong> is our distributed-AI contribution shelf: maintainer publishes structured chunks (~100k–300k tokens of work each), your AI agent (Claude Code, Codex, Cursor, ChatGPT) takes one and opens a PR in 1–3 hours. No clinical expertise needed — you trigger structured drafting; clinical co-leads sign off. <a href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><strong>How to start →</strong></a></p>
-        </div>
-      </div>
-      <p class="why-today-foot">
-        Every missed biomarker can cost a life. Every hour of manual cross-checking is an hour the patient waits for a decision. The tool is ready today — start with a virtual patient and see your typical case through a layer of open standards.
-      </p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="/try.html">Try with a virtual patient →</a>
-        <a class="btn btn-secondary" href="/capabilities.html">What&rsquo;s currently in the KB</a>
       </div>
     </div>
   </section>
@@ -189,8 +127,42 @@
   <footer class="page-foot">
     Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
     <br>
-    No real patient data · CHARTER §9.3. Informational tool for clinicians, not a medical device (CHARTER §15 + §11).
+    Informational tool for clinicians, not a medical device (CHARTER §15 + §11).
   </footer>
 </main>
+<script>
+(() => {
+  const root = document.querySelector('[data-home-carousel]');
+  if (!root) return;
+  const tabs = Array.from(root.querySelectorAll('[data-home-slide]'));
+  const panels = Array.from(root.querySelectorAll('[data-home-panel]'));
+  let active = 0;
+  let timer = null;
+
+  function show(index, userInitiated = false) {
+    active = (index + panels.length) % panels.length;
+    tabs.forEach((tab, i) => {
+      const on = i === active;
+      tab.classList.toggle('is-active', on);
+      tab.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    panels.forEach((panel, i) => {
+      panel.classList.toggle('is-active', i === active);
+    });
+    if (userInitiated) restart();
+  }
+
+  function restart() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    clearInterval(timer);
+    timer = window.setInterval(() => show(active + 1), 7000);
+  }
+
+  tabs.forEach((tab, i) => tab.addEventListener('click', () => show(i, true)));
+  root.addEventListener('mouseenter', () => clearInterval(timer));
+  root.addEventListener('mouseleave', restart);
+  restart();
+})();
+</script>
 </body>
 </html>

@@ -75,6 +75,7 @@ from scripts.site_cases import (
     GALLERY_FEATURED_CASE_IDS,
     CaseEntry,
 )
+from scripts.site_head import SITE_FAVICON_LINK, SITE_FONT_LINK, finalize_site_discovery
 from scripts.site_styles import STYLESHEET as _STYLE_CSS
 
 
@@ -403,7 +404,7 @@ const PRECACHE = [
 // Routes that use stale-while-revalidate (instant from cache, refresh
 // in background). HTML pages must be on this list — never cache-first,
 // or the user gets stuck on an old build.
-const SWR_PATHS = ['/try.html', '/ukr/try.html', '/style.css'];
+const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html', '/style.css'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -754,17 +755,17 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 
 _NAV_LABELS = {
-    "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →",
-           "diseases": "Хвороби", "specs": "Специфікації", "ask": "Tumor board Q"},
-    "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →",
-           "diseases": "Diseases", "specs": "Specs", "ask": "Tumor board Q"},
+    "uk": {"home": "Головна", "about": "About", "try_cta": "Спробувати →",
+           "diseases": "Хвороби", "ask": "Tumor board Q"},
+    "en": {"home": "Home", "about": "About", "try_cta": "Try it →",
+           "diseases": "Diseases", "ask": "Tumor board Q"},
 }
 
 
 def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> str:
     """Build the URL the language-toggle should point to.
 
-    page_kind: 'home' | 'gallery' | 'try' | 'ask' | 'case' | 'capabilities' | 'contribute' | 'diseases'
+    page_kind: 'home' | 'gallery' | 'try' | 'ask' | 'case' | 'capabilities' | 'about' | 'contribute' | 'diseases'
     target_lang: UA-side render asks where the EN mirror lives;
                  EN-side render asks where the UA mirror lives.
 
@@ -780,6 +781,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "ask":          return "/ask.html"
         if page_kind == "case":         return f"/cases/{case_id}.html"
         if page_kind == "capabilities": return "/capabilities.html"
+        if page_kind == "about":        return "/about.html"
         if page_kind == "diseases":     return "/diseases.html"
         if page_kind == "contribute":   return "/"
         if page_kind == "specs":        return "/specs.html"
@@ -791,6 +793,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "ask":          return f"{uk_prefix}/ask.html"
         if page_kind == "case":         return f"{uk_prefix}/cases/{case_id}.html"
         if page_kind == "capabilities": return f"{uk_prefix}/capabilities.html"
+        if page_kind == "about":        return f"{uk_prefix}/about.html"
         if page_kind == "diseases":     return f"{uk_prefix}/diseases.html"
         if page_kind == "contribute":   return f"{uk_prefix}/"
         if page_kind == "specs":        return f"{uk_prefix}/specs.html"
@@ -801,8 +804,8 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
                     lang_switch_href: str = "/ukr/") -> str:
     """Top navigation bar with:
     - brand on the left → links to home
-    - reading-only nav (Home, Onco Wiki, Capabilities, Specs UA-only,
-      Examples, GitHub) in the middle
+    - reading-only nav (Home, Capabilities, Onco Wiki, Tumor board Q, About)
+      in the middle
     - language switcher (UA / EN toggle) on the right
     - prominent CTA "Try it" button on the far right (action, not reading)
 
@@ -815,24 +818,20 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
 
     labels = _NAV_LABELS.get(target_lang, _NAV_LABELS["en"])
     home_path = "/ukr/" if target_lang == "uk" else "/"
-    gallery_path = "/ukr/gallery.html" if target_lang == "uk" else "/gallery.html"
     try_path = "/ukr/try.html" if target_lang == "uk" else "/try.html"
     ask_path = "/ukr/ask.html" if target_lang == "uk" else "/ask.html"
+    about_path = "/ukr/about.html" if target_lang == "uk" else "/about.html"
 
-    # Capabilities now folds in the former Limitations section. The Specs
-    # page is now rendered in both languages — the underlying markdown specs
-    # in /specs/ are still UA-first, but the catalog overview page is
-    # bilingual.
+    # Capabilities now folds in the former Limitations section. GitHub,
+    # Examples and Specs are grouped under About to keep the main nav focused.
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
             f'<a href="/ukr/capabilities.html"{cls("capabilities")}>Можливості</a>'
-            f'<a href="/ukr/specs.html"{cls("specs")}>Специфікації</a>'
         )
     else:  # target_lang == "en"
         extra_links = (
             f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>'
-            f'<a href="/specs.html"{cls("specs")}>Specs</a>'
         )
 
     # Stable visual order is always [UA · EN] regardless of which language
@@ -852,15 +851,13 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     return f"""<header class="top-bar">
   <div class="brand-line">
     <a href="{home_path}" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
-    <span class="brand-version" title="Released {OPENONCO_RELEASE_DATE}">v{OPENONCO_VERSION} &middot; {OPENONCO_RELEASE_DATE}</span>
   </div>
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
     {extra_links}
     <a href="{kb_href}"{kb_active_attr}>{kb_label}</a>
     <a href="{ask_path}"{cls("ask")}>{labels['ask']}</a>
-    <a href="{gallery_path}"{cls("gallery")}>{labels['gallery']}</a>
-    <a href="https://github.com/{GH_REPO}" target="_blank" rel="noopener">GitHub</a>
+    <a href="{about_path}"{cls("about")}>{labels['about']}</a>
   </nav>
   <div class="top-right">
     <div class="lang-switch" role="group" aria-label="Language">
@@ -872,7 +869,311 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
 </header>"""
 
 
+def _landing_stat_counts(stats) -> dict[str, int]:
+    by_type = {e.type: e.count for e in stats.entities}
+    return {
+        "diseases": by_type.get("diseases", 0),
+        "redflags": by_type.get("redflags", 0),
+        "indications": by_type.get("indications", 0),
+        "regimens": by_type.get("regimens", 0),
+        "algorithms": by_type.get("algorithms", 0),
+    }
+
+
+def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
+    counts = _landing_stat_counts(stats)
+    is_en = target_lang == "en"
+
+    if is_en:
+        title = "OpenOnco — oncology decisions you can audit"
+        kicker = "Open-source clinical decision support"
+        h1 = "OpenOnco"
+        sub = (
+            "A clinician-facing oncology workbench that turns a structured patient profile "
+            "into cited standard and trial-aware treatment plans. The engine is rules-first, "
+            "transparent, and built for review by oncologists."
+        )
+        primary = "Build a virtual plan"
+        secondary = "Explore the knowledge base"
+        note = "No real patient data. Synthetic examples only. Informational support, not a medical device."
+        footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
+        try_href = "/try.html"
+        kb_href = "/kb.html"
+        about_href = "/about.html"
+        carousel_label = "Audience"
+        carousel_slides = [
+            {
+                "key": "doctor",
+                "tab": "For clinicians",
+                "eyebrow": "Clinical workflow",
+                "title": "From structured case facts to a cited plan draft.",
+                "body": (
+                    "OpenOnco gives the oncologist a transparent second layer for MDT prep: "
+                    "standard and aggressive tracks, red flags, dose context, source IDs and "
+                    "review status in one view."
+                ),
+                "items": [
+                    "Two-track treatment plan: guideline-grade and trial-aware",
+                    "Biomarker, renal, hepatic and infection risks surfaced before sign-off",
+                    "Every branch remains auditable by source and YAML provenance",
+                ],
+                "href": try_href,
+                "cta": "Build a virtual plan",
+            },
+            {
+                "key": "investor",
+                "tab": "For investors",
+                "eyebrow": "Infrastructure thesis",
+                "title": "A governed open layer for oncology decision infrastructure.",
+                "body": (
+                    "The asset is not a chatbot wrapper. It is a growing clinical knowledge graph, "
+                    "rules engine, public specification stack and distribution path for hospitals, "
+                    "labs and AI-assisted contributors."
+                ),
+                "items": [
+                    "Public corpus, rules engine and specs evolve as separate auditable assets",
+                    "Clear non-device CDS positioning and visible clinical review gates",
+                    "Open corpus creates trust, auditability and ecosystem leverage",
+                ],
+                "href": about_href,
+                "cta": "Review the project",
+            },
+            {
+                "key": "lab",
+                "tab": "For laboratories",
+                "eyebrow": "Molecular handoff",
+                "title": "Make biomarker reports immediately actionable for the care team.",
+                "body": (
+                    "A lab can hand clinicians a structured bridge from NGS and pathology findings "
+                    "to disease-specific actionability, trial-aware options and patient-profile "
+                    "prefill without exposing private data on the public site."
+                ),
+                "items": [
+                    "Variant and biomarker context connects to disease, regimen and monitoring",
+                    "QR/profile handoff can prefill the browser-side plan builder",
+                    "CIViC-derived evidence remains citable and inspectable",
+                ],
+                "href": kb_href,
+                "cta": "Explore actionability",
+            },
+            {
+                "key": "patient",
+                "tab": "For patients",
+                "eyebrow": "Patient-facing explanation",
+                "title": "A clearer version of the plan to discuss with the doctor.",
+                "body": (
+                    "OpenOnco can render the same clinical logic in plain language: what the "
+                    "plan is trying to do, why tests and biomarkers matter, and what questions "
+                    "the patient should bring back to the oncology team."
+                ),
+                "items": [
+                    "Plain-language summary without changing the clinician-owned decision",
+                    "Helps patients understand biomarkers, monitoring and warning signs",
+                    "Keeps the doctor as the final authority for treatment choices",
+                ],
+                "href": try_href,
+                "cta": "See a patient-friendly plan",
+            },
+        ]
+    else:
+        title = "OpenOnco — онкологічні рішення, які можна перевірити"
+        kicker = "Open-source clinical decision support"
+        h1 = "OpenOnco"
+        sub = (
+            "Робочий інструмент для онколога: структурований профіль пацієнта перетворюється "
+            "на цитований стандартний і trial-aware план лікування. Логіка rules-first, "
+            "прозора й готова до клінічного ревʼю."
+        )
+        primary = "Побудувати віртуальний план"
+        secondary = "Відкрити базу знань"
+        note = "Без реальних пацієнтських даних. Лише синтетичні приклади. Інформаційна підтримка, не медичний пристрій."
+        footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
+        try_href = "/ukr/try.html"
+        kb_href = "/ukr/kb.html"
+        about_href = "/ukr/about.html"
+        carousel_label = "Аудиторія"
+        carousel_slides = [
+            {
+                "key": "doctor",
+                "tab": "Для лікаря",
+                "eyebrow": "Клінічний workflow",
+                "title": "Від структурованих фактів кейсу до цитованого draft-плану.",
+                "body": (
+                    "OpenOnco дає онкологу прозорий другий шар для підготовки MDT: стандартний "
+                    "і агресивний треки, red flags, контекст дозування, source IDs і статус "
+                    "ревʼю в одному вікні."
+                ),
+                "items": [
+                    "Два треки лікування: guideline-grade та trial-aware",
+                    "Біомаркери, ниркові, печінкові й інфекційні ризики видно до sign-off",
+                    "Кожна гілка аудіюється через джерела та YAML provenance",
+                ],
+                "href": try_href,
+                "cta": "Побудувати віртуальний план",
+            },
+            {
+                "key": "investor",
+                "tab": "Для інвестора",
+                "eyebrow": "Infrastructure thesis",
+                "title": "Керований open layer для онкологічної decision infrastructure.",
+                "body": (
+                    "Це не wrapper навколо chatbot. Це клінічна knowledge graph, rule engine, "
+                    "публічний стек специфікацій і канал дистрибуції для лікарень, лабораторій "
+                    "та AI-assisted contributors."
+                ),
+                "items": [
+                    "Публічний корпус, rule engine і specs розвиваються як окремі auditable assets",
+                    "Чітке non-device CDS positioning і видимі clinical review gates",
+                    "Відкритий корпус створює trust, auditability та ecosystem leverage",
+                ],
+                "href": about_href,
+                "cta": "Подивитись проєкт",
+            },
+            {
+                "key": "lab",
+                "tab": "Для лабораторії",
+                "eyebrow": "Molecular handoff",
+                "title": "Перетворюйте біомаркерні звіти на actionable context для команди.",
+                "body": (
+                    "Лабораторія може передати лікарю структурований міст від NGS і патології "
+                    "до disease-specific actionability, trial-aware опцій і prefill профілю "
+                    "пацієнта без приватних даних на публічному сайті."
+                ),
+                "items": [
+                    "Variant і biomarker context звʼязаний із хворобою, режимом і monitoring",
+                    "QR/profile handoff може заповнити браузерний plan builder",
+                    "CIViC-derived evidence залишається citable та inspectable",
+                ],
+                "href": kb_href,
+                "cta": "Відкрити actionability",
+            },
+            {
+                "key": "patient",
+                "tab": "Для пацієнта",
+                "eyebrow": "Пояснення для пацієнта",
+                "title": "Зрозуміла версія плану для розмови з лікарем.",
+                "body": (
+                    "OpenOnco може показати ту саму клінічну логіку простою мовою: що "
+                    "план має зробити, чому важливі аналізи й біомаркери, і які питання "
+                    "пацієнт має повернути онкологічній команді."
+                ),
+                "items": [
+                    "Plain-language summary без заміни рішення лікаря",
+                    "Допомагає зрозуміти біомаркери, monitoring і warning signs",
+                    "Фінальний вибір лікування залишається за лікарем",
+                ],
+                "href": try_href,
+                "cta": "Подивитись patient-friendly план",
+            },
+        ]
+
+    carousel_tabs_html = "\n".join(
+        f'        <button type="button" class="home-carousel-tab{" is-active" if i == 0 else ""}" '
+        f'data-home-slide="{slide["key"]}" aria-controls="home-slide-{slide["key"]}" '
+        f'aria-selected="{str(i == 0).lower()}">{slide["tab"]}</button>'
+        for i, slide in enumerate(carousel_slides)
+    )
+    carousel_slides_html = "\n".join(
+        f"""        <article class="home-carousel-slide{' is-active' if i == 0 else ''}" id="home-slide-{slide['key']}" data-home-panel="{slide['key']}">
+          <p class="home-carousel-eyebrow">{slide['eyebrow']}</p>
+          <h2>{slide['title']}</h2>
+          <p>{slide['body']}</p>
+          <ul>
+{chr(10).join(f'            <li>{item}</li>' for item in slide['items'])}
+          </ul>
+          <a class="home-carousel-cta" href="{slide['href']}">{slide['cta']} →</a>
+        </article>"""
+        for i, slide in enumerate(carousel_slides)
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="{'en' if is_en else 'uk'}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0a2e1a">
+<meta name="mobile-web-app-capable" content="yes">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+{_render_top_bar(active="home", target_lang=target_lang, lang_switch_href=_lang_switch_href("home", target_lang))}
+
+<main class="home-main">
+  <section class="home-hero">
+    <div class="home-hero-inner">
+      <p class="home-kicker">{kicker}</p>
+      <h1>{h1}</h1>
+      <p class="home-sub">{sub}</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="{try_href}">{primary}</a>
+        <a class="btn btn-secondary" href="{kb_href}">{secondary}</a>
+      </div>
+      <p class="home-note">{note}</p>
+      <div class="home-carousel" data-home-carousel aria-label="{carousel_label}">
+        <div class="home-carousel-tabs" role="tablist" aria-label="{carousel_label}">
+{carousel_tabs_html}
+        </div>
+        <div class="home-carousel-track">
+{carousel_slides_html}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
+    <br>
+    {footer}
+  </footer>
+</main>
+<script>
+(() => {{
+  const root = document.querySelector('[data-home-carousel]');
+  if (!root) return;
+  const tabs = Array.from(root.querySelectorAll('[data-home-slide]'));
+  const panels = Array.from(root.querySelectorAll('[data-home-panel]'));
+  let active = 0;
+  let timer = null;
+
+  function show(index, userInitiated = false) {{
+    active = (index + panels.length) % panels.length;
+    tabs.forEach((tab, i) => {{
+      const on = i === active;
+      tab.classList.toggle('is-active', on);
+      tab.setAttribute('aria-selected', on ? 'true' : 'false');
+    }});
+    panels.forEach((panel, i) => {{
+      panel.classList.toggle('is-active', i === active);
+    }});
+    if (userInitiated) restart();
+  }}
+
+  function restart() {{
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    clearInterval(timer);
+    timer = window.setInterval(() => show(active + 1), 7000);
+  }}
+
+  tabs.forEach((tab, i) => tab.addEventListener('click', () => show(i, true)));
+  root.addEventListener('mouseenter', () => clearInterval(timer));
+  root.addEventListener('mouseleave', restart);
+  restart();
+}})();
+</script>
+</body>
+</html>
+"""
+
+
 def render_landing(stats, *, target_lang: str = "en") -> str:
+    return _render_landing_v2(stats, target_lang=target_lang)
+
+
+def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
     # Most corpus-mass cards live on /capabilities.html. The landing pulls
     # only the headline counters (diseases, redflags, indications, regimens,
     # algorithms) so the "Ready for patients today" / "Red flags" cards stay
@@ -4402,10 +4703,6 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         '.oo-topbar-host .brand-mini{display:inline-flex;align-items:center;gap:9px;'
         'font-family:Playfair Display,Georgia,serif;'
         'font-size:26px;color:#dcfce7;text-decoration:none;letter-spacing:.2px;}'
-        '.oo-topbar-host .brand-version{font-family:JetBrains Mono,monospace;'
-        'font-size:10.5px;color:#dcfce7;opacity:.55;'
-        'background:rgba(255,255,255,.06);padding:2px 7px;border-radius:3px;'
-        'letter-spacing:.5px;align-self:center;}'
         '.oo-topbar-host .top-nav{display:flex;align-items:center;flex:1;'
         'margin:0 24px 0 16px;gap:4px;}'
         '.oo-topbar-host .top-nav a{color:#dcfce7;padding:4px 10px;'
@@ -4485,7 +4782,13 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         '</div>\n'
     )
 
-    out = rendered_html.replace("</head>", topbar_style + "</head>", 1)
+    head_assets = ""
+    if "fonts.googleapis.com/css2?family=Playfair" not in rendered_html:
+        head_assets += SITE_FONT_LINK + "\n"
+    if "favicon.svg" not in rendered_html:
+        head_assets += SITE_FAVICON_LINK + "\n"
+
+    out = rendered_html.replace("</head>", head_assets + topbar_style + "</head>", 1)
     out = out.replace('<div class="page">',
                       topbar_html + sub_bar_html + '<div class="page">', 1)
     return out
@@ -7809,6 +8112,171 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
 """
 
 
+def render_about(stats, *, target_lang: str = "en") -> str:
+    counts = _landing_stat_counts(stats)
+    is_en = target_lang == "en"
+    if is_en:
+        page_title = "About"
+        h1 = "About OpenOnco"
+        lead = (
+            "OpenOnco is an open clinical knowledge and rules project for oncology. "
+            "This page collects the material that used to sit in separate top-menu links: "
+            "examples, specifications and GitHub."
+        )
+        cards = [
+            (
+                "Examples",
+                "/gallery.html",
+                "Synthetic cases with rendered plans and diagnostic briefs. Use them to inspect how the engine explains decisions.",
+                "Open examples",
+            ),
+            (
+                "Specifications",
+                "/specs.html",
+                "The authoritative project contract: charter, clinical content rules, schemas, ingestion and governance.",
+                "Read specs",
+            ),
+            (
+                "GitHub",
+                f"https://github.com/{GH_REPO}",
+                "Source code, knowledge-base YAML, issues, pull requests and public review history.",
+                "View repository",
+            ),
+        ]
+        principles_h = "Project shape"
+        principles = [
+            ("Open by default", "Code is MIT-style; specifications and generated content are CC BY 4.0."),
+            ("Synthetic public data", "The public site ships no real patient records and no patient-specific private artifacts."),
+            ("Clinical review gate", "Clinical content needs reviewer sign-off before it can become trusted content."),
+            ("Auditable automation", "Rules, sources and rendered reasoning are visible instead of hidden behind a black box."),
+        ]
+        stats_h = "Current public corpus"
+        release_note = f"Current public build: v{OPENONCO_VERSION}, released {OPENONCO_RELEASE_DATE}."
+        footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
+        stat_labels = {
+            "diseases": "diseases",
+            "redflags": "red flags",
+            "indications": "indications",
+            "regimens": "regimens",
+            "algorithms": "algorithms",
+        }
+    else:
+        page_title = "About"
+        h1 = "About OpenOnco"
+        lead = (
+            "OpenOnco — відкритий проєкт клінічної бази знань і rule engine для онкології. "
+            "На цій сторінці зібрано те, що раніше було окремими пунктами верхнього меню: "
+            "приклади, специфікації та GitHub."
+        )
+        cards = [
+            (
+                "Приклади",
+                "/ukr/gallery.html",
+                "Синтетичні кейси з готовими планами й diagnostic briefs. Через них зручно перевіряти пояснення engine.",
+                "Відкрити приклади",
+            ),
+            (
+                "Специфікації",
+                "/ukr/specs.html",
+                "Авторитетний контракт проєкту: charter, правила клінічного контенту, схеми, ingestion і governance.",
+                "Читати специфікації",
+            ),
+            (
+                "GitHub",
+                f"https://github.com/{GH_REPO}",
+                "Код, YAML бази знань, issues, pull requests і публічна історія ревʼю.",
+                "Відкрити репозиторій",
+            ),
+        ]
+        principles_h = "Форма проєкту"
+        principles = [
+            ("Open by default", "Код має MIT-style usage; специфікації та згенерований контент — CC BY 4.0."),
+            ("Синтетичні публічні дані", "Публічний сайт не містить реальних пацієнтських записів чи приватних patient artifacts."),
+            ("Clinical review gate", "Клінічний контент потребує reviewer sign-off перед статусом trusted content."),
+            ("Auditable automation", "Правила, джерела й reasoning видимі, а не сховані за black box."),
+        ]
+        stats_h = "Поточний публічний корпус"
+        release_note = f"Поточна публічна збірка: v{OPENONCO_VERSION}, release {OPENONCO_RELEASE_DATE}."
+        footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
+        stat_labels = {
+            "diseases": "хвороб",
+            "redflags": "red flags",
+            "indications": "індикацій",
+            "regimens": "режимів",
+            "algorithms": "алгоритмів",
+        }
+
+    cards_html = "\n".join(
+        f"""        <a class="about-link-card" href="{href}"{' target="_blank" rel="noopener"' if href.startswith('https://') else ''}>
+          <span>{title}</span>
+          <p>{body}</p>
+          <strong>{cta} →</strong>
+        </a>"""
+        for title, href, body, cta in cards
+    )
+    principles_html = "\n".join(
+        f"""        <div class="about-principle">
+          <h3>{title}</h3>
+          <p>{body}</p>
+        </div>"""
+        for title, body in principles
+    )
+    stats_html = "\n".join(
+        f'        <div class="about-stat"><strong>{counts[key]}</strong><span>{label}</span></div>'
+        for key, label in stat_labels.items()
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="{'en' if is_en else 'uk'}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · {page_title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+{_render_top_bar(active="about", target_lang=target_lang, lang_switch_href=_lang_switch_href("about", target_lang))}
+
+<main>
+  <section class="about-hero">
+    <p class="home-kicker">OpenOnco</p>
+    <h1>{h1}</h1>
+    <p>{lead}</p>
+  </section>
+
+  <section class="about-link-grid">
+{cards_html}
+  </section>
+
+  <section class="about-split">
+    <div>
+      <h2>{principles_h}</h2>
+      <div class="about-principles">
+{principles_html}
+      </div>
+    </div>
+    <div class="about-stats-panel">
+      <h2>{stats_h}</h2>
+      <div class="about-stats">
+{stats_html}
+      </div>
+      <p class="about-release">{release_note}</p>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
+    <br>
+    {footer}
+  </footer>
+</main>
+</body>
+</html>
+"""
+
+
 # ── Build orchestration ───────────────────────────────────────────────────
 
 
@@ -7961,6 +8429,8 @@ def build_site(output_dir: Path) -> dict:
         render_diseases(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "specs.html").write_text(
         render_specs(stats, target_lang="en"), encoding="utf-8")
+    (output_dir / "about.html").write_text(
+        render_about(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "try.html").write_text(
         render_try(
             target_lang="en",
@@ -7982,6 +8452,8 @@ def build_site(output_dir: Path) -> dict:
         render_capabilities(stats, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "specs.html").write_text(
         render_specs(stats, target_lang="uk"), encoding="utf-8")
+    (output_dir / "ukr" / "about.html").write_text(
+        render_about(stats, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "gallery.html").write_text(
         render_gallery(target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "diseases.html").write_text(
@@ -8000,6 +8472,7 @@ def build_site(output_dir: Path) -> dict:
     disease_coverage_payload = bundle_disease_coverage(output_dir)
     kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
     clinical_gap_payload = write_clinical_gap_outputs(output_dir)
+    discovery_payload = finalize_site_discovery(output_dir)
 
     return {
         "output_dir": str(output_dir),
@@ -8014,6 +8487,7 @@ def build_site(output_dir: Path) -> dict:
         "disease_coverage_payload": disease_coverage_payload,
         "kb_wiki_payload": kb_wiki_payload,
         "clinical_gap_payload": clinical_gap_payload,
+        "discovery_payload": discovery_payload,
         "landing_assets": landing_assets,
     }
 

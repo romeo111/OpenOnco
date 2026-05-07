@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Any
 
 from knowledge_base.validation.loader import load_content
+from scripts.site_head import SITE_FONT_LINK
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -468,6 +469,7 @@ def render_html(report: dict[str, Any], *, target_lang: str = "en") -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · {title}</title>
+{SITE_FONT_LINK}
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 </head>

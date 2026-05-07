@@ -20,7 +20,7 @@ const PRECACHE = [
 // Routes that use stale-while-revalidate (instant from cache, refresh
 // in background). HTML pages must be on this list — never cache-first,
 // or the user gets stuck on an old build.
-const SWR_PATHS = ['/try.html', '/ukr/try.html', '/style.css'];
+const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html', '/style.css'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
