@@ -64,7 +64,7 @@
         Endpoint
         <input id="endpointInput" value="" placeholder="/api/clinical-question" spellcheck="false">
       </label>
-      <p id="endpointHint" class="ask-muted">This public page is static. Deploy the server adapter and paste its API URL in Endpoint; local dev can use /api/clinical-question.</p>
+      <p id="endpointHint" class="ask-muted">Temporary API endpoint is prefilled for public testing. Local dev can use /api/clinical-question.</p>
       <label class="qt-label" style="margin-top:12px">
         Clinical situation
         <textarea id="caseText" spellcheck="true" placeholder="62-year-old patient with metastatic gastric cancer, HER2-negative, MSS, PD-L1 CPS 25. What is the optimal first line?"></textarea>
@@ -108,10 +108,12 @@
   const planLinkWrap = document.getElementById('planGeneratorLinkWrap');
   const planLink = document.getElementById('planGeneratorLink');
   const DEFAULT_ENDPOINT = '/api/clinical-question';
-  const STATIC_ENDPOINT_MSG = "This public page is static. Deploy the server adapter and paste its API URL in Endpoint; local dev can use /api/clinical-question.";
+  const PUBLIC_ENDPOINT = 'https://dogs-highest-document-roof.trycloudflare.com/api/clinical-question';
+  const STATIC_ENDPOINT_MSG = "Temporary API endpoint is prefilled for public testing. Local dev can use /api/clinical-question.";
   const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
   if (configured) endpointInput.value = configured;
   else if (['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) endpointInput.value = DEFAULT_ENDPOINT;
+  else endpointInput.value = PUBLIC_ENDPOINT;
 
   function getUserId() {
     let id = localStorage.getItem(USER_KEY);

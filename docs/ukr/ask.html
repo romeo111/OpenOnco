@@ -64,7 +64,7 @@
         Endpoint
         <input id="endpointInput" value="" placeholder="/api/clinical-question" spellcheck="false">
       </label>
-      <p id="endpointHint" class="ask-muted">Ця публічна сторінка статична. Розгорніть серверний адаптер і вставте його API URL в Endpoint; локально можна використовувати /api/clinical-question.</p>
+      <p id="endpointHint" class="ask-muted">Тимчасовий API endpoint підставлено для публічного тестування. Локально можна використовувати /api/clinical-question.</p>
       <label class="qt-label" style="margin-top:12px">
         Клінічна ситуація
         <textarea id="caseText" spellcheck="true" placeholder="62-річний пацієнт із метастатичним раком шлунка, HER2-негативний, MSS, PD-L1 CPS 25. Яка оптимальна перша лінія?"></textarea>
@@ -108,10 +108,12 @@
   const planLinkWrap = document.getElementById('planGeneratorLinkWrap');
   const planLink = document.getElementById('planGeneratorLink');
   const DEFAULT_ENDPOINT = '/api/clinical-question';
-  const STATIC_ENDPOINT_MSG = "Ця публічна сторінка статична. Розгорніть серверний адаптер і вставте його API URL в Endpoint; локально можна використовувати /api/clinical-question.";
+  const PUBLIC_ENDPOINT = 'https://dogs-highest-document-roof.trycloudflare.com/api/clinical-question';
+  const STATIC_ENDPOINT_MSG = "Тимчасовий API endpoint підставлено для публічного тестування. Локально можна використовувати /api/clinical-question.";
   const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
   if (configured) endpointInput.value = configured;
   else if (['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) endpointInput.value = DEFAULT_ENDPOINT;
+  else endpointInput.value = PUBLIC_ENDPOINT;
 
   function getUserId() {
     let id = localStorage.getItem(USER_KEY);

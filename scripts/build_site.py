@@ -1775,9 +1775,9 @@ def render_ask(*, target_lang: str = "en") -> str:
     loading_msg = "Structuring case and running engine..." if is_en else "Структурую кейс і запускаю engine..."
     error_msg = "Request failed" if is_en else "Запит не вдався"
     static_endpoint_msg = (
-        "This public page is static. Deploy the server adapter and paste its API URL in Endpoint; local dev can use /api/clinical-question."
+        "Temporary API endpoint is prefilled for public testing. Local dev can use /api/clinical-question."
         if is_en else
-        "Ця публічна сторінка статична. Розгорніть серверний адаптер і вставте його API URL в Endpoint; локально можна використовувати /api/clinical-question."
+        "Тимчасовий API endpoint підставлено для публічного тестування. Локально можна використовувати /api/clinical-question."
     )
     limit_msg = (
         "You have used all 3 free-text questions in this browser."
@@ -1898,10 +1898,12 @@ def render_ask(*, target_lang: str = "en") -> str:
   const planLinkWrap = document.getElementById('planGeneratorLinkWrap');
   const planLink = document.getElementById('planGeneratorLink');
   const DEFAULT_ENDPOINT = '/api/clinical-question';
+  const PUBLIC_ENDPOINT = 'https://dogs-highest-document-roof.trycloudflare.com/api/clinical-question';
   const STATIC_ENDPOINT_MSG = {static_endpoint_msg_json};
   const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
   if (configured) endpointInput.value = configured;
   else if (['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) endpointInput.value = DEFAULT_ENDPOINT;
+  else endpointInput.value = PUBLIC_ENDPOINT;
 
   function getUserId() {{
     let id = localStorage.getItem(USER_KEY);
