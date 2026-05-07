@@ -1,0 +1,67 @@
+# Robot-assisted minimally invasive esophagectomy (RAMIE) — §17.1 Surgery
+# entity (RATIFIED 2026-05-07). Fourth procedure landing in the GI-2 wave
+# (chunk gi2-c4-mie-ramie-selection-2026-05-08-1100). Equivalent oncologic
+# outcomes to open per ROBOT RCT (van der Sluis 2019) with improved QoL
+# and reduced cardiopulmonary complications. Referenced from
+# `DIS-ESOPHAGEAL.metadata.procedure_options`.
+id: SUR-ESOPHAGECTOMY-RAMIE
+names:
+  preferred: "Robot-assisted minimally invasive esophagectomy (RAMIE)"
+  ukrainian: "Роботизована мінімально інвазивна езофагектомія (RAMIE)"
+  english: "Robot-assisted minimally invasive esophagectomy"
+  synonyms:
+    - "RAMIE"
+    - "Robot-assisted esophagectomy"
+    - "Robotic esophagectomy"
+    - "Robot-assisted thoracoscopic-laparoscopic esophagectomy"
+
+# Free-string per §17.1 sketch — surgical taxonomy not enum'd in v0.1.
+type: robot_assisted_minimally_invasive_esophagectomy
+intent: curative
+
+target_organ: esophagus
+applicable_diseases:
+  - DIS-ESOPHAGEAL
+
+# ROBOT (van der Sluis 2019) RAMIE arm: in-hospital mortality 4% (2/54).
+# High-volume robotic centers report 1-4%. Mortality is comparable across
+# the three esophagectomy techniques; the differentiator is morbidity
+# (cardiopulmonary) and patient-reported QoL.
+operative_mortality_pct: "1-4% in high-volume robotic centers (ROBOT RAMIE arm: 4% in-hospital)"
+
+common_complications:
+  - name: "Overall surgery-related complications (primary ROBOT endpoint — significantly reduced vs open)"
+    frequency: "59% RAMIE vs 80% open (ROBOT, p=0.02)"
+  - name: "Cardiopulmonary complications (Clavien-Dindo grade ≥2)"
+    frequency: "32% RAMIE vs 58% open (ROBOT, p=0.005 pulmonary; p=0.02 cardiac)"
+  - name: "Anastomotic leak (intrathoracic — Ivor-Lewis configuration most common)"
+    frequency: "10-20%"
+  - name: "Recurrent laryngeal nerve / vocal cord injury"
+    frequency: "2-10%"
+  - name: "Chyle leak / chylothorax"
+    frequency: "1-5%"
+  - name: "Anastomotic stricture (late)"
+    frequency: "10-25%"
+  - name: "Conversion to open"
+    frequency: "5-10%"
+
+sources:
+  - SRC-ROBOT-VAN-DER-SLUIS-2019
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-ESMO-ESOPHAGEAL-2024
+
+last_reviewed: "2026-05-08"
+notes: >
+  Robot-assisted minimally invasive esophagectomy (RAMIE) was validated
+  against open transthoracic esophagectomy by the ROBOT RCT (van der
+  Sluis et al., Ann Surg 2019; n=112; 50% reduction in surgery-related
+  complications, 59% RAMIE vs 80% open, p=0.02; better functional
+  recovery + QoL at 6 weeks and 3 months postoperatively). Oncologic
+  outcomes (R0, lymph node yield, 5-yr OS) were equivalent. RAMIE is
+  preferred over open in centers with established robotic-surgery
+  programs and adequate case volume; head-to-head RCT data vs MIE
+  (RAMIE-2 / RAMIE-China) are emerging but as of NCCN v3.2025 / ESMO
+  2024, RAMIE and MIE are positioned as equivalent minimally-invasive
+  options with selection driven by surgeon expertise + center
+  infrastructure. Pairs with neoadjuvant CROSS chemoradiotherapy in the
+  resectable pathway.

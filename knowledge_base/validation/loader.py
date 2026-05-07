@@ -73,6 +73,13 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
         # required_tests handled specially (list of Test IDs)
     ],
     "reviewers": [],
+    # §17 ratified 2026-05-07 — Surgery + RadiationCourse first-class entities.
+    "procedures": [
+        # applicable_diseases handled specially (list of Disease IDs)
+    ],
+    "radiation_courses": [
+        ("concurrent_chemo_regimen", "regimens"),
+    ],
 }
 
 
@@ -482,6 +489,39 @@ def _load_content_impl(
                     ))
                     continue
                 check_ref(path, sid, "tests", "desired_tests[]")
+            # §17 ratified 2026-05-07 — phased indications. Each phase's
+            # populated FK (regimen_id / surgery_id / radiation_id) must
+            # resolve to its target entity type (planning doc §2.4 rules
+            # 1-3). The Pydantic model validator on IndicationPhase already
+            # enforced exactly-one-FK; here we only check ref-integrity of
+            # whichever was set.
+            for i, phase in enumerate(data.get("phases") or []):
+                if not isinstance(phase, dict):
+                    continue
+                if phase.get("regimen_id") is not None:
+                    check_ref(
+                        path, phase["regimen_id"], "regimens",
+                        f"phases[{i}].regimen_id",
+                    )
+                if phase.get("surgery_id") is not None:
+                    check_ref(
+                        path, phase["surgery_id"], "procedures",
+                        f"phases[{i}].surgery_id",
+                    )
+                if phase.get("radiation_id") is not None:
+                    check_ref(
+                        path, phase["radiation_id"], "radiation_courses",
+                        f"phases[{i}].radiation_id",
+                    )
+        elif etype == "procedures":
+            # §17 ratified 2026-05-07 — Surgery.applicable_diseases must
+            # resolve to Disease entities (planning doc §2.4 rule 5).
+            for i, did in enumerate(data.get("applicable_diseases") or []):
+                if isinstance(did, str):
+                    check_ref(
+                        path, did, "diseases",
+                        f"applicable_diseases[{i}]",
+                    )
         elif etype == "contraindications":
             for sid in data.get("affects_indications") or []:
                 check_ref(path, sid, "indications", "affects_indications[]")
@@ -725,6 +765,18 @@ def _collect_algorithm_indication_refs(algo: dict) -> set[str]:
     return refs
 
 
+def _has_authored_treatment_phases(indication: dict) -> bool:
+    phases = indication.get("phases") or []
+    if not isinstance(phases, list):
+        return False
+    for phase in phases:
+        if not isinstance(phase, dict):
+            continue
+        if phase.get("regimen_id") or phase.get("surgery_id") or phase.get("radiation_id"):
+            return True
+    return False
+
+
 def _check_algorithm_regimen_routing_contracts(result: LoadResult) -> None:
     """Algorithms must not route active treatment tracks without a Regimen.
 
@@ -744,6 +796,8 @@ def _check_algorithm_regimen_routing_contracts(result: LoadResult) -> None:
                 continue
             ind = ind_info["data"]
             if ind.get("recommended_regimen"):
+                continue
+            if _has_authored_treatment_phases(ind):
                 continue
             plan_track = ind.get("plan_track")
             if plan_track in _NON_REGIMEN_PLAN_TRACKS:

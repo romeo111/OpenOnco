@@ -21,7 +21,7 @@ applicable_to:
   demographic_constraints:
     ecog_max: 1
 
-recommended_regimen: null
+recommended_regimen: REG-BEMARITUZUMAB-MFOLFOX6
 concurrent_therapy: []
 followed_by: []
 
@@ -66,9 +66,10 @@ rationale: >
   diagnostic IVD development concurrent with FORTITUDE-101 readout.
   Ocular toxicity (corneal events ~70% any-grade, ~25% grade ≥3) is the
   dose-defining AE — mandatory baseline + serial slit-lamp ophthalmology.
-  No bemarituzumab regimen entity exists in KB yet — recommended_regimen
-  intentionally null pending REG-BEMARITUZUMAB-MFOLFOX6 creation in a
-  follow-up regimen-fill chunk.
+  recommended_regimen now resolves to REG-BEMARITUZUMAB-MFOLFOX6 (GI-2
+  bemfill chunk 2026-05-07-1830) — FORTITUDE-101 phase 3 readout (ESMO
+  2025 LBA10) confirmed mOS 17.9 vs 12.5 mo at primary analysis (HR 0.61)
+  with attenuated benefit at descriptive follow-up (HR 0.82).
 
 rationale_ua: >
   Bemarituzumab + mFOLFOX6 — нова 1L опція для HER2-негативного,
@@ -92,7 +93,7 @@ ukrainian_drafted_by: claude_extraction
 sources:
   - source_id: SRC-FORTITUDE-101
     weight: primary
-    relevant_quote_paraphrase: "Phase 3 trial of bemarituzumab + chemotherapy in FGFR2b-overexpressing HER2-negative 1L metastatic gastric / GEJ adenocarcinoma — confirmatory readout pending; cited as TODO-stub per A2 chunk spec instruction"
+    relevant_quote_paraphrase: "FORTITUDE-101 phase 3 RCT (Rha et al. ESMO 2025 LBA10; NCT05052801): bemarituzumab 15 mg/kg q2w + mFOLFOX6 vs placebo + mFOLFOX6 in FGFR2b-overexpressing (IHC 2+/3+ ≥10%) HER2-non-positive 1L metastatic gastric/GEJ — primary mOS 17.9 vs 12.5 mo (HR 0.61, p=0.005) at 11.8 mo follow-up; attenuated to mOS 14.5 vs 13.2 mo (HR 0.82) at 19.4 mo descriptive follow-up; ocular toxicity dose-defining"
   - source_id: SRC-NCCN-GASTRIC-2025
     weight: primary
     relevant_quote_paraphrase: "FGFR2b IHC testing recommended in HER2-negative metastatic gastric / GEJ; bemarituzumab + chemotherapy listed as emerging targeted option pending phase 3 readout"
@@ -147,11 +148,14 @@ notes: >
   STUB — pending Clinical Co-Lead sign-off (CHARTER §6.1: ≥2 reviewers
   for clinical content). Aggressive-track 1L for HER2-negative /
   MSI-stable / CLDN18.2-negative / FGFR2b-positive metastatic gastric /
-  GEJ. Confidence: MODERATE — FIGHT phase 2 randomized data, FORTITUDE-101
-  phase 3 confirmatory results pending. SRC-FORTITUDE-101 is currently
-  a TODO-stub (citation upgrade is a separate housekeeping chunk).
-  recommended_regimen intentionally null — no REG-BEMARITUZUMAB-MFOLFOX6
-  exists in KB; needs follow-up regimen-fill chunk. Engine routing
+  GEJ. Confidence: MODERATE — FORTITUDE-101 phase 3 primary analysis
+  positive (mOS HR 0.61, p=0.005, ESMO 2025 LBA10) but attenuated at
+  descriptive follow-up (HR 0.82) — practice-changing status disputed.
+  SRC-FORTITUDE-101 upgraded from TODO-stub to canonical ESMO 2025
+  abstract-tier citation (GI-2 bemfill chunk 2026-05-07-1830);
+  evidence_tier=2 because peer-reviewed full publication not yet
+  indexed (paper_pending). REG-BEMARITUZUMAB-MFOLFOX6 created in
+  same chunk (15 mg/kg IV q2w + mFOLFOX6 backbone). Engine routing
   to this indication will not fire until algorithm extension adds
   FGFR2b biomarker requirement (D1 algorithm chunk recommended).
   UA access: bemarituzumab not registered; named-patient / charitable /

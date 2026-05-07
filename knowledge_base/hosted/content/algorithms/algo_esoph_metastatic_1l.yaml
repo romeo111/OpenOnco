@@ -3,23 +3,131 @@ applicable_to_disease: DIS-ESOPHAGEAL
 applicable_to_line_of_therapy: 1
 purpose: >
   Select 1L systemic therapy for metastatic or unresectable locally advanced
-  esophageal carcinoma. Routes by histology (ESCC vs adenocarcinoma/EAC),
-  PD-L1 CPS, HER2 status, and chemo-sparing preference. Distinct from
-  ALGO-ESOPH-RESECTABLE-1L (neoadjuvant CROSS) and
+  esophageal carcinoma. Step 0 (D2 chunk gi2-d2-algo-extensions-phase-c-
+  2026-05-08-1300) checks RF-OLIGOMET-DEFINITION first — when ≤3 metastases
+  + controllable primary + ECOG 0-1 + amenable to local therapy + no
+  peritoneal/leptomeningeal/>3-brain-mets exclusions, route to systemic-
+  plus-local oligomet track (RENAISSANCE-pattern, adenocarcinoma-grade
+  evidence; ESCC case-by-case). Otherwise routes by histology (ESCC vs
+  adenocarcinoma/EAC) and PD-L1 CPS to ICI+chemotherapy combinations.
+  Distinct from ALGO-ESOPH-RESECTABLE-1L (neoadjuvant CROSS),
+  ALGO-ESOPH-DEFINITIVE-1L (definitive CRT for unresectable SCC), and
   ALGO-ESOPHAGEAL-ADJUVANT-1L.
 
 output_indications:
-  - IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC
+  - IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL
   - IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO
-  - IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO
   - IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO
+  - IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC
+  - IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO
 
 default_indication: IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC
 alternative_indication: IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO
 
 decision_tree:
-  # Step 1 - Staging confirmation. Algorithm applies to metastatic (stage IV)
+  # Step 0 (D2 chunk gi2-d2-algo-extensions-phase-c-2026-05-08-1300) —
+  # RF-OLIGOMET-DEFINITION gate. When patient meets OMEC-1 oligomet
+  # consensus criteria (≤3 distant mets, ECOG 0-1, controllable primary,
+  # all sites amenable to local therapy; not peritoneal carcinomatosis /
+  # leptomeningeal / >3 brain mets), route to systemic-plus-local
+  # oligomet track. Indication primarily intended for EAC + GEJ Siewert I
+  # adenocarcinoma (RENAISSANCE-pattern); ESCC oligomet on case-by-case
+  # MDT basis with explicit weaker-evidence acknowledgement. Falls through
+  # to existing standard 1L metastatic histology hierarchy when the RF
+  # does not fire (>3 mets, peritoneal, leptomeningeal, etc.).
+  - step: 0
+    evaluate:
+      any_of:
+        - red_flag: RF-OLIGOMET-DEFINITION
+    if_true:
+      result: IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL
+      notes: >
+        OMEC-1 oligomet consensus (Kroese 2023, PMID 36947929) +
+        RENAISSANCE / AIO-FLOT5 design extrapolated to esophageal
+        histology (Al-Batran BMC Cancer 2017; NCT02578368). ≤3 distant
+        metastatic lesions + controllable primary + ECOG 0-1 + all sites
+        amenable to local therapy. Aggressive plan track — induction
+        FLOT (adeno) or nivo+chemo (ESCC) → restaging at ~12 wk →
+        metastasis-directed local therapy (esophagectomy + metastasectomy
+        or SBRT) in responders → adjuvant systemic continuation. NCCN
+        v3.2025 2B, ESMO 2024 conditional. Confidence: moderate
+        (RENAISSANCE primary OS pending; ESCC histology extrapolated).
+    if_false:
+      next_step: 10
+    notes: "D2 chunk new branch — prepended oligomet step gates the standard histology hierarchy. Fires only when RF-OLIGOMET-DEFINITION composite trigger evaluates True (≤3 mets + ECOG≤1 + primary controllable + all sites amenable + none of peritoneal/leptomeningeal/>3-brain). HER2-positive oligomet excluded at indication-level (biomarker_requirements_excluded) so HER2+ patients still route to step 11 trastuzumab branch."
+
+  # Step 10 (D1 chunk gi2-d1-algo-extensions-2026-05-07-2030) — SCC + PD-L1 CPS≥1
+  # + chemo-spare preference → nivolumab + ipilimumab (CheckMate-648 nivo+ipi arm).
+  # CM-648 enrolled ESCC only; chemo-sparing arm benefits from avoiding cytotoxic
+  # chemo (renal dysfunction, frailty, patient preference). Falls through to
+  # existing step 1 (chemo+nivo SCC arm) when chemo_spare_preference is not set.
+  - step: 10
+    evaluate:
+      any_of:
+        - condition: "ESCC CPS >=1 chemo-sparing preference"
+        - all_of:
+            - any_of:
+                - finding: "histology"
+                  value: "squamous"
+                - condition: "histology_escc"
+            - any_of:
+                - finding: "pdl1_cps"
+                  threshold: 1
+                  comparator: ">="
+                - condition: "PD-L1 CPS >= 1 (22C3 or 28-8 assay)"
+                - condition: "PD-L1 CPS ≥ 1 (22C3 or 28-8 assay)"
+                - condition: "ESCC CPS >=1"
+            - any_of:
+                - finding: "chemo_spare_preference"
+                  value: true
+                - condition: "Chemo-sparing preference"
+                - condition: "Chemo unsuitable but ICI eligible"
+                - condition: "chemo_sparing_preference"
+    if_true:
+      result: IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO
+      notes: >
+        ESCC + PD-L1 CPS≥1 + chemo-spare preference: nivo+ipi (CheckMate-648
+        nivo+ipi arm). Chosen over chemo+nivo when avoiding cytotoxic chemo
+        is preferred (frailty, renal dysfunction, patient preference). mOS
+        13.7 vs 9.1 mo CPS≥1 (HR 0.64).
+    if_false:
+      next_step: 11
+    notes: "D1 chunk new branch — routes chemo-sparing CPS≥1 ESCC to ipi+nivo arm of CheckMate-648."
+
+  # Step 11 (D1 chunk) — Adenocarcinoma + HER2-positive → trastuzumab + chemo
+  # (ToGA backbone extrapolation per NCCN-Esophageal/EGJ 2025). HER2 testing in
+  # metastatic adeno is recommended; trastuzumab + cisplatin/cape (or 5-FU)
+  # supersedes chemo+pembro for the HER2+ subset.
+  - step: 11
+    evaluate:
+      all_of:
+        - any_of:
+            - finding: "histology"
+              value: "adeno"
+            - condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
+            - condition: "histology_adenocarcinoma"
+        - any_of:
+            - finding: "her2_status"
+              value: "positive"
+            - condition: "HER2-positive adenocarcinoma"
+            - condition: "HER2-positive"
+            - condition: "BIO-HER2-SOLID positive"
+            - condition: "her2_positive"
+    if_true:
+      result: IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO
+      notes: >
+        EAC / GEJ Siewert I + HER2+ (IHC 3+ or IHC 2+/ISH+): trastuzumab +
+        cisplatin + capecitabine/5-FU (ToGA backbone). Extrapolation from
+        gastric/GEJ ToGA pivotal trial (mOS 13.8 vs 11.1 mo, HR 0.74; IHC3+
+        or IHC2+/FISH+ subgroup mOS 16.0 vs 11.8 mo). NCCN-Esophageal/EGJ
+        2025 endorses extrapolation. Confidence: moderate.
+    if_false:
+      next_step: 1
+    notes: "D1 chunk new branch — routes HER2+ esoph adeno to ToGA-backbone trastuzumab+chemo before generic CPS gating."
+
+  # Step 1 — Staging confirmation. Algorithm applies to metastatic (stage IV)
   # or unresectable locally advanced esophageal carcinoma only.
+  # Resectable disease → ALGO-ESOPH-RESECTABLE-1L (CROSS neoadjuvant).
   - step: 1
     evaluate:
       any_of:
@@ -29,11 +137,11 @@ decision_tree:
       next_step: 2
     if_false:
       result: null
-      notes: "Resectable disease uses ALGO-ESOPH-RESECTABLE-1L. Locally advanced with curative RT intent uses definitive CRT."
+      notes: "Resectable disease → ALGO-ESOPH-RESECTABLE-1L. Locally advanced with curative RT intent → definitive CRT."
 
-  # Step 2 - Histology. ESCC and EAC have different evidence bases.
-  # GEJ adenocarcinoma Siewert I is managed as esophageal. Siewert II/III is
-  # managed as gastric (ALGO-GASTRIC-METASTATIC-1L).
+  # Step 2 — Histology. ESCC and EAC have different evidence bases.
+  # GEJ adenocarcinoma Siewert I: managed as esophageal.
+  # GEJ Siewert II/III: managed as gastric (ALGO-GASTRIC-METASTATIC-1L).
   - step: 2
     evaluate:
       any_of:
@@ -43,55 +151,33 @@ decision_tree:
       next_step: 3
     if_false:
       next_step: 4
-    notes: "Adenocarcinoma of esophagus (EAC) and GEJ Siewert I go to step 4. Pure squamous goes to step 3."
+    notes: "Adenocarcinoma of esophagus (EAC) and GEJ Siewert I → step 4. Pure squamous → step 3."
 
-  # Step 3 - ESCC: chemo-free nivo+ipi only when chemo-sparing preference or
-  # chemo unsuitability is explicit; otherwise chemo+nivo remains default.
+  # Step 3 — ESCC: PD-L1 CPS gating for ICI+chemo choice.
+  # Both nivo+chemo (CheckMate-648) and pembro+chemo (KEYNOTE-590) are
+  # NCCN category 1. Nivo+chemo preferred for CPS≥1 (larger OS benefit HR 0.54).
   - step: 3
     evaluate:
       any_of:
-        - condition: "ESCC CPS >=1 chemo-sparing preference"
-        - all_of:
-            - any_of:
-                - condition: "PD-L1 CPS >= 1 (22C3 or 28-8 assay)"
-                - condition: "PD-L1 CPS â‰¥ 1 (22C3 or 28-8 assay)"
-                - condition: "ESCC CPS >=1"
-            - any_of:
-                - condition: "Chemo-sparing preference"
-                - condition: "Chemo unsuitable but ICI eligible"
-                - condition: "chemo_sparing_preference"
-    if_true:
-      result: IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO
-      notes: >
-        ESCC + CPS>=1 with chemo-sparing preference or chemo unsuitability:
-        nivolumab+ipilimumab (CheckMate-648; mOS 13.7 vs 9.1 mo, HR 0.64).
-        Use chemo+nivo instead when rapid response / high tumor burden is the
-        priority.
-    if_false:
-      next_step: 31
-
-  # Step 31 - ESCC default: nivo+chemo remains the rapid-response/default
-  # branch when chemo-sparing preference is absent.
-  - step: 31
-    evaluate:
-      any_of:
-        - condition: "PD-L1 CPS >= 1 (22C3 or 28-8 assay)"
-        - condition: "PD-L1 CPS â‰¥ 1 (22C3 or 28-8 assay)"
-        - condition: "ESCC CPS >=1"
+        - condition: "PD-L1 CPS ≥ 1 (22C3 or 28-8 assay)"
     if_true:
       result: IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC
       notes: >
-        ESCC + CPS>=1: nivolumab+chemo preferred when rapid response or
-        disease burden matters (CheckMate-648; mOS 15.4 vs 9.1 mo, HR 0.54).
-        Pembro+chemo is also valid in selected CPS>=10 or mixed-histology
-        settings.
+        ESCC + CPS≥1: nivolumab+chemo preferred (CheckMate-648; mOS 15.4 vs 9.1 mo,
+        HR 0.54). Pembro+chemo (KEYNOTE-590) is an equally valid alternative (mOS
+        13.9 vs 8.8 mo at CPS≥10 ESCC, HR 0.57). No head-to-head comparison;
+        institution/patient preference decides. Pembro+chemo if CPS≥10 and preference
+        for Q3W single-ICI agent, or if adenocarcinoma component present.
     if_false:
       result: IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC
       notes: >
-        ESCC + CPS <1: nivo+chemo still shows OS benefit in all-randomized
-        population. Chemo alone is an alternative if ICI is contraindicated.
+        ESCC + CPS < 1: nivo+chemo still shows OS benefit in all-randomized population
+        (CheckMate-648 all-comers: HR 0.74, p=0.002). NCCN acceptable. Chemo alone
+        is an alternative if ICI contraindicated (active autoimmune disease, prior transplant).
 
-  # Step 4 - Adenocarcinoma (EAC / GEJ Siewert I): HER2 branch first.
+  # Step 4 — Adenocarcinoma (EAC / GEJ Siewert I): PD-L1 CPS gate.
+  # KEYNOTE-590 is the evidence base for EAC (enrolled adeno + ESCC).
+  # HER2+ adenocarcinoma: trastuzumab addition — separate consideration.
   - step: 4
     evaluate:
       all_of:
@@ -99,41 +185,23 @@ decision_tree:
             - condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
             - condition: "histology_adenocarcinoma"
         - any_of:
-            - condition: "HER2-positive adenocarcinoma"
-            - condition: "HER2-positive"
-            - condition: "BIO-HER2-SOLID positive"
-            - condition: "her2_positive"
-    if_true:
-      result: IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO
-      notes: >
-        EAC/GEJ Siewert I + HER2-positive: trastuzumab+chemo using the ToGA
-        backbone, extrapolated from gastric/GEJ adenocarcinoma and endorsed by
-        NCCN-Esophageal/EGJ. Do not use this branch for ESCC.
-    if_false:
-      next_step: 41
-
-  # Step 41 - Adenocarcinoma (EAC / GEJ Siewert I): PD-L1 CPS gate.
-  # KEYNOTE-590 is the evidence base for EAC (enrolled adeno + ESCC).
-  - step: 41
-    evaluate:
-      all_of:
-        - any_of:
-            - condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
-            - condition: "histology_adenocarcinoma"
-        - any_of:
             - condition: "PD-L1 CPS >= 10"
-            - condition: "PD-L1 CPS â‰¥ 10"
+            - condition: "PD-L1 CPS ≥ 10"
     if_true:
       result: IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO
       notes: >
-        EAC/GEJ Siewert I + CPS>=10: pembro+chemo (KEYNOTE-590 adeno arm).
-        If HER2-positive, step 4 should already have routed to trastuzumab+chemo.
+        EAC/GEJ Siewert I + CPS≥10: pembro+chemo (KEYNOTE-590 adeno arm; mOS 11.6
+        vs 10.2 mo, HR 0.73 all EAC; benefit concentrated in CPS≥10). NCCN category 1.
+        If HER2+ (IHC 3+ or FISH+): consider adding trastuzumab to pembro+chemo
+        (KEYNOTE-811 data; stomach/GEJ, extrapolation to esophageal adeno).
     if_false:
       result: IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO
       notes: >
-        EAC/GEJ Siewert I + CPS <10 or unknown: pembro+chemo remains the
-        closest authored esophageal adenocarcinoma systemic option; chemo alone
-        can be substituted by HCP judgment if ICI is contraindicated.
+        EAC/GEJ Siewert I + CPS < 10: pembro+chemo benefit is present but smaller
+        in adeno CPS<10 (HR ~0.75 all-adeno all-comers, KEYNOTE-590). NCCN accepts
+        pembro+chemo for all-comers adeno; chemo alone (cisplatin/5-FU or FOLFOX)
+        is an alternative if ICI contraindicated. HER2+ adeno → trastuzumab+chemo
+        (ToGA; gastric/GEJ Siewert II-III data, extrapolated).
 
 sources:
   - SRC-CHECKMATE648-DOKI-2022
@@ -141,19 +209,24 @@ sources:
   - SRC-NCCN-ESOPHAGEAL-2025
   - SRC-ESMO-ESOPHAGEAL-2024
 
-last_reviewed: "2026-05-07"
+last_reviewed: "2026-05-08"
 notes: >
-  This algorithm covers metastatic/unresectable advanced disease only.
-  Resectable: ALGO-ESOPH-RESECTABLE-1L (CROSS neoadjuvant to esophagectomy).
-  Adjuvant post-CROSS-non-pCR: ALGO-ESOPHAGEAL-ADJUVANT-1L (nivolumab 1yr).
-  2L post-ICI+chemo: limited options - cytotoxic taxane or irinotecan.
-  2L post-chemo-only: nivo (ATTRACTION-3, ESCC) or pembro CPS>=10
+  Step 0 (D2 chunk gi2-d2-algo-extensions-phase-c-2026-05-08-1300):
+  RF-OLIGOMET-DEFINITION gate routes oligometastatic patients to
+  IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL before standard histology
+  hierarchy. This algorithm covers metastatic/unresectable advanced
+  disease only. Resectable: ALGO-ESOPH-RESECTABLE-1L (CROSS
+  neoadjuvant → esophagectomy). Definitive CRT for unresectable T4b /
+  medically inoperable SCC: ALGO-ESOPH-DEFINITIVE-1L. Adjuvant post-
+  CROSS-non-pCR: ALGO-ESOPHAGEAL-ADJUVANT-1L (nivolumab 1yr). 2L
+  post-ICI+chemo: limited options — cytotoxic taxane or irinotecan.
+  2L post-chemo-only: nivo (ATTRACTION-3, ESCC) or pembro CPS≥10
   (KEYNOTE-181) per ALGO-ESOPH-2L.
 
-  D1-thin update 2026-05-07: already-authored A1 indications are now reachable.
-  ESCC + CPS>=1 + chemo-sparing preference routes to ipi+nivo. HER2-positive
-  EAC/GEJ Siewert I routes to trastuzumab+chemo. Gastric FGFR2b remains
-  intentionally unrouted until a non-null bemarituzumab regimen exists.
+  ESCC vs EAC 1L choice:
+  - ESCC CPS≥1: nivo+chemo preferred (CheckMate-648, largest benefit HR 0.54)
+  - ESCC/EAC CPS≥10 or mixed histology: pembro+chemo acceptable (KEYNOTE-590)
+  - EAC CPS<10: modest pembro benefit; chemo alone or pembro+chemo per MDT
 
   GEJ Siewert II/III (gastroesophageal junction tumors below the Z-line):
-  managed as gastric - use ALGO-GASTRIC-METASTATIC-1L (not this algorithm).
+  managed as gastric — use ALGO-GASTRIC-METASTATIC-1L (not this algorithm).

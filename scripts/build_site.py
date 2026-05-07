@@ -749,9 +749,9 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 _NAV_LABELS = {
     "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →",
-           "diseases": "Хвороби", "contribute": "Допомогти", "specs": "Специфікації"},
+           "diseases": "Хвороби", "specs": "Специфікації"},
     "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →",
-           "diseases": "Diseases", "contribute": "Contribute", "specs": "Specs"},
+           "diseases": "Diseases", "specs": "Specs"},
 }
 
 
@@ -774,7 +774,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"/cases/{case_id}.html"
         if page_kind == "capabilities": return "/capabilities.html"
         if page_kind == "diseases":     return "/diseases.html"
-        if page_kind == "contribute":   return "/contribute.html"
+        if page_kind == "contribute":   return "/"
         if page_kind == "specs":        return "/specs.html"
     else:
         # EN page (at root) → switcher points to UA mirror at /ukr/
@@ -784,7 +784,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"{uk_prefix}/cases/{case_id}.html"
         if page_kind == "capabilities": return f"{uk_prefix}/capabilities.html"
         if page_kind == "diseases":     return f"{uk_prefix}/diseases.html"
-        if page_kind == "contribute":   return f"{uk_prefix}/contribute.html"
+        if page_kind == "contribute":   return f"{uk_prefix}/"
         if page_kind == "specs":        return f"{uk_prefix}/specs.html"
     return "/"
 
@@ -794,7 +794,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     """Top navigation bar with:
     - brand on the left → links to home
     - reading-only nav (Home, Diseases, Capabilities, Specs UA-only,
-      Contribute, Examples, GitHub) in the middle
+      Examples, GitHub) in the middle
     - language switcher (UA / EN toggle) on the right
     - prominent CTA "Try it" button on the far right (action, not reading)
 
@@ -820,14 +820,12 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
             f'<a href="/ukr/diseases.html"{cls("diseases")}>Хвороби</a>'
             f'<a href="/ukr/capabilities.html"{cls("capabilities")}>Можливості</a>'
             f'<a href="/ukr/specs.html"{cls("specs")}>Специфікації</a>'
-            f'<a href="/ukr/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
     else:  # target_lang == "en"
         extra_links = (
             f'<a href="/diseases.html"{cls("diseases")}>Diseases</a>'
             f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>'
             f'<a href="/specs.html"{cls("specs")}>Specs</a>'
-            f'<a href="/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
 
     # Stable visual order is always [UA · EN] regardless of which language
@@ -1011,7 +1009,7 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
              "shelf: maintainer publishes structured chunks (~100k–300k tokens of work each), "
              "your AI agent (Claude Code, Codex, Cursor, ChatGPT) takes one and opens a PR "
              "in 1–3 hours. No clinical expertise needed — you trigger structured drafting; "
-             "clinical co-leads sign off. <a href=\"/contribute.html\"><strong>How to start →</strong></a>"),
+             f"clinical co-leads sign off. <a href=\"https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md\" target=\"_blank\" rel=\"noopener\"><strong>How to start →</strong></a>"),
         ]
         why_today_foot = (
             "Every missed biomarker can cost a life. Every hour of manual cross-checking "
@@ -1154,7 +1152,7 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
              "ваш AI-агент (Claude Code, Codex, Cursor, ChatGPT) бере один і відкриває PR "
              "за 1-3 години. Клінічна експертиза не потрібна — ви тригерите structured "
              "drafting; clinical co-leads потім signoff'ять. "
-             "<a href=\"/ukr/contribute.html\"><strong>Як почати →</strong></a>"),
+             f"<a href=\"https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md\" target=\"_blank\" rel=\"noopener\"><strong>Як почати →</strong></a>"),
         ]
         why_today_foot = (
             "Кожен пропущений біомаркер може коштувати життя. Кожна година ручного "
@@ -4466,8 +4464,8 @@ def _render_capabilities_uk(stats) -> str:
             години і відкриває PR. Maintainer + Clinical Co-Lead перевіряють
             і мерджать. За останні 4 дні — <strong>7 хвиль</strong>,
             десятки chunks, ~73 BMA-кандидати, 23 BMA-драфти, 53 source
-            stubs. Деталі — у розділі «Як допомогти» нижче.
-            <a href="/ukr/contribute.html"><strong>→ Допомогти токенами</strong></a>
+            stubs. Деталі — у розділі TaskTorrent нижче.
+            <a href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><strong>→ Contributor Quickstart</strong></a>
           </p>
         </div>
       </div>
@@ -5304,7 +5302,7 @@ def _render_capabilities_uk(stats) -> str:
           <div class="num-lbl">8-line bootstrap</div>
           <p class="num-text">
             Скопіюйте 8-рядковий промпт з
-            <a href="/ukr/contribute.html"><code>/ukr/contribute.html</code></a>
+            <a href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><code>CONTRIBUTOR_QUICKSTART.md</code></a>
             у свій AI-агент. Він сам знайде наступний доступний chunk,
             прочитає його spec, claim'не його, виконає роботу під
             <code>contributions/&lt;chunk-id&gt;/</code>, прогоне валідатор,
@@ -5325,7 +5323,7 @@ def _render_capabilities_uk(stats) -> str:
         </div>
       </div>
       <div class="cta-row" style="margin-top:24px;">
-        <a class="btn btn-primary" href="/ukr/contribute.html">Допомогти токенами →</a>
+        <a class="btn btn-primary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart →</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart (GitHub)</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active" target="_blank" rel="noopener">Активні чанки →</a>
       </div>
@@ -5618,7 +5616,7 @@ def _render_capabilities_en(stats) -> str:
             review and merge. In the past 4 days — <strong>7 waves</strong>,
             dozens of chunks, ~73 BMA candidates, 23 BMA drafts, 53 source
             stubs. Details in the «How to help» section below.
-            <a href="/contribute.html"><strong>→ Contribute tokens</strong></a>
+            <a href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><strong>→ Contributor Quickstart</strong></a>
           </p>
         </div>
       </div>
@@ -6473,7 +6471,7 @@ def _render_capabilities_en(stats) -> str:
           <div class="num-lbl">8-line bootstrap</div>
           <p class="num-text">
             Copy the 8-line prompt from
-            <a href="/contribute.html"><code>/contribute.html</code></a>
+            <a href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><code>CONTRIBUTOR_QUICKSTART.md</code></a>
             into your AI agent. It will find the next available chunk on
             its own, read the spec, claim it, do the work under
             <code>contributions/&lt;chunk-id&gt;/</code>, run the
@@ -6494,7 +6492,7 @@ def _render_capabilities_en(stats) -> str:
         </div>
       </div>
       <div class="cta-row" style="margin-top:24px;">
-        <a class="btn btn-primary" href="/contribute.html">Contribute tokens →</a>
+        <a class="btn btn-primary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart →</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart (GitHub)</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active" target="_blank" rel="noopener">Active chunks →</a>
       </div>

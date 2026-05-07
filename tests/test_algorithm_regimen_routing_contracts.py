@@ -148,3 +148,61 @@ def test_algorithm_allows_active_track_with_regimen(tmp_path: Path) -> None:
     assert result.ref_errors == []
     assert result.contract_errors == []
     assert result.ok
+
+
+def test_algorithm_allows_active_track_with_authored_phases(tmp_path: Path) -> None:
+    clear_load_cache()
+    _seed_common(tmp_path)
+    _write(
+        tmp_path,
+        "drugs/drug_test.yaml",
+        """
+        id: DRUG-TEST
+        names: {preferred: Test drug}
+        """,
+    )
+    _write(
+        tmp_path,
+        "regimens/reg_test.yaml",
+        """
+        id: REG-TEST
+        name: Test regimen
+        components:
+          - drug_id: DRUG-TEST
+        """,
+    )
+    _write(
+        tmp_path,
+        "indications/ind_test.yaml",
+        """
+        id: IND-TEST-PHASED
+        plan_track: standard
+        applicable_to:
+          disease_id: DIS-TEST
+          line_of_therapy: 1
+        phases:
+          - phase: induction
+            type: chemotherapy
+            regimen_id: REG-TEST
+            cycles: 4
+        recommended_regimen: null
+        """,
+    )
+    _write(
+        tmp_path,
+        "algorithms/algo_test.yaml",
+        """
+        id: ALGO-TEST
+        applicable_to_disease: DIS-TEST
+        applicable_to_line_of_therapy: 1
+        output_indications: [IND-TEST-PHASED]
+        default_indication: IND-TEST-PHASED
+        """,
+    )
+
+    result = load_content(tmp_path)
+
+    assert result.schema_errors == []
+    assert result.ref_errors == []
+    assert result.contract_errors == []
+    assert result.ok
