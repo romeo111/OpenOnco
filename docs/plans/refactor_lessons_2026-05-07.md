@@ -248,3 +248,102 @@ Agent verified `test_seed_loads_without_errors` failure pre-exists by stashing c
 ### 8.11 `feat/...` branch prefix worked cleanly with self-push
 
 `feat/schema-17-refactor-2026-05-07-2200` was an infrastructure branch — no chunk-task label needed. Self-pushed successfully per CLAUDE.md `3a60901b` after green gates. **Confirms `feat/` prefix is the right signal for refactor / schema / engine / render work.** `chunk/` is reserved for clinical-content workstreams.
+
+---
+
+## 9. Phase C consumer-level findings (added 2026-05-08, post Phase C wave 1+2 merge)
+
+After §17 schema landed, six chunks (C1-C5 + C5-backfill) consumed the new schema. Patterns + gotchas surfaced from real clinical content authoring against `Indication.phases` / Surgery / RadiationCourse:
+
+### 9.1 YAML empty-list-with-comments pitfall
+
+`biomarker_requirements_excluded:` (or any list-typed field) followed only by comments — without explicit `: []` — parses as `None`, which Pydantic rejects for list field. **Symptom:** loader fails on indication YAML with valid-looking syntax.
+
+**Fix pattern:**
+```yaml
+# BAD (parses as None):
+biomarker_requirements_excluded:
+  # No exclusions in v0.1; HER2-positive routes to dedicated track
+
+# GOOD (parses as []):
+biomarker_requirements_excluded: []
+# No exclusions in v0.1; HER2-positive routes to dedicated track
+```
+
+Caught by C1 agent during validator checks. Worth pre-flagging for any chunk that authors new indications.
+
+### 9.2 §17 concurrent chemo+RT: RadiationCourse owns the ref
+
+XOR rule on `IndicationPhase` (exactly one of regimen_id / surgery_id / radiation_id) means concurrent chemoradiation can't put BOTH `radiation_id` AND `regimen_id` on a single phase. Decision: **`RadiationCourse.concurrent_chemo_regimen` field owns the reference**.
+
+Pattern (used by C2 CROSS + C3 definitive CRT):
+```yaml
+# Indication phase:
+phases:
+  - phase: neoadjuvant
+    type: chemoradiation
+    radiation_id: RC-CROSS-NEOADJ
+    duration_weeks: 5
+
+# RadiationCourse:
+id: RC-CROSS-NEOADJ
+total_dose_gy: 41.4
+fractions: 23
+concurrent_chemo_regimen: REG-CARBOPLATIN-PACLITAXEL-WEEKLY  # ← here
+```
+
+Mirrors `tests/fixtures/radiation_cross.yaml` golden fixture. **Don't try to put concurrent regimen on the phase itself** — XOR validator rejects.
+
+### 9.3 Backward-compat on edits via preserved `recommended_regimen`
+
+When converting a free-text-RT indication to §17 phases (C2 CROSS), preserve the existing `recommended_regimen` field. Renderers / engine layers may still read it. Adding `phases:` is opt-in additive; removing existing fields breaks back-compat. Old field becomes redundant but harmless.
+
+**Render layer migration** to phase-aware iteration is a separate workstream (§17.4 step 5 deferred). Until then: keep both.
+
+### 9.4 `recommended_regimen: null` is valid (Optional[str] semantics)
+
+C5 oligomet shipped with `recommended_regimen: null` because REG-FLOT didn't exist yet. C5-backfill predicted "ref_errors should drop by 2" when wired up. **Empirically: 0 drop.**
+
+`Indication.recommended_regimen` is `Optional[str]` per schema. `null` is already valid (no ref-integrity error). Wiring to a real regimen ID upgrades from `valid-null` to `valid-resolved` but doesn't reduce error count.
+
+**Implication for future agents:** don't predict ref-error drops from null→FK swaps. Predict drops only from invalid-FK (referencing non-existent ID) → valid-FK (now-existing ID).
+
+### 9.5 Disease filename convention: no `dis_` prefix
+
+Multiple agents discovered: gastric disease file is `gastric.yaml`, not `dis_gastric.yaml`. Esoph is `esophageal.yaml`, not `dis_esophageal.yaml`. **Verify via `ls knowledge_base/hosted/content/diseases/` before writing pathspecs.** Don't assume `dis_` prefix.
+
+`procedures/proc_*.yaml`, `radiation_courses/rc_*.yaml`, `regimens/reg_*.yaml`, `indications/ind_*.yaml`, `redflags/rf_*.yaml`, `biomarkers/bio_*.yaml`, `bma/bma_*.yaml`, `sources/src_*.yaml`, `algorithms/algo_*.yaml`, `drugs/drug_*.yaml` — these DO use prefixes. Diseases don't.
+
+### 9.6 Disease.procedure_options: use metadata namespace
+
+C1 discovered `Disease` schema has no canonical `procedure_options` top-level field in v0.1. Used `metadata.procedure_options` via Pydantic `extra='allow'`. C4 (esoph) mirrored exactly.
+
+**Pattern for future Disease extensions:** when a disease-level concept doesn't have schema support, use `metadata.<concept_name>` (extra='allow' admits this). Promote to top-level only when concept is universally adopted across multiple diseases AND clinical co-leads request.
+
+### 9.7 Filename in chunk spec ≠ actual filename
+
+Multiple agents found: chunk-spec filenames are descriptive, not literal. Examples:
+- Spec said `ind_esoph_neoadj_cross.yaml`; actual is `ind_esoph_resectable_cross_neoadjuvant.yaml`
+- Spec said `dis_esophageal.yaml`; actual is `esophageal.yaml`
+
+**Pattern:** when chunk spec lists a target filename, agent verifies via `ls` first and adapts to actual filename. Spec author should ideally list real filenames, but not always feasible when spec was written before content audit.
+
+### 9.8 First-consumer chunk sets gold-standard pattern for siblings
+
+C1 was first §17 consumer (FLOT periop). C2 → C5 + C5-backfill all explicitly cited "C1 precedent" or "mirrors C1's pattern" in their commits. **Designate one chunk as gold-standard pattern when launching a multi-chunk wave on new schema.** Subsequent chunks save dispatch time by referencing the precedent file directly.
+
+### 9.9 Sequential-vs-parallel timing for FK-dependent chunks
+
+C5 (oligomet) needed REG-FLOT. C1 (FLOT periop) created REG-FLOT. Dispatched both in parallel — C5 shipped with `recommended_regimen: null` honestly + flagged backfill needed. C5-backfill chunk (#438) wired the FK after C1 merged.
+
+**Pattern:** when chunk B depends on entity created by chunk A, and both are urgent:
+- Sequential: C1 first, then C5 — slower but no deferred state
+- Parallel + backfill chunk: ship null + small follow-up — faster end-to-end + honest reporting
+
+For Phase C, parallel + backfill won — one extra trivial chunk (#438) but ~15-30 min saved end-to-end. Worth it.
+
+### 9.10 Algorithm-wiring is consistently out of clinical-content chunk scope
+
+Every Phase C chunk flagged "algorithm doesn't route to new indication yet" as out-of-scope follow-up. Aggregated into D2 algorithm-extension chunk. **Confirmed pattern:** new clinical content lands first; engine routing extends in dedicated D-prefix chunk.
+
+This decoupling means clinical content can be reviewed for accuracy independently of routing logic — separate review surfaces per file type.
