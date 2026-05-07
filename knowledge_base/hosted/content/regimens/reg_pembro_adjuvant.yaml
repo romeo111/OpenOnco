@@ -1,0 +1,137 @@
+id: REG-PEMBRO-ADJUVANT-NSCLC
+name: "Pembrolizumab adjuvant (resected NSCLC; KEYNOTE-671)"
+name_ua: "Пембролізумаб ад'ювантно (резекований НДРЛ; KEYNOTE-671)"
+alternate_names:
+  - "KEYNOTE-671 adjuvant phase"
+  - "Perioperative pembrolizumab — adjuvant phase"
+
+# Reuse rationale: REG-PEMBRO-ADJUVANT-MELANOMA exists at 18 cycles
+# (~12 mo, KEYNOTE-054 protocol). KEYNOTE-671 adjuvant is 13 cycles
+# (~9 mo, ~1 year inclusive of 4 neoadjuvant cycles for total 17 cycles
+# / ~1 yr pembro exposure). Cycle count differs → separate regimen.
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg IV q3 weeks (or 400 mg IV q6 weeks)"
+    schedule: "Day 1 every 3 weeks (or q6w), starting within 4-12 weeks of surgical resection"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "13 cycles (~9 months) per KEYNOTE-671 adjuvant phase"
+toxicity_profile: low-moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Severe immune-related adverse event (gr ≥3 colitis, pneumonitis, hepatitis, nephritis, dermatitis)"
+    modification: "Hold pembrolizumab; high-dose corticosteroids (1-2 mg/kg prednisone equiv); consider permanent discontinuation in adjuvant setting given non-curative-uplift toxicity threshold"
+    rationale: "irAE risk-benefit threshold lower in adjuvant than metastatic — curative-intent patient should not be exposed to gr ≥3 toxicity recurrence"
+    source_refs:
+      - SRC-NCCN-NSCLC-2025
+  - condition: "Endocrinopathy (hypothyroidism, hypopituitarism, T1DM, primary adrenal insufficiency)"
+    modification: "Hormone replacement; pembrolizumab can usually be continued"
+    rationale: "Endocrine irAEs typically permanent but manageable with replacement"
+  - condition: "Pneumonitis grade ≥2"
+    modification: "Hold; chest CT; high-dose steroids; permanent discontinuation if grade ≥3"
+    rationale: "Pneumonitis is leading cause of pembrolizumab-related mortality; lower threshold to discontinue in adjuvant; baseline lung-cancer / post-resection patients are higher-risk than melanoma cohort"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Pembrolizumab registered in Ukraine; reimbursement for NSCLC perioperative
+    adjuvant phase variable / often out-of-pocket. Self-pay course
+    (~13 cycles × ~USD 4-7K) is substantial; private insurance / cross-
+    border are realistic routes. Major access barrier given the
+    curative-intent nature.
+
+sources:
+  - SRC-KEYNOTE-671-WAKELEE-2023
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-EARLY-2024
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pembrolizumab adjuvant for resected NSCLC (KEYNOTE-671 adj phase).
+# Same irAE pattern as pembro-mono other indications. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома після інфузій"
+    action_ua: "Очікувано — відпочивайте більше у дні 1-3"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Шкірний свербіж або сухість шкіри"
+    action_ua: "Часто і зазвичай легко — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті живота"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Виражена слабкість, постійна спрага, втрата ваги"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива імунна реакція щитоподібної залози або новий діабет"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний пневмоніт; на тлі легеневої резекції потребує термінової оцінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Тяжка діарея або виражена слабкість + низький тиск"
+    action_ua: "Звертайтесь у лікарню негайно — можливий тяжкий коліт або криз надниркових залоз"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Сильна задишка у спокої, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
+last_reviewed: "2026-05-09"
+reviewer_signoffs: []
+notes: >
+  KEYNOTE-671 adjuvant phase (Wakelee NEJM 2023): pembrolizumab 200 mg
+  q3w × 13 cycles (~9 months) starting within 4-12 weeks of complete
+  surgical resection, following 4 cycles of neoadjuvant pembrolizumab +
+  cisplatin-based doublet (REG-PEMBRO-CHEMO-NEOADJ-NSCLC). Total
+  perioperative pembrolizumab exposure: 17 cycles / ~1 year. EFS HR 0.58
+  and OS HR 0.72 reflect the contribution of the full perioperative
+  package; adjuvant phase contribution is not independently dissectable
+  from the trial design.
+
+  Distinct from REG-PEMBRO-ADJUVANT-MELANOMA (18 cycles, KEYNOTE-054
+  protocol) — separate Regimen entity to capture the KEYNOTE-671-specific
+  cycle count and NSCLC-specific monitoring (post-resection pneumonitis
+  baseline elevated; lower irAE-discontinuation threshold).
+
+  Excludes patients with EGFR-activating mutations or ALK fusion (FDA
+  label) — driver-positive resectable NSCLC has superior adjuvant TKI
+  options (osimertinib per ADAURA, alectinib per ALINA).
+
+notes_ua: >
+  KEYNOTE-671 ад'ювантна фаза (Wakelee NEJM 2023): пембролізумаб 200 мг
+  q3w × 13 циклів (~9 місяців) починаючи в межах 4-12 тижнів від повної
+  хірургічної резекції, після 4 циклів неоад'ювантного пембролізумабу +
+  цисплатин-вмісного дублета (REG-PEMBRO-CHEMO-NEOADJ-NSCLC). Загальна
+  периопераційна експозиція пембролізумабу: 17 циклів / ~1 рік. EFS HR
+  0.58 і OS HR 0.72 відображають внесок повного периопераційного пакета.
+
+  Відрізняється від REG-PEMBRO-ADJUVANT-MELANOMA (18 циклів, KEYNOTE-054
+  протокол) — окрема Regimen-сутність для специфічного KEYNOTE-671 числа
+  циклів і NSCLC-специфічного моніторингу.
+
+  Виключаються пацієнти з активуючими мутаціями EGFR або ALK-fusion
+  (FDA-етикетка) — драйвер-позитивний резектабельний НДРЛ має кращі
+  ад'ювантні TKI (osimertinib ADAURA, alectinib ALINA).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
