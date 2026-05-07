@@ -77,6 +77,20 @@ The five added Drug entities are intentionally thin: `DRUG-CABAZITAXEL`,
 They make existing regimens materializable, while detailed availability and
 full monograph metadata remain future curation work.
 
+Final V1 cleanup follow-up completed the structural validation pass:
+
+| Check | Original baseline | After V1 cleanup |
+|---|---:|---:|
+| Schema errors | 91 | 0 |
+| Referential errors | 179 | 0 |
+| Contract errors | 0 | 0 |
+| Loader `ok` | false | true |
+
+This was achieved through compatibility shims for legacy Indication/Source/BMA
+authoring shapes and thin structural catalog entries for missing Tests,
+Biomarkers, RedFlags, and five referenced Regimens. The remaining warnings are
+authoring-quality warnings, not loader blockers.
+
 The existing debt is still a release-management problem. A PWA or service worker will make stale/invalid KB states more persistent on client devices, so the deploy gate should distinguish:
 
 - block deploy on schema/ref errors in release-scoped content,
@@ -138,13 +152,13 @@ The right PWA role is: offline-capable viewer/generator for synthetic or locally
 
 ## Recommended next steps
 
-1. Add a release gate report that fails on schema/ref errors and prints a short per-directory summary.
-2. Tackle indication ref errors next; they now account for 90 of 148 remaining ref errors.
-3. Split generated docs refreshes from clinical KB PRs where practical.
-4. Add `manifest.webmanifest`, install icons, and minimal PWA metadata after validation debt is under control.
-5. Refactor `try.html` into external JS modules while keeping the static GitHub Pages deployment model.
-6. Add a visible build/version panel in the try page: core bundle hash, disease bundle hash, release date, and offline/cache status.
-7. For future contributor editing, create a "draft contribution" flow that exports YAML/patches for PR review instead of writing canonical KB from the PWA.
+1. Add a release gate report that fails on schema/ref/contract errors and prints a short per-directory summary.
+2. Split generated docs refreshes from clinical KB PRs where practical.
+3. Add `manifest.webmanifest`, install icons, and minimal PWA metadata now that structural validation is clean.
+4. Refactor `try.html` into external JS modules while keeping the static GitHub Pages deployment model.
+5. Add a visible build/version panel in the try page: core bundle hash, disease bundle hash, release date, and offline/cache status.
+6. For future contributor editing, create a "draft contribution" flow that exports YAML/patches for PR review instead of writing canonical KB from the PWA.
+7. Work down the 524 warnings by priority: convert legacy free-text tests/contraindications/supportive care into authored entities, then review draft RedFlags.
 
 ## Decision
 

@@ -846,3 +846,49 @@ Next V1 slice:
 2. Then resolve algorithm refs, which account for 50 remaining errors.
 3. Keep PWA work behind this gate; installability should not make a partially
    valid KB feel production-ready.
+
+### 13.12 V1 structural validation cleanup completed
+
+The full structural V1 pass is complete.
+
+Final validation state:
+
+| Metric | Original baseline | Final V1 state |
+|---|---:|---:|
+| Global schema errors | 91 | 0 |
+| Global ref errors | 179 | 0 |
+| Contract errors | 0 | 0 |
+| Loader `ok` | false | true |
+| Contract warnings | 217 | 524 |
+
+What changed:
+
+- Added compatibility normalization for old Indication authoring:
+  free-text biomarker requirements, dict-shaped alternative triggers,
+  `strength_of_recommendation: moderate`, `sources.position: background`,
+  and dict-shaped concurrent therapy.
+- Added compatibility normalization for old Source stubs:
+  `type:` -> `source_type`, nested `citation:` -> top-level title/authors/
+  journal/doi/pmid/url fields, `hosting:` -> `hosting_mode`, and string
+  licenses -> `license.name`.
+- Allowed alphanumeric Algorithm step IDs such as `3a` / `3b`, matching the
+  existing decision-tree walker.
+- Added compatibility normalization for older BMA records.
+- Added thin structural entities for missing Test, Biomarker, RedFlag, and
+  Regimen references.
+
+The warning count rose because legacy prose is now preserved as explicit
+contract warnings instead of blocking the loader as schema/ref errors. This is
+the correct next state: the KB is structurally loadable, and remaining work is
+quality/curation rather than broken graph integrity.
+
+Next work after V1:
+
+1. Add a CI/release gate that fails on schema/ref/contract errors.
+2. Prioritize warnings by patient-facing blast radius:
+   - free-text required/desired tests;
+   - free-text hard contraindications;
+   - free-text supportive care;
+   - draft RedFlags and source-signoff warnings.
+3. Resume PWA work only against hash-stamped bundles produced from this clean
+   structural state.

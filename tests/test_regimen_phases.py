@@ -308,9 +308,10 @@ def test_no_regression_all_244_legacy_yamls_load():
         f"expected at least 18 explicit multi-phase regimens (PR2 axi-cel "
         f"+ PR3 17 high-stakes), got {explicit_multiphase_count}"
     )
-    # Documented exception (surveillance / observation-only "regimen")
-    assert empty_count == 1, (
-        f"expected exactly one zero-component surveillance regimen, "
+    # Documented exceptions (surveillance / observation-only, and non-drug
+    # modality stubs such as radiation-only regimens).
+    assert empty_count >= 1, (
+        f"expected at least one zero-component non-drug regimen, "
         f"got {empty_count}"
     )
 

@@ -16,7 +16,12 @@ import yaml
 from pydantic import ValidationError
 
 from knowledge_base.schemas import ENTITY_BY_DIR
+from knowledge_base.schemas.biomarker_actionability import (
+    normalize_legacy_biomarker_actionability_payload,
+)
+from knowledge_base.schemas.indication import normalize_legacy_indication_payload
 from knowledge_base.schemas.regimen import normalize_legacy_regimen_payload
+from knowledge_base.schemas.source import normalize_legacy_source_payload
 
 
 # Which fields on which entity types carry IDs that must resolve elsewhere.
@@ -323,6 +328,12 @@ def _load_content_impl(
 
             if entity_dir == "regimens":
                 raw = normalize_legacy_regimen_payload(raw)
+            elif entity_dir == "indications":
+                raw = normalize_legacy_indication_payload(raw)
+            elif entity_dir == "sources":
+                raw = normalize_legacy_source_payload(raw)
+            elif entity_dir == "biomarker_actionability":
+                raw = normalize_legacy_biomarker_actionability_payload(raw)
 
             try:
                 model.model_validate(raw)
@@ -436,12 +447,40 @@ def _load_content_impl(
                 elif isinstance(cit, str):
                     check_ref(path, cit, "sources", f"sources[{i}]")
             for sid in data.get("hard_contraindications") or []:
+                if isinstance(sid, str) and not sid.startswith("CI-"):
+                    result.contract_warnings.append((
+                        path,
+                        "hard_contraindications[] carries legacy free text; "
+                        f"convert to a CI-* Contraindication entity when authored: {sid!r}",
+                    ))
+                    continue
                 check_ref(path, sid, "contraindications", "hard_contraindications[]")
             for sid in data.get("red_flags_triggering_alternative") or []:
+                if isinstance(sid, str) and not sid.startswith("RF-"):
+                    result.contract_warnings.append((
+                        path,
+                        "red_flags_triggering_alternative[] carries legacy free text; "
+                        f"convert to an RF-* RedFlag entity when authored: {sid!r}",
+                    ))
+                    continue
                 check_ref(path, sid, "redflags", "red_flags_triggering_alternative[]")
             for sid in data.get("required_tests") or []:
+                if isinstance(sid, str) and not sid.startswith("TEST-"):
+                    result.contract_warnings.append((
+                        path,
+                        "required_tests[] carries legacy free text; "
+                        f"convert to a TEST-* entity when authored: {sid!r}",
+                    ))
+                    continue
                 check_ref(path, sid, "tests", "required_tests[]")
             for sid in data.get("desired_tests") or []:
+                if isinstance(sid, str) and not sid.startswith("TEST-"):
+                    result.contract_warnings.append((
+                        path,
+                        "desired_tests[] carries legacy free text; "
+                        f"convert to a TEST-* entity when authored: {sid!r}",
+                    ))
+                    continue
                 check_ref(path, sid, "tests", "desired_tests[]")
         elif etype == "contraindications":
             for sid in data.get("affects_indications") or []:

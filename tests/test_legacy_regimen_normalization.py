@@ -122,9 +122,69 @@ def test_hosted_regimen_component_drug_refs_resolve() -> None:
 
     result = load_content(Path("knowledge_base/hosted/content"))
 
+    assert result.ok
     regimen_drug_ref_errors = [
         (path, msg)
         for path, msg in result.ref_errors
         if path.parts[-2] == "regimens" and "components[" in msg
     ]
     assert regimen_drug_ref_errors == []
+
+
+def test_loader_normalizes_legacy_indication_shapes(tmp_path: Path) -> None:
+    clear_load_cache()
+
+    for dirname in ("diseases", "regimens", "drugs", "indications"):
+        (tmp_path / dirname).mkdir()
+
+    (tmp_path / "diseases" / "dis_test.yaml").write_text(
+        yaml.safe_dump({
+            "id": "DIS-TEST",
+            "names": {"preferred": "Test disease"},
+            "codes": {},
+        }),
+        encoding="utf-8",
+    )
+    (tmp_path / "drugs" / "drug_test.yaml").write_text(
+        yaml.safe_dump({
+            "id": "DRUG-TEST",
+            "names": {"preferred": "Test drug"},
+        }),
+        encoding="utf-8",
+    )
+    (tmp_path / "regimens" / "reg_test.yaml").write_text(
+        yaml.safe_dump({
+            "id": "REG-TEST",
+            "name": "Test regimen",
+            "components": [{"drug_id": "DRUG-TEST"}],
+        }),
+        encoding="utf-8",
+    )
+    (tmp_path / "indications" / "ind_test.yaml").write_text(
+        yaml.safe_dump({
+            "id": "IND-TEST",
+            "applicable_to": {
+                "disease_id": "DIS-TEST",
+                "line_of_therapy": 1,
+                "biomarker_requirements_excluded": ["free-text exclusion"],
+            },
+            "recommended_regimen": "REG-TEST",
+            "strength_of_recommendation": "moderate",
+            "red_flags_triggering_alternative": [{
+                "condition": "legacy prose trigger",
+            }],
+            "hard_contraindications": ["ECOG PS >= 3"],
+            "required_tests": ["CBC baseline", "TEST-MISSING"],
+        }),
+        encoding="utf-8",
+    )
+
+    result = load_content(tmp_path)
+
+    assert not result.schema_errors
+    assert any("legacy free text" in msg for _path, msg in result.contract_warnings)
+    assert any("TEST-MISSING" in msg for _path, msg in result.ref_errors)
+    assert not any("CBC baseline" in msg for _path, msg in result.ref_errors)
+    ind = result.entities_by_id["IND-TEST"]["data"]
+    assert ind["strength_of_recommendation"] == "conditional"
+    assert ind["red_flags_triggering_alternative"] == []
