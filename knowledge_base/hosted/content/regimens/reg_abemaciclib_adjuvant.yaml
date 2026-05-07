@@ -1,0 +1,80 @@
+id: REG-ABEMACICLIB-ADJUVANT
+name: "Abemaciclib adjuvant (HR+/HER2- early high-risk breast cancer)"
+name_ua: "Абемацикліб ад'ювантно (HR+/HER2- ранній РМЗ підвищеного ризику)"
+alternate_names: ["monarchE regimen"]
+
+components:
+  - drug_id: DRUG-ABEMACICLIB
+    dose: "150 mg PO BID"
+    schedule: "Continuous BID x 2 years (fixed duration)"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "26 cycles (2 years fixed duration)"
+toxicity_profile: moderate
+
+premedication:
+  - "Loperamide 4 mg PO at first sign of diarrhea, then 2 mg every 4 hours up to 16 mg/day"
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "ANC <1.0 x10^9/L"
+    modification: "Hold abemaciclib; resume at same dose when ANC >=1.0"
+  - condition: "Diarrhea G3 despite loperamide"
+    modification: "Hold abemaciclib; reduce to 100 mg BID after recovery to G<=1"
+  - condition: "ALT/AST >3x ULN (G3 hepatotoxicity)"
+    modification: "Hold abemaciclib; resume at reduced dose after recovery to G<=1"
+  - condition: "Strong CYP3A4 inhibitor co-administration"
+    modification: "Reduce abemaciclib to 100 mg BID; further reduce to 50 mg BID if needed"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Abemaciclib registered in Ukraine; adjuvant reimbursement not established. Out-of-pocket access only; high-cost barrier."
+
+sources: [SRC-MONARCHE-JOHNSTON-2023, SRC-NCCN-BREAST-2025]
+
+between_visit_watchpoints:
+  - trigger_ua: "Діарея (>3 рідких випорожнень/день або будь-яка діарея з нетриманням)"
+    action_ua: "Розпочніть лоперамід — прийміть 4 мг одразу, потім 2 мг кожні 4 год; занотуйте частоту. Якщо >6/день або є лихоманка — зателефонуйте у клініку того ж дня"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-MONARCHE-JOHNSTON-2023
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Тяжка діарея (≥6 разів/день) або діарея з лихоманкою"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Раптова задишка, біль у грудях або набряк ноги"
+    action_ua: "Зверніться у лікарню негайно — можлива тромбоемболія (підвищений ризик на абемацикліб)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Жовтяниця, темна сеча, болі в животі"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива гепатотоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+
+last_reviewed:
+notes: >
+  STUB — pending Co-Lead sign-off. monarchE: 2-year fixed-duration adjuvant
+  CDK4/6i for high-risk HR+/HER2- early BC. Key AEs: diarrhea (most common,
+  usually G1-2, manageable with loperamide), neutropenia (CBC q2w x 2 months,
+  then monthly), hepatotoxicity (LFT monitoring), VTE. Strong CYP3A4 inhibitors
+  increase abemaciclib exposure significantly — dose reduction required.
+  NO benefit beyond 2 years per current data; fixed-duration design.
+  Concurrent endocrine therapy (AI or tamoxifen) is required throughout.
+notes_ua: >
+  STUB — pending Co-Lead sign-off. monarchE: 2-річний фіксований ад'ювантний
+  CDK4/6i для HR+/HER2- раннього РМЗ. Основні НЯ: діарея (G1-2, лоперамід),
+  нейтропенія, гепатотоксичність, ВТЕ.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
