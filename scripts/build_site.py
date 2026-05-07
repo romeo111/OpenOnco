@@ -2287,6 +2287,8 @@ def render_ask(*, target_lang: str = "en") -> str:
   const MAX_QUESTIONS = 3;
   const USER_KEY = 'openonco-ask-user-id-v1';
   const COUNT_KEY = 'openonco-ask-count-v1';
+  const DEFAULT_ENDPOINT = '/api/clinical-question';
+  const PUBLIC_ENDPOINT = 'https://dogs-highest-document-roof.trycloudflare.com/api/clinical-question';
   const endpointInput = document.getElementById('endpointInput');
   const caseText = document.getElementById('caseText');
   const askBtn = document.getElementById('askBtn');
@@ -2298,7 +2300,13 @@ def render_ask(*, target_lang: str = "en") -> str:
   const planLinkWrap = document.getElementById('planGeneratorLinkWrap');
   const planLink = document.getElementById('planGeneratorLink');
   const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
-  if (configured) endpointInput.value = configured;
+  if (configured) {{
+    endpointInput.value = configured;
+  }} else if (['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) {{
+    endpointInput.value = DEFAULT_ENDPOINT;
+  }} else {{
+    endpointInput.value = PUBLIC_ENDPOINT;
+  }}
 
   function getUserId() {{
     let id = localStorage.getItem(USER_KEY);
@@ -2428,7 +2436,7 @@ def render_ask(*, target_lang: str = "en") -> str:
     const contentType = (resp.headers.get('content-type') || '').toLowerCase();
     const text = await resp.text();
     if (!contentType.includes('application/json')) {{
-      const endpoint = endpointInput.value.trim() || '/api/clinical-question';
+      const endpoint = endpointInput.value.trim() || DEFAULT_ENDPOINT;
       throw new Error('{endpoint_unavailable_msg} Endpoint: ' + endpoint + '. HTTP ' + resp.status + '.');
     }}
     try {{
@@ -2453,7 +2461,7 @@ def render_ask(*, target_lang: str = "en") -> str:
     result.textContent = '';
     planLinkWrap.classList.remove('is-visible');
     try {{
-      const resp = await fetch(endpointInput.value.trim() || '/api/clinical-question', {{
+      const resp = await fetch(endpointInput.value.trim() || DEFAULT_ENDPOINT, {{
         method: 'POST',
         headers: {{ 'Content-Type': 'application/json' }},
         body: JSON.stringify({{ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() }})
