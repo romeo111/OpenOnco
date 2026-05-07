@@ -168,6 +168,17 @@ class EngineSummary:
     error: str | None = None
 
 
+_INTERNAL_ENGINE_LEAK_PATTERNS = (
+    re.compile(r"\b(?:engine_summary|traceback|ValueError|TypeError|NoneType|missing value conversion)\b", re.I),
+    re.compile(r"\b(?:rule engine|rules engine|OpenOnco rule engine)\s+(?:did not|failed|could not|was unable)", re.I),
+    re.compile(r"\bengine\s+(?:did not|failed|could not|was unable)", re.I),
+    re.compile(r"механізм(?:ом)? правил", re.I),
+    re.compile(r"не запустив", re.I),
+    re.compile(r"помилк[а-яіїєґ]* перетворенн", re.I),
+    re.compile(r"відсутн[ьо][а-яіїєґ]* значенн", re.I),
+)
+
+
 @dataclass(frozen=True)
 class ClinicalVocabulary:
     biomarker_ids: frozenset[str]
@@ -753,6 +764,76 @@ def run_engine(patient: dict[str, Any]) -> EngineSummary:
         )
 
 
+def _engine_summary_for_prompt(engine: EngineSummary) -> dict[str, Any]:
+    """Return model-facing engine state without leaking internal exceptions."""
+
+    if engine.mode == "error":
+        return {
+            "mode": "unavailable",
+            "ok": False,
+            "payload": {},
+            "warnings": [],
+            "public_status": (
+                "OpenOnco did not produce a deterministic match for this case. "
+                "Do not mention internal errors; answer clinically only if the "
+                "question is general or diagnostic, otherwise ask for missing data."
+            ),
+        }
+    if engine.mode == "unknown":
+        return {
+            "mode": engine.mode,
+            "ok": False,
+            "payload": {},
+            "warnings": engine.warnings[:20],
+            "public_status": "No confirmed OpenOnco disease/workup profile was matched.",
+        }
+    return {
+        "mode": engine.mode,
+        "ok": engine.ok,
+        "payload": engine.payload,
+        "warnings": engine.warnings[:20],
+        "public_status": "matched" if engine.ok else "no_deterministic_match",
+    }
+
+
+def _contains_internal_engine_leak(text: str) -> bool:
+    return any(pattern.search(text or "") for pattern in _INTERNAL_ENGINE_LEAK_PATTERNS)
+
+
+def _redact_internal_engine_leaks(text: str) -> str:
+    if not text or not _contains_internal_engine_leak(text):
+        return text
+    parts = re.split(r"(?<=[.!?])\s+|\n+", text)
+    kept = [part.strip() for part in parts if part.strip() and not _contains_internal_engine_leak(part)]
+    return " ".join(kept).strip()
+
+
+def _sanitize_answer(answer: dict[str, Any], *, locale: str) -> dict[str, Any]:
+    answer = dict(answer)
+    for key in ("direct_answer", "safety_note"):
+        if isinstance(answer.get(key), str):
+            answer[key] = _redact_internal_engine_leaks(answer[key])
+    for key in ("rationale", "clarifying_questions", "engine_limitations"):
+        cleaned = []
+        for item in answer.get(key) or []:
+            if not isinstance(item, str):
+                continue
+            redacted = _redact_internal_engine_leaks(item)
+            if redacted:
+                cleaned.append(redacted)
+        answer[key] = cleaned
+    if not answer.get("direct_answer") and not answer.get("clarifying_questions"):
+        answer["status"] = "needs_clarification"
+        answer["clarifying_questions"] = [
+            (
+                "Уточніть клінічне питання та ключові дані: діагноз/підозра, стадія або поширення, ECOG/WHO, біомаркери та варіанти відповіді."
+                if locale.lower().startswith("uk")
+                else "Clarify the clinical question and key data: diagnosis/suspicion, stage or extent, ECOG/WHO, biomarkers, and answer options."
+            )
+        ]
+    return answer
+
+
 def compose_answer(
     *,
     case_text: str,
@@ -765,7 +846,11 @@ def compose_answer(
         "You are the OpenOnco clinical-question presenter. You may explain the "
         "provided OpenOnco rule-engine output and map it to the user's answer "
         "options. Do not invent treatments that are absent from engine_summary. "
-        "If engine_summary.ok is false or the profile is underspecified, ask "
+        "Never mention internal implementation details, exceptions, stack traces, "
+        "conversion errors, missing-value conversion, or that a rule engine failed "
+        "to run. If engine_summary.ok is false because engine_summary.public_status "
+        "is not matched, answer only when the clinical question is general, "
+        "diagnostic, toxicity, or supportive-care oriented; otherwise ask targeted "
         "clarifying questions. Keep the answer concise and tumor-board oriented."
     )
     user = json.dumps(
@@ -774,13 +859,7 @@ def compose_answer(
             "case_text": case_text,
             "extraction": extraction,
             "patient_profile": patient,
-            "engine_summary": {
-                "mode": engine.mode,
-                "ok": engine.ok,
-                "payload": engine.payload,
-                "warnings": engine.warnings[:20],
-                "error": engine.error,
-            },
+            "engine_summary": _engine_summary_for_prompt(engine),
             "required_safety_note": _disclaimer(locale),
         },
         ensure_ascii=False,
@@ -831,6 +910,7 @@ def answer_clinical_question(case_text: str, *, locale: str = "uk") -> dict[str,
         engine=engine,
         locale=locale,
     )
+    answer = _sanitize_answer(answer, locale=locale)
     answer.setdefault("safety_note", _disclaimer(locale))
     answer["extraction"] = extraction
     answer["patient_profile"] = patient
