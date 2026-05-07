@@ -2210,20 +2210,85 @@ def render_ask(*, target_lang: str = "en") -> str:
         if is_en else
         "Не вставляйте реальні персональні дані пацієнта. Це чернетка для tumor board, а не автономна медична порада."
     )
-    examples = [
-        (
-            "Gastric 1L",
-            "62-річний пацієнт із метастатичним раком шлунка, поширений перитонеальний канцероматоз. Гістологія: недиференційована аденокарцинома з перснеподібними клітинами, MSS, HER2-негативний, PD-L1 CPS = 25. Яка оптимальна перша лінія лікування?"
-        ),
-        (
-            "GBM supportive",
-            "30-річний чоловік із гліобластомою лівої тім'яної частки 2 см, ECOG 1, без супутньої патології, судом не було. Що НЕ входить до лікування: резекція, радіотерапія, стероїди, темозоломід чи профілактичні протиепілептичні?"
-        ),
-        (
-            "CUP poor PS",
-            "74-річна жінка, множинні метастази в печінці, низькодиференційована аденокарцинома без первинного вогнища, PET-негативна, WHO PS 3. Яка найбільш доцільна тактика?"
-        ),
-    ]
+    examples = (
+        [
+            (
+                "Gastric 1L",
+                "62-year-old patient with metastatic gastric cancer and diffuse peritoneal carcinomatosis. Histology: poorly differentiated adenocarcinoma with signet-ring cells, MSS, HER2-negative, PD-L1 CPS 25. What is the optimal first-line treatment?"
+            ),
+            (
+                "GBM supportive",
+                "30-year-old man with a 2 cm contrast-enhancing left parietal glioblastoma, ECOG 1, no comorbidities and no seizures. Which option is NOT part of initial management: resection, radiotherapy, steroids, temozolomide, or prophylactic anti-epileptic therapy?"
+            ),
+            (
+                "CUP poor PS",
+                "74-year-old woman with painful hepatomegaly, multiple liver metastases, poorly differentiated adenocarcinoma and no primary site on PET. WHO PS is 3. What is the most appropriate strategy?"
+            ),
+            (
+                "mCRC first line",
+                "52-year-old man with metastatic right-sided colon cancer, unresectable liver, lung and peritoneal metastases. KRAS p.G12C, NRAS/BRAF wild type, MSS, HER2-negative. What systemic first-line therapy is most appropriate?"
+            ),
+            (
+                "NSCLC confusion",
+                "68-year-old patient with metastatic squamous NSCLC involving liver, adrenals and pleura. New disorientation and aggressive behaviour; brain MRI shows no metastases. What is the most likely cause?"
+            ),
+            (
+                "Pharmacogenomics",
+                "Patient is planned for fluoropyrimidine-based chemotherapy for gastrointestinal cancer. Which pharmacogenomic test is recommended before treatment to reduce severe toxicity risk?"
+            ),
+            (
+                "Breast HR+/HER2-",
+                "61-year-old postmenopausal woman with metastatic ER-positive, HER2-negative breast cancer, bone and liver metastases, no visceral crisis, ECOG 1. What is the preferred first-line systemic treatment?"
+            ),
+            (
+                "Ovarian maintenance",
+                "58-year-old woman with stage IIIC high-grade serous ovarian cancer after debulking surgery and response to platinum-taxane chemotherapy. BRCA1 pathogenic variant detected. What maintenance treatment should be discussed?"
+            ),
+            (
+                "Pancreatic 1L",
+                "66-year-old patient with metastatic pancreatic adenocarcinoma, liver metastases, ECOG 1, bilirubin normal and no major comorbidities. What first-line systemic therapy options are reasonable?"
+            ),
+        ]
+        if is_en else
+        [
+            (
+                "Gastric 1L",
+                "62-річний пацієнт із метастатичним раком шлунка, поширений перитонеальний канцероматоз. Гістологія: недиференційована аденокарцинома з перснеподібними клітинами, MSS, HER2-негативний, PD-L1 CPS = 25. Яка оптимальна перша лінія лікування?"
+            ),
+            (
+                "GBM supportive",
+                "30-річний чоловік із гліобластомою лівої тім'яної частки 2 см, ECOG 1, без супутньої патології, судом не було. Що НЕ входить до лікування: резекція, радіотерапія, стероїди, темозоломід чи профілактичні протиепілептичні?"
+            ),
+            (
+                "CUP poor PS",
+                "74-річна жінка, біль через гепатомегалію, множинні метастази в печінці, низькодиференційована аденокарцинома без первинного вогнища, PET-негативна, WHO PS 3. Яка найбільш доцільна тактика?"
+            ),
+            (
+                "mCRC first line",
+                "52-річний чоловік із метастатичним раком сліпої кишки, нерезектабельні метастази в печінку, легені та очеревину. KRAS p.G12C, NRAS/BRAF дикого типу, MSS, HER2-негативний. Яке системне лікування першої лінії найбільш доцільне?"
+            ),
+            (
+                "NSCLC confusion",
+                "68-річний пацієнт із метастатичним плоскоклітинним НДРЛ з ураженням печінки, наднирників і плеври. Нова дезорієнтація та агресія; МРТ головного мозку без метастазів. Яка найбільш імовірна причина симптомів?"
+            ),
+            (
+                "Pharmacogenomics",
+                "Пацієнту планують фторпіримідин-вмісну хіміотерапію з приводу пухлини ШКТ. Яке фармакогеномне тестування до початку лікування рекомендоване для зниження ризику тяжкої токсичності?"
+            ),
+            (
+                "Breast HR+/HER2-",
+                "61-річна жінка в постменопаузі з метастатичним ER-позитивним, HER2-негативним раком молочної залози, метастази в кістки та печінку, без вісцерального кризу, ECOG 1. Яка переважна перша лінія системної терапії?"
+            ),
+            (
+                "Ovarian maintenance",
+                "58-річна жінка зі стадією IIIC high-grade серозного раку яєчника після циторедуктивної операції та відповіді на platinum-taxane хіміотерапію. Виявлено патогенний варіант BRCA1. Яку підтримувальну терапію слід обговорити?"
+            ),
+            (
+                "Pancreatic 1L",
+                "66-річний пацієнт із метастатичною аденокарциномою підшлункової залози, метастази в печінку, ECOG 1, білірубін у нормі, суттєвих супутніх хвороб немає. Які варіанти першої лінії системної терапії є обґрунтованими?"
+            ),
+        ]
+    )
     examples_json = json.dumps(
         [{"title": title, "text": text} for title, text in examples],
         ensure_ascii=False,
@@ -2258,7 +2323,7 @@ def render_ask(*, target_lang: str = "en") -> str:
 .ask-result {{ white-space:pre-wrap; font:14px/1.55 var(--mono); background:#102018; color:#ecfdf5; border:1px solid #244d38; border-radius:8px; padding:16px; min-height:380px; overflow:auto; box-shadow:inset 0 1px 0 rgba(255,255,255,0.06); }}
 .ask-result:empty::before {{ content:""; display:block; min-height:1px; }}
 .ask-muted {{ color:#647067; font-size:14px; }}
-.ask-examples {{ display:grid; gap:10px; margin:12px 0 14px; }}
+.ask-examples {{ display:grid; gap:10px; margin:12px 0 14px; max-height:460px; overflow:auto; padding-right:4px; }}
 .ask-example {{ display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; border:1px solid #dbe7df; border-radius:8px; padding:12px; background:#f8fbf8; }}
 .ask-example-title {{ font-weight:800; margin-bottom:4px; color:#073b22; }}
 .ask-example-text {{ color:#56635c; font-size:13px; line-height:1.38; }}
