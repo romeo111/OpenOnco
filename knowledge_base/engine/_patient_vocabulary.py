@@ -657,7 +657,8 @@ PATIENT_ALLOWLIST_LATIN_WORDS: frozenset[str] = frozenset({
     "until", "progression", "toxicity", "unacceptable", "induction",
     "consolidation", "maintenance", "lymphodepletion", "bridging",
     "salvage", "adjuvant", "neoadjuvant", "first", "second", "third",
-    "high", "low", "risk", "trial", "stage", "line", "grade",
+    "high", "low", "risk", "trial", "trials", "stage", "line", "grade",
+    "metastatic", "periop",
     # Cycle-day-window structural vocabulary (PATIENT_MODE_SPEC §3.4)
     "each", "infusion", "infusions", "dose", "doses",
     # URL / tooling
