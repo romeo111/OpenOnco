@@ -58,28 +58,45 @@ Indications: 5; populated: 20; cited: 1; probably-cited: 1; uncited: 18; absent:
 | IND-TCELL-1L-CHP-BV | overall_survival_5y | uncited | — | ~70-85% (varies sharply by ALK status + IPI) |
 | IND-TCELL-1L-CHP-BV | progression_free_survival | cited | trial-number resolved: ECHELON-2 | 3-year PFS ~57% (CHP-Bv) vs ~44% (CHOP) in ECHELON-2 — substantial benefit in ALCL ALK- |
 
-## `DIS-APL` — Acute Promyelocytic Leukemia (PML-RARA)
+## `DIS-ANAL-SCC` — Squamous cell carcinoma of the anal canal
 
-Indications: 4; populated: 16; cited: 0; probably-cited: 0; uncited: 16; absent: 4; outcomes-cited % (loose): 0.0%.
+Indications: 3; populated: 10; cited: 0; probably-cited: 0; uncited: 10; absent: 11; outcomes-cited % (loose): 0.0%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
-| IND-APL-1L-ATRA-ATO | complete_response | uncited | — | ~99% post-induction |
-| IND-APL-1L-ATRA-ATO | overall_response_rate | uncited | — | ~99% complete remission (APL0406: ATRA+ATO arm) |
-| IND-APL-1L-ATRA-ATO | overall_survival_5y | uncited | — | ~95-99% in low/intermediate-risk treated with ATRA + ATO |
-| IND-APL-1L-ATRA-ATO | progression_free_survival | uncited | — | 2-y EFS 97% (APL0406) |
-| IND-APL-1L-ATRA-ATO-IDA | complete_response | uncited | — | ~85-90% post-induction |
-| IND-APL-1L-ATRA-ATO-IDA | overall_response_rate | uncited | — | ~90-95% complete remission (high-risk APL with intensified regimens) |
-| IND-APL-1L-ATRA-ATO-IDA | overall_survival_5y | uncited | — | ~85% high-risk treated with ATRA + ATO + idarubicin |
-| IND-APL-1L-ATRA-ATO-IDA | progression_free_survival | uncited | — | 5-y EFS ~80-85% high-risk |
-| IND-APL-RELAPSED-GEMTUZUMAB | complete_response | uncited | — | Rapid deep molecular CR in majority |
-| IND-APL-RELAPSED-GEMTUZUMAB | overall_response_rate | uncited | — | CR ~91% in MyloFrance series (gemtuzumab + ATO) |
-| IND-APL-RELAPSED-GEMTUZUMAB | overall_survival_5y | uncited | — | 5-y OS ~50-70% with autoSCT consolidation; lower without |
-| IND-APL-RELAPSED-GEMTUZUMAB | progression_free_survival | uncited | — | Median EFS variable; autoSCT consolidation extends durable remission |
-| IND-APL-SALVAGE-ATRA-ATO | complete_response | uncited | — | Molecular CR in 80-90% by end of induction (typically 4-8 weeks) |
-| IND-APL-SALVAGE-ATRA-ATO | overall_response_rate | uncited | — | CR ~85-95% (Lengfelder et al., Leukemia 2017 registry) |
-| IND-APL-SALVAGE-ATRA-ATO | overall_survival_5y | uncited | — | 5-y OS ~70-80% with autoSCT consolidation; ~50-60% without consolidation; <30% if molecular non-CR |
-| IND-APL-SALVAGE-ATRA-ATO | progression_free_survival | uncited | — | 5-y EFS 60-80% with autoSCT consolidation in molecularly-CR responders |
+| IND-ANAL-SCC-LA-1L-NIGRO-CRT | colostomy_free_survival_3y | uncited | — | ~70% colostomy-free at 3 years |
+| IND-ANAL-SCC-LA-1L-NIGRO-CRT | complete_response_rate | uncited | — | ~90% complete response at 26 weeks (ACT II) |
+| IND-ANAL-SCC-LA-1L-NIGRO-CRT | overall_survival_5y | uncited | — | ~80-85% 5-year OS for stage II-III with CRT |
+| IND-ANAL-SCC-LA-1L-NIGRO-CRT | progression_free_survival | uncited | — | 74% 3-year PFS (ACT II, MMC arm) |
+| IND-ANAL-SCC-LA-1L-NIGRO-CRT | salvage_apr_rate | uncited | — | ~10-25% require salvage APR for residual/recurrent disease |
+| IND-ANAL-SCC-METASTATIC-1L-CARBO-PACLI | orr | uncited | — | ~20-35% (retrospective series) |
+| IND-ANAL-SCC-METASTATIC-1L-CARBO-PACLI | pfs_months | uncited | — | ~5-7 (backbone doublet without ICI) |
+| IND-ANAL-SCC-METASTATIC-1L-RETIFANLIMAB-CARBO-PACLI | overall_response_rate | uncited | — | ~57% ORR (retifanlimab+carbo+pacli, POD1UM-303) |
+| IND-ANAL-SCC-METASTATIC-1L-RETIFANLIMAB-CARBO-PACLI | overall_survival | uncited | — | Data maturing; 12-month OS ~65% (preliminary) |
+| IND-ANAL-SCC-METASTATIC-1L-RETIFANLIMAB-CARBO-PACLI | progression_free_survival | uncited | — | ~9-10 months mPFS vs ~6-7 months with chemotherapy alone (POD1UM-303) |
+
+## `DIS-APL` — Acute Promyelocytic Leukemia (PML-RARA)
+
+Indications: 4; populated: 16; cited: 16; probably-cited: 0; uncited: 0; absent: 4; outcomes-cited % (loose): 100.0%.
+
+| Indication | Field | Bucket | Matched via | Value excerpt |
+|---|---|---|---|---|
+| IND-APL-1L-ATRA-ATO | complete_response | cited | SRC-id hit: SRC-APL0406-LOCOCO-2013 | ~99% post-induction |
+| IND-APL-1L-ATRA-ATO | overall_response_rate | cited | SRC-id hit: SRC-APL0406-LOCOCO-2013 | ~99% complete remission (APL0406: ATRA+ATO arm) |
+| IND-APL-1L-ATRA-ATO | overall_survival_5y | cited | SRC-id hit: SRC-APL0406-LOCOCO-2013 | ~95-99% in low/intermediate-risk treated with ATRA + ATO |
+| IND-APL-1L-ATRA-ATO | progression_free_survival | cited | SRC-id hit: SRC-APL0406-LOCOCO-2013 | 2-y EFS 97% (APL0406) |
+| IND-APL-1L-ATRA-ATO-IDA | complete_response | cited | SRC-id hit: SRC-ELN-APL-2019 | ~85-90% post-induction |
+| IND-APL-1L-ATRA-ATO-IDA | overall_response_rate | cited | SRC-id hit: SRC-ELN-APL-2019 | ~90-95% complete remission (high-risk APL with intensified regimens) |
+| IND-APL-1L-ATRA-ATO-IDA | overall_survival_5y | cited | SRC-id hit: SRC-ELN-APL-2019 | ~85% high-risk treated with ATRA + ATO + idarubicin |
+| IND-APL-1L-ATRA-ATO-IDA | progression_free_survival | cited | SRC-id hit: SRC-ELN-APL-2019 | 5-y EFS ~80-85% high-risk |
+| IND-APL-RELAPSED-GEMTUZUMAB | complete_response | cited | SRC-id hit: SRC-APL-RELAPSE-LENGFELDER-2017 | Rapid deep molecular CR in majority |
+| IND-APL-RELAPSED-GEMTUZUMAB | overall_response_rate | cited | SRC-id hit: SRC-APL-RELAPSE-LENGFELDER-2017 | CR ~91% in MyloFrance series (gemtuzumab + ATO) |
+| IND-APL-RELAPSED-GEMTUZUMAB | overall_survival_5y | cited | SRC-id hit: SRC-APL-RELAPSE-LENGFELDER-2017 | 5-y OS ~50-70% with autoSCT consolidation; lower without |
+| IND-APL-RELAPSED-GEMTUZUMAB | progression_free_survival | cited | SRC-id hit: SRC-APL-RELAPSE-LENGFELDER-2017 | Median EFS variable; autoSCT consolidation extends durable remission |
+| IND-APL-SALVAGE-ATRA-ATO | complete_response | cited | SRC-id hit: SRC-APL-RELAPSE-LENGFELDER-2017 | Molecular CR in 80-90% by end of induction (typically 4-8 weeks) |
+| IND-APL-SALVAGE-ATRA-ATO | overall_response_rate | cited | SRC-id hit: SRC-APL-RELAPSE-LENGFELDER-2017 | CR ~85-95% (Lengfelder et al., Leukemia 2017 registry) |
+| IND-APL-SALVAGE-ATRA-ATO | overall_survival_5y | cited | SRC-id hit: SRC-APL-RELAPSE-LENGFELDER-2017 | 5-y OS ~70-80% with autoSCT consolidation; ~50-60% without consolidation; <30% if molecular non-CR |
+| IND-APL-SALVAGE-ATRA-ATO | progression_free_survival | cited | SRC-id hit: SRC-APL-RELAPSE-LENGFELDER-2017 | 5-y EFS 60-80% with autoSCT consolidation in molecularly-CR responders |
 
 ## `DIS-ATLL` — Adult T-Cell Leukemia/Lymphoma
 
@@ -133,11 +150,13 @@ Indications: 6; populated: 24; cited: 0; probably-cited: 1; uncited: 23; absent:
 
 ## `DIS-BREAST` — Breast cancer (invasive)
 
-Indications: 20; populated: 39; cited: 21; probably-cited: 1; uncited: 17; absent: 84; outcomes-cited % (loose): 56.4%.
+Indications: 26; populated: 47; cited: 23; probably-cited: 2; uncited: 22; absent: 112; outcomes-cited % (loose): 53.2%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
+| IND-BREAST-BRCA-MET-TALAZOPARIB | median_progression_free_survival_months | uncited | — | 9 |
 | IND-BREAST-BRCA-POS-MET-PARPI | median_progression_free_survival_months | cited | trial-number resolved: OlympiAD | 7 |
+| IND-BREAST-HER2-LOW-2L-DATO-DXD | median_progression_free_survival_months | uncited | — | 7 |
 | IND-BREAST-HER2-POS-3L-TUCATINIB | median_overall_survival_months | uncited | — | 22 |
 | IND-BREAST-HER2-POS-3L-TUCATINIB | median_progression_free_survival_months | uncited | — | 8 |
 | IND-BREAST-HER2-POS-EARLY-NEOADJUVANT | five_year_invasive_disease_free_survival_with_pcr | uncited | — | >90% |
@@ -148,7 +167,9 @@ Indications: 20; populated: 39; cited: 21; probably-cited: 1; uncited: 17; absen
 | IND-BREAST-HER2-POS-MAINT-TRAST | progression_free_survival | cited | trial-number resolved: CLEOPATRA | Median PFS 18.7 mo (CLEOPATRA Swain 2015 NEJM final) |
 | IND-BREAST-HER2-POS-MET-1L-THP | median_overall_survival_months | cited | trial-number resolved: CLEOPATRA | 57 |
 | IND-BREAST-HER2-POS-MET-2L-TDXD | median_progression_free_survival_months | cited | trial-number resolved: DESTINY-Breast03 | 28 |
+| IND-BREAST-HR-POS-1L-INAVOLISIB | median_progression_free_survival_months | probably-cited | trial-number unresolved: INAVO120 | 15 |
 | IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB | median_progression_free_survival_months | cited | trial-number resolved: CAPItello-291 | 7 |
+| IND-BREAST-HR-POS-2L-DATO-DXD | median_progression_free_survival_months | uncited | — | 7 |
 | IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT | median_progression_free_survival_months | probably-cited | trial-family: EMERALD | 4 |
 | IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS | median_progression_free_survival_months | uncited | — | 10 |
 | IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB | median_progression_free_survival_months | uncited | — | 11 |
@@ -166,6 +187,7 @@ Indications: 20; populated: 39; cited: 21; probably-cited: 1; uncited: 17; absen
 | IND-BREAST-HR-POS-MET-1L-CDKI | median_progression_free_survival_months | cited | trial-number resolved: MONALEESA-2 | 25 |
 | IND-BREAST-TNBC-2L-BRCA-OLAPARIB | median_progression_free_survival_months | cited | trial-number resolved: OlympiAD | 7 |
 | IND-BREAST-TNBC-2L-BRCA-TALAZOPARIB | median_progression_free_survival_months | uncited | — | 9 |
+| IND-BREAST-TNBC-2L-DATO-DXD | median_progression_free_survival_months | cited | trial-number resolved: ASCENT | 6 |
 | IND-BREAST-TNBC-2L-SACITUZUMAB | median_overall_survival_months | cited | trial-number resolved: ASCENT | 12 |
 | IND-BREAST-TNBC-2L-SACITUZUMAB | median_progression_free_survival_months | cited | trial-number resolved: ASCENT | 6 |
 | IND-BREAST-TNBC-2L-T-DXD-HER2-LOW | median_overall_survival_months | cited | trial-number resolved: DESTINY-Breast04 | 18 |
@@ -176,6 +198,9 @@ Indications: 20; populated: 39; cited: 21; probably-cited: 1; uncited: 17; absen
 | IND-BREAST-TNBC-3L-POST-SACI-POST-T-DXD | progression_free_survival | uncited | — | Median PFS 2-4 mo per single-agent (cross-trial) |
 | IND-BREAST-TNBC-EARLY-NEOADJUVANT | pathologic_complete_response_rate | cited | trial-number resolved: KEYNOTE-522 | 65% |
 | IND-BREAST-TNBC-EARLY-NEOADJUVANT | three_year_event_free_survival | cited | trial-number resolved: KEYNOTE-522 | 85% |
+| IND-BREAST-TNBC-METASTATIC-1L-PEMBRO-CHEMO | overall_response_rate | cited | trial-number resolved: KEYNOTE-355 | ~53.2% vs 39.8% (CPS ≥10 subgroup; KEYNOTE-355) |
+| IND-BREAST-TNBC-METASTATIC-1L-PEMBRO-CHEMO | overall_survival | uncited | — | ~23.0 vs 16.1 months (HR 0.73 for CPS ≥10; Cortes NEJM 2022) |
+| IND-BREAST-TNBC-METASTATIC-1L-PEMBRO-CHEMO | progression_free_survival | uncited | — | ~9.7 vs 5.6 months (HR 0.65 for CPS ≥10) |
 
 ## `DIS-BURKITT` — Burkitt Lymphoma
 
@@ -206,10 +231,14 @@ Indications: 5; populated: 20; cited: 0; probably-cited: 0; uncited: 20; absent:
 
 ## `DIS-CERVICAL` — Cervical carcinoma (squamous predominant + adeno)
 
-Indications: 2; populated: 8; cited: 3; probably-cited: 0; uncited: 5; absent: 2; outcomes-cited % (loose): 37.5%.
+Indications: 3; populated: 12; cited: 3; probably-cited: 0; uncited: 9; absent: 3; outcomes-cited % (loose): 25.0%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
+| IND-CERVICAL-2L-TISOTUMAB-VEDOTIN | complete_response | uncited | — | ~7% (innovaTV 204) |
+| IND-CERVICAL-2L-TISOTUMAB-VEDOTIN | overall_response_rate | uncited | — | ~24% (innovaTV 204, Coleman 2021); 17.8% vs 5.2% chemo (innovaTV 301, Vergote 2024) |
+| IND-CERVICAL-2L-TISOTUMAB-VEDOTIN | overall_survival_5y | uncited | — | Median OS 12.1 mo (innovaTV 204); 11.5 vs 9.5 mo (innovaTV 301, HR 0.70, p=0.0038) |
+| IND-CERVICAL-2L-TISOTUMAB-VEDOTIN | progression_free_survival | uncited | — | Median PFS 4.2 mo (innovaTV 204); 4.2 vs 2.9 mo (innovaTV 301, HR 0.67) |
 | IND-CERVICAL-LOCALLY-ADVANCED-CRT | complete_response | uncited | — | ~60-70% local control |
 | IND-CERVICAL-LOCALLY-ADVANCED-CRT | overall_response_rate | uncited | — | ~80% complete clinical response post-CRT |
 | IND-CERVICAL-LOCALLY-ADVANCED-CRT | overall_survival_5y | uncited | — | 5-yr OS ~55-65% locally advanced (depends on FIGO stage + nodal status) |
@@ -256,7 +285,7 @@ Indications: 7; populated: 28; cited: 2; probably-cited: 5; uncited: 21; absent:
 
 ## `DIS-CHOLANGIOCARCINOMA` — Cholangiocarcinoma (bile duct cancer)
 
-Indications: 2; populated: 4; cited: 0; probably-cited: 0; uncited: 4; absent: 6; outcomes-cited % (loose): 0.0%.
+Indications: 4; populated: 11; cited: 0; probably-cited: 0; uncited: 11; absent: 9; outcomes-cited % (loose): 0.0%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
@@ -264,6 +293,13 @@ Indications: 2; populated: 4; cited: 0; probably-cited: 0; uncited: 4; absent: 6
 | IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB | overall_response_rate | uncited | — | ~35.5% (FIGHT-202 cohort A FGFR2 fusion / rearrangement) |
 | IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB | overall_survival_5y | uncited | — | Median OS 21.1 mo (FIGHT-202); long-term f/u pending |
 | IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB | progression_free_survival | uncited | — | Median PFS 6.9 mo (FIGHT-202) |
+| IND-CHOLANGIO-2L-FUTIBATINIB | complete_response | uncited | — | ~1% |
+| IND-CHOLANGIO-2L-FUTIBATINIB | overall_response_rate | uncited | — | ~41.7% (FOENIX-CCA2; 43/103 confirmed responders) |
+| IND-CHOLANGIO-2L-FUTIBATINIB | overall_survival_5y | uncited | — | Median OS 21.7 mo (FOENIX-CCA2; long-term f/u) |
+| IND-CHOLANGIO-2L-FUTIBATINIB | progression_free_survival | uncited | — | Median PFS 9.0 mo (FOENIX-CCA2) |
+| IND-CHOLANGIO-2L-INFIGRATINIB | overall_response_rate | uncited | — | ~23.1% (CBGJ398X2204 cohort; 25/108 confirmed responders) |
+| IND-CHOLANGIO-2L-INFIGRATINIB | overall_survival_5y | uncited | — | Median OS 12.2 mo (CBGJ398X2204) |
+| IND-CHOLANGIO-2L-INFIGRATINIB | progression_free_survival | uncited | — | Median PFS 7.3 mo (CBGJ398X2204) |
 
 ## `DIS-CHONDROSARCOMA` — Chondrosarcoma
 
@@ -275,7 +311,7 @@ Indications: 1; populated: 0; cited: 0; probably-cited: 0; uncited: 0; absent: 5
 
 ## `DIS-CLL` — Chronic Lymphocytic Leukemia / Small Lymphocytic Lymphoma
 
-Indications: 6; populated: 24; cited: 0; probably-cited: 7; uncited: 17; absent: 6; outcomes-cited % (loose): 29.2%.
+Indications: 7; populated: 28; cited: 0; probably-cited: 8; uncited: 20; absent: 7; outcomes-cited % (loose): 28.6%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
@@ -295,6 +331,10 @@ Indications: 6; populated: 24; cited: 0; probably-cited: 7; uncited: 17; absent:
 | IND-CLL-2L-VENR-MURANO | overall_response_rate | probably-cited | trial-family: MURANO | ~92% (≥PR by iwCLL, MURANO) |
 | IND-CLL-2L-VENR-MURANO | overall_survival_5y | uncited | — | 5-year OS ~82% vs ~62% BR (HR 0.41) |
 | IND-CLL-2L-VENR-MURANO | progression_free_survival | probably-cited | trial-family: MURANO | 4-year PFS 57.3% vs 4.6% BR (MURANO; HR 0.19) |
+| IND-CLL-3L-LISOCEL | complete_response | uncited | — | ~18% (CR + CRi with undetectable MRD ~64% of CR responders) |
+| IND-CLL-3L-LISOCEL | overall_response_rate | probably-cited | trial-number unresolved: TRANSCEND | ~47% (TRANSCEND CLL-004 primary cohort, n≈87 evaluable, double-exposed cBTKi + BCL-2i progression) |
+| IND-CLL-3L-LISOCEL | overall_survival_5y | uncited | — | Median OS ~30+ months at primary analysis; long-term follow-up ongoing |
+| IND-CLL-3L-LISOCEL | progression_free_survival | uncited | — | Median PFS ~12 months overall; deeper / longer in CR + uMRD subset (median PFS not reached at primary analysis) |
 | IND-CLL-3L-PIRTOBRUTINIB | complete_response | uncited | — | ~3-7% |
 | IND-CLL-3L-PIRTOBRUTINIB | overall_response_rate | probably-cited | trial-number unresolved: BRUIN | ~73% (BRUIN; ~71% in BTK-C481-mutated subset) |
 | IND-CLL-3L-PIRTOBRUTINIB | overall_survival_5y | uncited | — | Mature OS data still maturing; 18-month OS ~80% |
@@ -333,12 +373,12 @@ Indications: 5; populated: 20; cited: 0; probably-cited: 1; uncited: 19; absent:
 
 ## `DIS-DLBCL-NOS` — Diffuse Large B-Cell Lymphoma, NOS
 
-Indications: 9; populated: 36; cited: 3; probably-cited: 3; uncited: 30; absent: 9; outcomes-cited % (loose): 16.7%.
+Indications: 12; populated: 48; cited: 2; probably-cited: 4; uncited: 42; absent: 12; outcomes-cited % (loose): 12.5%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
 | IND-DLBCL-1L-POLA-R-CHP | complete_response | uncited | — | ~70% |
-| IND-DLBCL-1L-POLA-R-CHP | overall_response_rate | cited | trial-number resolved: POLARIX | ~88% (≥PR after 6 cycles, POLARIX) |
+| IND-DLBCL-1L-POLA-R-CHP | overall_response_rate | probably-cited | trial-number unresolved: POLARIX | ~88% (≥PR after 6 cycles, POLARIX) |
 | IND-DLBCL-1L-POLA-R-CHP | overall_survival_5y | uncited | — | Mature OS data still maturing; trends comparable or favoring Pola-R-CHP |
 | IND-DLBCL-1L-POLA-R-CHP | progression_free_survival | uncited | — | 2-year PFS ~76.7% (vs 70.2% R-CHOP, HR 0.73) |
 | IND-DLBCL-1L-RCHOP | complete_response | uncited | — | ~65-70% |
@@ -349,6 +389,10 @@ Indications: 9; populated: 36; cited: 3; probably-cited: 3; uncited: 30; absent:
 | IND-DLBCL-1L-RCHOP-ISRT-EARLY | overall_response_rate | uncited | — | ~95% (≥PR by end of treatment) |
 | IND-DLBCL-1L-RCHOP-ISRT-EARLY | overall_survival_5y | uncited | — | ~89-91% in non-bulky stage I-II |
 | IND-DLBCL-1L-RCHOP-ISRT-EARLY | progression_free_survival | uncited | — | 5-year PFS ~85-90% (LYSA / SWOG S1001) |
+| IND-DLBCL-2L-LISOCEL | complete_response | uncited | — | ~74% (vs ~43% with standard salvage + autoSCT) |
+| IND-DLBCL-2L-LISOCEL | overall_response_rate | uncited | — | ~86% (TRANSFORM phase 3 RCT vs salvage chemo + autoSCT) |
+| IND-DLBCL-2L-LISOCEL | overall_survival_5y | uncited | — | OS trend favourable but crossover-confounded; long-term follow-up ongoing |
+| IND-DLBCL-2L-LISOCEL | progression_free_survival | uncited | — | Median EFS 10.1 months vs 2.3 months for salvage chemo + autoSCT (HR ~0.36) |
 | IND-DLBCL-2L-POLA-R-BENDAMUSTINE | complete_response | uncited | — | ~40% (vs 18% BR alone) |
 | IND-DLBCL-2L-POLA-R-BENDAMUSTINE | overall_response_rate | uncited | — | ~63% (GO29365) |
 | IND-DLBCL-2L-POLA-R-BENDAMUSTINE | overall_survival_5y | uncited | — | mOS ~12.4 mo (vs 4.7 mo BR; 2-year OS ~28%) |
@@ -357,6 +401,14 @@ Indications: 9; populated: 36; cited: 3; probably-cited: 3; uncited: 30; absent:
 | IND-DLBCL-3L-AXICEL-CART | overall_response_rate | cited | trial-number resolved: ZUMA-1 | ~83% (ZUMA-1) |
 | IND-DLBCL-3L-AXICEL-CART | overall_survival_5y | cited | trial-number resolved: ZUMA-1 | ~43% (ZUMA-1 5-year follow-up) |
 | IND-DLBCL-3L-AXICEL-CART | progression_free_survival | uncited | — | Median PFS ~6 months for all responders; ~40% sustained remission at 5 years (durable) |
+| IND-DLBCL-3L-EPCORITAMAB | complete_response | uncited | — | ~39% |
+| IND-DLBCL-3L-EPCORITAMAB | overall_response_rate | uncited | — | ~63% (EPCORE NHL-1; n=157, ≥3L r/r LBCL with ~39% prior CAR-T) |
+| IND-DLBCL-3L-EPCORITAMAB | overall_survival_5y | uncited | — | OS not reached at primary analysis; 12-month OS ~50% in pooled bispecific cohorts |
+| IND-DLBCL-3L-EPCORITAMAB | progression_free_survival | uncited | — | Median PFS ~4.4 months overall; substantially longer in CR responders (median DOR ~12 months) |
+| IND-DLBCL-3L-GLOFITAMAB | complete_response | uncited | — | ~39% |
+| IND-DLBCL-3L-GLOFITAMAB | overall_response_rate | uncited | — | ~52% (NP30179; n=155, ≥3L r/r DLBCL with ~33% prior CAR-T) |
+| IND-DLBCL-3L-GLOFITAMAB | overall_survival_5y | uncited | — | 12-month OS ~50%; long-term follow-up ongoing |
+| IND-DLBCL-3L-GLOFITAMAB | progression_free_survival | uncited | — | Median CR DOR not reached at primary analysis; 12-month PFS among CR responders ~71% |
 | IND-DLBCL-3L-LISO-CEL-CART | complete_response | uncited | — | ~53% |
 | IND-DLBCL-3L-LISO-CEL-CART | overall_response_rate | probably-cited | trial-number unresolved: TRANSCEND | ~73% (TRANSCEND NHL-001 Abramson 2020 Lancet) |
 | IND-DLBCL-3L-LISO-CEL-CART | overall_survival_5y | probably-cited | trial-number unresolved: TRANSCEND | Median OS 27.3 mo (TRANSCEND); CR responders mOS not reached |
@@ -391,7 +443,7 @@ Indications: 2; populated: 8; cited: 0; probably-cited: 0; uncited: 8; absent: 2
 
 ## `DIS-ENDOMETRIAL` — Endometrial carcinoma
 
-Indications: 5; populated: 14; cited: 0; probably-cited: 4; uncited: 10; absent: 13; outcomes-cited % (loose): 28.6%.
+Indications: 5; populated: 14; cited: 1; probably-cited: 3; uncited: 10; absent: 13; outcomes-cited % (loose): 28.6%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
@@ -403,7 +455,7 @@ Indications: 5; populated: 14; cited: 0; probably-cited: 4; uncited: 10; absent:
 | IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR | overall_response_rate | probably-cited | trial-number unresolved: KEYNOTE-775 | ~30% pMMR (KEYNOTE-775) |
 | IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR | overall_survival_5y | probably-cited | trial-number unresolved: KEYNOTE-775 | mOS 17.4 vs 12.0 mo chemo pMMR (HR 0.68, KEYNOTE-775) |
 | IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR | progression_free_survival | probably-cited | trial-number unresolved: KEYNOTE-775 | Median PFS 6.6 vs 3.8 mo chemo pMMR (HR 0.60, KEYNOTE-775) |
-| IND-ENDOMETRIAL-ADVANCED-1L-DOSTARLIMAB-CHEMO | pfs_hr_dmmr | probably-cited | trial-number unresolved: RUBY | 0.3 |
+| IND-ENDOMETRIAL-ADVANCED-1L-DOSTARLIMAB-CHEMO | pfs_hr_dmmr | cited | trial-number resolved: RUBY | 0.3 |
 | IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO | pfs_hr_pmmr | uncited | — | 0.64 |
 | IND-ENDOMETRIAL-STAGE-I-POLE-OBSERVATION | complete_response | uncited | — | n/a |
 | IND-ENDOMETRIAL-STAGE-I-POLE-OBSERVATION | overall_response_rate | uncited | — | n/a (post-surgical surveillance — no systemic / radiation therapy) |
@@ -412,12 +464,18 @@ Indications: 5; populated: 14; cited: 0; probably-cited: 4; uncited: 10; absent:
 
 ## `DIS-ESOPHAGEAL` — Esophageal carcinoma (squamous + adeno)
 
-Indications: 4; populated: 14; cited: 0; probably-cited: 5; uncited: 9; absent: 6; outcomes-cited % (loose): 35.7%.
+Indications: 6; populated: 20; cited: 6; probably-cited: 5; uncited: 9; absent: 12; outcomes-cited % (loose): 55.0%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
 | IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS | overall_survival_5y | uncited | — | OS endpoint maturing — DFS doubling practice-changing |
 | IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS | progression_free_survival | probably-cited | trial-number unresolved: CheckMate-577 | Median DFS 22 vs 11 mo placebo (CheckMate-577) |
+| IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC | overall_response_rate | cited | trial-number resolved: CheckMate-648 | 47.0% vs 27.3% (CPS≥1 nivo+chemo vs chemo; CheckMate-648) |
+| IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC | overall_survival_median | cited | trial-number resolved: CheckMate-648 | mOS 15.4 vs 9.1 mo (CPS≥1, HR 0.54, p<0.0001) |
+| IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC | progression_free_survival | cited | trial-number resolved: CheckMate-648 | mPFS 6.9 vs 4.4 mo (CPS≥1, HR 0.65) |
+| IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO | overall_response_rate | cited | trial-number resolved: KEYNOTE-590 | ~51% (ESCC CPS≥10 pembro+chemo vs 26% chemo; KEYNOTE-590) |
+| IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO | overall_survival_median | cited | trial-number resolved: KEYNOTE-590 | mOS 13.9 vs 8.8 mo (ESCC CPS≥10, HR 0.57, p<0.0001) |
+| IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO | progression_free_survival | cited | trial-number resolved: KEYNOTE-590 | mPFS 7.5 vs 5.5 mo (ESCC CPS≥10, HR 0.51) |
 | IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS | complete_response | uncited | — | ~1% |
 | IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS | overall_response_rate | probably-cited | trial-family: ATTRACTION | ~19% (ATTRACTION-3) |
 | IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS | overall_survival_5y | probably-cited | trial-family: ATTRACTION | mOS 10.9 vs 8.4 mo taxane (HR 0.77, ATTRACTION-3); 12-mo OS 47% vs 34% |
@@ -486,7 +544,7 @@ Indications: 7; populated: 27; cited: 0; probably-cited: 2; uncited: 25; absent:
 
 ## `DIS-GASTRIC` — Gastric / GEJ adenocarcinoma
 
-Indications: 6; populated: 23; cited: 0; probably-cited: 10; uncited: 13; absent: 7; outcomes-cited % (loose): 43.5%.
+Indications: 6; populated: 25; cited: 4; probably-cited: 8; uncited: 13; absent: 7; outcomes-cited % (loose): 48.0%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
@@ -498,9 +556,11 @@ Indications: 6; populated: 23; cited: 0; probably-cited: 10; uncited: 13; absent
 | IND-GASTRIC-METASTATIC-1L-HER2-TOGA | overall_survival_5y | uncited | — | mOS 13.8 vs 11.1 chemo-only TOGA; 17.9 in HER2 IHC3+ subgroup |
 | IND-GASTRIC-METASTATIC-1L-HER2-TOGA | progression_free_survival | uncited | — | Median ~7 mo |
 | IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI | complete_response | uncited | — | ~10% |
-| IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI | overall_response_rate | probably-cited | trial-number unresolved: CheckMate-649 | ~60% (CheckMate-649 CPS ≥5) |
-| IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI | overall_survival_5y | probably-cited | trial-number unresolved: CheckMate-649 | mOS 14.4 mo (vs 11.1 chemo alone, CheckMate-649 CPS ≥5) |
-| IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI | progression_free_survival | uncited | — | Median ~7.7 mo |
+| IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI | overall_response_rate | cited | trial-number resolved: CheckMate-649 | ~60% (CheckMate-649 CPS ≥5); preserved benefit at CPS 1-4 |
+| IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI | overall_survival_5y | cited | trial-number resolved: CheckMate-649 | mOS 14.4 mo (vs 11.1 chemo alone, CheckMate-649 CPS ≥5) |
+| IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI | overall_survival_hr_cps_1_to_4 | cited | SRC-id hit: SRC-CHECKMATE-649-JANJIGIAN-2022 | OS HR 0.78 (CPS 1-4; preserved benefit, smaller magnitude than CPS ≥5) SRC-CHECKMATE-649-JANJIGIAN-2022 |
+| IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI | overall_survival_hr_cps_5plus | cited | SRC-id hit: SRC-CHECKMATE-649-JANJIGIAN-2022 | OS HR 0.71 (CPS ≥5; CheckMate-649) SRC-CHECKMATE-649-JANJIGIAN-2022 |
+| IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI | progression_free_survival | uncited | — | Median ~7.7 mo (CPS ≥5) |
 | IND-GASTRIC-METASTATIC-2L-HER2-TDXD | complete_response | uncited | — | ~9% |
 | IND-GASTRIC-METASTATIC-2L-HER2-TDXD | overall_response_rate | probably-cited | trial-number unresolved: DESTINY-Gastric01 | ~51% (DESTINY-Gastric01) |
 | IND-GASTRIC-METASTATIC-2L-HER2-TDXD | overall_survival_5y | probably-cited | trial-number unresolved: DESTINY-Gastric01 | mOS 12.5 vs 8.4 mo (HR 0.59, DESTINY-Gastric01) |
@@ -516,17 +576,33 @@ Indications: 6; populated: 23; cited: 0; probably-cited: 10; uncited: 13; absent
 
 ## `DIS-GBM` — Glioblastoma (IDH-WT, WHO grade 4)
 
-Indications: 1; populated: 3; cited: 0; probably-cited: 0; uncited: 3; absent: 2; outcomes-cited % (loose): 0.0%.
+Indications: 4; populated: 8; cited: 0; probably-cited: 0; uncited: 8; absent: 15; outcomes-cited % (loose): 0.0%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
+| IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT | overall_survival_median | uncited | — | mOS 9.3 mo (hypoRT + TMZ) vs 7.6 mo (hypoRT alone; CCTG CE.6, n=562, ≥65 yrs) |
+| IND-GBM-NEWLY-DIAGNOSED-ELDERLY-TMZ | overall_survival_median | uncited | — | mOS ~7-9 mo in elderly GBM with TMZ alone (Nordic; MGMT-methylated: ~10 mo) |
 | IND-GBM-NEWLY-DIAGNOSED-STUPP | overall_response_rate | uncited | — | Adjuvant — measured by PFS/OS |
 | IND-GBM-NEWLY-DIAGNOSED-STUPP | overall_survival_5y | uncited | — | mOS 14.6 mo (2-yr OS 27%); MGMT-methylated 21.7 mo |
 | IND-GBM-NEWLY-DIAGNOSED-STUPP | progression_free_survival | uncited | — | Median PFS ~7 mo; 6-mo PFS ~54% |
+| IND-GBM-RECURRENT-BEVACIZUMAB | overall_response_rate | uncited | — | ~28-38% (radiographic response; predominantly pseudo-response on MRI) |
+| IND-GBM-RECURRENT-BEVACIZUMAB | overall_survival_median | uncited | — | mOS ~9-10 mo from recurrence (no OS benefit in randomized data) |
+| IND-GBM-RECURRENT-BEVACIZUMAB | progression_free_survival | uncited | — | mPFS ~4-6 mo (AVAglio + RTOG 0825 recurrent data; phase 2 studies) |
+
+## `DIS-GI-NET` — Gastroenteropancreatic neuroendocrine tumor — GI origin (carcinoid), well-differentiated G1/G2
+
+Indications: 1; populated: 4; cited: 0; probably-cited: 0; uncited: 4; absent: 1; outcomes-cited % (loose): 0.0%.
+
+| Indication | Field | Bucket | Matched via | Value excerpt |
+|---|---|---|---|---|
+| IND-GI-NET-ADVANCED-1L-LANREOTIDE | complete_response | uncited | — | <1% |
+| IND-GI-NET-ADVANCED-1L-LANREOTIDE | overall_response_rate | uncited | — | ~3% (partial response; stable disease is the primary endpoint — 65% in CLARINET lanreotide arm) |
+| IND-GI-NET-ADVANCED-1L-LANREOTIDE | overall_survival_5y | uncited | — | No OS benefit demonstrated in CLARINET (low event rate, cross-over); OS secondary endpoint |
+| IND-GI-NET-ADVANCED-1L-LANREOTIDE | progression_free_survival | uncited | — | mPFS not reached (lanreotide arm) vs 18.0 mo placebo (HR 0.47, CLARINET) |
 
 ## `DIS-GIST` — Gastrointestinal stromal tumor (GIST)
 
-Indications: 2; populated: 6; cited: 0; probably-cited: 0; uncited: 6; absent: 4; outcomes-cited % (loose): 0.0%.
+Indications: 3; populated: 10; cited: 0; probably-cited: 1; uncited: 9; absent: 5; outcomes-cited % (loose): 10.0%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
@@ -536,6 +612,10 @@ Indications: 2; populated: 6; cited: 0; probably-cited: 0; uncited: 6; absent: 4
 | IND-GIST-1L-IMATINIB | overall_response_rate | uncited | — | ~50-67% (KIT exon 11) |
 | IND-GIST-1L-IMATINIB | overall_survival_5y | uncited | — | ~50% advanced disease; ~80-90% adjuvant high-risk |
 | IND-GIST-1L-IMATINIB | progression_free_survival | uncited | — | ~24 months (KIT exon 11); ~12 months (KIT exon 9 at 800 mg) |
+| IND-GIST-4L-RIPRETINIB | complete_response | uncited | — | ~0% CR; majority partial responses + stable disease |
+| IND-GIST-4L-RIPRETINIB | overall_response_rate | uncited | — | ~9.4% ORR (INVICTUS, n=129; ripretinib 150 mg vs placebo 4L+ GIST) |
+| IND-GIST-4L-RIPRETINIB | overall_survival_5y | probably-cited | trial-number unresolved: INTRIGUE | Median OS 15.1 vs 6.6 months (HR 0.36) — INVICTUS secondary endpoint with crossover allowed. INTRIGUE phase III (ripr... |
+| IND-GIST-4L-RIPRETINIB | progression_free_survival | uncited | — | Median PFS 6.3 vs 1.0 months (HR 0.15, p<0.0001) — INVICTUS primary endpoint |
 
 ## `DIS-GLIOMA-LOW-GRADE` — Low-grade glioma (LGG, WHO grade 2 — IDH-mutant)
 
@@ -549,22 +629,34 @@ Indications: 1; populated: 3; cited: 0; probably-cited: 0; uncited: 3; absent: 2
 
 ## `DIS-HCC` — Hepatocellular carcinoma (HCC)
 
-Indications: 3; populated: 12; cited: 0; probably-cited: 3; uncited: 9; absent: 3; outcomes-cited % (loose): 25.0%.
+Indications: 6; populated: 24; cited: 3; probably-cited: 0; uncited: 21; absent: 6; outcomes-cited % (loose): 12.5%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
 | IND-HCC-SYSTEMIC-1L-ATEZO-BEV | complete_response | uncited | — | ~7% |
 | IND-HCC-SYSTEMIC-1L-ATEZO-BEV | overall_response_rate | uncited | — | ~30% (RECIST mRECIST higher) |
-| IND-HCC-SYSTEMIC-1L-ATEZO-BEV | overall_survival_5y | probably-cited | trial-number unresolved: IMbrave150 | mOS 19.2 mo IMbrave150 vs 13.4 sorafenib |
-| IND-HCC-SYSTEMIC-1L-ATEZO-BEV | progression_free_survival | probably-cited | trial-number unresolved: IMbrave150 | Median ~6.8 mo (IMbrave150) |
+| IND-HCC-SYSTEMIC-1L-ATEZO-BEV | overall_survival_5y | cited | trial-number resolved: IMbrave150 | mOS 19.2 mo IMbrave150 vs 13.4 sorafenib |
+| IND-HCC-SYSTEMIC-1L-ATEZO-BEV | progression_free_survival | cited | trial-number resolved: IMbrave150 | Median ~6.8 mo (IMbrave150) |
 | IND-HCC-SYSTEMIC-1L-DURVA-TREME | complete_response | uncited | — | ~3% |
 | IND-HCC-SYSTEMIC-1L-DURVA-TREME | overall_response_rate | uncited | — | ~20% |
-| IND-HCC-SYSTEMIC-1L-DURVA-TREME | overall_survival_5y | probably-cited | trial-number unresolved: HIMALAYA | mOS 16.4 vs 13.8 sorafenib (HIMALAYA) |
+| IND-HCC-SYSTEMIC-1L-DURVA-TREME | overall_survival_5y | cited | trial-number resolved: HIMALAYA | mOS 16.4 vs 13.8 sorafenib (HIMALAYA) |
 | IND-HCC-SYSTEMIC-1L-DURVA-TREME | progression_free_survival | uncited | — | Median ~4 mo |
 | IND-HCC-SYSTEMIC-1L-SORAFENIB | complete_response | uncited | — | <1% |
 | IND-HCC-SYSTEMIC-1L-SORAFENIB | overall_response_rate | uncited | — | ~3% (RECIST); 10-15% (mRECIST) |
 | IND-HCC-SYSTEMIC-1L-SORAFENIB | overall_survival_5y | uncited | — | mOS ~10-11 mo (SHARP), worse for CP-B |
 | IND-HCC-SYSTEMIC-1L-SORAFENIB | progression_free_survival | uncited | — | Median ~4 mo |
+| IND-HCC-SYSTEMIC-2L-CABOZANTINIB | complete_response | uncited | — | <1% |
+| IND-HCC-SYSTEMIC-2L-CABOZANTINIB | overall_response_rate | uncited | — | ~4% ORR (RECIST 1.1, CELESTIAL) — disease stabilization is the primary goal |
+| IND-HCC-SYSTEMIC-2L-CABOZANTINIB | overall_survival_5y | uncited | — | Median OS 10.2 mo vs 8.0 mo (HR 0.76, 95% CI 0.63–0.92, p=0.005, CELESTIAL) |
+| IND-HCC-SYSTEMIC-2L-CABOZANTINIB | progression_free_survival | uncited | — | Median PFS 5.2 mo vs 1.9 mo (HR 0.44, p<0.001, CELESTIAL) |
+| IND-HCC-SYSTEMIC-2L-RAMUCIRUMAB | complete_response | uncited | — | ~1% |
+| IND-HCC-SYSTEMIC-2L-RAMUCIRUMAB | overall_response_rate | uncited | — | ~5% ORR (RECIST 1.1, REACH-2) |
+| IND-HCC-SYSTEMIC-2L-RAMUCIRUMAB | overall_survival_5y | uncited | — | Median OS 8.5 mo vs 7.3 mo (HR 0.71, 95% CI 0.53–0.95, p=0.0199, REACH-2) |
+| IND-HCC-SYSTEMIC-2L-RAMUCIRUMAB | progression_free_survival | uncited | — | Median PFS 2.8 mo vs 1.6 mo (HR 0.45, REACH-2) |
+| IND-HCC-SYSTEMIC-2L-REGORAFENIB | complete_response | uncited | — | ~1% |
+| IND-HCC-SYSTEMIC-2L-REGORAFENIB | overall_response_rate | uncited | — | ~11% ORR (RECIST 1.1); DCR 65% vs placebo 36% (RESORCE) |
+| IND-HCC-SYSTEMIC-2L-REGORAFENIB | overall_survival_5y | uncited | — | Median OS 10.6 mo vs 7.8 mo (HR 0.63, 95% CI 0.50–0.79, p<0.0001, RESORCE); sequential sorafenib→regorafenib OS ~26 m... |
+| IND-HCC-SYSTEMIC-2L-REGORAFENIB | progression_free_survival | uncited | — | Median PFS 3.1 mo vs 1.5 mo (HR 0.46, p<0.0001, RESORCE) |
 
 ## `DIS-HCL` — Hairy Cell Leukemia
 
@@ -627,7 +719,7 @@ Indications: 3; populated: 12; cited: 2; probably-cited: 0; uncited: 10; absent:
 
 ## `DIS-HNSCC` — Head and neck squamous cell carcinoma (HNSCC)
 
-Indications: 3; populated: 9; cited: 6; probably-cited: 0; uncited: 3; absent: 6; outcomes-cited % (loose): 66.7%.
+Indications: 5; populated: 21; cited: 18; probably-cited: 0; uncited: 3; absent: 15; outcomes-cited % (loose): 85.7%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
@@ -640,6 +732,18 @@ Indications: 3; populated: 9; cited: 6; probably-cited: 0; uncited: 3; absent: 6
 | IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH | overall_response_rate | cited | trial-number resolved: KEYNOTE-048 | ~23% (KEYNOTE-048 mono CPS ≥20) |
 | IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH | overall_survival_5y | cited | trial-number resolved: KEYNOTE-048 | Median OS 14.9 mo (vs 10.7 mo EXTREME); 24-mo OS ~35% |
 | IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH | progression_free_survival | cited | trial-number resolved: KEYNOTE-048 | Median ~3.4 mo (selection bias toward responders has long tail) |
+| IND-HNSCC-RM-2L-NIVOLUMAB | median_os_comparator_months | cited | trial-number resolved: CheckMate-141 | 5.1 |
+| IND-HNSCC-RM-2L-NIVOLUMAB | median_os_nivolumab_months | cited | trial-number resolved: CheckMate-141 | 7.5 |
+| IND-HNSCC-RM-2L-NIVOLUMAB | one_year_os | cited | trial-number resolved: CheckMate-141 | 36% (vs 16.6% comparator) |
+| IND-HNSCC-RM-2L-NIVOLUMAB | os_hr | cited | trial-number resolved: CheckMate-141 | 0.7 |
+| IND-HNSCC-RM-2L-NIVOLUMAB | overall_response_rate | cited | trial-number resolved: CheckMate-141 | 13.3% (vs 5.8% comparator) |
+| IND-HNSCC-RM-2L-NIVOLUMAB | pdl1_pos_os_hr | cited | trial-number resolved: CheckMate-141 | 0.55 |
+| IND-HNSCC-RM-2L-PEMBROLIZUMAB | cps_ge1_os_hr | cited | trial-number resolved: KEYNOTE-040 | 0.74 |
+| IND-HNSCC-RM-2L-PEMBROLIZUMAB | cps_ge20_os_hr | cited | trial-number resolved: KEYNOTE-040 | 0.53 |
+| IND-HNSCC-RM-2L-PEMBROLIZUMAB | median_os_comparator_months | cited | trial-number resolved: KEYNOTE-040 | 6.9 |
+| IND-HNSCC-RM-2L-PEMBROLIZUMAB | median_os_pembro_months | cited | trial-number resolved: KEYNOTE-040 | 8.4 |
+| IND-HNSCC-RM-2L-PEMBROLIZUMAB | orr_pembro | cited | trial-number resolved: KEYNOTE-040 | 14.6% |
+| IND-HNSCC-RM-2L-PEMBROLIZUMAB | os_hr | cited | trial-number resolved: KEYNOTE-040 | 0.8 |
 
 ## `DIS-HSTCL` — Hepatosplenic T-Cell Lymphoma
 
@@ -687,7 +791,7 @@ Indications: 2; populated: 6; cited: 0; probably-cited: 0; uncited: 6; absent: 4
 
 ## `DIS-MCL` — Mantle Cell Lymphoma
 
-Indications: 6; populated: 24; cited: 3; probably-cited: 1; uncited: 20; absent: 6; outcomes-cited % (loose): 16.7%.
+Indications: 7; populated: 28; cited: 3; probably-cited: 2; uncited: 23; absent: 7; outcomes-cited % (loose): 17.9%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
@@ -707,6 +811,10 @@ Indications: 6; populated: 24; cited: 3; probably-cited: 1; uncited: 20; absent:
 | IND-MCL-3L-BREXUCEL-CART | overall_response_rate | cited | trial-number resolved: ZUMA-2 | ~91% (ZUMA-2) |
 | IND-MCL-3L-BREXUCEL-CART | overall_survival_5y | cited | trial-number resolved: ZUMA-2 | ~40-50% (3-yr OS ~60% per ZUMA-2; mature 5-yr maturing) |
 | IND-MCL-3L-BREXUCEL-CART | progression_free_survival | cited | trial-number resolved: ZUMA-2 | Median PFS ~25 mo (ZUMA-2 3-yr update); ~37% PFS at 3y |
+| IND-MCL-3L-LISOCEL | complete_response | uncited | — | ~72% |
+| IND-MCL-3L-LISOCEL | overall_response_rate | probably-cited | trial-number unresolved: TRANSCEND | ~83% (TRANSCEND NHL-001 MCL cohort, n≈88 evaluable) |
+| IND-MCL-3L-LISOCEL | overall_survival_5y | uncited | — | 12-month OS ~74%; long-term follow-up ongoing |
+| IND-MCL-3L-LISOCEL | progression_free_survival | uncited | — | Median PFS ~15-16 months; durable responses ~50% at 12 months |
 | IND-MCL-3L-PIRTOBRUTINIB | complete_response | uncited | — | ~13% |
 | IND-MCL-3L-PIRTOBRUTINIB | overall_response_rate | probably-cited | trial-number unresolved: BRUIN | ~50% (BRUIN MCL cohort) |
 | IND-MCL-3L-PIRTOBRUTINIB | overall_survival_5y | uncited | — | Mature OS data still maturing; 18-mo OS ~67% |
@@ -802,6 +910,20 @@ Indications: 11; populated: 37; cited: 9; probably-cited: 0; uncited: 28; absent
 | IND-MELANOMA-NIVO-MAINT | overall_survival_5y | cited | trial-number resolved: CheckMate-067 | 5-yr OS 52% nivo+ipi vs 44% nivo mono vs 26% ipi mono (CheckMate-067) |
 | IND-MELANOMA-NIVO-MAINT | progression_free_survival | cited | trial-number resolved: CheckMate-067 | Median PFS 11.5 mo for nivo+ipi (CheckMate-067; Larkin 2019 NEJM 5-yr update) |
 
+## `DIS-MESOTHELIOMA` — Malignant pleural mesothelioma (MPM)
+
+Indications: 2; populated: 7; cited: 2; probably-cited: 0; uncited: 5; absent: 4; outcomes-cited % (loose): 28.6%.
+
+| Indication | Field | Bucket | Matched via | Value excerpt |
+|---|---|---|---|---|
+| IND-MESOTHELIOMA-1L-NIVO-IPI | complete_response | uncited | — | ~5% |
+| IND-MESOTHELIOMA-1L-NIVO-IPI | overall_response_rate | cited | trial-number resolved: CheckMate-743 | ~40% ORR (CheckMate-743; modified RECIST) |
+| IND-MESOTHELIOMA-1L-NIVO-IPI | overall_survival_5y | cited | trial-number resolved: CheckMate-743 | "Median OS 18.1 mo vs 14.1 mo chemo (HR 0.74, 95% CI 0.60–0.91, p=0.005, CheckMate-743); 2-year OS 41% vs 27%; Non-ep... |
+| IND-MESOTHELIOMA-1L-NIVO-IPI | progression_free_survival | uncited | — | Median PFS 6.8 mo vs 7.2 mo chemo (not superior); durable responses in responders |
+| IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM | overall_response_rate | uncited | — | ~41% (EMPHACIS, pemetrexed+cisplatin vs 17% cisplatin alone) |
+| IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM | overall_survival | uncited | — | ~12.1 months (EMPHACIS); 13.3 months in fully vitamin-supplemented patients |
+| IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM | progression_free_survival | uncited | — | ~5.7 months |
+
 ## `DIS-MF-SEZARY` — Mycosis Fungoides / Sézary Syndrome
 
 Indications: 5; populated: 20; cited: 0; probably-cited: 0; uncited: 20; absent: 5; outcomes-cited % (loose): 0.0%.
@@ -831,7 +953,7 @@ Indications: 5; populated: 20; cited: 0; probably-cited: 0; uncited: 20; absent:
 
 ## `DIS-MM` — Multiple Myeloma
 
-Indications: 7; populated: 28; cited: 0; probably-cited: 6; uncited: 22; absent: 7; outcomes-cited % (loose): 21.4%.
+Indications: 13; populated: 52; cited: 3; probably-cited: 12; uncited: 37; absent: 19; outcomes-cited % (loose): 28.8%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
@@ -863,6 +985,30 @@ Indications: 7; populated: 28; cited: 0; probably-cited: 6; uncited: 22; absent:
 | IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE | overall_response_rate | uncited | — | Maintenance — measured by depth deepening (~30% achieve ≥CR with maintenance vs without) |
 | IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE | overall_survival_5y | uncited | — | Median OS 113 mo (vs 84 mo placebo, HR 0.72) |
 | IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE | progression_free_survival | uncited | — | Median PFS 46 mo (vs 27 mo placebo, CALGB 100104) |
+| IND-MM-RR-2L-CILTACEL | complete_response | uncited | — | ~73% sCR / CR (cilta-cel arm) |
+| IND-MM-RR-2L-CILTACEL | overall_response_rate | probably-cited | trial-number unresolved: CARTITUDE-4 | ~85% (CARTITUDE-4; San-Miguel 2023 NEJM) |
+| IND-MM-RR-2L-CILTACEL | overall_survival_median | probably-cited | trial-number unresolved: CARTITUDE-4 | Not Reached at 16-mo median follow-up (CARTITUDE-4); OS HR favours cilta-cel |
+| IND-MM-RR-2L-CILTACEL | progression_free_survival | probably-cited | trial-number unresolved: CARTITUDE-4 | Median PFS Not Reached vs 11.8 mo SOC (HR 0.26; CARTITUDE-4) |
+| IND-MM-RR-3L-CILTACEL | complete_response | uncited | — | ~83% sCR / CR |
+| IND-MM-RR-3L-CILTACEL | overall_response_rate | cited | trial-number resolved: CARTITUDE-1 | ~98% (CARTITUDE-1; Berdeja 2021 Lancet, Martin 2023 JCO 3-yr update) |
+| IND-MM-RR-3L-CILTACEL | overall_survival_median | cited | trial-number resolved: CARTITUDE-1 | 30-mo OS landmark ~74% (CARTITUDE-1) |
+| IND-MM-RR-3L-CILTACEL | progression_free_survival | cited | trial-number resolved: CARTITUDE-1 | Median PFS ~35 mo (CARTITUDE-1 Martin 2023 JCO 3-yr update) |
+| IND-MM-RR-3L-ELRANATAMAB | complete_response | uncited | — | ~35% sCR / CR |
+| IND-MM-RR-3L-ELRANATAMAB | overall_response_rate | uncited | — | ~61% (MagnetisMM-3 BCMA-naive cohort A; Lesokhin 2023 Nat Med) |
+| IND-MM-RR-3L-ELRANATAMAB | overall_survival_median | uncited | — | Median OS ~24+ mo (immature follow-up) |
+| IND-MM-RR-3L-ELRANATAMAB | progression_free_survival | uncited | — | Median PFS ~17.2 mo (longer-term update; not yet mature) |
+| IND-MM-RR-3L-IDECEL | complete_response | uncited | — | ~33% sCR / CR |
+| IND-MM-RR-3L-IDECEL | overall_response_rate | probably-cited | trial-family: KarMMa | ~73% (KarMMa pivotal; Munshi 2021 NEJM) |
+| IND-MM-RR-3L-IDECEL | overall_survival_median | probably-cited | trial-family: KarMMa | Median OS ~24.8 mo (KarMMa) |
+| IND-MM-RR-3L-IDECEL | progression_free_survival | probably-cited | trial-number unresolved: KarMMa-3 | Median PFS ~12.1 mo (KarMMa); ~13.3 mo (KarMMa-3 update) |
+| IND-MM-RR-3L-TALQUETAMAB | complete_response | uncited | — | ~33% sCR / CR |
+| IND-MM-RR-3L-TALQUETAMAB | overall_response_rate | uncited | — | ~73% (MonumenTAL-1 QW 0.4 mg/kg + Q2W 0.8 mg/kg pooled; Chari 2022 NEJM) |
+| IND-MM-RR-3L-TALQUETAMAB | overall_survival_median | uncited | — | Median OS ~22 mo (immature; differs by schedule) |
+| IND-MM-RR-3L-TALQUETAMAB | progression_free_survival | uncited | — | Median PFS ~7.5 mo (QW); ~11.9 mo (Q2W cohort) |
+| IND-MM-RR-3L-TECLISTAMAB | complete_response | uncited | — | ~39% sCR / CR |
+| IND-MM-RR-3L-TECLISTAMAB | overall_response_rate | uncited | — | ~63% (MajesTEC-1; Moreau 2022 NEJM) |
+| IND-MM-RR-3L-TECLISTAMAB | overall_survival_median | uncited | — | Median OS ~22 mo (mature follow-up) |
+| IND-MM-RR-3L-TECLISTAMAB | progression_free_survival | uncited | — | Median PFS ~11.3 mo |
 
 ## `DIS-MPNST` — Malignant peripheral nerve sheath tumor (MPNST)
 
@@ -1021,7 +1167,7 @@ Indications: 3; populated: 12; cited: 0; probably-cited: 0; uncited: 12; absent:
 
 ## `DIS-PDAC` — Pancreatic ductal adenocarcinoma (PDAC)
 
-Indications: 3; populated: 9; cited: 0; probably-cited: 0; uncited: 9; absent: 6; outcomes-cited % (loose): 0.0%.
+Indications: 4; populated: 13; cited: 3; probably-cited: 0; uncited: 10; absent: 7; outcomes-cited % (loose): 23.1%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
@@ -1034,6 +1180,10 @@ Indications: 3; populated: 9; cited: 0; probably-cited: 0; uncited: 9; absent: 6
 | IND-PDAC-METASTATIC-1L-GEM-NAB-PAC | overall_response_rate | uncited | — | ~23% |
 | IND-PDAC-METASTATIC-1L-GEM-NAB-PAC | overall_survival_5y | uncited | — | mOS ~8.5 mo (MPACT) |
 | IND-PDAC-METASTATIC-1L-GEM-NAB-PAC | progression_free_survival | uncited | — | Median ~5.5 mo |
+| IND-PDAC-METASTATIC-2L-NAL-IRI | complete_response | uncited | — | ~1% |
+| IND-PDAC-METASTATIC-2L-NAL-IRI | overall_response_rate | cited | trial-number resolved: NAPOLI-1 | ~16% ORR (nal-IRI+5-FU/LV arm, NAPOLI-1) |
+| IND-PDAC-METASTATIC-2L-NAL-IRI | overall_survival_5y | cited | trial-number resolved: NAPOLI-1 | Median OS 6.1 mo vs 4.2 mo 5-FU/LV alone (HR 0.67, 95% CI 0.49–0.92, p=0.012, NAPOLI-1) |
+| IND-PDAC-METASTATIC-2L-NAL-IRI | progression_free_survival | cited | trial-number resolved: NAPOLI-1 | Median PFS 3.1 mo (vs 1.5 mo 5-FU/LV alone; HR 0.56, NAPOLI-1) |
 
 ## `DIS-PMBCL` — Primary Mediastinal (Thymic) Large B-Cell Lymphoma
 
@@ -1081,9 +1231,20 @@ Indications: 5; populated: 20; cited: 0; probably-cited: 0; uncited: 20; absent:
 | IND-PMF-MOMELOTINIB-ANEMIA | overall_survival_5y | uncited | — | Salvage setting; OS dependent on baseline DIPSS-Plus + alloHCT pathway |
 | IND-PMF-MOMELOTINIB-ANEMIA | progression_free_survival | uncited | — | Median treatment duration ongoing in MOMENTUM long-term follow-up |
 
+## `DIS-PNET` — Pancreatic neuroendocrine tumor (pNET), well-differentiated G1/G2
+
+Indications: 1; populated: 4; cited: 0; probably-cited: 0; uncited: 4; absent: 1; outcomes-cited % (loose): 0.0%.
+
+| Indication | Field | Bucket | Matched via | Value excerpt |
+|---|---|---|---|---|
+| IND-PNET-METASTATIC-1L-EVEROLIMUS | complete_response | uncited | — | ~1% |
+| IND-PNET-METASTATIC-1L-EVEROLIMUS | overall_response_rate | uncited | — | ~5% (RECIST CR+PR); disease control rate ~73% |
+| IND-PNET-METASTATIC-1L-EVEROLIMUS | overall_survival_5y | uncited | — | No significant OS benefit proven (>70% crossover at progression confounds OS data) |
+| IND-PNET-METASTATIC-1L-EVEROLIMUS | progression_free_survival | uncited | — | Median PFS 11.0 mo (HR 0.35 vs placebo, RADIANT-3) |
+
 ## `DIS-PROSTATE` — Prostate adenocarcinoma
 
-Indications: 5; populated: 16; cited: 3; probably-cited: 1; uncited: 12; absent: 20; outcomes-cited % (loose): 25.0%.
+Indications: 8; populated: 35; cited: 10; probably-cited: 1; uncited: 24; absent: 35; outcomes-cited % (loose): 31.4%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
@@ -1093,9 +1254,28 @@ Indications: 5; populated: 16; cited: 3; probably-cited: 1; uncited: 12; absent:
 | IND-PROSTATE-MCRPC-1L-PARPI | median_overall_survival_months | uncited | — | 19 |
 | IND-PROSTATE-MCRPC-1L-PARPI | median_radiographic_pfs_months | uncited | — | 7.4 |
 | IND-PROSTATE-MCRPC-1L-PARPI | overall_response_rate | uncited | — | Confirmed objective response ~33% in BRCA-mutant |
-| IND-PROSTATE-MCRPC-2L-LU-PSMA | median_overall_survival_months | uncited | — | 15.3 |
-| IND-PROSTATE-MCRPC-2L-LU-PSMA | median_radiographic_pfs_months | uncited | — | 8.7 |
-| IND-PROSTATE-MCRPC-2L-LU-PSMA | overall_response_rate | uncited | — | PSA decline ≥50% in ~46% |
+| IND-PROSTATE-MCRPC-2L-CABAZITAXEL | ipfs_hr_vs_second_arpi | uncited | — | 0.54 |
+| IND-PROSTATE-MCRPC-2L-CABAZITAXEL | median_ipfs_months | uncited | — | 8.0 |
+| IND-PROSTATE-MCRPC-2L-CABAZITAXEL | median_os_months | uncited | — | 13.6 |
+| IND-PROSTATE-MCRPC-2L-CABAZITAXEL | os_hr_vs_second_arpi | uncited | — | 0.64 |
+| IND-PROSTATE-MCRPC-2L-CABAZITAXEL | overall_response_rate | uncited | — | 35.7% (CARD; post-docetaxel + post-ARPI) |
+| IND-PROSTATE-MCRPC-2L-CABAZITAXEL | psa_decline_50pct | uncited | — | 35.7% |
+| IND-PROSTATE-MCRPC-2L-DOCETAXEL | median_os_months | uncited | — | 18.9 (TAX 327; mCRPC population) |
+| IND-PROSTATE-MCRPC-2L-DOCETAXEL | os_hr_vs_mitoxantrone | uncited | — | 0.76 |
+| IND-PROSTATE-MCRPC-2L-DOCETAXEL | psa_decline_50pct | uncited | — | 45% (TAX 327) |
+| IND-PROSTATE-MCRPC-2L-LU-PSMA | median_os_control_months | cited | trial-number resolved: VISION | 11.3 |
+| IND-PROSTATE-MCRPC-2L-LU-PSMA | median_os_lu_psma_months | cited | trial-number resolved: VISION | 15.3 |
+| IND-PROSTATE-MCRPC-2L-LU-PSMA | median_rpfs_control_months | cited | trial-number resolved: VISION | 3.4 |
+| IND-PROSTATE-MCRPC-2L-LU-PSMA | median_rpfs_lu_psma_months | cited | trial-number resolved: VISION | 8.7 |
+| IND-PROSTATE-MCRPC-2L-LU-PSMA | os_hr | cited | trial-number resolved: VISION | 0.62 |
+| IND-PROSTATE-MCRPC-2L-LU-PSMA | psa_decline_50pct | cited | trial-number resolved: VISION | ~46% |
+| IND-PROSTATE-MCRPC-2L-LU-PSMA | radiographic_pfs_hr | cited | trial-number resolved: VISION | 0.4 |
+| IND-PROSTATE-MCRPC-2L-RADIUM223 | alkaline_phosphatase_normalization | uncited | — | 47% vs 3% |
+| IND-PROSTATE-MCRPC-2L-RADIUM223 | bone_pain_palliation | uncited | — | Significant — primary benefit beyond survival |
+| IND-PROSTATE-MCRPC-2L-RADIUM223 | median_os_placebo_months | uncited | — | 11.3 |
+| IND-PROSTATE-MCRPC-2L-RADIUM223 | median_os_radium_months | uncited | — | 14.9 |
+| IND-PROSTATE-MCRPC-2L-RADIUM223 | os_hr | uncited | — | 0.7 |
+| IND-PROSTATE-MCRPC-2L-RADIUM223 | time_to_sse_hr | uncited | — | 0.66 |
 | IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET | median_overall_survival_months | cited | trial-number resolved: LATITUDE | 53 |
 | IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET | median_radiographic_pfs_months | cited | trial-number resolved: LATITUDE | 33 |
 | IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET | overall_response_rate | cited | trial-number resolved: LATITUDE | PSA decline ≥90% in ~75-80% within 6 months |
@@ -1179,15 +1359,26 @@ Indications: 6; populated: 24; cited: 0; probably-cited: 0; uncited: 24; absent:
 
 ## `DIS-RCC` — Renal cell carcinoma
 
-Indications: 4; populated: 7; cited: 0; probably-cited: 2; uncited: 5; absent: 18; outcomes-cited % (loose): 28.6%.
+Indications: 8; populated: 18; cited: 2; probably-cited: 5; uncited: 11; absent: 32; outcomes-cited % (loose): 38.9%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
+| IND-RCC-ADJUVANT-PEMBRO | disease_free_survival | cited | trial-number resolved: KEYNOTE-564 | DFS HR 0.68 (p=0.002) at primary analysis |
+| IND-RCC-ADJUVANT-PEMBRO | overall_survival | cited | trial-number resolved: KEYNOTE-564 | OS HR 0.62 (p=0.001) — first adjuvant therapy showing OS benefit in RCC |
+| IND-RCC-METASTATIC-1L-LENV-PEMBRO | overall_response_rate | uncited | — | 71% vs 36% (sunitinib) |
+| IND-RCC-METASTATIC-1L-LENV-PEMBRO | overall_survival_median | uncited | — | OS HR 0.66 (p=0.005) at interim; mOS 33.6 vs 29.5 mo |
+| IND-RCC-METASTATIC-1L-LENV-PEMBRO | progression_free_survival | uncited | — | mPFS 23.9 mo vs 9.2 mo sunitinib (HR 0.39, p<0.001) |
+| IND-RCC-METASTATIC-1L-NIVO-CABO | overall_response_rate | probably-cited | trial-family: CheckMate | 55.7% vs 27.1% (sunitinib) |
+| IND-RCC-METASTATIC-1L-NIVO-CABO | overall_survival_median | probably-cited | trial-family: CheckMate | mOS 37.7 vs 34.3 mo (HR 0.70, p=0.001) |
+| IND-RCC-METASTATIC-1L-NIVO-CABO | progression_free_survival | probably-cited | trial-family: CheckMate | mPFS 16.6 mo vs 8.3 mo sunitinib (HR 0.51, p<0.001) |
 | IND-RCC-METASTATIC-1L-NIVO-IPI | median_overall_survival_months | probably-cited | trial-number unresolved: CheckMate-214 | 56 |
 | IND-RCC-METASTATIC-1L-PEMBRO-AXI | median_overall_survival_months | probably-cited | trial-number unresolved: KEYNOTE-426 | 46 |
 | IND-RCC-METASTATIC-2L-BELZUTIFAN | median_overall_survival_months | uncited | — | 21 |
 | IND-RCC-METASTATIC-2L-BELZUTIFAN | median_progression_free_survival_months | uncited | — | 5.6 |
 | IND-RCC-METASTATIC-2L-BELZUTIFAN | overall_response_rate | uncited | — | ORR 23%; DCR 78% |
+| IND-RCC-METASTATIC-2L-CABOZANTINIB | overall_response_rate | uncited | — | 17% vs 3% (everolimus) |
+| IND-RCC-METASTATIC-2L-CABOZANTINIB | overall_survival_median | uncited | — | mOS 21.4 vs 16.5 mo (HR 0.66, p=0.0003) |
+| IND-RCC-METASTATIC-2L-CABOZANTINIB | progression_free_survival | uncited | — | mPFS 7.4 mo vs 3.8 mo everolimus (HR 0.58, p<0.001) |
 | IND-RCC-VHL-DISEASE-BELZUTIFAN | median_progression_free_survival_months | uncited | — | Not yet reached (24+ mo follow-up) |
 | IND-RCC-VHL-DISEASE-BELZUTIFAN | overall_response_rate | uncited | — | ORR 49% (RCC subset, LITESPARK-004); 30% (CNS hemangioblastoma); 91% (pancreatic NETs) |
 
@@ -1201,12 +1392,48 @@ Indications: 1; populated: 0; cited: 0; probably-cited: 0; uncited: 0; absent: 5
 
 ## `DIS-SCLC` — Small cell lung cancer
 
-Indications: 2; populated: 2; cited: 0; probably-cited: 1; uncited: 1; absent: 10; outcomes-cited % (loose): 50.0%.
+Indications: 5; populated: 13; cited: 0; probably-cited: 1; uncited: 12; absent: 15; outcomes-cited % (loose): 7.7%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
 | IND-SCLC-EXTENSIVE-1L | median_overall_survival_months | probably-cited | trial-family: CASPIAN | 13 |
 | IND-SCLC-LIMITED-1L | median_overall_survival_months | uncited | — | 27 |
+| IND-SCLC-PLATINUM-RECHALLENGE | overall_response_rate | uncited | — | ~50-60% for CTFI ≥180d (multiple retrospective series) |
+| IND-SCLC-PLATINUM-RECHALLENGE | overall_survival | uncited | — | ~8-12 months from rechallenge |
+| IND-SCLC-PLATINUM-RECHALLENGE | progression_free_survival | uncited | — | ~4-6 months |
+| IND-SCLC-RR-LURBINECTEDIN | complete_response | uncited | — | ~2-5% CR; majority partial responses |
+| IND-SCLC-RR-LURBINECTEDIN | overall_response_rate | uncited | — | ~35.2% ORR overall (Trigo phase II basket trial, n=105); platinum-sensitive (CTFI ≥90 days) ORR 45%; platinum-resista... |
+| IND-SCLC-RR-LURBINECTEDIN | overall_survival_5y | uncited | — | Median OS 9.3 mo overall; 11.9 mo platinum-sensitive; 5.0 mo platinum-resistant. ATLANTIS phase III combination (lurb... |
+| IND-SCLC-RR-LURBINECTEDIN | progression_free_survival | uncited | — | Median DoR 5.3 mo overall; 6.2 mo platinum-sensitive; 4.7 mo platinum-resistant |
+| IND-SCLC-RR-TOPOTECAN | complete_response | uncited | — | ~5% CR in platinum-sensitive; rare in resistant |
+| IND-SCLC-RR-TOPOTECAN | overall_response_rate | uncited | — | ~24% in platinum-sensitive; ~4% in platinum-resistant |
+| IND-SCLC-RR-TOPOTECAN | overall_survival_5y | uncited | — | Median OS ~7-8 mo in platinum-sensitive; ~5 mo in platinum-resistant (von Pawel 1999 vs CAV, similar OS HR ~0.93, p=NS) |
+| IND-SCLC-RR-TOPOTECAN | progression_free_survival | uncited | — | Median PFS ~3.4 mo (phase 3 vs CAV) |
+
+## `DIS-SOFT-TISSUE-SARCOMA` — Soft tissue sarcoma (STS)
+
+Indications: 4; populated: 18; cited: 0; probably-cited: 0; uncited: 18; absent: 16; outcomes-cited % (loose): 0.0%.
+
+| Indication | Field | Bucket | Matched via | Value excerpt |
+|---|---|---|---|---|
+| IND-STS-ADVANCED-1L-AI | overall_response_rate | uncited | — | ~26% (EORTC 62012) |
+| IND-STS-ADVANCED-1L-AI | overall_survival | uncited | — | ~14.3 months (EORTC 62012) |
+| IND-STS-ADVANCED-1L-AI | progression_free_survival | uncited | — | ~7.4 months (EORTC 62012) |
+| IND-STS-ADVANCED-1L-DOXORUBICIN | overall_response_rate | uncited | — | ~14% (EORTC 62012) |
+| IND-STS-ADVANCED-1L-DOXORUBICIN | overall_survival | uncited | — | ~12.8 months (EORTC 62012) |
+| IND-STS-ADVANCED-1L-DOXORUBICIN | progression_free_survival | uncited | — | ~4.6 months (EORTC 62012) |
+| IND-STS-ADVANCED-2L-GEMDOC | median_os_months | uncited | — | 17.9 |
+| IND-STS-ADVANCED-2L-GEMDOC | orr | uncited | — | ~16-18% (SARC002: 16% GemDoc vs 8% gem mono) |
+| IND-STS-ADVANCED-2L-GEMDOC | os_hr | uncited | — | 0.73 |
+| IND-STS-ADVANCED-2L-GEMDOC | pfs_gem_mono_months | uncited | — | 3.0 |
+| IND-STS-ADVANCED-2L-GEMDOC | pfs_gemdoc_months | uncited | — | 6.2 |
+| IND-STS-ADVANCED-2L-PAZOPANIB | disease_control_rate | uncited | — | 67% |
+| IND-STS-ADVANCED-2L-PAZOPANIB | median_os_pazopanib_months | uncited | — | 12.5 |
+| IND-STS-ADVANCED-2L-PAZOPANIB | median_pfs_pazopanib_months | uncited | — | 4.6 |
+| IND-STS-ADVANCED-2L-PAZOPANIB | median_pfs_placebo_months | uncited | — | 1.6 |
+| IND-STS-ADVANCED-2L-PAZOPANIB | orr | uncited | — | ~6% |
+| IND-STS-ADVANCED-2L-PAZOPANIB | os_hr | uncited | — | 0.86 |
+| IND-STS-ADVANCED-2L-PAZOPANIB | pfs_hr | uncited | — | 0.35 |
 
 ## `DIS-SPLENIC-MZL` — Splenic Marginal Zone Lymphoma
 
@@ -1257,13 +1484,37 @@ Indications: 2; populated: 8; cited: 0; probably-cited: 0; uncited: 8; absent: 2
 | IND-T-PLL-2L-VENETOCLAX-ALEMTUZUMAB | overall_survival_5y | uncited | — | ~10% chemo-only; ~25-35% if successful bridge to alloSCT in CR |
 | IND-T-PLL-2L-VENETOCLAX-ALEMTUZUMAB | progression_free_survival | uncited | — | Median PFS ~6-9 months without alloSCT consolidation |
 
-## `DIS-THYROID-ANAPLASTIC` — Anaplastic thyroid carcinoma (ATC)
+## `DIS-TESTICULAR-GCT` — Testicular germ cell tumor (GCT)
 
-Indications: 1; populated: 0; cited: 0; probably-cited: 0; uncited: 0; absent: 5; outcomes-cited % (loose): 0.0%.
+Indications: 4; populated: 14; cited: 0; probably-cited: 0; uncited: 14; absent: 15; outcomes-cited % (loose): 0.0%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
-| _(no populated outcome fields)_ | | | | |
+| IND-GCT-METASTATIC-1L-BEP | complete_response | uncited | — | ~70-80% complete marker normalization |
+| IND-GCT-METASTATIC-1L-BEP | overall_response_rate | uncited | — | ~90-95% ORR for good-risk GCT; ~80-85% for intermediate-risk |
+| IND-GCT-METASTATIC-1L-BEP | overall_survival_5y | uncited | — | 5-year OS: ~92-95% good risk; ~80% intermediate risk; ~50-55% poor risk (IGCCC 1997) |
+| IND-GCT-METASTATIC-1L-BEP | progression_free_survival | uncited | — | 5-year relapse-free survival: ~92% good risk; ~80% intermediate risk; ~50% poor risk |
+| IND-GCT-METASTATIC-1L-EP | complete_response_rate | uncited | — | Equivalent to BEP × 3 for good-risk (Loehrer 1995) |
+| IND-GCT-METASTATIC-1L-EP | overall_survival_5y | uncited | — | ~92% good risk; ~80% intermediate risk; ~50% poor risk (same as BEP) |
+| IND-GCT-SALVAGE-2L-HDCT-ASCT | ned_2year_overall | uncited | — | 63% (Einhorn 2007) |
+| IND-GCT-SALVAGE-2L-HDCT-ASCT | ned_favorable | uncited | — | 78% |
+| IND-GCT-SALVAGE-2L-HDCT-ASCT | ned_unfavorable | uncited | — | 53% |
+| IND-GCT-SALVAGE-2L-HDCT-ASCT | treatment_related_mortality | uncited | — | <3% |
+| IND-GCT-SALVAGE-2L-TIP | complete_response_rate | uncited | — | 63% (Kondagunta 2005) |
+| IND-GCT-SALVAGE-2L-TIP | durable_ned_rate | uncited | — | 52% |
+| IND-GCT-SALVAGE-2L-TIP | favorable_subgroup_cr | uncited | — | 76% (AFP <1000, no liver/bone/brain mets) |
+| IND-GCT-SALVAGE-2L-TIP | unfavorable_subgroup_cr | uncited | — | 45% |
+
+## `DIS-THYROID-ANAPLASTIC` — Anaplastic thyroid carcinoma (ATC)
+
+Indications: 2; populated: 4; cited: 0; probably-cited: 0; uncited: 4; absent: 6; outcomes-cited % (loose): 0.0%.
+
+| Indication | Field | Bucket | Matched via | Value excerpt |
+|---|---|---|---|---|
+| IND-ATC-BRAF-V600E-DAB-TRAM | complete_response | uncited | — | ~13-20% CR; some patients converted to surgical resection after response |
+| IND-ATC-BRAF-V600E-DAB-TRAM | overall_response_rate | uncited | — | ~69% ORR (initial ROAR ATC cohort n=29, Subbiah JCO 2018); updated 2022 cohort n=36: ORR 56% |
+| IND-ATC-BRAF-V600E-DAB-TRAM | overall_survival_5y | uncited | — | Median OS ~14.5 mo (vs historical mOS ~5 mo for unresectable ATC — 3× improvement) |
+| IND-ATC-BRAF-V600E-DAB-TRAM | progression_free_survival | uncited | — | Median DoR ~9.0 mo; responses durable in CR subset |
 
 ## `DIS-THYROID-PAPILLARY` — Papillary thyroid carcinoma (PTC)
 
@@ -1275,10 +1526,22 @@ Indications: 1; populated: 0; cited: 0; probably-cited: 0; uncited: 0; absent: 5
 
 ## `DIS-UROTHELIAL` — Urothelial carcinoma (bladder + upper tract)
 
-Indications: 2; populated: 2; cited: 0; probably-cited: 0; uncited: 2; absent: 10; outcomes-cited % (loose): 0.0%.
+Indications: 6; populated: 14; cited: 4; probably-cited: 0; uncited: 10; absent: 24; outcomes-cited % (loose): 28.6%.
 
 | Indication | Field | Bucket | Matched via | Value excerpt |
 |---|---|---|---|---|
+| IND-UROTHELIAL-2L-ERDAFITINIB | overall_response_rate | uncited | — | ~35.3% vs 8.5% chemo (THOR cohort 1) |
+| IND-UROTHELIAL-2L-ERDAFITINIB | overall_survival_5y | uncited | — | Median OS 12.1 vs 7.8 mo chemo (THOR cohort 1; HR 0.64, p=0.005) |
+| IND-UROTHELIAL-2L-ERDAFITINIB | progression_free_survival | uncited | — | Median PFS 5.6 vs 2.7 mo chemo (THOR cohort 1; HR 0.58) |
+| IND-UROTHELIAL-2L-EV | overall_response_rate | uncited | — | ~40.6% (EV-301 vs 17.9% chemo) |
+| IND-UROTHELIAL-2L-EV | overall_survival | uncited | — | ~12.9 months (EV-301 vs 9.0 months chemo; HR 0.70) |
+| IND-UROTHELIAL-2L-EV | progression_free_survival | uncited | — | ~5.6 months (EV-301) |
+| IND-UROTHELIAL-2L-PEMBROLIZUMAB | complete_response_rate | cited | trial-number resolved: KEYNOTE-045 | ~7% (with durable responses; ~19% 5-year responders) |
+| IND-UROTHELIAL-2L-PEMBROLIZUMAB | overall_response_rate | cited | trial-number resolved: KEYNOTE-045 | ~21.1% (KEYNOTE-045 vs 11.0% chemo) |
+| IND-UROTHELIAL-2L-PEMBROLIZUMAB | overall_survival | cited | trial-number resolved: KEYNOTE-045 | ~10.3 months (KEYNOTE-045 vs 7.4 months chemo; HR 0.73) |
+| IND-UROTHELIAL-2L-PEMBROLIZUMAB | pdl1_cps10_os | cited | trial-number resolved: KEYNOTE-045 | ~8.0 months (HR 0.57 for CPS ≥10 subgroup) |
+| IND-UROTHELIAL-2L-PLATINUM-CHEMO | median_pfs_months | uncited | — | ~5-7 (extrapolated from 1L cisplatin-ineligible data; no dedicated 2L post-EV+pembro RCT) |
+| IND-UROTHELIAL-2L-PLATINUM-CHEMO | orr_historical | uncited | — | ~35-40% (gem+carbo in cisplatin-ineligible UC 1L; EORTC/von der Maase data) |
 | IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO | median_overall_survival_months | uncited | — | 31 |
 | IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB | median_overall_survival_months | uncited | — | 21 |
 
