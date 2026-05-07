@@ -226,6 +226,9 @@ def test_try_page_has_pwa_manifest_and_build_status(site_dir: Path):
     assert "cacheAllBundlesForOffline" in html
     assert "scheduleOfflineCacheWarmup" in html
     assert "fetchJsonWithTimeout" in html
+    assert 'id="questReadiness"' in html
+    assert 'id="readinessCriticalText"' in html
+    assert 'class="quest-impact-card"' not in html
     assert 'rel="manifest" href="/manifest.webmanifest"' in ua_html
 
     assert manifest["start_url"] == "/try.html"

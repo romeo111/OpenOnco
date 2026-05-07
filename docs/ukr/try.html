@@ -73,6 +73,19 @@
     <button id="resetBtn" class="btn btn-secondary qt-reset">Очистити</button>
   </div>
 
+  <div class="quest-readiness" id="questReadiness">
+    <div class="quest-readiness-head">
+      <span>Готовність анкети</span>
+      <span class="quest-readiness-score"><span id="progressText">0 / 0</span> · <span id="progressPct">0%</span></span>
+    </div>
+    <div class="impact-bar" aria-hidden="true">
+      <div class="impact-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="quest-readiness-critical" id="readinessCriticalText">
+      Оберіть хворобу, щоб почати.
+    </div>
+  </div>
+
   <!-- Early-paint warmup: a tiny synchronous script that runs before the
        module-script below. Populates dropdowns from a localStorage cache
        (written on the previous successful boot) so repeat visitors see
@@ -151,42 +164,13 @@
     </section>
 
     <aside class="quest-side">
-      <div class="quest-impact-card">
-        <h3>Імпакт на план</h3>
-        <div class="impact-progress">
-          <div class="impact-bar">
-            <div class="impact-bar-fill" id="progressFill"></div>
-          </div>
-          <div class="impact-stats">
-            <span id="progressText">0 / 0</span>
-            <span class="impact-pct" id="progressPct">0%</span>
-          </div>
-        </div>
-        <div class="impact-section" id="impactMissingCritical">
-          <h4>⚠️ Критичні поля без відповіді</h4>
-          <ul></ul>
-        </div>
-        <div class="impact-section" id="impactRedflags">
-          <h4>🚩 Red flags активовано</h4>
-          <ul></ul>
-        </div>
-        <div class="impact-section" id="impactSelected">
-          <h4>📋 Поточний default</h4>
-          <p id="impactSelectedText">—</p>
-        </div>
-        <div class="impact-section" id="impactWarnings" hidden>
-          <h4>⚙️ Engine warnings</h4>
-          <ul></ul>
-        </div>
-      </div>
-
       <div class="quest-build-card" id="buildCard">
         <div class="build-card-head">
           <h3>Збірка</h3>
           <span id="pwaInstallState" class="build-state">Браузер</span>
         </div>
         <dl class="build-meta">
-          <div><dt>Core</dt><dd id="coreVersion">v0e1ac5e4c396</dd></div>
+          <div><dt>Core</dt><dd id="coreVersion">v1cc86e13bfcd</dd></div>
           <div><dt>Хвороба</dt><dd id="diseaseVersion">—</dd></div>
           <div><dt>Кеш</dt><dd id="cacheState">Перевіряю…</dd></div>
           <div><dt>Offline</dt><dd id="offlineState">Мережа потрібна для першого запуску</dd></div>
@@ -333,11 +317,7 @@ const modeJsonBtn = document.getElementById('modeJsonBtn');
 const progressFill = document.getElementById('progressFill');
 const progressText = document.getElementById('progressText');
 const progressPct = document.getElementById('progressPct');
-const impactMissingCritical = document.getElementById('impactMissingCritical');
-const impactRedflags = document.getElementById('impactRedflags');
-const impactSelected = document.getElementById('impactSelected');
-const impactSelectedText = document.getElementById('impactSelectedText');
-const impactWarnings = document.getElementById('impactWarnings');
+const readinessCriticalText = document.getElementById('readinessCriticalText');
 const coreVersionEl = document.getElementById('coreVersion');
 const diseaseVersionEl = document.getElementById('diseaseVersion');
 const cacheStateEl = document.getElementById('cacheState');
@@ -536,7 +516,7 @@ async function refreshBuildPanel(diseaseId = null) {
     : 'Браузер');
 
   if (bundleIndex) {
-    setText(coreVersionEl, 'v' + (bundleIndex.core_version || '0e1ac5e4c396'));
+    setText(coreVersionEl, 'v' + (bundleIndex.core_version || '1cc86e13bfcd'));
     if (offlineCacheTotal <= 0) {
       const total = offlineBundleUrls().length;
       setOfflineCacheProgress(0, total, 0);
@@ -1318,20 +1298,13 @@ function renderWhatIfMarks(results) {
   }
 }
 
-// Local-only impact panel update — runs WITHOUT Pyodide so form interaction
-// stays snappy. Computes progress + missing critical fields directly from
-// the questionnaire schema. Engine-dependent sections (red flags, indication)
-// show "click Generate" placeholders. Replaces the auto-fired runLivePreview
-// path which was costing 4–5 s per keystroke once KB grew past ~30 diseases.
+// Local-only readiness update — runs WITHOUT Pyodide so form interaction
+// stays snappy. It only keeps the essential pre-generation signal visible:
+// completion progress and missing critical fields.
 function updateImpactPanelLocal() {
   if (!activeQuest) {
     setProgress(0, 0);
-    impactMissingCritical.querySelector('ul').innerHTML = '';
-    impactRedflags.querySelector('ul').innerHTML =
-      '<li class="muted">Натисни «Згенерувати», щоб побачити red flags</li>';
-    impactSelectedText.innerHTML =
-      '<span class="muted">— оберіть хворобу і заповніть форму —</span>';
-    impactWarnings.hidden = true;
+    setReadinessCritical([]);
     return;
   }
   let total = 0, filled = 0;
@@ -1348,17 +1321,7 @@ function updateImpactPanelLocal() {
     }
   }
   setProgress(filled, total);
-  const ul = impactMissingCritical.querySelector('ul');
-  ul.innerHTML = missing.length
-    ? missing.map(m =>
-        `<li><strong>${escHtml(m.label)}</strong> <span class="muted">(${escHtml(m.group)})</span></li>`
-      ).join('')
-    : '<li class="muted">Усі critical поля заповнені ✓</li>';
-  impactRedflags.querySelector('ul').innerHTML =
-    '<li class="muted">Натисни «Згенерувати», щоб побачити red flags</li>';
-  impactSelectedText.innerHTML =
-    '<span class="muted">Натисни «Згенерувати», щоб побачити рекомендований Indication</span>';
-  impactWarnings.hidden = true;
+  setReadinessCritical(missing);
 }
 
 function setProgress(filled, total) {
@@ -1368,63 +1331,31 @@ function setProgress(filled, total) {
   progressFill.style.width = `${pct}%`;
 }
 
+function setReadinessCritical(missing) {
+  if (!readinessCriticalText) return;
+  if (!activeQuest) {
+    readinessCriticalText.textContent = 'Оберіть хворобу, щоб почати.';
+    readinessCriticalText.dataset.kind = 'idle';
+    return;
+  }
+  if (!missing || !missing.length) {
+    readinessCriticalText.textContent = 'Критичні поля заповнені ✓';
+    readinessCriticalText.dataset.kind = 'ok';
+    return;
+  }
+  const preview = missing.slice(0, 2).map(m => m.label).join(', ');
+  const extra = missing.length > 2 ? ' +' + (missing.length - 2) : '';
+  readinessCriticalText.textContent = 'Бракує критичних полів: ' + preview + extra;
+  readinessCriticalText.dataset.kind = 'warn';
+}
+
 function updateImpactPanel(result) {
   if (!result) {
-    impactMissingCritical.querySelector('ul').innerHTML = '';
-    impactRedflags.querySelector('ul').innerHTML = '';
-    impactSelectedText.textContent = '—';
-    impactWarnings.hidden = true;
+    updateImpactPanelLocal();
     return;
   }
   setProgress(result.filled_count, result.total_questions);
-
-  const miss = result.missing_critical || [];
-  impactMissingCritical.querySelector('ul').innerHTML = miss.length
-    ? miss.map(m => `<li><strong>${escHtml(m.label)}</strong> <span class="muted">(${escHtml(m.group)})</span></li>`).join('')
-    : '<li class="muted">Усі critical поля заповнені ✓</li>';
-
-  const rfs = result.fired_redflags || [];
-  const rfDetail = result.fired_redflags_detail || [];
-  // Build detail-keyed map so we can join id -> {definition, sources}
-  const detailById = {};
-  for (const d of rfDetail) detailById[d.id] = d;
-
-  const dirEmoji = {
-    'hold': '🛑', 'intensify': '⚡', 'de-escalate': '🔻', 'investigate': '🔍'
-  };
-
-  impactRedflags.querySelector('ul').innerHTML = rfs.length
-    ? rfs.map(r => {
-        const d = detailById[r] || {};
-        const defn = d.definition_ua || d.definition || '';
-        const dir = d.clinical_direction || '';
-        const emoji = dirEmoji[dir] || '';
-        const sources = (d.sources || []).map(
-          s => `<span class="rf-src-chip">${escHtml(s)}</span>`
-        ).join('');
-        return `<li class="rf-fired-item">
-          <div class="rf-fired-head"><code>${escHtml(r)}</code> ${emoji}
-            <span class="rf-dir rf-dir-${escHtml(dir)}">${escHtml(dir)}</span></div>
-          ${defn ? `<div class="rf-fired-defn">${escHtml(defn)}</div>` : ''}
-          ${sources ? `<div class="rf-fired-srcs">${sources}</div>` : ''}
-        </li>`;
-      }).join('')
-    : '<li class="muted">Жодного RedFlag поки не активовано</li>';
-
-  impactSelectedText.innerHTML = result.would_select_indication
-    ? `<code>${escHtml(result.would_select_indication)}</code>`
-    : '— (бракує даних для вибору)';
-
-  if ((result.warnings || []).length) {
-    impactWarnings.hidden = false;
-    impactWarnings.querySelector('ul').innerHTML =
-      result.warnings.map(w => `<li>${escHtml(w)}</li>`).join('');
-  } else {
-    impactWarnings.hidden = true;
-  }
-  // ready_to_generate is advisory — don't block the button on it; the
-  // user can still try to generate even with missing critical fields
-  // and the engine will surface the gaps.
+  setReadinessCritical(result.missing_critical || []);
 }
 
 // ── Bundle lazy-load (CSD-6E + CSD-9C) ────────────────────────────────────
