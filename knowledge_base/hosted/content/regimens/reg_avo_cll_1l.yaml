@@ -1,0 +1,137 @@
+id: REG-AVO-CLL-1L
+name: "Acalabrutinib + Venetoclax + Obinutuzumab (AVO), fixed-duration 14 cycles (AMPLIFY)"
+name_ua: "Акалабрутиніб + Венетоклакс + Обінутузумаб (AVO), фіксована тривалість 14 циклів (AMPLIFY)"
+alternate_names: ["AVO", "A+VO", "acala-ven-obi", "AMPLIFY-AVO"]
+
+components:
+  - drug_id: DRUG-ACALABRUTINIB
+    dose: "100 mg PO BID"
+    schedule: "Continuous twice daily, cycles 1-14 (entire duration)"
+    route: PO
+  - drug_id: DRUG-VENETOCLAX
+    dose: >
+      5-week ramp-up starting cycle 3 day 1:
+      week 1 20 mg → week 2 50 mg → week 3 100 mg → week 4 200 mg → week 5 400 mg;
+      then 400 mg QD maintenance through cycle 14
+    schedule: "PO daily, cycles 3-14 (ramp begins cycle 3 day 1)"
+    route: PO
+  - drug_id: DRUG-OBINUTUZUMAB
+    dose: >
+      Cycle 2 day 1: 100 mg IV; cycle 2 day 2: 900 mg IV; cycle 2 days 8+15: 1000 mg IV;
+      cycles 3-7 day 1: 1000 mg IV
+    schedule: "IV monthly (28-day cycles), cycles 2-7 (6 cycles total)"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "14 (fixed-duration)"
+toxicity_profile: moderate-high
+
+premedication:
+  - "Pre-obinutuzumab (cycle 2 day 1): methylprednisolone 80 mg IV + acetaminophen 650 mg PO + diphenhydramine 25-50 mg PO"
+  - "Pre-obinutuzumab (subsequent infusions, if no prior Grade ≥3 IRR): acetaminophen + antihistamine; methylprednisolone optional"
+  - "Pre-venetoclax ramp-up: allopurinol start 72h prior to cycle 3 day 1; hydration + serial labs during ramp steps"
+
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+
+monitoring_schedule_id: MON-CLL-BTKI
+
+dose_adjustments:
+  - condition: "Concomitant strong CYP3A inhibitor (azoles, ritonavir, cobicistat)"
+    modification: "Hold venetoclax during inhibitor course OR reduce venetoclax to 70 mg if inhibitor cannot be avoided; acalabrutinib: reduce to 100 mg QD or hold"
+    rationale: "Both venetoclax and acalabrutinib are CYP3A substrates; co-administration with strong inhibitors causes dangerous concentration increase"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "High tumor burden (ALC >25K OR any LN ≥10 cm OR LN ≥5 cm + ALC ≥25K)"
+    modification: "Hospitalize for first 3 venetoclax ramp-up steps with q6h TLS labs (K, phosphate, uric acid, creatinine, LDH)"
+    rationale: "Fatal TLS documented when ramp-up done outpatient in high-burden patients"
+  - condition: "ANC <1000 OR febrile neutropenia"
+    modification: "Hold venetoclax; consider G-CSF; resume at same or lower ramp step after recovery"
+  - condition: "Grade ≥3 atrial fibrillation on acalabrutinib"
+    modification: "Hold acalabrutinib; resume at lower dose or discontinue depending on severity"
+  - condition: "Severe hepatic impairment (Child-Pugh C)"
+    modification: "Avoid venetoclax; use with caution if Child-Pugh B"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Acalabrutinib: registered, NOT reimbursed via НСЗУ — funding gap.
+    Venetoclax: registered, NOT reimbursed via НСЗУ for most indications.
+    Obinutuzumab: registered + reimbursed for some CLL indications.
+    All three components required; full funding pathway must be confirmed
+    before initiating.
+
+sources: [SRC-AMPLIFY-BROWN-2025, SRC-NCCN-BCELL-2025]
+
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома після інфузії обінутузумабу"
+    action_ua: "Очікувано у перші 1-3 дні після інфузії — більше відпочивайте; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3 of obi cycles"
+    sources:
+      - SRC-AMPLIFY-BROWN-2025
+  - trigger_ua: "Помірна нудота або діарея під час прийому акалабрутинібу або венетоклаксу"
+    action_ua: "Приймайте з їжею та великою кількістю рідини; занотовуйте частоту"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Головний біль (перші тижні акалабрутинібу)"
+    action_ua: "Часто минає за 1-2 місяці — приймайте парацетамол; уникайте НПЗП через ризик кровотечі"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Незвичні синці, кровотеча з ясен або носа"
+    action_ua: "Подзвоніть у клініку того ж дня — BTKi підвищують ризик кровотеч; уникайте антикоагулянтів"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Прискорене або нерівномірне серцебиття"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива миготлива аритмія (пов'язана з BTKi)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — обінутузумаб та акалабрутиніб посилюють імуносупресію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-AMPLIFY-BROWN-2025
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Зменшення кількості сечі, набряки, біль у попереку — перші 5 тижнів венетоклаксу (цикл 3)"
+    action_ua: "Подзвоніть у клініку того ж дня — критичне вікно ризику синдрому розпаду пухлини при нарощуванні дози"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Cycle 3 days 1-35 (venetoclax ramp)"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Важка реакція на інфузію: різке утруднення дихання, набряк обличчя"
+    action_ua: "Якщо в клініці — повідомте медперсонал негайно. Якщо вдома — викликайте швидку"
+    urgency: er_now
+    cycle_day_window: "Day 1-2 of obinutuzumab cycle 2"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Раптова сильна слабкість, аритмія, судоми — під час нарощування венетоклаксу"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого синдрому розпаду пухлини"
+    urgency: er_now
+    cycle_day_window: "Cycle 3 days 1-35"
+    sources:
+      - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-07"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  AMPLIFY trial (Brown JR et al., NEJM 2025; NCT03836261): 3-arm 1:1:1 —
+  AV (acalabrutinib + venetoclax, cycles 1-14) vs AVO (AV + obinutuzumab
+  cycles 2-7) vs chemoimmunotherapy (FCR or BR, cycles 1-6). AVO arm: obi
+  starts cycle 2 (not cycle 1) to allow acalabrutinib lead-in; venetoclax
+  ramp begins cycle 3.
+  AVO 36-mo PFS 83.1% vs chemo 66.5% (HR 0.42 vs chemo).
+  Venetoclax ramp-up identical 5-week schedule to VenO (CLL14); TLS
+  protocol and HBV screening mandatory. Fixed-duration 14 cycles — no
+  indefinite therapy after cycle 14. STUB — pending Co-Lead sign-off.
+notes_ua: >
+  Дослідження AMPLIFY (Brown JR et al., NEJM 2025): AVO arm — акалабрутиніб
+  починається з циклу 1; обінутузумаб — цикли 2-7; венетоклакс рамп — цикл 3.
+  Фіксована тривалість 14 циклів. TLS протокол та HBV скринінг обов'язкові.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
