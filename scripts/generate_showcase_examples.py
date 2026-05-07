@@ -90,6 +90,7 @@ SHOWCASE_CASES = [
             "line_of_therapy": 1,
             "biomarkers": {
                 "ALK": "fusion (gene-level, TKI-naive)",
+                "BIO-ALK-FUSION": "positive",
                 "EGFR": "wildtype",
                 "ROS1": "negative",
                 "PD-L1 TPS": 0,
@@ -104,6 +105,8 @@ SHOWCASE_CASES = [
                 "stage": "IV",
                 "stage_iv": True,
                 "histology": "adenocarcinoma",
+                "alk_fusion": True,
+                "alk_status": "positive",
                 "metastatic_sites": ["brain", "bone"],
                 "brain_mets": True,
                 "creatinine_clearance_ml_min": 92,
@@ -150,6 +153,7 @@ SHOWCASE_CASES = [
                 "stage": "IV",
                 "stage_iv": True,
                 "primary_site": "right colon",
+                "braf_v600e_mutation": True,
                 "metastatic_sites": ["liver", "peritoneum"],
                 "prior_lines": [
                     {
@@ -215,6 +219,8 @@ SHOWCASE_CASES = [
                 "her2_ihc": 0,
                 "er_status": "positive",
                 "pr_status": "positive",
+                "pik3ca_mutation": True,
+                "pik3ca_hotspot": "positive",
                 "progression_on_prior_endocrine_cdk46i": True,
                 "prior_lines": [
                     {
@@ -328,6 +334,8 @@ SHOWCASE_CASES = [
                 "stage_iv": True,
                 "histology": "adenocarcinoma",
                 "primary_site": "right upper lobe",
+                "egfr_t790m": True,
+                "egfr_mutation": "T790M",
                 "metastatic_sites": ["bone", "contralateral lung"],
                 "brain_mets": False,
                 "prior_lines": [
@@ -472,6 +480,8 @@ SHOWCASE_CASES = [
                 "stage": "IV",
                 "stage_iv": True,
                 "primary_site": "intrahepatic bile duct",
+                "idh1_r132_mutation": True,
+                "idh1_status": "R132",
                 "metastatic_sites": ["liver", "peritoneum"],
                 "prior_lines": [
                     {
@@ -526,6 +536,7 @@ SHOWCASE_CASES = [
                 "stage_iv": True,
                 "primary_site": "GEJ",
                 "histology": "adenocarcinoma",
+                "her2_status": "positive",
                 "her2_ihc": "3+",
                 "metastatic_sites": ["liver", "nodes"],
                 "creatinine_clearance_ml_min": 78,
@@ -571,6 +582,9 @@ SHOWCASE_CASES = [
                 "stage": "IV",
                 "stage_iv": True,
                 "castration_resistant": True,
+                "ECOG PS 0-2": True,
+                "BRCA1 or BRCA2 somatic or germline pathogenic variant (or ATM, CDK12, PALB2, RAD51C/D, BRIP1, FANCA)": True,
+                "No prior PARPi therapy (olaparib, rucaparib, niraparib)": True,
                 "testosterone_ng_dL": 12,
                 "metastatic_sites": ["bone", "lymph nodes"],
                 "prior_lines": [

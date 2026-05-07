@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tarlatamab - OpenOnco</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+.kb-page { padding-top: 34px; }
+.kb-page h1 { font-family: var(--font-display); font-size: 38px; color: var(--green-900); margin-bottom: 10px; }
+.kb-page h2 { font-family: var(--font-display); color: var(--green-900); font-size: 24px; margin: 30px 0 12px; }
+.kb-page h3 { color: var(--green-900); font-size: 17px; margin: 18px 0 8px; }
+.kb-lead { color: var(--gray-700); font-size: 16px; max-width: 880px; margin-bottom: 22px; }
+.kb-breadcrumb { font-size: 13px; margin-bottom: 12px; color: var(--gray-500); }
+.kb-info-box { background: white; border: 1px solid var(--green-100); border-left: 5px solid var(--green-700); border-radius: 7px; padding: 13px 15px; color: var(--gray-700); margin: 18px 0 20px; max-width: 920px; }
+.kb-info-box strong { color: var(--green-900); }
+.kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
+.kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
+.kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
+.kb-search-label { display: block; font-weight: 700; margin-bottom: 7px; }
+.kb-search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: stretch; }
+.kb-search { width: 100%; border: 1px solid var(--gray-200); border-radius: 7px; padding: 13px 14px; font-size: 16px; background: white; }
+.kb-search-btn { min-width: 118px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 7px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+.kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 22px; }
+.kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
+.kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
+.kb-results { display: grid; gap: 8px; }
+.kb-result { display: grid; grid-template-columns: 105px 1fr auto; gap: 10px; align-items: baseline; background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 12px; text-decoration: none; color: var(--gray-900); }
+.kb-result:hover { border-color: var(--green-600); }
+.kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
+.kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
+.kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
+.kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
+.kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
+.kb-muted { color: var(--gray-500); }
+.kb-entity ul { padding-left: 22px; }
+.kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
+.kb-faq { margin-top: 36px; }
+.kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
+.kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
+@media (max-width: 700px) {
+  .kb-search-row { grid-template-columns: 1fr; }
+  .kb-search-btn { min-height: 44px; }
+  .kb-result { grid-template-columns: 1fr; }
+  .kb-result small { grid-column: auto; }
+  .kb-facts th { width: auto; display: block; border-bottom: 0; }
+  .kb-facts td { display: block; }
+}
+</style>
+</head>
+<body>
+  <header class="top-bar">
+  <div class="brand-line">
+    <a href="/ukr/" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
+    <span class="brand-version" title="Released 2026-05-06">v0.1.4 &middot; 2026-05-06</span>
+  </div>
+  <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/specs.html">Специфікації</a>
+    <a href="/ukr/kb.html" class="active">Onco Wiki</a>
+    <a href="/ukr/ask.html">Tumor board Q</a>
+    <a href="/ukr/gallery.html">Приклади</a>
+    <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
+      <a class="lang-other" href="/kb/drugs/drug-tarlatamab.html"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
+    </div>
+    <a href="/ukr/try.html" class="btn-cta-try" >Спробувати →</a>
+  </div>
+</header>
+  <main class="kb-page kb-entity">
+  <p class="kb-breadcrumb"><a href="/ukr/kb.html">Onco Wiki</a> / Препарат</p>
+  <h1>Tarlatamab</h1>
+  <p class="kb-lead">Детермінований перегляд YAML-сутності з джерельної бази. Клінічний авторитет лишається за вказаними source ID та статусом клінічного sign-off.</p>
+  <table class="kb-facts"><tr><th>ID</th><td><code>DRUG-TARLATAMAB</code></td></tr>
+<tr><th>Тип</th><td>Препарат</td></tr>
+<tr><th>Синоніми</th><td>Imdelltra, Тарлатамаб</td></tr>
+<tr><th>Статус</th><td>переглянуто 2026-05-08 | pending_clinical_signoff</td></tr>
+<tr><th>Файл</th><td><code>knowledge_base/hosted/content/drugs/drug_tarlatamab.yaml</code></td></tr>
+<tr><th>Хвороби</th><td><span class="kb-muted">Не вказано</span></td></tr>
+<tr><th>Джерела</th><td><span class="kb-chip" title="Tarlatamab for Patients with Previously Treated Small-Cell Lung Cancer"><code>SRC-DELLPHI-301-AHN-2023</code></span> <span class="kb-chip" title="ESMO Clinical Practice Guideline on Small Cell Lung Cancer"><code>SRC-ESMO-SCLC-2021</code></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Small Cell Lung Cancer"><code>SRC-NCCN-SCLC-2025</code></span></td></tr></table>
+  <h2>Дані про препарат</h2><table class="kb-facts"><tr><th>Клас</th><td>DLL3 × CD3 bispecific T-cell engager (BiTE)</td></tr>
+<tr><th>Механізм дії</th><td>Bispecific antibody construct (half-life-extended BiTE format, IgG-like scaffold) binding delta-like ligand 3 (DLL3) on small-cell-lung-cancer tumor cells AND CD3ε on T cells, forming a tumor-redirected immunological synapse that activates polyclonal cytotoxic T-cell killing of DLL3-expressing tumor cells. DLL3 is an inhibitory Notch ligand aberrantly expressed on the surface of ~85-95% of SCLC tumors but minimally on normal tissues, making it a tumor-selective target. Distinct from blinatumomab (anti-CD19 × CD3 BiTE for B-ALL) in: (1) solid-tumor target (DLL3 on SCLC) vs hematologic; (2) longer half-life (~Fc-extended) permitting q2w IV bolus dosing rather than continuous infusion; (3) requires step-up dosing (1 mg cycle 1 day 1) with inpatient monitoring to mitigate cytokine release syndrome (CRS). Does not require pre-treatment DLL3 testing for label use — most SCLCs are DLL3-positiv...</td></tr>
+<tr><th>Типове дозування</th><td>Step-up regimen (mandatory) followed by maintenance: Cycle 1 day 1: 1 mg IV (priming dose) — inpatient monitoring ≥22 hours Cycle 1 day 8: 10 mg IV — inpatient monitoring ≥22 hours Cycle 1 day 15: 10 mg IV (outpatient acceptable if D1 + D8 well-tolerated) Cycles 2+: 10 mg IV every 2 weeks Continuous q2w until disease progression or unacceptable toxicity. Premedication: dexamethasone 8 mg IV + antihistamine (e.g. diphenhydramine 25-50 mg IV) + acetaminophen 650-1000 mg PO ≥30-60 min before each of the first 2 doses (cycle 1 D1 + D8); IV hydration (1 L NS) before and after first 2 doses. Hospitalization for 22+ hours post-infusion mandatory for cycle 1 D1 and D8 to monitor for CRS.</td></tr>
+<tr><th>Зареєстровано в Україні</th><td>False</td></tr>
+<tr><th>Відшкодовується НСЗУ</th><td>False</td></tr>
+<tr><th>Остання перевірка для України</th><td>2026-05-08</td></tr></table><h2>Застереження</h2><ul><li>Cytokine release syndrome (CRS) — fatal cases reported; Grade ≥3 ~1%, any-grade ~50% in DeLLphi-301; mandatory step-up dosing + inpatient monitoring cycle 1 D1 and D8 required</li><li>Neurologic toxicity including immune effector cell-associated neurotoxicity syndrome (ICANS) — Grade ≥3 ~7%; monitor for confusion, tremor, aphasia, seizures</li></ul>
+  <h2>Нотатки</h2><p>First-in-class DLL3 × CD3 bispecific T-cell engager (Amgen). FDA accelerated approval May 2024 for extensive-stage SCLC with disease progression on or after platinum-based chemotherapy, on the basis of DeLLphi-301 (Ahn et al., NEJM 2023; n=222 across 10 mg q2w and 100 mg q2w cohorts; 10 mg q2w cohort n=99 — confirmed ORR 40% per independent central review, mDoR not reached at 10.6 mo follow-up, mPFS 4.9 mo, mOS 14.3 mo). 10 mg q2w selected as the registered dose (favorable safety/efficacy ratio; similar ORR with lower CRS rate than 100 mg). ESCAT tier IIA (FDA-approved disease-specific 2L+ ES-SCLC). Distinct from blinatumomab BiTE in solid-tumor target (DLL3) and dosing format (q2w bolus vs continuous infusion). Mandatory step-up cycle 1 + inpatient monitoring 22+ hours post-infusion D1 and D8 to detect early CRS. CRS mostly Grade 1-2 (fever, hypotension, hypoxia) and managed with supportive care + tocilizumab when needed; severe CRS (Grade ≥3) ~1%. Neurologic toxicity (ICANS-like) Grade ≥3 ~7% — generally reversible with corticosteroids. EMA review pending. Confirmatory phase 3 DeLLphi-304 (tarlatamab vs investigator-choice chemotherapy in 2L ES-SCLC) ongoing. Also under investig...</p>
+  <h2>Де використовується</h2>
+<h3>Regimens</h3><ul><li><code>REG-TARLATAMAB</code> - Tarlatamab — 2L+ extensive-stage SCLC (DeLLphi-301; DLL3 × CD3 BiTE) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_tarlatamab.yaml)</span></li></ul>
+</main>
+</body>
+</html>

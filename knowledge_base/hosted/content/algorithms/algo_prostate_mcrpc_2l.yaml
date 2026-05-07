@@ -12,7 +12,7 @@ purpose: >
   mHSPC or 1L mCRPC; many are post-ARPI + post-taxane at 2L.
 
 output_indications:
-  - IND-PROSTATE-MCRPC-1L-PARPI
+  - IND-PROSTATE-MCRPC-2L-PARPI
   - IND-PROSTATE-MCRPC-2L-LU-PSMA
   - IND-PROSTATE-MCRPC-2L-CABAZITAXEL
   - IND-PROSTATE-MCRPC-2L-RADIUM223
@@ -40,20 +40,21 @@ decision_tree:
   # If BRCA1/2 or other HRR mutation AND no prior PARPi: PARPi-first regardless
   # of prior therapy lines. PROfound: olaparib vs investigator choice in
   # mCRPC post-ARPI; Cohort A (BRCA1/2) OS HR 0.69.
-  # Reuses IND-PROSTATE-MCRPC-1L-PARPI since same PARPi eligibility applies.
+  # Uses the 2L-authored PARPi indication to keep current-line rendering
+  # separate from the 1L mCRPC PARPi pathway.
   - step: 2
     evaluate:
       all_of:
         - condition: "BRCA1 or BRCA2 somatic or germline pathogenic variant (or ATM, CDK12, PALB2, RAD51C/D, BRIP1, FANCA)"
         - condition: "No prior PARPi therapy (olaparib, rucaparib, niraparib)"
     if_true:
-      result: IND-PROSTATE-MCRPC-1L-PARPI
+      result: IND-PROSTATE-MCRPC-2L-PARPI
       notes: >
         HRR-mutant mCRPC without prior PARPi: olaparib 300 mg BID preferred for BRCA1/2
         (PROfound Cohort A; OS HR 0.69). Other HRR mutations (ATM, CDK12) have weaker
         evidence — BRCA1/2 has the clearest benefit. Rucaparib is an alternative
-        (TRITON3: rPFS HR 0.61 for BRCA1/2 mCRPC). IND-PROSTATE-MCRPC-1L-PARPI
-        applies at any mCRPC line if PARPi-naive.
+        (TRITON3: rPFS HR 0.61 for BRCA1/2 mCRPC). The 2L-authored PARPi
+        indication keeps this branch in the current-line option set.
     if_false:
       next_step: 3
 

@@ -1,6 +1,6 @@
 # Clinical gap audit
 
-Generated: `2026-05-07T16:09:56Z`
+Generated: `2026-05-07T16:47:04Z`
 
 This is a coverage/governance audit, not a clinical recommendation set.
 It makes the five largest known gaps measurable and repeatable.
@@ -9,11 +9,11 @@ It makes the five largest known gaps measurable and repeatable.
 
 | Gap | Current | Target | Status |
 |---|---:|---|---|
-| Clinical sign-off | 15/1836 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
+| Clinical sign-off | 15/1846 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
 | Solid tumor 2L+ coverage | 21/42 solid diseases have a 2L+ algorithm; 23/42 have a 2L+ indication | Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication. | `coverage_gap` |
-| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 397 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
-| Supportive-care depth | 138/344 regimens have mandatory supportive care (40.1%); 40 have monitoring; 303 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
-| Drug indication and off-label tracking | 764 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `schema_gap` |
+| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 401 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
+| Supportive-care depth | 138/348 regimens have mandatory supportive care (39.7%); 40 have monitoring; 307 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
+| Drug indication and off-label tracking | 773 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `schema_gap` |
 
 ## Next actions
 
@@ -67,6 +67,7 @@ It makes the five largest known gaps measurable and repeatable.
   - `REG-ADAGRASIB-NSCLC`
   - `REG-ALECTINIB-NSCLC`
   - `REG-ALPELISIB-FULVESTRANT-BREAST`
+  - `REG-AMI-LAZ-NSCLC`
   - `REG-AMIVANTAMAB-LAZERTINIB-NSCLC-2L`
   - `REG-AMIVANTAMAB-MONO-NSCLC-EX20INS`
   - `REG-ANAGRELIDE-ET`
@@ -98,13 +99,12 @@ It makes the five largest known gaps measurable and repeatable.
   - `REG-CARBO-PACLI-ANAL-MET`
   - `REG-CARBO-PACLI-CONCURRENT-RT-ESOPH`
   - `REG-CARBO-PACLI-OVARIAN`
-  - `REG-CARBO-PLD-BEV-OVARIAN`
 
 ### Drug indication and off-label tracking
 
 - Blocker: No first-class drug_indications entity directory/schema is present.
 - Next action: Introduce a drug_indications entity, then backfill from existing indications/regimens.
-- Inferred pairs to backfill: 764
+- Inferred pairs to backfill: 773
 - Explicit labeled/off-label statuses: 0
 
 ## Machine-readable outputs
