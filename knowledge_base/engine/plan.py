@@ -249,6 +249,68 @@ def _line_context_reason(indication: Optional[dict], patient_line: int) -> str:
     return "Current-line treatment candidate"
 
 
+def _compact_trace_note(note: Any, limit: int = 280) -> str:
+    if not note:
+        return ""
+    text = " ".join(str(note).split())
+    if len(text) <= limit:
+        return text
+    return text[: limit - 1].rstrip() + "..."
+
+
+def _format_current_default_reason(
+    algorithm: dict,
+    trace: list[dict],
+    selected_indication_id: Optional[str],
+    default_indication_id: Optional[str],
+) -> str:
+    algo_id = algorithm.get("id", "algorithm")
+    if not trace:
+        return f"Primary current-line option from {algo_id}; no decision trace was recorded."
+
+    last = trace[-1] or {}
+    step = last.get("step")
+    branch = last.get("branch") if isinstance(last.get("branch"), dict) else {}
+    branch_result = branch.get("result") if branch else last.get("result")
+    note = _compact_trace_note(branch.get("notes") or last.get("note"))
+    fired = [str(x) for x in (last.get("fired_red_flags") or [])]
+    winner = last.get("winner_red_flag")
+
+    step_text = f"step {step}" if step is not None else "the fallback path"
+
+    if selected_indication_id is None and branch_result is None:
+        reason = (
+            f"Provisional current-line default from {algo_id}: {step_text} "
+            "did not select a treatment branch."
+        )
+        if note:
+            reason += f" {note}"
+        return reason
+
+    if selected_indication_id == default_indication_id or branch_result == default_indication_id:
+        if winner:
+            return (
+                f"Primary current-line option selected by {algo_id} at {step_text}; "
+                f"branch-driving red flag: {winner}."
+            )
+        if fired:
+            return (
+                f"Primary current-line option selected by {algo_id} at {step_text}; "
+                f"fired red flags: {', '.join(fired)}."
+            )
+        return f"Primary current-line option selected by {algo_id} at {step_text}."
+
+    if selected_indication_id:
+        if winner:
+            return (
+                f"Primary current-line option selected by {algo_id} at {step_text}; "
+                f"branch-driving red flag: {winner}."
+            )
+        return f"Primary current-line option selected by {algo_id} at {step_text}."
+
+    return f"Primary current-line option from {algo_id}; review decision trace for details."
+
+
 # ── Track materialization ─────────────────────────────────────────────────────
 
 
@@ -527,7 +589,7 @@ def generate_plan(
             continue
         is_default = ind_id == current_default_id
         reason = (
-            f"Primary current-line option per algorithm {algo['id']}: {trace[-1] if trace else 'no trace'}"
+            _format_current_default_reason(algo, trace, selected, current_default_id)
             if is_default
             else "Current-line alternative presented for HCP consideration"
         )

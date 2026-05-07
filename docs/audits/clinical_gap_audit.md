@@ -1,6 +1,6 @@
 # Clinical gap audit
 
-Generated: `2026-05-07T16:47:04Z`
+Generated: `2026-05-07T16:55:56Z`
 
 This is a coverage/governance audit, not a clinical recommendation set.
 It makes the five largest known gaps measurable and repeatable.
@@ -9,10 +9,10 @@ It makes the five largest known gaps measurable and repeatable.
 
 | Gap | Current | Target | Status |
 |---|---:|---|---|
-| Clinical sign-off | 15/1846 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
+| Clinical sign-off | 15/1849 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
 | Solid tumor 2L+ coverage | 21/42 solid diseases have a 2L+ algorithm; 23/42 have a 2L+ indication | Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication. | `coverage_gap` |
-| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 401 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
-| Supportive-care depth | 138/348 regimens have mandatory supportive care (39.7%); 40 have monitoring; 307 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
+| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 402 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
+| Supportive-care depth | 138/350 regimens have mandatory supportive care (39.4%); 40 have monitoring; 309 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
 | Drug indication and off-label tracking | 773 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `schema_gap` |
 
 ## Next actions

@@ -47,11 +47,11 @@
 
     <div class="callout callout-hard">
       <strong>STUB-статус усього клінічного контенту.</strong>
-      Reviewer sign-offs ≥ 2: <strong>15/398</strong>
+      Reviewer sign-offs ≥ 2: <strong>15/399</strong>
       (CHARTER §6.1 вимагає двох Clinical Co-Lead approvals для будь-якої
       Indication, перш ніж її можна вважати «published»). Зараз — це
       proposed-plan: structured data + algorithm + sources на місці, але
-      без dual sign-off. Стан станом на <code>2026-05-07 16:46 UTC</code>.
+      без dual sign-off. Стан станом на <code>2026-05-07 16:55 UTC</code>.
       Це інструмент підтримки рішень, не медичний пристрій.
     </div>
 
@@ -63,7 +63,7 @@
       </h2>
       <p class="promo-sub">
         Декларативний rule engine на <strong>78 хворобах</strong>,
-        474 red flags, 414 показань, 348 режимів.
+        474 red flags, 415 показань, 350 режимів.
         Без LLM у клінічному рішенні, без серверу, без логів.
         Patient JSON ніколи не покидає машину.
       </p>
@@ -74,7 +74,7 @@
           <div class="promo-stat-lbl">Хвороб у KB</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">414</div>
+          <div class="promo-stat-num">415</div>
           <div class="promo-stat-lbl">Показань</div>
         </div>
         <div class="promo-stat">
@@ -321,9 +321,9 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">348</div>
+          <div class="num-big">350</div>
           <div class="num-lbl">Режими лікування</div>
-          <div class="num-detail">414 показань (229 1L · 185 2L+)</div>
+          <div class="num-detail">415 показань (230 1L · 185 2L+)</div>
           <p class="num-text">
             Кожна схема — список drugs з дозами, шкалою циклів, dose
             adjustments (renal impairment, FIB-4, frailty), premedications,
@@ -951,14 +951,14 @@
         <thead><tr><th>Категорія</th><th>Стан</th><th>Що це означає</th></tr></thead>
         <tbody>
           <tr><td>Хвороби з повним ланцюгом</td><td>70 / 78</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
-          <tr><td>Indications 1L</td><td>229</td><td>Перша лінія покрита для всіх 78 хвороб</td></tr>
+          <tr><td>Indications 1L</td><td>230</td><td>Перша лінія покрита для всіх 78 хвороб</td></tr>
           <tr><td>Indications 2L+</td><td>185</td><td>Друга-четверта лінія: 34 гематологічних + 19 солідних. Решта solid-tumor 2L+ — частково (CRC, breast, urothelial), не systematically.</td></tr>
           <tr><td>RedFlags</td><td>474</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — окремий track спеціалізації</td></tr>
           <tr><td>Радіотерапія планів</td><td>частково</td><td>RT входить у мультимодальні Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), але як окрема сутність з технічними параметрами (доза/фракції/target volumes) ще не моделюється</td></tr>
           <tr><td>Хірургія планів</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
           <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Поки що hard-coded на режимах; не auto-refresh з НСЗУ — окремий backlog</td></tr>
-          <tr><td>Reviewer dual-signoff</td><td>15/398</td><td>Більшість контенту — STUB. Capacity план: 398 → ≥85% verified — це наша основна bottleneck-метрика, описана у kb_coverage_strategy v0.2</td></tr>
+          <tr><td>Reviewer dual-signoff</td><td>15/399</td><td>Більшість контенту — STUB. Capacity план: 399 → ≥85% verified — це наша основна bottleneck-метрика, описана у kb_coverage_strategy v0.2</td></tr>
           <tr><td>Clinical gap audit</td><td><a href="/ukr/clinical-gaps.html">live dashboard</a></td><td>Build-generated audit for sign-off, solid-tumour 2L+, surgery/radiation structure, supportive care, and drug indication tracking.</td></tr>
         </tbody>
       </table>
@@ -1058,7 +1058,7 @@
       <h2>18. Як долучитись — верифікувати алгоритми токенами вашого AI</h2>
       <p class="info-text">
         Найбільший gap на цій сторінці —
-        <strong>15/398</strong>
+        <strong>15/399</strong>
         dual-reviewer sign-off. Це bottleneck, який не вирішується новим
         кодом — він вирішується <em>контрибуторами з AI-tool'ами</em>, які
         беруть structured chunks роботи і виконують їх кожен у свій
