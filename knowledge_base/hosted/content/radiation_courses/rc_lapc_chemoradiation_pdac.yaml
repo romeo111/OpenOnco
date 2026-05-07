@@ -30,21 +30,18 @@ schedule: "1.8 Gy/fx × 5 fx/week (Mon-Fri) × 5.5 weeks; concurrent with capeci
 # 28 fx course (NCCN-PANCREATIC v.4.2025 preferred concurrent regimen;
 # infusional 5-FU 225 mg/m^2/day CIV on RT days an alternative). Setting
 # `concurrent_chemo_regimen:` is the canonical §17 pattern (mirrors
-# RC-DEFINITIVE-ESOPH-SCC → REG-CARBO-PACLI-CONCURRENT-RT-ESOPH), but no
-# `REG-CAPECITABINE-CRT-CONCURRENT` entity exists in the KB yet — only
-# `REG-CAPECITABINE-PALLIATIVE` (1000 mg/m^2 BID days 1-14 / 21d for
-# ECOG 3-4 mCRC), which is the WRONG dose, schedule, and clinical
-# context. Cross-linking to that entity would mislead the engine and
-# render layer. Therefore `concurrent_chemo_regimen:` is left explicitly
-# null with this comment as the audit trail; the concurrent backbone is
-# fully captured in `schedule:` above and in `notes:` below. This mirrors
-# the C4 RC-LCCRT-504-28-RECTAL precedent (rectal LCCRT, same gap; same
-# dedicated-regimen-author follow-up). The shared follow-up: author a
-# single `REG-CAPECITABINE-CRT-CONCURRENT` regimen entity (825 mg/m^2 PO
-# BID on RT days only, no fixed cycle structure — paired with the
-# RadiationCourse) and back-fill BOTH this FK and the rectal LCCRT FK in
-# a future chunk.
-concurrent_chemo_regimen:
+# RC-DEFINITIVE-ESOPH-SCC → REG-CARBO-PACLI-CONCURRENT-RT-ESOPH).
+# Linked to REG-CAPECITABINE-CRT-CONCURRENT — see that regimen entity for
+# full schedule, dose-modification table, DPYD/CrCl gating, and source
+# citations. The 825 mg/m^2 PO BID on-RT-days-only schedule is paired
+# with the 50.4 Gy / 28 fx RT course (~5.5 weeks at 5 fx/week) and is
+# held on weekends and any RT-off days. Same regimen entity is shared
+# with the C4 RC-LCCRT-504-28-RECTAL rectal-LCCRT precedent — the
+# capecitabine radiosensitization backbone is identical across both
+# rectal LCCRT and LAPC consolidation CRT use cases (NCCN-CRC RECTAL-D
+# and NCCN-PANCREATIC PANC-F radiation principles converge on the
+# 825 mg/m^2 BID concurrent dose).
+concurrent_chemo_regimen: REG-CAPECITABINE-CRT-CONCURRENT
 
 intent: definitive
 

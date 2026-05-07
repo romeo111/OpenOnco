@@ -1,0 +1,168 @@
+id: REG-CAPECITABINE-CRT-CONCURRENT
+name: "Concurrent capecitabine radiosensitization (825 mg/m² PO BID on RT days only) — paired with conventionally fractionated GI chemoradiation"
+name_ua: "Конкурентна радіосенсибілізація капецитабіном (825 мг/м² PO 2 рази на день у дні ПТ) — у складі конвенційно фракціонованої хіміопроменевої терапії ШКТ-локалізацій"
+alternate_names:
+  - "Concurrent cape (CRT)"
+  - "Capecitabine 825 BID radiosensitizer"
+  - "Capecitabine on RT days (LCCRT/LAPC backbone)"
+  - "Cape-CRT (rectal LCCRT / pancreatic LAPC consolidation)"
+
+components:
+  - drug_id: DRUG-CAPECITABINE
+    dose: "825 mg/m² PO BID"
+    schedule: "On RT-treatment days only (Mon-Fri during the concurrent RT course); held on weekends and any RT-off days"
+    route: PO
+
+# Concurrent radiosensitizer paired with a RadiationCourse rather than a
+# stand-alone cyclic chemo backbone. Cycle structure tracks the RT course
+# (~5.5 weeks at 5 fx/week for 50.4 Gy / 28 fx) — there is no fixed
+# 21-day cycle. `cycle_length_days` left null and `total_cycles` describes
+# the course rather than a numeric cycle count.
+cycle_length_days:
+total_cycles: "Concurrent with the paired RadiationCourse (~5.5 weeks for 50.4 Gy / 28 fx; capecitabine on RT days only, held on weekends)"
+
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Hand-foot syndrome G≥2"
+    modification: "Hold capecitabine; resume at 75% (≈620 mg/m² BID) on resolution to ≤G1; topical urea/emollient; do not interrupt RT for HFS alone"
+    rationale: "HFS is dose-related and reversible; preserving RT continuity is the primary local-control determinant"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Diarrhea G≥2 (rectal LCCRT) / enteritis G≥2 (LAPC)"
+    modification: "Hold capecitabine; loperamide; hydration; resume at 75%; G≥3 → 50% reduction; consider RT pause only if G≥3 and persistent despite chemo hold"
+    source_refs: [SRC-NCCN-COLON-2025, SRC-NCCN-PANCREATIC-2025]
+  - condition: "Proctitis G≥3 (rectal LCCRT)"
+    modification: "Hold capecitabine; sitz baths, topical analgesia; pause RT per radiation oncology if mucosal break or unable to maintain treatment position; resume capecitabine at 75% on recovery to ≤G2"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Mucositis / esophagitis / gastritis G≥3 (LAPC overlap with stomach/duodenum)"
+    modification: "Hold capecitabine; aggressive supportive care (analgesia, PPI, nutrition support); resume at 75% on recovery; OAR review if recurrent"
+    source_refs: [SRC-NCCN-PANCREATIC-2025]
+  - condition: "CrCl 30-50 mL/min"
+    modification: "Capecitabine 75% starting dose (≈620 mg/m² PO BID on RT days)"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "CrCl <30 mL/min"
+    modification: "Contraindicated; substitute infusional 5-FU 225 mg/m²/day CIV on RT days as the alternative radiosensitizing backbone"
+    source_refs: [SRC-NCCN-COLON-2025, SRC-NCCN-PANCREATIC-2025]
+  - condition: "DPYD deficiency (any clinically-significant variant)"
+    modification: "Reduce starting dose by 50% per CPIC genotype-based guideline; if homozygous deficient, avoid capecitabine entirely and substitute infusional 5-FU only with extreme caution (or omit concurrent chemo and accept RT-alone)"
+    rationale: "DPYD variants cause severe-fatal radiosensitization toxicity; the 825 mg/m² BID concurrent dose is NOT well tolerated even at 50% reduction in homozygous-deficient patients"
+    source_refs: [SRC-NCCN-COLON-2025, SRC-NCCN-PANCREATIC-2025]
+  - condition: "Symptomatic coronary artery disease / prior 5-FU cardiotoxicity"
+    modification: "Discuss alternatives with cardiology; consider 5-FU/capecitabine avoidance with RT-alone or substituting non-fluoropyrimidine radiosensitizer per institutional protocol"
+    source_refs: [SRC-NCCN-COLON-2025]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Капецитабін зареєстрований і реімбурсується НСЗУ для онкологічних показань; пероральне введення дозволяє амбулаторне ведення під час курсу променевої терапії (ПТ виконується в радіологічному центрі)."
+
+sources:
+  - SRC-PRODIGE-23-CONROY-2021
+  - SRC-NCCN-COLON-2025
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-ESMO-CRC-2024
+
+# GRADE evidence assessment for the radiosensitization role of capecitabine
+# 825 mg/m² PO BID on RT days. Long-established backbone in rectal LCCRT
+# (PRODIGE-23 / standard NCCN-CRC RECTAL-D and Hofheinz 2012 cape-noninferior-
+# to-5-FU evidence) and consensus-endorsed for LAPC consolidation CRT
+# (NCCN-PANCREATIC v.4.2025 preferred concurrent regimen). High evidence
+# in rectal CRT, moderate-to-high (extrapolated) in LAPC. Strong
+# recommendation for radiosensitization role across both indications.
+evidence_level: high
+strength_of_recommendation: strong
+
+# §17 actionability review flag — second Clinical Co-Lead signoff still
+# required before publication per CHARTER §6.1.
+actionability_review_required: true
+
+last_reviewed: "2026-05-08"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  Concurrent radiosensitizing capecitabine paired with a conventionally
+  fractionated GI RadiationCourse — distinct from the cyclic palliative
+  capecitabine pattern (REG-CAPECITABINE-PALLIATIVE: 1000 mg/m² BID days
+  1-14 / 21d for ECOG 3-4 mCRC). The 825 mg/m² PO BID "on RT days only"
+  schedule has no fixed cycle structure: capecitabine is taken Monday
+  through Friday during each week of RT delivery (with the daily dose
+  split BID, typically ~12 hours apart, ideally bracketing the RT
+  fraction), held on weekends and any RT-off days, and stopped with the
+  final RT fraction. Total exposure ~5.5 weeks for the canonical
+  50.4 Gy / 28 fx pairing.
+
+  Authored to back-fill the `concurrent_chemo_regimen` FK on two §17
+  RadiationCourse entities that previously had to leave the field
+  explicitly null with audit-trail comments because no matching regimen
+  existed:
+
+    - RC-LCCRT-504-28-RECTAL — long-course preoperative chemoradiation
+      for locally advanced rectal cancer (PRODIGE-23 TNT CRT phase /
+      standard arm; SRC-PRODIGE-23-CONROY-2021, SRC-NCCN-COLON-2025,
+      SRC-ESMO-CRC-2024). Conroy 2021, Lancet Oncology n=461; 3-yr DFS
+      75.7% (TNT) vs 68.5% (standard); pCR 27.8% vs 12.1%.
+    - RC-LAPC-CHEMORADIATION-PDAC — definitive consolidation
+      chemoradiation for locally advanced unresectable pancreatic
+      adenocarcinoma (NCCN-PANCREATIC v.4.2025 preferred concurrent
+      regimen; SRC-NCCN-PANCREATIC-2025). Sequenced after ~6 cycles of
+      induction FOLFIRINOX/mFOLFIRINOX in patients without progression.
+
+  Hofheinz 2012 (Lancet Oncology) established capecitabine non-inferiority
+  to infusional 5-FU 225 mg/m²/day CIV in rectal CRT (5-yr OS 75.7% cape
+  vs 66.6% 5-FU, p=0.04 favoring cape) and that result generalizes by
+  clinical convention to pancreatic LAPC consolidation CRT, where
+  NCCN-PANCREATIC v.4.2025 lists capecitabine and infusional 5-FU as
+  interchangeable concurrent radiosensitizers. The infusional 5-FU
+  alternative remains a valid substitute for patients with
+  capecitabine-specific contraindications (severe HFS history, DPYD
+  homozygous deficiency, symptomatic CAD with prior 5-FU cardiotoxicity,
+  CrCl <30 mL/min where capecitabine is contraindicated but supervised
+  IV 5-FU may be feasible at a reduced dose).
+
+  Toxicity profile: moderate. Hand-foot syndrome and diarrhea (rectal) /
+  enteritis (LAPC) dominate. Proctitis (rectal LCCRT) and mucositis /
+  esophagitis / gastritis (LAPC, due to stomach/duodenum overlap with
+  the RT field) are RT-driven but capecitabine amplifies them via
+  radiosensitization. RT continuity is the primary local-control driver,
+  so chemo is held in preference to pausing RT whenever possible
+  (capecitabine is the modifiable variable; RT fractionation is fixed).
+  DPYD pre-screening per CPIC strongly recommended before starting any
+  fluoropyrimidine-based radiosensitization — DPYD-deficient patients
+  experience severe-fatal mucositis, diarrhea, and myelosuppression even
+  at 50% capecitabine reduction.
+
+  Pairing pattern (canonical §17 RadiationCourse FK):
+  RC.concurrent_chemo_regimen → REG-CAPECITABINE-CRT-CONCURRENT.id.
+  This regimen is NOT intended for stand-alone systemic-therapy use;
+  always paired with a RadiationCourse entity that defines the RT
+  fractionation, target volume, and total dose. Render layer should
+  surface this regimen only in the context of its paired RadiationCourse,
+  never as a candidate cyclic chemo regimen.
+notes_ua: >
+  Конкурентний радіосенсибілізатор капецитабін у дозі 825 мг/м² PO 2 рази
+  на день — приймається ЛИШЕ у дні проведення променевої терапії
+  (понеділок-п'ятниця протягом курсу ПТ), не у вихідні. Цикл відстежує
+  курс ПТ (~5.5 тижнів для 50.4 Гр / 28 фракцій), а не фіксований
+  21-денний цикл. Призначається ВИКЛЮЧНО у складі хіміопроменевої
+  терапії, ніколи як самостійний системний режим.
+
+  Створено для коректного зв'язування FK у §17 RadiationCourse
+  сутностях RC-LCCRT-504-28-RECTAL (довгий курс передопераційної ХПТ
+  при раку прямої кишки за PRODIGE-23) та RC-LAPC-CHEMORADIATION-PDAC
+  (радикальна консолідаційна ХПТ при локально-поширеному нерезектабель-
+  ному раку підшлункової залози).
+
+  Токсичність помірна — переважають долонно-підошовний синдром,
+  діарея (пряма кишка) / ентерит (підшлункова), проктит (пряма кишка)
+  та мукозит / езофагіт / гастрит (підшлункова, через перекриття поля
+  ПТ зі шлунком та дванадцятипалою кишкою). Безперервність ПТ є
+  пріоритетом для локального контролю — за можливості зупиняється
+  капецитабін, а не ПТ. Перед-скринінг на DPYD-дефіцит за CPIC
+  наполегливо рекомендується перед призначенням будь-якого
+  фторпіримідин-вмісного радіосенсибілізатора.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
