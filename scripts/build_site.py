@@ -1786,16 +1786,16 @@ def render_ask(*, target_lang: str = "en") -> str:
     )
     examples = [
         (
-            "Gastric 1L",
-            "62-річний пацієнт із метастатичним раком шлунка, поширений перитонеальний канцероматоз. Гістологія: недиференційована аденокарцинома з перснеподібними клітинами, MSS, HER2-негативний, PD-L1 CPS = 25. Яка оптимальна перша лінія лікування?"
+            "NSCLC EGFR 1L",
+            "64-річна жінка, ніколи не курила, метастатична аденокарцинома легені. EGFR exon 19 deletion позитивна, ALK негативний, PD-L1 TPS 30%, ECOG 1. Яка перша лінія системного лікування?"
         ),
         (
-            "GBM supportive",
-            "30-річний чоловік із гліобластомою лівої тім'яної частки 2 см, ECOG 1, без супутньої патології, судом не було. Що НЕ входить до лікування: резекція, радіотерапія, стероїди, темозоломід чи профілактичні протиепілептичні?"
+            "Breast HER2 2L",
+            "55-річна жінка з HER2-позитивним метастатичним раком молочної залози, прогресування після трастузумаб/пертузумаб + доцетаксел у першій лінії. ER/PR негативні, ECOG 1, без симптомних метастазів у ЦНС. Яка оптимальна друга лінія?"
         ),
         (
-            "CUP poor PS",
-            "74-річна жінка, множинні метастази в печінці, низькодиференційована аденокарцинома без первинного вогнища, PET-негативна, WHO PS 3. Яка найбільш доцільна тактика?"
+            "Melanoma BRAF",
+            "47-річний пацієнт із нерезектабельною метастатичною меланомою шкіри. BRAF V600E позитивний, LDH підвищений, ECOG 1, без активних аутоімунних хвороб. Які системні опції першої лінії слід розглянути?"
         ),
     ]
     examples_json = json.dumps(
@@ -1818,6 +1818,9 @@ def render_ask(*, target_lang: str = "en") -> str:
 .ask-panel input {{ width:100%; }}
 .ask-actions {{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }}
 .ask-result {{ white-space:pre-wrap; font:14px/1.5 var(--mono); background:#0f172a; color:#e5e7eb; border-radius:8px; padding:14px; min-height:340px; overflow:auto; }}
+.ask-related-links {{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid rgba(229,231,235,.18); white-space:normal; font-family:var(--font); }}
+.ask-related-links a {{ color:#bbf7d0; border:1px solid rgba(187,247,208,.45); border-radius:999px; padding:5px 9px; text-decoration:none; font-size:13px; }}
+.ask-related-links a:hover {{ background:rgba(187,247,208,.12); }}
 .ask-muted {{ color:var(--muted); font-size:14px; }}
 .ask-examples {{ display:grid; gap:10px; margin:12px 0 14px; }}
 .ask-example {{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; border:1px solid var(--line); border-radius:8px; padding:10px; background:#f8fafc; }}
@@ -1976,6 +1979,52 @@ def render_ask(*, target_lang: str = "en") -> str:
     return lines.join('\\n') || JSON.stringify(payload, null, 2);
   }}
 
+  function renderResult(payload) {{
+    result.textContent = renderPayload(payload);
+    if (!payload.related_links || !payload.related_links.length) return;
+    const links = document.createElement('div');
+    links.className = 'ask-related-links';
+    payload.related_links.forEach(item => {{
+      if (!item || !item.url || !item.label) return;
+      const a = document.createElement('a');
+      a.href = item.url;
+      a.textContent = item.label;
+      a.title = item.id || item.kind || '';
+      links.appendChild(a);
+    }});
+    if (links.children.length) result.appendChild(links);
+  }}
+
+  function endpointJsonError(endpoint, resp, body) {{
+    const isUk = (document.documentElement.lang || '').toLowerCase().startsWith('uk');
+    const looksHtml = /^\\s*</.test(body || '');
+    if (looksHtml) {{
+      return new Error(isUk
+        ? `Endpoint ${{endpoint}} повернув HTML замість JSON (HTTP ${{resp.status}}). На статичному openonco.info це зазвичай означає, що /api/clinical-question не розгорнуто як serverless endpoint. Вкажіть URL розгорнутого API в полі Endpoint.`
+        : `Endpoint ${{endpoint}} returned HTML instead of JSON (HTTP ${{resp.status}}). On static openonco.info this usually means /api/clinical-question is not deployed as a serverless endpoint. Paste the deployed API URL into the Endpoint field.`);
+    }}
+    return new Error(isUk
+      ? `Endpoint ${{endpoint}} не повернув валідний JSON (HTTP ${{resp.status}}).`
+      : `Endpoint ${{endpoint}} did not return valid JSON (HTTP ${{resp.status}}).`);
+  }}
+
+  async function postClinicalQuestion(endpoint, body) {{
+    const resp = await fetch(endpoint, {{
+      method: 'POST',
+      headers: {{ 'Content-Type': 'application/json' }},
+      body: JSON.stringify(body)
+    }});
+    const text = await resp.text();
+    let payload = null;
+    try {{
+      payload = text ? JSON.parse(text) : {{}};
+    }} catch (err) {{
+      throw endpointJsonError(endpoint, resp, text);
+    }}
+    if (!resp.ok) throw new Error(payload.message || ('HTTP ' + resp.status));
+    return payload;
+  }}
+
   function canOpenInPlanGenerator(payload) {{
     return !!(
       payload &&
@@ -2029,16 +2078,11 @@ def render_ask(*, target_lang: str = "en") -> str:
     result.textContent = '';
     planLinkWrap.classList.remove('is-visible');
     try {{
-      const resp = await fetch(endpointInput.value.trim() || '/api/clinical-question', {{
-        method: 'POST',
-        headers: {{ 'Content-Type': 'application/json' }},
-        body: JSON.stringify({{ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() }})
-      }});
-      const payload = await resp.json();
-      if (!resp.ok) throw new Error(payload.message || ('HTTP ' + resp.status));
+      const endpoint = endpointInput.value.trim() || '/api/clinical-question';
+      const payload = await postClinicalQuestion(endpoint, {{ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() }});
       if (typeof payload.questions_used === 'number') setCount(payload.questions_used);
       else setCount(getCount() + 1);
-      result.textContent = renderPayload(payload);
+      renderResult(payload);
       await updatePlanGeneratorLink(payload);
       status.textContent = payload.status || 'ok';
     }} catch (err) {{

@@ -235,6 +235,8 @@ def test_ask_page_wires_clinical_question_endpoint(site_dir: Path):
     assert "CompressionStream" in html
     assert "try.html#p=" in html
     assert "engine_summary.ok === true" in html
+    assert "related_links" in html
+    assert "ask-related-links" in html
     assert "questions_used" in html
     assert "OPENAI_API_KEY" not in html
     assert "api.openai.com" not in html

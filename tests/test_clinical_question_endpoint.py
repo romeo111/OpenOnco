@@ -57,12 +57,19 @@ def test_answer_flow_passes_engine_summary_to_presenter(monkeypatch):
         mode="treatment",
         ok=True,
         payload={
+            "disease_id": "DIS-GASTRIC",
             "default_indication_id": "IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI",
             "tracks": [
                 {
                     "is_default": True,
                     "regimen_id": "REG-FOLFOX-NIVO",
                     "regimen_name": "FOLFOX + Nivolumab",
+                    "component_drug_ids": ["DRUG-NIVOLUMAB"],
+                }
+            ],
+            "trace": [
+                {
+                    "fired_red_flags": ["RF-GASTRIC-PDL1-CPS-1-PLUS"],
                 }
             ],
         },
@@ -94,6 +101,11 @@ def test_answer_flow_passes_engine_summary_to_presenter(monkeypatch):
     assert out["direct_answer"] == "FOLFOX + nivolumab"
     assert out["engine_summary"]["ok"] is True
     assert out["patient_profile"]["disease"]["id"] == "DIS-GASTRIC"
+    urls = {item["url"] for item in out["related_links"]}
+    assert "/ukr/diseases.html#DIS-GASTRIC" in urls
+    assert "/ukr/kb/biomarkers/bio-pdl1-cps.html" in urls
+    assert "/ukr/kb/drugs/drug-nivolumab.html" in urls
+    assert "/ukr/kb/redflags/rf-gastric-pdl1-cps-1-plus.html" in urls
 
 
 def test_handle_json_request_serializes_errors(monkeypatch):
@@ -198,6 +210,225 @@ def test_fake_biomarker_blocks_engine_execution(monkeypatch):
     assert out["input_validation"]["ok"] is False
     assert "BIO-FAKE-X999" in out["input_validation"]["unknown_biomarkers"]
     assert out["engine_summary"] is None
+
+
+def test_common_valid_biomarker_mentions_pass_input_validation(monkeypatch):
+    extraction = {
+        "case_summary": "Metastatic gastric cancer, HER2 negative, MSS, PD-L1 CPS 25.",
+        "clinical_question": "First line",
+        "answer_options": [],
+        "patient_profile_json": json.dumps(
+            {
+                "patient_id": "TEST-GASTRIC",
+                "disease": {"id": "DIS-GASTRIC"},
+                "line_of_therapy": 1,
+                "biomarkers": {
+                    "BIO-HER2-SOLID": "negative",
+                    "BIO-MSI-STATUS": "MSS",
+                    "BIO-PDL1-CPS": 25,
+                },
+            }
+        ),
+        "mentioned_biomarkers": ["HER2-негативний", "MSS", "PD-L1 CPS 25"],
+        "mentioned_drugs": [],
+        "unsupported_mentions": [],
+        "missing_profile_fields": [],
+        "confidence_notes": [],
+    }
+    engine = cq.EngineSummary(mode="treatment", ok=True, payload={"tracks": []}, warnings=[])
+
+    monkeypatch.setattr(cq, "extract_case", lambda case_text, locale="uk": extraction)
+    monkeypatch.setattr(cq, "run_engine", lambda patient: engine)
+    monkeypatch.setattr(
+        cq,
+        "compose_answer",
+        lambda **kwargs: {
+            "status": "answered",
+            "direct_answer": "ok",
+            "selected_options": [],
+            "rationale": [],
+            "clarifying_questions": [],
+            "engine_limitations": [],
+            "safety_note": cq.DISCLAIMER_UK,
+            "confidence": "medium",
+        },
+    )
+
+    out = cq.answer_clinical_question("metastatic gastric cancer HER2-negative MSS", locale="uk")
+
+    assert out["status"] == "answered"
+    assert out["input_validation"]["ok"] is True
+
+
+def test_common_biomarker_typos_and_formats_are_tolerated():
+    vocab = cq._clinical_vocabulary()
+
+    assert cq._known_term(
+        "HER 2 negtive",
+        ids=vocab.biomarker_ids,
+        terms=vocab.biomarker_terms,
+        compact_terms=vocab.biomarker_compact_terms,
+    )
+    assert cq._known_term(
+        "PDL1CPS25",
+        ids=vocab.biomarker_ids,
+        terms=vocab.biomarker_terms,
+        compact_terms=vocab.biomarker_compact_terms,
+    )
+    assert cq._known_term(
+        "microsatelite stable",
+        ids=vocab.biomarker_ids,
+        terms=vocab.biomarker_terms,
+        compact_terms=vocab.biomarker_compact_terms,
+    )
+    assert not cq._known_term(
+        "BIO-FAKE-X999",
+        ids=vocab.biomarker_ids,
+        terms=vocab.biomarker_terms,
+        compact_terms=vocab.biomarker_compact_terms,
+    )
+
+
+def test_disease_inference_tolerates_minor_typos():
+    assert cq._infer_disease_id_from_text("metastatic gastrc cancer, first line") == "DIS-GASTRIC"
+    assert cq._infer_disease_id_from_text("newly diagnosed gliobastoma") == "DIS-GBM"
+
+
+def test_non_drug_biomarker_unsupported_mentions_do_not_block(monkeypatch):
+    extraction = {
+        "case_summary": "GBM case asking which supportive option is not part of treatment.",
+        "clinical_question": "What is not included?",
+        "answer_options": [{"label": "A", "text": "Radiotherapy"}],
+        "patient_profile_json": json.dumps(
+            {
+                "patient_id": "TEST-GBM",
+                "disease": {"id": "DIS-GBM"},
+                "line_of_therapy": 2,
+                "biomarkers": {},
+            }
+        ),
+        "mentioned_biomarkers": [],
+        "mentioned_drugs": [],
+        "unsupported_mentions": [
+            {"text": "радіотерапія", "reason": "Treatment modality, not a drug/biomarker."},
+            {"text": "WHO PS 3", "reason": "Performance status metric."},
+        ],
+        "missing_profile_fields": [],
+        "confidence_notes": [],
+    }
+    engine = cq.EngineSummary(mode="treatment", ok=True, payload={"tracks": []}, warnings=[])
+
+    monkeypatch.setattr(cq, "extract_case", lambda case_text, locale="uk": extraction)
+    def fake_engine(patient):
+        assert patient["line_of_therapy"] == 1
+        return engine
+
+    monkeypatch.setattr(cq, "run_engine", fake_engine)
+    monkeypatch.setattr(
+        cq,
+        "compose_answer",
+        lambda **kwargs: {
+            "status": "answered",
+            "direct_answer": "ok",
+            "selected_options": [],
+            "rationale": [],
+            "clarifying_questions": [],
+            "engine_limitations": [],
+            "safety_note": cq.DISCLAIMER_UK,
+            "confidence": "medium",
+        },
+    )
+
+    out = cq.answer_clinical_question("gbm radiotherapy who ps", locale="uk")
+
+    assert out["status"] == "answered"
+    assert out["input_validation"]["ok"] is True
+    assert out["input_validation"]["warnings"]
+
+
+def test_blocking_unsupported_fake_biomarker_still_blocks(monkeypatch):
+    extraction = {
+        "case_summary": "Cancer with unsupported fake biomarker.",
+        "clinical_question": "First line",
+        "answer_options": [],
+        "patient_profile_json": json.dumps(
+            {"patient_id": "TEST", "disease": {"id": "DIS-GASTRIC"}, "line_of_therapy": 1}
+        ),
+        "mentioned_biomarkers": [],
+        "mentioned_drugs": [],
+        "unsupported_mentions": [{"text": "BIO-FAKE-X999", "reason": "biomarker not in vocabulary"}],
+        "missing_profile_fields": [],
+        "confidence_notes": [],
+    }
+
+    monkeypatch.setattr(cq, "extract_case", lambda case_text, locale="uk": extraction)
+    monkeypatch.setattr(
+        cq,
+        "run_engine",
+        lambda patient: (_ for _ in ()).throw(AssertionError("engine should be blocked")),
+    )
+
+    out = cq.answer_clinical_question("metastatic gastric cancer with unusual marker", locale="uk")
+
+    assert out["status"] == "needs_clarification"
+    assert out["input_validation"]["unsupported_mentions"]
+
+
+def test_extracted_gastric_text_is_normalized_for_engine(monkeypatch):
+    extraction = {
+        "case_summary": "62-year-old with metastatic gastric cancer, HER2 negative, MSS, PD-L1 CPS 25.",
+        "clinical_question": "First line",
+        "answer_options": [],
+        "patient_profile_json": json.dumps(
+            {
+                "patient_id": "TEST-GASTRIC-NORMALIZE",
+                "disease": {
+                    "id": "DIS-GASTRIC-CANCER",
+                    "suspicion": "Metastatic gastric adenocarcinoma with signet-ring cells",
+                },
+                "disease_state": {"metastatic": True},
+                "line_of_therapy": None,
+                "biomarkers": [{"id": "BIO-HER2-SOLID", "value": "negative"}],
+                "findings": [{"text": "peritoneal carcinomatosis"}],
+            }
+        ),
+        "mentioned_biomarkers": ["HER2-негативний"],
+        "mentioned_drugs": [],
+        "unsupported_mentions": [],
+        "missing_profile_fields": [],
+        "confidence_notes": [],
+    }
+    engine = cq.EngineSummary(mode="treatment", ok=True, payload={"tracks": []}, warnings=[])
+
+    monkeypatch.setattr(cq, "extract_case", lambda case_text, locale="uk": extraction)
+
+    def fake_engine(patient):
+        assert patient["disease"]["id"] == "DIS-GASTRIC"
+        assert patient["line_of_therapy"] == 1
+        assert patient["disease_state"] is None
+        assert patient["biomarkers"] == {"BIO-HER2-SOLID": "negative"}
+        assert patient["findings"] == {"peritoneal carcinomatosis": True}
+        return engine
+
+    monkeypatch.setattr(cq, "run_engine", fake_engine)
+    monkeypatch.setattr(
+        cq,
+        "compose_answer",
+        lambda **kwargs: {
+            "status": "answered",
+            "direct_answer": "ok",
+            "selected_options": [],
+            "rationale": [],
+            "clarifying_questions": [],
+            "engine_limitations": [],
+            "safety_note": cq.DISCLAIMER_UK,
+            "confidence": "medium",
+        },
+    )
+
+    out = cq.answer_clinical_question("метастатичний рак шлунка", locale="uk")
+
+    assert out["status"] == "answered"
 
 
 def test_fake_drug_mention_blocks_engine_execution(monkeypatch):

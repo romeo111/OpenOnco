@@ -22,6 +22,7 @@ import re
 import traceback
 import urllib.error
 import urllib.request
+from difflib import SequenceMatcher
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -206,6 +207,91 @@ def _compact_term(text: Any) -> str:
     return re.sub(r"[^a-zа-яіїєґ0-9]+", "", _normalize_term(text), flags=re.IGNORECASE)
 
 
+def _without_trailing_digits(value: str) -> str:
+    return re.sub(r"\d+$", "", value)
+
+
+def _similar_enough(left: str, right: str) -> bool:
+    if len(left) < 4 or len(right) < 4:
+        return False
+    short, long = sorted((left, right), key=len)
+    if len(short) / len(long) < 0.68:
+        return False
+    threshold = 0.88 if len(long) <= 8 else 0.84
+    return SequenceMatcher(None, left, right).ratio() >= threshold
+
+
+def _status_suffix_matches(suffix: str) -> bool:
+    if not suffix or suffix.isdigit():
+        return False
+    if suffix in _STATUS_SUFFIX_COMPACT_TERMS:
+        return True
+    return any(_similar_enough(suffix, known) for known in _STATUS_SUFFIX_COMPACT_TERMS)
+
+
+def _compact_text_has_alias(text: str, alias: str) -> bool:
+    compact_text = _compact_term(text)
+    compact_alias = _compact_term(alias)
+    if not compact_alias:
+        return False
+    if compact_alias in compact_text:
+        return True
+    if len(compact_alias) < 6 or len(compact_text) < len(compact_alias) - 1:
+        return False
+    min_size = max(4, len(compact_alias) - 2)
+    max_size = len(compact_alias) + 2
+    for size in range(min_size, max_size + 1):
+        if size > len(compact_text):
+            continue
+        for start in range(0, len(compact_text) - size + 1):
+            if _similar_enough(compact_text[start : start + size], compact_alias):
+                return True
+    return False
+
+
+_BIOMARKER_TERM_ALIASES: dict[str, tuple[str, ...]] = {
+    "BIO-HER2-SOLID": ("HER2", "ERBB2"),
+    "BIO-MSI-STATUS": (
+        "MSI",
+        "MSI-H",
+        "MSI high",
+        "MSS",
+        "microsatellite stable",
+        "microsatellite instability",
+    ),
+    "BIO-PDL1-CPS": ("PD-L1", "PDL1", "PD-L1 CPS", "CPS"),
+}
+
+_STATUS_SUFFIX_COMPACT_TERMS = frozenset(
+    _compact_term(term)
+    for term in (
+        "positive",
+        "negative",
+        "pos",
+        "neg",
+        "mutated",
+        "mutation",
+        "wild type",
+        "wildtype",
+        "wt",
+        "rearranged",
+        "amplified",
+        "loss",
+        "high",
+        "low",
+        "stable",
+        "unstable",
+        "позитивний",
+        "позитивна",
+        "негативний",
+        "негативна",
+        "мутація",
+        "мутований",
+        "дикий тип",
+    )
+)
+
+
 def _iter_strings(value: Any) -> list[str]:
     if isinstance(value, str):
         return [value]
@@ -270,6 +356,8 @@ def _clinical_vocabulary() -> ClinicalVocabulary:
         if entity_type == "biomarkers":
             biomarker_ids.add(entity_id)
             biomarker_terms.update(terms)
+            for alias in _BIOMARKER_TERM_ALIASES.get(entity_id, ()):
+                biomarker_terms.add(_normalize_term(alias))
             prompt_biomarkers.append(prompt_entry)
         elif entity_type == "drugs":
             drug_ids.add(entity_id)
@@ -295,10 +383,24 @@ def _known_term(mention: str, *, ids: frozenset[str], terms: frozenset[str], com
     upper = raw.upper()
     if upper in ids:
         return True
+    if upper.startswith("BIO-") or upper.startswith("DRUG-"):
+        return False
     norm = _normalize_term(raw)
     compact = _compact_term(raw)
-    if norm in terms or compact in compact_terms:
+    compact_no_digits = _without_trailing_digits(compact)
+    if norm in terms or compact in compact_terms or compact_no_digits in compact_terms:
         return True
+    for term in compact_terms:
+        suffix = compact.removeprefix(term) if len(term) >= 3 and compact.startswith(term) else ""
+        if _status_suffix_matches(suffix):
+            return True
+        suffix = (
+            compact_no_digits.removeprefix(term)
+            if len(term) >= 3 and compact_no_digits.startswith(term)
+            else ""
+        )
+        if _status_suffix_matches(suffix):
+            return True
     if len(norm) < 3:
         return False
     for term in terms:
@@ -306,6 +408,8 @@ def _known_term(mention: str, *, ids: frozenset[str], terms: frozenset[str], com
             return True
         if norm.startswith(term + " ") or norm.startswith(term + "-"):
             return True
+    if compact_no_digits and any(_similar_enough(compact_no_digits, term) for term in compact_terms):
+        return True
     return False
 
 
@@ -337,6 +441,170 @@ def _walk_profile_ids(value: Any) -> tuple[set[str], set[str]]:
     return biomarker_ids, drug_ids
 
 
+_NON_BLOCKING_UNSUPPORTED_HINTS = (
+    "disease",
+    "diagnosis",
+    "dis-*",
+    "imaging",
+    "performance status",
+    "metric",
+    "treatment modality",
+    "modality",
+    "drug class",
+    "class mentioned",
+    "class",
+    "no specific",
+    "non-specific",
+    "not a drug/biomarker",
+    "not a biomarker/drug",
+    "not drugs/biomarkers",
+    "not biomarkers/drugs",
+    "not mappable",
+)
+
+
+def _is_blocking_unsupported_mention(item: dict[str, str]) -> bool:
+    text = str(item.get("text") or "").strip()
+    haystack = " ".join(
+        str(item.get(key) or "").casefold()
+        for key in ("type", "kind", "category", "reason", "note", "text")
+    )
+    upper = text.upper()
+    if upper.startswith("BIO-") or upper.startswith("DRUG-"):
+        return True
+    if any(hint in haystack for hint in _NON_BLOCKING_UNSUPPORTED_HINTS):
+        return False
+    return any(token in haystack for token in ("biomarker", "drug", "medicine", "preparat"))
+
+
+_DISEASE_ID_ALIASES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("DIS-GBM", ("glioblastoma", "gbm", "гліобласт")),
+    ("DIS-NSCLC", ("nsclc", "non-small cell lung", "недрібноклітин", "недрiбнокл")),
+    ("DIS-CRC", ("colorectal", "colon cancer", "рак ободов", "рак товст", "crc")),
+    (
+        "DIS-GASTRIC",
+        ("gastric cancer", "gastric adenocarcinoma", "stomach cancer", "рак шлун"),
+    ),
+)
+
+
+def _infer_disease_id_from_text(text: str) -> str | None:
+    norm = _normalize_term(text)
+    for disease_id, aliases in _DISEASE_ID_ALIASES:
+        if any(_normalize_term(alias) in norm or _compact_text_has_alias(text, alias) for alias in aliases):
+            return disease_id
+    return None
+
+
+@lru_cache(maxsize=1)
+def _disease_ids() -> frozenset[str]:
+    loaded = load_content(KB_ROOT)
+    return frozenset(
+        entity_id
+        for entity_id, info in loaded.entities_by_id.items()
+        if info.get("type") == "diseases"
+    )
+
+
+def _coerce_line_of_therapy(value: Any) -> int | None:
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    text = _normalize_term(value)
+    if not text:
+        return None
+    if re.search(r"\b(3|third|3l)\b", text) or "трет" in text:
+        return 3
+    if re.search(r"\b(2|second|2l)\b", text) or "друг" in text:
+        return 2
+    if re.search(r"\b(1|first|1l)\b", text) or "перш" in text:
+        return 1
+    return None
+
+
+def _normalize_extracted_patient(patient: dict[str, Any], extraction: dict[str, Any]) -> dict[str, Any]:
+    disease = patient.get("disease")
+    if not isinstance(disease, dict):
+        disease = {}
+        patient["disease"] = disease
+
+    disease_id = str(disease.get("id") or "").upper()
+    if not disease_id.startswith("DIS-") or disease_id not in _disease_ids():
+        text_blob = " ".join(_iter_strings({
+            "extraction": extraction.get("case_summary"),
+            "clinical_question": extraction.get("clinical_question"),
+            "disease": disease,
+            "pathology": patient.get("pathology"),
+        }))
+        inferred = _infer_disease_id_from_text(text_blob)
+        if inferred:
+            disease["id"] = inferred
+
+    suspicion = disease.get("suspicion")
+    if suspicion and not isinstance(suspicion, dict):
+        disease["suspicion"] = {
+            "presentation": str(suspicion),
+            "working_hypotheses": [str(suspicion)],
+        }
+
+    line = _coerce_line_of_therapy(patient.get("line_of_therapy"))
+    if line is None:
+        line = _coerce_line_of_therapy(
+            " ".join(
+                _iter_strings({
+                    "case_summary": extraction.get("case_summary"),
+                    "clinical_question": extraction.get("clinical_question"),
+                    "treatment": patient.get("treatment"),
+                })
+            )
+        )
+    if (
+        line == 2
+        and disease.get("id") == "DIS-GBM"
+        and not patient.get("prior_treatments")
+        and not patient.get("prior_therapies")
+    ):
+        line = 1
+    if line is not None:
+        patient["line_of_therapy"] = line
+
+    disease_state = patient.get("disease_state")
+    if isinstance(disease_state, dict):
+        # Most algorithms are line/disease based. Keep state-specific strings
+        # only when explicitly authored, rather than passing a dict to engine.
+        patient["disease_state"] = None
+
+    biomarkers = patient.get("biomarkers")
+    if isinstance(biomarkers, list):
+        normalized_biomarkers: dict[str, Any] = {}
+        for item in biomarkers:
+            if not isinstance(item, dict):
+                continue
+            biomarker_id = str(item.get("id") or "").upper()
+            if not biomarker_id.startswith("BIO-"):
+                continue
+            normalized_biomarkers[biomarker_id] = item.get("value")
+        if normalized_biomarkers:
+            patient["biomarkers"] = normalized_biomarkers
+
+    findings = patient.get("findings")
+    if isinstance(findings, list):
+        normalized_findings: dict[str, Any] = {}
+        for item in findings:
+            if isinstance(item, str):
+                normalized_findings[item] = True
+                continue
+            if not isinstance(item, dict):
+                continue
+            key = item.get("finding") or item.get("site") or item.get("text") or item.get("description")
+            if key:
+                normalized_findings[str(key)] = item.get("value", True)
+        patient["findings"] = normalized_findings
+
+    return patient
+
+
 def _validate_extracted_case(extraction: dict[str, Any], patient: dict[str, Any]) -> InputValidation:
     vocab = _clinical_vocabulary()
     unknown_biomarkers: set[str] = set()
@@ -364,15 +632,22 @@ def _validate_extracted_case(extraction: dict[str, Any], patient: dict[str, Any]
         ):
             unknown_drugs.add(str(mention))
 
-    unsupported = tuple(
+    unsupported_items = tuple(
         item for item in (extraction.get("unsupported_mentions") or [])
         if isinstance(item, dict) and str(item.get("text") or "").strip()
+    )
+    unsupported = tuple(item for item in unsupported_items if _is_blocking_unsupported_mention(item))
+    unsupported_warnings = tuple(
+        f"Non-blocking unsupported mention: {item.get('text')}"
+        for item in unsupported_items
+        if item not in unsupported
     )
     return InputValidation(
         ok=not unknown_biomarkers and not unknown_drugs and not unsupported,
         unknown_biomarkers=tuple(sorted(unknown_biomarkers)),
         unknown_drugs=tuple(sorted(unknown_drugs)),
         unsupported_mentions=unsupported,
+        warnings=unsupported_warnings,
     )
 
 
@@ -668,6 +943,7 @@ def _safe_json_object(text: str) -> dict[str, Any]:
 
 def _track_summary(track: Any) -> dict[str, Any]:
     regimen = getattr(track, "regimen_data", None) or {}
+    components = regimen.get("components") if isinstance(regimen, dict) else []
     return {
         "track_id": getattr(track, "track_id", None),
         "label": getattr(track, "label", None),
@@ -676,8 +952,105 @@ def _track_summary(track: Any) -> dict[str, Any]:
         "indication_id": getattr(track, "indication_id", None),
         "regimen_id": regimen.get("id") if isinstance(regimen, dict) else None,
         "regimen_name": regimen.get("name") if isinstance(regimen, dict) else None,
+        "component_drug_ids": [
+            item.get("drug_id")
+            for item in (components if isinstance(components, list) else [])
+            if isinstance(item, dict) and item.get("drug_id")
+        ],
         "selection_reason": getattr(track, "selection_reason", None),
     }
+
+
+def _slugify(value: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", str(value or "").lower()).strip("-")
+    return slug or "entity"
+
+
+def _entity_label(entity_id: str, data: dict[str, Any]) -> str:
+    names = data.get("names")
+    if isinstance(names, dict):
+        for key in ("preferred", "english", "ukrainian"):
+            value = names.get(key)
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+    for key in ("name", "label", "title"):
+        value = data.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return entity_id
+
+
+def _entity_link(entity_id: str, *, locale: str) -> dict[str, str] | None:
+    loaded = load_content(KB_ROOT)
+    info = loaded.entities_by_id.get(entity_id)
+    if not info:
+        return None
+    entity_type = info.get("type")
+    data = info.get("data") or {}
+    if not isinstance(data, dict):
+        data = {}
+    prefix = "/ukr" if locale.lower().startswith("uk") else ""
+    if entity_type == "diseases":
+        return {
+            "kind": "disease",
+            "label": _entity_label(entity_id, data),
+            "url": f"{prefix}/diseases.html#{entity_id}",
+        }
+    if entity_type not in {"drugs", "biomarkers", "redflags", "biomarker_actionability"}:
+        return None
+    return {
+        "kind": str(entity_type),
+        "label": _entity_label(entity_id, data),
+        "url": f"{prefix}/kb/{entity_type}/{_slugify(entity_id)}.html",
+    }
+
+
+def _append_related_link(
+    links: list[dict[str, str]],
+    seen: set[str],
+    entity_id: str | None,
+    *,
+    locale: str,
+) -> None:
+    if not entity_id or entity_id in seen:
+        return
+    link = _entity_link(entity_id, locale=locale)
+    if not link:
+        return
+    link["id"] = entity_id
+    seen.add(entity_id)
+    links.append(link)
+
+
+def _related_links(patient: dict[str, Any], engine: EngineSummary, *, locale: str) -> list[dict[str, str]]:
+    links: list[dict[str, str]] = []
+    seen: set[str] = set()
+
+    disease = patient.get("disease") if isinstance(patient.get("disease"), dict) else {}
+    _append_related_link(links, seen, disease.get("id"), locale=locale)
+
+    biomarkers = patient.get("biomarkers")
+    if isinstance(biomarkers, dict):
+        for biomarker_id in biomarkers:
+            _append_related_link(links, seen, str(biomarker_id).upper(), locale=locale)
+    elif isinstance(biomarkers, list):
+        for item in biomarkers:
+            if isinstance(item, dict):
+                _append_related_link(links, seen, str(item.get("id") or "").upper(), locale=locale)
+
+    for track in ((engine.payload or {}).get("tracks") or [])[:3]:
+        if not isinstance(track, dict):
+            continue
+        for drug_id in track.get("component_drug_ids") or []:
+            _append_related_link(links, seen, str(drug_id).upper(), locale=locale)
+
+    for step in ((engine.payload or {}).get("trace") or []):
+        if not isinstance(step, dict):
+            continue
+        for redflag_id in step.get("fired_red_flags") or []:
+            _append_related_link(links, seen, str(redflag_id).upper(), locale=locale)
+
+    return links[:10]
 
 
 def run_engine(patient: dict[str, Any]) -> EngineSummary:
@@ -815,6 +1188,7 @@ def answer_clinical_question(case_text: str, *, locale: str = "uk") -> dict[str,
 
     extraction = extract_case(case_text, locale=locale)
     patient = _safe_json_object(extraction["patient_profile_json"])
+    patient = _normalize_extracted_patient(patient, extraction)
     validation = _validate_extracted_case(extraction, patient)
     if not validation.ok:
         answer = _validation_clarification(validation, locale=locale)
@@ -841,7 +1215,8 @@ def answer_clinical_question(case_text: str, *, locale: str = "uk") -> dict[str,
         "warnings": engine.warnings[:20],
         "error": engine.error,
     }
-    answer["input_validation"] = {"ok": True}
+    answer["related_links"] = _related_links(patient, engine, locale=locale)
+    answer["input_validation"] = {"ok": True, "warnings": list(validation.warnings)}
     return answer
 
 
