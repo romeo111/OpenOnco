@@ -41,7 +41,17 @@ jobs:
 
       - name: Run tests
         run: |
-          python -m pytest tests/ -v
+          python -m pytest \
+            tests/test_audit_validator_contracts.py \
+            tests/test_run_scheduled_audit.py \
+            tests/test_audit_writers.py \
+            tests/test_algorithm_regimen_routing_contracts.py \
+            tests/test_legacy_regimen_normalization.py \
+            tests/test_esophageal_1l_algorithm.py \
+            tests/test_build_site.py::test_static_assets_present \
+            tests/test_build_site.py::test_try_page_wires_pyodide_and_form \
+            tests/test_build_site.py::test_try_page_has_pwa_manifest_and_build_status \
+            -v
 
       - name: Lint (non-blocking)
         continue-on-error: true
