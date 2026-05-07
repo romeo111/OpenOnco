@@ -2167,6 +2167,19 @@ def render_try(
     </div>
   </div>
 
+  <div class="try-actions quest-cta quest-actions-top" aria-label="{'Plan actions' if target_lang == 'en' else 'Дії з планом'}">
+    <button id="runBtn" class="btn btn-primary" type="button" disabled>
+      {'Generate full Plan' if target_lang == 'en' else 'Згенерувати повний Plan'}
+    </button>
+    <button id="viewPlanBtn" class="btn btn-primary" type="button" disabled>
+      {'Show plan' if target_lang == 'en' else 'Показати план'}
+    </button>
+    <button id="pdfBtn" class="btn btn-primary" type="button" disabled
+            title="{'Save as PDF via your browser print dialog' if target_lang == 'en' else 'Зберегти як PDF через діалог друку браузера'}">
+      {'Download PDF' if target_lang == 'en' else 'Скачати PDF'}
+    </button>
+  </div>
+
   <!-- Early-paint warmup: a tiny synchronous script that runs before the
        module-script below. Populates dropdowns from a localStorage cache
        (written on the previous successful boot) so repeat visitors see
@@ -2263,19 +2276,6 @@ def render_try(
           </div>
           <div class="offline-cache-text" id="offlineCacheText">{'Offline cache not started' if target_lang == 'en' else 'Офлайн-кеш ще не запущено'}</div>
         </div>
-      </div>
-
-      <div class="try-actions quest-cta">
-        <button id="runBtn" class="btn btn-primary" disabled>
-          {'Generate full Plan' if target_lang == 'en' else 'Згенерувати повний Plan'}
-        </button>
-        <button id="viewPlanBtn" class="btn btn-primary" type="button" disabled>
-          {'Show plan' if target_lang == 'en' else 'Показати план'}
-        </button>
-        <button id="pdfBtn" class="btn btn-primary" type="button" disabled
-                title="{'Save as PDF via your browser print dialog' if target_lang == 'en' else 'Зберегти як PDF через діалог друку браузера'}">
-          {'Download PDF' if target_lang == 'en' else 'Скачати PDF'}
-        </button>
       </div>
 
       <div id="status" class="status is-busy">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</div>
@@ -2392,6 +2392,7 @@ const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
 const questIntro = document.getElementById('questIntro');
 const questEmpty = document.getElementById('questEmpty');
+const personalizeBtn = document.getElementById('personalizeBtn');
 const modeFormBtn = document.getElementById('modeFormBtn');
 const modeJsonBtn = document.getElementById('modeJsonBtn');
 
@@ -2471,6 +2472,7 @@ const UI_LOCK_TEXT = {{
   planHint: '{"Loading the plan view…" if target_lang == "en" else "Завантажую перегляд плану…"}',
   qrHint: '{"Loading profile from QR…" if target_lang == "en" else "Завантажую профіль із QR…"}',
   renderHint: '{"Rendering the plan view…" if target_lang == "en" else "Перемальовую перегляд плану…"}',
+  actionLocked: '{"Action locked while the current process finishes." if target_lang == "en" else "Дію заблоковано, доки поточний процес не завершиться."}',
 }};
 
 // Initial render language follows the page lang (EN on /try.html, UA on
@@ -2620,18 +2622,33 @@ function highlightModeButtons() {{
   modePatientBtn.classList.toggle('is-active', currentResultMode === 'patient');
 }}
 
+function isInteractionLocked() {{
+  return uiBusy || generating;
+}}
+
+function setLockedTitle(el, locked) {{
+  if (!el) return;
+  if (typeof el.dataset.baseTitle === 'undefined') {{
+    el.dataset.baseTitle = el.getAttribute('title') || '';
+  }}
+  if (locked) el.setAttribute('title', UI_LOCK_TEXT.actionLocked);
+  else if (el.dataset.baseTitle) el.setAttribute('title', el.dataset.baseTitle);
+  else el.removeAttribute('title');
+}}
+
 // Patient mode is render-only on top of an already-generated treatment
 // PlanResult. It can't toggle for:
 //   * diagnostic-mode bundles (no `_render_patient_mode` for DiagnosticPlan)
 //   * example-mode (pre-built /cases/*.html — no Pyodide engine running)
 //   * pre-generation (planSource === null)
 function refreshModeButtonAvailability() {{
+  const locked = isInteractionLocked();
   const canPatient = (
     pyodide
     && planSource === 'generated'
     && !planDirty
   );
-  modePatientBtn.disabled = !canPatient;
+  modePatientBtn.disabled = locked || !canPatient;
   if (!canPatient) {{
     modePatientBtn.title = (
       planSource === 'example'
@@ -2645,16 +2662,22 @@ function refreshModeButtonAvailability() {{
   }} else {{
     modePatientBtn.title = '{ "Plain-Ukrainian simplified report — for patients" if target_lang == "en" else "Спрощений звіт зрозумілою мовою — для пацієнта" }';
   }}
-  modeClinicianBtn.disabled = (planSource === null);
+  modeClinicianBtn.disabled = locked || (planSource === null);
+  if (locked) {{
+    modePatientBtn.title = UI_LOCK_TEXT.actionLocked;
+    modeClinicianBtn.title = UI_LOCK_TEXT.actionLocked;
+  }}
 }}
 
-function openPlanModal() {{
+function openPlanModal(options = {{}}) {{
   if (!planModal) return;
+  if (!options.force && (isInteractionLocked() || planSource === null)) return;
   planModal.hidden = false;
   highlightLangButtons();
 }}
-function closePlanModal() {{
+function closePlanModal(options = {{}}) {{
   if (!planModal) return;
+  if (!options.force && isInteractionLocked()) return;
   planModal.hidden = true;
 }}
 
@@ -2667,7 +2690,7 @@ function downloadPdf() {{
   // Modal must be visible so iframe contentWindow is fully laid out and
   // print() picks up the right document.
   const wasHidden = planModal && planModal.hidden;
-  if (wasHidden) openPlanModal();
+  if (wasHidden) openPlanModal({{ force: true }});
   try {{
     resultFrame.contentWindow.focus();
     resultFrame.contentWindow.print();
@@ -2816,11 +2839,8 @@ async function loadExamplePlan(caseId) {{
   currentResultMode = 'clinician';
   highlightModeButtons();
   refreshModeButtonAvailability();
-  viewPlanBtn.disabled = false;
-  pdfBtn.disabled = false;
-  modalPdfBtn.disabled = false;
-  modalHtmlBtn.disabled = false;
-  openPlanModal();
+  updateWorkflowControls();
+  openPlanModal({{ force: true }});
   await frameReady;
 }}
 
@@ -2837,7 +2857,7 @@ function clearPlanState() {{
   currentResultMode = 'clinician';
   highlightModeButtons();
   refreshModeButtonAvailability();
-  closePlanModal();
+  closePlanModal({{ force: true }});
 }}
 
 pdfBtn.addEventListener('click', downloadPdf);
@@ -2893,6 +2913,32 @@ const IMPACT_LABEL = {{
   optional: 'Optional',
 }};
 
+// Central action gating. The high-priority controls sit above the form, so
+// they must also reflect process locks visually instead of relying only on
+// the modal overlay/inert attribute.
+function updateWorkflowControls() {{
+  const locked = isInteractionLocked();
+  let hasInput = false;
+  if (mode === 'form') hasInput = !!activeQuest;
+  else hasInput = textarea.value.trim().length > 0;
+  const planFresh = planSource !== null && !planDirty;
+  const hasPlan = planSource !== null;
+
+  runBtn.disabled = locked || !hasInput || planFresh;
+  viewPlanBtn.disabled = locked || !hasPlan;
+  pdfBtn.disabled = locked || !hasPlan;
+  modalPdfBtn.disabled = locked || !hasPlan;
+  modalHtmlBtn.disabled = locked || !hasPlan;
+
+  if (resetBtn) resetBtn.disabled = locked;
+  if (formatBtn) formatBtn.disabled = locked || mode !== 'json';
+  [diseaseSelect, exampleSelect, modeFormBtn, modeJsonBtn, personalizeBtn].forEach(el => {{
+    if (el) el.disabled = locked;
+  }});
+  [runBtn, viewPlanBtn, pdfBtn, resetBtn, formatBtn, diseaseSelect, exampleSelect, modeFormBtn, modeJsonBtn, personalizeBtn].forEach(el => setLockedTitle(el, locked));
+  refreshModeButtonAvailability();
+}}
+
 // Decoupled from engine readiness — button is clickable as soon as
 // there is something to send. The engine itself loads lazily on click
 // (and also kicks off in the background after first interaction so the
@@ -2903,11 +2949,7 @@ const IMPACT_LABEL = {{
 // (which auto-displays the pre-built case HTML). Re-enables the moment
 // the user edits any field (planDirty), so they can recompute.
 function updateRunBtnEnabled() {{
-  let hasInput = false;
-  if (mode === 'form') hasInput = !!activeQuest;
-  else hasInput = textarea.value.trim().length > 0;
-  const planFresh = planSource !== null && !planDirty;
-  runBtn.disabled = uiBusy || generating || !hasInput || planFresh;
+  updateWorkflowControls();
 }}
 
 // Mark the currently-shown plan as out-of-sync with the current input.
@@ -3742,7 +3784,7 @@ _summary
 
 // ── Generate full plan ────────────────────────────────────────────────────
 async function runEngine() {{
-  if (generating) return;  // double-click / re-entry guard
+  if (uiBusy || generating || runBtn.disabled) return;  // double-click / re-entry guard
   const _ooT0 = performance.now();
   setError(null);
   const profile = buildProfile();
@@ -3755,6 +3797,7 @@ async function runEngine() {{
   // plan from a moving profile. <main inert> hard-blocks pointer + keyboard
   // focus; init overlay (sibling of <main>) explains what's happening.
   generating = true;
+  updateWorkflowControls();
   if (mainTryEl) mainTryEl.inert = true;
   if (evalDebounceTimer) {{ clearTimeout(evalDebounceTimer); evalDebounceTimer = null; }}
   if (whatIfDebounceTimer) {{ clearTimeout(whatIfDebounceTimer); whatIfDebounceTimer = null; }}
@@ -3839,11 +3882,8 @@ html
       currentResultMode = 'clinician';
       highlightModeButtons();
       refreshModeButtonAvailability();
-      viewPlanBtn.disabled = false;
-      pdfBtn.disabled = false;
-      modalPdfBtn.disabled = false;
-      modalHtmlBtn.disabled = false;
-      openPlanModal();
+      updateWorkflowControls();
+      openPlanModal({{ force: true }});
       setStatus('{"Plan ready ✓" if target_lang == "en" else "Plan готовий ✓"}', 'ok');
       const _ooTNow = performance.now();
       console.log(`[OO] generate ${{(_ooTNow - _ooT0).toFixed(0)}}ms total (engine-load ${{(_ooTPython - _ooT0).toFixed(0)}}ms + python ${{(_ooTNow - _ooTPython).toFixed(0)}}ms)`);
@@ -4223,15 +4263,16 @@ exampleSelect.addEventListener('change', async () => {{
   }});
 }});
 
-const personalizeBtn = document.getElementById('personalizeBtn');
 personalizeBtn && personalizeBtn.addEventListener('click', () => {{
+  if (isInteractionLocked()) return;
   unlockAllFields();
   setStatus('{"Fields unlocked — edit anything. Click «Generate» when you are ready." if target_lang == "en" else "Поля розблоковано — редагуй що завгодно. Натисни «Згенерувати» коли готовий."}', 'ok');
 }});
 
-modeFormBtn.addEventListener('click', () => setMode('form'));
-modeJsonBtn.addEventListener('click', () => setMode('json'));
+modeFormBtn.addEventListener('click', () => {{ if (!isInteractionLocked()) setMode('form'); }});
+modeJsonBtn.addEventListener('click', () => {{ if (!isInteractionLocked()) setMode('json'); }});
 formatBtn && formatBtn.addEventListener('click', () => {{
+  if (isInteractionLocked()) return;
   setError(null);
   try {{ textarea.value = JSON.stringify(JSON.parse(textarea.value), null, 2); }}
   catch (e) {{ setError('{"Invalid JSON: " if target_lang == "en" else "Невалідний JSON: "}' + e.message); }}
@@ -4244,6 +4285,7 @@ textarea.addEventListener('input', () => {{
 }});
 
 resetBtn.addEventListener('click', () => {{
+  if (isInteractionLocked()) return;
   if (!confirm('{"Clear the form and drop the draft?" if target_lang == "en" else "Очистити форму і прибрати чернетку?"}')) return;
   answers = {{}};
   textarea.value = '';
