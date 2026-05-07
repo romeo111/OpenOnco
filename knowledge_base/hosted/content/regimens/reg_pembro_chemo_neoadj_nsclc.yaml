@@ -1,0 +1,188 @@
+id: REG-PEMBRO-CHEMO-NEOADJ-NSCLC
+name: "Pembrolizumab + cisplatin-based chemo (NSCLC neoadjuvant; KEYNOTE-671)"
+name_ua: "Пембролізумаб + цисплатин-вмісна хіміотерапія (НДРЛ неоад'юв; KEYNOTE-671)"
+alternate_names:
+  - "KEYNOTE-671 neoadjuvant regimen"
+  - "Perioperative pembrolizumab — neoadjuvant phase"
+
+# Trial protocol per Wakelee NEJM 2023: pembrolizumab + cisplatin-based
+# doublet (cisplatin + pemetrexed for non-squamous; cisplatin +
+# gemcitabine for squamous) × 4 cycles q3w. Default components reflect
+# the dominant non-squamous cisplatin + pemetrexed pairing; squamous-
+# histology and carboplatin-substitution variants documented in `notes:`.
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg IV q3 weeks"
+    schedule: "Day 1 of cycles 1-4"
+    route: IV
+  - drug_id: DRUG-CISPLATIN
+    dose: "75 mg/m² IV"
+    schedule: "Day 1 of cycles 1-4"
+    route: IV
+  - drug_id: DRUG-PEMETREXED
+    dose: "500 mg/m² IV (non-squamous histology)"
+    schedule: "Day 1 of cycles 1-4"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "4 cycles neoadjuvant per KEYNOTE-671 protocol"
+toxicity_profile: moderate-severe
+
+premedication:
+  - "Folic acid 400-1000 mcg PO daily + Vit B12 1000 mcg IM q9 weeks (pemetrexed)"
+  - "Dexamethasone 4 mg PO BID days 0, 1, 2 (pemetrexed rash prophylaxis)"
+  - "High-emetogenic antiemetic protocol (cisplatin) — 5-HT3 + NK1 + dexamethasone"
+  - "IV hydration (cisplatin nephroprotection) — pre + post infusion"
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Renal impairment (CrCl <60)"
+    modification: "Substitute carboplatin AUC 5 for cisplatin; avoid pemetrexed if CrCl <45"
+    rationale: "Cisplatin nephrotoxicity threshold; pemetrexed cleared renally"
+  - condition: "Squamous histology"
+    modification: "Substitute gemcitabine 1000 mg/m² IV days 1+8 for pemetrexed (KEYNOTE-671 squamous arm)"
+    rationale: "Pemetrexed approved in non-squamous only; KEYNOTE-671 protocol used cisplatin+gemcitabine for squamous"
+  - condition: "Immune-mediated AE grade ≥2"
+    modification: "Hold pembrolizumab; corticosteroids; permanent discontinuation if grade ≥3 recurrent"
+  - condition: "Cisplatin-induced ototoxicity / neuropathy grade ≥2"
+    modification: "Substitute carboplatin AUC 5"
+  - condition: "Febrile neutropenia"
+    modification: "G-CSF secondary prophylaxis; consider dose reduction"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Pembrolizumab registered in Ukraine; reimbursement for NSCLC perioperative
+    indication variable / often out-of-pocket. Cisplatin + pemetrexed +
+    gemcitabine reimbursed as standard chemo backbone. Total 4-cycle
+    neoadjuvant cost dominated by pembro out-of-pocket component.
+
+sources:
+  - SRC-KEYNOTE-671-WAKELEE-2023
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-EARLY-2024
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# KEYNOTE-671 neoadjuvant: pembro + cisplatin-doublet × 4. Combines
+# IO irAEs with cisplatin emesis/nephro/neuro/oto-toxicity + pemetrexed
+# mucositis (or gemcitabine cytopenia in squamous arm). STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, втома 3-7 днів після інфузії"
+    action_ua: "Очікувано від цисплатину — занотовуйте; протиблювотні за призначенням"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Поколювання, оніміння у пальцях рук і ніг"
+    action_ua: "Очікувано від цисплатину — занотовуйте, обговоримо на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Дзвін у вухах, зниження слуху"
+    action_ua: "Подзвоніть у клініку того ж дня — ототоксичність цисплатину, можлива заміна на карбоплатин"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Шкірний свербіж, висип"
+    action_ua: "Зустрічається на тлі пембролізумабу — використовуйте зволожувач; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Зниження апетиту, легкий мукозит"
+    action_ua: "Поширене на пеметрексед — м'яка щітка; полоскання з содою; B12+фолат за призначенням"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Лихоманка вище 38°C — особливо на 7-14 день циклу"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний пневмоніт або прогресування пухлини потребують оцінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті живота"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Зменшення сечовипускання, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — нефротоксичність цисплатину"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Тяжка діарея (≥7 разів на день, з кров'ю)"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний коліт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Сильна задишка у спокої, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
+last_reviewed: "2026-05-09"
+notes: >
+  KEYNOTE-671 (Wakelee NEJM 2023, Spicer NEJM 2024 OS update): neoadjuvant
+  pembrolizumab 200 mg q3w + cisplatin-based doublet × 4 cycles followed by
+  surgery and adjuvant pembrolizumab × 13 cycles, in resectable stage
+  II/IIIA/IIIB (T3-T4N2) NSCLC. 24-mo EFS 62.4% vs 40.6% (HR 0.58,
+  p<0.001); pCR 18.1% vs 4.0%; mPR 30.2% vs 11.0%; OS update mOS not
+  reached vs 52.4 mo (HR 0.72, p=0.005). FDA approval Oct 2023; NCCN
+  v3.2025 category 1.
+
+  Trial protocol used cisplatin-based doublet specifically:
+    * Non-squamous: cisplatin 75 mg/m² + pemetrexed 500 mg/m² q3w
+    * Squamous: cisplatin 75 mg/m² + gemcitabine 1000 mg/m² days 1+8 q3w
+  Carboplatin (AUC 5) substitution for cisplatin is NCCN-allowed as a
+  real-world tolerability variant in patients with renal impairment,
+  ototoxicity, neuropathy, or other cisplatin-contraindications, but is
+  NOT the trial protocol — note this in the plan rationale when carbo is
+  substituted.
+
+  Pembrolizumab is administered concurrently with chemo cycles 1-4
+  (neoadjuvant), then continues post-resection as adjuvant monotherapy
+  × 13 cycles (REG-PEMBRO-ADJUVANT-NSCLC) for total ~17 cycles
+  pembrolizumab over the perioperative course.
+
+  Excludes patients with EGFR-activating mutations or ALK fusion —
+  driver-positive resectable NSCLC has superior adjuvant TKI options
+  (osimertinib per ADAURA, alectinib per ALINA) and IO efficacy is
+  reduced in driver-positive disease (FDA label requires EGFR/ALK
+  testing before perioperative pembro initiation).
+
+notes_ua: >
+  KEYNOTE-671 (Wakelee NEJM 2023, Spicer NEJM 2024 OS-оновлення):
+  неоад'ювантний пембролізумаб 200 мг q3w + цисплатин-вмісний дублет ×
+  4 цикли із подальшою операцією і ад'ювантним пембролізумабом × 13
+  циклів, при резектабельній стадії II/IIIA/IIIB (T3-T4N2) НДРЛ.
+  24-міс EFS 62.4% проти 40.6% (HR 0.58); pCR 18.1% проти 4.0%; OS
+  mOS не досягнута проти 52.4 міс (HR 0.72). FDA-схвалення жовт 2023;
+  NCCN v3.2025 категорія 1.
+
+  Протокол випробування використовував цисплатин-вмісний дублет:
+    * Non-squamous: цисплатин 75 мг/м² + пеметрексед 500 мг/м² q3w
+    * Squamous: цисплатин 75 мг/м² + гемцитабін 1000 мг/м² дні 1+8 q3w
+  Заміна карбоплатином (AUC 5) — допустимий NCCN варіант для пацієнтів
+  з нирковою недостатністю, ототоксичністю, нейропатією; це НЕ
+  трайл-протокол.
+
+  Виключаються пацієнти з активуючими мутаціями EGFR або ALK-fusion —
+  драйвер-позитивний резектабельний НДРЛ має кращі ад'ювантні TKI
+  (osimertinib ADAURA, alectinib ALINA); FDA-етикетка вимагає
+  EGFR/ALK-тестування перед стартом периоопераційного пембро.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

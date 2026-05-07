@@ -1,0 +1,93 @@
+# SUR-LUNG-LOBECTOMY — Anatomic lung lobectomy with mediastinal nodal
+# dissection. §17.1 Surgery entity (RATIFIED 2026-05-07). First lung-
+# resection procedure landing in the PUL wave (chunk
+# pul-a5-kn671-perioperative-2026-05-09-1100). Referenced from
+# `IND-NSCLC-PERIOPERATIVE-PEMBRO.phases[1].surgery_id`.
+id: SUR-LUNG-LOBECTOMY
+names:
+  preferred: "Anatomic lung lobectomy with mediastinal lymph node dissection"
+  ukrainian: "Анатомічна лобектомія легені з медіастинальною лімфодисекцією"
+  english: "Anatomic lung lobectomy with mediastinal lymph node dissection"
+  synonyms:
+    - "Lobectomy"
+    - "Pulmonary lobectomy"
+    - "Anatomic lung resection (lobectomy)"
+    - "VATS lobectomy"
+    - "RATS lobectomy"
+    - "Open lobectomy"
+
+# Free-string per §17.1 sketch — surgical taxonomy not enum'd in v0.1.
+type: lobectomy
+intent: curative
+
+target_organ: lung
+applicable_diseases:
+  - DIS-NSCLC
+
+# Operative mortality from large-volume thoracic centers; ACOSOG-Z0030 +
+# STS database modern series report 30-day mortality 1-3% at high-volume
+# (>40 lobectomies/yr) centers, 4-6% at lower-volume centers. CALGB-140503
+# (sublobar vs lobar) confirmed comparable safety profile for VATS / RATS
+# vs open in matched cohorts.
+operative_mortality_pct: "1-3% in high-volume centers (>40 lobectomies/yr); 4-6% in lower-volume centers"
+
+common_complications:
+  - name: "Prolonged air leak (>5 days)"
+    frequency: "8-15%"
+  - name: "Pneumonia"
+    frequency: "5-10%"
+  - name: "Atrial arrhythmia (AF / atrial flutter)"
+    frequency: "10-20%"
+  - name: "Chylothorax"
+    frequency: "1-3%"
+  - name: "Persistent post-thoracotomy pain syndrome"
+    frequency: "15-25% (lower with VATS / RATS than open)"
+  - name: "Bronchopleural fistula (BPF)"
+    frequency: "<1% after lobectomy; 4-10% after pneumonectomy"
+  - name: "Wound infection / empyema"
+    frequency: "2-5%"
+  - name: "Recurrent laryngeal nerve injury (left-sided / mediastinal dissection)"
+    frequency: "1-3%"
+  - name: "Postoperative bleeding requiring intervention"
+    frequency: "1-3%"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-EARLY-2024
+  - SRC-KEYNOTE-671-WAKELEE-2023
+
+last_reviewed: "2026-05-09"
+notes: >
+  Anatomic lobectomy with mediastinal lymph node dissection (or
+  systematic sampling of stations 2R/4R/7/8/9 right; 5/6/7/8/9 left) is
+  the curative-intent operation for resectable stage I-IIIB NSCLC per
+  NCCN v3.2025 and ESMO 2024. Pneumonectomy is reserved for tumors
+  involving the mainstem bronchus or proximal pulmonary artery where
+  lobectomy / sleeve resection is not feasible — pneumonectomy carries
+  meaningfully higher mortality (5-10%) and BPF risk (4-10%) than
+  lobectomy.
+
+  Sublobar resection (segmentectomy / wedge): JCOG-0802 and CALGB-140503
+  established that anatomic segmentectomy is non-inferior to lobectomy
+  for peripheral cT1aN0 NSCLC ≤2 cm; for larger tumors, locally-advanced
+  disease, or central locations lobectomy remains the standard.
+
+  Minimally invasive approach: VATS or RATS lobectomy is preferred over
+  open thoracotomy when oncologically feasible — lower morbidity (pain,
+  pulmonary complications), shorter hospital stay, equivalent oncologic
+  outcomes per multiple meta-analyses + the VIOLET RCT (Lim 2022).
+
+  Mediastinal nodal dissection is mandatory for accurate pathologic
+  staging — at least 3 N2 stations + N1 nodes per NCCN. Extent of
+  dissection (systematic sampling vs complete dissection) is
+  surgeon-discretion; ACOSOG-Z0030 showed equivalent survival with
+  systematic sampling in cN0/cN1 disease.
+
+  Center-volume gradient: high-volume thoracic centers (>40
+  lobectomies/yr) show 30-day mortality ~1-3% vs ~4-6% at low-volume
+  centers; NCCN recommends referral to high-volume centers for
+  resectable NSCLC.
+
+  Pairs with neoadjuvant pembro+chemo and adjuvant pembro in the
+  KEYNOTE-671 perioperative sequence (Wakelee NEJM 2023) — see
+  IND-NSCLC-PERIOPERATIVE-PEMBRO.
