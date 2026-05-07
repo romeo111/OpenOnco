@@ -252,6 +252,20 @@
     }
   }
 
+  async function readJsonResponse(resp) {
+    const contentType = (resp.headers.get('content-type') || '').toLowerCase();
+    const text = await resp.text();
+    if (!contentType.includes('application/json')) {
+      const endpoint = endpointInput.value.trim() || '/api/clinical-question';
+      throw new Error('Clinical-question API не повернув JSON. Публічний сайт статичний, доки не задеплоєно серверний адаптер; скористайся браузерним генератором планів або вкажи робочий API endpoint. Endpoint: ' + endpoint + '. HTTP ' + resp.status + '.');
+    }
+    try {
+      return text ? JSON.parse(text) : {};
+    } catch (err) {
+      throw new Error('Невалідна JSON-відповідь від clinical-question API: ' + err.message);
+    }
+  }
+
   askBtn.addEventListener('click', async () => {
     if (getCount() >= MAX_QUESTIONS) {
       status.textContent = 'У цьому браузері вже використано всі 3 free-text питання.';
@@ -272,7 +286,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() })
       });
-      const payload = await resp.json();
+      const payload = await readJsonResponse(resp);
       if (!resp.ok) throw new Error(payload.message || ('HTTP ' + resp.status));
       if (typeof payload.questions_used === 'number') setCount(payload.questions_used);
       else setCount(getCount() + 1);

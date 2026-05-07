@@ -2084,6 +2084,16 @@ def render_ask(*, target_lang: str = "en") -> str:
     empty_msg = "Paste a clinical situation first." if is_en else "Спочатку встав клінічну ситуацію."
     loading_msg = "Structuring case and running engine..." if is_en else "Структурую кейс і запускаю engine..."
     error_msg = "Request failed" if is_en else "Запит не вдався"
+    endpoint_unavailable_msg = (
+        "The clinical-question API did not return JSON. This public site is static unless a server adapter is deployed; use the browser plan generator or enter a working API endpoint."
+        if is_en else
+        "Clinical-question API не повернув JSON. Публічний сайт статичний, доки не задеплоєно серверний адаптер; скористайся браузерним генератором планів або вкажи робочий API endpoint."
+    )
+    invalid_json_msg = (
+        "Invalid JSON response from the clinical-question API"
+        if is_en else
+        "Невалідна JSON-відповідь від clinical-question API"
+    )
     limit_msg = (
         "You have used all 3 free-text questions in this browser."
         if is_en else
@@ -2324,6 +2334,20 @@ def render_ask(*, target_lang: str = "en") -> str:
     }}
   }}
 
+  async function readJsonResponse(resp) {{
+    const contentType = (resp.headers.get('content-type') || '').toLowerCase();
+    const text = await resp.text();
+    if (!contentType.includes('application/json')) {{
+      const endpoint = endpointInput.value.trim() || '/api/clinical-question';
+      throw new Error('{endpoint_unavailable_msg} Endpoint: ' + endpoint + '. HTTP ' + resp.status + '.');
+    }}
+    try {{
+      return text ? JSON.parse(text) : {{}};
+    }} catch (err) {{
+      throw new Error('{invalid_json_msg}: ' + err.message);
+    }}
+  }}
+
   askBtn.addEventListener('click', async () => {{
     if (getCount() >= MAX_QUESTIONS) {{
       status.textContent = '{limit_msg}';
@@ -2344,7 +2368,7 @@ def render_ask(*, target_lang: str = "en") -> str:
         headers: {{ 'Content-Type': 'application/json' }},
         body: JSON.stringify({{ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() }})
       }});
-      const payload = await resp.json();
+      const payload = await readJsonResponse(resp);
       if (!resp.ok) throw new Error(payload.message || ('HTTP ' + resp.status));
       if (typeof payload.questions_used === 'number') setCount(payload.questions_used);
       else setCount(getCount() + 1);
