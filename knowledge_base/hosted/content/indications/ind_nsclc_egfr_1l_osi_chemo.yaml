@@ -1,0 +1,130 @@
+id: IND-NSCLC-EGFR-1L-OSI-CHEMO
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: EGFR_MUT
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic EGFR-mutated NSCLC (exon 19 deletion OR L858R activating mutation)"
+    - "Treatment-naïve in the metastatic setting (no prior systemic therapy for advanced disease)"
+    - "Particularly favored for high-burden disease — baseline CNS metastases, L858R subtype, large tumor volume / multiple visceral sites"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "Activating EGFR mutation (exon 19 del OR L858R)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-OSI-PEM-PLATINUM-NSCLC
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+actionability_review_required: true
+
+expected_outcomes:
+  median_progression_free_survival_months: 25
+  overall_response_rate: "~83% (FLAURA-2 osi+chemo arm)"
+  progression_free_survival: "Median PFS by investigator 25.5 vs 16.7 mo for osi mono (HR 0.62; p<0.001); BICR PFS 29.4 vs 19.9 mo"
+  overall_survival_5y: "OS data immature at primary analysis (FLAURA-2 NEJM 2023)"
+  notes: "FLAURA-2: PFS HR 0.62 vs osi monotherapy. CNS PFS HR 0.40 in patients with baseline CNS metastases — favored choice for CNS-involved disease. Grade ≥3 AE rate 64% (osi+chemo) vs 27% (osi mono)."
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+required_tests:
+  - TEST-NSCLC-NGS-PANEL
+  - TEST-PDL1-IHC
+  - TEST-CECT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+desired_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+
+rationale: >
+  FLAURA-2 (Planchard NEJM 2023, NCT04035486) established osimertinib
+  + pemetrexed + platinum (carboplatin AUC 5 or cisplatin 75 mg/m²)
+  × 4 cycles → osi + pemetrexed maintenance as a 1L option for
+  EGFR-mutated metastatic NSCLC. Median PFS 25.5 vs 16.7 mo for osi
+  monotherapy (HR 0.62; p<0.001). The benefit is most pronounced in
+  patients with baseline CNS metastases (CNS PFS HR 0.40) and L858R
+  subtype, which historically responds less robustly to osi
+  monotherapy than exon 19 del. Trade-off is meaningfully higher
+  Grade ≥3 AE rate (64% vs 27%) driven by additive cytopenia,
+  mucositis, and fatigue from the platinum + pemetrexed backbone.
+  Aggressive-track choice for fit patients (ECOG 0-1) with
+  high-burden disease — CNS involvement, L858R, large tumor volume,
+  symptomatic visceral disease — where the PFS extension justifies
+  the added toxicity. For lower-burden / standard-risk patients
+  without CNS mets, osimertinib monotherapy (FLAURA, IND-NSCLC-EGFR-MUT-MET-1L)
+  remains the preferred standard-track 1L. OS data from FLAURA-2
+  remain immature at primary analysis.
+
+sources:
+  - source_id: SRC-FLAURA-2-PLANCHARD-2023
+    weight: primary
+    position: supports
+    relevant_quote_paraphrase: "Osimertinib + pemetrexed + platinum × 4 cycles followed by osi + pemetrexed maintenance significantly improved investigator-assessed PFS vs osi monotherapy (25.5 vs 16.7 mo; HR 0.62; p<0.001) in 1L EGFR-mutated advanced NSCLC; CNS PFS HR 0.40 in baseline CNS-metastatic patients"
+  - source_id: SRC-NCCN-NSCLC-2025
+    weight: primary
+    position: supports
+    relevant_quote_paraphrase: "Osimertinib + carboplatin/cisplatin + pemetrexed is recommended as a Category 1 alternative-preferred 1L option for EGFR-mutated (ex19del or L858R) metastatic NSCLC, particularly with high-risk features"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    weight: primary
+    position: supports
+    relevant_quote_paraphrase: "Osimertinib combined with platinum-pemetrexed chemotherapy is an option for 1L EGFR-mutated advanced NSCLC based on FLAURA-2; trade-off between PFS gain and added chemo toxicity should be discussed with the patient"
+
+known_controversies:
+  - topic: "Osi+chemo (FLAURA-2) vs osi monotherapy (FLAURA) for 1L EGFR-mut NSCLC"
+    positions:
+      - position: "Osi+chemo for all fit EGFR-mut 1L: PFS HR 0.62 is large; CNS PFS HR 0.40 may translate to OS benefit at maturity"
+        sources: [SRC-FLAURA-2-PLANCHARD-2023]
+      - position: "Osi mono for most; osi+chemo only for high-burden / CNS-involved / L858R: triple regimen Grade ≥3 AE 64% vs 27% — toxicity not justified without selection"
+        sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
+      - position: "Wait for mature OS before broad adoption: PFS gain alone may not justify added toxicity if OS is similar (precedent: many TKI+chemo combinations show PFS but not OS benefit)"
+        sources: [SRC-ESMO-NSCLC-METASTATIC-2024]
+    our_default: "Osi+chemo for fit (ECOG 0-1) patients with CNS metastases, L858R subtype, or high tumor burden; osi monotherapy for standard-risk exon 19 del without CNS involvement"
+    rationale: "Aggressive-track 1L for selected high-risk EGFR-mut NSCLC; standard-track 1L (osi mono) remains default for lower-risk presentations. Mature OS data from FLAURA-2 will inform broader use."
+
+do_not_do:
+  - "НЕ призначати при ECOG ≥2 — додаткова токсичність платини+пеметрекседу непереносима у frail пацієнтів."
+  - "НЕ пропускати folate + B12 premedication за 7 днів до пеметрекседу — критично для зниження мієлосупресії та мукозиту."
+  - "НЕ ігнорувати baseline + serial ILD monitoring (CT chest) — пневмоніт ризик подвоюється vs osi mono (additive osi + pemetrexed pulmonary toxicity); permanent discontinuation Grade ≥3."
+  - "НЕ використовувати цисплатин при baseline CrCl <60 mL/min або history significant CKD — preferred carboplatin AUC 5."
+  - "НЕ розпочинати без NGS-підтвердження EGFR ex19del або L858R — ex20ins та інші uncommon mutations потребують іншого підходу (амівантамаб або afatinib)."
+  - "НЕ продовжувати платину/пеметрексед після cycle 4 — індукція 4 цикли, потім лише osi + pemetrexed maintenance."
+  - "НЕ комбінувати з іншими CYP3A4 strong inhibitors/inducers без перевірки QTc та dose review."
+
+do_not_do_en:
+  - "Do NOT administer at ECOG ≥2 — additive platinum + pemetrexed toxicity intolerable in frail patients."
+  - "Do NOT skip folate + B12 premedication 7 days prior to pemetrexed — critical to reduce myelosuppression and mucositis."
+  - "Do NOT ignore baseline + serial ILD monitoring (CT chest) — pneumonitis risk doubles vs osi mono (additive osi + pemetrexed pulmonary toxicity); permanent discontinuation Grade ≥3."
+  - "Do NOT use cisplatin at baseline CrCl <60 mL/min or history of significant CKD — prefer carboplatin AUC 5."
+  - "Do NOT initiate without NGS confirmation of EGFR ex19del or L858R — ex20ins and uncommon mutations require different approach (amivantamab or afatinib)."
+  - "Do NOT continue platinum/pemetrexed beyond cycle 4 — induction is 4 cycles only; maintenance is osi + pemetrexed."
+  - "Do NOT combine with strong CYP3A4 inhibitors/inducers without QTc check and osi dose review."
+time_critical: false
+last_reviewed: null
+reviewers: []
+reviewer_signoffs: 0
+
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 1L for
+  EGFR-mutated metastatic NSCLC (ex19del or L858R) based on FLAURA-2
+  (Planchard NEJM 2023). PFS HR 0.62 vs osi monotherapy; CNS PFS HR
+  0.40. NCCN cat 1 alternative-preferred 1L. Reuses
+  REG-OSI-PEM-PLATINUM-NSCLC (4 cycles induction → osi+pem
+  maintenance). Sister indication IND-NSCLC-EGFR-MUT-MET-1L
+  (osi monotherapy / FLAURA) is the standard-track choice for
+  lower-risk presentations. Sequenced to
+  IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ on progression. OS data
+  immature at FLAURA-2 primary analysis — reassess threshold for
+  osi+chemo vs osi mono when mature OS reads out.
