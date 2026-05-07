@@ -1,37 +1,39 @@
 {
-  "generated_at_utc": "2026-05-07T09:48:35Z",
-  "kb_root": "/home/runner/work/OpenOnco/OpenOnco/knowledge_base/hosted/content",
+  "generated_at_utc": "2026-05-07T15:34:35Z",
+  "kb_root": "C:\\Users\\805\\.codex\\worktrees\\da52\\cancer-autoresearch\\knowledge_base\\hosted\\content",
   "entity_counts": {
     "diseases": 78,
-    "drugs": 241,
-    "regimens": 302,
-    "indications": 356,
-    "biomarkers": 170,
-    "biomarker_actionability": 434,
+    "drugs": 250,
+    "regimens": 343,
+    "indications": 409,
+    "biomarkers": 173,
+    "biomarker_actionability": 438,
     "contraindications": 12,
-    "redflags": 505,
-    "algorithms": 129,
-    "tests": 95,
+    "redflags": 509,
+    "algorithms": 133,
+    "tests": 115,
     "supportive_care": 13,
     "monitoring": 8,
-    "sources": 321,
+    "sources": 366,
     "workups": 24,
     "questionnaires": 78,
     "mdt_skills": 16,
-    "reviewers": 4
+    "reviewers": 4,
+    "procedures": 6,
+    "radiation_courses": 5
   },
-  "loader_ok": false,
+  "loader_ok": true,
   "loader_error_counts": {
-    "schema_errors": 91,
-    "ref_errors": 179,
+    "schema_errors": 0,
+    "ref_errors": 0,
     "contract_errors": 0,
-    "contract_warnings": 217
+    "contract_warnings": 524
   },
   "gaps": [
     {
       "id": "clinical_signoff",
       "title": "Clinical sign-off",
-      "current": "15/1726 signoff-eligible entities reviewed (0.9%)",
+      "current": "15/1832 signoff-eligible entities reviewed (0.8%)",
       "target": ">=85% reviewed before public guideline-grade claims",
       "status": "blocked_on_reviewers",
       "blocker": "Cannot be fixed by code; requires qualified Clinical Co-Lead review.",
@@ -39,29 +41,29 @@
       "details": {
         "by_type": {
           "indications": {
-            "total": 356,
+            "total": 409,
             "reviewed": 15,
-            "gap": 341
+            "gap": 394
           },
           "algorithms": {
-            "total": 129,
+            "total": 133,
             "reviewed": 0,
-            "gap": 129
+            "gap": 133
           },
           "regimens": {
-            "total": 302,
+            "total": 343,
             "reviewed": 0,
-            "gap": 302
+            "gap": 343
           },
           "redflags": {
-            "total": 505,
+            "total": 509,
             "reviewed": 0,
-            "gap": 505
+            "gap": 509
           },
           "biomarker_actionability": {
-            "total": 434,
+            "total": 438,
             "reviewed": 0,
-            "gap": 434
+            "gap": 438
           }
         }
       }
@@ -69,7 +71,7 @@
     {
       "id": "solid_2l_plus",
       "title": "Solid tumor 2L+ coverage",
-      "current": "21/42 solid diseases have a 2L+ algorithm; 18/42 have a 2L+ indication",
+      "current": "21/42 solid diseases have a 2L+ algorithm; 23/42 have a 2L+ indication",
       "target": "Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication.",
       "status": "coverage_gap",
       "blocker": "Missing disease-by-disease 2L+ algorithm/indication authoring queue.",
@@ -108,15 +110,20 @@
           "DIS-ENDOMETRIAL",
           "DIS-ESOPHAGEAL",
           "DIS-GASTRIC",
+          "DIS-GBM",
           "DIS-GIST",
           "DIS-HCC",
+          "DIS-HNSCC",
           "DIS-MELANOMA",
           "DIS-NSCLC",
           "DIS-OVARIAN",
           "DIS-PDAC",
+          "DIS-PROSTATE",
           "DIS-RCC",
           "DIS-SCLC",
+          "DIS-SOFT-TISSUE-SARCOMA",
           "DIS-T-ALL",
+          "DIS-TESTICULAR-GCT",
           "DIS-UROTHELIAL"
         ],
         "missing_2l_algorithm": [
@@ -210,7 +217,7 @@
     {
       "id": "surgery_radiation_structure",
       "title": "Surgery/radiation detail",
-      "current": "structured surgery entities: no; structured radiation entities: no; 344 indications mention surgery/radiation in text",
+      "current": "structured surgery entities: no; structured radiation entities: no; 397 indications mention surgery/radiation in text",
       "target": "Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields.",
       "status": "schema_gap",
       "blocker": "Current KB carries surgery/radiation mostly as prose inside indications.",
@@ -225,24 +232,35 @@
           "IND-BREAST-HER2-POS-EARLY-NEOADJUVANT",
           "IND-BREAST-HR-POS-1L-INAVOLISIB",
           "IND-BREAST-TNBC-EARLY-NEOADJUVANT",
+          "IND-BREAST-TNBC-METASTATIC-1L-PEMBRO-CHEMO",
           "IND-CHONDROSARCOMA-ADVANCED-DOXORUBICIN",
           "IND-CLL-1L-ZANUBRUTINIB",
           "IND-CRC-3L-FRUQUINTINIB",
+          "IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX",
+          "IND-CRC-ADJUVANT-STAGE3-CAPOX",
           "IND-CRC-ADJUVANT-STAGE3-FOLFOX",
           "IND-CRC-METASTATIC-1L-FOLFOX-BEV",
+          "IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV",
           "IND-CRC-METASTATIC-2L-FOLFIRI-BEV",
           "IND-CRC-METASTATIC-3L-REGORAFENIB",
           "IND-CRC-METASTATIC-3L-TAS102-BEV",
           "IND-CRC-METASTATIC-3L-TRIFLURIDINE-TIPIRACIL-MONO",
           "IND-CRC-METASTATIC-MAINT-FOLFIRI-BEV",
+          "IND-CRC-OLIGOMET-LIVER-LIMITED",
           "IND-EATL-2L-ICE",
           "IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR",
           "IND-ENDOMETRIAL-STAGE-I-POLE-OBSERVATION",
           "IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS",
+          "IND-ESOPH-DEFINITIVE-CRT-SCC",
+          "IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL",
           "IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT",
           "IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL",
+          "IND-GASTRIC-OLIGOMET-SYSTEMIC-PLUS-LOCAL",
+          "IND-GASTRIC-PERIOP-FLOT4",
+          "IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT",
           "IND-GBM-NEWLY-DIAGNOSED-ELDERLY-TMZ",
           "IND-GBM-NEWLY-DIAGNOSED-STUPP",
+          "IND-GBM-RECURRENT-BEVACIZUMAB",
           "IND-GCT-METASTATIC-1L-BEP",
           "IND-GIST-1L-IMATINIB",
           "IND-GLIOMA-LOW-GRADE-1L-RT-PCV",
@@ -264,11 +282,21 @@
           "IND-OVARIAN-3L-POST-PARPi-POST-MIRVE",
           "IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG",
           "IND-OVARIAN-MAINT-BEV",
+          "IND-PDAC-ADJUVANT-MFOLFIRINOX",
+          "IND-PDAC-BORDERLINE-RESECTABLE-NEOADJ-FOLFIRINOX",
+          "IND-PDAC-LAPC-CHEMORADIATION",
           "IND-PDAC-METASTATIC-1L-FOLFIRINOX",
+          "IND-RCC-ADJUVANT-PEMBRO",
+          "IND-RCC-METASTATIC-1L-LENV-PEMBRO",
           "IND-RCC-METASTATIC-2L-CABOZANTINIB",
           "IND-RCC-VHL-DISEASE-BELZUTIFAN",
+          "IND-RECTAL-TNT-LONG-COURSE-PRODIGE23",
+          "IND-RECTAL-TNT-SHORT-COURSE-RAPIDO",
           "IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO",
-          "IND-SMZL-1L-RITUXIMAB"
+          "IND-SMZL-1L-RITUXIMAB",
+          "IND-STS-ADVANCED-1L-AI",
+          "IND-STS-ADVANCED-1L-DOXORUBICIN",
+          "IND-UROTHELIAL-2L-PLATINUM-CHEMO"
         ],
         "radiation_mentions": [
           "IND-ADVSM-1L-AVAPRITINIB",
@@ -294,6 +322,8 @@
           "IND-AML-PEDIATRIC-AAML1031",
           "IND-AML-RR-IDH1-OLUTASIDENIB",
           "IND-ANAL-SCC-LA-1L-NIGRO-CRT",
+          "IND-ANAL-SCC-METASTATIC-1L-CARBO-PACLI",
+          "IND-ANAL-SCC-METASTATIC-1L-RETIFANLIMAB-CARBO-PACLI",
           "IND-APL-1L-ATRA-ATO",
           "IND-APL-1L-ATRA-ATO-IDA",
           "IND-APL-RELAPSED-GEMTUZUMAB",
@@ -330,6 +360,7 @@
           "IND-BREAST-TNBC-2L-T-DXD-HER2-LOW",
           "IND-BREAST-TNBC-3L-POST-SACI-POST-T-DXD",
           "IND-BREAST-TNBC-EARLY-NEOADJUVANT",
+          "IND-BREAST-TNBC-METASTATIC-1L-PEMBRO-CHEMO",
           "IND-BURKITT-1L-CODOXM-IVAC",
           "IND-BURKITT-1L-DAEPOCHR",
           "IND-BURKITT-1L-HYPERCVAD-R",
@@ -347,29 +378,26 @@
           "IND-CHL-PREGNANCY-MOD-ABVD",
           "IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB",
           "IND-CHOLANGIO-2L-FUTIBATINIB",
-          "IND-CHOLANGIO-2L-INFIGRATINIB",
-          "IND-CHOLANGIO-ADVANCED-GEM-CIS",
-          "IND-CHONDROSARCOMA-ADVANCED-DOXORUBICIN",
-          "IND-CLL-1L-BTKI"
+          "IND-CHOLANGIO-2L-HER2-ZANIDATAMAB"
         ],
-        "mention_count": 344
+        "mention_count": 397
       }
     },
     {
       "id": "supportive_care_depth",
       "title": "Supportive-care depth",
-      "current": "138/302 regimens have mandatory supportive care (45.7%); 40 have monitoring; 292 have dose adjustments",
+      "current": "138/343 regimens have mandatory supportive care (40.2%); 40 have monitoring; 302 have dose adjustments",
       "target": "Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage.",
       "status": "coverage_gap",
       "blocker": "Supportive-care records exist, but regimen attachment is incomplete.",
       "next_action": "Audit high-toxicity regimens first, then fill missing regimen attachments.",
       "details": {
-        "regimens_total": 302,
+        "regimens_total": 343,
         "with_mandatory_supportive_care": 138,
-        "with_premedication": 220,
+        "with_premedication": 251,
         "with_monitoring": 40,
-        "with_dose_adjustments": 292,
-        "with_between_visit_watchpoints": 242,
+        "with_dose_adjustments": 302,
+        "with_between_visit_watchpoints": 245,
         "missing_mandatory_supportive_care": [
           "REG-2GEN-TKI-CML",
           "REG-5FU-LV-BEV-CKD-MODIFIED",
@@ -389,10 +417,15 @@
           "REG-AVELUMAB-MAINTENANCE",
           "REG-AVELUMAB-MONO-NK-T",
           "REG-BELZUTIFAN-MONO",
+          "REG-BEMARITUZUMAB-MFOLFOX6",
+          "REG-BEP-GCT",
           "REG-BEV-MAINTENANCE-OVARIAN",
+          "REG-BEVACIZUMAB-GBM",
           "REG-BEXAROTENE-MAINTENANCE-CTCL",
           "REG-BEXAROTENE-MONO-CTCL",
           "REG-BV-MONO-MF",
+          "REG-CABAZITAXEL-MCRPC",
+          "REG-CABOZANTINIB-HCC",
           "REG-CABOZANTINIB-MTC-1L",
           "REG-CAPE-BEV-MAINTENANCE",
           "REG-CAPECITABINE-PALLIATIVE",
@@ -401,9 +434,12 @@
           "REG-CAPOX",
           "REG-CAR-T-AXICEL-HGBL",
           "REG-CARBO-GEM-BEV-OVARIAN",
+          "REG-CARBO-PACLI-ANAL-MET",
+          "REG-CARBO-PACLI-CONCURRENT-RT-ESOPH",
           "REG-CARBO-PACLI-OVARIAN",
           "REG-CARBO-PLD-BEV-OVARIAN",
           "REG-CARBOPLATIN-PACLITAXEL-WEEKLY",
+          "REG-CE-SCLC",
           "REG-CETUXIMAB-RECHALLENGE",
           "REG-CINV-4DRUG-HEC",
           "REG-CISPLATIN-GEMCITABINE-UROTHELIAL",
@@ -413,25 +449,33 @@
           "REG-DAA-GLEC-PIBR",
           "REG-DAA-OBSERVATION-HCV-MZL",
           "REG-DAA-SOF-VEL",
+          "REG-DAB-TRAM-ATC",
           "REG-DABRAFENIB-TRAMETINIB-NSCLC",
           "REG-DATO-DXD-BREAST-2L",
           "REG-DATO-DXD-NSCLC-2L",
+          "REG-DOCETAXEL-MCRPC",
           "REG-DOSTARLIMAB-CARBO-PACLI-ENDOM",
           "REG-DOSTARLIMAB-MONO-ENDOM",
           "REG-DOXORUBICIN-CHONDROSARCOMA",
           "REG-DOXORUBICIN-IFOSFAMIDE-MPNST",
+          "REG-DOXORUBICIN-IFOSFAMIDE-STS",
+          "REG-DOXORUBICIN-STS",
           "REG-DURVA-CONSOLIDATION-PACIFIC",
+          "REG-DURVA-GEM-CIS-CHOLANGIO",
           "REG-DURVA-TREME-STRIDE",
           "REG-ELACESTRANT-BREAST",
           "REG-ENCORAFENIB-BINIMETINIB-MELANOMA",
           "REG-ENCORAFENIB-CETUXIMAB",
           "REG-ENSARTINIB-ALK-1L-NSCLC",
           "REG-ENTRECTINIB-NSCLC",
+          "REG-EP-GCT",
           "REG-ERDAFITINIB-UROTHELIAL-2L",
           "REG-ESA-MDS-LR",
+          "REG-EV-MONO-UROTHELIAL",
           "REG-EV-PEMBRO-UROTHELIAL",
           "REG-EVEROLIMUS-EXEMESTANE",
           "REG-EXTREME-HNSCC",
+          "REG-FLOT",
           "REG-FOLFIRINOX",
           "REG-FOLFOX",
           "REG-FOLFOX-BEV",
@@ -440,17 +484,22 @@
           "REG-FRUQUINTINIB-CRC-3L",
           "REG-FULVESTRANT-EVEROLIMUS-BREAST",
           "REG-FUTIBATINIB-CHOLANGIO-2L",
+          "REG-GEM-CARBO-UROTHELIAL",
           "REG-GEM-NAB-PAC",
           "REG-GEMCITABINE-CISPLATIN-CHOLANGIO",
+          "REG-GEMCITABINE-DOCETAXEL-STS",
           "REG-HP-MAINTENANCE",
           "REG-HU-PV-ET",
+          "REG-HYPOFRACTIONATED-RT-GBM",
           "REG-IMATINIB-CML",
           "REG-IMATINIB-GIST-1L",
           "REG-IMATINIB-KIT-MELANOMA",
           "REG-IMETELSTAT-MDS-LR",
           "REG-INAVOLISIB-PALBO-FULV-BREAST",
           "REG-INFIGRATINIB-CHOLANGIO-2L",
+          "REG-IPI-NIVO-ESOPH-SCC",
           "REG-IRR-RESCUE-PROTOCOL",
+          "REG-IVOSIDENIB-CHOLANGIO",
           "REG-LANREOTIDE-AUTOGEL-GI-NET",
           "REG-LAROTRECTINIB-IFS",
           "REG-LAROTRECTINIB-PANTUMOR",
@@ -460,54 +509,43 @@
           "REG-LORLATINIB-NSCLC",
           "REG-LURBINECTEDIN-SCLC-RR",
           "REG-LUSPATERCEPT-MDS-LR",
+          "REG-MFOLFIRINOX",
           "REG-MIDOSTAURIN-ADVSM-1L",
           "REG-MIRVETUXIMAB-OVARIAN",
           "REG-MOGAMULIZUMAB",
+          "REG-NAL-IRI-5FU-LV-PDAC",
+          "REG-NALIRIFOX",
+          "REG-NIGRO-MMC-5FU-RT",
           "REG-NIRAPARIB-MAINT-OVARIAN",
           "REG-NIVO-ADJUVANT-ESOPH",
-          "REG-NIVO-IPI-MELANOMA",
-          "REG-NIVO-IPI-RCC",
-          "REG-NIVO-MAINTENANCE-MELANOMA",
-          "REG-NIVO-MONO-ESOPH-2L",
-          "REG-OLAPARIB-MAINT-OVARIAN",
-          "REG-OLAPARIB-MAINT-PDAC",
-          "REG-OLUTASIDENIB-AML-RR-IDH1",
-          "REG-OSIMERTINIB-NSCLC",
-          "REG-PACLITAXEL-CARBOPLATIN-ATC",
-          "REG-PACLITAXEL-CARBOPLATIN-SALIVARY",
-          "REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC",
-          "REG-PATRITUMAB-DXD-NSCLC-POST-EGFR",
-          "REG-PEMBRO-ADJUVANT-MELANOMA",
-          "REG-PEMBRO-AXI-RCC",
-          "REG-PEMBRO-CARBO-PACLI-ENDOM",
-          "REG-PEMBRO-CHEMO-HNSCC-1L",
-          "REG-PEMBRO-CHEMO-NSCLC-NONSQ",
-          "REG-PEMBRO-LENVATINIB-ENDOM",
-          "REG-PEMBRO-MONO-ESOPH-2L",
-          "REG-PEMBRO-MONO-HNSCC-1L",
-          "REG-PEMBRO-MONO-MELANOMA",
-          "REG-PEMBRO-MONO-NSCLC",
-          "REG-PEMBROLIZUMAB-CERVICAL-1L",
-          "REG-PEMBROLIZUMAB-CHL",
-          "REG-PEMBROLIZUMAB-MAINTENANCE",
-          "REG-PEMBROLIZUMAB-MSI-MONO"
+          "REG-NIVO-CHEMO-ESCC"
         ]
       }
     },
     {
       "id": "drug_indication_tracking",
       "title": "Drug indication and off-label tracking",
-      "current": "654 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status",
+      "current": "764 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status",
       "target": "Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance.",
       "status": "schema_gap",
       "blocker": "No first-class drug_indications entity directory/schema is present.",
       "next_action": "Introduce a drug_indications entity, then backfill from existing indications/regimens.",
       "details": {
         "drug_indications_schema_present": false,
-        "inferred_drug_disease_indication_pairs": 654,
-        "pairs_with_indication_evidence_context": 654,
+        "inferred_drug_disease_indication_pairs": 764,
+        "pairs_with_indication_evidence_context": 764,
         "explicit_label_status_pairs": 0,
         "sample_pairs": [
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-ANAL-SCC",
+            "indication_id": "IND-ANAL-SCC-LA-1L-NIGRO-CRT"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-CRC",
+            "indication_id": "IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX"
+          },
           {
             "drug_id": "DRUG-5-FLUOROURACIL",
             "disease_id": "DIS-CRC",
@@ -517,6 +555,11 @@
             "drug_id": "DRUG-5-FLUOROURACIL",
             "disease_id": "DIS-CRC",
             "indication_id": "IND-CRC-METASTATIC-1L-FOLFOX-BEV"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-CRC",
+            "indication_id": "IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV"
           },
           {
             "drug_id": "DRUG-5-FLUOROURACIL",
@@ -535,13 +578,43 @@
           },
           {
             "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-CRC",
+            "indication_id": "IND-CRC-OLIGOMET-LIVER-LIMITED"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-ESOPHAGEAL",
+            "indication_id": "IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-ESOPHAGEAL",
+            "indication_id": "IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-ESOPHAGEAL",
+            "indication_id": "IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
             "disease_id": "DIS-GASTRIC",
             "indication_id": "IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB"
           },
           {
             "drug_id": "DRUG-5-FLUOROURACIL",
             "disease_id": "DIS-GASTRIC",
+            "indication_id": "IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-GASTRIC",
             "indication_id": "IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-GASTRIC",
+            "indication_id": "IND-GASTRIC-OLIGOMET-SYSTEMIC-PLUS-LOCAL"
           },
           {
             "drug_id": "DRUG-5-FLUOROURACIL",
@@ -557,6 +630,16 @@
             "drug_id": "DRUG-5-FLUOROURACIL",
             "disease_id": "DIS-PDAC",
             "indication_id": "IND-PDAC-METASTATIC-1L-FOLFIRINOX"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-PDAC",
+            "indication_id": "IND-PDAC-METASTATIC-1L-NALIRIFOX"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-PDAC",
+            "indication_id": "IND-PDAC-METASTATIC-2L-NAL-IRI"
           },
           {
             "drug_id": "DRUG-ABIRATERONE",
@@ -804,6 +887,11 @@
             "indication_id": "IND-RCC-VHL-DISEASE-BELZUTIFAN"
           },
           {
+            "drug_id": "DRUG-BEMARITUZUMAB",
+            "disease_id": "DIS-GASTRIC",
+            "indication_id": "IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB"
+          },
+          {
             "drug_id": "DRUG-BENDAMUSTINE",
             "disease_id": "DIS-ALCL",
             "indication_id": "IND-ALCL-2L-BENDAMUSTINE"
@@ -847,66 +935,6 @@
             "drug_id": "DRUG-BEVACIZUMAB",
             "disease_id": "DIS-CRC",
             "indication_id": "IND-CRC-METASTATIC-1L-FOLFOX-BEV"
-          },
-          {
-            "drug_id": "DRUG-BEVACIZUMAB",
-            "disease_id": "DIS-CRC",
-            "indication_id": "IND-CRC-METASTATIC-2L-FOLFIRI-BEV"
-          },
-          {
-            "drug_id": "DRUG-BEVACIZUMAB",
-            "disease_id": "DIS-CRC",
-            "indication_id": "IND-CRC-METASTATIC-3L-TAS102-BEV"
-          },
-          {
-            "drug_id": "DRUG-BEVACIZUMAB",
-            "disease_id": "DIS-HCC",
-            "indication_id": "IND-HCC-SYSTEMIC-1L-ATEZO-BEV"
-          },
-          {
-            "drug_id": "DRUG-BEVACIZUMAB",
-            "disease_id": "DIS-OVARIAN",
-            "indication_id": "IND-OVARIAN-2L-PLAT-RES-PLD-BEV"
-          },
-          {
-            "drug_id": "DRUG-BEVACIZUMAB",
-            "disease_id": "DIS-OVARIAN",
-            "indication_id": "IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV"
-          },
-          {
-            "drug_id": "DRUG-BEVACIZUMAB",
-            "disease_id": "DIS-OVARIAN",
-            "indication_id": "IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV"
-          },
-          {
-            "drug_id": "DRUG-BEVACIZUMAB",
-            "disease_id": "DIS-OVARIAN",
-            "indication_id": "IND-OVARIAN-2L-PLAT-SENS-CARBO-PLD-BEV"
-          },
-          {
-            "drug_id": "DRUG-BEXAROTENE",
-            "disease_id": "DIS-MF-SEZARY",
-            "indication_id": "IND-MF-ADVANCED-2L-BEXAROTENE"
-          },
-          {
-            "drug_id": "DRUG-BEXAROTENE",
-            "disease_id": "DIS-MF-SEZARY",
-            "indication_id": "IND-MF-MAINTENANCE-RETINOID"
-          },
-          {
-            "drug_id": "DRUG-BINIMETINIB",
-            "disease_id": "DIS-MELANOMA",
-            "indication_id": "IND-MELANOMA-2L-POST-IO-BRAFI-MEKI"
-          },
-          {
-            "drug_id": "DRUG-BLEOMYCIN",
-            "disease_id": "DIS-CHL",
-            "indication_id": "IND-CHL-1L-ABVD"
-          },
-          {
-            "drug_id": "DRUG-BLINATUMOMAB",
-            "disease_id": "DIS-B-ALL",
-            "indication_id": "IND-B-ALL-BLINATUMOMAB-MRD-OR-RR"
           }
         ]
       }

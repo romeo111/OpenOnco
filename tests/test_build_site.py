@@ -18,7 +18,13 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.build_site import CASES, GALLERY_EXCLUDED_CASE_IDS, build_site, render_diseases
+from scripts.build_site import (
+    CASES,
+    GALLERY_EXCLUDED_CASE_IDS,
+    GALLERY_FEATURED_CASE_IDS,
+    build_site,
+    render_diseases,
+)
 
 
 @pytest.fixture(scope="module")
@@ -157,7 +163,14 @@ def test_landing_drops_charter_eyebrow(site_dir: Path):
 def test_gallery_is_public_with_publishable_cases(site_dir: Path):
     html = (site_dir / "gallery.html").read_text(encoding="utf-8")
     assert "openOncoUser" not in html, "auth gate must be removed from gallery"
-    public_cases = [c for c in CASES if c.case_id not in GALLERY_EXCLUDED_CASE_IDS]
+    public_cases = [
+        c for c in CASES
+        if c.case_id not in GALLERY_EXCLUDED_CASE_IDS
+        and (
+            not GALLERY_FEATURED_CASE_IDS
+            or c.case_id in GALLERY_FEATURED_CASE_IDS
+        )
+    ]
     assert html.count('class="case-card"') == len(public_cases)
     assert "No treatment plan generated" not in html
     for c in public_cases:

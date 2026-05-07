@@ -18,6 +18,7 @@
     <a href="/">Home</a>
     <a href="/diseases.html">Diseases</a><a href="/capabilities.html" class="active">Capabilities</a><a href="/specs.html">Specs</a>
     <a href="/kb.html">KB Search</a>
+    <a href="/ask.html">Tumor board Q</a>
     <a href="/gallery.html">Examples</a>
     <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
   </nav>
@@ -47,12 +48,12 @@
 
     <div class="callout callout-hard">
       <strong>STUB status across all clinical content.</strong>
-      Reviewer sign-offs ≥ 2: <strong>15/383</strong>
+      Reviewer sign-offs ≥ 2: <strong>15/390</strong>
       (CHARTER §6.1 requires two Clinical Co-Lead approvals for any
       Indication before it can be considered «published»). Right now this
       is a proposed plan: structured data + algorithm + sources are in
       place, but without dual sign-off. State as of
-      <code>2026-05-07 09:47 UTC</code>. This is a decision-support
+      <code>2026-05-07 15:33 UTC</code>. This is a decision-support
       tool, not a medical device.
     </div>
 
@@ -64,7 +65,7 @@
       </h2>
       <p class="promo-sub">
         A declarative rule engine over <strong>78 diseases</strong>,
-        469 red flags, 390 indications, 328 regimens.
+        473 red flags, 409 indications, 343 regimens.
         No LLM in the clinical decision, no server, no logs.
         The patient JSON never leaves the machine.
       </p>
@@ -75,15 +76,15 @@
           <div class="promo-stat-lbl">Diseases in KB</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">390</div>
+          <div class="promo-stat-num">409</div>
           <div class="promo-stat-lbl">Indications</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">349</div>
+          <div class="promo-stat-num">366</div>
           <div class="promo-stat-lbl">Cited sources</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">469</div>
+          <div class="promo-stat-num">473</div>
           <div class="promo-stat-lbl">Red flags</div>
         </div>
         <div class="promo-stat">
@@ -275,7 +276,7 @@
             (etiologically_driven, risk_stratified, biomarker_driven,
             stage_driven) which determines the treatment-selection
             algorithm. 1L is covered for all 78
-            (76 algorithms), 2L+ — for 34 heme
+            (78 algorithms), 2L+ — for 34 heme
             and 19 solid (55 algorithms).
           </p>
         </div>
@@ -308,7 +309,7 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">469</div>
+          <div class="num-big">473</div>
           <div class="num-lbl">Red flags</div>
           <div class="num-detail">escalation or investigation triggers</div>
           <p class="num-text">
@@ -324,9 +325,9 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">328</div>
+          <div class="num-big">343</div>
           <div class="num-lbl">Regimens</div>
-          <div class="num-detail">390 indications (210 1L · 180 2L+)</div>
+          <div class="num-detail">409 indications (226 1L · 183 2L+)</div>
           <p class="num-text">
             Every regimen is a list of drugs with doses, cycle schedule,
             dose adjustments (renal impairment, FIB-4, frailty),
@@ -340,7 +341,7 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">241</div>
+          <div class="num-big">250</div>
           <div class="num-lbl">Drugs</div>
           <p class="num-text">
             ATC/RxNorm-coded. Each carries FDA/EMA/MoH regulatory status +
@@ -353,7 +354,7 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">95</div>
+          <div class="num-big">115</div>
           <div class="num-lbl">Tests / procedures</div>
           <p class="num-text">
             LOINC-coded labs + imaging + histology + IHC + genomic tests.
@@ -364,11 +365,11 @@
         </div>
 
         <div class="num-card num-card--accent">
-          <div class="num-big">349</div>
+          <div class="num-big">366</div>
           <div class="num-lbl">Sources (top-level guidelines + RCTs)</div>
           <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · MoH · WHO · CTCAE · FDA · CIViC (CC0)</div>
           <p class="num-text">
-            Beneath these 349 sources sit tens of thousands of
+            Beneath these 366 sources sit tens of thousands of
             primary clinical publications (RCTs, meta-analyses, cohort
             studies) and thousands of guideline pages. Each Indication /
             Regimen / RedFlag cites specific sources with <em>position</em>
@@ -411,7 +412,7 @@
           <div class="flow-num">Stage 3</div>
           <div class="flow-title">RedFlag evaluation</div>
           <div class="flow-desc">
-            Each of 469 RFs is checked against findings. Boolean
+            Each of 473 RFs is checked against findings. Boolean
             engine: <code>any_of</code>/<code>all_of</code>/<code>none_of</code>
             clauses with thresholds. The RF-trigger alias map cut
             «unevaluated» warnings by ~76%.
@@ -869,7 +870,7 @@
           <h3>No cumulative-toxicity tracking across lines</h3>
           <p>
             2L+ algorithms exist for 34 heme diseases
-            (180 indications 2L+), but the profile doesn't carry
+            (183 indications 2L+), but the profile doesn't carry
             <code>prior_treatment_history</code> as a structured field. A 2L
             plan for a patient who got bortezomib in 1L with grade 2
             neuropathy — the engine doesn't know about prior exposure
@@ -965,14 +966,14 @@
         <thead><tr><th>Category</th><th>State</th><th>What it means</th></tr></thead>
         <tbody>
           <tr><td>Diseases with full chain</td><td>70 / 78</td><td>The rest are partially modelled; the engine may emit a warning «no Algorithm found for disease=X»</td></tr>
-          <tr><td>Indications 1L</td><td>210</td><td>First line is covered for all 78 diseases</td></tr>
-          <tr><td>Indications 2L+</td><td>180</td><td>Second to fourth line: 34 heme + 19 solid. Remaining solid-tumour 2L+ — partial (CRC, breast, urothelial), not systematic.</td></tr>
-          <tr><td>RedFlags</td><td>469</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own.</td></tr>
+          <tr><td>Indications 1L</td><td>226</td><td>First line is covered for all 78 diseases</td></tr>
+          <tr><td>Indications 2L+</td><td>183</td><td>Second to fourth line: 34 heme + 19 solid. Remaining solid-tumour 2L+ — partial (CRC, breast, urothelial), not systematic.</td></tr>
+          <tr><td>RedFlags</td><td>473</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own.</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — a separate specialization track</td></tr>
           <tr><td>Radiation therapy plans</td><td>partial</td><td>RT is part of multimodal Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), but not yet modelled as a separate entity with technical parameters (dose/fractions/target volumes)</td></tr>
           <tr><td>Surgical oncology plans</td><td>not modelled</td><td>Surgical-oncology indications absent</td></tr>
           <tr><td>NHSU formulary live feed</td><td>static flag</td><td>Currently hard-coded on regimens; not auto-refreshed from NHSU — separate backlog</td></tr>
-          <tr><td>Reviewer dual-signoff</td><td>15/383</td><td>Most content is STUB. Capacity plan: 383 → ≥85% verified — our main bottleneck metric, described in kb_coverage_strategy v0.2</td></tr>
+          <tr><td>Reviewer dual-signoff</td><td>15/390</td><td>Most content is STUB. Capacity plan: 390 → ≥85% verified — our main bottleneck metric, described in kb_coverage_strategy v0.2</td></tr>
           <tr><td>Clinical gap audit</td><td><a href="/clinical-gaps.html">live dashboard</a></td><td>Build-generated audit for sign-off, solid-tumour 2L+, surgery/radiation structure, supportive care, and drug indication tracking.</td></tr>
         </tbody>
       </table>
@@ -1076,7 +1077,7 @@
       <h2>18. How to contribute — verify algorithms with your AI tokens</h2>
       <p class="info-text">
         The biggest gap on this page —
-        <strong>15/383</strong>
+        <strong>15/390</strong>
         dual-reviewer sign-off. This bottleneck isn't solved by more code;
         it's solved by <em>contributors with AI tools</em> who take
         structured chunks of work and execute each in their own worktree.

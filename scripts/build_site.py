@@ -68,7 +68,13 @@ from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
 from knowledge_base.stats import collect_stats
 from scripts.audit_clinical_gaps import write_outputs as write_clinical_gap_outputs
 from scripts.build_kb_wiki import build_kb_wiki
-from scripts.site_cases import CASE_CATEGORIES, CASES, GALLERY_EXCLUDED_CASE_IDS, CaseEntry
+from scripts.site_cases import (
+    CASE_CATEGORIES,
+    CASES,
+    GALLERY_EXCLUDED_CASE_IDS,
+    GALLERY_FEATURED_CASE_IDS,
+    CaseEntry,
+)
 from scripts.site_styles import STYLESHEET as _STYLE_CSS
 
 
@@ -1483,6 +1489,10 @@ def render_gallery(*, target_lang: str = "en") -> str:
     case_meta = [
         m for m in _gallery_case_disease_meta()
         if m["case"].case_id not in GALLERY_EXCLUDED_CASE_IDS
+        and (
+            not GALLERY_FEATURED_CASE_IDS
+            or m["case"].case_id in GALLERY_FEATURED_CASE_IDS
+        )
     ]
     n_cases = len(case_meta)
 

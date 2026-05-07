@@ -64,6 +64,18 @@ GALLERY_EXCLUDED_CASE_IDS: set[str] = {
     "variant-rcc-organ-dysf",
 }
 
+GALLERY_FEATURED_CASE_IDS: set[str] = {
+    # Public gallery is intentionally small: these six cases demonstrate
+    # the CIViC/ESCAT actionability layer better than hundreds of auto
+    # stubs. The full CASES list still feeds try.html examples.json.
+    "showcase-nsclc-alk-fusion-1l",
+    "showcase-crc-braf-v600e-2l",
+    "showcase-breast-pik3ca-h1047r-2l",
+    "showcase-ovarian-brca1-maintenance",
+    "showcase-nsclc-egfr-t790m-2l",
+    "showcase-ifs-ntrk-fusion",
+}
+
 
 CASE_CATEGORIES: list[tuple[str, str, str]] = [
     # (key, ua_label, en_label) — order = display order in filter chips
@@ -80,6 +92,74 @@ CASE_CATEGORIES: list[tuple[str, str, str]] = [
 
 
 CASES: list[CaseEntry] = [
+    # -- CURATED SHOWCASE CASES (regen via scripts/generate_showcase_examples.py) --
+    CaseEntry(
+        case_id="showcase-nsclc-alk-fusion-1l",
+        file="patient_showcase_nsclc_alk_fusion_1l.json",
+        label_ua="NSCLC - ALK fusion - ESCAT IA / CIViC evidence",
+        summary_ua="Метастатична аденокарцинома легень з ALK fusion і метастазами в мозок. Показує сильний ESCAT IA сигнал, CIViC evidence lanes і те, що actionability подається як контекст для MDT, а не як прихований ranking engine.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="NSCLC - ALK fusion - ESCAT IA / CIViC evidence",
+        summary_en="Metastatic lung adenocarcinoma with ALK fusion and brain metastases. Demonstrates a strong ESCAT IA signal, CIViC evidence lanes, and the separation between MDT context and treatment-track selection.",
+    ),
+    CaseEntry(
+        case_id="showcase-crc-braf-v600e-2l",
+        file="patient_showcase_crc_braf_v600e_2l.json",
+        label_ua="mCRC - BRAF V600E - tumor-specific actionability",
+        summary_ua="BRAF V600E після прогресії на FOLFOX. Кейс показує, чому один і той самий варіант не можна трактувати поза пухлинним контекстом: у CRC потрібна EGFR-комбінація, а не проста BRAF-монотерапія.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="mCRC - BRAF V600E - tumor-specific actionability",
+        summary_en="BRAF V600E after FOLFOX progression. Shows why a variant cannot be interpreted outside tumor context: CRC needs an EGFR-combination strategy, not simple BRAF monotherapy.",
+    ),
+    CaseEntry(
+        case_id="showcase-breast-pik3ca-h1047r-2l",
+        file="patient_showcase_breast_pik3ca_h1047r_2l.json",
+        label_ua="Breast HR+/HER2- - PIK3CA H1047R - post-CDK4/6i",
+        summary_ua="HR+/HER2- метастатичний рак молочної залози після CDK4/6i з PIK3CA H1047R. Показує, як ESCAT/CIViC шар додає молекулярний контекст до 2L endocrine-targeted опцій і одночасно залишає клінічні обмеження видимими.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="Breast HR+/HER2- - PIK3CA H1047R - post-CDK4/6i",
+        summary_en="HR+/HER2- metastatic breast cancer after CDK4/6i with PIK3CA H1047R. Shows how the ESCAT/CIViC layer adds molecular context to 2L endocrine-targeted options while keeping clinical constraints visible.",
+    ),
+    CaseEntry(
+        case_id="showcase-ovarian-brca1-maintenance",
+        file="patient_showcase_ovarian_brca1_maintenance.json",
+        label_ua="Ovarian - germline BRCA1 - PARPi maintenance",
+        summary_ua="Платин-чутливий рецидив high-grade serous ovarian carcinoma з germline BRCA1. Показує ESCAT IA, CIViC sensitivity/resistance evidence і практичний контекст для підтримувальної PARPi та каскадного тестування родини.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="Ovarian - germline BRCA1 - PARPi maintenance",
+        summary_en="Platinum-sensitive recurrent high-grade serous ovarian carcinoma with germline BRCA1. Shows ESCAT IA, CIViC sensitivity/resistance evidence, and the practical context for PARPi maintenance plus family cascade testing.",
+    ),
+    CaseEntry(
+        case_id="showcase-nsclc-egfr-t790m-2l",
+        file="patient_showcase_nsclc_egfr_t790m_2l.json",
+        label_ua="NSCLC - acquired EGFR T790M - resistance-aware review",
+        summary_ua="EGFR-mutated NSCLC з прогресією після першого покоління TKI і acquired T790M. Показує, як resistance/actionability evidence стає видимим для MDT замість того, щоб губитися в загальному списку мутацій.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="NSCLC - acquired EGFR T790M - resistance-aware review",
+        summary_en="EGFR-mutated NSCLC progressing after first-generation TKI with acquired T790M. Shows resistance/actionability evidence explicitly for MDT review instead of burying it in a generic mutation list.",
+    ),
+    CaseEntry(
+        case_id="showcase-ifs-ntrk-fusion",
+        file="patient_showcase_ifs_ntrk_fusion.json",
+        label_ua="Infantile fibrosarcoma - NTRK fusion - rare tumor target",
+        summary_ua="Рідкісна пухлина з ETV6-NTRK3 fusion. Кейс показує, як молекулярна actionability допомагає не загубити targetable alteration у діагнозі, де традиційні сценарії лікування часто неповні.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="Infantile fibrosarcoma - NTRK fusion - rare tumor target",
+        summary_en="Rare tumor with ETV6-NTRK3 fusion. Shows how molecular actionability prevents a targetable alteration from being lost in a diagnosis where conventional treatment pathways are often sparse.",
+    ),
+    # -- /CURATED SHOWCASE CASES --
     CaseEntry(
         case_id="hcv-mzl-reference",
         file="patient_zero_reference_case.json",
