@@ -1,0 +1,158 @@
+id: IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-GASTRIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV (metastatic) or unresectable locally advanced gastric / GEJ adenocarcinoma"
+    - "No prior systemic therapy for advanced disease"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-FGFR2B-IHC
+      required: true
+      value_constraint: "FGFR2b 2+/3+ membranous staining in ≥10% of tumor cells (FIGHT / FORTITUDE-101 threshold)"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "HER2-positive (IHC 3+ or IHC 2+/ISH+) excluded — TOGA trastuzumab+chemo supersedes"
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H excluded — pembrolizumab (KEYNOTE-859) supersedes"
+    - biomarker_id: BIO-CLDN18-2
+      value_constraint: "CLDN18.2-positive (≥75% 2+/3+) supersedes when bemarituzumab vs zolbetuximab head-to-head data unavailable — MDT decision when dual-positive"
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  progression_free_survival:
+    value: "Median PFS 9.5 vs 7.4 mo (HR 0.68, 95% CI 0.44–1.04, FIGHT phase 2 — FGFR2b ≥10% 2+/3+ subgroup)"
+    source: SRC-NCCN-GASTRIC-2025
+  overall_survival_median:
+    value: "Median OS 19.2 vs 13.5 mo (HR 0.60, 95% CI 0.38–0.94, FIGHT phase 2)"
+    source: SRC-NCCN-GASTRIC-2025
+  overall_response_rate:
+    value: "ORR 47% vs 33% (FIGHT phase 2 FGFR2b-overexpressing subgroup)"
+    source: SRC-NCCN-GASTRIC-2025
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-GASTRIC-FRAILTY-AGE
+  - RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-CBC
+  - TEST-CMP
+
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Bemarituzumab + mFOLFOX6 is an emerging 1L option for HER2-negative,
+  MSI-stable, FGFR2b-overexpressing (IHC 2+/3+ ≥10%) metastatic gastric /
+  GEJ adenocarcinoma. FIGHT phase 2 (Wainberg et al. Lancet Oncol 2022)
+  demonstrated mPFS 9.5 vs 7.4 mo (HR 0.68), mOS 19.2 vs 13.5 mo (HR 0.60)
+  — benefit greater at higher FGFR2b cutoffs. Phase 3 confirmatory trial
+  FORTITUDE-101 ongoing; full readout pending. Confidence: MODERATE —
+  phase 2 randomized data with consistent HR direction across PFS / OS /
+  ORR, awaiting phase 3 confirmation. ESCAT IIA. ~30% of HER2-negative
+  metastatic gastric / GEJ patients meet the FGFR2b threshold. Companion
+  diagnostic IVD development concurrent with FORTITUDE-101 readout.
+  Ocular toxicity (corneal events ~70% any-grade, ~25% grade ≥3) is the
+  dose-defining AE — mandatory baseline + serial slit-lamp ophthalmology.
+  No bemarituzumab regimen entity exists in KB yet — recommended_regimen
+  intentionally null pending REG-BEMARITUZUMAB-MFOLFOX6 creation in a
+  follow-up regimen-fill chunk.
+
+rationale_ua: >
+  Bemarituzumab + mFOLFOX6 — нова 1L опція для HER2-негативного,
+  MSI-стабільного, FGFR2b-надекспресуючого (ІГХ 2+/3+ ≥10%)
+  метастатичного раку шлунку / GEJ-аденокарциноми. Дослідження FIGHT
+  фази 2 (Wainberg, Lancet Oncol 2022): мПВ 9.5 проти 7.4 міс
+  (HR 0.68), мЗВ 19.2 проти 13.5 міс (HR 0.60) — користь зростає при
+  вищих порогах FGFR2b. Підтверджуюче дослідження фази 3 FORTITUDE-101
+  триває; повна публікація очікується. Впевненість: ПОМІРНА —
+  рандомізовані дані фази 2 із послідовним HR-напрямком для ПВ / ЗВ /
+  ЧВ, очікується підтвердження фази 3. ESCAT IIA. ~30% HER2-негативних
+  метастатичних пацієнтів відповідають порогу FGFR2b. Розробка IVD
+  companion diagnostic паралельна з FORTITUDE-101. Очна токсичність
+  (рогівкові події ~70% будь-якого ступеня, ~25% ≥3 ступеня) — основна
+  дозо-обмежуюча побічна дія — обов'язковий вихідний + серійний
+  огляд офтальмолога.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-FORTITUDE-101
+    weight: primary
+    relevant_quote_paraphrase: "Phase 3 trial of bemarituzumab + chemotherapy in FGFR2b-overexpressing HER2-negative 1L metastatic gastric / GEJ adenocarcinoma — confirmatory readout pending; cited as TODO-stub per A2 chunk spec instruction"
+  - source_id: SRC-NCCN-GASTRIC-2025
+    weight: primary
+    relevant_quote_paraphrase: "FGFR2b IHC testing recommended in HER2-negative metastatic gastric / GEJ; bemarituzumab + chemotherapy listed as emerging targeted option pending phase 3 readout"
+  - source_id: SRC-ESMO-GASTRIC-2024
+    weight: primary
+    relevant_quote_paraphrase: "FGFR2b expression by IHC noted as emerging biomarker; FORTITUDE-101 phase 3 trial ongoing for bemarituzumab + chemotherapy in FGFR2b-positive disease"
+
+known_controversies:
+  - topic: "Bemarituzumab vs zolbetuximab when both biomarkers co-positive (FGFR2b-IHC ≥10% AND CLDN18.2 ≥75%)"
+    positions:
+      - position: "Zolbetuximab + chemo: mature phase 3 OS benefit (SPOTLIGHT / GLOW HR 0.75 / 0.77); FDA-approved Oct 2024; companion diagnostic FDA-cleared"
+        sources: [SRC-NCCN-GASTRIC-2025]
+        evidence_note: "Higher evidence tier (phase 3 vs phase 2 for bemarituzumab) until FORTITUDE-101 reads out"
+      - position: "Bemarituzumab + chemo: numerically larger PFS / OS HRs in FIGHT phase 2 (HR 0.68 / 0.60); higher FGFR2b cutoffs amplify benefit"
+        sources: [SRC-NCCN-GASTRIC-2025]
+        evidence_note: "Confidence remains lower until phase 3 publication"
+    our_default: "Zolbetuximab + chemo when CLDN18.2 ≥75% (phase 3 OS established); reserve bemarituzumab + chemo for FGFR2b ≥10% with CLDN18.2 <75% or post-zolbetuximab access barrier"
+    rationale: "Both biomarkers can co-occur (~10% overlap estimated); evidence-tier hierarchy favors zolbetuximab until FORTITUDE-101 final results"
+  - topic: "FGFR2b IHC threshold — ≥10% vs ≥5% vs all-comer 2+/3+"
+    positions:
+      - position: "≥10% threshold: FORTITUDE-101 / FIGHT registrational cutoff; HR magnitude greater at this stringent cutoff"
+        sources: [SRC-FORTITUDE-101]
+      - position: "Lower thresholds (≥5%, all-comer 2+/3+): broader eligibility but smaller HR magnitude in FIGHT exploratory subsets"
+        sources: [SRC-NCCN-GASTRIC-2025]
+        evidence_note: "Emerging — pending FORTITUDE-101 secondary analyses"
+    our_default: "Use FORTITUDE-101 / FIGHT registrational threshold (≥10% 2+/3+) for treatment selection until label finalized"
+    rationale: "Match the trial-defined threshold that drives label / reimbursement; lower-cutoff exploratory data is hypothesis-generating only"
+
+do_not_do:
+  - "НЕ розпочинати bemarituzumab без підтвердженого FGFR2b-IHC 2+/3+ ≥10% за валідованим IIIb-селективним антитілом — поза цим діапазоном користь не доведена."
+  - "НЕ використовувати pan-FGFR2 IHC замість FGFR2b-селективного — ізоформа IIIb є мішенню; pan-FGFR2 не диференціює ізоформи."
+  - "НЕ призначати у HER2+ пацієнтів — TOGA трастузумаб+chemo має пріоритет."
+  - "НЕ призначати у MSI-H пацієнтів — пембролізумаб (KEYNOTE-859) має перевагу."
+  - "НЕ розпочинати без вихідного офтальмологічного огляду + плану серійного контролю — рогівкові події ~70% будь-якого ступеня, ~25% ≥3 ступеня."
+  - "НЕ підтверджувати план без funding pathway — bemarituzumab не зареєстрований; доступ через named-patient / clinical-trial only."
+  - "НЕ комбінувати з іншими FGFR-селективними інгібіторами або CLDN18.2-таргетною терапією поза дослідженнями."
+
+do_not_do_en:
+  - "Do not start bemarituzumab without confirmed FGFR2b IHC 2+/3+ ≥10% by validated IIIb-isoform-selective antibody — outside this range benefit is not proven."
+  - "Do not use pan-FGFR2 IHC instead of FGFR2b-selective — IIIb isoform is the target; pan-FGFR2 does not differentiate isoforms."
+  - "Do not prescribe in HER2+ patients — TOGA trastuzumab+chemo takes priority."
+  - "Do not prescribe in MSI-H patients — pembrolizumab (KEYNOTE-859) takes preference."
+  - "Do not start without baseline ophthalmology exam + serial monitoring plan — corneal events ~70% any-grade, ~25% grade ≥3."
+  - "Do not confirm the plan without funding pathway — bemarituzumab not registered; access via named-patient / clinical-trial only."
+  - "Do not combine with other FGFR-selective inhibitors or CLDN18.2-targeted therapy outside trials."
+
+time_critical: false
+last_reviewed: "2026-05-07"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — pending Clinical Co-Lead sign-off (CHARTER §6.1: ≥2 reviewers
+  for clinical content). Aggressive-track 1L for HER2-negative /
+  MSI-stable / CLDN18.2-negative / FGFR2b-positive metastatic gastric /
+  GEJ. Confidence: MODERATE — FIGHT phase 2 randomized data, FORTITUDE-101
+  phase 3 confirmatory results pending. SRC-FORTITUDE-101 is currently
+  a TODO-stub (citation upgrade is a separate housekeeping chunk).
+  recommended_regimen intentionally null — no REG-BEMARITUZUMAB-MFOLFOX6
+  exists in KB; needs follow-up regimen-fill chunk. Engine routing
+  to this indication will not fire until algorithm extension adds
+  FGFR2b biomarker requirement (D1 algorithm chunk recommended).
+  UA access: bemarituzumab not registered; named-patient / charitable /
+  clinical-trial pathway only.
