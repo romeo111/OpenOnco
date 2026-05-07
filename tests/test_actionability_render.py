@@ -55,6 +55,13 @@ def _plan(hits):
     return SimpleNamespace(variant_actionability=hits)
 
 
+def _plan_with_biomarkers(hits, biomarkers):
+    return SimpleNamespace(
+        variant_actionability=hits,
+        patient_snapshot={"biomarkers": biomarkers},
+    )
+
+
 # ── _is_skipped_source / _is_resistance_entry primitives ─────────────────
 
 
@@ -364,6 +371,17 @@ def test_render_actionability_section_empty_state():
     html = _render_variant_actionability(plan)
     assert "ONCOKB" not in html.upper()
     assert "actionability-table" in html
+
+
+def test_render_actionability_audit_does_not_call_known_bio_id_missing_from_kb():
+    """Known BIO-* clinical factors may intentionally have no ESCAT/BMA cell."""
+    plan = _plan_with_biomarkers([], {"BIO-HCV-STATUS": "anti-HCV-positive"})
+
+    html = _render_variant_actionability(plan, target_lang="en")
+
+    assert "BIO-HCV-STATUS" in html
+    assert "Not in KB" not in html
+    assert "No ESCAT/BMA record" in html
 
 
 def test_render_actionability_section_escat_tier_is_prominent():

@@ -484,12 +484,12 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "actionability_gene_level":    {"uk": "(гено-рівень)", "en": "(gene-level)"},
     "actionability_covered_heading":   {"uk": "✅ Покриті біомаркери (знайдено в KB)",
                                         "en": "✅ Covered biomarkers (matched in KB)"},
-    "actionability_uncovered_heading": {"uk": "⚠️ Не враховані при побудові плану",
-                                        "en": "⚠️ Not included in plan"},
+    "actionability_uncovered_heading": {"uk": "⚠️ Не покриті ESCAT/BMA lookup",
+                                        "en": "⚠️ Not covered by ESCAT/BMA lookup"},
     "actionability_uncovered_th_status": {"uk": "Статус", "en": "Status"},
     "actionability_uncovered_negative":  {"uk": "Виключено (негативний)", "en": "Excluded (negative)"},
-    "actionability_uncovered_unmatched": {"uk": "Немає в KB — рекомендуйте лікарю уточнити",
-                                          "en": "Not in KB — ask clinician to verify"},
+    "actionability_uncovered_unmatched": {"uk": "Немає ESCAT/BMA-запису — перевірте як клінічний фактор",
+                                          "en": "No ESCAT/BMA record — verify as a clinical factor"},
     # Experimental options (clinical-trial track)
     "exp_heading":                 {"uk": "Експериментальні опції (клінічні дослідження)",
                                     "en": "Experimental options (clinical trials)"},
@@ -2363,10 +2363,11 @@ def _render_variant_actionability(
     - ✅ Covered biomarkers: patient biomarkers that matched a BMA cell,
       shown with full ESCAT detail so the HCP can verify what the engine
       acted on.
-    - ⚠️ Not included in plan: biomarkers present in the patient profile
-      that were either negative (excluded by design) or positive but
-      absent from the KB (unmatched). This makes the coverage gap
-      explicit for verification.
+    - ⚠️ Not covered by ESCAT/BMA lookup: biomarkers present in the
+      patient profile that were either negative (excluded by design) or
+      positive but unmatched to a BMA cell. This makes the actionability
+      coverage gap explicit without implying the biomarker is absent
+      from the KB.
 
     The split is computed purely from `plan.patient_snapshot["biomarkers"]`
     and `plan.variant_actionability` — no schema changes required.
