@@ -347,3 +347,41 @@ For Phase C, parallel + backfill won — one extra trivial chunk (#438) but ~15-
 Every Phase C chunk flagged "algorithm doesn't route to new indication yet" as out-of-scope follow-up. Aggregated into D2 algorithm-extension chunk. **Confirmed pattern:** new clinical content lands first; engine routing extends in dedicated D-prefix chunk.
 
 This decoupling means clinical content can be reviewed for accuracy independently of routing logic — separate review surfaces per file type.
+
+---
+
+## 10. Late-session findings (added post-W0-6 / D2 merges)
+
+### 10.1 PMID defects in source manifests caught at ingestion
+
+W0-6 spec listed PMID 29952080 for KEYNOTE-061 Shitara 2018; that PMID actually resolves to a 2019 BDNF/epilepsy paper. Real KN-061 PMID is **29880231**, verified via independent NCBI esearch lookup. **6th spec defect** caught by agents in this session — reinforces that PMID/citation verification at agent-side IS the safety net, not the planning side.
+
+**For the next refactor:** when manifest specifies PMIDs, expect ~10-20% defect rate. Bake "verify each PMID via NCBI esearch + fetch title to confirm match" into agent prompts for source-stub chunks. Cheaper to verify than to ship a wrong-paper citation.
+
+### 10.2 Pre-existing skeletal entities in repo
+
+W0-6 discovered `src_palette_van_der_graaf_2012.yaml` already existed as a skeletal pre-canonical draft that was failing schema validation. Agent rewrote in-place to canonical schema. **Schema_errors -1, ref_errors -1** as bonus from this fix (`algo_sts_advanced_2l.yaml` ref to SRC-PALETTE now resolves).
+
+**Pattern:** before treating a manifest item as "NEW", grep `knowledge_base/hosted/content/sources/` for the trial name. If a draft exists, prefer EDIT over NEW + report bonus baseline reduction.
+
+### 10.3 Tooling-path mismatches between spec and repo
+
+W0-6 spec referenced `-m knowledge_base.validation.cli` module + `tests/test_sources_extraction.py` test file. Neither exists. Agent fell back to `scripts/audit_validator.py` + `tests/test_loader*.py` + `tests/test_source_ref_integrity.py` — actual canonical tooling.
+
+**For the next refactor:** orchestrator-written specs may reference module paths that have drifted. Agent should verify each tooling path with `ls` / `which` before running, fall back to nearest match, and report the substitution honestly. Don't fail the chunk on a wrong tool path — substitute and proceed.
+
+### 10.4 `applicable_to_disease_state` for algorithm disambiguation
+
+D2 introduced `applicable_to_disease_state` field on new algorithms (`resectable`, `unresectable_definitive`) to disambiguate from state-agnostic `metastatic_1l`. Existing profiles without `disease_state` continue landing on metastatic_1l (load-order behavior preserved). **Pattern:** when adding new algorithms in same disease as existing algos, scope via disease-state field rather than path-collision in algorithm dispatch.
+
+### 10.5 List-iteration semantics drive "step 0" placement
+
+D2 prepended oligomet branches as the FIRST list element in `algo_*_metastatic_1l.yaml`. Reason: `walk_algorithm` uses `next(iter(steps))` semantics — list order, not step-number sortation. Step number is purely a label.
+
+**For the next refactor:** when "prepend" is required (e.g. higher-priority decision step), edit the YAML list ordering. Adding `step_number: 0` is NOT sufficient — semantics depend on iteration order, not numeric ordering.
+
+### 10.6 Branch hygiene — feature branches deleted on remote post-merge
+
+`gh pr merge --squash` followed by `git push origin --delete <branch>` cleanly removes the remote feature branch after squash. **Local branch lingers** because the agent's worktree is still active. The orchestrator's local repo has no need to track these — `git remote prune origin` cleans references later.
+
+**For session-end cleanup:** worry only about remote; local branches naturally accumulate during multi-agent dispatch and don't impact correctness.
