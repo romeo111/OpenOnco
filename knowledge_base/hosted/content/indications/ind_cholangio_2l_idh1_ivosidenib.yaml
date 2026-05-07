@@ -1,0 +1,115 @@
+id: IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Locally advanced unresectable or metastatic intrahepatic cholangiocarcinoma"
+    - "Disease progression on ≥1 prior systemic therapy (typically gem+cis ± durvalumab 1L)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-IDH-MUTATION
+      required: true
+      value_constraint: "IDH1 R132 hotspot mutation positive (R132C / R132L / R132G / R132H / R132S; tumor NGS preferred; ctDNA acceptable when tumor tissue insufficient). IDH2 mutations NOT eligible."
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-IVOSIDENIB-CHOLANGIO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~2% (PR only; ClarIDHy ITT — disease-control measure more relevant)"
+  complete_response: "0%"
+  progression_free_survival: "Median PFS 2.7 mo vs 1.4 mo placebo, HR 0.37, p<0.0001 (ClarIDHy); 6-mo PFS rate 32% vs not reached on placebo"
+  overall_survival_5y: "Median OS 10.3 mo ITT (HR 0.79 with 70.5% placebo crossover); RPSFT-adjusted mOS HR 0.49 favoring ivosidenib (ClarIDHy)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CHOLANGIOCARCINOMA-FRAILTY-AGE
+  - RF-CHOLANGIOCARCINOMA-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-ECG
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Ivosidenib for IDH1-R132-mutated advanced cholangiocarcinoma post
+  ≥1 prior systemic line — mPFS 2.7 vs 1.4 mo (HR 0.37, p<0.0001),
+  RPSFT-adjusted mOS HR 0.49 (ClarIDHy phase 3, Abou-Alfa Lancet
+  Oncol 2020). FDA approved August 2021; EMA 2023. IDH1 R132 hotspot
+  mutations occur in ~13–20% of intrahepatic cholangiocarcinoma and
+  are mutually exclusive with FGFR2 fusions; comprehensive molecular
+  profiling at diagnosis should test both. NCCN-Hepatobiliary
+  category 1 (FDA-approved with phase 3 evidence). Toxicity profile
+  favorable — well-tolerated oral therapy in a generally elderly /
+  debilitated post-1L cholangiocarcinoma population. Class boxed
+  warning for differentiation syndrome derives from AML setting; in
+  ClarIDHy cholangio cohort it was not observed but clinicians should
+  remain aware. UA access barrier: ivosidenib not registered
+  (named-patient / Servier EAP only). Alternative when ivosidenib
+  unavailable: FOLFOX 2L (ABC-06) or clinical trial; vorasidenib
+  (dual mIDH1/2) NOT active in cholangiocarcinoma per current data
+  and is not an alternative.
+
+sources:
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+    relevant_quote_paraphrase: "Ivosidenib is a recommended option (category 1) for IDH1-R132 mutated locally advanced or metastatic cholangiocarcinoma after progression on prior systemic therapy; FDA approved August 2021 on ClarIDHy phase 3 data."
+  - source_id: SRC-ESMO-BTC-2023
+    position: supports
+    relevant_quote_paraphrase: "IDH1 mutation testing is recommended in advanced biliary tract cancer; ivosidenib is the standard 2L option for IDH1-mutated intrahepatic cholangiocarcinoma post chemotherapy failure."
+  - source_id: SRC-CLARIDHY-ABOU-ALFA-2020
+    position: supports
+    relevant_quote_paraphrase: "ClarIDHy phase 3 (n=185, ivosidenib vs placebo, 2:1, advanced IDH1-mutated cholangiocarcinoma post ≥1L chemotherapy): mPFS 2.7 vs 1.4 mo, HR 0.37 (95% CI 0.25–0.54, p<0.0001); RPSFT-adjusted mOS HR 0.49 with 70.5% placebo-arm crossover."
+
+known_controversies:
+  - topic: "Modest absolute mPFS gain (2.7 vs 1.4 mo) — is the magnitude clinically meaningful?"
+    positions:
+      - position: "Yes — HR 0.37 is robust; 6-month PFS rate 32% vs not reached on placebo demonstrates a tail of long-term disease control absent in placebo arm; well-tolerated oral monotherapy in an otherwise rapidly-progressing post-1L population without alternative biomarker-driven options"
+        sources: [SRC-NCCN-HEPATOBILIARY, SRC-CLARIDHY-ABOU-ALFA-2020]
+      - position: "Modest — absolute mPFS gap is small; ITT mOS not significantly different (crossover-confounded); cost-effectiveness contested in some payer environments"
+        sources: [SRC-CLARIDHY-ABOU-ALFA-2020]
+    our_default: "Recommend ivosidenib as 2L standard for IDH1-R132 cholangio when biomarker confirmed and access available; align with NCCN cat 1 + ESMO; alternative is FOLFOX 2L (ABC-06) — comparable mPFS but inferior tolerability in elderly population"
+    rationale: "Phase 3 randomized evidence + regulatory approval + guideline endorsement; tolerability profile favors ivosidenib over FOLFOX in post-1L cholangio population; tail of long-term responders justifies use despite modest median gain"
+
+do_not_do:
+  - "НЕ призначати без тестування на мутацію IDH1 R132 (NGS пухлини або ctDNA) — ампліфікація / IDH2-мутація / IDH1-мутації поза R132 НЕ є показанням."
+  - "НЕ розпочинати без вихідної ЕКГ та корекції електролітів (K, Mg, Ca) — QT-подовження є класовим побічним ефектом."
+  - "НЕ комбінувати з потужними CYP3A4 індукторами (rifampin, carbamazepine, phenytoin, St. John's wort) — експозиція ivosidenib різко знижується."
+  - "НЕ ігнорувати моніторинг QTc (ЕКГ на тиждень 1, 2, 4, далі щомісяця або за клінічними показаннями)."
+  - "НЕ покладатися на гормональну контрацепцію як єдиний метод — ivosidenib індукує CYP3A4; потрібен бар'єрний метод."
+  - "НЕ підтверджувати план без funding pathway — ivosidenib не зареєстрований в UA."
+
+do_not_do_en:
+  - "Do NOT prescribe without confirmed IDH1 R132 mutation testing (tumor NGS or ctDNA) — amplification, IDH2 mutation, or non-R132 IDH1 mutations are NOT eligible."
+  - "Do NOT start without baseline ECG and correction of electrolytes (K, Mg, Ca) — QT prolongation is a class adverse effect."
+  - "Do NOT combine with strong CYP3A4 inducers (rifampin, carbamazepine, phenytoin, St. John's wort) — ivosidenib exposure is sharply reduced."
+  - "Do NOT skip QTc monitoring (ECG at week 1, 2, 4, then monthly or as clinically indicated)."
+  - "Do NOT rely on hormonal contraception as the sole method — ivosidenib induces CYP3A4; barrier contraception is required."
+  - "Do NOT confirm the plan without funding pathway — ivosidenib not registered in UA."
+
+time_critical: false
+last_reviewed: "2026-05-07"
+reviewers: []
+reviewer_signoffs: 0
+actionability_review_required: true
+notes: >
+  STUB — pending Clinical Co-Lead sign-off (CHARTER §6.1: ≥2
+  reviewers for clinical content). Aggressive-track 2L+ for
+  IDH1-R132 mutated intrahepatic cholangiocarcinoma. NCCN cat 1
+  (2025 hepatobiliary); FDA Aug 2021; EMA 2023. References existing
+  BMA-IDH1-R132-CHOLANGIO (BIO-IDH-MUTATION) for biomarker
+  evidence linkage. Primary citation SRC-CLARIDHY-ABOU-ALFA-2020
+  ingested in W0-CHOLANGIO PR #456. UA access: named-patient /
+  Servier EAP pathway only.
