@@ -1,0 +1,115 @@
+id: IND-CHOLANGIO-METASTATIC-1L-PEMBRO-CHEMO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Advanced / unresectable / metastatic biliary tract carcinoma"
+    - "Includes intrahepatic cholangiocarcinoma, extrahepatic cholangiocarcinoma, and gallbladder cancer (per KEYNOTE-966 inclusion)"
+    - "Treatment-naive (no prior systemic therapy for advanced disease)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-PEMBRO-GEM-CIS-CHOLANGIO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "29% vs 29% (no improvement in objective response rate; KEYNOTE-966)"
+  progression_free_survival: "mPFS 6.5 vs 5.6 mo (HR 0.86; not statistically significant)"
+  overall_survival_median: "mOS 12.7 vs 10.9 mo (HR 0.83, 95% CI 0.72-0.95, p=0.0034)"
+  notes: "KEYNOTE-966, N=1069. OS benefit driven primarily by tail of curve (durable IO responders); ORR and PFS gains modest/non-significant. Benefit consistent across PD-L1 CPS subgroups and BTC anatomic subsites."
+
+hard_contraindications: []
+# Free-text contraindications (autoimmune, prior solid-organ transplant,
+# ECOG PS ≥ 2, severe renal impairment CrCl <50 mL/min) described in `notes:` /
+# `do_not_do:` — schema requires Contraindication entity IDs which are not yet
+# authored for IO-related contraindications. Stub gap; flag for D-prefix follow-up.
+
+red_flags_triggering_alternative: []
+
+required_tests: []
+# Required tests (biopsy confirmation, baseline LFT/CBC/CMP/CrCl, TSH baseline
+# pre-IO, CT C/A/P or MRI) described in `notes:` — schema requires Test entity
+# IDs not yet authored for these. Flagged for D-prefix follow-up.
+
+desired_tests: []
+# Desired tests (MSI/MMR, CGP for FGFR2/IDH1/BRAF/HER2/NTRK, PD-L1 CPS) described
+# in `notes:` — schema requires Test entity IDs not yet authored.
+
+rationale: >
+  KEYNOTE-966 (Kelley RK et al., Lancet 2023;401(10391):1853-1865;
+  NCT04003636): pembrolizumab 200 mg q3w + gemcitabine 1000 mg/m² +
+  cisplatin 25 mg/m² (D1, D8 q3w; cisplatin capped at 8 cycles, gem
+  continued indefinitely with pembro), vs placebo + gem-cis in 1L
+  advanced BTC (n=1069). mOS 12.7 vs 10.9 mo (HR 0.83, 95% CI 0.72-0.95,
+  p=0.0034). Modest absolute survival gain (~1.8 mo) with HR 0.83;
+  ORR and PFS not improved. Larger trial than TOPAZ-1 (1069 vs 685) but
+  weaker effect size. FDA-approved Oct 2023; NCCN category 1 alternative
+  preferred 1L regimen alongside TOPAZ-1. Choice between TOPAZ-1 (durva)
+  and KEYNOTE-966 (pembro) is institutional / access-driven — no
+  head-to-head; both NCCN cat 1.
+
+rationale_ua: >
+  KEYNOTE-966: пембролізумаб + гемцитабін + цисплатин для 1L прогресуючого
+  раку жовчних шляхів. mOS 12.7 vs 10.9 міс (HR 0.83). Більша когорта
+  (n=1069) ніж TOPAZ-1, але менший ефект. NCCN категорія 1, схвалено
+  FDA жовтень 2023. Вибір між durva і pembro — інституційний / за
+  доступністю; обидва прийнятні.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-KEYNOTE-966-KELLEY-2023
+    position: supports
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+  - source_id: SRC-ESMO-BTC-2023
+    position: supports
+
+do_not_do:
+  - "Не використовуйте за наявності активного аутоімунного захворювання (відносне протипоказання для пембролізумабу — оцінити ризик/користь індивідуально)"
+  - "Не продовжуйте пембролізумаб після прогресування — переходьте на 2L"
+  - "Не використовуйте при ECOG PS ≥ 2 — KEYNOTE-966 не включала цих пацієнтів"
+  - "Не пропускайте CGP (FGFR2, IDH1, BRAF, HER2, NTRK) на старті — потрібно для планування 2L"
+  - "Не перевищуйте 35 циклів пембролізумабу (~2 роки) за дизайном KEYNOTE"
+
+last_reviewed: "2026-05-08"
+notes: >
+  STUB scaffold — KEYNOTE-966 1L IO+chemo for advanced BTC, NCCN
+  category 1 alternative. Auto-generated minimal indication so engine
+  can route end-to-end with new 2024+ standard-of-care; pending
+  Clinical Co-Lead review per CHARTER §6.1 dev-mode signoff exemption.
+
+  Clinical contraindications (free-text, pending Contraindication-entity
+  authoring): active autoimmune disease requiring systemic
+  immunosuppression (pembrolizumab); prior solid-organ transplant
+  (rejection risk); ECOG PS ≥ 2 (not enrolled in KEYNOTE-966 — gem+cis
+  monotherapy preferred via existing IND-CHOLANGIO-ADVANCED-GEM-CIS);
+  severe renal impairment CrCl <50 mL/min (cisplatin contraindication
+  — carboplatin substitution case-by-case).
+
+  Required tests (free-text, pending Test-entity authoring): histologic
+  confirmation of BTC; baseline LFTs/CBC/CMP/CrCl; TSH baseline (IO
+  thyroiditis monitoring); CT C/A/P or MRI staging.
+
+  Desired tests: MSI/MMR (rare MSI-H in BTC); CGP for FGFR2 fusions,
+  IDH1, BRAF, HER2, NTRK (2L+ planning per existing FGFR2-fusion 2L
+  indications); PD-L1 CPS (informational — KEYNOTE-966 benefit
+  subgroup-independent).
+
+  Protocol differs from TOPAZ-1: gemcitabine continues past 8 cycles as
+  maintenance with pembrolizumab (cisplatin alone capped at 8 cycles);
+  pembrolizumab maximum 35 cycles (~2 years) per KEYNOTE design. §17
+  phased-indication structure not used for v0.1 (opt-in per planning
+  doc §2.5). D-prefix algo flag: `algo_cholangio_1l` may need extension
+  to surface 1L IO-combo option (out of A scope; flagged in PR). Existing
+  `ind_cholangio_advanced_gem_cis` retained as legacy / IO-contraindicated
+  fallback path.

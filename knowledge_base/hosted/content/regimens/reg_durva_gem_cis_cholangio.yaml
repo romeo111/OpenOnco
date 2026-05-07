@@ -1,0 +1,93 @@
+id: REG-DURVA-GEM-CIS-CHOLANGIO
+name: "Durvalumab + gemcitabine + cisplatin (TOPAZ-1) — 1L advanced biliary tract cancer"
+name_ua: "Дурвалумаб + гемцитабін + цисплатин (TOPAZ-1) — 1L прогресуючий рак жовчних шляхів"
+alternate_names:
+  - "TOPAZ-1 regimen"
+  - "Durva-GemCis"
+  - "Imfinzi + gem-cis"
+
+components:
+  - drug_id: DRUG-DURVALUMAB
+    dose: "1500 mg IV q3 weeks"
+    schedule: "Day 1 q3w with chemo (cycles 1-8); then maintenance 1500 mg q4w until progression or unacceptable toxicity"
+    route: IV
+  - drug_id: DRUG-GEMCITABINE
+    dose: "1000 mg/m² IV"
+    schedule: "Days 1 and 8 of every 21-day cycle, cycles 1-8"
+    route: IV
+  - drug_id: DRUG-CISPLATIN
+    dose: "25 mg/m² IV"
+    schedule: "Days 1 and 8 of every 21-day cycle, cycles 1-8"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Up to 8 cycles of induction durva + gem + cis (q3w); then durvalumab monotherapy maintenance q4w until progression, unacceptable toxicity, or 24 months total"
+toxicity_profile: severe
+
+premedication:
+  - "Standard cisplatin hydration: pre/post IV fluids 1-2 L NS, mannitol or furosemide as needed; avoid in CrCl <50 mL/min (consider carboplatin substitution case-by-case)"
+  - "Triple antiemetic prophylaxis MANDATORY (high-emetogenic cisplatin): 5-HT3 (palonosetron or ondansetron) + NK1-RA (aprepitant/fosaprepitant) + dexamethasone; consider olanzapine add-on"
+  - "Magnesium and potassium repletion as needed (cisplatin nephrotoxicity / electrolyte wasting)"
+  - "No specific durvalumab premedication required (low infusion-reaction rate)"
+
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Cisplatin grade 2+ nephrotoxicity (CrCl decline) or unable to tolerate hydration"
+    modification: "Reduce cisplatin to 20 mg/m² OR substitute carboplatin AUC 4-5 (TOPAZ-1 protocol; carbo-substitution accepted in NCCN/ESMO guidance for cisplatin-ineligible)"
+    source_refs: [SRC-NCCN-HEPATOBILIARY, SRC-ESMO-BTC-2023]
+  - condition: "Grade 3-4 neutropenia / thrombocytopenia"
+    modification: "Hold gem+cis until recovery; reduce gemcitabine to 800 mg/m²; consider G-CSF support"
+    source_refs: [SRC-TOPAZ-1-OH-2022]
+  - condition: "Grade 2+ peripheral neuropathy"
+    modification: "Hold cisplatin; reduce by 25% on resume; consider permanent discontinuation if grade 3+"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Immune-mediated AE (durvalumab) — grade 2"
+    modification: "Hold durvalumab; corticosteroids 0.5-1 mg/kg/day prednisone equivalent; resume when grade ≤1 and steroid taper to ≤10 mg/day"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Immune-mediated AE — grade 3-4"
+    modification: "Permanent discontinuation of durvalumab; high-dose corticosteroids 1-2 mg/kg/day; specialist consultation"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: |
+    Дурвалумаб зареєстровано в UA (Imfinzi, AstraZeneca); НСЗУ-реімбурсація
+    обмежена окремими онкологічними програмами (uvNSCLC, SCLC); BTC-показ
+    не покрито станом на 2026-05-08. Гемцитабін + цисплатин — повністю
+    зареєстровані та реімбурсуються в межах НСЗУ-онкопакету. Альтернативні
+    шляхи доступу до дурвалумабу для BTC: out-of-pocket, AstraZeneca patient
+    support, cross-border (EU онкоцентр за наказом МОЗ 988), клінічні
+    випробування.
+
+sources:
+  - SRC-TOPAZ-1-OH-2022
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+
+last_reviewed: "2026-05-08"
+notes: >
+  TOPAZ-1 (Oh DY et al., NEJM Evid 2022;1(8):EVIDoa2200015; NCT03875235):
+  durvalumab 1500 mg q3w + gemcitabine 1000 mg/m² + cisplatin 25 mg/m²
+  (D1, D8 q3w x up to 8 cycles), then durvalumab 1500 mg q4w maintenance,
+  vs placebo + gem-cis in 1L advanced BTC (n=685). Primary endpoint OS:
+  mOS 12.8 vs 11.5 mo (HR 0.80, 95% CI 0.66-0.97, p=0.021); mPFS 7.2 vs
+  5.7 mo (HR 0.75); ORR 26.7% vs 18.7%. Benefit consistent across PD-L1
+  CPS subgroups and BTC anatomic subsites (intra-/extrahepatic
+  cholangiocarcinoma, gallbladder cancer). FDA-approved Sep 2022 for 1L
+  advanced BTC. NCCN category 1 preferred regimen. Cisplatin (D1/D8
+  schedule, not standard D1-only) is per protocol — total cycles capped
+  at 8 for chemo backbone; durvalumab maintenance continues until
+  progression / toxicity. STUB pending Clinical Co-Lead sign-off per
+  CHARTER §6.1 dev-mode exemption.
+notes_ua: >
+  TOPAZ-1: дурвалумаб + гемцитабін + цисплатин для 1L прогресуючого
+  раку жовчних шляхів (внутрішньопечінкова / позапечінкова
+  холангіокарцинома, рак жовчного міхура). mOS 12.8 vs 11.5 міс
+  (HR 0.80). NCCN категорія 1, схвалено FDA вересень 2022. Стандарт
+  лікування першої лінії з 2022 року для прогресуючого/метастатичного
+  BTC. STUB — очікує клінічного підпису.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
