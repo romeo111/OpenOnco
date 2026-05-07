@@ -3,16 +3,20 @@ applicable_to_disease: DIS-CLL
 applicable_to_line_of_therapy: 1
 purpose: >
   Select default + alternative for first-line CLL based on cytogenetic
-  risk (TP53/del 17p/IGHV-unmutated/complex karyotype). Two tracks:
-  BTKi continuous (standard) vs VenO time-limited (preferred for high-risk).
+  risk (TP53/del 17p/IGHV-unmutated/complex karyotype) and fitness. Three
+  tracks: BTKi continuous (standard, acalabrutinib default / zanubrutinib
+  alternative) vs VenO time-limited (CLL14, high-risk ECOG 2 or anti-CD20
+  contraindication) vs AVO triple time-limited (AMPLIFY, aggressive-track
+  preferred for ECOG 0-1 high-risk CLL).
 
 output_indications:
   - IND-CLL-1L-BTKI
   - IND-CLL-1L-VENO
   - IND-CLL-1L-ZANUBRUTINIB
+  - IND-CLL-1L-AVO
 
 default_indication: IND-CLL-1L-BTKI
-alternative_indication: IND-CLL-1L-VENO
+alternative_indication: IND-CLL-1L-AVO
 
 decision_tree:
   - step: 1
@@ -21,10 +25,10 @@ decision_tree:
         - red_flag: RF-CLL-TP53-DELETION-ACTIONABLE
         - red_flag: RF-CLL-HIGH-RISK
     if_true:
-      result: IND-CLL-1L-VENO
+      next_step: 4
     if_false:
       next_step: 2
-    notes: "Wired via RF-CLL-TP53-DELETION-ACTIONABLE (CSD-9A) + RF-CLL-HIGH-RISK: TP53-disruption (del(17p)/TP53-mut) is the strongest single negative-prognostic factor and routes to fixed-duration venetoclax+obinutuzumab (CLL14, Fischer 2019); RF-CLL-HIGH-RISK still fires for IGHV-unmutated and complex-karyotype routing to the same VenO track."
+    notes: "Wired via RF-CLL-TP53-DELETION-ACTIONABLE (CSD-9A) + RF-CLL-HIGH-RISK: TP53-disruption (del(17p)/TP53-mut) is the strongest single negative-prognostic factor and routes high-risk to step 4 (AVO vs VenO fitness split); RF-CLL-HIGH-RISK still fires for IGHV-unmutated and complex-karyotype routing to the same AVO/VenO branch."
   - step: 2
     evaluate:
       any_of:
@@ -45,17 +49,31 @@ decision_tree:
     if_false:
       result: IND-CLL-1L-BTKI
     notes: "Wired via RF-BINET-A / RF-RAI-LOW (CSD-8A): early-stage CLL without iwCLL treatment indication — engine pins to BTKi as default but plan render surfaces watch-and-wait recommendation."
+  - step: 4
+    evaluate:
+      all_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - condition: "No major anti-CD20 or obinutuzumab contraindication (e.g., active HBV reactivation risk unmanaged, severe infusion history)"
+    if_true:
+      result: IND-CLL-1L-AVO
+    if_false:
+      result: IND-CLL-1L-VENO
+    notes: "MDT-only. High-risk CLL (TP53/del17p/IGHV-unmut from step 1) routed here. AVO (acalabrutinib+venetoclax+obinutuzumab; AMPLIFY, Brown NEJM 2025) shows superior PFS HR 0.42 vs chemoimmunotherapy and deeper uMRD vs VenO alone. Preferred for ECOG 0-1 fit patients seeking deepest response + finite duration. VenO (CLL14) preferred when ECOG 2, prior anti-CD20 reaction risk, or patient/MDT preference for lower-toxicity fixed-duration. Both are aggressive-track."
 
-sources: [SRC-NCCN-BCELL-2025]
-last_reviewed: "2026-04-30"
+sources: [SRC-NCCN-BCELL-2025, SRC-AMPLIFY-BROWN-2025]
+last_reviewed: "2026-05-09"
 notes: >
-  Both tracks are NCCN Cat 1; choice reflects risk + patient preference
-  (continuous vs finite-duration). IND-CLL-1L-ZANUBRUTINIB added to
-  output_indications 2026-04-30 (SEQUOIA 1L; ALPINE r/r superior to
-  ibrutinib HR 0.65 PFS, 5.2% vs 13.3% AF) — routes parallel to
-  IND-CLL-1L-BTKI (acalabrutinib) as Cat 1 second-generation BTKi
-  alternative. Engine continues to pin acalabrutinib via existing
-  step 2/3 result clauses (UA access default); render layer surfaces
-  zanubrutinib as alternative-track BTKi when applicable. Asymptomatic
-  CLL without iwCLL indication routes to active surveillance —
-  handled at higher level (no plan generated).
+  Three tracks: BTKi continuous (acalabrutinib default, zanubrutinib Cat 1
+  alternative per ALPINE/SEQUOIA) / VenO time-limited (CLL14 fixed-duration,
+  high-risk fallback when ECOG 2 or anti-CD20 contraindication) / AVO triple
+  time-limited (acalabrutinib+venetoclax+obinutuzumab; AMPLIFY Brown NEJM 2025,
+  preferred aggressive-track for ECOG 0-1 high-risk CLL). All tracks are NCCN
+  Cat 1; choice reflects cytogenetic risk, fitness, and patient preference
+  (continuous vs finite-duration). IND-CLL-1L-ZANUBRUTINIB added 2026-04-30
+  (SEQUOIA 1L; ALPINE r/r superior to ibrutinib HR 0.65 PFS, 5.2% vs 13.3% AF)
+  — routes parallel to IND-CLL-1L-BTKI (acalabrutinib) as Cat 1 second-generation
+  BTKi alternative. Engine pins acalabrutinib via step 2/3 result clauses (UA
+  access default); render surfaces zanubrutinib as alternative-track BTKi.
+  IND-CLL-1L-AVO added 2026-05-09 as aggressive-track alternative for high-risk
+  fit patients (step 4 AVO/VenO split). Asymptomatic CLL without iwCLL indication
+  routes to active surveillance — handled at higher level (no plan generated).
