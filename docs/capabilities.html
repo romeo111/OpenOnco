@@ -11,12 +11,13 @@
 <body>
 <header class="top-bar">
   <div class="brand-line">
-    <a href="/" class="brand-mini">OpenOnco</a>
-    <span class="brand-version" title="Released 2026-04-30">v0.1.2 · 2026-04-30</span>
+    <a href="/" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
+    <span class="brand-version" title="Released 2026-05-06">v0.1.4 &middot; 2026-05-06</span>
   </div>
   <nav class="top-nav">
     <a href="/">Home</a>
-    <a href="/diseases.html">Diseases</a><a href="/capabilities.html" class="active">Capabilities</a><a href="/specs.html">Specs</a><a href="/contribute.html">Contribute</a>
+    <a href="/diseases.html">Diseases</a><a href="/capabilities.html" class="active">Capabilities</a><a href="/specs.html">Specs</a>
+    <a href="/kb.html">KB Search</a>
     <a href="/gallery.html">Examples</a>
     <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
   </nav>
@@ -46,24 +47,24 @@
 
     <div class="callout callout-hard">
       <strong>STUB status across all clinical content.</strong>
-      Reviewer sign-offs ≥ 2: <strong>15/388</strong>
+      Reviewer sign-offs ≥ 2: <strong>15/395</strong>
       (CHARTER §6.1 requires two Clinical Co-Lead approvals for any
       Indication before it can be considered «published»). Right now this
       is a proposed plan: structured data + algorithm + sources are in
       place, but without dual sign-off. State as of
-      <code>2026-05-06 20:32 UTC</code>. This is a decision-support
+      <code>2026-05-07 10:49 UTC</code>. This is a decision-support
       tool, not a medical device.
     </div>
 
     <div class="promo-info" role="img" aria-label="OpenOnco — capabilities infographic">
-      <div class="promo-eyebrow">OpenOnco · v0.1.2 · the engine in two sentences</div>
+      <div class="promo-eyebrow">OpenOnco · v0.1.4 · the engine in two sentences</div>
       <h2 class="promo-headline">
         One JSON profile → <em>two alternative treatment plans</em>
         with a citation under every recommendation.
       </h2>
       <p class="promo-sub">
         A declarative rule engine over <strong>78 diseases</strong>,
-        472 red flags, 398 indications, 335 regimens.
+        472 red flags, 402 indications, 342 regimens.
         No LLM in the clinical decision, no server, no logs.
         The patient JSON never leaves the machine.
       </p>
@@ -74,11 +75,11 @@
           <div class="promo-stat-lbl">Diseases in KB</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">398</div>
+          <div class="promo-stat-num">402</div>
           <div class="promo-stat-lbl">Indications</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">337</div>
+          <div class="promo-stat-num">353</div>
           <div class="promo-stat-lbl">Cited sources</div>
         </div>
         <div class="promo-stat">
@@ -255,7 +256,7 @@
             review and merge. In the past 4 days — <strong>7 waves</strong>,
             dozens of chunks, ~73 BMA candidates, 23 BMA drafts, 53 source
             stubs. Details in the «How to help» section below.
-            <a href="/contribute.html"><strong>→ Contribute tokens</strong></a>
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><strong>→ Contributor Quickstart</strong></a>
           </p>
         </div>
       </div>
@@ -323,9 +324,9 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">335</div>
+          <div class="num-big">342</div>
           <div class="num-lbl">Regimens</div>
-          <div class="num-detail">398 indications (214 1L · 181 2L+)</div>
+          <div class="num-detail">402 indications (220 1L · 182 2L+)</div>
           <p class="num-text">
             Every regimen is a list of drugs with doses, cycle schedule,
             dose adjustments (renal impairment, FIB-4, frailty),
@@ -339,7 +340,7 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">245</div>
+          <div class="num-big">250</div>
           <div class="num-lbl">Drugs</div>
           <p class="num-text">
             ATC/RxNorm-coded. Each carries FDA/EMA/MoH regulatory status +
@@ -352,7 +353,7 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">95</div>
+          <div class="num-big">115</div>
           <div class="num-lbl">Tests / procedures</div>
           <p class="num-text">
             LOINC-coded labs + imaging + histology + IHC + genomic tests.
@@ -363,11 +364,11 @@
         </div>
 
         <div class="num-card num-card--accent">
-          <div class="num-big">337</div>
+          <div class="num-big">353</div>
           <div class="num-lbl">Sources (top-level guidelines + RCTs)</div>
           <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · MoH · WHO · CTCAE · FDA · CIViC (CC0)</div>
           <p class="num-text">
-            Beneath these 337 sources sit tens of thousands of
+            Beneath these 353 sources sit tens of thousands of
             primary clinical publications (RCTs, meta-analyses, cohort
             studies) and thousands of guideline pages. Each Indication /
             Regimen / RedFlag cites specific sources with <em>position</em>
@@ -868,7 +869,7 @@
           <h3>No cumulative-toxicity tracking across lines</h3>
           <p>
             2L+ algorithms exist for 34 heme diseases
-            (181 indications 2L+), but the profile doesn't carry
+            (182 indications 2L+), but the profile doesn't carry
             <code>prior_treatment_history</code> as a structured field. A 2L
             plan for a patient who got bortezomib in 1L with grade 2
             neuropathy — the engine doesn't know about prior exposure
@@ -964,14 +965,15 @@
         <thead><tr><th>Category</th><th>State</th><th>What it means</th></tr></thead>
         <tbody>
           <tr><td>Diseases with full chain</td><td>75 / 78</td><td>The rest are partially modelled; the engine may emit a warning «no Algorithm found for disease=X»</td></tr>
-          <tr><td>Indications 1L</td><td>214</td><td>First line is covered for all 78 diseases</td></tr>
-          <tr><td>Indications 2L+</td><td>181</td><td>Second to fourth line: 34 heme + 20 solid. Remaining solid-tumour 2L+ — partial (CRC, breast, urothelial), not systematic.</td></tr>
+          <tr><td>Indications 1L</td><td>220</td><td>First line is covered for all 78 diseases</td></tr>
+          <tr><td>Indications 2L+</td><td>182</td><td>Second to fourth line: 34 heme + 20 solid. Remaining solid-tumour 2L+ — partial (CRC, breast, urothelial), not systematic.</td></tr>
           <tr><td>RedFlags</td><td>472</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own.</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — a separate specialization track</td></tr>
           <tr><td>Radiation therapy plans</td><td>partial</td><td>RT is part of multimodal Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), but not yet modelled as a separate entity with technical parameters (dose/fractions/target volumes)</td></tr>
           <tr><td>Surgical oncology plans</td><td>not modelled</td><td>Surgical-oncology indications absent</td></tr>
           <tr><td>NHSU formulary live feed</td><td>static flag</td><td>Currently hard-coded on regimens; not auto-refreshed from NHSU — separate backlog</td></tr>
-          <tr><td>Reviewer dual-signoff</td><td>15/388</td><td>Most content is STUB. Capacity plan: 388 → ≥85% verified — our main bottleneck metric, described in kb_coverage_strategy v0.2</td></tr>
+          <tr><td>Reviewer dual-signoff</td><td>15/395</td><td>Most content is STUB. Capacity plan: 395 → ≥85% verified — our main bottleneck metric, described in kb_coverage_strategy v0.2</td></tr>
+          <tr><td>Clinical gap audit</td><td><a href="/clinical-gaps.html">live dashboard</a></td><td>Build-generated audit for sign-off, solid-tumour 2L+, surgery/radiation structure, supportive care, and drug indication tracking.</td></tr>
         </tbody>
       </table>
       <div class="callout">
@@ -1074,7 +1076,7 @@
       <h2>18. How to contribute — verify algorithms with your AI tokens</h2>
       <p class="info-text">
         The biggest gap on this page —
-        <strong>15/388</strong>
+        <strong>15/395</strong>
         dual-reviewer sign-off. This bottleneck isn't solved by more code;
         it's solved by <em>contributors with AI tools</em> who take
         structured chunks of work and execute each in their own worktree.
@@ -1109,7 +1111,7 @@
           <div class="num-lbl">8-line bootstrap</div>
           <p class="num-text">
             Copy the 8-line prompt from
-            <a href="/contribute.html"><code>/contribute.html</code></a>
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><code>CONTRIBUTOR_QUICKSTART.md</code></a>
             into your AI agent. It will find the next available chunk on
             its own, read the spec, claim it, do the work under
             <code>contributions/&lt;chunk-id&gt;/</code>, run the
@@ -1130,7 +1132,7 @@
         </div>
       </div>
       <div class="cta-row" style="margin-top:24px;">
-        <a class="btn btn-primary" href="/contribute.html">Contribute tokens →</a>
+        <a class="btn btn-primary" href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart →</a>
         <a class="btn btn-secondary" href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart (GitHub)</a>
         <a class="btn btn-secondary" href="https://github.com/romeo111/OpenOnco/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active" target="_blank" rel="noopener">Active chunks →</a>
       </div>

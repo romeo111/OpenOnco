@@ -222,47 +222,39 @@ def test_render_does_not_leak_reference_patient_initials():
     assert "В.Д.В" not in html
 
 
-# ── Skill version metadata in MDT brief (per user request) ────────────────
+# ── MDT brief prioritizes discussion questions over audit metadata ────────
 
 
-def test_mdt_brief_shows_skill_version_per_role():
-    """Each activated role in the rendered MDT brief must show the skill's
-    version + last_reviewed date inline so a clinician verifying changes
-    can see at a glance which version produced that activation."""
+def test_mdt_brief_hides_skill_version_per_role():
+    """Activated roles should stay clinically focused. Skill versions are
+    audit metadata and belong in the collapsed catalog footer."""
     p = _patient("patient_zero_indolent.json")
     plan = generate_plan(p, kb_root=KB_ROOT)
     mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
     html = render_plan_html(plan, mdt=mdt)
 
-    # Skill metadata strip class must be present
-    assert "skill-meta" in html
-    # At least one version pill rendered (e.g., "v0.1.0")
-    import re
-    assert re.search(r"v\d+\.\d+\.\d+", html), "no semver version pill in rendered HTML"
-    # last_reviewed date format (e.g., "reviewed 2026-04-25")
-    assert "reviewed " in html
-    # STUB or REVIEWED status pill
-    assert ("STUB" in html) or ("REVIEWED" in html)
+    assert "skill-meta" not in html
+    assert "q-list--featured" in html
+    assert html.index('<ul class="q-list q-list--featured"') < html.index('<ul class="role-list"')
 
 
-def test_mdt_brief_includes_skill_catalog_with_activation_markers():
-    """Skill catalog footer must list ALL registered skills with their
-    versions, so a clinician can see which dormant skills are available
-    for other clinical scenarios."""
+def test_mdt_brief_includes_collapsed_skill_catalog_with_activation_markers():
+    """Skill catalog footer must list all registered skills with versions,
+    but it should be collapsed so discussion questions remain the focus."""
     p = _patient("patient_zero_indolent.json")
     plan = generate_plan(p, kb_root=KB_ROOT)
     mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
     html = render_plan_html(plan, mdt=mdt)
 
     assert "skill-catalog" in html
-    assert "Skill catalog" in html
-    # Every catalog row carries a version
+    assert '<details class="skill-catalog">' in html
+    # Every catalog row still carries a version for audit when expanded.
     from knowledge_base.engine.mdt_orchestrator import _SKILL_REGISTRY
     for sid, s in _SKILL_REGISTRY.items():
         assert sid in html, f"skill_id '{sid}' missing from rendered catalog"
     # Activation marker must mention the count
     import re
-    m = re.search(r"Skill catalog \((\d+)/(\d+)", html)
+    m = re.search(r"<summary>.*\((\d+)/(\d+)", html)
     assert m, "skill catalog header missing activation count"
     activated, total = int(m.group(1)), int(m.group(2))
     assert total == len(_SKILL_REGISTRY)
@@ -347,3 +339,55 @@ def test_render_target_lang_preserves_entity_ids_and_doses():
     html = render_plan_html(plan, mdt=None, target_lang="en")
     for token in ("DIS-HCV-MZL", "IND-HCV-MZL-1L-ANTIVIRAL", "SRC-NCCN-BCELL-2025"):
         assert token in html, f"localization swallowed entity ID '{token}'"
+
+
+def test_treatment_plan_renders_biomarker_coverage_in_mdt():
+    p = _patient("patient_zero_indolent.json")
+    plan = generate_plan(p, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
+    html = render_plan_html(plan, mdt=mdt, target_lang="en")
+
+    assert "Biomarker coverage:" in html
+    assert "biomarker_coverage" not in html
+
+
+def test_treatment_plan_renders_doctor_facing_data_quality_actions():
+    p = _patient("patient_zero_indolent.json")
+    findings = dict(p.get("findings") or {})
+    findings.pop("hbsag", None)
+    p = {**p, "findings": findings}
+    plan = generate_plan(p, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
+    html = render_plan_html(plan, mdt=mdt, target_lang="en")
+
+    assert "Incomplete for MDT sign-off" in html
+    assert "Missing data for doctor action" in html
+    assert "HBsAg" in html
+    assert "Order or document HBsAg" in html
+
+
+def test_treatment_plan_renders_ukrainian_data_quality_actions():
+    p = _patient("patient_zero_indolent.json")
+    findings = dict(p.get("findings") or {})
+    findings.pop("hbsag", None)
+    p = {**p, "findings": findings}
+    plan = generate_plan(p, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
+    html = render_plan_html(plan, mdt=mdt, target_lang="uk")
+
+    assert "Якість даних" in html
+    assert "Неповно для підписання MDT" in html
+    assert "Відсутні дані для дії лікаря" in html
+    assert "Призначити або задокументувати HBsAg" in html
+    assert "Missing data for doctor action" not in html
+
+
+def test_treatment_plan_renders_mdt_talk_tree():
+    p = _patient("patient_zero_indolent.json")
+    plan = generate_plan(p, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
+    html = render_plan_html(plan, mdt=mdt)
+
+    assert "MDT talk tree" in html
+    assert "<th>Owner</th>" in html
+    assert "<th>Action</th>" in html

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Epinephrine - OpenOnco</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+.kb-page { padding-top: 34px; }
+.kb-page h1 { font-family: var(--font-display); font-size: 38px; color: var(--green-900); margin-bottom: 10px; }
+.kb-page h2 { font-family: var(--font-display); color: var(--green-900); font-size: 24px; margin: 30px 0 12px; }
+.kb-page h3 { color: var(--green-900); font-size: 17px; margin: 18px 0 8px; }
+.kb-lead { color: var(--gray-700); font-size: 16px; max-width: 880px; margin-bottom: 22px; }
+.kb-breadcrumb { font-size: 13px; margin-bottom: 12px; color: var(--gray-500); }
+.kb-info-box { background: white; border: 1px solid var(--green-100); border-left: 5px solid var(--green-700); border-radius: 7px; padding: 13px 15px; color: var(--gray-700); margin: 18px 0 20px; max-width: 920px; }
+.kb-info-box strong { color: var(--green-900); }
+.kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
+.kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
+.kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
+.kb-search-label { display: block; font-weight: 700; margin-bottom: 7px; }
+.kb-search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: stretch; }
+.kb-search { width: 100%; border: 1px solid var(--gray-200); border-radius: 7px; padding: 13px 14px; font-size: 16px; background: white; }
+.kb-search-btn { min-width: 118px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 7px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+.kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 22px; }
+.kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
+.kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
+.kb-results { display: grid; gap: 8px; }
+.kb-result { display: grid; grid-template-columns: 105px 1fr auto; gap: 10px; align-items: baseline; background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 12px; text-decoration: none; color: var(--gray-900); }
+.kb-result:hover { border-color: var(--green-600); }
+.kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
+.kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
+.kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
+.kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
+.kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
+.kb-muted { color: var(--gray-500); }
+.kb-entity ul { padding-left: 22px; }
+.kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
+.kb-faq { margin-top: 36px; }
+.kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
+.kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
+@media (max-width: 700px) {
+  .kb-search-row { grid-template-columns: 1fr; }
+  .kb-search-btn { min-height: 44px; }
+  .kb-result { grid-template-columns: 1fr; }
+  .kb-result small { grid-column: auto; }
+  .kb-facts th { width: auto; display: block; border-bottom: 0; }
+  .kb-facts td { display: block; }
+}
+</style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="brand-line"><a class="brand-mini" href="/">OpenOnco</a></div>
+    <nav class="top-nav">
+      <a href="/">Home</a>
+      <a href="/kb.html" class="active">KB Search</a>
+      <a href="/diseases.html">Diseases</a>
+      <a href="/gallery.html">Examples</a>
+      <a href="/capabilities.html">Capabilities</a>
+      <a href="/specs.html">Specs</a>
+    </nav>
+    <div class="top-right"><a class="btn-cta-try" href="/try.html">Try it</a></div>
+  </header>
+  <main class="kb-page kb-entity">
+  <p class="kb-breadcrumb"><a href="/kb.html">KB Search</a> / Drug</p>
+  <h1>Epinephrine</h1>
+  <p class="kb-lead">Deterministic view of the source YAML entity. Clinical authority remains with the cited source IDs and reviewer sign-off state.</p>
+  <table class="kb-facts"><tr><th>ID</th><td><code>DRUG-EPINEPHRINE</code></td></tr>
+<tr><th>Type</th><td>Drug</td></tr>
+<tr><th>Aliases</th><td>Adrenalin, Auvi-Q, EpiPen, adrenaline, Адреналін (епінефрин)</td></tr>
+<tr><th>Status</th><td>reviewed 2026-04-27</td></tr>
+<tr><th>File</th><td><code>knowledge_base/hosted/content/drugs/epinephrine.yaml</code></td></tr>
+<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><code>SRC-NCCN-BCELL-2025</code></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: Multiple Myeloma"><code>SRC-NCCN-MM-2025</code></span></td></tr></table>
+  <h2>Drug Facts</h2><table class="kb-facts"><tr><th>Class</th><td>Endogenous catecholamine; non-selective α and β adrenergic agonist (sympathomimetic)</td></tr>
+<tr><th>Mechanism</th><td>Endogenous catecholamine that stimulates all adrenergic receptor subtypes: α1 (vasoconstriction → reverses anaphylactic vasodilation and hypotension, reduces mucosal edema), β1 (positive inotropy and chronotropy → reverses cardiogenic component of anaphylactic shock and supports tissue perfusion), and β2 (bronchodilation → reverses anaphylactic bronchospasm; mast cell membrane stabilization → decreases further mediator release; vasodilation in skeletal muscle). The combined α + β1 + β2 actions make epinephrine uniquely first-line for anaphylaxis — no other single agent reverses all three life-threatening components (hypotension, bronchospasm, upper airway edema). Also used for cardiac arrest (asystole, PEA, refractory VF/VT) and infusion-reaction-related hypotension. Approved as a generic medicine since the early 20th century; modern auto-injectors approved 1980s.</td></tr>
+<tr><th>Typical dosing</th><td>ANAPHYLAXIS (adult): 0.3-0.5 mg (0.3-0.5 mL of 1 mg/mL solution) IM into anterolateral thigh (vastus lateralis); REPEAT every 5-15 min as needed; if 2 doses required, escalate to IV infusion. Pediatric: 0.01 mg/kg IM (max 0.3 mg child &lt;30 kg, 0.5 mg ≥30 kg). IV infusion for refractory anaphylactic shock: 0.05-1 µg/kg/min titrate to MAP ≥65 mmHg. CARDIAC ARREST: 1 mg IV/IO push every 3-5 min during CPR (pediatric 0.01 mg/kg). SEVERE INFUSION REACTION (e.g., chemotherapy hypersensitivity): 0.3-0.5 mg IM thigh as for anaphylaxis. CRITICAL ROUTE NOTES: IM thigh is standard for anaphylaxis — IM deltoid is suboptimal (slower absorption); SC route is OBSOLETE (slow, unreliable absorption); IV bolu...</td></tr>
+<tr><th>Ukraine registered</th><td>True</td></tr>
+<tr><th>NSZU reimbursed</th><td>True</td></tr>
+<tr><th>Ukraine last verified</th><td>2026-04-27</td></tr></table>
+  <h2>Notes</h2><p>ABSOLUTE FIRST-LINE for anaphylaxis — no equivalent alternative. H1/H2 antihistamines (diphenhydramine, famotidine), corticosteroids (hydrocortisone, methylprednisolone), and bronchodilators are all ADJUNCTS, NOT replacements. Delay or omission of epinephrine in anaphylaxis is the leading modifiable cause of fatal outcome — give EARLY (within 5 min of recognition), give IM thigh (NOT SC, NOT deltoid), and REPEAT every 5-15 min if symptoms persist. Common pitfall in chemotherapy infusion reactions: treating with diphenhydramine + steroid alone while withholding epinephrine for &quot;mild&quot; symptoms — escalate immediately if hypotension, bronchospasm, or upper airway involvement. Patients on β-blockers who develop refractory anaphylaxis: add glucagon 1-5 mg IV bolus then 5-15 µg/min infusion (bypasses β-receptor block via intracellular cAMP elevation). Auto-injectors not widely available in Ukraine — emergency department / oncology day-unit protocols should pre-position 1 mg/mL ampules + syringes and drill the IM-thigh administration. Ukraine: registered, NSZU- covered, ubiquitous.</p>
+  <h2>Used By</h2><p class="kb-muted">No reverse references found in the YAML corpus.</p>
+</main>
+</body>
+</html>

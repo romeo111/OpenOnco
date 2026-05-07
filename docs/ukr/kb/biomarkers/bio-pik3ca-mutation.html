@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PIK3CA hotspot mutation - OpenOnco</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+.kb-page { padding-top: 34px; }
+.kb-page h1 { font-family: var(--font-display); font-size: 38px; color: var(--green-900); margin-bottom: 10px; }
+.kb-page h2 { font-family: var(--font-display); color: var(--green-900); font-size: 24px; margin: 30px 0 12px; }
+.kb-page h3 { color: var(--green-900); font-size: 17px; margin: 18px 0 8px; }
+.kb-lead { color: var(--gray-700); font-size: 16px; max-width: 880px; margin-bottom: 22px; }
+.kb-breadcrumb { font-size: 13px; margin-bottom: 12px; color: var(--gray-500); }
+.kb-info-box { background: white; border: 1px solid var(--green-100); border-left: 5px solid var(--green-700); border-radius: 7px; padding: 13px 15px; color: var(--gray-700); margin: 18px 0 20px; max-width: 920px; }
+.kb-info-box strong { color: var(--green-900); }
+.kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
+.kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
+.kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
+.kb-search-label { display: block; font-weight: 700; margin-bottom: 7px; }
+.kb-search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: stretch; }
+.kb-search { width: 100%; border: 1px solid var(--gray-200); border-radius: 7px; padding: 13px 14px; font-size: 16px; background: white; }
+.kb-search-btn { min-width: 118px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 7px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+.kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 22px; }
+.kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
+.kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
+.kb-results { display: grid; gap: 8px; }
+.kb-result { display: grid; grid-template-columns: 105px 1fr auto; gap: 10px; align-items: baseline; background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 12px; text-decoration: none; color: var(--gray-900); }
+.kb-result:hover { border-color: var(--green-600); }
+.kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
+.kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
+.kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
+.kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
+.kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
+.kb-muted { color: var(--gray-500); }
+.kb-entity ul { padding-left: 22px; }
+.kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
+.kb-faq { margin-top: 36px; }
+.kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
+.kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
+@media (max-width: 700px) {
+  .kb-search-row { grid-template-columns: 1fr; }
+  .kb-search-btn { min-height: 44px; }
+  .kb-result { grid-template-columns: 1fr; }
+  .kb-result small { grid-column: auto; }
+  .kb-facts th { width: auto; display: block; border-bottom: 0; }
+  .kb-facts td { display: block; }
+}
+</style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="brand-line"><a class="brand-mini" href="/ukr/">OpenOnco</a></div>
+    <nav class="top-nav">
+      <a href="/ukr/">Головна</a>
+      <a href="/ukr/kb.html" class="active">Пошук у KB</a>
+      <a href="/ukr/diseases.html">Хвороби</a>
+      <a href="/ukr/gallery.html">Приклади</a>
+      <a href="/ukr/capabilities.html">Можливості</a>
+      <a href="/ukr/specs.html">Специфікації</a>
+    </nav>
+    <div class="top-right"><a class="btn-cta-try" href="/ukr/try.html">Спробувати</a></div>
+  </header>
+  <main class="kb-page kb-entity">
+  <p class="kb-breadcrumb"><a href="/ukr/kb.html">Пошук у KB</a> / Біомаркер</p>
+  <h1>PIK3CA hotspot mutation</h1>
+  <p class="kb-lead">Детермінований перегляд YAML-сутності з джерельної бази. Клінічний авторитет лишається за вказаними source ID та статусом клінічного sign-off.</p>
+  <table class="kb-facts"><tr><th>ID</th><td><code>BIO-PIK3CA-MUTATION</code></td></tr>
+<tr><th>Тип</th><td>Біомаркер</td></tr>
+<tr><th>Синоніми</th><td>Гарячі мутації PIK3CA</td></tr>
+<tr><th>Статус</th><td>pending_clinical_signoff</td></tr>
+<tr><th>Файл</th><td><code>knowledge_base/hosted/content/biomarkers/bio_pik3ca_mutation.yaml</code></td></tr>
+<tr><th>Хвороби</th><td><span class="kb-muted">Не вказано</span></td></tr>
+<tr><th>Джерела</th><td><span class="kb-muted">Не вказано</span></td></tr></table>
+  <h2>Дані про біомаркер</h2><table class="kb-facts"><tr><th>Тип біомаркера</th><td>gene_mutation</td></tr>
+<tr><th>Деталі мутації</th><td>{&quot;functional_impact&quot;: &quot;PI3K-alpha pathway activation&quot;, &quot;gene&quot;: &quot;PIK3CA&quot;, &quot;hotspots&quot;: [&quot;E542K&quot;, &quot;E545K&quot;, &quot;H1047R&quot;, &quot;H1047L&quot;], &quot;type&quot;: &quot;activating missense&quot;}</td></tr>
+<tr><th>Вимірювання</th><td>{&quot;method&quot;: &quot;Tumor-tissue NGS panel OR plasma ctDNA NGS — both ASCO/CAP-acceptable&quot;, &quot;sensitivity_requirement&quot;: &quot;VAF detection threshold ≥1% recommended for ctDNA&quot;}</td></tr>
+<tr><th>Пов’язані біомаркери</th><td><span class="kb-muted">Не вказано</span></td></tr></table>
+  <h2>Нотатки</h2><p>Companion diagnostic for alpelisib. Tissue + ctDNA both acceptable; ctDNA preferred when fresh tissue unavailable. UA-availability of alpelisib gates the clinical actionability.</p>
+  <h2>Де використовується</h2>
+<h3>Diseases</h3><ul><li><code>DIS-HNSCC</code> - Head and neck squamous cell carcinoma (HNSCC) <span class="kb-muted">(knowledge_base/hosted/content/diseases/hnscc.yaml)</span></li><li><code>DIS-SALIVARY</code> - Salivary gland carcinoma <span class="kb-muted">(knowledge_base/hosted/content/diseases/salivary.yaml)</span></li></ul>
+<h3>Indications</h3><ul><li><code>IND-BREAST-HR-POS-1L-INAVOLISIB</code> - IND-BREAST-HR-POS-1L-INAVOLISIB <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_breast_hr_pos_1l_pik3ca_inavolisib.yaml)</span></li><li><code>IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB</code> - IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_breast_hr_pos_2l_akt_capivasertib.yaml)</span></li><li><code>IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB</code> - IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_breast_hr_pos_2l_pik3ca_alpelisib.yaml)</span></li></ul>
+<h3>Questionnaires</h3><ul><li><code>QUEST-BREAST-1L-STUB</code> - Invasive breast cancer — first line (auto-generated STUB) <span class="kb-muted">(knowledge_base/hosted/content/questionnaires/quest_breast_1l.yaml)</span></li></ul>
+<h3>Tests</h3><ul><li><code>TEST-PIK3CA-NGS</code> - PIK3CA mutation testing (tumor or ctDNA) <span class="kb-muted">(knowledge_base/hosted/content/tests/test_pik3ca_ngs.yaml)</span></li></ul>
+<h3>Біомаркер</h3><ul><li><code>BIO-AKT1</code> - AKT1 E17K mutation <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_akt1.yaml)</span></li><li><code>BIO-ESR1</code> - ESR1 mutation (ligand-binding domain) <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_esr1.yaml)</span></li><li><code>BIO-PIK3CA-H1047R</code> - PIK3CA H1047R mutation <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_pik3ca_h1047r.yaml)</span></li><li><code>BIO-PTEN</code> - PTEN loss-of-function <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_pten.yaml)</span></li></ul>
+<h3>Клінічна застосовність</h3><ul><li><code>BMA-PIK3CA-E542K-BREAST</code> - PIK3CA hotspot mutations (~40% of HR+/HER2- metastatic breast cancer): alpelisib + fulves... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_e542k_breast.yaml)</span></li><li><code>BMA-PIK3CA-E545K-BREAST</code> - PIK3CA hotspot mutations (~40% of HR+/HER2- metastatic breast cancer): alpelisib + fulves... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_e545k_breast.yaml)</span></li><li><code>BMA-PIK3CA-EXON20-BREAST</code> - PIK3CA hotspot mutations (~40% of HR+/HER2- metastatic breast cancer): alpelisib + fulves... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_exon20_breast.yaml)</span></li><li><code>BMA-PIK3CA-EXON9-BREAST</code> - PIK3CA hotspot mutations (~40% of HR+/HER2- metastatic breast cancer): alpelisib + fulves... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_exon9_breast.yaml)</span></li><li><code>BMA-PIK3CA-H1047L-BREAST</code> - PIK3CA hotspot mutations (~40% of HR+/HER2- metastatic breast cancer): alpelisib + fulves... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_h1047l_breast.yaml)</span></li><li><code>BMA-PIK3CA-H1047R-BREAST</code> - PIK3CA hotspot mutations (~40% of HR+/HER2- metastatic breast cancer): alpelisib + fulves... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_h1047r_breast.yaml)</span></li><li><code>BMA-PIK3CA-HOTSPOT-CERVICAL</code> - PIK3CA mutations occur in ~30% of squamous cervical cancers. No PI3Ki/AKTi approval in ce... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_hotspot_cervical.yaml)</span></li><li><code>BMA-PIK3CA-HOTSPOT-ENDOMETRIAL</code> - PIK3CA mutations occur in ~30-50% of endometrioid endometrial cancers, often co-occurring... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_hotspot_endometrial.yaml)</span></li><li><code>BMA-PIK3CA-HOTSPOT-ESOPHAGEAL</code> - PIK3CA mutations in ~10% of esophageal SCC/AC. No PI3Ki approval; CRT or chemo/ICI per us... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_hotspot_esophageal.yaml)</span></li><li><code>BMA-PIK3CA-HOTSPOT-GASTRIC</code> - PIK3CA mutations in ~10% of gastric/GEJ adenocarcinoma. No PI3Ki/AKTi approval; trastuzum... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_hotspot_gastric.yaml)</span></li><li><code>BMA-PIK3CA-HOTSPOT-HCC</code> - PIK3CA in HCC — no targeted approval; atezolizumab + bevacizumab / lenvatinib per usual a... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_hotspot_hcc.yaml)</span></li><li><code>BMA-PIK3CA-HOTSPOT-NSCLC</code> - PIK3CA mutations in ~5% of NSCLC squamous; no approved targeted therapy. <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_hotspot_nsclc.yaml)</span></li><li><code>BMA-PIK3CA-HOTSPOT-PROSTATE</code> - PIK3CA mutations rare in prostate (~5%); PI3K/AKT/mTOR pathway often activated via PTEN l... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_hotspot_prostate.yaml)</span></li><li><code>BMA-PIK3CA-HOTSPOT-RCC</code> - PIK3CA mutations rare in RCC; mTORi (everolimus, temsirolimus) approved 2L+ regardless of... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_hotspot_rcc.yaml)</span></li><li><code>BMA-PIK3CA-HOTSPOT-UROTHELIAL</code> - PIK3CA mutations in ~20% of muscle-invasive bladder. No PI3Ki approval; FGFR3-driven (erd... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_hotspot_urothelial.yaml)</span></li></ul>
+<h3>Тривожна ознака</h3><ul><li><code>RF-BREAST-HIGH-RISK-BIOLOGY</code> - Germline or somatic BRCA1/2 mutation, PIK3CA mutation, ESR1 mutation, HER2-amplification,... <span class="kb-muted">(knowledge_base/hosted/content/redflags/rf_breast_high_risk_biology.yaml)</span></li><li><code>RF-SALIVARY-HIGH-RISK-BIOLOGY</code> - Salivary gland carcinoma with actionable molecular driver: ETV6-NTRK3 fusion (mammary ana... <span class="kb-muted">(knowledge_base/hosted/content/redflags/rf_salivary_high_risk_biology.yaml)</span></li></ul>
+</main>
+</body>
+</html>

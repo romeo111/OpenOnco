@@ -32,6 +32,13 @@ from .base import Base
 # ── ESCAT (ESMO Scale for Clinical Actionability of molecular Targets) ────────
 # Mateo et al. 2018, Ann Oncol 29(9):1895-1902. Tiers I–V plus X (no evidence).
 EscatTier = Literal["IA", "IB", "IIA", "IIB", "IIIA", "IIIB", "IV", "X"]
+EvidenceLaneToken = Literal[
+    "standard_care",
+    "molecular_evidence_option",
+    "resistance_or_avoidance_signal",
+    "trial_research_option",
+    "insufficient_evidence",
+]
 
 
 class RegulatoryApproval(Base):
@@ -73,6 +80,9 @@ class EvidenceSourceRef(Base):
         significance: CIViC-style fine-grained label
             ("sensitivity"/"resistance"/"reduced_sensitivity"/etc.). Other
             sources may leave it null.
+        evidence_lane: OpenOnco display lane for separating guideline-backed
+            care, molecular options, resistance signals, and research-only
+            evidence without collapsing all CIViC rows into standard care.
         note: free-form short clinical note (e.g. "FDA-CDx for osimertinib").
     """
 
@@ -81,6 +91,7 @@ class EvidenceSourceRef(Base):
     evidence_ids: list[str] = Field(default_factory=list)
     direction: Optional[str] = None  # "supports" | "does_not_support" | None
     significance: Optional[str] = None  # CIViC-specific significance label
+    evidence_lane: Optional[EvidenceLaneToken] = None
     note: Optional[str] = None
 
 

@@ -125,6 +125,4 @@ else:
 
 Маєш вільну ємність у Claude Code, Codex, Cursor чи ChatGPT? Візьми
 структуровану задачу з черги і відкрий PR — повний гайд у
-[`docs/contributing/CONTRIBUTOR_QUICKSTART.md`](../../docs/contributing/CONTRIBUTOR_QUICKSTART.md)
-або на публічній сторінці
-[openonco.info/ukr/contribute.html](https://openonco.info/ukr/contribute.html).
+[`docs/contributing/CONTRIBUTOR_QUICKSTART.md`](../../docs/contributing/CONTRIBUTOR_QUICKSTART.md).

@@ -26,6 +26,8 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+import yaml
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -247,9 +249,11 @@ def per_disease_metrics(load_root: Path) -> list[dict]:
     outcomes_pct = _outcomes_cited_pct_map() or {}
 
     rows: list[dict] = []
+    seen_disease_ids: set[str] = set()
     for eid, info in sorted(load.entities_by_id.items()):
         if info["type"] != "diseases":
             continue
+        seen_disease_ids.add(eid)
         d = info["data"]
         names = d.get("names") or {}
         name = names.get("english") or names.get("preferred") or eid
@@ -333,6 +337,48 @@ def per_disease_metrics(load_root: Path) -> list[dict]:
             "n_curated": curated_counts.get(eid, 0),
             "outcomes_cited_pct": outcomes_cited_pct,
         })
+
+    disease_dir = load_root / "diseases"
+    questionnaire_dir = load_root / "questionnaires"
+    questionnaire_disease_ids: set[str] = set()
+    if questionnaire_dir.is_dir():
+        for path in questionnaire_dir.glob("*.yaml"):
+            data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            did = data.get("disease_id")
+            if did:
+                questionnaire_disease_ids.add(did)
+    if disease_dir.is_dir():
+        for path in sorted(disease_dir.glob("*.yaml")):
+            d = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            eid = d.get("id")
+            if not eid or eid in seen_disease_ids:
+                continue
+            names = d.get("names") or {}
+            icd10 = (d.get("codes") or {}).get("icd_10") or ""
+            if isinstance(icd10, list):
+                icd10 = ", ".join(str(item) for item in icd10)
+            has_quest = eid in questionnaire_disease_ids
+            fill_components = [False, False, False, False, False, False, has_quest, False]
+            rows.append({
+                "id": eid,
+                "name": names.get("english") or names.get("preferred") or eid,
+                "family": _family(eid),
+                "icd10": icd10,
+                "n_bios": 0,
+                "n_drugs": 0,
+                "n_inds": 0,
+                "n_regs": 0,
+                "n_rfs": 0,
+                "algo_1l": False,
+                "algo_2l": False,
+                "has_quest": has_quest,
+                "is_stub_quest": has_quest,
+                "has_workup": False,
+                "fill_pct": round(100 * sum(fill_components) / len(fill_components)),
+                "verified_pct": 0,
+                "n_curated": curated_counts.get(eid, 0),
+                "outcomes_cited_pct": outcomes_pct.get(eid),
+            })
 
     return rows
 

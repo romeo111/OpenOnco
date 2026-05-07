@@ -194,6 +194,23 @@ a.lab-chip:hover { text-decoration: underline; }
 .q-list li.blocking {
     border-left-color: var(--red-alert); background: var(--red-bg);
 }
+.q-list--featured {
+    margin: 8px 0 18px;
+}
+.q-list--featured li {
+    background: #fff;
+    border: 1px solid var(--green-200);
+    border-left: 4px solid var(--green-600);
+    box-shadow: 0 4px 14px rgba(6, 78, 59, 0.06);
+}
+.q-list--featured li.blocking {
+    border-color: var(--red-alert);
+    border-left-color: var(--red-alert);
+}
+.q-list--featured .q-text {
+    font-size: 15px;
+    font-weight: 600;
+}
 .q-list .q-id {
     font-family: var(--font-mono); font-size: 11px;
     color: var(--gray-500); margin-bottom: 4px;
@@ -343,20 +360,18 @@ a.lab-chip:hover { text-decoration: underline; }
     border-left: 2px solid var(--gray-200); padding-left: 12px;
 }
 
-/* Skill metadata badge inline with each role */
-.skill-meta {
-    font-family: var(--font-mono); font-size: 10px;
-    color: var(--gray-500); margin-top: 4px;
-    display: flex; flex-wrap: wrap; gap: 10px;
-}
-.skill-meta .pill {
-    padding: 1px 6px; border-radius: 3px; background: var(--gray-100);
-}
-.skill-meta .pill--reviewed { background: var(--green-100); color: var(--green-700); }
-.skill-meta .pill--stub { background: var(--amber-bg); color: var(--amber); }
-
 /* Skill catalog block */
-.skill-catalog { margin-top: 18px; }
+.skill-catalog {
+    margin-top: 18px;
+    border-top: 1px dashed var(--green-200);
+    padding-top: 10px;
+}
+.skill-catalog summary {
+    cursor: pointer;
+    color: var(--gray-700);
+    font-size: 13px;
+    font-weight: 600;
+}
 .skill-catalog table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .skill-catalog th {
     text-align: left; padding: 6px 8px; background: var(--gray-100);
@@ -677,17 +692,18 @@ a.lab-chip:hover { text-decoration: underline; }
   text-align: center;
 }
 </style>
-<style>.oo-topbar-host{position:sticky;top:0;z-index:100;}.oo-topbar-host .top-bar{background:#0a2e1a;color:#dcfce7;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;}.oo-topbar-host .brand-line{display:flex;align-items:center;gap:12px;margin-right:28px;}.oo-topbar-host .brand-mini{font-family:Playfair Display,Georgia,serif;font-size:26px;color:#dcfce7;text-decoration:none;letter-spacing:.2px;}.oo-topbar-host .brand-version{font-family:JetBrains Mono,monospace;font-size:10.5px;color:#dcfce7;opacity:.55;background:rgba(255,255,255,.06);padding:2px 7px;border-radius:3px;letter-spacing:.5px;align-self:center;}.oo-topbar-host .top-nav{display:flex;align-items:center;flex:1;margin:0 24px 0 16px;gap:4px;}.oo-topbar-host .top-nav a{color:#dcfce7;padding:4px 10px;text-decoration:none;font-size:13px;border-radius:4px;}.oo-topbar-host .top-nav a:hover{color:white;background:rgba(255,255,255,.05);}.oo-topbar-host .top-right{display:flex;align-items:center;gap:14px;flex-shrink:0;}.oo-topbar-host .lang-switch{display:inline-flex;align-items:center;gap:0;background:rgba(255,255,255,.08);border-radius:4px;font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.5px;overflow:hidden;flex-shrink:0;}.oo-topbar-host .lang-switch .lang-current,.oo-topbar-host .lang-switch .lang-other{width:56px;box-sizing:border-box;padding:4px 9px;display:inline-flex;align-items:center;justify-content:center;gap:5px;}.oo-topbar-host .lang-switch .lang-current{background:rgba(255,255,255,.15);color:white;font-weight:600;}.oo-topbar-host .lang-switch .lang-other{color:#dcfce7;text-decoration:none;transition:background .12s;}.oo-topbar-host .lang-switch .lang-other:hover{background:rgba(255,255,255,.12);color:white;}.oo-topbar-host .lang-switch .lang-flag{display:inline-block;width:14px;height:10px;border-radius:1.5px;box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;}.oo-topbar-host .lang-switch .lang-flag.flag-ua{background:linear-gradient(to bottom,#0057b7 50%,#ffd500 50%);}.oo-topbar-host .lang-switch .lang-flag.flag-en{background:#012169 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E") center/cover no-repeat;}.oo-topbar-host .btn-cta-try{background:linear-gradient(135deg,#16a34a 0%,#0d9488 100%);color:white;padding:11px 22px;border-radius:7px;font-weight:600;font-size:15px;text-decoration:none;border:none;box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 1px 4px rgba(0,0,0,.15);white-space:nowrap;min-width:180px;box-sizing:border-box;text-align:center;display:inline-block;}.oo-topbar-host .btn-cta-try:hover{filter:brightness(1.05);}.case-bar{background:#0d3f24;color:#dcfce7;padding:8px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;font-size:13px;}.case-bar a{color:#86efac;text-decoration:none;margin-left:14px;}.case-bar a:hover{text-decoration:underline;}@media print{.oo-topbar-host,.case-bar{display:none;}}@media (max-width:700px){.oo-topbar-host .top-bar{flex-wrap:wrap;gap:8px;}.oo-topbar-host .top-nav{order:3;flex-basis:100%;margin:0;justify-content:center;}.oo-topbar-host .btn-cta-try{min-width:120px;padding:8px 14px;font-size:13px;}}</style>
+<style>.oo-topbar-host{position:sticky;top:0;z-index:100;}.oo-topbar-host .top-bar{background:#0a2e1a;color:#dcfce7;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;}.oo-topbar-host .brand-line{display:flex;align-items:center;gap:12px;margin-right:28px;}.oo-topbar-host .brand-logo{display:block;width:30px;height:30px;flex:0 0 30px;}.oo-topbar-host .brand-mini{display:inline-flex;align-items:center;gap:9px;font-family:Playfair Display,Georgia,serif;font-size:26px;color:#dcfce7;text-decoration:none;letter-spacing:.2px;}.oo-topbar-host .brand-version{font-family:JetBrains Mono,monospace;font-size:10.5px;color:#dcfce7;opacity:.55;background:rgba(255,255,255,.06);padding:2px 7px;border-radius:3px;letter-spacing:.5px;align-self:center;}.oo-topbar-host .top-nav{display:flex;align-items:center;flex:1;margin:0 24px 0 16px;gap:4px;}.oo-topbar-host .top-nav a{color:#dcfce7;padding:4px 10px;text-decoration:none;font-size:13px;border-radius:4px;}.oo-topbar-host .top-nav a:hover{color:white;background:rgba(255,255,255,.05);}.oo-topbar-host .top-right{display:flex;align-items:center;gap:14px;flex-shrink:0;}.oo-topbar-host .lang-switch{display:inline-flex;align-items:center;gap:0;background:rgba(255,255,255,.08);border-radius:4px;font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.5px;overflow:hidden;flex-shrink:0;}.oo-topbar-host .lang-switch .lang-current,.oo-topbar-host .lang-switch .lang-other{width:56px;box-sizing:border-box;padding:4px 9px;display:inline-flex;align-items:center;justify-content:center;gap:5px;}.oo-topbar-host .lang-switch .lang-current{background:rgba(255,255,255,.15);color:white;font-weight:600;}.oo-topbar-host .lang-switch .lang-other{color:#dcfce7;text-decoration:none;transition:background .12s;}.oo-topbar-host .lang-switch .lang-other:hover{background:rgba(255,255,255,.12);color:white;}.oo-topbar-host .lang-switch .lang-flag{display:inline-block;width:14px;height:10px;border-radius:1.5px;box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;}.oo-topbar-host .lang-switch .lang-flag.flag-ua{background:linear-gradient(to bottom,#0057b7 50%,#ffd500 50%);}.oo-topbar-host .lang-switch .lang-flag.flag-en{background:#012169 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E") center/cover no-repeat;}.oo-topbar-host .btn-cta-try{background:linear-gradient(135deg,#16a34a 0%,#0d9488 100%);color:white;padding:11px 22px;border-radius:7px;font-weight:600;font-size:15px;text-decoration:none;border:none;box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 1px 4px rgba(0,0,0,.15);white-space:nowrap;min-width:180px;box-sizing:border-box;text-align:center;display:inline-block;}.oo-topbar-host .btn-cta-try:hover{filter:brightness(1.05);}.case-bar{background:#0d3f24;color:#dcfce7;padding:8px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;font-size:13px;}.case-bar a{color:#86efac;text-decoration:none;margin-left:14px;}.case-bar a:hover{text-decoration:underline;}@media print{.oo-topbar-host,.case-bar{display:none;}}@media (max-width:700px){.oo-topbar-host .top-bar{flex-wrap:wrap;gap:8px;}.oo-topbar-host .top-nav{order:3;flex-basis:100%;margin:0;justify-content:center;}.oo-topbar-host .brand-logo{width:26px;height:26px;flex-basis:26px;}.oo-topbar-host .btn-cta-try{min-width:120px;padding:8px 14px;font-size:13px;}}</style>
 </head>
 <body>
 <div class="oo-topbar-host no-print"><header class="top-bar">
   <div class="brand-line">
-    <a href="/ukr/" class="brand-mini">OpenOnco</a>
-    <span class="brand-version" title="Released 2026-04-30">v0.1.2 · 2026-04-30</span>
+    <a href="/ukr/" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
+    <span class="brand-version" title="Released 2026-05-06">v0.1.4 &middot; 2026-05-06</span>
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/diseases.html">Хвороби</a><a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/specs.html">Специфікації</a><a href="/ukr/contribute.html">Допомогти</a>
+    <a href="/ukr/diseases.html">Хвороби</a><a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/specs.html">Специфікації</a>
+    <a href="/ukr/kb.html">Пошук у KB</a>
     <a href="/ukr/gallery.html">Приклади</a>
     <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
   </nav>
@@ -700,6 +716,8 @@ a.lab-chip:hover { text-decoration: underline; }
   </div>
 </header></div>
 <div class="case-bar no-print"><div>OpenOnco · <strong>DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)</strong></div><div><a href="/ukr/gallery.html">← Назад до галереї</a><a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+dlbcl-chemorefractory-cart&labels=tester-feedback" target="_blank" rel="noopener">Feedback на цей кейс</a></div></div>
-<div class="page"><div style='padding:2rem 2.5rem;font-family:system-ui,sans-serif;max-width:52rem'><h2 style='color:#c0392b;margin-top:0'>⚠ No treatment plan generated</h2><p>The engine matched <strong>no active indications</strong> for this patient profile.</p><p><strong>Common causes:</strong></p><ul style='line-height:1.8'><li>Disease not yet covered — check <a href='/diseases.html'>disease coverage</a></li><li>Patient profile missing <code>disease.id</code> or <code>disease.icd_o_3</code></li><li>All matching treatment tracks blocked by ECOG PS ≥ 4 gate or active contraindications</li><li>Diagnostic profile without <code>disease.suspicion</code> field</li></ul><p style='color:#666;font-size:.9rem'>Review the patient JSON, fill required fields, and generate again.</p></div></div>
+<div class="page"><div style='padding:2rem 2.5rem;font-family:system-ui,sans-serif;max-width:52rem'><h2 style='color:#c0392b;margin-top:0'>⚠ No treatment plan generated</h2><p>The engine matched <strong>no active indications</strong> for this patient profile.</p><p><strong>Engine details:</strong></p><ul style='line-height:1.65'><li><code>schema error in rf_fitness_ecog_poor.yaml: 1 validation error for RedFlag
+sources.0
+  Input should be a valid string [type=string_type, input_value={&#x27;source_id&#x27;: &#x27;</code></li><li><code>ref error in reg_bemarituzumab_mfolfox6.yaml: components[0].drug_id: &#x27;DRUG-BEMARITUZUMAB&#x27; not found in any loaded entity</code></li><li><code>No Algorithm found for disease=DIS-DLBCL-NOS, line_of_therapy=3</code></li></ul><p><strong>Common causes:</strong></p><ul style='line-height:1.8'><li>Disease not yet covered — check <a href='/diseases.html'>disease coverage</a></li><li>Patient profile missing <code>disease.id</code> or <code>disease.icd_o_3</code></li><li>All matching treatment tracks blocked by ECOG PS ≥ 4 gate or active contraindications</li><li>Diagnostic profile without <code>disease.suspicion</code> field</li></ul><p style='color:#666;font-size:.9rem'>Review the patient JSON, fill required fields, and generate again.</p></div></div>
 </body>
 </html>

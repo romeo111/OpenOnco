@@ -62,7 +62,9 @@ from knowledge_base.clients.ctgov_client import search_trials
 from knowledge_base import __version__ as OPENONCO_VERSION
 from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
 from knowledge_base.stats import collect_stats
-from scripts.site_cases import CASE_CATEGORIES, CASES, CaseEntry
+from scripts.audit_clinical_gaps import write_outputs as write_clinical_gap_outputs
+from scripts.build_kb_wiki import build_kb_wiki
+from scripts.site_cases import CASE_CATEGORIES, CASES, GALLERY_EXCLUDED_CASE_IDS, CaseEntry
 from scripts.site_styles import STYLESHEET as _STYLE_CSS
 
 
@@ -471,11 +473,24 @@ def bundle_examples(output_dir: Path) -> dict:
     """
     payload = []
     manifest = []
+    unique_icd_to_disease_id = _unique_questionnaire_icd_to_disease_id_map()
     for c in CASES:
         p = EXAMPLES / c.file
         if not p.exists():
             continue
         ex_json = json.loads(p.read_text(encoding="utf-8"))
+        disease = ex_json.get("disease", {}) if isinstance(ex_json, dict) else {}
+        disease_icd = disease.get("icd_o_3_morphology")
+        disease_id = (
+            disease.get("id")
+            or ex_json.get("disease_id")
+            or unique_icd_to_disease_id.get(str(disease_icd))
+        )
+        if disease_id and isinstance(ex_json, dict):
+            ex_json.setdefault("disease_id", disease_id)
+            disease = ex_json.setdefault("disease", {})
+            if isinstance(disease, dict):
+                disease.setdefault("id", disease_id)
         # Both UA and EN labels travel in the manifest so the inlined
         # JS constant on /try.html (UA) vs /ukr/try.html — wait, EN is
         # at root → /try.html serves EN labels — can pick the right
@@ -485,6 +500,7 @@ def bundle_examples(output_dir: Path) -> dict:
             "case_id": c.case_id,
             "label": c.label_ua,
             "label_en": label_en,
+            "disease_id": disease_id,
             "file": c.file,
             "json": ex_json,
         })
@@ -492,10 +508,8 @@ def bundle_examples(output_dir: Path) -> dict:
             "case_id": c.case_id,
             "label": c.label_ua,
             "label_en": label_en,
-            "disease_icd": (
-                ex_json.get("disease", {}).get("icd_o_3_morphology")
-                if isinstance(ex_json, dict) else None
-            ),
+            "disease_id": disease_id,
+            "disease_icd": disease_icd,
         })
     out = output_dir / "examples.json"
     out.write_text(
@@ -644,9 +658,9 @@ def bundle_questionnaires(output_dir: Path) -> dict:
     JSON file at docs/questionnaires.json + thin manifest for /try.html.
 
     Manifest carries only the dropdown-needed fields (id + title +
-    disease_icd) — ~30× smaller than the full payload — so /try.html
-    populates dropdowns instantly. Full payload is lazy-fetched only
-    after the user selects a questionnaire.
+    disease_id + disease_icd) — ~30× smaller than the full payload — so
+    /try.html populates dropdowns instantly. Full payload is lazy-fetched
+    only after the user selects a questionnaire.
 
     Each questionnaire is post-processed by `_inject_common_screening`
     so universal fields (LVEF, TB, child-pugh, etc.) appear without
@@ -666,6 +680,7 @@ def bundle_questionnaires(output_dir: Path) -> dict:
                     manifest.append({
                         "id": data.get("id"),
                         "title": data.get("title"),
+                        "disease_id": data.get("disease_id"),
                         "disease_icd": (
                             (data.get("fixed_fields") or {})
                             .get("disease", {})
@@ -691,9 +706,9 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 _NAV_LABELS = {
     "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →",
-           "diseases": "Хвороби", "contribute": "Допомогти", "specs": "Специфікації"},
+           "diseases": "Хвороби", "specs": "Специфікації"},
     "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →",
-           "diseases": "Diseases", "contribute": "Contribute", "specs": "Specs"},
+           "diseases": "Diseases", "specs": "Specs"},
 }
 
 
@@ -716,7 +731,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"/cases/{case_id}.html"
         if page_kind == "capabilities": return "/capabilities.html"
         if page_kind == "diseases":     return "/diseases.html"
-        if page_kind == "contribute":   return "/contribute.html"
+        if page_kind == "contribute":   return "/"
         if page_kind == "specs":        return "/specs.html"
     else:
         # EN page (at root) → switcher points to UA mirror at /ukr/
@@ -726,7 +741,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"{uk_prefix}/cases/{case_id}.html"
         if page_kind == "capabilities": return f"{uk_prefix}/capabilities.html"
         if page_kind == "diseases":     return f"{uk_prefix}/diseases.html"
-        if page_kind == "contribute":   return f"{uk_prefix}/contribute.html"
+        if page_kind == "contribute":   return f"{uk_prefix}/"
         if page_kind == "specs":        return f"{uk_prefix}/specs.html"
     return "/"
 
@@ -736,7 +751,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     """Top navigation bar with:
     - brand on the left → links to home
     - reading-only nav (Home, Diseases, Capabilities, Specs UA-only,
-      Contribute, Examples, GitHub) in the middle
+      Examples, GitHub) in the middle
     - language switcher (UA / EN toggle) on the right
     - prominent CTA "Try it" button on the far right (action, not reading)
 
@@ -762,14 +777,12 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
             f'<a href="/ukr/diseases.html"{cls("diseases")}>Хвороби</a>'
             f'<a href="/ukr/capabilities.html"{cls("capabilities")}>Можливості</a>'
             f'<a href="/ukr/specs.html"{cls("specs")}>Специфікації</a>'
-            f'<a href="/ukr/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
     else:  # target_lang == "en"
         extra_links = (
             f'<a href="/diseases.html"{cls("diseases")}>Diseases</a>'
             f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>'
             f'<a href="/specs.html"{cls("specs")}>Specs</a>'
-            f'<a href="/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
 
     # Stable visual order is always [UA · EN] regardless of which language
@@ -782,14 +795,18 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     ua_tag, ua_attr = ("span", "") if is_uk else ("a", f' href="{lang_switch_href}"')
     en_tag, en_attr = ("a", f' href="{lang_switch_href}"') if is_uk else ("span", "")
 
+    kb_href = "/ukr/kb.html" if target_lang == "uk" else "/kb.html"
+    kb_label = "Пошук у KB" if target_lang == "uk" else "KB Search"
+
     return f"""<header class="top-bar">
   <div class="brand-line">
-    <a href="{home_path}" class="brand-mini">OpenOnco</a>
-    <span class="brand-version" title="Released {OPENONCO_RELEASE_DATE}">v{OPENONCO_VERSION} · {OPENONCO_RELEASE_DATE}</span>
+    <a href="{home_path}" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
+    <span class="brand-version" title="Released {OPENONCO_RELEASE_DATE}">v{OPENONCO_VERSION} &middot; {OPENONCO_RELEASE_DATE}</span>
   </div>
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
     {extra_links}
+    <a href="{kb_href}"{cls("kb")}>{kb_label}</a>
     <a href="{gallery_path}"{cls("gallery")}>{labels['gallery']}</a>
     <a href="https://github.com/{GH_REPO}" target="_blank" rel="noopener">GitHub</a>
   </nav>
@@ -949,7 +966,7 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
              "shelf: maintainer publishes structured chunks (~100k–300k tokens of work each), "
              "your AI agent (Claude Code, Codex, Cursor, ChatGPT) takes one and opens a PR "
              "in 1–3 hours. No clinical expertise needed — you trigger structured drafting; "
-             "clinical co-leads sign off. <a href=\"/contribute.html\"><strong>How to start →</strong></a>"),
+             f"clinical co-leads sign off. <a href=\"https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md\" target=\"_blank\" rel=\"noopener\"><strong>How to start →</strong></a>"),
         ]
         why_today_foot = (
             "Every missed biomarker can cost a life. Every hour of manual cross-checking "
@@ -1092,7 +1109,7 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
              "ваш AI-агент (Claude Code, Codex, Cursor, ChatGPT) бере один і відкриває PR "
              "за 1-3 години. Клінічна експертиза не потрібна — ви тригерите structured "
              "drafting; clinical co-leads потім signoff'ять. "
-             "<a href=\"/ukr/contribute.html\"><strong>Як почати →</strong></a>"),
+             f"<a href=\"https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md\" target=\"_blank\" rel=\"noopener\"><strong>Як почати →</strong></a>"),
         ]
         why_today_foot = (
             "Кожен пропущений біомаркер може коштувати життя. Кожна година ручного "
@@ -1268,6 +1285,38 @@ def _questionnaire_icd_o_3_codes() -> set:
     return codes
 
 
+def _unique_questionnaire_icd_to_disease_id_map() -> dict[str, str]:
+    """Return ICD→disease_id only for ICDs that identify exactly one
+    try-page questionnaire disease.
+
+    Several oncology entities share broad morphology codes (8070/3,
+    8140/3, 8500/3, 9680/3, 9699/3). Those codes are useful as secondary
+    hints but must not be promoted to disease_id for example filtering,
+    otherwise the try page can show an HNSCC example under cervical, etc.
+    """
+    qsrc = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "questionnaires"
+    by_icd: dict[str, set[str]] = {}
+    if not qsrc.is_dir():
+        return {}
+    import yaml as _yaml
+    for path in qsrc.glob("*.yaml"):
+        try:
+            data = _yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        did = (data or {}).get("disease_id")
+        code = (
+            ((data or {}).get("fixed_fields") or {}).get("disease") or {}
+        ).get("icd_o_3_morphology")
+        if did and code:
+            by_icd.setdefault(str(code), set()).add(str(did).upper())
+    return {
+        code: next(iter(dids))
+        for code, dids in by_icd.items()
+        if len(dids) == 1
+    }
+
+
 def _case_has_questionnaire(case: CaseEntry, codes: set) -> bool:
     """True if the case's example JSON has a disease ICD-O-3 code that
     matches a curated questionnaire."""
@@ -1380,10 +1429,12 @@ def render_gallery(*, target_lang: str = "en") -> str:
     import html as _html
     is_en = target_lang == "en"
     case_path_prefix = "/cases/" if is_en else "/ukr/cases/"
-    n_cases = len(CASES)
-
     quest_codes = _questionnaire_icd_o_3_codes()
-    case_meta = _gallery_case_disease_meta()
+    case_meta = [
+        m for m in _gallery_case_disease_meta()
+        if m["case"].case_id not in GALLERY_EXCLUDED_CASE_IDS
+    ]
+    n_cases = len(case_meta)
 
     # Group cases by disease_id, preserving CASES order within each group.
     grouped: dict[str, dict] = {}
@@ -1393,8 +1444,11 @@ def render_gallery(*, target_lang: str = "en") -> str:
             "disease_id": did,
             "label_ua": m["label_ua"],
             "label_en": m["label_en"],
+            "icds": set(),
             "items": [],
         })
+        if m.get("icd"):
+            bucket["icds"].add(str(m["icd"]))
         bucket["items"].append({**m, "default_order": i})
     # Sort diseases alphabetically by display label (UA primary).
     sort_key = "label_en" if is_en else "label_ua"
@@ -1419,14 +1473,22 @@ def render_gallery(*, target_lang: str = "en") -> str:
         label = d[sort_key]
         n = len(d["items"])
         n_word = _examples_word(n)
-        # data-search holds both UA + EN labels lowercased so the search
+        icds = sorted(str(code) for code in d.get("icds", []) if code)
+        icd_text = ", ".join(icds[:3])
+        icd_suffix = f" +{len(icds) - 3}" if len(icds) > 3 else ""
+        icd_html = (
+            f'<span class="dt-icd">ICD-O-3 {_html.escape(icd_text + icd_suffix)}</span>'
+            if icds else ""
+        )
+        # data-search holds UA + EN labels and ICD-O-3 codes so the search
         # box works regardless of the page's render language.
-        search_blob = (d["label_ua"] + " " + d["label_en"]).lower()
+        search_blob = " ".join([d["label_ua"], d["label_en"], *icds]).lower()
         disease_tiles.append(
             f'<button type="button" class="disease-tile" '
             f'data-disease-id="{_html.escape(d["disease_id"])}" '
             f'data-search="{_html.escape(search_blob)}">'
             f'<span class="dt-label">{_html.escape(label)}</span>'
+            f'{icd_html}'
             f'<span class="dt-count">{n} {n_word}</span>'
             f'</button>'
         )
@@ -1482,7 +1544,7 @@ def render_gallery(*, target_lang: str = "en") -> str:
             f'target="_blank" rel="noopener">open an issue</a>.'
         )
         page_title = "Sample cases"
-        search_ph = "Search disease…"
+        search_ph = "Search disease or ICD-O-3…"
         back_label = "← All diseases"
         empty_label = "No diseases match your search."
     else:
@@ -1495,7 +1557,7 @@ def render_gallery(*, target_lang: str = "en") -> str:
             f'target="_blank" rel="noopener">відкрий issue</a>.'
         )
         page_title = "Готові приклади"
-        search_ph = "Шукати хворобу…"
+        search_ph = "Шукати хворобу або ICD-O-3…"
         back_label = "← Усі хвороби"
         empty_label = "Жодна хвороба не підходить під запит."
 
@@ -1662,12 +1724,16 @@ def render_try(
     {'Fill in a short questionnaire for a specific disease — the in-browser engine (Pyodide) shows you immediately which fields move the plan. <strong>No real patient data.</strong> Drafts are stored in your browser localStorage.' if target_lang == 'en' else 'Заповни короткий опитувальник по конкретній хворобі — engine у браузері (Pyodide) одразу показує які поля тригерять зміну плану. <strong>Жодних реальних пацієнтських даних.</strong> Чернетка зберігається у browser localStorage.'}
   </p>
 
-  <!-- Top status banner — prominent, sticky-ish, animated while loading
-       so the user sees that something is happening even when the engine
-       is mid-fetch. Mirrors the smaller #status in the sidebar. -->
+  <!-- Top status banner stays for loading/warnings. Success messages live in
+       the lower status area so examples do not push the questionnaire down. -->
   <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
     <span class="status-top-spinner" aria-hidden="true"></span>
-    <span class="status-top-text">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</span>
+    <span class="status-top-body">
+      <span class="status-top-text">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</span>
+      <span class="status-top-progress" aria-hidden="true">
+        <span id="statusTopProgress" class="status-top-progress-fill"></span>
+      </span>
+    </span>
   </div>
 
   <div class="quest-toolbar" data-step-label="{'1. Pick a disease and (optionally) an example' if target_lang == 'en' else '1. Оберіть хворобу та (опційно) приклад'}">
@@ -1741,7 +1807,6 @@ def render_try(
 
   <div class="quest-grid">
     <section class="quest-form-pane" id="formPane">
-      <div id="questIntro" class="quest-intro" hidden></div>
       <div id="exampleLockBanner" class="example-lock-banner" hidden>
         <div class="elb-text">
           <strong>📋 {'Example loaded.' if target_lang == 'en' else 'Завантажено приклад.'}</strong>
@@ -1755,6 +1820,7 @@ def render_try(
       <div id="questEmpty" class="quest-empty">
         {'Pick a disease from the list above to start the questionnaire.' if target_lang == 'en' else 'Оберіть хворобу зі списку вище, щоб почати опитування.'}
       </div>
+      <div id="questIntro" class="quest-intro" hidden></div>
     </section>
 
     <section class="quest-form-pane" id="jsonPane" hidden>
@@ -1811,7 +1877,7 @@ def render_try(
         </button>
       </div>
 
-      <div id="status" class="status">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</div>
+      <div id="status" class="status is-busy">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</div>
       <div id="error" class="error" hidden></div>
     </aside>
   </div>
@@ -1875,8 +1941,8 @@ def render_try(
 <div id="generatingOverlay" class="generating-overlay" hidden role="dialog" aria-live="polite" aria-modal="true">
   <div class="generating-card">
     <div class="generating-spinner" aria-hidden="true"></div>
-    <h3>{'Generating plan…' if target_lang == 'en' else 'Генерую план…'}</h3>
-    <p>{'Hold on 5–15 s. Fields are locked so the result matches the current input.' if target_lang == 'en' else 'Зачекай 5–15 с. Поля заблоковано, щоб результат відповідав поточному вводу.'}</p>
+    <h3 id="generatingTitle">{'Generating plan…' if target_lang == 'en' else 'Генерую план…'}</h3>
+    <p id="generatingLead">{'Hold on 5–15 s. Fields are locked so the result matches the current input.' if target_lang == 'en' else 'Зачекай 5–15 с. Поля заблоковано, щоб результат відповідав поточному вводу.'}</p>
     <p class="generating-hint" id="generatingHint">{'Starting the engine…' if target_lang == 'en' else 'Запускаю двигун…'}</p>
   </div>
 </div>
@@ -1901,6 +1967,7 @@ const STORAGE_KEY = 'openonco-try-draft-v1';
 const status = document.getElementById('status');
 const statusTop = document.getElementById('statusTop');
 const statusTopText = statusTop ? statusTop.querySelector('.status-top-text') : null;
+const statusTopProgress = document.getElementById('statusTopProgress');
 const errorBox = document.getElementById('error');
 const runBtn = document.getElementById('runBtn');
 const formatBtn = document.getElementById('formatBtn');
@@ -1936,6 +2003,8 @@ const impactSelected = document.getElementById('impactSelected');
 const impactSelectedText = document.getElementById('impactSelectedText');
 const impactWarnings = document.getElementById('impactWarnings');
 const generatingOverlay = document.getElementById('generatingOverlay');
+const generatingTitle = document.getElementById('generatingTitle');
+const generatingLead = document.getElementById('generatingLead');
 const generatingHint = document.getElementById('generatingHint');
 const mainTryEl = document.querySelector('main.try-page');
 const initOverlay = document.getElementById('initOverlay');
@@ -1966,6 +2035,9 @@ let activeQuest = null;      // currently selected questionnaire
 let generating = false;      // true while runEngine is mid-flight; blocks
                              // input via <main inert> + overlay so the
                              // rendered plan matches a stable snapshot
+let uiBusy = false;          // true while a user-triggered async load is
+                             // in flight; blocks pointer/keyboard input
+                             // with the same modal overlay
 let previewToken = 0;        // bumped on each runLivePreview start AND on
                              // runEngine start; stale results are discarded
 let answers = {{}};          // {{dotted_path: value}}
@@ -1978,6 +2050,18 @@ let lastPreviewResult = null;    // most recent preview result, fed to
                                  // what-if when its (longer) timer fires
 const PREVIEW_DEBOUNCE_MS = 400;
 const WHATIF_DEBOUNCE_MS = 1500;
+
+const UI_LOCK_TEXT = {{
+  generateTitle: '{"Generating plan…" if target_lang == "en" else "Генерую план…"}',
+  generateLead: '{"Hold on 5–15 s. Fields are locked so the result matches the current input." if target_lang == "en" else "Зачекай 5–15 с. Поля заблоковано, щоб результат відповідав поточному вводу."}',
+  loadingTitle: '{"Loading…" if target_lang == "en" else "Завантаження…"}',
+  loadingLead: '{"Please wait. Actions are locked until loading finishes." if target_lang == "en" else "Зачекайте. Дії заблоковано, доки завантаження не завершиться."}',
+  diseaseHint: '{"Loading the questionnaire…" if target_lang == "en" else "Завантажую опитувальник…"}',
+  exampleHint: '{"Loading the example and plan…" if target_lang == "en" else "Завантажую приклад і план…"}',
+  planHint: '{"Loading the plan view…" if target_lang == "en" else "Завантажую перегляд плану…"}',
+  qrHint: '{"Loading profile from QR…" if target_lang == "en" else "Завантажую профіль із QR…"}',
+  renderHint: '{"Rendering the plan view…" if target_lang == "en" else "Перемальовую перегляд плану…"}',
+}};
 
 // Initial render language follows the page lang (EN on /try.html, UA on
 // /ukr/try.html). User can switch via the buttons in the result toolbar
@@ -2008,7 +2092,7 @@ let activeExampleCaseId = null;
 function setStatus(msg, kind = 'info', topMode = 'auto') {{
   status.textContent = msg;
   status.dataset.kind = kind;
-  // Mirror to the prominent top banner.
+  // Mirror important transient states to the prominent top banner.
   //  topMode='busy'  → spinner, blue
   //  topMode='ok'    → green ✓
   //  topMode='warn'  → amber
@@ -2017,21 +2101,36 @@ function setStatus(msg, kind = 'info', topMode = 'auto') {{
   if (!statusTop || !statusTopText) return;
   let mode = topMode;
   if (mode === 'auto') {{
-    if (kind === 'ok') mode = 'ok';
+    if (kind === 'ok') mode = 'hide';
     else if (kind === 'warn') mode = 'warn';
     else if (!msg) mode = 'hide';
     else mode = 'busy';
   }}
   if (mode === 'hide' || !msg) {{
+    status.classList.remove('is-busy');
     statusTop.hidden = true;
+    clearLoadingProgress();
     return;
   }}
+  status.classList.toggle('is-busy', mode === 'busy');
   statusTop.hidden = false;
   statusTopText.textContent = msg;
   statusTop.dataset.kind = kind;
   statusTop.classList.toggle('is-busy', mode === 'busy');
   statusTop.classList.toggle('is-ok', mode === 'ok');
   statusTop.classList.toggle('is-warn', mode === 'warn');
+  if (mode !== 'busy') clearLoadingProgress();
+}}
+function setLoadingProgress(percent) {{
+  if (!statusTop || !statusTopProgress) return;
+  const pct = Math.max(0, Math.min(100, Number(percent) || 0));
+  statusTop.classList.add('has-progress');
+  statusTopProgress.style.setProperty('--status-progress', pct + '%');
+}}
+function clearLoadingProgress() {{
+  if (!statusTop || !statusTopProgress) return;
+  statusTop.classList.remove('has-progress');
+  statusTopProgress.style.removeProperty('--status-progress');
 }}
 function setError(msg) {{
   if (msg) {{
@@ -2096,6 +2195,7 @@ function downloadPdf() {{
   // Browser-native print → "Save as PDF" works on every modern browser.
   // The render layer ships A4-print-friendly CSS (@page + @media print)
   // so the iframe content paginates cleanly without any extra deps.
+  if (uiBusy || generating) return;
   if (planSource == null) return;
   // Modal must be visible so iframe contentWindow is fully laid out and
   // print() picks up the right document.
@@ -2113,12 +2213,13 @@ async function switchResultMode(newMode) {{
   if (newMode === currentResultMode) return;
   if (modePatientBtn.disabled && newMode === 'patient') return;
   if (!pyodide || planSource !== 'generated') return;
-  modeClinicianBtn.disabled = true;
-  modePatientBtn.disabled = true;
-  try {{
-    pyodide.globals.set('_target_lang', currentResultLang);
-    pyodide.globals.set('_target_mode', newMode);
-    const html = await pyodide.runPythonAsync(`
+  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
+    modeClinicianBtn.disabled = true;
+    modePatientBtn.disabled = true;
+    try {{
+      pyodide.globals.set('_target_lang', currentResultLang);
+      pyodide.globals.set('_target_mode', newMode);
+      const html = await pyodide.runPythonAsync(`
 if _oo_mode == 'diagnostic':
     # Patient mode is treatment-only per PATIENT_MODE_SPEC §3 — fall back
     # to the clinician diagnostic brief regardless of mode toggle.
@@ -2129,18 +2230,20 @@ else:
     )
 html
 `);
-    resultFrame.removeAttribute('src');
-    resultFrame.srcdoc = html;
-    currentResultMode = newMode;
-    highlightModeButtons();
-  }} catch (e) {{
-    setError('Re-render failed: ' + (e.message || e));
-  }} finally {{
-    refreshModeButtonAvailability();
-  }}
+      resultFrame.removeAttribute('src');
+      resultFrame.srcdoc = html;
+      currentResultMode = newMode;
+      highlightModeButtons();
+    }} catch (e) {{
+      setError('Re-render failed: ' + (e.message || e));
+    }} finally {{
+      refreshModeButtonAvailability();
+    }}
+  }});
 }}
 
 function downloadHtml() {{
+  if (uiBusy || generating) return;
   if (planSource == null) return;
   let html = resultFrame.srcdoc;
   if (!html) {{
@@ -2172,19 +2275,24 @@ async function switchResultLang(newLang) {{
     // Pre-built case file: just swap the iframe src to the matching
     // language variant. EN at /cases/<id>.html, UA at /ukr/cases/<id>.html.
     if (!activeExampleCaseId) return;
-    resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + '.html';
-    currentResultLang = newLang;
-    highlightLangButtons();
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {{
+      const frameReady = waitForFrameLoad();
+      resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + '.html';
+      currentResultLang = newLang;
+      highlightLangButtons();
+      await frameReady;
+    }});
     return;
   }}
   if (!pyodide) return;
-  // Disable buttons during re-render so user can't double-click
-  langUaBtn.disabled = true;
-  langEnBtn.disabled = true;
-  try {{
-    pyodide.globals.set('_target_lang', newLang);
-    pyodide.globals.set('_target_mode', currentResultMode);
-    const html = await pyodide.runPythonAsync(`
+  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
+    // Disable buttons during re-render so user can't double-click
+    langUaBtn.disabled = true;
+    langEnBtn.disabled = true;
+    try {{
+      pyodide.globals.set('_target_lang', newLang);
+      pyodide.globals.set('_target_mode', currentResultMode);
+      const html = await pyodide.runPythonAsync(`
 if _oo_mode == 'diagnostic':
     html = render_diagnostic_brief_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
 else:
@@ -2193,19 +2301,37 @@ else:
     )
 html
 `);
-    resultFrame.removeAttribute('src');
-    resultFrame.srcdoc = html;
-    currentResultLang = newLang;
-    highlightLangButtons();
-  }} catch (e) {{
-    setError('Re-render failed: ' + (e.message || e));
-  }} finally {{
-    langUaBtn.disabled = false;
-    langEnBtn.disabled = false;
-  }}
+      resultFrame.removeAttribute('src');
+      resultFrame.srcdoc = html;
+      currentResultLang = newLang;
+      highlightLangButtons();
+    }} catch (e) {{
+      setError('Re-render failed: ' + (e.message || e));
+    }} finally {{
+      langUaBtn.disabled = false;
+      langEnBtn.disabled = false;
+    }}
+  }});
 }}
 
-function loadExamplePlan(caseId) {{
+function waitForFrameLoad(timeoutMs = 12000) {{
+  if (!resultFrame) return Promise.resolve();
+  return new Promise(resolve => {{
+    let done = false;
+    const finish = () => {{
+      if (done) return;
+      done = true;
+      resultFrame.removeEventListener('load', finish);
+      resultFrame.removeEventListener('error', finish);
+      resolve();
+    }};
+    resultFrame.addEventListener('load', finish);
+    resultFrame.addEventListener('error', finish);
+    setTimeout(finish, timeoutMs);
+  }});
+}}
+
+async function loadExamplePlan(caseId) {{
   // Show the pre-built case HTML for the just-loaded example so the user
   // sees a plan immediately — without spinning up Pyodide and without
   // pretending the engine just ran. Generate stays disabled until the
@@ -2213,6 +2339,7 @@ function loadExamplePlan(caseId) {{
   if (!caseId) return;
   activeExampleCaseId = caseId;
   resultFrame.removeAttribute('srcdoc');
+  const frameReady = waitForFrameLoad();
   resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/') + caseId + '.html';
   planSource = 'example';
   planDirty = false;
@@ -2227,6 +2354,7 @@ function loadExamplePlan(caseId) {{
   modalPdfBtn.disabled = false;
   modalHtmlBtn.disabled = false;
   openPlanModal();
+  await frameReady;
 }}
 
 function clearPlanState() {{
@@ -2254,6 +2382,10 @@ planModal.addEventListener('click', (ev) => {{
   if (ev.target === planModal) closePlanModal();
 }});
 document.addEventListener('keydown', (ev) => {{
+  if ((generating || uiBusy) && ev.key === 'Escape') {{
+    ev.preventDefault();
+    return;
+  }}
   if (ev.key === 'Escape' && !planModal.hidden) closePlanModal();
 }});
 langUaBtn.addEventListener('click', () => switchResultLang('uk'));
@@ -2308,7 +2440,7 @@ function updateRunBtnEnabled() {{
   if (mode === 'form') hasInput = !!activeQuest;
   else hasInput = textarea.value.trim().length > 0;
   const planFresh = planSource !== null && !planDirty;
-  runBtn.disabled = !hasInput || planFresh;
+  runBtn.disabled = uiBusy || generating || !hasInput || planFresh;
 }}
 
 // Mark the currently-shown plan as out-of-sync with the current input.
@@ -2950,6 +3082,7 @@ async function loadCoreBundle() {{
     throw new Error('Bundle index missing core entry — cannot load engine');
   }}
   setStatus('{"Loading the engine core (~1.4 MB)…" if target_lang == "en" else "Завантажую ядро двигуна (~1.4 МБ)…"}');
+  setLoadingProgress(62);
   const ver = bundleIndex.core_version || '';
   const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
@@ -2996,6 +3129,7 @@ async function loadDiseaseModule(diseaseId) {{
   }}
 
   setStatus('{"Loading module " if target_lang == "en" else "Завантажую модуль "}' + diseaseId + '…');
+  setLoadingProgress(86);
   const url = '/' + relUrl + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
   if (!r.ok) throw new Error('Disease module fetch HTTP ' + r.status + ' for ' + diseaseId);
@@ -3043,6 +3177,7 @@ async function ensureEngine() {{
     stage = 'pyodide';
     initStageStart(stage);
     setStatus('{"Loading Pyodide…" if target_lang == "en" else "Завантажую Pyodide…"}');
+    setLoadingProgress(18);
     await yieldToBrowser(50);
     const _loadPyodide = await ensurePyodideLoader();
     pyodide = await _loadPyodide({{indexURL: "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/"}});
@@ -3051,6 +3186,7 @@ async function ensureEngine() {{
     stage = 'pydeps';
     initStageStart(stage);
     setStatus('{"Installing pydantic + pyyaml…" if target_lang == "en" else "Встановлюю pydantic + pyyaml…"}');
+    setLoadingProgress(36);
     await yieldToBrowser(50);
     await pyodide.loadPackage(['micropip']);
     await yieldToBrowser();
@@ -3063,6 +3199,7 @@ await micropip.install(['pydantic', 'pyyaml'])
     stage = 'bundle';
     initStageStart(stage);
     setStatus('{"Loading the OpenOnco engine…" if target_lang == "en" else "Завантажую двигун OpenOnco…"}');
+    setLoadingProgress(54);
     await yieldToBrowser(50);
     // CSD-6E + CSD-9C: lazy-load core bundle (~1.4 MB). Monolithic
     // fallback retired (CSD-9C 2026-04-27) — the index + core + per-
@@ -3074,6 +3211,7 @@ await micropip.install(['pydantic', 'pyyaml'])
     stage = 'validate';
     initStageStart(stage);
     setStatus('{"Verifying the KB…" if target_lang == "en" else "Перевіряю базу…"}');
+    setLoadingProgress(78);
     await yieldToBrowser(50);
     const validationSummary = await pyodide.runPythonAsync(`
 from pathlib import Path
@@ -3094,6 +3232,7 @@ _summary
 `);
     initStageDone(stage);
     enginReady = true;
+    setLoadingProgress(100);
     if (validationSummary === 'ok') {{
       setStatus('{"Engine ready ✓" if target_lang == "en" else "Двигун готовий ✓"}', 'ok');
     }} else {{
@@ -3163,6 +3302,7 @@ async function runEngine() {{
     }}
     initStageStart('generate');
     setStatus('{"Building a personalised plan…" if target_lang == "en" else "Будую персональний план…"}');
+    setLoadingProgress(92);
     await yieldToBrowser(30);
     const _ooTPython = performance.now();
     try {{
@@ -3229,18 +3369,35 @@ html
   }}
 }}
 
-function setGeneratingUI(on, hint) {{
+function setGeneratingUI(on, hint, title, lead) {{
   generatingOverlay.hidden = !on;
   // <main inert> hard-blocks pointer + keyboard focus on every interactive
   // element inside (form fields, toolbar, runBtn). The overlay is a sibling
   // of <main>, so it stays interactive — but we don't currently put any
   // controls in it (no cancel — Pyodide runPythonAsync is not interruptable).
   if (mainTryEl) mainTryEl.inert = on;
+  if (on && generatingTitle) generatingTitle.textContent = title || UI_LOCK_TEXT.generateTitle;
+  if (on && generatingLead) generatingLead.textContent = lead || UI_LOCK_TEXT.generateLead;
   if (on && hint) setGeneratingHint(hint);
 }}
 
 function setGeneratingHint(text) {{
   if (generatingHint) generatingHint.textContent = text;
+}}
+
+async function withUiLock(title, lead, hint, task) {{
+  if (uiBusy || generating) return;
+  uiBusy = true;
+  updateRunBtnEnabled();
+  setGeneratingUI(true, hint, title, lead);
+  await yieldToBrowser(16);
+  try {{
+    return await task();
+  }} finally {{
+    uiBusy = false;
+    setGeneratingUI(false);
+    updateRunBtnEnabled();
+  }}
 }}
 
 // ── Init overlay (one-time engine load with named stages) ─────────────────
@@ -3297,7 +3454,10 @@ async function ensureQuestionnaires() {{
   if (questionnaires) return questionnaires;
   if (!_questionnairesPromise) {{
     _questionnairesPromise = fetch('/questionnaires.json')
-      .then(r => r.json())
+      .then(r => {{
+        if (!r.ok) throw new Error('questionnaires.json HTTP ' + r.status);
+        return r.json();
+      }})
       .then(data => {{ questionnaires = data; return data; }});
   }}
   return _questionnairesPromise;
@@ -3306,7 +3466,10 @@ async function ensureExamples() {{
   if (examples) return examples;
   if (!_examplesPromise) {{
     _examplesPromise = fetch('/examples.json')
-      .then(r => r.json())
+      .then(r => {{
+        if (!r.ok) throw new Error('examples.json HTTP ' + r.status);
+        return r.json();
+      }})
       .then(data => {{ examples = data; return data; }});
   }}
   return _examplesPromise;
@@ -3328,6 +3491,7 @@ function saveManifestsToCache() {{
 }}
 
 async function loadAssets() {{
+  setLoadingProgress(18);
   // Populate dropdowns from manifests — instant, no network fetch.
   diseaseSelect.innerHTML = '<option value="">{"— select —" if target_lang == "en" else "— оберіть —"}</option>';
   QUESTIONNAIRES_MANIFEST.forEach((q, i) => {{
@@ -3337,69 +3501,96 @@ async function loadAssets() {{
     diseaseSelect.appendChild(opt);
   }});
   saveManifestsToCache();
+  setLoadingProgress(55);
 
   // Examples selector — initial population shows all; narrows once a
   // disease is picked.
   repopulateExamples(null);
+  setLoadingProgress(72);
 
-  // Restore draft
+  // Restore draft. If the full questionnaire payload is unavailable, keep
+  // the page usable from the inlined manifest instead of leaving the boot
+  // banner stuck on "Loading questionnaires…".
   const draft = loadDraft();
+  let draftRestored = false;
+  let draftRestoreFailed = false;
   if (draft && draft.questId) {{
     const idx = QUESTIONNAIRES_MANIFEST.findIndex(q => q.id === draft.questId);
     if (idx >= 0) {{
-      diseaseSelect.value = idx;
-      // Draft restore needs full data — lazy-fetch now
-      const fullList = await ensureQuestionnaires();
-      renderForm(fullList[idx]);
-      repopulateExamples(idx);
-      // Apply saved answers
-      if (draft.answers) {{
-        for (const [field, val] of Object.entries(draft.answers)) {{
-          const inp = formPane.querySelector(`[data-field="${{CSS.escape(field)}}"]`);
-          if (!inp) continue;
-          if (typeof val === 'boolean') inp.value = String(val);
-          else if (inp.dataset.type === 'enum') inp.value = JSON.stringify(val);
-          else inp.value = val;
-          answers[field] = val;
-        }}
+        try {{
+          await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
+            diseaseSelect.value = idx;
+            setLoadingProgress(82);
+            // Draft restore needs full data — lazy-fetch now
+            const fullList = await ensureQuestionnaires();
+            renderForm(fullList[idx]);
+          repopulateExamples(idx);
+          // Apply saved answers
+          if (draft.answers) {{
+            for (const [field, val] of Object.entries(draft.answers)) {{
+              const inp = formPane.querySelector(`[data-field="${{CSS.escape(field)}}"]`);
+              if (!inp) continue;
+              if (typeof val === 'boolean') inp.value = String(val);
+              else if (inp.dataset.type === 'enum') inp.value = JSON.stringify(val);
+              else inp.value = val;
+              answers[field] = val;
+            }}
+          }}
+          if (draft.jsonText) textarea.value = draft.jsonText;
+          if (draft.mode === 'json') setMode('json');
+          setStatus('{"Draft restored ✓ Click «Generate» when you are ready." if target_lang == "en" else "Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий."}', 'ok');
+          updateRunBtnEnabled();
+          updateImpactPanelLocal();
+          draftRestored = true;
+        }});
+      }} catch (e) {{
+        draftRestoreFailed = true;
+        console.warn('[OpenOnco] failed to restore saved draft:', e);
+        setError('{"Could not restore the saved draft: " if target_lang == "en" else "Не вдалося відновити чернетку: "}' + (e.message || e));
+        diseaseSelect.value = '';
+        renderForm(null);
+        repopulateExamples(null);
       }}
-      if (draft.jsonText) textarea.value = draft.jsonText;
-      if (draft.mode === 'json') setMode('json');
-      setStatus('{"Draft restored ✓ Click «Generate» when you are ready." if target_lang == "en" else "Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий."}', 'ok');
-      updateRunBtnEnabled();
-      updateImpactPanelLocal();
     }}
-  }} else {{
+  }}
+  if (!draftRestored) {{
     // Initial load done — hide the top busy banner; sidebar still shows hint.
-    setStatus('{"Pick a disease from the list to start." if target_lang == "en" else "Оберіть хворобу зі списку, щоб почати."}', 'info', 'hide');
+    if (draftRestoreFailed) {{
+      setStatus('{"Saved draft could not be restored. Pick a disease to start again." if target_lang == "en" else "Чернетку не вдалося відновити. Оберіть хворобу, щоб почати знову."}', 'warn', 'warn');
+    }} else {{
+      setStatus('{"Pick a disease from the list to start." if target_lang == "en" else "Оберіть хворобу зі списку, щоб почати."}', 'info', 'hide');
+    }}
     updateRunBtnEnabled();
     updateImpactPanelLocal();
   }}
-
   // Engine is fully lazy now — Pyodide loads only when the user clicks
   // «Згенерувати». Form interaction stays Pyodide-free and snappy.
 }}
 
 // ── Examples filtering by selected disease ────────────────────────────────
-// We narrow the example dropdown to those whose disease.icd_o_3_morphology
-// matches the active questionnaire — otherwise the picker overwhelms with
-// 35 cases for which we don't have a form.
+// We narrow the example dropdown to the active questionnaire disease.
+// Match by disease_id first: ICD-O morphology is not unique enough
+// (e.g. 8070/3 spans cervical, esophageal, and HNSCC examples).
 function repopulateExamples(activeQuestIdx) {{
   // Filter from manifest only — no need to await full examples payload
-  // just to populate a dropdown (manifest carries label + disease_icd).
-  const wantCode = activeQuestIdx == null
+  // just to populate a dropdown (manifest carries label + disease_id).
+  const activeQuestManifest = activeQuestIdx == null
     ? null
-    : (QUESTIONNAIRES_MANIFEST[activeQuestIdx] || {{}}).disease_icd;
+    : (QUESTIONNAIRES_MANIFEST[activeQuestIdx] || {{}});
+  const wantDiseaseId = activeQuestManifest && activeQuestManifest.disease_id;
+  const wantCode = activeQuestManifest && activeQuestManifest.disease_icd;
   exampleSelect.innerHTML = '';
   const placeholder = document.createElement('option');
   placeholder.value = '';
-  placeholder.textContent = wantCode == null
+  placeholder.textContent = wantDiseaseId == null && wantCode == null
     ? '{"— select an example —" if target_lang == "en" else "— оберіть приклад —"}'
     : '{"— select an example for this disease —" if target_lang == "en" else "— оберіть приклад для цієї хвороби —"}';
   exampleSelect.appendChild(placeholder);
   let n = 0;
   EXAMPLES_MANIFEST.forEach((ex, i) => {{
-    if (wantCode != null) {{
+    if (wantDiseaseId != null) {{
+      if (ex.disease_id !== wantDiseaseId) return;
+    }} else if (wantCode != null) {{
       if (ex.disease_icd !== wantCode) return;
     }}
     const opt = document.createElement('option');
@@ -3408,7 +3599,7 @@ function repopulateExamples(activeQuestIdx) {{
     exampleSelect.appendChild(opt);
     n++;
   }});
-  if (wantCode != null && n === 0) {{
+  if ((wantDiseaseId != null || wantCode != null) && n === 0) {{
     const noneOpt = document.createElement('option');
     noneOpt.value = '';
     noneOpt.disabled = true;
@@ -3419,30 +3610,39 @@ function repopulateExamples(activeQuestIdx) {{
 
 // ── Event wiring ──────────────────────────────────────────────────────────
 diseaseSelect.addEventListener('change', async () => {{
-  const i = diseaseSelect.value;
-  // Switching disease invalidates whatever plan was on screen — there is
-  // no longer any example or generated plan that matches the new form.
-  clearPlanState();
-  if (i === '') {{
-    renderForm(null);
-    repopulateExamples(null);
+  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
+    const i = diseaseSelect.value;
+    // Switching disease invalidates whatever plan was on screen — there is
+    // no longer any example or generated plan that matches the new form.
+    clearPlanState();
+    if (i === '') {{
+      renderForm(null);
+      repopulateExamples(null);
+      updateRunBtnEnabled();
+      return;
+    }}
+    const idx = parseInt(i, 10);
+    const fullList = await ensureQuestionnaires();
+    renderForm(fullList[idx]);
+    repopulateExamples(idx);
+    exampleSelect.value = '';
+    saveDraft();
     updateRunBtnEnabled();
-    return;
-  }}
-  const idx = parseInt(i, 10);
-  const fullList = await ensureQuestionnaires();
-  renderForm(fullList[idx]);
-  repopulateExamples(idx);
-  exampleSelect.value = '';
-  saveDraft();
-  updateRunBtnEnabled();
-  updateImpactPanelLocal();
+    updateImpactPanelLocal();
+  }});
 }});
 
 function findQuestionnaireForProfile(profile) {{
-  // Match by ICD-O-3 morphology — manifest carries disease_icd, no need
-  // to wait for full questionnaires payload.
-  const code = profile && profile.disease && profile.disease.icd_o_3_morphology;
+  // Match by explicit disease_id first, then ICD-O-3 morphology. The
+  // disease_id path is required for diseases with shared ICD-O codes.
+  const disease = profile && profile.disease ? profile.disease : {{}};
+  const diseaseId = (disease.id || (profile && profile.disease_id) || '').toString();
+  if (diseaseId.startsWith('DIS-')) {{
+    const normalized = diseaseId.toUpperCase();
+    const byId = QUESTIONNAIRES_MANIFEST.findIndex(q => q.disease_id === normalized);
+    if (byId >= 0) return byId;
+  }}
+  const code = disease.icd_o_3_morphology;
   if (!code) return -1;
   return QUESTIONNAIRES_MANIFEST.findIndex(q => q.disease_icd === code);
 }}
@@ -3477,45 +3677,47 @@ function populateFormFromProfile(quest, profile) {{
 }}
 
 exampleSelect.addEventListener('change', async () => {{
-  const i = exampleSelect.value;
-  if (i === '') return;
-  const fullExamples = await ensureExamples();
-  const ex = fullExamples[parseInt(i, 10)];
-  setError(null);
-  // Prefer form mode: find a questionnaire that matches this example's
-  // disease and populate it. Fall back to JSON view only when no
-  // matching questionnaire exists (most diseases don't have one yet).
-  const qIdx = findQuestionnaireForProfile(ex.json);
-  if (qIdx >= 0) {{
-    diseaseSelect.value = qIdx;
-    const fullList = await ensureQuestionnaires();
-    renderForm(fullList[qIdx]);
-    repopulateExamples(qIdx);
-    exampleSelect.value = i;
-    populateFormFromProfile(fullList[qIdx], ex.json);
-    setMode('form');
-    // Lock filled fields and reveal the personalize banner so the user
-    // can opt-in to editing the example's data.
-    lockFilledFields();
-    showExampleLockBanner();
-    // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
-    textarea.value = JSON.stringify(buildProfile(), null, 2);
-    // Show the pre-built case plan in the modal — the example IS already
-    // a generated plan, so we display it directly instead of pretending
-    // Generate would do new work.
-    loadExamplePlan(ex.case_id);
-    setStatus('{'Example loaded ✓ Plan shown — edit any field to generate your own.' if target_lang == 'en' else 'Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.'}', 'ok');
-  }} else {{
-    setMode('json');
-    textarea.value = JSON.stringify(ex.json, null, 2);
-    // No questionnaire match: still show the prebuilt plan if a case file
-    // exists for this example.
-    if (ex.case_id) loadExamplePlan(ex.case_id);
-    setStatus('{"Example loaded as JSON (no questionnaire for this disease yet)" if target_lang == "en" else "Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)"}', 'ok');
-  }}
-  saveDraft();
-  updateRunBtnEnabled();
-  updateImpactPanelLocal();
+  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.exampleHint, async () => {{
+    const i = exampleSelect.value;
+    if (i === '') return;
+    const fullExamples = await ensureExamples();
+    const ex = fullExamples[parseInt(i, 10)];
+    setError(null);
+    // Prefer form mode: find a questionnaire that matches this example's
+    // disease and populate it. Fall back to JSON view only when no
+    // matching questionnaire exists (most diseases don't have one yet).
+    const qIdx = findQuestionnaireForProfile(ex.json);
+    if (qIdx >= 0) {{
+      diseaseSelect.value = qIdx;
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[qIdx]);
+      repopulateExamples(qIdx);
+      exampleSelect.value = i;
+      populateFormFromProfile(fullList[qIdx], ex.json);
+      setMode('form');
+      // Lock filled fields and reveal the personalize banner so the user
+      // can opt-in to editing the example's data.
+      lockFilledFields();
+      showExampleLockBanner();
+      // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
+      textarea.value = JSON.stringify(buildProfile(), null, 2);
+      // Show the pre-built case plan in the modal — the example IS already
+      // a generated plan, so we display it directly instead of pretending
+      // Generate would do new work.
+      await loadExamplePlan(ex.case_id);
+      setStatus('{'Example loaded ✓ Plan shown — edit any field to generate your own.' if target_lang == 'en' else 'Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.'}', 'ok');
+    }} else {{
+      setMode('json');
+      textarea.value = JSON.stringify(ex.json, null, 2);
+      // No questionnaire match: still show the prebuilt plan if a case file
+      // exists for this example.
+      if (ex.case_id) await loadExamplePlan(ex.case_id);
+      setStatus('{"Example loaded as JSON (no questionnaire for this disease yet)" if target_lang == "en" else "Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)"}', 'ok');
+    }}
+    saveDraft();
+    updateRunBtnEnabled();
+    updateImpactPanelLocal();
+  }});
 }});
 
 const personalizeBtn = document.getElementById('personalizeBtn');
@@ -3574,6 +3776,7 @@ async function loadFromUrlHash() {{
   if (!token) return;
 
   try {{
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.qrHint, async () => {{
     // urlsafe-base64 → bytes (re-add padding) → gunzip → JSON
     const padded = token + '='.repeat((-token.length) & 3);
     const binStr = atob(padded.replace(/-/g, '+').replace(/_/g, '/'));
@@ -3609,6 +3812,7 @@ async function loadFromUrlHash() {{
     banner.textContent = '{"✓ Profile loaded from QR code. Click «Generate» to build the plan, or edit any field." if target_lang == "en" else "✓ Профіль завантажено з QR-коду. Натисніть «Згенерувати», щоб побудувати план, або відредагуйте поля."}';
     mainTryEl.parentNode.insertBefore(banner, mainTryEl);
     setStatus('{"Profile loaded from QR ✓" if target_lang == "en" else "Профіль із QR завантажено ✓"}', 'ok');
+    }});
   }} catch (err) {{
     console.error('Failed to decode case token:', err);
     const banner = document.createElement('div');
@@ -3680,7 +3884,9 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         'align-items:center;font-family:Source Sans 3,sans-serif;}'
         '.oo-topbar-host .brand-line{display:flex;align-items:center;'
         'gap:12px;margin-right:28px;}'
-        '.oo-topbar-host .brand-mini{font-family:Playfair Display,Georgia,serif;'
+        '.oo-topbar-host .brand-logo{display:block;width:30px;height:30px;flex:0 0 30px;}'
+        '.oo-topbar-host .brand-mini{display:inline-flex;align-items:center;gap:9px;'
+        'font-family:Playfair Display,Georgia,serif;'
         'font-size:26px;color:#dcfce7;text-decoration:none;letter-spacing:.2px;}'
         '.oo-topbar-host .brand-version{font-family:JetBrains Mono,monospace;'
         'font-size:10.5px;color:#dcfce7;opacity:.55;'
@@ -3731,6 +3937,7 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         '@media (max-width:700px){'
         '.oo-topbar-host .top-bar{flex-wrap:wrap;gap:8px;}'
         '.oo-topbar-host .top-nav{order:3;flex-basis:100%;margin:0;justify-content:center;}'
+        '.oo-topbar-host .brand-logo{width:26px;height:26px;flex-basis:26px;}'
         '.oo-topbar-host .btn-cta-try{min-width:120px;padding:8px 14px;font-size:13px;}'
         '}'
         '</style>\n'
@@ -4142,8 +4349,8 @@ def _render_capabilities_uk(stats) -> str:
             години і відкриває PR. Maintainer + Clinical Co-Lead перевіряють
             і мерджать. За останні 4 дні — <strong>7 хвиль</strong>,
             десятки chunks, ~73 BMA-кандидати, 23 BMA-драфти, 53 source
-            stubs. Деталі — у розділі «Як допомогти» нижче.
-            <a href="/ukr/contribute.html"><strong>→ Допомогти токенами</strong></a>
+            stubs. Деталі — у розділі TaskTorrent нижче.
+            <a href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><strong>→ Contributor Quickstart</strong></a>
           </p>
         </div>
       </div>
@@ -4848,6 +5055,7 @@ def _render_capabilities_uk(stats) -> str:
           <tr><td>Хірургія планів</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
           <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Поки що hard-coded на режимах; не auto-refresh з НСЗУ — окремий backlog</td></tr>
           <tr><td>Reviewer dual-signoff</td><td>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</td><td>Більшість контенту — STUB. Capacity план: {stats.reviewer_signoffs_total} → ≥85% verified — це наша основна bottleneck-метрика, описана у kb_coverage_strategy v0.2</td></tr>
+          <tr><td>Clinical gap audit</td><td><a href="/ukr/clinical-gaps.html">live dashboard</a></td><td>Build-generated audit for sign-off, solid-tumour 2L+, surgery/radiation structure, supportive care, and drug indication tracking.</td></tr>
         </tbody>
       </table>
       <div class="callout">
@@ -4979,7 +5187,7 @@ def _render_capabilities_uk(stats) -> str:
           <div class="num-lbl">8-line bootstrap</div>
           <p class="num-text">
             Скопіюйте 8-рядковий промпт з
-            <a href="/ukr/contribute.html"><code>/ukr/contribute.html</code></a>
+            <a href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><code>CONTRIBUTOR_QUICKSTART.md</code></a>
             у свій AI-агент. Він сам знайде наступний доступний chunk,
             прочитає його spec, claim'не його, виконає роботу під
             <code>contributions/&lt;chunk-id&gt;/</code>, прогоне валідатор,
@@ -5000,7 +5208,7 @@ def _render_capabilities_uk(stats) -> str:
         </div>
       </div>
       <div class="cta-row" style="margin-top:24px;">
-        <a class="btn btn-primary" href="/ukr/contribute.html">Допомогти токенами →</a>
+        <a class="btn btn-primary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart →</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart (GitHub)</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active" target="_blank" rel="noopener">Активні чанки →</a>
       </div>
@@ -5293,7 +5501,7 @@ def _render_capabilities_en(stats) -> str:
             review and merge. In the past 4 days — <strong>7 waves</strong>,
             dozens of chunks, ~73 BMA candidates, 23 BMA drafts, 53 source
             stubs. Details in the «How to help» section below.
-            <a href="/contribute.html"><strong>→ Contribute tokens</strong></a>
+            <a href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><strong>→ Contributor Quickstart</strong></a>
           </p>
         </div>
       </div>
@@ -6010,6 +6218,7 @@ def _render_capabilities_en(stats) -> str:
           <tr><td>Surgical oncology plans</td><td>not modelled</td><td>Surgical-oncology indications absent</td></tr>
           <tr><td>NHSU formulary live feed</td><td>static flag</td><td>Currently hard-coded on regimens; not auto-refreshed from NHSU — separate backlog</td></tr>
           <tr><td>Reviewer dual-signoff</td><td>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</td><td>Most content is STUB. Capacity plan: {stats.reviewer_signoffs_total} → ≥85% verified — our main bottleneck metric, described in kb_coverage_strategy v0.2</td></tr>
+          <tr><td>Clinical gap audit</td><td><a href="/clinical-gaps.html">live dashboard</a></td><td>Build-generated audit for sign-off, solid-tumour 2L+, surgery/radiation structure, supportive care, and drug indication tracking.</td></tr>
         </tbody>
       </table>
       <div class="callout">
@@ -6147,7 +6356,7 @@ def _render_capabilities_en(stats) -> str:
           <div class="num-lbl">8-line bootstrap</div>
           <p class="num-text">
             Copy the 8-line prompt from
-            <a href="/contribute.html"><code>/contribute.html</code></a>
+            <a href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><code>CONTRIBUTOR_QUICKSTART.md</code></a>
             into your AI agent. It will find the next available chunk on
             its own, read the spec, claim it, do the work under
             <code>contributions/&lt;chunk-id&gt;/</code>, run the
@@ -6168,7 +6377,7 @@ def _render_capabilities_en(stats) -> str:
         </div>
       </div>
       <div class="cta-row" style="margin-top:24px;">
-        <a class="btn btn-primary" href="/contribute.html">Contribute tokens →</a>
+        <a class="btn btn-primary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart →</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart (GitHub)</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active" target="_blank" rel="noopener">Active chunks →</a>
       </div>
@@ -6210,49 +6419,44 @@ _DISEASES_PAGE_LABELS = {
         "title": "Хвороби · OpenOnco",
         "h1": "Хвороби в базі знань",
         "lead": (
-            "Покриття OpenOnco по 65 онкологічних діагнозах: біомаркери, "
-            "препарати, indications/regimens/RedFlags, наявність алгоритму та "
-            "опитувальника, % наповненості і % верифікації Clinical Co-Lead."
+            "Покриття OpenOnco за {n} онкологічними діагнозами: біомаркери, "
+            "препарати, показання, режими, тривожні ознаки, алгоритми та "
+            "практична наповненість бази знань."
         ),
         "sum_diseases": "Усього діагнозів",
         "sum_avg_fill": "Сер. наповненість",
-        "sum_avg_ver": "Сер. верифікація",
-        "sum_with_signed": "З ≥1 верифікованим indication",
-        "sum_quest_real": "Hand-authored questionnaires",
-        "sum_quest_stub": "STUB questionnaires",
         "sum_algo_1l": "З 1L алгоритмом",
         "sum_algo_2l": "З 2L+ алгоритмом",
         "fam_lymphoid": "Лімфоїдна гематологія",
         "fam_myeloid": "Мієлоїдна гематологія",
         "fam_solid": "Солідні пухлини",
         "th_disease": "Хвороба", "th_icd": "ICD-10",
-        "th_bio": "Bio", "th_drug": "Drug",
-        "th_ind": "Ind", "th_reg": "Reg", "th_rf": "RF",
-        "th_1l": "1L", "th_2l": "2L", "th_quest": "Quest",
-        "th_fill": "Fill %", "th_ver": "Ver %",
+        "th_bio": "Біомарк.", "th_drug": "Преп.",
+        "th_ind": "Показ.", "th_reg": "Режими", "th_rf": "Трив. озн.",
+        "th_1l": "1L", "th_2l": "2L+", "th_quest": "Опитувальник",
+        "th_fill": "Наповн.", "th_ver": "Вериф.",
         "yes": "✓", "no": "—",
-        "metrics_title": "Метрики",
+        "metrics_title": "Позначення в таблиці",
+        "search_placeholder": "Шукати хворобу або ICD-10 код…",
+        "search_empty": "Жодна хвороба не підходить під запит.",
         "metrics": [
-            "<b>#Bio</b> — distinct biomarkers, на які посилаються Indications + Regimens цієї хвороби",
-            "<b>#Drug</b> — distinct drugs у regimens цієї хвороби",
-            "<b>#Ind / #Reg / #RF</b> — Indications / Regimens / RedFlags для цієї хвороби",
-            "<b>1L / 2L</b> — наявність Algorithm для першої / другої+ лінії",
-            "<b>Quest</b> — ✓ hand-authored / STUB auto-generated / — відсутній",
-            "<b>Fill %</b> — composite з 8 ентити-типів: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup",
-            "<b>Ver %</b> — % indications цієї хвороби з reviewer_signoffs ≥ 2 (CHARTER §6.1)",
+            "<b>Біомаркери / Препарати</b> — кількість унікальних сутностей, які використовуються у правилах цієї хвороби.",
+            "<b>Показання / Режими / Тривожні ознаки</b> — кількість відповідних записів у базі знань.",
+            "<b>1L / 2L+</b> — наявність алгоритму для першої або другої й наступних ліній лікування.",
+            "<b>Опитувальник</b> — ✓ якщо для хвороби є ручний клінічний опитувальник; — якщо його ще немає.",
+            "<b>Наповненість</b> — зведена оцінка за ключовими типами сутностей: показання, режими, біомаркери, препарати, тривожні ознаки, алгоритм, опитувальник і workup.",
+            "<b>Верифікація</b> — частка показань із достатньою кількістю клінічних sign-off за правилами проєкту.",
         ],
-        "verified_note": (
-            "<b>Ver % переважно 0%</b> — діє dev-mode signoff exemption "
-            "(<code>project_charter_dev_mode_exemptions</code>) до призначення "
-            "Clinical Co-Leads. Це навмисно, не bug."
-        ),
+        "verified_note": "",
+        "table_title": "Покриття за хворобами",
+        "avg_label": "середнє",
         "footer_data": "Дані оновлюються при кожному build_site.py запуску. JSON snapshot:",
     },
     "en": {
         "title": "Diseases · OpenOnco",
         "h1": "Diseases in the Knowledge Base",
         "lead": (
-            "OpenOnco coverage across 65 oncology diagnoses: biomarkers, "
+            "OpenOnco coverage across {n} oncology diagnoses: biomarkers, "
             "drugs, indications/regimens/RedFlags, algorithm and questionnaire "
             "presence, % fill and % Clinical Co-Lead verification."
         ),
@@ -6274,6 +6478,8 @@ _DISEASES_PAGE_LABELS = {
         "th_fill": "Fill %", "th_ver": "Ver %",
         "yes": "✓", "no": "—",
         "metrics_title": "Metric definitions",
+        "search_placeholder": "Search disease or ICD-10 code…",
+        "search_empty": "No diseases match your search.",
         "metrics": [
             "<b>#Bio</b> — distinct biomarkers referenced by this disease's Indications + Regimens",
             "<b>#Drug</b> — distinct drugs in this disease's regimens",
@@ -6288,25 +6494,118 @@ _DISEASES_PAGE_LABELS = {
             "(<code>project_charter_dev_mode_exemptions</code>) is in effect "
             "until Clinical Co-Leads are appointed. This is intentional, not a bug."
         ),
+        "table_title": "Disease coverage",
+        "avg_label": "avg",
         "footer_data": "Data refreshes on every build_site.py run. JSON snapshot:",
     },
 }
 
 
-def _disease_row_html(r: dict, lbl: dict) -> str:
+_DISEASE_UK_NAMES = {
+    "DIS-AITL": "Ангіоімунобластна Т-клітинна лімфома",
+    "DIS-ALCL": "Системна анапластична великоклітинна лімфома",
+    "DIS-AML": "Гострий мієлоїдний лейкоз",
+    "DIS-ANAL-SCC": "Плоскоклітинний рак анального каналу",
+    "DIS-APL": "Гострий промієлоцитарний лейкоз",
+    "DIS-ATLL": "Лейкоз/лімфома дорослих Т-клітин",
+    "DIS-B-ALL": "B-лімфобластний лейкоз/лімфома",
+    "DIS-BCC": "Базальноклітинна карцинома",
+    "DIS-BREAST": "Інвазивний рак молочної залози",
+    "DIS-BURKITT": "Лімфома Беркітта",
+    "DIS-CERVICAL": "Рак шийки матки",
+    "DIS-CHL": "Класична лімфома Годжкіна",
+    "DIS-CHOLANGIOCARCINOMA": "Холангіокарцинома",
+    "DIS-CHONDROSARCOMA": "Хондросаркома",
+    "DIS-CLL": "Хронічний лімфоцитарний лейкоз / мала лімфоцитарна лімфома",
+    "DIS-CML": "Хронічний мієлоїдний лейкоз",
+    "DIS-CRC": "Колоректальна карцинома",
+    "DIS-DLBCL-NOS": "Дифузна великоклітинна B-клітинна лімфома, NOS",
+    "DIS-EATL": "Ентеропатій-асоційована Т-клітинна лімфома",
+    "DIS-ENDOMETRIAL": "Рак ендометрія",
+    "DIS-EPITHELIOID-SARCOMA": "Епітеліоїдна саркома",
+    "DIS-ESOPHAGEAL": "Рак стравоходу",
+    "DIS-ET": "Есенціальна тромбоцитемія",
+    "DIS-FL": "Фолікулярна лімфома",
+    "DIS-GASTRIC": "Аденокарцинома шлунка та гастроезофагеального переходу",
+    "DIS-GBM": "Гліобластома",
+    "DIS-GI-NET": "Нейроендокринна пухлина ШКТ",
+    "DIS-GIST": "Гастроінтестинальна стромальна пухлина",
+    "DIS-GLIOMA-LOW-GRADE": "Гліома низького ступеня злоякісності",
+    "DIS-GRANULOSA-CELL": "Гранульозоклітинна пухлина яєчника дорослого типу",
+    "DIS-HCC": "Гепатоцелюлярна карцинома",
+    "DIS-HCL": "Волосатоклітинний лейкоз",
+    "DIS-HCV-MZL": "HCV-асоційована лімфома маргінальної зони",
+    "DIS-HGBL-DH": "Високозлоякісна B-клітинна лімфома з double-hit / triple-hit",
+    "DIS-HNSCC": "Плоскоклітинний рак голови та шиї",
+    "DIS-HSTCL": "Гепатоспленічна Т-клітинна лімфома",
+    "DIS-IFS": "Інфантильна фібросаркома",
+    "DIS-IMT": "Запальна міофібробластична пухлина",
+    "DIS-JMML": "Ювенільний мієломоноцитарний лейкоз",
+    "DIS-LAM": "Лімфангіолейоміоматоз",
+    "DIS-MASTOCYTOSIS": "Просунутий системний мастоцитоз",
+    "DIS-MCL": "Мантійноклітинна лімфома",
+    "DIS-MDS-HR": "Мієлодиспластичні синдроми високого ризику",
+    "DIS-MDS-LR": "Мієлодиспластичні синдроми низького ризику",
+    "DIS-MELANOMA": "Меланома шкіри",
+    "DIS-MENINGIOMA": "Менінгіома",
+    "DIS-MESOTHELIOMA": "Злоякісна мезотеліома",
+    "DIS-MF-SEZARY": "Грибоподібний мікоз / синдром Сезарі",
+    "DIS-MM": "Множинна мієлома",
+    "DIS-MPNST": "Злоякісна пухлина оболонки периферичного нерва",
+    "DIS-MTC": "Медулярна карцинома щитоподібної залози",
+    "DIS-NK-T-NASAL": "Екстранодальна NK/T-клітинна лімфома, назальний тип",
+    "DIS-NLPBL": "Нодулярна лімфоцитарно-переважна B-клітинна лімфома",
+    "DIS-NODAL-MZL": "Нодальна лімфома маргінальної зони",
+    "DIS-NSCLC": "Недрібноклітинний рак легені",
+    "DIS-OVARIAN": "Рак яєчника",
+    "DIS-PCNSL": "Первинна лімфома ЦНС",
+    "DIS-PDAC": "Протокова аденокарцинома підшлункової залози",
+    "DIS-PMBCL": "Первинна медіастинальна великоклітинна B-клітинна лімфома",
+    "DIS-PMF": "Первинний мієлофіброз",
+    "DIS-PNET": "Нейроендокринна пухлина підшлункової залози",
+    "DIS-PROSTATE": "Аденокарцинома передміхурової залози",
+    "DIS-PTCL-NOS": "Периферична Т-клітинна лімфома, NOS",
+    "DIS-PTLD": "Посттрансплантаційне лімфопроліферативне захворювання",
+    "DIS-PV": "Справжня поліцитемія",
+    "DIS-RCC": "Нирковоклітинна карцинома",
+    "DIS-SALIVARY": "Карцинома слинних залоз",
+    "DIS-SCLC": "Дрібноклітинний рак легені",
+    "DIS-SOFT-TISSUE-SARCOMA": "Саркома м'яких тканин",
+    "DIS-SPLENIC-MZL": "Селезінкова лімфома маргінальної зони",
+    "DIS-T-ALL": "T-лімфобластний лейкоз/лімфома",
+    "DIS-T-PLL": "T-клітинний пролімфоцитарний лейкоз",
+    "DIS-TESTICULAR-GCT": "Герміногенна пухлина яєчка",
+    "DIS-TGCT": "Теносиновіальна гігантоклітинна пухлина",
+    "DIS-THYROID-ANAPLASTIC": "Анапластична карцинома щитоподібної залози",
+    "DIS-THYROID-PAPILLARY": "Папілярна карцинома щитоподібної залози",
+    "DIS-UROTHELIAL": "Уротеліальна карцинома",
+    "DIS-WM": "Макроглобулінемія Вальденстрема / лімфоплазмоцитарна лімфома",
+}
+
+
+def _disease_display_name(r: dict, target_lang: str) -> str:
+    if target_lang == "uk":
+        return _DISEASE_UK_NAMES.get(r["id"], r["name"] or "")
+    return r["name"] or ""
+
+
+def _disease_row_html(r: dict, lbl: dict, target_lang: str) -> str:
     yes, no = lbl["yes"], lbl["no"]
     algo_1l = yes if r["algo_1l"] else no
     algo_2l = yes if r["algo_2l"] else no
-    if r["has_quest"]:
-        quest = "STUB" if r["is_stub_quest"] else yes
-    else:
-        quest = no
+    has_real_questionnaire = r["has_quest"] and not r["is_stub_quest"]
+    quest = yes if has_real_questionnaire else no
     fill_class = "fill-high" if r["fill_pct"] >= 75 else ("fill-mid" if r["fill_pct"] >= 50 else "fill-low")
     ver_class = "ver-high" if r["verified_pct"] >= 60 else ("ver-mid" if r["verified_pct"] >= 1 else "ver-low")
     short_id = r["id"].replace("DIS-", "")
-    name = (r["name"] or "")[:48]
+    display_name = _disease_display_name(r, target_lang)
+    name = display_name[:64]
+    search_blob = " ".join(
+        str(part) for part in (r.get("id"), display_name, r.get("name"), r.get("family"), r.get("icd10"))
+        if part
+    ).lower()
     return (
-        '<tr>'
+        f'<tr data-search="{html.escape(search_blob)}">'
         f'<td><strong>{html.escape(short_id)}</strong> <span class="dis-name">{html.escape(name)}</span></td>'
         f'<td class="mono">{html.escape(r["icd10"] or "")}</td>'
         f'<td class="num">{r["n_bios"]}</td>'
@@ -6316,7 +6615,7 @@ def _disease_row_html(r: dict, lbl: dict) -> str:
         f'<td class="num">{r["n_rfs"]}</td>'
         f'<td class="ck">{algo_1l}</td>'
         f'<td class="ck">{algo_2l}</td>'
-        f'<td class="ck quest-cell quest-{("stub" if r["is_stub_quest"] else "real" if r["has_quest"] else "none")}">{quest}</td>'
+        f'<td class="ck quest-cell quest-{("real" if has_real_questionnaire else "none")}">{quest}</td>'
         f'<td class="num pct {fill_class}"><strong>{r["fill_pct"]}%</strong></td>'
         f'<td class="num pct {ver_class}">{r["verified_pct"]}%</td>'
         '</tr>'
@@ -6335,12 +6634,9 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 
     n = len(rows)
     avg_fill = round(sum(r["fill_pct"] for r in rows) / max(1, n), 1)
-    avg_ver = round(sum(r["verified_pct"] for r in rows) / max(1, n), 1)
-    n_signed = sum(1 for r in rows if r["verified_pct"] > 0)
-    n_quest_real = sum(1 for r in rows if r["has_quest"] and not r["is_stub_quest"])
-    n_quest_stub = sum(1 for r in rows if r["has_quest"] and r["is_stub_quest"])
     n_algo_1l = sum(1 for r in rows if r["algo_1l"])
     n_algo_2l = sum(1 for r in rows if r["algo_2l"])
+    lead_text = lbl["lead"].format(n=n)
 
     # Group by family
     by_family: dict[str, list[dict]] = {
@@ -6362,8 +6658,8 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
         flist = by_family.get(fam_key) or []
         if not flist:
             continue
-        flist_sorted = sorted(flist, key=lambda x: (-x["fill_pct"], x["name"]))
-        rows_html = "\n".join(_disease_row_html(r, lbl) for r in flist_sorted)
+        flist_sorted = sorted(flist, key=lambda x: (-x["fill_pct"], _disease_display_name(x, target_lang)))
+        rows_html = "\n".join(_disease_row_html(r, lbl, target_lang) for r in flist_sorted)
         f_fill = round(sum(r["fill_pct"] for r in flist) / max(1, len(flist)), 1)
         f_ver = round(sum(r["verified_pct"] for r in flist) / max(1, len(flist)), 1)
         family_blocks.append(f"""
@@ -6388,7 +6684,7 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 {rows_html}
     </tbody>
     <tfoot><tr>
-      <td colspan="10"><em>avg</em></td>
+      <td colspan="10"><em>{lbl.get("avg_label", "avg")}</em></td>
       <td class="num pct"><em>{f_fill}%</em></td>
       <td class="num pct"><em>{f_ver}%</em></td>
     </tr></tfoot>
@@ -6397,6 +6693,8 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 """)
 
     metrics_li = "\n".join(f"<li>{m}</li>" for m in lbl["metrics"])
+    verified_note = lbl.get("verified_note") or ""
+    verified_note_html = f'<div class="verified-note">{verified_note}</div>' if verified_note else ""
 
     top_bar = _render_top_bar(
         active="diseases", target_lang=target_lang,
@@ -6417,11 +6715,12 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 .dis-summary .card {{ background: var(--gray-50); border-left: 3px solid var(--green-600); padding: 10px 14px; border-radius: 4px; }}
 .dis-summary .card .v {{ font-family: var(--font-display); font-size: 22px; color: var(--green-800); }}
 .dis-summary .card .k {{ font-size: 12px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }}
+.dis-matrix-search {{ margin: 2px 0 18px; max-width: 680px; }}
 .dis-family {{ margin: 28px 0; }}
 .dis-family h2 {{ margin-bottom: 8px; }}
 .dis-family .fam-count {{ font-size: 14px; color: var(--gray-500); font-weight: normal; }}
 .dis-table {{ width: 100%; border-collapse: collapse; font-size: 12.5px; }}
-.dis-table th {{ background: var(--green-700); color: white; padding: 6px 8px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }}
+.dis-table th {{ background: var(--green-700); color: white; padding: 6px 8px; text-align: left; font-weight: 600; font-size: 11px; text-transform: none; letter-spacing: 0; line-height: 1.15; }}
 .dis-table td {{ padding: 6px 8px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }}
 .dis-table tr:nth-child(even) td {{ background: var(--gray-50); }}
 .dis-table tfoot td {{ background: var(--gray-100); font-style: italic; color: var(--gray-700); }}
@@ -6436,12 +6735,12 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 .dis-table .pct.ver-high {{ color: #166534; background: #ecfdf5; }}
 .dis-table .pct.ver-mid {{ color: #b45309; }}
 .dis-table .pct.ver-low {{ color: var(--gray-500); }}
-.quest-cell.quest-stub {{ color: #b45309; font-size: 10px; font-family: var(--font-mono); }}
 .quest-cell.quest-real {{ color: #166534; font-weight: 600; }}
 .quest-cell.quest-none {{ color: var(--gray-500); }}
-.dis-metrics {{ background: var(--gray-50); padding: 16px 20px; border-radius: 6px; margin-top: 28px; font-size: 13px; }}
+.dis-metrics {{ background: var(--gray-50); padding: 16px 20px; border-radius: 6px; margin: 18px 0 24px; font-size: 13px; }}
 .dis-metrics ul {{ padding-left: 20px; line-height: 1.7; }}
 .dis-metrics .verified-note {{ background: #fef3c7; border-left: 3px solid #d97706; padding: 10px 14px; margin-top: 12px; border-radius: 4px; color: #92400e; }}
+.dis-table-title {{ margin-top: 26px; }}
 .dis-footer-data {{ font-size: 12px; color: var(--gray-500); margin-top: 20px; }}
 .dis-footer-data a {{ font-family: var(--font-mono); }}
 @media (max-width: 800px) {{ .dis-summary {{ grid-template-columns: repeat(2, 1fr); }} .dis-table {{ font-size: 11px; }} }}
@@ -6452,32 +6751,68 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 <main>
   <section class="info-page">
     <h1>{_html.escape(lbl['h1'])}</h1>
-    <p class="lead">{_html.escape(lbl['lead'])}</p>
-
-    <div class="dis-summary">
-      <div class="card"><div class="k">{lbl['sum_diseases']}</div><div class="v">{n}</div></div>
-      <div class="card"><div class="k">{lbl['sum_avg_fill']}</div><div class="v">{avg_fill}%</div></div>
-      <div class="card"><div class="k">{lbl['sum_avg_ver']}</div><div class="v">{avg_ver}%</div></div>
-      <div class="card"><div class="k">{lbl['sum_with_signed']}</div><div class="v">{n_signed}/{n}</div></div>
-      <div class="card"><div class="k">{lbl['sum_quest_real']}</div><div class="v">{n_quest_real}</div></div>
-      <div class="card"><div class="k">{lbl['sum_quest_stub']}</div><div class="v">{n_quest_stub}</div></div>
-      <div class="card"><div class="k">{lbl['sum_algo_1l']}</div><div class="v">{n_algo_1l}/{n}</div></div>
-      <div class="card"><div class="k">{lbl['sum_algo_2l']}</div><div class="v">{n_algo_2l}/{n}</div></div>
-    </div>
-
-    {''.join(family_blocks)}
+    <p class="lead">{_html.escape(lead_text)}</p>
 
     <div class="dis-metrics">
       <h3>{lbl['metrics_title']}</h3>
       <ul>
         {metrics_li}
       </ul>
-      <div class="verified-note">{lbl['verified_note']}</div>
+      {verified_note_html}
     </div>
+
+    <div class="dis-summary">
+      <div class="card"><div class="k">{lbl['sum_diseases']}</div><div class="v">{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_avg_fill']}</div><div class="v">{avg_fill}%</div></div>
+      <div class="card"><div class="k">{lbl['sum_algo_1l']}</div><div class="v">{n_algo_1l}/{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_algo_2l']}</div><div class="v">{n_algo_2l}/{n}</div></div>
+    </div>
+
+    <div class="disease-search-row dis-matrix-search">
+      <input type="search" id="matrixSearch" class="disease-search"
+             placeholder="{_html.escape(lbl['search_placeholder'])}" autocomplete="off"
+             aria-label="{_html.escape(lbl['search_placeholder'])}">
+      <span class="disease-search-count" id="matrixSearchCount">{n}</span>
+    </div>
+    <p class="disease-empty" id="matrixEmpty" hidden>{_html.escape(lbl['search_empty'])}</p>
+
+    <h2 class="dis-table-title">{lbl.get('table_title', 'Disease coverage')}</h2>
+    {''.join(family_blocks)}
 
     <p class="dis-footer-data">{lbl['footer_data']} <a href="/disease_coverage.json">/disease_coverage.json</a></p>
   </section>
 </main>
+<script>
+(function() {{
+  var input = document.getElementById("matrixSearch");
+  if (!input) return;
+  var families = Array.prototype.slice.call(document.querySelectorAll(".dis-family"));
+  var count = document.getElementById("matrixSearchCount");
+  var empty = document.getElementById("matrixEmpty");
+
+  function applySearch() {{
+    var q = (input.value || "").trim().toLowerCase();
+    var visible = 0;
+    families.forEach(function(section) {{
+      var sectionVisible = 0;
+      var rows = Array.prototype.slice.call(section.querySelectorAll("tbody tr"));
+      rows.forEach(function(row) {{
+        var blob = row.dataset.search || "";
+        var match = !q || blob.indexOf(q) !== -1;
+        row.style.display = match ? "" : "none";
+        if (match) sectionVisible++;
+      }});
+      section.hidden = sectionVisible === 0;
+      visible += sectionVisible;
+    }});
+    count.textContent = visible;
+    empty.hidden = visible !== 0;
+  }}
+
+  input.addEventListener("input", applySearch);
+  applySearch();
+}})();
+</script>
 </body>
 </html>
 """
@@ -6988,13 +7323,26 @@ def _build_all_cases_parallel(output_dir: Path) -> tuple[list[dict], list[dict]]
 
     tasks = [(c, output_dir, "uk") for c in CASES] + \
             [(c, output_dir, "en") for c in CASES]
-    n_workers = min(os.cpu_count() or 4, 8)
+    env_workers = os.environ.get("OPENONCO_BUILD_WORKERS")
+    if env_workers:
+        try:
+            n_workers = max(1, int(env_workers))
+        except ValueError:
+            n_workers = min(os.cpu_count() or 4, 8)
+    else:
+        n_workers = min(os.cpu_count() or 4, 8)
 
     if n_workers <= 1 or len(tasks) <= 2:
         results = [_build_one_case_worker(t) for t in tasks]
     else:
-        with ProcessPoolExecutor(max_workers=n_workers) as ex:
-            results = list(ex.map(_build_one_case_worker, tasks, chunksize=4))
+        try:
+            with ProcessPoolExecutor(max_workers=n_workers) as ex:
+                results = list(ex.map(_build_one_case_worker, tasks, chunksize=4))
+        except (OSError, PermissionError):
+            # Some sandboxed Windows runners forbid multiprocessing pipe
+            # creation. Serial rendering is slower but keeps the static build
+            # deterministic and usable in restricted environments.
+            results = [_build_one_case_worker(t) for t in tasks]
 
     uk = [r for r in results if r["lang"] == "uk"]
     en = [r for r in results if r["lang"] == "en"]
@@ -7044,11 +7392,12 @@ def _copy_landing_assets(output_dir: Path) -> list[str]:
         if src.exists():
             shutil.copyfile(src, output_dir / name)
             copied.append(name)
-    # favicon.svg lives directly under docs/ (committed) — preserve on --clean
-    favicon_src = REPO_ROOT / "docs" / "favicon.svg"
-    if favicon_src.exists() and favicon_src.resolve() != (output_dir / "favicon.svg").resolve():
-        shutil.copyfile(favicon_src, output_dir / "favicon.svg")
-        copied.append("favicon.svg")
+    # Small brand SVGs live directly under docs/ (committed) - preserve on --clean.
+    for asset_name in ("favicon.svg", "logo.svg"):
+        asset_src = REPO_ROOT / "docs" / asset_name
+        if asset_src.exists() and asset_src.resolve() != (output_dir / asset_name).resolve():
+            shutil.copyfile(asset_src, output_dir / asset_name)
+            copied.append(asset_name)
     return copied
 
 
@@ -7130,6 +7479,8 @@ def build_site(output_dir: Path) -> dict:
 
     case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
     disease_coverage_payload = bundle_disease_coverage(output_dir)
+    kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
+    clinical_gap_payload = write_clinical_gap_outputs(output_dir)
 
     return {
         "output_dir": str(output_dir),
@@ -7141,6 +7492,8 @@ def build_site(output_dir: Path) -> dict:
         "examples_payload": examples_payload,
         "questionnaires_payload": questionnaires_payload,
         "disease_coverage_payload": disease_coverage_payload,
+        "kb_wiki_payload": kb_wiki_payload,
+        "clinical_gap_payload": clinical_gap_payload,
         "landing_assets": landing_assets,
     }
 

@@ -26,6 +26,7 @@ Wired by `generate_plan` after both `tracks` and
 
 from __future__ import annotations
 
+import re
 from typing import Iterable
 
 from .actionability_types import (
@@ -48,13 +49,33 @@ def _drugs_from_track_regimen(regimen_data: dict | None) -> set[str]:
         # Drug name as stored on the component (preferred name)
         name = comp.get("drug_name") or comp.get("name")
         if name:
-            out.add(name.lower())
+            out.update(_drug_match_keys(name))
         # Drug ID — strip canonical prefix like "DRUG-VEMURAFENIB" → "vemurafenib"
         did = comp.get("drug_id")
         if did and isinstance(did, str):
-            stripped = did.split("-", 1)[-1].lower() if did.startswith("DRUG-") else did.lower()
-            out.add(stripped)
+            stripped = did.split("-", 1)[-1] if did.startswith("DRUG-") else did
+            out.update(_drug_match_keys(stripped))
     return out
+
+
+def _drug_match_keys(value: str | None) -> set[str]:
+    if not value:
+        return set()
+    raw = str(value).strip().lower()
+    compact = re.sub(r"[^a-z0-9]+", "", raw)
+    keys = {raw}
+    if compact:
+        keys.add(compact)
+    return keys
+
+
+def _is_resistance_option(opt: ActionabilityTherapeuticOption) -> bool:
+    if opt.level in RESISTANCE_LEVELS:
+        return True
+    description = (opt.description or "").lower()
+    if "does not support" in description or "does_not_support" in description:
+        return True
+    return "resistance" in description
 
 
 def detect_resistance_conflicts(
@@ -81,18 +102,19 @@ def detect_resistance_conflicts(
     resistance_index: list[tuple[str, str, str, str, str | None]] = []
     for result in actionability_results:
         for opt in result.therapeutic_options:
-            if opt.level not in RESISTANCE_LEVELS:
+            if not _is_resistance_option(opt):
                 continue
             for drug in opt.drugs:
-                resistance_index.append(
-                    (
-                        drug.lower(),
-                        result.query.gene,
-                        result.query.variant,
-                        opt.level,
-                        opt.description,
+                for drug_key in _drug_match_keys(drug):
+                    resistance_index.append(
+                        (
+                            drug_key,
+                            result.query.gene,
+                            result.query.variant,
+                            opt.level,
+                            opt.description,
+                        )
                     )
-                )
 
     if not resistance_index:
         return conflicts

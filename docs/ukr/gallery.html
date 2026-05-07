@@ -11,12 +11,13 @@
 <body>
 <header class="top-bar">
   <div class="brand-line">
-    <a href="/ukr/" class="brand-mini">OpenOnco</a>
-    <span class="brand-version" title="Released 2026-04-30">v0.1.2 · 2026-04-30</span>
+    <a href="/ukr/" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
+    <span class="brand-version" title="Released 2026-05-06">v0.1.4 &middot; 2026-05-06</span>
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/diseases.html">Хвороби</a><a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/specs.html">Специфікації</a><a href="/ukr/contribute.html">Допомогти</a>
+    <a href="/ukr/diseases.html">Хвороби</a><a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/specs.html">Специфікації</a>
+    <a href="/ukr/kb.html">Пошук у KB</a>
     <a href="/ukr/gallery.html" class="active">Приклади</a>
     <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
   </nav>
@@ -31,79 +32,84 @@
 
 <main class="gallery">
   <h1>Готові приклади</h1>
-  <p class="lead">615 синтетичних профілів пацієнтів, згрупованих за хворобою. Оберіть хворобу зі списку — кожен клік відкриває повний Plan або Diagnostic Brief, як його побачить лікар у tumor-board. Якщо щось виглядає клінічно неправильно — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.</p>
+  <p class="lead">608 синтетичних профілів пацієнтів, згрупованих за хворобою. Оберіть хворобу зі списку — кожен клік відкриває повний Plan або Diagnostic Brief, як його побачить лікар у tumor-board. Якщо щось виглядає клінічно неправильно — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.</p>
 
   <!-- Stage 1: disease grid (default visible) -->
   <section id="diseaseStage" class="disease-stage">
     <div class="disease-search-row">
       <input type="search" id="diseaseSearch" class="disease-search"
-             placeholder="Шукати хворобу…" autocomplete="off"
-             aria-label="Шукати хворобу…">
-      <span class="disease-search-count" id="diseaseSearchCount">66</span>
+             placeholder="Шукати хворобу або ICD-O-3…" autocomplete="off"
+             aria-label="Шукати хворобу або ICD-O-3…">
+      <span class="disease-search-count" id="diseaseSearchCount">71</span>
     </div>
     <div class="disease-tile-grid" id="diseaseTileGrid">
-    <button type="button" class="disease-tile" data-disease-id="DIS-B-ALL" data-search="b-лімфобластна лейкемія/лімфома b-lymphoblastic leukemia/lymphoma"><span class="dt-label">B-лімфобластна лейкемія/лімфома</span><span class="dt-count">10 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-T-PLL" data-search="t-клітинна пролімфоцитарна лейкемія t-cell prolymphocytic leukemia"><span class="dt-label">T-клітинна пролімфоцитарна лейкемія</span><span class="dt-count">9 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-T-ALL" data-search="t-лімфобластна лейкемія/лімфома t-lymphoblastic leukemia/lymphoma"><span class="dt-label">T-лімфобластна лейкемія/лімфома</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-B-ALL" data-search="b-лімфобластна лейкемія/лімфома b-lymphoblastic leukemia/lymphoma 9811/3 9836/3"><span class="dt-label">B-лімфобластна лейкемія/лімфома</span><span class="dt-icd">ICD-O-3 9811/3, 9836/3</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-T-PLL" data-search="t-клітинна пролімфоцитарна лейкемія t-cell prolymphocytic leukemia 9834/3"><span class="dt-label">T-клітинна пролімфоцитарна лейкемія</span><span class="dt-icd">ICD-O-3 9834/3</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-T-ALL" data-search="t-лімфобластна лейкемія/лімфома t-lymphoblastic leukemia/lymphoma 9837/3"><span class="dt-label">T-лімфобластна лейкемія/лімфома</span><span class="dt-icd">ICD-O-3 9837/3</span><span class="dt-count">9 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-PROSTATE" data-search="аденокарцинома передміхурової залози prostate adenocarcinoma"><span class="dt-label">Аденокарцинома передміхурової залози</span><span class="dt-count">7 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-GASTRIC" data-search="аденокарцинома шлунка / gej gastric and gastroesophageal junction adenocarcinoma"><span class="dt-label">Аденокарцинома шлунка / GEJ</span><span class="dt-count">9 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-ALCL" data-search="анапластична великоклітинна лімфома (системна) anaplastic large cell lymphoma, systemic"><span class="dt-label">Анапластична великоклітинна лімфома (системна)</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-ALCL" data-search="анапластична великоклітинна лімфома (системна) anaplastic large cell lymphoma, systemic 9714/3"><span class="dt-label">Анапластична великоклітинна лімфома (системна)</span><span class="dt-icd">ICD-O-3 9714/3</span><span class="dt-count">10 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-THYROID-ANAPLASTIC" data-search="анапластична карцинома щитовидної залози anaplastic thyroid carcinoma"><span class="dt-label">Анапластична карцинома щитовидної залози</span><span class="dt-count">6 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-AITL" data-search="ангіоімунобластна t-клітинна лімфома / нодальна tfh-лімфома angioimmunoblastic t-cell lymphoma"><span class="dt-label">Ангіоімунобластна T-клітинна лімфома / нодальна TFH-лімфома</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-AITL" data-search="ангіоімунобластна t-клітинна лімфома / нодальна tfh-лімфома angioimmunoblastic t-cell lymphoma 9705/3"><span class="dt-label">Ангіоімунобластна T-клітинна лімфома / нодальна TFH-лімфома</span><span class="dt-icd">ICD-O-3 9705/3</span><span class="dt-count">10 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-HGBL-DH" data-search="високозлоякісна b-клітинна лімфома з myc + bcl2/bcl6 (double-hit / triple-hit) high-grade b-cell lymphoma, double-hit / triple-hit"><span class="dt-label">Високозлоякісна B-клітинна лімфома з MYC + BCL2/BCL6 (double-hit / triple-hit)</span><span class="dt-count">8 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-HCL" data-search="волосатоклітинний лейкоз hairy cell leukemia"><span class="dt-label">Волосатоклітинний лейкоз</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-HCL" data-search="волосатоклітинний лейкоз hairy cell leukemia 9940/3"><span class="dt-label">Волосатоклітинний лейкоз</span><span class="dt-icd">ICD-O-3 9940/3</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-GI-NET" data-search="гастроентеропанкреатична нейроендокринна пухлина — шкт походження (карциноїд), добре-диференційована g1/g2 gi neuroendocrine tumor (carcinoid)"><span class="dt-label">Гастроентеропанкреатична нейроендокринна пухлина — ШКТ походження (карциноїд), добре-диференційована G1/G2</span><span class="dt-count">1 приклад</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-GIST" data-search="гастроінтестинальна стромальна пухлина (gist) gastrointestinal stromal tumor"><span class="dt-label">Гастроінтестинальна стромальна пухлина (GIST)</span><span class="dt-count">6 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-HSTCL" data-search="гепатоспленічна t-клітинна лімфома hepatosplenic t-cell lymphoma"><span class="dt-label">Гепатоспленічна T-клітинна лімфома</span><span class="dt-count">8 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-HSTCL" data-search="гепатоспленічна t-клітинна лімфома hepatosplenic t-cell lymphoma 9716/3"><span class="dt-label">Гепатоспленічна T-клітинна лімфома</span><span class="dt-icd">ICD-O-3 9716/3</span><span class="dt-count">8 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-HCC" data-search="гепатоцелюлярна карцинома hepatocellular carcinoma"><span class="dt-label">Гепатоцелюлярна карцинома</span><span class="dt-count">8 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-TESTICULAR-GCT" data-search="герміногенна пухлина яєчка testicular germ cell tumor"><span class="dt-label">Герміногенна пухлина яєчка</span><span class="dt-count">1 приклад</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-GBM" data-search="гліобластома (idh-wt, who grade 4) glioblastoma"><span class="dt-label">Гліобластома (IDH-WT, WHO grade 4)</span><span class="dt-count">7 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-GLIOMA-LOW-GRADE" data-search="гліома низького ступеня (who grade 2 — idh-мутантна) low-grade glioma"><span class="dt-label">Гліома низького ступеня (WHO grade 2 — IDH-мутантна)</span><span class="dt-count">1 приклад</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-AML" data-search="гострий мієлоїдний лейкоз (не-apl) acute myeloid leukemia"><span class="dt-label">Гострий мієлоїдний лейкоз (не-APL)</span><span class="dt-count">14 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-APL" data-search="гострий промієлоцитарний лейкоз (pml-rara) acute promyelocytic leukemia"><span class="dt-label">Гострий промієлоцитарний лейкоз (PML-RARA)</span><span class="dt-count">9 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-MF-SEZARY" data-search="грибоподібний мікоз / синдром сезарі mycosis fungoides / sézary syndrome"><span class="dt-label">Грибоподібний мікоз / Синдром Сезарі</span><span class="dt-count">11 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-DLBCL-NOS" data-search="дифузна b-великоклітинна лімфома, неуточнена (dlbcl nos) diffuse large b-cell lymphoma, not otherwise specified"><span class="dt-label">Дифузна B-великоклітинна лімфома, неуточнена (DLBCL NOS)</span><span class="dt-count">12 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-ATLL" data-search="дорослий t-клітинний лейкоз/лімфома adult t-cell leukemia/lymphoma"><span class="dt-label">Дорослий T-клітинний лейкоз/лімфома</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-AML" data-search="гострий мієлоїдний лейкоз (не-apl) acute myeloid leukemia 9861/3 9871/3 9920/3"><span class="dt-label">Гострий мієлоїдний лейкоз (не-APL)</span><span class="dt-icd">ICD-O-3 9861/3, 9871/3, 9920/3</span><span class="dt-count">14 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-APL" data-search="гострий промієлоцитарний лейкоз (pml-rara) acute promyelocytic leukemia 9866/3"><span class="dt-label">Гострий промієлоцитарний лейкоз (PML-RARA)</span><span class="dt-icd">ICD-O-3 9866/3</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MF-SEZARY" data-search="грибоподібний мікоз / синдром сезарі mycosis fungoides / sézary syndrome 9700/3"><span class="dt-label">Грибоподібний мікоз / Синдром Сезарі</span><span class="dt-icd">ICD-O-3 9700/3</span><span class="dt-count">11 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-DLBCL-NOS" data-search="дифузна b-великоклітинна лімфома, неуточнена (dlbcl nos) diffuse large b-cell lymphoma, not otherwise specified 9680/3"><span class="dt-label">Дифузна B-великоклітинна лімфома, неуточнена (DLBCL NOS)</span><span class="dt-icd">ICD-O-3 9680/3</span><span class="dt-count">11 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-ATLL" data-search="дорослий t-клітинний лейкоз/лімфома adult t-cell leukemia/lymphoma 9827/3"><span class="dt-label">Дорослий T-клітинний лейкоз/лімфома</span><span class="dt-icd">ICD-O-3 9827/3</span><span class="dt-count">9 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-SCLC" data-search="дрібноклітинний рак легені small cell lung cancer"><span class="dt-label">Дрібноклітинний рак легені</span><span class="dt-count">8 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-NK-T-NASAL" data-search="екстранодальна nk/t-клітинна лімфома, назального типу extranodal nk/t-cell lymphoma, nasal type"><span class="dt-label">Екстранодальна NK/T-клітинна лімфома, назального типу</span><span class="dt-count">9 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-EATL" data-search="ентеропатія-асоційована t-клітинна лімфома enteropathy-associated t-cell lymphoma"><span class="dt-label">Ентеропатія-асоційована T-клітинна лімфома</span><span class="dt-count">8 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-ET" data-search="есенціальна тромбоцитемія essential thrombocythemia"><span class="dt-label">Есенціальна тромбоцитемія</span><span class="dt-count">8 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-NK-T-NASAL" data-search="екстранодальна nk/t-клітинна лімфома, назального типу extranodal nk/t-cell lymphoma, nasal type 9719/3"><span class="dt-label">Екстранодальна NK/T-клітинна лімфома, назального типу</span><span class="dt-icd">ICD-O-3 9719/3</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-EATL" data-search="ентеропатія-асоційована t-клітинна лімфома enteropathy-associated t-cell lymphoma 9717/3"><span class="dt-label">Ентеропатія-асоційована T-клітинна лімфома</span><span class="dt-icd">ICD-O-3 9717/3</span><span class="dt-count">7 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-ET" data-search="есенціальна тромбоцитемія essential thrombocythemia 9962/3"><span class="dt-label">Есенціальна тромбоцитемія</span><span class="dt-icd">ICD-O-3 9962/3</span><span class="dt-count">8 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-IMT" data-search="запальна міофібробластична пухлина inflammatory myofibroblastic tumor"><span class="dt-label">Запальна міофібробластична пухлина</span><span class="dt-count">6 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MESOTHELIOMA" data-search="злоякісна мезотеліома плеври malignant mesothelioma"><span class="dt-label">Злоякісна мезотеліома плеври</span><span class="dt-count">1 приклад</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-MPNST" data-search="злоякісна пухлина оболонки периферичного нерва malignant peripheral nerve sheath tumor"><span class="dt-label">Злоякісна пухлина оболонки периферичного нерва</span><span class="dt-count">6 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-ENDOMETRIAL" data-search="карцинома ендометрія endometrial carcinoma"><span class="dt-label">Карцинома ендометрія</span><span class="dt-count">9 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-SALIVARY" data-search="карцинома слинних залоз salivary gland carcinoma"><span class="dt-label">Карцинома слинних залоз</span><span class="dt-count">6 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-ESOPHAGEAL" data-search="карцинома стравоходу (плоскоклітинна + аденокарцинома) esophageal carcinoma"><span class="dt-label">Карцинома стравоходу (плоскоклітинна + аденокарцинома)</span><span class="dt-count">8 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-CERVICAL" data-search="карцинома шийки матки cervical carcinoma"><span class="dt-label">Карцинома шийки матки</span><span class="dt-count">7 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-OVARIAN" data-search="карцинома яєчників (переважно high-grade серозна) ovarian carcinoma"><span class="dt-label">Карцинома яєчників (переважно high-grade серозна)</span><span class="dt-count">9 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-CHL" data-search="класична лімфома ходжкіна classical hodgkin lymphoma"><span class="dt-label">Класична лімфома Ходжкіна</span><span class="dt-count">11 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CHL" data-search="класична лімфома ходжкіна classical hodgkin lymphoma 9650/3"><span class="dt-label">Класична лімфома Ходжкіна</span><span class="dt-icd">ICD-O-3 9650/3</span><span class="dt-count">11 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-CRC" data-search="колоректальний рак colorectal carcinoma"><span class="dt-label">Колоректальний рак</span><span class="dt-count">13 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-BURKITT" data-search="лімфома беркітта burkitt lymphoma"><span class="dt-label">Лімфома Беркітта</span><span class="dt-count">9 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-MCL" data-search="лімфома з клітин зони мантії mantle cell lymphoma"><span class="dt-label">Лімфома з клітин зони мантії</span><span class="dt-count">10 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-HCV-MZL" data-search="лімфома маргінальної зони, асоційована з hcv hcv-associated marginal zone lymphoma"><span class="dt-label">Лімфома маргінальної зони, асоційована з HCV</span><span class="dt-count">8 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-WM" data-search="макроглобулінемія вальденстрема / лімфоплазмоцитарна лімфома waldenström macroglobulinemia / lymphoplasmacytic lymphoma"><span class="dt-label">Макроглобулінемія Вальденстрема / Лімфоплазмоцитарна лімфома</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-BURKITT" data-search="лімфома беркітта burkitt lymphoma 9687/3"><span class="dt-label">Лімфома Беркітта</span><span class="dt-icd">ICD-O-3 9687/3</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MCL" data-search="лімфома з клітин зони мантії mantle cell lymphoma 9673/3"><span class="dt-label">Лімфома з клітин зони мантії</span><span class="dt-icd">ICD-O-3 9673/3</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-HCV-MZL" data-search="лімфома маргінальної зони, асоційована з hcv hcv-associated marginal zone lymphoma 9699/3"><span class="dt-label">Лімфома маргінальної зони, асоційована з HCV</span><span class="dt-icd">ICD-O-3 9699/3</span><span class="dt-count">8 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-WM" data-search="макроглобулінемія вальденстрема / лімфоплазмоцитарна лімфома waldenström macroglobulinemia / lymphoplasmacytic lymphoma 9671/3"><span class="dt-label">Макроглобулінемія Вальденстрема / Лімфоплазмоцитарна лімфома</span><span class="dt-icd">ICD-O-3 9671/3</span><span class="dt-count">9 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-MTC" data-search="медулярна карцинома щитовидної залози medullary thyroid carcinoma"><span class="dt-label">Медулярна карцинома щитовидної залози</span><span class="dt-count">6 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-MM" data-search="множинна мієлома multiple myeloma"><span class="dt-label">Множинна мієлома</span><span class="dt-count">11 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-MDS-HR" data-search="мієлодиспластичні синдроми, високий ризик (ipss-r високий / дуже високий; включає mds-eb) myelodysplastic syndromes — higher risk"><span class="dt-label">Мієлодиспластичні синдроми, високий ризик (IPSS-R високий / дуже високий; включає MDS-EB)</span><span class="dt-count">10 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-MDS-LR" data-search="мієлодиспластичні синдроми, низький ризик (ipss-r дуже низький / низький / проміжний) myelodysplastic syndromes — lower risk"><span class="dt-label">Мієлодиспластичні синдроми, низький ризик (IPSS-R дуже низький / низький / проміжний)</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MM" data-search="множинна мієлома multiple myeloma 9732/3"><span class="dt-label">Множинна мієлома</span><span class="dt-icd">ICD-O-3 9732/3</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MDS-HR" data-search="мієлодиспластичні синдроми, високий ризик (ipss-r високий / дуже високий; включає mds-eb) myelodysplastic syndromes — higher risk 9989/3"><span class="dt-label">Мієлодиспластичні синдроми, високий ризик (IPSS-R високий / дуже високий; включає MDS-EB)</span><span class="dt-icd">ICD-O-3 9989/3</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MDS-LR" data-search="мієлодиспластичні синдроми, низький ризик (ipss-r дуже низький / низький / проміжний) myelodysplastic syndromes — lower risk 9982/3 9989/3"><span class="dt-label">Мієлодиспластичні синдроми, низький ризик (IPSS-R дуже низький / низький / проміжний)</span><span class="dt-icd">ICD-O-3 9982/3, 9989/3</span><span class="dt-count">10 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-NSCLC" data-search="недрібноклітинний рак легені non-small cell lung cancer"><span class="dt-label">Недрібноклітинний рак легені</span><span class="dt-count">19 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-RCC" data-search="нирково-клітинна карцинома renal cell carcinoma"><span class="dt-label">Нирково-клітинна карцинома</span><span class="dt-count">10 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-NODAL-MZL" data-search="нодальна лімфома маргінальної зони nodal marginal zone lymphoma"><span class="dt-label">Нодальна лімфома маргінальної зони</span><span class="dt-count">12 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-NLPBL" data-search="нодулярна лімфоцит-домінантна b-клітинна лімфома (раніше nlphl) nodular lymphocyte-predominant b-cell lymphoma"><span class="dt-label">Нодулярна лімфоцит-домінантна B-клітинна лімфома (раніше NLPHL)</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PNET" data-search="нейроендокринна пухлина підшлункової залози (пнеп), добре-диференційована g1/g2 pancreatic neuroendocrine tumor"><span class="dt-label">Нейроендокринна пухлина підшлункової залози (пНЕП), добре-диференційована G1/G2</span><span class="dt-count">1 приклад</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-RCC" data-search="нирково-клітинна карцинома renal cell carcinoma"><span class="dt-label">Нирково-клітинна карцинома</span><span class="dt-count">2 приклади</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-NODAL-MZL" data-search="нодальна лімфома маргінальної зони nodal marginal zone lymphoma 9699/3"><span class="dt-label">Нодальна лімфома маргінальної зони</span><span class="dt-icd">ICD-O-3 9699/3</span><span class="dt-count">12 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-NLPBL" data-search="нодулярна лімфоцит-домінантна b-клітинна лімфома (раніше nlphl) nodular lymphocyte-predominant b-cell lymphoma 9659/3"><span class="dt-label">Нодулярна лімфоцит-домінантна B-клітинна лімфома (раніше NLPHL)</span><span class="dt-icd">ICD-O-3 9659/3</span><span class="dt-count">9 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-THYROID-PAPILLARY" data-search="папілярна карцинома щитовидної залози papillary thyroid carcinoma"><span class="dt-label">Папілярна карцинома щитовидної залози</span><span class="dt-count">6 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-PCNSL" data-search="первинна дифузна великоклітинна b-клітинна лімфома центральної нервової системи primary cns lymphoma"><span class="dt-label">Первинна дифузна великоклітинна B-клітинна лімфома центральної нервової системи</span><span class="dt-count">13 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-PMBCL" data-search="первинна медіастинальна (тимічна) b-великоклітинна лімфома primary mediastinal large b-cell lymphoma"><span class="dt-label">Первинна медіастинальна (тимічна) B-великоклітинна лімфома</span><span class="dt-count">10 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-PMF" data-search="первинний мієлофіброз primary myelofibrosis"><span class="dt-label">Первинний мієлофіброз</span><span class="dt-count">10 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-PTCL-NOS" data-search="периферична t-клітинна лімфома, неуточнена peripheral t-cell lymphoma, nos"><span class="dt-label">Периферична T-клітинна лімфома, неуточнена</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PCNSL" data-search="первинна дифузна великоклітинна b-клітинна лімфома центральної нервової системи primary cns lymphoma 9680/3"><span class="dt-label">Первинна дифузна великоклітинна B-клітинна лімфома центральної нервової системи</span><span class="dt-icd">ICD-O-3 9680/3</span><span class="dt-count">13 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PMBCL" data-search="первинна медіастинальна (тимічна) b-великоклітинна лімфома primary mediastinal large b-cell lymphoma 9679/3"><span class="dt-label">Первинна медіастинальна (тимічна) B-великоклітинна лімфома</span><span class="dt-icd">ICD-O-3 9679/3</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PMF" data-search="первинний мієлофіброз primary myelofibrosis 9961/3"><span class="dt-label">Первинний мієлофіброз</span><span class="dt-icd">ICD-O-3 9961/3</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PTCL-NOS" data-search="периферична t-клітинна лімфома, неуточнена peripheral t-cell lymphoma, nos 9702/3"><span class="dt-label">Периферична T-клітинна лімфома, неуточнена</span><span class="dt-icd">ICD-O-3 9702/3</span><span class="dt-count">10 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-HNSCC" data-search="плоскоклітинна карцинома голови та шиї head and neck squamous cell carcinoma"><span class="dt-label">Плоскоклітинна карцинома голови та шиї</span><span class="dt-count">8 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-PTLD" data-search="посттрансплантаційні лімфопроліферативні захворювання post-transplant lymphoproliferative disorder"><span class="dt-label">Посттрансплантаційні лімфопроліферативні захворювання</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-ANAL-SCC" data-search="плоскоклітинний рак анального каналу anal squamous cell carcinoma (anal scc)"><span class="dt-label">Плоскоклітинний рак анального каналу</span><span class="dt-count">1 приклад</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PTLD" data-search="посттрансплантаційні лімфопроліферативні захворювання post-transplant lymphoproliferative disorder 9971/3"><span class="dt-label">Посттрансплантаційні лімфопроліферативні захворювання</span><span class="dt-icd">ICD-O-3 9971/3</span><span class="dt-count">9 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-MASTOCYTOSIS" data-search="поширений системний мастоцитоз advanced systemic mastocytosis"><span class="dt-label">Поширений системний мастоцитоз</span><span class="dt-count">6 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-PDAC" data-search="протокова аденокарцинома підшлункової залози pancreatic ductal adenocarcinoma"><span class="dt-label">Протокова аденокарцинома підшлункової залози</span><span class="dt-count">7 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-SPLENIC-MZL" data-search="селезінкова лімфома маргінальної зони splenic marginal zone lymphoma"><span class="dt-label">Селезінкова лімфома маргінальної зони</span><span class="dt-count">9 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-PV" data-search="справжня поліцитемія polycythemia vera"><span class="dt-label">Справжня поліцитемія</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-SOFT-TISSUE-SARCOMA" data-search="саркома м&#x27;яких тканин soft tissue sarcoma"><span class="dt-label">Саркома м&#x27;яких тканин</span><span class="dt-count">1 приклад</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-SPLENIC-MZL" data-search="селезінкова лімфома маргінальної зони splenic marginal zone lymphoma 9689/3"><span class="dt-label">Селезінкова лімфома маргінальної зони</span><span class="dt-icd">ICD-O-3 9689/3</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PV" data-search="справжня поліцитемія polycythemia vera 9950/3"><span class="dt-label">Справжня поліцитемія</span><span class="dt-icd">ICD-O-3 9950/3</span><span class="dt-count">10 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-UROTHELIAL" data-search="уротеліальна карцинома urothelial carcinoma"><span class="dt-label">Уротеліальна карцинома</span><span class="dt-count">7 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-FL" data-search="фолікулярна лімфома follicular lymphoma"><span class="dt-label">Фолікулярна лімфома</span><span class="dt-count">9 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-FL" data-search="фолікулярна лімфома follicular lymphoma 9690/3"><span class="dt-label">Фолікулярна лімфома</span><span class="dt-icd">ICD-O-3 9690/3</span><span class="dt-count">9 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-CHOLANGIOCARCINOMA" data-search="холангіокарцинома (рак жовчних проток) cholangiocarcinoma"><span class="dt-label">Холангіокарцинома (рак жовчних проток)</span><span class="dt-count">7 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-CHONDROSARCOMA" data-search="хондросаркома chondrosarcoma"><span class="dt-label">Хондросаркома</span><span class="dt-count">6 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-CLL" data-search="хронічна лімфоцитарна лейкемія / дрібноклітинна лімфоцитарна лімфома chronic lymphocytic leukemia / small lymphocytic lymphoma"><span class="dt-label">Хронічна лімфоцитарна лейкемія / Дрібноклітинна лімфоцитарна лімфома</span><span class="dt-count">11 прикладів</span></button>
-    <button type="button" class="disease-tile" data-disease-id="DIS-CML" data-search="хронічна мієлоїдна лейкемія (bcr-abl1) chronic myeloid leukemia"><span class="dt-label">Хронічна мієлоїдна лейкемія (BCR-ABL1)</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CLL" data-search="хронічна лімфоцитарна лейкемія / дрібноклітинна лімфоцитарна лімфома chronic lymphocytic leukemia / small lymphocytic lymphoma 9823/3"><span class="dt-label">Хронічна лімфоцитарна лейкемія / Дрібноклітинна лімфоцитарна лімфома</span><span class="dt-icd">ICD-O-3 9823/3</span><span class="dt-count">10 прикладів</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CML" data-search="хронічна мієлоїдна лейкемія (bcr-abl1) chronic myeloid leukemia 9863/3"><span class="dt-label">Хронічна мієлоїдна лейкемія (BCR-ABL1)</span><span class="dt-icd">ICD-O-3 9863/3</span><span class="dt-count">10 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-MELANOMA" data-search="шкірна меланома cutaneous melanoma"><span class="dt-label">Шкірна меланома</span><span class="dt-count">12 прикладів</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-BREAST" data-search="інвазивний рак молочної залози invasive breast cancer"><span class="dt-label">Інвазивний рак молочної залози</span><span class="dt-count">22 приклади</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-IFS" data-search="інфантильна фібросаркома infantile fibrosarcoma"><span class="dt-label">Інфантильна фібросаркома</span><span class="dt-count">6 прикладів</span></button>
@@ -123,7 +129,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/b-all-ph-pos-adult.html"
-   data-default-order="91"
+   data-default-order="87"
    data-name="B-ALL · Ph+ Adult (TKI + Chemo)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -134,7 +140,7 @@
   <div class="case-foot">patient_b_all_ph_pos_adult.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/b-all-mrd-positive.html"
-   data-default-order="92"
+   data-default-order="88"
    data-name="B-ALL · MRD-positive (Blinatumomab)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -145,7 +151,7 @@
   <div class="case-foot">patient_b_all_mrd_positive.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/b-all-t315i-post-tki.html"
-   data-default-order="93"
+   data-default-order="89"
    data-name="B-ALL · T315I-mutated post-TKI (Ponatinib + alloHCT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -156,7 +162,7 @@
   <div class="case-foot">patient_b_all_t315i_post_tki.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-b_all.html"
-   data-default-order="104"
+   data-default-order="101"
    data-name="DIS-B-ALL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -241,7 +247,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/t-pll-typical.html"
-   data-default-order="57"
+   data-default-order="54"
    data-name="T-PLL · Typical (Alemtuzumab IV)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -252,7 +258,7 @@
   <div class="case-foot">patient_t_pll_typical.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/t-pll-alem-refractory.html"
-   data-default-order="58"
+   data-default-order="55"
    data-name="T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -263,7 +269,7 @@
   <div class="case-foot">patient_t_pll_alemtuzumab_refractory.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-t_pll.html"
-   data-default-order="159"
+   data-default-order="158"
    data-name="DIS-T-PLL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -274,7 +280,7 @@
   <div class="case-foot">auto_t_pll.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_pll-frail.html"
-   data-default-order="500"
+   data-default-order="495"
    data-name="DIS-T-PLL · Літній / крихкий пацієнт (age 78, ECOG 3)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -285,7 +291,7 @@
   <div class="case-foot">variant_t_pll_frail.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_pll-organ-dysf.html"
-   data-default-order="501"
+   data-default-order="496"
    data-name="DIS-T-PLL · Дисфункція органів (CrCl 25, bili 3.5×ULN)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -296,7 +302,7 @@
   <div class="case-foot">variant_t_pll_organ_dysf.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_pll-infection-hbv.html"
-   data-default-order="502"
+   data-default-order="497"
    data-name="DIS-T-PLL · HBV-позитивний (HBsAg+, anti-HBc+)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -307,7 +313,7 @@
   <div class="case-foot">variant_t_pll_infection_hbv.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_pll-relapsed-2l.html"
-   data-default-order="503"
+   data-default-order="498"
    data-name="DIS-T-PLL · Релапс / 2-а лінія">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -318,7 +324,7 @@
   <div class="case-foot">variant_t_pll_relapsed_2l.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_pll-biomarker-act.html"
-   data-default-order="504"
+   data-default-order="499"
    data-name="DIS-T-PLL · Actionable біомаркер present">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -329,7 +335,7 @@
   <div class="case-foot">variant_t_pll_biomarker_act.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_pll-high-risk.html"
-   data-default-order="505"
+   data-default-order="500"
    data-name="DIS-T-PLL · High-risk biology / bulky disease">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -348,7 +354,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/t-all-relapsed.html"
-   data-default-order="94"
+   data-default-order="90"
    data-name="T-ALL · Relapsed post-hyper-CVAD (Nelarabine)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -359,7 +365,7 @@
   <div class="case-foot">patient_t_all_relapsed_post_hyper_cvad.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/t-lbl-mediastinal.html"
-   data-default-order="95"
+   data-default-order="91"
    data-name="T-LBL · Mediastinal Mass (Pediatric-inspired ALL)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -370,7 +376,7 @@
   <div class="case-foot">patient_t_lbl_mediastinal.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-t_all.html"
-   data-default-order="158"
+   data-default-order="157"
    data-name="DIS-T-ALL — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -381,7 +387,7 @@
   <div class="case-foot">auto_t_all.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_all-frail.html"
-   data-default-order="494"
+   data-default-order="489"
    data-name="DIS-T-ALL · Літній / крихкий пацієнт (age 78, ECOG 3)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -392,7 +398,7 @@
   <div class="case-foot">variant_t_all_frail.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_all-organ-dysf.html"
-   data-default-order="495"
+   data-default-order="490"
    data-name="DIS-T-ALL · Дисфункція органів (CrCl 25, bili 3.5×ULN)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -403,7 +409,7 @@
   <div class="case-foot">variant_t_all_organ_dysf.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_all-infection-hbv.html"
-   data-default-order="496"
+   data-default-order="491"
    data-name="DIS-T-ALL · HBV-позитивний (HBsAg+, anti-HBc+)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -414,7 +420,7 @@
   <div class="case-foot">variant_t_all_infection_hbv.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_all-relapsed-2l.html"
-   data-default-order="497"
+   data-default-order="492"
    data-name="DIS-T-ALL · Релапс / 2-а лінія">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -425,7 +431,7 @@
   <div class="case-foot">variant_t_all_relapsed_2l.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_all-biomarker-act.html"
-   data-default-order="498"
+   data-default-order="493"
    data-name="DIS-T-ALL · Actionable біомаркер present">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -436,7 +442,7 @@
   <div class="case-foot">variant_t_all_biomarker_act.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-t_all-high-risk.html"
-   data-default-order="499"
+   data-default-order="494"
    data-name="DIS-T-ALL · High-risk biology / bulky disease">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -455,7 +461,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-prostate.html"
-   data-default-order="150"
+   data-default-order="149"
    data-name="DIS-PROSTATE — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -521,7 +527,7 @@
   <div class="case-foot">variant_prostate_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/prostate-mcrpc-brca-olaparib.html"
-   data-default-order="565"
+   data-default-order="560"
    data-name="Prostate · mCRPC · BRCA-mut · Olaparib (PROfound)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -540,7 +546,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-gastric.html"
-   data-default-order="120"
+   data-default-order="117"
    data-name="DIS-GASTRIC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -617,7 +623,7 @@
   <div class="case-foot">variant_gastric_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/gastric-her2-pos-toga.html"
-   data-default-order="574"
+   data-default-order="567"
    data-name="Gastric · met HER2+ 1L · Trastuzumab+chemo (TOGA)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -628,7 +634,7 @@
   <div class="case-foot">patient_gastric_her2_pos_toga.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/gastric-pdl1-cps-chemo-nivo.html"
-   data-default-order="575"
+   data-default-order="568"
    data-name="Gastric · met CPS≥5 1L · Chemo+nivolumab (CheckMate-649)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -658,7 +664,7 @@
   <div class="case-foot">patient_alcl_alk_negative.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/alcl-alk-positive-typical.html"
-   data-default-order="48"
+   data-default-order="46"
    data-name="ALCL · ALK-positive Typical (CHP-Bv)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -669,7 +675,7 @@
   <div class="case-foot">patient_alcl_alk_positive_typical.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/alcl-relapsed-bv-naive.html"
-   data-default-order="49"
+   data-default-order="47"
    data-name="ALCL · Relapsed BV-naive (Brentuximab → autoSCT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -680,7 +686,7 @@
   <div class="case-foot">patient_alcl_relapsed_bv_naive.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-alcl.html"
-   data-default-order="100"
+   data-default-order="96"
    data-name="DIS-ALCL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -766,17 +772,17 @@
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-thyroid_anaplastic.html"
    data-default-order="160"
-   data-name="DIS-THYROID-ANAPLASTIC — Auto-stub (75% наповненість)">
+   data-name="DIS-THYROID-ANAPLASTIC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
     <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
   </div>
-  <h3>DIS-THYROID-ANAPLASTIC — Auto-stub (75% наповненість)</h3>
-  <p>Автогенерований мінімальний профіль для Anaplastic thyroid carcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.</p>
+  <h3>DIS-THYROID-ANAPLASTIC — Auto-stub (88% наповненість)</h3>
+  <p>Автогенерований мінімальний профіль для Anaplastic thyroid carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.</p>
   <div class="case-foot">auto_thyroid_anaplastic.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-thyroid_anaplastic-frail.html"
-   data-default-order="506"
+   data-default-order="501"
    data-name="DIS-THYROID-ANAPLASTIC · Літній / крихкий пацієнт (age 78, ECOG 3)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -787,7 +793,7 @@
   <div class="case-foot">variant_thyroid_anaplastic_frail.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-thyroid_anaplastic-organ-dysf.html"
-   data-default-order="507"
+   data-default-order="502"
    data-name="DIS-THYROID-ANAPLASTIC · Дисфункція органів (CrCl 25, bili 3.5×ULN)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -798,7 +804,7 @@
   <div class="case-foot">variant_thyroid_anaplastic_organ_dysf.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-thyroid_anaplastic-infection-hbv.html"
-   data-default-order="508"
+   data-default-order="503"
    data-name="DIS-THYROID-ANAPLASTIC · HBV-позитивний (HBsAg+, anti-HBc+)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -809,7 +815,7 @@
   <div class="case-foot">variant_thyroid_anaplastic_infection_hbv.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-thyroid_anaplastic-biomarker-act.html"
-   data-default-order="509"
+   data-default-order="504"
    data-name="DIS-THYROID-ANAPLASTIC · Actionable біомаркер present">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -820,7 +826,7 @@
   <div class="case-foot">variant_thyroid_anaplastic_biomarker_act.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-thyroid_anaplastic-high-risk.html"
-   data-default-order="510"
+   data-default-order="505"
    data-name="DIS-THYROID-ANAPLASTIC · High-risk biology / bulky disease">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -861,7 +867,7 @@
   <div class="case-foot">patient_aitl_cd30_negative.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/aitl-relapsed-2l.html"
-   data-default-order="52"
+   data-default-order="50"
    data-name="AITL · Relapsed 2L (Azacitidine)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -872,7 +878,7 @@
   <div class="case-foot">patient_aitl_relapsed_2l.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-aitl.html"
-   data-default-order="99"
+   data-default-order="95"
    data-name="DIS-AITL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -968,7 +974,7 @@
   <div class="case-foot">patient_hgbl_double_hit.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-hgbl_dh.html"
-   data-default-order="127"
+   data-default-order="124"
    data-name="DIS-HGBL-DH — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1064,7 +1070,7 @@
   <div class="case-foot">patient_hcl_typical.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/hcl-relapsed-braf.html"
-   data-default-order="45"
+   data-default-order="43"
    data-name="HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1075,7 +1081,7 @@
   <div class="case-foot">patient_hcl_relapsed_braf.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-hcl.html"
-   data-default-order="125"
+   data-default-order="122"
    data-name="DIS-HCL — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1153,6 +1159,25 @@
 </a>
   </div>
 </section>
+<section class="case-list" data-disease-id="DIS-GI-NET" hidden>
+  <header class="case-list-header">
+    <h2>Гастроентеропанкреатична нейроендокринна пухлина — ШКТ походження (карциноїд), добре-диференційована G1/G2</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/auto-gi_net.html"
+   data-default-order="119"
+   data-name="DIS-GI-NET — Auto-stub (88% наповненість)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-stub">Auto-stub</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>DIS-GI-NET — Auto-stub (88% наповненість)</h3>
+  <p>Автогенерований мінімальний профіль для GI neuroendocrine tumor (carcinoid). Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.</p>
+  <div class="case-foot">auto_gi_net.json</div>
+</a>
+  </div>
+</section>
 <section class="case-list" data-disease-id="DIS-GIST" hidden>
   <header class="case-list-header">
     <h2>Гастроінтестинальна стромальна пухлина (GIST)</h2>
@@ -1160,7 +1185,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-gist.html"
-   data-default-order="122"
+   data-default-order="120"
    data-name="DIS-GIST — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1234,7 +1259,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/hstcl-fit-younger.html"
-   data-default-order="55"
+   data-default-order="52"
    data-name="HSTCL · Fit Younger (ICE/IVAC → alloHCT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1245,7 +1270,7 @@
   <div class="case-foot">patient_hstcl_fit_younger.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/hstcl-iatrogenic-ibd.html"
-   data-default-order="56"
+   data-default-order="53"
    data-name="HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1256,7 +1281,7 @@
   <div class="case-foot">patient_hstcl_iatrogenic_ibd.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-hstcl.html"
-   data-default-order="129"
+   data-default-order="126"
    data-name="DIS-HSTCL — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1330,7 +1355,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-hcc.html"
-   data-default-order="124"
+   data-default-order="121"
    data-name="DIS-HCC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1396,7 +1421,7 @@
   <div class="case-foot">variant_hcc_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/hcc-atezo-bev-imbrave150.html"
-   data-default-order="572"
+   data-default-order="565"
    data-name="HCC · Child-Pugh A 1L · Atezo+bev (IMbrave150)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1407,7 +1432,7 @@
   <div class="case-foot">patient_hcc_atezo_bev_imbrave150.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/hcc-durva-treme-stride.html"
-   data-default-order="573"
+   data-default-order="566"
    data-name="HCC · 1L · Durva+treme (HIMALAYA STRIDE)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1419,6 +1444,25 @@
 </a>
   </div>
 </section>
+<section class="case-list" data-disease-id="DIS-TESTICULAR-GCT" hidden>
+  <header class="case-list-header">
+    <h2>Герміногенна пухлина яєчка</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/auto-testicular_gct.html"
+   data-default-order="159"
+   data-name="DIS-TESTICULAR-GCT — Auto-stub (50% наповненість)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-stub">Auto-stub</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>DIS-TESTICULAR-GCT — Auto-stub (50% наповненість)</h3>
+  <p>Автогенерований мінімальний профіль для Testicular germ cell tumor. Фактична наповненість бази для цієї хвороби — 50%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.</p>
+  <div class="case-foot">auto_testicular_gct.json</div>
+</a>
+  </div>
+</section>
 <section class="case-list" data-disease-id="DIS-GBM" hidden>
   <header class="case-list-header">
     <h2>Гліобластома (IDH-WT, WHO grade 4)</h2>
@@ -1426,7 +1470,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/gbm-stupp.html"
-   data-default-order="97"
+   data-default-order="93"
    data-name="Glioblastoma · Newly Diagnosed (Stupp Protocol)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1437,7 +1481,7 @@
   <div class="case-foot">patient_gbm_newly_diagnosed_stupp.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-gbm.html"
-   data-default-order="121"
+   data-default-order="118"
    data-name="DIS-GBM — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1504,25 +1548,6 @@
 </a>
   </div>
 </section>
-<section class="case-list" data-disease-id="DIS-GLIOMA-LOW-GRADE" hidden>
-  <header class="case-list-header">
-    <h2>Гліома низького ступеня (WHO grade 2 — IDH-мутантна)</h2>
-    <span class="case-list-count">1 приклад</span>
-  </header>
-  <div class="case-grid">
-<a class="case-card" href="/ukr/cases/auto-glioma_low_grade.html"
-   data-default-order="123"
-   data-name="DIS-GLIOMA-LOW-GRADE — Auto-stub (50% наповненість)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-stub">Auto-stub</div>
-    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
-  </div>
-  <h3>DIS-GLIOMA-LOW-GRADE — Auto-stub (50% наповненість)</h3>
-  <p>Автогенерований мінімальний профіль для Low-grade glioma. Фактична наповненість бази для цієї хвороби — 50%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.</p>
-  <div class="case-foot">auto_glioma_low_grade.json</div>
-</a>
-  </div>
-</section>
 <section class="case-list" data-disease-id="DIS-AML" hidden>
   <header class="case-list-header">
     <h2>Гострий мієлоїдний лейкоз (не-APL)</h2>
@@ -1530,7 +1555,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/aml-fit-1l-7-3.html"
-   data-default-order="70"
+   data-default-order="66"
    data-name="AML · Fit 1L (7+3 Induction)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1541,7 +1566,7 @@
   <div class="case-foot">patient_aml_fit_1l_seven_three.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/aml-unfit-ven-aza.html"
-   data-default-order="71"
+   data-default-order="67"
    data-name="AML · Unfit (Venetoclax + Azacitidine)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1552,7 +1577,7 @@
   <div class="case-foot">patient_aml_unfit_ven_aza.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/aml-flt3-relapse.html"
-   data-default-order="72"
+   data-default-order="68"
    data-name="AML · FLT3-mutant Relapse (Gilteritinib)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1563,7 +1588,7 @@
   <div class="case-foot">patient_aml_flt3_relapse.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-aml.html"
-   data-default-order="101"
+   data-default-order="97"
    data-name="DIS-AML — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1640,7 +1665,7 @@
   <div class="case-foot">variant_aml_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/aml-flt3-itd-midostaurin.html"
-   data-default-order="582"
+   data-default-order="575"
    data-name="AML · FLT3-ITD fit · 7+3 + Midostaurin (RATIFY)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1651,7 +1676,7 @@
   <div class="case-foot">patient_aml_flt3_itd_midostaurin_7_3.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/aml-cbf-inv16-7-3-go.html"
-   data-default-order="583"
+   data-default-order="576"
    data-name="AML · CBF inv(16) · 7+3 + Gemtuzumab (ALFA-0701)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1662,7 +1687,7 @@
   <div class="case-foot">patient_aml_cbf_inv16_7_3_go.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/aml-secondary-cpx351.html"
-   data-default-order="584"
+   data-default-order="577"
    data-name="AML · secondary/t-AML · CPX-351 (Vyxeos)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1673,7 +1698,7 @@
   <div class="case-foot">patient_aml_secondary_cpx351.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/aml-rr-gilteritinib.html"
-   data-default-order="585"
+   data-default-order="578"
    data-name="AML · R/R FLT3-mut · Gilteritinib (ADMIRAL)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1692,7 +1717,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/apl-low-risk.html"
-   data-default-order="73"
+   data-default-order="69"
    data-name="APL · Low Risk (ATRA + ATO chemo-free)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1703,7 +1728,7 @@
   <div class="case-foot">patient_apl_low_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/apl-high-risk.html"
-   data-default-order="74"
+   data-default-order="70"
    data-name="APL · High Risk + DIC (ATRA + ATO + Idarubicin)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1714,7 +1739,7 @@
   <div class="case-foot">patient_apl_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-apl.html"
-   data-default-order="102"
+   data-default-order="99"
    data-name="DIS-APL — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1832,7 +1857,7 @@
   <div class="case-foot">patient_mf_advanced_cd30.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/mf-relapsed-post-moga.html"
-   data-default-order="63"
+   data-default-order="60"
    data-name="MF · Relapsed post-Mogamulizumab (Bexarotene)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1843,7 +1868,7 @@
   <div class="case-foot">patient_mf_relapsed_post_moga.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-mf_sezary.html"
-   data-default-order="137"
+   data-default-order="135"
    data-name="DIS-MF-SEZARY — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1924,22 +1949,11 @@
 <section class="case-list" data-disease-id="DIS-DLBCL-NOS" hidden>
   <header class="case-list-header">
     <h2>Дифузна B-великоклітинна лімфома, неуточнена (DLBCL NOS)</h2>
-    <span class="case-list-count">12 прикладів</span>
+    <span class="case-list-count">11 прикладів</span>
   </header>
   <div class="case-grid">
-<a class="case-card" href="/ukr/cases/dlbcl-chemorefractory-cart.html"
-   data-default-order="35"
-   data-name="DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)</h3>
-  <p>DLBCL з primary refractory disease (PD на R-CHOP) — engine обирає axi-cel CAR-T (ZUMA-7: 2L CAR-T &gt; salvage+autoSCT для early-failure).</p>
-  <div class="case-foot">patient_dlbcl_chemorefractory_for_cart.json</div>
-</a>
 <a class="case-card" href="/ukr/cases/dlbcl-relapsed-te-ineligible.html"
-   data-default-order="36"
+   data-default-order="35"
    data-name="DLBCL NOS · Relapsed (Transplant-Ineligible)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1950,7 +1964,7 @@
   <div class="case-foot">patient_dlbcl_relapsed_transplant_ineligible.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-dlbcl_nos.html"
-   data-default-order="114"
+   data-default-order="111"
    data-name="DIS-DLBCL-NOS — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -2027,7 +2041,7 @@
   <div class="case-foot">variant_dlbcl_nos_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/dlbcl-2l-pola-r-b.html"
-   data-default-order="586"
+   data-default-order="579"
    data-name="DLBCL · 2L · Pola-R-B transplant-ineligible (POLARIX 2L)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2038,7 +2052,7 @@
   <div class="case-foot">patient_dlbcl_2l_pola_r_b.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/dlbcl-3l-axi-cel.html"
-   data-default-order="587"
+   data-default-order="580"
    data-name="DLBCL · 3L+ · Axi-cel post-2L (ZUMA-1)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2049,7 +2063,7 @@
   <div class="case-foot">patient_dlbcl_3l_axi_cel.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/dlbcl-primary-refractory-loncast.html"
-   data-default-order="588"
+   data-default-order="581"
    data-name="DLBCL · primary-refractory · Loncastuximab post-pola (LOTIS-2)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2068,7 +2082,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/atll-acute.html"
-   data-default-order="59"
+   data-default-order="56"
    data-name="ATLL · Acute (mLSG15 / EPOCH)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2079,7 +2093,7 @@
   <div class="case-foot">patient_atll_acute.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/atll-indolent-smoldering.html"
-   data-default-order="60"
+   data-default-order="57"
    data-name="ATLL · Indolent / Smoldering (Watchful Waiting)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2090,7 +2104,7 @@
   <div class="case-foot">patient_atll_indolent_smoldering.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-atll.html"
-   data-default-order="103"
+   data-default-order="100"
    data-name="DIS-ATLL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -2175,7 +2189,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-sclc.html"
-   data-default-order="156"
+   data-default-order="154"
    data-name="DIS-SCLC — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -2186,7 +2200,7 @@
   <div class="case-foot">auto_sclc.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-sclc-frail.html"
-   data-default-order="483"
+   data-default-order="478"
    data-name="DIS-SCLC · Літній / крихкий пацієнт (age 78, ECOG 3)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -2197,7 +2211,7 @@
   <div class="case-foot">variant_sclc_frail.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-sclc-organ-dysf.html"
-   data-default-order="484"
+   data-default-order="479"
    data-name="DIS-SCLC · Дисфункція органів (CrCl 25, bili 3.5×ULN)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -2208,7 +2222,7 @@
   <div class="case-foot">variant_sclc_organ_dysf.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-sclc-infection-hbv.html"
-   data-default-order="485"
+   data-default-order="480"
    data-name="DIS-SCLC · HBV-позитивний (HBsAg+, anti-HBc+)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -2219,7 +2233,7 @@
   <div class="case-foot">variant_sclc_infection_hbv.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-sclc-biomarker-act.html"
-   data-default-order="486"
+   data-default-order="481"
    data-name="DIS-SCLC · Actionable біомаркер present">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -2230,7 +2244,7 @@
   <div class="case-foot">variant_sclc_biomarker_act.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-sclc-high-risk.html"
-   data-default-order="487"
+   data-default-order="482"
    data-name="DIS-SCLC · High-risk biology / bulky disease">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -2241,7 +2255,7 @@
   <div class="case-foot">variant_sclc_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/sclc-ls-chemo-rt.html"
-   data-default-order="578"
+   data-default-order="571"
    data-name="SCLC · LS · Chemo + concurrent RT">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2252,7 +2266,7 @@
   <div class="case-foot">patient_sclc_ls_chemo_rt.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/sclc-es-atezo-impower133.html"
-   data-default-order="579"
+   data-default-order="572"
    data-name="SCLC · ES · Atezo+carbo+etoposide (IMpower133)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2271,7 +2285,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/nk-t-nasal-localized.html"
-   data-default-order="61"
+   data-default-order="58"
    data-name="NK/T-Nasal · Localized (P-GEMOX + RT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2282,7 +2296,7 @@
   <div class="case-foot">patient_nk_t_nasal_localized.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nk-t-nasal-relapsed.html"
-   data-default-order="62"
+   data-default-order="59"
    data-name="NK/T-Nasal · Relapsed (Avelumab)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2293,7 +2307,7 @@
   <div class="case-foot">patient_nk_t_nasal_relapsed.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-nk_t_nasal.html"
-   data-default-order="141"
+   data-default-order="139"
    data-name="DIS-NK-T-NASAL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -2374,11 +2388,11 @@
 <section class="case-list" data-disease-id="DIS-EATL" hidden>
   <header class="case-list-header">
     <h2>Ентеропатія-асоційована T-клітинна лімфома</h2>
-    <span class="case-list-count">8 прикладів</span>
+    <span class="case-list-count">7 прикладів</span>
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/eatl-typical.html"
-   data-default-order="53"
+   data-default-order="51"
    data-name="EATL · Typical (Celiac, CHOEP → autoSCT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2388,19 +2402,8 @@
   <p>EATL у пацієнта з celiac disease — engine обирає CHOEP induction → autoSCT consolidation (NLG-T-01).</p>
   <div class="case-foot">patient_eatl_typical.json</div>
 </a>
-<a class="case-card" href="/ukr/cases/eatl-relapsed-post-choep.html"
-   data-default-order="54"
-   data-name="EATL · Relapsed post-CHOEP (ICE Salvage)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>EATL · Relapsed post-CHOEP (ICE Salvage)</h3>
-  <p>EATL relapsed після CHOEP — engine обирає ICE salvage; alloHCT для chemosensitive.</p>
-  <div class="case-foot">patient_eatl_relapsed_post_choep.json</div>
-</a>
 <a class="case-card" href="/ukr/cases/auto-eatl.html"
-   data-default-order="115"
+   data-default-order="112"
    data-name="DIS-EATL — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -2474,7 +2477,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/et-high-risk-hu.html"
-   data-default-order="87"
+   data-default-order="83"
    data-name="Essential Thrombocythemia · High Risk (HU)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2485,7 +2488,7 @@
   <div class="case-foot">patient_et_high_risk_hu.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-et.html"
-   data-default-order="118"
+   data-default-order="115"
    data-name="DIS-ET — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -2570,7 +2573,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-imt.html"
-   data-default-order="131"
+   data-default-order="128"
    data-name="DIS-IMT — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -2637,6 +2640,25 @@
 </a>
   </div>
 </section>
+<section class="case-list" data-disease-id="DIS-MESOTHELIOMA" hidden>
+  <header class="case-list-header">
+    <h2>Злоякісна мезотеліома плеври</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/auto-mesothelioma.html"
+   data-default-order="134"
+   data-name="DIS-MESOTHELIOMA — Auto-stub (50% наповненість)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-stub">Auto-stub</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>DIS-MESOTHELIOMA — Auto-stub (50% наповненість)</h3>
+  <p>Автогенерований мінімальний профіль для Malignant mesothelioma. Фактична наповненість бази для цієї хвороби — 50%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.</p>
+  <div class="case-foot">auto_mesothelioma.json</div>
+</a>
+  </div>
+</section>
 <section class="case-list" data-disease-id="DIS-MPNST" hidden>
   <header class="case-list-header">
     <h2>Злоякісна пухлина оболонки периферичного нерва</h2>
@@ -2644,7 +2666,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-mpnst.html"
-   data-default-order="139"
+   data-default-order="137"
    data-name="DIS-MPNST — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -2718,7 +2740,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-endometrial.html"
-   data-default-order="116"
+   data-default-order="113"
    data-name="DIS-ENDOMETRIAL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -2795,7 +2817,7 @@
   <div class="case-foot">variant_endometrial_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/endometrial-dmmr-pembro-kn775.html"
-   data-default-order="569"
+   data-default-order="562"
    data-name="Endometrial · advanced dMMR · Pembro+chemo (NRG-GY018)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2806,7 +2828,7 @@
   <div class="case-foot">patient_endometrial_dmmr_pembro_kn775.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/endometrial-p53-abn-dosta-ruby.html"
-   data-default-order="570"
+   data-default-order="563"
    data-name="Endometrial · p53-abnormal · Carbo+pacli+dostarlimab (RUBY)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2825,7 +2847,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-salivary.html"
-   data-default-order="155"
+   data-default-order="153"
    data-name="DIS-SALIVARY — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -2836,7 +2858,7 @@
   <div class="case-foot">auto_salivary.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-salivary-frail.html"
-   data-default-order="478"
+   data-default-order="473"
    data-name="DIS-SALIVARY · Літній / крихкий пацієнт (age 78, ECOG 3)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -2847,7 +2869,7 @@
   <div class="case-foot">variant_salivary_frail.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-salivary-organ-dysf.html"
-   data-default-order="479"
+   data-default-order="474"
    data-name="DIS-SALIVARY · Дисфункція органів (CrCl 25, bili 3.5×ULN)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -2858,7 +2880,7 @@
   <div class="case-foot">variant_salivary_organ_dysf.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-salivary-infection-hbv.html"
-   data-default-order="480"
+   data-default-order="475"
    data-name="DIS-SALIVARY · HBV-позитивний (HBsAg+, anti-HBc+)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -2869,7 +2891,7 @@
   <div class="case-foot">variant_salivary_infection_hbv.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-salivary-biomarker-act.html"
-   data-default-order="481"
+   data-default-order="476"
    data-name="DIS-SALIVARY · Actionable біомаркер present">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -2880,7 +2902,7 @@
   <div class="case-foot">variant_salivary_biomarker_act.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-salivary-high-risk.html"
-   data-default-order="482"
+   data-default-order="477"
    data-name="DIS-SALIVARY · High-risk biology / bulky disease">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -2899,7 +2921,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-esophageal.html"
-   data-default-order="117"
+   data-default-order="114"
    data-name="DIS-ESOPHAGEAL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -2976,7 +2998,7 @@
   <div class="case-foot">variant_esophageal_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/esophageal-cross-then-nivo.html"
-   data-default-order="576"
+   data-default-order="569"
    data-name="Esophageal · adeno · Neoadj CROSS → adjuvant nivolumab (CheckMate-577)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -2995,7 +3017,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/cervical-locally-advanced.html"
-   data-default-order="96"
+   data-default-order="92"
    data-name="Cervical · Locally Advanced (CCRT + Pembrolizumab)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3006,7 +3028,7 @@
   <div class="case-foot">patient_cervical_locally_advanced.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-cervical.html"
-   data-default-order="107"
+   data-default-order="104"
    data-name="DIS-CERVICAL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -3080,7 +3102,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/ovarian-advanced-hrd.html"
-   data-default-order="98"
+   data-default-order="94"
    data-name="Ovarian · Advanced HRD+ (PARPi maintenance)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3091,7 +3113,7 @@
   <div class="case-foot">patient_ovarian_advanced_hrd.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-ovarian.html"
-   data-default-order="145"
+   data-default-order="143"
    data-name="DIS-OVARIAN — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -3168,7 +3190,7 @@
   <div class="case-foot">variant_ovarian_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/ovarian-hrd-neg-no-parpi.html"
-   data-default-order="571"
+   data-default-order="564"
    data-name="Ovarian · HRD-neg · Carbo+pacli, no PARPi maintenance">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3209,7 +3231,7 @@
   <div class="case-foot">patient_chl_early.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/chl-pediatric-bulky.html"
-   data-default-order="66"
+   data-default-order="63"
    data-name="cHL · AYA Stage IIB Bulky Mediastinal">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3220,7 +3242,7 @@
   <div class="case-foot">patient_chl_pediatric_bulky_mediastinal.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/chl-relapsed-salvage.html"
-   data-default-order="67"
+   data-default-order="64"
    data-name="cHL · Relapsed (Salvage → autoSCT + BV maint.)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3231,7 +3253,7 @@
   <div class="case-foot">patient_chl_relapsed_for_salvage.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-chl.html"
-   data-default-order="108"
+   data-default-order="105"
    data-name="DIS-CHL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -3316,7 +3338,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-crc.html"
-   data-default-order="113"
+   data-default-order="110"
    data-name="DIS-CRC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -3393,7 +3415,7 @@
   <div class="case-foot">variant_crc_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/crc-stage-iii-adjuvant-folfox.html"
-   data-default-order="554"
+   data-default-order="549"
    data-name="CRC · stage III adjuvant FOLFOX (MOSAIC)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3404,7 +3426,7 @@
   <div class="case-foot">patient_crc_stage_iii_adjuvant_folfox.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/crc-mcrc-ras-wt-left-folfox-cetux.html"
-   data-default-order="555"
+   data-default-order="550"
    data-name="mCRC · RAS-WT left-sided 1L · FOLFOX+cetuximab (CRYSTAL)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3415,7 +3437,7 @@
   <div class="case-foot">patient_crc_metastatic_ras_wt_left_folfox_cetux.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/crc-mcrc-ras-mut-folfox-bev.html"
-   data-default-order="556"
+   data-default-order="551"
    data-name="mCRC · RAS-mutated 1L · FOLFOX+bevacizumab">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3426,7 +3448,7 @@
   <div class="case-foot">patient_crc_metastatic_ras_mut_folfox_bev.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/crc-mcrc-msi-h-pembro.html"
-   data-default-order="557"
+   data-default-order="552"
    data-name="mCRC · MSI-H 1L · Pembrolizumab mono (KEYNOTE-177)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3437,7 +3459,7 @@
   <div class="case-foot">patient_crc_metastatic_msi_h_pembro_mono.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/crc-mcrc-2l-folfiri-bev.html"
-   data-default-order="558"
+   data-default-order="553"
    data-name="mCRC · 2L FOLFIRI+bev post-FOLFOX (E3200/ML18147)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3448,7 +3470,7 @@
   <div class="case-foot">patient_crc_metastatic_2l_folfiri_bev.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/crc-mcrc-3l-regorafenib.html"
-   data-default-order="559"
+   data-default-order="554"
    data-name="mCRC · 3L+ Regorafenib (CORRECT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3489,7 +3511,7 @@
   <div class="case-foot">patient_burkitt_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-burkitt.html"
-   data-default-order="106"
+   data-default-order="103"
    data-name="DIS-BURKITT — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -3596,7 +3618,7 @@
   <div class="case-foot">patient_mcl_unfit_or_tp53.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-mcl.html"
-   data-default-order="133"
+   data-default-order="130"
    data-name="DIS-MCL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -3673,7 +3695,7 @@
   <div class="case-foot">variant_mcl_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/mcl-pirtobrutinib-3l.html"
-   data-default-order="590"
+   data-default-order="583"
    data-name="MCL · 3L+ · Pirtobrutinib post-covalent-BTKi (BRUIN MCL-321)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3703,7 +3725,7 @@
   <div class="case-foot">patient_diagnostic_lymphoma_confirmed.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-hcv_mzl.html"
-   data-default-order="126"
+   data-default-order="123"
    data-name="DIS-HCV-MZL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -3799,7 +3821,7 @@
   <div class="case-foot">patient_wm_myd88_positive.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/wm-cxcr4-mut.html"
-   data-default-order="46"
+   data-default-order="44"
    data-name="Waldenström · CXCR4-mutant (BR fixed-duration)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -3821,7 +3843,7 @@
   <div class="case-foot">auto_wm.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-wm-frail.html"
-   data-default-order="521"
+   data-default-order="516"
    data-name="DIS-WM · Літній / крихкий пацієнт (age 78, ECOG 3)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -3832,7 +3854,7 @@
   <div class="case-foot">variant_wm_frail.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-wm-organ-dysf.html"
-   data-default-order="522"
+   data-default-order="517"
    data-name="DIS-WM · Дисфункція органів (CrCl 25, bili 3.5×ULN)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -3843,7 +3865,7 @@
   <div class="case-foot">variant_wm_organ_dysf.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-wm-infection-hbv.html"
-   data-default-order="523"
+   data-default-order="518"
    data-name="DIS-WM · HBV-позитивний (HBsAg+, anti-HBc+)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -3854,7 +3876,7 @@
   <div class="case-foot">variant_wm_infection_hbv.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-wm-relapsed-2l.html"
-   data-default-order="524"
+   data-default-order="519"
    data-name="DIS-WM · Релапс / 2-а лінія">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -3865,7 +3887,7 @@
   <div class="case-foot">variant_wm_relapsed_2l.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-wm-biomarker-act.html"
-   data-default-order="525"
+   data-default-order="520"
    data-name="DIS-WM · Actionable біомаркер present">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -3876,7 +3898,7 @@
   <div class="case-foot">variant_wm_biomarker_act.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-wm-high-risk.html"
-   data-default-order="526"
+   data-default-order="521"
    data-name="DIS-WM · High-risk biology / bulky disease">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -3895,7 +3917,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-mtc.html"
-   data-default-order="140"
+   data-default-order="138"
    data-name="DIS-MTC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -3965,7 +3987,7 @@
 <section class="case-list" data-disease-id="DIS-MM" hidden>
   <header class="case-list-header">
     <h2>Множинна мієлома</h2>
-    <span class="case-list-count">11 прикладів</span>
+    <span class="case-list-count">10 прикладів</span>
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/mm-standard-risk.html"
@@ -3991,7 +4013,7 @@
   <div class="case-foot">patient_mm_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/mm-post-vrd-progression.html"
-   data-default-order="68"
+   data-default-order="65"
    data-name="Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4001,19 +4023,8 @@
   <p>MM relapsed після VRd induction — engine обирає daratumumab+pomalidomide+dex (APOLLO) або isatuximab+Pd (ICARIA).</p>
   <div class="case-foot">patient_mm_post_vrd_progression.json</div>
 </a>
-<a class="case-card" href="/ukr/cases/mm-triple-class-refractory.html"
-   data-default-order="69"
-   data-name="Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)</h3>
-  <p>MM triple-class refractory (PI + IMiD + anti-CD38) — engine обирає cilta-cel/ide-cel CAR-T або teclistamab BCMA-T-cell engager.</p>
-  <div class="case-foot">patient_mm_triple_class_refractory.json</div>
-</a>
 <a class="case-card" href="/ukr/cases/auto-mm.html"
-   data-default-order="138"
+   data-default-order="136"
    data-name="DIS-MM — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -4098,7 +4109,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/mds-hr-transplant-eligible.html"
-   data-default-order="78"
+   data-default-order="74"
    data-name="MDS-HR · Transplant-Eligible (Aza Bridge → alloHCT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4109,7 +4120,7 @@
   <div class="case-foot">patient_mds_hr_transplant_eligible.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/mds-hr-unfit-aza.html"
-   data-default-order="79"
+   data-default-order="75"
    data-name="MDS-HR · Unfit (Azacitidine Maintenance)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4120,7 +4131,7 @@
   <div class="case-foot">patient_mds_hr_unfit_aza.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/mds-hr-progression-aml.html"
-   data-default-order="80"
+   data-default-order="76"
    data-name="MDS-HR · Progression to Secondary AML">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4131,7 +4142,7 @@
   <div class="case-foot">patient_mds_hr_progression_to_aml.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-mds_hr.html"
-   data-default-order="134"
+   data-default-order="131"
    data-name="DIS-MDS-HR — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -4216,7 +4227,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/mds-lr-del5q.html"
-   data-default-order="81"
+   data-default-order="77"
    data-name="MDS-LR · del(5q) (Lenalidomide)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4227,7 +4238,7 @@
   <div class="case-foot">patient_mds_lr_del5q.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/mds-lr-rs-luspatercept.html"
-   data-default-order="82"
+   data-default-order="78"
    data-name="MDS-LR · RS+ EPO-failure (Luspatercept)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4238,7 +4249,7 @@
   <div class="case-foot">patient_mds_lr_rs_luspatercept.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/mds-lr-hypoplastic-ist.html"
-   data-default-order="83"
+   data-default-order="79"
    data-name="MDS-LR · Hypoplastic / IST candidate">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4249,7 +4260,7 @@
   <div class="case-foot">patient_mds_lr_hypoplastic_ist.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-mds_lr.html"
-   data-default-order="135"
+   data-default-order="132"
    data-name="DIS-MDS-LR — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -4334,7 +4345,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-nsclc.html"
-   data-default-order="144"
+   data-default-order="142"
    data-name="DIS-NSCLC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -4411,7 +4422,7 @@
   <div class="case-foot">variant_nsclc_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-egfr-ex19del-1l.html"
-   data-default-order="527"
+   data-default-order="522"
    data-name="NSCLC · EGFR ex19del · 1L Osimertinib (FLAURA)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4422,7 +4433,7 @@
   <div class="case-foot">patient_nsclc_egfr_ex19del_1l_osimertinib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-alk-1l.html"
-   data-default-order="528"
+   data-default-order="523"
    data-name="NSCLC · ALK-перебудований · 1L Alectinib (ALEX)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4433,7 +4444,7 @@
   <div class="case-foot">patient_nsclc_alk_1l_alectinib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-pdl1-high-pembro-mono.html"
-   data-default-order="529"
+   data-default-order="524"
    data-name="NSCLC · PD-L1 TPS≥50% · 1L Pembro mono (KEYNOTE-024)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4444,7 +4455,7 @@
   <div class="case-foot">patient_nsclc_pdl1_high_pembro_mono.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-pdl1-low-chemo-io.html"
-   data-default-order="530"
+   data-default-order="525"
    data-name="NSCLC · PD-L1 1-49% · 1L Pembro+chemo (KEYNOTE-189)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4455,7 +4466,7 @@
   <div class="case-foot">patient_nsclc_pdl1_low_chemo_io.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-tmb-high-pembro-mono.html"
-   data-default-order="531"
+   data-default-order="526"
    data-name="NSCLC · TMB-high (≥10 mut/Mb) · 1L Pembro+chemo">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4466,7 +4477,7 @@
   <div class="case-foot">patient_nsclc_tmb_high_pembro_mono.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-egfr-t790m-2l.html"
-   data-default-order="532"
+   data-default-order="527"
    data-name="NSCLC · EGFR T790M post-1G TKI · 2L (MARIPOSA-2)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4477,7 +4488,7 @@
   <div class="case-foot">patient_nsclc_egfr_t790m_2l_post_1g_tki.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-alk-2l-lorlatinib.html"
-   data-default-order="533"
+   data-default-order="528"
    data-name="NSCLC · ALK 2L · Lorlatinib post-alectinib">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4488,7 +4499,7 @@
   <div class="case-foot">patient_nsclc_alk_2l_lorlatinib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-ros1-2l-entrectinib.html"
-   data-default-order="534"
+   data-default-order="529"
    data-name="NSCLC · ROS1 2L · Entrectinib post-chemoIO">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4499,7 +4510,7 @@
   <div class="case-foot">patient_nsclc_ros1_2l_entrectinib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-kras-g12c-2l-sotorasib.html"
-   data-default-order="535"
+   data-default-order="530"
    data-name="NSCLC · KRAS G12C 2L · Sotorasib (CodeBreaK 200)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4510,7 +4521,7 @@
   <div class="case-foot">patient_nsclc_kras_g12c_2l_sotorasib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-braf-v600e-2l.html"
-   data-default-order="536"
+   data-default-order="531"
    data-name="NSCLC · BRAF V600E 2L · Dabrafenib+trametinib">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4521,7 +4532,7 @@
   <div class="case-foot">patient_nsclc_braf_v600e_2l_dab_tram.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-metex14-2l-capmatinib.html"
-   data-default-order="537"
+   data-default-order="532"
    data-name="NSCLC · MET ex14 skipping 2L · Capmatinib (GEOMETRY mono-1)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4532,7 +4543,7 @@
   <div class="case-foot">patient_nsclc_metex14_2l_capmatinib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nsclc-ret-fusion-2l-selpercatinib.html"
-   data-default-order="538"
+   data-default-order="533"
    data-name="NSCLC · RET fusion 2L · Selpercatinib (LIBRETTO-001)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4544,58 +4555,33 @@
 </a>
   </div>
 </section>
-<section class="case-list" data-disease-id="DIS-RCC" hidden>
+<section class="case-list" data-disease-id="DIS-PNET" hidden>
   <header class="case-list-header">
-    <h2>Нирково-клітинна карцинома</h2>
-    <span class="case-list-count">10 прикладів</span>
+    <h2>Нейроендокринна пухлина підшлункової залози (пНЕП), добре-диференційована G1/G2</h2>
+    <span class="case-list-count">1 приклад</span>
   </header>
   <div class="case-grid">
-<a class="case-card" href="/ukr/cases/auto-rcc.html"
-   data-default-order="154"
-   data-name="DIS-RCC — Auto-stub (88% наповненість)">
+<a class="case-card" href="/ukr/cases/auto-pnet.html"
+   data-default-order="148"
+   data-name="DIS-PNET — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
     <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
   </div>
-  <h3>DIS-RCC — Auto-stub (88% наповненість)</h3>
-  <p>Автогенерований мінімальний профіль для Renal cell carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.</p>
-  <div class="case-foot">auto_rcc.json</div>
+  <h3>DIS-PNET — Auto-stub (88% наповненість)</h3>
+  <p>Автогенерований мінімальний профіль для Pancreatic neuroendocrine tumor. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.</p>
+  <div class="case-foot">auto_pnet.json</div>
 </a>
-<a class="case-card" href="/ukr/cases/variant-rcc-frail.html"
-   data-default-order="472"
-   data-name="DIS-RCC · Літній / крихкий пацієнт (age 78, ECOG 3)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-stub">Variant</div>
-    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
   </div>
-  <h3>DIS-RCC · Літній / крихкий пацієнт (age 78, ECOG 3)</h3>
-  <p>Автогенерований variant &#x27;frail&#x27;. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.</p>
-  <div class="case-foot">variant_rcc_frail.json</div>
-</a>
-<a class="case-card" href="/ukr/cases/variant-rcc-organ-dysf.html"
-   data-default-order="473"
-   data-name="DIS-RCC · Дисфункція органів (CrCl 25, bili 3.5×ULN)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-stub">Variant</div>
-    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
-  </div>
-  <h3>DIS-RCC · Дисфункція органів (CrCl 25, bili 3.5×ULN)</h3>
-  <p>Автогенерований variant &#x27;organ_dysf&#x27;. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.</p>
-  <div class="case-foot">variant_rcc_organ_dysf.json</div>
-</a>
-<a class="case-card" href="/ukr/cases/variant-rcc-infection-hbv.html"
-   data-default-order="474"
-   data-name="DIS-RCC · HBV-позитивний (HBsAg+, anti-HBc+)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-stub">Variant</div>
-    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
-  </div>
-  <h3>DIS-RCC · HBV-позитивний (HBsAg+, anti-HBc+)</h3>
-  <p>Автогенерований variant &#x27;infection_hbv&#x27;. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.</p>
-  <div class="case-foot">variant_rcc_infection_hbv.json</div>
-</a>
+</section>
+<section class="case-list" data-disease-id="DIS-RCC" hidden>
+  <header class="case-list-header">
+    <h2>Нирково-клітинна карцинома</h2>
+    <span class="case-list-count">2 приклади</span>
+  </header>
+  <div class="case-grid">
 <a class="case-card" href="/ukr/cases/variant-rcc-relapsed-2l.html"
-   data-default-order="475"
+   data-default-order="472"
    data-name="DIS-RCC · Релапс / 2-а лінія">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -4605,52 +4591,8 @@
   <p>Автогенерований variant &#x27;relapsed_2l&#x27;. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.</p>
   <div class="case-foot">variant_rcc_relapsed_2l.json</div>
 </a>
-<a class="case-card" href="/ukr/cases/variant-rcc-biomarker-act.html"
-   data-default-order="476"
-   data-name="DIS-RCC · Actionable біомаркер present">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-stub">Variant</div>
-    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
-  </div>
-  <h3>DIS-RCC · Actionable біомаркер present</h3>
-  <p>Автогенерований variant &#x27;biomarker_act&#x27;. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.</p>
-  <div class="case-foot">variant_rcc_biomarker_act.json</div>
-</a>
-<a class="case-card" href="/ukr/cases/variant-rcc-high-risk.html"
-   data-default-order="477"
-   data-name="DIS-RCC · High-risk biology / bulky disease">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-stub">Variant</div>
-    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
-  </div>
-  <h3>DIS-RCC · High-risk biology / bulky disease</h3>
-  <p>Автогенерований variant &#x27;high_risk&#x27;. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.</p>
-  <div class="case-foot">variant_rcc_high_risk.json</div>
-</a>
-<a class="case-card" href="/ukr/cases/rcc-imdc-int-nivo-ipi.html"
-   data-default-order="566"
-   data-name="RCC · IMDC int/poor 1L · Nivo+ipi (CheckMate-214)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
-  </div>
-  <h3>RCC · IMDC int/poor 1L · Nivo+ipi (CheckMate-214)</h3>
-  <p>Clear-cell RCC IMDC intermediate-poor. Drift: engine default = pembro+axi; nivo+ipi анкер CM-214 у comment.</p>
-  <div class="case-foot">patient_rcc_imdc_int_nivo_ipi.json</div>
-</a>
-<a class="case-card" href="/ukr/cases/rcc-imdc-fav-axi-pembro.html"
-   data-default-order="567"
-   data-name="RCC · IMDC favorable 1L · Axi+pembro (KEYNOTE-426)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
-  </div>
-  <h3>RCC · IMDC favorable 1L · Axi+pembro (KEYNOTE-426)</h3>
-  <p>Clear-cell RCC IMDC favorable. Engine: → IND-RCC-METASTATIC-1L-PEMBRO-AXI (KEYNOTE-426 5-yr OS).</p>
-  <div class="case-foot">patient_rcc_imdc_fav_axi_pembro.json</div>
-</a>
 <a class="case-card" href="/ukr/cases/bma-bma-met-amp-rcc-papillary.html"
-   data-default-order="614"
+   data-default-order="607"
    data-name="DIS-RCC · BIO-MET (ESCAT IIA)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">BMA</div>
@@ -4713,7 +4655,7 @@
   <div class="case-foot">patient_nmzl_low_burden.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/nmzl-high-burden.html"
-   data-default-order="47"
+   data-default-order="45"
    data-name="Nodal MZL · High Burden (BR)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -4724,7 +4666,7 @@
   <div class="case-foot">patient_nmzl_high_burden.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-nodal_mzl.html"
-   data-default-order="143"
+   data-default-order="141"
    data-name="DIS-NODAL-MZL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -4831,7 +4773,7 @@
   <div class="case-foot">patient_nlpbl_ia_rituximab.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-nlpbl.html"
-   data-default-order="142"
+   data-default-order="140"
    data-name="DIS-NLPBL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -4927,7 +4869,7 @@
   <div class="case-foot">auto_thyroid_papillary.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-thyroid_papillary-frail.html"
-   data-default-order="511"
+   data-default-order="506"
    data-name="DIS-THYROID-PAPILLARY · Літній / крихкий пацієнт (age 78, ECOG 3)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -4938,7 +4880,7 @@
   <div class="case-foot">variant_thyroid_papillary_frail.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-thyroid_papillary-organ-dysf.html"
-   data-default-order="512"
+   data-default-order="507"
    data-name="DIS-THYROID-PAPILLARY · Дисфункція органів (CrCl 25, bili 3.5×ULN)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -4949,7 +4891,7 @@
   <div class="case-foot">variant_thyroid_papillary_organ_dysf.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-thyroid_papillary-infection-hbv.html"
-   data-default-order="513"
+   data-default-order="508"
    data-name="DIS-THYROID-PAPILLARY · HBV-позитивний (HBsAg+, anti-HBc+)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -4960,7 +4902,7 @@
   <div class="case-foot">variant_thyroid_papillary_infection_hbv.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-thyroid_papillary-biomarker-act.html"
-   data-default-order="514"
+   data-default-order="509"
    data-name="DIS-THYROID-PAPILLARY · Actionable біомаркер present">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -4971,7 +4913,7 @@
   <div class="case-foot">variant_thyroid_papillary_biomarker_act.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-thyroid_papillary-high-risk.html"
-   data-default-order="515"
+   data-default-order="510"
    data-name="DIS-THYROID-PAPILLARY · High-risk biology / bulky disease">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -5012,7 +4954,7 @@
   <div class="case-foot">patient_dlbcl_high_ipi.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/hgbl-primary-refractory.html"
-   data-default-order="37"
+   data-default-order="36"
    data-name="HGBL · Primary Refractory (Early CAR-T)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5023,7 +4965,7 @@
   <div class="case-foot">patient_hgbl_primary_refractory.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/pcnsl-typical.html"
-   data-default-order="41"
+   data-default-order="40"
    data-name="PCNSL · Typical (R-MPV → autoSCT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5034,7 +4976,7 @@
   <div class="case-foot">patient_pcnsl_typical.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/pcnsl-elderly-frail.html"
-   data-default-order="42"
+   data-default-order="41"
    data-name="PCNSL · Elderly Frail (R-MTX-attenuated)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5045,7 +4987,7 @@
   <div class="case-foot">patient_pcnsl_elderly_frail.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/pcnsl-immunocompromised-ebv.html"
-   data-default-order="43"
+   data-default-order="42"
    data-name="PCNSL · Immunocompromised + EBV+ (Restore Immunity)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5056,7 +4998,7 @@
   <div class="case-foot">patient_pcnsl_immunocompromised_ebv.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-pcnsl.html"
-   data-default-order="146"
+   data-default-order="144"
    data-name="DIS-PCNSL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -5141,7 +5083,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/pmbcl-typical.html"
-   data-default-order="38"
+   data-default-order="37"
    data-name="PMBCL · Typical (DA-EPOCH-R)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5152,7 +5094,7 @@
   <div class="case-foot">patient_pmbcl_typical.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/pmbcl-bulky-svc.html"
-   data-default-order="39"
+   data-default-order="38"
    data-name="PMBCL · Bulky + SVC Syndrome">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5163,7 +5105,7 @@
   <div class="case-foot">patient_pmbcl_bulky_svc.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/pmbcl-relapsed-post-rchop.html"
-   data-default-order="40"
+   data-default-order="39"
    data-name="PMBCL · Relapsed post-R-CHOP (Pembrolizumab)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5174,7 +5116,7 @@
   <div class="case-foot">patient_pmbcl_relapsed_post_rchop.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-pmbcl.html"
-   data-default-order="148"
+   data-default-order="146"
    data-name="DIS-PMBCL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -5259,7 +5201,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/pmf-anemia-dominant.html"
-   data-default-order="88"
+   data-default-order="84"
    data-name="PMF · Anemia-Dominant (Momelotinib)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5270,7 +5212,7 @@
   <div class="case-foot">patient_pmf_anemia_dominant.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/pmf-int2-symptomatic-rux.html"
-   data-default-order="89"
+   data-default-order="85"
    data-name="PMF · Int-2 Symptomatic (Ruxolitinib)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5281,7 +5223,7 @@
   <div class="case-foot">patient_pmf_int2_symptomatic_ruxolitinib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/pmf-post-rux-allohct.html"
-   data-default-order="90"
+   data-default-order="86"
    data-name="PMF · Post-Rux alloHCT Bridge (Urgent)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5292,7 +5234,7 @@
   <div class="case-foot">patient_pmf_post_rux_allohct_bridge.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-pmf.html"
-   data-default-order="149"
+   data-default-order="147"
    data-name="DIS-PMF — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -5388,7 +5330,7 @@
   <div class="case-foot">patient_ptcl_cd30_negative.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/ptcl-cd30-positive.html"
-   data-default-order="50"
+   data-default-order="48"
    data-name="PTCL NOS · CD30-positive (CHP-Bv)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5399,7 +5341,7 @@
   <div class="case-foot">patient_ptcl_cd30_positive.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/ptcl-relapsed.html"
-   data-default-order="51"
+   data-default-order="49"
    data-name="PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5410,7 +5352,7 @@
   <div class="case-foot">patient_ptcl_relapsed.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-ptcl_nos.html"
-   data-default-order="151"
+   data-default-order="150"
    data-name="DIS-PTCL-NOS — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -5495,7 +5437,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-hnscc.html"
-   data-default-order="128"
+   data-default-order="125"
    data-name="DIS-HNSCC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -5561,7 +5503,7 @@
   <div class="case-foot">variant_hnscc_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/hnscc-cps-high-pembro-mono.html"
-   data-default-order="580"
+   data-default-order="573"
    data-name="HNSCC · R/M CPS≥1 1L · Pembro mono (KEYNOTE-048)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5572,7 +5514,7 @@
   <div class="case-foot">patient_hnscc_cps_high_pembro_mono.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/hnscc-extreme-cetux-platin.html"
-   data-default-order="581"
+   data-default-order="574"
    data-name="HNSCC · R/M EXTREME · Cetux+platin+5FU">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5584,6 +5526,25 @@
 </a>
   </div>
 </section>
+<section class="case-list" data-disease-id="DIS-ANAL-SCC" hidden>
+  <header class="case-list-header">
+    <h2>Плоскоклітинний рак анального каналу</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/auto-anal_scc.html"
+   data-default-order="98"
+   data-name="DIS-ANAL-SCC — Auto-stub (12% наповненість)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-stub">Auto-stub</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>DIS-ANAL-SCC — Auto-stub (12% наповненість)</h3>
+  <p>Автогенерований мінімальний профіль для Anal squamous cell carcinoma (Anal SCC). Фактична наповненість бази для цієї хвороби — 12%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.</p>
+  <div class="case-foot">auto_anal_scc.json</div>
+</a>
+  </div>
+</section>
 <section class="case-list" data-disease-id="DIS-PTLD" hidden>
   <header class="case-list-header">
     <h2>Посттрансплантаційні лімфопроліферативні захворювання</h2>
@@ -5591,7 +5552,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/ptld-polymorphic-ebv.html"
-   data-default-order="64"
+   data-default-order="61"
    data-name="PTLD · Polymorphic EBV+ (RIS + Rituximab)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5602,7 +5563,7 @@
   <div class="case-foot">patient_ptld_polymorphic_ebv.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/ptld-monomorphic-dlbcl-like.html"
-   data-default-order="65"
+   data-default-order="62"
    data-name="PTLD · Monomorphic DLBCL-like (R-CHOP)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5613,7 +5574,7 @@
   <div class="case-foot">patient_ptld_monomorphic_dlbcl_like.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-ptld.html"
-   data-default-order="152"
+   data-default-order="151"
    data-name="DIS-PTLD — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -5698,7 +5659,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-mastocytosis.html"
-   data-default-order="132"
+   data-default-order="129"
    data-name="DIS-MASTOCYTOSIS — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -5772,7 +5733,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-pdac.html"
-   data-default-order="147"
+   data-default-order="145"
    data-name="DIS-PDAC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -5838,7 +5799,7 @@
   <div class="case-foot">variant_pdac_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/pdac-folfirinox-fit.html"
-   data-default-order="577"
+   data-default-order="570"
    data-name="PDAC · met fit · FOLFIRINOX (PRODIGE-4)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5847,6 +5808,25 @@
   <h3>PDAC · met fit · FOLFIRINOX (PRODIGE-4)</h3>
   <p>Fit метастатична PDAC. Drift: ALGO step 3 condition free-text; engine default = gem-nab-pac; FOLFIRINOX як alternative track.</p>
   <div class="case-foot">patient_pdac_metastatic_folfirinox_fit.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-SOFT-TISSUE-SARCOMA" hidden>
+  <header class="case-list-header">
+    <h2>Саркома м&#x27;яких тканин</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/auto-soft_tissue_sarcoma.html"
+   data-default-order="155"
+   data-name="DIS-SOFT-TISSUE-SARCOMA — Auto-stub (25% наповненість)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-stub">Auto-stub</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>DIS-SOFT-TISSUE-SARCOMA — Auto-stub (25% наповненість)</h3>
+  <p>Автогенерований мінімальний профіль для Soft tissue sarcoma. Фактична наповненість бази для цієї хвороби — 25%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.</p>
+  <div class="case-foot">auto_soft_tissue_sarcoma.json</div>
 </a>
   </div>
 </section>
@@ -5879,7 +5859,7 @@
   <div class="case-foot">patient_smzl_hcv_negative.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-splenic_mzl.html"
-   data-default-order="157"
+   data-default-order="156"
    data-name="DIS-SPLENIC-MZL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -5890,7 +5870,7 @@
   <div class="case-foot">auto_splenic_mzl.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-splenic_mzl-frail.html"
-   data-default-order="488"
+   data-default-order="483"
    data-name="DIS-SPLENIC-MZL · Літній / крихкий пацієнт (age 78, ECOG 3)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -5901,7 +5881,7 @@
   <div class="case-foot">variant_splenic_mzl_frail.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-splenic_mzl-organ-dysf.html"
-   data-default-order="489"
+   data-default-order="484"
    data-name="DIS-SPLENIC-MZL · Дисфункція органів (CrCl 25, bili 3.5×ULN)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -5912,7 +5892,7 @@
   <div class="case-foot">variant_splenic_mzl_organ_dysf.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-splenic_mzl-infection-hbv.html"
-   data-default-order="490"
+   data-default-order="485"
    data-name="DIS-SPLENIC-MZL · HBV-позитивний (HBsAg+, anti-HBc+)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -5923,7 +5903,7 @@
   <div class="case-foot">variant_splenic_mzl_infection_hbv.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-splenic_mzl-relapsed-2l.html"
-   data-default-order="491"
+   data-default-order="486"
    data-name="DIS-SPLENIC-MZL · Релапс / 2-а лінія">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -5934,7 +5914,7 @@
   <div class="case-foot">variant_splenic_mzl_relapsed_2l.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-splenic_mzl-biomarker-act.html"
-   data-default-order="492"
+   data-default-order="487"
    data-name="DIS-SPLENIC-MZL · Actionable біомаркер present">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -5945,7 +5925,7 @@
   <div class="case-foot">variant_splenic_mzl_biomarker_act.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-splenic_mzl-high-risk.html"
-   data-default-order="493"
+   data-default-order="488"
    data-name="DIS-SPLENIC-MZL · High-risk biology / bulky disease">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -5964,7 +5944,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/pv-high-risk-hu.html"
-   data-default-order="84"
+   data-default-order="80"
    data-name="Polycythemia Vera · High Risk (HU 1L)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5975,7 +5955,7 @@
   <div class="case-foot">patient_pv_high_risk_hu.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/pv-hu-resistant-rux.html"
-   data-default-order="85"
+   data-default-order="81"
    data-name="PV · HU-resistant (Ruxolitinib 2L)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5986,7 +5966,7 @@
   <div class="case-foot">patient_pv_hu_resistant_ruxolitinib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/pv-pregnancy-planning.html"
-   data-default-order="86"
+   data-default-order="82"
    data-name="PV · Pregnancy Planning (Peg-IFN)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -5997,7 +5977,7 @@
   <div class="case-foot">patient_pv_pregnancy_planning.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-pv.html"
-   data-default-order="153"
+   data-default-order="152"
    data-name="DIS-PV — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -6093,7 +6073,7 @@
   <div class="case-foot">auto_urothelial.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-urothelial-frail.html"
-   data-default-order="516"
+   data-default-order="511"
    data-name="DIS-UROTHELIAL · Літній / крихкий пацієнт (age 78, ECOG 3)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -6104,7 +6084,7 @@
   <div class="case-foot">variant_urothelial_frail.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-urothelial-organ-dysf.html"
-   data-default-order="517"
+   data-default-order="512"
    data-name="DIS-UROTHELIAL · Дисфункція органів (CrCl 25, bili 3.5×ULN)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -6115,7 +6095,7 @@
   <div class="case-foot">variant_urothelial_organ_dysf.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-urothelial-infection-hbv.html"
-   data-default-order="518"
+   data-default-order="513"
    data-name="DIS-UROTHELIAL · HBV-позитивний (HBsAg+, anti-HBc+)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -6126,7 +6106,7 @@
   <div class="case-foot">variant_urothelial_infection_hbv.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-urothelial-biomarker-act.html"
-   data-default-order="519"
+   data-default-order="514"
    data-name="DIS-UROTHELIAL · Actionable біомаркер present">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -6137,7 +6117,7 @@
   <div class="case-foot">variant_urothelial_biomarker_act.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/variant-urothelial-high-risk.html"
-   data-default-order="520"
+   data-default-order="515"
    data-name="DIS-UROTHELIAL · High-risk biology / bulky disease">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Variant</div>
@@ -6148,7 +6128,7 @@
   <div class="case-foot">variant_urothelial_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/urothelial-muc-ev-pembro.html"
-   data-default-order="568"
+   data-default-order="561"
    data-name="Urothelial · mUC 1L · EV+pembro (EV-302)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6200,7 +6180,7 @@
   <div class="case-foot">patient_fl_transformation.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-fl.html"
-   data-default-order="119"
+   data-default-order="116"
    data-name="DIS-FL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -6274,7 +6254,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-cholangiocarcinoma.html"
-   data-default-order="109"
+   data-default-order="106"
    data-name="DIS-CHOLANGIOCARCINOMA — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -6359,7 +6339,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-chondrosarcoma.html"
-   data-default-order="110"
+   data-default-order="107"
    data-name="DIS-CHONDROSARCOMA — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -6429,7 +6409,7 @@
 <section class="case-list" data-disease-id="DIS-CLL" hidden>
   <header class="case-list-header">
     <h2>Хронічна лімфоцитарна лейкемія / Дрібноклітинна лімфоцитарна лімфома</h2>
-    <span class="case-list-count">11 прикладів</span>
+    <span class="case-list-count">10 прикладів</span>
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/cll-low-risk.html"
@@ -6454,19 +6434,8 @@
   <p>ХЛЛ з TP53 mutation + IGHV-unmut + complex karyotype — RF-CLL-HIGH-RISK fired. Engine ескалує до venetoclax+obinutuzumab (CLL14).</p>
   <div class="case-foot">patient_cll_high_risk.json</div>
 </a>
-<a class="case-card" href="/ukr/cases/cll-post-btki.html"
-   data-default-order="44"
-   data-name="CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)</h3>
-  <p>CLL з прогресією на covalent BTKi — engine обирає pirtobrutinib (BRUIN, non-covalent) або venetoclax+rituximab (MURANO).</p>
-  <div class="case-foot">patient_cll_post_btki_progression.json</div>
-</a>
 <a class="case-card" href="/ukr/cases/auto-cll.html"
-   data-default-order="111"
+   data-default-order="108"
    data-name="DIS-CLL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -6543,7 +6512,7 @@
   <div class="case-foot">variant_cll_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/cll-venr-2l-murano.html"
-   data-default-order="589"
+   data-default-order="582"
    data-name="CLL · 2L post-BTKi · VenR fixed-duration (MURANO)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6562,7 +6531,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/cml-chronic-newdx.html"
-   data-default-order="75"
+   data-default-order="71"
    data-name="CML · Chronic Phase Newly Diagnosed (TKI 1L)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6573,7 +6542,7 @@
   <div class="case-foot">patient_cml_chronic_phase_newdx.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/cml-t315i.html"
-   data-default-order="76"
+   data-default-order="72"
    data-name="CML · T315I-mutated (Ponatinib / Asciminib)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6584,7 +6553,7 @@
   <div class="case-foot">patient_cml_t315i.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/cml-blast-crisis.html"
-   data-default-order="77"
+   data-default-order="73"
    data-name="CML · Blast Crisis at Presentation (TKI + Chemo + alloHCT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6595,7 +6564,7 @@
   <div class="case-foot">patient_cml_blast_crisis_at_presentation.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/auto-cml.html"
-   data-default-order="112"
+   data-default-order="109"
    data-name="DIS-CML — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -6680,7 +6649,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-melanoma.html"
-   data-default-order="136"
+   data-default-order="133"
    data-name="DIS-MELANOMA — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -6757,7 +6726,7 @@
   <div class="case-foot">variant_melanoma_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/melanoma-braf-v600-dab-tram.html"
-   data-default-order="560"
+   data-default-order="555"
    data-name="Melanoma · BRAF V600 · 1L Dab+tram (COMBI-d/v)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6768,7 +6737,7 @@
   <div class="case-foot">patient_melanoma_braf_v600_dab_tram.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/melanoma-braf-v600-nivo-ipi.html"
-   data-default-order="561"
+   data-default-order="556"
    data-name="Melanoma · BRAF V600 · 1L Nivo+ipi (CheckMate-067)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6779,7 +6748,7 @@
   <div class="case-foot">patient_melanoma_braf_v600_nivo_ipi.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/melanoma-braf-wt-pembro-mono.html"
-   data-default-order="562"
+   data-default-order="557"
    data-name="Melanoma · BRAF-WT · 1L Pembro mono (KEYNOTE-006)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6790,7 +6759,7 @@
   <div class="case-foot">patient_melanoma_braf_wt_pembro_mono.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/melanoma-nivo-relatlimab.html"
-   data-default-order="563"
+   data-default-order="558"
    data-name="Melanoma · 1L Nivolumab+relatlimab (RELATIVITY-047)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6801,7 +6770,7 @@
   <div class="case-foot">patient_melanoma_nivo_relatlimab.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/melanoma-adjuvant-pembro-stage-iii.html"
-   data-default-order="564"
+   data-default-order="559"
    data-name="Melanoma · Stage III resected · Adjuvant pembro (KEYNOTE-054)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6820,7 +6789,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-breast.html"
-   data-default-order="105"
+   data-default-order="102"
    data-name="DIS-BREAST — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -6897,7 +6866,7 @@
   <div class="case-foot">variant_breast_high_risk.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-hr-pos-met-1l-cdk46i.html"
-   data-default-order="539"
+   data-default-order="534"
    data-name="Breast · HR+/HER2- met 1L · AI+palbociclib (PALOMA-2)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6908,7 +6877,7 @@
   <div class="case-foot">patient_breast_hr_pos_her2_neg_met_1l_cdk46i.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-hr-pos-pik3ca-alpelisib.html"
-   data-default-order="540"
+   data-default-order="535"
    data-name="Breast · HR+ post-CDK4/6i · PIK3CA H1047R · Alpelisib (SOLAR-1)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6919,7 +6888,7 @@
   <div class="case-foot">patient_breast_hr_pos_post_cdk46i_pik3ca_alpelisib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-her2-pos-early-katherine.html"
-   data-default-order="541"
+   data-default-order="536"
    data-name="Breast · HER2+ early · Neoadj TCHP → KATHERINE T-DM1">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6930,7 +6899,7 @@
   <div class="case-foot">patient_breast_her2_pos_early_neoadj_kn522_path.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-her2-pos-met-1l-thp.html"
-   data-default-order="542"
+   data-default-order="537"
    data-name="Breast · HER2+ met 1L · Docetaxel+THP (CLEOPATRA)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6941,7 +6910,7 @@
   <div class="case-foot">patient_breast_her2_pos_met_1l_thp.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-her2-pos-met-2l-tdxd.html"
-   data-default-order="543"
+   data-default-order="538"
    data-name="Breast · HER2+ met 2L · T-DXd (DESTINY-Breast03)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6952,7 +6921,7 @@
   <div class="case-foot">patient_breast_her2_pos_met_2l_tdxd.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-tnbc-neoadj-kn522.html"
-   data-default-order="544"
+   data-default-order="539"
    data-name="Breast · TNBC stage II-III · Neoadj pembro+chemo (KEYNOTE-522)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6963,7 +6932,7 @@
   <div class="case-foot">patient_breast_tnbc_neoadj_kn522_pembro_chemo.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-brca-germline-olaparib.html"
-   data-default-order="545"
+   data-default-order="540"
    data-name="Breast · BRCA1 germline met · Olaparib (OlympiAD)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6974,7 +6943,7 @@
   <div class="case-foot">patient_breast_brca_germline_met_olaparib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-tnbc-met-2l-sacituzumab.html"
-   data-default-order="546"
+   data-default-order="541"
    data-name="Breast · TNBC met 2L · Sacituzumab govitecan (ASCENT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6985,7 +6954,7 @@
   <div class="case-foot">patient_breast_tnbc_met_sacituzumab_2l.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-her2-pos-2l-brain-mets-tucatinib.html"
-   data-default-order="547"
+   data-default-order="542"
    data-name="Breast · HER2+ met 2L · Tucatinib+tras+capec (HER2CLIMB, brain mets)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -6996,7 +6965,7 @@
   <div class="case-foot">patient_breast_her2_pos_2l_brain_mets_tucatinib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-hr-pos-2l-akt1-capivasertib.html"
-   data-default-order="548"
+   data-default-order="543"
    data-name="Breast · HR+/HER2- met 2L · Capivasertib+fulvestrant (AKT1 E17K, CAPItello-291)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -7007,7 +6976,7 @@
   <div class="case-foot">patient_breast_hr_pos_2l_akt1_capivasertib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-hr-pos-2l-esr1-elacestrant.html"
-   data-default-order="549"
+   data-default-order="544"
    data-name="Breast · HR+/HER2- met 2L · Elacestrant (ESR1 D538G, EMERALD)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -7018,7 +6987,7 @@
   <div class="case-foot">patient_breast_hr_pos_2l_esr1_elacestrant.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-hr-pos-2l-her2-low-tdxd.html"
-   data-default-order="550"
+   data-default-order="545"
    data-name="Breast · HR+/HER2-low met 2L · T-DXd (DESTINY-Breast06)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -7029,7 +6998,7 @@
   <div class="case-foot">patient_breast_hr_pos_2l_her2_low_tdxd.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-hr-pos-2l-everolimus.html"
-   data-default-order="551"
+   data-default-order="546"
    data-name="Breast · HR+/HER2 IHC 0 met 2L · Everolimus+fulvestrant (BOLERO-2)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -7040,7 +7009,7 @@
   <div class="case-foot">patient_breast_hr_pos_2l_everolimus.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-tnbc-2l-brca-talazoparib.html"
-   data-default-order="552"
+   data-default-order="547"
    data-name="Breast · TNBC met 2L · PARPi — talazoparib (BRCA1, EMBRACA)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -7051,7 +7020,7 @@
   <div class="case-foot">patient_breast_tnbc_2l_brca_talazoparib.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/breast-tnbc-2l-her2-low-tdxd.html"
-   data-default-order="553"
+   data-default-order="548"
    data-name="Breast · TNBC/HER2-low met 2L · T-DXd (DESTINY-Breast04 subset)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -7070,7 +7039,7 @@
   </header>
   <div class="case-grid">
 <a class="case-card" href="/ukr/cases/auto-ifs.html"
-   data-default-order="130"
+   data-default-order="127"
    data-name="DIS-IFS — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -7155,7 +7124,7 @@
   <div class="case-foot">patient_diagnostic_lymphoma_suspect.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-breast-lump-prebiopsy.html"
-   data-default-order="591"
+   data-default-order="584"
    data-name="Diagnostic · Suspect breast lump · BI-RADS 4-5 pre-biopsy">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7166,7 +7135,7 @@
   <div class="case-foot">patient_diagnostic_breast_lump_prebiopsy.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-lung-mass-prebiopsy.html"
-   data-default-order="592"
+   data-default-order="585"
    data-name="Diagnostic · Suspect lung mass · Smoker hx pre-biopsy">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7177,7 +7146,7 @@
   <div class="case-foot">patient_diagnostic_lung_mass_smoker_prebiopsy.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-prostate-psa-prebiopsy.html"
-   data-default-order="593"
+   data-default-order="586"
    data-name="Diagnostic · Elevated PSA · mp-MRI PI-RADS 4 pre-biopsy">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7188,7 +7157,7 @@
   <div class="case-foot">patient_diagnostic_prostate_psa_elevated_prebiopsy.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-acute-leukemia-circulating-blasts.html"
-   data-default-order="594"
+   data-default-order="587"
    data-name="Diagnostic · Acute leukemia · Pancytopenia + 38% circulating blasts">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7199,7 +7168,7 @@
   <div class="case-foot">patient_diagnostic_acute_leukemia_circulating_blasts.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-crc-lgib-iron-deficiency.html"
-   data-default-order="595"
+   data-default-order="588"
    data-name="Diagnostic · Suspect CRC · Iron-deficiency + LGIB + colon mass">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7210,7 +7179,7 @@
   <div class="case-foot">patient_diagnostic_crc_lgib_iron_deficiency.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-endometrial-pmb.html"
-   data-default-order="596"
+   data-default-order="589"
    data-name="Diagnostic · Suspect endometrial · PMB + thickened endometrium 14 mm">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7221,7 +7190,7 @@
   <div class="case-foot">patient_diagnostic_endometrial_pmb.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-gbm-focal-neuro-deficit.html"
-   data-default-order="597"
+   data-default-order="590"
    data-name="Diagnostic · Suspect GBM · 4.2 cm ring-enhancing left frontal mass">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7232,7 +7201,7 @@
   <div class="case-foot">patient_diagnostic_gbm_focal_neuro_deficit.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-hcc-cirrhosis-li-rads.html"
-   data-default-order="598"
+   data-default-order="591"
    data-name="Diagnostic · Suspect HCC · HCV-cirrhosis + LI-RADS 5 + AFP 480">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7243,7 +7212,7 @@
   <div class="case-foot">patient_diagnostic_hcc_cirrhosis_li_rads.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-melanoma-atypical-lesion.html"
-   data-default-order="599"
+   data-default-order="592"
    data-name="Diagnostic · Suspect melanoma · Atypical pigmented lesion (ABCDE+)">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7254,7 +7223,7 @@
   <div class="case-foot">patient_diagnostic_melanoma_atypical_lesion.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-mm-bone-pain-m-protein.html"
-   data-default-order="600"
+   data-default-order="593"
    data-name="Diagnostic · Suspect MM · Bone pain + IgG-kappa M-spike + lytic L2">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7265,7 +7234,7 @@
   <div class="case-foot">patient_diagnostic_mm_bone_pain_m_protein.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-mpn-mds-pancytopenia.html"
-   data-default-order="601"
+   data-default-order="594"
    data-name="Diagnostic · Suspect MDS · Pancytopenia + dysplastic changes + JAK2-neg">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7276,7 +7245,7 @@
   <div class="case-foot">patient_diagnostic_mpn_mds_pancytopenia.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-mpn-polycythemia-pruritus.html"
-   data-default-order="602"
+   data-default-order="595"
    data-name="Diagnostic · Suspect PV · Erythrocytosis (Hgb 19.2) + low EPO + aquagenic pruritus">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7287,7 +7256,7 @@
   <div class="case-foot">patient_diagnostic_mpn_polycythemia_pruritus.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-ovarian-pelvic-mass-ca125.html"
-   data-default-order="603"
+   data-default-order="596"
    data-name="Diagnostic · Suspect ovarian · Bilateral adnexal masses + CA-125 412 + ascites">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7298,7 +7267,7 @@
   <div class="case-foot">patient_diagnostic_ovarian_pelvic_mass_ca125.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-rcc-incidental-mass.html"
-   data-default-order="604"
+   data-default-order="597"
    data-name="Diagnostic · Suspect RCC · 5.4 cm incidental enhancing renal mass">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7309,7 +7278,7 @@
   <div class="case-foot">patient_diagnostic_rcc_incidental_mass.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-sclc-central-lung-siadh.html"
-   data-default-order="605"
+   data-default-order="598"
    data-name="Diagnostic · Suspect SCLC · Central 5.8 cm mass + paraneoplastic SIADH (Na 124)">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7320,7 +7289,7 @@
   <div class="case-foot">patient_diagnostic_sclc_central_lung_siadh.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-urothelial-gross-hematuria.html"
-   data-default-order="606"
+   data-default-order="599"
    data-name="Diagnostic · Suspect urothelial · Gross painless hematuria + 2.8 cm bladder mass">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7331,7 +7300,7 @@
   <div class="case-foot">patient_diagnostic_urothelial_gross_hematuria.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-lymphadenopathy-undifferentiated.html"
-   data-default-order="607"
+   data-default-order="600"
    data-name="Diagnostic · Persistent LAD undifferentiated · Reactive vs lymphoma vs metastatic">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7342,7 +7311,7 @@
   <div class="case-foot">patient_diagnostic_lymphadenopathy_undifferentiated.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-metastatic-prostate-rising-psa.html"
-   data-default-order="608"
+   data-default-order="601"
    data-name="Diagnostic · mPC restage · Rising PSA + bone mets post-RP (Gleason 9)">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7353,7 +7322,7 @@
   <div class="case-foot">patient_diagnostic_metastatic_prostate_rising_psa.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-mgus-incidental-m-spike.html"
-   data-default-order="609"
+   data-default-order="602"
    data-name="Diagnostic · MGUS · Asymptomatic M-spike 8 g/L IgG-kappa (incidental)">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7364,7 +7333,7 @@
   <div class="case-foot">patient_diagnostic_mgus_incidental_m_spike.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-lung-cancer-indeterminate.html"
-   data-default-order="610"
+   data-default-order="603"
    data-name="Diagnostic · Lung cancer suspect · LDCT screening + 3.2 cm RUL mass (NSCLC vs SCLC)">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7375,7 +7344,7 @@
   <div class="case-foot">patient_diagnostic_lung_cancer_indeterminate.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-cup-unknown-primary.html"
-   data-default-order="611"
+   data-default-order="604"
    data-name="Diagnostic · CUP · 4 liver mets + bone lesions, occult primary">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7386,7 +7355,7 @@
   <div class="case-foot">patient_diagnostic_cup_unknown_primary.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-breast-post-imaging-staging.html"
-   data-default-order="612"
+   data-default-order="605"
    data-name="Diagnostic · Breast post-biopsy staging · ER+/HER2-low + axillary node + family hx">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
@@ -7397,7 +7366,7 @@
   <div class="case-foot">patient_diagnostic_breast_post_imaging_staging.json</div>
 </a>
 <a class="case-card" href="/ukr/cases/diagnostic-gu-skin-gyn-combined.html"
-   data-default-order="613"
+   data-default-order="606"
    data-name="Diagnostic · Multi-system suspicion · Renal mass + atypical melanocytic + endometrial thickening">
   <div class="case-badge-row">
     <div class="case-badge bdg-diag">Diagnostic Brief</div>
