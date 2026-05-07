@@ -1,16 +1,24 @@
+# ALGO-CHOLANGIO-2L — chunk gi3-d2-algo-extensions-2026-05-08-2300.
+# Routes 2L+ advanced/metastatic biliary tract / cholangiocarcinoma post-
+# chemo (gem+cis ± durvalumab) progression. Driver-mutation hierarchy:
+# IDH1-R132 mut (intrahepatic predominantly) → ivosidenib (ClarIDHy NCCN
+# cat 1); HER2-amp → zanidatamab (HERIZON-BTC-01 NCCN cat 2A FDA-accelerated);
+# FGFR2 fusion → pemigatinib (FIGHT-202 NCCN cat 1); fallback → gem+cis
+# placeholder until 2L FOLFOX (ABC-06) indication authored.
 id: ALGO-CHOLANGIO-2L
 applicable_to_disease: DIS-CHOLANGIOCARCINOMA
 applicable_to_line_of_therapy: 2
 purpose: >
-  2L+ routing for advanced / metastatic biliary tract / cholangiocarcinoma
-  post-chemo (gem+cis ± durvalumab) progression. Driver-mutation
-  routing first: FGFR2 fusion → pemigatinib (FIGHT-202; futibatinib
-  alternative). Future branches: IDH1-mutant intrahepatic (ivosidenib
-  ClarIDHy), HER2-amp (T-DXd / tucatinib-trastuzumab), BRAF V600E
-  (dab+tram), MSI-H/dMMR (pembrolizumab) — pending dedicated
-  indications. Default: FOLFOX 2L (ABC-06).
+  2L+ routing for advanced / metastatic biliary tract / cholangio-
+  carcinoma post-chemo (gem+cis ± durvalumab) progression. Driver-
+  mutation hierarchy: IDH1-R132 mut → ivosidenib (ClarIDHy);
+  HER2-amp → zanidatamab (HERIZON-BTC-01); FGFR2 fusion → pemigatinib
+  (FIGHT-202; futibatinib FOENIX-CCA2 alternative). Default fallback
+  to ABC-02 gem+cis as placeholder until 2L FOLFOX (ABC-06) authored.
 
 output_indications:
+  - IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
+  - IND-CHOLANGIO-2L-HER2-ZANIDATAMAB
   - IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
   - IND-CHOLANGIO-ADVANCED-GEM-CIS  # placeholder default; replaced when 2L FOLFOX indication authored
 
@@ -18,11 +26,53 @@ default_indication: IND-CHOLANGIO-ADVANCED-GEM-CIS
 alternative_indication: IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
 
 decision_tree:
-  # Step 1 — FGFR2 fusion / rearrangement (~10–20% of intrahepatic CCA).
-  # Treatment-defining for 2L: pemigatinib (FIGHT-202) preferred;
-  # futibatinib (FOENIX-CCA2) alternative including post-pemigatinib
-  # resistance. Surfaced via known_controversies in indication.
+  # Step 1 — IDH1-R132 mutant (~10–20% of intrahepatic cholangio).
+  # ClarIDHy phase 3 (Abou-Alfa Lancet Oncol 2020) PFS HR 0.37 vs
+  # placebo, mOS 10.3 vs 7.5 mo (rank-preserving structural failure
+  # crossover-adjusted). NCCN cat 1, FDA-approved Aug 2021.
+  # IDH1 testing typically via NGS (DNA-NGS sufficient — no fusion
+  # detection needed); positioned at step 1 because driver-targeted
+  # therapy with phase-3 OS evidence supersedes class-effect targeted
+  # alternatives.
   - step: 1
+    evaluate:
+      any_of:
+        - condition: "IDH1-R132 mutation confirmed by NGS (any of R132C/H/G/L/S)"
+    if_true:
+      result: IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
+      notes: >
+        ClarIDHy (Abou-Alfa 2020) — ivosidenib 500 mg PO daily until
+        PD/toxicity. PFS HR 0.37 (p<0.0001), mOS 10.3 vs 7.5 mo
+        crossover-adjusted. NCCN cat 1 + FDA-approved 2021. Confidence:
+        high (phase 3, RPSFT crossover-adjusted OS).
+    if_false:
+      next_step: 2
+
+  # Step 2 — HER2 amplification / overexpression (~5–15% intrahepatic;
+  # higher in extrahepatic / GB). Zanidatamab (biparatopic HER2 mAb)
+  # per HERIZON-BTC-01 phase 2 (Harding Lancet Oncol 2023): cORR 41.3%,
+  # mDOR 12.9 mo. NCCN cat 2A; FDA-accelerated approval Nov 2024.
+  # Note: HER2 testing in cholangio uses IHC + ISH per ASCO/CAP gastric
+  # criteria (no cholangio-specific guideline); 3+ or 2+/ISH-amp.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "HER2 amplification (IHC 3+ OR IHC 2+/ISH-amp) or HER2 overexpression per ASCO/CAP gastric criteria"
+    if_true:
+      result: IND-CHOLANGIO-2L-HER2-ZANIDATAMAB
+      notes: >
+        HERIZON-BTC-01 (Harding 2023) — zanidatamab 20 mg/kg IV q2w.
+        cORR 41.3% (95% CI 30.4–52.8), mDOR 12.9 mo, mOS 15.5 mo. NCCN
+        cat 2A, FDA-accelerated 2024. Confidence: moderate (single-arm
+        phase 2 with reasonable durability, awaiting confirmatory phase 3).
+    if_false:
+      next_step: 3
+
+  # Step 3 — FGFR2 fusion / rearrangement (~10–20% of intrahepatic CCA).
+  # Pemigatinib (FIGHT-202; Abou-Alfa Lancet Oncol 2020) preferred per
+  # NCCN cat 1; futibatinib (FOENIX-CCA2) alternative including post-
+  # pemigatinib resistance. Surfaced via known_controversies on indication.
+  - step: 3
     evaluate:
       any_of:
         - red_flag: RF-CHOLANGIO-FGFR2-FUSION-ACTIONABLE
@@ -30,13 +80,13 @@ decision_tree:
     if_true:
       result: IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
     if_false:
-      next_step: 2
+      next_step: 4
 
-  # Step 2 — default 2L (placeholder routing back to ABC-02 gem+cis
-  # indication; FOLFOX-2L (ABC-06) and future driver branches — IDH1
-  # ivosidenib, HER2 T-DXd, BRAF V600E dab+tram, MSI-H pembrolizumab —
+  # Step 4 — default 2L (placeholder routing back to ABC-02 gem+cis
+  # indication; FOLFOX-2L (ABC-06) and future driver branches — BRAF
+  # V600E dab+tram, MSI-H pembrolizumab, NTRK fusion larotrectinib —
   # to be added in subsequent biomarker-expansion chunks).
-  - step: 2
+  - step: 4
     evaluate:
       any_of:
         - condition: "Disease progression on 1L gem+cis ± durvalumab; no actionable driver biomarker"
@@ -50,14 +100,18 @@ sources:
   - SRC-ESMO-BTC-2023
   - SRC-FIGHT-202
 
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-08"
 reviewer_signoffs: 0
 notes: >
-  STUB scaffold — created in W1.B2 chunk. FGFR2 fusion is the only
-  fully-wired 2L driver branch in this version; default falls back to
-  ABC-02 gem+cis as placeholder. Future chunks should add: (1) 2L
-  FOLFOX (ABC-06) as proper default for non-driver progression; (2)
-  IDH1-mutant ivosidenib (ClarIDHy); (3) HER2-amp T-DXd (DESTINY-PanTumor02)
-  / tucatinib-trastuzumab; (4) BRAF V600E dab+tram (ROAR); (5) MSI-H
-  pembrolizumab (KEYNOTE-158). Out-of-scope: locoregional therapies
-  (radioembolization, intraarterial chemotherapy).
+  D2 chunk gi3-d2-algo-extensions-2026-05-08-2300 — extended W1.B2
+  scaffold with IDH1 (step 1) + HER2 (step 2) driver branches added on
+  top of existing FGFR2 fusion branch (now step 3). Driver hierarchy
+  ordered by trial evidence weight: IDH1 (ClarIDHy phase 3 NCCN cat 1)
+  > HER2 (HERIZON-BTC-01 phase 2 NCCN cat 2A FDA-accelerated) > FGFR2
+  (FIGHT-202 phase 2 NCCN cat 1). Default still falls back to ABC-02
+  gem+cis as placeholder until 2L FOLFOX (ABC-06) indication authored.
+  Future chunks should add: (1) 2L FOLFOX (ABC-06) as proper non-driver
+  default; (2) BRAF V600E dab+tram (ROAR); (3) MSI-H pembrolizumab
+  (KEYNOTE-158); (4) NTRK larotrectinib / entrectinib pan-tumor.
+  Out-of-scope: locoregional therapies (radioembolization, intraarterial
+  chemotherapy), durvalumab maintenance post-1L.
