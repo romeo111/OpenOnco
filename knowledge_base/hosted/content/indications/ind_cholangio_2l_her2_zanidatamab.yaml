@@ -1,0 +1,111 @@
+id: IND-CHOLANGIO-2L-HER2-ZANIDATAMAB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Locally advanced unresectable or metastatic biliary tract cancer (intrahepatic / perihilar / distal cholangiocarcinoma; gallbladder cancer eligible)"
+    - "Disease progression on ≥1 prior systemic therapy (typically gem+cis ± durvalumab 1L)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HER2-SOLID
+      required: true
+      value_constraint: "HER2 IHC 3+ OR (IHC 2+ AND ISH amplified, HER2/CEP17 ratio ≥2.0); gastric-style scoring (Hofmann 2008 — basolateral/lateral membranous staining ≥10%)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ZANIDATAMAB
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "41.3% (95% CI 30.4-52.8) per HERIZON-BTC-01 cohort 1 (HER2 IHC 3+ or IHC 2+/ISH+, n=87)"
+  complete_response: "~1-2%"
+  progression_free_survival: "Median PFS 5.5 mo (HERIZON-BTC-01)"
+  overall_survival_5y: "Median OS 15.5 mo (HERIZON-BTC-01); long-term f/u pending"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CHOLANGIOCARCINOMA-FRAILTY-AGE
+  - RF-CHOLANGIOCARCINOMA-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Zanidatamab (HER2-targeted biparatopic bispecific antibody binding
+  HER2 ECD2 + ECD4) for HER2-amplified (IHC 3+ or IHC 2+/ISH+)
+  unresectable / locally advanced / metastatic biliary tract cancer
+  post ≥1 prior systemic line — confirmed ORR 41.3% (95% CI 30.4-52.8),
+  median DoR 14.9 mo, DCR 68.8% in HERIZON-BTC-01 (Harding Lancet Oncol
+  2023; n=87 cohort 1). FDA accelerated approval November 2024 for
+  HER2-positive (IHC 3+) BTC ≥2L. NCCN category 2A. ESCAT tier IIA
+  (FDA-approved disease-specific). HER2 amplification ~5-15% of BTC
+  overall (higher in gallbladder + extrahepatic CCA; lower in
+  intrahepatic CCA). Single-arm phase 2b — evidence tier 2 / moderate;
+  conditional recommendation reflects accelerated approval status
+  pending confirmatory data. Class HER2-targeted toxicity profile —
+  ~40% any-grade diarrhea (antidiarrheal prophylaxis advised), ~33%
+  infusion reactions (premedication + slow first infusion), cardiac
+  surveillance per HER2-targeted class. UA access barrier: zanidatamab
+  not registered (named-patient / EAP only as of 2026-05).
+
+sources:
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+    relevant_quote_paraphrase: "Zanidatamab is a recommended option for HER2-positive (IHC 3+) advanced biliary tract cancer post ≥1 prior systemic line (HERIZON-BTC-01); FDA accelerated approval Nov 2024"
+  - source_id: SRC-ESMO-BTC-2023
+    position: supports
+    relevant_quote_paraphrase: "HER2 testing recommended in advanced biliary tract cancer; HER2-targeted therapy is an emerging 2L+ option upon HER2 amplification / overexpression confirmation"
+  - source_id: SRC-HERIZON-BTC-01-HARDING-2023
+    position: supports
+    relevant_quote_paraphrase: "HERIZON-BTC-01 cohort 1 (HER2 IHC 3+ or IHC 2+/ISH+, n=87): zanidatamab 20 mg/kg IV q2w; confirmed ORR 41.3% (95% CI 30.4-52.8), DCR 68.8%, median DoR 14.9 mo, median PFS 5.5 mo, median OS 15.5 mo"
+
+known_controversies:
+  - topic: "Zanidatamab vs trastuzumab + pertuzumab for HER2-amplified BTC 2L"
+    positions:
+      - position: "Zanidatamab: disease-specific FDA-approved (Nov 2024); HERIZON-BTC-01 ORR 41% with median DoR 14.9 mo; biparatopic dual-epitope binding produces enhanced activity vs single-epitope HER2-targeted antibodies"
+        sources: [SRC-NCCN-HEPATOBILIARY, SRC-HERIZON-BTC-01-HARDING-2023]
+      - position: "Trastuzumab + pertuzumab: MyPathway basket study (Meric-Bernstam Lancet Oncol 2021) ORR ~23% in HER2-amplified BTC; NOT FDA-approved for BTC indication; off-label / basket-trial precedent only"
+        sources: [SRC-NCCN-HEPATOBILIARY]
+        evidence_note: "No head-to-head; zanidatamab preferred based on disease-specific approval + numerically higher ORR + durable responses; trastuzumab + pertuzumab considered when zanidatamab access blocked"
+    our_default: "Zanidatamab as default 2L+ HER2-amplified BTC; trastuzumab + pertuzumab reserved when zanidatamab access blocked"
+    rationale: "FDA disease-specific accelerated approval + numerically higher / more durable response in single-arm phase 2b favor zanidatamab as the standard option upon HER2-amplification confirmation"
+
+do_not_do:
+  - "НЕ призначати без підтвердженої HER2-аmplification (IHC 3+ або IHC 2+/ISH+) — однієї лише експресії білка нижчого рівня недостатньо для цього показання."
+  - "НЕ розпочинати без baseline ехокардіограми / MUGA — клас HER2-таргетної токсичності включає LVEF-зниження."
+  - "НЕ ігнорувати премедикацію перед першими 2-3 інфузіями — інфузійні реакції ~33%."
+  - "НЕ ігнорувати профілактику діареї — ~40% any-grade; пацієнт повинен мати лоперамід вдома й чіткий план ескалації."
+  - "НЕ підтверджувати план без funding pathway — занідатамаб не зареєстрований в UA (named-patient / EAP лише)."
+
+do_not_do_en:
+  - "Do NOT prescribe without confirmed HER2-amplification (IHC 3+ or IHC 2+/ISH+) — lower-level protein expression alone is insufficient for this indication."
+  - "Do NOT start without baseline echocardiogram / MUGA — HER2-targeted class toxicity includes LVEF decline."
+  - "Do NOT skip premedication for first 2-3 infusions — infusion reactions ~33%."
+  - "Do NOT ignore diarrhea prophylaxis — ~40% any-grade; patient must have loperamide at home with clear escalation plan."
+  - "Do NOT confirm the plan without funding pathway — zanidatamab not registered in UA (named-patient / EAP only)."
+
+time_critical: false
+last_reviewed: "2026-05-08"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+ for
+  HER2-amplified BTC. NCCN cat 2A; FDA accelerated approval Nov 2024.
+  ESCAT tier IIA (FDA-approved disease-specific). HER2 amplification
+  ~5-15% of BTC overall (higher in gallbladder + extrahepatic CCA).
+  HERIZON-BTC-01 cohort 1 (n=87, IHC 3+ or IHC 2+/ISH+): confirmed
+  ORR 41.3%, mPFS 5.5 mo, mOS 15.5 mo, DoR 14.9 mo. Confirmatory phase
+  3 pending; traditional approval pending. UA access:
+  named-patient / EAP only.
