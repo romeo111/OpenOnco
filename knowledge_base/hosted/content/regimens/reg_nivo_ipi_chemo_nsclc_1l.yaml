@@ -1,0 +1,74 @@
+id: REG-NIVO-IPI-CHEMO-NSCLC-1L
+name: "Nivolumab + Ipilimumab + 2-Cycle Platinum-Doublet Chemotherapy (CheckMate-9LA)"
+name_ua: "Ніволумаб + Іпілімумаб + 2 цикли платиново-дублетної хіміотерапії (CheckMate-9LA)"
+alternate_names:
+  - "Nivo + Ipi + 2-cycle chemo NSCLC 1L"
+  - "CheckMate-9LA regimen"
+
+components:
+  - drug_id: DRUG-NIVOLUMAB
+    dose: "360 mg IV over 30 min"
+    schedule: "Day 1 of each 21-day cycle; indefinite until progression or unacceptable toxicity"
+    route: IV
+  - drug_id: DRUG-IPILIMUMAB
+    dose: "1 mg/kg IV over 30 min"
+    schedule: "Every 6 weeks (q6w); up to 2 years total"
+    route: IV
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 6 IV (squamous) or AUC 5 IV (non-squamous)"
+    schedule: "Day 1 of cycles 1–2 only (2 cycles total)"
+    route: IV
+  - drug_id: DRUG-PACLITAXEL
+    dose: "200 mg/m² IV (squamous histology primary chemo partner)"
+    schedule: "Day 1 of cycles 1–2 only"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Nivo q3w + Ipi q6w until progression/toxicity (up to 2 years); platinum-doublet chemo 2 cycles only"
+
+toxicity_profile: severe
+
+premedication:
+  - "Premedicate for paclitaxel: dexamethasone 20 mg IV + diphenhydramine 50 mg IV + ranitidine (or famotidine) 30 min before paclitaxel"
+  - "Hepatitis B and C screening before first dose of IO therapy"
+  - "Baseline CBC, CMP, LFTs, TSH, cortisol; ECG and LVEF if cardiac risk factors"
+
+dose_adjustments:
+  - condition: "Grade 3 immune-mediated AE (pneumonitis, hepatitis, colitis, nephritis, endocrinopathy)"
+    modification: "Hold nivolumab and/or ipilimumab; initiate methylprednisolone 1–2 mg/kg/d IV; resume IO when resolved to ≤Grade 1 and corticosteroids tapered to ≤10 mg/d prednisone equivalent"
+    rationale: "Standard immune-mediated toxicity management per ICI package insert and ASCO guidelines"
+  - condition: "Grade 4 immune-mediated AE or recurrent Grade 3 after rechallenging"
+    modification: "Permanently discontinue culprit ICI agent; may continue the other ICI agent alone if risk-benefit favorable"
+    rationale: "Permanent discontinuation reduces cumulative immune-mediated risk for severe events"
+  - condition: "Non-squamous histology (chemotherapy component)"
+    modification: "Substitute pemetrexed 500 mg/m² for paclitaxel; use carboplatin AUC 5; add folic acid 350–1000 mcg PO daily + vitamin B12 1000 mcg IM q9w starting 7 days before first pemetrexed"
+    rationale: "CheckMate-9LA protocol: carboplatin/pemetrexed for non-squamous; carboplatin/paclitaxel for squamous"
+  - condition: "Nab-paclitaxel substitution (squamous, paclitaxel intolerance)"
+    modification: "Substitute nab-paclitaxel 100 mg/m² days 1, 8, 15 for paclitaxel 200 mg/m² day 1"
+    rationale: "Per CheckMate-9LA protocol amendment — nab-paclitaxel acceptable alternative for squamous histology"
+
+sources:
+  - SRC-CHECKMATE-9LA-PAZ-ARES-2021
+
+last_reviewed: "2026-05-07"
+reviewers: []
+reviewer_signoffs: []
+
+notes: >
+  CheckMate-9LA (NCT03215706) regimen: nivolumab 360 mg q3w + ipilimumab 1 mg/kg q6w
+  (dual IO backbone, same as CheckMate-227 Part 1) combined with 2 cycles of
+  histology-directed platinum-doublet chemotherapy. Rationale for 2 chemo cycles:
+  rapid early disease control while IO ramps up; minimizes cumulative chemo toxicity.
+
+  Histology-specific chemo component (both used in cycles 1–2 only):
+    - Squamous: carboplatin AUC 6 + paclitaxel 200 mg/m² day 1 (or nab-paclitaxel 100 mg/m² days 1/8/15 per amendment)
+    - Non-squamous: carboplatin AUC 5 + pemetrexed 500 mg/m² (add folate/B12 supplementation)
+
+  After 2 chemo cycles, continue nivolumab 360 mg q3w + ipilimumab 1 mg/kg q6w alone
+  until progression, unacceptable toxicity, or 2 years of ipilimumab cumulative exposure.
+
+  Key distinction from CheckMate-227 (nivo+ipi alone): addition of 2-cycle chemo provides
+  faster initial tumor control, higher early ORR (38% vs ~32%), and broader benefit
+  independent of PD-L1 TPS (TPS <1% subgroup HR 0.62 for OS in CheckMate-9LA).
+
+  DRUG-IPILIMUMAB confirmed present in KB (knowledge_base/hosted/content/drugs/ipilimumab.yaml, id: DRUG-IPILIMUMAB).
