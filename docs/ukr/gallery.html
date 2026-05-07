@@ -36,7 +36,7 @@
 
 <main class="gallery">
   <h1>Готові приклади</h1>
-  <p class="lead">6 синтетичних профілів пацієнтів, згрупованих за хворобою. Оберіть хворобу зі списку — кожен клік відкриває повний Plan або Diagnostic Brief, як його побачить лікар у tumor-board. Якщо щось виглядає клінічно неправильно — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.</p>
+  <p class="lead">14 синтетичних профілів пацієнтів, згрупованих за хворобою. Оберіть хворобу зі списку — кожен клік відкриває повний Plan або Diagnostic Brief, як його побачить лікар у tumor-board. Якщо щось виглядає клінічно неправильно — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.</p>
 
   <!-- Stage 1: disease grid (default visible) -->
   <section id="diseaseStage" class="disease-stage">
@@ -44,12 +44,20 @@
       <input type="search" id="diseaseSearch" class="disease-search"
              placeholder="Шукати хворобу або ICD-O-3…" autocomplete="off"
              aria-label="Шукати хворобу або ICD-O-3…">
-      <span class="disease-search-count" id="diseaseSearchCount">5</span>
+      <span class="disease-search-count" id="diseaseSearchCount">13</span>
     </div>
     <div class="disease-tile-grid" id="diseaseTileGrid">
+    <button type="button" class="disease-tile" data-disease-id="DIS-PROSTATE" data-search="аденокарцинома передміхурової залози prostate adenocarcinoma"><span class="dt-label">Аденокарцинома передміхурової залози</span><span class="dt-count">1 приклад</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-GASTRIC" data-search="аденокарцинома шлунка / gej gastric and gastroesophageal junction adenocarcinoma"><span class="dt-label">Аденокарцинома шлунка / GEJ</span><span class="dt-count">1 приклад</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-GIST" data-search="гастроінтестинальна стромальна пухлина (gist) gastrointestinal stromal tumor"><span class="dt-label">Гастроінтестинальна стромальна пухлина (GIST)</span><span class="dt-count">1 приклад</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-AML" data-search="гострий мієлоїдний лейкоз (не-apl) acute myeloid leukemia"><span class="dt-label">Гострий мієлоїдний лейкоз (не-APL)</span><span class="dt-count">1 приклад</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-ENDOMETRIAL" data-search="карцинома ендометрія endometrial carcinoma"><span class="dt-label">Карцинома ендометрія</span><span class="dt-count">1 приклад</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-OVARIAN" data-search="карцинома яєчників (переважно high-grade серозна) ovarian carcinoma"><span class="dt-label">Карцинома яєчників (переважно high-grade серозна)</span><span class="dt-count">1 приклад</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-CRC" data-search="колоректальний рак colorectal carcinoma"><span class="dt-label">Колоректальний рак</span><span class="dt-count">1 приклад</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-NSCLC" data-search="недрібноклітинний рак легені non-small cell lung cancer"><span class="dt-label">Недрібноклітинний рак легені</span><span class="dt-count">2 приклади</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-THYROID-PAPILLARY" data-search="папілярна карцинома щитовидної залози papillary thyroid carcinoma"><span class="dt-label">Папілярна карцинома щитовидної залози</span><span class="dt-count">1 приклад</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CHOLANGIOCARCINOMA" data-search="холангіокарцинома (рак жовчних проток) cholangiocarcinoma"><span class="dt-label">Холангіокарцинома (рак жовчних проток)</span><span class="dt-count">1 приклад</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MELANOMA" data-search="шкірна меланома cutaneous melanoma"><span class="dt-label">Шкірна меланома</span><span class="dt-count">1 приклад</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-BREAST" data-search="інвазивний рак молочної залози invasive breast cancer"><span class="dt-label">Інвазивний рак молочної залози</span><span class="dt-count">1 приклад</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-IFS" data-search="інфантильна фібросаркома infantile fibrosarcoma"><span class="dt-label">Інфантильна фібросаркома</span><span class="dt-count">1 приклад</span></button>
     </div>
@@ -60,7 +68,102 @@
   <section id="caseStage" class="case-stage" hidden>
     <button type="button" class="case-back-btn" id="caseBackBtn">← Усі хвороби</button>
     <div id="caseListContainer">
-    <section class="case-list" data-disease-id="DIS-OVARIAN" hidden>
+    <section class="case-list" data-disease-id="DIS-PROSTATE" hidden>
+  <header class="case-list-header">
+    <h2>Аденокарцинома передміхурової залози</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/showcase-prostate-brca2-germline-mcrpc.html"
+   data-default-order="9"
+   data-name="mCRPC - germline BRCA2 - PARP/HRR context">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>mCRPC - germline BRCA2 - PARP/HRR context</h3>
+  <p>Метастатичний castration-resistant prostate cancer з germline BRCA2 після NHA. Показує, як ESCAT IA actionability додає HRR/PARP контекст, включно з родинним каскадним тестуванням і відмінністю BRCA2 від ширшого HRD label.</p>
+  <div class="case-foot">patient_showcase_prostate_brca2_germline_mcrpc.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-GASTRIC" hidden>
+  <header class="case-list-header">
+    <h2>Аденокарцинома шлунка / GEJ</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/showcase-gastric-her2-amp-1l.html"
+   data-default-order="8"
+   data-name="Gastric/GEJ - HER2 amplification - IHC/ISH actionability">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>Gastric/GEJ - HER2 amplification - IHC/ISH actionability</h3>
+  <p>Метастатична gastric/GEJ adenocarcinoma з HER2 IHC 3+. Показує, як actionability шар розділяє IHC/ISH evidence, 1L trastuzumab-based tracks і подальший T-DXd контекст.</p>
+  <div class="case-foot">patient_showcase_gastric_her2_amp_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-GIST" hidden>
+  <header class="case-list-header">
+    <h2>Гастроінтестинальна стромальна пухлина (GIST)</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/showcase-gist-kit-exon11-1l.html"
+   data-default-order="12"
+   data-name="GIST - KIT exon 11 - genotype sets TKI dose">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>GIST - KIT exon 11 - genotype sets TKI dose</h3>
+  <p>Метастатичний GIST з KIT exon 11 deletion. Кейс показує практичну перевагу структурованого biomarker layer: exon 11 підтримує стандартну 1L imatinib дозу, а не змішується з exon 9 чи PDGFRA D842V сценаріями.</p>
+  <div class="case-foot">patient_showcase_gist_kit_exon11_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-AML" hidden>
+  <header class="case-list-header">
+    <h2>Гострий мієлоїдний лейкоз (не-APL)</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/showcase-aml-flt3-itd-1l.html"
+   data-default-order="13"
+   data-name="AML - FLT3-ITD - heme actionability and risk">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>AML - FLT3-ITD - heme actionability and risk</h3>
+  <p>Новодіагностований fit AML з FLT3-ITD. Додає hematology приклад: BMA evidence пояснює targeted induction context, а ризик і transplant discussion лишаються окремими клінічними рішеннями.</p>
+  <div class="case-foot">patient_showcase_aml_flt3_itd_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-ENDOMETRIAL" hidden>
+  <header class="case-list-header">
+    <h2>Карцинома ендометрія</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/showcase-endometrial-dmmr-msh2-1l.html"
+   data-default-order="10"
+   data-name="Endometrial - dMMR/MSH2 - immunotherapy evidence">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>Endometrial - dMMR/MSH2 - immunotherapy evidence</h3>
+  <p>Поширений endometrial carcinoma з dMMR/MSI-H через втрату MSH2. Кейс показує tumor-specific і tissue-agnostic immunotherapy evidence в одному місці, не змішуючи його з неспецифічним MSI label.</p>
+  <div class="case-foot">patient_showcase_endometrial_dmmr_msh2_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-OVARIAN" hidden>
   <header class="case-list-header">
     <h2>Карцинома яєчників (переважно high-grade серозна)</h2>
     <span class="case-list-count">1 приклад</span>
@@ -125,6 +228,63 @@
   <h3>NSCLC - acquired EGFR T790M - resistance-aware review</h3>
   <p>EGFR-mutated NSCLC з прогресією після першого покоління TKI і acquired T790M. Показує, як resistance/actionability evidence стає видимим для MDT замість того, щоб губитися в загальному списку мутацій.</p>
   <div class="case-foot">patient_showcase_nsclc_egfr_t790m_2l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-THYROID-PAPILLARY" hidden>
+  <header class="case-list-header">
+    <h2>Папілярна карцинома щитовидної залози</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/showcase-thyroid-ret-fusion-rai-refractory.html"
+   data-default-order="11"
+   data-name="Papillary thyroid - RET fusion - RAI-refractory target">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>Papillary thyroid - RET fusion - RAI-refractory target</h3>
+  <p>RAI-refractory papillary thyroid carcinoma з RET fusion. Показує, як actionability відрізняє RET fusion у PTC від RET mutations у MTC і підсвічує selective RET-TKI.</p>
+  <div class="case-foot">patient_showcase_thyroid_ret_fusion_rai_refractory.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-CHOLANGIOCARCINOMA" hidden>
+  <header class="case-list-header">
+    <h2>Холангіокарцинома (рак жовчних проток)</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/showcase-cholangio-idh1-r132-2l.html"
+   data-default-order="7"
+   data-name="Cholangiocarcinoma - IDH1 R132 - 2L molecular option">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>Cholangiocarcinoma - IDH1 R132 - 2L molecular option</h3>
+  <p>Внутрішньопечінкова холангіокарцинома з IDH1 R132C після gem/cis/durvalumab. Кейс показує, як ESCAT/CIViC шар не дає втратити 2L molecular option у пухлині, де стандартні chemotherapy tracks швидко вичерпуються.</p>
+  <div class="case-foot">patient_showcase_cholangio_idh1_r132_2l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-MELANOMA" hidden>
+  <header class="case-list-header">
+    <h2>Шкірна меланома</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/showcase-melanoma-braf-v600e-1l.html"
+   data-default-order="6"
+   data-name="Melanoma - BRAF V600E - targeted vs immunotherapy context">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>Melanoma - BRAF V600E - targeted vs immunotherapy context</h3>
+  <p>Метастатична меланома з BRAF V600E. Показує класичний ESCAT IA / CIViC приклад, де biomarker actionability пояснює BRAF/MEK чутливість, але MDT усе одно бачить клінічний контекст для вибору послідовності з immunotherapy.</p>
+  <div class="case-foot">patient_showcase_melanoma_braf_v600e_1l.json</div>
 </a>
   </div>
 </section>

@@ -65,7 +65,7 @@ GALLERY_EXCLUDED_CASE_IDS: set[str] = {
 }
 
 GALLERY_FEATURED_CASE_IDS: set[str] = {
-    # Public gallery is intentionally small: these six cases demonstrate
+    # Public gallery is intentionally small: these curated cases demonstrate
     # the CIViC/ESCAT actionability layer better than hundreds of auto
     # stubs. The full CASES list still feeds try.html examples.json.
     "showcase-nsclc-alk-fusion-1l",
@@ -74,6 +74,14 @@ GALLERY_FEATURED_CASE_IDS: set[str] = {
     "showcase-ovarian-brca1-maintenance",
     "showcase-nsclc-egfr-t790m-2l",
     "showcase-ifs-ntrk-fusion",
+    "showcase-melanoma-braf-v600e-1l",
+    "showcase-cholangio-idh1-r132-2l",
+    "showcase-gastric-her2-amp-1l",
+    "showcase-prostate-brca2-germline-mcrpc",
+    "showcase-endometrial-dmmr-msh2-1l",
+    "showcase-thyroid-ret-fusion-rai-refractory",
+    "showcase-gist-kit-exon11-1l",
+    "showcase-aml-flt3-itd-1l",
 }
 
 
@@ -158,6 +166,94 @@ CASES: list[CaseEntry] = [
         category="solid",
         label_en="Infantile fibrosarcoma - NTRK fusion - rare tumor target",
         summary_en="Rare tumor with ETV6-NTRK3 fusion. Shows how molecular actionability prevents a targetable alteration from being lost in a diagnosis where conventional treatment pathways are often sparse.",
+    ),
+    CaseEntry(
+        case_id="showcase-melanoma-braf-v600e-1l",
+        file="patient_showcase_melanoma_braf_v600e_1l.json",
+        label_ua="Melanoma - BRAF V600E - targeted vs immunotherapy context",
+        summary_ua="Метастатична меланома з BRAF V600E. Показує класичний ESCAT IA / CIViC приклад, де biomarker actionability пояснює BRAF/MEK чутливість, але MDT усе одно бачить клінічний контекст для вибору послідовності з immunotherapy.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="Melanoma - BRAF V600E - targeted vs immunotherapy context",
+        summary_en="Metastatic melanoma with BRAF V600E. Shows a classic ESCAT IA / CIViC case where actionability explains BRAF/MEK sensitivity while MDT still sees the clinical sequencing context with immunotherapy.",
+    ),
+    CaseEntry(
+        case_id="showcase-cholangio-idh1-r132-2l",
+        file="patient_showcase_cholangio_idh1_r132_2l.json",
+        label_ua="Cholangiocarcinoma - IDH1 R132 - 2L molecular option",
+        summary_ua="Внутрішньопечінкова холангіокарцинома з IDH1 R132C після gem/cis/durvalumab. Кейс показує, як ESCAT/CIViC шар не дає втратити 2L molecular option у пухлині, де стандартні chemotherapy tracks швидко вичерпуються.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="Cholangiocarcinoma - IDH1 R132 - 2L molecular option",
+        summary_en="Intrahepatic cholangiocarcinoma with IDH1 R132C after gem/cis/durvalumab. Shows how ESCAT/CIViC context keeps a 2L molecular option visible when standard chemotherapy tracks are limited.",
+    ),
+    CaseEntry(
+        case_id="showcase-gastric-her2-amp-1l",
+        file="patient_showcase_gastric_her2_amp_1l.json",
+        label_ua="Gastric/GEJ - HER2 amplification - IHC/ISH actionability",
+        summary_ua="Метастатична gastric/GEJ adenocarcinoma з HER2 IHC 3+. Показує, як actionability шар розділяє IHC/ISH evidence, 1L trastuzumab-based tracks і подальший T-DXd контекст.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="Gastric/GEJ - HER2 amplification - IHC/ISH actionability",
+        summary_en="Metastatic gastric/GEJ adenocarcinoma with HER2 IHC 3+. Shows how the actionability layer connects IHC/ISH evidence, 1L trastuzumab-based tracks, and later T-DXd context.",
+    ),
+    CaseEntry(
+        case_id="showcase-prostate-brca2-germline-mcrpc",
+        file="patient_showcase_prostate_brca2_germline_mcrpc.json",
+        label_ua="mCRPC - germline BRCA2 - PARP/HRR context",
+        summary_ua="Метастатичний castration-resistant prostate cancer з germline BRCA2 після NHA. Показує, як ESCAT IA actionability додає HRR/PARP контекст, включно з родинним каскадним тестуванням і відмінністю BRCA2 від ширшого HRD label.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="mCRPC - germline BRCA2 - PARP/HRR context",
+        summary_en="Metastatic castration-resistant prostate cancer with germline BRCA2 after NHA. Shows HRR/PARP actionability, family cascade testing context, and the distinction between BRCA2 and broader HRD labels.",
+    ),
+    CaseEntry(
+        case_id="showcase-endometrial-dmmr-msh2-1l",
+        file="patient_showcase_endometrial_dmmr_msh2_1l.json",
+        label_ua="Endometrial - dMMR/MSH2 - immunotherapy evidence",
+        summary_ua="Поширений endometrial carcinoma з dMMR/MSI-H через втрату MSH2. Кейс показує tumor-specific і tissue-agnostic immunotherapy evidence в одному місці, не змішуючи його з неспецифічним MSI label.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="Endometrial - dMMR/MSH2 - immunotherapy evidence",
+        summary_en="Advanced endometrial carcinoma with dMMR/MSI-H from MSH2 loss. Shows tumor-specific and tissue-agnostic immunotherapy evidence together without flattening it into a generic MSI label.",
+    ),
+    CaseEntry(
+        case_id="showcase-thyroid-ret-fusion-rai-refractory",
+        file="patient_showcase_thyroid_ret_fusion_rai_refractory.json",
+        label_ua="Papillary thyroid - RET fusion - RAI-refractory target",
+        summary_ua="RAI-refractory papillary thyroid carcinoma з RET fusion. Показує, як actionability відрізняє RET fusion у PTC від RET mutations у MTC і підсвічує selective RET-TKI.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="Papillary thyroid - RET fusion - RAI-refractory target",
+        summary_en="RAI-refractory papillary thyroid carcinoma with RET fusion. Shows how actionability separates RET fusion in PTC from RET mutations in MTC and highlights selective RET-TKI context.",
+    ),
+    CaseEntry(
+        case_id="showcase-gist-kit-exon11-1l",
+        file="patient_showcase_gist_kit_exon11_1l.json",
+        label_ua="GIST - KIT exon 11 - genotype sets TKI dose",
+        summary_ua="Метастатичний GIST з KIT exon 11 deletion. Кейс показує практичну перевагу структурованого biomarker layer: exon 11 підтримує стандартну 1L imatinib дозу, а не змішується з exon 9 чи PDGFRA D842V сценаріями.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="solid",
+        label_en="GIST - KIT exon 11 - genotype sets TKI dose",
+        summary_en="Metastatic GIST with KIT exon 11 deletion. Shows why structured biomarker context matters: exon 11 supports standard 1L imatinib dosing and should not be mixed with exon 9 or PDGFRA D842V scenarios.",
+    ),
+    CaseEntry(
+        case_id="showcase-aml-flt3-itd-1l",
+        file="patient_showcase_aml_flt3_itd_1l.json",
+        label_ua="AML - FLT3-ITD - heme actionability and risk",
+        summary_ua="Новодіагностований fit AML з FLT3-ITD. Додає hematology приклад: BMA evidence пояснює targeted induction context, а ризик і transplant discussion лишаються окремими клінічними рішеннями.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+        category="hematology",
+        label_en="AML - FLT3-ITD - heme actionability and risk",
+        summary_en="Newly diagnosed fit AML with FLT3-ITD. Adds a hematology example: BMA evidence explains targeted induction context while risk and transplant discussion remain separate clinical decisions.",
     ),
     # -- /CURATED SHOWCASE CASES --
     CaseEntry(

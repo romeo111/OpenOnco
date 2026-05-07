@@ -27,6 +27,14 @@ SHOWCASE_IDS = [
     "showcase-ovarian-brca1-maintenance",
     "showcase-nsclc-egfr-t790m-2l",
     "showcase-ifs-ntrk-fusion",
+    "showcase-melanoma-braf-v600e-1l",
+    "showcase-cholangio-idh1-r132-2l",
+    "showcase-gastric-her2-amp-1l",
+    "showcase-prostate-brca2-germline-mcrpc",
+    "showcase-endometrial-dmmr-msh2-1l",
+    "showcase-thyroid-ret-fusion-rai-refractory",
+    "showcase-gist-kit-exon11-1l",
+    "showcase-aml-flt3-itd-1l",
 ]
 
 _SHOWCASE_BLOCK_BEGIN = "    # -- CURATED SHOWCASE CASES (regen via scripts/generate_showcase_examples.py) --"
@@ -183,6 +191,7 @@ SHOWCASE_CASES = [
             "patient_id": "SHOWCASE-BREAST-PIK3CA-001",
             "comment": "Synthetic showcase case. Demonstrates BMA-PIK3CA-H1047R-BREAST with ESCAT IA and CIViC evidence.",
             "disease": {"id": "DIS-BREAST"},
+            "disease_state": "HR-positive_HER2-negative",
             "line_of_therapy": 2,
             "biomarkers": {
                 "ER": "positive",
@@ -383,6 +392,395 @@ SHOWCASE_CASES = [
             },
         },
     ),
+    _case(
+        case_id="showcase-melanoma-braf-v600e-1l",
+        file="patient_showcase_melanoma_braf_v600e_1l.json",
+        label_ua="Melanoma - BRAF V600E - targeted vs immunotherapy context",
+        summary_ua=(
+            "Метастатична меланома з BRAF V600E. Показує класичний ESCAT IA / CIViC приклад, "
+            "де biomarker actionability пояснює BRAF/MEK чутливість, але MDT усе одно бачить "
+            "клінічний контекст для вибору послідовності з immunotherapy."
+        ),
+        category="solid",
+        label_en="Melanoma - BRAF V600E - targeted vs immunotherapy context",
+        summary_en=(
+            "Metastatic melanoma with BRAF V600E. Shows a classic ESCAT IA / CIViC case "
+            "where actionability explains BRAF/MEK sensitivity while MDT still sees the "
+            "clinical sequencing context with immunotherapy."
+        ),
+        patient={
+            "patient_id": "SHOWCASE-MELANOMA-BRAF-001",
+            "comment": "Synthetic showcase case. Demonstrates BMA-BRAF-V600E-MELANOMA with CIViC sensitivity and resistance lanes.",
+            "disease": {"id": "DIS-MELANOMA"},
+            "line_of_therapy": 1,
+            "biomarkers": {
+                "BRAF": "V600E",
+                "BIO-BRAF-V600E": "V600E",
+                "NRAS": "wildtype",
+                "KIT": "wildtype",
+                "PD-L1": "not required for melanoma decision",
+            },
+            "demographics": {"age": 44, "sex": "male", "ecog": 1},
+            "findings": {
+                "stage": "IV",
+                "stage_iv": True,
+                "histology": "cutaneous melanoma",
+                "metastatic_sites": ["lung", "liver", "subcutaneous"],
+                "brain_mets": False,
+                "ldh_uln_x": 1.4,
+                "symptomatic_bulk": True,
+                "creatinine_clearance_ml_min": 96,
+                "bilirubin_uln_x": 0.9,
+                "absolute_neutrophil_count_k_ul": 3.3,
+                "platelets_k_ul": 255,
+                "hbsag": "negative",
+                "anti_hbc_total": "negative",
+                "hcv_status": "negative",
+                "hiv_status": "negative",
+            },
+        },
+    ),
+    _case(
+        case_id="showcase-cholangio-idh1-r132-2l",
+        file="patient_showcase_cholangio_idh1_r132_2l.json",
+        label_ua="Cholangiocarcinoma - IDH1 R132 - 2L molecular option",
+        summary_ua=(
+            "Внутрішньопечінкова холангіокарцинома з IDH1 R132C після gem/cis/durvalumab. "
+            "Кейс показує, як ESCAT/CIViC шар не дає втратити 2L molecular option у пухлині, "
+            "де стандартні chemotherapy tracks швидко вичерпуються."
+        ),
+        category="solid",
+        label_en="Cholangiocarcinoma - IDH1 R132 - 2L molecular option",
+        summary_en=(
+            "Intrahepatic cholangiocarcinoma with IDH1 R132C after gem/cis/durvalumab. "
+            "Shows how ESCAT/CIViC context keeps a 2L molecular option visible when "
+            "standard chemotherapy tracks are limited."
+        ),
+        patient={
+            "patient_id": "SHOWCASE-CHOLANGIO-IDH1-001",
+            "comment": "Synthetic showcase case. Demonstrates BMA-IDH1-R132-CHOLANGIO and 2L ivosidenib context.",
+            "disease": {"id": "DIS-CHOLANGIOCARCINOMA"},
+            "line_of_therapy": 2,
+            "biomarkers": {
+                "IDH1": "R132C",
+                "BIO-IDH-MUTATION": "R132C",
+                "FGFR2": "negative",
+                "MSI": "MSS",
+            },
+            "demographics": {"age": 59, "sex": "female", "ecog": 1},
+            "findings": {
+                "stage": "IV",
+                "stage_iv": True,
+                "primary_site": "intrahepatic bile duct",
+                "metastatic_sites": ["liver", "peritoneum"],
+                "prior_lines": [
+                    {
+                        "line": 1,
+                        "regimen": "gemcitabine + cisplatin + durvalumab",
+                        "cycles": 8,
+                        "best_response": "SD",
+                        "outcome": "PD after 7 mo",
+                    }
+                ],
+                "creatinine_clearance_ml_min": 82,
+                "bilirubin_uln_x": 1.1,
+                "absolute_neutrophil_count_k_ul": 2.7,
+                "platelets_k_ul": 220,
+                "hbsag": "negative",
+                "anti_hbc_total": "negative",
+                "hcv_status": "negative",
+                "hiv_status": "negative",
+            },
+        },
+    ),
+    _case(
+        case_id="showcase-gastric-her2-amp-1l",
+        file="patient_showcase_gastric_her2_amp_1l.json",
+        label_ua="Gastric/GEJ - HER2 amplification - IHC/ISH actionability",
+        summary_ua=(
+            "Метастатична gastric/GEJ adenocarcinoma з HER2 IHC 3+. Показує, як actionability "
+            "шар розділяє IHC/ISH evidence, 1L trastuzumab-based tracks і подальший T-DXd контекст."
+        ),
+        category="solid",
+        label_en="Gastric/GEJ - HER2 amplification - IHC/ISH actionability",
+        summary_en=(
+            "Metastatic gastric/GEJ adenocarcinoma with HER2 IHC 3+. Shows how the "
+            "actionability layer connects IHC/ISH evidence, 1L trastuzumab-based tracks, "
+            "and later T-DXd context."
+        ),
+        patient={
+            "patient_id": "SHOWCASE-GASTRIC-HER2-001",
+            "comment": "Synthetic showcase case. Demonstrates BMA-HER2-AMP-GASTRIC and gastric-specific HER2 interpretation.",
+            "disease": {"id": "DIS-GASTRIC"},
+            "line_of_therapy": 1,
+            "biomarkers": {
+                "HER2": "amplification / overexpression",
+                "BIO-HER2-SOLID": "amplification / overexpression",
+                "PD-L1 CPS": 8,
+                "MSI": "MSS",
+                "CLDN18.2": "negative",
+            },
+            "demographics": {"age": 67, "sex": "male", "ecog": 1},
+            "findings": {
+                "stage": "IV",
+                "stage_iv": True,
+                "primary_site": "GEJ",
+                "histology": "adenocarcinoma",
+                "her2_ihc": "3+",
+                "metastatic_sites": ["liver", "nodes"],
+                "creatinine_clearance_ml_min": 78,
+                "bilirubin_uln_x": 0.9,
+                "absolute_neutrophil_count_k_ul": 3.0,
+                "platelets_k_ul": 230,
+                "hbsag": "negative",
+                "anti_hbc_total": "negative",
+                "hcv_status": "negative",
+                "hiv_status": "negative",
+            },
+        },
+    ),
+    _case(
+        case_id="showcase-prostate-brca2-germline-mcrpc",
+        file="patient_showcase_prostate_brca2_germline_mcrpc.json",
+        label_ua="mCRPC - germline BRCA2 - PARP/HRR context",
+        summary_ua=(
+            "Метастатичний castration-resistant prostate cancer з germline BRCA2 після NHA. "
+            "Показує, як ESCAT IA actionability додає HRR/PARP контекст, включно з родинним "
+            "каскадним тестуванням і відмінністю BRCA2 від ширшого HRD label."
+        ),
+        category="solid",
+        label_en="mCRPC - germline BRCA2 - PARP/HRR context",
+        summary_en=(
+            "Metastatic castration-resistant prostate cancer with germline BRCA2 after NHA. "
+            "Shows HRR/PARP actionability, family cascade testing context, and the distinction "
+            "between BRCA2 and broader HRD labels."
+        ),
+        patient={
+            "patient_id": "SHOWCASE-PROSTATE-BRCA2-001",
+            "comment": "Synthetic showcase case. Demonstrates BMA-BRCA2-GERMLINE-PROSTATE with ESCAT IA PARP context.",
+            "disease": {"id": "DIS-PROSTATE"},
+            "disease_state": "mCRPC",
+            "line_of_therapy": 2,
+            "biomarkers": {
+                "BRCA2": "BRCA2 germline pathogenic",
+                "MSI": "MSS",
+                "PSMA PET": "avid",
+            },
+            "demographics": {"age": 69, "sex": "male", "ecog": 1},
+            "findings": {
+                "stage": "IV",
+                "stage_iv": True,
+                "castration_resistant": True,
+                "testosterone_ng_dL": 12,
+                "metastatic_sites": ["bone", "lymph nodes"],
+                "prior_lines": [
+                    {
+                        "line": 1,
+                        "regimen": "ADT + abiraterone",
+                        "duration_months": 16,
+                        "best_response": "PSA90",
+                        "outcome": "radiographic PD",
+                    }
+                ],
+                "creatinine_clearance_ml_min": 74,
+                "bilirubin_uln_x": 0.8,
+                "absolute_neutrophil_count_k_ul": 2.9,
+                "platelets_k_ul": 205,
+                "hbsag": "negative",
+                "anti_hbc_total": "negative",
+                "hcv_status": "negative",
+                "hiv_status": "negative",
+            },
+        },
+    ),
+    _case(
+        case_id="showcase-endometrial-dmmr-msh2-1l",
+        file="patient_showcase_endometrial_dmmr_msh2_1l.json",
+        label_ua="Endometrial - dMMR/MSH2 - immunotherapy evidence",
+        summary_ua=(
+            "Поширений endometrial carcinoma з dMMR/MSI-H через втрату MSH2. Кейс показує "
+            "tumor-specific і tissue-agnostic immunotherapy evidence в одному місці, не змішуючи "
+            "його з неспецифічним MSI label."
+        ),
+        category="solid",
+        label_en="Endometrial - dMMR/MSH2 - immunotherapy evidence",
+        summary_en=(
+            "Advanced endometrial carcinoma with dMMR/MSI-H from MSH2 loss. Shows tumor-specific "
+            "and tissue-agnostic immunotherapy evidence together without flattening it into a "
+            "generic MSI label."
+        ),
+        patient={
+            "patient_id": "SHOWCASE-ENDOMETRIAL-DMMR-001",
+            "comment": "Synthetic showcase case. Demonstrates BMA-MSH2-GERMLINE-ENDOMETRIAL and dMMR immunotherapy evidence.",
+            "disease": {"id": "DIS-ENDOMETRIAL"},
+            "line_of_therapy": 1,
+            "biomarkers": {
+                "MSH2": "germline loss-of-function",
+                "BIO-DMMR-IHC": "MSH2 germline loss-of-function (dMMR / MSI-H)",
+                "MSI": "MSI-H",
+                "POLE": "wildtype",
+                "TP53": "wildtype pattern",
+            },
+            "demographics": {"age": 62, "sex": "female", "ecog": 1},
+            "findings": {
+                "stage": "IVB",
+                "stage_iv": True,
+                "histology": "endometrioid adenocarcinoma",
+                "grade": 3,
+                "metastatic_sites": ["peritoneum", "nodes"],
+                "creatinine_clearance_ml_min": 84,
+                "bilirubin_uln_x": 0.7,
+                "absolute_neutrophil_count_k_ul": 3.4,
+                "platelets_k_ul": 250,
+                "hbsag": "negative",
+                "anti_hbc_total": "negative",
+                "hcv_status": "negative",
+                "hiv_status": "negative",
+            },
+        },
+    ),
+    _case(
+        case_id="showcase-thyroid-ret-fusion-rai-refractory",
+        file="patient_showcase_thyroid_ret_fusion_rai_refractory.json",
+        label_ua="Papillary thyroid - RET fusion - RAI-refractory target",
+        summary_ua=(
+            "RAI-refractory papillary thyroid carcinoma з RET fusion. Показує, як actionability "
+            "відрізняє RET fusion у PTC від RET mutations у MTC і підсвічує selective RET-TKI."
+        ),
+        category="solid",
+        label_en="Papillary thyroid - RET fusion - RAI-refractory target",
+        summary_en=(
+            "RAI-refractory papillary thyroid carcinoma with RET fusion. Shows how actionability "
+            "separates RET fusion in PTC from RET mutations in MTC and highlights selective RET-TKI context."
+        ),
+        patient={
+            "patient_id": "SHOWCASE-THYROID-RET-001",
+            "comment": "Synthetic showcase case. Demonstrates BMA-RET-FUSION-THYROID-PAPILLARY and disease-specific RET interpretation.",
+            "disease": {"id": "DIS-THYROID-PAPILLARY"},
+            "line_of_therapy": 1,
+            "biomarkers": {
+                "RET": "fusion",
+                "BIO-RET": "fusion",
+                "BRAF": "wildtype",
+                "NTRK": "negative",
+            },
+            "demographics": {"age": 51, "sex": "female", "ecog": 1},
+            "findings": {
+                "stage": "IV",
+                "stage_iv": True,
+                "histology": "papillary thyroid carcinoma",
+                "radioiodine_refractory": True,
+                "metastatic_sites": ["lung", "bone"],
+                "prior_lines": [
+                    {
+                        "line": 1,
+                        "regimen": "radioiodine + TSH suppression",
+                        "outcome": "RAI-refractory progression",
+                    }
+                ],
+                "creatinine_clearance_ml_min": 90,
+                "bilirubin_uln_x": 0.8,
+                "absolute_neutrophil_count_k_ul": 3.1,
+                "platelets_k_ul": 240,
+                "hbsag": "negative",
+                "anti_hbc_total": "negative",
+                "hcv_status": "negative",
+                "hiv_status": "negative",
+            },
+        },
+    ),
+    _case(
+        case_id="showcase-gist-kit-exon11-1l",
+        file="patient_showcase_gist_kit_exon11_1l.json",
+        label_ua="GIST - KIT exon 11 - genotype sets TKI dose",
+        summary_ua=(
+            "Метастатичний GIST з KIT exon 11 deletion. Кейс показує практичну перевагу "
+            "структурованого biomarker layer: exon 11 підтримує стандартну 1L imatinib дозу, "
+            "а не змішується з exon 9 чи PDGFRA D842V сценаріями."
+        ),
+        category="solid",
+        label_en="GIST - KIT exon 11 - genotype sets TKI dose",
+        summary_en=(
+            "Metastatic GIST with KIT exon 11 deletion. Shows why structured biomarker context "
+            "matters: exon 11 supports standard 1L imatinib dosing and should not be mixed with "
+            "exon 9 or PDGFRA D842V scenarios."
+        ),
+        patient={
+            "patient_id": "SHOWCASE-GIST-KIT11-001",
+            "comment": "Synthetic showcase case. Demonstrates BMA-KIT-EXON11-GIST and genotype-specific TKI context.",
+            "disease": {"id": "DIS-GIST"},
+            "line_of_therapy": 1,
+            "biomarkers": {
+                "KIT": "exon 11 deletion",
+                "BIO-KIT": "exon 11 deletion",
+                "PDGFRA": "wildtype",
+                "SDH": "retained",
+            },
+            "demographics": {"age": 58, "sex": "male", "ecog": 0},
+            "findings": {
+                "stage": "IV",
+                "stage_iv": True,
+                "primary_site": "stomach",
+                "metastatic_sites": ["liver", "peritoneum"],
+                "tumor_size_cm": 9.4,
+                "mitoses_per_50_hpf": 8,
+                "creatinine_clearance_ml_min": 94,
+                "bilirubin_uln_x": 0.9,
+                "absolute_neutrophil_count_k_ul": 3.5,
+                "platelets_k_ul": 260,
+                "hbsag": "negative",
+                "anti_hbc_total": "negative",
+                "hcv_status": "negative",
+                "hiv_status": "negative",
+            },
+        },
+    ),
+    _case(
+        case_id="showcase-aml-flt3-itd-1l",
+        file="patient_showcase_aml_flt3_itd_1l.json",
+        label_ua="AML - FLT3-ITD - heme actionability and risk",
+        summary_ua=(
+            "Новодіагностований fit AML з FLT3-ITD. Додає hematology приклад: BMA evidence "
+            "пояснює targeted induction context, а ризик і transplant discussion лишаються окремими "
+            "клінічними рішеннями."
+        ),
+        category="hematology",
+        label_en="AML - FLT3-ITD - heme actionability and risk",
+        summary_en=(
+            "Newly diagnosed fit AML with FLT3-ITD. Adds a hematology example: BMA evidence "
+            "explains targeted induction context while risk and transplant discussion remain "
+            "separate clinical decisions."
+        ),
+        patient={
+            "patient_id": "SHOWCASE-AML-FLT3-001",
+            "comment": "Synthetic showcase case. Demonstrates BMA-FLT3-ITD-AML with CIViC and ELN-context rendering.",
+            "disease": {"id": "DIS-AML"},
+            "line_of_therapy": 1,
+            "biomarkers": {
+                "FLT3": "internal tandem duplication",
+                "BIO-FLT3-ITD": "internal tandem duplication",
+                "NPM1": "wildtype",
+                "IDH1": "wildtype",
+                "TP53": "wildtype",
+            },
+            "demographics": {"age": 52, "sex": "female", "ecog": 1},
+            "findings": {
+                "newly_diagnosed": True,
+                "fit_for_intensive_induction": True,
+                "bone_marrow_blasts_percent": 68,
+                "wbc_k_ul": 42,
+                "hemoglobin_g_dl": 8.9,
+                "platelets_k_ul": 42,
+                "creatinine_clearance_ml_min": 88,
+                "bilirubin_uln_x": 0.8,
+                "absolute_neutrophil_count_k_ul": 0.7,
+                "hbsag": "negative",
+                "anti_hbc_total": "negative",
+                "hcv_status": "negative",
+                "hiv_status": "negative",
+            },
+        },
+    ),
 ]
 
 
@@ -423,6 +821,29 @@ def _patch_site_cases(entries: list[str]) -> None:
     SITE_CASES.write_text(new, encoding="utf-8")
 
 
+def _patch_featured_ids() -> None:
+    text = SITE_CASES.read_text(encoding="utf-8")
+    marker = "GALLERY_FEATURED_CASE_IDS: set[str] = {\n"
+    start = text.find(marker)
+    if start < 0:
+        raise RuntimeError("Could not find GALLERY_FEATURED_CASE_IDS in scripts/site_cases.py")
+
+    body_start = start + len(marker)
+    end = text.find("}\n", body_start)
+    if end < 0:
+        raise RuntimeError("Could not find end of GALLERY_FEATURED_CASE_IDS")
+
+    featured = (
+        marker
+        + "    # Public gallery is intentionally small: these curated cases demonstrate\n"
+        + "    # the CIViC/ESCAT actionability layer better than hundreds of auto\n"
+        + "    # stubs. The full CASES list still feeds try.html examples.json.\n"
+        + "".join(f"    {_json_string(case_id)},\n" for case_id in SHOWCASE_IDS)
+        + "}"
+    )
+    SITE_CASES.write_text(text[:start] + featured + text[end + 1 :], encoding="utf-8")
+
+
 def main() -> int:
     EXAMPLES_DIR.mkdir(parents=True, exist_ok=True)
     for case in SHOWCASE_CASES:
@@ -434,6 +855,7 @@ def main() -> int:
         print(f"wrote {path.relative_to(REPO_ROOT)}")
 
     _patch_site_cases([_render_case_entry(case) for case in SHOWCASE_CASES])
+    _patch_featured_ids()
     print(f"patched {SITE_CASES.relative_to(REPO_ROOT)} with {len(SHOWCASE_CASES)} showcase cases")
     return 0
 

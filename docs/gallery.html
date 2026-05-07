@@ -36,7 +36,7 @@
 
 <main class="gallery">
   <h1>Sample cases</h1>
-  <p class="lead">6 synthetic patient profiles run through the engine, grouped by disease. Pick a disease to see its examples — each click opens a full Plan or Diagnostic Brief as a clinician would see it in tumor-board. If something looks clinically wrong — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">open an issue</a>.</p>
+  <p class="lead">14 synthetic patient profiles run through the engine, grouped by disease. Pick a disease to see its examples — each click opens a full Plan or Diagnostic Brief as a clinician would see it in tumor-board. If something looks clinically wrong — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">open an issue</a>.</p>
 
   <!-- Stage 1: disease grid (default visible) -->
   <section id="diseaseStage" class="disease-stage">
@@ -44,14 +44,22 @@
       <input type="search" id="diseaseSearch" class="disease-search"
              placeholder="Search disease or ICD-O-3…" autocomplete="off"
              aria-label="Search disease or ICD-O-3…">
-      <span class="disease-search-count" id="diseaseSearchCount">5</span>
+      <span class="disease-search-count" id="diseaseSearchCount">13</span>
     </div>
     <div class="disease-tile-grid" id="diseaseTileGrid">
+    <button type="button" class="disease-tile" data-disease-id="DIS-AML" data-search="гострий мієлоїдний лейкоз (не-apl) acute myeloid leukemia"><span class="dt-label">Acute Myeloid Leukemia</span><span class="dt-count">1 example</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CHOLANGIOCARCINOMA" data-search="холангіокарцинома (рак жовчних проток) cholangiocarcinoma"><span class="dt-label">Cholangiocarcinoma</span><span class="dt-count">1 example</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-CRC" data-search="колоректальний рак colorectal carcinoma"><span class="dt-label">Colorectal carcinoma</span><span class="dt-count">1 example</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MELANOMA" data-search="шкірна меланома cutaneous melanoma"><span class="dt-label">Cutaneous melanoma</span><span class="dt-count">1 example</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-ENDOMETRIAL" data-search="карцинома ендометрія endometrial carcinoma"><span class="dt-label">Endometrial carcinoma</span><span class="dt-count">1 example</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-GASTRIC" data-search="аденокарцинома шлунка / gej gastric and gastroesophageal junction adenocarcinoma"><span class="dt-label">Gastric and gastroesophageal junction adenocarcinoma</span><span class="dt-count">1 example</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-GIST" data-search="гастроінтестинальна стромальна пухлина (gist) gastrointestinal stromal tumor"><span class="dt-label">Gastrointestinal stromal tumor</span><span class="dt-count">1 example</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-IFS" data-search="інфантильна фібросаркома infantile fibrosarcoma"><span class="dt-label">Infantile fibrosarcoma</span><span class="dt-count">1 example</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-BREAST" data-search="інвазивний рак молочної залози invasive breast cancer"><span class="dt-label">Invasive breast cancer</span><span class="dt-count">1 example</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-NSCLC" data-search="недрібноклітинний рак легені non-small cell lung cancer"><span class="dt-label">Non-small cell lung cancer</span><span class="dt-count">2 examples</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-OVARIAN" data-search="карцинома яєчників (переважно high-grade серозна) ovarian carcinoma"><span class="dt-label">Ovarian carcinoma</span><span class="dt-count">1 example</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-THYROID-PAPILLARY" data-search="папілярна карцинома щитовидної залози papillary thyroid carcinoma"><span class="dt-label">Papillary thyroid carcinoma</span><span class="dt-count">1 example</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PROSTATE" data-search="аденокарцинома передміхурової залози prostate adenocarcinoma"><span class="dt-label">Prostate adenocarcinoma</span><span class="dt-count">1 example</span></button>
     </div>
     <p class="disease-empty" id="diseaseEmpty" hidden>No diseases match your search.</p>
   </section>
@@ -60,7 +68,45 @@
   <section id="caseStage" class="case-stage" hidden>
     <button type="button" class="case-back-btn" id="caseBackBtn">← All diseases</button>
     <div id="caseListContainer">
-    <section class="case-list" data-disease-id="DIS-CRC" hidden>
+    <section class="case-list" data-disease-id="DIS-AML" hidden>
+  <header class="case-list-header">
+    <h2>Acute Myeloid Leukemia</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/cases/showcase-aml-flt3-itd-1l.html"
+   data-default-order="13"
+   data-name="AML - FLT3-ITD - heme actionability and risk">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>AML - FLT3-ITD - heme actionability and risk</h3>
+  <p>Newly diagnosed fit AML with FLT3-ITD. Adds a hematology example: BMA evidence explains targeted induction context while risk and transplant discussion remain separate clinical decisions.</p>
+  <div class="case-foot">patient_showcase_aml_flt3_itd_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-CHOLANGIOCARCINOMA" hidden>
+  <header class="case-list-header">
+    <h2>Cholangiocarcinoma</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/cases/showcase-cholangio-idh1-r132-2l.html"
+   data-default-order="7"
+   data-name="Cholangiocarcinoma - IDH1 R132 - 2L molecular option">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>Cholangiocarcinoma - IDH1 R132 - 2L molecular option</h3>
+  <p>Intrahepatic cholangiocarcinoma with IDH1 R132C after gem/cis/durvalumab. Shows how ESCAT/CIViC context keeps a 2L molecular option visible when standard chemotherapy tracks are limited.</p>
+  <div class="case-foot">patient_showcase_cholangio_idh1_r132_2l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-CRC" hidden>
   <header class="case-list-header">
     <h2>Colorectal carcinoma</h2>
     <span class="case-list-count">1 example</span>
@@ -76,6 +122,82 @@
   <h3>mCRC - BRAF V600E - tumor-specific actionability</h3>
   <p>BRAF V600E after FOLFOX progression. Shows why a variant cannot be interpreted outside tumor context: CRC needs an EGFR-combination strategy, not simple BRAF monotherapy.</p>
   <div class="case-foot">patient_showcase_crc_braf_v600e_2l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-MELANOMA" hidden>
+  <header class="case-list-header">
+    <h2>Cutaneous melanoma</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/cases/showcase-melanoma-braf-v600e-1l.html"
+   data-default-order="6"
+   data-name="Melanoma - BRAF V600E - targeted vs immunotherapy context">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>Melanoma - BRAF V600E - targeted vs immunotherapy context</h3>
+  <p>Metastatic melanoma with BRAF V600E. Shows a classic ESCAT IA / CIViC case where actionability explains BRAF/MEK sensitivity while MDT still sees the clinical sequencing context with immunotherapy.</p>
+  <div class="case-foot">patient_showcase_melanoma_braf_v600e_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-ENDOMETRIAL" hidden>
+  <header class="case-list-header">
+    <h2>Endometrial carcinoma</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/cases/showcase-endometrial-dmmr-msh2-1l.html"
+   data-default-order="10"
+   data-name="Endometrial - dMMR/MSH2 - immunotherapy evidence">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>Endometrial - dMMR/MSH2 - immunotherapy evidence</h3>
+  <p>Advanced endometrial carcinoma with dMMR/MSI-H from MSH2 loss. Shows tumor-specific and tissue-agnostic immunotherapy evidence together without flattening it into a generic MSI label.</p>
+  <div class="case-foot">patient_showcase_endometrial_dmmr_msh2_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-GASTRIC" hidden>
+  <header class="case-list-header">
+    <h2>Gastric and gastroesophageal junction adenocarcinoma</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/cases/showcase-gastric-her2-amp-1l.html"
+   data-default-order="8"
+   data-name="Gastric/GEJ - HER2 amplification - IHC/ISH actionability">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>Gastric/GEJ - HER2 amplification - IHC/ISH actionability</h3>
+  <p>Metastatic gastric/GEJ adenocarcinoma with HER2 IHC 3+. Shows how the actionability layer connects IHC/ISH evidence, 1L trastuzumab-based tracks, and later T-DXd context.</p>
+  <div class="case-foot">patient_showcase_gastric_her2_amp_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-GIST" hidden>
+  <header class="case-list-header">
+    <h2>Gastrointestinal stromal tumor</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/cases/showcase-gist-kit-exon11-1l.html"
+   data-default-order="12"
+   data-name="GIST - KIT exon 11 - genotype sets TKI dose">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>GIST - KIT exon 11 - genotype sets TKI dose</h3>
+  <p>Metastatic GIST with KIT exon 11 deletion. Shows why structured biomarker context matters: exon 11 supports standard 1L imatinib dosing and should not be mixed with exon 9 or PDGFRA D842V scenarios.</p>
+  <div class="case-foot">patient_showcase_gist_kit_exon11_1l.json</div>
 </a>
   </div>
 </section>
@@ -163,6 +285,44 @@
   <h3>Ovarian - germline BRCA1 - PARPi maintenance</h3>
   <p>Platinum-sensitive recurrent high-grade serous ovarian carcinoma with germline BRCA1. Shows ESCAT IA, CIViC sensitivity/resistance evidence, and the practical context for PARPi maintenance plus family cascade testing.</p>
   <div class="case-foot">patient_showcase_ovarian_brca1_maintenance.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-THYROID-PAPILLARY" hidden>
+  <header class="case-list-header">
+    <h2>Papillary thyroid carcinoma</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/cases/showcase-thyroid-ret-fusion-rai-refractory.html"
+   data-default-order="11"
+   data-name="Papillary thyroid - RET fusion - RAI-refractory target">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>Papillary thyroid - RET fusion - RAI-refractory target</h3>
+  <p>RAI-refractory papillary thyroid carcinoma with RET fusion. Shows how actionability separates RET fusion in PTC from RET mutations in MTC and highlights selective RET-TKI context.</p>
+  <div class="case-foot">patient_showcase_thyroid_ret_fusion_rai_refractory.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-PROSTATE" hidden>
+  <header class="case-list-header">
+    <h2>Prostate adenocarcinoma</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/cases/showcase-prostate-brca2-germline-mcrpc.html"
+   data-default-order="9"
+   data-name="mCRPC - germline BRCA2 - PARP/HRR context">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>mCRPC - germline BRCA2 - PARP/HRR context</h3>
+  <p>Metastatic castration-resistant prostate cancer with germline BRCA2 after NHA. Shows HRR/PARP actionability, family cascade testing context, and the distinction between BRCA2 and broader HRD labels.</p>
+  <div class="case-foot">patient_showcase_prostate_brca2_germline_mcrpc.json</div>
 </a>
   </div>
 </section>
