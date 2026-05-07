@@ -228,6 +228,11 @@ def test_try_page_has_pwa_manifest_and_build_status(site_dir: Path):
     assert "fetchJsonWithTimeout" in html
     assert 'id="questReadiness"' in html
     assert 'id="readinessCriticalText"' in html
+    assert 'class="try-actions quest-cta quest-actions-top"' in html
+    assert html.index('id="questReadiness"') < html.index('id="runBtn"') < html.index('class="quest-grid"')
+    assert html.index('id="runBtn"') < html.index('id="buildCard"')
+    assert "function updateWorkflowControls()" in html
+    assert "actionLocked" in html
     assert 'class="quest-impact-card"' not in html
     assert 'rel="manifest" href="/manifest.webmanifest"' in ua_html
 

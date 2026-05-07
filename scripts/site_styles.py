@@ -913,6 +913,15 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 }
 .quest-readiness-critical[data-kind="ok"] { color: var(--green-700); font-weight: 600; }
 .quest-readiness-critical[data-kind="warn"] { color: var(--amber); font-weight: 600; }
+.quest-actions-top.quest-cta {
+  display: grid; grid-template-columns: minmax(220px, 1.4fr) minmax(150px, 1fr) minmax(150px, 1fr);
+  gap: 10px; margin: -4px 0 18px; padding: 12px;
+  background: white; border: 1px solid var(--green-200); border-radius: 8px;
+  box-shadow: 0 3px 12px rgba(22, 101, 52, 0.08);
+}
+.quest-actions-top.quest-cta .btn {
+  min-height: 44px; width: 100%;
+}
 .quest-grid {
   display: grid; grid-template-columns: 1fr 380px; gap: 18px;
   margin-bottom: 24px; align-items: start;
@@ -1156,6 +1165,11 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 .quest-cta button { width: 100%; }
 .quest-cta button:disabled {
   opacity: 0.5; cursor: not-allowed;
+}
+@media (max-width: 760px) {
+  .quest-actions-top.quest-cta {
+    grid-template-columns: 1fr; padding: 10px;
+  }
 }
 
 /* Plan result modal — replaces the old in-page .quest-output section so
