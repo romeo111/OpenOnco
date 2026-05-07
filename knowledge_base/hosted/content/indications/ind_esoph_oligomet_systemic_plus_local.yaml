@@ -1,0 +1,196 @@
+id: IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-ESOPHAGEAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV (oligometastatic) — ≤3 distant metastatic lesions per OMEC-1 consensus"
+    - "Esophageal adenocarcinoma (EAC) including GEJ Siewert I — squamous cell (ESCC) considered case-by-case (less RCT support)"
+    - "Includes metachronous oligo-recurrence ≥6 months after curative-intent treatment"
+    - "Excluded: peritoneal carcinomatosis, leptomeningeal disease, >3 brain metastases"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+  demographic_constraints:
+    ecog_max: 1
+    primary_tumor_controllable: true
+    all_metastatic_sites_amenable_to_local_therapy: true
+
+# §17 phases NOT populated for v0.1 — local-therapy entities (esophagectomy
+# / metastasectomy Surgery, SBRT RadiationCourse) for oligomet are future
+# Phase C extensions. Sequence described in description / notes / rationale
+# text. C2 + C4 chunks will populate Surgery + RadiationCourse for esoph;
+# oligomet phases backfilled when those entities exist.
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: "RENAISSANCE / AIO-FLOT5 (gastric/GEJ adenocarcinoma): ~60% response to induction FLOT before randomisation. Esoph-specific oligomet response data sparser — extrapolated from gastric/GEJ trial."
+  overall_survival_median: "RENAISSANCE primary endpoint OS: full results pending (ASCO 2024 interim presented; Lancet/JCO publication awaited as of 2026-05-04). Esoph-specific oligomet OS evidence: heterogeneous case-series only."
+  progression_free_survival: "OMEC-1 consensus: heterogeneous case-series PFS depending on histology, metastatic site + local-therapy modality; no pooled estimate"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-OLIGOMET-DEFINITION
+  - RF-ESOPH-SEVERE-DYSPHAGIA-ASPIRATION
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-HER2-IHC-ISH-IF-RAS-WT
+  - TEST-MSI-PCR-OR-NGS
+
+desired_tests: []
+
+rationale: >
+  Oligometastatic esophageal adenocarcinoma (EAC, including GEJ Siewert I)
+  per OMEC-1 European Delphi consensus (Kroese et al., Eur J Cancer 2023,
+  PMID 36947929): ≤3 distant metastatic lesions in a patient with
+  controllable primary disease, ECOG 0-1, all sites amenable to local
+  therapy. Treatment intent is potentially curative via induction FLOT
+  (or comparable platinum/fluoropyrimidine/taxane systemic chemo) with
+  metastasis-directed local therapy (esophagectomy + metastasectomy or
+  SBRT) in responders, modeled on the RENAISSANCE / AIO-FLOT5 trial
+  design (Al-Batran et al., BMC Cancer 2017; NCT02578368). RENAISSANCE
+  enrolled gastric AND esophagogastric-junction adenocarcinoma; pure
+  esophageal oligomet evidence is extrapolated.
+
+  Squamous-cell esophageal carcinoma (ESCC) oligomet is a case-by-case
+  MDT decision — RENAISSANCE evidence does not extend to squamous
+  histology, and ESCC standard 1L systemic is nivolumab + chemo (1L
+  nivo-chemo SCC track) or ipilimumab + nivolumab; metastasis-directed
+  local therapy in ESCC oligomet rests on smaller case-series + OMEC-1
+  consensus.
+
+  Sequence (described in text; phases: not populated for v0.1):
+    1. Systemic induction: 4 cycles FLOT (or platinum/fluoropyrimidine/
+       taxane triplet) for adenocarcinoma; for ESCC — nivolumab + chemo
+       per standard 1L SCC track if ICI-eligible.
+    2. Restaging at ~12 weeks: PET/CT, EUS, brain MRI if symptomatic.
+    3. Metastasis-directed local therapy in responders: esophagectomy +
+       metastasectomy (RENAISSANCE-pattern for adenocarcinoma in fit
+       patients), or SBRT for site/patient ineligible for surgery (per
+       OMEC-1 consensus on radiotherapy as alternative local modality).
+    4. Adjuvant systemic continuation: 4 cycles FLOT (adenocarcinoma)
+       per RENAISSANCE protocol; ICI-based maintenance for ESCC per
+       1L SCC track.
+
+  Evidence is sparse / consensus-grade. RENAISSANCE primary OS results
+  pending full publication (ASCO 2024 interim only as of 2026-05-04);
+  recommendation strength = conditional, NCCN category 2B (basis: NCCN
+  v3.2025 esophageal cites RENAISSANCE design as rationale for
+  considering surgery in highly selected oligometastatic responders,
+  but does not yet endorse routine practice). HER2-positive disease
+  excluded — those patients route via the dedicated HER2 trastuzumab +
+  chemo track.
+
+rationale_ua: >
+  Олігометастатична аденокарцинома стравоходу (EAC, включаючи GEJ Siewert I)
+  за консенсусом OMEC-1 European Delphi (Kroese et al., Eur J Cancer 2023,
+  PMID 36947929): ≤3 дистантних метастатичних вогнищ у пацієнта з
+  контрольованим первинним вогнищем, ECOG 0-1, всі вогнища доступні
+  локальній терапії. Намір лікування — потенційно куративний: індукційний
+  FLOT + метастазо-направлена локальна терапія у респондерів за дизайном
+  RENAISSANCE / AIO-FLOT5. RENAISSANCE включав gastric ТА GEJ-аденокарциному;
+  суто-езофагальні олігомет-дані екстраполюються.
+
+  Squamous-cell стравоходу (ESCC) олігомет — case-by-case MDT-рішення:
+  RENAISSANCE-докази не поширюються на squamous; стандарт 1L для ESCC —
+  ніволумаб + хіміо (1L nivo-chemo SCC track) або іпілімумаб + ніволумаб;
+  метастазо-направлена локальна терапія у ESCC олігомет базується на
+  менших серіях + OMEC-1 консенсус.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-OMEC-1-KROESE-2018
+    position: supports
+  - source_id: SRC-RENAISSANCE-AIO-FLOT5
+    position: supports
+  - source_id: SRC-NCCN-ESOPHAGEAL-2025
+    position: context
+  - source_id: SRC-ESMO-ESOPHAGEAL-2024
+    position: context
+
+known_controversies:
+  - topic: Routine use of metastasectomy / SBRT in esophageal oligomet outside trial — disputed; ESCC vs adenocarcinoma evidence asymmetry
+    positions:
+      - position: OMEC-1 consensus (Kroese 2023) — local therapy alongside systemic chemo for ≤3 metastases in selected patients (esophagogastric umbrella, both histologies)
+        sources:
+          - SRC-OMEC-1-KROESE-2018
+        evidence_note: "European Delphi expert consensus; covers both adenocarcinoma + ESCC under esophagogastric umbrella"
+      - position: RENAISSANCE / AIO-FLOT5 design — randomised test of FLOT alone vs FLOT + surgical resection for limited-metastatic gastric AND GEJ adenocarcinoma (does NOT enrol pure esoph or ESCC)
+        sources:
+          - SRC-RENAISSANCE-AIO-FLOT5
+        evidence_note: "Phase 3 trial; OS primary endpoint full results pending as of 2026-05-04. Pure-esoph + ESCC histologies extrapolated"
+      - position: NCCN v3.2025 esophageal — considers surgery for highly selected oligometastatic responders; not routine practice
+        sources:
+          - SRC-NCCN-ESOPHAGEAL-2025
+        evidence_note: "Cites RENAISSANCE design rationale; no routine endorsement pending full results"
+    our_default: "Restrict to MDT-reviewed adenocarcinoma cases meeting OMEC-1 consensus criteria + RENAISSANCE-pattern eligibility. ESCC oligomet on case-by-case MDT basis with explicit acknowledgement of weaker evidence base. Document trial registration where available."
+    rationale: "Evidence base is consensus + ongoing-trial design with adenocarcinoma extrapolation; routine practice should await RENAISSANCE primary publication. ESCC asymmetry flagged so MDT can weigh evidence appropriately."
+
+do_not_do:
+  - "Do NOT offer surgical metastasectomy without 4 cycles induction systemic chemo first (RENAISSANCE design requires response demonstration)"
+  - "Do NOT include peritoneal carcinomatosis, leptomeningeal disease, or >3 brain mets — these are explicit OMEC-1 exclusions"
+  - "Do NOT proceed without MDT review (medical onc + surgical onc + radiation onc)"
+  - "Do NOT extrapolate RENAISSANCE evidence to ESCC without explicit MDT-level evidence-base acknowledgement"
+  - "Do NOT initiate FLOT-pattern systemic chemo with severe dysphagia / aspiration risk — establish nutritional access first (RF-ESOPH-SEVERE-DYSPHAGIA-ASPIRATION)"
+  - "Do NOT use in HER2-positive disease — route via dedicated HER2 trastuzumab + chemo track"
+
+do_not_do_en:
+  - "Do NOT offer surgical metastasectomy without 4 cycles induction systemic chemo first (RENAISSANCE design requires response demonstration)"
+  - "Do NOT include peritoneal carcinomatosis, leptomeningeal disease, or >3 brain mets — these are explicit OMEC-1 exclusions"
+  - "Do NOT proceed without MDT review (medical onc + surgical onc + radiation onc)"
+  - "Do NOT extrapolate RENAISSANCE evidence to ESCC without explicit MDT-level evidence-base acknowledgement"
+  - "Do NOT initiate FLOT-pattern systemic chemo with severe dysphagia / aspiration risk — establish nutritional access first (RF-ESOPH-SEVERE-DYSPHAGIA-ASPIRATION)"
+  - "Do NOT use in HER2-positive disease — route via dedicated HER2 trastuzumab + chemo track"
+
+actionability_review_required: true
+
+last_reviewed: "2026-05-08"
+notes: >
+  Esophageal oligometastatic systemic-plus-local track per OMEC-1 consensus
+  + RENAISSANCE / AIO-FLOT5 design extrapolated to esophageal histology.
+  Confidence: moderate (consensus + adenocarcinoma trial extrapolation;
+  NCCN 2B). RENAISSANCE enrolled gastric/GEJ adenocarcinoma — esoph-only
+  + ESCC histologies are extrapolated. Re-grade once full RENAISSANCE
+  primary results published + esoph-specific oligomet RCT data emerge
+  (D2 follow-up).
+
+  §17 phases: NOT populated for v0.1 (planning doc gi2_wave §4.5
+  recommendation 2). Local-therapy entities (esophagectomy /
+  metastasectomy Surgery, SBRT RadiationCourse) for oligomet are
+  future Phase C extensions. C2 + C4 chunks will populate Surgery +
+  RadiationCourse for esoph; oligomet phases backfilled when those
+  entities exist. Sequence (induction FLOT → restaging → local therapy
+  → adjuvant FLOT for adenocarcinoma; nivo-chemo for ESCC) described
+  in description / rationale / do_not_do text only. recommended_regimen:
+  null because REG-FLOT entity does not yet exist in KB (tracked as
+  separate gap).
+
+  ESCC histology asymmetry flagged in known_controversies — RENAISSANCE
+  evidence does not directly support ESCC; case-by-case MDT decision
+  required. Indication primarily intended for EAC + GEJ Siewert I
+  adenocarcinoma.
+
+  Algorithm wiring deferred — esoph metastatic 1L algorithms do not
+  yet have an oligomet branch. D2 follow-up: extend algorithm with
+  oligomet decision step gated by RF-OLIGOMET-DEFINITION.
+
+  Engine smoke (synthetic patient: esoph adenocarcinoma, mets=liver_1
+  + para_aortic_LN_1, ECOG 1, primary_controllable=true, HER2 negative):
+  RF-OLIGOMET-DEFINITION fires; no algorithm branch consumes it yet.
+  Indication is reachable via direct ID lookup but not via current
+  decision-tree routing. D2 algorithm-extension chunk needed to wire.
+
+  actionability_review_required: true per Phase 1.5 schema convention
+  (CIViC pivot — flagged for Clinical Co-Lead two-reviewer signoff
+  per CHARTER §6.1).
