@@ -1,0 +1,90 @@
+# ALGO-GASTRIC-RESECTABLE-PERIOP — chunk gi2-d2-algo-extensions-phase-c-
+# 2026-05-08-1300. Routes resectable gastric / GEJ adenocarcinoma stage
+# II-III (cT2-T4 / cN+ / locally advanced potentially resectable, M0,
+# ECOG 0-1, fit for taxane chemo) to perioperative FLOT4 (4 cycles
+# neoadjuvant FLOT → D2 gastrectomy → 4 cycles adjuvant FLOT) per
+# FLOT4-AIO (Al-Batran 2019 Lancet). Distinct from ALGO-GASTRIC-
+# METASTATIC-1L (stage IV) and ALGO-GASTRIC-2L (post-progression).
+#
+# applicable_to_disease_state: "resectable" disambiguates this from
+# ALGO-GASTRIC-METASTATIC-1L (state-agnostic) when the patient profile
+# carries disease_state="resectable" — patients without disease_state
+# continue to land on the metastatic algorithm (load-order behavior
+# preserved per _find_algorithm fallback rules).
+id: ALGO-GASTRIC-RESECTABLE-PERIOP
+applicable_to_disease: DIS-GASTRIC
+applicable_to_line_of_therapy: 1
+applicable_to_disease_state: resectable
+purpose: >
+  Algorithm for resectable / locally advanced potentially resectable
+  gastric or GEJ Siewert II/III adenocarcinoma. Step 1 routes adeno +
+  stage II-III (cT2-T4 / cN+) + ECOG 0-1 + fit-for-chemo to perioperative
+  FLOT4 (IND-GASTRIC-PERIOP-FLOT4). Default fallback also points to
+  FLOT4 — the indication itself carries hard contraindications
+  (RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION) that the engine surfaces
+  via red_flags_triggering_alternative on the indication.
+
+output_indications:
+  - IND-GASTRIC-PERIOP-FLOT4
+
+default_indication: IND-GASTRIC-PERIOP-FLOT4
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Resectable adeno + stage II-III locally advanced + ECOG 0-1
+  # + fit for chemo → perioperative FLOT4. The fitness gate is wired via
+  # CSD-7A pan-disease RFs (RF-FITNESS-ECOG-FIT, RF-FITNESS-ECOG-INTERMEDIATE)
+  # following the pattern in ALGO-ESOPH-RESECTABLE-1L. Histology + stage +
+  # resectability conditions remain as MDT-evaluated text — no concrete
+  # finding-keyed lookups exist for these in the questionnaire layer yet
+  # (per D1 honest finding: existing English-string `condition:` clauses
+  # functionally fall through to default_indication; documented here for
+  # clinical readability).
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Adenocarcinoma histology (gastric or GEJ Siewert II/III)"
+        - condition: "Resectable cT2-T4 or N+ M0 disease (or locally advanced potentially resectable per MDT)"
+        - any_of:
+            - red_flag: RF-FITNESS-ECOG-FIT
+            - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    if_true:
+      result: IND-GASTRIC-PERIOP-FLOT4
+      notes: >
+        FLOT4-AIO (Al-Batran 2019, Lancet) — perioperative FLOT × 4
+        cycles neoadjuvant + D2 gastrectomy + FLOT × 4 cycles adjuvant.
+        Median OS 50 vs 35 mo (HR 0.77), DFS 30 vs 18 mo (HR 0.75),
+        pCR 16% vs 6%. NCCN v3.2025 category 1 + ESMO 2024 strong
+        recommendation. Phased indication uses §17 Indication.phases[]
+        (REG-FLOT × 4 → SUR-D2-LYMPHADENECTOMY → REG-FLOT × 4).
+    if_false:
+      result: IND-GASTRIC-PERIOP-FLOT4
+      notes: >
+        Fallback: even when fitness-RF clause does not fire, indication
+        defaults to FLOT4 — the indication's demographic_constraints
+        (ecog_max: 1, fit_for_chemo: true) and red_flags_triggering_
+        alternative (RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION) handle
+        contraindication surfacing at render time. Patients with
+        ECOG ≥2 or unfit-for-taxane status should be routed to MDT
+        for FOLFOX-based or fluoropyrimidine-only periop alternatives
+        (out of scope for v0.1 — ratification awaiting separate IND).
+    notes: "D2 chunk routing — adeno + stage II-III resectable + ECOG 0-1 + fit-for-chemo gates entry to periop FLOT4. Fitness RFs (RF-FITNESS-ECOG-FIT / -INTERMEDIATE) provide structured fitness signal; histology + stage + resectability remain MDT-text conditions consistent with ALGO-ESOPH-RESECTABLE-1L wiring pattern (no concrete finding-keyed lookups available for these gates in the questionnaire layer yet)."
+
+sources:
+  - SRC-FLOT4-AL-BATRAN-2019
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+
+last_reviewed: "2026-05-08"
+notes: >
+  D2 chunk gi2-d2-algo-extensions-phase-c-2026-05-08-1300 — first
+  routing for IND-GASTRIC-PERIOP-FLOT4 (Phase C C1 indication, the
+  §17 Indication.phases[] gold-standard exemplar). Algorithm scope
+  is intentionally narrow: routes resectable adeno to FLOT4 periop
+  with no biomarker stratification (FLOT4 did not stratify; HER2 /
+  PD-L1 / MSI testing on diagnostic biopsy informs metastatic-line
+  preparedness but does not gate periop pathway). Out-of-scope:
+  FOLFOX-based or fluoropyrimidine-only periop alternatives for
+  ECOG ≥2 / unfit-for-taxane patients (separate indication pending);
+  CROSS neoadjuvant for GEJ Siewert I (handled by ALGO-ESOPH-
+  RESECTABLE-1L); MAGIC ECF/ECX (legacy, superseded by FLOT4).

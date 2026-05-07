@@ -2,13 +2,19 @@ id: ALGO-GASTRIC-METASTATIC-1L
 applicable_to_disease: DIS-GASTRIC
 applicable_to_line_of_therapy: 1
 purpose: >
-  Algorithm for gastric/GEJ adenocarcinoma metastatic 1L. HER2+ →
-  TOGA trastuzumab+chemo (treatment-defining); HER2- + PD-L1 CPS ≥5 →
-  FOLFOX+nivo. CLDN18.2+ zolbetuximab and MSI-H pembro mono pathways
-  await full authoring (separate Indications when zolbetuximab regimen
-  is added).
+  Algorithm for gastric/GEJ adenocarcinoma metastatic 1L. Step 0
+  (D2 chunk gi2-d2-algo-extensions-phase-c-2026-05-08-1300) checks
+  RF-OLIGOMET-DEFINITION first — when ≤3 metastases + controllable
+  primary + ECOG 0-1 + amenable to local therapy + no peritoneal/
+  leptomeningeal/>3-brain-mets exclusions, route to the systemic-
+  plus-local oligomet track. Otherwise falls through to standard 1L
+  metastatic biomarker hierarchy: HER2+ → TOGA trastuzumab+chemo
+  (treatment-defining); CLDN18.2+ HER2- → zolbetuximab (SPOTLIGHT/
+  GLOW); FGFR2b+ HER2- → bemarituzumab (FORTITUDE-101); HER2- +
+  PD-L1 CPS ≥1 → FOLFOX+nivo (CheckMate-649).
 
 output_indications:
+  - IND-GASTRIC-OLIGOMET-SYSTEMIC-PLUS-LOCAL
   - IND-GASTRIC-METASTATIC-1L-HER2-TOGA
   - IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB
   - IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB
@@ -18,6 +24,35 @@ default_indication: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
 alternative_indication: IND-GASTRIC-METASTATIC-1L-HER2-TOGA
 
 decision_tree:
+  # Step 0 (D2 chunk gi2-d2-algo-extensions-phase-c-2026-05-08-1300) —
+  # RF-OLIGOMET-DEFINITION gate. When patient meets OMEC-1 oligomet
+  # consensus criteria (≤3 distant mets, ECOG 0-1, controllable primary,
+  # all sites amenable to local therapy; not peritoneal carcinomatosis /
+  # leptomeningeal / >3 brain mets), route to systemic-plus-local
+  # oligomet track (induction FLOT → restaging → metastasis-directed
+  # local therapy → adjuvant FLOT per RENAISSANCE / AIO-FLOT5 design).
+  # Falls through to existing standard 1L metastatic biomarker hierarchy
+  # when the RF does not fire (>3 mets, peritoneal, leptomeningeal, etc.).
+  - step: 0
+    evaluate:
+      any_of:
+        - red_flag: RF-OLIGOMET-DEFINITION
+    if_true:
+      result: IND-GASTRIC-OLIGOMET-SYSTEMIC-PLUS-LOCAL
+      notes: >
+        OMEC-1 oligomet consensus (Kroese 2023, PMID 36947929) +
+        RENAISSANCE / AIO-FLOT5 design (Al-Batran BMC Cancer 2017;
+        NCT02578368). ≤3 distant metastatic lesions + controllable
+        primary + ECOG 0-1 + all sites amenable to local therapy.
+        Aggressive plan track — induction FLOT → restaging at ~12 wk
+        → metastasis-directed local therapy (metastasectomy or SBRT)
+        in responders → adjuvant FLOT continuation. NCCN v3.2025 2B,
+        ESMO 2024 conditional. Confidence: moderate (RENAISSANCE
+        primary OS pending).
+    if_false:
+      next_step: 1
+    notes: "D2 chunk new branch — prepended oligomet step gates the standard biomarker hierarchy. Fires only when RF-OLIGOMET-DEFINITION composite trigger evaluates True (≤3 mets + ECOG≤1 + primary controllable + all sites amenable + none of peritoneal/leptomeningeal/>3-brain). HER2-positive oligomet excluded at indication-level (biomarker_requirements_excluded) so HER2+ patients still route to TOGA at step 1."
+
   # Step 1 — HER2+ routes to trastuzumab+chemo (TOGA / KEYNOTE-811).
   - step: 1
     evaluate:
@@ -91,17 +126,22 @@ sources:
   - SRC-NCCN-GASTRIC-2025
   - SRC-ESMO-GASTRIC-2024
 
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-08"
 notes: >
-  HER2+ branch (step 1) routes to TOGA via RF-GASTRIC-HIGH-RISK-BIOLOGY.
-  CLDN18.2-positive HER2-negative branch (step 2) added W1.B2 chunk
-  2026-04-30 — routes to zolbetuximab+chemo (SPOTLIGHT/GLOW; FDA Oct
-  2024). PD-L1 CPS≥1 + HER2-negative branch (step 3, formerly step 2)
-  routes to nivolumab+chemo (CheckMate-649). The CLDN18.2 step
-  precedes PD-L1 because zolbetuximab + chemo is treatment-defining
-  when CLDN18.2≥75% AND PD-L1<5; for dual-positive CLDN18.2≥75% AND
-  PD-L1≥5 the indication's known_controversies surfaces the MDT
-  trade-off.
-  Out-of-scope: T-DXd 2L+ HER2+, FLOT periop for resectable, MSI-H
-  KEYNOTE-859 pembrolizumab as separate algorithm branch (pending
-  dedicated indication).
+  Step 0 (D2 chunk gi2-d2-algo-extensions-phase-c-2026-05-08-1300):
+  RF-OLIGOMET-DEFINITION gate routes oligometastatic patients to
+  IND-GASTRIC-OLIGOMET-SYSTEMIC-PLUS-LOCAL before standard biomarker
+  hierarchy. HER2+ branch (step 1) routes to TOGA via
+  RF-GASTRIC-HIGH-RISK-BIOLOGY. CLDN18.2-positive HER2-negative
+  branch (step 2) added W1.B2 chunk 2026-04-30 — routes to
+  zolbetuximab+chemo (SPOTLIGHT/GLOW; FDA Oct 2024). FGFR2b+ HER2-
+  branch (step 10) added D1 chunk 2026-05-07 — routes to bemarituzumab
+  + mFOLFOX6 (FORTITUDE-101). PD-L1 CPS≥1 + HER2-negative branch
+  (step 3) routes to nivolumab+chemo (CheckMate-649). The CLDN18.2
+  step precedes PD-L1 because zolbetuximab + chemo is treatment-
+  defining when CLDN18.2≥75% AND PD-L1<5; for dual-positive
+  CLDN18.2≥75% AND PD-L1≥5 the indication's known_controversies
+  surfaces the MDT trade-off.
+  Out-of-scope: T-DXd 2L+ HER2+, FLOT periop for resectable
+  (ALGO-GASTRIC-RESECTABLE-PERIOP), MSI-H KEYNOTE-859 pembrolizumab
+  as separate algorithm branch (pending dedicated indication).
