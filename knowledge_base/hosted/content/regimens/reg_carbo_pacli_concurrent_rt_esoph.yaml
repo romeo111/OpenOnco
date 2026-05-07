@@ -1,0 +1,68 @@
+id: REG-CARBO-PACLI-CONCURRENT-RT-ESOPH
+name: "Weekly carboplatin + paclitaxel concurrent with definitive RT (esophageal)"
+name_ua: "Щотижневий карбоплатин + паклітаксел разом із радикальною променевою терапією (стравохід)"
+alternate_names:
+  - "Weekly carbo-pacli concurrent definitive CRT esoph"
+  - "Carbo-pacli + 50.4 Gy concurrent (NCCN definitive CRT esoph SCC)"
+
+components:
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 2"
+    schedule: "IV weekly during RT (5-6 weekly cycles)"
+    route: IV
+  - drug_id: DRUG-PACLITAXEL
+    dose: "50 mg/m²"
+    schedule: "IV weekly during RT (5-6 weekly cycles)"
+    route: IV
+
+cycle_length_days: 7
+total_cycles: "5-6 weekly cycles concurrent with RT 50.4 Gy in 28 fractions (definitive CRT for unresectable esophageal SCC)"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Paclitaxel premed: dexamethasone 20 mg PO 12+6h pre + diphenhydramine 50 mg + ranitidine 50 mg IV 30 min pre"
+  - "5-HT3 antagonist for nausea"
+
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Grade 3 neutropenia"
+    modification: "Hold weekly dose until ANC >=1.5 x 10^9/L; resume same dose"
+    source_refs:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - condition: "Grade 2-3 peripheral neuropathy"
+    modification: "Reduce paclitaxel to 40 mg/m^2; if persistent, omit and continue carboplatin alone"
+    source_refs:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - condition: "Grade >=3 esophagitis interfering with hydration / nutrition"
+    modification: "Hold chemo and pause RT per radiation oncology; aggressive supportive care (analgesia, NG/PEG if prolonged); resume when tolerating PO"
+    source_refs:
+      - SRC-NCCN-ESOPHAGEAL-2025
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Both components NSZU-funded; outpatient delivery feasible during RT course."
+
+sources:
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-ESMO-ESOPHAGEAL-2024
+  - SRC-RTOG-8501-HERSKOVIC-1992
+
+last_reviewed: "2026-05-08"
+
+notes: >
+  Definitive concurrent chemoradiation chemo backbone for unresectable
+  (T4b), M0, medically inoperable, or surgery-declining esophageal
+  squamous-cell carcinoma. Paired with RC-DEFINITIVE-ESOPH-SCC
+  (50.4 Gy / 28 fx) per NCCN ESOPH-F preferred definitive CRT regimen.
+  Evolved from RTOG 85-01 (cisplatin + 5-FU + 50 Gy) backbone with
+  improved tolerability profile; weekly carbo+pacli now NCCN/ESMO
+  preferred chemo backbone for definitive CRT in SCC. Distinct from
+  REG-CARBOPLATIN-PACLITAXEL-WEEKLY (CROSS neoadjuvant 5 cycles +
+  41.4 Gy / 23 fx) — same drugs/doses but different RT pairing and
+  cycle count.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
