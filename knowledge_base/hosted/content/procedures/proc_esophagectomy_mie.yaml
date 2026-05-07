@@ -1,0 +1,66 @@
+# Minimally invasive esophagectomy (MIE) — §17.1 Surgery entity (RATIFIED
+# 2026-05-07). Third procedure landing in the GI-2 wave (chunk
+# gi2-c4-mie-ramie-selection-2026-05-08-1100). Equivalent oncologic
+# outcomes to open per TIME RCT (Biere 2012) with reduced pulmonary
+# morbidity. Referenced from `DIS-ESOPHAGEAL.metadata.procedure_options`.
+id: SUR-ESOPHAGECTOMY-MIE
+names:
+  preferred: "Minimally invasive esophagectomy (MIE)"
+  ukrainian: "Мінімально інвазивна езофагектомія (МІЕ)"
+  english: "Minimally invasive esophagectomy"
+  synonyms:
+    - "MIE"
+    - "Thoracoscopic-laparoscopic esophagectomy"
+    - "Total MIE"
+    - "Minimally invasive Ivor-Lewis"
+    - "Minimally invasive McKeown"
+
+# Free-string per §17.1 sketch — surgical taxonomy not enum'd in v0.1.
+type: minimally_invasive_esophagectomy
+intent: curative
+
+target_organ: esophagus
+applicable_diseases:
+  - DIS-ESOPHAGEAL
+
+# TIME (Biere 2012) MIE arm: in-hospital mortality 3% (2/59); 30-day
+# mortality similar to open. High-volume MIE centers report ~1-3%.
+operative_mortality_pct: "1-3% in high-volume centers (TIME MIE arm: 3% in-hospital)"
+
+common_complications:
+  - name: "Pulmonary infection within 2 weeks (primary TIME endpoint — significantly reduced vs open)"
+    frequency: "9% MIE vs 29% open (TIME, p=0.005)"
+  - name: "Anastomotic leak (intrathoracic or cervical depending on configuration)"
+    frequency: "10-20%"
+  - name: "Recurrent laryngeal nerve / vocal cord injury"
+    frequency: "2% MIE vs 14% open (TIME)"
+  - name: "Chyle leak / chylothorax"
+    frequency: "1-5%"
+  - name: "Cardiac complications (arrhythmia, MI)"
+    frequency: "10-15%"
+  - name: "Anastomotic stricture (late)"
+    frequency: "10-25%"
+  - name: "Conversion to open"
+    frequency: "5-10%"
+
+sources:
+  - SRC-TIME-BIERE-2012
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-ESMO-ESOPHAGEAL-2024
+
+last_reviewed: "2026-05-08"
+notes: >
+  Minimally invasive esophagectomy (MIE — thoracoscopic + laparoscopic,
+  with either intrathoracic Ivor-Lewis or cervical McKeown anastomosis)
+  was established as a valid alternative to open by the TIME RCT (Biere
+  et al., Lancet 2012; n=115; pulmonary infection within 2 weeks 9% MIE
+  vs 29% open, p=0.005). Long-term follow-up (Straatman 2017, Ann Surg)
+  confirmed equivalent oncologic outcomes (3-yr OS 50.5% MIE vs 40.4%
+  open; n.s.) and lymph node yield. MIE is preferred over open in
+  centers with established minimally-invasive expertise and amenable
+  patient anatomy / tumor extent. Hybrid MIE (laparoscopic abdomen +
+  open thoracotomy) is a documented variant — the MIRO trial (Mariette
+  2019) compared hybrid vs full open and showed major complication
+  reduction at 30 days. Pure totally-MIE remains the reference for the
+  TIME comparison. Pairs with neoadjuvant CROSS chemoradiotherapy in
+  the resectable pathway.
