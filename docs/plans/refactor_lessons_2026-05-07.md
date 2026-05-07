@@ -185,3 +185,66 @@ When agent discovers an issue beyond chunk scope (e.g. English-string predicates
 - `docs/plans/q_axis_dispatch_template_2026-05-01.md` — chunk-task template patterns
 - `specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md` — canonical schema spec
 - `CLAUDE.md` — repo conventions + multi-agent coordination protocol
+
+---
+
+## 8. Execution-level findings from §17 agent (added post-merge `9882381c`)
+
+These are concrete things the §17 agent did/discovered during execution that supplement the planning-stage decisions in §2-§3.
+
+### 8.1 IndicationPhase placement: sibling-in-same-file
+
+Planning doc §2.2 left this as agent's call ("nested or in same file"). Agent chose **sibling-in-same-file** in `indication.py`, matching the existing `RegimenPhase` pattern. **Cite this precedent in future**: nested model classes go in the same file as their parent, when the relationship is one-to-many composition.
+
+### 8.2 Loader pattern: `ENTITY_BY_DIR` + `REF_FIELDS`
+
+Loader uses two declarative tables:
+- `ENTITY_BY_DIR` maps folder name → Pydantic model (added `procedures: Surgery`, `radiation_courses: RadiationCourse`)
+- `REF_FIELDS` declares foreign-key paths for ref-integrity (added `concurrent_chemo_regimen → regimens`)
+- Per-entity special cases handle paths that don't fit the simple `field_name → entity_type` shape (`phases[*].{regimen,surgery,radiation}_id`, `procedures.applicable_diseases[]`)
+
+**For future refactors:** before adding new entity types, read these two tables. They define the loader's contract surface. Most additive changes need updates to BOTH (new dir mapping + any fk paths).
+
+### 8.3 Folders need not exist for loader to be ready
+
+Agent verified that `procedures/` and `radiation_courses/` folders don't yet exist (no Surgery / RadiationCourse content authored — that's Phase C). Loader's existing dir-walk tolerates non-existent folders gracefully. New entity types can be schema-ready without populated content.
+
+### 8.4 Free-string `Optional[str]` for vocabulary-pending fields
+
+Agent kept `Surgery.type` as `Optional[str]` per §17.1 sketch rather than promoting to enum. Rationale: curator vocabulary will stabilize after Phase C uses Surgery in real content. Premature enum promotion is a recurring schema-design trap.
+
+**For future refactors:** when a field's value-set isn't yet stable from clinical content, ship it as `Optional[str]` first. Promote to enum only after multiple chunks of real content reveal the canonical vocabulary.
+
+### 8.5 Pydantic v2 `@model_validator(mode='after')` for XOR rules
+
+XOR rule on `IndicationPhase.{regimen_id,surgery_id,radiation_id}` implemented via `@model_validator(mode='after')` returning `self` after raising `ValueError` on multi-FK or zero-FK cases. **Standard idiom for cross-field validation in Pydantic v2.**
+
+### 8.6 Test count rule of thumb
+
+Agent wrote 28 tests for §17 (12 phases + 8 surgery + 8 radiation). Roughly: 8-12 tests per new model covers accept-paths (valid construction + serialization) + reject-paths (each validator failure mode). Use as estimating heuristic for future refactors.
+
+### 8.7 Golden fixtures via `model_validate`, not `load_content`
+
+Test fixtures (`phased_indication.yaml`, `surgery_whipple.yaml`, `radiation_cross.yaml`) loaded via direct `model_validate()` calls in tests, NOT through the full `load_content` loader pipeline. This decouples model-level testing from loader-level testing — fixture data doesn't have to satisfy ref-integrity.
+
+**For future refactors:** model tests via `model_validate`; loader tests via real KB load. Separate test layers.
+
+### 8.8 Migration scripts NOT needed when fields are opt-in
+
+Agent did NOT write a migration script. Confirmed: existing 2799 entities continue loading unchanged because `phases:` is `Optional[list[IndicationPhase]] = None`. **Re-validates planning doc §2.5 — opt-in fields remove the entire migration burden.**
+
+### 8.9 Pre-existing pytest failure verification via git-stash round-trip
+
+Agent verified `test_seed_loads_without_errors` failure pre-exists by stashing changes, running test on baseline, confirming same failure, then restoring changes. Standard technique.
+
+**For future refactors:** when "all tests pass except N" is the result, EVERY pre-existing failure must be verified via stash round-trip. Don't accept "they were probably failing before" without proof.
+
+### 8.10 Spec text edit pattern: §X.4 step-by-step done/deferred
+
+§17.4 originally listed 7 resolution steps. Agent marked steps 1, 2, 3, 6, 7 done in this PR; steps 4 (engine pass-through) + 5 (render phased-timeline) explicitly deferred to Phase C readiness work — visible in the spec text post-merge.
+
+**For future refactors:** when ratifying a multi-step proposal, edit the resolution-path section to mark each step's status (done/deferred). Future readers see at a glance what landed vs what's pending.
+
+### 8.11 `feat/...` branch prefix worked cleanly with self-push
+
+`feat/schema-17-refactor-2026-05-07-2200` was an infrastructure branch — no chunk-task label needed. Self-pushed successfully per CLAUDE.md `3a60901b` after green gates. **Confirms `feat/` prefix is the right signal for refactor / schema / engine / render work.** `chunk/` is reserved for clinical-content workstreams.
