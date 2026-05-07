@@ -632,8 +632,8 @@ PATIENT_ALLOWLIST_ACRONYMS: frozenset[str] = frozenset({
     "CMV", "TB",
     # Allowed Latin biology fragments
     "DNA", "RNA", "mRNA", "MoA", "AE",
-    # ESCAT tier labels
-    "IA", "IB", "IIA", "IIB", "IIIA", "IIIB", "IV", "X",
+    # ESCAT tier labels + cancer staging Roman numerals
+    "II", "III", "IA", "IB", "IIA", "IIB", "IIIA", "IIIB", "IV", "X",
     # Site / tooling
     "OpenOnco", "GitHub", "MIT", "API", "URL",
     # Routes / common short tokens
