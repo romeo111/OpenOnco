@@ -1,0 +1,32 @@
+# Golden fixture — RadiationCourse / CROSS neoadj CRT per §17.1 sketch
+# (RATIFIED 2026-05-07). Pure Pydantic round-trip; loader ref-integrity
+# (concurrent_chemo_regimen → REG-CARBOPLATIN-PACLITAXEL-WEEKLY) is
+# exercised by `test_loader.py` once the first real RadiationCourse YAML
+# lands in Phase C of the GI-2 wave.
+id: RT-CROSS-NEOADJ
+names:
+  preferred: "CROSS neoadjuvant chemoradiation"
+  ukrainian: "CROSS неоад'ювантна хіміопроменева терапія"
+  english: "CROSS regimen — neoadjuvant CRT for esophageal cancer"
+  synonyms: ["CROSS CRT", "Neoadj CRT 41.4 Gy / 23 fx"]
+
+total_dose_gy: 41.4
+fractions: 23
+fraction_size_gy: 1.8
+target_volume: "primary tumor + involved nodes (CTV) with PTV expansion per institutional protocol"
+schedule: "5 fx/week × 4.6 weeks (Mon-Fri)"
+
+# Concurrent weekly carboplatin + paclitaxel — illustrative ID; the actual
+# Regimen entity lands in Phase C of the GI-2 wave.
+concurrent_chemo_regimen: REG-CARBOPLATIN-PACLITAXEL-WEEKLY
+intent: neoadjuvant
+
+sources:
+  - SRC-CROSS-VAN-HAGEN-2012
+  - SRC-NCCN-ESOPHAGEAL-2025
+
+last_reviewed: "2026-05-07"
+notes: >
+  van Hagen 2012 (NEJM) established CROSS as standard neoadjuvant CRT for
+  resectable esophageal/GEJ cancer (squamous and adenocarcinoma). Median
+  OS gain ~14 months over surgery alone; pCR ~29%.
