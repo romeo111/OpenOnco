@@ -385,3 +385,64 @@ D2 prepended oligomet branches as the FIRST list element in `algo_*_metastatic_1
 `gh pr merge --squash` followed by `git push origin --delete <branch>` cleanly removes the remote feature branch after squash. **Local branch lingers** because the agent's worktree is still active. The orchestrator's local repo has no need to track these — `git remote prune origin` cleans references later.
 
 **For session-end cleanup:** worry only about remote; local branches naturally accumulate during multi-agent dispatch and don't impact correctness.
+
+---
+
+## 11. GI-3 wave closure findings (added 2026-05-08)
+
+### 11.1 PMID defect rate confirmed at ~36% in GI-3 W0
+
+Across 11 PMIDs in GI-3 W0 manifests (PDAC × 4, Cholangio × 4, CRC × 3): **4 of 11 had wrong PMIDs** (PRODIGE-24, NAPOLI-3, ESPAC-5F, ClarIDHy). All caught by agents via PubMed WebFetch verification. **§10.1 estimate of "~10-20%" should be revised upward to "~25-40% empirical defect rate"**.
+
+The 4 defective PMIDs all resolved to unrelated papers (diabetes paper, case report, bioinformatics paper, SARS-CoV-2 schools study) — not "almost-right" near-matches. Implication: don't accept PMIDs from any spec without title verification.
+
+### 11.2 Pre-existing skeletal-entity bonus (PALETTE-style)
+
+W0-6 of GI-2 (PR #445) demonstrated that pre-existing failing-schema skeleton files for upcoming sources are common. Grep before treating as NEW. When found and rewritten:
+- `audit_validator` schema_errors decreases (validator-correctness improvement)
+- `audit_validator` ref_errors decreases if other entities cited the dangling ID
+
+**Pattern reuses across waves**: PALETTE-2012 (W0-6 GI-2), Whipple Surgery (C2 GI-3 promoted from fixture). Always check fixtures + sources/ for existing drafts before writing.
+
+### 11.3 Tooling-path drift: agent must validate scripts/tests before relying
+
+W0-6 + multiple GI-3 chunks found that brief-specified tooling paths don't always exist:
+- `-m knowledge_base.validation.cli` → use `scripts/audit_validator.py`
+- `tests/test_indications.py` → use `tests/test_indication_schema.py`
+- `tests/test_sources_extraction.py` → use `tests/test_loader.py + test_source_ref_integrity.py`
+
+**Pattern:** orchestrator-written specs may reference paths that have drifted (renamed/moved/deleted). Agent verifies via `ls` first, falls back to nearest existing match, reports substitution honestly. Don't fail the chunk on a wrong tool path.
+
+### 11.4 `applicable_to_disease_state` for algorithm disambiguation (validated)
+
+GI-3 D2 (PR #482) used `applicable_to_disease_state` to disambiguate same-disease algorithms:
+- `algo_pdac_metastatic_1l` (state-agnostic legacy)
+- `algo_pdac_resectable_periop` (`applicable_to_disease_state: pdac_resectable_or_borderline`)
+- `algo_pdac_lapc` (`applicable_to_disease_state: pdac_lapc_unresectable`)
+
+Existing profiles WITHOUT `disease_state` continue to land on the metastatic_1l (legacy load-order). New profiles WITH `disease_state` route to the right specialised algorithm. **Pattern works for v0.1; future engine refactor may want explicit dispatch precedence.**
+
+### 11.5 State-agnostic algorithm collision (pre-existing engine quirk surfaced)
+
+GI-3 D2 engine smoke required force-routing past a pre-existing collision: `ALGO-CRC-ADJUVANT` (state-agnostic) and `ALGO-CRC-METASTATIC-1L` (state-agnostic) both match same DIS-CRC profile when `disease_state` not provided. Walker resolves by load order, not by algorithm-specific predicates. **Pre-existing — verified via stash + baseline rerun.**
+
+**For the next engine refactor:** algorithms in same disease without `disease_state` discriminator should error or warn. Adding `applicable_to_disease_state` for legacy algos would surface this.
+
+### 11.6 Concurrent CRT regimen pattern (closes C4/C5 follow-up)
+
+C4 (PR #477) + C5 (PR #480) RadiationCourses for chemoradiation both initially had `concurrent_chemo_regimen: null` because no concurrent capecitabine regimen existed. Existing `reg_capecitabine_palliative.yaml` was wrong dose/schedule/context for radiosensitization.
+
+**Pattern:** when a foreign-key target doesn't exist, the honest move is `null` + audit comment, NOT inventing a wrong-context FK. Follow-up chunk authors the missing entity + back-fills both RC EDITs in one chunk.
+
+This is the inverse of §10.2 (skeletal-entity rewrite) — here the FK target genuinely doesn't exist, so creation comes later when first needed.
+
+### 11.7 §17 schema fully exercised end-to-end
+
+GI-3 wave validated §17 schema across:
+- Surgery: Whipple (C2), TME proctectomy (C3) — production
+- RadiationCourse: SCRT 25/5 rectal (C3), LCCRT 50.4/28 rectal (C4), LAPC 50.4/28 PDAC (C5) — production
+- IndicationPhase: 1-phase (C1 PDAC adj), 2-phase (C5 LAPC induction+definitive), 3-phase (C2 PDAC BR neoadj+surgery+adj, C3 RAPIDO RT+chemo+surgery, C4 PRODIGE-23 induction+CRT+surgery)
+- Phase enum: `neoadjuvant`, `induction`, `surgery`, `adjuvant`, `definitive` all used
+- Phase type enum: `chemotherapy`, `radiation`, `chemoradiation`, `surgery` all used
+
+**No schema gaps surfaced.** Optional `extra='allow'` admitted all needed metadata. Schema design held up across 5 GI diseases (gastric, esoph, cholangio, PDAC, CRC) + 14+ §17-consumer indications.
