@@ -23,7 +23,7 @@ class handler(BaseHTTPRequestHandler):  # pylint: disable=invalid-name
         self.wfile.write(body)
 
     def do_OPTIONS(self) -> None:  # noqa: N802
-        self._send_json(204, _cors_headers(), {})
+        self._send_json(200, _cors_headers(), {"status": "ok"})
 
     def do_POST(self) -> None:  # noqa: N802
         length = int(self.headers.get("Content-Length") or "0")
