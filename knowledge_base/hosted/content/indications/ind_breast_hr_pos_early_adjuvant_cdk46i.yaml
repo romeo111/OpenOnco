@@ -1,0 +1,113 @@
+id: IND-BREAST-HR-POS-EARLY-ADJ-CDK46I
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  line_of_therapy: 1
+  stage_requirements:
+    - "Early-stage HR+/HER2- breast cancer post-surgery"
+    - "High-risk: >=4 positive axillary nodes, OR 1-3 positive nodes with T >=5cm or grade 3 histology or Ki-67 >=20% (monarchE criteria)"
+    - "Adjuvant endocrine therapy ongoing (AI or tamoxifen)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      required: true
+      value_constraint: "ER positive (>=1% by IHC)"
+    - biomarker_id: BIO-HER2-SOLID
+      required: true
+      value_constraint: "HER2 negative (IHC 0-1+ OR IHC 2+ FISH-negative)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-ABEMACICLIB-ADJUVANT
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  idfs_4yr:
+    value: "4-yr iDFS 85.8% vs 79.4% (HR 0.664; 95% CI 0.578-0.762; monarchE); absolute benefit 6.4%"
+    source: SRC-MONARCHE-JOHNSTON-2023
+
+hard_contraindications: []
+# NOTE: CI-PREGNANCY-TERATOGEN does not yet exist in contraindications/.
+# CDK4/6i teratogenicity is covered in do_not_do bullets below.
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - TEST-BONE-SCAN
+  - TEST-ECHO
+desired_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+
+rationale: >
+  Adjuvant abemaciclib + endocrine therapy for 2 years (monarchE) is NCCN Cat 1
+  for high-risk HR+/HER2- early breast cancer. monarchE 4-year analysis
+  (Johnston et al., Lancet Oncol 2023; PMID 36493792): iDFS HR 0.664
+  (95% CI 0.578-0.762; nominal p<0.0001); 4-yr iDFS 85.8% vs 79.4%;
+  absolute benefit 6.4 percentage points (N=5,637; median follow-up 42 months).
+  High-risk defined as >=4 positive axillary nodes, OR 1-3 positive nodes +
+  at least one of: T >=5 cm, grade 3, or Ki-67 >=20%. Key risks: diarrhea
+  (most common; manageable with loperamide), neutropenia (CBC q2w first
+  2 months then monthly), hepatotoxicity (LFT monitoring), VTE. Strong
+  CYP3A4 inhibitors increase abemaciclib exposure — dose reduce. 2-year
+  fixed duration; no benefit beyond 2 years per current data. Concurrent
+  endocrine therapy required throughout.
+
+rationale_ua: >
+  Ад'ювантний абемацикліб + ендокринна терапія 2 роки (monarchE) — NCCN Кат 1
+  для HR+/HER2- раннього РМЗ підвищеного ризику. 4-річний аналіз: iDFS HR 0.664
+  (95% ДІ 0.578-0.762), абсолютна користь ~6.4% на 4-му році. Критерії
+  підвищеного ризику: >=4 уражених ЛВ або 1-3 ЛВ + T >=5 см, або grade 3,
+  або Ki-67 >=20%. Основні ризики: діарея, нейтропенія, гепатотоксичність, ВТЕ.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-MONARCHE-JOHNSTON-2023
+    position: supports
+    relevant_quote_paraphrase: "Abemaciclib + ET adjuvant vs ET alone: 4-yr iDFS HR 0.664 (95% CI 0.578-0.762); absolute benefit 6.4% at 4yr (monarchE, N=5,637)"
+  - source_id: SRC-NCCN-BREAST-2025
+    position: supports
+    relevant_quote_paraphrase: "Abemaciclib + endocrine therapy is NCCN Category 1 for high-risk HR+/HER2- early breast cancer adjuvant"
+
+known_controversies:
+  - topic: "Ki-67 cutoff for high-risk eligibility"
+    positions:
+      - position: "monarchE used >=20% Ki-67 as high-risk criterion (with 1-3 nodes)"
+        sources: [SRC-MONARCHE-JOHNSTON-2023]
+      - position: "NCCN and ESMO consider Ki-67 as one of several high-risk features; pathologic score tools (CPS+EG, IHC4) may better stratify"
+        sources: [SRC-NCCN-BREAST-2025]
+    our_default: "Ki-67 >=20% + 1-3 nodes qualifies; >=4 nodes always qualifies regardless of Ki-67"
+    rationale: "Aligned with monarchE eligibility criteria"
+
+do_not_do:
+  - "НЕ призначати при вагітності — CDK4/6i тератогенні."
+  - "НЕ починати до повного загоєння хірургічних ран."
+  - "НЕ поєднувати з сильними інгібіторами CYP3A4 — значне підвищення концентрації абемацикліб."
+  - "НЕ пропускати моніторинг загального аналізу крові q2w перші 2 місяці — ризик тяжкої нейтропенії."
+
+do_not_do_en:
+  - "Do NOT use in pregnancy — CDK4/6i are teratogenic."
+  - "Do NOT start until full surgical wound healing."
+  - "Do NOT combine with strong CYP3A4 inhibitors — significant abemaciclib concentration increase."
+  - "Do NOT skip CBC monitoring q2w first 2 months — severe neutropenia risk."
+
+time_critical: false
+last_reviewed: "2026-05-09"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Co-Lead sign-off. REG-ABEMACICLIB-ADJUVANT created alongside
+  this indication (abemaciclib 150 mg PO BID x 2 years; new file).
+  CI-PREGNANCY-TERATOGEN not yet created; teratogenicity captured in do_not_do
+  bullets instead — hard_contraindications left empty pending CI entity creation.
+  NATALEE (ribociclib 400 mg 3w/1w-off x 3 years adjuvant; NCCN Cat 1) is an
+  alternative adjuvant CDK4/6i; not modeled here — separate indication needed.
