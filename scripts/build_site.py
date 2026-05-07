@@ -50,6 +50,10 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from knowledge_base.engine import (
     generate_diagnostic_brief,
     generate_plan,
@@ -68,7 +72,6 @@ from scripts.site_cases import CASE_CATEGORIES, CASES, GALLERY_EXCLUDED_CASE_IDS
 from scripts.site_styles import STYLESHEET as _STYLE_CSS
 
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
 KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 EXAMPLES = REPO_ROOT / "examples"
 CTGOV_CACHE = KB_ROOT / "cache" / "ctgov"
@@ -382,6 +385,9 @@ def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
 // push automatically rotates the cache key.
 const CACHE_NAME = '__CACHE_NAME__';
 const PRECACHE = [
+  '/manifest.webmanifest',
+  '/logo.svg',
+  '/favicon.svg',
   '/openonco-engine-index.json',
   '/openonco-engine-core.zip',
   '/try.html',
@@ -461,6 +467,43 @@ self.addEventListener('fetch', (event) => {
     out = output_dir / "sw.js"
     out.write_text(sw_js, encoding="utf-8")
     return {"path": "sw.js", "cache_name": cache_name}
+
+
+def write_web_manifest(output_dir: Path) -> dict:
+    """Write the PWA manifest for the static try-page app shell."""
+    manifest = {
+        "id": "/try.html",
+        "name": "OpenOnco Try",
+        "short_name": "OpenOnco",
+        "description": (
+            "In-browser OpenOnco demo for synthetic oncology profiles. "
+            "The engine runs locally in Pyodide."
+        ),
+        "start_url": "/try.html",
+        "scope": "/",
+        "display": "standalone",
+        "background_color": "#f8faf8",
+        "theme_color": "#0a2e1a",
+        "orientation": "any",
+        "categories": ["medical", "education", "productivity"],
+        "icons": [
+            {
+                "src": "/logo.svg",
+                "sizes": "any",
+                "type": "image/svg+xml",
+                "purpose": "any maskable",
+            },
+            {
+                "src": "/favicon.svg",
+                "sizes": "any",
+                "type": "image/svg+xml",
+                "purpose": "any",
+            },
+        ],
+    }
+    out = output_dir / "manifest.webmanifest"
+    out.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return {"path": "manifest.webmanifest", "start_url": manifest["start_url"]}
 
 
 def bundle_examples(output_dir: Path) -> dict:
@@ -1137,6 +1180,9 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
 <title>OpenOnco — Open-source CDS for oncology</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0a2e1a">
+<meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -1571,6 +1617,9 @@ def render_gallery(*, target_lang: str = "en") -> str:
 <title>OpenOnco · {page_title}</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0a2e1a">
+<meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -1715,6 +1764,9 @@ def render_try(
 <title>OpenOnco · {'Try it' if target_lang == 'en' else 'Спробувати'}</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0a2e1a">
+<meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -1866,6 +1918,19 @@ def render_try(
         </div>
       </div>
 
+      <div class="quest-build-card" id="buildCard">
+        <div class="build-card-head">
+          <h3>{'Build' if target_lang == 'en' else 'Збірка'}</h3>
+          <span id="pwaInstallState" class="build-state">{'Browser' if target_lang == 'en' else 'Браузер'}</span>
+        </div>
+        <dl class="build-meta">
+          <div><dt>Core</dt><dd id="coreVersion">v{bundle_version or 'pending'}</dd></div>
+          <div><dt>{'Disease' if target_lang == 'en' else 'Хвороба'}</dt><dd id="diseaseVersion">—</dd></div>
+          <div><dt>{'Cache' if target_lang == 'en' else 'Кеш'}</dt><dd id="cacheState">{'Checking…' if target_lang == 'en' else 'Перевіряю…'}</dd></div>
+          <div><dt>{'Offline' if target_lang == 'en' else 'Offline'}</dt><dd id="offlineState">{'Network required for first launch' if target_lang == 'en' else 'Мережа потрібна для першого запуску'}</dd></div>
+        </dl>
+      </div>
+
       <div class="try-actions quest-cta">
         <button id="runBtn" class="btn btn-primary" disabled>
           {'Generate full Plan' if target_lang == 'en' else 'Згенерувати повний Plan'}
@@ -2004,6 +2069,11 @@ const impactRedflags = document.getElementById('impactRedflags');
 const impactSelected = document.getElementById('impactSelected');
 const impactSelectedText = document.getElementById('impactSelectedText');
 const impactWarnings = document.getElementById('impactWarnings');
+const coreVersionEl = document.getElementById('coreVersion');
+const diseaseVersionEl = document.getElementById('diseaseVersion');
+const cacheStateEl = document.getElementById('cacheState');
+const offlineStateEl = document.getElementById('offlineState');
+const pwaInstallStateEl = document.getElementById('pwaInstallState');
 const generatingOverlay = document.getElementById('generatingOverlay');
 const generatingTitle = document.getElementById('generatingTitle');
 const generatingLead = document.getElementById('generatingLead');
@@ -2141,6 +2211,33 @@ function setError(msg) {{
   }} else {{
     errorBox.hidden = true;
     errorBox.textContent = '';
+  }}
+}}
+
+function setText(el, value) {{
+  if (el) el.textContent = value;
+}}
+
+async function refreshBuildPanel(diseaseId = null) {{
+  const online = navigator.onLine !== false;
+  setText(offlineStateEl, online
+    ? '{"Online" if target_lang == "en" else "Онлайн"}'
+    : '{"Offline - cached bundles only" if target_lang == "en" else "Offline - лише кешовані bundle"}');
+
+  const swControlled = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
+  setText(cacheStateEl, swControlled
+    ? '{"Service worker active" if target_lang == "en" else "Service worker активний"}'
+    : '{"Browser cache pending" if target_lang == "en" else "Кеш браузера очікує"}');
+  setText(pwaInstallStateEl, window.matchMedia('(display-mode: standalone)').matches
+    ? '{"Installed" if target_lang == "en" else "Встановлено"}'
+    : '{"Browser" if target_lang == "en" else "Браузер"}');
+
+  if (bundleIndex) {{
+    setText(coreVersionEl, 'v' + (bundleIndex.core_version || '{bundle_version or "unknown"}'));
+    if (diseaseId) {{
+      const dver = (bundleIndex.disease_versions || {{}})[diseaseId];
+      setText(diseaseVersionEl, dver ? diseaseId + ' / v' + dver : diseaseId + ' / core');
+    }}
   }}
 }}
 
@@ -3041,6 +3138,7 @@ async function loadBundleIndex() {{
       const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now());
       if (!r.ok) throw new Error('Index fetch HTTP ' + r.status);
       bundleIndex = await r.json();
+      refreshBuildPanel().catch(() => {{}});
       return bundleIndex;
     }} catch (e) {{
       lastErr = e;
@@ -3102,12 +3200,16 @@ async function loadCoreBundle() {{
 // time per slot and drop silently on quota errors.
 async function loadDiseaseModule(diseaseId) {{
   if (!diseaseId) return;
-  if (loadedDiseases.has(diseaseId)) return;
+  if (loadedDiseases.has(diseaseId)) {{
+    refreshBuildPanel(diseaseId).catch(() => {{}});
+    return;
+  }}
   if (!bundleIndex || !bundleIndex.diseases) return;
   const relUrl = bundleIndex.diseases[diseaseId];
   if (!relUrl) {{
     // Disease has no per-disease bundle — its content is fully in core.
     loadedDiseases.add(diseaseId);
+    refreshBuildPanel(diseaseId).catch(() => {{}});
     return;
   }}
   const ver = (bundleIndex.disease_versions || {{}})[diseaseId] || '';
@@ -3122,6 +3224,7 @@ async function loadDiseaseModule(diseaseId) {{
       for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
       pyodide.unpackArchive(u8.buffer, 'zip');
       loadedDiseases.add(diseaseId);
+      refreshBuildPanel(diseaseId).catch(() => {{}});
       console.log('[OO] disease module ' + diseaseId + ' loaded from localStorage cache');
       return;
     }}
@@ -3139,6 +3242,7 @@ async function loadDiseaseModule(diseaseId) {{
   await yieldToBrowser();
   pyodide.unpackArchive(buf, 'zip');
   loadedDiseases.add(diseaseId);
+  refreshBuildPanel(diseaseId).catch(() => {{}});
 
   // Re-validate after merge so the next generate_plan() sees the new YAMLs.
   // apply_disease_module() drops the loader cache; cheap enough to run on
@@ -3837,6 +3941,14 @@ window.addEventListener('hashchange', loadFromUrlHash);
 // ICD-O-3 codes before the user clicks Generate. Best-effort, never
 // blocks UI.
 loadBundleIndex().catch(() => {{}});
+refreshBuildPanel().catch(() => {{}});
+window.addEventListener('online', () => refreshBuildPanel().catch(() => {{}}));
+window.addEventListener('offline', () => refreshBuildPanel().catch(() => {{}}));
+if (navigator.serviceWorker) {{
+  navigator.serviceWorker.addEventListener('controllerchange', () => {{
+    refreshBuildPanel().catch(() => {{}});
+  }});
+}}
 
 // CSD-6E polish: register the cache-first service worker so repeat
 // visits skip the network for the engine bundle entirely. Best-effort
@@ -3844,9 +3956,12 @@ loadBundleIndex().catch(() => {{}});
 // mode, ITP, file://, etc.).
 if ('serviceWorker' in navigator) {{
   window.addEventListener('load', () => {{
-    navigator.serviceWorker.register('/sw.js').catch((e) => {{
-      console.warn('[OpenOnco] service worker registration failed:', e);
-    }});
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => refreshBuildPanel().catch(() => {{}}))
+      .catch((e) => {{
+        console.warn('[OpenOnco] service worker registration failed:', e);
+        refreshBuildPanel().catch(() => {{}});
+      }});
   }});
 }}
 </script>
@@ -7424,6 +7539,7 @@ def build_site(output_dir: Path) -> dict:
     sw_payload = write_service_worker(
         output_dir, core_version=engine_bundle.get("core_version", ""),
     )
+    manifest_payload = write_web_manifest(output_dir)
 
     # Bundle dropdowns BEFORE render_try so /try.html can inline the
     # ~15 KB manifests as JS constants — saves the ~870 KB initial fetch
@@ -7491,6 +7607,7 @@ def build_site(output_dir: Path) -> dict:
         "cases_en": case_paths_en,
         "engine_bundle": engine_bundle,
         "service_worker": sw_payload,
+        "web_manifest": manifest_payload,
         "examples_payload": examples_payload,
         "questionnaires_payload": questionnaires_payload,
         "disease_coverage_payload": disease_coverage_payload,
