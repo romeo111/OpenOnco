@@ -32,6 +32,7 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     counts = wiki_payload["counts"]
 
     assert len(wiki_payload["entries"]) > 1000
+    assert counts["Disease"] >= 70
     assert counts["Drugs"] >= 200
     assert counts["Biomarkers"] >= 100
     assert counts["Red flags"] >= 400
@@ -61,6 +62,7 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     assert 'class="kb-info-box"' in kb_home
     assert 'id="kbSearchBtn"' in kb_home
     assert "Source-grounded browser" in kb_home
+    assert 'data-kind="Disease"' in kb_home
     assert ">Search</button>" in kb_home
 
     uk_kb_home = (wiki_dir / "ukr" / "kb.html").read_text(encoding="utf-8")
@@ -73,6 +75,14 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
 
 def test_kb_search_index_exposes_provenance_and_reverse_refs(wiki_payload: dict):
     entries = {entry["id"]: entry for entry in wiki_payload["entries"]}
+
+    nsclc = entries["DIS-NSCLC"]
+    assert nsclc["kind"] == "Disease"
+    assert nsclc["kind_key"] == "diseases"
+    assert nsclc["url"] == "/diseases.html#DIS-NSCLC"
+    assert "non-small cell lung cancer" in nsclc["search_text"]
+    assert "regimen" in nsclc["search_text"]
+    assert "verified" in nsclc["subtitle"]
 
     rituximab = entries["DRUG-RITUXIMAB"]
     assert rituximab["kind"] == "Drug"

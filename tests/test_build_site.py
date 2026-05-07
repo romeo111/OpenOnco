@@ -44,6 +44,7 @@ def test_static_assets_present(site_dir: Path):
 
 def test_ukrainian_diseases_page_localized_and_clean():
     html = render_diseases(None, target_lang="uk")
+    assert 'id="DIS-NSCLC"' in html
 
     assert "Недрібноклітинний рак легені" in html
     assert "Біомарк." in html

@@ -6834,7 +6834,7 @@ def _disease_row_html(r: dict, lbl: dict, target_lang: str) -> str:
         if part
     ).lower()
     return (
-        f'<tr data-search="{html.escape(search_blob)}">'
+        f'<tr id="{html.escape(r["id"])}" data-search="{html.escape(search_blob)}">'
         f'<td><strong>{html.escape(short_id)}</strong> <span class="dis-name">{html.escape(name)}</span></td>'
         f'<td class="mono">{html.escape(r["icd10"] or "")}</td>'
         f'<td class="num">{r["n_bios"]}</td>'

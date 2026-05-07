@@ -43,9 +43,10 @@ T = {
         "try_it": "Try it",
         "page_title": "KB Search",
         "lead": (
-            "Search drugs, biomarkers, red flags, and biomarker actionability. "
-            "Results are generated directly from the YAML knowledge base, with "
-            "source IDs and reverse references exposed for audit."
+            "Search diseases, drugs, biomarkers, red flags, and biomarker "
+            "actionability. Results are generated directly from the YAML "
+            "knowledge base and the disease coverage matrix, with source IDs "
+            "and reverse references exposed for audit."
         ),
         "info_title": "Source-grounded browser.",
         "info_body": (
@@ -54,7 +55,7 @@ T = {
             "status, file provenance, and where it is used."
         ),
         "search_label": "Search the clinical KB",
-        "search_placeholder": "Try rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
+        "search_placeholder": "Try NSCLC, rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
         "search_button": "Search",
         "all": "All",
         "no_matches": "No matching KB entities.",
@@ -111,10 +112,10 @@ T = {
         "try_it": "Спробувати",
         "page_title": "Пошук у базі знань",
         "lead": (
-            "Шукайте препарати, біомаркери, тривожні ознаки та клінічну "
-            "застосовність біомаркерів. Результати генеруються безпосередньо "
-            "з YAML-бази знань, із відкритими source ID та зворотними "
-            "посиланнями для аудиту."
+            "Шукайте хвороби, препарати, біомаркери, тривожні ознаки та "
+            "клінічну застосовність біомаркерів. Результати генеруються "
+            "безпосередньо з YAML-бази знань і матриці покриття хвороб, із "
+            "відкритими source ID та зворотними посиланнями для аудиту."
         ),
         "info_title": "Браузер, прив’язаний до джерел.",
         "info_body": (
@@ -123,7 +124,7 @@ T = {
             "source ID, статус рев’ю, походження файлу та місця використання."
         ),
         "search_label": "Пошук у клінічній KB",
-        "search_placeholder": "Спробуйте rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
+        "search_placeholder": "Спробуйте NSCLC, rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
         "search_button": "Шукати",
         "all": "Усе",
         "no_matches": "Сутностей KB за цим запитом не знайдено.",
@@ -260,6 +261,7 @@ FIELD_LABELS = {
 }
 
 SEARCH_KINDS = set(ENTITY_DIRS)
+DISEASE_KIND_LABELS = {"en": "Disease", "uk": "Хвороба"}
 ID_RE = re.compile(r"\b(?:DRUG|BIO|BMA|RF|DIS|REG|IND|ALGO|SRC|CI|SUP|TEST|MON)-[A-Z0-9][A-Z0-9_-]*\b")
 
 
@@ -710,6 +712,66 @@ def _search_entry(entity: KbEntity, reverse_refs: dict[str, list[KbEntity]], *, 
     }
 
 
+def _disease_search_entries(kb_root: Path, *, locale: str = "en") -> list[dict[str, Any]]:
+    from scripts.disease_coverage_matrix import per_disease_metrics
+
+    rows = per_disease_metrics(kb_root)
+    kind = DISEASE_KIND_LABELS[locale]
+    url_prefix = "/ukr/diseases.html" if locale == "uk" else "/diseases.html"
+    entries: list[dict[str, Any]] = []
+    for row in rows:
+        disease_id = str(row["id"])
+        name = _text(row.get("name")) or disease_id
+        family = _text(row.get("family"))
+        icd10 = _text(row.get("icd10"))
+        subtitle_parts = [
+            f"ICD-10: {icd10}" if icd10 else "",
+            f"family: {family}" if family and locale == "en" else "",
+            f"родина: {family}" if family and locale == "uk" else "",
+            f"fill {row['fill_pct']}%",
+            f"verified {row['verified_pct']}%",
+            f"{row['n_inds']} indications",
+            f"{row['n_regs']} regimens",
+            f"{row['n_rfs']} red flags",
+        ]
+        search_text = " ".join(
+            [
+                disease_id,
+                name,
+                kind,
+                family,
+                icd10,
+                f"fill {row['fill_pct']}",
+                f"verified {row['verified_pct']}",
+                f"bio {row['n_bios']}",
+                f"drug {row['n_drugs']}",
+                f"indication {row['n_inds']}",
+                f"regimen {row['n_regs']}",
+                f"redflag {row['n_rfs']}",
+                "1l algorithm" if row["algo_1l"] else "",
+                "2l algorithm" if row["algo_2l"] else "",
+                "questionnaire" if row["has_quest"] else "",
+                "workup" if row["has_workup"] else "",
+            ]
+        )
+        entries.append(
+            {
+                "id": disease_id,
+                "kind": kind,
+                "kind_key": "diseases",
+                "title": name,
+                "url": f"{url_prefix}#{disease_id}",
+                "subtitle": " | ".join(part for part in subtitle_parts if part),
+                "sources": [],
+                "diseases": [disease_id],
+                "used_by_count": row["n_inds"] + row["n_regs"] + row["n_rfs"],
+                "search_text": search_text.lower(),
+            }
+        )
+    entries.sort(key=lambda e: (e["title"].lower(), e["id"]))
+    return entries
+
+
 def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, locale: str = "en") -> str:
     t = T[locale]
     faq = f"""
@@ -726,6 +788,15 @@ def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, loc
         f'<div class="kb-count"><span>{count}</span>{html.escape(label)}</div>'
         for label, count in counts.items()
     )
+    filter_buttons = "\n      ".join(
+        [
+            f'<button type="button" data-kind="">{html.escape(t["all"])}</button>',
+            *(
+                f'<button type="button" data-kind="{html.escape(label)}">{html.escape(label)}</button>'
+                for label in counts
+            ),
+        ]
+    )
     body = f"""<main class="kb-page">
   <section class="kb-hero">
     <h1>{html.escape(t["page_title"])}</h1>
@@ -741,11 +812,7 @@ def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, loc
       <button id="kbSearchBtn" class="kb-search-btn" type="button">{html.escape(t["search_button"])}</button>
     </div>
     <div class="kb-filter-row">
-      <button type="button" data-kind="">{html.escape(t["all"])}</button>
-      <button type="button" data-kind="{html.escape(_kind_label("drugs", locale))}">{html.escape(_kind_label("drugs", locale))}</button>
-      <button type="button" data-kind="{html.escape(_kind_label("biomarkers", locale))}">{html.escape(_kind_label("biomarkers", locale))}</button>
-      <button type="button" data-kind="{html.escape(_kind_label("redflags", locale))}">{html.escape(_kind_label("redflags", locale))}</button>
-      <button type="button" data-kind="{html.escape(_kind_label("biomarker_actionability", locale))}">{html.escape(_kind_label("biomarker_actionability", locale))}</button>
+      {filter_buttons}
     </div>
   </section>
   <section>
@@ -845,7 +912,9 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
 
     payloads: dict[str, dict[str, Any]] = {}
     for locale in ("en", "uk"):
-        entries = [_search_entry(e, reverse_refs, locale=locale) for e in searchable]
+        entity_entries = [_search_entry(e, reverse_refs, locale=locale) for e in searchable]
+        disease_entries = _disease_search_entries(kb_root, locale=locale)
+        entries = [*disease_entries, *entity_entries]
         count_labels = (
             {
                 "drugs": "Drugs",
@@ -862,6 +931,7 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
             }
         )
         counts = {
+            DISEASE_KIND_LABELS[locale]: len(disease_entries),
             count_labels["drugs"]: sum(1 for e in searchable if e.kind == "drugs"),
             count_labels["biomarkers"]: sum(1 for e in searchable if e.kind == "biomarkers"),
             count_labels["redflags"]: sum(1 for e in searchable if e.kind == "redflags"),
@@ -892,7 +962,7 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
         uk_out_path.write_text(_clean_html(render_entity_page(entity, entities, reverse_refs, locale="uk")), encoding="utf-8")
 
     return {
-        "entities": len(searchable),
+        "entities": len(payloads["en"]["entries"]),
         "counts": payloads["en"]["counts"],
         "index": "kb_search_index.json",
         "home": "kb.html",
