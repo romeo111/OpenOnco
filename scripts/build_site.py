@@ -379,10 +379,10 @@ def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
     SHA-256 prefix) automatically invalidates stale bundles on next
     fetch. CSD-6E polish — speeds up cold loads on repeat visits past
     what localStorage can hold (entire core + all visited diseases)."""
-    # 'l2' = layout v2 (EN-default at root, UA at /ukr/). Bumping the
-    # layout prefix forces a hard cache invalidation for users who still
-    # had the v1 layout (UA at root, EN at /en/) cached on their device.
-    cache_name = "openonco-bundle-l2-" + (core_version or "v1")
+    # 'l3' = navigation network-first. Bumping the layout prefix forces
+    # a hard cache invalidation for users whose browser still has an old
+    # service worker/cache after a landing-page redesign.
+    cache_name = "openonco-bundle-l3-" + (core_version or "v1")
     sw_js = """// OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
 // Two strategies in one SW:
 //   1. Cache-first for engine bundle artifacts (large, infrequent).
@@ -442,9 +442,21 @@ function staleWhileRevalidate(event) {
   );
 }
 
+function networkFirstNavigation(event) {
+  event.respondWith(
+    fetch(event.request, { cache: 'no-store' }).catch(() =>
+      caches.match(event.request, { ignoreSearch: true })
+    )
+  );
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
+
+  if (event.request.mode === 'navigate') {
+    return networkFirstNavigation(event);
+  }
 
   // SWR for the small interactive shell (HTML + CSS).
   if (SWR_PATHS.indexOf(url.pathname) !== -1) {
@@ -3978,7 +3990,7 @@ async function cacheAllBundlesForOffline() {{
     return;
   }}
 
-  const cacheName = 'openonco-bundle-l2-' + (bundleIndex.core_version || 'v1');
+  const cacheName = 'openonco-bundle-l3-' + (bundleIndex.core_version || 'v1');
   const cache = await caches.open(cacheName);
   let done = 0;
   let failed = 0;

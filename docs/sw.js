@@ -6,7 +6,7 @@
 //      background, so the dropdowns aren't gated on the HTML download.
 // Cache name is stamped with the core bundle's SHA-256 prefix so a KB
 // push automatically rotates the cache key.
-const CACHE_NAME = 'openonco-bundle-l2-0bdfec1aea8a';
+const CACHE_NAME = 'openonco-bundle-l3-0bdfec1aea8a';
 const PRECACHE = [
   '/manifest.webmanifest',
   '/logo.svg',
@@ -57,9 +57,21 @@ function staleWhileRevalidate(event) {
   );
 }
 
+function networkFirstNavigation(event) {
+  event.respondWith(
+    fetch(event.request, { cache: 'no-store' }).catch(() =>
+      caches.match(event.request, { ignoreSearch: true })
+    )
+  );
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
+
+  if (event.request.mode === 'navigate') {
+    return networkFirstNavigation(event);
+  }
 
   // SWR for the small interactive shell (HTML + CSS).
   if (SWR_PATHS.indexOf(url.pathname) !== -1) {
