@@ -1,0 +1,103 @@
+id: IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-ESOPHAGEAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV (metastatic) OR unresectable locally advanced esophageal carcinoma"
+    - "Squamous-cell histology (ESCC)"
+    - "Treatment-naive (no prior systemic therapy for advanced disease)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-CPS
+      required: false
+      value_constraint: "PD-L1 CPS ≥1 preferred (CheckMate-648 primary endpoint stratum; OS HR 0.64). All-randomized benefit smaller (HR 0.78). Test required for decision-making."
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    histology_excluded: "Adenocarcinoma — CheckMate-648 enrolled ESCC only; use pembro+chemo (KEYNOTE-590) or chemo alone for adeno"
+
+recommended_regimen: REG-IPI-NIVO-ESOPH-SCC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "35.4% vs 27.3% (CPS≥1 nivo+ipi vs chemo; CheckMate-648). Lower than chemo+nivo arm ORR (47.0%)."
+  progression_free_survival: "mPFS 4.0 vs 4.4 mo (CPS≥1, HR 1.02). PFS benefit not significant in CPS≥1; OS benefit driven by long-term tail."
+  overall_survival_median: "mOS 13.7 vs 9.1 mo (CPS≥1, HR 0.64, p=0.001). All-randomized: 12.7 vs 10.7 mo (HR 0.78)."
+  notes: >
+    CheckMate-648, N=970 ESCC. Nivo+ipi arm chosen over nivo+chemo when chemo-sparing
+    is preferred (renal dysfunction, frailty, patient preference). Higher rate of
+    immune-related AEs vs chemo+nivo. Use chemo+nivo if rapid response priority
+    (higher ORR vs nivo+ipi).
+
+hard_contraindications: []
+
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-PDL1-IHC
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-ECHO
+
+desired_tests:
+  - TEST-HER2-IHC-FISH
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+
+rationale: >
+  CheckMate-648 (NCT03143153, Doki 2022): nivolumab 3 mg/kg q2w + ipilimumab
+  1 mg/kg q6w vs chemo alone in untreated advanced ESCC (n=970). PD-L1 CPS≥1
+  primary endpoint: mOS 13.7 vs 9.1 mo (HR 0.64, p=0.001). All-randomized:
+  mOS 12.7 vs 10.7 mo (HR 0.78, p=0.011). ORR 35.4% (CPS≥1) — lower than the
+  chemo+nivo arm (47.0%) but with chemo-sparing benefit. Choice between
+  nivo+ipi and chemo+nivo is patient-specific: nivo+ipi preferred when avoiding
+  cytotoxic chemo (frailty, renal dysfunction, patient preference); chemo+nivo
+  preferred for rapid disease control / high tumor burden. FDA-approved May 2022
+  for ESCC 1L. NCCN category 1.
+
+rationale_ua: >
+  CheckMate-648: ніволумаб + іпілімумаб для ПКРС стравоходу 1L (chemo-free режим).
+  mOS 13.7 vs 9.1 міс при CPS≥1 (HR 0.64). Категорія 1 NCCN. Альтернатива
+  nivo+chemo при бажанні уникнути цитотоксичної хіміотерапії (вікова крихкість,
+  ниркова дисфункція, вибір пацієнта).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-CHECKMATE648-DOKI-2022
+    position: supports
+    relevant_quote_paraphrase: "CheckMate-648 nivo+ipi arm vs chemo: mOS 13.7 vs 9.1 mo (CPS≥1, HR 0.64); 12.7 vs 10.7 mo (all-randomized, HR 0.78)"
+  - source_id: SRC-NCCN-ESOPHAGEAL-2025
+    position: supports
+  - source_id: SRC-ESMO-ESOPHAGEAL-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT use in adenocarcinoma — CheckMate-648 enrolled ESCC only"
+  - "Do NOT use in patients with prior ICI exposure"
+  - "Do NOT use in active autoimmune disease requiring systemic immunosuppression (high irAE risk on combination ICI)"
+  - "Do NOT use in patients with prior solid organ transplant (rejection risk)"
+  - "Do NOT continue ipilimumab beyond cycle 4 equivalent if irAEs are escalating — switch to nivo monotherapy"
+  - "Do NOT skip baseline endocrine + cardiac panels (combination ICI has ~30%+ irAE rate)"
+  - "Do NOT use if ECOG ≥2 (trial enrolled 0-1; safety in poor PS unestablished)"
+
+last_reviewed: "2026-05-07"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  Sister indication to IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC (chemo+nivo arm,
+  same trial). Choice between arms is clinical: nivo+ipi favored when avoiding
+  cytotoxic chemo; chemo+nivo favored when rapid response is priority. Regimen
+  REG-IPI-NIVO-ESOPH-SCC uses CM-648-specific dosing (nivo 3 mg/kg q2w +
+  ipi 1 mg/kg q6w) — distinct from melanoma (1+3 mg/kg) and RCC (3+1 q3w);
+  hence new ESCC-specific regimen file rather than reuse.
+
+  Algorithm extension required: ALGO-ESOPH-METASTATIC-1L should add a
+  branch routing CPS≥1 ESCC patients with chemo-spare preference to this
+  indication. Out of scope for A1 (algorithm chunk D1 will handle).
