@@ -18,6 +18,7 @@ output_indications:
   - IND-NSCLC-NTRK-FUSION-1L-LAROTRECTINIB
   - IND-NSCLC-PDL1-HIGH-MET-1L
   - IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
+  - IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO
 
 default_indication: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
 alternative_indication: IND-NSCLC-PDL1-HIGH-MET-1L
@@ -142,7 +143,7 @@ decision_tree:
 
   # Step 9 — Driver-negative: PD-L1 TPS gate.
   # TPS ≥50%: pembrolizumab monotherapy (KEYNOTE-024: OS HR 0.63).
-  # TPS <50%: chemo+ICI (KEYNOTE-189 non-squamous or KEYNOTE-407 squamous).
+  # TPS <50%: chemo+ICI — step 10 gates nivo+ipi+chemo vs pembro+chemo preference.
   - step: 9
     evaluate:
       any_of:
@@ -154,14 +155,31 @@ decision_tree:
         (KEYNOTE-024; OS HR 0.63). Pembro+chemo also acceptable if rapid progression
         or visceral crisis requiring faster tumor reduction.
     if_false:
+      next_step: 10
+
+  # Step 10 — Driver-negative, PD-L1 <50%: nivo+ipi+chemo vs pembro+chemo gate.
+  # CheckMate-9LA (nivo+ipi+2-cycle chemo) and KEYNOTE-189/407 (pembro+chemo)
+  # are both NCCN Cat 1 for all-comers PD-L1 <50%. MDT preference routes between them.
+  - step: 10
+    evaluate:
+      any_of:
+        - condition: "Nivo+ipi+2-cycle chemo (CheckMate-9LA) accessible and preferred per MDT"
+    if_true:
+      result: IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO
+      notes: >
+        Nivo+ipi+chemo accessible: nivolumab 360 mg q3w + ipilimumab 1 mg/kg q6w +
+        2 cycles histology-appropriate platinum-doublet (CheckMate-9LA: OS HR 0.72;
+        mOS 15.8 mo; 3-yr OS 25% vs 14%). Benefit consistent across all PD-L1 subgroups
+        including TPS <1%. Alternative to pembro+chemo when this regimen is preferred.
+    if_false:
       result: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
       notes: >
-        PD-L1 TPS <50% or unknown: pembrolizumab + platinum + pemetrexed (non-squamous;
-        KEYNOTE-189) or pembrolizumab + carboplatin + paclitaxel/nab-paclitaxel (squamous;
-        KEYNOTE-407). TMB-high (≥10 mut/Mb) may support pembro mono even at low TPS.
+        PD-L1 TPS <50% or unknown + pembro+chemo preferred: pembrolizumab +
+        platinum-doublet (KEYNOTE-189 non-squamous or KEYNOTE-407 squamous).
+        TMB-high (≥10 mut/Mb) may support pembro mono even at low TPS.
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
-last_reviewed: "2026-05-04"
+last_reviewed: "2026-05-09"
 notes: >
   NSCLC DRIVER CASCADE (1L):
   EGFR (ex19del/L858R/ex20ins) → ALK fusion → ROS1 fusion → MET ex14 →
@@ -183,6 +201,10 @@ notes: >
 
   KRAS G12C: no approved 1L inhibitor — routes to ICI+chemo backbone 1L;
   sotorasib/adagrasib are 2L options.
+
+  Step 10 added 2026-05-09: driver-negative PD-L1 <50% fork between
+  nivo+ipi+chemo (CheckMate-9LA; CM-9LA) and pembro+chemo (KEYNOTE-189/407).
+  Both are NCCN Cat 1; MDT preference gates between them.
 
   Updated 2026-05-04: expanded step 4 cascade to cover all 5 remaining
   driver subtypes with per-driver 1L indications now authored.
