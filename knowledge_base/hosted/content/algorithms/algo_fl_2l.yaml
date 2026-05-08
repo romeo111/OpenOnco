@@ -1,63 +1,129 @@
 id: ALGO-FL-2L
 applicable_to_disease: DIS-FL
-applicable_to_line_of_therapy: 3
-purpose: 'Select 3L+ relapsed/refractory FL Indication. Three tracks driven by EZH2 status + CAR-T eligibility: (1) EZH2-mutated (Y641) → tazemetostat preferred (treatment-defining biomarker, ORR ~69% mut vs ~35% WT); (2) CAR-T-eligible non-EZH2 → axi-cel for durable remission; (3) transplant-ineligible / older / no CAR-T access → mosunetuzumab bispecific (off-the-shelf, manageable in standard heme unit). Note: although this algo is gated on line=3, it is the de-facto 2L+ relapsed routing for FL (no dedicated 2L algo wired).
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L and 3L+ relapsed/refractory FL Indication. Three routing tiers:
+  (1) First relapse (prior_lines ≤1): rituximab-refractoriness gate → OBG+Benda
+  (GADOLIN, standard) or R² (AUGMENT, aggressive/chemo-free); (2) EZH2-mutated
+  (Y641) at ≥2 prior lines → tazemetostat preferred; (3) ≥2 prior lines
+  non-EZH2: CAR-T-eligible → axi-cel, else mosunetuzumab bispecific.
 
-  '
 output_indications:
-- IND-FL-3L-TAZEMETOSTAT
-- IND-FL-3L-AXICEL-CART
-- IND-FL-3L-MOSUNETUZUMAB
-default_indication: IND-FL-3L-MOSUNETUZUMAB
-alternative_indication: IND-FL-3L-AXICEL-CART
-decision_tree:
-- step: 1
-  evaluate:
-    any_of:
-    - red_flag: RF-FL-EZH2-Y641-ACTIONABLE
-  if_true:
-    next_step: 11
-  if_false:
-    next_step: 2
-  notes: "Wired via RF-FL-EZH2-Y641-ACTIONABLE (CSD-9A): biomarker-gated branch fires on EZH2 hotspot mutation; sequential step 11 then checks ≥2 prior lines requirement before routing to tazemetostat."
-- step: 11
-  evaluate:
-    any_of:
-    - finding: "prior_lines"
-      threshold: 2
-      comparator: ">="
-  if_true:
-    result: IND-FL-3L-TAZEMETOSTAT
-  if_false:
-    next_step: 2
-  notes: "Sequential gate after EZH2 RF (step 1): tazemetostat is FDA-approved only for ≥2 prior systemic lines (Morschhauser 2020). EZH2-mut at <2 lines falls through to CAR-T / mosunetuzumab routing."
-- step: 2
-  evaluate:
-    all_of:
-    - condition: ≥2 prior systemic lines
-    - red_flag: RF-FITNESS-ECOG-FIT
-    - red_flag: RF-CAR-T-ELIGIBLE
-    - condition: Age 18-75
-    - condition: CD19+ disease confirmed
-  if_true:
-    result: IND-FL-3L-AXICEL-CART
-  if_false:
-    next_step: 3
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
-- step: 3
-  evaluate:
-    any_of:
-    - condition: Transplant-ineligible OR CAR-T inaccessible
-    - condition: EZH2-WT and patient prefers chemo-free off-the-shelf
-  if_true:
-    result: IND-FL-3L-MOSUNETUZUMAB
-  if_false:
-    result: IND-FL-3L-MOSUNETUZUMAB
-  notes: Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring.
-sources:
-- SRC-NCCN-BCELL-2025
-- SRC-ESMO-FL-2024
-last_reviewed: '2026-04-26'
-notes: 'OOS / wiring gaps: (1) True 2L (post-1L BR/R-CHOP) routing — R2 (rituximab+lenalidomide) AUGMENT regimen, obinutuzumab+benda — not modeled as dedicated indications; this algo is wired at line=3. (2) Histologic transformation detection at relapse (RF-FL- TRANSFORMATION-SUSPECT) routes to ALGO-DLBCL algos — must be resolved at disease-resolution stage upstream. (3) Loncastuximab tesirine, glofitamab not modeled. (4) Bridging therapy + lymphodepletion for axi-cel handled in Regimen / SUP layer, not algorithm.
+  - IND-FL-2L-OBG-BENDA
+  - IND-FL-2L-R2
+  - IND-FL-3L-TAZEMETOSTAT
+  - IND-FL-3L-AXICEL-CART
+  - IND-FL-3L-MOSUNETUZUMAB
 
-  '
+default_indication: IND-FL-2L-OBG-BENDA
+alternative_indication: IND-FL-2L-R2
+
+decision_tree:
+  - step: 0
+    evaluate:
+      any_of:
+        - finding: "prior_lines"
+          threshold: 1
+          comparator: "<="
+    if_true:
+      next_step: 01
+    if_false:
+      next_step: 1
+    notes: >
+      Gate on line of therapy: prior_lines ≤1 (first relapse after 1L) → 2L
+      routing (step 01). prior_lines ≥2 → existing 3L+ routing (step 1 EZH2 gate).
+      This step ensures OBG+Benda and R² are only offered at the correct 2L context.
+
+  - step: 01
+    evaluate:
+      any_of:
+        - condition: "Rituximab-refractory (progression on or within 6 months of last rituximab)"
+    if_true:
+      result: IND-FL-2L-OBG-BENDA
+    if_false:
+      result: IND-FL-2L-R2
+    notes: >
+      2L selection: rituximab-refractory (GADOLIN definition: progression on/within
+      6 months of last rituximab dose) → OBG+Benda (standard track, GADOLIN NCCN
+      Cat 1). Rituximab-sensitive OR chemo-free preference → R² (aggressive track,
+      AUGMENT NCCN Cat 1). MDT may override: chemo-free preference, renal function,
+      prior toxicities, and patient preference can shift from OBG+Benda → R².
+      Engine routes to default (IND-FL-2L-OBG-BENDA); MDT evaluates alternative
+      (IND-FL-2L-R2). Free-text condition — no structured RF for
+      rituximab-refractoriness at 2L currently modeled; flag for RF authoring.
+
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-FL-EZH2-Y641-ACTIONABLE
+    if_true:
+      next_step: 11
+    if_false:
+      next_step: 2
+    notes: >
+      Wired via RF-FL-EZH2-Y641-ACTIONABLE (CSD-9A): biomarker-gated branch fires
+      on EZH2 hotspot mutation; sequential step 11 then checks ≥2 prior lines
+      requirement before routing to tazemetostat.
+
+  - step: 11
+    evaluate:
+      any_of:
+        - finding: "prior_lines"
+          threshold: 2
+          comparator: ">="
+    if_true:
+      result: IND-FL-3L-TAZEMETOSTAT
+    if_false:
+      next_step: 2
+    notes: >
+      Sequential gate after EZH2 RF (step 1): tazemetostat is FDA-approved only
+      for ≥2 prior systemic lines (Morschhauser 2020). EZH2-mut at <2 lines falls
+      through to CAR-T / mosunetuzumab routing.
+
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: ≥2 prior systemic lines
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-CAR-T-ELIGIBLE
+        - condition: Age 18-75
+        - condition: CD19+ disease confirmed
+    if_true:
+      result: IND-FL-3L-AXICEL-CART
+    if_false:
+      next_step: 3
+    notes: >
+      Partially wired — fitness/eligibility gates wired via CSD-7A pan-disease RFs;
+      remaining condition(s) kept as MDT-evaluated text (no RF available for that
+      criterion).
+
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: Transplant-ineligible OR CAR-T inaccessible
+        - condition: EZH2-WT and patient prefers chemo-free off-the-shelf
+    if_true:
+      result: IND-FL-3L-MOSUNETUZUMAB
+    if_false:
+      result: IND-FL-3L-MOSUNETUZUMAB
+    notes: >
+      Free-text condition without matching disease-scoped RF; engine routes to
+      default. Flag for RF authoring.
+
+sources:
+  - SRC-GADOLIN-SEHN-2016
+  - SRC-AUGMENT-LEONARD-2019
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-FL-2024
+
+last_reviewed: "2026-05-09"
+notes: >
+  2L wiring added 2026-05-09: IND-FL-2L-OBG-BENDA (GADOLIN, standard) and
+  IND-FL-2L-R2 (AUGMENT, aggressive/chemo-free) now modeled as dedicated 2L
+  Indications. Algo routes prior_lines ≤1 → step 01 (rituximab-refractoriness
+  gate); prior_lines ≥2 → existing 3L+ EZH2/CAR-T/mosunetuzumab path (steps
+  1-3). Remaining OOS gaps: (1) histologic transformation detection at relapse
+  (RF-FL-TRANSFORMATION-SUSPECT) routes to DLBCL algos — resolved upstream.
+  (2) Loncastuximab tesirine, glofitamab not modeled. (3) Bridging + lymphodepletion
+  for axi-cel in Regimen/SUP layer. (4) Structured RF for rituximab-refractoriness
+  at 2L not yet authored — step 01 uses free-text condition.
