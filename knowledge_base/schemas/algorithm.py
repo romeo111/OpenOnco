@@ -4,7 +4,7 @@ An Algorithm is the decision tree that selects a default Indication
 (and usually an alternative) for a given Disease + line of therapy,
 based on RedFlag evaluations against patient data."""
 
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import Field, field_validator
 
@@ -13,7 +13,7 @@ from .base import Base
 
 
 class DecisionStep(Base):
-    step: int
+    step: Union[int, str]
     evaluate: dict = Field(default_factory=dict)
     # Flexible eval clause — typically {any_of: [{red_flag: RF-X}, ...]}
     # or {all_of: [...]}, or {red_flag: RF-Y}, etc.

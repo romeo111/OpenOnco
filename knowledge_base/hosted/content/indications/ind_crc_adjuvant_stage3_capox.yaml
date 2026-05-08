@@ -35,6 +35,19 @@ expected_outcomes:
   complete_response: "n/a (post-resection)"
   progression_free_survival: "5-yr DFS: ~73% stage III (all) with oxaliplatin-based adjuvant"
   overall_survival_5y: "5-yr OS ~75-85% stage III; low-risk T1-3 N1 ~85%"
+  # Stratified DFS magnitude-of-benefit per IDEA pooled analysis (Grothey
+  # NEJM 2018, PMID 29590544) — CapOx subgroup. 3 mo non-inferior to 6 mo
+  # for low-risk T1-3 N1 (DFS HR 0.85, 95% CI 0.71-1.01) but not for
+  # high-risk T4 OR N2 (HR 0.79 favouring 6 mo). Engine renders both
+  # strata so clinicians can weigh duration trade-off (efficacy vs
+  # neuropathy burden) at the IDEA risk-tier boundary.
+  # Disease-specific OutcomeValue fields (admitted via Pydantic extra='allow').
+  disease_free_survival_hr_low_risk_t1_3_n1:
+    value: "DFS HR 0.85 (3 vs 6 mo CapOx; 95% CI 0.71-1.01; non-inferior, IDEA CapOx subgroup)"
+    source: SRC-IDEA-GROTHEY-2018
+  disease_free_survival_hr_high_risk_t4_or_n2:
+    value: "DFS HR 0.79 favouring 6 mo (3 vs 6 mo CapOx; non-inferiority not met for high-risk)"
+    source: SRC-IDEA-GROTHEY-2018
 
 hard_contraindications: []
 red_flags_triggering_alternative:
@@ -74,6 +87,28 @@ sources:
 - source_id: SRC-ESMO-COLON-2024
   position: supports
 
+known_controversies:
+  - topic: IDEA pooled-analysis duration question — 3 vs 6 mo oxaliplatin-based adjuvant for stage III colon, by regimen and risk tier
+    positions:
+      - position: IDEA pooled (CapOx subgroup) — 3 mo non-inferior to 6 mo for low-risk T1-3 N1 (DFS HR 0.85)
+        sources:
+          - SRC-IDEA-GROTHEY-2018
+        evidence_note: "CapOx 3 mo vs 6 mo low-risk arm met pre-specified non-inferiority margin; substantially less grade ≥2 neuropathy (16% vs 48%)"
+      - position: IDEA pooled (CapOx subgroup) — 3 mo NOT non-inferior to 6 mo for high-risk T4 OR N2 (DFS HR 0.79 favouring 6 mo)
+        sources:
+          - SRC-IDEA-GROTHEY-2018
+        evidence_note: "High-risk subgroup did not meet non-inferiority; 6 mo CapOx remains preferred"
+      - position: IDEA pooled (FOLFOX subgroup) — 3 mo formally failed non-inferiority at the boundary (regimen-by-duration interaction)
+        sources:
+          - SRC-IDEA-GROTHEY-2018
+        evidence_note: "FOLFOX 3-mo arm did not meet non-inferiority margin overall — IDEA conclusions are regimen-specific, not class-wide. Do NOT extrapolate CapOx 3-mo low-risk data to FOLFOX (see do_not_do)"
+      - position: Constituent-trial heterogeneity — SCOT/TOSCA/ACHIEVE/CALGB-80702/IDEA-France(GERCOR)/HORG individually reached different conclusions
+        sources:
+          - SRC-IDEA-GROTHEY-2018
+        evidence_note: "Pooled analysis was pre-specified to overcome power limits of individual trials; individual subgroup conclusions diverge (e.g., IDEA-France CapOx-heavy + favoured 3 mo for low-risk; CALGB-80702 FOLFOX-heavy + did not). Pooled estimate is the primary signal; individual trials are supportive context only"
+    our_default: "Stratify CapOx duration by IDEA risk tier — 3 mo for low-risk T1-3 N1 (preferred per NCCN 2025 + ESMO 2024), 6 mo for high-risk T4 OR N2. FOLFOX duration handled separately (sister indication ind_crc_adjuvant_stage3_folfox.yaml)"
+    rationale: "IDEA pooled CapOx subgroup met non-inferiority for 3 mo at low risk with a major neuropathy-reduction benefit; high-risk did not. NCCN/ESMO post-IDEA guidelines align with the stratified recommendation. Regimen-specific (CapOx vs FOLFOX) and risk-stratum-specific reading prevents over-generalisation."
+
 do_not_do:
 - "Do NOT use CAPOX if CrCl <30 mL/min — capecitabine renally cleared"
 - "Do NOT add bevacizumab — adjuvant bevacizumab NSABP C-08 negative"
@@ -88,3 +123,11 @@ notes: >
   the preferred standard (less neuropathy, equivalent survival).
   High-risk stage III → 6 months either regimen, with clinical discussion
   about neuropathy burden.
+  GI-3 B1 (chunk gi3-b1-idea-stratification-2026-05-08-1900): IDEA-stratified
+  duration recommendation per NCCN 2025 / ESMO 2024 surfaced via
+  duration_guidance (operational) + expected_outcomes stratum fields
+  (DFS HR 0.85 low-risk T1-3 N1 non-inferior; HR 0.79 high-risk T4/N2
+  favouring 6 mo) + known_controversies (FOLFOX 3-mo failed non-inferiority,
+  constituent-trial heterogeneity). Sister indication
+  ind_crc_adjuvant_stage3_folfox.yaml not edited in this chunk — FOLFOX
+  duration deserves separate consideration (out of B1 scope).

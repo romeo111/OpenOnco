@@ -1,0 +1,87 @@
+id: REG-RIBOCICLIB-AI-ADJUVANT
+name: "Ribociclib adjuvant + AI (HR+/HER2- early breast cancer; NATALEE)"
+name_ua: "Рибоцикліб ад'ювантно + AI (HR+/HER2- ранній РМЗ; NATALEE)"
+alternate_names: ["NATALEE regimen"]
+
+components:
+  - drug_id: DRUG-RIBOCICLIB
+    dose: "400 mg PO QD"
+    schedule: "Days 1-21 of each 28-day cycle (3 weeks on, 1 week off)"
+    route: PO
+    duration: "3 years (36 cycles)"
+  - drug_id: DRUG-LETROZOLE
+    dose: "2.5 mg PO QD"
+    schedule: "Continuous (or anastrozole 1 mg QD or exemestane 25 mg QD as alternatives)"
+    route: PO
+    duration: "5 years (continued beyond ribociclib)"
+
+cycle_length_days: 28
+total_cycles: "36 cycles (3 years) for ribociclib; AI continues to 5 years"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "QTcF >480 ms and <=500 ms"
+    modification: "Hold ribociclib; resume at same dose if QTcF recovers to <=480 ms"
+  - condition: "QTcF >500 ms"
+    modification: "Permanently discontinue ribociclib"
+  - condition: "ANC <500/µL (G4 neutropenia)"
+    modification: "Hold ribociclib; resume at next lower dose level after recovery to ANC >=1000/µL"
+  - condition: "ALT/AST >3x ULN with total bilirubin >2x ULN"
+    modification: "Permanently discontinue ribociclib"
+  - condition: "ALT/AST >5x ULN (G3) without bilirubin elevation"
+    modification: "Hold ribociclib; reduce dose if recurring"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Ribociclib registered in Ukraine; adjuvant reimbursement not established. Letrozole/anastrozole/exemestane widely available. Out-of-pocket cost for ribociclib is high."
+
+sources: [SRC-NATALEE-SLAMON-2024, SRC-NCCN-BREAST-2025]
+
+between_visit_watchpoints:
+  - trigger_ua: "Серцебиття, запаморочення, непритомність"
+    action_ua: "Зверніться у лікарню негайно — рибоцикліб може подовжувати QT-інтервал (ризик аритмії)"
+    urgency: er_now
+    sources:
+      - SRC-NATALEE-SLAMON-2024
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Лихоманка вище 38°C на 2-3 тижні циклу"
+    action_ua: "Подзвоніть у клініку того ж дня — рибоцикліб спричиняє нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 14-21"
+    sources:
+      - SRC-NATALEE-SLAMON-2024
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Жовтяниця, потемніння сечі, біль у правому підребер'ї"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива гепатотоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірна втома, гарячі припливи, біль у суглобах"
+    action_ua: "Очікувано від AI + рибоцикліба — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NATALEE-SLAMON-2024
+
+last_reviewed:
+notes: >
+  STUB — pending Co-Lead sign-off. NATALEE: 3-year adjuvant CDK4/6i for
+  HR+/HER2- early breast cancer (stage II-III + selected stage I high-risk).
+  Ribociclib adjuvant dose is 400 mg (NOT the 600 mg metastatic dose).
+  Key distinction from abemaciclib (monarchE): ribociclib has BROADER
+  eligibility (includes node-negative with risk features); however requires
+  mandatory ECG/QTc monitoring at baseline and on-treatment (QT prolongation
+  boxed warning — fatal arrhythmia risk). Concurrent AI required throughout
+  3 years of ribociclib, then AI continues to 5 years total. Strong CYP3A4
+  inhibitors increase ribociclib exposure — avoid or dose-reduce.
+  Separate metastatic regimen: REG-AI-RIBOCICLIB (600 mg continuous dose).
+notes_ua: >
+  STUB — pending Co-Lead sign-off. NATALEE: 3-річний ад'ювантний CDK4/6i
+  для HR+/HER2- раннього РМЗ. Доза рибоцикліба ад'ювантно 400 мг (НЕ 600 мг
+  як при метастатичному). Обов'язковий ЕКГ-моніторинг QTc — ризик аритмії.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

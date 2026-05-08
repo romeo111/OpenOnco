@@ -1,0 +1,39 @@
+id: RF-CHOLANGIO-IDH1-R132-ACTIONABLE
+definition: >
+  IDH1 R132 mutation in intrahepatic cholangiocarcinoma after progression on
+  gemcitabine/cisplatin-based therapy. Routes 2L targeted therapy review
+  toward ivosidenib.
+definition_ua: >
+  Мутація IDH1 R132 при внутрішньопечінковій холангіокарциномі після
+  прогресування на gemcitabine/cisplatin-based терапії. Спрямовує 2L розгляд
+  до ivosidenib.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "idh1_r132_mutation"
+      value: true
+    - finding: "idh1_status"
+      value: "R132"
+    - finding: "IDH1"
+      value: "R132C"
+    - finding: "BIO-IDH1-MUTATION"
+      value: "R132C"
+
+clinical_direction: intensify
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-CHOLANGIOCARCINOMA
+shifts_algorithm:
+  - ALGO-CHOLANGIO-2L
+
+sources:
+  - SRC-FIGHT-202
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+
+last_reviewed: "2026-05-07"
+draft: false

@@ -1,0 +1,79 @@
+# SUR-WHIPPLE — Pancreaticoduodenectomy (Whipple) §17.1 Surgery entity
+# (RATIFIED 2026-05-07). Promoted from tests/fixtures/surgery_whipple.yaml
+# to production in chunk gi3-c2-pdac-br-norpact-2026-05-08-2200. First
+# referenced from `IND-PDAC-BORDERLINE-RESECTABLE-NEOADJ-FOLFIRINOX.phases[1]`.
+id: SUR-WHIPPLE
+names:
+  preferred: "Pancreaticoduodenectomy (Whipple)"
+  ukrainian: "Панкреатодуоденектомія (Уіппла)"
+  english: "Pancreaticoduodenectomy"
+  synonyms:
+    - "Whipple procedure"
+    - "PD"
+    - "Classical Whipple"
+    - "Pylorus-preserving pancreaticoduodenectomy (PPPD)"
+
+# Free-string per §17.1 sketch — surgical taxonomy not enum'd in v0.1.
+type: pancreaticoduodenectomy
+intent: curative
+
+target_organ: pancreas_head
+
+# Whipple resects the pancreatic head, duodenum, distal common bile duct,
+# gallbladder, and proximal jejunum — applicable to malignancies arising
+# in any of those structures. DIS-PDAC is the dominant clinical indication;
+# distal extrahepatic cholangiocarcinoma (dCCA) and ampullary / duodenal
+# cancers are also Whipple-resected, but the umbrella DIS-CHOLANGIOCARCINOMA
+# entity covers iCCA + pCCA + dCCA without subtype scoping (only dCCA is
+# Whipple-resectable). To avoid over-applicability, we list only DIS-PDAC
+# here and flag the gap in `notes` until a subtype-scoped distal
+# cholangio entity exists.
+applicable_diseases:
+  - DIS-PDAC
+
+operative_mortality_pct: "1-3% in high-volume centers (>25 PD/yr); 5-10% in low-volume centers"
+common_complications:
+  - name: "POPF (postoperative pancreatic fistula)"
+    frequency: "10-20%"
+  - name: "Delayed gastric emptying (DGE)"
+    frequency: "15-25%"
+  - name: "Biliary anastomotic leak"
+    frequency: "3-8%"
+  - name: "Postoperative hemorrhage"
+    frequency: "3-5%"
+  - name: "Postoperative pancreatitis"
+    frequency: "5-10%"
+  - name: "Wound infection / intra-abdominal abscess"
+    frequency: "5-15%"
+  - name: "Anastomotic leak (gastrojejunostomy / duodenojejunostomy)"
+    frequency: "1-3%"
+  - name: "New-onset diabetes mellitus (late, exocrine + endocrine pancreatic insufficiency)"
+    frequency: "10-20% new-onset; 20-30% pre-existing worsened"
+
+sources:
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-ESMO-PANCREATIC-2024
+  - SRC-NORPACT-1-LABORI-2024
+
+last_reviewed: "2026-05-08"
+notes: >
+  Pancreaticoduodenectomy (Whipple) is the curative-intent operation for
+  pancreatic head and uncinate-process malignancy, distal extrahepatic
+  cholangiocarcinoma, and ampullary / periampullary tumors. The
+  classical Whipple includes antrectomy; the pylorus-preserving variant
+  (PPPD) preserves the gastric outlet — oncologic outcomes are equivalent
+  per multiple randomized comparisons; PPPD has slightly higher rates of
+  delayed gastric emptying.
+
+  Center-volume gradient is well established — operative mortality drops
+  to ~1% at >25 PDs/yr centers vs >5% at <5/yr centers (NCCN v3.2025
+  surgical-volume statement; multiple national audits). NCCN and ESMO
+  both recommend referral to high-volume centers for any Whipple
+  candidate.
+
+  applicable_diseases coverage gap: distal extrahepatic cholangiocarcinoma
+  (dCCA) and ampullary / periampullary cancers are Whipple-resected but
+  DIS-CHOLANGIOCARCINOMA is currently a subtype-agnostic entity covering
+  iCCA + pCCA + dCCA. Adding it here would over-apply Whipple to
+  intrahepatic cholangiocarcinoma (which is hepatectomy-resected, NOT
+  Whipple-resected). Flagged for a future subtype split.

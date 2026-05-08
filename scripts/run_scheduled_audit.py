@@ -145,7 +145,8 @@ def _load_previous_state() -> dict[str, Any]:
             },
             "validator": {
                 "loaded_entities": 0, "schema_errors_count": 0,
-                "ref_errors_count": 0, "errors": [],
+                "ref_errors_count": 0, "contract_errors_count": 0,
+                "errors": [],
             },
             "freshness": {
                 "total_breaches": 0, "by_entity_type": {},
@@ -252,7 +253,7 @@ def _classify_deltas(
     for resolved_id in sorted(prev_dormant - cur_dormant):
         deltas.append({"kind": "dormant_resolved", "key": resolved_id})
 
-    # 4. Schema/ref error regressions.
+    # 4. Schema/ref/contract error regressions.
     if val.get("schema_errors_count", 0) > prev_val.get("schema_errors_count", 0):
         deltas.append({
             "kind": "schema_regression",
@@ -281,6 +282,21 @@ def _classify_deltas(
             "key": "ref-errors",
             "previous": prev_val.get("ref_errors_count", 0),
             "current": val["ref_errors_count"],
+        })
+
+    if val.get("contract_errors_count", 0) > prev_val.get("contract_errors_count", 0):
+        deltas.append({
+            "kind": "contract_regression",
+            "key": "contract-errors",
+            "previous": prev_val.get("contract_errors_count", 0),
+            "current": val["contract_errors_count"],
+        })
+    elif val.get("contract_errors_count", 0) < prev_val.get("contract_errors_count", 0):
+        deltas.append({
+            "kind": "contract_resolved",
+            "key": "contract-errors",
+            "previous": prev_val.get("contract_errors_count", 0),
+            "current": val["contract_errors_count"],
         })
 
     # 5. LOINC coverage trend.
@@ -360,6 +376,7 @@ def _dedupe_key(delta: dict[str, Any]) -> str:
         "dormant_resolved": "dormant_appeared",
         "schema_resolved": "schema_regression",
         "ref_resolved": "ref_regression",
+        "contract_resolved": "contract_regression",
         "freshness_resolved": "freshness_breach",
     }
     canonical_kind = resolution_aliases.get(kind, kind)
@@ -504,7 +521,22 @@ def _action_for_delta(
             "rationale": "ref regression",
         }
 
-    if kind in {"schema_resolved", "ref_resolved", "loinc_improved",
+    if kind == "contract_regression":
+        return {
+            "type": "open_issue" if not existing else "comment_issue",
+            "dedupe_key": key,
+            "issue_number": existing,
+            "title": f"[kb-audit] Contract errors increased: {delta['previous']} -> {delta['current']}",
+            "labels": ["kb-audit", "regression", "blocker"],
+            "body": (
+                f"Loader contract validation caught new errors. "
+                f"Was {delta['previous']}, now {delta['current']}. "
+                "Inspect `python scripts/audit_validator.py --human` output."
+            ),
+            "rationale": "contract regression",
+        }
+
+    if kind in {"schema_resolved", "ref_resolved", "contract_resolved", "loinc_improved",
                 "freshness_resolved", "coverage_growth"}:
         # Informational — log only, no issue.
         return {
@@ -560,6 +592,7 @@ def _maybe_catalog_refresh(
         ("biomarkers", "loinc_missing_count"),
         ("validator", "schema_errors_count"),
         ("validator", "ref_errors_count"),
+        ("validator", "contract_errors_count"),
         ("freshness", "total_breaches"),
     )
     cur_sig = tuple(
@@ -582,7 +615,8 @@ def _maybe_catalog_refresh(
         "message": (
             f"chore(catalog): KB audit — defined={cur_sig[0]} "
             f"referenced={cur_sig[1]} dormant={cur_sig[2]} "
-            f"missing={cur_sig[3]} schema_err={cur_sig[5]} ref_err={cur_sig[6]}"
+            f"missing={cur_sig[3]} schema_err={cur_sig[5]} ref_err={cur_sig[6]} "
+            f"contract_err={cur_sig[7]}"
         ),
         "rationale": "snapshot signature changed since last archived state",
     }
@@ -741,6 +775,7 @@ def render_human(plan: dict[str, Any]) -> str:
         f"missing={bio.get('missing_count', '?')} "
         f"schema_err={val.get('schema_errors_count', '?')} "
         f"ref_err={val.get('ref_errors_count', '?')} "
+        f"contract_err={val.get('contract_errors_count', '?')} "
         f"freshness_breaches={fresh.get('total_breaches', '?')}"
     )
     lines.append("")

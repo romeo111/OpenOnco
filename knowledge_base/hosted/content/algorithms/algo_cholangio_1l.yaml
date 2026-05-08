@@ -1,21 +1,99 @@
+# ALGO-CHOLANGIO-1L — chunk gi3-d2-algo-extensions-2026-05-08-2300.
+# Routes 1L systemic therapy for unresectable / metastatic biliary tract /
+# cholangiocarcinoma. Step 1 routes IO-eligible (no autoimmune CI) +
+# durvalumab-access patients to TOPAZ-1 durva+gem+cis (NCCN cat 1, ESMO
+# 2024 preferred per "First-in-class" IO+chemo). Step 2 routes IO-eligible
+# patients without durva access to KEYNOTE-966 pembro+gem+cis (NCCN cat 1
+# alternative). Fallback: legacy gem+cis (ABC-02) for IO-contraindicated
+# (active autoimmune disease, transplant, ICI-incompatible) or access-
+# limited settings.
 id: ALGO-CHOLANGIO-1L
 applicable_to_disease: DIS-CHOLANGIOCARCINOMA
 applicable_to_line_of_therapy: 1
 purpose: >
-  1L systemic therapy for unresectable / metastatic biliary tract cancer.
+  1L systemic therapy for advanced / metastatic biliary tract /
+  cholangiocarcinoma. IO+chemo is the post-2022 standard of care
+  (TOPAZ-1 / KEYNOTE-966); legacy gem+cis (ABC-02) reserved for
+  IO-contraindicated patients.
 
 output_indications:
+  - IND-CHOLANGIO-METASTATIC-1L-DURVA-CHEMO
+  - IND-CHOLANGIO-METASTATIC-1L-PEMBRO-CHEMO
   - IND-CHOLANGIO-ADVANCED-GEM-CIS
 
-default_indication: IND-CHOLANGIO-ADVANCED-GEM-CIS
+default_indication: IND-CHOLANGIO-METASTATIC-1L-DURVA-CHEMO
+alternative_indication: IND-CHOLANGIO-METASTATIC-1L-PEMBRO-CHEMO
 
 decision_tree:
+  # Step 1 — IO-eligible (no active autoimmune disease, no transplant,
+  # no ICI-incompatible immunosuppression) → TOPAZ-1 durva+gem+cis
+  # (preferred per ESMO 2024 / NCCN cat 1). Eligibility gate currently
+  # MDT-text — IO-contraindication RFs (active autoimmune, prior
+  # transplant) not yet authored as concrete RF entries; fall-through
+  # logic preserves legacy gem+cis routing for IO-CI patients.
   - step: 1
     evaluate:
       any_of:
-        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic"
-    branch_target: IND-CHOLANGIO-ADVANCED-GEM-CIS
+        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic AND no IO contraindication (active autoimmune disease, prior solid-organ transplant, ICI-incompatible immunosuppression)"
+    if_true:
+      result: IND-CHOLANGIO-METASTATIC-1L-DURVA-CHEMO
+      notes: >
+        TOPAZ-1 (Oh NEJM Evidence 2022) — durvalumab + gem+cis ×8 cycles
+        induction → durvalumab maintenance until PD/toxicity. mOS 12.8 vs
+        11.5 mo (HR 0.80, p=0.021); 24-mo OS 24.9% vs 10.4%. NCCN cat 1
+        + ESMO 2024 preferred IO+chemo backbone. Confidence: high.
+    if_false:
+      next_step: 2
 
+  # Step 2 — IO-eligible without durvalumab access → KEYNOTE-966 pembro+
+  # gem+cis (alternative IO+chemo regimen, NCCN cat 1). Effectively
+  # equivalent efficacy to TOPAZ-1; choice is access-driven.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "IO-eligible patient without durvalumab access (regional formulary / reimbursement)"
+    if_true:
+      result: IND-CHOLANGIO-METASTATIC-1L-PEMBRO-CHEMO
+      notes: >
+        KEYNOTE-966 (Kelley Lancet 2023) — pembrolizumab + gem+cis ×8
+        cycles induction → pembrolizumab + gem maintenance. mOS 12.7 vs
+        10.9 mo (HR 0.83, p=0.0034). NCCN cat 1 alternative. Choice
+        between TOPAZ-1 and KN-966 is by access, not efficacy.
+    if_false:
+      next_step: 3
+
+  # Step 3 — IO-contraindicated or access-limited → fallback gem+cis
+  # (ABC-02). Legacy doublet, but remains the standard for patients with
+  # active autoimmune disease, prior transplant, or settings without IO
+  # access. mOS ~11.7 mo per ABC-02 (Valle NEJM 2010).
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "IO contraindicated (active autoimmune, transplant, immunosuppression) OR no IO access"
+    if_true:
+      result: IND-CHOLANGIO-ADVANCED-GEM-CIS
+      notes: >
+        ABC-02 (Valle NEJM 2010) — gem 1000 mg/m² + cis 25 mg/m² q3w
+        ×8 cycles. mOS 11.7 vs 8.1 mo. Pre-IO standard; remains the
+        backbone for IO-contraindicated or access-limited patients.
+    if_false:
+      result: IND-CHOLANGIO-ADVANCED-GEM-CIS
+
+sources:
+  - SRC-TOPAZ-1-OH-2022
+  - SRC-KEYNOTE-966-KELLEY-2023
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+
+last_reviewed: "2026-05-08"
 reviewer_signoffs: 0
 notes: >
-  STUB scaffold. Single-branch algorithm.
+  D2 chunk gi3-d2-algo-extensions-2026-05-08-2300 — replaces stub
+  scaffold with full IO+chemo routing. Step 1 (TOPAZ-1 durva+gem+cis)
+  is the post-2022 standard per NCCN cat 1 / ESMO 2024 preferred.
+  Step 2 (KN-966 pembro+gem+cis) is the access-driven alternative.
+  Step 3 (gem+cis ABC-02) is reserved for IO-contraindicated patients.
+  IO-contraindication conditions (active autoimmune, transplant) remain
+  MDT-text — no concrete RF entries authored yet for those gates.
+  Out-of-scope: 2L+ driver-mutation routing (handled by ALGO-CHOLANGIO-2L);
+  locoregional therapies (TARE, intra-arterial chemo).

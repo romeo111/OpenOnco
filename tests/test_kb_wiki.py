@@ -32,6 +32,7 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     counts = wiki_payload["counts"]
 
     assert len(wiki_payload["entries"]) > 1000
+    assert counts["Disease"] >= 70
     assert counts["Drugs"] >= 200
     assert counts["Biomarkers"] >= 100
     assert counts["Red flags"] >= 400
@@ -60,12 +61,32 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     kb_home = (wiki_dir / "kb.html").read_text(encoding="utf-8")
     assert 'class="kb-info-box"' in kb_home
     assert 'id="kbSearchBtn"' in kb_home
+    assert 'id="kbPagination"' in kb_home
+    assert 'class="brand-logo"' in kb_home
+    assert 'class="lang-switch"' in kb_home
+    assert "<h1>Onco Wiki</h1>" in kb_home
+    assert 'href="/diseases.html">Diseases</a>' not in kb_home
+    assert 'href="/ask.html">Tumor board Q</a>' in kb_home
     assert "Source-grounded browser" in kb_home
+    assert 'data-kind-key="diseases"' in kb_home
+    assert 'data-kind-key="drugs"' in kb_home
+    assert 'data-kind-key="biomarkers"' in kb_home
+    assert 'data-kind-key="redflags"' in kb_home
+    assert ".kind_key === activeKindKey" in kb_home
+    assert "const PAGE_SIZE = 50;" in kb_home
+    assert "ranked.slice(start, start + PAGE_SIZE)" in kb_home
+    assert 'data-page="next"' in kb_home
     assert ">Search</button>" in kb_home
 
     uk_kb_home = (wiki_dir / "ukr" / "kb.html").read_text(encoding="utf-8")
     assert 'lang="uk"' in uk_kb_home
-    assert "Пошук у базі знань" in uk_kb_home
+    assert 'id="kbPagination"' in uk_kb_home
+    assert 'class="brand-logo"' in uk_kb_home
+    assert 'class="lang-switch"' in uk_kb_home
+    assert "<h1>Onco Wiki</h1>" in uk_kb_home
+    assert 'href="/ukr/diseases.html">Хвороби</a>' not in uk_kb_home
+    assert 'href="/ukr/ask.html">Tumor board Q</a>' in uk_kb_home
+    assert "const PAGE_SIZE = 50;" in uk_kb_home
     assert "Браузер, прив’язаний до джерел" in uk_kb_home
     assert ">Шукати</button>" in uk_kb_home
     assert "FAQ для клініцистів" in uk_kb_home
@@ -73,6 +94,14 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
 
 def test_kb_search_index_exposes_provenance_and_reverse_refs(wiki_payload: dict):
     entries = {entry["id"]: entry for entry in wiki_payload["entries"]}
+
+    nsclc = entries["DIS-NSCLC"]
+    assert nsclc["kind"] == "Disease"
+    assert nsclc["kind_key"] == "diseases"
+    assert nsclc["url"] == "/diseases.html#DIS-NSCLC"
+    assert "non-small cell lung cancer" in nsclc["search_text"]
+    assert "regimen" in nsclc["search_text"]
+    assert "verified" in nsclc["subtitle"]
 
     rituximab = entries["DRUG-RITUXIMAB"]
     assert rituximab["kind"] == "Drug"
@@ -84,6 +113,22 @@ def test_kb_search_index_exposes_provenance_and_reverse_refs(wiki_payload: dict)
     assert egfr["kind"] == "Biomarker"
     assert "egfr" in egfr["search_text"]
     assert "SRC-NCCN-NSCLC-2025" in egfr["sources"]
+
+
+def test_kb_home_filters_use_stable_kind_keys(wiki_dir: Path, wiki_payload: dict):
+    kb_home = (wiki_dir / "kb.html").read_text(encoding="utf-8")
+    entries = wiki_payload["entries"]
+
+    for kind_key, visible_kind in (
+        ("drugs", "Drug"),
+        ("biomarkers", "Biomarker"),
+        ("redflags", "Red flag"),
+    ):
+        assert f'data-kind-key="{kind_key}"' in kb_home
+        assert any(
+            entry["kind_key"] == kind_key and entry["kind"] == visible_kind
+            for entry in entries
+        )
 
 
 def test_redflag_page_shows_origin_logic_and_usage(wiki_dir: Path):

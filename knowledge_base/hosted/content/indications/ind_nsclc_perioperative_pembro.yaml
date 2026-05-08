@@ -1,0 +1,241 @@
+# IND-NSCLC-PERIOPERATIVE-PEMBRO — §17 3-phase perioperative indication
+# for resectable stage II/IIIA/IIIB NSCLC (chunk
+# pul-a5-kn671-perioperative-2026-05-09-1100). Mirrors GI-2 C1 FLOT periop
+# pattern: neoadjuvant pembro+chemo × 4 → anatomic lobectomy → adjuvant
+# pembro × 13. First clinical-content consumer of §17 schema in NSCLC,
+# and first IO-containing periop indication.
+id: IND-NSCLC-PERIOPERATIVE-PEMBRO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Resectable stage II NSCLC (T1-2N1 or T3N0, M0)"
+    - "Resectable stage IIIA NSCLC (T1-2N2 or T3N1 or T4N0-1, M0)"
+    - "Resectable stage IIIB NSCLC (T3-T4N2 or T4N0-1 with chest wall / mediastinal involvement, M0) — selected MDT-confirmed cases"
+    - "MDT-confirmed surgical resectability (anatomic lobectomy or sleeve / pneumonectomy as required for R0)"
+  biomarker_requirements_required: []
+  # KEYNOTE-671 enrolled regardless of PD-L1 TPS — benefit was observed
+  # across PD-L1 strata (TPS <1%, 1-49%, ≥50%). PD-L1 testing recommended
+  # for prognostic / counseling purposes but does NOT gate the periop
+  # pathway.
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "activating mutation present (exon 19 deletion, L858R, exon 20 insertion, etc.)"
+      required: false
+    - biomarker_id: BIO-ALK-FUSION
+      value_constraint: "ALK rearrangement / fusion present"
+      required: false
+  demographic_constraints:
+    ecog_max: 1
+    fit_for_chemo: true
+    fit_for_surgery: true
+    # KEYNOTE-671 enrolled ECOG 0-1 only and required surgical fitness.
+    # ECOG 2+ patients should be considered for definitive chemoradiation
+    # (PACIFIC pathway) or upfront surgery without IO via MDT.
+
+# §17 ratified 2026-05-07 — 3-phase periop indication. The phased
+# representation supersedes the single `recommended_regimen` field for
+# multi-modality lines of therapy. Each phase carries exactly ONE foreign
+# key (regimen_id / surgery_id / radiation_id) per the IndicationPhase
+# XOR validator. Cycle counts: 4 neoadjuvant + 13 adjuvant = 17 total
+# pembro cycles (~1 yr exposure) per KEYNOTE-671 protocol.
+phases:
+  - phase: neoadjuvant
+    type: chemotherapy
+    regimen_id: REG-PEMBRO-CHEMO-NEOADJ-NSCLC
+    cycles: 4
+  - phase: surgery
+    type: surgery
+    surgery_id: SUR-LUNG-LOBECTOMY
+    duration_weeks: 1
+  - phase: adjuvant
+    type: immunotherapy
+    regimen_id: REG-PEMBRO-ADJUVANT-NSCLC
+    cycles: 13
+
+# Legacy `recommended_regimen` left null — render layer should consume
+# `phases:` for this indication per §17 ratification (commit 9882381c).
+recommended_regimen:
+
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_survival_median: "OS update (Spicer NEJM 2024): mOS not reached (perioperative pembro) vs 52.4 mo (placebo); HR 0.72, p=0.005"
+  progression_free_survival: "24-mo EFS 62.4% (perioperative pembro) vs 40.6% (placebo); HR 0.58, 95% CI 0.46-0.72, p<0.001 (KEYNOTE-671 / Wakelee NEJM 2023)"
+  complete_response: "pCR 18.1% (perioperative pembro) vs 4.0% (placebo); mPR 30.2% vs 11.0% — at surgical specimen"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+
+desired_tests: []
+
+rationale: >
+  KEYNOTE-671 (Wakelee NEJM 2023; Spicer NEJM 2024 OS update) established
+  perioperative pembrolizumab — 4 cycles neoadjuvant pembrolizumab +
+  cisplatin-based doublet (cisplatin/pemetrexed for non-squamous,
+  cisplatin/gemcitabine for squamous) → anatomic lobectomy → 13 cycles
+  adjuvant pembrolizumab — as the standard perioperative regimen for
+  resectable stage II/IIIA/IIIB NSCLC without targetable EGFR/ALK
+  alterations. n=797 randomized; 24-mo EFS 62.4% vs 40.6% (HR 0.58,
+  p<0.001); pCR 18.1% vs 4.0%; mPR 30.2% vs 11.0%; OS update mOS not
+  reached vs 52.4 mo (HR 0.72, p=0.005). FDA approval Oct 2023; NCCN
+  v3.2025 category 1 + ESMO 2024 strong recommendation.
+
+  Patient selection: ECOG 0-1, fit for cisplatin-based chemotherapy
+  (CrCl ≥60, no significant ototoxicity / neuropathy at baseline), and
+  fit for anatomic lobectomy (FEV1 + DLCO meeting thoracic-surgical
+  thresholds; no decompensated cardiopulmonary comorbidity). KEYNOTE-671
+  excluded ECOG ≥2 and patients unfit for cisplatin or surgery.
+
+  EGFR / ALK testing is mandatory before initiating perioperative pembro
+  (FDA label requirement) — driver-positive resectable NSCLC has
+  superior adjuvant TKI options (osimertinib per ADAURA for EGFR Δ19/L858R,
+  alectinib per ALINA for ALK), and IO efficacy is reduced in
+  driver-positive disease. PD-L1 testing recommended for prognostic /
+  counseling purposes but does NOT gate the periop pathway — KEYNOTE-671
+  benefit was observed across PD-L1 TPS strata.
+
+  Restaging after 4 neoadjuvant cycles drives the surgical decision: CT
+  chest/abdomen/pelvis ± PET to confirm operability and rule out new
+  metastases. Patients with new oligo-progression on neoadjuvant should
+  be re-evaluated at MDT — some may still proceed to resection if
+  oligo-progressive disease is locally controllable; others convert to
+  systemic-only management. Patients with frank progression do NOT
+  proceed to lobectomy.
+
+  Carboplatin (AUC 5) substitution for cisplatin is NCCN-allowed as a
+  real-world tolerability variant in patients with renal impairment,
+  ototoxicity, or neuropathy, but is NOT the trial protocol — note the
+  protocol-deviation in the plan rationale when carbo is substituted.
+
+rationale_ua: >
+  KEYNOTE-671 (Wakelee NEJM 2023; Spicer NEJM 2024 OS-оновлення) встановив
+  периоопераційний пембролізумаб — 4 цикли неоад'ювантного пембро +
+  цисплатин-вмісного дублета (цисплатин/пеметрексед для non-squamous,
+  цисплатин/гемцитабін для squamous) → анатомічна лобектомія → 13 циклів
+  ад'ювантного пембро — стандартним периоопераційним режимом для
+  резектабельної стадії II/IIIA/IIIB НДРЛ без таргетабельних EGFR/ALK
+  альтерацій. n=797; 24-міс EFS 62.4% проти 40.6% (HR 0.58); pCR 18.1%
+  проти 4.0%; OS mOS не досягнута проти 52.4 міс (HR 0.72). FDA-схвалення
+  жовт 2023; NCCN v3.2025 категорія 1 + ESMO 2024 сильна рекомендація.
+
+  Відбір пацієнтів: ECOG 0-1, придатність до цисплатин-вмісної хіміотерапії
+  (CrCl ≥60), і придатність до анатомічної лобектомії (FEV1 + DLCO
+  відповідають торакально-хірургічним порогам). KEYNOTE-671 виключив
+  ECOG ≥2 і пацієнтів непридатних до цисплатину або хірургії.
+
+  EGFR / ALK-тестування — обов'язкове перед стартом периоопераційного
+  пембро (FDA-етикетка) — драйвер-позитивний резектабельний НДРЛ має
+  кращі ад'ювантні TKI (osimertinib ADAURA, alectinib ALINA).
+  PD-L1-тестування — для прогностичних цілей, не гейтить периоопераційний
+  шлях.
+
+  Заміна цисплатину карбоплатином (AUC 5) — допустимий NCCN-варіант для
+  пацієнтів з нирковою недостатністю, ототоксичністю, нейропатією; це
+  НЕ трайл-протокол.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-KEYNOTE-671-WAKELEE-2023
+    position: supports
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+  - source_id: SRC-ESMO-NSCLC-EARLY-2024
+    position: supports
+
+known_controversies:
+  - topic: Cisplatin (trial protocol) vs carboplatin (real-world tolerability) for the chemo backbone
+    positions:
+      - position: Cisplatin-based doublet per KEYNOTE-671 protocol
+        sources:
+          - SRC-KEYNOTE-671-WAKELEE-2023
+        evidence_note: "KEYNOTE-671 used cisplatin 75 mg/m² + pemetrexed 500 mg/m² (non-sq) or cisplatin 75 mg/m² + gemcitabine 1000 mg/m² days 1+8 (sq) — this is the protocol that generated the EFS/OS benefit"
+      - position: Carboplatin (AUC 5) substitution acceptable for cisplatin-unfit patients
+        sources:
+          - SRC-NCCN-NSCLC-2025
+        evidence_note: "NCCN allows carbo substitution for renal impairment, ototoxicity, neuropathy; carbo+pem and carbo+pacli are validated chemo backbones in NSCLC overall but were NOT the KEYNOTE-671 protocol — efficacy extrapolation based on shared chemo activity, not direct trial evidence"
+    our_default: "Cisplatin-based doublet per KEYNOTE-671 protocol when patient fit; carbo substitution allowed for cisplatin-unfit (note protocol-deviation in plan rationale)"
+    rationale: "Trial protocol cisplatin generated the published EFS/OS benefit; carbo substitution is an extrapolation supported by NCCN consensus but not direct RCT in the periop-pembro context."
+
+  - topic: Surgical timing — 4-12 week window from neoadjuvant cycle 4 to lobectomy
+    positions:
+      - position: 4-6 weeks post-cycle-4 to allow IO washout and chemo recovery
+        sources:
+          - SRC-KEYNOTE-671-WAKELEE-2023
+        evidence_note: "KEYNOTE-671 protocol allowed surgery 4-6 weeks post-cycle-4 to balance pembro half-life (clearance ~26 days) with avoidance of disease progression"
+      - position: Up to 8-12 weeks acceptable if surgical scheduling / fitness optimization needed
+        sources:
+          - SRC-NCCN-NSCLC-2025
+        evidence_note: "NCCN allows wider window for fitness optimization, prehabilitation, scheduling — provided no progression on restaging"
+    our_default: "Target 4-6 weeks post-neoadjuvant-cycle-4 to lobectomy per trial protocol; wider window (up to 8-12 wks) acceptable for fitness optimization with restaging confirmation of stable / responding disease"
+    rationale: "Trial protocol window optimal; real-world flexibility allowed within NCCN bounds. Progression on restaging excludes patient from surgical phase."
+
+  - topic: Adjuvant phase completion when post-op fitness declines or new toxicity emerges
+    positions:
+      - position: Continue all 13 adjuvant cycles per KEYNOTE-671 protocol if no recurrence / dose-limiting irAE
+        sources:
+          - SRC-KEYNOTE-671-WAKELEE-2023
+        evidence_note: "Per-protocol adjuvant phase contributes to the published OS benefit; abbreviating reduces cumulative IO exposure and may attenuate benefit"
+      - position: De-escalate or discontinue adjuvant if grade ≥3 irAE recurrence
+        sources:
+          - SRC-NCCN-NSCLC-2025
+        evidence_note: "NCCN allows clinical judgment when post-op irAE recurrence threatens curative-intent patient quality of life; permanent discontinuation acceptable for refractory grade ≥3 irAE"
+    our_default: "Complete 13 adjuvant cycles unless grade ≥3 irAE recurrence or recurrence; partial completion (e.g., 6-9 cycles) acceptable if irAE-driven discontinuation per MDT"
+    rationale: "Per-protocol completion drives the OS benefit; irAE-driven de-escalation is defensible in curative-intent context where quality of life and irAE-mortality risk weigh heavily."
+
+do_not_do:
+  - "Do NOT initiate perioperative pembro without EGFR / ALK testing — FDA label requires driver-status before pembro start; driver-positive disease has superior adjuvant TKI options"
+  - "Do NOT initiate perioperative pembro in ECOG ≥2 — KEYNOTE-671 excluded ECOG ≥2; route to definitive chemoradiation (PACIFIC) or upfront surgery without IO via MDT"
+  - "Do NOT initiate perioperative pembro in active autoimmune disease requiring systemic immunosuppression — irAE risk significantly elevated; route to chemo-only neoadj or upfront surgery"
+  - "Do NOT proceed to lobectomy if frank progression on neoadjuvant restaging — convert to systemic-only management"
+  - "Do NOT use this indication for stage I NSCLC — KEYNOTE-671 enrolled stage II-IIIB; stage I (T1-2aN0) is upfront surgery + observation or upfront surgery + adjuvant chemo (CALGB-9633 / JBR-10) without IO"
+  - "Do NOT use this indication for unresectable stage III NSCLC — route to definitive chemoradiation + consolidation durvalumab (PACIFIC) instead"
+  - "Do NOT skip pneumonitis baseline assessment (PFTs, baseline chest CT) — pre-existing ILD or compromised lung function elevates pneumonitis risk in lung-cancer cohort"
+  - "Do NOT refer to a low-volume thoracic-surgical center — operative mortality 4-6% at lower-volume centers vs 1-3% at high-volume (>40 lobectomies/yr) centers"
+
+do_not_do_en:
+  - "Do NOT initiate perioperative pembro without EGFR / ALK testing — FDA label requires driver-status before pembro start; driver-positive disease has superior adjuvant TKI options"
+  - "Do NOT initiate perioperative pembro in ECOG ≥2 — KEYNOTE-671 excluded ECOG ≥2; route to definitive chemoradiation (PACIFIC) or upfront surgery without IO via MDT"
+  - "Do NOT initiate perioperative pembro in active autoimmune disease requiring systemic immunosuppression — irAE risk significantly elevated; route to chemo-only neoadj or upfront surgery"
+  - "Do NOT proceed to lobectomy if frank progression on neoadjuvant restaging — convert to systemic-only management"
+  - "Do NOT use this indication for stage I NSCLC — KEYNOTE-671 enrolled stage II-IIIB; stage I (T1-2aN0) is upfront surgery + observation or upfront surgery + adjuvant chemo (CALGB-9633 / JBR-10) without IO"
+  - "Do NOT use this indication for unresectable stage III NSCLC — route to definitive chemoradiation + consolidation durvalumab (PACIFIC) instead"
+  - "Do NOT skip pneumonitis baseline assessment (PFTs, baseline chest CT) — pre-existing ILD or compromised lung function elevates pneumonitis risk in lung-cancer cohort"
+  - "Do NOT refer to a low-volume thoracic-surgical center — operative mortality 4-6% at lower-volume centers vs 1-3% at high-volume (>40 lobectomies/yr) centers"
+
+last_reviewed: "2026-05-09"
+
+actionability_review_required: true
+
+notes: >
+  PUL-A5: §17 3-phase periop indication for resectable stage II/IIIA/IIIB
+  NSCLC, mirroring GI-2 C1 FLOT periop pattern. The phases[] block models
+  neoadjuvant pembrolizumab + cisplatin-doublet × 4 →
+  anatomic lobectomy (SUR-LUNG-LOBECTOMY, NEW in this chunk) → adjuvant
+  pembrolizumab × 13 (REG-PEMBRO-ADJUVANT-NSCLC, NEW in this chunk).
+  evidence_level: high + nccn_category 1 reflect the level-1 evidence
+  (Wakelee NEJM 2023 + Spicer NEJM 2024 OS update). First IO-containing
+  periop indication in OpenOnco; first lung-resection Surgery entity.
+
+  Active autoimmune disease handled in `do_not_do` rather than
+  `biomarker_requirements_excluded` — autoimmune disease is a clinical-
+  status flag, not a Biomarker entity, so it does not fit the BMA-style
+  exclusion shape. Surface in plan rationale via the do_not_do list.
+
+  Engine routing: `algo_nsclc_resectable_periop` does not yet exist —
+  flagged for D2 algorithm-extension chunk follow-up. The
+  `recommended_regimen` field is left null intentionally because the
+  periop sequence is multi-modality; consumers should iterate `phases:`
+  rather than dereferencing a single regimen ID.

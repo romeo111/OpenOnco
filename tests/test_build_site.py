@@ -18,7 +18,14 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.build_site import CASES, GALLERY_EXCLUDED_CASE_IDS, build_site, render_diseases
+from scripts.build_site import (
+    CASES,
+    GALLERY_EXCLUDED_CASE_IDS,
+    GALLERY_FEATURED_CASE_IDS,
+    build_site,
+    _render_top_bar,
+    render_diseases,
+)
 
 
 @pytest.fixture(scope="module")
@@ -34,8 +41,8 @@ def site_dir(tmp_path_factory) -> Path:
 def test_static_assets_present(site_dir: Path):
     # CSD-9C dropped monolithic openonco-engine.zip — replaced by core + per-disease + index.
     for f in (".nojekyll", "CNAME", "style.css", "index.html", "gallery.html",
-              "try.html", "openonco-engine-core.zip", "openonco-engine-index.json",
-              "examples.json", "kb.html", "kb_search_index.json",
+              "try.html", "ask.html", "openonco-engine-core.zip", "openonco-engine-index.json",
+              "examples.json", "manifest.webmanifest", "kb.html", "kb_search_index.json",
               "ukr/kb.html", "ukr/kb_search_index.json",
               "clinical-gaps.html", "ukr/clinical-gaps.html",
               "audits/clinical_gap_audit.md", "audits/clinical_gap_audit.json"):
@@ -44,6 +51,7 @@ def test_static_assets_present(site_dir: Path):
 
 def test_ukrainian_diseases_page_localized_and_clean():
     html = render_diseases(None, target_lang="uk")
+    assert 'id="DIS-NSCLC"' in html
 
     assert "Недрібноклітинний рак легені" in html
     assert "Біомарк." in html
@@ -135,7 +143,7 @@ def test_landing_how_section_uses_dataflow_stages(site_dir: Path):
 
 def test_top_bar_drops_tester_pill(site_dir: Path):
     """Per user direction: 'Тестувальник · OSS preview' pill removed from header."""
-    for page in ("index.html", "gallery.html", "try.html"):
+    for page in ("index.html", "gallery.html", "try.html", "ask.html"):
         html = (site_dir / page).read_text(encoding="utf-8")
         assert "Тестувальник · OSS preview" not in html, (
             f"tester pill still in {page} header"
@@ -156,7 +164,14 @@ def test_landing_drops_charter_eyebrow(site_dir: Path):
 def test_gallery_is_public_with_publishable_cases(site_dir: Path):
     html = (site_dir / "gallery.html").read_text(encoding="utf-8")
     assert "openOncoUser" not in html, "auth gate must be removed from gallery"
-    public_cases = [c for c in CASES if c.case_id not in GALLERY_EXCLUDED_CASE_IDS]
+    public_cases = [
+        c for c in CASES
+        if c.case_id not in GALLERY_EXCLUDED_CASE_IDS
+        and (
+            not GALLERY_FEATURED_CASE_IDS
+            or c.case_id in GALLERY_FEATURED_CASE_IDS
+        )
+    ]
     assert html.count('class="case-card"') == len(public_cases)
     assert "No treatment plan generated" not in html
     for c in public_cases:
@@ -192,6 +207,68 @@ def test_try_page_wires_pyodide_and_form(site_dir: Path):
     assert "openonco-engine-index.json" in html
     # Example dropdown source
     assert "examples.json" in html
+
+
+def test_try_page_has_pwa_manifest_and_build_status(site_dir: Path):
+    html = (site_dir / "try.html").read_text(encoding="utf-8")
+    ua_html = (site_dir / "ukr" / "try.html").read_text(encoding="utf-8")
+    manifest = json.loads((site_dir / "manifest.webmanifest").read_text(encoding="utf-8"))
+
+    assert 'rel="manifest" href="/manifest.webmanifest"' in html
+    assert 'name="theme-color" content="#0a2e1a"' in html
+    assert 'id="buildCard"' in html
+    assert 'id="coreVersion"' in html
+    assert 'id="diseaseVersion"' in html
+    assert 'id="cacheState"' in html
+    assert 'id="offlineState"' in html
+    assert 'id="offlineModulesState"' in html
+    assert 'id="offlineCacheFill"' in html
+    assert "cacheAllBundlesForOffline" in html
+    assert "scheduleOfflineCacheWarmup" in html
+    assert "fetchJsonWithTimeout" in html
+    assert 'id="questReadiness"' in html
+    assert 'id="readinessCriticalText"' in html
+    assert 'class="try-actions quest-cta quest-actions-top"' in html
+    assert html.index('id="questReadiness"') < html.index('id="runBtn"') < html.index('class="quest-grid"')
+    assert html.index('id="runBtn"') < html.index('id="buildCard"')
+    assert "function updateWorkflowControls()" in html
+    assert "actionLocked" in html
+    assert ".status-top[hidden] { display: none; }" in (site_dir / "style.css").read_text(encoding="utf-8")
+    assert "statusTopText.textContent = ''" in html
+    assert 'class="quest-impact-card"' not in html
+    assert 'rel="manifest" href="/manifest.webmanifest"' in ua_html
+
+    assert manifest["start_url"] == "/try.html"
+    assert manifest["display"] == "standalone"
+    assert manifest["theme_color"] == "#0a2e1a"
+    assert any(icon["src"] == "/logo.svg" for icon in manifest["icons"])
+
+
+def test_ask_page_wires_clinical_question_endpoint(site_dir: Path):
+    """Optional ChatGPT adapter: free-text case goes to a server endpoint,
+    not directly to OpenAI from the browser."""
+    html = (site_dir / "ask.html").read_text(encoding="utf-8")
+    uk_html = (site_dir / "ukr" / "ask.html").read_text(encoding="utf-8")
+    assert 'id="caseText"' in html
+    assert 'id="endpointInput"' in html
+    assert 'id="askBtn"' in html
+    assert "/api/clinical-question" in html
+    assert "OPENONCO_CLINICAL_QUESTION_ENDPOINT" in html
+    assert "openonco-ask-user-id-v1" in html
+    assert "MAX_QUESTIONS = 3" in html
+    assert 'id="askExamples"' in html
+    assert 'id="planGeneratorLink"' in html
+    assert "CompressionStream" in html
+    assert "try.html#p=" in html
+    assert "engine_summary.ok === true" in html
+    assert "questions_used" in html
+    assert "OPENAI_API_KEY" not in html
+    assert "api.openai.com" not in html
+    for ask_html in (html, uk_html):
+        assert 'property="og:image"' not in ask_html
+        assert 'name="twitter:image"' not in ask_html
+        assert 'name="twitter:card" content="summary"' in ask_html
+        assert 'name="twitter:card" content="summary_large_image"' not in ask_html
 
 
 # ── Engine bundle (Pyodide-loadable zip) ──────────────────────────────────
@@ -260,8 +337,12 @@ def test_engine_bundle_excludes_heavy_unused_subtrees(site_dir: Path):
 def test_examples_payload_matches_cases(site_dir: Path):
     payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
     case_ids_payload = {e["case_id"] for e in payload}
-    case_ids_expected = {c.case_id for c in CASES}
+    case_ids_expected = {
+        c.case_id for c in CASES
+        if c.case_id not in GALLERY_EXCLUDED_CASE_IDS
+    }
     assert case_ids_payload == case_ids_expected
+    assert not (case_ids_payload & GALLERY_EXCLUDED_CASE_IDS)
     # Each entry has a parseable patient JSON
     for entry in payload:
         assert isinstance(entry["json"], dict)
@@ -315,6 +396,32 @@ def test_try_examples_cover_every_questionnaire_disease(site_dir: Path):
     assert "ICD-O morphology is not unique enough" in html
 
 
+def test_try_questionnaire_dropdown_titles_are_public_and_localized(site_dir: Path):
+    en_html = (site_dir / "try.html").read_text(encoding="utf-8")
+    uk_html = (site_dir / "ukr" / "try.html").read_text(encoding="utf-8")
+
+    assert '"title_en": "Invasive breast cancer — first line"' in en_html
+    assert '"title_en": "HCV-associated Marginal Zone Lymphoma — first line"' in en_html
+    assert '"icd_10": "C50"' in en_html
+    assert "ICD-10 ${icd10}" in en_html
+    assert "openonco-manifests-v2" in en_html
+    assert "getItem('openonco-manifests-v2')" in en_html
+    assert "removeItem('openonco-manifests-v1')" in en_html
+    assert "auto-generated STUB" not in en_html
+    assert "q.title_uk || q.title_en || q.title" in uk_html
+    assert '"title_uk": "Інвазивний рак молочної залози — перша лінія"' in uk_html
+    assert '"icd_10": "C50"' in uk_html
+    assert "auto-generated STUB" not in uk_html
+
+    qsrc = Path("knowledge_base/hosted/content/questionnaires")
+    assert not any(
+        "auto-generated STUB" in line
+        for path in qsrc.glob("*.yaml")
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.startswith("title:")
+    )
+
+
 # ── Per-case files ────────────────────────────────────────────────────────
 
 
@@ -323,6 +430,9 @@ def test_case_files_have_back_link_and_no_auth(site_dir: Path):
     # UA back-link "Назад до галереї" lives at /ukr/cases/<id>.html.
     for c in CASES:
         path = site_dir / "cases" / f"{c.case_id}.html"
+        if c.case_id in GALLERY_EXCLUDED_CASE_IDS:
+            assert not path.exists(), f"excluded case file leaked: {path.name}"
+            continue
         assert path.exists(), f"case file missing: {path.name}"
         html = path.read_text(encoding="utf-8")
         assert html.startswith("<!DOCTYPE html>")
@@ -342,20 +452,24 @@ def test_case_files_have_back_link_and_no_auth(site_dir: Path):
 def test_en_mirror_built_alongside_ua(site_dir: Path):
     """Every public page has a /ukr/ counterpart so the language toggle
     can navigate between them without 404."""
-    for page in ("index.html", "gallery.html", "try.html"):
+    for page in ("index.html", "gallery.html", "try.html", "ask.html"):
         assert (site_dir / "ukr" / page).exists(), f"missing ukr/{page}"
     assert (site_dir / "ukr").is_dir()
     assert (site_dir / "ukr" / "cases").is_dir()
     # Every EN case has a UA counterpart at /ukr/cases/
     for c in CASES:
-        assert (site_dir / "ukr" / "cases" / f"{c.case_id}.html").exists(), (
+        path = site_dir / "ukr" / "cases" / f"{c.case_id}.html"
+        if c.case_id in GALLERY_EXCLUDED_CASE_IDS:
+            assert not path.exists(), f"excluded UA case file leaked: {path.name}"
+            continue
+        assert path.exists(), (
             f"missing ukr/cases/{c.case_id}.html"
         )
 
 
 def test_lang_switch_present_on_every_top_level_page(site_dir: Path):
     """Toggle in the top bar lets the user flip EN↔UA on landing/gallery/try."""
-    for page in ("index.html", "gallery.html", "try.html"):
+    for page in ("index.html", "gallery.html", "try.html", "ask.html"):
         en = (site_dir / page).read_text(encoding="utf-8")
         ua = (site_dir / "ukr" / page).read_text(encoding="utf-8")
         # Toggle markup
@@ -382,13 +496,35 @@ def test_lang_switch_present_on_case_pages(site_dir: Path):
 
 
 def test_try_cta_is_separate_action_button(site_dir: Path):
-    """'Try it' is a high-conviction action, not a reading link. It must
+    """The plan builder is a high-conviction action, not a reading link. It must
     render as a distinct CTA button class — not a plain top-nav link."""
     html = (site_dir / "index.html").read_text(encoding="utf-8")
-    assert 'class="btn-cta-try"' in html, "Try CTA button missing from top bar"
+    assert 'class="btn-cta-top btn-cta-try"' in html, "Plan Builder CTA missing from top bar"
+    assert "Plan Builder" in html
+    assert "Try it" not in html
     # Top reading-nav must not include the try link as a plain entry —
     # CTA lives in the right cluster, separated visually
     assert 'class="top-right"' in html
+    assert 'class="top-cta-group"' in html
+
+
+def test_top_nav_uses_single_onco_wiki_entry():
+    """Diseases stay addressable by URL, but Wiki is a top action, not a nav duplicate."""
+    for html, wiki_label, board_label in (
+        (_render_top_bar(active="home", target_lang="en"), "Onco Wiki", "Tumor Board"),
+        (_render_top_bar(active="diseases", target_lang="en"), "Onco Wiki", "Tumor Board"),
+        (_render_top_bar(active="home", target_lang="uk"), "Онко-вікі", "Туморборд"),
+        (_render_top_bar(active="diseases", target_lang="uk"), "Онко-вікі", "Туморборд"),
+    ):
+        nav = html.split('<nav class="top-nav">', 1)[1].split("</nav>", 1)[0]
+        actions = html.split('<div class="top-cta-group">', 1)[1].split("</div>", 1)[0]
+        assert wiki_label in actions
+        assert board_label in actions
+        assert wiki_label not in nav
+        assert board_label not in nav
+        assert "KB Search" not in nav
+        assert 'href="/diseases.html"' not in nav
+        assert 'href="/ukr/diseases.html"' not in nav
 
 
 def test_en_pages_load_stylesheet_via_root_relative_path(site_dir: Path):

@@ -1,0 +1,276 @@
+# IND-PDAC-BORDERLINE-RESECTABLE-NEOADJ-FOLFIRINOX — §17 3-phase
+# perioperative indication for borderline-resectable PDAC (chunk
+# gi3-c2-pdac-br-norpact-2026-05-08-2200). Mirrors GI-2 C1 FLOT periop
+# pattern: neoadjuvant FOLFIRINOX × 4 → Whipple → adjuvant mFOLFIRINOX × 8
+# (12 total per PRODIGE-24 rationale, of which 4 are pre-op and 8 are
+# post-op). First clinical-content consumer of the §17 schema in PDAC.
+id: IND-PDAC-BORDERLINE-RESECTABLE-NEOADJ-FOLFIRINOX
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PDAC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Borderline-resectable pancreatic ductal adenocarcinoma per NCCN criteria (venous: SMV/PV abutment >180° with reconstructable contour; arterial: SMA/CHA abutment ≤180° without extension to celiac axis)"
+    - "MDT-confirmed borderline-resectable status with anticipated R0 feasibility after neoadjuvant downstaging"
+    - "Pancreatic head / uncinate location amenable to pancreaticoduodenectomy (Whipple)"
+  biomarker_requirements_required: []
+  # No biomarker stratification — borderline-resectable selection is
+  # anatomic (vascular involvement on cross-sectional imaging) per NCCN
+  # and ESMO. KRAS / BRCA / MSI status does not gate this pathway, though
+  # NGS testing is recommended in parallel for metastatic-line preparedness
+  # if recurrence develops.
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    fit_for_chemo: true
+    # NORPACT-1 enrolled ECOG 0-1 only; ECOG 2+ patients should be
+    # considered for less-intensive neoadjuvant alternatives (gem-nab-pac,
+    # gem-cape) or upfront resection if anatomically feasible via MDT.
+
+# §17 ratified 2026-05-07 — 3-phase periop indication. Each phase carries
+# exactly ONE foreign key (regimen_id / surgery_id) per the IndicationPhase
+# XOR validator. Cycle counts: 4 neoadjuvant + 8 adjuvant = 12 total per
+# the PRODIGE-24 adjuvant-rationale total-dose argument; NORPACT-1 used
+# this exact split (4 pre + 8 post) in its protocol arm.
+phases:
+  - phase: neoadjuvant
+    type: chemotherapy
+    regimen_id: REG-FOLFIRINOX
+    cycles: 4
+  - phase: surgery
+    type: surgery
+    surgery_id: SUR-WHIPPLE
+    duration_weeks: 1
+  - phase: adjuvant
+    type: chemotherapy
+    regimen_id: REG-MFOLFIRINOX
+    cycles: 8
+
+# Legacy `recommended_regimen` left null — render layer should consume
+# `phases:` for this indication per §17 ratification (commit 9882381c).
+recommended_regimen:
+
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_survival_median: "NORPACT-1 (resectable, not BR): 18-mo OS 60% (neoadj FOLFIRINOX) vs 73% (upfront surgery), HR 1.52 — did NOT show superiority in clearly resectable disease; BR-specific RCT evidence pending"
+  progression_free_survival: "Resection rate 82% (neoadj) vs 89% (upfront) in NORPACT-1; R0 rate higher with neoadjuvant"
+  complete_response: "pCR rate ~5-10% with neoadjuvant FOLFIRINOX in BR-PDAC observational series; uncommon"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-LFT
+  - TEST-CBC
+
+desired_tests:
+  - TEST-CT-PET
+  - TEST-NGS-COMPREHENSIVE  # BRCA / KRAS / MSI for future-line preparedness if recurrence
+
+rationale: >
+  Borderline-resectable (BR) pancreatic ductal adenocarcinoma — anatomic
+  category between resectable and locally-advanced unresectable, defined
+  by NCCN and ESMO via vascular-contact criteria (venous: SMV/PV abutment
+  >180° with reconstructable contour; arterial: SMA/CHA ≤180° without
+  celiac extension). Upfront resection in BR-PDAC carries high R1/R2
+  margin rates and early systemic recurrence; neoadjuvant systemic therapy
+  is NCCN-preferred to maximize R0 feasibility, downstage vascular
+  involvement, and select biology (patients who progress on neoadjuvant
+  are spared a non-curative laparotomy).
+
+  Evidence base for FOLFIRINOX in the neoadjuvant slot is layered:
+
+  (1) NORPACT-1 (Labori 2024, Lancet Gastro Hep) — phase-2 RCT in
+  RESECTABLE (not BR) PDAC, n=140 across Nordic centres. Neoadjuvant
+  FOLFIRINOX × 4 + surgery + adjuvant × 8 vs upfront surgery + adjuvant
+  × 12. Primary endpoint OS at 18 mo: 60% (neoadj) vs 73% (upfront), HR
+  1.52 — did NOT demonstrate superiority in clearly resectable disease.
+  Resection rate 82% vs 89%. NORPACT-1 is the closest RCT evidence for
+  feasibility / safety of FOLFIRINOX in the neoadjuvant slot but does
+  NOT directly support the BR-specific recommendation.
+
+  (2) BR-specific evidence is observational + smaller phase-2 trials
+  (Alliance A021501, ESPAC-5F preliminary, multiple single-arm cohorts).
+  No definitive phase-3 RCT in BR-PDAC has read out; the BR-specific
+  recommendation rests on NCCN v3.2025 + ESMO 2024 consensus extrapolating
+  from NORPACT-1 feasibility, BR-cohort observational signals, and the
+  established adjuvant mFOLFIRINOX OS benefit (PRODIGE-24).
+
+  (3) PRODIGE-24 (Conroy 2018, NEJM) — adjuvant mFOLFIRINOX × 12 cycles
+  vs gemcitabine in resected PDAC; OS 54.4 vs 35.0 mo (HR 0.64). The
+  total-dose rationale for 12 cycles of FOLFIRINOX-family chemotherapy
+  drives the 4 neoadjuvant + 8 adjuvant split: patients have already
+  received 4 cycles pre-op, so 8 cycles post-op completes the
+  PRODIGE-24-equivalent total exposure.
+
+  Patient selection: ECOG 0-1, fit for FOLFIRINOX (bilirubin <1.5 ULN —
+  irinotecan hepatotoxicity), no severe cardiac comorbidity. Biliary
+  obstruction must be resolved (ERCP / PTC stenting) before FOLFIRINOX
+  initiation. UGT1A1 *28/*28 homozygous patients should start with
+  reduced irinotecan dose. Patients unfit for FOLFIRINOX should be
+  considered for gem-nab-paclitaxel-based neoadjuvant via MDT.
+
+  Restaging after 4 neoadjuvant cycles drives the surgical decision: CT
+  + CA19-9 dynamics + diagnostic laparoscopy (NCCN-recommended for BR)
+  to rule out occult peritoneal / hepatic metastases. Patients showing
+  progression on neoadjuvant are NOT taken to Whipple — they convert to
+  systemic-only metastatic management. evidence_level: moderate +
+  strength_of_recommendation: conditional + nccn_category 2A reflect
+  the consensus-extrapolation status of the BR-specific recommendation.
+
+rationale_ua: >
+  Borderline-resectable (BR) протокова аденокарцинома підшлункової залози —
+  анатомічна категорія між резектабельною і місцево-поширеною
+  нерезектабельною, визначена NCCN та ESMO через критерії судинного
+  контакту (венозний: SMV/PV >180° зі збереженим реконструктабельним
+  контуром; артеріальний: SMA/CHA ≤180° без поширення на черевний
+  стовбур). Upfront-резекція при BR-PDAC дає високий рівень R1/R2-країв
+  і ранній системний рецидив; неоад'ювантна системна терапія —
+  преферентний підхід NCCN для максимізації R0, downstaging судинного
+  залучення і селекції біології.
+
+  Доказова база FOLFIRINOX у неоад'ювантному слоті багатошарова:
+
+  (1) NORPACT-1 (Labori 2024, Lancet Gastro Hep) — фаза-2 RCT у
+  РЕЗЕКТАБЕЛЬНОМУ (не BR) PDAC, n=140 у скандинавських центрах.
+  Неоад'ювантний FOLFIRINOX × 4 + операція + ад'ювант × 8 vs upfront
+  операція + ад'ювант × 12. ЗВ на 18 міс: 60% vs 73%, HR 1.52 — НЕ
+  показав переваги в чітко резектабельній хворобі. Рівень резекції 82%
+  vs 89%. NORPACT-1 — найближчий RCT-доказ feasibility / безпеки
+  FOLFIRINOX у неоад'ювантному слоті, але НЕ підтримує безпосередньо
+  BR-специфічну рекомендацію.
+
+  (2) BR-специфічні докази — обсерваційні + менші фаза-2 (Alliance
+  A021501, ESPAC-5F preliminary, single-arm когорти). Дефінітивний
+  фаза-3 RCT у BR-PDAC поки не зчитався; BR-специфічна рекомендація
+  спирається на консенсус NCCN v3.2025 + ESMO 2024, який екстраполює
+  feasibility з NORPACT-1, обсерваційні сигнали з BR-когорт, і
+  встановлену ад'ювантну користь mFOLFIRINOX (PRODIGE-24).
+
+  (3) PRODIGE-24 (Conroy 2018, NEJM) — ад'ювантний mFOLFIRINOX × 12
+  циклів проти гемцитабіну в резектованому PDAC; ЗВ 54.4 vs 35.0 міс
+  (HR 0.64). Логіка total dose 12 циклів FOLFIRINOX-сім'ї керує поділом
+  4 неоад'ювантні + 8 ад'ювантні: 4 цикли pre-op, потім 8 цикл post-op
+  завершують еквівалентну PRODIGE-24 total expose.
+
+  Відбір пацієнтів: ECOG 0-1, придатність до FOLFIRINOX (білірубін
+  <1.5 ULN — гепатотоксичність іринотекану), без тяжкої кардіальної
+  коморбідності. Біліарну обструкцію слід усунути (ERCP / PTC) до
+  початку FOLFIRINOX. UGT1A1 *28/*28 гомозиготні — стартова знижена
+  доза іринотекану. Непридатні до FOLFIRINOX — гем-наб-паклітаксел-base
+  неоад'ювант через MDT.
+
+  Рестейджинг після 4 неоад'ювантних циклів керує хірургічним рішенням:
+  КТ + динаміка CA19-9 + діагностична лапароскопія (NCCN рекомендує для
+  BR) для виключення occult перитонеальних / печінкових метастазів.
+  Пацієнти з прогресією на неоад'юванті НЕ йдуть на Whipple —
+  конвертуються в системний-тільки метастатичний менеджмент.
+  evidence_level: moderate + strength_of_recommendation: conditional +
+  nccn_category 2A відображають consensus-extrapolation статус
+  BR-специфічної рекомендації.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NORPACT-1-LABORI-2024
+    position: supports
+  - source_id: SRC-PRODIGE-24-CONROY-2018
+    position: supports
+  - source_id: SRC-NCCN-PANCREATIC-2025
+    position: supports
+  - source_id: SRC-ESMO-PANCREATIC-2024
+    position: supports
+
+known_controversies:
+  - topic: Neoadjuvant FOLFIRINOX in BR-PDAC — NCCN-preferred consensus vs lack of direct phase-3 RCT superiority signal
+    positions:
+      - position: Neoadjuvant FOLFIRINOX is the preferred standard for BR-PDAC per NCCN / ESMO
+        sources:
+          - SRC-NCCN-PANCREATIC-2025
+          - SRC-ESMO-PANCREATIC-2024
+        evidence_note: "NCCN v3.2025 lists neoadjuvant systemic therapy (FOLFIRINOX or gem-nab-pac) as preferred for BR-PDAC; rationale is R0 feasibility, biology-selection, and avoiding non-curative laparotomy in patients who progress on neoadjuvant"
+      - position: NORPACT-1 did NOT demonstrate superiority of neoadjuvant FOLFIRINOX in resectable PDAC
+        sources:
+          - SRC-NORPACT-1-LABORI-2024
+        evidence_note: "NORPACT-1 enrolled clearly resectable (not BR) PDAC; 18-mo OS 60% (neoadj) vs 73% (upfront), HR 1.52 — did NOT show superiority. The BR-specific recommendation rests on consensus extrapolation, not direct RCT in BR"
+      - position: BR-specific phase-3 RCT evidence has not yet read out
+        sources:
+          - SRC-NCCN-PANCREATIC-2025
+        evidence_note: "Alliance A021501, ESPAC-5F, and other BR-specific trials are observational or smaller phase-2; the BR-specific recommendation has not been validated in a definitive phase-3 RCT"
+    our_default: "Neoadjuvant FOLFIRINOX × 4 → Whipple → adjuvant mFOLFIRINOX × 8 for fit ECOG 0-1 BR-PDAC patients per NCCN / ESMO consensus; flag the consensus-extrapolation status (no direct phase-3 RCT in BR) in plan rationale"
+    rationale: "BR-PDAC is anatomically distinct from clearly-resectable PDAC, where upfront surgery + adjuvant mFOLFIRINOX (PRODIGE-24) remains acceptable. The neoadjuvant pathway in BR is supported by guideline consensus and biology-selection logic, with NORPACT-1 cited for feasibility (not superiority). Clinical sign-off should explicitly note the lack of phase-3 BR-specific evidence."
+
+  - topic: Total cycle count and pre/post-op split (4+8 NORPACT-1 vs 12-only PRODIGE-24 adjuvant)
+    positions:
+      - position: 4 neoadjuvant + 8 adjuvant = 12 total (NORPACT-1 protocol split)
+        sources:
+          - SRC-NORPACT-1-LABORI-2024
+        evidence_note: "NORPACT-1 used 4 cycles neoadjuvant FOLFIRINOX + 8 cycles adjuvant; total 12 cycles aligns with PRODIGE-24 adjuvant total dose"
+      - position: 12 cycles all-adjuvant per PRODIGE-24
+        sources:
+          - SRC-PRODIGE-24-CONROY-2018
+        evidence_note: "PRODIGE-24 enrolled post-resection patients only; 12 adjuvant cycles is the validated regimen exposure"
+    our_default: "4 neoadjuvant FOLFIRINOX + 8 adjuvant mFOLFIRINOX for the BR pathway; total exposure equivalent to PRODIGE-24 with the additional benefit of biology-selection and downstaging"
+    rationale: "NORPACT-1's 4+8 protocol matches the PRODIGE-24 total-dose target while incorporating neoadjuvant biology-selection. The dose-modification from full FOLFIRINOX (neoadjuvant) to mFOLFIRINOX (adjuvant) reflects PRODIGE-24's tolerability data — full-dose FOLFIRINOX has higher post-resection toxicity than mFOLFIRINOX in cumulatively-fatigued patients."
+
+  - topic: Diagnostic laparoscopy before / between neoadjuvant and surgery
+    positions:
+      - position: Diagnostic laparoscopy NCCN-recommended before initiating neoadjuvant + before Whipple
+        sources:
+          - SRC-NCCN-PANCREATIC-2025
+        evidence_note: "Occult peritoneal / hepatic metastases in BR-PDAC are 10-20% — laparoscopy avoids non-curative open surgery; some centers stage at neoadjuvant initiation, others restage post-neoadjuvant"
+      - position: Diagnostic laparoscopy timing is center-discretion
+        sources:
+          - SRC-ESMO-PANCREATIC-2024
+        evidence_note: "ESMO 2024 supports laparoscopy in selected BR cases but does not mandate timing"
+    our_default: "Diagnostic laparoscopy at neoadjuvant initiation is preferred for BR-PDAC (highest detection yield for occult metastases); restaging laparoscopy at the time of planned Whipple acceptable if clinical/radiologic restaging is concerning"
+    rationale: "BR-PDAC's anatomic borderline status correlates with higher occult-metastasis prevalence; early laparoscopy avoids the resource cost of completing neoadjuvant in a patient already metastatic at baseline."
+
+do_not_do:
+  - "Do NOT initiate FOLFIRINOX in ECOG ≥2 patients — NORPACT-1 / PRODIGE-24 excluded ECOG ≥2; route to gem-nab-pac neoadjuvant or systemic-only metastatic management via MDT"
+  - "Do NOT start FOLFIRINOX without resolved biliary obstruction (bilirubin <1.5 ULN) — irinotecan hepatotoxicity risk; place ERCP / PTC stent first"
+  - "Do NOT skip UGT1A1 testing for high-risk populations — preventable severe diarrhea + neutropenia with starting dose adjustment"
+  - "Do NOT skip G-CSF primary prophylaxis — FOLFIRINOX cumulative febrile-neutropenia risk over 12 total cycles"
+  - "Do NOT proceed to Whipple after neoadjuvant without restaging (CT + CA19-9 + diagnostic laparoscopy) — patients with progression / occult metastases on restaging convert to systemic-only management"
+  - "Do NOT use this indication for clearly resectable PDAC — NORPACT-1 did not show superiority of neoadjuvant in clearly resectable disease; upfront surgery + adjuvant mFOLFIRINOX (IND-PDAC-ADJUVANT-MFOLFIRINOX) is acceptable for clearly resectable"
+  - "Do NOT use this indication for locally-advanced unresectable PDAC — anatomically not Whipple-feasible; route to systemic-only management with possible later resection assessment"
+  - "Do NOT refer to a low-volume Whipple center — operative mortality 5-10% at <5 PD/yr centers vs 1-3% at >25 PD/yr centers; refer to high-volume regional center"
+
+do_not_do_en:
+  - "Do NOT initiate FOLFIRINOX in ECOG ≥2 patients — NORPACT-1 / PRODIGE-24 excluded ECOG ≥2; route to gem-nab-pac neoadjuvant or systemic-only metastatic management via MDT"
+  - "Do NOT start FOLFIRINOX without resolved biliary obstruction (bilirubin <1.5 ULN) — irinotecan hepatotoxicity risk; place ERCP / PTC stent first"
+  - "Do NOT skip UGT1A1 testing for high-risk populations — preventable severe diarrhea + neutropenia with starting dose adjustment"
+  - "Do NOT skip G-CSF primary prophylaxis — FOLFIRINOX cumulative febrile-neutropenia risk over 12 total cycles"
+  - "Do NOT proceed to Whipple after neoadjuvant without restaging (CT + CA19-9 + diagnostic laparoscopy) — patients with progression / occult metastases on restaging convert to systemic-only management"
+  - "Do NOT use this indication for clearly resectable PDAC — NORPACT-1 did not show superiority of neoadjuvant in clearly resectable disease; upfront surgery + adjuvant mFOLFIRINOX (IND-PDAC-ADJUVANT-MFOLFIRINOX) is acceptable for clearly resectable"
+  - "Do NOT use this indication for locally-advanced unresectable PDAC — anatomically not Whipple-feasible; route to systemic-only management with possible later resection assessment"
+  - "Do NOT refer to a low-volume Whipple center — operative mortality 5-10% at <5 PD/yr centers vs 1-3% at >25 PD/yr centers; refer to high-volume regional center"
+
+last_reviewed: "2026-05-08"
+
+actionability_review_required: true
+
+notes: >
+  GI-3 Phase C2: §17 3-phase periop indication for borderline-resectable
+  PDAC, mirroring GI-2 C1 FLOT periop pattern. The phases[] block models
+  neoadjuvant FOLFIRINOX × 4 → Whipple (SUR-WHIPPLE, promoted from
+  fixture in same chunk) → adjuvant mFOLFIRINOX × 8. evidence_level:
+  moderate + nccn_category 2A reflect consensus-extrapolation status —
+  NORPACT-1 (the closest RCT) tested neoadjuvant FOLFIRINOX in clearly
+  resectable (NOT BR) PDAC and did NOT show superiority; the BR-specific
+  recommendation rests on NCCN / ESMO consensus + observational BR-cohort
+  signals + PRODIGE-24 adjuvant rationale. Clinical sign-off should
+  explicitly review the consensus-extrapolation framing.
+
+  Engine routing from PDAC algorithm to this indication is out of C2
+  scope — flagged for D2 algorithm-extension chunk follow-up.

@@ -1,0 +1,110 @@
+# Definitive consolidation chemoradiation for locally advanced unresectable
+# pancreatic ductal adenocarcinoma (LAPC). §17.1 RadiationCourse entity
+# (RATIFIED 2026-05-07). Lands as the consolidation CRT phase (phase 2)
+# of IND-PDAC-LAPC-CHEMORADIATION (chunk
+# gi3-c5-pdac-lapc-chemoradiation-2026-05-08-2300). Sequenced after
+# induction FOLFIRINOX / mFOLFIRINOX × ~6 cycles; pattern mirrors
+# RC-DEFINITIVE-ESOPH-SCC (definitive intent precedent, GI-2 C3) for
+# 50.4 Gy / 28 fx 1.8 Gy/fx scheduling, and RC-LCCRT-504-28-RECTAL
+# (C4 just-merged) for the explicit-null `concurrent_chemo_regimen`
+# audit pattern (REG-CAPECITABINE-CRT-CONCURRENT does not yet exist in
+# the KB — see notes for follow-up).
+id: RC-LAPC-CHEMORADIATION-PDAC
+names:
+  preferred: "Definitive consolidation chemoradiation for locally advanced unresectable pancreatic adenocarcinoma (50.4 Gy / 28 fx)"
+  ukrainian: "Радикальна консолідаційна хіміопроменева терапія при локально-поширеному нерезектабельному раку підшлункової залози (50.4 Гр / 28 фракцій)"
+  english: "LAPC consolidation CRT — 50.4 Gy / 28 fx (post-induction FOLFIRINOX/mFOLFIRINOX, intent: definitive)"
+  synonyms:
+    - "LAPC consolidation CRT 50.4 / 28"
+    - "PDAC definitive chemoradiation (locally advanced unresectable)"
+    - "LAP07-style consolidation CRT"
+
+total_dose_gy: 50.4
+fractions: 28
+fraction_size_gy: 1.8
+target_volume: "pancreatic primary tumor + involved peripancreatic lymph nodes (CTV) with PTV expansion per institutional protocol; elective nodal coverage per NCCN-PANCREATIC PANC-F radiation principles"
+schedule: "1.8 Gy/fx × 5 fx/week (Mon-Fri) × 5.5 weeks; concurrent with capecitabine 825 mg/m^2 PO BID on RT days only (NCCN-preferred radiosensitizing backbone)"
+
+# Concurrent radiosensitizing chemo backbone for LAPC consolidation CRT is
+# capecitabine 825 mg/m^2 PO BID on RT days during the 5.5-week 50.4 Gy /
+# 28 fx course (NCCN-PANCREATIC v.4.2025 preferred concurrent regimen;
+# infusional 5-FU 225 mg/m^2/day CIV on RT days an alternative). Setting
+# `concurrent_chemo_regimen:` is the canonical §17 pattern (mirrors
+# RC-DEFINITIVE-ESOPH-SCC → REG-CARBO-PACLI-CONCURRENT-RT-ESOPH).
+# Linked to REG-CAPECITABINE-CRT-CONCURRENT — see that regimen entity for
+# full schedule, dose-modification table, DPYD/CrCl gating, and source
+# citations. The 825 mg/m^2 PO BID on-RT-days-only schedule is paired
+# with the 50.4 Gy / 28 fx RT course (~5.5 weeks at 5 fx/week) and is
+# held on weekends and any RT-off days. Same regimen entity is shared
+# with the C4 RC-LCCRT-504-28-RECTAL rectal-LCCRT precedent — the
+# capecitabine radiosensitization backbone is identical across both
+# rectal LCCRT and LAPC consolidation CRT use cases (NCCN-CRC RECTAL-D
+# and NCCN-PANCREATIC PANC-F radiation principles converge on the
+# 825 mg/m^2 BID concurrent dose).
+concurrent_chemo_regimen: REG-CAPECITABINE-CRT-CONCURRENT
+
+intent: definitive
+
+sources:
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-ESMO-PANCREATIC-2024
+
+last_reviewed: "2026-05-08"
+notes: >
+  Definitive consolidation chemoradiation (50.4 Gy / 28 fx over 5.5 weeks
+  at 1.8 Gy/fx, concurrent with capecitabine 825 mg/m^2 PO BID on RT
+  days) is the radiation backbone of the NCCN/ESMO-endorsed
+  induction-then-consolidation pattern for locally advanced unresectable
+  pancreatic ductal adenocarcinoma (LAPC). Sequenced after ~6 cycles of
+  induction FOLFIRINOX or mFOLFIRINOX in patients without progression
+  (controlling for the metastatic-progression risk that is the dominant
+  failure mode in PDAC), the consolidation CRT consolidates local
+  control while sparing patients with rapidly progressive disease the
+  toxicity of CRT they would not benefit from.
+
+  Evidence: LAP07 (Hammel 2016, JAMA, n=449 LAPC) randomized patients
+  without progression after 4 mo induction gemcitabine ± erlotinib to
+  2 more mo of chemo vs CRT (54 Gy + capecitabine). LAP07 showed NO
+  overall-survival benefit for consolidation CRT vs continued chemo
+  (median OS 15.2 vs 16.5 mo, HR 1.03, p=0.83), BUT a meaningful
+  reduction in local progression (32% vs 46%, p=0.03) and a 6-mo
+  treatment-free interval extension. CONKO-007 (Fietkau, ASCO 2022;
+  results still maturing) examined chemoradiation after induction
+  FOLFIRINOX vs continued FOLFIRINOX in LAPC and similarly found no
+  OS benefit but improved local control and R0 conversion in the
+  ~25-30% who became operable. NCCN v.4.2025 lists CRT as category 2A
+  preferred-alternative AFTER induction chemo for LAPC patients without
+  progression (NCCN-PANC-3); ESMO 2024 conditional recommendation
+  (moderate evidence). Total elapsed time from induction-start to end
+  of consolidation CRT ~6 months (induction ~16-24 wks → restaging →
+  CRT ~5.5 wks).
+
+  Modern technique: IMRT or VMAT preferred over 3D-CRT to spare
+  duodenum, stomach, kidneys, and small bowel (NCCN-PANCREATIC PANC-F
+  radiation principles; pancreatic OARs are dose-limiting). SBRT 33-40
+  Gy / 5 fx is an alternative consolidation modality at experienced
+  centers but is NOT the canonical 50.4 Gy / 28 fx pattern modeled
+  here — SBRT for LAPC is captured separately in a future
+  RadiationCourse if/when authored. Capecitabine 825 mg/m^2 PO BID on
+  RT days is the standard NCCN-preferred radiosensitizing backbone,
+  identical to rectal LCCRT (RC-LCCRT-504-28-RECTAL) and consistent
+  with the broader GI radiosensitization paradigm; alternative
+  infusional 5-FU 225 mg/m^2/day CIV on RT days is acceptable
+  (Hofheinz 2012 capecitabine-noninferior in rectal CRT generalizes
+  to pancreatic LAPC by clinical convention). DPYD pre-screening
+  strongly recommended (CPIC) — DPYD variants cause severe-fatal
+  capecitabine radiosensitization toxicity even at 50% reduction.
+
+  Distinct from neoadjuvant CRT for borderline-resectable PDAC
+  (intent=neoadjuvant — bridge to surgery, captured in a separate
+  RadiationCourse) by intent: LAPC here is unresectable (T4 invading
+  celiac/SMA >180° encasement OR >180° SMV/portal vein involvement
+  not amenable to vascular reconstruction) and the CRT is
+  curative-intent definitive consolidation, NOT a bridge to surgery.
+  R0 conversion to surgery occurs in only ~25-30% of patients (CONKO-
+  007), and that subgroup transitions to a separate adjuvant pathway
+  (not modeled in this RadiationCourse). The dominant failure mode
+  remains distant metastasis (~70% at 2y), which is why induction
+  chemo precedes CRT — it both selects out occult-metastatic
+  patients (who progress through induction and avoid CRT toxicity)
+  and treats micrometastatic disease that CRT alone cannot address.

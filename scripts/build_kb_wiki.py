@@ -35,17 +35,18 @@ T = {
         "specs_href": "/specs.html",
         "try_href": "/try.html",
         "home": "Home",
-        "kb_search": "KB Search",
+        "kb_search": "Onco Wiki",
         "diseases": "Diseases",
         "gallery": "Examples",
         "capabilities": "Capabilities",
         "specs": "Specs",
         "try_it": "Try it",
-        "page_title": "KB Search",
+        "page_title": "Onco Wiki",
         "lead": (
-            "Search drugs, biomarkers, red flags, and biomarker actionability. "
-            "Results are generated directly from the YAML knowledge base, with "
-            "source IDs and reverse references exposed for audit."
+            "Search diseases, drugs, biomarkers, red flags, and biomarker "
+            "actionability. Results are generated directly from the YAML "
+            "knowledge base and the disease coverage matrix, with source IDs "
+            "and reverse references exposed for audit."
         ),
         "info_title": "Source-grounded browser.",
         "info_body": (
@@ -53,11 +54,11 @@ T = {
             "free-text LLM answers. Open an entity to see source IDs, review "
             "status, file provenance, and where it is used."
         ),
-        "search_label": "Search the clinical KB",
-        "search_placeholder": "Try rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
+        "search_label": "Search Onco Wiki",
+        "search_placeholder": "Try NSCLC, rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
         "search_button": "Search",
         "all": "All",
-        "no_matches": "No matching KB entities.",
+        "no_matches": "No matching Onco Wiki entries.",
         "used_by": "used by",
         "clinician_faq": "Clinician FAQ",
         "faq_prescribe_q": "Does OpenOnco prescribe treatment?",
@@ -103,18 +104,18 @@ T = {
         "specs_href": "/ukr/specs.html",
         "try_href": "/ukr/try.html",
         "home": "Головна",
-        "kb_search": "Пошук у KB",
+        "kb_search": "Onco Wiki",
         "diseases": "Хвороби",
         "gallery": "Приклади",
         "capabilities": "Можливості",
         "specs": "Специфікації",
         "try_it": "Спробувати",
-        "page_title": "Пошук у базі знань",
+        "page_title": "Onco Wiki",
         "lead": (
-            "Шукайте препарати, біомаркери, тривожні ознаки та клінічну "
-            "застосовність біомаркерів. Результати генеруються безпосередньо "
-            "з YAML-бази знань, із відкритими source ID та зворотними "
-            "посиланнями для аудиту."
+            "Шукайте хвороби, препарати, біомаркери, тривожні ознаки та "
+            "клінічну застосовність біомаркерів. Результати генеруються "
+            "безпосередньо з YAML-бази знань і матриці покриття хвороб, із "
+            "відкритими source ID та зворотними посиланнями для аудиту."
         ),
         "info_title": "Браузер, прив’язаний до джерел.",
         "info_body": (
@@ -122,11 +123,11 @@ T = {
             "а не з довільних відповідей LLM. Відкрийте сутність, щоб побачити "
             "source ID, статус рев’ю, походження файлу та місця використання."
         ),
-        "search_label": "Пошук у клінічній KB",
-        "search_placeholder": "Спробуйте rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
+        "search_label": "Пошук в Onco Wiki",
+        "search_placeholder": "Спробуйте NSCLC, rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
         "search_button": "Шукати",
         "all": "Усе",
-        "no_matches": "Сутностей KB за цим запитом не знайдено.",
+        "no_matches": "Записів Onco Wiki за цим запитом не знайдено.",
         "used_by": "використовується у",
         "clinician_faq": "FAQ для клініцистів",
         "faq_prescribe_q": "Чи призначає OpenOnco лікування?",
@@ -260,6 +261,7 @@ FIELD_LABELS = {
 }
 
 SEARCH_KINDS = set(ENTITY_DIRS)
+DISEASE_KIND_LABELS = {"en": "Disease", "uk": "Хвороба"}
 ID_RE = re.compile(r"\b(?:DRUG|BIO|BMA|RF|DIS|REG|IND|ALGO|SRC|CI|SUP|TEST|MON)-[A-Z0-9][A-Z0-9_-]*\b")
 
 
@@ -482,6 +484,40 @@ def _rows(rows: list[tuple[str, str]]) -> str:
     )
 
 
+def _alias_chips(aliases: list[str]) -> str:
+    if not aliases:
+        return ""
+    chips = "".join(f'<span class="kb-alias">{html.escape(alias)}</span>' for alias in aliases)
+    return f'<div class="kb-alias-list">{chips}</div>'
+
+
+def _humanize_key(key: str) -> str:
+    return re.sub(r"\s+", " ", key.replace("_", " ")).strip().capitalize()
+
+
+def _structured_value(value: Any, *, limit: int = 700) -> str:
+    if value in (None, "", [], {}):
+        return ""
+    if isinstance(value, dict):
+        items = []
+        for key, item in value.items():
+            if item in (None, "", [], {}):
+                continue
+            items.append(
+                f'<div class="kb-kv-item"><span class="kb-kv-key">{html.escape(_humanize_key(str(key)))}</span>'
+                f"<span>{_structured_value(item, limit=limit)}</span></div>"
+            )
+        return f'<div class="kb-kv-list">{"".join(items)}</div>' if items else ""
+    if isinstance(value, list):
+        items = "".join(
+            f"<li>{_structured_value(item, limit=limit)}</li>"
+            for item in value
+            if item not in (None, "", [], {})
+        )
+        return f'<ul class="kb-inline-list">{items}</ul>' if items else ""
+    return html.escape(_text(value, limit=limit))
+
+
 def _json_block(value: Any) -> str:
     if value in (None, "", [], {}):
         return ""
@@ -493,31 +529,43 @@ def _clean_html(text: str) -> str:
     return "\n".join(line.rstrip() for line in text.splitlines()) + "\n"
 
 
-def _page_shell(title: str, body: str, *, active: str = "kb", locale: str = "en") -> str:
+def _shared_top_bar(*, active: str = "kb", locale: str = "en", lang_switch_href: str | None = None) -> str:
+    from scripts.build_site import _render_top_bar
+
+    target_lang = "uk" if locale == "uk" else "en"
+    if lang_switch_href is None:
+        lang_switch_href = "/kb.html" if target_lang == "uk" else "/ukr/kb.html"
+    return _render_top_bar(
+        active=active,
+        target_lang=target_lang,
+        lang_switch_href=lang_switch_href,
+    )
+
+
+def _page_shell(
+    title: str,
+    body: str,
+    *,
+    active: str = "kb",
+    locale: str = "en",
+    lang_switch_href: str | None = None,
+) -> str:
+    from scripts.site_head import SITE_FAVICON_LINK, SITE_FONT_LINK
+
     t = T[locale]
-    active_attr = ' class="active"' if active == "kb" else ""
     return f"""<!doctype html>
 <html lang="{html.escape(t["html_lang"])}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{html.escape(title)} - OpenOnco</title>
+  {SITE_FONT_LINK}
+  {SITE_FAVICON_LINK}
   <link rel="stylesheet" href="/style.css">
   <style>{KB_CSS}</style>
 </head>
 <body>
-  <header class="top-bar">
-    <div class="brand-line"><a class="brand-mini" href="{t["home_href"]}">OpenOnco</a></div>
-    <nav class="top-nav">
-      <a href="{t["home_href"]}">{html.escape(t["home"])}</a>
-      <a href="{t["kb_href"]}"{active_attr}>{html.escape(t["kb_search"])}</a>
-      <a href="{t["diseases_href"]}">{html.escape(t["diseases"])}</a>
-      <a href="{t["gallery_href"]}">{html.escape(t["gallery"])}</a>
-      <a href="{t["capabilities_href"]}">{html.escape(t["capabilities"])}</a>
-      <a href="{t["specs_href"]}">{html.escape(t["specs"])}</a>
-    </nav>
-    <div class="top-right"><a class="btn-cta-try" href="{t["try_href"]}">{html.escape(t["try_it"])}</a></div>
-  </header>
+  {_shared_top_bar(active=active, locale=locale, lang_switch_href=lang_switch_href)}
   {body}
 </body>
 </html>
@@ -547,7 +595,7 @@ def _frontmatter(entity: KbEntity, entities: dict[str, KbEntity], *, locale: str
     ]
     aliases = _aliases(data)
     if aliases:
-        rows.insert(2, (labels["aliases"], html.escape(", ".join(aliases[:12]))))
+        rows.insert(2, (labels["aliases"], _alias_chips(aliases)))
     return f'<table class="kb-facts">{_rows(rows)}</table>'
 
 
@@ -575,7 +623,7 @@ def _biomarker_sections(entity: KbEntity, entities: dict[str, KbEntity], *, loca
     rows = [
         (labels["biomarker_type"], html.escape(_text(d.get("biomarker_type")))),
         (labels["mutation_details"], html.escape(_text(d.get("mutation_details"), limit=500))),
-        (labels["measurement"], html.escape(_text(d.get("measurement"), limit=500))),
+        (labels["measurement"], _structured_value(d.get("measurement"), limit=700)),
         (labels["actionability_lookup"], html.escape(_text(d.get("actionability_lookup"), limit=500))),
         (labels["related_biomarkers"], _chips([str(x) for x in _as_list(d.get("related_biomarkers"))], entities, locale=locale)),
     ]
@@ -667,7 +715,13 @@ def render_entity_page(
   {notes_html}
   {_reverse_ref_section(entity, reverse_refs, locale=locale)}
 </main>"""
-    return _page_shell(f"{entity.title}", body, locale=locale)
+    switch_locale = "en" if locale == "uk" else "uk"
+    return _page_shell(
+        f"{entity.title}",
+        body,
+        locale=locale,
+        lang_switch_href="/" + _entity_url(entity, switch_locale),
+    )
 
 
 def _search_entry(entity: KbEntity, reverse_refs: dict[str, list[KbEntity]], *, locale: str = "en") -> dict[str, Any]:
@@ -710,6 +764,66 @@ def _search_entry(entity: KbEntity, reverse_refs: dict[str, list[KbEntity]], *, 
     }
 
 
+def _disease_search_entries(kb_root: Path, *, locale: str = "en") -> list[dict[str, Any]]:
+    from scripts.disease_coverage_matrix import per_disease_metrics
+
+    rows = per_disease_metrics(kb_root)
+    kind = DISEASE_KIND_LABELS[locale]
+    url_prefix = "/ukr/diseases.html" if locale == "uk" else "/diseases.html"
+    entries: list[dict[str, Any]] = []
+    for row in rows:
+        disease_id = str(row["id"])
+        name = _text(row.get("name")) or disease_id
+        family = _text(row.get("family"))
+        icd10 = _text(row.get("icd10"))
+        subtitle_parts = [
+            f"ICD-10: {icd10}" if icd10 else "",
+            f"family: {family}" if family and locale == "en" else "",
+            f"родина: {family}" if family and locale == "uk" else "",
+            f"fill {row['fill_pct']}%",
+            f"verified {row['verified_pct']}%",
+            f"{row['n_inds']} indications",
+            f"{row['n_regs']} regimens",
+            f"{row['n_rfs']} red flags",
+        ]
+        search_text = " ".join(
+            [
+                disease_id,
+                name,
+                kind,
+                family,
+                icd10,
+                f"fill {row['fill_pct']}",
+                f"verified {row['verified_pct']}",
+                f"bio {row['n_bios']}",
+                f"drug {row['n_drugs']}",
+                f"indication {row['n_inds']}",
+                f"regimen {row['n_regs']}",
+                f"redflag {row['n_rfs']}",
+                "1l algorithm" if row["algo_1l"] else "",
+                "2l algorithm" if row["algo_2l"] else "",
+                "questionnaire" if row["has_quest"] else "",
+                "workup" if row["has_workup"] else "",
+            ]
+        )
+        entries.append(
+            {
+                "id": disease_id,
+                "kind": kind,
+                "kind_key": "diseases",
+                "title": name,
+                "url": f"{url_prefix}#{disease_id}",
+                "subtitle": " | ".join(part for part in subtitle_parts if part),
+                "sources": [],
+                "diseases": [disease_id],
+                "used_by_count": row["n_inds"] + row["n_regs"] + row["n_rfs"],
+                "search_text": search_text.lower(),
+            }
+        )
+    entries.sort(key=lambda e: (e["title"].lower(), e["id"]))
+    return entries
+
+
 def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, locale: str = "en") -> str:
     t = T[locale]
     faq = f"""
@@ -726,6 +840,22 @@ def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, loc
         f'<div class="kb-count"><span>{count}</span>{html.escape(label)}</div>'
         for label, count in counts.items()
     )
+    filter_keys_by_label = {
+        label: key
+        for label, key in zip(
+            counts,
+            ("diseases", "drugs", "biomarkers", "redflags", "biomarker_actionability"),
+        )
+    }
+    filter_buttons = "\n      ".join(
+        [
+            f'<button type="button" data-kind-key="">{html.escape(t["all"])}</button>',
+            *(
+                f'<button type="button" data-kind-key="{html.escape(filter_keys_by_label[label])}">{html.escape(label)}</button>'
+                for label in counts
+            ),
+        ]
+    )
     body = f"""<main class="kb-page">
   <section class="kb-hero">
     <h1>{html.escape(t["page_title"])}</h1>
@@ -741,26 +871,26 @@ def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, loc
       <button id="kbSearchBtn" class="kb-search-btn" type="button">{html.escape(t["search_button"])}</button>
     </div>
     <div class="kb-filter-row">
-      <button type="button" data-kind="">{html.escape(t["all"])}</button>
-      <button type="button" data-kind="{html.escape(_kind_label("drugs", locale))}">{html.escape(_kind_label("drugs", locale))}</button>
-      <button type="button" data-kind="{html.escape(_kind_label("biomarkers", locale))}">{html.escape(_kind_label("biomarkers", locale))}</button>
-      <button type="button" data-kind="{html.escape(_kind_label("redflags", locale))}">{html.escape(_kind_label("redflags", locale))}</button>
-      <button type="button" data-kind="{html.escape(_kind_label("biomarker_actionability", locale))}">{html.escape(_kind_label("biomarker_actionability", locale))}</button>
+      {filter_buttons}
     </div>
   </section>
   <section>
     <div id="kbResults" class="kb-results"></div>
+    <div id="kbPagination" class="kb-pagination" aria-label="Result pages"></div>
   </section>
   {faq}
 </main>
 <script>
 const KB_ENTRIES = {json.dumps(entries, ensure_ascii=False)};
-const KB_COPY = {json.dumps({"no_matches": t["no_matches"], "used_by": t["used_by"]}, ensure_ascii=False)};
+const KB_COPY = {json.dumps({"no_matches": t["no_matches"], "used_by": t["used_by"], "page": "Page" if locale == "en" else "Сторінка", "of": "of" if locale == "en" else "з", "results": "results" if locale == "en" else "результатів", "previous": "Previous" if locale == "en" else "Назад", "next": "Next" if locale == "en" else "Далі"}, ensure_ascii=False)};
+const PAGE_SIZE = 50;
 const searchInput = document.getElementById('kbSearch');
 const searchButton = document.getElementById('kbSearchBtn');
 const results = document.getElementById('kbResults');
-const filterButtons = Array.from(document.querySelectorAll('[data-kind]'));
-let activeKind = '';
+const pagination = document.getElementById('kbPagination');
+const filterButtons = Array.from(document.querySelectorAll('[data-kind-key]'));
+let activeKindKey = '';
+let currentPage = 1;
 
 function escapeHtml(value) {{
   return String(value || '').replace(/[&<>"']/g, ch => ({{
@@ -788,17 +918,21 @@ function renderResults() {{
   const q = (searchInput.value || '').trim().toLowerCase();
   const terms = q.split(/\\s+/).filter(Boolean);
   const ranked = KB_ENTRIES
-    .filter(e => !activeKind || e.kind === activeKind)
+    .filter(e => !activeKindKey || e.kind_key === activeKindKey)
     .map(e => [scoreEntry(e, terms), e])
     .filter(pair => terms.length === 0 ? true : pair[0] >= 0)
     .sort((a, b) => b[0] - a[0] || a[1].title.localeCompare(b[1].title))
-    .slice(0, 80)
     .map(pair => pair[1]);
   if (!ranked.length) {{
     results.innerHTML = `<p class="kb-muted">${{escapeHtml(KB_COPY.no_matches)}}</p>`;
+    pagination.innerHTML = '';
     return;
   }}
-  results.innerHTML = ranked.map(e => `
+  const totalPages = Math.ceil(ranked.length / PAGE_SIZE);
+  currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const pageEntries = ranked.slice(start, start + PAGE_SIZE);
+  results.innerHTML = pageEntries.map(e => `
     <a class="kb-result" href="${{e.url}}">
       <span class="kb-kind">${{escapeHtml(e.kind)}}</span>
       <strong>${{escapeHtml(e.title)}}</strong>
@@ -806,22 +940,40 @@ function renderResults() {{
       <small>${{escapeHtml(e.subtitle)}} | ${{escapeHtml(KB_COPY.used_by)}} ${{e.used_by_count}}</small>
     </a>
   `).join('');
+  pagination.innerHTML = totalPages > 1 ? `
+    <button type="button" data-page="prev" ${{currentPage === 1 ? 'disabled' : ''}}>${{escapeHtml(KB_COPY.previous)}}</button>
+    <span>${{escapeHtml(KB_COPY.page)}} ${{currentPage}} ${{escapeHtml(KB_COPY.of)}} ${{totalPages}} · ${{ranked.length}} ${{escapeHtml(KB_COPY.results)}}</span>
+    <button type="button" data-page="next" ${{currentPage === totalPages ? 'disabled' : ''}}>${{escapeHtml(KB_COPY.next)}}</button>
+  ` : '';
 }}
 
 filterButtons.forEach(btn => btn.addEventListener('click', () => {{
-  activeKind = btn.dataset.kind || '';
+  activeKindKey = btn.dataset.kindKey || '';
+  currentPage = 1;
   filterButtons.forEach(b => b.classList.toggle('active', b === btn));
   renderResults();
 }}));
-searchInput.addEventListener('input', renderResults);
+searchInput.addEventListener('input', () => {{
+  currentPage = 1;
+  renderResults();
+}});
 searchInput.addEventListener('keydown', event => {{
   if (event.key === 'Enter') {{
     event.preventDefault();
+    currentPage = 1;
     renderResults();
     results.scrollIntoView({{ block: 'start', behavior: 'smooth' }});
   }}
 }});
 searchButton.addEventListener('click', () => {{
+  currentPage = 1;
+  renderResults();
+  results.scrollIntoView({{ block: 'start', behavior: 'smooth' }});
+}});
+pagination.addEventListener('click', event => {{
+  const btn = event.target.closest('[data-page]');
+  if (!btn) return;
+  currentPage += btn.dataset.page === 'next' ? 1 : -1;
   renderResults();
   results.scrollIntoView({{ block: 'start', behavior: 'smooth' }});
 }});
@@ -845,7 +997,9 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
 
     payloads: dict[str, dict[str, Any]] = {}
     for locale in ("en", "uk"):
-        entries = [_search_entry(e, reverse_refs, locale=locale) for e in searchable]
+        entity_entries = [_search_entry(e, reverse_refs, locale=locale) for e in searchable]
+        disease_entries = _disease_search_entries(kb_root, locale=locale)
+        entries = [*disease_entries, *entity_entries]
         count_labels = (
             {
                 "drugs": "Drugs",
@@ -862,6 +1016,7 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
             }
         )
         counts = {
+            DISEASE_KIND_LABELS[locale]: len(disease_entries),
             count_labels["drugs"]: sum(1 for e in searchable if e.kind == "drugs"),
             count_labels["biomarkers"]: sum(1 for e in searchable if e.kind == "biomarkers"),
             count_labels["redflags"]: sum(1 for e in searchable if e.kind == "redflags"),
@@ -892,7 +1047,7 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
         uk_out_path.write_text(_clean_html(render_entity_page(entity, entities, reverse_refs, locale="uk")), encoding="utf-8")
 
     return {
-        "entities": len(searchable),
+        "entities": len(payloads["en"]["entries"]),
         "counts": payloads["en"]["counts"],
         "index": "kb_search_index.json",
         "home": "kb.html",
@@ -926,10 +1081,19 @@ KB_CSS = """
 .kb-result:hover { border-color: var(--green-600); }
 .kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
 .kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px 0 4px; color: var(--gray-700); }
+.kb-pagination button { border: 1px solid var(--gray-200); background: white; color: var(--green-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; font-weight: 700; }
+.kb-pagination button:disabled { color: var(--gray-500); cursor: not-allowed; opacity: .65; }
 .kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
 .kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
 .kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
+.kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
+.kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -941,6 +1105,7 @@ KB_CSS = """
   .kb-search-btn { min-height: 44px; }
   .kb-result { grid-template-columns: 1fr; }
   .kb-result small { grid-column: auto; }
+  .kb-pagination { flex-wrap: wrap; }
   .kb-facts th { width: auto; display: block; border-bottom: 0; }
   .kb-facts td { display: block; }
 }

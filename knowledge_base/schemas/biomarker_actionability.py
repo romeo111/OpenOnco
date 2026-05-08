@@ -23,7 +23,7 @@ partnership pitch). When the spec is updated, register this entity there.
 
 from typing import Literal, Optional
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 
 from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
 from .base import Base
@@ -156,3 +156,56 @@ class BiomarkerActionability(Base):
     @classmethod
     def _migrate_signoffs(cls, v):
         return _migrate_int_signoffs(v)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_legacy_shape(cls, v):
+        return normalize_legacy_biomarker_actionability_payload(v)
+
+
+def normalize_legacy_biomarker_actionability_payload(raw: object) -> object:
+    """Normalize older BMA authoring fields into the current schema."""
+    if not isinstance(raw, dict):
+        return raw
+
+    normalized = dict(raw)
+
+    if normalized.get("escat_tier") == "III":
+        normalized["escat_tier"] = "IIIA"
+
+    if not normalized.get("evidence_summary") and normalized.get("summary"):
+        normalized["evidence_summary"] = normalized.get("summary")
+
+    if not normalized.get("last_verified") and normalized.get("last_reviewed"):
+        normalized["last_verified"] = normalized.get("last_reviewed")
+
+    if not normalized.get("primary_sources"):
+        primary_sources: list[str] = []
+        for item in normalized.get("sources") or []:
+            if isinstance(item, str):
+                primary_sources.append(item)
+            elif isinstance(item, dict) and item.get("source_id"):
+                primary_sources.append(item["source_id"])
+        if primary_sources:
+            normalized["primary_sources"] = primary_sources
+
+    evidence_sources = []
+    for item in normalized.get("evidence_sources") or []:
+        if not isinstance(item, dict):
+            continue
+        if item.get("source"):
+            evidence_sources.append(item)
+            continue
+        source_id = item.get("source_id")
+        if not source_id:
+            continue
+        evidence_sources.append({
+            "source": source_id,
+            "level": str(item.get("evidence_type") or normalized.get("evidence_level") or "legacy"),
+            "evidence_lane": "insufficient_evidence",
+            "note": item.get("description"),
+        })
+    if evidence_sources:
+        normalized["evidence_sources"] = evidence_sources
+
+    return normalized

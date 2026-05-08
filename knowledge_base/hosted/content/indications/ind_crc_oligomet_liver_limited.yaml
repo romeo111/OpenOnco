@@ -1,0 +1,256 @@
+id: IND-CRC-OLIGOMET-LIVER-LIMITED
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV (oligometastatic) — liver-limited disease, ≤5 R0-resectable hepatic lesions per NCCN Colon v3.2025 + ESMO CRC 2024 + EORTC 40983 framework"
+    - "Includes synchronous liver-only metastases AND metachronous liver-only oligo-recurrence after curative-intent treatment of the primary"
+    - "Excluded: extrahepatic disease (lung mets, peritoneal carcinomatosis, distant LN beyond locoregional, brain mets), unresectable lesions on hepatobiliary surgical review, inadequate future liver remnant"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    primary_tumor_controllable: true
+    all_liver_lesions_r0_resectable: true
+    extrahepatic_disease_absent: true
+
+# §17 phases NOT populated for v0.1 — local-therapy entities (hepatectomy
+# Surgery, RFA / SBRT RadiationCourse) for CRC liver oligomet are future
+# Phase C extensions. Sequence (induction FOLFOX → restaging → hepatic
+# resection ± ablation → adjuvant FOLFOX) described in description /
+# rationale / notes text. Future chunk will populate phases when local-
+# therapy entities exist (mirrors GI-2 C5 IND-GASTRIC-OLIGOMET-SYSTEMIC-
+# PLUS-LOCAL precedent + planning doc gi2_wave §4.5 recommendation 2).
+recommended_regimen: REG-FOLFOX
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "EORTC 40983 (Nordlinger Lancet 2008): perioperative FOLFOX in initially resectable CRLM — ~43% response rate in chemo arm; primary RCT pending re-citation in KB"
+  overall_survival_5y: "EORTC 40983 (Nordlinger Lancet 2008 + 2013 long-term update): 5y OS ~51% perioperative FOLFOX vs ~48% surgery alone (NS for OS); selected ≤4-lesion hepatic-resection series report 5y OS 30-40%"
+  progression_free_survival: "EORTC 40983: 3y PFS 35.4% perioperative FOLFOX vs 28.1% surgery alone (HR 0.77, p=0.04 in eligible patients)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CRC-OLIGOMET-LIVER-DEFINITION
+  - RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-CEA
+  - TEST-MSI-PCR-OR-NGS
+  - TEST-RAS-EXTENDED
+
+desired_tests:
+  - TEST-PET-CT
+  - TEST-MRI-BRAIN-CONTRAST
+
+rationale: >
+  Liver-limited oligometastatic CRC per NCCN Colon v3.2025 "Resectable
+  Synchronous Liver-Only Metastases" pathway + ESMO CRC 2024 + EORTC
+  40983 / Nordlinger Lancet 2008 trial framework: ≤5 hepatic
+  metastatic lesions, all R0-resectable on multidisciplinary review,
+  no extrahepatic disease, ECOG 0-1, controllable primary. Treatment
+  intent is potentially curative via perioperative FOLFOX (induction
+  + adjuvant) bracketing hepatic metastasectomy. Selected ≤4-lesion
+  hepatic-resection series (Fong nomogram, Adam, Pawlik cohorts)
+  report 5y OS 30-40% — substantially higher than 1L systemic-only
+  metastatic CRC (mOS ~24-28 mo with FOLFOX+bev, <20% 5y OS), which
+  drives the intensification recommendation despite EORTC 40983
+  failing to show OS benefit in the formal RCT comparison
+  (perioperative FOLFOX vs surgery alone; PFS benefit was significant
+  HR 0.77 p=0.04 in the eligible-patient analysis).
+
+  Sequence (described in text; phases: not populated for v0.1):
+    1. MDT review (medical onc + hepatobiliary surgery + radiation
+       onc + radiology) confirms liver-limited disease, ≤5 R0-
+       resectable lesions, adequate future liver remnant, ECOG 0-1,
+       controllable primary.
+    2. Systemic induction: 6 cycles FOLFOX (mFOLFOX6: oxaliplatin +
+       leucovorin + 5-FU bolus + 5-FU 46h infusion, q14d) per
+       EORTC 40983 protocol. (Bev typically WITHHELD perioperatively
+       due to wound-healing / hepatic-regeneration concerns — held
+       ≥6 weeks before hepatectomy. FOLFOXIRI ± bev is an option
+       in fit patients with high tumour burden but increases
+       hepatotoxicity / chemotherapy-associated steatohepatitis
+       CASH risk.)
+    3. Restaging at ~12 weeks: contrast CT or MRI liver, CEA,
+       PET/CT if clinically indicated. Patients with progression
+       exit oligomet track to standard 1L metastatic management.
+    4. Hepatic resection (open or laparoscopic) ± intraoperative
+       ablation for non-resectable small lesions, by an experienced
+       hepatobiliary surgeon at an appropriate-volume centre.
+       Synchronous primary + liver resection vs staged is a
+       case-specific decision (no clear OS difference in pooled
+       series).
+    5. Adjuvant systemic continuation: 6 cycles FOLFOX post-
+       resection per EORTC 40983 (total 12 cycles perioperative).
+
+  HER2-positive does NOT disqualify from this track: anti-HER2
+  trastuzumab+tucatinib / trastuzumab-deruxtecan is a 2L-3L metastatic
+  treatment, not an alternative to perioperative intensification in
+  resectable CRLM. Contrast with gastroesophageal OMEC-1 indication
+  where HER2+ routes to dedicated KEYNOTE-811 trastuzumab+chemo+ICI
+  track from the start. RAS / BRAF / MSI status is captured by
+  required tests but does not gate this oligomet indication —
+  selection for hepatic resection is based on anatomic resectability,
+  not molecular subtype, in the resectable-CRLM literature.
+
+  Confidence: moderate, conditional, NCCN category 2A. EORTC 40983
+  is the primary RCT and remains the foundational evidence for
+  perioperative FOLFOX in resectable CRLM (no superior contemporary
+  RCT). HAI (hepatic arterial infusion floxuridine + systemic chemo,
+  MSKCC pattern) and CRS+HIPEC for peritoneal disease are NOT
+  covered by this indication — HAI requires SRC-NEW source ingestion
+  (search KB; cite NCCN/ESMO with primary-RCT-pending flag if no
+  HAI source exists), and peritoneal disease is excluded from this
+  liver-limited definition.
+
+rationale_ua: >
+  Печінково-обмежений олігометастатичний КРР за NCCN Colon v3.2025
+  "Resectable Synchronous Liver-Only Metastases" + ESMO CRC 2024 +
+  EORTC 40983 / Nordlinger Lancet 2008: ≤5 печінкових метастатичних
+  вогнищ, усі R0-резектабельні при мультидисциплінарному огляді,
+  відсутність екстрапечінкової хвороби, ECOG 0-1, контрольоване
+  первинне вогнище. Намір лікування — потенційно куративний:
+  периопераційний FOLFOX (індукція + ад'ювант) з резекцією
+  печінкових метастазів. Відібрані серії з ≤4 вогнищами повідомляють
+  5-річне OS 30-40% — значно вище за 1L системне-тільки
+  метастатичне КРР (mOS ~24-28 міс).
+
+  Послідовність (описано в тексті; phases: не заповнено для v0.1):
+    1. MDT-огляд (мед.онк + гепатобіліарний хірург + рад.онк +
+       радіолог) підтверджує печінково-обмежену хворобу, ≤5 R0-
+       резектабельних вогнищ, адекватний залишок печінки, ECOG 0-1,
+       контрольоване первинне.
+    2. Системна індукція: 6 циклів FOLFOX (mFOLFOX6, q14d) за
+       протоколом EORTC 40983. (Бевацизумаб зазвичай ТРИМАЮТЬ
+       периопераційно — wound healing / регенерація печінки —
+       призупиняють ≥6 тижнів до гепатектомії.)
+    3. Restaging у ~12 тиж: contrast CT / MRI печінки, CEA, PET/CT
+       за показаннями. Прогресія → вихід із oligomet track.
+    4. Резекція печінки (відкрита або лапароскопічна) ±
+       інтраопераційна абляція для нерезектабельних дрібних
+       вогнищ, досвідченим гепатобіліарним хірургом у центрі
+       відповідного об'єму.
+    5. Ад'ювантне системне продовження: 6 циклів FOLFOX після
+       резекції (загалом 12 циклів периопераційно).
+
+  HER2-positive НЕ дискваліфікує з цього треку: анти-HER2 трек —
+  2L-3L метастатичне лікування, не альтернатива периопераційній
+  інтенсифікації при резектабельних CRLM.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+  - source_id: SRC-ESMO-CRC-2024
+    position: supports
+  - source_id: SRC-ESMO-COLON-2024
+    position: context
+
+known_controversies:
+  - topic: Perioperative FOLFOX vs surgery-alone for initially resectable CRLM — EORTC 40983 OS not significant
+    positions:
+      - position: EORTC 40983 (Nordlinger Lancet 2008 + 2013 long-term) — perioperative FOLFOX showed PFS benefit (HR 0.77 p=0.04 eligible-patient analysis) but no statistically significant OS benefit in the formal ITT comparison
+        sources:
+          - SRC-NCCN-COLON-2025
+        evidence_note: "Foundational RCT; PFS benefit drives recommendation; OS benefit not formally demonstrated. Primary RCT (EORTC 40983) source not yet in KB — citation via NCCN/ESMO context as primary-RCT-pending flag."
+      - position: NCCN Colon v3.2025 — perioperative chemotherapy + hepatic resection for resectable CRLM is preferred standard for fit ECOG 0-1 patients with ≤5 R0-resectable liver-limited lesions
+        sources:
+          - SRC-NCCN-COLON-2025
+        evidence_note: "Category 2A per NCCN; consensus-based given EORTC 40983 PFS benefit + selected-series 5y OS 30-40%"
+      - position: ESMO CRC 2024 — multidisciplinary review mandatory; perioperative chemo (typically FOLFOX) recommended; FOLFOXIRI ± bev option for high-burden / fit patients despite hepatotoxicity concerns
+        sources:
+          - SRC-ESMO-CRC-2024
+        evidence_note: "Consensus pathway; FOLFOXIRI an option but carries higher CASH risk; bev typically held perioperatively"
+      - position: HAI (hepatic arterial infusion floxuridine) + systemic chemo — MSKCC retrospective + small-RCT data show OS benefit in selected unresectable→converted-resectable CRLM; not standard outside high-volume HAI centres
+        sources:
+          - SRC-NCCN-COLON-2025
+        evidence_note: "Primary HAI RCT source pending KB ingestion; cited via NCCN context. HAI not in scope of this indication — requires hepatic arterial pump infrastructure not widely available."
+    our_default: "Restrict to MDT-reviewed cases meeting NCCN Colon v3.2025 + ESMO CRC 2024 criteria (≤5 R0-resectable liver-limited lesions, ECOG 0-1, controllable primary). Perioperative FOLFOX (REG-FOLFOX) as default systemic backbone. HAI and CRS+HIPEC tracks are out of scope."
+    rationale: "Evidence base is one PFS-positive but OS-neutral RCT (EORTC 40983) + retrospective hepatic-resection series with 5y OS 30-40% in selected patients. Recommendation strength = conditional, NCCN 2A. MDT gate is non-negotiable per NCCN/ESMO; explicitly require hepatobiliary-surgery review + adequate-volume centre."
+
+do_not_do:
+  - "Do NOT proceed without MDT review (medical onc + hepatobiliary surgery + radiation onc + radiology) — resectability assessment is the gate"
+  - "Do NOT offer hepatic metastasectomy without ≤5 R0-resectable liver-limited lesions + adequate future liver remnant on imaging review"
+  - "Do NOT include extrahepatic disease (lung, peritoneal, distant LN, brain) — these are explicit exclusions and route to standard 1L metastatic CRC management"
+  - "Do NOT continue bevacizumab perioperatively — hold ≥6 weeks before hepatectomy due to wound-healing / hepatic-regeneration risk; resume post-recovery if indicated"
+  - "Do NOT initiate during ongoing GI bleed / obstruction / perforation — emergency management first (RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION)"
+  - "Do NOT default to non-MDT single-surgeon decision — refer to a hepatobiliary surgeon at an appropriate-volume centre"
+
+do_not_do_en:
+  - "Do NOT proceed without MDT review (medical onc + hepatobiliary surgery + radiation onc + radiology) — resectability assessment is the gate"
+  - "Do NOT offer hepatic metastasectomy without ≤5 R0-resectable liver-limited lesions + adequate future liver remnant on imaging review"
+  - "Do NOT include extrahepatic disease (lung, peritoneal, distant LN, brain) — these are explicit exclusions and route to standard 1L metastatic CRC management"
+  - "Do NOT continue bevacizumab perioperatively — hold ≥6 weeks before hepatectomy due to wound-healing / hepatic-regeneration risk; resume post-recovery if indicated"
+  - "Do NOT initiate during ongoing GI bleed / obstruction / perforation — emergency management first (RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION)"
+  - "Do NOT default to non-MDT single-surgeon decision — refer to a hepatobiliary surgeon at an appropriate-volume centre"
+
+actionability_review_required: true
+
+last_reviewed: "2026-05-08"
+notes: >
+  CRC liver-limited oligometastatic perioperative track per NCCN Colon
+  v3.2025 + ESMO CRC 2024 + EORTC 40983 (Nordlinger Lancet 2008)
+  framework. Confidence: moderate; nccn_category 2A; recommendation
+  conditional given EORTC 40983 PFS-positive but OS-neutral primary
+  RCT result. Re-grade to NCCN 2A high-confidence pending future
+  RCT or ingestion of EORTC 40983 + Fong nomogram cohort sources
+  (D2 follow-up).
+
+  §17 phases: NOT populated for v0.1 (planning doc gi2_wave §4.5
+  recommendation 2 + §17 ratification 2026-05-07; mirrors GI-2 C5
+  IND-GASTRIC-OLIGOMET-SYSTEMIC-PLUS-LOCAL precedent). Local-therapy
+  entities (hepatectomy Surgery, RFA / SBRT RadiationCourse) for CRC
+  liver oligomet are future Phase C extensions. Sequence (induction
+  FOLFOX → restaging → hepatic resection → adjuvant FOLFOX, total
+  ~12 cycles perioperative) described in description / rationale /
+  do_not_do text only. recommended_regimen: REG-FOLFOX
+  (perioperative FOLFOX backbone per EORTC 40983; bevacizumab
+  withheld perioperatively, distinct from REG-FOLFOX-BEV used in
+  metastatic-only setting).
+
+  Algorithm wiring deferred — algo_crc_metastatic_1l (if present)
+  does not yet have an oligomet branch. D2 follow-up: extend
+  algorithm with oligomet decision step gated by
+  RF-CRC-OLIGOMET-LIVER-DEFINITION → routes here.
+
+  Engine smoke (synthetic patient: CRC, mets=liver_3_lesions, ECOG 1,
+  primary_controllable=true, no extrahepatic disease, all R0-
+  resectable per surgical review): RF-CRC-OLIGOMET-LIVER-DEFINITION
+  fires; no algorithm branch consumes it yet. Indication is reachable
+  via direct ID lookup but not via current decision-tree routing.
+  D2 algorithm-extension chunk needed to wire.
+
+  HAI (hepatic arterial infusion) and CRS+HIPEC tracks: out of scope
+  for this indication. HAI primary RCT source not yet in KB —
+  pending source-ingestion chunk; this indication cites NCCN/ESMO
+  context only and explicitly excludes peritoneal disease /
+  extrahepatic mets.
+
+  CRC-specific differences from GI-2 C5 gastroesophageal OMEC-1
+  oligomet pattern (IND-GASTRIC-OLIGOMET-SYSTEMIC-PLUS-LOCAL):
+    - Lesion threshold ≤5 LIVER lesions (not ≤3 distant).
+    - Liver-LIMITED (extrahepatic excluded; no multi-organ admission
+      as in OMEC-1).
+    - HER2-positive does NOT disqualify (anti-HER2 is 2L-3L track,
+      not alternative to periop intensification).
+    - NCCN category 2A (not 2B as in gastric oligomet); EORTC 40983
+      RCT exists (PFS-positive, OS-neutral), unlike RENAISSANCE
+      where primary results pending.
+    - Backbone REG-FOLFOX (not REG-FLOT — gastric uses platinum-
+      fluoropyrimidine-taxane triplet; CRC uses platinum-
+      fluoropyrimidine doublet).
+
+  actionability_review_required: true per Phase 1.5 schema convention
+  (CIViC pivot — flagged for Clinical Co-Lead two-reviewer signoff
+  per CHARTER §6.1).

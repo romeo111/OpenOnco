@@ -13,13 +13,20 @@ Schema of the emitted JSON:
       "loaded_entities": int,                  # total IDs in entities_by_id
       "schema_errors_count": int,
       "ref_errors_count": int,
+      "contract_errors_count": int,
+      "contract_warnings_count": int,
       "errors": [
         {"file": "x.yaml", "type": "schema", "message": "..."},
         {"file": "y.yaml", "type": "ref",    "message": "..."},
+        {"file": "z.yaml", "type": "contract", "message": "..."},
+        ...
+      ],
+      "warnings": [
+        {"file": "w.yaml", "type": "contract_warning", "message": "..."},
         ...
       ],
       "summary_by_file": {                    # convenience for reporting
-        "x.yaml": {"schema": 1, "ref": 0},
+        "x.yaml": {"schema": 1, "ref": 0, "contract": 0, "warning": 0},
       }
     }
 
@@ -46,6 +53,9 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parent.parent
 KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 
 def collect_validator_state(kb_root: Path = KB_ROOT) -> dict[str, Any]:
     """Run the loader, capture errors, normalize to JSON-friendly dict.
@@ -66,14 +76,18 @@ def collect_validator_state(kb_root: Path = KB_ROOT) -> dict[str, Any]:
             "loaded_entities": 0,
             "schema_errors_count": 0,
             "ref_errors_count": 0,
+            "contract_errors_count": 0,
+            "contract_warnings_count": 0,
             "catastrophic_error": f"{type(exc).__name__}: {exc}",
             "errors": [],
+            "warnings": [],
             "summary_by_file": {},
         }
 
     errors: list[dict[str, str]] = []
+    warnings: list[dict[str, str]] = []
     summary_by_file: dict[str, dict[str, int]] = defaultdict(
-        lambda: {"schema": 0, "ref": 0}
+        lambda: {"schema": 0, "ref": 0, "contract": 0, "warning": 0}
     )
 
     for path, message in result.schema_errors:
@@ -94,14 +108,36 @@ def collect_validator_state(kb_root: Path = KB_ROOT) -> dict[str, Any]:
         })
         summary_by_file[fname]["ref"] += 1
 
+    for path, message in result.contract_errors:
+        fname = path.name
+        errors.append({
+            "file": fname,
+            "type": "contract",
+            "message": str(message),
+        })
+        summary_by_file[fname]["contract"] += 1
+
+    for path, message in result.contract_warnings:
+        fname = path.name
+        warnings.append({
+            "file": fname,
+            "type": "contract_warning",
+            "message": str(message),
+        })
+        summary_by_file[fname]["warning"] += 1
+
     # Sort for determinism (file path → type → first-N-chars of msg).
     errors.sort(key=lambda e: (e["file"], e["type"], e["message"][:80]))
+    warnings.sort(key=lambda e: (e["file"], e["type"], e["message"][:80]))
 
     return {
         "loaded_entities": len(result.entities_by_id),
         "schema_errors_count": len(result.schema_errors),
         "ref_errors_count": len(result.ref_errors),
+        "contract_errors_count": len(result.contract_errors),
+        "contract_warnings_count": len(result.contract_warnings),
         "errors": errors,
+        "warnings": warnings,
         "summary_by_file": dict(summary_by_file),
     }
 
@@ -117,17 +153,26 @@ def render_human(state: dict[str, Any]) -> str:
 
     schema_n = state["schema_errors_count"]
     ref_n = state["ref_errors_count"]
-    if schema_n == 0 and ref_n == 0:
-        lines.append("✓ Clean — 0 schema errors, 0 ref errors.")
+    contract_n = state.get("contract_errors_count", 0)
+    warning_n = state.get("contract_warnings_count", 0)
+    if schema_n == 0 and ref_n == 0 and contract_n == 0:
+        lines.append(
+            f"✓ Clean — 0 schema errors, 0 ref errors, 0 contract errors "
+            f"({warning_n} warnings)."
+        )
         return "\n".join(lines) + "\n"
 
     lines.append(f"Schema errors: {schema_n}")
     lines.append(f"Ref errors:    {ref_n}")
+    lines.append(f"Contract errors: {contract_n}")
+    lines.append(f"Warnings: {warning_n}")
     lines.append("")
     lines.append("By file:")
     for fname, counts in sorted(state["summary_by_file"].items()):
         lines.append(
-            f"  {fname:50s}  schema={counts['schema']:>2}  ref={counts['ref']:>2}"
+            f"  {fname:50s}  schema={counts['schema']:>2}  "
+            f"ref={counts['ref']:>2}  contract={counts['contract']:>2}  "
+            f"warn={counts['warning']:>2}"
         )
     if state["errors"]:
         lines.append("")
@@ -183,7 +228,11 @@ def main() -> int:
 
     if state.get("catastrophic_error"):
         return 2
-    if state["schema_errors_count"] or state["ref_errors_count"]:
+    if (
+        state["schema_errors_count"]
+        or state["ref_errors_count"]
+        or state.get("contract_errors_count", 0)
+    ):
         return 1
     return 0
 

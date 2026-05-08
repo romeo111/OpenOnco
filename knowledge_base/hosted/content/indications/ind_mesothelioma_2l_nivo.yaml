@@ -1,0 +1,107 @@
+id: IND-MESOTHELIOMA-2L-NIVO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MESOTHELIOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or progressive malignant pleural mesothelioma (MPM) after ≥1 prior platinum-based chemotherapy line"
+    - "Any histological subtype (epithelioid or non-epithelioid — benefit observed in both)"
+    - "Any PD-L1 expression status (unselected population per CONFIRM trial)"
+    - "ECOG PS 0–1 (CONFIRM eligibility criteria)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-NIVO-MONO-MESOTHELIOMA-2L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_survival_median:
+    value: "Median OS 9.2 mo vs 6.6 mo placebo"
+    source: SRC-CONFIRM-FENNELL-2021
+    confidence_interval: "HR 0.72, 95% CI 0.55–0.94; p=0.018"
+  progression_free_survival:
+    value: "PFS HR 0.61 vs placebo"
+    source: SRC-CONFIRM-FENNELL-2021
+    confidence_interval: "95% CI 0.46–0.81; p=0.0003"
+  overall_response_rate:
+    value: "ORR 11% vs 2% placebo"
+    source: SRC-CONFIRM-FENNELL-2021
+
+hard_contraindications: []
+
+red_flags_triggering_alternative:
+  - RF-NSCLC-INFECTION-SCREENING
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-LFT
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-TSH
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+
+desired_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-CORTISOL-MORNING
+  - TEST-PFT-SPIROMETRY
+
+rationale: >
+  Nivolumab 240 mg IV q2w for up to 12 months is the first phase-3 immunotherapy
+  regimen to demonstrate an OS benefit in second-line malignant pleural mesothelioma.
+  CONFIRM (Fennell, Lancet Oncol 2021; n=332) randomised relapsed MPM patients
+  (≥1 prior platinum) to nivolumab vs placebo: mOS 9.2 vs 6.6 mo (HR 0.72,
+  95% CI 0.55–0.94; p=0.018); mPFS HR 0.61 (p=0.0003); ORR 11% vs 2%.
+  OS benefit was consistent across histological subtypes (epithelioid and
+  non-epithelioid) and PD-L1 expression levels — population is unselected.
+  CONFIRM is the pivotal evidence for 2L MPM immunotherapy, establishing nivolumab
+  as the standard of care in this setting. NCCN includes nivolumab as a preferred
+  2L MPM option (Category 2A based on CONFIRM data).
+
+sources:
+  - source_id: SRC-CONFIRM-FENNELL-2021
+    position: supports
+    relevant_quote_paraphrase: "CONFIRM: nivolumab vs placebo 2L MPM; mOS 9.2 vs 6.6 mo (HR 0.72, p=0.018); PFS HR 0.61; ORR 11% vs 2%; OS benefit regardless of histological subtype or PD-L1 status"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Nivolumab monotherapy included as 2L MPM option (Category 2A); NCCN maintains separate Mesothelioma guideline — SRC-NCCN-NSCLC-2025 used as proxy pending dedicated NCCN mesothelioma source"
+
+do_not_do:
+  - "Не проводити оцінку відповіді за стандартним RECIST 1.1 — МПМ потребує модифікованого RECIST (двовимірне плевральне вимірювання)"
+  - "Не вводити ніволумаб при активному аутоімунному захворюванні, що потребує системної імуносупресії > 10 мг/д преднізолону"
+  - "Не пропускати базовий скринінг HBV/HCV + тиреоїдна функція (ТТГ) + LFT перед першою дозою"
+  - "Не застосовувати при попередньому пересаджуванні органів або активному імунному пневмоніті після попередньої ICI-терапії"
+
+do_not_do_en:
+  - "Do not assess response with standard RECIST 1.1 — MPM requires modified RECIST (bidimensional pleural measurement)"
+  - "Do not administer nivolumab for active autoimmune disease requiring systemic immunosuppression >10 mg/d prednisone equivalent"
+  - "Do not omit baseline HBV/HCV serology + thyroid function (TSH) + LFTs before first dose"
+  - "Do not use in prior organ transplant recipients or active immune pneumonitis from prior ICI therapy"
+
+time_critical: false
+last_reviewed: "2026-05-07"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  CONFIRM (PMID 34090562) is the first phase-3 RCT with OS benefit for 2L MPM.
+  First platinum-based therapy was pemetrexed+cisplatin/carboplatin in most patients.
+  Nivolumab benefit observed in both epithelioid (majority of patients) and
+  non-epithelioid subtypes — distinct from the 1L CheckMate-743 pattern where
+  non-epithelioid derived substantially greater benefit.
+  PD-L1 expression status is NOT required for patient selection; CONFIRM enrolled
+  an unselected population and OS benefit was consistent across PD-L1 subgroups.
+  Active autoimmune disease, prior organ transplantation, and ongoing
+  corticosteroids >10 mg/d prednisone equivalent are clinical contraindications
+  (not KB entity IDs — hard_contraindications remains []).
+  NCCN source note: MPM is managed under a dedicated NCCN Mesothelioma guideline
+  separate from NSCLC. SRC-NCCN-NSCLC-2025 is used as proxy here (same approach
+  as IND-MESOTHELIOMA-1L-NIVO-IPI). A dedicated NCCN mesothelioma source should
+  be added when available.

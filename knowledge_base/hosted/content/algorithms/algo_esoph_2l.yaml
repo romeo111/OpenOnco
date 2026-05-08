@@ -5,11 +5,38 @@ purpose: 'Select 2L+ metastatic esophageal carcinoma Indication. Two ICI tracks 
 
   '
 output_indications:
+- IND-ESOPH-METASTATIC-2L-HER2-POSITIVE-T-DXD
 - IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
 - IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
 default_indication: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
 alternative_indication: IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
 decision_tree:
+- step: 10
+  # D1 chunk (gi2-d1-algo-extensions-2026-05-07-2030) — Adenocarcinoma + HER2+
+  # + post-trastuzumab progression → trastuzumab deruxtecan (T-DXd). Extrapolation
+  # from DESTINY-Gastric01/04 (gastric/GEJ adeno, post-trastuzumab; mOS 14.7 vs
+  # 11.4 mo, HR 0.70 in DG-04). Excludes squamous-cell esoph carcinoma — DG-01/04
+  # enrolled adeno only and HER2 amplification is rare in ESCC. Falls through to
+  # existing step 1 (CPS≥10 pembro) when HER2-/SCC/no prior trastuzumab.
+  evaluate:
+    all_of:
+    - finding: "histology"
+      value: "adeno"
+    - finding: "her2_status"
+      value: "positive"
+    - finding: "prior_trastuzumab_progression"
+      value: true
+  if_true:
+    result: IND-ESOPH-METASTATIC-2L-HER2-POSITIVE-T-DXD
+    notes: >
+      EAC / GEJ Siewert I + HER2+ + progression on 1L trastuzumab-containing
+      regimen → T-DXd 6.4 mg/kg q3w (REG-TDXD-GASTRIC reused). Extrapolation
+      from DESTINY-Gastric01/04 (gastric/GEJ adeno, post-trastuzumab). NCCN-
+      Esophageal/EGJ 2025 + ESMO-Esophageal 2024 endorse via biological
+      contiguity with GEJ adeno. Confidence: moderate.
+  if_false:
+    next_step: 1
+  notes: "D1 chunk new branch — routes HER2+ esoph adeno post 1L trastuzumab to T-DXd before generic ICI logic."
 - step: 1
   evaluate:
     all_of:

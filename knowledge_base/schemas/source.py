@@ -3,7 +3,7 @@ SOURCE_INGESTION_SPEC §3 (licensing & hosting fields)."""
 
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from .base import (
     Attribution,
@@ -78,3 +78,43 @@ class Source(Base):
     references_count: Optional[int] = None
     corpus_role: Optional[str] = None  # primary_guideline | regional_guideline |
     # diagnostic_methodology | rct_publication | terminology | regulatory
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_legacy_shape(cls, v):
+        return normalize_legacy_source_payload(v)
+
+
+def normalize_legacy_source_payload(raw: object) -> object:
+    """Normalize older Source stubs into the current Source schema shape."""
+    if not isinstance(raw, dict):
+        return raw
+
+    normalized = dict(raw)
+    citation = normalized.get("citation") if isinstance(normalized.get("citation"), dict) else {}
+
+    if not normalized.get("source_type"):
+        normalized["source_type"] = (
+            normalized.get("type")
+            or normalized.get("study_type")
+            or "clinical_trial"
+        )
+
+    if not normalized.get("title"):
+        normalized["title"] = citation.get("title") or normalized.get("id") or "Untitled source"
+
+    if not normalized.get("authors") and citation.get("authors"):
+        authors = citation.get("authors")
+        normalized["authors"] = [authors] if isinstance(authors, str) else authors
+
+    for field_name in ("journal", "doi", "pmid", "url"):
+        if not normalized.get(field_name) and citation.get(field_name):
+            normalized[field_name] = str(citation.get(field_name))
+
+    if not normalized.get("hosting_mode"):
+        normalized["hosting_mode"] = normalized.get("hosting") or "referenced"
+
+    if isinstance(normalized.get("license"), str):
+        normalized["license"] = {"name": normalized["license"]}
+
+    return normalized

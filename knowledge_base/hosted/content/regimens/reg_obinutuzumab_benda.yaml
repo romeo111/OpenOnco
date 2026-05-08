@@ -1,0 +1,56 @@
+id: REG-OBINUTUZUMAB-BENDA
+name: Obinutuzumab + Bendamustine (GADOLIN)
+name_ua: Обінутузумаб + Бендамустин (GADOLIN)
+alternate_names:
+  - OBG+B
+  - G-Benda
+  - OBG-Benda
+components:
+  - drug_id: DRUG-OBINUTUZUMAB
+    dose: "1000 mg"
+    route: IV
+    schedule: "Days 1, 8, 15 of cycle 1; day 1 of cycles 2-6"
+    duration: "6 cycles (28-day)"
+  - drug_id: DRUG-BENDAMUSTINE
+    dose: "90 mg/m²"
+    route: IV
+    schedule: "Days 1-2 of each cycle"
+    duration: "6 cycles (28-day)"
+cycle_length_days: 28
+total_cycles: "6"
+toxicity_profile: moderate
+premedication:
+  - Acetaminophen + diphenhydramine + IV methylprednisolone before obinutuzumab (infusion-related reaction prophylaxis)
+  - Antiemetic for bendamustine (day 1-2)
+mandatory_supportive_care: []
+dose_adjustments:
+  - condition: ANC <1000 OR platelets <75K at cycle start
+    modification: Hold; G-CSF support; resume at recovery; consider 25% bendamustine dose reduction
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: CrCl <40 mL/min
+    modification: Avoid bendamustine — renally cleared; consider alternative
+    source_refs:
+      - SRC-GADOLIN-SEHN-2016
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Obinutuzumab (Gazyvaro) registered in Ukraine. Bendamustine (Ribomustin/Levact)
+    registered. Reimbursement via НСЗУ subject to lymphoma-specific program;
+    obinutuzumab not currently on НСЗУ standard NHL reimbursement list — may require
+    individual program application.
+sources:
+  - SRC-GADOLIN-SEHN-2016
+  - SRC-NCCN-BCELL-2025
+last_reviewed: "2026-05-09"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  GADOLIN schedule: OBG+Benda induction × 6 cycles (28-day) → obinutuzumab
+  maintenance 1000 mg IV q2months × 2yr for rituximab-refractory iNHL (predominantly
+  FL grades 1-3a). Type II anti-CD20 (glyco-engineered GA101): enhanced ADCC,
+  direct cell death vs rituximab. PFS HR 0.55 (Sehn 2016) + OS HR 0.67 (Cheson
+  2018, PMID 29584548). HBV reactivation screening + entecavir prophylaxis mandatory.
+  PJP prophylaxis ≥6 mo post-anti-CD20 therapy. Maintenance OBG modeled in the
+  indication, not as a separate regimen.

@@ -1,0 +1,103 @@
+id: IND-NSCLC-ADJUVANT-ATEZO-PDL1POS
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Completely resected stage IB (primary tumour ≥4 cm), stage II, or stage IIIA NSCLC"
+    - "Completed 1–4 cycles of adjuvant platinum-based chemotherapy post-resection"
+    - "ECOG PS 0–1 at start of adjuvant atezolizumab"
+    - "No evidence of disease recurrence at time of initiation"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-SP142-CLONE
+      required: true
+      value_constraint: "SP142 TC ≥1% (tumour cell staining; SP142 assay per IMpower010)"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      required: false
+    - biomarker_id: BIO-ALK-FUSION
+      required: false
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-ATEZO-ADJUVANT-NSCLC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+actionability_review_required: true
+
+expected_outcomes:
+  disease_free_survival_hr:
+    value: "HR 0.66 (95% CI 0.50–0.88) in PD-L1 SP142 ≥1% stage II–IIIA subgroup"
+    source: SRC-IMPOWER-010-FELIP-2021
+    median_followup_months: 32.2
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests: []
+desired_tests: []
+
+rationale: >
+  IMpower010 (Felip LANCET 2021, NCT02486718): phase 3 RCT of adjuvant
+  atezolizumab 1200 mg q3w × 16 cycles vs best supportive care after
+  1–4 cycles adjuvant platinum-based chemo in resected stage IB–IIIA NSCLC.
+  In the PD-L1 SP142 ≥1% stage II–IIIA population (primary endpoint): DFS
+  HR 0.66 (95% CI 0.50–0.88), demonstrating statistically significant
+  improvement. OS data were not mature at primary analysis. FDA approved
+  October 2021 for PD-L1 SP142 ≥1% stage II–IIIA NSCLC. NCCN category 1
+  for this population. Per IMpower010, EGFR-mutant and ALK-rearranged patients
+  were not pre-specified beneficiary subgroups and targeted therapy remains
+  standard in those populations; atezolizumab adjuvant is therefore excluded
+  for EGFR/ALK-positive disease.
+
+rationale_ua: >
+  IMpower010 (Felip LANCET 2021): фаза 3 РКД ад'ювантного атезолізумабу
+  1200 мг q3т × 16 циклів проти оптимальної підтримувальної терапії після
+  1–4 циклів ад'ювантної платино-вмісної ХТ при резектованій НМРЛ
+  IB–IIIA стадії. В субпопуляції PD-L1 SP142 ≥1% стадії II–IIIA (первинна
+  кінцева точка): ВБП HR 0.66 (95% ДІ 0.50–0.88), статистично значуще
+  покращення. Дані ЗВ не були зрілими на момент первинного аналізу.
+  Схвалення FDA жовтень 2021 для PD-L1 SP142 ≥1% стадії II–IIIA НМРЛ.
+  Категорія NCCN 1 для цієї популяції. Пацієнти з мутацією EGFR / ALK
+  перебудовою не є цільовою підгрупою — для них стандартом залишається
+  таргетна терапія; атезолізумаб ад'ювантний виключений при EGFR/ALK-позитивній хворобі.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-IMPOWER-010-FELIP-2021
+    weight: primary
+
+do_not_do:
+  - "Не призначайте атезолізумаб за відсутності PD-L1 SP142 ≥1% (TC) — IMpower010 не показав значущого покращення ВБП у SP142 <1% популяції"
+  - "Не призначайте атезолізумаб пацієнтам з мутацією EGFR або перебудовою ALK — таргетна терапія є стандартом для цих підгруп; ад'ювантний атезолізумаб не рекомендований"
+  - "Не починайте атезолізумаб без завершення ад'ювантної платино-вмісної ХТ (1–4 цикли) — IMpower010 включав лише пацієнтів, які завершили ХТ"
+  - "Не застосовуйте при незавершеній резекції (R1/R2) — дослідження включало лише R0-резекції"
+  - "Не продовжуйте понад 16 циклів (1 рік) — максимальна тривалість за протоколом IMpower010"
+
+do_not_do_en:
+  - "Do NOT administer atezolizumab without PD-L1 SP142 ≥1% (TC) confirmation — IMpower010 did not show significant DFS benefit in the SP142 <1% population"
+  - "Do NOT use adjuvant atezolizumab in EGFR-mutant or ALK-rearranged NSCLC — targeted therapy is standard in those subgroups; adjuvant IO is not recommended"
+  - "Do NOT initiate atezolizumab without completing adjuvant platinum-based chemotherapy (1–4 cycles) — IMpower010 enrolled only patients who completed chemo"
+  - "Do NOT use in incomplete resection (R1/R2) — IMpower010 enrolled R0 resection only"
+  - "Do NOT continue beyond 16 cycles (1 year) — maximum duration per IMpower010 protocol"
+
+last_reviewed: "2026-05-07"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  PD-L1 assay note: IMpower010 used the SP142 assay (Ventana). The SP142
+  clone is NOT interchangeable with 22C3 TPS (used for pembrolizumab). A
+  patient PD-L1 result must be specifically tested with the SP142 assay for
+  eligibility determination per this indication. Stage IB eligibility
+  restricted to tumours ≥4 cm per protocol (not all IB tumours). OS not yet
+  mature at primary analysis (32.2 month median follow-up); longer follow-up
+  data awaited. Algorithm routing to this indication is out of scope for this
+  chunk — see D-prefix algorithm extension work.

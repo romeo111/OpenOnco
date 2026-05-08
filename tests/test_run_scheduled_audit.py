@@ -236,6 +236,49 @@ last_reviewed: "2026-04-26"
     assert "blocker" in missing_actions[0]["labels"]
 
 
+def test_contract_regression_surfaces_one_action(kb, tmp_path):
+    """Add an algorithm that routes active treatment without a regimen."""
+    _write(kb / "indications" / "ind_contract_broken.yaml", """
+id: IND-CONTRACT-BROKEN
+plan_track: standard
+applicable_to:
+  disease_id: DIS-TEST
+  line_of_therapy: 1
+recommended_regimen: null
+evidence_level: high
+strength_of_recommendation: strong
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests: []
+desired_tests: []
+sources:
+  - source_id: SRC-TEST
+    weight: primary
+last_reviewed: "2026-04-26"
+""".strip())
+    _write(kb / "algorithms" / "algo_contract_broken.yaml", """
+id: ALGO-CONTRACT-BROKEN
+applicable_to_disease: DIS-TEST
+applicable_to_line_of_therapy: 1
+purpose: "test"
+output_indications: [IND-CONTRACT-BROKEN]
+default_indication: IND-CONTRACT-BROKEN
+decision_tree: []
+sources: [SRC-TEST]
+last_reviewed: "2026-04-26"
+""".strip())
+
+    orch = _import_orchestrator()
+    plan = _run(orch, kb, state_dir=tmp_path)
+
+    contract_actions = [
+        a for a in plan["actions"]
+        if a["type"] == "open_issue" and "Contract errors increased" in a.get("title", "")
+    ]
+    assert len(contract_actions) == 1
+    assert "blocker" in contract_actions[0]["labels"]
+
+
 # ── 4. Dormant biomarker detection ──────────────────────────────────────
 
 

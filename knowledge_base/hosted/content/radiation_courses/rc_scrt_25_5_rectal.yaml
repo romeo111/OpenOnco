@@ -1,0 +1,68 @@
+# Short-course preoperative radiotherapy (SCRT) — 25 Gy / 5 fx — for rectal
+# cancer. §17.1 RadiationCourse entity (RATIFIED 2026-05-07). Lands as the
+# RT phase (phase 1) of IND-RECTAL-TNT-SHORT-COURSE-RAPIDO (chunk
+# gi3-c3-rectal-tnt-rapido-2026-05-08-2100). Distinct from CROSS-style
+# concurrent CRT — RAPIDO is RT-FIRST then chemo, NOT concurrent
+# chemoradiation, so `concurrent_chemo_regimen: null`.
+id: RC-SCRT-25-5-RECTAL
+names:
+  preferred: "Short-course preoperative radiotherapy for rectal cancer (25 Gy / 5 fx)"
+  ukrainian: "Короткий курс передопераційної променевої терапії раку прямої кишки (25 Гр / 5 фракцій)"
+  english: "SCRT 25 Gy / 5 fx — preoperative short-course radiotherapy for locally advanced rectal cancer"
+  synonyms:
+    - "SCRT 5×5"
+    - "Stockholm short-course"
+    - "5×5 Gy preop rectal RT"
+    - "Short-course preoperative RT (rectal)"
+
+total_dose_gy: 25
+fractions: 5
+fraction_size_gy: 5
+target_volume: "primary rectal tumor + mesorectum + regional pelvic lymph nodes (CTV) with PTV expansion per institutional protocol; typical fields cover internal iliac, presacral, and obturator nodes"
+schedule: "1 fx/day × 5 consecutive days (Mon-Fri); total elapsed time ~1 week"
+
+# RAPIDO is an RT-FIRST sequence: SCRT alone (no concurrent chemo), then
+# chemotherapy (induction CapOx × 6 or FOLFOX × 9), then TME. This is
+# DISTINCT from concurrent long-course CRT (e.g. 50.4 Gy / 28 fx +
+# concurrent capecitabine). Therefore concurrent_chemo_regimen is
+# explicitly null per planning doc §2.4 rule 7 (Optional FK).
+concurrent_chemo_regimen:
+
+intent: neoadjuvant
+
+sources:
+  - SRC-RAPIDO-BAHADOER-2021
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-CRC-2024
+
+last_reviewed: "2026-05-08"
+notes: >
+  Short-course preoperative radiotherapy (25 Gy / 5 fx over 1 week) is the
+  radiotherapy backbone of the RAPIDO total neoadjuvant therapy (TNT)
+  regimen for locally advanced rectal cancer (Bahadoer 2021, Lancet
+  Oncology). Within RAPIDO TNT, SCRT is followed by induction
+  chemotherapy (CAPOX × 6 or FOLFOX × 9 cycles) then TME proctectomy —
+  this is the experimental arm of the RAPIDO RCT vs the standard arm
+  (long-course CRT 50.4 Gy / 28 fx + concurrent capecitabine + TME +
+  optional adjuvant chemo).
+
+  RAPIDO results (n=920, locally advanced rectal cT4 OR cN2 OR EMVI+
+  OR mesorectal fascia involvement OR enlarged lateral lymph nodes):
+  3-year disease-related treatment failure 23.7% (TNT) vs 30.4%
+  (standard) — relative reduction of disease-related events. pCR
+  doubled (28% vs 14%). NCCN v.4.2025 category 1 / preferred-alternative;
+  ESMO 2024 strong recommendation for high-risk locally advanced rectal.
+
+  IMRT or VMAT preferred over 3D-CRT to reduce small-bowel and bladder
+  dose. SCRT is RT-FIRST then chemo (NOT concurrent chemoradiation) —
+  this is the key sequencing distinction from CROSS-style neoadj CRT.
+  Surgery (TME) follows after the induction-chemo phase, ~22-26 weeks
+  from SCRT start, allowing tumor downstaging.
+
+  Distinguishing 5×5 SCRT from long-course 25-fx CRT: short-course is
+  hypofractionated (5 Gy/fx, large daily dose) — biologically more potent
+  per fx but acceptable late-toxicity profile when followed by surgery
+  within 4-8 weeks (Stockholm III) or after induction chemo (RAPIDO TNT
+  pattern). NOT to be confused with the older "Polish short-course"
+  (immediate surgery within 7 days post-RT) — RAPIDO inserts the chemo
+  phase between RT and surgery.

@@ -43,12 +43,17 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 import shutil
 import sys
 import zipfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from knowledge_base.engine import (
     generate_diagnostic_brief,
@@ -64,11 +69,17 @@ from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
 from knowledge_base.stats import collect_stats
 from scripts.audit_clinical_gaps import write_outputs as write_clinical_gap_outputs
 from scripts.build_kb_wiki import build_kb_wiki
-from scripts.site_cases import CASE_CATEGORIES, CASES, GALLERY_EXCLUDED_CASE_IDS, CaseEntry
+from scripts.site_cases import (
+    CASE_CATEGORIES,
+    CASES,
+    GALLERY_EXCLUDED_CASE_IDS,
+    GALLERY_FEATURED_CASE_IDS,
+    CaseEntry,
+)
+from scripts.site_head import SITE_FAVICON_LINK, SITE_FONT_LINK, finalize_site_discovery
 from scripts.site_styles import STYLESHEET as _STYLE_CSS
 
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
 KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 EXAMPLES = REPO_ROOT / "examples"
 CTGOV_CACHE = KB_ROOT / "cache" / "ctgov"
@@ -368,10 +379,10 @@ def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
     SHA-256 prefix) automatically invalidates stale bundles on next
     fetch. CSD-6E polish — speeds up cold loads on repeat visits past
     what localStorage can hold (entire core + all visited diseases)."""
-    # 'l2' = layout v2 (EN-default at root, UA at /ukr/). Bumping the
-    # layout prefix forces a hard cache invalidation for users who still
-    # had the v1 layout (UA at root, EN at /en/) cached on their device.
-    cache_name = "openonco-bundle-l2-" + (core_version or "v1")
+    # 'l3' = navigation network-first. Bumping the layout prefix forces
+    # a hard cache invalidation for users whose browser still has an old
+    # service worker/cache after a landing-page redesign.
+    cache_name = "openonco-bundle-l3-" + (core_version or "v1")
     sw_js = """// OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
 // Two strategies in one SW:
 //   1. Cache-first for engine bundle artifacts (large, infrequent).
@@ -382,6 +393,9 @@ def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
 // push automatically rotates the cache key.
 const CACHE_NAME = '__CACHE_NAME__';
 const PRECACHE = [
+  '/manifest.webmanifest',
+  '/logo.svg',
+  '/favicon.svg',
   '/openonco-engine-index.json',
   '/openonco-engine-core.zip',
   '/try.html',
@@ -391,7 +405,7 @@ const PRECACHE = [
 // Routes that use stale-while-revalidate (instant from cache, refresh
 // in background). HTML pages must be on this list — never cache-first,
 // or the user gets stuck on an old build.
-const SWR_PATHS = ['/try.html', '/ukr/try.html', '/style.css'];
+const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html', '/style.css'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -428,9 +442,21 @@ function staleWhileRevalidate(event) {
   );
 }
 
+function networkFirstNavigation(event) {
+  event.respondWith(
+    fetch(event.request, { cache: 'no-store' }).catch(() =>
+      caches.match(event.request, { ignoreSearch: true })
+    )
+  );
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
+
+  if (event.request.mode === 'navigate') {
+    return networkFirstNavigation(event);
+  }
 
   // SWR for the small interactive shell (HTML + CSS).
   if (SWR_PATHS.indexOf(url.pathname) !== -1) {
@@ -463,7 +489,67 @@ self.addEventListener('fetch', (event) => {
     return {"path": "sw.js", "cache_name": cache_name}
 
 
-def bundle_examples(output_dir: Path) -> dict:
+def write_web_manifest(output_dir: Path) -> dict:
+    """Write the PWA manifest for the static try-page app shell."""
+    manifest = {
+        "id": "/try.html",
+        "name": "OpenOnco Try",
+        "short_name": "OpenOnco",
+        "description": (
+            "In-browser OpenOnco demo for synthetic oncology profiles. "
+            "The engine runs locally in Pyodide."
+        ),
+        "start_url": "/try.html",
+        "scope": "/",
+        "display": "standalone",
+        "background_color": "#f8faf8",
+        "theme_color": "#0a2e1a",
+        "orientation": "any",
+        "categories": ["medical", "education", "productivity"],
+        "icons": [
+            {
+                "src": "/logo.svg",
+                "sizes": "any",
+                "type": "image/svg+xml",
+                "purpose": "any maskable",
+            },
+            {
+                "src": "/favicon.svg",
+                "sizes": "any",
+                "type": "image/svg+xml",
+                "purpose": "any",
+            },
+        ],
+    }
+    out = output_dir / "manifest.webmanifest"
+    out.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return {"path": "manifest.webmanifest", "start_url": manifest["start_url"]}
+
+
+def _public_case_entries() -> list[CaseEntry]:
+    """Cases safe to expose through gallery, examples, and static case pages."""
+    return [c for c in CASES if c.case_id not in GALLERY_EXCLUDED_CASE_IDS]
+
+
+def _remove_excluded_case_pages(output_dir: Path) -> int:
+    """Delete stale generated pages for hidden auto-stub cases."""
+    removed = 0
+    for case_id in sorted(GALLERY_EXCLUDED_CASE_IDS):
+        for rel_path in (
+            Path("cases") / f"{case_id}.html",
+            Path("ukr") / "cases" / f"{case_id}.html",
+        ):
+            path = output_dir / rel_path
+            if path.exists():
+                path.unlink()
+                removed += 1
+    return removed
+
+
+def bundle_examples(
+    output_dir: Path,
+    questionnaires_manifest: list[dict] | None = None,
+) -> dict:
     """Write docs/examples.json — array of {label, json} entries used as
     the 'Load example' dropdown on try.html.
 
@@ -474,10 +560,17 @@ def bundle_examples(output_dir: Path) -> dict:
     payload = []
     manifest = []
     unique_icd_to_disease_id = _unique_questionnaire_icd_to_disease_id_map()
-    for c in CASES:
+    questionnaire_disease_ids = {
+        q.get("disease_id")
+        for q in (questionnaires_manifest or [])
+        if q.get("disease_id")
+    }
+    covered_disease_ids: set[str] = set()
+
+    def append_case(c: CaseEntry, *, has_case_page: bool) -> str | None:
         p = EXAMPLES / c.file
         if not p.exists():
-            continue
+            return None
         ex_json = json.loads(p.read_text(encoding="utf-8"))
         disease = ex_json.get("disease", {}) if isinstance(ex_json, dict) else {}
         disease_icd = disease.get("icd_o_3_morphology")
@@ -491,26 +584,62 @@ def bundle_examples(output_dir: Path) -> dict:
             disease = ex_json.setdefault("disease", {})
             if isinstance(disease, dict):
                 disease.setdefault("id", disease_id)
+            covered_disease_ids.add(disease_id)
         # Both UA and EN labels travel in the manifest so the inlined
         # JS constant on /try.html (UA) vs /ukr/try.html — wait, EN is
         # at root → /try.html serves EN labels — can pick the right
         # one per page locale at render time.
         label_en = c.label_en or c.label_ua
-        payload.append({
+        payload_entry = {
             "case_id": c.case_id,
             "label": c.label_ua,
             "label_en": label_en,
             "disease_id": disease_id,
             "file": c.file,
             "json": ex_json,
-        })
-        manifest.append({
+        }
+        manifest_entry = {
             "case_id": c.case_id,
             "label": c.label_ua,
             "label_en": label_en,
             "disease_id": disease_id,
             "disease_icd": disease_icd,
-        })
+        }
+        if not has_case_page:
+            payload_entry["has_case_page"] = False
+            manifest_entry["has_case_page"] = False
+        payload.append(payload_entry)
+        manifest.append(manifest_entry)
+        return disease_id
+
+    for c in _public_case_entries():
+        append_case(c, has_case_page=True)
+
+    # Some low-coverage auto-stub profiles are intentionally hidden from the
+    # gallery because their pre-rendered case pages are not clinically useful
+    # yet. They still make good questionnaire starters; include only the ones
+    # that fill otherwise-empty disease dropdowns, and mark them as having no
+    # prebuilt plan page so the UI does not iframe a missing case.
+    if questionnaire_disease_ids:
+        for c in CASES:
+            if c.case_id not in GALLERY_EXCLUDED_CASE_IDS:
+                continue
+            p = EXAMPLES / c.file
+            if not p.exists():
+                continue
+            try:
+                ex_json = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            disease = ex_json.get("disease", {}) if isinstance(ex_json, dict) else {}
+            disease_id = (
+                disease.get("id")
+                or ex_json.get("disease_id")
+                or unique_icd_to_disease_id.get(str(disease.get("icd_o_3_morphology")))
+            )
+            if disease_id in questionnaire_disease_ids and disease_id not in covered_disease_ids:
+                append_case(c, has_case_page=False)
+
     out = output_dir / "examples.json"
     out.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -653,6 +782,40 @@ def _inject_common_screening(quest: dict) -> dict:
     return {**quest, "groups": groups}
 
 
+_STUB_TITLE_NOTICE_RE = re.compile(r"\s*\(auto-generated STUB\)\s*", re.IGNORECASE)
+
+
+def _clean_questionnaire_title(title: object) -> str:
+    """Public display title without internal scaffold notices."""
+    cleaned = _STUB_TITLE_NOTICE_RE.sub("", str(title or "")).strip()
+    return cleaned.replace("HCV-asociated", "HCV-associated")
+
+
+def _stringify_code(code: object) -> str:
+    if isinstance(code, list):
+        return ", ".join(str(item) for item in code if item)
+    return str(code or "").strip()
+
+
+def _questionnaire_display_titles(
+    data: dict,
+    disease_names_by_id: dict[str, dict],
+) -> dict[str, str]:
+    title_en = _clean_questionnaire_title(data.get("title"))
+    names = disease_names_by_id.get(data.get("disease_id")) or {}
+    disease_uk = names.get("ukrainian")
+    if not disease_uk:
+        return {"title_en": title_en, "title_uk": title_en}
+
+    if "— newly diagnosed (1L)" in title_en:
+        title_uk = f"{disease_uk} — вперше діагностована (1L)"
+    elif "— first line" in title_en:
+        title_uk = f"{disease_uk} — перша лінія"
+    else:
+        title_uk = disease_uk
+    return {"title_en": title_en, "title_uk": title_uk}
+
+
 def bundle_questionnaires(output_dir: Path) -> dict:
     """Pre-render all curated Questionnaire YAML files to a single
     JSON file at docs/questionnaires.json + thin manifest for /try.html.
@@ -671,21 +834,39 @@ def bundle_questionnaires(output_dir: Path) -> dict:
     manifest = []
     if qsrc.is_dir():
         import yaml as _yaml
+        disease_names_by_id = {}
+        disease_codes_by_id = {}
+        dsrc = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "diseases"
+        if dsrc.is_dir():
+            for dpath in sorted(dsrc.glob("*.yaml")):
+                try:
+                    disease = _yaml.safe_load(dpath.read_text(encoding="utf-8"))
+                    if isinstance(disease, dict) and disease.get("id"):
+                        disease_names_by_id[disease["id"]] = disease.get("names") or {}
+                        disease_codes_by_id[disease["id"]] = disease.get("codes") or {}
+                except Exception:
+                    continue
         for path in sorted(qsrc.glob("*.yaml")):
             try:
                 data = _yaml.safe_load(path.read_text(encoding="utf-8"))
                 if isinstance(data, dict):
                     data = _inject_common_screening(data)
+                    display_titles = _questionnaire_display_titles(data, disease_names_by_id)
+                    disease_codes = disease_codes_by_id.get(data.get("disease_id")) or {}
+                    disease_icd = (
+                        (data.get("fixed_fields") or {})
+                        .get("disease", {})
+                        .get("icd_o_3_morphology")
+                    )
+                    data = {**data, "title": display_titles["title_en"]}
                     payload.append(data)
                     manifest.append({
                         "id": data.get("id"),
                         "title": data.get("title"),
+                        **display_titles,
                         "disease_id": data.get("disease_id"),
-                        "disease_icd": (
-                            (data.get("fixed_fields") or {})
-                            .get("disease", {})
-                            .get("icd_o_3_morphology")
-                        ),
+                        "icd_10": _stringify_code(disease_codes.get("icd_10")),
+                        "disease_icd": disease_icd,
                     })
             except Exception:
                 continue
@@ -705,17 +886,17 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 
 _NAV_LABELS = {
-    "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →",
-           "diseases": "Хвороби", "specs": "Специфікації"},
-    "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →",
-           "diseases": "Diseases", "specs": "Specs"},
+    "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "План лікування",
+           "diseases": "Хвороби", "ask": "Туморборд", "kb": "Онко-вікі"},
+    "en": {"home": "Home", "about": "About", "try_cta": "Plan Builder",
+           "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki"},
 }
 
 
 def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> str:
     """Build the URL the language-toggle should point to.
 
-    page_kind: 'home' | 'gallery' | 'try' | 'case' | 'capabilities' | 'contribute' | 'diseases'
+    page_kind: 'home' | 'gallery' | 'try' | 'ask' | 'case' | 'capabilities' | 'about' | 'contribute' | 'diseases'
     target_lang: UA-side render asks where the EN mirror lives;
                  EN-side render asks where the UA mirror lives.
 
@@ -728,8 +909,10 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "home":         return "/"
         if page_kind == "gallery":      return "/gallery.html"
         if page_kind == "try":          return "/try.html"
+        if page_kind == "ask":          return "/ask.html"
         if page_kind == "case":         return f"/cases/{case_id}.html"
         if page_kind == "capabilities": return "/capabilities.html"
+        if page_kind == "about":        return "/about.html"
         if page_kind == "diseases":     return "/diseases.html"
         if page_kind == "contribute":   return "/"
         if page_kind == "specs":        return "/specs.html"
@@ -738,8 +921,10 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "home":         return f"{uk_prefix}/"
         if page_kind == "gallery":      return f"{uk_prefix}/gallery.html"
         if page_kind == "try":          return f"{uk_prefix}/try.html"
+        if page_kind == "ask":          return f"{uk_prefix}/ask.html"
         if page_kind == "case":         return f"{uk_prefix}/cases/{case_id}.html"
         if page_kind == "capabilities": return f"{uk_prefix}/capabilities.html"
+        if page_kind == "about":        return f"{uk_prefix}/about.html"
         if page_kind == "diseases":     return f"{uk_prefix}/diseases.html"
         if page_kind == "contribute":   return f"{uk_prefix}/"
         if page_kind == "specs":        return f"{uk_prefix}/specs.html"
@@ -750,10 +935,10 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
                     lang_switch_href: str = "/ukr/") -> str:
     """Top navigation bar with:
     - brand on the left → links to home
-    - reading-only nav (Home, Diseases, Capabilities, Specs UA-only,
-      Examples, GitHub) in the middle
+    - reading-only nav (Home, Capabilities, Onco Wiki, Tumor Board, About)
+      in the middle
     - language switcher (UA / EN toggle) on the right
-    - prominent CTA "Try it" button on the far right (action, not reading)
+    - prominent action buttons on the far right (Plan Builder, Onco Wiki, Tumor Board)
 
     Per user direction: 'Спробувати' is an action and gets a separate CTA
     button styled distinctly from the nav links.
@@ -764,25 +949,20 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
 
     labels = _NAV_LABELS.get(target_lang, _NAV_LABELS["en"])
     home_path = "/ukr/" if target_lang == "uk" else "/"
-    gallery_path = "/ukr/gallery.html" if target_lang == "uk" else "/gallery.html"
     try_path = "/ukr/try.html" if target_lang == "uk" else "/try.html"
+    ask_path = "/ukr/ask.html" if target_lang == "uk" else "/ask.html"
+    about_path = "/ukr/about.html" if target_lang == "uk" else "/about.html"
 
-    # Capabilities now folds in the former Limitations section. The Specs
-    # page is now rendered in both languages — the underlying markdown specs
-    # in /specs/ are still UA-first, but the catalog overview page is
-    # bilingual.
+    # Capabilities now folds in the former Limitations section. GitHub,
+    # Examples and Specs are grouped under About to keep the main nav focused.
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
-            f'<a href="/ukr/diseases.html"{cls("diseases")}>Хвороби</a>'
             f'<a href="/ukr/capabilities.html"{cls("capabilities")}>Можливості</a>'
-            f'<a href="/ukr/specs.html"{cls("specs")}>Специфікації</a>'
         )
     else:  # target_lang == "en"
         extra_links = (
-            f'<a href="/diseases.html"{cls("diseases")}>Diseases</a>'
             f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>'
-            f'<a href="/specs.html"{cls("specs")}>Specs</a>'
         )
 
     # Stable visual order is always [UA · EN] regardless of which language
@@ -796,31 +976,323 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     en_tag, en_attr = ("a", f' href="{lang_switch_href}"') if is_uk else ("span", "")
 
     kb_href = "/ukr/kb.html" if target_lang == "uk" else "/kb.html"
-    kb_label = "Пошук у KB" if target_lang == "uk" else "KB Search"
+    kb_current = ' aria-current="page"' if active in {"kb", "diseases"} else ""
+    ask_current = ' aria-current="page"' if active == "ask" else ""
+    try_current = ' aria-current="page"' if active == "try" else ""
 
     return f"""<header class="top-bar">
   <div class="brand-line">
-    <a href="{home_path}" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
-    <span class="brand-version" title="Released {OPENONCO_RELEASE_DATE}">v{OPENONCO_VERSION} &middot; {OPENONCO_RELEASE_DATE}</span>
+    <a href="{home_path}" class="brand-mini">OpenOnco</a>
   </div>
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
     {extra_links}
-    <a href="{kb_href}"{cls("kb")}>{kb_label}</a>
-    <a href="{gallery_path}"{cls("gallery")}>{labels['gallery']}</a>
-    <a href="https://github.com/{GH_REPO}" target="_blank" rel="noopener">GitHub</a>
+    <a href="{about_path}"{cls("about")}>{labels['about']}</a>
   </nav>
   <div class="top-right">
     <div class="lang-switch" role="group" aria-label="Language">
       <{ua_tag} class="{ua_cls}"{ua_attr}><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</{ua_tag}>
       <{en_tag} class="{en_cls}"{en_attr}><span class="lang-flag flag-en" aria-hidden="true"></span>EN</{en_tag}>
     </div>
-    <a href="{try_path}" class="btn-cta-try" {'aria-current="page"' if active == "try" else ""}>{labels['try_cta']}</a>
+    <div class="top-cta-group">
+      <a href="{try_path}" class="btn-cta-top btn-cta-try"{try_current}>{labels['try_cta']}</a>
+      <a href="{kb_href}" class="btn-cta-top btn-cta-secondary"{kb_current}>{labels['kb']}</a>
+      <a href="{ask_path}" class="btn-cta-top btn-cta-secondary"{ask_current}>{labels['ask']}</a>
+    </div>
   </div>
 </header>"""
 
 
+def _landing_stat_counts(stats) -> dict[str, int]:
+    by_type = {e.type: e.count for e in stats.entities}
+    return {
+        "diseases": by_type.get("diseases", 0),
+        "redflags": by_type.get("redflags", 0),
+        "indications": by_type.get("indications", 0),
+        "regimens": by_type.get("regimens", 0),
+        "algorithms": by_type.get("algorithms", 0),
+    }
+
+
+def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
+    counts = _landing_stat_counts(stats)
+    is_en = target_lang == "en"
+
+    if is_en:
+        title = "OpenOnco — oncology decisions you can audit"
+        kicker = "Open-source clinical decision support"
+        h1 = "OpenOnco"
+        sub = (
+            "OpenOnco helps clinicians assemble a clinically coherent treatment plan quickly: "
+            "from diagnosis, stage, biomarkers, and patient status to therapeutic options. "
+            "Onco Wiki sits beside it as the project's oncology wiki for diseases, drugs, "
+            "biomarkers, and source-linked facts.",
+            "Every recommendation is tied to sources, standards, and verified rules. The "
+            "system highlights key drugs, biomarkers, and constraints, while AI Tumor Board "
+            "helps formulate review questions before the final decision.",
+        )
+        primary = "Build a virtual plan"
+        secondary = "Explore the knowledge base"
+        tertiary = "Ask AI"
+        note = "Open-data inputs: CIViC (CC0) for biomarker actionability, ClinicalTrials.gov for trial-aware options, PubMed/PMID/DOI and DailyMed/openFDA for literature and drug-label context. No LLM chooses treatment: plans are rules-first with YAML provenance, so LLM hallucinations are excluded from the plan."
+        footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
+        try_href = "/try.html"
+        kb_href = "/kb.html"
+        ask_href = "/ask.html"
+        about_href = "/about.html"
+        carousel_label = "Audience"
+        carousel_slides = [
+            {
+                "key": "doctor",
+                "tab": "For clinicians",
+                "eyebrow": "Clinical workflow",
+                "title": "From structured case facts to a cited plan draft.",
+                "body": (
+                    "OpenOnco gives the oncologist a transparent second layer for MDT prep: "
+                    "standard and aggressive tracks, red flags, dose context, source IDs and "
+                    "review status in one view."
+                ),
+                "items": [
+                    "Two-track treatment plan: guideline-grade and trial-aware",
+                    "Biomarker, renal, hepatic and infection risks surfaced before sign-off",
+                    "Every branch remains auditable by source and YAML provenance",
+                ],
+                "href": try_href,
+                "cta": "Build a virtual plan",
+            },
+            {
+                "key": "investor",
+                "tab": "For investors",
+                "eyebrow": "Infrastructure thesis",
+                "title": "A governed open layer for oncology decision infrastructure.",
+                "body": (
+                    "The asset is not a chatbot wrapper. It is a growing clinical knowledge graph, "
+                    "rules engine, public specification stack and distribution path for hospitals, "
+                    "labs and AI-assisted contributors."
+                ),
+                "items": [
+                    "Public corpus, rules engine and specs evolve as separate auditable assets",
+                    "Clear non-device CDS positioning and visible clinical review gates",
+                    "Open corpus creates trust, auditability and ecosystem leverage",
+                ],
+                "href": about_href,
+                "cta": "Review the project",
+            },
+            {
+                "key": "lab",
+                "tab": "For laboratories",
+                "eyebrow": "Molecular handoff",
+                "title": "Make biomarker reports immediately actionable for the care team.",
+                "body": (
+                    "A lab can hand clinicians a structured bridge from NGS and pathology findings "
+                    "to disease-specific actionability, trial-aware options and patient-profile "
+                    "prefill without exposing private data on the public site."
+                ),
+                "items": [
+                    "Variant and biomarker context connects to disease, regimen and monitoring",
+                    "QR/profile handoff can prefill the browser-side plan builder",
+                    "CIViC-derived evidence remains citable and inspectable",
+                ],
+                "href": kb_href,
+                "cta": "Explore actionability",
+            },
+            {
+                "key": "patient",
+                "tab": "For patients",
+                "eyebrow": "Patient-facing explanation",
+                "title": "A clearer version of the plan to discuss with the doctor.",
+                "body": (
+                    "OpenOnco can render the same clinical logic in plain language: what the "
+                    "plan is trying to do, why tests and biomarkers matter, and what questions "
+                    "the patient should bring back to the oncology team."
+                ),
+                "items": [
+                    "Plain-language summary without changing the clinician-owned decision",
+                    "Helps patients understand biomarkers, monitoring and warning signs",
+                    "Keeps the doctor as the final authority for treatment choices",
+                ],
+                "href": try_href,
+                "cta": "See a patient-friendly plan",
+            },
+        ]
+    else:
+        title = "OpenOnco — онкологічні рішення, які можна перевірити"
+        kicker = "Відкрита підтримка клінічних рішень"
+        h1 = "OpenOnco"
+        sub = (
+            "Робочий інструмент для онколога: структурований профіль пацієнта перетворюється "
+            "на цитований стандартний і trial-aware план лікування. Логіка rules-first, "
+            "прозора й готова до клінічного ревʼю."
+        )
+        primary = "Побудувати план лікування"
+        secondary = "Відкрити Онко-вікі"
+        tertiary = "Питання до туморборду"
+        note = "Відкриті джерела: CIViC (CC0) для біомаркерної клінічної значущості, ClinicalTrials.gov для trial-aware опцій, PubMed/PMID/DOI та DailyMed/openFDA для літератури й контексту інструкцій до препаратів. LLM не обирає лікування: план збирається rules-first із YAML provenance."
+        footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
+        try_href = "/ukr/try.html"
+        kb_href = "/ukr/kb.html"
+        ask_href = "/ukr/ask.html"
+        about_href = "/ukr/about.html"
+        carousel_label = "Аудиторія"
+        carousel_slides = [
+            {
+                "key": "doctor",
+                "tab": "Для лікаря",
+                "eyebrow": "Клінічний workflow",
+                "title": "Від структурованих фактів кейсу до цитованого draft-плану.",
+                "body": (
+                    "OpenOnco дає онкологу прозорий другий шар для підготовки MDT: стандартний "
+                    "і агресивний треки, red flags, контекст дозування, source IDs і статус "
+                    "ревʼю в одному вікні."
+                ),
+                "items": [
+                    "Два треки лікування: guideline-grade та trial-aware",
+                    "Біомаркери, ниркові, печінкові й інфекційні ризики видно до sign-off",
+                    "Кожна гілка аудіюється через джерела та YAML provenance",
+                ],
+                "href": try_href,
+                "cta": "Побудувати віртуальний план",
+            },
+            {
+                "key": "investor",
+                "tab": "Для інвестора",
+                "eyebrow": "Infrastructure thesis",
+                "title": "Керований open layer для онкологічної decision infrastructure.",
+                "body": (
+                    "Це не wrapper навколо chatbot. Це клінічна knowledge graph, rule engine, "
+                    "публічний стек специфікацій і канал дистрибуції для лікарень, лабораторій "
+                    "та AI-assisted contributors."
+                ),
+                "items": [
+                    "Публічний корпус, rule engine і specs розвиваються як окремі auditable assets",
+                    "Чітке non-device CDS positioning і видимі clinical review gates",
+                    "Відкритий корпус створює trust, auditability та ecosystem leverage",
+                ],
+                "href": about_href,
+                "cta": "Подивитись проєкт",
+            },
+            {
+                "key": "lab",
+                "tab": "Для лабораторії",
+                "eyebrow": "Molecular handoff",
+                "title": "Перетворюйте біомаркерні звіти на actionable context для команди.",
+                "body": (
+                    "Лабораторія може передати лікарю структурований міст від NGS і патології "
+                    "до disease-specific actionability, trial-aware опцій і prefill профілю "
+                    "пацієнта без приватних даних на публічному сайті."
+                ),
+                "items": [
+                    "Variant і biomarker context звʼязаний із хворобою, режимом і monitoring",
+                    "QR/profile handoff може заповнити браузерний plan builder",
+                    "CIViC-derived evidence залишається citable та inspectable",
+                ],
+                "href": kb_href,
+                "cta": "Відкрити actionability",
+            },
+            {
+                "key": "patient",
+                "tab": "Для пацієнта",
+                "eyebrow": "Пояснення для пацієнта",
+                "title": "Зрозуміла версія плану для розмови з лікарем.",
+                "body": (
+                    "OpenOnco може показати ту саму клінічну логіку простою мовою: що "
+                    "план має зробити, чому важливі аналізи й біомаркери, і які питання "
+                    "пацієнт має повернути онкологічній команді."
+                ),
+                "items": [
+                    "Plain-language summary без заміни рішення лікаря",
+                    "Допомагає зрозуміти біомаркери, monitoring і warning signs",
+                    "Фінальний вибір лікування залишається за лікарем",
+                ],
+                "href": try_href,
+                "cta": "Подивитись patient-friendly план",
+            },
+        ]
+
+    if not is_en:
+        sub = (
+            "OpenOnco допомагає швидко зібрати клінічно осмислений план лікування: "
+            "від діагнозу, стадії, біомаркерів і стану пацієнта до можливих "
+            "терапевтичних опцій. Поруч працює Онко-вікі - онкологічна вікіпедія "
+            "проєкту з хворобами, препаратами, біомаркерами та джерелами.",
+            "Кожна рекомендація прив'язана до джерел, стандартів і перевірених "
+            "правил. Система підсвічує ключові ліки, біомаркери та обмеження, а "
+            "AI-туморборд допомагає сформулювати питання для клінічного рев'ю "
+            "перед фінальним рішенням.",
+        )
+
+    carousel_tabs_html = "\n".join(
+        f'        <button type="button" class="home-carousel-tab{" is-active" if i == 0 else ""}" '
+        f'data-home-slide="{slide["key"]}" aria-controls="home-slide-{slide["key"]}" '
+        f'aria-selected="{str(i == 0).lower()}">{slide["tab"]}</button>'
+        for i, slide in enumerate(carousel_slides)
+    )
+    carousel_slides_html = "\n".join(
+        f"""        <article class="home-carousel-slide{' is-active' if i == 0 else ''}" id="home-slide-{slide['key']}" data-home-panel="{slide['key']}">
+          <p class="home-carousel-eyebrow">{slide['eyebrow']}</p>
+          <h2>{slide['title']}</h2>
+          <p>{slide['body']}</p>
+          <ul>
+{chr(10).join(f'            <li>{item}</li>' for item in slide['items'])}
+          </ul>
+          <a class="home-carousel-cta" href="{slide['href']}">{slide['cta']} →</a>
+        </article>"""
+        for i, slide in enumerate(carousel_slides)
+    )
+
+    sub_paragraphs = sub if isinstance(sub, (list, tuple)) else (sub,)
+    sub_html = "\n      ".join(
+        f'<p class="home-sub">{paragraph}</p>'
+        for paragraph in sub_paragraphs
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="{'en' if is_en else 'uk'}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#14532d">
+<meta name="mobile-web-app-capable" content="yes">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body class="home-page">
+{_render_top_bar(active="home", target_lang=target_lang, lang_switch_href=_lang_switch_href("home", target_lang))}
+
+<main class="home-main">
+  <section class="home-hero">
+    <div class="home-hero-inner">
+      <p class="home-kicker">{kicker}</p>
+      <h1>{h1}</h1>
+      {sub_html}
+      <div class="cta-row">
+        <a class="btn btn-primary" href="{try_href}">{primary}</a>
+        <a class="btn btn-secondary" href="{kb_href}">{secondary}</a>
+        <a class="btn btn-secondary" href="{ask_href}">{tertiary}</a>
+      </div>
+      <p class="home-note">{note}</p>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
+    <br>
+    {footer}
+  </footer>
+</main>
+</body>
+</html>
+"""
+
+
 def render_landing(stats, *, target_lang: str = "en") -> str:
+    return _render_landing_v2(stats, target_lang=target_lang)
+
+
+def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
     # Most corpus-mass cards live on /capabilities.html. The landing pulls
     # only the headline counters (diseases, redflags, indications, regimens,
     # algorithms) so the "Ready for patients today" / "Red flags" cards stay
@@ -1135,6 +1607,9 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
 <title>OpenOnco — Open-source CDS for oncology</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0a2e1a">
+<meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -1433,6 +1908,10 @@ def render_gallery(*, target_lang: str = "en") -> str:
     case_meta = [
         m for m in _gallery_case_disease_meta()
         if m["case"].case_id not in GALLERY_EXCLUDED_CASE_IDS
+        and (
+            not GALLERY_FEATURED_CASE_IDS
+            or m["case"].case_id in GALLERY_FEATURED_CASE_IDS
+        )
     ]
     n_cases = len(case_meta)
 
@@ -1569,6 +2048,9 @@ def render_gallery(*, target_lang: str = "en") -> str:
 <title>OpenOnco · {page_title}</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0a2e1a">
+<meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -1680,6 +2162,568 @@ def render_gallery(*, target_lang: str = "en") -> str:
 """
 
 
+# ── Clinical question page (optional LLM adapter) ─────────────────────────
+
+
+def render_ask(*, target_lang: str = "en") -> str:
+    is_en = target_lang == "en"
+    title = "Tumor board question" if is_en else "Запит до tumor board"
+    kicker = "OpenOnco AI draft" if is_en else "OpenOnco AI-чернетка"
+    lead = (
+        "Paste an oncology vignette in natural language. ChatGPT structures the case, "
+        "OpenOnco checks it against the rule engine, and the page returns an answer, "
+        "reasonable alternatives, or clarifying questions."
+        if is_en else
+        "Опишіть онкологічну клінічну ситуацію своїми словами. ChatGPT структурує кейс, "
+        "OpenOnco звіряє його з алгоритмами, а сторінка повертає відповідь, обґрунтовані "
+        "альтернативи або уточнювальні питання."
+    )
+    endpoint_label = "API endpoint" if is_en else "API endpoint"
+    case_label = "Clinical situation" if is_en else "Клінічна ситуація"
+    run_label = "Answer with OpenOnco" if is_en else "Відповісти через OpenOnco"
+    clear_label = "Clear" if is_en else "Очистити"
+    examples_title = "Example prompts" if is_en else "Приклади формату"
+    use_example_label = "Use" if is_en else "Вставити"
+    quota_label = "Questions used" if is_en else "Використано запитів"
+    quota_hero_label = "free-text questions per browser" if is_en else "текстові запити на браузер"
+    wait_label = "Typical wait" if is_en else "Орієнтовне очікування"
+    wait_value = "30-90 sec" if is_en else "30-90 с"
+    progress_idle = "Ready for a clinical question" if is_en else "Готово до клінічного запиту"
+    progress_idle_eta = "Usually 30-90 sec" if is_en else "Зазвичай 30-90 с"
+    progress_step_1 = "Structuring case" if is_en else "Структурую кейс"
+    progress_step_2 = "Matching OpenOnco algorithms" if is_en else "Зіставляю з алгоритмами OpenOnco"
+    progress_step_3 = "Checking biomarkers and options" if is_en else "Перевіряю біомаркери й опції"
+    progress_step_4 = "Writing answer" if is_en else "Формую відповідь"
+    progress_done = "Answer is ready" if is_en else "Відповідь готова"
+    progress_failed = "Request stopped" if is_en else "Запит зупинено"
+    progress_done_eta = "Done" if is_en else "Готово"
+    progress_failed_eta = "Check the message below" if is_en else "Перевірте повідомлення нижче"
+    progress_eta_prefix = "approx." if is_en else "ще приблизно"
+    progress_eta_unit = "s" if is_en else "с"
+    plan_link_label = "Open in plan generator" if is_en else "Відкрити в генераторі планів"
+    plan_link_hint = (
+        "Good KB match found. The structured profile can be opened in the in-browser plan generator."
+        if is_en else
+        "Є добрий збіг із KB. Структурований профіль можна відкрити в браузерному генераторі планів."
+    )
+    plan_link_error = (
+        "Plan-generator link could not be created in this browser."
+        if is_en else
+        "Не вдалося створити посилання на генератор планів у цьому браузері."
+    )
+    placeholder = (
+        "62-year-old patient with metastatic gastric cancer, HER2-negative, MSS, PD-L1 CPS 25. What is the optimal first line?"
+        if is_en else
+        "62-річний пацієнт із метастатичним раком шлунка, HER2-негативний, MSS, PD-L1 CPS 25. Яка оптимальна перша лінія?"
+    )
+    empty_msg = "Paste a clinical situation first." if is_en else "Спочатку вставте клінічну ситуацію."
+    loading_msg = "Analyzing the case. This usually takes under 90 seconds." if is_en else "Аналізую кейс. Зазвичай це займає до 90 секунд."
+    error_msg = "Request failed" if is_en else "Запит не вдався"
+    endpoint_unavailable_msg = (
+        "The clinical-question API did not return JSON. This public site is static unless a server adapter is deployed; use the browser plan generator or enter a working API endpoint."
+        if is_en else
+        "Clinical-question API не повернув JSON. Публічний сайт статичний, доки не розгорнуто серверний адаптер; скористайтеся браузерним генератором планів або вкажіть робочий API endpoint."
+    )
+    invalid_json_msg = (
+        "Invalid JSON response from the clinical-question API"
+        if is_en else
+        "Невалідна JSON-відповідь від clinical-question API"
+    )
+    limit_msg = (
+        "You have used all 3 free-text questions in this browser."
+        if is_en else
+        "У цьому браузері вже використано всі 3 текстові запити."
+    )
+    safety = (
+        "Do not paste real identifiable patient data. This is a tumor-board draft, not autonomous medical advice."
+        if is_en else
+        "Не вставляйте реальні персональні дані пацієнта. Це чернетка для tumor board, а не автономна медична порада."
+    )
+    examples = (
+        [
+            (
+                "Gastric 1L",
+                "62-year-old patient with metastatic gastric cancer and diffuse peritoneal carcinomatosis. Histology: poorly differentiated adenocarcinoma with signet-ring cells, MSS, HER2-negative, PD-L1 CPS 25. What is the optimal first-line treatment?"
+            ),
+            (
+                "GBM supportive",
+                "30-year-old man with a 2 cm contrast-enhancing left parietal glioblastoma, ECOG 1, no comorbidities and no seizures. Which option is NOT part of initial management: resection, radiotherapy, steroids, temozolomide, or prophylactic anti-epileptic therapy?"
+            ),
+            (
+                "CUP poor PS",
+                "74-year-old woman with painful hepatomegaly, multiple liver metastases, poorly differentiated adenocarcinoma and no primary site on PET. WHO PS is 3. What is the most appropriate strategy?"
+            ),
+            (
+                "mCRC first line",
+                "52-year-old man with metastatic right-sided colon cancer, unresectable liver, lung and peritoneal metastases. KRAS p.G12C, NRAS/BRAF wild type, MSS, HER2-negative. What systemic first-line therapy is most appropriate?"
+            ),
+            (
+                "NSCLC confusion",
+                "68-year-old patient with metastatic squamous NSCLC involving liver, adrenals and pleura. New disorientation and aggressive behaviour; brain MRI shows no metastases. What is the most likely cause?"
+            ),
+            (
+                "Pharmacogenomics",
+                "Patient is planned for fluoropyrimidine-based chemotherapy for gastrointestinal cancer. Which pharmacogenomic test is recommended before treatment to reduce severe toxicity risk?"
+            ),
+            (
+                "Breast HR+/HER2-",
+                "61-year-old postmenopausal woman with metastatic ER-positive, HER2-negative breast cancer, bone and liver metastases, no visceral crisis, ECOG 1. What is the preferred first-line systemic treatment?"
+            ),
+            (
+                "Ovarian maintenance",
+                "58-year-old woman with stage IIIC high-grade serous ovarian cancer after debulking surgery and response to platinum-taxane chemotherapy. BRCA1 pathogenic variant detected. What maintenance treatment should be discussed?"
+            ),
+            (
+                "Pancreatic 1L",
+                "66-year-old patient with metastatic pancreatic adenocarcinoma, liver metastases, ECOG 1, bilirubin normal and no major comorbidities. What first-line systemic therapy options are reasonable?"
+            ),
+        ]
+        if is_en else
+        [
+            (
+                "Gastric 1L",
+                "62-річний пацієнт із метастатичним раком шлунка, поширений перитонеальний канцероматоз. Гістологія: недиференційована аденокарцинома з перснеподібними клітинами, MSS, HER2-негативний, PD-L1 CPS = 25. Яка оптимальна перша лінія лікування?"
+            ),
+            (
+                "GBM supportive",
+                "30-річний чоловік із гліобластомою лівої тім'яної частки 2 см, ECOG 1, без супутньої патології, судом не було. Що НЕ входить до лікування: резекція, радіотерапія, стероїди, темозоломід чи профілактичні протиепілептичні?"
+            ),
+            (
+                "CUP poor PS",
+                "74-річна жінка, біль через гепатомегалію, множинні метастази в печінці, низькодиференційована аденокарцинома без первинного вогнища, PET-негативна, WHO PS 3. Яка найбільш доцільна тактика?"
+            ),
+            (
+                "mCRC first line",
+                "52-річний чоловік із метастатичним раком сліпої кишки, нерезектабельні метастази в печінку, легені та очеревину. KRAS p.G12C, NRAS/BRAF дикого типу, MSS, HER2-негативний. Яке системне лікування першої лінії найбільш доцільне?"
+            ),
+            (
+                "NSCLC confusion",
+                "68-річний пацієнт із метастатичним плоскоклітинним НДРЛ з ураженням печінки, наднирників і плеври. Нова дезорієнтація та агресія; МРТ головного мозку без метастазів. Яка найбільш імовірна причина симптомів?"
+            ),
+            (
+                "Pharmacogenomics",
+                "Пацієнту планують фторпіримідин-вмісну хіміотерапію з приводу пухлини ШКТ. Яке фармакогеномне тестування до початку лікування рекомендоване для зниження ризику тяжкої токсичності?"
+            ),
+            (
+                "Breast HR+/HER2-",
+                "61-річна жінка в постменопаузі з метастатичним ER-позитивним, HER2-негативним раком молочної залози, метастази в кістки та печінку, без вісцерального кризу, ECOG 1. Яка переважна перша лінія системної терапії?"
+            ),
+            (
+                "Ovarian maintenance",
+                "58-річна жінка зі стадією IIIC high-grade серозного раку яєчника після циторедуктивної операції та відповіді на platinum-taxane хіміотерапію. Виявлено патогенний варіант BRCA1. Яку підтримувальну терапію слід обговорити?"
+            ),
+            (
+                "Pancreatic 1L",
+                "66-річний пацієнт із метастатичною аденокарциномою підшлункової залози, метастази в печінку, ECOG 1, білірубін у нормі, суттєвих супутніх хвороб немає. Які варіанти першої лінії системної терапії є обґрунтованими?"
+            ),
+        ]
+    )
+    examples_json = json.dumps(
+        [{"title": title, "text": text} for title, text in examples],
+        ensure_ascii=False,
+    ).replace("</", "<\\/")
+    return f"""<!DOCTYPE html>
+<html lang="{'en' if is_en else 'uk'}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · {html.escape(title)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+<style>
+.ask-hero {{ display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:22px; align-items:end; margin-bottom:22px; }}
+.ask-kicker {{ margin:0 0 8px; color:#0f766e; font-weight:800; letter-spacing:0; text-transform:uppercase; font-size:12px; }}
+.ask-hero h1 {{ margin-bottom:10px; }}
+.ask-hero-meter {{ display:grid; grid-template-columns:repeat(2, minmax(112px, 1fr)); gap:10px; min-width:260px; }}
+.ask-stat {{ border:1px solid #d6e4de; background:#f8fbf8; border-radius:8px; padding:12px; }}
+.ask-stat strong {{ display:block; color:#073b22; font-size:24px; line-height:1; margin-bottom:5px; }}
+.ask-stat span {{ color:#53605a; font-size:13px; line-height:1.25; }}
+.ask-grid {{ display:grid; grid-template-columns:minmax(0, 0.92fr) minmax(0, 1.08fr); gap:18px; align-items:start; }}
+.ask-panel {{ border:1px solid #dbe7df; border-radius:8px; background:#fff; padding:18px; box-shadow:0 14px 38px rgba(9, 44, 27, 0.08); }}
+.ask-panel h2 {{ font-size:22px; }}
+.ask-endpoint {{ padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; }}
+.ask-endpoint input {{ margin-top:6px; font-size:12px; color:#475569; }}
+.ask-panel textarea {{ width:100%; min-height:310px; resize:vertical; font:14px/1.5 var(--mono); border-color:#cbd5e1; border-radius:8px; background:#fbfdfc; }}
+.ask-panel textarea:focus, .ask-panel input:focus {{ outline:2px solid rgba(20, 118, 82, 0.22); border-color:#0f766e; }}
+.ask-panel input {{ width:100%; }}
+.ask-actions {{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }}
+.ask-actions .btn {{ min-height:42px; }}
+.ask-result {{ white-space:pre-wrap; font:14px/1.55 var(--mono); background:#102018; color:#ecfdf5; border:1px solid #244d38; border-radius:8px; padding:16px; min-height:380px; overflow:auto; box-shadow:inset 0 1px 0 rgba(255,255,255,0.06); }}
+.ask-result:empty::before {{ content:""; display:block; min-height:1px; }}
+.ask-muted {{ color:#647067; font-size:14px; }}
+.ask-examples {{ display:grid; gap:10px; margin:12px 0 14px; max-height:460px; overflow:auto; padding-right:4px; }}
+.ask-example {{ display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; border:1px solid #dbe7df; border-radius:8px; padding:12px; background:#f8fbf8; }}
+.ask-example-title {{ font-weight:800; margin-bottom:4px; color:#073b22; }}
+.ask-example-text {{ color:#56635c; font-size:13px; line-height:1.38; }}
+.ask-quota {{ display:flex; justify-content:space-between; gap:10px; margin-top:12px; font-size:13px; color:#56635c; }}
+.ask-quota strong {{ color:#073b22; }}
+.ask-progress {{ margin-top:14px; padding:14px; border:1px solid #cfe5d8; border-radius:8px; background:#f7fcf8; }}
+.ask-progress-head {{ display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:10px; font-size:14px; }}
+.ask-progress-head strong {{ color:#073b22; }}
+.ask-progress-head span {{ color:#53605a; font-size:13px; white-space:nowrap; }}
+.ask-progress-track {{ height:12px; overflow:hidden; border-radius:999px; background:#dfe9e2; box-shadow:inset 0 1px 2px rgba(15, 23, 42, 0.12); }}
+.ask-progress-fill {{ width:0%; height:100%; border-radius:999px; background:linear-gradient(90deg, #0f766e, #22c55e, #f59e0b); transition:width 420ms ease; }}
+.ask-progress.is-running .ask-progress-fill {{ box-shadow:0 0 18px rgba(34, 197, 94, 0.45); }}
+.ask-progress-steps {{ display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; padding:0; margin:12px 0 0; list-style:none; }}
+.ask-progress-steps li {{ min-height:42px; padding:8px; border-radius:8px; background:#eef6f0; color:#647067; font-size:12px; line-height:1.25; border:1px solid transparent; }}
+.ask-progress-steps li.is-active {{ border-color:#0f766e; background:#e7f7ee; color:#073b22; font-weight:800; }}
+.ask-progress-steps li.is-done {{ background:#dcfce7; color:#14532d; }}
+.ask-plan-link {{ display:none; margin-bottom:12px; padding:12px; border:1px solid #b7e4c7; background:#f0fdf4; border-radius:8px; }}
+.ask-plan-link.is-visible {{ display:block; }}
+.ask-plan-link p {{ margin:0 0 8px; color:#166534; font-size:14px; }}
+@media (max-width: 900px) {{ .ask-hero, .ask-grid {{ grid-template-columns:1fr; }} .ask-hero-meter {{ min-width:0; }} }}
+@media (max-width: 640px) {{ .ask-hero-meter, .ask-progress-steps {{ grid-template-columns:1fr 1fr; }} }}
+@media (max-width: 520px) {{ .ask-example {{ grid-template-columns:1fr; }} .ask-progress-head {{ display:block; }} .ask-progress-head span {{ display:block; margin-top:4px; }} }}
+</style>
+</head>
+<body>
+{_render_top_bar(active="ask", target_lang=target_lang, lang_switch_href=_lang_switch_href("ask", target_lang))}
+
+<main class="try-page">
+  <div class="ask-hero">
+    <div>
+      <p class="ask-kicker">{kicker}</p>
+      <h1>{html.escape(title)}</h1>
+      <p class="lead">{lead}</p>
+      <p class="ask-muted">{safety}</p>
+    </div>
+    <div class="ask-hero-meter" aria-label="{quota_label}">
+      <div class="ask-stat"><strong>3</strong><span>{quota_hero_label}</span></div>
+      <div class="ask-stat"><strong>{wait_value}</strong><span>{wait_label}</span></div>
+    </div>
+  </div>
+
+  <div class="ask-grid">
+    <section class="ask-panel">
+      <label class="qt-label ask-endpoint">
+        {endpoint_label}
+        <input id="endpointInput" value="/api/clinical-question" spellcheck="false">
+      </label>
+      <label class="qt-label" style="margin-top:12px">
+        {case_label}
+        <textarea id="caseText" spellcheck="true" placeholder="{html.escape(placeholder)}"></textarea>
+      </label>
+      <div class="ask-quota">
+        <span>{quota_label}</span>
+        <strong><span id="quotaUsed">0</span> / 3</strong>
+      </div>
+      <div class="ask-actions">
+        <button id="askBtn" class="btn">{run_label}</button>
+        <button id="clearAskBtn" class="btn btn-secondary">{clear_label}</button>
+      </div>
+      <div id="askProgress" class="ask-progress" aria-live="polite">
+        <div class="ask-progress-head">
+          <strong id="progressLabel">{progress_idle}</strong>
+          <span id="progressEta">{progress_idle_eta}</span>
+        </div>
+        <div class="ask-progress-track" aria-hidden="true">
+          <div id="progressFill" class="ask-progress-fill"></div>
+        </div>
+        <ol class="ask-progress-steps">
+          <li id="progressStep1" class="is-active">{progress_step_1}</li>
+          <li id="progressStep2">{progress_step_2}</li>
+          <li id="progressStep3">{progress_step_3}</li>
+          <li id="progressStep4">{progress_step_4}</li>
+        </ol>
+      </div>
+      <p id="askStatus" class="ask-muted" role="status" aria-live="polite"></p>
+    </section>
+    <section class="ask-panel">
+      <h2 style="margin-top:0">{examples_title}</h2>
+      <div id="askExamples" class="ask-examples"></div>
+      <div id="planGeneratorLinkWrap" class="ask-plan-link">
+        <p>{plan_link_hint}</p>
+        <a id="planGeneratorLink" class="btn" href="try.html">{plan_link_label}</a>
+      </div>
+      <div id="askResult" class="ask-result"></div>
+    </section>
+  </div>
+</main>
+
+<script>
+(function() {{
+  const ASK_EXAMPLES = {examples_json};
+  const MAX_QUESTIONS = 3;
+  const USER_KEY = 'openonco-ask-user-id-v1';
+  const COUNT_KEY = 'openonco-ask-count-v1';
+  const DEFAULT_ENDPOINT = '/api/clinical-question';
+  const PUBLIC_ENDPOINT = 'https://dogs-highest-document-roof.trycloudflare.com/api/clinical-question';
+  const endpointInput = document.getElementById('endpointInput');
+  const caseText = document.getElementById('caseText');
+  const askBtn = document.getElementById('askBtn');
+  const clearBtn = document.getElementById('clearAskBtn');
+  const status = document.getElementById('askStatus');
+  const result = document.getElementById('askResult');
+  const quotaUsed = document.getElementById('quotaUsed');
+  const examplesRoot = document.getElementById('askExamples');
+  const planLinkWrap = document.getElementById('planGeneratorLinkWrap');
+  const planLink = document.getElementById('planGeneratorLink');
+  const progressBox = document.getElementById('askProgress');
+  const progressFill = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+  const progressEta = document.getElementById('progressEta');
+  const progressSteps = [
+    document.getElementById('progressStep1'),
+    document.getElementById('progressStep2'),
+    document.getElementById('progressStep3'),
+    document.getElementById('progressStep4')
+  ];
+  const PROGRESS_COPY = [
+    {{ at: 0, label: '{progress_step_1}' }},
+    {{ at: 34, label: '{progress_step_2}' }},
+    {{ at: 64, label: '{progress_step_3}' }},
+    {{ at: 86, label: '{progress_step_4}' }}
+  ];
+  let progressTimer = null;
+  let progressStartedAt = 0;
+  const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
+  if (configured) {{
+    endpointInput.value = configured;
+  }} else if (['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) {{
+    endpointInput.value = DEFAULT_ENDPOINT;
+  }} else {{
+    endpointInput.value = PUBLIC_ENDPOINT;
+  }}
+
+  function getUserId() {{
+    let id = localStorage.getItem(USER_KEY);
+    if (!id) {{
+      const browserCrypto = window.crypto || window.msCrypto;
+      const suffix = (browserCrypto && browserCrypto.randomUUID) ? browserCrypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
+      id = 'ask-' + suffix;
+      localStorage.setItem(USER_KEY, id);
+    }}
+    return id;
+  }}
+
+  function getCount() {{
+    const n = Number(localStorage.getItem(COUNT_KEY) || '0');
+    return Number.isFinite(n) && n > 0 ? Math.min(n, MAX_QUESTIONS) : 0;
+  }}
+
+  function setCount(n) {{
+    localStorage.setItem(COUNT_KEY, String(Math.min(Math.max(n, 0), MAX_QUESTIONS)));
+    updateQuota();
+  }}
+
+  function updateQuota() {{
+    const used = getCount();
+    quotaUsed.textContent = String(used);
+    askBtn.disabled = used >= MAX_QUESTIONS;
+    if (used >= MAX_QUESTIONS) status.textContent = '{limit_msg}';
+  }}
+
+  function setProgress(percent, label, eta, activeIndex) {{
+    const pct = Math.max(0, Math.min(100, Math.round(percent)));
+    progressFill.style.width = pct + '%';
+    progressLabel.textContent = label;
+    progressEta.textContent = eta;
+    progressSteps.forEach((step, idx) => {{
+      step.classList.toggle('is-active', idx === activeIndex);
+      step.classList.toggle('is-done', idx < activeIndex || pct >= 100);
+    }});
+  }}
+
+  function resetProgress() {{
+    if (progressTimer) window.clearInterval(progressTimer);
+    progressTimer = null;
+    progressBox.classList.remove('is-running');
+    setProgress(0, '{progress_idle}', '{progress_idle_eta}', 0);
+  }}
+
+  function startProgress() {{
+    resetProgress();
+    progressBox.classList.add('is-running');
+    progressStartedAt = Date.now();
+    const durationMs = 90000;
+    const tick = () => {{
+      const elapsed = Date.now() - progressStartedAt;
+      const pct = Math.min(92, 8 + (elapsed / durationMs) * 84);
+      let activeIndex = 0;
+      PROGRESS_COPY.forEach((step, idx) => {{
+        if (pct >= step.at) activeIndex = idx;
+      }});
+      const remainingSec = Math.max(10, Math.ceil((durationMs - elapsed) / 1000));
+      setProgress(pct, PROGRESS_COPY[activeIndex].label, '{progress_eta_prefix} ' + remainingSec + ' {progress_eta_unit}', activeIndex);
+    }};
+    tick();
+    progressTimer = window.setInterval(tick, 900);
+  }}
+
+  function finishProgress(ok) {{
+    if (progressTimer) window.clearInterval(progressTimer);
+    progressTimer = null;
+    progressBox.classList.remove('is-running');
+    setProgress(ok ? 100 : 0, ok ? '{progress_done}' : '{progress_failed}', ok ? '{progress_done_eta}' : '{progress_failed_eta}', ok ? 3 : 0);
+  }}
+
+  function renderExamples() {{
+    examplesRoot.innerHTML = '';
+    ASK_EXAMPLES.forEach((ex) => {{
+      const row = document.createElement('div');
+      row.className = 'ask-example';
+      const body = document.createElement('div');
+      const title = document.createElement('div');
+      title.className = 'ask-example-title';
+      title.textContent = ex.title;
+      const text = document.createElement('div');
+      text.className = 'ask-example-text';
+      text.textContent = ex.text;
+      body.appendChild(title);
+      body.appendChild(text);
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-secondary';
+      btn.type = 'button';
+      btn.textContent = '{use_example_label}';
+      btn.addEventListener('click', () => {{
+        caseText.value = ex.text;
+        caseText.focus();
+      }});
+      row.appendChild(body);
+      row.appendChild(btn);
+      examplesRoot.appendChild(row);
+    }});
+  }}
+
+  function renderPayload(payload) {{
+    const lines = [];
+    if (payload.direct_answer) lines.push(payload.direct_answer);
+    if (payload.selected_options && payload.selected_options.length) {{
+      lines.push('');
+      lines.push('Options:');
+      payload.selected_options.forEach(o => lines.push('- ' + (o.label ? o.label + '. ' : '') + o.text));
+    }}
+    if (payload.rationale && payload.rationale.length) {{
+      lines.push('');
+      lines.push('Rationale:');
+      payload.rationale.forEach(x => lines.push('- ' + x));
+    }}
+    if (payload.clarifying_questions && payload.clarifying_questions.length) {{
+      lines.push('');
+      lines.push('Clarifying questions:');
+      payload.clarifying_questions.forEach(x => lines.push('- ' + x));
+    }}
+    if (payload.engine_limitations && payload.engine_limitations.length) {{
+      lines.push('');
+      lines.push('Engine limitations:');
+      payload.engine_limitations.forEach(x => lines.push('- ' + x));
+    }}
+    if (payload.safety_note) {{
+      lines.push('');
+      lines.push(payload.safety_note);
+    }}
+    return lines.join('\\n') || JSON.stringify(payload, null, 2);
+  }}
+
+  function canOpenInPlanGenerator(payload) {{
+    return !!(
+      payload &&
+      payload.status === 'answered' &&
+      payload.patient_profile &&
+      payload.engine_summary &&
+      payload.engine_summary.ok === true &&
+      payload.engine_summary.mode === 'treatment'
+    );
+  }}
+
+  async function profileToHash(profile) {{
+    const json = JSON.stringify(profile);
+    if (!('CompressionStream' in window)) throw new Error('CompressionStream unavailable');
+    const stream = new Blob([json], {{ type: 'application/json' }}).stream().pipeThrough(new CompressionStream('gzip'));
+    const bytes = new Uint8Array(await new Response(stream).arrayBuffer());
+    let binary = '';
+    const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) {{
+      binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+    }}
+    return btoa(binary).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');
+  }}
+
+  async function updatePlanGeneratorLink(payload) {{
+    planLinkWrap.classList.remove('is-visible');
+    planLink.removeAttribute('href');
+    if (!canOpenInPlanGenerator(payload)) return;
+    try {{
+      const token = await profileToHash(payload.patient_profile);
+      planLink.href = 'try.html#p=' + token;
+      planLinkWrap.classList.add('is-visible');
+    }} catch (err) {{
+      console.warn('Plan-generator link failed:', err);
+      status.textContent = '{plan_link_error}';
+    }}
+  }}
+
+  async function readJsonResponse(resp) {{
+    const contentType = (resp.headers.get('content-type') || '').toLowerCase();
+    const text = await resp.text();
+    if (!contentType.includes('application/json')) {{
+      const endpoint = endpointInput.value.trim() || DEFAULT_ENDPOINT;
+      throw new Error('{endpoint_unavailable_msg} Endpoint: ' + endpoint + '. HTTP ' + resp.status + '.');
+    }}
+    try {{
+      return text ? JSON.parse(text) : {{}};
+    }} catch (err) {{
+      throw new Error('{invalid_json_msg}: ' + err.message);
+    }}
+  }}
+
+  askBtn.addEventListener('click', async () => {{
+    if (getCount() >= MAX_QUESTIONS) {{
+      status.textContent = '{limit_msg}';
+      return;
+    }}
+    const text = caseText.value.trim();
+    if (!text) {{
+      status.textContent = '{empty_msg}';
+      return;
+    }}
+    askBtn.disabled = true;
+    status.textContent = '{loading_msg}';
+    result.textContent = '';
+    planLinkWrap.classList.remove('is-visible');
+    startProgress();
+    try {{
+      const resp = await fetch(endpointInput.value.trim() || DEFAULT_ENDPOINT, {{
+        method: 'POST',
+        headers: {{ 'Content-Type': 'application/json' }},
+        body: JSON.stringify({{ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() }})
+      }});
+      const payload = await readJsonResponse(resp);
+      if (!resp.ok) throw new Error(payload.message || ('HTTP ' + resp.status));
+      if (typeof payload.questions_used === 'number') setCount(payload.questions_used);
+      else setCount(getCount() + 1);
+      result.textContent = renderPayload(payload);
+      await updatePlanGeneratorLink(payload);
+      status.textContent = payload.status || 'ok';
+      finishProgress(true);
+    }} catch (err) {{
+      status.textContent = '{error_msg}: ' + err.message;
+      result.textContent = '';
+      planLinkWrap.classList.remove('is-visible');
+      finishProgress(false);
+    }} finally {{
+      updateQuota();
+    }}
+  }});
+  clearBtn.addEventListener('click', () => {{
+    caseText.value = '';
+    result.textContent = '';
+    status.textContent = '';
+    planLinkWrap.classList.remove('is-visible');
+    resetProgress();
+  }});
+  renderExamples();
+  getUserId();
+  updateQuota();
+  resetProgress();
+}})();
+</script>
+</body>
+</html>
+"""
+
+
 # ── Try page (Pyodide interactive) ────────────────────────────────────────
 
 
@@ -1713,6 +2757,9 @@ def render_try(
 <title>OpenOnco · {'Try it' if target_lang == 'en' else 'Спробувати'}</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0a2e1a">
+<meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -1757,6 +2804,32 @@ def render_try(
     <button id="resetBtn" class="btn btn-secondary qt-reset">{'Clear' if target_lang == 'en' else 'Очистити'}</button>
   </div>
 
+  <div class="quest-readiness" id="questReadiness">
+    <div class="quest-readiness-head">
+      <span>{'Questionnaire readiness' if target_lang == 'en' else 'Готовність анкети'}</span>
+      <span class="quest-readiness-score"><span id="progressText">0 / 0</span> · <span id="progressPct">0%</span></span>
+    </div>
+    <div class="impact-bar" aria-hidden="true">
+      <div class="impact-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="quest-readiness-critical" id="readinessCriticalText">
+      {'Pick a disease to start.' if target_lang == 'en' else 'Оберіть хворобу, щоб почати.'}
+    </div>
+  </div>
+
+  <div class="try-actions quest-cta quest-actions-top" aria-label="{'Plan actions' if target_lang == 'en' else 'Дії з планом'}">
+    <button id="runBtn" class="btn btn-primary" type="button" disabled>
+      {'Generate full Plan' if target_lang == 'en' else 'Згенерувати повний Plan'}
+    </button>
+    <button id="viewPlanBtn" class="btn btn-primary" type="button" disabled>
+      {'Show plan' if target_lang == 'en' else 'Показати план'}
+    </button>
+    <button id="pdfBtn" class="btn btn-primary" type="button" disabled
+            title="{'Save as PDF via your browser print dialog' if target_lang == 'en' else 'Зберегти як PDF через діалог друку браузера'}">
+      {'Download PDF' if target_lang == 'en' else 'Скачати PDF'}
+    </button>
+  </div>
+
   <!-- Early-paint warmup: a tiny synchronous script that runs before the
        module-script below. Populates dropdowns from a localStorage cache
        (written on the previous successful boot) so repeat visitors see
@@ -1767,10 +2840,22 @@ def render_try(
   <script>
   (function() {{
     try {{
-      var raw = localStorage.getItem('openonco-manifests-v1');
+      localStorage.removeItem('openonco-manifests-v1');
+      var raw = localStorage.getItem('openonco-manifests-v2');
       if (!raw) return;
       var data = JSON.parse(raw);
       var ds = document.getElementById('diseaseSelect');
+      function cleanCachedQuestionnaireTitle(q) {{
+        if (!q) return '';
+        var title = {'(q.title_en || q.title || "")' if target_lang == 'en' else '(q.title_uk || q.title_en || q.title || "")'};
+        var stubNotice = 'auto-generated ' + 'STUB';
+        title = String(title).replace(new RegExp('\\\\s*\\\\(' + stubNotice + '\\\\)\\\\s*', 'ig'), '').trim();
+        var icd10 = q.icd_10 ? String(q.icd_10).trim() : '';
+        var icdo3 = q.disease_icd ? String(q.disease_icd).trim() : '';
+        if (icd10) return title + ' · ICD-10 ' + icd10;
+        if (icdo3) return title + ' · ICD-O-3 ' + icdo3;
+        return title;
+      }}
       if (ds && data && Array.isArray(data.questionnaires)) {{
         var frag = document.createDocumentFragment();
         var ph = document.createElement('option');
@@ -1779,7 +2864,7 @@ def render_try(
         data.questionnaires.forEach(function(q, i) {{
           var opt = document.createElement('option');
           opt.value = i;
-          opt.textContent = q.title;
+          opt.textContent = cleanCachedQuestionnaireTitle(q);
           frag.appendChild(opt);
         }});
         ds.innerHTML = '';
@@ -1835,46 +2920,24 @@ def render_try(
     </section>
 
     <aside class="quest-side">
-      <div class="quest-impact-card">
-        <h3>{'Plan impact' if target_lang == 'en' else 'Імпакт на план'}</h3>
-        <div class="impact-progress">
-          <div class="impact-bar">
-            <div class="impact-bar-fill" id="progressFill"></div>
+      <div class="quest-build-card" id="buildCard">
+        <div class="build-card-head">
+          <h3>{'Build' if target_lang == 'en' else 'Збірка'}</h3>
+          <span id="pwaInstallState" class="build-state">{'Browser' if target_lang == 'en' else 'Браузер'}</span>
+        </div>
+        <dl class="build-meta">
+          <div><dt>Core</dt><dd id="coreVersion">v{bundle_version or 'pending'}</dd></div>
+          <div><dt>{'Disease' if target_lang == 'en' else 'Хвороба'}</dt><dd id="diseaseVersion">—</dd></div>
+          <div><dt>{'Cache' if target_lang == 'en' else 'Кеш'}</dt><dd id="cacheState">{'Checking…' if target_lang == 'en' else 'Перевіряю…'}</dd></div>
+          <div><dt>{'Offline' if target_lang == 'en' else 'Offline'}</dt><dd id="offlineState">{'Network required for first launch' if target_lang == 'en' else 'Мережа потрібна для першого запуску'}</dd></div>
+          <div><dt>{'Modules' if target_lang == 'en' else 'Модулі'}</dt><dd id="offlineModulesState">{'Waiting for index' if target_lang == 'en' else 'Чекаю індекс'}</dd></div>
+        </dl>
+        <div class="offline-cache-progress" id="offlineCacheProgress">
+          <div class="offline-cache-bar" id="offlineCacheBar" role="progressbar" aria-label="{'Offline module cache progress' if target_lang == 'en' else 'Прогрес офлайн-кешу модулів'}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="offline-cache-fill" id="offlineCacheFill"></div>
           </div>
-          <div class="impact-stats">
-            <span id="progressText">0 / 0</span>
-            <span class="impact-pct" id="progressPct">0%</span>
-          </div>
+          <div class="offline-cache-text" id="offlineCacheText">{'Offline cache not started' if target_lang == 'en' else 'Офлайн-кеш ще не запущено'}</div>
         </div>
-        <div class="impact-section" id="impactMissingCritical">
-          <h4>⚠️ {'Critical fields without an answer' if target_lang == 'en' else 'Критичні поля без відповіді'}</h4>
-          <ul></ul>
-        </div>
-        <div class="impact-section" id="impactRedflags">
-          <h4>🚩 {'Red flags triggered' if target_lang == 'en' else 'Red flags активовано'}</h4>
-          <ul></ul>
-        </div>
-        <div class="impact-section" id="impactSelected">
-          <h4>📋 {'Current default' if target_lang == 'en' else 'Поточний default'}</h4>
-          <p id="impactSelectedText">—</p>
-        </div>
-        <div class="impact-section" id="impactWarnings" hidden>
-          <h4>⚙️ Engine warnings</h4>
-          <ul></ul>
-        </div>
-      </div>
-
-      <div class="try-actions quest-cta">
-        <button id="runBtn" class="btn btn-primary" disabled>
-          {'Generate full Plan' if target_lang == 'en' else 'Згенерувати повний Plan'}
-        </button>
-        <button id="viewPlanBtn" class="btn btn-primary" type="button" disabled>
-          {'Show plan' if target_lang == 'en' else 'Показати план'}
-        </button>
-        <button id="pdfBtn" class="btn btn-primary" type="button" disabled
-                title="{'Save as PDF via your browser print dialog' if target_lang == 'en' else 'Зберегти як PDF через діалог друку браузера'}">
-          {'Download PDF' if target_lang == 'en' else 'Скачати PDF'}
-        </button>
       </div>
 
       <div id="status" class="status is-busy">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</div>
@@ -1991,17 +3054,23 @@ const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
 const questIntro = document.getElementById('questIntro');
 const questEmpty = document.getElementById('questEmpty');
+const personalizeBtn = document.getElementById('personalizeBtn');
 const modeFormBtn = document.getElementById('modeFormBtn');
 const modeJsonBtn = document.getElementById('modeJsonBtn');
 
 const progressFill = document.getElementById('progressFill');
 const progressText = document.getElementById('progressText');
 const progressPct = document.getElementById('progressPct');
-const impactMissingCritical = document.getElementById('impactMissingCritical');
-const impactRedflags = document.getElementById('impactRedflags');
-const impactSelected = document.getElementById('impactSelected');
-const impactSelectedText = document.getElementById('impactSelectedText');
-const impactWarnings = document.getElementById('impactWarnings');
+const readinessCriticalText = document.getElementById('readinessCriticalText');
+const coreVersionEl = document.getElementById('coreVersion');
+const diseaseVersionEl = document.getElementById('diseaseVersion');
+const cacheStateEl = document.getElementById('cacheState');
+const offlineStateEl = document.getElementById('offlineState');
+const pwaInstallStateEl = document.getElementById('pwaInstallState');
+const offlineModulesStateEl = document.getElementById('offlineModulesState');
+const offlineCacheBarEl = document.getElementById('offlineCacheBar');
+const offlineCacheFillEl = document.getElementById('offlineCacheFill');
+const offlineCacheTextEl = document.getElementById('offlineCacheText');
 const generatingOverlay = document.getElementById('generatingOverlay');
 const generatingTitle = document.getElementById('generatingTitle');
 const generatingLead = document.getElementById('generatingLead');
@@ -2024,9 +3093,14 @@ const CORE_BUNDLE_URL = '/openonco-engine-core.zip';
 let bundleIndex = null;
 let coreBundleLoaded = false;
 const loadedDiseases = new Set();
+let offlineCacheStarted = false;
+let offlineCacheDone = 0;
+let offlineCacheTotal = 0;
+let offlineCacheFailed = 0;
 // Build-time manifests — instant dropdown population, no fetch.
 const QUESTIONNAIRES_MANIFEST = {qm_json};
 const EXAMPLES_MANIFEST = {em_json};
+const PAGE_LANG = '{target_lang}';
 let questionnaires = null;   // lazy-fetched from /questionnaires.json on first need
 let examples = null;         // lazy-fetched from /examples.json on first need
 let _questionnairesPromise = null;
@@ -2061,12 +3135,13 @@ const UI_LOCK_TEXT = {{
   planHint: '{"Loading the plan view…" if target_lang == "en" else "Завантажую перегляд плану…"}',
   qrHint: '{"Loading profile from QR…" if target_lang == "en" else "Завантажую профіль із QR…"}',
   renderHint: '{"Rendering the plan view…" if target_lang == "en" else "Перемальовую перегляд плану…"}',
+  actionLocked: '{"Action locked while the current process finishes." if target_lang == "en" else "Дію заблоковано, доки поточний процес не завершиться."}',
 }};
 
 // Initial render language follows the page lang (EN on /try.html, UA on
 // /ukr/try.html). User can switch via the buttons in the result toolbar
 // without re-running the engine — Pyodide caches _oo_result/_oo_mdt.
-let currentResultLang = '{target_lang}';
+let currentResultLang = PAGE_LANG;
 
 // Audience mode for the plan render — 'clinician' (default, full tumor-
 // board brief) or 'patient' (plain-UA simplified report). Per
@@ -2109,6 +3184,8 @@ function setStatus(msg, kind = 'info', topMode = 'auto') {{
   if (mode === 'hide' || !msg) {{
     status.classList.remove('is-busy');
     statusTop.hidden = true;
+    statusTop.classList.remove('is-busy', 'is-ok', 'is-warn', 'has-progress');
+    statusTopText.textContent = '';
     clearLoadingProgress();
     return;
   }}
@@ -2142,6 +3219,63 @@ function setError(msg) {{
   }}
 }}
 
+function setText(el, value) {{
+  if (el) el.textContent = value;
+}}
+
+function setOfflineCacheProgress(done, total, failed = 0) {{
+  offlineCacheDone = done;
+  offlineCacheTotal = total;
+  offlineCacheFailed = failed;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  if (offlineCacheBarEl) offlineCacheBarEl.setAttribute('aria-valuenow', String(pct));
+  if (offlineCacheFillEl) offlineCacheFillEl.style.width = pct + '%';
+  if (offlineCacheTextEl) {{
+    if (total <= 0) {{
+      offlineCacheTextEl.textContent = '{"Offline cache not started" if target_lang == "en" else "Офлайн-кеш ще не запущено"}';
+    }} else if (done >= total && failed === 0) {{
+      offlineCacheTextEl.textContent = '{"All modules cached for offline use" if target_lang == "en" else "Усі модулі збережено для офлайну"}';
+    }} else if (done >= total) {{
+      offlineCacheTextEl.textContent = '{"Cached with some failed modules" if target_lang == "en" else "Кеш готовий частково, є помилки"}' + ' (' + failed + ')';
+    }} else {{
+      offlineCacheTextEl.textContent = '{"Caching modules" if target_lang == "en" else "Кешую модулі"}' + ' ' + done + ' / ' + total;
+    }}
+  }}
+  if (offlineModulesStateEl) {{
+    if (total <= 0) setText(offlineModulesStateEl, '{"Waiting for index" if target_lang == "en" else "Чекаю індекс"}');
+    else if (done >= total && failed === 0) setText(offlineModulesStateEl, '{"Ready offline" if target_lang == "en" else "Офлайн готовий"}');
+    else if (done >= total) setText(offlineModulesStateEl, '{"Partial cache" if target_lang == "en" else "Частковий кеш"}');
+    else setText(offlineModulesStateEl, Math.round((done / total) * 100) + '%');
+  }}
+}}
+
+async function refreshBuildPanel(diseaseId = null) {{
+  const online = navigator.onLine !== false;
+  setText(offlineStateEl, online
+    ? '{"Online" if target_lang == "en" else "Онлайн"}'
+    : '{"Offline - cached bundles only" if target_lang == "en" else "Offline - лише кешовані bundle"}');
+
+  const swControlled = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
+  setText(cacheStateEl, swControlled
+    ? '{"Service worker active" if target_lang == "en" else "Service worker активний"}'
+    : '{"Browser cache pending" if target_lang == "en" else "Кеш браузера очікує"}');
+  setText(pwaInstallStateEl, window.matchMedia('(display-mode: standalone)').matches
+    ? '{"Installed" if target_lang == "en" else "Встановлено"}'
+    : '{"Browser" if target_lang == "en" else "Браузер"}');
+
+  if (bundleIndex) {{
+    setText(coreVersionEl, 'v' + (bundleIndex.core_version || '{bundle_version or "unknown"}'));
+    if (offlineCacheTotal <= 0) {{
+      const total = offlineBundleUrls().length;
+      setOfflineCacheProgress(0, total, 0);
+    }}
+    if (diseaseId) {{
+      const dver = (bundleIndex.disease_versions || {{}})[diseaseId];
+      setText(diseaseVersionEl, dver ? diseaseId + ' / v' + dver : diseaseId + ' / core');
+    }}
+  }}
+}}
+
 // ── Plan modal + lang switcher ────────────────────────────────────────────
 function highlightLangButtons() {{
   langUaBtn.classList.toggle('is-active', currentResultLang === 'uk');
@@ -2153,18 +3287,33 @@ function highlightModeButtons() {{
   modePatientBtn.classList.toggle('is-active', currentResultMode === 'patient');
 }}
 
+function isInteractionLocked() {{
+  return uiBusy || generating;
+}}
+
+function setLockedTitle(el, locked) {{
+  if (!el) return;
+  if (typeof el.dataset.baseTitle === 'undefined') {{
+    el.dataset.baseTitle = el.getAttribute('title') || '';
+  }}
+  if (locked) el.setAttribute('title', UI_LOCK_TEXT.actionLocked);
+  else if (el.dataset.baseTitle) el.setAttribute('title', el.dataset.baseTitle);
+  else el.removeAttribute('title');
+}}
+
 // Patient mode is render-only on top of an already-generated treatment
 // PlanResult. It can't toggle for:
 //   * diagnostic-mode bundles (no `_render_patient_mode` for DiagnosticPlan)
 //   * example-mode (pre-built /cases/*.html — no Pyodide engine running)
 //   * pre-generation (planSource === null)
 function refreshModeButtonAvailability() {{
+  const locked = isInteractionLocked();
   const canPatient = (
     pyodide
     && planSource === 'generated'
     && !planDirty
   );
-  modePatientBtn.disabled = !canPatient;
+  modePatientBtn.disabled = locked || !canPatient;
   if (!canPatient) {{
     modePatientBtn.title = (
       planSource === 'example'
@@ -2178,16 +3327,22 @@ function refreshModeButtonAvailability() {{
   }} else {{
     modePatientBtn.title = '{ "Plain-Ukrainian simplified report — for patients" if target_lang == "en" else "Спрощений звіт зрозумілою мовою — для пацієнта" }';
   }}
-  modeClinicianBtn.disabled = (planSource === null);
+  modeClinicianBtn.disabled = locked || (planSource === null);
+  if (locked) {{
+    modePatientBtn.title = UI_LOCK_TEXT.actionLocked;
+    modeClinicianBtn.title = UI_LOCK_TEXT.actionLocked;
+  }}
 }}
 
-function openPlanModal() {{
+function openPlanModal(options = {{}}) {{
   if (!planModal) return;
+  if (!options.force && (isInteractionLocked() || planSource === null)) return;
   planModal.hidden = false;
   highlightLangButtons();
 }}
-function closePlanModal() {{
+function closePlanModal(options = {{}}) {{
   if (!planModal) return;
+  if (!options.force && isInteractionLocked()) return;
   planModal.hidden = true;
 }}
 
@@ -2200,7 +3355,7 @@ function downloadPdf() {{
   // Modal must be visible so iframe contentWindow is fully laid out and
   // print() picks up the right document.
   const wasHidden = planModal && planModal.hidden;
-  if (wasHidden) openPlanModal();
+  if (wasHidden) openPlanModal({{ force: true }});
   try {{
     resultFrame.contentWindow.focus();
     resultFrame.contentWindow.print();
@@ -2349,11 +3504,8 @@ async function loadExamplePlan(caseId) {{
   currentResultMode = 'clinician';
   highlightModeButtons();
   refreshModeButtonAvailability();
-  viewPlanBtn.disabled = false;
-  pdfBtn.disabled = false;
-  modalPdfBtn.disabled = false;
-  modalHtmlBtn.disabled = false;
-  openPlanModal();
+  updateWorkflowControls();
+  openPlanModal({{ force: true }});
   await frameReady;
 }}
 
@@ -2370,7 +3522,7 @@ function clearPlanState() {{
   currentResultMode = 'clinician';
   highlightModeButtons();
   refreshModeButtonAvailability();
-  closePlanModal();
+  closePlanModal({{ force: true }});
 }}
 
 pdfBtn.addEventListener('click', downloadPdf);
@@ -2397,6 +3549,19 @@ function escHtml(s) {{
   return String(s).replace(/[&<>"']/g, c => ({{
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   }})[c]);
+}}
+
+function questionnaireDisplayTitle(q) {{
+  if (!q) return '';
+  const title = (PAGE_LANG === 'uk'
+    ? (q.title_uk || q.title_en || q.title)
+    : (q.title_en || q.title)
+  ) || '';
+  const icd10 = q.icd_10 ? String(q.icd_10).trim() : '';
+  const icdo3 = q.disease_icd ? String(q.disease_icd).trim() : '';
+  if (icd10) return `${{title}} · ICD-10 ${{icd10}}`;
+  if (icdo3) return `${{title}} · ICD-O-3 ${{icdo3}}`;
+  return title;
 }}
 
 function saveDraft() {{
@@ -2426,6 +3591,32 @@ const IMPACT_LABEL = {{
   optional: 'Optional',
 }};
 
+// Central action gating. The high-priority controls sit above the form, so
+// they must also reflect process locks visually instead of relying only on
+// the modal overlay/inert attribute.
+function updateWorkflowControls() {{
+  const locked = isInteractionLocked();
+  let hasInput = false;
+  if (mode === 'form') hasInput = !!activeQuest;
+  else hasInput = textarea.value.trim().length > 0;
+  const planFresh = planSource !== null && !planDirty;
+  const hasPlan = planSource !== null;
+
+  runBtn.disabled = locked || !hasInput || planFresh;
+  viewPlanBtn.disabled = locked || !hasPlan;
+  pdfBtn.disabled = locked || !hasPlan;
+  modalPdfBtn.disabled = locked || !hasPlan;
+  modalHtmlBtn.disabled = locked || !hasPlan;
+
+  if (resetBtn) resetBtn.disabled = locked;
+  if (formatBtn) formatBtn.disabled = locked || mode !== 'json';
+  [diseaseSelect, exampleSelect, modeFormBtn, modeJsonBtn, personalizeBtn].forEach(el => {{
+    if (el) el.disabled = locked;
+  }});
+  [runBtn, viewPlanBtn, pdfBtn, resetBtn, formatBtn, diseaseSelect, exampleSelect, modeFormBtn, modeJsonBtn, personalizeBtn].forEach(el => setLockedTitle(el, locked));
+  refreshModeButtonAvailability();
+}}
+
 // Decoupled from engine readiness — button is clickable as soon as
 // there is something to send. The engine itself loads lazily on click
 // (and also kicks off in the background after first interaction so the
@@ -2436,11 +3627,7 @@ const IMPACT_LABEL = {{
 // (which auto-displays the pre-built case HTML). Re-enables the moment
 // the user edits any field (planDirty), so they can recompute.
 function updateRunBtnEnabled() {{
-  let hasInput = false;
-  if (mode === 'form') hasInput = !!activeQuest;
-  else hasInput = textarea.value.trim().length > 0;
-  const planFresh = planSource !== null && !planDirty;
-  runBtn.disabled = uiBusy || generating || !hasInput || planFresh;
+  updateWorkflowControls();
 }}
 
 // Mark the currently-shown plan as out-of-sync with the current input.
@@ -2912,20 +4099,13 @@ function renderWhatIfMarks(results) {{
   }}
 }}
 
-// Local-only impact panel update — runs WITHOUT Pyodide so form interaction
-// stays snappy. Computes progress + missing critical fields directly from
-// the questionnaire schema. Engine-dependent sections (red flags, indication)
-// show "click Generate" placeholders. Replaces the auto-fired runLivePreview
-// path which was costing 4–5 s per keystroke once KB grew past ~30 diseases.
+// Local-only readiness update — runs WITHOUT Pyodide so form interaction
+// stays snappy. It only keeps the essential pre-generation signal visible:
+// completion progress and missing critical fields.
 function updateImpactPanelLocal() {{
   if (!activeQuest) {{
     setProgress(0, 0);
-    impactMissingCritical.querySelector('ul').innerHTML = '';
-    impactRedflags.querySelector('ul').innerHTML =
-      '<li class="muted">{"Click «Generate» to see red flags" if target_lang == "en" else "Натисни «Згенерувати», щоб побачити red flags"}</li>';
-    impactSelectedText.innerHTML =
-      '<span class="muted">{"— pick a disease and fill the form —" if target_lang == "en" else "— оберіть хворобу і заповніть форму —"}</span>';
-    impactWarnings.hidden = true;
+    setReadinessCritical([]);
     return;
   }}
   let total = 0, filled = 0;
@@ -2942,17 +4122,7 @@ function updateImpactPanelLocal() {{
     }}
   }}
   setProgress(filled, total);
-  const ul = impactMissingCritical.querySelector('ul');
-  ul.innerHTML = missing.length
-    ? missing.map(m =>
-        `<li><strong>${{escHtml(m.label)}}</strong> <span class="muted">(${{escHtml(m.group)}})</span></li>`
-      ).join('')
-    : '<li class="muted">{"All critical fields filled ✓" if target_lang == "en" else "Усі critical поля заповнені ✓"}</li>';
-  impactRedflags.querySelector('ul').innerHTML =
-    '<li class="muted">{"Click «Generate» to see red flags" if target_lang == "en" else "Натисни «Згенерувати», щоб побачити red flags"}</li>';
-  impactSelectedText.innerHTML =
-    '<span class="muted">{"Click «Generate» to see the recommended Indication" if target_lang == "en" else "Натисни «Згенерувати», щоб побачити рекомендований Indication"}</span>';
-  impactWarnings.hidden = true;
+  setReadinessCritical(missing);
 }}
 
 function setProgress(filled, total) {{
@@ -2962,63 +4132,31 @@ function setProgress(filled, total) {{
   progressFill.style.width = `${{pct}}%`;
 }}
 
+function setReadinessCritical(missing) {{
+  if (!readinessCriticalText) return;
+  if (!activeQuest) {{
+    readinessCriticalText.textContent = '{"Pick a disease to start." if target_lang == "en" else "Оберіть хворобу, щоб почати."}';
+    readinessCriticalText.dataset.kind = 'idle';
+    return;
+  }}
+  if (!missing || !missing.length) {{
+    readinessCriticalText.textContent = '{"Critical fields filled ✓" if target_lang == "en" else "Критичні поля заповнені ✓"}';
+    readinessCriticalText.dataset.kind = 'ok';
+    return;
+  }}
+  const preview = missing.slice(0, 2).map(m => m.label).join(', ');
+  const extra = missing.length > 2 ? ' +' + (missing.length - 2) : '';
+  readinessCriticalText.textContent = '{"Missing critical fields:" if target_lang == "en" else "Бракує критичних полів:"} ' + preview + extra;
+  readinessCriticalText.dataset.kind = 'warn';
+}}
+
 function updateImpactPanel(result) {{
   if (!result) {{
-    impactMissingCritical.querySelector('ul').innerHTML = '';
-    impactRedflags.querySelector('ul').innerHTML = '';
-    impactSelectedText.textContent = '—';
-    impactWarnings.hidden = true;
+    updateImpactPanelLocal();
     return;
   }}
   setProgress(result.filled_count, result.total_questions);
-
-  const miss = result.missing_critical || [];
-  impactMissingCritical.querySelector('ul').innerHTML = miss.length
-    ? miss.map(m => `<li><strong>${{escHtml(m.label)}}</strong> <span class="muted">(${{escHtml(m.group)}})</span></li>`).join('')
-    : '<li class="muted">{"All critical fields filled ✓" if target_lang == "en" else "Усі critical поля заповнені ✓"}</li>';
-
-  const rfs = result.fired_redflags || [];
-  const rfDetail = result.fired_redflags_detail || [];
-  // Build detail-keyed map so we can join id -> {{definition, sources}}
-  const detailById = {{}};
-  for (const d of rfDetail) detailById[d.id] = d;
-
-  const dirEmoji = {{
-    'hold': '🛑', 'intensify': '⚡', 'de-escalate': '🔻', 'investigate': '🔍'
-  }};
-
-  impactRedflags.querySelector('ul').innerHTML = rfs.length
-    ? rfs.map(r => {{
-        const d = detailById[r] || {{}};
-        const defn = d.definition_ua || d.definition || '';
-        const dir = d.clinical_direction || '';
-        const emoji = dirEmoji[dir] || '';
-        const sources = (d.sources || []).map(
-          s => `<span class="rf-src-chip">${{escHtml(s)}}</span>`
-        ).join('');
-        return `<li class="rf-fired-item">
-          <div class="rf-fired-head"><code>${{escHtml(r)}}</code> ${{emoji}}
-            <span class="rf-dir rf-dir-${{escHtml(dir)}}">${{escHtml(dir)}}</span></div>
-          ${{defn ? `<div class="rf-fired-defn">${{escHtml(defn)}}</div>` : ''}}
-          ${{sources ? `<div class="rf-fired-srcs">${{sources}}</div>` : ''}}
-        </li>`;
-      }}).join('')
-    : '<li class="muted">{"No RedFlag triggered yet" if target_lang == "en" else "Жодного RedFlag поки не активовано"}</li>';
-
-  impactSelectedText.innerHTML = result.would_select_indication
-    ? `<code>${{escHtml(result.would_select_indication)}}</code>`
-    : '{"— (not enough data to choose)" if target_lang == "en" else "— (бракує даних для вибору)"}';
-
-  if ((result.warnings || []).length) {{
-    impactWarnings.hidden = false;
-    impactWarnings.querySelector('ul').innerHTML =
-      result.warnings.map(w => `<li>${{escHtml(w)}}</li>`).join('');
-  }} else {{
-    impactWarnings.hidden = true;
-  }}
-  // ready_to_generate is advisory — don't block the button on it; the
-  // user can still try to generate even with missing critical fields
-  // and the engine will surface the gaps.
+  setReadinessCritical(result.missing_critical || []);
 }}
 
 // ── Bundle lazy-load (CSD-6E + CSD-9C) ────────────────────────────────────
@@ -3039,6 +4177,7 @@ async function loadBundleIndex() {{
       const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now());
       if (!r.ok) throw new Error('Index fetch HTTP ' + r.status);
       bundleIndex = await r.json();
+      refreshBuildPanel().catch(() => {{}});
       return bundleIndex;
     }} catch (e) {{
       lastErr = e;
@@ -3050,6 +4189,75 @@ async function loadBundleIndex() {{
   }}
   console.error('[OpenOnco] bundle index unavailable after retry:', lastErr);
   throw new Error('Bundle index unavailable: ' + (lastErr && lastErr.message || lastErr));
+}}
+
+function offlineBundleUrls() {{
+  if (!bundleIndex) return [];
+  const urls = [];
+  if (bundleIndex.core) {{
+    const ver = bundleIndex.core_version || '';
+    urls.push('/' + bundleIndex.core + (ver ? '?v=' + ver : ''));
+  }}
+  const diseases = bundleIndex.diseases || {{}};
+  const versions = bundleIndex.disease_versions || {{}};
+  Object.keys(diseases).sort().forEach((diseaseId) => {{
+    const rel = diseases[diseaseId];
+    if (!rel) return;
+    const ver = versions[diseaseId] || '';
+    urls.push('/' + rel + (ver ? '?v=' + ver : ''));
+  }});
+  return urls;
+}}
+
+async function cacheAllBundlesForOffline() {{
+  if (offlineCacheStarted) return;
+  offlineCacheStarted = true;
+  await loadBundleIndex();
+  const urls = offlineBundleUrls();
+  setOfflineCacheProgress(0, urls.length, 0);
+  if (!urls.length) return;
+  if (!('caches' in window)) {{
+    setText(offlineModulesStateEl, '{"Cache unavailable" if target_lang == "en" else "Кеш недоступний"}');
+    return;
+  }}
+  if (navigator.onLine === false) {{
+    setText(offlineModulesStateEl, '{"Offline now" if target_lang == "en" else "Зараз офлайн"}');
+    return;
+  }}
+
+  const cacheName = 'openonco-bundle-l3-' + (bundleIndex.core_version || 'v1');
+  const cache = await caches.open(cacheName);
+  let done = 0;
+  let failed = 0;
+  for (const url of urls) {{
+    try {{
+      const cached = await cache.match(url, {{ ignoreSearch: true }});
+      if (!cached) {{
+        const resp = await fetch(url);
+        if (!resp || !resp.ok) throw new Error('HTTP ' + (resp && resp.status));
+        await cache.put(url, resp.clone());
+      }}
+    }} catch (e) {{
+      failed += 1;
+      console.warn('[OpenOnco] offline cache failed for ' + url + ':', e);
+    }} finally {{
+      done += 1;
+      setOfflineCacheProgress(done, urls.length, failed);
+      await yieldToBrowser(10);
+    }}
+  }}
+}}
+
+function scheduleOfflineCacheWarmup() {{
+  const run = () => cacheAllBundlesForOffline().catch((e) => {{
+    console.warn('[OpenOnco] offline cache warmup failed:', e);
+    setText(offlineModulesStateEl, '{"Cache failed" if target_lang == "en" else "Кеш не вдався"}');
+  }});
+  if ('requestIdleCallback' in window) {{
+    window.requestIdleCallback(run, {{ timeout: 3000 }});
+  }} else {{
+    window.setTimeout(run, 1500);
+  }}
 }}
 
 // Resolve a disease_id from whatever the patient profile / form gives us.
@@ -3100,12 +4308,16 @@ async function loadCoreBundle() {{
 // time per slot and drop silently on quota errors.
 async function loadDiseaseModule(diseaseId) {{
   if (!diseaseId) return;
-  if (loadedDiseases.has(diseaseId)) return;
+  if (loadedDiseases.has(diseaseId)) {{
+    refreshBuildPanel(diseaseId).catch(() => {{}});
+    return;
+  }}
   if (!bundleIndex || !bundleIndex.diseases) return;
   const relUrl = bundleIndex.diseases[diseaseId];
   if (!relUrl) {{
     // Disease has no per-disease bundle — its content is fully in core.
     loadedDiseases.add(diseaseId);
+    refreshBuildPanel(diseaseId).catch(() => {{}});
     return;
   }}
   const ver = (bundleIndex.disease_versions || {{}})[diseaseId] || '';
@@ -3120,6 +4332,7 @@ async function loadDiseaseModule(diseaseId) {{
       for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
       pyodide.unpackArchive(u8.buffer, 'zip');
       loadedDiseases.add(diseaseId);
+      refreshBuildPanel(diseaseId).catch(() => {{}});
       console.log('[OO] disease module ' + diseaseId + ' loaded from localStorage cache');
       return;
     }}
@@ -3137,6 +4350,7 @@ async function loadDiseaseModule(diseaseId) {{
   await yieldToBrowser();
   pyodide.unpackArchive(buf, 'zip');
   loadedDiseases.add(diseaseId);
+  refreshBuildPanel(diseaseId).catch(() => {{}});
 
   // Re-validate after merge so the next generate_plan() sees the new YAMLs.
   // apply_disease_module() drops the loader cache; cheap enough to run on
@@ -3248,7 +4462,7 @@ _summary
 
 // ── Generate full plan ────────────────────────────────────────────────────
 async function runEngine() {{
-  if (generating) return;  // double-click / re-entry guard
+  if (uiBusy || generating || runBtn.disabled) return;  // double-click / re-entry guard
   const _ooT0 = performance.now();
   setError(null);
   const profile = buildProfile();
@@ -3261,6 +4475,7 @@ async function runEngine() {{
   // plan from a moving profile. <main inert> hard-blocks pointer + keyboard
   // focus; init overlay (sibling of <main>) explains what's happening.
   generating = true;
+  updateWorkflowControls();
   if (mainTryEl) mainTryEl.inert = true;
   if (evalDebounceTimer) {{ clearTimeout(evalDebounceTimer); evalDebounceTimer = null; }}
   if (whatIfDebounceTimer) {{ clearTimeout(whatIfDebounceTimer); whatIfDebounceTimer = null; }}
@@ -3345,11 +4560,8 @@ html
       currentResultMode = 'clinician';
       highlightModeButtons();
       refreshModeButtonAvailability();
-      viewPlanBtn.disabled = false;
-      pdfBtn.disabled = false;
-      modalPdfBtn.disabled = false;
-      modalHtmlBtn.disabled = false;
-      openPlanModal();
+      updateWorkflowControls();
+      openPlanModal({{ force: true }});
       setStatus('{"Plan ready ✓" if target_lang == "en" else "Plan готовий ✓"}', 'ok');
       const _ooTNow = performance.now();
       console.log(`[OO] generate ${{(_ooTNow - _ooT0).toFixed(0)}}ms total (engine-load ${{(_ooTPython - _ooT0).toFixed(0)}}ms + python ${{(_ooTNow - _ooTPython).toFixed(0)}}ms)`);
@@ -3450,27 +4662,36 @@ function yieldToBrowser(ms) {{
 // Lazy-loaders for full questionnaire/example data. Dropdowns populate
 // instantly from the build-time manifests above; the full ~870 KB payload
 // is fetched only after the user picks something.
+function fetchJsonWithTimeout(url, label, timeoutMs = 10000) {{
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, {{ signal: controller.signal }})
+    .then(r => {{
+      if (!r.ok) throw new Error(label + ' HTTP ' + r.status);
+      return r.json();
+    }})
+    .catch(e => {{
+      if (e && e.name === 'AbortError') throw new Error(label + ' timed out');
+      throw e;
+    }})
+    .finally(() => window.clearTimeout(timer));
+}}
+
 async function ensureQuestionnaires() {{
   if (questionnaires) return questionnaires;
   if (!_questionnairesPromise) {{
-    _questionnairesPromise = fetch('/questionnaires.json')
-      .then(r => {{
-        if (!r.ok) throw new Error('questionnaires.json HTTP ' + r.status);
-        return r.json();
-      }})
-      .then(data => {{ questionnaires = data; return data; }});
+    _questionnairesPromise = fetchJsonWithTimeout('/questionnaires.json', 'questionnaires.json')
+      .then(data => {{ questionnaires = data; return data; }})
+      .catch(e => {{ _questionnairesPromise = null; throw e; }});
   }}
   return _questionnairesPromise;
 }}
 async function ensureExamples() {{
   if (examples) return examples;
   if (!_examplesPromise) {{
-    _examplesPromise = fetch('/examples.json')
-      .then(r => {{
-        if (!r.ok) throw new Error('examples.json HTTP ' + r.status);
-        return r.json();
-      }})
-      .then(data => {{ examples = data; return data; }});
+    _examplesPromise = fetchJsonWithTimeout('/examples.json', 'examples.json')
+      .then(data => {{ examples = data; return data; }})
+      .catch(e => {{ _examplesPromise = null; throw e; }});
   }}
   return _examplesPromise;
 }}
@@ -3479,9 +4700,10 @@ async function ensureExamples() {{
 // warmup at the top of the script body, written by loadAssets after a
 // successful boot so the next cold visit can paint dropdowns from
 // localStorage even before the new HTML's inline manifest is parsed.
-const MANIFEST_CACHE_KEY = 'openonco-manifests-v1';
+const MANIFEST_CACHE_KEY = 'openonco-manifests-v2';
 function saveManifestsToCache() {{
   try {{
+    localStorage.removeItem('openonco-manifests-v1');
     localStorage.setItem(MANIFEST_CACHE_KEY, JSON.stringify({{
       ts: Date.now(),
       questionnaires: QUESTIONNAIRES_MANIFEST,
@@ -3497,7 +4719,7 @@ async function loadAssets() {{
   QUESTIONNAIRES_MANIFEST.forEach((q, i) => {{
     const opt = document.createElement('option');
     opt.value = i;
-    opt.textContent = q.title;
+    opt.textContent = questionnaireDisplayTitle(q);
     diseaseSelect.appendChild(opt);
   }});
   saveManifestsToCache();
@@ -3701,18 +4923,28 @@ exampleSelect.addEventListener('change', async () => {{
       showExampleLockBanner();
       // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
       textarea.value = JSON.stringify(buildProfile(), null, 2);
-      // Show the pre-built case plan in the modal — the example IS already
-      // a generated plan, so we display it directly instead of pretending
-      // Generate would do new work.
-      await loadExamplePlan(ex.case_id);
-      setStatus('{'Example loaded ✓ Plan shown — edit any field to generate your own.' if target_lang == 'en' else 'Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.'}', 'ok');
+      // Show the pre-built case plan when one exists. Hidden starter stubs
+      // are form-prefill examples only, so they should not iframe a missing
+      // /cases/<id>.html page.
+      if (ex.case_id && ex.has_case_page !== false) {{
+        await loadExamplePlan(ex.case_id);
+        setStatus('{'Example loaded ✓ Plan shown — edit any field to generate your own.' if target_lang == 'en' else 'Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.'}', 'ok');
+      }} else {{
+        clearPlanState();
+        setStatus('{'Starter example loaded ✓ Click «Generate» to build a plan.' if target_lang == 'en' else 'Стартовий приклад завантажено ✓ Натисни «Згенерувати», щоб побудувати план.'}', 'ok');
+      }}
     }} else {{
       setMode('json');
       textarea.value = JSON.stringify(ex.json, null, 2);
       // No questionnaire match: still show the prebuilt plan if a case file
       // exists for this example.
-      if (ex.case_id) await loadExamplePlan(ex.case_id);
-      setStatus('{"Example loaded as JSON (no questionnaire for this disease yet)" if target_lang == "en" else "Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)"}', 'ok');
+      if (ex.case_id && ex.has_case_page !== false) {{
+        await loadExamplePlan(ex.case_id);
+        setStatus('{"Example loaded as JSON (no questionnaire for this disease yet)" if target_lang == "en" else "Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)"}', 'ok');
+      }} else {{
+        clearPlanState();
+        setStatus('{"Starter example loaded as JSON" if target_lang == "en" else "Стартовий приклад завантажено як JSON"}', 'ok');
+      }}
     }}
     saveDraft();
     updateRunBtnEnabled();
@@ -3720,15 +4952,16 @@ exampleSelect.addEventListener('change', async () => {{
   }});
 }});
 
-const personalizeBtn = document.getElementById('personalizeBtn');
 personalizeBtn && personalizeBtn.addEventListener('click', () => {{
+  if (isInteractionLocked()) return;
   unlockAllFields();
   setStatus('{"Fields unlocked — edit anything. Click «Generate» when you are ready." if target_lang == "en" else "Поля розблоковано — редагуй що завгодно. Натисни «Згенерувати» коли готовий."}', 'ok');
 }});
 
-modeFormBtn.addEventListener('click', () => setMode('form'));
-modeJsonBtn.addEventListener('click', () => setMode('json'));
+modeFormBtn.addEventListener('click', () => {{ if (!isInteractionLocked()) setMode('form'); }});
+modeJsonBtn.addEventListener('click', () => {{ if (!isInteractionLocked()) setMode('json'); }});
 formatBtn && formatBtn.addEventListener('click', () => {{
+  if (isInteractionLocked()) return;
   setError(null);
   try {{ textarea.value = JSON.stringify(JSON.parse(textarea.value), null, 2); }}
   catch (e) {{ setError('{"Invalid JSON: " if target_lang == "en" else "Невалідний JSON: "}' + e.message); }}
@@ -3741,6 +4974,7 @@ textarea.addEventListener('input', () => {{
 }});
 
 resetBtn.addEventListener('click', () => {{
+  if (isInteractionLocked()) return;
   if (!confirm('{"Clear the form and drop the draft?" if target_lang == "en" else "Очистити форму і прибрати чернетку?"}')) return;
   answers = {{}};
   textarea.value = '';
@@ -3834,7 +5068,15 @@ window.addEventListener('hashchange', loadFromUrlHash);
 // it's tiny (~5 KB) and lets resolveDiseaseId() pre-resolve from
 // ICD-O-3 codes before the user clicks Generate. Best-effort, never
 // blocks UI.
-loadBundleIndex().catch(() => {{}});
+loadBundleIndex().then(() => scheduleOfflineCacheWarmup()).catch(() => {{}});
+refreshBuildPanel().catch(() => {{}});
+window.addEventListener('online', () => refreshBuildPanel().catch(() => {{}}));
+window.addEventListener('offline', () => refreshBuildPanel().catch(() => {{}}));
+if (navigator.serviceWorker) {{
+  navigator.serviceWorker.addEventListener('controllerchange', () => {{
+    refreshBuildPanel().catch(() => {{}});
+  }});
+}}
 
 // CSD-6E polish: register the cache-first service worker so repeat
 // visits skip the network for the engine bundle entirely. Best-effort
@@ -3842,9 +5084,12 @@ loadBundleIndex().catch(() => {{}});
 // mode, ITP, file://, etc.).
 if ('serviceWorker' in navigator) {{
   window.addEventListener('load', () => {{
-    navigator.serviceWorker.register('/sw.js').catch((e) => {{
-      console.warn('[OpenOnco] service worker registration failed:', e);
-    }});
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => refreshBuildPanel().catch(() => {{}}))
+      .catch((e) => {{
+        console.warn('[OpenOnco] service worker registration failed:', e);
+        refreshBuildPanel().catch(() => {{}});
+      }});
   }});
 }}
 </script>
@@ -3879,40 +5124,39 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         # doctor scrolls the (long) Plan body. z-index above any
         # Plan-internal sticky elements.
         '.oo-topbar-host{position:sticky;top:0;z-index:100;}'
-        '.oo-topbar-host .top-bar{background:#0a2e1a;color:#dcfce7;'
-        'padding:12px 24px;display:flex;justify-content:space-between;'
-        'align-items:center;font-family:Source Sans 3,sans-serif;}'
+        '.oo-topbar-host .top-bar{background:#fff;color:#111827;'
+        'padding:13px 24px;display:flex;justify-content:space-between;'
+        'align-items:center;font-family:Source Sans 3,sans-serif;'
+        'border-bottom:1px solid #e5e7eb;}'
         '.oo-topbar-host .brand-line{display:flex;align-items:center;'
-        'gap:12px;margin-right:28px;}'
-        '.oo-topbar-host .brand-logo{display:block;width:30px;height:30px;flex:0 0 30px;}'
+        'gap:12px;margin-right:30px;}'
+        '.oo-topbar-host .brand-logo{display:none;}'
         '.oo-topbar-host .brand-mini{display:inline-flex;align-items:center;gap:9px;'
         'font-family:Playfair Display,Georgia,serif;'
-        'font-size:26px;color:#dcfce7;text-decoration:none;letter-spacing:.2px;}'
-        '.oo-topbar-host .brand-version{font-family:JetBrains Mono,monospace;'
-        'font-size:10.5px;color:#dcfce7;opacity:.55;'
-        'background:rgba(255,255,255,.06);padding:2px 7px;border-radius:3px;'
-        'letter-spacing:.5px;align-self:center;}'
+        'font-size:26px;font-weight:900;color:#14532d;text-decoration:none;letter-spacing:0;}'
         '.oo-topbar-host .top-nav{display:flex;align-items:center;flex:1;'
         'margin:0 24px 0 16px;gap:4px;}'
-        '.oo-topbar-host .top-nav a{color:#dcfce7;padding:4px 10px;'
-        'text-decoration:none;font-size:13px;border-radius:4px;}'
-        '.oo-topbar-host .top-nav a:hover{color:white;background:rgba(255,255,255,.05);}'
+        '.oo-topbar-host .top-nav a{color:#374151;padding:6px 10px;'
+        'text-decoration:none;font-size:14.5px;font-weight:700;border-radius:4px;}'
+        '.oo-topbar-host .top-nav a:hover{color:#14532d;background:transparent;}'
         '.oo-topbar-host .top-right{display:flex;align-items:center;gap:14px;'
         'flex-shrink:0;}'
+        '.oo-topbar-host .top-cta-group{display:flex;align-items:center;gap:8px;'
+        'flex-wrap:wrap;justify-content:flex-end;}'
         '.oo-topbar-host .lang-switch{display:inline-flex;align-items:center;gap:0;'
-        'background:rgba(255,255,255,.08);border-radius:4px;'
+        'background:#fff;border:1px solid #e5e7eb;border-radius:4px;'
         'font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.5px;'
         'overflow:hidden;flex-shrink:0;}'
         '.oo-topbar-host .lang-switch .lang-current,'
         '.oo-topbar-host .lang-switch .lang-other{width:56px;box-sizing:border-box;'
         'padding:4px 9px;display:inline-flex;align-items:center;'
         'justify-content:center;gap:5px;}'
-        '.oo-topbar-host .lang-switch .lang-current{background:rgba(255,255,255,.15);'
+        '.oo-topbar-host .lang-switch .lang-current{background:#14532d;'
         'color:white;font-weight:600;}'
-        '.oo-topbar-host .lang-switch .lang-other{color:#dcfce7;'
+        '.oo-topbar-host .lang-switch .lang-other{color:#374151;'
         'text-decoration:none;transition:background .12s;}'
-        '.oo-topbar-host .lang-switch .lang-other:hover{background:rgba(255,255,255,.12);'
-        'color:white;}'
+        '.oo-topbar-host .lang-switch .lang-other:hover{background:transparent;'
+        'color:#14532d;}'
         '.oo-topbar-host .lang-switch .lang-flag{display:inline-block;'
         'width:14px;height:10px;border-radius:1.5px;'
         'box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;}'
@@ -3920,13 +5164,14 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         'background:linear-gradient(to bottom,#0057b7 50%,#ffd500 50%);}'
         '.oo-topbar-host .lang-switch .lang-flag.flag-en{background:#012169 '
         "url(\"data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E\") center/cover no-repeat;}"
-        '.oo-topbar-host .btn-cta-try{background:linear-gradient(135deg,#16a34a 0%,#0d9488 100%);'
-        'color:white;padding:11px 22px;border-radius:7px;font-weight:600;'
-        'font-size:15px;text-decoration:none;border:none;'
-        'box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 1px 4px rgba(0,0,0,.15);'
-        'white-space:nowrap;min-width:180px;box-sizing:border-box;text-align:center;'
+        '.oo-topbar-host .btn-cta-top{color:#14532d;background:white;'
+        'padding:10px 16px;border-radius:7px;font-weight:700;'
+        'font-size:15px;text-decoration:none;border:1px solid #e5e7eb;'
+        'box-shadow:none;'
+        'white-space:nowrap;min-width:112px;box-sizing:border-box;text-align:center;'
         'display:inline-block;}'
-        '.oo-topbar-host .btn-cta-try:hover{filter:brightness(1.05);}'
+        '.oo-topbar-host .btn-cta-try{min-width:132px;}'
+        '.oo-topbar-host .btn-cta-top:hover{filter:none;}'
         # Sub-bar with case context (back-to-gallery + feedback)
         '.case-bar{background:#0d3f24;color:#dcfce7;padding:8px 24px;'
         'display:flex;justify-content:space-between;align-items:center;'
@@ -3937,8 +5182,10 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         '@media (max-width:700px){'
         '.oo-topbar-host .top-bar{flex-wrap:wrap;gap:8px;}'
         '.oo-topbar-host .top-nav{order:3;flex-basis:100%;margin:0;justify-content:center;}'
-        '.oo-topbar-host .brand-logo{width:26px;height:26px;flex-basis:26px;}'
-        '.oo-topbar-host .btn-cta-try{min-width:120px;padding:8px 14px;font-size:13px;}'
+        '.oo-topbar-host .top-right{gap:8px;flex-wrap:wrap;justify-content:flex-end;}'
+        '.oo-topbar-host .top-cta-group{width:100%;justify-content:flex-end;gap:6px;}'
+        '.oo-topbar-host .btn-cta-top{min-width:98px;padding:8px 10px;font-size:13px;}'
+        '.oo-topbar-host .btn-cta-try{min-width:118px;}'
         '}'
         '</style>\n'
     )
@@ -3971,7 +5218,13 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         '</div>\n'
     )
 
-    out = rendered_html.replace("</head>", topbar_style + "</head>", 1)
+    head_assets = ""
+    if "fonts.googleapis.com/css2?family=Playfair" not in rendered_html:
+        head_assets += SITE_FONT_LINK + "\n"
+    if "favicon.svg" not in rendered_html:
+        head_assets += SITE_FAVICON_LINK + "\n"
+
+    out = rendered_html.replace("</head>", head_assets + topbar_style + "</head>", 1)
     out = out.replace('<div class="page">',
                       topbar_html + sub_bar_html + '<div class="page">', 1)
     return out
@@ -6417,7 +7670,7 @@ def _build_disease_coverage_rows() -> list[dict]:
 _DISEASES_PAGE_LABELS = {
     "uk": {
         "title": "Хвороби · OpenOnco",
-        "h1": "Хвороби в базі знань",
+        "h1": "Хвороби в Onco Wiki",
         "lead": (
             "Покриття OpenOnco за {n} онкологічними діагнозами: біомаркери, "
             "препарати, показання, режими, тривожні ознаки, алгоритми та "
@@ -6454,7 +7707,7 @@ _DISEASES_PAGE_LABELS = {
     },
     "en": {
         "title": "Diseases · OpenOnco",
-        "h1": "Diseases in the Knowledge Base",
+        "h1": "Diseases in Onco Wiki",
         "lead": (
             "OpenOnco coverage across {n} oncology diagnoses: biomarkers, "
             "drugs, indications/regimens/RedFlags, algorithm and questionnaire "
@@ -6605,7 +7858,7 @@ def _disease_row_html(r: dict, lbl: dict, target_lang: str) -> str:
         if part
     ).lower()
     return (
-        f'<tr data-search="{html.escape(search_blob)}">'
+        f'<tr id="{html.escape(r["id"])}" data-search="{html.escape(search_blob)}">'
         f'<td><strong>{html.escape(short_id)}</strong> <span class="dis-name">{html.escape(name)}</span></td>'
         f'<td class="mono">{html.escape(r["icd10"] or "")}</td>'
         f'<td class="num">{r["n_bios"]}</td>'
@@ -7295,6 +8548,171 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
 """
 
 
+def render_about(stats, *, target_lang: str = "en") -> str:
+    counts = _landing_stat_counts(stats)
+    is_en = target_lang == "en"
+    if is_en:
+        page_title = "About"
+        h1 = "About OpenOnco"
+        lead = (
+            "OpenOnco is an open clinical knowledge and rules project for oncology. "
+            "This page collects the material that used to sit in separate top-menu links: "
+            "examples, specifications and GitHub."
+        )
+        cards = [
+            (
+                "Examples",
+                "/gallery.html",
+                "Synthetic cases with rendered plans and diagnostic briefs. Use them to inspect how the engine explains decisions.",
+                "Open examples",
+            ),
+            (
+                "Specifications",
+                "/specs.html",
+                "The authoritative project contract: charter, clinical content rules, schemas, ingestion and governance.",
+                "Read specs",
+            ),
+            (
+                "GitHub",
+                f"https://github.com/{GH_REPO}",
+                "Source code, knowledge-base YAML, issues, pull requests and public review history.",
+                "View repository",
+            ),
+        ]
+        principles_h = "Project shape"
+        principles = [
+            ("Open by default", "Code is MIT-style; specifications and generated content are CC BY 4.0."),
+            ("Synthetic public data", "The public site ships no real patient records and no patient-specific private artifacts."),
+            ("Clinical review gate", "Clinical content needs reviewer sign-off before it can become trusted content."),
+            ("Auditable automation", "Rules, sources and rendered reasoning are visible instead of hidden behind a black box."),
+        ]
+        stats_h = "Current public corpus"
+        release_note = f"Current public build: v{OPENONCO_VERSION}, released {OPENONCO_RELEASE_DATE}."
+        footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
+        stat_labels = {
+            "diseases": "diseases",
+            "redflags": "red flags",
+            "indications": "indications",
+            "regimens": "regimens",
+            "algorithms": "algorithms",
+        }
+    else:
+        page_title = "About"
+        h1 = "About OpenOnco"
+        lead = (
+            "OpenOnco — відкритий проєкт клінічної бази знань і rule engine для онкології. "
+            "На цій сторінці зібрано те, що раніше було окремими пунктами верхнього меню: "
+            "приклади, специфікації та GitHub."
+        )
+        cards = [
+            (
+                "Приклади",
+                "/ukr/gallery.html",
+                "Синтетичні кейси з готовими планами й diagnostic briefs. Через них зручно перевіряти пояснення engine.",
+                "Відкрити приклади",
+            ),
+            (
+                "Специфікації",
+                "/ukr/specs.html",
+                "Авторитетний контракт проєкту: charter, правила клінічного контенту, схеми, ingestion і governance.",
+                "Читати специфікації",
+            ),
+            (
+                "GitHub",
+                f"https://github.com/{GH_REPO}",
+                "Код, YAML бази знань, issues, pull requests і публічна історія ревʼю.",
+                "Відкрити репозиторій",
+            ),
+        ]
+        principles_h = "Форма проєкту"
+        principles = [
+            ("Open by default", "Код має MIT-style usage; специфікації та згенерований контент — CC BY 4.0."),
+            ("Синтетичні публічні дані", "Публічний сайт не містить реальних пацієнтських записів чи приватних patient artifacts."),
+            ("Clinical review gate", "Клінічний контент потребує reviewer sign-off перед статусом trusted content."),
+            ("Auditable automation", "Правила, джерела й reasoning видимі, а не сховані за black box."),
+        ]
+        stats_h = "Поточний публічний корпус"
+        release_note = f"Поточна публічна збірка: v{OPENONCO_VERSION}, release {OPENONCO_RELEASE_DATE}."
+        footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
+        stat_labels = {
+            "diseases": "хвороб",
+            "redflags": "red flags",
+            "indications": "індикацій",
+            "regimens": "режимів",
+            "algorithms": "алгоритмів",
+        }
+
+    cards_html = "\n".join(
+        f"""        <a class="about-link-card" href="{href}"{' target="_blank" rel="noopener"' if href.startswith('https://') else ''}>
+          <span>{title}</span>
+          <p>{body}</p>
+          <strong>{cta} →</strong>
+        </a>"""
+        for title, href, body, cta in cards
+    )
+    principles_html = "\n".join(
+        f"""        <div class="about-principle">
+          <h3>{title}</h3>
+          <p>{body}</p>
+        </div>"""
+        for title, body in principles
+    )
+    stats_html = "\n".join(
+        f'        <div class="about-stat"><strong>{counts[key]}</strong><span>{label}</span></div>'
+        for key, label in stat_labels.items()
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="{'en' if is_en else 'uk'}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · {page_title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+{_render_top_bar(active="about", target_lang=target_lang, lang_switch_href=_lang_switch_href("about", target_lang))}
+
+<main>
+  <section class="about-hero">
+    <p class="home-kicker">OpenOnco</p>
+    <h1>{h1}</h1>
+    <p>{lead}</p>
+  </section>
+
+  <section class="about-link-grid">
+{cards_html}
+  </section>
+
+  <section class="about-split">
+    <div>
+      <h2>{principles_h}</h2>
+      <div class="about-principles">
+{principles_html}
+      </div>
+    </div>
+    <div class="about-stats-panel">
+      <h2>{stats_h}</h2>
+      <div class="about-stats">
+{stats_html}
+      </div>
+      <p class="about-release">{release_note}</p>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
+    <br>
+    {footer}
+  </footer>
+</main>
+</body>
+</html>
+"""
+
+
 # ── Build orchestration ───────────────────────────────────────────────────
 
 
@@ -7321,8 +8739,9 @@ def _build_all_cases_parallel(output_dir: Path) -> tuple[list[dict], list[dict]]
     import os
     from concurrent.futures import ProcessPoolExecutor
 
-    tasks = [(c, output_dir, "uk") for c in CASES] + \
-            [(c, output_dir, "en") for c in CASES]
+    public_cases = _public_case_entries()
+    tasks = [(c, output_dir, "uk") for c in public_cases] + \
+            [(c, output_dir, "en") for c in public_cases]
     env_workers = os.environ.get("OPENONCO_BUILD_WORKERS")
     if env_workers:
         try:
@@ -7410,6 +8829,7 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / "CNAME").write_text(CUSTOM_DOMAIN + "\n", encoding="utf-8")
     (output_dir / "style.css").write_text(_STYLE_CSS, encoding="utf-8")
     landing_assets = _copy_landing_assets(output_dir)
+    excluded_case_pages_removed = _remove_excluded_case_pages(output_dir)
 
     stats = collect_stats()
 
@@ -7422,12 +8842,18 @@ def build_site(output_dir: Path) -> dict:
     sw_payload = write_service_worker(
         output_dir, core_version=engine_bundle.get("core_version", ""),
     )
+    manifest_payload = write_web_manifest(output_dir)
 
+    questionnaires_payload = bundle_questionnaires(output_dir)
     # Bundle dropdowns BEFORE render_try so /try.html can inline the
     # ~15 KB manifests as JS constants — saves the ~870 KB initial fetch
-    # of questionnaires.json + examples.json on first paint.
-    examples_payload = bundle_examples(output_dir)
-    questionnaires_payload = bundle_questionnaires(output_dir)
+    # of questionnaires.json + examples.json on first paint. Examples use
+    # the questionnaire manifest to expose hidden starter profiles only for
+    # diseases that would otherwise have an empty example dropdown.
+    examples_payload = bundle_examples(
+        output_dir,
+        questionnaires_manifest=questionnaires_payload.get("manifest", []),
+    )
     questionnaires_manifest = questionnaires_payload.get("manifest", [])
     examples_manifest = examples_payload.get("manifest", [])
 
@@ -7446,6 +8872,8 @@ def build_site(output_dir: Path) -> dict:
         render_diseases(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "specs.html").write_text(
         render_specs(stats, target_lang="en"), encoding="utf-8")
+    (output_dir / "about.html").write_text(
+        render_about(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "try.html").write_text(
         render_try(
             target_lang="en",
@@ -7453,6 +8881,8 @@ def build_site(output_dir: Path) -> dict:
             questionnaires_manifest=questionnaires_manifest,
             examples_manifest=examples_manifest,
         ), encoding="utf-8")
+    (output_dir / "ask.html").write_text(
+        render_ask(target_lang="en"), encoding="utf-8")
 
     # ── UA build (mirror at /ukr/) ──
     # Specs catalog page is rendered in both locales — the underlying
@@ -7465,6 +8895,8 @@ def build_site(output_dir: Path) -> dict:
         render_capabilities(stats, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "specs.html").write_text(
         render_specs(stats, target_lang="uk"), encoding="utf-8")
+    (output_dir / "ukr" / "about.html").write_text(
+        render_about(stats, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "gallery.html").write_text(
         render_gallery(target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "diseases.html").write_text(
@@ -7476,11 +8908,14 @@ def build_site(output_dir: Path) -> dict:
             questionnaires_manifest=questionnaires_manifest,
             examples_manifest=examples_manifest,
         ), encoding="utf-8")
+    (output_dir / "ukr" / "ask.html").write_text(
+        render_ask(target_lang="uk"), encoding="utf-8")
 
     case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
     disease_coverage_payload = bundle_disease_coverage(output_dir)
     kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
     clinical_gap_payload = write_clinical_gap_outputs(output_dir)
+    discovery_payload = finalize_site_discovery(output_dir)
 
     return {
         "output_dir": str(output_dir),
@@ -7489,12 +8924,15 @@ def build_site(output_dir: Path) -> dict:
         "cases_en": case_paths_en,
         "engine_bundle": engine_bundle,
         "service_worker": sw_payload,
+        "web_manifest": manifest_payload,
         "examples_payload": examples_payload,
         "questionnaires_payload": questionnaires_payload,
         "disease_coverage_payload": disease_coverage_payload,
         "kb_wiki_payload": kb_wiki_payload,
         "clinical_gap_payload": clinical_gap_payload,
+        "discovery_payload": discovery_payload,
         "landing_assets": landing_assets,
+        "excluded_case_pages_removed": excluded_case_pages_removed,
     }
 
 

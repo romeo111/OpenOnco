@@ -10,6 +10,23 @@ applicable_to:
   demographic_constraints:
     ecog_max: 2
 
+# §17 phased indication (RATIFIED 2026-05-07). Single neoadjuvant
+# chemoradiation phase: the RadiationCourse RC-CROSS-NEOADJ owns the
+# concurrent chemo regimen reference (REG-CARBOPLATIN-PACLITAXEL-WEEKLY)
+# per planning doc §2.3 — XOR rule permits exactly ONE of regimen_id /
+# surgery_id / radiation_id per phase. The post-CROSS surgery phase
+# (esophagectomy) lands in the C4 chunk (#437) once the Surgery entity
+# for esophagectomy is defined.
+phases:
+  - phase: neoadjuvant
+    type: chemoradiation
+    radiation_id: RC-CROSS-NEOADJ
+    duration_weeks: 5
+
+# `recommended_regimen` preserved for backward-compat — render layer may
+# still dereference this for non-§17-aware code paths. Going forward the
+# phased timeline (RadiationCourse RC-CROSS-NEOADJ → esophagectomy →
+# adjuvant nivolumab) is the canonical representation.
 recommended_regimen: REG-CARBOPLATIN-PACLITAXEL-WEEKLY
 concurrent_therapy: []
 followed_by: []
@@ -60,11 +77,18 @@ do_not_do_en:
   - "Do NOT proceed to surgery without restaging post-CRT (occult progression detection)"
   - "Do NOT initiate RT without addressing severe dysphagia / aspiration risk first"
   - "Do NOT skip CheckMate-577 nivolumab adjuvant for residual ypT+ or ypN+ post-CROSS"
-last_reviewed: "2026-04-26"
+last_reviewed: "2026-05-08"
 notes: >
-  PARTIAL — RT 41.4 Gy / 23 fractions concurrent with chemo is NOT
-  modellable in current OpenOnco schema. This Indication captures
-  the chemo backbone; the RT + esophagectomy + adjuvant nivolumab
-  sequence is documented here but cannot be enforced by the engine
-  until PROPOSAL §17 (Surgery + RadiationCourse + Indication.phases)
-  is ratified.
+  §17 phased indication (RATIFIED 2026-05-07). Free-text RT description
+  in this `notes:` block has been replaced by structured `phases:` field
+  with radiation_id=RC-CROSS-NEOADJ; the RadiationCourse owns the
+  concurrent chemo regimen reference
+  (concurrent_chemo_regimen=REG-CARBOPLATIN-PACLITAXEL-WEEKLY) per
+  planning doc §2.3 (XOR rule on phase fields). The post-CROSS surgery
+  phase (esophagectomy) is deferred to C4 chunk (#437) — this entity
+  models the neoadjuvant CRT phase only. Backward-compat: legacy
+  `recommended_regimen=REG-CARBOPLATIN-PACLITAXEL-WEEKLY` preserved so
+  non-§17-aware render paths continue to surface the chemo backbone.
+  Adjuvant nivolumab post-resection (CheckMate-577, ypT+ or ypN+) is a
+  separate downstream indication and remains out of scope for this
+  chunk.
