@@ -546,7 +546,10 @@ def _remove_excluded_case_pages(output_dir: Path) -> int:
     return removed
 
 
-def bundle_examples(output_dir: Path) -> dict:
+def bundle_examples(
+    output_dir: Path,
+    questionnaires_manifest: list[dict] | None = None,
+) -> dict:
     """Write docs/examples.json — array of {label, json} entries used as
     the 'Load example' dropdown on try.html.
 
@@ -557,10 +560,17 @@ def bundle_examples(output_dir: Path) -> dict:
     payload = []
     manifest = []
     unique_icd_to_disease_id = _unique_questionnaire_icd_to_disease_id_map()
-    for c in _public_case_entries():
+    questionnaire_disease_ids = {
+        q.get("disease_id")
+        for q in (questionnaires_manifest or [])
+        if q.get("disease_id")
+    }
+    covered_disease_ids: set[str] = set()
+
+    def append_case(c: CaseEntry, *, has_case_page: bool) -> str | None:
         p = EXAMPLES / c.file
         if not p.exists():
-            continue
+            return None
         ex_json = json.loads(p.read_text(encoding="utf-8"))
         disease = ex_json.get("disease", {}) if isinstance(ex_json, dict) else {}
         disease_icd = disease.get("icd_o_3_morphology")
@@ -574,26 +584,62 @@ def bundle_examples(output_dir: Path) -> dict:
             disease = ex_json.setdefault("disease", {})
             if isinstance(disease, dict):
                 disease.setdefault("id", disease_id)
+            covered_disease_ids.add(disease_id)
         # Both UA and EN labels travel in the manifest so the inlined
         # JS constant on /try.html (UA) vs /ukr/try.html — wait, EN is
         # at root → /try.html serves EN labels — can pick the right
         # one per page locale at render time.
         label_en = c.label_en or c.label_ua
-        payload.append({
+        payload_entry = {
             "case_id": c.case_id,
             "label": c.label_ua,
             "label_en": label_en,
             "disease_id": disease_id,
             "file": c.file,
             "json": ex_json,
-        })
-        manifest.append({
+        }
+        manifest_entry = {
             "case_id": c.case_id,
             "label": c.label_ua,
             "label_en": label_en,
             "disease_id": disease_id,
             "disease_icd": disease_icd,
-        })
+        }
+        if not has_case_page:
+            payload_entry["has_case_page"] = False
+            manifest_entry["has_case_page"] = False
+        payload.append(payload_entry)
+        manifest.append(manifest_entry)
+        return disease_id
+
+    for c in _public_case_entries():
+        append_case(c, has_case_page=True)
+
+    # Some low-coverage auto-stub profiles are intentionally hidden from the
+    # gallery because their pre-rendered case pages are not clinically useful
+    # yet. They still make good questionnaire starters; include only the ones
+    # that fill otherwise-empty disease dropdowns, and mark them as having no
+    # prebuilt plan page so the UI does not iframe a missing case.
+    if questionnaire_disease_ids:
+        for c in CASES:
+            if c.case_id not in GALLERY_EXCLUDED_CASE_IDS:
+                continue
+            p = EXAMPLES / c.file
+            if not p.exists():
+                continue
+            try:
+                ex_json = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            disease = ex_json.get("disease", {}) if isinstance(ex_json, dict) else {}
+            disease_id = (
+                disease.get("id")
+                or ex_json.get("disease_id")
+                or unique_icd_to_disease_id.get(str(disease.get("icd_o_3_morphology")))
+            )
+            if disease_id in questionnaire_disease_ids and disease_id not in covered_disease_ids:
+                append_case(c, has_case_page=False)
+
     out = output_dir / "examples.json"
     out.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -4852,18 +4898,28 @@ exampleSelect.addEventListener('change', async () => {{
       showExampleLockBanner();
       // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
       textarea.value = JSON.stringify(buildProfile(), null, 2);
-      // Show the pre-built case plan in the modal — the example IS already
-      // a generated plan, so we display it directly instead of pretending
-      // Generate would do new work.
-      await loadExamplePlan(ex.case_id);
-      setStatus('{'Example loaded ✓ Plan shown — edit any field to generate your own.' if target_lang == 'en' else 'Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.'}', 'ok');
+      // Show the pre-built case plan when one exists. Hidden starter stubs
+      // are form-prefill examples only, so they should not iframe a missing
+      // /cases/<id>.html page.
+      if (ex.case_id && ex.has_case_page !== false) {{
+        await loadExamplePlan(ex.case_id);
+        setStatus('{'Example loaded ✓ Plan shown — edit any field to generate your own.' if target_lang == 'en' else 'Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.'}', 'ok');
+      }} else {{
+        clearPlanState();
+        setStatus('{'Starter example loaded ✓ Click «Generate» to build a plan.' if target_lang == 'en' else 'Стартовий приклад завантажено ✓ Натисни «Згенерувати», щоб побудувати план.'}', 'ok');
+      }}
     }} else {{
       setMode('json');
       textarea.value = JSON.stringify(ex.json, null, 2);
       // No questionnaire match: still show the prebuilt plan if a case file
       // exists for this example.
-      if (ex.case_id) await loadExamplePlan(ex.case_id);
-      setStatus('{"Example loaded as JSON (no questionnaire for this disease yet)" if target_lang == "en" else "Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)"}', 'ok');
+      if (ex.case_id && ex.has_case_page !== false) {{
+        await loadExamplePlan(ex.case_id);
+        setStatus('{"Example loaded as JSON (no questionnaire for this disease yet)" if target_lang == "en" else "Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)"}', 'ok');
+      }} else {{
+        clearPlanState();
+        setStatus('{"Starter example loaded as JSON" if target_lang == "en" else "Стартовий приклад завантажено як JSON"}', 'ok');
+      }}
     }}
     saveDraft();
     updateRunBtnEnabled();
@@ -8757,11 +8813,16 @@ def build_site(output_dir: Path) -> dict:
     )
     manifest_payload = write_web_manifest(output_dir)
 
+    questionnaires_payload = bundle_questionnaires(output_dir)
     # Bundle dropdowns BEFORE render_try so /try.html can inline the
     # ~15 KB manifests as JS constants — saves the ~870 KB initial fetch
-    # of questionnaires.json + examples.json on first paint.
-    examples_payload = bundle_examples(output_dir)
-    questionnaires_payload = bundle_questionnaires(output_dir)
+    # of questionnaires.json + examples.json on first paint. Examples use
+    # the questionnaire manifest to expose hidden starter profiles only for
+    # diseases that would otherwise have an empty example dropdown.
+    examples_payload = bundle_examples(
+        output_dir,
+        questionnaires_manifest=questionnaires_payload.get("manifest", []),
+    )
     questionnaires_manifest = questionnaires_payload.get("manifest", [])
     examples_manifest = examples_payload.get("manifest", [])
 
