@@ -12,6 +12,7 @@ purpose: >
 output_indications:
   - IND-BREAST-HR-POS-MET-1L-CDKI
   - IND-BREAST-HR-POS-EARLY-ADJ-CDK46I
+  - IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB
   - IND-BREAST-HER2-POS-EARLY-NEOADJUVANT
   - IND-BREAST-HER2-POS-MET-1L-THP
   - IND-BREAST-HER2-POS-MET-2L-TDXD
@@ -76,7 +77,7 @@ decision_tree:
       result: IND-BREAST-HR-POS-EARLY-ADJ-CDK46I
     if_false:
       result: IND-BREAST-HR-POS-MET-1L-CDKI
-    notes: "Wired 2026-05-09 (BREAST-1 D1). monarchE (SRC-MONARCHE-JOHNSTON-2023): 4-yr iDFS HR 0.664, absolute benefit 6.4% in high-risk early HR+/HER2-. Free-text conditions — no disease-scoped RF available yet; engine routes to default for metastatic cases. Early low-risk HR+/HER2- (standard AI adjuvant, no CDK4/6i) currently falls to metastatic default — flag for dedicated IND-BREAST-HR-POS-EARLY-ADJUVANT-AI entity."
+    notes: "Wired 2026-05-09 (BREAST-1 D1). Routes to abemaciclib (IND-BREAST-HR-POS-EARLY-ADJ-CDK46I, monarchE default). Alternative: ribociclib (IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB, NATALEE — broader eligibility incl. node-negative + QTc monitoring required). MDT chooses based on node status, QTc risk, access. Free-text conditions — no disease-scoped RF available yet; metastatic cases default to IND-BREAST-HR-POS-MET-1L-CDKI."
 
   # Step 6 — Metastatic TNBC: BRCA mutation gate → PARPi vs pembro+chemo.
   # BRCA-mutated mTNBC: olaparib or talazoparib preferred 1L (OlympiAD, EMBRACA).
@@ -107,13 +108,14 @@ sources:
   - SRC-NCCN-BREAST-2025
   - SRC-ESMO-BREAST-METASTATIC-2024
   - SRC-MONARCHE-JOHNSTON-2023
+  - SRC-NATALEE-SLAMON-2024
 last_reviewed: '2026-05-09'
 notes: >
   Receptor-subtype is the dominant branch point — biomarker_driven
   archetype materialized. T-DXd 2L HER2+ metastatic referenced as
   output but engaged via revise_plan() after THP failure rather than
-  as 1L choice. Step 5 wired 2026-05-09 to route early HR+/HER2-
-  high-risk to adjuvant CDK4/6i (IND-BREAST-HR-POS-EARLY-ADJ-CDK46I,
-  monarchE/NATALEE evidence); free-text conditions pending RF authoring.
-  OOS: NATALEE (ribociclib 3yr adjuvant) indication not yet modeled;
-  Lu-PSMA analog targeted ADCs; brain-met HER2CLIMB pathways.
+  as 1L choice. Step 5 wired 2026-05-09 (BREAST-1 D1) for early
+  HR+/HER2- high-risk adjuvant CDK4/6i; D2 adds NATALEE ribociclib
+  as alternative (IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB).
+  OOS: Lu-PSMA analog targeted ADCs; brain-met HER2CLIMB pathways;
+  early low-risk HR+/HER2- standard AI adjuvant (no CDK4/6i needed).
