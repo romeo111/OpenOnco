@@ -7,7 +7,7 @@ applicable_to:
   stage_requirements: ["Stage IV (metastatic)", "Unresectable locally advanced not eligible for periop"]
   biomarker_requirements_required:
     - biomarker_id: BIO-PDL1-CPS
-      value_constraint: "CPS ≥5"
+      value_constraint: "CPS ≥1"
   biomarker_requirements_excluded:
     - biomarker_id: BIO-HER2-SOLID
       value_constraint: "positive"
@@ -23,10 +23,21 @@ strength_of_recommendation: strong
 nccn_category: "1"
 
 expected_outcomes:
-  overall_response_rate: "~60% (CheckMate-649 CPS ≥5)"
+  overall_response_rate: "~60% (CheckMate-649 CPS ≥5); preserved benefit at CPS 1-4"
   complete_response: "~10%"
-  progression_free_survival: "Median ~7.7 mo"
+  progression_free_survival: "Median ~7.7 mo (CPS ≥5)"
   overall_survival_5y: "mOS 14.4 mo (vs 11.1 chemo alone, CheckMate-649 CPS ≥5)"
+  # Stratified magnitude-of-benefit per CheckMate-649 (Janjigian 2022) — stronger
+  # OS benefit at CPS ≥5 (HR 0.71) but preserved benefit at CPS 1-4 (HR 0.78).
+  # Engine renders both strata so clinicians can weigh CPS-stratum benefit when
+  # CPS=1-4 patients are routed (algorithm gates via RF-GASTRIC-PDL1-CPS-1-PLUS).
+  # Disease-specific OutcomeValue fields (admitted via Pydantic extra='allow').
+  overall_survival_hr_cps_5plus:
+    value: "OS HR 0.71 (CPS ≥5; CheckMate-649)"
+    source: SRC-CHECKMATE-649-JANJIGIAN-2022
+  overall_survival_hr_cps_1_to_4:
+    value: "OS HR 0.78 (CPS 1-4; preserved benefit, smaller magnitude than CPS ≥5)"
+    source: SRC-CHECKMATE-649-JANJIGIAN-2022
 
 hard_contraindications:
   - CI-PEMBROLIZUMAB-AUTOIMMUNE  # Same autoimmune block applies to nivo
@@ -41,18 +52,52 @@ required_tests:
 desired_tests: []
 
 rationale: >
-  CheckMate-649: FOLFOX + nivo for HER2-negative advanced gastric/GEJ
-  with PD-L1 CPS ≥5 — OS benefit. NCCN category 1.
+  CheckMate-649: FOLFOX + nivo for HER2-negative advanced gastric/GEJ.
+  Stratified OS benefit — HR 0.71 at CPS ≥5 (primary endpoint, EMA cutoff)
+  and HR 0.78 at CPS 1-4 (preserved benefit, smaller magnitude). NCCN
+  v3.2025 + ESMO 2024 favour adding nivolumab at CPS ≥1; FDA approval
+  is regardless of CPS. Indication value_constraint set to CPS ≥1 to
+  match RF-GASTRIC-PDL1-CPS-1-PLUS (algorithm-gating threshold) and
+  NCCN/ESMO authoring; magnitude-of-benefit difference surfaced via
+  expected_outcomes stratum fields and known_controversies.
 
 rationale_ua: >
-  CheckMate-649: FOLFOX + nivo for HER2-negative поширений gastric/GEJ with PD-L1 CPS ≥5 — OS виграш. NCCN категорія 1.
+  CheckMate-649: FOLFOX + nivo for HER2-negative поширений gastric/GEJ.
+  Стратифікована користь OS — HR 0.71 при CPS ≥5 (первинна кінцева точка,
+  EMA cutoff) та HR 0.78 при CPS 1-4 (збережена користь, менший magnitude).
+  NCCN v3.2025 + ESMO 2024 підтримують додавання ніволумабу при CPS ≥1;
+  FDA схвалення — незалежно від CPS.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 sources:
+  - source_id: SRC-CHECKMATE-649-JANJIGIAN-2022
+    position: supports
   - source_id: SRC-NCCN-GASTRIC-2025
     position: supports
   - source_id: SRC-ESMO-GASTRIC-2024
     position: supports
+
+known_controversies:
+  - topic: PD-L1 CPS threshold for adding nivolumab to FOLFOX/XELOX (HER2-neg gastric/GEJ 1L) — jurisdictional split
+    positions:
+      - position: FDA — approved regardless of CPS (no biomarker gate on label)
+        sources:
+          - SRC-CHECKMATE-649-JANJIGIAN-2022
+        evidence_note: "FDA label permits use across CPS range; rests on overall CheckMate-649 ITT benefit"
+      - position: EMA — restricts to CPS ≥5 (label-gated to primary-endpoint stratum)
+        sources:
+          - SRC-CHECKMATE-649-JANJIGIAN-2022
+        evidence_note: "Aligned with CheckMate-649 primary-endpoint pre-specified CPS ≥5 stratum (HR 0.71)"
+      - position: NCCN v3.2025 — favours adding nivolumab at CPS ≥1 with magnitude-of-benefit note for CPS ≥5
+        sources:
+          - SRC-NCCN-GASTRIC-2025
+        evidence_note: "Acknowledges preserved benefit at CPS 1-4 (HR 0.78) while flagging stronger magnitude at CPS ≥5"
+      - position: ESMO 2024 — supports CPS ≥1 with stronger preference at CPS ≥5
+        sources:
+          - SRC-ESMO-GASTRIC-2024
+        evidence_note: "Treatment guideline aligns with NCCN; CPS ≥5 preferred when access constrained"
+    our_default: "Add nivolumab to FOLFOX/XELOX at CPS ≥1 (matches NCCN/ESMO + RF-GASTRIC-PDL1-CPS-1-PLUS); document stronger magnitude expected at CPS ≥5 in MDT note"
+    rationale: "CheckMate-649 CPS 1-4 subgroup retains OS benefit (HR 0.78) although the primary-endpoint analysis was at CPS ≥5; NCCN/ESMO consensus favours the broader cohort. EMA-only sites should follow EMA cutoff; jurisdictional notes surfaced for transparency."
 
 do_not_do:
   - "Do NOT use without HER2 testing — HER2+ patients get trastuzumab+chemo instead"
@@ -64,4 +109,11 @@ do_not_do_en:
   - "Do NOT continue through Grade 3+ irAE without permanent ICI discontinuation consideration"
   - "Do NOT initiate during ongoing GI bleed / obstruction"
 last_reviewed: "2026-04-26"
-notes: "Scaffold entry — gastric metastatic 1L PD-L1 CPS ≥5 / HER2- track only."
+notes: >
+  Gastric metastatic 1L HER2-neg PD-L1 CPS ≥1 track. Indication threshold
+  reconciled with RF-GASTRIC-PDL1-CPS-1-PLUS (CPS ≥1) and NCCN/ESMO 2024-2025
+  consensus (GI-2 B1 chunk gi2-cps-recon-nivo-dose-2026-05-04-2030).
+  Algorithm ALGO-GASTRIC-METASTATIC-1L step 3 gates ICI add-on via the
+  ≥1 RedFlag; magnitude-of-benefit difference between CPS ≥5 (HR 0.71)
+  and CPS 1-4 (HR 0.78) per CheckMate-649 captured in expected_outcomes
+  stratum fields and known_controversies.

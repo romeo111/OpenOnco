@@ -1,0 +1,43 @@
+# Golden fixture — periop FLOT-style 3-phase indication.
+# §17 ratification (2026-05-07). Pure Pydantic round-trip; no loader
+# ref-integrity is exercised by this fixture (FK IDs are illustrative —
+# REG-FLOT and SUR-TOTAL-GASTRECTOMY may or may not be defined when the
+# full KB loads via test_loader.py — that test covers ref-integrity
+# separately for real entities).
+id: IND-TEST-PERIOP-FLOT
+applicable_to:
+  disease_id: DIS-GASTRIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "T2-T4 OR node-positive resectable gastric/GEJ adenocarcinoma"
+
+# §17 ratified 2026-05-07 — phased indication. Three phases:
+#   1. Neoadjuvant FLOT × 4 cycles
+#   2. Total gastrectomy
+#   3. Adjuvant FLOT × 4 cycles
+phases:
+  - phase: neoadjuvant
+    type: chemotherapy
+    regimen_id: REG-FLOT
+    cycles: 4
+  - phase: surgery
+    type: surgery
+    surgery_id: SUR-TOTAL-GASTRECTOMY
+    duration_weeks: 1
+  - phase: adjuvant
+    type: chemotherapy
+    regimen_id: REG-FLOT
+    cycles: 4
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+rationale: >
+  FLOT4 trial (Al-Batran 2019) established perioperative FLOT (4 pre + 4
+  post) as standard of care for resectable gastric/GEJ adenocarcinoma,
+  superseding ECF/ECX from MAGIC.
+
+sources:
+  - source_id: SRC-FLOT4-AL-BATRAN-2019
+    position: supports

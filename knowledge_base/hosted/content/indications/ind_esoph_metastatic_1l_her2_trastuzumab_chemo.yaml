@@ -1,0 +1,115 @@
+id: IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-ESOPHAGEAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV (metastatic) OR unresectable locally advanced esophageal carcinoma"
+    - "Adenocarcinoma histology (EAC) OR GEJ adenocarcinoma (Siewert I)"
+    - "Treatment-naive (no prior systemic therapy for advanced disease)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HER2-SOLID
+      required: true
+      value_constraint: "HER2-positive (IHC 3+ OR IHC 2+/ISH-amplified). ToGA showed greatest benefit in IHC 3+ or IHC 2+/FISH+ subgroup."
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    histology_excluded: "Squamous-cell — HER2 amplification rare in ESCC; trial data (ToGA) is gastric/GEJ adenocarcinoma; extrapolation valid only for esoph adeno"
+
+recommended_regimen: REG-TRASTUZUMAB-CHEMO-TOGA
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~47% (ToGA HER2 IHC3+ subgroup; gastric/GEJ population — esoph adeno extrapolation)"
+  progression_free_survival: "Median ~7 mo (ToGA all-HER2-positive)"
+  overall_survival_median: "mOS 13.8 vs 11.1 mo (ToGA all-HER2-positive vs chemo, HR 0.74); 16.0 vs 11.8 mo in IHC3+ or IHC2+/FISH+ subgroup"
+  notes: >
+    ToGA enrolled gastric + GEJ adenocarcinoma (Siewert I-III). Esoph
+    adenocarcinoma was not enrolled but is biologically grouped with
+    GEJ/gastric adeno; NCCN-Esophageal/EGJ 2025 endorses extrapolation
+    when distal-third esoph adeno is HER2+. Confidence: moderate
+    (extrapolation from anatomically adjacent disease site enrolled in
+    the pivotal trial).
+
+hard_contraindications: []
+
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-HER2-IHC-FISH
+  - TEST-ECHO
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+
+desired_tests:
+  - TEST-PDL1-IHC
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+
+rationale: >
+  ToGA (Bang 2010 Lancet, NCT01041404): trastuzumab 8 mg/kg loading then
+  6 mg/kg q3w + capecitabine 1000 mg/m² PO BID D1-14 OR 5-FU 800 mg/m²/d D1-5 +
+  cisplatin 80 mg/m² q3w vs chemo alone in HER2-positive (IHC3+ or FISH+)
+  advanced gastric/GEJ adenocarcinoma (n=594). Median OS 13.8 vs 11.1 mo
+  (HR 0.74, p=0.0046); IHC3+ or IHC2+/FISH+ subgroup mOS 16.0 vs 11.8 mo.
+  Established trastuzumab + chemo as 1L standard for HER2+ advanced gastric/
+  GEJ adeno. NCCN/ESMO category 1 for gastric/GEJ.
+
+  Extrapolation rationale for esoph adenocarcinoma: ToGA enrolled GEJ adeno
+  (Siewert I-III); distal-third esoph adenocarcinoma is biologically
+  contiguous with GEJ adeno (shared chronic GERD / Barrett pathogenesis).
+  NCCN-Esophageal/EGJ 2025 endorses HER2 testing in metastatic adeno and
+  trastuzumab + chemo when HER2+ — same backbone as gastric. Pure
+  esoph-confined adeno was not enrolled in ToGA; benefit magnitude is
+  inferred. Confidence: moderate.
+
+rationale_ua: >
+  ToGA (Bang 2010): трастузумаб + цисплатин + капецитабін/5-ФУ для HER2+
+  метастатичної аденокарциноми шлунка/ВГП. mOS 13.8 vs 11.1 міс (HR 0.74).
+  Екстраполяція на аденокарциному стравоходу обґрунтована анатомічною
+  суміжністю з ВГП-аденокарциномою; NCCN-Esophageal 2025 підтримує. Рівень
+  достовірності: помірний.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-TOGA-BANG-2010
+    position: supports
+    relevant_quote_paraphrase: "ToGA: trastuzumab + cisplatin + 5-FU/cape vs chemo in HER2+ advanced gastric/GEJ adeno (n=594); mOS 13.8 vs 11.1 mo (HR 0.74). IHC3+ or IHC2+/FISH+ subgroup mOS 16.0 vs 11.8 mo. Established 1L standard for HER2+ gastric/GEJ. Extrapolated to HER2+ esoph adeno per NCCN."
+  - source_id: SRC-NCCN-ESOPHAGEAL-2025
+    position: supports
+  - source_id: SRC-ESMO-ESOPHAGEAL-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT use in squamous-cell histology — HER2 amplification rare in ESCC; trial enrolled adeno only"
+  - "Do NOT use without baseline LVEF — trastuzumab cardiotoxicity (q3-mo echo monitoring)"
+  - "Do NOT combine with anthracycline (cumulative cardiotoxicity)"
+  - "Do NOT skip HER2 reflex ISH on IHC 2+ — IHC 2+ alone is NOT a treatment indication"
+  - "Do NOT initiate during ongoing GI bleed / luminal obstruction without first-line stabilization"
+  - "Do NOT extrapolate to ESCC even with rare HER2 amplification — out of scope of ToGA"
+
+last_reviewed: "2026-05-07"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  Extrapolation indication — confidence: moderate. ToGA was gastric + GEJ
+  (Siewert I-III). Esoph adenocarcinoma was not formally enrolled but NCCN
+  2025 recommends HER2 testing + trastuzumab + chemo for HER2+ metastatic
+  esoph adeno based on biological continuity with GEJ. KEYNOTE-811
+  (pembro + trastuzumab + chemo for HER2+ gastric/GEJ + CPS≥1) further
+  supports this backbone but is a separate indication scope.
+
+  Reuses REG-TRASTUZUMAB-CHEMO-TOGA (gastric ToGA regimen) — same dose,
+  schedule, components for esoph adeno extrapolation. No new regimen
+  authored; reuse audit confirmed identical backbone.
+
+  Algorithm extension required: ALGO-ESOPH-METASTATIC-1L should add a
+  HER2-positive adeno branch routing to this indication. Out of scope for
+  A1 (algorithm chunk D1 will handle).

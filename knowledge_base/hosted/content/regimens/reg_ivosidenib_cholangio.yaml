@@ -1,0 +1,144 @@
+id: REG-IVOSIDENIB-CHOLANGIO
+name: "Ivosidenib monotherapy (ClarIDHy) — 2L+ IDH1-mutated cholangiocarcinoma"
+name_ua: "Івосиденіб монотерапія (ClarIDHy) — 2L+ IDH1-mutated CCA"
+alternate_names:
+  - "Ivosidenib"
+  - "Tibsovo"
+
+components:
+  - drug_id: DRUG-IVOSIDENIB
+    dose: "500 mg PO once daily, continuous"
+    schedule: "PO daily, 28-day cycle (continuous; no scheduled break)"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: low
+
+premedication: []
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+# Ivosidenib supportive-care protocol (encoded in notes / dose_adjustments
+# below; no dedicated SUP entity yet — flagged for future supportive_care
+# expansion):
+#  - Baseline + serial ECG (week 1, 2, 4, then monthly or at clinical
+#    discretion) for QTc monitoring; aim QTcF <480 ms
+#  - Baseline + pre-cycle electrolytes (K, Mg, Ca) — correct hypokalemia
+#    / hypomagnesemia before initiation; recheck with concomitant
+#    QT-prolonging drugs or new GI losses
+#  - Baseline + monthly LFTs and CBC
+#  - Pre-treatment confirmation of IDH1 R132 mutation by tumor NGS
+#    (DNA preferred; ctDNA acceptable when tumor tissue insufficient)
+#  - Differentiation-syndrome vigilance is primarily an AML concern;
+#    in cholangiocarcinoma it is rare but plausible — clinicians
+#    should remain aware
+
+dose_adjustments:
+  - condition: "QTcF prolongation 481–500 ms (grade 2)"
+    modification: "Hold ivosidenib until QTcF ≤480 ms; resume at the same dose with weekly ECG monitoring; correct K / Mg / Ca; review concomitant QT-prolonging drugs"
+    source_refs: [SRC-NCCN-HEPATOBILIARY, SRC-CLARIDHY-ABOU-ALFA-2020]
+  - condition: "QTcF >500 ms (grade 3)"
+    modification: "Hold ivosidenib until QTcF ≤480 ms; resume at 250 mg daily; permanent reduction or discontinuation if recurrent at 250 mg"
+    source_refs: [SRC-NCCN-HEPATOBILIARY, SRC-CLARIDHY-ABOU-ALFA-2020]
+  - condition: "QTcF prolongation with arrhythmia (torsades de pointes, polymorphic VT, signs/symptoms of serious arrhythmia)"
+    modification: "Discontinue ivosidenib permanently"
+    source_refs: [SRC-NCCN-HEPATOBILIARY, SRC-CLARIDHY-ABOU-ALFA-2020]
+  - condition: "Suspected differentiation syndrome (rare in cholangio; any grade)"
+    modification: "Initiate dexamethasone 10 mg IV q12h + hemodynamic / hydration / diuresis support immediately; hold ivosidenib only if grade ≥3; resume at same dose after symptom resolution"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Grade 3 non-hematologic toxicity (excluding QT, differentiation syndrome) attributed to ivosidenib"
+    modification: "Hold ivosidenib until ≤grade 1 or baseline; resume at 250 mg daily; discontinue if recurrent at 250 mg"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Strong CYP3A4 inhibitor concomitant (unavoidable)"
+    modification: "Reduce ivosidenib to 250 mg daily; monitor QTc weekly; revert to 500 mg ≥5 half-lives after inhibitor discontinuation"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Strong CYP3A4 inducer concomitant"
+    modification: "Avoid combination — ivosidenib exposure substantially reduced; consider alternate non-inducing agent"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: |
+    Івосиденіб НЕ зареєстровано в UA (drlz.com.ua станом на
+    2026-05-07; FDA серпень 2021 для cholangio, EMA 2023). НЕ
+    входить до НСЗУ. Шляхи доступу:
+    - Named-patient import — за рахунок пацієнта;
+    - Servier EAP — обмежено для IDH1-mutated CCA пост-1L
+      gem+cis ± durvalumab;
+    - Cross-border (EU): EU гепатобіліарні центри (наказ МОЗ 988);
+    - Clinical trials (NCT search: IDH1 + cholangiocarcinoma).
+    Альтернатива при недоступному ivosidenib: FOLFOX 2L (ABC-06)
+    або клінічне дослідження. Vorasidenib (dual mIDH1/2) NOT active
+    у cholangio і не є альтернативою.
+
+sources:
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+  - SRC-CLARIDHY-ABOU-ALFA-2020
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Ivosidenib for IDH1-mutated cholangiocarcinoma 2L+ (ClarIDHy).
+# Toxicity signature: QT prolongation, fatigue, GI (nausea, diarrhea),
+# rare differentiation syndrome (boxed warning is AML-specific).
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, втрата апетиту"
+    action_ua: "Часто проходить — занотовуйте; підтримуючий протиблювотний при потребі"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея (3–4 рази на день, без зневоднення)"
+    action_ua: "Лоперамід за схемою; пийте більше рідини; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Втома, що не заважає щоденній активності"
+    action_ua: "Очікувано — занотовуйте; режим сну, легка фізична активність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Серцебиття, перебої в роботі серця, запаморочення"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна ЕКГ для контролю QT-інтервалу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HEPATOBILIARY
+      - SRC-CLARIDHY-ABOU-ALFA-2020
+  - trigger_ua: "Виражена діарея (≥6 разів на день) або зневоднення"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози та підтримка"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова задишка, набряк ніг, швидке збільшення ваги"
+    action_ua: "Звертайтесь у лікарню негайно — рідко може бути ознакою синдрому диференціації; потребує негайного введення дексаметазону"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-HEPATOBILIARY
+  - trigger_ua: "Втрата свідомості, виражене запаморочення з серцебиттям"
+    action_ua: "Звертайтесь у лікарню негайно — можлива серйозна аритмія через QT-подовження"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-HEPATOBILIARY
+      - SRC-CLARIDHY-ABOU-ALFA-2020
+
+last_reviewed: "2026-05-07"
+
+notes: >
+  ClarIDHy phase 3 (Abou-Alfa et al. Lancet Oncol 2020): ivosidenib
+  500 mg PO daily continuous vs placebo in advanced/metastatic
+  IDH1-mutant cholangiocarcinoma post ≥1L systemic therapy (typically
+  gemcitabine/cisplatin ± durvalumab in modern practice). N=185
+  randomized 2:1 (ivo n=124, pbo n=61). mPFS 2.7 vs 1.4 mo, HR 0.37
+  (95% CI 0.25–0.54), p<0.0001. Disease control rate 53% vs 28%.
+  ORR 2% (no CR; 2 PR by independent review). mOS HR 0.79 ITT (NS,
+  with 70.5% placebo-arm crossover); RPSFT-adjusted mOS HR 0.49 — OS
+  benefit recognized in label. FDA-approved August 2021; EMA approved
+  2023. Toxicity well tolerated overall (G≥3 AE 30% ivo vs 22% pbo);
+  notable AEs: ascites (G≥3 7% ivo vs 5% pbo, attributable to disease
+  progression in part), fatigue, nausea, QTc prolongation (any grade
+  ~9%, G≥3 ~1%). Differentiation syndrome — boxed warning class
+  effect — not observed in ClarIDHy cholangio cohort but possible
+  per labelling and AML experience; clinicians should remain aware.
+  STUB pending Clinical Co-Lead sign-off; SRC-CLARIDHY-ABOU-ALFA-2020
+  ingested as primary citation (W0-CHOLANGIO PR #456).

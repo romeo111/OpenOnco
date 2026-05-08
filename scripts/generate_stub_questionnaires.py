@@ -28,6 +28,8 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+import yaml
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 QUEST_DIR = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "questionnaires"
 
@@ -453,9 +455,11 @@ def main() -> int:
 
     written: list[str] = []
     skipped_existing = 0
+    processed_diseases: set[str] = set()
     for eid, info in sorted(load.entities_by_id.items()):
         if info["type"] != "diseases":
             continue
+        processed_diseases.add(eid)
         if eid in existing_quest_diseases:
             skipped_existing += 1
             continue
@@ -470,6 +474,21 @@ def main() -> int:
         path.write_text(text, encoding="utf-8")
         written.append(eid)
         print(f"  + {path.name:50s} ({len(bio_ids)} biomarkers wired)")
+
+    disease_dir = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "diseases"
+    for disease_path in sorted(disease_dir.glob("*.yaml")):
+        disease_data = yaml.safe_load(disease_path.read_text(encoding="utf-8")) or {}
+        disease_id = disease_data.get("id")
+        if not disease_id or disease_id in processed_diseases:
+            continue
+        path = QUEST_DIR / _filename_for(disease_id)
+        if path.exists():
+            skipped_existing += 1
+            continue
+        text = _build_questionnaire_yaml(disease_id, disease_data, [], load.entities_by_id)
+        path.write_text(text, encoding="utf-8")
+        written.append(disease_id)
+        print(f"  + {path.name:50s} (0 biomarkers wired; disease-yaml fallback)")
 
     print(f"\nWrote {len(written)} stub questionnaires.")
     print(f"Skipped (already had questionnaire): {skipped_existing}")

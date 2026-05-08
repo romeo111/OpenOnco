@@ -1,0 +1,96 @@
+# ALGO-PDAC-LAPC — chunk gi3-d2-algo-extensions-2026-05-08-2300.
+# Routes locally advanced unresectable PDAC (LAPC) — T4 (celiac axis
+# or SMA >180° encasement, or unreconstructable SMV/portal vein
+# involvement) M0 disease without distant metastases — to induction-
+# then-consolidation chemoradiation: IND-PDAC-LAPC-CHEMORADIATION.
+# Phase 1: FOLFIRINOX or mFOLFIRINOX × 4-6 cycles induction; Phase 2:
+# definitive consolidation chemoradiation 50.4 Gy + concurrent
+# capecitabine (per LAP07 / CONKO-007).
+#
+# applicable_to_disease_state: "pdac_lapc_unresectable" disambiguates
+# this from ALGO-PDAC-METASTATIC-1L (state-agnostic, line=1) and from
+# ALGO-PDAC-RESECTABLE-PERIOP (resectable_or_borderline state). Patients
+# without disease_state continue to land on the metastatic algorithm
+# per _find_algorithm fallback rules.
+id: ALGO-PDAC-LAPC
+applicable_to_disease: DIS-PDAC
+applicable_to_line_of_therapy: 1
+applicable_to_disease_state: pdac_lapc_unresectable
+purpose: >
+  Algorithm for locally advanced unresectable PDAC (LAPC). Single
+  routing target — IND-PDAC-LAPC-CHEMORADIATION (induction
+  FOLFIRINOX/mFOLFIRINOX → definitive chemoradiation). Step 1
+  routes T4/M0 unresectable disease + ECOG 0-1 + fit-for-FOLFIRINOX
+  to the §17 2-phase phased indication. Patients failing fitness
+  gates fall back to gem-nab-pac induction-then-CRT or palliative
+  systemic via MDT review (out of scope v0.1 — separate indication
+  pending).
+
+output_indications:
+  - IND-PDAC-LAPC-CHEMORADIATION
+
+default_indication: IND-PDAC-LAPC-CHEMORADIATION
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — LAPC routing. Patient with resectability_status="lapc"
+  # or "unresectable_locally_advanced" (T4 with celiac axis / SMA
+  # >180° encasement OR unreconstructable SMV/portal vein involvement,
+  # M0) routes to induction-then-CRT phased indication. Fitness gates
+  # (ECOG 0-1 + RF-PDAC-FIT-FOR-FOLFIRINOX) required for FOLFIRINOX
+  # induction intensity.
+  - step: 1
+    evaluate:
+      all_of:
+        - finding: resectability_status
+          value: lapc
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-PDAC-FIT-FOR-FOLFIRINOX
+    if_true:
+      result: IND-PDAC-LAPC-CHEMORADIATION
+      notes: >
+        LAP07 / CONKO-007 / Hammel JAMA 2016 informed protocol —
+        induction FOLFIRINOX or mFOLFIRINOX × 4-6 cycles → restaging
+        at ~12-16 wk → if no progression and no new metastases →
+        definitive consolidation chemoradiation 50.4 Gy / 28 fx +
+        concurrent capecitabine (825 mg/m² PO BID on RT days). NCCN
+        v3.2025 cat 2A; evidence-level moderate (LAP07: no OS benefit
+        overall HR 1.03 p=0.83 but local control improved at 1y;
+        CONKO-007 maturing). Confidence: moderate (consensus + local-
+        control benefit; OS benefit uncertain). Conversion-to-surgery
+        is an explicit option for downstaging responders — handled
+        externally to this algorithm via MDT review post-CRT.
+    if_false:
+      result: IND-PDAC-LAPC-CHEMORADIATION
+      notes: >
+        Fallback: when finding-keyed resectability_status="lapc"
+        does not evaluate True OR fitness gates fail, indication
+        still defaults to LAPC chemoradiation — the indication's
+        demographic_constraints (ecog_max: 1) and stage_requirements
+        handle ineligibility surfacing at render time. Patients
+        failing fitness gates should be routed to MDT for gem-nab-pac
+        induction-then-CRT or palliative systemic alternative (out
+        of scope v0.1 — separate indication pending).
+
+sources:
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-ESMO-PANCREATIC-2024
+
+last_reviewed: "2026-05-08"
+reviewer_signoffs: []
+notes: >
+  D2 chunk gi3-d2-algo-extensions-2026-05-08-2300 — first routing for
+  IND-PDAC-LAPC-CHEMORADIATION (Phase C C5; §17 2-phase phased
+  indication). Algorithm scope is intentionally narrow: LAPC + ECOG
+  0-1 + fit-for-FOLFIRINOX → induction-then-CRT. Out-of-scope:
+  gem-nab-pac induction-then-CRT for fitness-failing patients
+  (separate indication pending); palliative systemic-only for
+  unresectable patients without consolidation-CRT intent (handled
+  via metastatic algorithm if M+); conversion-to-surgery post-CRT
+  for downstaging responders (handled externally via MDT review,
+  routes to ALGO-PDAC-RESECTABLE-PERIOP if reclassified resectable
+  post-induction). LAP07 OS-neutral but local-control improvement
+  + symptom palliation benefit drives NCCN cat 2A inclusion;
+  evidence_level on indication is "moderate" + strength_of_
+  recommendation "conditional" reflecting this mixed-signal trial
+  base.

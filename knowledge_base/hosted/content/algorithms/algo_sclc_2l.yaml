@@ -11,6 +11,7 @@ output_indications:
   - IND-SCLC-RR-TOPOTECAN
   - IND-SCLC-RR-LURBINECTEDIN
   - IND-SCLC-PLATINUM-RECHALLENGE
+  - IND-SCLC-RR-TARLATAMAB
 
 default_indication: IND-SCLC-RR-TOPOTECAN
 alternative_indication: IND-SCLC-RR-LURBINECTEDIN
@@ -42,12 +43,32 @@ decision_tree:
       result: null
       notes: "ECOG ≥3: systemic therapy benefit minimal. Best supportive care + corticosteroids for paraneoplastic symptoms. Palliative/hospice referral."
 
-  # Step 3 — Platinum rechallenge gate for CTFI ≥180 days.
+  # Step 3 — DLL3+ tarlatamab gate (NEW — NCCN Cat 1 2025).
+  # DLL3 is expressed in ~80-90% of SCLC. Tarlatamab (DeLLphi-301) is NCCN
+  # Category 1 preferred 2L+ option for DLL3+ patients as of 2025 guidelines.
+  # Route DLL3-negative or assay-unavailable patients to CTFI-based chemo routing.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "DLL3 IHC positive (≥1% tumour cells; any DLL3 expression per DeLLphi-301 eligibility)"
+    if_true:
+      result: IND-SCLC-RR-TARLATAMAB
+      notes: >
+        DLL3+ SCLC relapsed/refractory: tarlatamab 10 mg IV q2w preferred
+        (DeLLphi-301: ORR 40.0%; mDoR 9.7 mo; mOS 14.3 mo; NCCN Cat 1 2025).
+        DeLLphi-301 enrolled patients with ≥2 prior lines; NCCN and ESMO list
+        as 2L+ preferred option for DLL3+. Monitor for CRS (grade 1-2 common).
+        If tarlatamab inaccessible or DLL3 assay unavailable: route to step 4.
+    if_false:
+      next_step: 4
+      notes: "DLL3 negative or assay not performed: CTFI-based chemotherapy routing."
+
+  # Step 4 — Platinum rechallenge gate for CTFI ≥180 days.
   # CTFI = time from end of 1L platinum chemotherapy to disease progression/recurrence.
   # CTFI ≥180 days (highly platinum-sensitive): platinum rechallenge preferred (ORR ~50-60%,
   # superior to topotecan ~24% or lurbinectedin ~35% in this sensitivity category).
-  # CTFI <180 days: proceed to step 4 (lurbinectedin vs topotecan routing).
-  - step: 3
+  # CTFI <180 days: proceed to step 5 (lurbinectedin vs topotecan routing).
+  - step: 4
     evaluate:
       any_of:
         - condition: "CTFI ≥ 180 days from end of 1L platinum chemotherapy"
@@ -62,19 +83,19 @@ decision_tree:
         If patient declines rechallenge or has contraindication to platinum:
         proceed to lurbinectedin (if accessible) or topotecan.
     if_false:
-      next_step: 4
-      notes: "CTFI <180 days: route to step 4 for CTFI ≥30d gate and lurbinectedin access."
+      next_step: 5
+      notes: "CTFI <180 days: route to step 5 for CTFI ≥30d gate and lurbinectedin access."
 
-  # Step 4 — CTFI ≥30d gate for lurbinectedin eligibility.
+  # Step 5 — CTFI ≥30d gate for lurbinectedin eligibility.
   # Lurbinectedin FDA label requires CTFI ≥30 days from last platinum dose.
   # CTFI <30 days (platinum-refractory): topotecan only.
-  - step: 4
+  - step: 5
     evaluate:
       any_of:
         - condition: "CTFI ≥ 30 days from last platinum dose"
     if_true:
-      next_step: 5
-      notes: "CTFI 30-179 days: lurbinectedin within FDA-label eligibility. Route to step 5 for access gate."
+      next_step: 6
+      notes: "CTFI 30-179 days: lurbinectedin within FDA-label eligibility. Route to step 6 for access gate."
     if_false:
       result: IND-SCLC-RR-TOPOTECAN
       notes: >
@@ -84,11 +105,11 @@ decision_tree:
         CAV (cyclophosphamide+doxorubicin+vincristine) is NCCN Category 2A alternative
         but rarely used given topotecan similar efficacy and better tolerability.
 
-  # Step 5 — Lurbinectedin access gate (CTFI 30-179 days).
+  # Step 6 — Lurbinectedin access gate (CTFI 30-179 days).
   # Lurbinectedin is preferred per NCCN Cat 2A when accessible (ORR 35% overall;
   # 45% for CTFI ≥90d). Not registered or reimbursed in Ukraine — topotecan is
   # the accessible standard.
-  - step: 5
+  - step: 6
     evaluate:
       all_of:
         - condition: "Lurbinectedin accessible (registered/reimbursed or international pharmacy available)"
@@ -113,15 +134,20 @@ sources:
   - SRC-ESMO-SCLC-2021
   - SRC-TRIGO-2020
 
-last_reviewed: "2026-05-04"
+last_reviewed: "2026-05-09"
 notes: >
-  SCLC 2L routing: 5-step algorithm — clinical trial gate → PS gate →
-  CTFI ≥180d rechallenge gate → CTFI ≥30d gate → lurbinectedin access gate.
+  SCLC 2L routing: 6-step algorithm — clinical trial gate → PS gate →
+  DLL3+ tarlatamab gate (NEW) → CTFI ≥180d rechallenge gate →
+  CTFI ≥30d gate → lurbinectedin access gate.
 
-  Three active indications:
+  Four active indications:
+  - IND-SCLC-RR-TARLATAMAB (NCCN Cat 1 2025; DLL3+; DeLLphi-301; ORR 40%; mOS 14.3mo)
   - IND-SCLC-PLATINUM-RECHALLENGE (NCCN Cat 2A; CTFI ≥180d; ORR ~50-60%)
   - IND-SCLC-RR-LURBINECTEDIN (NCCN Cat 2A; CTFI 30-179d; not registered UA)
   - IND-SCLC-RR-TOPOTECAN (NCCN Cat 1; all CTFI; registered UA; default)
+
+  Step renumbering (2026-05-09): new tarlatamab step inserted as step 3;
+  old steps 3→4, 4→5, 5→6 with all next_step cross-references updated.
 
   CAV (cyclophosphamide+doxorubicin+vincristine) is NCCN Category 2A alternative for
   CTFI ≥90 days but rarely used given topotecan non-inferiority and better tolerability

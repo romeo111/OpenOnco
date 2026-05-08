@@ -1,0 +1,89 @@
+# SUR-ASCT-AUTOLOGOUS — Autologous stem cell transplantation (high-dose
+# melphalan conditioning + PBSC reinfusion). §17.1 Surgery entity.
+# Referenced from IND-MM-1L-DVRD.phases[1].surgery_id.
+id: SUR-ASCT-AUTOLOGOUS
+names:
+  preferred: "Autologous stem cell transplantation (HDM/ASCT)"
+  ukrainian: "Аутологічна трансплантація стовбурових клітин (ВДМФ/ASCT)"
+  english: "Autologous stem cell transplantation (HDM/ASCT)"
+  synonyms:
+    - "ASCT"
+    - "Auto-SCT"
+    - "HDM/ASCT"
+    - "High-dose melphalan with autologous stem cell rescue"
+    - "BEAM-ASCT (lymphoma variant)"
+    - "Autologous BMT"
+
+type: stem_cell_transplant
+intent: curative
+
+target_organ: hematopoietic_system
+applicable_diseases:
+  - DIS-MM
+
+# Treatment-related mortality from modern IMWG/NCCN-era series; PERSEUS
+# reported 1.6% treatment-related deaths in D-VRd/ASCT arm. Historical
+# melphalan-200 registry data (EBMT): TRM ~1-3% in fit patients (ECOG 0-1,
+# age <65); rises to 3-5% with comorbidities or older age (65-70+).
+operative_mortality_pct: "1-3% treatment-related mortality in fit transplant-eligible patients (ECOG 0-1); up to 5% in patients with significant comorbidity burden"
+
+common_complications:
+  - name: "Mucositis (WHO Grade 2-4)"
+    frequency: "70-90% (melphalan-200 conditioning)"
+  - name: "Febrile neutropenia / infectious complications during engraftment"
+    frequency: "60-80%; bacteremia most common; fungal / viral reactivation (HSV, VZV) require prophylaxis"
+  - name: "Nausea and vomiting"
+    frequency: "80-95% (high-dose melphalan); managed with 5-HT3 + NK1 antagonists"
+  - name: "Engraftment syndrome (capillary leak)"
+    frequency: "10-20%; fever + rash + fluid retention around day +7 to +10"
+  - name: "Delayed engraftment (neutrophil >21 days, platelet >28 days)"
+    frequency: "5-10%; risk increased with prior lenalidomide, poor mobilization"
+  - name: "Graft failure (primary)"
+    frequency: "<1% with PBSC (peripheral blood) vs higher with marrow grafts"
+  - name: "Sinusoidal obstruction syndrome (SOS/VOD)"
+    frequency: "Rare with melphalan conditioning (<2%); higher risk if prior hepatotoxic agents"
+  - name: "Second primary malignancy (MDS/AML)"
+    frequency: "2-5% at 5 years post-ASCT; risk amplified by post-ASCT lenalidomide maintenance"
+  - name: "Pulmonary toxicity"
+    frequency: "1-3%; pneumonitis / interstitial pattern; higher with prior thalidomide"
+  - name: "Cardiac arrhythmia"
+    frequency: "5-10%; atrial fibrillation most common during conditioning/engraftment"
+
+sources:
+  - SRC-PERSEUS-SONNEVELD-2024
+  - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-05-09"
+notes: >
+  Autologous SCT with high-dose melphalan (200 mg/m² single dose; mel-140
+  if renal impairment CrCl <40 or age >65-70 per center) remains the
+  consolidation standard for transplant-eligible NDMM following quadruplet
+  or triplet induction. PERSEUS (Sonneveld NEJM 2024, PMID 38084760)
+  demonstrated ASCT as the consolidation step in D-VRd × 4 → ASCT →
+  D-VRd × 2 → dara-len maintenance sequence: 48-mo PFS 84.3% vs 67.7%
+  for VRd+ASCT+VRd+len-maintenance (HR 0.42, p<0.001).
+
+  Mobilization: GCSF ± plerixafor (BioMOVe / NCCN protocol); target ≥5×10⁶
+  CD34+ cells/kg (≥2×10⁶ minimum for one transplant). Prior lenalidomide
+  >4 cycles may impair mobilization — use plerixafor preemptively.
+
+  Transplant-eligibility criteria (NCCN / IMWG consensus):
+  - Age: no strict upper cutoff; functional age + comorbidity burden (HCT-CI)
+    is the discriminator. Most centers: biological age ≤70-75 + ECOG 0-1
+    (or ECOG 2 if reversible myeloma-related). Some centers extend to 75+
+    for very fit patients.
+  - Organ function: CrCl ≥30 mL/min (mel-140 if 30-40); LVEF ≥45%; DLCO ≥50%.
+  - No uncontrolled infection at time of conditioning.
+
+  ASCT timing in PERSEUS protocol: after 4 induction cycles (D-VRd × 4),
+  followed by D-VRd × 2 consolidation, then daratumumab-lenalidomide
+  maintenance until progression. The ASCT itself takes approximately 3-4 weeks
+  inpatient (conditioning + reinfusion + engraftment to ANC ≥500).
+  Duration_weeks for the phases entry reflects the total transplant episode
+  (admission to safe discharge ≈ 4-6 weeks including mobilization/harvest
+  overlap in many centers).
+
+  Ukraine context: ASCT is available at specialized centers (BMT units in
+  Kyiv, Lviv, Dnipro); coverage via НСЗУ with prior authorization for MM
+  indications. Capacity is limited — coordinate referral early after
+  confirmed transplant eligibility.

@@ -1,0 +1,182 @@
+# IND-PDAC-ADJUVANT-MFOLFIRINOX — §17 single-phase adjuvant indication
+# (chunk gi3-c1-pdac-adj-mfolfirinox-2026-05-08-2100). Mirrors GI-2 C1
+# FLOT pattern but adjuvant-only — surgery happened pre-enrollment in
+# PRODIGE-24, so the indication phases[] models the systemic adjuvant
+# course only. The patient must already have undergone R0/R1 resection
+# to qualify; pre-resection patients route to a different indication
+# (neoadjuvant if planned, or systemic if upfront unresectable).
+id: IND-PDAC-ADJUVANT-MFOLFIRINOX
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PDAC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Resected pancreatic ductal adenocarcinoma, stage I-III, R0 or R1 margin"
+    - "Post-resection, recovery to ECOG 0-1 within 12 weeks of surgery"
+  biomarker_requirements_required: []
+  # PRODIGE-24 did NOT stratify by biomarker — adjuvant mFOLFIRINOX is
+  # offered to all fit post-resection PDAC regardless of KRAS / BRCA / MSI
+  # status. BRCA1/2 patients may consider adjuvant trials with PARPi
+  # additions; MSI-H / dMMR patients are exceedingly rare in PDAC and
+  # remain candidates for standard mFOLFIRINOX.
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    fit_for_chemo: true
+    # PRODIGE-24 enrolled ECOG 0-1 only; ECOG 2+ patients should be
+    # considered for less-toxic adjuvant alternatives (gem-cape,
+    # gemcitabine monotherapy) via MDT.
+
+# §17 single-phase adjuvant — surgery happened pre-enrollment in
+# PRODIGE-24 and is NOT modelled here. Patients who reach this indication
+# have already had R0/R1 resection. The adjuvant systemic course is the
+# entire scope of this indication.
+phases:
+  - phase: adjuvant
+    type: chemotherapy
+    regimen_id: REG-MFOLFIRINOX
+    cycles: 12
+
+# Legacy `recommended_regimen` left null — render layer should consume
+# `phases:` for this indication per §17 ratification (commit 9882381c).
+recommended_regimen:
+
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_survival_median: "54.4 mo (mFOLFIRINOX) vs 35.0 mo (gemcitabine); HR 0.64, p<0.001 (PRODIGE-24 / Conroy 2018)"
+  progression_free_survival: "Median DFS 21.6 mo (mFOLFIRINOX) vs 12.8 mo (gemcitabine); HR 0.58, p<0.001"
+  overall_survival_5y: "5y OS ~43% (mFOLFIRINOX) vs ~32% (gemcitabine) per PRODIGE-24 long-term update"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-LFT
+  - TEST-CBC
+
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE  # BRCA / KRAS / MSI for future-line preparedness
+
+rationale: >
+  PRODIGE-24/CCTG PA.6 (Conroy 2018, NEJM) established modified
+  FOLFIRINOX × 12 cycles as the preferred adjuvant therapy for resected
+  pancreatic ductal adenocarcinoma in fit ECOG 0-1 patients post R0/R1
+  resection. Median OS 54.4 vs 35.0 mo (HR 0.64), median DFS 21.6 vs 12.8
+  mo (HR 0.58), both p<0.001 vs gemcitabine monotherapy. NCCN v3.2025
+  category 1 + ESMO 2024 strong recommendation. mFOLFIRINOX superseded
+  gemcitabine monotherapy and gem-capecitabine (ESPAC-4) as the preferred
+  adjuvant regimen for fit patients.
+
+  Patient selection: ECOG 0-1, recovery from surgery within 12 weeks
+  (PRODIGE-24 protocol window), bilirubin <1.5 ULN (irinotecan
+  hepatotoxicity), no severe cardiac comorbidity. UGT1A1 *28/*28
+  homozygous patients should start with reduced irinotecan dose. Patients
+  unfit for mFOLFIRINOX (ECOG ≥2, severe comorbidity, persistent
+  post-operative complications) should be offered gem-capecitabine
+  (ESPAC-4) or gemcitabine monotherapy as alternative adjuvant standards
+  via MDT review.
+
+  Surgery is NOT modelled in phases[] for this indication because
+  PRODIGE-24 enrolled patients post-resection — surgical decision and
+  outcome are pre-conditions, not phases of this line of therapy.
+
+rationale_ua: >
+  PRODIGE-24/CCTG PA.6 (Conroy 2018, NEJM) встановив модифікований
+  FOLFIRINOX × 12 циклів як преферентну ад'ювантну терапію резектованої
+  протокової аденокарциноми підшлункової залози у фіт-пацієнтів ECOG 0-1
+  після R0/R1 резекції. Медіана ЗВ 54.4 vs 35.0 міс (HR 0.64), медіана
+  БХВ 21.6 vs 12.8 міс (HR 0.58), обидва p<0.001 vs гемцитабін у
+  монорежимі. NCCN v3.2025 категорія 1 + ESMO 2024 сильна рекомендація.
+  mFOLFIRINOX замінив гемцитабін у монорежимі та гем-капецитабін
+  (ESPAC-4) як преферентний ад'ювантний режим для фіт-пацієнтів.
+
+  Відбір пацієнтів: ECOG 0-1, відновлення після операції протягом 12
+  тижнів (вікно протоколу PRODIGE-24), білірубін <1.5 ULN
+  (гепатотоксичність іринотекану), відсутність тяжкої кардіальної
+  коморбідності. Пацієнти UGT1A1 *28/*28 гомозиготні — стартова
+  знижена доза іринотекану. Непридатні до mFOLFIRINOX (ECOG ≥2, тяжка
+  коморбідність, стійкі післяопераційні ускладнення) — гем-капецитабін
+  (ESPAC-4) або гемцитабін у монорежимі через MDT.
+
+  Хірургія НЕ моделюється у phases[] цього indication, оскільки
+  PRODIGE-24 включав пацієнтів після резекції — хірургічне рішення і
+  результат є передумовами, а не фазами цієї лінії терапії.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-PRODIGE-24-CONROY-2018
+    position: supports
+  - source_id: SRC-NCCN-PANCREATIC-2025
+    position: supports
+  - source_id: SRC-ESMO-PANCREATIC-2024
+    position: supports
+
+known_controversies:
+  - topic: Adjuvant mFOLFIRINOX vs gem-capecitabine for fit post-resection PDAC
+    positions:
+      - position: mFOLFIRINOX preferred for fit ECOG 0-1 patients
+        sources:
+          - SRC-PRODIGE-24-CONROY-2018
+          - SRC-NCCN-PANCREATIC-2025
+          - SRC-ESMO-PANCREATIC-2024
+        evidence_note: "PRODIGE-24 OS 54.4 vs 35.0 mo (HR 0.64) — largest absolute OS gain in adjuvant PDAC; mFOLFIRINOX is now preferred standard"
+      - position: Gem-capecitabine acceptable when mFOLFIRINOX not feasible
+        sources:
+          - SRC-NCCN-PANCREATIC-2025
+        evidence_note: "ESPAC-4 demonstrated gem-cape superiority over gem-mono (mOS 28 vs 25.5 mo, HR 0.82); reasonable adjuvant alternative when intolerance / unfit for mFOLFIRINOX"
+    our_default: "mFOLFIRINOX × 12 cycles for ECOG 0-1 patients within 12-week post-op recovery window; gem-capecitabine as MDT-determined alternative for marginal-fitness or comorbidity-limited patients"
+    rationale: "PRODIGE-24's OS gain is the largest in adjuvant PDAC trial history; mFOLFIRINOX is the preferred standard. ESPAC-4 gem-cape preserves a meaningful OS gain over gem-mono and is the appropriate fallback when mFOLFIRINOX is contraindicated."
+
+  - topic: Adjuvant initiation timing post-resection
+    positions:
+      - position: Initiate within 12 weeks of surgery
+        sources:
+          - SRC-PRODIGE-24-CONROY-2018
+        evidence_note: "PRODIGE-24 protocol enrolled patients within 3-12 weeks of resection; benefit beyond 12 weeks not established"
+      - position: NCCN allows up to 12-16 weeks for slow recoverers
+        sources:
+          - SRC-NCCN-PANCREATIC-2025
+        evidence_note: "NCCN allows clinical judgment for patients with slower post-op recovery; meaningful benefit likely retained if initiated by 16 weeks"
+    our_default: "Target 8-12 weeks post-resection; initiate by week 12 if ECOG 0-1; consider gem-based regimen if delayed beyond 12-16 weeks"
+    rationale: "PRODIGE-24's timing window is the only RCT-validated initiation interval; NCCN's broader allowance reflects pragmatic recovery variability but not direct RCT evidence."
+
+do_not_do:
+  - "Do NOT initiate mFOLFIRINOX in ECOG ≥2 patients — PRODIGE-24 excluded ECOG ≥2; route to gem-capecitabine or gemcitabine monotherapy via MDT"
+  - "Do NOT start without bilirubin <1.5 ULN — irinotecan hepatotoxicity risk; resolve biliary obstruction first"
+  - "Do NOT skip UGT1A1 testing for high-risk populations — preventable severe diarrhea + neutropenia with starting dose adjustment"
+  - "Do NOT skip G-CSF primary prophylaxis — cumulative febrile-neutropenia risk over 12 adjuvant cycles"
+  - "Do NOT use this regimen in metastatic / unresectable PDAC — adjuvant mFOLFIRINOX is for resected disease only; metastatic patients route to IND-PDAC-METASTATIC-1L-FOLFIRINOX (full FOLFIRINOX) or alternatives"
+  - "Do NOT initiate beyond 12-16 weeks post-resection without MDT review — benefit window not RCT-validated beyond protocol timing"
+
+do_not_do_en:
+  - "Do NOT initiate mFOLFIRINOX in ECOG ≥2 patients — PRODIGE-24 excluded ECOG ≥2; route to gem-capecitabine or gemcitabine monotherapy via MDT"
+  - "Do NOT start without bilirubin <1.5 ULN — irinotecan hepatotoxicity risk; resolve biliary obstruction first"
+  - "Do NOT skip UGT1A1 testing for high-risk populations — preventable severe diarrhea + neutropenia with starting dose adjustment"
+  - "Do NOT skip G-CSF primary prophylaxis — cumulative febrile-neutropenia risk over 12 adjuvant cycles"
+  - "Do NOT use this regimen in metastatic / unresectable PDAC — adjuvant mFOLFIRINOX is for resected disease only; metastatic patients route to IND-PDAC-METASTATIC-1L-FOLFIRINOX (full FOLFIRINOX) or alternatives"
+  - "Do NOT initiate beyond 12-16 weeks post-resection without MDT review — benefit window not RCT-validated beyond protocol timing"
+
+last_reviewed: "2026-05-08"
+
+actionability_review_required: true
+
+notes: >
+  GI-3 Phase C1: §17 single-phase adjuvant indication for resected PDAC,
+  mirroring GI-2 C1 FLOT periop pattern but adjuvant-only because surgery
+  happened pre-enrollment in PRODIGE-24. The phases[] block contains a
+  single chemotherapy phase (adjuvant × 12 cycles, REG-MFOLFIRINOX). The
+  surgical pre-condition is captured in stage_requirements rather than
+  phases[] — patients reaching this indication have already had R0/R1
+  resection. Engine routing from PDAC algorithm to this indication is out
+  of C1 scope — flagged for D2 algorithm-extension chunk follow-up.

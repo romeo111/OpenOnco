@@ -176,6 +176,11 @@ class Plan(Base):
     # The tracks — at least 2 per CHARTER §2
     tracks: list[PlanTrack]
 
+    # Same algorithm, different authored line_of_therapy. These tracks are
+    # useful sequencing/audit context but must not appear as current-line
+    # treatment choices.
+    sequencing_tracks: list[PlanTrack] = Field(default_factory=list)
+
     # FDA Criterion 4 metadata (always present, surfaced in rendered doc)
     fda_compliance: FDAComplianceMetadata
 

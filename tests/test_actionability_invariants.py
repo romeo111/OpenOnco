@@ -290,6 +290,82 @@ def test_no_conflict_when_actionability_only_has_non_resistance_levels():
     assert detect_resistance_conflicts([track], [result]) == []
 
 
+def test_civic_does_not_support_conflict_detected_for_drug_overlap():
+    track = _make_track("standard", [{"drug_name": "Cetuximab"}])
+    query = ActionabilityQuery(
+        gene="KRAS", variant="G12D", oncotree_code="CRC",
+        source_biomarker_id="BIO-KRAS-G12D",
+    )
+    result = ActionabilityResult(
+        query=query,
+        source_url="x",
+        therapeutic_options=(
+            ActionabilityTherapeuticOption(
+                level="B",
+                drugs=("cetuximab",),
+                description="CIViC Predictive - Does Not Support - Sensitivity/Response",
+                pmids=(),
+            ),
+        ),
+        cached=False,
+    )
+
+    conflicts = detect_resistance_conflicts([track], [result])
+
+    assert len(conflicts) == 1
+    assert conflicts[0].drug == "cetuximab"
+    assert conflicts[0].gene == "KRAS"
+
+
+def test_civic_resistance_significance_conflict_detected_for_drug_id_overlap():
+    track = _make_track("standard", [{"drug_id": "DRUG-GEFITINIB"}])
+    query = ActionabilityQuery(
+        gene="EGFR", variant="T790M", oncotree_code="NSCLC",
+        source_biomarker_id="BIO-EGFR-T790M",
+    )
+    result = ActionabilityResult(
+        query=query,
+        source_url="x",
+        therapeutic_options=(
+            ActionabilityTherapeuticOption(
+                level="A",
+                drugs=("Gefitinib",),
+                description="CIViC Predictive - Supports - Resistance",
+                pmids=(),
+            ),
+        ),
+        cached=False,
+    )
+
+    conflicts = detect_resistance_conflicts([track], [result])
+
+    assert len(conflicts) == 1
+    assert conflicts[0].drug == "gefitinib"
+
+
+def test_civic_support_sensitivity_does_not_create_conflict():
+    track = _make_track("standard", [{"drug_name": "Vemurafenib"}])
+    query = ActionabilityQuery(
+        gene="BRAF", variant="V600E", oncotree_code="MEL",
+        source_biomarker_id="BIO-BRAF-V600E",
+    )
+    result = ActionabilityResult(
+        query=query,
+        source_url="x",
+        therapeutic_options=(
+            ActionabilityTherapeuticOption(
+                level="A",
+                drugs=("Vemurafenib",),
+                description="CIViC Predictive - Supports - Sensitivity/Response",
+                pmids=(),
+            ),
+        ),
+        cached=False,
+    )
+
+    assert detect_resistance_conflicts([track], [result]) == []
+
+
 @pytest.mark.skip(reason="phase-2: surfacing rules redefined for CIViC")
 def test_conflict_dedupe_when_drug_referenced_twice_in_same_track():
     track = _make_track(

@@ -1,0 +1,275 @@
+# IND-RECTAL-TNT-LONG-COURSE-PRODIGE23 — §17 Indication.phases[] consumer for
+# locally advanced rectal cancer (chunk gi3-c4-rectal-tnt-prodige23-2026-05-08-2200).
+# PRODIGE-23 total neoadjuvant therapy (TNT) — induction triplet chemo
+# then long-course concurrent chemoradiation then TME — uses
+# Indication.phases[] to model the 3-phase TNT sequence:
+#   1. Induction FOLFIRINOX × 6 cycles (REG-FOLFIRINOX — reused)
+#   2. Neoadjuvant LCCRT 50.4 Gy / 28 fx + concurrent capecitabine
+#      (RC-LCCRT-504-28-RECTAL — NEW C4)
+#   3. TME proctectomy (SUR-TME-PROCTECTOMY — merged in C3)
+# Sister indication to IND-RECTAL-TNT-SHORT-COURSE-RAPIDO (C3) — same
+# disease, same line, but DIFFERENT TNT backbone (long-course concurrent
+# CRT vs short-course RT-first sequential). Both are NCCN category 1.
+# Continues the §17 gold-standard pattern set by IND-GASTRIC-PERIOP-FLOT4
+# (GI-2 C1), IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT (GI-2 C2), and
+# IND-RECTAL-TNT-SHORT-COURSE-RAPIDO (GI-3 C3).
+id: IND-RECTAL-TNT-LONG-COURSE-PRODIGE23
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Locally advanced rectal adenocarcinoma — cT3 OR cT4 OR cN+ (any nodal involvement) M0; PRODIGE-23 enrollment was less restrictive than RAPIDO's high-risk-feature list, accepting any cT3-4 or cN+ rectal disease without requiring EMVI / MRF / lateral-node features"
+    - "M0 (non-metastatic) per CT chest/abdomen/pelvis + pelvic MRI staging"
+    - "Tumor located in rectum (mid or low rectum within ~15 cm of anal verge); colon adenocarcinomas excluded — they receive different periop strategy"
+  biomarker_requirements_required: []
+  # PRODIGE-23 did NOT stratify by biomarker. MSI-H rectal tumors merit
+  # MDT discussion of dostarlimab/pembrolizumab non-operative pathway
+  # (Cercek 2022 NEJM dMMR rectal pembro), but that is a separate
+  # indication. KRAS / NRAS / BRAF status do not gate periop LCCRT-TNT —
+  # they drive metastatic-line selection if the patient later progresses.
+  # DPYD pre-screening strongly recommended for the concurrent
+  # capecitabine phase (CPIC) — DPYD deficiency is a hard contraindication
+  # to capecitabine 825 mg/m² BID concurrent radiosensitization without
+  # genotype-guided dose modification.
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    fit_for_chemo: true
+    # PRODIGE-23 enrolled ECOG 0-1, age ≤75; FOLFIRINOX induction is
+    # the most-toxic of standard CRC chemo backbones (severe-fatigue,
+    # neutropenia ~30% G3-4 with G-CSF, neuropathy, severe diarrhea
+    # ~15% G3-4) — older / frailer patients should be considered for
+    # the RAPIDO short-course (CAPOX-induction) variant or for
+    # standard long-course CRT alone via MDT.
+
+# §17 ratified 2026-05-07 — 3-phase TNT indication. Each phase carries
+# exactly ONE foreign key (regimen_id / surgery_id / radiation_id) per
+# the IndicationPhase XOR validator.
+#
+# Phase ordering rationale: PRODIGE-23 inverts the RAPIDO sequence —
+# induction chemo FIRST (FOLFIRINOX × 6 ~12 weeks), then concurrent
+# CRT (LCCRT ~5.5 weeks), then surgery (TME after ≥6-week recovery).
+# The chemo phase is `induction` (TNT canonical term — initiates tumor
+# downstaging before definitive local therapy), the CRT phase is
+# `neoadjuvant` (immediately precedes TME, type=chemoradiation
+# captures the modality — the concurrent chemo lives inside the
+# RadiationCourse RC-LCCRT-504-28-RECTAL, not on the phase, per the
+# XOR rule + planning doc §2.3).
+#
+# Compare to IND-RECTAL-TNT-SHORT-COURSE-RAPIDO (C3) which orders
+# `neoadjuvant` (RT) → `induction` (chemo) → `surgery` — the two TNT
+# patterns differ in whether radiation precedes (RAPIDO) or follows
+# (PRODIGE-23) the systemic chemo block.
+phases:
+  - phase: induction
+    type: chemotherapy
+    regimen_id: REG-FOLFIRINOX
+    cycles: 6
+  - phase: neoadjuvant
+    type: chemoradiation
+    radiation_id: RC-LCCRT-504-28-RECTAL
+    duration_weeks: 6
+  - phase: surgery
+    type: surgery
+    surgery_id: SUR-TME-PROCTECTOMY
+    duration_weeks: 1
+
+# Legacy `recommended_regimen` left null — render layer should consume
+# `phases:` for this indication (multi-modality TNT). Engine pass-through
+# to render is part of Phase D readiness work (planning doc §2.7).
+recommended_regimen:
+
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION
+
+required_tests:
+  - TEST-MRI-PELVIS
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+
+desired_tests:
+  - TEST-CEA
+
+actionability_review_required: true
+
+rationale: >
+  PRODIGE-23 (Conroy 2021, Lancet Oncology) — randomised phase 3 trial,
+  n=461, locally advanced rectal cancer (cT3 OR cT4 OR cN+ M0) —
+  established total neoadjuvant therapy (TNT) with induction
+  FOLFIRINOX × 6 cycles followed by long-course concurrent chemoradiation
+  (50.4 Gy / 28 fx + capecitabine 825 mg/m² PO BID on RT days) and
+  then TME as a preferred alternative to standard long-course
+  chemoradiation alone (50.4 Gy / 28 fx + concurrent capecitabine) +
+  TME + adjuvant FOLFOX/CAPOX × 12 cycles. Primary endpoint
+  disease-free survival at 3 years 75.7% (TNT) vs 68.5% (standard);
+  HR 0.69 (95% CI 0.49-0.97, p=0.034). pCR more than doubled: 27.8%
+  (TNT) vs 12.1% (standard). 3-yr metastasis-free survival 78.8% (TNT)
+  vs 71.7% (standard), HR 0.64 (95% CI 0.44-0.93, p=0.017). NCCN
+  v.4.2025 category 1 (preferred-alternative for locally advanced
+  rectal); ESMO 2024 strong recommendation.
+
+  Patient selection: ECOG 0-1, age ≤75 (PRODIGE-23 cutoff), fit for
+  FOLFIRINOX triplet (which carries ~30% G3-4 neutropenia even with
+  G-CSF, ~15% G3-4 diarrhea, oxaliplatin neuropathy ~5-10% G≥2 by
+  cycle 6). Older / frailer patients should preferentially receive
+  RAPIDO short-course (CAPOX-induction) or standard long-course CRT
+  alone via MDT discussion. Pelvic MRI is mandatory for T-stage,
+  mesorectal fascia, and EMVI assessment; CT chest/abdomen/pelvis
+  rules out distant disease. DPYD pre-screening strongly recommended
+  before capecitabine concurrent phase (CPIC).
+
+  Sequencing nuances: FOLFIRINOX × 6 (~12 weeks) → 1-2 week recovery →
+  LCCRT 50.4 Gy / 28 fx (5.5 weeks; concurrent capecitabine on RT days)
+  → ≥6 week recovery → TME proctectomy. Total elapsed time
+  FOLFIRINOX-start to surgery ~22-26 weeks. The interval after CRT
+  allows tumor downstaging — a non-trivial fraction (~10-15% in
+  PRODIGE-23 follow-up) achieve clinical complete response (cCR) and
+  may enter watch-and-wait protocols at expert centers (still
+  consensus-based; outside this indication's standard arm).
+
+  PRODIGE-23 vs RAPIDO TNT comparison: both reached NCCN cat 1, but
+  enrolled overlapping (not identical) populations and used different
+  TNT backbones. PRODIGE-23 (induction FOLFIRINOX → concurrent CRT)
+  is preferred when patients are FOLFIRINOX-fit and the concurrent CRT
+  modality is desired (e.g., bulkier tumors where downstaging during
+  RT is valuable). RAPIDO (short-course RT → induction CAPOX) is
+  preferred when chemo intensity must be lower (CAPOX-fit but
+  FOLFIRINOX-unfit) or when high-risk features (cT4, EMVI+, MRF+,
+  lateral nodes) drive the high-risk-RAPIDO eligibility. MDT-driven
+  selection.
+
+rationale_ua: >
+  PRODIGE-23 (Conroy 2021, Lancet Oncology) — рандомізоване дослідження
+  3 фази, n=461, місцево-поширений рак прямої кишки (cT3 АБО cT4 АБО
+  cN+ M0) — встановив тотальну неоад'ювантну терапію (TNT) з
+  індукційним FOLFIRINOX × 6 циклів з подальшою довгокурсовою
+  конкурентною хіміопроменевою терапією (50.4 Гр / 28 фракцій +
+  капецитабін 825 мг/м² PO BID у дні променевої терапії) та TME як
+  кращу альтернативу стандартній довгокурсовій хіміопроменевій терапії
+  (50.4 Гр / 28 фракцій + конкурентний капецитабін) + TME + ад'ювантний
+  FOLFOX/CAPOX × 12 циклів. Первинна кінцева точка — безрецидивна
+  виживаність на 3-му році 75.7% (TNT) проти 68.5% (стандарт);
+  HR 0.69 (95% ДІ 0.49-0.97, p=0.034). pCR більш ніж подвоївся: 27.8%
+  (TNT) проти 12.1% (стандарт). NCCN v.4.2025 категорія 1 (краща
+  альтернатива для місцево-поширеного раку прямої кишки); ESMO 2024
+  сильна рекомендація.
+
+  Відбір пацієнтів: ECOG 0-1, вік ≤75 (поріг PRODIGE-23), придатність
+  до FOLFIRINOX триплета (~30% нейтропенія ступінь 3-4 навіть з G-CSF,
+  ~15% діарея ступінь 3-4, нейропатія від оксаліплатину). Старші /
+  ослабленіші пацієнти повинні отримувати RAPIDO короткий курс
+  (індукція CAPOX) або стандартний довгий курс CRT через обговорення
+  MDT. МРТ малого тазу обов'язкове для оцінки T-стадії, мезоректальної
+  фасції та EMVI; КТ грудна клітка/черевна порожнина/малий таз
+  виключає віддалене захворювання. DPYD-передскринінг наполегливо
+  рекомендується перед фазою конкурентного капецитабіну (CPIC).
+
+  Послідовність: FOLFIRINOX × 6 (~12 тижнів) → 1-2 тижні відновлення →
+  LCCRT 50.4 Гр / 28 фракцій (5.5 тижнів; конкурентний капецитабін у
+  дні променевої терапії) → ≥6 тижнів відновлення → TME проктектомія.
+  Загальний час від початку FOLFIRINOX до операції ~22-26 тижнів.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-PRODIGE-23-CONROY-2021
+    position: supports
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+  - source_id: SRC-ESMO-CRC-2024
+    position: supports
+
+known_controversies:
+  - topic: TNT (PRODIGE-23 long-course CRT) vs TNT (RAPIDO short-course RT) vs standard long-course CRT + adjuvant
+    positions:
+      - position: PRODIGE-23 TNT (induction FOLFIRINOX → LCCRT → TME) preferred for FOLFIRINOX-fit locally advanced rectal cancer (cT3-4 OR cN+, ECOG 0-1, age ≤75)
+        sources:
+          - SRC-PRODIGE-23-CONROY-2021
+          - SRC-NCCN-COLON-2025
+        evidence_note: "Improved 3-yr DFS (75.7% vs 68.5%, HR 0.69); doubled pCR (27.8% vs 12.1%); improved metastasis-free survival (HR 0.64); concurrent CRT modality preferred for tumors where downstaging during RT is valuable"
+      - position: RAPIDO TNT (SCRT → induction CAPOX/FOLFOX → TME) preferred for high-risk locally advanced rectal cancer (cT4, EMVI+, MRF+, enlarged lateral nodes) where CAPOX-fit-only or where short-course RT modality acceptable
+        sources:
+          - SRC-NCCN-COLON-2025
+          - SRC-ESMO-CRC-2024
+        evidence_note: "RAPIDO benefit driven by high-risk subgroup; CAPOX is operationally simpler than FOLFIRINOX (oral, fewer infusions, lower toxicity)"
+      - position: Standard long-course CRT (50.4 Gy / 28 fx + concurrent capecitabine) + TME + selective adjuvant remains acceptable for non-high-risk locally advanced
+        sources:
+          - SRC-NCCN-COLON-2025
+          - SRC-ESMO-CRC-2024
+        evidence_note: "Comparator arm in both PRODIGE-23 and RAPIDO; lower-risk locally advanced may not need TNT intensification; remains category 1 preferred"
+    our_default: "Stratify by patient fitness + risk features. PRODIGE-23 long-course TNT for FOLFIRINOX-fit ECOG 0-1 cT3-4/cN+ rectal (age ≤75). RAPIDO short-course TNT for high-risk-feature locally advanced (cT4, EMVI+, MRF+, lateral nodes) when CAPOX-fit-only or short-course RT preferred. Standard long-course CRT + TME + adjuvant for lower-risk locally advanced or FOLFIRINOX-unfit-and-CAPOX-unfit. MDT-driven."
+    rationale: "Both TNT regimens reached NCCN cat 1 against the same comparator (standard long-course CRT + adjuvant) but enrolled overlapping (not identical) populations. PRODIGE-23 admitted any cT3-4/cN+ rectal; RAPIDO required ≥1 high-risk feature. Tradeoffs: FOLFIRINOX more toxic but more intensive systemic; CAPOX better tolerated. Long-course CRT may be preferable for tumors where concurrent radiosensitization during 5.5 weeks of RT is biologically valuable."
+
+  - topic: FOLFIRINOX × 6 vs mFOLFIRINOX × 6 induction backbone within PRODIGE-23 TNT
+    positions:
+      - position: mFOLFIRINOX (modified — no 5-FU bolus) is preferred where tolerability matters; equivalent oncologic outcome in ACCORD-11 PDAC + general CRC practice
+        sources:
+          - SRC-NCCN-COLON-2025
+        evidence_note: "PRODIGE-23 used full FOLFIRINOX (with 5-FU bolus); modern practice often substitutes mFOLFIRINOX (omits the 400 mg/m² 5-FU bolus to reduce mucositis + neutropenia) without measurable efficacy loss. Adjuvant PRODIGE-24 used mFOLFIRINOX successfully. Choice driven by toxicity tolerance and institutional preference."
+      - position: Full FOLFIRINOX (per-protocol PRODIGE-23) preserves trial fidelity for evidence-graded outcomes
+        sources:
+          - SRC-PRODIGE-23-CONROY-2021
+        evidence_note: "PRODIGE-23 efficacy data was generated on full FOLFIRINOX; mFOLFIRINOX extrapolation is reasonable but technically off-protocol. Toxicity profile: full FOLFIRINOX has measurable febrile-neutropenia + grade-3+ mucositis premium over mFOLFIRINOX."
+    our_default: "mFOLFIRINOX × 6 as primary induction backbone (omits 5-FU bolus) — better tolerability, equivalent efficacy by modern consensus. Switch to full FOLFIRINOX only if institutional protocol mandates per-PRODIGE-23-protocol fidelity."
+    rationale: "Consistent with broader CRC practice (mFOLFIRINOX is the standard modern variant); PRODIGE-23 enrolled before mFOLFIRINOX displacement was complete, and the bolus omission is well-supported by PRODIGE-24 adjuvant data showing equivalent efficacy with reduced toxicity."
+
+do_not_do:
+  - "Do NOT use PRODIGE-23 TNT in patients FOLFIRINOX-unfit (ECOG ≥2, age >75 in absence of equivalent functional reserve, baseline G≥2 neuropathy, severe cardiac dysfunction, bilirubin >1.5 ULN) — switch to RAPIDO short-course (CAPOX-induction) or standard long-course CRT alone"
+  - "Do NOT use this indication for colon adenocarcinoma — PRODIGE-23 enrolled rectal only; colon receives different periop strategy (no RT)"
+  - "Do NOT skip pelvic MRI staging — T-stage, mesorectal fascia, and EMVI assessment is mandatory for treatment planning"
+  - "Do NOT skip DPYD pre-screening before the concurrent capecitabine phase — DPYD-deficient patients have severe-fatal radiosensitization toxicity at 825 mg/m² BID"
+  - "Do NOT use TNT in metastatic (M1) rectal — periop sequence is for resectable / locally advanced non-metastatic only; metastatic receives systemic-first strategy"
+  - "Do NOT proceed to TME during ongoing GI bleed, obstruction, or perforation without emergency stabilization (decompressive ostomy may be required)"
+  - "Do NOT shorten the ≥6-week post-CRT to TME interval — the downstaging window is part of PRODIGE-23 efficacy and acute CRT toxicity needs full recovery before surgery"
+  - "Do NOT escalate the 50.4 Gy LCCRT total dose — dose escalation beyond 50.4 Gy has not improved outcomes and increases late toxicity (consistent with INT-0123 / RTOG 94-05 negative data in esophageal CRT)"
+
+do_not_do_en:
+  - "Do NOT use PRODIGE-23 TNT in patients FOLFIRINOX-unfit (ECOG ≥2, age >75 in absence of equivalent functional reserve, baseline G≥2 neuropathy, severe cardiac dysfunction, bilirubin >1.5 ULN) — switch to RAPIDO short-course (CAPOX-induction) or standard long-course CRT alone"
+  - "Do NOT use this indication for colon adenocarcinoma — PRODIGE-23 enrolled rectal only; colon receives different periop strategy (no RT)"
+  - "Do NOT skip pelvic MRI staging — T-stage, mesorectal fascia, and EMVI assessment is mandatory for treatment planning"
+  - "Do NOT skip DPYD pre-screening before the concurrent capecitabine phase — DPYD-deficient patients have severe-fatal radiosensitization toxicity at 825 mg/m² BID"
+  - "Do NOT use TNT in metastatic (M1) rectal — periop sequence is for resectable / locally advanced non-metastatic only; metastatic receives systemic-first strategy"
+  - "Do NOT proceed to TME during ongoing GI bleed, obstruction, or perforation without emergency stabilization (decompressive ostomy may be required)"
+  - "Do NOT shorten the ≥6-week post-CRT to TME interval — the downstaging window is part of PRODIGE-23 efficacy and acute CRT toxicity needs full recovery before surgery"
+  - "Do NOT escalate the 50.4 Gy LCCRT total dose — dose escalation beyond 50.4 Gy has not improved outcomes and increases late toxicity (consistent with INT-0123 / RTOG 94-05 negative data in esophageal CRT)"
+
+last_reviewed: "2026-05-08"
+
+notes: >
+  GI-3 wave C4 chunk (gi3-c4-rectal-tnt-prodige23-2026-05-08-2200). Fourth
+  §17 phased indication after IND-GASTRIC-PERIOP-FLOT4 (GI-2 C1),
+  IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT (GI-2 C2), and
+  IND-RECTAL-TNT-SHORT-COURSE-RAPIDO (GI-3 C3). Sister rectal-TNT
+  indication to RAPIDO short-course; pair forms the two NCCN cat 1 TNT
+  backbones for locally advanced rectal cancer. The CRT phase uses
+  type=chemoradiation with radiation_id only (XOR) — the concurrent
+  capecitabine 825 mg/m² PO BID on RT days is documented in the
+  RadiationCourse RC-LCCRT-504-28-RECTAL `schedule:` and `notes:`
+  fields, not as a phase regimen_id, because the §17 XOR rule permits
+  exactly ONE foreign key per phase and concurrent CRT is by convention
+  modeled on the RadiationCourse side (planning doc §2.3, mirroring
+  RC-CROSS-NEOADJ pattern from C2).
+
+  Engine routing from `algo_rectal_*` (D-prefix algorithm extension) to
+  this indication is out of C4 scope — flagged for the D-wave algorithm
+  chunks. The `recommended_regimen` field is left null intentionally
+  because TNT is multi-modality; consumers should iterate `phases:`
+  rather than dereferencing a single regimen ID.
+
+  Follow-up: a dedicated REG-CAPECITABINE-CRT-CONCURRENT regimen entity
+  (825 mg/m² PO BID on RT days) should be authored to back-fill the
+  RC-LCCRT-504-28-RECTAL `concurrent_chemo_regimen` foreign key — the
+  existing REG-CAPECITABINE-PALLIATIVE entity (1000 mg/m² BID days
+  1-14 / 21d for ECOG 3-4 mCRC) is the wrong dose / schedule / clinical
+  context and cannot be reused. Until then, the concurrent backbone is
+  captured in RadiationCourse free-text fields.

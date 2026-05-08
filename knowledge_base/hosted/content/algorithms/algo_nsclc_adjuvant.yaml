@@ -1,0 +1,57 @@
+id: ALGO-NSCLC-ADJUVANT
+applicable_to_disease: DIS-NSCLC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select adjuvant systemic therapy for completely resected stage IB-IIIA NSCLC
+  after adjuvant platinum-based chemotherapy. Routes EGFR-positive patients to
+  targeted adjuvant discussion (osimertinib; not yet modelled), PD-L1 SP142 ≥1%
+  stage II-IIIA patients to atezolizumab adjuvant (IMpower010). Default observation.
+
+output_indications:
+  - IND-NSCLC-ADJUVANT-ATEZO-PDL1POS
+
+default_indication: IND-NSCLC-ADJUVANT-ATEZO-PDL1POS
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
+    if_true:
+      result: null
+      notes: >
+        EGFR ex19del or L858R: osimertinib 80 mg QD x3 years adjuvant preferred
+        (ADAURA: DFS HR 0.20 for stage II-IIIA; NCCN Cat 1). Not yet modelled in KB.
+        Route to MDT for osimertinib adjuvant discussion.
+    if_false:
+      next_step: 2
+
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "PD-L1 SP142 IHC ≥1% on resected tumour specimen (IMpower010 SP142 assay; not interchangeable with 22C3 TPS)"
+        - red_flag: RF-NSCLC-PDL1-50-PLUS
+    if_true:
+      result: IND-NSCLC-ADJUVANT-ATEZO-PDL1POS
+      notes: >
+        PD-L1 SP142 ≥1%, completely resected stage IB (≥4 cm) / II / IIIA, post adj chemo:
+        atezolizumab 1200 mg IV q3w x16 cycles (1 year). IMpower010: DFS HR 0.66
+        (95% CI 0.50-0.88) in PD-L1 SP142 ≥1% stage II-IIIA subgroup. SP142 assay
+        is NOT interchangeable with 22C3 TPS — confirm correct assay was used.
+    if_false:
+      result: null
+      notes: >
+        PD-L1 SP142 <1% or assay not performed: no approved adjuvant IO indication.
+        Observation after completion of adjuvant platinum-based chemotherapy.
+
+sources:
+  - SRC-IMPOWER-010-FELIP-2021
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-05-09"
+notes: >
+  Adjuvant NSCLC routing: EGFR ex19del/L858R → osimertinib adj (not modelled, ADAURA);
+  PD-L1 SP142 ≥1% → IND-NSCLC-ADJUVANT-ATEZO-PDL1POS (IMpower010);
+  all others → observation.
+  ALK fusion adj: alectinib (ALINA) not yet modelled.
+  Note: RF-NSCLC-PDL1-50-PLUS used as proxy — may over-trigger for SP142 ≥1% gate.
+  Verify RF scope if engine produces unexpected results.

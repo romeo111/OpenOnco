@@ -1,0 +1,88 @@
+id: REG-DURVA-CONSOLIDATION-SCLC
+name: "Durvalumab consolidation post-CRT (LS-SCLC)"
+name_ua: "Дурвалумаб консолідація після ХПТ (ЛС-ДКРЛ)"
+alternate_names: ["ADRIATIC regimen"]
+
+components:
+  - drug_id: DRUG-DURVALUMAB
+    dose: "1500 mg IV q4 weeks"
+    schedule: "Up to 24 months OR until progression / unacceptable toxicity"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "Up to 24 months consolidation post-concurrent CRT"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Pneumonitis G≥2"
+    modification: "Hold; corticosteroids; permanent discontinuation if recurrent / severe (post-CRT pneumonitis risk additive)"
+  - condition: "Immune-mediated AE (colitis, hepatitis, endocrinopathy)"
+    modification: "Standard ICI management per NCCN/ESMO IO toxicity guidelines"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Durvalumab registered in Ukraine; reimbursement variable — out-of-pocket for most patients. LS-SCLC consolidation indication adopted post-FDA Dec-2024 / EMA 2024."
+
+sources: [SRC-ADRIATIC-CHENG-2024, SRC-NCCN-SCLC-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Durvalumab consolidation post-concurrent CRT for LS-SCLC (ADRIATIC).
+# Anti-PD-L1 irAE pattern + post-thoracic-RT pneumonitis risk additive.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, шкірний свербіж"
+    action_ua: "Очікувано"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — на тлі попередньої грудної RT ризик пневмоніту вищий; критично виключити"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SCLC-2025
+      - SRC-ADRIATIC-CHENG-2024
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Жовтяниця"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Виражена слабкість, постійна спрага"
+    action_ua: "Подзвоніть у клініку того ж дня — імунна реакція щитоподібної залози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Сильна задишка у спокої, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-SCLC-2025
+
+last_reviewed:
+notes: >
+  ADRIATIC (Cheng NEJM 2024, NCT03703297): durvalumab 1500 mg q4w
+  consolidation × up to 24 months in LS-SCLC patients without
+  progression after concurrent platinum-based CRT — mOS 55.9 vs 33.4
+  months (HR 0.73; p=0.01); mPFS 16.6 vs 9.2 months (HR 0.76; p=0.02).
+  First major OS-positive trial in LS-SCLC in decades. FDA approval
+  Dec-2024; new standard of care. Tremelimumab arm (durva+treme) did
+  not improve outcomes vs durva alone — durva monotherapy is the
+  approved consolidation regimen.
+notes_ua: >
+  ADRIATIC (Cheng NEJM 2024): дурвалумаб 1500 мг q4т консолідація до
+  24 місяців у пацієнтів з ЛС-ДКРЛ без прогресування після одночасної
+  платино-вмісної ХПТ — медіана ЗВ 55.9 проти 33.4 міс (HR 0.73);
+  медіана БПВ 16.6 проти 9.2 міс. Перше велике OS-позитивне
+  дослідження при ЛС-ДКРЛ за десятиліття. Схвалення FDA груд-2024;
+  новий стандарт лікування.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

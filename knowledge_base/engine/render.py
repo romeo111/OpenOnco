@@ -342,8 +342,48 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "skills_optional":             {"uk": "Скіли (optional) — опціональні",
                                     "en": "Skills (optional)"},
     "mdt_brief":                   {"uk": "MDT brief", "en": "MDT brief"},
-    "open_questions":              {"uk": "Open questions", "en": "Open questions"},
-    "data_quality":                {"uk": "Data quality", "en": "Data quality"},
+    "open_questions":              {"uk": "Питання для обговорення", "en": "Discussion questions"},
+    "data_quality":                {"uk": "Якість даних", "en": "Data quality"},
+    "dq_status_complete":          {"uk": "Готово до розгляду MDT", "en": "Complete for MDT review"},
+    "dq_status_caveats":           {"uk": "Можна використовувати з застереженнями", "en": "Usable with caveats"},
+    "dq_status_incomplete_mdt":    {"uk": "Неповно для підписання MDT", "en": "Incomplete for MDT sign-off"},
+    "dq_status_incomplete_default": {"uk": "Неповно для розгляду default-треку", "en": "Incomplete for default-track review"},
+    "dq_status_fallback":          {"uk": "Статус якості даних", "en": "Data quality status"},
+    "dq_summary_complete":         {"uk": "Обов'язкові перевірки даних MDT завершені для поточного профілю кейсу.",
+                                    "en": "Required MDT data checks are complete for the current case profile."},
+    "dq_summary_caveats":          {"uk": "Критичних прогалин default-треку не знайдено, але MDT має переглянути наведені застереження перед фінальним підписанням.",
+                                    "en": "No critical default-track gap was found, but the MDT should review the listed caveats before final sign-off."},
+    "dq_summary_incomplete_mdt":   {"uk": "Підписання MDT неповне, доки не усунені критичні прогалини клінічних даних.",
+                                    "en": "MDT sign-off is incomplete until critical clinical data gaps are resolved."},
+    "dq_summary_incomplete_default": {"uk": "Розгляд default-треку неповний, доки не усунені обов'язкові прогалини біомаркерів.",
+                                      "en": "Default-track review is incomplete until required biomarker gaps are resolved."},
+    "dq_biomarker_coverage":       {"uk": "Покриття біомаркерів", "en": "Biomarker coverage"},
+    "dq_known":                    {"uk": "відомо", "en": "known"},
+    "dq_missing":                  {"uk": "відсутньо", "en": "missing"},
+    "dq_default_gaps":             {"uk": "прогалин default-треку", "en": "default-track gaps"},
+    "dq_missing_critical":         {"uk": "Відсутні критичні", "en": "Missing critical"},
+    "dq_missing_recommended":      {"uk": "Відсутні рекомендовані", "en": "Missing recommended"},
+    "dq_unevaluated_redflags":     {"uk": "Неоцінені RedFlags", "en": "Unevaluated RedFlags"},
+    "dq_doctor_action_heading":    {"uk": "Відсутні дані для дії лікаря", "en": "Missing data for doctor action"},
+    "dq_th_clinical_item":         {"uk": "Клінічний пункт", "en": "Clinical item"},
+    "dq_th_owner":                 {"uk": "Власник", "en": "Owner"},
+    "dq_th_why":                   {"uk": "Чому важливо", "en": "Why it matters"},
+    "dq_th_next_action":           {"uk": "Наступна дія", "en": "Next action"},
+    "dq_th_blocks":                {"uk": "Блокує", "en": "Blocks"},
+    "dq_priority_critical":        {"uk": "КРИТИЧНО", "en": "CRITICAL"},
+    "dq_priority_recommended":     {"uk": "РЕКОМЕНДОВАНО", "en": "RECOMMENDED"},
+    "dq_missing_biomarker":        {"uk": "Відсутній біомаркер", "en": "Missing biomarker"},
+    "dq_label":                    {"uk": "Назва", "en": "Label"},
+    "dq_mdt_owner":                {"uk": "Власник MDT", "en": "MDT owner"},
+    "dq_default_track":            {"uk": "Default-трек", "en": "Default track"},
+    "dq_required_by":              {"uk": "Потрібно для", "en": "Required by"},
+    "dq_yes":                      {"uk": "так", "en": "yes"},
+    "dq_no":                       {"uk": "ні", "en": "no"},
+    "dq_biomarker_action_base":    {"uk": "Перевірити результат, метод, матеріал і дату звіту перед підписанням.",
+                                    "en": "Verify result, method, specimen, and report date before sign-off."},
+    "dq_biomarker_action_constraint": {"uk": "Очікуване значення/умова", "en": "Expected/constraint"},
+    "dq_more_missing_data":        {"uk": "більше відсутніх пунктів даних", "en": "more missing data items"},
+    "dq_more_missing_biomarkers":  {"uk": "більше відсутніх вимог до біомаркерів", "en": "more missing biomarker requirements"},
     "blocking":                    {"uk": "BLOCKING", "en": "BLOCKING"},
     "sources_cited":               {"uk": "Sources cited", "en": "Sources cited"},
     # Track labels (matches plan.py track id semantics)
@@ -353,6 +393,8 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
                                     "en": "Active surveillance (watch-and-wait)"},
     "track_palliative":            {"uk": "Паліативний план", "en": "Palliative plan"},
     "track_trial":                 {"uk": "План у рамках клінічного дослідження", "en": "Clinical-trial-only plan"},
+    "track_local_therapy":         {"uk": "Локальна терапія", "en": "Local therapy plan"},
+    "track_transplant":            {"uk": "Трансплантаційний план", "en": "Transplant plan"},
     # Document headers
     "doc_label_plan":              {"uk": "OpenOnco · Treatment Plan", "en": "OpenOnco · Treatment Plan"},
     "doc_title_plan_prefix":       {"uk": "План лікування", "en": "Treatment plan"},
@@ -372,7 +414,7 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "ci_label":                    {"uk": "Hard contraindications", "en": "Hard contraindications"},
     "reason_label":                {"uk": "Reason", "en": "Reason"},
     # Skill catalog
-    "skill_catalog_prefix":        {"uk": "Skill catalog", "en": "Skill catalog"},
+    "skill_catalog_prefix":        {"uk": "Технічні метадані MDT skills", "en": "Technical MDT skill metadata"},
     "skill_catalog_active_in":     {"uk": "активовано в цьому плані", "en": "activated in this plan"},
     "skill_catalog_legend":        {"uk": "Усі зареєстровані віртуальні спеціалісти. ✓ — активовано для цього кейсу; ○ — не активовано (доступні для інших клінічних сценаріїв).",
                                     "en": "All registered virtual specialists. ✓ — activated for this case; ○ — not activated (available for other clinical scenarios)."},
@@ -741,27 +783,6 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
     # `_localize_html` is a no-op for them. If a UA-translated form is
     # ever desired, add keys to `_UI_STRINGS` and route through `_t`.
 
-    def _skill_meta_html(r) -> str:
-        """One-line metadata strip showing skill version + last-reviewed
-        date + sign-off status — so a clinician verifying changes can see
-        at a glance which version of which skill produced this row."""
-        s = r.skill
-        if s is None:
-            return ""
-        status_cls = "pill--reviewed" if s.review_status == "reviewed" else "pill--stub"
-        status_label = "REVIEWED" if s.review_status == "reviewed" else "STUB"
-        lead = _h(s.clinical_lead) if s.clinical_lead else "TBD"
-        return (
-            '<div class="skill-meta">'
-            f'<span class="pill">skill: <code>{_h(s.skill_id)}</code></span>'
-            f'<span class="pill">v{_h(s.version)}</span>'
-            f'<span class="pill">reviewed {_h(s.last_reviewed)}</span>'
-            f'<span class="pill {status_cls}">{status_label}</span>'
-            f'<span class="pill">sign-offs: {s.signoffs}</span>'
-            f'<span class="pill">lead: {lead}</span>'
-            "</div>"
-        )
-
     def _role_block(label: str, badge_cls: str, roles) -> str:
         if not roles:
             return ""
@@ -778,23 +799,12 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
                 f'<span class="badge {badge_cls}">{_h(r.priority)}</span>'
                 f'<div class="role-reason">{_h_t(r.reason, target_lang)}</div>'
                 f"{qs}"
-                f"{_skill_meta_html(r)}"
                 f"</li>"
             )
         return (
             f"<h3>{_h(label)} ({len(roles)})</h3>"
             f'<ul class="role-list">{"".join(items)}</ul>'
         )
-
-    parts.append(_role_block(
-        _t("skills_required", target_lang),
-        "badge--required", mdt.required_roles))
-    parts.append(_role_block(
-        _t("skills_recommended", target_lang),
-        "badge--recommended", mdt.recommended_roles))
-    parts.append(_role_block(
-        _t("skills_optional", target_lang),
-        "badge--optional", mdt.optional_roles))
 
     qs = mdt.open_questions
     if qs:
@@ -812,15 +822,90 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
                 f"</li>"
             )
         parts.append(
-            f"<h3>Open questions ({len(qs)}, {blocking} blocking)</h3>"
-            f'<ul class="q-list">{"".join(items)}</ul>'
+            f"<h3>{_h(_t('open_questions', target_lang))} ({len(qs)}, {blocking} blocking)</h3>"
+            f'<ul class="q-list q-list--featured">{"".join(items)}</ul>'
         )
+
+    talk_tree = getattr(mdt, "talk_tree", []) or []
+    if talk_tree:
+        rows = []
+        for node in talk_tree[:14]:
+            step = getattr(node, "step", None)
+            owner = getattr(node, "owner_role", "")
+            topic = getattr(node, "topic", "")
+            action = getattr(node, "action", "")
+            blocking = getattr(node, "blocking", False)
+            badge = '<span class="badge badge--blocking">BLOCKING</span>' if blocking else ""
+            rows.append(
+                "<tr>"
+                f'<td class="mono">{_h(step if step is not None else "")}</td>'
+                f'<td>{_h(owner)}</td>'
+                f'<td>{_h(topic)} {badge}</td>'
+                f'<td>{_h_t(action, target_lang)}</td>'
+                "</tr>"
+            )
+        more = len(talk_tree) - 14
+        more_txt = (
+            f'<div class="section-sub">+{more} more MDT talk steps.</div>'
+            if more > 0 else ""
+        )
+        parts.append(
+            f"<h3>MDT talk tree ({len(talk_tree)} steps)</h3>"
+            '<table class="tbl"><thead><tr>'
+            '<th>#</th><th>Owner</th><th>Topic</th><th>Action</th>'
+            '</tr></thead><tbody>'
+            f'{"".join(rows)}'
+            '</tbody></table>'
+            f'{more_txt}'
+        )
+
+    parts.append(_role_block(
+        _t("skills_required", target_lang),
+        "badge--required", mdt.required_roles))
+    parts.append(_role_block(
+        _t("skills_recommended", target_lang),
+        "badge--recommended", mdt.recommended_roles))
+    parts.append(_role_block(
+        _t("skills_optional", target_lang),
+        "badge--optional", mdt.optional_roles))
 
     dq = mdt.data_quality_summary or {}
     crit = dq.get("missing_critical_fields") or []
     rec = dq.get("missing_recommended_fields") or []
     unevaluated = dq.get("unevaluated_red_flags") or []
     field_unlocks = dq.get("field_unlocks") or {}
+    biomarker_coverage = dq.get("biomarker_coverage") or {}
+    missing_field_details = dq.get("missing_field_details") or []
+
+    def _dq_status_label(status: str) -> str:
+        return {
+            "complete_for_mdt_review": _t("dq_status_complete", target_lang),
+            "usable_with_caveats": _t("dq_status_caveats", target_lang),
+            "incomplete_for_mdt_review": _t("dq_status_incomplete_mdt", target_lang),
+            "incomplete_for_default_track": _t("dq_status_incomplete_default", target_lang),
+        }.get(status or "", status or _t("dq_status_fallback", target_lang))
+
+    def _dq_status_summary(status: str, fallback: str) -> str:
+        return {
+            "complete_for_mdt_review": _t("dq_summary_complete", target_lang),
+            "usable_with_caveats": _t("dq_summary_caveats", target_lang),
+            "incomplete_for_mdt_review": _t("dq_summary_incomplete_mdt", target_lang),
+            "incomplete_for_default_track": _t("dq_summary_incomplete_default", target_lang),
+        }.get(status or "", fallback or "")
+
+    def _dq_badge(severity: str) -> str:
+        cls = "badge--required" if severity == "critical" else "badge--recommended"
+        label = (
+            _t("dq_priority_critical", target_lang)
+            if severity == "critical"
+            else _t("dq_priority_recommended", target_lang)
+        )
+        return f'<span class="badge {cls}">{label}</span>'
+
+    def _dq_detail_text(item: dict, key: str) -> str:
+        if target_lang == "uk":
+            return item.get(f"{key}_uk") or item.get(key) or ""
+        return item.get(key) or item.get(f"{key}_uk") or ""
 
     def _dq_field(f: str) -> str:
         rfs = field_unlocks.get(f)
@@ -832,19 +917,117 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
             f"blocks: {rf_txt}</span>"
         )
 
-    if crit or rec or unevaluated:
-        parts.append("<h3>Data quality</h3><ul>")
+    if crit or rec or unevaluated or biomarker_coverage:
+        status = dq.get("status") or ""
+        summary = _dq_status_summary(status, dq.get("doctor_summary") or "")
+        status_line = (
+            f'<div class="section-sub"><strong>{_h(_dq_status_label(status))}.</strong> '
+            f'{_h(summary)}</div>'
+            if status or summary else ""
+        )
+        parts.append(f"<h3>{_h(_t('data_quality', target_lang))}</h3>{status_line}<ul>")
+        if biomarker_coverage:
+            total = biomarker_coverage.get("required_total", 0)
+            known = biomarker_coverage.get("required_known", 0)
+            missing = biomarker_coverage.get("required_missing", 0)
+            pct = biomarker_coverage.get("coverage_percent", 100)
+            default_missing = dq.get("missing_default_biomarkers", 0)
+            parts.append(
+                f"<li>{_h(_t('dq_biomarker_coverage', target_lang))}: "
+                f"{known}/{total} {_h(_t('dq_known', target_lang))} "
+                f"({pct}%), {missing} {_h(_t('dq_missing', target_lang))}, "
+                f"{default_missing} {_h(_t('dq_default_gaps', target_lang))}</li>"
+            )
         if crit:
             parts.append(
-                f"<li>Missing critical: {', '.join(_dq_field(f) for f in crit)}</li>"
+                f"<li>{_h(_t('dq_missing_critical', target_lang))}: "
+                f"{', '.join(_dq_field(f) for f in crit)}</li>"
             )
         if rec:
             parts.append(
-                f"<li>Missing recommended: {', '.join(_dq_field(f) for f in rec)}</li>"
+                f"<li>{_h(_t('dq_missing_recommended', target_lang))}: "
+                f"{', '.join(_dq_field(f) for f in rec)}</li>"
             )
         if unevaluated:
-            parts.append(f"<li>Unevaluated RedFlags: {_h(', '.join(unevaluated))}</li>")
+            parts.append(
+                f"<li>{_h(_t('dq_unevaluated_redflags', target_lang))}: "
+                f"{_h(', '.join(unevaluated))}</li>"
+            )
         parts.append("</ul>")
+
+        if missing_field_details:
+            rows = []
+            for item in missing_field_details[:12]:
+                blocks = ", ".join(item.get("blocked_red_flags") or []) or "-"
+                rows.append(
+                    "<tr>"
+                    f'<td>{_dq_badge(item.get("severity") or "")}</td>'
+                    f'<td><strong>{_h(_dq_detail_text(item, "label") or item.get("field") or "")}</strong>'
+                    f'<div class="section-sub"><code>{_h(item.get("field") or "")}</code></div></td>'
+                    f'<td>{_h(item.get("owner_role") or "")}</td>'
+                    f'<td>{_h(_dq_detail_text(item, "why_it_matters"))}</td>'
+                    f'<td>{_h(_dq_detail_text(item, "doctor_action"))}</td>'
+                    f'<td>{_h(blocks)}</td>'
+                    "</tr>"
+                )
+            more = len(missing_field_details) - 12
+            more_txt = (
+                f'<div class="section-sub">+{more} {_h(_t("dq_more_missing_data", target_lang))}.</div>'
+                if more > 0 else ""
+            )
+            parts.append(
+                f"<h4>{_h(_t('dq_doctor_action_heading', target_lang))}</h4>"
+                '<table class="tbl"><thead><tr>'
+                f'<th>{_h(_t("th_priority", target_lang))}</th>'
+                f'<th>{_h(_t("dq_th_clinical_item", target_lang))}</th>'
+                f'<th>{_h(_t("dq_th_owner", target_lang))}</th>'
+                f'<th>{_h(_t("dq_th_why", target_lang))}</th>'
+                f'<th>{_h(_t("dq_th_next_action", target_lang))}</th>'
+                f'<th>{_h(_t("dq_th_blocks", target_lang))}</th>'
+                '</tr></thead><tbody>'
+                f'{"".join(rows)}'
+                '</tbody></table>'
+                f'{more_txt}'
+            )
+
+        missing_biomarkers = biomarker_coverage.get("missing") or []
+        if missing_biomarkers:
+            rows = []
+            for item in missing_biomarkers[:12]:
+                tracks = ", ".join(item.get("tracks") or [])
+                default = _t("dq_yes", target_lang) if item.get("default_track") else _t("dq_no", target_lang)
+                action = _t("dq_biomarker_action_base", target_lang)
+                constraint = item.get("value_constraint")
+                if constraint:
+                    action = f"{action} {_t('dq_biomarker_action_constraint', target_lang)}: {constraint}"
+                rows.append(
+                    "<tr>"
+                    f'<td><code>{_h(item.get("biomarker_id") or "")}</code></td>'
+                    f'<td>{_h(item.get("label") or "")}</td>'
+                    f'<td>{_h(item.get("owner_role") or "")}</td>'
+                    f"<td>{_h(default)}</td>"
+                    f'<td>{_h(tracks)}</td>'
+                    f'<td>{_h(action)}</td>'
+                    "</tr>"
+                )
+            more = len(missing_biomarkers) - 12
+            more_txt = (
+                f'<div class="section-sub">+{more} {_h(_t("dq_more_missing_biomarkers", target_lang))}.</div>'
+                if more > 0 else ""
+            )
+            parts.append(
+                '<table class="tbl"><thead><tr>'
+                f'<th>{_h(_t("dq_missing_biomarker", target_lang))}</th>'
+                f'<th>{_h(_t("dq_label", target_lang))}</th>'
+                f'<th>{_h(_t("dq_mdt_owner", target_lang))}</th>'
+                f'<th>{_h(_t("dq_default_track", target_lang))}</th>'
+                f'<th>{_h(_t("dq_required_by", target_lang))}</th>'
+                f'<th>{_h(_t("dq_th_next_action", target_lang))}</th>'
+                '</tr></thead><tbody>'
+                f'{"".join(rows)}'
+                '</tbody></table>'
+                f'{more_txt}'
+            )
 
     # Skill catalog — full list of registered skills with activation marker
     activated_ids = {s.skill_id for s in mdt.activated_skills}
@@ -871,9 +1054,9 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
             "</tr>"
         )
     parts.append(
-        '<div class="skill-catalog">'
-        f'<h3>{_h(_t("skill_catalog_prefix", target_lang))} '
-        f'({len(activated_ids)}/{len(full)} {_h(_t("skill_catalog_active_in", target_lang))})</h3>'
+        '<details class="skill-catalog">'
+        f'<summary>{_h(_t("skill_catalog_prefix", target_lang))} '
+        f'({len(activated_ids)}/{len(full)} {_h(_t("skill_catalog_active_in", target_lang))})</summary>'
         f'<div class="section-sub">{_h(_t("skill_catalog_legend", target_lang))}</div>'
         '<table><thead><tr>'
         f'<th>{_h(_t("th_specialist", target_lang))}</th>'
@@ -885,7 +1068,7 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
         "</tr></thead><tbody>"
         f'{"".join(catalog_rows)}'
         "</tbody></table>"
-        "</div>"
+        "</details>"
     )
 
     return (
@@ -1416,7 +1599,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             )
             phases_html.append(
                 '<div class="tl-phase tl-phase--induction">'
-                f'<div class="name">{_h(_t("tl_induction", target_lang))} · {_h(reg.get("name", "—")[:30])}</div>'
+                f'<div class="name">{_h(_t("tl_induction", target_lang))} · {_h(reg.get("name", "—"))}</div>'
                 f'<div class="window">{_h(window)}</div>'
                 '</div>'
             )
@@ -2012,6 +2195,38 @@ def _is_resistance_entry(direction, significance) -> bool:
     return False
 
 
+_EVIDENCE_LANE_LABELS = {
+    "standard_care": "Standard care",
+    "molecular_evidence_option": "Molecular evidence option",
+    "resistance_or_avoidance_signal": "Resistance or avoidance signal",
+    "trial_research_option": "Trial or research option",
+    "insufficient_evidence": "Insufficient evidence",
+}
+
+
+def _source_ref_get(es, key: str, default=None):
+    if isinstance(es, dict):
+        return es.get(key, default)
+    return getattr(es, key, default)
+
+
+def _evidence_lane_for_source_ref(es, is_resistance: bool) -> str:
+    lane = _source_ref_get(es, "evidence_lane")
+    if lane in _EVIDENCE_LANE_LABELS:
+        return lane
+    if is_resistance:
+        return "resistance_or_avoidance_signal"
+    source = str(_source_ref_get(es, "source", "") or "").upper()
+    level = str(_source_ref_get(es, "level", "") or "").upper()
+    if source == "SRC-CIVIC":
+        if level in {"A", "B"}:
+            return "molecular_evidence_option"
+        if level in {"C", "D", "E"}:
+            return "trial_research_option"
+        return "insufficient_evidence"
+    return "standard_care"
+
+
 def _format_evidence_sources(
     evidence_sources: list, primary_sources: Optional[list] = None
 ) -> str:
@@ -2033,26 +2248,20 @@ def _format_evidence_sources(
          for non-OncoKB) as citation cards without a level, plus a note
          pointing to the Phase-2-of-CIViC-pivot re-cite roadmap.
     """
-    items: list[str] = []
+    lane_items: dict[str, list[str]] = {lane: [] for lane in _EVIDENCE_LANE_LABELS}
     seen: set = set()
     for es in (evidence_sources or []):
-        if isinstance(es, dict):
-            source = es.get("source") or ""
-            level = es.get("level") or ""
-            direction = es.get("direction")
-            significance = es.get("significance")
-            evidence_ids = es.get("evidence_ids") or []
-        else:
-            source = getattr(es, "source", "") or ""
-            level = getattr(es, "level", "") or ""
-            direction = getattr(es, "direction", None)
-            significance = getattr(es, "significance", None)
-            evidence_ids = getattr(es, "evidence_ids", None) or []
+        source = _source_ref_get(es, "source", "") or ""
+        level = _source_ref_get(es, "level", "") or ""
+        direction = _source_ref_get(es, "direction")
+        significance = _source_ref_get(es, "significance")
+        evidence_ids = _source_ref_get(es, "evidence_ids", None) or []
         if not source or _is_skipped_source(source):
             continue
         is_resistance = _is_resistance_entry(direction, significance)
+        lane = _evidence_lane_for_source_ref(es, is_resistance)
         # Dedupe key — collapse same source+level+resistance-flag rows.
-        key = (str(source).upper(), str(level).upper(), is_resistance)
+        key = (lane, str(source).upper(), str(level).upper(), is_resistance)
         if key in seen:
             continue
         seen.add(key)
@@ -2091,12 +2300,24 @@ def _format_evidence_sources(
             else ""
         )
 
-        items.append(
+        lane_items[lane].append(
             f'<li>{source_label}: Level {_h(level)}{badge}{suffix}</li>'
         )
 
-    if items:
-        return f'<ul class="evidence-sources">{"".join(items)}</ul>'
+    rendered_lanes: list[str] = []
+    for lane, label in _EVIDENCE_LANE_LABELS.items():
+        items = lane_items[lane]
+        if not items:
+            continue
+        rendered_lanes.append(
+            f'<div class="evidence-lane evidence-lane--{_h(lane)}">'
+            f'<div class="evidence-lane-title">{_h(label)}</div>'
+            f'<ul class="evidence-sources">{"".join(items)}</ul>'
+            "</div>"
+        )
+
+    if rendered_lanes:
+        return "".join(rendered_lanes)
 
     # Fallback: promote primary_sources (sans OncoKB) into citation cards
     # so the cell still surfaces something meaningful for the 18 J-drafts
@@ -2416,11 +2637,26 @@ def render_plan_html(
 
     plan = plan_result.plan
     if plan is None:
+        warnings = plan_result.warnings or []
+        if warnings:
+            warning_items = "".join(
+                f"<li><code>{_h(w)}</code></li>" for w in warnings
+            )
+            warning_html = (
+                "<p><strong>Engine details:</strong></p>"
+                f"<ul style='line-height:1.65'>{warning_items}</ul>"
+            )
+        else:
+            warning_html = (
+                "<p><strong>Engine details:</strong> "
+                "No specific warning was returned by the engine.</p>"
+            )
         return _doc_shell(
             "OpenOnco — no indications found",
             "<div style='padding:2rem 2.5rem;font-family:system-ui,sans-serif;max-width:52rem'>"
             "<h2 style='color:#c0392b;margin-top:0'>⚠ No treatment plan generated</h2>"
             "<p>The engine matched <strong>no active indications</strong> for this patient profile.</p>"
+            f"{warning_html}"
             "<p><strong>Common causes:</strong></p>"
             "<ul style='line-height:1.8'>"
             "<li>Disease not yet covered — check <a href='/diseases.html'>disease coverage</a></li>"
@@ -2546,14 +2782,54 @@ def render_plan_html(
             f'</dl>'
             f'</div>'
         )
-    body.append(
-        f'<section><h2>Treatment options ({len(plan.tracks)} tracks)</h2>'
-        f'<div class="tracks">{"".join(track_html)}</div></section>'
-    )
+    primary_html = track_html[0] if track_html else ""
+    if primary_html:
+        body.append(
+            "<section><h2>Primary current-line option</h2>"
+            f'<div class="tracks">{primary_html}</div></section>'
+        )
+    alternative_html = "".join(track_html[1:])
+    if alternative_html:
+        body.append(
+            "<section><details>"
+            f"<summary><h2>Other current-line alternatives ({len(track_html) - 1} tracks)</h2>"
+            "<span class=\"section-sub\">Same treatment line; review when biomarker, access, contraindication, or patient-context assumptions change.</span>"
+            "</summary>"
+            f'<div class="tracks">{alternative_html}</div>'
+            "</details></section>"
+        )
 
     # Why this branch was chosen — actual fired RFs from the trace,
     # with the conflict-resolution winner tagged. Distinct from the
     # PRO/CONTRA section, which lists possible triggers in the abstract.
+    sequencing_tracks = getattr(plan, "sequencing_tracks", []) or []
+    if sequencing_tracks:
+        seq_rows: list[str] = []
+        for t in sequencing_tracks:
+            authored_line = ((t.indication_data or {}).get("applicable_to") or {}).get("line_of_therapy")
+            regimen_name = (t.regimen_data or {}).get("name", "-") if t.regimen_data else "-"
+            line_note = f"line {authored_line}" if authored_line is not None else "line not authored"
+            seq_rows.append(
+                "<tr>"
+                f"<td><code>{_h(t.indication_id)}</code></td>"
+                f"<td>{_h(line_note)}</td>"
+                f"<td>{_h(regimen_name)}</td>"
+                f"<td>{_h(t.selection_reason or '')}</td>"
+                "</tr>"
+            )
+        body.append(
+            "<section><details>"
+            "<summary><h2>Sequencing / non-current-line candidates</h2>"
+            "<span class=\"section-sub\">Shown for audit and future-line context; not part of the current treatment choice.</span>"
+            "</summary>"
+            "<table class=\"tbl\"><thead><tr>"
+            "<th>Indication</th><th>Authored line</th><th>Regimen</th><th>Why separated</th>"
+            "</tr></thead><tbody>"
+            f"{''.join(seq_rows)}"
+            "</tbody></table>"
+            "</details></section>"
+        )
+
     body.append(_render_branch_explanation(plan_result, plan_result.kb_resolved, target_lang))
 
     # Pre-treatment investigations · RedFlag PRO/CONTRA · What NOT to do ·

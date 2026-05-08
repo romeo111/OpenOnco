@@ -1,0 +1,226 @@
+# IND-RECTAL-TNT-SHORT-COURSE-RAPIDO — §17 Indication.phases[] consumer for
+# locally advanced rectal cancer (chunk gi3-c3-rectal-tnt-rapido-2026-05-08-2100).
+# RAPIDO total neoadjuvant therapy (TNT) — short-course RT then induction chemo
+# then TME — uses Indication.phases[] to model the 3-phase TNT sequence:
+#   1. Neoadjuvant SCRT 25 Gy / 5 fx × 1 week (RC-SCRT-25-5-RECTAL — NEW C3)
+#   2. Induction CAPOX × 6 cycles (REG-CAPOX — reused)
+#   3. TME proctectomy (SUR-TME-PROCTECTOMY — NEW C3)
+# Mirrors the §17 gold-standard pattern set by IND-GASTRIC-PERIOP-FLOT4 (C1)
+# and continued by IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT (C2).
+id: IND-RECTAL-TNT-SHORT-COURSE-RAPIDO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Locally advanced rectal adenocarcinoma — at least one high-risk feature: cT4a/T4b, OR cN2 (≥4 regional nodes), OR extramural vascular invasion (EMVI+), OR mesorectal fascia involvement / CRM threatened (<1 mm on MRI), OR enlarged lateral pelvic lymph nodes"
+    - "M0 (non-metastatic) per CT chest/abdomen/pelvis + pelvic MRI staging"
+    - "Tumor located in rectum (mid or low rectum within ~15 cm of anal verge); colon adenocarcinomas excluded — they receive different periop strategy"
+  biomarker_requirements_required: []
+  # RAPIDO did NOT stratify by biomarker. MSI-H rectal tumors merit MDT
+  # discussion of dostarlimab/pembrolizumab non-operative pathway (Cercek
+  # 2022 NEJM dMMR rectal pembro), but that is a separate indication.
+  # KRAS / NRAS / BRAF status do not gate periop SCRT-TNT — they drive
+  # metastatic-line selection if the patient later progresses.
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    fit_for_chemo: true
+    # RAPIDO enrolled ECOG 0-1 only; ECOG 2+ should be considered for
+    # less-toxic alternatives (e.g., long-course CRT alone, or palliative
+    # SCRT) via MDT.
+
+# §17 ratified 2026-05-07 — 3-phase TNT indication. Each phase carries
+# exactly ONE foreign key (regimen_id / surgery_id / radiation_id) per the
+# IndicationPhase XOR validator.
+#
+# Phase-stage naming choice for chemo phase: `induction`. RAPIDO literature
+# variously calls this "induction" (when SCRT precedes it) or "consolidation"
+# (within a TNT framework). All chemo cycles here precede surgery, so the
+# phase is pre-surgical / neoadjuvant in *intent*, but `induction` is the
+# canonical TNT term and is the §17 IndicationPhaseStage value that
+# distinguishes "this chemo block initiates / induces tumor downstaging
+# before definitive local therapy" from a strictly perioperative neoadj
+# phase. Documented for the GI-3 wave to consume (GI-2 wave used
+# `neoadjuvant` / `surgery` / `adjuvant` triple — TNT extends the pattern
+# with `neoadjuvant` (RT) → `induction` (chemo) → `surgery`).
+phases:
+  - phase: neoadjuvant
+    type: radiation
+    radiation_id: RC-SCRT-25-5-RECTAL
+    duration_weeks: 1
+  - phase: induction
+    type: chemotherapy
+    regimen_id: REG-CAPOX
+    cycles: 6
+  - phase: surgery
+    type: surgery
+    surgery_id: SUR-TME-PROCTECTOMY
+    duration_weeks: 1
+
+# Legacy `recommended_regimen` left null — render layer should consume
+# `phases:` for this indication (multi-modality TNT). Engine pass-through
+# to render is part of Phase D readiness work (planning doc §2.7).
+recommended_regimen:
+
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION
+
+required_tests:
+  - TEST-MRI-PELVIS
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+
+desired_tests:
+  - TEST-CEA
+
+actionability_review_required: true
+
+rationale: >
+  RAPIDO (Bahadoer 2021, Lancet Oncology) — randomised phase 3 trial,
+  n=920, locally advanced rectal cancer with at least one high-risk
+  feature (cT4a/b, cN2, EMVI+, mesorectal fascia involvement, or
+  enlarged lateral nodes) — established total neoadjuvant therapy (TNT)
+  with short-course preoperative radiotherapy (25 Gy / 5 fx) followed
+  by induction chemotherapy (CAPOX × 6 OR FOLFOX × 9) and then TME as
+  a preferred alternative to standard long-course chemoradiation
+  (50.4 Gy / 28 fx + concurrent capecitabine) + TME + optional adjuvant
+  chemotherapy. Primary endpoint disease-related treatment failure at
+  3 years 23.7% (TNT) vs 30.4% (standard); HR 0.75 (95% CI 0.60-0.95,
+  p=0.019). pCR doubled: 28% (TNT) vs 14% (standard). NCCN v.4.2025
+  category 1 (preferred-alternative for high-risk locally advanced
+  rectal); ESMO 2024 strong recommendation.
+
+  Patient selection: ECOG 0-1, fit for oxaliplatin-containing chemo
+  (CAPOX carries ~10-15% Grade ≥3 diarrhea + ~5-10% peripheral sensory
+  neuropathy persisting beyond cycle 4 — dose-modify or switch to
+  fluoropyrimidine-only if neuropathy ≥ Grade 2). Pelvic MRI is
+  mandatory for T-stage, mesorectal fascia, and EMVI assessment;
+  CT chest/abdomen/pelvis rules out distant disease. Pre-operative
+  staging laparoscopy is NOT routine for rectal (unlike gastric).
+
+  Sequencing nuances: SCRT (1 week) → 1-2 week recovery → CAPOX × 6
+  (~18 weeks) → 6-8 week interval → TME proctectomy. Total elapsed
+  time SCRT-start to surgery ~22-26 weeks. The interval after
+  induction chemo allows tumor downstaging — a non-trivial fraction
+  achieve clinical complete response (cCR) and may enter watch-and-wait
+  protocols at expert centers (still consensus-based, not RAPIDO-trial-
+  defined; outside this indication's standard arm).
+
+  RAPIDO chemo backbone choice: trial allowed CAPOX × 6 OR FOLFOX × 9 —
+  this indication uses CAPOX as the canonical OpenOnco regimen. FOLFOX
+  variant indication may follow if curator demand surfaces.
+
+rationale_ua: >
+  RAPIDO (Bahadoer 2021, Lancet Oncology) — рандомізоване дослідження
+  3 фази, n=920, місцево-поширений рак прямої кишки з принаймні однією
+  ознакою високого ризику (cT4a/b, cN2, EMVI+, ураження мезоректальної
+  фасції або збільшені латеральні лімфовузли) — встановив тотальну
+  неоад'ювантну терапію (TNT) з коротким курсом передопераційної
+  променевої терапії (25 Гр / 5 фракцій) з подальшою індукційною
+  хіміотерапією (CAPOX × 6 АБО FOLFOX × 9) та TME як кращу альтернативу
+  стандартній довгокурсовій хіміопроменевій терапії (50.4 Гр / 28
+  фракцій + конкурентний капецитабін) + TME + опціональна ад'ювантна
+  хіміотерапія. Первинна кінцева точка — невдача лікування пов'язана
+  з захворюванням на 3-му році 23.7% (TNT) проти 30.4% (стандарт);
+  HR 0.75 (95% ДІ 0.60-0.95, p=0.019). pCR подвоївся: 28% (TNT) проти
+  14% (стандарт). NCCN v.4.2025 категорія 1 (краща альтернатива для
+  високоризикового місцево-поширеного раку прямої кишки); ESMO 2024
+  сильна рекомендація.
+
+  Відбір пацієнтів: ECOG 0-1, придатність до оксаліплатин-вмісної
+  хіміотерапії (CAPOX — ~10-15% діарея ступінь ≥3 + ~5-10%
+  периферична сенсорна нейропатія, що зберігається після 4 циклу —
+  модифікувати дозу або перейти на фторпіримідин-моно при нейропатії
+  ≥ ступінь 2). МРТ малого тазу обов'язкове для оцінки T-стадії,
+  мезоректальної фасції та EMVI; КТ грудна клітка/черевна
+  порожнина/малий таз виключає віддалене захворювання.
+
+  Послідовність: SCRT (1 тиждень) → 1-2 тижні відновлення → CAPOX × 6
+  (~18 тижнів) → інтервал 6-8 тижнів → TME проктектомія. Загальний
+  час від початку SCRT до операції ~22-26 тижнів.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-RAPIDO-BAHADOER-2021
+    position: supports
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+  - source_id: SRC-ESMO-CRC-2024
+    position: supports
+
+known_controversies:
+  - topic: TNT (RAPIDO short-course) vs long-course CRT + selective adjuvant
+    positions:
+      - position: TNT (SCRT + induction CAPOX/FOLFOX + TME) preferred for high-risk locally advanced rectal cancer
+        sources:
+          - SRC-RAPIDO-BAHADOER-2021
+          - SRC-NCCN-COLON-2025
+        evidence_note: "Reduced 3-yr disease-related treatment failure (23.7% vs 30.4%, HR 0.75); doubled pCR (28% vs 14%); allows tumor downstaging window before surgery"
+      - position: Long-course CRT (50.4 Gy / 28 fx + concurrent capecitabine) + TME + selective adjuvant remains standard for non-high-risk locally advanced
+        sources:
+          - SRC-NCCN-COLON-2025
+          - SRC-ESMO-CRC-2024
+        evidence_note: "RAPIDO benefit was driven by high-risk subgroup; lower-risk locally advanced may not need TNT intensification — long-course CRT remains category 1 preferred"
+    our_default: "Stratify by RAPIDO eligibility (high-risk features) — TNT for cT4a/b, cN2, EMVI+, MRF+, or enlarged lateral nodes; long-course CRT for non-high-risk locally advanced. MDT-driven."
+    rationale: "RAPIDO's benefit was demonstrated in the high-risk population; extrapolating TNT to all locally advanced rectal is not yet evidence-based. Disease-related failure metric in RAPIDO was disease-specific (locoregional + distant), while long-course CRT remains adequate for tumors at lower distant-recurrence risk."
+
+  - topic: CAPOX × 6 vs FOLFOX × 9 induction chemo backbone within RAPIDO TNT
+    positions:
+      - position: CAPOX × 6 (3-mo) is preferred — oral capecitabine, fewer infusion visits, equivalent oncologic outcome in IDEA pooled analysis
+        sources:
+          - SRC-NCCN-COLON-2025
+        evidence_note: "Per-protocol RAPIDO allowed both; IDEA-collaboration showed CAPOX 3-mo non-inferior to FOLFOX 6-mo for stage III adjuvant — extrapolation to TNT induction supports CAPOX preference"
+      - position: FOLFOX × 9 (~18 weeks) acceptable when capecitabine PO not feasible (e.g., severe HFS history, swallowing disorder, DPYD heterozygote)
+        sources:
+          - SRC-NCCN-COLON-2025
+        evidence_note: "Both arms in RAPIDO; FOLFOX backbone preserved for capecitabine-intolerant patients"
+    our_default: "CAPOX × 6 as primary induction backbone; switch to FOLFOX × 9 only when capecitabine contraindicated (severe HFS, DPYD homo/heterozygote, dysphagia)"
+    rationale: "CAPOX is operationally simpler (oral, fewer visits); IDEA + RAPIDO together support equipoise. Switch to FOLFOX only when capecitabine contraindicated."
+
+do_not_do:
+  - "Do NOT use TNT short-course (RAPIDO) for low-risk locally advanced rectal — long-course CRT + TME + selective adjuvant remains the category 1 preferred alternative for non-high-risk disease"
+  - "Do NOT use this indication for colon adenocarcinoma — RAPIDO enrolled rectal only; colon receives different periop strategy (no RT)"
+  - "Do NOT skip pelvic MRI staging — mesorectal fascia / EMVI / lateral-node assessment is mandatory for RAPIDO eligibility determination"
+  - "Do NOT use TNT in metastatic (M1) rectal — periop sequence is for resectable / locally advanced non-metastatic only; metastatic receives systemic-first strategy"
+  - "Do NOT initiate CAPOX in ECOG ≥2 patients or in patients with Grade ≥2 baseline peripheral neuropathy"
+  - "Do NOT proceed to TME during ongoing GI bleed, obstruction, or perforation without emergency stabilization (decompressive ostomy may be required)"
+  - "Do NOT shorten the 6-8 week post-induction-chemo to TME interval — the downstaging window is part of RAPIDO efficacy"
+
+do_not_do_en:
+  - "Do NOT use TNT short-course (RAPIDO) for low-risk locally advanced rectal — long-course CRT + TME + selective adjuvant remains the category 1 preferred alternative for non-high-risk disease"
+  - "Do NOT use this indication for colon adenocarcinoma — RAPIDO enrolled rectal only; colon receives different periop strategy (no RT)"
+  - "Do NOT skip pelvic MRI staging — mesorectal fascia / EMVI / lateral-node assessment is mandatory for RAPIDO eligibility determination"
+  - "Do NOT use TNT in metastatic (M1) rectal — periop sequence is for resectable / locally advanced non-metastatic only; metastatic receives systemic-first strategy"
+  - "Do NOT initiate CAPOX in ECOG ≥2 patients or in patients with Grade ≥2 baseline peripheral neuropathy"
+  - "Do NOT proceed to TME during ongoing GI bleed, obstruction, or perforation without emergency stabilization (decompressive ostomy may be required)"
+  - "Do NOT shorten the 6-8 week post-induction-chemo to TME interval — the downstaging window is part of RAPIDO efficacy"
+
+last_reviewed: "2026-05-08"
+
+notes: >
+  GI-3 wave C3 chunk (gi3-c3-rectal-tnt-rapido-2026-05-08-2100). Third
+  §17 phased indication after IND-GASTRIC-PERIOP-FLOT4 (GI-2 C1) and
+  IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT (GI-2 C2). Introduces the
+  `induction` IndicationPhaseStage in clinical content (was schema-
+  available since §17 ratification 2026-05-07; first consumer here).
+  Engine routing from `algo_rectal_*` (D-prefix algorithm extension) to
+  this indication is out of C3 scope — flagged for the D-wave algorithm
+  chunks. The `recommended_regimen` field is left null intentionally
+  because TNT is multi-modality; consumers should iterate `phases:`
+  rather than dereferencing a single regimen ID.
+
+  D-prefix algorithm flag: rectal-cancer treatment routing
+  (algo_rectal_locally_advanced_*) does not yet exist; this indication
+  is reachable only through direct lookup or via crc.yaml routing once
+  the D-wave landed (separate chunk).

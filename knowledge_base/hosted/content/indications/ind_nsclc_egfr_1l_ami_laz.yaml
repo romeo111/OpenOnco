@@ -1,0 +1,129 @@
+id: IND-NSCLC-EGFR-1L-AMI-LAZ
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: EGFR_MUTATED_1L
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic EGFR-mutated NSCLC (ex19del OR L858R activating mutation)"
+    - "No prior systemic therapy for advanced disease"
+    - "EGFR mutation confirmed by tissue or ctDNA NGS prior to initiation"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "Activating EGFR mutation: exon 19 deletion (ex19del) OR L858R substitution"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-AMI-LAZ-NSCLC
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ  # post-progression option (resistance-mutation guided)
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  progression_free_survival:
+    value: "Median PFS 23.7 mo (ami+laz) vs 16.6 mo (osimertinib mono); HR 0.70, p<0.001 by BICR"
+    source: SRC-MARIPOSA-CHO-2024
+  overall_response_rate:
+    value: "ORR 86% (ami+laz) vs 85% (osi mono); median DoR 25.8 vs 16.8 mo"
+    source: SRC-MARIPOSA-CHO-2024
+  overall_survival_median:
+    value: "OS interim — trend toward benefit at 2026 reporting; mature OS data evolving"
+    source: SRC-MARIPOSA-CHO-2024
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE  # frail / elderly may not tolerate IRR + VTE risk profile
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests:
+  - TEST-PDL1-IHC
+
+rationale: >
+  Amivantamab (EGFR-MET bispecific antibody) + lazertinib (3rd-gen
+  EGFR-TKI) for treatment-naive metastatic EGFR-mutated NSCLC
+  (ex19del or L858R). MARIPOSA (Cho NEJM 2024) demonstrated PFS HR
+  0.70 vs osimertinib monotherapy (median 23.7 vs 16.6 mo) with
+  BICR confirmation. FDA approved Aug 2024 as 1L alternative to
+  osimertinib mono. The dual EGFR + MET targeting addresses both
+  the activating EGFR driver and the bypass-pathway resistance
+  (MET amplification — common osimertinib resistance mechanism)
+  proactively in the 1L setting. Significant toxicity burden: VTE
+  ~37% any-grade (DOAC prophylaxis mandatory first 4 mo), rash,
+  paronychia, infusion reactions — toxicity profile is the primary
+  trade-off vs osimertinib mono. Aggressive-track for fit patients
+  with funding pathway. UA access barrier: neither component
+  registered; named-patient or cross-border treatment required.
+
+sources:
+  - source_id: SRC-MARIPOSA-CHO-2024
+    position: supports
+    relevant_quote_paraphrase: "Amivantamab + lazertinib improved PFS over osimertinib monotherapy (HR 0.70, median 23.7 vs 16.6 mo) in 1L EGFR-mutated NSCLC; basis for FDA approval Aug 2024 as 1L alternative"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Amivantamab + lazertinib is recommended as a 1L option for EGFR-mutated metastatic NSCLC (ex19del / L858R); Cat 1 (MARIPOSA)"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Amivantamab + lazertinib added to ESMO 1L recommendations for EGFR-mutated metastatic NSCLC alongside osimertinib monotherapy"
+
+known_controversies:
+  - topic: "Ami+laz vs osimertinib mono vs osimertinib + chemo (FLAURA2) in 1L EGFR-mut NSCLC"
+    positions:
+      - position: "Amivantamab + lazertinib (MARIPOSA): best PFS by BICR, HR 0.70 vs osi mono; significant added toxicity (VTE, IRR, rash); IV/SC infusion burden"
+        sources: [SRC-MARIPOSA-CHO-2024]
+      - position: "Osimertinib monotherapy (FLAURA): proven workhorse standard; oral; well-tolerated; CNS-active; remains preferred in many settings for tolerability"
+        sources: [SRC-NCCN-NSCLC-2025]
+      - position: "Osimertinib + carbo + pemetrexed (FLAURA2): PFS HR 0.62 vs osi mono; intermediate toxicity; alternative for high-burden disease"
+        sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
+    our_default: "Osimertinib mono for most patients (standard-track tolerability + UA accessibility). Ami+laz aggressive-track for fit, motivated patients with funding pathway when maximal upfront PFS prioritized over tolerability. FLAURA2 (osi+chemo) reserved for high disease burden."
+    rationale: "MARIPOSA proves superior PFS but at meaningful toxicity cost; in UA reality (ami unregistered) osi mono is default 1L; ami+laz reserved for trial / named-patient / cross-border access"
+
+do_not_do:
+  - "НЕ розпочинати без NGS-підтвердженої активуючої EGFR мутації (ex19del або L858R) — клінічної ефективності в EGFR-WT не показано."
+  - "НЕ пропускати DOAC profylactic anticoagulation перші 4 місяці — VTE rate ~37% з амі+лазертініб combination в MARIPOSA."
+  - "НЕ призначати при ECOG ≥2 — IRR + кумулятивна токсичність непереносимі; обрати осимертиніб mono."
+  - "НЕ використовувати IV формуляцію без full premedication протоколу — IRR ~65% baseline; SC формуляція strongly preferred."
+  - "НЕ ігнорувати baseline + serial ILD monitoring (CT chest) — pneumonitis ризик; permanent discontinuation Grade ≥3."
+  - "НЕ підтверджувати план без funding pathway — ані амівантамаб, ані лазертініб не зареєстровані в Україні; access requires named-patient або cross-border."
+  - "НЕ призначати при відомій historic VTE (DVT/PE) без оцінки ризику кровотечі — anticoagulation triple-therapy risk."
+  - "НЕ обирати ami+laz замість осимертинібу mono лише через 'aggressive' marketing — toxicity trade-off має бути узгоджений з пацієнтом після інформованої згоди."
+
+do_not_do_en:
+  - "Do NOT initiate without NGS-confirmed activating EGFR mutation (ex19del or L858R) — no clinical efficacy shown in EGFR-WT."
+  - "Do NOT skip DOAC prophylactic anticoagulation for the first 4 months — VTE rate ~37% with ami+lazertinib combination in MARIPOSA."
+  - "Do NOT prescribe at ECOG ≥2 — IRR + cumulative toxicity intolerable; choose osimertinib mono instead."
+  - "Do NOT use IV formulation without full premedication protocol — IRR ~65% baseline; SC formulation strongly preferred."
+  - "Do NOT ignore baseline + serial ILD monitoring (CT chest) — pneumonitis risk; permanent discontinuation Grade ≥3."
+  - "Do NOT confirm plan without funding pathway — neither amivantamab nor lazertinib registered in Ukraine; access requires named-patient or cross-border."
+  - "Do NOT prescribe in known historic VTE (DVT/PE) without bleeding-risk assessment — anticoagulation triple-therapy risk."
+  - "Do NOT select ami+laz over osimertinib mono purely on 'aggressive' marketing grounds — toxicity trade-off must be discussed with patient under informed consent."
+
+time_critical: false
+last_reviewed: "2026-05-09"
+reviewers: []
+reviewer_signoffs: 0
+actionability_review_required: true
+notes: >
+  STUB — pending Clinical Co-Lead sign-off (CHARTER §6.1: ≥2
+  reviewer signoffs to publish). Aggressive-track 1L for EGFR-mut
+  metastatic NSCLC per MARIPOSA (Cho NEJM 2024). PFS HR 0.70 vs
+  osimertinib mono; FDA approved Aug 2024 as 1L alternative.
+  Distinct entity from IND-NSCLC-EGFR-MUT-MET-1L (osi mono
+  standard-track 1L), IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ (2L
+  post-osi via MARIPOSA-2), and IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB
+  (2L ex20ins). Reuses DRUG-AMIVANTAMAB and DRUG-LAZERTINIB; new
+  REG-AMI-LAZ-NSCLC because MARIPOSA dosing differs from MARIPOSA-2
+  protocol (no split day 1+2; no chemo-combo arms).

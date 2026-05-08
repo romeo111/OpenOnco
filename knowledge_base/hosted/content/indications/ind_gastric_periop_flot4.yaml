@@ -1,0 +1,175 @@
+# IND-GASTRIC-PERIOP-FLOT4 — first §17-consumer indication (chunk
+# gi2-c1-flot-periop-gastric-2026-05-08-0900). Uses Indication.phases[]
+# to model the 3-phase periop FLOT sequence:
+#   1. Neoadjuvant FLOT × 4 cycles
+#   2. D2 gastrectomy
+#   3. Adjuvant FLOT × 4 cycles
+# Sets gold-standard pattern for C2-C5 chunks per §17 schema (commit 9882381c).
+id: IND-GASTRIC-PERIOP-FLOT4
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GASTRIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Resectable gastric or GEJ adenocarcinoma, cT2-T4 OR node-positive (cN+), M0"
+    - "Locally advanced potentially resectable (after MDT review)"
+  biomarker_requirements_required: []
+  # FLOT4 did NOT stratify by biomarker — periop sequence is for resectable
+  # disease regardless of HER2 / PD-L1 / MSI status. Those biomarkers drive
+  # metastatic-line selection (post-recurrence), not periop. No biomarker
+  # exclusions apply at the indication level.
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    fit_for_chemo: true
+    # FLOT4 enrolled ECOG 0-1 only; ECOG 2+ patients should be considered
+    # for less-toxic alternatives (e.g., FOLFOX-based periop) via MDT.
+
+# §17 ratified 2026-05-07 — 3-phase periop indication. The phased
+# representation supersedes the single `recommended_regimen` field for
+# multi-modality lines of therapy. Each phase carries exactly ONE foreign
+# key (regimen_id / surgery_id / radiation_id) per the IndicationPhase
+# XOR validator.
+phases:
+  - phase: neoadjuvant
+    type: chemotherapy
+    regimen_id: REG-FLOT
+    cycles: 4
+  - phase: surgery
+    type: surgery
+    surgery_id: SUR-D2-LYMPHADENECTOMY
+    duration_weeks: 1
+  - phase: adjuvant
+    type: chemotherapy
+    regimen_id: REG-FLOT
+    cycles: 4
+
+# Legacy `recommended_regimen` left null — render layer should consume
+# `phases:` for this indication. Engine pass-through to render is part
+# of Phase C readiness work (planning doc §2.7).
+recommended_regimen:
+
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_survival_median: "50 mo (FLOT) vs 35 mo (ECF/ECX); HR 0.77, 95% CI 0.63-0.94, p=0.012 (FLOT4 / Al-Batran 2019)"
+  progression_free_survival: "Median DFS 30 mo (FLOT) vs 18 mo (ECF/ECX); HR 0.75, p=0.0036"
+  complete_response: "pCR 16% (FLOT) vs 6% (ECF/ECX) at surgical specimen"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+
+desired_tests: []
+
+rationale: >
+  FLOT4-AIO (Al-Batran 2019, Lancet) established perioperative FLOT — 4
+  cycles neoadjuvant + 4 cycles adjuvant around D2 gastrectomy — as the
+  global standard of care for resectable gastric / GEJ adenocarcinoma
+  cT2-N+ / locally advanced, superseding the MAGIC ECF/ECX regimen.
+  Median OS 50 vs 35 mo (HR 0.77), DFS 30 vs 18 mo, pCR 16% vs 6%.
+  NCCN v3.2025 category 1 + ESMO 2024 strong recommendation. The 3-phase
+  perioperative sequence (neoadj → surgery → adjuvant) is the canonical
+  modeling case for §17 Indication.phases[] — first clinical-content
+  consumer of the new schema.
+
+  Patient selection: ECOG 0-1, fit for taxane-containing chemotherapy
+  (FLOT carries ~20-25% febrile-neutropenia risk requiring G-CSF primary
+  prophylaxis). Pre-op staging laparoscopy is NCCN-recommended for cT3+
+  / cN+ to rule out occult peritoneal metastases. HER2 / PD-L1 / MSI
+  testing can be obtained on the diagnostic biopsy in parallel for
+  metastatic-line preparedness but does NOT gate the periop pathway.
+
+rationale_ua: >
+  FLOT4-AIO (Al-Batran 2019, Lancet) встановив периоопераційний FLOT —
+  4 цикли неоад'ювантно + 4 цикли ад'ювантно навколо D2-гастректомії —
+  глобальним стандартом терапії резектабельної аденокарциноми шлунка /
+  GEJ cT2-N+ / місцево-поширеної, замінивши режим MAGIC ECF/ECX.
+  Медіана ЗВ 50 проти 35 місяців (HR 0.77), БХВ 30 проти 18 (HR 0.75),
+  pCR 16% проти 6%. NCCN v3.2025 категорія 1 + ESMO 2024 сильна
+  рекомендація. Трифазна периоопераційна послідовність (неоад'ювант →
+  операція → ад'ювант) — канонічний кейс моделювання для §17
+  Indication.phases[].
+
+  Відбір пацієнтів: ECOG 0-1, придатність до таксан-вмісної хіміотерапії
+  (FLOT — ~20-25% ризик фебрильної нейтропенії, G-CSF первинна
+  профілактика обов'язкова). Передопераційна діагностична лапароскопія
+  рекомендована NCCN при cT3+ / cN+ для виключення occult перитонеальних
+  метастазів. HER2 / PD-L1 / MSI можна паралельно отримати на діагностичній
+  біопсії для готовності до метастатичної лінії, але вони НЕ гейтять
+  периоопераційний шлях.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-FLOT4-AL-BATRAN-2019
+    position: supports
+  - source_id: SRC-NCCN-GASTRIC-2025
+    position: supports
+  - source_id: SRC-ESMO-GASTRIC-2024
+    position: supports
+
+known_controversies:
+  - topic: Total vs subtotal gastrectomy for distal gastric tumors
+    positions:
+      - position: Subtotal gastrectomy preferred for distal/antral tumors with adequate margins
+        sources:
+          - SRC-NCCN-GASTRIC-2025
+        evidence_note: "Equivalent oncologic outcomes when ≥5 cm proximal margin achievable; better quality-of-life vs total gastrectomy"
+      - position: Total gastrectomy required for proximal / diffuse-type / linitis plastica
+        sources:
+          - SRC-NCCN-GASTRIC-2025
+          - SRC-ESMO-GASTRIC-2024
+        evidence_note: "Tumor biology (diffuse, signet-ring) favors total resection regardless of location"
+    our_default: "Surgical extent decided by MDT based on tumor location, histology, and margin feasibility — surfaced as procedure-level choice on SUR-D2-LYMPHADENECTOMY"
+    rationale: "Both options are within standard-of-care; SUR-D2-LYMPHADENECTOMY captures D2 nodal dissection extent (the survival-driver) without prescribing total vs subtotal — that decision is patient-specific."
+
+  - topic: Adjuvant FLOT completion when neoadjuvant + surgery completed but post-op fitness declines
+    positions:
+      - position: Continue adjuvant FLOT × 4 cycles per FLOT4 protocol if ECOG returns to 0-1 by week 6-8 post-op
+        sources:
+          - SRC-FLOT4-AL-BATRAN-2019
+        evidence_note: "Per-protocol FLOT4 — adjuvant phase is integral to the OS benefit; abbreviating reduces benefit magnitude"
+      - position: De-escalate to FOLFOX or omit adjuvant phase if ECOG ≥2 / significant cumulative neuropathy
+        sources:
+          - SRC-NCCN-GASTRIC-2025
+        evidence_note: "NCCN allows clinical judgment when post-op recovery limits taxane reintroduction; oxaliplatin-omitting variants acceptable"
+    our_default: "Reassess fitness at week 6-8 post-op; resume FLOT if ECOG 0-1 and neuropathy ≤ Grade 1; otherwise consider FOLFOX-based or fluoropyrimidine-only adjuvant per MDT"
+    rationale: "FLOT4 per-protocol completion is the OS-benefit driver, but post-operative deconditioning is common; NCCN supports flexibility. Decision is MDT-level."
+
+do_not_do:
+  - "Do NOT initiate FLOT in ECOG ≥2 patients — FLOT4 excluded ECOG ≥2; alternative perioperative regimens via MDT"
+  - "Do NOT skip G-CSF primary prophylaxis — FLOT carries ~20-25% febrile-neutropenia risk"
+  - "Do NOT proceed to surgery during ongoing GI bleed or obstruction without emergency stabilization"
+  - "Do NOT omit adjuvant phase by default — adjuvant FLOT × 4 is integral to the OS benefit demonstrated in FLOT4"
+  - "Do NOT use periop FLOT in metastatic disease — periop sequence is for resectable / locally advanced potentially resectable only"
+
+do_not_do_en:
+  - "Do NOT initiate FLOT in ECOG ≥2 patients — FLOT4 excluded ECOG ≥2; alternative perioperative regimens via MDT"
+  - "Do NOT skip G-CSF primary prophylaxis — FLOT carries ~20-25% febrile-neutropenia risk"
+  - "Do NOT proceed to surgery during ongoing GI bleed or obstruction without emergency stabilization"
+  - "Do NOT omit adjuvant phase by default — adjuvant FLOT × 4 is integral to the OS benefit demonstrated in FLOT4"
+  - "Do NOT use periop FLOT in metastatic disease — periop sequence is for resectable / locally advanced potentially resectable only"
+
+last_reviewed: "2026-05-07"
+
+notes: >
+  First clinical-content consumer of §17 Indication.phases[] schema
+  (chunk gi2-c1-flot-periop-gastric-2026-05-08-0900). Sets the gold-
+  standard pattern for C2-C5 chunks (CROSS phasing, Whipple-aware PDAC
+  indications, etc.). Engine routing from `algo_gastric_resectable_*`
+  to this indication is out of C1 scope — flagged for D2 algorithm-
+  extension chunk follow-up. The `recommended_regimen` field is left
+  null intentionally because the periop sequence is multi-modality;
+  consumers should iterate `phases:` rather than dereferencing a single
+  regimen ID.

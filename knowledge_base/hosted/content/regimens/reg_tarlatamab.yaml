@@ -1,0 +1,142 @@
+id: REG-TARLATAMAB
+name: "Tarlatamab — 2L+ extensive-stage SCLC (DeLLphi-301; DLL3 × CD3 BiTE)"
+name_ua: "Тарлатамаб — 2L+ ES-МКЛЛ (DeLLphi-301; DLL3 × CD3 BiTE)"
+alternate_names:
+  - "DeLLphi-301 regimen"
+  - "Imdelltra SCLC"
+  - "AMG 757"
+
+components:
+  - drug_id: DRUG-TARLATAMAB
+    dose: "Step-up: 1 mg IV cycle 1 day 1; 10 mg IV cycle 1 day 8 + day 15; then 10 mg IV every 2 weeks"
+    schedule: "Cycle 1 days 1, 8, 15 (priming + step-up); cycles 2+ q2w (every 14 days) until progression or unacceptable toxicity. Cycle 1 days 1 and 8 require inpatient monitoring ≥22 hours post-infusion for CRS."
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication:
+  - "Cycle 1 D1 + D8 + D15 AND any first dose after a >2-week interruption: dexamethasone 8 mg IV + antihistamine (diphenhydramine 25-50 mg IV) + acetaminophen 650-1000 mg PO ≥30-60 min before infusion — CRS / infusion-reaction prophylaxis"
+  - "Cycle 1 D1 + D8: IV hydration with 1 L 0.9% NaCl before AND after infusion — CRS hypotension mitigation"
+  - "Cycles 2+ (after maintenance phase reached): premedication may be tapered to acetaminophen + antihistamine if prior cycles well-tolerated; corticosteroid optional"
+
+mandatory_supportive_care: []
+
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Grade 1 CRS (fever ≥38°C, no hypotension/hypoxia)"
+    modification: "Continue tarlatamab; manage symptoms (acetaminophen, IV fluids); resume schedule on time"
+    rationale: "Grade 1 CRS is the most common manifestation in DeLLphi-301 (~50% any-grade, mostly Grade 1) and does not require dose modification."
+    source_refs:
+      - SRC-DELLPHI-301-AHN-2023
+      - SRC-NCCN-SCLC-2025
+  - condition: "Grade 2 CRS (fever + hypotension responsive to IV fluids OR hypoxia requiring low-flow O2)"
+    modification: "Hold tarlatamab; IV fluids + supplemental O2 + tocilizumab 8 mg/kg IV (max 800 mg) if not improving in 24 hr; corticosteroids (dexamethasone 10 mg IV) if refractory; resume at next scheduled dose once resolved to Grade ≤1"
+    rationale: "ASTCT consensus grading; tocilizumab and corticosteroids are first-line for moderate CRS."
+    source_refs:
+      - SRC-DELLPHI-301-AHN-2023
+  - condition: "Grade 3 CRS (hypotension requiring vasopressors OR hypoxia requiring high-flow O2 / non-rebreather)"
+    modification: "Permanently hold next dose pending recovery; tocilizumab + IV corticosteroids (methylprednisolone 1-2 mg/kg/day or dexamethasone equivalent); ICU-level care; resume only if recovered to Grade ≤1 within 7 days; permanent discontinuation if recurrent or unresolved"
+    rationale: "Grade ≥3 CRS in DeLLphi-301 ~1% — uncommon but life-threatening; requires aggressive management."
+    source_refs:
+      - SRC-DELLPHI-301-AHN-2023
+  - condition: "Grade 4 CRS (life-threatening; requiring vasopressors + ventilation)"
+    modification: "Permanently discontinue tarlatamab; ICU + tocilizumab + high-dose corticosteroids"
+    rationale: "Boxed warning — fatal cases reported."
+    source_refs:
+      - SRC-DELLPHI-301-AHN-2023
+  - condition: "ICANS / Grade 2 neurotoxicity (confusion, mild aphasia, tremor; ICE score 3-6)"
+    modification: "Hold tarlatamab; dexamethasone 10 mg IV q6h until improvement; neurology consult; resume at next scheduled dose once recovered to Grade ≤1"
+    rationale: "Neurologic toxicity in DeLLphi-301 — Grade ≥3 ~7%; corticosteroids first-line."
+    source_refs:
+      - SRC-DELLPHI-301-AHN-2023
+  - condition: "Grade 3-4 ICANS (severe confusion, seizures, depressed consciousness; ICE score 0-2)"
+    modification: "Permanently hold pending recovery; high-dose corticosteroids (methylprednisolone 1 g IV daily ×3 days then taper); neurology + ICU; permanent discontinuation if recurrent or persistent"
+    rationale: "Severe ICANS may require ICU; recovery typically gradual but generally reversible with steroids."
+    source_refs:
+      - SRC-DELLPHI-301-AHN-2023
+  - condition: "Grade 3-4 infusion reaction (anaphylaxis)"
+    modification: "Permanently discontinue tarlatamab; supportive management"
+    rationale: "Anaphylaxis is a permanent contraindication to re-challenge."
+    source_refs:
+      - SRC-DELLPHI-301-AHN-2023
+  - condition: "Active uncontrolled infection (Grade ≥3 sepsis, pneumonia)"
+    modification: "Hold tarlatamab until infection resolved + appropriate antimicrobials completed; monitor for hypogammaglobulinemia; consider IVIG replacement if recurrent serious infections"
+    rationale: "T-cell-redistribution and hypogammaglobulinemia increase infection risk; sepsis Grade ≥3 ~10% in DeLLphi-301."
+    source_refs:
+      - SRC-DELLPHI-301-AHN-2023
+  - condition: "Missed dose ≥2 weeks (interruption beyond schedule)"
+    modification: "Restart with priming dose (1 mg) followed by next 10 mg dose; resume q2w schedule; full premedication for restart"
+    rationale: "Re-priming required to mitigate CRS recurrence after prolonged interruption."
+    source_refs:
+      - SRC-DELLPHI-301-AHN-2023
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Tarlatamab (Imdelltra) NOT registered in Ukraine; NOT reimbursed by
+    NSZU as of 2026-05. Access via named-patient import / EAP / charitable
+    funding only. Out-of-pocket cost USD 30-40K per cycle (US WAC). Major
+    structural access barrier beyond cost: requires inpatient infusion
+    centre with CRS / ICANS management protocol (tocilizumab on-formulary,
+    ICU access for Grade ≥3 CRS) — limits realistic deployment to a small
+    number of major Kyiv / regional oncology centres even if drug becomes
+    available. UA-restricted-access patients: alternative 2L options are
+    REG-TOPOTECAN (registered + НСЗУ-reimbursed) or REG-LURBINECTEDIN-SCLC-RR
+    (also not registered, but lower structural barrier — outpatient
+    infusion).
+
+sources:
+  - SRC-DELLPHI-301-AHN-2023
+  - SRC-NCCN-SCLC-2025
+  - SRC-ESMO-SCLC-2021
+
+last_reviewed: "2026-05-08"
+notes: >
+  DeLLphi-301 (Ahn et al., NEJM 2023; NCT05060016): open-label
+  multicenter phase 2 trial of tarlatamab (DLL3 × CD3 bispecific T-cell
+  engager) in pretreated extensive-stage SCLC progressing on or after
+  platinum-based chemotherapy. 222 patients randomized 1:1 to 10 mg q2w
+  vs 100 mg q2w. 10 mg q2w cohort (n=99) — confirmed ORR per independent
+  central review 40% (95% CI 29-52); mDoR not reached at 10.6 mo
+  follow-up; mPFS 4.9 mo; mOS 14.3 mo (95% CI 10.8-NE). 100 mg cohort
+  showed similar ORR with higher CRS rate; 10 mg selected as registered
+  dose. CRS any-grade ~50% (mostly cycle 1 D1-D2 fever ± mild hypotension);
+  Grade ≥3 CRS ~1%. ICANS-like neurotoxicity Grade ≥3 ~7%. Step-up dosing
+  (1 mg → 10 mg) + inpatient cycle 1 D1 + D8 monitoring (22+ hr) is
+  mandatory per US prescribing information; mitigates CRS through
+  immune-effector priming. Tocilizumab + corticosteroids first-line for
+  Grade ≥2 CRS / ICANS. FDA accelerated approval May 2024. NCCN-SCLC 2025
+  category 2A for ES-SCLC 2L+ post-platinum. Confirmatory phase 3
+  DeLLphi-304 (tarlatamab vs investigator-choice chemotherapy in 2L
+  ES-SCLC) ongoing. Active development: maintenance post-1L chemo-IO
+  (DeLLphi-303); SCLC-transformed NSCLC; neuroendocrine prostate cancer.
+  Pending peer-reviewed pop-PK and label updates may further refine
+  step-up schedule.
+
+notes_ua: >
+  DeLLphi-301 (Ahn et al., NEJM 2023; NCT05060016): відкрите
+  багатоцентрове дослідження фази 2 тарлатамабу (DLL3 × CD3 BiTE) у
+  попередньо лікованій extensive-stage МКЛЛ після прогресування на
+  платиновмісній ХТ. 222 пацієнти, рандомізація 1:1 на 10 мг кожні 2
+  тижні проти 100 мг кожні 2 тижні. Когорта 10 мг q2w (n=99) —
+  підтверджена ORR за незалежним центральним оглядом 40% (95% ДІ 29-52);
+  медіана DoR не досягнута при 10.6 міс спостереження; mPFS 4.9 міс;
+  mOS 14.3 міс (95% ДІ 10.8-NE). Когорта 100 мг показала подібну ORR при
+  вищій частоті CRS; 10 мг обрано як реєстраційну дозу. Цитокіновий
+  «шторм» (CRS) будь-якого ступеня ~50% (переважно цикл 1 Д1-Д2:
+  лихоманка ± легка гіпотензія); Grade ≥3 CRS ~1%. ICANS-подібна
+  нейротоксичність Grade ≥3 ~7%. Step-up dosing (1 мг → 10 мг) +
+  стаціонарний моніторинг ≥22 год у циклі 1 Д1 і Д8 ОБОВ'ЯЗКОВИЙ за
+  інструкцією FDA; зменшує ризик CRS через ефекторне «праймування» Т-
+  клітин. Тоцилізумаб + кортикостероїди — перша лінія для Grade ≥2
+  CRS / ICANS. FDA accelerated approval травень 2024. NCCN-SCLC 2025
+  категорія 2A для ES-МКЛЛ ≥2L після платини. Підтверджуюча фаза 3
+  DeLLphi-304 (тарлатамаб проти ХТ за вибором дослідника у 2L ES-МКЛЛ)
+  триває.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

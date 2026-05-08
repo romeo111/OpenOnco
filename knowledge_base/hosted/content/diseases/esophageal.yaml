@@ -39,8 +39,37 @@ last_reviewed: "2026-04-26"
 reviewers: []
 
 metadata:
-  proposal_status: partial
-  awaiting_proposal: "KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 — CROSS protocol (neoadjuvant CRT 41.4 Gy + carbo-pacli) + esophagectomy + adjuvant nivolumab phasing not modellable; FLOT periop adeno same gap"
+  proposal_status: full
+  # §17 Surgery entity references (added 2026-05-08, chunk
+  # gi2-c4-mie-ramie-selection). Three valid esophagectomy techniques
+  # with equivalent oncologic outcomes per TIME (open vs MIE) and ROBOT
+  # (open vs RAMIE) RCTs; technique selection by surgeon expertise +
+  # patient factors. Disease has no canonical `procedure_options` field
+  # in v0.1; this lives under metadata per `extra='allow'` and CLAUDE.md
+  # "do not invent fields" guidance, mirroring the gastric.yaml
+  # precedent set by chunk gi2-c1-flot-periop-gastric.
+  # Intended consumers: render layer (procedure-context surfacing),
+  # MDT note builder, future technique-selection algorithm extensions.
+  procedure_options:
+    - surgery_id: SUR-ESOPHAGECTOMY-OPEN
+      role: "Curative resection — historical reference operation (Ivor-Lewis or McKeown); valid where surgeon expertise favours it or extensive local invasion requires open exposure"
+      sources:
+        - SRC-TIME-BIERE-2012
+        - SRC-ROBOT-VAN-DER-SLUIS-2019
+        - SRC-NCCN-ESOPHAGEAL-2025
+        - SRC-ESMO-ESOPHAGEAL-2024
+    - surgery_id: SUR-ESOPHAGECTOMY-MIE
+      role: "Curative resection — minimally invasive (thoracoscopic + laparoscopic); reduced pulmonary morbidity vs open per TIME RCT (Biere 2012); equivalent oncologic outcomes; preferred where MIE expertise is established"
+      sources:
+        - SRC-TIME-BIERE-2012
+        - SRC-NCCN-ESOPHAGEAL-2025
+        - SRC-ESMO-ESOPHAGEAL-2024
+    - surgery_id: SUR-ESOPHAGECTOMY-RAMIE
+      role: "Curative resection — robot-assisted minimally invasive; reduced surgery-related + cardiopulmonary complications and improved QoL vs open per ROBOT RCT (van der Sluis 2019); equivalent oncologic outcomes; preferred where robotic-surgery programs are established"
+      sources:
+        - SRC-ROBOT-VAN-DER-SLUIS-2019
+        - SRC-NCCN-ESOPHAGEAL-2025
+        - SRC-ESMO-ESOPHAGEAL-2024
 
 notes: >
   Scaffolded for Phase GI-1: 1 RF (high-grade dysphagia / aspiration —

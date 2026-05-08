@@ -1,0 +1,95 @@
+id: REG-PEMBRO-GEM-CIS-CHOLANGIO
+name: "Pembrolizumab + gemcitabine + cisplatin (KEYNOTE-966) — 1L advanced biliary tract cancer"
+name_ua: "Пембролізумаб + гемцитабін + цисплатин (KEYNOTE-966) — 1L прогресуючий рак жовчних шляхів"
+alternate_names:
+  - "KEYNOTE-966 regimen"
+  - "Pembro-GemCis"
+  - "Keytruda + gem-cis"
+
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg IV q3 weeks"
+    schedule: "Day 1 q3w throughout (concurrent with chemo cycles 1-8 then maintenance with gemcitabine until progression / toxicity / 35 cycles total)"
+    route: IV
+  - drug_id: DRUG-GEMCITABINE
+    dose: "1000 mg/m² IV"
+    schedule: "Days 1 and 8 of every 21-day cycle, continued until progression / toxicity (no fixed cap; cisplatin stops at cycle 8)"
+    route: IV
+  - drug_id: DRUG-CISPLATIN
+    dose: "25 mg/m² IV"
+    schedule: "Days 1 and 8 of every 21-day cycle, cycles 1-8 only (capped at 8 cycles per protocol)"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Cisplatin: up to 8 cycles. Gemcitabine + pembrolizumab: continue until progression, unacceptable toxicity, or 35 cycles (~2 years) of pembrolizumab"
+toxicity_profile: severe
+
+premedication:
+  - "Standard cisplatin hydration: pre/post IV fluids 1-2 L NS, mannitol or furosemide as needed; avoid in CrCl <50 mL/min (consider carboplatin substitution case-by-case)"
+  - "Triple antiemetic prophylaxis MANDATORY (high-emetogenic cisplatin): 5-HT3 (palonosetron or ondansetron) + NK1-RA (aprepitant/fosaprepitant) + dexamethasone; consider olanzapine add-on"
+  - "Magnesium and potassium repletion as needed (cisplatin nephrotoxicity / electrolyte wasting)"
+  - "No specific pembrolizumab premedication required (low infusion-reaction rate)"
+
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Cisplatin grade 2+ nephrotoxicity (CrCl decline) or unable to tolerate hydration"
+    modification: "Reduce cisplatin to 20 mg/m² OR substitute carboplatin AUC 4-5 (KEYNOTE-966 protocol; carbo-substitution accepted in NCCN/ESMO guidance for cisplatin-ineligible)"
+    source_refs: [SRC-NCCN-HEPATOBILIARY, SRC-ESMO-BTC-2023]
+  - condition: "Grade 3-4 neutropenia / thrombocytopenia"
+    modification: "Hold gem+cis until recovery; reduce gemcitabine to 800 mg/m²; consider G-CSF support"
+    source_refs: [SRC-KEYNOTE-966-KELLEY-2023]
+  - condition: "Grade 2+ peripheral neuropathy"
+    modification: "Hold cisplatin; reduce by 25% on resume; consider permanent discontinuation if grade 3+"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Immune-mediated AE (pembrolizumab) — grade 2"
+    modification: "Hold pembrolizumab; corticosteroids 0.5-1 mg/kg/day prednisone equivalent; resume when grade ≤1 and steroid taper to ≤10 mg/day"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Immune-mediated AE — grade 3-4"
+    modification: "Permanent discontinuation of pembrolizumab; high-dose corticosteroids 1-2 mg/kg/day; specialist consultation"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: |
+    Пембролізумаб зареєстровано в UA (Keytruda, MSD); НСЗУ-реімбурсація
+    обмежена окремими онкологічними програмами (NSCLC, melanoma, MSI-H);
+    BTC-показ не покрито станом на 2026-05-08. Гемцитабін + цисплатин —
+    повністю зареєстровані та реімбурсуються в межах НСЗУ-онкопакету.
+    Альтернативні шляхи доступу до пембролізумабу для BTC: out-of-pocket,
+    MSD patient assistance, cross-border (EU онкоцентр за наказом МОЗ
+    988), клінічні випробування.
+
+sources:
+  - SRC-KEYNOTE-966-KELLEY-2023
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+
+last_reviewed: "2026-05-08"
+notes: >
+  KEYNOTE-966 (Kelley RK et al., Lancet 2023;401(10391):1853-1865;
+  NCT04003636): pembrolizumab 200 mg q3w + gemcitabine 1000 mg/m² +
+  cisplatin 25 mg/m² (D1, D8 q3w; cisplatin capped at 8 cycles, gem
+  continued indefinitely with pembro), vs placebo + gem-cis in 1L
+  advanced BTC (n=1069). Primary endpoint OS: mOS 12.7 vs 10.9 mo
+  (HR 0.83, 95% CI 0.72-0.95, p=0.0034); mPFS 6.5 vs 5.6 mo (HR 0.86,
+  ns); ORR 29% vs 29% (no improvement). Benefit consistent across
+  PD-L1 CPS subgroups; magnitude smaller than TOPAZ-1 but corroborates
+  anti-PD-(L)1 + chemo as new 1L standard. FDA-approved Oct 2023.
+  NCCN category 1 alternative preferred regimen alongside TOPAZ-1.
+  Note: KEYNOTE-966 differs from TOPAZ-1 in that gemcitabine continues
+  past 8 cycles as maintenance with pembrolizumab (cisplatin capped at
+  cycle 8); TOPAZ-1 stops both gem and cis at cycle 8 with durvalumab
+  monotherapy maintenance. STUB pending Clinical Co-Lead sign-off per
+  CHARTER §6.1 dev-mode exemption.
+notes_ua: >
+  KEYNOTE-966: пембролізумаб + гемцитабін + цисплатин для 1L прогресуючого
+  раку жовчних шляхів (внутрішньопечінкова / позапечінкова
+  холангіокарцинома, рак жовчного міхура). mOS 12.7 vs 10.9 міс
+  (HR 0.83). NCCN категорія 1, схвалено FDA жовтень 2023. Стандарт
+  1L разом із TOPAZ-1; вибір між durva і pembro — інституційний / за
+  доступністю. STUB — очікує клінічного підпису.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

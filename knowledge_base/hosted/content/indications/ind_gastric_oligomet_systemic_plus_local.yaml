@@ -1,0 +1,178 @@
+id: IND-GASTRIC-OLIGOMET-SYSTEMIC-PLUS-LOCAL
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-GASTRIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV (oligometastatic) — ≤3 distant metastatic lesions per OMEC-1 consensus"
+    - "Includes metachronous oligo-recurrence ≥6 months after curative-intent treatment"
+    - "Excluded: peritoneal carcinomatosis, leptomeningeal disease, >3 brain metastases"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+  demographic_constraints:
+    ecog_max: 1
+    primary_tumor_controllable: true
+    all_metastatic_sites_amenable_to_local_therapy: true
+
+# §17 phases NOT populated for v0.1 — local-therapy entities (metastasectomy
+# Surgery, SBRT RadiationCourse) for gastric oligomet are future Phase C
+# extensions. Sequence described in description / notes / rationale text.
+# Future chunk will populate phases when local-therapy entities exist.
+recommended_regimen: REG-FLOT
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: "RENAISSANCE / AIO-FLOT5: ~60% response to induction FLOT before randomisation (consistent with FLOT4 metastatic-arm response)"
+  overall_survival_median: "RENAISSANCE primary endpoint OS: full results pending (ASCO 2024 interim presented; Lancet/JCO publication awaited as of 2026-05-04)"
+  progression_free_survival: "OMEC-1 consensus: heterogeneous case-series PFS depending on metastatic site + local-therapy modality; no pooled estimate"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-OLIGOMET-DEFINITION
+  - RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-HER2-IHC-ISH-IF-RAS-WT
+  - TEST-MSI-PCR-OR-NGS
+
+desired_tests: []
+
+rationale: >
+  Oligometastatic gastric / GE-junction adenocarcinoma per OMEC-1 European
+  Delphi consensus (Kroese et al., Eur J Cancer 2023, PMID 36947929):
+  ≤3 distant metastatic lesions in a patient with controllable primary
+  disease, ECOG 0-1, all sites amenable to local therapy. Treatment
+  intent is potentially curative via induction FLOT (or comparable
+  fluoropyrimidine + platinum + taxane systemic chemo) with metastasis-
+  directed local therapy (metastasectomy or SBRT) in responders, modeled
+  on the RENAISSANCE / AIO-FLOT5 trial design (Al-Batran et al., BMC
+  Cancer 2017; NCT02578368).
+
+  Sequence (described in text; phases: not populated for v0.1):
+    1. Systemic induction: 4 cycles FLOT (or comparable platinum/
+       fluoropyrimidine/taxane triplet) per OMEC-1 + RENAISSANCE design.
+    2. Restaging at ~12 weeks: PET/CT, EUS as indicated. Patients with
+       progression exit oligomet track to standard 1L metastatic
+       management.
+    3. Metastasis-directed local therapy in responders: surgical
+       resection (gastrectomy + metastasectomy) per RENAISSANCE arm B,
+       or SBRT for site/patient ineligible for surgery (per OMEC-1
+       consensus on radiotherapy as alternative local modality).
+    4. Adjuvant systemic continuation: 4 cycles FLOT post-local therapy
+       per RENAISSANCE protocol.
+
+  Evidence is sparse / consensus-grade. RENAISSANCE primary OS results
+  are pending full publication (ASCO 2024 interim only as of 2026-05-04);
+  recommendation strength = conditional, NCCN category 2B (basis: NCCN
+  v3.2025 cites RENAISSANCE design as rationale for considering surgery
+  in highly selected oligometastatic responders, but does not yet
+  endorse routine practice). HER2-positive disease excluded — those
+  patients route via the dedicated HER2 trastuzumab + chemo + ICI
+  indication (KEYNOTE-811), with local-therapy consideration on a
+  separate MDT-driven track.
+
+rationale_ua: >
+  Олігометастатична аденокарцинома шлунка / стравохідно-шлункового
+  з'єднання за консенсусом OMEC-1 European Delphi (Kroese et al.,
+  Eur J Cancer 2023, PMID 36947929): ≤3 дистантних метастатичних
+  вогнищ у пацієнта з контрольованим первинним вогнищем, ECOG 0-1,
+  всі вогнища доступні локальній терапії. Намір лікування —
+  потенційно куративний: індукційний FLOT (або еквівалентна
+  фторпіримідин + платина + таксан системна хіміо) + метастазо-
+  направлена локальна терапія (метастазектомія або SBRT) у
+  респондерів, за дизайном RENAISSANCE / AIO-FLOT5 (Al-Batran et al.,
+  BMC Cancer 2017; NCT02578368).
+
+  Послідовність (описано в тексті; phases: не заповнено для v0.1):
+    1. Системна індукція: 4 цикли FLOT (або еквівалентний триплет).
+    2. Restaging у ~12 тиж: PET/CT, EUS за показаннями.
+    3. Метастазо-направлена локальна терапія у респондерів:
+       резекція (гастректомія + метастазектомія) за RENAISSANCE arm B,
+       або SBRT при недоступності хірургії.
+    4. Ад'ювантне системне продовження: 4 цикли FLOT.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-OMEC-1-KROESE-2018
+    position: supports
+  - source_id: SRC-RENAISSANCE-AIO-FLOT5
+    position: supports
+  - source_id: SRC-NCCN-GASTRIC-2025
+    position: context
+  - source_id: SRC-ESMO-GASTRIC-2024
+    position: context
+
+known_controversies:
+  - topic: Routine use of metastasectomy / SBRT in gastric oligomet outside trial — disputed
+    positions:
+      - position: OMEC-1 consensus (Kroese 2023) — local therapy alongside systemic chemo for ≤3 metastases in selected patients
+        sources:
+          - SRC-OMEC-1-KROESE-2018
+        evidence_note: "European Delphi expert consensus; not RCT evidence"
+      - position: RENAISSANCE / AIO-FLOT5 design — randomised test of FLOT alone vs FLOT + surgical resection for limited-metastatic disease
+        sources:
+          - SRC-RENAISSANCE-AIO-FLOT5
+        evidence_note: "Phase 3 trial; OS primary endpoint full results pending as of 2026-05-04 (ASCO 2024 interim presented)"
+      - position: NCCN v3.2025 — considers surgery for highly selected oligometastatic responders to systemic therapy; not routine practice
+        sources:
+          - SRC-NCCN-GASTRIC-2025
+        evidence_note: "Cites RENAISSANCE design; no routine endorsement pending full results"
+    our_default: "Restrict to MDT-reviewed cases meeting OMEC-1 consensus criteria + RENAISSANCE-pattern eligibility (≤1 incurable organ-system, no ascites, ≤1 retroperitoneal LN station). Document trial registration where available."
+    rationale: "Evidence base is consensus + ongoing-trial design; routine practice should await RENAISSANCE primary publication. Track flagged conditional with explicit MDT gate."
+
+do_not_do:
+  - "Do NOT offer surgical metastasectomy without 4 cycles induction systemic chemo first (RENAISSANCE design requires response demonstration)"
+  - "Do NOT include peritoneal carcinomatosis, leptomeningeal disease, or >3 brain mets — these are explicit OMEC-1 exclusions"
+  - "Do NOT proceed without MDT review (medical onc + surgical onc + radiation onc)"
+  - "Do NOT initiate during ongoing GI bleed / obstruction — emergency management first (RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION)"
+  - "Do NOT use in HER2-positive disease — route via dedicated HER2 trastuzumab + chemo track"
+
+do_not_do_en:
+  - "Do NOT offer surgical metastasectomy without 4 cycles induction systemic chemo first (RENAISSANCE design requires response demonstration)"
+  - "Do NOT include peritoneal carcinomatosis, leptomeningeal disease, or >3 brain mets — these are explicit OMEC-1 exclusions"
+  - "Do NOT proceed without MDT review (medical onc + surgical onc + radiation onc)"
+  - "Do NOT initiate during ongoing GI bleed / obstruction — emergency management first (RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION)"
+  - "Do NOT use in HER2-positive disease — route via dedicated HER2 trastuzumab + chemo track"
+
+actionability_review_required: true
+
+last_reviewed: "2026-05-08"
+notes: >
+  Gastric oligometastatic systemic-plus-local track per OMEC-1 consensus +
+  RENAISSANCE / AIO-FLOT5 design. Confidence: moderate (consensus +
+  ongoing-trial design; NCCN 2B). RENAISSANCE primary OS publication
+  pending — re-grade to 2A and evidence_level high once full results
+  published (D2 follow-up).
+
+  §17 phases: NOT populated for v0.1 (planning doc gi2_wave §4.5
+  recommendation 2). Local-therapy entities (metastasectomy Surgery,
+  SBRT RadiationCourse) for gastric oligomet are future Phase C
+  extensions. Sequence (induction FLOT → restaging → local therapy →
+  adjuvant FLOT) described in description / rationale / do_not_do
+  text only. recommended_regimen: REG-FLOT (backfilled 2026-05-08
+  after C1 PR #435 created REG-FLOT; closes #438).
+
+  Algorithm wiring deferred — ALGO-GASTRIC-METASTATIC-1L does not yet
+  have an oligomet branch. D2 follow-up: extend algorithm with oligomet
+  decision step gated by RF-OLIGOMET-DEFINITION.
+
+  Engine smoke (synthetic patient: gastric, mets=liver_2_lesions +
+  1_lymph_node, ECOG 1, primary_controllable=true, HER2 negative):
+  RF-OLIGOMET-DEFINITION fires; no algorithm branch consumes it yet.
+  Indication is reachable via direct ID lookup but not via current
+  decision-tree routing. D2 algorithm-extension chunk needed to wire.
+
+  actionability_review_required: true per Phase 1.5 schema convention
+  (CIViC pivot — flagged for Clinical Co-Lead two-reviewer signoff
+  per CHARTER §6.1).

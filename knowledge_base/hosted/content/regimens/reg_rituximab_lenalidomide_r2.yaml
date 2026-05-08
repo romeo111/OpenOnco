@@ -1,0 +1,58 @@
+id: REG-RITUXIMAB-LENALIDOMIDE-R2
+name: Rituximab + Lenalidomide (R²/AUGMENT)
+name_ua: Ритуксимаб + Леналідомід (R²/AUGMENT)
+alternate_names:
+  - R2
+  - R-squared
+  - R-Len
+components:
+  - drug_id: DRUG-RITUXIMAB
+    dose: "375 mg/m²"
+    route: IV
+    schedule: "Day 1 of each 28-day cycle"
+    duration: "12 cycles"
+  - drug_id: DRUG-LENALIDOMIDE
+    dose: "20 mg"
+    route: PO
+    schedule: "QD days 1-21 of each 28-day cycle"
+    duration: "12 cycles"
+cycle_length_days: 28
+total_cycles: "12"
+toxicity_profile: moderate
+premedication:
+  - Acetaminophen + diphenhydramine + IV steroid before rituximab
+mandatory_supportive_care: []
+dose_adjustments:
+  - condition: CrCl 30-59 mL/min
+    modification: Lenalidomide 10 mg QD days 1-21
+    source_refs:
+      - SRC-AUGMENT-LEONARD-2019
+  - condition: CrCl <30 mL/min (non-dialysis)
+    modification: Lenalidomide 7.5 mg QD days 1-21; reassess benefit-risk
+    source_refs:
+      - SRC-AUGMENT-LEONARD-2019
+  - condition: Grade ≥3 neutropenia or thrombocytopenia
+    modification: Hold lenalidomide; G-CSF for ANC <500; resume at 5 mg dose reduction per REMS labeling
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Rituximab (Mabthera/biosimilars) registered in Ukraine. Lenalidomide registered
+    for MM; NHL-indication registration status requires local verification.
+    Lenalidomide not on standard НСЗУ NHL reimbursement list.
+sources:
+  - SRC-AUGMENT-LEONARD-2019
+  - SRC-NCCN-BCELL-2025
+last_reviewed: "2026-05-09"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  AUGMENT R² schedule: rituximab 375 mg/m² IV day 1 + lenalidomide 20 mg PO
+  days 1-21 q28d × 12 cycles. Chemo-free. PFS HR 0.46 (Leonard 2019).
+  REMS program for lenalidomide (RevAssist/Revlimid-REMS in US; equivalent
+  pregnancy-prevention program in UA) — mandatory dual-contraception, monthly
+  pregnancy tests. VTE prophylaxis required (aspirin 81-325 mg QD minimum;
+  LMWH for high-risk patients). HBV screening mandatory pre-rituximab.
+  Grade 3-4 neutropenia 50% — monitor CBC monthly; G-CSF support as needed.

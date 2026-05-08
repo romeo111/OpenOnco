@@ -1,0 +1,122 @@
+id: REG-AMI-LAZ-NSCLC
+name: "Amivantamab + Lazertinib (MARIPOSA) — 1L EGFR-mut NSCLC"
+name_ua: "Амівантамаб + Лазертініб (MARIPOSA) — 1L EGFR-mut НДРЛ"
+alternate_names:
+  - "Ami + Laz"
+  - "Rybrevant + Lazcluze"
+  - "MARIPOSA ami+laz arm"
+
+components:
+  - drug_id: DRUG-AMIVANTAMAB
+    dose: "1050 mg IV (<80 kg) OR 1400 mg IV (≥80 kg); SC formulation 1600 mg / 2240 mg available (PALOMA-3)"
+    schedule: "Weekly (split day 1+2 of Cycle 1, then weekly weeks 2-4), then every 2 weeks from week 5 onward"
+    route: IV
+  - drug_id: DRUG-LAZERTINIB
+    dose: "240 mg PO once daily"
+    schedule: "Continuous"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: severe
+
+premedication:
+  - "IV amivantamab cycle 1 day 1: methylprednisolone 40 mg IV + diphenhydramine 25-50 mg IV + acetaminophen 650-1000 mg PO 30-60 min pre-infusion (mitigates IRR ~65% baseline → ~5% with full premed)"
+  - "Cycle 1 day 2 + subsequent: continue dexamethasone 8 mg PO + antihistamine + antipyretic; SC formulation reduces premed burden"
+mandatory_supportive_care: []
+# DOAC (apixaban / rivaroxaban) prophylaxis required first 4 mo per
+# MARIPOSA protocol — VTE rate elevated in ami+laz arm vs osi mono
+# (~37% any-grade vs ~9%). Surfaced in dose_adjustments + notes; no
+# SUP entity yet (TODO: SUP-VTE-PROPHYLAXIS-AMI-LAZ shared with 2L
+# regimen).
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Infusion-related reaction Grade ≥2"
+    modification: "Hold infusion; resume at 50% rate after symptom resolution; continue premedication next cycles"
+    source_refs: [SRC-MARIPOSA-CHO-2024]
+  - condition: "Rash Grade ≥3"
+    modification: "Hold both drugs; topical / oral steroids + doxycycline; resume at lower dose"
+    source_refs: [SRC-MARIPOSA-CHO-2024]
+  - condition: "VTE event despite prophylaxis"
+    modification: "Therapeutic anticoagulation; continue ami+laz unless contraindicated"
+    rationale: "VTE rate ~37% any-grade in MARIPOSA ami+laz arm; prophylaxis mandatory first 4 mo"
+    source_refs: [SRC-MARIPOSA-CHO-2024]
+  - condition: "ILD / pneumonitis any grade"
+    modification: "Hold both drugs; corticosteroids; permanent discontinuation if Grade ≥3"
+  - condition: "Hepatic transaminase elevation Grade ≥3"
+    modification: "Hold lazertinib; resume at lower dose after recovery"
+  - condition: "Paronychia Grade ≥3"
+    modification: "Hold amivantamab until ≤Grade 1; topical steroids, antibiotics; resume at lower dose"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Both components NOT registered in UA (per drlz.com.ua snapshot
+    2026-04-27). Access only via Janssen named-patient pathway,
+    cross-border (EU) treatment per наказ МОЗ 988, or clinical trial.
+    Funding = primary barrier in UA setting. Osimertinib (1L sister
+    REG-OSIMERTINIB-NSCLC) remains workhorse standard 1L when
+    ami+laz inaccessible.
+
+sources:
+  - SRC-MARIPOSA-CHO-2024
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Amivantamab + lazertinib for 1L EGFR-mut NSCLC (MARIPOSA).
+# EGFR + MET bispecific + 3rd-gen EGFR TKI. Signature: acneiform
+# rash, paronychia, infusion reactions, VTE. STUB pending §6.1
+# signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Акнеформний висип на обличчі, шиї"
+    action_ua: "Очікувано на тлі амівантамабу/лазертинібу — використовуйте призначені креми"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Запалення та біль навколо нігтів (паронихії)"
+    action_ua: "Поширене — носіть м'яке взуття, уникайте травм нігтів"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Помірна нудота, помірна діарея"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Біль або припухлість в одній нозі"
+    action_ua: "Подзвоніть у клініку того ж дня — амівантамаб підвищує ризик тромбозу; антикоагулянти зазвичай призначаються профілактично"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-MARIPOSA-CHO-2024
+  - trigger_ua: "Виражена реакція на інфузію амівантамабу: задишка, висип, набряк"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно. Премедикація стероїдами + антигістамінними знижує ризик"
+    urgency: er_now
+    cycle_day_window: "First infusion"
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Раптова задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія або пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
+last_reviewed: "2026-05-09"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  MARIPOSA (Cho NEJM 2024, NCT04487080): amivantamab + lazertinib vs
+  osimertinib monotherapy in 1L EGFR-mutated (ex19del or L858R)
+  advanced NSCLC (n=1074 across three arms). Median PFS 23.7 vs 16.6
+  mo (HR 0.70; p<0.001) by BICR. ORR 86% vs 85%; median DoR 25.8 vs
+  16.8 mo. Significant added toxicity vs osimertinib alone: VTE
+  ~37% any-grade (DOAC prophylaxis mandatory first 4 mo), rash,
+  paronychia, infusion reactions. Basis for FDA approval Aug 2024 as
+  1L alternative to osimertinib monotherapy. SC amivantamab
+  (PALOMA-3) preferred where available — IRR rate <10% vs ~65% IV.
+  Distinct from MARIPOSA-2 (2L post-osi) regimen
+  (REG-AMIVANTAMAB-LAZERTINIB-NSCLC-2L) which uses split-day cycle 1
+  with chemotherapy-combo arms. STUB pending §6.1 sign-off.

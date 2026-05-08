@@ -1,0 +1,96 @@
+id: REG-NALIRIFOX
+name: "NALIRIFOX"
+name_ua: "NALIRIFOX"
+alternate_names: ["NAPOLI-3 regimen", "lipo-IRI + oxaliplatin + 5-FU/LV"]
+
+components:
+  - drug_id: DRUG-LIPOSOMAL-IRINOTECAN
+    dose: "50 mg/m² free base (≈60 mg/m² salt equivalent)"
+    schedule: "IV over 90 min, day 1 every 14d"
+    route: IV
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "60 mg/m²"
+    schedule: "IV day 1 every 14d"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m²"
+    schedule: "IV day 1 (after liposomal irinotecan + oxaliplatin)"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "2400 mg/m² CIV over 46 h"
+    schedule: "Day 1 starting after leucovorin, every 14d"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Until disease progression or unacceptable toxicity"
+
+toxicity_profile: severe
+
+premedication:
+  - "Atropine 0.25-1 mg IV/SQ for acute cholinergic syndrome (early-onset diarrhea, diaphoresis) during or within 30 min of liposomal irinotecan"
+  - "Antiemetics: moderate-to-high emetogenic protocol (5-HT3 antagonist + dexamethasone day 1; consider NK1 antagonist)"
+  - "Loperamide patient education for late-onset diarrhea (≥24h post-infusion): 4 mg at onset, then 2 mg q2h until diarrhea-free 12h"
+  - "G-CSF secondary prophylaxis after febrile neutropenia episode (consider primary prophylaxis in high-risk patients)"
+
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "UGT1A1 *28/*28 homozygous"
+    modification: "Reduce liposomal irinotecan starting dose to 40 mg/m² free base (cycle 1); escalate to 50 mg/m² if tolerated"
+    rationale: "Severe neutropenia + diarrhea risk due to impaired SN-38 glucuronidation"
+    source_refs: [SRC-NAPOLI-3-WAINBERG-2024, SRC-NCCN-PANCREATIC-2025]
+  - condition: "Bilirubin 1.5-2× ULN"
+    modification: "Hold or reduce liposomal irinotecan; resolve biliary obstruction first"
+    source_refs: [SRC-NCCN-PANCREATIC-2025]
+  - condition: "Bilirubin >2× ULN"
+    modification: "Do not initiate; hold all components — relieve biliary obstruction (stenting/PBD) first"
+    source_refs: [SRC-NCCN-PANCREATIC-2025]
+  - condition: "Grade 3-4 diarrhea"
+    modification: "Aggressive loperamide; IV hydration if severe; reduce liposomal irinotecan to 40 mg/m² free base; consider 5-FU 25% reduction"
+    source_refs: [SRC-NAPOLI-3-WAINBERG-2024]
+  - condition: "Grade 3-4 neutropenia or febrile neutropenia"
+    modification: "Hold until ANC ≥1500; reduce liposomal irinotecan and 5-FU; G-CSF secondary prophylaxis"
+    source_refs: [SRC-NAPOLI-3-WAINBERG-2024]
+  - condition: "Grade ≥3 peripheral neuropathy"
+    modification: "Hold or reduce oxaliplatin; consider oxaliplatin discontinuation if persistent at next cycle"
+    source_refs: [SRC-NCCN-PANCREATIC-2025]
+  - condition: "Grade 3 mucositis or hand-foot syndrome"
+    modification: "Reduce 5-FU by 25%; consider uridine triacetate if severe 5-FU toxicity"
+    source_refs: [SRC-NCCN-PANCREATIC-2025]
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Liposomal irinotecan (ONIVYDE) NOT registered in Ukraine as of 2026-05-08
+    — significant access barrier. Oxaliplatin, 5-FU, and leucovorin are all
+    NSZU-funded. Without ONIVYDE access, accessible alternatives are
+    FOLFIRINOX (REG-FOLFIRINOX) for ECOG 0-1 fit patients or gem-nab-pac
+    (REG-GEM-NAB-PAC) for ECOG 1-2 / borderline-fit patients.
+
+between_visit_watchpoints: []
+
+sources: [SRC-NAPOLI-3-WAINBERG-2024, SRC-NCCN-PANCREATIC-2025, SRC-ESMO-PANCREATIC-2024]
+
+last_reviewed: "2026-05-08"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+
+notes: >
+  NAPOLI-3 (Wainberg, Lancet 2023; n=770, phase 3 RCT; NCT04083235):
+  NALIRIFOX vs gem-nab-pac as 1L therapy in metastatic PDAC, ECOG 0-1.
+  mOS 11.1 vs 9.2 mo (HR 0.83, 95% CI 0.70-0.99, p=0.04); mPFS 7.4 vs
+  5.6 mo (HR 0.69, 95% CI 0.58-0.83, p<0.0001); ORR 41.8% vs 36.2%.
+  Grade ≥3 TEAEs comparable: diarrhea (20% vs 4.5%), nausea (12% vs 3%),
+  hypokalemia (15% vs 4%), neutropenia (14% vs 25%), febrile neutropenia
+  (3% vs 1%), peripheral neuropathy (3% vs 2%), thrombocytopenia (2% vs
+  9%). NCCN Category 1 (preferred) 1L option for mPDAC alongside
+  FOLFIRINOX and gem-nab-pac. Eligibility: PS 0-1, bilirubin <1.5-2× ULN,
+  no severe cardiac comorbidity. NALIRIFOX vs FOLFIRINOX: no head-to-head
+  trial; cross-trial OS appears comparable; NALIRIFOX may have somewhat
+  better tolerability profile (lower neutropenia, less alopecia) but
+  more diarrhea and nausea. Choice between FOLFIRINOX and NALIRIFOX in
+  Ukraine is dominated by ONIVYDE access (not registered) — FOLFIRINOX
+  remains the accessible Category 1 option. between_visit_watchpoints
+  authoring deferred to PATIENT_MODE Phase 3 backlog.

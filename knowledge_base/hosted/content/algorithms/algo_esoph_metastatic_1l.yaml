@@ -3,11 +3,21 @@ applicable_to_disease: DIS-ESOPHAGEAL
 applicable_to_line_of_therapy: 1
 purpose: >
   Select 1L systemic therapy for metastatic or unresectable locally advanced
-  esophageal carcinoma. Routes by histology (ESCC vs adenocarcinoma/EAC) and
-  PD-L1 CPS to ICI+chemotherapy combinations. Distinct from ALGO-ESOPH-
-  RESECTABLE-1L (neoadjuvant CROSS) and ALGO-ESOPHAGEAL-ADJUVANT-1L.
+  esophageal carcinoma. Step 0 (D2 chunk gi2-d2-algo-extensions-phase-c-
+  2026-05-08-1300) checks RF-OLIGOMET-DEFINITION first — when ≤3 metastases
+  + controllable primary + ECOG 0-1 + amenable to local therapy + no
+  peritoneal/leptomeningeal/>3-brain-mets exclusions, route to systemic-
+  plus-local oligomet track (RENAISSANCE-pattern, adenocarcinoma-grade
+  evidence; ESCC case-by-case). Otherwise routes by histology (ESCC vs
+  adenocarcinoma/EAC) and PD-L1 CPS to ICI+chemotherapy combinations.
+  Distinct from ALGO-ESOPH-RESECTABLE-1L (neoadjuvant CROSS),
+  ALGO-ESOPH-DEFINITIVE-1L (definitive CRT for unresectable SCC), and
+  ALGO-ESOPHAGEAL-ADJUVANT-1L.
 
 output_indications:
+  - IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL
+  - IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO
+  - IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO
   - IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC
   - IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO
 
@@ -15,6 +25,106 @@ default_indication: IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC
 alternative_indication: IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO
 
 decision_tree:
+  # Step 0 (D2 chunk gi2-d2-algo-extensions-phase-c-2026-05-08-1300) —
+  # RF-OLIGOMET-DEFINITION gate. When patient meets OMEC-1 oligomet
+  # consensus criteria (≤3 distant mets, ECOG 0-1, controllable primary,
+  # all sites amenable to local therapy; not peritoneal carcinomatosis /
+  # leptomeningeal / >3 brain mets), route to systemic-plus-local
+  # oligomet track. Indication primarily intended for EAC + GEJ Siewert I
+  # adenocarcinoma (RENAISSANCE-pattern); ESCC oligomet on case-by-case
+  # MDT basis with explicit weaker-evidence acknowledgement. Falls through
+  # to existing standard 1L metastatic histology hierarchy when the RF
+  # does not fire (>3 mets, peritoneal, leptomeningeal, etc.).
+  - step: 0
+    evaluate:
+      any_of:
+        - red_flag: RF-OLIGOMET-DEFINITION
+    if_true:
+      result: IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL
+      notes: >
+        OMEC-1 oligomet consensus (Kroese 2023, PMID 36947929) +
+        RENAISSANCE / AIO-FLOT5 design extrapolated to esophageal
+        histology (Al-Batran BMC Cancer 2017; NCT02578368). ≤3 distant
+        metastatic lesions + controllable primary + ECOG 0-1 + all sites
+        amenable to local therapy. Aggressive plan track — induction
+        FLOT (adeno) or nivo+chemo (ESCC) → restaging at ~12 wk →
+        metastasis-directed local therapy (esophagectomy + metastasectomy
+        or SBRT) in responders → adjuvant systemic continuation. NCCN
+        v3.2025 2B, ESMO 2024 conditional. Confidence: moderate
+        (RENAISSANCE primary OS pending; ESCC histology extrapolated).
+    if_false:
+      next_step: 10
+    notes: "D2 chunk new branch — prepended oligomet step gates the standard histology hierarchy. Fires only when RF-OLIGOMET-DEFINITION composite trigger evaluates True (≤3 mets + ECOG≤1 + primary controllable + all sites amenable + none of peritoneal/leptomeningeal/>3-brain). HER2-positive oligomet excluded at indication-level (biomarker_requirements_excluded) so HER2+ patients still route to step 11 trastuzumab branch."
+
+  # Step 10 (D1 chunk gi2-d1-algo-extensions-2026-05-07-2030) — SCC + PD-L1 CPS≥1
+  # + chemo-spare preference → nivolumab + ipilimumab (CheckMate-648 nivo+ipi arm).
+  # CM-648 enrolled ESCC only; chemo-sparing arm benefits from avoiding cytotoxic
+  # chemo (renal dysfunction, frailty, patient preference). Falls through to
+  # existing step 1 (chemo+nivo SCC arm) when chemo_spare_preference is not set.
+  - step: 10
+    evaluate:
+      any_of:
+        - condition: "ESCC CPS >=1 chemo-sparing preference"
+        - all_of:
+            - any_of:
+                - finding: "histology"
+                  value: "squamous"
+                - condition: "histology_escc"
+            - any_of:
+                - finding: "pdl1_cps"
+                  threshold: 1
+                  comparator: ">="
+                - condition: "PD-L1 CPS >= 1 (22C3 or 28-8 assay)"
+                - condition: "PD-L1 CPS ≥ 1 (22C3 or 28-8 assay)"
+                - condition: "ESCC CPS >=1"
+            - any_of:
+                - finding: "chemo_spare_preference"
+                  value: true
+                - condition: "Chemo-sparing preference"
+                - condition: "Chemo unsuitable but ICI eligible"
+                - condition: "chemo_sparing_preference"
+    if_true:
+      result: IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO
+      notes: >
+        ESCC + PD-L1 CPS≥1 + chemo-spare preference: nivo+ipi (CheckMate-648
+        nivo+ipi arm). Chosen over chemo+nivo when avoiding cytotoxic chemo
+        is preferred (frailty, renal dysfunction, patient preference). mOS
+        13.7 vs 9.1 mo CPS≥1 (HR 0.64).
+    if_false:
+      next_step: 11
+    notes: "D1 chunk new branch — routes chemo-sparing CPS≥1 ESCC to ipi+nivo arm of CheckMate-648."
+
+  # Step 11 (D1 chunk) — Adenocarcinoma + HER2-positive → trastuzumab + chemo
+  # (ToGA backbone extrapolation per NCCN-Esophageal/EGJ 2025). HER2 testing in
+  # metastatic adeno is recommended; trastuzumab + cisplatin/cape (or 5-FU)
+  # supersedes chemo+pembro for the HER2+ subset.
+  - step: 11
+    evaluate:
+      all_of:
+        - any_of:
+            - finding: "histology"
+              value: "adeno"
+            - condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
+            - condition: "histology_adenocarcinoma"
+        - any_of:
+            - finding: "her2_status"
+              value: "positive"
+            - condition: "HER2-positive adenocarcinoma"
+            - condition: "HER2-positive"
+            - condition: "BIO-HER2-SOLID positive"
+            - condition: "her2_positive"
+    if_true:
+      result: IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO
+      notes: >
+        EAC / GEJ Siewert I + HER2+ (IHC 3+ or IHC 2+/ISH+): trastuzumab +
+        cisplatin + capecitabine/5-FU (ToGA backbone). Extrapolation from
+        gastric/GEJ ToGA pivotal trial (mOS 13.8 vs 11.1 mo, HR 0.74; IHC3+
+        or IHC2+/FISH+ subgroup mOS 16.0 vs 11.8 mo). NCCN-Esophageal/EGJ
+        2025 endorses extrapolation. Confidence: moderate.
+    if_false:
+      next_step: 1
+    notes: "D1 chunk new branch — routes HER2+ esoph adeno to ToGA-backbone trastuzumab+chemo before generic CPS gating."
+
   # Step 1 — Staging confirmation. Algorithm applies to metastatic (stage IV)
   # or unresectable locally advanced esophageal carcinoma only.
   # Resectable disease → ALGO-ESOPH-RESECTABLE-1L (CROSS neoadjuvant).
@@ -22,6 +132,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "Stage IV (metastatic) OR unresectable locally advanced esophageal carcinoma"
+        - condition: "metastatic_or_unresectable"
     if_true:
       next_step: 2
     if_false:
@@ -35,6 +146,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "Squamous-cell carcinoma (ESCC) histology"
+        - condition: "histology_escc"
     if_true:
       next_step: 3
     if_false:
@@ -69,8 +181,12 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
-        - condition: "PD-L1 CPS ≥ 10"
+        - any_of:
+            - condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
+            - condition: "histology_adenocarcinoma"
+        - any_of:
+            - condition: "PD-L1 CPS >= 10"
+            - condition: "PD-L1 CPS ≥ 10"
     if_true:
       result: IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO
       notes: >
@@ -93,14 +209,19 @@ sources:
   - SRC-NCCN-ESOPHAGEAL-2025
   - SRC-ESMO-ESOPHAGEAL-2024
 
-last_reviewed: "2026-05-04"
+last_reviewed: "2026-05-08"
 notes: >
-  This algorithm covers metastatic/unresectable advanced disease only.
-  Resectable: ALGO-ESOPH-RESECTABLE-1L (CROSS neoadjuvant → esophagectomy).
-  Adjuvant post-CROSS-non-pCR: ALGO-ESOPHAGEAL-ADJUVANT-1L (nivolumab 1yr).
-  2L post-ICI+chemo: limited options — cytotoxic taxane or irinotecan.
-  2L post-chemo-only: nivo (ATTRACTION-3, ESCC) or pembro CPS≥10 (KEYNOTE-181)
-  per ALGO-ESOPH-2L.
+  Step 0 (D2 chunk gi2-d2-algo-extensions-phase-c-2026-05-08-1300):
+  RF-OLIGOMET-DEFINITION gate routes oligometastatic patients to
+  IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL before standard histology
+  hierarchy. This algorithm covers metastatic/unresectable advanced
+  disease only. Resectable: ALGO-ESOPH-RESECTABLE-1L (CROSS
+  neoadjuvant → esophagectomy). Definitive CRT for unresectable T4b /
+  medically inoperable SCC: ALGO-ESOPH-DEFINITIVE-1L. Adjuvant post-
+  CROSS-non-pCR: ALGO-ESOPHAGEAL-ADJUVANT-1L (nivolumab 1yr). 2L
+  post-ICI+chemo: limited options — cytotoxic taxane or irinotecan.
+  2L post-chemo-only: nivo (ATTRACTION-3, ESCC) or pembro CPS≥10
+  (KEYNOTE-181) per ALGO-ESOPH-2L.
 
   ESCC vs EAC 1L choice:
   - ESCC CPS≥1: nivo+chemo preferred (CheckMate-648, largest benefit HR 0.54)

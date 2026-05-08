@@ -20,7 +20,12 @@ from .diagnostic import (
 from .disease import Disease
 from .drug import Drug
 from .experimental_option import ExperimentalOption, ExperimentalTrial
-from .indication import Indication
+from .indication import (
+    Indication,
+    IndicationPhase,
+    IndicationPhaseStage,
+    IndicationPhaseType,
+)
 from .mdt_skill import MdtSkill
 from .monitoring import MonitoringSchedule
 from .plan import (
@@ -38,12 +43,14 @@ from .questionnaire import (
     QuestionOption,
     Questionnaire,
 )
+from .radiation_course import RadiationCourse, RadiationIntent
 from ._reviewer_signoff import ReviewerSignoff
 from .red_flag import RedFlag
 from .regimen import Regimen, RegimenComponent, RegimenPhase
 from .reviewer_profile import ReviewerProfile, SignOffScope
 from .source import Source
 from .supportive_care import SupportiveCare
+from .surgery import Surgery, SurgeryComplication, SurgeryIntent
 from .test import Test
 
 # Map content directory name → entity class.
@@ -70,6 +77,11 @@ ENTITY_BY_DIR: dict[str, type] = {
     "access_pathways": AccessPathway,
     "mdt_skills": MdtSkill,
     "reviewers": ReviewerProfile,
+    # §17 ratified 2026-05-07 — solid-tumor extensions. Empty / non-existent
+    # folders are tolerated by the loader (loader.py walks dirs that exist).
+    # First content lands in Phase C of the GI-2 wave.
+    "procedures": Surgery,
+    "radiation_courses": RadiationCourse,
 }
 
 __all__ = [
@@ -92,6 +104,9 @@ __all__ = [
     "FDAComplianceMetadata",
     "IHCPanel",
     "Indication",
+    "IndicationPhase",
+    "IndicationPhaseStage",
+    "IndicationPhaseType",
     "MdtSkill",
     "MonitoringSchedule",
     "Plan",
@@ -101,6 +116,8 @@ __all__ = [
     "Question",
     "QuestionOption",
     "Questionnaire",
+    "RadiationCourse",
+    "RadiationIntent",
     "RedFlag",
     "Regimen",
     "RegimenComponent",
@@ -111,6 +128,9 @@ __all__ = [
     "SignOffScope",
     "Source",
     "SupportiveCare",
+    "Surgery",
+    "SurgeryComplication",
+    "SurgeryIntent",
     "SuspicionSnapshot",
     "Test",
     "VariantActionabilityHit",

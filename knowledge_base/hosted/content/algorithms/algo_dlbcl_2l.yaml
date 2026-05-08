@@ -1,15 +1,19 @@
 id: ALGO-DLBCL-2L
 applicable_to_disease: DIS-DLBCL-NOS
 applicable_to_line_of_therapy: 2
-purpose: 'Select 2L+/relapsed-refractory DLBCL Indication. Three tracks: (1) transplant-eligible salvage chemo → BEAM-autoSCT (no dedicated indication yet — surfaced as free-text recommendation in trace, see notes); (2) ≥3 lines failed AND CAR-T-eligible → axi-cel CAR-T (curative-intent aggressive track); (3) transplant-ineligible / older / frail → Pola-R- bendamustine (standard-track 2L for the realistic UA majority).
-
-  '
+purpose: >
+  Select 2L+/relapsed-refractory DLBCL Indication. Four tracks: (1) transplant-
+  eligible early relapse → liso-cel CAR-T 2L (TRANSFORM: superior to salvage +
+  ASCT; preferred aggressive track); (2) ≥2 prior lines + CAR-T-eligible ≥3L →
+  axi-cel (ZUMA-7); (3) CAR-T-ineligible post-2L → loncastuximab (LOTIS-2);
+  (4) transplant-ineligible / frail → Pola-R-bendamustine (standard majority).
 output_indications:
 - IND-DLBCL-2L-POLA-R-BENDAMUSTINE
+- IND-DLBCL-2L-LISOCEL
 - IND-DLBCL-3L-AXICEL-CART
 - IND-DLBCL-3L-LONCASTUXIMAB
 default_indication: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
-alternative_indication: IND-DLBCL-3L-AXICEL-CART
+alternative_indication: IND-DLBCL-2L-LISOCEL
 decision_tree:
 - step: 1
   evaluate:
@@ -17,10 +21,10 @@ decision_tree:
     - red_flag: RF-ASCT-ELIGIBLE-COMPOSITE
     - condition: First relapse, chemosensitive disease (≥PR to salvage)
   if_true:
-    result: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
+    result: IND-DLBCL-2L-LISOCEL
   if_false:
     next_step: 2
-  notes: "Partially wired - RF-ASCT-ELIGIBLE-COMPOSITE gates the transplant-eligible composite (ECOG ≤2 + LVEF ≥50% + CrCl ≥30 + bilirubin ≤2× ULN + no active infection + age <70) for autoSCT consolidation route (vs transplant-ineligible CAR-T pivot at step 2); chemosensitivity-to-salvage criterion remains MDT-text (response-to-prior-line not RF-modelled)."
+  notes: "Wired via RF-ASCT-ELIGIBLE-COMPOSITE (ECOG ≤2 + LVEF ≥50% + CrCl ≥30 + bili ≤2× ULN + no active infection + age <70). TRANSFORM (Kamdar, Lancet 2022; PFS HR 0.35, median EFS 10.1 vs 2.3 mo): liso-cel superior to salvage chemo + ASCT for transplant-eligible 2L DLBCL → now preferred aggressive track. Pola-RB remains default (standard-track) via step 3. Chemosensitivity-to-salvage criterion remains MDT-text (response-to-prior-line not RF-modelled)."
 - step: 2
   evaluate:
     all_of:
@@ -56,8 +60,9 @@ decision_tree:
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-DLBCL-2024
-last_reviewed: '2026-04-26'
-notes: 'OOS / wiring gaps: (1) IND-DLBCL-2L-RDHAP-AUTOSCT (or R-ICE-autoSCT) is the true NCCN-preferred 2L for transplant-eligible chemosensitive relapse but no dedicated indication YAML exists yet — step 1 routes to the Pola-BR placeholder and the trace must surface "salvage → BEAM-ASCT preferred" as a free-text MDT note. Add IND-DLBCL-2L-RDHAP-AUTOSCT in next batch. (2) Liso-cel / TRANSFORM (early-relapse 2L CAR-T) not modeled — only axi-cel for ≥3L modeled. (3) Bispecifics (epcoritamab, glofitamab) for ≥3L not modeled. (4) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land.
+- SRC-TRANSFORM-KAMDAR-2022
+last_reviewed: '2026-05-09'
+notes: 'OOS / wiring gaps: (1) IND-DLBCL-2L-RDHAP-AUTOSCT (R-ICE-autoSCT → BEAM) still not modeled as a dedicated indication — step 1 now routes to liso-cel (TRANSFORM preferred) rather than salvage chemo placeholder; R-DHAP-autoSCT remains clinically valid where CAR-T unavailable. (2) Bispecifics (epcoritamab, glofitamab) for ≥3L not modeled. (3) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land.
 
   '
 reviewer_signoffs_v2:

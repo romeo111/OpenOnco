@@ -1674,11 +1674,20 @@ jobs:
 
 ---
 
-## 17. PROPOSAL — Solid-tumor extensions (2026-04-26)
+## 17. Solid-tumor extensions (RATIFIED 2026-05-07)
 
-**Status:** open. Drives 5 GI diagnoses (CRC, gastric/GEJ, PDAC, HCC,
-esophageal). Each is committed initially as `partial` until the proposal
-resolves.
+**Status:** ratified 2026-05-07. Drives 5 GI diagnoses (CRC, gastric/GEJ,
+PDAC, HCC, esophageal). Schema-side ratification landed in
+`feat/schema-17-refactor-2026-05-07-2200` (Pydantic models, loader
+ref-integrity, golden fixtures, 5 GI disease re-stamps). Engine
+pass-through and render phased-timeline are deferred to Phase C readiness
+work in the GI-2 wave (planning doc
+`docs/plans/schema_17_refactor_2026-05-07.md` §2.7).
+
+**Original status (2026-04-26):** open. Each of the 5 GI diseases was
+committed initially as `proposal_status: partial` until the proposal
+resolved; ratification re-stamped them to `full` and removed the
+`awaiting_proposal` marker.
 
 **Why now:** OpenOnco v0.1 was built around hematolymphoid diseases where
 1L = "pick a chemo regimen + monitoring". Solid tumors introduce three
@@ -1705,7 +1714,7 @@ patterns the schema does not represent today:
    BED have no representation. Concurrent chemo-RT is doubly
    unmodellable today.
 
-### 17.1. Proposed entities (sketch — to be ratified)
+### 17.1. Ratified entities
 
 ```yaml
 # entity_type: Surgery
@@ -1790,11 +1799,28 @@ lands:
 ### 17.4. Resolution path
 
 1. Clinical co-leads review §17.1 and either ratify or counter-propose.
-2. Pydantic schemas added: `surgery.py`, `radiation_course.py`,
-   `Indication.phases: list[IndicationPhase]`.
-3. Loader-side referential integrity for surgery/RT IDs.
+   **Done 2026-05-07** (dev-mode autonomous per CHARTER §6.1 v0.1
+   exemption — `project_charter_dev_mode_exemptions.md`).
+2. **Done 2026-05-07.** Pydantic schemas added: `surgery.py`,
+   `radiation_course.py`, `Indication.phases: list[IndicationPhase] | None`.
+   `IndicationPhase` lives in `indication.py` (matches `RegimenPhase`'s
+   sibling-in-same-file pattern in `regimen.py`). Phase-stage enum extends
+   §17.1 (neoadjuvant / surgery / adjuvant) with induction / maintenance /
+   definitive; phase-type enum extends with targeted_therapy / immunotherapy.
+3. **Done 2026-05-07.** Loader-side referential integrity for
+   `phases[*].surgery_id` → Surgery, `phases[*].radiation_id` →
+   RadiationCourse, `phases[*].regimen_id` → Regimen,
+   `Surgery.applicable_diseases[]` → Disease,
+   `RadiationCourse.concurrent_chemo_regimen` → Regimen.
 4. Engine: pass-through of `phases` into `PlanTrack.indication_data`.
-5. Render: phased-timeline section.
+   **Deferred to Phase C** of the GI-2 wave (1-line change paired with
+   the first phased indication that lands).
+5. Render: phased-timeline section. **Deferred to Phase C** —
+   `_render_timeline` extension lands with the first periop FLOT / CROSS
+   indication that needs to render.
 6. Tests: golden fixtures per disease that assert the phased output.
-7. Re-stamp affected diseases as `proposal_status: full` and remove the
-   `awaiting_proposal` field.
+   **Schema-level done 2026-05-07** (`tests/fixtures/phased_indication.yaml`,
+   `surgery_whipple.yaml`, `radiation_cross.yaml`); per-disease engine /
+   render fixtures land alongside steps 4-5 in Phase C.
+7. **Done 2026-05-07.** Re-stamped 5 GI diseases as
+   `proposal_status: full` and removed the `awaiting_proposal` field.

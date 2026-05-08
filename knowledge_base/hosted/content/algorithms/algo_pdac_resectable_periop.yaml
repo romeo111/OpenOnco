@@ -1,0 +1,121 @@
+# ALGO-PDAC-RESECTABLE-PERIOP — chunk gi3-d2-algo-extensions-2026-05-08-2300.
+# Routes resectable or borderline-resectable PDAC patients to the
+# appropriate perioperative track:
+#   - Resectable + R0-likely + ECOG 0-1: → IND-PDAC-ADJUVANT-MFOLFIRINOX
+#     (PRODIGE-24 mFOLFIRINOX × 12 cycles post-resection; surgery
+#     happens externally and is the entry condition).
+#   - Borderline-resectable (BR; e.g., SMV/PV abutment ≤180°, or PV
+#     short occlusion with reconstruction option): → IND-PDAC-BORDERLINE-
+#     RESECTABLE-NEOADJ-FOLFIRINOX (NORPACT-1 neoadjuvant FOLFIRINOX
+#     × 4 cycles → restaging → resection if responder → adjuvant
+#     mFOLFIRINOX).
+#
+# applicable_to_disease_state: "pdac_resectable_or_borderline" disambiguates
+# this from ALGO-PDAC-METASTATIC-1L (state-agnostic) when the patient
+# profile carries disease_state="pdac_resectable_or_borderline" — patients
+# without disease_state continue to land on the metastatic algorithm
+# (load-order behavior preserved per _find_algorithm fallback rules).
+id: ALGO-PDAC-RESECTABLE-PERIOP
+applicable_to_disease: DIS-PDAC
+applicable_to_line_of_therapy: 1
+applicable_to_disease_state: pdac_resectable_or_borderline
+purpose: >
+  Algorithm for resectable or borderline-resectable PDAC. Step 1
+  routes resectability_status="borderline" to NORPACT-1 neoadjuvant
+  FOLFIRINOX track; step 2 routes resectability_status="resectable"
+  to PRODIGE-24 mFOLFIRINOX adjuvant track. Both branches gate on
+  ECOG 0-1 + bilirubin-resolved + age fit-for-FOLFIRINOX (RF-PDAC-
+  FIT-FOR-FOLFIRINOX). Patients failing fitness gates fall back to
+  gem-nab-pac-based perioperative regimens via MDT review (out of
+  scope for v0.1 — separate indication pending).
+
+output_indications:
+  - IND-PDAC-ADJUVANT-MFOLFIRINOX
+  - IND-PDAC-BORDERLINE-RESECTABLE-NEOADJ-FOLFIRINOX
+
+default_indication: IND-PDAC-ADJUVANT-MFOLFIRINOX
+alternative_indication: IND-PDAC-BORDERLINE-RESECTABLE-NEOADJ-FOLFIRINOX
+
+decision_tree:
+  # Step 1 — Borderline-resectable gate. Patient with resectability_
+  # status="borderline" (SMV/PV abutment ≤180°, short PV occlusion
+  # with reconstruction option, hepatic-artery contact <180°, etc.)
+  # routes to NORPACT-1 neoadjuvant FOLFIRINOX track. Fitness gates
+  # (RF-FITNESS-ECOG-FIT + RF-PDAC-FIT-FOR-FOLFIRINOX) required for
+  # FOLFIRINOX intensity.
+  - step: 1
+    evaluate:
+      all_of:
+        - finding: resectability_status
+          value: borderline
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-PDAC-FIT-FOR-FOLFIRINOX
+    if_true:
+      result: IND-PDAC-BORDERLINE-RESECTABLE-NEOADJ-FOLFIRINOX
+      notes: >
+        NORPACT-1 (Labori NEJM 2024) — neoadjuvant FOLFIRINOX × 4
+        cycles → restaging at ~8 wk → resection if responder + R0-
+        achievable → adjuvant mFOLFIRINOX × 8 cycles to complete
+        12-cycle perioperative course. NORPACT-1 demonstrated improved
+        R0-resection rate and pathological response over upfront-
+        surgery; OS benefit pending longer follow-up. NCCN v3.2025
+        cat 1 for borderline-resectable PDAC. Confidence: moderate
+        (pivotal RCT, OS not yet mature).
+    if_false:
+      next_step: 2
+
+  # Step 2 — Resectable gate. Patient with resectability_status=
+  # "resectable" (no vascular abutment / R0-resection feasible
+  # upfront) routes to adjuvant mFOLFIRINOX. Surgery happens externally
+  # before this algorithm is invoked — the indication's intent is
+  # post-resection adjuvant chemotherapy.
+  - step: 2
+    evaluate:
+      all_of:
+        - finding: resectability_status
+          value: resectable
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-PDAC-FIT-FOR-FOLFIRINOX
+    if_true:
+      result: IND-PDAC-ADJUVANT-MFOLFIRINOX
+      notes: >
+        PRODIGE-24 / CCTG PA.6 (Conroy NEJM 2018) — mFOLFIRINOX × 12
+        cycles adjuvant post-resection. mDFS 21.6 vs 12.8 mo (HR 0.58),
+        mOS 54.4 vs 35.0 mo (HR 0.64) vs gemcitabine. NCCN v3.2025
+        cat 1 + ESMO 2024 strong recommendation for fit ECOG 0-1
+        patients. Confidence: high (pivotal phase 3, mature OS).
+    if_false:
+      result: IND-PDAC-ADJUVANT-MFOLFIRINOX
+      notes: >
+        Fallback: when fitness gates do not fire (ECOG ≥2 OR bilirubin
+        unresolved OR age >75) for resectable patients, indication
+        defaults to mFOLFIRINOX — the indication's demographic_
+        constraints handle contraindication surfacing at render time.
+        Patients failing fitness gates should be routed to MDT for
+        gem-nab-pac perioperative alternative (out of scope v0.1 —
+        separate indication pending).
+
+sources:
+  - SRC-PRODIGE-24-CONROY-2018
+  - SRC-NORPACT-1-LABORI-2024
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-ESMO-PANCREATIC-2024
+
+last_reviewed: "2026-05-08"
+reviewer_signoffs: []
+notes: >
+  D2 chunk gi3-d2-algo-extensions-2026-05-08-2300 — first routing for
+  IND-PDAC-ADJUVANT-MFOLFIRINOX (Phase C C1) and IND-PDAC-BORDERLINE-
+  RESECTABLE-NEOADJ-FOLFIRINOX (Phase C C2). Algorithm uses
+  applicable_to_disease_state="pdac_resectable_or_borderline" to
+  disambiguate from state-agnostic ALGO-PDAC-METASTATIC-1L (line=1)
+  per _find_algorithm engine convention (refactor lesson §10.4).
+  Discriminator inside tree: resectability_status ∈ {resectable,
+  borderline} routes to the appropriate phased indication. Fitness
+  gates (RF-FITNESS-ECOG-FIT + RF-PDAC-FIT-FOR-FOLFIRINOX) shared
+  with metastatic 1L FOLFIRINOX routing — failure routes to fallback
+  default with MDT review escalation. Out-of-scope: gem-nab-pac
+  perioperative alternatives for fitness-failing patients (separate
+  indication pending); adjuvant gemcitabine + capecitabine (ESPAC-4,
+  alternative if FOLFIRINOX-CI); resectable PDAC neoadjuvant chemo
+  (NEONAX / SWOG-1505 — not yet definitive standard).

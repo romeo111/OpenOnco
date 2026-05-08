@@ -1,0 +1,80 @@
+id: REG-IPI-NIVO-ESOPH-SCC
+name: "Nivolumab + ipilimumab (ESCC, 1L metastatic; CheckMate-648)"
+name_ua: "Ніволумаб + іпілімумаб (ПКРС стравоходу, 1L метастаз; CheckMate-648)"
+alternate_names: ["CheckMate-648 nivo+ipi arm", "Nivo 3 mg/kg q2w + ipi 1 mg/kg q6w"]
+
+components:
+  - drug_id: DRUG-NIVOLUMAB
+    dose: "3 mg/kg IV (CheckMate-648 ESCC dose)"
+    schedule: "Day 1 every 2 weeks"
+    route: IV
+  - drug_id: DRUG-IPILIMUMAB
+    dose: "1 mg/kg IV (CheckMate-648 ESCC dose)"
+    schedule: "Day 1 every 6 weeks"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Until progression / unacceptable toxicity / 2 years (per CheckMate-648 protocol)"
+
+toxicity_profile: severe
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Grade 2 immune-related AE (irAE)"
+    modification: "Hold both agents; corticosteroids (prednisone 0.5-1 mg/kg) until ≤Grade 1; resume if benefit > risk"
+    rationale: "Combination ICI has higher irAE rate than monotherapy; early intervention prevents Grade 3-4 escalation"
+    source_refs: [SRC-CHECKMATE648-DOKI-2022, SRC-NCCN-ESOPHAGEAL-2025]
+  - condition: "Grade ≥3 immune-related AE"
+    modification: "Permanently discontinue ipilimumab; high-dose corticosteroids (prednisone 1-2 mg/kg) + organ-specific specialist; nivolumab may resume if irAE resolves to ≤Grade 1 and not endocrine/neurologic"
+    source_refs: [SRC-CHECKMATE648-DOKI-2022]
+  - condition: "Immune-mediated pneumonitis (any grade)"
+    modification: "Hold immediately; HRCT chest + pulmonology; Grade 1 — consider hold + observation; Grade ≥2 — corticosteroids + permanent ipilimumab discontinuation"
+    source_refs: [SRC-NCCN-ESOPHAGEAL-2025]
+  - condition: "Immune-mediated colitis Grade ≥3"
+    modification: "Permanent discontinuation of both agents; high-dose IV methylprednisolone; consider infliximab if steroid-refractory"
+    source_refs: [SRC-NCCN-ESOPHAGEAL-2025]
+  - condition: "Immune-mediated hepatitis (AST/ALT > 5× ULN)"
+    modification: "Hold both agents; hepatology consult; corticosteroids; ipilimumab permanently discontinued at Grade 3+"
+    source_refs: [SRC-NCCN-ESOPHAGEAL-2025]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Nivolumab + ipilimumab: both registered in Ukraine. NSZU 2026 onco package
+    does NOT cover ipilimumab for esophageal indication; combination is
+    out-of-pocket / charitable pathway. Single-agent nivolumab (CheckMate-577
+    adjuvant) is reimbursed but not the ipi combo. Realistic funded alternative
+    is REG-NIVO-CHEMO-ESCC (chemo+nivo) which has higher ORR but adds chemo
+    toxicity.
+
+sources:
+  - SRC-CHECKMATE648-DOKI-2022
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-ESMO-ESOPHAGEAL-2024
+
+last_reviewed: "2026-05-07"
+notes: >
+  CheckMate-648 (Doki 2022 NEJM): nivolumab 3 mg/kg q2w + ipilimumab 1 mg/kg q6w
+  in untreated advanced ESCC. mOS 13.7 vs 9.1 mo (CPS≥1, HR 0.64); 12.7 vs 10.7 mo
+  (all-randomized, HR 0.78). ORR 35.4% (lower than chemo+nivo arm 47%) but
+  chemo-sparing. FDA-approved May 2022 for ESCC 1L. NCCN category 1.
+
+  Dose distinct from melanoma (REG-NIVO-IPI-MELANOMA: nivo 1 + ipi 3 induction)
+  and RCC (REG-NIVO-IPI-RCC: nivo 3 + ipi 1 q3w induction). CheckMate-648 ESCC
+  uses extended-interval schedule (q2w nivo + q6w ipi) without distinct
+  induction/maintenance phases — both agents continue concurrently until
+  progression / 2-year cap.
+
+  Watchpoints (PATIENT_MODE_SPEC §3.4) deferred — to be authored alongside
+  REG-NIVO-CHEMO-ESCC sister regimen in a coordinated patient-mode pass.
+
+notes_ua: >
+  CheckMate-648 (Doki 2022): ніволумаб 3 mg/kg q2w + іпілімумаб 1 mg/kg q6w для
+  нелікованого розвиненого ПКРС стравоходу. mOS 13.7 vs 9.1 міс (CPS≥1, HR 0.64).
+  Хімі-зберігаюча схема. Доза відрізняється від меланоми та НКР.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

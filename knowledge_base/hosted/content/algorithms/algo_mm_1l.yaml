@@ -1,9 +1,13 @@
 id: ALGO-MM-1L
 applicable_to_disease: DIS-MM
 applicable_to_line_of_therapy: 1
-purpose: 'Select default + alternative Indication for first-line multiple myeloma based on cytogenetic risk category and patient fitness. Outputs the two-plan pair required by CHARTER §2 — VRd (standard-risk default) vs D-VRd (high-risk default; alternative shown for standard-risk patients with funding pathway).
+purpose: >
+  Select default + alternative Indication for first-line multiple myeloma based
+  on cytogenetic risk and fitness. Outputs the two-plan pair per CHARTER §2 —
+  D-VRd (preferred for high-risk; also NCCN Cat 1 for standard-risk post-PERSEUS
+  Sonneveld NEJM 2024 PFS HR 0.42) vs VRd (standard-risk default where D-VRd
+  access/funding is unavailable). High-risk always routes to D-VRd.
 
-  '
 output_indications:
 - IND-MM-1L-VRD
 - IND-MM-1L-DVRD
@@ -45,5 +49,7 @@ decision_tree:
 sources:
 - SRC-NCCN-MM-2025
 - SRC-ESMO-MM-2023
-last_reviewed: '2026-04-27'
+- SRC-PERSEUS-SONNEVELD-2024
+- SRC-GRIFFIN-VOORHEES-2020
+last_reviewed: '2026-05-09'
 notes: "Cytogenetic risk + aggressive biology are the primary regimen determinants; frailty is recorded but doesn't switch regimen (handled at Regimen dose-modification layer). Transplant eligibility is a downstream consideration that affects total cycle count and post- induction pathway (ASCT + consolidation + maintenance vs continuous induction-then-maintenance), but not the induction regimen choice. Both Indications carry CI-LENALIDOMIDE-PREGNANCY and CI-BORTEZOMIB-SEVERE-NEUROPATHY; D-VRd additionally carries CI-HBV-NO-PROPHYLAXIS. RF-MM-RENAL-DYSFUNCTION (investigate) triggers dose adjustment but does not shift regimen choice. RF-MM-INFECTION-SCREENING (hold) operates via parallel SUP-HBV-PROPHYLAXIS, not a decision-tree branch.\nEtiology rails (parallel to indication selection):\n- HBV (HBsAg+ OR anti-HBc+) — entecavir 0.5 mg PO daily before first\n  daratumumab or isatuximab dose, continued through induction +\n  ≥12 months post-last-anti-CD38. Anti-CD38 mAbs have documented HBV\n  reactivation risk (FDA labels; NCCN MM 2.2025). For VRd-only (no\n  anti-CD38), HBV reactivation risk is lower but entecavir still\n  recommended in HBsAg+ on prolonged steroid pulse. CI-HBV-NO-\n  PROPHYLAXIS (extended 2026-04-27 to cover daratumumab) is a hard\n  contraindication on D-VRd, blocking plan finalization until\n  SUP-HBV-PROPHYLAXIS is acknowledged.\n\n- HCV — Less common in MM cohort; treat MM first and coordinate DAA\n  timing with hepatologist. Avoid sofosbuvir + amiodarone interaction.\n\nHIV+ MM is rare (older population, typically post-PCP / post-PJP era); manage per ART-aware MM consensus (continue ART, prefer integrase- inhibitor backbone, no empiric VRd dose-reduction). BIO-HBV-STATUS, BIO-HCV-STATUS, BIO-HIV-STATUS missing — flagged for future round.\n"
