@@ -1,0 +1,140 @@
+id: REG-DARA-LEN-MAINTENANCE
+name: "Daratumumab + Lenalidomide maintenance post-ASCT (PERSEUS schedule)"
+name_ua: "Даратумумаб + Леналідомід підтримуюча терапія після ASCT (PERSEUS)"
+alternate_names:
+  - "Dara-len maintenance"
+  - "D-R maintenance"
+  - "PERSEUS maintenance arm"
+
+# PERSEUS maintenance phase: daratumumab q4w + lenalidomide 10 mg PO d1-21
+# until progression. Starts after D-VRd × 2 consolidation (~6 months post-ASCT).
+components:
+  - drug_id: DRUG-DARATUMUMAB
+    dose: "1800 mg SC (or 16 mg/kg IV)"
+    schedule: "q4w (day 1 of each 28-day maintenance cycle) — every 8 weeks after cycle 6 per PERSEUS protocol"
+    route: SC
+  - drug_id: DRUG-LENALIDOMIDE
+    dose: "10 mg PO daily on days 1-21 of each 28-day cycle"
+    schedule: "Continuous 21/28 schedule; start 90-100 days post-ASCT after completion of consolidation"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity (PERSEUS median maintenance ~38 months)"
+toxicity_profile: low-moderate
+
+premedication:
+  - "Pre-daratumumab: methylprednisolone 100 mg IV (or equivalent) + diphenhydramine + acetaminophen before each SC injection — reduce infusion reactions"
+  - "Aspirin 81-100 mg PO daily for VTE prophylaxis (lenalidomide IMiD class); LMWH if prior VTE or high-risk profile"
+  - "Confirm two reliable contraceptive methods (women of reproductive potential) — REMS / iPLEDGE-equivalent required for lenalidomide"
+
+mandatory_supportive_care:
+  - SUP-MM-VTE-PROPHYLAXIS
+  - SUP-MM-BONE-PROTECTION
+  - SUP-ANTIINFECTIVE-PROPHYLAXIS-MM
+
+monitoring_schedule_id: MON-VRD-REGIMEN
+
+dose_adjustments:
+  - condition: "ANC <1000 OR platelets <50K"
+    modification: "Hold lenalidomide; resume at next-lower dose (10 mg → 5 mg → 5 mg every other day); daratumumab continues if ANC ≥500"
+    rationale: "Cumulative lenalidomide myelosuppression during prolonged maintenance"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "CrCl 30-60 mL/min"
+    modification: "Lenalidomide 10 mg PO every other day (not daily); daratumumab dose unchanged"
+    rationale: "Lenalidomide ~80% renally cleared; dose interval extension recommended"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "CrCl <30 mL/min (no dialysis)"
+    modification: "Lenalidomide 5 mg PO daily (or every other day); consider discontinuing if <15 mL/min"
+    rationale: "Major lenalidomide exposure increase"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "Grade ≥3 infusion-related reaction to daratumumab"
+    modification: "Withhold daratumumab; manage with systemic corticosteroids + bronchodilators; restart at 50% rate if resolved to ≤Grade 1; discontinue if Grade 4"
+    rationale: "Anti-CD38 infusion reactions most common at first 1-2 doses; rare at maintenance-phase doses"
+    source_refs: [SRC-PERSEUS-SONNEVELD-2024]
+  - condition: "Second primary malignancy detected"
+    modification: "Discontinue lenalidomide; daratumumab may continue per MDT decision; risk-benefit reassessed individually"
+    rationale: "PERSEUS + CALGB 100104 reported elevated SPM rate with lenalidomide maintenance (~5-7% absolute); counseling required upfront"
+    source_refs: [SRC-NCCN-MM-2025]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Lenalidomide reimbursed via НСЗУ for myeloma (maintenance indication
+    covered). Daratumumab is NOT currently НСЗУ-reimbursed — funding
+    pathway (clinical trial / charitable / out-of-pocket) MUST be
+    confirmed before this maintenance phase is finalized. Without
+    daratumumab funding, REG-LENALIDOMIDE-MAINTENANCE (len-only, CALGB
+    100104) is the standard-access alternative.
+
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома або діарея під час леналідоміду"
+    action_ua: "Часто проходить — занотовуйте; не зупиняйте без консультації"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Помірний шкірний висип"
+    action_ua: "Зустрічається — зволожуйте шкіру; повідомте клініку при наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Біль або набряк в одній нозі"
+    action_ua: "Подзвоніть у клініку того ж дня — леналідомід підвищує ризик тромбозу; антикоагулянти зазвичай призначаються профілактично"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива нейтропенія або інфекція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова задишка, біль у грудях або кровохаркання"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Реакція на ін'єкцію даратумумабу (ядуха, кропив'янка, відчуття стискання в грудях)"
+    action_ua: "Зупиніть ін'єкцію та звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-PERSEUS-SONNEVELD-2024
+
+sources:
+  - SRC-PERSEUS-SONNEVELD-2024
+  - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-05-09"
+notes: >
+  PERSEUS maintenance arm (Sonneveld NEJM 2024, PMID 38084760): after
+  D-VRd × 4 induction + ASCT + D-VRd × 2 consolidation, patients received
+  daratumumab SC q4w (first 6 cycles then q8w) + lenalidomide 10 mg d1-21
+  until progression. Median maintenance duration ~38 months. Distinct from:
+  (1) REG-LENALIDOMIDE-MAINTENANCE (len-only, no daratumumab — CALGB 100104
+  / IFM 2005-02 schema); (2) MRD-guided approaches (investigational).
+
+  Key PERSEUS maintenance outcomes: 48-month PFS 84.3% (D-VRd arm) vs
+  67.7% (VRd arm); MRD-negativity (10⁻⁵) at 12 months post-consolidation
+  75.2% vs 47.5%. The PFS benefit was consistent across transplant-eligible
+  subgroups including high-risk cytogenetics (del17p, t[4;14], t[14;16]).
+
+  Daratumumab dosing transition in PERSEUS: q4w during consolidation and
+  first 6 maintenance cycles → q8w thereafter. Some Ukrainian centers may
+  default to q4w throughout for simplicity; both schedules are documented.
+
+  Second primary malignancy (SPM) risk: the combination of ASCT + extended
+  lenalidomide increases SPM risk (MDS/AML ~2-3% at 5 yr, solid tumors).
+  Must be included in pre-consent discussion. Risk-benefit favors maintenance
+  in standard-risk and high-risk NDMM given the magnitude of PFS gain.
+
+  Red-cell phenotyping before first daratumumab dose is mandatory (anti-CD38
+  interference with crossmatching) — maintained through maintenance phase;
+  update type-and-screen before each quarterly assessment.
+notes_ua: >
+  PERSEUS фаза підтримки (Sonneveld NEJM 2024, PMID 38084760): після
+  D-VRd × 4 індукції + ASCT + D-VRd × 2 консолідації пацієнти отримували
+  даратумумаб SC q4w (перші 6 циклів, потім q8w) + леналідомід 10 мг д1-21
+  до прогресування. Середня тривалість підтримки ~38 місяців. Відрізняється
+  від REG-LENALIDOMIDE-MAINTENANCE (леналідомід без даратумумабу).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
