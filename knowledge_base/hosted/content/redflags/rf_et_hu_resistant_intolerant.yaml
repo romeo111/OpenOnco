@@ -1,0 +1,100 @@
+id: RF-ET-HU-RESISTANT-INTOLERANT
+definition: >
+  Hydroxyurea (HU) resistance or intolerance in essential thrombocythemia
+  (ET), triggering switch to 2L cytoreduction. ELN/BCSH resistance criteria:
+  platelets ≥600 ×10⁹/L despite HU ≥2 g/day for ≥3 months; failure to
+  achieve platelet <400 ×10⁹/L AND WBC <10 ×10⁹/L on adequate HU dose;
+  thrombotic event occurring on HU therapy. ELN intolerance criteria:
+  ANC <1 ×10⁹/L or Hgb <10 g/dL on any dose of HU; HU-related
+  mucocutaneous toxicity (oral ulcers, leg ulcers, skin atrophy) grade ≥2
+  at any dose; fever ≥38°C attributable to HU.
+  Anagrelide is the ELN/NCCN 2L standard after HU failure — platelet-
+  selective, non-leukemogenic, preferred in younger patients (ANAHYDRET
+  trial: anagrelide non-inferior to HU in event-free survival, better
+  arterial thrombosis rate). Pegylated IFN (ropeginterferon) is the
+  preferred alternative in pregnancy/planning or JAK2-V617F dominant
+  disease but is not yet a separate KB Indication.
+definition_ua: >
+  Резистентність або непереносимість гідроксисечовини (HU) при есенціальній
+  тромбоцитемії (ET), що зумовлює перехід до 2L цитредукції.
+  Критерії резистентності ELN/BCSH: тромбоцити ≥600 ×10⁹/л попри HU
+  ≥2 г/добу ≥3 місяці; неможливість досягти тромбоцитів <400 ×10⁹/л
+  та ЛПК <10 ×10⁹/л на адекватній дозі HU; тромботичний епізод на фоні HU.
+  Критерії непереносимості ELN: АНЧ <1 ×10⁹/л або Hgb <10 г/дл на
+  будь-якій дозі HU; мукошкірна токсичність (виразки рота/ніг, атрофія
+  шкіри) ≥2 ст. на будь-якій дозі; лихоманка ≥38°С, пов'язана з HU.
+  Анагрелід — стандарт 2L за ELN/NCCN після відмови HU (ANAHYDRET:
+  анагрелід не поступається HU за event-free survival, краща ставка
+  артеріального тромбозу). Пег-ІФН (ропегінтерферон) — альтернатива при
+  вагітності/плануванні або JAK2-V617F-домінуючій хворобі, але поки не
+  є окремою KB Indication.
+
+trigger:
+  type: prior_therapy_failure
+  any_of:
+    - finding: "hu_resistance"
+      value: true
+    - finding: "hydroxyurea_resistance"
+      value: true
+    - finding: "hu_intolerance"
+      value: true
+    - finding: "hydroxyurea_intolerance"
+      value: true
+    - finding: "cytoreduction_failure_class"
+      value: "HU"
+    - finding: "cytoreduction_failure_class"
+      value: "hydroxyurea"
+    - finding: "hu_status"
+      value: "resistant"
+    - finding: "hu_status"
+      value: "intolerant"
+    - finding: "thrombosis_on_hu"
+      value: true
+    - finding: "platelet_on_hu"
+      threshold: 600
+      comparator: ">="
+      condition_context: "on_max_tolerated_hu_3mo"
+
+clinical_direction: de-escalate
+severity: major
+priority: 70
+category: prior-therapy-class
+
+relevant_diseases:
+  - DIS-ET
+
+branch_targets:
+  ALGO-ET-2L: "2"
+
+shifts_algorithm:
+  - ALGO-ET-2L
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+
+last_reviewed: "2026-05-08"
+draft: true
+
+notes: >
+  Note: ALGO-ET-2L step 2 already includes RF-PV-ET-HIGH-THROMBOSIS-RISK
+  in its any_of — this RF augments (not replaces) that gate, adding the
+  explicit HU-failure criterion. Since anagrelide is the only 2L IND
+  in the KB, both true and false branches at step 2 route to anagrelide;
+  the RF primarily provides trace evidence for why the switch was made.
+  Age <60 preferring non-cytotoxic option is a clinical preference
+  condition not mapped to a finding — retained as free-text in the algo.
+  Step 3 is degenerate (both → anagrelide) and intentionally not wired.
+  Missing IND-ET-2L-PEG-IFN: peg-IFN α-2a / ropeginterferon is the
+  preferred 2L in pregnancy or JAK2-driven disease (ELN 2018, BSH 2024)
+  but is not modeled — flagged as OOS gap in the algo notes.
+  Draft pending two-reviewer clinical co-lead signoff (CHARTER §6.1).
+notes_ua: >
+  ALGO-ET-2L крок 2 вже містить RF-PV-ET-HIGH-THROMBOSIS-RISK у
+  any_of — цей RF доповнює (не замінює) цей критерій, додаючи явний
+  критерій відмови HU. Оскільки анагрелід — єдина 2L IND у KB, обидві
+  гілки кроку 2 маршрутизуються до анагреліду; RF переважно надає
+  trace-доказ переходу. Degenerate крок 3 навмисно не прив'язаний.
+  Відсутня IND-ET-2L-PEG-IFN — ropeginterferon є кращою альтернативою
+  при вагітності або JAK2-домінуючій хворобі, але не змодельована
+  (gap у notes алго). Чернетка — очікується підпис двох КСК (CHARTER §6.1).

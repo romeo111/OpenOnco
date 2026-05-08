@@ -1,0 +1,109 @@
+id: RF-BURKITT-IFOS-CONTRAINDICATED
+definition: >
+  Ifosfamide contraindicated or high-risk in relapsed/refractory Burkitt
+  lymphoma 2L salvage, routing to R-DHAP (cisplatin-based) over R-ICE
+  (ifosfamide-based). Three clinical scenarios: (1) Prior hemorrhagic
+  cystitis — any prior ifosfamide- or cyclophosphamide-related hemorrhagic
+  cystitis is a contraindication to further ifosfamide even with mesna;
+  residual mucosal damage increases bleeding risk; (2) Pelvic RT field
+  overlap — prior irradiation to bladder field dramatically increases
+  ifosfamide-related bladder toxicity; avoid; (3) Pre-existing peripheral
+  neuropathy grade ≥2 — ifosfamide causes both peripheral and central
+  neuropathy; additional neurotoxicity risk unacceptable when baseline
+  neuropathy already impairs function; (4) Bladder outlet obstruction,
+  single kidney, or other bladder structural contraindication to mesna-
+  protected ifosfamide.
+  In these scenarios R-DHAP (dexamethasone 40 mg d1-4 + cytarabine
+  2 g/m² q12h d2 + cisplatin 100 mg/m² d1) is the preferred platinum
+  salvage — equivalent salvage activity to R-ICE (CORAL trial subgroup)
+  with different toxicity profile (renal/ototoxicity from cisplatin vs
+  bladder/neuropathy from ifosfamide).
+definition_ua: >
+  Іфосфамід протипоказаний або високоризикований при рецидиві/рефрактерній
+  лімфомі Беркіта 2L, що переключає на R-DHAP (цисплатин) замість R-ICE
+  (іфосфамід). Три клінічні сценарії: (1) Попередній геморагічний цистит —
+  будь-який попередній геморагічний цистит після іфосфаміду або
+  циклофосфаміду є протипоказанням до повторного застосування іфосфаміду
+  навіть із месною; (2) Перекриття поля опромінення малого таза — попереднє
+  опромінення в ділянці сечового міхура різко підвищує токсичність іфосфаміду;
+  (3) Периферична нейропатія ≥2 ст. — іфосфамід спричиняє периферичну та
+  центральну нейропатію; (4) Обструкція вихідного відділу сечового міхура,
+  одна нирка або інша структурна перешкода для месна-захисту.
+  У цих сценаріях R-DHAP (дексаметазон 40 мг д1-4 + цитарабін 2 г/м²
+  кожні 12 год д2 + цисплатин 100 мг/м² д1) — кращий платиновий режим
+  порятунку (CORAL trial subgroup: еквівалентна активність R-ICE).
+
+trigger:
+  type: treatment_contraindication
+  any_of:
+    - finding: "prior_hemorrhagic_cystitis"
+      value: true
+    - finding: "hemorrhagic_cystitis_history"
+      value: true
+    - finding: "ifosfamide_contraindicated"
+      value: true
+    - finding: "pelvic_rt_bladder_field"
+      value: true
+    - finding: "prior_pelvic_radiotherapy"
+      value: true
+    - finding: "peripheral_neuropathy_grade"
+      threshold: 2
+      comparator: ">="
+    - finding: "neuropathy_grade"
+      threshold: 2
+      comparator: ">="
+    - finding: "baseline_neuropathy"
+      value: "grade2"
+    - finding: "baseline_neuropathy"
+      value: "grade3"
+    - finding: "bladder_dysfunction"
+      value: true
+    - finding: "bladder_outlet_obstruction"
+      value: true
+    - finding: "single_kidney"
+      value: true
+
+clinical_direction: de-escalate
+severity: major
+priority: 75
+category: fitness-eligibility
+
+relevant_diseases:
+  - DIS-BURKITT
+
+branch_targets:
+  ALGO-BURKITT-2L: "3"
+
+shifts_algorithm:
+  - ALGO-BURKITT-2L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-BURKITT-2024
+
+last_reviewed: "2026-05-08"
+draft: true
+
+notes: >
+  Step 2 handles the reverse routing: CrCl <50 mL/min / hearing loss /
+  prior cisplatin toxicity → R-ICE preferred (uses carboplatin AUC-dose).
+  Step 3 (this RF) handles the inverse: ifosfamide-specific
+  contraindications → R-DHAP preferred. Both steps reference
+  RF-BURKITT-ORGAN-DYSFUNCTION (which already fires on renal/hepatic
+  dysfunction) — this RF captures the ifosfamide-specific history and
+  neuropathy sub-criteria not covered by the organ-dysfunction RF.
+  Step 1 pre-screens for transplant-ineligible patients (frailty +
+  organ dysfunction + infection); this RF only fires after step 1 is
+  negative (patient IS eligible for salvage).
+  CORAL trial note: R-ICE and R-DHAP showed similar overall salvage
+  rates (~63% ORR); the choice is driven purely by toxicity avoidance.
+  Draft pending two-reviewer clinical co-lead signoff (CHARTER §6.1).
+notes_ua: >
+  Крок 2 обробляє зворотне маршрутизування: CrCl <50 мл/хв / втрата
+  слуху → R-ICE (карбоплатин AUC). Крок 3 (цей RF) обробляє обернений
+  варіант: специфічні протипоказання до іфосфаміду → R-DHAP.
+  RF-BURKITT-ORGAN-DYSFUNCTION вже охоплює ниркову/печінкову дисфункцію —
+  цей RF захоплює специфічний анамнез іфосфаміду та нейропатію,
+  які не охоплені RF органної дисфункції. CORAL trial: R-ICE та
+  R-DHAP — еквівалентні (~63% ORR); вибір визначається уникненням
+  токсичності. Чернетка — очікується підпис двох КСК (CHARTER §6.1).

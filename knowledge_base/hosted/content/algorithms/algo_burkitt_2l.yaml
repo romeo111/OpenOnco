@@ -60,6 +60,21 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
+        - red_flag: RF-BURKITT-IFOS-CONTRAINDICATED
+        - finding: "prior_hemorrhagic_cystitis"
+          value: true
+        - finding: "ifosfamide_contraindicated"
+          value: true
+        - finding: "pelvic_rt_bladder_field"
+          value: true
+        - finding: "neuropathy_grade"
+          threshold: 2
+          comparator: ">="
+        - finding: "peripheral_neuropathy_grade"
+          threshold: 2
+          comparator: ">="
+        - finding: "bladder_dysfunction"
+          value: true
         - condition: "Prior hemorrhagic cystitis OR pelvic RT field overlap"
         - condition: "Pre-existing grade ≥2 peripheral neuropathy"
         - condition: "Bladder dysfunction precluding mesna-protected ifosfamide"
@@ -67,7 +82,7 @@ decision_tree:
       result: IND-BURKITT-2L-RDHAP-ASCT
     if_false:
       next_step: 4
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Wired via RF-BURKITT-IFOS-CONTRAINDICATED (W5c): hemorrhagic cystitis history, pelvic RT field, grade ≥2 neuropathy, or bladder dysfunction → R-DHAP (CORAL trial: equivalent salvage, different toxicity profile). Legacy finding lookups + free-text retained."
 
   # Step 4 — default: R-ICE preferred (CORAL-equivalent salvage,
   # institutional familiarity > R-DHAP in most UA centers).
@@ -85,7 +100,7 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-BURKITT-2024
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-08"
 notes: >
   OOS / wiring gaps:
   (1) BEAM-autoSCT consolidation in CR2 is a procedure, not modeled

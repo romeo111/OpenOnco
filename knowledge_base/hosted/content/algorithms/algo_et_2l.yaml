@@ -42,15 +42,27 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
+        - red_flag: RF-ET-HU-RESISTANT-INTOLERANT
+        - finding: "hu_resistance"
+          value: true
+        - finding: "hu_intolerance"
+          value: true
+        - finding: "thrombosis_on_hu"
+          value: true
+        - finding: "hu_status"
+          value: "resistant"
+        - finding: "hu_status"
+          value: "intolerant"
+        - red_flag: RF-PV-ET-HIGH-THROMBOSIS-RISK
         - condition: "HU resistance (platelets ≥600 ×10^9/L on max-tolerated HU ≥3mo)"
         - condition: "HU intolerance (cytopenia, mucocutaneous toxicity, leg ulcers, GI)"
         - condition: "Thrombotic event on HU therapy"
         - condition: "Age <60 preferring non-cytotoxic option"
-        - red_flag: RF-PV-ET-HIGH-THROMBOSIS-RISK
     if_true:
       result: IND-ET-2L-ANAGRELIDE
     if_false:
       next_step: 3
+    notes: "Wired via RF-ET-HU-RESISTANT-INTOLERANT (W5c): ELN HU resistance/intolerance criteria → switch to anagrelide (ANAHYDRET: non-inferior to HU in EFS, better arterial thrombosis rate). Legacy finding lookups + free-text retained."
 
   # Step 3 — default: anagrelide for any 2L+ ET indication.
   - step: 3
@@ -67,7 +79,7 @@ sources:
   - SRC-NCCN-MPN-2025
   - SRC-ESMO-MPN-2015
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-08"
 notes: >
   OOS / wiring gaps:
   (1) IND-ET-2L-PEG-IFN (pegylated interferon α-2a / ropeginterferon
