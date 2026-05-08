@@ -1,0 +1,129 @@
+id: RF-MTC-RET-MUTANT
+definition: >
+  RET proto-oncogene activating mutation (somatic or germline) in advanced
+  or metastatic medullary thyroid carcinoma (MTC). RET mutations are the
+  defining oncogenic driver of hereditary and sporadic MTC: approximately
+  25% of sporadic MTC carry somatic RET mutations (M918T in ~50% of these),
+  and hereditary MTC (Multiple Endocrine Neoplasia type 2A/2B, Familial
+  MTC) is driven by germline RET mutations (C634R/W/Y/F in MEN2A; M918T in
+  MEN2B; C611/C620/C630 in FMTC-risk MEN2A kindreds). Total prevalence of
+  RET-mutant MTC: approximately 60-70% when germline + somatic are combined.
+
+  RET-mutant status is the primary biomarker gate for selpercatinib over
+  cabozantinib/vandetanib as 1L systemic therapy. LIBRETTO-531 (Wirth NEJM
+  2024, PMID 39133858) demonstrated selpercatinib superior to physician's
+  choice (cabozantinib or vandetanib) in 1L advanced RET-mutant MTC:
+  median PFS not reached vs 16.8 months (HR 0.28; 95% CI 0.16-0.48;
+  p<0.001); ORR 69% vs 38%. All RET mutation genotypes (somatic and
+  germline) were enrolled. NCCN Thyroid 2025 Category 1 preferred:
+  selpercatinib for all advanced/metastatic RET-mutant MTC regardless of
+  specific variant.
+
+  Testing recommendation: All MTC patients should undergo germline RET
+  sequencing (reflexed from clinical diagnosis of MTC) plus somatic RET
+  testing if germline is negative. ctDNA-based RET testing is an acceptable
+  alternative for tissue-unavailable patients. Selpercatinib FDA label
+  covers all RET-mutant MTC (accelerated 2020, full 2022); pralsetinib
+  is an alternative RET-selective TKI (ARROW trial, FDA 2020).
+
+definition_ua: >
+  Активуюча мутація RET (соматична або зародкова) при поширеній або
+  метастатичній медулярній карциномі щитовидної залози (МКЩЗ). RET-мутації
+  є основним онкогенним драйвером спадкового та спорадичного МКЩЗ (~60-70%
+  у сукупності). LIBRETTO-531 (Wirth NEJM 2024): PFS HR 0.28 (p<0.001),
+  ЗВВ 69% vs 38% — селперкатиніб перевершує кабозантиніб/ванадетаніб в 1L.
+  Категорія 1 NCCN 2025: селперкатиніб при усіх поширених RET-мутантних МКЩЗ.
+
+trigger:
+  type: biomarker_status
+  any_of:
+    # Somatic high-frequency variants
+    - finding: BIO-RET
+      value: M918T
+    - finding: BIO-RET
+      value: C634R
+    - finding: BIO-RET
+      value: C634W
+    - finding: BIO-RET
+      value: C634Y
+    - finding: BIO-RET
+      value: C634F
+    - finding: BIO-RET
+      value: C634S
+    - finding: BIO-RET
+      value: C620R
+    - finding: BIO-RET
+      value: C611Y
+    - finding: BIO-RET
+      value: C630R
+    # Class-level trigger patterns for when variant is not specified
+    - finding: ret_mutation_status
+      value: positive
+    - finding: ret_mutation_status
+      value: mutant
+    - finding: ret_mutation_status
+      value: detected
+    - finding: ret_mutation_status
+      value: MEN2A
+    - finding: ret_mutation_status
+      value: MEN2B
+    - finding: ret_germline_mutation
+      value: positive
+    - finding: ret_somatic_mutation
+      value: positive
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+branch_targets:
+  ALGO-MTC-1L: "1"
+
+relevant_diseases:
+  - DIS-MTC
+
+shifts_algorithm:
+  - ALGO-MTC-1L
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-LIBRETTO-531-WIRTH-2024
+
+last_reviewed: "2026-05-08"
+reviewer_signoffs: []
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+notes: >
+  W5c RF authoring. Converts free-text `{condition: "RET mutation positive
+  (somatic M918T OR germline MEN2-associated C634/M918T/other)"}` in
+  ALGO-MTC-1L step 1 into a formal RF entity.
+
+  Clinical rationale: LIBRETTO-531 (Wirth NEJM 2024, PMID 39133858,
+  NCT04211337) enrolled 291 patients with advanced RET-mutant MTC (both
+  somatic and germline variants; all genotypes). Primary endpoint PFS:
+  HR 0.28 (95% CI 0.16-0.48; p<0.001); median PFS NR vs 16.8 months.
+  ORR 69% vs 38% (p<0.001). Grade 3+ AEs 36% vs 55%. All subgroups
+  benefited; M918T (somatic, highest-risk MEN2B) and germline C634x
+  (MEN2A) are both covered by selpercatinib label.
+
+  Trigger scope: This RF covers all activating RET mutations. The class-
+  level `ret_mutation_status` findings are the primary triggers when
+  individual variant annotation is not available in the patient record;
+  specific variant triggers (M918T, C634R, etc.) are secondary precision
+  matches for when molecular report specifies the codon. This allows the
+  engine to fire on either a structured biomarker status report or a
+  free-text extraction result.
+
+  Note: RET fusions (distinct from point mutations) driving NSCLC/thyroid
+  PTC are covered by separate RF entities (RF-NSCLC-RET-FUSION-ACTIONABLE,
+  RF-THYROID-RET-FUSION) and are NOT within this RF scope.
+
+  Step 2 of ALGO-MTC-1L is degenerate (both if_true and if_false →
+  cabozantinib) — that step requires algorithm cleanup rather than
+  RF authoring.
+
+  CHARTER §6.1: Two-reviewer clinical co-lead signoff required before
+  removing draft: true.

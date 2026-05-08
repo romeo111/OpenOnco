@@ -22,12 +22,33 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
+        - red_flag: RF-MTC-RET-MUTANT
+        # Legacy finding-based evaluations for backward engine compatibility:
+        - {finding: ret_mutation_status, value: positive}
+        - {finding: ret_mutation_status, value: mutant}
+        - {finding: ret_mutation_status, value: detected}
+        - {finding: ret_mutation_status, value: MEN2A}
+        - {finding: ret_mutation_status, value: MEN2B}
+        - {finding: ret_germline_mutation, value: positive}
+        - {finding: ret_somatic_mutation, value: positive}
+        - {finding: BIO-RET, value: M918T}
+        - {finding: BIO-RET, value: C634R}
+        - {finding: BIO-RET, value: C634W}
+        - {finding: BIO-RET, value: C634Y}
         - condition: "RET mutation positive (somatic M918T OR germline MEN2-associated C634/M918T/other)"
     if_true:
       result: IND-MTC-ADVANCED-1L-SELPERCATINIB
+      notes: >
+        RF-MTC-RET-MUTANT fired — selpercatinib preferred 1L for all
+        advanced RET-mutant MTC (LIBRETTO-531; PFS HR 0.28; ORR 69% vs 38%).
+        Covers somatic (M918T) and germline (MEN2A/MEN2B) variants.
+        NCCN Thyroid 2025 Category 1.
     if_false:
       next_step: 2
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: >
+      W5c RF wiring: RF-MTC-RET-MUTANT added as primary gate; legacy
+      finding lookups and free-text condition retained for backward
+      engine compatibility.
   - step: 2
     evaluate:
       any_of:
@@ -40,8 +61,8 @@ decision_tree:
 
 sources:
   - SRC-NCCN-THYROID-2025
-  - SRC-ONCOKB
-last_reviewed: '2026-04-26'
+  - SRC-LIBRETTO-531-WIRTH-2024
+last_reviewed: '2026-05-08'
 notes: >
   Decision tree intentionally simplified: pralsetinib is an
   alternative RET-selective and vandetanib an alternative multikinase,
