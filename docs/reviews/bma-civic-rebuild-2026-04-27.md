@@ -5,66 +5,374 @@ Snapshot: `knowledge_base/hosted/civic/2026-04-25/evidence.yaml`
 
 ## Summary
 
-- Total BMAs scanned: **399**
-- BMAs carrying CIViC evidence (post-write): **37**
-- BMAs newly written this run: **0**
-- BMAs unmodified — biomarker has no `actionability_lookup`: **360**
-- BMAs unmodified — biomarker actionable but no CIViC evidence: **2**
-- BMAs unmodified — CIViC evidence already present (idempotent): **37**
+- Total BMAs scanned: **438**
+- BMAs carrying CIViC evidence (post-write): **347**
+- BMAs newly written this run: **5**
+- BMAs unmodified — biomarker has no `actionability_lookup`: **372**
+- BMAs unmodified — biomarker actionable but no CIViC evidence: **25**
+- BMAs unmodified - CIViC evidence exists only for another disease: **11**
+- BMAs unmodified — CIViC evidence already present (idempotent): **25**
 - BMAs unmodified — malformed `evidence_sources` (manual fix): **0**
 - BMAs unmodified — CIViC client error: **0**
-- BMAs with CIViC resistance evidence (urgent surfacing review): **27**
+- BMAs with CIViC resistance evidence (urgent surfacing review): **256**
 
 ## Per-BMA detail (BMAs carrying CIViC evidence)
 
-| BMA-ID | biomarker | (gene, variant) | CIViC entries (total) | added this run | levels | resistance | review_required |
-|---|---|---|---|---|---|---|---|
-| BMA-BRAF-CLASS3-NSCLC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-AML | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-CHOLANGIO | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-CLL | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-CRC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-DLBCL-NOS | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-GBM | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-HCC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-HCL | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-MELANOMA | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-MM | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-NSCLC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-OVARIAN | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-PDAC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600E-THYROID-ANAPLASTIC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-BRAF-V600K-MELANOMA | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | yes | yes |
-| BMA-FLT3-D835-AML | BIO-FLT3-D835 | (FLT3, D835Y) | 2 | 0 | D | yes | yes |
-| BMA-FLT3-D835-AML-RR | BIO-FLT3-D835 | (FLT3, D835Y) | 2 | 0 | D | yes | yes |
-| BMA-FLT3-F691L-AML | BIO-FLT3-D835 | (FLT3, D835Y) | 2 | 0 | D | yes | yes |
-| BMA-JAK2-V617F-ET | BIO-JAK2 | (JAK2, V617F) | 4 | 0 | B, D | no | yes |
-| BMA-JAK2-V617F-PMF | BIO-JAK2 | (JAK2, V617F) | 4 | 0 | B, D | no | yes |
-| BMA-JAK2-V617F-PV | BIO-JAK2 | (JAK2, V617F) | 4 | 0 | B, D | no | yes |
-| BMA-KRAS-G12C-CRC | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | yes | yes |
-| BMA-KRAS-G12C-ENDOMETRIAL | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | yes | yes |
-| BMA-KRAS-G12C-GASTRIC | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | yes | yes |
-| BMA-KRAS-G12C-HCC | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | yes | yes |
-| BMA-KRAS-G12C-MM | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | yes | yes |
-| BMA-KRAS-G12C-NSCLC | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | yes | yes |
-| BMA-KRAS-G12C-OVARIAN | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | yes | yes |
-| BMA-KRAS-G12C-PDAC | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | yes | yes |
-| BMA-MYD88-L265P-DLBCL-NOS | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | no | yes |
-| BMA-MYD88-L265P-HCV-MZL | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | no | yes |
-| BMA-MYD88-L265P-NODAL-MZL | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | no | yes |
-| BMA-MYD88-L265P-PCNSL | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | no | yes |
-| BMA-MYD88-L265P-PTLD | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | no | yes |
-| BMA-MYD88-L265P-SPLENIC-MZL | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | no | yes |
-| BMA-MYD88-L265P-WM | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | no | yes |
+| BMA-ID | biomarker | (gene, variant) | CIViC entries (total) | added this run | levels | lanes | resistance | review_required |
+|---|---|---|---|---|---|---|---|---|
+| BMA-ALK-EML4-V1-NSCLC | BIO-ALK-FUSION | (, ) | 11 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ALK-EML4-V3-NSCLC | BIO-ALK-FUSION | (, ) | 11 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ALK-FUSION-ALCL | BIO-ALK-FUSION | (, ) | 11 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ALK-FUSION-NSCLC | BIO-ALK-FUSION | (, ) | 11 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ALK-G1202R-NSCLC | BIO-ALK-FUSION | (, ) | 11 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ALK-L1196M-NSCLC | BIO-ALK-FUSION | (, ) | 11 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ATM-GERMLINE-BREAST | BIO-HRR-PANEL | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ATM-GERMLINE-PDAC | BIO-HRR-PANEL | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ATM-GERMLINE-PROSTATE | BIO-HRR-PANEL | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ATM-LOSS-CLL | BIO-HRR-PANEL | (, ) | 4 | 0 | A, B, D | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-ATM-LOSS-MCL | BIO-HRR-PANEL | (, ) | 1 | 0 | D | trial_research_option | no | yes |
+| BMA-ATM-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ATM-SOMATIC-PDAC | BIO-HRR-PANEL | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ATM-SOMATIC-PROSTATE | BIO-HRR-PANEL | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BARD1-GERMLINE-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-BARD1-GERMLINE-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-BARD1-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-BARD1-SOMATIC-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-BCL2-EXPRESSION-CLL | BIO-BCL2-EXPRESSION-IHC | (, ) | 2 | 0 | C, D | resistance_or_avoidance_signal | yes | yes |
+| BMA-BCL2-EXPRESSION-DLBCL-NOS | BIO-BCL2-EXPRESSION-IHC | (, ) | 2 | 0 | B | molecular_evidence_option | no | yes |
+| BMA-BCL2-EXPRESSION-FL | BIO-BCL2-EXPRESSION-IHC | (, ) | 3 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-BCL2-REARRANGEMENT-DLBCL-NOS | BIO-BCL2-REARRANGEMENT | (, ) | 2 | 0 | B | molecular_evidence_option | no | yes |
+| BMA-BCL2-REARRANGEMENT-FL | BIO-BCL2-REARRANGEMENT | (, ) | 3 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-BCR-ABL1-E255K-CML | BIO-BCR-ABL1 | (, ) | 10 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BCR-ABL1-F317L-BALL | BIO-BCR-ABL1 | (, ) | 10 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BCR-ABL1-F317L-CML | BIO-BCR-ABL1 | (, ) | 10 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BCR-ABL1-P190-BALL | BIO-BCR-ABL1 | (, ) | 10 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BCR-ABL1-P210-BALL | BIO-BCR-ABL1 | (, ) | 10 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BCR-ABL1-P210-CML | BIO-BCR-ABL1 | (, ) | 10 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BCR-ABL1-T315I-BALL | BIO-BCR-ABL1 | (, ) | 10 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BCR-ABL1-T315I-CML | BIO-BCR-ABL1 | (, ) | 10 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BCR-ABL1-V299L-CML | BIO-BCR-ABL1 | (, ) | 10 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-CLASS3-NSCLC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-AML | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-CHOLANGIO | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-CLL | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-CRC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-DLBCL-NOS | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-GBM | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-HCC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-HCL | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-MELANOMA | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-MM | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-NSCLC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-OVARIAN | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-PDAC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600E-THYROID-ANAPLASTIC | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRAF-V600K-MELANOMA | BIO-BRAF-V600E | (BRAF, V600E) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRCA1-GERMLINE-BREAST | BIO-BRCA1-BRCA2-GERMLINE | (, ) | 5 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-BRCA1-GERMLINE-OVARIAN | BIO-BRCA1-BRCA2-GERMLINE | (, ) | 5 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-BRCA1-GERMLINE-PDAC | BIO-BRCA1-BRCA2-GERMLINE | (, ) | 5 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-BRCA1-GERMLINE-PROSTATE | BIO-BRCA1-BRCA2-GERMLINE | (, ) | 5 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-BRCA1-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | 5 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-BRCA1-SOMATIC-OVARIAN | BIO-HRR-PANEL | (, ) | 5 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-BRCA1-SOMATIC-PDAC | BIO-HRR-PANEL | (, ) | 5 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-BRCA1-SOMATIC-PROSTATE | BIO-HRR-PANEL | (, ) | 5 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-BRCA2-GERMLINE-BREAST | BIO-BRCA1-BRCA2-GERMLINE | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRCA2-GERMLINE-MELANOMA | BIO-BRCA1-BRCA2-GERMLINE | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRCA2-GERMLINE-OVARIAN | BIO-BRCA1-BRCA2-GERMLINE | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRCA2-GERMLINE-PDAC | BIO-BRCA1-BRCA2-GERMLINE | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRCA2-GERMLINE-PROSTATE | BIO-BRCA1-BRCA2-GERMLINE | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRCA2-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRCA2-SOMATIC-MELANOMA | BIO-HRR-PANEL | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRCA2-SOMATIC-OVARIAN | BIO-HRR-PANEL | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRCA2-SOMATIC-PDAC | BIO-HRR-PANEL | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRCA2-SOMATIC-PROSTATE | BIO-HRR-PANEL | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-BRIP1-GERMLINE-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-BRIP1-GERMLINE-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-BRIP1-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-BRIP1-SOMATIC-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-CALR-ET | BIO-CALR | (, ) | 2 | 0 | A, B | molecular_evidence_option | no | yes |
+| BMA-CALR-PMF | BIO-CALR | (, ) | 2 | 0 | A, B | molecular_evidence_option | no | yes |
+| BMA-CCND1-IHC-MCL | BIO-CCND1-IHC | (, ) | 3 | 0 | B, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-CCND1-T1114-MCL | BIO-T11-14-IGH-CCND1 | (, ) | 3 | 0 | B, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-CHEK1-SOMATIC-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-CHEK1-SOMATIC-PROSTATE | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-CHEK2-GERMLINE-PROSTATE | BIO-HRR-PANEL | (, ) | 3 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-CHEK2-SOMATIC-PROSTATE | BIO-HRR-PANEL | (, ) | 3 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-EGFR-C797S-NSCLC | BIO-EGFR-MUTATION | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-EGFR-EX19DEL-NSCLC | BIO-EGFR-MUTATION | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-EGFR-EX20INS-NSCLC | BIO-EGFR-MUTATION | (, ) | 6 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-EGFR-G719X-NSCLC | BIO-EGFR-MUTATION | (, ) | 4 | 0 | A, B, C | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-EGFR-L858R-NSCLC | BIO-EGFR-MUTATION | (, ) | 7 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-EGFR-MUTATION-GBM | BIO-EGFR-MUTATION | (, ) | 4 | 0 | A, B, C | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-EGFR-T790M-NSCLC | BIO-EGFR-MUTATION | (, ) | 12 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-EPCAM-GERMLINE-ENDOMETRIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | B | molecular_evidence_option | no | yes |
+| BMA-ESR1-MUT-BREAST | BIO-ESR1 | (, ) | 4 | 0 | A, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-EZH2-Y641-FL | BIO-EZH2-Y641 | (EZH2, Y641N) | 7 | 0 | A, B, C | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-FGFR1-AMP-BREAST | BIO-FGFR1 | (, ) | 11 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-FGFR1-AMP-NSCLC-SQUAMOUS | BIO-FGFR1 | (, ) | 11 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-FGFR2-AMP-GASTRIC | BIO-FGFR2 | (, ) | 1 | 0 | B | molecular_evidence_option | no | yes |
+| BMA-FGFR2-BICC1-CHOLANGIO | BIO-FGFR2 | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-FGFR2-FUSION-CHOLANGIO | BIO-FGFR2 | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-FGFR2-MUTATION-ENDOMETRIAL | BIO-FGFR2 | (, ) | 3 | 0 | B, C, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-FGFR2-MUTATION-UROTHELIAL | BIO-FGFR2 | (, ) | 3 | 0 | B, C, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-FGFR3-MUTATION-MM | BIO-FGFR3-MUTATION | (, ) | 2 | 0 | A, B | molecular_evidence_option | no | yes |
+| BMA-FGFR3-R248C-UROTHELIAL | BIO-FGFR3-MUTATION | (, ) | 4 | 0 | A, B, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-FGFR3-S249C-UROTHELIAL | BIO-FGFR3-MUTATION | (, ) | 7 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-FGFR3-TACC3-UROTHELIAL | BIO-FGFR3-MUTATION | (, ) | 4 | 0 | A, B, C, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-FGFR3-Y373C-UROTHELIAL | BIO-FGFR3-MUTATION | (, ) | 5 | 0 | A, B, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-FLT3-D835-AML | BIO-FLT3-D835 | (FLT3, D835Y) | 4 | 1 | B, C, D | standard_care, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-FLT3-D835-AML-RR | BIO-FLT3-D835 | (FLT3, D835Y) | 4 | 1 | B, C, D | standard_care, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-FLT3-F691L-AML | BIO-FLT3-D835 | (FLT3, D835Y) | 4 | 1 | B, C, D | resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-FLT3-ITD-AML | BIO-FLT3-ITD | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-FLT3-ITD-AML-RR | BIO-FLT3-ITD | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-FLT3-ITD-B-ALL | BIO-FLT3-ITD | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-FOXL2-GRANULOSA-CELL | BIO-FOXL2 | (FOXL2, C134W) | 1 | 1 | B | insufficient_evidence | no | yes |
+| BMA-HER2-AMP-CRC | BIO-HER2-SOLID | (, ) | 6 | 0 | B, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-HER2-AMP-GASTRIC | BIO-HER2-SOLID | (, ) | 2 | 0 | A, B | molecular_evidence_option | no | yes |
+| BMA-HRD-STATUS-BREAST | BIO-HRD-STATUS | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-HRD-STATUS-PROSTATE | BIO-HRD-STATUS | (, ) | 6 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH1-R132-CHOLANGIO | BIO-IDH-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH1-R132C-AML | BIO-IDH-MUTATION | (, ) | 7 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH1-R132C-GBM | BIO-IDH-MUTATION | (, ) | 7 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH1-R132G-AML | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-IDH1-R132G-GBM | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-IDH1-R132H-AML | BIO-IDH-MUTATION | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH1-R132H-B-ALL | BIO-IDH-MUTATION | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH1-R132H-DLBCL-NOS | BIO-IDH-MUTATION | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH1-R132H-GBM | BIO-IDH-MUTATION | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH1-R132H-MDS-HR | BIO-IDH-MUTATION | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH1-R132H-MDS-LR | BIO-IDH-MUTATION | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH1-R132L-AML | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-IDH1-R132L-GBM | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-IDH1-R132S-AML | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-IDH1-R132S-GBM | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-IDH2-R140Q-AITL | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH2-R140Q-AML | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH2-R140Q-DLBCL-NOS | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH2-R140Q-MDS-HR | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH2-R140Q-MDS-LR | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH2-R140Q-T-ALL | BIO-IDH-MUTATION | (, ) | 5 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH2-R172K-AITL | BIO-IDH-MUTATION | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH2-R172K-AML | BIO-IDH-MUTATION | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH2-R172K-MDS-HR | BIO-IDH-MUTATION | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-IDH2-R172K-MDS-LR | BIO-IDH-MUTATION | (, ) | 6 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-JAK2-V617F-ET | BIO-JAK2 | (JAK2, V617F) | 4 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-JAK2-V617F-PMF | BIO-JAK2 | (JAK2, V617F) | 4 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-JAK2-V617F-PV | BIO-JAK2 | (JAK2, V617F) | 4 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-KIT-D816V-GIST | BIO-KIT | (, ) | 3 | 0 | B, D | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-KIT-D816V-MASTOCYTOSIS | BIO-KIT | (, ) | 3 | 0 | B, D | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-KIT-EXON11-GIST | BIO-KIT | (, ) | 16 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KIT-EXON13-17-GIST | BIO-KIT | (, ) | 16 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KIT-EXON9-GIST | BIO-KIT | (, ) | 16 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KIT-MUTATION-AML | BIO-KIT | (, ) | 2 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-KIT-MUTATION-MELANOMA | BIO-KIT | (, ) | 2 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-KRAS-A146T-CRC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-A146T-NSCLC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-A146T-PDAC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-EXON3-CRC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-EXON4-CRC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12C-CRC | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12C-ENDOMETRIAL | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12C-GASTRIC | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12C-HCC | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12C-MM | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12C-NSCLC | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12C-OVARIAN | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12C-PDAC | BIO-KRAS-G12C | (KRAS, G12C) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12D-CRC | BIO-RAS-MUTATION | (, ) | 14 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12D-ENDOMETRIAL | BIO-RAS-MUTATION | (, ) | 14 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12D-GASTRIC | BIO-RAS-MUTATION | (, ) | 14 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12D-NSCLC | BIO-RAS-MUTATION | (, ) | 14 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12D-OVARIAN | BIO-RAS-MUTATION | (, ) | 14 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12D-PDAC | BIO-RAS-MUTATION | (, ) | 14 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12V-CRC | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12V-ENDOMETRIAL | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12V-NSCLC | BIO-KRAS-G12V | (KRAS, G12V) | 5 | 5 | B, C, D | standard_care, resistance_or_avoidance_signal, insufficient_evidence | yes | yes |
+| BMA-KRAS-G12V-OVARIAN | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12V-PDAC | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G12X-CRC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G13D-CRC | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G13D-NSCLC | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-G13X-CRC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-Q61-CRC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-Q61-MELANOMA | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-Q61-NSCLC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-KRAS-Q61-PDAC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-MET-AMP-GASTRIC | BIO-MET | (, ) | 4 | 0 | C, D | resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-MET-AMP-HCC | BIO-MET | (, ) | 4 | 0 | C, D | resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-MET-AMP-NSCLC | BIO-MET | (, ) | 4 | 0 | C, D | resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-MET-AMP-RCC-PAPILLARY | BIO-MET | (, ) | 1 | 0 | B | molecular_evidence_option | no | yes |
+| BMA-MET-EX14-NSCLC | BIO-MET | (, ) | 5 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-MGMT-METHYLATION-GBM | BIO-MGMT-METHYLATION | (, ) | 4 | 0 | A, B, E | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MLH1-GERMLINE-CRC | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MLH1-GERMLINE-ENDOMETRIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MLH1-GERMLINE-GASTRIC | BIO-DMMR-IHC | (, ) | 2 | 0 | B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-MLH1-SOMATIC-CRC | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MLH1-SOMATIC-ENDOMETRIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MLH1-SOMATIC-GASTRIC | BIO-DMMR-IHC | (, ) | 2 | 0 | B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-MSH2-GERMLINE-CRC | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MSH2-GERMLINE-ENDOMETRIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MSH2-GERMLINE-UROTHELIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MSH2-SOMATIC-CRC | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MSH2-SOMATIC-ENDOMETRIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MSH2-SOMATIC-UROTHELIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MSH6-GERMLINE-CRC | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MSH6-GERMLINE-ENDOMETRIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MSH6-GERMLINE-UROTHELIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MSH6-SOMATIC-CRC | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MSH6-SOMATIC-ENDOMETRIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MSH6-SOMATIC-UROTHELIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-MYC-REARRANGEMENT-BURKITT | BIO-MYC-REARRANGEMENT | (, ) | 2 | 0 | B, C | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MYC-REARRANGEMENT-DLBCL-NOS | BIO-MYC-REARRANGEMENT | (, ) | 2 | 0 | B, C | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MYC-REARRANGEMENT-FL | BIO-MYC-REARRANGEMENT | (, ) | 2 | 0 | B, C | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MYC-REARRANGEMENT-HGBL-DH | BIO-DOUBLE-HIT | (, ) | 2 | 0 | B, C | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MYC-REARRANGEMENT-NLPBL | BIO-MYC-REARRANGEMENT | (, ) | 2 | 0 | B, C | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MYD88-L265P-DLBCL-NOS | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MYD88-L265P-HCV-MZL | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MYD88-L265P-NODAL-MZL | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MYD88-L265P-PCNSL | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MYD88-L265P-PTLD | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MYD88-L265P-SPLENIC-MZL | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-MYD88-L265P-WM | BIO-MYD88-L265P | (MYD88, L265P) | 3 | 0 | B, D | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-NOTCH1-ACTIVATING-CLL | BIO-NOTCH1-MUTATION | (, ) | 3 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-NOTCH1-ACTIVATING-DLBCL-NOS | BIO-NOTCH1-MUTATION | (, ) | 3 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-NOTCH1-ACTIVATING-MCL | BIO-NOTCH1-MUTATION | (, ) | 3 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-NOTCH1-ACTIVATING-T-ALL | BIO-NOTCH1-MUTATION | (, ) | 3 | 0 | A, B | molecular_evidence_option, resistance_or_avoidance_signal | yes | yes |
+| BMA-NPM1-AML | BIO-NPM1 | (NPM1, W288fs) | 10 | 0 | A, B, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-G12-AML | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-G12-CRC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-G12-MDS-HR | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-G12-MDS-LR | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-G12-MELANOMA | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-G13-AML | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-G13-CRC | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-G13-MDS-HR | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-G13-MDS-LR | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-G13-MELANOMA | BIO-RAS-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-Q61K-AML | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-Q61K-CRC | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-Q61K-MELANOMA | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-Q61R-AML | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-Q61R-CRC | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-Q61R-MDS-HR | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-Q61R-MDS-LR | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NRAS-Q61R-MELANOMA | BIO-RAS-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-NTRK-FUSION-IFS | BIO-NTRK-FUSION | (, ) | 4 | 0 | A, B, C | molecular_evidence_option, trial_research_option | no | yes |
+| BMA-NTRK-FUSION-NSCLC | BIO-NTRK-FUSION | (, ) | 1 | 0 | C | resistance_or_avoidance_signal | yes | yes |
+| BMA-PALB2-GERMLINE-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-PALB2-GERMLINE-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-PALB2-GERMLINE-PDAC | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-PALB2-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-PALB2-SOMATIC-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-PALB2-SOMATIC-PDAC | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-PDGFRA-D842V-GIST | BIO-PDGFRA | (, ) | 5 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PDGFRA-EXON12-GIST | BIO-PDGFRA | (, ) | 7 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PDGFRA-EXON14-GIST | BIO-PDGFRA | (, ) | 7 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PDGFRA-EXON18-NON-D842-GIST | BIO-PDGFRA | (, ) | 5 | 0 | B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-E542K-BREAST | BIO-PIK3CA-MUTATION | (, ) | 14 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-E545K-BREAST | BIO-PIK3CA-MUTATION | (, ) | 16 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-EXON20-BREAST | BIO-PIK3CA-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-EXON9-BREAST | BIO-PIK3CA-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-H1047L-BREAST | BIO-PIK3CA-MUTATION | (, ) | 13 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-H1047R-BREAST | BIO-PIK3CA-MUTATION | (, ) | 15 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-HOTSPOT-CERVICAL | BIO-PIK3CA-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-HOTSPOT-ENDOMETRIAL | BIO-PIK3CA-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-HOTSPOT-ESOPHAGEAL | BIO-PIK3CA-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-HOTSPOT-GASTRIC | BIO-PIK3CA-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-HOTSPOT-HCC | BIO-PIK3CA-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-HOTSPOT-NSCLC | BIO-PIK3CA-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-HOTSPOT-PROSTATE | BIO-PIK3CA-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-HOTSPOT-RCC | BIO-PIK3CA-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PIK3CA-HOTSPOT-UROTHELIAL | BIO-PIK3CA-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-PMS2-GERMLINE-ENDOMETRIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-PMS2-SOMATIC-ENDOMETRIAL | BIO-DMMR-IHC | (, ) | 1 | 0 | C | trial_research_option | no | yes |
+| BMA-RAD51B-GERMLINE-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RAD51B-GERMLINE-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RAD51B-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RAD51B-SOMATIC-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RAD51D-GERMLINE-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RAD51D-GERMLINE-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RAD51D-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RAD51D-SOMATIC-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RAD54L-GERMLINE-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RAD54L-GERMLINE-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RAD54L-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RAD54L-SOMATIC-OVARIAN | BIO-HRR-PANEL | (, ) | 1 | 0 | A | molecular_evidence_option | no | yes |
+| BMA-RET-C634R-MTC | BIO-RET | (, ) | 1 | 0 | D | trial_research_option | no | yes |
+| BMA-RET-CCDC6-NSCLC | BIO-RET | (, ) | 4 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-RET-FUSION-NSCLC | BIO-RET | (, ) | 4 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-RET-FUSION-THYROID-PAPILLARY | BIO-RET | (, ) | 4 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-RET-KIF5B-NSCLC | BIO-RET | (, ) | 4 | 0 | A, B, C | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-RET-M918T-MTC | BIO-RET | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ROS1-CD74-NSCLC | BIO-ROS1-FUSION | (, ) | 6 | 0 | A, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ROS1-EZR-NSCLC | BIO-ROS1-FUSION | (, ) | 6 | 0 | A, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ROS1-FUSION-NSCLC | BIO-ROS1-FUSION | (, ) | 6 | 0 | A, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ROS1-G2032R-NSCLC | BIO-ROS1-FUSION | (, ) | 6 | 0 | A, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-ROS1-SLC34A2-NSCLC | BIO-ROS1-FUSION | (, ) | 6 | 0 | A, C, D, E | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-AML | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-BREAST | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-CERVICAL | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-CLL | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-CRC | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-DLBCL-NOS | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-ENDOMETRIAL | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-ESOPHAGEAL | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-GASTRIC | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-GBM | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-HCC | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-MCL | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-MDS-HR | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-MELANOMA | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-MM | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-NSCLC | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-OVARIAN | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-PDAC | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-PROSTATE | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-RCC | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-SCLC | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-MUT-UROTHELIAL | BIO-TP53-MUTATION | (, ) | 8 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R175H-AML | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R175H-BREAST | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R175H-CLL | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R175H-DLBCL-NOS | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R175H-MCL | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R175H-MDS-HR | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R175H-MM | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R175H-NSCLC | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R175H-OVARIAN | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R248Q-AML | BIO-TP53-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R248Q-BREAST | BIO-TP53-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R248Q-CLL | BIO-TP53-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R248Q-DLBCL-NOS | BIO-TP53-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R248Q-MCL | BIO-TP53-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R248Q-MDS-HR | BIO-TP53-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R248Q-MM | BIO-TP53-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R248Q-NSCLC | BIO-TP53-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R248Q-OVARIAN | BIO-TP53-MUTATION | (, ) | 12 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R273H-AML | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R273H-BREAST | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R273H-CLL | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R273H-DLBCL-NOS | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R273H-MCL | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R273H-MDS-HR | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R273H-MM | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R273H-NSCLC | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R273H-OVARIAN | BIO-TP53-MUTATION | (, ) | 10 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R282W-AML | BIO-TP53-MUTATION | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R282W-BREAST | BIO-TP53-MUTATION | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R282W-CLL | BIO-TP53-MUTATION | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R282W-DLBCL-NOS | BIO-TP53-MUTATION | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R282W-MCL | BIO-TP53-MUTATION | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R282W-MDS-HR | BIO-TP53-MUTATION | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R282W-MM | BIO-TP53-MUTATION | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R282W-NSCLC | BIO-TP53-MUTATION | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
+| BMA-TP53-R282W-OVARIAN | BIO-TP53-MUTATION | (, ) | 9 | 0 | A, B, C, D | molecular_evidence_option, resistance_or_avoidance_signal, trial_research_option | yes | yes |
 
 ## Contradictions: legacy SRC-ONCOKB vs CIViC
 
 BMAs whose legacy OncoKB level was 1 or 2, but the CIViC snapshot carries only Level D/E for the same (gene, variant). These warrant clinical review — the high-confidence label was OncoKB-derived and may not be defensible in the CIViC-only render.
 
-| BMA-ID | biomarker | (gene, variant) | legacy SRC-ONCOKB | highest CIViC | levels present |
-|---|---|---|---|---|---|
-| BMA-FLT3-D835-AML | BIO-FLT3-D835 | (FLT3, D835Y) | 1 | D | D |
-| BMA-FLT3-D835-AML-RR | BIO-FLT3-D835 | (FLT3, D835Y) | 1 | D | D |
+_None detected._
 
 ## CIViC resistance — `Does Not Support` / `significance=Resistance`
 
@@ -72,6 +380,31 @@ BMAs where CIViC carries resistance evidence. These are the urgent surfacing dec
 
 | BMA-ID | biomarker | (gene, variant) | levels present |
 |---|---|---|---|
+| BMA-ALK-EML4-V1-NSCLC | BIO-ALK-FUSION | (, ) | A, B, C, D, E |
+| BMA-ALK-EML4-V3-NSCLC | BIO-ALK-FUSION | (, ) | A, B, C, D, E |
+| BMA-ALK-FUSION-ALCL | BIO-ALK-FUSION | (, ) | A, B, C, D, E |
+| BMA-ALK-FUSION-NSCLC | BIO-ALK-FUSION | (, ) | A, B, C, D, E |
+| BMA-ALK-G1202R-NSCLC | BIO-ALK-FUSION | (, ) | A, B, C, D, E |
+| BMA-ALK-L1196M-NSCLC | BIO-ALK-FUSION | (, ) | A, B, C, D, E |
+| BMA-ATM-GERMLINE-BREAST | BIO-HRR-PANEL | (, ) | A, B, C, D |
+| BMA-ATM-GERMLINE-PDAC | BIO-HRR-PANEL | (, ) | A, B, C, D |
+| BMA-ATM-GERMLINE-PROSTATE | BIO-HRR-PANEL | (, ) | A, B, C, D |
+| BMA-ATM-LOSS-CLL | BIO-HRR-PANEL | (, ) | A, B, D |
+| BMA-ATM-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | A, B, C, D |
+| BMA-ATM-SOMATIC-PDAC | BIO-HRR-PANEL | (, ) | A, B, C, D |
+| BMA-ATM-SOMATIC-PROSTATE | BIO-HRR-PANEL | (, ) | A, B, C, D |
+| BMA-BCL2-EXPRESSION-CLL | BIO-BCL2-EXPRESSION-IHC | (, ) | C, D |
+| BMA-BCL2-EXPRESSION-FL | BIO-BCL2-EXPRESSION-IHC | (, ) | B, C, D |
+| BMA-BCL2-REARRANGEMENT-FL | BIO-BCL2-REARRANGEMENT | (, ) | B, C, D |
+| BMA-BCR-ABL1-E255K-CML | BIO-BCR-ABL1 | (, ) | B, C, D |
+| BMA-BCR-ABL1-F317L-BALL | BIO-BCR-ABL1 | (, ) | B, C, D |
+| BMA-BCR-ABL1-F317L-CML | BIO-BCR-ABL1 | (, ) | B, C, D |
+| BMA-BCR-ABL1-P190-BALL | BIO-BCR-ABL1 | (, ) | B, C, D |
+| BMA-BCR-ABL1-P210-BALL | BIO-BCR-ABL1 | (, ) | B, C, D |
+| BMA-BCR-ABL1-P210-CML | BIO-BCR-ABL1 | (, ) | B, C, D |
+| BMA-BCR-ABL1-T315I-BALL | BIO-BCR-ABL1 | (, ) | B, C, D |
+| BMA-BCR-ABL1-T315I-CML | BIO-BCR-ABL1 | (, ) | B, C, D |
+| BMA-BCR-ABL1-V299L-CML | BIO-BCR-ABL1 | (, ) | B, C, D |
 | BMA-BRAF-CLASS3-NSCLC | BIO-BRAF-V600E | (BRAF, V600E) | A, B, C, D |
 | BMA-BRAF-V600E-AML | BIO-BRAF-V600E | (BRAF, V600E) | A, B, C, D |
 | BMA-BRAF-V600E-CHOLANGIO | BIO-BRAF-V600E | (BRAF, V600E) | A, B, C, D |
@@ -88,9 +421,77 @@ BMAs where CIViC carries resistance evidence. These are the urgent surfacing dec
 | BMA-BRAF-V600E-PDAC | BIO-BRAF-V600E | (BRAF, V600E) | A, B, C, D |
 | BMA-BRAF-V600E-THYROID-ANAPLASTIC | BIO-BRAF-V600E | (BRAF, V600E) | A, B, C, D |
 | BMA-BRAF-V600K-MELANOMA | BIO-BRAF-V600E | (BRAF, V600E) | A, B, C, D |
-| BMA-FLT3-D835-AML | BIO-FLT3-D835 | (FLT3, D835Y) | D |
-| BMA-FLT3-D835-AML-RR | BIO-FLT3-D835 | (FLT3, D835Y) | D |
-| BMA-FLT3-F691L-AML | BIO-FLT3-D835 | (FLT3, D835Y) | D |
+| BMA-BRCA1-GERMLINE-BREAST | BIO-BRCA1-BRCA2-GERMLINE | (, ) | A, B |
+| BMA-BRCA1-GERMLINE-OVARIAN | BIO-BRCA1-BRCA2-GERMLINE | (, ) | A, B |
+| BMA-BRCA1-GERMLINE-PDAC | BIO-BRCA1-BRCA2-GERMLINE | (, ) | A, B |
+| BMA-BRCA1-GERMLINE-PROSTATE | BIO-BRCA1-BRCA2-GERMLINE | (, ) | A, B |
+| BMA-BRCA1-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | A, B |
+| BMA-BRCA1-SOMATIC-OVARIAN | BIO-HRR-PANEL | (, ) | A, B |
+| BMA-BRCA1-SOMATIC-PDAC | BIO-HRR-PANEL | (, ) | A, B |
+| BMA-BRCA1-SOMATIC-PROSTATE | BIO-HRR-PANEL | (, ) | A, B |
+| BMA-BRCA2-GERMLINE-BREAST | BIO-BRCA1-BRCA2-GERMLINE | (, ) | A, B, C |
+| BMA-BRCA2-GERMLINE-MELANOMA | BIO-BRCA1-BRCA2-GERMLINE | (, ) | A, B, C |
+| BMA-BRCA2-GERMLINE-OVARIAN | BIO-BRCA1-BRCA2-GERMLINE | (, ) | A, B, C |
+| BMA-BRCA2-GERMLINE-PDAC | BIO-BRCA1-BRCA2-GERMLINE | (, ) | A, B, C |
+| BMA-BRCA2-GERMLINE-PROSTATE | BIO-BRCA1-BRCA2-GERMLINE | (, ) | A, B, C |
+| BMA-BRCA2-SOMATIC-BREAST | BIO-HRR-PANEL | (, ) | A, B, C |
+| BMA-BRCA2-SOMATIC-MELANOMA | BIO-HRR-PANEL | (, ) | A, B, C |
+| BMA-BRCA2-SOMATIC-OVARIAN | BIO-HRR-PANEL | (, ) | A, B, C |
+| BMA-BRCA2-SOMATIC-PDAC | BIO-HRR-PANEL | (, ) | A, B, C |
+| BMA-BRCA2-SOMATIC-PROSTATE | BIO-HRR-PANEL | (, ) | A, B, C |
+| BMA-CCND1-IHC-MCL | BIO-CCND1-IHC | (, ) | B, D |
+| BMA-CCND1-T1114-MCL | BIO-T11-14-IGH-CCND1 | (, ) | B, D |
+| BMA-CHEK2-GERMLINE-PROSTATE | BIO-HRR-PANEL | (, ) | A, B |
+| BMA-CHEK2-SOMATIC-PROSTATE | BIO-HRR-PANEL | (, ) | A, B |
+| BMA-EGFR-C797S-NSCLC | BIO-EGFR-MUTATION | (, ) | A, B, C |
+| BMA-EGFR-EX19DEL-NSCLC | BIO-EGFR-MUTATION | (, ) | A, B, C, D |
+| BMA-EGFR-EX20INS-NSCLC | BIO-EGFR-MUTATION | (, ) | A, B, C |
+| BMA-EGFR-L858R-NSCLC | BIO-EGFR-MUTATION | (, ) | A, B, C, D |
+| BMA-EGFR-T790M-NSCLC | BIO-EGFR-MUTATION | (, ) | A, B, C, D, E |
+| BMA-ESR1-MUT-BREAST | BIO-ESR1 | (, ) | A, C, D |
+| BMA-FGFR1-AMP-BREAST | BIO-FGFR1 | (, ) | B, C, D |
+| BMA-FGFR1-AMP-NSCLC-SQUAMOUS | BIO-FGFR1 | (, ) | B, C, D |
+| BMA-FGFR3-R248C-UROTHELIAL | BIO-FGFR3-MUTATION | (, ) | A, B, D |
+| BMA-FGFR3-S249C-UROTHELIAL | BIO-FGFR3-MUTATION | (, ) | A, B, C, D |
+| BMA-FGFR3-Y373C-UROTHELIAL | BIO-FGFR3-MUTATION | (, ) | A, B, D |
+| BMA-FLT3-D835-AML | BIO-FLT3-D835 | (FLT3, D835Y) | B, C, D |
+| BMA-FLT3-D835-AML-RR | BIO-FLT3-D835 | (FLT3, D835Y) | B, C, D |
+| BMA-FLT3-F691L-AML | BIO-FLT3-D835 | (FLT3, D835Y) | B, C, D |
+| BMA-FLT3-ITD-AML | BIO-FLT3-ITD | (, ) | A, B, C, D |
+| BMA-FLT3-ITD-AML-RR | BIO-FLT3-ITD | (, ) | A, B, C, D |
+| BMA-FLT3-ITD-B-ALL | BIO-FLT3-ITD | (, ) | A, B, C, D |
+| BMA-HER2-AMP-CRC | BIO-HER2-SOLID | (, ) | B, D |
+| BMA-HRD-STATUS-BREAST | BIO-HRD-STATUS | (, ) | A, B, C, D |
+| BMA-HRD-STATUS-PROSTATE | BIO-HRD-STATUS | (, ) | A, B, C |
+| BMA-IDH1-R132-CHOLANGIO | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH1-R132C-AML | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH1-R132C-GBM | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH1-R132H-AML | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH1-R132H-B-ALL | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH1-R132H-DLBCL-NOS | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH1-R132H-GBM | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH1-R132H-MDS-HR | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH1-R132H-MDS-LR | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH2-R140Q-AITL | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH2-R140Q-AML | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH2-R140Q-DLBCL-NOS | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH2-R140Q-MDS-HR | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH2-R140Q-MDS-LR | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH2-R140Q-T-ALL | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH2-R172K-AITL | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH2-R172K-AML | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH2-R172K-MDS-HR | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-IDH2-R172K-MDS-LR | BIO-IDH-MUTATION | (, ) | A, B, C, D |
+| BMA-KIT-D816V-GIST | BIO-KIT | (, ) | B, D |
+| BMA-KIT-D816V-MASTOCYTOSIS | BIO-KIT | (, ) | B, D |
+| BMA-KIT-EXON11-GIST | BIO-KIT | (, ) | A, B, C, D |
+| BMA-KIT-EXON13-17-GIST | BIO-KIT | (, ) | A, B, C, D |
+| BMA-KIT-EXON9-GIST | BIO-KIT | (, ) | A, B, C, D |
+| BMA-KRAS-A146T-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-A146T-NSCLC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-A146T-PDAC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-EXON3-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-EXON4-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
 | BMA-KRAS-G12C-CRC | BIO-KRAS-G12C | (KRAS, G12C) | A, B, C, D |
 | BMA-KRAS-G12C-ENDOMETRIAL | BIO-KRAS-G12C | (KRAS, G12C) | A, B, C, D |
 | BMA-KRAS-G12C-GASTRIC | BIO-KRAS-G12C | (KRAS, G12C) | A, B, C, D |
@@ -99,24 +500,164 @@ BMAs where CIViC carries resistance evidence. These are the urgent surfacing dec
 | BMA-KRAS-G12C-NSCLC | BIO-KRAS-G12C | (KRAS, G12C) | A, B, C, D |
 | BMA-KRAS-G12C-OVARIAN | BIO-KRAS-G12C | (KRAS, G12C) | A, B, C, D |
 | BMA-KRAS-G12C-PDAC | BIO-KRAS-G12C | (KRAS, G12C) | A, B, C, D |
+| BMA-KRAS-G12D-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G12D-ENDOMETRIAL | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G12D-GASTRIC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G12D-NSCLC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G12D-OVARIAN | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G12D-PDAC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G12V-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G12V-ENDOMETRIAL | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G12V-NSCLC | BIO-KRAS-G12V | (KRAS, G12V) | B, C, D |
+| BMA-KRAS-G12V-OVARIAN | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G12V-PDAC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G12X-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G13D-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G13D-NSCLC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-G13X-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-Q61-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-Q61-MELANOMA | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-Q61-NSCLC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-KRAS-Q61-PDAC | BIO-RAS-MUTATION | (, ) | A, B, C, D, E |
+| BMA-MET-AMP-GASTRIC | BIO-MET | (, ) | C, D |
+| BMA-MET-AMP-HCC | BIO-MET | (, ) | C, D |
+| BMA-MET-AMP-NSCLC | BIO-MET | (, ) | C, D |
+| BMA-MET-EX14-NSCLC | BIO-MET | (, ) | A, B, C |
+| BMA-MLH1-GERMLINE-GASTRIC | BIO-DMMR-IHC | (, ) | B |
+| BMA-MLH1-SOMATIC-GASTRIC | BIO-DMMR-IHC | (, ) | B |
+| BMA-NOTCH1-ACTIVATING-CLL | BIO-NOTCH1-MUTATION | (, ) | A, B |
+| BMA-NOTCH1-ACTIVATING-DLBCL-NOS | BIO-NOTCH1-MUTATION | (, ) | A, B |
+| BMA-NOTCH1-ACTIVATING-MCL | BIO-NOTCH1-MUTATION | (, ) | A, B |
+| BMA-NOTCH1-ACTIVATING-T-ALL | BIO-NOTCH1-MUTATION | (, ) | A, B |
+| BMA-NPM1-AML | BIO-NPM1 | (NPM1, W288fs) | A, B, D, E |
+| BMA-NRAS-G12-AML | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-G12-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-G12-MDS-HR | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-G12-MDS-LR | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-G12-MELANOMA | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-G13-AML | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-G13-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-G13-MDS-HR | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-G13-MDS-LR | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-G13-MELANOMA | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-Q61K-AML | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-Q61K-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-Q61K-MELANOMA | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-Q61R-AML | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-Q61R-CRC | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-Q61R-MDS-HR | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-Q61R-MDS-LR | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NRAS-Q61R-MELANOMA | BIO-RAS-MUTATION | (, ) | A, B, C, D |
+| BMA-NTRK-FUSION-NSCLC | BIO-NTRK-FUSION | (, ) | C |
+| BMA-PDGFRA-D842V-GIST | BIO-PDGFRA | (, ) | B, C, D |
+| BMA-PDGFRA-EXON12-GIST | BIO-PDGFRA | (, ) | B, C, D |
+| BMA-PDGFRA-EXON14-GIST | BIO-PDGFRA | (, ) | B, C, D |
+| BMA-PDGFRA-EXON18-NON-D842-GIST | BIO-PDGFRA | (, ) | B, C, D |
+| BMA-PIK3CA-E542K-BREAST | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-E545K-BREAST | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-EXON20-BREAST | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-EXON9-BREAST | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-H1047L-BREAST | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-H1047R-BREAST | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-HOTSPOT-CERVICAL | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-HOTSPOT-ENDOMETRIAL | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-HOTSPOT-ESOPHAGEAL | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-HOTSPOT-GASTRIC | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-HOTSPOT-HCC | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-HOTSPOT-NSCLC | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-HOTSPOT-PROSTATE | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-HOTSPOT-RCC | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-PIK3CA-HOTSPOT-UROTHELIAL | BIO-PIK3CA-MUTATION | (, ) | A, B, C, D |
+| BMA-RET-CCDC6-NSCLC | BIO-RET | (, ) | A, B, C |
+| BMA-RET-FUSION-NSCLC | BIO-RET | (, ) | A, B, C |
+| BMA-RET-FUSION-THYROID-PAPILLARY | BIO-RET | (, ) | A, B, C |
+| BMA-RET-KIF5B-NSCLC | BIO-RET | (, ) | A, B, C |
+| BMA-RET-M918T-MTC | BIO-RET | (, ) | A, B, C, D |
+| BMA-ROS1-CD74-NSCLC | BIO-ROS1-FUSION | (, ) | A, C, D, E |
+| BMA-ROS1-EZR-NSCLC | BIO-ROS1-FUSION | (, ) | A, C, D, E |
+| BMA-ROS1-FUSION-NSCLC | BIO-ROS1-FUSION | (, ) | A, C, D, E |
+| BMA-ROS1-G2032R-NSCLC | BIO-ROS1-FUSION | (, ) | A, C, D, E |
+| BMA-ROS1-SLC34A2-NSCLC | BIO-ROS1-FUSION | (, ) | A, C, D, E |
+| BMA-TP53-MUT-AML | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-BREAST | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-CERVICAL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-CLL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-CRC | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-DLBCL-NOS | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-ENDOMETRIAL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-ESOPHAGEAL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-GASTRIC | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-GBM | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-HCC | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-MCL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-MDS-HR | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-MELANOMA | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-MM | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-NSCLC | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-OVARIAN | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-PDAC | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-PROSTATE | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-RCC | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-SCLC | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-MUT-UROTHELIAL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R175H-AML | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R175H-BREAST | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R175H-CLL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R175H-DLBCL-NOS | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R175H-MCL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R175H-MDS-HR | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R175H-MM | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R175H-NSCLC | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R175H-OVARIAN | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R248Q-AML | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R248Q-BREAST | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R248Q-CLL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R248Q-DLBCL-NOS | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R248Q-MCL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R248Q-MDS-HR | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R248Q-MM | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R248Q-NSCLC | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R248Q-OVARIAN | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R273H-AML | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R273H-BREAST | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R273H-CLL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R273H-DLBCL-NOS | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R273H-MCL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R273H-MDS-HR | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R273H-MM | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R273H-NSCLC | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R273H-OVARIAN | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R282W-AML | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R282W-BREAST | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R282W-CLL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R282W-DLBCL-NOS | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R282W-MCL | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R282W-MDS-HR | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R282W-MM | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R282W-NSCLC | BIO-TP53-MUTATION | (, ) | A, B, C, D |
+| BMA-TP53-R282W-OVARIAN | BIO-TP53-MUTATION | (, ) | A, B, C, D |
 
 ## Coverage by gene (BMAs carrying CIViC evidence)
 
 | gene | BMAs modified |
 |---|---|
 | BRAF | 16 |
-| KRAS | 8 |
+| KRAS | 9 |
 | MYD88 | 7 |
 | FLT3 | 3 |
 | JAK2 | 3 |
+| EZH2 | 1 |
+| FOXL2 | 1 |
+| NPM1 | 1 |
 
 ## Skips by reason
 
 | reason | count |
 |---|---|
-| biomarker_not_actionable_for_civic_lookup | 360 |
-| civic_already_recorded_idempotent | 37 |
-| civic_no_evidence | 2 |
+| biomarker_not_actionable_for_civic_lookup | 372 |
+| civic_already_recorded_idempotent | 25 |
+| civic_no_evidence | 25 |
+| civic_no_disease_matched_evidence | 11 |
 
 ## TODO / clinical-signoff blockers
 
