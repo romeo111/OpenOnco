@@ -2,46 +2,57 @@ id: REGIMEN-TALQUETAMAB-STEP-UP-DOSING-MM
 name: "Talquetamab GPRC5D × CD3 bispecific — inpatient step-up dosing schedule"
 name_ua: "Талквотамаб GPRC5D × CD3 біспецифік — стаціонарна схема step-up dosing"
 alternate_names:
-  - "Talquetamab step-up"
-  - "Talvey induction"
-  - "MonumenTAL-1 step-up phase"
+- "Talquetamab step-up"
+- "Talvey induction"
+- "MonumenTAL-1 step-up phase"
 
 components:
-  - drug_id: DRUG-TALQUETAMAB
-    dose: >
-      Two FDA-approved step-up schedules per MonumenTAL-1 cohort:
-      QW target (0.4 mg/kg weekly): step-up 0.01 → 0.06 → 0.4 mg/kg SC at days 1, 4, 7.
-      Q2W target (0.8 mg/kg every 2 weeks): step-up 0.01 → 0.06 → 0.4 → 0.8 mg/kg SC at days 1, 4, 7, 10
-      (≥48h between doses).
-    schedule: "Days 1, 4, 7 (QW target) OR days 1, 4, 7, 10 (Q2W target) — one-time inpatient induction"
-    route: SC
+- drug_id: DRUG-TALQUETAMAB
+  dose: >
+    Two FDA-approved step-up schedules per MonumenTAL-1 cohort:
+    QW target (0.4 mg/kg weekly): step-up 0.01 → 0.06 → 0.4 mg/kg SC at days 1, 4,
+    7.
+    Q2W target (0.8 mg/kg every 2 weeks): step-up 0.01 → 0.06 → 0.4 → 0.8 mg/kg SC
+    at days 1, 4, 7, 10
+    (≥48h between doses).
+  schedule: "Days 1, 4, 7 (QW target) OR days 1, 4, 7, 10 (Q2W target) — one-time
+    inpatient induction"
+  route: SC
 
 cycle_length_days: 10
 total_cycles: "1 (one-time step-up; transition to REGIMEN-TALQUETAMAB-MONO-MM or REGIMEN-TALQUETAMAB-QW-Q2W-MM)"
 toxicity_profile: severe
 
 premedication:
-  - "Pre-step-up doses (each step-up dose AND first full target dose): dexamethasone 16 mg IV/PO + diphenhydramine 50 mg IV/PO + acetaminophen 650 mg PO 1-3h before dosing — required for CRS mitigation per FDA label."
-  - "Tocilizumab 8 mg/kg IV must be on-site for emergency CRS management."
-  - "Hospitalize for ≥48h after each step-up dose AND first full target dose (CRS / ICANS surveillance) per FDA label."
-  - "Baseline oral / dental / nutrition assessment prior to step-up — GPRC5D on-target toxicities anticipated."
+- "Pre-step-up doses (each step-up dose AND first full target dose): dexamethasone
+  16 mg IV/PO + diphenhydramine 50 mg IV/PO + acetaminophen 650 mg PO 1-3h before
+  dosing — required for CRS mitigation per FDA label."
+- "Tocilizumab 8 mg/kg IV must be on-site for emergency CRS management."
+- "Hospitalize for ≥48h after each step-up dose AND first full target dose (CRS /
+  ICANS surveillance) per FDA label."
+- "Baseline oral / dental / nutrition assessment prior to step-up — GPRC5D on-target
+  toxicities anticipated."
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-IVIG-HYPOGAMMA
-
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-IVIG-HYPOGAMMA
 dose_adjustments:
-  - condition: "CRS Grade 1 (fever ≥38°C only) during step-up"
-    modification: "Acetaminophen + observation; do not advance to next step-up dose until afebrile ≥48h."
-    source_refs: [SRC-NCCN-MM-2025]
-  - condition: "CRS Grade 2 (hypotension responsive to fluids OR low-flow O₂)"
-    modification: "Tocilizumab 8 mg/kg IV; ± dexamethasone 10 mg IV q6h; supportive care; do not advance step-up until CRS resolved."
-    source_refs: [SRC-NCCN-MM-2025]
-  - condition: "CRS Grade 3-4 OR ICANS Grade 2+"
-    modification: "Tocilizumab + high-dose dexamethasone OR methylprednisolone 1 g/day; ICU; anakinra for refractory; pause step-up indefinitely pending recovery + multidisciplinary review."
-    rationale: "Severe CRS / ICANS may be fatal if untreated."
-  - condition: "Step-up dose delayed >7 days"
-    modification: "Restart step-up at the previous tolerated dose level (per FDA label / MonumenTAL-1 protocol)."
+- condition: "CRS Grade 1 (fever ≥38°C only) during step-up"
+  modification: "Acetaminophen + observation; do not advance to next step-up dose
+    until afebrile ≥48h."
+  source_refs: [SRC-NCCN-MM-2025]
+- condition: "CRS Grade 2 (hypotension responsive to fluids OR low-flow O₂)"
+  modification: "Tocilizumab 8 mg/kg IV; ± dexamethasone 10 mg IV q6h; supportive
+    care; do not advance step-up until CRS resolved."
+  source_refs: [SRC-NCCN-MM-2025]
+- condition: "CRS Grade 3-4 OR ICANS Grade 2+"
+  modification: "Tocilizumab + high-dose dexamethasone OR methylprednisolone 1 g/day;
+    ICU; anakinra for refractory; pause step-up indefinitely pending recovery + multidisciplinary
+    review."
+  rationale: "Severe CRS / ICANS may be fatal if untreated."
+- condition: "Step-up dose delayed >7 days"
+  modification: "Restart step-up at the previous tolerated dose level (per FDA label
+    / MonumenTAL-1 protocol)."
 
 ukraine_availability:
   all_components_registered: false
@@ -53,33 +64,33 @@ ukraine_availability:
     referral only.
 
 sources:
-  - SRC-NCCN-MM-2025
+- SRC-NCCN-MM-2025
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Talquetamab step-up dosing (cycle 1 inpatient). CRS peak during
 # step-up. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна температура у дні step-up"
-    action_ua: "Звертайтесь у лікарню негайно — будь-яка лихоманка може бути CRS"
-    urgency: er_now
-    cycle_day_window: "Day 1-7 step-up"
-    sources:
-      - SRC-NCCN-MM-2025
-  - trigger_ua: "Висока лихоманка, низький тиск"
-    action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-MM-2025
-  - trigger_ua: "Розмиття мови, плутаність свідомості"
-    action_ua: "Звертайтесь у лікарню негайно — нейротоксичність бісспецифіку"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-MM-2025
-  - trigger_ua: "Зміна смаку (їжа здається картонною)"
-    action_ua: "Очікувано на тлі талкетамабу — обговоріть нутриційну підтримку на візиті"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-MM-2025
+- trigger_ua: "Помірна температура у дні step-up"
+  action_ua: "Звертайтесь у лікарню негайно — будь-яка лихоманка може бути CRS"
+  urgency: er_now
+  cycle_day_window: "Day 1-7 step-up"
+  sources:
+  - SRC-NCCN-MM-2025
+- trigger_ua: "Висока лихоманка, низький тиск"
+  action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-MM-2025
+- trigger_ua: "Розмиття мови, плутаність свідомості"
+  action_ua: "Звертайтесь у лікарню негайно — нейротоксичність бісспецифіку"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-MM-2025
+- trigger_ua: "Зміна смаку (їжа здається картонною)"
+  action_ua: "Очікувано на тлі талкетамабу — обговоріть нутриційну підтримку на візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-MM-2025
 
 last_reviewed: "2026-05-01"
 notes: >

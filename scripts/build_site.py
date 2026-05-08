@@ -119,6 +119,7 @@ _DISEASE_SCOPED_DIRS = {
     "regimens",
     "redflags",
     "biomarker_actionability",
+    "questionnaires",  # disease_id present in every questionnaire; moves ~155 KB compressed out of core
 }
 
 
@@ -155,6 +156,16 @@ def _disease_id_for_yaml(yaml_text: str, arc_path: str) -> str | None:
         return m.group(1).upper()
     # redflags: relevant_diseases — only attribute when it pins to a
     # single concrete disease. Universal / multi-disease RFs stay in core.
+    # Handles both inline list `[DIS-X]` and block-list format.
+    m = _re.search(
+        r"^relevant_diseases\s*:\s*\[([^\]]+)\]",
+        yaml_text, _re.MULTILINE,
+    )
+    if m:
+        items = [t.strip() for t in m.group(1).split(",") if t.strip()]
+        dis = [t.upper() for t in items if t.upper().startswith("DIS-")]
+        if len(dis) == 1:
+            return dis[0]
     m = _re.search(
         r"^relevant_diseases\s*:\s*\n((?:\s*-\s*\S+\s*\n)+)",
         yaml_text, _re.MULTILINE,
@@ -255,9 +266,9 @@ def bundle_engine(output_dir: Path) -> dict:
 
       1. `openonco-engine-core.zip` — code + schemas + validation +
          shared content (drugs, sources, biomarkers, tests,
-         supportive_care, monitoring, workups, questionnaires,
-         contraindications, mdt_skills, diseases, plus universal
-         redflags and any indications/algorithms/regimens/RFs/BMA cells
+         supportive_care, monitoring, workups, contraindications,
+         mdt_skills, diseases, plus universal redflags and any
+         indications/algorithms/regimens/RFs/BMAs/questionnaires
          that don't pin to a single disease). /try.html fetches this
          first — small enough to make the page interactive quickly.
 

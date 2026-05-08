@@ -1,0 +1,42 @@
+id: ALGO-EPITHELIOID-SARCOMA-1L
+applicable_to_disease: DIS-EPITHELIOID-SARCOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic therapy for advanced (metastatic or locally
+  advanced unresectable) epithelioid sarcoma. Tazemetostat (EZH2
+  inhibitor) is the only FDA-approved targeted therapy — requires
+  SMARCB1/INI1 loss confirmed by IHC. Doxorubicin-based cytotoxic
+  chemo is an alternative for fit patients, particularly for large
+  tumor burden or rapidly progressive disease.
+
+output_indications:
+  - IND-EPITHELIOID-SARCOMA-1L-TAZEMETOSTAT
+
+default_indication: IND-EPITHELIOID-SARCOMA-1L-TAZEMETOSTAT
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "SMARCB1/INI1 loss confirmed by IHC"
+    if_true:
+      result: IND-EPITHELIOID-SARCOMA-1L-TAZEMETOSTAT
+    if_false:
+      result: IND-EPITHELIOID-SARCOMA-1L-TAZEMETOSTAT
+    notes: >
+      INI1 loss is present in ~90% of epithelioid sarcoma — effectively
+      universal. If IHC is unavailable or equivocal, tazemetostat is
+      still appropriate pending confirmation. Free-text condition without RF.
+
+sources:
+  - SRC-EZH202-GOUNDER-2020
+  - SRC-ESMO-SARCOMA-2024
+last_reviewed: "2026-05-04"
+notes: >
+  Tazemetostat is the only FDA-approved targeted therapy for epithelioid
+  sarcoma (accelerated approval January 2020 based on EZH-202 ORR ~15%).
+  Doxorubicin-based chemotherapy is commonly used in clinical practice
+  for high-volume/rapidly progressive disease — not encoded here as a
+  separate indication. SMARCB1/INI1 IHC should be performed on all
+  diagnostic biopsies of suspected epithelioid sarcoma.

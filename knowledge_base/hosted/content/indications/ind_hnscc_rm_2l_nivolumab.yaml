@@ -5,13 +5,12 @@ applicable_to:
   disease_id: DIS-HNSCC
   line_of_therapy: 2
   stage_requirements:
-    - "Recurrent or metastatic HNSCC (oral cavity, oropharynx, hypopharynx, or larynx)"
-    - "Progression during or within 6 months of platinum-based chemotherapy"
-    - "ICI-naive at 2L (no prior anti-PD-(L)1 therapy in 1L or earlier)"
-    - "ECOG PS 0-2"
+  - "Recurrent or metastatic HNSCC (oral cavity, oropharynx, hypopharynx, or larynx)"
+  - "Progression during or within 6 months of platinum-based chemotherapy"
+  - "ICI-naive at 2L (no prior anti-PD-(L)1 therapy in 1L or earlier)"
+  - "ECOG PS 0-2"
   biomarker_requirements_required: []
-  biomarker_requirements_excluded:
-    - "Prior anti-PD-(L)1 therapy (pembrolizumab, atezolizumab, etc.) — ICI re-challenge not validated"
+  biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 2
     notes: "CheckMate-141 enrolled ECOG 0-1; ECOG 2 accepted clinically per NCCN"
@@ -19,8 +18,8 @@ applicable_to:
 recommended_regimen: REG-NIVOLUMAB-MONO
 concurrent_therapy: []
 followed_by:
-  - "CT CAP response assessment q9-12 weeks"
-  - "Continue until progression or unacceptable toxicity"
+- "CT CAP response assessment q9-12 weeks"
+- "Continue until progression or unacceptable toxicity"
 
 evidence_level: high
 strength_of_recommendation: strong
@@ -40,30 +39,16 @@ expected_outcomes:
     PD-L1 ≥1% subgroup: OS HR 0.55. FDA approved November 2016.
     Modern context: primary 2L population is CPS <1 EXTREME-treated patients.
 
-hard_contraindications:
-  - "Prior anti-PD-(L)1 therapy (pembrolizumab, nivolumab, atezolizumab, durvalumab)"
-  - "Active autoimmune disease requiring systemic immunosuppression (prednisone >10 mg/day)"
-  - "Active interstitial lung disease / pneumonitis"
-  - "Solid organ transplant recipient"
-
+hard_contraindications: []
 red_flags_triggering_alternative:
-  - condition: "Prior pembrolizumab 1L (ICI-experienced): platinum chemotherapy preferred 2L (no ICI re-challenge data)"
-  - condition: "Rapid life-threatening disease progression: consider platinum chemotherapy for faster response"
-  - RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK
-
+- RF-HNSCC-INFECTION-SCREENING
+- RF-HNSCC-ORGAN-DYSFUNCTION
 required_tests:
-  - TEST-CT-CAP
-  - TEST-CBC
-  - TEST-CMP
-  - TEST-LFT
-  - "TSH + cortisol (baseline — irAE endocrine monitoring)"
-  - "PD-L1 by SP263 or 28-8 (informative — PD-L1 ≥1% predicts greater benefit; not required for prescribing)"
-  - "ECOG PS assessment"
-
-desired_tests:
-  - "HPV status (oropharyngeal HNSCC — informative for prognosis; HPV+ has better baseline outcomes)"
-  - "EBV status (nasopharyngeal component assessment)"
-
+- TEST-CT-CAP
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+desired_tests: []
 rationale: >
   CheckMate-141 (Ferris 2016, NEJM; n=361): nivolumab 3 mg/kg q2w (now given as
   flat 240 mg q2w) vs investigator's choice chemotherapy in platinum-refractory,
@@ -83,14 +68,14 @@ ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 
 sources:
-  - source_id: SRC-CHECKMATE141-FERRIS-2016
-    position: supports
-    relevant_quote_paraphrase: "CheckMate-141 (n=361): nivolumab vs investigator choice, platinum-refractory ICI-naive HNSCC; mOS 7.5 vs 5.1m (HR 0.70, p=0.01); 1y OS 36% vs 16.6%; NCCN Cat 1"
+- source_id: SRC-CHECKMATE141-FERRIS-2016
+  position: supports
+  relevant_quote_paraphrase: "CheckMate-141 (n=361): nivolumab vs investigator choice, platinum-refractory ICI-naive HNSCC; mOS 7.5 vs 5.1m (HR 0.70, p=0.01); 1y OS 36% vs 16.6%; NCCN Cat 1"
 
 do_not_do:
-  - "Не призначати при попередній ICI-терапії (пembro, атезолізумаб) — повторний ICI не підтверджений"
-  - "Не відміняти нівалумаб при ендокринних іrAE — гормональна замісна терапія без відміни"
-  - "Не призначати при активному аутоімунному захворюванні під системними ГКС"
+- "Не призначати при попередній ICI-терапії (пembro, атезолізумаб) — повторний ICI не підтверджений"
+- "Не відміняти нівалумаб при ендокринних іrAE — гормональна замісна терапія без відміни"
+- "Не призначати при активному аутоімунному захворюванні під системними ГКС"
 
 time_critical: false
 last_reviewed: "2026-05-04"

@@ -1,0 +1,47 @@
+id: ALGO-GIST-2L
+applicable_to_disease: DIS-GIST
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L systemic therapy for advanced/metastatic GIST after imatinib
+  failure (resistance or intolerance). Sunitinib is the standard-of-care
+  2L option for non-PDGFRA D842V GIST. PDGFRA D842V should proceed to
+  avapritinib (which is active at any line in this genotype).
+
+output_indications:
+  - IND-GIST-2L-SUNITINIB
+  - IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
+
+default_indication: IND-GIST-2L-SUNITINIB
+alternative_indication: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "PDGFRA D842V mutation positive"
+    if_true:
+      result: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
+      notes: "Avapritinib active at any line for PDGFRA D842V; sunitinib has no meaningful activity in this genotype"
+    if_false:
+      next_step: 2
+    notes: "Free-text condition without RF; engine routes to default."
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Imatinib-resistant GIST (any KIT genotype or WT)"
+        - condition: "Imatinib-intolerant GIST"
+    if_true:
+      result: IND-GIST-2L-SUNITINIB
+    if_false:
+      result: IND-GIST-2L-SUNITINIB
+    notes: "Free-text condition; default to sunitinib for 2L non-D842V GIST."
+
+sources:
+  - SRC-NCCN-GIST-2025
+last_reviewed: "2026-05-04"
+notes: >
+  Sunitinib is Category 1 for 2L GIST after imatinib failure (non-D842V).
+  PDGFRA D842V routes to avapritinib (re-uses the 1L avapritinib indication
+  as avapritinib is active regardless of prior therapy line in D842V).
+  Regorafenib is 3L standard after sunitinib failure; not encoded here.
+  Ripretinib is 4L (encoded separately as IND-GIST-4L-RIPRETINIB).

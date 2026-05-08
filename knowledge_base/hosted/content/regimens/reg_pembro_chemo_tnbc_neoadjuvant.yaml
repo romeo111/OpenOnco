@@ -4,49 +4,52 @@ name_ua: "Пембролізумаб + хіміо (TNBC неоад'юв)"
 alternate_names: ["KEYNOTE-522 regimen"]
 
 components:
-  - drug_id: DRUG-PEMBROLIZUMAB
-    dose: "200 mg IV q3 weeks"
-    schedule: "Days 1 of cycles 1-8 (4 cycles each phase)"
-    route: IV
-  - drug_id: DRUG-PACLITAXEL
-    dose: "80 mg/m² IV weekly"
-    schedule: "Cycles 1-4 (12 weekly doses)"
-    route: IV
-  - drug_id: DRUG-CARBOPLATIN
-    dose: "AUC 5 IV"
-    schedule: "Cycles 1-4 q3 weeks (or weekly AUC 1.5)"
-    route: IV
-  - drug_id: DRUG-DOXORUBICIN
-    dose: "60 mg/m² IV"
-    schedule: "Cycles 5-8 q3 weeks"
-    route: IV
-  - drug_id: DRUG-CYCLOPHOSPHAMIDE
-    dose: "600 mg/m² IV"
-    schedule: "Cycles 5-8 q3 weeks"
-    route: IV
+- drug_id: DRUG-PEMBROLIZUMAB
+  dose: "200 mg IV q3 weeks"
+  schedule: "Days 1 of cycles 1-8 (4 cycles each phase)"
+  route: IV
+- drug_id: DRUG-PACLITAXEL
+  dose: "80 mg/m² IV weekly"
+  schedule: "Cycles 1-4 (12 weekly doses)"
+  route: IV
+- drug_id: DRUG-CARBOPLATIN
+  dose: "AUC 5 IV"
+  schedule: "Cycles 1-4 q3 weeks (or weekly AUC 1.5)"
+  route: IV
+- drug_id: DRUG-DOXORUBICIN
+  dose: "60 mg/m² IV"
+  schedule: "Cycles 5-8 q3 weeks"
+  route: IV
+- drug_id: DRUG-CYCLOPHOSPHAMIDE
+  dose: "600 mg/m² IV"
+  schedule: "Cycles 5-8 q3 weeks"
+  route: IV
 
 cycle_length_days: 21
 total_cycles: "8 (paclitaxel/carbo+pembro phase 1-4, then AC+pembro phase 5-8)"
 toxicity_profile: severe
 
 premedication:
-  - "Dexamethasone for paclitaxel + AC"
-  - "Antiemetic protocol (high-emetogenic for AC)"
+- "Dexamethasone for paclitaxel + AC"
+- "Antiemetic protocol (high-emetogenic for AC)"
 mandatory_supportive_care:
-  - SUP-G-CSF-PRIMARY-PROPHYLAXIS-PROSTATE
-  - SUP-BONE-HEALTH-PROSTATE
+- SUP-G-CSF-PRIMARY-PROPHYLAXIS-PROSTATE
+- SUP-BONE-HEALTH-PROSTATE
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Immune-mediated adverse event G≥3"
-    modification: "Hold pembrolizumab; corticosteroids; permanent discontinuation if not resolved"
-  - condition: "Cardiotoxicity from AC"
-    modification: "Cardiology evaluation"
+- condition: "Immune-mediated adverse event G≥3"
+  modification: "Hold pembrolizumab; corticosteroids; permanent discontinuation if
+    not resolved"
+- condition: "Cardiotoxicity from AC"
+  modification: "Cardiology evaluation"
 
 ukraine_availability:
   all_components_registered: true
   all_components_reimbursed: false
-  notes: "Pembrolizumab registered; TNBC neoadjuvant indication reimbursement varies. Chemo backbone reimbursed. Out-of-pocket for pembro adds significant cost; clinical-review queue item."
+  notes: "Pembrolizumab registered; TNBC neoadjuvant indication reimbursement varies.
+    Chemo backbone reimbursed. Out-of-pocket for pembro adds significant cost; clinical-review
+    queue item."
 
 sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-EARLY-2024]
 
@@ -55,52 +58,52 @@ sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-EARLY-2024]
 # Mixes IO irAEs with platinum + anthracycline + cyclophosphamide.
 # STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Випадіння волосся, помірна нудота"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Поколювання у пальцях рук і ніг"
-    action_ua: "Очікувано від паклітакселу — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Шкірний свербіж, помірна втома"
-    action_ua: "Очікувано від пембролізумабу — зволожувач"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Помірна діарея"
-    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Жовтяниця, темна сеча"
-    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Виражена слабкість, постійна спрага"
-    action_ua: "Подзвоніть у клініку того ж дня — щитоподібна реакція"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Задишка при підйомі сходами або в стані спокою"
-    action_ua: "Подзвоніть у клініку того ж дня — антрацикліни впливають на серце"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Тяжка діарея, сильна задишка або біль у грудях"
-    action_ua: "Звертайтесь у лікарню негайно"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BREAST-2025
+- trigger_ua: "Випадіння волосся, помірна нудота"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Поколювання у пальцях рук і ніг"
+  action_ua: "Очікувано від паклітакселу — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Шкірний свербіж, помірна втома"
+  action_ua: "Очікувано від пембролізумабу — зволожувач"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Помірна діарея"
+  action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Жовтяниця, темна сеча"
+  action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Виражена слабкість, постійна спрага"
+  action_ua: "Подзвоніть у клініку того ж дня — щитоподібна реакція"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Задишка при підйомі сходами або в стані спокою"
+  action_ua: "Подзвоніть у клініку того ж дня — антрацикліни впливають на серце"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Тяжка діарея, сильна задишка або біль у грудях"
+  action_ua: "Звертайтесь у лікарню негайно"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BREAST-2025
 
 last_reviewed:
 notes: >
@@ -108,6 +111,8 @@ notes: >
   PD-L1 status). Continuation: 9 additional cycles of pembrolizumab
   adjuvant for total ~1 year of immunotherapy.
 notes_ua: >
-  KEYNOTE-522: pCR + EFS виграш in stage II-III TNBC (regardless of PD-L1 status). Continuation: 9 additional цикли of пембролізумаб ад'ювантний for total ~1 year of імунотерапія.
+  KEYNOTE-522: pCR + EFS виграш in stage II-III TNBC (regardless of PD-L1 status).
+  Continuation: 9 additional цикли of пембролізумаб ад'ювантний for total ~1 year
+  of імунотерапія.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

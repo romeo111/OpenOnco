@@ -1,0 +1,89 @@
+id: IND-BCC-1L-SONIDEGIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-BCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Locally advanced BCC (laBCC) not amenable to curative surgery or radiation (FDA label restricted to laBCC; NOT for metastatic BCC)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-SMO
+      required: false
+      value_constraint: "SMO activating mutation — supports eligibility; HH pathway activation assumed in all laBCC"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-SONIDEGIB-BCC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~56% (laBCC, BOLT 200 mg, 30-month update)"
+  complete_response: "~20% (laBCC)"
+  progression_free_survival: "Median ~26 months (BOLT 200 mg, 30-month update)"
+  overall_survival_5y: "Mature OS data limited; disease-stabilizing in most responders"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-EXCISIONAL-SKIN-BIOPSY
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Sonidegib (SMO antagonist, second-generation HHI) was approved for
+  locally advanced BCC in 2015. BOLT trial: 200 mg daily — ORR ~56% at
+  30 months in laBCC (higher than ERIVANCE vismodegib data, though cross-
+  trial comparison is indirect). FDA label restricts to laBCC (not metastatic
+  BCC, unlike vismodegib). Very long half-life (~28 days) — prolonged
+  teratogenicity counseling required. CK monitoring for rhabdomyolysis
+  (class effect, more prominent at 800 mg — 200 mg has better tolerability).
+  NCCN Category 1 for laBCC alongside vismodegib.
+
+rationale_ua: >
+  Сонідегіб (SMO-антагоніст, 2-ге покоління) — схвалено для laBCC 2015.
+  BOLT (200 мг): ORR ~56% при 30 міс. Тільки для laBCC (не mBCC). Тривалий T½
+  (~28 днів) — тривале консультування з контрацепції. NCCN Category 1.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-SKIN-2025
+    position: supports
+    relevant_quote_paraphrase: "Sonidegib is NCCN Category 1 for locally advanced BCC (not metastatic); alternative to vismodegib"
+
+known_controversies:
+  - topic: "Vismodegib vs sonidegib for laBCC"
+    positions:
+      - position: "Vismodegib — longer track record, approved for mBCC as well; broader label"
+        sources: [SRC-NCCN-SKIN-2025]
+      - position: "Sonidegib — higher numerical ORR in BOLT 30-month update (~56% vs ~30%); PFS ~26 months; longer half-life means fewer doses if adherence is concern"
+        sources: [SRC-NCCN-SKIN-2025]
+    our_default: "Both NCCN Category 1 for laBCC; vismodegib preferred when mBCC (sonidegib not FDA-approved for mBCC); choice based on availability, tolerability, patient preference"
+
+do_not_do:
+  - "НЕ призначати при метастатичному БКК — FDA схвалення лише для laBCC"
+  - "НЕ призначати під час вагітності — BBW тератогенність"
+  - "НЕ ігнорувати КФК — контролюйте при симптомах м'язів (ризик рабдоміолізу)"
+  - "НЕ призначати без контрацепції — 20 місяців контрацепції після останньої дози для жінок"
+
+do_not_do_en:
+  - "Do NOT prescribe for metastatic BCC — FDA approval is laBCC only"
+  - "Do NOT prescribe during pregnancy — Black Box Warning teratogenicity"
+  - "Do NOT ignore CK — monitor if muscle symptoms (rhabdomyolysis risk)"
+  - "Do NOT prescribe without contraception — 20 months post-dose contraception required for females"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track HHI alternative
+  for laBCC (not mBCC). BOLT 200 mg arm has strong laBCC ORR data.
+  Key restriction: laBCC only per FDA label.

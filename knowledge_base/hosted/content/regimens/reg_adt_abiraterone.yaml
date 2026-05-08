@@ -4,18 +4,18 @@ name_ua: "АДТ + абіратерон + преднізолон (безпере
 alternate_names: ["LATITUDE regimen (mHSPC)", "COU-AA-302 regimen (mCRPC)"]
 
 components:
-  - drug_id: DRUG-LEUPROLIDE
-    dose: "11.25 mg IM q3 months"
-    schedule: "Continuous from initiation"
-    route: IM
-  - drug_id: DRUG-ABIRATERONE
-    dose: "1000 mg PO daily on empty stomach"
-    schedule: "Continuous"
-    route: PO
-  - drug_id: DRUG-PREDNISONE
-    dose: "5 mg PO BID (mCRPC) OR 5 mg PO daily (mHSPC)"
-    schedule: "Continuous with abiraterone"
-    route: PO
+- drug_id: DRUG-LEUPROLIDE
+  dose: "11.25 mg IM q3 months"
+  schedule: "Continuous from initiation"
+  route: IM
+- drug_id: DRUG-ABIRATERONE
+  dose: "1000 mg PO daily on empty stomach"
+  schedule: "Continuous"
+  route: PO
+- drug_id: DRUG-PREDNISONE
+  dose: "5 mg PO BID (mCRPC) OR 5 mg PO daily (mHSPC)"
+  schedule: "Continuous with abiraterone"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "Continuous until progression or unacceptable toxicity"
@@ -23,14 +23,14 @@ toxicity_profile: moderate
 
 premedication: []
 mandatory_supportive_care:
-  - SUP-BONE-HEALTH-PROSTATE
+- SUP-BONE-HEALTH-PROSTATE
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Severe hepatic impairment (Child-Pugh C)"
-    modification: "Avoid abiraterone"
-  - condition: "Hypokalemia or fluid retention"
-    modification: "Increase prednisone dose, add antihypertensive / K+ supplement"
+- condition: "Severe hepatic impairment (Child-Pugh C)"
+  modification: "Avoid abiraterone"
+- condition: "Hypokalemia or fluid retention"
+  modification: "Increase prednisone dose, add antihypertensive / K+ supplement"
 
 ukraine_availability:
   all_components_registered: true
@@ -45,42 +45,45 @@ sources: [SRC-NCCN-PROSTATE-2025, SRC-ESMO-PROSTATE-2024]
 # retention. ADT signature: hot flashes, BMD, libido, cardiac.
 # STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Гарячі припливи, втрата лібідо, втома"
-    action_ua: "Очікувані ефекти від ADT — занотовуйте, обговоріть стратегії на візиті"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
-    action_ua: "Абіратерон може підвищувати тиск — занотовуйте показники"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-  - trigger_ua: "М'язова слабкість, судоми ніг"
-    action_ua: "Можлива знижена кількість калію — занотовуйте, обговоріть на візиті"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-  - trigger_ua: "Жовтяниця, потемніння сечі"
-    action_ua: "Подзвоніть у клініку того ж дня — абіратерон може впливати на печінку"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Сильні набряки гомілок, задишка при навантаженні"
-    action_ua: "Подзвоніть у клініку того ж дня — можлива затримка рідини або серцева недостатність"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-  - trigger_ua: "Сильний головний біль або запаморочення з підвищеним тиском"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція антигіпертензивної терапії"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-PROSTATE-2025
-  - trigger_ua: "Раптовий сильний головний біль, порушення зору або мовлення, слабкість в одній стороні тіла"
-    action_ua: "Звертайтесь у лікарню негайно — ADT підвищує ризик інсульту"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Гарячі припливи, втрата лібідо, втома"
+  action_ua: "Очікувані ефекти від ADT — занотовуйте, обговоріть стратегії на візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+  action_ua: "Абіратерон може підвищувати тиск — занотовуйте показники"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "М'язова слабкість, судоми ніг"
+  action_ua: "Можлива знижена кількість калію — занотовуйте, обговоріть на візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Жовтяниця, потемніння сечі"
+  action_ua: "Подзвоніть у клініку того ж дня — абіратерон може впливати на печінку"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Сильні набряки гомілок, задишка при навантаженні"
+  action_ua: "Подзвоніть у клініку того ж дня — можлива затримка рідини або серцева
+    недостатність"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Сильний головний біль або запаморочення з підвищеним тиском"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція антигіпертензивної
+    терапії"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-PROSTATE-2025
+- trigger_ua: "Раптовий сильний головний біль, порушення зору або мовлення, слабкість
+    в одній стороні тіла"
+  action_ua: "Звертайтесь у лікарню негайно — ADT підвищує ризик інсульту"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-PROSTATE-2025
 
 last_reviewed:
 notes: >
@@ -90,7 +93,9 @@ notes: >
 
   Cross-disease use: same regimen reused for mCRPC 1L and high-risk mHSPC.
 notes_ua: >
-  LATITUDE: ADT + абіратерон перевершує ADT alone in високого ризику mHSPC. COU-AA-302 / COU-AA-301: усталений in chemo-naive and post-chemo mCRPC. Always with prednisone — NEVER alone (mineralocorticoid syndrome).
+  LATITUDE: ADT + абіратерон перевершує ADT alone in високого ризику mHSPC. COU-AA-302
+  / COU-AA-301: усталений in chemo-naive and post-chemo mCRPC. Always with prednisone
+  — NEVER alone (mineralocorticoid syndrome).
 
   Cross-хвороба use: same схема reused for mCRPC 1L and високого ризику mHSPC.
 ukrainian_review_status: pending_clinical_signoff

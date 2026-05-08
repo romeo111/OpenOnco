@@ -2,109 +2,115 @@ id: REG-ATRA-ATO-IDA-APL
 name: "ATRA + ATO + Idarubicin (APL high-risk) — modified APL0406 / AIDA-style"
 name_ua: "ATRA + ATO + Ідарубіцин (ГПЛ високого ризику) — модифікована APL0406 / AIDA-схема"
 alternate_names:
-  - "ATRA+ATO+IDA"
-  - "Triplet APL induction high-risk"
-  - "AIDA + ATO"
+- "ATRA+ATO+IDA"
+- "Triplet APL induction high-risk"
+- "AIDA + ATO"
 
 components:
-  - drug_id: DRUG-ATRA
-    dose: "45 mg/m²/day PO (divided BID with food)"
-    schedule: "continuous from day 1 until CR; then per consolidation"
-    route: PO
-  - drug_id: DRUG-ATO
-    dose: "0.15 mg/kg/day"
-    schedule: "IV daily until CR; then per consolidation"
-    route: IV
-  - drug_id: DRUG-IDARUBICIN
-    dose: "12 mg/m²"
-    schedule: "IV days 2, 4, 6, 8 (4 doses during induction)"
-    route: IV
+- drug_id: DRUG-ATRA
+  dose: "45 mg/m²/day PO (divided BID with food)"
+  schedule: "continuous from day 1 until CR; then per consolidation"
+  route: PO
+- drug_id: DRUG-ATO
+  dose: "0.15 mg/kg/day"
+  schedule: "IV daily until CR; then per consolidation"
+  route: IV
+- drug_id: DRUG-IDARUBICIN
+  dose: "12 mg/m²"
+  schedule: "IV days 2, 4, 6, 8 (4 doses during induction)"
+  route: IV
 
 cycle_length_days:
-total_cycles: "Induction to CR + 2-3 consolidation cycles (anthracycline-based) ± maintenance"
+total_cycles: "Induction to CR + 2-3 consolidation cycles (anthracycline-based) ±
+  maintenance"
 
 toxicity_profile: severe
 
 premedication:
-  - "Prophylactic dexamethasone 10 mg IV BID (mandatory in high-risk for DS prophylaxis)"
-  - "Aggressive electrolyte repletion (K+ >4.0, Mg2+ >1.8) for ATO"
-  - "Daily ECG during ATO; baseline + serial echo for anthracycline (LVEF)"
-  - "Hyperleukocytosis management at presentation: hydroxyurea 500-1000 mg BID PO; consider leukapheresis if WBC >100K"
-  - "Aggressive DIC management (transfusion plt to >50K, fibrinogen >150)"
+- "Prophylactic dexamethasone 10 mg IV BID (mandatory in high-risk for DS prophylaxis)"
+- "Aggressive electrolyte repletion (K+ >4.0, Mg2+ >1.8) for ATO"
+- "Daily ECG during ATO; baseline + serial echo for anthracycline (LVEF)"
+- "Hyperleukocytosis management at presentation: hydroxyurea 500-1000 mg BID PO; consider
+  leukapheresis if WBC >100K"
+- "Aggressive DIC management (transfusion plt to >50K, fibrinogen >150)"
 mandatory_supportive_care:
-  - SUP-TLS-PROPHYLAXIS
-  - SUP-HBV-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
+- SUP-TLS-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "QTc >500 ms (ATO)"
-    modification: "Hold ATO; correct electrolytes; resume at lower dose"
-    rationale: "Torsades risk"
-    source_refs:
-      - SRC-ELN-APL-2019
-  - condition: "Cardiac dysfunction (LVEF <50%) precluding idarubicin"
-    modification: "Switch to alternative regimen — classic AIDA ATRA + idarubicin, or ATRA + ATO chemo-free with intensified DS prophylaxis (off-label)"
-    rationale: "Anthracycline cardiotoxicity"
-    source_refs:
-      - SRC-ELN-APL-2019
-  - condition: "Differentiation syndrome (active)"
-    modification: "Dexamethasone 10 mg IV BID; consider temporary ATRA/ATO hold; do NOT routinely hold idarubicin"
-    rationale: "DS management standard"
+- condition: "QTc >500 ms (ATO)"
+  modification: "Hold ATO; correct electrolytes; resume at lower dose"
+  rationale: "Torsades risk"
+  source_refs:
+  - SRC-ELN-APL-2019
+- condition: "Cardiac dysfunction (LVEF <50%) precluding idarubicin"
+  modification: "Switch to alternative regimen — classic AIDA ATRA + idarubicin, or
+    ATRA + ATO chemo-free with intensified DS prophylaxis (off-label)"
+  rationale: "Anthracycline cardiotoxicity"
+  source_refs:
+  - SRC-ELN-APL-2019
+- condition: "Differentiation syndrome (active)"
+  modification: "Dexamethasone 10 mg IV BID; consider temporary ATRA/ATO hold; do
+    NOT routinely hold idarubicin"
+  rationale: "DS management standard"
 
 ukraine_availability:
   all_components_registered: true
   all_components_reimbursed: true
-  notes: "All three components НСЗУ-reimbursed for APL. Idarubicin and daunorubicin are interchangeable as anthracycline component."
+  notes: "All three components НСЗУ-reimbursed for APL. Idarubicin and daunorubicin
+    are interchangeable as anthracycline component."
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-APL-2019
-  - SRC-APL0406-LOCOCO-2013
+- SRC-NCCN-AML-2025
+- SRC-ELN-APL-2019
+- SRC-APL0406-LOCOCO-2013
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # ATRA + ATO + idarubicin for high-risk APL induction. Differentiation
 # syndrome + DIC + QT prolongation are early-induction killers; cytopenia
 # from idarubicin + cardio overlay. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Випадіння волосся, помірна нудота"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-ELN-APL-2019
-  - trigger_ua: "Сухість шкіри, тріщини на губах, головний біль (ATRA)"
-    action_ua: "Очікувано від ATRA — зволожувач, занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-ELN-APL-2019
-  - trigger_ua: "Раптовий набір ваги, набряки, задишка, лихоманка під час перших 2 тижнів"
-    action_ua: "Звертайтесь у лікарню негайно — синдром диференціації, потенційно фатальний без лікування"
-    urgency: er_now
-    cycle_day_window: "Day 1-14"
-    sources:
-      - SRC-NCCN-AML-2025
-      - SRC-ELN-APL-2019
-  - trigger_ua: "Кровотеча з ясен, з носа, синці без причини"
-    action_ua: "Звертайтесь у лікарню негайно — ДВЗ-синдром, потрібна термінова трансфузія"
-    urgency: er_now
-    cycle_day_window: "Day 1-14"
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Серцебиття, запаморочення, втрата свідомості"
-    action_ua: "Подзвоніть у клініку того ж дня — ATO може подовжувати QT"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Задишка при підйомі сходами або в стані спокою, набряки"
-    action_ua: "Подзвоніть у клініку того ж дня — антрацикліни впливають на серце"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-AML-2025
+- trigger_ua: "Випадіння волосся, помірна нудота"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-ELN-APL-2019
+- trigger_ua: "Сухість шкіри, тріщини на губах, головний біль (ATRA)"
+  action_ua: "Очікувано від ATRA — зволожувач, занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-ELN-APL-2019
+- trigger_ua: "Раптовий набір ваги, набряки, задишка, лихоманка під час перших 2 тижнів"
+  action_ua: "Звертайтесь у лікарню негайно — синдром диференціації, потенційно фатальний
+    без лікування"
+  urgency: er_now
+  cycle_day_window: "Day 1-14"
+  sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+- trigger_ua: "Кровотеча з ясен, з носа, синці без причини"
+  action_ua: "Звертайтесь у лікарню негайно — ДВЗ-синдром, потрібна термінова трансфузія"
+  urgency: er_now
+  cycle_day_window: "Day 1-14"
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Серцебиття, запаморочення, втрата свідомості"
+  action_ua: "Подзвоніть у клініку того ж дня — ATO може подовжувати QT"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Задишка при підйомі сходами або в стані спокою, набряки"
+  action_ua: "Подзвоніть у клініку того ж дня — антрацикліни впливають на серце"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-AML-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -115,6 +121,10 @@ notes: >
   dose tracking. Pregnancy gating mandatory (all 3 agents teratogenic).
   STUB — requires clinical co-lead signoff before publication.
 notes_ua: >
-  1L for високого ризику APL (Sanz WBC >10) per ELN 2019. ATRA + ATO + idarubicin is переважний when ATO available; classic AIDA (ATRA + idarubicin alone) is прийнятний alternative without ATO. Hyperleukocytosis-related DS prophylaxis and DIC management are обов'язковий. Cumulative anthracycline доза tracking. вагітність gating обов'язковий (all 3 agents teratogenic). STUB — requires clinical co-lead signoff before publication.
+  1L for високого ризику APL (Sanz WBC >10) per ELN 2019. ATRA + ATO + idarubicin
+  is переважний when ATO available; classic AIDA (ATRA + idarubicin alone) is прийнятний
+  alternative without ATO. Hyperleukocytosis-related DS prophylaxis and DIC management
+  are обов'язковий. Cumulative anthracycline доза tracking. вагітність gating обов'язковий
+  (all 3 agents teratogenic). STUB — requires clinical co-lead signoff before publication.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

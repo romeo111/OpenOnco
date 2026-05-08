@@ -8,49 +8,59 @@ components: []  # phases supersede; kept empty for back-compat with downstream
                 # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
 
 phases:
-  - name: induction
-    purpose_ua: "SMILE-індукція 2-4 цикли — комбінований режим Steroid + MTX + Ifosfamide + L-asparaginase + Etoposide для extranodal NK/T-cell lymphoma; провадить до RT 50 Gy при локалізованих stage I/II"
-    purpose_en: "SMILE induction 2-4 cycles — combined regimen Steroid + MTX + Ifosfamide + L-asparaginase + Etoposide for extranodal NK/T-cell lymphoma; followed by RT 50 Gy for localized stage I/II"
-    duration: "2-4 cycles × 28 days each"
-    timing_relative_to: "absolute"
-    optional: false
-    components:
-      - {drug_id: DRUG-DEXAMETHASONE, dose: "40 mg", schedule: "PO/IV days 2-4", route: PO}
-      - {drug_id: DRUG-METHOTREXATE, dose: "2 g/m²", schedule: "IV 6h infusion day 1; leucovorin rescue", route: IV}
-      - {drug_id: DRUG-IFOSFAMIDE, dose: "1.5 g/m²", schedule: "IV days 2-4; mesna co-administration", route: IV}
-      - {drug_id: DRUG-L-ASPARAGINASE, dose: "6000 IU/m²", schedule: "IM days 8, 10, 12, 14, 16, 18, 20", route: IM}
-      - {drug_id: DRUG-ETOPOSIDE, dose: "100 mg/m²", schedule: "IV days 2-4", route: IV}
-    sources:
-      - SRC-NCCN-BCELL-2025
+- name: induction
+  purpose_ua: "SMILE-індукція 2-4 цикли — комбінований режим Steroid + MTX + Ifosfamide
+    + L-asparaginase + Etoposide для extranodal NK/T-cell lymphoma; провадить до RT
+    50 Gy при локалізованих stage I/II"
+  purpose_en: "SMILE induction 2-4 cycles — combined regimen Steroid + MTX + Ifosfamide
+    + L-asparaginase + Etoposide for extranodal NK/T-cell lymphoma; followed by RT
+    50 Gy for localized stage I/II"
+  duration: "2-4 cycles × 28 days each"
+  timing_relative_to: "absolute"
+  optional: false
+  components:
+  - {drug_id: DRUG-DEXAMETHASONE, dose: "40 mg", schedule: "PO/IV days 2-4", 
+      route: PO}
+  - {drug_id: DRUG-METHOTREXATE, dose: "2 g/m²", schedule: "IV 6h infusion day 1;
+      leucovorin rescue", route: IV}
+  - {drug_id: DRUG-IFOSFAMIDE, dose: "1.5 g/m²", schedule: "IV days 2-4; mesna co-administration",
+    route: IV}
+  - {drug_id: DRUG-L-ASPARAGINASE, dose: "6000 IU/m²", schedule: "IM days 8, 10, 12,
+      14, 16, 18, 20", route: IM}
+  - {drug_id: DRUG-ETOPOSIDE, dose: "100 mg/m²", schedule: "IV days 2-4", route: 
+      IV}
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 cycle_length_days: 28
 total_cycles: "2-4 cycles induction; followed by RT 50 Gy для localized stage I/II"
 toxicity_profile: high
 
 premedication:
-  - "Hypersensitivity testing для L-asparaginase перед first dose"
-  - "Mesna 100% дози ifosfamide"
-  - "HD-MTX hydration + leucovorin rescue"
-  - "Antithrombin III monitoring (asparaginase risk thrombosis)"
+- "Hypersensitivity testing для L-asparaginase перед first dose"
+- "Mesna 100% дози ifosfamide"
+- "HD-MTX hydration + leucovorin rescue"
+- "Antithrombin III monitoring (asparaginase risk thrombosis)"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-GCSF-NEUTROPENIA
-  - SUP-ANTIEMETIC-PREMED
-
+- SUP-PJP-PROPHYLAXIS
+- SUP-GCSF-NEUTROPENIA
+- SUP-ANTIEMETIC-PREMED
 dose_adjustments:
-  - condition: "Asparaginase hypersensitivity"
-    modification: "Switch to PEG-asparaginase 2000 IU/m² day 8 only"
-  - condition: "CrCl <50"
-    modification: "Reduce ifosfamide 50%; reduce MTX до 1.5 g/m²"
-  - condition: "Pancreatitis history"
-    modification: "Replace SMILE з DeVIC (without asparaginase): dexamethasone + etoposide + ifosfamide + carboplatin"
-  - condition: "Coagulopathy"
-    modification: "Hold asparaginase; FFP support; reassess after"
+- condition: "Asparaginase hypersensitivity"
+  modification: "Switch to PEG-asparaginase 2000 IU/m² day 8 only"
+- condition: "CrCl <50"
+  modification: "Reduce ifosfamide 50%; reduce MTX до 1.5 g/m²"
+- condition: "Pancreatitis history"
+  modification: "Replace SMILE з DeVIC (without asparaginase): dexamethasone + etoposide
+    + ifosfamide + carboplatin"
+- condition: "Coagulopathy"
+  modification: "Hold asparaginase; FFP support; reassess after"
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "L-asparaginase обмежено доступний. PEG-asparaginase preferred якщо доступний. Альтернатива — DeVIC або P-GEMOX (gemcitabine-based)."
+  notes: "L-asparaginase обмежено доступний. PEG-asparaginase preferred якщо доступний.
+    Альтернатива — DeVIC або P-GEMOX (gemcitabine-based)."
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
@@ -60,6 +70,8 @@ notes: >
   Для localized stage I/II — concurrent CRT з RT 50 Gy + 2-3 cycles
   modified-DeVIC.
 notes_ua: >
-  STUB. Yamaguchi 2008 — Asian стандарт. Alternative — P-GEMOX (цисплатин + гемцитабін + оксаліплатин) для центрів без asparaginase. Для localized stage I/II — concurrent CRT з RT 50 Gy + 2-3 цикли modified-DeVIC.
+  STUB. Yamaguchi 2008 — Asian стандарт. Alternative — P-GEMOX (цисплатин + гемцитабін
+  + оксаліплатин) для центрів без asparaginase. Для localized stage I/II — concurrent
+  CRT з RT 50 Gy + 2-3 цикли modified-DeVIC.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

@@ -2,48 +2,55 @@ id: REG-CARBO-PEM-MOD-ELDERLY
 name: "Carboplatin + Pemetrexed (attenuated, NSCLC non-squamous elderly ≥75y)"
 name_ua: "Карбоплатин + Пеметрексед (ослаблений, НДРЛ несквамозний літні ≥75 р)"
 alternate_names:
-  - "Carbo-Pem elderly"
-  - "Modified carbo-pem ≥75"
+- "Carbo-Pem elderly"
+- "Modified carbo-pem ≥75"
 
 components:
-  - drug_id: DRUG-CARBOPLATIN
-    dose: "AUC 4 (Calvert formula; reduced from standard AUC 5-6)"
-    schedule: "day 1 of each 21-day cycle × 4 cycles"
-    route: IV
-  - drug_id: DRUG-PEMETREXED
-    dose: "400 mg/m² IV (reduced from standard 500 mg/m²)"
-    schedule: "day 1 of each 21-day cycle × 4 cycles induction; continue as maintenance until progression"
-    route: IV
+- drug_id: DRUG-CARBOPLATIN
+  dose: "AUC 4 (Calvert formula; reduced from standard AUC 5-6)"
+  schedule: "day 1 of each 21-day cycle × 4 cycles"
+  route: IV
+- drug_id: DRUG-PEMETREXED
+  dose: "400 mg/m² IV (reduced from standard 500 mg/m²)"
+  schedule: "day 1 of each 21-day cycle × 4 cycles induction; continue as maintenance
+    until progression"
+  route: IV
 
 cycle_length_days: 21
-total_cycles: "4 cycles induction; pemetrexed maintenance until progression / unacceptable toxicity"
+total_cycles: "4 cycles induction; pemetrexed maintenance until progression / unacceptable
+  toxicity"
 toxicity_profile: moderate
 
 premedication:
-  - "Folic acid 400-1000 µg PO daily (start 7d before, continue throughout pemetrexed)"
-  - "Vitamin B12 1000 µg IM q9w (start ≤7d before first dose, continue q9w)"
-  - "Dexamethasone 4 mg PO BID days -1, 0, +1 (rash prophylaxis)"
-  - "Antiemetic — moderate emetogenicity (5HT3 + dex)"
+- "Folic acid 400-1000 µg PO daily (start 7d before, continue throughout pemetrexed)"
+- "Vitamin B12 1000 µg IM q9w (start ≤7d before first dose, continue q9w)"
+- "Dexamethasone 4 mg PO BID days -1, 0, +1 (rash prophylaxis)"
+- "Antiemetic — moderate emetogenicity (5HT3 + dex)"
 mandatory_supportive_care:
-  - SUP-ANTIEMETIC-PREMED
+- SUP-ANTIEMETIC-PREMED
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "CrCl 45-60 mL/min"
-    modification: "Carboplatin AUC 3 (Calvert with measured CrCl); pemetrexed unchanged at 400 mg/m²"
-    source_refs: [SRC-NCCN-NSCLC-2025]
-  - condition: "CrCl <45 mL/min"
-    modification: "Pemetrexed contraindicated; consider gemcitabine + carboplatin or single-agent regimen"
-    source_refs: [SRC-NCCN-NSCLC-2025]
-  - condition: "ECOG 2 with comorbidities"
-    modification: "Consider single-agent carboplatin OR docetaxel; full doublet may not be tolerated"
-    source_refs: [SRC-NCCN-NSCLC-2025]
-  - condition: "G≥3 cytopenia"
-    modification: "Hold; resume next cycle at 75% of both agents on recovery; G-CSF if febrile neutropenia"
-  - condition: "G≥2 stomatitis OR fatigue persistent"
-    modification: "Pemetrexed dose reduction to 75%"
-  - condition: "Hearing loss / ototoxicity concern"
-    modification: "Carboplatin (which is preferred over cisplatin in elderly already) — continue with audiogram monitoring"
+- condition: "CrCl 45-60 mL/min"
+  modification: "Carboplatin AUC 3 (Calvert with measured CrCl); pemetrexed unchanged
+    at 400 mg/m²"
+  source_refs: [SRC-NCCN-NSCLC-2025]
+- condition: "CrCl <45 mL/min"
+  modification: "Pemetrexed contraindicated; consider gemcitabine + carboplatin or
+    single-agent regimen"
+  source_refs: [SRC-NCCN-NSCLC-2025]
+- condition: "ECOG 2 with comorbidities"
+  modification: "Consider single-agent carboplatin OR docetaxel; full doublet may
+    not be tolerated"
+  source_refs: [SRC-NCCN-NSCLC-2025]
+- condition: "G≥3 cytopenia"
+  modification: "Hold; resume next cycle at 75% of both agents on recovery; G-CSF
+    if febrile neutropenia"
+- condition: "G≥2 stomatitis OR fatigue persistent"
+  modification: "Pemetrexed dose reduction to 75%"
+- condition: "Hearing loss / ototoxicity concern"
+  modification: "Carboplatin (which is preferred over cisplatin in elderly already)
+    — continue with audiogram monitoring"
 
 ukraine_availability:
   all_components_registered: true
@@ -51,45 +58,45 @@ ukraine_availability:
   notes: "Карбоплатин + пеметрексед — реімбурсуються НСЗУ для НДРЛ несквамозного метастатичного."
 
 sources:
-  - SRC-NCCN-NSCLC-2025
-  - SRC-ESMO-NSCLC-METASTATIC-2024
+- SRC-NCCN-NSCLC-2025
+- SRC-ESMO-NSCLC-METASTATIC-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Attenuated carbo-pem for elderly NSCLC ≥75y. Same toxicities as
 # standard dose but lower-grade; ototoxicity + cytopenia + fatigue
 # dominate. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, помірна нудота"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Висип, помірна сухість шкіри"
-    action_ua: "Зволожувач; занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Шум у вухах, зниження слуху"
-    action_ua: "Подзвоніть у клініку того ж дня — карбоплатин впливає на слух"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Поколювання у пальцях, що погіршується"
-    action_ua: "Занотовуйте — обговоримо корекцію дози"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-NSCLC-2025
-  - trigger_ua: "Виражена слабкість, неможливість підвестися"
-    action_ua: "Подзвоніть у клініку того ж дня — ризик падінь у похилому віці"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Помірна втома, помірна нудота"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Висип, помірна сухість шкіри"
+  action_ua: "Зволожувач; занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Шум у вухах, зниження слуху"
+  action_ua: "Подзвоніть у клініку того ж дня — карбоплатин впливає на слух"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Поколювання у пальцях, що погіршується"
+  action_ua: "Занотовуйте — обговоримо корекцію дози"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-NSCLC-2025
+- trigger_ua: "Виражена слабкість, неможливість підвестися"
+  action_ua: "Подзвоніть у клініку того ж дня — ризик падінь у похилому віці"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-NSCLC-2025
 
 last_reviewed: "2026-04-27"
 reviewers: []

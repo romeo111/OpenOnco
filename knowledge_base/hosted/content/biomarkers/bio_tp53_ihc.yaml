@@ -1,0 +1,82 @@
+id: BIO-TP53-IHC
+names:
+  preferred: "TP53 IHC (aberrant p53 expression pattern)"
+  synonyms:
+    - "p53 IHC"
+    - "p53 immunohistochemistry"
+    - "aberrant p53 staining"
+    - "p53-abnormal by IHC"
+    - "TP53 aberrant expression"
+
+biomarker_type: protein_expression_ihc
+
+mutation_details:
+  gene_symbol: TP53
+  gene_id_ncbi: 7157
+  note: >
+    IHC-based surrogate for TP53 mutation. Two aberrant patterns recognized:
+    (1) Diffuse strong positivity: >80% of tumor nuclei with strong (3+) staining —
+    indicates gain-of-function or dominant-negative TP53 point mutation.
+    (2) Null/complete absence: 0% staining with internal positive controls intact —
+    indicates truncating/nonsense mutation or large deletion (loss-of-function).
+    Wild-type pattern = patchy/focal heterogeneous staining (10-70% of nuclei, 1-2+).
+    IHC concordance with sequencing: ~94-96% in endometrial, ~90% in serous ovarian.
+    False-negative rate (sequencing-positive, IHC wild-type): ~5-10% (missense not
+    at DBD hotspot or splice variants).
+
+measurement:
+  method: >
+    IHC on FFPE biopsy or resection specimen. Anti-p53 antibody (clone DO-7 or BP53-12
+    — most validated). Scoring per TransPORTEC criteria:
+    - Diffuse strong (abnormal): >80% cells, 3+ intensity (uniform nuclear)
+    - Null (abnormal): 0% staining with verified internal control positivity
+    - Wild-type (normal): focal / patchy, 1-2+ intensity
+    Pathologist sign-out must explicitly distinguish wild-type from null pattern.
+
+specimen_requirements:
+  - "FFPE tumor tissue (biopsy or resection)"
+  - "Internal positive controls (stromal fibroblasts, lymphocytes) must be positive to interpret null pattern as true loss rather than technical failure."
+  - "Minimum tumor content: >10% tumor nuclei for reliable scoring"
+
+interpretation_notes: >
+  Clinically relevant in:
+  1. Endometrial cancer (ESMO 2023 molecular classification): p53-abnormal IHC =
+     p53-abn subtype (highest-risk group: serous-like molecular profile; worst PFS/OS;
+     benefits from adjuvant chemotherapy + radiotherapy in stage I-II).
+     POLE-mut > dMMR > NSMP > p53-abn in prognosis hierarchy.
+  2. High-grade serous ovarian cancer: >96% of HGSOC show p53-abn IHC — used as
+     part of diagnostic workup (sensitivity marker for HGSOC subtype).
+  3. Not a therapeutic companion diagnostic per se — no drug requires p53 IHC
+     for approval as of 2026 — but directly guides adjuvant treatment intensity
+     in endometrial cancer per PORTEC-3 / ESMO-ESGO-ESTRO 2023.
+
+related_biomarkers:
+  - BIO-TP53-MUTATION
+  - BIO-DMMR-IHC
+  - BIO-MSI-STATUS
+  - BIO-POLE
+
+external_ids:
+  loinc: "85319-2"
+  hugo_gene_id: "11998"
+
+sources: [SRC-ESMO-ESGO-ESTRO-ENDOMETRIAL-2023, SRC-NCCN-UTERINE-2025]
+
+notes: >
+  Critical biomarker for endometrial cancer molecular subclassification (WHO 2020 /
+  FIGO 2023 / ESMO 2023). p53-abn endometrial cancers behave like HGSOC and require
+  aggressive adjuvant treatment regardless of stage. IHC is the preferred practical
+  method over sequencing alone because: (1) faster TAT, (2) cheaper, (3) handles
+  the full spectrum of TP53 alterations (missense, nonsense, splicing). However,
+  sequencing is needed for tumors with discordant IHC (equivocal pattern) or when
+  IHC controls are suboptimal.
+
+notes_ua: >
+  Критичний маркер для молекулярної класифікації раку ендометрію (ESMO 2023).
+  p53-аберантна (p53-abn) група — найвищий ризик рецидиву, поводить себе як
+  ВПЕС яєчника. Потребує ад'ювантної ХТ + ПТ навіть при I ст. (PORTEC-3 / ESMO).
+  ІГХ є стандартним скринінговим методом; сиквенс — для незрозумілих ІГХ-патернів.
+
+last_reviewed: "2026-05-05"
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

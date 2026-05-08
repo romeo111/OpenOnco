@@ -1,101 +1,123 @@
 id: REG-CILTACEL-MM-3L
-name: "Ciltacabtagene autoleucel (cilta-cel) BCMA CAR-T for R/R multiple myeloma after ≥3 prior lines — single infusion after Flu/Cy lymphodepletion (CARTITUDE-1)"
-name_ua: "Цилтакабтаген аутолейцел (cilta-cel) BCMA CAR-T для р/р множинної мієломи після ≥3 попередніх ліній — одна інфузія після лімфодеплеції Flu/Cy (CARTITUDE-1)"
+name: "Ciltacabtagene autoleucel (cilta-cel) BCMA CAR-T for R/R multiple myeloma after
+  ≥3 prior lines — single infusion after Flu/Cy lymphodepletion (CARTITUDE-1)"
+name_ua: "Цилтакабтаген аутолейцел (cilta-cel) BCMA CAR-T для р/р множинної мієломи
+  після ≥3 попередніх ліній — одна інфузія після лімфодеплеції Flu/Cy (CARTITUDE-1)"
 alternate_names:
-  - "Cilta-cel"
-  - "Carvykti"
-  - "JNJ-4528"
-  - "LCAR-B38M"
-  - "CARTITUDE-1 regimen"
+- "Cilta-cel"
+- "Carvykti"
+- "JNJ-4528"
+- "LCAR-B38M"
+- "CARTITUDE-1 regimen"
 
 components: []  # phases supersede; kept empty for back-compat with downstream
                 # consumers that still iterate `components` directly. PR3 of
                 # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
 
 phases:
-  - name: lymphodepletion
-    purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин (CARTITUDE-1 Flu/Cy 300)"
-    purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment (CARTITUDE-1 Flu/Cy 300)"
-    duration: "3 days, days -5 to -3"
-    timing_relative_to: "main_infusion"
-    timing_offset_days: -5
-    optional: false
-    components:
-      - drug_id: DRUG-FLUDARABINE
-        dose: "30 mg/m²/day"
-        schedule: "IV days -5, -4, -3"
-        route: IV
-      - drug_id: DRUG-CYCLOPHOSPHAMIDE
-        dose: "300 mg/m²/day"
-        schedule: "IV days -5, -4, -3"
-        route: IV
-    sources:
-      - SRC-CARTITUDE-1-BERDEJA-2021
-      - SRC-NCCN-MM-2025
-  - name: main
-    purpose_ua: "основна BCMA CAR-T інфузія (тандемний 2-епітопний scFv)"
-    purpose_en: "main BCMA CAR-T infusion (tandem 2-epitope scFv)"
-    duration: "single infusion"
-    timing_relative_to: "absolute"
-    optional: false
-    components:
-      - drug_id: DRUG-CILTACABTAGENE-AUTOLEUCEL
-        dose: "Target dose 0.75 × 10⁶ CAR-positive viable T cells per kg (range 0.5–1.0 × 10⁶/kg per CARTITUDE-1); single IV infusion"
-        schedule: "Single IV infusion day 0, after lymphodepletion completed (typical interval lymphodepletion → infusion 5-7 days)"
-        route: IV
-    sources:
-      - SRC-CARTITUDE-1-BERDEJA-2021
-      - SRC-NCCN-MM-2025
+- name: lymphodepletion
+  purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин (CARTITUDE-1
+    Flu/Cy 300)"
+  purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment (CARTITUDE-1
+    Flu/Cy 300)"
+  duration: "3 days, days -5 to -3"
+  timing_relative_to: "main_infusion"
+  timing_offset_days: -5
+  optional: false
+  components:
+  - drug_id: DRUG-FLUDARABINE
+    dose: "30 mg/m²/day"
+    schedule: "IV days -5, -4, -3"
+    route: IV
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "300 mg/m²/day"
+    schedule: "IV days -5, -4, -3"
+    route: IV
+  sources:
+  - SRC-CARTITUDE-1-BERDEJA-2021
+  - SRC-NCCN-MM-2025
+- name: main
+  purpose_ua: "основна BCMA CAR-T інфузія (тандемний 2-епітопний scFv)"
+  purpose_en: "main BCMA CAR-T infusion (tandem 2-epitope scFv)"
+  duration: "single infusion"
+  timing_relative_to: "absolute"
+  optional: false
+  components:
+  - drug_id: DRUG-CILTACABTAGENE-AUTOLEUCEL
+    dose: "Target dose 0.75 × 10⁶ CAR-positive viable T cells per kg (range 0.5–1.0
+      × 10⁶/kg per CARTITUDE-1); single IV infusion"
+    schedule: "Single IV infusion day 0, after lymphodepletion completed (typical
+      interval lymphodepletion → infusion 5-7 days)"
+    route: IV
+  sources:
+  - SRC-CARTITUDE-1-BERDEJA-2021
+  - SRC-NCCN-MM-2025
 
 cycle_length_days:
-total_cycles: "Single infusion (one-time therapy); no maintenance; bridging therapy during 4-6 week manufacturing window for active progressive disease"
+total_cycles: "Single infusion (one-time therapy); no maintenance; bridging therapy
+  during 4-6 week manufacturing window for active progressive disease"
 toxicity_profile: severe
 
 premedication:
-  - "Acetaminophen 650-1000 mg PO + diphenhydramine 25-50 mg IV/PO 30-60 min before CAR-T infusion"
-  - "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + efficacy"
-  - "Tocilizumab MUST be on-site (≥2 doses, 8 mg/kg each available) BEFORE infusion — for emergency CRS rescue"
-  - "Confirm BCMA expression on plasma cells (universal in MM but documented per protocol)"
-  - "Confirm REMS / FACT-JACIE accreditation of administering center"
-  - "Bridging therapy during 4-6 week manufacturing window; minimize steroid exposure in 2 weeks pre-lymphodepletion"
-  - "Pre-CAR-T infectious workup (HBV / HCV / HIV / CMV / TB) + ECHO + brain MRI + neurocognitive baseline (CARTITUDE-specific — delayed-onset neurotoxicity risk)"
-  - "IVIG availability for prolonged hypogammaglobulinemia post-CAR-T"
+- "Acetaminophen 650-1000 mg PO + diphenhydramine 25-50 mg IV/PO 30-60 min before
+  CAR-T infusion"
+- "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + efficacy"
+- "Tocilizumab MUST be on-site (≥2 doses, 8 mg/kg each available) BEFORE infusion
+  — for emergency CRS rescue"
+- "Confirm BCMA expression on plasma cells (universal in MM but documented per protocol)"
+- "Confirm REMS / FACT-JACIE accreditation of administering center"
+- "Bridging therapy during 4-6 week manufacturing window; minimize steroid exposure
+  in 2 weeks pre-lymphodepletion"
+- "Pre-CAR-T infectious workup (HBV / HCV / HIV / CMV / TB) + ECHO + brain MRI + neurocognitive
+  baseline (CARTITUDE-specific — delayed-onset neurotoxicity risk)"
+- "IVIG availability for prolonged hypogammaglobulinemia post-CAR-T"
 
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-IVIG-HYPOGAMMA
-  - SUP-TLS-PROPHYLAXIS
-
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-IVIG-HYPOGAMMA
+- SUP-TLS-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Cytokine release syndrome (CRS) Grade 2"
-    modification: "Tocilizumab 8 mg/kg IV (max 800 mg); ± dexamethasone 10 mg IV q6h; ICU monitoring"
-    rationale: "Boxed warning — Grade ≥3 CRS ~5% in CARTITUDE-1; tocilizumab IL-6R blockade is first-line"
-    source_refs:
-      - SRC-CARTITUDE-1-BERDEJA-2021
-  - condition: "CRS Grade 3-4 OR ICANS Grade 2+"
-    modification: "Tocilizumab + high-dose dexamethasone (10-20 mg q6h) OR methylprednisolone 1 g/day; ICU; anakinra for refractory ICANS"
-    rationale: "Boxed warning — severe CRS / ICANS may be fatal"
-    source_refs:
-      - SRC-CARTITUDE-1-BERDEJA-2021
-  - condition: "Movement-and-neurocognitive treatment-emergent adverse events (MNT — parkinsonism, cranial-nerve palsy, cerebellar signs)"
-    modification: "High-dose corticosteroids (methylprednisolone 1 g/day × 3 days) + neurology consult; monitor weeks 5-12 post-infusion; low recovery rate once established — emphasis on prevention via low tumor burden + minimized lymphodepletion-to-infusion interval"
-    rationale: "Cilta-cel-specific delayed-onset neurotoxicity ~5% in CARTITUDE-1 + lower in subsequent trials with mitigation strategies (tumor-burden screening, prompt CRS/ICANS treatment); may be irreversible"
-    source_refs:
-      - SRC-CARTITUDE-1-BERDEJA-2021
-  - condition: "Persistent severe cytopenia >Day +30"
-    modification: "G-CSF support; transfusions; thrombopoietin agonist; IVIG for IgG <400 + recurrent infections"
-    rationale: "Prolonged cytopenia ~30% in CARTITUDE-1; on-target / off-tumor BCMA expression on normal plasma cells contributes to hypogammaglobulinemia"
-    source_refs:
-      - SRC-CARTITUDE-1-BERDEJA-2021
-  - condition: "Active uncontrolled infection at planned infusion"
-    modification: "Defer infusion until infection resolved; repeat lymphodepletion if interval >2 weeks"
-    rationale: "Lymphodepletion + CRS in active infection = high mortality"
-  - condition: "ECOG ≥2 OR significant organ dysfunction"
-    modification: "Re-evaluate CAR-T candidacy; CARTITUDE-1 enrolled ECOG 0-1 only"
-    rationale: "Outside-trial use in ECOG ≥2 carries unproven safety profile"
+- condition: "Cytokine release syndrome (CRS) Grade 2"
+  modification: "Tocilizumab 8 mg/kg IV (max 800 mg); ± dexamethasone 10 mg IV q6h;
+    ICU monitoring"
+  rationale: "Boxed warning — Grade ≥3 CRS ~5% in CARTITUDE-1; tocilizumab IL-6R blockade
+    is first-line"
+  source_refs:
+  - SRC-CARTITUDE-1-BERDEJA-2021
+- condition: "CRS Grade 3-4 OR ICANS Grade 2+"
+  modification: "Tocilizumab + high-dose dexamethasone (10-20 mg q6h) OR methylprednisolone
+    1 g/day; ICU; anakinra for refractory ICANS"
+  rationale: "Boxed warning — severe CRS / ICANS may be fatal"
+  source_refs:
+  - SRC-CARTITUDE-1-BERDEJA-2021
+- condition: "Movement-and-neurocognitive treatment-emergent adverse events (MNT —
+    parkinsonism, cranial-nerve palsy, cerebellar signs)"
+  modification: "High-dose corticosteroids (methylprednisolone 1 g/day × 3 days) +
+    neurology consult; monitor weeks 5-12 post-infusion; low recovery rate once established
+    — emphasis on prevention via low tumor burden + minimized lymphodepletion-to-infusion
+    interval"
+  rationale: "Cilta-cel-specific delayed-onset neurotoxicity ~5% in CARTITUDE-1 +
+    lower in subsequent trials with mitigation strategies (tumor-burden screening,
+    prompt CRS/ICANS treatment); may be irreversible"
+  source_refs:
+  - SRC-CARTITUDE-1-BERDEJA-2021
+- condition: "Persistent severe cytopenia >Day +30"
+  modification: "G-CSF support; transfusions; thrombopoietin agonist; IVIG for IgG
+    <400 + recurrent infections"
+  rationale: "Prolonged cytopenia ~30% in CARTITUDE-1; on-target / off-tumor BCMA
+    expression on normal plasma cells contributes to hypogammaglobulinemia"
+  source_refs:
+  - SRC-CARTITUDE-1-BERDEJA-2021
+- condition: "Active uncontrolled infection at planned infusion"
+  modification: "Defer infusion until infection resolved; repeat lymphodepletion if
+    interval >2 weeks"
+  rationale: "Lymphodepletion + CRS in active infection = high mortality"
+- condition: "ECOG ≥2 OR significant organ dysfunction"
+  modification: "Re-evaluate CAR-T candidacy; CARTITUDE-1 enrolled ECOG 0-1 only"
+  rationale: "Outside-trial use in ECOG ≥2 carries unproven safety profile"
 
 ukraine_availability:
   all_components_registered: false
@@ -113,8 +135,8 @@ ukraine_availability:
     counseling.
 
 sources:
-  - SRC-CARTITUDE-1-BERDEJA-2021
-  - SRC-NCCN-MM-2025
+- SRC-CARTITUDE-1-BERDEJA-2021
+- SRC-NCCN-MM-2025
 
 last_reviewed: "2026-04-29"
 notes: >

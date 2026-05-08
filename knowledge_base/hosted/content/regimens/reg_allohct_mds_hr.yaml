@@ -2,138 +2,156 @@ id: REG-ALLOHCT-MDS-HR
 name: "Allogeneic hematopoietic cell transplant for high-risk MDS"
 name_ua: "Алогенна трансплантація кровотворних клітин для високоризикової МДС"
 alternate_names:
-  - "AlloHCT MDS-HR"
-  - "Allogeneic SCT MDS"
+- "AlloHCT MDS-HR"
+- "Allogeneic SCT MDS"
 
 components: []  # phases supersede; kept empty for back-compat with downstream
                 # consumers that still iterate `components` directly. PR3 of
                 # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
 
 phases:
-  - name: bridging
-    purpose_ua: "HMA-бриджинг 4-6 циклів азацитидину перед ало-ТГСК — зменшити навантаження бластами + bridge до пошуку донора"
-    purpose_en: "HMA bridging 4-6 cycles of azacitidine pre-HCT — reduce blast burden + bridge to donor search"
-    duration: "4-6 cycles × 28 days each (until donor identified + transplant slot available)"
-    timing_relative_to: "main_infusion"
-    timing_offset_days: -120
-    optional: false
-    components:
-      - drug_id: DRUG-AZACITIDINE
-        dose: "Pre-HCT cytoreduction: azacitidine 75 mg/m² SC days 1-7 q28d × 4-6 cycles to reduce blast burden + bridge to HCT"
-        schedule: "Bridging until donor identified + transplant slot available; conditioning regimen institution-specific (myeloablative Bu/Cy or Bu/Flu for fit younger; reduced-intensity Flu/Mel or Flu/Bu for older / comorbid)"
-        route: SC
-    sources:
-      - SRC-NCCN-AML-2025
-      - SRC-ESMO-MDS-2021
-  - name: conditioning_allohct
-    purpose_ua: "кондиціонування перед ало-ТГСК — мієлоаблятивне (Bu/Cy або Bu/Flu) для фіт-молодших; редукованої інтенсивності (Flu/Mel або Flu/Bu) для старших/коморбідних; інституційно специфічне"
-    purpose_en: "conditioning before allo-HCT — myeloablative (Bu/Cy or Bu/Flu) for fit younger; reduced-intensity (Flu/Mel or Flu/Bu) for older/comorbid; institution-specific"
-    duration: "single conditioning regimen (institution-specific) before HCT"
-    timing_relative_to: "previous_phase_completion"
-    optional: false
-    components: []  # Conditioning regimen institution-specific; not enumerated
+- name: bridging
+  purpose_ua: "HMA-бриджинг 4-6 циклів азацитидину перед ало-ТГСК — зменшити навантаження
+    бластами + bridge до пошуку донора"
+  purpose_en: "HMA bridging 4-6 cycles of azacitidine pre-HCT — reduce blast burden
+    + bridge to donor search"
+  duration: "4-6 cycles × 28 days each (until donor identified + transplant slot available)"
+  timing_relative_to: "main_infusion"
+  timing_offset_days: -120
+  optional: false
+  components:
+  - drug_id: DRUG-AZACITIDINE
+    dose: "Pre-HCT cytoreduction: azacitidine 75 mg/m² SC days 1-7 q28d × 4-6 cycles
+      to reduce blast burden + bridge to HCT"
+    schedule: "Bridging until donor identified + transplant slot available; conditioning
+      regimen institution-specific (myeloablative Bu/Cy or Bu/Flu for fit younger;
+      reduced-intensity Flu/Mel or Flu/Bu for older / comorbid)"
+    route: SC
+  sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+- name: conditioning_allohct
+  purpose_ua: "кондиціонування перед ало-ТГСК — мієлоаблятивне (Bu/Cy або Bu/Flu)
+    для фіт-молодших; редукованої інтенсивності (Flu/Mel або Flu/Bu) для старших/коморбідних;
+    інституційно специфічне"
+  purpose_en: "conditioning before allo-HCT — myeloablative (Bu/Cy or Bu/Flu) for
+    fit younger; reduced-intensity (Flu/Mel or Flu/Bu) for older/comorbid; institution-specific"
+  duration: "single conditioning regimen (institution-specific) before HCT"
+  timing_relative_to: "previous_phase_completion"
+  optional: false
+  components: []    # Conditioning regimen institution-specific; not enumerated
                    # as drug components here (placeholder per plan-doc §5 Group D)
-    sources:
-      - SRC-NCCN-AML-2025
-  - name: allohct
-    purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — єдина куративна опція для MDS-HR; пост-ТГСК підтримка азацитидином опціонально × 12 місяців"
-    purpose_en: "allogeneic hematopoietic cell transplant (allo-HCT) — only curative option for MDS-HR; post-HCT azacitidine maintenance optional × 12 months"
-    duration: "single transplant procedure"
-    timing_relative_to: "previous_phase_completion"
-    optional: false
-    components: []  # AlloHCT — pathway placeholder, no drug components
-    sources:
-      - SRC-NCCN-AML-2025
+  sources:
+  - SRC-NCCN-AML-2025
+- name: allohct
+  purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — єдина куративна
+    опція для MDS-HR; пост-ТГСК підтримка азацитидином опціонально × 12 місяців"
+  purpose_en: "allogeneic hematopoietic cell transplant (allo-HCT) — only curative
+    option for MDS-HR; post-HCT azacitidine maintenance optional × 12 months"
+  duration: "single transplant procedure"
+  timing_relative_to: "previous_phase_completion"
+  optional: false
+  components: []    # AlloHCT — pathway placeholder, no drug components
+  sources:
+  - SRC-NCCN-AML-2025
 
 cycle_length_days:
-total_cycles: "Single transplant procedure; HMA bridging 4-6 cycles pre-HCT; post-HCT azacitidine maintenance optional ×12 months for high-risk subset"
+total_cycles: "Single transplant procedure; HMA bridging 4-6 cycles pre-HCT; post-HCT
+  azacitidine maintenance optional ×12 months for high-risk subset"
 
 toxicity_profile: severe
 
 premedication:
-  - "Donor identification (HLA-matched sibling > matched unrelated > haploidentical > cord)"
-  - "Pre-transplant comorbidity assessment (HCT-CI score)"
-  - "Pre-transplant blast reduction with HMA to optimal disease control (target blasts <10%, ideally <5%)"
-  - "Standard infectious + organ workup (echo, PFT, CMV serology, HBV/HCV/HIV)"
+- "Donor identification (HLA-matched sibling > matched unrelated > haploidentical
+  > cord)"
+- "Pre-transplant comorbidity assessment (HCT-CI score)"
+- "Pre-transplant blast reduction with HMA to optimal disease control (target blasts
+  <10%, ideally <5%)"
+- "Standard infectious + organ workup (echo, PFT, CMV serology, HBV/HCV/HIV)"
 
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-HBV-PROPHYLAXIS
-
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Older / comorbid (HCT-CI ≥3, age >60-65)"
-    modification: "Reduced-intensity conditioning (RIC): Flu/Mel or Flu/Bu2; haplo or matched-unrelated donor acceptable"
-    rationale: "Lower TRM with RIC; comparable disease control in MDS-HR"
-    source_refs:
-      - SRC-NCCN-AML-2025
-      - SRC-ESMO-MDS-2021
-  - condition: "Active blast crisis (>20% blasts → AML transformation)"
-    modification: "Treat as AML — induction (7+3 or ven+aza) before HCT; HCT outcomes substantially worse if active disease"
-    rationale: "Disease status at HCT is dominant predictor"
-    source_refs:
-      - SRC-NCCN-AML-2025
-  - condition: "TP53-mutated MDS-HR"
-    modification: "HCT remains the only chance of cure; outcomes worse than non-TP53 (~20-30% 3-y OS); consider clinical trial enrollment + post-HCT maintenance"
-    rationale: "TP53-mutated MDS has very poor HMA response + post-HCT relapse; decitabine/cedazuridine + venetoclax studied as bridging"
-    source_refs:
-      - SRC-NCCN-AML-2025
-      - SRC-IPSS-M-BERNARD-2022
+- condition: "Older / comorbid (HCT-CI ≥3, age >60-65)"
+  modification: "Reduced-intensity conditioning (RIC): Flu/Mel or Flu/Bu2; haplo or
+    matched-unrelated donor acceptable"
+  rationale: "Lower TRM with RIC; comparable disease control in MDS-HR"
+  source_refs:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+- condition: "Active blast crisis (>20% blasts → AML transformation)"
+  modification: "Treat as AML — induction (7+3 or ven+aza) before HCT; HCT outcomes
+    substantially worse if active disease"
+  rationale: "Disease status at HCT is dominant predictor"
+  source_refs:
+  - SRC-NCCN-AML-2025
+- condition: "TP53-mutated MDS-HR"
+  modification: "HCT remains the only chance of cure; outcomes worse than non-TP53
+    (~20-30% 3-y OS); consider clinical trial enrollment + post-HCT maintenance"
+  rationale: "TP53-mutated MDS has very poor HMA response + post-HCT relapse; decitabine/cedazuridine
+    + venetoclax studied as bridging"
+  source_refs:
+  - SRC-NCCN-AML-2025
+  - SRC-IPSS-M-BERNARD-2022
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "AlloHCT performed at limited Ukrainian centers (Kyiv Institute of Hematology + few others); international referral common for adult MDS-HR. Donor registry coverage limited. Azacitidine bridging components НСЗУ-reimbursed."
+  notes: "AlloHCT performed at limited Ukrainian centers (Kyiv Institute of Hematology
+    + few others); international referral common for adult MDS-HR. Donor registry
+    coverage limited. Azacitidine bridging components НСЗУ-reimbursed."
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ESMO-MDS-2021
-  - SRC-IPSS-M-BERNARD-2022
+- SRC-NCCN-AML-2025
+- SRC-ESMO-MDS-2021
+- SRC-IPSS-M-BERNARD-2022
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Allo-HCT for high-risk MDS. Multi-month inpatient pathway. Toxicity
 # dominated by GVHD + infection during prolonged neutropenia + organ
 # toxicity from conditioning. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Виражена втома, що триває тижнями після виписки"
-    action_ua: "Очікувано — кістковий мозок відновлюється повільно; відпочивайте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Лихоманка вище 38°C — у будь-який час після кондиціонування"
-    action_ua: "Звертайтесь у лікарню негайно — інфекція на тлі тривалої нейтропенії"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-AML-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Висип на шкірі (особливо долоні, стопи), діарея, жовтяниця"
-    action_ua: "Подзвоніть у клініку того ж дня — реакція трансплантат-проти-господаря"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Сухість у роті, очах, ускладнене ковтання, що не минає"
-    action_ua: "Занотовуйте — хронічна РТПХ; обговоримо на наступному візиті"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Жовтяниця, набір ваги, біль у правому підребер'ї перші 30 днів"
-    action_ua: "Звертайтесь у лікарню негайно — вено-оклюзивне ускладнення"
-    urgency: er_now
-    cycle_day_window: "Day 1-30"
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Сильний біль у животі, нудота, кров у стільці"
-    action_ua: "Звертайтесь у лікарню негайно — РТПХ кишечника або інфекція"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
-    action_ua: "Звертайтесь у лікарню негайно — ознаки можливого сепсису"
-    urgency: er_now
-    sources:
-      - SRC-CTCAE-V5
+- trigger_ua: "Виражена втома, що триває тижнями після виписки"
+  action_ua: "Очікувано — кістковий мозок відновлюється повільно; відпочивайте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Лихоманка вище 38°C — у будь-який час після кондиціонування"
+  action_ua: "Звертайтесь у лікарню негайно — інфекція на тлі тривалої нейтропенії"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-AML-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Висип на шкірі (особливо долоні, стопи), діарея, жовтяниця"
+  action_ua: "Подзвоніть у клініку того ж дня — реакція трансплантат-проти-господаря"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Сухість у роті, очах, ускладнене ковтання, що не минає"
+  action_ua: "Занотовуйте — хронічна РТПХ; обговоримо на наступному візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Жовтяниця, набір ваги, біль у правому підребер'ї перші 30 днів"
+  action_ua: "Звертайтесь у лікарню негайно — вено-оклюзивне ускладнення"
+  urgency: er_now
+  cycle_day_window: "Day 1-30"
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Сильний біль у животі, нудота, кров у стільці"
+  action_ua: "Звертайтесь у лікарню негайно — РТПХ кишечника або інфекція"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+  action_ua: "Звертайтесь у лікарню негайно — ознаки можливого сепсису"
+  urgency: er_now
+  sources:
+  - SRC-CTCAE-V5
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -148,6 +166,13 @@ notes: >
   the alloHCT pathway with HMA bridging, not a fully specified
   conditioning chemotherapy regimen.
 notes_ua: >
-  AlloHCT remains the ONLY curative option for MDS-HR. обов'язковий consideration in all придатний до трансплантації patients (типово age <70-75 + adequate organ function + suitable donor + adequate caregiver support). HMA bridging during 3-6 month donor search is стандарт. Post-HCT азацитидин підтримка ×12 months зменшує рецидив in високого ризику subset (Oran et al., новий дані). STUB — pending Co-Lead sign-off. Conditioning схема selection is institution-specific — this сутність is a placeholder pointing to the alloHCT pathway with HMA bridging, not a fully specified conditioning хіміотерапія схема.
+  AlloHCT remains the ONLY curative option for MDS-HR. обов'язковий consideration
+  in all придатний до трансплантації patients (типово age <70-75 + adequate organ
+  function + suitable donor + adequate caregiver support). HMA bridging during 3-6
+  month donor search is стандарт. Post-HCT азацитидин підтримка ×12 months зменшує
+  рецидив in високого ризику subset (Oran et al., новий дані). STUB — pending Co-Lead
+  sign-off. Conditioning схема selection is institution-specific — this сутність is
+  a placeholder pointing to the alloHCT pathway with HMA bridging, not a fully specified
+  conditioning хіміотерапія схема.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

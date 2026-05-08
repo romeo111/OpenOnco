@@ -1,0 +1,87 @@
+id: IND-GIST-2L-SUNITINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GIST
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced / metastatic / unresectable GIST"
+    - "Imatinib-resistant GIST (primary resistance or acquired resistance after initial response)"
+    - "Imatinib-intolerant GIST (Grade ≥3 toxicity precluding continued use)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-PDGFRA
+      value_constraint: "PDGFRA D842V — avapritinib is preferred for any line in D842V; sunitinib has no meaningful activity"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-SUNITINIB-GIST-2L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~7% (imatinib-resistant GIST; partial responses) — stable disease is the main benefit"
+  complete_response: "~1%"
+  progression_free_survival: "Median ~27 weeks (vs ~6 weeks placebo, Demetri 2006 — HR 0.33)"
+  overall_survival_5y: "Median OS ~73 weeks (Demetri 2006); 5-y OS ~7% in imatinib-resistant cohort"
+
+hard_contraindications:
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-ECHO
+desired_tests: []
+
+rationale: >
+  Sunitinib (multi-targeted TKI: VEGFR-1/2/3, PDGFR, KIT, FLT3, CSF-1R)
+  is the standard of care for 2nd-line GIST after imatinib failure (FDA
+  2006). Phase III trial (Demetri 2006 Lancet): sunitinib vs placebo in
+  imatinib-resistant/intolerant GIST — mPFS 27 vs 6.4 weeks (HR 0.33,
+  p<0.0001). Benefit in imatinib-resistant KIT exon 9 or wild-type GIST
+  appears greater than exon 11. Note: PDGFRA D842V is excluded — sunitinib
+  has no meaningful activity in this genotype (avapritinib is the option
+  here regardless of line). Standard 4-weeks-on/2-weeks-off schedule;
+  continuous 37.5 mg alternative. Regorafenib is 3L after sunitinib failure.
+
+rationale_ua: >
+  Сунітиніб (мульти-цільовий TKI) — стандарт 2L ГІСТ після невдачі іматинібу
+  (FDA 2006). Demetri 2006: mPFS 27 vs 6.4 тижні (HR 0.33). KIT exon 9 / WT
+  виграє більше. PDGFRA D842V — виключений (аваприніб незалежно від лінії).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-GIST-2025
+    position: supports
+    relevant_quote_paraphrase: "Sunitinib is NCCN Category 1 for 2L GIST after imatinib failure; 50 mg 4/2 schedule or 37.5 mg continuous"
+
+do_not_do:
+  - "НЕ застосовувати при PDGFRA D842V — сунітиніб неефективний; аваприніб незалежно від лінії"
+  - "НЕ пропускати baseline ЕхоКГ та ЕКГ — кардіотоксичність (зниження ФВЛШ, подовження QTc)"
+  - "НЕ ігнорувати моніторинг ТТГ — гіпотиреоз у ~36% при тривалому прийомі"
+  - "НЕ ігнорувати АТ — гіпертензія у ~34%; потрібна антигіпертензивна терапія при G2+"
+  - "НЕ продовжувати без корекції дози при G3+ кістково-стопному синдромі (PPE)"
+
+do_not_do_en:
+  - "Do NOT use for PDGFRA D842V — sunitinib is ineffective; avapritinib preferred regardless of line"
+  - "Do NOT skip baseline echo + ECG — cardiotoxicity (LVEF decline, QTc prolongation)"
+  - "Do NOT ignore TSH monitoring — hypothyroidism in ~36% with long-term use"
+  - "Do NOT ignore BP monitoring — hypertension in ~34%; antihypertensives for G2+"
+  - "Do NOT continue without dose reduction for G3+ hand-foot syndrome (PPE)"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard 2L GIST after imatinib
+  failure (non-PDGFRA D842V). Sunitinib registered in Ukraine (Sutent).
+  NSZU may reimburse for GIST indication — verify current coverage.

@@ -1,0 +1,40 @@
+id: REG-RT-PCV-LGG
+name: "Radiotherapy + PCV (procarbazine/lomustine/vincristine) — high-risk low-grade glioma"
+name_ua: "Радіотерапія + PCV (прокарбазин/ломустин/вінкристин) — висококризовий низькоступеневий гліома"
+alternate_names:
+  - "RT + PCV"
+  - "PCV + RT"
+  - "RTOG 9802 regimen"
+
+# RTOG 9802 (Buckner NEJM 2016, PMID 27050206): RT 54 Gy/30 fx followed by
+# 6 cycles PCV q6w. Components below reflect the adjuvant PCV phase.
+components:
+  - drug_id: DRUG-PROCARBAZINE
+    dose: "60 mg/m² PO days 8-21 of each cycle"
+    schedule: "q6w (42-day cycles) × 6 cycles"
+    route: PO
+  - drug_id: DRUG-LOMUSTINE
+    dose: "110 mg/m² PO day 1 of each cycle"
+    schedule: "q6w × 6 cycles"
+    route: PO
+  - drug_id: DRUG-VINCRISTINE
+    dose: "1.4 mg/m² IV (cap 2 mg) days 8 and 29 of each cycle"
+    schedule: "q6w × 6 cycles"
+    route: IV
+
+cycle_length_days: 42
+total_cycles: "6 cycles adjuvant (after RT 54 Gy/30 fx)"
+toxicity_profile: moderate-high
+
+sources:
+  - SRC-NCCN-CNS-2025
+
+last_reviewed: "2026-05-08"
+review_status: stub
+drafted_by: claude_extraction
+notes: >
+  STUB — minimal entity to satisfy routing contract for IND-GLIOMA-LOW-GRADE-1L-RT-PCV.
+  Based on RTOG 9802 PCV regimen (Buckner NEJM 2016, PMID 27050206).
+  Requires clinical co-lead signoff before publication.
+  The RT component (54 Gy/30 fx, conformal to tumor bed + 2 cm margin) is
+  delivered first; PCV starts 4 weeks post-RT completion.

@@ -4,23 +4,28 @@ name_ua: "Кладрибін, один курс 7 днів"
 alternate_names: ["2-CdA"]
 
 components:
-  - {drug_id: DRUG-CLADRIBINE, dose: "0.09 mg/kg/day continuous IV", schedule: "× 7 days, single course", route: IV}
+- {drug_id: DRUG-CLADRIBINE, dose: "0.09 mg/kg/day continuous IV", schedule: "× 7
+    days, single course", route: IV}
 
 cycle_length_days: 7
 total_cycles: "1 (single course; repeat only if persistent disease at 6 months)"
 toxicity_profile: moderate
 
 premedication: ["IV hydration; allopurinol if high tumor burden"]
-mandatory_supportive_care: [SUP-PJP-PROPHYLAXIS, SUP-HSV-PROPHYLAXIS]
+mandatory_supportive_care:
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
 monitoring_schedule_id: MON-HCL-CLADRIBINE
 
 dose_adjustments:
-  - condition: "Active infection"
-    modification: "Defer until resolved — profound lymphopenia post-treatment increases infection risk"
-  - condition: "Severe renal impairment (CrCl <30)"
-    modification: "Reduce dose by 50%"
+- condition: "Active infection"
+  modification: "Defer until resolved — profound lymphopenia post-treatment increases
+    infection risk"
+- condition: "Severe renal impairment (CrCl <30)"
+  modification: "Reduce dose by 50%"
 
-ukraine_availability: {all_components_registered: true, all_components_reimbursed: true}
+ukraine_availability: {all_components_registered: true, 
+    all_components_reimbursed: true}
 sources: [SRC-NCCN-BCELL-2025]
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
@@ -28,42 +33,47 @@ sources: [SRC-NCCN-BCELL-2025]
 # remissions; main risk is prolonged immunosuppression after the
 # course. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, що триває кілька тижнів після курсу"
-    action_ua: "Очікувано — кістковий мозок відновлюється поступово"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Зниження апетиту, легка нудота"
-    action_ua: "Зустрічається — занотовуйте інтенсивність, обговоріть на наступному візиті"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C — особливо в перший місяць після курсу"
-    action_ua: "Подзвоніть у клініку того ж дня — кладрибін викликає тривалу лімфопенію, ризик опортуністичної інфекції підвищений на місяці"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Сухий кашель, нова задишка"
-    action_ua: "Подзвоніть у клініку того ж дня — на тлі лімфопенії можлива опортуністична інфекція легень (PJP), потрібна оцінка"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Висип у вигляді пухирців на смузі шкіри (одна сторона тіла)"
-    action_ua: "Подзвоніть у клініку того ж дня — можлива реактивація опериєзу (herpes zoster); потрібне противірусне лікування"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Незвичні синці, кровотеча ясен або носа"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Виражена слабкість, висока лихоманка з ознобом"
-    action_ua: "Звертайтесь у лікарню негайно — у пацієнтів з тривалою лімфопенією інфекція може швидко прогресувати"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома, що триває кілька тижнів після курсу"
+  action_ua: "Очікувано — кістковий мозок відновлюється поступово"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Зниження апетиту, легка нудота"
+  action_ua: "Зустрічається — занотовуйте інтенсивність, обговоріть на наступному
+    візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C — особливо в перший місяць після курсу"
+  action_ua: "Подзвоніть у клініку того ж дня — кладрибін викликає тривалу лімфопенію,
+    ризик опортуністичної інфекції підвищений на місяці"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Сухий кашель, нова задишка"
+  action_ua: "Подзвоніть у клініку того ж дня — на тлі лімфопенії можлива опортуністична
+    інфекція легень (PJP), потрібна оцінка"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Висип у вигляді пухирців на смузі шкіри (одна сторона тіла)"
+  action_ua: "Подзвоніть у клініку того ж дня — можлива реактивація опериєзу (herpes
+    zoster); потрібне противірусне лікування"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Незвичні синці, кровотеча ясен або носа"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Виражена слабкість, висока лихоманка з ознобом"
+  action_ua: "Звертайтесь у лікарню негайно — у пацієнтів з тривалою лімфопенією інфекція
+    може швидко прогресувати"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -73,6 +83,9 @@ notes: >
   6-12 mo). Rituximab can be added (CdA + rituximab) to improve depth
   of response in selected cases.
 notes_ua: >
-  Single course produces durable CR (медіана ВБП >10 years) in >85% of HCL — серед the найбільш effective single-agent схеми in oncology. обов'язковий PJP + HSV prophylaxis ≥1 year post (profound CD4 lymphopenia 6-12 міс.). ритуксимаб can be added (CdA + ритуксимаб) to improve depth of відповідь in selected cases.
+  Single course produces durable CR (медіана ВБП >10 years) in >85% of HCL — серед
+  the найбільш effective single-agent схеми in oncology. обов'язковий PJP + HSV prophylaxis
+  ≥1 year post (profound CD4 lymphopenia 6-12 міс.). ритуксимаб can be added (CdA
+  + ритуксимаб) to improve depth of відповідь in selected cases.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

@@ -4,14 +4,14 @@ name_ua: "Інгібітор ароматази + рибоцикліб (HR+/HER2
 alternate_names: ["MONALEESA regimen"]
 
 components:
-  - drug_id: DRUG-LETROZOLE
-    dose: "2.5 mg PO daily"
-    schedule: "Continuous"
-    route: PO
-  - drug_id: DRUG-RIBOCICLIB
-    dose: "600 mg PO daily, days 1-21 of 28-day cycle"
-    schedule: "21 days on, 7 days off"
-    route: PO
+- drug_id: DRUG-LETROZOLE
+  dose: "2.5 mg PO daily"
+  schedule: "Continuous"
+  route: PO
+- drug_id: DRUG-RIBOCICLIB
+  dose: "600 mg PO daily, days 1-21 of 28-day cycle"
+  schedule: "21 days on, 7 days off"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "Continuous until progression"
@@ -19,14 +19,14 @@ toxicity_profile: moderate
 
 premedication: []
 mandatory_supportive_care:
-  - SUP-BONE-HEALTH-PROSTATE
+- SUP-BONE-HEALTH-PROSTATE
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "QTcF >480 ms"
-    modification: "Hold ribociclib; resume at next lower dose level after recovery"
-  - condition: "ANC <500/µL"
-    modification: "Hold; resume at lower dose"
+- condition: "QTcF >480 ms"
+  modification: "Hold ribociclib; resume at next lower dose level after recovery"
+- condition: "ANC <500/µL"
+  modification: "Hold; resume at lower dose"
 
 ukraine_availability:
   all_components_registered: true
@@ -40,38 +40,39 @@ sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
 # higher QT prolongation rate than other CDK4/6i (boxed warning).
 # STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, гарячі припливи, біль у суглобах"
-    action_ua: "Очікувано від AI + рибоцикліба — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Помірна нудота, легка втрата апетиту"
-    action_ua: "Зустрічається — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C — на 2-3 тижні циклу"
-    action_ua: "Подзвоніть у клініку того ж дня — рибоцикліб дає нейтропенію"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 14-28"
-    sources:
-      - SRC-NCCN-BREAST-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Жовтяниця, потемніння сечі"
-    action_ua: "Подзвоніть у клініку того ж дня — рибоцикліб може впливати на печінку"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
-    action_ua: "Звертайтесь у лікарню негайно — рибоцикліб може подовжувати інтервал QT"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Раптова задишка, біль у грудях"
-    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BREAST-2025
+- trigger_ua: "Помірна втома, гарячі припливи, біль у суглобах"
+  action_ua: "Очікувано від AI + рибоцикліба — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Помірна нудота, легка втрата апетиту"
+  action_ua: "Зустрічається — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C — на 2-3 тижні циклу"
+  action_ua: "Подзвоніть у клініку того ж дня — рибоцикліб дає нейтропенію"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 14-28"
+  sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Жовтяниця, потемніння сечі"
+  action_ua: "Подзвоніть у клініку того ж дня — рибоцикліб може впливати на печінку"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
+  action_ua: "Звертайтесь у лікарню негайно — рибоцикліб може подовжувати інтервал
+    QT"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Раптова задишка, біль у грудях"
+  action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BREAST-2025
 
 last_reviewed:
 notes: >
@@ -79,6 +80,8 @@ notes: >
   + postmenopausal subgroups. NATALEE: 3-year adjuvant role established
   for high-risk N+ HR+/HER2- early breast (separate Indication needed).
 notes_ua: >
-  MONALEESA-2/3/7: OS виграш in метастатичний HR+/HER2- 1L+ premenopausal + postmenopausal subgroups. NATALEE: 3-year ад'ювантний role усталений for високого ризику N+ HR+/HER2- early breast (separate показання needed).
+  MONALEESA-2/3/7: OS виграш in метастатичний HR+/HER2- 1L+ premenopausal + postmenopausal
+  subgroups. NATALEE: 3-year ад'ювантний role усталений for високого ризику N+ HR+/HER2-
+  early breast (separate показання needed).
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

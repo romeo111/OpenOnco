@@ -2,18 +2,19 @@ id: REG-CPX351-AML
 name: "CPX-351 (Vyxeos) for tAML / AML-MRC 1L"
 name_ua: "CPX-351 (Vyxeos) для tAML / AML-MRC 1L"
 alternate_names:
-  - "Vyxeos induction"
-  - "Liposomal 7+3"
+- "Vyxeos induction"
+- "Liposomal 7+3"
 
 components:
-  - drug_id: DRUG-CPX-351
-    dose: "Induction 100 units/m² IV (= cytarabine 100 mg/m² + daunorubicin 44 mg/m²) days 1, 3, 5"
-    schedule: "Cycle 1; re-induction days 1, 3 if needed"
-    route: IV
-  - drug_id: DRUG-CPX-351
-    dose: "Consolidation 65 units/m² IV days 1, 3"
-    schedule: "Up to 2 consolidation cycles, every 5-8 weeks after count recovery"
-    route: IV
+- drug_id: DRUG-CPX-351
+  dose: "Induction 100 units/m² IV (= cytarabine 100 mg/m² + daunorubicin 44 mg/m²)
+    days 1, 3, 5"
+  schedule: "Cycle 1; re-induction days 1, 3 if needed"
+  route: IV
+- drug_id: DRUG-CPX-351
+  dose: "Consolidation 65 units/m² IV days 1, 3"
+  schedule: "Up to 2 consolidation cycles, every 5-8 weeks after count recovery"
+  route: IV
 
 cycle_length_days: 35
 total_cycles: "1-2 induction + up to 2 consolidation; alloHCT in CR1 if eligible"
@@ -21,83 +22,83 @@ total_cycles: "1-2 induction + up to 2 consolidation; alloHCT in CR1 if eligible
 toxicity_profile: severe
 
 premedication:
-  - "Antiemetics — moderate-emetogenic prophylaxis"
-  - "Allopurinol 300 mg PO daily for TLS prophylaxis"
-  - "IV hydration ≥3 L/day during d1-5"
-  - "Pre-induction ECHO + LVEF; re-check before each cycle (cumulative anthracycline)"
+- "Antiemetics — moderate-emetogenic prophylaxis"
+- "Allopurinol 300 mg PO daily for TLS prophylaxis"
+- "IV hydration ≥3 L/day during d1-5"
+- "Pre-induction ECHO + LVEF; re-check before each cycle (cumulative anthracycline)"
 
 mandatory_supportive_care:
-  - SUP-TLS-PROPHYLAXIS
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-HBV-PROPHYLAXIS
-
+- SUP-TLS-PROPHYLAXIS
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "LVEF <50% baseline"
-    modification: "Do not use; substitute ven+aza or alternative non-anthracycline regimen"
-    rationale: "Liposomal anthracycline still cardiotoxic; cumulative tracking critical"
-    source_refs:
-      - SRC-NCCN-AML-2025
-      - SRC-LANCET-CPX351-2018
-  - condition: "Severe hepatic impairment (bilirubin >3× ULN)"
-    modification: "Avoid; insufficient data"
-    rationale: "Hepatic clearance pathway"
-    source_refs:
-      - SRC-NCCN-AML-2025
-  - condition: "Persistent cytopenia at week 5"
-    modification: "Delay consolidation until ANC ≥1.0K + platelets ≥100K"
-    rationale: "Liposomal formulation causes prolonged myelosuppression vs free 7+3"
-    source_refs:
-      - SRC-LANCET-CPX351-2018
+- condition: "LVEF <50% baseline"
+  modification: "Do not use; substitute ven+aza or alternative non-anthracycline regimen"
+  rationale: "Liposomal anthracycline still cardiotoxic; cumulative tracking critical"
+  source_refs:
+  - SRC-NCCN-AML-2025
+  - SRC-LANCET-CPX351-2018
+- condition: "Severe hepatic impairment (bilirubin >3× ULN)"
+  modification: "Avoid; insufficient data"
+  rationale: "Hepatic clearance pathway"
+  source_refs:
+  - SRC-NCCN-AML-2025
+- condition: "Persistent cytopenia at week 5"
+  modification: "Delay consolidation until ANC ≥1.0K + platelets ≥100K"
+  rationale: "Liposomal formulation causes prolonged myelosuppression vs free 7+3"
+  source_refs:
+  - SRC-LANCET-CPX351-2018
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "CPX-351 (Vyxeos) NOT registered in Ukraine. International referral required. CRITICAL: dosing in 'units/m²' not 'mg/m²' — fatal labeling errors reported."
+  notes: "CPX-351 (Vyxeos) NOT registered in Ukraine. International referral required.
+    CRITICAL: dosing in 'units/m²' not 'mg/m²' — fatal labeling errors reported."
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-AML-2022
-  - SRC-LANCET-CPX351-2018
+- SRC-NCCN-AML-2025
+- SRC-ELN-AML-2022
+- SRC-LANCET-CPX351-2018
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # CPX-351 (Vyxeos) for secondary AML / t-AML 1L (LANCET). Liposomal
 # cytarabine + daunorubicin. Inpatient. Same 7+3 toxicity pattern with
 # delayed/prolonged cytopenia. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Виражена втома, що триває тижнями"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Випадання волосся"
-    action_ua: "Очікувано — повертається після курсу"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Звертайтесь у лікарню негайно — глибока тривала нейтропенія"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-AML-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Незвичні синці, кровотеча"
-    action_ua: "Подзвоніть у клініку того ж дня"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Нова задишка при навантаженні"
-    action_ua: "Подзвоніть у клініку того ж дня — антрациклін впливає на серце"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Сплутаність свідомості, висока лихоманка"
-    action_ua: "Звертайтесь у лікарню негайно — сепсис"
-    urgency: er_now
-    sources:
-      - SRC-CTCAE-V5
+- trigger_ua: "Виражена втома, що триває тижнями"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Випадання волосся"
+  action_ua: "Очікувано — повертається після курсу"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Звертайтесь у лікарню негайно — глибока тривала нейтропенія"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-AML-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Незвичні синці, кровотеча"
+  action_ua: "Подзвоніть у клініку того ж дня"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Нова задишка при навантаженні"
+  action_ua: "Подзвоніть у клініку того ж дня — антрациклін впливає на серце"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Сплутаність свідомості, висока лихоманка"
+  action_ua: "Звертайтесь у лікарню негайно — сепсис"
+  urgency: er_now
+  sources:
+  - SRC-CTCAE-V5
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -107,6 +108,9 @@ notes: >
   better CR rate + alloHCT eligibility drives survival benefit.
   STUB — pending Co-Lead sign-off.
 notes_ua: >
-  схвалений FDA зокрема for newly-dx tAML or AML-MRC in older (60-75) patients. медіана ЗВ 9.56 проти 5.95 mo for 7+3 (HR 0.69). Bridge to alloHCT in CR1 for fit candidates — комбінація of краще CR rate + alloHCT eligibility drives виграш у виживаності. STUB — pending Co-Lead sign-off.
+  схвалений FDA зокрема for newly-dx tAML or AML-MRC in older (60-75) patients. медіана
+  ЗВ 9.56 проти 5.95 mo for 7+3 (HR 0.69). Bridge to alloHCT in CR1 for fit candidates
+  — комбінація of краще CR rate + alloHCT eligibility drives виграш у виживаності.
+  STUB — pending Co-Lead sign-off.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

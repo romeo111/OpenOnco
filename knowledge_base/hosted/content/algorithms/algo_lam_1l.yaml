@@ -1,0 +1,49 @@
+id: ALGO-LAM-1L
+applicable_to_disease: DIS-LAM
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select disease-modifying therapy for progressive lymphangioleiomyomatosis
+  (LAM). Sirolimus (rapamycin, mTOR inhibitor) is the only FDA/EMA-approved
+  disease-modifying therapy, indicated when lung function is abnormal
+  (FEV1 <70% predicted) or declining (≥90 mL/year). Everolimus is
+  an alternative for TSC-associated LAM.
+
+output_indications:
+  - IND-LAM-1L-SIROLIMUS
+
+default_indication: IND-LAM-1L-SIROLIMUS
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "FEV1 <70% predicted OR declining FEV1 (≥90 mL/year loss)"
+        - condition: "Serum VEGF-D ≥800 pg/mL with bilateral cystic lung disease"
+    if_true:
+      result: IND-LAM-1L-SIROLIMUS
+    if_false:
+      next_step: 2
+    notes: "Free-text condition without RF; engine routes to default."
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Stable LAM with normal lung function (FEV1 ≥70%)"
+    if_true:
+      result: IND-LAM-1L-SIROLIMUS
+      notes: "Close monitoring reasonable; treatment threshold FEV1 <70% or decline ≥90 mL/year — sirolimus if threshold met"
+    if_false:
+      result: IND-LAM-1L-SIROLIMUS
+    notes: "Default to sirolimus; clinician judgment on treatment threshold."
+
+sources:
+  - SRC-MILES-MCCORMACK-2011
+last_reviewed: "2026-05-04"
+notes: >
+  Sirolimus is the only FDA/EMA-approved disease-modifying therapy for LAM.
+  Treatment is stabilizing (not curative) — FEV1 decline may resume after
+  stopping. Lung transplant remains the only curative option for end-stage
+  disease. Everolimus is used for TSC-associated manifestations (SEGA,
+  renal AML) and can be used for TSC-LAM if sirolimus not available.
+  VEGF-D ≥800 pg/mL confirms LAM diagnosis without biopsy in the right
+  clinical context and identifies likely responders.

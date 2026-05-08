@@ -1,0 +1,51 @@
+id: ALGO-GRANULOSA-CELL-1L
+applicable_to_disease: DIS-GRANULOSA-CELL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select systemic therapy for advanced (stage III–IV) or recurrent adult
+  granulosa cell tumor (AGCT) requiring chemotherapy. Carboplatin +
+  paclitaxel is the most widely used platinum-taxane regimen, extrapolated
+  from ovarian cancer practice. BEP is an alternative (historically used,
+  higher toxicity). Surgery remains primary; this algorithm applies only
+  when systemic therapy is indicated.
+
+output_indications:
+  - IND-GRANULOSA-CELL-1L-CARBOPLATIN-PACLITAXEL
+
+default_indication: IND-GRANULOSA-CELL-1L-CARBOPLATIN-PACLITAXEL
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Advanced stage III–IV AGCT OR recurrent AGCT with rapid progression"
+    if_true:
+      result: IND-GRANULOSA-CELL-1L-CARBOPLATIN-PACLITAXEL
+    if_false:
+      next_step: 2
+    notes: "Free-text condition without RF; engine routes to default."
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Recurrent hormone receptor-positive AGCT with slow progression"
+    if_true:
+      result: IND-GRANULOSA-CELL-1L-CARBOPLATIN-PACLITAXEL
+      notes: "Hormone-directed therapy (leuprolide, letrozole) is a reasonable alternative for slow-progression recurrence — not encoded here (no separate indication yet)"
+    if_false:
+      result: IND-GRANULOSA-CELL-1L-CARBOPLATIN-PACLITAXEL
+    notes: "Default to carboplatin+paclitaxel for all advanced/recurrent AGCT requiring chemotherapy."
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+last_reviewed: "2026-05-04"
+notes: >
+  No randomized trial specific to AGCT systemic therapy. Platinum-taxane
+  (carboplatin + paclitaxel) is widely used as 1L chemotherapy for
+  advanced/recurrent AGCT based on retrospective series and extrapolation
+  from epithelial ovarian cancer. Inhibin B and AMH are the primary tumor
+  markers for monitoring. Hormone-directed therapy (leuprolide/letrozole)
+  is active and is preferred by some for slow-progression hormone receptor-
+  positive recurrence — not yet encoded as a separate indication.
+  CDK4/6 inhibitor trials ongoing in AGCT (no approval yet).

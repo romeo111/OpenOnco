@@ -2,107 +2,132 @@ id: REG-AML-7-3-GO
 name: "7+3 + fractionated gemtuzumab ozogamicin (CD33+ AML, 1L; ALFA-0701)"
 name_ua: "7+3 + фракційний гемтузумаб озогаміцин (CD33+ ОМЛ, 1L; ALFA-0701)"
 alternate_names:
-  - "7+3+GO"
-  - "DA + fractionated GO"
-  - "ALFA-0701 induction"
-  - "Induction with gemtuzumab"
+- "7+3+GO"
+- "DA + fractionated GO"
+- "ALFA-0701 induction"
+- "Induction with gemtuzumab"
 
 components:
-  - drug_id: DRUG-CYTARABINE
-    dose: "100-200 mg/m²/day"
-    schedule: "Continuous IV infusion days 1-7"
-    route: IV
-  - drug_id: DRUG-DAUNORUBICIN
-    dose: "60 mg/m² (per ALFA-0701; 90 mg/m² acceptable when GO not added per ECOG-ACRIN — but 60 mg/m² standard with concurrent GO due to additive cardiotoxicity / mortality concern)"
-    schedule: "IV bolus days 1-3"
-    route: IV
-  - drug_id: DRUG-GEMTUZUMAB-OZOGAMICIN
-    dose: "3 mg/m² (max 4.5 mg total per dose) IV — fractionated"
-    schedule: "Days 1, 4, 7 of induction"
-    route: IV
+- drug_id: DRUG-CYTARABINE
+  dose: "100-200 mg/m²/day"
+  schedule: "Continuous IV infusion days 1-7"
+  route: IV
+- drug_id: DRUG-DAUNORUBICIN
+  dose: "60 mg/m² (per ALFA-0701; 90 mg/m² acceptable when GO not added per ECOG-ACRIN
+    — but 60 mg/m² standard with concurrent GO due to additive cardiotoxicity / mortality
+    concern)"
+  schedule: "IV bolus days 1-3"
+  route: IV
+- drug_id: DRUG-GEMTUZUMAB-OZOGAMICIN
+  dose: "3 mg/m² (max 4.5 mg total per dose) IV — fractionated"
+  schedule: "Days 1, 4, 7 of induction"
+  route: IV
 
 cycle_length_days: 28
-total_cycles: "1 induction; consolidation HiDAC × 3-4 cycles ± additional fractionated GO 3 mg/m² day 1 of consolidation cycles 1-2 (per ALFA-0701 protocol). No upfront alloHCT in CR1 for favorable-risk per ELN 2022."
+total_cycles: "1 induction; consolidation HiDAC × 3-4 cycles ± additional fractionated
+  GO 3 mg/m² day 1 of consolidation cycles 1-2 (per ALFA-0701 protocol). No upfront
+  alloHCT in CR1 for favorable-risk per ELN 2022."
 toxicity_profile: severe
 
 premedication:
-  - "Standard 7+3 premedications (antiemetic 5HT3 + dexamethasone, allopurinol 300 mg PO daily for TLS prophylaxis, IV hydration ≥3 L/day d1-3)"
-  - "GO infusion: pre-medicate with acetaminophen 650 mg PO + diphenhydramine 50 mg IV ≥30 min before; methylprednisolone 1 mg/kg IV for prior reactions"
-  - "Hepatic VOD/SOS prophylaxis: ursodiol 12 mg/kg/day PO during GO administration (some centers)"
+- "Standard 7+3 premedications (antiemetic 5HT3 + dexamethasone, allopurinol 300 mg
+  PO daily for TLS prophylaxis, IV hydration ≥3 L/day d1-3)"
+- "GO infusion: pre-medicate with acetaminophen 650 mg PO + diphenhydramine 50 mg
+  IV ≥30 min before; methylprednisolone 1 mg/kg IV for prior reactions"
+- "Hepatic VOD/SOS prophylaxis: ursodiol 12 mg/kg/day PO during GO administration
+  (some centers)"
 mandatory_supportive_care:
-  - SUP-TLS-PROPHYLAXIS
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-HBV-PROPHYLAXIS
+- SUP-TLS-PROPHYLAXIS
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Bilirubin ≥2× ULN OR ALT/AST ≥2.5× ULN before GO dose"
-    modification: "Hold GO; reassess at next planned dose; permanent hold if VOD/SOS clinically suspected (RUQ pain + weight gain + bilirubin rise)"
-    rationale: "Hepatic VOD/SOS is the dominant safety concern with GO; risk increased with cumulative dose, prior alloHCT, or concurrent hepatotoxic agents"
-    source_refs:
-      - SRC-ALFA-0701-CASTAIGNE-2012
-      - SRC-NCCN-AML-2025
-  - condition: "Platelet count <100 × 10⁹/L pre-GO dose AND not yet in CR (induction setting)"
-    modification: "Hold subsequent GO doses if not on day 1; full induction proceeds — GO d4/d7 doses may be omitted if cumulative myelosuppression unacceptable"
-    rationale: "Prolonged thrombocytopenia is GO-specific signature toxicity; balance against benefit"
-  - condition: "Adverse-risk cytogenetics (complex karyotype, monosomy 7, TP53-mutant)"
-    modification: "Do NOT add GO — no benefit in adverse-risk subset per ALFA-0701 / Hills meta-analysis; standard 7+3 alone preferred"
-    rationale: "Subgroup analysis: GO benefit confined to CBF / favorable + intermediate risk; adverse-risk derives no benefit and incurs toxicity"
-    source_refs:
-      - SRC-ALFA-0701-CASTAIGNE-2012
-      - SRC-NCCN-AML-2025
-  - condition: "FLT3-ITD/TKD positive"
-    modification: "Standard 7+3 + midostaurin per RATIFY; do NOT routinely add GO (insufficient combination data); FLT3+ takes priority over CBF/GO add-on"
-    rationale: "FLT3 inhibition has primary survival benefit; combination with GO not validated in phase-3"
-  - condition: "Age ≥75 OR HCT-CI ≥3 OR significant cardiac comorbidity"
-    modification: "Consider de-escalating to ven+aza or CPX-351 (if tAML/AML-MRC); GO addition increases TRM in unfit"
-    rationale: "ALFA-0701 enrolled age 50-70; AML-19 (Burnett 2017) supports GO in elderly but with reduced anthracycline; clinician judgment required"
+- condition: "Bilirubin ≥2× ULN OR ALT/AST ≥2.5× ULN before GO dose"
+  modification: "Hold GO; reassess at next planned dose; permanent hold if VOD/SOS
+    clinically suspected (RUQ pain + weight gain + bilirubin rise)"
+  rationale: "Hepatic VOD/SOS is the dominant safety concern with GO; risk increased
+    with cumulative dose, prior alloHCT, or concurrent hepatotoxic agents"
+  source_refs:
+  - SRC-ALFA-0701-CASTAIGNE-2012
+  - SRC-NCCN-AML-2025
+- condition: "Platelet count <100 × 10⁹/L pre-GO dose AND not yet in CR (induction
+    setting)"
+  modification: "Hold subsequent GO doses if not on day 1; full induction proceeds
+    — GO d4/d7 doses may be omitted if cumulative myelosuppression unacceptable"
+  rationale: "Prolonged thrombocytopenia is GO-specific signature toxicity; balance
+    against benefit"
+- condition: "Adverse-risk cytogenetics (complex karyotype, monosomy 7, TP53-mutant)"
+  modification: "Do NOT add GO — no benefit in adverse-risk subset per ALFA-0701 /
+    Hills meta-analysis; standard 7+3 alone preferred"
+  rationale: "Subgroup analysis: GO benefit confined to CBF / favorable + intermediate
+    risk; adverse-risk derives no benefit and incurs toxicity"
+  source_refs:
+  - SRC-ALFA-0701-CASTAIGNE-2012
+  - SRC-NCCN-AML-2025
+- condition: "FLT3-ITD/TKD positive"
+  modification: "Standard 7+3 + midostaurin per RATIFY; do NOT routinely add GO (insufficient
+    combination data); FLT3+ takes priority over CBF/GO add-on"
+  rationale: "FLT3 inhibition has primary survival benefit; combination with GO not
+    validated in phase-3"
+- condition: "Age ≥75 OR HCT-CI ≥3 OR significant cardiac comorbidity"
+  modification: "Consider de-escalating to ven+aza or CPX-351 (if tAML/AML-MRC); GO
+    addition increases TRM in unfit"
+  rationale: "ALFA-0701 enrolled age 50-70; AML-19 (Burnett 2017) supports GO in elderly
+    but with reduced anthracycline; clinician judgment required"
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "Cytarabine + daunorubicin: НСЗУ-reimbursed for AML. Gemtuzumab ozogamicin: NOT registered in Ukraine (drlz.com.ua confirmed; Mylotarg withdrawn 2010 + re-approved FDA 2017 was not followed by UA registration). Access via international referral / EAP for the GO component only — major access barrier limits this regimen to centers with cross-border or compassionate-use pathways. Standard 7+3 remains universally available."
+  notes: "Cytarabine + daunorubicin: НСЗУ-reimbursed for AML. Gemtuzumab ozogamicin:
+    NOT registered in Ukraine (drlz.com.ua confirmed; Mylotarg withdrawn 2010 + re-approved
+    FDA 2017 was not followed by UA registration). Access via international referral
+    / EAP for the GO component only — major access barrier limits this regimen to
+    centers with cross-border or compassionate-use pathways. Standard 7+3 remains
+    universally available."
 
 sources:
-  - SRC-ALFA-0701-CASTAIGNE-2012
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-AML-2022
+- SRC-ALFA-0701-CASTAIGNE-2012
+- SRC-NCCN-AML-2025
+- SRC-ELN-AML-2022
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # 7+3 + GO for CD33+ favorable-risk AML 1L (ALFA-0701).
 # Inherits 7+3 inpatient toxicity + GO-specific VOD risk.
 # STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Виражена втома, що триває тижнями"
-    action_ua: "Очікувано після індукції — кістковий мозок відновлюється повільно"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Жовтяниця, набір ваги, біль у правому верхньому квадранті — у перші 30 днів"
-    action_ua: "Звертайтесь у лікарню негайно — гемтузумаб може спричиняти веноокклюзивну хворобу печінки (VOD)"
-    urgency: er_now
-    cycle_day_window: "Day 1-30"
-    sources:
-      - SRC-NCCN-AML-2025
-      - SRC-ALFA-0701-CASTAIGNE-2012
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Звертайтесь у лікарню негайно — нейтропенія, ризик сепсису"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-AML-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Незвичні синці, кровотеча"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Тяжка інфузійна реакція на гемтузумаб"
-    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
-    urgency: er_now
-    cycle_day_window: "Day 1 of cycle 1"
-    sources:
-      - SRC-NCCN-AML-2025
+- trigger_ua: "Виражена втома, що триває тижнями"
+  action_ua: "Очікувано після індукції — кістковий мозок відновлюється повільно"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Жовтяниця, набір ваги, біль у правому верхньому квадранті — у перші
+    30 днів"
+  action_ua: "Звертайтесь у лікарню негайно — гемтузумаб може спричиняти веноокклюзивну
+    хворобу печінки (VOD)"
+  urgency: er_now
+  cycle_day_window: "Day 1-30"
+  sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ALFA-0701-CASTAIGNE-2012
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Звертайтесь у лікарню негайно — нейтропенія, ризик сепсису"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-AML-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Незвичні синці, кровотеча"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Тяжка інфузійна реакція на гемтузумаб"
+  action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+  urgency: er_now
+  cycle_day_window: "Day 1 of cycle 1"
+  sources:
+  - SRC-NCCN-AML-2025
 
 last_reviewed: "2026-04-30"
 reviewer_signoffs: []
@@ -121,6 +146,15 @@ notes: >
   is the dominant safety concern — careful LFT monitoring + alloHCT
   timing (avoid GO within 90 days of planned alloHCT).
 notes_ua: >
-  ALFA-0701 (Castaigne Lancet 2012): фракційний GO 3 мг/м² дні 1, 4, 7 додано до стандарту 7+3 у 1L de-novo AML вік 50-70. 2-річна EFS 40.8% проти 17.1% (HR 0.58); 2-річна OS 53.2% проти 41.9% (HR 0.69). Hills meta-аналіз 2014 (Lancet Oncol): додання GO зменшує 5-річну смертність на ~20% у favorable-risk (HR 0.47) та intermediate-risk (HR 0.84); БЕЗ виграшу в adverse-risk (HR 1.03). AML-19 (Burnett 2017) підтримує GO 6 мг/м² одна доза в елdeрлі unfit-for-7+3 але це окрема regimen-сутність. Позиція: переважна 1L для fit CD33+ CBF / favorable / intermediate-risk AML де GO доступний. Доза daunorubicin 60 мг/м² (не 90) при додаванні GO через адитивну кардіотоксичність. Печінкова VOD/SOS — домінантна занепокоєність безпеки — ретельний моніторинг LFT + час планування alloHCT (уникати GO протягом 90 днів до планового alloHCT).
+  ALFA-0701 (Castaigne Lancet 2012): фракційний GO 3 мг/м² дні 1, 4, 7 додано до стандарту
+  7+3 у 1L de-novo AML вік 50-70. 2-річна EFS 40.8% проти 17.1% (HR 0.58); 2-річна
+  OS 53.2% проти 41.9% (HR 0.69). Hills meta-аналіз 2014 (Lancet Oncol): додання GO
+  зменшує 5-річну смертність на ~20% у favorable-risk (HR 0.47) та intermediate-risk
+  (HR 0.84); БЕЗ виграшу в adverse-risk (HR 1.03). AML-19 (Burnett 2017) підтримує
+  GO 6 мг/м² одна доза в елdeрлі unfit-for-7+3 але це окрема regimen-сутність. Позиція:
+  переважна 1L для fit CD33+ CBF / favorable / intermediate-risk AML де GO доступний.
+  Доза daunorubicin 60 мг/м² (не 90) при додаванні GO через адитивну кардіотоксичність.
+  Печінкова VOD/SOS — домінантна занепокоєність безпеки — ретельний моніторинг LFT
+  + час планування alloHCT (уникати GO протягом 90 днів до планового alloHCT).
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

@@ -1,6 +1,8 @@
 id: REG-RDHAP-BURKITT
-name: "R-DHAP (Rituximab + Dexamethasone + HD-Cytarabine + Cisplatin) × 2-3 cycles → ASCT/alloSCT (r/r Burkitt salvage; non-cross-resistant alternative to R-ICE)"
-name_ua: "R-DHAP × 2-3 циклів → ASCT/алоТКМ (рятувальна терапія Беркітта; не перехресно-резистентна до R-ICE)"
+name: "R-DHAP (Rituximab + Dexamethasone + HD-Cytarabine + Cisplatin) × 2-3 cycles
+  → ASCT/alloSCT (r/r Burkitt salvage; non-cross-resistant alternative to R-ICE)"
+name_ua: "R-DHAP × 2-3 циклів → ASCT/алоТКМ (рятувальна терапія Беркітта; не перехресно-резистентна
+  до R-ICE)"
 alternate_names: ["R-DHAP Burkitt salvage"]
 
 components: []  # phases supersede; kept empty for back-compat with downstream
@@ -8,83 +10,91 @@ components: []  # phases supersede; kept empty for back-compat with downstream
                 # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
 
 phases:
-  - name: salvage_induction
-    purpose_ua: "сальвадж-індукція R-DHAP × 2-3 цикли — цисплатин + HiDAC + стероїд для рефрактерної/рецидивної Беркітт-лімфоми перед консолідацією трансплантацією"
-    purpose_en: "salvage induction R-DHAP × 2-3 cycles — cisplatin + HiDAC + steroid for r/r Burkitt before transplant consolidation"
-    duration: "2-3 cycles × 21 days each"
-    timing_relative_to: "absolute"
-    optional: false
-    components:
-      - drug_id: DRUG-RITUXIMAB
-        dose: "375 mg/m²"
-        schedule: "IV day 1 of each cycle"
-        route: IV
-      - drug_id: DRUG-DEXAMETHASONE
-        dose: "40 mg"
-        schedule: "IV/PO days 1-4 each cycle"
-        route: IV
-      - drug_id: DRUG-CYTARABINE
-        dose: "2 g/m² q12h × 2 doses"
-        schedule: "IV day 2 each cycle (HiDAC component)"
-        route: IV
-      - drug_id: DRUG-CISPLATIN
-        dose: "100 mg/m²"
-        schedule: "IV continuous 24h day 1 each cycle"
-        route: IV
-      - drug_id: DRUG-METHOTREXATE
-        dose: "12 mg IT"
-        schedule: "IT each cycle (CNS prophylaxis / treatment)"
-        route: IT
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-ESMO-BURKITT-2024
-  - name: consolidation_autosct
-    purpose_ua: "консолідація аутологічною (або алогенною за рефрактерним перебігом) ТГСК після PET-CR2 на сальвадж-індукцію"
-    purpose_en: "consolidation with autologous (or allogeneic for refractory) HCT after PET-CR2 to salvage induction"
-    duration: "single transplant procedure (post PET-CT restaging)"
-    timing_relative_to: "previous_phase_completion"
-    optional: false
-    components: []  # ASCT (BEAM-conditioned) or alloSCT pathway —
+- name: salvage_induction
+  purpose_ua: "сальвадж-індукція R-DHAP × 2-3 цикли — цисплатин + HiDAC + стероїд
+    для рефрактерної/рецидивної Беркітт-лімфоми перед консолідацією трансплантацією"
+  purpose_en: "salvage induction R-DHAP × 2-3 cycles — cisplatin + HiDAC + steroid
+    for r/r Burkitt before transplant consolidation"
+  duration: "2-3 cycles × 21 days each"
+  timing_relative_to: "absolute"
+  optional: false
+  components:
+  - drug_id: DRUG-RITUXIMAB
+    dose: "375 mg/m²"
+    schedule: "IV day 1 of each cycle"
+    route: IV
+  - drug_id: DRUG-DEXAMETHASONE
+    dose: "40 mg"
+    schedule: "IV/PO days 1-4 each cycle"
+    route: IV
+  - drug_id: DRUG-CYTARABINE
+    dose: "2 g/m² q12h × 2 doses"
+    schedule: "IV day 2 each cycle (HiDAC component)"
+    route: IV
+  - drug_id: DRUG-CISPLATIN
+    dose: "100 mg/m²"
+    schedule: "IV continuous 24h day 1 each cycle"
+    route: IV
+  - drug_id: DRUG-METHOTREXATE
+    dose: "12 mg IT"
+    schedule: "IT each cycle (CNS prophylaxis / treatment)"
+    route: IT
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-BURKITT-2024
+- name: consolidation_autosct
+  purpose_ua: "консолідація аутологічною (або алогенною за рефрактерним перебігом)
+    ТГСК після PET-CR2 на сальвадж-індукцію"
+  purpose_en: "consolidation with autologous (or allogeneic for refractory) HCT after
+    PET-CR2 to salvage induction"
+  duration: "single transplant procedure (post PET-CT restaging)"
+  timing_relative_to: "previous_phase_completion"
+  optional: false
+  components: []    # ASCT (BEAM-conditioned) or alloSCT pathway —
                    # institution-specific conditioning; not enumerated as
                    # drug components here (placeholder per plan-doc §5 Group C)
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-ESMO-BURKITT-2024
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-BURKITT-2024
 
 cycle_length_days: 21
-total_cycles: "2-3 cycles induction → restage by PET-CT → ASCT in CR2 (fit transplant-eligible) OR alloSCT (refractory)"
+total_cycles: "2-3 cycles induction → restage by PET-CT → ASCT in CR2 (fit transplant-eligible)
+  OR alloSCT (refractory)"
 toxicity_profile: very-high
 
 premedication:
-  - "TLS prophylaxis MANDATORY (rasburicase OR allopurinol + IV hydration ≥3 L/day)"
-  - "IV hydration + diuresis for cisplatin nephroprotection (mannitol if needed)"
-  - "Cytarabine eye drops (steroid drops) + cerebellar exam baseline + each HiDAC dose"
-  - "Standard rituximab premedications"
-  - "Antiemetic regimen aggressive (cisplatin + HiDAC = high emetogenicity)"
-  - "Prophylactic G-CSF day 5"
+- "TLS prophylaxis MANDATORY (rasburicase OR allopurinol + IV hydration ≥3 L/day)"
+- "IV hydration + diuresis for cisplatin nephroprotection (mannitol if needed)"
+- "Cytarabine eye drops (steroid drops) + cerebellar exam baseline + each HiDAC dose"
+- "Standard rituximab premedications"
+- "Antiemetic regimen aggressive (cisplatin + HiDAC = high emetogenicity)"
+- "Prophylactic G-CSF day 5"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-TLS-PROPHYLAXIS
-  - SUP-GCSF-NEUTROPENIA
-  - SUP-ANTIEMETIC-PREMED
-  - SUP-HBV-PROPHYLAXIS
+- SUP-PJP-PROPHYLAXIS
+- SUP-TLS-PROPHYLAXIS
+- SUP-GCSF-NEUTROPENIA
+- SUP-ANTIEMETIC-PREMED
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "CrCl 30-60 mL/min"
-    modification: "Reduce cisplatin 50% OR substitute carboplatin AUC 5 (R-DHAOx variant)"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Pre-existing peripheral neuropathy"
-    modification: "Reduce cisplatin 50% on cycle 2 if Grade ≥2 develops; consider switch to R-ICE"
-  - condition: "Ototoxicity (high-frequency hearing loss)"
-    modification: "Reduce cisplatin 50% OR substitute carboplatin"
-  - condition: "Cerebellar toxicity from HiDAC (ataxia, dysmetria)"
-    modification: "Discontinue HiDAC immediately; permanent if Grade ≥2"
-    rationale: "Cerebellar toxicity from HiDAC may be irreversible"
-  - condition: "Age >65"
-    modification: "Reduce all drugs 25-50%; consider NOT pursuing ASCT consolidation; outcomes substantially worse"
-  - condition: "Failure to achieve CR after 2 cycles (PR or PD)"
-    modification: "Switch to alternative salvage (R-ICE or R-GDP); reassess transplant feasibility"
+- condition: "CrCl 30-60 mL/min"
+  modification: "Reduce cisplatin 50% OR substitute carboplatin AUC 5 (R-DHAOx variant)"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Pre-existing peripheral neuropathy"
+  modification: "Reduce cisplatin 50% on cycle 2 if Grade ≥2 develops; consider switch
+    to R-ICE"
+- condition: "Ototoxicity (high-frequency hearing loss)"
+  modification: "Reduce cisplatin 50% OR substitute carboplatin"
+- condition: "Cerebellar toxicity from HiDAC (ataxia, dysmetria)"
+  modification: "Discontinue HiDAC immediately; permanent if Grade ≥2"
+  rationale: "Cerebellar toxicity from HiDAC may be irreversible"
+- condition: "Age >65"
+  modification: "Reduce all drugs 25-50%; consider NOT pursuing ASCT consolidation;
+    outcomes substantially worse"
+- condition: "Failure to achieve CR after 2 cycles (PR or PD)"
+  modification: "Switch to alternative salvage (R-ICE or R-GDP); reassess transplant
+    feasibility"
 
 ukraine_availability:
   all_components_registered: true
@@ -96,8 +106,8 @@ ukraine_availability:
     domestic.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-BURKITT-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-BURKITT-2024
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -112,6 +122,13 @@ notes: >
   vs. ototoxicity / renal function [favors R-ICE]). CR2 with ASCT
   consolidation is goal in fit younger r/r Burkitt.
 notes_ua: >
-  R-DHAP is non-cross-resistant alternative to R-ICE for р/р агресивний B-cell NHL сальвадж. цисплатин + HiDAC + steroid mechanism vs ICE іфосфамід + карбоплатин + етопозид. For Burkitt зокрема: HiDAC component provides additional CNS-penetrant cytotoxicity beyond IT терапія. Used either as 1st сальвадж OR after R-ICE failure (CORAL дослідження showed R-DHAP and R-ICE співставний in DLBCL сальвадж; choice часто dictated by pre-existing нейропатія [favors R-ICE] vs. anthracycline cumulative доза [favors R-DHAP] vs. ototoxicity / renal function [favors R-ICE]). CR2 with ASCT консолідація is goal in fit younger р/р Burkitt.
+  R-DHAP is non-cross-resistant alternative to R-ICE for р/р агресивний B-cell NHL
+  сальвадж. цисплатин + HiDAC + steroid mechanism vs ICE іфосфамід + карбоплатин +
+  етопозид. For Burkitt зокрема: HiDAC component provides additional CNS-penetrant
+  cytotoxicity beyond IT терапія. Used either as 1st сальвадж OR after R-ICE failure
+  (CORAL дослідження showed R-DHAP and R-ICE співставний in DLBCL сальвадж; choice
+  часто dictated by pre-existing нейропатія [favors R-ICE] vs. anthracycline cumulative
+  доза [favors R-DHAP] vs. ototoxicity / renal function [favors R-ICE]). CR2 with
+  ASCT консолідація is goal in fit younger р/р Burkitt.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

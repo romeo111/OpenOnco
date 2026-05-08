@@ -4,32 +4,32 @@ name_ua: "Етопозид-платина + дурвалумаб (поширен
 alternate_names: ["CASPIAN regimen"]
 
 components:
-  - drug_id: DRUG-CARBOPLATIN
-    dose: "AUC 5-6 IV"
-    schedule: "Day 1 of 21-day cycle x 4 cycles"
-    route: IV
-  - drug_id: DRUG-ETOPOSIDE
-    dose: "80-100 mg/m² IV"
-    schedule: "Days 1, 2, 3 of 21-day cycle x 4 cycles"
-    route: IV
-  - drug_id: DRUG-DURVALUMAB
-    dose: "1500 mg IV q3 weeks (induction); 1500 mg q4 weeks (maintenance)"
-    schedule: "From cycle 1; maintenance until progression"
-    route: IV
+- drug_id: DRUG-CARBOPLATIN
+  dose: "AUC 5-6 IV"
+  schedule: "Day 1 of 21-day cycle x 4 cycles"
+  route: IV
+- drug_id: DRUG-ETOPOSIDE
+  dose: "80-100 mg/m² IV"
+  schedule: "Days 1, 2, 3 of 21-day cycle x 4 cycles"
+  route: IV
+- drug_id: DRUG-DURVALUMAB
+  dose: "1500 mg IV q3 weeks (induction); 1500 mg q4 weeks (maintenance)"
+  schedule: "From cycle 1; maintenance until progression"
+  route: IV
 
 cycle_length_days: 21
 total_cycles: "EP × 4; durva maintenance until progression"
 toxicity_profile: severe
 
 premedication:
-  - "Antiemetic per high-emetogenic protocol"
+- "Antiemetic per high-emetogenic protocol"
 mandatory_supportive_care:
-  - SUP-G-CSF-PRIMARY-PROPHYLAXIS-PROSTATE
+- SUP-G-CSF-PRIMARY-PROPHYLAXIS-PROSTATE
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Same as EP+atezo"
-    modification: "Per drug-specific guidance"
+- condition: "Same as EP+atezo"
+  modification: "Per drug-specific guidance"
 
 ukraine_availability:
   all_components_registered: true
@@ -42,44 +42,45 @@ sources: [SRC-NCCN-SCLC-2025, SRC-ESMO-SCLC-2021]
 # Etoposide + carbo + durvalumab for SCLC ext-stage 1L (CASPIAN).
 # Same as EP-atezo pattern. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Виражена втома, нудота"
-    action_ua: "Очікувано — приймайте призначені протиблювотні"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-SCLC-2025
-  - trigger_ua: "Випадання волосся"
-    action_ua: "Очікувано"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-SCLC-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — глибока нейтропенія"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-NCCN-SCLC-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Помірна діарея"
-    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-SCLC-2025
-  - trigger_ua: "Нова задишка"
-    action_ua: "Подзвоніть у клініку того ж дня — пневмоніт"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-SCLC-2025
-  - trigger_ua: "Тяжка діарея або сильна задишка"
-    action_ua: "Звертайтесь у лікарню негайно"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-SCLC-2025
+- trigger_ua: "Виражена втома, нудота"
+  action_ua: "Очікувано — приймайте призначені протиблювотні"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-SCLC-2025
+- trigger_ua: "Випадання волосся"
+  action_ua: "Очікувано"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-SCLC-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — глибока нейтропенія"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-NCCN-SCLC-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Помірна діарея"
+  action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-SCLC-2025
+- trigger_ua: "Нова задишка"
+  action_ua: "Подзвоніть у клініку того ж дня — пневмоніт"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-SCLC-2025
+- trigger_ua: "Тяжка діарея або сильна задишка"
+  action_ua: "Звертайтесь у лікарню негайно"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-SCLC-2025
 
 last_reviewed:
 notes: >
   CASPIAN: median OS 13.0 (durva) vs 10.3 months (EP). ESMO preferred
   ICI; NCCN considers atezo and durva equivalent.
 notes_ua: >
-  CASPIAN: медіана ЗВ 13.0 (durva) проти 10.3 місяців (EP). ESMO переважний ICI; NCCN considers atezo and durva еквівалентний.
+  CASPIAN: медіана ЗВ 13.0 (durva) проти 10.3 місяців (EP). ESMO переважний ICI; NCCN
+  considers atezo and durva еквівалентний.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

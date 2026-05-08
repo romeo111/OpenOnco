@@ -4,61 +4,59 @@ name_ua: "ФОЛФОКСІРІ + Бевацизумаб"
 alternate_names: ["FOLFOXIRI+bev", "triplet + bevacizumab"]
 
 components:
-  - drug_id: DRUG-IRINOTECAN
-    dose: "165 mg/m²"
-    schedule: "IV over 1h, day 1"
-    route: IV
-    notes: "Reduced vs FOLFIRI (180→165) to allow triplet tolerability"
-  - drug_id: DRUG-OXALIPLATIN
-    dose: "85 mg/m²"
-    schedule: "IV over 2h, day 1"
-    route: IV
-  - drug_id: DRUG-LEUCOVORIN
-    dose: "200 mg/m²"
-    schedule: "IV over 2h, day 1"
-    route: IV
-  - drug_id: DRUG-5-FLUOROURACIL
-    dose: "3200 mg/m² CIV over 48h"
-    schedule: "Day 1-2 (no bolus)"
-    route: IV
-    notes: "No 5-FU bolus component (omitted vs FOLFOX to manage toxicity)"
-  - drug_id: DRUG-BEVACIZUMAB
-    dose: "5 mg/kg"
-    schedule: "IV day 1, before chemotherapy"
-    route: IV
+- drug_id: DRUG-IRINOTECAN
+  dose: "165 mg/m²"
+  schedule: "IV over 1h, day 1"
+  route: IV
+  notes: "Reduced vs FOLFIRI (180→165) to allow triplet tolerability"
+- drug_id: DRUG-OXALIPLATIN
+  dose: "85 mg/m²"
+  schedule: "IV over 2h, day 1"
+  route: IV
+- drug_id: DRUG-LEUCOVORIN
+  dose: "200 mg/m²"
+  schedule: "IV over 2h, day 1"
+  route: IV
+- drug_id: DRUG-5-FLUOROURACIL
+  dose: "3200 mg/m² CIV over 48h"
+  schedule: "Day 1-2 (no bolus)"
+  route: IV
+  notes: "No 5-FU bolus component (omitted vs FOLFOX to manage toxicity)"
+- drug_id: DRUG-BEVACIZUMAB
+  dose: "5 mg/kg"
+  schedule: "IV day 1, before chemotherapy"
+  route: IV
 
 cycle_length_days: 14
 total_cycles: "Until progression / unacceptable toxicity; consider de-escalation after 4-6 months"
 
 toxicity_profile: severe
 premedication:
-  - "Atropine 0.25 mg IV prior to irinotecan (prevent cholinergic syndrome)"
-  - "5-HT3 antagonist + dexamethasone"
-  - "NK1 receptor antagonist recommended (triple antiemetic)"
-mandatory_supportive_care:
-  - "Prophylactic G-CSF strongly recommended (neutropenia rate ~50%)"
-  - "Loperamide dispensed at start of each cycle (irinotecan diarrhea)"
+- "Atropine 0.25 mg IV prior to irinotecan (prevent cholinergic syndrome)"
+- "5-HT3 antagonist + dexamethasone"
+- "NK1 receptor antagonist recommended (triple antiemetic)"
+mandatory_supportive_care: []
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Grade 3-4 diarrhea"
-    modification: "Reduce irinotecan by 25%; hold until Grade ≤1"
-    source_refs: [SRC-TRIBE-LOUPAKIS-2014]
-  - condition: "Grade 3-4 neutropenia with fever"
-    modification: "Delay cycle; reduce all cytotoxic components by 15-20% in subsequent cycle"
-    source_refs: [SRC-NCCN-COLON-2025]
-  - condition: "Grade 2-3 peripheral neuropathy (persistent)"
-    modification: "Reduce oxaliplatin by 25%; discontinue if Grade 3"
-    source_refs: [SRC-NCCN-COLON-2025]
-  - condition: "Hypertension Grade 2 (SBP ≥150 or DBP ≥100)"
-    modification: "Optimize antihypertensive; hold bevacizumab if uncontrolled"
-    source_refs: [SRC-NCCN-COLON-2025]
-  - condition: "UGT1A1 *28/*28 homozygous (Gilbert syndrome)"
-    modification: "Consider irinotecan starting at 130 mg/m²; monitor for severe neutropenia"
-    source_refs: [SRC-NCCN-COLON-2025]
-  - condition: "Recent / planned major surgery"
-    modification: "Hold bevacizumab ≥28 days pre-op and ≥28 days post-op until wound healing"
-    source_refs: [SRC-NCCN-COLON-2025]
+- condition: "Grade 3-4 diarrhea"
+  modification: "Reduce irinotecan by 25%; hold until Grade ≤1"
+  source_refs: [SRC-TRIBE-LOUPAKIS-2014]
+- condition: "Grade 3-4 neutropenia with fever"
+  modification: "Delay cycle; reduce all cytotoxic components by 15-20% in subsequent cycle"
+  source_refs: [SRC-NCCN-COLON-2025]
+- condition: "Grade 2-3 peripheral neuropathy (persistent)"
+  modification: "Reduce oxaliplatin by 25%; discontinue if Grade 3"
+  source_refs: [SRC-NCCN-COLON-2025]
+- condition: "Hypertension Grade 2 (SBP ≥150 or DBP ≥100)"
+  modification: "Optimize antihypertensive; hold bevacizumab if uncontrolled"
+  source_refs: [SRC-NCCN-COLON-2025]
+- condition: "UGT1A1 *28/*28 homozygous (Gilbert syndrome)"
+  modification: "Consider irinotecan starting at 130 mg/m²; monitor for severe neutropenia"
+  source_refs: [SRC-NCCN-COLON-2025]
+- condition: "Recent / planned major surgery"
+  modification: "Hold bevacizumab ≥28 days pre-op and ≥28 days post-op until wound healing"
+  source_refs: [SRC-NCCN-COLON-2025]
 
 ukraine_availability:
   all_components_registered: true
@@ -70,55 +68,55 @@ ukraine_availability:
     requires oncology centre with 48h infusion capability.
 
 sources:
-  - SRC-TRIBE-LOUPAKIS-2014
-  - SRC-TRIBE2-CREMOLINI-2020
-  - SRC-NCCN-COLON-2025
-  - SRC-ESMO-COLON-2024
+- SRC-TRIBE-LOUPAKIS-2014
+- SRC-TRIBE2-CREMOLINI-2020
+- SRC-NCCN-COLON-2025
+- SRC-ESMO-COLON-2024
 
 between_visit_watchpoints:
-  - trigger_ua: "Діарея — більше 4 разів на день або з кров'ю"
-    action_ua: "Подзвоніть у клініку того ж дня — іринотекан спричиняє діарею; потрібен лоперамід або госпіталізація"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 2-7"
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Звертайтесь у лікарню негайно — ризик нейтропенічної лихоманки (частіше ніж при FOLFOX)"
-    urgency: er_now
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
-    action_ua: "Оксаліплатин — занотуйте і повідомте лікаря"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-COLON-2025
-  - trigger_ua: "Чутливість до холоду — холодне питво або повітря викликають дискомфорт"
-    action_ua: "Очікувано перші 3-5 днів циклу — уникайте холодного"
-    urgency: log_at_next_visit
-    cycle_day_window: "Day 1-5"
-    sources:
-      - SRC-NCCN-COLON-2025
-  - trigger_ua: "Підвищений артеріальний тиск (вимірюйте 1-2 рази на тиждень)"
-    action_ua: "Бевацизумаб може підвищувати тиск — занотуйте показники, обговоріть на наступному візиті"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-COLON-2025
-  - trigger_ua: "Кров у сечі або сеча, що піниться"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібен аналіз сечі (бевацизумаб)"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-COLON-2025
-  - trigger_ua: "Раптовий гострий біль у животі"
-    action_ua: "Звертайтесь у лікарню негайно — рідкісна перфорація кишківника (бевацизумаб)"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-COLON-2025
-  - trigger_ua: "Кровохаркання або значна кровотеча"
-    action_ua: "Звертайтесь у лікарню негайно"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-COLON-2025
+- trigger_ua: "Діарея — більше 4 разів на день або з кров'ю"
+  action_ua: "Подзвоніть у клініку того ж дня — іринотекан спричиняє діарею; потрібен лоперамід або госпіталізація"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 2-7"
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Звертайтесь у лікарню негайно — ризик нейтропенічної лихоманки (частіше ніж при FOLFOX)"
+  urgency: er_now
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Поколювання або оніміння в кистях/стопах"
+  action_ua: "Оксаліплатин — занотуйте і повідомте лікаря"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-COLON-2025
+- trigger_ua: "Чутливість до холоду — холодне питво або повітря викликають дискомфорт"
+  action_ua: "Очікувано перші 3-5 днів циклу — уникайте холодного"
+  urgency: log_at_next_visit
+  cycle_day_window: "Day 1-5"
+  sources:
+  - SRC-NCCN-COLON-2025
+- trigger_ua: "Підвищений артеріальний тиск (вимірюйте 1-2 рази на тиждень)"
+  action_ua: "Бевацизумаб може підвищувати тиск — занотуйте показники, обговоріть на наступному візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-COLON-2025
+- trigger_ua: "Кров у сечі або сеча, що піниться"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібен аналіз сечі (бевацизумаб)"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-COLON-2025
+- trigger_ua: "Раптовий гострий біль у животі"
+  action_ua: "Звертайтесь у лікарню негайно — рідкісна перфорація кишківника (бевацизумаб)"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-COLON-2025
+- trigger_ua: "Кровохаркання або значна кровотеча"
+  action_ua: "Звертайтесь у лікарню негайно"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-COLON-2025
 
 last_reviewed: "2026-05-03"
 notes: >

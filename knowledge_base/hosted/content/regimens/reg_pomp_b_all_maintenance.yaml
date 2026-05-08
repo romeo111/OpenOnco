@@ -1,67 +1,75 @@
 id: REG-POMP-B-ALL-MAINTENANCE
-name: "POMP maintenance — B-ALL post-induction-consolidation (vincristine + 6-MP + MTX + prednisone)"
-name_ua: "POMP підтримуюча терапія B-ALL після індукції-консолідації (вінкристин + 6-МП + MTX + преднізолон)"
+name: "POMP maintenance — B-ALL post-induction-consolidation (vincristine + 6-MP +
+  MTX + prednisone)"
+name_ua: "POMP підтримуюча терапія B-ALL після індукції-консолідації (вінкристин +
+  6-МП + MTX + преднізолон)"
 alternate_names:
-  - "POMP"
-  - "B-ALL maintenance"
-  - "Vincristine/6-MP/MTX/prednisone maintenance"
-  - "BFM-style maintenance phase"
+- "POMP"
+- "B-ALL maintenance"
+- "Vincristine/6-MP/MTX/prednisone maintenance"
+- "BFM-style maintenance phase"
 
 components:
-  - drug_id: DRUG-MERCAPTOPURINE
-    dose: "50-75 mg/m² PO daily (continuous), titrated to ANC 0.75-1.5 × 10⁹/L; dose-adjust per TPMT/NUDT15 genotype if measured"
-    schedule: "PO daily, continuous (taken on empty stomach, bedtime preferred)"
-    route: PO
-  - drug_id: DRUG-METHOTREXATE
-    dose: "20 mg/m² PO weekly (titrated to ANC + tolerance)"
-    schedule: "PO weekly, same day each week"
-    route: PO
-  - drug_id: DRUG-VINCRISTINE
-    dose: "1.4 mg/m² IV (cap 2 mg) day 1 of each maintenance pulse"
-    schedule: "IV monthly (every 4 weeks) during pulse phases, paired with prednisone"
-    route: IV
-  - drug_id: DRUG-PREDNISONE
-    dose: "60 mg/m²/day PO × 5 days each monthly pulse"
-    schedule: "PO × 5 days every 4 weeks (paired with vincristine pulse)"
-    route: PO
+- drug_id: DRUG-MERCAPTOPURINE
+  dose: "50-75 mg/m² PO daily (continuous), titrated to ANC 0.75-1.5 × 10⁹/L; dose-adjust
+    per TPMT/NUDT15 genotype if measured"
+  schedule: "PO daily, continuous (taken on empty stomach, bedtime preferred)"
+  route: PO
+- drug_id: DRUG-METHOTREXATE
+  dose: "20 mg/m² PO weekly (titrated to ANC + tolerance)"
+  schedule: "PO weekly, same day each week"
+  route: PO
+- drug_id: DRUG-VINCRISTINE
+  dose: "1.4 mg/m² IV (cap 2 mg) day 1 of each maintenance pulse"
+  schedule: "IV monthly (every 4 weeks) during pulse phases, paired with prednisone"
+  route: IV
+- drug_id: DRUG-PREDNISONE
+  dose: "60 mg/m²/day PO × 5 days each monthly pulse"
+  schedule: "PO × 5 days every 4 weeks (paired with vincristine pulse)"
+  route: PO
 
 cycle_length_days: 28
-total_cycles: "Continue maintenance to total treatment duration of 2 years (women) - 3 years (men) from start of interim maintenance"
+total_cycles: "Continue maintenance to total treatment duration of 2 years (women)
+  - 3 years (men) from start of interim maintenance"
 toxicity_profile: low-moderate
 
 premedication:
-  - "Antiemetics PRN with vincristine pulse"
-  - "Stool softener / laxative continuous (vincristine ileus prophylaxis)"
+- "Antiemetics PRN with vincristine pulse"
+- "Stool softener / laxative continuous (vincristine ileus prophylaxis)"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS  # TMP/SMX × duration of maintenance
-  - SUP-HBV-PROPHYLAXIS
+- SUP-PJP-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "ANC <0.75 × 10⁹/L OR platelets <75 × 10⁹/L"
-    modification: "Hold 6-MP + MTX; resume at lower dose on count recovery (6-MP 25-50% reduction)"
-    rationale: "Maintenance is dose-titrated to mild myelosuppression; cytopenia signals over-dosing"
-    source_refs:
-      - SRC-CALGB-10403-STOCK-2019
-      - SRC-NCCN-BCELL-2025
-  - condition: "TPMT or NUDT15 poor metabolizer genotype"
-    modification: "6-MP at 10% of standard dose OR avoid; consult pharmacogenomics"
-    rationale: "TPMT*3A/*3A or NUDT15 c.415C>T homozygotes have severe life-threatening myelosuppression at standard doses"
-    source_refs:
-      - SRC-NCCN-BCELL-2025
-  - condition: "Transaminitis (ALT/AST >5× ULN OR bilirubin >2 mg/dL)"
-    modification: "Hold both 6-MP and MTX; resume at 50% on resolution"
-    rationale: "Both agents are hepatotoxic; synergistic in maintenance"
-    source_refs:
-      - SRC-NCCN-BCELL-2025
-  - condition: "Severe peripheral neuropathy grade ≥3"
-    modification: "Hold vincristine; resume at 1 mg fixed dose if recovery to grade ≤1"
-    rationale: "Cumulative neurotoxicity; cap dose to limit"
-  - condition: "Concurrent allopurinol indicated (uric acid management)"
-    modification: "Reduce 6-MP dose by 50-75%"
-    rationale: "Allopurinol blocks xanthine oxidase, increases active 6-MP metabolites"
-    source_refs:
-      - SRC-NCCN-BCELL-2025
+- condition: "ANC <0.75 × 10⁹/L OR platelets <75 × 10⁹/L"
+  modification: "Hold 6-MP + MTX; resume at lower dose on count recovery (6-MP 25-50%
+    reduction)"
+  rationale: "Maintenance is dose-titrated to mild myelosuppression; cytopenia signals
+    over-dosing"
+  source_refs:
+  - SRC-CALGB-10403-STOCK-2019
+  - SRC-NCCN-BCELL-2025
+- condition: "TPMT or NUDT15 poor metabolizer genotype"
+  modification: "6-MP at 10% of standard dose OR avoid; consult pharmacogenomics"
+  rationale: "TPMT*3A/*3A or NUDT15 c.415C>T homozygotes have severe life-threatening
+    myelosuppression at standard doses"
+  source_refs:
+  - SRC-NCCN-BCELL-2025
+- condition: "Transaminitis (ALT/AST >5× ULN OR bilirubin >2 mg/dL)"
+  modification: "Hold both 6-MP and MTX; resume at 50% on resolution"
+  rationale: "Both agents are hepatotoxic; synergistic in maintenance"
+  source_refs:
+  - SRC-NCCN-BCELL-2025
+- condition: "Severe peripheral neuropathy grade ≥3"
+  modification: "Hold vincristine; resume at 1 mg fixed dose if recovery to grade
+    ≤1"
+  rationale: "Cumulative neurotoxicity; cap dose to limit"
+- condition: "Concurrent allopurinol indicated (uric acid management)"
+  modification: "Reduce 6-MP dose by 50-75%"
+  rationale: "Allopurinol blocks xanthine oxidase, increases active 6-MP metabolites"
+  source_refs:
+  - SRC-NCCN-BCELL-2025
 
 ukraine_availability:
   all_components_registered: true
@@ -69,39 +77,40 @@ ukraine_availability:
   notes: "All four POMP components are registered and НСЗУ-reimbursed for B-ALL maintenance."
 
 sources:
-  - SRC-CALGB-10403-STOCK-2019
-  - SRC-NCCN-BCELL-2025
+- SRC-CALGB-10403-STOCK-2019
+- SRC-NCCN-BCELL-2025
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # POMP maintenance B-ALL. Vincristine: ileus + neuropathy.
 # 6-MP + MTX: hepatotoxicity + cytopenia (TPMT/NUDT15 severe myelosuppression).
 # STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Запор більше 3 днів"
-    action_ua: "Прийміть призначений послаблюючий засіб; занотовуйте — вінкристин уповільнює кишечник"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Поколювання або оніміння у пальцях рук і ніг"
-    action_ua: "Занотовуйте і повідомте лікаря — нейротоксичність вінкристину"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Жовтяниця, темна сеча"
-    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність від 6-МП або MTX"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Відсутність стільця понад 5 днів, здуття живота, виражений біль"
-    action_ua: "Звертайтесь у лікарню негайно — паралітичний ілеус від вінкристину"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Запор більше 3 днів"
+  action_ua: "Прийміть призначений послаблюючий засіб; занотовуйте — вінкристин уповільнює
+    кишечник"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Поколювання або оніміння у пальцях рук і ніг"
+  action_ua: "Занотовуйте і повідомте лікаря — нейротоксичність вінкристину"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Жовтяниця, темна сеча"
+  action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність від 6-МП або MTX"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Відсутність стільця понад 5 днів, здуття живота, виражений біль"
+  action_ua: "Звертайтесь у лікарню негайно — паралітичний ілеус від вінкристину"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-27"
 notes: >
@@ -114,6 +123,12 @@ notes: >
   pre-initiation when available. PJP prophylaxis (TMP/SMX) mandatory
   throughout maintenance. STUB — requires Clinical Co-Lead signoff.
 notes_ua: >
-  CALGB 10403 (Stock 2019): 2-3 рік POMP підтримка after індукція + консолідація + interim підтримка + delayed intensification. стандарт tail of педіатричний-inspired BFM-style схема for AYA Ph-negative B-ALL; also used in дорослий Ph-negative ALL and post hyper-CVAD дорослий protocols. доза-titrated to mild myelosuppression (ANC 0.75-1.5 × 10⁹/L). TPMT/NUDT15 genotyping рекомендований pre-initiation when available. PJP prophylaxis (TMP/SMX) обов'язковий throughout підтримка. STUB — requires Clinical Co-Lead signoff.
+  CALGB 10403 (Stock 2019): 2-3 рік POMP підтримка after індукція + консолідація +
+  interim підтримка + delayed intensification. стандарт tail of педіатричний-inspired
+  BFM-style схема for AYA Ph-negative B-ALL; also used in дорослий Ph-negative ALL
+  and post hyper-CVAD дорослий protocols. доза-titrated to mild myelosuppression (ANC
+  0.75-1.5 × 10⁹/L). TPMT/NUDT15 genotyping рекомендований pre-initiation when available.
+  PJP prophylaxis (TMP/SMX) обов'язковий throughout підтримка. STUB — requires Clinical
+  Co-Lead signoff.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

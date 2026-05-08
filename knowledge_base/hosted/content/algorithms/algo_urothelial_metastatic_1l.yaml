@@ -23,10 +23,8 @@ decision_tree:
   # of cisplatin eligibility (EV-302 enrolled both groups).
   - step: 1
     evaluate:
-      all_of:
-        - condition: "No pre-existing severe (Grade ≥2) peripheral neuropathy"
-        - condition: "No uncontrolled diabetes mellitus (HbA1c > 10% or recurrent DKA)"
-        - condition: "No severe corneal disease or active keratopathy"
+      any_of:
+        - {finding: ev_pembro_eligible, value: true}
     if_true:
       result: IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO
       notes: >

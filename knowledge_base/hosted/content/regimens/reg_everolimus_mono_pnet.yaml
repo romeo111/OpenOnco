@@ -2,54 +2,61 @@ id: REG-EVEROLIMUS-MONO-PNET
 name: "Everolimus monotherapy (advanced/progressive pNET G1/G2; RADIANT-3)"
 name_ua: "Еверолімус монотерапія (поширена/прогресуюча pNET G1/G2; RADIANT-3)"
 alternate_names:
-  - "RADIANT-3 regimen"
-  - "Everolimus pNET"
-  - "Afinitor pNET"
+- "RADIANT-3 regimen"
+- "Everolimus pNET"
+- "Afinitor pNET"
 
 components:
-  - drug_id: DRUG-EVEROLIMUS
-    dose: "10 mg PO once daily"
-    schedule: "Continuous daily dosing until progression or unacceptable toxicity"
-    route: PO
+- drug_id: DRUG-EVEROLIMUS
+  dose: "10 mg PO once daily"
+  schedule: "Continuous daily dosing until progression or unacceptable toxicity"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "Continuous until progression or unacceptable toxicity"
 toxicity_profile: moderate
 
 premedication:
-  - "Dexamethasone 0.5 mg/5 mL mouthwash (swish and spit) BID starting day 1 through week 8 — SWISH protocol reduces G2+ stomatitis from ~33% to ~2%"
+- "Dexamethasone 0.5 mg/5 mL mouthwash (swish and spit) BID starting day 1 through
+  week 8 — SWISH protocol reduces G2+ stomatitis from ~33% to ~2%"
 
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-
+- SUP-PJP-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Grade ≥2 non-infectious pneumonitis (CT-confirmed interstitial changes)"
-    modification: "Hold everolimus; prednisolone 0.5–1 mg/kg/day until ≤gr 1; resume at 5 mg/day; discontinue if gr 3 or recurrent gr 2"
-    rationale: "Pneumonitis is a boxed warning for everolimus — leading cause of treatment discontinuation (~16% any grade)"
-    source_refs:
-      - SRC-NCCN-NET-2025
-  - condition: "Grade ≥3 stomatitis"
-    modification: "Hold until ≤gr 1; resume at 5 mg/day; dexamethasone mouthwash escalation; rule out candidiasis (antifungal cover if confirmed)"
-    rationale: "Stomatitis is dose-limiting; most responsive to dose reduction + prophylaxis"
-    source_refs:
-      - SRC-NCCN-NET-2025
-  - condition: "Grade ≥3 hyperglycemia (>250 mg/dL)"
-    modification: "Hold everolimus; glucose-lowering therapy; resume at 5 mg/day once controlled; consider endocrinology referral"
-    rationale: "mTOR inhibition impairs insulin signalling — hyperglycemia common in pNET patients (often already diabetic)"
-    source_refs:
-      - SRC-NCCN-NET-2025
-  - condition: "Strong CYP3A4 inhibitor (e.g., azole antifungals, clarithromycin)"
-    modification: "Avoid if possible; if unavoidable reduce everolimus to 2.5 mg/day and monitor closely"
-    rationale: "Everolimus is a CYP3A4 substrate; inhibitor doubles exposure"
-    source_refs:
-      - SRC-NCCN-NET-2025
-  - condition: "Strong CYP3A4 inducer (e.g., rifampicin, phenytoin, carbamazepine)"
-    modification: "Avoid; if unavoidable increase everolimus to 20 mg/day in 5 mg increments; do not exceed 20 mg"
-    rationale: "Enzyme inducers reduce everolimus AUC ~65%"
-    source_refs:
-      - SRC-NCCN-NET-2025
+- condition: "Grade ≥2 non-infectious pneumonitis (CT-confirmed interstitial changes)"
+  modification: "Hold everolimus; prednisolone 0.5–1 mg/kg/day until ≤gr 1; resume
+    at 5 mg/day; discontinue if gr 3 or recurrent gr 2"
+  rationale: "Pneumonitis is a boxed warning for everolimus — leading cause of treatment
+    discontinuation (~16% any grade)"
+  source_refs:
+  - SRC-NCCN-NET-2025
+- condition: "Grade ≥3 stomatitis"
+  modification: "Hold until ≤gr 1; resume at 5 mg/day; dexamethasone mouthwash escalation;
+    rule out candidiasis (antifungal cover if confirmed)"
+  rationale: "Stomatitis is dose-limiting; most responsive to dose reduction + prophylaxis"
+  source_refs:
+  - SRC-NCCN-NET-2025
+- condition: "Grade ≥3 hyperglycemia (>250 mg/dL)"
+  modification: "Hold everolimus; glucose-lowering therapy; resume at 5 mg/day once
+    controlled; consider endocrinology referral"
+  rationale: "mTOR inhibition impairs insulin signalling — hyperglycemia common in
+    pNET patients (often already diabetic)"
+  source_refs:
+  - SRC-NCCN-NET-2025
+- condition: "Strong CYP3A4 inhibitor (e.g., azole antifungals, clarithromycin)"
+  modification: "Avoid if possible; if unavoidable reduce everolimus to 2.5 mg/day
+    and monitor closely"
+  rationale: "Everolimus is a CYP3A4 substrate; inhibitor doubles exposure"
+  source_refs:
+  - SRC-NCCN-NET-2025
+- condition: "Strong CYP3A4 inducer (e.g., rifampicin, phenytoin, carbamazepine)"
+  modification: "Avoid; if unavoidable increase everolimus to 20 mg/day in 5 mg increments;
+    do not exceed 20 mg"
+  rationale: "Enzyme inducers reduce everolimus AUC ~65%"
+  source_refs:
+  - SRC-NCCN-NET-2025
 
 ukraine_availability:
   all_components_registered: true
@@ -61,38 +68,41 @@ ukraine_availability:
     compassionate use, або участь у клінічному дослідженні.
 
 sources:
-  - SRC-RADIANT3-YAO-2011
-  - SRC-NCCN-NET-2025
+- SRC-RADIANT3-YAO-2011
+- SRC-NCCN-NET-2025
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Everolimus pNET. Key risks: pneumonitis (boxed warning), stomatitis,
 # hyperglycemia, infections (immunosuppression).
 between_visit_watchpoints:
-  - trigger_ua: "Оральні виразки або болючість у роті"
-    action_ua: "Очікувано — застосовуйте дексаметазон-ополіскувач; занотовуйте ступінь тяжкості"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-NET-2025
-  - trigger_ua: "Підвищений рівень цукру в крові при самоконтролі (>13 ммоль/л)"
-    action_ua: "Подзвоніть у клініку того ж дня — гіперглікемія від еверолімусу"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-NET-2025
-  - trigger_ua: "Нова задишка, кашель або дискомфорт у грудній клітці"
-    action_ua: "Подзвоніть у клініку того ж дня — пневмоніт (попередження в рамці для еверолімусу)"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-NET-2025
-  - trigger_ua: "Лихоманка вище 38°C або ознаки інфекції"
-    action_ua: "Подзвоніть у клініку того ж дня — підвищений ризик інфекцій на фоні мТОР-інгібітора"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Різка задишка у спокої або біль у грудях"
-    action_ua: "Звертайтесь у лікарню негайно — тяжкий пневмоніт або ТЕЛА"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-NET-2025
+- trigger_ua: "Оральні виразки або болючість у роті"
+  action_ua: "Очікувано — застосовуйте дексаметазон-ополіскувач; занотовуйте ступінь
+    тяжкості"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-NET-2025
+- trigger_ua: "Підвищений рівень цукру в крові при самоконтролі (>13 ммоль/л)"
+  action_ua: "Подзвоніть у клініку того ж дня — гіперглікемія від еверолімусу"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-NET-2025
+- trigger_ua: "Нова задишка, кашель або дискомфорт у грудній клітці"
+  action_ua: "Подзвоніть у клініку того ж дня — пневмоніт (попередження в рамці для
+    еверолімусу)"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-NET-2025
+- trigger_ua: "Лихоманка вище 38°C або ознаки інфекції"
+  action_ua: "Подзвоніть у клініку того ж дня — підвищений ризик інфекцій на фоні
+    мТОР-інгібітора"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Різка задишка у спокої або біль у грудях"
+  action_ua: "Звертайтесь у лікарню негайно — тяжкий пневмоніт або ТЕЛА"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-NET-2025
 
 last_reviewed: "2026-05-03"
 reviewer_signoffs: []
@@ -107,6 +117,13 @@ notes: >
   on comorbidities (cardiac/renal → prefer everolimus; diabetes/steroids →
   consider sunitinib). STUB pending §6.1 signoff.
 notes_ua: >
-  RADIANT-3 (Yao NEJM 2011): еверолімус 10 мг/добу проти плацебо у прогресуючій добре-диференційованій pNET (n=410). мВБП 11.0 проти 4.6 міс (HR 0.35, p<0.001). Значного переваги ЗВ не виявлено (заплутано >70% перехресним переходом після прогресії). Попереднє/одночасне використання SSA дозволялось. Профілактика стоматиту (дексаметазон-ополіскувач, SWISH дослідження) різко знижує G2+ стоматит. Сунітиніб 37.5 мг/добу є альтернативою (Raymond NEJM 2011 — схожа мВБП 11.4 проти 5.5 міс, HR 0.42); немає прямого порівняння; вибір на основі коморбідностей (серцеві/ниркові → перевага еверолімусу; діабет/стероїди → розглянути сунітиніб). STUB очікує підпис §6.1.
+  RADIANT-3 (Yao NEJM 2011): еверолімус 10 мг/добу проти плацебо у прогресуючій добре-диференційованій
+  pNET (n=410). мВБП 11.0 проти 4.6 міс (HR 0.35, p<0.001). Значного переваги ЗВ не
+  виявлено (заплутано >70% перехресним переходом після прогресії). Попереднє/одночасне
+  використання SSA дозволялось. Профілактика стоматиту (дексаметазон-ополіскувач,
+  SWISH дослідження) різко знижує G2+ стоматит. Сунітиніб 37.5 мг/добу є альтернативою
+  (Raymond NEJM 2011 — схожа мВБП 11.4 проти 5.5 міс, HR 0.42); немає прямого порівняння;
+  вибір на основі коморбідностей (серцеві/ниркові → перевага еверолімусу; діабет/стероїди
+  → розглянути сунітиніб). STUB очікує підпис §6.1.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

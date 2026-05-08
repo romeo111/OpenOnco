@@ -5,16 +5,14 @@ applicable_to:
   disease_id: DIS-NSCLC
   line_of_therapy: 1
   stage_requirements:
-    - "Stage IV metastatic NSCLC (squamous or non-squamous)"
-    - "MET exon 14 skipping mutation confirmed (NGS preferred; RNA-seq for splice variants)"
-    - "Treatment-naive (1L setting)"
+  - "Stage IV metastatic NSCLC (squamous or non-squamous)"
+  - "MET exon 14 skipping mutation confirmed (NGS preferred; RNA-seq for splice variants)"
+  - "Treatment-naive (1L setting)"
   biomarker_requirements_required:
-    - biomarker_id: BIO-MET-EX14
-      value_constraint: "MET exon 14 skipping mutation confirmed by NGS (DNA or RNA)"
-      required: true
-  biomarker_requirements_excluded:
-    - "Co-occurring EGFR sensitizing mutation (EGFR-directed therapy takes priority)"
-    - "Co-occurring ALK fusion (ALK-directed therapy takes priority)"
+  - biomarker_id: BIO-MET-EX14
+    value_constraint: "MET exon 14 skipping mutation confirmed by NGS (DNA or RNA)"
+    required: true
+  biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 2
 
@@ -35,21 +33,20 @@ expected_outcomes:
     Previously-treated ORR 41%. Treatment-naive patients have markedly superior outcomes.
     NCCN Category 1 for treatment-naive MET exon 14 NSCLC.
 
-hard_contraindications:
-  - "Hepatic impairment (Child-Pugh B/C) — capmatinib hepatically metabolized"
-  - "Co-existing EGFR mutation or ALK fusion (prioritize those drivers)"
-
+hard_contraindications: []
+red_flags_triggering_alternative:
+- RF-NSCLC-BRAIN-METS-EMERGENCY
+- RF-NSCLC-CORD-COMPRESSION
+- RF-NSCLC-SVC-SYNDROME
+- RF-NSCLC-MALIGNANT-EFFUSION
 required_tests:
-  - "MET exon 14 NGS (DNA preferred; RNA-NGS for splice variant detection)"
-  - TEST-CT-CAP
-  - TEST-LFT
-  - TEST-CBC
-  - "MET IHC (optional — high-level MET amplification co-assessment)"
-
+- TEST-CT-CAP
+- TEST-LFT
+- TEST-CBC
 sources:
-  - source_id: SRC-GEOMETRY-WOLF-2020
-    position: supports
-    relevant_quote_paraphrase: "GEOMETRY mono-1 (n=40 treatment-naive): capmatinib 400 mg BID; ORR 67.9%; mDOR 12.6m; NCCN Cat 1 for treatment-naive MET ex14 NSCLC"
+- source_id: SRC-GEOMETRY-WOLF-2020
+  position: supports
+  relevant_quote_paraphrase: "GEOMETRY mono-1 (n=40 treatment-naive): capmatinib 400 mg BID; ORR 67.9%; mDOR 12.6m; NCCN Cat 1 for treatment-naive MET ex14 NSCLC"
 
 rationale_ua: >
   GEOMETRY mono-1 (n=40 раніше нелікованих): капматиніб 400 мг BID;
@@ -57,8 +54,8 @@ rationale_ua: >
   (пропуск) методом NGS обов'язкове.
 
 do_not_do:
-  - "Не призначати без підтвердження MET екзон 14 пропуску — MET ампліфікація без ex14 пропуску не є показанням"
-  - "Не призначати при наявності EGFR/ALK — ці драйвери мають пріоритет"
+- "Не призначати без підтвердження MET екзон 14 пропуску — MET ампліфікація без ex14 пропуску не є показанням"
+- "Не призначати при наявності EGFR/ALK — ці драйвери мають пріоритет"
 
 time_critical: false
 last_reviewed: "2026-05-04"

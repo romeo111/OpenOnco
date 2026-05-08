@@ -1,5 +1,6 @@
 id: REG-MCL-INTENSIVE-RDHAP-AUTOSCT
-name: "Intensive 1L MCL: alternating R-CHOP / R-DHAP × 6 cycles + autoSCT consolidation + R maintenance"
+name: "Intensive 1L MCL: alternating R-CHOP / R-DHAP × 6 cycles + autoSCT consolidation
+  + R maintenance"
 name_ua: "Інтенсивна 1L MCL: альтернація R-CHOP / R-DHAP × 6 циклів + autoSCT + R-підтримка"
 alternate_names: ["Nordic regimen", "MCL Younger", "R-DHAP/R-CHOP alternating"]
 
@@ -8,79 +9,88 @@ components: []  # phases supersede; kept empty for back-compat with downstream
                 # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
 
 phases:
-  - name: induction
-    purpose_ua: "індукція: 6 чергуючих циклів R-CHOP та R-DHAP (3 + 3); анти-CD20 з anthracycline-вмісним та HiDAC-вмісним блоками для максимальної ремісії перед autoSCT"
-    purpose_en: "induction: 6 alternating cycles R-CHOP and R-DHAP (3 + 3); anti-CD20 with anthracycline-containing and HiDAC-containing blocks for maximum remission before autoSCT"
-    duration: "~18 weeks (6 × 21-day cycles)"
-    timing_relative_to: "absolute"
-    optional: false
-    components:
-      - drug_id: DRUG-RITUXIMAB
-        dose: "375 mg/m²"
-        schedule: "IV day 1 each cycle (R-CHOP + R-DHAP)"
-        route: IV
-      - drug_id: DRUG-CYCLOPHOSPHAMIDE
-        dose: "750 mg/m²"
-        schedule: "IV day 1 of R-CHOP cycles only"
-        route: IV
-      - drug_id: DRUG-DOXORUBICIN
-        dose: "50 mg/m²"
-        schedule: "IV day 1 of R-CHOP cycles only"
-        route: IV
-      - drug_id: DRUG-VINCRISTINE
-        dose: "1.4 mg/m² (cap 2 mg)"
-        schedule: "IV day 1 of R-CHOP cycles only"
-        route: IV
-      - drug_id: DRUG-PREDNISONE
-        dose: "100 mg"
-        schedule: "PO days 1-5 of R-CHOP cycles"
-        route: PO
-      - drug_id: DRUG-DEXAMETHASONE
-        dose: "40 mg"
-        schedule: "IV days 1-4 of R-DHAP cycles only"
-        route: IV
-      - drug_id: DRUG-CYTARABINE
-        dose: "2 g/m² q12h"
-        schedule: "IV day 2 of R-DHAP cycles (HiDAC component)"
-        route: IV
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - name: consolidation_autosct
-    purpose_ua: "консолідація аутологічною ТГСК після відповіді на індукцію (BEAM/CBV кондиціонування)"
-    purpose_en: "consolidation with autologous HCT after response to induction (BEAM/CBV conditioning)"
-    duration: "single transplant procedure"
-    timing_relative_to: "previous_phase_completion"
-    optional: false
-    components: []  # BEAM/CBV conditioning + autoSCT — institution-specific;
+- name: induction
+  purpose_ua: "індукція: 6 чергуючих циклів R-CHOP та R-DHAP (3 + 3); анти-CD20 з
+    anthracycline-вмісним та HiDAC-вмісним блоками для максимальної ремісії перед
+    autoSCT"
+  purpose_en: "induction: 6 alternating cycles R-CHOP and R-DHAP (3 + 3); anti-CD20
+    with anthracycline-containing and HiDAC-containing blocks for maximum remission
+    before autoSCT"
+  duration: "~18 weeks (6 × 21-day cycles)"
+  timing_relative_to: "absolute"
+  optional: false
+  components:
+  - drug_id: DRUG-RITUXIMAB
+    dose: "375 mg/m²"
+    schedule: "IV day 1 each cycle (R-CHOP + R-DHAP)"
+    route: IV
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "750 mg/m²"
+    schedule: "IV day 1 of R-CHOP cycles only"
+    route: IV
+  - drug_id: DRUG-DOXORUBICIN
+    dose: "50 mg/m²"
+    schedule: "IV day 1 of R-CHOP cycles only"
+    route: IV
+  - drug_id: DRUG-VINCRISTINE
+    dose: "1.4 mg/m² (cap 2 mg)"
+    schedule: "IV day 1 of R-CHOP cycles only"
+    route: IV
+  - drug_id: DRUG-PREDNISONE
+    dose: "100 mg"
+    schedule: "PO days 1-5 of R-CHOP cycles"
+    route: PO
+  - drug_id: DRUG-DEXAMETHASONE
+    dose: "40 mg"
+    schedule: "IV days 1-4 of R-DHAP cycles only"
+    route: IV
+  - drug_id: DRUG-CYTARABINE
+    dose: "2 g/m² q12h"
+    schedule: "IV day 2 of R-DHAP cycles (HiDAC component)"
+    route: IV
+  sources:
+  - SRC-NCCN-BCELL-2025
+- name: consolidation_autosct
+  purpose_ua: "консолідація аутологічною ТГСК після відповіді на індукцію (BEAM/CBV
+    кондиціонування)"
+  purpose_en: "consolidation with autologous HCT after response to induction (BEAM/CBV
+    conditioning)"
+  duration: "single transplant procedure"
+  timing_relative_to: "previous_phase_completion"
+  optional: false
+  components: []    # BEAM/CBV conditioning + autoSCT — institution-specific;
                    # not enumerated as drug components in this regimen entity
                    # (consolidation pathway placeholder per plan-doc §5 Group C)
-    sources:
-      - SRC-NCCN-BCELL-2025
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 cycle_length_days: 21
-total_cycles: "6 alternating (3 R-CHOP + 3 R-DHAP), then BEAM/CBV-conditioned autoSCT, then R maintenance every 2 mo × 3 years"
+total_cycles: "6 alternating (3 R-CHOP + 3 R-DHAP), then BEAM/CBV-conditioned autoSCT,
+  then R maintenance every 2 mo × 3 years"
 toxicity_profile: high
 
 premedication:
-  - "Standard R-CHOP premedications + cytarabine eye drops + cerebellar exam pre each HiDAC"
+- "Standard R-CHOP premedications + cytarabine eye drops + cerebellar exam pre each
+  HiDAC"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-TLS-PROPHYLAXIS
-  - SUP-ANTIEMETIC-PREMED
+- SUP-PJP-PROPHYLAXIS
+- SUP-TLS-PROPHYLAXIS
+- SUP-ANTIEMETIC-PREMED
 monitoring_schedule_id: MON-R-CHOP-REGIMEN
 
 dose_adjustments:
-  - condition: "Age >65 OR ECOG ≥2 at start"
-    modification: "Generally NOT eligible — route to BTKi-based (REG-ACALABRUTINIB-RITUXIMAB)"
-    rationale: "Tolerability of HiDAC drops sharply with age/frailty"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Renal impairment CrCl <60"
-    modification: "Reduce cytarabine; consider non-HiDAC arm only"
+- condition: "Age >65 OR ECOG ≥2 at start"
+  modification: "Generally NOT eligible — route to BTKi-based (REG-ACALABRUTINIB-RITUXIMAB)"
+  rationale: "Tolerability of HiDAC drops sharply with age/frailty"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Renal impairment CrCl <60"
+  modification: "Reduce cytarabine; consider non-HiDAC arm only"
 
 ukraine_availability:
   all_components_registered: true
   all_components_reimbursed: true
-  notes: "All R-CHOP + R-DHAP components reimbursed via НСЗУ; autoSCT performed at major hematology centers"
+  notes: "All R-CHOP + R-DHAP components reimbursed via НСЗУ; autoSCT performed at
+    major hematology centers"
 
 sources: [SRC-NCCN-BCELL-2025]
 
@@ -89,44 +99,48 @@ sources: [SRC-NCCN-BCELL-2025]
 # Cisplatin/cytarabine are toxic; HiDAC adds neurotoxicity + cytopenia.
 # AutoSCT phase: prolonged severe pancytopenia. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Виражена втома, що триває тижнями після кожного циклу і особливо після SCT"
-    action_ua: "Очікувано — кістковий мозок відновлюється повільно після високих доз"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Зниження апетиту, нудота, мукозит"
-    action_ua: "Поширене — приймайте призначені протиблювотні; полоскання порожнини рота; занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Шум у вухах або зниження слуху"
-    action_ua: "Подзвоніть у клініку того ж дня — цисплатин впливає на слух"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Зменшення кількості сечі, набряки гомілок"
-    action_ua: "Подзвоніть у клініку того ж дня — цисплатин впливає на нирки"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Розмиття мислення, утруднена мова, плутаність — після високих доз цитарабіну"
-    action_ua: "Подзвоніть у клініку того ж дня — HiDAC рідко може спричиняти церебелярну токсичність"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка вище 38°C — особливо після SCT у вікно engraftment"
-    action_ua: "Звертайтесь у лікарню негайно — глибока тривала нейтропенія, високий ризик сепсису"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Виражена слабкість, плутаність свідомості, висока лихоманка з ознобом"
-    action_ua: "Звертайтесь у лікарню негайно — ознаки можливого сепсису"
-    urgency: er_now
-    sources:
-      - SRC-CTCAE-V5
+- trigger_ua: "Виражена втома, що триває тижнями після кожного циклу і особливо після
+    SCT"
+  action_ua: "Очікувано — кістковий мозок відновлюється повільно після високих доз"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Зниження апетиту, нудота, мукозит"
+  action_ua: "Поширене — приймайте призначені протиблювотні; полоскання порожнини
+    рота; занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Шум у вухах або зниження слуху"
+  action_ua: "Подзвоніть у клініку того ж дня — цисплатин впливає на слух"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Зменшення кількості сечі, набряки гомілок"
+  action_ua: "Подзвоніть у клініку того ж дня — цисплатин впливає на нирки"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Розмиття мислення, утруднена мова, плутаність — після високих доз цитарабіну"
+  action_ua: "Подзвоніть у клініку того ж дня — HiDAC рідко може спричиняти церебелярну
+    токсичність"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка вище 38°C — особливо після SCT у вікно engraftment"
+  action_ua: "Звертайтесь у лікарню негайно — глибока тривала нейтропенія, високий
+    ризик сепсису"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Виражена слабкість, плутаність свідомості, висока лихоманка з ознобом"
+  action_ua: "Звертайтесь у лікарню негайно — ознаки можливого сепсису"
+  urgency: er_now
+  sources:
+  - SRC-CTCAE-V5
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -136,6 +150,9 @@ notes: >
   >7-8 years vs ~3 years on R-CHOP alone). Cardiotoxicity risk +
   cumulative HiDAC toxicity — fitness selection critical.
 notes_ua: >
-  стандарт 1L for fit придатний до трансплантації MCL (age <65, ECOG 0-1). Nordic protocol or LYMA-style. Major contribution: HiDAC + аутоТГСК консолідація + R підтримка dramatically покращений PFS (медіана >7-8 years vs ~3 years on R-CHOP alone). кардіотоксичність risk + cumulative HiDAC токсичність — fitness selection critical.
+  стандарт 1L for fit придатний до трансплантації MCL (age <65, ECOG 0-1). Nordic
+  protocol or LYMA-style. Major contribution: HiDAC + аутоТГСК консолідація + R підтримка
+  dramatically покращений PFS (медіана >7-8 years vs ~3 years on R-CHOP alone). кардіотоксичність
+  risk + cumulative HiDAC токсичність — fitness selection critical.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

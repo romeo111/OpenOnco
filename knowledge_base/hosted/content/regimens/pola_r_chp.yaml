@@ -2,30 +2,30 @@ id: REG-POLA-R-CHP
 name: "Polatuzumab vedotin + Rituximab + CHP (Pola-R-CHP), 6 cycles + 2× rituximab"
 name_ua: "Полатузумаб ведотин + Ритуксимаб + CHP (Pola-R-CHP), 6 циклів + 2× ритуксимаб"
 alternate_names:
-  - "Pola-R-CHP"
-  - "POLARIX-style"
+- "Pola-R-CHP"
+- "POLARIX-style"
 
 components:
-  - drug_id: DRUG-POLATUZUMAB-VEDOTIN
-    dose: "1.8 mg/kg"
-    schedule: "IV day 1 of each 21-day cycle, cycles 1-6"
-    route: IV
-  - drug_id: DRUG-RITUXIMAB
-    dose: "375 mg/m²"
-    schedule: "IV day 1 of each 21-day cycle, cycles 1-8 (last 2 cycles rituximab-only)"
-    route: IV
-  - drug_id: DRUG-CYCLOPHOSPHAMIDE
-    dose: "750 mg/m²"
-    schedule: "IV day 1 of each 21-day cycle, cycles 1-6"
-    route: IV
-  - drug_id: DRUG-DOXORUBICIN
-    dose: "50 mg/m²"
-    schedule: "IV day 1 of each 21-day cycle, cycles 1-6"
-    route: IV
-  - drug_id: DRUG-PREDNISONE
-    dose: "100 mg"
-    schedule: "PO days 1-5 of each 21-day cycle, cycles 1-6"
-    route: PO
+- drug_id: DRUG-POLATUZUMAB-VEDOTIN
+  dose: "1.8 mg/kg"
+  schedule: "IV day 1 of each 21-day cycle, cycles 1-6"
+  route: IV
+- drug_id: DRUG-RITUXIMAB
+  dose: "375 mg/m²"
+  schedule: "IV day 1 of each 21-day cycle, cycles 1-8 (last 2 cycles rituximab-only)"
+  route: IV
+- drug_id: DRUG-CYCLOPHOSPHAMIDE
+  dose: "750 mg/m²"
+  schedule: "IV day 1 of each 21-day cycle, cycles 1-6"
+  route: IV
+- drug_id: DRUG-DOXORUBICIN
+  dose: "50 mg/m²"
+  schedule: "IV day 1 of each 21-day cycle, cycles 1-6"
+  route: IV
+- drug_id: DRUG-PREDNISONE
+  dose: "100 mg"
+  schedule: "PO days 1-5 of each 21-day cycle, cycles 1-6"
+  route: PO
 
 cycle_length_days: 21
 total_cycles: "6 (Pola-R-CHP) + 2× rituximab consolidation (cycles 7-8)"
@@ -33,29 +33,30 @@ total_cycles: "6 (Pola-R-CHP) + 2× rituximab consolidation (cycles 7-8)"
 toxicity_profile: moderate-high
 
 premedication:
-  - "Antihistamine + acetaminophen before polatuzumab (first dose)"
-  - "Antihistamine + acetaminophen + IV steroid before rituximab (especially first dose)"
-  - "5-HT3 antagonist + dexamethasone before chemotherapy"
+- "Antihistamine + acetaminophen before polatuzumab (first dose)"
+- "Antihistamine + acetaminophen + IV steroid before rituximab (especially first dose)"
+- "5-HT3 antagonist + dexamethasone before chemotherapy"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-TLS-PROPHYLAXIS
-  - SUP-ANTIEMETIC-PREMED
+- SUP-PJP-PROPHYLAXIS
+- SUP-TLS-PROPHYLAXIS
+- SUP-ANTIEMETIC-PREMED
 monitoring_schedule_id: MON-R-CHOP-REGIMEN
 
 dose_adjustments:
-  - condition: "Grade ≥2 peripheral neuropathy"
-    modification: "Hold polatuzumab; consider switching to vincristine (R-CHOP)"
-    rationale: "Polatuzumab carries dose-limiting neuropathy from MMAE payload"
-    source_refs:
-      - SRC-NCCN-BCELL-2025
-  - condition: "Cumulative anthracycline >450-500 mg/m²"
-    modification: "Echo + LVEF check before next dose; consider regimen change"
-    rationale: "Cardiotoxicity is dose-cumulative"
-    source_refs:
-      - SRC-NCCN-BCELL-2025
-  - condition: "Strong CYP3A4 inhibitor concomitant"
-    modification: "Avoid coadministration if possible; if necessary, monitor for increased neuropathy/myelosuppression"
-    rationale: "Polatuzumab MMAE is CYP3A4 substrate"
+- condition: "Grade ≥2 peripheral neuropathy"
+  modification: "Hold polatuzumab; consider switching to vincristine (R-CHOP)"
+  rationale: "Polatuzumab carries dose-limiting neuropathy from MMAE payload"
+  source_refs:
+  - SRC-NCCN-BCELL-2025
+- condition: "Cumulative anthracycline >450-500 mg/m²"
+  modification: "Echo + LVEF check before next dose; consider regimen change"
+  rationale: "Cardiotoxicity is dose-cumulative"
+  source_refs:
+  - SRC-NCCN-BCELL-2025
+- condition: "Strong CYP3A4 inhibitor concomitant"
+  modification: "Avoid coadministration if possible; if necessary, monitor for increased
+    neuropathy/myelosuppression"
+  rationale: "Polatuzumab MMAE is CYP3A4 substrate"
 
 ukraine_availability:
   all_components_registered: false
@@ -67,7 +68,7 @@ ukraine_availability:
     barrier; flag explicitly to patient before regimen offered.
 
 sources:
-  - SRC-NCCN-BCELL-2025
+- SRC-NCCN-BCELL-2025
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Pola-R-CHP for IPI≥2 DLBCL 1L (POLARIX). Polatuzumab is anti-CD79b
@@ -75,45 +76,45 @@ sources:
 # neuropathy (less than vincristine but still present), plus standard
 # R-CHOP cytopenia + cardiac. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
-    action_ua: "Полатузумаб може спричиняти нейропатію (менше, ніж вінкристин) — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна втома, випадання волосся"
-    action_ua: "Очікувано — повертається після курсу"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна нудота"
-    action_ua: "Приймайте призначені протиблювотні"
-    urgency: log_at_next_visit
-    cycle_day_window: "Day 1-3"
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Поколювання стає сильним болем"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози полатузумабу"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Нова задишка, прискорене серцебиття, набряки ніг"
-    action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Тяжка реакція на інфузію ритуксимабу або полатузумабу"
-    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
-    urgency: er_now
-    cycle_day_window: "Day 1 of cycle 1"
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Поколювання або оніміння в кистях/стопах"
+  action_ua: "Полатузумаб може спричиняти нейропатію (менше, ніж вінкристин) — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома, випадання волосся"
+  action_ua: "Очікувано — повертається після курсу"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна нудота"
+  action_ua: "Приймайте призначені протиблювотні"
+  urgency: log_at_next_visit
+  cycle_day_window: "Day 1-3"
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Поколювання стає сильним болем"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози полатузумабу"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Нова задишка, прискорене серцебиття, набряки ніг"
+  action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Тяжка реакція на інфузію ритуксимабу або полатузумабу"
+  action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+  urgency: er_now
+  cycle_day_window: "Day 1 of cycle 1"
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -124,6 +125,10 @@ notes: >
   IPI ≥2 in resourced settings — access in Ukraine is the bottleneck.
   Vincristine is replaced by polatuzumab (hence "CHP" not "CHOP").
 notes_ua: >
-  POLARIX дослідження (NEJM 2022): in IPI ≥2 newly-diagnosed DLBCL, перевершує 2-year PFS (76.7% проти 70.2% R-CHOP, HR 0.73). співставний OS (mature дані still maturing) and профіль токсичності (more PN with polatuzumab but offset by ні вінкристин). Becoming the new 1L стандарт for IPI ≥2 in resourced settings — access in Ukraine is the bottleneck. вінкристин is replaced by polatuzumab (hence "CHP" not "CHOP").
+  POLARIX дослідження (NEJM 2022): in IPI ≥2 newly-diagnosed DLBCL, перевершує 2-year
+  PFS (76.7% проти 70.2% R-CHOP, HR 0.73). співставний OS (mature дані still maturing)
+  and профіль токсичності (more PN with polatuzumab but offset by ні вінкристин).
+  Becoming the new 1L стандарт for IPI ≥2 in resourced settings — access in Ukraine
+  is the bottleneck. вінкристин is replaced by polatuzumab (hence "CHP" not "CHOP").
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

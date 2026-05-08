@@ -2,14 +2,14 @@ id: REG-FEDRATINIB-PMF
 name: "Fedratinib (Inrebic) for ruxolitinib-resistant / intolerant PMF"
 name_ua: "Федратиніб (Inrebic) для PMF з резистентністю / непереносимістю до руксолітинібу"
 alternate_names:
-  - "Fedratinib mono"
-  - "JAKARTA-2 / FREEDOM-2 regimen"
+- "Fedratinib mono"
+- "JAKARTA-2 / FREEDOM-2 regimen"
 
 components:
-  - drug_id: DRUG-FEDRATINIB
-    dose: "400 mg PO once daily with food"
-    schedule: "Continuous; cycles of 28 days; until progression / unacceptable toxicity"
-    route: PO
+- drug_id: DRUG-FEDRATINIB
+  dose: "400 mg PO once daily with food"
+  schedule: "Continuous; cycles of 28 days; until progression / unacceptable toxicity"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "Continuous until progression / unacceptable toxicity"
@@ -17,84 +17,85 @@ total_cycles: "Continuous until progression / unacceptable toxicity"
 toxicity_profile: severe
 
 premedication:
-  - "MANDATORY baseline thiamine measurement; correct deficiency BEFORE initiation"
-  - "Thiamine 100 mg PO daily ongoing for prophylaxis"
-  - "Antiemetic prophylaxis (ondansetron PRN); antidiarrheal (loperamide) PRN"
-  - "Pre-treatment HBV / HCV / HIV / TB screening"
-  - "Take with food to reduce GI toxicity"
+- "MANDATORY baseline thiamine measurement; correct deficiency BEFORE initiation"
+- "Thiamine 100 mg PO daily ongoing for prophylaxis"
+- "Antiemetic prophylaxis (ondansetron PRN); antidiarrheal (loperamide) PRN"
+- "Pre-treatment HBV / HCV / HIV / TB screening"
+- "Take with food to reduce GI toxicity"
 
 mandatory_supportive_care:
-  - SUP-HBV-PROPHYLAXIS
-
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Wernicke encephalopathy symptoms (confusion, ataxia, ophthalmoplegia)"
-    modification: "DISCONTINUE immediately; high-dose IV thiamine; neurology consult"
-    rationale: "Boxed warning — fatal if untreated"
-    source_refs:
-      - SRC-NCCN-MPN-2025
-      - SRC-JAKARTA2-HARRISON-2017
-  - condition: "Severe diarrhea / nausea / vomiting"
-    modification: "Hold; antidiarrheal; resume reduced dose 300 mg or 200 mg on resolution"
-    rationale: "GI toxicity dominant reason for dose hold"
-    source_refs:
-      - SRC-JAKARTA2-HARRISON-2017
-  - condition: "Severe thrombocytopenia / anemia"
-    modification: "Hold; transfusion support; resume reduced dose"
-    rationale: "Cytopenia common"
-    source_refs:
-      - SRC-NCCN-MPN-2025
-  - condition: "Concomitant strong CYP3A4 inhibitor"
-    modification: "Reduce fedratinib to 200 mg PO daily"
-    rationale: "Exposure +"
-    source_refs:
-      - SRC-NCCN-MPN-2025
+- condition: "Wernicke encephalopathy symptoms (confusion, ataxia, ophthalmoplegia)"
+  modification: "DISCONTINUE immediately; high-dose IV thiamine; neurology consult"
+  rationale: "Boxed warning — fatal if untreated"
+  source_refs:
+  - SRC-NCCN-MPN-2025
+  - SRC-JAKARTA2-HARRISON-2017
+- condition: "Severe diarrhea / nausea / vomiting"
+  modification: "Hold; antidiarrheal; resume reduced dose 300 mg or 200 mg on resolution"
+  rationale: "GI toxicity dominant reason for dose hold"
+  source_refs:
+  - SRC-JAKARTA2-HARRISON-2017
+- condition: "Severe thrombocytopenia / anemia"
+  modification: "Hold; transfusion support; resume reduced dose"
+  rationale: "Cytopenia common"
+  source_refs:
+  - SRC-NCCN-MPN-2025
+- condition: "Concomitant strong CYP3A4 inhibitor"
+  modification: "Reduce fedratinib to 200 mg PO daily"
+  rationale: "Exposure +"
+  source_refs:
+  - SRC-NCCN-MPN-2025
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "Fedratinib NOT registered in Ukraine. International referral or compassionate-use pathway required."
+  notes: "Fedratinib NOT registered in Ukraine. International referral or compassionate-use
+    pathway required."
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-JAKARTA2-HARRISON-2017
+- SRC-NCCN-MPN-2025
+- SRC-JAKARTA2-HARRISON-2017
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Fedratinib for ruxolitinib-resistant PMF. Boxed warning: Wernicke
 # encephalopathy. GI toxicity + cytopenia dominant. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна нудота, помірна діарея — у перші тижні"
-    action_ua: "Приймайте призначені протиблювотні; лоперамід для діареї; занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Помірна втома"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Сплутаність свідомості, проблеми з координацією, рухи очей"
-    action_ua: "Звертайтесь у лікарню негайно — підозра на енцефалопатію Верніке (фатальна без лікування)"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-MPN-2025
-      - SRC-JAKARTA2-HARRISON-2017
-  - trigger_ua: "Тяжка діарея або блювання, що не дозволяє пити"
-    action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення, дефіциту тіаміну"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-JAKARTA2-HARRISON-2017
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Кровотеча з ясен, з носа, синці без причини"
-    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-MPN-2025
+- trigger_ua: "Помірна нудота, помірна діарея — у перші тижні"
+  action_ua: "Приймайте призначені протиблювотні; лоперамід для діареї; занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Помірна втома"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Сплутаність свідомості, проблеми з координацією, рухи очей"
+  action_ua: "Звертайтесь у лікарню негайно — підозра на енцефалопатію Верніке (фатальна
+    без лікування)"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-JAKARTA2-HARRISON-2017
+- trigger_ua: "Тяжка діарея або блювання, що не дозволяє пити"
+  action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення, дефіциту тіаміну"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-JAKARTA2-HARRISON-2017
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Кровотеча з ясен, з носа, синці без причини"
+  action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-MPN-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -104,6 +105,9 @@ notes: >
   measurement + supplementation. Take with food. STUB — pending
   Co-Lead sign-off.
 notes_ua: >
-  селективний JAK2 інгібітор for MF post-руксолитиніб failure or intolerance. JAKARTA-2 phase-2 + FREEDOM-2 phase-3 confirmatory. Wernicke encephalopathy спеціальне попередження в інструкції — обов'язковий thiamine measurement + supplementation. Take with food. STUB — pending Co-Lead sign-off.
+  селективний JAK2 інгібітор for MF post-руксолитиніб failure or intolerance. JAKARTA-2
+  phase-2 + FREEDOM-2 phase-3 confirmatory. Wernicke encephalopathy спеціальне попередження
+  в інструкції — обов'язковий thiamine measurement + supplementation. Take with food.
+  STUB — pending Co-Lead sign-off.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

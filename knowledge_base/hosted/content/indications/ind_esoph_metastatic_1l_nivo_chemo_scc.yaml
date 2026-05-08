@@ -5,15 +5,14 @@ applicable_to:
   disease_id: DIS-ESOPHAGEAL
   line_of_therapy: 1
   stage_requirements:
-    - "Stage IV (metastatic) OR unresectable locally advanced esophageal carcinoma"
-    - "Squamous-cell histology (ESCC)"
-    - "Treatment-naive (no prior systemic therapy for advanced disease)"
+  - "Stage IV (metastatic) OR unresectable locally advanced esophageal carcinoma"
+  - "Squamous-cell histology (ESCC)"
+  - "Treatment-naive (no prior systemic therapy for advanced disease)"
   biomarker_requirements_required:
-    - biomarker_id: BIO-PD-L1-CPS
-      required: false
-      value_constraint: "PD-L1 CPS ≥1 preferred (CheckMate-648 primary endpoint; larger OS benefit at CPS≥1). All-comers benefit observed but smaller. Test required for decision-making."
-  biomarker_requirements_excluded:
-    - "Adenocarcinoma histology — use pembro+chemo (KEYNOTE-590) or chemo alone"
+  - biomarker_id: BIO-PD-L1-CPS
+    required: false
+    value_constraint: "PD-L1 CPS ≥1 preferred (CheckMate-648 primary endpoint; larger OS benefit at CPS≥1). All-comers benefit observed but smaller. Test required for decision-making."
+  biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 2
 
@@ -31,23 +30,11 @@ expected_outcomes:
   overall_survival_median: "mOS 15.4 vs 9.1 mo (CPS≥1, HR 0.54, p<0.0001)"
   notes: "CheckMate-648, N=970 ESCC. CPS≥1 subgroup N=473 nivo+chemo arm."
 
-hard_contraindications:
-  - "Adenocarcinoma histology"
-  - "Active autoimmune disease requiring systemic immunosuppression"
-  - "Prior solid organ transplant"
-  - "ECOG PS ≥ 3"
+hard_contraindications: []
+red_flags_triggering_alternative: []
 
-red_flags_triggering_alternative: [RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK]
-
-required_tests:
-  - "Histology confirmation (squamous-cell histology mandatory)"
-  - "PD-L1 CPS (22C3 assay — CheckMate-648 used 28-8 assay but CPS generally equivalent)"
-  - "CBC, CMP, LFTs, creatinine baseline"
-
-desired_tests:
-  - "HER2 status (rare in ESCC but relevant if adeno component)"
-  - "CT chest/abdomen/pelvis + bone scan if symptomatic"
-
+required_tests: []
+desired_tests: []
 rationale: >
   CheckMate-648 (NCT03143153): nivolumab 360mg + chemo (5-FU 800mg/m²/d D1-5 +
   cisplatin 80mg/m² D1 q3w) vs chemo alone in untreated advanced ESCC (n=970).
@@ -65,18 +52,18 @@ ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 
 sources:
-  - source_id: SRC-CHECKMATE648-DOKI-2022
-    position: supports
-  - source_id: SRC-NCCN-ESOPHAGEAL-2025
-    position: supports
-  - source_id: SRC-ESMO-ESOPHAGEAL-2024
-    position: supports
+- source_id: SRC-CHECKMATE648-DOKI-2022
+  position: supports
+- source_id: SRC-NCCN-ESOPHAGEAL-2025
+  position: supports
+- source_id: SRC-ESMO-ESOPHAGEAL-2024
+  position: supports
 
 do_not_do:
-  - "Do NOT use in adenocarcinoma — nivo+chemo studied in ESCC only (CheckMate-648)"
-  - "Do NOT skip PD-L1 testing — CPS guides benefit magnitude and clinical decision"
-  - "Do NOT continue ICI beyond disease progression"
-  - "Do NOT use with prior ICI (not for ICI-experienced patients)"
+- "Do NOT use in adenocarcinoma — nivo+chemo studied in ESCC only (CheckMate-648)"
+- "Do NOT skip PD-L1 testing — CPS guides benefit magnitude and clinical decision"
+- "Do NOT continue ICI beyond disease progression"
+- "Do NOT use with prior ICI (not for ICI-experienced patients)"
 
 last_reviewed: "2026-05-04"
 notes: >

@@ -32,6 +32,7 @@ from knowledge_base.schemas.experimental_option import (
     ExperimentalOption,
     ExperimentalTrial,
 )
+from knowledge_base.engine.trial_outlook import score_trial
 
 
 _DEFAULT_TTL_DAYS = 7
@@ -85,9 +86,19 @@ def _ua_sites_from_countries(countries: list[str]) -> list[str]:
     return ["UA"] if "UA" in norm or "UKRAINE" in norm else []
 
 
-def _to_trial(study: dict, *, sync_ts: str) -> Optional[ExperimentalTrial]:
+def _to_trial(
+    study: dict,
+    *,
+    sync_ts: str,
+    biomarker_term: Optional[str] = None,
+) -> Optional[ExperimentalTrial]:
     """Convert one parsed-ctgov study dict into an `ExperimentalTrial`,
-    skipping records with closed enrollment or missing NCT id."""
+    skipping records with closed enrollment or missing NCT id.
+
+    `biomarker_term` flows from the enumerator's `biomarker_profile`
+    parameter into `score_trial` for stratification detection. None/empty
+    yields an "open_label" stratification.
+    """
 
     status = (study.get("status") or "").upper()
     if status not in _OPEN_STATUSES:
@@ -100,6 +111,14 @@ def _to_trial(study: dict, *, sync_ts: str) -> Optional[ExperimentalTrial]:
     countries = study.get("countries") or []
     elig = study.get("eligibility_criteria") or study.get("EligibilityCriteria") or ""
     incl, excl = _split_eligibility(elig)
+
+    outlook = score_trial(
+        study,
+        biomarker_term=biomarker_term,
+        inclusion_summary=incl,
+        exclusion_summary=excl,
+        last_scored=sync_ts,
+    )
 
     return ExperimentalTrial(
         nct_id=nct,
@@ -116,6 +135,7 @@ def _to_trial(study: dict, *, sync_ts: str) -> Optional[ExperimentalTrial]:
         ),
         sites_global_count=study.get("location_count"),
         last_synced=sync_ts,
+        outlook=outlook,
     )
 
 
@@ -294,7 +314,7 @@ def enumerate_experimental_options(
 
     trials: list[ExperimentalTrial] = []
     for study in (raw_studies or []):
-        t = _to_trial(study, sync_ts=sync_ts)
+        t = _to_trial(study, sync_ts=sync_ts, biomarker_term=biomarker_profile)
         if t is not None:
             trials.append(t)
 
