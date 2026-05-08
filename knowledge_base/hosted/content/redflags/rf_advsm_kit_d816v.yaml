@@ -1,0 +1,112 @@
+id: RF-ADVSM-KIT-D816V
+definition: >
+  KIT D816V activating point mutation (exon 17, activation loop) in
+  advanced systemic mastocytosis (ASM, SM-AHN, mast cell leukemia per
+  WHO 2022). KIT D816V is present in >90% of systemic mastocytosis cases
+  and is the defining molecular driver. D816V confers resistance to
+  imatinib (steric clash at the drug-binding site; imatinib is INACTIVE
+  against D816V). However, avapritinib — a type I KIT inhibitor designed
+  to bind the active (DFG-in) conformation — potently inhibits D816V
+  kinase activity.
+
+  Fires to route ALGO-ADVSM-1L step 1 toward avapritinib (IND-ADVSM-1L-
+  AVAPRITINIB) as the preferred 1L option, contingent on adequate platelet
+  count (≥50 ×10⁹/L; enforced as a separate condition in the step all_of
+  gate). If platelets <50 ×10⁹/L or avapritinib is inaccessible despite
+  D816V positivity, midostaurin (IND-ADVSM-1L-MIDOSTAURIN) remains
+  appropriate.
+
+  Clinical evidence:
+  - PATHFINDER (avapritinib in AdvSM): ORR 75%, complete remission rate 36%,
+    KIT D816V variant allele fraction reduction in bone marrow (Gotlib JCO
+    2023). Deep molecular response distinguishes avapritinib from midostaurin.
+  - EXPLORER/D2201 (midostaurin in AdvSM): ORR 60%, CR/CRh 17% (Gotlib NEJM
+    2016). Active regardless of platelet count — chosen when avapritinib
+    contraindicated by thrombocytopenia.
+  - NCCN SM 2025 Category 2A: avapritinib preferred 1L for KIT D816V+
+    AdvSM with adequate platelet count; midostaurin alternative/fallback.
+
+  Detection: KIT D816V detected by high-sensitivity allele-specific PCR
+  (ARUP/Foundation/local lab) on bone marrow aspirate or peripheral blood
+  with ≥1% variant allele fraction threshold. Standard next-generation
+  sequencing panels may miss D816V if D816V-specific probes are not
+  included — allele-specific PCR preferred for diagnosis.
+
+definition_ua: >
+  Активуюча точкова мутація KIT D816V (екзон 17) при поширеному системному
+  мастоцитозі (AdvSM, SM-AHN, мастоцитарна лейкемія за ВООЗ 2022). D816V
+  наявна у >90% системного мастоцитозу. D816V конферує резистентність до
+  іматинібу. Авапритиніб — інгібітор KIT I типу — потужно пригнічує D816V.
+  PATHFINDER: ЗВВ 75%, ПР 36%. EXPLORER (мідостаурін): ЗВВ 60%.
+  NCCN SM 2025: авапритиніб переважний 1L при D816V+ AdvSM з тромбоцитами
+  ≥50×10⁹/л; мідостаурін — альтернатива/резервний варіант.
+
+trigger:
+  type: biomarker_status
+  any_of:
+    - finding: BIO-KIT
+      value: D816V
+    - finding: kit_mutation
+      value: D816V
+    - finding: kit_d816v_status
+      value: positive
+    - finding: kit_d816v_status
+      value: detected
+    - finding: kit_d816v_status
+      value: mutant
+    - finding: kit_exon17_mutation
+      value: D816V
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+branch_targets:
+  ALGO-ADVSM-1L: "1"
+
+relevant_diseases:
+  - DIS-MASTOCYTOSIS
+
+shifts_algorithm:
+  - ALGO-ADVSM-1L
+
+sources:
+  - SRC-NCCN-SM-2025
+  - SRC-PATHFINDER
+  - SRC-EXPLORER
+
+last_reviewed: "2026-05-08"
+reviewer_signoffs: []
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+notes: >
+  W5c RF authoring. Converts free-text `{condition: "KIT D816V positive"}`
+  in ALGO-ADVSM-1L step 1 (all_of composite) into a formal RF entity. The
+  step uses all_of: [biomarker gate, platelet-count gate] — this RF
+  formalizes the biomarker half; the platelet-count condition (≥50 ×10⁹/L)
+  remains a free-text MDT-evaluated condition in the algo (no platelet-
+  threshold RF entity in current KB design).
+
+  Clinical rationale: Avapritinib has superior molecular response depth
+  vs midostaurin (KIT D816V VAF reduction in BM; Gotlib JCO 2023 PATHFINDER
+  cohort). Platelet threshold of ≥50 ×10⁹/L is from avapritinib prescribing
+  information due to risk of intracranial hemorrhage in severe
+  thrombocytopenia. Midostaurin does NOT have this platelet restriction —
+  rationale for algo step 2 fallback.
+
+  Important KIT D816V disambiguation: This RF is for SYSTEMIC MASTOCYTOSIS
+  (DIS-MASTOCYTOSIS). KIT mutations in GIST are exon 11/9/13/17, not the
+  same D816V codon; imatinib is active against GIST KIT exon 11/9 but NOT
+  D816V. This RF must NOT be triggered in GIST patients. The `relevant_diseases:
+  [DIS-MASTOCYTOSIS]` constraint ensures disease-scoped routing.
+
+  BMA-KIT-D816V-MASTOCYTOSIS (ESCAT IA): confirms evidence base.
+  Source stubs SRC-PATHFINDER and SRC-EXPLORER are auto-stubs with
+  pending citation verification. SRC-NCCN-SM-2025 is the primary guideline
+  authority.
+
+  CHARTER §6.1: Two-reviewer clinical co-lead signoff required before
+  removing draft: true.
