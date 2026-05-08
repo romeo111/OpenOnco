@@ -248,6 +248,7 @@ def test_ask_page_wires_clinical_question_endpoint(site_dir: Path):
     """Optional ChatGPT adapter: free-text case goes to a server endpoint,
     not directly to OpenAI from the browser."""
     html = (site_dir / "ask.html").read_text(encoding="utf-8")
+    uk_html = (site_dir / "ukr" / "ask.html").read_text(encoding="utf-8")
     assert 'id="caseText"' in html
     assert 'id="endpointInput"' in html
     assert 'id="askBtn"' in html
@@ -263,6 +264,11 @@ def test_ask_page_wires_clinical_question_endpoint(site_dir: Path):
     assert "questions_used" in html
     assert "OPENAI_API_KEY" not in html
     assert "api.openai.com" not in html
+    for ask_html in (html, uk_html):
+        assert 'property="og:image"' not in ask_html
+        assert 'name="twitter:image"' not in ask_html
+        assert 'name="twitter:card" content="summary"' in ask_html
+        assert 'name="twitter:card" content="summary_large_image"' not in ask_html
 
 
 # ── Engine bundle (Pyodide-loadable zip) ──────────────────────────────────
@@ -490,17 +496,20 @@ def test_lang_switch_present_on_case_pages(site_dir: Path):
 
 
 def test_try_cta_is_separate_action_button(site_dir: Path):
-    """'Try it' is a high-conviction action, not a reading link. It must
+    """The plan builder is a high-conviction action, not a reading link. It must
     render as a distinct CTA button class — not a plain top-nav link."""
     html = (site_dir / "index.html").read_text(encoding="utf-8")
-    assert 'class="btn-cta-try"' in html, "Try CTA button missing from top bar"
+    assert 'class="btn-cta-top btn-cta-try"' in html, "Plan Builder CTA missing from top bar"
+    assert "Plan Builder" in html
+    assert "Try it" not in html
     # Top reading-nav must not include the try link as a plain entry —
     # CTA lives in the right cluster, separated visually
     assert 'class="top-right"' in html
+    assert 'class="top-cta-group"' in html
 
 
 def test_top_nav_uses_single_onco_wiki_entry():
-    """Diseases stay addressable by URL, but the top menu has one wiki entry."""
+    """Diseases stay addressable by URL, but Wiki is a top action, not a nav duplicate."""
     for html in (
         _render_top_bar(active="home", target_lang="en"),
         _render_top_bar(active="diseases", target_lang="en"),
@@ -508,7 +517,11 @@ def test_top_nav_uses_single_onco_wiki_entry():
         _render_top_bar(active="diseases", target_lang="uk"),
     ):
         nav = html.split('<nav class="top-nav">', 1)[1].split("</nav>", 1)[0]
-        assert "Onco Wiki" in nav
+        actions = html.split('<div class="top-cta-group">', 1)[1].split("</div>", 1)[0]
+        assert "Onco Wiki" in actions
+        assert "Tumor Board" in actions
+        assert "Onco Wiki" not in nav
+        assert "Tumor Board" not in nav
         assert "KB Search" not in nav
         assert 'href="/diseases.html"' not in nav
         assert 'href="/ukr/diseases.html"' not in nav

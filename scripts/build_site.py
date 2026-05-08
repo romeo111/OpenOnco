@@ -886,9 +886,9 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 
 _NAV_LABELS = {
-    "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "Спробувати →",
+    "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "План лікування",
            "diseases": "Хвороби", "ask": "Tumor Board", "kb": "Onco Wiki"},
-    "en": {"home": "Home", "about": "About", "try_cta": "Try it →",
+    "en": {"home": "Home", "about": "About", "try_cta": "Plan Builder",
            "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki"},
 }
 
@@ -938,7 +938,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     - reading-only nav (Home, Capabilities, Onco Wiki, Tumor Board, About)
       in the middle
     - language switcher (UA / EN toggle) on the right
-    - prominent CTA "Try it" button on the far right (action, not reading)
+    - prominent action buttons on the far right (Plan Builder, Onco Wiki, Tumor Board)
 
     Per user direction: 'Спробувати' is an action and gets a separate CTA
     button styled distinctly from the nav links.
@@ -976,8 +976,9 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     en_tag, en_attr = ("a", f' href="{lang_switch_href}"') if is_uk else ("span", "")
 
     kb_href = "/ukr/kb.html" if target_lang == "uk" else "/kb.html"
-    kb_label = labels["kb"]
-    kb_active_attr = ' class="active"' if active in {"kb", "diseases"} else ""
+    kb_current = ' aria-current="page"' if active in {"kb", "diseases"} else ""
+    ask_current = ' aria-current="page"' if active == "ask" else ""
+    try_current = ' aria-current="page"' if active == "try" else ""
 
     return f"""<header class="top-bar">
   <div class="brand-line">
@@ -986,8 +987,6 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
     {extra_links}
-    <a href="{kb_href}"{kb_active_attr}>{kb_label}</a>
-    <a href="{ask_path}"{cls("ask")}>{labels['ask']}</a>
     <a href="{about_path}"{cls("about")}>{labels['about']}</a>
   </nav>
   <div class="top-right">
@@ -995,7 +994,11 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
       <{ua_tag} class="{ua_cls}"{ua_attr}><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</{ua_tag}>
       <{en_tag} class="{en_cls}"{en_attr}><span class="lang-flag flag-en" aria-hidden="true"></span>EN</{en_tag}>
     </div>
-    <a href="{try_path}" class="btn-cta-try" {'aria-current="page"' if active == "try" else ""}>{labels['try_cta']}</a>
+    <div class="top-cta-group">
+      <a href="{try_path}" class="btn-cta-top btn-cta-try"{try_current}>{labels['try_cta']}</a>
+      <a href="{kb_href}" class="btn-cta-top btn-cta-secondary"{kb_current}>{labels['kb']}</a>
+      <a href="{ask_path}" class="btn-cta-top btn-cta-secondary"{ask_current}>{labels['ask']}</a>
+    </div>
   </div>
 </header>"""
 
@@ -1202,6 +1205,18 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             },
         ]
 
+    if not is_en:
+        sub = (
+            "OpenOnco допомагає швидко зібрати клінічно осмислений план лікування: "
+            "від діагнозу, стадії, біомаркерів і стану пацієнта до можливих "
+            "терапевтичних опцій. Поруч працює Onco Wiki - онкологічна вікіпедія "
+            "проєкту з хворобами, препаратами, біомаркерами та джерелами.",
+            "Кожна рекомендація прив'язана до джерел, стандартів і перевірених "
+            "правил. Система підсвічує ключові ліки, біомаркери та обмеження, а "
+            "AI tumor board допомагає сформулювати питання для клінічного рев'ю "
+            "перед фінальним рішенням.",
+        )
+
     carousel_tabs_html = "\n".join(
         f'        <button type="button" class="home-carousel-tab{" is-active" if i == 0 else ""}" '
         f'data-home-slide="{slide["key"]}" aria-controls="home-slide-{slide["key"]}" '
@@ -1219,6 +1234,12 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
           <a class="home-carousel-cta" href="{slide['href']}">{slide['cta']} →</a>
         </article>"""
         for i, slide in enumerate(carousel_slides)
+    )
+
+    sub_paragraphs = sub if isinstance(sub, (list, tuple)) else (sub,)
+    sub_html = "\n      ".join(
+        f'<p class="home-sub">{paragraph}</p>'
+        for paragraph in sub_paragraphs
     )
 
     return f"""<!DOCTYPE html>
@@ -1242,7 +1263,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
     <div class="home-hero-inner">
       <p class="home-kicker">{kicker}</p>
       <h1>{h1}</h1>
-      <p class="home-sub">{sub}</p>
+      {sub_html}
       <div class="cta-row">
         <a class="btn btn-primary" href="{try_href}">{primary}</a>
         <a class="btn btn-secondary" href="{kb_href}">{secondary}</a>
@@ -5116,6 +5137,8 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         '.oo-topbar-host .top-nav a:hover{color:#14532d;background:transparent;}'
         '.oo-topbar-host .top-right{display:flex;align-items:center;gap:14px;'
         'flex-shrink:0;}'
+        '.oo-topbar-host .top-cta-group{display:flex;align-items:center;gap:8px;'
+        'flex-wrap:wrap;justify-content:flex-end;}'
         '.oo-topbar-host .lang-switch{display:inline-flex;align-items:center;gap:0;'
         'background:#fff;border:1px solid #e5e7eb;border-radius:4px;'
         'font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.5px;'
@@ -5137,13 +5160,14 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         'background:linear-gradient(to bottom,#0057b7 50%,#ffd500 50%);}'
         '.oo-topbar-host .lang-switch .lang-flag.flag-en{background:#012169 '
         "url(\"data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E\") center/cover no-repeat;}"
-        '.oo-topbar-host .btn-cta-try{background:#14532d;'
-        'color:white;padding:11px 22px;border-radius:7px;font-weight:700;'
-        'font-size:15px;text-decoration:none;border:none;'
+        '.oo-topbar-host .btn-cta-top{color:#14532d;background:white;'
+        'padding:10px 16px;border-radius:7px;font-weight:700;'
+        'font-size:15px;text-decoration:none;border:1px solid #e5e7eb;'
         'box-shadow:none;'
-        'white-space:nowrap;min-width:180px;box-sizing:border-box;text-align:center;'
+        'white-space:nowrap;min-width:112px;box-sizing:border-box;text-align:center;'
         'display:inline-block;}'
-        '.oo-topbar-host .btn-cta-try:hover{filter:none;}'
+        '.oo-topbar-host .btn-cta-try{min-width:132px;}'
+        '.oo-topbar-host .btn-cta-top:hover{filter:none;}'
         # Sub-bar with case context (back-to-gallery + feedback)
         '.case-bar{background:#0d3f24;color:#dcfce7;padding:8px 24px;'
         'display:flex;justify-content:space-between;align-items:center;'
@@ -5154,7 +5178,10 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         '@media (max-width:700px){'
         '.oo-topbar-host .top-bar{flex-wrap:wrap;gap:8px;}'
         '.oo-topbar-host .top-nav{order:3;flex-basis:100%;margin:0;justify-content:center;}'
-        '.oo-topbar-host .btn-cta-try{min-width:120px;padding:8px 14px;font-size:13px;}'
+        '.oo-topbar-host .top-right{gap:8px;flex-wrap:wrap;justify-content:flex-end;}'
+        '.oo-topbar-host .top-cta-group{width:100%;justify-content:flex-end;gap:6px;}'
+        '.oo-topbar-host .btn-cta-top{min-width:98px;padding:8px 10px;font-size:13px;}'
+        '.oo-topbar-host .btn-cta-try{min-width:118px;}'
         '}'
         '</style>\n'
     )
