@@ -542,6 +542,115 @@ def _public_case_entries() -> list[CaseEntry]:
     return [c for c in CASES if c.case_id not in GALLERY_EXCLUDED_CASE_IDS]
 
 
+def _case_quality_meta(c: CaseEntry, *, has_case_page: bool) -> dict:
+    """Display-only quality tier for public example pickers.
+
+    This does not certify clinical review; it keeps intentionally broad
+    starter profiles visually separate from curated showcase/demo plans.
+    """
+    cid = c.case_id.lower()
+    filename = c.file.lower()
+    if not has_case_page:
+        return {
+            "quality_rank": 50,
+            "quality_tier": "starter",
+            "quality_label": "Старт для форми",
+            "quality_label_en": "Form starter",
+            "quality_class": "quality-starter",
+        }
+    if cid.startswith("showcase-"):
+        return {
+            "quality_rank": 0,
+            "quality_tier": "showcase",
+            "quality_label": "Кураторський showcase",
+            "quality_label_en": "Curated showcase",
+            "quality_class": "quality-showcase",
+        }
+    if cid.startswith("diagnostic-"):
+        return {
+            "quality_rank": 10,
+            "quality_tier": "diagnostic",
+            "quality_label": "Діагностичний brief",
+            "quality_label_en": "Diagnostic brief",
+            "quality_class": "quality-diagnostic",
+        }
+    if cid.startswith("auto-") or cid.startswith("variant-") or filename.startswith(("auto_", "variant_")):
+        return {
+            "quality_rank": 40,
+            "quality_tier": "starter",
+            "quality_label": "Стартовий профіль",
+            "quality_label_en": "Coverage starter",
+            "quality_class": "quality-starter",
+        }
+    return {
+        "quality_rank": 20,
+        "quality_tier": "curated",
+        "quality_label": "Кураторський план",
+        "quality_label_en": "Curated plan",
+        "quality_class": "quality-curated",
+    }
+
+
+def _example_display_labels(
+    c: CaseEntry,
+    ex_json: dict,
+    disease_id: str | None,
+    *,
+    has_case_page: bool,
+) -> tuple[str, str]:
+    """Return picker labels that are readable to users, not generator names."""
+    label_en = c.label_en or c.label_ua
+    label_ua = c.label_ua
+    cid = c.case_id.lower()
+    filename = c.file.lower()
+    generated = (
+        not has_case_page
+        or cid.startswith("auto-")
+        or cid.startswith("variant-")
+        or filename.startswith("auto_")
+        or filename.startswith("variant_")
+        or "auto-stub" in label_en.lower()
+        or "auto-stub" in label_ua.lower()
+    )
+    if not generated:
+        return label_ua, label_en
+
+    disease_names = _load_disease_name_map().get(str(disease_id or "").upper()) or {}
+    disease = ex_json.get("disease", {}) if isinstance(ex_json, dict) else {}
+    disease_label_ua = (
+        disease_names.get("ua")
+        or disease.get("name_uk")
+        or disease.get("name")
+        or disease_id
+        or c.case_id
+    )
+    disease_label_en = (
+        disease_names.get("en")
+        or disease.get("name_en")
+        or disease.get("name")
+        or disease_id
+        or c.case_id
+    )
+    if has_case_page:
+        return (
+            f"{disease_label_ua} · стартовий профіль",
+            f"{disease_label_en} · coverage starter",
+        )
+    return (
+        f"{disease_label_ua} · старт для форми",
+        f"{disease_label_en} · form starter",
+    )
+
+
+def _example_sort_key(entry: dict) -> tuple:
+    return (
+        str(entry.get("disease_id") or entry.get("disease_icd") or "ZZZ"),
+        int(entry.get("quality_rank", 99)),
+        str(entry.get("label_en") or entry.get("label") or "").casefold(),
+        str(entry.get("case_id") or ""),
+    )
+
+
 def _remove_excluded_case_pages(output_dir: Path) -> int:
     """Delete stale generated pages for hidden auto-stub cases."""
     removed = 0
@@ -600,21 +709,26 @@ def bundle_examples(
         # JS constant on /try.html (UA) vs /ukr/try.html — wait, EN is
         # at root → /try.html serves EN labels — can pick the right
         # one per page locale at render time.
-        label_en = c.label_en or c.label_ua
+        label_ua, label_en = _example_display_labels(
+            c, ex_json, disease_id, has_case_page=has_case_page
+        )
+        quality_meta = _case_quality_meta(c, has_case_page=has_case_page)
         payload_entry = {
             "case_id": c.case_id,
-            "label": c.label_ua,
+            "label": label_ua,
             "label_en": label_en,
             "disease_id": disease_id,
             "file": c.file,
             "json": ex_json,
+            **quality_meta,
         }
         manifest_entry = {
             "case_id": c.case_id,
-            "label": c.label_ua,
+            "label": label_ua,
             "label_en": label_en,
             "disease_id": disease_id,
             "disease_icd": disease_icd,
+            **quality_meta,
         }
         if not has_case_page:
             payload_entry["has_case_page"] = False
@@ -650,6 +764,9 @@ def bundle_examples(
             )
             if disease_id in questionnaire_disease_ids and disease_id not in covered_disease_ids:
                 append_case(c, has_case_page=False)
+
+    payload.sort(key=_example_sort_key)
+    manifest.sort(key=_example_sort_key)
 
     out = output_dir / "examples.json"
     out.write_text(
@@ -1964,6 +2081,16 @@ def render_gallery(*, target_lang: str = "en") -> str:
         label = d[sort_key]
         n = len(d["items"])
         n_word = _examples_word(n)
+        best_rank = min(
+            _case_quality_meta(item["case"], has_case_page=True)["quality_rank"]
+            for item in d["items"]
+        )
+        quality_text = (
+            "curated first" if is_en and best_rank <= 20
+            else "best first" if is_en
+            else "кураторські першими" if best_rank <= 20
+            else "кращі першими"
+        )
         icds = sorted(str(code) for code in d.get("icds", []) if code)
         icd_text = ", ".join(icds[:3])
         icd_suffix = f" +{len(icds) - 3}" if len(icds) > 3 else ""
@@ -1981,6 +2108,7 @@ def render_gallery(*, target_lang: str = "en") -> str:
             f'<span class="dt-label">{_html.escape(label)}</span>'
             f'{icd_html}'
             f'<span class="dt-count">{n} {n_word}</span>'
+            f'<span class="dt-quality">{_html.escape(quality_text)}</span>'
             f'</button>'
         )
     disease_tiles_html = "\n    ".join(disease_tiles)
@@ -1997,6 +2125,8 @@ def render_gallery(*, target_lang: str = "en") -> str:
                 f'{("Form not yet available — opens as JSON on Try-it" if is_en else "Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON")}'
                 f'">JSON-only</span>'
             )
+            quality = _case_quality_meta(c, has_case_page=True)
+            quality_label = quality["quality_label_en"] if is_en else quality["quality_label"]
             card_label = (c.label_en or c.label_ua) if is_en else c.label_ua
             card_summary = (c.summary_en or c.summary_ua) if is_en else c.summary_ua
             cards.append(
@@ -2005,6 +2135,7 @@ def render_gallery(*, target_lang: str = "en") -> str:
    data-name="{_html.escape(card_label)}">
   <div class="case-badge-row">
     <div class="case-badge {c.badge_class}">{c.badge}</div>
+    <span class="case-quality {quality["quality_class"]}">{_html.escape(quality_label)}</span>
     {json_only_pill}
   </div>
   <h3>{_html.escape(card_label)}</h3>
@@ -2902,7 +3033,9 @@ def render_try(
         data.examples.forEach(function(ex, i) {{
           var opt = document.createElement('option');
           opt.value = i;
-          opt.textContent = {'(ex.label_en || ex.label)' if target_lang == 'en' else 'ex.label'};
+          var base = {'(ex.label_en || ex.label)' if target_lang == 'en' else 'ex.label'};
+          var quality = {'(ex.quality_label_en || ex.quality_label)' if target_lang == 'en' else 'ex.quality_label'};
+          opt.textContent = quality ? (base + ' · ' + quality) : base;
           frag2.appendChild(opt);
         }});
         es.innerHTML = '';
@@ -4815,6 +4948,12 @@ async function loadAssets() {{
 // We narrow the example dropdown to the active questionnaire disease.
 // Match by disease_id first: ICD-O morphology is not unique enough
 // (e.g. 8070/3 spans cervical, esophageal, and HNSCC examples).
+function exampleDisplayLabel(ex) {{
+  const base = {'(ex.label_en || ex.label)' if target_lang == 'en' else 'ex.label'};
+  const quality = {'(ex.quality_label_en || ex.quality_label)' if target_lang == 'en' else 'ex.quality_label'};
+  return quality ? `${{base}} · ${{quality}}` : base;
+}}
+
 function repopulateExamples(activeQuestIdx) {{
   // Filter from manifest only — no need to await full examples payload
   // just to populate a dropdown (manifest carries label + disease_id).
@@ -4831,15 +4970,28 @@ function repopulateExamples(activeQuestIdx) {{
     : '{"— select an example for this disease —" if target_lang == "en" else "— оберіть приклад для цієї хвороби —"}';
   exampleSelect.appendChild(placeholder);
   let n = 0;
-  EXAMPLES_MANIFEST.forEach((ex, i) => {{
+  EXAMPLES_MANIFEST
+    .map((ex, i) => ({{ ex, i }}))
+    .filter((item) => {{
+      const ex = item.ex;
     if (wantDiseaseId != null) {{
-      if (ex.disease_id !== wantDiseaseId) return;
+        return ex.disease_id === wantDiseaseId;
     }} else if (wantCode != null) {{
-      if (ex.disease_icd !== wantCode) return;
+        return ex.disease_icd === wantCode;
     }}
+      return true;
+    }})
+    .sort((a, b) => {{
+      const ar = Number.isFinite(a.ex.quality_rank) ? a.ex.quality_rank : 99;
+      const br = Number.isFinite(b.ex.quality_rank) ? b.ex.quality_rank : 99;
+      if (ar !== br) return ar - br;
+      return exampleDisplayLabel(a.ex).localeCompare(exampleDisplayLabel(b.ex));
+    }})
+    .forEach((item) => {{
+    const ex = item.ex;
     const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = {'(ex.label_en || ex.label)' if target_lang == 'en' else 'ex.label'};
+    opt.value = item.i;
+    opt.textContent = exampleDisplayLabel(ex);
     exampleSelect.appendChild(opt);
     n++;
   }});

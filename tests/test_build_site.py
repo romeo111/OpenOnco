@@ -23,6 +23,7 @@ from scripts.build_site import (
     GALLERY_EXCLUDED_CASE_IDS,
     GALLERY_FEATURED_CASE_IDS,
     build_site,
+    _example_sort_key,
     _render_top_bar,
     render_diseases,
 )
@@ -173,6 +174,8 @@ def test_gallery_is_public_with_publishable_cases(site_dir: Path):
         )
     ]
     assert html.count('class="case-card"') == len(public_cases)
+    assert "Curated showcase" in html
+    assert 'class="dt-quality"' in html
     assert "No treatment plan generated" not in html
     for c in public_cases:
         assert f"cases/{c.case_id}.html" in html
@@ -337,17 +340,40 @@ def test_engine_bundle_excludes_heavy_unused_subtrees(site_dir: Path):
 def test_examples_payload_matches_cases(site_dir: Path):
     payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
     case_ids_payload = {e["case_id"] for e in payload}
-    case_ids_expected = {
+    publishable_case_ids = {
         c.case_id for c in CASES
         if c.case_id not in GALLERY_EXCLUDED_CASE_IDS
     }
-    assert case_ids_payload == case_ids_expected
-    assert not (case_ids_payload & GALLERY_EXCLUDED_CASE_IDS)
+    assert publishable_case_ids <= case_ids_payload
+    starter_case_ids = case_ids_payload - publishable_case_ids
+    assert starter_case_ids <= GALLERY_EXCLUDED_CASE_IDS
     # Each entry has a parseable patient JSON
     for entry in payload:
         assert isinstance(entry["json"], dict)
+        assert isinstance(entry.get("quality_rank"), int)
+        assert entry.get("quality_label")
+        assert entry.get("quality_label_en")
+        assert entry.get("quality_class")
+        assert "Auto-stub" not in entry.get("label", "")
+        assert "Auto-stub" not in entry.get("label_en", "")
+        if entry["case_id"] in GALLERY_EXCLUDED_CASE_IDS:
+            assert entry.get("has_case_page") is False
+            assert entry["quality_tier"] == "starter"
         # Engine-required top-level fields exist for non-diagnostic patients
         # (diagnostic patients have a different shape)
+
+
+def test_examples_are_quality_ranked_in_try_picker(site_dir: Path):
+    payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
+    nsclc = [entry for entry in payload if entry.get("disease_id") == "DIS-NSCLC"]
+    assert nsclc, "NSCLC examples should be available for try.html"
+    assert nsclc == sorted(nsclc, key=_example_sort_key)
+    assert nsclc[0]["quality_tier"] == "showcase"
+    try_html = (site_dir / "try.html").read_text(encoding="utf-8")
+    assert '"quality_rank":' in try_html
+    assert "function exampleDisplayLabel(ex)" in try_html
+    assert "quality_rank" in try_html
+    assert "Curated showcase" in try_html
 
 
 def test_try_examples_cover_every_questionnaire_disease(site_dir: Path):
@@ -392,7 +418,7 @@ def test_try_examples_cover_every_questionnaire_disease(site_dir: Path):
 
     html = (site_dir / "try.html").read_text(encoding="utf-8")
     assert '"disease_id":' in html
-    assert "ex.disease_id !== wantDiseaseId" in html
+    assert "return ex.disease_id === wantDiseaseId" in html
     assert "ICD-O morphology is not unique enough" in html
 
 
