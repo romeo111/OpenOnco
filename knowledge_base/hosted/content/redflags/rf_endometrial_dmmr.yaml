@@ -1,0 +1,122 @@
+id: RF-ENDOMETRIAL-DMMR
+definition: >
+  Deficient mismatch repair (dMMR) or microsatellite instability-high
+  (MSI-H) status in advanced or recurrent endometrial carcinoma. dMMR
+  endometrial cancer is defined by loss of at least one MMR protein (MLH1,
+  MSH2, MSH6, PMS2) on IHC or MSI-H on PCR or NGS. Approximately 25-30%
+  of advanced endometrial cancers are dMMR/MSI-H (higher in endometrioid
+  histology, lower in serous/CCCC).
+
+  Fires to route ALGO-ENDOMETRIAL-ADVANCED-1L to checkpoint inhibitor
+  + chemotherapy combinations (dostarlimab + carbo/paclitaxel per RUBY
+  trial, Mirza NEJM 2023 PMID 37395437; or pembrolizumab + carbo/paclitaxel
+  per KEYNOTE-868 / NRG-GY018, Eskander NEJM 2023 PMID 36972026). Both
+  are NCCN Category 1 for dMMR/MSI-H advanced endometrial cancer.
+
+  dMMR status is the strongest predictive biomarker for immunotherapy
+  benefit in endometrial cancer: hazard ratio for PFS with CPI+chemo vs
+  chemo alone is approximately 0.28 (RUBY dostarlimab arm, dMMR cohort)
+  and 0.30 (KEYNOTE-868 pembro arm, dMMR/MSI-H cohort), versus ~0.70 for
+  the pMMR cohort with the same regimens — about double the relative PFS
+  benefit in dMMR vs pMMR. The OS benefit is similarly pronounced in
+  dMMR (HR ~0.28 RUBY 24-mo update; NRG-GY018 OS data maturing).
+
+  Lynch syndrome (germline MLH1/MSH2/MSH6/PMS2 mutation) accounts for
+  approximately 2-3% of endometrial cancers; somatic MLH1 promoter
+  hypermethylation accounts for most sporadic dMMR cases. The RF fires
+  regardless of germline vs somatic mechanism.
+definition_ua: >
+  Дефіцит системи репарації помилок (dMMR) або висока мікросателітна
+  нестабільність (MSI-H) при поширеному або рецидивуючому раку ендометрія.
+  Приблизно 25-30% поширеного раку ендометрія є dMMR/MSI-H. Спрацьовує для
+  маршрутизації до схем хіміоімунотерапії: достарлімаб + карбо/паклітаксел
+  (RUBY; Mirza NEJM 2023) або пембролізумаб + карбо/паклітаксел (KEYNOTE-868;
+  Eskander NEJM 2023). Обидва — NCCN категорія 1 для dMMR/MSI-H. Відношення
+  ризику ВБП при dMMR ~0.28-0.30 порівняно з ~0.70 при pMMR — подвоєний
+  виграш від імунотерапії при dMMR. Синдром Лінча (зародкова мутація
+  MLH1/MSH2/MSH6/PMS2) відповідає за ~2-3% випадків.
+
+trigger:
+  type: biomarker_status
+  any_of:
+    - finding: "mmr_status"
+      value: "deficient"
+    - finding: "mmr_status"
+      value: "dMMR"
+    - finding: "msi_status"
+      value: "MSI-H"
+    - finding: "msi_status"
+      value: "MSI-high"
+    - finding: "msi_status"
+      value: "high"
+    - finding: "mlh1_ihc"
+      value: "loss"
+    - finding: "msh2_ihc"
+      value: "loss"
+    - finding: "msh6_ihc"
+      value: "loss"
+    - finding: "pms2_ihc"
+      value: "loss"
+
+clinical_direction: intensify
+severity: major
+priority: 50
+category: high-risk-biology
+
+branch_targets:
+  ALGO-ENDOMETRIAL-ADVANCED-1L: "1"
+
+relevant_diseases:
+  - DIS-ENDOMETRIAL
+
+shifts_algorithm:
+  - ALGO-ENDOMETRIAL-ADVANCED-1L
+
+sources:
+  - SRC-RUBY-MIRZA-2023
+  - SRC-GY018-MAKKER-2022
+  - SRC-NCCN-UTERINE-2025
+
+last_reviewed: "2026-05-09"
+reviewer_signoffs: []
+draft: true
+notes: >
+  W5c RF authoring. Converts the free-text `{finding: mmr_status, value:
+  deficient}` condition in ALGO-ENDOMETRIAL-ADVANCED-1L step 1 into a
+  formal RF entity. The algo already uses structured finding lookups;
+  this RF provides the named entity that coverage tooling and the render
+  layer can reference.
+
+  RUBY trial (Mirza NEJM 2023, PMID 37395437): dostarlimab + carbo/pac
+  vs carbo/pac in advanced/recurrent endometrial. dMMR cohort 24-month
+  PFS HR 0.28 (95% CI 0.16–0.50); overall cohort PFS HR 0.64. OS data
+  reported at 2024 SGO (dMMR HR 0.28, CI 0.16–0.50, interim OS
+  analysis with 46% events).
+
+  KEYNOTE-868 / NRG-GY018 (Eskander NEJM 2023, PMID 36972026): pembrolizumab
+  + carbo/pac vs carbo/pac. dMMR/MSI-H cohort PFS HR 0.30 (95% CI
+  0.19–0.48); pMMR cohort PFS HR 0.54 (95% CI 0.41–0.71). OS data
+  maturing.
+
+  POLE/POLD1 ultra-mutated endometrial (see RF-POLE-POLD1-ENDOMETRIAL-LOW-RISK):
+  POLE exonuclease domain mutations confer MSI-H-like hypermutation but with
+  EXCELLENT prognosis — do not conflate with dMMR. POLE/POLD1 status is
+  assessed separately and typically warrants de-escalation (no cytotoxic
+  needed per ESMO 2022 for POLE/POLD1 early stage). dMMR ≠ POLE ultra-mutated.
+
+  Lynch syndrome genetic counselling: all dMMR endometrial cancers should
+  have germline MMR gene testing (reflex IHC → MLH1 methylation if MLH1 loss
+  → germline testing if methylation negative or other MMR protein loss).
+  This RF triggers the treatment routing; Lynch genetic referral is a
+  parallel care requirement not modelled in this RF.
+
+  Ukraine availability: pembrolizumab partially reimbursed for dMMR tumours
+  via НСЗУ oncology package (oncology drug access program 2024);
+  dostarlimab not currently НСЗУ-reimbursed. Practical default in Ukraine:
+  pembrolizumab + carbo/pac (KEYNOTE-868) when ICI funded; carbo/pac alone
+  when ICI access unavailable.
+
+  Sources confirmed in KB: SRC-RUBY-MIRZA-2023 (dostarlimab RUBY trial),
+  SRC-GY018-MAKKER-2022 (NRG-GY018/KEYNOTE-868 pembro+chemo trial),
+  SRC-NCCN-UTERINE-2025. All IDs verified present in
+  knowledge_base/hosted/content/sources/.

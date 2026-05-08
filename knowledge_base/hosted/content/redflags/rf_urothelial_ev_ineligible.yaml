@@ -1,0 +1,112 @@
+id: RF-UROTHELIAL-EV-INELIGIBLE
+definition: >
+  Enfortumab vedotin + pembrolizumab (EV+pembro) exclusion criteria in
+  locally advanced or metastatic urothelial carcinoma. EV+pembro (EV-302 /
+  KEYNOTE-A39; Powles NEJM 2024, PMID 37840257) is NCCN Category 1 preferred
+  1L for all eligible patients regardless of cisplatin eligibility or PD-L1
+  status. This flag fires when ANY of the following EV-specific toxicity
+  exclusions are present, routing the algorithm to platinum-based chemotherapy
+  → avelumab maintenance instead:
+
+  (1) Grade ≥2 pre-existing peripheral neuropathy — MMAE (monomethyl
+  auristatin E) payload induces dose-limiting sensory-motor neuropathy;
+  baseline impairment is the primary safety exclusion in all EV trials.
+  (2) Uncontrolled diabetes mellitus (HbA1c >9% or active hyperglycaemia
+  requiring IV insulin) — EV causes hyperglycaemia through a mechanism
+  distinct from immunotherapy; uncontrolled DM amplifies risk of severe
+  hyperglycaemic events (grade ≥3 in ~4% EV-302).
+  (3) Severe corneal/ocular surface disease — EV-associated keratopathy
+  (microcyst-like epithelial changes) is class-wide for MMAE-ADCs; severe
+  baseline corneal disease or active keratitis is an exclusion.
+  (4) Active autoimmune disease requiring systemic immunosuppression —
+  pembrolizumab component; cross-references RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK.
+  (5) Unresolved irAE from prior checkpoint inhibitor therapy — pembrolizumab
+  component; prior immune toxicity Grade ≥3 from any ICI is a standard
+  re-challenge exclusion.
+
+  Does NOT include CrCl <60 mL/min (cisplatin-ineligible) — EV+pembro was
+  tested in both cisplatin-eligible and cisplatin-ineligible cohorts in EV-302;
+  renal impairment alone is NOT an exclusion for EV+pembro.
+definition_ua: >
+  Критерії виключення для енфортумаб ведотин + пембролізумаб (EV+пембро)
+  при місцево-поширеному або метастатичному уротеліальному раку. EV+пембро
+  (EV-302/KEYNOTE-A39; Powles NEJM 2024) — NCCN категорія 1, переважний
+  режим 1Л для всіх придатних пацієнтів незалежно від придатності до
+  цисплатину або статусу PD-L1. Цей прапор спрацьовує при наявності
+  БУДЬ-ЯКОГО з таких критеріїв виключення, специфічних для EV:
+  (1) Периферична нейропатія ≥2 ступеня — ММАЕ індукує нейротоксичність;
+  (2) Неконтрольований цукровий діабет (HbA1c >9%) — EV викликає гіперглікемію;
+  (3) Тяжке захворювання рогівки/поверхні ока — ММАЕ-ADC кератопатія;
+  (4) Активне аутоімунне захворювання — компонент пембролізумабу;
+  (5) Невирішена іАНЖ від попереднього ІКТ ≥3 ступеня.
+  НЕ включає CrCl <60 мл/хв — EV+пембро тестувався в обох когортах.
+
+trigger:
+  type: composite_eligibility
+  any_of:
+    - finding: "peripheral_neuropathy_grade"
+      threshold: 2
+      comparator: ">="
+    - finding: "baseline_neuropathy"
+      value: "grade2"
+    - finding: "baseline_neuropathy"
+      value: "grade3"
+    - finding: "baseline_neuropathy"
+      value: "grade4"
+    - finding: "diabetes_control"
+      value: "uncontrolled"
+    - finding: "hba1c"
+      threshold: 9.0
+      comparator: ">"
+    - finding: "ev_pembro_eligible"
+      value: false
+    - finding: "corneal_disease_severe"
+      value: true
+    - finding: "active_autoimmune_disease"
+      value: true
+    - finding: "prior_ici_grade3_irae"
+      value: true
+
+clinical_direction: de-escalate
+severity: major
+priority: 60
+category: fitness-eligibility
+
+branch_targets:
+  ALGO-UROTHELIAL-METASTATIC-1L: "1"
+
+relevant_diseases:
+  - DIS-UROTHELIAL
+
+shifts_algorithm:
+  - ALGO-UROTHELIAL-METASTATIC-1L
+
+sources:
+  - SRC-NCCN-BLADDER-2025
+  - SRC-EV302-POWLES-2024
+
+last_reviewed: "2026-05-09"
+reviewer_signoffs: []
+draft: true
+notes: >
+  W5c RF authoring. Closes the RF authoring gap noted in
+  ALGO-UROTHELIAL-METASTATIC-1L step 1 (comment: "RF authoring for
+  composite exclusion criteria still owed — RF-UROTHELIAL-EV-INELIGIBLE.
+  Until then, evaluated as MDT text.").
+
+  EV-302 key data (Powles NEJM 2024, PMID 37840257): EV+pembro vs
+  platinum-based chemotherapy in 1L la/mUC. mOS 31.5 vs 16.1 months
+  (HR 0.47, p<0.001); mPFS 12.5 vs 6.3 months (HR 0.45). Benefit
+  consistent regardless of cisplatin eligibility, PD-L1 CPS status,
+  primary site, or prior BCG. EV-specific safety (grade ≥3): peripheral
+  neuropathy 6%, hyperglycaemia 4%, skin reactions 10%.
+
+  Rationale for `de-escalate` direction: firing this RF means EV+pembro
+  (the preferred aggressive regimen) is contraindicated — the patient
+  must de-escalate to the alternative (platinum chemo + avelumab
+  maintenance). The flag does not modify dosing; it routes to a
+  different regimen.
+
+  SRC-EV302-POWLES-2024: Powles T et al. Enfortumab vedotin and
+  pembrolizumab in untreated advanced urothelial cancer. N Engl J Med.
+  2024;390(10):875-888. PMID 37840257. Source stub confirmed in KB.
