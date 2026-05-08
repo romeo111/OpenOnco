@@ -71,6 +71,21 @@ body {
     text-transform: uppercase; color: var(--green-700); margin-bottom: 4px;
 }
 .patient-strip .value { font-size: 15px; color: var(--gray-900); }
+.patient-meta-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px 16px; margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid rgba(20, 83, 45, .16);
+}
+.patient-meta-item { min-width: 0; }
+.patient-meta-item .meta-label {
+    display: block; font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: .6px; text-transform: uppercase; color: var(--green-700);
+    margin-bottom: 2px;
+}
+.patient-meta-item .meta-value {
+    display: block; font-size: 14px; color: var(--gray-900);
+    overflow-wrap: anywhere;
+}
 
 /* Banner — diagnostic phase */
 .banner {

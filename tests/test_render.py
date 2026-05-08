@@ -57,6 +57,23 @@ def test_treatment_plan_html_well_formed():
         )
 
 
+def test_treatment_plan_header_shows_diagnosis_codes_and_context():
+    p = _patient("patient_showcase_nsclc_alk_fusion_1l.json")
+    plan = generate_plan(p, kb_root=KB_ROOT)
+    html = render_plan_html(plan, mdt=None, target_lang="en")
+
+    assert "Treatment plan — Non-small cell lung cancer" in html
+    assert "Diagnosis" in html
+    assert "Non-small cell lung cancer" in html
+    assert "MOH / ICD-10" in html
+    assert "C34" in html
+    assert "ICD-O-3" in html
+    assert "8046/3" in html
+    assert "C34.9" in html
+    assert "Stage" in html and "IV" in html
+    assert "Histology" in html and "adenocarcinoma" in html
+
+
 def test_treatment_plan_shows_both_tracks():
     p = _patient("patient_zero_indolent.json")
     plan = generate_plan(p, kb_root=KB_ROOT)

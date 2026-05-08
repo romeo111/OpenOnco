@@ -314,6 +314,100 @@ def _pick_name(names: dict | None, target_lang: str = "uk", default: str = "") -
 # For `target_lang` outside {uk, en}, falls back to UA on UI labels;
 # free-text still translated by the client if it supports the language.
 
+def _code_value(value) -> str:
+    """Render scalar/list code values without exposing Python repr syntax."""
+    if value is None:
+        return ""
+    if isinstance(value, (list, tuple, set)):
+        return ", ".join(str(v) for v in value if v not in (None, ""))
+    return str(value)
+
+
+def _diagnosis_codes(plan_result: PlanResult) -> dict[str, str]:
+    """Merge disease KB codes with patient-supplied codes."""
+    disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
+    kb_codes = disease_data.get("codes") if isinstance(disease_data, dict) else {}
+    codes: dict[str, str] = {}
+    if isinstance(kb_codes, dict):
+        for key, value in kb_codes.items():
+            rendered = _code_value(value)
+            if rendered:
+                codes[key] = rendered
+
+    snapshot = (plan_result.plan and plan_result.plan.patient_snapshot) or {}
+    patient_disease = snapshot.get("disease") if isinstance(snapshot, dict) else {}
+    if isinstance(patient_disease, dict):
+        patient_codes = patient_disease.get("codes")
+        if isinstance(patient_codes, dict):
+            for key, value in patient_codes.items():
+                rendered = _code_value(value)
+                if rendered:
+                    codes[key] = rendered
+        for key in ("icd_10", "icd_o_3_morphology", "icd_o_3_topography"):
+            rendered = _code_value(patient_disease.get(key))
+            if rendered:
+                codes[key] = rendered
+    return codes
+
+
+def _finding_value(plan_result: PlanResult, *keys: str) -> str:
+    snapshot = (plan_result.plan and plan_result.plan.patient_snapshot) or {}
+    findings = snapshot.get("findings") if isinstance(snapshot, dict) else {}
+    if not isinstance(findings, dict):
+        return ""
+    for key in keys:
+        rendered = _code_value(findings.get(key))
+        if rendered:
+            return rendered
+    return ""
+
+
+def _diagnosis_name(plan_result: PlanResult, target_lang: str = "uk") -> str:
+    disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
+    names = disease_data.get("names") if isinstance(disease_data, dict) else None
+    return _pick_name(names, target_lang, default=plan_result.disease_id or "")
+
+
+def _render_patient_strip(plan_result: PlanResult, target_lang: str = "uk") -> str:
+    plan = plan_result.plan
+    patient_id = (plan.patient_id if plan is not None else plan_result.patient_id) or ""
+    algorithm_id = (plan.algorithm_id if plan is not None else plan_result.algorithm_id) or ""
+    diagnosis = _diagnosis_name(plan_result, target_lang)
+    codes = _diagnosis_codes(plan_result)
+    stage = _finding_value(plan_result, "tnm_stage", "clinical_stage", "stage", "stage_group")
+    histology = _finding_value(plan_result, "histology", "morphology")
+
+    meta: list[tuple[str, str]] = []
+    if diagnosis:
+        meta.append((_t("diagnosis_label", target_lang), diagnosis))
+    if codes.get("icd_10"):
+        meta.append((_t("moh_icd10_label", target_lang), codes["icd_10"]))
+    icdo_parts = [codes.get("icd_o_3_morphology"), codes.get("icd_o_3_topography")]
+    icdo = "; ".join(part for part in icdo_parts if part)
+    if icdo:
+        meta.append(("ICD-O-3", icdo))
+    if stage:
+        meta.append((_t("stage_label", target_lang), stage))
+    if histology:
+        meta.append((_t("histology_label", target_lang), histology))
+
+    details = "".join(
+        '<div class="patient-meta-item">'
+        f'<span class="meta-label">{_h(label)}</span>'
+        f'<span class="meta-value">{_h(value)}</span>'
+        '</div>'
+        for label, value in meta
+    )
+    details_html = f'<div class="patient-meta-grid">{details}</div>' if details else ""
+    return (
+        '<div class="patient-strip">'
+        f'<div class="label">{_h(_t("patient_label", target_lang))}</div>'
+        f'<div class="value">{_h(patient_id)} · Algorithm: {_h(algorithm_id)}</div>'
+        f'{details_html}'
+        '</div>'
+    )
+
+
 _UI_STRINGS: dict[str, dict[str, str]] = {
     # Section headers
     "treatment_options":           {"uk": "Варіанти лікування", "en": "Treatment options"},
@@ -406,7 +500,11 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     # Banners and labels
     "diagnostic_banner_strong":    {"uk": "⚠ DIAGNOSTIC PHASE — TREATMENT PLAN NOT YET APPLICABLE",
                                     "en": "⚠ DIAGNOSTIC PHASE — TREATMENT PLAN NOT YET APPLICABLE"},
-    "patient_label":               {"uk": "Patient", "en": "Patient"},
+    "patient_label":               {"uk": "Пацієнт", "en": "Patient"},
+    "diagnosis_label":             {"uk": "Діагноз", "en": "Diagnosis"},
+    "moh_icd10_label":             {"uk": "МОЗ / ICD-10", "en": "MOH / ICD-10"},
+    "stage_label":                 {"uk": "Стадія", "en": "Stage"},
+    "histology_label":             {"uk": "Гістологія", "en": "Histology"},
     "default_badge":                {"uk": "★ DEFAULT", "en": "★ DEFAULT"},
     "indication_label":            {"uk": "Indication", "en": "Indication"},
     "regimen_label":               {"uk": "Regimen", "en": "Regimen"},
@@ -2767,23 +2865,19 @@ def render_plan_html(
 
     # Header
     body: list[str] = []
+    disease_title = _diagnosis_name(plan_result, target_lang) or plan_result.disease_id
     cross_link = _render_mode_toggle(sibling_link, "Версія для пацієнта →")
     body.append(
         '<div class="doc-header">'
         '<div class="doc-label">OpenOnco · Treatment Plan</div>'
-        f'<div class="doc-title">План лікування — {_h(plan_result.disease_id)}</div>'
+        f'<div class="doc-title">План лікування — {_h(disease_title)}</div>'
         f'<div class="doc-sub">{_h(plan.id)} · v{_h(plan.version)} · {_h(plan.generated_at[:10])}</div>'
         f'{cross_link}'
         '</div>'
     )
 
     # Patient strip
-    body.append(
-        '<div class="patient-strip">'
-        '<div class="label">Patient</div>'
-        f'<div class="value">{_h(plan.patient_id)} · Algorithm: {_h(plan_result.algorithm_id)}</div>'
-        '</div>'
-    )
+    body.append(_render_patient_strip(plan_result, target_lang))
 
     # Etiological driver — only for etiologically_driven archetype
     body.append(_render_etiological_driver(
@@ -2972,7 +3066,7 @@ def render_plan_html(
     body.append(f'<div class="medical-disclaimer">{_h(_MEDICAL_DISCLAIMER)}</div>')
     body.append('</div>')
 
-    out = _doc_shell(f"План лікування — {plan_result.disease_id}", "".join(body))
+    out = _doc_shell(f"План лікування — {disease_title}", "".join(body))
     return _localize_html(out, target_lang)
 
 
