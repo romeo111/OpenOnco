@@ -11,13 +11,55 @@ Engine semantics: `ExperimentalOption` is render-time-only metadata. It
 NEVER influences which Indication / Regimen the engine picks for the
 default or alternative tracks (CHARTER §8.3 + the "show all alternatives"
 invariant from `feedback_efficacy_over_registration.md`).
+
+`TrialOutlook` (added 2026-05-07) is a per-trial structured signal
+bundle — biomarker-stratification detection + design-quality flags,
+computed by `engine.trial_outlook.score_trial`. Like the rest of this
+track, it's render-time-only metadata: never read back as a selection
+signal. v1 ships two signals (`biomarker_stratification`,
+`design_flags`); mechanism-precedent scoring is deferred to a follow-up.
 """
 
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import Field
 
 from .base import Base
+
+
+# ── Trial outlook: per-trial structured signals ──────────────────────────────
+#
+# Pure heuristics over the parsed ctgov dict — no probabilistic claims, no
+# verbal verdicts. Render surfaces each flag as a tag with an explanatory
+# tooltip; the engine never consumes these fields.
+
+BiomarkerStratification = Literal[
+    "enriched",   # patient's biomarker is in the inclusion criteria
+    "open_label", # no biomarker enrichment detected (or none queried)
+    "unclear",    # biomarker mentioned only in exclusion / ambiguous match
+]
+
+DesignFlag = Literal[
+    "phase1_only",            # phase string is exactly PHASE1
+    "small_enrollment",       # target N < 50
+    "surrogate_endpoint_only", # primary outcomes ORR/PFS but no OS
+    "single_country",         # site presence in only one country
+]
+
+
+class TrialOutlook(Base):
+    """Structured per-trial signals for the experimental-options render layer.
+
+    See `engine.trial_outlook.score_trial` for the heuristics. v1 fields
+    are intentionally minimal — every flag must be derivable from the
+    parsed ctgov study dict alone (no KB lookup, no probabilistic
+    modeling). Mechanism-precedent scoring is a follow-up.
+    """
+
+    biomarker_stratification: BiomarkerStratification
+    design_flags: list[DesignFlag] = Field(default_factory=list)
+    notes: list[str] = Field(default_factory=list)  # one short string per flag
+    last_scored: Optional[str] = None  # ISO date
 
 
 class ExperimentalTrial(Base):
@@ -35,6 +77,11 @@ class ExperimentalTrial(Base):
     sites_ua: list[str] = Field(default_factory=list)   # UA city names if any
     sites_global_count: Optional[int] = None
     last_synced: Optional[str] = None  # ISO date
+
+    # Structured outlook signals — render-time-only, populated by
+    # `engine.trial_outlook.score_trial`. Optional so older cached JSON
+    # without this field still loads.
+    outlook: Optional[TrialOutlook] = None
 
 
 class ExperimentalOption(Base):
