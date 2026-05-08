@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -117,7 +121,7 @@
 <tr><th>Sources</th><td><span class="kb-chip" title="Philadelphia-negative chronic myeloproliferative neoplasms: ESMO Clinical Practice Guidel..."><code>SRC-ESMO-MPN-2015</code></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: Myeloproliferative Neoplasms"><code>SRC-NCCN-MPN-2025</code></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>gene_mutation</td></tr>
 <tr><th>Mutation details</th><td>{&quot;functional_impact&quot;: &quot;Constitutive JAK2 kinase activation through JH2-domain release → JAK-STAT signaling&quot;, &quot;gene&quot;: &quot;JAK2&quot;, &quot;gene_hugo_id&quot;: &quot;HGNC:6192&quot;, &quot;hotspots&quot;: [&quot;V617F (exon 14, JH2 pseudokinase domain — ~95% of PV; ~50–60% of ET / PMF)&quot;, &quot;exon 12 (small in-frame indels — ~3% of PV; JAK2-V617F-negative PV)&quot;], &quot;variant_type&quot;: &quot;missense / in-frame indel&quot;}</td></tr>
-<tr><th>Measurement</th><td>{&quot;method&quot;: &quot;Allele-specific PCR (V617F screen — high sensitivity LoD ~0.1% VAF) + Sanger / NGS for exon 12 if V617F-negative&quot;, &quot;sensitivity_requirement&quot;: &quot;ASP / ddPCR LoD ~0.1% VAF for low-burden detection; allele burden useful for treatment monitoring&quot;, &quot;units&quot;: &quot;categorical (positive/negative); VAF reported (allele burden tracks disease)&quot;}</td></tr>
+<tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Allele-specific PCR (V617F screen — high sensitivity LoD ~0.1% VAF) + Sanger / NGS for exon 12 if V617F-negative</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical (positive/negative); VAF reported (allele burden tracks disease)</span></div><div class="kb-kv-item"><span class="kb-kv-key">Sensitivity requirement</span><span>ASP / ddPCR LoD ~0.1% VAF for low-burden detection; allele burden useful for treatment monitoring</span></div></div></td></tr>
 <tr><th>Actionability lookup</th><td>{&quot;gene&quot;: &quot;JAK2&quot;, &quot;variant&quot;: &quot;V617F&quot;}</td></tr>
 <tr><th>Related biomarkers</th><td><span class="kb-chip"><a href="/kb/biomarkers/bio-calr.html"><code>BIO-CALR</code></a></span></td></tr></table>
   <h2>Notes</h2><p>Diagnostic for PV (V617F or exon 12 — together ≥98%), ET (~50–60% V617F), PMF (~50–60% V617F). Mutually exclusive with CALR and MPL. JAK2 inhibitors (ruxolitinib COMFORT-I/II; fedratinib JAKARTA-2; pacritinib PERSIST-2; momelotinib MOMENTUM) treat MF symptoms + splenomegaly across all driver genotypes. Ruxolitinib is also 1L for hydroxyurea-resistant / -intolerant PV (RESPONSE) and approved for symptomatic / high-risk ET in some jurisdictions. Allele burden reduction on therapy correlates with longer-term outcomes in PV / MF but is not a treatment switch trigger.</p>

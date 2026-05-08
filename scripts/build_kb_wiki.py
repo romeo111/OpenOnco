@@ -491,6 +491,33 @@ def _alias_chips(aliases: list[str]) -> str:
     return f'<div class="kb-alias-list">{chips}</div>'
 
 
+def _humanize_key(key: str) -> str:
+    return re.sub(r"\s+", " ", key.replace("_", " ")).strip().capitalize()
+
+
+def _structured_value(value: Any, *, limit: int = 700) -> str:
+    if value in (None, "", [], {}):
+        return ""
+    if isinstance(value, dict):
+        items = []
+        for key, item in value.items():
+            if item in (None, "", [], {}):
+                continue
+            items.append(
+                f'<div class="kb-kv-item"><span class="kb-kv-key">{html.escape(_humanize_key(str(key)))}</span>'
+                f"<span>{_structured_value(item, limit=limit)}</span></div>"
+            )
+        return f'<div class="kb-kv-list">{"".join(items)}</div>' if items else ""
+    if isinstance(value, list):
+        items = "".join(
+            f"<li>{_structured_value(item, limit=limit)}</li>"
+            for item in value
+            if item not in (None, "", [], {})
+        )
+        return f'<ul class="kb-inline-list">{items}</ul>' if items else ""
+    return html.escape(_text(value, limit=limit))
+
+
 def _json_block(value: Any) -> str:
     if value in (None, "", [], {}):
         return ""
@@ -596,7 +623,7 @@ def _biomarker_sections(entity: KbEntity, entities: dict[str, KbEntity], *, loca
     rows = [
         (labels["biomarker_type"], html.escape(_text(d.get("biomarker_type")))),
         (labels["mutation_details"], html.escape(_text(d.get("mutation_details"), limit=500))),
-        (labels["measurement"], html.escape(_text(d.get("measurement"), limit=500))),
+        (labels["measurement"], _structured_value(d.get("measurement"), limit=700)),
         (labels["actionability_lookup"], html.escape(_text(d.get("actionability_lookup"), limit=500))),
         (labels["related_biomarkers"], _chips([str(x) for x in _as_list(d.get("related_biomarkers"))], entities, locale=locale)),
     ]
@@ -1063,6 +1090,10 @@ KB_CSS = """
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }

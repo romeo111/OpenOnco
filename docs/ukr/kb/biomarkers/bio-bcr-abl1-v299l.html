@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -117,7 +121,7 @@
 <tr><th>Джерела</th><td><span class="kb-chip" title="European LeukemiaNet 2020 recommendations for treating chronic myeloid leukemia"><code>SRC-ELN-CML-2020</code></span> <span class="kb-chip" title="2025 European LeukemiaNet recommendations for the management of chronic myeloid leukemia"><code>SRC-ELN-CML-2025</code></span> <span class="kb-chip" title="Chronic myeloid leukaemia: ESMO Clinical Practice Guidelines for diagnosis, treatment and..."><code>SRC-ESMO-CML-2017</code></span></td></tr></table>
   <h2>Дані про біомаркер</h2><table class="kb-facts"><tr><th>Тип біомаркера</th><td>gene_mutation</td></tr>
 <tr><th>Деталі мутації</th><td>{&quot;exon&quot;: &quot;5&quot;, &quot;functional_impact&quot;: &quot;dasatinib and bosutinib resistance; nilotinib and ponatinib retain activity&quot;, &quot;gene&quot;: &quot;ABL1&quot;, &quot;hgvs_protein&quot;: &quot;p.V299L&quot;, &quot;variant_type&quot;: &quot;missense&quot;}</td></tr>
-<tr><th>Вимірювання</th><td>{&quot;method&quot;: &quot;BCR::ABL1 kinase-domain Sanger sequencing OR targeted NGS at TKI failure&quot;, &quot;units&quot;: &quot;categorical (positive | negative); VAF % when NGS&quot;}</td></tr>
+<tr><th>Вимірювання</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>BCR::ABL1 kinase-domain Sanger sequencing OR targeted NGS at TKI failure</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical (positive | negative); VAF % when NGS</span></div></div></td></tr>
 <tr><th>Пошук клінічної застосовності</th><td>{&quot;gene&quot;: &quot;ABL1&quot;, &quot;variant&quot;: &quot;V299L&quot;}</td></tr>
 <tr><th>Пов’язані біомаркери</th><td><span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-bcr-abl1.html"><code>BIO-BCR-ABL1</code></a></span> <span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-bcr-abl1-t315i.html"><code>BIO-BCR-ABL1-T315I</code></a></span> <span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-bcr-abl1-f317l.html"><code>BIO-BCR-ABL1-F317L</code></a></span></td></tr></table>
   <h2>Нотатки</h2><p>Resistance to BOTH dasatinib and bosutinib via P-loop conformational change. IC50 for dasatinib elevated ~15-20x; bosutinib ~25-50x. Nilotinib retains activity (IC50 unchanged). Ponatinib and asciminib both active. Per ELN-2020 / ELN-2025: detection on dasatinib or bosutinib failure → switch to nilotinib (preferred 2G-TKI option) or ponatinib. Distinguishing V299L from F317L is clinically meaningful: F317L spares bosutinib whereas V299L does not.</p>

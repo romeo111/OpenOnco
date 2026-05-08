@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -116,7 +120,7 @@
 <tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
 <tr><th>Sources</th><td><span class="kb-chip" title="Trastuzumab Deruxtecan in Previously Treated HER2-Low Advanced Breast Cancer"><code>SRC-DESTINY-BREAST04-MODI-2022</code></span> <span class="kb-chip" title="ESMO Clinical Practice Guideline on Metastatic Breast Cancer"><code>SRC-ESMO-BREAST-METASTATIC-2024</code></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Breast Cancer"><code>SRC-NCCN-BREAST-2025</code></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>protein_expression_ihc</td></tr>
-<tr><th>Measurement</th><td>{&quot;method&quot;: &quot;IHC (4B5 / HercepTest); reflex ISH (FISH/CISH/SISH) for IHC 2+. Breast scoring uses 2018 ASCO/CAP criteria — circumferential membranous staining ≥10%.&quot;, &quot;units&quot;: &quot;IHC 0 | 1+ | 2+ (ISH-non-amplified) — HER2-low = IHC 1+ OR (IHC 2+ AND ISH HER2/CEP17 ratio &lt;2.0 AND HER2 signals/cell &lt;4.0)&quot;}</td></tr>
+<tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>IHC (4B5 / HercepTest); reflex ISH (FISH/CISH/SISH) for IHC 2+. Breast scoring uses 2018 ASCO/CAP criteria — circumferential membranous staining ≥10%.</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>IHC 0 | 1+ | 2+ (ISH-non-amplified) — HER2-low = IHC 1+ OR (IHC 2+ AND ISH HER2/CEP17 ratio &lt;2.0 AND HER2 signals/cell &lt;4.0)</span></div></div></td></tr>
 <tr><th>Related biomarkers</th><td><span class="kb-chip"><a href="/kb/biomarkers/bio-her2-solid.html"><code>BIO-HER2-SOLID</code></a></span> <span class="kb-chip"><a href="/kb/biomarkers/bio-estrogen-receptor.html"><code>BIO-ESTROGEN-RECEPTOR</code></a></span></td></tr></table>
   <h2>Notes</h2><p>HER2-low (IHC 1+ OR IHC 2+/ISH-) covers ~50-55% of HER2-non-positive breast cancers. DESTINY-Breast04 (Modi 2022) established T-DXd efficacy 2L+ in HER2-low metastatic breast (HR+ post-endocrine + ≥1 prior chemo, OR TNBC post-≥1 prior chemo): mPFS 9.9 vs 5.1 mo, OS 23.4 vs 16.8 mo. DESTINY-Breast06 extended signal to HER2-ultralow (IHC ≥0 with membrane staining) post-endocrine in HR+. Pathology challenge: IHC 1+ vs 0 has poor inter-observer reproducibility — ASCO/CAP 2023 update ongoing. ILD class warning (~12% any-grade, 1-2% G≥3) is dominant safety concern. Distinct from BIO-HER2-SOLID (which is named/scoped for gastric/GEJ/CRC scoring conventions).</p>
   <h2>Used By</h2>

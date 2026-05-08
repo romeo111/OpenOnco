@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -117,7 +121,7 @@
 <tr><th>Джерела</th><td><span class="kb-chip" title="MILES: Sirolimus for Lymphangioleiomyomatosis (McCormack et al., NEJM 2011)"><code>SRC-MILES-MCCORMACK-2011</code></span> <span class="kb-chip" title="NCCN Kidney Cancer"><code>SRC-NCCN-KIDNEY-2025</code></span></td></tr></table>
   <h2>Дані про біомаркер</h2><table class="kb-facts"><tr><th>Тип біомаркера</th><td>gene_mutation</td></tr>
 <tr><th>Деталі мутації</th><td>{&quot;exon&quot;: &quot;multiple&quot;, &quot;functional_impact&quot;: &quot;loss-of-function&quot;, &quot;gene&quot;: &quot;TSC1&quot;, &quot;variant_type&quot;: &quot;loss-of-function (frameshift, nonsense, splice, large deletion)&quot;}</td></tr>
-<tr><th>Вимірювання</th><td>{&quot;method&quot;: &quot;Germline NGS panel (blood/saliva) for TSC diagnosis; tumor NGS for somatic TSC1/TSC2 in LAM/renal AML. TSC1 mutations less common than TSC2 in sporadic LAM (~10% vs ~80%).&quot;}</td></tr>
+<tr><th>Вимірювання</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Germline NGS panel (blood/saliva) for TSC diagnosis; tumor NGS for somatic TSC1/TSC2 in LAM/renal AML. TSC1 mutations less common than TSC2 in sporadic LAM (~10% vs ~80%).</span></div></div></td></tr>
 <tr><th>Пошук клінічної застосовності</th><td>{&quot;gene&quot;: &quot;TSC1&quot;, &quot;variant&quot;: &quot;loss_of_function&quot;}</td></tr>
 <tr><th>Пов’язані біомаркери</th><td><span class="kb-muted">Не вказано</span></td></tr></table>
   <h2>Нотатки</h2><p>TSC1 (hamartin) forms a heterodimeric complex with TSC2 (tuberin) that acts as a GTPase activating protein (GAP) for Rheb, maintaining mTORC1 in an inactive state. Loss of either TSC1 or TSC2 → constitutive mTORC1 activation → protein synthesis, cell growth, proliferation. Clinical manifestations of TSC1 loss: (1) Tuberous Sclerosis Complex (TSC) — germline TSC1 (~30%) or TSC2 (~70%): cortical tubers, SEGA, renal AML, cardiac rhabdomyomas, LAM (females), skin lesions. TSC1 germline associated with milder phenotype than TSC2. (2) LAM — predominantly somatic TSC2 (&gt;80%) or rarely TSC1 in sporadic LAM. TSC-associated LAM has germline TSC mutation. (3) Renal angiomyolipoma (sporadic) — somatic TSC1/TSC2 in ~50%. mTOR inhibitors (everolimus, sirolimus) are approved for multiple TSC/LAM manifestations: - Sirolimus: LAM (MILES 2011; FDA 2015) - Everolimus: SEGA (EXIST-1), renal AML (EXIST-2), TSC-related seizures (EXIST-3); renal cell carcinoma (SRC-BOLERO2 — different indication via PIK3/AKT/mTOR pathway). Note: the BIO entity covers TSC1 specifically; TSC2 mutations are clinically similar but a separate gene — both treated with mTOR inhibitors.</p>

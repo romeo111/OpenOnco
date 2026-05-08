@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -117,7 +121,7 @@
 <tr><th>Sources</th><td><span class="kb-chip" title="CIViC — Clinical Interpretations of Variants in Cancer"><code>SRC-CIVIC</code></span> <span class="kb-chip" title="NCCN Colon / Rectal Cancer"><code>SRC-NCCN-COLON-2025</code></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>gene_mutation</td></tr>
 <tr><th>Mutation details</th><td>{&quot;functional_impact&quot;: &quot;germline mismatch-repair deficiency&quot;, &quot;gene&quot;: &quot;MLH1, MSH2, MSH6, PMS2, EPCAM&quot;, &quot;inheritance&quot;: &quot;germline&quot;, &quot;variant_type&quot;: &quot;loss-of-function (frameshift, nonsense, splice, large deletions); EPCAM 3&#x27; deletions silence MSH2&quot;}</td></tr>
-<tr><th>Measurement</th><td>{&quot;method&quot;: &quot;Germline multi-gene hereditary-cancer NGS panel on whole blood / saliva, with MLPA or equivalent for large rearrangements (PMS2 has high pseudogene homology — specialty assays required to distinguish gene from PMS2P pseudogenes).&quot;, &quot;units&quot;: &quot;categorical per gene: pathogenic | likely_pathogenic | VUS | benign | absent&quot;}</td></tr>
+<tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Germline multi-gene hereditary-cancer NGS panel on whole blood / saliva, with MLPA or equivalent for large rearrangements (PMS2 has high pseudogene homology — specialty assays required to distinguish gene from PMS2P pseudogenes).</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical per gene: pathogenic | likely_pathogenic | VUS | benign | absent</span></div></div></td></tr>
 <tr><th>Related biomarkers</th><td><span class="kb-chip"><a href="/kb/biomarkers/bio-dmmr-ihc.html"><code>BIO-DMMR-IHC</code></a></span> <span class="kb-chip"><a href="/kb/biomarkers/bio-msi-status.html"><code>BIO-MSI-STATUS</code></a></span> <span class="kb-chip"><a href="/kb/biomarkers/bio-tmb-high.html"><code>BIO-TMB-HIGH</code></a></span></td></tr></table>
   <h2>Notes</h2><p>Surveillance / cascade-testing biomarker. v0.1 grouping is a single composite entry to mirror BIO-DMMR-IHC / BIO-MSI-STATUS at the same resolution; the gene-resolved field carries the actual gene called. If the engine needs to branch on MLH1 vs MSH6 (e.g., gene-specific surveillance starting age, gene-specific colorectal cancer risk tiers), split into BIO-MLH1-GERMLINE / BIO-MSH2-GERMLINE / etc. in a follow-on chunk. Cascade-testing recommendation is uniform across the five genes; differentiation kicks in at surveillance cadence and risk counseling.</p>
   <h2>Used By</h2><p class="kb-muted">No reverse references found in the YAML corpus.</p>

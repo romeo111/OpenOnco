@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -116,7 +120,7 @@
 <tr><th>Хвороби</th><td><span class="kb-muted">Не вказано</span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="EASL Clinical Practice Guidelines on Hepatitis C Virus Infection"><code>SRC-EASL-HCV-2023</code></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><code>SRC-NCCN-BCELL-2025</code></span></td></tr></table>
   <h2>Дані про біомаркер</h2><table class="kb-facts"><tr><th>Тип біомаркера</th><td>viral_serology</td></tr>
-<tr><th>Вимірювання</th><td>{&quot;method&quot;: &quot;Anti-HCV antibody (third-generation EIA). Reflex to BIO-HCV-RNA (quantitative PCR) when anti-HCV+ to distinguish active infection (RNA detectable) from resolved / cleared (RNA undetectable, antibody persists for life).\n&quot;, &quot;units&quot;: &quot;categorical: anti-HCV+ | anti-HCV-&quot;}</td></tr>
+<tr><th>Вимірювання</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Anti-HCV antibody (third-generation EIA). Reflex to BIO-HCV-RNA (quantitative PCR) when anti-HCV+ to distinguish active infection (RNA detectable) from resolved / cleared (RNA undetectable, antibody persists for life).</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical: anti-HCV+ | anti-HCV-</span></div></div></td></tr>
 <tr><th>Пов’язані біомаркери</th><td><span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-hcv-rna.html"><code>BIO-HCV-RNA</code></a></span> <span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-hbv-status.html"><code>BIO-HBV-STATUS</code></a></span> <span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-hiv-status.html"><code>BIO-HIV-STATUS</code></a></span></td></tr></table>
   <h2>Нотатки</h2><p>Screening test; positive result is necessary but not sufficient evidence of active HCV (false positives in autoimmune disease, cleared infections retain antibodies indefinitely). Active infection requires BIO-HCV-RNA detectable; rules engine should branch on HCV-RNA positivity, not antibody alone, for any DAA / treatment decision. Currently consumed by: ALGO-MM-1L (etiology rail — coordinate DAA with hepatologist if HCV+). Companion biomarker BIO-HCV-RNA carries the quantitative load and drives the HCV-MZL etiologically-driven algorithm. STATUS is the cheap screening; RNA is the actionable confirmation. reviewer_signoffs: 0 # STUB — pending two Clinical Co-Lead approvals</p>
   <h2>Де використовується</h2>

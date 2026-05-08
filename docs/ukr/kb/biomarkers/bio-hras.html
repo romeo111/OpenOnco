@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -117,7 +121,7 @@
 <tr><th>Джерела</th><td><span class="kb-chip" title="NCCN Bladder Cancer"><code>SRC-NCCN-BLADDER-2025</code></span> <span class="kb-chip" title="OncoKB — Precision Oncology Knowledge Base"><code>SRC-ONCOKB</code></span></td></tr></table>
   <h2>Дані про біомаркер</h2><table class="kb-facts"><tr><th>Тип біомаркера</th><td>gene_mutation</td></tr>
 <tr><th>Деталі мутації</th><td>{&quot;functional_impact&quot;: &quot;Constitutive GTP-bound HRAS → MAPK / PI3K signaling&quot;, &quot;gene&quot;: &quot;HRAS&quot;, &quot;gene_hugo_id&quot;: &quot;HGNC:5173&quot;, &quot;hotspots&quot;: [&quot;G12X (exon 2 — codon 12; G12V / G12D / G12S most common)&quot;, &quot;G13X (exon 2 — codon 13)&quot;, &quot;Q61X (exon 3 — codon 61; Q61R / Q61K most common in HNSCC)&quot;], &quot;variant_type&quot;: &quot;activating missense&quot;}</td></tr>
-<tr><th>Вимірювання</th><td>{&quot;method&quot;: &quot;DNA-NGS (preferred) OR ctDNA NGS OR allele-specific PCR (codon 12 / 13 / 61)&quot;, &quot;sensitivity_requirement&quot;: &quot;Standard NGS; tipifarnib enrolment uses VAF threshold ≥20% in some trials&quot;, &quot;units&quot;: &quot;categorical; variant + VAF reported&quot;}</td></tr>
+<tr><th>Вимірювання</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>DNA-NGS (preferred) OR ctDNA NGS OR allele-specific PCR (codon 12 / 13 / 61)</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical; variant + VAF reported</span></div><div class="kb-kv-item"><span class="kb-kv-key">Sensitivity requirement</span><span>Standard NGS; tipifarnib enrolment uses VAF threshold ≥20% in some trials</span></div></div></td></tr>
 <tr><th>Пов’язані біомаркери</th><td><span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-kras-g12c.html"><code>BIO-KRAS-G12C</code></a></span> <span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-ras-mutation.html"><code>BIO-RAS-MUTATION</code></a></span></td></tr></table>
   <h2>Нотатки</h2><p>HNSCC: ~5–8% (KURRENT-HN — tipifarnib + alpelisib activity in HRAS-mutant + PIK3CA-mut/amp subset). Thyroid (PDTC / ATC subset): ~5%. Urothelial / bladder: ~5%. Salivary duct carcinoma: ~10–15%. Tipifarnib (farnesyl-transferase inhibitor) is the only HRAS-targeted agent with positive single-arm signal — KO-TIP-001 (Ho et al, JCO 2021) in R/M HRAS-mutant HNSCC achieved ORR ~55% in VAF-≥20% subset → FDA breakthrough designation; phase 3 AIM-HN ongoing. HRAS depends on farnesylation for membrane localization (KRAS / NRAS use geranylgeranyl alternative pathway → tipifarnib less active vs KRAS / NRAS).</p>
   <h2>Де використовується</h2>

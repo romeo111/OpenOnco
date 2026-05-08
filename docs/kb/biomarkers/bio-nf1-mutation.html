@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -117,7 +121,7 @@
 <tr><th>Sources</th><td><span class="kb-chip" title="CIViC — Clinical Interpretations of Variants in Cancer"><code>SRC-CIVIC</code></span> <span class="kb-chip" title="NCCN Cutaneous Melanoma"><code>SRC-NCCN-MELANOMA-2025</code></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>gene_mutation</td></tr>
 <tr><th>Mutation details</th><td>{&quot;functional_impact&quot;: &quot;loss_of_function&quot;, &quot;gene&quot;: &quot;NF1&quot;, &quot;variant_type&quot;: &quot;loss-of-function — frameshift / nonsense / splice / large deletion (germline NF1 syndrome or somatic)&quot;}</td></tr>
-<tr><th>Measurement</th><td>{&quot;method&quot;: &quot;NGS panel (tumor or germline) detecting truncating / splice / CNV events; IHC for neurofibromin loss is research-grade only&quot;, &quot;units&quot;: &quot;categorical (mutated | wild-type)&quot;}</td></tr>
+<tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>NGS panel (tumor or germline) detecting truncating / splice / CNV events; IHC for neurofibromin loss is research-grade only</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical (mutated | wild-type)</span></div></div></td></tr>
 <tr><th>Related biomarkers</th><td><span class="kb-chip"><a href="/kb/biomarkers/bio-braf-v600e.html"><code>BIO-BRAF-V600E</code></a></span></td></tr></table>
   <h2>Notes</h2><p>NF1 encodes neurofibromin, a RAS-GAP tumor suppressor. Loss-of-function events activate RAS/MAPK signaling. **Melanoma sub-classification (TCGA Cell 2015):** four genomic subtypes — BRAF-mutant, RAS-mutant, NF1-mutant, triple wild-type. NF1-mutant melanomas (~14%) are typically: - cutaneous, sun-exposed sites with high UV signature mutational burden - older patients - frequently co-occur with RASopathy-pattern alterations - generally lack canonical BRAF V600 / NRAS Q61 drivers **Therapeutic relevance:** - No tumor-type-agnostic NF1-directed targeted therapy approved (2026). - MEK inhibitor sensitivity reported in plexiform neurofibroma (selumetinib FDA-approved for pediatric NF1 plexiform NF, 2020) and explored in NF1-mutant cutaneous melanoma (off-label, evidence emerging). - High TMB common in UV-driven NF1-mutant melanoma → ICI candidate. Outside melanoma: NF1 mutation is the defining lesion in neurofibromatosis type 1 (germline) and recurs somatically in glioblastoma, MPNST, juvenile myelomonocytic leukemia (JMML), AML, ovarian, lung adenocarcinoma. Lineage drives interpretation. multi_allele_mvp skip-reason: tumor-suppressor with no single canonical actionable variant — many...</p>
   <h2>Used By</h2><p class="kb-muted">No reverse references found in the YAML corpus.</p>

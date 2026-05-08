@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -116,7 +120,7 @@
 <tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
 <tr><th>Sources</th><td><span class="kb-chip" title="ESMO Clinical Practice Guideline on Diffuse Large B-Cell Lymphoma"><code>SRC-ESMO-DLBCL-2024</code></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><code>SRC-NCCN-BCELL-2025</code></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>viral_serology</td></tr>
-<tr><th>Measurement</th><td>{&quot;method&quot;: &quot;Fourth-generation HIV-1/2 antigen/antibody combo immunoassay (detects p24 antigen + anti-HIV-1/2 antibodies; window period ~10-14 days). Reactive screen → confirmatory HIV-1/2 antibody differentiation assay + HIV-1 RNA viral load if newly diagnosed.\n&quot;, &quot;units&quot;: &quot;categorical: HIV+ (with VL/CD4 if known) | HIV-&quot;}</td></tr>
+<tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Fourth-generation HIV-1/2 antigen/antibody combo immunoassay (detects p24 antigen + anti-HIV-1/2 antibodies; window period ~10-14 days). Reactive screen → confirmatory HIV-1/2 antibody differentiation assay + HIV-1 RNA viral load if newly diagnosed.</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical: HIV+ (with VL/CD4 if known) | HIV-</span></div></div></td></tr>
 <tr><th>Related biomarkers</th><td><span class="kb-chip"><a href="/kb/biomarkers/bio-hbv-status.html"><code>BIO-HBV-STATUS</code></a></span> <span class="kb-chip"><a href="/kb/biomarkers/bio-hcv-status.html"><code>BIO-HCV-STATUS</code></a></span> <span class="kb-chip"><a href="/kb/biomarkers/bio-ebv-status.html"><code>BIO-EBV-STATUS</code></a></span></td></tr></table>
   <h2>Notes</h2><p>Mandatory pre-treatment screening for any aggressive lymphoma (Burkitt, DLBCL, plasmablastic, primary effusion) and Hodgkin lymphoma — HIV-associated subtypes have distinct biology, increased CNS-IPI risk, and require coordinated cART before / during cytotoxic therapy. HIV+ does NOT contraindicate standard regimens but requires: - cART continuation throughout cytotoxic therapy (avoid AZT — myelotoxic; integrase-inhibitor backbone preferred) - PJP + MAC prophylaxis if CD4 &lt; 200 - CNS prophylaxis (intrathecal MTX) for HIV-associated DLBCL / Burkitt regardless of CNS-IPI score - Screen for KSHV / HHV-8 if effusion lymphoma suspected Wired into CHL, DLBCL, Burkitt, MM, SMZL 1L algorithm etiology rails (notes only at present — full branching on HIV+ deferred to next round). reviewer_signoffs: 0 # STUB — pending two Clinical Co-Lead approvals</p>
   <h2>Used By</h2>

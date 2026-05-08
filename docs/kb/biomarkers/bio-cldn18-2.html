@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -116,7 +120,7 @@
 <tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
 <tr><th>Sources</th><td><span class="kb-chip" title="ESMO Gastric Cancer"><code>SRC-ESMO-GASTRIC-2024</code></span> <span class="kb-chip" title="NCCN Gastric Cancer"><code>SRC-NCCN-GASTRIC-2025</code></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>protein_expression_ihc</td></tr>
-<tr><th>Measurement</th><td>{&quot;method&quot;: &quot;IHC with VENTANA CLDN18 (43-14A) RxDx assay (zolbetuximab companion diagnostic). Score: % of tumor cells with moderate-to-strong (2+/3+) membranous staining.&quot;, &quot;units&quot;: &quot;categorical: positive (≥75% of tumor cells with 2+/3+ membranous staining) | negative&quot;}</td></tr>
+<tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>IHC with VENTANA CLDN18 (43-14A) RxDx assay (zolbetuximab companion diagnostic). Score: % of tumor cells with moderate-to-strong (2+/3+) membranous staining.</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical: positive (≥75% of tumor cells with 2+/3+ membranous staining) | negative</span></div></div></td></tr>
 <tr><th>Related biomarkers</th><td><span class="kb-chip"><a href="/kb/biomarkers/bio-her2-solid.html"><code>BIO-HER2-SOLID</code></a></span> <span class="kb-chip"><a href="/kb/biomarkers/bio-msi-status.html"><code>BIO-MSI-STATUS</code></a></span> <span class="kb-chip"><a href="/kb/biomarkers/bio-pdl1-cps.html"><code>BIO-PDL1-CPS</code></a></span></td></tr></table>
   <h2>Notes</h2><p>CLDN18.2 is a tight-junction protein normally restricted to gastric mucosa; aberrantly expressed in gastric/GEJ, pancreatic, and biliary adenocarcinomas. Zolbetuximab is a chimeric IgG1 mAb targeting CLDN18.2 — first FDA approval Oct 2024 (SPOTLIGHT mFOLFOX6 + GLOW CAPOX registrational trials). Companion diagnostic VENTANA CLDN18 (43-14A) RxDx required. SPOTLIGHT: mOS 18.2 vs 15.5 mo (HR 0.75); GLOW: mOS 14.4 vs 12.2 mo (HR 0.77). Hierarchy when multiple actionable signals co-occur: HER2+ (TOGA/KEYNOTE-811) &gt; MSI-H (KEYNOTE-859) &gt; CLDN18.2+ (SPOTLIGHT/GLOW) &gt; PD-L1 CPS≥5 ICI add-on (CheckMate-649).</p>
   <h2>Used By</h2>

@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -117,7 +121,7 @@
 <tr><th>Sources</th><td><span class="kb-chip" title="ESMO Clinical Practice Guideline on Metastatic Breast Cancer"><code>SRC-ESMO-BREAST-METASTATIC-2024</code></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Breast Cancer"><code>SRC-NCCN-BREAST-2025</code></span> <span class="kb-chip" title="OncoKB — Precision Oncology Knowledge Base"><code>SRC-ONCOKB</code></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>gene_mutation</td></tr>
 <tr><th>Mutation details</th><td>{&quot;functional_impact&quot;: &quot;Constitutive AKT1 membrane localization and PI3K-independent activation&quot;, &quot;gene&quot;: &quot;AKT1&quot;, &quot;gene_hugo_id&quot;: &quot;HGNC:391&quot;, &quot;hotspots&quot;: [&quot;E17K (PH-domain hotspot; &gt;90% of AKT1 mutations across tumors)&quot;], &quot;variant_type&quot;: &quot;missense&quot;}</td></tr>
-<tr><th>Measurement</th><td>{&quot;method&quot;: &quot;DNA-NGS (preferred) OR ctDNA NGS OR allele-specific PCR (E17K)&quot;, &quot;sensitivity_requirement&quot;: &quot;Standard NGS; ctDNA acceptable for monitoring&quot;, &quot;units&quot;: &quot;categorical; VAF reported&quot;}</td></tr>
+<tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>DNA-NGS (preferred) OR ctDNA NGS OR allele-specific PCR (E17K)</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical; VAF reported</span></div><div class="kb-kv-item"><span class="kb-kv-key">Sensitivity requirement</span><span>Standard NGS; ctDNA acceptable for monitoring</span></div></div></td></tr>
 <tr><th>Related biomarkers</th><td><span class="kb-chip"><a href="/kb/biomarkers/bio-pik3ca-mutation.html"><code>BIO-PIK3CA-MUTATION</code></a></span> <span class="kb-chip"><a href="/kb/biomarkers/bio-pten.html"><code>BIO-PTEN</code></a></span></td></tr></table>
   <h2>Notes</h2><p>~3–6% of HR+ HER2− metastatic breast (CAPItello-291 enrichment ~7%); also seen in endometrial, prostate, lung, meningioma. Capivasertib + fulvestrant FDA-approved for HR+ HER2− advanced breast harboring PIK3CA / AKT1 / PTEN alteration after progression on endocrine ± CDK4/6i (CAPItello-291). The pathway-altered cohort (any of the three) drove the benefit; AKT1 E17K alone is a smaller subset but responsive. Hyperglycemia + diarrhea + rash are class on-target effects.</p>
   <h2>Used By</h2>

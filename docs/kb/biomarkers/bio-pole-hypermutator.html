@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -117,7 +121,7 @@
 <tr><th>Sources</th><td><span class="kb-chip" title="ESGO-ESTRO-ESP guidelines for the management of patients with endometrial carcinoma: upda..."><code>SRC-ESGO-ENDOMETRIAL-2025</code></span> <span class="kb-chip" title="ESMO-ESGO-ESTRO Endometrial Consensus"><code>SRC-ESMO-ENDOMETRIAL-2022</code></span> <span class="kb-chip" title="NCCN Uterine Neoplasms"><code>SRC-NCCN-UTERINE-2025</code></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>clinical_composite</td></tr>
 <tr><th>Mutation details</th><td>{&quot;exon&quot;: &quot;9-14 (proofreading / exonuclease domain)&quot;, &quot;functional_impact&quot;: &quot;loss of proofreading fidelity → ultra-high TMB (&gt;100 mut/Mb), hypermutator phenotype&quot;, &quot;gene&quot;: &quot;POLE&quot;, &quot;variant_type&quot;: &quot;missense (pathogenic exonuclease-domain)&quot;}</td></tr>
-<tr><th>Measurement</th><td>{&quot;method&quot;: &quot;NGS panel covering POLE exonuclease domain (codons 268-471). Pathogenic variants per TransPORTEC / TCGA list (e.g., P286R, V411L, S297F, A456P, S459F, others) confer hypermutator phenotype. Some panels co-call TMB which serves as supportive evidence.&quot;, &quot;units&quot;: &quot;categorical (pathogenic_EDM | non-pathogenic / wild-type)&quot;}</td></tr>
+<tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>NGS panel covering POLE exonuclease domain (codons 268-471). Pathogenic variants per TransPORTEC / TCGA list (e.g., P286R, V411L, S297F, A456P, S459F, others) confer hypermutator phenotype. Some panels co-call TMB which serves as supportive evidence.</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical (pathogenic_EDM | non-pathogenic / wild-type)</span></div></div></td></tr>
 <tr><th>Related biomarkers</th><td><span class="kb-chip"><a href="/kb/biomarkers/bio-pold1-hypermutator.html"><code>BIO-POLD1-HYPERMUTATOR</code></a></span> <span class="kb-chip"><a href="/kb/biomarkers/bio-dmmr-ihc.html"><code>BIO-DMMR-IHC</code></a></span> <span class="kb-chip"><a href="/kb/biomarkers/bio-msi-status.html"><code>BIO-MSI-STATUS</code></a></span></td></tr></table>
   <h2>Notes</h2><p>Endometrial-specific TCGA molecular subtype (~7% of endometrial cancers). Pathogenic exonuclease-domain (EDM) variants drive hypermutator phenotype with TMB typically &gt;100 mut/Mb. PORTEC-3 / TransPORTEC stratification showed Stage I POLE-EDM tumors do not benefit from adjuvant therapy — observation only. POLE-mutated endometrial carcinoma also enriches for immune infiltration and may respond to ICI in advanced setting (covered by existing dMMR/MSI-H / TMB-high indications). This biomarker primarily enables Stage I de-escalation via RF-POLE-POLD1-ENDOMETRIAL-LOW-RISK + IND-ENDOMETRIAL-STAGE-I-POLE-OBSERVATION.</p>
   <h2>Used By</h2>

@@ -65,6 +65,10 @@
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
 .kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
 .kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
@@ -117,7 +121,7 @@
 <tr><th>Sources</th><td><span class="kb-chip" title="ESMO colorectal cancer guideline (2024) (TODO: confirm citation)"><code>SRC-ESMO-CRC-2024</code></span> <span class="kb-chip" title="NCCN Colon / Rectal Cancer"><code>SRC-NCCN-COLON-2025</code></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>gene_mutation</td></tr>
 <tr><th>Mutation details</th><td>{&quot;exon&quot;: &quot;multiple; hotspot arginine triad R465, R479, R505 in WD40 substrate-recognition domain&quot;, &quot;functional_impact&quot;: &quot;loss-of-function (impaired ubiquitin-mediated degradation of oncoproteins: NOTCH1/2, MYC, CCNE1, mTOR, JUN, MCL-1)&quot;, &quot;gene&quot;: &quot;FBXW7&quot;, &quot;variant_type&quot;: &quot;loss-of-function (missense at Arg triad, frameshift, nonsense)&quot;}</td></tr>
-<tr><th>Measurement</th><td>{&quot;method&quot;: &quot;Tumor NGS panel (DNA); RNA-seq for expression loss (research)&quot;}</td></tr>
+<tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Tumor NGS panel (DNA); RNA-seq for expression loss (research)</span></div></div></td></tr>
 <tr><th>Actionability lookup</th><td>{&quot;gene&quot;: &quot;FBXW7&quot;, &quot;variant&quot;: &quot;loss_of_function&quot;}</td></tr>
 <tr><th>Related biomarkers</th><td><span class="kb-chip"><code>BIO-NOTCH1</code></span> <span class="kb-chip"><code>BIO-KRAS</code></span> <span class="kb-chip"><code>BIO-TP53</code></span> <span class="kb-chip"><a href="/kb/biomarkers/bio-cdkn2a.html"><code>BIO-CDKN2A</code></a></span></td></tr></table>
   <h2>Notes</h2><p>FBXW7 (F-Box and WD Repeat Domain Containing 7) is the substrate-recognition subunit of the SCF (SKP1-CUL1-F-box) E3 ubiquitin ligase complex. FBXW7 recognizes phosphodegrons on multiple oncoproteins and mediates their ubiquitin-proteasomal degradation. Key substrates: NOTCH1/2, MYC, CCNE1, mTOR, JUN, MCL-1. Loss of FBXW7 → stabilization of these oncoproteins → resistance to multiple targeted therapies. Frequency: ~10–15% CRC (one of highest across cancers), ~15% T-ALL, ~6% gastric, ~5% pancreatic. Clinical significance: FBXW7 mutation is a resistance mechanism (to anti-NOTCH, CDK4/6i via CCNE1 upregulation, mTOR inhibitors via mTOR stabilization) rather than an independent therapeutic target. In CRC, FBXW7 mutation does not select any approved systemic therapy; it may co-occur with MSI-H (favoring immunotherapy) but is not independently actionable. ESCAT IV.</p>
