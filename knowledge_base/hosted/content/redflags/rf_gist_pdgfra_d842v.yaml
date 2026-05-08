@@ -1,0 +1,104 @@
+id: RF-GIST-PDGFRA-D842V
+definition: >
+  PDGFRA D842V substitution mutation in advanced or metastatic GIST. The
+  PDGFRA D842V variant accounts for approximately 6-7% of all GIST and is
+  the most common PDGFRA exon 18 mutation (~65-70% of PDGFRA-mutant GIST).
+  D842V confers primary resistance to imatinib, sunitinib, and regorafenib
+  due to steric interference with drug binding at the activation loop. The
+  type I kinase inhibitor avapritinib binds the active conformation of
+  PDGFRA D842V and achieves ORR ~88% (NAVIGATOR phase 1; Heinrich CANCER
+  DISCOV 2020) and confirmed ORR ~91% in the phase 3 NAVIGATOR expansion
+  cohort. Imatinib is ineffective (historical ORR <10% for D842V) and must
+  not be used as 1L for confirmed D842V-mutant GIST.
+
+  Fires to route ALGO-GIST-1L step 1 to avapritinib (IND-GIST-1L-
+  AVAPRITINIB-PDGFRA-D842V) instead of imatinib (IND-GIST-1L-IMATINIB).
+  NCCN GIST 2025 Category 1 preferred: avapritinib 300 mg PO QD for
+  PDGFRA D842V-mutant unresectable/metastatic GIST.
+
+  Detection: PDGFRA D842V is detectable on targeted NGS, hotspot PCR, or
+  PDGFRA-specific IHC (D842V antibody). Tissue or ctDNA-based molecular
+  testing of all GIST at diagnosis is standard of care per NCCN GIST 2025.
+
+  PDGFRA non-D842V exon 18 mutations (e.g., D842del, DI842-843IM):
+  intermediate imatinib sensitivity — these are NOT covered by this RF.
+  The RF fires exclusively on the D842V substitution. Non-D842V exon 18
+  PDGFRA mutations route to imatinib (ALGO-GIST-1L step 2 default path).
+
+definition_ua: >
+  Мутація PDGFRA D842V при поширеній або метастатичній ГІСТ. D842V наявна
+  приблизно у 6-7% всіх ГІСТ і є найпоширенішою мутацією PDGFRA екзону 18.
+  D842V конферує первинну резистентність до іматинібу, сунітинібу та
+  регорафенібу. Авапритиніб — інгібітор тирозинкінази I типу, ефективний
+  при D842V: ЗВВ ~88-91% (NAVIGATOR). Іматиніб неефективний (ЗВВ <10%)
+  і не повинен застосовуватись при підтвердженій D842V-мутації ГІСТ.
+  Категорія 1 NCCN GIST 2025: авапритиніб 300 мг перорально 1 раз на добу.
+
+trigger:
+  type: biomarker_status
+  any_of:
+    - finding: BIO-PDGFRA
+      value: D842V
+    - finding: pdgfra_mutation
+      value: D842V
+    - finding: pdgfra_exon18_mutation
+      value: D842V
+    - finding: pdgfra_mutation_codon
+      value: D842V
+    - finding: pdgfra_d842v
+      value: "true"
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+branch_targets:
+  ALGO-GIST-1L: "1"
+
+relevant_diseases:
+  - DIS-GIST
+
+shifts_algorithm:
+  - ALGO-GIST-1L
+
+sources:
+  - SRC-NCCN-GIST-2025
+  - SRC-NAVIGATOR
+  - SRC-VOYAGER
+
+last_reviewed: "2026-05-08"
+reviewer_signoffs: []
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+notes: >
+  W5c RF authoring. Converts free-text `{condition: "PDGFRA D842V mutation
+  positive"}` in ALGO-GIST-1L step 1 into a formal RF entity.
+
+  Clinical rationale: PDGFRA D842V confers primary resistance to all
+  approved TKIs except avapritinib. NAVIGATOR phase 3 expansion cohort
+  (Heinrich et al, CANCER DISCOV 2020; trial NCT02508532) demonstrated
+  ORR 88-91% with avapritinib 300 mg QD; median PFS not reached at
+  data cutoff. VOYAGER (NCT03465722) was designed as avapritinib vs
+  regorafenib in 3L+ GIST (mixed genotype); primary endpoint (PFS) did
+  not meet statistical significance but was confounded by inclusion of
+  non-D842V GIST. NAVIGATOR remains the key evidence base for D842V 1L.
+
+  Trigger: uses BIO-PDGFRA/D842V pattern consistent with BMA entity
+  bma_pdgfra_d842v_gist.yaml (ESCAT IA). Legacy finding name variants
+  retained for backward engine compatibility until biomarker normalization
+  pass completes.
+
+  PDGFRA non-D842V exon 18 mutations (D842del, DI842-843IM, N659K, etc.)
+  are NOT within this RF scope — those have intermediate imatinib
+  sensitivity and route via ALGO-GIST-1L step 2 imatinib path.
+
+  Source stubs: SRC-NAVIGATOR and SRC-VOYAGER are auto-stubs with
+  pending citation verification (PMID + DOI to be confirmed by clinical
+  co-lead). SRC-NCCN-GIST-2025 is the primary guideline authority
+  (NCCN Category 1 for avapritinib 1L in D842V GIST).
+
+  CHARTER §6.1: Two-reviewer clinical co-lead signoff required before
+  removing draft: true.

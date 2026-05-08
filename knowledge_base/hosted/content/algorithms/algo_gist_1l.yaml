@@ -20,12 +20,26 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
+        - red_flag: RF-GIST-PDGFRA-D842V
+        # Legacy finding-based evaluations for backward engine compatibility:
+        - {finding: BIO-PDGFRA, value: D842V}
+        - {finding: pdgfra_mutation, value: D842V}
+        - {finding: pdgfra_exon18_mutation, value: D842V}
+        - {finding: pdgfra_mutation_codon, value: D842V}
+        - {finding: pdgfra_d842v, value: "true"}
         - condition: "PDGFRA D842V mutation positive"
     if_true:
       result: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
+      notes: >
+        RF-GIST-PDGFRA-D842V fired (PDGFRA D842V confirmed) — avapritinib
+        preferred 1L (NAVIGATOR ORR ~88-91%). Imatinib is ineffective for
+        D842V (ORR <10%) and must NOT be used. NCCN GIST 2025 Category 1.
     if_false:
       next_step: 2
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: >
+      W5c RF wiring: RF-GIST-PDGFRA-D842V added as primary gate; legacy
+      finding lookups and free-text condition retained for backward
+      engine compatibility.
   - step: 2
     evaluate:
       any_of:
@@ -49,8 +63,9 @@ decision_tree:
 
 sources:
   - SRC-NCCN-GIST-2025
-  - SRC-ONCOKB
-last_reviewed: '2026-04-26'
+  - SRC-NAVIGATOR
+  - SRC-VOYAGER
+last_reviewed: '2026-05-08'
 notes: >
   Decision tree intentionally simplified for MVP: KIT/PDGFRA-WT
   (SDH-deficient or NF1-mutant) GIST is routed to imatinib as the
