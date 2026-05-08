@@ -17,11 +17,14 @@ SDK. Active clinical skill modules must remain free of LLM client imports.
 from __future__ import annotations
 
 import json
+import copy
 import os
 import re
 import traceback
 import urllib.error
 import urllib.request
+import hashlib
+from datetime import datetime, timezone
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -43,6 +46,7 @@ OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses"
 DEFAULT_MODEL = "gpt-5.2"
 MAX_QUESTIONS_PER_USER = 3
 _USAGE_COUNTS: dict[str, int] = {}
+_ANSWER_CACHE: dict[tuple[str, str], dict[str, Any]] = {}
 
 DISCLAIMER_UK = (
     "OpenOnco формує чернетку для tumor board. Це не медична порада, "
@@ -431,10 +435,11 @@ _NON_BLOCKING_BIOMARKER_MENTIONS = {
 
 def _is_non_blocking_biomarker_mention(mention: str) -> bool:
     norm = _normalize_term(mention)
+    plain = re.sub(r"[^a-z0-9\s-]+", " ", norm)
     compact = re.sub(r"[^a-z0-9]+", "", norm)
     if norm in _NON_BLOCKING_BIOMARKER_MENTIONS or compact in _NON_BLOCKING_BIOMARKER_MENTIONS:
         return True
-    if re.search(r"\b(brca1|cdx2|ck7|ck20|dpd|dpyd|ebv|er|hrd|idh|lauren|nst|p53|palb2|pr|signet|smad4)\b", norm):
+    if re.search(r"\b(brca1|cdx2|ck7|ck20|dpd|dpyd|ebv|er|hrd|idh|lauren|napsin|nst|p40|p53|palb2|pr|signet|smad4|ttf)\b", plain):
         return True
     if any(token in norm for token in ("ascites", "peritoneal", "visceral crisis", "\u0456\u043d\u0432\u0430\u0437\u0438\u0432\u043d\u0430 \u043a\u0430\u0440\u0446\u0438\u043d\u043e\u043c\u0430", "\u0432\u0456\u0441\u0446\u0435\u0440\u0430\u043b\u044c\u043d", "\u043f\u0435\u0440\u0438\u0442\u043e\u043d\u0435", "\u0430\u0441\u0446\u0438\u0442")):
         return True
@@ -447,6 +452,10 @@ def _is_non_blocking_biomarker_mention(mention: str) -> bool:
     if "mmr" in norm and any(token in norm for token in ("intact", "retained", "proficient", "pmmr", "збереж")):
         return True
     if "met" in norm and ("exon 14" in norm or "exon14" in norm):
+        return True
+    if re.search(r"\b(wild type|wt|negative)\b", norm) and any(
+        driver in norm for driver in ("alk", "braf", "kras", "nras", "ntrk", "ret", "ros1")
+    ):
         return True
     if "nras" in norm and any(token in norm for token in ("wild type", "wt", "дикого тип", "negative", "негатив")):
         return True
@@ -1252,39 +1261,141 @@ def answer_clinical_question(case_text: str, *, locale: str = "uk") -> dict[str,
     return answer
 
 
-def handle_json_request(body: dict[str, Any]) -> tuple[int, dict[str, str], dict[str, Any]]:
+def _request_header(meta: dict[str, Any] | None, name: str) -> str:
+    headers = (meta or {}).get("headers") or {}
+    if not isinstance(headers, dict):
+        return ""
+    wanted = name.casefold()
+    for key, value in headers.items():
+        if str(key).casefold() == wanted:
+            return str(value or "").strip()
+    return ""
+
+
+def _request_ip(meta: dict[str, Any] | None) -> str:
+    cf_ip = _request_header(meta, "CF-Connecting-IP")
+    if cf_ip:
+        return cf_ip
+    forwarded_for = _request_header(meta, "X-Forwarded-For")
+    if forwarded_for:
+        return forwarded_for.split(",", 1)[0].strip()
+    real_ip = _request_header(meta, "X-Real-IP")
+    if real_ip:
+        return real_ip
+    forwarded = _request_header(meta, "Forwarded")
+    match = re.search(r"(?:^|[;,]\s*)for=\"?([^\";,]+)", forwarded, flags=re.IGNORECASE)
+    if match:
+        return match.group(1).strip("[]")
+    return str((meta or {}).get("client_ip") or "").strip()
+
+
+def _audit_log_path() -> Path | None:
+    raw = os.environ.get("OPENONCO_ASK_AUDIT_LOG", "").strip()
+    if not raw:
+        return None
+    return Path(raw)
+
+
+def _write_ask_audit_log(
+    *,
+    body: dict[str, Any],
+    request_meta: dict[str, Any] | None,
+    http_status: int,
+    response: dict[str, Any],
+) -> None:
+    path = _audit_log_path()
+    if path is None:
+        return
+    case_text = str(body.get("case_text") or "")
+    row: dict[str, Any] = {
+        "ts": datetime.now(timezone.utc).isoformat(),
+        "ip": _request_ip(request_meta),
+        "user_id": str(body.get("user_id") or ""),
+        "locale": str(body.get("locale") or "uk"),
+        "http_status": http_status,
+        "status": response.get("status"),
+        "questions_used": response.get("questions_used"),
+        "case_text_len": len(case_text),
+        "case_text_sha256": hashlib.sha256(case_text.encode("utf-8")).hexdigest(),
+    }
+    if os.environ.get("OPENONCO_ASK_LOG_RAW_INPUT") == "1":
+        row["case_text"] = case_text
+    disease = response.get("patient_profile")
+    if isinstance(disease, dict):
+        disease_obj = disease.get("disease")
+        if isinstance(disease_obj, dict):
+            row["disease_id"] = disease_obj.get("id")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+
+
+def _finalize_json_request(
+    status: int,
+    headers: dict[str, str],
+    response: dict[str, Any],
+    *,
+    body: dict[str, Any],
+    request_meta: dict[str, Any] | None,
+) -> tuple[int, dict[str, str], dict[str, Any]]:
+    try:
+        _write_ask_audit_log(body=body, request_meta=request_meta, http_status=status, response=response)
+    except Exception:  # pragma: no cover - audit logging must not break answers
+        if os.environ.get("OPENONCO_DEBUG") == "1":
+            response = {**response, "audit_log_error": traceback.format_exc()}
+    return status, headers, response
+
+
+def _answer_cache_key(case_text: str, locale: str) -> tuple[str, str]:
+    normalized_text = re.sub(r"\s+", " ", case_text.strip())
+    normalized_locale = (locale or "uk").casefold()
+    digest = hashlib.sha256(normalized_text.encode("utf-8")).hexdigest()
+    return normalized_locale, digest
+
+
+def handle_json_request(
+    body: dict[str, Any],
+    request_meta: dict[str, Any] | None = None,
+) -> tuple[int, dict[str, str], dict[str, Any]]:
     locale = str(body.get("locale") or "uk")
     user_id = str(body.get("user_id") or "").strip()
     if not user_id:
-        return 400, _cors_headers(), {
+        return _finalize_json_request(400, _cors_headers(), {
             "status": "error",
             "message": "user_id is required for per-user quota enforcement",
             "safety_note": _disclaimer(locale),
-        }
+        }, body=body, request_meta=request_meta)
     used = _USAGE_COUNTS.get(user_id, 0)
     if used >= MAX_QUESTIONS_PER_USER:
-        return 429, _cors_headers(), {
+        return _finalize_json_request(429, _cors_headers(), {
             "status": "quota_exceeded",
             "message": f"Question limit reached: {MAX_QUESTIONS_PER_USER} per user.",
             "questions_used": used,
             "questions_limit": MAX_QUESTIONS_PER_USER,
             "safety_note": _disclaimer(locale),
-        }
+        }, body=body, request_meta=request_meta)
     try:
-        result = answer_clinical_question(str(body.get("case_text") or ""), locale=locale)
+        case_text = str(body.get("case_text") or "")
+        cache_key = _answer_cache_key(case_text, locale)
+        cached_result = _ANSWER_CACHE.get(cache_key)
+        if cached_result is None:
+            result = answer_clinical_question(case_text, locale=locale)
+            _ANSWER_CACHE[cache_key] = copy.deepcopy(result)
+        else:
+            result = copy.deepcopy(cached_result)
         _USAGE_COUNTS[user_id] = used + 1
         result["questions_used"] = _USAGE_COUNTS[user_id]
         result["questions_limit"] = MAX_QUESTIONS_PER_USER
-        return 200, _cors_headers(), result
+        return _finalize_json_request(200, _cors_headers(), result, body=body, request_meta=request_meta)
     except Exception as exc:  # pylint: disable=broad-except
-        return 500, _cors_headers(), {
+        return _finalize_json_request(500, _cors_headers(), {
             "status": "error",
             "message": str(exc),
             "questions_used": _USAGE_COUNTS.get(user_id, 0),
             "questions_limit": MAX_QUESTIONS_PER_USER,
             "trace": traceback.format_exc() if os.environ.get("OPENONCO_DEBUG") == "1" else "",
             "safety_note": _disclaimer(locale),
-        }
+        }, body=body, request_meta=request_meta)
 
 
 def _cors_headers() -> dict[str, str]:
