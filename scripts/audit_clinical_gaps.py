@@ -443,6 +443,9 @@ def render_markdown(report: dict[str, Any]) -> str:
 def render_html(report: dict[str, Any], *, target_lang: str = "en") -> str:
     title = "Clinical Gap Audit"
     nav_prefix = "/ukr" if target_lang == "uk" else ""
+    nav_home = "Головна" if target_lang == "uk" else "Home"
+    nav_capabilities = "Можливості" if target_lang == "uk" else "Capabilities"
+    nav_kb = "База знань" if target_lang == "uk" else "Onco Wiki"
     rows = []
     cards = []
     for gap in report["gaps"]:
@@ -479,9 +482,9 @@ def render_html(report: dict[str, Any], *, target_lang: str = "en") -> str:
     <a href="{nav_prefix or '/'}" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
   </div>
   <nav class="top-nav">
-    <a href="{nav_prefix or '/'}">Home</a>
-    <a href="{nav_prefix}/capabilities.html">Capabilities</a>
-    <a href="{nav_prefix}/kb.html">Onco Wiki</a>
+    <a href="{nav_prefix or '/'}">{nav_home}</a>
+    <a href="{nav_prefix}/capabilities.html">{nav_capabilities}</a>
+    <a href="{nav_prefix}/kb.html">{nav_kb}</a>
   </nav>
 </header>
 <main>
