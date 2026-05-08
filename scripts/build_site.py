@@ -531,6 +531,22 @@ def _public_case_entries() -> list[CaseEntry]:
     return [c for c in CASES if c.case_id not in GALLERY_EXCLUDED_CASE_IDS]
 
 
+def _public_example_entries() -> list[CaseEntry]:
+    """Curated examples safe for the try-page picker.
+
+    Auto-generated stubs and variant-matrix smoke cases are useful for
+    engine/render QA, but they read as stale low-fill clinical examples in
+    the public picker. Keep them out of /try.html and examples.json.
+    """
+
+    return [
+        c for c in _public_case_entries()
+        if c.badge_class != "bdg-stub"
+        and c.badge.lower() not in {"auto-stub", "variant"}
+        and not c.case_id.startswith(("auto-", "variant-"))
+    ]
+
+
 def _remove_excluded_case_pages(output_dir: Path) -> int:
     """Delete stale generated pages for hidden auto-stub cases."""
     removed = 0
@@ -560,12 +576,6 @@ def bundle_examples(
     payload = []
     manifest = []
     unique_icd_to_disease_id = _unique_questionnaire_icd_to_disease_id_map()
-    questionnaire_disease_ids = {
-        q.get("disease_id")
-        for q in (questionnaires_manifest or [])
-        if q.get("disease_id")
-    }
-    covered_disease_ids: set[str] = set()
 
     def append_case(c: CaseEntry, *, has_case_page: bool) -> str | None:
         p = EXAMPLES / c.file
@@ -584,7 +594,6 @@ def bundle_examples(
             disease = ex_json.setdefault("disease", {})
             if isinstance(disease, dict):
                 disease.setdefault("id", disease_id)
-            covered_disease_ids.add(disease_id)
         # Both UA and EN labels travel in the manifest so the inlined
         # JS constant on /try.html (UA) vs /ukr/try.html — wait, EN is
         # at root → /try.html serves EN labels — can pick the right
@@ -612,33 +621,8 @@ def bundle_examples(
         manifest.append(manifest_entry)
         return disease_id
 
-    for c in _public_case_entries():
+    for c in _public_example_entries():
         append_case(c, has_case_page=True)
-
-    # Some low-coverage auto-stub profiles are intentionally hidden from the
-    # gallery because their pre-rendered case pages are not clinically useful
-    # yet. They still make good questionnaire starters; include only the ones
-    # that fill otherwise-empty disease dropdowns, and mark them as having no
-    # prebuilt plan page so the UI does not iframe a missing case.
-    if questionnaire_disease_ids:
-        for c in CASES:
-            if c.case_id not in GALLERY_EXCLUDED_CASE_IDS:
-                continue
-            p = EXAMPLES / c.file
-            if not p.exists():
-                continue
-            try:
-                ex_json = json.loads(p.read_text(encoding="utf-8"))
-            except Exception:
-                continue
-            disease = ex_json.get("disease", {}) if isinstance(ex_json, dict) else {}
-            disease_id = (
-                disease.get("id")
-                or ex_json.get("disease_id")
-                or unique_icd_to_disease_id.get(str(disease.get("icd_o_3_morphology")))
-            )
-            if disease_id in questionnaire_disease_ids and disease_id not in covered_disease_ids:
-                append_case(c, has_case_page=False)
 
     out = output_dir / "examples.json"
     out.write_text(
@@ -2478,13 +2462,15 @@ def render_ask(*, target_lang: str = "en") -> str:
   let progressTimer = null;
   let progressStartedAt = 0;
   const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
-  if (configured) {{
-    endpointInput.value = configured;
-  }} else if (['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) {{
-    endpointInput.value = DEFAULT_ENDPOINT;
-  }} else {{
-    endpointInput.value = PUBLIC_ENDPOINT;
+  const isLocalHost = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+  const isFilePage = window.location.protocol === 'file:';
+  function defaultEndpointCandidates() {{
+    if (configured) return [configured];
+    if (isFilePage) return [PUBLIC_ENDPOINT];
+    if (isLocalHost) return [DEFAULT_ENDPOINT];
+    return [DEFAULT_ENDPOINT, PUBLIC_ENDPOINT];
   }}
+  endpointInput.value = defaultEndpointCandidates()[0];
 
   function getUserId() {{
     let id = localStorage.getItem(USER_KEY);
@@ -2654,18 +2640,55 @@ def render_ask(*, target_lang: str = "en") -> str:
     }}
   }}
 
-  async function readJsonResponse(resp) {{
+  async function readJsonResponse(resp, endpoint) {{
     const contentType = (resp.headers.get('content-type') || '').toLowerCase();
     const text = await resp.text();
     if (!contentType.includes('application/json')) {{
-      const endpoint = endpointInput.value.trim() || DEFAULT_ENDPOINT;
-      throw new Error('{endpoint_unavailable_msg} Endpoint: ' + endpoint + '. HTTP ' + resp.status + '.');
+      const err = new Error('{endpoint_unavailable_msg} Endpoint: ' + endpoint + '. HTTP ' + resp.status + '.');
+      err.retryable = true;
+      throw err;
     }}
     try {{
       return text ? JSON.parse(text) : {{}};
     }} catch (err) {{
       throw new Error('{invalid_json_msg}: ' + err.message);
     }}
+  }}
+
+  function endpointCandidatesForRequest() {{
+    const entered = endpointInput.value.trim();
+    const defaults = defaultEndpointCandidates();
+    const candidates = entered ? [entered] : defaults.slice();
+    defaults.forEach((endpoint) => {{
+      if (endpoint && !candidates.includes(endpoint)) candidates.push(endpoint);
+    }});
+    return candidates;
+  }}
+
+  async function postClinicalQuestion(body) {{
+    const candidates = endpointCandidatesForRequest();
+    const errors = [];
+    for (const endpoint of candidates) {{
+      try {{
+        const resp = await fetch(endpoint, {{
+          method: 'POST',
+          headers: {{ 'Content-Type': 'application/json' }},
+          body: JSON.stringify(body)
+        }});
+        const payload = await readJsonResponse(resp, endpoint);
+        if (!resp.ok) {{
+          const err = new Error(payload.message || ('HTTP ' + resp.status));
+          err.status = resp.status;
+          throw err;
+        }}
+        if (endpointInput.value.trim() !== endpoint) endpointInput.value = endpoint;
+        return payload;
+      }} catch (err) {{
+        errors.push(endpoint + ': ' + err.message);
+        if (err.status && err.status !== 404) throw err;
+      }}
+    }}
+    throw new Error(errors.join(' | ') || 'No clinical-question endpoint available');
   }}
 
   askBtn.addEventListener('click', async () => {{
@@ -2684,13 +2707,7 @@ def render_ask(*, target_lang: str = "en") -> str:
     planLinkWrap.classList.remove('is-visible');
     startProgress();
     try {{
-      const resp = await fetch(endpointInput.value.trim() || DEFAULT_ENDPOINT, {{
-        method: 'POST',
-        headers: {{ 'Content-Type': 'application/json' }},
-        body: JSON.stringify({{ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() }})
-      }});
-      const payload = await readJsonResponse(resp);
-      if (!resp.ok) throw new Error(payload.message || ('HTTP ' + resp.status));
+      const payload = await postClinicalQuestion({{ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() }});
       if (typeof payload.questions_used === 'number') setCount(payload.questions_used);
       else setCount(getCount() + 1);
       result.textContent = renderPayload(payload);
@@ -2841,7 +2858,8 @@ def render_try(
   (function() {{
     try {{
       localStorage.removeItem('openonco-manifests-v1');
-      var raw = localStorage.getItem('openonco-manifests-v2');
+      localStorage.removeItem('openonco-manifests-v2');
+      var raw = localStorage.getItem('openonco-manifests-v3');
       if (!raw) return;
       var data = JSON.parse(raw);
       var ds = document.getElementById('diseaseSelect');
@@ -4700,10 +4718,11 @@ async function ensureExamples() {{
 // warmup at the top of the script body, written by loadAssets after a
 // successful boot so the next cold visit can paint dropdowns from
 // localStorage even before the new HTML's inline manifest is parsed.
-const MANIFEST_CACHE_KEY = 'openonco-manifests-v2';
+const MANIFEST_CACHE_KEY = 'openonco-manifests-v3';
 function saveManifestsToCache() {{
   try {{
     localStorage.removeItem('openonco-manifests-v1');
+    localStorage.removeItem('openonco-manifests-v2');
     localStorage.setItem(MANIFEST_CACHE_KEY, JSON.stringify({{
       ts: Date.now(),
       questionnaires: QUESTIONNAIRES_MANIFEST,
@@ -5127,7 +5146,7 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         '.oo-topbar-host .top-bar{background:#fff;color:#111827;'
         'padding:13px 24px;display:flex;justify-content:space-between;'
         'align-items:center;font-family:Source Sans 3,sans-serif;'
-        'border-bottom:1px solid #e5e7eb;}'
+        'border-bottom:1px solid #e5e7eb;width:100%;max-width:100%;overflow-x:clip;}'
         '.oo-topbar-host .brand-line{display:flex;align-items:center;'
         'gap:12px;margin-right:30px;}'
         '.oo-topbar-host .brand-logo{display:none;}'
@@ -5180,12 +5199,27 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         '.case-bar a:hover{text-decoration:underline;}'
         '@media print{.oo-topbar-host,.case-bar{display:none;}}'
         '@media (max-width:700px){'
-        '.oo-topbar-host .top-bar{flex-wrap:wrap;gap:8px;}'
-        '.oo-topbar-host .top-nav{order:3;flex-basis:100%;margin:0;justify-content:center;}'
-        '.oo-topbar-host .top-right{gap:8px;flex-wrap:wrap;justify-content:flex-end;}'
-        '.oo-topbar-host .top-cta-group{width:100%;justify-content:flex-end;gap:6px;}'
-        '.oo-topbar-host .btn-cta-top{min-width:98px;padding:8px 10px;font-size:13px;}'
-        '.oo-topbar-host .btn-cta-try{min-width:118px;}'
+        '.oo-topbar-host .top-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;'
+        'gap:10px 12px;align-items:center;'
+        'padding:12px max(14px,env(safe-area-inset-right)) 14px max(14px,env(safe-area-inset-left));}'
+        '.oo-topbar-host .brand-line{grid-column:1;grid-row:1;min-width:0;margin-right:0;}'
+        '.oo-topbar-host .brand-mini{max-width:100%;font-size:22px;overflow:hidden;text-overflow:ellipsis;}'
+        '.oo-topbar-host .top-right{display:contents;}'
+        '.oo-topbar-host .lang-switch{grid-column:2;grid-row:1;justify-self:end;font-size:10px;}'
+        '.oo-topbar-host .lang-switch .lang-current,'
+        '.oo-topbar-host .lang-switch .lang-other{width:48px;padding:4px 6px;}'
+        '.oo-topbar-host .top-nav{grid-column:1/-1;grid-row:2;display:grid;'
+        'grid-template-columns:repeat(3,minmax(0,1fr));width:100%;margin:0;gap:4px;justify-content:stretch;}'
+        '.oo-topbar-host .top-nav a{min-width:0;padding:8px 4px;text-align:center;'
+        'overflow-wrap:anywhere;line-height:1.15;}'
+        '.oo-topbar-host .top-cta-group{grid-column:1/-1;grid-row:3;display:grid;'
+        'grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:6px;justify-content:stretch;}'
+        '.oo-topbar-host .btn-cta-top{display:flex;align-items:center;justify-content:center;'
+        'width:100%;min-width:0;min-height:44px;padding:8px 6px;font-size:13px;'
+        'line-height:1.12;white-space:normal;overflow-wrap:anywhere;}'
+        '.oo-topbar-host .btn-cta-try{min-width:0;}'
+        '.case-bar{display:grid;gap:6px;padding:8px max(14px,env(safe-area-inset-right)) 8px max(14px,env(safe-area-inset-left));}'
+        '.case-bar a{margin-left:0;margin-right:12px;}'
         '}'
         '</style>\n'
     )
@@ -8847,9 +8881,8 @@ def build_site(output_dir: Path) -> dict:
     questionnaires_payload = bundle_questionnaires(output_dir)
     # Bundle dropdowns BEFORE render_try so /try.html can inline the
     # ~15 KB manifests as JS constants — saves the ~870 KB initial fetch
-    # of questionnaires.json + examples.json on first paint. Examples use
-    # the questionnaire manifest to expose hidden starter profiles only for
-    # diseases that would otherwise have an empty example dropdown.
+    # of questionnaires.json + examples.json on first paint. Examples are
+    # curated only; low-fill auto-stubs stay out of the public picker.
     examples_payload = bundle_examples(
         output_dir,
         questionnaires_manifest=questionnaires_payload.get("manifest", []),

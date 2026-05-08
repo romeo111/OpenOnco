@@ -22,6 +22,7 @@ from scripts.build_site import (
     CASES,
     GALLERY_EXCLUDED_CASE_IDS,
     GALLERY_FEATURED_CASE_IDS,
+    _public_example_entries,
     build_site,
     _render_top_bar,
     render_diseases,
@@ -337,12 +338,12 @@ def test_engine_bundle_excludes_heavy_unused_subtrees(site_dir: Path):
 def test_examples_payload_matches_cases(site_dir: Path):
     payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
     case_ids_payload = {e["case_id"] for e in payload}
-    case_ids_expected = {
-        c.case_id for c in CASES
-        if c.case_id not in GALLERY_EXCLUDED_CASE_IDS
-    }
+    case_ids_expected = {c.case_id for c in _public_example_entries()}
     assert case_ids_payload == case_ids_expected
     assert not (case_ids_payload & GALLERY_EXCLUDED_CASE_IDS)
+    assert not any((e.get("case_id") or "").startswith(("auto-", "variant-")) for e in payload)
+    assert not any("Auto-stub" in (e.get("label_en") or e.get("label") or "") for e in payload)
+    assert not any("KB fill" in (e.get("label_en") or "") for e in payload)
     # Each entry has a parseable patient JSON
     for entry in payload:
         assert isinstance(entry["json"], dict)
@@ -350,13 +351,9 @@ def test_examples_payload_matches_cases(site_dir: Path):
         # (diagnostic patients have a different shape)
 
 
-def test_try_examples_cover_every_questionnaire_disease(site_dir: Path):
-    """Every disease shown in /try.html must have at least one disease-owned
-    example in the picker.
-
-    The picker must not rely on ICD-O morphology alone: several distinct
-    diseases share broad morphology codes, so the thin manifests carry
-    disease_id and the JS filters on that first.
+def test_try_examples_are_curated_and_filter_by_disease_id(site_dir: Path):
+    """Try-page examples are curated. Missing examples are better than
+    surfacing old low-fill auto-stubs as if they were clinical examples.
     """
     examples = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
     questionnaires = json.loads((site_dir / "questionnaires.json").read_text(encoding="utf-8"))
@@ -378,7 +375,7 @@ def test_try_examples_cover_every_questionnaire_disease(site_dir: Path):
     hosted_disease_ids.discard(None)
 
     assert hosted_disease_ids <= questionnaire_disease_ids
-    assert questionnaire_disease_ids <= example_disease_ids
+    assert example_disease_ids <= questionnaire_disease_ids
     for entry in examples:
         did = entry.get("disease_id")
         if did not in questionnaire_disease_ids:
@@ -404,9 +401,10 @@ def test_try_questionnaire_dropdown_titles_are_public_and_localized(site_dir: Pa
     assert '"title_en": "HCV-associated Marginal Zone Lymphoma — first line"' in en_html
     assert '"icd_10": "C50"' in en_html
     assert "ICD-10 ${icd10}" in en_html
-    assert "openonco-manifests-v2" in en_html
-    assert "getItem('openonco-manifests-v2')" in en_html
+    assert "openonco-manifests-v3" in en_html
+    assert "getItem('openonco-manifests-v3')" in en_html
     assert "removeItem('openonco-manifests-v1')" in en_html
+    assert "removeItem('openonco-manifests-v2')" in en_html
     assert "auto-generated STUB" not in en_html
     assert "q.title_uk || q.title_en || q.title" in uk_html
     assert '"title_uk": "Інвазивний рак молочної залози — перша лінія"' in uk_html
