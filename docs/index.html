@@ -31,11 +31,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0a2e1a">
+<meta name="theme-color" content="#14532d">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css" rel="stylesheet">
 </head>
-<body>
+<body class="home-page">
 <header class="top-bar">
   <div class="brand-line">
     <a href="/" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
@@ -44,7 +44,7 @@
     <a href="/" class="active">Home</a>
     <a href="/capabilities.html">Capabilities</a>
     <a href="/kb.html">Onco Wiki</a>
-    <a href="/ask.html">Tumor board Q</a>
+    <a href="/ask.html">Tumor Board</a>
     <a href="/about.html">About</a>
   </nav>
   <div class="top-right">
@@ -65,62 +65,9 @@
       <div class="cta-row">
         <a class="btn btn-primary" href="/try.html">Build a virtual plan</a>
         <a class="btn btn-secondary" href="/kb.html">Explore the knowledge base</a>
+        <a class="btn btn-secondary" href="/ask.html">Ask AI</a>
       </div>
       <p class="home-note">No real patient data. Synthetic examples only. Informational support, not a medical device.</p>
-      <div class="home-carousel" data-home-carousel aria-label="Audience">
-        <div class="home-carousel-tabs" role="tablist" aria-label="Audience">
-        <button type="button" class="home-carousel-tab is-active" data-home-slide="doctor" aria-controls="home-slide-doctor" aria-selected="true">For clinicians</button>
-        <button type="button" class="home-carousel-tab" data-home-slide="investor" aria-controls="home-slide-investor" aria-selected="false">For investors</button>
-        <button type="button" class="home-carousel-tab" data-home-slide="lab" aria-controls="home-slide-lab" aria-selected="false">For laboratories</button>
-        <button type="button" class="home-carousel-tab" data-home-slide="patient" aria-controls="home-slide-patient" aria-selected="false">For patients</button>
-        </div>
-        <div class="home-carousel-track">
-        <article class="home-carousel-slide is-active" id="home-slide-doctor" data-home-panel="doctor">
-          <p class="home-carousel-eyebrow">Clinical workflow</p>
-          <h2>From structured case facts to a cited plan draft.</h2>
-          <p>OpenOnco gives the oncologist a transparent second layer for MDT prep: standard and aggressive tracks, red flags, dose context, source IDs and review status in one view.</p>
-          <ul>
-            <li>Two-track treatment plan: guideline-grade and trial-aware</li>
-            <li>Biomarker, renal, hepatic and infection risks surfaced before sign-off</li>
-            <li>Every branch remains auditable by source and YAML provenance</li>
-          </ul>
-          <a class="home-carousel-cta" href="/try.html">Build a virtual plan →</a>
-        </article>
-        <article class="home-carousel-slide" id="home-slide-investor" data-home-panel="investor">
-          <p class="home-carousel-eyebrow">Infrastructure thesis</p>
-          <h2>A governed open layer for oncology decision infrastructure.</h2>
-          <p>The asset is not a chatbot wrapper. It is a growing clinical knowledge graph, rules engine, public specification stack and distribution path for hospitals, labs and AI-assisted contributors.</p>
-          <ul>
-            <li>Public corpus, rules engine and specs evolve as separate auditable assets</li>
-            <li>Clear non-device CDS positioning and visible clinical review gates</li>
-            <li>Open corpus creates trust, auditability and ecosystem leverage</li>
-          </ul>
-          <a class="home-carousel-cta" href="/about.html">Review the project →</a>
-        </article>
-        <article class="home-carousel-slide" id="home-slide-lab" data-home-panel="lab">
-          <p class="home-carousel-eyebrow">Molecular handoff</p>
-          <h2>Make biomarker reports immediately actionable for the care team.</h2>
-          <p>A lab can hand clinicians a structured bridge from NGS and pathology findings to disease-specific actionability, trial-aware options and patient-profile prefill without exposing private data on the public site.</p>
-          <ul>
-            <li>Variant and biomarker context connects to disease, regimen and monitoring</li>
-            <li>QR/profile handoff can prefill the browser-side plan builder</li>
-            <li>CIViC-derived evidence remains citable and inspectable</li>
-          </ul>
-          <a class="home-carousel-cta" href="/kb.html">Explore actionability →</a>
-        </article>
-        <article class="home-carousel-slide" id="home-slide-patient" data-home-panel="patient">
-          <p class="home-carousel-eyebrow">Patient-facing explanation</p>
-          <h2>A clearer version of the plan to discuss with the doctor.</h2>
-          <p>OpenOnco can render the same clinical logic in plain language: what the plan is trying to do, why tests and biomarkers matter, and what questions the patient should bring back to the oncology team.</p>
-          <ul>
-            <li>Plain-language summary without changing the clinician-owned decision</li>
-            <li>Helps patients understand biomarkers, monitoring and warning signs</li>
-            <li>Keeps the doctor as the final authority for treatment choices</li>
-          </ul>
-          <a class="home-carousel-cta" href="/try.html">See a patient-friendly plan →</a>
-        </article>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -130,44 +77,5 @@
     Informational tool for clinicians, not a medical device (CHARTER §15 + §11).
   </footer>
 </main>
-<script>
-(() => {
-  const root = document.querySelector('[data-home-carousel]');
-  if (!root) return;
-  const tabs = Array.from(root.querySelectorAll('[data-home-slide]'));
-  const panels = Array.from(root.querySelectorAll('[data-home-panel]'));
-  let active = 0;
-  let timer = null;
-
-  function show(index, userInitiated = false) {
-    active = (index + panels.length) % panels.length;
-    tabs.forEach((tab, i) => {
-      const on = i === active;
-      tab.classList.toggle('is-active', on);
-      tab.setAttribute('aria-selected', on ? 'true' : 'false');
-    });
-    panels.forEach((panel, i) => {
-      panel.classList.toggle('is-active', i === active);
-    });
-    if (userInitiated) restart();
-  }
-
-  function restart() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    clearInterval(timer);
-    timer = window.setInterval(() => show(active + 1), 5000);
-  }
-
-  tabs.forEach((tab, i) => tab.addEventListener('click', () => show(i, true)));
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      clearInterval(timer);
-    } else {
-      restart();
-    }
-  });
-  restart();
-})();
-</script>
 </body>
 </html>

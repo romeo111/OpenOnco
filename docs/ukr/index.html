@@ -31,11 +31,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0a2e1a">
+<meta name="theme-color" content="#14532d">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css" rel="stylesheet">
 </head>
-<body>
+<body class="home-page">
 <header class="top-bar">
   <div class="brand-line">
     <a href="/ukr/" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
@@ -43,9 +43,9 @@
   <nav class="top-nav">
     <a href="/ukr/" class="active">Головна</a>
     <a href="/ukr/capabilities.html">Можливості</a>
-    <a href="/ukr/kb.html">Onco Wiki</a>
-    <a href="/ukr/ask.html">Tumor board Q</a>
-    <a href="/ukr/about.html">About</a>
+    <a href="/ukr/kb.html">База знань</a>
+    <a href="/ukr/ask.html">Tumor Board</a>
+    <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
     <div class="lang-switch" role="group" aria-label="Language">
@@ -65,62 +65,9 @@
       <div class="cta-row">
         <a class="btn btn-primary" href="/ukr/try.html">Побудувати віртуальний план</a>
         <a class="btn btn-secondary" href="/ukr/kb.html">Відкрити базу знань</a>
+        <a class="btn btn-secondary" href="/ukr/ask.html">Запитай АІ</a>
       </div>
       <p class="home-note">Без реальних пацієнтських даних. Лише синтетичні приклади. Інформаційна підтримка, не медичний пристрій.</p>
-      <div class="home-carousel" data-home-carousel aria-label="Аудиторія">
-        <div class="home-carousel-tabs" role="tablist" aria-label="Аудиторія">
-        <button type="button" class="home-carousel-tab is-active" data-home-slide="doctor" aria-controls="home-slide-doctor" aria-selected="true">Для лікаря</button>
-        <button type="button" class="home-carousel-tab" data-home-slide="investor" aria-controls="home-slide-investor" aria-selected="false">Для інвестора</button>
-        <button type="button" class="home-carousel-tab" data-home-slide="lab" aria-controls="home-slide-lab" aria-selected="false">Для лабораторії</button>
-        <button type="button" class="home-carousel-tab" data-home-slide="patient" aria-controls="home-slide-patient" aria-selected="false">Для пацієнта</button>
-        </div>
-        <div class="home-carousel-track">
-        <article class="home-carousel-slide is-active" id="home-slide-doctor" data-home-panel="doctor">
-          <p class="home-carousel-eyebrow">Клінічний workflow</p>
-          <h2>Від структурованих фактів кейсу до цитованого draft-плану.</h2>
-          <p>OpenOnco дає онкологу прозорий другий шар для підготовки MDT: стандартний і агресивний треки, red flags, контекст дозування, source IDs і статус ревʼю в одному вікні.</p>
-          <ul>
-            <li>Два треки лікування: guideline-grade та trial-aware</li>
-            <li>Біомаркери, ниркові, печінкові й інфекційні ризики видно до sign-off</li>
-            <li>Кожна гілка аудіюється через джерела та YAML provenance</li>
-          </ul>
-          <a class="home-carousel-cta" href="/ukr/try.html">Побудувати віртуальний план →</a>
-        </article>
-        <article class="home-carousel-slide" id="home-slide-investor" data-home-panel="investor">
-          <p class="home-carousel-eyebrow">Infrastructure thesis</p>
-          <h2>Керований open layer для онкологічної decision infrastructure.</h2>
-          <p>Це не wrapper навколо chatbot. Це клінічна knowledge graph, rule engine, публічний стек специфікацій і канал дистрибуції для лікарень, лабораторій та AI-assisted contributors.</p>
-          <ul>
-            <li>Публічний корпус, rule engine і specs розвиваються як окремі auditable assets</li>
-            <li>Чітке non-device CDS positioning і видимі clinical review gates</li>
-            <li>Відкритий корпус створює trust, auditability та ecosystem leverage</li>
-          </ul>
-          <a class="home-carousel-cta" href="/ukr/about.html">Подивитись проєкт →</a>
-        </article>
-        <article class="home-carousel-slide" id="home-slide-lab" data-home-panel="lab">
-          <p class="home-carousel-eyebrow">Molecular handoff</p>
-          <h2>Перетворюйте біомаркерні звіти на actionable context для команди.</h2>
-          <p>Лабораторія може передати лікарю структурований міст від NGS і патології до disease-specific actionability, trial-aware опцій і prefill профілю пацієнта без приватних даних на публічному сайті.</p>
-          <ul>
-            <li>Variant і biomarker context звʼязаний із хворобою, режимом і monitoring</li>
-            <li>QR/profile handoff може заповнити браузерний plan builder</li>
-            <li>CIViC-derived evidence залишається citable та inspectable</li>
-          </ul>
-          <a class="home-carousel-cta" href="/ukr/kb.html">Відкрити actionability →</a>
-        </article>
-        <article class="home-carousel-slide" id="home-slide-patient" data-home-panel="patient">
-          <p class="home-carousel-eyebrow">Пояснення для пацієнта</p>
-          <h2>Зрозуміла версія плану для розмови з лікарем.</h2>
-          <p>OpenOnco може показати ту саму клінічну логіку простою мовою: що план має зробити, чому важливі аналізи й біомаркери, і які питання пацієнт має повернути онкологічній команді.</p>
-          <ul>
-            <li>Plain-language summary без заміни рішення лікаря</li>
-            <li>Допомагає зрозуміти біомаркери, monitoring і warning signs</li>
-            <li>Фінальний вибір лікування залишається за лікарем</li>
-          </ul>
-          <a class="home-carousel-cta" href="/ukr/try.html">Подивитись patient-friendly план →</a>
-        </article>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -130,44 +77,5 @@
     Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
   </footer>
 </main>
-<script>
-(() => {
-  const root = document.querySelector('[data-home-carousel]');
-  if (!root) return;
-  const tabs = Array.from(root.querySelectorAll('[data-home-slide]'));
-  const panels = Array.from(root.querySelectorAll('[data-home-panel]'));
-  let active = 0;
-  let timer = null;
-
-  function show(index, userInitiated = false) {
-    active = (index + panels.length) % panels.length;
-    tabs.forEach((tab, i) => {
-      const on = i === active;
-      tab.classList.toggle('is-active', on);
-      tab.setAttribute('aria-selected', on ? 'true' : 'false');
-    });
-    panels.forEach((panel, i) => {
-      panel.classList.toggle('is-active', i === active);
-    });
-    if (userInitiated) restart();
-  }
-
-  function restart() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    clearInterval(timer);
-    timer = window.setInterval(() => show(active + 1), 5000);
-  }
-
-  tabs.forEach((tab, i) => tab.addEventListener('click', () => show(i, true)));
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      clearInterval(timer);
-    } else {
-      restart();
-    }
-  });
-  restart();
-})();
-</script>
 </body>
 </html>

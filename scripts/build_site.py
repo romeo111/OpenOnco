@@ -840,10 +840,10 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 
 _NAV_LABELS = {
-    "uk": {"home": "Головна", "about": "About", "try_cta": "Спробувати →",
-           "diseases": "Хвороби", "ask": "Tumor board Q"},
+    "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "Спробувати →",
+           "diseases": "Хвороби", "ask": "Tumor Board", "kb": "База знань"},
     "en": {"home": "Home", "about": "About", "try_cta": "Try it →",
-           "diseases": "Diseases", "ask": "Tumor board Q"},
+           "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki"},
 }
 
 
@@ -889,7 +889,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
                     lang_switch_href: str = "/ukr/") -> str:
     """Top navigation bar with:
     - brand on the left → links to home
-    - reading-only nav (Home, Capabilities, Onco Wiki, Tumor board Q, About)
+    - reading-only nav (Home, Capabilities, Onco Wiki, Tumor Board, About)
       in the middle
     - language switcher (UA / EN toggle) on the right
     - prominent CTA "Try it" button on the far right (action, not reading)
@@ -930,7 +930,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     en_tag, en_attr = ("a", f' href="{lang_switch_href}"') if is_uk else ("span", "")
 
     kb_href = "/ukr/kb.html" if target_lang == "uk" else "/kb.html"
-    kb_label = "Onco Wiki"
+    kb_label = labels["kb"]
     kb_active_attr = ' class="active"' if active in {"kb", "diseases"} else ""
 
     return f"""<header class="top-bar">
@@ -980,10 +980,12 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
         )
         primary = "Build a virtual plan"
         secondary = "Explore the knowledge base"
+        tertiary = "Ask AI"
         note = "No real patient data. Synthetic examples only. Informational support, not a medical device."
         footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
         try_href = "/try.html"
         kb_href = "/kb.html"
+        ask_href = "/ask.html"
         about_href = "/about.html"
         carousel_label = "Audience"
         carousel_slides = [
@@ -1071,10 +1073,12 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
         )
         primary = "Побудувати віртуальний план"
         secondary = "Відкрити базу знань"
+        tertiary = "Запитай АІ"
         note = "Без реальних пацієнтських даних. Лише синтетичні приклади. Інформаційна підтримка, не медичний пристрій."
         footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
         try_href = "/ukr/try.html"
         kb_href = "/ukr/kb.html"
+        ask_href = "/ukr/ask.html"
         about_href = "/ukr/about.html"
         carousel_label = "Аудиторія"
         carousel_slides = [
@@ -1180,11 +1184,11 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0a2e1a">
+<meta name="theme-color" content="#14532d">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css" rel="stylesheet">
 </head>
-<body>
+<body class="home-page">
 {_render_top_bar(active="home", target_lang=target_lang, lang_switch_href=_lang_switch_href("home", target_lang))}
 
 <main class="home-main">
@@ -1196,16 +1200,9 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
       <div class="cta-row">
         <a class="btn btn-primary" href="{try_href}">{primary}</a>
         <a class="btn btn-secondary" href="{kb_href}">{secondary}</a>
+        <a class="btn btn-secondary" href="{ask_href}">{tertiary}</a>
       </div>
       <p class="home-note">{note}</p>
-      <div class="home-carousel" data-home-carousel aria-label="{carousel_label}">
-        <div class="home-carousel-tabs" role="tablist" aria-label="{carousel_label}">
-{carousel_tabs_html}
-        </div>
-        <div class="home-carousel-track">
-{carousel_slides_html}
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1215,45 +1212,6 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
     {footer}
   </footer>
 </main>
-<script>
-(() => {{
-  const root = document.querySelector('[data-home-carousel]');
-  if (!root) return;
-  const tabs = Array.from(root.querySelectorAll('[data-home-slide]'));
-  const panels = Array.from(root.querySelectorAll('[data-home-panel]'));
-  let active = 0;
-  let timer = null;
-
-  function show(index, userInitiated = false) {{
-    active = (index + panels.length) % panels.length;
-    tabs.forEach((tab, i) => {{
-      const on = i === active;
-      tab.classList.toggle('is-active', on);
-      tab.setAttribute('aria-selected', on ? 'true' : 'false');
-    }});
-    panels.forEach((panel, i) => {{
-      panel.classList.toggle('is-active', i === active);
-    }});
-    if (userInitiated) restart();
-  }}
-
-  function restart() {{
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    clearInterval(timer);
-    timer = window.setInterval(() => show(active + 1), 5000);
-  }}
-
-  tabs.forEach((tab, i) => tab.addEventListener('click', () => show(i, true)));
-  document.addEventListener('visibilitychange', () => {{
-    if (document.hidden) {{
-      clearInterval(timer);
-    }} else {{
-      restart();
-    }}
-  }});
-  restart();
-}})();
-</script>
 </body>
 </html>
 """
