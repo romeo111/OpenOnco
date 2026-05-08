@@ -1,0 +1,98 @@
+id: RF-AITL-ROMIDEPSIN-INELIGIBLE
+definition: >
+  Romidepsin inaccessible, contraindicated, or intolerant in AITL 2L+.
+  Scenarios driving ineligibility: (1) Access — romidepsin is not
+  approved in Ukraine (as of 2026); available only via named-patient
+  programme or clinical trial; many patients cannot access; (2) Cardiac
+  contraindication — class I/II QTc-prolonging cardiac arrhythmia or
+  baseline QTc ≥480 ms; romidepsin HDACi class causes dose-dependent
+  QTc prolongation and is contraindicated in significant baseline
+  arrhythmia; (3) Prior HDACi intolerance — prior romidepsin or
+  belinostat-related grade ≥3 cardiac event, thrombocytopenia, or GI
+  toxicity requiring discontinuation. In all cases belinostat (BELIEF,
+  2014; PTCL ORR 25.8%, AITL ORR ~46%) is the preferred alternative
+  HDACi: less QTc prolongation than romidepsin, IV weekly schedule,
+  and UA-accessible via named-patient. Azacitidine remains an orthogonal
+  alternative (HMA, not HDACi) routed via step 1 default.
+definition_ua: >
+  Ромідепсин недоступний, протипоказаний або непереносимий при AITL 2L+.
+  Сценарії: (1) Доступність — ромідепсин не зареєстрований в Україні
+  (станом на 2026 р.); доступний лише через програму іменованого пацієнта
+  або клінічне дослідження; (2) Кардіальне протипоказання — аритмія I/II
+  класу з подовженням QTc або вихідний QTc ≥480 мс; HDACi-клас ромідепсину
+  спричиняє дозозалежне подовження QTc; (3) Попередня непереносимість
+  HDACi — попередня небажана реакція ≥3 ступеня (кардіальна, тромбоцитопенія,
+  ШКТ) з відміною. У всіх випадках белінностат (BELIEF 2014; ORR при AITL
+  ~46%) є кращою альтернативою HDACi: менше подовжує QTc, вводиться
+  внутрішньовенно щотижня, доступний в Україні через іменованого пацієнта.
+  Азацитидин залишається ортогональною альтернативою (HMA, не HDACi),
+  маршрутизованою через крок 1 за замовчуванням.
+
+trigger:
+  type: treatment_contraindication
+  any_of:
+    - finding: "romidepsin_accessible"
+      value: false
+    - finding: "romidepsin_access"
+      value: "not_available"
+    - finding: "romidepsin_access"
+      value: "inaccessible"
+    - finding: "romidepsin_intolerant"
+      value: true
+    - finding: "prior_romidepsin_intolerance"
+      value: true
+    - finding: "qtc_prolonged_baseline"
+      value: true
+    - finding: "qtc_ms"
+      threshold: 480
+      comparator: ">="
+    - finding: "baseline_cardiac_arrhythmia"
+      value: true
+    - finding: "hdaci_cardiac_contraindication"
+      value: true
+    - finding: "hdaci_intolerant"
+      value: true
+
+clinical_direction: de-escalate
+severity: major
+priority: 65
+category: fitness-eligibility
+
+relevant_diseases:
+  - DIS-AITL
+
+branch_targets:
+  ALGO-AITL-2L: "3"
+
+shifts_algorithm:
+  - ALGO-AITL-2L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-05-08"
+draft: true
+
+notes: >
+  This RF fires at ALGO-AITL-2L step 3, which is only reached when
+  step 1 (azacitidine default) evaluated if_false AND step 2 (romidepsin
+  composite with HDAC-naive + accessible + no cardiac) evaluated if_false.
+  Step 3 is the disambiguation gate: if romidepsin inaccessible/intolerant
+  → belinostat; else → azacitidine fallback. The primary cardiac risk gate
+  (HDAC-naive + accessible + no cardiac arrhythmia) lives in step 2 as
+  an MDT-composite — this RF captures the inverse (ineligibility) at step 3.
+  Belinostat QTc note: belinostat also prolongs QTc but less severely than
+  romidepsin; MDT cardiac review still recommended before initiating any
+  HDACi in patients with arrhythmia history.
+  Draft pending two-reviewer clinical co-lead signoff (CHARTER §6.1).
+notes_ua: >
+  Цей RF спрацьовує на кроці 3 ALGO-AITL-2L, до якого доходять лише тоді,
+  коли крок 1 (азацитидин за замовч.) — хибний, а крок 2 (ромідепсин:
+  HDAC-naive + доступний + немає аритмії) — хибний. Крок 3 — ворота
+  диференціації: якщо ромідепсин недоступний/непереносимий → белінностат;
+  інакше → азацитидин (запасний). Первинні кардіальні ворота (HDAC-naive
+  + доступний + без аритмії) знаходяться на кроці 2 як MDT-composite.
+  Примітка щодо QTc белінностату: також подовжує QTc, але менш виражено;
+  рекомендується МДТ-кардіологічний огляд. Чернетка — очікується підпис
+  двох клінічних співкерівників (CHARTER §6.1).

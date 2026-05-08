@@ -1,0 +1,89 @@
+id: RF-NLPBL-RT-CONTRAINDICATED
+definition: >
+  Radiotherapy contraindicated or declined for early-stage NLPBL
+  (nodular lymphocyte-predominant B-cell lymphoma, WHO 5th ed).
+  Major clinical scenarios: (1) Young patient with breast or thyroid
+  field overlap — cumulative RT dose risk of secondary malignancy and
+  cardiac toxicity unacceptable; (2) Prior RT to the involved or
+  adjacent region — reirradiation risks exceed benefit; (3) Patient
+  refuses RT after informed discussion. In all scenarios rituximab
+  monotherapy (4–8 × R weekly) achieves ~94% ORR with ≥70% CR in
+  early-stage NLPBL (Advani 2014, IELSG-37 data) and is the accepted
+  standard alternative. RT remains the default for eligible patients
+  where field is safe and patient consents (stage IA-IIA, ≤2 cm).
+definition_ua: >
+  Протипоказання або відмова від променевої терапії (ПТ) при ранній
+  стадії NLPBL (нодулярна лімфома з переважанням лімфоцитів, 5-е вид.
+  ВООЗ). Головні клінічні сценарії: (1) Молодий пацієнт — перекриття
+  поля ПТ з молочною залозою або щитоподібною залозою (ризик вторинної
+  пухлини та кардіотоксичності неприйнятний); (2) Попередня ПТ на ту
+  саму або суміжну область; (3) Пацієнт відмовляється від ПТ після
+  поінформованого обговорення. В усіх випадках монотерапія ритуксимабом
+  (4–8 введень щотижня) дає ~94% ORR при ≥70% CR при ранній стадії
+  NLPBL (Advani 2014, дані IELSG-37) і є прийнятим стандартним
+  альтернативним варіантом. ПТ залишається стандартом для придатних
+  пацієнтів (стадія IA-IIA, ≤2 см, поле безпечне, пацієнт дає згоду).
+
+trigger:
+  type: treatment_contraindication
+  any_of:
+    - finding: "rt_contraindicated"
+      value: true
+    - finding: "radiotherapy_contraindicated"
+      value: true
+    - finding: "prior_rt_to_field"
+      value: true
+    - finding: "prior_radiotherapy_adjacent_field"
+      value: true
+    - finding: "breast_field_rt_overlap"
+      value: true
+    - finding: "thyroid_field_rt_overlap"
+      value: true
+    - finding: "patient_refuses_radiotherapy"
+      value: true
+    - finding: "rt_patient_preference"
+      value: "declined"
+
+clinical_direction: de-escalate
+severity: major
+priority: 70
+category: fitness-eligibility
+
+relevant_diseases:
+  - DIS-NLPBL
+
+branch_targets:
+  ALGO-NLPBL-1L: "2"
+
+shifts_algorithm:
+  - ALGO-NLPBL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-08"
+draft: true
+
+notes: >
+  Only applies after step 1 confirms early-stage (IA-IIA) disease —
+  advanced NLPBL routes to R-CHOP at step 1 before this RF fires.
+  RT-field safety is a nuanced clinical judgment: 'breast field overlap'
+  applies most to left-axillary or mediastinal-adjacent presentations in
+  premenopausal women; thyroid overlap relevant for high cervical/upper
+  mediastinal nodes. MDT coordination with radiation oncology to assess
+  field feasibility is recommended before classifying RT as contraindicated.
+  Note: NLPBL differs from classic Hodgkin lymphoma — ABVD is NOT
+  appropriate (CD20+ B-cell; rituximab is the active backbone).
+  IELSG-37 RCT (rituximab mono vs ISRT vs observation for very-favorable
+  NLPBL) provides the comparative evidence base; pending mature OS data.
+  Draft pending two-reviewer clinical co-lead signoff (CHARTER §6.1).
+notes_ua: >
+  Застосовується лише після того, як крок 1 підтверджує ранню стадію
+  (IA-IIA) — поширена NLPBL маршрутизується до R-CHOP на кроці 1 до
+  спрацювання цього RF. Безпека поля ПТ — це тонке клінічне рішення:
+  «перекриття поля молочної залози» актуальне переважно для лівої
+  аксилярної або медіастинальної суміжної локалізації у жінок до
+  менопаузи; перекриття щитоподібної залози — для шийних/верхніх
+  медіастинальних лімфовузлів. Рекомендується МДТ-координація з
+  радіаційним онкологом. Чернетка — очікується підпис двох клінічних
+  співкерівників (CHARTER §6.1).
