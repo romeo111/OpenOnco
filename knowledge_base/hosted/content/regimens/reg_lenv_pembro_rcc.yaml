@@ -3,81 +3,77 @@ name: "Lenvatinib + pembrolizumab (RCC, 1L)"
 name_ua: "Ленватиніб + пембролізумаб (НКК, 1L)"
 alternate_names: ["CLEAR", "LEAP-011", "lenvima+keytruda"]
 components:
-  - drug_id: DRUG-LENVATINIB
-    dose: "20 mg PO daily"
-    schedule: "Continuous daily dosing"
-    route: PO
-  - drug_id: DRUG-PEMBROLIZUMAB
-    dose: "200 mg IV q3w (or 400 mg q6w)"
-    schedule: "Until progression or 2 years maximum"
-    route: IV
+- drug_id: DRUG-LENVATINIB
+  dose: "20 mg PO daily"
+  schedule: "Continuous daily dosing"
+  route: PO
+- drug_id: DRUG-PEMBROLIZUMAB
+  dose: "200 mg IV q3w (or 400 mg q6w)"
+  schedule: "Until progression or 2 years maximum"
+  route: IV
 cycle_length_days: 21
 total_cycles: "Until progression or max 35 cycles (~2 years) for pembrolizumab; lenvatinib continues until progression"
 toxicity_profile: severe
 premedication: []
-mandatory_supportive_care:
-  - "Blood pressure monitoring (hypertension grade 3-4 in ~36% — highest of ICI+TKI combos)"
-  - "Proteinuria monitoring (UPCR or 24h urine q4-8w)"
-  - "Thyroid function q12w (both lenvatinib and pembrolizumab cause thyroid dysfunction)"
-  - "LFTs periodically (immune-mediated hepatitis)"
+mandatory_supportive_care: []
 monitoring_schedule_id:
 dose_adjustments:
-  - condition: "Grade 3 hypertension"
-    modification: "Hold lenvatinib; reduce to 14 mg → 10 mg → 8 mg on resumption"
-  - condition: "Grade 4 hypertension or hypertensive crisis"
-    modification: "Permanently discontinue lenvatinib"
-  - condition: "UPCR ≥ 2 g/24h"
-    modification: "Hold lenvatinib until < 2 g; reduce dose on resumption"
-  - condition: "Immune-mediated AE G≥2 from pembrolizumab"
-    modification: "Hold pembrolizumab; corticosteroids if G≥3"
-  - condition: "G3 non-hematologic lenvatinib AE"
-    modification: "Hold; reduce by one dose level on resumption"
+- condition: "Grade 3 hypertension"
+  modification: "Hold lenvatinib; reduce to 14 mg → 10 mg → 8 mg on resumption"
+- condition: "Grade 4 hypertension or hypertensive crisis"
+  modification: "Permanently discontinue lenvatinib"
+- condition: "UPCR ≥ 2 g/24h"
+  modification: "Hold lenvatinib until < 2 g; reduce dose on resumption"
+- condition: "Immune-mediated AE G≥2 from pembrolizumab"
+  modification: "Hold pembrolizumab; corticosteroids if G≥3"
+- condition: "G3 non-hematologic lenvatinib AE"
+  modification: "Hold; reduce by one dose level on resumption"
 ukraine_availability:
   all_components_registered: true
   all_components_reimbursed: false
   notes: "Lenvatinib registered; pembrolizumab registered. Both largely out-of-pocket."
 sources:
-  - SRC-CLEAR-MOTZER-2021
-  - SRC-NCCN-KIDNEY-2025
-  - SRC-ESMO-RCC-2024
+- SRC-CLEAR-MOTZER-2021
+- SRC-NCCN-KIDNEY-2025
+- SRC-ESMO-RCC-2024
 
 between_visit_watchpoints:
-  - trigger_ua: "Підвищений кров'яний тиск (≥150/100 або сильний головний біль)"
-    action_ua: "Подзвоніть у клініку того ж дня — гіпертензія дуже поширена і потребує активного лікування"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Any day"
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Виражені набряки ніг або задишка"
-    action_ua: "Подзвоніть у клініку того ж дня — можлива серцева недостатність або тромбоз"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Діарея більше 4 разів на день або слизистий/кров'яний стілець"
-    action_ua: "Подзвоніть у клініку — діарея від ленватинібу та імунний коліт від пембролізумабу; раннє розрізнення важливе"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Жовтяниця або потемніння сечі"
-    action_ua: "Зверніться до лікарні — можливий імунний гепатит чи токсичність ленватинібу"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Нова задишка, сухий кашель"
-    action_ua: "Подзвоніть у клініку — можливий імунний пневмоніт"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Болючість або виразки в роті (стоматит)"
-    action_ua: "Поширений від ленватинібу — полощіть рот, м'яка їжа; повідомте на наступному візиті"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-KIDNEY-2025
-  - trigger_ua: "Раптова гостра біль у животі"
-    action_ua: "Зверніться до лікарні — ризик перфорації від ленватинібу"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Підвищений кров'яний тиск (≥150/100 або сильний головний біль)"
+  action_ua: "Подзвоніть у клініку того ж дня — гіпертензія дуже поширена і потребує активного лікування"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Any day"
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Виражені набряки ніг або задишка"
+  action_ua: "Подзвоніть у клініку того ж дня — можлива серцева недостатність або тромбоз"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Діарея більше 4 разів на день або слизистий/кров'яний стілець"
+  action_ua: "Подзвоніть у клініку — діарея від ленватинібу та імунний коліт від пембролізумабу; раннє розрізнення важливе"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Жовтяниця або потемніння сечі"
+  action_ua: "Зверніться до лікарні — можливий імунний гепатит чи токсичність ленватинібу"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Нова задишка, сухий кашель"
+  action_ua: "Подзвоніть у клініку — можливий імунний пневмоніт"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Болючість або виразки в роті (стоматит)"
+  action_ua: "Поширений від ленватинібу — полощіть рот, м'яка їжа; повідомте на наступному візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-KIDNEY-2025
+- trigger_ua: "Раптова гостра біль у животі"
+  action_ua: "Зверніться до лікарні — ризик перфорації від ленватинібу"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-KIDNEY-2025
 
 last_reviewed: "2026-05-03"
 notes: >

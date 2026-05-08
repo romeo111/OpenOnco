@@ -33,7 +33,6 @@ It makes the five largest known gaps measurable and repeatable.
   - `DIS-CHONDROSARCOMA`: Chondrosarcoma
   - `DIS-EPITHELIOID-SARCOMA`: Epithelioid sarcoma
   - `DIS-GI-NET`: GI neuroendocrine tumor (carcinoid)
-  - `DIS-GIST`: Gastrointestinal stromal tumor
   - `DIS-GLIOMA-LOW-GRADE`: Low-grade glioma
   - `DIS-GRANULOSA-CELL`: Adult granulosa cell tumor
   - `DIS-IFS`: Infantile fibrosarcoma
@@ -89,6 +88,7 @@ It makes the five largest known gaps measurable and repeatable.
   - `REG-CABAZITAXEL-MCRPC`
   - `REG-CABOZANTINIB-HCC`
   - `REG-CABOZANTINIB-MTC-1L`
+  - `REG-CABOZANTINIB-RCC`
   - `REG-CAPE-BEV-MAINTENANCE`
   - `REG-CAPECITABINE-CRT-CONCURRENT`
   - `REG-CAPECITABINE-PALLIATIVE`

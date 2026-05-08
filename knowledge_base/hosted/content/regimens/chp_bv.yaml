@@ -4,24 +4,36 @@ name_ua: "Брентуксимаб ведотин + CHP (CHP-Bv), 6 циклів
 alternate_names: ["A+CHP", "Bv-CHP", "ECHELON-2"]
 
 components:
-  - {drug_id: DRUG-BRENTUXIMAB-VEDOTIN, dose: "1.8 mg/kg", schedule: "IV day 1 each 21-day cycle × 6", route: IV}
-  - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "750 mg/m²", schedule: "IV day 1 each cycle", route: IV}
-  - {drug_id: DRUG-DOXORUBICIN, dose: "50 mg/m²", schedule: "IV day 1 each cycle", route: IV}
-  - {drug_id: DRUG-PREDNISONE, dose: "100 mg", schedule: "PO days 1-5 each cycle", route: PO}
+- {drug_id: DRUG-BRENTUXIMAB-VEDOTIN, dose: "1.8 mg/kg", schedule: "IV day 1 each
+    21-day cycle × 6", route: IV}
+- {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "750 mg/m²", schedule: "IV day 1 each cycle",
+  route: IV}
+- {drug_id: DRUG-DOXORUBICIN, dose: "50 mg/m²", schedule: "IV day 1 each cycle", 
+    route: IV}
+- {drug_id: DRUG-PREDNISONE, dose: "100 mg", schedule: "PO days 1-5 each cycle", 
+    route: PO}
 
 cycle_length_days: 21
 total_cycles: "6"
 toxicity_profile: moderate-high
 
-premedication: ["Antihistamine + acetaminophen before brentuximab", "Antiemetic premedications (dexamethasone + 5-HT3 antagonist)"]
-mandatory_supportive_care: [SUP-PJP-PROPHYLAXIS, SUP-ANTIEMETIC-PREMED]
+premedication: ["Antihistamine + acetaminophen before brentuximab", "Antiemetic premedications
+    (dexamethasone + 5-HT3 antagonist)"]
+mandatory_supportive_care:
+- SUP-PJP-PROPHYLAXIS
+- SUP-ANTIEMETIC-PREMED
 monitoring_schedule_id: MON-R-CHOP-REGIMEN  # reuse — same baseline + on-treatment structure
 
 dose_adjustments:
-  - {condition: "Grade ≥2 peripheral neuropathy", modification: "Hold or reduce brentuximab; vincristine NOT given (CHP, not CHOP — vincristine omitted to reduce neuropathy stack with brentuximab MMAE)"}
-  - {condition: "Cumulative anthracycline >450-500 mg/m²", modification: "Echo + LVEF check before next dose"}
+- {condition: "Grade ≥2 peripheral neuropathy", modification: "Hold or reduce brentuximab;
+    vincristine NOT given (CHP, not CHOP — vincristine omitted to reduce neuropathy
+    stack with brentuximab MMAE)"}
+- {condition: "Cumulative anthracycline >450-500 mg/m²", modification: "Echo + LVEF
+    check before next dose"}
 
-ukraine_availability: {all_components_registered: true, all_components_reimbursed: false, notes: "Brentuximab not НСЗУ-reimbursed; CHOEP fallback (etoposide replaces brentuximab) when not accessible"}
+ukraine_availability: {all_components_registered: true, 
+    all_components_reimbursed: false, notes: "Brentuximab not НСЗУ-reimbursed; CHOEP
+    fallback (etoposide replaces brentuximab) when not accessible"}
 sources: [SRC-NCCN-BCELL-2025]
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
@@ -29,48 +41,48 @@ sources: [SRC-NCCN-BCELL-2025]
 # replaces vincristine; signature toxicity is BV neuropathy + IRR +
 # anthracycline cardiac. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
-    action_ua: "Брентуксимаб може спричиняти нейропатію — занотовуйте інтенсивність"
-    urgency: log_at_next_visit
-    cycle_day_window: "Day 14+"
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна втома, випадання волосся"
-    action_ua: "Очікувано — волосся повертається після курсу"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна нудота"
-    action_ua: "Приймайте призначені протиблювотні"
-    urgency: log_at_next_visit
-    cycle_day_window: "Day 1-3"
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Поколювання стає сильним, заважає в побуті"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози брентуксимабу"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Нова задишка при навантаженні, набряки гомілок"
-    action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Тяжка реакція на інфузію брентуксимабу: задишка, висип, набряк обличчя"
-    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
-    urgency: er_now
-    cycle_day_window: "Day 1 of cycle 1"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
+- trigger_ua: "Поколювання або оніміння в кистях/стопах"
+  action_ua: "Брентуксимаб може спричиняти нейропатію — занотовуйте інтенсивність"
+  urgency: log_at_next_visit
+  cycle_day_window: "Day 14+"
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома, випадання волосся"
+  action_ua: "Очікувано — волосся повертається після курсу"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна нудота"
+  action_ua: "Приймайте призначені протиблювотні"
+  urgency: log_at_next_visit
+  cycle_day_window: "Day 1-3"
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Поколювання стає сильним, заважає в побуті"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози брентуксимабу"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Нова задишка при навантаженні, набряки гомілок"
+  action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Тяжка реакція на інфузію брентуксимабу: задишка, висип, набряк обличчя"
+  action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+  urgency: er_now
+  cycle_day_window: "Day 1 of cycle 1"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -81,6 +93,10 @@ notes: >
   ALCL is universally CD30+ → CHP-Bv preferred. PTCL NOS / AITL
   ~40-60% CD30+ → CHP-Bv if expression confirmed; else CHOEP.
 notes_ua: >
-  ECHELON-2 дослідження (Horwitz 2019): CHP-Bv перевершує CHOP for CD30+ systemic ALCL + CD30+ PTCL/AITL — покращений PFS + OS (~85% 3-річна ВБП for ALCL ALK-). вінкристин REPLACED by brentuximab (avoiding additive MMAE нейропатія stack). Patients must be CD30+ ≥10% by IHC. ALCL is universally CD30+ → CHP-Bv переважний. PTCL NOS / AITL ~40-60% CD30+ → CHP-Bv if експресія confirmed; else CHOEP.
+  ECHELON-2 дослідження (Horwitz 2019): CHP-Bv перевершує CHOP for CD30+ systemic
+  ALCL + CD30+ PTCL/AITL — покращений PFS + OS (~85% 3-річна ВБП for ALCL ALK-). вінкристин
+  REPLACED by brentuximab (avoiding additive MMAE нейропатія stack). Patients must
+  be CD30+ ≥10% by IHC. ALCL is universally CD30+ → CHP-Bv переважний. PTCL NOS /
+  AITL ~40-60% CD30+ → CHP-Bv if експресія confirmed; else CHOEP.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

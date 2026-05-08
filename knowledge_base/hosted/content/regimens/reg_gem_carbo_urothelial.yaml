@@ -1,12 +1,13 @@
 id: REG-GEM-CARBO-UROTHELIAL
+name: "Gemcitabine + carboplatin (urothelial carcinoma, cisplatin-ineligible)"
 disease_context: DIS-UROTHELIAL
 line_of_therapy: 2
 plan_track: standard
 
 regimen_type: "chemotherapy"
 
-agents:
-  - drug_id: DRG-GEMCITABINE
+components:
+  - drug_id: DRUG-GEMCITABINE
     dose: "1000 mg/m² IV over 30 min"
     route: IV
     schedule: "Days 1 and 8 q21d"
@@ -17,7 +18,7 @@ agents:
         action: "Omit day 8; add G-CSF prophylaxis next cycle"
       - trigger: "Grade ≥3 mucositis"
         action: "Reduce to 750 mg/m²"
-  - drug_id: DRG-CARBOPLATIN
+  - drug_id: DRUG-CARBOPLATIN
     dose: "AUC 5 IV over 30 min (Calvert formula: dose [mg] = AUC × [GFR + 25])"
     route: IV
     schedule: "Day 1 q21d (after gemcitabine infusion)"

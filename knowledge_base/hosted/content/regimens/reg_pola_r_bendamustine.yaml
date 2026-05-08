@@ -2,55 +2,62 @@ id: REG-POLA-R-BENDAMUSTINE
 name: "Polatuzumab vedotin + Rituximab + Bendamustine (Pola-BR), 6 cycles"
 name_ua: "Полатузумаб ведотин + Ритуксимаб + Бендамустин (Pola-BR), 6 циклів"
 alternate_names:
-  - "Pola-BR"
-  - "Pola+BR"
-  - "GO29365 regimen"
+- "Pola-BR"
+- "Pola+BR"
+- "GO29365 regimen"
 
 components:
-  - drug_id: DRUG-POLATUZUMAB-VEDOTIN
-    dose: "1.8 mg/kg"
-    schedule: "IV day 2 of cycle 1, day 1 of cycles 2-6"
-    route: IV
-  - drug_id: DRUG-RITUXIMAB
-    dose: "375 mg/m²"
-    schedule: "IV day 1 of each 21-day cycle"
-    route: IV
-  - drug_id: DRUG-BENDAMUSTINE
-    dose: "90 mg/m²"
-    schedule: "IV days 2-3 of each 21-day cycle"
-    route: IV
+- drug_id: DRUG-POLATUZUMAB-VEDOTIN
+  dose: "1.8 mg/kg"
+  schedule: "IV day 2 of cycle 1, day 1 of cycles 2-6"
+  route: IV
+- drug_id: DRUG-RITUXIMAB
+  dose: "375 mg/m²"
+  schedule: "IV day 1 of each 21-day cycle"
+  route: IV
+- drug_id: DRUG-BENDAMUSTINE
+  dose: "90 mg/m²"
+  schedule: "IV days 2-3 of each 21-day cycle"
+  route: IV
 
 cycle_length_days: 21
 total_cycles: "6"
 toxicity_profile: severe
 
 premedication:
-  - "Pre-rituximab: acetaminophen + diphenhydramine ± methylprednisolone (cycle 1)"
-  - "Pre-polatuzumab (first dose): antihistamine + acetaminophen — infusion-related reaction risk"
-  - "Antiemetics — bendamustine is moderate-emetogenic; ondansetron + dexamethasone day 2-3"
-  - "Allopurinol 300 mg PO daily × 7 days for TLS prophylaxis (high tumor burden)"
+- "Pre-rituximab: acetaminophen + diphenhydramine ± methylprednisolone (cycle 1)"
+- "Pre-polatuzumab (first dose): antihistamine + acetaminophen — infusion-related
+  reaction risk"
+- "Antiemetics — bendamustine is moderate-emetogenic; ondansetron + dexamethasone
+  day 2-3"
+- "Allopurinol 300 mg PO daily × 7 days for TLS prophylaxis (high tumor burden)"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-HBV-PROPHYLAXIS
-  - SUP-GCSF-NEUTROPENIA
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
+- SUP-GCSF-NEUTROPENIA
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Grade ≥2 peripheral neuropathy (polatuzumab)"
-    modification: "Hold polatuzumab until ≤Grade 1; resume at 1.4 mg/kg. Discontinue if Grade ≥3 persistent."
-    rationale: "MMAE-induced neuropathy can become permanent; early hold + dose reduction critical"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Grade 4 neutropenia OR febrile neutropenia"
-    modification: "Hold all components; G-CSF support; resume bendamustine at 60 mg/m² (dose level -1) on recovery"
-    rationale: "Cumulative myelosuppression bendamustine + polatuzumab"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Strong CYP3A4 inhibitor concomitant"
-    modification: "Avoid; if unavoidable, monitor closely for MMAE-related neuropathy + myelosuppression"
-    rationale: "Increased MMAE exposure"
-  - condition: "Renal impairment CrCl <30"
-    modification: "Avoid bendamustine (renally cleared metabolites); consider Pola-R alternate"
-    source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Grade ≥2 peripheral neuropathy (polatuzumab)"
+  modification: "Hold polatuzumab until ≤Grade 1; resume at 1.4 mg/kg. Discontinue
+    if Grade ≥3 persistent."
+  rationale: "MMAE-induced neuropathy can become permanent; early hold + dose reduction
+    critical"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Grade 4 neutropenia OR febrile neutropenia"
+  modification: "Hold all components; G-CSF support; resume bendamustine at 60 mg/m²
+    (dose level -1) on recovery"
+  rationale: "Cumulative myelosuppression bendamustine + polatuzumab"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Strong CYP3A4 inhibitor concomitant"
+  modification: "Avoid; if unavoidable, monitor closely for MMAE-related neuropathy
+    + myelosuppression"
+  rationale: "Increased MMAE exposure"
+- condition: "Renal impairment CrCl <30"
+  modification: "Avoid bendamustine (renally cleared metabolites); consider Pola-R
+    alternate"
+  source_refs: [SRC-NCCN-BCELL-2025]
 
 ukraine_availability:
   all_components_registered: true
@@ -62,47 +69,47 @@ ukraine_availability:
     out-of-pocket) MUST be confirmed before plan finalization.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Pola-R-bendamustine for R/R DLBCL transplant-ineligible (GO29365).
 # Polatuzumab neuropathy + bendamustine cytopenia + rituximab IRR.
 # STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
-    action_ua: "Полатузумаб може спричиняти нейропатію — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна втома, нудота"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C — особливо на 14-21 день"
-    action_ua: "Подзвоніть у клініку того ж дня — бендамустин дає глибоку тривалу нейтропенію"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 14-21"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Поколювання стає сильним болем"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози полатузумабу"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна реакція на інфузію ритуксимабу"
-    action_ua: "Повідомте медсестру негайно — інфузію сповільнюють"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 1 of cycle 1"
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Тяжка інфузійна реакція або сепсис"
-    action_ua: "Звертайтесь у лікарню негайно"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Поколювання або оніміння в кистях/стопах"
+  action_ua: "Полатузумаб може спричиняти нейропатію — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома, нудота"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C — особливо на 14-21 день"
+  action_ua: "Подзвоніть у клініку того ж дня — бендамустин дає глибоку тривалу нейтропенію"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 14-21"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Поколювання стає сильним болем"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози полатузумабу"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна реакція на інфузію ритуксимабу"
+  action_ua: "Повідомте медсестру негайно — інфузію сповільнюють"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 1 of cycle 1"
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Тяжка інфузійна реакція або сепсис"
+  action_ua: "Звертайтесь у лікарню негайно"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -113,6 +120,11 @@ notes: >
   patients — verify CD20 retention by repeat IHC). Bendamustine
   myelosuppression cumulative — GCSF prophylaxis recommended.
 notes_ua: >
-  GO29365 randomized phase 1b/2 (Sehn 2020): in р/р DLBCL непридатний для аутоТГСК, Pola-BR vs BR alone showed CR 40% проти 18%, mPFS 9.5 проти 3.7 міс., міс. 12.4 проти 4.7 mo. схвалений 2L+ for непридатний до трансплантації р/р DLBCL. Active CD20 + CD79b експресія both обов'язковий (post-CD19/CD20 CAR-T patients — verify CD20 retention by repeat IHC). бендамустин myelosuppression cumulative — GCSF prophylaxis рекомендований.
+  GO29365 randomized phase 1b/2 (Sehn 2020): in р/р DLBCL непридатний для аутоТГСК,
+  Pola-BR vs BR alone showed CR 40% проти 18%, mPFS 9.5 проти 3.7 міс., міс. 12.4
+  проти 4.7 mo. схвалений 2L+ for непридатний до трансплантації р/р DLBCL. Active
+  CD20 + CD79b експресія both обов'язковий (post-CD19/CD20 CAR-T patients — verify
+  CD20 retention by repeat IHC). бендамустин myelosuppression cumulative — GCSF prophylaxis
+  рекомендований.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

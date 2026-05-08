@@ -1,17 +1,18 @@
 id: REG-EP-GCT
+name: "EP (etoposide + cisplatin, germ cell tumor)"
 disease_context: DIS-TESTICULAR-GCT
 line_of_therapy: 1
 plan_track: standard
 
-agents:
-  - drug_id: DRG-ETOPOSIDE
+components:
+  - drug_id: DRUG-ETOPOSIDE
     dose: "100 mg/m²/day IV over 60 min"
     route: IV
     schedule: "Days 1-5 of each 21-day cycle"
     dose_modifications:
       - trigger: "ANC <1000 or platelets <50K on day 1"
         action: "Delay until ANC ≥1000 + platelets ≥75K"
-  - drug_id: DRG-CISPLATIN
+  - drug_id: DRUG-CISPLATIN
     dose: "20 mg/m²/day IV over 60 min with aggressive hydration"
     route: IV
     schedule: "Days 1-5 of each 21-day cycle (total 100 mg/m² per cycle)"

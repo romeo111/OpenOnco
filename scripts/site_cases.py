@@ -6042,4 +6042,16 @@ CASES: list[CaseEntry] = [
     ),
     # ── /DIAGNOSTIC-MODE COMPLETION 2026-05-01 ──
 
+    # ── AUTO-BMA-EXAMPLES (do not hand-edit; regen via scripts/generate_bma_examples.py) ──
+    CaseEntry(
+        case_id="bma-bma-met-amp-rcc-papillary",
+        file="bma_bma_met_amp_rcc_papillary.json",
+        label_ua="DIS-RCC · BIO-MET (ESCAT IIA)",
+        summary_ua="Синтетичний профіль: BIO-MET (amplification or activating mutation (papillary type-1 conte). ESCAT IIA. Engine: 5 tracks. Не для клінічних рішень.",
+        badge="BMA", badge_class="bdg-stub", category="solid",
+        label_en="DIS-RCC · BIO-MET (ESCAT IIA)",
+        summary_en="Synthetic profile: BIO-MET (amplification or activating mutation (papillary type-1 conte). ESCAT IIA. Engine: 5 tracks. Not for clinical decisions.",
+    ),
+    # ── /AUTO-BMA-EXAMPLES ──
+
 ]

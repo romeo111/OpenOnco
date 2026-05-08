@@ -2,45 +2,50 @@ id: REGIMEN-TECLISTAMAB-STEP-UP-DOSING-MM
 name: "Teclistamab BCMA × CD3 bispecific — inpatient step-up dosing schedule"
 name_ua: "Теклістамаб BCMA × CD3 біспецифік — стаціонарна схема step-up dosing"
 alternate_names:
-  - "Teclistamab step-up"
-  - "Tecvayli induction"
-  - "MajesTEC-1 step-up phase"
+- "Teclistamab step-up"
+- "Tecvayli induction"
+- "MajesTEC-1 step-up phase"
 
 components:
-  - drug_id: DRUG-TECLISTAMAB
-    dose: >
-      Step-up dose 1: 0.06 mg/kg SC on day 1.
-      Step-up dose 2: 0.3 mg/kg SC on day 4 (≥48h after dose 1).
-      First full treatment dose: 1.5 mg/kg SC on day 7 (≥48h after dose 2).
-    schedule: "Days 1, 4, 7 of a one-time 7-day inpatient induction window"
-    route: SC
+- drug_id: DRUG-TECLISTAMAB
+  dose: >
+    Step-up dose 1: 0.06 mg/kg SC on day 1.
+    Step-up dose 2: 0.3 mg/kg SC on day 4 (≥48h after dose 1).
+    First full treatment dose: 1.5 mg/kg SC on day 7 (≥48h after dose 2).
+  schedule: "Days 1, 4, 7 of a one-time 7-day inpatient induction window"
+  route: SC
 
 cycle_length_days: 7
 total_cycles: "1 (one-time step-up; transition to REGIMEN-TECLISTAMAB-MONO-MM weekly)"
 toxicity_profile: severe
 
 premedication:
-  - "Pre-step-up doses (each of 3 doses): dexamethasone 16 mg IV/PO + diphenhydramine 50 mg IV/PO + acetaminophen 650 mg PO 1-3h before dosing — required for CRS mitigation."
-  - "Tocilizumab 8 mg/kg IV must be on-site for emergency CRS management."
-  - "Hospitalize for ≥48h after each step-up dose AND first full dose (CRS / ICANS surveillance)."
+- "Pre-step-up doses (each of 3 doses): dexamethasone 16 mg IV/PO + diphenhydramine
+  50 mg IV/PO + acetaminophen 650 mg PO 1-3h before dosing — required for CRS mitigation."
+- "Tocilizumab 8 mg/kg IV must be on-site for emergency CRS management."
+- "Hospitalize for ≥48h after each step-up dose AND first full dose (CRS / ICANS surveillance)."
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-IVIG-HYPOGAMMA
-
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-IVIG-HYPOGAMMA
 dose_adjustments:
-  - condition: "CRS Grade 1 (fever ≥38°C only) during step-up"
-    modification: "Acetaminophen + observation; do not advance to next step-up dose until afebrile ≥48h; consider holding next dose 48-72h."
-    source_refs: [SRC-NCCN-MM-2025]
-  - condition: "CRS Grade 2 (hypotension responsive to fluids OR low-flow O₂)"
-    modification: "Tocilizumab 8 mg/kg IV; ± dexamethasone 10 mg IV q6h; supportive care; do not advance step-up until CRS resolved."
-    source_refs: [SRC-NCCN-MM-2025]
-  - condition: "CRS Grade 3-4 OR ICANS Grade 2+"
-    modification: "Tocilizumab + high-dose dexamethasone OR methylprednisolone 1 g/day; ICU; anakinra for refractory; pause step-up indefinitely pending recovery + multidisciplinary review."
-    rationale: "Severe CRS / ICANS may be fatal if untreated."
-  - condition: "Step-up dose delayed >7 days"
-    modification: "Restart step-up at the previous tolerated dose level (per FDA label / MajesTEC-1 protocol)."
-    source_refs: [SRC-MAJESTEC-1-MOREAU-2022]
+- condition: "CRS Grade 1 (fever ≥38°C only) during step-up"
+  modification: "Acetaminophen + observation; do not advance to next step-up dose
+    until afebrile ≥48h; consider holding next dose 48-72h."
+  source_refs: [SRC-NCCN-MM-2025]
+- condition: "CRS Grade 2 (hypotension responsive to fluids OR low-flow O₂)"
+  modification: "Tocilizumab 8 mg/kg IV; ± dexamethasone 10 mg IV q6h; supportive
+    care; do not advance step-up until CRS resolved."
+  source_refs: [SRC-NCCN-MM-2025]
+- condition: "CRS Grade 3-4 OR ICANS Grade 2+"
+  modification: "Tocilizumab + high-dose dexamethasone OR methylprednisolone 1 g/day;
+    ICU; anakinra for refractory; pause step-up indefinitely pending recovery + multidisciplinary
+    review."
+  rationale: "Severe CRS / ICANS may be fatal if untreated."
+- condition: "Step-up dose delayed >7 days"
+  modification: "Restart step-up at the previous tolerated dose level (per FDA label
+    / MajesTEC-1 protocol)."
+  source_refs: [SRC-MAJESTEC-1-MOREAU-2022]
 
 ukraine_availability:
   all_components_registered: false
@@ -52,35 +57,35 @@ ukraine_availability:
     referral only.
 
 sources:
-  - SRC-MAJESTEC-1-MOREAU-2022
-  - SRC-NCCN-MM-2025
+- SRC-MAJESTEC-1-MOREAU-2022
+- SRC-NCCN-MM-2025
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Teclistamab step-up dosing (cycle 1 inpatient). CRS peak during
 # step-up. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна температура у дні step-up"
-    action_ua: "Звертайтесь у лікарню негайно — будь-яка лихоманка може бути CRS"
-    urgency: er_now
-    cycle_day_window: "Day 1-7 step-up"
-    sources:
-      - SRC-NCCN-MM-2025
-      - SRC-MAJESTEC-1-MOREAU-2022
-  - trigger_ua: "Висока лихоманка, низький тиск"
-    action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-MM-2025
-  - trigger_ua: "Розмиття мови, плутаність свідомості"
-    action_ua: "Звертайтесь у лікарню негайно — нейротоксичність"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-MM-2025
-  - trigger_ua: "Реакція в місці підшкірної ін'єкції"
-    action_ua: "Чергуйте місця ін'єкцій"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-MM-2025
+- trigger_ua: "Помірна температура у дні step-up"
+  action_ua: "Звертайтесь у лікарню негайно — будь-яка лихоманка може бути CRS"
+  urgency: er_now
+  cycle_day_window: "Day 1-7 step-up"
+  sources:
+  - SRC-NCCN-MM-2025
+  - SRC-MAJESTEC-1-MOREAU-2022
+- trigger_ua: "Висока лихоманка, низький тиск"
+  action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-MM-2025
+- trigger_ua: "Розмиття мови, плутаність свідомості"
+  action_ua: "Звертайтесь у лікарню негайно — нейротоксичність"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-MM-2025
+- trigger_ua: "Реакція в місці підшкірної ін'єкції"
+  action_ua: "Чергуйте місця ін'єкцій"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-MM-2025
 
 last_reviewed: "2026-05-01"
 notes: >

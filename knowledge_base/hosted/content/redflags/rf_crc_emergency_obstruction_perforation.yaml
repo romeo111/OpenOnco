@@ -25,12 +25,13 @@ trigger:
 clinical_direction: hold
 
 severity: critical
-priority: 30
+priority: 40
 category: organ-dysfunction
 
 relevant_diseases:
   - DIS-CRC
-shifts_algorithm: []  # Surgical emergency — escapes the chemo algorithm
+shifts_algorithm:
+  - ALGO-CRC-ADJUVANT
                       # entirely. Engine surfaces this RF in plan output
                       # with explicit "hold systemic therapy / surgical
                       # consult immediate" message.

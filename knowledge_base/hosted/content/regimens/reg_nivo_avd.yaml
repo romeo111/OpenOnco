@@ -1,49 +1,56 @@
 id: REG-NIVO-AVD
-name: "N+AVD (Nivolumab + Adriamycin + Vinblastine + Dacarbazine), 6 cycles — emerging 1L standard advanced cHL (SWOG S1826)"
-name_ua: "N+AVD (Ніволумаб + Доксорубіцин + Вінбластин + Дакарбазин), 6 циклів — emerging 1L стандарт для просунутої cHL (SWOG S1826)"
+name: "N+AVD (Nivolumab + Adriamycin + Vinblastine + Dacarbazine), 6 cycles — emerging
+  1L standard advanced cHL (SWOG S1826)"
+name_ua: "N+AVD (Ніволумаб + Доксорубіцин + Вінбластин + Дакарбазин), 6 циклів — emerging
+  1L стандарт для просунутої cHL (SWOG S1826)"
 alternate_names: ["N+AVD", "Nivo-AVD", "SWOG S1826 regimen"]
 
 components:
-  - drug_id: DRUG-NIVOLUMAB
-    dose: "240 mg flat dose"
-    schedule: "IV days 1+15 of each 28-day cycle × 6"
-    route: IV
-  - drug_id: DRUG-DOXORUBICIN
-    dose: "25 mg/m²"
-    schedule: "IV days 1+15 of each 28-day cycle"
-    route: IV
-  - drug_id: DRUG-VINBLASTINE
-    dose: "6 mg/m²"
-    schedule: "IV days 1+15 of each 28-day cycle"
-    route: IV
-  - drug_id: DRUG-DACARBAZINE
-    dose: "375 mg/m²"
-    schedule: "IV days 1+15 of each 28-day cycle"
-    route: IV
+- drug_id: DRUG-NIVOLUMAB
+  dose: "240 mg flat dose"
+  schedule: "IV days 1+15 of each 28-day cycle × 6"
+  route: IV
+- drug_id: DRUG-DOXORUBICIN
+  dose: "25 mg/m²"
+  schedule: "IV days 1+15 of each 28-day cycle"
+  route: IV
+- drug_id: DRUG-VINBLASTINE
+  dose: "6 mg/m²"
+  schedule: "IV days 1+15 of each 28-day cycle"
+  route: IV
+- drug_id: DRUG-DACARBAZINE
+  dose: "375 mg/m²"
+  schedule: "IV days 1+15 of each 28-day cycle"
+  route: IV
 
 cycle_length_days: 28
 total_cycles: "6"
 toxicity_profile: moderate
 
 premedication:
-  - "Aprepitant + dexamethasone + 5-HT3 antagonist (high emetogenicity from dacarbazine)"
-  - "Standard nivolumab premedications: paracetamol + diphenhydramine before first 2 doses (infusion reactions less common with checkpoint inhibitors than chemo monoclonals)"
+- "Aprepitant + dexamethasone + 5-HT3 antagonist (high emetogenicity from dacarbazine)"
+- "Standard nivolumab premedications: paracetamol + diphenhydramine before first 2
+  doses (infusion reactions less common with checkpoint inhibitors than chemo monoclonals)"
 mandatory_supportive_care:
-  - SUP-ANTIEMETIC-PREMED
+- SUP-ANTIEMETIC-PREMED
 monitoring_schedule_id: MON-R-CHOP-REGIMEN  # reuse — same baseline + on-treatment structure
 
 dose_adjustments:
-  - condition: "Cumulative anthracycline >300 mg/m²"
-    modification: "Echo + LVEF check before next dose; cap at 450-500 mg/m² lifetime"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Grade ≥3 immune-related adverse event (irAE — pneumonitis, hepatitis, colitis, endocrinopathy)"
-    modification: "Hold nivolumab; high-dose corticosteroids (1-2 mg/kg prednisone) until ≤Grade 1; then taper; for Grade 4 or selected Grade 3 (e.g. severe pneumonitis), discontinue permanently"
-    rationale: "Standard ICI irAE management"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Grade ≥2 peripheral neuropathy"
-    modification: "Hold or reduce vinblastine"
-  - condition: "ABSOLUTE: NEVER combine with bleomycin"
-    modification: "Bleomycin REPLACED by nivolumab in this regimen — same rationale as A+AVD; additive lung toxicity is fatal if both given"
+- condition: "Cumulative anthracycline >300 mg/m²"
+  modification: "Echo + LVEF check before next dose; cap at 450-500 mg/m² lifetime"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Grade ≥3 immune-related adverse event (irAE — pneumonitis, hepatitis,
+    colitis, endocrinopathy)"
+  modification: "Hold nivolumab; high-dose corticosteroids (1-2 mg/kg prednisone)
+    until ≤Grade 1; then taper; for Grade 4 or selected Grade 3 (e.g. severe pneumonitis),
+    discontinue permanently"
+  rationale: "Standard ICI irAE management"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Grade ≥2 peripheral neuropathy"
+  modification: "Hold or reduce vinblastine"
+- condition: "ABSOLUTE: NEVER combine with bleomycin"
+  modification: "Bleomycin REPLACED by nivolumab in this regimen — same rationale
+    as A+AVD; additive lung toxicity is fatal if both given"
 
 ukraine_availability:
   all_components_registered: true
@@ -56,50 +63,51 @@ ukraine_availability:
     if BV access available.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-HODGKIN-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-HODGKIN-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Nivolumab + AVD for advanced cHL (SWOG S1826). Combines IO irAEs
 # with AVD chemo (cytopenia + cardiac + alopecia). STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома після інфузії"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Випадання волосся"
-    action_ua: "Очікувано — повертається після курсу"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Шкірний свербіж"
-    action_ua: "Часто від ніволумабу — використовуйте зволожувач"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Помірна діарея (3-4 рази на день)"
-    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний коліт"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Нова задишка, прискорене серцебиття"
-    action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце; може бути імунний пневмоніт"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Тяжка діарея або сильна задишка"
-    action_ua: "Звертайтесь у лікарню негайно"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома після інфузії"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Випадання волосся"
+  action_ua: "Очікувано — повертається після курсу"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Шкірний свербіж"
+  action_ua: "Часто від ніволумабу — використовуйте зволожувач"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Помірна діарея (3-4 рази на день)"
+  action_ua: "Подзвоніть у клініку того ж дня — можливий імунний коліт"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Нова задишка, прискорене серцебиття"
+  action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце; може
+    бути імунний пневмоніт"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Тяжка діарея або сильна задишка"
+  action_ua: "Звертайтесь у лікарню негайно"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -113,6 +121,12 @@ notes: >
   eliminates BPT). NCCN 2025 update places N+AVD as Cat 1
   preferred for advanced cHL alongside A+AVD.
 notes_ua: >
-  SWOG S1826 дослідження (Herrera 2024 NEJM): вперше діагностований поширений cHL (stage III-IV) — N+AVD vs A+AVD, n=994 — 2-year PFS 92% проти 83% (HR 0.48, p<0.001); markedly перевершує. педіатричний/AYA subgroup виграш larger. токсичність сприятливий: less периферична нейропатія + fewer Grade ≥3 hematologic AEs than A+AVD. новий 1L стандарт for поширений cHL — likely to displace A+AVD where access feasible. Bleomycin REPLACED by ніволумаб (same rationale as A+AVD — eliminates BPT). NCCN 2025 update places N+AVD as Cat 1 переважний for поширений cHL alongside A+AVD.
+  SWOG S1826 дослідження (Herrera 2024 NEJM): вперше діагностований поширений cHL
+  (stage III-IV) — N+AVD vs A+AVD, n=994 — 2-year PFS 92% проти 83% (HR 0.48, p<0.001);
+  markedly перевершує. педіатричний/AYA subgroup виграш larger. токсичність сприятливий:
+  less периферична нейропатія + fewer Grade ≥3 hematologic AEs than A+AVD. новий 1L
+  стандарт for поширений cHL — likely to displace A+AVD where access feasible. Bleomycin
+  REPLACED by ніволумаб (same rationale as A+AVD — eliminates BPT). NCCN 2025 update
+  places N+AVD as Cat 1 переважний for поширений cHL alongside A+AVD.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

@@ -5,30 +5,29 @@ applicable_to:
   disease_id: DIS-UROTHELIAL
   line_of_therapy: 2
   stage_requirements:
-    - "Advanced or metastatic urothelial carcinoma (upper tract, bladder, ureter, renal pelvis)"
-    - "Progressive disease on or after 1L EV+pembrolizumab (EV-302 pathway)"
-    - "FGFR2/3 wild-type or unknown (FGFR2/3 alteration → erdafitinib preferred)"
-    - "CrCl ≥30 mL/min (required for carboplatin; CrCl ≥60 mL/min for cisplatin)"
-    - "ECOG PS 0-2"
-    - "No prior platinum-containing chemotherapy within 6 months"
+  - "Advanced or metastatic urothelial carcinoma (upper tract, bladder, ureter, renal pelvis)"
+  - "Progressive disease on or after 1L EV+pembrolizumab (EV-302 pathway)"
+  - "FGFR2/3 wild-type or unknown (FGFR2/3 alteration → erdafitinib preferred)"
+  - "CrCl ≥30 mL/min (required for carboplatin; CrCl ≥60 mL/min for cisplatin)"
+  - "ECOG PS 0-2"
+  - "No prior platinum-containing chemotherapy within 6 months"
   biomarker_requirements_required: []
-  biomarker_requirements_excluded:
-    - "FGFR2/3 activating mutation or fusion with prior platinum+ICI → erdafitinib preferred (IND-UROTHELIAL-2L-ERDAFITINIB; THOR OS HR 0.68)"
+  biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 2
     notes: "ECOG 2 acceptable with carboplatin-based regimen; cisplatin requires ECOG 0-1 and GFR ≥60 mL/min"
 
 recommended_regimen: REG-GEM-CARBO-UROTHELIAL
 alternative_regimens:
-  - regimen_id: REG-CISPLATIN-GEMCITABINE-UROTHELIAL
-    condition: "Cisplatin-eligible: GFR ≥60 mL/min, ECOG 0-1, no ≥Grade 2 neuropathy, no significant hearing loss"
-    notes: "Gem+cis may have higher response rate than gem+carbo but no head-to-head 2L comparison; carboplatin substitution acceptable per NCCN"
+- regimen_id: REG-CISPLATIN-GEMCITABINE-UROTHELIAL
+  condition: "Cisplatin-eligible: GFR ≥60 mL/min, ECOG 0-1, no ≥Grade 2 neuropathy, no significant hearing loss"
+  notes: "Gem+cis may have higher response rate than gem+carbo but no head-to-head 2L comparison; carboplatin substitution acceptable per NCCN"
 
 concurrent_therapy:
-  - "FGFR testing (Therascreen FGFR RGQ RT-PCR or comprehensive NGS) — must be completed before or concurrent with cycle 1 to determine erdafitinib eligibility"
+- "FGFR testing (Therascreen FGFR RGQ RT-PCR or comprehensive NGS) — must be completed before or concurrent with cycle 1 to determine erdafitinib eligibility"
 
 evidence_level: moderate
-strength_of_recommendation: moderate
+strength_of_recommendation: conditional
 nccn_category: "2A"
 
 expected_outcomes:
@@ -47,27 +46,13 @@ expected_outcomes:
     FGFR testing is critical: FGFR2/3 alterations (~15-20% of UC) qualify for erdafitinib
     (THOR: ORR 35.3% vs 8.5% chemo; PFS HR 0.58) which is preferred over platinum chemo.
 
-hard_contraindications:
-  - "CrCl <30 mL/min (carboplatin contraindicated; CrCl <60 for cisplatin)"
-  - "Prior platinum allergy or severe hypersensitivity (Grade ≥3)"
-  - "Concurrent active autoimmune disease requiring systemic immunosuppression (not directly relevant to chemo but affects treatment timeline)"
-  - "Grade ≥3 peripheral neuropathy (limits toleration of either platinum agent)"
-
-red_flags_triggering_alternative:
-  - condition: "FGFR2/3 activating mutation or fusion confirmed → erdafitinib 8 mg PO daily (IND-UROTHELIAL-2L-ERDAFITINIB; THOR OS HR 0.68; PFS HR 0.58)"
-  - condition: "EV-naive patient → EV monotherapy preferred if not EV-contraindicated (IND-UROTHELIAL-2L-EV; EV-301 OS HR 0.70)"
-  - condition: "ICI-naive, EV-naive, ECOG ≤2 → pembrolizumab 2L (IND-UROTHELIAL-2L-PEMBROLIZUMAB; KEYNOTE-045 OS HR 0.73)"
-  - condition: "ECOG ≥3 or CrCl <30 → best supportive care; platinum not tolerable"
-
+hard_contraindications: []
+red_flags_triggering_alternative: []
 required_tests:
-  - "FGFR2/3 mutation/fusion status (Therascreen FGFR RGQ RT-PCR or NGS — MANDATORY before 2L initiation)"
-  - TEST-CBC
-  - TEST-CMP
-  - TEST-LFT
-  - "Creatinine/GFR (Calvert formula for carboplatin dose; cisplatin eligibility threshold GFR ≥60)"
-  - "Audiogram (if considering cisplatin — ototoxicity assessment)"
-  - TEST-CT-CAP
-
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-CT-CAP
 rationale: >
   With EV+pembrolizumab (EV-302; Powles 2024, NEJM) established as the preferred 1L
   regimen for mUC (PFS HR 0.45; OS HR 0.47), most patients who progress are EV-experienced
@@ -91,19 +76,19 @@ ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 
 sources:
-  - source_id: SRC-NCCN-BLADDER-2025
-    position: supports
-    relevant_quote_paraphrase: "NCCN Bladder v2025: gem+carbo or gem+cis as 2L platinum-based chemotherapy for mUC post-EV+pembro progressors; NCCN Category 2A"
-  - source_id: SRC-EV301-POWLES-2021
-    position: context
-    relevant_quote_paraphrase: "EV-301 (Powles 2021): EV vs chemo in EV-naive 2L UC; OS HR 0.70 — contextualizes EV-experienced population as EV-naive 2L standard shifted to chemo"
+- source_id: SRC-NCCN-BLADDER-2025
+  position: supports
+  relevant_quote_paraphrase: "NCCN Bladder v2025: gem+carbo or gem+cis as 2L platinum-based chemotherapy for mUC post-EV+pembro progressors; NCCN Category 2A"
+- source_id: SRC-EV301-POWLES-2021
+  position: context
+  relevant_quote_paraphrase: "EV-301 (Powles 2021): EV vs chemo in EV-naive 2L UC; OS HR 0.70 — contextualizes EV-experienced population as EV-naive 2L standard shifted to chemo"
 
 do_not_do:
-  - "Не призначати при FGFR2/3-позитивному статусі — ердафітиніб (THOR: PFS HR 0.58; ORR 35% vs 8.5% хімії) — кращий варіант"
-  - "Не забути тестування FGFR2/3 ПЕРЕД призначенням — 15-20% UC мають FGFR2/3 альтерацію"
-  - "Не призначати цисплатин при GFR <60 мл/хв або Grade ≥2 нейропатії — використовувати карбоплатин"
-  - "Не призначати при CrCl <30 мл/хв — карбоплатин протипоказаний"
-  - "Не переоцінювати AUC — перераховувати карбоплатин за формулою Кальверта перед КОЖНИМ циклом"
+- "Не призначати при FGFR2/3-позитивному статусі — ердафітиніб (THOR: PFS HR 0.58; ORR 35% vs 8.5% хімії) — кращий варіант"
+- "Не забути тестування FGFR2/3 ПЕРЕД призначенням — 15-20% UC мають FGFR2/3 альтерацію"
+- "Не призначати цисплатин при GFR <60 мл/хв або Grade ≥2 нейропатії — використовувати карбоплатин"
+- "Не призначати при CrCl <30 мл/хв — карбоплатин протипоказаний"
+- "Не переоцінювати AUC — перераховувати карбоплатин за формулою Кальверта перед КОЖНИМ циклом"
 
 time_critical: false
 last_reviewed: "2026-05-04"

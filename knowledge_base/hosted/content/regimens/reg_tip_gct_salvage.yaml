@@ -1,12 +1,13 @@
 id: REG-TIP-GCT-SALVAGE
+name: "TIP (paclitaxel + ifosfamide + cisplatin, germ cell tumor salvage)"
 disease_context: DIS-TESTICULAR-GCT
 line_of_therapy: 2
 plan_track: standard
 
 regimen_type: "chemotherapy_salvage"
 
-agents:
-  - drug_id: DRG-PACLITAXEL
+components:
+  - drug_id: DRUG-PACLITAXEL
     dose: "250 mg/m² IV 24h continuous infusion"
     route: IV
     schedule: "Day 1 (24-hour CIV beginning Day 1)"
@@ -15,7 +16,7 @@ agents:
       - "Dexamethasone 20 mg IV 30 min pre-paclitaxel (higher dose for 24h infusion)"
       - "Diphenhydramine 50 mg IV 30 min pre"
       - "Ranitidine 50 mg IV 30 min pre"
-  - drug_id: DRG-IFOSFAMIDE
+  - drug_id: DRUG-IFOSFAMIDE
     dose: "1.5 g/m²/day IV"
     route: IV
     schedule: "Days 2, 3, 4, 5 (4 days)"
@@ -24,7 +25,7 @@ agents:
     dose_modifications:
       - trigger: "Ifosfamide encephalopathy (confusion, somnolence, seizure)"
         action: "Stop ifosfamide immediately; methylene blue 50 mg IV q4h until resolution; do not re-challenge in same cycle"
-  - drug_id: DRG-CISPLATIN
+  - drug_id: DRUG-CISPLATIN
     dose: "25 mg/m²/day IV over 60 min"
     route: IV
     schedule: "Days 2, 3, 4, 5 (4 days); after ifosfamide each day"

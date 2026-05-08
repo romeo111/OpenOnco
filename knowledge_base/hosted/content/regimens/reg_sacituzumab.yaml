@@ -4,33 +4,34 @@ name_ua: "Сацитузумаб говітекан моно (TNBC ≥2L; HR+/HE
 alternate_names: ["ASCENT regimen", "TROPiCS-02 regimen"]
 
 components:
-  - drug_id: DRUG-SACITUZUMAB-GOVITECAN
-    dose: "10 mg/kg IV"
-    schedule: "Days 1, 8 of 21-day cycle, until progression"
-    route: IV
+- drug_id: DRUG-SACITUZUMAB-GOVITECAN
+  dose: "10 mg/kg IV"
+  schedule: "Days 1, 8 of 21-day cycle, until progression"
+  route: IV
 
 cycle_length_days: 21
 total_cycles: "Continuous until progression"
 toxicity_profile: severe
 
 premedication:
-  - "Antiemetic protocol"
-  - "Loperamide on hand for delayed-onset diarrhea"
+- "Antiemetic protocol"
+- "Loperamide on hand for delayed-onset diarrhea"
 mandatory_supportive_care:
-  - SUP-G-CSF-PRIMARY-PROPHYLAXIS-PROSTATE
-  - SUP-BONE-HEALTH-PROSTATE
+- SUP-G-CSF-PRIMARY-PROPHYLAXIS-PROSTATE
+- SUP-BONE-HEALTH-PROSTATE
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "UGT1A1*28 homozygous"
-    modification: "Reduce starting dose; monitor closely for severe neutropenia"
-  - condition: "Febrile neutropenia"
-    modification: "G-CSF support; subsequent dose reduction"
+- condition: "UGT1A1*28 homozygous"
+  modification: "Reduce starting dose; monitor closely for severe neutropenia"
+- condition: "Febrile neutropenia"
+  modification: "G-CSF support; subsequent dose reduction"
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "Not yet registered in Ukraine. Major access barrier; off-label import / international referral only. Clinical-review queue priority."
+  notes: "Not yet registered in Ukraine. Major access barrier; off-label import /
+    international referral only. Clinical-review queue priority."
 
 sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
 
@@ -39,40 +40,41 @@ sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
 # HR+/HER2- breast 3L+. Signature: severe diarrhea + neutropenia from
 # SN-38 payload. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна нудота, втома"
-    action_ua: "Очікувано — приймайте призначені протиблювотні"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Випадання волосся (на 2-3 тижні)"
-    action_ua: "Очікувано — повертається після курсу"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Помірна діарея (1-3 рази на день)"
-    action_ua: "Зазвичай контролюється лоперамідом — занотовуйте частоту"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — сацитузумаб дає глибоку нейтропенію"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 8-15"
-    sources:
-      - SRC-NCCN-BREAST-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Тяжка діарея (≥6 разів на день, з кров'ю)"
-    action_ua: "Подзвоніть у клініку того ж дня — SN-38 може спричиняти небезпечну діарею; ризик зневоднення"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BREAST-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Сильна реакція на інфузію: задишка, висип, набряк обличчя"
-    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
-    urgency: er_now
-    cycle_day_window: "Day 1 of cycle 1"
-    sources:
-      - SRC-NCCN-BREAST-2025
+- trigger_ua: "Помірна нудота, втома"
+  action_ua: "Очікувано — приймайте призначені протиблювотні"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Випадання волосся (на 2-3 тижні)"
+  action_ua: "Очікувано — повертається після курсу"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Помірна діарея (1-3 рази на день)"
+  action_ua: "Зазвичай контролюється лоперамідом — занотовуйте частоту"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — сацитузумаб дає глибоку нейтропенію"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 8-15"
+  sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Тяжка діарея (≥6 разів на день, з кров'ю)"
+  action_ua: "Подзвоніть у клініку того ж дня — SN-38 може спричиняти небезпечну діарею;
+    ризик зневоднення"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Сильна реакція на інфузію: задишка, висип, набряк обличчя"
+  action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+  urgency: er_now
+  cycle_day_window: "Day 1 of cycle 1"
+  sources:
+  - SRC-NCCN-BREAST-2025
 
 last_reviewed:
 notes: >
@@ -80,6 +82,7 @@ notes: >
   TNBC. TROPiCS-02: HR+/HER2- ≥3L. Trop-2 expression universal — not
   required pre-test.
 notes_ua: >
-  ASCENT: перевершує physician-choice chemo in pretreated метастатичний TNBC. TROPiCS-02: HR+/HER2- ≥3L. Trop-2 експресія universal — not обов'язковий pre-test.
+  ASCENT: перевершує physician-choice chemo in pretreated метастатичний TNBC. TROPiCS-02:
+  HR+/HER2- ≥3L. Trop-2 експресія universal — not обов'язковий pre-test.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

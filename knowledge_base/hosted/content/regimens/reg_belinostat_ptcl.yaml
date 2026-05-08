@@ -4,37 +4,38 @@ name_ua: "Белінoстат IV дні 1-5 кожні 21 день (BELIEF) — 
 alternate_names: ["Belinostat mono", "BELIEF regimen", "Beleodaq r/r PTCL"]
 
 components:
-  - drug_id: DRUG-BELINOSTAT
-    dose: "1000 mg/m² IV over 30 min"
-    schedule: "Days 1-5 of each 21-day cycle, until progression or unacceptable toxicity"
-    route: IV
+- drug_id: DRUG-BELINOSTAT
+  dose: "1000 mg/m² IV over 30 min"
+  schedule: "Days 1-5 of each 21-day cycle, until progression or unacceptable toxicity"
+  route: IV
 
 cycle_length_days: 21
 total_cycles: "Until progression or unacceptable toxicity (response-driven)"
 toxicity_profile: moderate
 
 premedication:
-  - "5-HT3 antagonist + dexamethasone before each infusion (high emetogenic potential)"
-  - "TLS prophylaxis cycle 1 if high-burden disease (allopurinol + hydration)"
+- "5-HT3 antagonist + dexamethasone before each infusion (high emetogenic potential)"
+- "TLS prophylaxis cycle 1 if high-burden disease (allopurinol + hydration)"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-TLS-PROPHYLAXIS
-  - SUP-ANTIEMETIC-PREMED
+- SUP-PJP-PROPHYLAXIS
+- SUP-TLS-PROPHYLAXIS
+- SUP-ANTIEMETIC-PREMED
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Platelets <50K OR ANC <500"
-    modification: "Hold; resume at same dose after recovery; if recurrent, reduce to 750 mg/m²"
-    rationale: "Cytopenia is dose-limiting"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "QTc >500 ms OR baseline >480 ms"
-    modification: "Hold; correct K/Mg; cardiology consult; resume after QTc <480 ms"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Bilirubin >1.5× ULN OR transaminases >3× ULN"
-    modification: "Hold; reduce to 750 mg/m² on resume; monitor LFTs weekly"
-  - condition: "Concomitant strong UGT1A1 inhibitor (atazanavir)"
-    modification: "Avoid OR reduce belinostat dose"
-    rationale: "UGT1A1 is primary metabolic pathway"
+- condition: "Platelets <50K OR ANC <500"
+  modification: "Hold; resume at same dose after recovery; if recurrent, reduce to
+    750 mg/m²"
+  rationale: "Cytopenia is dose-limiting"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "QTc >500 ms OR baseline >480 ms"
+  modification: "Hold; correct K/Mg; cardiology consult; resume after QTc <480 ms"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Bilirubin >1.5× ULN OR transaminases >3× ULN"
+  modification: "Hold; reduce to 750 mg/m² on resume; monitor LFTs weekly"
+- condition: "Concomitant strong UGT1A1 inhibitor (atazanavir)"
+  modification: "Avoid OR reduce belinostat dose"
+  rationale: "UGT1A1 is primary metabolic pathway"
 
 ukraine_availability:
   all_components_registered: false
@@ -47,44 +48,44 @@ ukraine_availability:
     PTCL NOS — but access dominant constraint.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-PTCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-PTCL-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Belinostat HDACi for relapsed PTCL. Signature: cytopenia, GI,
 # QT prolongation, hepatic. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, нудота"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна блювота, діарея"
-    action_ua: "Приймайте призначені протиблювотні"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Жовтяниця, потемніння сечі"
-    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Незвичні синці, кровотеча"
-    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
-    action_ua: "Звертайтесь у лікарню негайно — белінстат подовжує QT"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома, нудота"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна блювота, діарея"
+  action_ua: "Приймайте призначені протиблювотні"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Жовтяниця, потемніння сечі"
+  action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Незвичні синці, кровотеча"
+  action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
+  action_ua: "Звертайтесь у лікарню негайно — белінстат подовжує QT"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -95,6 +96,10 @@ notes: >
   r/r PTCL after ≥1 prior line. Key advantage: distinct mechanism
   from chemo + most targeted agents — useful as bridge or last-line.
 notes_ua: >
-  BELIEF дослідження (O'Connor 2015): р/р PTCL n=129 (incl AITL ~22%, PTCL NOS ~58%, ALCL ~10%, others) — overall ORR 26%, CR 11%, mDOR 13.6 міс., mPFS 1.6 міс. (mature responders 13.6 міс.). AITL subset відповідь numerically higher than PTCL NOS (small cohort). FDA-схвалений для р/р PTCL after ≥1 prior line. Key advantage: distinct mechanism from chemo + найбільш targeted agents — useful as bridge or last-line.
+  BELIEF дослідження (O'Connor 2015): р/р PTCL n=129 (incl AITL ~22%, PTCL NOS ~58%,
+  ALCL ~10%, others) — overall ORR 26%, CR 11%, mDOR 13.6 міс., mPFS 1.6 міс. (mature
+  responders 13.6 міс.). AITL subset відповідь numerically higher than PTCL NOS (small
+  cohort). FDA-схвалений для р/р PTCL after ≥1 prior line. Key advantage: distinct
+  mechanism from chemo + найбільш targeted agents — useful as bridge or last-line.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

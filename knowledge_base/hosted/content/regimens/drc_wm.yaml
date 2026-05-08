@@ -4,62 +4,70 @@ name_ua: "Дексаметазон + Ритуксимаб + Циклофосфа
 alternate_names: ["DRC", "Dex-R-Cyclo"]
 
 components:
-  - {drug_id: DRUG-DEXAMETHASONE, dose: "20 mg IV day 1", schedule: "IV day 1 each cycle", route: IV}
-  - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1", schedule: "IV day 1 each cycle", route: IV}
-  - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "100 mg/m² PO BID days 1-5", schedule: "PO twice daily, days 1-5 each cycle", route: PO}
+- {drug_id: DRUG-DEXAMETHASONE, dose: "20 mg IV day 1", schedule: "IV day 1 each cycle",
+  route: IV}
+- {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1", schedule: "IV day 1 each cycle",
+  route: IV}
+- {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "100 mg/m² PO BID days 1-5", schedule: "PO
+    twice daily, days 1-5 each cycle", route: PO}
 
 cycle_length_days: 21
 total_cycles: "6"
 toxicity_profile: low-moderate
 
 premedication: ["Standard rituximab premedications first dose"]
-mandatory_supportive_care: [SUP-PJP-PROPHYLAXIS, SUP-HBV-PROPHYLAXIS]
+mandatory_supportive_care:
+- SUP-PJP-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id: MON-RITUXIMAB-MONO
 
 dose_adjustments:
-  - {condition: "Symptomatic hyperviscosity (RF-WM-HYPERVISCOSITY)", modification: "Plasmapheresis first; HOLD rituximab until IgM reduced (rituximab causes IgM flare)"}
-  - {condition: "ANC <1500", modification: "Delay cycle"}
+- {condition: "Symptomatic hyperviscosity (RF-WM-HYPERVISCOSITY)", modification: "Plasmapheresis
+    first; HOLD rituximab until IgM reduced (rituximab causes IgM flare)"}
+- {condition: "ANC <1500", modification: "Delay cycle"}
 
-ukraine_availability: {all_components_registered: true, all_components_reimbursed: true}
+ukraine_availability: {all_components_registered: true, 
+    all_components_reimbursed: true}
 sources: [SRC-NCCN-BCELL-2025]
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # DRC (dexa + R + cyclophos) for WM 1L. Lower-toxicity alt.
 # STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, нудота"
-    action_ua: "Приймайте призначені протиблювотні"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Безсоння у дні дексаметазону"
-    action_ua: "Очікувано — приймайте дексаметазон зранку"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — циклофосфамід дає нейтропенію"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Кров у сечі"
-    action_ua: "Подзвоніть у клініку того ж дня — циклофосфамід може спричиняти геморагічний цистит; пийте багато води"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Сильний головний біль, розмиття зору, шум у вухах"
-    action_ua: "Подзвоніть у клініку того ж дня — у WM ризик гіпервіскозного синдрому"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Тяжка інфузійна реакція на ритуксимаб"
-    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
-    urgency: er_now
-    cycle_day_window: "Day 1 of cycle 1"
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома, нудота"
+  action_ua: "Приймайте призначені протиблювотні"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Безсоння у дні дексаметазону"
+  action_ua: "Очікувано — приймайте дексаметазон зранку"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — циклофосфамід дає нейтропенію"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Кров у сечі"
+  action_ua: "Подзвоніть у клініку того ж дня — циклофосфамід може спричиняти геморагічний
+    цистит; пийте багато води"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Сильний головний біль, розмиття зору, шум у вухах"
+  action_ua: "Подзвоніть у клініку того ж дня — у WM ризик гіпервіскозного синдрому"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Тяжка інфузійна реакція на ритуксимаб"
+  action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+  urgency: er_now
+  cycle_day_window: "Day 1 of cycle 1"
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -68,6 +76,8 @@ notes: >
   IgM flare with rituximab can worsen hyperviscosity — plasmapheresis
   first if symptomatic.
 notes_ua: >
-  Time-limited (6 months) chemoimmuno for WM — переважний when BTKi not accessible OR for CXCR4-WHIM-mutated WM (BTKi відповідь weaker). IgM flare with ритуксимаб can worsen hyperviscosity — plasmapheresis first if symptomatic.
+  Time-limited (6 months) chemoimmuno for WM — переважний when BTKi not accessible
+  OR for CXCR4-WHIM-mutated WM (BTKi відповідь weaker). IgM flare with ритуксимаб
+  can worsen hyperviscosity — plasmapheresis first if symptomatic.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

@@ -11,65 +11,85 @@ components: []  # phases supersede; kept empty for back-compat with downstream
 
 phases:
   # Block A — CODOX-M
-  - name: alternating_block_a
-    purpose_ua: "блок A (CODOX-M): cyclophosphamide-vincristine-doxorubicin + HD-методreксат з IT-CNS-профілактикою; з ритуксимабом для CD20+; чергує з блоком B (IVAC) × 4 разом"
-    purpose_en: "block A (CODOX-M): cyclophosphamide-vincristine-doxorubicin + HD-MTX with IT-CNS prophylaxis; with rituximab for CD20+; alternates with block B (IVAC) × 4 total"
-    duration: "21 days per CODOX-M block × 2 (cycles 1, 3 of 4 alternating)"
-    timing_relative_to: "absolute"
-    optional: false
-    components:
-      - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "800 mg/m² day 1 + 200 mg/m² days 2-5 (CODOX-M)", schedule: "IV per CODOX-M block", route: IV}
-      - {drug_id: DRUG-VINCRISTINE, dose: "1.5 mg/m² day 1 (cap 2 mg)", schedule: "IV per CODOX-M block", route: IV}
-      - {drug_id: DRUG-DOXORUBICIN, dose: "40 mg/m² day 1 (CODOX-M)", schedule: "IV per CODOX-M block", route: IV}
-      - {drug_id: DRUG-METHOTREXATE, dose: "3 g/m² day 10 (HD-MTX) + 12 mg IT day 1 + day 3", schedule: "CODOX-M HD + IT", route: IV/IT}
+- name: alternating_block_a
+  purpose_ua: "блок A (CODOX-M): cyclophosphamide-vincristine-doxorubicin + HD-методreксат
+    з IT-CNS-профілактикою; з ритуксимабом для CD20+; чергує з блоком B (IVAC) × 4
+    разом"
+  purpose_en: "block A (CODOX-M): cyclophosphamide-vincristine-doxorubicin + HD-MTX
+    with IT-CNS prophylaxis; with rituximab for CD20+; alternates with block B (IVAC)
+    × 4 total"
+  duration: "21 days per CODOX-M block × 2 (cycles 1, 3 of 4 alternating)"
+  timing_relative_to: "absolute"
+  optional: false
+  components:
+  - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "800 mg/m² day 1 + 200 mg/m² days 2-5 (CODOX-M)",
+    schedule: "IV per CODOX-M block", route: IV}
+  - {drug_id: DRUG-VINCRISTINE, dose: "1.5 mg/m² day 1 (cap 2 mg)", schedule: "IV
+      per CODOX-M block", route: IV}
+  - {drug_id: DRUG-DOXORUBICIN, dose: "40 mg/m² day 1 (CODOX-M)", schedule: "IV per
+      CODOX-M block", route: IV}
+  - {drug_id: DRUG-METHOTREXATE, dose: "3 g/m² day 10 (HD-MTX) + 12 mg IT day 1 +
+      day 3", schedule: "CODOX-M HD + IT", route: IV/IT}
       # Shared — applies to all blocks
-      - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1 each block (when CD20+, R-CODOX-M/R-IVAC)", schedule: "IV", route: IV}
-      - {drug_id: DRUG-FILGRASTIM, dose: "5 µg/kg/day", schedule: "SC from day 13 each block until ANC recovery", route: SC}
-    sources:
-      - SRC-NCCN-BCELL-2025
+  - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1 each block (when CD20+, R-CODOX-M/R-IVAC)",
+    schedule: "IV", route: IV}
+  - {drug_id: DRUG-FILGRASTIM, dose: "5 µg/kg/day", schedule: "SC from day 13 each
+      block until ANC recovery", route: SC}
+  sources:
+  - SRC-NCCN-BCELL-2025
   # Block B — IVAC
-  - name: alternating_block_b
-    purpose_ua: "блок B (IVAC): ifosfamide + HD-cytarabine + etoposide; з ритуксимабом для CD20+; чергує з блоком A (CODOX-M) × 4 разом"
-    purpose_en: "block B (IVAC): ifosfamide + HD-cytarabine + etoposide; with rituximab for CD20+; alternates with block A (CODOX-M) × 4 total"
-    duration: "21 days per IVAC block × 2 (cycles 2, 4 of 4 alternating)"
-    timing_relative_to: "previous_phase_completion"
-    optional: false
-    components:
-      - {drug_id: DRUG-CYTARABINE, dose: "2 g/m² q12h × 4 doses (IVAC)", schedule: "IV per IVAC block", route: IV}
-      - {drug_id: DRUG-ETOPOSIDE, dose: "60 mg/m² days 1-5 (IVAC)", schedule: "IV per IVAC block", route: IV}
+- name: alternating_block_b
+  purpose_ua: "блок B (IVAC): ifosfamide + HD-cytarabine + etoposide; з ритуксимабом
+    для CD20+; чергує з блоком A (CODOX-M) × 4 разом"
+  purpose_en: "block B (IVAC): ifosfamide + HD-cytarabine + etoposide; with rituximab
+    for CD20+; alternates with block A (CODOX-M) × 4 total"
+  duration: "21 days per IVAC block × 2 (cycles 2, 4 of 4 alternating)"
+  timing_relative_to: "previous_phase_completion"
+  optional: false
+  components:
+  - {drug_id: DRUG-CYTARABINE, dose: "2 g/m² q12h × 4 doses (IVAC)", schedule: "IV
+      per IVAC block", route: IV}
+  - {drug_id: DRUG-ETOPOSIDE, dose: "60 mg/m² days 1-5 (IVAC)", schedule: "IV per
+      IVAC block", route: IV}
       # Shared — applies to all blocks
-      - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1 each block (when CD20+, R-CODOX-M/R-IVAC)", schedule: "IV", route: IV}
-      - {drug_id: DRUG-FILGRASTIM, dose: "5 µg/kg/day", schedule: "SC from day 13 each block until ANC recovery", route: SC}
-    sources:
-      - SRC-NCCN-BCELL-2025
+  - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1 each block (when CD20+, R-CODOX-M/R-IVAC)",
+    schedule: "IV", route: IV}
+  - {drug_id: DRUG-FILGRASTIM, dose: "5 µg/kg/day", schedule: "SC from day 13 each
+      block until ANC recovery", route: SC}
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 cycle_length_days: 21
 total_cycles: "4 alternating blocks (CODOX-M, IVAC, CODOX-M, IVAC)"
 toxicity_profile: very-high
 
 premedication:
-  - "Standard rituximab premedications"
-  - "Aggressive TLS prophylaxis with rasburicase for high-burden"
-  - "HD-MTX prep: hydration 3 L/m²/day, urine pH alkalinization, leucovorin rescue starting 24h post"
-  - "Cytarabine eye drops + cerebellar exam during IVAC HiDAC"
+- "Standard rituximab premedications"
+- "Aggressive TLS prophylaxis with rasburicase for high-burden"
+- "HD-MTX prep: hydration 3 L/m²/day, urine pH alkalinization, leucovorin rescue starting
+  24h post"
+- "Cytarabine eye drops + cerebellar exam during IVAC HiDAC"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-TLS-PROPHYLAXIS
-  - SUP-ANTIEMETIC-PREMED
-  - SUP-GCSF-NEUTROPENIA
+- SUP-PJP-PROPHYLAXIS
+- SUP-TLS-PROPHYLAXIS
+- SUP-ANTIEMETIC-PREMED
+- SUP-GCSF-NEUTROPENIA
 monitoring_schedule_id: MON-R-CHOP-REGIMEN
 
 dose_adjustments:
-  - condition: "Pleural effusion / ascites"
-    modification: "Drain BEFORE HD-MTX — 3rd-space fluid prolongs clearance to lethal levels"
-  - condition: "Concomitant NSAIDs / PPIs / penicillins"
-    modification: "Hold during HD-MTX phase — reduces clearance"
-  - condition: "Age >65"
-    modification: "Generally NOT eligible; route to DA-EPOCH-R; consider hyper-CVAD/MA selectively"
-  - condition: "CrCl <60"
-    modification: "Reduce HD-MTX or omit; reduce cytarabine"
+- condition: "Pleural effusion / ascites"
+  modification: "Drain BEFORE HD-MTX — 3rd-space fluid prolongs clearance to lethal
+    levels"
+- condition: "Concomitant NSAIDs / PPIs / penicillins"
+  modification: "Hold during HD-MTX phase — reduces clearance"
+- condition: "Age >65"
+  modification: "Generally NOT eligible; route to DA-EPOCH-R; consider hyper-CVAD/MA
+    selectively"
+- condition: "CrCl <60"
+  modification: "Reduce HD-MTX or omit; reduce cytarabine"
 
-ukraine_availability: {all_components_registered: true, all_components_reimbursed: true}
+ukraine_availability: {all_components_registered: true, 
+    all_components_reimbursed: true}
 sources: [SRC-NCCN-BCELL-2025]
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
@@ -77,44 +97,47 @@ sources: [SRC-NCCN-BCELL-2025]
 # regimen with TLS risk + cytopenia + mucositis dominating. CNS
 # prophylaxis via IT methotrexate. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Виражена втома, що триває тижнями між циклами"
-    action_ua: "Очікувано — кістковий мозок відновлюється повільно"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Мукозит, болі і виразки в порожнині рота"
-    action_ua: "Поширене на HD-MTX/HiDAC — полоскання порожнини рота, м'яка їжа"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
-    action_ua: "Вінкристин може спричиняти нейропатію — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Біль у спині, головний біль після інтратекальної ін'єкції"
-    action_ua: "Зустрічається — лежіть рівно після пункції, пийте багато води; занотовуйте інтенсивність"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Зменшення кількості сечі, набряки"
-    action_ua: "Подзвоніть у клініку того ж дня — HD-MTX потребує контролю функції нирок"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Звертайтесь у лікарню негайно — глибока тривала нейтропенія, ризик сепсису"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Раптова сильна слабкість, серцебиття ненормальне, болі в м'язах — у перші дні циклу 1"
-    action_ua: "Звертайтесь у лікарню негайно — Burkitt дає високий ризик синдрому розпаду пухлини"
-    urgency: er_now
-    cycle_day_window: "Day 1-7 of cycle 1"
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Виражена втома, що триває тижнями між циклами"
+  action_ua: "Очікувано — кістковий мозок відновлюється повільно"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Мукозит, болі і виразки в порожнині рота"
+  action_ua: "Поширене на HD-MTX/HiDAC — полоскання порожнини рота, м'яка їжа"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Поколювання або оніміння в кистях/стопах"
+  action_ua: "Вінкристин може спричиняти нейропатію — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Біль у спині, головний біль після інтратекальної ін'єкції"
+  action_ua: "Зустрічається — лежіть рівно після пункції, пийте багато води; занотовуйте
+    інтенсивність"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Зменшення кількості сечі, набряки"
+  action_ua: "Подзвоніть у клініку того ж дня — HD-MTX потребує контролю функції нирок"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Звертайтесь у лікарню негайно — глибока тривала нейтропенія, ризик сепсису"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Раптова сильна слабкість, серцебиття ненормальне, болі в м'язах — у
+    перші дні циклу 1"
+  action_ua: "Звертайтесь у лікарню негайно — Burkitt дає високий ризик синдрому розпаду
+    пухлини"
+  urgency: er_now
+  cycle_day_window: "Day 1-7 of cycle 1"
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -124,6 +147,9 @@ notes: >
   Substantial myelosuppression + mucositis + HD-MTX management complexity
   demand experienced center.
 notes_ua: >
-  Magrath original protocol modified with ритуксимаб (R-CODOX-M/R-IVAC). Used for fit younger високого ризику Burkitt: CNS+, leukemic phase, LDH >3× ULN, bulky abdomen. ~80-85% sustained CR in fit younger adults. Substantial myelosuppression + мукозит + HD-MTX management complexity demand experienced center.
+  Magrath original protocol modified with ритуксимаб (R-CODOX-M/R-IVAC). Used for
+  fit younger високого ризику Burkitt: CNS+, leukemic phase, LDH >3× ULN, bulky abdomen.
+  ~80-85% sustained CR in fit younger adults. Substantial myelosuppression + мукозит
+  + HD-MTX management complexity demand experienced center.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

@@ -4,25 +4,36 @@ name_ua: "ABVD (Доксорубіцин + Блеоміцин + Вінбласт
 alternate_names: ["ABVD"]
 
 components:
-  - {drug_id: DRUG-DOXORUBICIN, dose: "25 mg/m²", schedule: "IV days 1+15 of 28-day cycle", route: IV}
-  - {drug_id: DRUG-BLEOMYCIN, dose: "10 units/m²", schedule: "IV days 1+15 of 28-day cycle", route: IV}
-  - {drug_id: DRUG-VINBLASTINE, dose: "6 mg/m²", schedule: "IV days 1+15 of 28-day cycle", route: IV}
-  - {drug_id: DRUG-DACARBAZINE, dose: "375 mg/m²", schedule: "IV days 1+15 of 28-day cycle", route: IV}
+- {drug_id: DRUG-DOXORUBICIN, dose: "25 mg/m²", schedule: "IV days 1+15 of 28-day
+    cycle", route: IV}
+- {drug_id: DRUG-BLEOMYCIN, dose: "10 units/m²", schedule: "IV days 1+15 of 28-day
+    cycle", route: IV}
+- {drug_id: DRUG-VINBLASTINE, dose: "6 mg/m²", schedule: "IV days 1+15 of 28-day cycle",
+  route: IV}
+- {drug_id: DRUG-DACARBAZINE, dose: "375 mg/m²", schedule: "IV days 1+15 of 28-day
+    cycle", route: IV}
 
 cycle_length_days: 28
-total_cycles: "2-4 (early-stage + ISRT) OR 6 (advanced); response-adapted per interim PET-CT Deauville"
+total_cycles: "2-4 (early-stage + ISRT) OR 6 (advanced); response-adapted per interim
+  PET-CT Deauville"
 toxicity_profile: moderate
 
-premedication: ["Aprepitant + dexamethasone + 5-HT3 antagonist (high emetogenicity from dacarbazine)", "Bleomycin test dose 1-2 units before first full dose (anaphylactoid risk)"]
-mandatory_supportive_care: [SUP-ANTIEMETIC-PREMED]
+premedication: ["Aprepitant + dexamethasone + 5-HT3 antagonist (high emetogenicity
+    from dacarbazine)", "Bleomycin test dose 1-2 units before first full dose (anaphylactoid
+    risk)"]
+mandatory_supportive_care:
+- SUP-ANTIEMETIC-PREMED
 monitoring_schedule_id: MON-R-CHOP-REGIMEN  # reuse for now
 
 dose_adjustments:
-  - {condition: "DLCO drop ≥25% from baseline OR pulmonary symptoms", modification: "DISCONTINUE bleomycin permanently; consider AVD (drop bleomycin) for remaining cycles"}
-  - {condition: "Cumulative bleomycin >300 units", modification: "Stop bleomycin (risk of progressive fibrosis)"}
-  - {condition: "Cumulative anthracycline >300 mg/m²", modification: "Echo + LVEF check"}
+- {condition: "DLCO drop ≥25% from baseline OR pulmonary symptoms", modification: "DISCONTINUE
+    bleomycin permanently; consider AVD (drop bleomycin) for remaining cycles"}
+- {condition: "Cumulative bleomycin >300 units", modification: "Stop bleomycin (risk
+    of progressive fibrosis)"}
+- {condition: "Cumulative anthracycline >300 mg/m²", modification: "Echo + LVEF check"}
 
-ukraine_availability: {all_components_registered: true, all_components_reimbursed: true}
+ukraine_availability: {all_components_registered: true, 
+    all_components_reimbursed: true}
 sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-HODGKIN-2024]
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
@@ -30,45 +41,50 @@ sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-HODGKIN-2024]
 # fatal, dose-cumulative) + doxorubicin cardiac + cytopenia.
 # G-CSF specifically AVOIDED on ABVD (worsens BPT). STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома після кожної інфузії"
-    action_ua: "Очікувано — відпочивайте у дні 1-3 циклу"
-    urgency: log_at_next_visit
-    cycle_day_window: "Day 1-3"
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Випадання волосся (починається на 2-3 тижні)"
-    action_ua: "Очікувано — волосся повертається після завершення курсу"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна нудота протягом 1-3 днів"
-    action_ua: "Приймайте призначені протиблювотні; занотуйте, якщо нудота утруднює прийом їжі"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Новий сухий кашель або задишка при невеликому навантаженні"
-    action_ua: "Подзвоніть у клініку того ж дня — блеоміцин може спричиняти ушкодження легень; потрібна оцінка"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-ESMO-HODGKIN-2024
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — на ABVD G-CSF не призначається, нейтропенія вища"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 7-14"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Біль у грудях, прискорене серцебиття, набряки гомілок"
-    action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Раптова сильна задишка у спокої, синюшність губ, неможливість лежати рівно"
-    action_ua: "Звертайтесь у лікарню негайно — це може бути тяжке ушкодження легень або серцева недостатність"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома після кожної інфузії"
+  action_ua: "Очікувано — відпочивайте у дні 1-3 циклу"
+  urgency: log_at_next_visit
+  cycle_day_window: "Day 1-3"
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Випадання волосся (починається на 2-3 тижні)"
+  action_ua: "Очікувано — волосся повертається після завершення курсу"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна нудота протягом 1-3 днів"
+  action_ua: "Приймайте призначені протиблювотні; занотуйте, якщо нудота утруднює
+    прийом їжі"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Новий сухий кашель або задишка при невеликому навантаженні"
+  action_ua: "Подзвоніть у клініку того ж дня — блеоміцин може спричиняти ушкодження
+    легень; потрібна оцінка"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-HODGKIN-2024
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — на ABVD G-CSF не призначається, нейтропенія
+    вища"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 7-14"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Біль у грудях, прискорене серцебиття, набряки гомілок"
+  action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Раптова сильна задишка у спокої, синюшність губ, неможливість лежати
+    рівно"
+  action_ua: "Звертайтесь у лікарню негайно — це може бути тяжке ушкодження легень
+    або серцева недостатність"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -79,6 +95,10 @@ notes: >
   Hodgkin: A+AVD (ECHELON-1) — brentuximab replaces bleomycin,
   superior OS in advanced disease.
 notes_ua: >
-  Long-standing 1L Hodgkin стандарт (40+ years). Pulmonary токсичність (BPT) ~5-10% — DLCO обов'язковий pre-лікування + serial. NEVER combine with brentuximab (additive lung токсичність). Г-КСФ avoided on ABVD (збільшує pulmonary токсичність). Modern alternative for поширений Hodgkin: A+AVD (ECHELON-1) — brentuximab replaces bleomycin, перевершує OS in поширений хвороба.
+  Long-standing 1L Hodgkin стандарт (40+ years). Pulmonary токсичність (BPT) ~5-10%
+  — DLCO обов'язковий pre-лікування + serial. NEVER combine with brentuximab (additive
+  lung токсичність). Г-КСФ avoided on ABVD (збільшує pulmonary токсичність). Modern
+  alternative for поширений Hodgkin: A+AVD (ECHELON-1) — brentuximab replaces bleomycin,
+  перевершує OS in поширений хвороба.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

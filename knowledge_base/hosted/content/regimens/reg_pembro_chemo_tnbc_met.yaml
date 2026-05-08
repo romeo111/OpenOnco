@@ -1,12 +1,13 @@
 id: REG-PEMBRO-CHEMO-TNBC-MET
+name: "Pembrolizumab + chemotherapy (TNBC, metastatic PD-L1+)"
 disease_context: DIS-BREAST
 line_of_therapy: 1
 plan_track: standard
 
 regimen_type: "immunochemotherapy"
 
-agents:
-  - drug_id: DRG-PEMBROLIZUMAB
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
     dose: "200 mg IV over 30 min"
     route: IV
     schedule: "Day 1 q21d (when combined with paclitaxel or gem-carbo); or Day 1 q28d (when combined with nab-paclitaxel)"
@@ -25,16 +26,16 @@ chemotherapy_backbone_options:
     schedule: "Days 1, 8, 15 q28d + pembrolizumab Day 1 q28d"
     cycle_length_days: 28
   - backbone: "Paclitaxel (alternative, KEYNOTE-355 optional arm)"
-    drug: DRG-PACLITAXEL
+    drug: DRUG-PACLITAXEL
     dose: "90 mg/m² IV over 60 min"
     schedule: "Days 1, 8, 15 q28d + pembrolizumab Day 1 q28d"
     cycle_length_days: 28
     premedication_additional: "Dexamethasone + diphenhydramine + H2 blocker (paclitaxel hypersensitivity prophylaxis)"
   - backbone: "Gemcitabine + carboplatin (alternative, no taxane sensitivity)"
     drugs:
-      - drug: DRG-GEMCITABINE
+      - drug: DRUG-GEMCITABINE
         dose: "1000 mg/m² IV days 1, 8"
-      - drug: DRG-CARBOPLATIN
+      - drug: DRUG-CARBOPLATIN
         dose: "AUC 2 IV days 1, 8"
     schedule: "q21d + pembrolizumab Day 1 q21d"
     cycle_length_days: 21

@@ -4,14 +4,14 @@ name_ua: "Інгібітор ароматази + палбоцикліб (HR+/HE
 alternate_names: ["PALOMA-2 regimen", "Letrozole + palbociclib"]
 
 components:
-  - drug_id: DRUG-LETROZOLE
-    dose: "2.5 mg PO daily"
-    schedule: "Continuous"
-    route: PO
-  - drug_id: DRUG-PALBOCICLIB
-    dose: "125 mg PO daily, days 1-21 of 28-day cycle"
-    schedule: "21 days on, 7 days off"
-    route: PO
+- drug_id: DRUG-LETROZOLE
+  dose: "2.5 mg PO daily"
+  schedule: "Continuous"
+  route: PO
+- drug_id: DRUG-PALBOCICLIB
+  dose: "125 mg PO daily, days 1-21 of 28-day cycle"
+  schedule: "21 days on, 7 days off"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "Continuous until progression or unacceptable toxicity"
@@ -19,19 +19,21 @@ toxicity_profile: moderate
 
 premedication: []
 mandatory_supportive_care:
-  - SUP-BONE-HEALTH-PROSTATE   # cross-disease bone-health for AI BMD loss
+- SUP-BONE-HEALTH-PROSTATE
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "ANC <500/µL"
-    modification: "Hold palbociclib until recovery; resume at next lower dose level"
-  - condition: "Severe hepatic impairment"
-    modification: "Reduce palbociclib to 75 mg; AI dose adjust per hepatic monograph"
+- condition: "ANC <500/µL"
+  modification: "Hold palbociclib until recovery; resume at next lower dose level"
+- condition: "Severe hepatic impairment"
+  modification: "Reduce palbociclib to 75 mg; AI dose adjust per hepatic monograph"
 
 ukraine_availability:
   all_components_registered: true
   all_components_reimbursed: false
-  notes: "Letrozole reimbursed (generic). Palbociclib registered; reimbursement gap — out-of-pocket for most patients in Ukraine. Funding pathway must be confirmed pre-start."
+  notes: "Letrozole reimbursed (generic). Palbociclib registered; reimbursement gap
+    — out-of-pocket for most patients in Ukraine. Funding pathway must be confirmed
+    pre-start."
 
 sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
 
@@ -41,44 +43,47 @@ sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
 # (mild), hot flashes (AI), QT/cardiac (palbociclib rare).
 # STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, особливо в перші тижні"
-    action_ua: "Очікувано — занотовуйте інтенсивність, відпочивайте більше"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Гарячі припливи, легкий біль у суглобах"
-    action_ua: "Поширені на тлі інгібіторів ароматази — занотовуйте, обговоріть стратегії допомоги на візиті"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-ESMO-BREAST-METASTATIC-2024
-  - trigger_ua: "Нудота легка, втрата апетиту"
-    action_ua: "Зазвичай зникає протягом 2-3 циклів — занотовуйте інтенсивність"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C — особливо на 2-3 тижні циклу"
-    action_ua: "Подзвоніть у клініку того ж дня — палбоцикліб дає нейтропенію; критично виключити інфекцію"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 14-28"
-    sources:
-      - SRC-NCCN-BREAST-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Сильний біль у кістках"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка причини"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Біль або припухлість в одній нозі (особливо литка)"
-    action_ua: "Подзвоніть у клініку того ж дня — рак та інгібітори CDK підвищують ризик тромбозу"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BREAST-2025
-  - trigger_ua: "Раптова задишка, біль у грудях, кашель з кров'ю"
-    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BREAST-2025
-      - SRC-CTCAE-V5
+- trigger_ua: "Помірна втома, особливо в перші тижні"
+  action_ua: "Очікувано — занотовуйте інтенсивність, відпочивайте більше"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Гарячі припливи, легкий біль у суглобах"
+  action_ua: "Поширені на тлі інгібіторів ароматази — занотовуйте, обговоріть стратегії
+    допомоги на візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-ESMO-BREAST-METASTATIC-2024
+- trigger_ua: "Нудота легка, втрата апетиту"
+  action_ua: "Зазвичай зникає протягом 2-3 циклів — занотовуйте інтенсивність"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C — особливо на 2-3 тижні циклу"
+  action_ua: "Подзвоніть у клініку того ж дня — палбоцикліб дає нейтропенію; критично
+    виключити інфекцію"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 14-28"
+  sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Сильний біль у кістках"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка причини"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Біль або припухлість в одній нозі (особливо литка)"
+  action_ua: "Подзвоніть у клініку того ж дня — рак та інгібітори CDK підвищують ризик
+    тромбозу"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BREAST-2025
+- trigger_ua: "Раптова задишка, біль у грудях, кашель з кров'ю"
+  action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-CTCAE-V5
 
 last_reviewed:
 notes: >
@@ -87,6 +92,8 @@ notes: >
   suppression (LHRH agonist) added. For postmenopausal with bone-only
   disease + endocrine-sensitive: this is workhorse 1L.
 notes_ua: >
-  PALOMA-2: PFS виграш (~10-month покращення vs летрозол alone) in HR+/HER2- метастатичний 1L. Premenopausal patients require ovarian suppression (LHRH агоніст) added. For postmenopausal with bone-only хвороба + endocrine-sensitive: this is workhorse 1L.
+  PALOMA-2: PFS виграш (~10-month покращення vs летрозол alone) in HR+/HER2- метастатичний
+  1L. Premenopausal patients require ovarian suppression (LHRH агоніст) added. For
+  postmenopausal with bone-only хвороба + endocrine-sensitive: this is workhorse 1L.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

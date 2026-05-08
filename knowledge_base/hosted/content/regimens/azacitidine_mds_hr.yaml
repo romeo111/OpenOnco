@@ -2,51 +2,55 @@ id: REG-AZA-MDS-HR
 name: "Azacitidine (MDS-HR 1L)"
 name_ua: "Азацитидин (MDS-HR 1L)"
 alternate_names:
-  - "AZA monotherapy MDS"
-  - "Vidaza MDS"
+- "AZA monotherapy MDS"
+- "Vidaza MDS"
 
 components:
-  - drug_id: DRUG-AZACITIDINE
-    dose: "75 mg/m²/day"
-    schedule: "SC days 1-7 of each 28-day cycle (or 5-2-2 schedule for outpatient convenience)"
-    route: SC
+- drug_id: DRUG-AZACITIDINE
+  dose: "75 mg/m²/day"
+  schedule: "SC days 1-7 of each 28-day cycle (or 5-2-2 schedule for outpatient convenience)"
+  route: SC
 
 cycle_length_days: 28
-total_cycles: "Continue ≥6 cycles before declaring failure (response often delayed to cycles 4-6); continue until progression / unacceptable toxicity in responders"
+total_cycles: "Continue ≥6 cycles before declaring failure (response often delayed
+  to cycles 4-6); continue until progression / unacceptable toxicity in responders"
 
 toxicity_profile: moderate
 
 premedication:
-  - "Antiemetic prophylaxis (low-emetogenic; ondansetron PRN)"
-  - "Pre-cycle CBC + CMP"
+- "Antiemetic prophylaxis (low-emetogenic; ondansetron PRN)"
+- "Pre-cycle CBC + CMP"
 mandatory_supportive_care:
-  - SUP-HBV-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Severe cytopenias persisting beyond cycle 2"
-    modification: "Delay next cycle 1-2 weeks; reduce to 50 mg/m² × 7 d if recurrent"
-    rationale: "Cumulative myelosuppression; response often achieved with attenuated dose"
-    source_refs:
-      - SRC-NCCN-AML-2025
-      - SRC-ESMO-MDS-2021
-  - condition: "Renal impairment (CrCl 30-60 mL/min)"
-    modification: "No dose adjustment typically; monitor closely"
-    rationale: "Predominantly hepatic + renal clearance"
-  - condition: "No response by cycle 6"
-    modification: "Discontinue; consider ven+aza (off-label MDS-HR), enrollment in trial, alloHCT bridge if eligible"
-    rationale: "HMA failure has dismal prognosis (~6 mo OS); rapid pivot required"
-    source_refs:
-      - SRC-ESMO-MDS-2021
+- condition: "Severe cytopenias persisting beyond cycle 2"
+  modification: "Delay next cycle 1-2 weeks; reduce to 50 mg/m² × 7 d if recurrent"
+  rationale: "Cumulative myelosuppression; response often achieved with attenuated
+    dose"
+  source_refs:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+- condition: "Renal impairment (CrCl 30-60 mL/min)"
+  modification: "No dose adjustment typically; monitor closely"
+  rationale: "Predominantly hepatic + renal clearance"
+- condition: "No response by cycle 6"
+  modification: "Discontinue; consider ven+aza (off-label MDS-HR), enrollment in trial,
+    alloHCT bridge if eligible"
+  rationale: "HMA failure has dismal prognosis (~6 mo OS); rapid pivot required"
+  source_refs:
+  - SRC-ESMO-MDS-2021
 
 ukraine_availability:
   all_components_registered: true
   all_components_reimbursed: true
-  notes: "Azacitidine НСЗУ-reimbursed for MDS-HR. Decitabine alternative also reimbursed; clinically equivalent."
+  notes: "Azacitidine НСЗУ-reimbursed for MDS-HR. Decitabine alternative also reimbursed;
+    clinically equivalent."
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ESMO-MDS-2021
+- SRC-NCCN-AML-2025
+- SRC-ESMO-MDS-2021
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Azacitidine is given monthly cycles for many months in MDS-HR.
@@ -54,43 +58,50 @@ sources:
 # cytopenia, injection-site reactions (SC), and infection risk.
 # STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, нудота, зниження апетиту після ін'єкцій"
-    action_ua: "Часто буває в перші 1-2 цикли — приймайте призначені протиблювотні; занотовуйте інтенсивність"
-    urgency: log_at_next_visit
-    cycle_day_window: "Day 1-7"
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Почервоніння або легкий біль у місці підшкірних ін'єкцій"
-    action_ua: "Очікувано — чергуйте місця ін'єкцій, занотовуйте, якщо реакція стає сильнішою"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Помірний запор"
-    action_ua: "Поширений побічний ефект — пийте достатньо рідини, обговоріть проносні з лікарем"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — низька кількість нейтрофілів і ризик інфекції протягом усього курсу"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-AML-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Незвичні синці або кровотеча, що довго не спиняється"
-    action_ua: "Подзвоніть у клініку того ж дня — азацитидин знижує тромбоцити, особливо у перших циклах"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Виражена реакція в місці ін'єкції — болючий вузол, виразка"
-    action_ua: "Подзвоніть у клініку того ж дня — рідко потрібна корекція техніки введення або препарату"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
-    action_ua: "Звертайтесь у лікарню негайно — на тлі тривалої нейтропенії можливий швидкий розвиток сепсису"
-    urgency: er_now
-    sources:
-      - SRC-CTCAE-V5
+- trigger_ua: "Помірна втома, нудота, зниження апетиту після ін'єкцій"
+  action_ua: "Часто буває в перші 1-2 цикли — приймайте призначені протиблювотні;
+    занотовуйте інтенсивність"
+  urgency: log_at_next_visit
+  cycle_day_window: "Day 1-7"
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Почервоніння або легкий біль у місці підшкірних ін'єкцій"
+  action_ua: "Очікувано — чергуйте місця ін'єкцій, занотовуйте, якщо реакція стає
+    сильнішою"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Помірний запор"
+  action_ua: "Поширений побічний ефект — пийте достатньо рідини, обговоріть проносні
+    з лікарем"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — низька кількість нейтрофілів і ризик
+    інфекції протягом усього курсу"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-AML-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Незвичні синці або кровотеча, що довго не спиняється"
+  action_ua: "Подзвоніть у клініку того ж дня — азацитидин знижує тромбоцити, особливо
+    у перших циклах"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Виражена реакція в місці ін'єкції — болючий вузол, виразка"
+  action_ua: "Подзвоніть у клініку того ж дня — рідко потрібна корекція техніки введення
+    або препарату"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+  action_ua: "Звертайтесь у лікарню негайно — на тлі тривалої нейтропенії можливий
+    швидкий розвиток сепсису"
+  urgency: er_now
+  sources:
+  - SRC-CTCAE-V5
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -101,6 +112,10 @@ notes: >
   extrapolation from VIALE-A AML data; no Phase-3 HR-MDS-specific RCT).
   STUB — requires clinical co-lead signoff before publication.
 notes_ua: >
-  стандарт 1L for MDS-HR (and bridging to alloHCT in eligible patients). азацитидин and децитабін functionally еквівалентний; choice часто local. Do NOT припинити before цикл 6 unless overt прогресування — відповідь is delayed. венетоклакс+азацитидин in HR-MDS is increasingly used (off-label extrapolation from VIALE-A AML дані; ні Phase-3 HR-MDS-specific РКД). STUB — requires clinical co-lead signoff before publication.
+  стандарт 1L for MDS-HR (and bridging to alloHCT in eligible patients). азацитидин
+  and децитабін functionally еквівалентний; choice часто local. Do NOT припинити before
+  цикл 6 unless overt прогресування — відповідь is delayed. венетоклакс+азацитидин
+  in HR-MDS is increasingly used (off-label extrapolation from VIALE-A AML дані; ні
+  Phase-3 HR-MDS-specific РКД). STUB — requires clinical co-lead signoff before publication.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

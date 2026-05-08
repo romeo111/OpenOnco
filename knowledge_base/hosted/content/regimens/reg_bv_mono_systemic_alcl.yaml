@@ -1,34 +1,37 @@
 id: REG-BV-MONO-SYSTEMIC-ALCL
-name: "Brentuximab vedotin monotherapy (1.8 mg/kg IV q3 weeks × up to 16 cycles) for r/r systemic ALCL"
-name_ua: "Брентуксимаб ведотин монотерапія (1.8 mg/kg IV q3 тижні × до 16 циклів) для рефрактерної системної ALCL"
+name: "Brentuximab vedotin monotherapy (1.8 mg/kg IV q3 weeks × up to 16 cycles) for
+  r/r systemic ALCL"
+name_ua: "Брентуксимаб ведотин монотерапія (1.8 mg/kg IV q3 тижні × до 16 циклів)
+  для рефрактерної системної ALCL"
 alternate_names: ["BV-mono sALCL", "SGN-35-005-style", "Adcetris r/r sALCL"]
 
 components:
-  - drug_id: DRUG-BRENTUXIMAB-VEDOTIN
-    dose: "1.8 mg/kg (max 180 mg)"
-    schedule: "IV over 30 min every 21 days × up to 16 cycles or progression / toxicity"
-    route: IV
+- drug_id: DRUG-BRENTUXIMAB-VEDOTIN
+  dose: "1.8 mg/kg (max 180 mg)"
+  schedule: "IV over 30 min every 21 days × up to 16 cycles or progression / toxicity"
+  route: IV
 
 cycle_length_days: 21
 total_cycles: "Up to 16 (longer if sustained CR + toxicity acceptable)"
 toxicity_profile: moderate
 
-premedication: ["Antihistamine + acetaminophen before infusion (especially first 2 doses)"]
+premedication: ["Antihistamine + acetaminophen before infusion (especially first 2
+    doses)"]
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
+- SUP-PJP-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Grade ≥2 peripheral neuropathy"
-    modification: "Hold; reduce to 1.2 mg/kg on resume; discontinue if Grade ≥3"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Grade ≥4 neutropenia"
-    modification: "Hold until recovery; G-CSF support if recurrent; reduce dose"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Pre-existing Grade ≥2 neuropathy"
-    modification: "ABSOLUTE CI — choose alternative regimen (bendamustine, pralatrexate)"
-  - condition: "Active concomitant bleomycin therapy"
-    modification: "ABSOLUTE CI — additive lethal pulmonary toxicity"
+- condition: "Grade ≥2 peripheral neuropathy"
+  modification: "Hold; reduce to 1.2 mg/kg on resume; discontinue if Grade ≥3"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Grade ≥4 neutropenia"
+  modification: "Hold until recovery; G-CSF support if recurrent; reduce dose"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Pre-existing Grade ≥2 neuropathy"
+  modification: "ABSOLUTE CI — choose alternative regimen (bendamustine, pralatrexate)"
+- condition: "Active concomitant bleomycin therapy"
+  modification: "ABSOLUTE CI — additive lethal pulmonary toxicity"
 
 ukraine_availability:
   all_components_registered: true
@@ -40,40 +43,40 @@ ukraine_availability:
     response of any T-cell lymphoma — funding pathway worth pursuing.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-PTCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-PTCL-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Brentuximab vedotin monotherapy for relapsed systemic ALCL.
 # Same BV pattern. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
-    action_ua: "Брентуксимаб може спричиняти нейропатію — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна втома"
-    action_ua: "Очікувано"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Поколювання стає сильним болем"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Тяжка реакція на інфузію"
-    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
-    urgency: er_now
-    cycle_day_window: "Day 1 of cycle 1"
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Поколювання або оніміння в кистях/стопах"
+  action_ua: "Брентуксимаб може спричиняти нейропатію — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома"
+  action_ua: "Очікувано"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Поколювання стає сильним болем"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Тяжка реакція на інфузію"
+  action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+  urgency: er_now
+  cycle_day_window: "Day 1 of cycle 1"
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -85,6 +88,11 @@ notes: >
   responders. Also used in primary cutaneous ALCL per ALCANZA-style
   schedule.
 notes_ua: >
-  SGN-35-005 дослідження (Pro 2012, спостереження 2017): р/р systemic ALCL (n=58) — ORR 86%, CR 57%, mDOR 12.6 міс., 5-річна ЗВ ~60%. найкращий відповідь rates of any single agent in р/р T-cell лімфома. ALCL is universally CD30+ (~100% by IHC) — strongest BV target. часто used as bridge to аутоТГСК or алоТГСК in придатний до трансплантації responders. Also used in primary cutaneous ALCL per ALCANZA-style схема.
+  SGN-35-005 дослідження (Pro 2012, спостереження 2017): р/р systemic ALCL (n=58)
+  — ORR 86%, CR 57%, mDOR 12.6 міс., 5-річна ЗВ ~60%. найкращий відповідь rates of
+  any single agent in р/р T-cell лімфома. ALCL is universally CD30+ (~100% by IHC)
+  — strongest BV target. часто used as bridge to аутоТГСК or алоТГСК in придатний
+  до трансплантації responders. Also used in primary cutaneous ALCL per ALCANZA-style
+  схема.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

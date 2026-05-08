@@ -1,0 +1,36 @@
+id: ALGO-TGCT-1L
+applicable_to_disease: DIS-TGCT
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select systemic therapy for symptomatic, functionally debilitating
+  TGCT (tenosynovial giant cell tumor / diffuse-type PVNS) not amenable
+  to surgical improvement. Pexidartinib is the only FDA-approved systemic
+  option. Surgery remains the primary modality; systemic therapy only
+  for those with severe morbidity unimprovable by surgery.
+
+output_indications:
+  - IND-TGCT-1L-PEXIDARTINIB
+
+default_indication: IND-TGCT-1L-PEXIDARTINIB
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Severe symptomatic TGCT with functional limitation not amenable to surgery"
+    if_true:
+      result: IND-TGCT-1L-PEXIDARTINIB
+    if_false:
+      result: IND-TGCT-1L-PEXIDARTINIB
+    notes: "Only FDA-approved systemic option for TGCT. Hepatotoxicity REMS mandatory. Free-text condition without RF."
+
+sources:
+  - SRC-ILLUMINATE-TAP-2019
+  - SRC-ESMO-SARCOMA-2024
+last_reviewed: "2026-05-04"
+notes: >
+  Single-indication algorithm: pexidartinib is the only FDA-approved
+  systemic therapy for TGCT. EMA refused registration due to hepatotoxicity.
+  US REMS mandatory; access in Ukraine extremely limited (compassionate use
+  only). Hepatotoxicity monitoring (weekly LFTs × 8 weeks) is non-negotiable.

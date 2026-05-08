@@ -1,49 +1,56 @@
 id: REG-CARFILZOMIB-WM
-name: "Carfilzomib + Rituximab + Dexamethasone (CaRD) × 6 cycles — for CXCR4-WHIM-mutated WM (BTKi-resistant subset)"
-name_ua: "Карфілзоміб + Ритуксимаб + Дексаметазон (CaRD) × 6 циклів — для CXCR4-WHIM-мутованої WM (BTKi-резистентна підгрупа)"
+name: "Carfilzomib + Rituximab + Dexamethasone (CaRD) × 6 cycles — for CXCR4-WHIM-mutated
+  WM (BTKi-resistant subset)"
+name_ua: "Карфілзоміб + Ритуксимаб + Дексаметазон (CaRD) × 6 циклів — для CXCR4-WHIM-мутованої
+  WM (BTKi-резистентна підгрупа)"
 alternate_names: ["CaRD", "Carfil-R-Dex WM"]
 
 components:
-  - drug_id: DRUG-CARFILZOMIB
-    dose: "20 mg/m² days 1+2 of cycle 1, then 36 mg/m² days 1, 2, 8, 9, 15, 16 of subsequent cycles"
-    schedule: "IV days 1+2, 8+9, 15+16 of each 28-day cycle × 6"
-    route: IV
-  - drug_id: DRUG-RITUXIMAB
-    dose: "375 mg/m²"
-    schedule: "IV day 2 of each cycle"
-    route: IV
-  - drug_id: DRUG-DEXAMETHASONE
-    dose: "20 mg"
-    schedule: "IV/PO before carfilzomib doses (premed + therapeutic)"
-    route: PO
+- drug_id: DRUG-CARFILZOMIB
+  dose: "20 mg/m² days 1+2 of cycle 1, then 36 mg/m² days 1, 2, 8, 9, 15, 16 of subsequent
+    cycles"
+  schedule: "IV days 1+2, 8+9, 15+16 of each 28-day cycle × 6"
+  route: IV
+- drug_id: DRUG-RITUXIMAB
+  dose: "375 mg/m²"
+  schedule: "IV day 2 of each cycle"
+  route: IV
+- drug_id: DRUG-DEXAMETHASONE
+  dose: "20 mg"
+  schedule: "IV/PO before carfilzomib doses (premed + therapeutic)"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "6 cycles induction; rituximab maintenance optional based on response"
 toxicity_profile: moderate-high
 
 premedication:
-  - "Pre-carfilzomib hydration: NS 250-500 mL IV before infusion (TLS + cardiac protection)"
-  - "Dexamethasone (in regimen) — premedication for carfilzomib infusion reactions"
-  - "Standard rituximab premedications (especially first dose)"
-  - "Plasmapheresis FIRST if symptomatic hyperviscosity"
-  - "Acyclovir 400 mg PO BID throughout (HSV/VZV prophylaxis)"
+- "Pre-carfilzomib hydration: NS 250-500 mL IV before infusion (TLS + cardiac protection)"
+- "Dexamethasone (in regimen) — premedication for carfilzomib infusion reactions"
+- "Standard rituximab premedications (especially first dose)"
+- "Plasmapheresis FIRST if symptomatic hyperviscosity"
+- "Acyclovir 400 mg PO BID throughout (HSV/VZV prophylaxis)"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-HBV-PROPHYLAXIS
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Cardiac symptoms (CHF, dyspnea, hypertension >180/110)"
-    modification: "Hold carfilzomib; cardiology consult; LVEF assessment; resume at 50% dose if cleared, OR discontinue if Grade ≥3"
-    rationale: "Carfilzomib has cardiotoxicity signal — particularly relevant in older patients"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "TLS (high-burden disease)"
-    modification: "Aggressive hydration + allopurinol/rasburicase; reduce dose cycle 1 if very high burden"
-  - condition: "Acute renal failure"
-    modification: "Hold; investigate (TLS, hyperviscosity, drug effect); resume at reduced dose"
-  - condition: "Symptomatic hyperviscosity"
-    modification: "Plasmapheresis FIRST; HOLD rituximab until IgM reduced"
+- condition: "Cardiac symptoms (CHF, dyspnea, hypertension >180/110)"
+  modification: "Hold carfilzomib; cardiology consult; LVEF assessment; resume at
+    50% dose if cleared, OR discontinue if Grade ≥3"
+  rationale: "Carfilzomib has cardiotoxicity signal — particularly relevant in older
+    patients"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "TLS (high-burden disease)"
+  modification: "Aggressive hydration + allopurinol/rasburicase; reduce dose cycle
+    1 if very high burden"
+- condition: "Acute renal failure"
+  modification: "Hold; investigate (TLS, hyperviscosity, drug effect); resume at reduced
+    dose"
+- condition: "Symptomatic hyperviscosity"
+  modification: "Plasmapheresis FIRST; HOLD rituximab until IgM reduced"
 
 ukraine_availability:
   all_components_registered: true
@@ -55,46 +62,47 @@ ukraine_availability:
     UA: all components on-shelf via existing MM/NHL supply routes.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-WM-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-WM-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Carfilzomib + R + dexamethasone for WM. Carfilzomib signature:
 # cardiac toxicity (heart failure, hypertension), pulmonary, infusion
 # reactions. Less neuropathy than bortezomib. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
-    action_ua: "Карфілзоміб може підвищувати тиск — занотовуйте показники"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна нудота, втома"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Нова задишка при навантаженні, набряки гомілок"
-    action_ua: "Подзвоніть у клініку того ж дня — карфілзоміб може спричиняти серцеву недостатність"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Реакція на інфузію — задишка, гарячка, біль у грудях"
-    action_ua: "Інфузія в клініці — повідомте медсестру негайно"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 1 of cycle 1"
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — імуносупресія від анти-CD20"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Раптова сильна задишка у спокої, біль у грудях"
-    action_ua: "Звертайтесь у лікарню негайно — можлива серцева подія"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+  action_ua: "Карфілзоміб може підвищувати тиск — занотовуйте показники"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна нудота, втома"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Нова задишка при навантаженні, набряки гомілок"
+  action_ua: "Подзвоніть у клініку того ж дня — карфілзоміб може спричиняти серцеву
+    недостатність"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Реакція на інфузію — задишка, гарячка, біль у грудях"
+  action_ua: "Інфузія в клініці — повідомте медсестру негайно"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 1 of cycle 1"
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — імуносупресія від анти-CD20"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Раптова сильна задишка у спокої, біль у грудях"
+  action_ua: "Звертайтесь у лікарню негайно — можлива серцева подія"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -107,6 +115,11 @@ notes: >
   in older patients. Weekly schedule less cardiotoxic but lower
   efficacy data in WM.
 notes_ua: >
-  CaRD дослідження (Treon 2014): р/р WM — major частота відповіді 87%, VGPR 68%; особливо active in CXCR4-WHIM-mutated subset where BTKi відповідь weaker. карфілзоміб (необоротний proteasome інгібітор) has minimal периферична нейропатія vs бортезоміб — переважний for WM IgM-related нейропатія patients. Cardiac моніторинг critical — карфілзоміб has кардіотоксичність signal (CHF, гіпертензія) особливо in older patients. Weekly схема less cardiotoxic but lower ефективність дані in WM.
+  CaRD дослідження (Treon 2014): р/р WM — major частота відповіді 87%, VGPR 68%; особливо
+  active in CXCR4-WHIM-mutated subset where BTKi відповідь weaker. карфілзоміб (необоротний
+  proteasome інгібітор) has minimal периферична нейропатія vs бортезоміб — переважний
+  for WM IgM-related нейропатія patients. Cardiac моніторинг critical — карфілзоміб
+  has кардіотоксичність signal (CHF, гіпертензія) особливо in older patients. Weekly
+  схема less cardiotoxic but lower ефективність дані in WM.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

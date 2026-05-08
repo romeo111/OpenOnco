@@ -2,137 +2,156 @@ id: REG-ALLOHCT-PMF
 name: "Allogeneic hematopoietic cell transplant for high-risk PMF"
 name_ua: "Алогенна трансплантація кровотворних клітин для високоризикової ПМФ"
 alternate_names:
-  - "AlloHCT PMF"
-  - "Allogeneic SCT myelofibrosis"
+- "AlloHCT PMF"
+- "Allogeneic SCT myelofibrosis"
 
 components: []  # phases supersede; kept empty for back-compat with downstream
                 # consumers that still iterate `components` directly. PR3 of
                 # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
 
 phases:
-  - name: bridging
-    purpose_ua: "JAKi-бриджинг 3-6 місяців перед ало-ТГСК — оптимізація рoxolitinib для зменшення селезінки + симптоматичного навантаження; taper за 5-7 днів до кондиціонування"
-    purpose_en: "JAKi bridging 3-6 months pre-HCT — ruxolitinib optimization to reduce spleen volume + symptom burden; taper 5-7 days before conditioning"
-    duration: "3-6 months pre-HCT"
-    timing_relative_to: "main_infusion"
-    timing_offset_days: -180
-    optional: false
-    components:
-      - drug_id: DRUG-RUXOLITINIB
-        dose: "JAKi optimization 3-6 months pre-HCT (5-20 mg PO BID by baseline plt) to reduce spleen volume + symptom burden; taper 5-7 days before conditioning"
-        schedule: "Pre-HCT bridging; conditioning regimen institution-specific (myeloablative Bu/Flu or Bu/Cy for fit younger; reduced-intensity Flu/Mel or Flu/Bu for older / comorbid)"
-        route: PO
-    sources:
-      - SRC-NCCN-MPN-2025
-      - SRC-DIPSS-PLUS-GANGAT-2011
-  - name: conditioning_allohct
-    purpose_ua: "кондиціонування перед ало-ТГСК — мієлоаблятивне (Bu/Flu або Bu/Cy) для фіт-молодших; редукованої інтенсивності (Flu/Mel або Flu/Bu) для старших/коморбідних; інституційно специфічне"
-    purpose_en: "conditioning before allo-HCT — myeloablative (Bu/Flu or Bu/Cy) for fit younger; reduced-intensity (Flu/Mel or Flu/Bu) for older/comorbid; institution-specific"
-    duration: "single conditioning regimen (institution-specific) before HCT"
-    timing_relative_to: "previous_phase_completion"
-    optional: false
-    components: []  # Conditioning regimen institution-specific; not enumerated
+- name: bridging
+  purpose_ua: "JAKi-бриджинг 3-6 місяців перед ало-ТГСК — оптимізація рoxolitinib
+    для зменшення селезінки + симптоматичного навантаження; taper за 5-7 днів до кондиціонування"
+  purpose_en: "JAKi bridging 3-6 months pre-HCT — ruxolitinib optimization to reduce
+    spleen volume + symptom burden; taper 5-7 days before conditioning"
+  duration: "3-6 months pre-HCT"
+  timing_relative_to: "main_infusion"
+  timing_offset_days: -180
+  optional: false
+  components:
+  - drug_id: DRUG-RUXOLITINIB
+    dose: "JAKi optimization 3-6 months pre-HCT (5-20 mg PO BID by baseline plt) to
+      reduce spleen volume + symptom burden; taper 5-7 days before conditioning"
+    schedule: "Pre-HCT bridging; conditioning regimen institution-specific (myeloablative
+      Bu/Flu or Bu/Cy for fit younger; reduced-intensity Flu/Mel or Flu/Bu for older
+      / comorbid)"
+    route: PO
+  sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-DIPSS-PLUS-GANGAT-2011
+- name: conditioning_allohct
+  purpose_ua: "кондиціонування перед ало-ТГСК — мієлоаблятивне (Bu/Flu або Bu/Cy)
+    для фіт-молодших; редукованої інтенсивності (Flu/Mel або Flu/Bu) для старших/коморбідних;
+    інституційно специфічне"
+  purpose_en: "conditioning before allo-HCT — myeloablative (Bu/Flu or Bu/Cy) for
+    fit younger; reduced-intensity (Flu/Mel or Flu/Bu) for older/comorbid; institution-specific"
+  duration: "single conditioning regimen (institution-specific) before HCT"
+  timing_relative_to: "previous_phase_completion"
+  optional: false
+  components: []    # Conditioning regimen institution-specific; not enumerated
                    # as drug components here (placeholder per plan-doc §5 Group D)
-    sources:
-      - SRC-NCCN-MPN-2025
-  - name: allohct
-    purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — єдина куративна опція для PMF; donor: sibling > matched unrelated > haplo > cord"
-    purpose_en: "allogeneic hematopoietic cell transplant (allo-HCT) — only curative option for PMF; donor priority: sibling > matched unrelated > haplo > cord"
-    duration: "single transplant procedure"
-    timing_relative_to: "previous_phase_completion"
-    optional: false
-    components: []  # AlloHCT — pathway placeholder, no drug components
-    sources:
-      - SRC-NCCN-MPN-2025
+  sources:
+  - SRC-NCCN-MPN-2025
+- name: allohct
+  purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — єдина куративна
+    опція для PMF; donor: sibling > matched unrelated > haplo > cord"
+  purpose_en: "allogeneic hematopoietic cell transplant (allo-HCT) — only curative
+    option for PMF; donor priority: sibling > matched unrelated > haplo > cord"
+  duration: "single transplant procedure"
+  timing_relative_to: "previous_phase_completion"
+  optional: false
+  components: []    # AlloHCT — pathway placeholder, no drug components
+  sources:
+  - SRC-NCCN-MPN-2025
 
 cycle_length_days:
-total_cycles: "Single transplant procedure; consider post-HCT JAKi resumption (off-label) if early molecular relapse signal; donor lymphocyte infusion (DLI) for relapse"
+total_cycles: "Single transplant procedure; consider post-HCT JAKi resumption (off-label)
+  if early molecular relapse signal; donor lymphocyte infusion (DLI) for relapse"
 
 toxicity_profile: severe
 
 premedication:
-  - "Donor identification (HLA-matched sibling > matched unrelated > haploidentical > cord)"
-  - "Pre-transplant comorbidity assessment (HCT-CI)"
-  - "Pre-transplant spleen reduction with JAKi 3-6 months (improves transplant outcomes)"
-  - "Splenectomy NOT routinely recommended pre-HCT (high mortality in MF; only for refractory massive splenomegaly per institution)"
-  - "Standard infectious + organ workup (echo, PFT, CMV serology, HBV/HCV/HIV)"
+- "Donor identification (HLA-matched sibling > matched unrelated > haploidentical
+  > cord)"
+- "Pre-transplant comorbidity assessment (HCT-CI)"
+- "Pre-transplant spleen reduction with JAKi 3-6 months (improves transplant outcomes)"
+- "Splenectomy NOT routinely recommended pre-HCT (high mortality in MF; only for refractory
+  massive splenomegaly per institution)"
+- "Standard infectious + organ workup (echo, PFT, CMV serology, HBV/HCV/HIV)"
 
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-HBV-PROPHYLAXIS
-
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Older / comorbid (HCT-CI ≥3, age >60-65)"
-    modification: "Reduced-intensity conditioning (RIC): Flu/Mel or Flu/Bu2; haplo or matched-unrelated donor acceptable"
-    rationale: "Lower TRM with RIC; comparable disease control in MF"
-    source_refs:
-      - SRC-NCCN-MPN-2025
-      - SRC-DIPSS-PLUS-GANGAT-2011
-  - condition: "Massive splenomegaly with symptoms despite JAKi"
-    modification: "Continue JAKi pre-HCT; splenectomy only for refractory cases per institutional MF-HCT expertise (high mortality)"
-    rationale: "Splenectomy in MF has high peri-op mortality; only for refractory massive splenomegaly"
-    source_refs:
-      - SRC-NCCN-MPN-2025
-  - condition: "Active blast progression (>10% blasts → accelerated/blast phase)"
-    modification: "Treat as AML (induction with HMA + venetoclax or 7+3) before HCT; outcomes substantially worse if active blast crisis"
-    rationale: "Disease status at HCT dominant predictor"
-    source_refs:
-      - SRC-NCCN-MPN-2025
+- condition: "Older / comorbid (HCT-CI ≥3, age >60-65)"
+  modification: "Reduced-intensity conditioning (RIC): Flu/Mel or Flu/Bu2; haplo or
+    matched-unrelated donor acceptable"
+  rationale: "Lower TRM with RIC; comparable disease control in MF"
+  source_refs:
+  - SRC-NCCN-MPN-2025
+  - SRC-DIPSS-PLUS-GANGAT-2011
+- condition: "Massive splenomegaly with symptoms despite JAKi"
+  modification: "Continue JAKi pre-HCT; splenectomy only for refractory cases per
+    institutional MF-HCT expertise (high mortality)"
+  rationale: "Splenectomy in MF has high peri-op mortality; only for refractory massive
+    splenomegaly"
+  source_refs:
+  - SRC-NCCN-MPN-2025
+- condition: "Active blast progression (>10% blasts → accelerated/blast phase)"
+  modification: "Treat as AML (induction with HMA + venetoclax or 7+3) before HCT;
+    outcomes substantially worse if active blast crisis"
+  rationale: "Disease status at HCT dominant predictor"
+  source_refs:
+  - SRC-NCCN-MPN-2025
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "AlloHCT performed at limited Ukrainian centers (Kyiv Institute of Hematology + few others); international referral common for adult MF. Donor registry coverage limited. Ruxolitinib bridging registered but NOT НСЗУ-reimbursed for MF."
+  notes: "AlloHCT performed at limited Ukrainian centers (Kyiv Institute of Hematology
+    + few others); international referral common for adult MF. Donor registry coverage
+    limited. Ruxolitinib bridging registered but NOT НСЗУ-reimbursed for MF."
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-DIPSS-PLUS-GANGAT-2011
+- SRC-NCCN-MPN-2025
+- SRC-DIPSS-PLUS-GANGAT-2011
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Allo-HCT for high-risk PMF with JAKi bridging. Same allo-HCT toxicity
 # pattern (GVHD + infection + VOD); during JAKi bridging — cytopenia +
 # rebound on taper. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Виражена втома, що триває тижнями після виписки"
-    action_ua: "Очікувано — кістковий мозок відновлюється повільно; відпочивайте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Лихоманка вище 38°C — у будь-який час після кондиціонування"
-    action_ua: "Звертайтесь у лікарню негайно — інфекція на тлі тривалої нейтропенії"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-MPN-2025
-      - SRC-CTCAE-V5
-  - trigger_ua: "Висип на шкірі (особливо долоні, стопи), діарея, жовтяниця"
-    action_ua: "Подзвоніть у клініку того ж дня — реакція трансплантат-проти-господаря"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Жовтяниця, набір ваги, біль у правому підребер'ї перші 30 днів"
-    action_ua: "Звертайтесь у лікарню негайно — вено-оклюзивне ускладнення"
-    urgency: er_now
-    cycle_day_window: "Day 1-30"
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Раптове повернення симптомів селезінки (біль, набряк живота, лихоманка) під час відміни руксолітинібу"
-    action_ua: "Подзвоніть у клініку того ж дня — синдром відміни JAKi"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Сильний біль у животі, нудота, кров у стільці"
-    action_ua: "Звертайтесь у лікарню негайно — РТПХ кишечника або інфекція"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
-    action_ua: "Звертайтесь у лікарню негайно — ознаки можливого сепсису"
-    urgency: er_now
-    sources:
-      - SRC-CTCAE-V5
+- trigger_ua: "Виражена втома, що триває тижнями після виписки"
+  action_ua: "Очікувано — кістковий мозок відновлюється повільно; відпочивайте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Лихоманка вище 38°C — у будь-який час після кондиціонування"
+  action_ua: "Звертайтесь у лікарню негайно — інфекція на тлі тривалої нейтропенії"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-CTCAE-V5
+- trigger_ua: "Висип на шкірі (особливо долоні, стопи), діарея, жовтяниця"
+  action_ua: "Подзвоніть у клініку того ж дня — реакція трансплантат-проти-господаря"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Жовтяниця, набір ваги, біль у правому підребер'ї перші 30 днів"
+  action_ua: "Звертайтесь у лікарню негайно — вено-оклюзивне ускладнення"
+  urgency: er_now
+  cycle_day_window: "Day 1-30"
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Раптове повернення симптомів селезінки (біль, набряк живота, лихоманка)
+    під час відміни руксолітинібу"
+  action_ua: "Подзвоніть у клініку того ж дня — синдром відміни JAKi"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Сильний біль у животі, нудота, кров у стільці"
+  action_ua: "Звертайтесь у лікарню негайно — РТПХ кишечника або інфекція"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+  action_ua: "Звертайтесь у лікарню негайно — ознаки можливого сепсису"
+  urgency: er_now
+  sources:
+  - SRC-CTCAE-V5
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -144,6 +163,11 @@ notes: >
   for high-risk without HCT. JAKi pre-HCT bridging 3-6 months
   improves outcomes. STUB — pending Co-Lead sign-off.
 notes_ua: >
-  AlloHCT remains the ONLY curative option for PMF. обов'язковий consideration in ALL придатний до трансплантації patients with DIPSS-Plus intermediate-2 / високого ризику OR MIPSS70+ високого ризику OR несприятливий molecular features (TP53, ASXL1, EZH2, IDH1/2, SRSF2 — "HMR мутації"). 5-y OS post-HCT 30-65% (DIPSS-stratified) проти <20% for високого ризику without HCT. JAKi pre-HCT bridging 3-6 months покращує outcomes. STUB — pending Co-Lead sign-off.
+  AlloHCT remains the ONLY curative option for PMF. обов'язковий consideration in
+  ALL придатний до трансплантації patients with DIPSS-Plus intermediate-2 / високого
+  ризику OR MIPSS70+ високого ризику OR несприятливий molecular features (TP53, ASXL1,
+  EZH2, IDH1/2, SRSF2 — "HMR мутації"). 5-y OS post-HCT 30-65% (DIPSS-stratified)
+  проти <20% for високого ризику without HCT. JAKi pre-HCT bridging 3-6 months покращує
+  outcomes. STUB — pending Co-Lead sign-off.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

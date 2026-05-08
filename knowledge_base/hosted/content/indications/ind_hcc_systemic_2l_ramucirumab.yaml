@@ -5,14 +5,14 @@ applicable_to:
   disease_id: DIS-HCC
   line_of_therapy: 2
   stage_requirements:
-    - "Advanced/unresectable HCC (BCLC C, or BCLC B not amenable to locoregional therapy)"
-    - "Disease progression on sorafenib 1L"
-    - "Child-Pugh A liver function"
-    - "AFP ≥ 400 ng/mL at time of 2L initiation (required biomarker)"
+  - "Advanced/unresectable HCC (BCLC C, or BCLC B not amenable to locoregional therapy)"
+  - "Disease progression on sorafenib 1L"
+  - "Child-Pugh A liver function"
+  - "AFP ≥ 400 ng/mL at time of 2L initiation (required biomarker)"
   biomarker_requirements_required:
-    - biomarker_id: BIO-AFP
-      required: true
-      value_constraint: "AFP ≥ 400 ng/mL (serum AFP; FDA label requirement for ramucirumab in HCC)"
+  - biomarker_id: BIO-AFP
+    required: true
+    value_constraint: "AFP ≥ 400 ng/mL (serum AFP; FDA label requirement for ramucirumab in HCC)"
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 1
@@ -31,26 +31,20 @@ expected_outcomes:
   progression_free_survival: "Median PFS 2.8 mo vs 1.6 mo (HR 0.45, REACH-2)"
   overall_survival_5y: "Median OS 8.5 mo vs 7.3 mo (HR 0.71, 95% CI 0.53–0.95, p=0.0199, REACH-2)"
 
-hard_contraindications:
-  - "AFP < 400 ng/mL (no OS benefit in unselected population per REACH-1; ramucirumab is ONLY indicated for AFP ≥400)"
-  - "Active uncontrolled hemorrhage (anti-VEGFR2 increases bleeding risk)"
-  - "Recent (< 6 months) arterial thromboembolism"
-  - "Child-Pugh B or C"
-  - "Uncontrolled hypertension (>150/100 despite treatment)"
-
+hard_contraindications: []
 red_flags_triggering_alternative:
-  - RF-HCC-CHILD-PUGH-B-C
-  - RF-HCC-VARICEAL-BLEED
-  - RF-HCC-FRAILTY-AGE
+- RF-HCC-CHILD-PUGH-B-C
+- RF-HCC-VARICEAL-BLEED
+- RF-HCC-FRAILTY-AGE
 
 required_tests:
-  - TEST-AFP
-  - TEST-LFT
-  - TEST-BILIRUBIN-TOTAL
-  - TEST-CBC
-  - TEST-CMP
-  - TEST-CT-CAP
-  - TEST-URINE-PROTEIN
+- TEST-AFP
+- TEST-LFT
+- TEST-BILIRUBIN-TOTAL
+- TEST-CBC
+- TEST-CMP
+- TEST-CT-CAP
+- TEST-URINE-PROTEIN
 
 desired_tests: []
 
@@ -81,32 +75,32 @@ ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 
 sources:
-  - source_id: SRC-REACH2-ZHU-2019
-    position: supports
-    relevant_quote_paraphrase: "Ramucirumab vs placebo post-sorafenib AFP≥400 HCC: mOS 8.5 vs 7.3 mo (HR 0.71, p=0.0199); FDA approved May 2019 — first biomarker-selected 2L HCC approval"
-  - source_id: SRC-NCCN-HCC-2025
-    position: supports
-    relevant_quote_paraphrase: "Ramucirumab is NCCN Category 1 for HCC after sorafenib with AFP ≥400 ng/mL; do not use in AFP <400 population"
+- source_id: SRC-REACH2-ZHU-2019
+  position: supports
+  relevant_quote_paraphrase: "Ramucirumab vs placebo post-sorafenib AFP≥400 HCC: mOS 8.5 vs 7.3 mo (HR 0.71, p=0.0199); FDA approved May 2019 — first biomarker-selected 2L HCC approval"
+- source_id: SRC-NCCN-HCC-2025
+  position: supports
+  relevant_quote_paraphrase: "Ramucirumab is NCCN Category 1 for HCC after sorafenib with AFP ≥400 ng/mL; do not use in AFP <400 population"
 
 do_not_do:
-  - "НІКОЛИ не призначати при АФП <400 нг/мл — FDA-схвалення біомаркерно-вибіркове; REACH-1 (unselected) НЕ показав ЗВ-переваги (HR 0.87, p=0.14)"
-  - "Не призначати при активній кровотечі або нелікованому варикозному розширенні вен — анти-VEGFR2 підвищує ризик кровотечі"
-  - "Не ігнорувати протеїнурію — UPCR моніторинг кожні 4 тижні; призупинити при UPCR ≥2 г/добу"
-  - "Не призначати при Child-Pugh B/C — REACH-2 включав тільки Child-Pugh A"
-  - "Контроль АТ перед кожним введенням — цільовий <150/100; гіпертензія у ~13% Grade 3-4"
-  - "Не призначати в Україні без підтвердження доступності — рамуцирумаб не зареєстрований в Україні"
+- "НІКОЛИ не призначати при АФП <400 нг/мл — FDA-схвалення біомаркерно-вибіркове; REACH-1 (unselected) НЕ показав ЗВ-переваги (HR 0.87, p=0.14)"
+- "Не призначати при активній кровотечі або нелікованому варикозному розширенні вен — анти-VEGFR2 підвищує ризик кровотечі"
+- "Не ігнорувати протеїнурію — UPCR моніторинг кожні 4 тижні; призупинити при UPCR ≥2 г/добу"
+- "Не призначати при Child-Pugh B/C — REACH-2 включав тільки Child-Pugh A"
+- "Контроль АТ перед кожним введенням — цільовий <150/100; гіпертензія у ~13% Grade 3-4"
+- "Не призначати в Україні без підтвердження доступності — рамуцирумаб не зареєстрований в Україні"
 
 known_controversies:
-  - topic: "Optimal 2L sequencing: regorafenib vs cabozantinib vs ramucirumab in AFP≥400 HCC"
-    positions:
-      - position: "For AFP ≥400: ramucirumab is IV, well-tolerated, biomarker-selected; suitable when TKI toxicity (HFSR, fatigue) concerns dominate"
-        sources:
-          - SRC-REACH2-ZHU-2019
-      - position: "Regorafenib has largest OS benefit (HR 0.63 vs HR 0.71 for ramu); regorafenib preferred when sorafenib was tolerated regardless of AFP"
-        sources:
-          - SRC-RESORCE-BRUIX-2017
-    our_default: "AFP≥400 + sorafenib-intolerant (no HFSR tolerance): ramucirumab; AFP≥400 + sorafenib-tolerant: regorafenib preferred (HR 0.63 > 0.71)"
-    rationale: "Tolerated sorafenib→regorafenib gives the best OS HR; ramucirumab fills a gap for sorafenib-intolerant with AFP≥400"
+- topic: "Optimal 2L sequencing: regorafenib vs cabozantinib vs ramucirumab in AFP≥400 HCC"
+  positions:
+  - position: "For AFP ≥400: ramucirumab is IV, well-tolerated, biomarker-selected; suitable when TKI toxicity (HFSR, fatigue) concerns dominate"
+    sources:
+    - SRC-REACH2-ZHU-2019
+  - position: "Regorafenib has largest OS benefit (HR 0.63 vs HR 0.71 for ramu); regorafenib preferred when sorafenib was tolerated regardless of AFP"
+    sources:
+    - SRC-RESORCE-BRUIX-2017
+  our_default: "AFP≥400 + sorafenib-intolerant (no HFSR tolerance): ramucirumab; AFP≥400 + sorafenib-tolerant: regorafenib preferred (HR 0.63 > 0.71)"
+  rationale: "Tolerated sorafenib→regorafenib gives the best OS HR; ramucirumab fills a gap for sorafenib-intolerant with AFP≥400"
 
 time_critical: false
 last_reviewed: "2026-05-04"

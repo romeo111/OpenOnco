@@ -2,14 +2,14 @@ id: REG-MOMELOTINIB-PMF
 name: "Momelotinib (Ojjaara) for MF with anemia"
 name_ua: "Момелотиніб (Ojjaara) для МФ з анемією"
 alternate_names:
-  - "Momelotinib mono"
-  - "MOMENTUM regimen"
+- "Momelotinib mono"
+- "MOMENTUM regimen"
 
 components:
-  - drug_id: DRUG-MOMELOTINIB
-    dose: "200 mg PO once daily (with or without food)"
-    schedule: "Continuous; cycles of 28 days; until progression / unacceptable toxicity"
-    route: PO
+- drug_id: DRUG-MOMELOTINIB
+  dose: "200 mg PO once daily (with or without food)"
+  schedule: "Continuous; cycles of 28 days; until progression / unacceptable toxicity"
+  route: PO
 
 cycle_length_days: 28
 total_cycles: "Continuous until progression / unacceptable toxicity"
@@ -17,76 +17,80 @@ total_cycles: "Continuous until progression / unacceptable toxicity"
 toxicity_profile: moderate
 
 premedication:
-  - "Pre-treatment HBV / HCV / HIV / TB screening — JAKi reactivation risk"
-  - "Baseline LFT; serial monitoring"
-  - "Pregnancy testing in WCBP + reliable contraception"
+- "Pre-treatment HBV / HCV / HIV / TB screening — JAKi reactivation risk"
+- "Baseline LFT; serial monitoring"
+- "Pregnancy testing in WCBP + reliable contraception"
 
 mandatory_supportive_care:
-  - SUP-HBV-PROPHYLAXIS
-
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Severe thrombocytopenia (platelets <50K) OR Grade 4"
-    modification: "Hold; resume reduced dose 150 mg or 100 mg PO daily on platelets ≥50K"
-    rationale: "Thrombocytopenia commonest reason for dose hold; less anemia impact than ruxolitinib due to hepcidin lowering via ACVR1 inhibition"
-    source_refs:
-      - SRC-MOMENTUM-VERSTOVSEK-2023
-      - SRC-NCCN-MPN-2025
-  - condition: "Grade ≥3 ALT/AST elevation"
-    modification: "Hold; resume reduced dose on resolution; permanent discontinuation if Grade 4 or recurrent"
-    rationale: "Hepatotoxicity observed in MOMENTUM"
-    source_refs:
-      - SRC-MOMENTUM-VERSTOVSEK-2023
-  - condition: "Renal impairment CrCl <30 mL/min"
-    modification: "Reduce to 150 mg PO daily"
-    rationale: "Reduced clearance"
-    source_refs:
-      - SRC-NCCN-MPN-2025
-  - condition: "Hepatic impairment Child-Pugh B"
-    modification: "Reduce to 150 mg PO daily; avoid in Child-Pugh C"
-    rationale: "Hepatic metabolism"
-    source_refs:
-      - SRC-NCCN-MPN-2025
+- condition: "Severe thrombocytopenia (platelets <50K) OR Grade 4"
+  modification: "Hold; resume reduced dose 150 mg or 100 mg PO daily on platelets
+    ≥50K"
+  rationale: "Thrombocytopenia commonest reason for dose hold; less anemia impact
+    than ruxolitinib due to hepcidin lowering via ACVR1 inhibition"
+  source_refs:
+  - SRC-MOMENTUM-VERSTOVSEK-2023
+  - SRC-NCCN-MPN-2025
+- condition: "Grade ≥3 ALT/AST elevation"
+  modification: "Hold; resume reduced dose on resolution; permanent discontinuation
+    if Grade 4 or recurrent"
+  rationale: "Hepatotoxicity observed in MOMENTUM"
+  source_refs:
+  - SRC-MOMENTUM-VERSTOVSEK-2023
+- condition: "Renal impairment CrCl <30 mL/min"
+  modification: "Reduce to 150 mg PO daily"
+  rationale: "Reduced clearance"
+  source_refs:
+  - SRC-NCCN-MPN-2025
+- condition: "Hepatic impairment Child-Pugh B"
+  modification: "Reduce to 150 mg PO daily; avoid in Child-Pugh C"
+  rationale: "Hepatic metabolism"
+  source_refs:
+  - SRC-NCCN-MPN-2025
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "Momelotinib NOT registered in Ukraine. International referral or compassionate-use pathway required."
+  notes: "Momelotinib NOT registered in Ukraine. International referral or compassionate-use
+    pathway required."
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-MOMENTUM-VERSTOVSEK-2023
+- SRC-NCCN-MPN-2025
+- SRC-MOMENTUM-VERSTOVSEK-2023
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Momelotinib for MF with anemia (MOMENTUM). JAK1/JAK2/ACVR1: cytopenia
 # + hepatotox + peripheral neuropathy + HBV reactivation. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, нудота"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Поколювання або оніміння у руках чи ногах"
-    action_ua: "Занотовуйте і повідомте лікаря на прийомі — периферична нейропатія"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-MOMENTUM-VERSTOVSEK-2023
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Кровотеча з ясен, синці без причини"
-    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-MPN-2025
-  - trigger_ua: "Жовтяниця, темна сеча"
-    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність або реактивація HBV"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-MOMENTUM-VERSTOVSEK-2023
+- trigger_ua: "Помірна втома, нудота"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Поколювання або оніміння у руках чи ногах"
+  action_ua: "Занотовуйте і повідомте лікаря на прийомі — периферична нейропатія"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-MOMENTUM-VERSTOVSEK-2023
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Кровотеча з ясен, синці без причини"
+  action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-MPN-2025
+- trigger_ua: "Жовтяниця, темна сеча"
+  action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність або реактивація
+    HBV"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-MOMENTUM-VERSTOVSEK-2023
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -97,6 +101,10 @@ notes: >
   response 25% vs 9%, spleen response 22% vs 3%, TI 31% vs 20%.
   STUB — pending Co-Lead sign-off.
 notes_ua: >
-  JAK1/JAK2 + ACVR1 інгібітор — distinguishes from руксолитиніб by improving анемія (ACVR1 → зменшений hepcidin → restored erythropoiesis) where руксолитиніб часто погіршує анемія. MOMENTUM phase-3 vs danazol in JAKi-experienced anemic MF: symptom відповідь 25% проти 9%, spleen відповідь 22% проти 3%, TI 31% проти 20%. STUB — pending Co-Lead sign-off.
+  JAK1/JAK2 + ACVR1 інгібітор — distinguishes from руксолитиніб by improving анемія
+  (ACVR1 → зменшений hepcidin → restored erythropoiesis) where руксолитиніб часто
+  погіршує анемія. MOMENTUM phase-3 vs danazol in JAKi-experienced anemic MF: symptom
+  відповідь 25% проти 9%, spleen відповідь 22% проти 3%, TI 31% проти 20%. STUB —
+  pending Co-Lead sign-off.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

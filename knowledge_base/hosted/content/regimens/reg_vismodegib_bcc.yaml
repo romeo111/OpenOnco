@@ -1,0 +1,63 @@
+id: REG-VISMODEGIB-BCC
+name: "Vismodegib monotherapy (locally advanced / metastatic BCC)"
+name_ua: "Візомодегіб моно (місцево-поширений / метастатичний БКК)"
+alternate_names:
+- "Erivedge BCC"
+- "ERIVANCE regimen"
+
+components:
+- drug_id: DRUG-VISMODEGIB
+  dose: "150 mg PO once daily, with or without food"
+  schedule: "Continuous until progression or unacceptable toxicity"
+  route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care: []
+dose_adjustments:
+- condition: "Intolerable muscle spasms / Grade ≥3 musculoskeletal toxicity"
+  modification: "Interrupt treatment up to 8 weeks; resume 150 mg if resolved; discontinue if persistent"
+  rationale: "Muscle cramps are dose-limiting; drug holiday strategy may be considered"
+  source_refs:
+  - SRC-NCCN-SKIN-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Vismodegib NOT registered in Ukraine. Access via DEC named-patient import or cross-border EU center."
+
+between_visit_watchpoints:
+- trigger_ua: "Сильні м'язові спазми або судоми"
+  action_ua: "Поширений побічний ефект — занотуйте частоту та тяжкість; обговоріть на візиті"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-SKIN-2025
+- trigger_ua: "Повне або значне випадіння волосся"
+  action_ua: "Очікуваний ефект — не відміняти самовільно"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-SKIN-2025
+- trigger_ua: "Вагітність або затримка менструації"
+  action_ua: "Зателефонуйте в клініку негайно — препарат вкрай небезпечний для плода"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-SKIN-2025
+
+sources:
+- SRC-NCCN-SKIN-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  First-in-class SMO inhibitor for BCC. ERIVANCE: ORR 43% (mBCC), 30% (laBCC).
+  High discontinuation rate due to AEs (~50% by 9 months), not progression.
+  Drug holiday strategy (intermittent dosing) may reduce AE burden while
+  maintaining some control. Cemiplimab is the approved option after HHI failure.
+notes_ua: >
+  Перший в класі SMO-інгібітор для БКК. ERIVANCE: ORR 43% (mBCC), 30% (laBCC).
+  Висока частота відміни через побічні ефекти (~50% до 9 місяців). Цемипліумаб —
+  варіант після прогресування на HHI.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

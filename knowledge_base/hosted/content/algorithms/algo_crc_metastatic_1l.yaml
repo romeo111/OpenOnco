@@ -92,10 +92,10 @@ decision_tree:
       result: IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
       notes: "BRAF V600E + fit: FOLFOXIRI+bev preferred (TRIBE; ESMO 2024). Plan BEACON 2L after progression."
     if_false:
-      next_step: 3b
+      next_step: 4
 
-  # Step 3b — BRAF V600E but frail/older → de-escalate to doublet.
-  - step: 3b
+  # Step 4 — BRAF V600E but frail/older → de-escalate to doublet.
+  - step: 4
     evaluate:
       any_of:
         - red_flag: RF-CRC-BRAF-V600E-POOR-PROGNOSIS
@@ -103,11 +103,11 @@ decision_tree:
       result: IND-CRC-METASTATIC-1L-FOLFOX-BEV
       notes: "BRAF V600E + ECOG ≥2 or age ≥75: FOLFOX+bev (tolerable doublet); BEACON 2L after progression."
     if_false:
-      next_step: 4
+      next_step: 5
 
   # Step 4 — Fit patient with high tumour burden / conversion intent
   # (non-BRAF, non-MSI-H, ECOG 0-1) → consider FOLFOXIRI+bev.
-  - step: 4
+  - step: 5
     evaluate:
       all_of:
         - condition: "ECOG PS 0-1 AND age <75"
@@ -116,10 +116,10 @@ decision_tree:
       result: IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
       notes: "Fit + high-burden/conversion intent: FOLFOXIRI+bev (TRIBE OS benefit; higher ORR/R0 rate). MDT resectability review before starting."
     if_false:
-      next_step: 5
+      next_step: 6
 
   # Step 5 — frailty de-escalation.
-  - step: 5
+  - step: 6
     evaluate:
       any_of:
         - red_flag: RF-CRC-FRAILTY-AGE

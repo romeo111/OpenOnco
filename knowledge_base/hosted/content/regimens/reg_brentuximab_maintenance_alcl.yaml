@@ -1,33 +1,36 @@
 id: REG-BRENTUXIMAB-MAINTENANCE-ALCL
-name: "Brentuximab vedotin maintenance post-ASCT for high-risk systemic ALCL (AETHERA-style, 16 cycles)"
-name_ua: "Брентуксимаб ведотин maintenance після ASCT для високоризикової системної ALCL (за зразком AETHERA, 16 циклів)"
+name: "Brentuximab vedotin maintenance post-ASCT for high-risk systemic ALCL (AETHERA-style,
+  16 cycles)"
+name_ua: "Брентуксимаб ведотин maintenance після ASCT для високоризикової системної
+  ALCL (за зразком AETHERA, 16 циклів)"
 alternate_names: ["BV maintenance ALCL", "AETHERA-style ALCL"]
 
 components:
-  - drug_id: DRUG-BRENTUXIMAB-VEDOTIN
-    dose: "1.8 mg/kg (max 180 mg)"
-    schedule: "IV every 21 days × 16 cycles, starting 30-45 days post-ASCT"
-    route: IV
+- drug_id: DRUG-BRENTUXIMAB-VEDOTIN
+  dose: "1.8 mg/kg (max 180 mg)"
+  schedule: "IV every 21 days × 16 cycles, starting 30-45 days post-ASCT"
+  route: IV
 
 cycle_length_days: 21
 total_cycles: "16 cycles (~12 months) starting 30-45 days post-ASCT"
 toxicity_profile: moderate
 
-premedication: ["Antihistamine + acetaminophen before infusion (especially first 2 doses)"]
+premedication: ["Antihistamine + acetaminophen before infusion (especially first 2
+    doses)"]
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
+- SUP-PJP-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "Grade ≥2 peripheral neuropathy"
-    modification: "Hold; reduce to 1.2 mg/kg on resume; discontinue if Grade ≥3"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Grade ≥4 neutropenia"
-    modification: "Hold until recovery; G-CSF support if recurrent; reduce dose"
-  - condition: "Pre-existing Grade ≥2 neuropathy from pre-ASCT therapy"
-    modification: "Generally NOT eligible — risk-benefit unfavorable; surveillance only"
-  - condition: "Any active infection at start"
-    modification: "Defer until resolved"
+- condition: "Grade ≥2 peripheral neuropathy"
+  modification: "Hold; reduce to 1.2 mg/kg on resume; discontinue if Grade ≥3"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Grade ≥4 neutropenia"
+  modification: "Hold until recovery; G-CSF support if recurrent; reduce dose"
+- condition: "Pre-existing Grade ≥2 neuropathy from pre-ASCT therapy"
+  modification: "Generally NOT eligible — risk-benefit unfavorable; surveillance only"
+- condition: "Any active infection at start"
+  modification: "Defer until resolved"
 
 ukraine_availability:
   all_components_registered: true
@@ -38,44 +41,44 @@ ukraine_availability:
     typical. ASCT performed at major hematology centers domestically.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-PTCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-PTCL-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Brentuximab vedotin maintenance post-ASCT for ALCL. CD30 ADC;
 # peripheral neuropathy signature + neutropenia + rare PML/pancreatitis.
 # STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Поколювання у пальцях рук і ніг"
-    action_ua: "Занотовуйте інтенсивність — вираженість має бути обговорена з лікарем"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна втома"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Виражене оніміння або слабкість у руках чи ногах, що погіршується"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози або пауза"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Сильний біль у верхній частині живота, що віддає в спину"
-    action_ua: "Подзвоніть у клініку того ж дня — рідкісний побічний — панкреатит"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Сплутаність свідомості, проблеми з мовою, рухами"
-    action_ua: "Звертайтесь у лікарню негайно — рідкісний неврологічний побічний"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Поколювання у пальцях рук і ніг"
+  action_ua: "Занотовуйте інтенсивність — вираженість має бути обговорена з лікарем"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Виражене оніміння або слабкість у руках чи ногах, що погіршується"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози або пауза"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Сильний біль у верхній частині живота, що віддає в спину"
+  action_ua: "Подзвоніть у клініку того ж дня — рідкісний побічний — панкреатит"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Сплутаність свідомості, проблеми з мовою, рухами"
+  action_ua: "Звертайтесь у лікарню негайно — рідкісний неврологічний побічний"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-27"
 notes: >
@@ -87,6 +90,11 @@ notes: >
   consolidation strategies in CD30+ T-cell. Off-label in this setting
   per NCCN — practice-level recommendation, not registration.
 notes_ua: >
-  Adapted from AETHERA (Moskowitz 2015 cHL) — extrapolated to systemic ALCL високого ризику post-аутоТГСК (primary рефрактерний, рецидив <12 міс., multiple lines pre-ASCT, extranodal at рецидив). Strongest rationale for ALK-negative ALCL where natural history post-ASCT remains poor. ECHELON-2 спостереження дані (Horwitz 2022, 5-річна) further supports BV консолідація strategies in CD30+ T-cell. off-label in this setting per NCCN — practice-level рекомендація, not registration.
+  Adapted from AETHERA (Moskowitz 2015 cHL) — extrapolated to systemic ALCL високого
+  ризику post-аутоТГСК (primary рефрактерний, рецидив <12 міс., multiple lines pre-ASCT,
+  extranodal at рецидив). Strongest rationale for ALK-negative ALCL where natural
+  history post-ASCT remains poor. ECHELON-2 спостереження дані (Horwitz 2022, 5-річна)
+  further supports BV консолідація strategies in CD30+ T-cell. off-label in this setting
+  per NCCN — practice-level рекомендація, not registration.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,48 @@
+id: ALGO-BCC-1L
+applicable_to_disease: DIS-BCC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic therapy for locally advanced or metastatic BCC
+  not amenable to surgery/radiation. Both agents are SMO antagonists
+  (HHI); choice depends on extent of disease (vismodegib for both
+  laBCC and mBCC; sonidegib FDA-approved for laBCC only), access,
+  and patient tolerance.
+
+output_indications:
+  - IND-BCC-1L-VISMODEGIB
+  - IND-BCC-1L-SONIDEGIB
+
+default_indication: IND-BCC-1L-VISMODEGIB
+alternative_indication: IND-BCC-1L-SONIDEGIB
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Metastatic BCC (distant metastases)"
+    if_true:
+      result: IND-BCC-1L-VISMODEGIB
+      notes: "Sonidegib FDA label restricted to laBCC; vismodegib approved for both laBCC and mBCC"
+    if_false:
+      next_step: 2
+    notes: "Free-text condition without RF; engine routes to default."
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Locally advanced BCC (unresectable or radiation-inappropriate)"
+    if_true:
+      result: IND-BCC-1L-VISMODEGIB
+    if_false:
+      result: IND-BCC-1L-VISMODEGIB
+    notes: "Both HHIs appropriate for laBCC; default to vismodegib (longer track record). Sonidegib available as alternative."
+
+sources:
+  - SRC-NCCN-SKIN-2025
+last_reviewed: "2026-05-04"
+notes: >
+  Both vismodegib and sonidegib are NCCN Category 1 for locally advanced
+  BCC. Vismodegib has broader FDA approval (laBCC + mBCC); sonidegib
+  restricted to laBCC only. Decision tree currently simplified — both
+  routes to vismodegib as default with sonidegib as explicit alternative
+  track (aggressive). Cemiplimab (anti-PD-1) is the standard after HHI
+  failure; not encoded here (2L scope).

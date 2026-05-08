@@ -2,77 +2,85 @@ id: REG-CAR-T-AXICEL
 name: "Axicabtagene ciloleucel (axi-cel) CAR-T — single infusion after lymphodepletion"
 name_ua: "Аксікабтаген цилолейцел (axi-cel) CAR-T — одна інфузія після лімфодеплеції"
 alternate_names:
-  - "Axi-cel"
-  - "Yescarta"
-  - "ZUMA-1 regimen"
-  - "ZUMA-7 regimen (2L primary-refractory)"
+- "Axi-cel"
+- "Yescarta"
+- "ZUMA-1 regimen"
+- "ZUMA-7 regimen (2L primary-refractory)"
 
 components: []  # phases supersede; kept empty for back-compat with downstream
                 # consumers that still iterate `components` directly. PR2 of
                 # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
 
 phases:
-  - name: lymphodepletion
-    purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин"
-    purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment"
-    duration: "3 days, days -5 to -3"
-    timing_relative_to: "main_infusion"
-    timing_offset_days: -5
-    optional: false
-    components:
-      - drug_id: DRUG-CYCLOPHOSPHAMIDE
-        dose: "500 mg/m²/day"
-        schedule: "IV days -5, -4, -3"
-        route: IV
-      - drug_id: DRUG-FLUDARABINE
-        dose: "30 mg/m²/day"
-        schedule: "IV days -5, -4, -3"
-        route: IV
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - name: main
-    purpose_ua: "основна CAR-T інфузія"
-    purpose_en: "main CAR-T infusion"
-    duration: "single infusion"
-    timing_relative_to: "absolute"
-    optional: false
-    components:
-      - drug_id: DRUG-AXICABTAGENE-CILOLEUCEL
-        dose: "Target 2 × 10^6 anti-CD19 CAR+ T-cells/kg (max 2 × 10^8 total)"
-        schedule: "Single IV infusion day 0, after lymphodepletion completed"
-        route: IV
-    sources:
-      - SRC-NCCN-BCELL-2025
+- name: lymphodepletion
+  purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин"
+  purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment"
+  duration: "3 days, days -5 to -3"
+  timing_relative_to: "main_infusion"
+  timing_offset_days: -5
+  optional: false
+  components:
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "500 mg/m²/day"
+    schedule: "IV days -5, -4, -3"
+    route: IV
+  - drug_id: DRUG-FLUDARABINE
+    dose: "30 mg/m²/day"
+    schedule: "IV days -5, -4, -3"
+    route: IV
+  sources:
+  - SRC-NCCN-BCELL-2025
+- name: main
+  purpose_ua: "основна CAR-T інфузія"
+  purpose_en: "main CAR-T infusion"
+  duration: "single infusion"
+  timing_relative_to: "absolute"
+  optional: false
+  components:
+  - drug_id: DRUG-AXICABTAGENE-CILOLEUCEL
+    dose: "Target 2 × 10^6 anti-CD19 CAR+ T-cells/kg (max 2 × 10^8 total)"
+    schedule: "Single IV infusion day 0, after lymphodepletion completed"
+    route: IV
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 cycle_length_days:
 total_cycles: "Single infusion (one-time therapy)"
 toxicity_profile: severe
 
 premedication:
-  - "Acetaminophen 650 mg PO + diphenhydramine 12.5 mg IV pre-infusion"
-  - "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + efficacy"
-  - "Tocilizumab MUST be on-site (≥2 doses available) BEFORE infusion — for emergency CRS rescue"
+- "Acetaminophen 650 mg PO + diphenhydramine 12.5 mg IV pre-infusion"
+- "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + efficacy"
+- "Tocilizumab MUST be on-site (≥2 doses available) BEFORE infusion — for emergency
+  CRS rescue"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-IVIG-HYPOGAMMA
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-IVIG-HYPOGAMMA
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "CRS Grade 2 (hypotension responsive to fluids OR hypoxia requiring low-flow O₂)"
-    modification: "Tocilizumab 8 mg/kg IV (max 800 mg); ± dexamethasone 10 mg IV q6h; supportive care"
-    rationale: "Cytokine release reaction — tocilizumab IL-6R blockade is first-line"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "CRS Grade 3-4 OR ICANS Grade 2+"
-    modification: "Tocilizumab + high-dose dexamethasone (10-20 mg q6h) OR methylprednisolone 1 g/day; ICU; anakinra for refractory ICANS"
-    rationale: "Severe CRS / ICANS may be fatal if untreated; aggressive immunomodulation indicated"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Persistent severe cytopenia >Day +30"
-    modification: "G-CSF support; transfusions; consider ferrokinetics + B-cell aplasia management; IVIG for IgG <400"
-    rationale: "On-target B-cell aplasia + delayed marrow recovery is common; IVIG for symptomatic hypogammaglobulinemia"
-  - condition: "Active uncontrolled infection at planned infusion"
-    modification: "Delay infusion until infection resolved + lymphodepletion repeated if interval >2 weeks"
-    rationale: "Lymphodepletion + CRS in active infection = high mortality"
+- condition: "CRS Grade 2 (hypotension responsive to fluids OR hypoxia requiring low-flow
+    O₂)"
+  modification: "Tocilizumab 8 mg/kg IV (max 800 mg); ± dexamethasone 10 mg IV q6h;
+    supportive care"
+  rationale: "Cytokine release reaction — tocilizumab IL-6R blockade is first-line"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "CRS Grade 3-4 OR ICANS Grade 2+"
+  modification: "Tocilizumab + high-dose dexamethasone (10-20 mg q6h) OR methylprednisolone
+    1 g/day; ICU; anakinra for refractory ICANS"
+  rationale: "Severe CRS / ICANS may be fatal if untreated; aggressive immunomodulation
+    indicated"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Persistent severe cytopenia >Day +30"
+  modification: "G-CSF support; transfusions; consider ferrokinetics + B-cell aplasia
+    management; IVIG for IgG <400"
+  rationale: "On-target B-cell aplasia + delayed marrow recovery is common; IVIG for
+    symptomatic hypogammaglobulinemia"
+- condition: "Active uncontrolled infection at planned infusion"
+  modification: "Delay infusion until infection resolved + lymphodepletion repeated
+    if interval >2 weeks"
+  rationale: "Lymphodepletion + CRS in active infection = high mortality"
 
 ukraine_availability:
   all_components_registered: false
@@ -88,8 +96,8 @@ ukraine_availability:
     coordinated with referring center.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Axicabtagene ciloleucel CD19 CAR-T for r/r DLBCL ≥2L. Same CRS /
@@ -97,47 +105,50 @@ sources:
 # CRS rate (~13%) and Grade 3+ ICANS (~28%) than 4-1BB constructs.
 # Inpatient during peak risk window. STUB pending §6.1 signoff.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна втома, зниження апетиту після інфузії"
-    action_ua: "Очікувано — занотовуйте інтенсивність"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Помірна температура (37.5-38°C), легкий головний біль протягом перших 1-2 тижнів"
-    action_ua: "Подзвоніть у клініку того ж дня — навіть невелика лихоманка може бути першою ознакою CRS"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 1-21"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-ESMO-DLBCL-2024
-  - trigger_ua: "Розмиття мови, плутаність, утруднене писання — навіть легке"
-    action_ua: "Звертайтесь у лікарню негайно — це може бути ICANS; рання оцінка критична"
-    urgency: er_now
-    cycle_day_window: "Day 1-30"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-ESMO-DLBCL-2024
-  - trigger_ua: "Висока лихоманка (>38.5°C), низький тиск, прискорене серцебиття"
-    action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого CRS; потрібен тоцилізумаб"
-    urgency: er_now
-    cycle_day_window: "Day 1-21"
-    sources:
-      - SRC-NCCN-BCELL-2025
-      - SRC-ESMO-DLBCL-2024
-  - trigger_ua: "Раптова сильна задишка, синюшність губ"
-    action_ua: "Звертайтесь у лікарню негайно — можливий тяжкий CRS з ушкодженням легень"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Судомний напад, втрата свідомості"
-    action_ua: "Звертайтесь у лікарню негайно — тяжкий ICANS"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Часті інфекції протягом місяців після CAR-T"
-    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка; B-cell aplasia триває роки"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна втома, зниження апетиту після інфузії"
+  action_ua: "Очікувано — занотовуйте інтенсивність"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна температура (37.5-38°C), легкий головний біль протягом перших
+    1-2 тижнів"
+  action_ua: "Подзвоніть у клініку того ж дня — навіть невелика лихоманка може бути
+    першою ознакою CRS"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 1-21"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+- trigger_ua: "Розмиття мови, плутаність, утруднене писання — навіть легке"
+  action_ua: "Звертайтесь у лікарню негайно — це може бути ICANS; рання оцінка критична"
+  urgency: er_now
+  cycle_day_window: "Day 1-30"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+- trigger_ua: "Висока лихоманка (>38.5°C), низький тиск, прискорене серцебиття"
+  action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого CRS; потрібен тоцилізумаб"
+  urgency: er_now
+  cycle_day_window: "Day 1-21"
+  sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+- trigger_ua: "Раптова сильна задишка, синюшність губ"
+  action_ua: "Звертайтесь у лікарню негайно — можливий тяжкий CRS з ушкодженням легень"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Судомний напад, втрата свідомості"
+  action_ua: "Звертайтесь у лікарню негайно — тяжкий ICANS"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Часті інфекції протягом місяців після CAR-T"
+  action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка; B-cell aplasia триває
+    роки"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -151,6 +162,12 @@ notes: >
   (Breyanzi) are alternative CD19 CAR-T products — separate Regimen
   entities (future).
 notes_ua: >
-  ZUMA-1 (р/р DLBCL, ≥2 prior lines): ORR ~83%, CR ~58%, durable ~40% at 5-year спостереження. ZUMA-7 expanded показання to 2L for primary- рефрактерний or early-рецидив (<12 міс.) DLBCL: перевершує EFS vs сальвадж chemo + аутоТГСК. Centre must be FACT/JACIE/REMS-accredited. спеціальні попередження в інструкції: CRS, ICANS, secondary T-cell злоякісне новоутворення (FDA 2024). Plan бриджингова терапія + caregiver-presence-for-4-weeks-post-infusion as стандарт. тисагенлеклеуцел (Kymriah) and лісокабтаген маралейцел (Breyanzi) are alternative CD19 CAR-T products — separate схема entities (future).
+  ZUMA-1 (р/р DLBCL, ≥2 prior lines): ORR ~83%, CR ~58%, durable ~40% at 5-year спостереження.
+  ZUMA-7 expanded показання to 2L for primary- рефрактерний or early-рецидив (<12
+  міс.) DLBCL: перевершує EFS vs сальвадж chemo + аутоТГСК. Centre must be FACT/JACIE/REMS-accredited.
+  спеціальні попередження в інструкції: CRS, ICANS, secondary T-cell злоякісне новоутворення
+  (FDA 2024). Plan бриджингова терапія + caregiver-presence-for-4-weeks-post-infusion
+  as стандарт. тисагенлеклеуцел (Kymriah) and лісокабтаген маралейцел (Breyanzi) are
+  alternative CD19 CAR-T products — separate схема entities (future).
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

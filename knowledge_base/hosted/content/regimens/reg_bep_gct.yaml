@@ -1,10 +1,11 @@
 id: REG-BEP-GCT
+name: "BEP (bleomycin + etoposide + cisplatin, germ cell tumor)"
 disease_context: DIS-TESTICULAR-GCT
 line_of_therapy: 1
 plan_track: standard
 
-agents:
-  - drug_id: DRG-BLEOMYCIN
+components:
+  - drug_id: DRUG-BLEOMYCIN
     dose: "30 IU IV push over 10 min (or 30 IU in 100 mL NS over 30 min)"
     route: IV
     schedule: "Days 2, 9, 16 of each 21-day cycle (once weekly per cycle)"
@@ -16,14 +17,14 @@ agents:
         action: "Permanently discontinue bleomycin; systemic corticosteroids"
       - trigger: "CrCl <50 mL/min"
         action: "Consider EP instead of BEP (bleomycin renally cleared)"
-  - drug_id: DRG-ETOPOSIDE
+  - drug_id: DRUG-ETOPOSIDE
     dose: "100 mg/m²/day IV over 60 min"
     route: IV
     schedule: "Days 1-5 of each 21-day cycle"
     dose_modifications:
       - trigger: "ANC <1000 or platelets <50K on day 1"
         action: "Delay until ANC ≥1000 + platelets ≥75K; G-CSF secondary prophylaxis"
-  - drug_id: DRG-CISPLATIN
+  - drug_id: DRUG-CISPLATIN
     dose: "20 mg/m²/day IV over 60 min with aggressive hydration"
     route: IV
     schedule: "Days 1-5 of each 21-day cycle (total 100 mg/m² per cycle)"

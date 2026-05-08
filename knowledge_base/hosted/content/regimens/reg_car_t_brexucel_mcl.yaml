@@ -1,6 +1,8 @@
 id: REG-CAR-T-BREXUCEL-MCL
-name: "Brexucabtagene autoleucel (brexu-cel) CAR-T for r/r MCL — single infusion after lymphodepletion (ZUMA-2)"
-name_ua: "Брексукабтаген аутолейцел (brexu-cel) CAR-T для рефрактерної MCL — одна інфузія після лімфодеплеції (ZUMA-2)"
+name: "Brexucabtagene autoleucel (brexu-cel) CAR-T for r/r MCL — single infusion after
+  lymphodepletion (ZUMA-2)"
+name_ua: "Брексукабтаген аутолейцел (brexu-cel) CAR-T для рефрактерної MCL — одна
+  інфузія після лімфодеплеції (ZUMA-2)"
 alternate_names: ["Brexu-cel MCL", "Tecartus MCL", "ZUMA-2 regimen"]
 
 components: []  # phases supersede; kept empty for back-compat with downstream
@@ -8,66 +10,71 @@ components: []  # phases supersede; kept empty for back-compat with downstream
                 # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
 
 phases:
-  - name: lymphodepletion
-    purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин"
-    purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment"
-    duration: "3 days, days -5 to -3"
-    timing_relative_to: "main_infusion"
-    timing_offset_days: -5
-    optional: false
-    components:
-      - drug_id: DRUG-CYCLOPHOSPHAMIDE
-        dose: "500 mg/m²/day"
-        schedule: "IV days -5, -4, -3"
-        route: IV
-      - drug_id: DRUG-FLUDARABINE
-        dose: "30 mg/m²/day"
-        schedule: "IV days -5, -4, -3"
-        route: IV
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - name: main
-    purpose_ua: "основна CAR-T інфузія"
-    purpose_en: "main CAR-T infusion"
-    duration: "single infusion"
-    timing_relative_to: "absolute"
-    optional: false
-    components:
-      - drug_id: DRUG-BREXUCABTAGENE-AUTOLEUCEL
-        dose: "Target 2 × 10^6 anti-CD19 CAR+ T-cells/kg (max 2 × 10^8 total)"
-        schedule: "Single IV infusion day 0, after lymphodepletion completed"
-        route: IV
-    sources:
-      - SRC-NCCN-BCELL-2025
+- name: lymphodepletion
+  purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин"
+  purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment"
+  duration: "3 days, days -5 to -3"
+  timing_relative_to: "main_infusion"
+  timing_offset_days: -5
+  optional: false
+  components:
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "500 mg/m²/day"
+    schedule: "IV days -5, -4, -3"
+    route: IV
+  - drug_id: DRUG-FLUDARABINE
+    dose: "30 mg/m²/day"
+    schedule: "IV days -5, -4, -3"
+    route: IV
+  sources:
+  - SRC-NCCN-BCELL-2025
+- name: main
+  purpose_ua: "основна CAR-T інфузія"
+  purpose_en: "main CAR-T infusion"
+  duration: "single infusion"
+  timing_relative_to: "absolute"
+  optional: false
+  components:
+  - drug_id: DRUG-BREXUCABTAGENE-AUTOLEUCEL
+    dose: "Target 2 × 10^6 anti-CD19 CAR+ T-cells/kg (max 2 × 10^8 total)"
+    schedule: "Single IV infusion day 0, after lymphodepletion completed"
+    route: IV
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 cycle_length_days:
 total_cycles: "Single infusion (one-time therapy)"
 toxicity_profile: severe
 
 premedication:
-  - "Acetaminophen 650 mg PO + diphenhydramine 12.5 mg IV pre-infusion"
-  - "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + efficacy"
-  - "Tocilizumab MUST be on-site (≥2 doses available) BEFORE infusion — for emergency CRS rescue"
+- "Acetaminophen 650 mg PO + diphenhydramine 12.5 mg IV pre-infusion"
+- "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + efficacy"
+- "Tocilizumab MUST be on-site (≥2 doses available) BEFORE infusion — for emergency
+  CRS rescue"
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-IVIG-HYPOGAMMA
-  - SUP-TLS-PROPHYLAXIS
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-IVIG-HYPOGAMMA
+- SUP-TLS-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "CRS Grade 2"
-    modification: "Tocilizumab 8 mg/kg IV (max 800 mg); ± dexamethasone 10 mg IV q6h"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "CRS Grade 3-4 OR ICANS Grade 2+"
-    modification: "Tocilizumab + high-dose dexamethasone (10-20 mg q6h) OR methylprednisolone 1 g/day; ICU; anakinra for refractory ICANS"
-    source_refs: [SRC-NCCN-BCELL-2025]
-  - condition: "Persistent severe cytopenia >Day +30"
-    modification: "G-CSF; transfusions; IVIG for IgG <400 with recurrent infection"
-  - condition: "Active uncontrolled infection at planned infusion"
-    modification: "Delay infusion until resolved + repeat lymphodepletion if interval >2 weeks"
-  - condition: "TP53-mutated bridging considerations"
-    modification: "Bridging during 3-4 wk manufacturing window — TP53-mutated MCL progresses fast; consider BTKi-based bridging if not previously failed; avoid steroid-heavy regimens"
+- condition: "CRS Grade 2"
+  modification: "Tocilizumab 8 mg/kg IV (max 800 mg); ± dexamethasone 10 mg IV q6h"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "CRS Grade 3-4 OR ICANS Grade 2+"
+  modification: "Tocilizumab + high-dose dexamethasone (10-20 mg q6h) OR methylprednisolone
+    1 g/day; ICU; anakinra for refractory ICANS"
+  source_refs: [SRC-NCCN-BCELL-2025]
+- condition: "Persistent severe cytopenia >Day +30"
+  modification: "G-CSF; transfusions; IVIG for IgG <400 with recurrent infection"
+- condition: "Active uncontrolled infection at planned infusion"
+  modification: "Delay infusion until resolved + repeat lymphodepletion if interval
+    >2 weeks"
+- condition: "TP53-mutated bridging considerations"
+  modification: "Bridging during 3-4 wk manufacturing window — TP53-mutated MCL progresses
+    fast; consider BTKi-based bridging if not previously failed; avoid steroid-heavy
+    regimens"
 
 ukraine_availability:
   all_components_registered: false
@@ -80,40 +87,40 @@ ukraine_availability:
     only durable-remission option.
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-MCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-MCL-2024
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Brexucabtagene autoleucel for relapsed MCL (ZUMA-2). Same axi-cel-
 # adjacent CRS/ICANS pattern. STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна температура у перші 1-2 тижні"
-    action_ua: "Подзвоніть у клініку того ж дня — будь-яка лихоманка може бути CRS"
-    urgency: call_clinic_same_day
-    cycle_day_window: "Day 1-21"
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Розмиття мови, плутаність"
-    action_ua: "Звертайтесь у лікарню негайно — ICANS"
-    urgency: er_now
-    cycle_day_window: "Day 1-30"
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Висока лихоманка, низький тиск"
-    action_ua: "Звертайтесь у лікарню негайно — CRS"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Раптова сильна задишка"
-    action_ua: "Звертайтесь у лікарню негайно"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-BCELL-2025
-  - trigger_ua: "Часті інфекції протягом місяців"
-    action_ua: "Подзвоніть у клініку того ж дня — B-cell aplasia"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-BCELL-2025
+- trigger_ua: "Помірна температура у перші 1-2 тижні"
+  action_ua: "Подзвоніть у клініку того ж дня — будь-яка лихоманка може бути CRS"
+  urgency: call_clinic_same_day
+  cycle_day_window: "Day 1-21"
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Розмиття мови, плутаність"
+  action_ua: "Звертайтесь у лікарню негайно — ICANS"
+  urgency: er_now
+  cycle_day_window: "Day 1-30"
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Висока лихоманка, низький тиск"
+  action_ua: "Звертайтесь у лікарню негайно — CRS"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Раптова сильна задишка"
+  action_ua: "Звертайтесь у лікарню негайно"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-BCELL-2025
+- trigger_ua: "Часті інфекції протягом місяців"
+  action_ua: "Подзвоніть у клініку того ж дня — B-cell aplasia"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -127,6 +134,12 @@ notes: >
   in 3-4 wk manufacturing window; pirtobrutinib bridging preferred if
   not prior-failed.
 notes_ua: >
-  ZUMA-2 дослідження (Wang 2020): р/р MCL after prior cBTKi (медіана 3 prior lines, ~25% TP53-mut, 60% високого ризику MIPI) — ORR 91%, CR 68%, 3-year OS ~60%. First CAR-T for MCL. Higher Grade ≥3 ICANS in MCL cohort (~31%) vs DLBCL — MCL patients older + heavily pretreated. CD19-depletion manufacturing step in brexu-cel зменшує malignant apheresis contamination (vs axi-cel) — relevant in leukemic MCL. бриджингова терапія critical: TP53-mut / blastoid MCL progresses fast in 3-4 wk manufacturing window; pirtobrutinib bridging переважний if not prior-failed.
+  ZUMA-2 дослідження (Wang 2020): р/р MCL after prior cBTKi (медіана 3 prior lines,
+  ~25% TP53-mut, 60% високого ризику MIPI) — ORR 91%, CR 68%, 3-year OS ~60%. First
+  CAR-T for MCL. Higher Grade ≥3 ICANS in MCL cohort (~31%) vs DLBCL — MCL patients
+  older + heavily pretreated. CD19-depletion manufacturing step in brexu-cel зменшує
+  malignant apheresis contamination (vs axi-cel) — relevant in leukemic MCL. бриджингова
+  терапія critical: TP53-mut / blastoid MCL progresses fast in 3-4 wk manufacturing
+  window; pirtobrutinib bridging переважний if not prior-failed.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction

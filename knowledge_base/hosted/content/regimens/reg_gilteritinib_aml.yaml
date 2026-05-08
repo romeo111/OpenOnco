@@ -2,90 +2,94 @@ id: REG-GILTERITINIB-AML
 name: "Gilteritinib monotherapy for R/R FLT3-mutated AML"
 name_ua: "Гілтеритиніб монотерапія для R/R FLT3+ ГМЛ"
 alternate_names:
-  - "Gilteritinib mono"
-  - "Xospata mono"
+- "Gilteritinib mono"
+- "Xospata mono"
 
 components:
-  - drug_id: DRUG-GILTERITINIB
-    dose: "120 mg PO once daily"
-    schedule: "continuous, 28-day cycles, until progression / unacceptable toxicity"
-    route: PO
+- drug_id: DRUG-GILTERITINIB
+  dose: "120 mg PO once daily"
+  schedule: "continuous, 28-day cycles, until progression / unacceptable toxicity"
+  route: PO
 
 cycle_length_days: 28
-total_cycles: "Continuous until progression / unacceptable toxicity / proceed to alloHCT in CR"
+total_cycles: "Continuous until progression / unacceptable toxicity / proceed to alloHCT
+  in CR"
 
 toxicity_profile: moderate
 
 premedication:
-  - "Antiemetic PRN"
-  - "Baseline + serial ECG; correct K+ ≥4.0 mEq/L and Mg++ ≥2.0 mg/dL before initiation and during therapy"
+- "Antiemetic PRN"
+- "Baseline + serial ECG; correct K+ ≥4.0 mEq/L and Mg++ ≥2.0 mg/dL before initiation
+  and during therapy"
 
 mandatory_supportive_care:
-  - SUP-PJP-PROPHYLAXIS
-  - SUP-HSV-PROPHYLAXIS
-  - SUP-HBV-PROPHYLAXIS
-
+- SUP-PJP-PROPHYLAXIS
+- SUP-HSV-PROPHYLAXIS
+- SUP-HBV-PROPHYLAXIS
 monitoring_schedule_id:
 
 dose_adjustments:
-  - condition: "QTc >500 ms"
-    modification: "Hold; resume at 80 mg when QTc ≤480 ms; permanent discontinuation if recurrent"
-    rationale: "Risk of torsades de pointes / sudden death"
-    source_refs:
-      - SRC-NCCN-AML-2025
-      - SRC-ADMIRAL-PERL-2019
-  - condition: "Differentiation syndrome (fever, dyspnea, weight gain, effusions)"
-    modification: "Dexamethasone 10 mg IV q12h; hold gilteritinib until resolution; resume at full dose"
-    rationale: "DS fatal if untreated; corticosteroids lifesaving"
-    source_refs:
-      - SRC-NCCN-AML-2025
-  - condition: "Concomitant strong CYP3A4 inhibitor unavoidable"
-    modification: "Consider dose reduction to 80 mg + intensify ECG monitoring"
-    rationale: "Increased exposure → QTc + DS risk"
-    source_refs:
-      - SRC-NCCN-AML-2025
+- condition: "QTc >500 ms"
+  modification: "Hold; resume at 80 mg when QTc ≤480 ms; permanent discontinuation
+    if recurrent"
+  rationale: "Risk of torsades de pointes / sudden death"
+  source_refs:
+  - SRC-NCCN-AML-2025
+  - SRC-ADMIRAL-PERL-2019
+- condition: "Differentiation syndrome (fever, dyspnea, weight gain, effusions)"
+  modification: "Dexamethasone 10 mg IV q12h; hold gilteritinib until resolution;
+    resume at full dose"
+  rationale: "DS fatal if untreated; corticosteroids lifesaving"
+  source_refs:
+  - SRC-NCCN-AML-2025
+- condition: "Concomitant strong CYP3A4 inhibitor unavoidable"
+  modification: "Consider dose reduction to 80 mg + intensify ECG monitoring"
+  rationale: "Increased exposure → QTc + DS risk"
+  source_refs:
+  - SRC-NCCN-AML-2025
 
 ukraine_availability:
   all_components_registered: false
   all_components_reimbursed: false
-  notes: "Gilteritinib NOT registered in Ukraine. International referral or compassionate-use pathway required."
+  notes: "Gilteritinib NOT registered in Ukraine. International referral or compassionate-use
+    pathway required."
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-AML-2022
-  - SRC-ADMIRAL-PERL-2019
+- SRC-NCCN-AML-2025
+- SRC-ELN-AML-2022
+- SRC-ADMIRAL-PERL-2019
 
 # Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
 # Gilteritinib FLT3i for R/R FLT3-mutated AML (ADMIRAL). Tox:
 # differentiation syndrome (boxed), QT, hepatic, cytopenia.
 # STUB pending §6.1.
 between_visit_watchpoints:
-  - trigger_ua: "Помірна нудота, помірна діарея, втома"
-    action_ua: "Очікувано — занотовуйте"
-    urgency: log_at_next_visit
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Швидкий набір ваги, набряки, задишка"
-    action_ua: "Звертайтесь у лікарню негайно — синдром диференціювання"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-AML-2025
-      - SRC-ADMIRAL-PERL-2019
-  - trigger_ua: "Жовтяниця, потемніння сечі"
-    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-NCCN-AML-2025
-  - trigger_ua: "Лихоманка вище 38°C"
-    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
-    urgency: call_clinic_same_day
-    sources:
-      - SRC-CTCAE-V5
-  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
-    action_ua: "Звертайтесь у лікарню негайно — гілтеритиніб може подовжувати QT"
-    urgency: er_now
-    sources:
-      - SRC-NCCN-AML-2025
+- trigger_ua: "Помірна нудота, помірна діарея, втома"
+  action_ua: "Очікувано — занотовуйте"
+  urgency: log_at_next_visit
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Швидкий набір ваги, набряки, задишка"
+  action_ua: "Звертайтесь у лікарню негайно — синдром диференціювання"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ADMIRAL-PERL-2019
+- trigger_ua: "Жовтяниця, потемніння сечі"
+  action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-NCCN-AML-2025
+- trigger_ua: "Лихоманка вище 38°C"
+  action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+  urgency: call_clinic_same_day
+  sources:
+  - SRC-CTCAE-V5
+- trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
+  action_ua: "Звертайтесь у лікарню негайно — гілтеритиніб може подовжувати QT"
+  urgency: er_now
+  sources:
+  - SRC-NCCN-AML-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -95,6 +99,9 @@ notes: >
   (off-label, supported by emerging data MORPHO trial). STUB —
   pending Co-Lead sign-off.
 notes_ua: >
-  стандарт 2L+ for р/р FLT3-mutated AML per ADMIRAL. Bridge to alloHCT for fit candidates achieving CR/CRh — гілтеритиніб alone is not curative. Continue гілтеритиніб post-HCT as підтримка (off-label, supported by новий дані MORPHO дослідження). STUB — pending Co-Lead sign-off.
+  стандарт 2L+ for р/р FLT3-mutated AML per ADMIRAL. Bridge to alloHCT for fit candidates
+  achieving CR/CRh — гілтеритиніб alone is not curative. Continue гілтеритиніб post-HCT
+  as підтримка (off-label, supported by новий дані MORPHO дослідження). STUB — pending
+  Co-Lead sign-off.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
