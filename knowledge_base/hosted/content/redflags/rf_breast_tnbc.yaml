@@ -1,0 +1,125 @@
+id: RF-BREAST-TNBC
+definition: >
+  Triple-negative breast cancer (TNBC): estrogen receptor (ER) <1% nuclear
+  staining on IHC AND progesterone receptor (PR) <1% nuclear staining on IHC
+  AND HER2-negative (IHC 0 or 1+, OR IHC 2+ with ISH non-amplified).
+  TNBC represents ~15-20% of all invasive breast cancers and is defined by
+  the absence of all three hormone/growth-factor receptor targets.
+
+  Clinical significance: TNBC lacks ER, PR, and HER2 targets, precluding
+  endocrine therapy (tamoxifen, aromatase inhibitors) and HER2-directed
+  therapy. Treatment is chemotherapy-based:
+  - Early TNBC: pembrolizumab + neoadjuvant chemotherapy (KEYNOTE-522;
+    Schmid NEJM 2022) — pCR rate 64.8% vs 51.2% with chemo alone, regardless
+    of PD-L1 status. KEYNOTE-522 is the standard-of-care regimen.
+  - Metastatic TNBC (BRCA-WT): pembrolizumab + chemotherapy (KEYNOTE-355)
+    for CPS ≥10; chemotherapy alone (nab-paclitaxel, paclitaxel, or
+    gemcitabine+carboplatin) for CPS <10.
+  - Metastatic TNBC + germline BRCA1/2 mutation: olaparib or talazoparib
+    preferred 1L over chemotherapy (OlympiAD; exploits HRD).
+
+  Fires to route ALGO-BREAST-1L step 3 toward the TNBC track (step 4 stage
+  gate → PARPi or pembro+chemo routing) instead of the HR+/HER2- track
+  (CDK4/6i+AI, step 5).
+
+  The engine sequential check (step 1: HER2+ gate via RF-BREAST-HER2-AMP-
+  ACTIONABLE; step 3: TNBC gate via this RF) means HER2-positive patients
+  are already routed away before step 3 fires. The HER2-negative component
+  of the TNBC definition is therefore confirmed by the prior sequential
+  filtering, but is included in the trigger for completeness and for use
+  in non-sequential contexts.
+
+definition_ua: >
+  Тричі негативний рак молочної залози (ТНРМЗ): ЕР <1% AND ПР <1%
+  (ядерне забарвлення за ІГХ) AND HER2-негативний (ІГХ 0/1+ або ІГХ 2+ з
+  ненмпліфікованим ISH). ~15-20% інвазивного РМЗ. Лікування хіміотерапевтичне:
+  ранній ТНРМЗ — пембролізумаб + неоад'ювантна хіміотерапія (KEYNOTE-522,
+  pCR 64.8%); метастатичний ТНРМЗ + BRCA1/2 — олапариб/талазопариб;
+  CPS ≥10 — пембролізумаб+хіміо (KEYNOTE-355).
+
+trigger:
+  type: receptor_status_composite
+  all_of:
+    - any_of:
+        - finding: er_status
+          value: negative
+        - finding: er_ihc
+          value: negative
+        - finding: er_ihc
+          value: "0%"
+        - finding: er_ihc
+          value: absent
+        - finding: BIO-ESTROGEN-RECEPTOR
+          value: negative
+    - any_of:
+        - finding: pr_status
+          value: negative
+        - finding: pr_ihc
+          value: negative
+        - finding: pr_ihc
+          value: "0%"
+        - finding: pr_ihc
+          value: absent
+        - finding: BIO-PROGESTERONE-RECEPTOR
+          value: negative
+    - any_of:
+        # HER2-negative confirmation (belt-and-suspenders; sequential algo screens HER2+ first)
+        - finding: her2_status
+          value: negative
+        - finding: her2_ihc
+          value: "0"
+        - finding: her2_ihc
+          value: "1+"
+        - finding: her2_ish
+          value: non_amplified
+
+clinical_direction: intensify
+severity: major
+priority: 60
+category: high-risk-biology
+
+branch_targets:
+  ALGO-BREAST-1L: "3"
+
+relevant_diseases:
+  - DIS-BREAST
+
+shifts_algorithm:
+  - ALGO-BREAST-1L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-KEYNOTE522-SCHMID-2022
+  - SRC-KEYNOTE355-CORTES-2020
+
+last_reviewed: "2026-05-08"
+reviewer_signoffs: []
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+notes: >
+  W5c RF authoring. Converts free-text `{condition: "ER <1% AND PR <1%
+  (TNBC)"}` in ALGO-BREAST-1L step 3 into a formal RF entity.
+
+  The trigger uses an `all_of` composite with ER-negative, PR-negative,
+  and HER2-negative conditions. Each receptor check uses an `any_of`
+  to accommodate multiple finding key naming conventions (er_status,
+  er_ihc, BIO-ESTROGEN-RECEPTOR).
+
+  In ALGO-BREAST-1L sequential logic, step 1 first gates HER2+ via
+  RF-BREAST-HER2-AMP-ACTIONABLE. Patients reaching step 3 are HER2-negative
+  by definition. The HER2-negative component of this RF is included for
+  standalone use but is not strictly required within the sequential algo.
+
+  KEYNOTE-522 (Schmid NEJM 2022, PMID 35294803): early TNBC pembro+chemo —
+  pCR 64.8% vs 51.2%, regardless of PD-L1; EFS benefit maintained at 5yr.
+  KEYNOTE-355 (Cortes NEJM 2020, PMID 31789049): metastatic TNBC CPS ≥10 —
+  pembro+chemo mPFS 9.7 vs 5.6 mo.
+
+  ER/PR thresholds: ASCO/CAP 2020 guideline: ER or PR positive ≥1%
+  nuclear staining. Values <1% are ER-negative or PR-negative respectively.
+  This RF fires when BOTH ER and PR are below the 1% threshold.
+
+  CHARTER §6.1: Two-reviewer clinical co-lead signoff required before
+  removing draft: true.
