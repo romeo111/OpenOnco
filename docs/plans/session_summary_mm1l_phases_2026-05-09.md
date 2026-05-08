@@ -61,9 +61,23 @@ NDMM: flagged in notes, pending HEME backlog wave.
 
 ## Test results
 
-303 passed, 8 skipped, 1 pre-existing failure:
-- `test_landing_is_public_with_hero_and_ctas` — Codex site-redesign (PR unrelated);
-  `class="hero"` missing from landing page. Requires site team fix or test update.
+Full suite (skipping pre-existing hero failure): **2164 passed, 34 pre-existing failures, 9 skipped**
+
+All 34 remaining failures are pre-existing on master and unrelated to this wave.
+
+### Fixups applied in continuation session (2026-05-09)
+
+Three bugs were caught by the full suite and corrected before final push:
+
+| Commit | Bug | Fix |
+|--------|-----|-----|
+| `89c393c` | `SUP-ANTIINFECTIVE-PROPHYLAXIS-MM` invented FK in `mandatory_supportive_care` | Removed; only `SUP-MM-VTE-PROPHYLAXIS` + `SUP-MM-BONE-PROTECTION` remain |
+| `d6dea10` | `proc_asct.yaml` `intent: consolidation` — not in `Surgery.intent` enum (`curative\|palliative\|diagnostic\|salvage`) | Changed to `intent: curative` (curative-intent taxonomy for transplant-eligible NDMM) |
+| `d6dea10` | `ind_mm_1l_dvrd.yaml` `recommended_regimen:` nulled — engine reads this field for track routing; `phases` support in engine is pending | Restored `recommended_regimen: REG-DARA-VRD`; `phases:` block is additive metadata for future renderer |
+
+Pre-existing failure (out of scope):
+- `test_landing_is_public_with_hero_and_ctas` — Codex site-redesign removed `class="hero"`;
+  requires site team fix or test update.
 
 ---
 
