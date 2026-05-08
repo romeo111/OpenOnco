@@ -56,6 +56,9 @@
 .kb-result:hover { border-color: var(--green-600); }
 .kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
 .kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px 0 4px; color: var(--gray-700); }
+.kb-pagination button { border: 1px solid var(--gray-200); background: white; color: var(--green-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; font-weight: 700; }
+.kb-pagination button:disabled { color: var(--gray-500); cursor: not-allowed; opacity: .65; }
 .kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
 .kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
 .kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
@@ -71,6 +74,7 @@
   .kb-search-btn { min-height: 44px; }
   .kb-result { grid-template-columns: 1fr; }
   .kb-result small { grid-column: auto; }
+  .kb-pagination { flex-wrap: wrap; }
   .kb-facts th { width: auto; display: block; border-bottom: 0; }
   .kb-facts td { display: block; }
 }
@@ -84,8 +88,6 @@
   <nav class="top-nav">
     <a href="/">Home</a>
     <a href="/capabilities.html">Capabilities</a>
-    <a href="/kb.html" class="active">Onco Wiki</a>
-    <a href="/ask.html">Tumor board Q</a>
     <a href="/about.html">About</a>
   </nav>
   <div class="top-right">
@@ -93,7 +95,11 @@
       <a class="lang-other" href="/ukr/kb/redflags/rf-t-pll-organ-dysfunction.html"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
       <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
     </div>
-    <a href="/try.html" class="btn-cta-try" >Try it →</a>
+    <div class="top-cta-group">
+      <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
+      <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
+    </div>
   </div>
 </header>
   <main class="kb-page kb-entity">

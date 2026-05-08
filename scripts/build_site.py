@@ -887,7 +887,7 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 _NAV_LABELS = {
     "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "План лікування",
-           "diseases": "Хвороби", "ask": "Tumor Board", "kb": "Onco Wiki"},
+           "diseases": "Хвороби", "ask": "Туморборд", "kb": "Онко-вікі"},
     "en": {"home": "Home", "about": "About", "try_cta": "Plan Builder",
            "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki"},
 }
@@ -1023,9 +1023,13 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
         kicker = "Open-source clinical decision support"
         h1 = "OpenOnco"
         sub = (
-            "A clinician-facing oncology workbench that turns a structured patient profile "
-            "into cited standard and trial-aware treatment plans. The engine is rules-first, "
-            "transparent, and built for review by oncologists."
+            "OpenOnco helps clinicians assemble a clinically coherent treatment plan quickly: "
+            "from diagnosis, stage, biomarkers, and patient status to therapeutic options. "
+            "Onco Wiki sits beside it as the project's oncology wiki for diseases, drugs, "
+            "biomarkers, and source-linked facts.",
+            "Every recommendation is tied to sources, standards, and verified rules. The "
+            "system highlights key drugs, biomarkers, and constraints, while AI Tumor Board "
+            "helps formulate review questions before the final decision.",
         )
         primary = "Build a virtual plan"
         secondary = "Explore the knowledge base"
@@ -1113,17 +1117,17 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
         ]
     else:
         title = "OpenOnco — онкологічні рішення, які можна перевірити"
-        kicker = "Open-source clinical decision support"
+        kicker = "Відкрита підтримка клінічних рішень"
         h1 = "OpenOnco"
         sub = (
             "Робочий інструмент для онколога: структурований профіль пацієнта перетворюється "
             "на цитований стандартний і trial-aware план лікування. Логіка rules-first, "
             "прозора й готова до клінічного ревʼю."
         )
-        primary = "Побудувати віртуальний план"
-        secondary = "Відкрити базу знань"
-        tertiary = "Запитай АІ"
-        note = "Відкриті бази: CIViC (CC0) для biomarker actionability, ClinicalTrials.gov для trial-aware опцій, PubMed/PMID/DOI та DailyMed/openFDA для літератури й drug-label контексту. LLM не обирає лікування: план збирається rules-first із YAML provenance, тому LLM-галюцинації в плані виключені."
+        primary = "Побудувати план лікування"
+        secondary = "Відкрити Онко-вікі"
+        tertiary = "Питання до туморборду"
+        note = "Відкриті джерела: CIViC (CC0) для біомаркерної клінічної значущості, ClinicalTrials.gov для trial-aware опцій, PubMed/PMID/DOI та DailyMed/openFDA для літератури й контексту інструкцій до препаратів. LLM не обирає лікування: план збирається rules-first із YAML provenance."
         footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
         try_href = "/ukr/try.html"
         kb_href = "/ukr/kb.html"
@@ -1209,11 +1213,11 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
         sub = (
             "OpenOnco допомагає швидко зібрати клінічно осмислений план лікування: "
             "від діагнозу, стадії, біомаркерів і стану пацієнта до можливих "
-            "терапевтичних опцій. Поруч працює Onco Wiki - онкологічна вікіпедія "
+            "терапевтичних опцій. Поруч працює Онко-вікі - онкологічна вікіпедія "
             "проєкту з хворобами, препаратами, біомаркерами та джерелами.",
             "Кожна рекомендація прив'язана до джерел, стандартів і перевірених "
             "правил. Система підсвічує ключові ліки, біомаркери та обмеження, а "
-            "AI tumor board допомагає сформулювати питання для клінічного рев'ю "
+            "AI-туморборд допомагає сформулювати питання для клінічного рев'ю "
             "перед фінальним рішенням.",
         )
 

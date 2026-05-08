@@ -1,11 +1,11 @@
 {
-  "generated_at_utc": "2026-05-07T19:26:58Z",
-  "kb_root": "C:\\Users\\805\\.codex\\worktrees\\dd7d\\cancer-autoresearch\\knowledge_base\\hosted\\content",
+  "generated_at_utc": "2026-05-08T09:29:00Z",
+  "kb_root": "C:\\Users\\805\\.codex\\worktrees\\b97d\\cancer-autoresearch\\knowledge_base\\hosted\\content",
   "entity_counts": {
     "diseases": 78,
     "drugs": 251,
-    "regimens": 355,
-    "indications": 418,
+    "regimens": 359,
+    "indications": 424,
     "biomarkers": 173,
     "biomarker_actionability": 438,
     "contraindications": 12,
@@ -14,7 +14,7 @@
     "tests": 115,
     "supportive_care": 13,
     "monitoring": 8,
-    "sources": 377,
+    "sources": 383,
     "workups": 24,
     "questionnaires": 78,
     "mdt_skills": 16,
@@ -22,18 +22,18 @@
     "procedures": 7,
     "radiation_courses": 5
   },
-  "loader_ok": false,
+  "loader_ok": true,
   "loader_error_counts": {
-    "schema_errors": 2,
-    "ref_errors": 7,
+    "schema_errors": 0,
+    "ref_errors": 0,
     "contract_errors": 0,
-    "contract_warnings": 524
+    "contract_warnings": 522
   },
   "gaps": [
     {
       "id": "clinical_signoff",
       "title": "Clinical sign-off",
-      "current": "15/1861 signoff-eligible entities reviewed (0.8%)",
+      "current": "15/1871 signoff-eligible entities reviewed (0.8%)",
       "target": ">=85% reviewed before public guideline-grade claims",
       "status": "blocked_on_reviewers",
       "blocker": "Cannot be fixed by code; requires qualified Clinical Co-Lead review.",
@@ -41,9 +41,9 @@
       "details": {
         "by_type": {
           "indications": {
-            "total": 418,
+            "total": 424,
             "reviewed": 15,
-            "gap": 403
+            "gap": 409
           },
           "algorithms": {
             "total": 140,
@@ -51,9 +51,9 @@
             "gap": 140
           },
           "regimens": {
-            "total": 355,
+            "total": 359,
             "reviewed": 0,
-            "gap": 355
+            "gap": 359
           },
           "redflags": {
             "total": 510,
@@ -215,7 +215,7 @@
     {
       "id": "surgery_radiation_structure",
       "title": "Surgery/radiation detail",
-      "current": "structured surgery entities: no; structured radiation entities: no; 405 indications mention surgery/radiation in text",
+      "current": "structured surgery entities: no; structured radiation entities: no; 411 indications mention surgery/radiation in text",
       "target": "Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields.",
       "status": "schema_gap",
       "blocker": "Current KB carries surgery/radiation mostly as prose inside indications.",
@@ -229,6 +229,8 @@
           "IND-ATC-PACLITAXEL-CARBOPLATIN",
           "IND-BREAST-HER2-POS-EARLY-NEOADJUVANT",
           "IND-BREAST-HR-POS-1L-INAVOLISIB",
+          "IND-BREAST-HR-POS-EARLY-ADJ-CDK46I",
+          "IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB",
           "IND-BREAST-TNBC-EARLY-NEOADJUVANT",
           "IND-BREAST-TNBC-METASTATIC-1L-PEMBRO-CHEMO",
           "IND-CHONDROSARCOMA-ADVANCED-DOXORUBICIN",
@@ -354,6 +356,8 @@
           "IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB",
           "IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW",
           "IND-BREAST-HR-POS-3L-POST-CDK46I-POST-AKT",
+          "IND-BREAST-HR-POS-EARLY-ADJ-CDK46I",
+          "IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB",
           "IND-BREAST-HR-POS-MAINT-CDK46I",
           "IND-BREAST-HR-POS-MET-1L-CDKI",
           "IND-BREAST-TNBC-2L-DATO-DXD",
@@ -377,31 +381,30 @@
           "IND-CHL-2L-PEMBROLIZUMAB",
           "IND-CHL-CHILD-PUGH-C-MOD",
           "IND-CHL-PREGNANCY-MOD-ABVD",
-          "IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB",
-          "IND-CHOLANGIO-2L-FUTIBATINIB",
-          "IND-CHOLANGIO-2L-HER2-ZANIDATAMAB"
+          "IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB"
         ],
-        "mention_count": 405
+        "mention_count": 411
       }
     },
     {
       "id": "supportive_care_depth",
       "title": "Supportive-care depth",
-      "current": "140/355 regimens have mandatory supportive care (39.4%); 41 have monitoring; 314 have dose adjustments",
+      "current": "140/359 regimens have mandatory supportive care (39.0%); 41 have monitoring; 318 have dose adjustments",
       "target": "Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage.",
       "status": "coverage_gap",
       "blocker": "Supportive-care records exist, but regimen attachment is incomplete.",
       "next_action": "Audit high-toxicity regimens first, then fill missing regimen attachments.",
       "details": {
-        "regimens_total": 355,
+        "regimens_total": 359,
         "with_mandatory_supportive_care": 140,
-        "with_premedication": 258,
+        "with_premedication": 261,
         "with_monitoring": 41,
-        "with_dose_adjustments": 314,
-        "with_between_visit_watchpoints": 252,
+        "with_dose_adjustments": 318,
+        "with_between_visit_watchpoints": 254,
         "missing_mandatory_supportive_care": [
           "REG-2GEN-TKI-CML",
           "REG-5FU-LV-BEV-CKD-MODIFIED",
+          "REG-ABEMACICLIB-ADJUVANT",
           "REG-ACALABRUTINIB-CONTINUOUS",
           "REG-ACALABRUTINIB-MCL",
           "REG-ACALABRUTINIB-RITUXIMAB",
@@ -518,23 +521,22 @@
           "REG-MIDOSTAURIN-ADVSM-1L",
           "REG-MIRVETUXIMAB-OVARIAN",
           "REG-MOGAMULIZUMAB",
-          "REG-NAL-IRI-5FU-LV-PDAC",
-          "REG-NALIRIFOX"
+          "REG-NAL-IRI-5FU-LV-PDAC"
         ]
       }
     },
     {
       "id": "drug_indication_tracking",
       "title": "Drug indication and off-label tracking",
-      "current": "776 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status",
+      "current": "792 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status",
       "target": "Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance.",
       "status": "schema_gap",
       "blocker": "No first-class drug_indications entity directory/schema is present.",
       "next_action": "Introduce a drug_indications entity, then backfill from existing indications/regimens.",
       "details": {
         "drug_indications_schema_present": false,
-        "inferred_drug_disease_indication_pairs": 776,
-        "pairs_with_indication_evidence_context": 776,
+        "inferred_drug_disease_indication_pairs": 792,
+        "pairs_with_indication_evidence_context": 792,
         "explicit_label_status_pairs": 0,
         "sample_pairs": [
           {
@@ -641,6 +643,11 @@
             "drug_id": "DRUG-5-FLUOROURACIL",
             "disease_id": "DIS-PDAC",
             "indication_id": "IND-PDAC-METASTATIC-2L-NAL-IRI"
+          },
+          {
+            "drug_id": "DRUG-ABEMACICLIB",
+            "disease_id": "DIS-BREAST",
+            "indication_id": "IND-BREAST-HR-POS-EARLY-ADJ-CDK46I"
           },
           {
             "drug_id": "DRUG-ABIRATERONE",
@@ -924,18 +931,13 @@
           },
           {
             "drug_id": "DRUG-BENDAMUSTINE",
+            "disease_id": "DIS-FL",
+            "indication_id": "IND-FL-2L-OBG-BENDA"
+          },
+          {
+            "drug_id": "DRUG-BENDAMUSTINE",
             "disease_id": "DIS-HCV-MZL",
             "indication_id": "IND-HCV-MZL-1L-BR-AGGRESSIVE"
-          },
-          {
-            "drug_id": "DRUG-BENDAMUSTINE",
-            "disease_id": "DIS-NODAL-MZL",
-            "indication_id": "IND-NMZL-1L-BR"
-          },
-          {
-            "drug_id": "DRUG-BENDAMUSTINE",
-            "disease_id": "DIS-NODAL-MZL",
-            "indication_id": "IND-NMZL-2L-BR"
           }
         ]
       }

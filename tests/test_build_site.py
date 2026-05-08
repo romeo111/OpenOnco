@@ -510,18 +510,18 @@ def test_try_cta_is_separate_action_button(site_dir: Path):
 
 def test_top_nav_uses_single_onco_wiki_entry():
     """Diseases stay addressable by URL, but Wiki is a top action, not a nav duplicate."""
-    for html in (
-        _render_top_bar(active="home", target_lang="en"),
-        _render_top_bar(active="diseases", target_lang="en"),
-        _render_top_bar(active="home", target_lang="uk"),
-        _render_top_bar(active="diseases", target_lang="uk"),
+    for html, wiki_label, board_label in (
+        (_render_top_bar(active="home", target_lang="en"), "Onco Wiki", "Tumor Board"),
+        (_render_top_bar(active="diseases", target_lang="en"), "Onco Wiki", "Tumor Board"),
+        (_render_top_bar(active="home", target_lang="uk"), "Онко-вікі", "Туморборд"),
+        (_render_top_bar(active="diseases", target_lang="uk"), "Онко-вікі", "Туморборд"),
     ):
         nav = html.split('<nav class="top-nav">', 1)[1].split("</nav>", 1)[0]
         actions = html.split('<div class="top-cta-group">', 1)[1].split("</div>", 1)[0]
-        assert "Onco Wiki" in actions
-        assert "Tumor Board" in actions
-        assert "Onco Wiki" not in nav
-        assert "Tumor Board" not in nav
+        assert wiki_label in actions
+        assert board_label in actions
+        assert wiki_label not in nav
+        assert board_label not in nav
         assert "KB Search" not in nav
         assert 'href="/diseases.html"' not in nav
         assert 'href="/ukr/diseases.html"' not in nav

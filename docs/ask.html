@@ -50,10 +50,6 @@
 .ask-result { white-space:pre-wrap; font:14px/1.55 var(--mono); background:#102018; color:#ecfdf5; border:1px solid #244d38; border-radius:8px; padding:16px; min-height:380px; overflow:auto; box-shadow:inset 0 1px 0 rgba(255,255,255,0.06); }
 .ask-result:empty::before { content:""; display:block; min-height:1px; }
 .ask-muted { color:#647067; font-size:14px; }
-.ask-guidance { margin-top:14px; padding:14px; border:1px solid #cfe5d8; border-radius:8px; background:#f7fcf8; color:#26352d; }
-.ask-guidance strong { display:block; margin-bottom:8px; color:#073b22; }
-.ask-guidance ul { margin:0; padding-left:18px; display:grid; gap:5px; }
-.ask-guidance li { line-height:1.35; }
 .ask-examples { display:grid; gap:10px; margin:12px 0 14px; max-height:460px; overflow:auto; padding-right:4px; }
 .ask-example { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; border:1px solid #dbe7df; border-radius:8px; padding:12px; background:#f8fbf8; }
 .ask-example-title { font-weight:800; margin-bottom:4px; color:#073b22; }
@@ -87,8 +83,6 @@
   <nav class="top-nav">
     <a href="/">Home</a>
     <a href="/capabilities.html">Capabilities</a>
-    <a href="/kb.html">Onco Wiki</a>
-    <a href="/ask.html" class="active">Tumor Board</a>
     <a href="/about.html">About</a>
   </nav>
   <div class="top-right">
@@ -96,7 +90,11 @@
       <a class="lang-other" href="/ukr/ask.html"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
       <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
     </div>
-    <a href="/try.html" class="btn-cta-try" >Try it →</a>
+    <div class="top-cta-group">
+      <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/kb.html" class="btn-cta-top btn-cta-secondary">Onco Wiki</a>
+      <a href="/ask.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Tumor Board</a>
+    </div>
   </div>
 </header>
 
@@ -107,16 +105,6 @@
       <h1>Tumor board question</h1>
       <p class="lead">Paste an oncology vignette in natural language. ChatGPT structures the case, OpenOnco checks it against the rule engine, and the page returns an answer, reasonable alternatives, or clarifying questions.</p>
       <p class="ask-muted">Do not paste real identifiable patient data. This is a tumor-board draft, not autonomous medical advice.</p>
-      <p class="ask-muted">For abuse prevention and debugging, the server may record your IP address and submitted text. Do not include patient identifiers.</p>
-      <div class="ask-guidance">
-        <strong>For a more reliable answer, enter the case precisely and completely</strong>
-        <ul>
-          <li>Include age, sex, ECOG/WHO status, stage or disease extent.</li>
-          <li>Add biopsy details: specimen site, histology, grade, IHC, and date/method when known.</li>
-          <li>List key biomarkers: HER2, PD-L1 CPS/TPS, MSI/MMR, RAS/BRAF/EGFR/ALK/ROS1, BRCA/HRD, NGS, etc.</li>
-          <li>State treatment line, prior therapy, response/progression, relevant contraindications, and the exact question.</li>
-        </ul>
-      </div>
     </div>
     <div class="ask-hero-meter" aria-label="Questions used">
       <div class="ask-stat"><strong>3</strong><span>free-text questions per browser</span></div>
@@ -132,7 +120,7 @@
       </label>
       <label class="qt-label" style="margin-top:12px">
         Clinical situation
-        <textarea id="caseText" spellcheck="true" placeholder="Full prompt example: age/sex, ECOG, stage or disease extent, biopsy with histology and IHC, biomarkers/NGS, prior therapy, contraindications, and the exact question."></textarea>
+        <textarea id="caseText" spellcheck="true" placeholder="62-year-old patient with metastatic gastric cancer, HER2-negative, MSS, PD-L1 CPS 25. What is the optimal first line?"></textarea>
       </label>
       <div class="ask-quota">
         <span>Questions used</span>
@@ -173,7 +161,7 @@
 
 <script>
 (function() {
-  const ASK_EXAMPLES = [{"title":"Gastric 1L with biopsy","text":"62-year-old man, ECOG 1, metastatic gastric adenocarcinoma with diffuse peritoneal carcinomatosis and ascites. Gastric biopsy 12 Apr 2026: poorly differentiated adenocarcinoma with signet-ring cells, Lauren diffuse type. IHC/molecular: HER2 IHC 0, MMR retained / MSS, PD-L1 CPS 25, EBV negative, CLDN18.2 not tested. No prior systemic therapy; creatinine and bilirubin normal, no neuropathy. What is the optimal ESMO-aligned first-line systemic treatment and which additional tests should be ordered?"},{"title":"NSCLC adenocarcinoma 1L","text":"64-year-old never-smoking woman, ECOG 1. CT shows right lung primary with bone and liver metastases, no symptomatic CNS disease. Liver metastasis biopsy: lung adenocarcinoma, TTF-1+, Napsin A+, p40-. NGS: EGFR exon 19 deletion, ALK/ROS1/RET/NTRK negative, BRAF V600E negative, MET exon14 negative, KRAS negative. PD-L1 TPS 30%. What first-line treatment is recommended, and is chemoimmunotherapy needed?"},{"title":"mCRC 1L right-sided","text":"52-year-old man, ECOG 0-1, cecal colon cancer with unresectable liver, lung and peritoneal metastases. Colonoscopic biopsy: moderately differentiated adenocarcinoma, CDX2+, CK20+, CK7-. MMR intact / MSS. NGS: KRAS p.G12C, NRAS wild type, BRAF wild type, HER2 IHC 0/not amplified. Bilirubin normal, no significant neuropathy. What is the most appropriate first-line systemic treatment?"},{"title":"PDAC 1L fit patient","text":"66-year-old man, ECOG 1, metastatic pancreatic adenocarcinoma with liver metastases. Liver biopsy: adenocarcinoma compatible with pancreaticobiliary primary; CK7+, CK19+, SMAD4 loss, focal CDX2. Bilirubin after stenting 18 umol/L, creatinine normal, no neuropathy, no major comorbidities. Germline BRCA/PALB2 not yet done; MSI/MMR unknown. What first-line options are reasonable and what tests are needed before treatment?"},{"title":"Breast HR+/HER2- metastatic","text":"61-year-old postmenopausal woman, ECOG 1, metastatic breast cancer with bone and liver involvement, no visceral crisis. Liver metastasis biopsy: invasive carcinoma NST, ER 90%, PR 40%, HER2 IHC 1+ / ISH negative, Ki-67 22%. PIK3CA/AKT1/PTEN not tested, ESR1 not tested. Completed 5 years of adjuvant letrozole 3 years ago. What is the preferred first-line systemic therapy?"},{"title":"GBM initial management","text":"30-year-old man, ECOG 1, 4 weeks of progressive right arm weakness. MRI: 2 cm contrast-enhancing left parietal lesion with perifocal edema. Stereotactic biopsy: glioblastoma, IDH-wildtype, MGMT promoter methylation pending. No seizures, no comorbidities. Which is NOT part of standard initial management: complete resection, radiotherapy, steroids, temozolomide, or prophylactic anti-epileptic therapy?"},{"title":"CUP poor performance status","text":"74-year-old woman, WHO PS 3, right upper quadrant pain from hepatomegaly, multiple liver metastases. Liver core biopsy: poorly differentiated adenocarcinoma; IHC CK7+/CK20-, CDX2-, TTF-1-, PAX8-, GATA3-, ER-, HepPar1-. PET/CT shows no obvious primary. Bilirubin 45 umol/L, albumin 28 g/L. What is the most appropriate strategy now?"},{"title":"Ovarian maintenance","text":"58-year-old woman, ECOG 0, FIGO IIIC high-grade serous ovarian carcinoma. Surgical specimen: high-grade serous carcinoma, p53 aberrant, WT1+, PAX8+. After primary cytoreduction to residual disease 0 she received carboplatin/paclitaxel x6 with partial response. Germline BRCA1 pathogenic variant positive, HRD positive. What maintenance therapy should be discussed?"},{"title":"Pharmacogenomics before 5-FU","text":"Patient with metastatic colon adenocarcinoma is planned for FOLFOX or CAPOX. Primary tumor biopsy: adenocarcinoma, MSS. No pharmacogenomic testing has been done yet. Which EMA/FDA-recommended testing should be done to assess severe fluoropyrimidine toxicity risk, and what should be done if the result is abnormal?"}];
+  const ASK_EXAMPLES = [{"title": "Gastric 1L", "text": "62-year-old patient with metastatic gastric cancer and diffuse peritoneal carcinomatosis. Histology: poorly differentiated adenocarcinoma with signet-ring cells, MSS, HER2-negative, PD-L1 CPS 25. What is the optimal first-line treatment?"}, {"title": "GBM supportive", "text": "30-year-old man with a 2 cm contrast-enhancing left parietal glioblastoma, ECOG 1, no comorbidities and no seizures. Which option is NOT part of initial management: resection, radiotherapy, steroids, temozolomide, or prophylactic anti-epileptic therapy?"}, {"title": "CUP poor PS", "text": "74-year-old woman with painful hepatomegaly, multiple liver metastases, poorly differentiated adenocarcinoma and no primary site on PET. WHO PS is 3. What is the most appropriate strategy?"}, {"title": "mCRC first line", "text": "52-year-old man with metastatic right-sided colon cancer, unresectable liver, lung and peritoneal metastases. KRAS p.G12C, NRAS/BRAF wild type, MSS, HER2-negative. What systemic first-line therapy is most appropriate?"}, {"title": "NSCLC confusion", "text": "68-year-old patient with metastatic squamous NSCLC involving liver, adrenals and pleura. New disorientation and aggressive behaviour; brain MRI shows no metastases. What is the most likely cause?"}, {"title": "Pharmacogenomics", "text": "Patient is planned for fluoropyrimidine-based chemotherapy for gastrointestinal cancer. Which pharmacogenomic test is recommended before treatment to reduce severe toxicity risk?"}, {"title": "Breast HR+/HER2-", "text": "61-year-old postmenopausal woman with metastatic ER-positive, HER2-negative breast cancer, bone and liver metastases, no visceral crisis, ECOG 1. What is the preferred first-line systemic treatment?"}, {"title": "Ovarian maintenance", "text": "58-year-old woman with stage IIIC high-grade serous ovarian cancer after debulking surgery and response to platinum-taxane chemotherapy. BRCA1 pathogenic variant detected. What maintenance treatment should be discussed?"}, {"title": "Pancreatic 1L", "text": "66-year-old patient with metastatic pancreatic adenocarcinoma, liver metastases, ECOG 1, bilirubin normal and no major comorbidities. What first-line systemic therapy options are reasonable?"}];
   const MAX_QUESTIONS = 3;
   const USER_KEY = 'openonco-ask-user-id-v1';
   const COUNT_KEY = 'openonco-ask-count-v1';

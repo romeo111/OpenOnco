@@ -56,6 +56,9 @@
 .kb-result:hover { border-color: var(--green-600); }
 .kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
 .kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px 0 4px; color: var(--gray-700); }
+.kb-pagination button { border: 1px solid var(--gray-200); background: white; color: var(--green-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; font-weight: 700; }
+.kb-pagination button:disabled { color: var(--gray-500); cursor: not-allowed; opacity: .65; }
 .kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
 .kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
 .kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
@@ -71,6 +74,7 @@
   .kb-search-btn { min-height: 44px; }
   .kb-result { grid-template-columns: 1fr; }
   .kb-result small { grid-column: auto; }
+  .kb-pagination { flex-wrap: wrap; }
   .kb-facts th { width: auto; display: block; border-bottom: 0; }
   .kb-facts td { display: block; }
 }
@@ -84,8 +88,6 @@
   <nav class="top-nav">
     <a href="/">Home</a>
     <a href="/capabilities.html">Capabilities</a>
-    <a href="/kb.html" class="active">Onco Wiki</a>
-    <a href="/ask.html">Tumor board Q</a>
     <a href="/about.html">About</a>
   </nav>
   <div class="top-right">
@@ -93,7 +95,11 @@
       <a class="lang-other" href="/ukr/kb/drugs/drug-lenalidomide.html"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
       <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
     </div>
-    <a href="/try.html" class="btn-cta-try" >Try it →</a>
+    <div class="top-cta-group">
+      <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
+      <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
+    </div>
   </div>
 </header>
   <main class="kb-page kb-entity">
@@ -116,7 +122,7 @@
   <h2>Notes</h2><p>Renal dose adjustment is critical: CrCl 30-60 mL/min → 10 mg daily; CrCl &lt;30 (no dialysis) → 15 mg every other day; dialysis → 5 mg post- dialysis on dialysis days. VTE prophylaxis (aspirin 81-325 mg or LMWH in higher-risk patients) is mandatory throughout therapy.</p>
   <h2>Used By</h2>
 <h3>Contraindications</h3><ul><li><code>CI-LENALIDOMIDE-PREGNANCY</code> - CI-LENALIDOMIDE-PREGNANCY <span class="kb-muted">(knowledge_base/hosted/content/contraindications/ci_lenalidomide_pregnancy.yaml)</span></li></ul>
-<h3>Regimens</h3><ul><li><code>REG-D-RD-MAIA</code> - Daratumumab + Lenalidomide + Dexamethasone (D-Rd, MAIA — MM 1L transplant-ineligible) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_d_rd_maia.yaml)</span></li><li><code>REG-DARA-VRD</code> - Daratumumab + Bortezomib + Lenalidomide + Dexamethasone (D-VRd), 4-6 induction cycles <span class="kb-muted">(knowledge_base/hosted/content/regimens/dara_vrd.yaml)</span></li><li><code>REG-LENALIDOMIDE-MAINTENANCE</code> - Lenalidomide maintenance post-ASCT (CALGB 100104 / IFM 2005-02 schedule) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_lenalidomide_maintenance.yaml)</span></li><li><code>REG-LENALIDOMIDE-MDS-DEL5Q</code> - Lenalidomide for del(5q) LR-MDS <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_lenalidomide_mds_del5q.yaml)</span></li><li><code>REG-VRD</code> - Bortezomib + Lenalidomide + Dexamethasone (VRd), 4-6 induction cycles <span class="kb-muted">(knowledge_base/hosted/content/regimens/vrd_standard.yaml)</span></li><li><code>REG-VRD-LITE</code> - VRd-lite (Bortezomib + Lenalidomide + Dexamethasone, attenuated for elderly/frail MM) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_vrd_lite.yaml)</span></li></ul>
+<h3>Regimens</h3><ul><li><code>REG-D-RD-MAIA</code> - Daratumumab + Lenalidomide + Dexamethasone (D-Rd, MAIA — MM 1L transplant-ineligible) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_d_rd_maia.yaml)</span></li><li><code>REG-DARA-VRD</code> - Daratumumab + Bortezomib + Lenalidomide + Dexamethasone (D-VRd), 4-6 induction cycles <span class="kb-muted">(knowledge_base/hosted/content/regimens/dara_vrd.yaml)</span></li><li><code>REG-LENALIDOMIDE-MAINTENANCE</code> - Lenalidomide maintenance post-ASCT (CALGB 100104 / IFM 2005-02 schedule) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_lenalidomide_maintenance.yaml)</span></li><li><code>REG-LENALIDOMIDE-MDS-DEL5Q</code> - Lenalidomide for del(5q) LR-MDS <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_lenalidomide_mds_del5q.yaml)</span></li><li><code>REG-RITUXIMAB-LENALIDOMIDE-R2</code> - Rituximab + Lenalidomide (R²/AUGMENT) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_rituximab_lenalidomide_r2.yaml)</span></li><li><code>REG-VRD</code> - Bortezomib + Lenalidomide + Dexamethasone (VRd), 4-6 induction cycles <span class="kb-muted">(knowledge_base/hosted/content/regimens/vrd_standard.yaml)</span></li><li><code>REG-VRD-LITE</code> - VRd-lite (Bortezomib + Lenalidomide + Dexamethasone, attenuated for elderly/frail MM) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_vrd_lite.yaml)</span></li></ul>
 </main>
 </body>
 </html>
