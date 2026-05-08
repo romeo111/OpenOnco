@@ -293,6 +293,7 @@ def test_handle_json_request_serializes_errors(monkeypatch):
     )
 
     cq._USAGE_COUNTS.clear()
+    cq._ANSWER_CACHE.clear()
     status, headers, payload = cq.handle_json_request({
         "case_text": "x",
         "locale": "uk",
@@ -308,6 +309,7 @@ def test_handle_json_request_serializes_errors(monkeypatch):
 
 def test_handle_json_request_enforces_three_question_quota(monkeypatch):
     cq._USAGE_COUNTS.clear()
+    cq._ANSWER_CACHE.clear()
 
     monkeypatch.setattr(
         cq,
@@ -340,6 +342,7 @@ def test_handle_json_request_can_audit_ip_and_raw_input(monkeypatch):
     monkeypatch.setenv("OPENONCO_ASK_AUDIT_LOG", str(audit_path))
     monkeypatch.setenv("OPENONCO_ASK_LOG_RAW_INPUT", "1")
     cq._USAGE_COUNTS.clear()
+    cq._ANSWER_CACHE.clear()
 
     monkeypatch.setattr(
         cq,
@@ -366,6 +369,66 @@ def test_handle_json_request_can_audit_ip_and_raw_input(monkeypatch):
     assert rows[0]["case_text"] == "GBM, IDH-wildtype"
     assert rows[0]["disease_id"] == "DIS-GBM"
     audit_path.unlink(missing_ok=True)
+
+
+def test_handle_json_request_reuses_exact_input_cache(monkeypatch):
+    cq._USAGE_COUNTS.clear()
+    cq._ANSWER_CACHE.clear()
+    calls = {"count": 0}
+
+    def fake_answer(case_text, locale="uk"):
+        calls["count"] += 1
+        return {
+            "status": "answered",
+            "direct_answer": f"answer {calls['count']}",
+            "patient_profile": {"disease": {"id": "DIS-NSCLC"}},
+            "safety_note": cq.DISCLAIMER_UK,
+        }
+
+    monkeypatch.setattr(cq, "answer_clinical_question", fake_answer)
+
+    body = {
+        "case_text": "Metastatic NSCLC, exact standard example.",
+        "locale": "uk",
+        "user_id": "cache-user",
+    }
+    status, _headers, first = cq.handle_json_request(body)
+    status2, _headers2, second = cq.handle_json_request(body)
+
+    assert status == 200
+    assert status2 == 200
+    assert calls["count"] == 1
+    assert first["direct_answer"] == "answer 1"
+    assert second["direct_answer"] == "answer 1"
+    assert first["questions_used"] == 1
+    assert second["questions_used"] == 2
+
+
+def test_standard_nsclc_ihc_and_negative_drivers_do_not_block_validation():
+    extraction = {
+        "mentioned_biomarkers": [
+            "Napsin A+",
+            "TTF-1+",
+            "p40-",
+            "KRAS negative",
+            "ALK negative",
+            "ROS1 negative",
+            "RET negative",
+            "NTRK negative",
+        ],
+        "mentioned_drugs": [],
+        "unsupported_mentions": [
+            {"type": "biomarker", "text": "Napsin A+", "reason": "IHC marker"},
+            {"type": "biomarker", "text": "KRAS negative", "reason": "gene-level negative"},
+        ],
+    }
+    patient = {"disease": {"id": "DIS-NSCLC"}, "biomarkers": {}}
+
+    validation = cq._validate_extracted_case(extraction, patient)
+
+    assert validation.ok is True
+    assert validation.unknown_biomarkers == ()
+    assert validation.unsupported_mentions == ()
 
 
 def test_prompt_injection_guard_blocks_before_openai(monkeypatch):
