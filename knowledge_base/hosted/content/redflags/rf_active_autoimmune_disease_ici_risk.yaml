@@ -1,0 +1,124 @@
+id: RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK
+definition: >
+  Patient with active or incompletely controlled pre-existing autoimmune
+  or inflammatory disease (sarcoidosis, rheumatoid arthritis, IBD, SLE,
+  autoimmune hepatitis, inflammatory myopathy, myasthenia gravis, or
+  similar) is considered for immune checkpoint inhibitor (ICI) therapy —
+  elevated risk of immune-related adverse events (irAE) flare or de-novo
+  grade 3-4 irAE. Requires specialist (rheumatology / pulmonology /
+  gastroenterology) pre-treatment review; prefer lower-irAE-burden
+  backbone when options exist (pembrolizumab mono > ipilimumab+nivolumab).
+definition_ua: >
+  Пацієнт із активним або недостатньо контрольованим передіснуючим
+  аутоімунним чи запальним захворюванням (саркоїдоз, ревматоїдний
+  артрит, ЗЗК, ВКВ, аутоімунний гепатит, запальна міопатія, міастенія
+  гравіс та ін.) розглядається для терапії інгібіторами
+  імунних контрольних точок (ІКТ) — підвищений ризик загострення
+  імуноопосередкованих небажаних явищ (irAE) або de-novo gr 3-4 irAE.
+  Потребує консультації профільного спеціаліста (ревматологія /
+  пульмонологія / гастроентерологія) перед початком лікування;
+  перевага надається режимам з нижчим irAE-тягарем за наявності альтернатив
+  (пембролізумаб моно > іпілімумаб+нівол умаб).
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - {finding: "active_autoimmune_disease", value: true}
+    - {finding: "autoimmune_disease_active", value: true}
+    - {finding: "active_sarcoidosis", value: true}
+    - {finding: "pulmonary_sarcoidosis_active", value: true}
+    - {finding: "active_rheumatoid_arthritis", value: true}
+    - {finding: "active_inflammatory_bowel_disease", value: true}
+    - {finding: "active_crohn_disease", value: true}
+    - {finding: "active_ulcerative_colitis", value: true}
+    - {finding: "active_autoimmune_hepatitis", value: true}
+    - {finding: "active_lupus", value: true}
+    - {finding: "active_sle", value: true}
+    - {finding: "active_inflammatory_myopathy", value: true}
+    - {finding: "active_myasthenia_gravis", value: true}
+    - {finding: "active_multiple_sclerosis", value: true}
+    - {finding: "active_psoriasis_systemic", value: true}
+
+clinical_direction: de-escalate
+severity: major
+priority: 50
+category: fitness-eligibility
+
+relevant_diseases:
+  - DIS-NSCLC
+  - DIS-MELANOMA
+  - DIS-RCC
+  - DIS-UROTHELIAL
+  - DIS-CRC
+  - DIS-ENDOMETRIAL
+  - DIS-GASTRIC
+  - DIS-ESOPHAGEAL
+  - DIS-HNSCC
+  - DIS-HCC
+  - DIS-CHL
+  - DIS-PMBCL
+  - DIS-CERVICAL
+  - DIS-BREAST
+  - DIS-MESOTHELIOMA
+
+shifts_algorithm: []
+
+sources:
+  - SRC-SITC-ICI-IRAEMANAGEMENT-2021
+
+last_reviewed: "2026-05-04"
+draft: false
+
+notes: >
+  Pre-existing autoimmune disease is present in ~10-15% of patients
+  eligible for ICI therapy; historically excluded from pivotal trials.
+  Real-world data (Abdel-Wahab 2018, 3557 pts) shows 55% experienced
+  irAE flare and ~29% required systemic immunosuppression beyond steroids.
+  Risk stratification by SITC 2021:
+
+  - **Low risk** (generally safe to proceed with monitoring): thyroiditis,
+    vitiligo, stable psoriasis, type 1 diabetes — irAE flare mild, manageable.
+  - **Moderate risk** (proceed with specialist input): RA, IBD (Crohn/UC),
+    sarcoidosis, sicca syndrome, psoriatic arthritis — flare rate ~50%;
+    baseline DMARDs often OK to continue (methotrexate, HCQ but NOT
+    high-dose steroids or anti-TNF at start).
+  - **High risk** (strongest caution; consider alternative if available):
+    active autoimmune hepatitis, myasthenia gravis, inflammatory myopathy,
+    neuromyelitis optica — flare can be life-threatening; benefit-risk
+    discussion mandatory.
+
+  Pulmonary sarcoidosis specifically: ICI-induced sarcoid-like reactions
+  are well-documented (5-7% of patients on ICI), often mimicking disease
+  progression on imaging. Active pulmonary sarcoidosis + ICI raises risk
+  of severe pulmonary irAE (gr 3 pneumonitis). Pre-ICI chest CT baseline
+  recommended; pulmonology consult mandatory if active disease.
+
+  Algorithm action: no automatic track-switch (shifts_algorithm empty) —
+  fires as MDT advisory requiring specialist review before ICI initiation.
+  When combination ICI is the planned regimen, flag explicitly to consider
+  pembrolizumab mono as lower-irAE alternative.
+
+notes_ua: >
+  Передіснуюче аутоімунне захворювання присутнє у ~10-15% пацієнтів,
+  що відповідають критеріям для ІКТ-терапії; ця категорія історично
+  виключалась із ключових РКД. Реальні дані (Abdel-Wahab 2018, 3557 пацієнтів)
+  показують: 55% мали загострення irAE та ~29% потребували системної
+  імуносупресії понад стероїди.
+
+  Стратифікація ризику за SITC 2021:
+  - **Низький ризик**: тиреоїдит, вітиліго, стабільний псоріаз, цукровий
+    діабет 1-го типу — загострення irAE легке, кероване.
+  - **Помірний ризик**: РА, ЗЗК (Crohn/UC), саркоїдоз, сіндром Шегрена,
+    псоріатичний артрит — частота загострень ~50%.
+  - **Високий ризик**: активний аутоімунний гепатит, міастенія гравіс,
+    запальна міопатія — загострення може бути загрозливим для життя.
+
+  Легеневий саркоїдоз: саркоїдоподібні реакції на ІКТ — 5-7% пацієнтів,
+  часто імітують прогресування на КТ. Активний легеневий саркоїдоз + ІКТ
+  підвищує ризик тяжкого пневмоніту (gr 3). Обов'язкова: базова КТ ОГК
+  та консультація пульмонолога перед початком.
+
+  Дія алгоритму: автоматичного переключення треку немає —
+  RF спрацьовує як МДТ-рекомендація консультації спеціаліста перед ІКТ.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
