@@ -1,0 +1,105 @@
+id: IND-FL-2L-R2
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-FL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory FL grades 1-3a after ≥1 prior rituximab-containing regimen"
+    - "ECOG PS ≤2; adequate renal function (CrCl ≥30 mL/min with lenalidomide dose adjustment)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-RITUXIMAB-LENALIDOMIDE-R2
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate:
+    value: "~78% (R² arm, AUGMENT)"
+    source: SRC-AUGMENT-LEONARD-2019
+  complete_response:
+    value: "~34% (R² arm, AUGMENT)"
+    source: SRC-AUGMENT-LEONARD-2019
+  progression_free_survival:
+    value: "Median 39.4 mo vs 14.1 mo; HR 0.46 (95% CI 0.34-0.62; p<0.001)"
+    source: SRC-AUGMENT-LEONARD-2019
+
+hard_contraindications: []
+
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-PREGNANCY
+  - TEST-CECT-CAP
+  - TEST-PET-CT
+
+rationale: >
+  Rituximab+lenalidomide (R²) is the aggressive-track chemo-free 2L regimen for
+  r/r FL. AUGMENT phase 3 RCT (Leonard 2019) demonstrated superior PFS over
+  rituximab monotherapy (median 39.4 vs 14.1 mo; HR 0.46; p<0.001). ORR ~78%,
+  CR ~34%. IMiD (lenalidomide) + anti-CD20 (rituximab) combination exploits
+  immunomodulatory activity and rituximab-resensitization mechanisms. Valuable
+  where a chemo-free approach is preferred (pre-existing neuropathy, cytopenias,
+  frailty, patient preference) or where rituximab-sensitive relapse allows
+  re-challenge. NCCN Category 1 for r/r FL. Mandatory lenalidomide pregnancy
+  prevention program (REMS/equivalent) and VTE prophylaxis required.
+
+rationale_ua: >
+  Ритуксимаб+леналідомід (R²) є агресивним безхімієтерапевтичним режимом 2L
+  для r/r FL. AUGMENT (Leonard 2019): HR ВБП 0.46 (p<0.001), медіана ВБП 39.4 vs
+  14.1 міс; ORR ~78%, CR ~34%. Категорія 1 NCCN. Обов'язкова програма запобігання
+  вагітності та VTE-профілактика.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-AUGMENT-LEONARD-2019
+    position: supports
+    relevant_quote_paraphrase: >
+      R² (rituximab+lenalidomide) vs R+placebo in r/r iNHL: PFS HR 0.46
+      (95% CI 0.34-0.62; p<0.001); median PFS 39.4 vs 14.1 mo; ORR ~78%,
+      CR ~34% in R² arm.
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      R² (rituximab+lenalidomide) is a Category 1 preferred regimen for
+      relapsed/refractory FL in NCCN B-Cell Lymphomas guidelines.
+
+do_not_do:
+  - "НЕ застосовувати при вагітності — леналідомід категорія X; обов'язкова подвійна контрацепція + щомісячні тести на вагітність."
+  - "НЕ пропускати VTE-профілактику (аспірин або НМГ) — ризик тромбозу, пов'язаний з леналідомідом."
+  - "НЕ застосовувати при важкій нирковій недостатності (CrCl <30 мл/хв) без корекції дози."
+  - "НЕ починати без скринінгу HBV + профілактики при HBsAg+ або anti-HBc+ — ритуксимаб = ризик реактивації."
+
+do_not_do_en:
+  - "Do NOT use in pregnancy — lenalidomide is Category X teratogen; dual contraception mandatory + monthly pregnancy tests (REMS/equivalent program)."
+  - "Do NOT skip VTE prophylaxis (aspirin 81-325 mg QD minimum, or LMWH for high-risk) — lenalidomide-associated thrombosis risk."
+  - "Do NOT use in severe renal impairment (CrCl <30 mL/min) without lenalidomide dose adjustment per labeling."
+  - "Do NOT start without HBV screening + prophylaxis if HBsAg+ or anti-HBc+ — rituximab = reactivation risk."
+
+time_critical: false
+last_reviewed: "2026-05-09"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — pending Clinical Co-Lead sign-off (CHARTER §6.1). Aggressive-track
+  chemo-free 2L for r/r FL. AUGMENT (Leonard 2019 JCO, PMID 30897038).
+  R² × 12 cycles q28d. ORR/CR values (~78%/~34%) are from published AUGMENT
+  data reported in secondary analyses and review articles (abstract did not
+  include ORR directly; PFS is abstract-confirmed). Lenalidomide mandatory
+  REMS pregnancy-prevention program. VTE prophylaxis mandatory.
+  Teratogenicity covered in do_not_do_en — no CI-PREGNANCY-TERATOGEN entity
+  currently modeled.
