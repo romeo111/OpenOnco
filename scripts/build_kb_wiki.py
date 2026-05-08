@@ -484,6 +484,13 @@ def _rows(rows: list[tuple[str, str]]) -> str:
     )
 
 
+def _alias_chips(aliases: list[str]) -> str:
+    if not aliases:
+        return ""
+    chips = "".join(f'<span class="kb-alias">{html.escape(alias)}</span>' for alias in aliases)
+    return f'<div class="kb-alias-list">{chips}</div>'
+
+
 def _json_block(value: Any) -> str:
     if value in (None, "", [], {}):
         return ""
@@ -561,7 +568,7 @@ def _frontmatter(entity: KbEntity, entities: dict[str, KbEntity], *, locale: str
     ]
     aliases = _aliases(data)
     if aliases:
-        rows.insert(2, (labels["aliases"], html.escape(", ".join(aliases[:12]))))
+        rows.insert(2, (labels["aliases"], _alias_chips(aliases)))
     return f'<table class="kb-facts">{_rows(rows)}</table>'
 
 
@@ -1054,6 +1061,8 @@ KB_CSS = """
 .kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
 .kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
 .kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
+.kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
+.kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
 .kb-muted { color: var(--gray-500); }
 .kb-entity ul { padding-left: 22px; }
 .kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
