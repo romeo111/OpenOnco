@@ -36,9 +36,9 @@ def test_mf_early_skin_directed_has_no_systemic_regimen():
     """Skin-directed track should resolve with regimen_data null/empty —
     procedural therapy, not a drug regimen. Engine must not crash on null."""
     plan = generate_plan(_patient("patient_mf_early_stage.json"), kb_root=KB_ROOT)
-    standard = next(t for t in plan.plan.tracks if t.track_id == "standard")
+    local_therapy = next(t for t in plan.plan.tracks if t.track_id == "local_therapy")
     # No drug components for skin-directed
-    assert standard.regimen_data is None or not standard.regimen_data.get("components")
+    assert local_therapy.regimen_data is None or not local_therapy.regimen_data.get("components")
 
 
 def test_sezary_advanced_routes_to_mogamulizumab():

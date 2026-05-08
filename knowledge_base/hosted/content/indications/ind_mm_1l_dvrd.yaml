@@ -15,8 +15,25 @@ applicable_to:
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 2
+    fit_for_transplant: true
 
 recommended_regimen: REG-DARA-VRD
+phases:
+  - phase: induction
+    type: targeted_therapy
+    regimen_id: REG-DARA-VRD
+    cycles: 4
+  - phase: surgery
+    type: surgery
+    surgery_id: SUR-ASCT-AUTOLOGOUS
+    duration_weeks: 6
+  - phase: adjuvant
+    type: targeted_therapy
+    regimen_id: REG-DARA-VRD
+    cycles: 2
+  - phase: maintenance
+    type: targeted_therapy
+    regimen_id: REG-DARA-LEN-MAINTENANCE
 concurrent_therapy: []
 followed_by: []
 
@@ -67,6 +84,12 @@ rationale_ua: >
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_extraction
 sources:
+  - source_id: SRC-PERSEUS-SONNEVELD-2024
+    position: supports
+    relevant_quote_paraphrase: "D-VRd + ASCT + D-VRd + dara-len maintenance vs VRd + ASCT + VRd + len maintenance: PFS HR 0.42 (95% CI 0.30–0.59); 48-month PFS 84.3% vs 67.7%; MRD negativity (10⁻⁵) 75.2% vs 47.5% (PERSEUS)"
+  - source_id: SRC-GRIFFIN-VOORHEES-2020
+    position: supports
+    relevant_quote_paraphrase: "Phase 2 GRIFFIN trial established early D-VRd safety and efficacy data supporting quadruplet induction in ASCT-eligible NDMM"
   - source_id: SRC-NCCN-MM-2025
     position: supports
     relevant_quote_paraphrase: "D-VRd is a Category 1 preferred regimen for newly-diagnosed MM, particularly for high-risk cytogenetics; PERSEUS / GRIFFIN data support quadruplet over triplet"
@@ -91,7 +114,7 @@ do_not_do_en:
 known_controversies: []
 
 time_critical: false  # outpatient cancer planning, not time-critical (FDA non-device CDS criterion 4)
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-05-09"
 reviewers: []
 reviewer_signoffs: 0
 notes: >
@@ -102,3 +125,12 @@ notes: >
   finalized. Red-cell phenotyping (type and screen) BEFORE first
   daratumumab dose is mandatory due to anti-CD38 interference with
   crossmatching.
+
+  Phases wired 2026-05-09 per PERSEUS protocol (§17 IndicationPhase schema):
+  D-VRd × 4 induction → ASCT (SUR-ASCT-AUTOLOGOUS) → D-VRd × 2
+  consolidation → daratumumab-lenalidomide maintenance (REG-DARA-LEN-MAINTENANCE)
+  until progression. Scoped to transplant-eligible patients (fit_for_transplant:
+  true). TRANSPLANT-INELIGIBLE GAP: D-Rd (MAIA trial, Facon NEJM 2019;
+  daratumumab + lenalidomide + dex until progression) or D-VRd × 6 cycles
+  (GRIFFIN-style without ASCT) for non-transplant-eligible NDMM — not yet
+  modeled as a separate indication entity; flag for next HEME backlog wave.

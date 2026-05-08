@@ -1,0 +1,155 @@
+id: REG-FLOT
+name: "FLOT"
+name_ua: "FLOT"
+alternate_names:
+  - "Docetaxel + Oxaliplatin + Leucovorin + 5-FU"
+  - "FLOT4 regimen"
+
+components:
+  - drug_id: DRUG-DOCETAXEL
+    dose: "50 mg/m²"
+    schedule: "IV over 1h, day 1 of 14-day cycle"
+    route: IV
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "85 mg/m²"
+    schedule: "IV over 2h, day 1"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "200 mg/m²"
+    schedule: "IV over 30 min, day 1 (concurrent with oxaliplatin)"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "2600 mg/m² CIV over 24h"
+    schedule: "Day 1, continuous infusion via ambulatory pump"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "8 cycles total in perioperative use (4 pre-op + 4 post-op per FLOT4 / Al-Batran 2019); regimen not used as ongoing systemic therapy beyond periop"
+
+toxicity_profile: severe
+
+premedication:
+  - "Dexamethasone 8 mg PO/IV (docetaxel hypersensitivity prophylaxis — start 1 day before, continue day 0 + day 1)"
+  - "5-HT3 antagonist (ondansetron 8 mg IV) + dexamethasone 8 mg IV (anti-emetic)"
+  - "G-CSF primary prophylaxis (pegfilgrastim 6 mg SC day 2 OR filgrastim 5 µg/kg/day) — FLOT carries ~20-25% febrile-neutropenia risk; primary prophylaxis is standard"
+
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Grade 3-4 neutropenia OR febrile neutropenia despite G-CSF"
+    modification: "Reduce all components by 20-25% next cycle; continue G-CSF prophylaxis"
+    rationale: "Standard FLOT4 protocol dose-modification rules (Al-Batran 2019 supplementary)"
+    source_refs: [SRC-FLOT4-AL-BATRAN-2019]
+  - condition: "Grade 2 sensory neuropathy with functional impairment"
+    modification: "Reduce oxaliplatin to 65 mg/m² OR omit oxaliplatin (continue docetaxel + 5-FU/LV)"
+    rationale: "Cumulative oxaliplatin neurotoxicity; oxaliplatin is the first dropped component"
+    source_refs: [SRC-FLOT4-AL-BATRAN-2019, SRC-NCCN-GASTRIC-2025]
+  - condition: "Grade 3-4 mucositis or diarrhea"
+    modification: "Reduce 5-FU CIV to 2000 mg/m² and consider docetaxel reduction"
+    rationale: "Combined fluoropyrimidine + taxane mucotoxicity"
+    source_refs: [SRC-FLOT4-AL-BATRAN-2019]
+  - condition: "ECOG decline to ≥2 between pre-op cycles"
+    modification: "Hold further pre-op cycles; proceed to surgical evaluation"
+    rationale: "FLOT4 protocol — fitness gate before continuing periop sequence"
+    source_refs: [SRC-FLOT4-AL-BATRAN-2019]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "All four components (docetaxel, oxaliplatin, leucovorin, 5-FU) on НСЗУ formulary. G-CSF primary prophylaxis (pegfilgrastim or filgrastim) reimbursed for high-risk regimens including FLOT."
+
+sources:
+  - SRC-FLOT4-AL-BATRAN-2019
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+
+# Patient between-visit watchpoints — STUB pending CHARTER §6.1 two-Co-Lead
+# signoff (dev-mode exemption per project_charter_dev_mode_exemptions).
+# FLOT signature toxicities: docetaxel (alopecia, fluid retention,
+# myelosuppression, hypersensitivity), oxaliplatin (cold-sensitivity +
+# cumulative neuropathy), 5-FU CIV (mucositis, diarrhea, hand-foot).
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Характерно для оксаліплатину — занотовуйте інтенсивність; обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7 of each cycle"
+    sources:
+      - SRC-FLOT4-AL-BATRAN-2019
+  - trigger_ua: "Чутливість до холоду — дискомфорт від холодного питва, повітря або поверхонь"
+    action_ua: "Очікувано в перші 3-5 днів після інфузії — уникайте холодного питва і холодного повітря на обличчя"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-5"
+    sources:
+      - SRC-FLOT4-AL-BATRAN-2019
+  - trigger_ua: "Випадання волосся"
+    action_ua: "Очікувано від доцетакселу; занотуйте; за бажанням — обговоріть охолодження скальпу на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-FLOT4-AL-BATRAN-2019
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у клініку того ж дня АБО у швидку — на 7-14 день циклу можлива фебрильна нейтропенія (FLOT — високий ризик навіть на G-CSF)"
+    urgency: er_now
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-FLOT4-AL-BATRAN-2019
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Сильна діарея — більше 4 разів на день, особливо з нудотою або зневодненням"
+    action_ua: "Подзвоніть у клініку того ж дня — 5-фторурацил CIV може спричиняти зневоднення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-FLOT4-AL-BATRAN-2019
+  - trigger_ua: "Біль або виразки в роті, які заважають їсти"
+    action_ua: "Подзвоніть у клініку того ж дня — мукозит від 5-ФУ та доцетакселу; може потребувати корекції дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-FLOT4-AL-BATRAN-2019
+  - trigger_ua: "Набряки гомілок або обличчя, помітна задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — затримка рідини від доцетакселу; може потребувати діуретиків або корекції стероїдів"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-FLOT4-AL-BATRAN-2019
+  - trigger_ua: "Поколювання стало настільки сильним, що складно тримати дрібні предмети або відчувати стопи"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка нейропатії; зазвичай пропускають оксаліплатин у наступних циклах"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-FLOT4-AL-BATRAN-2019
+      - SRC-NCCN-GASTRIC-2025
+
+last_reviewed: "2026-05-07"
+
+notes: >
+  FLOT (docetaxel 50 + oxaliplatin 85 + leucovorin 200 + 5-FU 2600 CIV/24h
+  q14d) per FLOT4-AIO trial (Al-Batran 2019, Lancet) — global standard
+  perioperative regimen for resectable gastric / GEJ adenocarcinoma cT2-N+
+  / locally advanced. Used 4 cycles pre-op + 4 cycles post-op (8 total)
+  in periop sequence; pairs with D2 gastrectomy. Median OS 50 vs 35 mo
+  (HR 0.77; 95% CI 0.63-0.94) vs ECF/ECX. NCCN/ESMO category 1.
+
+  Toxicity profile is significantly heavier than FOLFOX — taxane
+  component adds neutropenia, alopecia, fluid retention, and ~20-25%
+  febrile-neutropenia risk requiring G-CSF primary prophylaxis. FLOT4
+  excluded ECOG ≥2 patients; clinical fitness assessment is mandatory
+  before initiation. For patients unfit for taxane-containing periop
+  chemotherapy, alternative perioperative regimens (e.g., FOLFOX-based)
+  may be considered after MDT discussion — out of C1 scope.
+
+  RENAISSANCE/AIO-FLOT5 trial (Al-Batran 2024) examined adding immune
+  checkpoint inhibition to perioperative FLOT in oligometastatic gastric;
+  not yet a standard-of-care indication and not covered here.
+
+notes_ua: >
+  FLOT (доцетаксел 50 + оксаліплатин 85 + лейковорин 200 + 5-ФУ 2600
+  CIV/24h q14d) — глобальний стандарт периоопераційної терапії при
+  резектабельній аденокарциномі шлунка / GEJ cT2-N+ / місцево-поширеній
+  (FLOT4-AIO, Al-Batran 2019, Lancet). 4 цикли до операції + 4 після (8
+  всього) у периоопераційній послідовності; поєднується з D2-гастректомією.
+  Медіана ЗВ 50 проти 35 місяців (HR 0.77) проти ECF/ECX. NCCN/ESMO
+  категорія 1. Профіль токсичності значно тяжчий за FOLFOX — таксан
+  додає нейтропенію, алопецію, затримку рідини, ризик фебрильної
+  нейтропенії 20-25% (G-CSF первинна профілактика обов'язкова). FLOT4
+  виключив пацієнтів з ECOG ≥2; оцінка функціонального стану обов'язкова
+  перед стартом.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

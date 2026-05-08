@@ -1,0 +1,44 @@
+id: RC-CROSS-NEOADJ
+names:
+  preferred: "CROSS neoadjuvant chemoradiation for resectable esophageal cancer"
+  ukrainian: "CROSS неоад'ювантна хіміопроменева терапія резектабельного раку стравоходу"
+  english: "CROSS regimen — neoadjuvant CRT for esophageal cancer (41.4 Gy / 23 fx + weekly carbo+pacli × 5)"
+  synonyms:
+    - "CROSS CRT"
+    - "Neoadj CRT 41.4 Gy / 23 fx"
+    - "van Hagen 2012 neoadj CRT"
+
+total_dose_gy: 41.4
+fractions: 23
+fraction_size_gy: 1.8
+target_volume: "primary tumor + involved nodes (CTV) with PTV expansion per institutional protocol"
+schedule: "5 fx/week × 4.6 weeks (Mon-Fri); concurrent with weekly carbo+pacli × 5 cycles"
+
+# Concurrent weekly carboplatin AUC 2 + paclitaxel 50 mg/m^2 × 5 cycles
+# (REG-CARBOPLATIN-PACLITAXEL-WEEKLY) — the canonical CROSS chemo backbone
+# per van Hagen 2012. Distinct from definitive-CRT regimen
+# (REG-CARBO-PACLI-CONCURRENT-RT-ESOPH, 5-6 cycles paired with 28-fx /
+# 50.4 Gy course). Loader resolves via planning doc §2.4 rule 7.
+concurrent_chemo_regimen: REG-CARBOPLATIN-PACLITAXEL-WEEKLY
+
+intent: neoadjuvant
+
+sources:
+  - SRC-CROSS-VAN-HAGEN-2012
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-ESMO-ESOPHAGEAL-2024
+
+last_reviewed: "2026-05-08"
+notes: >
+  van Hagen 2012 (NEJM) established CROSS as standard neoadjuvant
+  chemoradiation for resectable esophageal / GEJ cancer (squamous and
+  adenocarcinoma, cT1b N+ M0 or cT2-4a any N M0). 41.4 Gy in 23 fractions
+  (1.8 Gy/fx) over ~4.6 weeks concurrent with weekly carboplatin AUC 2 +
+  paclitaxel 50 mg/m^2 × 5 cycles, followed by esophagectomy 6-8 weeks
+  post-CRT. Median OS ~49 mo (CRT+S) vs ~24 mo (S alone), HR 0.66 (95% CI
+  0.50-0.87, p=0.003); pCR ~29% squamous, ~23% adeno; 5-yr OS ~47%
+  (combined). NCCN category 1 + ESMO 2024 strong recommendation. IMRT
+  or VMAT preferred (3D-CRT acceptable). Distinct from definitive CRT
+  (50.4 Gy / 28 fx) by total dose, fraction count, and intent (CRT here
+  is a bridge to surgery, not definitive). Surgery (esophagectomy) phase
+  modeled separately — see C4 chunk for Surgery entities.

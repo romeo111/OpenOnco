@@ -1,0 +1,114 @@
+id: REG-BEMARITUZUMAB-MFOLFOX6
+name: "Bemarituzumab + mFOLFOX6 (FORTITUDE-101) — 1L FGFR2b-overexpressing HER2-non-positive gastric/GEJ"
+name_ua: "Бемаритузумаб + mFOLFOX6 (FORTITUDE-101) — 1L FGFR2b+ HER2- шлунок/GEJ"
+alternate_names:
+  - "Bema-FOLFOX"
+  - "FPA144 + mFOLFOX6 (legacy development name)"
+
+components:
+  - drug_id: DRUG-BEMARITUZUMAB
+    dose: "15 mg/kg IV q2w; cycle 1 day 8 additional 7.5 mg/kg loading dose (FORTITUDE-101 protocol)"
+    schedule: "IV q2w (with mFOLFOX6 backbone) + cycle 1 day 8 booster dose"
+    route: IV
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "85 mg/m² IV day 1"
+    schedule: "IV day 1 q2w"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m² IV day 1"
+    schedule: "IV day 1 q2w"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "400 mg/m² IV bolus day 1, then 2400 mg/m² IV continuous infusion over 46 h"
+    schedule: "IV q2w"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Until progression / unacceptable toxicity (oxaliplatin commonly capped at 8-12 cycles for cumulative neuropathy; bemarituzumab + 5-FU/LV maintenance continues; FORTITUDE-101 protocol allows oxaliplatin discontinuation per investigator with bemarituzumab + 5-FU/LV continued)"
+
+toxicity_profile: severe
+
+premedication:
+  - "MANDATORY baseline + serial slit-lamp ophthalmology examination prior to each cycle; topical lubricants prophylactically"
+  - "Standard 5-HT3 + dexamethasone antiemetic premedication for mFOLFOX6 (high-emetogenic chemotherapy)"
+  - "Anti-H1 / anti-pyretic prophylaxis optional for bemarituzumab infusion-reaction prophylaxis (rate ~5%, mostly grade 1-2)"
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Bemarituzumab grade 2 corneal event (punctate keratitis, reduced visual acuity, dry eye, corneal epithelium defect)"
+    modification: "Hold bemarituzumab until ≤Grade 1; resume at same dose; intensify ophthalmology follow-up + topical lubrication"
+    source_refs: [SRC-FORTITUDE-101]
+  - condition: "Bemarituzumab grade 3 corneal event"
+    modification: "Hold bemarituzumab until ≤Grade 1; resume at reduced dose (12 mg/kg); permanent discontinuation if recurrent grade 3 or any grade 4 ocular toxicity"
+    source_refs: [SRC-FORTITUDE-101]
+  - condition: "Bemarituzumab grade ≥3 infusion reaction"
+    modification: "Permanent discontinuation of bemarituzumab; continue mFOLFOX6 backbone if disease control needed"
+    source_refs: [SRC-FORTITUDE-101]
+  - condition: "Oxaliplatin grade 2-3 peripheral neuropathy"
+    modification: "Reduce oxaliplatin to 65 mg/m² OR hold until ≤Grade 1; consider oxaliplatin discontinuation with 5-FU/LV + bemarituzumab maintenance"
+    source_refs: [SRC-NCCN-GASTRIC-2025]
+  - condition: "5-FU grade 3-4 stomatitis or diarrhea"
+    modification: "Hold 5-FU until ≤Grade 1, resume at 75% dose"
+    source_refs: [SRC-NCCN-GASTRIC-2025]
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: |
+    Бемаритузумаб НЕ зареєстровано в UA (drlz.com.ua станом на
+    2026-05-07; не FDA-схвалений станом на 2026-05-07 — phase 3
+    FORTITUDE-101 первинний readout позитивний (ESMO 2025 LBA10),
+    регуляторне подання очікується). Хіміо-беккбон (oxaliplatin /
+    leucovorin / 5-FU) — зареєстрований + НСЗУ-реімбурсується.
+    Шляхи доступу бемаритузумабу:
+    - Named-patient import — за рахунок пацієнта;
+    - Amgen compassionate use / EAP — обмежено;
+    - Cross-border (EU): EU онкоцентр (наказ МОЗ 988);
+    - Clinical trials: пост-маркетингові FORTITUDE-102 / FORTITUDE-103
+      (perioperative + 1L з PD-1 інгібітором).
+    Альтернатива при недоступному бемаритузумабі: стандартний
+    FOLFOX/CAPOX ± nivolumab (CheckMate-649 при PD-L1 CPS≥1) як 1L;
+    бемаритузумаб додається коли стає доступним.
+
+sources:
+  - SRC-FORTITUDE-101
+  - SRC-FIGHT
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+last_reviewed: "2026-05-07"
+
+notes: >
+  FORTITUDE-101 (Rha et al. ESMO 2025 LBA10; NCT05052801) phase 3
+  registrational: bemarituzumab + mFOLFOX6 vs placebo + mFOLFOX6 in
+  FGFR2b-overexpressing (IHC 2+/3+ ≥10% of tumor cells, validated
+  IIIb-selective antibody) HER2-non-positive 1L unresectable / metastatic
+  gastric/GEJ adenocarcinoma. Primary analysis (median follow-up 11.8 mo):
+  mOS 17.9 vs 12.5 mo (HR 0.61, p=0.005); mPFS 8.6 vs 6.7 mo (HR 0.71,
+  95% CI 0.53–0.95); ORR ~45% in both arms. Updated descriptive analysis
+  (median follow-up 19.4 mo): mOS 14.5 vs 13.2 mo (HR 0.82, 95% CI
+  0.62–1.08) — early survival gain attenuated with longer follow-up,
+  raising practice-changing controversy at ESMO 2025 (one discussant
+  characterized the data as "biologic activity, not practice-changing"
+  citing absence of PD-1 backbone in control arm and shrinking median
+  OS difference). Predecessor FIGHT phase 2 (Wainberg et al. Lancet
+  Oncol 2022) showed mPFS 9.5 vs 7.4 mo (HR 0.68) in the same FGFR2b ≥10%
+  2+/3+ subgroup. Ocular toxicity is the dose-defining AE: ~70% any-grade
+  corneal events (punctate keratitis, reduced visual acuity, dry eye,
+  corneal epithelium defect), ~25% grade ≥3, 28% withdrawal due to ocular
+  toxicity (typical onset ~6 months) — mandatory baseline + serial
+  slit-lamp ophthalmology REQUIRED. Bemarituzumab dosing per FORTITUDE-101
+  protocol: 15 mg/kg IV q2w with cycle 1 day 8 additional 7.5 mg/kg
+  loading dose. Hierarchy when multiple actionable signals co-occur in
+  HER2-non-positive 1L gastric/GEJ: HER2+ trastuzumab supersedes;
+  MSI-H pembrolizumab supersedes; CLDN18.2 ≥75% zolbetuximab supersedes
+  (phase 3 OS established Oct 2024 vs FORTITUDE-101 attenuated benefit);
+  bemarituzumab reserved for FGFR2b ≥10% with CLDN18.2 <75%.
+  STUB pending Clinical Co-Lead sign-off (CHARTER §6.1: ≥2 reviewers
+  for clinical content). DRUG-BEMARITUZUMAB entity does not yet exist
+  in KB — drug-stub creation deferred to a separate chunk; transient
+  ref-error expected until then.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

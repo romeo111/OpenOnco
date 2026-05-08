@@ -11,6 +11,8 @@ purpose: >
 
 output_indications:
   - IND-BREAST-HR-POS-MET-1L-CDKI
+  - IND-BREAST-HR-POS-EARLY-ADJ-CDK46I
+  - IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB
   - IND-BREAST-HER2-POS-EARLY-NEOADJUVANT
   - IND-BREAST-HER2-POS-MET-1L-THP
   - IND-BREAST-HER2-POS-MET-2L-TDXD
@@ -63,17 +65,19 @@ decision_tree:
     if_false:
       result: IND-BREAST-TNBC-EARLY-NEOADJUVANT
       notes: "Stage I-III TNBC: KEYNOTE-522 neoadjuvant pembrolizumab+chemo regardless of PD-L1 status."
-  # Step 5 — HR+/HER2- branch: BRCA+ metastatic takes PARPi over CDK4/6i?
-  # Clinical practice mixed; default keeps CDK4/6i 1L; clinician overrides.
+  # Step 5 — HR+/HER2- branch: early-stage high-risk → adjuvant CDK4/6i; metastatic → CDK4/6i 1L.
+  # monarchE (Johnston, Lancet Oncol 2023): abemaciclib 2yr adjuvant; high-risk = ≥4+ nodes
+  # OR 1-3 nodes + Ki67 ≥20% or grade 3. NATALEE (ribociclib 3yr) broadens eligibility.
   - step: 5
     evaluate:
-      any_of:
-        - condition: "Default HR+/HER2- 1L metastatic"
+      all_of:
+        - condition: "Stage I-III (early HR+/HER2-)"
+        - condition: "High-risk: ≥4 axillary nodes OR (1-3 nodes + Ki67 ≥20% or grade 3) — monarchE eligibility"
     if_true:
-      result: IND-BREAST-HR-POS-MET-1L-CDKI
+      result: IND-BREAST-HR-POS-EARLY-ADJ-CDK46I
     if_false:
       result: IND-BREAST-HR-POS-MET-1L-CDKI
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Wired 2026-05-09 (BREAST-1 D1). Routes to abemaciclib (IND-BREAST-HR-POS-EARLY-ADJ-CDK46I, monarchE default). Alternative: ribociclib (IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB, NATALEE — broader eligibility incl. node-negative + QTc monitoring required). MDT chooses based on node status, QTc risk, access. Free-text conditions — no disease-scoped RF available yet; metastatic cases default to IND-BREAST-HR-POS-MET-1L-CDKI."
 
   # Step 6 — Metastatic TNBC: BRCA mutation gate → PARPi vs pembro+chemo.
   # BRCA-mutated mTNBC: olaparib or talazoparib preferred 1L (OlympiAD, EMBRACA).
@@ -100,13 +104,18 @@ decision_tree:
         Choose chemotherapy backbone based on: taxane tolerance, neuropathy,
         prior taxane exposure; gem+carbo for taxane-ineligible patients.
 
-sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
-last_reviewed: null
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-MONARCHE-JOHNSTON-2023
+  - SRC-NATALEE-SLAMON-2024
+last_reviewed: '2026-05-09'
 notes: >
   Receptor-subtype is the dominant branch point — biomarker_driven
   archetype materialized. T-DXd 2L HER2+ metastatic referenced as
   output but engaged via revise_plan() after THP failure rather than
-  as 1L choice. Decision tree intentionally simplified for MVP — full
-  integration of CDK4/6i adjuvant (NATALEE / monarchE), Lu-PSMA
-  analog targeted ADCs, and brain-met HER2CLIMB pathways requires
-  follow-up content sessions.
+  as 1L choice. Step 5 wired 2026-05-09 (BREAST-1 D1) for early
+  HR+/HER2- high-risk adjuvant CDK4/6i; D2 adds NATALEE ribociclib
+  as alternative (IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB).
+  OOS: Lu-PSMA analog targeted ADCs; brain-met HER2CLIMB pathways;
+  early low-risk HR+/HER2- standard AI adjuvant (no CDK4/6i needed).

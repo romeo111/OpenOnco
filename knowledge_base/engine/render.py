@@ -393,6 +393,8 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
                                     "en": "Active surveillance (watch-and-wait)"},
     "track_palliative":            {"uk": "Паліативний план", "en": "Palliative plan"},
     "track_trial":                 {"uk": "План у рамках клінічного дослідження", "en": "Clinical-trial-only plan"},
+    "track_local_therapy":         {"uk": "Локальна терапія", "en": "Local therapy plan"},
+    "track_transplant":            {"uk": "Трансплантаційний план", "en": "Transplant plan"},
     # Document headers
     "doc_label_plan":              {"uk": "OpenOnco · Treatment Plan", "en": "OpenOnco · Treatment Plan"},
     "doc_title_plan_prefix":       {"uk": "План лікування", "en": "Treatment plan"},
@@ -2875,14 +2877,54 @@ def render_plan_html(
             f'</dl>'
             f'</div>'
         )
-    body.append(
-        f'<section><h2>Treatment options ({len(plan.tracks)} tracks)</h2>'
-        f'<div class="tracks">{"".join(track_html)}</div></section>'
-    )
+    primary_html = track_html[0] if track_html else ""
+    if primary_html:
+        body.append(
+            "<section><h2>Primary current-line option</h2>"
+            f'<div class="tracks">{primary_html}</div></section>'
+        )
+    alternative_html = "".join(track_html[1:])
+    if alternative_html:
+        body.append(
+            "<section><details>"
+            f"<summary><h2>Other current-line alternatives ({len(track_html) - 1} tracks)</h2>"
+            "<span class=\"section-sub\">Same treatment line; review when biomarker, access, contraindication, or patient-context assumptions change.</span>"
+            "</summary>"
+            f'<div class="tracks">{alternative_html}</div>'
+            "</details></section>"
+        )
 
     # Why this branch was chosen — actual fired RFs from the trace,
     # with the conflict-resolution winner tagged. Distinct from the
     # PRO/CONTRA section, which lists possible triggers in the abstract.
+    sequencing_tracks = getattr(plan, "sequencing_tracks", []) or []
+    if sequencing_tracks:
+        seq_rows: list[str] = []
+        for t in sequencing_tracks:
+            authored_line = ((t.indication_data or {}).get("applicable_to") or {}).get("line_of_therapy")
+            regimen_name = (t.regimen_data or {}).get("name", "-") if t.regimen_data else "-"
+            line_note = f"line {authored_line}" if authored_line is not None else "line not authored"
+            seq_rows.append(
+                "<tr>"
+                f"<td><code>{_h(t.indication_id)}</code></td>"
+                f"<td>{_h(line_note)}</td>"
+                f"<td>{_h(regimen_name)}</td>"
+                f"<td>{_h(t.selection_reason or '')}</td>"
+                "</tr>"
+            )
+        body.append(
+            "<section><details>"
+            "<summary><h2>Sequencing / non-current-line candidates</h2>"
+            "<span class=\"section-sub\">Shown for audit and future-line context; not part of the current treatment choice.</span>"
+            "</summary>"
+            "<table class=\"tbl\"><thead><tr>"
+            "<th>Indication</th><th>Authored line</th><th>Regimen</th><th>Why separated</th>"
+            "</tr></thead><tbody>"
+            f"{''.join(seq_rows)}"
+            "</tbody></table>"
+            "</details></section>"
+        )
+
     body.append(_render_branch_explanation(plan_result, plan_result.kb_resolved, target_lang))
 
     # Pre-treatment investigations · RedFlag PRO/CONTRA · What NOT to do ·

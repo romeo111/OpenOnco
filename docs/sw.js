@@ -6,8 +6,11 @@
 //      background, so the dropdowns aren't gated on the HTML download.
 // Cache name is stamped with the core bundle's SHA-256 prefix so a KB
 // push automatically rotates the cache key.
-const CACHE_NAME = 'openonco-bundle-l2-c17eab458943';
+const CACHE_NAME = 'openonco-bundle-l3-cba6bc286d2a';
 const PRECACHE = [
+  '/manifest.webmanifest',
+  '/logo.svg',
+  '/favicon.svg',
   '/openonco-engine-index.json',
   '/openonco-engine-core.zip',
   '/try.html',
@@ -17,7 +20,7 @@ const PRECACHE = [
 // Routes that use stale-while-revalidate (instant from cache, refresh
 // in background). HTML pages must be on this list — never cache-first,
 // or the user gets stuck on an old build.
-const SWR_PATHS = ['/try.html', '/ukr/try.html', '/style.css'];
+const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html', '/style.css'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -54,9 +57,21 @@ function staleWhileRevalidate(event) {
   );
 }
 
+function networkFirstNavigation(event) {
+  event.respondWith(
+    fetch(event.request, { cache: 'no-store' }).catch(() =>
+      caches.match(event.request, { ignoreSearch: true })
+    )
+  );
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
+
+  if (event.request.mode === 'navigate') {
+    return networkFirstNavigation(event);
+  }
 
   // SWR for the small interactive shell (HTML + CSS).
   if (SWR_PATHS.indexOf(url.pathname) !== -1) {

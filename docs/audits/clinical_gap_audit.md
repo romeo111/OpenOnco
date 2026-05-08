@@ -1,6 +1,6 @@
 # Clinical gap audit
 
-Generated: `2026-05-06T19:43:51Z`
+Generated: `2026-05-08T09:40:15Z`
 
 This is a coverage/governance audit, not a clinical recommendation set.
 It makes the five largest known gaps measurable and repeatable.
@@ -9,11 +9,11 @@ It makes the five largest known gaps measurable and repeatable.
 
 | Gap | Current | Target | Status |
 |---|---:|---|---|
-| Clinical sign-off | 15/1726 signoff-eligible entities reviewed (0.9%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
-| Solid tumor 2L+ coverage | 21/42 solid diseases have a 2L+ algorithm; 18/42 have a 2L+ indication | Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication. | `coverage_gap` |
-| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 344 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
-| Supportive-care depth | 138/302 regimens have mandatory supportive care (45.7%); 40 have monitoring; 292 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
-| Drug indication and off-label tracking | 654 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `schema_gap` |
+| Clinical sign-off | 15/1871 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
+| Solid tumor 2L+ coverage | 22/42 solid diseases have a 2L+ algorithm; 24/42 have a 2L+ indication | Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication. | `coverage_gap` |
+| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 411 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
+| Supportive-care depth | 140/359 regimens have mandatory supportive care (39.0%); 41 have monitoring; 318 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
+| Drug indication and off-label tracking | 792 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `schema_gap` |
 
 ## Next actions
 
@@ -26,7 +26,7 @@ It makes the five largest known gaps measurable and repeatable.
 
 - Blocker: Missing disease-by-disease 2L+ algorithm/indication authoring queue.
 - Next action: Prioritize missing high-volume solid diseases, then rare solid diseases.
-- Missing 2L+ algorithm rows: 21
+- Missing 2L+ algorithm rows: 20
   - `DIS-ANAL-SCC`: Anal squamous cell carcinoma (Anal SCC)
   - `DIS-BCC`: Basal cell carcinoma
   - `DIS-CERVICAL`: Cervical carcinoma
@@ -40,7 +40,6 @@ It makes the five largest known gaps measurable and repeatable.
   - `DIS-IMT`: Inflammatory myofibroblastic tumor
   - `DIS-LAM`: Lymphangioleiomyomatosis
   - `DIS-MENINGIOMA`: Meningioma
-  - `DIS-MESOTHELIOMA`: Malignant mesothelioma
   - `DIS-MPNST`: Malignant peripheral nerve sheath tumor
   - `DIS-MTC`: Medullary thyroid carcinoma
   - `DIS-PNET`: Pancreatic neuroendocrine tumor
@@ -61,50 +60,50 @@ It makes the five largest known gaps measurable and repeatable.
 - Regimens missing mandatory supportive care: 120 shown below
   - `REG-2GEN-TKI-CML`
   - `REG-5FU-LV-BEV-CKD-MODIFIED`
+  - `REG-ABEMACICLIB-ADJUVANT`
   - `REG-ACALABRUTINIB-CONTINUOUS`
   - `REG-ACALABRUTINIB-MCL`
   - `REG-ACALABRUTINIB-RITUXIMAB`
   - `REG-ADAGRASIB-NSCLC`
   - `REG-ALECTINIB-NSCLC`
   - `REG-ALPELISIB-FULVESTRANT-BREAST`
+  - `REG-AMI-LAZ-NSCLC`
   - `REG-AMIVANTAMAB-LAZERTINIB-NSCLC-2L`
   - `REG-AMIVANTAMAB-MONO-NSCLC-EX20INS`
   - `REG-ANAGRELIDE-ET`
   - `REG-ASCIMINIB-CML`
+  - `REG-ATEZO-ADJUVANT-NSCLC`
   - `REG-ATEZO-BEV`
   - `REG-AVAPRITINIB-ADVSM-1L`
   - `REG-AVAPRITINIB-GIST-1L`
   - `REG-AVELUMAB-MAINTENANCE`
   - `REG-AVELUMAB-MONO-NK-T`
   - `REG-BELZUTIFAN-MONO`
+  - `REG-BEMARITUZUMAB-MFOLFOX6`
+  - `REG-BEP-GCT`
   - `REG-BEV-MAINTENANCE-OVARIAN`
+  - `REG-BEVACIZUMAB-GBM`
   - `REG-BEXAROTENE-MAINTENANCE-CTCL`
   - `REG-BEXAROTENE-MONO-CTCL`
   - `REG-BV-MONO-MF`
+  - `REG-CABAZITAXEL-MCRPC`
+  - `REG-CABOZANTINIB-HCC`
   - `REG-CABOZANTINIB-MTC-1L`
   - `REG-CAPE-BEV-MAINTENANCE`
+  - `REG-CAPECITABINE-CRT-CONCURRENT`
   - `REG-CAPECITABINE-PALLIATIVE`
   - `REG-CAPIVASERTIB-FULVESTRANT-BREAST`
   - `REG-CAPMATINIB-NSCLC`
   - `REG-CAPOX`
   - `REG-CAR-T-AXICEL-HGBL`
   - `REG-CARBO-GEM-BEV-OVARIAN`
-  - `REG-CARBO-PACLI-OVARIAN`
-  - `REG-CARBO-PLD-BEV-OVARIAN`
-  - `REG-CARBOPLATIN-PACLITAXEL-WEEKLY`
-  - `REG-CETUXIMAB-RECHALLENGE`
-  - `REG-CINV-4DRUG-HEC`
-  - `REG-CISPLATIN-GEMCITABINE-UROTHELIAL`
-  - `REG-CISPLATIN-RADIOSENS`
-  - `REG-CRIZOTINIB-ALCL`
-  - `REG-CRIZOTINIB-IMT`
-  - `REG-DAA-GLEC-PIBR`
+  - `REG-CARBO-PACLI-ANAL-MET`
 
 ### Drug indication and off-label tracking
 
 - Blocker: No first-class drug_indications entity directory/schema is present.
 - Next action: Introduce a drug_indications entity, then backfill from existing indications/regimens.
-- Inferred pairs to backfill: 654
+- Inferred pairs to backfill: 792
 - Explicit labeled/off-label statuses: 0
 
 ## Machine-readable outputs

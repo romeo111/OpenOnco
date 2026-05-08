@@ -1,0 +1,68 @@
+# Open esophagectomy (Ivor-Lewis or McKeown) — §17.1 Surgery entity
+# (RATIFIED 2026-05-07). Second clinical-content procedure landing in the
+# GI-2 wave (chunk gi2-c4-mie-ramie-selection-2026-05-08-1100). One of three
+# valid technique options (open / MIE / RAMIE) per TIME and ROBOT RCTs;
+# referenced from `DIS-ESOPHAGEAL.metadata.procedure_options`.
+id: SUR-ESOPHAGECTOMY-OPEN
+names:
+  preferred: "Open esophagectomy (Ivor-Lewis or McKeown)"
+  ukrainian: "Відкрита езофагектомія (Айвор-Льюїс або МакКеоун)"
+  english: "Open esophagectomy (Ivor-Lewis or McKeown)"
+  synonyms:
+    - "Ivor-Lewis esophagectomy"
+    - "McKeown esophagectomy"
+    - "Three-incision esophagectomy"
+    - "Transthoracic esophagectomy"
+    - "Open transthoracic esophagectomy"
+
+# Free-string per §17.1 sketch — surgical taxonomy not enum'd in v0.1.
+type: open_esophagectomy
+intent: curative
+
+target_organ: esophagus
+applicable_diseases:
+  - DIS-ESOPHAGEAL
+
+# Open esophagectomy historical morbidity / mortality — moderate-volume
+# centers; high-volume centers report 1-3% but global registry data
+# (e.g. ECCG) places the moderate-center band at 4-10%. TIME (Biere
+# 2012) open arm: in-hospital mortality 3% (1/56). ROBOT (van der Sluis
+# 2019) open arm: in-hospital mortality 4%.
+operative_mortality_pct: "4-10% (moderate-volume centers); 1-3% in high-volume centers"
+
+common_complications:
+  - name: "Anastomotic leak (intrathoracic — Ivor-Lewis; cervical — McKeown)"
+    frequency: "10-25% (cervical leaks more common, intrathoracic leaks more morbid)"
+  - name: "Pulmonary complications (pneumonia, ARDS, prolonged ventilation)"
+    frequency: "29% open arm in TIME (vs 9% MIE)"
+  - name: "Recurrent laryngeal nerve / vocal cord injury"
+    frequency: "5-15% (higher with cervical anastomosis / McKeown 3-field)"
+  - name: "Chyle leak / chylothorax"
+    frequency: "1-5%"
+  - name: "Cardiac complications (arrhythmia, MI)"
+    frequency: "10-20%"
+  - name: "Wound infection"
+    frequency: "5-15%"
+  - name: "Anastomotic stricture (late)"
+    frequency: "10-30%"
+
+sources:
+  - SRC-TIME-BIERE-2012
+  - SRC-ROBOT-VAN-DER-SLUIS-2019
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-ESMO-ESOPHAGEAL-2024
+
+last_reviewed: "2026-05-08"
+notes: >
+  Open esophagectomy (Ivor-Lewis = right thoracotomy + laparotomy with
+  intrathoracic anastomosis; McKeown = right thoracotomy + laparotomy +
+  cervical anastomosis) is the historical reference operation. Both TIME
+  (Biere 2012, Lancet) and ROBOT (van der Sluis 2019, Ann Surg) RCTs
+  randomised against open and demonstrated equivalent oncologic outcomes
+  (R0 rate, lymph node yield, 3-yr survival) with reduced respiratory
+  morbidity for MIE / RAMIE arms. Open remains a valid technique where
+  surgeon expertise favours it, in tumors with extensive local invasion
+  requiring open exposure, or where minimally-invasive infrastructure /
+  expertise is unavailable. Technique selection is by surgeon expertise +
+  patient factors; oncologic outcomes are equivalent across the three
+  techniques.

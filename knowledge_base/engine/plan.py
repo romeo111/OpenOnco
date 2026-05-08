@@ -60,6 +60,8 @@ _TRACK_LABELS_UA = {
     "surveillance": "Активне спостереження (watch-and-wait)",
     "palliative": "Паліативний план",
     "trial": "План у рамках клінічного дослідження",
+    "local_therapy": "Локальна терапія",
+    "transplant": "Трансплантаційний план",
 }
 _TRACK_LABELS_EN = {
     "standard": "Standard plan",
@@ -67,6 +69,8 @@ _TRACK_LABELS_EN = {
     "surveillance": "Active surveillance (watch-and-wait)",
     "palliative": "Palliative plan",
     "trial": "Clinical-trial-only plan",
+    "local_therapy": "Local therapy plan",
+    "transplant": "Transplant plan",
 }
 
 
@@ -210,6 +214,101 @@ def _resolve(entities: dict, entity_id: Optional[str]) -> Optional[dict]:
     if entity_id and entity_id in entities:
         return entities[entity_id]["data"]
     return None
+
+
+def _indication_line_of_therapy(indication: Optional[dict]) -> Optional[int]:
+    applicable_to = (indication or {}).get("applicable_to") or {}
+    value = applicable_to.get("line_of_therapy")
+    if value is None:
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _is_current_line_indication(indication: Optional[dict], patient_line: int) -> bool:
+    authored_line = _indication_line_of_therapy(indication)
+    return authored_line is None or authored_line == patient_line
+
+
+def _line_context_reason(indication: Optional[dict], patient_line: int) -> str:
+    authored_line = _indication_line_of_therapy(indication)
+    if authored_line is None:
+        return "No authored line_of_therapy; retained for HCP review"
+    if authored_line < patient_line:
+        return (
+            f"Prior-line candidate only: indication line {authored_line}, "
+            f"patient line {patient_line}; not a current treatment option"
+        )
+    if authored_line > patient_line:
+        return (
+            f"Later-line sequencing candidate: indication line {authored_line}, "
+            f"patient line {patient_line}; not a current treatment option"
+        )
+    return "Current-line treatment candidate"
+
+
+def _compact_trace_note(note: Any, limit: int = 280) -> str:
+    if not note:
+        return ""
+    text = " ".join(str(note).split())
+    if len(text) <= limit:
+        return text
+    return text[: limit - 1].rstrip() + "..."
+
+
+def _format_current_default_reason(
+    algorithm: dict,
+    trace: list[dict],
+    selected_indication_id: Optional[str],
+    default_indication_id: Optional[str],
+) -> str:
+    algo_id = algorithm.get("id", "algorithm")
+    if not trace:
+        return f"Primary current-line option from {algo_id}; no decision trace was recorded."
+
+    last = trace[-1] or {}
+    step = last.get("step")
+    branch = last.get("branch") if isinstance(last.get("branch"), dict) else {}
+    branch_result = branch.get("result") if branch else last.get("result")
+    note = _compact_trace_note(branch.get("notes") or last.get("note"))
+    fired = [str(x) for x in (last.get("fired_red_flags") or [])]
+    winner = last.get("winner_red_flag")
+
+    step_text = f"step {step}" if step is not None else "the fallback path"
+
+    if selected_indication_id is None and branch_result is None:
+        reason = (
+            f"Provisional current-line default from {algo_id}: {step_text} "
+            "did not select a treatment branch."
+        )
+        if note:
+            reason += f" {note}"
+        return reason
+
+    if selected_indication_id == default_indication_id or branch_result == default_indication_id:
+        if winner:
+            return (
+                f"Primary current-line option selected by {algo_id} at {step_text}; "
+                f"branch-driving red flag: {winner}."
+            )
+        if fired:
+            return (
+                f"Primary current-line option selected by {algo_id} at {step_text}; "
+                f"fired red flags: {', '.join(fired)}."
+            )
+        return f"Primary current-line option selected by {algo_id} at {step_text}."
+
+    if selected_indication_id:
+        if winner:
+            return (
+                f"Primary current-line option selected by {algo_id} at {step_text}; "
+                f"branch-driving red flag: {winner}."
+            )
+        return f"Primary current-line option selected by {algo_id} at {step_text}."
+
+    return f"Primary current-line option from {algo_id}; review decision trace for details."
 
 
 # ── Track materialization ─────────────────────────────────────────────────────
@@ -434,6 +533,36 @@ def generate_plan(
         candidates.remove(default_id)
         candidates.insert(0, default_id)
 
+    current_candidate_ids: list[str] = []
+    sequencing_candidate_ids: list[str] = []
+    for ind_id in candidates:
+        ind = _resolve(entities, ind_id)
+        if _is_current_line_indication(ind, line):
+            current_candidate_ids.append(ind_id)
+        else:
+            sequencing_candidate_ids.append(ind_id)
+
+    selected_line = _indication_line_of_therapy(_resolve(entities, default_id))
+    if selected_line is not None and selected_line != line:
+        result.warnings.append(
+            f"selected indication {default_id} authored for line {selected_line}; "
+            f"patient is line {line}. Moved non-current candidate out of current tracks."
+        )
+
+    current_default_id = default_id if default_id in current_candidate_ids else None
+    authored_default = algo.get("default_indication")
+    if current_default_id is None and authored_default in current_candidate_ids:
+        current_default_id = authored_default
+    if current_default_id is None and current_candidate_ids:
+        current_default_id = current_candidate_ids[0]
+        result.warnings.append(
+            f"no same-line selected/default indication for {algo['id']}; "
+            f"using first current-line candidate {current_default_id}"
+        )
+    if current_default_id and current_default_id in current_candidate_ids:
+        current_candidate_ids.remove(current_default_id)
+        current_candidate_ids.insert(0, current_default_id)
+
     # Lenient biomarker-aware track filtering: drop only when the patient
     # profile EXPLICITLY violates an Indication's
     # `biomarker_requirements_excluded` list. Missing biomarkers do NOT
@@ -443,7 +572,7 @@ def generate_plan(
     _ACTIVE_TRACKS = {"standard", "aggressive"}
 
     tracks: list[PlanTrack] = []
-    for ind_id in candidates:
+    for ind_id in current_candidate_ids:
         ind = _resolve(entities, ind_id)
         if ind and is_track_excluded(ind, patient_biomarkers):
             result.warnings.append(
@@ -458,13 +587,31 @@ def generate_plan(
                 "active treatment not appropriate; palliative care only"
             )
             continue
-        is_default = ind_id == default_id
+        is_default = ind_id == current_default_id
         reason = (
-            f"Engine default per algorithm {algo['id']}: {trace[-1] if trace else 'no trace'}"
+            _format_current_default_reason(algo, trace, selected, current_default_id)
             if is_default
-            else "Alternative track presented for HCP consideration"
+            else "Current-line alternative presented for HCP consideration"
         )
         tracks.append(_materialize_track(track_label, ind_id, is_default, reason, entities))
+
+    sequencing_tracks: list[PlanTrack] = []
+    for ind_id in sequencing_candidate_ids:
+        ind = _resolve(entities, ind_id)
+        if ind and is_track_excluded(ind, patient_biomarkers):
+            continue
+        track_label = (ind or {}).get("plan_track") or ind_id
+        reason = _line_context_reason(ind, line)
+        sequencing_tracks.append(
+            _materialize_track(track_label, ind_id, False, reason, entities)
+        )
+
+    if tracks and not any(t.is_default for t in tracks):
+        tracks[0].is_default = True
+        tracks[0].selection_reason = (
+            f"Primary current-line option per algorithm {algo['id']}: "
+            "selected default was filtered; promoted first remaining current-line track"
+        )
 
     fda = _build_fda_compliance(algo, tracks, entities, result.warnings)
 
@@ -472,6 +619,7 @@ def generate_plan(
     kb_state = {
         "loaded_entities": len(entities),
         "indications_used": [t.indication_id for t in tracks],
+        "sequencing_indications": [t.indication_id for t in sequencing_tracks],
         "algorithm_version": algo.get("last_reviewed"),
     }
 
@@ -488,6 +636,7 @@ def generate_plan(
         algorithm_id=algo["id"],
         knowledge_base_state=kb_state,
         tracks=tracks,
+        sequencing_tracks=sequencing_tracks,
         fda_compliance=fda,
         trace=trace,
         warnings=result.warnings,

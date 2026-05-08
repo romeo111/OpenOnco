@@ -1,0 +1,114 @@
+# ALGO-RECTAL-LOCALLY-ADVANCED-TNT — chunk gi3-d2-algo-extensions-
+# 2026-05-08-2300. Routes locally advanced rectal cancer (LARC; cT3-4
+# OR cN+ M0) to total neoadjuvant therapy (TNT). Two NCCN cat 1
+# alternatives:
+#   - RAPIDO short-course track (5×5 Gy SCRT → induction CAPOX/FOLFOX
+#     × 18 wk → TME): IND-RECTAL-TNT-SHORT-COURSE-RAPIDO.
+#   - PRODIGE-23 long-course track (induction mFOLFIRINOX × 6 cycles →
+#     LCCRT 50.4 Gy + capecitabine → TME → adjuvant CAPOX/FOLFOX):
+#     IND-RECTAL-TNT-LONG-COURSE-PRODIGE23.
+#
+# Both regimens are NCCN cat 1 — selection is by surgeon / oncologist
+# clinical preference + tumor characteristics (e.g., low-lying tumors
+# with sphincter-sparing intent may favor PRODIGE-23 LCCRT for
+# downstaging; rapid-throughput patients may favor RAPIDO short-course).
+#
+# applicable_to_disease_state: "rectal_locally_advanced_tnt" disambiguates
+# this from ALGO-CRC-METASTATIC-1L and ALGO-CRC-ADJUVANT (state-agnostic,
+# line=1) when the patient profile carries disease_state=
+# "rectal_locally_advanced_tnt".
+id: ALGO-RECTAL-LOCALLY-ADVANCED-TNT
+applicable_to_disease: DIS-CRC
+applicable_to_line_of_therapy: 1
+applicable_to_disease_state: rectal_locally_advanced_tnt
+purpose: >
+  Algorithm for locally advanced rectal adenocarcinoma (LARC; cT3-4
+  OR cN+ M0) routed to total neoadjuvant therapy (TNT). Step 1 routes
+  by clinical_preference (short-course vs long-course): "short_course"
+  → RAPIDO (5×5 Gy SCRT + induction chemo + TME); "long_course" →
+  PRODIGE-23 (induction mFOLFIRINOX + LCCRT + TME + adjuvant). Both
+  are NCCN cat 1 — the algorithm reflects MDT preference; default is
+  RAPIDO short-course (resource-efficient + rapid throughput) but
+  PRODIGE-23 is the alternative for low-lying tumors with sphincter-
+  sparing intent or patients tolerating LCCRT logistics.
+
+output_indications:
+  - IND-RECTAL-TNT-SHORT-COURSE-RAPIDO
+  - IND-RECTAL-TNT-LONG-COURSE-PRODIGE23
+
+default_indication: IND-RECTAL-TNT-SHORT-COURSE-RAPIDO
+alternative_indication: IND-RECTAL-TNT-LONG-COURSE-PRODIGE23
+
+decision_tree:
+  # Step 1 — Short-course preference → RAPIDO. The TNT preference
+  # selection is MDT-driven (surgical access, tumor location, patient
+  # factors); finding-keyed lookup uses tnt_preference ∈ {short_course,
+  # long_course} when captured in the patient profile.
+  - step: 1
+    evaluate:
+      any_of:
+        - finding: tnt_preference
+          value: short_course
+        - condition: "MDT preference for SCRT (5×5 Gy short-course): rapid throughput, less radiation logistics, comparable DRTF outcomes"
+    if_true:
+      result: IND-RECTAL-TNT-SHORT-COURSE-RAPIDO
+      notes: >
+        RAPIDO (Bahadoer Lancet Oncol 2021) — 5 × 5 Gy SCRT (1 wk) →
+        induction CAPOX × 6 or FOLFOX × 9 (~18 wk) → restaging → TME.
+        3-yr DRTF (disease-related treatment failure) 23.7% vs 30.4%
+        (HR 0.75; p=0.019); pCR 28.4% vs 14.3%. NCCN v3.2025 cat 1.
+        Confidence: high (pivotal phase 3 RCT). Track this as default
+        for v0.1 — both NCCN cat 1, selection by MDT.
+    if_false:
+      next_step: 2
+
+  # Step 2 — Long-course preference → PRODIGE-23. Long-course
+  # chemoradiation favored for low-lying tumors requiring sphincter-
+  # sparing downstaging or when LCCRT logistics tolerable.
+  - step: 2
+    evaluate:
+      any_of:
+        - finding: tnt_preference
+          value: long_course
+        - condition: "MDT preference for LCCRT (50.4 Gy + capecitabine): low-lying tumor with sphincter-sparing intent, patient tolerates 5.5-week RT logistics"
+    if_true:
+      result: IND-RECTAL-TNT-LONG-COURSE-PRODIGE23
+      notes: >
+        PRODIGE-23 (Conroy Lancet Oncol 2021) — induction mFOLFIRINOX
+        × 6 cycles → LCCRT 50.4 Gy + capecitabine (~5.5 wk) → TME at
+        ~10 wk post-CRT → adjuvant CAPOX × 4 or FOLFOX × 6.
+        3-yr DFS 75.7% vs 68.5% (HR 0.69; p=0.034); pCR 27.8% vs 12.1%.
+        NCCN v3.2025 cat 1. Confidence: high (pivotal phase 3 RCT).
+    if_false:
+      result: IND-RECTAL-TNT-SHORT-COURSE-RAPIDO
+      notes: >
+        Default fallback: when no explicit tnt_preference captured,
+        route to RAPIDO (resource-efficient, rapid throughput). MDT
+        should explicitly capture preference; PRODIGE-23 alternative
+        surfaces at render time via alternative_indication.
+
+sources:
+  - SRC-RAPIDO-BAHADOER-2021
+  - SRC-PRODIGE-23-CONROY-2021
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-05-08"
+reviewer_signoffs: []
+notes: >
+  D2 chunk gi3-d2-algo-extensions-2026-05-08-2300 — first routing for
+  IND-RECTAL-TNT-SHORT-COURSE-RAPIDO (Phase C C3) and IND-RECTAL-TNT-
+  LONG-COURSE-PRODIGE23 (Phase C C4). Both indications are NCCN cat 1;
+  selection driven by MDT clinical preference + tumor / patient factors
+  rather than evidence hierarchy. Default to RAPIDO short-course for
+  v0.1 (resource efficiency + comparable DRTF outcomes); PRODIGE-23
+  surfaces as alternative for low-lying tumors with sphincter-sparing
+  downstaging intent. Out-of-scope: non-TNT pathway (selective
+  watch-and-wait post-CRT for cCR — separate indication pending);
+  short-course-RT-only without TNT (Polish-2 / Stockholm III); CRT
+  followed by surgery without induction chemo (legacy CAO/ARO/AIO-04
+  pre-TNT-era). Both NCCN cat 1 trade-off documented per refactor
+  lesson §10 — selection by MDT preference is captured in tnt_
+  preference finding (short_course / long_course); when absent,
+  algorithm defaults to RAPIDO and surfaces PRODIGE-23 as alternative
+  track.

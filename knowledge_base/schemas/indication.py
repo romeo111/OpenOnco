@@ -1,10 +1,18 @@
 """Indication entity — KNOWLEDGE_SCHEMA_SPECIFICATION §7. The central
 clinical recommendation unit: disease + line of therapy + patient
-applicability → recommended regimen, with full provenance."""
+applicability → recommended regimen, with full provenance.
 
+`Indication.phases` (added 2026-05-07 — KNOWLEDGE_SCHEMA_SPECIFICATION §17
+ratified) decomposes a single line of therapy into ordered phases
+(neoadjuvant → surgery → adjuvant for periop FLOT / CROSS, induction →
+maintenance for sequential systemic, etc.). Opt-in: existing indications
+without `phases:` continue to work unchanged.
+"""
+
+from enum import Enum
 from typing import Optional
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 
 from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
 from .base import Base, Citation, EvidenceLevel, StrengthOfRecommendation
@@ -119,6 +127,93 @@ class KnownControversy(Base):
     rationale: Optional[str] = None
 
 
+# ── §17 phased indications (RATIFIED 2026-05-07) ─────────────────────────────
+
+
+class IndicationPhaseStage(str, Enum):
+    """Phase position within a single line of therapy.
+
+    `neoadjuvant` / `surgery` / `adjuvant` come straight from §17.1; the
+    `induction` / `maintenance` / `definitive` extensions (planning doc
+    §2.2) cover sequential systemic regimens (induction-then-maintenance
+    in NSCLC, MPN) and unresectable definitive CRT (esophageal squamous,
+    head-and-neck) that don't fit the neoadj-surgery-adj pattern.
+    """
+
+    NEOADJUVANT = "neoadjuvant"
+    SURGERY = "surgery"
+    ADJUVANT = "adjuvant"
+    INDUCTION = "induction"
+    MAINTENANCE = "maintenance"
+    DEFINITIVE = "definitive"
+
+
+class IndicationPhaseType(str, Enum):
+    """Modality of the phase. Drives which foreign key (regimen_id /
+    surgery_id / radiation_id) is expected to be populated.
+
+    Extensions over §17.1 (planning doc §2.2): `targeted_therapy` and
+    `immunotherapy` separated from generic `chemotherapy` because phased
+    indications often interleave them (e.g., induction chemo →
+    consolidation IO; CROSS = chemoradiation modality, not chemo+radiation
+    as separate phases).
+    """
+
+    CHEMOTHERAPY = "chemotherapy"
+    SURGERY = "surgery"
+    RADIATION = "radiation"
+    CHEMORADIATION = "chemoradiation"
+    TARGETED_THERAPY = "targeted_therapy"
+    IMMUNOTHERAPY = "immunotherapy"
+
+
+class IndicationPhase(Base):
+    """One ordered phase inside an Indication (§17.1 ratified 2026-05-07).
+
+    Foreign-key invariant: exactly ONE of `regimen_id` / `surgery_id` /
+    `radiation_id` must be non-null per phase. Enforced by the
+    `_exactly_one_fk` model validator below; loader-side ref-integrity
+    additionally checks that the populated ID resolves to the right entity
+    type (planning doc §2.4 rules 1-4).
+
+    `cycles` and `duration_weeks` are alternatives — `cycles` for
+    chemo/targeted/IO, `duration_weeks` for radiation or surgical recovery
+    where the cycle concept doesn't apply. Both Optional; render layer
+    falls back to `notes:`-style description when neither is set.
+    """
+
+    phase: IndicationPhaseStage
+    type: IndicationPhaseType
+
+    regimen_id: Optional[str] = None
+    surgery_id: Optional[str] = None
+    radiation_id: Optional[str] = None
+
+    cycles: Optional[int] = None
+    duration_weeks: Optional[int] = None
+
+    @model_validator(mode="after")
+    def _exactly_one_fk(self) -> "IndicationPhase":
+        """Exactly ONE of regimen_id / surgery_id / radiation_id must be set.
+
+        Schema-level pre-check — ref-integrity (does the ID actually
+        resolve to a Regimen / Surgery / RadiationCourse?) lives in the
+        loader per existing-pattern. This validator catches the structural
+        XOR violation before the loader is ever called.
+        """
+        populated = sum(
+            1
+            for fk in (self.regimen_id, self.surgery_id, self.radiation_id)
+            if fk is not None
+        )
+        if populated != 1:
+            raise ValueError(
+                f"IndicationPhase requires exactly one of regimen_id / "
+                f"surgery_id / radiation_id to be set (found {populated})"
+            )
+        return self
+
+
 class Indication(Base):
     id: str
     applicable_to: IndicationApplicability
@@ -126,6 +221,14 @@ class Indication(Base):
     recommended_regimen: Optional[str] = None  # Regimen ID
     concurrent_therapy: list[str] = Field(default_factory=list)
     followed_by: list[str] = Field(default_factory=list)  # next-line Indication IDs
+
+    # §17 phased indications — opt-in (RATIFIED 2026-05-07). When populated,
+    # `phases` describes the ordered intra-line sequence (neoadj → surgery →
+    # adj for periop FLOT/CROSS, induction → maintenance for sequential
+    # systemic, etc.). Engine pass-through to PlanTrack.indication_data and
+    # render-layer phased timeline are deferred to Phase C readiness work
+    # (planning doc §2.7).
+    phases: Optional[list[IndicationPhase]] = None
 
     evidence_level: Optional[EvidenceLevel] = None
     strength_of_recommendation: Optional[StrengthOfRecommendation] = None
@@ -172,7 +275,103 @@ class Indication(Base):
     reviewer_signoffs: list[ReviewerSignoff] = Field(default_factory=list)
     notes: Optional[str] = None
 
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_legacy_shape(cls, v):
+        return normalize_legacy_indication_payload(v)
+
     @field_validator("reviewer_signoffs", mode="before")
     @classmethod
     def _migrate_signoffs(cls, v):
         return _migrate_int_signoffs(v)
+
+
+def _legacy_biomarker_requirement(value: object, *, required: bool) -> object:
+    if not isinstance(value, str):
+        return value
+    return {
+        "biomarker_id": "LEGACY-FREE-TEXT",
+        "required": required,
+        "value_constraint": value,
+    }
+
+
+def _note_append(notes: object, prefix: str, values: list[str]) -> str:
+    base = notes if isinstance(notes, str) else ""
+    addition = f"{prefix}: " + " | ".join(values)
+    return f"{base}\n{addition}".strip() if base else addition
+
+
+def normalize_legacy_indication_payload(raw: object) -> object:
+    """Normalize older rich Indication YAML into the current strict schema.
+
+    Several generated indication files used prose objects in fields that later
+    became FK-only lists. Preserve that authoring context in `notes`, but keep
+    the actual FK fields strict so the loader can still catch real IDs.
+    """
+    if not isinstance(raw, dict):
+        return raw
+
+    normalized = dict(raw)
+
+    if normalized.get("strength_of_recommendation") == "moderate":
+        normalized["strength_of_recommendation"] = "conditional"
+
+    sources = []
+    for source in normalized.get("sources") or []:
+        if isinstance(source, dict) and source.get("position") == "background":
+            source = dict(source)
+            source["position"] = "context"
+        sources.append(source)
+    if sources:
+        normalized["sources"] = sources
+
+    applicable = normalized.get("applicable_to")
+    if isinstance(applicable, dict):
+        applicable = dict(applicable)
+        for field_name, required in (
+            ("biomarker_requirements_required", True),
+            ("biomarker_requirements_excluded", False),
+        ):
+            applicable[field_name] = [
+                _legacy_biomarker_requirement(item, required=required)
+                for item in applicable.get(field_name) or []
+            ]
+        normalized["applicable_to"] = applicable
+
+    if isinstance(normalized.get("concurrent_therapy"), list):
+        concurrent: list[str] = []
+        legacy_notes: list[str] = []
+        for item in normalized.get("concurrent_therapy") or []:
+            if isinstance(item, str):
+                concurrent.append(item)
+            elif isinstance(item, dict):
+                regimen_id = item.get("regimen_id")
+                if isinstance(regimen_id, str):
+                    concurrent.append(regimen_id)
+                legacy_notes.append(str(item))
+        normalized["concurrent_therapy"] = concurrent
+        if legacy_notes:
+            normalized["notes"] = _note_append(
+                normalized.get("notes"),
+                "Legacy concurrent therapy details",
+                legacy_notes,
+            )
+
+    if isinstance(normalized.get("red_flags_triggering_alternative"), list):
+        red_flags: list[str] = []
+        legacy_notes = []
+        for item in normalized.get("red_flags_triggering_alternative") or []:
+            if isinstance(item, str):
+                red_flags.append(item)
+            elif isinstance(item, dict):
+                legacy_notes.append(str(item))
+        normalized["red_flags_triggering_alternative"] = red_flags
+        if legacy_notes:
+            normalized["notes"] = _note_append(
+                normalized.get("notes"),
+                "Legacy alternative-trigger prose",
+                legacy_notes,
+            )
+
+    return normalized

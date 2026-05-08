@@ -1,0 +1,102 @@
+id: IND-ESOPH-DEFINITIVE-CRT-SCC
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ESOPHAGEAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "cT4b any N M0 (unresectable due to invasion of adjacent structures)"
+    - "Medically inoperable (cardiopulmonary or comorbidity contraindications)"
+    - "Patient declines surgery"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    histology: squamous_cell_carcinoma
+
+# §17 phased indication. Single-phase chemoradiation: the RadiationCourse
+# RC-DEFINITIVE-ESOPH-SCC owns the concurrent chemo regimen reference
+# (REG-CARBO-PACLI-CONCURRENT-RT-ESOPH) per planning doc §2.3 — XOR rule
+# permits exactly ONE of regimen_id / surgery_id / radiation_id per phase.
+phases:
+  - phase: definitive
+    type: chemoradiation
+    radiation_id: RC-DEFINITIVE-ESOPH-SCC
+    duration_weeks: 6
+
+# `recommended_regimen` left null — the concurrent chemo regimen is
+# discoverable via RadiationCourse.concurrent_chemo_regimen on
+# RC-DEFINITIVE-ESOPH-SCC (planning doc §2.3 design choice).
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_survival_median: "median OS ~14-21 mo (modern weekly carbo+pacli + 50.4 Gy series); RTOG 85-01 historical 12.5 mo"
+  overall_survival_5y: "5-yr OS ~20-25% squamous (modern definitive CRT cohorts)"
+  complete_response: "clinical CR ~60-70% post-CRT (squamous more responsive than adeno)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-ESOPH-SEVERE-DYSPHAGIA-ASPIRATION
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-CT-PET
+
+desired_tests: []
+
+rationale: >
+  Definitive concurrent chemoradiation per RTOG 85-01 (Herskovic NEJM
+  1992) is standard of care for unresectable (T4b), M0, medically
+  inoperable, or surgery-declining esophageal squamous-cell carcinoma.
+  RTOG 85-01 established concurrent cisplatin + 5-FU + 50 Gy superior
+  to RT alone (2-yr OS 38% vs 10%). Modern NCCN/ESMO preferred regimen
+  is weekly carboplatin AUC 2 + paclitaxel 50 mg/m^2 with 50.4 Gy / 28
+  fx (1.8 Gy/fx) — same chemo backbone as CROSS neoadjuvant but extended
+  to 5-6 cycles paired with full-dose RT. NCCN category 1.
+
+rationale_ua: >
+  Радикальна одночасна хіміопроменева терапія за RTOG 85-01 (Herskovic
+  NEJM 1992) — стандарт лікування при нерезектабельному (T4b), M0,
+  медично неоперабельному або при відмові від хірургії плоскоклітинному
+  раку стравоходу. RTOG 85-01 показав перевагу одночасної ХПТ
+  (цисплатин + 5-ФУ + 50 Гр) над лише ПТ (2-річна ЗВ 38% vs 10%).
+  Сучасний NCCN/ESMO режим — щотижневий карбоплатин AUC 2 + паклітаксел
+  50 мг/м^2 разом із 50.4 Гр / 28 фракцій (1.8 Гр/фр). NCCN категорія 1.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-RTOG-8501-HERSKOVIC-1992
+    position: supports
+  - source_id: SRC-NCCN-ESOPHAGEAL-2025
+    position: supports
+  - source_id: SRC-ESMO-ESOPHAGEAL-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT escalate RT dose beyond 50.4 Gy — INT-0123 / RTOG 94-05 showed no OS benefit and increased toxicity at 64.8 Gy"
+  - "Do NOT proceed with definitive CRT without addressing severe dysphagia / aspiration risk first (NG/PEG planning if needed)"
+  - "Do NOT omit nutritional + esophagitis supportive care — CRT esophagitis peaks weeks 3-5 and limits hydration / oral intake"
+  - "Do NOT switch to surgery-then-adjuvant pattern in a T4b unresectable patient — definitive CRT is the standard, not a bridge"
+
+do_not_do_en:
+  - "Do NOT escalate RT dose beyond 50.4 Gy — INT-0123 / RTOG 94-05 showed no OS benefit and increased toxicity at 64.8 Gy"
+  - "Do NOT proceed with definitive CRT without addressing severe dysphagia / aspiration risk first (NG/PEG planning if needed)"
+  - "Do NOT omit nutritional + esophagitis supportive care — CRT esophagitis peaks weeks 3-5 and limits hydration / oral intake"
+  - "Do NOT switch to surgery-then-adjuvant pattern in a T4b unresectable patient — definitive CRT is the standard, not a bridge"
+
+last_reviewed: "2026-05-08"
+notes: >
+  §17 phased indication using new RadiationCourse schema. Single phase
+  type=chemoradiation with radiation_id=RC-DEFINITIVE-ESOPH-SCC; the
+  RadiationCourse owns concurrent_chemo_regimen=REG-CARBO-PACLI-CONCURRENT-RT-ESOPH
+  per planning doc §2.3 (XOR rule on phase fields). Salvage esophagectomy
+  for persistent / recurrent disease post-definitive-CRT is a separate
+  indication path (not modeled here).

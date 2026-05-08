@@ -16,6 +16,12 @@ import yaml
 from pydantic import ValidationError
 
 from knowledge_base.schemas import ENTITY_BY_DIR
+from knowledge_base.schemas.biomarker_actionability import (
+    normalize_legacy_biomarker_actionability_payload,
+)
+from knowledge_base.schemas.indication import normalize_legacy_indication_payload
+from knowledge_base.schemas.regimen import normalize_legacy_regimen_payload
+from knowledge_base.schemas.source import normalize_legacy_source_payload
 
 
 # Which fields on which entity types carry IDs that must resolve elsewhere.
@@ -67,6 +73,13 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
         # required_tests handled specially (list of Test IDs)
     ],
     "reviewers": [],
+    # §17 ratified 2026-05-07 — Surgery + RadiationCourse first-class entities.
+    "procedures": [
+        # applicable_diseases handled specially (list of Disease IDs)
+    ],
+    "radiation_courses": [
+        ("concurrent_chemo_regimen", "regimens"),
+    ],
 }
 
 
@@ -320,6 +333,15 @@ def _load_content_impl(
                 result.schema_errors.append((path, "Root is not a mapping"))
                 continue
 
+            if entity_dir == "regimens":
+                raw = normalize_legacy_regimen_payload(raw)
+            elif entity_dir == "indications":
+                raw = normalize_legacy_indication_payload(raw)
+            elif entity_dir == "sources":
+                raw = normalize_legacy_source_payload(raw)
+            elif entity_dir == "biomarker_actionability":
+                raw = normalize_legacy_biomarker_actionability_payload(raw)
+
             try:
                 model.model_validate(raw)
             except ValidationError as e:
@@ -400,6 +422,13 @@ def _load_content_impl(
             for i, comp in enumerate(data.get("components") or []):
                 check_ref(path, comp.get("drug_id"), "drugs", f"components[{i}].drug_id")
             for sid in data.get("mandatory_supportive_care") or []:
+                if isinstance(sid, str) and not sid.startswith("SUP-"):
+                    result.contract_warnings.append((
+                        path,
+                        "mandatory_supportive_care[] carries legacy free text; "
+                        f"convert to a SUP-* SupportiveCare entity when authored: {sid!r}",
+                    ))
+                    continue
                 check_ref(path, sid, "supportive_care", "mandatory_supportive_care[]")
             # PR4 — dose_adjustments[].source_refs[] are SRC-* citations.
             # Drafts skip resolution because authors leave SRC-TODO placeholders.
@@ -425,13 +454,74 @@ def _load_content_impl(
                 elif isinstance(cit, str):
                     check_ref(path, cit, "sources", f"sources[{i}]")
             for sid in data.get("hard_contraindications") or []:
+                if isinstance(sid, str) and not sid.startswith("CI-"):
+                    result.contract_warnings.append((
+                        path,
+                        "hard_contraindications[] carries legacy free text; "
+                        f"convert to a CI-* Contraindication entity when authored: {sid!r}",
+                    ))
+                    continue
                 check_ref(path, sid, "contraindications", "hard_contraindications[]")
             for sid in data.get("red_flags_triggering_alternative") or []:
+                if isinstance(sid, str) and not sid.startswith("RF-"):
+                    result.contract_warnings.append((
+                        path,
+                        "red_flags_triggering_alternative[] carries legacy free text; "
+                        f"convert to an RF-* RedFlag entity when authored: {sid!r}",
+                    ))
+                    continue
                 check_ref(path, sid, "redflags", "red_flags_triggering_alternative[]")
             for sid in data.get("required_tests") or []:
+                if isinstance(sid, str) and not sid.startswith("TEST-"):
+                    result.contract_warnings.append((
+                        path,
+                        "required_tests[] carries legacy free text; "
+                        f"convert to a TEST-* entity when authored: {sid!r}",
+                    ))
+                    continue
                 check_ref(path, sid, "tests", "required_tests[]")
             for sid in data.get("desired_tests") or []:
+                if isinstance(sid, str) and not sid.startswith("TEST-"):
+                    result.contract_warnings.append((
+                        path,
+                        "desired_tests[] carries legacy free text; "
+                        f"convert to a TEST-* entity when authored: {sid!r}",
+                    ))
+                    continue
                 check_ref(path, sid, "tests", "desired_tests[]")
+            # §17 ratified 2026-05-07 — phased indications. Each phase's
+            # populated FK (regimen_id / surgery_id / radiation_id) must
+            # resolve to its target entity type (planning doc §2.4 rules
+            # 1-3). The Pydantic model validator on IndicationPhase already
+            # enforced exactly-one-FK; here we only check ref-integrity of
+            # whichever was set.
+            for i, phase in enumerate(data.get("phases") or []):
+                if not isinstance(phase, dict):
+                    continue
+                if phase.get("regimen_id") is not None:
+                    check_ref(
+                        path, phase["regimen_id"], "regimens",
+                        f"phases[{i}].regimen_id",
+                    )
+                if phase.get("surgery_id") is not None:
+                    check_ref(
+                        path, phase["surgery_id"], "procedures",
+                        f"phases[{i}].surgery_id",
+                    )
+                if phase.get("radiation_id") is not None:
+                    check_ref(
+                        path, phase["radiation_id"], "radiation_courses",
+                        f"phases[{i}].radiation_id",
+                    )
+        elif etype == "procedures":
+            # §17 ratified 2026-05-07 — Surgery.applicable_diseases must
+            # resolve to Disease entities (planning doc §2.4 rule 5).
+            for i, did in enumerate(data.get("applicable_diseases") or []):
+                if isinstance(did, str):
+                    check_ref(
+                        path, did, "diseases",
+                        f"applicable_diseases[{i}]",
+                    )
         elif etype == "contraindications":
             for sid in data.get("affects_indications") or []:
                 check_ref(path, sid, "indications", "affects_indications[]")
@@ -538,6 +628,7 @@ def _load_content_impl(
     # Pass 3: entity-contract checks (semantics beyond schema)
     _check_redflag_contracts(result)
     _check_source_precedence_policy(result)
+    _check_algorithm_regimen_routing_contracts(result)
 
     return result
 
@@ -634,6 +725,90 @@ _VALID_PRECEDENCE_POLICIES = {
     "national_floor_only",
     "secondary_evidence_base",
 }
+
+_NON_REGIMEN_PLAN_TRACKS = {
+    "surveillance",
+    "trial",
+    "palliative",
+    "local_therapy",
+    "transplant",
+    "procedure",
+    "supportive_care",
+    "diagnostic",
+    "active_surveillance",
+}
+
+
+def _collect_algorithm_indication_refs(algo: dict) -> set[str]:
+    """Collect all Indication IDs an Algorithm can route or advertise."""
+    refs: set[str] = set()
+    for ind_id in algo.get("output_indications") or []:
+        if isinstance(ind_id, str):
+            refs.add(ind_id)
+    for key in ("default_indication", "alternative_indication"):
+        ind_id = algo.get(key)
+        if isinstance(ind_id, str):
+            refs.add(ind_id)
+
+    def walk(node) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key in {"result", "then_indication"} and isinstance(value, str):
+                    refs.add(value)
+                else:
+                    walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(algo.get("decision_tree") or [])
+    return refs
+
+
+def _has_authored_treatment_phases(indication: dict) -> bool:
+    phases = indication.get("phases") or []
+    if not isinstance(phases, list):
+        return False
+    for phase in phases:
+        if not isinstance(phase, dict):
+            continue
+        if phase.get("regimen_id") or phase.get("surgery_id") or phase.get("radiation_id"):
+            return True
+    return False
+
+
+def _check_algorithm_regimen_routing_contracts(result: LoadResult) -> None:
+    """Algorithms must not route active treatment tracks without a Regimen.
+
+    Non-regimen tracks are allowed for authored observation, palliative,
+    transplant/procedure, trial-only, and local-therapy workflows. Active
+    `standard` / `aggressive` tracks need a concrete `recommended_regimen`
+    so Plan materialization cannot silently produce an empty treatment row.
+    """
+    for algo_id, info in result.entities_by_id.items():
+        if info["type"] != "algorithms":
+            continue
+        algo = info["data"]
+        path = info["path"]
+        for ind_id in sorted(_collect_algorithm_indication_refs(algo)):
+            ind_info = result.entities_by_id.get(ind_id)
+            if not ind_info or ind_info["type"] != "indications":
+                continue
+            ind = ind_info["data"]
+            if ind.get("recommended_regimen"):
+                continue
+            if _has_authored_treatment_phases(ind):
+                continue
+            plan_track = ind.get("plan_track")
+            if plan_track in _NON_REGIMEN_PLAN_TRACKS:
+                continue
+            result.contract_errors.append((
+                path,
+                f"{algo_id}: routes to {ind_id} with recommended_regimen=null "
+                f"and plan_track={plan_track!r}. Use an explicit non-regimen "
+                f"plan_track ({sorted(_NON_REGIMEN_PLAN_TRACKS)}) or author "
+                "a Regimen before routing.",
+            ))
 
 
 def _check_source_precedence_policy(result: LoadResult) -> None:

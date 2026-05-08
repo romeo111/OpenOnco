@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Any
 
 from knowledge_base.validation.loader import load_content
+from scripts.site_head import SITE_FONT_LINK
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -442,6 +443,9 @@ def render_markdown(report: dict[str, Any]) -> str:
 def render_html(report: dict[str, Any], *, target_lang: str = "en") -> str:
     title = "Clinical Gap Audit"
     nav_prefix = "/ukr" if target_lang == "uk" else ""
+    nav_home = "Головна" if target_lang == "uk" else "Home"
+    nav_capabilities = "Можливості" if target_lang == "uk" else "Capabilities"
+    nav_kb = "База знань" if target_lang == "uk" else "Onco Wiki"
     rows = []
     cards = []
     for gap in report["gaps"]:
@@ -468,6 +472,7 @@ def render_html(report: dict[str, Any], *, target_lang: str = "en") -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · {title}</title>
+{SITE_FONT_LINK}
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 </head>
@@ -477,10 +482,9 @@ def render_html(report: dict[str, Any], *, target_lang: str = "en") -> str:
     <a href="{nav_prefix or '/'}" class="brand-mini"><img src="/logo.svg" alt="" class="brand-logo" width="30" height="30">OpenOnco</a>
   </div>
   <nav class="top-nav">
-    <a href="{nav_prefix or '/'}">Home</a>
-    <a href="{nav_prefix}/capabilities.html">Capabilities</a>
-    <a href="{nav_prefix}/diseases.html">Diseases</a>
-    <a href="{nav_prefix}/kb.html">KB Search</a>
+    <a href="{nav_prefix or '/'}">{nav_home}</a>
+    <a href="{nav_prefix}/capabilities.html">{nav_capabilities}</a>
+    <a href="{nav_prefix}/kb.html">{nav_kb}</a>
   </nav>
 </header>
 <main>

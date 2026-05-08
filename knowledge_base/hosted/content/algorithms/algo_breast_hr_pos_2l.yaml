@@ -15,7 +15,7 @@ output_indications:
   - IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT
   - IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
   - IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
-  - IND-BREAST-BRCA-POS-MET-PARPI
+  - IND-BREAST-BRCA-MET-TALAZOPARIB
 
 default_indication: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
 alternative_indication: IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
@@ -32,7 +32,7 @@ decision_tree:
       any_of:
         - red_flag: RF-BREAST-BRCA-GERMLINE-ACTIONABLE
     if_true:
-      result: IND-BREAST-BRCA-POS-MET-PARPI
+      result: IND-BREAST-BRCA-MET-TALAZOPARIB
     if_false:
       next_step: 1
     notes: "MDT-only — 2L PARPi entry assumes PARPi-naive at 1L (OlympiAD line-position varied; ESMO 2024 supports 2L+ when PARPi not yet given); MDT confirms not-already-exposed before this branch fires."

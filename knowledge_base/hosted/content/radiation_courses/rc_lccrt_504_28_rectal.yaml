@@ -1,0 +1,95 @@
+# Long-course concurrent chemoradiation (LCCRT) — 50.4 Gy / 28 fx — for
+# locally advanced rectal cancer. §17.1 RadiationCourse entity (RATIFIED
+# 2026-05-07). Lands as the CRT phase (phase 2) of
+# IND-RECTAL-TNT-LONG-COURSE-PRODIGE23 (chunk
+# gi3-c4-rectal-tnt-prodige23-2026-05-08-2200). Mirrors the CROSS-style
+# concurrent CRT precedent set by RC-CROSS-NEOADJ (GI-2 C2 esophageal),
+# but tuned to the rectal LCCRT dose/fx (50.4 Gy / 28 fx, 1.8 Gy/fx — a
+# 5.5-week course at 5 fx/week) with concurrent capecitabine 825 mg/m²
+# PO BID on RT days. DISTINCT from RAPIDO short-course (RC-SCRT-25-5-RECTAL,
+# RT-first sequential, NOT concurrent CRT) — the two together cover the
+# two TNT backbones (PRODIGE-23 long-course CRT-induction-or-consolidation
+# vs RAPIDO short-course RT-then-induction-chemo).
+id: RC-LCCRT-504-28-RECTAL
+names:
+  preferred: "Long-course preoperative chemoradiation for rectal cancer (50.4 Gy / 28 fx + concurrent capecitabine)"
+  ukrainian: "Довгий курс передопераційної хіміопроменевої терапії раку прямої кишки (50.4 Гр / 28 фракцій + конкурентний капецитабін)"
+  english: "LCCRT 50.4 Gy / 28 fx + concurrent capecitabine 825 mg/m² PO BID — neoadjuvant CRT for locally advanced rectal cancer"
+  synonyms:
+    - "LCCRT 50.4 / 28 rectal"
+    - "Long-course preoperative CRT (rectal)"
+    - "Preoperative chemoradiation (rectal) — 50.4 Gy / 28 fx + cape"
+    - "PRODIGE-23 CRT phase"
+
+total_dose_gy: 50.4
+fractions: 28
+fraction_size_gy: 1.8
+target_volume: "primary rectal tumor + mesorectum + regional pelvic lymph nodes (CTV) with PTV expansion per institutional protocol; typical fields cover internal iliac, presacral, and obturator nodes"
+schedule: "1.8 Gy/fx × 5 fx/week (Mon-Fri) × 5.5 weeks; concurrent with capecitabine 825 mg/m² PO BID on RT days only (PRODIGE-23 schedule)"
+
+# PRODIGE-23 LCCRT IS concurrent chemoradiation: capecitabine 825 mg/m²
+# PO BID on RT days during the 5.5-week 50.4 Gy / 28 fx course (Conroy
+# 2021, Lancet Oncology; standard NCCN/ESMO long-course CRT chemo
+# backbone). Setting `concurrent_chemo_regimen` is the canonical §17
+# pattern (mirrors RC-CROSS-NEOADJ → REG-CARBOPLATIN-PACLITAXEL-WEEKLY).
+# Linked to REG-CAPECITABINE-CRT-CONCURRENT — see that regimen entity for
+# full schedule, dose-modification table, DPYD/CrCl gating, and source
+# citations. The 825 mg/m² PO BID on-RT-days-only schedule is paired with
+# the 50.4 Gy / 28 fx RT course (~5.5 weeks at 5 fx/week) and is held on
+# weekends and any RT-off days. Distinct from RC-SCRT-25-5-RECTAL (RAPIDO
+# short-course), which leaves `concurrent_chemo_regimen:` null because
+# RAPIDO uses RT-first sequential delivery (no concurrent chemo) rather
+# than missing-entity.
+concurrent_chemo_regimen: REG-CAPECITABINE-CRT-CONCURRENT
+
+intent: neoadjuvant
+
+sources:
+  - SRC-PRODIGE-23-CONROY-2021
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-CRC-2024
+
+last_reviewed: "2026-05-08"
+notes: >
+  Long-course preoperative chemoradiation (50.4 Gy / 28 fx over 5.5 weeks
+  at 1.8 Gy/fx, concurrent with capecitabine 825 mg/m² PO BID on RT
+  days) is the radiation backbone of the PRODIGE-23 total neoadjuvant
+  therapy (TNT) regimen for locally advanced rectal cancer (Conroy 2021,
+  Lancet Oncology). Within PRODIGE-23 TNT, LCCRT follows induction
+  FOLFIRINOX × 6 cycles and precedes TME proctectomy — this is the
+  experimental arm of the PRODIGE-23 RCT vs the standard arm
+  (LCCRT 50.4 Gy / 28 fx + concurrent capecitabine + TME + adjuvant
+  FOLFOX/CAPOX × 12 cycles).
+
+  PRODIGE-23 results (n=461, locally advanced rectal cT3 OR cT4 OR
+  cN+ M0): 3-year disease-free survival 75.7% (TNT) vs 68.5% (standard);
+  HR 0.69 (95% CI 0.49-0.97, p=0.034). pCR doubled: 27.8% (TNT) vs 12.1%
+  (standard). NCCN v.4.2025 category 1 / preferred-alternative; ESMO
+  2024 strong recommendation.
+
+  IMRT or VMAT preferred over 3D-CRT to reduce small-bowel and bladder
+  dose (NCCN-CRC RECTAL-D radiation principles). LCCRT is concurrent
+  chemoradiation (NOT RT-first sequential like RAPIDO short-course) —
+  this is the key sequencing distinction from RC-SCRT-25-5-RECTAL.
+  Surgery (TME) follows ≥6 weeks post-CRT, allowing tumor downstaging.
+  Total elapsed time from FOLFIRINOX-induction-start to surgery
+  ~22-26 weeks (induction ~12 wks → CRT ~5.5 wks → 6-wk recovery → TME).
+
+  Distinguishing LCCRT 50.4 Gy / 28 fx from short-course 5×5 Gy SCRT:
+  long-course is conventionally fractionated (1.8 Gy/fx, smaller daily
+  dose over 5.5 weeks) and uses concurrent radiosensitizing chemo
+  (capecitabine), giving acute mucositis / proctitis but lower late
+  toxicity than hypofractionated SCRT when pelvis is the target volume.
+  Concurrent capecitabine 825 mg/m² PO BID on RT days is the standard
+  NCCN-preferred radiosensitizing backbone (alternative: infusional
+  5-FU 225 mg/m²/day CIV on RT days — less commonly used in the modern
+  era given oral cape equivalence per Hofheinz 2012). Capecitabine
+  pre-screening for DPYD deficiency strongly recommended (CPIC) — DPYD
+  variants cause severe-fatal radiosensitization toxicity, and the
+  825 mg/m² BID concurrent dose is NOT well tolerated in DPYD-deficient
+  patients even at 50% reduction. Hand-foot syndrome and proctitis
+  dominate the toxicity profile during the 5.5-week CRT course.
+
+  Distinct from the definitive-CRT pattern (e.g., RC-DEFINITIVE-ESOPH-SCC,
+  also 50.4 Gy / 28 fx) by intent: LCCRT here is a bridge to surgery
+  (intent=neoadjuvant), not a curative-intent definitive course.

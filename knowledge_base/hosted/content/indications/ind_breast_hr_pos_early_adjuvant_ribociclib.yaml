@@ -1,0 +1,129 @@
+id: IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-BREAST
+  line_of_therapy: 1
+  stage_requirements:
+    - "Early-stage HR+/HER2- breast cancer post-surgery; stage II-III"
+    - "Or stage I with high-risk features per NATALEE eligibility (e.g., grade 3, node-negative with >=1 clinical risk factor)"
+    - "Broader eligibility than monarchE (abemaciclib): includes node-negative patients with risk features"
+    - "Adjuvant endocrine therapy ongoing (AI or tamoxifen)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      required: true
+      value_constraint: "ER positive (>=1% by IHC)"
+    - biomarker_id: BIO-HER2-SOLID
+      required: true
+      value_constraint: "HER2 negative (IHC 0-1+ OR IHC 2+ FISH-negative)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-RIBOCICLIB-AI-ADJUVANT
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  idfs_3yr:
+    value: "3-yr iDFS 90.4% vs 87.1% (HR 0.75; 95% CI 0.62-0.91; p=0.003; NATALEE); absolute benefit ~3.3%"
+    source: SRC-NATALEE-SLAMON-2024
+
+hard_contraindications: []
+# NOTE: CI-PREGNANCY-TERATOGEN does not yet exist in contraindications/.
+# CDK4/6i teratogenicity is covered in do_not_do bullets below.
+# Congenital long QT syndrome or baseline QTcF >450 ms should be documented
+# as a do_not_do item; no CI entity exists yet.
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-ECG
+  - TEST-ECHO
+desired_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+
+rationale: >
+  Adjuvant ribociclib 400 mg (3w on/1w off) x 3 years + aromatase inhibitor
+  (NATALEE; Slamon et al., NEJM 2024; PMID 38507751): iDFS HR 0.75
+  (95% CI 0.62-0.91; p=0.003); 3-yr iDFS 90.4% vs 87.1%; absolute benefit
+  ~3.3 percentage points (N=5,101). NCCN Category 1 adjuvant CDK4/6i option.
+  NATALEE differs from monarchE (abemaciclib) in two critical ways:
+  (1) BROADER ELIGIBILITY — includes node-negative patients with >=1 high-risk
+  clinical feature (grade 3, large tumor, young age, etc.), not limited to
+  node-positive only; stage II-III + selected stage I.
+  (2) QTC MONITORING REQUIRED — ribociclib prolongs QTc interval (boxed FDA
+  warning; fatal arrhythmia risk). Mandatory ECG at baseline, on Day 14 of
+  cycle 1, then periodically. Do not start if QTcF >450 ms; permanently
+  discontinue if QTcF >500 ms.
+  Ribociclib adjuvant dose (400 mg) is lower than metastatic dose (600 mg).
+  Duration: 3 years ribociclib, AI continues to 5 years total.
+  CDK4/6 mechanism: dual CDK4 and CDK6 inhibitor (cf. abemaciclib = CDK4
+  selective). Strong CYP3A4 inhibitors (e.g., azole antifungals, clarithromycin)
+  increase ribociclib exposure — avoid co-administration or dose-reduce.
+  PLAN TRACK = aggressive (broader eligibility; patients with node-negative
+  high-risk disease not covered by IND-BREAST-HR-POS-EARLY-ADJ-CDK46I are
+  covered here).
+
+rationale_ua: >
+  Ад'ювантний рибоцикліб 400 мг (3 тижні/1 тиждень off) × 3 роки + інгібітор
+  ароматази (NATALEE, Slamon et al., NEJM 2024): iDFS HR 0.75 (95% ДІ
+  0.62-0.91, p=0.003); абсолютна користь ~3.3% на 3-му році (N=5,101). NCCN
+  Категорія 1. Ширші критерії відбору ніж monarchE: включає ЛВ-негативних з
+  >=1 клінічним фактором ризику. Обов'язковий моніторинг QTc (рибоцикліб
+  подовжує QT-інтервал — ризик фатальної аритмії). Доза рибоцикліба ад'ювантно
+  400 мг (менша ніж 600 мг при метастатичному захворюванні).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NATALEE-SLAMON-2024
+    position: supports
+    relevant_quote_paraphrase: "NATALEE: ribociclib + AI adjuvant vs AI alone; 3-yr iDFS HR 0.75 (95% CI 0.62-0.91; p=0.003); 90.4% vs 87.1%; absolute benefit ~3.3% (N=5,101)"
+  - source_id: SRC-NCCN-BREAST-2025
+    position: supports
+    relevant_quote_paraphrase: "Ribociclib + endocrine therapy is NCCN Category 1 adjuvant CDK4/6i option for HR+/HER2- early breast cancer (NATALEE eligibility criteria)"
+
+known_controversies:
+  - topic: "Ribociclib vs abemaciclib for adjuvant CDK4/6i — which to choose"
+    positions:
+      - position: "Abemaciclib (monarchE) has more mature node-positive data with larger absolute iDFS benefit (~6.4% at 4yr vs ~3.3% at 3yr for ribociclib); CDK4-selective; no QTc monitoring required"
+        sources: [SRC-MONARCHE-JOHNSTON-2023]
+      - position: "Ribociclib (NATALEE) has broader eligibility including node-negative high-risk patients; 3-year duration (vs 2 years abemaciclib); requires QTc monitoring"
+        sources: [SRC-NATALEE-SLAMON-2024]
+    our_default: "Abemaciclib preferred for node-positive (standard track: IND-BREAST-HR-POS-EARLY-ADJ-CDK46I); ribociclib appropriate for node-negative high-risk or when abemaciclib is not tolerated/available"
+    rationale: "monarchE data more mature with larger absolute benefit in node-positive; NATALEE fills gap for node-negative high-risk"
+
+do_not_do:
+  - "НЕ призначати при вагітності — CDK4/6i тератогенні."
+  - "НЕ починати якщо QTcF >450 мс на вихідній ЕКГ — рибоцикліб подовжує QT."
+  - "НЕ застосовувати разом із сильними інгібіторами CYP3A4 — значно зростає концентрація рибоцикліба."
+  - "НЕ пропускати ЕКГ-моніторинг QTc (вихідний, День 14 Циклу 1, надалі) — ризик фатальної аритмії."
+  - "НЕ застосовувати дозу 600 мг ад'ювантно — доза NATALEE 400 мг; 600 мг лише при метастатичній хворобі."
+
+do_not_do_en:
+  - "Do NOT use in pregnancy — CDK4/6i are teratogenic."
+  - "Do NOT start if baseline QTcF >450 ms — ribociclib prolongs QT interval (boxed warning; fatal arrhythmia risk)."
+  - "Do NOT combine with strong CYP3A4 inhibitors (azole antifungals, clarithromycin, etc.) — significant ribociclib exposure increase."
+  - "Do NOT skip ECG/QTc monitoring (baseline, Day 14 Cycle 1, periodic thereafter) — fatal arrhythmia risk."
+  - "Do NOT use 600 mg dose adjuvantly — NATALEE protocol uses 400 mg; 600 mg is metastatic dosing only."
+
+time_critical: false
+last_reviewed: "2026-05-08"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Co-Lead sign-off. Brief specified year 2023 but PubMed
+  fetch confirmed publication year 2024 (NEJM vol 390, pp 1080-1091, PMID
+  38507751); source ID and file use 2024. Key distinction from monarchE:
+  NATALEE includes node-negative high-risk patients. Regimen REG-RIBOCICLIB-AI-ADJUVANT
+  created alongside (400 mg adjuvant dose; separate from metastatic REG-AI-RIBOCICLIB
+  at 600 mg). CI-PREGNANCY-TERATOGEN and congenital long QT CI entities do not
+  yet exist; teratogenicity and QTc cutoff captured in do_not_do bullets instead.

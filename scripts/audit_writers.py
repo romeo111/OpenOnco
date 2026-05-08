@@ -44,6 +44,7 @@ METRICS_CSV_COLUMNS: tuple[str, ...] = (
     "loinc_missing",
     "schema_errors",
     "ref_errors",
+    "contract_errors",
     "freshness_breaches",
     "deltas_detected",
     "actions_taken",
@@ -143,6 +144,7 @@ def build_state_payload(
         "loaded_entities": val.get("loaded_entities", 0),
         "schema_errors_count": val.get("schema_errors_count", 0),
         "ref_errors_count": val.get("ref_errors_count", 0),
+        "contract_errors_count": val.get("contract_errors_count", 0),
         "errors": [],   # full error list lives in audit log MD, not state
     }
     fresh_subset = {
@@ -227,6 +229,7 @@ def render_audit_log_md(plan: dict[str, Any]) -> str:
     lines.append(f"| LOINC missing | {bio.get('loinc_missing_count', 0)} |")
     lines.append(f"| Schema errors | {val.get('schema_errors_count', 0)} |")
     lines.append(f"| Ref errors | {val.get('ref_errors_count', 0)} |")
+    lines.append(f"| Contract errors | {val.get('contract_errors_count', 0)} |")
     lines.append(f"| Freshness breaches | {fresh.get('total_breaches', 0)} |")
     lines.append("")
 
@@ -311,6 +314,7 @@ def metrics_row(plan: dict[str, Any]) -> dict[str, Any]:
         "loinc_missing": bio.get("loinc_missing_count", 0),
         "schema_errors": val.get("schema_errors_count", 0),
         "ref_errors": val.get("ref_errors_count", 0),
+        "contract_errors": val.get("contract_errors_count", 0),
         "freshness_breaches": fresh.get("total_breaches", 0),
         "deltas_detected": diag.get("deltas_detected", 0),
         "actions_taken": diag.get("actions_taken", 0),

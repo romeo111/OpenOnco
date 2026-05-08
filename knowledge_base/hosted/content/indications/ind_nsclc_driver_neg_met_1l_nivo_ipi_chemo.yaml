@@ -1,0 +1,106 @@
+id: IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: DRIVER_NEGATIVE
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic NSCLC (AJCC 8th ed.)"
+    - "No actionable driver mutation (EGFR, ALK, ROS1, MET exon 14 skip, BRAF V600E, KRAS G12C, RET, NTRK)"
+    - "Any PD-L1 TPS (including TPS <1%)"
+    - "No prior systemic therapy for metastatic disease"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      required: false
+    - biomarker_id: BIO-ALK-FUSION
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-NIVO-IPI-CHEMO-NSCLC-1L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_survival_median:
+    value: "15.8 mo (nivo+ipi+chemo) vs 11.0 mo (chemo alone); HR 0.72 (96.7% CI 0.61–0.86); 3-year OS 25% vs 14%"
+    source: SRC-CHECKMATE-9LA-PAZ-ARES-2021
+  progression_free_survival:
+    value: "HR 0.67 (95% CI 0.56–0.79)"
+    source: SRC-CHECKMATE-9LA-PAZ-ARES-2021
+  overall_response_rate:
+    value: "38% vs 25%"
+    source: SRC-CHECKMATE-9LA-PAZ-ARES-2021
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-NSCLC-NGS-PANEL
+  - TEST-PDL1-IHC
+  - TEST-CECT-CAP
+desired_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+
+sources:
+  - source_id: SRC-CHECKMATE-9LA-PAZ-ARES-2021
+    weight: primary
+    position: supports
+    relevant_quote_paraphrase: >
+      Paz-Ares 2021 Lancet Oncol: CheckMate-9LA — nivo+ipi+2-cycle chemo improved OS
+      (median 15.8 vs 11.0 mo; HR 0.72) and PFS (HR 0.67) vs chemo alone in driver-negative
+      stage IV NSCLC; benefit consistent across PD-L1 TPS subgroups including TPS <1%.
+  - source_id: SRC-NCCN-NSCLC-2025
+    weight: secondary
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    weight: secondary
+
+do_not_do:
+  - "EGFR-мутований або ALK+ НМКЛЛ: таргетна терапія (осимертиніб/ALK-ТКІ) є кращою — не призначати нівосексімаб+іпілімумаб+хімію як першу лінію"
+  - "Активне автоімунне захворювання, що потребує системної імуносупресивної терапії: протипоказано призначення ніволумабу та іпілімумабу"
+  - "Важка інтерстиціальна хвороба легень або пневмоніт в анамнезі: підвищений ризик імунно-опосередкованого пневмоніту"
+  - "ECOG PS ≥3: відсутні дані безпеки та ефективності; платинова хіміотерапія протипоказана"
+
+do_not_do_en:
+  - "EGFR-mutant or ALK+ NSCLC: targeted therapy (osimertinib/ALK-TKI) is superior — do not use nivo+ipi+chemo as first-line"
+  - "Active autoimmune disease requiring systemic immunosuppression: nivolumab and ipilimumab are contraindicated"
+  - "Severe interstitial lung disease or prior pneumonitis: markedly elevated risk of immune-mediated pneumonitis"
+  - "ECOG PS ≥3: no safety/efficacy data; platinum-doublet chemotherapy contraindicated"
+
+last_reviewed: "2026-05-07"
+reviewers: []
+reviewer_signoffs: []
+
+notes: >
+  CheckMate-9LA (Paz-Ares 2021, Lancet Oncol; NCT03215706): Phase III RCT, 719 patients,
+  driver-negative stage IV NSCLC, any PD-L1 TPS. Nivo 360 mg q3w + Ipi 1 mg/kg q6w +
+  2 cycles platinum-doublet chemo vs 4 cycles platinum-doublet chemo alone.
+
+  Key clinical differentiation:
+    - vs CheckMate-227 (nivo+ipi alone, any PD-L1): addition of 2 chemo cycles provides
+      faster early disease control and higher early ORR; especially advantageous for
+      symptomatic disease, large burden, or when rapid response is needed.
+    - vs KEYNOTE-189/nivo+chemo: dual-IO backbone (nivo+ipi) with chemotherapy
+      provides durable long-tail OS benefit (3-year OS 25% vs 14%) not seen with PD-1 mono + chemo.
+    - PD-L1 subgroup analysis: OS benefit consistent across TPS <1% (HR 0.62),
+      TPS 1–49% (HR 0.79), TPS ≥50% (HR 0.66) — regimen is PD-L1 agnostic.
+
+  Patient selection: driver-negative stage IV NSCLC is confirmed only after negative
+  comprehensive molecular profiling (NGS panel). PD-L1 testing required to document
+  eligibility but does not stratify treatment in this indication.
+
+  Chemotherapy component: only 2 cycles administered. Histology-specific selection:
+  squamous → carboplatin AUC 6 + paclitaxel; non-squamous → carboplatin AUC 5 + pemetrexed.
+  After 2 cycles, IO doublet (nivo+ipi) continues alone.
+
+  Note: BIO-KRAS-G12C, BIO-MET-EX14, BIO-BRAF-V600E, BIO-RET-FUSION, BIO-NTRK-FUSION
+  exclusion is captured as clinical prose above; only BIO-EGFR-MUTATION and BIO-ALK-FUSION
+  are listed in biomarker_requirements_excluded as those BIO-* IDs are confirmed in KB.
+  Other driver biomarker exclusions documented in stage_requirements prose.
