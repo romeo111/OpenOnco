@@ -1,0 +1,124 @@
+id: IND-MM-1L-RD
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MM
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    fit_for_transplant: false
+
+recommended_regimen: REG-RD-CONTINUOUS
+phases: []
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~76% (MAIA Rd control arm; Facon NEJM 2019)"
+  complete_response: "~34% ≥VGPR; ~9% sCR/CR (MAIA Rd arm 30-month update)"
+  progression_free_survival: "30-month PFS ~38% (Rd alone, MAIA control); median PFS ~31.9 months"
+  overall_survival_5y: "~53% (MAIA Rd 5-yr update, Facon JCO 2024)"
+
+hard_contraindications:
+  - CI-LENALIDOMIDE-PREGNANCY
+red_flags_triggering_alternative:
+  - RF-MM-CORD-COMPRESSION
+  - RF-MM-HYPERCALCEMIA
+  - RF-MM-HYPERVISCOSITY
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-IMMUNOGLOBULINS
+  - TEST-SPEP-UPEP
+  - TEST-FREE-LIGHT-CHAINS
+  - TEST-FISH-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-WHOLE-BODY-MRI
+  - TEST-HBV-SEROLOGY
+desired_tests: []
+
+rationale: >
+  Standard-plan default for newly-diagnosed transplant-ineligible multiple
+  myeloma (ECOG ≤2, fit_for_transplant: false) when daratumumab funding
+  is unavailable or patient is not a candidate for anti-CD38 therapy.
+  Rd continuous (lenalidomide 25 mg d1-21 + dexamethasone 40 mg weekly,
+  28-day cycles until progression) was established by the MAIA control
+  arm (Facon NEJM 2019) and the FIRST trial (Benboubker NEJM 2014) as
+  the standard-access backbone for TI-NDMM. ORR ~76%, 30-month PFS ~38%.
+  No HBV prophylaxis required for Rd (no anti-CD38), but HBV serology
+  still recommended per NCCN given immunosuppression from IMiD+steroid.
+  No red-cell phenotyping required (no daratumumab).
+
+rationale_ua: >
+  стандарт-plan default for newly-diagnosed непридатний до трансплантації
+  множинна мієлома (ECOG ≤2, fit_for_transplant: false) коли фінансування
+  даратумумабу недоступне або пацієнт не є кандидатом на анти-CD38 терапію.
+  Rd безперервно (леналідомід 25 мг д1-21 + дексаметазон 40 мг щотижня,
+  28-денні цикли до прогресування) встановлений дослідженнями MAIA (Facon
+  NEJM 2019) та FIRST (Benboubker NEJM 2014) як стандартний доступний
+  режим для непридатних до трансплантації НДММ. ЗВВ ~76%, 30-місячна ВБП
+  ~38%. Схема повністю фінансується через НСЗУ — є стандартом доступу в
+  Україні при недоступності даратумумабу.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-MAIA-FACON-2019
+    position: supports
+    relevant_quote_paraphrase: "MAIA Rd control arm: ORR 75.8%, 30-month PFS 37.9%, 5-yr OS 53.1%; establishes Rd continuous as TI-NDMM standard backbone"
+  - source_id: SRC-NCCN-MM-2025
+    position: supports
+    relevant_quote_paraphrase: "Rd continuous is a Category 1 preferred regimen for transplant-ineligible NDMM; standard-access option where anti-CD38 funding is unavailable"
+
+do_not_do:
+  - "Не пропускати VTE профілактику (aspirin 81-100 mg або LMWH) — ризик тромбозу на леналідоміді 10-20% без профілактики."
+  - "Не пропускати HSV/VZV профілактику (acyclovir 400 mg BID) — IMiD + steroid підвищують ризик оперізуючого герпесу."
+  - "Не починати у жінок репродуктивного віку без підтверджених двох методів контрацепції + негативного тесту на вагітність (леналідомід — тератоген)."
+  - "Не пропускати редукцію дози леналідоміду при CrCl 30-60 mL/min (10 mg) — повна доза значно токсична при нирковій недостатності."
+  - "Не призначати zoledronate без попередньої стоматологічної оцінки — ризик osteonecrosis of the jaw."
+  - "Не використовувати IND-MM-1L-RD якщо daratumumab фінансується — агресивний план (IND-MM-1L-DARA-RD) має кращі результати виживаності."
+
+do_not_do_en:
+  - "Do not skip VTE prophylaxis (aspirin 81-100 mg or LMWH) — IMiD-induced VTE risk 10-20% without prophylaxis."
+  - "Do not skip HSV/VZV prophylaxis (acyclovir 400 mg BID) — IMiD + steroid elevates herpes zoster reactivation risk."
+  - "Do not start in women of reproductive age without two methods of contraception + negative pregnancy test (lenalidomide is teratogenic)."
+  - "Do not skip lenalidomide dose reduction at CrCl 30-60 mL/min (use 10 mg) — full dose significantly toxic in renal impairment."
+  - "Do not prescribe zoledronate without prior dental evaluation — osteonecrosis of the jaw risk."
+  - "Do not use IND-MM-1L-RD if daratumumab is funded — aggressive plan (IND-MM-1L-DARA-RD) has superior survival outcomes."
+known_controversies: []
+
+time_critical: false  # outpatient cancer planning, not time-critical (FDA non-device CDS criterion 4)
+last_reviewed: "2026-05-09"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires clinical co-lead signoff before publication. Standard
+  counterpart to IND-MM-1L-DARA-RD for two-plan output in transplant-
+  ineligible NDMM (CHARTER §2). Rd continuous is the standard-access
+  option when daratumumab funding is unavailable (common in Ukraine
+  where НСЗУ does not currently reimburse daratumumab).
+
+  MAIA trial context (Facon NEJM 2019, PMID 30926586): this indication
+  represents the control arm — Rd alone. D-Rd improved PFS HR 0.56 and
+  5-yr OS HR 0.66 vs Rd. In a well-resourced setting, D-Rd is preferred;
+  Rd is the fallback when daratumumab is inaccessible.
+
+  FIRST trial (Benboubker NEJM 2014, PMID 25184863): Rd continuous vs
+  Rd18 (18 cycles fixed) vs MPT — Rd continuous showed superior PFS
+  (26 months) vs MPT (21.9 months). Established the "until progression"
+  strategy.
+
+  Scope gate: fit_for_transplant: false restricts IND-MM-1L-RD to
+  transplant-ineligible patients. For transplant-eligible standard-plan
+  patients, see IND-MM-1L-VRD (VRd backbone + ASCT pathway).

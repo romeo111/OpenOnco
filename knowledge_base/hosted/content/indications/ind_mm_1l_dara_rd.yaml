@@ -1,0 +1,145 @@
+id: IND-MM-1L-DARA-RD
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MM
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HBV-STATUS
+      required: true
+      value_constraint: "any value valid (categorical etiology gate; HBsAg+ or anti-HBc+ → entecavir prophylaxis mandatory before first daratumumab dose; anti-CD38 class effect — fulminant reactivation reported)"
+    - biomarker_id: BIO-HCV-STATUS
+      required: true
+      value_constraint: "any value valid (categorical etiology gate; anti-HCV+ → reflex BIO-HCV-RNA; coordinate DAA with hepatology)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    fit_for_transplant: false
+
+recommended_regimen: REG-D-RD-MAIA
+phases: []
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~93% (MAIA D-Rd arm; vs ~76% Rd control, P<0.001)"
+  complete_response: "~48% ≥VGPR post-induction; ~24% sCR/CR (MAIA 30-month update)"
+  progression_free_survival: "30-month PFS ~53% (D-Rd); HR 0.56 (95% CI 0.43–0.73) vs Rd alone (MAIA)"
+  overall_survival_5y: "60-month OS ~66.3% D-Rd vs ~53.1% Rd (MAIA 5-yr update, Facon JCO 2024)"
+
+hard_contraindications:
+  - CI-LENALIDOMIDE-PREGNANCY
+  - CI-HBV-NO-PROPHYLAXIS
+red_flags_triggering_alternative:
+  - RF-MM-CORD-COMPRESSION
+  - RF-MM-HYPERCALCEMIA
+  - RF-MM-HYPERVISCOSITY
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-IMMUNOGLOBULINS
+  - TEST-SPEP-UPEP
+  - TEST-FREE-LIGHT-CHAINS
+  - TEST-FISH-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-WHOLE-BODY-MRI
+  - TEST-HBV-SEROLOGY
+  - TEST-ECHO
+desired_tests: []
+
+rationale: >
+  Aggressive-plan default for newly-diagnosed transplant-ineligible multiple
+  myeloma (ECOG ≤2, fit_for_transplant: false). The MAIA trial (Facon NEJM
+  2019, PMID 30926586) demonstrated that adding daratumumab to Rd (D-Rd)
+  significantly improves ORR (~93% vs ~76%), PFS (HR 0.56), and OS (5-yr
+  ~66% vs ~53%) vs Rd alone in transplant-ineligible NDMM. D-Rd is given
+  until progression — no transplant, no consolidation phase. Anti-CD38
+  class HBV reactivation risk mandates pre-treatment HBV serology +
+  entecavir prophylaxis if HBsAg+ or anti-HBc+. Red-cell phenotyping
+  before first daratumumab dose is mandatory (anti-CD38 crossmatching
+  interference). НСЗУ reimbursement for daratumumab not currently available
+  in Ukraine — funding pathway must be confirmed before plan announcement.
+
+rationale_ua: >
+  агресивний-plan default for newly-diagnosed непридатний до трансплантації
+  множинна мієлома (ECOG ≤2, fit_for_transplant: false). Дослідження MAIA
+  (Facon NEJM 2019, PMID 30926586) продемонструвало, що додавання
+  даратумумабу до Rd (D-Rd) значно покращує ЗВВ (~93% проти ~76%), ВБП
+  (ВР 0.56) та ЗВ (5-річна ~66% проти ~53%) порівняно з Rd у непридатних
+  до трансплантації пацієнтів. D-Rd призначається до прогресування.
+  HBV реактивація на анти-CD38 — обов'язковий скринінг + ентекавір при
+  HBsAg+ або anti-HBc+. Феротипування еритроцитів перед першою дозою
+  даратумумабу є обов'язковим. НСЗУ не відшкодовує даратумумаб — шлях
+  фінансування має бути підтверджений до оголошення плану.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-MAIA-FACON-2019
+    position: supports
+    relevant_quote_paraphrase: "MAIA: D-Rd vs Rd in transplant-ineligible NDMM; PFS HR 0.56 (95% CI 0.43–0.73); ORR 92.9% vs 75.8%; 30-month PFS 52.9% vs 37.9%; 5-yr OS 66.3% vs 53.1% (Facon JCO 2024 update)"
+  - source_id: SRC-NCCN-MM-2025
+    position: supports
+    relevant_quote_paraphrase: "D-Rd is a Category 1 preferred regimen for transplant-ineligible NDMM; MAIA data support daratumumab addition to Rd backbone"
+
+do_not_do:
+  - "Не призначати daratumumab без попереднього red-cell phenotyping (type and screen) — анти-CD38 інтерферує з прямим Coombs та crossmatching."
+  - "Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ — ризик HBV реактивації значно підвищений на анти-CD38."
+  - "Не підтверджувати D-Rd план без верифікованого funding pathway — daratumumab НЕ реімбурсується через НСЗУ; пацієнт повинен бути попереджений до оголошення плану."
+  - "Не пропускати VTE профілактику (aspirin/LMWH) — IMiD-induced VTE ризик не зменшується від додавання даратумумабу."
+  - "Не пропускати HSV/VZV профілактику — даратумумаб додає до immunosuppression леналідоміду."
+  - "Не пропускати PJP профілактику — анти-CD38 + IMiD + steroid = підвищений ризик опортуністичних інфекцій."
+  - "Не розпочинати у жінок репродуктивного віку без двох методів контрацепції (леналідомід — тератоген)."
+  - "Не призначати у transplant-eligible пацієнтів — D-VRd (IND-MM-1L-DVRD) є відповідним планом для придатних до трансплантації."
+  - "Не скорочувати дексаметазон без клінічної підстави у перших 6 циклах — зниження дози стероїду у цей момент може знизити ефективність анти-CD38."
+
+do_not_do_en:
+  - "Do not prescribe daratumumab without prior red-cell phenotyping (type and screen) — anti-CD38 interferes with direct Coombs and crossmatching."
+  - "Do not start without HBV screening + entecavir prophylaxis in HBsAg+ or anti-HBc+ — risk of HBV reactivation significantly elevated on anti-CD38."
+  - "Do not confirm D-Rd plan without verified funding pathway — daratumumab is NOT reimbursed via NSZU; patient must be informed before the plan is announced."
+  - "Do not skip VTE prophylaxis (aspirin/LMWH) — IMiD-induced VTE risk is not reduced by adding daratumumab."
+  - "Do not skip HSV/VZV prophylaxis — daratumumab adds to lenalidomide immunosuppression."
+  - "Do not skip PJP prophylaxis — anti-CD38 + IMiD + steroid = elevated risk of opportunistic infections."
+  - "Do not start in women of reproductive age without two methods of contraception (lenalidomide is teratogenic)."
+  - "Do not use in transplant-eligible patients — D-VRd (IND-MM-1L-DVRD) is the appropriate plan for transplant-eligible patients."
+  - "Do not reduce dexamethasone without clinical indication in first 6 cycles — steroid dose reduction at this point may reduce anti-CD38 efficacy."
+known_controversies:
+  - "Frail TI patients (IMWG frailty ≥2, age >80): D-Rd vs DRd-lite (attenuated Rd) debated. MAIA enrolled broadly fit TI-NDMM; frail subgroup analysis suggests benefit maintained but toxicity higher. Some centers use attenuated doses (len 10 mg, dex 20 mg) upfront in frailest patients."
+  - "D-VRd continuous (GRIFFIN-style, 6+ cycles without ASCT) vs D-Rd for TI-NDMM: no head-to-head RCT; bortezomib adds neuropathy risk in older TI population. MAIA D-Rd is current NCCN Cat 1 standard for TI-NDMM."
+
+time_critical: false  # outpatient cancer planning, not time-critical (FDA non-device CDS criterion 4)
+last_reviewed: "2026-05-09"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires clinical co-lead signoff before publication. Aggressive
+  counterpart to IND-MM-1L-RD for two-plan output in transplant-ineligible
+  NDMM (CHARTER §2). Major access constraint in Ukraine: daratumumab is
+  not currently НСЗУ-reimbursed — funding pathway (clinical trial /
+  charitable / out-of-pocket) MUST be confirmed BEFORE this Plan is
+  finalized. Red-cell phenotyping (type and screen) BEFORE first
+  daratumumab dose is mandatory due to anti-CD38 interference with
+  crossmatching.
+
+  MAIA trial (Facon NEJM 2019, PMID 30926586): 737 transplant-ineligible
+  NDMM patients randomized D-Rd vs Rd. Primary endpoint PFS: HR 0.56
+  (95% CI 0.43–0.73), p<0.001. 5-year OS update (Facon JCO 2024):
+  66.3% vs 53.1% (HR 0.66, p<0.0001) — first OS benefit for an anti-CD38
+  doublet addition in TI-NDMM.
+
+  Scope gate: fit_for_transplant: false restricts IND-MM-1L-DARA-RD to
+  transplant-ineligible patients. For transplant-eligible aggressive-plan
+  patients, see IND-MM-1L-DVRD (D-VRd + ASCT + dara-len maintenance).
+
+  Treatment is continuous until progression or unacceptable toxicity —
+  no fixed-duration transplant pathway. No phases block needed (single
+  continuous regimen, no ASCT step).
