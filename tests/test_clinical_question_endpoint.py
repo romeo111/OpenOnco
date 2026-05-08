@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import inspect
 import json
+import os
+from pathlib import Path
 
 from serverless import clinical_question as cq
 
@@ -329,6 +331,41 @@ def test_handle_json_request_enforces_three_question_quota(monkeypatch):
     assert status == 429
     assert payload["status"] == "quota_exceeded"
     assert payload["questions_used"] == 3
+
+
+def test_handle_json_request_can_audit_ip_and_raw_input(monkeypatch):
+    audit_path = Path(f"openonco-ask-audit-test-{os.getpid()}.jsonl")
+    if audit_path.exists():
+        audit_path.unlink()
+    monkeypatch.setenv("OPENONCO_ASK_AUDIT_LOG", str(audit_path))
+    monkeypatch.setenv("OPENONCO_ASK_LOG_RAW_INPUT", "1")
+    cq._USAGE_COUNTS.clear()
+
+    monkeypatch.setattr(
+        cq,
+        "answer_clinical_question",
+        lambda case_text, locale="uk": {
+            "status": "answered",
+            "direct_answer": "answer",
+            "patient_profile": {"disease": {"id": "DIS-GBM"}},
+            "safety_note": cq.DISCLAIMER_UK,
+        },
+    )
+
+    body = {"case_text": "GBM, IDH-wildtype", "locale": "uk", "user_id": "audit-user"}
+    status, _headers, payload = cq.handle_json_request(
+        body,
+        request_meta={"headers": {"CF-Connecting-IP": "203.0.113.9"}, "client_ip": "127.0.0.1"},
+    )
+
+    assert status == 200
+    assert payload["questions_used"] == 1
+    rows = [json.loads(line) for line in audit_path.read_text(encoding="utf-8").splitlines()]
+    assert rows[0]["ip"] == "203.0.113.9"
+    assert rows[0]["user_id"] == "audit-user"
+    assert rows[0]["case_text"] == "GBM, IDH-wildtype"
+    assert rows[0]["disease_id"] == "DIS-GBM"
+    audit_path.unlink(missing_ok=True)
 
 
 def test_prompt_injection_guard_blocks_before_openai(monkeypatch):

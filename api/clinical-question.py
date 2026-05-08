@@ -33,6 +33,12 @@ class handler(BaseHTTPRequestHandler):  # pylint: disable=invalid-name
         except json.JSONDecodeError:
             self._send_json(400, _cors_headers(), {"status": "error", "message": "Invalid JSON body"})
             return
-        status, headers, response = handle_json_request(payload)
+        status, headers, response = handle_json_request(
+            payload,
+            request_meta={
+                "headers": dict(self.headers.items()),
+                "client_ip": self.client_address[0] if self.client_address else "",
+            },
+        )
         self._send_json(status, headers, response)
 

@@ -22,6 +22,8 @@ import re
 import traceback
 import urllib.error
 import urllib.request
+import hashlib
+from datetime import datetime, timezone
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -1252,39 +1254,127 @@ def answer_clinical_question(case_text: str, *, locale: str = "uk") -> dict[str,
     return answer
 
 
-def handle_json_request(body: dict[str, Any]) -> tuple[int, dict[str, str], dict[str, Any]]:
+def _request_header(meta: dict[str, Any] | None, name: str) -> str:
+    headers = (meta or {}).get("headers") or {}
+    if not isinstance(headers, dict):
+        return ""
+    wanted = name.casefold()
+    for key, value in headers.items():
+        if str(key).casefold() == wanted:
+            return str(value or "").strip()
+    return ""
+
+
+def _request_ip(meta: dict[str, Any] | None) -> str:
+    cf_ip = _request_header(meta, "CF-Connecting-IP")
+    if cf_ip:
+        return cf_ip
+    forwarded_for = _request_header(meta, "X-Forwarded-For")
+    if forwarded_for:
+        return forwarded_for.split(",", 1)[0].strip()
+    real_ip = _request_header(meta, "X-Real-IP")
+    if real_ip:
+        return real_ip
+    forwarded = _request_header(meta, "Forwarded")
+    match = re.search(r"(?:^|[;,]\s*)for=\"?([^\";,]+)", forwarded, flags=re.IGNORECASE)
+    if match:
+        return match.group(1).strip("[]")
+    return str((meta or {}).get("client_ip") or "").strip()
+
+
+def _audit_log_path() -> Path | None:
+    raw = os.environ.get("OPENONCO_ASK_AUDIT_LOG", "").strip()
+    if not raw:
+        return None
+    return Path(raw)
+
+
+def _write_ask_audit_log(
+    *,
+    body: dict[str, Any],
+    request_meta: dict[str, Any] | None,
+    http_status: int,
+    response: dict[str, Any],
+) -> None:
+    path = _audit_log_path()
+    if path is None:
+        return
+    case_text = str(body.get("case_text") or "")
+    row: dict[str, Any] = {
+        "ts": datetime.now(timezone.utc).isoformat(),
+        "ip": _request_ip(request_meta),
+        "user_id": str(body.get("user_id") or ""),
+        "locale": str(body.get("locale") or "uk"),
+        "http_status": http_status,
+        "status": response.get("status"),
+        "questions_used": response.get("questions_used"),
+        "case_text_len": len(case_text),
+        "case_text_sha256": hashlib.sha256(case_text.encode("utf-8")).hexdigest(),
+    }
+    if os.environ.get("OPENONCO_ASK_LOG_RAW_INPUT") == "1":
+        row["case_text"] = case_text
+    disease = response.get("patient_profile")
+    if isinstance(disease, dict):
+        disease_obj = disease.get("disease")
+        if isinstance(disease_obj, dict):
+            row["disease_id"] = disease_obj.get("id")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+
+
+def _finalize_json_request(
+    status: int,
+    headers: dict[str, str],
+    response: dict[str, Any],
+    *,
+    body: dict[str, Any],
+    request_meta: dict[str, Any] | None,
+) -> tuple[int, dict[str, str], dict[str, Any]]:
+    try:
+        _write_ask_audit_log(body=body, request_meta=request_meta, http_status=status, response=response)
+    except Exception:  # pragma: no cover - audit logging must not break answers
+        if os.environ.get("OPENONCO_DEBUG") == "1":
+            response = {**response, "audit_log_error": traceback.format_exc()}
+    return status, headers, response
+
+
+def handle_json_request(
+    body: dict[str, Any],
+    request_meta: dict[str, Any] | None = None,
+) -> tuple[int, dict[str, str], dict[str, Any]]:
     locale = str(body.get("locale") or "uk")
     user_id = str(body.get("user_id") or "").strip()
     if not user_id:
-        return 400, _cors_headers(), {
+        return _finalize_json_request(400, _cors_headers(), {
             "status": "error",
             "message": "user_id is required for per-user quota enforcement",
             "safety_note": _disclaimer(locale),
-        }
+        }, body=body, request_meta=request_meta)
     used = _USAGE_COUNTS.get(user_id, 0)
     if used >= MAX_QUESTIONS_PER_USER:
-        return 429, _cors_headers(), {
+        return _finalize_json_request(429, _cors_headers(), {
             "status": "quota_exceeded",
             "message": f"Question limit reached: {MAX_QUESTIONS_PER_USER} per user.",
             "questions_used": used,
             "questions_limit": MAX_QUESTIONS_PER_USER,
             "safety_note": _disclaimer(locale),
-        }
+        }, body=body, request_meta=request_meta)
     try:
         result = answer_clinical_question(str(body.get("case_text") or ""), locale=locale)
         _USAGE_COUNTS[user_id] = used + 1
         result["questions_used"] = _USAGE_COUNTS[user_id]
         result["questions_limit"] = MAX_QUESTIONS_PER_USER
-        return 200, _cors_headers(), result
+        return _finalize_json_request(200, _cors_headers(), result, body=body, request_meta=request_meta)
     except Exception as exc:  # pylint: disable=broad-except
-        return 500, _cors_headers(), {
+        return _finalize_json_request(500, _cors_headers(), {
             "status": "error",
             "message": str(exc),
             "questions_used": _USAGE_COUNTS.get(user_id, 0),
             "questions_limit": MAX_QUESTIONS_PER_USER,
             "trace": traceback.format_exc() if os.environ.get("OPENONCO_DEBUG") == "1" else "",
             "safety_note": _disclaimer(locale),
-        }
+        }, body=body, request_meta=request_meta)
 
 
 def _cors_headers() -> dict[str, str]:
