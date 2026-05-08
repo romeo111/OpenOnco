@@ -887,7 +887,7 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 _NAV_LABELS = {
     "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "Спробувати →",
-           "diseases": "Хвороби", "ask": "Tumor Board", "kb": "База знань"},
+           "diseases": "Хвороби", "ask": "Tumor Board", "kb": "Onco Wiki"},
     "en": {"home": "Home", "about": "About", "try_cta": "Try it →",
            "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki"},
 }
