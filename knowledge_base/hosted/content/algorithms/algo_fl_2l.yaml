@@ -53,7 +53,13 @@ decision_tree:
     result: IND-FL-3L-MOSUNETUZUMAB
   if_false:
     result: IND-FL-3L-MOSUNETUZUMAB
-  notes: Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring.
+  notes: >
+    Degenerate step — both branches route to mosunetuzumab (3L default).
+    Conditions are informational only: patients who failed EZH2-tazemetostat
+    route or are CAR-T-ineligible are correctly captured here. No RF can
+    change outcome at this step; the step functions as a pass-through to the
+    default Indication. Remove when a fourth track (e.g. loncastuximab,
+    glofitamab) creates a meaningful bifurcation.
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-FL-2024

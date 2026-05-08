@@ -19,10 +19,14 @@ decision_tree:
       result: IND-EATL-1L-CHOEP-AUTOSCT
     if_false:
       result: IND-EATL-1L-CHOEP-AUTOSCT
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: >
+      Degenerate step — single-track algorithm: both branches route to the
+      same default. No RF can change outcome until a second Indication is
+      modeled (e.g. IND-EATL-1L-BV-CHP for CD30+ subtype). Remove step and
+      replace with direct default routing when still single-track.
 
 sources: [SRC-NCCN-BCELL-2025]
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-05-08"
 notes: >
   Single track для 1L EATL. Future: окрема Indication для CD30+ subtype
   (BV-CHP замість CHOEP). Refractory → salvage (ICE + allo-SCT consideration).
