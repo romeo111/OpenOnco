@@ -1,25 +1,25 @@
 {
-  "generated_at_utc": "2026-05-08T09:40:15Z",
+  "generated_at_utc": "2026-05-08T11:41:24Z",
   "kb_root": "C:\\Users\\805\\.codex\\worktrees\\b97d\\cancer-autoresearch\\knowledge_base\\hosted\\content",
   "entity_counts": {
     "diseases": 78,
-    "drugs": 251,
-    "regimens": 359,
-    "indications": 424,
-    "biomarkers": 174,
-    "biomarker_actionability": 438,
+    "drugs": 256,
+    "regimens": 368,
+    "indications": 432,
+    "biomarkers": 181,
+    "biomarker_actionability": 440,
     "contraindications": 12,
-    "redflags": 510,
-    "algorithms": 140,
+    "redflags": 511,
+    "algorithms": 147,
     "tests": 115,
     "supportive_care": 13,
     "monitoring": 8,
-    "sources": 385,
+    "sources": 388,
     "workups": 24,
     "questionnaires": 78,
     "mdt_skills": 16,
     "reviewers": 4,
-    "procedures": 7,
+    "procedures": 8,
     "radiation_courses": 5
   },
   "loader_ok": true,
@@ -27,13 +27,13 @@
     "schema_errors": 0,
     "ref_errors": 0,
     "contract_errors": 0,
-    "contract_warnings": 522
+    "contract_warnings": 177
   },
   "gaps": [
     {
       "id": "clinical_signoff",
       "title": "Clinical sign-off",
-      "current": "15/1871 signoff-eligible entities reviewed (0.8%)",
+      "current": "15/1898 signoff-eligible entities reviewed (0.8%)",
       "target": ">=85% reviewed before public guideline-grade claims",
       "status": "blocked_on_reviewers",
       "blocker": "Cannot be fixed by code; requires qualified Clinical Co-Lead review.",
@@ -41,29 +41,29 @@
       "details": {
         "by_type": {
           "indications": {
-            "total": 424,
+            "total": 432,
             "reviewed": 15,
-            "gap": 409
+            "gap": 417
           },
           "algorithms": {
-            "total": 140,
+            "total": 147,
             "reviewed": 0,
-            "gap": 140
+            "gap": 147
           },
           "regimens": {
-            "total": 359,
+            "total": 368,
             "reviewed": 0,
-            "gap": 359
+            "gap": 368
           },
           "redflags": {
-            "total": 510,
+            "total": 511,
             "reviewed": 0,
-            "gap": 510
+            "gap": 511
           },
           "biomarker_actionability": {
-            "total": 438,
+            "total": 440,
             "reviewed": 0,
-            "gap": 438
+            "gap": 440
           }
         }
       }
@@ -71,7 +71,7 @@
     {
       "id": "solid_2l_plus",
       "title": "Solid tumor 2L+ coverage",
-      "current": "22/42 solid diseases have a 2L+ algorithm; 24/42 have a 2L+ indication",
+      "current": "23/42 solid diseases have a 2L+ algorithm; 24/42 have a 2L+ indication",
       "target": "Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication.",
       "status": "coverage_gap",
       "blocker": "Missing disease-by-disease 2L+ algorithm/indication authoring queue.",
@@ -212,7 +212,7 @@
     {
       "id": "surgery_radiation_structure",
       "title": "Surgery/radiation detail",
-      "current": "structured surgery entities: no; structured radiation entities: no; 411 indications mention surgery/radiation in text",
+      "current": "structured surgery entities: no; structured radiation entities: no; 419 indications mention surgery/radiation in text",
       "target": "Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields.",
       "status": "schema_gap",
       "blocker": "Current KB carries surgery/radiation mostly as prose inside indications.",
@@ -260,7 +260,6 @@
           "IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT",
           "IND-GBM-NEWLY-DIAGNOSED-ELDERLY-TMZ",
           "IND-GBM-NEWLY-DIAGNOSED-STUPP",
-          "IND-GBM-RECURRENT-BEVACIZUMAB",
           "IND-GCT-METASTATIC-1L-BEP",
           "IND-GIST-1L-IMATINIB",
           "IND-GLIOMA-LOW-GRADE-1L-RT-PCV",
@@ -271,6 +270,7 @@
           "IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III",
           "IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO",
           "IND-MESOTHELIOMA-1L-NIVO-IPI",
+          "IND-MM-1L-DVRD",
           "IND-MPNST-DOXORUBICIN-IFOSFAMIDE",
           "IND-MTC-ADVANCED-1L-SELPERCATINIB",
           "IND-NLPBL-1L-RITUXIMAB-MONO",
@@ -290,8 +290,7 @@
           "IND-PDAC-LAPC-CHEMORADIATION",
           "IND-PDAC-METASTATIC-1L-FOLFIRINOX",
           "IND-RCC-ADJUVANT-PEMBRO",
-          "IND-RCC-METASTATIC-1L-LENV-PEMBRO",
-          "IND-RCC-METASTATIC-2L-CABOZANTINIB",
+          "IND-RCC-NON-CLEAR-CELL-1L-CABOZANTINIB",
           "IND-RCC-VHL-DISEASE-BELZUTIFAN",
           "IND-RECTAL-TNT-LONG-COURSE-PRODIGE23",
           "IND-RECTAL-TNT-SHORT-COURSE-RAPIDO",
@@ -300,6 +299,7 @@
           "IND-SMZL-1L-RITUXIMAB",
           "IND-STS-ADVANCED-1L-AI",
           "IND-STS-ADVANCED-1L-DOXORUBICIN",
+          "IND-TGCT-1L-PEXIDARTINIB",
           "IND-UROTHELIAL-2L-PLATINUM-CHEMO"
         ],
         "radiation_mentions": [
@@ -382,28 +382,26 @@
           "IND-CHL-1L-N-AVD",
           "IND-CHL-2L-BRENTUXIMAB-MAINTENANCE",
           "IND-CHL-2L-PEMBROLIZUMAB",
-          "IND-CHL-CHILD-PUGH-C-MOD",
-          "IND-CHL-PREGNANCY-MOD-ABVD",
-          "IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB"
+          "IND-CHL-CHILD-PUGH-C-MOD"
         ],
-        "mention_count": 411
+        "mention_count": 419
       }
     },
     {
       "id": "supportive_care_depth",
       "title": "Supportive-care depth",
-      "current": "140/359 regimens have mandatory supportive care (39.0%); 41 have monitoring; 318 have dose adjustments",
+      "current": "134/368 regimens have mandatory supportive care (36.4%); 42 have monitoring; 326 have dose adjustments",
       "target": "Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage.",
       "status": "coverage_gap",
       "blocker": "Supportive-care records exist, but regimen attachment is incomplete.",
       "next_action": "Audit high-toxicity regimens first, then fill missing regimen attachments.",
       "details": {
-        "regimens_total": 359,
-        "with_mandatory_supportive_care": 140,
-        "with_premedication": 261,
-        "with_monitoring": 41,
-        "with_dose_adjustments": 318,
-        "with_between_visit_watchpoints": 254,
+        "regimens_total": 368,
+        "with_mandatory_supportive_care": 134,
+        "with_premedication": 263,
+        "with_monitoring": 42,
+        "with_dose_adjustments": 326,
+        "with_between_visit_watchpoints": 262,
         "missing_mandatory_supportive_care": [
           "REG-2GEN-TKI-CML",
           "REG-5FU-LV-BEV-CKD-MODIFIED",
@@ -524,26 +522,22 @@
           "REG-LORLATINIB-NSCLC",
           "REG-LURBINECTEDIN-SCLC-RR",
           "REG-LUSPATERCEPT-MDS-LR",
-          "REG-MFOLFIRINOX",
-          "REG-MIDOSTAURIN-ADVSM-1L",
-          "REG-MIRVETUXIMAB-OVARIAN",
-          "REG-MOGAMULIZUMAB",
-          "REG-NAL-IRI-5FU-LV-PDAC"
+          "REG-MFOLFIRINOX"
         ]
       }
     },
     {
       "id": "drug_indication_tracking",
       "title": "Drug indication and off-label tracking",
-      "current": "792 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status",
+      "current": "804 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status",
       "target": "Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance.",
       "status": "schema_gap",
       "blocker": "No first-class drug_indications entity directory/schema is present.",
       "next_action": "Introduce a drug_indications entity, then backfill from existing indications/regimens.",
       "details": {
         "drug_indications_schema_present": false,
-        "inferred_drug_disease_indication_pairs": 792,
-        "pairs_with_indication_evidence_context": 792,
+        "inferred_drug_disease_indication_pairs": 804,
+        "pairs_with_indication_evidence_context": 804,
         "explicit_label_status_pairs": 0,
         "sample_pairs": [
           {

@@ -1,6 +1,6 @@
 # Clinical gap audit
 
-Generated: `2026-05-08T09:40:15Z`
+Generated: `2026-05-08T11:41:24Z`
 
 This is a coverage/governance audit, not a clinical recommendation set.
 It makes the five largest known gaps measurable and repeatable.
@@ -9,11 +9,11 @@ It makes the five largest known gaps measurable and repeatable.
 
 | Gap | Current | Target | Status |
 |---|---:|---|---|
-| Clinical sign-off | 15/1871 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
-| Solid tumor 2L+ coverage | 22/42 solid diseases have a 2L+ algorithm; 24/42 have a 2L+ indication | Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication. | `coverage_gap` |
-| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 411 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
-| Supportive-care depth | 140/359 regimens have mandatory supportive care (39.0%); 41 have monitoring; 318 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
-| Drug indication and off-label tracking | 792 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `schema_gap` |
+| Clinical sign-off | 15/1898 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
+| Solid tumor 2L+ coverage | 23/42 solid diseases have a 2L+ algorithm; 24/42 have a 2L+ indication | Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication. | `coverage_gap` |
+| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 419 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
+| Supportive-care depth | 134/368 regimens have mandatory supportive care (36.4%); 42 have monitoring; 326 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
+| Drug indication and off-label tracking | 804 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `schema_gap` |
 
 ## Next actions
 
@@ -26,7 +26,7 @@ It makes the five largest known gaps measurable and repeatable.
 
 - Blocker: Missing disease-by-disease 2L+ algorithm/indication authoring queue.
 - Next action: Prioritize missing high-volume solid diseases, then rare solid diseases.
-- Missing 2L+ algorithm rows: 20
+- Missing 2L+ algorithm rows: 19
   - `DIS-ANAL-SCC`: Anal squamous cell carcinoma (Anal SCC)
   - `DIS-BCC`: Basal cell carcinoma
   - `DIS-CERVICAL`: Cervical carcinoma
@@ -97,13 +97,12 @@ It makes the five largest known gaps measurable and repeatable.
   - `REG-CAPOX`
   - `REG-CAR-T-AXICEL-HGBL`
   - `REG-CARBO-GEM-BEV-OVARIAN`
-  - `REG-CARBO-PACLI-ANAL-MET`
 
 ### Drug indication and off-label tracking
 
 - Blocker: No first-class drug_indications entity directory/schema is present.
 - Next action: Introduce a drug_indications entity, then backfill from existing indications/regimens.
-- Inferred pairs to backfill: 792
+- Inferred pairs to backfill: 804
 - Explicit labeled/off-label statuses: 0
 
 ## Machine-readable outputs

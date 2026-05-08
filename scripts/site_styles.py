@@ -160,7 +160,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   outline: 2px solid var(--green-700); outline-offset: 2px;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   .top-bar { flex-wrap: wrap; gap: 8px; }
   .brand-line { margin-right: 0; }
   .brand-mini { font-size: 22px; }
@@ -219,20 +219,27 @@ body.home-page {
 }
 .home-sub {
   max-width: 700px;
-  font-size: 21px;
+  font-size: 20px;
   line-height: 1.42;
   color: var(--gray-700);
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 .home-sub + .home-sub {
   margin-top: -12px;
 }
 .home-note {
   max-width: 680px;
-  margin-top: 18px;
+  margin: 0;
   font-family: var(--font-mono);
   font-size: 12px;
+  line-height: 1.6;
   color: var(--gray-500);
+}
+.home-source-band {
+  border-top: 1px solid var(--gray-100);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 22px 24px 0;
 }
 body.home-page .btn-primary,
 body.home-page .btn-primary:hover {
@@ -519,7 +526,15 @@ body.home-page .home-carousel {
     font-size: 52px;
   }
   .home-sub {
-    font-size: 17px;
+    font-size: 16px;
+    line-height: 1.38;
+    margin-bottom: 16px;
+  }
+  .home-sub + .home-sub {
+    margin-top: -6px;
+  }
+  .home-source-band {
+    padding-top: 18px;
   }
   .home-carousel {
     margin-top: 26px;

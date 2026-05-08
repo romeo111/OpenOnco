@@ -508,6 +508,34 @@ def test_try_cta_is_separate_action_button(site_dir: Path):
     assert 'class="top-cta-group"' in html
 
 
+def test_home_hero_avoids_duplicate_top_actions(site_dir: Path):
+    """The top bar owns the three product actions; the home hero keeps one
+    primary next step so the first viewport stays focused."""
+    html = (site_dir / "ukr" / "index.html").read_text(encoding="utf-8")
+    hero = html.split('<section class="home-hero">', 1)[1].split("</section>", 1)[0]
+    assert hero.count('class="btn ') == 1
+    assert 'href="/ukr/try.html"' in hero
+    assert 'href="/ukr/kb.html"' not in hero
+    assert 'href="/ukr/ask.html"' not in hero
+    assert 'class="home-source-band"' in html
+
+
+def test_top_bar_wraps_before_tablet_width(site_dir: Path):
+    """Header must wrap before common 768px tablet widths because the right
+    cluster now includes language switch plus three CTA buttons."""
+    css = (site_dir / "style.css").read_text(encoding="utf-8")
+    assert "@media (max-width: 900px)" in css
+
+
+def test_try_page_uses_plan_builder_language(site_dir: Path):
+    html = (site_dir / "try.html").read_text(encoding="utf-8")
+    ua_html = (site_dir / "ukr" / "try.html").read_text(encoding="utf-8")
+    assert "<h1>Plan Builder</h1>" in html
+    assert "Try it with a virtual patient" not in html
+    assert "<h1>План лікування</h1>" in ua_html
+    assert "Спробувати з віртуальним пацієнтом" not in ua_html
+
+
 def test_top_nav_uses_single_onco_wiki_entry():
     """Diseases stay addressable by URL, but Wiki is a top action, not a nav duplicate."""
     for html, wiki_label, board_label in (

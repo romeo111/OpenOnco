@@ -1281,11 +1281,12 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
       {sub_html}
       <div class="cta-row">
         <a class="btn btn-primary" href="{try_href}">{primary}</a>
-        <a class="btn btn-secondary" href="{kb_href}">{secondary}</a>
-        <a class="btn btn-secondary" href="{ask_href}">{tertiary}</a>
       </div>
-      <p class="home-note">{note}</p>
     </div>
+  </section>
+
+  <section class="home-source-band" aria-label="OpenOnco sources">
+    <p class="home-note">{note}</p>
   </section>
 
   <footer class="page-foot">
@@ -1323,7 +1324,7 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
             "guidelines and references. Transparent and based on internationally recognized "
             "standards."
         )
-        cta_primary = "Try with a virtual patient →"
+        cta_primary = "Build a plan →"
         cta_secondary = "See examples"
         try_href = "/try.html"
         gallery_href = "/gallery.html"
@@ -1466,7 +1467,7 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
             "на основі світових клінічних настанов і референсів. Прозоро та відповідно до "
             "міжнародно визнаних стандартів."
         )
-        cta_primary = "Спробувати з віртуальним пацієнтом →"
+        cta_primary = "Побудувати план лікування →"
         cta_secondary = "Дивитись приклади"
         try_href = "/ukr/try.html"
         gallery_href = "/ukr/gallery.html"
@@ -2760,12 +2761,22 @@ def render_try(
     em = examples_manifest if examples_manifest is not None else []
     qm_json = json.dumps(qm, ensure_ascii=False).replace("</", "<\\/")
     em_json = json.dumps(em, ensure_ascii=False).replace("</", "<\\/")
+    page_title = "Plan Builder" if target_lang == "en" else "План лікування"
+    page_lead = (
+        "Build a cited treatment-plan draft from a virtual patient profile. "
+        "The in-browser engine shows which diagnosis, staging, biomarker and safety fields change the plan. "
+        "<strong>No real patient data.</strong> Drafts are stored in your browser localStorage."
+        if target_lang == "en" else
+        "Побудуйте цитований draft-план лікування з віртуального профілю пацієнта. "
+        "Браузерний engine показує, які поля діагнозу, стадії, біомаркерів і безпеки змінюють план. "
+        "<strong>Жодних реальних пацієнтських даних.</strong> Чернетка зберігається у browser localStorage."
+    )
     return f"""<!DOCTYPE html>
 <html lang="{'en' if target_lang == 'en' else 'uk'}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · {'Try it' if target_lang == 'en' else 'Спробувати'}</title>
+<title>OpenOnco · {page_title}</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -2777,9 +2788,9 @@ def render_try(
 {_render_top_bar(active="try", target_lang=target_lang, lang_switch_href=_lang_switch_href("try", target_lang))}
 
 <main class="try-page">
-  <h1>{'Try it with a virtual patient' if target_lang == 'en' else 'Спробувати з віртуальним пацієнтом'}</h1>
+  <h1>{page_title}</h1>
   <p class="lead">
-    {'Fill in a short questionnaire for a specific disease — the in-browser engine (Pyodide) shows you immediately which fields move the plan. <strong>No real patient data.</strong> Drafts are stored in your browser localStorage.' if target_lang == 'en' else 'Заповни короткий опитувальник по конкретній хворобі — engine у браузері (Pyodide) одразу показує які поля тригерять зміну плану. <strong>Жодних реальних пацієнтських даних.</strong> Чернетка зберігається у browser localStorage.'}
+    {page_lead}
   </p>
 
   <!-- Top status banner stays for loading/warnings. Success messages live in
@@ -5190,7 +5201,7 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         '.case-bar a{color:#86efac;text-decoration:none;margin-left:14px;}'
         '.case-bar a:hover{text-decoration:underline;}'
         '@media print{.oo-topbar-host,.case-bar{display:none;}}'
-        '@media (max-width:700px){'
+        '@media (max-width:900px){'
         '.oo-topbar-host .top-bar{flex-wrap:wrap;gap:8px;}'
         '.oo-topbar-host .top-nav{order:3;flex-basis:100%;margin:0;justify-content:center;}'
         '.oo-topbar-host .top-right{gap:8px;flex-wrap:wrap;justify-content:flex-end;}'
