@@ -431,6 +431,57 @@ def test_standard_nsclc_ihc_and_negative_drivers_do_not_block_validation():
     assert validation.unsupported_mentions == ()
 
 
+def test_diagnostic_lineage_ihc_vocabulary_covers_common_biopsy_panels():
+    markers = [
+        "AE1/AE3+",
+        "CK7+",
+        "CK20-",
+        "CDX2+",
+        "SATB2+",
+        "GATA3+",
+        "TRPS1+",
+        "PAX8+",
+        "WT1+",
+        "RCC marker+",
+        "NKX3.1+",
+        "Uroplakin II+",
+        "Calretinin+",
+        "D2-40+",
+        "SOX10+",
+        "S100+",
+        "HMB-45+",
+        "Melan-A+",
+        "Synaptophysin+",
+        "Chromogranin A+",
+        "INSM1+",
+        "Desmin+",
+        "SMA+",
+        "Myogenin+",
+        "MyoD1+",
+        "CD31+",
+        "ERG+",
+        "DOG1+",
+        "CD117+",
+        "SALL4+",
+        "OCT3/4+",
+        "GFAP+",
+        "OLIG2+",
+        "INI1 loss",
+        "BRG1 loss",
+        "BAP1 loss",
+        "MTAP loss",
+        "EBER ISH+",
+        "CD45+",
+        "PAX5+",
+        "CD3+",
+        "TdT+",
+        "MPO+",
+    ]
+
+    for marker in markers:
+        assert cq._is_non_blocking_biomarker_mention(marker), marker
+
+
 def test_prompt_injection_guard_blocks_before_openai(monkeypatch):
     def fail_call(*args, **kwargs):  # pragma: no cover - should never run
         raise AssertionError("OpenAI should not be called for prompt-injection text")

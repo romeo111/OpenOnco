@@ -221,6 +221,31 @@ def _compact_term(text: Any) -> str:
     return re.sub(r"[^a-zа-яіїєґ0-9]+", "", _normalize_term(text), flags=re.IGNORECASE)
 
 
+_STATUS_SUFFIX_COMPACT_TERMS = frozenset(
+    _compact_term(term)
+    for term in (
+        "positive",
+        "negative",
+        "pos",
+        "neg",
+        "loss",
+        "retained",
+        "high",
+        "low",
+        "expressed",
+        "not expressed",
+    )
+)
+
+
+def _without_trailing_digits(value: str) -> str:
+    return re.sub(r"\d+$", "", value)
+
+
+def _status_suffix_matches(suffix: str) -> bool:
+    return bool(suffix) and suffix in _STATUS_SUFFIX_COMPACT_TERMS
+
+
 def _iter_strings(value: Any) -> list[str]:
     if isinstance(value, str):
         return [value]
@@ -312,7 +337,12 @@ def _known_term(mention: str, *, ids: frozenset[str], terms: frozenset[str], com
         return True
     norm = _normalize_term(raw)
     compact = _compact_term(raw)
-    if norm in terms or compact in compact_terms:
+    if _matches_term_or_status_suffix(
+        norm=norm,
+        compact=compact,
+        terms=terms,
+        compact_terms=compact_terms,
+    ):
         return True
     if len(norm) < 3:
         return False
@@ -322,6 +352,46 @@ def _known_term(mention: str, *, ids: frozenset[str], terms: frozenset[str], com
         if norm.startswith(term + " ") or norm.startswith(term + "-"):
             return True
     return False
+
+
+def _matches_term_or_status_suffix(
+    *,
+    norm: str,
+    compact: str,
+    terms: frozenset[str],
+    compact_terms: frozenset[str],
+) -> bool:
+    compact_no_digits = _without_trailing_digits(compact)
+    if norm in terms or compact in compact_terms or compact_no_digits in compact_terms:
+        return True
+    for term in compact_terms:
+        if len(term) < 3:
+            continue
+        suffix = compact.removeprefix(term) if compact.startswith(term) else ""
+        if _status_suffix_matches(suffix):
+            return True
+        suffix = compact_no_digits.removeprefix(term) if compact_no_digits.startswith(term) else ""
+        if _status_suffix_matches(suffix):
+            return True
+    return False
+
+
+@lru_cache(maxsize=1)
+def _diagnostic_ihc_vocabulary() -> tuple[frozenset[str], frozenset[str]]:
+    loaded = load_content(KB_ROOT)
+    terms: set[str] = set()
+    for entity_id, info in loaded.entities_by_id.items():
+        if info.get("type") != "biomarkers":
+            continue
+        data = info.get("data") or {}
+        if not isinstance(data, dict):
+            continue
+        if data.get("biomarker_type") != "protein_expression_ihc":
+            continue
+        if data.get("oncokb_skip_reason") != "ihc_no_variant":
+            continue
+        terms.update(_entity_terms(entity_id, data))
+    return frozenset(terms), frozenset(_compact_term(term) for term in terms)
 
 
 def _walk_profile_ids(value: Any) -> tuple[set[str], set[str]]:
@@ -436,7 +506,15 @@ _NON_BLOCKING_BIOMARKER_MENTIONS = {
 def _is_non_blocking_biomarker_mention(mention: str) -> bool:
     norm = _normalize_term(mention)
     plain = re.sub(r"[^a-z0-9\s-]+", " ", norm)
-    compact = re.sub(r"[^a-z0-9]+", "", norm)
+    compact = _compact_term(norm)
+    ihc_terms, ihc_compact_terms = _diagnostic_ihc_vocabulary()
+    if _matches_term_or_status_suffix(
+        norm=norm,
+        compact=compact,
+        terms=ihc_terms,
+        compact_terms=ihc_compact_terms,
+    ):
+        return True
     if norm in _NON_BLOCKING_BIOMARKER_MENTIONS or compact in _NON_BLOCKING_BIOMARKER_MENTIONS:
         return True
     if re.search(r"\b(brca1|cdx2|ck7|ck20|dpd|dpyd|ebv|er|hrd|idh|lauren|napsin|nst|p40|p53|palb2|pr|signet|smad4|ttf)\b", plain):
