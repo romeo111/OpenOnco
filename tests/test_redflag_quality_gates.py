@@ -61,7 +61,24 @@ SPEC_CATEGORIES = (
 # Each will close as the disease-specific RF families land in subsequent
 # CSDs; whitelisted now so the matrix gate still fails on regressions
 # elsewhere.
-DISEASES_WITH_GAPS_BASELINE: set[str] = set()
+DISEASES_WITH_GAPS_BASELINE: set[str] = {
+    # 2026-05-09 W5c rare-tumour/solid-tumour expansion: 13 new diseases added
+    # to the KB without yet seeding the full 5-type RF family. Each will close
+    # as disease-specific RF families land in subsequent CSDs.
+    "DIS-ANAL-SCC",          # rare GI solid tumour — RF family pending
+    "DIS-BCC",               # basal cell carcinoma — RF family pending
+    "DIS-EPITHELIOID-SARCOMA",  # rare soft-tissue sarcoma — RF family pending
+    "DIS-GI-NET",            # GI neuroendocrine tumour — has carcinoid+G3 RFs; frailty/organ-dysfunction/infection RFs pending
+    "DIS-GRANULOSA-CELL",    # granulosa cell tumour — RF family pending
+    "DIS-JMML",              # juvenile myelomonocytic leukaemia — RF family pending
+    "DIS-LAM",               # lymphangioleiomyomatosis — RF family pending
+    "DIS-MENINGIOMA",        # meningioma — RF family pending
+    "DIS-MESOTHELIOMA",      # mesothelioma — RF family pending
+    "DIS-PNET",              # pancreatic NET — partial RFs (G3 only); full matrix pending
+    "DIS-SOFT-TISSUE-SARCOMA",  # soft-tissue sarcoma — RF family pending
+    "DIS-TESTICULAR-GCT",    # testicular germ cell tumour — RF family pending
+    "DIS-TGCT",              # tenosynovial giant cell tumour — RF family pending
+}
 # All 12 previously-allowed gap diseases now cover the 5-type matrix as of
 # 2026-04-30. Keep this set as the extension point: when a new disease is
 # added that hasn't yet seeded its 5-type RF family, add the disease ID

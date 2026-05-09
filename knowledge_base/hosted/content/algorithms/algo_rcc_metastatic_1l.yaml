@@ -22,9 +22,18 @@ decision_tree:
   # Non-clear cell (papillary, chromophobe, sarcomatoid-predominant, collecting duct)
   # follow separate NCCN guidance (cabozantinib preferred for papillary; clinical trial).
   - step: 1
+    # Histology gate: fires (if_true) when clear-cell histology is confirmed.
+    # Non-clear-cell subtypes fall to null (separate NCCN pathway).
     evaluate:
       any_of:
-        - condition: "Clear-cell (conventional) RCC confirmed on pathology"
+        - finding: "histology"
+          value: "clear_cell_rcc"
+        - finding: "histologic_subtype"
+          value: "CLEAR_CELL"
+        - finding: "histologic_subtype"
+          value: "clear_cell"
+        - finding: "rcc_histology"
+          value: "clear_cell"
     if_true:
       next_step: 2
     if_false:
@@ -63,12 +72,20 @@ decision_tree:
       notes: "IMDC favorable + ECOG 2 or limited fitness: pembro+axi preferred (KEYNOTE-426 includes ECOG 0-2; less TKI toxicity than lenv+pembro)."
 
   # Step 3b — IMDC intermediate/poor. All 4 preferred regimens eligible.
-  # Route based on ipilimumab eligibility and patient profile.
+  # Route based on ipilimumab eligibility: fire if_true when no ipi contraindication.
   - step: 3b
+    # none_of: fires True when none of the ipi contraindications are active.
     evaluate:
-      all_of:
-        - condition: "No active autoimmune disease; no prior transplant; ECOG 0-1"
-        - condition: "Ipi-eligible (no significant autoimmune history, patient accepts 4-dose ipi induction)"
+      none_of:
+        - finding: "active_autoimmune_disease"
+          value: true
+        - finding: "prior_organ_transplant"
+          value: true
+        - finding: "ipi_contraindicated"
+          value: true
+        - finding: "ecog"
+          threshold: 2
+          comparator: ">="
     if_true:
       result: IND-RCC-METASTATIC-1L-NIVO-IPI
       notes: >

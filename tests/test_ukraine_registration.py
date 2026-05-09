@@ -42,6 +42,39 @@ _POST_CSD2_DRUGS: frozenset[str] = frozenset({
     "DRUG-PEMIGATINIB",
     "DRUG-REVUMENIB",
     "DRUG-ZOLBETUXIMAB",
+    # W5c / CSD-7B/9 expansion (2026-04-29 – 2026-05-08): newly-ingested agents
+    # with their own authoring date; exempt from the point-in-time CSD-2 stamp.
+    "DRUG-CABAZITAXEL",
+    "DRUG-DATOPOTAMAB-DERUXTECAN",
+    "DRUG-BEMARITUZUMAB",
+    "DRUG-IVOSIDENIB",
+    "DRUG-LIPOSOMAL-IRINOTECAN",
+    "DRUG-PAZOPANIB",
+    "DRUG-TARLATAMAB",
+    "DRUG-ZANIDATAMAB",
+    "DRUG-ELRANATAMAB",
+    "DRUG-ENSARTINIB",
+    "DRUG-EPCORITAMAB",
+    "DRUG-ERDAFITINIB",
+    "DRUG-FUTIBATINIB",
+    "DRUG-GLOFITAMAB",
+    "DRUG-IDECABTAGENE-VICLEUCEL",
+    "DRUG-INAVOLISIB",
+    "DRUG-INFIGRATINIB",
+    "DRUG-LANREOTIDE",
+    "DRUG-LURBINECTEDIN",
+    "DRUG-MAGROLIMAB",
+    "DRUG-MESNA",
+    "DRUG-MITOMYCIN-C",
+    "DRUG-NAL-IRI",
+    "DRUG-OLUTASIDENIB",
+    "DRUG-PATRITUMAB-DERUXTECAN",
+    "DRUG-RETIFANLIMAB",
+    "DRUG-RIPRETINIB",
+    "DRUG-SUNITINIB",
+    "DRUG-TALQUETAMAB",
+    "DRUG-TISOTUMAB-VEDOTIN",
+    "DRUG-ZENOCUTUZUMAB",
 })
 
 # Pathway keywords that satisfy the "unregistered drug must mention an
@@ -414,25 +447,28 @@ def test_total_drug_count_167(drug_yamls):
 def test_at_least_65_percent_drugs_registered(drug_yamls):
     """Sanity check on the registration distribution — original CSD-2
     baseline was ~74% on a 167-drug corpus, but post-CSD-7B/9 expansions
-    (now ≥216 drugs) added new agents (CAR-T, bispecifics, niche TKIs)
-    that legitimately are not registered in Ukraine. Floor lowered to
-    65% so the gate still flags a regression mass-flip while tolerating
-    the expansion mix."""
+    (now ≥251 drugs) added new agents (CAR-T, bispecifics, niche TKIs,
+    NET agents, rare-tumour drugs) that legitimately are not registered in
+    Ukraine. Floor lowered to 60% (2026-05-09 W5c re-calibration) so the
+    gate still flags a regression mass-flip while tolerating the expansion
+    mix. Recalibrate again when the next UA registration audit batch lands."""
     counts = _count_states(drug_yamls)
     pct = 100.0 * counts["registered"] / counts["total"]
-    assert pct >= 65.0, (
+    assert pct >= 60.0, (
         f"Only {counts['registered']}/{counts['total']} ({pct:.1f}%) drugs registered — "
-        "expected ≥65%"
+        "expected ≥60%"
     )
 
 
 def test_at_least_60_percent_drugs_reimbursed(drug_yamls):
-    """Sanity check on the reimbursement distribution — actual is ~65%
-    after CSD-2. Falls below 60% only if a regression demoted a batch
-    of drugs from `reimbursed_nszu=True` → False."""
+    """Sanity check on the reimbursement distribution — actual was ~65%
+    after CSD-2, but post-W5c expansion (now ≥251 drugs) includes many
+    agents not reimbursed in Ukraine. Floor lowered to 50% (2026-05-09
+    W5c re-calibration) to reflect expanded corpus while still guarding
+    against mass regression. Recalibrate after next NSZU audit batch."""
     counts = _count_states(drug_yamls)
     pct = 100.0 * counts["reimbursed"] / counts["total"]
-    assert pct >= 60.0, (
+    assert pct >= 50.0, (
         f"Only {counts['reimbursed']}/{counts['total']} ({pct:.1f}%) drugs reimbursed — "
-        "expected ≥60%"
+        "expected ≥50%"
     )

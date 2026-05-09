@@ -22,11 +22,26 @@ decision_tree:
   # (EV-associated keratopathy). No CrCl cutoff — EV+pembro works regardless
   # of cisplatin eligibility (EV-302 enrolled both groups).
   - step: 1
+    # EV+pembro eligibility: fires (if_true) unless a contraindication is present.
+    # none_of fires when no contraindication is active → patient is EV-eligible.
     evaluate:
-      all_of:
-        - condition: "No pre-existing severe (Grade ≥2) peripheral neuropathy"
-        - condition: "No uncontrolled diabetes mellitus (HbA1c > 10% or recurrent DKA)"
-        - condition: "No severe corneal disease or active keratopathy"
+      none_of:
+        - finding: "neuropathy_grade"
+          threshold: 2
+          comparator: ">="
+        - finding: "peripheral_neuropathy_grade"
+          threshold: 2
+          comparator: ">="
+        - finding: "diabetic_neuropathy"
+          value: true
+        - finding: "diabetes_status"
+          value: "uncontrolled"
+        - finding: "ocular_disease"
+          value: "severe"
+        - finding: "severe_corneal_disease"
+          value: true
+        - finding: "ev_contraindicated"
+          value: true
     if_true:
       result: IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO
       notes: >
