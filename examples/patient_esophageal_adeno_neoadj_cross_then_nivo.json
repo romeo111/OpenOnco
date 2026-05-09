@@ -1,7 +1,8 @@
 {
   "patient_id": "ESOPH-CROSS-CM577-001",
-  "comment": "Synthetic resectable distal esophageal adenocarcinoma, cT3N1M0, Barrett-driven, ECOG 1, no severe dysphagia. Engine routes ALGO-ESOPH-RESECTABLE-1L step 1 (resectable + ECOG-fit) → IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT (carboplatin+paclitaxel weekly + RT 41.4 Gy, 5-yr OS ~47%, NCCN cat 1). KB drift: ALGO-ESOPH-RESECTABLE-1L only emits CROSS-NEOADJUVANT; IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS (CheckMate-577 adjuvant nivolumab × 1y for ypT+/ypN+ residual, DFS 22 vs 11 mo) is not wired into algorithm output_indications, so engine surfaces only the neoadjuvant phase. Findings include not_pcr / residual disease flags so a future revise-step (line 2) could reach the adjuvant IND once ALGO is extended (PROPOSAL §17 phasing).",
+  "comment": "Synthetic resectable distal esophageal adenocarcinoma, cT3N1M0, Barrett-driven, ECOG 1, post-CROSS non-pCR (ypT+/ypN+). disease_state=resectable_perioperative routes to ALGO-ESOPH-RESECTABLE-1L; step 0 fires RF-ESOPHAGEAL-POST-CROSS-NON-PCR → IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS (CheckMate-577 adjuvant nivolumab × 1y, DFS 22 vs 11 mo, HR 0.69).",
   "disease": {"id": "DIS-ESOPHAGEAL"},
+  "disease_state": "resectable_perioperative",
   "line_of_therapy": 1,
   "biomarkers": {
     "BIO-HER2-SOLID": "negative",
