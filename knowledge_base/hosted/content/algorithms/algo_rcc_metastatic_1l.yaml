@@ -24,6 +24,12 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
+        - finding: "histology"
+          value: "clear_cell_rcc"
+        - finding: "histologic_subtype"
+          value: "CLEAR_CELL"
+        - finding: "histologic_subtype"
+          value: "clear_cell"
         - condition: "Clear-cell (conventional) RCC confirmed on pathology"
     if_true:
       next_step: 2
@@ -67,8 +73,7 @@ decision_tree:
   - step: 3b
     evaluate:
       all_of:
-        - condition: "No active autoimmune disease; no prior transplant; ECOG 0-1"
-        - condition: "Ipi-eligible (no significant autoimmune history, patient accepts 4-dose ipi induction)"
+        - red_flag: RF-FITNESS-ECOG-FIT
     if_true:
       result: IND-RCC-METASTATIC-1L-NIVO-IPI
       notes: >
@@ -78,6 +83,7 @@ decision_tree:
         if patient/MDT prefers TKI-containing regimen or ipi not suitable.
     if_false:
       next_step: 4
+    notes: "Wired RF-FITNESS-ECOG-FIT (ECOG 0-1) as ipi-eligible proxy; autoimmune exclusion remains MDT-evaluated until RF-RCC-AUTOIMMUNE-CONTRAINDICATED is authored. IMDC int/poor + ECOG 0-1 → nivo+ipi preferred (CheckMate-214)."
 
   # Step 4 — ICI+TKI selection for fit patients (all IMDC groups reaching this step).
   # Three equally valid NCCN category-1 regimens; differentiate by toxicity profile

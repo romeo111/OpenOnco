@@ -1,0 +1,51 @@
+id: ALGO-DLBCL-3L
+applicable_to_disease: DIS-DLBCL-NOS
+applicable_to_line_of_therapy: 3
+purpose: >
+  3L+ DLBCL. Routes CAR-T-eligible patients to axi-cel (IND-DLBCL-3L-AXICEL-CART);
+  CAR-T-ineligible post-2L patients to loncastuximab (IND-DLBCL-3L-LONCASTUXIMAB,
+  LOTIS-2 ORR 48%); bispecifics (epcoritamab, glofitamab) surfaced as alternatives.
+output_indications:
+  - IND-DLBCL-3L-LONCASTUXIMAB
+  - IND-DLBCL-3L-AXICEL-CART
+  - IND-DLBCL-3L-EPCORITAMAB
+  - IND-DLBCL-3L-GLOFITAMAB
+default_indication: IND-DLBCL-3L-LONCASTUXIMAB
+alternative_indication: IND-DLBCL-3L-AXICEL-CART
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - red_flag: RF-CAR-T-ELIGIBLE
+    if_true:
+      result: IND-DLBCL-3L-AXICEL-CART
+      notes: >
+        CAR-T-eligible 3L+ DLBCL: axi-cel (ZUMA-1 ORR 83%, CR 58%) preferred over
+        liso-cel (TRANSFORM) when CD19+ confirmed and organ function adequate.
+    if_false:
+      next_step: 2
+    notes: "RF-CAR-T-ELIGIBLE composite: ECOG ≤2, LVEF ≥50, CrCl ≥30, bilirubin ≤2×ULN, age <75, no active uncontrolled infection, CD19+."
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-DLBCL-CART-INELIGIBLE-POST-2L
+    if_true:
+      result: IND-DLBCL-3L-LONCASTUXIMAB
+      notes: >
+        CAR-T-ineligible post-2L DLBCL: loncastuximab tesirine (LOTIS-2 Caimi 2021;
+        ORR 48%, CR 24%, mPFS 4.9 mo, mOS 9.5 mo). Off-the-shelf outpatient CD19-targeted
+        ADC; ideal for frail/elderly patients without CAR-T access.
+    if_false:
+      result: IND-DLBCL-3L-LONCASTUXIMAB
+      notes: "Default 3L when CAR-T ineligible and CAR-T-ineligible RF not explicitly wired."
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+last_reviewed: '2026-05-09'
+draft: true
+notes: >
+  Scaffold 3L+ algorithm. Key gaps: (1) Pola-R-Benda cross-line from 2L not modeled
+  here; (2) liso-cel TRANSFORM (early-relapse 2L CAR-T) not separated from 3L+ axi-cel;
+  (3) bispecifics (epcoritamab EPCORE-NHL-1, glofitamab GLEAM) wired as output_indications
+  but not decision-tree-stepped (surfaced as alternatives). Promote draft:false after
+  CHARTER §6.1 clinical co-lead review.

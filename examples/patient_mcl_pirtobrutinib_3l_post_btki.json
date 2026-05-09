@@ -1,11 +1,11 @@
 {
   "patient_id": "MCL-3L-PIRTO-001",
-  "comment": "Synthetic r/r MCL post-cBTKi: 1L R-bendamustine + acalabrutinib (NCCN unfit-track), progression at 14 mo with BTK-C481S mutation documented on repeat NGS. Age 74, ECOG 2, LVEF 38% → fails RF-CAR-T-ELIGIBLE composite (LVEF<40 fails). Engine routes via ALGO-MCL-2L (line_of_therapy=2 wires the algo): step 1 false (RF-PRIOR-BTKI-PROGRESSION fires, none_of fails) → step 2 true (RF-PRIOR-BTKI-PROGRESSION matches) → step 21 false (CAR-T-ineligible) → step 3 free-text conditions (post-cBTKi failure + C481-mut). KNOWN DRIFT: ALGO-MCL-2L step 3 conditions are not yet RF-wired (algo notes 'Free-text condition without matching disease-scoped RF; engine routes to default'), so default lands on IND-MCL-2L-ACALABRUTINIB despite the patient already having failed acalabrutinib clinically. IND-MCL-3L-PIRTOBRUTINIB IS surfaced as a standard alternative track (BRUIN MCL-321, ORR 50% post-cBTKi). Tumor-board reviewer should pick the alternative pirtobrutinib track, not the engine default; this case primarily illustrates the post-cBTKi alternative-track presentation. Distinct from existing MCL fit-younger / unfit-or-tp53 cases (those are 1L).",
+  "comment": "Synthetic r/r MCL post-cBTKi: 1L R-bendamustine + acalabrutinib (NCCN unfit-track), progression at 14 mo with BTK-C481S mutation documented on repeat NGS. Age 74, ECOG 2, LVEF 38% → fails RF-CAR-T-ELIGIBLE composite (LVEF<40 fails). Updated 2026-05-09: line_of_therapy=3, prior_lines_count=2 (added 2L salvage Bendamustine+R). ALGO-MCL-3L routes via RF-PRIOR-BTKI-PROGRESSION + RF-CAR-T-ELIGIBLE_false → IND-MCL-3L-PIRTOBRUTINIB. LVEF 38% fails CAR-T LVEF gate (requires ≥50%). BRUIN MCL-321 ORR 50% post-cBTKi.",
   "disease": {
     "id": "DIS-MCL",
     "icd_o_3_morphology": "9673/3"
   },
-  "line_of_therapy": 2,
+  "line_of_therapy": 3,
   "biomarkers": {
     "BIO-CD20-IHC": "positive",
     "BIO-CYCLIN-D1-IHC": "positive"
@@ -22,8 +22,8 @@
     "ki67_above_30_percent": true,
     "tp53_mutation": false,
     "del_17p": false,
-    "prior_lines_count": 1,
-    "prior_regimens": ["Bendamustine + rituximab + acalabrutinib (1L, 14 mo, PD)"],
+    "prior_lines_count": 2,
+    "prior_regimens": ["Bendamustine + rituximab + acalabrutinib (1L, 14 mo, PD)", "Bendamustine + rituximab (2L salvage attempt, 2 cycles, PD at 3 mo)"],
     "prior_btki_received": true,
     "prior_btki_progression": true,
     "best_response_to_btki": "PD",

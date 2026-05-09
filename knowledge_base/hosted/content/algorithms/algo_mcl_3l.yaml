@@ -1,0 +1,39 @@
+id: ALGO-MCL-3L
+applicable_to_disease: DIS-MCL
+applicable_to_line_of_therapy: 3
+purpose: >
+  3L+ MCL post-BTKi. Routes post-BTKi + CAR-T-eligible patients to brexucabtagene
+  autoleucel (ZUMA-2 ORR 91%, CR 68%); post-BTKi + CAR-T-ineligible (or BTK-C481-mut)
+  to pirtobrutinib (BRUIN MCL-321, ORR 50% post-cBTKi). Default: pirtobrutinib.
+output_indications:
+  - IND-MCL-3L-PIRTOBRUTINIB
+  - IND-MCL-3L-BREXUCEL-CART
+default_indication: IND-MCL-3L-PIRTOBRUTINIB
+alternative_indication: IND-MCL-3L-BREXUCEL-CART
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - red_flag: RF-PRIOR-BTKI-PROGRESSION
+        - red_flag: RF-CAR-T-ELIGIBLE
+    if_true:
+      result: IND-MCL-3L-BREXUCEL-CART
+      notes: >
+        Post-BTKi + CAR-T-eligible: brexucabtagene autoleucel (ZUMA-2 ORR 91%,
+        CR 68%, 2-yr OS 61%). Preferred when LVEF ≥50%, adequate organ function,
+        CAR-T centre accessible, no active CNS MCL.
+    if_false:
+      result: IND-MCL-3L-PIRTOBRUTINIB
+      notes: >
+        Post-BTKi + CAR-T-ineligible (or BTK C481-mut, LVEF <50%, ECOG ≥2):
+        pirtobrutinib (BRUIN MCL-321; ORR 50%, median DoR 22 mo post-cBTKi).
+        Non-covalent BTKi retains activity vs C481-substitution mutations.
+sources:
+  - SRC-NCCN-MCL-2025
+  - SRC-ESMO-MCL-2024
+last_reviewed: '2026-05-09'
+draft: true
+notes: >
+  3L+ MCL scaffold. Patient fixture: post-cBTKi (acalabrutinib), BTK-C481S+,
+  LVEF 38% (fails CAR-T LVEF gate) → RF-PRIOR-BTKI-PROGRESSION fires, RF-CAR-T-ELIGIBLE
+  does not fire → IND-MCL-3L-PIRTOBRUTINIB. Promote draft:false after §6.1 review.

@@ -23,10 +23,8 @@ decision_tree:
   # of cisplatin eligibility (EV-302 enrolled both groups).
   - step: 1
     evaluate:
-      all_of:
-        - condition: "No pre-existing severe (Grade ≥2) peripheral neuropathy"
-        - condition: "No uncontrolled diabetes mellitus (HbA1c > 10% or recurrent DKA)"
-        - condition: "No severe corneal disease or active keratopathy"
+      none_of:
+        - red_flag: RF-UROTHELIAL-EV-CONTRAINDICATED
     if_true:
       result: IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO
       notes: >
@@ -38,8 +36,10 @@ decision_tree:
       next_step: 2
     notes: >
       EV eligibility gate covers MMAE toxicity-based exclusions (neuropathy,
-      hyperglycemia, keratopathy). RF authoring for composite exclusion criteria
-      still owed (RF-UROTHELIAL-EV-INELIGIBLE). Until then, evaluated as MDT text.
+      hyperglycemia, keratopathy). Wired RF-UROTHELIAL-EV-CONTRAINDICATED
+      (neuropathy ≥2, diabetic neuropathy, severe skin/ocular disease) as EV
+      eligibility gate; patients without explicit contraindication → EV+pembro
+      preferred (EV-302 mOS 31.5 vs 16.1 mo).
 
   # Step 2 — EV+pembro ineligible. Route by cisplatin eligibility.
   # Cisplatin-eligible: GC or dose-dense MVAC followed by avelumab maintenance.

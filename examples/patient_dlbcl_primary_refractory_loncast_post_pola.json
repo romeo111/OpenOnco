@@ -1,11 +1,11 @@
 {
   "patient_id": "DLBCL-LONCAST-001",
-  "comment": "Synthetic primary-refractory DLBCL post 1L R-CHOP (PD at 4 mo, treatment stopped) → 2L Pola-R-CHP (early-switch attempt to anti-CD79b combination, transient PR then PD at 3 mo). Age 71, ECOG 2, frail, multiple grade-2 comorbidities; not transplant-eligible AND not CAR-T-eligible (no UA international referral pathway). Clinically the textbook indication is loncastuximab tesirine 3L+ (LOTIS-2 Caimi 2021 Lancet Oncol; ORR 48%, CR 24%, mPFS 4.9 mo, mOS 9.5 mo) — off-the-shelf outpatient ADC ideally suited for non-CAR-T-eligible frail patient. KB-DRIFT NOTE: engine routes ALGO-DLBCL-2L (LOT=2 set per algorithm match constraint; clinically post-2L) → standard-track DEFAULT = IND-DLBCL-2L-POLA-R-BENDAMUSTINE (step 3 fallback), aggressive-track ALTERNATIVE = IND-DLBCL-3L-AXICEL-CART. The intended IND-DLBCL-3L-LONCASTUXIMAB is NOT surfaced because (a) it is not in ALGO-DLBCL-2L.output_indications list, (b) its YAML has empty recommended_regimen (no REG-LONCASTUXIMAB-TESIRINE entity yet — flagged STUB), and (c) no ALGO-DLBCL-3L exists. Surfacing real KB drift: loncastuximab pathway needs (i) REG-LONCASTUXIMAB-TESIRINE authoring, (ii) inclusion in ALGO-DLBCL-2L step branches gated on CAR-T-ineligible composite, (iii) and/or new ALGO-DLBCL-3L for frail post-2L cohort. Default Pola-BR is clinically inappropriate for this patient (already failed Pola-based 2L Pola-R-CHP — re-treating with same MMAE class is futile + neuropathy risk Grade 1 already present).",
+  "comment": "Synthetic primary-refractory DLBCL post 1L R-CHOP (PD at 4 mo, treatment stopped) → 2L Pola-R-CHP (early-switch attempt to anti-CD79b combination, transient PR then PD at 3 mo). Age 71, ECOG 2, frail, multiple grade-2 comorbidities; not transplant-eligible AND not CAR-T-eligible (no UA international referral pathway). Clinically the textbook indication is loncastuximab tesirine 3L+ (LOTIS-2 Caimi 2021 Lancet Oncol; ORR 48%, CR 24%, mPFS 4.9 mo, mOS 9.5 mo) — off-the-shelf outpatient ADC ideally suited for non-CAR-T-eligible frail patient. Updated 2026-05-09: line_of_therapy=3 (post-2L) + new ALGO-DLBCL-3L routes RF-DLBCL-CART-INELIGIBLE-POST-2L → IND-DLBCL-3L-LONCASTUXIMAB (LOTIS-2, ORR 48%). Age 71, ECOG 2, CAR-T-ineligible (LVEF 52 but frailty+access barrier → RF-DLBCL-CART-INELIGIBLE-POST-2L composite fires).",
   "disease": {
     "id": "DIS-DLBCL-NOS",
     "icd_o_3_morphology": "9680/3"
   },
-  "line_of_therapy": 2,
+  "line_of_therapy": 3,
   "biomarkers": {
     "BIO-CD20-IHC": "positive"
   },
