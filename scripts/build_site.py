@@ -204,6 +204,11 @@ def _gather_engine_entries() -> list[tuple[Path, str, str | None]]:
     attributed_disease_id) tuples for every file that belongs in any
     bundle. attributed_disease_id is None for files that go in core.
     Code, schemas, validation, and shared content are always None.
+
+    Explicitly excluded from all bundles:
+    - ``hosted/content/cache/`` — ClinicalTrials.gov HTTP response caches
+      written by the ingestion pipeline. These are build-time artefacts and
+      must not be shipped to browsers.
     """
     src = REPO_ROOT / "knowledge_base"
     entries: list[tuple[Path, str, str | None]] = []
@@ -222,7 +227,10 @@ def _gather_engine_entries() -> list[tuple[Path, str, str | None]]:
                 continue
             if "__pycache__" in path.parts or path.suffix in {".pyc", ".pyo"}:
                 continue
-            arcname = "knowledge_base/" + str(path.relative_to(src)).replace("\\", "/")
+            rel = str(path.relative_to(src)).replace("\\", "/")
+            if rel.startswith("hosted/content/cache/"):
+                continue
+            arcname = "knowledge_base/" + rel
 
             attributed: str | None = None
             # Only YAML under hosted/content/<disease-scoped-dir>/ is
@@ -272,6 +280,9 @@ def bundle_engine(output_dir: Path) -> dict:
     path — the monolithic bundle had crossed the 3 MB ceiling and was
     only kept as a safety fallback. Any stale monolithic on disk is
     cleaned up so deploys don't carry the old file forever.
+
+    ``hosted/content/cache/`` (ClinicalTrials.gov HTTP response caches)
+    is excluded from all bundles — see ``_gather_engine_entries``.
 
     Returns a dict whose `core_version` field is a 12-char SHA-256
     prefix of the core zip — used as a `?v=...` cache-buster on the
