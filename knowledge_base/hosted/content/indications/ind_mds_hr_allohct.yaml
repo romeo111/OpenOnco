@@ -3,7 +3,9 @@ plan_track: aggressive
 
 applicable_to:
   disease_id: DIS-MDS-HR
-  line_of_therapy: 1
+  # line_of_therapy intentionally unset: alloHCT is valid at 1L (upfront for very-high-risk)
+  # AND at 2L (post-HMA failure). ALGO-MDS-HR-2L routes here for transplant-eligible patients
+  # after azacitidine failure. No separate alloHCT indication exists for 2L.
   stage_requirements:
     - "MDS-HR (IPSS-R high / very high; IPSS-M High / Very High; MDS-IB1/IB2)"
     - "Transplant-eligible: age <70-75 + adequate organ function + ECOG ≤2 + adequate caregiver support"
