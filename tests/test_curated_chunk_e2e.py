@@ -83,7 +83,7 @@ CASE_TREATMENT_GOLDENS: dict[str, str] = {
     "patient_crc_metastatic_msi_h_pembro_mono.json": "IND-CRC-METASTATIC-1L-MSI-H-PEMBRO",
     "patient_crc_metastatic_ras_mut_folfox_bev.json": "IND-CRC-METASTATIC-1L-FOLFOX-BEV",
     "patient_crc_metastatic_ras_wt_left_folfox_cetux.json": "IND-CRC-METASTATIC-1L-RAS-WT-LEFT",
-    "patient_crc_stage_iii_adjuvant_folfox.json": "IND-CRC-METASTATIC-1L-FOLFOX-BEV",
+    "patient_crc_stage_iii_adjuvant_folfox.json": "IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX",
     "patient_dlbcl_2l_pola_r_b.json": "IND-DLBCL-2L-POLA-R-BENDAMUSTINE",
     "patient_dlbcl_3l_axi_cel.json": "IND-DLBCL-2L-POLA-R-BENDAMUSTINE",
     "patient_dlbcl_primary_refractory_loncast_post_pola.json": "IND-DLBCL-3L-LONCASTUXIMAB",
