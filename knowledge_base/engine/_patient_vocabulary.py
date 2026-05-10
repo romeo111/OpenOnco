@@ -619,6 +619,7 @@ PATIENT_ALLOWLIST_ACRONYMS: frozenset[str] = frozenset({
     "DFS", "EFS", "RFS", "CR", "PR", "SD", "PD", "ORR", "DCR", "MRD",
     "ANC", "LVEF", "INR", "PFT", "DLCO", "ECG", "EKG", "ICU", "MRI",
     "MUGA", "CTCAE", "QT", "QTc", "BMI", "LDH", "CRP", "BMD",
+    "HFS",  # Hand-Foot Syndrome (capecitabine/regorafenib toxicity)
     # Drug names that travel as acronyms (INN/brand)
     "5-FU", "BCG", "ATRA", "ATO", "TKI", "ADC", "FU",
     # Standard regimen acronyms (widely cited in patient guides)
@@ -632,8 +633,9 @@ PATIENT_ALLOWLIST_ACRONYMS: frozenset[str] = frozenset({
     "CMV", "TB",
     # Allowed Latin biology fragments
     "DNA", "RNA", "mRNA", "MoA", "AE",
-    # ESCAT tier labels
+    # ESCAT tier labels + bare Roman numerals (stage I–V, grade III etc.)
     "IA", "IB", "IIA", "IIB", "IIIA", "IIIB", "IV", "X",
+    "I", "II", "III", "V",  # bare stage/grade Roman numerals
     # Site / tooling
     "OpenOnco", "GitHub", "MIT", "API", "URL",
     # Routes / common short tokens
@@ -657,7 +659,9 @@ PATIENT_ALLOWLIST_LATIN_WORDS: frozenset[str] = frozenset({
     "until", "progression", "toxicity", "unacceptable", "induction",
     "consolidation", "maintenance", "lymphodepletion", "bridging",
     "salvage", "adjuvant", "neoadjuvant", "first", "second", "third",
-    "high", "low", "risk", "trial", "stage", "line", "grade",
+    "high", "low", "risk", "trial", "trials", "stage", "line", "grade",
+    "metastatic", "periop",  # from regimen total_cycles prose (§6.1 gates KB rewrite)
+    "hand", "foot", "syndrome",  # from "hand-foot syndrome" in drug side-effect text
     # Cycle-day-window structural vocabulary (PATIENT_MODE_SPEC §3.4)
     "each", "infusion", "infusions", "dose", "doses",
     # URL / tooling
@@ -681,6 +685,7 @@ PATIENT_ALLOWLIST_TRIAL_PREFIXES: tuple[str, ...] = (
     "GALACTIC", "ARASENS", "CHAARTED", "LATITUDE", "TITAN", "TROPICAL",
     "DESTINY", "EMBRACA", "PALOMA", "MONALEESA", "MONARCH", "RUBY",
     "ATTRACTION", "TROPiCS", "POSEIDON", "GEMINI", "MARS",
+    "IDEA",  # International Duration Evaluation of Adjuvant chemo (CRC)
 )
 
 
