@@ -1,0 +1,82 @@
+id: RF-ATLL-SHIMOYAMA-INDOLENT
+definition: >
+  Shimoyama smoldering or chronic-favourable subtype of ATLL.
+  Smoldering: ≥5% circulating abnormal lymphocytes, no organ involvement
+  (skin/lung lesion permitted), LDH normal, BUN normal, albumin normal,
+  no hypercalcemia, no lymphadenopathy or organomegaly. Chronic-favourable:
+  similar to smoldering but lymphadenopathy/organomegaly permitted, LDH
+  ≤2× ULN, BUN ≤ULN, albumin ≥ULN, Ca normal, no CNS/bone/GI/effusion.
+  AZT+IFN-α (anti-HTLV-1 mechanism) yields 5-yr OS ~46% vs ~20% for
+  chemotherapy in these subtypes (Bazarbachi 2010 meta-analysis, JNCI).
+  Aggressive subtypes (acute/lymphoma/chronic-unfavourable) do NOT respond
+  to AZT+IFN — route those to CHOEP+mogamulizumab via RF-ATLL-HIGH-RISK-BIOLOGY.
+definition_ua: >
+  Smoldering або chronic-сприятлива підтипи ATLL за Shimoyama 1991.
+  Smoldering: ≥5% аномальних лімфоцитів, відсутність ураження органів
+  (шкіра/легеня допустима), норма LDH, BUN, альбуміну, Ca, без
+  лімфаденопатії чи органомегалії. Chronic-сприятлива: аналогічно,
+  але лімфаденопатія/органомегалія допустима, LDH ≤2× ULN, BUN ≤ULN,
+  альбумін ≥ULN, Ca норма, без ЦНС/кістки/ШКТ/випоту.
+  AZT+IFN-α (анти-HTLV-1 механізм) дає 5-річну OS ~46% проти ~20% для
+  хіміотерапії в цих підтипах (Bazarbachi 2010, JNCI).
+  Агресивні підтипи (гостра/лімфомна/chronic-несприятлива) НЕ відповідають
+  на AZT+IFN — їх маршрутизувати до CHOEP+могамулізумабу через
+  RF-ATLL-HIGH-RISK-BIOLOGY.
+
+trigger:
+  type: clinical_classification
+  any_of:
+    - finding: "shimoyama_subtype"
+      value: "smoldering"
+    - finding: "shimoyama_subtype"
+      value: "chronic_favourable"
+    - finding: "shimoyama_subtype"
+      value: "chronic-favourable"
+    - finding: "atll_subtype"
+      value: "smoldering"
+    - finding: "atll_subtype"
+      value: "chronic_favourable"
+    - finding: "atll_subtype"
+      value: "chronic-favourable"
+    - finding: "shimoyama_indolent"
+      value: true
+
+clinical_direction: de-escalate
+severity: major
+priority: 75
+category: other
+
+relevant_diseases:
+  - DIS-ATLL
+
+branch_targets:
+  ALGO-ATLL-1L: "2"
+
+shifts_algorithm:
+  - ALGO-ATLL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-05-08"
+draft: true
+
+notes: >
+  Shimoyama 1991 (JNCI 83:1034) is the gold-standard ATLL prognostic
+  classifier. Four subtypes: smoldering / chronic-favourable / chronic-
+  unfavourable / acute / lymphoma. This RF captures only the indolent
+  end; chronic-unfavourable routes to aggressive track via lack of this
+  RF (falls through to CHOEP default). Draft pending two-reviewer
+  clinical co-lead signoff (CHARTER §6.1).
+  Exclusion safety: step 1 screens for RF-ATLL-ORGAN-DYSFUNCTION +
+  RF-ATLL-HIGH-RISK-BIOLOGY first — this RF only fires at step 2 after
+  those are negative, so hypercalcemia/aggressive-subtype patients are
+  already routed to CHOEP before this RF is evaluated.
+notes_ua: >
+  Shimoyama 1991 (JNCI 83:1034) — gold-standard прогностичний класифікатор ATLL.
+  Чотири підтипи: smoldering / chronic-сприятливий / chronic-несприятливий /
+  гострий / лімфомний. Цей RF захоплює лише індолентну частину; chronic-
+  несприятливий маршрутизується до агресивного треку через відсутність цього RF
+  (повертається до CHOEP за замовчуванням). Чернетка — очікується підпис двох
+  клінічних співкерівників (CHARTER §6.1).

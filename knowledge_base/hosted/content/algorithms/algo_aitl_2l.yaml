@@ -52,19 +52,28 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
+        - red_flag: RF-AITL-ROMIDEPSIN-INELIGIBLE
+        - finding: "romidepsin_accessible"
+          value: false
+        - finding: "romidepsin_intolerant"
+          value: true
+        - finding: "qtc_prolonged_baseline"
+          value: true
+        - finding: "hdaci_cardiac_contraindication"
+          value: true
         - condition: "Romidepsin inaccessible / intolerant"
         - condition: "Mild baseline arrhythmia, prefer belinostat profile"
     if_true:
       result: IND-AITL-2L-BELINOSTAT
     if_false:
       result: IND-AITL-2L-AZACITIDINE
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Wired via RF-AITL-ROMIDEPSIN-INELIGIBLE (W5c): romidepsin inaccessible (not registered UA 2026, named-patient only), intolerant, or QTc/cardiac contraindication → belinostat (BELIEF 2014; AITL ORR ~46%). Legacy finding lookups + free-text retained."
 
 sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-PTCL-2024
 
-last_reviewed: "2026-04-26"
+last_reviewed: "2026-05-08"
 notes: >
   OOS / wiring gaps:
   (1) Brentuximab vedotin for CD30+ AITL relapse not modeled as 2L

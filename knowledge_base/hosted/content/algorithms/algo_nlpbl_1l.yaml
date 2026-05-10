@@ -32,15 +32,26 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
+        - red_flag: RF-NLPBL-RT-CONTRAINDICATED
+        - finding: "rt_contraindicated"
+          value: true
+        - finding: "radiotherapy_contraindicated"
+          value: true
+        - finding: "prior_rt_to_field"
+          value: true
+        - finding: "breast_field_rt_overlap"
+          value: true
+        - finding: "patient_refuses_radiotherapy"
+          value: true
         - condition: "RT contraindicated (young patient breast/thyroid field overlap, prior RT, patient refuses)"
     if_true:
       result: IND-NLPBL-1L-RITUXIMAB-MONO
     if_false:
       result: IND-NLPBL-1L-OBSERVATION-OR-RT
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Wired via RF-NLPBL-RT-CONTRAINDICATED (W5c): young patient breast/thyroid field overlap, prior RT to field, or patient refusal → rituximab monotherapy (Advani 2014, IELSG-37 data: ~94% ORR). Legacy finding lookups + free-text retained."
 
 sources: [SRC-NCCN-BCELL-2025]
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-05-08"
 notes: >
   3-arm algorithm: ISRT default for early-stage RT-amenable;
   rituximab-mono alternative for early-stage RT-contraindicated;
