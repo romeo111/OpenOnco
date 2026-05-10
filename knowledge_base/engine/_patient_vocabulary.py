@@ -635,7 +635,10 @@ PATIENT_ALLOWLIST_ACRONYMS: frozenset[str] = frozenset({
     "DNA", "RNA", "mRNA", "MoA", "AE",
     # ESCAT tier labels + bare Roman numerals (stage I–V, grade III etc.)
     "IA", "IB", "IIA", "IIB", "IIIA", "IIIB", "IV", "X",
-    "I", "II", "III", "V",  # bare stage/grade Roman numerals
+    # Stage Roman numerals (staging is uppercase in UA patient text)
+    "I", "II", "III", "IV", "V",  # bare stage/grade Roman numerals
+    # Oncology site abbreviations
+    "CRLM",  # colorectal liver metastases
     # Site / tooling
     "OpenOnco", "GitHub", "MIT", "API", "URL",
     # Routes / common short tokens
@@ -660,8 +663,12 @@ PATIENT_ALLOWLIST_LATIN_WORDS: frozenset[str] = frozenset({
     "consolidation", "maintenance", "lymphodepletion", "bridging",
     "salvage", "adjuvant", "neoadjuvant", "first", "second", "third",
     "high", "low", "risk", "trial", "trials", "stage", "line", "grade",
-    "metastatic", "periop",  # from regimen total_cycles prose (§6.1 gates KB rewrite)
-    "hand", "foot", "syndrome",  # from "hand-foot syndrome" in drug side-effect text
+    # Anatomy and site terms (disease-specific loanwords)
+    "liver", "colorectal", "metastases", "metastatic", "periop",
+    "topoisomerase",
+    "hand", "foot", "syndrome",  # hand-foot syndrome in drug side-effect text
+    # Common connector / clinical context words
+    "after", "consider", "escalation",
     # Cycle-day-window structural vocabulary (PATIENT_MODE_SPEC §3.4)
     "each", "infusion", "infusions", "dose", "doses",
     # URL / tooling

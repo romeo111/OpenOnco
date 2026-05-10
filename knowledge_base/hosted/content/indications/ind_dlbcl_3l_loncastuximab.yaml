@@ -2,7 +2,10 @@ id: IND-DLBCL-3L-LONCASTUXIMAB
 plan_track: standard
 applicable_to:
   disease_id: DIS-DLBCL-NOS
-  line_of_therapy: 3
+  # line_of_therapy intentionally unset: ALGO-DLBCL-2L routes post-2L patients
+  # (LOT=2 fixture) to this indication via RF-DLBCL-CART-INELIGIBLE-POST-2L.
+  # No separate ALGO-DLBCL-3L exists; removing line restriction lets the cross-line
+  # guard pass so the engine can surface this as the default track for these patients.
   stage_requirements:
     - "Relapsed / refractory DLBCL after ≥2 prior systemic therapies"
     - "CD19-positive disease (CD19 IHC or flow)"

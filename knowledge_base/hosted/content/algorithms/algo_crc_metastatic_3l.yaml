@@ -1,0 +1,55 @@
+id: ALGO-CRC-METASTATIC-3L
+applicable_to_disease: DIS-CRC
+applicable_to_line_of_therapy: 3
+purpose: >
+  3L+ routing for chemo-refractory metastatic CRC. Default track is
+  TAS-102 + bevacizumab (SUNLIGHT, preferred over TAS-102 mono or
+  regorafenib by tolerability + OS edge). Regorafenib (CORRECT/ReDOS)
+  and TAS-102 mono (RECOURSE) are access-based alternatives surfaced
+  via indication known_controversies. Fruitquintinib (FRESCO-2) not
+  yet modelled.
+
+output_indications:
+  - IND-CRC-METASTATIC-3L-TAS102-BEV
+  - IND-CRC-METASTATIC-3L-REGORAFENIB
+  - IND-CRC-METASTATIC-3L-TRIFLURIDINE-TIPIRACIL-MONO
+
+default_indication: IND-CRC-METASTATIC-3L-TAS102-BEV
+alternative_indication: IND-CRC-METASTATIC-3L-REGORAFENIB
+
+decision_tree:
+  # Step 1 — Frailty de-escalation: ECOG ≥2 or significant comorbidity.
+  # ReDOS dose-escalation strategy improves tolerability for regorafenib
+  # in frail patients; however TAS-102+bev remains preferred even in
+  # many frail patients per SUNLIGHT tolerability data.
+  # Wiring gap: no dedicated frailty RF gates this step — falls to
+  # default (TAS-102+bev) for all patients until RF-CRC-FRAILTY-AGE
+  # is extended to also cover regorafenib-preference scenarios.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-CRC-FRAILTY-AGE
+    if_true:
+      result: IND-CRC-METASTATIC-3L-TAS102-BEV
+      notes: >
+        Frail 3L+ patient: TAS-102 + bev preferred per SUNLIGHT
+        (mOS 10.8 vs 7.5 mo vs chemo, manageable toxicity). Regorafenib
+        ReDOS escalation is an alternative if TAS-102 access limited.
+    if_false:
+      result: IND-CRC-METASTATIC-3L-TAS102-BEV
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-05-09"
+draft: true
+
+notes: >
+  Draft scaffold (W5c routing fix 2026-05-09) — authored to give
+  line=3 CRC patients a dedicated algorithm and prevent the
+  cross-line guard from blocking IND-CRC-METASTATIC-3L-TAS102-BEV.
+  All paths fall to default TAS-102+bev (SUNLIGHT). Regorafenib
+  (CORRECT/ReDOS dose-escalation), TAS-102 mono (RECOURSE), and
+  fruquintinib (FRESCO-2) surface via indication known_controversies.
+  Two-reviewer §6.1 sign-off required before draft: false.

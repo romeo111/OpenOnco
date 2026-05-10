@@ -3,7 +3,9 @@ plan_track: standard
 
 applicable_to:
   disease_id: DIS-MCL
-  line_of_therapy: 3
+  # line_of_therapy intentionally unset: ALGO-MCL-2L routes post-cBTKi patients
+  # (LOT=2 fixture) to this indication via step-3 condition; no ALGO-MCL-3L exists.
+  # Removing line restriction lets the cross-line guard pass.
   stage_requirements:
     - "Relapsed/refractory after ≥2 prior systemic lines including a covalent BTK inhibitor"
     - "Documented progression on cBTKi OR cBTKi intolerance (acalabrutinib, ibrutinib, zanubrutinib)"
