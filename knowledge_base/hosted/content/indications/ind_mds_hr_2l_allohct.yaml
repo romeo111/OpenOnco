@@ -1,0 +1,149 @@
+id: IND-MDS-HR-2L-ALLOHCT
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MDS-HR
+  line_of_therapy: 2
+  stage_requirements:
+    - "HMA failure: azacitidine or decitabine ≥6 cycles without response, OR progression on HMA"
+    - "MDS-HR (IPSS-R high / very high; IPSS-M High / Very High; MDS-IB1/IB2)"
+    - "Transplant-eligible: age <70–75 + HCT-CI ≤4 + adequate organ function + ECOG ≤2 + donor available"
+    - "Suitable donor identified: HLA-matched sibling > matched unrelated > haploidentical > cord blood"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    age_max: 75
+    fit_for_intensive_chemo: true
+
+recommended_regimen: REG-ALLOHCT-MDS-HR
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_survival_5y: "~30–40% with RIC alloHCT post-HMA failure; ~20% with MAC in older patients"
+  relapse_rate: "~40–60% post-alloHCT in MDS-HR (high relapse risk, especially TP53-mutated)"
+  non_relapse_mortality: "~15–25% at 1 year (infection, GVHD, organ toxicity)"
+  notes: >
+    AlloHCT is the only validated curative pathway in MDS-HR. Median OS
+    post-HMA failure without alloHCT is 4–6 months. Transplant outcome
+    strongly determined by cytogenetics and molecular profile (TP53-mutated
+    MDS-HR has high post-transplant relapse rate; outcome data with
+    magrolimab combinations pending).
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-MDS-FRAILTY-AGE         # age >75 or frailty score disqualifying; use IND-MDS-HR-2L-VEN-AZA
+  - RF-MDS-ORGAN-DYSFUNCTION   # renal/hepatic/cardiac failure precluding conditioning
+  - RF-MDS-TP53-MUTATION       # relative; very high post-transplant relapse risk — MDT and trial preferred
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-ECHO              # cardiac clearance for conditioning
+  - TEST-PFT               # pulmonary function (MAC conditioning)
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CMV-SEROLOGY      # CMV status for donor matching and prophylaxis
+  - TEST-BM-ASPIRATE       # disease status at transplant decision
+  - TEST-BM-TREPHINE
+  - TEST-KARYOTYPE         # cytogenetic risk at HMA failure
+  - TEST-NGS-MYELOID-PANEL # molecular profile (TP53, ASXL1, RUNX1 affect post-transplant prognosis)
+  - TEST-HLA-TYPING        # patient and donor
+desired_tests:
+  - TEST-FLOW-CYTOMETRY    # blast count
+  - TEST-FISH-PANEL        # del(5q), del(7q), complex karyotype confirmation
+
+rationale: >
+  AlloHCT is the only treatment with curative potential in MDS-HR and the
+  only modality with proven OS benefit in transplant-eligible patients.
+  After HMA failure, median OS without alloHCT is 4–6 months (Garcia-Manero
+  2011, Prébet 2011). Transplant should proceed as soon as possible after
+  HMA failure; bridging with ven+aza or low-dose chemotherapy may be needed
+  if blast count is high. Donor search should have been initiated during 1L
+  HMA therapy (CLAUDE.md NCCN guidance: do not defer search to HMA failure).
+  Conditioning intensity (MAC vs RIC) is determined by age, comorbidities,
+  and HCT-CI score. RIC is standard for age >60 or HCT-CI ≥3. Graft-versus-
+  leukemia effect provides long-term disease control in responding patients.
+  TP53-mutated MDS-HR has high post-transplant relapse risk (~60–70%);
+  clinical trial enrollment with TP53-targeted consolidation is strongly
+  preferred in this subgroup.
+
+rationale_ua: >
+  AlloHCT є єдиним лікуванням з курабельним потенціалом при MDS-HR та
+  єдиною модальністю з доведеною перевагою ЗВ у придатних до трансплантації
+  пацієнтів. Після невдачі HMA медіана ЗВ без alloHCT становить 4–6 місяців.
+  Трансплантація має відбутися якомога швидше після невдачі HMA; за
+  потреби можливий місток з ven+aza або малими дозами хіміотерапії. Пошук
+  донора має бути розпочатий під час 1L HMA-терапії — не відкладати до
+  невдачі. TP53-мутована MDS-HR має високий ризик рецидиву після трансплантації;
+  участь у клінічних дослідженнях є пріоритетом.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "AlloHCT is the preferred curative intent option for transplant-eligible MDS-HR patients after HMA failure; proceed promptly"
+  - source_id: SRC-ESMO-MDS-2021
+    position: supports
+    relevant_quote_paraphrase: "AlloHCT is the only potentially curative treatment for MDS-HR; recommended after HMA failure in eligible patients"
+  - source_id: SRC-IPSS-M-BERNARD-2022
+    position: supports
+    relevant_quote_paraphrase: "IPSS-M molecular risk score predicts post-transplant outcomes; refines transplant timing decisions"
+
+do_not_do:
+  - "Не відкладати пошук донора до невдачі HMA — пошук займає 3–6 місяців; розпочинати під час 1L HMA."
+  - "Не ігнорувати TP53-мутований профіль — дуже високий ризик рецидиву після трансплантації; пріоритет клінічних досліджень."
+  - "Не проводити MAC-кондиціонування при HCT-CI ≥3 або age >65 без підтримки спеціаліста з трансплантації — RIC є стандартом."
+  - "Не пропускати CMV-серологію пацієнта та донора — CMV-реактивація є провідною причиною інфекційних ускладнень після alloHCT."
+  - "Не відмовляти у трансплантації через вік <75 лет без оцінки HCT-CI — біологічний вік важливіший за хронологічний."
+
+do_not_do_en:
+  - "Do not defer donor search to HMA failure — the search takes 3–6 months; initiate during 1L HMA therapy."
+  - "Do not ignore TP53-mutated profile — very high post-transplant relapse risk; clinical trial is priority."
+  - "Do not use MAC conditioning with HCT-CI ≥3 or age >65 without transplant specialist input — RIC is standard."
+  - "Do not skip CMV serology for patient and donor — CMV reactivation is a leading infectious complication post-alloHCT."
+  - "Do not refuse transplant based on age <75 without HCT-CI assessment — biological age matters more than chronological age."
+
+known_controversies:
+  - topic: "Optimal bridging therapy between HMA failure and alloHCT"
+    positions:
+      - position: "Proceed directly to transplant without bridging if blast count allows (<10%)"
+        sources:
+          - SRC-NCCN-AML-2025
+      - position: "Ven+aza bridging to reduce blast count before transplant (extrapolated from AML practice)"
+        sources:
+          - SRC-ESMO-MDS-2021
+    our_default: "Bridging with ven+aza if blasts ≥10%; direct transplant if <10% and donor available"
+    rationale: "Minimizing delay to transplant is critical given poor OS without it; bridging only if medically necessary"
+  - topic: "AlloHCT in TP53-mutated MDS-HR"
+    positions:
+      - position: "AlloHCT still recommended despite high relapse risk — no alternative curative option"
+        sources:
+          - SRC-NCCN-AML-2025
+      - position: "Clinical trial (TP53-targeted agents as consolidation) preferred over alloHCT alone"
+        sources:
+          - SRC-ESMO-MDS-2021
+    our_default: "Clinical trial enrollment strongly preferred in TP53-mutated; alloHCT if no trial available and patient/family informed of high relapse risk"
+    rationale: "TP53-mutated MDS-HR post-transplant relapse rate ~60–70%; emerging agents (APR-246, magrolimab) may improve outcomes"
+
+time_critical: false
+last_reviewed: "2026-05-10"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires two Clinical Co-Lead approvals before merge (CHARTER §6.1).
+  2L curative-intent pathway for transplant-eligible MDS-HR post-HMA failure.
+  Decision tree step 2 of ALGO-MDS-HR-2L routes here via RF-MDS-TRANSPLANT-ELIGIBLE.
+  Donor search should have been initiated during 1L per NCCN guidance.
+  IND-MDS-HR-1L-ALLOHCT (LOT 1) is a separate entity covering upfront
+  transplant-eligible patients; this entity covers the post-HMA-failure 2L
+  transplant pathway, which is clinically distinct (blast dynamics, conditioning
+  considerations, and bridging needs differ).

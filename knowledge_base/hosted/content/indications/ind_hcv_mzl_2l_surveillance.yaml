@@ -1,0 +1,118 @@
+id: IND-HCV-MZL-2L-SURVEILLANCE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HCV-MZL
+  line_of_therapy: 2
+  stage_requirements:
+    - "SVR12 confirmed (HCV-RNA undetectable at week 12 post-DAA)"
+    - "No documented lymphoma progression on imaging or biopsy"
+    - "Hematologic response assessment ongoing (3–12 months post-SVR12)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HCV-STATUS
+      required: true
+      value_constraint: "SVR12 achieved (anti-HCV positive, HCV-RNA undetectable)"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HCV-RNA
+      excluded_if: "detectable at week 12 post-DAA (use IND-HCV-MZL-2L-DAA-RETREATMENT instead)"
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: REG-DAA-OBSERVATION-HCV-MZL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~70% achieve durable lymphoma response from DAA alone (Arcaini 2014, Carrier 2015)"
+  complete_response: "~50% at 12 months post-SVR12 in DAA-era cohorts"
+  progression_free_survival: "Median not reached in SVR12-responders with full lymphoma remission"
+  overall_survival_5y: ">85% in non-cirrhotic SVR12 responders"
+  notes: "~30% progress despite SVR12 (antigen-independent clonal escape) — escalate to IND-HCV-MZL-2L-BR"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION  # re-biopsy + ALGO-DLBCL routing
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HCV-RNA  # confirm SVR12 at week 12 post-DAA
+  - TEST-HBV-SEROLOGY
+desired_tests:
+  - TEST-PET-CT   # baseline and at 6 months for response assessment
+  - TEST-CT-CAP   # if PET not available
+
+rationale: >
+  Approximately 70% of HCV-MZL patients achieve durable lymphoma remission
+  following DAA-induced HCV eradication — the lymphoma is antigen-driven and
+  resolves as the etiological stimulus is removed. Active surveillance is the
+  correct default after confirmed SVR12 with no progression evidence.
+  Chemoimmunotherapy at this stage would be premature and unnecessary for the
+  majority. Response assessment is performed at 6 months post-SVR12 (lymphoma
+  remission unfolds slowly; do not assess before that milestone). Patients who
+  progress at 6–12 months have antigen-independent disease and require
+  escalation to IND-HCV-MZL-2L-BR. NCCN B-Cell 2025, ESMO 2024, and EASL
+  HCV 2023 all support observation-first after SVR12 in indolent HCV-MZL.
+
+rationale_ua: >
+  Приблизно 70% пацієнтів з HCV-MZL досягають стійкої ремісії лімфоми після
+  ерадикації HCV за допомогою DAA — лімфома є антиген-залежною та регресує
+  після усунення етіологічного стимулу. Активне спостереження є правильним
+  стандартом після підтвердженого SVR12 без ознак прогресії. Додавання
+  хіміоімунотерапії на цьому етапі є передчасним і зайвим для більшості
+  пацієнтів. Оцінку відповіді лімфоми проводять через 6 місяців після SVR12.
+  Пацієнти з прогресією на 6–12 місяцях мають антиген-незалежне захворювання
+  і потребують ескалації до IND-HCV-MZL-2L-BR.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Observation after SVR12 in HCV-MZL; chemoimmunotherapy reserved for non-response or progression"
+  - source_id: SRC-EASL-HCV-2023
+    position: supports
+    relevant_quote_paraphrase: "SVR12 is the endpoint for DAA therapy; lymphoma response assessed at 6–12 months post-SVR12"
+  - source_id: SRC-BSH-MZL-2024
+    position: supports
+    relevant_quote_paraphrase: "Post-DAA surveillance in HCV-MZL; escalate to chemoimmunotherapy at progression"
+
+do_not_do:
+  - "Не починати BR або інших хіміоімунотерапій до оцінки відповіді на 6-му місяці після SVR12 — передчасна ескалація у більшості пацієнтів непотрібна."
+  - "Не плутати HCV-RNA детектовність (вірусна невдача) з лімфомною прогресією — це різні показники, що потребують різних стратегій."
+  - "Не оцінювати відповідь лімфоми раніше 6 місяців після SVR12 — ремісія розгортається повільно."
+  - "Не ігнорувати HBV статус — анти-HCV позитивні пацієнти можуть мати ко-інфекцію HBV; реактивація HBV можлива навіть без активної HBV-терапії."
+
+do_not_do_en:
+  - "Do not start BR or other chemoimmunotherapy before the 6-month post-SVR12 response assessment — premature escalation is unnecessary for most patients."
+  - "Do not confuse HCV-RNA detectability (virologic failure) with lymphoma progression — these are distinct findings requiring different strategies."
+  - "Do not assess lymphoma response before 6 months post-SVR12 — remission unfolds slowly."
+  - "Do not ignore HBV status — anti-HCV-positive patients may have HBV co-infection; HBV reactivation possible."
+
+known_controversies:
+  - topic: "Timing of chemoimmunotherapy escalation in post-SVR12 non-responders"
+    positions:
+      - position: "Wait 12 months post-SVR12 before declaring failure and escalating"
+        sources:
+          - SRC-EASL-HCV-2023
+      - position: "Escalate at 6 months if no response (earlier trigger in bulky/symptomatic disease)"
+        sources:
+          - SRC-NCCN-BCELL-2025
+    our_default: "Reassess at 6 months; escalate to IND-HCV-MZL-2L-BR if progression documented; continue observation if stable or responding"
+    rationale: "6-month interval balances avoiding premature chemoimmunotherapy vs delayed treatment of antigen-independent relapse"
+
+time_critical: false
+last_reviewed: "2026-05-10"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires two Clinical Co-Lead approvals before merge (CHARTER §6.1).
+  Covers the ~70% durable-response surveillance track after DAA-achieved SVR12.
+  Decision tree step 4 of ALGO-HCV-MZL-2L routes here as the default output.
+  If lymphoma progression is documented at follow-up, MDT escalates to
+  IND-HCV-MZL-2L-BR; virologic failure routes to IND-HCV-MZL-2L-DAA-RETREATMENT.

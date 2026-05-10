@@ -11,11 +11,11 @@ purpose: >
   fallback when neither pathway applies and is surfaced as annotation.
 
 output_indications:
-  - IND-MDS-HR-ALLOHCT
-  - IND-MDS-HR-1L-VEN-AZA
+  - IND-MDS-HR-2L-ALLOHCT
+  - IND-MDS-HR-2L-VEN-AZA
 
-default_indication: IND-MDS-HR-ALLOHCT
-alternative_indication: IND-MDS-HR-1L-VEN-AZA
+default_indication: IND-MDS-HR-2L-ALLOHCT
+alternative_indication: IND-MDS-HR-2L-VEN-AZA
 
 decision_tree:
   # Step 1 — overt AML transformation → re-route conceptually to
@@ -25,7 +25,7 @@ decision_tree:
       any_of:
         - red_flag: RF-MDS-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-MDS-HR-1L-VEN-AZA
+      result: IND-MDS-HR-2L-VEN-AZA
     if_false:
       next_step: 2
 
@@ -37,7 +37,7 @@ decision_tree:
       any_of:
         - red_flag: RF-MDS-TRANSPLANT-ELIGIBLE
     if_true:
-      result: IND-MDS-HR-ALLOHCT
+      result: IND-MDS-HR-2L-ALLOHCT
     if_false:
       next_step: 3
 
@@ -50,7 +50,7 @@ decision_tree:
         - red_flag: RF-MDS-FRAILTY-AGE
         - red_flag: RF-MDS-ORGAN-DYSFUNCTION
     if_true:
-      result: IND-MDS-HR-1L-VEN-AZA
+      result: IND-MDS-HR-2L-VEN-AZA
     if_false:
       next_step: 4
 
@@ -62,7 +62,7 @@ decision_tree:
       any_of:
         - red_flag: RF-MDS-TP53-MUTATION
     if_true:
-      result: IND-MDS-HR-1L-VEN-AZA
+      result: IND-MDS-HR-2L-VEN-AZA
     if_false:
       next_step: 5
 
@@ -73,9 +73,9 @@ decision_tree:
       all_of:
         - condition: "Default post-HMA failure, transplant-ineligible — ven+aza off-label or clinical trial"
     if_true:
-      result: IND-MDS-HR-1L-VEN-AZA
+      result: IND-MDS-HR-2L-VEN-AZA
     if_false:
-      result: IND-MDS-HR-1L-VEN-AZA
+      result: IND-MDS-HR-2L-VEN-AZA
     notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:

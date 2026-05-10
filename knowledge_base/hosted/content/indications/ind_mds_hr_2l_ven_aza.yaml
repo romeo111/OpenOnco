@@ -1,0 +1,144 @@
+id: IND-MDS-HR-2L-VEN-AZA
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MDS-HR
+  line_of_therapy: 2
+  stage_requirements:
+    - "HMA failure: azacitidine or decitabine ≥6 cycles without response, OR progression on HMA"
+    - "MDS-HR (IPSS-R high / very high; IPSS-M High / Very High; MDS-IB1/IB2)"
+    - "Transplant-ineligible: age >75, OR HCT-CI >4, OR ECOG ≥3, OR no suitable donor, OR patient refusal"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: REG-VEN-AZA-AML
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: "~20–30% (extrapolated from AML unfit data; MDS-HR-specific phase-3 data absent)"
+  complete_response: "~10–15%"
+  overall_survival_median: "~6–9 months post-HMA failure (off-label context; very limited MDS-HR-specific data)"
+  notes: >
+    Evidence is extrapolated from VIALE-A (AML, unfit; DiNardo 2020) and small
+    MDS-HR retrospective series. No phase-3 RCT in MDS-HR post-HMA failure.
+    Clinical-trial enrollment is strongly preferred when available (VERONA,
+    magrolimab combinations, novel TP53-targeted agents). Ven+aza serves as
+    cytoreductive bridge or palliative-intent option when trial not accessible.
+
+hard_contraindications:
+  - CI-SEVERE-HEPATIC-IMPAIRMENT  # venetoclax dose adjustment or avoidance
+red_flags_triggering_alternative:
+  - RF-MDS-TRANSPLANT-ELIGIBLE   # if donor becomes available, reassess for alloHCT
+  - RF-MDS-TP53-MUTATION         # very poor prognosis; clinical trial priority
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT                    # venetoclax hepatic metabolism; baseline LFT critical
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-BM-ASPIRATE            # disease status at 2L entry
+  - TEST-BM-TREPHINE
+  - TEST-KARYOTYPE
+  - TEST-NGS-MYELOID-PANEL      # TP53 status critical for prognosis and trial eligibility
+desired_tests:
+  - TEST-FLOW-CYTOMETRY
+  - TEST-ECHO                   # cardiac safety, especially if prior anthracycline exposure
+
+rationale: >
+  For transplant-ineligible MDS-HR patients after HMA failure, ven+aza
+  (venetoclax + azacitidine, VIALE-A schedule off-label) is the most
+  accessible cytoreductive option with evidence of clinical activity.
+  The evidence base is indirect: VIALE-A enrolled AML patients unfit for
+  intensive induction; MDS-HR extrapolation is reasonable given overlapping
+  pathobiology (blast-rich MDS merges with AML in clinical behavior) but
+  a phase-3 MDS-HR trial is lacking. NCCN 2025 lists ven+aza as a 2B
+  option in post-HMA MDS-HR. Clinical-trial enrollment (VERONA trial
+  [ven+aza vs aza in MDS-HR], magrolimab trials, TP53-targeted APR-246
+  combinations) is the strongly preferred path and should be surfaced by
+  the plan generator regardless of this indication being the algorithmic
+  output. When no trial is available, ven+aza provides cytoreduction and
+  occasional durable responses while preserving quality of life better
+  than intensive chemotherapy. Supportive care escalation is an
+  acceptable concurrent goal.
+
+rationale_ua: >
+  Для пацієнтів з MDS-HR, непридатних до трансплантації після невдачі HMA,
+  ven+aza (венетоклакс + азацитидин, схема VIALE-A позалабораторно) є
+  найдоступнішим циторедуктивним варіантом з доказами клінічної активності.
+  Доказова база є непрямою: VIALE-A включав пацієнтів з ГМЛ; екстраполяція
+  на MDS-HR обґрунтована, але фаза 3 для MDS-HR відсутня. Участь у
+  клінічних дослідженнях є пріоритетом. При відсутності дослідження ven+aza
+  забезпечує циторедукцію та збереження якості життя.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "Venetoclax + azacitidine (2B recommendation) for transplant-ineligible MDS-HR post-HMA failure; clinical trial preferred"
+  - source_id: SRC-ESMO-MDS-2021
+    position: supports
+    relevant_quote_paraphrase: "Ven+aza extrapolated from AML data for post-HMA MDS-HR; trial enrollment preferred; off-label for MDS"
+  - source_id: SRC-IPSS-M-BERNARD-2022
+    position: supports
+    relevant_quote_paraphrase: "IPSS-M molecular risk identifies very high-risk patients for whom ven+aza monotherapy is insufficient; trial preferred"
+
+do_not_do:
+  - "Не призначати ven+aza без обговорення участі в клінічних дослідженнях — trial є пріоритетом при наявності."
+  - "Не призначати venetoclax при важкому порушенні функції печінки без корекції дози або гепатологічного консультанта."
+  - "Не ігнорувати TP53-мутований профіль — дуже погані прогноз і відповідь на ven+aza; пріоритет trial або паліативного підходу."
+  - "Не зволікати з reassessment алloHCT якщо донор стає доступним — пацієнти, початково непридатні до трансплантації, можуть стати придатними після циторедукції."
+  - "Не продовжувати ven+aza після 2–3 циклів без відповіді — оцінювати після 2 циклів; при відсутності відповіді перейти до паліативної підтримки або trial."
+
+do_not_do_en:
+  - "Do not prescribe ven+aza without discussing clinical trial enrollment — trial is priority if available."
+  - "Do not prescribe venetoclax in severe hepatic impairment without dose adjustment or hepatology consult."
+  - "Do not ignore TP53-mutated profile — very poor prognosis and response to ven+aza; prioritize trial or palliative approach."
+  - "Do not delay alloHCT reassessment if a donor becomes available — initially ineligible patients may become eligible after cytoreduction."
+  - "Do not continue ven+aza beyond 2–3 cycles without response — assess at 2 cycles; if no response, transition to palliative support or trial."
+
+known_controversies:
+  - topic: "Ven+aza vs best supportive care (BSC) in frail post-HMA MDS-HR"
+    positions:
+      - position: "Ven+aza provides meaningful cytoreduction and occasional CR vs BSC alone; off-label use justified"
+        sources:
+          - SRC-NCCN-AML-2025
+      - position: "Toxicity of ven+aza may outweigh benefit in ECOG ≥3; BSC + growth factors may be preferable"
+        sources:
+          - SRC-ESMO-MDS-2021
+    our_default: "MDT decision; ven+aza for ECOG ≤2 with adequate hepatic function; BSC for ECOG ≥3 or patient preference"
+    rationale: "No head-to-head RCT vs BSC in MDS-HR; individual patient values and goals of care central to decision"
+  - topic: "Ven+aza duration and response assessment timing"
+    positions:
+      - position: "Assess bone marrow response after 2 cycles; continue if any response"
+        sources:
+          - SRC-NCCN-AML-2025
+      - position: "Allow 3–4 cycles before declaring failure (delayed response possible as in HMA)"
+        sources:
+          - SRC-ESMO-MDS-2021
+    our_default: "Bone marrow assessment at cycle 2; continue if partial response; stop at 3 cycles without any response"
+    rationale: "Pragmatic; balances avoiding futile treatment vs premature discontinuation of delayed responders"
+
+time_critical: false
+last_reviewed: "2026-05-10"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires two Clinical Co-Lead approvals before merge (CHARTER §6.1).
+  Off-label use of venetoclax + azacitidine (VIALE-A schedule) in MDS-HR
+  post-HMA failure. Evidence level low; no phase-3 MDS-HR-specific RCT.
+  Plan generator MUST surface clinical trial enrollment (VERONA, magrolimab,
+  TP53-targeted) as the primary recommendation when outputting this indication.
+  Decision tree steps 1, 3, 4, 5 of ALGO-MDS-HR-2L route here for
+  transplant-ineligible, frail, TP53-mutated, and default-fallback patients.
+  IND-MDS-HR-1L-VEN-AZA (LOT 1, first-line off-label use) is a separate
+  entity; this entity is distinct: post-HMA-failure context, different patient
+  population and evidence context (double-failure vs first-line).

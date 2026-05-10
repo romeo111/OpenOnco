@@ -1,0 +1,139 @@
+id: IND-HCV-MZL-2L-DAA-RETREATMENT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HCV-MZL
+  line_of_therapy: 2
+  stage_requirements:
+    - "SVR12 NOT achieved: HCV-RNA detectable at week 12 post-first-line DAA"
+    - "Prior 1L DAA regimen: sofosbuvir/velpatasvir (SOF/VEL) or equivalent"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HCV-RNA
+      required: true
+      value_constraint: "detectable at week 12 post-DAA (SVR12 failure)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    decompensated_cirrhosis: false  # Child-Pugh A only without specialist review
+
+recommended_regimen: REG-DAA-GLEC-PIBR
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  svr12_retreatment: ">90% with SOF/VEL/VOX or GLE/PIB in NS5A-naive failures"
+  lymphoma_response_post_retreatment: "~60–70% lymphoma response after second SVR12 (limited data; extrapolated from first SVR12 cohorts)"
+  notes: >
+    If lymphoma is also progressing at week 12 (concurrent virologic + lymphoma
+    failure), add BR concurrently or sequentially per MDT decision. BR alone
+    is insufficient if HCV not eradicated (persistent antigen drive).
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+red_flags_triggering_alternative:
+  - RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION  # re-biopsy + ALGO-DLBCL routing
+  - RF-DECOMP-CIRRHOSIS  # hepatology consult; specialist-only DAA selection
+
+required_tests:
+  - TEST-HCV-RNA       # confirm virologic failure (week 12 post-DAA)
+  - TEST-HCV-GENOTYPE  # genotype + resistance-associated substitutions (RAS) for regimen selection
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-FIB4          # liver fibrosis staging before retreatment
+desired_tests:
+  - TEST-PET-CT        # lymphoma status at switch point
+  - TEST-CT-CAP
+
+rationale: >
+  SVR12 failure occurs in <5% of patients with modern DAAs but requires
+  prompt second-line DAA selection to re-eradicate HCV and restore the
+  antigen-removal pathway for lymphoma remission. Per EASL HCV 2023,
+  second-line options after SOF/VEL failure are:
+  (1) Sofosbuvir/velpatasvir/voxilaprevir (SOF/VEL/VOX) 12 weeks —
+  pan-genotypic NS5A rescue, preferred if NS5A resistance-associated
+  substitutions (RAS) present.
+  (2) Glecaprevir/pibrentasvir (GLE/PIB) 8–16 weeks — pan-genotypic
+  NS3+NS5A dual-class salvage; regimen duration depends on genotype
+  and cirrhosis status (EASL 2023 Table 9).
+  REG-DAA-GLEC-PIBR is the default here; SOF/VEL/VOX is preferred if
+  NS5A RAS-confirmed and local availability permits.
+  If lymphoma is also progressing despite retreatment, add BR
+  chemoimmunotherapy (IND-HCV-MZL-2L-BR logic applies concurrently per
+  MDT decision; antigen-independent clonal escape may be co-occurring).
+
+rationale_ua: >
+  Вірусна невдача SVR12 трапляється у <5% пацієнтів при сучасних DAA, але
+  потребує негайного вибору другорядної DAA-схеми для повторної ерадикації
+  HCV та відновлення шляху ремісії лімфоми. Згідно з EASL HCV 2023,
+  другорядні варіанти після невдачі SOF/VEL: (1) SOF/VEL/VOX 12 тижнів
+  — пангенотипний NS5A-rescue, бажаний при підтверджених RAS NS5A;
+  (2) GLE/PIB 8–16 тижнів — пангенотипний подвійний NS3+NS5A-salvage.
+  Якщо лімфома також прогресує — додати BR за рішенням MDT.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-EASL-HCV-2023
+    position: supports
+    relevant_quote_paraphrase: "SOF/VEL/VOX or GLE/PIB for DAA-experienced patients with NS5A treatment failure; retreatment achieves SVR12 >90%"
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Re-treat HCV virologic failure before escalating to chemoimmunotherapy in HCV-MZL"
+  - source_id: SRC-BSH-MZL-2024
+    position: supports
+    relevant_quote_paraphrase: "Second-line DAA therapy for virologic failure; add BR if concurrent lymphoma progression"
+
+do_not_do:
+  - "Не призначати BR замість DAA-retreatment при ізольованій вірусній невдачі (SVR12 failure без прогресії лімфоми) — ерадикація HCV залишається пріоритетом."
+  - "Не повторювати той же режим DAA при вірусній невдачі — необхідна зміна класу або додавання voxilaprevir (NS5A rescue)."
+  - "Не починати retreatment без оцінки HCV RAS (resistance-associated substitutions) — вибір схеми залежить від профілю резистентності."
+  - "Не ігнорувати гепатологічний консультант при Child-Pugh B/C — окремий алгоритм вибору DAA при декомпенсованому цирозі."
+  - "Не затримувати retreatment: антигенна стимуляція триває, поки HCV-RNA детектована."
+
+do_not_do_en:
+  - "Do not prescribe BR instead of DAA retreatment for isolated virologic failure (SVR12 failure without lymphoma progression) — HCV eradication remains the priority."
+  - "Do not repeat the same DAA regimen at virologic failure — class switch or addition of voxilaprevir (NS5A rescue) is required."
+  - "Do not start retreatment without HCV RAS assessment — regimen selection depends on resistance profile."
+  - "Do not skip hepatology consult at Child-Pugh B/C — separate algorithm for decompensated cirrhosis DAA selection."
+  - "Do not delay retreatment: antigenic stimulation continues while HCV-RNA is detectable."
+
+known_controversies:
+  - topic: "SOF/VEL/VOX vs GLE/PIB for DAA-experienced SVR12 failure"
+    positions:
+      - position: "SOF/VEL/VOX preferred if NS5A RAS present (pan-genotypic NS5A rescue activity)"
+        sources:
+          - SRC-EASL-HCV-2023
+      - position: "GLE/PIB preferred for broader NS3+NS5A dual-class coverage; 8-week option in non-cirrhotic"
+        sources:
+          - SRC-EASL-HCV-2023
+    our_default: "GLE/PIB as REG-DAA-GLEC-PIBR (available in KB); SOF/VEL/VOX noted in rationale — local availability and RAS profile determine final choice"
+    rationale: "Both achieve >90% SVR12 in DAA-experienced patients per EASL 2023; HCV genotype and RAS profile guide selection"
+  - topic: "Sequential vs concurrent BR with DAA retreatment when both virologic and lymphoma failure occur"
+    positions:
+      - position: "Complete DAA retreatment first (12 weeks); add BR only if lymphoma not responding at SVR12 reassessment"
+        sources:
+          - SRC-BSH-MZL-2024
+      - position: "Concurrent BR + DAA if rapid lymphoma progression or bulky symptomatic disease"
+        sources:
+          - SRC-NCCN-BCELL-2025
+    our_default: "MDT decision; concurrent BR if lymphoma is clinically progressing; sequential if lymphoma stable"
+    rationale: "No RCT; concurrent approach risks additive toxicity but avoids delay in aggressive-phenotype cases"
+
+time_critical: false
+last_reviewed: "2026-05-10"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires two Clinical Co-Lead approvals before merge (CHARTER §6.1).
+  SOF/VEL/VOX (REG-DAA-SOF-VEL-VOX) does not yet exist in the KB regimen
+  catalog — only REG-DAA-SOF-VEL (sofosbuvir/velpatasvir without voxilaprevir)
+  is present. REG-DAA-GLEC-PIBR used as primary here. Add SOF/VEL/VOX regimen
+  stub when NS5A RAS-guided retreatment workflow is modeled.
+  Decision tree step 2 of ALGO-HCV-MZL-2L routes here when BIO-HCV-RNA is
+  detectable at week 12 post-DAA.

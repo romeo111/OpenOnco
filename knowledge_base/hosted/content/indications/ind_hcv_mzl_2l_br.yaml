@@ -1,0 +1,134 @@
+id: IND-HCV-MZL-2L-BR
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-HCV-MZL
+  line_of_therapy: 2
+  stage_requirements:
+    - "SVR12 achieved (HCV-RNA undetectable at week 12 post-DAA)"
+    - "Documented lymphoma progression on imaging or biopsy after confirmed SVR12"
+    - "MZL histology confirmed at relapse (re-biopsy to exclude transformation)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HCV-STATUS
+      required: true
+      value_constraint: "SVR12 achieved (HCV cleared)"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HCV-RNA
+      excluded_if: "detectable (active HCV; use IND-HCV-MZL-2L-DAA-RETREATMENT instead)"
+  demographic_constraints:
+    ecog_max: 2
+    fit_for_chemoimmunotherapy: true
+
+recommended_regimen: REG-BR-STANDARD
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~85–90% (BR in relapsed/refractory MZL; Rummel 2013 + subgroup analyses)"
+  complete_response: "~55–65% in indolent B-cell lymphoma at relapse"
+  progression_free_survival: "Median ~40 months in indolent B-NHL post-BR (Rummel 2013)"
+  overall_survival_5y: ">70% in fit MZL patients achieving CR after BR"
+  notes: >
+    HCV-cleared MZL behaves as antigen-independent lymphoma at relapse;
+    BR response rates should mirror general MZL BR salvage data.
+    No HCV-MZL-specific 2L BR RCT exists; evidence extrapolated from
+    relapsed/refractory indolent B-NHL trials.
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-SEVERE-CYTOPENIA-BR
+red_flags_triggering_alternative:
+  - RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION  # mandatory re-biopsy first; routes to ALGO-DLBCL if confirmed
+  - RF-DECOMP-CIRRHOSIS                     # relative; hepatology review for bendamustine dosing
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY     # HBV prophylaxis mandatory before rituximab
+  - TEST-HCV-RNA          # confirm HCV cleared (active HCV is exclusion)
+  - TEST-BM-ASPIRATE      # staging/response evaluation
+  - TEST-BM-TREPHINE
+  - TEST-CT-CAP           # staging
+  - TEST-ECHO             # cardiac baseline before bendamustine
+desired_tests:
+  - TEST-PET-CT           # preferred over CT for lymphoma response assessment
+  - TEST-BIOPSY-RELAPSE   # strongly preferred — exclude transformation at relapse
+
+rationale: >
+  After confirmed SVR12, HCV-MZL lymphoma that persists or progresses has
+  become antigen-independent (clonal escape from HCV-driven stimulation).
+  Further DAA therapy provides no lymphoma benefit at this stage; the
+  etiological driver has been removed. BR (bendamustine + rituximab) is the
+  evidence-based standard for relapsed/refractory indolent B-cell lymphoma
+  including MZL and is endorsed by NCCN B-Cell 2025 and BSH MZL 2024 for
+  this scenario. Re-biopsy at relapse is mandatory to exclude histologic
+  transformation to DLBCL (transformation rate in MZL ~3% per year; clinical
+  suspicion raised by rapid growth, B-symptoms, LDH elevation, extranodal
+  spread). Confirmed transformation routes to ALGO-DLBCL, not BR alone.
+  HBV prophylaxis is mandatory before rituximab initiation.
+
+rationale_ua: >
+  Після підтвердженого SVR12, лімфома HCV-MZL, що зберігається або
+  прогресує, стала антиген-незалежною (клональна втеча від HCV-стимуляції).
+  Подальша DAA-терапія не дає переваг для лімфоми на цьому етапі.
+  BR (бендамустин + ритуксимаб) є доказовим стандартом для рецидивуючої/
+  рефрактерної індолентної В-клітинної лімфоми, включаючи MZL. Повторна
+  біопсія є обов'язковою для виключення гістологічної трансформації в DLBCL.
+  Профілактика HBV є обов'язковою перед ритуксимабом.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "BR is preferred 2L for relapsed/refractory MZL after HCV eradication; re-biopsy to exclude transformation"
+  - source_id: SRC-BSH-MZL-2024
+    position: supports
+    relevant_quote_paraphrase: "BR for antigen-independent HCV-MZL relapse after SVR12; rituximab requires HBV prophylaxis"
+  - source_id: SRC-EASL-HCV-2023
+    position: supports
+    relevant_quote_paraphrase: "SVR12 achieved, lymphoma progressive — antigen-independent pathway; chemoimmunotherapy indicated"
+
+do_not_do:
+  - "Не призначати BR без підтверджено досягнутого SVR12 — при активній HCV ерадикація вірусу залишається пріоритетом (IND-HCV-MZL-2L-DAA-RETREATMENT)."
+  - "Не ігнорувати повторну біопсію при підозрі на трансформацію — трансформований DLBCL вимагає іншої хіміотерапії (R-CHOP, не BR)."
+  - "Не починати ритуксимаб без HBV профілактики (реактивація HBV може бути фатальною)."
+  - "Не призначати BR при ECOG ≥3 або важкій цитопенії без MDT-перегляду — токсичність бендамустину значна."
+  - "Не пропускати оцінку серцевої функції (ECHO) перед бендамустином у пацієнтів з кардіальними факторами ризику."
+
+do_not_do_en:
+  - "Do not prescribe BR without confirmed SVR12 — active HCV requires viral eradication first (IND-HCV-MZL-2L-DAA-RETREATMENT)."
+  - "Do not skip re-biopsy if transformation is suspected — transformed DLBCL requires different chemotherapy (R-CHOP, not BR)."
+  - "Do not start rituximab without HBV prophylaxis (HBV reactivation can be fatal)."
+  - "Do not prescribe BR at ECOG ≥3 or severe cytopenia without MDT review — bendamustine toxicity is significant."
+  - "Do not skip cardiac function assessment (ECHO) before bendamustine in patients with cardiac risk factors."
+
+known_controversies:
+  - topic: "BR vs R-CHOP for relapsed MZL after HCV eradication"
+    positions:
+      - position: "BR preferred — superior PFS to R-CHOP in indolent B-NHL without excess toxicity (Rummel 2013)"
+        sources:
+          - SRC-NCCN-BCELL-2025
+          - SRC-BSH-MZL-2024
+      - position: "R-CHOP acceptable if BR not available or contraindicated (anthracycline option for bulky disease)"
+        sources:
+          - SRC-NCCN-BCELL-2025
+    our_default: "BR as first choice; R-CHOP if BR contraindicated or not available"
+    rationale: "Rummel 2013 STIL NHL trial shows superior PFS for BR vs R-CHOP in indolent B-NHL; MZL subgroup consistent with overall result"
+
+time_critical: false
+last_reviewed: "2026-05-10"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires two Clinical Co-Lead approvals before merge (CHARTER §6.1).
+  Covers antigen-independent HCV-MZL relapse after confirmed SVR12.
+  Decision tree step 3 of ALGO-HCV-MZL-2L routes here when BIO-HCV-RNA
+  is undetectable (HCV cleared) AND lymphoma progression is documented.
+  Re-biopsy at relapse is strongly preferred to exclude DLBCL transformation
+  before initiating BR — transformation changes regimen selection entirely.

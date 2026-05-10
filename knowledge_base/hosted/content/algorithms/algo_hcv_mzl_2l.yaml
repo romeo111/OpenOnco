@@ -25,10 +25,12 @@ purpose: >
   achieved SVR12, OR transformation to aggressive histology.
 
 output_indications:
-  - IND-HCV-MZL-POST-DAA-SURVEILLANCE
+  - IND-HCV-MZL-2L-SURVEILLANCE
+  - IND-HCV-MZL-2L-DAA-RETREATMENT
+  - IND-HCV-MZL-2L-BR
 
-default_indication: IND-HCV-MZL-POST-DAA-SURVEILLANCE
-alternative_indication: IND-HCV-MZL-POST-DAA-SURVEILLANCE
+default_indication: IND-HCV-MZL-2L-SURVEILLANCE
+alternative_indication: IND-HCV-MZL-2L-BR
 
 decision_tree:
   # Step 1 — histologic transformation suspected → upstream re-biopsy
@@ -39,7 +41,7 @@ decision_tree:
         - condition: "Aggressive histology suspected at relapse (rapid growth, B-symptoms, LDH ↑↑, extranodal sites)"
         - red_flag: RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
     if_true:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — routes to ALGO-DLBCL
+      result: IND-HCV-MZL-2L-SURVEILLANCE  # re-biopsy mandatory; MDT re-routes to ALGO-DLBCL if transformation confirmed
     if_false:
       next_step: 2
 
@@ -53,7 +55,7 @@ decision_tree:
         - biomarker: BIO-HCV-RNA
           comparator: "detectable at week 12 post-DAA (SVR12 not achieved)"
     if_true:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — DAA retreatment + BR
+      result: IND-HCV-MZL-2L-DAA-RETREATMENT
     if_false:
       next_step: 3
 
@@ -68,7 +70,7 @@ decision_tree:
           comparator: "undetectable at SVR12 (HCV cleared)"
         - condition: "Documented lymphoma progression on imaging or biopsy after DAA"
     if_true:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — BR salvage
+      result: IND-HCV-MZL-2L-BR
     if_false:
       next_step: 4
     notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
@@ -82,9 +84,9 @@ decision_tree:
           comparator: "categorical (post-DAA)"
         - condition: "No documented relapse / progression"
     if_true:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE
+      result: IND-HCV-MZL-2L-SURVEILLANCE
     if_false:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE
+      result: IND-HCV-MZL-2L-SURVEILLANCE
     notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:
@@ -94,24 +96,21 @@ sources:
 
 last_reviewed: "2026-04-27"
 notes: >
-  OOS / wiring gaps:
-  (1) IND-HCV-MZL-2L-DAA-RETREATMENT (SOF/VEL/VOX or GLE/PIB ±
-  concurrent BR) — not modeled as dedicated indication. Step 2
-  routes to surveillance placeholder; trace must surface "SVR12
-  not achieved → DAA retreatment per EASL 2023; add BR if
-  lymphoma progressing" as free-text MDT note.
-  (2) IND-HCV-MZL-2L-BR (BR for SVR12-achieved + lymphoma relapse)
-  — not modeled as HCV-MZL-specific indication. Step 3 placeholder;
-  trace surfaces "SVR12-achieved relapse → BR salvage" MDT note.
-  (3) Histologic transformation routing must be resolved at upstream
-  disease-resolution stage (re-biopsy mandatory at any clinical
-  progression in HCV-MZL given baseline transformation risk).
-  (4) Branching uses BIO-HCV-RNA (quantitative confirmation) plus
+  Wiring status (2026-05-10):
+  (1) IND-HCV-MZL-2L-DAA-RETREATMENT — WIRED. Step 2 routes here
+  on BIO-HCV-RNA detectable at week 12 post-DAA.
+  (2) IND-HCV-MZL-2L-BR — WIRED. Step 3 routes here on SVR12
+  achieved + documented lymphoma relapse.
+  (3) IND-HCV-MZL-2L-SURVEILLANCE — WIRED. Steps 1 (pending
+  re-biopsy result) and 4 (default durable-response track) route here.
+  (4) Histologic transformation (step 1): still routes to
+  IND-HCV-MZL-2L-SURVEILLANCE as a safe default; re-biopsy is
+  mandatory before any treatment decision; confirmed DLBCL routes
+  to ALGO-DLBCL at MDT level. This gap cannot be wired declaratively
+  without a post-biopsy feedback loop.
+  (5) Branching uses BIO-HCV-RNA (quantitative confirmation) plus
   BIO-HCV-STATUS (screening); BIO-HCV-RNA is the actionable
   biomarker per EASL 2023 (anti-HCV antibody persists for life
   even after clearance).
-  (5) IND-HCV-MZL-POST-DAA-SURVEILLANCE serves as the algorithmic
-  anchor — it covers the ~70% durable-response track and acts as
-  surveillance gate for the ~30% who progress (escalation to DAA
-  retreatment or BR is MDT-driven via free-text triggers).
-  (6) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
+  (6) All three indication stubs require two Clinical Co-Lead
+  approvals before merge (CHARTER §6.1).
