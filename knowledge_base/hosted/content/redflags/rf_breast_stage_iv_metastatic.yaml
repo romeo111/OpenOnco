@@ -1,0 +1,83 @@
+id: RF-BREAST-STAGE-IV-METASTATIC
+definition: >
+  Metastatic (stage IV) breast cancer: presence of distant metastasis (M1
+  per TNM 8th edition) involving any organ system (bone, liver, lung, brain,
+  peritoneum, other). Stage IV breast cancer is currently incurable with
+  available systemic therapy; treatment intent is disease control, quality
+  of life, and life prolongation.
+
+  Stage IV status is the gating criterion for palliative systemic therapy
+  (CDK4/6i+AI for HR+/HER2-; THP for HER2+; pembro+chemo or PARPi for TNBC)
+  rather than curative-intent neoadjuvant/adjuvant approaches.
+
+  Fires to route ALGO-BREAST-1L step 4 (TNBC branch) from early-stage
+  neoadjuvant (IND-BREAST-TNBC-EARLY-NEOADJUVANT) toward metastatic
+  evaluation (step 6: BRCA mutation gate → PARPi vs pembro+chemo).
+
+definition_ua: >
+  Метастатичний (стадія IV) рак молочної залози: наявність дистантних
+  метастазів (M1). Паліативний намір лікування — контроль захворювання,
+  якість життя, продовження виживання.
+
+trigger:
+  type: stage_classification
+  any_of:
+    - finding: stage_group
+      value: "IV"
+    - finding: stage_group
+      value: "IVA"
+    - finding: stage_group
+      value: "IVB"
+    - finding: stage_group
+      value: "metastatic"
+    - finding: disease_extent
+      value: "metastatic"
+    - finding: distant_metastasis
+      value: true
+    - finding: m_stage
+      value: M1
+
+clinical_direction: intensify
+severity: major
+priority: 50
+category: other
+
+branch_targets:
+  ALGO-BREAST-1L: "4"
+
+relevant_diseases:
+  - DIS-BREAST
+
+shifts_algorithm:
+  - ALGO-BREAST-1L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+
+last_reviewed: "2026-05-08"
+reviewer_signoffs: []
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+notes: >
+  W5c RF authoring. Converts free-text `{condition: "Stage IV (locally
+  recurrent unresectable or distant metastatic)"}` in ALGO-BREAST-1L step 4
+  (TNBC metastatic gate) into a formal RF entity.
+
+  The trigger fires on any M1 / Stage IV finding. ALGO-BREAST-1L step 4
+  routes:
+    if_true (RF fires = metastatic): next_step: 6 (BRCA mutation gate)
+    if_false (RF doesn't fire = early stage): IND-BREAST-TNBC-EARLY-NEOADJUVANT
+
+  Locally recurrent unresectable disease is treated with metastatic-intent
+  therapy and is included in the stage IV / distant metastasis definition
+  for this routing purpose.
+
+  Note: Recheck `disease_extent` finding key naming convention against KB
+  engine vocabulary when available. ESMO-BREAST-METASTATIC-2024 source
+  (`SRC-ESMO-BREAST-METASTATIC-2024`) may need ID verification.
+
+  CHARTER §6.1: Two-reviewer clinical co-lead signoff required before
+  removing draft: true.
