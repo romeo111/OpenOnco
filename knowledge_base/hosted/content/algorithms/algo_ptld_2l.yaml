@@ -9,23 +9,21 @@ purpose: >
   → tabelecleucel (EBV-CTL) referral or CD19 CAR-T (not yet modeled).
 
 output_indications:
-  - IND-PTLD-MAINTENANCE-RITUXIMAB
-  - IND-PTLD-1L-RCHOP
-
+- IND-PTLD-MAINTENANCE-RITUXIMAB
 default_indication: IND-PTLD-MAINTENANCE-RITUXIMAB
 alternative_indication: IND-PTLD-1L-RCHOP
 
 decision_tree:
-  - step: 1
-    evaluate:
-      all_of:
-        - condition: "CR or PR after initial rituximab × 4 weekly induction"
-        - condition: "CD20+ B-PTLD"
-    if_true:
-      result: IND-PTLD-MAINTENANCE-RITUXIMAB
-    if_false:
-      result: IND-PTLD-1L-RCHOP
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 1
+  evaluate:
+    all_of:
+    - condition: "CR or PR after initial rituximab × 4 weekly induction"
+    - condition: "CD20+ B-PTLD"
+  if_true:
+    result: IND-PTLD-MAINTENANCE-RITUXIMAB
+  if_false:
+    result: IND-PTLD-1L-RCHOP
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-DLBCL-2024]
 last_reviewed: "2026-04-27"

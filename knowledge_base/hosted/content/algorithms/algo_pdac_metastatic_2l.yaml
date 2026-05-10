@@ -8,81 +8,79 @@ purpose: >
   2L PDAC is palliative intent; median OS with any 2L therapy is ~5-7 months.
 
 output_indications:
-  - IND-PDAC-METASTATIC-2L-NAL-IRI
-  - IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
-
+- IND-PDAC-METASTATIC-2L-NAL-IRI
 default_indication: IND-PDAC-METASTATIC-2L-NAL-IRI
 alternative_indication: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
 
 decision_tree:
   # Step 1 — Performance status gate. PS must allow 2L systemic therapy.
   # ECOG ≥3 in PDAC: extremely poor prognosis; systemic therapy rarely beneficial.
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-FITNESS-ECOG-FIT
-        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
-    if_true:
-      next_step: 2
-    if_false:
-      result: null
-      notes: >
-        ECOG ≥3 after 1L PDAC: systemic therapy benefit minimal — toxicity likely
-        exceeds benefit. Best supportive care. Hospice/palliative referral.
-        Assess reversible causes of PS decline (biliary obstruction, dehydration,
-        pain, steroids) before concluding PS ≥3 is irreversible.
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-FITNESS-ECOG-FIT
+    - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+  if_true:
+    next_step: 2
+  if_false:
+    result:
+    notes: >
+      ECOG ≥3 after 1L PDAC: systemic therapy benefit minimal — toxicity likely
+      exceeds benefit. Best supportive care. Hospice/palliative referral.
+      Assess reversible causes of PS decline (biliary obstruction, dehydration,
+      pain, steroids) before concluding PS ≥3 is irreversible.
 
   # Step 2 — Biliary obstruction clearance. High bilirubin contraindicates
   # irinotecan/5-FU-based therapy (hepatic metabolism impaired).
-  - step: 2
-    evaluate:
-      any_of:
-        - condition: "Total bilirubin ≤ 2× ULN OR biliary obstruction drained with stent/drain"
-    if_true:
-      next_step: 3
-    if_false:
-      result: null
-      notes: >
-        Biliary obstruction with bilirubin >2× ULN: address obstruction first
-        (endoscopic biliary stent or percutaneous drain). Irinotecan and most
-        cytotoxics are contraindicated with significant hyperbilirubinemia.
-        Reassess for 2L once bilirubin <2× ULN.
+- step: 2
+  evaluate:
+    any_of:
+    - condition: "Total bilirubin ≤ 2× ULN OR biliary obstruction drained with stent/drain"
+  if_true:
+    next_step: 3
+  if_false:
+    result:
+    notes: >
+      Biliary obstruction with bilirubin >2× ULN: address obstruction first
+      (endoscopic biliary stent or percutaneous drain). Irinotecan and most
+      cytotoxics are contraindicated with significant hyperbilirubinemia.
+      Reassess for 2L once bilirubin <2× ULN.
 
   # Step 3 — Prior 1L backbone determines 2L choice.
   # Cross-resistance exists between FOLFIRINOX components (oxaliplatin, irinotecan,
   # 5-FU) and nal-IRI+5-FU/LV — use gemcitabine-based 2L after FOLFIRINOX.
   # After gemcitabine-based 1L: nal-IRI+5-FU/LV is FDA-approved NCCN Cat 1.
-  - step: 3
-    evaluate:
-      any_of:
-        - condition: "Prior 1L was gemcitabine-based (gemcitabine monotherapy, gem+nab-paclitaxel, or gem+erlotinib)"
-    if_true:
-      result: IND-PDAC-METASTATIC-2L-NAL-IRI
-      notes: >
-        After gemcitabine-based 1L: nal-IRI (ONIVYDE) + 5-FU/LV is the
-        preferred 2L regimen (NAPOLI-1; FDA approved Oct 2015; NCCN Category 1).
-        mOS 6.1 vs 4.2 mo vs 5-FU/LV alone (HR 0.67, p=0.012). FOLFOX or
-        modified FOLFOX (oxaliplatin 85mg/m²+5-FU/LV q2w) is an accessible
-        alternative when ONIVYDE is unavailable (NCCN Category 2A; no phase 3 RCT
-        in this setting). BRCA1/2 germline-mutated patients who received
-        platinum-containing 1L and achieved ≥16-week disease control: olaparib
-        maintenance (POLO trial, IND-PDAC-MAINTENANCE-OLAPARIB-BRCA) remains an
-        option even at 2L if not already used.
-    if_false:
-      result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
-      notes: >
-        After FOLFIRINOX-based or oxaliplatin-based 1L: gemcitabine ± nab-
-        paclitaxel is the 2L of choice (non-overlapping mechanism; NCCN
-        Category 2A — no phase 3 RCT but standard cross-over regimen).
-        IND-PDAC-METASTATIC-1L-GEM-NAB-PAC applies here as a 2L regimen
-        with same dosing. Consider reduced nab-paclitaxel dose if significant
-        neuropathy from prior oxaliplatin. Single-agent gemcitabine if intolerant
-        of nab-paclitaxel.
+- step: 3
+  evaluate:
+    any_of:
+    - condition: "Prior 1L was gemcitabine-based (gemcitabine monotherapy, gem+nab-paclitaxel, or gem+erlotinib)"
+  if_true:
+    result: IND-PDAC-METASTATIC-2L-NAL-IRI
+    notes: >
+      After gemcitabine-based 1L: nal-IRI (ONIVYDE) + 5-FU/LV is the
+      preferred 2L regimen (NAPOLI-1; FDA approved Oct 2015; NCCN Category 1).
+      mOS 6.1 vs 4.2 mo vs 5-FU/LV alone (HR 0.67, p=0.012). FOLFOX or
+      modified FOLFOX (oxaliplatin 85mg/m²+5-FU/LV q2w) is an accessible
+      alternative when ONIVYDE is unavailable (NCCN Category 2A; no phase 3 RCT
+      in this setting). BRCA1/2 germline-mutated patients who received
+      platinum-containing 1L and achieved ≥16-week disease control: olaparib
+      maintenance (POLO trial, IND-PDAC-MAINTENANCE-OLAPARIB-BRCA) remains an
+      option even at 2L if not already used.
+  if_false:
+    result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
+    notes: >
+      After FOLFIRINOX-based or oxaliplatin-based 1L: gemcitabine ± nab-
+      paclitaxel is the 2L of choice (non-overlapping mechanism; NCCN
+      Category 2A — no phase 3 RCT but standard cross-over regimen).
+      IND-PDAC-METASTATIC-1L-GEM-NAB-PAC applies here as a 2L regimen
+      with same dosing. Consider reduced nab-paclitaxel dose if significant
+      neuropathy from prior oxaliplatin. Single-agent gemcitabine if intolerant
+      of nab-paclitaxel.
 
 sources:
-  - SRC-NAPOLI1-WANG-GILLAM-2016
-  - SRC-NCCN-PANCREATIC-2025
-  - SRC-ESMO-PANCREATIC-2024
+- SRC-NAPOLI1-WANG-GILLAM-2016
+- SRC-NCCN-PANCREATIC-2025
+- SRC-ESMO-PANCREATIC-2024
 
 last_reviewed: "2026-05-04"
 notes: >

@@ -3,21 +3,21 @@ plan_track: aggressive
 
 applicable_to:
   disease_id: DIS-CRC
-  line_of_therapy: 3  # rechallenge typically positioned 3L+ after intervening line
+  line_of_therapy: 2  # rechallenge typically positioned 3L+ after intervening line
   stage_requirements:
-    - "Stage IV metastatic mCRC"
-    - "Prior 1L anti-EGFR (cetuximab or panitumumab) + chemo with documented response (PR or better) OR prolonged SD ≥6 mo"
-    - "Intervening 2L therapy (no anti-EGFR) — typical pattern: 1L anti-EGFR → 2L bev-based → 3L anti-EGFR rechallenge"
-    - "Recommended: ctDNA RAS reassessment before rechallenge — RAS-WT in ctDNA supports rechallenge benefit"
+  - "Stage IV metastatic mCRC"
+  - "Prior 1L anti-EGFR (cetuximab or panitumumab) + chemo with documented response (PR or better) OR prolonged SD ≥6 mo"
+  - "Intervening 2L therapy (no anti-EGFR) — typical pattern: 1L anti-EGFR → 2L bev-based → 3L anti-EGFR rechallenge"
+  - "Recommended: ctDNA RAS reassessment before rechallenge — RAS-WT in ctDNA supports rechallenge benefit"
   biomarker_requirements_required:
-    - biomarker_id: BIO-RAS-MUTATION
-      required: true
-      value_constraint: "RAS wild-type at baseline AND (preferably) RAS-WT confirmed on ctDNA at rechallenge timepoint (CHRONOS biomarker selection)"
+  - biomarker_id: BIO-RAS-MUTATION
+    required: true
+    value_constraint: "RAS wild-type at baseline AND (preferably) RAS-WT confirmed on ctDNA at rechallenge timepoint (CHRONOS biomarker selection)"
   biomarker_requirements_excluded:
-    - biomarker_id: BIO-BRAF-V600E
-      value_constraint: "BRAF V600E excluded — encorafenib + cetuximab (BEACON) preferred; rechallenge benefit lower in BRAF-mut"
-    - biomarker_id: BIO-MSI-STATUS
-      value_constraint: "MSI-H excluded — pembrolizumab supersedes (separate algorithm step)"
+  - biomarker_id: BIO-BRAF-V600E
+    value_constraint: "BRAF V600E excluded — encorafenib + cetuximab (BEACON) preferred; rechallenge benefit lower in BRAF-mut"
+  - biomarker_id: BIO-MSI-STATUS
+    value_constraint: "MSI-H excluded — pembrolizumab supersedes (separate algorithm step)"
   demographic_constraints:
     ecog_max: 2
 
@@ -37,16 +37,16 @@ expected_outcomes:
 
 hard_contraindications: []
 red_flags_triggering_alternative:
-  - RF-CRC-FRAILTY-AGE
+- RF-CRC-FRAILTY-AGE
 
 required_tests:
-  - TEST-RAS-EXTENDED  # baseline RAS-WT confirmation
-  - TEST-NGS-COMPREHENSIVE  # ctDNA NGS at rechallenge timepoint preferred (CHRONOS-style selection)
-  - TEST-CBC
-  - TEST-CMP
-  - TEST-LFT
-  - TEST-CEA
-  - TEST-CT-CHEST-ABDOMEN-PELVIS
+- TEST-RAS-EXTENDED    # baseline RAS-WT confirmation
+- TEST-NGS-COMPREHENSIVE    # ctDNA NGS at rechallenge timepoint preferred (CHRONOS-style selection)
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-CEA
+- TEST-CT-CHEST-ABDOMEN-PELVIS
 desired_tests: []
 
 rationale: >
@@ -67,39 +67,39 @@ rationale: >
   use.
 
 sources:
-  - source_id: SRC-NCCN-COLON-2025
-    position: supports
-    relevant_quote_paraphrase: "Anti-EGFR rechallenge may be considered in 3L+ for RAS-WT mCRC with prior anti-EGFR response and intervening EGFR-free interval; ctDNA RAS reassessment recommended (CHRONOS)"
-  - source_id: SRC-ESMO-COLON-2024
-    position: supports
-    relevant_quote_paraphrase: "Anti-EGFR rechallenge in selected RAS-WT mCRC patients with prior anti-EGFR benefit is a recognised strategy; ctDNA-guided selection improves outcomes"
+- source_id: SRC-NCCN-COLON-2025
+  position: supports
+  relevant_quote_paraphrase: "Anti-EGFR rechallenge may be considered in 3L+ for RAS-WT mCRC with prior anti-EGFR response and intervening EGFR-free interval; ctDNA RAS reassessment recommended (CHRONOS)"
+- source_id: SRC-ESMO-COLON-2024
+  position: supports
+  relevant_quote_paraphrase: "Anti-EGFR rechallenge in selected RAS-WT mCRC patients with prior anti-EGFR benefit is a recognised strategy; ctDNA-guided selection improves outcomes"
 
 known_controversies:
-  - topic: "ctDNA-guided vs unselected anti-EGFR rechallenge"
-    positions:
-      - position: "ctDNA RAS-WT selection (CHRONOS) is mandatory — unselected rechallenge has minimal benefit"
-        sources: [SRC-NCCN-COLON-2025]
-      - position: "Clinical selection (prior response + EGFR-free interval ≥4 mo) is acceptable when ctDNA unavailable"
-        sources: [SRC-ESMO-COLON-2024]
-        evidence_note: "Pragmatic compromise where ctDNA NGS not accessible — but lower ORR expected"
-    our_default: "ctDNA-selected rechallenge preferred (CHRONOS-style); clinical-selection rechallenge acceptable when ctDNA NGS not feasible — document rationale + lower expectations"
-    rationale: "ctDNA selection improves enrichment; UA ctDNA access constrained — pragmatic clinical selection is fallback"
+- topic: "ctDNA-guided vs unselected anti-EGFR rechallenge"
+  positions:
+  - position: "ctDNA RAS-WT selection (CHRONOS) is mandatory — unselected rechallenge has minimal benefit"
+    sources: [SRC-NCCN-COLON-2025]
+  - position: "Clinical selection (prior response + EGFR-free interval ≥4 mo) is acceptable when ctDNA unavailable"
+    sources: [SRC-ESMO-COLON-2024]
+    evidence_note: "Pragmatic compromise where ctDNA NGS not accessible — but lower ORR expected"
+  our_default: "ctDNA-selected rechallenge preferred (CHRONOS-style); clinical-selection rechallenge acceptable when ctDNA NGS not feasible — document rationale + lower expectations"
+  rationale: "ctDNA selection improves enrichment; UA ctDNA access constrained — pragmatic clinical selection is fallback"
 
 do_not_do:
-  - "НЕ призначати rechallenge без prior anti-EGFR response (PR+ OR SD ≥6 mo) — inadequate selection."
-  - "НЕ використовувати rechallenge безпосередньо після prior anti-EGFR (без intervening line) — clonal selection not yet decayed."
-  - "НЕ ігнорувати RAS-WT confirmation — baseline RAS-mut patients не повинні отримувати rechallenge."
-  - "НЕ розпочинати при known BRAF V600E — preferred encorafenib + cetuximab (BEACON)."
-  - "НЕ ігнорувати acneiform rash management — tetracycline + topical clindamycin protocol."
-  - "НЕ підтверджувати rechallenge без funding pathway — cetuximab not NSZU-reimbursed for non-1L."
+- "НЕ призначати rechallenge без prior anti-EGFR response (PR+ OR SD ≥6 mo) — inadequate selection."
+- "НЕ використовувати rechallenge безпосередньо після prior anti-EGFR (без intervening line) — clonal selection not yet decayed."
+- "НЕ ігнорувати RAS-WT confirmation — baseline RAS-mut patients не повинні отримувати rechallenge."
+- "НЕ розпочинати при known BRAF V600E — preferred encorafenib + cetuximab (BEACON)."
+- "НЕ ігнорувати acneiform rash management — tetracycline + topical clindamycin protocol."
+- "НЕ підтверджувати rechallenge без funding pathway — cetuximab not NSZU-reimbursed for non-1L."
 
 do_not_do_en:
-  - "Do NOT prescribe rechallenge without prior anti-EGFR response (PR+ OR SD ≥6 mo) — inadequate selection."
-  - "Do NOT use rechallenge immediately after prior anti-EGFR (without intervening line) — clonal selection has not yet decayed."
-  - "Do NOT ignore RAS-WT confirmation — baseline RAS-mut patients should not receive rechallenge."
-  - "Do NOT initiate in known BRAF V600E — preferred encorafenib + cetuximab (BEACON)."
-  - "Do NOT ignore acneiform rash management — tetracycline + topical clindamycin protocol."
-  - "Do NOT confirm rechallenge without funding pathway — cetuximab not NSZU-reimbursed for non-1L."
+- "Do NOT prescribe rechallenge without prior anti-EGFR response (PR+ OR SD ≥6 mo) — inadequate selection."
+- "Do NOT use rechallenge immediately after prior anti-EGFR (without intervening line) — clonal selection has not yet decayed."
+- "Do NOT ignore RAS-WT confirmation — baseline RAS-mut patients should not receive rechallenge."
+- "Do NOT initiate in known BRAF V600E — preferred encorafenib + cetuximab (BEACON)."
+- "Do NOT ignore acneiform rash management — tetracycline + topical clindamycin protocol."
+- "Do NOT confirm rechallenge without funding pathway — cetuximab not NSZU-reimbursed for non-1L."
 time_critical: false
 last_reviewed: "2026-04-27"
 reviewers: []

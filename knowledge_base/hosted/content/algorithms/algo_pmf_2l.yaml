@@ -12,77 +12,75 @@ purpose: >
   switches.
 
 output_indications:
-  - IND-PMF-MOMELOTINIB-ANEMIA
-  - IND-PMF-2L-FEDRATINIB
-  - IND-PMF-ALLOHCT-HIGH-RISK
-
+- IND-PMF-MOMELOTINIB-ANEMIA
+- IND-PMF-2L-FEDRATINIB
 default_indication: IND-PMF-MOMELOTINIB-ANEMIA
 alternative_indication: IND-PMF-ALLOHCT-HIGH-RISK
 
 decision_tree:
   # Step 1 — blast progression → re-route conceptually to ALGO-AML-2L;
   # algorithm pins to alloHCT-high-risk locally as bridge intent.
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-PMF-BLAST-PROGRESSION
-    if_true:
-      result: IND-PMF-ALLOHCT-HIGH-RISK
-    if_false:
-      next_step: 2
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-PMF-BLAST-PROGRESSION
+  if_true:
+    result: IND-PMF-ALLOHCT-HIGH-RISK
+  if_false:
+    next_step: 2
 
   # Step 2 — high-risk DIPSS-Plus + transplant-eligible → alloHCT
   # (only curative pathway; bridging JAKi parallel layer).
-  - step: 2
-    evaluate:
-      all_of:
-        - red_flag: RF-PMF-HIGH-RISK-DIPSS
-    if_true:
-      result: IND-PMF-ALLOHCT-HIGH-RISK
-    if_false:
-      next_step: 3
+- step: 2
+  evaluate:
+    all_of:
+    - red_flag: RF-PMF-HIGH-RISK-DIPSS
+  if_true:
+    result: IND-PMF-ALLOHCT-HIGH-RISK
+  if_false:
+    next_step: 3
 
   # Step 3 — anemia-dominant (Hgb <10 OR transfusion-dependent) →
   # momelotinib (MOMENTUM / SIMPLIFY-1: ACVR1 inhibition addresses
   # anemia where ruxolitinib worsens it).
-  - step: 3
-    evaluate:
-      any_of:
-        - red_flag: RF-PMF-ANEMIA-DOMINANT
-    if_true:
-      result: IND-PMF-MOMELOTINIB-ANEMIA
-    if_false:
-      next_step: 4
+- step: 3
+  evaluate:
+    any_of:
+    - red_flag: RF-PMF-ANEMIA-DOMINANT
+  if_true:
+    result: IND-PMF-MOMELOTINIB-ANEMIA
+  if_false:
+    next_step: 4
 
   # Step 4 — frailty → momelotinib (better tolerability than fedratinib
   # for elderly; no Wernicke risk).
-  - step: 4
-    evaluate:
-      any_of:
-        - red_flag: RF-PMF-FRAILTY-AGE
-        - red_flag: RF-PMF-ORGAN-DYSFUNCTION
-    if_true:
-      result: IND-PMF-MOMELOTINIB-ANEMIA
-    if_false:
-      next_step: 5
+- step: 4
+  evaluate:
+    any_of:
+    - red_flag: RF-PMF-FRAILTY-AGE
+    - red_flag: RF-PMF-ORGAN-DYSFUNCTION
+  if_true:
+    result: IND-PMF-MOMELOTINIB-ANEMIA
+  if_false:
+    next_step: 5
 
   # Step 5 — default ruxolitinib-resistant / intolerant non-anemic →
   # fedratinib (JAKARTA-2 spleen response + symptom benefit post-rux).
-  - step: 5
-    evaluate:
-      all_of:
-        - condition: "Default ruxolitinib-resistant non-anemic non-frail — fedratinib per JAKARTA-2"
-    if_true:
-      result: IND-PMF-2L-FEDRATINIB
-    if_false:
-      result: IND-PMF-2L-FEDRATINIB
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 5
+  evaluate:
+    all_of:
+    - condition: "Default ruxolitinib-resistant non-anemic non-frail — fedratinib per JAKARTA-2"
+  if_true:
+    result: IND-PMF-2L-FEDRATINIB
+  if_false:
+    result: IND-PMF-2L-FEDRATINIB
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-DIPSS-PLUS-GANGAT-2011
-  - SRC-MOMENTUM-VERSTOVSEK-2023
-  - SRC-JAKARTA2-HARRISON-2017
+- SRC-NCCN-MPN-2025
+- SRC-DIPSS-PLUS-GANGAT-2011
+- SRC-MOMENTUM-VERSTOVSEK-2023
+- SRC-JAKARTA2-HARRISON-2017
 
 last_reviewed: "2026-04-25"
 notes: >

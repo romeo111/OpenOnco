@@ -10,78 +10,75 @@ purpose: >
   cytoreduction). Clinical-trial enrollment is the strongly preferred
   fallback when neither pathway applies and is surfaced as annotation.
 
-output_indications:
-  - IND-MDS-HR-ALLOHCT
-  - IND-MDS-HR-1L-VEN-AZA
-
+output_indications: []
 default_indication: IND-MDS-HR-ALLOHCT
 alternative_indication: IND-MDS-HR-1L-VEN-AZA
 
 decision_tree:
   # Step 1 — overt AML transformation → re-route conceptually to
   # ALGO-AML-2L; algorithm pins to ven+aza locally as bridge.
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-MDS-TRANSFORMATION-PROGRESSION
-    if_true:
-      result: IND-MDS-HR-1L-VEN-AZA
-    if_false:
-      next_step: 2
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-MDS-TRANSFORMATION-PROGRESSION
+  if_true:
+    result: IND-MDS-HR-1L-VEN-AZA
+  if_false:
+    next_step: 2
 
   # Step 2 — transplant-eligible (age ≤70, HCT-CI ≤4, donor available,
   # adequate organ function) → alloHCT is the curative pathway after
   # HMA failure.
-  - step: 2
-    evaluate:
-      any_of:
-        - red_flag: RF-MDS-TRANSPLANT-ELIGIBLE
-    if_true:
-      result: IND-MDS-HR-ALLOHCT
-    if_false:
-      next_step: 3
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-MDS-TRANSPLANT-ELIGIBLE
+  if_true:
+    result: IND-MDS-HR-ALLOHCT
+  if_false:
+    next_step: 3
 
   # Step 3 — frailty / organ dysfunction → ven+aza off-label (lower
   # toxicity than experimental salvage; supportive-care-equivalent
   # palliation).
-  - step: 3
-    evaluate:
-      any_of:
-        - red_flag: RF-MDS-FRAILTY-AGE
-        - red_flag: RF-MDS-ORGAN-DYSFUNCTION
-    if_true:
-      result: IND-MDS-HR-1L-VEN-AZA
-    if_false:
-      next_step: 4
+- step: 3
+  evaluate:
+    any_of:
+    - red_flag: RF-MDS-FRAILTY-AGE
+    - red_flag: RF-MDS-ORGAN-DYSFUNCTION
+  if_true:
+    result: IND-MDS-HR-1L-VEN-AZA
+  if_false:
+    next_step: 4
 
   # Step 4 — TP53-mutated MDS-HR post-HMA → very poor prognosis;
   # algorithm pins to ven+aza but plan generator must surface clinical-
   # trial enrollment (TP53-targeted agents) as primary recommendation.
-  - step: 4
-    evaluate:
-      any_of:
-        - red_flag: RF-MDS-TP53-MUTATION
-    if_true:
-      result: IND-MDS-HR-1L-VEN-AZA
-    if_false:
-      next_step: 5
+- step: 4
+  evaluate:
+    any_of:
+    - red_flag: RF-MDS-TP53-MUTATION
+  if_true:
+    result: IND-MDS-HR-1L-VEN-AZA
+  if_false:
+    next_step: 5
 
   # Step 5 — default fallback for transplant-ineligible non-TP53
   # post-HMA failure: ven+aza off-label or clinical trial.
-  - step: 5
-    evaluate:
-      all_of:
-        - condition: "Default post-HMA failure, transplant-ineligible — ven+aza off-label or clinical trial"
-    if_true:
-      result: IND-MDS-HR-1L-VEN-AZA
-    if_false:
-      result: IND-MDS-HR-1L-VEN-AZA
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 5
+  evaluate:
+    all_of:
+    - condition: "Default post-HMA failure, transplant-ineligible — ven+aza off-label or clinical trial"
+  if_true:
+    result: IND-MDS-HR-1L-VEN-AZA
+  if_false:
+    result: IND-MDS-HR-1L-VEN-AZA
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ESMO-MDS-2021
-  - SRC-IPSS-M-BERNARD-2022
+- SRC-NCCN-AML-2025
+- SRC-ESMO-MDS-2021
+- SRC-IPSS-M-BERNARD-2022
 
 last_reviewed: "2026-04-25"
 notes: >

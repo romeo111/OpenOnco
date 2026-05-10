@@ -11,10 +11,7 @@ purpose: >
   to ALGO-MDS-HR-1L / ALGO-MDS-HR-2L conceptually.
 
 output_indications:
-  - IND-MDS-LR-LENALIDOMIDE-DEL5Q
-  - IND-MDS-LR-2L-IMETELSTAT
-  - IND-MDS-LR-1L-LUSPATERCEPT
-
+- IND-MDS-LR-2L-IMETELSTAT
 default_indication: IND-MDS-LR-2L-IMETELSTAT
 alternative_indication: IND-MDS-LR-LENALIDOMIDE-DEL5Q
 
@@ -22,57 +19,57 @@ decision_tree:
   # Step 1 — risk escalation to MDS-HR / transformation → re-route to
   # ALGO-MDS-HR pathways at calling layer; algorithm pins to
   # luspatercept locally as bridge for cytopenia.
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-MDS-HIGH-RISK-IPSS
-        - red_flag: RF-MDS-TRANSFORMATION-PROGRESSION
-    if_true:
-      result: IND-MDS-LR-1L-LUSPATERCEPT
-    if_false:
-      next_step: 2
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-MDS-HIGH-RISK-IPSS
+    - red_flag: RF-MDS-TRANSFORMATION-PROGRESSION
+  if_true:
+    result: IND-MDS-LR-1L-LUSPATERCEPT
+  if_false:
+    next_step: 2
 
   # Step 2 — del(5q) isolated → lenalidomide (NCCN cat 1; ~67% TI rate
   # in MDS-004 / MYLOFRANCE).
-  - step: 2
-    evaluate:
-      any_of:
-        - red_flag: RF-MDS-DEL-5Q-ISOLATED
-    if_true:
-      result: IND-MDS-LR-LENALIDOMIDE-DEL5Q
-    if_false:
-      next_step: 3
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-MDS-DEL-5Q-ISOLATED
+  if_true:
+    result: IND-MDS-LR-LENALIDOMIDE-DEL5Q
+  if_false:
+    next_step: 3
 
   # Step 3 — frailty / organ dysfunction → luspatercept (better
   # tolerability profile than imetelstat; minimal cytopenia
   # exacerbation).
-  - step: 3
-    evaluate:
-      any_of:
-        - red_flag: RF-MDS-FRAILTY-AGE
-        - red_flag: RF-MDS-ORGAN-DYSFUNCTION
-    if_true:
-      result: IND-MDS-LR-1L-LUSPATERCEPT
-    if_false:
-      next_step: 4
+- step: 3
+  evaluate:
+    any_of:
+    - red_flag: RF-MDS-FRAILTY-AGE
+    - red_flag: RF-MDS-ORGAN-DYSFUNCTION
+  if_true:
+    result: IND-MDS-LR-1L-LUSPATERCEPT
+  if_false:
+    next_step: 4
 
   # Step 4 — default non-del(5q) post-ESA failure → imetelstat
   # (telomerase inhibitor; IMerge phase-3 TI rate 40% vs 15%).
-  - step: 4
-    evaluate:
-      all_of:
-        - condition: "Default non-del(5q), non-frail, post-ESA failure — imetelstat per IMerge"
-    if_true:
-      result: IND-MDS-LR-2L-IMETELSTAT
-    if_false:
-      result: IND-MDS-LR-2L-IMETELSTAT
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 4
+  evaluate:
+    all_of:
+    - condition: "Default non-del(5q), non-frail, post-ESA failure — imetelstat per IMerge"
+  if_true:
+    result: IND-MDS-LR-2L-IMETELSTAT
+  if_false:
+    result: IND-MDS-LR-2L-IMETELSTAT
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ESMO-MDS-2021
-  - SRC-IMERGE-PLATZBECKER-2024
-  - SRC-MDS-004-FENAUX-2011
+- SRC-NCCN-AML-2025
+- SRC-ESMO-MDS-2021
+- SRC-IMERGE-PLATZBECKER-2024
+- SRC-MDS-004-FENAUX-2011
 
 last_reviewed: "2026-04-25"
 notes: >

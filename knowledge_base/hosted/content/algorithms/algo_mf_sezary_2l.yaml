@@ -10,48 +10,45 @@ purpose: >
   bexarotene full-dose mono.
 
 output_indications:
-  - IND-MF-MAINTENANCE-RETINOID
-  - IND-MF-ADVANCED-2L-BEXAROTENE
-  - IND-MF-ADVANCED-1L-MOGA
-  - IND-MF-ADVANCED-1L-BV
-
+- IND-MF-MAINTENANCE-RETINOID
+- IND-MF-ADVANCED-2L-BEXAROTENE
 default_indication: IND-MF-ADVANCED-2L-BEXAROTENE
 alternative_indication: IND-MF-MAINTENANCE-RETINOID
 
 decision_tree:
   # Step 1 — in CR/PR to induction → maintenance
-  - step: 1
-    evaluate:
-      all_of:
-        - condition: "Best response to induction is CR or PR"
-        - condition: "Tolerating systemic therapy"
-    if_true:
-      result: IND-MF-MAINTENANCE-RETINOID
-    if_false:
-      next_step: 2
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 1
+  evaluate:
+    all_of:
+    - condition: "Best response to induction is CR or PR"
+    - condition: "Tolerating systemic therapy"
+  if_true:
+    result: IND-MF-MAINTENANCE-RETINOID
+  if_false:
+    next_step: 2
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
   # Step 2 — CD30+ relapse and BV-naive → BV mono
-  - step: 2
-    evaluate:
-      all_of:
-        - red_flag: RF-TCELL-CD30-POSITIVE
-        - condition: "Brentuximab vedotin not previously administered"
-    if_true:
-      result: IND-MF-ADVANCED-1L-BV
-    if_false:
-      next_step: 3
+- step: 2
+  evaluate:
+    all_of:
+    - red_flag: RF-TCELL-CD30-POSITIVE
+    - condition: "Brentuximab vedotin not previously administered"
+  if_true:
+    result: IND-MF-ADVANCED-1L-BV
+  if_false:
+    next_step: 3
 
   # Step 3 — Sézary blood-dominant and moga-naive → mogamulizumab
-  - step: 3
-    evaluate:
-      all_of:
-        - red_flag: RF-MF-SEZARY-LEUKEMIC
-        - condition: "Mogamulizumab not previously administered"
-    if_true:
-      result: IND-MF-ADVANCED-1L-MOGA
-    if_false:
-      result: IND-MF-ADVANCED-2L-BEXAROTENE
+- step: 3
+  evaluate:
+    all_of:
+    - red_flag: RF-MF-SEZARY-LEUKEMIC
+    - condition: "Mogamulizumab not previously administered"
+  if_true:
+    result: IND-MF-ADVANCED-1L-MOGA
+  if_false:
+    result: IND-MF-ADVANCED-2L-BEXAROTENE
 
 sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-CTCL-2024]
 last_reviewed: "2026-04-27"

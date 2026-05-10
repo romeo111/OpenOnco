@@ -24,73 +24,71 @@ purpose: >
   (virologic failure), OR lymphoma progression on imaging despite
   achieved SVR12, OR transformation to aggressive histology.
 
-output_indications:
-  - IND-HCV-MZL-POST-DAA-SURVEILLANCE
-
+output_indications: []
 default_indication: IND-HCV-MZL-POST-DAA-SURVEILLANCE
 alternative_indication: IND-HCV-MZL-POST-DAA-SURVEILLANCE
 
 decision_tree:
   # Step 1 — histologic transformation suspected → upstream re-biopsy
   # + ALGO-DLBCL routing.
-  - step: 1
-    evaluate:
-      any_of:
-        - condition: "Aggressive histology suspected at relapse (rapid growth, B-symptoms, LDH ↑↑, extranodal sites)"
-        - red_flag: RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
-    if_true:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — routes to ALGO-DLBCL
-    if_false:
-      next_step: 2
+- step: 1
+  evaluate:
+    any_of:
+    - condition: "Aggressive histology suspected at relapse (rapid growth, B-symptoms, LDH ↑↑, extranodal sites)"
+    - red_flag: RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
+  if_true:
+    result: IND-HCV-MZL-POST-DAA-SURVEILLANCE    # placeholder; see notes — routes to ALGO-DLBCL
+  if_false:
+    next_step: 2
 
   # Step 2 — SVR12 NOT achieved (HCV-RNA detectable post-DAA) →
   # DAA retreatment branch. Per EASL 2023, second-line DAA is
   # SOF/VEL/VOX (pan-genotypic, NS5A-rescue) or GLE/PIB. If lymphoma
   # also progressing, add BR concurrent with retreatment.
-  - step: 2
-    evaluate:
-      all_of:
-        - biomarker: BIO-HCV-RNA
-          comparator: "detectable at week 12 post-DAA (SVR12 not achieved)"
-    if_true:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — DAA retreatment + BR
-    if_false:
-      next_step: 3
+- step: 2
+  evaluate:
+    all_of:
+    - biomarker: BIO-HCV-RNA
+      comparator: "detectable at week 12 post-DAA (SVR12 not achieved)"
+  if_true:
+    result: IND-HCV-MZL-POST-DAA-SURVEILLANCE    # placeholder; see notes — DAA retreatment + BR
+  if_false:
+    next_step: 3
 
   # Step 3 — SVR12 achieved + lymphoma relapse (HCV cleared, MZL
   # now antigen-independent / clonal escape) → BR. Surveillance
   # indication remains the default route; clinician escalates to
   # BR via MDT free-text trigger when relapse documented.
-  - step: 3
-    evaluate:
-      all_of:
-        - biomarker: BIO-HCV-RNA
-          comparator: "undetectable at SVR12 (HCV cleared)"
-        - condition: "Documented lymphoma progression on imaging or biopsy after DAA"
-    if_true:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — BR salvage
-    if_false:
-      next_step: 4
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 3
+  evaluate:
+    all_of:
+    - biomarker: BIO-HCV-RNA
+      comparator: "undetectable at SVR12 (HCV cleared)"
+    - condition: "Documented lymphoma progression on imaging or biopsy after DAA"
+  if_true:
+    result: IND-HCV-MZL-POST-DAA-SURVEILLANCE    # placeholder; see notes — BR salvage
+  if_false:
+    next_step: 4
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
   # Step 4 — default: routine post-DAA surveillance (~70% of patients
   # achieve durable lymphoma response from HCV eradication alone).
-  - step: 4
-    evaluate:
-      all_of:
-        - biomarker: BIO-HCV-STATUS
-          comparator: "categorical (post-DAA)"
-        - condition: "No documented relapse / progression"
-    if_true:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE
-    if_false:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 4
+  evaluate:
+    all_of:
+    - biomarker: BIO-HCV-STATUS
+      comparator: "categorical (post-DAA)"
+    - condition: "No documented relapse / progression"
+  if_true:
+    result: IND-HCV-MZL-POST-DAA-SURVEILLANCE
+  if_false:
+    result: IND-HCV-MZL-POST-DAA-SURVEILLANCE
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-BSH-MZL-2024
-  - SRC-EASL-HCV-2023
+- SRC-NCCN-BCELL-2025
+- SRC-BSH-MZL-2024
+- SRC-EASL-HCV-2023
 
 last_reviewed: "2026-04-27"
 notes: >

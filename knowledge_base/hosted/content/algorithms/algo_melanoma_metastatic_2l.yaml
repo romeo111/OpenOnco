@@ -10,12 +10,10 @@ purpose: >
   option).
 
 output_indications:
-  - IND-MELANOMA-2L-KIT-IMATINIB
-  - IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
-  - IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
-  - IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
-  - IND-MELANOMA-3L-LIFILEUCEL
-
+- IND-MELANOMA-2L-KIT-IMATINIB
+- IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
+- IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
+- IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
 default_indication: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
 alternative_indication: IND-MELANOMA-3L-LIFILEUCEL
 
@@ -24,93 +22,93 @@ decision_tree:
   # Imatinib is oral, low-tox, accessible (UA generic). Carvajal 2011
   # established the genotype-response correlation: exon 11 / exon 13
   # point mutations only — KIT amplification alone NOT predictive.
-  - step: 1
+- step: 1
     # KIT-actionable subset → imatinib. RF triggers only on exon 11 / 13
     # activating mutations (not amplification alone). Subtype context
     # (mucosal/acral/chronic-sun-damaged) retained as MDT note since no
     # melanoma-subtype RF exists yet.
-    evaluate:
-      any_of:
-        - red_flag: RF-MELANOMA-KIT-MUT-ACTIONABLE
-    if_true:
-      result: IND-MELANOMA-2L-KIT-IMATINIB
-    if_false:
-      next_step: 2
-    notes: "MDT-only — KIT-imatinib clinical context (mucosal/acral/CSD subtype) is documented in indication eligibility; the RF gates on activating exon 11/13 mutation."
+  evaluate:
+    any_of:
+    - red_flag: RF-MELANOMA-KIT-MUT-ACTIONABLE
+  if_true:
+    result: IND-MELANOMA-2L-KIT-IMATINIB
+  if_false:
+    next_step: 2
+  notes: "MDT-only — KIT-imatinib clinical context (mucosal/acral/CSD subtype) is documented in indication eligibility; the RF gates on activating exon 11/13 mutation."
 
   # Step 2 — Branch on prior-therapy axis. Was 1L anti-PD-1 (with or
   # without ipi)? RF-MELANOMA-IO-RESISTANT fires when post-IO progression
   # is documented.
-  - step: 2
-    evaluate:
-      any_of:
-        - red_flag: RF-MELANOMA-IO-RESISTANT
-    if_true:
-      next_step: 3
-    if_false:
-      next_step: 4
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-MELANOMA-IO-RESISTANT
+  if_true:
+    next_step: 3
+  if_false:
+    next_step: 4
 
   # Step 3 — Post-IO branch. If BRAF V600+, BRAFi+MEKi doublet is
   # the standard 2L per NCCN/ESMO + DREAMseq sequencing data. If
   # BRAF-WT, route to lifileucel default (no targeted option).
-  - step: 3
-    evaluate:
-      any_of:
-        - red_flag: RF-MELANOMA-BRAF-V600-ACTIONABLE
-    if_true:
-      result: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
-    if_false:
-      result: IND-MELANOMA-3L-LIFILEUCEL
+- step: 3
+  evaluate:
+    any_of:
+    - red_flag: RF-MELANOMA-BRAF-V600-ACTIONABLE
+  if_true:
+    result: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
+  if_false:
+    result: IND-MELANOMA-3L-LIFILEUCEL
 
   # Step 4 — Post-BRAFi branch (1L was BRAFi+MEKi for BRAF V600+
   # patient with visceral crisis or active brain mets). 2L is
   # IO-based. Detect BRAF V600+ first (biomarker), then verify ipi-fit
   # status downstream. Split from old all_of.
-  - step: 4
-    evaluate:
-      any_of:
-        - red_flag: RF-MELANOMA-BRAF-V600-ACTIONABLE
-    if_true:
-      next_step: 41
-    if_false:
-      next_step: 5
+- step: 4
+  evaluate:
+    any_of:
+    - red_flag: RF-MELANOMA-BRAF-V600-ACTIONABLE
+  if_true:
+    next_step: 41
+  if_false:
+    next_step: 5
 
-  - step: 41
+- step: 41
     # Sub-step: ipi+nivo fitness check (ECOG 0-1, no autoimmunity).
     # Free-text retained — no melanoma-scoped RF for "fit for high-grade
     # irAE risk" combination.
-    evaluate:
-      any_of:
-        - condition: "Patient fit for ipi+nivo Grade 3-4 irAE risk (ECOG 0-1, no significant baseline autoimmunity)"
-    if_true:
-      result: IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
-    if_false:
-      next_step: 5
-    notes: "MDT-only — ipi+nivo fitness has no dedicated RF (composite ECOG + autoimmunity); falls through to rela+nivo / lifileucel for unfit patients."
+  evaluate:
+    any_of:
+    - condition: "Patient fit for ipi+nivo Grade 3-4 irAE risk (ECOG 0-1, no significant baseline autoimmunity)"
+  if_true:
+    result: IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
+  if_false:
+    next_step: 5
+  notes: "MDT-only — ipi+nivo fitness has no dedicated RF (composite ECOG + autoimmunity); falls through to rela+nivo / lifileucel for unfit patients."
 
   # Step 5 — Patient unfit for ipi+nivo OR strongly prefers
   # tolerability profile → rela+nivo (Opdualag) as IO-naive 2L
   # alternative. If neither applicable, fall through to lifileucel
   # default (e.g., BRAF-WT with no IO history at all — unusual but
   # possible if 1L was clinical trial).
-  - step: 5
-    evaluate:
-      any_of:
-        - condition: "Patient unfit for ipi+nivo (baseline autoimmunity, frailty, advanced age) but IO-naive"
-        - red_flag: RF-MELANOMA-FRAILTY-AGE
-    if_true:
-      result: IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
-    if_false:
-      result: IND-MELANOMA-3L-LIFILEUCEL
+- step: 5
+  evaluate:
+    any_of:
+    - condition: "Patient unfit for ipi+nivo (baseline autoimmunity, frailty, advanced age) but IO-naive"
+    - red_flag: RF-MELANOMA-FRAILTY-AGE
+  if_true:
+    result: IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
+  if_false:
+    result: IND-MELANOMA-3L-LIFILEUCEL
 
 sources:
-  - SRC-NCCN-MELANOMA-2025
-  - SRC-ESMO-MELANOMA-2024
-  - SRC-COLUMBUS-DUMMETT-2018
-  - SRC-CHECKMATE-067-LARKIN-2019
-  - SRC-RELATIVITY-047-TAWBI-2022
-  - SRC-C14401-CHESNEY-2024
-  - SRC-CARVAJAL-KIT-MELANOMA-2013
+- SRC-NCCN-MELANOMA-2025
+- SRC-ESMO-MELANOMA-2024
+- SRC-COLUMBUS-DUMMETT-2018
+- SRC-CHECKMATE-067-LARKIN-2019
+- SRC-RELATIVITY-047-TAWBI-2022
+- SRC-C14401-CHESNEY-2024
+- SRC-CARVAJAL-KIT-MELANOMA-2013
 
 last_reviewed: "2026-04-27"
 
