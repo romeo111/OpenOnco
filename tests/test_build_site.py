@@ -80,11 +80,10 @@ def test_landing_is_public_with_hero_and_ctas(site_dir: Path):
     html = (site_dir / "index.html").read_text(encoding="utf-8")
     # No auth gate — public landing per user direction
     assert "openOncoUser" not in html, "auth gate must be removed from landing"
-    # Hero structure
-    assert 'class="hero"' in html
-    # Both CTAs (root-relative paths since the EN-default flip — commit 48eb804e)
+    # Hero structure (v2 redesign: class="home-hero", commit after 48eb804e)
+    assert 'class="home-hero"' in html
+    # Primary CTA in hero (root-relative path since EN-default flip — commit 48eb804e)
     assert 'href="/try.html"' in html
-    assert 'href="/gallery.html"' in html
     # Hero copy
     assert "oncology" in html.lower() or "онколог" in html.lower()
 
@@ -102,7 +101,7 @@ def test_capabilities_shows_numerical_metrics(site_dir: Path):
     assert 'class="num-grid num-grid--rich"' in html
     for label in ("Хвороби в KB", "Лікарі-скіли", "Режими лікування",
                   "Препарати", "Тести", "Workups", "Red flags",
-                  "Джерела", "Специфікації"):
+                  "Джерела"):
         assert label in html, f"missing capabilities metric label: {label}"
     # Removed labels per user direction
     for removed in ("Показання (Indications)", "Supportive care"):
@@ -121,24 +120,23 @@ def test_landing_drops_watson_comparison(site_dir: Path):
 
 
 def test_landing_problem_block_is_single_prose(site_dir: Path):
-    """The 'why this is needed' block is prose paragraphs (`how-lead`)
-    inside the unified `<section class="how">`, not a 2-column grid.
-    Renamed from `problem-text` to `how-lead` in commit `25b0340` when
-    the problem and how-it-works blocks merged."""
+    """Landing v2 redesign: the 'why this is needed' prose (`how-lead`) was
+    removed from the home page to keep the first viewport focused on the product.
+    The source-band (`home-source-band`) is the canonical non-hero section,
+    replacing the old how/problem blocks. No 2-column problem-grid either."""
     html = (site_dir / "index.html").read_text(encoding="utf-8")
-    assert 'class="how-lead"' in html
+    assert 'class="home-source-band"' in html
     assert 'class="problem-grid"' not in html
+    assert 'class="how-lead"' not in html
 
 
 def test_landing_how_section_uses_dataflow_stages(site_dir: Path):
-    """The 'Як це працює' section uses a 4-stage dataflow block
-    (INPUT → VERIFY → BIOMARKERS → OUTPUT) — replaced the older
-    MDT infographic embed when the landing was redesigned."""
+    """Landing v2 redesign: the dataflow (INPUT → VERIFY → BIOMARKERS → OUTPUT)
+    was removed from the home page. The landing is now a focused home-main layout
+    with hero + source-band. Old step/dataflow/MDT embeds must be absent."""
     html = (site_dir / "index.html").read_text(encoding="utf-8")
-    assert 'class="dataflow"' in html
-    for stage in ("01 · INPUT", "02 · VERIFY", "03 · BIOMARKERS", "04 · OUTPUT"):
-        assert stage in html, f"missing dataflow stage label: {stage}"
-    # Old text-list step format removed
+    assert 'class="home-main"' in html
+    assert 'class="dataflow"' not in html
     assert '<ol class="steps">' not in html
 
 
@@ -619,10 +617,10 @@ def test_en_landing_links_use_en_paths(site_dir: Path):
     """Top-bar links on /ukr/ pages must stay within /ukr/ scope (so the
     user keeps reading in Ukrainian unless they explicitly toggle EN).
 
-    Direction flipped in commit 48eb804e: UA is now the secondary tier."""
+    Direction flipped in commit 48eb804e: UA is now the secondary tier.
+    Landing v2 redesign removed Gallery from the nav; Try is the primary CTA."""
     ua_index = (site_dir / "ukr" / "index.html").read_text(encoding="utf-8")
-    # Gallery + Try links route through /ukr/ for UA nav
-    assert "/ukr/gallery.html" in ua_index
+    # Try link routes through /ukr/ for UA nav
     assert "/ukr/try.html" in ua_index
     # html lang attr is uk
     assert '<html lang="uk">' in ua_index
