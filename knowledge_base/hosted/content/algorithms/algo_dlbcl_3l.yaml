@@ -1,0 +1,75 @@
+id: ALGO-DLBCL-3L
+applicable_to_disease: DIS-DLBCL-NOS
+applicable_to_line_of_therapy: 3
+draft: true
+purpose: >
+  Select 3L+ relapsed/refractory DLBCL indication for patients with ≥2 prior
+  systemic therapies failed. Two primary tracks: (1) CAR-T-ineligible (frailty,
+  comorbidity, ECOG ≥2, no funded international referral pathway, manufacturing-window
+  risk) → loncastuximab tesirine (LOTIS-2; ORR 48%, mPFS 4.9 mo, mOS 9.5 mo) — the
+  realistic default for the UA frail majority; (2) CAR-T-eligible, fit,
+  CD19-positive → axi-cel or liso-cel CAR-T (curative-intent aggressive track).
+  Bispecifics (epcoritamab, glofitamab) included as output_indications for HCP
+  consideration when CAR-T not feasible and bispecific step-up infrastructure is
+  available; not separately wired into the decision tree at v0.1.
+
+output_indications:
+- IND-DLBCL-3L-LONCASTUXIMAB
+- IND-DLBCL-3L-AXICEL-CART
+- IND-DLBCL-3L-LISO-CEL-CART
+- IND-DLBCL-3L-EPCORITAMAB
+- IND-DLBCL-3L-GLOFITAMAB
+default_indication: IND-DLBCL-3L-LONCASTUXIMAB
+alternative_indication: IND-DLBCL-3L-AXICEL-CART
+
+decision_tree:
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-DLBCL-CART-INELIGIBLE-POST-2L
+  if_true:
+    result: IND-DLBCL-3L-LONCASTUXIMAB
+  if_false:
+    next_step: 2
+  notes: >
+    CAR-T-ineligible composite (RF-DLBCL-CART-INELIGIBLE-POST-2L): fires when
+    prior_lines_count ≥2 AND (cart_ineligibility_reason set OR ECOG ≥2 + age ≥70
+    OR universal ineligibility RFs). Routes to loncastuximab tesirine — off-the-shelf
+    outpatient ADC ideally suited for frail post-2L patients without CAR-T access.
+    Covers LOTIS-2 population: median 3 prior lines, ~30% prior CAR-T, ORR 48% CR 24%.
+
+- step: 2
+  evaluate:
+    all_of:
+    - red_flag: RF-CAR-T-ELIGIBLE
+    - red_flag: RF-FITNESS-ECOG-FIT
+  if_true:
+    result: IND-DLBCL-3L-AXICEL-CART
+  if_false:
+    result: IND-DLBCL-3L-LONCASTUXIMAB
+  notes: >
+    CAR-T-eligible + fit patients (ECOG ≤2, LVEF ≥50%, adequate organ function,
+    age <75, no active uncontrolled infection) route to axi-cel CAR-T (ZUMA-7;
+    curative intent, ~40% long-term remission). Fallback to loncastuximab for
+    borderline fitness or unclassified eligibility. Liso-cel (TRANSFORM) and
+    bispecifics (epcoritamab, glofitamab) are in output_indications for HCP
+    discretion but not separately wired at this draft stage.
+
+sources:
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
+- SRC-LOTIS-2-CAIMI-2021
+last_reviewed: '2026-05-10'
+notes: >
+  DRAFT — pending two Clinical Co-Lead sign-offs per CHARTER §6.1 before
+  promotion to non-draft. Authored to route patient_dlbcl_primary_refractory_loncast_post_pola
+  (line_of_therapy=3, CAR-T-ineligible, post-Pola-R-CHP) to IND-DLBCL-3L-LONCASTUXIMAB.
+  OOS / wiring gaps: (1) liso-cel 3L (TRANSFORM) and bispecifics (epcoritamab
+  EPCORE NHL-1; glofitamab STARGLO) modelled as output_indications only — separate
+  step branches gated on IP-observation-infrastructure / CD19-expression post-CAR-T
+  deferred to next KB batch. (2) Post-CAR-T relapse cohort (CD19-loss vs CD19-retained)
+  not separately branched — both epcoritamab and glofitamab are listed for HCP
+  discretion. (3) RF-DLBCL-CART-INELIGIBLE-POST-2L cross-line surfacing from
+  ALGO-DLBCL-2L step 21 is retained as defensive wiring for edge-case line=2
+  patients already post-2-line progression.
+reviewer_signoffs: []
