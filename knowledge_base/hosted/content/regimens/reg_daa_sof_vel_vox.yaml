@@ -1,0 +1,86 @@
+id: REG-DAA-SOF-VEL-VOX
+name: "Sofosbuvir/Velpatasvir/Voxilaprevir 12 weeks (NS5A rescue)"
+name_ua: "Софосбувір/Велпатасвір/Воксилапревір 12 тижнів (NS5A rescue)"
+alternate_names:
+  - "SOF/VEL/VOX 12w"
+  - "Vosevi 12w"
+
+components:
+  - drug_id: DRUG-SOFOSBUVIR-VELPATASVIR-VOXILAPREVIR
+    dose: "400/100/100 mg PO"
+    schedule: "once daily with food"
+    route: PO
+    duration: "12 weeks continuous"
+
+cycle_length_days: 84
+total_cycles: "1 (continuous 12-week course)"
+
+toxicity_profile: low
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Decompensated cirrhosis (Child-Pugh B or C)"
+    modification: "SOF/VEL/VOX contraindicated — use GLE/PIB with hepatology input"
+    rationale: "EASL 2023: SOF/VEL/VOX not studied in Child-Pugh B/C; GLE/PIB preferred with specialist guidance"
+    source_refs:
+      - SRC-EASL-HCV-2023
+  - condition: "NS5B resistance-associated substitutions (S282T)"
+    modification: "Reduced efficacy; hepatology or ID specialist consultation required"
+    rationale: "SOF-component efficacy reduced with S282T; rare but documented"
+    source_refs:
+      - SRC-EASL-HCV-2023
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Sofosbuvir/velpatasvir/voxilaprevir (Vosevi) may not be available
+    through the national HCV program in Ukraine. GLE/PIB (REG-DAA-GLEC-PIBR)
+    is the preferred accessible alternative for DAA-experienced retreatment.
+    Verify local availability before prescribing.
+
+sources:
+  - SRC-EASL-HCV-2023
+
+between_visit_watchpoints:
+  - trigger_ua: "Головний біль, нудота або діарея протягом перших 2 тижнів"
+    action_ua: "Зазвичай легкі та минають — занотуйте у щоденник і обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-14"
+    sources:
+      - SRC-EASL-HCV-2023
+  - trigger_ua: "Жовтяниця або потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — ознака можливого погіршення функції печінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-EASL-HCV-2023
+  - trigger_ua: "Раптова сильна слабкість або запаморочення при одночасному прийомі аміодарону"
+    action_ua: "Звертайтесь у лікарню негайно — поєднання з аміодароном небезпечне"
+    urgency: er_now
+    sources:
+      - SRC-EASL-HCV-2023
+
+last_reviewed: "2026-05-10"
+notes: >
+  Pan-genotypic NS5A+NS5B+NS3 triple-class rescue regimen for
+  DAA-experienced patients with NS5A treatment failure (EASL 2023).
+  Primary 2L DAA option after sofosbuvir/velpatasvir failure when
+  NS5A resistance-associated substitutions are present or suspected.
+  GLE/PIB (REG-DAA-GLEC-PIBR) is the alternative with broader
+  NS3+NS5A dual-class coverage and better availability in Ukraine.
+  Used in IND-HCV-MZL-2L-DAA-RETREATMENT (referenced in rationale;
+  GLE/PIB is the primary KB-modeled regimen, SOF/VEL/VOX noted as
+  the preferred option when NS5A RAS confirmed and locally available).
+  STUB — requires Clinical Co-Lead signoff and DRUG-SOFOSBUVIR-
+  VELPATASVIR-VOXILAPREVIR drug entity creation.
+notes_ua: >
+  Пангенотипний NS5A+NS5B+NS3 triple-class rescue режим для DAA-досвідчених
+  пацієнтів з невдачею NS5A (EASL 2023). Основний 2L DAA варіант після
+  невдачі sofosbuvir/velpatasvir при підтверджених або підозрюваних NS5A RAS.
+  GLE/PIB є альтернативою з ширшим покриттям NS3+NS5A та кращою доступністю
+  в Україні.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
