@@ -3,14 +3,19 @@ applicable_to_disease: DIS-MM
 applicable_to_line_of_therapy: 1
 purpose: >
   Select default + alternative Indication for first-line multiple myeloma based
-  on cytogenetic risk and fitness. Outputs the two-plan pair per CHARTER §2 —
-  D-VRd (preferred for high-risk; also NCCN Cat 1 for standard-risk post-PERSEUS
-  Sonneveld NEJM 2024 PFS HR 0.42) vs VRd (standard-risk default where D-VRd
-  access/funding is unavailable). High-risk always routes to D-VRd.
+  on transplant eligibility, cytogenetic risk, and fitness. Outputs two-plan pair
+  per CHARTER §2. Transplant-eligible (TE): VRd (standard) vs D-VRd+ASCT
+  (aggressive, PERSEUS HR 0.42). Transplant-ineligible (TI): Rd continuous
+  (standard, MAIA control) vs D-Rd (aggressive, MAIA HR 0.56). Routing between
+  TE and TI cohorts is determined by applicable_to.demographic_constraints.fit_for_transplant
+  on each Indication entity — the decision tree below governs regimen selection
+  within the TE cohort; TI cohort routing support pending engine transplant-gate.
 
 output_indications:
 - IND-MM-1L-VRD
 - IND-MM-1L-DVRD
+- IND-MM-1L-RD
+- IND-MM-1L-DARA-RD
 default_indication: IND-MM-1L-VRD
 alternative_indication: IND-MM-1L-DVRD
 decision_tree:
@@ -51,5 +56,34 @@ sources:
 - SRC-ESMO-MM-2023
 - SRC-PERSEUS-SONNEVELD-2024
 - SRC-GRIFFIN-VOORHEES-2020
+- SRC-MAIA-FACON-2019
 last_reviewed: '2026-05-09'
-notes: "Cytogenetic risk + aggressive biology are the primary regimen determinants; frailty is recorded but doesn't switch regimen (handled at Regimen dose-modification layer). Transplant eligibility is a downstream consideration that affects total cycle count and post- induction pathway (ASCT + consolidation + maintenance vs continuous induction-then-maintenance), but not the induction regimen choice. Both Indications carry CI-LENALIDOMIDE-PREGNANCY and CI-BORTEZOMIB-SEVERE-NEUROPATHY; D-VRd additionally carries CI-HBV-NO-PROPHYLAXIS. RF-MM-RENAL-DYSFUNCTION (investigate) triggers dose adjustment but does not shift regimen choice. RF-MM-INFECTION-SCREENING (hold) operates via parallel SUP-HBV-PROPHYLAXIS, not a decision-tree branch.\nEtiology rails (parallel to indication selection):\n- HBV (HBsAg+ OR anti-HBc+) — entecavir 0.5 mg PO daily before first\n  daratumumab or isatuximab dose, continued through induction +\n  ≥12 months post-last-anti-CD38. Anti-CD38 mAbs have documented HBV\n  reactivation risk (FDA labels; NCCN MM 2.2025). For VRd-only (no\n  anti-CD38), HBV reactivation risk is lower but entecavir still\n  recommended in HBsAg+ on prolonged steroid pulse. CI-HBV-NO-\n  PROPHYLAXIS (extended 2026-04-27 to cover daratumumab) is a hard\n  contraindication on D-VRd, blocking plan finalization until\n  SUP-HBV-PROPHYLAXIS is acknowledged.\n\n- HCV — Less common in MM cohort; treat MM first and coordinate DAA\n  timing with hepatologist. Avoid sofosbuvir + amiodarone interaction.\n\nHIV+ MM is rare (older population, typically post-PCP / post-PJP era); manage per ART-aware MM consensus (continue ART, prefer integrase- inhibitor backbone, no empiric VRd dose-reduction). BIO-HBV-STATUS, BIO-HCV-STATUS, BIO-HIV-STATUS missing — flagged for future round.\n"
+notes: >
+  Cytogenetic risk + aggressive biology are the primary regimen determinants
+  within each transplant-eligibility cohort. Frailty is recorded but doesn't
+  switch regimen (handled at Regimen dose-modification layer).
+
+  Transplant-eligibility gate: IND-MM-1L-VRD and IND-MM-1L-DVRD have
+  fit_for_transplant: true; IND-MM-1L-RD and IND-MM-1L-DARA-RD have
+  fit_for_transplant: false. The engine should apply this demographic gate
+  before running the decision tree. Until the engine supports
+  applicable_to.demographic_constraints routing, the decision tree outputs
+  TE indications by default. TI cohort: D-Rd (MAIA, Facon NEJM 2019, HR
+  0.56) as aggressive plan; Rd continuous as standard plan.
+
+  Both TE Indications carry CI-LENALIDOMIDE-PREGNANCY and CI-BORTEZOMIB-
+  SEVERE-NEUROPATHY; D-VRd and D-Rd additionally carry CI-HBV-NO-PROPHYLAXIS.
+  RF-MM-RENAL-DYSFUNCTION (investigate) triggers dose adjustment but does
+  not shift regimen choice. RF-MM-INFECTION-SCREENING (hold) operates via
+  parallel SUP-HBV-PROPHYLAXIS, not a decision-tree branch.
+
+  Etiology rails (parallel to indication selection):
+  - HBV (HBsAg+ OR anti-HBc+) — entecavir 0.5 mg PO daily before first
+    daratumumab dose, continued through therapy + ≥12 months post-last-anti-CD38.
+    Anti-CD38 mAbs have documented HBV reactivation risk (FDA labels; NCCN
+    MM 2.2025). CI-HBV-NO-PROPHYLAXIS is a hard contraindication on D-VRd
+    and D-Rd, blocking plan finalization until SUP-HBV-PROPHYLAXIS acknowledged.
+  - HCV — Less common in MM cohort; treat MM first and coordinate DAA timing
+    with hepatologist.
+  - HIV+ MM is rare; manage per ART-aware MM consensus (continue ART, prefer
+    integrase-inhibitor backbone). BIO-HIV-STATUS flagged for future wave.

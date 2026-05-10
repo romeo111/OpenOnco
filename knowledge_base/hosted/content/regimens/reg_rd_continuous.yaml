@@ -1,0 +1,128 @@
+id: REG-RD-CONTINUOUS
+name: "Lenalidomide + Dexamethasone continuous (Rd, MAIA control arm — MM 1L transplant-ineligible)"
+name_ua: "Леналідомід + Дексаметазон безперервно (Rd, контрольна група MAIA — MM 1Л непридатні до трансплантації)"
+alternate_names:
+  - "Rd continuous"
+  - "Len-Dex"
+  - "Lenalidomide-Dex until progression"
+  - "MAIA control arm"
+  - "CALGB 100104 backbone"
+
+# MAIA control arm (Facon NEJM 2019, PMID 30926586):
+# Lenalidomide 25 mg PO days 1-21 + dexamethasone 40 mg PO weekly, 28-day cycles
+# until progression. Standard-of-care triplet-ineligible or access-limited option.
+components:
+  - drug_id: DRUG-LENALIDOMIDE
+    dose: "25 mg PO daily (10 mg if CrCl 30-60 mL/min)"
+    schedule: "Days 1-21 of each 28-day cycle; continuous until progression"
+    route: PO
+  - drug_id: DRUG-DEXAMETHASONE
+    dose: "40 mg PO weekly (20 mg if age >75 or frail)"
+    schedule: "Days 1, 8, 15, 22 of each 28-day cycle"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: low-moderate
+
+premedication:
+  - "Acyclovir 400 mg PO BID (HSV/VZV prophylaxis per NCCN MM)"
+  - "Aspirin 81-100 mg PO daily for VTE prophylaxis (IMiD class); LMWH if prior VTE or high-risk profile"
+  - "Confirm two reliable contraceptive methods (women of reproductive potential) — REMS/iPLEDGE-equivalent required for lenalidomide"
+
+mandatory_supportive_care:
+  - SUP-MM-VTE-PROPHYLAXIS
+  - SUP-MM-BONE-PROTECTION
+
+monitoring_schedule_id: MON-VRD-REGIMEN
+
+dose_adjustments:
+  - condition: "CrCl 30-60 mL/min"
+    modification: "Lenalidomide 10 mg daily; dexamethasone unchanged"
+    rationale: "Lenalidomide ~80% renally cleared; dose-interval extension recommended"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "CrCl <30 mL/min (no dialysis)"
+    modification: "Lenalidomide 5 mg daily or 10 mg every other day; reassess if <15 mL/min"
+    rationale: "Major lenalidomide exposure increase"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "Age >75 OR frail (IMWG frailty ≥2)"
+    modification: "Dexamethasone 20 mg weekly; consider lenalidomide 15 mg starting dose"
+    rationale: "Frail patients have increased steroid toxicity (infections, delirium, hyperglycemia)"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "ANC <1000 OR platelets <50K"
+    modification: "Hold lenalidomide; resume at 20 mg → 15 mg → 10 mg → 5 mg on recovery"
+    rationale: "Cumulative lenalidomide myelosuppression; dose ladder per NCCN"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "Grade ≥3 rash"
+    modification: "Withhold lenalidomide; systemic corticosteroids; resume at next-lower dose if resolves ≤Grade 1"
+    rationale: "Lenalidomide dermatological toxicity (Stevens-Johnson rarely)"
+    source_refs: [SRC-NCCN-MM-2025]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    Lenalidomide reimbursed via НСЗУ for myeloma. Dexamethasone widely
+    available. Rd is the standard-access backbone for transplant-ineligible
+    NDMM in Ukraine when daratumumab funding is unavailable.
+
+between_visit_watchpoints:
+  - trigger_ua: "Втома або слабкість під час леналідоміду"
+    action_ua: "Часто зустрічається — занотовуйте; не зупиняйте без консультації"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Біль або набряк в одній нозі"
+    action_ua: "Подзвоніть у клініку того ж дня — леналідомід підвищує ризик тромбозу; антикоагулянти призначаються профілактично"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива нейтропенія або інфекція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова задишка, біль у грудях або кровохаркання"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+
+sources:
+  - SRC-MAIA-FACON-2019
+  - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-05-09"
+notes: >
+  Rd continuous (lenalidomide + low-dose dexamethasone until progression)
+  was the MAIA control arm (Facon NEJM 2019, PMID 30926586) and represents
+  the standard-access first-line regimen for transplant-ineligible NDMM.
+  MAIA control arm outcomes: ORR 75.8%, PFS HR (D-Rd vs Rd) 0.56 (95% CI
+  0.43–0.73), 30-month PFS ~53.3% for D-Rd vs ~37.8% for Rd.
+
+  Rd continuous showed superiority over MPT and melphalan-prednisone in the
+  FIRST trial (Benboubker NEJM 2014, PMID 25184863): PFS 26 months vs 21.9
+  months for MPT.
+
+  Dose of dexamethasone: low-dose (40 mg weekly = "Ld schedule") is
+  preferred over high-dose (480 mg/cycle); ECOG E4A03 showed equivalent
+  efficacy and better tolerability with low-dose dex in NDMM (Rajkumar
+  LANCET ONCOL 2010).
+
+  Renal adjustment is critical: lenalidomide is ~80% renally cleared.
+  CrCl 30-60 → 10 mg daily; CrCl <30 → 5 mg daily or 10 mg qod.
+  Myeloma renal impairment often improves with therapy — recheck CrCl
+  monthly and escalate dose when GFR recovers.
+
+  Second primary malignancy (SPM) risk: CALGB 100104 and IFM 2005-02
+  documented elevated SPM (MDS/AML) with lenalidomide maintenance
+  post-ASCT; risk applies to continuous Rd as well at smaller magnitude.
+  Must be included in informed consent discussion.
+notes_ua: >
+  Rd безперервно (леналідомід + низькодозовий дексаметазон до прогресування)
+  була контрольною групою у дослідженні MAIA (Facon NEJM 2019, PMID 30926586)
+  і є стандартною схемою першої лінії для непридатних до трансплантації пацієнтів
+  з НДММ. Схема фінансується через НСЗУ — є стандартом доступу в Україні.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
