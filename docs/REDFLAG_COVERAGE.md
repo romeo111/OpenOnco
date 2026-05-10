@@ -6,24 +6,48 @@ Purpose: single source of truth for RedFlag catalog integrity + 5-type matrix co
 
 ## Summary
 
-- **Defined entities:** 270
-- **Referenced by rules:** 133 unique IDs, 496 total citations
-- **Defined + used (✓):** 133
-- **Defined + unused (⚠):** 137
-- **Referenced + missing (❌):** 0
-- **Drafts:** 2
-- **Without source citation:** 0
+- **Defined entities:** 511
+- **Referenced by rules:** 341 unique IDs, 1590 total citations
+- **Defined + used (✓):** 327
+- **Defined + unused (⚠):** 184
+- **Referenced + missing (❌):** 14
+- **Drafts:** 40
+- **Without source citation:** 2
 - **With ≥2 reviewer signoffs (CHARTER §6.1):** 0
 
 By category:
-- `frailty-age`: 51
-- `infection-screening`: 51
-- `organ-dysfunction`: 56
-- `transformation-progression`: 52
-- `high-risk-biology`: 59
-- `other` (off-matrix): 1
+- `frailty-age`: 66
+- `infection-screening`: 64
+- `organ-dysfunction`: 96
+- `transformation-progression`: 71
+- `high-risk-biology`: 152
+- `other` (off-matrix): 62
 
 ## Issues to resolve
+
+### 🔧 Naming mismatches (likely typos — engine sees broken ref)
+
+| Defined entity | Cited form | Action |
+|---|---|---|
+| `RF-ATC-BRAF-V600E-ACTIONABLE` | `RF-CRC-BRAF-V600E` | Pick canonical id, update either the entity file or the citing rules. Two-reviewer per CHARTER §6.1. |
+| `RF-CNS-METASTASES-ACTIVE` | `RF-MELANOMA-CNS-ACTIVE` | Pick canonical id, update either the entity file or the citing rules. Two-reviewer per CHARTER §6.1. |
+
+### ❌ Referenced but no entity file
+
+- `RF-BURKITT` — cited 1×. Author the entity, or remove the citation.
+- `RF-CAR-T-INELIGIBLE` — cited 1×. Author the entity, or remove the citation.
+- `RF-CLL` — cited 1×. Author the entity, or remove the citation.
+- `RF-CML` — cited 2×. Author the entity, or remove the citation.
+- `RF-CRC-BRAF-V600E` — cited 2×. Author the entity, or remove the citation.
+- `RF-CRC-HER2-AMP-ACTIONABILITY` — cited 1×. Author the entity, or remove the citation.
+- `RF-CRC-KRAS-G12C-ACTIONABILITY` — cited 1×. Author the entity, or remove the citation.
+- `RF-FITNESS` — cited 1×. Author the entity, or remove the citation.
+- `RF-FL` — cited 2×. Author the entity, or remove the citation.
+- `RF-MELANOMA-CNS-ACTIVE` — cited 1×. Author the entity, or remove the citation.
+- `RF-MM` — cited 1×. Author the entity, or remove the citation.
+- `RF-ORGAN` — cited 3×. Author the entity, or remove the citation.
+- `RF-PMF` — cited 3×. Author the entity, or remove the citation.
+- `RF-UROTHELIAL-EV-INELIGIBLE` — cited 1×. Author the entity, or remove the citation.
 
 ### ⚠ Defined but no rule consumes them
 
@@ -36,99 +60,140 @@ RedFlag exists in the catalog but no algorithm / indication / other RedFlag refe
 - `RF-ALCL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-ALCL
 - `RF-ALCL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-ALCL
 - `RF-ALCL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-ALCL
+- `RF-AML-CD33-POS-GO-CANDIDATE` (high-risk-biology) — diseases: DIS-AML
+- `RF-AML-TP53-ADVERSE` (high-risk-biology) — diseases: DIS-AML
+- `RF-ATC-BRAF-V600E-ACTIONABLE` (high-risk-biology) — diseases: DIS-THYROID-ANAPLASTIC
 - `RF-ATLL-FRAILTY-AGE` (frailty-age) — diseases: DIS-ATLL
-- `RF-ATLL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-ATLL
-- `RF-BREAST-INFECTION-SCREENING` (infection-screening) — diseases: DIS-BREAST
-- `RF-BREAST-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-BREAST
-- `RF-BURKITT-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-BURKITT
-- `RF-CERVICAL-FRAILTY-AGE` (frailty-age) — diseases: DIS-CERVICAL
+- `RF-ATLL-HYPERCALCEMIA` (organ-dysfunction) — diseases: DIS-ATLL
+- `RF-B-ALL-CNS-LEUKEMIA` (high-risk-biology) — diseases: DIS-B-ALL
+- `RF-B-ALL-EMERGENCY-TLS-LEUKOSTASIS` (organ-dysfunction) — diseases: DIS-B-ALL
+- `RF-BALL-CD22-POS-INO-CANDIDATE` (high-risk-biology) — diseases: DIS-B-ALL
+- `RF-BREAST-CDH1-LOBULAR-CANDIDATE` (high-risk-biology) — diseases: DIS-BREAST, DIS-GASTRIC
+- `RF-BREAST-OVARIAN-HRD-ASSAY-DISTINCTION` (high-risk-biology) — diseases: DIS-OVARIAN, DIS-BREAST
+- `RF-BURKITT-EMERGENCY-TLS` (organ-dysfunction) — diseases: DIS-BURKITT
 - `RF-CERVICAL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-CERVICAL
-- `RF-CERVICAL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-CERVICAL
 - `RF-CERVICAL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-CERVICAL
-- `RF-CHL-FRAILTY-AGE` (frailty-age) — diseases: DIS-CHL
 - `RF-CHL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-CHL
-- `RF-CHL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-CHL
+- `RF-CHOLANGIOCARCINOMA-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-CHOLANGIOCARCINOMA
+- `RF-CHOLANGIOCARCINOMA-INFECTION-SCREENING` (infection-screening) — diseases: DIS-CHOLANGIOCARCINOMA
+- `RF-CHOLANGIOCARCINOMA-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-CHOLANGIOCARCINOMA
+- `RF-CHONDROSARCOMA-FRAILTY-AGE` (frailty-age) — diseases: DIS-CHONDROSARCOMA
+- `RF-CHONDROSARCOMA-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-CHONDROSARCOMA
+- `RF-CHONDROSARCOMA-INFECTION-SCREENING` (infection-screening) — diseases: DIS-CHONDROSARCOMA
+- `RF-CHONDROSARCOMA-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-CHONDROSARCOMA
+- `RF-CHONDROSARCOMA-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-CHONDROSARCOMA
 - `RF-CLL-FRAILTY-AGE` (frailty-age) — diseases: DIS-CLL
-- `RF-CLL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-CLL
 - `RF-CLL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-CLL
-- `RF-CLL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-CLL
+- `RF-CNS-METASTASES-ACTIVE` (oncologic-emergency) — diseases: *
 - `RF-CRC-INFECTION-SCREENING` (infection-screening) — diseases: DIS-CRC
-- `RF-CRC-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-CRC
+- `RF-DLBCL-CD79B-MUT-MCD-CANDIDATE` (high-risk-biology) — diseases: DIS-DLBCL-NOS
 - `RF-DLBCL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-DLBCL-NOS
 - `RF-EATL-FRAILTY-AGE` (frailty-age) — diseases: DIS-EATL
 - `RF-EATL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-EATL
 - `RF-EATL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-EATL
 - `RF-EATL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-EATL
 - `RF-EATL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-EATL
-- `RF-ENDOMETRIAL-FRAILTY-AGE` (frailty-age) — diseases: DIS-ENDOMETRIAL
-- `RF-ENDOMETRIAL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-ENDOMETRIAL
 - `RF-ENDOMETRIAL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-ENDOMETRIAL
-- `RF-ENDOMETRIAL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-ENDOMETRIAL
-- `RF-ENDOMETRIAL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-ENDOMETRIAL
-- `RF-ESOPH-FRAILTY-AGE` (frailty-age) — diseases: DIS-ESOPHAGEAL
 - `RF-ESOPH-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-ESOPHAGEAL
 - `RF-ESOPH-INFECTION-SCREENING` (infection-screening) — diseases: DIS-ESOPHAGEAL
 - `RF-ESOPH-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-ESOPHAGEAL
 - `RF-FL-FRAILTY-AGE` (frailty-age) — diseases: DIS-FL
 - `RF-FL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-FL
 - `RF-FL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-FL
+- `RF-FOLLICULAR-TRANSFORMATION` (transformation-progression) — diseases: DIS-FL
 - `RF-GASTRIC-INFECTION-SCREENING` (infection-screening) — diseases: DIS-GASTRIC
 - `RF-GASTRIC-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-GASTRIC
 - `RF-GBM-FRAILTY-AGE` (frailty-age) — diseases: DIS-GBM
 - `RF-GBM-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-GBM
 - `RF-GBM-INFECTION-SCREENING` (infection-screening) — diseases: DIS-GBM
-- `RF-GBM-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-GBM
+- `RF-GIST-FRAILTY-AGE` (frailty-age) — diseases: DIS-GIST
+- `RF-GIST-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-GIST
+- `RF-GLIOMA-LOW-GRADE-INFECTION-SCREENING` (infection-screening) — diseases: DIS-GLIOMA-LOW-GRADE
+- `RF-GLIOMA-LOW-GRADE-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-GLIOMA-LOW-GRADE
+- `RF-GLIOMA-LOW-GRADE-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-GLIOMA-LOW-GRADE
 - `RF-HCC-AFP-RAPID-RISE` (transformation-progression) — diseases: DIS-HCC
 - `RF-HCC-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-HCC
 - `RF-HCL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-HCL
 - `RF-HCL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-HCL
-- `RF-HCL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-HCL
-- `RF-HGBL-DH-INFECTION-SCREENING` (infection-screening) — diseases: DIS-HGBL-DH
-- `RF-HGBL-DH-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-HGBL-DH
-- `RF-HGBL-DH-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-HGBL-DH
+- `RF-HGBL-DH-CNS-PROPHYLAXIS-TRIGGER` (high-risk-biology) — diseases: DIS-HGBL-DH
+- `RF-HGBL-DH-EMERGENCY-TLS` (organ-dysfunction) — diseases: DIS-HGBL-DH
+- `RF-HNSCC-FRAILTY-AGE` (frailty-age) — diseases: DIS-HNSCC
+- `RF-HNSCC-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-HNSCC
 - `RF-HSTCL-FRAILTY-AGE` (frailty-age) — diseases: DIS-HSTCL
 - `RF-HSTCL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-HSTCL
 - `RF-HSTCL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-HSTCL
 - `RF-HSTCL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-HSTCL
 - `RF-HSTCL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-HSTCL
+- `RF-IFS-FRAILTY-AGE` (frailty-age) — diseases: DIS-IFS
+- `RF-IFS-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-IFS
+- `RF-IFS-INFECTION-SCREENING` (infection-screening) — diseases: DIS-IFS
+- `RF-IFS-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-IFS
+- `RF-IFS-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-IFS
+- `RF-IMT-FRAILTY-AGE` (frailty-age) — diseases: DIS-IMT
+- `RF-IMT-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-IMT
+- `RF-IMT-INFECTION-SCREENING` (infection-screening) — diseases: DIS-IMT
+- `RF-IMT-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-IMT
+- `RF-IMT-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-IMT
+- `RF-LACTATION-ACTIVE` (reproductive-status) — diseases: *
+- `RF-LEPTOMENINGEAL-DISEASE` (oncologic-emergency) — diseases: *
+- `RF-MASTOCYTOSIS-FRAILTY-AGE` (frailty-age) — diseases: DIS-MASTOCYTOSIS
+- `RF-MASTOCYTOSIS-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-MASTOCYTOSIS
+- `RF-MASTOCYTOSIS-INFECTION-SCREENING` (infection-screening) — diseases: DIS-MASTOCYTOSIS
+- `RF-MASTOCYTOSIS-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-MASTOCYTOSIS
+- `RF-MASTOCYTOSIS-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-MASTOCYTOSIS
 - `RF-MCL-FRAILTY-AGE` (frailty-age) — diseases: DIS-MCL
-- `RF-MCL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-MCL
 - `RF-MCL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-MCL
 - `RF-MCL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-MCL
-- `RF-MELANOMA-FRAILTY-AGE` (frailty-age) — diseases: DIS-MELANOMA
 - `RF-MELANOMA-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-MELANOMA
 - `RF-MELANOMA-INFECTION-SCREENING` (infection-screening) — diseases: DIS-MELANOMA
-- `RF-MELANOMA-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-MELANOMA
-- `RF-MELANOMA-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-MELANOMA
+- `RF-MELANOMA-NF1-MUT-CANDIDATE` (high-risk-biology) — diseases: DIS-MELANOMA
 - `RF-MF-SEZARY-FRAILTY-AGE` (frailty-age) — diseases: DIS-MF-SEZARY
 - `RF-MF-SEZARY-INFECTION-SCREENING` (infection-screening) — diseases: DIS-MF-SEZARY
 - `RF-MF-SEZARY-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-MF-SEZARY
+- `RF-MM-BCMA-EXPRESSION-POS` (high-risk-biology) — diseases: DIS-MM
+- `RF-MM-CD38-EXPRESSION-DARA-CANDIDATE` (high-risk-biology) — diseases: DIS-MM
+- `RF-MPNST-ADVANCED-DOXORUBICIN-UNSUITABLE` (organ-dysfunction) — diseases: DIS-MPNST
+- `RF-MPNST-FRAILTY-AGE` (frailty-age) — diseases: DIS-MPNST
+- `RF-MPNST-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-MPNST
+- `RF-MPNST-INFECTION-SCREENING` (infection-screening) — diseases: DIS-MPNST
+- `RF-MPNST-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-MPNST
+- `RF-MPNST-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-MPNST
+- `RF-MTC-FRAILTY-AGE` (frailty-age) — diseases: DIS-MTC
+- `RF-MTC-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-MTC
+- `RF-MTC-INFECTION-SCREENING` (infection-screening) — diseases: DIS-MTC
+- `RF-MTC-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-MTC
+- `RF-MTC-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-MTC
 - `RF-NK-T-NASAL-FRAILTY-AGE` (frailty-age) — diseases: DIS-NK-T-NASAL
 - `RF-NK-T-NASAL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-NK-T-NASAL
 - `RF-NK-T-NASAL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-NK-T-NASAL
-- `RF-NK-T-NASAL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-NK-T-NASAL
 - `RF-NLPBL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-NLPBL
 - `RF-NLPBL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-NLPBL
 - `RF-NLPBL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-NLPBL
-- `RF-NLPBL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-NLPBL
 - `RF-NMZL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-NODAL-MZL
-- `RF-NSCLC-INFECTION-SCREENING` (infection-screening) — diseases: DIS-NSCLC
-- `RF-NSCLC-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-NSCLC
-- `RF-OVARIAN-INFECTION-SCREENING` (infection-screening) — diseases: DIS-OVARIAN
-- `RF-OVARIAN-PERIOPERATIVE-VTE` (organ-dysfunction) — diseases: DIS-OVARIAN
-- `RF-OVARIAN-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-OVARIAN
+- `RF-NSCLC-HER3-HIGH-PATRITUMAB-CANDIDATE` (high-risk-biology) — diseases: DIS-NSCLC
+- `RF-NSCLC-NRG1-FUSION-ZENO-CANDIDATE` (high-risk-biology) — diseases: DIS-NSCLC
+- `RF-NSCLC-TROP2-DATO-CANDIDATE` (high-risk-biology) — diseases: DIS-NSCLC
+- `RF-ONCOLOGIC-EMERGENCY-CORD-COMPRESSION` (oncologic-emergency) — diseases: *
+- `RF-ONCOLOGIC-EMERGENCY-SVC` (oncologic-emergency) — diseases: *
+- `RF-ONCOLOGIC-EMERGENCY-TLS` (oncologic-emergency) — diseases: *
+- `RF-ORGAN-PULMONARY-DLCO-LOW` (organ-dysfunction) — diseases: *
+- `RF-PAN-CTDNA-MRD-POSITIVE` (transformation-progression) — diseases: *
+- `RF-PAN-PDL1-CLONE-22C3-PEMBRO-ELIGIBLE` (high-risk-biology) — diseases: *
 - `RF-PCNSL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-PCNSL
 - `RF-PCNSL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-PCNSL
-- `RF-PCNSL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-PCNSL
-- `RF-PDAC-INFECTION-SCREENING` (infection-screening) — diseases: DIS-PDAC
+- `RF-PCNSL-INTRACRANIAL-PRESSURE` (organ-dysfunction) — diseases: DIS-PCNSL
 - `RF-PDAC-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-PDAC
 - `RF-PMBCL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-PMBCL
 - `RF-PMBCL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-PMBCL
-- `RF-PMBCL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-PMBCL
-- `RF-PMBCL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-PMBCL
-- `RF-PROSTATE-INFECTION-SCREENING` (infection-screening) — diseases: DIS-PROSTATE
-- `RF-PROSTATE-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-PROSTATE
-- `RF-PROSTATE-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-PROSTATE
+- `RF-PMBCL-MEDIASTINAL-AIRWAY` (organ-dysfunction) — diseases: DIS-PMBCL
+- `RF-PMBCL-SVC-SYNDROME` (organ-dysfunction) — diseases: DIS-PMBCL
+- `RF-POLE-POLD1-ENDOMETRIAL-LOW-RISK` (risk-score) — diseases: DIS-ENDOMETRIAL
+- `RF-PREGNANCY-PLANNING` (reproductive-status) — diseases: *
+- `RF-PRIOR-BRAFI-MEKI-FAILED` (prior-therapy-class) — diseases: *
+- `RF-PRIOR-CDK46I-PROGRESSION` (prior-therapy-class) — diseases: *
+- `RF-PRIOR-EGFRI-PROGRESSION` (prior-therapy-class) — diseases: *
+- `RF-PRIOR-PARPI-EXPOSED` (prior-therapy-class) — diseases: *
+- `RF-PROSTATE-TMPRSS2-ERG-PROGNOSTIC` (high-risk-biology) — diseases: DIS-PROSTATE
 - `RF-PTCL-NOS-FRAILTY-AGE` (frailty-age) — diseases: DIS-PTCL-NOS
 - `RF-PTCL-NOS-INFECTION-SCREENING` (infection-screening) — diseases: DIS-PTCL-NOS
 - `RF-PTCL-NOS-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-PTCL-NOS
@@ -136,42 +201,66 @@ RedFlag exists in the catalog but no algorithm / indication / other RedFlag refe
 - `RF-PTLD-FRAILTY-AGE` (frailty-age) — diseases: DIS-PTLD
 - `RF-PTLD-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-PTLD
 - `RF-PTLD-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-PTLD
-- `RF-RCC-FRAILTY-AGE` (frailty-age) — diseases: DIS-RCC
 - `RF-RCC-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-RCC
 - `RF-RCC-INFECTION-SCREENING` (infection-screening) — diseases: DIS-RCC
-- `RF-RCC-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-RCC
-- `RF-RCC-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-RCC
+- `RF-RICHTER-TRANSFORMATION` (transformation-progression) — diseases: DIS-CLL
+- `RF-SALIVARY-ADVANCED-PALLIATIVE` (frailty-age) — diseases: DIS-SALIVARY
+- `RF-SALIVARY-FRAILTY-AGE` (frailty-age) — diseases: DIS-SALIVARY
+- `RF-SALIVARY-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-SALIVARY
+- `RF-SALIVARY-INFECTION-SCREENING` (infection-screening) — diseases: DIS-SALIVARY
+- `RF-SALIVARY-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-SALIVARY
+- `RF-SALIVARY-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-SALIVARY
 - `RF-SCLC-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-SCLC
-- `RF-SCLC-INFECTION-SCREENING` (infection-screening) — diseases: DIS-SCLC
-- `RF-SCLC-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-SCLC
-- `RF-SCLC-PARANEOPLASTIC` (transformation-progression) — diseases: DIS-SCLC
+- `RF-SCLC-SVC-SYNDROME` (organ-dysfunction) — diseases: DIS-SCLC
 - `RF-SMZL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-SPLENIC-MZL
+- `RF-T-ALL-CNS-LEUKEMIA` (high-risk-biology) — diseases: DIS-T-ALL
+- `RF-T-ALL-EMERGENCY-TLS-LEUKOSTASIS` (organ-dysfunction) — diseases: DIS-T-ALL
 - `RF-T-ALL-FRAILTY-AGE` (frailty-age) — diseases: DIS-T-ALL
 - `RF-T-ALL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-T-ALL
 - `RF-T-ALL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-T-ALL
+- `RF-T-ALL-MEDIASTINAL-AIRWAY` (organ-dysfunction) — diseases: DIS-T-ALL
 - `RF-T-ALL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-T-ALL
-- `RF-T-ALL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-T-ALL
 - `RF-T-PLL-FRAILTY-AGE` (frailty-age) — diseases: DIS-T-PLL
 - `RF-T-PLL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-T-PLL
 - `RF-T-PLL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-T-PLL
 - `RF-T-PLL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-T-PLL
-- `RF-T-PLL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-T-PLL
+- `RF-THYROID-ANAPLASTIC-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-THYROID-ANAPLASTIC
+- `RF-THYROID-PAPILLARY-FRAILTY-AGE` (frailty-age) — diseases: DIS-THYROID-PAPILLARY
+- `RF-THYROID-PAPILLARY-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-THYROID-PAPILLARY
+- `RF-THYROID-PAPILLARY-INFECTION-SCREENING` (infection-screening) — diseases: DIS-THYROID-PAPILLARY
+- `RF-THYROID-PAPILLARY-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-THYROID-PAPILLARY
+- `RF-THYROID-PAPILLARY-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-THYROID-PAPILLARY
 - `RF-UNIVERSAL-INFUSION-REACTION-FIRST-CYCLE` (other) — diseases: *
-- `RF-UNIVERSAL-TLS-RISK` (organ-dysfunction) — diseases: *
-- `RF-UROTHELIAL-FRAILTY-AGE` (frailty-age) — diseases: DIS-UROTHELIAL
 - `RF-UROTHELIAL-HIGH-RISK-BIOLOGY` (high-risk-biology) — diseases: DIS-UROTHELIAL
 - `RF-UROTHELIAL-INFECTION-SCREENING` (infection-screening) — diseases: DIS-UROTHELIAL
-- `RF-UROTHELIAL-ORGAN-DYSFUNCTION` (organ-dysfunction) — diseases: DIS-UROTHELIAL
 - `RF-UROTHELIAL-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-UROTHELIAL
+- `RF-UVEAL-MELANOMA-BAP1-MUT-CANDIDATE` (high-risk-biology) — diseases: DIS-MELANOMA
 - `RF-WM-FRAILTY-AGE` (frailty-age) — diseases: DIS-WM
 - `RF-WM-INFECTION-SCREENING` (infection-screening) — diseases: DIS-WM
-- `RF-WM-TRANSFORMATION-PROGRESSION` (transformation-progression) — diseases: DIS-WM
 
 ## 5-type matrix coverage per disease
 
 Every modeled disease should carry RedFlags in all five categories (REDFLAG_AUTHORING_GUIDE §2). Coverage uses the authored `category` + `relevant_diseases` fields directly — universal RFs (`relevant_diseases: ["*"]`) count toward every disease.
 
-**Complete (all 5 categories): 52 / 52 diseases.**
+**Complete (all 5 categories): 65 / 78 diseases.**
+
+### Diseases missing one or more matrix categories
+
+| Disease | Missing categories |
+|---|---|
+| `DIS-ANAL-SCC` (Squamous cell carcinoma of the anal cana) | `frailty-age` |
+| `DIS-BCC` (Basal cell carcinoma (BCC)) | `frailty-age` |
+| `DIS-EPITHELIOID-SARCOMA` (Epithelioid sarcoma) | `frailty-age` |
+| `DIS-GI-NET` (Gastroenteropancreatic neuroendocrine tu) | `frailty-age` |
+| `DIS-GRANULOSA-CELL` (Adult granulosa cell tumor of the ovary) | `frailty-age` |
+| `DIS-JMML` (Juvenile myelomonocytic leukemia (JMML)) | `frailty-age` |
+| `DIS-LAM` (Lymphangioleiomyomatosis (LAM)) | `frailty-age` |
+| `DIS-MENINGIOMA` (Meningioma) | `frailty-age` |
+| `DIS-MESOTHELIOMA` (Malignant pleural mesothelioma (MPM)) | `frailty-age` |
+| `DIS-PNET` (Pancreatic neuroendocrine tumor (pNET)) | `frailty-age` |
+| `DIS-SOFT-TISSUE-SARCOMA` (Soft tissue sarcoma (STS)) | `frailty-age` |
+| `DIS-TESTICULAR-GCT` (Testicular germ cell tumor (GCT)) | `frailty-age` |
+| `DIS-TGCT` (Tenosynovial giant cell tumor (TGCT)) | `frailty-age` |
 
 ## Top-cited RedFlags (engine hot-path)
 
@@ -179,30 +268,37 @@ Reference count below is a proxy for how often the engine evaluates the trigger.
 
 | RedFlag | Refs | Category | Severity | Direction |
 |---|---|---|---|---|
-| `RF-FL-TRANSFORMATION-SUSPECT` | 18 | transformation-progression | — | intensify |
-| `RF-UNIVERSAL-HBV-REACTIVATION-RISK` | 14 | infection-screening | critical | hold |
-| `RF-PV-ET-PREGNANCY-OR-PLANNING` | 11 | frailty-age | major | investigate |
-| `RF-TCELL-CD30-POSITIVE` | 10 | high-risk-biology | — | intensify |
-| `RF-PV-ET-HIGH-THROMBOSIS-RISK` | 10 | high-risk-biology | major | intensify |
-| `RF-PV-ET-ORGAN-DYSFUNCTION` | 10 | organ-dysfunction | major | investigate |
-| `RF-MDS-TRANSFORMATION-PROGRESSION` | 10 | transformation-progression | critical | intensify |
-| `RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION` | 9 | transformation-progression | — | intensify |
-| `RF-PV-ET-FRAILTY-AGE` | 8 | frailty-age | minor | de-escalate |
-| `RF-MDS-FRAILTY-AGE` | 8 | frailty-age | major | de-escalate |
-| `RF-MDS-HIGH-RISK-IPSS` | 8 | high-risk-biology | critical | intensify |
-| `RF-PMF-HIGH-RISK-DIPSS` | 8 | high-risk-biology | critical | intensify |
-| `RF-PMF-ANEMIA-DOMINANT` | 8 | organ-dysfunction | major | investigate |
-| `RF-AML-ORGAN-DYSFUNCTION` | 7 | organ-dysfunction | critical | de-escalate |
-| `RF-AML-EMERGENCY-TLS-LEUKOSTASIS` | 7 | organ-dysfunction | critical | hold |
-| `RF-CML-TRANSFORMATION-PROGRESSION` | 7 | transformation-progression | critical | hold |
-| `RF-CML-ORGAN-DYSFUNCTION` | 7 | organ-dysfunction | major | investigate |
-| `RF-CRC-FRAILTY-AGE` | 7 | frailty-age | major | de-escalate |
-| `RF-MCL-BLASTOID-OR-TP53` | 7 | high-risk-biology | — | intensify |
-| `RF-MDS-ORGAN-DYSFUNCTION` | 7 | organ-dysfunction | major | de-escalate |
+| `RF-FITNESS-ECOG-FIT` | 44 | fitness-eligibility | minor | intensify |
+| `RF-NSCLC-BRAIN-METS-EMERGENCY` | 40 | organ-dysfunction | critical | hold |
+| `RF-NSCLC-CORD-COMPRESSION` | 40 | organ-dysfunction | critical | hold |
+| `RF-NSCLC-SVC-SYNDROME` | 40 | organ-dysfunction | critical | hold |
+| `RF-NSCLC-MALIGNANT-EFFUSION` | 40 | organ-dysfunction | major | hold |
+| `RF-BREAST-INFECTION-SCREENING` | 26 | infection-screening | major | investigate |
+| `RF-UNIVERSAL-HBV-REACTIVATION-RISK` | 24 | infection-screening | critical | hold |
+| `RF-FITNESS-ECOG-INTERMEDIATE` | 24 | fitness-eligibility | major | de-escalate |
+| `RF-FL-TRANSFORMATION-SUSPECT` | 19 | transformation-progression | — | intensify |
+| `RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK` | 18 | fitness-eligibility | major | de-escalate |
+| `RF-OLIGOMET-DEFINITION` | 18 | high-risk-biology | major | intensify |
+| `RF-CRC-FRAILTY-AGE` | 17 | frailty-age | major | de-escalate |
+| `RF-NSCLC-FRAILTY-AGE` | 16 | frailty-age | major | de-escalate |
+| `RF-PV-ET-HIGH-THROMBOSIS-RISK` | 14 | high-risk-biology | major | intensify |
+| `RF-PRIOR-BTKI-PROGRESSION` | 14 | prior-therapy-class | major | de-escalate |
+| `RF-TCELL-CD30-POSITIVE` | 13 | high-risk-biology | — | intensify |
+| `RF-AML-EMERGENCY-TLS-LEUKOSTASIS` | 13 | organ-dysfunction | critical | hold |
+| `RF-MM-CORD-COMPRESSION` | 13 | organ-dysfunction | critical | hold |
+| `RF-MM-HYPERCALCEMIA` | 13 | organ-dysfunction | critical | hold |
+| `RF-MM-HYPERVISCOSITY` | 13 | organ-dysfunction | critical | hold |
 
 ## Authoring lifecycle
 
-### Pending two-reviewer sign-off (270 of 270 STUB)
+### Without source citation (2)
+
+CHARTER §6.1 requires a clinical source for every published RedFlag. Drafts may be sourceless during authoring; ship-ready RedFlags must cite ≥1 guideline / RCT / regulatory document.
+
+- `RF-PDAC-ORGAN-DYSFUNCTION` (organ-dysfunction)
+- `RF-RCC-FRAILTY-ECOG2` (frailty-age)
+
+### Pending two-reviewer sign-off (511 of 511 STUB)
 
 CHARTER §6.1: clinical content must carry two of three Clinical Co-Lead approvals before leaving STUB status. The count above tracks the gap; don't list every RedFlag here — see the full catalog table.
 
@@ -212,8 +308,10 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **C
 
 | ID | Status | Refs | Cat | Dir | Sev | Src | Draft | Diseases |
 |---|---|---|---|---|---|---|---|---|
-| `RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION` | ✓ | 9 | transformation-progression | intensify | — | ✓ | — | DIS-HCV-MZL |
-| `RF-AITL-AUTOIMMUNE-CYTOPENIA` | ✓ | 6 | high-risk-biology | investigate | — | ✓ | — | DIS-AITL |
+| `RF-AAIPI-HIGH` | ✓ | 1 | risk-score | intensify | major | ✓ | — | DIS-DLBCL-NOS |
+| `RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK` | ✓ | 18 | fitness-eligibility | de-escalate | major | ✓ | — | DIS-NSCLC, DIS-MELANOMA, DIS-RCC +12 |
+| `RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION` | ✓ | 11 | transformation-progression | intensify | — | ✓ | — | DIS-HCV-MZL |
+| `RF-AITL-AUTOIMMUNE-CYTOPENIA` | ✓ | 7 | high-risk-biology | investigate | — | ✓ | — | DIS-AITL |
 | `RF-AITL-EBV-DRIVEN-B-CELL` | ✓ | 4 | high-risk-biology | investigate | — | ✓ | — | DIS-AITL |
 | `RF-AITL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-AITL |
 | `RF-AITL-HYPOGAMMA` | ✓ | 1 | infection-screening | investigate | — | ✓ | — | DIS-AITL |
@@ -223,12 +321,21 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **C
 | `RF-ALCL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-ALCL |
 | `RF-ALCL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-ALCL |
 | `RF-ALCL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-ALCL |
-| `RF-AML-EMERGENCY-TLS-LEUKOSTASIS` | ✓ | 7 | organ-dysfunction | hold | critical | ✓ | — | DIS-AML |
-| `RF-AML-FLT3-ACTIONABLE` | ✓ | 4 | high-risk-biology | intensify | major | ✓ | — | DIS-AML |
-| `RF-AML-FRAILTY-AGE` | ✓ | 5 | frailty-age | de-escalate | major | ✓ | — | DIS-AML |
-| `RF-AML-HIGH-RISK-BIOLOGY` | ✓ | 2 | high-risk-biology | intensify | critical | ✓ | — | DIS-AML |
-| `RF-AML-INFECTION-SCREENING` | ✓ | 5 | infection-screening | hold | major | ✓ | — | DIS-AML |
-| `RF-AML-ORGAN-DYSFUNCTION` | ✓ | 7 | organ-dysfunction | de-escalate | critical | ✓ | — | DIS-AML |
+| `RF-AML-CD33-POS-GO-CANDIDATE` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-AML |
+| `RF-AML-CORE-BINDING-FACTOR-FAVORABLE` | ✓ | 3 | high-risk-biology | de-escalate | major | ✓ | — | DIS-AML |
+| `RF-AML-EMERGENCY-TLS-LEUKOSTASIS` | ✓ | 13 | organ-dysfunction | hold | critical | ✓ | — | DIS-AML |
+| `RF-AML-FLT3-ACTIONABLE` | ✓ | 11 | high-risk-biology | intensify | major | ✓ | — | DIS-AML |
+| `RF-AML-FRAILTY-AGE` | ✓ | 6 | frailty-age | de-escalate | major | ✓ | — | DIS-AML |
+| `RF-AML-HIGH-RISK-BIOLOGY` | ✓ | 6 | high-risk-biology | intensify | critical | ✓ | — | DIS-AML |
+| `RF-AML-IDH1-MUT-ACTIONABLE` | ✓ | 3 | high-risk-biology | intensify | major | ✓ | — | DIS-AML |
+| `RF-AML-IDH2-MUT-ACTIONABLE` | ✓ | 4 | high-risk-biology | intensify | major | ✓ | — | DIS-AML |
+| `RF-AML-INFECTION-SCREENING` | ✓ | 10 | infection-screening | hold | major | ✓ | — | DIS-AML |
+| `RF-AML-KMT2A-ACTIONABLE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-AML |
+| `RF-AML-MEASURABLE-RESIDUAL-DISEASE` | ✓ | 3 | high-risk-biology | intensify | critical | ✓ | — | DIS-AML |
+| `RF-AML-NPM1-MUT-FAVORABLE` | ✓ | 1 | high-risk-biology | de-escalate | major | ✓ | — | DIS-AML |
+| `RF-AML-ORGAN-DYSFUNCTION` | ✓ | 11 | organ-dysfunction | de-escalate | critical | ✓ | — | DIS-AML |
+| `RF-AML-SECONDARY-AML-MRC-CPX351-ELIGIBLE` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-AML |
+| `RF-AML-TP53-ADVERSE` | ⚠ unused | 0 | high-risk-biology | intensify | critical | ✓ | — | DIS-AML |
 | `RF-AML-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | intensify | critical | ✓ | — | DIS-AML |
 | `RF-APL-EMERGENCY-DIC` | ✓ | 6 | organ-dysfunction | hold | critical | ✓ | — | DIS-APL |
 | `RF-APL-FRAILTY-AGE` | ✓ | 3 | frailty-age | de-escalate | major | ✓ | — | DIS-APL |
@@ -236,61 +343,119 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **C
 | `RF-APL-INFECTION-SCREENING` | ✓ | 4 | infection-screening | hold | major | ✓ | — | DIS-APL |
 | `RF-APL-ORGAN-DYSFUNCTION` | ✓ | 6 | organ-dysfunction | investigate | critical | ✓ | — | DIS-APL |
 | `RF-APL-TRANSFORMATION-PROGRESSION` | ✓ | 3 | transformation-progression | investigate | critical | ✓ | — | DIS-APL |
+| `RF-ASCT-ELIGIBLE-COMPOSITE` | ✓ | 2 | other | intensify | major | ✓ | — | * |
+| `RF-ATC-BRAF-V600E-ACTIONABLE` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-THYROID-ANAPLASTIC |
 | `RF-ATLL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-ATLL |
 | `RF-ATLL-HIGH-RISK-BIOLOGY` | ✓ | 1 | high-risk-biology | intensify | critical | ✓ | — | DIS-ATLL |
+| `RF-ATLL-HYPERCALCEMIA` | ⚠ unused | 0 | organ-dysfunction | hold | critical | ✓ | draft | DIS-ATLL |
 | `RF-ATLL-INFECTION-SCREENING` | ✓ | 1 | infection-screening | investigate | major | ✓ | — | DIS-ATLL |
 | `RF-ATLL-ORGAN-DYSFUNCTION` | ✓ | 1 | organ-dysfunction | intensify | critical | ✓ | — | DIS-ATLL |
-| `RF-ATLL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-ATLL |
+| `RF-ATLL-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | intensify | critical | ✓ | — | DIS-ATLL |
+| `RF-B-ALL-CNS-LEUKEMIA` | ⚠ unused | 0 | high-risk-biology | intensify | critical | ✓ | draft | DIS-B-ALL |
+| `RF-B-ALL-EMERGENCY-TLS-LEUKOSTASIS` | ⚠ unused | 0 | organ-dysfunction | hold | critical | ✓ | draft | DIS-B-ALL |
 | `RF-B-ALL-FRAILTY-AGE` | ✓ | 2 | frailty-age | de-escalate | major | ✓ | — | DIS-B-ALL |
 | `RF-B-ALL-HIGH-RISK-BIOLOGY` | ✓ | 6 | high-risk-biology | intensify | critical | ✓ | — | DIS-B-ALL |
 | `RF-B-ALL-INFECTION-SCREENING` | ✓ | 5 | infection-screening | investigate | major | ✓ | — | DIS-B-ALL |
 | `RF-B-ALL-ORGAN-DYSFUNCTION` | ✓ | 5 | organ-dysfunction | investigate | major | ✓ | — | DIS-B-ALL |
 | `RF-B-ALL-TRANSFORMATION-PROGRESSION` | ✓ | 4 | transformation-progression | investigate | critical | ✓ | — | DIS-B-ALL |
+| `RF-BALL-CD22-POS-INO-CANDIDATE` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-B-ALL |
+| `RF-BINET-A` | ✓ | 3 | risk-score | de-escalate | major | ✓ | — | DIS-CLL |
+| `RF-BINET-B-C` | ✓ | 2 | risk-score | intensify | major | ✓ | — | DIS-CLL |
+| `RF-BREAST-AKT1-E17K-ACTIONABLE` | ✓ | 5 | high-risk-biology | intensify | major | ✓ | — | DIS-BREAST |
+| `RF-BREAST-AKT1-E17K-CAPIVASERTIB-CANDIDATE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-BREAST |
+| `RF-BREAST-BRCA-GERMLINE-ACTIONABLE` | ✓ | 4 | high-risk-biology | intensify | critical | ✓ | — | DIS-BREAST |
+| `RF-BREAST-CDH1-LOBULAR-CANDIDATE` | ⚠ unused | 0 | high-risk-biology | investigate | major | ✓ | — | DIS-BREAST, DIS-GASTRIC |
+| `RF-BREAST-ESR1-MUT-ACTIONABLE` | ✓ | 5 | high-risk-biology | intensify | major | ✓ | — | DIS-BREAST |
+| `RF-BREAST-ESR1-Y537S-D538G-CANDIDATE` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-BREAST |
 | `RF-BREAST-FRAILTY-AGE` | ✓ | 2 | frailty-age | de-escalate | major | ✓ | — | DIS-BREAST |
+| `RF-BREAST-HER2-AMP-ACTIONABLE` | ✓ | 2 | high-risk-biology | intensify | critical | ✓ | — | DIS-BREAST |
+| `RF-BREAST-HER2-LOW-ACTIONABLE` | ✓ | 4 | high-risk-biology | intensify | major | ✓ | — | DIS-BREAST |
+| `RF-BREAST-HER2-ULTRALOW-CANDIDATE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | draft | DIS-BREAST |
 | `RF-BREAST-HIGH-RISK-BIOLOGY` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-BREAST |
-| `RF-BREAST-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | investigate | major | ✓ | — | DIS-BREAST |
+| `RF-BREAST-INFECTION-SCREENING` | ✓ | 26 | infection-screening | investigate | major | ✓ | — | DIS-BREAST |
 | `RF-BREAST-ORGAN-DYSFUNCTION` | ✓ | 2 | organ-dysfunction | investigate | major | ✓ | — | DIS-BREAST |
-| `RF-BREAST-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-BREAST |
+| `RF-BREAST-OVARIAN-HRD-ASSAY-DISTINCTION` | ⚠ unused | 0 | high-risk-biology | investigate | major | ✓ | — | DIS-OVARIAN, DIS-BREAST |
+| `RF-BREAST-PIK3CA-COALT-INAVOLISIB-CANDIDATE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | draft | DIS-BREAST |
+| `RF-BREAST-PIK3CA-MUT-ACTIONABLE` | ✓ | 5 | high-risk-biology | intensify | major | ✓ | — | DIS-BREAST |
+| `RF-BREAST-TRANSFORMATION-PROGRESSION` | ✓ | 4 | transformation-progression | hold | critical | ✓ | — | DIS-BREAST |
 | `RF-BULKY-DISEASE` | ✓ | 3 | high-risk-biology | intensify | — | ✓ | — | DIS-HCV-MZL |
+| `RF-BURKITT` | ❌ MISSING | 1 | — | — | — | — | — | — |
+| `RF-BURKITT-EMERGENCY-TLS` | ⚠ unused | 0 | organ-dysfunction | hold | critical | ✓ | draft | DIS-BURKITT |
 | `RF-BURKITT-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-BURKITT |
-| `RF-BURKITT-HIGH-RISK` | ✓ | 6 | high-risk-biology | intensify | — | ✓ | — | DIS-BURKITT |
+| `RF-BURKITT-HIGH-RISK` | ✓ | 7 | high-risk-biology | intensify | — | ✓ | — | DIS-BURKITT |
 | `RF-BURKITT-INFECTION-SCREENING` | ✓ | 2 | infection-screening | hold | critical | ✓ | — | DIS-BURKITT |
-| `RF-BURKITT-ORGAN-DYSFUNCTION` | ✓ | 1 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-BURKITT |
-| `RF-BURKITT-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-BURKITT |
-| `RF-CERVICAL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-CERVICAL |
+| `RF-BURKITT-ORGAN-DYSFUNCTION` | ✓ | 2 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-BURKITT |
+| `RF-BURKITT-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | intensify | critical | ✓ | — | DIS-BURKITT |
+| `RF-CAR-T-ELIGIBLE` | ✓ | 7 | fitness-eligibility | intensify | major | ✓ | — | * |
+| `RF-CAR-T-INELIGIBLE` | ❌ MISSING | 1 | — | — | — | — | — | — |
+| `RF-CAR-T-INELIGIBLE-AGE-COMORBID` | ✓ | 6 | fitness-eligibility | hold | major | ✓ | — | * |
+| `RF-CAR-T-INELIGIBLE-ORGAN` | ✓ | 5 | organ-dysfunction | hold | critical | ✓ | — | * |
+| `RF-CERVICAL-FRAILTY-AGE` | ✓ | 2 | frailty-age | de-escalate | major | ✓ | — | DIS-CERVICAL |
 | `RF-CERVICAL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-CERVICAL |
-| `RF-CERVICAL-HYDRONEPHROSIS-PELVIC-OBSTRUCTION` | ✓ | 1 | organ-dysfunction | hold | critical | ✓ | — | DIS-CERVICAL |
-| `RF-CERVICAL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | — | DIS-CERVICAL |
+| `RF-CERVICAL-HYDRONEPHROSIS-PELVIC-OBSTRUCTION` | ✓ | 2 | organ-dysfunction | hold | critical | ✓ | — | DIS-CERVICAL |
+| `RF-CERVICAL-INFECTION-SCREENING` | ✓ | 1 | infection-screening | hold | major | ✓ | — | DIS-CERVICAL |
+| `RF-CERVICAL-PDL1-CPS-1-PLUS` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-CERVICAL |
 | `RF-CERVICAL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-CERVICAL |
-| `RF-CHL-ADVANCED-STAGE` | ✓ | 5 | high-risk-biology | intensify | — | ✓ | — | DIS-CHL |
-| `RF-CHL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-CHL |
+| `RF-CHAARTED-HIGH-VOLUME-MHSPC` | ✓ | 5 | risk-score | intensify | major | ✓ | — | DIS-PROSTATE |
+| `RF-CHL-ADVANCED-STAGE` | ✓ | 7 | high-risk-biology | intensify | — | ✓ | — | DIS-CHL |
+| `RF-CHL-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-CHL |
 | `RF-CHL-INFECTION-SCREENING` | ✓ | 1 | infection-screening | hold | major | ✓ | — | DIS-CHL |
 | `RF-CHL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-CHL |
-| `RF-CHL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-CHL |
+| `RF-CHL-TRANSFORMATION-PROGRESSION` | ✓ | 4 | transformation-progression | intensify | critical | ✓ | — | DIS-CHL |
+| `RF-CHOLANGIO-FGFR2-FUSION-ACTIONABLE` | ✓ | 1 | high-risk-biology | intensify | critical | ✓ | — | DIS-CHOLANGIOCARCINOMA |
+| `RF-CHOLANGIO-IDH1-R132-ACTIONABLE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-CHOLANGIOCARCINOMA |
+| `RF-CHOLANGIOCARCINOMA-FRAILTY-AGE` | ✓ | 5 | frailty-age | de-escalate | major | ✓ | — | DIS-CHOLANGIOCARCINOMA |
+| `RF-CHOLANGIOCARCINOMA-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-CHOLANGIOCARCINOMA |
+| `RF-CHOLANGIOCARCINOMA-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-CHOLANGIOCARCINOMA |
+| `RF-CHOLANGIOCARCINOMA-ORGAN-DYSFUNCTION` | ✓ | 5 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-CHOLANGIOCARCINOMA |
+| `RF-CHOLANGIOCARCINOMA-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-CHOLANGIOCARCINOMA |
+| `RF-CHONDROSARCOMA-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-CHONDROSARCOMA |
+| `RF-CHONDROSARCOMA-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-CHONDROSARCOMA |
+| `RF-CHONDROSARCOMA-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-CHONDROSARCOMA |
+| `RF-CHONDROSARCOMA-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-CHONDROSARCOMA |
+| `RF-CHONDROSARCOMA-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-CHONDROSARCOMA |
+| `RF-CLL` | ❌ MISSING | 1 | — | — | — | — | — | — |
 | `RF-CLL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-CLL |
-| `RF-CLL-HIGH-RISK` | ✓ | 5 | high-risk-biology | intensify | — | ✓ | — | DIS-CLL |
-| `RF-CLL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-CLL |
+| `RF-CLL-HIGH-RISK` | ✓ | 11 | high-risk-biology | intensify | — | ✓ | — | DIS-CLL |
+| `RF-CLL-INFECTION-SCREENING` | ✓ | 1 | infection-screening | hold | critical | ✓ | — | DIS-CLL |
 | `RF-CLL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-CLL |
-| `RF-CLL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-CLL |
-| `RF-CML-COMORBIDITY-COMPLEX` | ✓ | 1 | high-risk-biology | investigate | major | ✓ | draft | DIS-CML |
+| `RF-CLL-POST-BTKI-C481-ACTIONABLE` | ✓ | 4 | prior-therapy-class | intensify | major | ✓ | — | DIS-CLL |
+| `RF-CLL-TP53-DELETION-ACTIONABLE` | ✓ | 3 | high-risk-biology | intensify | critical | ✓ | — | DIS-CLL |
+| `RF-CLL-TRANSFORMATION-PROGRESSION` | ✓ | 2 | transformation-progression | intensify | critical | ✓ | — | DIS-CLL |
+| `RF-CLL-VEN-RESISTANT-ACTIONABLE` | ✓ | 5 | prior-therapy-class | intensify | major | ✓ | — | DIS-CLL |
+| `RF-CML` | ❌ MISSING | 2 | — | — | — | — | — | — |
+| `RF-CML-COMORBIDITY-COMPLEX` | ✓ | 4 | high-risk-biology | de-escalate | major | ✓ | draft | DIS-CML |
 | `RF-CML-FRAILTY-AGE` | ✓ | 4 | frailty-age | de-escalate | minor | ✓ | — | DIS-CML |
-| `RF-CML-HIGH-RISK-ELTS` | ✓ | 5 | high-risk-biology | intensify | major | ✓ | — | DIS-CML |
+| `RF-CML-HIGH-RISK-ELTS` | ✓ | 7 | high-risk-biology | intensify | major | ✓ | — | DIS-CML |
 | `RF-CML-INFECTION-SCREENING` | ✓ | 3 | infection-screening | investigate | minor | ✓ | — | DIS-CML |
 | `RF-CML-ORGAN-DYSFUNCTION` | ✓ | 7 | organ-dysfunction | investigate | major | ✓ | — | DIS-CML |
 | `RF-CML-T315I-MUTATION` | ✓ | 6 | high-risk-biology | intensify | critical | ✓ | — | DIS-CML |
 | `RF-CML-TRANSFORMATION-PROGRESSION` | ✓ | 7 | transformation-progression | hold | critical | ✓ | — | DIS-CML |
-| `RF-CRC-BRAF-V600E-POOR-PROGNOSIS` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-CRC |
-| `RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION` | ✓ | 1 | organ-dysfunction | hold | critical | ✓ | — | DIS-CRC |
-| `RF-CRC-FRAILTY-AGE` | ✓ | 7 | frailty-age | de-escalate | major | ✓ | — | DIS-CRC |
+| `RF-CNS-METASTASES-ACTIVE` | ⚠ unused | 0 | oncologic-emergency | intensify | critical | ✓ | — | * |
+| `RF-CRC-BRAF-V600E` | ❌ MISSING | 2 | — | — | — | — | — | — |
+| `RF-CRC-BRAF-V600E-POOR-PROGNOSIS` | ✓ | 4 | high-risk-biology | intensify | major | ✓ | — | DIS-CRC |
+| `RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION` | ✓ | 8 | organ-dysfunction | hold | critical | ✓ | — | DIS-CRC |
+| `RF-CRC-FRAILTY-AGE` | ✓ | 17 | frailty-age | de-escalate | major | ✓ | — | DIS-CRC |
+| `RF-CRC-HER2-AMP-ACTIONABILITY` | ❌ MISSING | 1 | — | — | — | — | — | — |
+| `RF-CRC-HER2-AMP-ACTIONABLE` | ✓ | 2 | high-risk-biology | intensify | critical | ✓ | — | DIS-CRC |
 | `RF-CRC-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-CRC |
-| `RF-CRC-MSI-H-ACTIONABILITY` | ✓ | 4 | high-risk-biology | intensify | critical | ✓ | — | DIS-CRC |
-| `RF-CRC-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | major | ✓ | — | DIS-CRC |
+| `RF-CRC-KRAS-G12C-ACTIONABILITY` | ❌ MISSING | 1 | — | — | — | — | — | — |
+| `RF-CRC-MSI-H-ACTIONABILITY` | ✓ | 12 | high-risk-biology | intensify | critical | ✓ | — | DIS-CRC |
+| `RF-CRC-OLIGOMET-LIVER-DEFINITION` | ✓ | 8 | high-risk-biology | intensify | major | ✓ | — | DIS-CRC |
+| `RF-CRC-RAS-MUTANT` | ✓ | 1 | high-risk-biology | de-escalate | major | ✓ | — | DIS-CRC |
+| `RF-CRC-RAS-WT` | ✓ | 4 | high-risk-biology | intensify | major | ✓ | — | DIS-CRC |
+| `RF-CRC-TRANSFORMATION-PROGRESSION` | ✓ | 5 | transformation-progression | intensify | major | ✓ | — | DIS-CRC |
 | `RF-DECOMP-CIRRHOSIS` | ✓ | 4 | organ-dysfunction | de-escalate | — | ✓ | — | DIS-HCV-MZL |
-| `RF-DLBCL-CNS-RISK` | ✓ | 2 | high-risk-biology | investigate | — | ✓ | — | DIS-DLBCL-NOS |
-| `RF-DLBCL-FRAILTY-AGE` | ✓ | 2 | frailty-age | de-escalate | major | ✓ | — | DIS-DLBCL-NOS |
-| `RF-DLBCL-HIGH-IPI` | ✓ | 6 | high-risk-biology | intensify | — | ✓ | — | DIS-DLBCL-NOS |
-| `RF-DLBCL-HIGH-RISK-BIOLOGY` | ✓ | 2 | high-risk-biology | intensify | critical | ✓ | — | DIS-DLBCL-NOS |
-| `RF-DLBCL-INFECTION-SCREENING` | ✓ | 2 | infection-screening | hold | critical | ✓ | — | DIS-DLBCL-NOS |
+| `RF-DIPSS-PLUS-HIGH` | ✓ | 3 | risk-score | intensify | critical | ✓ | — | DIS-PMF |
+| `RF-DLBCL-CART-INELIGIBLE-POST-2L` | ✓ | 6 | prior-therapy-class | intensify | major | ✓ | — | DIS-DLBCL-NOS |
+| `RF-DLBCL-CD20-POS-EPCORITAMAB-CANDIDATE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-DLBCL-NOS |
+| `RF-DLBCL-CD20-POS-GLOFITAMAB-CANDIDATE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-DLBCL-NOS |
+| `RF-DLBCL-CD79B-MUT-MCD-CANDIDATE` | ⚠ unused | 0 | high-risk-biology | investigate | minor | ✓ | — | DIS-DLBCL-NOS |
+| `RF-DLBCL-CNS-RISK` | ✓ | 5 | high-risk-biology | investigate | — | ✓ | — | DIS-DLBCL-NOS |
+| `RF-DLBCL-FRAILTY-AGE` | ✓ | 3 | frailty-age | de-escalate | major | ✓ | — | DIS-DLBCL-NOS |
+| `RF-DLBCL-HIGH-IPI` | ✓ | 11 | risk-score | intensify | — | ✓ | — | DIS-DLBCL-NOS |
+| `RF-DLBCL-HIGH-RISK-BIOLOGY` | ✓ | 6 | high-risk-biology | intensify | critical | ✓ | — | DIS-DLBCL-NOS |
+| `RF-DLBCL-INFECTION-SCREENING` | ✓ | 5 | infection-screening | hold | critical | ✓ | — | DIS-DLBCL-NOS |
 | `RF-DLBCL-ORGAN-DYSFUNCTION` | ✓ | 2 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-DLBCL-NOS |
 | `RF-DLBCL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | draft | DIS-DLBCL-NOS |
 | `RF-EATL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-EATL |
@@ -298,136 +463,288 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **C
 | `RF-EATL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | investigate | major | ✓ | — | DIS-EATL |
 | `RF-EATL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | hold | critical | ✓ | — | DIS-EATL |
 | `RF-EATL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | critical | ✓ | — | DIS-EATL |
-| `RF-ENDOMETRIAL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-ENDOMETRIAL |
-| `RF-ENDOMETRIAL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-ENDOMETRIAL |
+| `RF-ENDOMETRIAL-FIT-FOR-LENVATINIB-COMBO` | ✓ | 2 | fitness-eligibility | intensify | minor | ✓ | — | DIS-ENDOMETRIAL |
+| `RF-ENDOMETRIAL-FRAILTY-AGE` | ✓ | 2 | frailty-age | de-escalate | major | ✓ | — | DIS-ENDOMETRIAL |
+| `RF-ENDOMETRIAL-HIGH-RISK-BIOLOGY` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-ENDOMETRIAL |
 | `RF-ENDOMETRIAL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | — | DIS-ENDOMETRIAL |
-| `RF-ENDOMETRIAL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | major | ✓ | — | DIS-ENDOMETRIAL |
-| `RF-ENDOMETRIAL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-ENDOMETRIAL |
-| `RF-ESOPH-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-ESOPHAGEAL |
+| `RF-ENDOMETRIAL-ORGAN-DYSFUNCTION` | ✓ | 3 | organ-dysfunction | investigate | major | ✓ | — | DIS-ENDOMETRIAL |
+| `RF-ENDOMETRIAL-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | intensify | critical | ✓ | — | DIS-ENDOMETRIAL |
+| `RF-ESOPH-FRAILTY-AGE` | ✓ | 3 | frailty-age | de-escalate | major | ✓ | — | DIS-ESOPHAGEAL |
 | `RF-ESOPH-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | critical | ✓ | — | DIS-ESOPHAGEAL |
 | `RF-ESOPH-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-ESOPHAGEAL |
-| `RF-ESOPH-SEVERE-DYSPHAGIA-ASPIRATION` | ✓ | 1 | organ-dysfunction | hold | critical | ✓ | — | DIS-ESOPHAGEAL |
+| `RF-ESOPH-SEVERE-DYSPHAGIA-ASPIRATION` | ✓ | 9 | organ-dysfunction | hold | critical | ✓ | — | DIS-ESOPHAGEAL |
 | `RF-ESOPH-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | major | ✓ | — | DIS-ESOPHAGEAL |
+| `RF-ESOPHAGEAL-POST-CROSS-NON-PCR` | ✓ | 3 | high-risk-biology | intensify | critical | ✓ | — | DIS-ESOPHAGEAL |
 | `RF-ET-TRANSFORMATION-PROGRESSION` | ✓ | 2 | transformation-progression | intensify | critical | ✓ | — | DIS-ET |
+| `RF-FITNESS` | ❌ MISSING | 1 | — | — | — | — | — | — |
+| `RF-FITNESS-ECOG-FIT` | ✓ | 44 | fitness-eligibility | intensify | minor | ✓ | — | * |
+| `RF-FITNESS-ECOG-INTERMEDIATE` | ✓ | 24 | fitness-eligibility | de-escalate | major | ✓ | — | * |
+| `RF-FITNESS-ECOG-POOR` | ✓ | 4 | fitness-eligibility | de-escalate | critical | ✓ | — | * |
+| `RF-FL` | ❌ MISSING | 2 | — | — | — | — | — | — |
+| `RF-FL-EZH2-Y641-ACTIONABLE` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-FL |
 | `RF-FL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-FL |
-| `RF-FL-HIGH-TUMOR-BURDEN-GELF` | ✓ | 6 | high-risk-biology | intensify | — | ✓ | — | DIS-FL |
+| `RF-FL-HIGH-TUMOR-BURDEN-GELF` | ✓ | 7 | risk-score | intensify | — | ✓ | — | DIS-FL |
 | `RF-FL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-FL |
 | `RF-FL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-FL |
-| `RF-FL-TRANSFORMATION-SUSPECT` | ✓ | 18 | transformation-progression | intensify | — | ✓ | — | DIS-FL |
-| `RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION` | ✓ | 2 | organ-dysfunction | hold | critical | ✓ | — | DIS-GASTRIC |
-| `RF-GASTRIC-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-GASTRIC |
-| `RF-GASTRIC-HIGH-RISK-BIOLOGY` | ✓ | 2 | high-risk-biology | intensify | critical | ✓ | — | DIS-GASTRIC |
+| `RF-FL-TRANSFORMATION-SUSPECT` | ✓ | 19 | transformation-progression | intensify | — | ✓ | — | DIS-FL |
+| `RF-FOLLICULAR-TRANSFORMATION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-FL |
+| `RF-FRAILTY-AGE-G8-LOW` | ✓ | 1 | fitness-eligibility | de-escalate | major | ✓ | — | * |
+| `RF-GASTRIC-CLDN18-2-ACTIONABLE` | ✓ | 1 | high-risk-biology | intensify | critical | ✓ | — | DIS-GASTRIC |
+| `RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION` | ✓ | 12 | organ-dysfunction | hold | critical | ✓ | — | DIS-GASTRIC |
+| `RF-GASTRIC-FRAILTY-AGE` | ✓ | 6 | frailty-age | de-escalate | major | ✓ | — | DIS-GASTRIC |
+| `RF-GASTRIC-HIGH-RISK-BIOLOGY` | ✓ | 4 | high-risk-biology | intensify | critical | ✓ | — | DIS-GASTRIC |
 | `RF-GASTRIC-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-GASTRIC |
+| `RF-GASTRIC-PDL1-CPS-1-PLUS` | ✓ | 7 | high-risk-biology | intensify | major | ✓ | — | DIS-GASTRIC |
 | `RF-GASTRIC-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | major | ✓ | — | DIS-GASTRIC |
 | `RF-GBM-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-GBM |
 | `RF-GBM-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-GBM |
 | `RF-GBM-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | — | DIS-GBM |
-| `RF-GBM-INTRACRANIAL-PRESSURE-EMERGENCY` | ✓ | 1 | organ-dysfunction | hold | critical | ✓ | — | DIS-GBM |
-| `RF-GBM-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-GBM |
-| `RF-HBV-COINFECTION` | ✓ | 1 | infection-screening | investigate | major | ✓ | — | DIS-HCV-MZL |
+| `RF-GBM-INTRACRANIAL-PRESSURE-EMERGENCY` | ✓ | 4 | organ-dysfunction | hold | critical | ✓ | — | DIS-GBM |
+| `RF-GBM-TRANSFORMATION-PROGRESSION` | ✓ | 4 | transformation-progression | intensify | critical | ✓ | — | DIS-GBM |
+| `RF-GELF-CRITERIA-MET` | ✓ | 1 | risk-score | intensify | major | ✓ | — | DIS-FL |
+| `RF-GELF-LOW-BURDEN` | ✓ | 3 | risk-score | de-escalate | major | ✓ | — | DIS-FL |
+| `RF-GIST-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-GIST |
+| `RF-GIST-HIGH-RISK-BIOLOGY` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-GIST |
+| `RF-GIST-INFECTION-SCREENING` | ✓ | 1 | infection-screening | hold | critical | ✓ | — | DIS-GIST |
+| `RF-GIST-ORGAN-DYSFUNCTION` | ✓ | 1 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-GIST |
+| `RF-GIST-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | major | ✓ | — | DIS-GIST |
+| `RF-GLIOMA-LOW-GRADE-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | draft | DIS-GLIOMA-LOW-GRADE |
+| `RF-GLIOMA-LOW-GRADE-HIGH-RISK-BIOLOGY` | ✓ | 1 | high-risk-biology | intensify | critical | ✓ | draft | DIS-GLIOMA-LOW-GRADE |
+| `RF-GLIOMA-LOW-GRADE-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-GLIOMA-LOW-GRADE |
+| `RF-GLIOMA-LOW-GRADE-INTRACRANIAL-PRESSURE` | ✓ | 1 | organ-dysfunction | hold | critical | ✓ | draft | DIS-GLIOMA-LOW-GRADE |
+| `RF-GLIOMA-LOW-GRADE-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-GLIOMA-LOW-GRADE |
+| `RF-GLIOMA-LOW-GRADE-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | draft | DIS-GLIOMA-LOW-GRADE |
+| `RF-HASFORD-HIGH` | ✓ | 3 | risk-score | intensify | major | ✓ | — | DIS-CML |
+| `RF-HBV-COINFECTION` | ✓ | 2 | infection-screening | investigate | major | ✓ | — | DIS-HCV-MZL |
 | `RF-HCC-AFP-RAPID-RISE` | ⚠ unused | 0 | transformation-progression | investigate | major | ✓ | — | DIS-HCC |
-| `RF-HCC-CHILD-PUGH-B-C` | ✓ | 4 | organ-dysfunction | de-escalate | critical | ✓ | — | DIS-HCC |
-| `RF-HCC-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-HCC |
+| `RF-HCC-CHILD-PUGH-B-C` | ✓ | 9 | organ-dysfunction | de-escalate | critical | ✓ | — | DIS-HCC |
+| `RF-HCC-FRAILTY-AGE` | ✓ | 4 | frailty-age | de-escalate | major | ✓ | — | DIS-HCC |
 | `RF-HCC-HBV-REACTIVATION-RISK` | ✓ | 2 | infection-screening | hold | critical | ✓ | — | DIS-HCC |
 | `RF-HCC-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | critical | ✓ | — | DIS-HCC |
-| `RF-HCC-VARICEAL-BLEED` | ✓ | 2 | organ-dysfunction | hold | critical | ✓ | — | DIS-HCC |
+| `RF-HCC-VARICEAL-BLEED` | ✓ | 4 | organ-dysfunction | hold | critical | ✓ | — | DIS-HCC |
 | `RF-HCL-FRAILTY-AGE` | ✓ | 3 | frailty-age | de-escalate | major | ✓ | — | DIS-HCL |
 | `RF-HCL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-HCL |
 | `RF-HCL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | — | DIS-HCL |
-| `RF-HCL-ORGAN-DYSFUNCTION` | ✓ | 1 | organ-dysfunction | investigate | major | ✓ | — | DIS-HCL |
-| `RF-HCL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | major | ✓ | — | DIS-HCL |
-| `RF-HCV-MZL-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-HCV-MZL |
-| `RF-HGBL-DH-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-HGBL-DH |
-| `RF-HGBL-DH-HIGH-RISK-BIOLOGY` | ✓ | 1 | high-risk-biology | intensify | critical | ✓ | — | DIS-HGBL-DH |
-| `RF-HGBL-DH-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | investigate | major | ✓ | — | DIS-HGBL-DH |
-| `RF-HGBL-DH-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | major | ✓ | — | DIS-HGBL-DH |
-| `RF-HGBL-DH-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | critical | ✓ | — | DIS-HGBL-DH |
+| `RF-HCL-ORGAN-DYSFUNCTION` | ✓ | 2 | organ-dysfunction | investigate | major | ✓ | — | DIS-HCL |
+| `RF-HCL-TRANSFORMATION-PROGRESSION` | ✓ | 2 | transformation-progression | investigate | major | ✓ | — | DIS-HCL |
+| `RF-HCV-MZL-FRAILTY-AGE` | ✓ | 2 | frailty-age | de-escalate | major | ✓ | — | DIS-HCV-MZL |
+| `RF-HGBL-DH-CNS-PROPHYLAXIS-TRIGGER` | ⚠ unused | 0 | high-risk-biology | investigate | — | ✓ | draft | DIS-HGBL-DH |
+| `RF-HGBL-DH-EMERGENCY-TLS` | ⚠ unused | 0 | organ-dysfunction | hold | critical | ✓ | draft | DIS-HGBL-DH |
+| `RF-HGBL-DH-FRAILTY-AGE` | ✓ | 2 | frailty-age | de-escalate | major | ✓ | — | DIS-HGBL-DH |
+| `RF-HGBL-DH-HIGH-RISK-BIOLOGY` | ✓ | 2 | high-risk-biology | intensify | critical | ✓ | — | DIS-HGBL-DH |
+| `RF-HGBL-DH-INFECTION-SCREENING` | ✓ | 1 | infection-screening | investigate | major | ✓ | — | DIS-HGBL-DH |
+| `RF-HGBL-DH-ORGAN-DYSFUNCTION` | ✓ | 1 | organ-dysfunction | investigate | major | ✓ | — | DIS-HGBL-DH |
+| `RF-HGBL-DH-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | investigate | critical | ✓ | — | DIS-HGBL-DH |
+| `RF-HNSCC-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-HNSCC |
+| `RF-HNSCC-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-HNSCC |
+| `RF-HNSCC-INFECTION-SCREENING` | ✓ | 5 | infection-screening | hold | critical | ✓ | — | DIS-HNSCC |
+| `RF-HNSCC-ORGAN-DYSFUNCTION` | ✓ | 5 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-HNSCC |
+| `RF-HNSCC-TRANSFORMATION-PROGRESSION` | ✓ | 2 | transformation-progression | hold | critical | ✓ | — | DIS-HNSCC |
 | `RF-HSTCL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-HSTCL |
 | `RF-HSTCL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | critical | ✓ | — | DIS-HSTCL |
 | `RF-HSTCL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | investigate | major | ✓ | — | DIS-HSTCL |
 | `RF-HSTCL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | critical | ✓ | — | DIS-HSTCL |
 | `RF-HSTCL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | critical | ✓ | — | DIS-HSTCL |
-| `RF-MCL-BLASTOID-OR-TP53` | ✓ | 7 | high-risk-biology | intensify | — | ✓ | — | DIS-MCL |
+| `RF-IFS-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-IFS |
+| `RF-IFS-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-IFS |
+| `RF-IFS-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-IFS |
+| `RF-IFS-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-IFS |
+| `RF-IFS-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-IFS |
+| `RF-IMT-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-IMT |
+| `RF-IMT-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-IMT |
+| `RF-IMT-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-IMT |
+| `RF-IMT-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-IMT |
+| `RF-IMT-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-IMT |
+| `RF-IPI-HIGH` | ✓ | 1 | risk-score | intensify | major | ✓ | — | DIS-DLBCL-NOS |
+| `RF-IPI-INTERMEDIATE` | ✓ | 2 | risk-score | investigate | major | ✓ | — | DIS-DLBCL-NOS |
+| `RF-IPI-LOW` | ✓ | 2 | risk-score | de-escalate | major | ✓ | — | DIS-DLBCL-NOS |
+| `RF-IPSS-M-HIGH` | ✓ | 2 | risk-score | intensify | major | ✓ | — | DIS-MDS-HR, DIS-MDS-LR |
+| `RF-IPSS-R-VERY-HIGH` | ✓ | 2 | risk-score | intensify | critical | ✓ | — | DIS-MDS-HR |
+| `RF-ISS-1` | ✓ | 2 | risk-score | de-escalate | major | ✓ | — | DIS-MM |
+| `RF-ISS-3` | ✓ | 1 | risk-score | intensify | major | ✓ | — | DIS-MM |
+| `RF-LACTATION-ACTIVE` | ⚠ unused | 0 | reproductive-status | hold | major | ✓ | — | * |
+| `RF-LATITUDE-HIGH-RISK-MHSPC` | ✓ | 5 | risk-score | intensify | major | ✓ | — | DIS-PROSTATE |
+| `RF-LEPTOMENINGEAL-DISEASE` | ⚠ unused | 0 | oncologic-emergency | intensify | critical | ✓ | — | * |
+| `RF-MASTOCYTOSIS-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | draft | DIS-MASTOCYTOSIS |
+| `RF-MASTOCYTOSIS-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | critical | ✓ | draft | DIS-MASTOCYTOSIS |
+| `RF-MASTOCYTOSIS-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | draft | DIS-MASTOCYTOSIS |
+| `RF-MASTOCYTOSIS-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | intensify | major | ✓ | draft | DIS-MASTOCYTOSIS |
+| `RF-MASTOCYTOSIS-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | draft | DIS-MASTOCYTOSIS |
+| `RF-MCL-BLASTOID-OR-TP53` | ✓ | 12 | high-risk-biology | intensify | — | ✓ | — | DIS-MCL |
+| `RF-MCL-BLASTOID-VARIANT` | ✓ | 3 | high-risk-biology | intensify | critical | ✓ | — | DIS-MCL |
 | `RF-MCL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-MCL |
-| `RF-MCL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-MCL |
+| `RF-MCL-INFECTION-SCREENING` | ✓ | 1 | infection-screening | hold | critical | ✓ | — | DIS-MCL |
 | `RF-MCL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-MCL |
+| `RF-MCL-POST-BTKI-C481-ACTIONABLE` | ✓ | 3 | prior-therapy-class | intensify | major | ✓ | — | DIS-MCL |
 | `RF-MCL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-MCL |
-| `RF-MDS-DEL-5Q-ISOLATED` | ✓ | 7 | high-risk-biology | investigate | major | ✓ | — | DIS-MDS-LR |
+| `RF-MDS-DEL-5Q-ISOLATED` | ✓ | 9 | high-risk-biology | investigate | major | ✓ | — | DIS-MDS-LR |
 | `RF-MDS-FRAILTY-AGE` | ✓ | 8 | frailty-age | de-escalate | major | ✓ | — | DIS-MDS-LR, DIS-MDS-HR |
 | `RF-MDS-HIGH-RISK-IPSS` | ✓ | 8 | high-risk-biology | intensify | critical | ✓ | — | DIS-MDS-LR, DIS-MDS-HR |
 | `RF-MDS-INFECTION-SCREENING` | ✓ | 6 | infection-screening | hold | major | ✓ | — | DIS-MDS-LR, DIS-MDS-HR |
 | `RF-MDS-ORGAN-DYSFUNCTION` | ✓ | 7 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-MDS-LR, DIS-MDS-HR |
-| `RF-MDS-TP53-MUTATION` | ✓ | 5 | high-risk-biology | intensify | critical | ✓ | — | DIS-MDS-HR, DIS-MDS-LR |
+| `RF-MDS-TP53-MUTATION` | ✓ | 7 | high-risk-biology | intensify | critical | ✓ | — | DIS-MDS-HR, DIS-MDS-LR |
 | `RF-MDS-TRANSFORMATION-PROGRESSION` | ✓ | 10 | transformation-progression | intensify | critical | ✓ | — | DIS-MDS-LR, DIS-MDS-HR |
-| `RF-MDS-TRANSPLANT-ELIGIBLE` | ✓ | 5 | high-risk-biology | intensify | major | ✓ | — | DIS-MDS-HR |
-| `RF-MELANOMA-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-MELANOMA |
+| `RF-MDS-TRANSPLANT-ELIGIBLE` | ✓ | 6 | high-risk-biology | intensify | major | ✓ | — | DIS-MDS-HR |
+| `RF-MELANOMA-BRAF-V600-ACTIONABLE` | ✓ | 4 | high-risk-biology | intensify | critical | ✓ | — | DIS-MELANOMA |
+| `RF-MELANOMA-CNS-ACTIVE` | ❌ MISSING | 1 | — | — | — | — | — | — |
+| `RF-MELANOMA-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-MELANOMA |
 | `RF-MELANOMA-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-MELANOMA |
 | `RF-MELANOMA-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | — | DIS-MELANOMA |
-| `RF-MELANOMA-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | major | ✓ | — | DIS-MELANOMA |
-| `RF-MELANOMA-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-MELANOMA |
+| `RF-MELANOMA-IO-RESISTANT` | ✓ | 1 | transformation-progression | intensify | major | ✓ | — | DIS-MELANOMA |
+| `RF-MELANOMA-KIT-MUT-ACTIONABLE` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-MELANOMA |
+| `RF-MELANOMA-NF1-MUT-CANDIDATE` | ⚠ unused | 0 | high-risk-biology | investigate | minor | ✓ | — | DIS-MELANOMA |
+| `RF-MELANOMA-ORGAN-DYSFUNCTION` | ✓ | 11 | organ-dysfunction | investigate | major | ✓ | — | DIS-MELANOMA |
+| `RF-MELANOMA-STAGE-III-RESECTED` | ✓ | 3 | high-risk-biology | intensify | critical | ✓ | — | DIS-MELANOMA |
+| `RF-MELANOMA-TRANSFORMATION-PROGRESSION` | ✓ | 3 | transformation-progression | intensify | critical | ✓ | — | DIS-MELANOMA |
 | `RF-MF-LARGE-CELL-TRANSFORMATION` | ✓ | 4 | transformation-progression | intensify | — | ✓ | — | DIS-MF-SEZARY |
 | `RF-MF-SEZARY-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-MF-SEZARY |
 | `RF-MF-SEZARY-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | — | DIS-MF-SEZARY |
 | `RF-MF-SEZARY-LEUKEMIC` | ✓ | 3 | high-risk-biology | intensify | — | ✓ | — | DIS-MF-SEZARY |
 | `RF-MF-SEZARY-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-MF-SEZARY |
-| `RF-MM-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-MM |
-| `RF-MM-HIGH-RISK-CYTOGENETICS` | ✓ | 5 | high-risk-biology | intensify | — | ✓ | — | DIS-MM |
-| `RF-MM-INFECTION-SCREENING` | ✓ | 2 | infection-screening | hold | critical | ✓ | — | DIS-MM |
-| `RF-MM-RENAL-DYSFUNCTION` | ✓ | 2 | organ-dysfunction | investigate | — | ✓ | — | DIS-MM |
-| `RF-MM-TRANSFORMATION-PROGRESSION` | ✓ | 2 | transformation-progression | intensify | critical | ✓ | — | DIS-MM |
+| `RF-MIPI-HIGH` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-MCL |
+| `RF-MIPI-LOW` | ✓ | 2 | high-risk-biology | de-escalate | major | ✓ | — | DIS-MCL |
+| `RF-MM` | ❌ MISSING | 1 | — | — | — | — | — | — |
+| `RF-MM-BCMA-EXPRESSION-POS` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-MM |
+| `RF-MM-CD38-EXPRESSION-DARA-CANDIDATE` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-MM |
+| `RF-MM-CORD-COMPRESSION` | ✓ | 13 | organ-dysfunction | hold | critical | ✓ | draft | DIS-MM |
+| `RF-MM-FRAILTY-AGE` | ✓ | 2 | frailty-age | de-escalate | major | ✓ | — | DIS-MM |
+| `RF-MM-HIGH-RISK-CYTOGENETICS` | ✓ | 10 | high-risk-biology | intensify | — | ✓ | — | DIS-MM |
+| `RF-MM-HYPERCALCEMIA` | ✓ | 13 | organ-dysfunction | hold | critical | ✓ | draft | DIS-MM |
+| `RF-MM-HYPERVISCOSITY` | ✓ | 13 | organ-dysfunction | hold | critical | ✓ | draft | DIS-MM |
+| `RF-MM-INFECTION-SCREENING` | ✓ | 9 | infection-screening | hold | critical | ✓ | — | DIS-MM |
+| `RF-MM-RENAL-DYSFUNCTION` | ✓ | 6 | organ-dysfunction | investigate | — | ✓ | — | DIS-MM |
+| `RF-MM-T11-14-ACTIONABLE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-MM |
+| `RF-MM-TRANSFORMATION-PROGRESSION` | ✓ | 3 | transformation-progression | intensify | critical | ✓ | — | DIS-MM |
+| `RF-MPNST-ADVANCED-DOXORUBICIN-UNSUITABLE` | ⚠ unused | 0 | organ-dysfunction | de-escalate | critical | ✓ | — | DIS-MPNST |
+| `RF-MPNST-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-MPNST |
+| `RF-MPNST-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-MPNST |
+| `RF-MPNST-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-MPNST |
+| `RF-MPNST-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-MPNST |
+| `RF-MPNST-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-MPNST |
+| `RF-MTC-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-MTC |
+| `RF-MTC-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-MTC |
+| `RF-MTC-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-MTC |
+| `RF-MTC-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-MTC |
+| `RF-MTC-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-MTC |
+| `RF-NET-CARCINOID-SYNDROME` | ✓ | 1 | other | intensify | minor | ✓ | — | DIS-GI-NET, DIS-PNET |
+| `RF-NET-HIGH-GRADE-G3` | ✓ | 6 | high-risk-biology | intensify | major | ✓ | — | DIS-PNET, DIS-GI-NET |
 | `RF-NK-T-NASAL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-NK-T-NASAL |
 | `RF-NK-T-NASAL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | investigate | major | ✓ | — | DIS-NK-T-NASAL |
 | `RF-NK-T-NASAL-INFECTION-SCREENING` | ✓ | 1 | infection-screening | investigate | major | ✓ | — | DIS-NK-T-NASAL |
 | `RF-NK-T-NASAL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | major | ✓ | — | DIS-NK-T-NASAL |
-| `RF-NK-T-NASAL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | critical | ✓ | — | DIS-NK-T-NASAL |
+| `RF-NK-T-NASAL-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | investigate | critical | ✓ | — | DIS-NK-T-NASAL |
 | `RF-NLPBL-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-NLPBL |
 | `RF-NLPBL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | critical | ✓ | — | DIS-NLPBL |
 | `RF-NLPBL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | investigate | minor | ✓ | — | DIS-NLPBL |
 | `RF-NLPBL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-NLPBL |
-| `RF-NLPBL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-NLPBL |
+| `RF-NLPBL-TRANSFORMATION-PROGRESSION` | ✓ | 3 | transformation-progression | intensify | critical | ✓ | — | DIS-NLPBL |
 | `RF-NMZL-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-NODAL-MZL |
 | `RF-NMZL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-NODAL-MZL |
 | `RF-NMZL-INFECTION-SCREENING` | ✓ | 1 | infection-screening | investigate | major | ✓ | — | DIS-NODAL-MZL |
-| `RF-NMZL-ORGAN-DYSFUNCTION` | ✓ | 1 | organ-dysfunction | investigate | major | ✓ | — | DIS-NODAL-MZL |
-| `RF-NMZL-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | intensify | critical | ✓ | — | DIS-NODAL-MZL |
-| `RF-NSCLC-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-NSCLC |
+| `RF-NMZL-ORGAN-DYSFUNCTION` | ✓ | 2 | organ-dysfunction | investigate | major | ✓ | — | DIS-NODAL-MZL |
+| `RF-NMZL-TRANSFORMATION-PROGRESSION` | ✓ | 2 | transformation-progression | intensify | critical | ✓ | — | DIS-NODAL-MZL |
+| `RF-NSCLC-ALK-FUSION-ACTIONABLE` | ✓ | 4 | high-risk-biology | intensify | critical | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-BRAF-V600E-ACTIONABLE` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-BRAIN-METS-EMERGENCY` | ✓ | 40 | organ-dysfunction | hold | critical | ✓ | draft | DIS-NSCLC |
+| `RF-NSCLC-CORD-COMPRESSION` | ✓ | 40 | organ-dysfunction | hold | critical | ✓ | draft | DIS-NSCLC |
+| `RF-NSCLC-EGFR-C797S-RESISTANCE` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-EGFR-EX19DEL-ACTIONABLE` | ✓ | 5 | high-risk-biology | intensify | critical | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-EGFR-EX20INS-ACTIONABLE` | ✓ | 3 | high-risk-biology | intensify | critical | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-EGFR-T790M-ACTIONABLE` | ✓ | 2 | high-risk-biology | intensify | critical | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-FRAILTY-AGE` | ✓ | 16 | frailty-age | de-escalate | major | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-HER2-MUT-ACTIONABLE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-HER3-HIGH-PATRITUMAB-CANDIDATE` | ⚠ unused | 0 | high-risk-biology | investigate | minor | ✓ | draft | DIS-NSCLC |
 | `RF-NSCLC-HIGH-RISK-BIOLOGY` | ✓ | 1 | high-risk-biology | intensify | critical | ✓ | — | DIS-NSCLC |
-| `RF-NSCLC-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-INFECTION-SCREENING` | ✓ | 2 | infection-screening | hold | major | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-KRAS-G12C-ACTIONABLE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-MALIGNANT-EFFUSION` | ✓ | 40 | organ-dysfunction | hold | major | ✓ | draft | DIS-NSCLC |
+| `RF-NSCLC-MET-AMP-ACTIONABLE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-MET-EX14-ACTIONABLE` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-NRG1-FUSION-ZENO-CANDIDATE` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | draft | DIS-NSCLC |
+| `RF-NSCLC-NTRK-FUSION-ACTIONABLE` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-NSCLC |
 | `RF-NSCLC-ORGAN-DYSFUNCTION` | ✓ | 1 | organ-dysfunction | hold | critical | ✓ | — | DIS-NSCLC |
-| `RF-NSCLC-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-NSCLC |
-| `RF-OVARIAN-FRAILTY-AGE` | ✓ | 3 | frailty-age | de-escalate | major | ✓ | — | DIS-OVARIAN |
-| `RF-OVARIAN-HRD-ACTIONABILITY` | ✓ | 1 | high-risk-biology | intensify | critical | ✓ | — | DIS-OVARIAN |
-| `RF-OVARIAN-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | — | DIS-OVARIAN |
-| `RF-OVARIAN-PERIOPERATIVE-VTE` | ⚠ unused | 0 | organ-dysfunction | investigate | major | ✓ | — | DIS-OVARIAN |
+| `RF-NSCLC-PDL1-50-PLUS` | ✓ | 5 | high-risk-biology | intensify | critical | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-RET-FUSION-ACTIONABLE` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-ROS1-FUSION-ACTIONABLE` | ✓ | 2 | high-risk-biology | intensify | critical | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-SVC-SYNDROME` | ✓ | 40 | organ-dysfunction | hold | critical | ✓ | draft | DIS-NSCLC |
+| `RF-NSCLC-TRANSFORMATION-PROGRESSION` | ✓ | 8 | transformation-progression | hold | critical | ✓ | — | DIS-NSCLC |
+| `RF-NSCLC-TROP2-DATO-CANDIDATE` | ⚠ unused | 0 | high-risk-biology | investigate | minor | ✓ | draft | DIS-NSCLC |
+| `RF-OBLIGATE-CARDIO-TOXIC-NAIVE` | ✓ | 1 | prior-therapy-class | intensify | minor | ✓ | — | * |
+| `RF-OLIGOMET-DEFINITION` | ✓ | 18 | high-risk-biology | intensify | major | ✓ | — | DIS-GASTRIC, DIS-ESOPHAGEAL |
+| `RF-ONCOLOGIC-EMERGENCY-CORD-COMPRESSION` | ⚠ unused | 0 | oncologic-emergency | intensify | critical | ✓ | — | * |
+| `RF-ONCOLOGIC-EMERGENCY-SVC` | ⚠ unused | 0 | oncologic-emergency | intensify | critical | ✓ | — | * |
+| `RF-ONCOLOGIC-EMERGENCY-TLS` | ⚠ unused | 0 | oncologic-emergency | hold | critical | ✓ | — | * |
+| `RF-ORGAN` | ❌ MISSING | 3 | — | — | — | — | — | — |
+| `RF-ORGAN-CARDIAC-LVEF-LOW` | ✓ | 4 | organ-dysfunction | de-escalate | critical | ✓ | — | * |
+| `RF-ORGAN-HEPATIC-CHILD-PUGH-B` | ✓ | 1 | organ-dysfunction | de-escalate | major | ✓ | — | * |
+| `RF-ORGAN-HEPATIC-CHILD-PUGH-C` | ✓ | 1 | organ-dysfunction | hold | critical | ✓ | — | * |
+| `RF-ORGAN-PULMONARY-DLCO-LOW` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | * |
+| `RF-ORGAN-RENAL-IMPAIRED` | ✓ | 6 | organ-dysfunction | de-escalate | major | ✓ | — | * |
+| `RF-OVARIAN-BRCA-MUT-ACTIONABLE` | ✓ | 6 | high-risk-biology | intensify | critical | ✓ | — | DIS-OVARIAN |
+| `RF-OVARIAN-FRA-HIGH-ACTIONABLE` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-OVARIAN |
+| `RF-OVARIAN-FRAILTY-AGE` | ✓ | 11 | frailty-age | de-escalate | major | ✓ | — | DIS-OVARIAN |
+| `RF-OVARIAN-HRD-ACTIONABILITY` | ✓ | 6 | high-risk-biology | intensify | critical | ✓ | — | DIS-OVARIAN |
+| `RF-OVARIAN-HRD-POSITIVE-ACTIONABLE` | ✓ | 2 | high-risk-biology | intensify | critical | ✓ | — | DIS-OVARIAN |
+| `RF-OVARIAN-INFECTION-SCREENING` | ✓ | 2 | infection-screening | hold | major | ✓ | — | DIS-OVARIAN |
+| `RF-OVARIAN-PERIOPERATIVE-VTE` | ✓ | 5 | organ-dysfunction | investigate | major | ✓ | — | DIS-OVARIAN |
+| `RF-OVARIAN-PLATINUM-RESISTANT` | ✓ | 1 | transformation-progression | de-escalate | major | ✓ | — | DIS-OVARIAN |
+| `RF-OVARIAN-PLATINUM-SENSITIVE` | ✓ | 1 | transformation-progression | intensify | major | ✓ | — | DIS-OVARIAN |
 | `RF-OVARIAN-SUBOPTIMAL-DEBULKING` | ✓ | 3 | organ-dysfunction | investigate | major | ✓ | — | DIS-OVARIAN |
-| `RF-OVARIAN-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-OVARIAN |
-| `RF-PCNSL-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-PCNSL |
+| `RF-OVARIAN-TRANSFORMATION-PROGRESSION` | ✓ | 4 | transformation-progression | intensify | critical | ✓ | — | DIS-OVARIAN |
+| `RF-PAN-ATM-CHEK2-CDK12-PARPI-CANDIDATE` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-PROSTATE, DIS-BREAST, DIS-PDAC |
+| `RF-PAN-BRCA-SOMATIC-PARPI-CANDIDATE` | ✓ | 4 | high-risk-biology | intensify | major | ✓ | — | DIS-OVARIAN, DIS-PROSTATE, DIS-PDAC +1 |
+| `RF-PAN-CTDNA-MRD-POSITIVE` | ⚠ unused | 0 | transformation-progression | investigate | major | ✓ | — | * |
+| `RF-PAN-PALB2-PARPI-CANDIDATE` | ✓ | 2 | high-risk-biology | intensify | major | ✓ | — | DIS-BREAST, DIS-PDAC, DIS-PROSTATE |
+| `RF-PAN-PDL1-CLONE-22C3-PEMBRO-ELIGIBLE` | ⚠ unused | 0 | high-risk-biology | investigate | minor | ✓ | — | * |
+| `RF-PCNSL-FRAILTY-AGE` | ✓ | 3 | frailty-age | de-escalate | major | ✓ | — | DIS-PCNSL |
 | `RF-PCNSL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-PCNSL |
 | `RF-PCNSL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | investigate | major | ✓ | — | DIS-PCNSL |
-| `RF-PCNSL-ORGAN-DYSFUNCTION` | ✓ | 2 | organ-dysfunction | hold | critical | ✓ | — | DIS-PCNSL |
-| `RF-PCNSL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | critical | ✓ | — | DIS-PCNSL |
-| `RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS` | ✓ | 2 | organ-dysfunction | hold | critical | ✓ | — | DIS-PDAC |
-| `RF-PDAC-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-PDAC |
+| `RF-PCNSL-INTRACRANIAL-PRESSURE` | ⚠ unused | 0 | organ-dysfunction | hold | critical | ✓ | draft | DIS-PCNSL |
+| `RF-PCNSL-ORGAN-DYSFUNCTION` | ✓ | 3 | organ-dysfunction | hold | critical | ✓ | — | DIS-PCNSL |
+| `RF-PCNSL-TRANSFORMATION-PROGRESSION` | ✓ | 2 | transformation-progression | investigate | critical | ✓ | — | DIS-PCNSL |
+| `RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS` | ✓ | 9 | organ-dysfunction | hold | critical | ✓ | — | DIS-PDAC |
+| `RF-PDAC-FIT-FOR-FOLFIRINOX` | ✓ | 7 | fitness-eligibility | intensify | major | ✓ | — | DIS-PDAC |
+| `RF-PDAC-FRAILTY-AGE` | ✓ | 5 | frailty-age | de-escalate | major | ✓ | — | DIS-PDAC |
 | `RF-PDAC-HIGH-RISK-BIOLOGY` | ✓ | 1 | high-risk-biology | intensify | critical | ✓ | — | DIS-PDAC |
-| `RF-PDAC-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-PDAC |
+| `RF-PDAC-INFECTION-SCREENING` | ✓ | 2 | infection-screening | hold | critical | ✓ | — | DIS-PDAC |
+| `RF-PDAC-ORGAN-DYSFUNCTION` | ✓ | 1 | organ-dysfunction | hold | major | — | draft | DIS-PDAC |
 | `RF-PDAC-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | major | ✓ | — | DIS-PDAC |
-| `RF-PMBCL-FRAILTY-AGE` | ✓ | 2 | frailty-age | de-escalate | major | ✓ | — | DIS-PMBCL |
+| `RF-PMBCL-FRAILTY-AGE` | ✓ | 3 | frailty-age | de-escalate | major | ✓ | — | DIS-PMBCL |
 | `RF-PMBCL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | investigate | major | ✓ | — | DIS-PMBCL |
 | `RF-PMBCL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | investigate | major | ✓ | — | DIS-PMBCL |
-| `RF-PMBCL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | major | ✓ | — | DIS-PMBCL |
-| `RF-PMBCL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | critical | ✓ | — | DIS-PMBCL |
+| `RF-PMBCL-MEDIASTINAL-AIRWAY` | ⚠ unused | 0 | organ-dysfunction | hold | critical | ✓ | draft | DIS-PMBCL |
+| `RF-PMBCL-ORGAN-DYSFUNCTION` | ✓ | 2 | organ-dysfunction | investigate | major | ✓ | — | DIS-PMBCL |
+| `RF-PMBCL-SVC-SYNDROME` | ⚠ unused | 0 | organ-dysfunction | hold | critical | ✓ | draft | DIS-PMBCL |
+| `RF-PMBCL-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | investigate | critical | ✓ | — | DIS-PMBCL |
+| `RF-PMF` | ❌ MISSING | 3 | — | — | — | — | — | — |
 | `RF-PMF-ANEMIA-DOMINANT` | ✓ | 8 | organ-dysfunction | investigate | major | ✓ | — | DIS-PMF |
 | `RF-PMF-BLAST-PROGRESSION` | ✓ | 7 | transformation-progression | intensify | critical | ✓ | — | DIS-PMF |
 | `RF-PMF-FRAILTY-AGE` | ✓ | 6 | frailty-age | de-escalate | major | ✓ | — | DIS-PMF |
-| `RF-PMF-HIGH-RISK-DIPSS` | ✓ | 8 | high-risk-biology | intensify | critical | ✓ | — | DIS-PMF |
+| `RF-PMF-HIGH-RISK-DIPSS` | ✓ | 9 | high-risk-biology | intensify | critical | ✓ | — | DIS-PMF |
 | `RF-PMF-INFECTION-SCREENING` | ✓ | 5 | infection-screening | hold | major | ✓ | — | DIS-PMF |
 | `RF-PMF-ORGAN-DYSFUNCTION` | ✓ | 6 | organ-dysfunction | investigate | major | ✓ | — | DIS-PMF |
+| `RF-POLE-POLD1-ENDOMETRIAL-LOW-RISK` | ⚠ unused | 0 | risk-score | de-escalate | major | ✓ | — | DIS-ENDOMETRIAL |
+| `RF-PREGNANCY-ACTIVE` | ✓ | 1 | reproductive-status | hold | critical | ✓ | — | * |
+| `RF-PREGNANCY-PLANNING` | ⚠ unused | 0 | reproductive-status | investigate | major | ✓ | — | * |
+| `RF-PRIOR-BRAFI-MEKI-FAILED` | ⚠ unused | 0 | prior-therapy-class | de-escalate | major | ✓ | — | * |
+| `RF-PRIOR-BTKI-PROGRESSION` | ✓ | 14 | prior-therapy-class | de-escalate | major | ✓ | — | * |
+| `RF-PRIOR-BV-NAIVE` | ✓ | 2 | other | intensify | major | ✓ | — | * |
+| `RF-PRIOR-CDK46I-PROGRESSION` | ⚠ unused | 0 | prior-therapy-class | de-escalate | major | ✓ | — | * |
+| `RF-PRIOR-EGFRI-PROGRESSION` | ⚠ unused | 0 | prior-therapy-class | de-escalate | major | ✓ | — | * |
+| `RF-PRIOR-HDACI-NAIVE` | ✓ | 2 | other | intensify | minor | ✓ | — | * |
+| `RF-PRIOR-IO-PROGRESSION` | ✓ | 2 | prior-therapy-class | de-escalate | major | ✓ | — | * |
+| `RF-PRIOR-PARPI-EXPOSED` | ⚠ unused | 0 | prior-therapy-class | investigate | major | ✓ | — | * |
+| `RF-PRIOR-PLATINUM-RESISTANT` | ✓ | 2 | prior-therapy-class | de-escalate | major | ✓ | — | * |
+| `RF-PROSTATE-AR-AMP-ARSI-RESISTANCE` | ✓ | 3 | high-risk-biology | investigate | major | ✓ | — | DIS-PROSTATE |
+| `RF-PROSTATE-AR-V7-ARSI-RESISTANCE` | ✓ | 7 | high-risk-biology | investigate | major | ✓ | — | DIS-PROSTATE |
+| `RF-PROSTATE-CORD-COMPRESSION` | ✓ | 8 | organ-dysfunction | hold | critical | ✓ | draft | DIS-PROSTATE |
 | `RF-PROSTATE-FRAILTY-AGE` | ✓ | 2 | frailty-age | de-escalate | major | ✓ | — | DIS-PROSTATE |
-| `RF-PROSTATE-HIGH-RISK-BIOLOGY` | ✓ | 3 | high-risk-biology | intensify | major | ✓ | — | DIS-PROSTATE |
-| `RF-PROSTATE-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | investigate | minor | ✓ | — | DIS-PROSTATE |
-| `RF-PROSTATE-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | major | ✓ | — | DIS-PROSTATE |
+| `RF-PROSTATE-HIGH-RISK-BIOLOGY` | ✓ | 9 | high-risk-biology | intensify | major | ✓ | — | DIS-PROSTATE |
+| `RF-PROSTATE-INFECTION-SCREENING` | ✓ | 4 | infection-screening | investigate | minor | ✓ | — | DIS-PROSTATE |
+| `RF-PROSTATE-ORGAN-DYSFUNCTION` | ✓ | 8 | organ-dysfunction | investigate | major | ✓ | — | DIS-PROSTATE |
 | `RF-PROSTATE-PSA-PROGRESSION` | ✓ | 5 | transformation-progression | investigate | major | ✓ | — | DIS-PROSTATE |
-| `RF-PROSTATE-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-PROSTATE |
+| `RF-PROSTATE-TMPRSS2-ERG-PROGNOSTIC` | ⚠ unused | 0 | high-risk-biology | investigate | minor | ✓ | — | DIS-PROSTATE |
+| `RF-PROSTATE-TRANSFORMATION-PROGRESSION` | ✓ | 8 | transformation-progression | hold | critical | ✓ | — | DIS-PROSTATE |
 | `RF-PTCL-NOS-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-PTCL-NOS |
 | `RF-PTCL-NOS-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-PTCL-NOS |
 | `RF-PTCL-NOS-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-PTCL-NOS |
@@ -438,48 +755,82 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **C
 | `RF-PTLD-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | critical | ✓ | — | DIS-PTLD |
 | `RF-PTLD-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-PTLD |
 | `RF-PV-ET-FRAILTY-AGE` | ✓ | 8 | frailty-age | de-escalate | minor | ✓ | — | DIS-PV, DIS-ET |
-| `RF-PV-ET-HIGH-THROMBOSIS-RISK` | ✓ | 10 | high-risk-biology | intensify | major | ✓ | — | DIS-PV, DIS-ET |
+| `RF-PV-ET-HIGH-THROMBOSIS-RISK` | ✓ | 14 | high-risk-biology | intensify | major | ✓ | — | DIS-PV, DIS-ET |
 | `RF-PV-ET-INFECTION-SCREENING` | ✓ | 5 | infection-screening | investigate | minor | ✓ | — | DIS-PV, DIS-ET |
 | `RF-PV-ET-ORGAN-DYSFUNCTION` | ✓ | 10 | organ-dysfunction | investigate | major | ✓ | — | DIS-PV, DIS-ET |
-| `RF-PV-ET-PREGNANCY-OR-PLANNING` | ✓ | 11 | frailty-age | investigate | major | ✓ | — | DIS-PV, DIS-ET |
-| `RF-PV-HU-RESISTANCE-INTOLERANCE` | ✓ | 5 | transformation-progression | intensify | major | ✓ | — | DIS-PV |
-| `RF-RCC-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-RCC |
+| `RF-PV-ET-PREGNANCY-OR-PLANNING` | ✓ | 12 | frailty-age | investigate | major | ✓ | — | DIS-PV, DIS-ET |
+| `RF-PV-HU-RESISTANCE-INTOLERANCE` | ✓ | 6 | transformation-progression | intensify | major | ✓ | — | DIS-PV |
+| `RF-R-ISS-3-HIGH-RISK` | ✓ | 2 | risk-score | intensify | critical | ✓ | — | DIS-MM |
+| `RF-RAI-HIGH` | ✓ | 2 | risk-score | intensify | major | ✓ | — | DIS-CLL |
+| `RF-RAI-LOW` | ✓ | 2 | risk-score | de-escalate | major | ✓ | — | DIS-CLL |
+| `RF-RCC-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-RCC |
+| `RF-RCC-FRAILTY-ECOG2` | ✓ | 1 | frailty-age | de-escalate | major | — | draft | DIS-RCC |
 | `RF-RCC-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-RCC |
+| `RF-RCC-IMDC-INTERMEDIATE-POOR-RISK` | ✓ | 2 | risk-score | intensify | major | ✓ | — | DIS-RCC |
 | `RF-RCC-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | — | DIS-RCC |
-| `RF-RCC-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | major | ✓ | — | DIS-RCC |
-| `RF-RCC-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | critical | ✓ | — | DIS-RCC |
+| `RF-RCC-ORGAN-DYSFUNCTION` | ✓ | 9 | organ-dysfunction | investigate | major | ✓ | — | DIS-RCC |
+| `RF-RCC-TRANSFORMATION-PROGRESSION` | ✓ | 9 | transformation-progression | investigate | critical | ✓ | — | DIS-RCC |
+| `RF-RICHTER-TRANSFORMATION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-CLL |
+| `RF-SALIVARY-ADVANCED-PALLIATIVE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-SALIVARY |
+| `RF-SALIVARY-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-SALIVARY |
+| `RF-SALIVARY-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-SALIVARY |
+| `RF-SALIVARY-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-SALIVARY |
+| `RF-SALIVARY-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-SALIVARY |
+| `RF-SALIVARY-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-SALIVARY |
+| `RF-SANZ-HIGH-RISK` | ✓ | 1 | risk-score | intensify | critical | ✓ | — | DIS-APL |
+| `RF-SANZ-INTERMEDIATE` | ✓ | 2 | risk-score | investigate | major | ✓ | — | DIS-APL |
+| `RF-SANZ-LOW-RISK` | ✓ | 2 | risk-score | de-escalate | major | ✓ | — | DIS-APL |
+| `RF-SCLC-BRAIN-METS-EMERGENCY` | ✓ | 3 | organ-dysfunction | hold | critical | ✓ | draft | DIS-SCLC |
 | `RF-SCLC-FRAILTY-AGE` | ✓ | 3 | frailty-age | de-escalate | major | ✓ | — | DIS-SCLC |
 | `RF-SCLC-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | critical | ✓ | — | DIS-SCLC |
-| `RF-SCLC-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | — | DIS-SCLC |
-| `RF-SCLC-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | major | ✓ | — | DIS-SCLC |
-| `RF-SCLC-PARANEOPLASTIC` | ⚠ unused | 0 | transformation-progression | investigate | major | ✓ | — | DIS-SCLC |
+| `RF-SCLC-INFECTION-SCREENING` | ✓ | 3 | infection-screening | hold | major | ✓ | — | DIS-SCLC |
+| `RF-SCLC-ORGAN-DYSFUNCTION` | ✓ | 3 | organ-dysfunction | investigate | major | ✓ | — | DIS-SCLC |
+| `RF-SCLC-PARANEOPLASTIC` | ✓ | 3 | transformation-progression | investigate | major | ✓ | — | DIS-SCLC |
+| `RF-SCLC-SVC-SYNDROME` | ⚠ unused | 0 | organ-dysfunction | hold | critical | ✓ | draft | DIS-SCLC |
 | `RF-SMZL-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | major | ✓ | — | DIS-SPLENIC-MZL |
 | `RF-SMZL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-SPLENIC-MZL |
 | `RF-SMZL-INFECTION-SCREENING` | ✓ | 1 | infection-screening | intensify | major | ✓ | — | DIS-SPLENIC-MZL |
-| `RF-SMZL-ORGAN-DYSFUNCTION` | ✓ | 1 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-SPLENIC-MZL |
-| `RF-SMZL-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | intensify | critical | ✓ | — | DIS-SPLENIC-MZL |
+| `RF-SMZL-ORGAN-DYSFUNCTION` | ✓ | 2 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-SPLENIC-MZL |
+| `RF-SMZL-TRANSFORMATION-PROGRESSION` | ✓ | 2 | transformation-progression | intensify | critical | ✓ | — | DIS-SPLENIC-MZL |
+| `RF-SOKAL-HIGH` | ✓ | 3 | risk-score | intensify | major | ✓ | — | DIS-CML |
+| `RF-T-ALL-CNS-LEUKEMIA` | ⚠ unused | 0 | high-risk-biology | intensify | critical | ✓ | draft | DIS-T-ALL |
+| `RF-T-ALL-EMERGENCY-TLS-LEUKOSTASIS` | ⚠ unused | 0 | organ-dysfunction | hold | critical | ✓ | draft | DIS-T-ALL |
 | `RF-T-ALL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-T-ALL |
 | `RF-T-ALL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | critical | ✓ | — | DIS-T-ALL |
 | `RF-T-ALL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | investigate | major | ✓ | — | DIS-T-ALL |
+| `RF-T-ALL-MEDIASTINAL-AIRWAY` | ⚠ unused | 0 | organ-dysfunction | hold | critical | ✓ | draft | DIS-T-ALL |
 | `RF-T-ALL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | major | ✓ | — | DIS-T-ALL |
-| `RF-T-ALL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | critical | ✓ | — | DIS-T-ALL |
+| `RF-T-ALL-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | investigate | critical | ✓ | — | DIS-T-ALL |
 | `RF-T-PLL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | investigate | major | ✓ | — | DIS-T-PLL |
 | `RF-T-PLL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-T-PLL |
 | `RF-T-PLL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | investigate | major | ✓ | — | DIS-T-PLL |
 | `RF-T-PLL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | investigate | major | ✓ | — | DIS-T-PLL |
-| `RF-T-PLL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | investigate | critical | ✓ | — | DIS-T-PLL |
-| `RF-TCELL-CD30-POSITIVE` | ✓ | 10 | high-risk-biology | intensify | — | ✓ | — | DIS-PTCL-NOS, DIS-ALCL, DIS-AITL |
-| `RF-UNIVERSAL-HBV-REACTIVATION-RISK` | ✓ | 14 | infection-screening | hold | critical | ✓ | — | * |
+| `RF-T-PLL-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | investigate | critical | ✓ | — | DIS-T-PLL |
+| `RF-TCELL-CD30-POSITIVE` | ✓ | 13 | high-risk-biology | intensify | — | ✓ | — | DIS-PTCL-NOS, DIS-ALCL, DIS-AITL |
+| `RF-THYROID-ANAPLASTIC-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | critical | ✓ | — | DIS-THYROID-ANAPLASTIC |
+| `RF-THYROID-ANAPLASTIC-HIGH-RISK-BIOLOGY` | ✓ | 1 | high-risk-biology | intensify | critical | ✓ | — | DIS-THYROID-ANAPLASTIC |
+| `RF-THYROID-ANAPLASTIC-INFECTION-SCREENING` | ✓ | 1 | infection-screening | hold | critical | ✓ | — | DIS-THYROID-ANAPLASTIC |
+| `RF-THYROID-ANAPLASTIC-ORGAN-DYSFUNCTION` | ✓ | 1 | organ-dysfunction | de-escalate | critical | ✓ | — | DIS-THYROID-ANAPLASTIC |
+| `RF-THYROID-ANAPLASTIC-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-THYROID-ANAPLASTIC |
+| `RF-THYROID-PAPILLARY-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-THYROID-PAPILLARY |
+| `RF-THYROID-PAPILLARY-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-THYROID-PAPILLARY |
+| `RF-THYROID-PAPILLARY-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-THYROID-PAPILLARY |
+| `RF-THYROID-PAPILLARY-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-THYROID-PAPILLARY |
+| `RF-THYROID-PAPILLARY-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-THYROID-PAPILLARY |
+| `RF-UNIVERSAL-HBV-REACTIVATION-RISK` | ✓ | 24 | infection-screening | hold | critical | ✓ | — | * |
 | `RF-UNIVERSAL-INFUSION-REACTION-FIRST-CYCLE` | ⚠ unused | 0 | other | investigate | minor | ✓ | — | * |
-| `RF-UNIVERSAL-TLS-RISK` | ⚠ unused | 0 | organ-dysfunction | intensify | major | ✓ | — | * |
-| `RF-UROTHELIAL-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | critical | ✓ | — | DIS-UROTHELIAL |
+| `RF-UNIVERSAL-TLS-RISK` | ✓ | 4 | oncologic-emergency | intensify | major | ✓ | — | * |
+| `RF-UROTHELIAL-EV-INELIGIBLE` | ❌ MISSING | 1 | — | — | — | — | — | — |
+| `RF-UROTHELIAL-FRAILTY-AGE` | ✓ | 1 | frailty-age | de-escalate | critical | ✓ | — | DIS-UROTHELIAL |
 | `RF-UROTHELIAL-HIGH-RISK-BIOLOGY` | ⚠ unused | 0 | high-risk-biology | intensify | major | ✓ | — | DIS-UROTHELIAL |
 | `RF-UROTHELIAL-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | major | ✓ | — | DIS-UROTHELIAL |
-| `RF-UROTHELIAL-ORGAN-DYSFUNCTION` | ⚠ unused | 0 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-UROTHELIAL |
+| `RF-UROTHELIAL-ORGAN-DYSFUNCTION` | ✓ | 1 | organ-dysfunction | de-escalate | major | ✓ | — | DIS-UROTHELIAL |
 | `RF-UROTHELIAL-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | hold | critical | ✓ | — | DIS-UROTHELIAL |
+| `RF-UVEAL-MELANOMA-BAP1-MUT-CANDIDATE` | ⚠ unused | 0 | high-risk-biology | investigate | major | ✓ | — | DIS-MELANOMA |
 | `RF-WM-FRAILTY-AGE` | ⚠ unused | 0 | frailty-age | de-escalate | major | ✓ | — | DIS-WM |
 | `RF-WM-HIGH-RISK-BIOLOGY` | ✓ | 1 | high-risk-biology | intensify | major | ✓ | — | DIS-WM |
 | `RF-WM-HYPERVISCOSITY` | ✓ | 6 | organ-dysfunction | hold | — | ✓ | — | DIS-WM |
 | `RF-WM-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-WM |
-| `RF-WM-TRANSFORMATION-PROGRESSION` | ⚠ unused | 0 | transformation-progression | intensify | critical | ✓ | — | DIS-WM |
+| `RF-WM-MYD88-L265P-ACTIONABLE` | ✓ | 4 | high-risk-biology | intensify | major | ✓ | — | DIS-WM |
+| `RF-WM-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | intensify | critical | ✓ | — | DIS-WM |
 

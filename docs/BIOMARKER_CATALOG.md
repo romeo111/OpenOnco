@@ -6,10 +6,10 @@ Purpose: single source of truth for which biomarkers OpenOnco's engine actually 
 
 ## Summary
 
-- **Defined entities:** 174
-- **Referenced by rules:** 114 unique IDs, 541 total citations
-- **Defined + used (✓):** 104
-- **Defined + unused (⚠):** 70
+- **Defined entities:** 181
+- **Referenced by rules:** 120 unique IDs, 550 total citations
+- **Defined + used (✓):** 110
+- **Defined + unused (⚠):** 71
 - **Referenced + missing (❌):** 10
 
 ## Issues to resolve
@@ -29,12 +29,15 @@ Purpose: single source of truth for which biomarkers OpenOnco's engine actually 
 
 ### ⚠ Defined but no rule consumes them
 
+- `BIO-1P19Q-CODELETION` — 1p/19q codeletion. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-AML-TP53-ADVERSE` — TP53-mutated AML (adverse risk). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-APC` — APC loss-of-function mutation / truncation. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-AR-V7` — AR-V7 (androgen receptor splice variant 7). Wire into ≥1 Indication or red-flag, or document why dormant.
+- `BIO-ATRX-MUTATION` — ATRX mutation / ATRX loss (IHC). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-BAP1` — BAP1 alteration. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-BAP1-MUTATION` — BAP1 loss-of-function mutation. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-BCL2-IHC` — BCL2 expression by IHC. Wire into ≥1 Indication or red-flag, or document why dormant.
+- `BIO-BCL6-IHC` — BCL6 IHC (protein expression). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-BCMA-EXPRESSION` — BCMA expression (target of teclistamab / elranatamab / cilta-cel / ide-cel). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-BCR-ABL1-E255K` — BCR::ABL1 E255K nilotinib-resistance mutation. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-BCR-ABL1-F317L` — BCR::ABL1 F317L resistance mutation. Wire into ≥1 Indication or red-flag, or document why dormant.
@@ -43,11 +46,11 @@ Purpose: single source of truth for which biomarkers OpenOnco's engine actually 
 - `BIO-BRAF-CLASS-II-III` — BRAF non-V600 mutation (Class II / Class III). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-BRAF-V600K` — BRAF V600K mutation. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-CALR` — CALR mutation (exon 9). Wire into ≥1 Indication or red-flag, or document why dormant.
+- `BIO-CD10-IHC` — CD10 IHC (CALLA, neprilysin). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-CD22-EXPRESSION` — CD22 expression (target of inotuzumab ozogamicin). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-CD33-EXPRESSION` — CD33 expression (target of gemtuzumab ozogamicin). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-CD38-EXPRESSION` — CD38 expression (target of daratumumab / isatuximab). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-CD79B-MUTATION` — CD79B mutation (ITAM domain, e.g. Y196). Wire into ≥1 Indication or red-flag, or document why dormant.
-- `BIO-CSF1R` — CSF1R expression / CSF1R pathway activation (TGCT). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-CTDNA-MRD` — Circulating tumor DNA — minimal residual disease (ctDNA-MRD). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-CTNNB1` — CTNNB1 activating mutation (β-catenin). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-DDR2` — DDR2 activating mutation — discoidin domain receptor tyrosine kinase 2. Wire into ≥1 Indication or red-flag, or document why dormant.
@@ -62,7 +65,6 @@ Purpose: single source of truth for which biomarkers OpenOnco's engine actually 
 - `BIO-FLT3-D835` — FLT3 tyrosine kinase domain (TKD) mutation. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-FLT3-F691L` — FLT3 F691L gilteritinib-resistance gatekeeper mutation. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-FLT3-ITD` — FLT3 internal tandem duplication (ITD). Wire into ≥1 Indication or red-flag, or document why dormant.
-- `BIO-FOXL2` — FOXL2 p.C134W mutation. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-GNAS` — GNAS activating mutation (Gα_s protein). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-HNF1A` — HNF1A mutation (somatic or germline). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-HRD-ASSAY-DISTINCTION` — HRD assay distinction (Myriad myChoice CDx vs FoundationOne CDx). Wire into ≥1 Indication or red-flag, or document why dormant.
@@ -77,6 +79,7 @@ Purpose: single source of truth for which biomarkers OpenOnco's engine actually 
 - `BIO-LYNCH-PANEL-SPLIT` — Lynch syndrome germline panel — gene-resolved (MLH1 / MSH2 / MSH6 / PMS2 / EPCAM). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-MAP2K1` — MAP2K1 activating mutation (MEK1). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-MDS-DEL-5Q` — MDS with del(5q) cytogenetic abnormality. Wire into ≥1 Indication or red-flag, or document why dormant.
+- `BIO-MUM1-IHC` — MUM1/IRF4 IHC (Multiple Myeloma oncogene 1). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-NF1-MUTATION` — NF1 loss-of-function mutation. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-NF2` — NF2 loss-of-function mutation (merlin/schwannomin). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-NOTCH2-MUTATION` — NOTCH2 mutation (PEST domain truncating). Wire into ≥1 Indication or red-flag, or document why dormant.
@@ -86,19 +89,17 @@ Purpose: single source of truth for which biomarkers OpenOnco's engine actually 
 - `BIO-PDL1-SP263-CLONE` — PD-L1 IHC — Ventana SP263 clone. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-PIK3CA-H1047R` — PIK3CA H1047R mutation. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-PIK3R1` — PIK3R1 mutation (p85α regulatory subunit of PI3K). Wire into ≥1 Indication or red-flag, or document why dormant.
-- `BIO-PTCH1` — PTCH1 loss-of-function mutation (Patched-1). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-PTPN11` — PTPN11 activating mutation (SHP2). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-RB1` — RB1 loss-of-function (retinoblastoma protein). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-ROS1-G2032R` — ROS1 G2032R resistance mutation. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-SF3B1` — SF3B1 mutation. Wire into ≥1 Indication or red-flag, or document why dormant.
-- `BIO-SMARCB1` — SMARCB1 (INI1) loss of expression. Wire into ≥1 Indication or red-flag, or document why dormant.
-- `BIO-SMO` — SMO activating mutation (Smoothened). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-TERT` — TERT promoter mutation (C228T / C250T). Wire into ≥1 Indication or red-flag, or document why dormant.
+- `BIO-TP53-IHC` — TP53 IHC (aberrant p53 expression pattern). Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-TP53-R175H` — TP53 R175H gain-of-function hotspot. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-TP53-R248Q` — TP53 R248Q DNA-contact hotspot. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-TP53-R273H` — TP53 R273H DNA-contact hotspot. Wire into ≥1 Indication or red-flag, or document why dormant.
 - `BIO-TP53-R282W` — TP53 R282W partial loss-of-function hotspot. Wire into ≥1 Indication or red-flag, or document why dormant.
-- `BIO-TSC1` — TSC1 loss-of-function mutation (hamartin). Wire into ≥1 Indication or red-flag, or document why dormant.
+- `BIO-WT1-MUTATION` — WT1 mutation (Wilms tumor 1 gene). Wire into ≥1 Indication or red-flag, or document why dormant.
 
 ## Top-cited biomarkers (PDF-extraction priority)
 
@@ -111,8 +112,8 @@ Reference count below is a proxy for how often the engine reads the marker. High
 | `BIO-BRAF-V600E` | 23 | Anaplastic thyroid carci, Colorectal carcinoma (CR, Cutaneous melanoma, Hairy Cell Leukemia, Non-small cell lung canc |
 | `BIO-ESTROGEN-RECEPTOR` | 21 | Breast cancer (invasive) |
 | `BIO-ALK-FUSION` | 19 | Inflammatory myofibrobla, Non-small cell lung canc |
+| `BIO-MSI-STATUS` | 18 | Colorectal carcinoma (CR, Gastric / GEJ adenocarci |
 | `BIO-EGFR-MUTATION` | 18 | Non-small cell lung canc |
-| `BIO-MSI-STATUS` | 17 | Colorectal carcinoma (CR, Gastric / GEJ adenocarci |
 | `BIO-HCV-RNA` | 16 | Diffuse Large B-Cell Lym, HCV-associated Marginal , Hepatocellular carcinoma, Multiple Myeloma, Nodal Marginal Zone Lymp, Splenic Marginal Zone Ly |
 | `BIO-NTRK-FUSION` | 15 | Infantile fibrosarcoma (, Non-small cell lung canc |
 | `BIO-HIV-STATUS` | 11 | Burkitt Lymphoma, Classical Hodgkin Lympho, Diffuse Large B-Cell Lym, Multiple Myeloma, Splenic Marginal Zone Ly |
@@ -133,14 +134,14 @@ Method category drives PDF-extraction pattern complexity. IHC + serum + MSI mark
 
 | Method group | Count |
 |---|---|
-| NGS | 83 |
+| NGS | 85 |
+| IHC | 35 |
 | FISH | 32 |
-| IHC | 31 |
 | composite | 8 |
 | viral | 7 |
+| methylation | 3 |
 | serum | 3 |
 | histology | 2 |
-| methylation | 2 |
 | FISH/NGS | 1 |
 | gene expression | 1 |
 | MSI/MMR | 1 |
@@ -150,10 +151,11 @@ Method category drives PDF-extraction pattern complexity. IHC + serum + MSI mark
 
 ## Coverage gaps
 
-### Missing LOINC (169 of 174)
+### Missing LOINC (176 of 181)
 
 LOINC required for FHIR R4/R5 + mCODE export. Add `codes.loinc` to each entity below; `https://search.loinc.org` for canonical codes.
 
+- `BIO-1P19Q-CODELETION`
 - `BIO-AFP`
 - `BIO-AKT1`
 - `BIO-ALK-FUSION`
@@ -165,18 +167,17 @@ LOINC required for FHIR R4/R5 + mCODE export. Add `codes.loinc` to each entity b
 - `BIO-AR-AMPLIFICATION`
 - `BIO-AR-V7`
 - `BIO-ATM-CHEK2-CDK12-GERMLINE`
+- `BIO-ATRX-MUTATION`
 - `BIO-BAP1`
 - `BIO-BAP1-MUTATION`
 - `BIO-BCL2-EXPRESSION-IHC`
 - `BIO-BCL2-IHC`
 - `BIO-BCL2-REARRANGEMENT`
+- `BIO-BCL6-IHC`
 - `BIO-BCL6-REARRANGEMENT`
-- `BIO-BCMA-EXPRESSION`
-- `BIO-BCR-ABL1-E255K`
-- `BIO-BCR-ABL1-F317L`
-- ... and 149 more
+- ... and 156 more
 
-### No fixture coverage (42 used markers)
+### No fixture coverage (33 used markers)
 
 Markers consumed by rules but never appearing in `examples/*.json`. Either add a patient fixture exercising the marker, or document why no example is needed.
 
@@ -184,10 +185,7 @@ Markers consumed by rules but never appearing in `examples/*.json`. Either add a
 - `BIO-ALK-REARRANGEMENT` (2× refs)
 - `BIO-AR-AMPLIFICATION` (2× refs)
 - `BIO-ATM-CHEK2-CDK12-GERMLINE` (2× refs)
-- `BIO-BCL2-EXPRESSION-IHC` (2× refs)
-- `BIO-BCL2-REARRANGEMENT` (2× refs)
 - `BIO-BCL6-REARRANGEMENT` (2× refs)
-- `BIO-BCR-ABL1` (1× refs)
 - `BIO-BRCA-SOMATIC` (2× refs)
 - `BIO-CDH1-GERMLINE` (2× refs)
 - `BIO-CDKN2A` (2× refs)
@@ -196,11 +194,14 @@ Markers consumed by rules but never appearing in `examples/*.json`. Either add a
 - `BIO-EBV-STATUS` (1× refs)
 - `BIO-EGFR-C797S` (2× refs)
 - `BIO-ESTROGEN-RECEPTOR` (21× refs)
-- `BIO-EZH2-Y641` (1× refs)
 - `BIO-FGFR2B-IHC` (1× refs)
-- `BIO-FGFR3-MUTATION` (2× refs)
-- `BIO-HER2-LOW` (1× refs)
-- ... and 22 more
+- `BIO-HER2-ULTRALOW` (2× refs)
+- `BIO-HRAS` (2× refs)
+- `BIO-IDH1-R132C` (1× refs)
+- `BIO-IDH1-R132G` (1× refs)
+- `BIO-IDH1-R132H` (1× refs)
+- `BIO-KI67-PROLIFERATION-INDEX` (1× refs)
+- ... and 13 more
 
 ## Full catalog
 
@@ -208,9 +209,10 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 
 | ID | Status | Refs | Name | Method | LOINC | Fix | Pri | Diseases |
 |---|---|---|---|---|---|---|---|---|
+| `BIO-1P19Q-CODELETION` | ⚠ unused | 0 | 1p/19q codeletion | methylation | — | — | low | — |
 | `BIO-AFP` | ✓ | 8 | Alpha-fetoprotein (serum) | serum | — | 8× ✓ | **high** | Hepatocellular carcino, Testicular germ cell t |
 | `BIO-AKT1` | ✓ | 1 | AKT1 E17K mutation | NGS | — | 1× ✓ | low | Breast cancer (invasiv |
-| `BIO-ALK-FUSION` | ✓ | 19 | ALK rearrangement / fusion | FISH | — | 16× ✓ | **high** | Inflammatory myofibrob, Non-small cell lung ca |
+| `BIO-ALK-FUSION` | ✓ | 19 | ALK rearrangement / fusion | FISH | — | 17× ✓ | **high** | Inflammatory myofibrob, Non-small cell lung ca |
 | `BIO-ALK-G1202R` | ✓ | 1 | ALK G1202R resistance mutation | NGS | — | 1× ✓ | low | — |
 | `BIO-ALK-L1196M` | ✓ | 1 | ALK L1196M gatekeeper resistance mutation | NGS | — | — | low | — |
 | `BIO-ALK-REARRANGEMENT` | ✓ | 2 | ALK rearrangement (most commonly NPM1-ALK t(2;5)) | FISH | — | — | medium | Anaplastic Large Cell  |
@@ -219,30 +221,33 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-AR-AMPLIFICATION` | ✓ | 2 | AR amplification (high-level androgen receptor copy-number gain) | FISH | — | — | medium | — |
 | `BIO-AR-V7` | ⚠ unused | 0 | AR-V7 (androgen receptor splice variant 7) | FISH/NGS | — | — | low | — |
 | `BIO-ATM-CHEK2-CDK12-GERMLINE` | ✓ | 2 | Germline ATM / CHEK2 / CDK12 pathogenic variant (HRR/DDR composite) | NGS | — | — | medium | — |
+| `BIO-ATRX-MUTATION` | ⚠ unused | 0 | ATRX mutation / ATRX loss (IHC) | NGS | — | — | low | — |
 | `BIO-BAP1` | ⚠ unused | 0 | BAP1 alteration | NGS | — | — | low | — |
 | `BIO-BAP1-MUTATION` | ⚠ unused | 0 | BAP1 loss-of-function mutation | NGS | — | — | low | — |
-| `BIO-BCL2-EXPRESSION-IHC` | ✓ | 2 | BCL2 expression by IHC | IHC | — | — | medium | Diffuse Large B-Cell L |
-| `BIO-BCL2-IHC` | ⚠ unused | 0 | BCL2 expression by IHC | IHC | — | — | low | — |
-| `BIO-BCL2-REARRANGEMENT` | ✓ | 2 | BCL2 rearrangement (t(14;18) IGH/BCL2 by FISH break-apart) | FISH | — | — | medium | High-Grade B-Cell Lymp |
+| `BIO-BCL2-EXPRESSION-IHC` | ✓ | 2 | BCL2 expression by IHC | IHC | — | 1× ✓ | medium | Diffuse Large B-Cell L |
+| `BIO-BCL2-IHC` | ⚠ unused | 0 | BCL2 expression by IHC | IHC | — | 1× ✓ | low | — |
+| `BIO-BCL2-REARRANGEMENT` | ✓ | 2 | BCL2 rearrangement (t(14;18) IGH/BCL2 by FISH break-apart) | FISH | — | 1× ✓ | medium | High-Grade B-Cell Lymp |
+| `BIO-BCL6-IHC` | ⚠ unused | 0 | BCL6 IHC (protein expression) | IHC | — | — | low | — |
 | `BIO-BCL6-REARRANGEMENT` | ✓ | 2 | BCL6 rearrangement (3q27) by FISH break-apart | FISH | — | — | medium | High-Grade B-Cell Lymp |
 | `BIO-BCMA-EXPRESSION` | ⚠ unused | 0 | BCMA expression (target of teclistamab / elranatamab / cilta-cel / ide-cel) | IHC | — | — | low | — |
-| `BIO-BCR-ABL1` | ✓ | 1 | BCR::ABL1 fusion (Philadelphia chromosome) | FISH | 21239-1 | — | low | B-Lymphoblastic Leukem |
+| `BIO-BCR-ABL1` | ✓ | 1 | BCR::ABL1 fusion (Philadelphia chromosome) | FISH | 21239-1 | 2× ✓ | low | B-Lymphoblastic Leukem |
 | `BIO-BCR-ABL1-E255K` | ⚠ unused | 0 | BCR::ABL1 E255K nilotinib-resistance mutation | NGS | — | — | low | — |
 | `BIO-BCR-ABL1-F317L` | ⚠ unused | 0 | BCR::ABL1 F317L resistance mutation | NGS | — | — | low | — |
 | `BIO-BCR-ABL1-T315I` | ⚠ unused | 0 | BCR::ABL1 T315I gatekeeper mutation | NGS | — | — | low | — |
 | `BIO-BCR-ABL1-V299L` | ⚠ unused | 0 | BCR::ABL1 V299L dasatinib-resistance mutation | NGS | — | — | low | — |
 | `BIO-BRAF-CLASS-II-III` | ⚠ unused | 0 | BRAF non-V600 mutation (Class II / Class III) | NGS | — | — | low | — |
-| `BIO-BRAF-V600E` | ✓ | 23 | BRAF V600E mutation | NGS | — | 36× ✓ | **high** | Anaplastic thyroid car, Colorectal carcinoma (, Cutaneous melanoma, Hairy Cell Leukemia, Non-small cell lung ca |
+| `BIO-BRAF-V600E` | ✓ | 23 | BRAF V600E mutation | NGS | — | 40× ✓ | **high** | Anaplastic thyroid car, Colorectal carcinoma (, Cutaneous melanoma, Hairy Cell Leukemia, Non-small cell lung ca |
 | `BIO-BRAF-V600K` | ⚠ unused | 0 | BRAF V600K mutation | NGS | — | 2× ✓ | low | — |
 | `BIO-BRCA-GERMLINE` | ✓ | 5 | Germline BRCA1/2 mutation status | NGS | 94075-3 | 9× ✓ | **high** | Breast cancer (invasiv, Ovarian carcinoma (hig |
 | `BIO-BRCA-SOMATIC` | ✓ | 2 | Somatic BRCA1/BRCA2 pathogenic variant | NGS | — | — | medium | — |
 | `BIO-BRCA1-BRCA2-GERMLINE` | ✓ | 5 | BRCA1/BRCA2 germline pathogenic variant | NGS | — | 11× ✓ | **high** | Breast cancer (invasiv, Ovarian carcinoma (hig, Pancreatic ductal aden |
-| `BIO-CALR` | ⚠ unused | 0 | CALR mutation (exon 9) | NGS | — | — | low | — |
-| `BIO-CCND1-IHC` | ✓ | 3 | Cyclin D1 expression by IHC (encoded by CCND1) | IHC | — | 9× ✓ | medium | Mantle Cell Lymphoma |
+| `BIO-CALR` | ⚠ unused | 0 | CALR mutation (exon 9) | NGS | — | 2× ✓ | low | — |
+| `BIO-CCND1-IHC` | ✓ | 3 | Cyclin D1 expression by IHC (encoded by CCND1) | IHC | — | 11× ✓ | medium | Mantle Cell Lymphoma |
+| `BIO-CD10-IHC` | ⚠ unused | 0 | CD10 IHC (CALLA, neprilysin) | IHC | — | — | low | — |
 | `BIO-CD20-IHC` | ✓ | 49 | CD20 expression by immunohistochemistry | IHC | — | 105× ✓ | **high** | Burkitt Lymphoma, Chronic Lymphocytic Le, Classical Hodgkin Lymp, Diffuse Large B-Cell L, Follicular Lymphoma, High-Grade B-Cell Lymp, Mantle Cell Lymphoma, Nodal Marginal Zone Ly, Nodular Lymphocyte-Pre, Post-Transplant Lympho, Primary Diffuse Large , Primary Mediastinal (T, Splenic Marginal Zone  |
 | `BIO-CD22-EXPRESSION` | ⚠ unused | 0 | CD22 expression (target of inotuzumab ozogamicin) | IHC | — | — | low | — |
 | `BIO-CD23-IHC` | ✓ | 3 | CD23 expression by IHC / flow cytometry | IHC | — | 10× ✓ | medium | Chronic Lymphocytic Le |
-| `BIO-CD30-IHC` | ✓ | 6 | CD30 expression by IHC | IHC | — | 32× ✓ | **high** | Anaplastic Large Cell , Angioimmunoblastic T-C, Mycosis Fungoides / Sé |
+| `BIO-CD30-IHC` | ✓ | 6 | CD30 expression by IHC | IHC | — | 33× ✓ | **high** | Anaplastic Large Cell , Angioimmunoblastic T-C, Mycosis Fungoides / Sé |
 | `BIO-CD33-EXPRESSION` | ⚠ unused | 0 | CD33 expression (target of gemtuzumab ozogamicin) | IHC | — | — | low | — |
 | `BIO-CD38-EXPRESSION` | ⚠ unused | 0 | CD38 expression (target of daratumumab / isatuximab) | IHC | — | — | low | — |
 | `BIO-CD5-IHC` | ✓ | 6 | CD5 expression by IHC / flow cytometry | IHC | — | 19× ✓ | **high** | Chronic Lymphocytic Le, Mantle Cell Lymphoma |
@@ -253,15 +258,15 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-CDKN2A` | ✓ | 2 | CDKN2A loss (homozygous deletion or biallelic inactivation) | FISH | — | — | medium | — |
 | `BIO-CLDN18-2` | ✓ | 2 | Claudin-18.2 expression (CLDN18.2) | IHC | — | 6× ✓ | medium | Gastric / GEJ adenocar |
 | `BIO-CLL-HIGH-RISK-GENETICS` | ✓ | 1 | CLL high-risk genetics (TP53 / del(17p) / IGHV-unmutated / complex karyotype) | composite | — | 3× ✓ | low | — |
-| `BIO-CSF1R` | ⚠ unused | 0 | CSF1R expression / CSF1R pathway activation (TGCT) | gene expression | — | — | low | — |
+| `BIO-CSF1R` | ✓ | 1 | CSF1R expression / CSF1R pathway activation (TGCT) | gene expression | — | 1× ✓ | low | Tenosynovial giant cel |
 | `BIO-CTDNA-MRD` | ⚠ unused | 0 | Circulating tumor DNA — minimal residual disease (ctDNA-MRD) | composite | — | — | low | — |
-| `BIO-CTNNB1` | ⚠ unused | 0 | CTNNB1 activating mutation (β-catenin) | NGS | — | — | low | — |
+| `BIO-CTNNB1` | ⚠ unused | 0 | CTNNB1 activating mutation (β-catenin) | NGS | — | 1× ✓ | low | — |
 | `BIO-CXCR4-WHIM` | ✓ | 2 | CXCR4 WHIM-like mutation | NGS | — | 1× ✓ | medium | Waldenström Macroglobu |
 | `BIO-DDR2` | ⚠ unused | 0 | DDR2 activating mutation — discoidin domain receptor tyrosine kinase 2 | FISH | — | — | low | — |
 | `BIO-DIAGNOSTIC-IHC-LINEAGE` | ⚠ unused | 0 | Diagnostic lineage immunohistochemistry marker panel | IHC | — | — | low | — |
 | `BIO-DLBCL-COO-HANS` | ✓ | 2 | Cell-of-origin classification (Hans IHC algorithm) | IHC | — | — | medium | Diffuse Large B-Cell L |
 | `BIO-DLBCL-IPI` | ✓ | 2 | International Prognostic Index (IPI) for DLBCL | composite | — | — | medium | Diffuse Large B-Cell L |
-| `BIO-DMMR-IHC` | ✓ | 4 | Mismatch repair protein expression by IHC | IHC | — | 10× ✓ | medium | Endometrial carcinoma |
+| `BIO-DMMR-IHC` | ✓ | 4 | Mismatch repair protein expression by IHC | IHC | — | 15× ✓ | medium | Endometrial carcinoma |
 | `BIO-DOUBLE-HIT` | ✓ | 1 | Double-hit (MYC + BCL2 and/or BCL6 rearrangements) | FISH | — | 1× ✓ | low | High-Grade B-Cell Lymp |
 | `BIO-EBV-DNA` | ✓ | 3 | EBV-DNA viral load (quantitative PCR, plasma) | viral | — | 7× ✓ | medium | Extranodal NK/T-Cell L, Post-Transplant Lympho |
 | `BIO-EBV-STATUS` | ✓ | 1 | EBV status (EBER-ISH on tumor tissue) | viral | — | — | low | — |
@@ -275,81 +280,82 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-ERBB4` | ⚠ unused | 0 | ERBB4 (HER4) somatic mutation / amplification | FISH | — | — | low | — |
 | `BIO-ESR1` | ✓ | 1 | ESR1 mutation (ligand-binding domain) | NGS | — | 1× ✓ | low | Breast cancer (invasiv |
 | `BIO-ESTROGEN-RECEPTOR` | ✓ | 21 | Estrogen receptor (ER) | IHC | 16112-5 | — | **high** | Breast cancer (invasiv |
-| `BIO-EZH2-Y641` | ✓ | 1 | EZH2 Y641 mutation | NGS | — | — | low | Follicular Lymphoma |
+| `BIO-EZH2-Y641` | ✓ | 1 | EZH2 Y641 mutation | NGS | — | 1× ✓ | low | Follicular Lymphoma |
 | `BIO-FBXW7` | ⚠ unused | 0 | FBXW7 loss-of-function mutation | NGS | — | — | low | — |
 | `BIO-FGFR1` | ⚠ unused | 0 | FGFR1 alterations (amplification / mutation / fusion) | FISH | — | — | low | — |
-| `BIO-FGFR2` | ✓ | 3 | FGFR2 alterations (fusion / amplification / mutation) | FISH | — | 6× ✓ | medium | Cholangiocarcinoma (bi |
+| `BIO-FGFR2` | ✓ | 3 | FGFR2 alterations (fusion / amplification / mutation) | FISH | — | 9× ✓ | medium | Cholangiocarcinoma (bi |
 | `BIO-FGFR2-FUSION` | ❌ MISSING | 1 | — | — | — | — | low | — |
 | `BIO-FGFR2B-IHC` | ✓ | 1 | FGFR2b protein expression by IHC (membranous staining) | IHC | — | — | low | Gastric / GEJ adenocar |
-| `BIO-FGFR3-MUTATION` | ✓ | 2 | FGFR3 mutation/fusion | NGS | — | — | medium | Urothelial carcinoma ( |
+| `BIO-FGFR3-MUTATION` | ✓ | 2 | FGFR3 mutation/fusion | NGS | — | 1× ✓ | medium | Urothelial carcinoma ( |
 | `BIO-FL-FLIPI` | ✓ | 3 | Follicular Lymphoma International Prognostic Index (FLIPI) | composite | — | 2× ✓ | medium | Follicular Lymphoma |
-| `BIO-FLT3-D835` | ⚠ unused | 0 | FLT3 tyrosine kinase domain (TKD) mutation | NGS | — | — | low | — |
+| `BIO-FLT3-D835` | ⚠ unused | 0 | FLT3 tyrosine kinase domain (TKD) mutation | NGS | — | 1× ✓ | low | — |
 | `BIO-FLT3-F691L` | ⚠ unused | 0 | FLT3 F691L gilteritinib-resistance gatekeeper mutation | NGS | — | — | low | — |
-| `BIO-FLT3-ITD` | ⚠ unused | 0 | FLT3 internal tandem duplication (ITD) | NGS | — | 1× ✓ | low | — |
-| `BIO-FOXL2` | ⚠ unused | 0 | FOXL2 p.C134W mutation | NGS | — | — | low | — |
+| `BIO-FLT3-ITD` | ⚠ unused | 0 | FLT3 internal tandem duplication (ITD) | NGS | — | 2× ✓ | low | — |
+| `BIO-FOXL2` | ✓ | 1 | FOXL2 p.C134W mutation | NGS | — | 1× ✓ | low | Adult granulosa cell t |
 | `BIO-FRA` | ✓ | 2 | Folate receptor alpha (FRα / FOLR1) tumor expression | IHC | — | 7× ✓ | medium | Ovarian carcinoma (hig |
 | `BIO-GLEASON-ISUP` | ✓ | 9 | Gleason score / ISUP grade group | histology | — | 7× ✓ | medium | Prostate adenocarcinom |
-| `BIO-GNAS` | ⚠ unused | 0 | GNAS activating mutation (Gα_s protein) | NGS | — | — | low | — |
+| `BIO-GNAS` | ⚠ unused | 0 | GNAS activating mutation (Gα_s protein) | NGS | — | 1× ✓ | low | — |
 | `BIO-HBV-STATUS` | ✓ | 11 | HBV status (HBsAg + anti-HBc serology) | viral | — | 18× ✓ | medium | Burkitt Lymphoma, Classical Hodgkin Lymp, Diffuse Large B-Cell L, Hepatocellular carcino, Multiple Myeloma, Post-Transplant Lympho, Splenic Marginal Zone  |
 | `BIO-HCG-SERUM` | ❌ MISSING | 2 | — | — | — | — | medium | Testicular germ cell t |
 | `BIO-HCV-RNA` | ✓ | 16 | HCV RNA (quantitative PCR) | viral | — | 16× ✓ | medium | Diffuse Large B-Cell L, HCV-associated Margina, Hepatocellular carcino, Multiple Myeloma, Nodal Marginal Zone Ly, Splenic Marginal Zone  |
 | `BIO-HCV-STATUS` | ✓ | 10 | HCV status (anti-HCV antibody screening) | viral | — | 11× ✓ | medium | Diffuse Large B-Cell L, HCV-associated Margina, Hepatocellular carcino, Multiple Myeloma, Nodal Marginal Zone Ly, Splenic Marginal Zone  |
-| `BIO-HER2-LOW` | ✓ | 1 | HER2-low (breast — IHC 1+ OR IHC 2+ ISH-negative) | FISH | — | — | low | Breast cancer (invasiv |
-| `BIO-HER2-SOLID` | ✓ | 49 | HER2 status (solid tumors — gastric/GEJ/CRC scoring) | FISH | — | 21× ✓ | **high** | Breast cancer (invasiv, Cholangiocarcinoma (bi, Colorectal carcinoma (, Esophageal carcinoma (, Gastric / GEJ adenocar, Non-small cell lung ca |
+| `BIO-HER2-LOW` | ✓ | 1 | HER2-low (breast — IHC 1+ OR IHC 2+ ISH-negative) | FISH | — | 1× ✓ | low | Breast cancer (invasiv |
+| `BIO-HER2-SOLID` | ✓ | 49 | HER2 status (solid tumors — gastric/GEJ/CRC scoring) | FISH | — | 22× ✓ | **high** | Breast cancer (invasiv, Cholangiocarcinoma (bi, Colorectal carcinoma (, Esophageal carcinoma (, Gastric / GEJ adenocar, Non-small cell lung ca |
 | `BIO-HER2-ULTRALOW` | ✓ | 2 | HER2-ultralow (breast — IHC > 0 < 1+; faint/incomplete membrane staining ≤10%) | IHC | — | — | medium | — |
 | `BIO-HER3-EXPRESSION` | ❌ MISSING | 4 | — | — | — | — | medium | — |
 | `BIO-HIV-STATUS` | ✓ | 11 | HIV status (4th-gen Ag/Ab combo screening) | viral | — | 3× ✓ | medium | Burkitt Lymphoma, Classical Hodgkin Lymp, Diffuse Large B-Cell L, Multiple Myeloma, Splenic Marginal Zone  |
-| `BIO-HNF1A` | ⚠ unused | 0 | HNF1A mutation (somatic or germline) | NGS | — | — | low | — |
+| `BIO-HNF1A` | ⚠ unused | 0 | HNF1A mutation (somatic or germline) | NGS | — | 1× ✓ | low | — |
 | `BIO-HPV-STATUS` | ✓ | 1 | Human Papillomavirus (HPV) status | serum | — | 9× ✓ | low | Cervical carcinoma (sq |
 | `BIO-HRAS` | ✓ | 2 | HRAS mutation | NGS | — | — | medium | — |
 | `BIO-HRD-ASSAY-DISTINCTION` | ⚠ unused | 0 | HRD assay distinction (Myriad myChoice CDx vs FoundationOne CDx) | composite | — | — | low | — |
-| `BIO-HRD-STATUS` | ✓ | 4 | Homologous recombination deficiency (HRD) status | NGS | — | 10× ✓ | medium | Ovarian carcinoma (hig |
-| `BIO-HRR-PANEL` | ✓ | 4 | Homologous recombination repair (HRR) gene panel status | NGS | — | 1× ✓ | medium | Prostate adenocarcinom |
+| `BIO-HRD-STATUS` | ✓ | 4 | Homologous recombination deficiency (HRD) status | NGS | — | 13× ✓ | medium | Ovarian carcinoma (hig |
+| `BIO-HRR-PANEL` | ✓ | 4 | Homologous recombination repair (HRR) gene panel status | NGS | — | 6× ✓ | medium | Prostate adenocarcinom |
 | `BIO-HTLV-1` | ✓ | 3 | HTLV-1 status (anti-HTLV-1 antibody + confirmatory) | viral | — | 9× ✓ | medium | Adult T-Cell Leukemia/ |
-| `BIO-IDH-MUTATION` | ✓ | 6 | IDH1 / IDH2 mutation status | NGS | — | 2× ✓ | **high** | Cholangiocarcinoma (bi, Glioblastoma (IDH-WT |
+| `BIO-IDH-MUTATION` | ✓ | 6 | IDH1 / IDH2 mutation status | NGS | — | 7× ✓ | **high** | Cholangiocarcinoma (bi, Glioblastoma (IDH-WT |
 | `BIO-IDH1-MUTATION` | ❌ MISSING | 4 | — | — | — | 1× ✓ | medium | Low-grade glioma (LGG |
 | `BIO-IDH1-R132C` | ✓ | 1 | IDH1 R132C mutation (glioma / cholangiocarcinoma / AML) | NGS | — | — | low | Acute Myeloid Leukemia |
 | `BIO-IDH1-R132G` | ✓ | 1 | IDH1 R132G mutation (glioma / AML) | methylation | — | — | low | Acute Myeloid Leukemia |
 | `BIO-IDH1-R132H` | ✓ | 1 | IDH1 R132H mutation (glioma / AML) | NGS | — | — | low | Acute Myeloid Leukemia |
 | `BIO-IDH2-R140Q` | ⚠ unused | 0 | IDH2 R140Q mutation (AML) | NGS | — | — | low | — |
 | `BIO-IDH2-R172K` | ⚠ unused | 0 | IDH2 R172K mutation (AML) | NGS | — | — | low | — |
-| `BIO-IGHV-MUTATIONAL-STATUS` | ✓ | 1 | IGHV (immunoglobulin heavy-chain variable region) mutational status | NGS | — | — | low | — |
-| `BIO-JAK2` | ✓ | 2 | JAK2 mutation (V617F or exon 12) | NGS | — | 7× ✓ | medium | Polycythemia Vera |
-| `BIO-JAK3` | ⚠ unused | 0 | JAK3 activating mutation | NGS | — | — | low | — |
+| `BIO-IGHV-MUTATIONAL-STATUS` | ✓ | 1 | IGHV (immunoglobulin heavy-chain variable region) mutational status | NGS | — | 1× ✓ | low | — |
+| `BIO-JAK2` | ✓ | 2 | JAK2 mutation (V617F or exon 12) | NGS | — | 9× ✓ | medium | Polycythemia Vera |
+| `BIO-JAK3` | ⚠ unused | 0 | JAK3 activating mutation | NGS | — | 2× ✓ | low | — |
 | `BIO-KDR` | ⚠ unused | 0 | KDR (VEGFR2) mutation / amplification — vascular endothelial growth factor receptor 2 | FISH | — | — | low | — |
 | `BIO-KI67-PROLIFERATION` | ❌ MISSING | 2 | — | — | — | 2× ✓ | medium | Gastroenteropancreatic, Pancreatic neuroendocr |
 | `BIO-KI67-PROLIFERATION-INDEX` | ✓ | 1 | Ki-67 proliferation index (IHC, % positive nuclei) | IHC | — | — | low | — |
-| `BIO-KIT` | ✓ | 5 | KIT mutation | NGS | — | 19× ✓ | **high** | Advanced systemic mast, Cutaneous melanoma, Gastrointestinal strom |
+| `BIO-KIT` | ✓ | 5 | KIT mutation | NGS | — | 21× ✓ | **high** | Advanced systemic mast, Cutaneous melanoma, Gastrointestinal strom |
 | `BIO-KIT-D816V` | ⚠ unused | 0 | KIT D816V mutation | NGS | — | — | low | — |
-| `BIO-KMT2A-REARRANGEMENT` | ⚠ unused | 0 | KMT2A rearrangement (MLL fusion) | FISH | — | — | low | — |
-| `BIO-KRAS-G12C` | ✓ | 7 | KRAS G12C mutation | NGS | — | 2× ✓ | **high** | Colorectal carcinoma (, Non-small cell lung ca |
+| `BIO-KMT2A-REARRANGEMENT` | ⚠ unused | 0 | KMT2A rearrangement (MLL fusion) | FISH | — | 2× ✓ | low | — |
+| `BIO-KRAS-G12C` | ✓ | 7 | KRAS G12C mutation | NGS | — | 3× ✓ | **high** | Colorectal carcinoma (, Non-small cell lung ca |
 | `BIO-KRAS-G12D` | ⚠ unused | 0 | KRAS G12D mutation | NGS | — | — | low | — |
 | `BIO-KRAS-G12V` | ⚠ unused | 0 | KRAS G12V mutation | NGS | — | — | low | — |
 | `BIO-LYNCH-PANEL-SPLIT` | ⚠ unused | 0 | Lynch syndrome germline panel — gene-resolved (MLH1 / MSH2 / MSH6 / PMS2 / EPCAM) | NGS | — | — | low | — |
-| `BIO-MAP2K1` | ⚠ unused | 0 | MAP2K1 activating mutation (MEK1) | NGS | — | — | low | — |
+| `BIO-MAP2K1` | ⚠ unused | 0 | MAP2K1 activating mutation (MEK1) | NGS | — | 2× ✓ | low | — |
 | `BIO-MCL-MIPI` | ✓ | 3 | Mantle Cell Lymphoma International Prognostic Index (MIPI) | composite | — | 9× ✓ | medium | Mantle Cell Lymphoma |
 | `BIO-MDS-DEL-5Q` | ⚠ unused | 0 | MDS with del(5q) cytogenetic abnormality | FISH | — | — | low | — |
-| `BIO-MET` | ✓ | 5 | MET alterations (exon 14 skipping or amplification) | FISH | — | 1× ✓ | **high** | Non-small cell lung ca |
+| `BIO-MET` | ✓ | 6 | MET alterations (exon 14 skipping or amplification) | FISH | — | 2× ✓ | **high** | Non-small cell lung ca, Renal cell carcinoma |
 | `BIO-MET-AMPLIFICATION` | ✓ | 1 | MET amplification (high-level copy-number gain) | FISH | — | — | low | Non-small cell lung ca |
 | `BIO-MET-EX14` | ❌ MISSING | 2 | — | — | — | — | medium | Non-small cell lung ca |
 | `BIO-MF-LCT` | ✓ | 1 | Large-cell transformation in MF (LCT — >25% large cells, often CD30+) | histology | — | 1× ✓ | low | — |
 | `BIO-MGMT-METHYLATION` | ✓ | 2 | MGMT promoter methylation status | methylation | — | 7× ✓ | medium | Glioblastoma (IDH-WT |
 | `BIO-MM-CYTOGENETICS-HR` | ✓ | 1 | High-risk cytogenetics in multiple myeloma (FISH) | FISH | — | 2× ✓ | low | — |
 | `BIO-MSI` | ❌ MISSING | 1 | — | — | — | — | low | — |
-| `BIO-MSI-STATUS` | ✓ | 17 | Microsatellite instability status | MSI/MMR | — | 21× ✓ | **high** | Colorectal carcinoma (, Gastric / GEJ adenocar |
-| `BIO-MYC-REARRANGEMENT` | ✓ | 7 | MYC rearrangement (8q24) by FISH break-apart | FISH | — | 2× ✓ | **high** | Burkitt Lymphoma, High-Grade B-Cell Lymp |
-| `BIO-MYD88-L265P` | ✓ | 3 | MYD88 L265P mutation | NGS | — | 9× ✓ | medium | Waldenström Macroglobu |
+| `BIO-MSI-STATUS` | ✓ | 18 | Microsatellite instability status | MSI/MMR | — | 21× ✓ | **high** | Colorectal carcinoma (, Gastric / GEJ adenocar |
+| `BIO-MUM1-IHC` | ⚠ unused | 0 | MUM1/IRF4 IHC (Multiple Myeloma oncogene 1) | IHC | — | — | low | — |
+| `BIO-MYC-REARRANGEMENT` | ✓ | 7 | MYC rearrangement (8q24) by FISH break-apart | FISH | — | 3× ✓ | **high** | Burkitt Lymphoma, High-Grade B-Cell Lymp |
+| `BIO-MYD88-L265P` | ✓ | 3 | MYD88 L265P mutation | NGS | — | 11× ✓ | medium | Waldenström Macroglobu |
 | `BIO-NF1-MUTATION` | ⚠ unused | 0 | NF1 loss-of-function mutation | NGS | — | — | low | — |
 | `BIO-NF2` | ⚠ unused | 0 | NF2 loss-of-function mutation (merlin/schwannomin) | FISH | — | — | low | — |
 | `BIO-NOTCH1-MUTATION` | ✓ | 4 | NOTCH1 mutation (PEST domain) | NGS | — | 10× ✓ | medium | Chronic Lymphocytic Le |
 | `BIO-NOTCH2-MUTATION` | ⚠ unused | 0 | NOTCH2 mutation (PEST domain truncating) | NGS | — | — | low | — |
-| `BIO-NPM1` | ⚠ unused | 0 | NPM1 mutation (cytoplasmic NPM1) | NGS | — | — | low | — |
+| `BIO-NPM1` | ⚠ unused | 0 | NPM1 mutation (cytoplasmic NPM1) | NGS | — | 1× ✓ | low | — |
 | `BIO-NRAS-Q61R` | ⚠ unused | 0 | NRAS Q61R mutation | NGS | — | — | low | — |
-| `BIO-NRG1-FUSION` | ✓ | 1 | NRG1 fusion (gene rearrangement) | FISH | — | — | low | Non-small cell lung ca |
-| `BIO-NTRK-FUSION` | ✓ | 15 | NTRK1/2/3 gene fusion | FISH | — | 14× ✓ | **high** | Infantile fibrosarcoma, Non-small cell lung ca |
+| `BIO-NRG1-FUSION` | ✓ | 1 | NRG1 fusion (gene rearrangement) | FISH | — | 2× ✓ | low | Non-small cell lung ca |
+| `BIO-NTRK-FUSION` | ✓ | 15 | NTRK1/2/3 gene fusion | FISH | — | 19× ✓ | **high** | Infantile fibrosarcoma, Non-small cell lung ca |
 | `BIO-PALB2-GERMLINE` | ✓ | 2 | Germline PALB2 pathogenic variant | NGS | — | — | medium | — |
 | `BIO-PD-L1-CPS` | ❌ MISSING | 3 | — | — | — | — | medium | Cervical carcinoma (sq, Esophageal carcinoma ( |
-| `BIO-PDGFRA` | ✓ | 5 | PDGFRA mutation | NGS | — | 6× ✓ | **high** | Gastrointestinal strom |
+| `BIO-PDGFRA` | ✓ | 6 | PDGFRA mutation | NGS | — | 6× ✓ | **high** | Gastrointestinal strom |
 | `BIO-PDL1-22C3-CLONE` | ✓ | 1 | PD-L1 IHC — Dako 22C3 pharmDx clone | IHC | — | — | low | Non-small cell lung ca |
 | `BIO-PDL1-28-8-CLONE` | ⚠ unused | 0 | PD-L1 IHC — Dako 28-8 pharmDx clone | IHC | — | — | low | — |
 | `BIO-PDL1-CPS` | ✓ | 9 | PD-L1 Combined Positive Score (CPS) | IHC | — | 20× ✓ | **high** | Breast cancer (invasiv, Esophageal carcinoma (, Gastric / GEJ adenocar, Head and neck squamous |
@@ -359,18 +365,18 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-PDL1-TPS` | ✓ | 6 | PD-L1 Tumor Proportion Score (TPS) | IHC | — | 16× ✓ | **high** | Non-small cell lung ca |
 | `BIO-PIK3CA-H1047R` | ⚠ unused | 0 | PIK3CA H1047R mutation | NGS | — | — | low | — |
 | `BIO-PIK3CA-MUTATION` | ✓ | 5 | PIK3CA hotspot mutation | NGS | — | 2× ✓ | **high** | Breast cancer (invasiv |
-| `BIO-PIK3R1` | ⚠ unused | 0 | PIK3R1 mutation (p85α regulatory subunit of PI3K) | NGS | — | — | low | — |
+| `BIO-PIK3R1` | ⚠ unused | 0 | PIK3R1 mutation (p85α regulatory subunit of PI3K) | NGS | — | 1× ✓ | low | — |
 | `BIO-POLD1-HYPERMUTATOR` | ✓ | 2 | POLD1 hypermutator phenotype (proofreading-domain mutation) | composite | — | — | medium | Endometrial carcinoma |
 | `BIO-POLE-HYPERMUTATOR` | ✓ | 2 | POLE hypermutator phenotype (proofreading-domain mutation) | composite | — | — | medium | Endometrial carcinoma |
 | `BIO-PROGESTERONE-RECEPTOR` | ✓ | 1 | Progesterone receptor (PR) | IHC | 16113-3 | — | low | Breast cancer (invasiv |
 | `BIO-PSA` | ✓ | 9 | Prostate-specific antigen (PSA) | serum | 2857-1 | 1× ✓ | **high** | Prostate adenocarcinom |
 | `BIO-PSMA-PET` | ✓ | 1 | PSMA-PET imaging avidity | imaging | — | — | low | Prostate adenocarcinom |
-| `BIO-PTCH1` | ⚠ unused | 0 | PTCH1 loss-of-function mutation (Patched-1) | NGS | — | — | low | — |
+| `BIO-PTCH1` | ✓ | 1 | PTCH1 loss-of-function mutation (Patched-1) | NGS | — | 1× ✓ | low | Basal cell carcinoma ( |
 | `BIO-PTEN` | ✓ | 1 | PTEN loss-of-function | NGS | — | — | low | Breast cancer (invasiv |
 | `BIO-PTPN11` | ⚠ unused | 0 | PTPN11 activating mutation (SHP2) | NGS | — | — | low | — |
-| `BIO-RAS-MUTATION` | ✓ | 6 | RAS mutation status (KRAS / NRAS exons 2-4) | NGS | — | 3× ✓ | **high** | Colorectal carcinoma ( |
+| `BIO-RAS-MUTATION` | ✓ | 6 | RAS mutation status (KRAS / NRAS exons 2-4) | NGS | — | 5× ✓ | **high** | Colorectal carcinoma ( |
 | `BIO-RB1` | ⚠ unused | 0 | RB1 loss-of-function (retinoblastoma protein) | FISH | — | — | low | — |
-| `BIO-RET` | ✓ | 9 | RET alterations (fusion or activating point mutation) | FISH | — | 8× ✓ | **high** | Medullary thyroid carc, Non-small cell lung ca |
+| `BIO-RET` | ✓ | 9 | RET alterations (fusion or activating point mutation) | FISH | — | 9× ✓ | **high** | Medullary thyroid carc, Non-small cell lung ca |
 | `BIO-RET-FUSION` | ❌ MISSING | 2 | — | — | — | — | medium | Non-small cell lung ca |
 | `BIO-RET-M918T` | ✓ | 1 | RET M918T mutation (MEN2B / sporadic MTC) | NGS | — | — | low | — |
 | `BIO-RHOA-G17V` | ✓ | 2 | RHOA G17V mutation | NGS | — | 7× ✓ | medium | Angioimmunoblastic T-C |
@@ -378,18 +384,20 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-ROS1-G2032R` | ⚠ unused | 0 | ROS1 G2032R resistance mutation | NGS | — | 1× ✓ | low | — |
 | `BIO-SEZARY-COUNT` | ✓ | 1 | Sézary cell count (peripheral blood, B-classification per ISCL/EORTC) | cell count | — | 1× ✓ | low | — |
 | `BIO-SF3B1` | ⚠ unused | 0 | SF3B1 mutation | NGS | — | — | low | — |
-| `BIO-SMARCB1` | ⚠ unused | 0 | SMARCB1 (INI1) loss of expression | FISH | — | — | low | — |
-| `BIO-SMO` | ⚠ unused | 0 | SMO activating mutation (Smoothened) | NGS | — | — | low | — |
-| `BIO-T11-14-IGH-CCND1` | ✓ | 2 | t(11;14)(q13;q32) IGH/CCND1 by FISH | FISH | — | 9× ✓ | medium | Mantle Cell Lymphoma |
-| `BIO-TERT` | ⚠ unused | 0 | TERT promoter mutation (C228T / C250T) | NGS | — | — | low | — |
+| `BIO-SMARCB1` | ✓ | 1 | SMARCB1 (INI1) loss of expression | FISH | — | 1× ✓ | low | Epithelioid sarcoma |
+| `BIO-SMO` | ✓ | 1 | SMO activating mutation (Smoothened) | NGS | — | 1× ✓ | low | Basal cell carcinoma ( |
+| `BIO-T11-14-IGH-CCND1` | ✓ | 2 | t(11;14)(q13;q32) IGH/CCND1 by FISH | FISH | — | 11× ✓ | medium | Mantle Cell Lymphoma |
+| `BIO-TERT` | ⚠ unused | 0 | TERT promoter mutation (C228T / C250T) | NGS | — | 2× ✓ | low | — |
 | `BIO-TMB-HIGH` | ✓ | 2 | Tumor mutational burden (TMB-high) | NGS-TMB | — | 1× ✓ | medium | Non-small cell lung ca |
 | `BIO-TMPRSS2-ERG-FUSION` | ✓ | 2 | TMPRSS2-ERG fusion | FISH | — | — | medium | — |
-| `BIO-TP53-MUTATION` | ✓ | 7 | TP53 mutation / del(17p) | FISH | — | — | **high** | Acute Myeloid Leukemia, Chronic Lymphocytic Le |
+| `BIO-TP53-IHC` | ⚠ unused | 0 | TP53 IHC (aberrant p53 expression pattern) | IHC | — | — | low | — |
+| `BIO-TP53-MUTATION` | ✓ | 7 | TP53 mutation / del(17p) | FISH | — | 2× ✓ | **high** | Acute Myeloid Leukemia, Chronic Lymphocytic Le |
 | `BIO-TP53-R175H` | ⚠ unused | 0 | TP53 R175H gain-of-function hotspot | NGS | — | — | low | — |
 | `BIO-TP53-R248Q` | ⚠ unused | 0 | TP53 R248Q DNA-contact hotspot | NGS | — | — | low | — |
 | `BIO-TP53-R273H` | ⚠ unused | 0 | TP53 R273H DNA-contact hotspot | NGS | — | — | low | — |
 | `BIO-TP53-R282W` | ⚠ unused | 0 | TP53 R282W partial loss-of-function hotspot | NGS | — | — | low | — |
 | `BIO-TROP2-EXPRESSION` | ✓ | 1 | TROP2 expression (Trophoblast cell-surface antigen 2) | IHC | — | — | low | Non-small cell lung ca |
-| `BIO-TSC1` | ⚠ unused | 0 | TSC1 loss-of-function mutation (hamartin) | NGS | — | — | low | — |
+| `BIO-TSC1` | ✓ | 1 | TSC1 loss-of-function mutation (hamartin) | NGS | — | 1× ✓ | low | Lymphangioleiomyomatos |
 | `BIO-VHL-STATUS` | ✓ | 1 | VHL gene status | NGS | — | 7× ✓ | low | Renal cell carcinoma |
+| `BIO-WT1-MUTATION` | ⚠ unused | 0 | WT1 mutation (Wilms tumor 1 gene) | NGS | — | — | low | — |
 
