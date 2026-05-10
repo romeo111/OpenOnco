@@ -5804,10 +5804,10 @@ CASES: list[CaseEntry] = [
         case_id="mcl-pirtobrutinib-3l",
         file="patient_mcl_pirtobrutinib_3l_post_btki.json",
         label_ua="MCL · 3L+ · Pirtobrutinib post-covalent-BTKi (BRUIN MCL-321)",
-        summary_ua="Post-covalent-BTKi прогрес з LVEF 38% (CAR-T ineligible). Drift: ALGO-MCL-2L step 3 free-text; engine default = acalabrutinib; BRUIN анкер у comment.",
+        summary_ua="Вік 74, ECOG 2, LVEF 38% — CAR-T ineligible. ALGO-MCL-3L крок 1 false (LVEF<40) → IND-MCL-3L-PIRTOBRUTINIB (BRUIN MCL-321, ORR 50%). ≥2 попередніх ліній включаючи cBTKi (1Л R-CHOP + 2Л акалабрутиніб).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
         label_en="MCL · 3L+ · Pirtobrutinib post-covalent-BTKi (BRUIN MCL-321)",
-        summary_en="Post-covalent-BTKi progression with LVEF 38% (CAR-T ineligible). Drift: ALGO-MCL-2L step 3 free-text; engine default = acalabrutinib; BRUIN anchor in comment.",
+        summary_en="Age 74, ECOG 2, LVEF 38% — CAR-T ineligible. ALGO-MCL-3L step 1 false (LVEF<40) → IND-MCL-3L-PIRTOBRUTINIB (BRUIN MCL-321, ORR 50%). ≥2 prior lines including cBTKi (1L R-CHOP + 2L acalabrutinib).",
     ),
 
     # D1 Diagnostic pre-biopsy solid (3)
