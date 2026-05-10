@@ -22,13 +22,29 @@ decision_tree:
   - step: 1
     evaluate:
       all_of:
-        - condition: "KIT D816V positive"
+        - red_flag: RF-ADVSM-KIT-D816V
+        # Legacy finding-based evaluations for backward engine compatibility:
+        - any_of:
+            - {finding: BIO-KIT, value: D816V}
+            - {finding: kit_d816v_status, value: positive}
+            - {finding: kit_d816v_status, value: detected}
+            - condition: "KIT D816V positive"
+        # Platelet threshold — MDT-evaluated, no platelet-threshold RF entity:
         - condition: "Platelet count ≥50 ×10⁹/L"
     if_true:
       result: IND-ADVSM-1L-AVAPRITINIB
+      notes: >
+        RF-ADVSM-KIT-D816V fired AND platelet count ≥50 ×10⁹/L confirmed —
+        avapritinib preferred 1L (PATHFINDER ORR 75%, deep molecular response).
+        NCCN SM 2025 Category 2A. If platelets <50 or avapritinib inaccessible,
+        fall through to step 2 (midostaurin).
     if_false:
       next_step: 2
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: >
+      W5c RF wiring: RF-ADVSM-KIT-D816V added as formal biomarker gate;
+      platelet-count condition (≥50 ×10⁹/L) remains MDT-evaluated free-text
+      (no platelet-threshold RF entity in KB design). Legacy finding lookups
+      retained for backward engine compatibility.
   - step: 2
     evaluate:
       any_of:
@@ -43,8 +59,9 @@ decision_tree:
 
 sources:
   - SRC-NCCN-SM-2025
-  - SRC-ONCOKB
-last_reviewed: '2026-04-26'
+  - SRC-PATHFINDER
+  - SRC-EXPLORER
+last_reviewed: '2026-05-08'
 notes: >
   Decision tree intentionally simplified for MVP. SM-AHN dual-
   compartment management (KIT-directed + AHN-histology-directed) is
