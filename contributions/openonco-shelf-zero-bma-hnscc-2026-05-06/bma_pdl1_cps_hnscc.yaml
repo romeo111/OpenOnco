@@ -1,0 +1,49 @@
+id: BMA-PDL1-CPS-HNSCC
+biomarker_id: BIO-PDL1-CPS
+variant_qualifier: "PD-L1 CPS threshold in recurrent or metastatic HNSCC"
+disease_id: DIS-HNSCC
+escat_tier: IA
+evidence_summary: >
+  PD-L1 CPS is a treatment-selection biomarker for recurrent/metastatic
+  HNSCC. CPS at least 1 supports pembrolizumab plus platinum/5-FU; CPS at
+  least 20 supports consideration of pembrolizumab monotherapy when disease
+  tempo and fitness make chemotherapy avoidance appropriate. CPS below 1
+  favors non-ICI cetuximab/platinum/5-FU or other clinician-selected options.
+regulatory_approval:
+  fda:
+    - "pembrolizumab - recurrent/metastatic HNSCC in PD-L1 CPS-selected settings per label and guideline context"
+  ema: []
+  ukraine: []
+recommended_combinations:
+  - "pembrolizumab + platinum + 5-FU for CPS >=1 recurrent/metastatic HNSCC"
+  - "pembrolizumab monotherapy for CPS >=20 recurrent/metastatic HNSCC when clinically appropriate"
+contraindicated_monotherapy:
+  - "pembrolizumab monotherapy when CPS <20 and rapid disease control is required"
+primary_sources:
+  - SRC-NCCN-HNSCC-2025
+last_verified: "2026-05-06"
+evidence_sources:
+  - source: SRC-NCCN-HNSCC-2025
+    level: "Category 1 / guideline-preferred context"
+    evidence_ids:
+      - KEYNOTE-048
+    direction: Supports
+    significance: Sensitivity/Response
+    evidence_lane: standard_care
+    note: "NCCN HNSCC source records CPS-stratified pembrolizumab-containing 1L recurrent/metastatic therapy."
+actionability_review_required: true
+notes: >
+  Verify assay clone and CPS reporting method. Existing OpenOnco HNSCC
+  indications already encode the regimen-level branching; this BMA provides
+  biomarker-layer traceability.
+_contribution:
+  chunk_id: openonco-shelf-zero-bma-hnscc-2026-05-06
+  contributor: codex
+  submission_date: "2026-05-06"
+  ai_tool: codex
+  ai_model: gpt-5
+  target_action: new
+  target_entity_id: BMA-PDL1-CPS-HNSCC
+  notes_for_reviewer: >
+    New PD-L1 CPS HNSCC BMA sidecar aligned with existing HNSCC regimen and
+    indication content. Review required for exact threshold wording.
