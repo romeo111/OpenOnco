@@ -1,0 +1,53 @@
+id: ALGO-MCL-3L
+applicable_to_disease: DIS-MCL
+applicable_to_line_of_therapy: 3
+purpose: >
+  Select 3L+ r/r MCL Indication for patients post-cBTKi failure with ≥2
+  prior systemic lines. Two tracks: (1) CAR-T-eligible (fit, ECOG 0-1,
+  age ≤75, LVEF ≥40%) → brexucabtagene autoleucel (ZUMA-2, durable cure
+  intent); (2) CAR-T-ineligible (older / frail / organ dysfunction) →
+  pirtobrutinib (non-covalent BTKi, C481-independent, BRUIN MCL-321).
+
+output_indications:
+  - IND-MCL-3L-PIRTOBRUTINIB
+  - IND-MCL-3L-BREXUCEL-CART
+
+default_indication: IND-MCL-3L-PIRTOBRUTINIB
+alternative_indication: IND-MCL-3L-BREXUCEL-CART
+
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-CAR-T-ELIGIBLE
+    if_true:
+      result: IND-MCL-3L-BREXUCEL-CART
+    if_false:
+      result: IND-MCL-3L-PIRTOBRUTINIB
+    notes: >
+      Wired via RF-FITNESS-ECOG-FIT (ECOG ≤1) + RF-CAR-T-ELIGIBLE composite
+      (age ≤75, LVEF ≥40%, no active CNS disease, no uncontrolled infection).
+      Fit + CAR-T-accessible → brexu-cel (ZUMA-2, ORR 91%, mPFS 25 mo).
+      CAR-T-ineligible (older / frail / LVEF<40 / organ constraint) →
+      pirtobrutinib (BRUIN MCL-321, ORR 50%, mDOR 17.6 mo). CAR-T-ineligible
+      patients: pirtobrutinib is also a meaningful bridge if CAR-T access
+      improves later (manufacturing logistics, fitness improvement).
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MCL-2024
+
+last_reviewed: '2026-05-10'
+reviewer_signoffs: []
+notes: >
+  DRAFT — pending two Co-Lead sign-offs per CHARTER §6.1. Do not surface
+  to production until reviewer_signoffs ≥ 2.
+
+  OOS / wiring gaps: (1) Lisocabtagene maraleucel (IND-MCL-3L-LISOCEL-CART,
+  TRANSCEND-NHL-001) — FDA-approved alternative to brexu-cel; not wired in
+  decision tree because no disease-scoped RF distinguishes brexu-cel vs liso-cel
+  preference; MDT choice based on centre availability + patient preference.
+  (2) Venetoclax-based combos for post-BTKi/post-CAR-T MCL — not modelled.
+  (3) Allogeneic SCT for fit younger post-CAR-T relapse — outside KB scope
+  (transplant referral handled in MDT brief).
