@@ -12,6 +12,7 @@ def _patient(findings: dict) -> dict:
     return {
         "patient_id": "ESOPH-1L-TEST",
         "disease": {"id": "DIS-ESOPHAGEAL"},
+        "disease_state": "metastatic",
         "line_of_therapy": 1,
         "findings": {
             "metastatic_or_unresectable": True,
