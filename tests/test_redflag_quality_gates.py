@@ -61,7 +61,23 @@ SPEC_CATEGORIES = (
 # Each will close as the disease-specific RF families land in subsequent
 # CSDs; whitelisted now so the matrix gate still fails on regressions
 # elsewhere.
-DISEASES_WITH_GAPS_BASELINE: set[str] = set()
+DISEASES_WITH_GAPS_BASELINE: set[str] = {
+    # Added 2026-05-09 — new diseases without full 5-type RF matrix yet;
+    # clinical authoring backlog (CHARTER §6.1 sign-off required).
+    "DIS-ANAL-SCC",
+    "DIS-BCC",
+    "DIS-EPITHELIOID-SARCOMA",
+    "DIS-GI-NET",
+    "DIS-GRANULOSA-CELL",
+    "DIS-JMML",
+    "DIS-LAM",
+    "DIS-MENINGIOMA",
+    "DIS-MESOTHELIOMA",
+    "DIS-PNET",
+    "DIS-SOFT-TISSUE-SARCOMA",
+    "DIS-TESTICULAR-GCT",
+    "DIS-TGCT",
+}
 # All 12 previously-allowed gap diseases now cover the 5-type matrix as of
 # 2026-04-30. Keep this set as the extension point: when a new disease is
 # added that hasn't yet seeded its 5-type RF family, add the disease ID
