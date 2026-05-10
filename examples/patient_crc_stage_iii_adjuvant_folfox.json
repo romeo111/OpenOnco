@@ -1,6 +1,6 @@
 {
   "patient_id": "CRC-STAGE3-ADJ-001",
-  "comment": "Synthetic stage III colon adenocarcinoma, post-curative resection (R0), 62F, ECOG 0, intended adjuvant FOLFOX 6 mo (MOSAIC). ALGO-CRC-ADJUVANT now exists and has applicable_to_disease_state: adjuvant — this case routes correctly to IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX (first output_indication; engine falls back to list-order default because all step conditions are free-text and evaluate to False). Stage III T3 N1b — IDEA low-risk, target indication is IND-CRC-ADJUVANT-STAGE3-CAPOX; full RF-gated routing pending structured condition wiring.",
+  "comment": "Synthetic stage III colon adenocarcinoma, post-curative resection (R0), 62F, ECOG 0, intended adjuvant FOLFOX 6 mo (MOSAIC). disease_state=adjuvant routes to ALGO-CRC-ADJUVANT (step 1 stage gate → IND-CRC-ADJUVANT-STAGE3-FOLFOX). MSI-S/BRAF-WT → no ICI modification (NCCN category 1 for MSS stage III adjuvant FOLFOX).",
   "disease": {"id": "DIS-CRC"},
   "disease_state": "adjuvant",
   "line_of_therapy": 1,
