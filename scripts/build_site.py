@@ -631,7 +631,43 @@ def _example_display_labels(
         or disease_id
         or c.case_id
     )
+
+    # For variant_* files, append a human-readable qualifier derived from the
+    # filename suffix so that all variants of the same disease get distinct labels
+    # (e.g. "Chronic Myeloid Leukemia · frail patient" instead of seven identical
+    # "Chronic Myeloid Leukemia · coverage starter" entries).
+    _VARIANT_SUFFIX_MAP = {
+        "frail": "frail patient",
+        "high_risk": "high risk",
+        "relapsed_2l": "relapsed 2L",
+        "relapsed_3l": "relapsed 3L",
+        "biomarker_act": "biomarker-driven",
+        "infection_hbv": "HBV+",
+        "organ_dysf": "organ dysfunction",
+        "biomarker": "biomarker-driven",
+        "high_burden": "high burden",
+        "transplant_eligible": "transplant-eligible",
+        "transplant_ineligible": "transplant-ineligible",
+        "fit": "fit",
+        "unfit": "unfit",
+        "elderly": "elderly",
+        "young_fit": "young/fit",
+    }
+    variant_qualifier = ""
+    fname_stem = c.file.lower().removesuffix(".json")
+    if fname_stem.startswith("variant_"):
+        # Strip "variant_<disease-slug>_" prefix → remainder is the variant suffix
+        parts = fname_stem.split("_", 2)  # ["variant", "<disease>", "<suffix>"]
+        if len(parts) == 3:
+            raw_suffix = parts[2]
+            variant_qualifier = _VARIANT_SUFFIX_MAP.get(raw_suffix) or raw_suffix.replace("_", " ")
+
     if has_case_page:
+        if variant_qualifier:
+            return (
+                f"{disease_label_ua} · {variant_qualifier}",
+                f"{disease_label_en} · {variant_qualifier}",
+            )
         return (
             f"{disease_label_ua} · стартовий профіль",
             f"{disease_label_en} · coverage starter",
