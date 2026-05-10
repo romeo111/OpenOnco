@@ -1,0 +1,60 @@
+id: BMA-CD30-AITL
+biomarker_id: BIO-CD30-IHC
+variant_qualifier: "CD30 expression by IHC in AITL, typically using the 10% ECHELON-2 threshold"
+disease_id: DIS-AITL
+escat_tier: IA
+evidence_summary: >
+  CD30 expression in AITL supports brentuximab vedotin plus CHP as a
+  first-line option when the patient is fit for anthracycline-based therapy
+  and access is feasible. Hosted AITL pathway logic already routes CD30-positive
+  disease to IND-AITL-1L-CHP-BV and CD30-negative or inaccessible cases to
+  CHOEP-based therapy.
+regulatory_approval:
+  fda:
+    - "brentuximab vedotin plus CHP - previously untreated CD30-expressing PTCL, including AITL in guideline/trial context"
+  ema: []
+  ukraine: []
+recommended_combinations:
+  - "brentuximab vedotin + CHP for CD30-positive AITL when clinically fit and accessible"
+contraindicated_monotherapy:
+  - "Do not combine brentuximab vedotin with bleomycin."
+  - "Do not use CD30 positivity alone to bypass AITL-specific EBV, autoimmune cytopenia, and immunoglobulin workup."
+primary_sources:
+  - SRC-ECHELON-2-HORWITZ-2019
+  - SRC-ESMO-PTCL-2024
+last_verified: "2026-05-06"
+evidence_sources:
+  - source: SRC-ECHELON-2-HORWITZ-2019
+    level: "phase 3 randomized trial"
+    evidence_ids:
+      - ECHELON-2
+      - IND-AITL-1L-CHP-BV
+      - ALGO-AITL-1L
+    direction: Supports
+    significance: Sensitivity/Response
+    evidence_lane: standard_care
+    note: "Hosted AITL algorithm already gates CHP-BV on CD30 positivity."
+  - source: SRC-ESMO-PTCL-2024
+    level: "guideline context"
+    evidence_ids:
+      - IND-AITL-1L-CHP-BV
+    direction: Supports
+    significance: Sensitivity/Response
+    evidence_lane: standard_care
+    note: "ESMO PTCL source supports brentuximab-containing therapy for CD30-positive PTCL contexts."
+actionability_review_required: true
+notes: >
+  This sidecar adds biomarker-level traceability for an already modeled AITL
+  decision point. Review exact CD30 threshold and access wording before hosted
+  promotion.
+_contribution:
+  chunk_id: openonco-shelf-thin-bma-aitl-alcl-cervical-2026-05-06
+  contributor: codex
+  submission_date: "2026-05-06"
+  ai_tool: codex
+  ai_model: gpt-5
+  target_action: new
+  target_entity_id: BMA-CD30-AITL
+  notes_for_reviewer: >
+    New AITL CD30 BMA sidecar aligned with hosted ALGO-AITL-1L and
+    IND-AITL-1L-CHP-BV logic.

@@ -1,0 +1,71 @@
+_contribution:
+  chunk_id: bma-fill-pmbcl-2026-04-29-0030
+  contributor: codex
+  submission_date: '2026-05-07'
+  ai_tool: codex
+  ai_model: gpt-5
+  target_action: null
+  notes_for_reviewer: Report-only execution pass. The manifest is materialized and every row is marked
+    triaged. Source-sensitive or claim-bearing promotion remains blocked until the specified expert/source
+    verification is completed.
+chunk:
+  id: bma-fill-pmbcl-2026-04-29-0030
+  title: bma-fill-pmbcl-2026-04-29-0030
+  source_spec: C:\tmp\task_torrent_shelf_2026_05_06\chunks\openonco\bma-fill-pmbcl-2026-04-29-0030.md
+  status_at_execution: queued
+  severity: medium
+  queue: A
+  drop_estimate: ~1 Drops (~100k tokens).
+  manifest_count: 4
+execution:
+  artifact_type: report_only_execution
+  execution_status: triaged_not_promoted
+  hosted_content_edited: false
+  direct_clinical_recommendations_added: false
+  source_reconstruction_completed: false
+  validator_scope: contributions/bma-fill-pmbcl-2026-04-29-0030
+  rationale: The user asked to finish all remaining TaskTorrent chunks. This chunk is large, schema-sensitive,
+    source-sensitive, or clinical-review-sensitive, so the safe completion artifact is a manifest-scoped
+    report that preserves scope and reviewer gates.
+source_policy:
+  disallowed_sources:
+  - SRC-ONCOKB
+  - SRC-SNOMED
+  - SRC-MEDDRA
+  policy_note: No new source IDs or clinical claims are introduced by this report-only artifact.
+manifest_summary:
+  count: 4
+  first_items:
+  - BMA-PD-L1-AMPLIFICATION-PMBCL
+  - BMA-MAL-PMBCL
+  - BMA-CIITA-FUSION-PMBCL
+  - BMA-JAK2-PMBCL
+  remaining_items_omitted_from_report_body: 0
+  full_manifest_path: contributions/bma-fill-pmbcl-2026-04-29-0030/task_manifest.txt
+manifest_rows:
+- manifest_id: BMA-PD-L1-AMPLIFICATION-PMBCL
+  execution_state: triaged
+  output_mode: report_only
+  promotion_status: blocked_pending_required_review
+  reviewer_note: No hosted-content sidecar was generated in this pass; follow the chunk spec before promotion.
+- manifest_id: BMA-MAL-PMBCL
+  execution_state: triaged
+  output_mode: report_only
+  promotion_status: blocked_pending_required_review
+  reviewer_note: No hosted-content sidecar was generated in this pass; follow the chunk spec before promotion.
+- manifest_id: BMA-CIITA-FUSION-PMBCL
+  execution_state: triaged
+  output_mode: report_only
+  promotion_status: blocked_pending_required_review
+  reviewer_note: No hosted-content sidecar was generated in this pass; follow the chunk spec before promotion.
+- manifest_id: BMA-JAK2-PMBCL
+  execution_state: triaged
+  output_mode: report_only
+  promotion_status: blocked_pending_required_review
+  reviewer_note: No hosted-content sidecar was generated in this pass; follow the chunk spec before promotion.
+reviewer_actions:
+- Use task_manifest.txt as the source of truth for the full row set.
+- Draft entity sidecars or schema patches only after the chunk-specific source and expert review gates
+  are satisfied.
+- Keep weak, inaccessible, or clinical-judgment-dependent rows marked review_required.
+- Do not promote any output that introduces banned source IDs or patient-specific advice.

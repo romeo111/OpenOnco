@@ -1,0 +1,389 @@
+_contribution:
+  chunk_id: openonco-shelf-low-biomarker-zero-regimen-audit-2026-05-07
+  contributor: codex
+  submission_date: '2026-05-07'
+  ai_tool: codex
+  ai_model: gpt-5
+  target_action: null
+  notes_for_reviewer: |
+    Report-only TaskTorrent execution. This audit evaluates all hosted disease
+    records against the requested threshold and turns the true gaps into a
+    30-drop backlog. No hosted clinical YAML is modified.
+audit:
+  title: Low-biomarker / zero-regimen disease coverage audit
+  execution_date: '2026-05-07'
+  scope:
+    disease_root: knowledge_base/hosted/content/diseases
+    linked_biomarker_roots:
+      - knowledge_base/hosted/content/biomarker_actionability
+    linked_regimen_roots:
+      - knowledge_base/hosted/content/indications
+      - knowledge_base/hosted/content/regimens
+  threshold:
+    biomarker_count: '< 2'
+    regimen_count: '< 1'
+  counting_method:
+    biomarkers: |
+      Count BIO-* identifiers declared in disease key/actionable/diagnostic
+      biomarker fields plus hosted biomarker actionability rows whose
+      disease_id matches the disease.
+    regimens: |
+      Count REG-* and REGIMEN-* identifiers recursively referenced by
+      indications whose disease is either disease_id or
+      applicable_to.disease_id, plus regimen files with direct disease_context.
+    correction_applied: |
+      The first pass only inspected top-level indication.disease_id and
+      therefore under-counted many diseases. This audit uses
+      applicable_to.disease_id, which removes false positives such as APL,
+      AITL, PTCL-NOS, PNET, and T-PLL.
+  totals:
+    diseases_scanned: 78
+    threshold_matches: 6
+    proposed_backlog_drops: 30
+  source_policy:
+    hosted_content_edited: false
+    direct_clinical_recommendations_added: false
+    banned_sources_not_introduced:
+      - SRC-ONCOKB
+      - SRC-SNOMED
+      - SRC-MEDDRA
+    reviewer_rule: |
+      Promote no therapy, biomarker, indication, or regimen from this report
+      until source locators and disease-specific clinical review are complete.
+findings:
+  - disease_id: DIS-EPITHELIOID-SARCOMA
+    disease_name: Epithelioid sarcoma
+    current_structured_biomarkers:
+      count: 1
+      ids:
+        - BIO-SMARCB1
+    current_bma_ids:
+      - BMA-SMARCB1-EPITHELIOID-SARCOMA
+    current_structured_regimens:
+      count: 0
+      ids: []
+    current_indications: 0
+    current_algorithms: 0
+    existing_source_ids:
+      - SRC-EZH202-GOUNDER-2020
+      - SRC-NCCN-SARCOMA
+      - SRC-ESMO-SARCOMA-2024
+    improvement_assessment: |
+      The disease prose already names localized surgery, tazemetostat for
+      advanced unresectable/metastatic disease, and doxorubicin-based systemic
+      therapy as candidate treatment tracks. The structured gap is not a lack
+      of clinical context; it is missing indication/regimen entities.
+    biomarker_assessment: |
+      SMARCB1/INI1 loss is the defining biomarker. Do not invent a second
+      disease biomarker just to satisfy a numeric threshold. If expanded,
+      keep EZH2 as therapeutic mechanism or trial context unless reviewers
+      choose a specific diagnostic/actionability row.
+    suggested_entities_for_review:
+      - IND-EPITHELIOID-SARCOMA-ADV-TAZEMETOSTAT
+      - REG-TAZEMETOSTAT-EPITHELIOID-SARCOMA
+      - IND-EPITHELIOID-SARCOMA-ADV-DOXORUBICIN
+    risk_note: |
+      Tazemetostat and anthracycline chemotherapy require separate eligibility,
+      disease-state, and regulatory/access notes before hosted promotion.
+  - disease_id: DIS-GRANULOSA-CELL
+    disease_name: Adult granulosa cell tumor of the ovary
+    current_structured_biomarkers:
+      count: 1
+      ids:
+        - BIO-FOXL2
+    current_bma_ids:
+      - BMA-FOXL2-GRANULOSA-CELL
+    current_structured_regimens:
+      count: 0
+      ids: []
+    current_indications: 0
+    current_algorithms: 0
+    existing_source_ids:
+      - SRC-NCCN-OVARIAN-2025
+      - SRC-ESMO-OVARIAN-2024
+    improvement_assessment: |
+      The disease prose names surgery, platinum-based chemotherapy, and
+      hormone-based recurrent therapy. Structured regimen/indication coverage
+      is absent.
+    biomarker_assessment: |
+      FOXL2 p.C134W is appropriate as the primary diagnostic marker. Candidate
+      non-genomic monitoring markers such as inhibin B or AMH need explicit
+      source reconstruction before any BIO-* sidecar is proposed.
+    suggested_entities_for_review:
+      - IND-GRANULOSA-CELL-PRIMARY-SURGERY
+      - REG-CARBO-PACLI-GRANULOSA-CELL
+      - IND-GRANULOSA-CELL-RECURRENT-HORMONAL
+      - BIO-INHIBIN-B
+      - BIO-AMH
+    risk_note: |
+      Avoid reusing REG-BEP-GCT without review; that GCT abbreviation can
+      refer to germ cell tumor, not granulosa cell tumor.
+  - disease_id: DIS-JMML
+    disease_name: Juvenile myelomonocytic leukemia
+    current_structured_biomarkers:
+      count: 1
+      ids:
+        - BIO-PTPN11
+    current_bma_ids:
+      - BMA-PTPN11-JMML
+    current_structured_regimens:
+      count: 0
+      ids: []
+    current_indications: 0
+    current_algorithms: 0
+    existing_source_ids:
+      - SRC-COG
+    improvement_assessment: |
+      The disease prose already identifies allogeneic HCT as the curative
+      path, azacitidine as a bridge, and investigational MEK/SHP2 options.
+      The structured gap is high priority because the disease has no regimen
+      or indication entries despite explicit treatment context.
+    biomarker_assessment: |
+      Existing hosted biomarkers can partially cover the RAS/MAPK context
+      through BIO-NF1-MUTATION, BIO-KRAS-G12D, BIO-KRAS-G12V, and
+      BIO-NRAS-Q61R. CBL and broader RAS/MAPK grouped rows need review if
+      maintainers want disease-level biomarker count above one without
+      fragmenting variants.
+    suggested_entities_for_review:
+      - IND-JMML-ALLOHCT
+      - REG-ALLOHCT-JMML
+      - IND-JMML-AZACITIDINE-BRIDGE
+      - REG-AZACITIDINE-JMML
+      - BIO-CBL-MUTATION
+    risk_note: |
+      JMML content is pediatric and germline/somatic distinction is clinically
+      important; all treatment rows require pediatric hematology review.
+  - disease_id: DIS-LAM
+    disease_name: Lymphangioleiomyomatosis
+    current_structured_biomarkers:
+      count: 1
+      ids:
+        - BIO-TSC1
+    current_bma_ids:
+      - BMA-TSC1-LAM
+    current_structured_regimens:
+      count: 0
+      ids: []
+    current_indications: 0
+    current_algorithms: 0
+    existing_source_ids:
+      - SRC-MILES-MCCORMACK-2011
+      - SRC-NCCN-SARCOMA
+    improvement_assessment: |
+      The disease prose names sirolimus for progressive LAM and lung
+      transplant for advanced disease. There are no structured regimen or
+      indication entities.
+    biomarker_assessment: |
+      TSC2 and serum VEGF-D are explicitly described in prose but not
+      represented as structured disease biomarkers. TSC2 is part of the core
+      biology; VEGF-D is a diagnostic/monitoring marker and should be modeled
+      carefully.
+    suggested_entities_for_review:
+      - IND-LAM-PROGRESSIVE-SIROLIMUS
+      - REG-SIROLIMUS-LAM
+      - BIO-TSC2
+      - BIO-VEGFD
+      - BMA-TSC2-LAM
+    risk_note: |
+      LAM is not a conventional cancer regimen pathway; maintainers should
+      verify whether regimen modeling or a non-oncology treatment track is
+      preferred.
+  - disease_id: DIS-MENINGIOMA
+    disease_name: Meningioma
+    current_structured_biomarkers:
+      count: 1
+      ids:
+        - BIO-NF2
+    current_bma_ids:
+      - BMA-NF2-MENINGIOMA
+    current_structured_regimens:
+      count: 0
+      ids: []
+    current_indications: 0
+    current_algorithms: 0
+    existing_source_ids:
+      - SRC-EANO-MENINGIOMA-2024
+      - SRC-NCCN-CNS-2025
+    improvement_assessment: |
+      The disease prose names surgery/radiation as primary modalities and
+      systemic options only for recurrent or grade II/III disease. No
+      structured regimen or indication rows exist.
+    biomarker_assessment: |
+      The file already lists non-NF2 molecular subgroups in prose. Existing
+      hosted biomarker definitions include BIO-AKT1, BIO-SMO, and
+      BIO-PIK3CA-MUTATION; TRAF7 and KLF4 would need new rows if reviewers
+      want complete disease biology coverage.
+    suggested_entities_for_review:
+      - IND-MENINGIOMA-RECURRENT-BEVACIZUMAB
+      - REG-BEVACIZUMAB-MENINGIOMA
+      - BMA-AKT1-MENINGIOMA
+      - BMA-SMO-MENINGIOMA
+      - BIO-TRAF7-MUTATION
+      - BIO-KLF4-MUTATION
+    risk_note: |
+      Systemic therapy evidence is limited/off-label in many meningioma
+      settings; encode review_required rather than a standard-care default
+      unless guideline support is explicit.
+  - disease_id: DIS-TGCT
+    disease_name: Tenosynovial giant cell tumor
+    current_structured_biomarkers:
+      count: 1
+      ids:
+        - BIO-CSF1R
+    current_bma_ids:
+      - BMA-CSF1R-TGCT
+    current_structured_regimens:
+      count: 0
+      ids: []
+    current_indications: 0
+    current_algorithms: 0
+    existing_source_ids:
+      - SRC-ILLUMINATE-TAP-2019
+      - SRC-NCCN-SARCOMA
+      - SRC-ESMO-SARCOMA-2024
+    improvement_assessment: |
+      The disease prose already names surgery and pexidartinib for inoperable
+      or severe symptomatic disease, but there is no structured regimen or
+      indication entry.
+    biomarker_assessment: |
+      CSF1R is a therapeutic pathway marker. CSF1 overexpression or
+      COL6A3-CSF1 fusion may be useful biology rows, but should be modeled as
+      diagnostic/pathway context, not as an automatic pexidartinib selection
+      rule without review.
+    suggested_entities_for_review:
+      - IND-TGCT-INOPERABLE-PEXIDARTINIB
+      - REG-PEXIDARTINIB-TGCT
+      - BIO-CSF1-OVEREXPRESSION
+      - BIO-COL6A3-CSF1-FUSION
+      - BMA-CSF1-OVEREXPRESSION-TGCT
+    risk_note: |
+      Pexidartinib has important hepatotoxicity and access constraints; any
+      regimen row needs monitoring, contraindication, and REMS/access notes.
+backlog:
+  drop_count: 30
+  drops:
+    - manifest_id: DIS-EPITHELIOID-SARCOMA:DROP-01
+      task: "Draft advanced unresectable/metastatic tazemetostat indication and regimen candidates with source locators."
+      target_mode: source_grounded_sidecars
+      review_required: true
+    - manifest_id: DIS-EPITHELIOID-SARCOMA:DROP-02
+      task: "Assess whether advanced doxorubicin-based systemic therapy should reuse STS regimen rows or get disease-specific indication text."
+      target_mode: audit_or_sidecar
+      review_required: true
+    - manifest_id: DIS-EPITHELIOID-SARCOMA:DROP-03
+      task: "Review BMA-SMARCB1-EPITHELIOID-SARCOMA for therapy linkage completeness and actionability caveats."
+      target_mode: upsert_or_review_existing
+      review_required: true
+    - manifest_id: DIS-EPITHELIOID-SARCOMA:DROP-04
+      task: "Add safety/access checklist for tazemetostat and advanced soft-tissue sarcoma context."
+      target_mode: source_grounded_sidecars
+      review_required: true
+    - manifest_id: DIS-EPITHELIOID-SARCOMA:DROP-05
+      task: "Run disease-bundle QA after proposed indication/regimen sidecars are drafted."
+      target_mode: validator_and_render_check
+      review_required: true
+    - manifest_id: DIS-GRANULOSA-CELL:DROP-01
+      task: "Draft primary surgery/staging indication shell with no systemic recommendation until source review."
+      target_mode: audit_or_sidecar
+      review_required: true
+    - manifest_id: DIS-GRANULOSA-CELL:DROP-02
+      task: "Evaluate platinum/taxane regimen coverage for advanced or recurrent adult granulosa cell tumor."
+      target_mode: source_grounded_sidecars
+      review_required: true
+    - manifest_id: DIS-GRANULOSA-CELL:DROP-03
+      task: "Evaluate recurrent hormonal therapy candidate rows and explicit evidence limits."
+      target_mode: source_grounded_sidecars
+      review_required: true
+    - manifest_id: DIS-GRANULOSA-CELL:DROP-04
+      task: "Source-check inhibin B and AMH as monitoring biomarkers before creating BIO-* rows."
+      target_mode: biomarker_source_reconstruction
+      review_required: true
+    - manifest_id: DIS-GRANULOSA-CELL:DROP-05
+      task: "Review FOXL2 BMA language for diagnostic-only versus therapeutic actionability."
+      target_mode: upsert_or_review_existing
+      review_required: true
+    - manifest_id: DIS-JMML:DROP-01
+      task: "Draft allogeneic HCT JMML regimen/indication candidate with pediatric hematology review flag."
+      target_mode: source_grounded_sidecars
+      review_required: true
+    - manifest_id: DIS-JMML:DROP-02
+      task: "Draft azacitidine bridge-to-HCT JMML candidate with uncertainty and line-of-therapy constraints."
+      target_mode: source_grounded_sidecars
+      review_required: true
+    - manifest_id: DIS-JMML:DROP-03
+      task: "Expand RAS/MAPK biomarker coverage using existing KRAS, NRAS, and NF1 rows where valid."
+      target_mode: biomarker_sidecars
+      review_required: true
+    - manifest_id: DIS-JMML:DROP-04
+      task: "Assess need for new CBL or grouped RAS/MAPK biomarker definitions."
+      target_mode: biomarker_source_reconstruction
+      review_required: true
+    - manifest_id: DIS-JMML:DROP-05
+      task: "Add germline versus somatic distinction warnings to any JMML actionability sidecars."
+      target_mode: safety_review
+      review_required: true
+    - manifest_id: DIS-LAM:DROP-01
+      task: "Draft progressive LAM sirolimus regimen/indication candidate from MILES-supported source set."
+      target_mode: source_grounded_sidecars
+      review_required: true
+    - manifest_id: DIS-LAM:DROP-02
+      task: "Decide whether everolimus belongs in LAM core content or only TSC-related context."
+      target_mode: audit_or_sidecar
+      review_required: true
+    - manifest_id: DIS-LAM:DROP-03
+      task: "Create or review BIO-TSC2 and BMA-TSC2-LAM candidates."
+      target_mode: biomarker_sidecars
+      review_required: true
+    - manifest_id: DIS-LAM:DROP-04
+      task: "Source-check VEGF-D threshold modeling before creating BIO-VEGFD."
+      target_mode: biomarker_source_reconstruction
+      review_required: true
+    - manifest_id: DIS-LAM:DROP-05
+      task: "Review whether LAM should stay in oncology TaskTorrent or move to a non-oncology treatment model."
+      target_mode: architecture_review
+      review_required: true
+    - manifest_id: DIS-MENINGIOMA:DROP-01
+      task: "Draft recurrent/progressive grade II-III meningioma systemic-therapy audit with explicit off-label flags."
+      target_mode: audit_or_sidecar
+      review_required: true
+    - manifest_id: DIS-MENINGIOMA:DROP-02
+      task: "Assess bevacizumab regimen candidate for recurrent meningioma with source-level support."
+      target_mode: source_grounded_sidecars
+      review_required: true
+    - manifest_id: DIS-MENINGIOMA:DROP-03
+      task: "Create or review AKT1 and SMO meningioma BMA candidates as trial/research or molecular subtype context."
+      target_mode: biomarker_sidecars
+      review_required: true
+    - manifest_id: DIS-MENINGIOMA:DROP-04
+      task: "Assess TRAF7, KLF4, and PIK3CA disease-biology rows without overstating treatment actionability."
+      target_mode: biomarker_source_reconstruction
+      review_required: true
+    - manifest_id: DIS-MENINGIOMA:DROP-05
+      task: "Add surgery/radiation modality coverage plan if regimen schema is not suitable for primary therapy."
+      target_mode: architecture_review
+      review_required: true
+    - manifest_id: DIS-TGCT:DROP-01
+      task: "Draft inoperable/severe symptomatic TGCT pexidartinib indication and regimen candidates."
+      target_mode: source_grounded_sidecars
+      review_required: true
+    - manifest_id: DIS-TGCT:DROP-02
+      task: "Add hepatotoxicity, monitoring, REMS/access, and eligibility caveats to pexidartinib sidecar draft."
+      target_mode: safety_review
+      review_required: true
+    - manifest_id: DIS-TGCT:DROP-03
+      task: "Review surgery-first TGCT pathway and decide whether non-drug modality belongs in algorithm or indication content."
+      target_mode: architecture_review
+      review_required: true
+    - manifest_id: DIS-TGCT:DROP-04
+      task: "Source-check CSF1 overexpression or COL6A3-CSF1 fusion biomarker candidates."
+      target_mode: biomarker_source_reconstruction
+      review_required: true
+    - manifest_id: DIS-TGCT:DROP-05
+      task: "Run disease-bundle QA after TGCT sidecars are drafted."
+      target_mode: validator_and_render_check
+      review_required: true
+reviewer_actions:
+  - Confirm whether each proposed treatment belongs as regimen, indication, algorithm, or non-drug modality content.
+  - Draft source-grounded sidecars only inside the relevant contribution chunk.
+  - Keep weak, off-label, pediatric, rare-disease, or architecture-sensitive claims marked review_required.
+  - Do not promote content that uses banned source IDs or unreviewed patient-specific advice.

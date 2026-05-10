@@ -1,0 +1,61 @@
+id: BMA-CD30-PTCL-NOS
+biomarker_id: BIO-CD30-IHC
+variant_qualifier: "CD30 expression by IHC in PTCL-NOS, typically using the 10% ECHELON-2 threshold"
+disease_id: DIS-PTCL-NOS
+escat_tier: IA
+evidence_summary: >
+  CD30 expression in PTCL-NOS routes eligible patients to the hosted
+  brentuximab vedotin plus CHP first-line pathway when clinically feasible.
+  The existing PTCL algorithm already uses RF-TCELL-CD30-POSITIVE to select
+  IND-TCELL-1L-CHP-BV over CHOEP for CD30-positive disease.
+regulatory_approval:
+  fda:
+    - "brentuximab vedotin plus CHP - previously untreated CD30-expressing PTCL including PTCL-NOS per label/guideline context"
+  ema: []
+  ukraine: []
+recommended_combinations:
+  - "brentuximab vedotin + CHP for CD30-positive PTCL-NOS when fit and accessible"
+contraindicated_monotherapy:
+  - "Do not combine brentuximab vedotin with bleomycin."
+  - "Do not omit CD30 IHC before choosing CHOEP versus CHP-BV in PTCL-NOS."
+primary_sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+  - SRC-ECHELON-2-HORWITZ-2019
+last_verified: "2026-05-06"
+evidence_sources:
+  - source: SRC-ECHELON-2-HORWITZ-2019
+    level: "phase 3 randomized trial"
+    evidence_ids:
+      - ECHELON-2
+      - IND-TCELL-1L-CHP-BV
+      - RF-TCELL-CD30-POSITIVE
+    direction: Supports
+    significance: Sensitivity/Response
+    evidence_lane: standard_care
+    note: "Hosted PTCL algorithm already uses CD30 positivity to route to CHP-BV."
+  - source: SRC-ESMO-PTCL-2024
+    level: "guideline context"
+    evidence_ids:
+      - ALGO-PTCL-1L
+      - IND-TCELL-1L-CHP-BV
+    direction: Supports
+    significance: Sensitivity/Response
+    evidence_lane: standard_care
+    note: "ESMO PTCL source supports CD30-positive PTCL brentuximab-containing first-line therapy."
+actionability_review_required: true
+notes: >
+  This sidecar adds biomarker-level traceability for existing hosted pathway
+  behavior. It should not relax the hosted safety checks around neuropathy,
+  anthracycline fitness, HBV screening, or access constraints.
+_contribution:
+  chunk_id: openonco-shelf-zero-bma-ptcl-nos-2026-05-06
+  contributor: codex
+  submission_date: "2026-05-06"
+  ai_tool: codex
+  ai_model: gpt-5
+  target_action: new
+  target_entity_id: BMA-CD30-PTCL-NOS
+  notes_for_reviewer: >
+    New CD30 PTCL-NOS BMA sidecar aligned to hosted RF-TCELL-CD30-POSITIVE
+    and IND-TCELL-1L-CHP-BV logic.
