@@ -12,7 +12,12 @@ decision_tree:
         - {condition: "Prior PD-(L)1 + VEGF-TKI failure"}
     if_true: {result: IND-RCC-METASTATIC-2L-BELZUTIFAN}
     if_false: {result: IND-RCC-METASTATIC-2L-BELZUTIFAN}  # default — algorithm only fires post-1L
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: >
+      Degenerate step — single-track algorithm: both branches route to
+      belzutifan. Condition is informational only (prior PD-(L)1 + VEGF-TKI
+      failure is the entry criterion for this algo, not a bifurcating gate).
+      No RF can change outcome until ≥2 Indications are wired (cabozantinib,
+      lenvatinib + everolimus, tivozanib). Remove step when second track added.
 sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
 last_reviewed: "2026-04-26"
 notes: >
