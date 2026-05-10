@@ -15,6 +15,7 @@ output_indications:
 - IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB
 - IND-BREAST-HER2-POS-EARLY-NEOADJUVANT
 - IND-BREAST-HER2-POS-MET-1L-THP
+- IND-BREAST-HER2-POS-MET-2L-TDXD
 - IND-BREAST-TNBC-EARLY-NEOADJUVANT
 - IND-BREAST-BRCA-POS-MET-PARPI
 - IND-BREAST-TNBC-METASTATIC-1L-PEMBRO-CHEMO
@@ -35,34 +36,88 @@ decision_tree:
 - step: 2
   evaluate:
     any_of:
+    - red_flag: RF-BREAST-EARLY-STAGE
+    # Legacy finding-based evaluations for backward engine compatibility:
+    - {finding: stage_group, value: "I"}
+    - {finding: stage_group, value: "II"}
+    - {finding: stage_group, value: "III"}
+    - {finding: stage_group, value: "IIA"}
+    - {finding: stage_group, value: "IIB"}
+    - {finding: stage_group, value: "IIIA"}
+    - {finding: stage_group, value: "IIIB"}
+    - {finding: stage_group, value: "IIIC"}
+    - {finding: stage_group, value: "early"}
+    - {finding: disease_extent, value: "localized"}
+    - {finding: disease_extent, value: "locally_advanced"}
     - condition: "Stage I-III (early)"
   if_true:
     result: IND-BREAST-HER2-POS-EARLY-NEOADJUVANT
+    notes: >
+      RF-BREAST-EARLY-STAGE fired (stage I-III) — curative-intent
+      neoadjuvant TCHP for HER2+ early breast cancer.
   if_false:
     result: IND-BREAST-HER2-POS-MET-1L-THP
-  notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: >
+      No early-stage finding — route to metastatic 1L THP
+      (trastuzumab + pertuzumab + taxane; CLEOPATRA).
+  notes: >
+    W5c RF wiring: RF-BREAST-EARLY-STAGE added as primary gate;
+    legacy finding lookups and free-text condition retained for
+    backward engine compatibility.
   # Step 3 — HER2-negative; check TNBC vs HR+
 - step: 3
   evaluate:
     any_of:
+    - red_flag: RF-BREAST-TNBC
+    # Legacy finding-based evaluations for backward engine compatibility:
+    - {finding: tnbc_status, value: true}
+    - {finding: tnbc_status, value: positive}
+    - {finding: breast_subtype, value: TNBC}
+    - {finding: breast_subtype, value: triple_negative}
     - condition: "ER <1% AND PR <1% (TNBC)"
   if_true:
     next_step: 4
+    notes: >
+      RF-BREAST-TNBC fired (ER<1% AND PR<1% AND HER2-negative) — route
+      to TNBC stage gate (step 4). DO NOT use CDK4/6i or endocrine therapy
+      for TNBC patients.
   if_false:
     next_step: 5
-  notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: >
+      No TNBC signal — patient is HR+/HER2-. Route to step 5
+      (CDK4/6i + aromatase inhibitor default for HR+ metastatic disease).
+  notes: >
+    W5c RF wiring: RF-BREAST-TNBC added as primary gate; legacy
+    finding lookups retained. Step 5 is degenerate (both branches
+    → CDKI) and is not RF-wirable without adding HR+ explicit indication.
   # Step 4 — TNBC: early vs metastatic stage gate.
   # Early stage → neoadjuvant (KEYNOTE-522); metastatic → step 6 (BRCA/PD-L1 routing).
 - step: 4
   evaluate:
     any_of:
+    - red_flag: RF-BREAST-STAGE-IV-METASTATIC
+    # Legacy finding-based evaluations for backward engine compatibility:
+    - {finding: stage_group, value: "IV"}
+    - {finding: stage_group, value: "IVA"}
+    - {finding: stage_group, value: "metastatic"}
+    - {finding: disease_extent, value: "metastatic"}
+    - {finding: distant_metastasis, value: true}
+    - {finding: m_stage, value: M1}
     - condition: "Stage IV (locally recurrent unresectable or distant metastatic)"
   if_true:
     next_step: 6
-    notes: "Metastatic TNBC: route to BRCA mutation gate (step 6)."
+    notes: >
+      RF-BREAST-STAGE-IV-METASTATIC fired — metastatic TNBC: route to
+      BRCA mutation gate (step 6). Palliative-intent therapy.
   if_false:
     result: IND-BREAST-TNBC-EARLY-NEOADJUVANT
-    notes: "Stage I-III TNBC: KEYNOTE-522 neoadjuvant pembrolizumab+chemo regardless of PD-L1 status."
+    notes: >
+      No metastatic finding — early-stage TNBC (I-III): KEYNOTE-522
+      neoadjuvant pembrolizumab+chemo regardless of PD-L1 status.
+  notes: >
+    W5c RF wiring: RF-BREAST-STAGE-IV-METASTATIC added as primary gate;
+    legacy finding lookups and free-text condition retained for
+    backward engine compatibility.
   # Step 5 — HR+/HER2- branch: early-stage high-risk → adjuvant CDK4/6i; metastatic → CDK4/6i 1L.
   # monarchE (Johnston, Lancet Oncol 2023): abemaciclib 2yr adjuvant; high-risk = ≥4+ nodes
   # OR 1-3 nodes + Ki67 ≥20% or grade 3. NATALEE (ribociclib 3yr) broadens eligibility.
@@ -107,7 +162,9 @@ sources:
 - SRC-ESMO-BREAST-METASTATIC-2024
 - SRC-MONARCHE-JOHNSTON-2023
 - SRC-NATALEE-SLAMON-2024
-last_reviewed: '2026-05-09'
+- SRC-KEYNOTE522-SCHMID-2022
+- SRC-KEYNOTE355-CORTES-2020
+last_reviewed: '2026-05-10'
 notes: >
   Receptor-subtype is the dominant branch point — biomarker_driven
   archetype materialized. T-DXd 2L HER2+ metastatic referenced as
@@ -115,5 +172,8 @@ notes: >
   as 1L choice. Step 5 wired 2026-05-09 (BREAST-1 D1) for early
   HR+/HER2- high-risk adjuvant CDK4/6i; D2 adds NATALEE ribociclib
   as alternative (IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB).
+  W5c RF wiring (2026-05-10): RF-BREAST-EARLY-STAGE, RF-BREAST-TNBC,
+  RF-BREAST-STAGE-IV-METASTATIC added as primary gates for steps 2-4;
+  legacy finding lookups retained for backward engine compatibility.
   OOS: Lu-PSMA analog targeted ADCs; brain-met HER2CLIMB pathways;
   early low-risk HR+/HER2- standard AI adjuvant (no CDK4/6i needed).
