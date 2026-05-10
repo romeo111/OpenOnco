@@ -1,0 +1,109 @@
+id: RF-WM-CXCR4-WHIM-MUTANT
+definition: >
+  CXCR4 WHIM-like nonsense or frameshift mutation in the C-terminal
+  regulatory domain (e.g., S338X, R334X) in Waldenström macroglobulinemia
+  (WM). CXCR4 WHIM-like mutations co-occur with MYD88 L265P in ~30-40%
+  of MYD88-mutant WM and cause constitutive CXCR4 signaling via loss of
+  the C-terminal regulatory domain. These mutations confer relative
+  resistance to BTK inhibitor (BTKi) monotherapy — lower overall response
+  rate and major-response rate, slower IgM decline kinetics compared to
+  CXCR4-WT MYD88-mutant WM (Treon NEJM 2015; Castillo Blood 2020).
+
+  Fires to route ALGO-WM-2L step 1 to carfilzomib-based therapy
+  (IND-WM-2L-CARFILZOMIB-CXCR4MUT) rather than zanubrutinib BTKi
+  monotherapy (IND-WM-2L-ZANUBRUTINIB), as BTKi efficacy is substantially
+  attenuated in CXCR4-mutated WM.
+
+  Detection: CXCR4 C-terminal sequencing by targeted PCR + Sanger or NGS
+  panel with CXCR4 C-terminus coverage. Note: standard NGS panels
+  frequently omit CXCR4 C-terminus; dedicated assay required. Bone marrow
+  aspirate with CD138+ enrichment preferred for adequate WM clone
+  representation.
+
+  CXCR4 mutation testing is recommended at WM diagnosis per NCCN B-Cell
+  Lymphomas 2025 (alongside MYD88 L265P) to guide initial therapy
+  selection. In CXCR4-mutated patients, BTKi monotherapy response is
+  attenuated; proteasome-inhibitor-based regimens or BR are preferred
+  1L per NCCN/ESMO. In 2L, carfilzomib-based regimens offer benefit
+  in BTKi-refractory or BTKi-intolerant CXCR4-mutated WM.
+
+definition_ua: >
+  CXCR4 WHIM-подібна нонсенс- або фреймшифт-мутація C-кінцевого регуляторного
+  домену при макроглобулінемії Вальденстрема (МВ). Зустрічається у ~30-40%
+  MYD88-L265P МВ; спричиняє конститутивну активацію CXCR4-сигналізації.
+  Конферує відносну резистентність до BTK-інгібіторів (знижений ЗВВ, повільна
+  кінетика зниження IgM). Маршрутизує до схем на основі карфілзомібу (2L) або
+  бортезоміб/BR-режимів (1L) замість монотерапії BTKi. NCCN B-Cell 2025:
+  тестування CXCR4 рекомендовано при встановленні діагнозу МВ.
+
+trigger:
+  type: biomarker_status
+  any_of:
+    - finding: BIO-CXCR4-WHIM
+      value: positive
+    - finding: BIO-CXCR4-WHIM
+      value: detected
+    - finding: BIO-CXCR4-WHIM
+      value: mutant
+    - finding: cxcr4_whim_mutation
+      value: positive
+    - finding: cxcr4_mutation_status
+      value: positive
+    - finding: cxcr4_mutation_status
+      value: WHIM
+    - finding: cxcr4_mutation_status
+      value: mutant
+
+clinical_direction: intensify
+severity: major
+priority: 70
+category: high-risk-biology
+
+branch_targets:
+  ALGO-WM-2L: "1"
+
+relevant_diseases:
+  - DIS-WM
+
+shifts_algorithm:
+  - ALGO-WM-2L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-WM-2024
+
+last_reviewed: "2026-05-08"
+reviewer_signoffs: []
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+notes: >
+  W5c RF authoring. Converts free-text `{condition: "CXCR4-WHIM mutation
+  positive"}` in ALGO-WM-2L step 1 into a formal RF entity. Step 1 is a
+  partial gate: the RF covers the CXCR4-mutation branch; the second branch
+  ("bortezomib-intolerant due to baseline neuropathy AND PI-class still
+  indicated") remains a free-text condition in the algo for MDT evaluation.
+
+  Clinical rationale: CXCR4 WHIM mutations attenuate BTKi response in WM.
+  In the iNNOVATORY-WM ibrutinib cohort, CXCR4-mutated patients had
+  major response rate 36% vs 77% in CXCR4-WT (Treon NEJM 2015). In
+  ASPEN zanubrutinib cohort, CXCR4 mutation status maintained as a
+  predictive marker for attenuated response (Castillo Blood 2020 analysis).
+  Carfilzomib-based regimens (carfilzomib + rituximab ± dexamethasone)
+  are not BTKi-class and do not share this resistance mechanism.
+
+  Note: ALGO-WM-2L step 1 also includes `condition: "Bortezomib-intolerant
+  due to baseline neuropathy AND PI-class still indicated"` which is a
+  clinical contraindication gate, NOT covered by this RF. That condition
+  refers to bortezomib (step 1 routes to CaRd/carfilzomib-based, which
+  is distinct from bortezomib). Keep as free-text MDT-evaluated condition.
+
+  BMA-CXCR4-WHIM-WM (ESCAT IB) confirms the evidence base. Sources
+  SRC-NCCN-BCELL-2025 and SRC-ESMO-WM-2024 are the primary guideline
+  authorities. Treon 2015 (NEJM, PMC) and Castillo 2020 (Blood) are
+  the primary evidence — no standalone source stubs for these yet;
+  clinical co-lead to verify.
+
+  CHARTER §6.1: Two-reviewer clinical co-lead signoff required before
+  removing draft: true.

@@ -14,13 +14,29 @@ decision_tree:
 - step: 1
   evaluate:
     any_of:
-    - condition: CXCR4-WHIM mutation positive (NGS or Sanger)
+    - red_flag: RF-WM-CXCR4-WHIM-MUTANT
+    # Legacy finding-based evaluations for backward engine compatibility:
+    - {finding: BIO-CXCR4-WHIM, value: positive}
+    - {finding: cxcr4_mutation_status, value: positive}
+    - {finding: cxcr4_mutation_status, value: WHIM}
+    - {finding: cxcr4_mutation_status, value: mutant}
+    # Clinical fallback — not covered by RF (MDT-evaluated):
     - condition: Bortezomib-intolerant due to baseline neuropathy AND PI-class still indicated
   if_true:
     result: IND-WM-2L-CARFILZOMIB-CXCR4MUT
+    notes: >
+      RF-WM-CXCR4-WHIM-MUTANT fired — CXCR4-WHIM mutation confirmed;
+      BTKi response attenuated (major response rate ~36% vs ~77% WT).
+      Route to carfilzomib-based 2L (IND-WM-2L-CARFILZOMIB-CXCR4MUT).
+      OR bortezomib-intolerant patient using PI-class alternative via
+      carfilzomib (free-text MDT fallback).
   if_false:
     next_step: 2
-  notes: Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring.
+  notes: >
+    W5c RF wiring: RF-WM-CXCR4-WHIM-MUTANT added as primary gate for
+    CXCR4-biomarker branch; legacy finding lookups retained for backward
+    compat. Bortezomib-intolerance condition stays as free-text MDT-
+    evaluated (no RF for neuropathy-grade/PI-eligibility composite).
 - step: 2
   evaluate:
     all_of:
@@ -48,7 +64,7 @@ decision_tree:
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-WM-2024
-last_reviewed: '2026-04-26'
+last_reviewed: '2026-05-08'
 notes: 'OOS / wiring gaps: (1) Pirtobrutinib (BRUIN WM cohort) for post-cBTKi WM — not modeled (no IND-WM yet). (2) Bendamustine-rituximab (BR) re-treatment for chemo-sensitive late relapse — not modeled. (3) Hyperviscosity emergency at relapse routes via RF-WM-HYPERVISCOSITY (plasmapheresis SUP-* parallel trigger), not decision-tree branch. (4) MYD88-WT WM (~5-10%) has poor BTKi response — covered by RF-WM-HIGH-RISK-BIOLOGY (which fires on MYD88 wildtype, CXCR4-mut, TP53-mut, or IPSSWM high-risk) and routes to VRd or BR.
 
   '
