@@ -234,7 +234,7 @@ worktree merge conflict at integration time.
 
 - All six specs drafted at v0.1. Specs naming locked: OpenOnco.
 - KB scale: **78 diseases, 438 biomarker_actionability, 173 biomarkers, 383
-  sources, 251 drugs, 426 indications, 474 redflags, 361 regimens, 140
+  sources, 251 drugs, 426 indications, 476 redflags, 361 regimens, 140
   algorithms, 8 procedures, 5 radiation courses.** (updated 2026-05-09)
 - API clients live under `knowledge_base/clients/`.
 - RedFlag quality phases 1-7 done (2026-04-25/26): clinical sign-off received.

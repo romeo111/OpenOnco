@@ -1,20 +1,74 @@
 id: ALGO-ENDOMETRIAL-ADVANCED-1L
 applicable_to_disease: DIS-ENDOMETRIAL
 applicable_to_line_of_therapy: 1
-purpose: "Select 1L advanced/recurrent endometrial by MMR status."
+purpose: >
+  Select 1L checkpoint inhibitor + chemotherapy combination for advanced or
+  recurrent endometrial carcinoma based on MMR/MSI status. dMMR/MSI-H
+  (RF-ENDOMETRIAL-DMMR) → dostarlimab+carbo/pac (RUBY; Mirza NEJM 2023,
+  dMMR PFS HR 0.28) as the aggressive plan. pMMR/MSS → pembrolizumab+carbo/pac
+  (KEYNOTE-868; Eskander NEJM 2023, overall PFS HR 0.54) as the standard plan.
+  Both carboplatin-paclitaxel backbones; carbo substituted for cisplatin in
+  most endometrial patients.
 output_indications: [IND-ENDOMETRIAL-ADVANCED-1L-DOSTARLIMAB-CHEMO, IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO]
 default_indication: IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO
 alternative_indication: IND-ENDOMETRIAL-ADVANCED-1L-DOSTARLIMAB-CHEMO
 decision_tree:
+  # Step 1 — dMMR/MSI-H gate (RF-ENDOMETRIAL-DMMR). dMMR patients benefit
+  # more from CPI+chemo than pMMR (PFS HR ~0.28-0.30 dMMR vs ~0.54-0.70
+  # pMMR). Both regimens are NCCN Category 1 regardless of MMR status.
   - step: 1
     evaluate:
       any_of:
+        - red_flag: RF-ENDOMETRIAL-DMMR
+        # Legacy finding-based evaluations for backward engine compatibility:
         - {finding: mmr_status, value: deficient}
+        - {finding: mmr_status, value: dMMR}
         - {finding: msi_status, value: MSI-H}
         - {finding: msi_status, value: MSI-high}
-    if_true: {result: IND-ENDOMETRIAL-ADVANCED-1L-DOSTARLIMAB-CHEMO}
-    if_false: {result: IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO}
-    notes: "Gate replaced free-text condition with structured finding lookups for dMMR (mmr_status=deficient) and MSI-H (msi_status=MSI-H/MSI-high) — both label as eligible for dostarlimab arm."
-sources: [SRC-NCCN-UTERINE-2025, SRC-ESMO-ENDOMETRIAL-2022]
-last_reviewed: null
-notes: "Both pembro and dostarlimab approved; chemoimmuno superior to chemo alone regardless of MMR."
+        - {finding: msi_status, value: high}
+        - {finding: mlh1_ihc, value: loss}
+        - {finding: msh2_ihc, value: loss}
+        - {finding: msh6_ihc, value: loss}
+        - {finding: pms2_ihc, value: loss}
+    if_true:
+      result: IND-ENDOMETRIAL-ADVANCED-1L-DOSTARLIMAB-CHEMO
+      notes: >
+        dMMR/MSI-H confirmed (RF-ENDOMETRIAL-DMMR fired) — dostarlimab +
+        carbo/pac preferred (RUBY dMMR cohort 24-mo PFS HR 0.28,
+        95% CI 0.16–0.50; OS HR 0.28 interim). NCCN Cat 1. Pembrolizumab
+        + carbo/pac (KEYNOTE-868) is an equally acceptable alternative.
+    if_false:
+      result: IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO
+      notes: >
+        pMMR/MSS — pembrolizumab + carbo/pac (KEYNOTE-868 overall PFS HR 0.54,
+        95% CI 0.41–0.71). NCCN Cat 1 for all comers; pMMR cohort still
+        benefits. Dostarlimab + carbo/pac (RUBY) also acceptable. In Ukraine,
+        pembrolizumab access via НСЗУ oncology program preferred over
+        dostarlimab (not reimbursed).
+    notes: >
+      W5c RF wiring: added RF-ENDOMETRIAL-DMMR as primary gate; legacy
+      finding lookups retained for backward engine compatibility.
+sources:
+  - SRC-RUBY-MIRZA-2023
+  - SRC-GY018-MAKKER-2022
+  - SRC-NCCN-UTERINE-2025
+  - SRC-ESMO-ENDOMETRIAL-2022
+last_reviewed: "2026-05-09"
+notes: >
+  Both pembrolizumab + carbo/pac (KEYNOTE-868/NRG-GY018) and dostarlimab +
+  carbo/pac (RUBY) are NCCN Category 1 for advanced/recurrent endometrial
+  carcinoma regardless of MMR status. The dMMR subgroup shows approximately
+  double the PFS benefit (HR ~0.28-0.30) vs the pMMR subgroup (HR ~0.54-0.70).
+  dMMR status is defined by loss of MLH1, MSH2, MSH6, or PMS2 on IHC, or
+  MSI-H on PCR/NGS.
+
+  Ukraine context: pembrolizumab partially reimbursed via НСЗУ oncology
+  program for eligible patients; dostarlimab is not currently НСЗУ-reimbursed.
+  For dMMR patients where dostarlimab is unavailable, pembrolizumab + carbo/pac
+  (IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO) is the standard-access alternative.
+
+  POLE/POLD1 ultra-mutated endometrial cancer: separate RF-POLE-POLD1-ENDOMETRIAL-
+  LOW-RISK; these patients may be candidates for de-escalation (omit
+  cytotoxic per ESMO 2022 for early-stage POLE). This algorithm covers
+  advanced/recurrent stage — POLE/POLD1 does not change systemic therapy
+  in advanced disease per current NCCN guidance.
