@@ -10,57 +10,55 @@ purpose: >
   ELIANA). All three pathways bridge to alloHCT for fit responders.
 
 output_indications:
-  - IND-B-ALL-BLINATUMOMAB-MRD-OR-RR
-  - IND-B-ALL-2L-INOTUZUMAB
-  - IND-B-ALL-3L-TISAGENLECLEUCEL
-
+- IND-B-ALL-BLINATUMOMAB-MRD-OR-RR
+- IND-B-ALL-2L-INOTUZUMAB
 default_indication: IND-B-ALL-BLINATUMOMAB-MRD-OR-RR
 alternative_indication: IND-B-ALL-2L-INOTUZUMAB
 
 decision_tree:
   # Step 1 — frailty / organ dysfunction → blinatumomab (lower
   # short-term toxicity; CRS manageable; no VOD risk vs inotuzumab).
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-B-ALL-FRAILTY-AGE
-        - red_flag: RF-B-ALL-ORGAN-DYSFUNCTION
-    if_true:
-      result: IND-B-ALL-BLINATUMOMAB-MRD-OR-RR
-    if_false:
-      next_step: 2
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-B-ALL-FRAILTY-AGE
+    - red_flag: RF-B-ALL-ORGAN-DYSFUNCTION
+  if_true:
+    result: IND-B-ALL-BLINATUMOMAB-MRD-OR-RR
+  if_false:
+    next_step: 2
 
   # Step 2 — high-risk biology / overt high-burden relapse → inotuzumab
   # (CD22 ADC; INO-VATE CR rate ~80% in high-burden R/R; preferred
   # debulking before CAR-T to avoid CRS / ICANS in bulky disease).
-  - step: 2
-    evaluate:
-      any_of:
-        - red_flag: RF-B-ALL-HIGH-RISK-BIOLOGY
-        - red_flag: RF-B-ALL-TRANSFORMATION-PROGRESSION
-    if_true:
-      result: IND-B-ALL-2L-INOTUZUMAB
-    if_false:
-      next_step: 3
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-B-ALL-HIGH-RISK-BIOLOGY
+    - red_flag: RF-B-ALL-TRANSFORMATION-PROGRESSION
+  if_true:
+    result: IND-B-ALL-2L-INOTUZUMAB
+  if_false:
+    next_step: 3
 
   # Step 3 — default 2L MRD+ post-induction or low-burden R/R →
   # blinatumomab (BLAST trial MRD eradication; preferred T-cell
   # engager for low burden where CAR-T not indicated 2L).
-  - step: 3
-    evaluate:
-      all_of:
-        - condition: "Default 2L MRD+ or low-burden R/R B-ALL — blinatumomab per BLAST"
-    if_true:
-      result: IND-B-ALL-BLINATUMOMAB-MRD-OR-RR
-    if_false:
-      result: IND-B-ALL-BLINATUMOMAB-MRD-OR-RR
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 3
+  evaluate:
+    all_of:
+    - condition: "Default 2L MRD+ or low-burden R/R B-ALL — blinatumomab per BLAST"
+  if_true:
+    result: IND-B-ALL-BLINATUMOMAB-MRD-OR-RR
+  if_false:
+    result: IND-B-ALL-BLINATUMOMAB-MRD-OR-RR
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-INOVATE-KANTARJIAN-2016
-  - SRC-BLAST-GOKBUGET-2018
-  - SRC-ELIANA-MAUDE-2018
+- SRC-NCCN-BCELL-2025
+- SRC-INOVATE-KANTARJIAN-2016
+- SRC-BLAST-GOKBUGET-2018
+- SRC-ELIANA-MAUDE-2018
 
 last_reviewed: "2026-04-25"
 notes: >

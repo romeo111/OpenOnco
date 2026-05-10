@@ -11,10 +11,8 @@ purpose: >
   specialty center is mandatory.
 
 output_indications:
-  - IND-GCT-METASTATIC-1L-BEP
-  - IND-GCT-SALVAGE-2L-TIP
-  - IND-GCT-SALVAGE-2L-HDCT-ASCT
-
+- IND-GCT-SALVAGE-2L-TIP
+- IND-GCT-SALVAGE-2L-HDCT-ASCT
 default_indication: IND-GCT-SALVAGE-2L-TIP
 alternative_indication: IND-GCT-SALVAGE-2L-HDCT-ASCT
 
@@ -22,90 +20,90 @@ decision_tree:
   # Step 1 — Prior chemotherapy gate.
   # Surveillance relapse (no prior chemo): 1L BEP, not salvage.
   # True relapse after BEP/EP 1L: salvage pathway.
-  - step: 1
-    evaluate:
-      any_of:
-        - condition: "Prior cisplatin-containing chemotherapy received (BEP or EP 1L)"
-    if_true:
-      next_step: 2
-      notes: "Post-BEP/EP relapse: salvage pathway."
-    if_false:
-      result: IND-GCT-METASTATIC-1L-BEP
-      notes: >
-        Clinical stage I surveillance relapse with no prior chemotherapy:
-        treat as 1L with BEP × 3 (good-risk) or × 4 (intermediate/poor-risk)
-        or EP × 4 if bleomycin-contraindicated. Not salvage — 1L standard.
+- step: 1
+  evaluate:
+    any_of:
+    - condition: "Prior cisplatin-containing chemotherapy received (BEP or EP 1L)"
+  if_true:
+    next_step: 2
+    notes: "Post-BEP/EP relapse: salvage pathway."
+  if_false:
+    result: IND-GCT-METASTATIC-1L-BEP
+    notes: >
+      Clinical stage I surveillance relapse with no prior chemotherapy:
+      treat as 1L with BEP × 3 (good-risk) or × 4 (intermediate/poor-risk)
+      or EP × 4 if bleomycin-contraindicated. Not salvage — 1L standard.
 
   # Step 2 — Cisplatin refractoriness gate.
   # Cisplatin-refractory = progression during or within 4 weeks of last cisplatin dose.
   # Absolute platinum refractoriness: HDCT+ASCT (or clinical trial) preferred.
-  - step: 2
-    evaluate:
-      any_of:
-        - condition: "Cisplatin-refractory: disease progression during BEP/EP OR within 4 weeks of last cisplatin administration"
-    if_true:
-      result: IND-GCT-SALVAGE-2L-HDCT-ASCT
-      notes: >
-        Cisplatin-refractory GCT (relapse within 4 weeks of last cisplatin):
-        conventional TIP or VeIP have poor outcomes (~15-20% CR). HDCT+ASCT
-        (IND-GCT-SALVAGE-2L-HDCT-ASCT) preferred per NCCN.
-        Clinical trial strongly preferred — cisplatin-refractory GCT has poor
-        prognosis with any approach; enroll in novel trials (e.g., immunotherapy,
-        PARP inhibitor combinations) where available.
-        Requires urgent referral to GCT specialty center with ASCT capability.
-    if_false:
-      next_step: 3
+- step: 2
+  evaluate:
+    any_of:
+    - condition: "Cisplatin-refractory: disease progression during BEP/EP OR within 4 weeks of last cisplatin administration"
+  if_true:
+    result: IND-GCT-SALVAGE-2L-HDCT-ASCT
+    notes: >
+      Cisplatin-refractory GCT (relapse within 4 weeks of last cisplatin):
+      conventional TIP or VeIP have poor outcomes (~15-20% CR). HDCT+ASCT
+      (IND-GCT-SALVAGE-2L-HDCT-ASCT) preferred per NCCN.
+      Clinical trial strongly preferred — cisplatin-refractory GCT has poor
+      prognosis with any approach; enroll in novel trials (e.g., immunotherapy,
+      PARP inhibitor combinations) where available.
+      Requires urgent referral to GCT specialty center with ASCT capability.
+  if_false:
+    next_step: 3
 
   # Step 3 — Indiana prognostic score at relapse.
   # Poor Indiana score: AFP ≥1000 ng/mL OR hCG ≥1000 IU/L OR liver/bone/brain
   # metastases at relapse. Poor score → HDCT preferred over TIP.
-  - step: 3
-    evaluate:
-      any_of:
-        - condition: "Poor Indiana prognostic score: AFP ≥1000 ng/mL OR hCG ≥1000 IU/L at relapse"
-        - condition: "Liver, bone, or brain metastases at relapse"
-        - condition: "Incomplete response to 1L (AFP/hCG never normalized after BEP completion)"
-    if_true:
-      next_step: 4
-      notes: "Poor Indiana score or incomplete 1L response: assess ASCT candidacy (step 4)."
-    if_false:
-      result: IND-GCT-SALVAGE-2L-TIP
-      notes: >
-        Good/intermediate Indiana score (AFP <1000, hCG <1000, no liver/bone/brain mets,
-        CR after 1L then relapse): TIP × 4 cycles q21d preferred.
-        Kondagunta 2005: CR 63% (durable NED 52%); favorable group CR 76%.
-        NCCN Category 1. G-CSF + mesna mandatory.
-        MDT at GCT specialty center recommended for all salvage decisions.
+- step: 3
+  evaluate:
+    any_of:
+    - condition: "Poor Indiana prognostic score: AFP ≥1000 ng/mL OR hCG ≥1000 IU/L at relapse"
+    - condition: "Liver, bone, or brain metastases at relapse"
+    - condition: "Incomplete response to 1L (AFP/hCG never normalized after BEP completion)"
+  if_true:
+    next_step: 4
+    notes: "Poor Indiana score or incomplete 1L response: assess ASCT candidacy (step 4)."
+  if_false:
+    result: IND-GCT-SALVAGE-2L-TIP
+    notes: >
+      Good/intermediate Indiana score (AFP <1000, hCG <1000, no liver/bone/brain mets,
+      CR after 1L then relapse): TIP × 4 cycles q21d preferred.
+      Kondagunta 2005: CR 63% (durable NED 52%); favorable group CR 76%.
+      NCCN Category 1. G-CSF + mesna mandatory.
+      MDT at GCT specialty center recommended for all salvage decisions.
 
   # Step 4 — ASCT candidacy gate for poor Indiana / incomplete responders.
-  - step: 4
-    evaluate:
-      all_of:
-        - condition: "ECOG PS 0-1"
-        - condition: "LVEF ≥45%"
-        - condition: "CrCl ≥30 mL/min"
-        - condition: "ASCT-capable center accessible"
-    if_true:
-      result: IND-GCT-SALVAGE-2L-HDCT-ASCT
-      notes: >
-        Poor Indiana score / incomplete 1L response + ASCT-eligible: HDCT+ASCT preferred.
-        Einhorn 2007 (NEJM): 63% NED 2y; 78% favorable (among poor-score patients within
-        the Indiana series). 2 tandem cycles carboplatin 700 mg/m²/d × 3 + etoposide
-        750 mg/m²/d × 3 + ASCT per cycle. Referral to specialized center mandatory.
-        Ukraine: limited ASCT centers — consider international referral (Poland, Germany,
-        Austria) for patients with good PS and motivated to pursue curative-intent therapy.
-    if_false:
-      result: IND-GCT-SALVAGE-2L-TIP
-      notes: >
-        Poor Indiana score but ASCT not feasible (ECOG ≥2, organ dysfunction, no center):
-        TIP × 4 conventional salvage is the best available option.
-        Enroll in clinical trial if available. Palliative intent discussion if TIP fails.
+- step: 4
+  evaluate:
+    all_of:
+    - condition: "ECOG PS 0-1"
+    - condition: "LVEF ≥45%"
+    - condition: "CrCl ≥30 mL/min"
+    - condition: "ASCT-capable center accessible"
+  if_true:
+    result: IND-GCT-SALVAGE-2L-HDCT-ASCT
+    notes: >
+      Poor Indiana score / incomplete 1L response + ASCT-eligible: HDCT+ASCT preferred.
+      Einhorn 2007 (NEJM): 63% NED 2y; 78% favorable (among poor-score patients within
+      the Indiana series). 2 tandem cycles carboplatin 700 mg/m²/d × 3 + etoposide
+      750 mg/m²/d × 3 + ASCT per cycle. Referral to specialized center mandatory.
+      Ukraine: limited ASCT centers — consider international referral (Poland, Germany,
+      Austria) for patients with good PS and motivated to pursue curative-intent therapy.
+  if_false:
+    result: IND-GCT-SALVAGE-2L-TIP
+    notes: >
+      Poor Indiana score but ASCT not feasible (ECOG ≥2, organ dysfunction, no center):
+      TIP × 4 conventional salvage is the best available option.
+      Enroll in clinical trial if available. Palliative intent discussion if TIP fails.
 
 sources:
-  - SRC-KONDAGUNTA-TIP-2005
-  - SRC-EINHORN-HDCT-ASCT-2007
-  - SRC-IGCCC-1997
-  - SRC-NCCN-TESTICULAR-2025
+- SRC-KONDAGUNTA-TIP-2005
+- SRC-EINHORN-HDCT-ASCT-2007
+- SRC-IGCCC-1997
+- SRC-NCCN-TESTICULAR-2025
 
 last_reviewed: "2026-05-04"
 notes: >

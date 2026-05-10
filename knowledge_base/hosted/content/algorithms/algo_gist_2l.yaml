@@ -8,36 +8,34 @@ purpose: >
   avapritinib (which is active at any line in this genotype).
 
 output_indications:
-  - IND-GIST-2L-SUNITINIB
-  - IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
-
+- IND-GIST-2L-SUNITINIB
 default_indication: IND-GIST-2L-SUNITINIB
 alternative_indication: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
 
 decision_tree:
-  - step: 1
-    evaluate:
-      any_of:
-        - condition: "PDGFRA D842V mutation positive"
-    if_true:
-      result: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
-      notes: "Avapritinib active at any line for PDGFRA D842V; sunitinib has no meaningful activity in this genotype"
-    if_false:
-      next_step: 2
-    notes: "Free-text condition without RF; engine routes to default."
-  - step: 2
-    evaluate:
-      any_of:
-        - condition: "Imatinib-resistant GIST (any KIT genotype or WT)"
-        - condition: "Imatinib-intolerant GIST"
-    if_true:
-      result: IND-GIST-2L-SUNITINIB
-    if_false:
-      result: IND-GIST-2L-SUNITINIB
-    notes: "Free-text condition; default to sunitinib for 2L non-D842V GIST."
+- step: 1
+  evaluate:
+    any_of:
+    - condition: "PDGFRA D842V mutation positive"
+  if_true:
+    result: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
+    notes: "Avapritinib active at any line for PDGFRA D842V; sunitinib has no meaningful activity in this genotype"
+  if_false:
+    next_step: 2
+  notes: "Free-text condition without RF; engine routes to default."
+- step: 2
+  evaluate:
+    any_of:
+    - condition: "Imatinib-resistant GIST (any KIT genotype or WT)"
+    - condition: "Imatinib-intolerant GIST"
+  if_true:
+    result: IND-GIST-2L-SUNITINIB
+  if_false:
+    result: IND-GIST-2L-SUNITINIB
+  notes: "Free-text condition; default to sunitinib for 2L non-D842V GIST."
 
 sources:
-  - SRC-NCCN-GIST-2025
+- SRC-NCCN-GIST-2025
 last_reviewed: "2026-05-04"
 notes: >
   Sunitinib is Category 1 for 2L GIST after imatinib failure (non-D842V).

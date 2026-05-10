@@ -11,64 +11,62 @@ purpose: >
   IFN at the regimen layer.
 
 output_indications:
-  - IND-PV-2L-RUXOLITINIB
-  - IND-PV-1L-ROPEGINTERFERON
-
+- IND-PV-2L-RUXOLITINIB
 default_indication: IND-PV-2L-RUXOLITINIB
 alternative_indication: IND-PV-1L-ROPEGINTERFERON
 
 decision_tree:
   # Step 1 — pregnancy / planning → ropeginterferon (only safe
   # cytoreductive option in pregnancy; ruxolitinib contraindicated).
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-PV-ET-PREGNANCY-OR-PLANNING
-    if_true:
-      result: IND-PV-1L-ROPEGINTERFERON
-    if_false:
-      next_step: 2
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-PV-ET-PREGNANCY-OR-PLANNING
+  if_true:
+    result: IND-PV-1L-ROPEGINTERFERON
+  if_false:
+    next_step: 2
 
   # Step 2 — HU resistance / intolerance documented (ELN criteria) →
   # ruxolitinib per RESPONSE.
-  - step: 2
-    evaluate:
-      any_of:
-        - red_flag: RF-PV-HU-RESISTANCE-INTOLERANCE
-    if_true:
-      result: IND-PV-2L-RUXOLITINIB
-    if_false:
-      next_step: 3
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-PV-HU-RESISTANCE-INTOLERANCE
+  if_true:
+    result: IND-PV-2L-RUXOLITINIB
+  if_false:
+    next_step: 3
 
   # Step 3 — frailty / organ dysfunction → ruxolitinib (better
   # tolerated than IFN in elderly; lower depression / autoimmune
   # risk).
-  - step: 3
-    evaluate:
-      any_of:
-        - red_flag: RF-PV-ET-FRAILTY-AGE
-        - red_flag: RF-PV-ET-ORGAN-DYSFUNCTION
-    if_true:
-      result: IND-PV-2L-RUXOLITINIB
-    if_false:
-      next_step: 4
+- step: 3
+  evaluate:
+    any_of:
+    - red_flag: RF-PV-ET-FRAILTY-AGE
+    - red_flag: RF-PV-ET-ORGAN-DYSFUNCTION
+  if_true:
+    result: IND-PV-2L-RUXOLITINIB
+  if_false:
+    next_step: 4
 
   # Step 4 — default 2L PV (post-HU failure non-frail) → ruxolitinib
   # (RESPONSE primary endpoint hematocrit control + spleen response).
-  - step: 4
-    evaluate:
-      all_of:
-        - condition: "Default 2L PV post-HU failure — ruxolitinib per RESPONSE"
-    if_true:
-      result: IND-PV-2L-RUXOLITINIB
-    if_false:
-      result: IND-PV-2L-RUXOLITINIB
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 4
+  evaluate:
+    all_of:
+    - condition: "Default 2L PV post-HU failure — ruxolitinib per RESPONSE"
+  if_true:
+    result: IND-PV-2L-RUXOLITINIB
+  if_false:
+    result: IND-PV-2L-RUXOLITINIB
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-ESMO-MPN-2015
-  - SRC-RESPONSE-VANNUCCHI-2015
+- SRC-NCCN-MPN-2025
+- SRC-ESMO-MPN-2015
+- SRC-RESPONSE-VANNUCCHI-2015
 
 last_reviewed: "2026-04-25"
 notes: >

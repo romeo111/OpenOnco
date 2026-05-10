@@ -13,70 +13,68 @@ purpose: >
   layer / 1L-aggressive arm decision and is not enumerated here.
 
 output_indications:
-  - IND-CML-2L-PONATINIB-T315I
-  - IND-CML-3L-ASCIMINIB
-  - IND-CML-ADVANCED-ALLOHCT
-
+- IND-CML-2L-PONATINIB-T315I
+- IND-CML-ADVANCED-ALLOHCT
 default_indication: IND-CML-3L-ASCIMINIB
 alternative_indication: IND-CML-2L-PONATINIB-T315I
 
 decision_tree:
   # Step 1 — blast crisis / accelerated phase → alloHCT (curative
   # intent; bridging TKI selection at regimen layer).
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-CML-TRANSFORMATION-PROGRESSION
-    if_true:
-      result: IND-CML-ADVANCED-ALLOHCT
-    if_false:
-      next_step: 2
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-CML-TRANSFORMATION-PROGRESSION
+  if_true:
+    result: IND-CML-ADVANCED-ALLOHCT
+  if_false:
+    next_step: 2
 
   # Step 2 — T315I detected (any TKI failure) → ponatinib is the only
   # active TKI; cardiovascular risk mitigation per OPTIC dose-reduction
   # paradigm.
-  - step: 2
-    evaluate:
-      any_of:
-        - red_flag: RF-CML-T315I-MUTATION
-    if_true:
-      result: IND-CML-2L-PONATINIB-T315I
-    if_false:
-      next_step: 3
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-CML-T315I-MUTATION
+  if_true:
+    result: IND-CML-2L-PONATINIB-T315I
+  if_false:
+    next_step: 3
 
   # Step 3 — ≥2 TKI failure with CV-comorbid profile (or established
   # vascular events) → asciminib (STAMP allosteric; non-CV AE profile,
   # ASCEMBL OS/MMR data). RF-CML-COMORBIDITY-COMPLEX captures the
   # CV/QTc/pulmonary comorbidity matrix that constrains 2GTKI choice.
-  - step: 3
-    evaluate:
-      any_of:
-        - red_flag: RF-CML-ORGAN-DYSFUNCTION
-        - red_flag: RF-CML-FRAILTY-AGE
-        - red_flag: RF-CML-COMORBIDITY-COMPLEX
-    if_true:
-      result: IND-CML-3L-ASCIMINIB
-    if_false:
-      next_step: 4
+- step: 3
+  evaluate:
+    any_of:
+    - red_flag: RF-CML-ORGAN-DYSFUNCTION
+    - red_flag: RF-CML-FRAILTY-AGE
+    - red_flag: RF-CML-COMORBIDITY-COMPLEX
+  if_true:
+    result: IND-CML-3L-ASCIMINIB
+  if_false:
+    next_step: 4
 
   # Step 4 — default ≥2 TKI failure non-T315I → asciminib (deeper
   # response, manageable AE; preferred over recycling 2GTKI per
   # NCCN-MPN-2025).
-  - step: 4
-    evaluate:
-      all_of:
-        - condition: "Default 2L+ CML, T315I-negative, non-blast — asciminib preferred over 2GTKI recycle"
-    if_true:
-      result: IND-CML-3L-ASCIMINIB
-    if_false:
-      result: IND-CML-3L-ASCIMINIB
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 4
+  evaluate:
+    all_of:
+    - condition: "Default 2L+ CML, T315I-negative, non-blast — asciminib preferred over 2GTKI recycle"
+  if_true:
+    result: IND-CML-3L-ASCIMINIB
+  if_false:
+    result: IND-CML-3L-ASCIMINIB
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-ELN-CML-2020
-  - SRC-ASCEMBL-REA-2021
-  - SRC-PACE-CORTES-2013
+- SRC-NCCN-MPN-2025
+- SRC-ELN-CML-2020
+- SRC-ASCEMBL-REA-2021
+- SRC-PACE-CORTES-2013
 
 last_reviewed: "2026-04-25"
 notes: >

@@ -8,46 +8,45 @@ purpose: >
   default when carfilzomib-naive and not yet triple-class refractory.
 
 output_indications:
-  - IND-MM-3L-ISA-KD
-  - IND-MM-4L-TECLISTAMAB
+- IND-MM-3L-ISA-KD
 default_indication: IND-MM-3L-ISA-KD
 alternative_indication: IND-MM-4L-TECLISTAMAB
 
 decision_tree:
-  - step: 1
-    evaluate:
-      all_of:
-        - condition: "≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38 monoclonal antibody"
-        - condition: "Refractory (progressed during or within 60 days of last line of each class)"
-    if_true:
-      result: IND-MM-4L-TECLISTAMAB
-    if_false:
-      next_step: 2
-    notes: "MDT-only — triple-class refractory definition. No RF for this composite criterion; evaluated as clinical MDT gate. If true, teclistamab BCMA bispecific (MajesTEC-1) is preferred (NCCN Cat 2A); ISA-Kd not indicated in triple-class refractory."
-  - step: 2
-    evaluate:
-      all_of:
-        - condition: "Carfilzomib-naive (no prior carfilzomib or carfilzomib-based regimen)"
-        - condition: "≥2 prior lines including ≥1 PI (non-carfilzomib) + ≥1 IMiD"
-        - red_flag: RF-FITNESS-ECOG-FIT
-    if_true:
-      result: IND-MM-3L-ISA-KD
-    if_false:
-      next_step: 3
-    notes: "Wired: RF-FITNESS-ECOG-FIT (CSD-7A). Remaining conditions (carfilzomib-naive, prior lines) are MDT-evaluated. IKEMA trial enrolled carfilzomib-naive RRMM ≥2 prior lines; PFS HR 0.531."
-  - step: 3
-    evaluate:
-      any_of:
-        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
-    if_true:
-      result: IND-MM-3L-ISA-KD
-    if_false:
-      result: IND-MM-3L-ISA-KD
-    notes: "Default ISA-Kd for carfilzomib-naive RRMM regardless of ECOG intermediate status; dose modifications available per IKEMA protocol. MDT surfaces carfilzomib cardiac monitoring requirement."
+- step: 1
+  evaluate:
+    all_of:
+    - condition: "≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38 monoclonal antibody"
+    - condition: "Refractory (progressed during or within 60 days of last line of each class)"
+  if_true:
+    result: IND-MM-4L-TECLISTAMAB
+  if_false:
+    next_step: 2
+  notes: "MDT-only — triple-class refractory definition. No RF for this composite criterion; evaluated as clinical MDT gate. If true, teclistamab BCMA bispecific (MajesTEC-1) is preferred (NCCN Cat 2A); ISA-Kd not indicated in triple-class refractory."
+- step: 2
+  evaluate:
+    all_of:
+    - condition: "Carfilzomib-naive (no prior carfilzomib or carfilzomib-based regimen)"
+    - condition: "≥2 prior lines including ≥1 PI (non-carfilzomib) + ≥1 IMiD"
+    - red_flag: RF-FITNESS-ECOG-FIT
+  if_true:
+    result: IND-MM-3L-ISA-KD
+  if_false:
+    next_step: 3
+  notes: "Wired: RF-FITNESS-ECOG-FIT (CSD-7A). Remaining conditions (carfilzomib-naive, prior lines) are MDT-evaluated. IKEMA trial enrolled carfilzomib-naive RRMM ≥2 prior lines; PFS HR 0.531."
+- step: 3
+  evaluate:
+    any_of:
+    - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+  if_true:
+    result: IND-MM-3L-ISA-KD
+  if_false:
+    result: IND-MM-3L-ISA-KD
+  notes: "Default ISA-Kd for carfilzomib-naive RRMM regardless of ECOG intermediate status; dose modifications available per IKEMA protocol. MDT surfaces carfilzomib cardiac monitoring requirement."
 
 sources:
-  - SRC-NCCN-MM-2025
-  - SRC-IKEMA-MOREAU-2021
+- SRC-NCCN-MM-2025
+- SRC-IKEMA-MOREAU-2021
 last_reviewed: "2026-05-09"
 notes: >
   Coverage gaps: (1) Selinexor+dex (STORM, BOSTON) for penta-refractory — not

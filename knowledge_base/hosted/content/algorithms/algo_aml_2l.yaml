@@ -13,63 +13,61 @@ purpose: >
   relapses lose detectable FLT3).
 
 output_indications:
-  - IND-AML-2L-GILTERITINIB-FLT3
-  - IND-AML-1L-VEN-AZA
-  - IND-AML-2L-IDH2-ENASIDENIB
-
+- IND-AML-2L-GILTERITINIB-FLT3
+- IND-AML-2L-IDH2-ENASIDENIB
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-2L-GILTERITINIB-FLT3
 
 decision_tree:
   # Step 1 — emergency at relapse (TLS / leukostasis): pin to lower-
   # toxicity hypomethylating-style backbone; surface emergency workup.
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-AML-EMERGENCY-TLS-LEUKOSTASIS
-    if_true:
-      result: IND-AML-1L-VEN-AZA
-    if_false:
-      next_step: 2
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-AML-EMERGENCY-TLS-LEUKOSTASIS
+  if_true:
+    result: IND-AML-1L-VEN-AZA
+  if_false:
+    next_step: 2
 
   # Step 2 — measurable residual disease (MRD) post-induction or post-
   # consolidation: ELN-2021 ≥0.1% MFC-MRD or molecular MRD ≥10⁻³.
   # MRD-positive after CR1 is an indication for consolidation
   # intensification (alloHCT bridge for fit) or early salvage. Gate on
   # FLT3 status at step 3.
-  - step: 2
-    evaluate:
-      any_of:
-        - red_flag: RF-AML-MEASURABLE-RESIDUAL-DISEASE
-    if_true:
-      next_step: 3
-    if_false:
-      next_step: 4
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-AML-MEASURABLE-RESIDUAL-DISEASE
+  if_true:
+    next_step: 3
+  if_false:
+    next_step: 4
 
   # Step 3 — MRD-positive: FLT3+ → gilteritinib salvage (ADMIRAL; bridge
   # to alloHCT). FLT3-WT MRD+ → ven+aza intensification (default
   # backbone; MDT considers alloHCT bridge for fit). Both branches
   # short-circuit subsequent steps.
-  - step: 3
-    evaluate:
-      any_of:
-        - red_flag: RF-AML-FLT3-ACTIONABLE
-    if_true:
-      result: IND-AML-2L-GILTERITINIB-FLT3
-    if_false:
-      result: IND-AML-1L-VEN-AZA
-    notes: "MRD-positive AML — FLT3+ routes to gilteritinib salvage (ADMIRAL); FLT3-WT MRD+ routes to ven+aza intensification with MDT to consider alloHCT bridge."
+- step: 3
+  evaluate:
+    any_of:
+    - red_flag: RF-AML-FLT3-ACTIONABLE
+  if_true:
+    result: IND-AML-2L-GILTERITINIB-FLT3
+  if_false:
+    result: IND-AML-1L-VEN-AZA
+  notes: "MRD-positive AML — FLT3+ routes to gilteritinib salvage (ADMIRAL); FLT3-WT MRD+ routes to ven+aza intensification with MDT to consider alloHCT bridge."
 
   # Step 4 — FLT3 actionable at relapse → gilteritinib (FDA-approved
   # 2L+; ADMIRAL OS benefit; bridge to alloHCT for fit responders).
-  - step: 4
-    evaluate:
-      any_of:
-        - red_flag: RF-AML-FLT3-ACTIONABLE
-    if_true:
-      result: IND-AML-2L-GILTERITINIB-FLT3
-    if_false:
-      next_step: 5
+- step: 4
+  evaluate:
+    any_of:
+    - red_flag: RF-AML-FLT3-ACTIONABLE
+  if_true:
+    result: IND-AML-2L-GILTERITINIB-FLT3
+  if_false:
+    next_step: 5
 
   # Step 5 — IDH2-actionable at relapse (FLT3-WT) → enasidenib
   # monotherapy per AG221-AML-001 (FDA Aug 2017 R/R IDH2-mut AML).
@@ -77,61 +75,61 @@ decision_tree:
   # IND-AML-2L-IDH2-ENASIDENIB rather than ven+aza backbone. IDH1
   # still falls through to step 6 ven+aza backbone with MDT
   # annotation (no dedicated IDH1 IND in KB).
-  - step: 5
-    evaluate:
-      any_of:
-        - red_flag: RF-AML-IDH2-MUT-ACTIONABLE
-    if_true:
-      result: IND-AML-2L-IDH2-ENASIDENIB
-    if_false:
-      next_step: 6
-    notes: "Wired via RF-AML-IDH2-MUT-ACTIONABLE — IDH2 R140Q/R172K routes to enasidenib monotherapy (AG221-AML-001 phase 1/2; ORR 38%, CR 19%, mOS 9.3 mo). Bridge to alloHCT for fit responders. Ukraine: not registered, EU CHMP negative; international referral / compassionate-use only."
+- step: 5
+  evaluate:
+    any_of:
+    - red_flag: RF-AML-IDH2-MUT-ACTIONABLE
+  if_true:
+    result: IND-AML-2L-IDH2-ENASIDENIB
+  if_false:
+    next_step: 6
+  notes: "Wired via RF-AML-IDH2-MUT-ACTIONABLE — IDH2 R140Q/R172K routes to enasidenib monotherapy (AG221-AML-001 phase 1/2; ORR 38%, CR 19%, mOS 9.3 mo). Bridge to alloHCT for fit responders. Ukraine: not registered, EU CHMP negative; international referral / compassionate-use only."
 
   # Step 6 — IDH1 actionable at relapse → IDHi monotherapy
   # (ivosidenib FDA-approved R/R-AML). No dedicated IDH1 Indication in
   # KB yet (PROD-5 deferred); pin to ven+aza backbone with MDT
   # annotation to switch to ivosidenib monotherapy. IDH2 already
   # captured by step 5.
-  - step: 6
-    evaluate:
-      any_of:
-        - red_flag: RF-AML-IDH1-MUT-ACTIONABLE
-    if_true:
-      result: IND-AML-1L-VEN-AZA
-    if_false:
-      next_step: 7
-    notes: "MDT-only — IDH1 R/R: switch to ivosidenib (AG-120) monotherapy per FDA-approved R/R-AML labelling. Pinned to ven+aza Indication as backbone (no dedicated IDH1 IND in KB). IDH2 captured at step 5."
+- step: 6
+  evaluate:
+    any_of:
+    - red_flag: RF-AML-IDH1-MUT-ACTIONABLE
+  if_true:
+    result: IND-AML-1L-VEN-AZA
+  if_false:
+    next_step: 7
+  notes: "MDT-only — IDH1 R/R: switch to ivosidenib (AG-120) monotherapy per FDA-approved R/R-AML labelling. Pinned to ven+aza Indication as backbone (no dedicated IDH1 IND in KB). IDH2 captured at step 5."
 
   # Step 7 — frailty / organ dysfunction at relapse → ven+aza (lower
   # toxicity than re-induction; also covers FLT3-WT R/R unfit).
-  - step: 7
-    evaluate:
-      any_of:
-        - red_flag: RF-AML-FRAILTY-AGE
-        - red_flag: RF-AML-ORGAN-DYSFUNCTION
-    if_true:
-      result: IND-AML-1L-VEN-AZA
-    if_false:
-      next_step: 8
+- step: 7
+  evaluate:
+    any_of:
+    - red_flag: RF-AML-FRAILTY-AGE
+    - red_flag: RF-AML-ORGAN-DYSFUNCTION
+  if_true:
+    result: IND-AML-1L-VEN-AZA
+  if_false:
+    next_step: 8
 
   # Step 8 — default FLT3 wild-type R/R: ven+aza for unfit / fallback;
   # re-induction (off-algorithm) or clinical trial preferred for fit
   # patients. Algorithm pins to ven+aza so plan generator surfaces the
   # clinical-trial / BSC annotation rather than silently failing.
-  - step: 8
-    evaluate:
-      any_of:
-        - condition: "FLT3 wild-type R/R AML; clinical-trial / re-induction / BSC routing surfaced as annotation"
-    if_true:
-      result: IND-AML-1L-VEN-AZA
-    if_false:
-      result: IND-AML-1L-VEN-AZA
-    notes: "Default fall-through — FLT3-WT R/R routes to ven+aza backbone; clinical-trial / BSC noted in Indication."
+- step: 8
+  evaluate:
+    any_of:
+    - condition: "FLT3 wild-type R/R AML; clinical-trial / re-induction / BSC routing surfaced as annotation"
+  if_true:
+    result: IND-AML-1L-VEN-AZA
+  if_false:
+    result: IND-AML-1L-VEN-AZA
+  notes: "Default fall-through — FLT3-WT R/R routes to ven+aza backbone; clinical-trial / BSC noted in Indication."
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-AML-2022
-  - SRC-ADMIRAL-PERL-2019
+- SRC-NCCN-AML-2025
+- SRC-ELN-AML-2022
+- SRC-ADMIRAL-PERL-2019
 
 last_reviewed: "2026-04-30"
 notes: >

@@ -10,9 +10,7 @@ purpose: >
   for second molecular CR is parallel layer.
 
 output_indications:
-  - IND-APL-SALVAGE-ATRA-ATO
-  - IND-APL-RELAPSED-GEMTUZUMAB
-
+- IND-APL-SALVAGE-ATRA-ATO
 default_indication: IND-APL-SALVAGE-ATRA-ATO
 alternative_indication: IND-APL-RELAPSED-GEMTUZUMAB
 
@@ -20,55 +18,55 @@ decision_tree:
   # Step 1 — DIC at relapse (HOLD-equivalent) → re-induction with
   # ATRA + ATO (rapid coagulopathy reversal); plan generator surfaces
   # emergency workup.
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-APL-EMERGENCY-DIC
-    if_true:
-      result: IND-APL-SALVAGE-ATRA-ATO
-    if_false:
-      next_step: 2
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-APL-EMERGENCY-DIC
+  if_true:
+    result: IND-APL-SALVAGE-ATRA-ATO
+  if_false:
+    next_step: 2
 
   # Step 2 — overt second relapse / progression on maintenance OR
   # ATRA-resistant molecular relapse → gemtuzumab (CD33 ADC; durable
   # CR2 in re-treated APL per Lengfelder series).
-  - step: 2
-    evaluate:
-      any_of:
-        - red_flag: RF-APL-TRANSFORMATION-PROGRESSION
-    if_true:
-      result: IND-APL-RELAPSED-GEMTUZUMAB
-    if_false:
-      next_step: 3
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-APL-TRANSFORMATION-PROGRESSION
+  if_true:
+    result: IND-APL-RELAPSED-GEMTUZUMAB
+  if_false:
+    next_step: 3
 
   # Step 3 — frailty / organ dysfunction → ATRA + ATO re-induction
   # (chemo-free; manageable cardiac / hepatic toxicity with monitoring).
-  - step: 3
-    evaluate:
-      any_of:
-        - red_flag: RF-APL-FRAILTY-AGE
-        - red_flag: RF-APL-ORGAN-DYSFUNCTION
-    if_true:
-      result: IND-APL-SALVAGE-ATRA-ATO
-    if_false:
-      next_step: 4
+- step: 3
+  evaluate:
+    any_of:
+    - red_flag: RF-APL-FRAILTY-AGE
+    - red_flag: RF-APL-ORGAN-DYSFUNCTION
+  if_true:
+    result: IND-APL-SALVAGE-ATRA-ATO
+  if_false:
+    next_step: 4
 
   # Step 4 — default first relapse post-frontline ATRA+ATO → ATRA+ATO
   # re-induction (highly effective; CR2 ~85-90% per Lengfelder).
-  - step: 4
-    evaluate:
-      all_of:
-        - condition: "Default first relapse post-ATRA+ATO frontline — ATRA+ATO re-induction"
-    if_true:
-      result: IND-APL-SALVAGE-ATRA-ATO
-    if_false:
-      result: IND-APL-SALVAGE-ATRA-ATO
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 4
+  evaluate:
+    all_of:
+    - condition: "Default first relapse post-ATRA+ATO frontline — ATRA+ATO re-induction"
+  if_true:
+    result: IND-APL-SALVAGE-ATRA-ATO
+  if_false:
+    result: IND-APL-SALVAGE-ATRA-ATO
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-APL-2019
-  - SRC-APL-RELAPSE-LENGFELDER-2017
+- SRC-NCCN-AML-2025
+- SRC-ELN-APL-2019
+- SRC-APL-RELAPSE-LENGFELDER-2017
 
 last_reviewed: "2026-04-25"
 notes: >
