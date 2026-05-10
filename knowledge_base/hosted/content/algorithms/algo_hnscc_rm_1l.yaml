@@ -42,11 +42,17 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "PD-L1 CPS ≥20 AND no rapid progression / visceral crisis AND ECOG 0-2"
-        - red_flag: RF-HNSCC-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH
     if_false:
       next_step: 2
+    notes: >
+      RF-HNSCC-TRANSFORMATION-PROGRESSION removed (2026-05-08): it is a
+      hold/critical flag (rapid progression / airway compromise) that
+      CONTRA-indicates pembro-mono, not selects it. Patients with that RF
+      firing should fall through to step 2 (pembro-chemo default) or
+      palliative hold per MDT. Biomarker gate (CPS ≥20 numeric finding
+      lookup via RF-HNSCC-CPS-HIGH) deferred to future RF authoring round.
   - step: 2
     evaluate:
       any_of:
@@ -55,20 +61,24 @@ decision_tree:
       result: IND-HNSCC-RM-1L-PEMBRO-CHEMO
     if_false:
       result: IND-HNSCC-RM-1L-PEMBRO-CHEMO
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: >
+      Degenerate step — both branches route to pembro-chemo. CPS <1 is
+      already handled in step 0 (→ EXTREME), so any patient reaching this
+      step has CPS ≥1 and pembro-chemo is the correct default. Remove step
+      when CPS 1-19 vs ≥20 gets a further bifurcating Indication.
 
 sources:
   - SRC-NCCN-HNSCC-2025
   - SRC-EXTREME-VERMORKEN-2008
-last_reviewed: '2026-04-30'
+last_reviewed: '2026-05-08'
 notes: >
-  W5b drift fix (2026-04-30): added step 0 only — CPS<1 → EXTREME via
-  IND-HNSCC-RM-1L-EXTREME. Step 1 + step 2 preserved verbatim per
-  brief's "additive only" gate. The pre-existing notes about the
-  free-text "CPS ≥20" branch and the RF-HNSCC-TRANSFORMATION-PROGRESSION
-  drift documented in `patient_hnscc_cps_high_pembro_mono.json` remain
-  unchanged — that is a separate KB drift to be addressed in a
-  follow-up RF-authoring session, NOT in W5b.
+  W5b drift fix (2026-04-30): added step 0 only — CPS<1 → EXTREME.
+  W5c structural fix (2026-05-08): removed RF-HNSCC-TRANSFORMATION-
+  PROGRESSION from step 1 any_of — it is a hold/critical flag that
+  contra-indicates pembro-mono (rapid progression / airway compromise),
+  not a positive selector for it. CPS-stratum biomarker gate
+  (RF-HNSCC-CPS-HIGH with numeric pdl1_cps ≥20 finding lookup) deferred
+  to future RF authoring round.
   Genotype-driven 1L (HRAS-mutant tipifarnib, NTRK-fusion
   larotrectinib/entrectinib, BRAF V600E dabra+trame) are
   investigational / accelerated and not authored as 1L Indications
