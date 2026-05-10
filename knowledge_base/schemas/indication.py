@@ -35,7 +35,7 @@ class BiomarkerRequirement(Base):
 
 class IndicationApplicability(Base):
     disease_id: str
-    line_of_therapy: int  # 1, 2, 3...
+    line_of_therapy: Optional[int] = None  # 1, 2, 3... — None = line-agnostic (cross-line algo routing)
     stage_requirements: list[str] = Field(default_factory=list)
     biomarker_requirements_required: list[BiomarkerRequirement] = Field(default_factory=list)
     biomarker_requirements_excluded: list[BiomarkerRequirement] = Field(default_factory=list)

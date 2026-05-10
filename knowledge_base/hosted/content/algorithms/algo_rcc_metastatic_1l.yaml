@@ -23,10 +23,18 @@ decision_tree:
   # Non-clear cell (papillary, chromophobe, sarcomatoid-predominant, collecting duct)
   # follow separate NCCN guidance (cabozantinib preferred for papillary; clinical trial).
   - step: 1
+    # Histology gate: fires (if_true) when clear-cell histology is confirmed.
+    # Non-clear-cell subtypes route to cabozantinib indication.
     evaluate:
       any_of:
-        - {finding: histology, value: clear_cell_rcc}
-        - {finding: histology, value: clear_cell}
+        - finding: "histology"
+          value: "clear_cell_rcc"
+        - finding: "histologic_subtype"
+          value: "CLEAR_CELL"
+        - finding: "histologic_subtype"
+          value: "clear_cell"
+        - finding: "rcc_histology"
+          value: "clear_cell"
     if_true:
       next_step: 2
     if_false:
@@ -46,46 +54,53 @@ decision_tree:
       any_of:
         - red_flag: RF-RCC-IMDC-INTERMEDIATE-POOR-RISK
     if_true:
-      next_step: 4
+      next_step: 3b
     if_false:
-      next_step: 3
-    notes: "RF-RCC-IMDC-INTERMEDIATE-POOR-RISK fires on imdc_risk in {intermediate, poor, int} or imdc_risk_factors_count >= 1. Favorable (0 factors) falls to step 3."
+      next_step: 3a
+    notes: "RF-RCC-IMDC-INTERMEDIATE-POOR-RISK fires on imdc_risk in {intermediate, poor, int} or imdc_risk_factors_count >= 1. Favorable (0 factors) falls to step 3a."
 
-  # Step 3 — IMDC favorable. Nivo+ipi is NOT preferred (CheckMate-214:
+  # Step 3a — IMDC favorable. Nivo+ipi is NOT preferred (CheckMate-214:
   # sunitinib numerically better in favorable subgroup). Use ICI+TKI.
-  - step: 3
+  - step: 3a
     evaluate:
       all_of:
         - condition: "IMDC favorable risk (0 adverse factors)"
         - condition: "ECOG PS 0-1 AND fit for ICI+TKI combination"
     if_true:
-      next_step: 5
+      next_step: 4
     if_false:
       result: IND-RCC-METASTATIC-1L-PEMBRO-AXI
       notes: "IMDC favorable + ECOG 2 or limited fitness: pembro+axi preferred (KEYNOTE-426 includes ECOG 0-2; less TKI toxicity than lenv+pembro)."
 
-  # Step 4 — IMDC intermediate/poor. All 4 preferred regimens eligible.
-  # Route based on ipilimumab eligibility. Proxy: active_autoimmune_disease absent/false.
-  # Structured gate replaces prior free-text condition (unevaluable by engine).
-  - step: 4
+  # Step 3b — IMDC intermediate/poor. All 4 preferred regimens eligible.
+  # Route based on ipilimumab eligibility: fire if_true when no ipi contraindication.
+  - step: 3b
+    # none_of: fires True when none of the ipi contraindications are active.
     evaluate:
-      all_of:
-        - {finding: active_autoimmune_disease, value: false}
+      none_of:
+        - finding: "active_autoimmune_disease"
+          value: true
+        - finding: "prior_organ_transplant"
+          value: true
+        - finding: "ipi_contraindicated"
+          value: true
+        - finding: "ecog"
+          threshold: 2
+          comparator: ">="
     if_true:
       result: IND-RCC-METASTATIC-1L-NIVO-IPI
       notes: >
-        IMDC intermediate/poor + ipi-eligible (no active autoimmune disease):
-        nivo+ipi preferred (CheckMate-214; mOS 56 mo in int/poor; 48% ORR;
-        durable complete remissions). ICI+TKI alternatives (pembro+axi,
-        lenv+pembro, nivo+cabo) equally valid if patient/MDT prefers TKI
-        or prior-transplant / autoimmune history.
+        IMDC intermediate/poor + ipi-eligible: nivo+ipi preferred (CheckMate-214;
+        mOS 56 mo in int/poor; 48% ORR; durable responses including complete remissions).
+        ICI+TKI alternatives (pembro+axi, lenv+pembro, nivo+cabo) are equally valid
+        if patient/MDT prefers TKI-containing regimen or ipi not suitable.
     if_false:
-      next_step: 5
+      next_step: 4
 
-  # Step 5 — ICI+TKI selection for fit patients (all IMDC groups reaching this step).
+  # Step 4 — ICI+TKI selection for fit patients (all IMDC groups reaching this step).
   # Three equally valid NCCN category-1 regimens; differentiate by toxicity profile
   # and tumor burden / response priority.
-  - step: 5
+  - step: 4
     evaluate:
       all_of:
         - condition: "ECOG PS 0-1"
@@ -98,10 +113,10 @@ decision_tree:
         Requires active BP management (hypertension G3-4 ~36%). Alternative:
         nivo+cabo if BP uncontrolled or bone metastases prominent.
     if_false:
-      next_step: 6
+      next_step: 5
 
-  # Step 6 — Bone metastases or lenv+pembro hypertension concern → nivo+cabo.
-  - step: 6
+  # Step 5 — Bone metastases or lenv+pembro hypertension concern → nivo+cabo.
+  - step: 5
     evaluate:
       any_of:
         - condition: "Significant bone metastases (MET/AXL pathway biological rationale for cabozantinib)"
