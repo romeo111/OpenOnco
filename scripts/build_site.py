@@ -574,6 +574,14 @@ def _case_quality_meta(c: CaseEntry, *, has_case_page: bool) -> dict:
             "quality_label_en": "Diagnostic brief",
             "quality_class": "quality-diagnostic",
         }
+    if cid.startswith("coverage-") or filename.startswith("patient_coverage_"):
+        return {
+            "quality_rank": 30,
+            "quality_tier": "coverage",
+            "quality_label": "Перевірений coverage-план",
+            "quality_label_en": "Engine-verified coverage plan",
+            "quality_class": "quality-curated",
+        }
     if cid.startswith("auto-") or cid.startswith("variant-") or filename.startswith(("auto_", "variant_")):
         return {
             "quality_rank": 40,

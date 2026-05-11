@@ -1,0 +1,61 @@
+id: REG-ALLOHCT-JMML
+name: "Allogeneic hematopoietic cell transplant pathway for JMML"
+name_ua: "Allogeneic hematopoietic cell transplant pathway for JMML"
+alternate_names:
+  - "AlloHCT JMML"
+  - "Allogeneic SCT for juvenile myelomonocytic leukemia"
+
+components: []
+
+phases:
+  - name: bridge_to_hct
+    purpose_ua: "Azacitidine or cytoreduction bridge while donor search and transplant workup proceed"
+    purpose_en: "Azacitidine or cytoreduction bridge while donor search and transplant workup proceed"
+    duration: "Institution-specific; avoid delaying transplant once donor and fitness are ready"
+    timing_relative_to: "main_infusion"
+    optional: true
+    components: []
+    sources:
+      - SRC-COG
+  - name: conditioning_allohct
+    purpose_ua: "Conditioning regimen before allogeneic hematopoietic cell transplant; pediatric transplant-center specific"
+    purpose_en: "Conditioning regimen before allogeneic hematopoietic cell transplant; pediatric transplant-center specific"
+    duration: "Single conditioning course before HCT"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []
+    sources:
+      - SRC-COG
+  - name: allohct
+    purpose_ua: "Allogeneic hematopoietic cell transplant, the curative-intent therapy for most high-risk somatic JMML"
+    purpose_en: "Allogeneic hematopoietic cell transplant, the curative-intent therapy for most high-risk somatic JMML"
+    duration: "Single transplant procedure with post-HCT relapse surveillance"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []
+    sources:
+      - SRC-COG
+
+cycle_length_days:
+total_cycles: "Single transplant pathway; pre-HCT bridge and conditioning are center-specific"
+toxicity_profile: severe
+
+premedication:
+  - "Confirm somatic versus germline RAS/MAPK driver context before committing to transplant"
+  - "Initiate donor search and pediatric transplant referral at diagnosis"
+  - "Assess infection status, organ function, CMV/EBV/HBV/HCV/HIV serologies, and family HLA typing"
+
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+sources:
+  - SRC-COG
+
+last_reviewed: "2026-05-11"
+review_status: stub
+drafted_by: codex
+notes: >
+  Minimal pathway entity to make JMML treatment routing executable. JMML is
+  pediatric and transplant-centered; the exact conditioning regimen and any
+  azacitidine/cytoreductive bridge are institution-specific and require
+  pediatric transplant team review.

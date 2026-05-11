@@ -1,0 +1,28 @@
+id: ALGO-JMML-1L
+applicable_to_disease: DIS-JMML
+applicable_to_line_of_therapy: 1
+purpose: >
+  Route confirmed pediatric JMML to curative-intent allogeneic HCT pathway
+  after germline/somatic RAS-MAPK context and transplant fitness review.
+
+output_indications:
+  - IND-JMML-1L-ALLOHCT
+
+default_indication: IND-JMML-1L-ALLOHCT
+alternative_indication:
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of: []
+    if_true:
+      result: IND-JMML-1L-ALLOHCT
+    if_false:
+      result: IND-JMML-1L-ALLOHCT
+    notes: "Default to pediatric transplant pathway for confirmed treatment-profile JMML; germline self-limited contexts require expert override."
+
+sources:
+  - SRC-COG
+last_reviewed: "2026-05-11"
+notes: >
+  Minimal routing algorithm to replace the previous no-plan gap for DIS-JMML.

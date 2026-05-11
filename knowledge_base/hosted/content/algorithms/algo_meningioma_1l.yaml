@@ -1,0 +1,29 @@
+id: ALGO-MENINGIOMA-1L
+applicable_to_disease: DIS-MENINGIOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  Route treatment-requiring meningioma to maximal safe resection with
+  pathology- and residual-disease-guided adjuvant radiation review.
+
+output_indications:
+  - IND-MENINGIOMA-1L-RESECTION-RT
+
+default_indication: IND-MENINGIOMA-1L-RESECTION-RT
+alternative_indication:
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of: []
+    if_true:
+      result: IND-MENINGIOMA-1L-RESECTION-RT
+    if_false:
+      result: IND-MENINGIOMA-1L-RESECTION-RT
+    notes: "Default treatment-profile route is local therapy; incidental asymptomatic lesions should be handled outside treatment mode as observation/diagnostic follow-up."
+
+sources:
+  - SRC-EANO-MENINGIOMA-2024
+  - SRC-NCCN-CNS-2025
+last_reviewed: "2026-05-11"
+notes: >
+  Minimal routing algorithm to replace the previous no-plan gap for DIS-MENINGIOMA.
