@@ -76,6 +76,13 @@ _POST_CSD2_DRUGS: frozenset[str] = frozenset({
     "DRUG-TALQUETAMAB",
     "DRUG-TISOTUMAB-VEDOTIN",
     "DRUG-ZENOCUTUZUMAB",
+    # W5c/W5d wave (2026-05): hedgehog inhibitors, CSF1R inhibitor, and mTOR
+    # inhibitor updated during solid-tumour expansion; carry 2026-05-04/09 dates.
+    "DRUG-LOMUSTINE",
+    "DRUG-PEXIDARTINIB",
+    "DRUG-SIROLIMUS",
+    "DRUG-SONIDEGIB",
+    "DRUG-VISMODEGIB",
 })
 
 # Pathway keywords that satisfy the "unregistered drug must mention an
