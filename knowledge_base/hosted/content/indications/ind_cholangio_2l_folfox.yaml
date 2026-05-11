@@ -1,0 +1,137 @@
+id: IND-CHOLANGIO-2L-FOLFOX
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Locally advanced unresectable or metastatic biliary tract cancer (intrahepatic CCA, extrahepatic CCA, or gallbladder cancer)"
+    - "Disease progression on ≥1 prior gemcitabine-based systemic therapy (gem+cis ± durvalumab)"
+    - "No actionable driver mutation (IDH1, FGFR2, HER2, BRAF) — use targeted 2L indication if driver present"
+    - "Adequate biliary drainage (bilirubin ≤2× ULN; biliary obstruction addressed before chemotherapy)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-IDH-MUTATION
+      excluded_if: "IDH1 R132 mutation present → use IND-CHOLANGIO-2L-IDH1-IVOSIDENIB"
+    - biomarker_id: BIO-FGFR2-FUSION
+      excluded_if: "FGFR2 fusion/rearrangement present → use IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-FOLFOX
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~5–10% (ABC-06; mFOLFOX6 vs active symptom control)"
+  disease_control_rate: "~44% (CR+PR+SD at 12 weeks; ABC-06)"
+  progression_free_survival: "Median 4.0 months (ABC-06 mFOLFOX6 arm)"
+  overall_survival_median: "6.2 months (mFOLFOX6) vs 5.3 months (ASC); HR 0.69 (95% CI 0.50–0.97), p=0.031 (ABC-06, Lamarca JCO 2021)"
+  notes: >
+    Modest OS benefit over active symptom control; consistent with the
+    generally refractory biology of biliary tract cancer. Benefit concentrated
+    in ECOG 0-1 patients with adequate organ function. No OS data in post-
+    gem+cis+durvalumab setting (ABC-06 enrolled pre-durvalumab era patients).
+
+hard_contraindications:
+  - CI-SEVERE-HEPATIC-IMPAIRMENT   # oxaliplatin and 5-FU require adequate hepatic function
+  - CI-PERIPHERAL-NEUROPATHY-GRADE2  # oxaliplatin cumulative neurotoxicity
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-POOR           # ECOG ≥3: BSC preferred
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT                       # bilirubin threshold critical for irinotecan/5-FU safety
+  - TEST-LDH
+  - TEST-CA19-9                    # tumor marker for response tracking
+  - TEST-CT-CAP                    # disease staging before 2L
+  - TEST-NGS-SOLID-TUMOR-PANEL     # confirm no actionable driver before committing to non-targeted 2L
+desired_tests:
+  - TEST-ECHO                      # cardiac baseline if prior cardiotoxic agents
+  - TEST-PFT                       # if neuropathy from prior oxaliplatin present
+
+rationale: >
+  mFOLFOX6 (oxaliplatin 85 mg/m² + leucovorin 400 mg/m² + 5-FU 400 mg/m²
+  bolus + 5-FU 2400 mg/m² 46h infusion, q2w) is the standard non-driver-
+  selected 2L chemotherapy for biliary tract cancer after gem+cis-based 1L
+  failure, based on ABC-06 (Lamarca Lancet Oncol 2019; updated JCO 2021):
+  mOS 6.2 vs 5.3 months (HR 0.69, p=0.031) — statistically significant,
+  modest absolute benefit. NCCN Category 2A; ESMO BTC 2023 endorses.
+  This indication applies only when no actionable driver biomarker is
+  present. Driver-mutation hierarchy (ALGO-CHOLANGIO-2L steps 1-3):
+  IDH1 → ivosidenib (ClarIDHy, NCCN Cat 1) supersedes; HER2 → zanidatamab;
+  FGFR2 → pemigatinib/futibatinib; then FOLFOX as non-driver default (step 4).
+  Note: ABC-06 enrolled pre-durvalumab era patients. Whether FOLFOX 2L
+  efficacy differs after gem+cis+durvalumab 1L (TOPAZ-1 regimen) is unknown;
+  use with appropriate patient expectations. FOLFIRI (irinotecan-based)
+  is an alternative when oxaliplatin is contraindicated (peripheral
+  neuropathy, DYPD-deficiency concerns); not separately modeled in KB.
+
+rationale_ua: >
+  mFOLFOX6 є стандартним немутаційно-селективним режимом 2L для раку
+  жовчних шляхів після прогресії на gem+cis (±дурвалумаб), на основі
+  ABC-06 (Lamarca JCO 2021): мЗВ 6.2 проти 5.3 місяця (HR 0.69, p=0.031).
+  Застосовується тільки за відсутності дієвої мутації-драйвера (IDH1, FGFR2,
+  HER2). Підтверджується NCCN Category 2A та ESMO BTC 2023.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+    relevant_quote_paraphrase: "FOLFOX (mFOLFOX6) Category 2A for 2L biliary tract cancer without actionable driver; preferred non-targeted option post-gem+cis"
+  - source_id: SRC-ESMO-BTC-2023
+    position: supports
+    relevant_quote_paraphrase: "mFOLFOX6 recommended for 2L BTC after gemcitabine-based 1L failure (ABC-06 evidence, HR 0.69); driver-targeted options preferred when available"
+
+do_not_do:
+  - "Не призначати mFOLFOX6 без виключення дієвих мутацій-драйверів (IDH1, FGFR2, HER2, BRAF) — цільова терапія має перевагу в доказовій базі та ефективності."
+  - "Не починати без нормалізації рівня білірубіну ≤2× ВМН — білірубін >2× ВМН збільшує токсичність оксаліплатину та 5-ФУ."
+  - "Не призначати при ECOG ≥3 — очікувана токсичність перевищує потенційну перевагу; перейти до активної симптоматичної допомоги."
+  - "Не ігнорувати попередню периферичну нейропатію від оксаліплатину (1L gem+oxali або інший оксаліплатин-вмісний режим) — кумулятивна нейротоксичність може обмежити дозу або вимагати заміни на FOLFIRI."
+
+do_not_do_en:
+  - "Do not prescribe mFOLFOX6 without ruling out actionable driver mutations (IDH1, FGFR2, HER2, BRAF) — targeted therapy has superior evidence and efficacy."
+  - "Do not start with bilirubin >2× ULN — hyperbilirubinemia increases oxaliplatin and 5-FU toxicity; address biliary obstruction first."
+  - "Do not prescribe at ECOG ≥3 — expected toxicity outweighs potential benefit; transition to active symptom care."
+  - "Do not ignore prior peripheral neuropathy from oxaliplatin — cumulative neurotoxicity may limit dose or require switch to FOLFIRI."
+
+known_controversies:
+  - topic: "FOLFOX vs FOLFIRI in 2L BTC"
+    positions:
+      - position: "mFOLFOX6 preferred based on ABC-06 RCT evidence; FOLFIRI lacks phase-3 BTC data"
+        sources:
+          - SRC-NCCN-HEPATOBILIARY
+      - position: "FOLFIRI acceptable alternative when oxaliplatin contraindicated (prior neuropathy, renal impairment)"
+        sources:
+          - SRC-ESMO-BTC-2023
+    our_default: "mFOLFOX6 as first choice; FOLFIRI when oxaliplatin contraindicated — not separately modeled in KB"
+    rationale: "ABC-06 is the only positive 2L RCT in BTC; FOLFIRI data extrapolated from observational series"
+  - topic: "Applicability of ABC-06 data after gem+cis+durvalumab 1L"
+    positions:
+      - position: "ABC-06 enrolled pre-durvalumab era; FOLFOX 2L efficacy after IO-containing 1L is extrapolated"
+        sources:
+          - SRC-ESMO-BTC-2023
+      - position: "No alternative 2L chemotherapy has better evidence; FOLFOX remains the standard default"
+        sources:
+          - SRC-NCCN-HEPATOBILIARY
+    our_default: "Use FOLFOX with explicit patient counselling on modest benefit; enroll in trial if available"
+    rationale: "No post-TOPAZ-1 2L RCT data; FOLFOX extrapolation is pragmatic but uncertain"
+
+time_critical: false
+last_reviewed: "2026-05-11"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires two Clinical Co-Lead approvals before merge (CHARTER §6.1).
+  Fills the explicit gap flagged in ALGO-CHOLANGIO-2L step 4 notes
+  ("placeholder until 2L FOLFOX (ABC-06) indication authored").
+  Once this stub is approved, update ALGO-CHOLANGIO-2L:
+    default_indication: IND-CHOLANGIO-2L-FOLFOX  (replace IND-CHOLANGIO-ADVANCED-GEM-CIS)
+    output_indications: replace IND-CHOLANGIO-ADVANCED-GEM-CIS with IND-CHOLANGIO-2L-FOLFOX
+    step 4 result: IND-CHOLANGIO-2L-FOLFOX
