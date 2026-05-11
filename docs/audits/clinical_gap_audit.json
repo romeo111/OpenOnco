@@ -1,16 +1,16 @@
 {
-  "generated_at_utc": "2026-05-10T09:08:49Z",
-  "kb_root": "/home/runner/work/OpenOnco/OpenOnco/knowledge_base/hosted/content",
+  "generated_at_utc": "2026-05-11T06:31:57Z",
+  "kb_root": "C:\\tmp\\mobile-css-fix\\knowledge_base\\hosted\\content",
   "entity_counts": {
     "diseases": 78,
     "drugs": 256,
-    "regimens": 368,
-    "indications": 432,
+    "regimens": 369,
+    "indications": 434,
     "biomarkers": 181,
-    "biomarker_actionability": 440,
+    "biomarker_actionability": 448,
     "contraindications": 12,
-    "redflags": 514,
-    "algorithms": 148,
+    "redflags": 523,
+    "algorithms": 150,
     "tests": 115,
     "supportive_care": 13,
     "monitoring": 8,
@@ -27,13 +27,13 @@
     "schema_errors": 0,
     "ref_errors": 0,
     "contract_errors": 0,
-    "contract_warnings": 180
+    "contract_warnings": 192
   },
   "gaps": [
     {
       "id": "clinical_signoff",
       "title": "Clinical sign-off",
-      "current": "15/1902 signoff-eligible entities reviewed (0.8%)",
+      "current": "15/1924 signoff-eligible entities reviewed (0.8%)",
       "target": ">=85% reviewed before public guideline-grade claims",
       "status": "blocked_on_reviewers",
       "blocker": "Cannot be fixed by code; requires qualified Clinical Co-Lead review.",
@@ -41,29 +41,29 @@
       "details": {
         "by_type": {
           "indications": {
-            "total": 432,
+            "total": 434,
             "reviewed": 15,
-            "gap": 417
+            "gap": 419
           },
           "algorithms": {
-            "total": 148,
+            "total": 150,
             "reviewed": 0,
-            "gap": 148
+            "gap": 150
           },
           "regimens": {
-            "total": 368,
+            "total": 369,
             "reviewed": 0,
-            "gap": 368
+            "gap": 369
           },
           "redflags": {
-            "total": 514,
+            "total": 523,
             "reviewed": 0,
-            "gap": 514
+            "gap": 523
           },
           "biomarker_actionability": {
-            "total": 440,
+            "total": 448,
             "reviewed": 0,
-            "gap": 440
+            "gap": 448
           }
         }
       }
@@ -212,7 +212,7 @@
     {
       "id": "surgery_radiation_structure",
       "title": "Surgery/radiation detail",
-      "current": "structured surgery entities: no; structured radiation entities: no; 419 indications mention surgery/radiation in text",
+      "current": "structured surgery entities: no; structured radiation entities: no; 421 indications mention surgery/radiation in text",
       "target": "Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields.",
       "status": "schema_gap",
       "blocker": "Current KB carries surgery/radiation mostly as prose inside indications.",
@@ -384,24 +384,24 @@
           "IND-CHL-2L-PEMBROLIZUMAB",
           "IND-CHL-CHILD-PUGH-C-MOD"
         ],
-        "mention_count": 419
+        "mention_count": 421
       }
     },
     {
       "id": "supportive_care_depth",
       "title": "Supportive-care depth",
-      "current": "134/368 regimens have mandatory supportive care (36.4%); 42 have monitoring; 326 have dose adjustments",
+      "current": "135/369 regimens have mandatory supportive care (36.6%); 43 have monitoring; 327 have dose adjustments",
       "target": "Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage.",
       "status": "coverage_gap",
       "blocker": "Supportive-care records exist, but regimen attachment is incomplete.",
       "next_action": "Audit high-toxicity regimens first, then fill missing regimen attachments.",
       "details": {
-        "regimens_total": 368,
-        "with_mandatory_supportive_care": 134,
-        "with_premedication": 263,
-        "with_monitoring": 42,
-        "with_dose_adjustments": 326,
-        "with_between_visit_watchpoints": 262,
+        "regimens_total": 369,
+        "with_mandatory_supportive_care": 135,
+        "with_premedication": 264,
+        "with_monitoring": 43,
+        "with_dose_adjustments": 327,
+        "with_between_visit_watchpoints": 263,
         "missing_mandatory_supportive_care": [
           "REG-2GEN-TKI-CML",
           "REG-5FU-LV-BEV-CKD-MODIFIED",
@@ -529,15 +529,15 @@
     {
       "id": "drug_indication_tracking",
       "title": "Drug indication and off-label tracking",
-      "current": "804 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status",
+      "current": "812 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status",
       "target": "Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance.",
       "status": "schema_gap",
       "blocker": "No first-class drug_indications entity directory/schema is present.",
       "next_action": "Introduce a drug_indications entity, then backfill from existing indications/regimens.",
       "details": {
         "drug_indications_schema_present": false,
-        "inferred_drug_disease_indication_pairs": 804,
-        "pairs_with_indication_evidence_context": 804,
+        "inferred_drug_disease_indication_pairs": 812,
+        "pairs_with_indication_evidence_context": 812,
         "explicit_label_status_pairs": 0,
         "sample_pairs": [
           {
