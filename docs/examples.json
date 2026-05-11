@@ -3438,6 +3438,7 @@
         "hcv_status": "negative",
         "hiv_status": "negative"
       },
+      "disease_state": "metastatic",
       "disease_id": "DIS-CRC"
     },
     "quality_rank": 20,
@@ -3504,6 +3505,7 @@
         "hcv_status": "negative",
         "hiv_status": "negative"
       },
+      "disease_state": "metastatic",
       "disease_id": "DIS-CRC"
     },
     "quality_rank": 20,
@@ -3570,6 +3572,7 @@
         "hcv_status": "negative",
         "hiv_status": "negative"
       },
+      "disease_state": "metastatic",
       "disease_id": "DIS-CRC"
     },
     "quality_rank": 20,
@@ -3860,7 +3863,7 @@
     "file": "patient_dlbcl_primary_refractory_loncast_post_pola.json",
     "json": {
       "patient_id": "DLBCL-LONCAST-001",
-      "comment": "Synthetic primary-refractory DLBCL post 1L R-CHOP (PD at 4 mo, treatment stopped) → 2L Pola-R-CHP (transient PR then PD at 3 mo). Age 71, ECOG 2, frail, multiple grade-2 comorbidities; not transplant-eligible AND not CAR-T-eligible (no UA international referral pathway). Entering 3L — textbook indication is loncastuximab tesirine (LOTIS-2 Caimi 2021 Lancet Oncol; ORR 48%, CR 24%, mPFS 4.9 mo, mOS 9.5 mo) — off-the-shelf outpatient CD19-targeted ADC ideally suited for non-CAR-T-eligible frail patient. Engine routing (2026-05-10 fix): line_of_therapy=3 → ALGO-DLBCL-3L step 1 → RF-DLBCL-CART-INELIGIBLE-POST-2L fires (cart_ineligibility_reason set + prior_lines_count=2 ≥2) → IND-DLBCL-3L-LONCASTUXIMAB (standard track, default). Alternative aggressive track = IND-DLBCL-3L-AXICEL-CART (CAR-T, not accessible for this patient). Note: previously line_of_therapy was set to 2 as a workaround pending ALGO-DLBCL-3L authoring; that caused IND-DLBCL-3L-LONCASTUXIMAB to be filtered by the line-mismatch guard and the engine fell back to IND-DLBCL-2L-POLA-R-BENDAMUSTINE — clinically inappropriate (patient already failed Pola-based 2L Pola-R-CHP; re-treating same MMAE class is futile + grade-1 neuropathy present).",
+      "comment": "Synthetic primary-refractory DLBCL post 1L R-CHOP (PD at 4 mo, treatment stopped) → 2L Pola-R-CHP (early-switch attempt to anti-CD79b combination, transient PR then PD at 3 mo). Age 71, ECOG 2, frail, multiple grade-2 comorbidities; not transplant-eligible AND not CAR-T-eligible (no UA international referral pathway). Clinically the textbook indication is loncastuximab tesirine 3L+ (LOTIS-2 Caimi 2021 Lancet Oncol; ORR 48%, CR 24%, mPFS 4.9 mo, mOS 9.5 mo) — off-the-shelf outpatient ADC ideally suited for non-CAR-T-eligible frail patient. Updated 2026-05-09: line_of_therapy=3 (post-2L) + new ALGO-DLBCL-3L routes RF-DLBCL-CART-INELIGIBLE-POST-2L → IND-DLBCL-3L-LONCASTUXIMAB (LOTIS-2, ORR 48%). Age 71, ECOG 2, CAR-T-ineligible (LVEF 52 but frailty+access barrier → RF-DLBCL-CART-INELIGIBLE-POST-2L composite fires).",
       "disease": {
         "id": "DIS-DLBCL-NOS",
         "icd_o_3_morphology": "9680/3"
@@ -5250,7 +5253,7 @@
     "file": "patient_mcl_pirtobrutinib_3l_post_btki.json",
     "json": {
       "patient_id": "MCL-3L-PIRTO-001",
-      "comment": "Synthetic r/r MCL 3L post-cBTKi: 1L R-CHOP (6 cycles, PR, 18 mo), 2L acalabrutinib (14 mo, PD with BTK-C481S mutation on repeat NGS). Age 74, ECOG 2, LVEF 38% → fails RF-CAR-T-ELIGIBLE composite (LVEF<40 fails). Engine routes via ALGO-MCL-3L (line_of_therapy=3): step 1 false (RF-FITNESS-ECOG-FIT passes but RF-CAR-T-ELIGIBLE fails due to LVEF 38%) → result: IND-MCL-3L-PIRTOBRUTINIB (default). Pirtobrutinib (BRUIN MCL-321, ORR 50% post-cBTKi) is the standard-track default for CAR-T-ineligible 3L+ MCL; brexu-cel CAR-T is the alternative track (requires ECOG ≤1, LVEF ≥40%). ≥2 prior lines including a cBTKi criterion met (1L chemo + 2L acalabrutinib). Pirtobrutinib FDA-approved 2023 (Cat 2A NCCN). Major UA access barrier: not registered in Ukraine.",
+      "comment": "Synthetic r/r MCL post-cBTKi: 1L R-bendamustine + acalabrutinib (NCCN unfit-track), progression at 14 mo with BTK-C481S mutation documented on repeat NGS. Age 74, ECOG 2, LVEF 38% → fails RF-CAR-T-ELIGIBLE composite (LVEF<40 fails). Updated 2026-05-09: line_of_therapy=3, prior_lines_count=2 (added 2L salvage Bendamustine+R). ALGO-MCL-3L routes via RF-PRIOR-BTKI-PROGRESSION + RF-CAR-T-ELIGIBLE_false → IND-MCL-3L-PIRTOBRUTINIB. LVEF 38% fails CAR-T LVEF gate (requires ≥50%). BRUIN MCL-321 ORR 50% post-cBTKi.",
       "disease": {
         "id": "DIS-MCL",
         "icd_o_3_morphology": "9673/3"
@@ -5274,8 +5277,8 @@
         "del_17p": false,
         "prior_lines_count": 2,
         "prior_regimens": [
-          "R-CHOP (1L, 6 cycles, PR, 18 mo, PD)",
-          "Acalabrutinib (2L, 14 mo, PD with BTK-C481S mutation)"
+          "Bendamustine + rituximab + acalabrutinib (1L, 14 mo, PD)",
+          "Bendamustine + rituximab (2L salvage attempt, 2 cycles, PD at 3 mo)"
         ],
         "prior_btki_received": true,
         "prior_btki_progression": true,
@@ -5295,22 +5298,15 @@
       "clinical_record": {
         "diagnosis": {
           "primary_diagnosis": {
-            "disease_entity": "Mantle Cell Lymphoma — 3L r/r post-cBTKi, BTK-C481S+",
+            "disease_entity": "Mantle Cell Lymphoma — relapsed post-cBTKi, BTK-C481S+",
             "icd_o_3": "9673/3"
           },
           "treatment_history": {
             "first_line": {
-              "regimen": "R-CHOP (6 cycles)",
-              "best_response": "PR",
-              "duration_months": 18,
-              "progression": true
-            },
-            "second_line": {
-              "regimen": "Acalabrutinib monotherapy",
+              "regimen": "Bendamustine + rituximab + acalabrutinib (R-BAC-style unfit track)",
               "best_response": "PR",
               "duration_months": 14,
-              "progression": true,
-              "btki_resistance_mechanism": "BTK-C481S mutation"
+              "progression": true
             }
           },
           "molecular": {

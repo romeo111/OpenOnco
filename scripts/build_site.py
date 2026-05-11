@@ -5606,6 +5606,7 @@ def _render_capabilities_uk(stats) -> str:
     n_workups = by_type.get("workups", 0)
     n_sources = by_type.get("sources", 0)
     n_drugs = by_type.get("drugs", 0)
+    n_algos = by_type.get("algorithms", 0)
     n_skills = stats.skills_planned_roles
     cov = _coverage_breakdown()
     n_heme = cov["heme_diseases"]
@@ -5773,6 +5774,80 @@ def _render_capabilities_uk(stats) -> str:
               нові біомаркери чи findings.
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Для кого це</h2>
+      <p class="info-text">
+        Чотири аудиторії дивляться на той самий engine. Дані спільні,
+        фрейм — різний.
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card num-card--accent">
+          <div class="num-big">MD</div>
+          <div class="num-lbl">Для онколога — менше ручної перевірки, більше клінічного фокусу</div>
+          <p class="num-text">
+            NCCN, ESMO, MoH, дозування, протипоказання, доступність
+            препаратів — зараз це 2–4 години ручних перевірок на кейс.
+            OpenOnco формує чернетку guideline-grade
+            <strong>стандартного</strong> плану та
+            <strong>агресивного</strong> альтернативного (trials /
+            higher-efficacy options) — з посиланням під кожним рядком.
+            Без чорної скриньки: LLM не призначає схеми, рішення
+            приймає декларативний rule engine, а «чому» простежується —
+            біомаркер → препарат → evidence → моніторинг → ризики.
+            Ниркова / печінкова функція, вік, вага, CTCAE, supportive
+            care — first-class сигнали.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">NGS</div>
+          <div class="num-lbl">Для NGS-лабораторій — перетворіть variant report на клінічну дію</div>
+          <p class="num-text">
+            OpenOnco може лягати поверх variant report як шар
+            інтерпретації. Точкові мутації, ф'южни, rearrangements і
+            variant actionability — first-class. <strong>CIViC
+            (CC0)</strong> замість закритих non-commercial баз; ESCAT
+            tier — зрозумілий сигнал для лікаря. Інтеграція через
+            структуровані формати: FHIR R4 / mCODE, JSON, disease-coverage
+            API. Для клініциста це вже не «мутація знайдена», а «що це
+            може означати для лікування, моніторингу або clinical
+            trials». Молекулярного патолога не замінюємо і діагнозу не
+            ставимо — робимо результат лабораторії дієвим у наступному
+            кроці.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">Pt</div>
+          <div class="num-lbl">Для пацієнта — план людською мовою</div>
+          <p class="num-text">
+            Пацієнт не читає NCCN, але має розуміти, що відбувається.
+            OpenOnco може згенерувати спрощений супровідний звіт: без
+            латини, скорочень і зайвого страху. Чому обрана саме ця
+            схема, які аналізи потрібні, на що звертати увагу між
+            візитами. Чітка межа: інформаційний інструмент для розмови
+            з онкологом, не його заміна. Для демо реальні персональні
+            дані не потрібні.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">$</div>
+          <div class="num-lbl">Для інвесторів і партнерів — відкрита онкологічна інфраструктура з реальним технологічним бар'єром</div>
+          <p class="num-text">
+            Не «ще один AI-chatbot», а клінічний інфраструктурний стек:
+            rule engine, knowledge base, citations, FHIR/mCODE, CIViC,
+            PubMed, ClinicalTrials.gov, DailyMed, openFDA. Понад
+            <strong>100M AI-токенів</strong> уже вкладено в розробку,
+            верифікацію та рефакторинг алгоритмів; робота триває
+            щотижня. Поточний масштаб: {n_diseases} захворювань,
+            {n_redflags} red flags, {n_indications} indications,
+            {n_regimens} regimens, {n_algos} treatment algorithms.
+            Моделі партнерства: гранти, clinical validation, NGS
+            integrations, hospital pilots, donor funding, infrastructure
+            sponsorship.
+          </p>
         </div>
       </div>
     </div>
@@ -6754,6 +6829,7 @@ def _render_capabilities_en(stats) -> str:
     n_workups = by_type.get("workups", 0)
     n_sources = by_type.get("sources", 0)
     n_drugs = by_type.get("drugs", 0)
+    n_algos = by_type.get("algorithms", 0)
     n_skills = stats.skills_planned_roles
     cov = _coverage_breakdown()
     n_heme = cov["heme_diseases"]
@@ -6923,6 +6999,77 @@ def _render_capabilities_en(stats) -> str:
               soon as new biomarkers or findings appear.
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Who it's for</h2>
+      <p class="info-text">
+        Four audiences map onto the same engine. The data is shared;
+        the framing differs.
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card num-card--accent">
+          <div class="num-big">MD</div>
+          <div class="num-lbl">For the oncologist — less manual cross-checking, more clinical focus</div>
+          <p class="num-text">
+            NCCN, ESMO, MoH, dosing, contraindications, drug access —
+            currently 2–4 hours of manual lookups per case. OpenOnco
+            drafts a guideline-grade <strong>standard</strong> plan and
+            an <strong>aggressive</strong> alternative (trials /
+            higher-efficacy options) with a citation under every line.
+            No black box: LLMs don't choose regimens, a declarative rule
+            engine does, and the «why» is traceable —
+            biomarker → drug → evidence → monitoring → risk. Renal /
+            hepatic function, age, weight, CTCAE, supportive care are
+            first-class signals.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">NGS</div>
+          <div class="num-lbl">For NGS labs — turn a variant report into a clinical action</div>
+          <p class="num-text">
+            OpenOnco can sit on top of your variant report as an
+            interpretation layer. Point mutations, fusions, rearrangements
+            and variant actionability are first-class. <strong>CIViC
+            (CC0)</strong> replaces closed evidence bases; ESCAT tier is
+            the clinician-facing signal. Integration via structured
+            formats — FHIR R4 / mCODE, JSON, disease-coverage API. The
+            handoff to the clinician changes from «a mutation was found»
+            to «what it can mean for treatment, monitoring, or trial
+            matching». We don't replace the molecular pathologist or
+            assign a diagnosis — we make their output actionable downstream.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">Pt</div>
+          <div class="num-lbl">For patients — the plan in plain language</div>
+          <p class="num-text">
+            Patients don't read NCCN, but they need to know what is
+            happening. OpenOnco can render a simplified companion report:
+            no Latin, no acronyms, no fear-by-jargon. Why this regimen
+            was chosen, which tests are needed, what to watch between
+            visits. Hard line: an information aid for the conversation
+            with the oncologist, not a substitute. The demo doesn't
+            require real personal data.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">$</div>
+          <div class="num-lbl">For investors and partners — open oncology infrastructure with a real technical moat</div>
+          <p class="num-text">
+            Not «another AI chatbot» — a clinical infrastructure stack:
+            rule engine, knowledge base, citations, FHIR/mCODE, CIViC,
+            PubMed, ClinicalTrials.gov, DailyMed, openFDA. Over
+            <strong>100M AI tokens</strong> already invested in authoring,
+            verification, and refactor; the work continues weekly. Current
+            scale: {n_diseases} diseases, {n_redflags} red flags,
+            {n_indications} indications, {n_regimens} regimens,
+            {n_algos} treatment algorithms. Partnership models: grants,
+            clinical validation, NGS integrations, hospital pilots, donor
+            funding, infrastructure sponsorship.
+          </p>
         </div>
       </div>
     </div>
