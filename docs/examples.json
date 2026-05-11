@@ -7310,10 +7310,11 @@
     "file": "patient_crc_stage_iii_adjuvant_folfox.json",
     "json": {
       "patient_id": "CRC-STAGE3-ADJ-001",
-      "comment": "Synthetic stage III colon adenocarcinoma, post-curative resection (R0), 62F, ECOG 0, intended adjuvant FOLFOX 6 mo (MOSAIC). KB DRIFT: there is currently NO adjuvant CRC algorithm in knowledge_base/hosted/content/algorithms/ — only ALGO-CRC-METASTATIC-1L and ALGO-CRC-METASTATIC-2L exist. The engine matches algorithms strictly by (disease_id, line_of_therapy), so a CRC line=1 patient — adjuvant or metastatic — routes through ALGO-CRC-METASTATIC-1L and surfaces metastatic 1L tracks. The intended IND-CRC-ADJUVANT-STAGE3-FOLFOX never appears (it is in NO algorithm's output_indications). Engine actually routes step 4 default → IND-CRC-METASTATIC-1L-FOLFOX-BEV (clinically wrong for adjuvant; bevacizumab is not standard adjuvant per NSABP-C-08). This case is preserved as an audit artifact demonstrating the wired-vs-intended gap; the comment is the load-bearing piece, not the rendered plan. Fix requires authoring algo_crc_adjuvant.yaml referencing IND-CRC-ADJUVANT-STAGE3-FOLFOX (Phase-2 KB work, out of scope here).",
+      "comment": "Synthetic stage III colon adenocarcinoma, post-curative resection (R0), 62F, ECOG 0, intended adjuvant FOLFOX 6 mo (MOSAIC). ALGO-CRC-ADJUVANT now exists and has applicable_to_disease_state: adjuvant — this case routes correctly to IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX (first output_indication; engine falls back to list-order default because all step conditions are free-text and evaluate to False). Stage III T3 N1b — IDEA low-risk, target indication is IND-CRC-ADJUVANT-STAGE3-CAPOX; full RF-gated routing pending structured condition wiring.",
       "disease": {
         "id": "DIS-CRC"
       },
+      "disease_state": "adjuvant",
       "line_of_therapy": 1,
       "biomarkers": {
         "BIO-MSI-STATUS": "stable",
@@ -7443,11 +7444,11 @@
     "file": "patient_crc_metastatic_3l_regorafenib.json",
     "json": {
       "patient_id": "CRC-MET-3L-REGO-001",
-      "comment": "Synthetic chemo-refractory metastatic CRC, 67M, ECOG 1, left-sided sigmoid primary, RAS-mutant (KRAS G12V), BRAF-WT, MSS, post 1L FOLFOX+bev → 2L FOLFIRI+bev → PD; intent is 3L+ regorafenib (CORRECT, mOS 6.4 vs 5.0 mo HR 0.77, ReDOS dose-escalation strategy). KB DRIFT: there is currently NO ALGO-CRC-METASTATIC-3L; the engine routes (DIS-CRC, line=3) to no algorithm and emits no plan. To preserve a renderable artifact this case is encoded as line_of_therapy=2 with prior_lines reflecting both 1L and 2L exposure, so it falls through ALGO-CRC-METASTATIC-2L: step 1 (no MSI-H) → step 2 (no BRAF) → step 3 (no KRAS-G12C) → step 4 (no HER2 amp) → step 5 (RAS-mut, no rechallenge) → step 6 (RF-CRC-TRANSFORMATION-PROGRESSION does NOT fire — no cea_doubling / peritoneal / oxaliplatin-relapse trigger) → step 7 if_false default = IND-CRC-METASTATIC-3L-TAS102-BEV. The engine surfaces TAS-102+bev (SUNLIGHT) as the ENGINE-DEFAULT track; IND-CRC-METASTATIC-3L-REGORAFENIB appears as one of the alternative tracks via algo.output_indications. Drift: the brief asked for regorafenib as the headline plan, but the wired KB prefers SUNLIGHT TAS-102+bev (better tolerability + slight OS edge) and demotes regorafenib to alternative-track positioning per the indication's known_controversies + Ukraine-context access analysis. Fix would require either an ALGO-CRC-METASTATIC-3L with regorafenib as a frailty/preference branch, or a dedicated RF-CRC-TAS102-INELIGIBLE gate — both are Phase-2 KB work.",
+      "comment": "Synthetic chemo-refractory metastatic CRC, 67M, ECOG 1, left-sided sigmoid primary, RAS-mutant (KRAS G12V), BRAF-WT, MSS, post 1L FOLFOX+bev → 2L FOLFIRI+bev → PD. Engine routes ALGO-CRC-METASTATIC-3L (draft, W5c routing fix 2026-05-09) step 1 (RF-CRC-FRAILTY-AGE does NOT fire — ECOG 1, age 67) → if_false default = IND-CRC-METASTATIC-3L-TAS102-BEV (SUNLIGHT, TAS-102+bev, mOS 10.8 vs 7.5 mo). Regorafenib (CORRECT/ReDOS) surfaces as alternative via indication known_controversies.",
       "disease": {
         "id": "DIS-CRC"
       },
-      "line_of_therapy": 2,
+      "line_of_therapy": 3,
       "biomarkers": {
         "BIO-MSI-STATUS": "stable",
         "BIO-BRAF-V600E": "negative",
@@ -8288,12 +8289,12 @@
     "file": "patient_dlbcl_primary_refractory_loncast_post_pola.json",
     "json": {
       "patient_id": "DLBCL-LONCAST-001",
-      "comment": "Synthetic primary-refractory DLBCL post 1L R-CHOP (PD at 4 mo, treatment stopped) → 2L Pola-R-CHP (early-switch attempt to anti-CD79b combination, transient PR then PD at 3 mo). Age 71, ECOG 2, frail, multiple grade-2 comorbidities; not transplant-eligible AND not CAR-T-eligible (no UA international referral pathway). Clinically the textbook indication is loncastuximab tesirine 3L+ (LOTIS-2 Caimi 2021 Lancet Oncol; ORR 48%, CR 24%, mPFS 4.9 mo, mOS 9.5 mo) — off-the-shelf outpatient ADC ideally suited for non-CAR-T-eligible frail patient. KB-DRIFT NOTE: engine routes ALGO-DLBCL-2L (LOT=2 set per algorithm match constraint; clinically post-2L) → standard-track DEFAULT = IND-DLBCL-2L-POLA-R-BENDAMUSTINE (step 3 fallback), aggressive-track ALTERNATIVE = IND-DLBCL-3L-AXICEL-CART. The intended IND-DLBCL-3L-LONCASTUXIMAB is NOT surfaced because (a) it is not in ALGO-DLBCL-2L.output_indications list, (b) its YAML has empty recommended_regimen (no REG-LONCASTUXIMAB-TESIRINE entity yet — flagged STUB), and (c) no ALGO-DLBCL-3L exists. Surfacing real KB drift: loncastuximab pathway needs (i) REG-LONCASTUXIMAB-TESIRINE authoring, (ii) inclusion in ALGO-DLBCL-2L step branches gated on CAR-T-ineligible composite, (iii) and/or new ALGO-DLBCL-3L for frail post-2L cohort. Default Pola-BR is clinically inappropriate for this patient (already failed Pola-based 2L Pola-R-CHP — re-treating with same MMAE class is futile + neuropathy risk Grade 1 already present).",
+      "comment": "Synthetic primary-refractory DLBCL post 1L R-CHOP (PD at 4 mo, treatment stopped) → 2L Pola-R-CHP (transient PR then PD at 3 mo). Age 71, ECOG 2, frail, multiple grade-2 comorbidities; not transplant-eligible AND not CAR-T-eligible (no UA international referral pathway). Entering 3L — textbook indication is loncastuximab tesirine (LOTIS-2 Caimi 2021 Lancet Oncol; ORR 48%, CR 24%, mPFS 4.9 mo, mOS 9.5 mo) — off-the-shelf outpatient CD19-targeted ADC ideally suited for non-CAR-T-eligible frail patient. Engine routing (2026-05-10 fix): line_of_therapy=3 → ALGO-DLBCL-3L step 1 → RF-DLBCL-CART-INELIGIBLE-POST-2L fires (cart_ineligibility_reason set + prior_lines_count=2 ≥2) → IND-DLBCL-3L-LONCASTUXIMAB (standard track, default). Alternative aggressive track = IND-DLBCL-3L-AXICEL-CART (CAR-T, not accessible for this patient). Note: previously line_of_therapy was set to 2 as a workaround pending ALGO-DLBCL-3L authoring; that caused IND-DLBCL-3L-LONCASTUXIMAB to be filtered by the line-mismatch guard and the engine fell back to IND-DLBCL-2L-POLA-R-BENDAMUSTINE — clinically inappropriate (patient already failed Pola-based 2L Pola-R-CHP; re-treating same MMAE class is futile + grade-1 neuropathy present).",
       "disease": {
         "id": "DIS-DLBCL-NOS",
         "icd_o_3_morphology": "9680/3"
       },
-      "line_of_therapy": 2,
+      "line_of_therapy": 3,
       "biomarkers": {
         "BIO-CD20-IHC": "positive"
       },
@@ -9451,10 +9452,11 @@
     "file": "patient_esophageal_adeno_neoadj_cross_then_nivo.json",
     "json": {
       "patient_id": "ESOPH-CROSS-CM577-001",
-      "comment": "Synthetic resectable distal esophageal adenocarcinoma, cT3N1M0, Barrett-driven, ECOG 1, no severe dysphagia. Engine routes ALGO-ESOPH-RESECTABLE-1L step 1 (resectable + ECOG-fit) → IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT (carboplatin+paclitaxel weekly + RT 41.4 Gy, 5-yr OS ~47%, NCCN cat 1). KB drift: ALGO-ESOPH-RESECTABLE-1L only emits CROSS-NEOADJUVANT; IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS (CheckMate-577 adjuvant nivolumab × 1y for ypT+/ypN+ residual, DFS 22 vs 11 mo) is not wired into algorithm output_indications, so engine surfaces only the neoadjuvant phase. Findings include not_pcr / residual disease flags so a future revise-step (line 2) could reach the adjuvant IND once ALGO is extended (PROPOSAL §17 phasing).",
+      "comment": "Synthetic resectable distal esophageal adenocarcinoma, cT3N1M0, Barrett-driven, ECOG 1, post-CROSS non-pCR (ypT+/ypN+). disease_state=resectable_perioperative routes to ALGO-ESOPH-RESECTABLE-1L; step 0 fires RF-ESOPHAGEAL-POST-CROSS-NON-PCR (post_cross_residual_disease_ypT_or_ypN_positive=true) → IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS (CheckMate-577 adjuvant nivolumab × 1y, DFS 22 vs 11 mo, HR 0.69).",
       "disease": {
         "id": "DIS-ESOPHAGEAL"
       },
+      "disease_state": "resectable_perioperative",
       "line_of_therapy": 1,
       "biomarkers": {
         "BIO-HER2-SOLID": "negative",

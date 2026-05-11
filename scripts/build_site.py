@@ -427,7 +427,7 @@ const PRECACHE = [
 // Routes that use stale-while-revalidate (instant from cache, refresh
 // in background). HTML pages must be on this list — never cache-first,
 // or the user gets stuck on an old build.
-const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html', '/style.css'];
+const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html', '/news.html', '/ukr/news.html', '/style.css'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -1062,9 +1062,11 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 _NAV_LABELS = {
     "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "План лікування",
-           "diseases": "Хвороби", "ask": "Туморборд", "kb": "Онко-вікі"},
+           "diseases": "Хвороби", "ask": "Туморборд", "kb": "Онко-вікі",
+           "news": "Новини"},
     "en": {"home": "Home", "about": "About", "try_cta": "Plan Builder",
-           "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki"},
+           "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki",
+           "news": "News"},
 }
 
 
@@ -1088,6 +1090,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"/cases/{case_id}.html"
         if page_kind == "capabilities": return "/capabilities.html"
         if page_kind == "about":        return "/about.html"
+        if page_kind == "news":         return "/news.html"
         if page_kind == "diseases":     return "/diseases.html"
         if page_kind == "contribute":   return "/"
         if page_kind == "specs":        return "/specs.html"
@@ -1100,6 +1103,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"{uk_prefix}/cases/{case_id}.html"
         if page_kind == "capabilities": return f"{uk_prefix}/capabilities.html"
         if page_kind == "about":        return f"{uk_prefix}/about.html"
+        if page_kind == "news":         return f"{uk_prefix}/news.html"
         if page_kind == "diseases":     return f"{uk_prefix}/diseases.html"
         if page_kind == "contribute":   return f"{uk_prefix}/"
         if page_kind == "specs":        return f"{uk_prefix}/specs.html"
@@ -1127,6 +1131,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     try_path = "/ukr/try.html" if target_lang == "uk" else "/try.html"
     ask_path = "/ukr/ask.html" if target_lang == "uk" else "/ask.html"
     about_path = "/ukr/about.html" if target_lang == "uk" else "/about.html"
+    news_path = "/ukr/news.html" if target_lang == "uk" else "/news.html"
 
     # Capabilities now folds in the former Limitations section. GitHub,
     # Examples and Specs are grouped under About to keep the main nav focused.
@@ -1162,6 +1167,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
     {extra_links}
+    <a href="{news_path}"{cls("news")}>{labels['news']}</a>
     <a href="{about_path}"{cls("about")}>{labels['about']}</a>
   </nav>
   <div class="top-right">
@@ -8769,6 +8775,372 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
 """
 
 
+_NEWS_REPO_URL = f"https://github.com/{GH_REPO}"
+
+
+def _news_entries(target_lang: str) -> list[dict]:
+    """Curated highlights from the 2026-04-30 → 2026-05-10 merge window.
+
+    The raw window held ~130 PRs, of which a large share are internal
+    sidecars (Q-axis upserts, validator baseline bumps, session-summary
+    docs). This list keeps only items that change clinical coverage,
+    rule-engine behaviour, or product UX — translated out of internal
+    wave codenames into clinical terms."""
+    is_en = target_lang == "en"
+    if is_en:
+        return [
+            {
+                "title": "Hematology coverage wave (HEME-1)",
+                "summary": (
+                    "New regimens and routing for chronic lymphocytic leukemia, "
+                    "diffuse large B-cell lymphoma, multiple myeloma and "
+                    "follicular lymphoma, with primary-trial sources backfilled."
+                ),
+                "items": [
+                    "CLL 1L: acalabrutinib + venetoclax + obinutuzumab triple branch (AMPLIFY).",
+                    "DLBCL 1L: pola-R-CHP routing (POLARIX) with primary source backfill.",
+                    "DLBCL 2L: lisocabtagene maraleucel routing (TRANSFORM, Lancet 2022).",
+                    "DLBCL 3L: new ALGO-DLBCL-3L authored; loncastuximab patient fixture corrected.",
+                    "MM 1L: D-VRd induction + ASCT + dara-len maintenance §17 phases (PERSEUS).",
+                    "MM 3L: isatuximab + Kd (IKEMA); new ALGO-MM-3L.",
+                    "CLL 2L: VenR backfilled with MURANO primary source.",
+                    "FL 2L: GADOLIN and AUGMENT sources, regimens, indications + algo wiring.",
+                ],
+            },
+            {
+                "title": "Pulmonary coverage wave (PUL)",
+                "summary": (
+                    "Non-small-cell lung cancer, small-cell lung cancer and "
+                    "pleural mesothelioma all received new 1L, perioperative, "
+                    "adjuvant and 2L options."
+                ),
+                "items": [
+                    "NSCLC EGFR 1L: osimertinib + chemo (FLAURA-2).",
+                    "NSCLC EGFR 1L: amivantamab + lazertinib (MARIPOSA).",
+                    "NSCLC perioperative: pembrolizumab for resectable disease (KEYNOTE-671) — first pulmonary §17 consumer.",
+                    "NSCLC adjuvant: atezolizumab (IMpower010).",
+                    "NSCLC 1L combo: nivolumab + ipilimumab + 2-cycle chemo (CheckMate-9LA).",
+                    "SCLC limited stage: durvalumab consolidation (ADRIATIC).",
+                    "SCLC 2L: tarlatamab DLL3 BiTE (DeLLphi-301).",
+                    "Pleural mesothelioma 2L: nivolumab (CONFIRM).",
+                ],
+            },
+            {
+                "title": "Breast coverage wave (BREAST-1)",
+                "summary": (
+                    "Triple-negative neoadjuvant and early HR+/HER2− adjuvant "
+                    "CDK4/6 inhibitor pathways were authored end-to-end and "
+                    "wired into the breast 1L algorithm."
+                ),
+                "items": [
+                    "TNBC neoadjuvant: KEYNOTE-522 source + indication backfill.",
+                    "Early HR+/HER2− adjuvant: abemaciclib (monarchE) — source, regimen, indication, 1L routing.",
+                    "Early HR+/HER2− adjuvant: ribociclib (NATALEE) — source, regimen, indication, 1L wiring.",
+                    "ALGO-BREAST-1L now carries TNBC, early-stage and metastatic-stage red-flag wiring.",
+                ],
+            },
+            {
+                "title": "Rare-tumor red flags and algorithm wiring (W5c)",
+                "summary": (
+                    "A focused pass on uncommon biomarker-defined indications "
+                    "added red flags and routed them into the relevant disease "
+                    "algorithms."
+                ),
+                "items": [
+                    "GIST PDGFRA D842V → ALGO-GIST-1L.",
+                    "Medullary thyroid RET-mutant → ALGO-MTC-1L.",
+                    "Waldenström macroglobulinemia CXCR4-WHIM → ALGO-WM-2L.",
+                    "Advanced systemic mastocytosis KIT D816V → ALGO-ADVSM-1L.",
+                    "Urothelial: enfortumab vedotin + pembrolizumab eligibility gate.",
+                    "Endometrial dMMR gate.",
+                    "Essential thrombocythemia hydroxyurea-resistance; Burkitt ifosfamide.",
+                    "T-cell lymphomas: ATLL Shimoyama, NLPBL RT-CI, AITL romidepsin.",
+                ],
+            },
+            {
+                "title": "GI coverage finalisation (GI-2 / GI-3)",
+                "summary": (
+                    "Gastric and esophageal primary-trial sources were "
+                    "backfilled, and pancreatic locally-advanced chemoradiation "
+                    "closed out the GI-3 wave."
+                ),
+                "items": [
+                    "Gastric 1L PD-L1 CPS reconciliation; canonical CheckMate-649 dose.",
+                    "Esophageal 1L primary-trial source backfill.",
+                    "PDAC LAPC chemoradiation (definitive intent, 2-phase §17).",
+                    "Concurrent capecitabine CRT regimen.",
+                    "GI-3 algorithm extensions for Phase A + Phase C indications.",
+                ],
+            },
+            {
+                "title": "CIViC actionability (phase 3)",
+                "summary": (
+                    "Five biomarker-actionability entities were backfilled with "
+                    "CIViC evidence under the new "
+                    "<code>evidence_sources</code> block, continuing the "
+                    "OncoKB → CIViC pivot."
+                ),
+                "items": [
+                    "FLT3 TKD, FOXL2, KRAS G12V evidence wired with CIViC primary citations.",
+                ],
+            },
+            {
+                "title": "Engine, render and product UX",
+                "summary": (
+                    "Behaviour changes that shape every plan: a hard ECOG-PS "
+                    "gate, English questionnaires, vocabulary fixes, and a "
+                    "tighter Plan Builder flow."
+                ),
+                "items": [
+                    "ECOG PS ≥ 4 hard gate — no active treatment tracks proposed.",
+                    "Track-filter gene-level bypass fix; lymphoma source consolidation; OA mirror URLs.",
+                    "Patient vocabulary allowlist extended (HFS, IDEA, hand-foot syndrome).",
+                    "EN translation of every Ukrainian questionnaire label.",
+                    "Plan Builder: inlined questionnaire readiness, prioritised plan controls, prevented page-boot stalls, fixed status-hiding bug.",
+                    "Empty-plan UX, loading overlay, stats fix; 1214 cases rebuilt.",
+                    "DATA_STANDARDS aligned with МОЗ наказ №473/2026 (TNM type, grade, verification).",
+                    "Hotfix: /en/* 404 → redirect to root.",
+                ],
+            },
+            {
+                "title": "Cross-LOT routing fixes",
+                "summary": (
+                    "A pass over 27 algorithms removed cross-LOT "
+                    "<code>output_indications</code> references, including a "
+                    "fix to IND-CRC-2L-EGFRI; HNSCC step-1 misplaced red flag "
+                    "removed; MOSCATO-style degenerate steps clarified."
+                ),
+                "items": [
+                    "Cross-LOT output_indications cleanup across 27 algorithms.",
+                    "HNSCC 1L red-flag wiring corrected; degenerate steps clarified.",
+                    "Bundle: cache exclusion + 3.5 MB ceiling; cervical / NSCLC disease_state tags.",
+                ],
+            },
+        ]
+    # Ukrainian
+    return [
+        {
+            "title": "Хвиля гематології (HEME-1)",
+            "summary": (
+                "Нові режими й маршрутизація для ХЛЛ, ДВКЛ, множинної мієломи "
+                "та фолікулярної лімфоми; підкладені первинні джерела."
+            ),
+            "items": [
+                "ХЛЛ 1L: акалабрутиніб + венетоклакс + обінутузумаб (AMPLIFY).",
+                "ДВКЛ 1L: pola-R-CHP (POLARIX) з первинним джерелом.",
+                "ДВКЛ 2L: лізокабтаген маралейцел (TRANSFORM, Lancet 2022).",
+                "ДВКЛ 3L: новий ALGO-DLBCL-3L; виправлено фікстуру з лонкастуксимабом.",
+                "ММ 1L: D-VRd + АТКЗГ + dara-len підтримка, §17 фази (PERSEUS).",
+                "ММ 3L: ізатуксимаб + Kd (IKEMA); новий ALGO-MM-3L.",
+                "ХЛЛ 2L: VenR з первинним джерелом MURANO.",
+                "ФЛ 2L: GADOLIN та AUGMENT — джерела, режими, індикації + algo wiring.",
+            ],
+        },
+        {
+            "title": "Хвиля пульмонології (PUL)",
+            "summary": (
+                "НДКРЛ, ДКРЛ і плевральна мезотеліома отримали нові 1L, "
+                "періопераційні, ад’ювантні й 2L опції."
+            ),
+            "items": [
+                "НДКРЛ EGFR 1L: озимертиніб + хіміо (FLAURA-2).",
+                "НДКРЛ EGFR 1L: амівантамаб + лазертиніб (MARIPOSA).",
+                "НДКРЛ періопераційно: пембролізумаб (KEYNOTE-671) — перший пульмональний §17 споживач.",
+                "НДКРЛ ад’ювантно: атезолізумаб (IMpower010).",
+                "НДКРЛ 1L комбо: ніволумаб + іпілімумаб + 2 цикли хіміо (CheckMate-9LA).",
+                "ДКРЛ обмежена стадія: консолідація дурвалумабом (ADRIATIC).",
+                "ДКРЛ 2L: тарлатамаб (DeLLphi-301), DLL3 BiTE.",
+                "Плевральна мезотеліома 2L: ніволумаб (CONFIRM).",
+            ],
+        },
+        {
+            "title": "Хвиля грудної залози (BREAST-1)",
+            "summary": (
+                "Тричі-негативна неоад’ювантна терапія та ад’ювантний CDK4/6i "
+                "для раннього HR+/HER2− розписані повністю й вмонтовані в 1L алгоритм."
+            ),
+            "items": [
+                "ТНРГЗ неоад’ювантно: KEYNOTE-522 — джерело + індикація.",
+                "Ранній HR+/HER2− ад’ювант: абемацикліб (monarchE) — джерело, режим, індикація, 1L маршрутизація.",
+                "Ранній HR+/HER2− ад’ювант: рибоцикліб (NATALEE) — джерело, режим, індикація, 1L wiring.",
+                "ALGO-BREAST-1L: ред-флаги для ТНРГЗ, ранньої та метастатичної стадій.",
+            ],
+        },
+        {
+            "title": "Ред-флаги рідкісних пухлин і algo wiring (W5c)",
+            "summary": (
+                "Прохід по біомаркер-визначених індикаціях додав ред-флаги та "
+                "вивів їх у відповідні алгоритми."
+            ),
+            "items": [
+                "ГІСТ PDGFRA D842V → ALGO-GIST-1L.",
+                "Медулярний рак ЩЗ RET-mutant → ALGO-MTC-1L.",
+                "Макроглобулінемія Вальденстрема CXCR4-WHIM → ALGO-WM-2L.",
+                "Поширений системний мастоцитоз KIT D816V → ALGO-ADVSM-1L.",
+                "Уротеліальний: гейт допуску до енфортумаб ведотину + пембролізумабу.",
+                "Ендометрій: dMMR gate.",
+                "ЕТ резистентність до гідроксисечовини; лімфома Беркітта — іфосфамід.",
+                "Т-клітинні лімфоми: ATLL Shimoyama, NLPBL RT-CI, AITL ромідепсин.",
+            ],
+        },
+        {
+            "title": "Завершення ШКТ (GI-2 / GI-3)",
+            "summary": (
+                "Підкладено первинні джерела для шлунка й стравоходу; "
+                "PDAC LAPC хіміопроменева закриває хвилю GI-3."
+            ),
+            "items": [
+                "Шлунок 1L: узгоджено поріг PD-L1 CPS; канонічна доза CheckMate-649.",
+                "Стравохід 1L: підкладено первинні джерела.",
+                "PDAC LAPC хіміопроменева (definitive intent, 2 фази §17).",
+                "Конкурентний капецитабін CRT.",
+                "Розширення GI-3 алгоритмів для індикацій фази A та C.",
+            ],
+        },
+        {
+            "title": "CIViC actionability (фаза 3)",
+            "summary": (
+                "5 biomarker-actionability сутностей отримали CIViC evidence "
+                "у блоці <code>evidence_sources</code> — продовження "
+                "переходу OncoKB → CIViC."
+            ),
+            "items": [
+                "FLT3 TKD, FOXL2, KRAS G12V — первинні CIViC-цитати.",
+            ],
+        },
+        {
+            "title": "Engine, render і UX",
+            "summary": (
+                "Зміни поведінки, що впливають на кожен план: жорсткий гейт "
+                "за ECOG, англомовні анкети, словникові правки й щільніший "
+                "Plan Builder."
+            ),
+            "items": [
+                "ECOG PS ≥ 4 — жорсткий гейт; жодного активного треку.",
+                "Track-filter: правка обходу на рівні гена; консолідація лімфомних джерел; OA mirror URL.",
+                "Розширено allowlist пацієнтського словника (HFS, IDEA, hand-foot syndrome).",
+                "Англомовний переклад усіх українських лейблів анкет.",
+                "Plan Builder: вбудована перевірка готовності анкети, пріоритезовані контролі, виправлено зависання при boot, фікс приховування статусу.",
+                "Empty-plan UX, loading overlay, фікс stats; перебудовано 1214 кейсів.",
+                "DATA_STANDARDS приведено у відповідність до МОЗ наказ №473/2026 (TNM type, grade, верифікація).",
+                "Hotfix: /en/* 404 → redirect на корінь.",
+            ],
+        },
+        {
+            "title": "Виправлення cross-LOT маршрутизації",
+            "summary": (
+                "Прохід по 27 алгоритмах прибрав cross-LOT "
+                "<code>output_indications</code>; HNSCC step-1 ред-флаг "
+                "повернуто на місце; вироджені кроки прокоментовані."
+            ),
+            "items": [
+                "27 алгоритмів: чистка cross-LOT output_indications.",
+                "HNSCC 1L: виправлено wiring ред-флагу; degenerate steps уточнено.",
+                "Bundle: виключено cache/, стеля 3,5 МБ; теги disease_state для шийки матки / НДКРЛ.",
+            ],
+        },
+    ]
+
+
+def render_news(stats, *, target_lang: str = "en") -> str:
+    """News page: curated highlights from the most recent merge window.
+
+    Generated from a hand-curated list (see _news_entries) — this is not a
+    raw `git log` dump. The page fronts clinical coverage and product
+    behaviour changes that a clinician or contributor would want to
+    notice; it is not an audit of every internal sidecar."""
+    is_en = target_lang == "en"
+    if is_en:
+        page_title = "News"
+        h1 = "What's new"
+        kicker = "Last 10 days"
+        window_label = "Window: 30 April 2026 → 10 May 2026"
+        lead = (
+            "A curated digest of clinical coverage, rule-engine behaviour and "
+            "product changes that landed on the public main branch in the "
+            "last ten days. Internal infrastructure (validator baselines, "
+            "Q-axis sidecars, session-summary docs) is intentionally omitted; "
+            "see the GitHub history for the full audit trail."
+        )
+        repo_cta = "Full merge history on GitHub →"
+        footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
+    else:
+        page_title = "Новини"
+        h1 = "Що нового"
+        kicker = "Останні 10 днів"
+        window_label = "Період: 30 квітня 2026 → 10 травня 2026"
+        lead = (
+            "Curated дайджест клінічного покриття, змін у rule engine та "
+            "продуктових правок, що приземлилися у головну гілку за останні "
+            "десять днів. Внутрішні sidecars (validator baselines, Q-axis, "
+            "сесійні нотатки) свідомо пропущені; повна історія — у GitHub."
+        )
+        repo_cta = "Повна історія мерджів у GitHub →"
+        footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
+
+    entries = _news_entries(target_lang)
+    sections_html = "\n".join(
+        f"""    <article class="news-entry">
+      <h2>{e['title']}</h2>
+      <p class="news-summary">{e['summary']}</p>
+      <ul class="news-items">
+{chr(10).join(f'        <li>{item}</li>' for item in e['items'])}
+      </ul>
+    </article>"""
+        for e in entries
+    )
+
+    extra_css = """<style>
+.news-window-line{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:#6b7280;margin-top:.4rem;}
+.news-feed{display:flex;flex-direction:column;gap:1.6rem;max-width:920px;margin:2.4rem auto 1.6rem;padding:0 1rem;}
+.news-entry{background:#fff;border:1px solid #e5e7eb;border-left:4px solid var(--green-600,#14532d);border-radius:8px;padding:1.2rem 1.4rem;}
+.news-entry h2{margin:0 0 .4rem;font-family:'Playfair Display',serif;font-size:1.35rem;color:#14532d;}
+.news-summary{margin:.2rem 0 .8rem;color:#374151;}
+.news-items{margin:0;padding-left:1.2rem;color:#1f2937;}
+.news-items li{margin:.25rem 0;line-height:1.45;}
+.news-repo-cta{display:block;text-align:center;margin:1.4rem auto 2.4rem;font-family:'JetBrains Mono',monospace;color:#14532d;}
+.news-repo-cta:hover{text-decoration:underline;}
+</style>"""
+
+    return f"""<!DOCTYPE html>
+<html lang="{'en' if is_en else 'uk'}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · {page_title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+{extra_css}
+</head>
+<body>
+{_render_top_bar(active="news", target_lang=target_lang, lang_switch_href=_lang_switch_href("news", target_lang))}
+
+<main>
+  <section class="about-hero">
+    <p class="home-kicker">{kicker}</p>
+    <h1>{h1}</h1>
+    <p>{lead}</p>
+    <p class="news-window-line">{window_label}</p>
+  </section>
+
+  <section class="news-feed">
+{sections_html}
+  </section>
+
+  <p><a class="news-repo-cta" href="{_NEWS_REPO_URL}/pulls?q=is%3Apr+is%3Amerged">{repo_cta}</a></p>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="{_NEWS_REPO_URL}">{GH_REPO}</a>
+    <br>
+    {footer}
+  </footer>
+</main>
+</body>
+</html>
+"""
+
+
 def render_about(stats, *, target_lang: str = "en") -> str:
     counts = _landing_stat_counts(stats)
     is_en = target_lang == "en"
@@ -9095,6 +9467,8 @@ def build_site(output_dir: Path) -> dict:
         render_specs(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "about.html").write_text(
         render_about(stats, target_lang="en"), encoding="utf-8")
+    (output_dir / "news.html").write_text(
+        render_news(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "try.html").write_text(
         render_try(
             target_lang="en",
@@ -9118,6 +9492,8 @@ def build_site(output_dir: Path) -> dict:
         render_specs(stats, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "about.html").write_text(
         render_about(stats, target_lang="uk"), encoding="utf-8")
+    (output_dir / "ukr" / "news.html").write_text(
+        render_news(stats, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "gallery.html").write_text(
         render_gallery(target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "diseases.html").write_text(
