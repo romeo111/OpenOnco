@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# pre-commit hook: prevent stale site builds from being committed.
+#
+# If scripts/build_site.py or scripts/site_styles.py are staged, the
+# generated docs/ must also be staged (or you must skip with --no-verify,
+# which is banned in this repo per CLAUDE.md).
+#
+# Install:
+#   python scripts/install_hooks.py
+#   OR  cp scripts/hooks/pre-commit .git/hooks/pre-commit
+#
+# The check is advisory-to-blocking: it only fires when site source files
+# change.  All other commits pass through immediately.
+set -euo pipefail
+
+# ── 1. Find staged site-source files ─────────────────────────────────────
+STAGED=$(git diff --cached --name-only 2>/dev/null || true)
+
+SITE_SRC_CHANGED=$(echo "$STAGED" | grep -E \
+    "^scripts/(build_site|site_styles)\.py$" || true)
+
+if [ -z "$SITE_SRC_CHANGED" ]; then
+    exit 0  # No site source changes — nothing to check.
+fi
+
+# ── 2. Check that docs/style.css is also staged ──────────────────────────
+STYLE_STAGED=$(echo "$STAGED" | grep -E "^docs/style\.css$" || true)
+
+if [ -n "$STYLE_STAGED" ]; then
+    exit 0  # style.css is staged — assume a full site rebuild was done.
+fi
+
+# ── 3. Fail with helpful message ─────────────────────────────────────────
+echo ""
+echo "  pre-commit: site source changed, but docs/style.css not staged."
+echo ""
+echo "  Changed site source:"
+echo "$SITE_SRC_CHANGED" | sed 's/^/    /'
+echo ""
+echo "  You must rebuild and stage docs/ before committing:"
+echo "    C:/Python312/python.exe scripts/build_site.py"
+echo "    git add docs/"
+echo ""
+echo "  If you intentionally changed site source without rebuilding"
+echo "  (e.g., docs-only commit), stage a rebuild first, then re-commit."
+echo ""
+exit 1
