@@ -42,6 +42,42 @@ _POST_CSD2_DRUGS: frozenset[str] = frozenset({
     "DRUG-PEMIGATINIB",
     "DRUG-REVUMENIB",
     "DRUG-ZOLBETUXIMAB",
+    # GI-3 / HEM wave expansion (last_verified=2026-04-29)
+    "DRUG-DATOPOTAMAB-DERUXTECAN",
+    "DRUG-ELRANATAMAB",
+    "DRUG-ENSARTINIB",
+    "DRUG-EPCORITAMAB",
+    "DRUG-ERDAFITINIB",
+    "DRUG-FUTIBATINIB",
+    "DRUG-GLOFITAMAB",
+    "DRUG-IDECABTAGENE-VICLEUCEL",
+    "DRUG-INAVOLISIB",
+    "DRUG-INFIGRATINIB",
+    "DRUG-LURBINECTEDIN",
+    "DRUG-MAGROLIMAB",
+    "DRUG-OLUTASIDENIB",
+    "DRUG-PATRITUMAB-DERUXTECAN",
+    "DRUG-RETIFANLIMAB",
+    "DRUG-RIPRETINIB",
+    "DRUG-TALQUETAMAB",
+    "DRUG-TISOTUMAB-VEDOTIN",
+    "DRUG-ZENOCUTUZUMAB",
+    # GI-3 / PUL wave expansion (last_verified=2026-05-03 to 2026-05-04)
+    "DRUG-LANREOTIDE",
+    "DRUG-PEXIDARTINIB",
+    "DRUG-SIROLIMUS",
+    "DRUG-SONIDEGIB",
+    "DRUG-SUNITINIB",
+    "DRUG-VISMODEGIB",
+    # GI-3 D2 chunk + HEME-1 wave (last_verified=2026-05-07 to 2026-05-08)
+    "DRUG-BEMARITUZUMAB",
+    "DRUG-IVOSIDENIB",
+    "DRUG-LIPOSOMAL-IRINOTECAN",
+    "DRUG-PAZOPANIB",
+    "DRUG-TARLATAMAB",
+    "DRUG-ZANIDATAMAB",
+    # 2L indication stubs workstream (PR #582, last_verified=2026-05-11)
+    "DRUG-SOFOSBUVIR-VELPATASVIR-VOXILAPREVIR",
 })
 
 # Pathway keywords that satisfy the "unregistered drug must mention an

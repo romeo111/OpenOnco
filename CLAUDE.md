@@ -230,12 +230,12 @@ worktree merge conflict at integration time.
   files you don't fully understand) to "make a problem go away" — diagnose
   the root cause, ask the user when uncertain.
 
-## Current state (as of 2026-05-09)
+## Current state (as of 2026-05-11)
 
 - All six specs drafted at v0.1. Specs naming locked: OpenOnco.
-- KB scale: **78 diseases, 438 biomarker_actionability, 173 biomarkers, 383
-  sources, 251 drugs, 424 indications, 474 redflags, 360 regimens, 140
-  algorithms, 8 procedures, 5 radiation courses.** (updated 2026-05-09)
+- KB scale: **78 diseases, 440 biomarker_actionability, 181 biomarkers, 388
+  sources, 257 drugs, 442 indications, 478 redflags, 370 regimens, 150
+  algorithms, 9 procedures, 6 radiation courses.** (updated 2026-05-11)
 - API clients live under `knowledge_base/clients/`.
 - RedFlag quality phases 1-7 done (2026-04-25/26): clinical sign-off received.
 - 9-agent parallel run (2026-04-27 morning): ~73 biomarkers tagged with
@@ -253,6 +253,12 @@ worktree merge conflict at integration time.
     + `actionability_review_required: true`.
   - Phases 2 (CIViC reader, fusion-aware matcher, monthly refresh CI) +
     3 (BMA evidence reconstruction) + 4 (render + spec + docs) + 5 (verification) pending.
+- **2L indication stubs + LOT-mismatch audit** (2026-05-10/11, PR #582):
+  8 new 2L indication stubs authored (HCV-MZL ×3, MDS-HR ×2, AML, MDS-LR,
+  CHOLANGIO-FOLFOX); 5 algos wired; 1 regimen + 1 drug entity added.
+  Repo-wide audit of all 56 2L algo files: 0 unresolved LOT mismatches;
+  all cross-LOT `output_indications` refs carry `# intentional cross-LOT`
+  annotation. Clinical co-lead sign-off applied 2026-05-11.
 
 ## Audit artifacts
 
