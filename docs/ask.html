@@ -196,13 +196,15 @@
   let progressTimer = null;
   let progressStartedAt = 0;
   const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
-  if (configured) {
-    endpointInput.value = configured;
-  } else if (['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) {
-    endpointInput.value = DEFAULT_ENDPOINT;
-  } else {
-    endpointInput.value = PUBLIC_ENDPOINT;
+  const isLocalHost = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+  const isFilePage = window.location.protocol === 'file:';
+  function defaultEndpointCandidates() {
+    if (configured) return [configured];
+    if (isFilePage) return [PUBLIC_ENDPOINT];
+    if (isLocalHost) return [DEFAULT_ENDPOINT];
+    return [DEFAULT_ENDPOINT, PUBLIC_ENDPOINT];
   }
+  endpointInput.value = defaultEndpointCandidates()[0];
 
   function getUserId() {
     let id = localStorage.getItem(USER_KEY);
@@ -372,18 +374,55 @@
     }
   }
 
-  async function readJsonResponse(resp) {
+  async function readJsonResponse(resp, endpoint) {
     const contentType = (resp.headers.get('content-type') || '').toLowerCase();
     const text = await resp.text();
     if (!contentType.includes('application/json')) {
-      const endpoint = endpointInput.value.trim() || DEFAULT_ENDPOINT;
-      throw new Error('The clinical-question API did not return JSON. This public site is static unless a server adapter is deployed; use the browser plan generator or enter a working API endpoint. Endpoint: ' + endpoint + '. HTTP ' + resp.status + '.');
+      const err = new Error('The clinical-question API did not return JSON. This public site is static unless a server adapter is deployed; use the browser plan generator or enter a working API endpoint. Endpoint: ' + endpoint + '. HTTP ' + resp.status + '.');
+      err.retryable = true;
+      throw err;
     }
     try {
       return text ? JSON.parse(text) : {};
     } catch (err) {
       throw new Error('Invalid JSON response from the clinical-question API: ' + err.message);
     }
+  }
+
+  function endpointCandidatesForRequest() {
+    const entered = endpointInput.value.trim();
+    const defaults = defaultEndpointCandidates();
+    const candidates = entered ? [entered] : defaults.slice();
+    defaults.forEach((endpoint) => {
+      if (endpoint && !candidates.includes(endpoint)) candidates.push(endpoint);
+    });
+    return candidates;
+  }
+
+  async function postClinicalQuestion(body) {
+    const candidates = endpointCandidatesForRequest();
+    const errors = [];
+    for (const endpoint of candidates) {
+      try {
+        const resp = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const payload = await readJsonResponse(resp, endpoint);
+        if (!resp.ok) {
+          const err = new Error(payload.message || ('HTTP ' + resp.status));
+          err.status = resp.status;
+          throw err;
+        }
+        if (endpointInput.value.trim() !== endpoint) endpointInput.value = endpoint;
+        return payload;
+      } catch (err) {
+        errors.push(endpoint + ': ' + err.message);
+        if (err.status && err.status !== 404) throw err;
+      }
+    }
+    throw new Error(errors.join(' | ') || 'No clinical-question endpoint available');
   }
 
   askBtn.addEventListener('click', async () => {
@@ -402,13 +441,7 @@
     planLinkWrap.classList.remove('is-visible');
     startProgress();
     try {
-      const resp = await fetch(endpointInput.value.trim() || DEFAULT_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() })
-      });
-      const payload = await readJsonResponse(resp);
-      if (!resp.ok) throw new Error(payload.message || ('HTTP ' + resp.status));
+      const payload = await postClinicalQuestion({ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() });
       if (typeof payload.questions_used === 'number') setCount(payload.questions_used);
       else setCount(getCount() + 1);
       result.textContent = renderPayload(payload);
