@@ -13,7 +13,6 @@ output_indications:
   - IND-RCC-METASTATIC-1L-PEMBRO-AXI
   - IND-RCC-METASTATIC-1L-LENV-PEMBRO
   - IND-RCC-METASTATIC-1L-NIVO-CABO
-  - IND-RCC-NON-CLEAR-CELL-1L-CABOZANTINIB
 
 default_indication: IND-RCC-METASTATIC-1L-PEMBRO-AXI
 alternative_indication: IND-RCC-METASTATIC-1L-NIVO-CABO
@@ -23,8 +22,6 @@ decision_tree:
   # Non-clear cell (papillary, chromophobe, sarcomatoid-predominant, collecting duct)
   # follow separate NCCN guidance (cabozantinib preferred for papillary; clinical trial).
   - step: 1
-    # Histology gate: fires (if_true) when clear-cell histology is confirmed.
-    # Non-clear-cell subtypes route to cabozantinib indication.
     evaluate:
       any_of:
         - finding: "histology"
@@ -33,17 +30,16 @@ decision_tree:
           value: "CLEAR_CELL"
         - finding: "histologic_subtype"
           value: "clear_cell"
-        - finding: "rcc_histology"
-          value: "clear_cell"
+        - condition: "Clear-cell (conventional) RCC confirmed on pathology"
     if_true:
       next_step: 2
     if_false:
-      result: IND-RCC-NON-CLEAR-CELL-1L-CABOZANTINIB
+      result: null
       notes: >
-        Non-clear cell RCC: cabozantinib preferred for papillary/MET-driven subtype
-        (NCCN preferred, PAPMET/SWOG-1500 rationale). Clinical trial preferred for
-        chromophobe, collecting duct, translocation RCC — but cabozantinib is the
-        guideline-supported default when trial unavailable.
+        Non-clear cell RCC: use cabozantinib 60mg monotherapy (REG-CABOZANTINIB-RCC)
+        for papillary subtype (NCCN preferred, MET pathway rationale); clinical trial
+        enrollment preferred for chromophobe, collecting duct, translocation RCC.
+        Algorithm does not cover these subtypes.
 
   # Step 2 — IMDC risk group. Determines regimen eligibility.
   # IMDC favorable (0 factors) vs intermediate/poor (1-2 / ≥3 factors).
@@ -73,20 +69,11 @@ decision_tree:
       notes: "IMDC favorable + ECOG 2 or limited fitness: pembro+axi preferred (KEYNOTE-426 includes ECOG 0-2; less TKI toxicity than lenv+pembro)."
 
   # Step 3b — IMDC intermediate/poor. All 4 preferred regimens eligible.
-  # Route based on ipilimumab eligibility: fire if_true when no ipi contraindication.
+  # Route based on ipilimumab eligibility and patient profile.
   - step: 3b
-    # none_of: fires True when none of the ipi contraindications are active.
     evaluate:
-      none_of:
-        - finding: "active_autoimmune_disease"
-          value: true
-        - finding: "prior_organ_transplant"
-          value: true
-        - finding: "ipi_contraindicated"
-          value: true
-        - finding: "ecog"
-          threshold: 2
-          comparator: ">="
+      all_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
     if_true:
       result: IND-RCC-METASTATIC-1L-NIVO-IPI
       notes: >
@@ -96,6 +83,7 @@ decision_tree:
         if patient/MDT prefers TKI-containing regimen or ipi not suitable.
     if_false:
       next_step: 4
+    notes: "Wired RF-FITNESS-ECOG-FIT (ECOG 0-1) as ipi-eligible proxy; autoimmune exclusion remains MDT-evaluated until RF-RCC-AUTOIMMUNE-CONTRAINDICATED is authored. IMDC int/poor + ECOG 0-1 → nivo+ipi preferred (CheckMate-214)."
 
   # Step 4 — ICI+TKI selection for fit patients (all IMDC groups reaching this step).
   # Three equally valid NCCN category-1 regimens; differentiate by toxicity profile

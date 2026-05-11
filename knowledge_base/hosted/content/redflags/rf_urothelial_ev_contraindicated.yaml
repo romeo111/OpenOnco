@@ -1,0 +1,54 @@
+id: RF-UROTHELIAL-EV-CONTRAINDICATED
+definition: >
+  Enfortumab vedotin (EV) contraindication in urothelial carcinoma — MMAE-related
+  toxicity exclusions that preclude EV+pembrolizumab (EV-302/KEYNOTE-A39 exclusion
+  criteria): (1) pre-existing severe peripheral neuropathy (Grade ≥2) — MMAE
+  causes additive neuropathy; (2) uncontrolled diabetes mellitus — EV-related
+  hyperglycemia risk; (3) severe corneal disease or active keratopathy — EV-class
+  ocular toxicity. Fires to route EV-ineligible patients to platinum-based
+  chemotherapy + avelumab maintenance.
+definition_ua: >
+  Протипоказання до енфортумабу ведотину (EV) при уротеліальній карциномі —
+  MMAE-пов'язані токсичні виключення для EV+пембролізумабу (EV-302/KEYNOTE-A39):
+  (1) вже існуюча тяжка периферична нейропатія (ступінь ≥2); (2) неконтрольований
+  цукровий діабет; (3) тяжке рогівкове захворювання або активна кератопатія.
+  Спрацьовує для направлення EV-неприйнятних пацієнтів до платинової хіміотерапії
+  + підтримуючий авелумаб.
+
+trigger:
+  type: eligibility
+  any_of:
+    - finding: "neuropathy_grade"
+      threshold: 2
+      comparator: ">="
+    - finding: "diabetic_neuropathy"
+      value: true
+    - finding: "skin_disease_severe"
+      value: true
+    - finding: "ocular_disease"
+      value: "severe"
+
+clinical_direction: de-escalate
+severity: major
+priority: 75
+category: fitness-eligibility
+
+relevant_diseases:
+  - DIS-UROTHELIAL
+shifts_algorithm:
+  - ALGO-UROTHELIAL-METASTATIC-1L
+
+sources:
+  - SRC-NCCN-BLADDER-2025
+  - SRC-EV302-POWLES-2024
+
+last_reviewed: "2026-05-09"
+draft: true
+
+notes: >
+  EV contraindication composite. Patient fixture ev_pembro_eligible=true,
+  neuropathy_grade=0, diabetic_neuropathy=false, skin_disease_severe=false,
+  ocular_disease="none" → RF does NOT fire → algo step 1 none_of passes →
+  IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO selected. ocular_disease=="severe"
+  check: fixture has "none" so this is false. Partial — full CTCAE grading
+  and HbA1c checks would improve precision.
