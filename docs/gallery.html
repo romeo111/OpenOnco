@@ -60,7 +60,7 @@
 
 <main class="gallery">
   <h1>Sample cases</h1>
-  <p class="lead">14 synthetic patient profiles run through the engine, grouped by disease. Pick a disease to see its examples — each click opens a full Plan or Diagnostic Brief as a clinician would see it in tumor-board. If something looks clinically wrong — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">open an issue</a>.</p>
+  <p class="lead">16 synthetic patient profiles run through the engine, grouped by disease. Pick a disease to see its examples — each click opens a full Plan or Diagnostic Brief as a clinician would see it in tumor-board. If something looks clinically wrong — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">open an issue</a>.</p>
 
   <!-- Stage 1: disease grid (default visible) -->
   <section id="diseaseStage" class="disease-stage">
@@ -68,10 +68,12 @@
       <input type="search" id="diseaseSearch" class="disease-search"
              placeholder="Search disease or ICD-O-3…" autocomplete="off"
              aria-label="Search disease or ICD-O-3…">
-      <span class="disease-search-count" id="diseaseSearchCount">13</span>
+      <span class="disease-search-count" id="diseaseSearchCount">15</span>
     </div>
     <div class="disease-tile-grid" id="diseaseTileGrid">
     <button type="button" class="disease-tile" data-disease-id="DIS-AML" data-search="гострий мієлоїдний лейкоз (не-apl) acute myeloid leukemia"><span class="dt-label">Acute Myeloid Leukemia</span><span class="dt-count">1 example</span><span class="dt-quality">curated first</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-BCC" data-search="базально-клітинна карцинома (бкк) basal cell carcinoma"><span class="dt-label">Basal cell carcinoma</span><span class="dt-count">1 example</span><span class="dt-quality">curated first</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CERVICAL" data-search="карцинома шийки матки cervical carcinoma"><span class="dt-label">Cervical carcinoma</span><span class="dt-count">1 example</span><span class="dt-quality">curated first</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-CHOLANGIOCARCINOMA" data-search="холангіокарцинома (рак жовчних проток) cholangiocarcinoma"><span class="dt-label">Cholangiocarcinoma</span><span class="dt-count">1 example</span><span class="dt-quality">curated first</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-CRC" data-search="колоректальний рак colorectal carcinoma"><span class="dt-label">Colorectal carcinoma</span><span class="dt-count">1 example</span><span class="dt-quality">curated first</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-MELANOMA" data-search="шкірна меланома cutaneous melanoma"><span class="dt-label">Cutaneous melanoma</span><span class="dt-count">1 example</span><span class="dt-quality">curated first</span></button>
@@ -109,6 +111,46 @@
   <h3>AML - FLT3-ITD - heme actionability and risk</h3>
   <p>Newly diagnosed fit AML with FLT3-ITD. Adds a hematology example: BMA evidence explains targeted induction context while risk and transplant discussion remain separate clinical decisions.</p>
   <div class="case-foot">patient_showcase_aml_flt3_itd_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-BCC" hidden>
+  <header class="case-list-header">
+    <h2>Basal cell carcinoma</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/cases/showcase-bcc-labcc-hhi-1l.html"
+   data-default-order="14"
+   data-name="BCC - locally advanced - hedgehog inhibitor 1L">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-quality quality-showcase">Curated showcase</span>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>BCC - locally advanced - hedgehog inhibitor 1L</h3>
+  <p>Locally advanced BCC in Gorlin syndrome where resection and radiation are not appropriate, so the plan should route to 1L SMO/Hedgehog inhibition instead of a form-only starter.</p>
+  <div class="case-foot">patient_showcase_bcc_labcc_hhi_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-CERVICAL" hidden>
+  <header class="case-list-header">
+    <h2>Cervical carcinoma</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/cases/cervical-locally-advanced.html"
+   data-default-order="15"
+   data-name="Cervical · Locally Advanced (CCRT + Pembrolizumab)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-quality quality-curated">Curated plan</span>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>Cervical · Locally Advanced (CCRT + Pembrolizumab)</h3>
+  <p>Locally advanced cervical cancer (FIGO IIB-IVA) — engine selects cisplatin-based CCRT + brachytherapy; pembrolizumab maintenance (KEYNOTE-A18).</p>
+  <div class="case-foot">patient_cervical_locally_advanced.json</div>
 </a>
   </div>
 </section>
