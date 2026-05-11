@@ -1,0 +1,136 @@
+id: IND-MDS-LR-2L-LUSPATERCEPT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MDS-LR
+  line_of_therapy: 2
+  stage_requirements:
+    - "ESA failure (no response after 8-12 weeks at adequate EPO dose, or loss of ESA response)"
+    - "MDS-LR (IPSS-R very low / low / intermediate; transfusion-dependent anemia)"
+    - "Frailty OR organ dysfunction gate (use when imetelstat toxicity risk exceeds benefit)"
+    - "OR: risk escalation detected (IPSS-R intermediate+ drift) — bridge while HMA plan initiated"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: REG-LUSPATERCEPT-MDS-LR
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~38% RBC-TI ≥8 weeks in MEDALIST (2L ESA-failed; Fenaux 2020, NEJM)"
+  complete_response: "Transfusion independence at ≥8 weeks: ~38%; durable response in ~25%"
+  overall_survival_5y: "Cytopenia management; does not alter disease natural history or MDS progression risk"
+  notes: >
+    MEDALIST (Fenaux 2020, NEJM) was the pivotal 2L trial for luspatercept
+    in ESA-refractory MDS-LR with ring sideroblasts (RS+/SF3B1+).
+    Response rate in RS-negative patients is lower (~17% vs ~38% RS+).
+    COMMANDS trial (Al-Kali 2023) showed superiority over EPO in 1L,
+    supporting 1L use but also confirming robust 2L activity in ESA-refractory
+    patients enrolled after short EPO exposure.
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-MDS-HIGH-RISK-IPSS          # escalate to MDS-HR pathway (ALGO-MDS-HR-1L)
+  - RF-MDS-TRANSFORMATION-PROGRESSION  # escalate to MDS-HR pathway
+  - RF-MDS-DEL-5Q-ISOLATED         # lenalidomide preferred for del(5q) (IND-MDS-LR-LENALIDOMIDE-DEL5Q)
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL       # iron overload monitoring (luspatercept increases erythropoiesis; iron chelation consideration)
+  - TEST-B12-FOLATE
+  - TEST-BM-ASPIRATE      # confirm MDS-LR vs progression to MDS-HR before 2L start
+  - TEST-BM-TREPHINE
+  - TEST-KARYOTYPE        # del(5q) exclusion — routes to lenalidomide
+  - TEST-NGS-MYELOID-PANEL # SF3B1 status (predicts response); TP53 for risk assessment
+desired_tests:
+  - TEST-FLOW-CYTOMETRY
+
+rationale: >
+  Luspatercept (erythroid maturation agent; SMAD2/3 inhibitor) is the
+  established 2L option for ESA-refractory transfusion-dependent MDS-LR.
+  MEDALIST (Fenaux NEJM 2020): luspatercept 1 mg/kg SC q3w vs placebo in
+  RS+/SF3B1+ ESA-refractory MDS-LR — RBC-TI ≥8wk in 38% vs 13% (OR 5.1,
+  p<0.001). In ALGO-MDS-LR-2L, this indication is the preferred 2L choice
+  in two routing paths:
+  (1) Frailty / organ dysfunction gate (steps 1 false, 3 true): imetelstat
+  carries significant on-target G3+ cytopenia (thrombocytopenia ~62%,
+  neutropenia ~68%); luspatercept has a superior safety profile for frail
+  patients with borderline counts.
+  (2) Risk-escalation bridge (step 1 true): when IPSS-R drift toward
+  MDS-HR is detected, luspatercept maintains transfusion independence
+  while HMA therapy (ALGO-MDS-HR pathway) is initiated; avoids imetelstat's
+  cytopenia burden during a critical transition period.
+  Luspatercept does NOT alter MDS natural history or progression risk —
+  it is a transfusion-burden reduction tool only. Response predictors:
+  SF3B1 mutation / ring sideroblast phenotype (RS+ predicts better response).
+
+rationale_ua: >
+  Луспатерцепт (агент дозрівання еритроїдів; інгібітор SMAD2/3) є
+  встановленим варіантом 2L для ЕСА-рефрактерної трансфузійно-залежної
+  МДС-НР. MEDALIST (Fenaux NEJM 2020): луспатерцепт проти плацебо в RS+/
+  SF3B1+ ЕСА-рефрактерній МДС-НР — RBC-TI ≥8 тижнів у 38% проти 13%.
+  Перевага безпеки порівняно з іметелстатом при крихкості та дисфункції
+  органів. Не змінює природний перебіг МДС.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-ESMO-MDS-2021
+    position: supports
+    relevant_quote_paraphrase: "Luspatercept is recommended for ESA-refractory RS-positive MDS-LR (MEDALIST evidence)"
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "Luspatercept preferred for RS+/SF3B1+ ESA-refractory MDS-LR; NCCN Category 1"
+  - source_id: SRC-IMERGE-PLATZBECKER-2024
+    position: context
+    relevant_quote_paraphrase: "IMerge (imetelstat) enrolled ESA-refractory non-del(5q) MDS-LR; luspatercept-naive subgroup shows higher TI rate with imetelstat vs non-RS patients"
+
+do_not_do:
+  - "Не призначати луспатерцепт пацієнтам з del(5q) — леналідомід є кращим вибором (NCCN cat 1) і безпосередньо таргетує аномалію."
+  - "Не продовжувати луспатерцепт понад 3 цикли без ознак відповіді — оцінити TI та рівень гемоглобіну після 3 циклів."
+  - "Не ігнорувати ознаки прогресії до МДС-ВР — луспатерцепт не уповільнює прогресію; перейти до МДС-ВР алгоритму при підвищенні IPSS-R."
+  - "Не призначати без виключення дефіциту заліза, вітаміну B12 та фолату — замінна анемія має бути скоригована перш за все."
+  - "Не очікувати відповіді при RS-негативному/SF3B1-дикому типі — відповідь значно нижча (~17% vs ~38% у RS+)."
+
+do_not_do_en:
+  - "Do not prescribe luspatercept in del(5q) — lenalidomide is the preferred choice (NCCN cat 1) and directly targets the anomaly."
+  - "Do not continue luspatercept beyond 3 cycles without response — assess TI and Hgb after 3 cycles."
+  - "Do not ignore signs of progression to MDS-HR — luspatercept does not slow progression; switch to MDS-HR algorithm if IPSS-R escalates."
+  - "Do not prescribe without ruling out iron, B12, and folate deficiency — replacement anemias must be corrected first."
+  - "Do not expect response in RS-negative/SF3B1 wild-type — response is substantially lower (~17% vs ~38% in RS+)."
+
+known_controversies:
+  - topic: "Imetelstat vs luspatercept sequencing in 2L ESA-refractory non-del(5q) MDS-LR"
+    positions:
+      - position: "Imetelstat preferred for non-RS non-del(5q) based on IMerge TI rate (~40%); luspatercept for RS+"
+        sources:
+          - SRC-IMERGE-PLATZBECKER-2024
+          - SRC-NCCN-AML-2025
+      - position: "Luspatercept for all ESA-refractory patients given superior safety profile; imetelstat reserved for MEDALIST non-responders"
+        sources:
+          - SRC-ESMO-MDS-2021
+    our_default: "Imetelstat (IND-MDS-LR-2L-IMETELSTAT) as primary 2L for non-del(5q) non-frail; luspatercept for frail/organ-dysfunction or RS+/SF3B1+ bridge"
+    rationale: "IMerge shows higher TI rate in non-RS patients vs MEDALIST RS+ population — imetelstat has advantage in non-RS biology; luspatercept wins on tolerability"
+
+time_critical: false
+last_reviewed: "2026-05-11"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires two Clinical Co-Lead approvals before merge (CHARTER §6.1).
+  Created to replace IND-MDS-LR-1L-LUSPATERCEPT incorrectly referenced in
+  ALGO-MDS-LR-2L output_indications (LOT mismatch fix). This is the proper
+  2L indication for luspatercept in ESA-failed MDS-LR; IND-MDS-LR-1L-LUSPATERCEPT
+  remains the first-line indication. Both use REG-LUSPATERCEPT-MDS-LR (same
+  regimen; different context, stage_requirements, and routing rationale).
+  Decision tree step 1 (if_true: risk escalation) and step 3 (if_true: frailty)
+  of ALGO-MDS-LR-2L route here.

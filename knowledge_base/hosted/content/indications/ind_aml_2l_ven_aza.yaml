@@ -1,0 +1,129 @@
+id: IND-AML-2L-VEN-AZA
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-AML
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory AML after ≥1 prior systemic therapy (7+3 induction failure OR relapse after CR OR post-HMA progression)"
+    - "FLT3 wild-type OR FLT3-mutated but gilteritinib-ineligible/failed"
+    - "Transplant-ineligible OR bridging-intent for fit patients while alloHCT workup proceeds"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: REG-VEN-AZA-AML
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~20–30% composite CR in R/R AML (VIALE-A off-label extrapolation + retrospective series)"
+  complete_response: "~10–15% CR/CRh in R/R AML"
+  overall_survival_median: "~4–6 months post-HMA failure in R/R AML; higher in previously untreated fit patients"
+  notes: >
+    Evidence is primarily from VIALE-A (AML unfit 1L; DiNardo 2020, NEJM).
+    Off-label in R/R AML 2L context; no dedicated phase-3 R/R AML RCT.
+    Retrospective series (DiNardo 2019, Am J Hematol) show composite CRc
+    ~21% in ven+aza-naive R/R AML. Markedly lower response expected in
+    ven+aza-refractory relapse (3L+) — this indication is for ven+aza-naive
+    R/R patients. Clinical trial enrollment strongly preferred.
+
+hard_contraindications:
+  - CI-SEVERE-HEPATIC-IMPAIRMENT
+red_flags_triggering_alternative:
+  - RF-AML-FLT3-ACTIONABLE    # gilteritinib preferred (ADMIRAL OS benefit)
+  - RF-AML-IDH2-MUT-ACTIONABLE # enasidenib preferred (AG221-AML-001)
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT          # venetoclax hepatic metabolism
+  - TEST-BM-ASPIRATE  # disease confirmation at 2L entry; re-test FLT3/IDH at relapse
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-NGS-MYELOID-PANEL  # FLT3, IDH1/2, TP53 — must re-test at relapse
+  - TEST-HBV-SEROLOGY
+desired_tests:
+  - TEST-ECHO         # cardiac baseline if prior anthracycline
+
+rationale: >
+  Venetoclax + azacitidine (VIALE-A schedule: VEN 400 mg PO daily d1-28 +
+  AZA 75 mg/m² SC/IV d1-7 q28d) is the standard-of-care for AML unfit for
+  intensive induction and is frequently used off-label in R/R AML when:
+  (1) FLT3-WT and IDH2-WT (targeted options exhausted or unavailable),
+  (2) patient is too frail for re-induction chemotherapy (7+3, FLAG-IDA),
+  (3) used as bridging/cytoreduction toward alloHCT in fit patients with
+  borderline performance at the time of relapse.
+  Evidence in R/R AML is indirect (retrospective + VIALE-A extrapolation).
+  Clinical trial enrollment (novel triplets, CPX-351-based, CAR-T approaches)
+  is the strongly preferred option. When no trial is available, ven+aza
+  provides a lower-toxicity cytoreductive option compared to re-induction,
+  with meaningful responses in ven+aza-naive patients (~21% CRc retrospective).
+  Re-test FLT3 and IDH status at relapse before selecting this indication —
+  ~25% of FLT3-mut relapses lose detectable FLT3 (and vice versa); newly
+  acquired IDH2/IDH1 mutations warrant targeted therapy switch.
+
+rationale_ua: >
+  Венетоклакс + азацитидин (схема VIALE-A: VEN 400 мг перорально д1-28 +
+  AZA 75 мг/м² п/ш д1-7 к28д) є стандартом для пацієнтів з ГМЛ, непридатних
+  до інтенсивної індукції, та часто використовується позалабораторно при
+  рецидивно/рефрактерній ГМЛ при FLT3-WT та IDH2-WT, неможливості
+  повторної індукції або як місток до alloHCT. Повторне тестування FLT3
+  та IDH при рецидиві є обов'язковим — клони еволюціонують. Пріоритет
+  клінічних досліджень при наявності.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "Ven+aza (2A) for R/R AML; clinical trial preferred; FLT3-actionable patients route to gilteritinib"
+  - source_id: SRC-ELN-AML-2022
+    position: supports
+    relevant_quote_paraphrase: "Clinical trial is the preferred treatment for R/R AML; ven+aza is an option for non-actionable relapse in unfit patients"
+
+do_not_do:
+  - "Не призначати ven+aza без повторного тестування FLT3/IDH при рецидиві — цільова терапія (гілтерітиніб, енасіденіб) має перевагу при actionable мутаціях."
+  - "Не продовжувати ven+aza після 2 циклів без відповіді — оцінити кістковий мозок після 2 циклів; при відсутності відповіді перейти до клінічного дослідження або паліативу."
+  - "Не призначати venetoclax при важкому порушенні функції печінки без корекції дози."
+  - "Не ігнорувати можливість alloHCT для тих пацієнтів, хто відповідає — ven+aza може виступати мостом до трансплантації."
+  - "Не призначати ven+aza пацієнтам з рецидивом після попередньої ven+aza-терапії без обговорення в MDT — очікувана відповідь дуже низька."
+
+do_not_do_en:
+  - "Do not prescribe ven+aza without re-testing FLT3/IDH at relapse — targeted therapy (gilteritinib, enasidenib) takes priority when actionable mutations are found."
+  - "Do not continue ven+aza beyond 2 cycles without response — assess bone marrow at 2 cycles; transition to trial or palliative care if no response."
+  - "Do not prescribe venetoclax in severe hepatic impairment without dose adjustment."
+  - "Do not ignore alloHCT eligibility for responding patients — ven+aza can serve as a bridge to transplant."
+  - "Do not prescribe ven+aza to patients relapsing after prior ven+aza exposure without MDT discussion — expected response is very low."
+
+known_controversies:
+  - topic: "Ven+aza vs low-intensity re-induction (azacitidine monotherapy, LDAC) in FLT3-WT R/R AML"
+    positions:
+      - position: "Ven+aza preferred over single-agent HMA based on superior 1L unfit data extrapolation"
+        sources:
+          - SRC-NCCN-AML-2025
+      - position: "Clinical trial is the only evidence-based choice in R/R AML; any approved regimen is a compromise"
+        sources:
+          - SRC-ELN-AML-2022
+    our_default: "Ven+aza for FLT3-WT R/R AML unfit for intensive re-induction; clinical trial enrollment surfaced as primary annotation"
+    rationale: "No head-to-head R/R RCT; ven+aza preferred over single-agent HMA based on mechanism and 1L extrapolation"
+
+time_critical: false
+last_reviewed: "2026-05-11"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires two Clinical Co-Lead approvals before merge (CHARTER §6.1).
+  Created to replace IND-AML-1L-VEN-AZA incorrectly referenced in
+  ALGO-AML-2L output_indications (LOT mismatch fix). This is the proper
+  2L indication for ven+aza in R/R AML; IND-AML-1L-VEN-AZA remains the
+  first-line unfit AML indication. Both use REG-VEN-AZA-AML (same regimen,
+  different clinical context and evidence level).
+  Clinical trial enrollment must be surfaced as primary annotation by the
+  plan generator regardless of this indication being the algorithmic output.

@@ -14,10 +14,10 @@ purpose: >
 
 output_indications:
   - IND-AML-2L-GILTERITINIB-FLT3
-  - IND-AML-1L-VEN-AZA
+  - IND-AML-2L-VEN-AZA
   - IND-AML-2L-IDH2-ENASIDENIB
 
-default_indication: IND-AML-1L-VEN-AZA
+default_indication: IND-AML-2L-VEN-AZA
 alternative_indication: IND-AML-2L-GILTERITINIB-FLT3
 
 decision_tree:
@@ -28,7 +28,7 @@ decision_tree:
       any_of:
         - red_flag: RF-AML-EMERGENCY-TLS-LEUKOSTASIS
     if_true:
-      result: IND-AML-1L-VEN-AZA
+      result: IND-AML-2L-VEN-AZA
     if_false:
       next_step: 2
 
@@ -57,7 +57,7 @@ decision_tree:
     if_true:
       result: IND-AML-2L-GILTERITINIB-FLT3
     if_false:
-      result: IND-AML-1L-VEN-AZA
+      result: IND-AML-2L-VEN-AZA
     notes: "MRD-positive AML — FLT3+ routes to gilteritinib salvage (ADMIRAL); FLT3-WT MRD+ routes to ven+aza intensification with MDT to consider alloHCT bridge."
 
   # Step 4 — FLT3 actionable at relapse → gilteritinib (FDA-approved
@@ -97,7 +97,7 @@ decision_tree:
       any_of:
         - red_flag: RF-AML-IDH1-MUT-ACTIONABLE
     if_true:
-      result: IND-AML-1L-VEN-AZA
+      result: IND-AML-2L-VEN-AZA
     if_false:
       next_step: 7
     notes: "MDT-only — IDH1 R/R: switch to ivosidenib (AG-120) monotherapy per FDA-approved R/R-AML labelling. Pinned to ven+aza Indication as backbone (no dedicated IDH1 IND in KB). IDH2 captured at step 5."
@@ -110,7 +110,7 @@ decision_tree:
         - red_flag: RF-AML-FRAILTY-AGE
         - red_flag: RF-AML-ORGAN-DYSFUNCTION
     if_true:
-      result: IND-AML-1L-VEN-AZA
+      result: IND-AML-2L-VEN-AZA
     if_false:
       next_step: 8
 
@@ -123,9 +123,9 @@ decision_tree:
       any_of:
         - condition: "FLT3 wild-type R/R AML; clinical-trial / re-induction / BSC routing surfaced as annotation"
     if_true:
-      result: IND-AML-1L-VEN-AZA
+      result: IND-AML-2L-VEN-AZA
     if_false:
-      result: IND-AML-1L-VEN-AZA
+      result: IND-AML-2L-VEN-AZA
     notes: "Default fall-through — FLT3-WT R/R routes to ven+aza backbone; clinical-trial / BSC noted in Indication."
 
 sources:
