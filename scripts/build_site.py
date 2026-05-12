@@ -70,6 +70,7 @@ from knowledge_base.stats import collect_stats
 from scripts.audit_clinical_gaps import write_outputs as write_clinical_gap_outputs
 from scripts.build_kb_wiki import build_kb_wiki
 from scripts.site_cases import (
+    BROKEN_CASE_IDS,
     CASE_CATEGORIES,
     CASES,
     GALLERY_EXCLUDED_CASE_IDS,
@@ -549,8 +550,13 @@ def write_web_manifest(output_dir: Path) -> dict:
 
 
 def _public_case_entries() -> list[CaseEntry]:
-    """Cases safe to expose through gallery, examples, and static case pages."""
-    return [c for c in CASES if c.case_id not in GALLERY_EXCLUDED_CASE_IDS]
+    """Cases safe to expose through gallery, examples, and static case pages.
+
+    Excludes only genuinely broken cases. Gallery-only-hidden cases still
+    get their case HTML built so the /try.html example picker can iframe
+    a real generated plan when the user loads them.
+    """
+    return [c for c in CASES if c.case_id not in BROKEN_CASE_IDS]
 
 
 def _public_example_entries() -> list[CaseEntry]:
@@ -559,11 +565,19 @@ def _public_example_entries() -> list[CaseEntry]:
     Auto-generated stubs and variant-matrix smoke cases are useful for
     engine/render QA, but they read as stale low-fill clinical examples in
     the public picker. Keep them out of /try.html and examples.json.
+
+    The picker is intentionally more permissive than the case gallery: it
+    only filters out genuinely broken cases (BROKEN_CASE_IDS) and noisy
+    auto/variant smoke entries. Cases that are merely curated out of the
+    gallery (GALLERY_ONLY_HIDDEN_CASE_IDS — e.g. HCC patient cases without
+    ESCAT BMA) still show here so every supported disease has at least
+    one usable load-example entry.
     """
 
     return [
-        c for c in _public_case_entries()
-        if c.badge_class != "bdg-stub"
+        c for c in CASES
+        if c.case_id not in BROKEN_CASE_IDS
+        and c.badge_class != "bdg-stub"
         and c.badge.lower() not in {"auto-stub", "variant"}
         and not c.case_id.startswith(("auto-", "variant-"))
     ]
@@ -723,9 +737,13 @@ def _example_sort_key(entry: dict) -> tuple:
 
 
 def _remove_excluded_case_pages(output_dir: Path) -> int:
-    """Delete stale generated pages for hidden auto-stub cases."""
+    """Delete stale generated pages for broken/auto-stub cases.
+
+    Gallery-only-hidden cases still get their case HTML built (see
+    _public_case_entries), so we must not delete them here.
+    """
     removed = 0
-    for case_id in sorted(GALLERY_EXCLUDED_CASE_IDS):
+    for case_id in sorted(BROKEN_CASE_IDS):
         for rel_path in (
             Path("cases") / f"{case_id}.html",
             Path("ukr") / "cases" / f"{case_id}.html",
@@ -3011,6 +3029,10 @@ def render_try(
   <div class="quest-toolbar" data-step-label="{'1. Pick a disease and (optionally) an example' if target_lang == 'en' else '1. Оберіть хворобу та (опційно) приклад'}">
     <label class="qt-label">
       {'Disease' if target_lang == 'en' else 'Хвороба'}
+      <input id="diseaseSearch" type="search"
+             placeholder="{'Search · name, abbreviation (HCC, DLBCL), or ICD' if target_lang == 'en' else 'Пошук · назва, скорочення (HCC, DLBCL) або ICD'}"
+             autocomplete="off"
+             aria-label="{'Filter diseases' if target_lang == 'en' else 'Фільтр хвороб'}">
       <select id="diseaseSelect">
         <option value="">{'— select —' if target_lang == 'en' else '— оберіть —'}</option>
       </select>
@@ -3264,6 +3286,7 @@ const runBtn = document.getElementById('runBtn');
 const formatBtn = document.getElementById('formatBtn');
 const resetBtn = document.getElementById('resetBtn');
 const diseaseSelect = document.getElementById('diseaseSelect');
+const diseaseSearch = document.getElementById('diseaseSearch');
 const exampleSelect = document.getElementById('exampleSelect');
 const textarea = document.getElementById('patientJson');
 const resultFrame = document.getElementById('resultFrame');
@@ -4941,16 +4964,58 @@ function saveManifestsToCache() {{
   }} catch (e) {{ /* quota or private mode — silent skip */ }}
 }}
 
-async function loadAssets() {{
-  setLoadingProgress(18);
-  // Populate dropdowns from manifests — instant, no network fetch.
-  diseaseSelect.innerHTML = '<option value="">{"— select —" if target_lang == "en" else "— оберіть —"}</option>';
+// Build a lower-cased haystack so the search box matches the full title
+// (EN/UA), the disease_id with and without the "DIS-" prefix (so users
+// can type "HCC" or "DLBCL"), and both ICD codes.
+function diseaseSearchHaystack(q) {{
+  if (!q) return '';
+  const did = String(q.disease_id || '');
+  return [
+    q.title_en || q.title || '',
+    q.title_uk || '',
+    did,
+    did.replace(/^DIS-/, ''),
+    q.icd_10 || '',
+    q.disease_icd || '',
+  ].join(' ').toLowerCase();
+}}
+
+function renderDiseaseOptions() {{
+  const term = (diseaseSearch && diseaseSearch.value || '').trim().toLowerCase();
+  const previousVal = diseaseSelect.value;
+  diseaseSelect.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = term
+    ? ('{"— matches for" if target_lang == "en" else "— збіги для"} "' + term + '" —')
+    : '{"— select —" if target_lang == "en" else "— оберіть —"}';
+  diseaseSelect.appendChild(placeholder);
+  let kept = 0;
   QUESTIONNAIRES_MANIFEST.forEach((q, i) => {{
+    if (term && !diseaseSearchHaystack(q).includes(term)) return;
     const opt = document.createElement('option');
     opt.value = i;
     opt.textContent = questionnaireDisplayTitle(q);
     diseaseSelect.appendChild(opt);
+    kept++;
   }});
+  if (term && kept === 0) {{
+    const none = document.createElement('option');
+    none.value = '';
+    none.disabled = true;
+    none.textContent = '{"(no matching diseases)" if target_lang == "en" else "(жодних збігів)"}';
+    diseaseSelect.appendChild(none);
+  }}
+  // Preserve selection if the previously-chosen disease still matches.
+  if (previousVal && [...diseaseSelect.options].some(o => o.value === previousVal)) {{
+    diseaseSelect.value = previousVal;
+  }}
+}}
+
+async function loadAssets() {{
+  setLoadingProgress(18);
+  // Populate dropdowns from manifests — instant, no network fetch.
+  renderDiseaseOptions();
   saveManifestsToCache();
   setLoadingProgress(55);
 
@@ -5079,6 +5144,23 @@ function repopulateExamples(activeQuestIdx) {{
 }}
 
 // ── Event wiring ──────────────────────────────────────────────────────────
+if (diseaseSearch) {{
+  diseaseSearch.addEventListener('input', () => {{
+    renderDiseaseOptions();
+  }});
+  // Pressing Enter when exactly one disease matches selects it directly so
+  // a clinician typing "DLBCL" + Enter doesn't have to click the dropdown.
+  diseaseSearch.addEventListener('keydown', (ev) => {{
+    if (ev.key !== 'Enter') return;
+    const real = [...diseaseSelect.options].filter(o => o.value !== '' && !o.disabled);
+    if (real.length === 1) {{
+      ev.preventDefault();
+      diseaseSelect.value = real[0].value;
+      diseaseSelect.dispatchEvent(new Event('change', {{ bubbles: true }}));
+    }}
+  }});
+}}
+
 diseaseSelect.addEventListener('change', async () => {{
   await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
     const i = diseaseSelect.value;

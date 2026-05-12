@@ -19,6 +19,7 @@ import pytest
 import yaml
 
 from scripts.build_site import (
+    BROKEN_CASE_IDS,
     CASES,
     GALLERY_EXCLUDED_CASE_IDS,
     GALLERY_FEATURED_CASE_IDS,
@@ -341,7 +342,11 @@ def test_examples_payload_matches_cases(site_dir: Path):
     case_ids_payload = {e["case_id"] for e in payload}
     case_ids_expected = {c.case_id for c in _public_example_entries()}
     assert case_ids_payload == case_ids_expected
-    assert not (case_ids_payload & GALLERY_EXCLUDED_CASE_IDS)
+    # The picker is intentionally more permissive than the curated gallery:
+    # it must still exclude every broken case, but it MAY include
+    # GALLERY_ONLY_HIDDEN_CASE_IDS (HCC/RCC patient cases, etc.) so that
+    # every supported disease has at least one usable load-example entry.
+    assert not (case_ids_payload & BROKEN_CASE_IDS)
     assert not any((e.get("case_id") or "").startswith(("auto-", "variant-")) for e in payload)
     assert not any("Auto-stub" in (e.get("label_en") or e.get("label") or "") for e in payload)
     assert not any("KB fill" in (e.get("label_en") or "") for e in payload)
@@ -448,8 +453,11 @@ def test_case_files_have_back_link_and_no_auth(site_dir: Path):
     # UA back-link "Назад до галереї" lives at /ukr/cases/<id>.html.
     for c in CASES:
         path = site_dir / "cases" / f"{c.case_id}.html"
-        if c.case_id in GALLERY_EXCLUDED_CASE_IDS:
-            assert not path.exists(), f"excluded case file leaked: {path.name}"
+        # Only BROKEN cases skip the case-page build. Gallery-only-hidden
+        # cases still get their HTML so the /try.html example picker can
+        # iframe a real generated plan when the user loads them.
+        if c.case_id in BROKEN_CASE_IDS:
+            assert not path.exists(), f"broken case file leaked: {path.name}"
             continue
         assert path.exists(), f"case file missing: {path.name}"
         html = path.read_text(encoding="utf-8")
@@ -477,8 +485,8 @@ def test_en_mirror_built_alongside_ua(site_dir: Path):
     # Every EN case has a UA counterpart at /ukr/cases/
     for c in CASES:
         path = site_dir / "ukr" / "cases" / f"{c.case_id}.html"
-        if c.case_id in GALLERY_EXCLUDED_CASE_IDS:
-            assert not path.exists(), f"excluded UA case file leaked: {path.name}"
+        if c.case_id in BROKEN_CASE_IDS:
+            assert not path.exists(), f"broken UA case file leaked: {path.name}"
             continue
         assert path.exists(), (
             f"missing ukr/cases/{c.case_id}.html"

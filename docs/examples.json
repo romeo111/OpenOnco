@@ -1476,6 +1476,76 @@
     "quality_class": "quality-showcase"
   },
   {
+    "case_id": "breast-brca-germline-olaparib",
+    "label": "Breast · BRCA1 germline met · Olaparib (OlympiAD)",
+    "label_en": "Breast · BRCA1 germline met · Olaparib (OlympiAD)",
+    "disease_id": "DIS-BREAST",
+    "file": "patient_breast_brca_germline_met_olaparib.json",
+    "json": {
+      "patient_id": "BREAST-BRCA-MET-1L-001",
+      "comment": "Synthetic metastatic HR+/HER2- breast cancer with germline BRCA1 pathogenic variant (c.5266dupC), female 41 premenopausal, ER 70% / PR 50% / HER2 IHC 1+. Anchor: OlympiAD → olaparib monotherapy (HER2-negative metastatic gBRCA1/2). Engine: ALGO-BREAST-1L step 1 HER2-amp False → step 3 free-text TNBC condition False → step 5 default → IND-BREAST-HR-POS-MET-1L-CDKI. The BRCA-PARPi indication (IND-BREAST-BRCA-POS-MET-PARPI) is exposed as an alternative track and surfaces via RF-BREAST-BRCA-GERMLINE-ACTIONABLE. Drift: olaparib-first per OlympiAD is not the default at 1L in current KB; clinician override via MDT preserves OlympiAD pathway.",
+      "disease": {
+        "id": "DIS-BREAST"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-ER": "positive",
+        "BIO-PR": "positive",
+        "BIO-HER2-SOLID": "negative",
+        "BIO-BRCA-GERMLINE": "positive"
+      },
+      "demographics": {
+        "age": 41,
+        "sex": "female",
+        "ecog": 1,
+        "menopausal_status": "premenopausal",
+        "pregnancy_status": "not_pregnant"
+      },
+      "findings": {
+        "her2_status": "negative",
+        "her2_ihc": "1+",
+        "er_status": "positive",
+        "pr_status": "positive",
+        "er_percent": 70,
+        "pr_percent": 50,
+        "brca1_germline": "pathogenic",
+        "brca2_germline": "wild_type",
+        "brca1_brca2_germline": "positive",
+        "brca1_brca2_pathogenic": true,
+        "germline_brca_status": "pathogenic",
+        "germline_variant": "BRCA1 c.5266dupC (p.Gln1756Profs*74)",
+        "pik3ca_mutation": false,
+        "esr1_mutation": false,
+        "histology": "invasive_ductal_carcinoma_NST",
+        "tumor_grade": 3,
+        "ki67_percent": 45,
+        "stage": "IV",
+        "stage_iv": true,
+        "metastatic_sites": [
+          "liver",
+          "bone"
+        ],
+        "visceral_crisis": false,
+        "brain_mets": false,
+        "creatinine_clearance_ml_min": 96,
+        "bilirubin_uln_x": 0.8,
+        "absolute_neutrophil_count_k_ul": 3.5,
+        "platelets_k_ul": 240,
+        "hemoglobin_g_dl": 11.8,
+        "hbsag": "negative",
+        "anti_hbc_total": "negative",
+        "hcv_status": "negative",
+        "hiv_status": "negative"
+      },
+      "disease_id": "DIS-BREAST"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
     "case_id": "breast-her2-pos-early-katherine",
     "label": "Breast · HER2+ early · Neoadj TCHP → KATHERINE T-DM1",
     "label_en": "Breast · HER2+ early · Neoadj TCHP → KATHERINE T-DM1",
@@ -3756,6 +3826,204 @@
     "quality_class": "quality-curated"
   },
   {
+    "case_id": "dlbcl-high-ipi",
+    "label": "DLBCL NOS · High-IPI (Pola-R-CHP)",
+    "label_en": "DLBCL NOS · High-IPI (Pola-R-CHP)",
+    "disease_id": "DIS-DLBCL-NOS",
+    "file": "patient_dlbcl_high_ipi.json",
+    "json": {
+      "patient_id": "DLBCL-HIGHIPI-001",
+      "comment": "Synthetic newly-diagnosed DLBCL NOS with high IPI (3+, age >60, advanced stage, multiple extranodal). Engine should select Pola-R-CHP (aggressive track) as default.",
+      "disease": {
+        "icd_o_3_morphology": "9680/3",
+        "id": "DIS-DLBCL-NOS"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive",
+        "BIO-CD79B-IHC": "positive"
+      },
+      "demographics": {
+        "age": 67,
+        "sex": "female",
+        "ecog": 2
+      },
+      "findings": {
+        "ipi_score": 4,
+        "high_ipi": true,
+        "cns_ipi_score": 4,
+        "anatomic_cns_risk_site": false,
+        "lvef_percent": 58
+      },
+      "clinical_record": {
+        "diagnosis": {
+          "primary_diagnosis": {
+            "disease_entity": "Diffuse Large B-Cell Lymphoma, NOS",
+            "icd_o_3": "9680/3",
+            "icd_10": "C83.3",
+            "who_classification_5th_ed": "Aggressive B-cell lymphomas — Diffuse large B-cell lymphoma, NOS"
+          },
+          "staging": {
+            "staging_system": "Lugano",
+            "stage": "IV",
+            "b_symptoms": true,
+            "extranodal_involvement": true,
+            "extranodal_sites": [
+              "bone marrow",
+              "liver",
+              "stomach"
+            ]
+          },
+          "ipi_components": {
+            "age_over_60": true,
+            "ecog_2_or_more": true,
+            "ldh_above_uln": true,
+            "stage_3_or_4": true,
+            "extranodal_sites_2_or_more": true,
+            "ipi_score": 4
+          },
+          "cell_of_origin_hans": "non-GCB"
+        },
+        "ihc_and_molecular": {
+          "ihc_markers": {
+            "CD20": "positive",
+            "CD3": "negative",
+            "CD10": "negative",
+            "BCL2": "positive",
+            "BCL6": "positive",
+            "MUM1": "positive",
+            "MYC": "approximately_40_percent",
+            "Ki67_percent": 80
+          },
+          "fish": {
+            "MYC_break_apart": "negative",
+            "BCL2_break_apart": "negative",
+            "BCL6_break_apart": "negative"
+          }
+        },
+        "infectious_status": {
+          "HBV": {
+            "HBsAg": "negative",
+            "anti_HBc": "negative"
+          },
+          "HCV": {
+            "anti_HCV": "negative"
+          },
+          "HIV": "negative"
+        },
+        "cardiac": {
+          "baseline_LVEF_percent": 58
+        },
+        "funding_pathway": {
+          "polatuzumab_funding_confirmed": false,
+          "notes": "Без підтвердженого charitable / clinical-trial / out-of-pocket pathway пацієнта спрямовано на R-CHOP як fallback"
+        }
+      },
+      "disease_id": "DIS-DLBCL-NOS"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
+    "case_id": "dlbcl-low-ipi",
+    "label": "DLBCL NOS · Low-IPI (R-CHOP standard)",
+    "label_en": "DLBCL NOS · Low-IPI (R-CHOP standard)",
+    "disease_id": "DIS-DLBCL-NOS",
+    "file": "patient_dlbcl_low_ipi.json",
+    "json": {
+      "patient_id": "DLBCL-LOWIPI-001",
+      "comment": "Synthetic newly-diagnosed DLBCL NOS with low IPI (0-1). Engine should select R-CHOP (standard track) as default.",
+      "disease": {
+        "icd_o_3_morphology": "9680/3",
+        "id": "DIS-DLBCL-NOS"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive",
+        "BIO-CD79B-IHC": "positive"
+      },
+      "demographics": {
+        "age": 54,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "ipi_score": 1,
+        "high_ipi": false,
+        "cns_ipi_score": 1,
+        "anatomic_cns_risk_site": false,
+        "lvef_percent": 62,
+        "Standard-risk IPI (0-1)": true,
+        "ECOG ≤ 2": true
+      },
+      "clinical_record": {
+        "diagnosis": {
+          "primary_diagnosis": {
+            "disease_entity": "Diffuse Large B-Cell Lymphoma, NOS",
+            "icd_o_3": "9680/3",
+            "icd_10": "C83.3",
+            "who_classification_5th_ed": "Aggressive B-cell lymphomas — Diffuse large B-cell lymphoma, NOS"
+          },
+          "staging": {
+            "staging_system": "Lugano",
+            "stage": "II",
+            "b_symptoms": false,
+            "extranodal_involvement": false
+          },
+          "ipi_components": {
+            "age_over_60": false,
+            "ecog_2_or_more": false,
+            "ldh_above_uln": true,
+            "stage_3_or_4": false,
+            "extranodal_sites_2_or_more": false,
+            "ipi_score": 1
+          },
+          "cell_of_origin_hans": "GCB"
+        },
+        "ihc_and_molecular": {
+          "ihc_markers": {
+            "CD20": "positive",
+            "CD3": "negative",
+            "CD10": "positive",
+            "BCL2": "positive",
+            "BCL6": "positive",
+            "MUM1": "negative",
+            "MYC": "<40%",
+            "Ki67_percent": 65
+          },
+          "fish": {
+            "MYC_break_apart": "negative",
+            "BCL2_break_apart": "negative",
+            "BCL6_break_apart": "negative"
+          }
+        },
+        "infectious_status": {
+          "HBV": {
+            "HBsAg": "negative",
+            "anti_HBc": "negative",
+            "anti_HBs": "positive"
+          },
+          "HCV": {
+            "anti_HCV": "negative"
+          },
+          "HIV": "negative"
+        },
+        "cardiac": {
+          "baseline_LVEF_percent": 62
+        }
+      },
+      "disease_id": "DIS-DLBCL-NOS"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
     "case_id": "dlbcl-relapsed-te-ineligible",
     "label": "DLBCL NOS · Relapsed (Transplant-Ineligible)",
     "label_en": "DLBCL NOS · Relapsed (Transplant-Ineligible)",
@@ -5010,6 +5278,129 @@
     "quality_class": "quality-curated"
   },
   {
+    "case_id": "hcc-durva-treme-stride",
+    "label": "HCC · 1L · Durva+treme (HIMALAYA STRIDE)",
+    "label_en": "HCC · 1L · Durva+treme (HIMALAYA STRIDE)",
+    "disease_id": "DIS-HCC",
+    "file": "patient_hcc_durva_treme_stride.json",
+    "json": {
+      "patient_id": "HCC-HIMALAYA-STRIDE-001",
+      "comment": "Synthetic advanced HCC, BCLC C, Child-Pugh A6, HCV-cirrhosis (post-SVR12), ECOG 1, AFP 180 ng/mL, prior variceal bleed 4 months ago (banded, controlled) — bevacizumab contraindicated. Engine routes ALGO-HCC-SYSTEMIC-1L step 1 (RF-HCC-VARICEAL-BLEED fires on recent_variceal_bleed_6mo) → IND-HCC-SYSTEMIC-1L-DURVA-TREME (durvalumab+tremelimumab STRIDE, HIMALAYA mOS 16.4 vs 13.8 sorafenib, NCCN cat 1, bev-sparing track).",
+      "disease": {
+        "id": "DIS-HCC"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-AFP": 180,
+        "BIO-HBV-STATUS": "negative",
+        "BIO-HCV-STATUS": "positive_svr"
+      },
+      "demographics": {
+        "age": 67,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "afp_baseline_ng_ml": 180,
+        "child_pugh_class": "A",
+        "child_pugh_score": 6,
+        "bclc_stage": "C",
+        "etiology": "HCV",
+        "cirrhosis": true,
+        "hcv_svr12_achieved": true,
+        "portal_vein_tumor_thrombus": false,
+        "active_variceal_bleed": false,
+        "recent_variceal_bleed_6mo": true,
+        "untreated_high_risk_varices": false,
+        "egd_within_6mo": true,
+        "varices_banded": true,
+        "stage": "IV",
+        "stage_iv": true,
+        "metastatic_sites": [
+          "lung",
+          "lymph_node_distant"
+        ],
+        "creatinine_clearance_ml_min": 72,
+        "bilirubin_uln_x": 1.2,
+        "albumin_g_dl": 3.4,
+        "inr": 1.2,
+        "platelets_k_ul": 95,
+        "absolute_neutrophil_count_k_ul": 2.4,
+        "hbsag": "negative",
+        "anti_hbc_total": "negative",
+        "hcv_status": "rna_undetectable_post_svr",
+        "hiv_status": "negative",
+        "autoimmune_disease_active": false
+      },
+      "disease_id": "DIS-HCC"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
+    "case_id": "hcc-atezo-bev-imbrave150",
+    "label": "HCC · Child-Pugh A 1L · Atezo+bev (IMbrave150)",
+    "label_en": "HCC · Child-Pugh A 1L · Atezo+bev (IMbrave150)",
+    "disease_id": "DIS-HCC",
+    "file": "patient_hcc_atezo_bev_imbrave150.json",
+    "json": {
+      "patient_id": "HCC-IMBRAVE150-001",
+      "comment": "Synthetic advanced HCC, BCLC C, Child-Pugh A5, MASH cirrhosis, no varices on recent EGD, ECOG 1, AFP 620 ng/mL, HBV/HCV/HIV negative. Engine routes ALGO-HCC-SYSTEMIC-1L step 1 (no variceal bleed) → step 2 (no CP-B/C, no frailty) → step 3 (no hepatic dysfunction RF + RF-FITNESS-ECOG-FIT fires) → IND-HCC-SYSTEMIC-1L-ATEZO-BEV (atezolizumab+bevacizumab, IMbrave150 mOS 19.2 vs 13.4 sorafenib, NCCN cat 1).",
+      "disease": {
+        "id": "DIS-HCC"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-AFP": 620,
+        "BIO-HBV-STATUS": "negative",
+        "BIO-HCV-STATUS": "negative"
+      },
+      "demographics": {
+        "age": 64,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "afp_baseline_ng_ml": 620,
+        "child_pugh_class": "A",
+        "child_pugh_score": 5,
+        "bclc_stage": "C",
+        "etiology": "MASH",
+        "cirrhosis": true,
+        "portal_vein_tumor_thrombus": false,
+        "active_variceal_bleed": false,
+        "recent_variceal_bleed_6mo": false,
+        "untreated_high_risk_varices": false,
+        "egd_within_6mo": true,
+        "stage": "IV",
+        "stage_iv": true,
+        "metastatic_sites": [
+          "lung"
+        ],
+        "creatinine_clearance_ml_min": 78,
+        "bilirubin_uln_x": 1.0,
+        "albumin_g_dl": 3.6,
+        "inr": 1.1,
+        "platelets_k_ul": 120,
+        "absolute_neutrophil_count_k_ul": 2.6,
+        "hbsag": "negative",
+        "anti_hbc_total": "negative",
+        "hcv_status": "negative",
+        "hiv_status": "negative",
+        "autoimmune_disease_active": false
+      },
+      "disease_id": "DIS-HCC"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
     "case_id": "hcl-typical",
     "label": "Hairy Cell Leukemia (Cladribine 7-day)",
     "label_en": "Hairy Cell Leukemia (Cladribine 7-day)",
@@ -5180,6 +5571,356 @@
     "quality_class": "quality-diagnostic"
   },
   {
+    "case_id": "hcv-mzl-bulky",
+    "label": "HCV-MZL · Aggressive Burden (BR + concurrent DAA)",
+    "label_en": "HCV-MZL · Aggressive Burden (BR + concurrent DAA)",
+    "disease_id": "DIS-HCV-MZL",
+    "file": "patient_hcv_mzl_aggressive_burden.json",
+    "json": {
+      "patient_id": "HCV-MZL-AGG-002",
+      "comment": "Synthetic HCV-positive MZL with high tumor burden + B-symptoms. Engine should select aggressive track — concurrent DAA + BR (IND-HCV-MZL-1L-BR-AGGRESSIVE).",
+      "disease": {
+        "icd_o_3_morphology": "9699/3",
+        "id": "DIS-HCV-MZL"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive",
+        "BIO-HCV-RNA": "detectable",
+        "BIO-HCV-GENOTYPE": "3a"
+      },
+      "demographics": {
+        "age": 58,
+        "sex": "male",
+        "ecog": 2
+      },
+      "findings": {
+        "hcv_rna_iu_ml": 5400000,
+        "hcv_genotype": "3a",
+        "fib4_score": 2.6,
+        "child_pugh": "A",
+        "cryoglobulins_present": true,
+        "cryoglobulinemic_vasculitis": true,
+        "dominant_nodal_mass_cm": 8.5,
+        "b_symptoms_present": true,
+        "ldh_above_uln": true,
+        "transformation_suspect": false,
+        "fl_gelf_high_burden": true,
+        "Active treatment indication (high-burden, B-symptoms)": true,
+        "HCV-positive (concurrent DAA + immunochemotherapy)": true
+      },
+      "clinical_record": {
+        "diagnosis": {
+          "primary_diagnosis": {
+            "disease_entity": "HCV-associated marginal zone lymphoma",
+            "icd_o_3": "9699/3",
+            "icd_10": "C88.4",
+            "who_classification_5th_ed": "Indolent B-cell lymphomas — Marginal zone lymphomas — HCV-associated MZL"
+          },
+          "staging": {
+            "staging_system": "Lugano",
+            "stage": "IIIB",
+            "b_symptoms": true,
+            "extranodal_involvement": true,
+            "extranodal_sites": [
+              "bone marrow",
+              "spleen"
+            ]
+          }
+        },
+        "infectious_status": {
+          "HBV": {
+            "HBsAg": "negative",
+            "anti_HBc": "positive",
+            "anti_HBs": "positive"
+          },
+          "HCV": {
+            "anti_HCV": "positive",
+            "HCV_RNA": "detectable",
+            "genotype": "3a"
+          },
+          "HIV": "negative"
+        },
+        "hepatic_status": {
+          "FIB4": 2.6,
+          "child_pugh": "A",
+          "esophageal_varices": false
+        }
+      },
+      "disease_id": "DIS-HCV-MZL"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
+    "case_id": "hcv-mzl-post-daa",
+    "label": "HCV-MZL · Post-DAA Responder (Surveillance)",
+    "label_en": "HCV-MZL · Post-DAA Responder (Surveillance)",
+    "disease_id": "DIS-HCV-MZL",
+    "file": "patient_hcv_mzl_post_daa_responder.json",
+    "json": {
+      "patient_id": "HCV-MZL-POSTDAA-003",
+      "comment": "Synthetic HCV-MZL post-DAA, SVR12 achieved, lymphoma response in progress. Engine should activate post-DAA surveillance (IND-HCV-MZL-POST-DAA-SURVEILLANCE) — observe q3 mo for hematologic response.",
+      "disease": {
+        "icd_o_3_morphology": "9699/3",
+        "id": "DIS-HCV-MZL"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive",
+        "BIO-HCV-RNA": "undetectable"
+      },
+      "demographics": {
+        "age": 67,
+        "sex": "female",
+        "ecog": 1
+      },
+      "findings": {
+        "svr12_achieved": true,
+        "months_post_svr12": 4,
+        "hcv_rna_iu_ml": 0,
+        "fib4_score": 2.0,
+        "child_pugh": "A",
+        "cryoglobulins_present": false,
+        "lymphoma_response_partial": true,
+        "lymphoma_response_complete": false,
+        "transformation_suspect": false,
+        "fl_gelf_high_burden": false,
+        "Surveillance phase post-SVR12 (lymphoma response in progress)": true
+      },
+      "clinical_record": {
+        "diagnosis": {
+          "primary_diagnosis": {
+            "disease_entity": "HCV-associated marginal zone lymphoma",
+            "icd_o_3": "9699/3",
+            "icd_10": "C88.4"
+          },
+          "staging": {
+            "staging_system": "Lugano",
+            "stage": "II",
+            "b_symptoms": false
+          },
+          "treatment_history": [
+            {
+              "line": "antiviral",
+              "regimen": "Sofosbuvir/velpatasvir × 12 weeks",
+              "completed": "2026-01-15",
+              "response": "SVR12 confirmed 2026-04-10"
+            }
+          ]
+        },
+        "infectious_status": {
+          "HBV": {
+            "HBsAg": "negative",
+            "anti_HBc": "negative",
+            "anti_HBs": "negative"
+          },
+          "HCV": {
+            "anti_HCV": "positive",
+            "HCV_RNA": "undetectable",
+            "SVR12": true
+          },
+          "HIV": "negative"
+        }
+      },
+      "disease_id": "DIS-HCV-MZL"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
+    "case_id": "hcv-mzl-reference",
+    "label": "HCV-MZL · Reference Case (Patient Zero)",
+    "label_en": "HCV-MZL · Reference Case (Patient Zero)",
+    "disease_id": "DIS-HCV-MZL",
+    "file": "patient_zero_reference_case.json",
+    "json": {
+      "patient_id": "REFERENCE-CASE-0001",
+      "comment": "Synthetic HCV-MZL reference case per specs/REFERENCE_CASE_SPECIFICATION.md §2. NOT real patient data — fully synthesized for acceptance testing of the §1.3 critical structural criteria. Engine-required fields at top; the clinical_record block carries the spec-§2 patient profile template populated with realistic synthetic values, kept alongside so render layers and downstream tooling can read it.",
+      "disease": {
+        "icd_o_3_morphology": "9699/3",
+        "id": "DIS-HCV-MZL"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-HCV-RNA": "positive"
+      },
+      "demographics": {
+        "age": 49,
+        "sex": "male",
+        "ecog": 1,
+        "decompensated_cirrhosis": false,
+        "fit_for_chemoimmunotherapy": true
+      },
+      "findings": {
+        "dominant_nodal_mass_cm": 5.3,
+        "mediastinal_ratio": 0.12,
+        "symptomatic_b_symptoms_severe": false,
+        "biopsy_shows_dlbcl": false,
+        "ldh_ratio_to_uln": 1.05,
+        "clinical_progression_weeks": 48,
+        "HCV RNA positive": true,
+        "Indolent presentation (non-bulky, asymptomatic or minimally symptomatic)": true,
+        "hbsag": "negative",
+        "anti_hbc_total": "negative"
+      },
+      "clinical_record": {
+        "demographics": {
+          "patient_id": "REFERENCE-CASE-0001",
+          "gender": "male",
+          "birth_year_cohort": "1975-1979",
+          "age_at_diagnosis_range": "45-55",
+          "performance_status_ecog": 1,
+          "height_cm": 178,
+          "weight_kg": 82,
+          "bsa_m2": 2.0
+        },
+        "diagnosis": {
+          "primary_diagnosis": {
+            "disease_entity": "HCV-associated marginal zone lymphoma",
+            "icd_o_3": "9699/3",
+            "icd_10": "C88.4",
+            "who_classification_5th_ed": "Extranodal marginal zone lymphoma of mucosa-associated lymphoid tissue",
+            "date_of_histological_confirmation": "[redacted]",
+            "biopsy_site": "root of tongue with tonsil involvement",
+            "diagnostic_method": "histological biopsy with IHC"
+          },
+          "staging": {
+            "staging_system": "Lugano",
+            "stage": "IV-E",
+            "b_symptoms": false,
+            "bulky_disease_over_7cm": false,
+            "extranodal_involvement": true
+          }
+        },
+        "ihc_and_molecular": {
+          "ihc_markers": {
+            "CD20": "positive",
+            "MNDA": "positive",
+            "BCL2": "positive",
+            "FoxP1": "positive",
+            "c_MYC": "approximately_30_percent",
+            "Ki67_percent": 60,
+            "double_expressor_status": "no"
+          },
+          "molecular_tests": {
+            "NGS_panel": "not_performed",
+            "FISH_tests": "not_performed"
+          }
+        },
+        "infectious_status": {
+          "HCV": {
+            "status": "chronic_infection_confirmed",
+            "RNA_quantitative_IU_mL": 1240000,
+            "genotype": "1b",
+            "duration_known_years": 6,
+            "prior_DAA_treatment": "no"
+          },
+          "HBV": {
+            "HBsAg": "negative",
+            "anti_HBc": "negative",
+            "anti_HBs": "positive"
+          },
+          "HIV": "negative"
+        },
+        "laboratory_baseline": {
+          "cbc": {
+            "hemoglobin_g_dl": 13.4,
+            "platelets_k_ul": 198,
+            "anc_k_ul": 3.2,
+            "alc_k_ul": 1.8
+          },
+          "liver_panel": {
+            "AST_U_L": 48,
+            "ALT_U_L": 62,
+            "alkaline_phosphatase_U_L": 102,
+            "GGT_U_L": 85,
+            "total_bilirubin_mg_dL": 0.9,
+            "albumin_g_dL": 4.1,
+            "INR": 1.0
+          },
+          "renal": {
+            "creatinine_mg_dL": 0.95,
+            "eGFR": 92
+          },
+          "other": {
+            "LDH_U_L": 215,
+            "B2_microglobulin_mg_L": 2.1
+          },
+          "calculations": {
+            "FIB_4": 1.65,
+            "CrCl_CockcroftGault_mL_min": 96
+          }
+        },
+        "imaging": {
+          "modality": "MRI + CECT",
+          "date": "[redacted]",
+          "findings": {
+            "primary_lesion": {
+              "location": "root of tongue with tonsil involvement",
+              "dimensions_mm": "33x36x53",
+              "approximate_size_cm": 5.3,
+              "bulky_by_criteria": false
+            },
+            "lymph_nodes": [
+              {
+                "station": "Ia",
+                "size_mm": 10,
+                "suspicious": true
+              },
+              {
+                "station": "IIa",
+                "size_mm": 14,
+                "suspicious": true
+              }
+            ],
+            "bone_destruction": false,
+            "CNS_involvement": false
+          }
+        },
+        "comorbidities_and_meds": {
+          "comorbidities": [
+            "chronic HCV (E11 — managed)",
+            "mild hypertension (I10)"
+          ],
+          "current_medications": [
+            "amlodipine 5 mg daily"
+          ],
+          "allergies": [
+            "none documented"
+          ],
+          "prior_cancer_treatments": []
+        },
+        "symptoms_and_concerns": {
+          "symptoms_onset": "approximately 6 months — gradually enlarging tongue-base mass, mild dysphagia",
+          "b_symptoms": {
+            "fever": false,
+            "night_sweats": false,
+            "weight_loss_over_10_percent": false
+          },
+          "functional_status_changes": "minimal — daily activities preserved, ECOG 1",
+          "clinical_concerns_flagged": {
+            "rapid_progression": false,
+            "suspected_transformation": false,
+            "performance_decline": false
+          }
+        }
+      },
+      "disease_id": "DIS-HCV-MZL"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
     "case_id": "hgbl-double-hit",
     "label": "HGBL · Double-Hit (DA-EPOCH-R)",
     "label_en": "HGBL · Double-Hit (DA-EPOCH-R)",
@@ -5208,6 +5949,104 @@
         "bcl2_rearrangement": true,
         "double_hit_lymphoma": true,
         "lvef_percent": 60
+      },
+      "disease_id": "DIS-HGBL-DH"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
+    "case_id": "hgbl-primary-refractory",
+    "label": "HGBL · Primary Refractory (Early CAR-T)",
+    "label_en": "HGBL · Primary Refractory (Early CAR-T)",
+    "disease_id": "DIS-HGBL-DH",
+    "file": "patient_hgbl_primary_refractory.json",
+    "json": {
+      "patient_id": "HGBL-PRIMREF-002",
+      "comment": "Synthetic HGBL-DH (MYC + BCL2 rearrangement) primary-refractory to 1L DA-EPOCH-R, fit for CAR-T. Engine should route to 2L axi-cel CAR-T (IND-HGBL-DH-2L-CART-AXICEL) as aggressive track.",
+      "disease": {
+        "icd_o_3_morphology": "9680/3",
+        "id": "DIS-HGBL-DH"
+      },
+      "line_of_therapy": 2,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive",
+        "BIO-MYC-FISH": "positive (rearrangement)",
+        "BIO-BCL2-FISH": "positive (rearrangement)",
+        "BIO-BCL6-FISH": "negative"
+      },
+      "demographics": {
+        "age": 48,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "months_since_1L_completion": 0,
+        "primary_refractory": true,
+        "double_hit": true,
+        "triple_hit": false,
+        "cns_involvement": false,
+        "ldh_above_uln": true,
+        "lvef_percent": 62,
+        "Primary refractory HGBL-DH (no response to DA-EPOCH-R)": true,
+        "CAR-T eligible (age, ECOG, no CNS, organ function)": true
+      },
+      "clinical_record": {
+        "diagnosis": {
+          "primary_diagnosis": {
+            "disease_entity": "High-Grade B-Cell Lymphoma with MYC and BCL2 rearrangement (double-hit)",
+            "icd_o_3": "9680/3",
+            "icd_10": "C83.7",
+            "who_classification_5th_ed": "Aggressive B-cell lymphomas — High-grade B-cell lymphoma with MYC and BCL2 rearrangement"
+          },
+          "staging": {
+            "staging_system": "Lugano",
+            "stage": "IV",
+            "b_symptoms": true,
+            "extranodal_involvement": true,
+            "extranodal_sites": [
+              "bone marrow",
+              "liver"
+            ]
+          }
+        },
+        "ihc_and_molecular": {
+          "ihc_markers": {
+            "CD20": "positive",
+            "BCL2": "positive",
+            "MYC": ">40%",
+            "Ki67_percent": 95
+          },
+          "fish": {
+            "MYC_break_apart": "positive",
+            "BCL2_break_apart": "positive",
+            "BCL6_break_apart": "negative"
+          }
+        },
+        "treatment_history": [
+          {
+            "line": "1L",
+            "regimen": "DA-EPOCH-R × 4 cycles",
+            "completed": "2026-03-30",
+            "response": "PD (interim PET Deauville 5)"
+          }
+        ],
+        "infectious_status": {
+          "HBV": {
+            "HBsAg": "negative",
+            "anti_HBc": "negative"
+          },
+          "HCV": {
+            "anti_HCV": "negative"
+          },
+          "HIV": "negative"
+        },
+        "cardiac": {
+          "baseline_LVEF_percent": 62
+        }
       },
       "disease_id": "DIS-HGBL-DH"
     },
@@ -7470,6 +8309,77 @@
     "quality_class": "quality-curated"
   },
   {
+    "case_id": "nmzl-high-burden",
+    "label": "Nodal MZL · High Burden (BR)",
+    "label_en": "Nodal MZL · High Burden (BR)",
+    "disease_id": "DIS-NODAL-MZL",
+    "file": "patient_nmzl_high_burden.json",
+    "json": {
+      "patient_id": "NMZL-HIGHBURDEN-002",
+      "comment": "Synthetic nodal MZL with high tumor burden (GELF criteria positive), symptomatic. Engine should select BR (IND-NMZL-1L-BR) over watch-and-wait.",
+      "disease": {
+        "icd_o_3_morphology": "9699/3",
+        "id": "DIS-NODAL-MZL"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive"
+      },
+      "demographics": {
+        "age": 64,
+        "sex": "female",
+        "ecog": 1
+      },
+      "findings": {
+        "fl_gelf_high_burden": true,
+        "dominant_nodal_mass_cm": 8.2,
+        "nodal_areas_count": 4,
+        "b_symptoms_present": true,
+        "ldh_above_uln": true,
+        "splenomegaly_cm_below_costal": 6,
+        "cytopenia": true,
+        "transformation_suspect": false,
+        "GELF criteria met (high tumor burden)": true,
+        "Symptomatic disease requiring active treatment": true
+      },
+      "clinical_record": {
+        "diagnosis": {
+          "primary_diagnosis": {
+            "disease_entity": "Nodal Marginal Zone Lymphoma",
+            "icd_o_3": "9699/3",
+            "icd_10": "C88.4"
+          },
+          "staging": {
+            "staging_system": "Lugano",
+            "stage": "IIIB",
+            "b_symptoms": true,
+            "extranodal_involvement": true,
+            "extranodal_sites": [
+              "bone marrow",
+              "spleen"
+            ]
+          }
+        },
+        "infectious_status": {
+          "HBV": {
+            "HBsAg": "negative",
+            "anti_HBc": "negative"
+          },
+          "HCV": {
+            "anti_HCV": "negative"
+          },
+          "HIV": "negative"
+        }
+      },
+      "disease_id": "DIS-NODAL-MZL"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
     "case_id": "nmzl-low-burden",
     "label": "Nodal MZL · Low Burden (W&W)",
     "label_en": "Nodal MZL · Low Burden (W&W)",
@@ -8538,6 +9448,240 @@
         "bilirubin_uln_x": 0.9
       },
       "disease_id": "DIS-OVARIAN"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
+    "case_id": "pcnsl-elderly-frail",
+    "label": "PCNSL · Elderly Frail (R-MTX-attenuated)",
+    "label_en": "PCNSL · Elderly Frail (R-MTX-attenuated)",
+    "disease_id": "DIS-PCNSL",
+    "file": "patient_pcnsl_elderly_frail.json",
+    "json": {
+      "patient_id": "PCNSL-ELDERLY-002",
+      "comment": "Synthetic elderly frail PCNSL — age 78, ECOG 2, CrCl 48 (HD-MTX-marginal). Engine should flag frailty (RF-PCNSL-FRAILTY-AGE) and consider reduced-intensity HD-MTX (1 g/m²) or rituximab + temozolomide; route to alternative track if HD-MTX excluded.",
+      "disease": {
+        "icd_o_3_morphology": "9680/3",
+        "id": "DIS-PCNSL"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive"
+      },
+      "demographics": {
+        "age": 78,
+        "sex": "female",
+        "ecog": 2
+      },
+      "findings": {
+        "creatinine_clearance": 48,
+        "third_space_fluid": false,
+        "csf_cytology_positive": false,
+        "ocular_involvement": false,
+        "frailty_assessment": "moderately frail",
+        "comorbidities": [
+          "controlled DM2",
+          "atrial fibrillation"
+        ],
+        "memorial_sloan_kettering_score": 3,
+        "Elderly (≥65) with renal impairment + comorbidities": true,
+        "HD-MTX caution / dose-reduction needed": true
+      },
+      "clinical_record": {
+        "diagnosis": {
+          "primary_diagnosis": {
+            "disease_entity": "Primary Diffuse Large B-Cell Lymphoma of the CNS",
+            "icd_o_3": "9680/3",
+            "icd_10": "C71.9"
+          },
+          "staging": {
+            "staging_system": "PCNSL-specific",
+            "stage": "Multifocal brain lesions (3 lesions)",
+            "csf_involvement": false
+          }
+        },
+        "infectious_status": {
+          "HBV": {
+            "HBsAg": "negative",
+            "anti_HBc": "negative"
+          },
+          "HCV": {
+            "anti_HCV": "negative"
+          },
+          "HIV": "negative"
+        },
+        "renal": {
+          "creatinine_clearance_ml_min": 48
+        }
+      },
+      "disease_id": "DIS-PCNSL"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
+    "case_id": "pcnsl-immunocompromised-ebv",
+    "label": "PCNSL · Immunocompromised + EBV+ (Restore Immunity)",
+    "label_en": "PCNSL · Immunocompromised + EBV+ (Restore Immunity)",
+    "disease_id": "DIS-PCNSL",
+    "file": "patient_pcnsl_immunocompromised_ebv.json",
+    "json": {
+      "patient_id": "PCNSL-IMMUNO-003",
+      "comment": "Synthetic atypical PCNSL — immunocompromised (post-renal-transplant), EBV-positive lymphoma. PCNSL in immunocompromised setting overlaps PTLD pathway — engine should flag for MDT review (immunosuppression reduction first, then rituximab-based therapy).",
+      "disease": {
+        "icd_o_3_morphology": "9680/3",
+        "id": "DIS-PCNSL"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive",
+        "BIO-EBV-EBER-ISH": "positive"
+      },
+      "demographics": {
+        "age": 52,
+        "sex": "male",
+        "ecog": 2
+      },
+      "findings": {
+        "creatinine_clearance": 65,
+        "third_space_fluid": false,
+        "csf_cytology_positive": false,
+        "ocular_involvement": false,
+        "immunocompromised": true,
+        "immunosuppression_cause": "post-renal-transplant on tacrolimus + MMF",
+        "ebv_eber_positive": true,
+        "ebv_viral_load_copies_ml": 12500,
+        "Atypical PCNSL — immunocompromised + EBV-driven": true
+      },
+      "clinical_record": {
+        "diagnosis": {
+          "primary_diagnosis": {
+            "disease_entity": "Primary CNS DLBCL (EBV-positive, immunocompromised setting)",
+            "icd_o_3": "9680/3",
+            "icd_10": "C71.9",
+            "who_classification_5th_ed": "EBV-positive DLBCL of the CNS — immunocompromised host"
+          },
+          "staging": {
+            "staging_system": "PCNSL-specific",
+            "stage": "Brain only — periventricular + corpus callosum involvement",
+            "csf_involvement": false
+          }
+        },
+        "ihc_and_molecular": {
+          "ihc_markers": {
+            "CD20": "positive",
+            "EBV-EBER": "positive",
+            "Ki67_percent": 85
+          }
+        },
+        "transplant_history": {
+          "organ": "kidney",
+          "year": 2019,
+          "current_immunosuppression": "tacrolimus + mycophenolate"
+        },
+        "infectious_status": {
+          "HBV": {
+            "HBsAg": "negative",
+            "anti_HBc": "negative"
+          },
+          "HCV": {
+            "anti_HCV": "negative"
+          },
+          "HIV": "negative",
+          "EBV": {
+            "viral_load_copies_ml": 12500
+          }
+        },
+        "renal": {
+          "creatinine_clearance_ml_min": 65
+        }
+      },
+      "disease_id": "DIS-PCNSL"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
+    "case_id": "pcnsl-typical",
+    "label": "PCNSL · Typical (R-MPV → autoSCT)",
+    "label_en": "PCNSL · Typical (R-MPV → autoSCT)",
+    "disease_id": "DIS-PCNSL",
+    "file": "patient_pcnsl_typical.json",
+    "json": {
+      "patient_id": "PCNSL-TYPICAL-001",
+      "comment": "Synthetic typical PCNSL — fit middle-aged patient, single periventricular lesion. Engine should select R-MPV induction (IND-PCNSL-1L-R-MPV) as standard, with consolidation pathway (autoSCT thiotepa-based).",
+      "disease": {
+        "icd_o_3_morphology": "9680/3",
+        "id": "DIS-PCNSL"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive"
+      },
+      "demographics": {
+        "age": 58,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "creatinine_clearance": 95,
+        "third_space_fluid": false,
+        "csf_cytology_positive": false,
+        "ocular_involvement": false,
+        "single_lesion": true,
+        "lesions_count": 1,
+        "memorial_sloan_kettering_score": 1,
+        "Newly-diagnosed PCNSL, fit": true,
+        "Adequate renal function for HD-MTX": true
+      },
+      "clinical_record": {
+        "diagnosis": {
+          "primary_diagnosis": {
+            "disease_entity": "Primary Diffuse Large B-Cell Lymphoma of the CNS",
+            "icd_o_3": "9680/3",
+            "icd_10": "C71.9",
+            "who_classification_5th_ed": "Aggressive B-cell lymphomas — Primary CNS DLBCL"
+          },
+          "staging": {
+            "staging_system": "PCNSL-specific (CSF + ocular + brain MRI)",
+            "stage": "Brain only — single periventricular lesion",
+            "csf_involvement": false,
+            "ocular_involvement": false
+          }
+        },
+        "ihc_and_molecular": {
+          "ihc_markers": {
+            "CD20": "positive",
+            "BCL6": "positive",
+            "MUM1": "positive",
+            "Ki67_percent": 90
+          }
+        },
+        "infectious_status": {
+          "HBV": {
+            "HBsAg": "negative",
+            "anti_HBc": "negative"
+          },
+          "HCV": {
+            "anti_HCV": "negative"
+          },
+          "HIV": "negative"
+        },
+        "renal": {
+          "creatinine_clearance_ml_min": 95
+        }
+      },
+      "disease_id": "DIS-PCNSL"
     },
     "quality_rank": 20,
     "quality_tier": "curated",
@@ -9777,6 +10921,118 @@
         }
       },
       "disease_id": "DIS-PV"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
+    "case_id": "rcc-imdc-fav-axi-pembro",
+    "label": "RCC · IMDC favorable 1L · Axi+pembro (KEYNOTE-426)",
+    "label_en": "RCC · IMDC favorable 1L · Axi+pembro (KEYNOTE-426)",
+    "disease_id": "DIS-RCC",
+    "file": "patient_rcc_imdc_fav_axi_pembro.json",
+    "json": {
+      "patient_id": "RCC-AXI-PEMBRO-001",
+      "comment": "Synthetic clear-cell metastatic RCC, IMDC favorable-risk female 58 (KEYNOTE-426 candidate for axi+pembro). Engine routes ALGO-RCC-METASTATIC-1L → default IND-RCC-METASTATIC-1L-PEMBRO-AXI (favorable IMDC, no intermediate/poor RF triggered). KEYNOTE-426 mOS ~46 mo across IMDC risk groups.",
+      "disease": {
+        "id": "DIS-RCC"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {},
+      "demographics": {
+        "age": 58,
+        "sex": "female",
+        "ecog": 0
+      },
+      "findings": {
+        "histology": "clear_cell_rcc",
+        "histologic_subtype": "CLEAR_CELL",
+        "stage": "IV",
+        "stage_iv": true,
+        "stage_stratum": "STAGE_IV_METASTATIC",
+        "imdc_risk": "favorable",
+        "imdc_risk_factors_count": 0,
+        "metastatic_sites": [
+          "lung"
+        ],
+        "brain_mets": false,
+        "time_from_diagnosis_to_systemic_tx_months": 18,
+        "hemoglobin_g_dl": 13.2,
+        "calcium_corrected_mg_dl": 9.4,
+        "neutrophils_k_ul": 4.8,
+        "platelets_k_ul": 280,
+        "karnofsky_percent": 90,
+        "creatinine_clearance_ml_min": 88,
+        "bilirubin_uln_x": 0.9,
+        "hbsag": "negative",
+        "anti_hbc_total": "negative",
+        "hcv_status": "negative",
+        "hiv_status": "negative",
+        "uncontrolled_hypertension": false,
+        "qtc_prolongation": false,
+        "prior_systemic_therapy": false,
+        "nephrectomy_status": "cytoreductive_nephrectomy_done"
+      },
+      "disease_id": "DIS-RCC"
+    },
+    "quality_rank": 20,
+    "quality_tier": "curated",
+    "quality_label": "Кураторський план",
+    "quality_label_en": "Curated plan",
+    "quality_class": "quality-curated"
+  },
+  {
+    "case_id": "rcc-imdc-int-nivo-ipi",
+    "label": "RCC · IMDC int/poor 1L · Nivo+ipi (CheckMate-214)",
+    "label_en": "RCC · IMDC int/poor 1L · Nivo+ipi (CheckMate-214)",
+    "disease_id": "DIS-RCC",
+    "file": "patient_rcc_imdc_int_nivo_ipi.json",
+    "json": {
+      "patient_id": "RCC-NIVO-IPI-001",
+      "comment": "Synthetic clear-cell metastatic RCC, IMDC intermediate-risk male 62 (CheckMate-214 candidate for nivo+ipi). Plan target IND-RCC-METASTATIC-1L-NIVO-IPI. Drift: ALGO-RCC-METASTATIC-1L step 1 uses free-text 'IMDC intermediate or poor risk' without a disease-scoped RF, so engine routes to default IND-RCC-METASTATIC-1L-PEMBRO-AXI. Drift acknowledged — RF authoring (RF-RCC-IMDC-INTERMEDIATE-POOR) tracked separately.",
+      "disease": {
+        "id": "DIS-RCC"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {},
+      "demographics": {
+        "age": 62,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "histology": "clear_cell_rcc",
+        "histologic_subtype": "CLEAR_CELL",
+        "stage": "IV",
+        "stage_iv": true,
+        "stage_stratum": "STAGE_IV_METASTATIC",
+        "imdc_risk": "intermediate",
+        "imdc_risk_factors_count": 2,
+        "metastatic_sites": [
+          "lung",
+          "bone"
+        ],
+        "brain_mets": false,
+        "time_from_diagnosis_to_systemic_tx_months": 6,
+        "hemoglobin_g_dl": 11.4,
+        "calcium_corrected_mg_dl": 10.0,
+        "neutrophils_k_ul": 6.2,
+        "platelets_k_ul": 380,
+        "karnofsky_percent": 80,
+        "creatinine_clearance_ml_min": 72,
+        "bilirubin_uln_x": 1.0,
+        "hbsag": "negative",
+        "anti_hbc_total": "negative",
+        "hcv_status": "negative",
+        "hiv_status": "negative",
+        "active_autoimmune_disease": false,
+        "prior_systemic_therapy": false,
+        "nephrectomy_status": "cytoreductive_nephrectomy_done"
+      },
+      "disease_id": "DIS-RCC"
     },
     "quality_rank": 20,
     "quality_tier": "curated",
@@ -11995,936 +13251,5 @@
     "quality_label": "Діагностичний brief",
     "quality_label_en": "Diagnostic brief",
     "quality_class": "quality-diagnostic"
-  },
-  {
-    "case_id": "dlbcl-high-ipi",
-    "label": "DLBCL NOS · High-IPI (Pola-R-CHP)",
-    "label_en": "DLBCL NOS · High-IPI (Pola-R-CHP)",
-    "disease_id": null,
-    "file": "patient_dlbcl_high_ipi.json",
-    "json": {
-      "patient_id": "DLBCL-HIGHIPI-001",
-      "comment": "Synthetic newly-diagnosed DLBCL NOS with high IPI (3+, age >60, advanced stage, multiple extranodal). Engine should select Pola-R-CHP (aggressive track) as default.",
-      "disease": {
-        "icd_o_3_morphology": "9680/3"
-      },
-      "line_of_therapy": 1,
-      "biomarkers": {
-        "BIO-CD20-IHC": "positive",
-        "BIO-CD79B-IHC": "positive"
-      },
-      "demographics": {
-        "age": 67,
-        "sex": "female",
-        "ecog": 2
-      },
-      "findings": {
-        "ipi_score": 4,
-        "high_ipi": true,
-        "cns_ipi_score": 4,
-        "anatomic_cns_risk_site": false,
-        "lvef_percent": 58
-      },
-      "clinical_record": {
-        "diagnosis": {
-          "primary_diagnosis": {
-            "disease_entity": "Diffuse Large B-Cell Lymphoma, NOS",
-            "icd_o_3": "9680/3",
-            "icd_10": "C83.3",
-            "who_classification_5th_ed": "Aggressive B-cell lymphomas — Diffuse large B-cell lymphoma, NOS"
-          },
-          "staging": {
-            "staging_system": "Lugano",
-            "stage": "IV",
-            "b_symptoms": true,
-            "extranodal_involvement": true,
-            "extranodal_sites": [
-              "bone marrow",
-              "liver",
-              "stomach"
-            ]
-          },
-          "ipi_components": {
-            "age_over_60": true,
-            "ecog_2_or_more": true,
-            "ldh_above_uln": true,
-            "stage_3_or_4": true,
-            "extranodal_sites_2_or_more": true,
-            "ipi_score": 4
-          },
-          "cell_of_origin_hans": "non-GCB"
-        },
-        "ihc_and_molecular": {
-          "ihc_markers": {
-            "CD20": "positive",
-            "CD3": "negative",
-            "CD10": "negative",
-            "BCL2": "positive",
-            "BCL6": "positive",
-            "MUM1": "positive",
-            "MYC": "approximately_40_percent",
-            "Ki67_percent": 80
-          },
-          "fish": {
-            "MYC_break_apart": "negative",
-            "BCL2_break_apart": "negative",
-            "BCL6_break_apart": "negative"
-          }
-        },
-        "infectious_status": {
-          "HBV": {
-            "HBsAg": "negative",
-            "anti_HBc": "negative"
-          },
-          "HCV": {
-            "anti_HCV": "negative"
-          },
-          "HIV": "negative"
-        },
-        "cardiac": {
-          "baseline_LVEF_percent": 58
-        },
-        "funding_pathway": {
-          "polatuzumab_funding_confirmed": false,
-          "notes": "Без підтвердженого charitable / clinical-trial / out-of-pocket pathway пацієнта спрямовано на R-CHOP як fallback"
-        }
-      }
-    },
-    "quality_rank": 20,
-    "quality_tier": "curated",
-    "quality_label": "Кураторський план",
-    "quality_label_en": "Curated plan",
-    "quality_class": "quality-curated"
-  },
-  {
-    "case_id": "dlbcl-low-ipi",
-    "label": "DLBCL NOS · Low-IPI (R-CHOP standard)",
-    "label_en": "DLBCL NOS · Low-IPI (R-CHOP standard)",
-    "disease_id": null,
-    "file": "patient_dlbcl_low_ipi.json",
-    "json": {
-      "patient_id": "DLBCL-LOWIPI-001",
-      "comment": "Synthetic newly-diagnosed DLBCL NOS with low IPI (0-1). Engine should select R-CHOP (standard track) as default.",
-      "disease": {
-        "icd_o_3_morphology": "9680/3"
-      },
-      "line_of_therapy": 1,
-      "biomarkers": {
-        "BIO-CD20-IHC": "positive",
-        "BIO-CD79B-IHC": "positive"
-      },
-      "demographics": {
-        "age": 54,
-        "sex": "male",
-        "ecog": 1
-      },
-      "findings": {
-        "ipi_score": 1,
-        "high_ipi": false,
-        "cns_ipi_score": 1,
-        "anatomic_cns_risk_site": false,
-        "lvef_percent": 62,
-        "Standard-risk IPI (0-1)": true,
-        "ECOG ≤ 2": true
-      },
-      "clinical_record": {
-        "diagnosis": {
-          "primary_diagnosis": {
-            "disease_entity": "Diffuse Large B-Cell Lymphoma, NOS",
-            "icd_o_3": "9680/3",
-            "icd_10": "C83.3",
-            "who_classification_5th_ed": "Aggressive B-cell lymphomas — Diffuse large B-cell lymphoma, NOS"
-          },
-          "staging": {
-            "staging_system": "Lugano",
-            "stage": "II",
-            "b_symptoms": false,
-            "extranodal_involvement": false
-          },
-          "ipi_components": {
-            "age_over_60": false,
-            "ecog_2_or_more": false,
-            "ldh_above_uln": true,
-            "stage_3_or_4": false,
-            "extranodal_sites_2_or_more": false,
-            "ipi_score": 1
-          },
-          "cell_of_origin_hans": "GCB"
-        },
-        "ihc_and_molecular": {
-          "ihc_markers": {
-            "CD20": "positive",
-            "CD3": "negative",
-            "CD10": "positive",
-            "BCL2": "positive",
-            "BCL6": "positive",
-            "MUM1": "negative",
-            "MYC": "<40%",
-            "Ki67_percent": 65
-          },
-          "fish": {
-            "MYC_break_apart": "negative",
-            "BCL2_break_apart": "negative",
-            "BCL6_break_apart": "negative"
-          }
-        },
-        "infectious_status": {
-          "HBV": {
-            "HBsAg": "negative",
-            "anti_HBc": "negative",
-            "anti_HBs": "positive"
-          },
-          "HCV": {
-            "anti_HCV": "negative"
-          },
-          "HIV": "negative"
-        },
-        "cardiac": {
-          "baseline_LVEF_percent": 62
-        }
-      }
-    },
-    "quality_rank": 20,
-    "quality_tier": "curated",
-    "quality_label": "Кураторський план",
-    "quality_label_en": "Curated plan",
-    "quality_class": "quality-curated"
-  },
-  {
-    "case_id": "hcv-mzl-bulky",
-    "label": "HCV-MZL · Aggressive Burden (BR + concurrent DAA)",
-    "label_en": "HCV-MZL · Aggressive Burden (BR + concurrent DAA)",
-    "disease_id": null,
-    "file": "patient_hcv_mzl_aggressive_burden.json",
-    "json": {
-      "patient_id": "HCV-MZL-AGG-002",
-      "comment": "Synthetic HCV-positive MZL with high tumor burden + B-symptoms. Engine should select aggressive track — concurrent DAA + BR (IND-HCV-MZL-1L-BR-AGGRESSIVE).",
-      "disease": {
-        "icd_o_3_morphology": "9699/3"
-      },
-      "line_of_therapy": 1,
-      "biomarkers": {
-        "BIO-CD20-IHC": "positive",
-        "BIO-HCV-RNA": "detectable",
-        "BIO-HCV-GENOTYPE": "3a"
-      },
-      "demographics": {
-        "age": 58,
-        "sex": "male",
-        "ecog": 2
-      },
-      "findings": {
-        "hcv_rna_iu_ml": 5400000,
-        "hcv_genotype": "3a",
-        "fib4_score": 2.6,
-        "child_pugh": "A",
-        "cryoglobulins_present": true,
-        "cryoglobulinemic_vasculitis": true,
-        "dominant_nodal_mass_cm": 8.5,
-        "b_symptoms_present": true,
-        "ldh_above_uln": true,
-        "transformation_suspect": false,
-        "fl_gelf_high_burden": true,
-        "Active treatment indication (high-burden, B-symptoms)": true,
-        "HCV-positive (concurrent DAA + immunochemotherapy)": true
-      },
-      "clinical_record": {
-        "diagnosis": {
-          "primary_diagnosis": {
-            "disease_entity": "HCV-associated marginal zone lymphoma",
-            "icd_o_3": "9699/3",
-            "icd_10": "C88.4",
-            "who_classification_5th_ed": "Indolent B-cell lymphomas — Marginal zone lymphomas — HCV-associated MZL"
-          },
-          "staging": {
-            "staging_system": "Lugano",
-            "stage": "IIIB",
-            "b_symptoms": true,
-            "extranodal_involvement": true,
-            "extranodal_sites": [
-              "bone marrow",
-              "spleen"
-            ]
-          }
-        },
-        "infectious_status": {
-          "HBV": {
-            "HBsAg": "negative",
-            "anti_HBc": "positive",
-            "anti_HBs": "positive"
-          },
-          "HCV": {
-            "anti_HCV": "positive",
-            "HCV_RNA": "detectable",
-            "genotype": "3a"
-          },
-          "HIV": "negative"
-        },
-        "hepatic_status": {
-          "FIB4": 2.6,
-          "child_pugh": "A",
-          "esophageal_varices": false
-        }
-      }
-    },
-    "quality_rank": 20,
-    "quality_tier": "curated",
-    "quality_label": "Кураторський план",
-    "quality_label_en": "Curated plan",
-    "quality_class": "quality-curated"
-  },
-  {
-    "case_id": "hcv-mzl-post-daa",
-    "label": "HCV-MZL · Post-DAA Responder (Surveillance)",
-    "label_en": "HCV-MZL · Post-DAA Responder (Surveillance)",
-    "disease_id": null,
-    "file": "patient_hcv_mzl_post_daa_responder.json",
-    "json": {
-      "patient_id": "HCV-MZL-POSTDAA-003",
-      "comment": "Synthetic HCV-MZL post-DAA, SVR12 achieved, lymphoma response in progress. Engine should activate post-DAA surveillance (IND-HCV-MZL-POST-DAA-SURVEILLANCE) — observe q3 mo for hematologic response.",
-      "disease": {
-        "icd_o_3_morphology": "9699/3"
-      },
-      "line_of_therapy": 1,
-      "biomarkers": {
-        "BIO-CD20-IHC": "positive",
-        "BIO-HCV-RNA": "undetectable"
-      },
-      "demographics": {
-        "age": 67,
-        "sex": "female",
-        "ecog": 1
-      },
-      "findings": {
-        "svr12_achieved": true,
-        "months_post_svr12": 4,
-        "hcv_rna_iu_ml": 0,
-        "fib4_score": 2.0,
-        "child_pugh": "A",
-        "cryoglobulins_present": false,
-        "lymphoma_response_partial": true,
-        "lymphoma_response_complete": false,
-        "transformation_suspect": false,
-        "fl_gelf_high_burden": false,
-        "Surveillance phase post-SVR12 (lymphoma response in progress)": true
-      },
-      "clinical_record": {
-        "diagnosis": {
-          "primary_diagnosis": {
-            "disease_entity": "HCV-associated marginal zone lymphoma",
-            "icd_o_3": "9699/3",
-            "icd_10": "C88.4"
-          },
-          "staging": {
-            "staging_system": "Lugano",
-            "stage": "II",
-            "b_symptoms": false
-          },
-          "treatment_history": [
-            {
-              "line": "antiviral",
-              "regimen": "Sofosbuvir/velpatasvir × 12 weeks",
-              "completed": "2026-01-15",
-              "response": "SVR12 confirmed 2026-04-10"
-            }
-          ]
-        },
-        "infectious_status": {
-          "HBV": {
-            "HBsAg": "negative",
-            "anti_HBc": "negative",
-            "anti_HBs": "negative"
-          },
-          "HCV": {
-            "anti_HCV": "positive",
-            "HCV_RNA": "undetectable",
-            "SVR12": true
-          },
-          "HIV": "negative"
-        }
-      }
-    },
-    "quality_rank": 20,
-    "quality_tier": "curated",
-    "quality_label": "Кураторський план",
-    "quality_label_en": "Curated plan",
-    "quality_class": "quality-curated"
-  },
-  {
-    "case_id": "hcv-mzl-reference",
-    "label": "HCV-MZL · Reference Case (Patient Zero)",
-    "label_en": "HCV-MZL · Reference Case (Patient Zero)",
-    "disease_id": null,
-    "file": "patient_zero_reference_case.json",
-    "json": {
-      "patient_id": "REFERENCE-CASE-0001",
-      "comment": "Synthetic HCV-MZL reference case per specs/REFERENCE_CASE_SPECIFICATION.md §2. NOT real patient data — fully synthesized for acceptance testing of the §1.3 critical structural criteria. Engine-required fields at top; the clinical_record block carries the spec-§2 patient profile template populated with realistic synthetic values, kept alongside so render layers and downstream tooling can read it.",
-      "disease": {
-        "icd_o_3_morphology": "9699/3"
-      },
-      "line_of_therapy": 1,
-      "biomarkers": {
-        "BIO-HCV-RNA": "positive"
-      },
-      "demographics": {
-        "age": 49,
-        "sex": "male",
-        "ecog": 1,
-        "decompensated_cirrhosis": false,
-        "fit_for_chemoimmunotherapy": true
-      },
-      "findings": {
-        "dominant_nodal_mass_cm": 5.3,
-        "mediastinal_ratio": 0.12,
-        "symptomatic_b_symptoms_severe": false,
-        "biopsy_shows_dlbcl": false,
-        "ldh_ratio_to_uln": 1.05,
-        "clinical_progression_weeks": 48,
-        "HCV RNA positive": true,
-        "Indolent presentation (non-bulky, asymptomatic or minimally symptomatic)": true,
-        "hbsag": "negative",
-        "anti_hbc_total": "negative"
-      },
-      "clinical_record": {
-        "demographics": {
-          "patient_id": "REFERENCE-CASE-0001",
-          "gender": "male",
-          "birth_year_cohort": "1975-1979",
-          "age_at_diagnosis_range": "45-55",
-          "performance_status_ecog": 1,
-          "height_cm": 178,
-          "weight_kg": 82,
-          "bsa_m2": 2.0
-        },
-        "diagnosis": {
-          "primary_diagnosis": {
-            "disease_entity": "HCV-associated marginal zone lymphoma",
-            "icd_o_3": "9699/3",
-            "icd_10": "C88.4",
-            "who_classification_5th_ed": "Extranodal marginal zone lymphoma of mucosa-associated lymphoid tissue",
-            "date_of_histological_confirmation": "[redacted]",
-            "biopsy_site": "root of tongue with tonsil involvement",
-            "diagnostic_method": "histological biopsy with IHC"
-          },
-          "staging": {
-            "staging_system": "Lugano",
-            "stage": "IV-E",
-            "b_symptoms": false,
-            "bulky_disease_over_7cm": false,
-            "extranodal_involvement": true
-          }
-        },
-        "ihc_and_molecular": {
-          "ihc_markers": {
-            "CD20": "positive",
-            "MNDA": "positive",
-            "BCL2": "positive",
-            "FoxP1": "positive",
-            "c_MYC": "approximately_30_percent",
-            "Ki67_percent": 60,
-            "double_expressor_status": "no"
-          },
-          "molecular_tests": {
-            "NGS_panel": "not_performed",
-            "FISH_tests": "not_performed"
-          }
-        },
-        "infectious_status": {
-          "HCV": {
-            "status": "chronic_infection_confirmed",
-            "RNA_quantitative_IU_mL": 1240000,
-            "genotype": "1b",
-            "duration_known_years": 6,
-            "prior_DAA_treatment": "no"
-          },
-          "HBV": {
-            "HBsAg": "negative",
-            "anti_HBc": "negative",
-            "anti_HBs": "positive"
-          },
-          "HIV": "negative"
-        },
-        "laboratory_baseline": {
-          "cbc": {
-            "hemoglobin_g_dl": 13.4,
-            "platelets_k_ul": 198,
-            "anc_k_ul": 3.2,
-            "alc_k_ul": 1.8
-          },
-          "liver_panel": {
-            "AST_U_L": 48,
-            "ALT_U_L": 62,
-            "alkaline_phosphatase_U_L": 102,
-            "GGT_U_L": 85,
-            "total_bilirubin_mg_dL": 0.9,
-            "albumin_g_dL": 4.1,
-            "INR": 1.0
-          },
-          "renal": {
-            "creatinine_mg_dL": 0.95,
-            "eGFR": 92
-          },
-          "other": {
-            "LDH_U_L": 215,
-            "B2_microglobulin_mg_L": 2.1
-          },
-          "calculations": {
-            "FIB_4": 1.65,
-            "CrCl_CockcroftGault_mL_min": 96
-          }
-        },
-        "imaging": {
-          "modality": "MRI + CECT",
-          "date": "[redacted]",
-          "findings": {
-            "primary_lesion": {
-              "location": "root of tongue with tonsil involvement",
-              "dimensions_mm": "33x36x53",
-              "approximate_size_cm": 5.3,
-              "bulky_by_criteria": false
-            },
-            "lymph_nodes": [
-              {
-                "station": "Ia",
-                "size_mm": 10,
-                "suspicious": true
-              },
-              {
-                "station": "IIa",
-                "size_mm": 14,
-                "suspicious": true
-              }
-            ],
-            "bone_destruction": false,
-            "CNS_involvement": false
-          }
-        },
-        "comorbidities_and_meds": {
-          "comorbidities": [
-            "chronic HCV (E11 — managed)",
-            "mild hypertension (I10)"
-          ],
-          "current_medications": [
-            "amlodipine 5 mg daily"
-          ],
-          "allergies": [
-            "none documented"
-          ],
-          "prior_cancer_treatments": []
-        },
-        "symptoms_and_concerns": {
-          "symptoms_onset": "approximately 6 months — gradually enlarging tongue-base mass, mild dysphagia",
-          "b_symptoms": {
-            "fever": false,
-            "night_sweats": false,
-            "weight_loss_over_10_percent": false
-          },
-          "functional_status_changes": "minimal — daily activities preserved, ECOG 1",
-          "clinical_concerns_flagged": {
-            "rapid_progression": false,
-            "suspected_transformation": false,
-            "performance_decline": false
-          }
-        }
-      }
-    },
-    "quality_rank": 20,
-    "quality_tier": "curated",
-    "quality_label": "Кураторський план",
-    "quality_label_en": "Curated plan",
-    "quality_class": "quality-curated"
-  },
-  {
-    "case_id": "hgbl-primary-refractory",
-    "label": "HGBL · Primary Refractory (Early CAR-T)",
-    "label_en": "HGBL · Primary Refractory (Early CAR-T)",
-    "disease_id": null,
-    "file": "patient_hgbl_primary_refractory.json",
-    "json": {
-      "patient_id": "HGBL-PRIMREF-002",
-      "comment": "Synthetic HGBL-DH (MYC + BCL2 rearrangement) primary-refractory to 1L DA-EPOCH-R, fit for CAR-T. Engine should route to 2L axi-cel CAR-T (IND-HGBL-DH-2L-CART-AXICEL) as aggressive track.",
-      "disease": {
-        "icd_o_3_morphology": "9680/3"
-      },
-      "line_of_therapy": 2,
-      "biomarkers": {
-        "BIO-CD20-IHC": "positive",
-        "BIO-MYC-FISH": "positive (rearrangement)",
-        "BIO-BCL2-FISH": "positive (rearrangement)",
-        "BIO-BCL6-FISH": "negative"
-      },
-      "demographics": {
-        "age": 48,
-        "sex": "male",
-        "ecog": 1
-      },
-      "findings": {
-        "months_since_1L_completion": 0,
-        "primary_refractory": true,
-        "double_hit": true,
-        "triple_hit": false,
-        "cns_involvement": false,
-        "ldh_above_uln": true,
-        "lvef_percent": 62,
-        "Primary refractory HGBL-DH (no response to DA-EPOCH-R)": true,
-        "CAR-T eligible (age, ECOG, no CNS, organ function)": true
-      },
-      "clinical_record": {
-        "diagnosis": {
-          "primary_diagnosis": {
-            "disease_entity": "High-Grade B-Cell Lymphoma with MYC and BCL2 rearrangement (double-hit)",
-            "icd_o_3": "9680/3",
-            "icd_10": "C83.7",
-            "who_classification_5th_ed": "Aggressive B-cell lymphomas — High-grade B-cell lymphoma with MYC and BCL2 rearrangement"
-          },
-          "staging": {
-            "staging_system": "Lugano",
-            "stage": "IV",
-            "b_symptoms": true,
-            "extranodal_involvement": true,
-            "extranodal_sites": [
-              "bone marrow",
-              "liver"
-            ]
-          }
-        },
-        "ihc_and_molecular": {
-          "ihc_markers": {
-            "CD20": "positive",
-            "BCL2": "positive",
-            "MYC": ">40%",
-            "Ki67_percent": 95
-          },
-          "fish": {
-            "MYC_break_apart": "positive",
-            "BCL2_break_apart": "positive",
-            "BCL6_break_apart": "negative"
-          }
-        },
-        "treatment_history": [
-          {
-            "line": "1L",
-            "regimen": "DA-EPOCH-R × 4 cycles",
-            "completed": "2026-03-30",
-            "response": "PD (interim PET Deauville 5)"
-          }
-        ],
-        "infectious_status": {
-          "HBV": {
-            "HBsAg": "negative",
-            "anti_HBc": "negative"
-          },
-          "HCV": {
-            "anti_HCV": "negative"
-          },
-          "HIV": "negative"
-        },
-        "cardiac": {
-          "baseline_LVEF_percent": 62
-        }
-      }
-    },
-    "quality_rank": 20,
-    "quality_tier": "curated",
-    "quality_label": "Кураторський план",
-    "quality_label_en": "Curated plan",
-    "quality_class": "quality-curated"
-  },
-  {
-    "case_id": "nmzl-high-burden",
-    "label": "Nodal MZL · High Burden (BR)",
-    "label_en": "Nodal MZL · High Burden (BR)",
-    "disease_id": null,
-    "file": "patient_nmzl_high_burden.json",
-    "json": {
-      "patient_id": "NMZL-HIGHBURDEN-002",
-      "comment": "Synthetic nodal MZL with high tumor burden (GELF criteria positive), symptomatic. Engine should select BR (IND-NMZL-1L-BR) over watch-and-wait.",
-      "disease": {
-        "icd_o_3_morphology": "9699/3"
-      },
-      "line_of_therapy": 1,
-      "biomarkers": {
-        "BIO-CD20-IHC": "positive"
-      },
-      "demographics": {
-        "age": 64,
-        "sex": "female",
-        "ecog": 1
-      },
-      "findings": {
-        "fl_gelf_high_burden": true,
-        "dominant_nodal_mass_cm": 8.2,
-        "nodal_areas_count": 4,
-        "b_symptoms_present": true,
-        "ldh_above_uln": true,
-        "splenomegaly_cm_below_costal": 6,
-        "cytopenia": true,
-        "transformation_suspect": false,
-        "GELF criteria met (high tumor burden)": true,
-        "Symptomatic disease requiring active treatment": true
-      },
-      "clinical_record": {
-        "diagnosis": {
-          "primary_diagnosis": {
-            "disease_entity": "Nodal Marginal Zone Lymphoma",
-            "icd_o_3": "9699/3",
-            "icd_10": "C88.4"
-          },
-          "staging": {
-            "staging_system": "Lugano",
-            "stage": "IIIB",
-            "b_symptoms": true,
-            "extranodal_involvement": true,
-            "extranodal_sites": [
-              "bone marrow",
-              "spleen"
-            ]
-          }
-        },
-        "infectious_status": {
-          "HBV": {
-            "HBsAg": "negative",
-            "anti_HBc": "negative"
-          },
-          "HCV": {
-            "anti_HCV": "negative"
-          },
-          "HIV": "negative"
-        }
-      }
-    },
-    "quality_rank": 20,
-    "quality_tier": "curated",
-    "quality_label": "Кураторський план",
-    "quality_label_en": "Curated plan",
-    "quality_class": "quality-curated"
-  },
-  {
-    "case_id": "pcnsl-elderly-frail",
-    "label": "PCNSL · Elderly Frail (R-MTX-attenuated)",
-    "label_en": "PCNSL · Elderly Frail (R-MTX-attenuated)",
-    "disease_id": null,
-    "file": "patient_pcnsl_elderly_frail.json",
-    "json": {
-      "patient_id": "PCNSL-ELDERLY-002",
-      "comment": "Synthetic elderly frail PCNSL — age 78, ECOG 2, CrCl 48 (HD-MTX-marginal). Engine should flag frailty (RF-PCNSL-FRAILTY-AGE) and consider reduced-intensity HD-MTX (1 g/m²) or rituximab + temozolomide; route to alternative track if HD-MTX excluded.",
-      "disease": {
-        "icd_o_3_morphology": "9680/3"
-      },
-      "line_of_therapy": 1,
-      "biomarkers": {
-        "BIO-CD20-IHC": "positive"
-      },
-      "demographics": {
-        "age": 78,
-        "sex": "female",
-        "ecog": 2
-      },
-      "findings": {
-        "creatinine_clearance": 48,
-        "third_space_fluid": false,
-        "csf_cytology_positive": false,
-        "ocular_involvement": false,
-        "frailty_assessment": "moderately frail",
-        "comorbidities": [
-          "controlled DM2",
-          "atrial fibrillation"
-        ],
-        "memorial_sloan_kettering_score": 3,
-        "Elderly (≥65) with renal impairment + comorbidities": true,
-        "HD-MTX caution / dose-reduction needed": true
-      },
-      "clinical_record": {
-        "diagnosis": {
-          "primary_diagnosis": {
-            "disease_entity": "Primary Diffuse Large B-Cell Lymphoma of the CNS",
-            "icd_o_3": "9680/3",
-            "icd_10": "C71.9"
-          },
-          "staging": {
-            "staging_system": "PCNSL-specific",
-            "stage": "Multifocal brain lesions (3 lesions)",
-            "csf_involvement": false
-          }
-        },
-        "infectious_status": {
-          "HBV": {
-            "HBsAg": "negative",
-            "anti_HBc": "negative"
-          },
-          "HCV": {
-            "anti_HCV": "negative"
-          },
-          "HIV": "negative"
-        },
-        "renal": {
-          "creatinine_clearance_ml_min": 48
-        }
-      }
-    },
-    "quality_rank": 20,
-    "quality_tier": "curated",
-    "quality_label": "Кураторський план",
-    "quality_label_en": "Curated plan",
-    "quality_class": "quality-curated"
-  },
-  {
-    "case_id": "pcnsl-immunocompromised-ebv",
-    "label": "PCNSL · Immunocompromised + EBV+ (Restore Immunity)",
-    "label_en": "PCNSL · Immunocompromised + EBV+ (Restore Immunity)",
-    "disease_id": null,
-    "file": "patient_pcnsl_immunocompromised_ebv.json",
-    "json": {
-      "patient_id": "PCNSL-IMMUNO-003",
-      "comment": "Synthetic atypical PCNSL — immunocompromised (post-renal-transplant), EBV-positive lymphoma. PCNSL in immunocompromised setting overlaps PTLD pathway — engine should flag for MDT review (immunosuppression reduction first, then rituximab-based therapy).",
-      "disease": {
-        "icd_o_3_morphology": "9680/3"
-      },
-      "line_of_therapy": 1,
-      "biomarkers": {
-        "BIO-CD20-IHC": "positive",
-        "BIO-EBV-EBER-ISH": "positive"
-      },
-      "demographics": {
-        "age": 52,
-        "sex": "male",
-        "ecog": 2
-      },
-      "findings": {
-        "creatinine_clearance": 65,
-        "third_space_fluid": false,
-        "csf_cytology_positive": false,
-        "ocular_involvement": false,
-        "immunocompromised": true,
-        "immunosuppression_cause": "post-renal-transplant on tacrolimus + MMF",
-        "ebv_eber_positive": true,
-        "ebv_viral_load_copies_ml": 12500,
-        "Atypical PCNSL — immunocompromised + EBV-driven": true
-      },
-      "clinical_record": {
-        "diagnosis": {
-          "primary_diagnosis": {
-            "disease_entity": "Primary CNS DLBCL (EBV-positive, immunocompromised setting)",
-            "icd_o_3": "9680/3",
-            "icd_10": "C71.9",
-            "who_classification_5th_ed": "EBV-positive DLBCL of the CNS — immunocompromised host"
-          },
-          "staging": {
-            "staging_system": "PCNSL-specific",
-            "stage": "Brain only — periventricular + corpus callosum involvement",
-            "csf_involvement": false
-          }
-        },
-        "ihc_and_molecular": {
-          "ihc_markers": {
-            "CD20": "positive",
-            "EBV-EBER": "positive",
-            "Ki67_percent": 85
-          }
-        },
-        "transplant_history": {
-          "organ": "kidney",
-          "year": 2019,
-          "current_immunosuppression": "tacrolimus + mycophenolate"
-        },
-        "infectious_status": {
-          "HBV": {
-            "HBsAg": "negative",
-            "anti_HBc": "negative"
-          },
-          "HCV": {
-            "anti_HCV": "negative"
-          },
-          "HIV": "negative",
-          "EBV": {
-            "viral_load_copies_ml": 12500
-          }
-        },
-        "renal": {
-          "creatinine_clearance_ml_min": 65
-        }
-      }
-    },
-    "quality_rank": 20,
-    "quality_tier": "curated",
-    "quality_label": "Кураторський план",
-    "quality_label_en": "Curated plan",
-    "quality_class": "quality-curated"
-  },
-  {
-    "case_id": "pcnsl-typical",
-    "label": "PCNSL · Typical (R-MPV → autoSCT)",
-    "label_en": "PCNSL · Typical (R-MPV → autoSCT)",
-    "disease_id": null,
-    "file": "patient_pcnsl_typical.json",
-    "json": {
-      "patient_id": "PCNSL-TYPICAL-001",
-      "comment": "Synthetic typical PCNSL — fit middle-aged patient, single periventricular lesion. Engine should select R-MPV induction (IND-PCNSL-1L-R-MPV) as standard, with consolidation pathway (autoSCT thiotepa-based).",
-      "disease": {
-        "icd_o_3_morphology": "9680/3"
-      },
-      "line_of_therapy": 1,
-      "biomarkers": {
-        "BIO-CD20-IHC": "positive"
-      },
-      "demographics": {
-        "age": 58,
-        "sex": "male",
-        "ecog": 1
-      },
-      "findings": {
-        "creatinine_clearance": 95,
-        "third_space_fluid": false,
-        "csf_cytology_positive": false,
-        "ocular_involvement": false,
-        "single_lesion": true,
-        "lesions_count": 1,
-        "memorial_sloan_kettering_score": 1,
-        "Newly-diagnosed PCNSL, fit": true,
-        "Adequate renal function for HD-MTX": true
-      },
-      "clinical_record": {
-        "diagnosis": {
-          "primary_diagnosis": {
-            "disease_entity": "Primary Diffuse Large B-Cell Lymphoma of the CNS",
-            "icd_o_3": "9680/3",
-            "icd_10": "C71.9",
-            "who_classification_5th_ed": "Aggressive B-cell lymphomas — Primary CNS DLBCL"
-          },
-          "staging": {
-            "staging_system": "PCNSL-specific (CSF + ocular + brain MRI)",
-            "stage": "Brain only — single periventricular lesion",
-            "csf_involvement": false,
-            "ocular_involvement": false
-          }
-        },
-        "ihc_and_molecular": {
-          "ihc_markers": {
-            "CD20": "positive",
-            "BCL6": "positive",
-            "MUM1": "positive",
-            "Ki67_percent": 90
-          }
-        },
-        "infectious_status": {
-          "HBV": {
-            "HBsAg": "negative",
-            "anti_HBc": "negative"
-          },
-          "HCV": {
-            "anti_HCV": "negative"
-          },
-          "HIV": "negative"
-        },
-        "renal": {
-          "creatinine_clearance_ml_min": 95
-        }
-      }
-    },
-    "quality_rank": 20,
-    "quality_tier": "curated",
-    "quality_label": "Кураторський план",
-    "quality_label_en": "Curated plan",
-    "quality_class": "quality-curated"
   }
 ]
