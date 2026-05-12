@@ -1,24 +1,30 @@
 id: RF-CML-ORGAN-DYSFUNCTION
-definition: "CML patient with comorbidity excluding specific 2nd-gen TKIs: significant cardiovascular disease (PAOD, prior MI/stroke, uncontrolled HTN — avoid nilotinib/ponatinib), pulmonary disease (COPD, prior pleural disease — avoid dasatinib), severe GI disease (avoid bosutinib), pancreatitis history (avoid nilotinib)"
-definition_ua: "Пацієнт з ХМЛ та коморбідністю, що виключає певні ТКІ 2-го покоління: значуща серцево-судинна патологія (PAOD, перенесений ІМ/інсульт, неконтрольована гіпертензія — уникати нілотинібу/понатинібу), легенева патологія (ХОЗЛ, попередня плевральна патологія — уникати дазатинібу), важка ГІ-патологія (уникати босутинібу), панкреатит в анамнезі (уникати нілотинібу)"
+definition: "CML patient with comorbidity excluding specific 2nd-gen TKIs: significant cardiovascular
+  disease (PAOD, prior MI/stroke, uncontrolled HTN — avoid nilotinib/ponatinib), pulmonary disease (COPD,
+  prior pleural disease — avoid dasatinib), severe GI disease (avoid bosutinib), pancreatitis history
+  (avoid nilotinib)"
+definition_ua: "Пацієнт з ХМЛ та коморбідністю, що виключає певні ТКІ 2-го покоління: значуща серцево-судинна
+  патологія (PAOD, перенесений ІМ/інсульт, неконтрольована гіпертензія — уникати нілотинібу/понатинібу),
+  легенева патологія (ХОЗЛ, попередня плевральна патологія — уникати дазатинібу), важка ГІ-патологія (уникати
+  босутинібу), панкреатит в анамнезі (уникати нілотинібу)"
 
 trigger:
   type: composite
   any_of:
-    - finding: "cv_high_risk"
-      value: true
-    - finding: "prior_mi_or_stroke"
-      value: true
-    - finding: "peripheral_arterial_disease"
-      value: true
-    - finding: "pulmonary_disease_significant"
-      value: true
-    - finding: "prior_pleural_effusion"
-      value: true
-    - finding: "pancreatitis_history"
-      value: true
-    - finding: "ibd_or_severe_diarrhea"
-      value: true
+  - finding: "cv_high_risk"
+    value: true
+  - finding: "prior_mi_or_stroke"
+    value: true
+  - finding: "peripheral_arterial_disease"
+    value: true
+  - finding: "pulmonary_disease_significant"
+    value: true
+  - finding: "prior_pleural_effusion"
+    value: true
+  - finding: "pancreatitis_history"
+    value: true
+  - finding: "ibd_or_severe_diarrhea"
+    value: true
 
 clinical_direction: investigate
 
@@ -26,12 +32,12 @@ severity: major
 priority: 80
 category: organ-dysfunction
 relevant_diseases:
-  - DIS-CML
+- DIS-CML
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-ELN-CML-2020
+- SRC-NCCN-MPN-2025
+- SRC-ELN-CML-2020
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -45,12 +51,11 @@ notes: >
     - Default low-comorbidity → imatinib (cost) or dasatinib/nilotinib (response)
   STUB — requires clinical co-lead signoff.
 notes_ua: >
-  Direction "investigate" — surfaces коморбідність-matched TKI choice as a supplementary annotation rather than a binary показання switch. ELN 2020 коморбідність matrix:
-    - CV хвороба / hyperlipidemia / DM → AVOID нілотиніб + понатиніб
-    - Pulmonary / pleural хвороба → AVOID дазатиніб
-    - GI хвороба (IBD, базове діарея) → AVOID бозутиніб
-    - Pancreatitis / hepatic dysfunction → AVOID нілотиніб
-    - Default low-коморбідність → іматиніб (cost) or дазатиніб/нілотиніб (відповідь)
-  STUB — requires clinical co-lead signoff.
+  Функція нирок та печінки впливають на вибір ТКІ як примітка-додаток до алгоритму, а не як бінарний перемикач.
+  Іматиніб: мінімальний ниркове кліренс — найбезпечніший при ХХН; дозування при ШКФ <30 не встановлено
+  у РКД. Бозутиніб: переважно гепатично — але гепатотоксичність є класовим ефектом. Дазатиніб: плевральний
+  випіт (~20%), обов'язковий контроль при серцево-легеневій основній патології. СТАБ — потребує клінічного
+  підпису.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

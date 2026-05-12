@@ -25,21 +25,21 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: "uncontrolled_hypertension"
-      value: true
-    - finding: "prior_arterial_thrombotic_event"
-      value: true
-    - finding: "baseline_qtc_ms"
-      threshold: 460
-      comparator: ">"
-    - finding: "qt_prolonging_medications"
-      value: true
-    - finding: "pancreatitis_history"
-      value: true
-    - finding: "pulmonary_hypertension"
-      value: true
-    - finding: "pleural_effusion_history"
-      value: true
+  - finding: "uncontrolled_hypertension"
+    value: true
+  - finding: "prior_arterial_thrombotic_event"
+    value: true
+  - finding: "baseline_qtc_ms"
+    threshold: 460
+    comparator: ">"
+  - finding: "qt_prolonging_medications"
+    value: true
+  - finding: "pancreatitis_history"
+    value: true
+  - finding: "pulmonary_hypertension"
+    value: true
+  - finding: "pleural_effusion_history"
+    value: true
 
 clinical_direction: de-escalate
 
@@ -48,15 +48,15 @@ priority: 80
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-CML
+- DIS-CML
 shifts_algorithm:
-  - ALGO-CML-1L
-  - ALGO-CML-2L
+- ALGO-CML-1L
+- ALGO-CML-2L
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-ESMO-CML-2017
-  - SRC-ELN-CML-2020
+- SRC-NCCN-MPN-2025
+- SRC-ESMO-CML-2017
+- SRC-ELN-CML-2020
 
 last_reviewed: "2026-04-26"
 draft: true
@@ -77,10 +77,11 @@ notes: >
 
   reviewer_signoffs: 0
 notes_ua: >
-  Co-determines TKI selection with RF-CML-високого ризику-ELTS. The комбінація matters: високого ризику CML *plus* CV-коморбідність → асциминіб переважний (per ASCEMBL дослідження 3L+ дані extrapolating to comorbid 1L use under expanded ELN guidance); високого ризику CML without CV-коморбідність → нілотиніб or дазатиніб remain reasonable. іматиніб remains прийнятний in низького ризику comorbid patients where лікування-free ремісія is not the primary goal.
-
-  STUB — author content above reflects published докази but has not been clinically reviewed. Two-reviewer per CHARTER §6.1 обов'язковий before this RedFlag is wired into ALGO-CML-1L / ALGO-CML-2L decision_tree branches.
-
-  reviewer_signoffs: 0
+  Комплексний коморбідний профіль є примітка-анотацією до MDT-брифу, а не бінарним перемикачем показань.
+  Цей RF виводить анотацію суміжної коморбідності до MDT-брифу і підтвердного переліку. Коморбідний конкурентний
+  RF: RF-CML-HIGH-RISK-ELTS перетинається при літніх з діабетом + ССЗ. Алгоритмне підключення відкладено
+  — ще не підключено до ALGO-CML-1L / ALGO-CML-2L decision_tree гілок. reviewer_signoffs: 0. СТАБ — потребує
+  підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2
