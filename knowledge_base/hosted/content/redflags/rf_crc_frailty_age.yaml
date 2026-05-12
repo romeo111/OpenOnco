@@ -12,26 +12,26 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: "ecog"
+  - finding: "ecog"
+    threshold: 3
+    comparator: ">="
+  - all_of:
+    - finding: "age"
+      threshold: 80
+      comparator: ">="
+    - finding: "charlson_score"
       threshold: 3
       comparator: ">="
-    - all_of:
-        - finding: "age"
-          threshold: 80
-          comparator: ">="
-        - finding: "charlson_score"
-          threshold: 3
-          comparator: ">="
-    - all_of:
-        - finding: "age"
-          threshold: 75
-          comparator: ">="
-        - finding: "albumin_g_dl"
-          threshold: 3.0
-          comparator: "<"
-        - finding: "comorbidity_count"
-          threshold: 2
-          comparator: ">="
+  - all_of:
+    - finding: "age"
+      threshold: 75
+      comparator: ">="
+    - finding: "albumin_g_dl"
+      threshold: 3.0
+      comparator: "<"
+    - finding: "comorbidity_count"
+      threshold: 2
+      comparator: ">="
 
 clinical_direction: de-escalate
 
@@ -40,13 +40,13 @@ priority: 100
 category: frailty-age
 
 relevant_diseases:
-  - DIS-CRC
+- DIS-CRC
 shifts_algorithm: []
 branch_targets: {}
 
 sources:
-  - SRC-NCCN-COLON-2025
-  - SRC-ESMO-COLON-2024
+- SRC-NCCN-COLON-2025
+- SRC-ESMO-COLON-2024
 
 last_reviewed: "2026-04-26"
 draft: false
@@ -58,6 +58,10 @@ notes: >
   showed acceptable efficacy with reduced toxicity. BSC alone if PS 4
   or organ failure precludes any chemo.
 notes_ua: >
-  IDEA pooled analysis: 3 mo CAPOX ад'ювантний не гірше to 6 mo for низького ризику (T1-3 N1) stage III — explicitly designed for літнього віку / fragile. FOCUS-2 дослідження: капецитабін ± оксаліплатин in літнього віку mCRC showed прийнятний ефективність with зменшений токсичність. BSC alone if PS 4 or organ failure precludes any chemo.
+  FOLFOX/FOLFIRI скорочені схеми (зменшені оксаліплатин/іринотекан або видалені) або капецитабін-моно
+  (XELOX-зменшений) при PS ≥2. Бевацизумаб підвищує ризик кровотечі/тромбозу у пацієнтів з ССЗ — показаний
+  з обережністю. Тільки BSC при PS ≥3 або органній недостатності, що виключає будь-яку хіміо. СТАБ — потребує
+  підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

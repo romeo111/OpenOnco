@@ -1,17 +1,19 @@
 id: RF-HASFORD-HIGH
-definition: "CML chronic phase with Hasford (EURO) high risk — supports 2nd-generation TKI 1L (dasatinib / nilotinib / bosutinib) over imatinib; comparable rationale to Sokal-high"
-definition_ua: "ХМЛ хронічної фази з високим ризиком за Hasford (EURO) — підтримує 2-е покоління ТКІ 1-ї лінії (дазатиніб / нілотиніб / босутиніб) над іматинібом; рекомендація аналогічна високому Sokal"
+definition: "CML chronic phase with Hasford (EURO) high risk — supports 2nd-generation TKI 1L (dasatinib
+  / nilotinib / bosutinib) over imatinib; comparable rationale to Sokal-high"
+definition_ua: "ХМЛ хронічної фази з високим ризиком за Hasford (EURO) — підтримує 2-е покоління ТКІ 1-ї
+  лінії (дазатиніб / нілотиніб / босутиніб) над іматинібом; рекомендація аналогічна високому Sokal"
 
 trigger:
   type: composite_score
   any_of:
-    - finding: "cml_hasford_risk"
-      value: "high"
-    - finding: "cml_euro_risk"
-      value: "high"
-    - finding: "cml_hasford_score"
-      threshold: 1480
-      comparator: ">"
+  - finding: "cml_hasford_risk"
+    value: "high"
+  - finding: "cml_euro_risk"
+    value: "high"
+  - finding: "cml_hasford_score"
+    threshold: 1480
+    comparator: ">"
 
 clinical_direction: intensify
 
@@ -19,14 +21,14 @@ severity: major
 priority: 80
 category: risk-score
 relevant_diseases:
-  - DIS-CML
+- DIS-CML
 shifts_algorithm:
-  - ALGO-CML-1L
+- ALGO-CML-1L
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-ELN-CML-2020
-  - SRC-ESMO-CML-2017
+- SRC-NCCN-MPN-2025
+- SRC-ELN-CML-2020
+- SRC-ESMO-CML-2017
 
 last_reviewed: "2026-04-27"
 notes: >
@@ -38,3 +40,13 @@ notes: >
   TKI 1L; co-fires with RF-SOKAL-HIGH and the existing
   RF-CML-HIGH-RISK-ELTS. The CML-1L algorithm picks the 2nd-gen track
   as long as comorbidity flags don't de-escalate.
+notes_ua: >
+  Оцінка Hasford/EURO (Hasford 1998) уточнила Sokal додаванням еозинофілів та базофілів; високий ризик
+  = >1480. Групи Hasford-high та Sokal-high значно перекриваються, але ідентифікують дещо різні підгрупи.
+  ELN 2020 визнає обидві поряд з новішим ELTS, але надає перевагу ELTS для планування ремісії без лікування.
+  Напрямок «інтенсифікація» до ТКІ 2-го покоління 1L; паралельне спрацювання з RF-SOKAL-HIGH та наявним
+  RF-CML-HIGH-RISK-ELTS. Алгоритм CML-1L обирає трек ТКІ 2-го покоління поки прапори коморбідності не
+  де-ескалують.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

@@ -1,13 +1,15 @@
 id: RF-AITL-HYPOGAMMA
-definition: "AITL with baseline hypogammaglobulinemia (IgG <600 mg/dL) and/or recurrent bacterial infections — qualifies for IgG replacement (IVIG) during and after T-cell-directed therapy"
-definition_ua: "AITL з вихідною гіпогаммаглобулінемією (IgG <600 mg/dL) і/або рекурентними бактеріальними інфекціями — кваліфікується на замісну терапію IgG (IVIG) під час і після T-клітинної терапії"
+definition: "AITL with baseline hypogammaglobulinemia (IgG <600 mg/dL) and/or recurrent bacterial infections
+  — qualifies for IgG replacement (IVIG) during and after T-cell-directed therapy"
+definition_ua: "AITL з вихідною гіпогаммаглобулінемією (IgG <600 mg/dL) і/або рекурентними бактеріальними
+  інфекціями — кваліфікується на замісну терапію IgG (IVIG) під час і після T-клітинної терапії"
 
 trigger:
   type: composite_clinical
   any_of:
-    - {finding: "TEST-IMMUNOGLOBULINS", threshold: 600, comparator: "<", units: "mg/dL IgG"}
-    - {finding: "hypogamma_present", value: true}
-    - {finding: "recurrent_bacterial_infections", value: true}
+  - {finding: "TEST-IMMUNOGLOBULINS", threshold: 600, comparator: "<", units: "mg/dL IgG"}
+  - {finding: "hypogamma_present", value: true}
+  - {finding: "recurrent_bacterial_infections", value: true}
 
 clinical_direction: investigate
 category: infection-screening
@@ -24,6 +26,10 @@ notes: >
   Continue surveillance post-treatment — recovery often partial. Distinct
   from rituximab-induced hypogamma (would be late/acquired).
 notes_ua: >
-  AITL produces hypogammaglobulinemia in ~30-50% — paraneoplastic + лікування-related. IgG <400 mg/dL with infection history → ВВІГ replacement (типово 0.4 g/kg q3-4 weeks targeting trough >500). Continue спостереження post-лікування — recovery часто partial. Distinct from ритуксимаб-induced hypogamma (would be late/набутий).
+  AITL спричиняє гіпогаммаглобулінемію у ~30–50% — паранеопластичну та лікування-обумовлену. IgG <400 mg/дл
+  з анамнезом інфекцій → замісна терапія ВВІГ (зазвичай 0.4 g/kg q3–4 тижні з цільовим залишковим рівнем
+  >500 мг/дл). Моніторинг після лікування — відновлення часто часткове. Відрізняється від гіпогаммаглобулінемії,
+  індукованої ритуксимабом (остання є пізньою/набутою).
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

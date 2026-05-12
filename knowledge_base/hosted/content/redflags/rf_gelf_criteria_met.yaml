@@ -1,27 +1,29 @@
 id: RF-GELF-CRITERIA-MET
-definition: "Follicular lymphoma meeting any GELF criterion — high tumor burden warranting systemic therapy 1L (R-CHOP / BR / R-CVP / R²) rather than watch-and-wait"
-definition_ua: "Фолікулярна лімфома з виконанням принаймні одного критерію GELF — високе пухлинне навантаження, що потребує системної терапії 1-ї лінії (R-CHOP / BR / R-CVP / R²) замість спостереження"
+definition: "Follicular lymphoma meeting any GELF criterion — high tumor burden warranting systemic therapy
+  1L (R-CHOP / BR / R-CVP / R²) rather than watch-and-wait"
+definition_ua: "Фолікулярна лімфома з виконанням принаймні одного критерію GELF — високе пухлинне навантаження,
+  що потребує системної терапії 1-ї лінії (R-CHOP / BR / R-CVP / R²) замість спостереження"
 
 trigger:
   type: composite_clinical
   any_of:
-    - finding: "fl_gelf_high_burden"
-      value: true
-    - finding: "dominant_nodal_mass_cm"
-      threshold: 7.0
-      comparator: ">="
-    - finding: "b_symptoms_present"
-      value: true
-    - finding: "splenomegaly_below_umbilicus"
-      value: true
-    - finding: "ldh_above_uln"
-      value: true
-    - finding: "rapid_progression"
-      value: true
-    - finding: "compressive_symptoms"
-      value: true
-    - finding: "cytopenia_due_to_lymphoma"
-      value: true
+  - finding: "fl_gelf_high_burden"
+    value: true
+  - finding: "dominant_nodal_mass_cm"
+    threshold: 7.0
+    comparator: ">="
+  - finding: "b_symptoms_present"
+    value: true
+  - finding: "splenomegaly_below_umbilicus"
+    value: true
+  - finding: "ldh_above_uln"
+    value: true
+  - finding: "rapid_progression"
+    value: true
+  - finding: "compressive_symptoms"
+    value: true
+  - finding: "cytopenia_due_to_lymphoma"
+    value: true
 
 clinical_direction: intensify
 
@@ -29,13 +31,13 @@ severity: major
 priority: 80
 category: risk-score
 relevant_diseases:
-  - DIS-FL
+- DIS-FL
 shifts_algorithm:
-  - ALGO-FL-1L
+- ALGO-FL-1L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-FL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-FL-2024
 
 last_reviewed: "2026-04-27"
 notes: >
@@ -48,3 +50,13 @@ notes: >
   (existing) — this RF carries a clearer ID for cross-disease reuse and
   the cohort label needed by the FL-1L decision tree. Without GELF
   criteria, observation is standard (RF-GELF-LOW-BURDEN).
+notes_ua: >
+  Критерії GELF (Brice 1997) — давній тригер активного лікування при поширеній стадії ФЛ. Будь-який одиничний
+  критерій є показанням: нодальна/екстранодальна маса ≥7 см, ≥3 нодальні ділянки кожна ≥3 см, В-симптоми,
+  спленомегалія нижче пупка, плевральний/перитонеальний випіт, лейкемічна фаза, цитопенія (Hb<10 г/дл
+  / тромбоцити<100К / АНН<1.5К) обумовлена лімфомою, компресійні симптоми. Супутній до RF-FL-HIGH-TUMOR-BURDEN-GELF
+  (наявний) — цей RF має чіткіший ідентифікатор для міжнозологічного використання та мітку когорти для
+  дерева рішень FL-1L. Без критеріїв GELF — спостереження є стандартом (RF-GELF-LOW-BURDEN).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

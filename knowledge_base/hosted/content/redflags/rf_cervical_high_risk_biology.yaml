@@ -15,21 +15,21 @@ definition_ua: >
 trigger:
   type: composite_clinical
   any_of:
-    - finding: "primary_tumor_size_cm"
-      threshold: 4
+  - finding: "primary_tumor_size_cm"
+    threshold: 4
+    comparator: ">="
+  - finding: "lymph_node_positive"
+    value: true
+  - finding: "para_aortic_node_positive"
+    value: true
+  - finding: "histology_non_squamous"
+    value: true
+  - all_of:
+    - finding: "metastatic_disease"
+      value: true
+    - finding: "pdl1_cps"
+      threshold: 1
       comparator: ">="
-    - finding: "lymph_node_positive"
-      value: true
-    - finding: "para_aortic_node_positive"
-      value: true
-    - finding: "histology_non_squamous"
-      value: true
-    - all_of:
-        - finding: "metastatic_disease"
-          value: true
-        - finding: "pdl1_cps"
-          threshold: 1
-          comparator: ">="
 
 clinical_direction: intensify
 
@@ -38,11 +38,11 @@ priority: 80
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-CERVICAL
+- DIS-CERVICAL
 shifts_algorithm: []  # not yet wired into ALGO-CERVICAL-LOCALLY-ADVANCED-1L.decision_tree — surfaces as plan annotation
 sources:
-  - SRC-NCCN-CERVICAL-2025
-  - SRC-ESMO-CERVICAL-2024
+- SRC-NCCN-CERVICAL-2025
+- SRC-ESMO-CERVICAL-2024
 
 last_reviewed: "2026-04-27"
 draft: false
@@ -56,6 +56,12 @@ notes: >
   early consolidation considerations. PD-L1 CPS ≥1 metastatic: pembrolizumab
   + carbo + pacli ± bev (KEYNOTE-826 — OS HR 0.67).
 notes_ua: >
-  Para-aortic-node-positive: extend RT field to PA + pelvis (per ATIVE/RTOG дані). Bulky ≥4 cm or LN+ : INTERLACE дослідження (Lancet 2024) — індукція carbo+pacli x6 weeks then стандарт CRT покращує OS (~5% absolute at 5y); ESMO 2024 update endorses for fit patients. Adenocarcinoma: poorer CRT відповідь than squamous; same схема but lower cure rate — counsel early консолідація considerations. PD-L1 CPS ≥1 метастатичний: пембролізумаб + carbo + pacli ± bev (KEYNOTE-826 — OS HR 0.67).
+  PD-L1 CPS ≥1 (22C3) — поріг для пембролізумабу + хіміо (KEYNOTE-826); CPS ≥10 показує більшу користь
+  (підгрупа). HPV+ (>95% плоскоклітинних) — не змінює вибір хіміо, але є предиктором відповіді на ICI.
+  Стандартна хіміопроменева терапія покращує ЗВ (~5% абсолютних на 5 роках) при параортальній аденопатії
+  — ESMO 2024 підтримує для придатних пацієнтів. Бевацизумаб + цисплатин + паклітаксел є стандартом 1L
+  при поширеній хворобі. Цисплатин-рефрактерний — нижча частота відповіді на ICI, але не виключає повністю.
+  СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

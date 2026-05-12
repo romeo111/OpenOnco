@@ -132,3 +132,32 @@ notes: >
   algorithm branches.
   (5) BIO-FRA is newly introduced in this batch; biomarker_actionability
   entry not yet authored.
+notes_ua: >
+  Основні осі дерева рішень: PFI > BRCA/HRD > FRα. Підтримуючий PARPi
+  виводиться через ланцюг `followed_by` показання з хіміотерапією (BRCA-mut →
+  олапариб (olaparib); HRD+ → нірапариб (niraparib); рукапариб (rucaparib) як
+  альтернатива при непереносимості олапарибу/нірапарибу). Рушій повинен
+  оцінювати `followed_by` тільки після документованої CR/PR на повторній
+  індукції (оновлення статусу, а не гілка до лікування).
+
+  OOS / прогалини в підключенні:
+  (1) PFI закодовано в stage_requirements показання у вигляді вільного тексту;
+  рушій зчитує platinum_free_interval_months з профілю пацієнта для гейтування
+  кроку 1. Якщо поле профілю відсутнє, резервний варіант — запросити через
+  анкету.
+  (2) Тестування FRα обумовлене наявністю тканини у пацієнта — повторна біопсія
+  при платино-резистентному рецидиві є кращою, ніж покладатись на архівну первинну
+  пухлину (експресія може змінюватись).
+  (3) Трабектедин+PLD (IND-OVARIAN-3L-TRABECTEDIN-PLD) та монотерапія топотеканом
+  (IND-OVARIAN-2L-PLAT-RES-TOPOTECAN) є пізніми/рятівними варіантами, які НЕ
+  маршрутизуються цим 2Л-алгоритмом; вони виводяться через вільний текст МДТ або
+  майбутній ALGO-OVARIAN-3L.
+  (4) Крихкість (RF-OVARIAN-FRAILTY-AGE) та периопераційний ВТЕ
+  (RF-OVARIAN-PERIOPERATIVE-VTE) модифікують дозування / скасовують бев —
+  виводяться як red_flags_triggering_alternative для кожного показання, а не як
+  гілки алгоритму.
+  (5) BIO-FRA нещодавно введено в цьому пакеті; запис biomarker_actionability
+  ще не авторований.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_13
+draft_revision: 2

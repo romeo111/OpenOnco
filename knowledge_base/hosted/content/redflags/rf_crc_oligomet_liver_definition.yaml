@@ -36,21 +36,21 @@ definition_ua: >
 trigger:
   type: composite_score
   all_of:
-    - finding: "liver_metastasis_count"
-      threshold: 5
-      comparator: "<="
-    - finding: "all_liver_lesions_r0_resectable"
-      value: true
-    - finding: "ecog_performance_status"
-      threshold: 1
-      comparator: "<="
-    - finding: "primary_tumor_controllable"
-      value: true
+  - finding: "liver_metastasis_count"
+    threshold: 5
+    comparator: "<="
+  - finding: "all_liver_lesions_r0_resectable"
+    value: true
+  - finding: "ecog_performance_status"
+    threshold: 1
+    comparator: "<="
+  - finding: "primary_tumor_controllable"
+    value: true
   none_of:
-    - finding: "extrahepatic_metastasis"
-      value: true
-    - finding: "peritoneal_carcinomatosis"
-      value: true
+  - finding: "extrahepatic_metastasis"
+    value: true
+  - finding: "peritoneal_carcinomatosis"
+    value: true
 
 clinical_direction: intensify
 
@@ -59,13 +59,13 @@ priority: 70
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-CRC
+- DIS-CRC
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-COLON-2025
-  - SRC-ESMO-CRC-2024
-  - SRC-ESMO-COLON-2024
+- SRC-NCCN-COLON-2025
+- SRC-ESMO-CRC-2024
+- SRC-ESMO-COLON-2024
 
 last_reviewed: "2026-05-08"
 draft: false
@@ -142,20 +142,14 @@ notes: >
   description.
 
 notes_ua: >
-  Критерії печінково-обмеженого олігометастатичного КРР (за NCCN Colon
-  v3.2025 + ESMO CRC 2024 + EORTC 40983 / Nordlinger Lancet 2008):
-    1. ≤5 метастатичних вогнищ у печінці (числовий поріг).
-    2. Всі вогнища R0-резектабельні при гепатобіліарному хірургічному
-       огляді, з адекватним залишком печінки.
-    3. Відсутність екстрапечінкової хвороби.
-    4. ECOG 0-1.
-    5. Контрольоване первинне вогнище (резекція або резектабельне;
-       без перфорації/обструкції).
-
-  Відмінності від гастроезофагеального OMEC-1 oligomet:
-    - ≤5 ПЕЧІНКОВИХ вогнищ (не ≤3 дистантних).
-    - Обмеження тільки печінкою (екстрапечінкова — hard exclusion).
-    - HER2-positive НЕ дискваліфікує.
+  Резектабельна КРР (лише печінка, ≤3 метастази, можлива резекція R0): потенційно курабельна — хірургія
+  золотий стандарт. 5-річна ЗВ після резекції метастазів печінки ~30–40% при сприятливому відборі. Конверсійна
+  хімія може конвертувати ~20–30% нерезектабельних. IND-CRC-OLIGOMET-LIVER-LIMITED охоплює показання до
+  хірургії; IND-GASTRIC-OLIGOMET-SYSTEMIC є окремою сутністю. Посилання: SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024,
+  SRC-ESMO-CRC-2024. Абляція (РЧА, МВА, SBRT) для ≤3 см уражень у неоперованих (~50% ефективність). RF-CRC-OLIGOMET-LIVER-DEFINITION
+  та RF-OLIGOMET-DEFINITION — конкурентні прапори. RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION — пріоритетний
+  прапор при гострій ситуації. СТАБ — потребує підпису клінічного співкерівника.
 
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

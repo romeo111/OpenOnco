@@ -17,18 +17,18 @@ definition_ua: >
 trigger:
   type: composite_score
   all_of:
-    - any_of:
-        - finding: "npm1_mutation"
-          value: true
-        - finding: "npm1_status"
-          value: "mutated"
-        - finding: "npm1_type_a"
-          value: true
-    - any_of:
-        - finding: "flt3_itd"
-          value: false
-        - finding: "flt3_itd_status"
-          value: "negative"
+  - any_of:
+    - finding: "npm1_mutation"
+      value: true
+    - finding: "npm1_status"
+      value: "mutated"
+    - finding: "npm1_type_a"
+      value: true
+  - any_of:
+    - finding: "flt3_itd"
+      value: false
+    - finding: "flt3_itd_status"
+      value: "negative"
 
 clinical_direction: de-escalate
 
@@ -37,14 +37,14 @@ priority: 80
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-AML
+- DIS-AML
 shifts_algorithm:
-  - ALGO-AML-1L
+- ALGO-AML-1L
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-AML-2022
-  - SRC-ESMO-AML-2020
+- SRC-NCCN-AML-2025
+- SRC-ELN-AML-2022
+- SRC-ESMO-AML-2020
 
 last_reviewed: "2026-04-27"
 draft: false
@@ -71,3 +71,6 @@ notes_ua: >
   alloHCT. Menin-інгібітори (revumenib, ziftomenib) — у дослідженнях
   при р/р NPM1-mut. RF співіснує з RF-AML-FLT3-ACTIONABLE (різні
   осі — випадок NPM1+FLT3-ITD спрацьовує обидва).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

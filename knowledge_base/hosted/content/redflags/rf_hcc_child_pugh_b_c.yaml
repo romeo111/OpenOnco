@@ -13,10 +13,10 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: "child_pugh_class"
-      value: "B"
-    - finding: "child_pugh_class"
-      value: "C"
+  - finding: "child_pugh_class"
+    value: "B"
+  - finding: "child_pugh_class"
+    value: "C"
 
 clinical_direction: de-escalate
 
@@ -25,15 +25,15 @@ priority: 60
 category: organ-dysfunction
 
 relevant_diseases:
-  - DIS-HCC
+- DIS-HCC
 shifts_algorithm:
-  - ALGO-HCC-SYSTEMIC-1L
+- ALGO-HCC-SYSTEMIC-1L
 branch_targets:
   ALGO-HCC-SYSTEMIC-1L: "step-2"
 
 sources:
-  - SRC-NCCN-HCC-2025
-  - SRC-AASLD-HCC-2023
+- SRC-NCCN-HCC-2025
+- SRC-AASLD-HCC-2023
 
 last_reviewed: "2026-04-26"
 draft: false
@@ -45,6 +45,9 @@ notes: >
   CP-C: best supportive care + hepatology / transplant; systemic chemo
   not indicated.
 notes_ua: >
-  Child-Pugh score assesses encephalopathy, ascites, bilirubin, albumin, INR. CP-B: ICI-bev протипоказаний (anti-angiogenic stress on decompensated liver); сорафеніб partial дані (GIDEON registry). CP-C: найкраще підтримуюче лікування + hepatology / transplant; systemic chemo not indicated.
+  Child-Pugh оцінка включає енцефалопатію, асцит, білірубін, альбумін, МНВ. CP-B: ICI-bev протипоказаний
+  (антиангіогенний стрес на декомпенсованій печінці); сорафеніб з частковими даними (реєстр GIDEON). CP-C:
+  найкраще підтримуюче лікування + гепатологія / трансплантат; системна хімія не показана.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2
