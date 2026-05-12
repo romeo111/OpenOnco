@@ -131,3 +131,26 @@ notes: >
   handled by IND-BREAST-BRCA-POS-MET-PARPI in 1L; revisit at 2L if
   PARPi not yet given. Not in this algo's default tree to keep the
   decision focused on post-CDK4/6i targeted-therapy selection.
+notes_ua: >
+  Обмеження підтипу: лише HR+/HER2- — алгоритм слід застосовувати лише
+  після того, як розподільник на рівні захворювання скерував пацієнта сюди
+  через гілку підтипу рецептора. Схема наразі не має поля верхнього рівня
+  `receptor_subtype` для Алгоритму; кодується через purpose та
+  Indication.applicable_to.receptor_subtype на кожному виході.
+
+  Раціональне обґрунтування послідовності (стандартний порядок):
+    PIK3CA/AKT1/PTEN > ESR1 > HER2-low > без біомаркера
+  Капівасертиб є кращим за алпелісиб у гілці з альтерацією шляху
+  через (1) ширше охоплення (3 гени проти 1), (2) переривчасте дозування
+  4-дні/3-дні краще переноситься, (3) новіша доказова база. Алпелісиб
+  залишається дійсною альтернативою при лише PIK3CA та недоступності
+  капівасертибу (UA — серйозний бар'єр доступу — жоден не є відшкодованим).
+
+  PARPi (олапариб/талазопариб) для gBRCA-мут метастатичного HR+/HER2-
+  розглядається у IND-BREAST-BRCA-POS-MET-PARPI в 1L; переглянути у 2L,
+  якщо PARPi ще не призначався. Не включено до основного дерева цього
+  алгоритму, щоб зосередити рішення на виборі цільової терапії
+  після CDK4/6i.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_13
+draft_revision: 2
