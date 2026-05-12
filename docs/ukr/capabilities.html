@@ -75,7 +75,7 @@
       (CHARTER §6.1 вимагає двох Clinical Co-Lead approvals для будь-якої
       Indication, перш ніж її можна вважати «published»). Зараз — це
       proposed-plan: structured data + algorithm + sources на місці, але
-      без dual sign-off. Стан станом на <code>2026-05-11 10:45 UTC</code>.
+      без dual sign-off. Стан станом на <code>2026-05-12 06:26 UTC</code>.
       Це інструмент підтримки рішень, не медичний пристрій.
     </div>
 
@@ -87,7 +87,7 @@
       </h2>
       <p class="promo-sub">
         Декларативний rule engine на <strong>78 хворобах</strong>,
-        488 red flags, 434 показань, 369 режимів.
+        488 red flags, 436 показань, 370 режимів.
         Без LLM у клінічному рішенні, без серверу, без логів.
         Patient JSON ніколи не покидає машину.
       </p>
@@ -98,7 +98,7 @@
           <div class="promo-stat-lbl">Хвороб у KB</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">434</div>
+          <div class="promo-stat-num">436</div>
           <div class="promo-stat-lbl">Показань</div>
         </div>
         <div class="promo-stat">
@@ -198,6 +198,80 @@
     </div>
 
     <div class="info-section">
+      <h2>Для кого це</h2>
+      <p class="info-text">
+        Чотири аудиторії дивляться на той самий engine. Дані спільні,
+        фрейм — різний.
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card num-card--accent">
+          <div class="num-big">MD</div>
+          <div class="num-lbl">Для онколога — менше ручної перевірки, більше клінічного фокусу</div>
+          <p class="num-text">
+            NCCN, ESMO, MoH, дозування, протипоказання, доступність
+            препаратів — зараз це 2–4 години ручних перевірок на кейс.
+            OpenOnco формує чернетку guideline-grade
+            <strong>стандартного</strong> плану та
+            <strong>агресивного</strong> альтернативного (trials /
+            higher-efficacy options) — з посиланням під кожним рядком.
+            Без чорної скриньки: LLM не призначає схеми, рішення
+            приймає декларативний rule engine, а «чому» простежується —
+            біомаркер → препарат → evidence → моніторинг → ризики.
+            Ниркова / печінкова функція, вік, вага, CTCAE, supportive
+            care — first-class сигнали.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">NGS</div>
+          <div class="num-lbl">Для NGS-лабораторій — перетворіть variant report на клінічну дію</div>
+          <p class="num-text">
+            OpenOnco може лягати поверх variant report як шар
+            інтерпретації. Точкові мутації, ф'южни, rearrangements і
+            variant actionability — first-class. <strong>CIViC
+            (CC0)</strong> замість закритих non-commercial баз; ESCAT
+            tier — зрозумілий сигнал для лікаря. Інтеграція через
+            структуровані формати: FHIR R4 / mCODE, JSON, disease-coverage
+            API. Для клініциста це вже не «мутація знайдена», а «що це
+            може означати для лікування, моніторингу або clinical
+            trials». Молекулярного патолога не замінюємо і діагнозу не
+            ставимо — робимо результат лабораторії дієвим у наступному
+            кроці.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">Pt</div>
+          <div class="num-lbl">Для пацієнта — план людською мовою</div>
+          <p class="num-text">
+            Пацієнт не читає NCCN, але має розуміти, що відбувається.
+            OpenOnco може згенерувати спрощений супровідний звіт: без
+            латини, скорочень і зайвого страху. Чому обрана саме ця
+            схема, які аналізи потрібні, на що звертати увагу між
+            візитами. Чітка межа: інформаційний інструмент для розмови
+            з онкологом, не його заміна. Для демо реальні персональні
+            дані не потрібні.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">$</div>
+          <div class="num-lbl">Для інвесторів і партнерів — відкрита онкологічна інфраструктура з реальним технологічним бар'єром</div>
+          <p class="num-text">
+            Не «ще один AI-chatbot», а клінічний інфраструктурний стек:
+            rule engine, knowledge base, citations, FHIR/mCODE, CIViC,
+            PubMed, ClinicalTrials.gov, DailyMed, openFDA. Понад
+            <strong>100M AI-токенів</strong> уже вкладено в розробку,
+            верифікацію та рефакторинг алгоритмів; робота триває
+            щотижня. Поточний масштаб: 78 захворювань,
+            488 red flags, 436 indications,
+            370 regimens, 152 treatment algorithms.
+            Моделі партнерства: гранти, clinical validation, NGS
+            integrations, hospital pilots, donor funding, infrastructure
+            sponsorship.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
       <h2>0. Що нового за останній тиждень</h2>
       <p class="info-text">
         Останні дні KB і engine отримали кілька структурних апдейтів —
@@ -291,12 +365,12 @@
         <div class="num-card">
           <div class="num-big">78</div>
           <div class="num-lbl">Хвороби в KB</div>
-          <div class="num-detail">38 гематологічних · 40 солідних · 76 з повним ланцюгом · 55 мають 2L+ алгоритм</div>
+          <div class="num-detail">38 гематологічних · 40 солідних · 77 з повним ланцюгом · 55 мають 2L+ алгоритм</div>
           <p class="num-text">
             Кожна хвороба має свій <strong>archetype</strong>
             (etiologically_driven, risk_stratified, biomarker_driven,
             stage_driven), що визначає логіку алгоритму вибору лікування.
-            Зараз 1L покрито для всіх 78 (89 алгоритмів),
+            Зараз 1L покрито для всіх 78 (91 алгоритмів),
             2L+ — для 34 гематологічних та 21
             солідних (61 алгоритмів).
           </p>
@@ -345,9 +419,9 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">369</div>
+          <div class="num-big">370</div>
           <div class="num-lbl">Режими лікування</div>
-          <div class="num-detail">434 показань (228 1L · 172 2L+)</div>
+          <div class="num-detail">436 показань (230 1L · 172 2L+)</div>
           <p class="num-text">
             Кожна схема — список drugs з дозами, шкалою циклів, dose
             adjustments (renal impairment, FIB-4, frailty), premedications,
@@ -974,8 +1048,8 @@
       <table class="kv-table">
         <thead><tr><th>Категорія</th><th>Стан</th><th>Що це означає</th></tr></thead>
         <tbody>
-          <tr><td>Хвороби з повним ланцюгом</td><td>76 / 78</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
-          <tr><td>Indications 1L</td><td>228</td><td>Перша лінія покрита для всіх 78 хвороб</td></tr>
+          <tr><td>Хвороби з повним ланцюгом</td><td>77 / 78</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
+          <tr><td>Indications 1L</td><td>230</td><td>Перша лінія покрита для всіх 78 хвороб</td></tr>
           <tr><td>Indications 2L+</td><td>172</td><td>Друга-четверта лінія: 34 гематологічних + 21 солідних. Решта solid-tumor 2L+ — частково (CRC, breast, urothelial), не systematically.</td></tr>
           <tr><td>RedFlags</td><td>488</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — окремий track спеціалізації</td></tr>
