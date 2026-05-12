@@ -1,0 +1,443 @@
+# OpenOnco UA terminology — single source of truth for translation agents.
+#
+# Every translation agent reads this file. Agents do NOT edit it; new term
+# proposals go to ``glossary_proposals.jsonl`` (per-agent), which the
+# orchestrator reviews and folds back here in Phase 0 increments.
+#
+# Conventions
+# -----------
+# - ``stay_latin``: tokens that must NOT be transliterated. Rendered verbatim.
+# - ``transliterate``: EN -> UA mappings the agent MUST use; case-insensitive
+#   match on EN, exact UA replacement.
+# - ``preserve_verbatim``: regex patterns to keep intact (dosing, %, NCT IDs,
+#   gene HGVS, ESCAT/NCCN tier labels).
+# - ``register``: prose-style notes — clinical UA register, third person,
+#   hospital-discharge-letter tone, no patient-direct address in KB fields
+#   (patient-direct lives only in patient-mode glossing).
+#
+# This file is loaded as plain YAML; no schema validation. Loader function
+# lives at ``knowledge_base.translation.glossary.load_glossary``.
+
+version: "2026-05-12"
+status: phase0_seed
+
+# ── Stay Latin (verbatim, never translated) ─────────────────────────────
+stay_latin:
+  # Gene / protein symbols
+  genes:
+    - ALK
+    - APC
+    - ATM
+    - ATRX
+    - BCL2
+    - BCL6
+    - BCR
+    - BRAF
+    - BRCA1
+    - BRCA2
+    - CDH1
+    - CDK4
+    - CDK6
+    - CDKN2A
+    - CEBPA
+    - CHEK2
+    - CTNNB1
+    - DDX41
+    - DNMT3A
+    - EGFR
+    - ERBB2
+    - ESR1
+    - EZH2
+    - FGFR1
+    - FGFR2
+    - FGFR3
+    - FLT3
+    - HER2
+    - IDH1
+    - IDH2
+    - JAK2
+    - KIT
+    - KMT2A
+    - KRAS
+    - MET
+    - MLH1
+    - MSH2
+    - MSH6
+    - MYC
+    - MYD88
+    - NF1
+    - NOTCH1
+    - NPM1
+    - NRAS
+    - NTRK1
+    - NTRK2
+    - NTRK3
+    - PALB2
+    - PD-L1
+    - PDGFRA
+    - PIK3CA
+    - PML
+    - PMS2
+    - POLE
+    - PTCH1
+    - PTEN
+    - RARA
+    - RB1
+    - RET
+    - ROS1
+    - RUNX1
+    - SF3B1
+    - SMAD4
+    - SMARCB1
+    - SMO
+    - STK11
+    - TP53
+    - VHL
+  # Trial acronyms (uppercase)
+  trials:
+    - ALEX
+    - CHECKMATE
+    - CHRONOS
+    - CROWN
+    - ECHELON
+    - FLAURA
+    - KEYNOTE
+    - MURANO
+    - PALOMA
+    - PROFILE
+    - RATIFY
+    - REGONIVO
+    - VIALE
+  # Classification systems
+  classifications:
+    - ESCAT
+    - NCCN
+    - ESMO
+    - ELN
+    - WHO
+    - ICC
+    - FAB
+    - IPSS
+    - IPSS-R
+    - IPSS-M
+    - ISS
+    - R-ISS
+    - R2-ISS
+    - mSMART
+    - ECOG
+    - Karnofsky
+  # Code-system identifiers
+  codes:
+    - ICD-10
+    - ICD-O-3
+    - LOINC
+    - RxNorm
+    - CTCAE
+    - HGVS
+    - SNOMED
+    - mCODE
+    - FHIR
+  # Modality / regimen acronyms
+  regimens:
+    - ABVD
+    - A-AVD
+    - AVD
+    - BV-CHP
+    - CHOP
+    - CHOEP
+    - DA-EPOCH-R
+    - FOLFIRI
+    - FOLFIRINOX
+    - FOLFOX
+    - R-CHOP
+    - R-DA-EPOCH
+    - R-EPOCH
+    - R-ICE
+    - VR-CAP
+    - 7+3
+  # Therapy class acronyms
+  therapy_classes:
+    - ADC          # antibody-drug conjugate
+    - BiTE
+    - CAR-T
+    - CDK4/6i
+    - ICI
+    - PARPi
+    - PD-1
+    - PD-L1
+    - SERD
+    - TKI
+
+# ── Drug names: EN -> UA ────────────────────────────────────────────────
+# Conservative UA pharmacopoeia transliterations. Where a drug has both an
+# established UA spelling AND clinical English usage, prefer the UA form
+# in prose; allow EN in tables/dosing strings.
+drugs:
+  abemaciclib: абемацикліб
+  acalabrutinib: акалабрутиніб
+  alectinib: алектиніб
+  alpelisib: алпелісиб
+  atezolizumab: атезолізумаб
+  avapritinib: авапритиніб
+  axitinib: акситиніб
+  azacitidine: азацитидин
+  bendamustine: бендамустин
+  bevacizumab: бевацизумаб
+  binimetinib: бініметиніб
+  bortezomib: бортезоміб
+  bosutinib: босутиніб
+  brentuximab vedotin: брентуксимаб ведотин
+  brigatinib: бригатиніб
+  cabozantinib: кабозантиніб
+  capecitabine: капецитабін
+  capmatinib: капматиніб
+  carboplatin: карбоплатин
+  ceritinib: церитиніб
+  cetuximab: цетуксимаб
+  chlorambucil: хлорамбуцил
+  cisplatin: цисплатин
+  cobimetinib: кобіметиніб
+  copanlisib: копанлісиб
+  crizotinib: кризотиніб
+  cyclophosphamide: циклофосфамід
+  cytarabine: цитарабін
+  dabrafenib: дабрафеніб
+  dacarbazine: дакарбазин
+  daratumumab: даратумумаб
+  dasatinib: дазатиніб
+  daunorubicin: даунорубіцин
+  decitabine: децитабін
+  docetaxel: доцетаксел
+  doxorubicin: доксорубіцин
+  durvalumab: дурвалумаб
+  elacestrant: елацестрант
+  elotuzumab: елотузумаб
+  encorafenib: енкорафеніб
+  enfortumab vedotin: енфортумаб ведотин
+  entrectinib: ентректиніб
+  enzalutamide: ензалутамід
+  epirubicin: епірубіцин
+  erdafitinib: ердафітиніб
+  erlotinib: ерлотиніб
+  etoposide: етопозид
+  everolimus: еверолімус
+  exemestane: екземестан
+  fluorouracil: фторурацил
+  fulvestrant: фулвестрант
+  gemcitabine: гемцитабін
+  gilteritinib: гілтеритиніб
+  glasdegib: гласдегіб
+  ibrutinib: ібрутиніб
+  idelalisib: іделалісиб
+  ifosfamide: іфосфамід
+  imatinib: іматиніб
+  ipilimumab: іпілімумаб
+  irinotecan: іринотекан
+  isatuximab: ісатуксимаб
+  ivosidenib: івосидениб
+  ixazomib: іксазоміб
+  lapatinib: лапатиніб
+  larotrectinib: ларотректиніб
+  lenalidomide: леналідомід
+  lenvatinib: ленватиніб
+  letrozole: летрозол
+  lomustine: ломустин
+  lorlatinib: лорлатиніб
+  melphalan: мелфалан
+  methotrexate: метотрексат
+  midostaurin: мідостаурин
+  mitomycin: мітоміцин
+  nelarabine: неларабін
+  nilotinib: нілотиніб
+  nivolumab: ніволумаб
+  obinutuzumab: обінутузумаб
+  olaparib: олапариб
+  osimertinib: осимертиніб
+  oxaliplatin: оксаліплатин
+  paclitaxel: паклітаксел
+  palbociclib: палбоцикліб
+  pazopanib: пазопаніб
+  pembrolizumab: пембролізумаб
+  pemetrexed: пеметрексед
+  pertuzumab: пертузумаб
+  polatuzumab vedotin: полатузумаб ведотин
+  pomalidomide: помалідомід
+  ponatinib: понатиніб
+  prednisone: преднізон
+  raloxifene: ралоксифен
+  ramucirumab: рамуцирумаб
+  regorafenib: регорафеніб
+  ribociclib: рибоцикліб
+  rituximab: ритуксимаб
+  ruxolitinib: руксолітиніб
+  selpercatinib: селперкатиніб
+  sirolimus: сиролімус
+  sorafenib: сорафеніб
+  sotorasib: сотораcиб
+  sunitinib: сунітиніб
+  tamoxifen: тамоксифен
+  temozolomide: темозоломід
+  thalidomide: талідомід
+  tisotumab vedotin: тісотумаб ведотин
+  topotecan: топотекан
+  trametinib: траметиніб
+  trastuzumab: трастузумаб
+  trastuzumab deruxtecan: трастузумаб дерукстекан
+  trastuzumab emtansine: трастузумаб емтанзин
+  tucatinib: тукатиніб
+  vemurafenib: вемурафеніб
+  venetoclax: венетоклакс
+  vincristine: вінкристин
+  vinorelbine: вінорельбін
+  zanubrutinib: занубрутиніб
+
+# ── Common clinical phrases: EN -> UA ───────────────────────────────────
+# These supersede ad-hoc agent translations. Agents must use these forms
+# when the EN phrase appears.
+phrases:
+  "first-line": перша лінія
+  "second-line": друга лінія
+  "third-line": третя лінія
+  "frontline": перша лінія
+  "front-line": перша лінія
+  "newly diagnosed": вперше діагностований
+  "previously treated": раніше лікований
+  "previously untreated": раніше нелікований
+  "treatment-naive": без попереднього лікування
+  "treatment naive": без попереднього лікування
+  "relapsed": рецидивний
+  "refractory": рефрактерний
+  "relapsed/refractory": рецидивний/рефрактерний
+  "complete response": повна відповідь
+  "partial response": часткова відповідь
+  "overall response rate": загальна частота відповіді
+  "overall survival": загальна виживаність
+  "progression-free survival": виживаність без прогресування
+  "disease-free survival": виживаність без хвороби
+  "event-free survival": виживаність без подій
+  "median follow-up": медіана спостереження
+  "hazard ratio": відношення ризиків
+  "standard of care": стандарт лікування
+  "targeted therapy": таргетна терапія
+  "checkpoint inhibitor": інгібітор контрольних точок
+  "immune checkpoint inhibitor": інгібітор контрольних точок імунітету
+  "immunotherapy": імунотерапія
+  "chemotherapy": хіміотерапія
+  "chemoimmunotherapy": хіміоімунотерапія
+  "radiotherapy": променева терапія
+  "radiation therapy": променева терапія
+  "chemoradiation": хіміопроменева терапія
+  "stem cell transplant": трансплантація стовбурових клітин
+  "autologous stem cell transplant": аутологічна трансплантація стовбурових клітин
+  "allogeneic stem cell transplant": алогенна трансплантація стовбурових клітин
+  "bone marrow": кістковий мозок
+  "lymph node": лімфатичний вузол
+  "lymph nodes": лімфатичні вузли
+  "tumor burden": пухлинне навантаження
+  "tumor lysis syndrome": синдром лізису пухлини
+  "cytokine release syndrome": синдром вивільнення цитокінів
+  "graft-versus-host disease": реакція трансплантат-проти-господаря
+  "minimal residual disease": мінімальна залишкова хвороба
+  "measurable residual disease": вимірювана залишкова хвороба
+  "driver mutation": драйверна мутація
+  "activating mutation": активуюча мутація
+  "loss-of-function": втрата функції
+  "gain-of-function": посилення функції
+  "germline": герміногенний
+  "somatic": соматичний
+  "amplification": ампліфікація
+  "deletion": делеція
+  "translocation": транслокація
+  "rearrangement": перебудова
+  "fusion": злиття
+  "overexpression": гіперекспресія
+  "loss of expression": втрата експресії
+  "immunohistochemistry": імуногістохімія
+  "flow cytometry": проточна цитометрія
+  "next-generation sequencing": секвенування нового покоління
+  "liquid biopsy": рідинна біопсія
+  "circulating tumor dna": циркулююча пухлинна ДНК
+  "indolent": індолентний
+  "aggressive": агресивний
+  "high-grade": високого ступеня
+  "low-grade": низького ступеня
+  "high-risk": високого ризику
+  "low-risk": низького ризику
+  "intermediate-risk": проміжного ризику
+  "favorable-risk": сприятливого ризику
+  "favorable": сприятливий
+  "adverse": несприятливий
+  "induction": індукція
+  "consolidation": консолідація
+  "maintenance": підтримуюча терапія
+  "salvage": сальвадж
+  "monotherapy": монотерапія
+  "combination therapy": комбінована терапія
+  "dose reduction": зниження дози
+  "dose adjustment": корекція дози
+  "adverse event": небажане явище
+  "adverse events": небажані явища
+  "side effect": побічний ефект
+  "side effects": побічні ефекти
+  "clinical trial": клінічне дослідження
+  "clinical trials": клінічні дослідження
+  "randomized controlled trial": рандомізоване контрольоване дослідження
+  "phase 3": фаза 3
+  "phase 2": фаза 2
+  "phase 1": фаза 1
+  "phase iii": фаза 3
+  "phase ii": фаза 2
+  "phase i": фаза 1
+  "subgroup analysis": аналіз підгруп
+  "interim analysis": проміжний аналіз
+  "primary endpoint": первинна кінцева точка
+  "secondary endpoint": вторинна кінцева точка
+  "fda-approved": схвалений FDA
+  "ema-approved": схвалений EMA
+  "ukraine-approved": зареєстрований в Україні
+  "guidelines recommend": настанови рекомендують
+  "category 1": категорія 1
+  "category 2a": категорія 2A
+  "category 2b": категорія 2B
+  "level of evidence": рівень доказовості
+
+# ── Patterns kept verbatim (regex, case-insensitive on EN side) ──────────
+preserve_verbatim:
+  # Dosing strings: 100 mg, 5 mg/kg, 60 mg/m², 2 g/day, 1.5 mg/kg/day
+  - 'numeric_dose': '\b\d+(?:\.\d+)?\s*(?:mg|g|mcg|µg|kg|ml|mL|U|IU|MU)(?:/(?:m²|m\^2|kg|day|d|h|hr|wk))?\b'
+  # Percentages
+  - 'percent': '\b\d+(?:\.\d+)?\s*%'
+  # Trial / NCT identifiers
+  - 'nct': '\bNCT\d{6,8}\b'
+  # PubMed IDs
+  - 'pmid': '\bPMID:?\s*\d{6,9}\b'
+  # OpenOnco internal IDs
+  - 'oo_id': '\b(?:DIS|BIO|BMA|DRUG|IND|RF|REG|SRC|ALGO|PROC|RAD|EID)-[A-Z0-9-]+\b'
+  # CIViC EID
+  - 'eid': '\bEID\d{1,6}\b'
+  # HGVS-style variants: p.V600E, c.123A>T, p.L858R
+  - 'hgvs': '\b[pcgn]\.[A-Z][A-Za-z0-9*>=._-]+\b'
+  # Cytogenetic notation: t(8;21), inv(16), del(5q)
+  - 'cytogen': '\b(?:t|inv|del|dup|add|der)\(\d+(?:;\d+)?(?:[pq]\d+(?:\.\d+)?)?\)'
+  # Years: 2024, (2018-2024)
+  - 'year': '\b(?:19|20)\d{2}\b'
+
+# ── Style register notes for agents ─────────────────────────────────────
+register:
+  tone: >
+    Neutral clinical Ukrainian, hospital-discharge-letter / textbook
+    register. Third person. Past tense for trial outcomes
+    ("показано, що…"); present tense for guideline statements
+    ("настанови рекомендують…").
+  forbidden_in_kb_fields:
+    - patient-direct address ("ви", "вам") — patient mode glosses these
+      separately at render time
+    - colloquialisms, hedging emoji, exclamation marks
+    - direct treatment recommendations to a named individual — KB
+      describes evidence; rule engine + render layer compose the plan
+  uppercase_acronyms_keep_latin: true
+  trial_names_keep_latin: true
+  drug_first_mention_pattern: >
+    On first mention in a long prose field, prefer "<UA name> (<EN INN>)"
+    so non-UA-fluent reviewers can verify. On subsequent mentions in the
+    same field, UA name alone is fine.
