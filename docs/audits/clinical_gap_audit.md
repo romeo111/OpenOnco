@@ -1,6 +1,6 @@
 # Clinical gap audit
 
-Generated: `2026-05-11T10:46:53Z`
+Generated: `2026-05-12T09:57:28Z`
 
 This is a coverage/governance audit, not a clinical recommendation set.
 It makes the five largest known gaps measurable and repeatable.
@@ -9,10 +9,10 @@ It makes the five largest known gaps measurable and repeatable.
 
 | Gap | Current | Target | Status |
 |---|---:|---|---|
-| Clinical sign-off | 15/1925 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
+| Clinical sign-off | 15/1930 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
 | Solid tumor 2L+ coverage | 23/42 solid diseases have a 2L+ algorithm; 24/42 have a 2L+ indication | Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication. | `coverage_gap` |
-| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 421 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
-| Supportive-care depth | 135/369 regimens have mandatory supportive care (36.6%); 43 have monitoring; 327 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
+| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 424 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
+| Supportive-care depth | 135/370 regimens have mandatory supportive care (36.5%); 43 have monitoring; 327 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
 | Drug indication and off-label tracking | 812 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `schema_gap` |
 
 ## Next actions
@@ -65,6 +65,7 @@ It makes the five largest known gaps measurable and repeatable.
   - `REG-ACALABRUTINIB-RITUXIMAB`
   - `REG-ADAGRASIB-NSCLC`
   - `REG-ALECTINIB-NSCLC`
+  - `REG-ALLOHCT-JMML`
   - `REG-ALPELISIB-FULVESTRANT-BREAST`
   - `REG-AMI-LAZ-NSCLC`
   - `REG-AMIVANTAMAB-LAZERTINIB-NSCLC-2L`
@@ -96,7 +97,6 @@ It makes the five largest known gaps measurable and repeatable.
   - `REG-CAPMATINIB-NSCLC`
   - `REG-CAPOX`
   - `REG-CAR-T-AXICEL-HGBL`
-  - `REG-CARBO-GEM-BEV-OVARIAN`
 
 ### Drug indication and off-label tracking
 
