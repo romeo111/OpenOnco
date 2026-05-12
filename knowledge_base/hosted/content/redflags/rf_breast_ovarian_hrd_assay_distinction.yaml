@@ -42,20 +42,20 @@ definition_ua: >
 trigger:
   type: biomarker
   all_of:
-    - any_of:
-        - finding: "hrd_status"
-          value: "positive"
-        - finding: "hrd_call"
-          value: "positive"
-    - any_of:
-        - finding: "hrd_assay_platform"
-          value: "foundationone_cdx"
-        - finding: "hrd_assay_platform"
-          value: "f1cdx"
-        - finding: "hrd_assay_platform"
-          value: "loh_only"
-        - finding: "hrd_score_source"
-          value: "f1cdx_loh_high"
+  - any_of:
+    - finding: "hrd_status"
+      value: "positive"
+    - finding: "hrd_call"
+      value: "positive"
+  - any_of:
+    - finding: "hrd_assay_platform"
+      value: "foundationone_cdx"
+    - finding: "hrd_assay_platform"
+      value: "f1cdx"
+    - finding: "hrd_assay_platform"
+      value: "loh_only"
+    - finding: "hrd_score_source"
+      value: "f1cdx_loh_high"
 
 clinical_direction: investigate
 
@@ -64,16 +64,16 @@ priority: 60
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-OVARIAN
-  - DIS-BREAST
+- DIS-OVARIAN
+- DIS-BREAST
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-OVARIAN-2025
-  - SRC-NCCN-BREAST-2025
-  - SRC-ESMO-OVARIAN-2024
-  - SRC-PRIMA-GONZALEZ-MARTIN-2019
-  - SRC-CIVIC
+- SRC-NCCN-OVARIAN-2025
+- SRC-NCCN-BREAST-2025
+- SRC-ESMO-OVARIAN-2024
+- SRC-PRIMA-GONZALEZ-MARTIN-2019
+- SRC-CIVIC
 
 last_reviewed: "2026-04-29"
 draft: false
@@ -135,54 +135,28 @@ notes: >
 notes_ua: >
   **Чому платформо-зафіксованість має клінічне значення:**
 
-  PARPi-підтримуючий режим у яєчниках | HRD CDx у pivotal-дослідженні
-  | формулювання FDA-індикації
-  -----------------------------------------------------------------
-  - олапариб + bev (PAOLA-1) | Myriad myChoice GIS ≥42 | "HRD-positive
-    by an FDA-approved test" — на практиці Myriad
-  - ніпарариб моно (PRIMA) | Myriad myChoice GIS ≥42 | "regardless of
-    HRD", але HRD-positive subgroup HR 0.43 vs HRD-neg HR 0.68
-  - олапариб моно (SOLO-1) | gBRCA / sBRCA only | не HRD-score-based
-  - рукапариб (ARIEL3) | LOH-high (Foundation Medicine LOH only) |
-    лише ЄС; США відкликало 2022 — вузький прецедент для F1CDx-LOH
+  PARPi-підтримуючий режим у яєчниках / HRD CDx у pivotal-дослідженні / FDA-статус:
+  - олапариб + bev (PAOLA-1) / Myriad myChoice GIS ≥42 / «HRD-позитивний за FDA-затвердженим тестом» —
+    на практиці Myriad
+  - ніпарариб моно (PRIMA) / Myriad myChoice GIS ≥42 / незалежно від HRD, але HRD-позитивна підгрупа
+    HR 0.43 проти HRD-neg HR 0.68
+  - олапариб моно (SOLO-1) / gBRCA / sBRCA only / не на основі HRD-скору
+  - рукапариб (ARIEL3) / LOH-high (Foundation Medicine LOH only) / лише ЄС; США відкликало 2022
 
-  **Механізм розбіжності:** Myriad GIS захоплює три незалежні
-  footprint геномного скарування (LOH, telomeric allelic imbalance
-  TAI, large-scale state transitions LST). F1CDx HRD агрегує лише
-  LOH + BRCA. Пухлина з високою TAI але помірним LOH може бути
-  Myriad-позитивною і F1CDx-негативною; пухлина з розповсюдженою
-  LOH з не-HRR причин (хромотрипсис, CDK12-loss) — F1CDx-позитивна
-  і Myriad-негативна на композитному cut-point. Емпірична
-  конкордантність ~85-90%; зона незгоди — клінічно значуща при
-  вирішенні питання PARPi-підтримки.
+  **Механізм розбіжності:** Myriad GIS захоплює три незалежні footprint геномного скарування (LOH, TAI,
+  LST). F1CDx HRD агрегує лише LOH + BRCA. Емпірична конкордантність ~85-90%; зона незгоди клінічно значуща
+  при вирішенні питання PARPi-підтримки.
 
-  **Дія при спрацюванні RF:**
-  1. Підтвердити HRD-платформу в звіті (Myriad myChoice CDx vs F1CDx
-     vs Caris vs lab-developed test).
-  2. Якщо лише F1CDx → Myriad myChoice reflex-тест на існуючому
-     FFPE-блоці (turnaround 2-3 тижні); якщо блок недостатній,
-     запит ре-біопсії або BRCA1/2 germline + somatic + select-HRR
-     панель (RAD51C, RAD51D, PALB2 — обмежена доказова база PARPi)
-     як проксі.
-  3. Якщо Myriad myChoice недоступний (ресурсо-обмежене середовище),
-     задокументувати off-label обґрунтування + цитувати BRCA1/2-
-     якірну підгрупу HR (PAOLA-1 BRCA-mut HR 0.31 vs HRD non-BRCA HR
-     0.43 vs HRD-neg HR 0.92).
-  4. **Засторога РМЗ:** HRD-аналізи НЕ є FDA-companion-діагностично
-     індикованими при PARPi РМЗ (талазопариб, олапариб — лише
-     gBRCA-якірні). Повідомлення "HRD-позитивний" у РМЗ поза
-     дослідженням — інформаційно; НЕ використовувати для індикації
-     off-trial PARPi.
+  **Дія при спрацюванні RF:** Підтвердити HRD-платформу в звіті — Myriad myChoice CDx, F1CDx, Caris або
+  лабораторно-розроблений тест. Якщо лише F1CDx → Myriad myChoice reflex-тест (turnaround 2-3 тижні). Якщо
+  Myriad myChoice недоступний, задокументувати off-label обґрунтування.
 
-  **Negative space (коли НЕ спрацьовувати):**
-  - HRD-негативний за будь-якою платформою — окремий RF (HRR-
-    proficient → менша користь PARPi, але PAOLA-1 olaparib + bev має
-    BRCA-якірну користь незалежно від HRD-скору).
-  - BRCA1/2-мутація (germline / somatic) — первинний actionable
-    сигнал; HRD-платформа неважлива, коли BRCA-mut — якір індикації
-    (PARPi показаний незалежно від HRD-скору).
+  **Засторога РМЗ:** HRD-аналізи НЕ є FDA companion-діагностично індикованими при PARPi РМЗ — лише
+  gBRCA-якірні. Повідомлення «HRD-позитивний» у РМЗ поза дослідженням — інформаційно; НЕ використовувати
+  для індикації off-trial PARPi.
 
-  **Цитований ліміт:** PAOLA-1 / PRIMA pivotal-дослідження використовували
-  Myriad myChoice CDx виключно; клініцисти регулярно повідомляють
-  F1CDx HRD-позитивний без розпізнавання off-label-gap. RF — це
-  коригуючий / disambiguation-прапорець.
+
+  **Засторога РМЗ:** HRD-аналізи НЕ є FDA companion-діагностично індикованими при PARPi РМЗ — лише gBRCA-якірні.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

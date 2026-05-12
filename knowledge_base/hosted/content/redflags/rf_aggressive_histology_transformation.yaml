@@ -1,36 +1,39 @@
 id: RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
-definition: "Histologic evidence of transformation to aggressive large B-cell lymphoma (DLBCL) on biopsy or suspected by rapid clinical progression / LDH elevation / PET hotspot"
-definition_ua: "Гістологічне свідчення трансформації в агресивну великоклітинну B-клітинну лімфому (DLBCL) АБО клінічне підозріння на трансформацію"
+definition: "Histologic evidence of transformation to aggressive large B-cell lymphoma (DLBCL) on biopsy
+  or suspected by rapid clinical progression / LDH elevation / PET hotspot"
+definition_ua: "Гістологічне свідчення трансформації в агресивну великоклітинну B-клітинну лімфому (DLBCL)
+  АБО клінічне підозріння на трансформацію"
 
 trigger:
   type: symptom_composite
   any_of:
-    - finding: "biopsy_shows_dlbcl"
-      value: true
-    - all_of:
-        - finding: "ldh_ratio_to_uln"
-          threshold: 1.5
-          comparator: ">"
-        - finding: "clinical_progression_weeks"
-          threshold: 12
-          comparator: "<"
+  - finding: "biopsy_shows_dlbcl"
+    value: true
+  - all_of:
+    - finding: "ldh_ratio_to_uln"
+      threshold: 1.5
+      comparator: ">"
+    - finding: "clinical_progression_weeks"
+      threshold: 12
+      comparator: "<"
 
 clinical_direction: intensify
 
 category: transformation-progression
 priority: 60
 relevant_diseases:
-  - DIS-HCV-MZL
+- DIS-HCV-MZL
 shifts_algorithm:
-  - ALGO-HCV-MZL-1L
+- ALGO-HCV-MZL-1L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-MZL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-MZL-2024
 
 last_reviewed: "2026-04-24"
 notes: "Transformation shifts MZL from indolent to aggressive lymphoma treatment paradigm."
-notes_ua: >-
-  трансформація shifts MZL from індолентний to агресивний лімфома лікування paradigm.
+notes_ua: >
+  Трансформація переводить МЗЛ з індолентної до агресивної парадигми лікування лімфоми.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

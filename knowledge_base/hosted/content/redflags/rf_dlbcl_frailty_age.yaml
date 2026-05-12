@@ -11,26 +11,26 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: "ecog"
-      threshold: 3
+  - finding: "ecog"
+    threshold: 3
+    comparator: ">="
+  - all_of:
+    - finding: "age"
+      threshold: 80
       comparator: ">="
-    - all_of:
-        - finding: "age"
-          threshold: 80
-          comparator: ">="
-        - finding: "comorbidity_grade2_count"
-          threshold: 1
-          comparator: ">="
-    - all_of:
-        - finding: "age"
-          threshold: 75
-          comparator: ">="
-        - finding: "albumin_g_dl"
-          threshold: 3.0
-          comparator: "<"
-        - finding: "comorbidity_count"
-          threshold: 2
-          comparator: ">="
+    - finding: "comorbidity_grade2_count"
+      threshold: 1
+      comparator: ">="
+  - all_of:
+    - finding: "age"
+      threshold: 75
+      comparator: ">="
+    - finding: "albumin_g_dl"
+      threshold: 3.0
+      comparator: "<"
+    - finding: "comorbidity_count"
+      threshold: 2
+      comparator: ">="
 
 clinical_direction: de-escalate
 
@@ -39,13 +39,13 @@ priority: 100
 category: frailty-age
 
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm:
-  - ALGO-DLBCL-1L
+- ALGO-DLBCL-1L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-04-25"
 draft: false
@@ -59,6 +59,11 @@ notes: >
   (severity tie-break: hold > intensify > de-escalate, but here directions
   conflict so engine logs both and surfaces conflict to MDT).
 notes_ua: >
-  Tucci/Italian лімфома Foundation дряхлість score validated as predictor of R-CHOP tolerance. Frail patients: R-mini-CHOP (50% doses) per GELA LNH03-7B; R-GemOx if anthracycline протипоказаний; R-бендамустин in паліативний intent. This RF de-escalates from Pola-R-CHP intensification toward R-CHOP / R-mini-CHOP when дряхлість co-occurs with high-IPI (severity tie-break: утримати > intensify > деескалувати, but here directions conflict so engine logs both and surfaces conflict to MDT).
+  Шкала крихкості Tucci/Italian Lymphoma Foundation валідована як предиктор переносимості R-CHOP. Крихкі
+  пацієнти: R-mini-CHOP (50% доз) за GELA LNH03-7B; R-GemOx при протипоказанні до антрациклінів; R-бендамустин
+  при паліативному намірі. Цей RF де-ескалує від інтенсифікації Pola-R-CHP до R-CHOP / R-mini-CHOP коли
+  крихкість co-виникає з high-IPI (tie-break тяжкості: утримати > інтенсифікувати > де-ескалувати, але
+  тут напрямки конфліктують, тому рушій логує обидва та виводить конфлікт до МДК).
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

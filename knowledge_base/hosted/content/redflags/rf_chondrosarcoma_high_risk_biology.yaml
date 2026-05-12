@@ -1,23 +1,29 @@
 id: RF-CHONDROSARCOMA-HIGH-RISK-BIOLOGY
-definition: "Adverse subtype or molecular feature in chondrosarcoma: dedifferentiated subtype (high-grade sarcoma component), mesenchymal subtype (HEY1-NCOA2 fusion, Ewing-like biology), grade III conventional histology, IDH1 R132 mutation in advanced unresectable disease (ivosidenib-eligible), or CDKN2A loss — each shifts treatment from observation/surgery alone to systemic therapy or trial enrollment."
-definition_ua: "Несприятливий підтип або молекулярна ознака при хондросаркомі: дедиференційований підтип (компонент високодиференційованої саркоми), мезенхімальний підтип (фузія HEY1-NCOA2, Ewing-подібна біологія), grade III конвенційна гістологія, мутація IDH1 R132 в просунутій нерезектабельній хворобі (ivosidenib-кандидат) або втрата CDKN2A — змінює тактику від спостереження/самохірургії на системну терапію або трайл."
+definition: "Adverse subtype or molecular feature in chondrosarcoma: dedifferentiated subtype (high-grade
+  sarcoma component), mesenchymal subtype (HEY1-NCOA2 fusion, Ewing-like biology), grade III conventional
+  histology, IDH1 R132 mutation in advanced unresectable disease (ivosidenib-eligible), or CDKN2A loss
+  — each shifts treatment from observation/surgery alone to systemic therapy or trial enrollment."
+definition_ua: "Несприятливий підтип або молекулярна ознака при хондросаркомі: дедиференційований підтип
+  (компонент високодиференційованої саркоми), мезенхімальний підтип (фузія HEY1-NCOA2, Ewing-подібна біологія),
+  grade III конвенційна гістологія, мутація IDH1 R132 в просунутій нерезектабельній хворобі (ivosidenib-кандидат)
+  або втрата CDKN2A — змінює тактику від спостереження/самохірургії на системну терапію або трайл."
 
 trigger:
   type: biomarker
   any_of:
-    - finding: "chondrosarcoma_subtype"
-      value: "dedifferentiated"
-    - finding: "chondrosarcoma_subtype"
-      value: "mesenchymal"
-    - finding: "chondrosarcoma_grade"
-      value: "III"
-    - all_of:
-        - finding: "BIO-IDH-MUTATION"
-          value: "positive"
-        - finding: "unresectable_or_metastatic"
-          value: true
-    - finding: "BIO-CDKN2A"
-      value: "loss"
+  - finding: "chondrosarcoma_subtype"
+    value: "dedifferentiated"
+  - finding: "chondrosarcoma_subtype"
+    value: "mesenchymal"
+  - finding: "chondrosarcoma_grade"
+    value: "III"
+  - all_of:
+    - finding: "BIO-IDH-MUTATION"
+      value: "positive"
+    - finding: "unresectable_or_metastatic"
+      value: true
+  - finding: "BIO-CDKN2A"
+    value: "loss"
 
 clinical_direction: intensify
 severity: major
@@ -28,8 +34,8 @@ relevant_diseases: [DIS-CHONDROSARCOMA]
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-NSCLC-2025
-  - SRC-ONCOKB
+- SRC-NCCN-NSCLC-2025
+- SRC-ONCOKB
 
 last_reviewed: '2026-04-26'
 draft: false
@@ -47,6 +53,13 @@ notes: >
   unresectable disease (Tap et al JCO 2020); off-label / trial.
   CDKN2A loss is prognostic in dedifferentiated subtype.
 notes_ua: >
-  Chondrosarcoma decision-making is dominated by підтип + grade. Dedifferentiated (~10%) — biphasic with високого ступеня саркома component, behaves aggressively (5-річна ЗВ ~30%) → доксорубіцин + іфосфамід ад'ювантний by extrapolation from soft-tissue саркома protocols. Mesenchymal (~3–5%, young adults) — HEY1-NCOA2 злиття-positive small-round-blue-cell biology, treated like Ewing (VDC/IE protocols) — chemo-sensitive. Grade III conventional — consider ад'ювантний systemic терапія on дослідження. IDH1 R132 mutant (~40–50% of conventional) — івосиденіб has signal in поширений нерезектабельний хвороба (Tap et al JCO 2020); off-label / дослідження. CDKN2A loss is прогностичний in dedifferentiated підтип.
+  Прийняття рішень при хондросаркомі визначається підтипом + ступенем злоякісності. Дедиференційована
+  (~10%) — біфазна з компонентом саркоми; 5-річна ЗВ ~30% — доксорубіцин + іфосфамід ад'ювантний за
+  аналогією з протоколами м'якотканинних сарком. Мезенхімальна (~3–5%) — HEY1-NCOA2 фузія, Ewing-подібна
+  біологія, хімічуйна (VDC/IE протоколи). Grade III конвенційна — розглянути системну терапію на трайлі.
+  IDH1 R132-мутантна (~40–50% конвенційних) — івосидениб має сигнал при просунутій нерезектабельній
+  (дослідження 2020 Tap та ін., JCO); off-label / трайл. CDKN2A втрата є прогностичною при дедиференційованому підтипі.
+  СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

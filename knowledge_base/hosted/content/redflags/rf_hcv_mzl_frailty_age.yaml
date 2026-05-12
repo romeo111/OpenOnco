@@ -15,27 +15,27 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: "ecog"
-      threshold: 3
+  - finding: "ecog"
+    threshold: 3
+    comparator: ">="
+  - finding: "fit_for_combination_chemo"
+    value: false
+  - all_of:
+    - finding: "age"
+      threshold: 75
       comparator: ">="
-    - finding: "fit_for_combination_chemo"
-      value: false
-    - all_of:
-        - finding: "age"
-          threshold: 75
-          comparator: ">="
-        - finding: "comorbidity_count"
-          threshold: 2
-          comparator: ">="
-    - all_of:
-        - finding: "age"
-          threshold: 70
-          comparator: ">="
-        - finding: "albumin_g_dl"
-          threshold: 3.0
-          comparator: "<"
-        - finding: "cirrhosis_present"
-          value: true
+    - finding: "comorbidity_count"
+      threshold: 2
+      comparator: ">="
+  - all_of:
+    - finding: "age"
+      threshold: 70
+      comparator: ">="
+    - finding: "albumin_g_dl"
+      threshold: 3.0
+      comparator: "<"
+    - finding: "cirrhosis_present"
+      value: true
 
 clinical_direction: de-escalate
 
@@ -44,14 +44,14 @@ priority: 100
 category: frailty-age
 
 relevant_diseases:
-  - DIS-HCV-MZL
+- DIS-HCV-MZL
 shifts_algorithm:
-  - ALGO-HCV-MZL-1L
+- ALGO-HCV-MZL-1L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-MZL-2024
-  - SRC-BSH-MZL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-MZL-2024
+- SRC-BSH-MZL-2024
 
 last_reviewed: "2026-04-27"
 draft: false
@@ -67,6 +67,12 @@ notes: >
   recovery + add PJP prophylaxis. Cirrhotic + frail: prefer rituximab-
   monotherapy. Geriatric assessment recommended.
 notes_ua: >
-  HCV-MZL is типово індолентний and DAA-responsive — antiviral терапія alone (DAA: glecaprevir/pibrentasvir or sofosbuvir/velpatasvir) produces ~75% лімфома відповідь when achieved viral cure (Arcaini 2014). Frail patients should preferentially receive DAA-only with watch-and-wait for the лімфома; reserve immunochemotherapy (R-бендамустин, R-CVP) for symptomatic / прогресування хвороби after SVR. бендамустин in літнього віку: high infection risk, monitor lymphocyte recovery + add PJP prophylaxis. Cirrhotic + frail: prefer ритуксимаб- монотерапія. Geriatric assessment рекомендований.
+  HCV-MZL є типово індолентною та DAA-чутливою — антивірусна терапія сама (DAA: глекапревір/пібрентасвір
+  або sofosbu/velpatasvir) забезпечує ~75% відповіді лімфоми при досягнутому вірусному одужанні (Arcaini
+  2014). Крихкі пацієнти повинні переважно отримувати тільки DAA з watch-and-wait для лімфоми; резервувати
+  імунохімію (R-бендамустин, R-CVP) для симптомної / прогресуючої хвороби після SVR. Бендамустин у літніх:
+  високий ризик інфекції, моніторинг відновлення лімфоцитів + додати PJP-профілактику. Цироз + крихкість:
+  надавати перевагу ритуксимаб-монотерапії. Рекомендована геріатрична оцінка.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

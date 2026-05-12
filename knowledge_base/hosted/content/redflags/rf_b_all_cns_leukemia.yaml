@@ -1,21 +1,24 @@
 id: RF-B-ALL-CNS-LEUKEMIA
-definition: "B-ALL with CNS-2 (CSF blasts, WBC <5/µL) or CNS-3 (CSF WBC ≥5/µL with blasts, or cranial nerve palsy) status at diagnosis or relapse — mandates intensified IT therapy ± cranial RT"
-definition_ua: "B-ALL зі статусом CNS-2 (бласти в лікворі, WBC <5/мкл) або CNS-3 (WBC в лікворі ≥5/мкл з бластами, або параліч черепних нервів) при діагностиці чи рецидиві — інтенсифікована IT-терапія ± краніальна RT"
+definition: "B-ALL with CNS-2 (CSF blasts, WBC <5/µL) or CNS-3 (CSF WBC ≥5/µL with blasts, or cranial
+  nerve palsy) status at diagnosis or relapse — mandates intensified IT therapy ± cranial RT"
+definition_ua: "B-ALL зі статусом CNS-2 (бласти в лікворі, WBC <5/мкл) або CNS-3 (WBC в лікворі ≥5/мкл
+  з бластами, або параліч черепних нервів) при діагностиці чи рецидиві — інтенсифікована IT-терапія ±
+  краніальна RT"
 
 trigger:
   type: composite
   any_of:
-    - finding: "csf_blasts_present"
-      value: true
-    - finding: "csf_wbc_per_ul"
-      threshold: 5
-      comparator: ">="
-    - finding: "cranial_nerve_palsy"
-      value: true
-    - finding: "cns_parenchymal_mass"
-      value: true
-    - finding: "cns_status"
-      value: "CNS-3"
+  - finding: "csf_blasts_present"
+    value: true
+  - finding: "csf_wbc_per_ul"
+    threshold: 5
+    comparator: ">="
+  - finding: "cranial_nerve_palsy"
+    value: true
+  - finding: "cns_parenchymal_mass"
+    value: true
+  - finding: "cns_status"
+    value: "CNS-3"
 
 clinical_direction: intensify
 
@@ -23,13 +26,13 @@ severity: critical
 priority: 20
 category: high-risk-biology
 relevant_diseases:
-  - DIS-B-ALL
+- DIS-B-ALL
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-CALGB-10403-STOCK-2019
-  - SRC-BLAST-GOKBUGET-2018
+- SRC-NCCN-BCELL-2025
+- SRC-CALGB-10403-STOCK-2019
+- SRC-BLAST-GOKBUGET-2018
 
 last_reviewed: "2026-04-27"
 draft: true
@@ -42,6 +45,10 @@ notes: >
   Direction INTENSIFY — adds CNS-directed therapy to chosen 1L
   regimen; priority 20. STUB — requires clinical co-lead signoff.
 notes_ua: >
-  Per NCCN ALL/LBL: CNS-3 при діагнозі warrants cranial RT (12-18 Gy) addition + intensified IT MTX/Ara-C/HC схема. CALGB-10403 + GMALL protocols both define CNS-2/CNS-3 thresholds and IT escalation. Direction INTENSIFY — adds CNS-directed терапія to chosen 1L схема; priority 20. STUB — requires clinical co-lead signoff.
+  Відповідно до NCCN ALL/LBL: CNS-3 при діагнозі обумовлює додавання краніального опромінення (12–18 Гр)
+  + інтенсифіковану ендолюмбальну схему MTX/Ara-C/HC. CALGB-10403 + протоколи GMALL обидва визначають
+  пороги CNS-2/CNS-3 та ескалацію ендолюмбальної терапії. Напрямок ІНТЕНСИФІКАЦІЯ — додає ЦНС-спрямовану
+  терапію до обраного режиму 1L; пріоритет 20. СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

@@ -34,24 +34,24 @@ definition_ua: >
 trigger:
   type: composite_score
   all_of:
-    - any_of:
-        - finding: "cd79b_mutation"
-          value: true
-        - finding: "cd79b_y196_mutation"
-          value: true
-        - finding: "cd79b_itam_mutation"
-          value: true
-    - any_of:
-        - finding: "myd88_l265p_mutation"
-          value: true
-        - finding: "lymphgen_subtype"
-          value: "MCD"
-        - finding: "abc_subtype"
-          value: true
-        - finding: "non_gcb_subtype"
-          value: true
-        - finding: "extranodal_involvement"
-          value: true
+  - any_of:
+    - finding: "cd79b_mutation"
+      value: true
+    - finding: "cd79b_y196_mutation"
+      value: true
+    - finding: "cd79b_itam_mutation"
+      value: true
+  - any_of:
+    - finding: "myd88_l265p_mutation"
+      value: true
+    - finding: "lymphgen_subtype"
+      value: "MCD"
+    - finding: "abc_subtype"
+      value: true
+    - finding: "non_gcb_subtype"
+      value: true
+    - finding: "extranodal_involvement"
+      value: true
 
 clinical_direction: investigate
 
@@ -60,12 +60,12 @@ priority: 80
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-04-29"
 draft: false
@@ -102,3 +102,6 @@ notes_ua: >
   для перенаправлення 1L терапії поза клінічним випробуванням —
   RF має shifts_algorithm: [] свідомо.
   STUB — потребує схвалення клінічного співкерівника.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2
