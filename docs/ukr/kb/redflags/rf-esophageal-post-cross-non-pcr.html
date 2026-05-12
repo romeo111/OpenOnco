@@ -114,10 +114,9 @@
   <p class="kb-lead">Детермінований перегляд YAML-сутності з джерельної бази. Клінічний авторитет лишається за вказаними source ID та статусом клінічного sign-off.</p>
   <table class="kb-facts"><tr><th>ID</th><td><code>RF-ESOPHAGEAL-POST-CROSS-NON-PCR</code></td></tr>
 <tr><th>Тип</th><td>Тривожна ознака</td></tr>
-<tr><th>Статус</th><td>переглянуто 2026-04-30 | pending_clinical_signoff</td></tr>
-<tr><th>Файл</th><td><code>knowledge_base/hosted/content/redflags/rf_esophageal_post_cross_non_pcr.yaml</code></td></tr>
-<tr><th>Хвороби</th><td><span class="kb-chip"><code>DIS-ESOPHAGEAL</code></span></td></tr>
-<tr><th>Джерела</th><td><span class="kb-chip" title="ESMO Esophageal Cancer"><code>SRC-ESMO-ESOPHAGEAL-2024</code></span> <span class="kb-chip" title="NCCN Esophageal and EGJ Cancers"><code>SRC-NCCN-ESOPHAGEAL-2025</code></span></td></tr></table>
+<tr><th>Статус</th><td>переглянуто 2026-04-30 | очікує клінічного підпису</td></tr>
+<tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-ESOPHAGEAL"><code>DIS-ESOPHAGEAL</code></a></span></td></tr>
+<tr><th>Джерела</th><td><span class="kb-chip" title="ESMO Esophageal Cancer"><a href="https://www.esmo.org/guidelines/guidelines-by-topic/esmo-clinical-practice-guidelines-gastrointestinal-cancers/clinical-practice-guideline-oesophageal-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-ESOPHAGEAL-2024</code></a></span> <span class="kb-chip" title="NCCN Esophageal and EGJ Cancers"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1433" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-ESOPHAGEAL-2025</code></a></span></td></tr></table>
   <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Post-CROSS-CRT-then-esophagectomy with residual disease — pathology shows ypT+ and/or ypN+ (no pCR). ~70% of CROSS patients fall into this category. Treatment-defining: shifts the patient out of the resectable-1L (CROSS neoadjuvant) pathway into adjuvant nivolumab × 1 year per CheckMate-577 (DFS 22 vs 11 mo placebo, HR 0.69). Eligibility window: initiate within 4-16 weeks post-surgery. Applies to both adenocarcinoma and squamous-cell histology.</td></tr>
 <tr><th>Клінічний напрям</th><td>intensify</td></tr>
 <tr><th>Категорія</th><td>high-risk-biology</td></tr>
@@ -152,7 +151,7 @@
 }</pre>
   <h2>Нотатки</h2><p>Engine wiring: when post-CROSS non-pCR biology is detected on a patient profile that lacks `disease_state` (so the resectable-1L algorithm is the only line=1 esophageal algorithm reached by load-order fallback), this RedFlag fires inside ALGO-ESOPH-RESECTABLE-1L step 0 to redirect the engine to the adjuvant indication (IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS) instead of the neoadjuvant default. Once curated patient JSONs migrate to set `disease_state: &quot;adjuvant&quot;`, the dedicated ALGO-ESOPHAGEAL-ADJUVANT-1L picks them up directly and this step 0 becomes redundant (still safe — additive). pCR patients (ypT0N0M0) excluded from CheckMate-577 — adjuvant nivo is contraindicated in that subset.</p>
   <h2>Де використовується</h2>
-<h3>Algorithms</h3><ul><li><code>ALGO-ESOPH-RESECTABLE-1L</code> - ALGO-ESOPH-RESECTABLE-1L <span class="kb-muted">(knowledge_base/hosted/content/algorithms/algo_esoph_resectable_1l.yaml)</span></li><li><code>ALGO-ESOPHAGEAL-ADJUVANT-1L</code> - ALGO-ESOPHAGEAL-ADJUVANT-1L <span class="kb-muted">(knowledge_base/hosted/content/algorithms/algo_esophageal_adjuvant_1l.yaml)</span></li></ul>
+<h3>Algorithms</h3><ul><li><code>ALGO-ESOPH-RESECTABLE-1L</code> - ALGO-ESOPH-RESECTABLE-1L</li><li><code>ALGO-ESOPHAGEAL-ADJUVANT-1L</code> - ALGO-ESOPHAGEAL-ADJUVANT-1L</li></ul>
 </main>
 </body>
 </html>

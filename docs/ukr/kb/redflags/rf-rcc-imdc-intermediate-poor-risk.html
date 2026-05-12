@@ -114,10 +114,9 @@
   <p class="kb-lead">Детермінований перегляд YAML-сутності з джерельної бази. Клінічний авторитет лишається за вказаними source ID та статусом клінічного sign-off.</p>
   <table class="kb-facts"><tr><th>ID</th><td><code>RF-RCC-IMDC-INTERMEDIATE-POOR-RISK</code></td></tr>
 <tr><th>Тип</th><td>Тривожна ознака</td></tr>
-<tr><th>Статус</th><td>переглянуто 2026-04-29 | pending_clinical_signoff</td></tr>
-<tr><th>Файл</th><td><code>knowledge_base/hosted/content/redflags/rf_rcc_imdc_intermediate_poor_risk.yaml</code></td></tr>
-<tr><th>Хвороби</th><td><span class="kb-chip"><code>DIS-RCC</code></span></td></tr>
-<tr><th>Джерела</th><td><span class="kb-chip" title="ESMO Renal Cell Carcinoma"><code>SRC-ESMO-RCC-2024</code></span> <span class="kb-chip" title="NCCN Kidney Cancer"><code>SRC-NCCN-KIDNEY-2025</code></span></td></tr></table>
+<tr><th>Статус</th><td>переглянуто 2026-04-29 | очікує клінічного підпису</td></tr>
+<tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-RCC"><code>DIS-RCC</code></a></span></td></tr>
+<tr><th>Джерела</th><td><span class="kb-chip" title="ESMO Renal Cell Carcinoma"><a href="https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-renal-cell-carcinoma" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-RCC-2024</code></a></span> <span class="kb-chip" title="NCCN Kidney Cancer"><a href="https://www.nccn.org/professionals/physician_gls/pdf/kidney.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-KIDNEY-2025</code></a></span></td></tr></table>
   <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>IMDC (International Metastatic RCC Database Consortium) intermediate or poor risk score in metastatic clear-cell RCC (Heng JCO 2009). Six adverse factors: KPS &lt;80%, time from diagnosis to systemic therapy &lt;1 year, hemoglobin &lt; lower-limit-of-normal (≈12 g/dL), corrected calcium &gt; ULN, neutrophils &gt; ULN, platelets &gt; ULN. 0 factors = favorable; 1-2 = intermediate; ≥3 = poor. CheckMate-214 (Motzer NEJM 2018) established superiority of nivolumab + ipilimumab over sunitinib for intermediate and poor-risk subgroups (mOS 47 vs 26 mo, ITT). KEYNOTE-426 (pembro+axi) benefits across all risk groups; nivo+ipi preferred in int/poor by long-term durable-response signal. Routes ALGO-RCC-METASTATIC-1L step 1 to IND-RCC-METASTATIC-1L-NIVO-IPI; favorable risk falls through to default IND-RCC-METASTATIC-1L-PEMBRO-AXI.</td></tr>
 <tr><th>Клінічний напрям</th><td>intensify</td></tr>
 <tr><th>Категорія</th><td>risk-score</td></tr>
@@ -157,7 +156,7 @@
 }</pre>
   <h2>Нотатки</h2><p>Trigger fires on the categorical `imdc_risk` field (favorable / intermediate / poor) when present, or as a fall-back on `imdc_risk_factors_count &gt;= 1` (any IMDC adverse factor). Aggregate computation from raw inputs (KPS, hemoglobin, calcium, neutrophils, platelets, time-to-tx) is left to upstream questionnaire scoring; this RF consumes the already-derived risk category. Conflict-resolution: if RF-RCC-FRAILTY-AGE fires alongside (de-escalate), frailty wins by direction-precedence (de-escalate &gt; intensify? — note: actually intensify &gt; de-escalate in current matrix, so this RF would dominate; reviewers may prefer to add explicit frail-disqualifies-IO logic at algorithm level rather than reordering severity matrix). Brief authoring for W5c chunk 2026-04-30; engine smoke covered by patient_rcc_imdc_int_nivo_ipi.json (intermediate, expects nivo+ipi) and patient_rcc_imdc_fav_axi_pembro.json (favorable, expects pembro+axi).</p>
   <h2>Де використовується</h2>
-<h3>Algorithms</h3><ul><li><code>ALGO-RCC-METASTATIC-1L</code> - ALGO-RCC-METASTATIC-1L <span class="kb-muted">(knowledge_base/hosted/content/algorithms/algo_rcc_metastatic_1l.yaml)</span></li></ul>
+<h3>Algorithms</h3><ul><li><code>ALGO-RCC-METASTATIC-1L</code> - ALGO-RCC-METASTATIC-1L</li></ul>
 </main>
 </body>
 </html>

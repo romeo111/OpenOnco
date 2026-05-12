@@ -38,10 +38,10 @@ class CaseEntry:
     summary_en: str = ""
 
 
-GALLERY_EXCLUDED_CASE_IDS: set[str] = {
+# Cases that genuinely fail to render a working plan — these are kept out
+# of every public surface (gallery, /try.html example picker, case pages).
+BROKEN_CASE_IDS: set[str] = {
     # These generated examples currently render "No treatment plan generated".
-    # Keep the underlying case HTML for debugging, but do not advertise them
-    # in the public examples gallery as usable plans.
     "auto-bcc",
     "auto-epithelioid_sarcoma",
     "auto-glioma_low_grade",
@@ -55,22 +55,37 @@ GALLERY_EXCLUDED_CASE_IDS: set[str] = {
     "dlbcl-chemorefractory-cart",
     "eatl-relapsed-post-choep",
     "mm-triple-class-refractory",
-    "rcc-imdc-fav-axi-pembro",
-    "rcc-imdc-int-nivo-ipi",
     "variant-rcc-biomarker-act",
     "variant-rcc-frail",
     "variant-rcc-high-risk",
     "variant-rcc-infection-hbv",
     "variant-rcc-organ-dysf",
-    # No ESCAT-tier BMA triggered; plan produces no biomarker actionability
-    # context — hidden to keep gallery focused on ESCAT-rich demonstrators.
-    "hcc-atezo-bev-imbrave150",
-    "hcc-durva-treme-stride",
-    "breast-brca-germline-olaparib",
     # Adjuvant case: no ESCAT tiers, and free-text step conditions cause
     # engine to fall back to stage-2 indication for a stage-3 patient.
     "crc-stage-iii-adjuvant-folfox",
 }
+
+# Cases that work end-to-end but are curated out of the public gallery
+# (e.g. no ESCAT-tier BMA, so they would dilute the actionability focus).
+# These DO appear in the /try.html example picker — that picker is meant
+# to give every disease at least one usable load-example entry, so it
+# cannot afford the same level of curation as the gallery.
+GALLERY_ONLY_HIDDEN_CASE_IDS: set[str] = {
+    # No ESCAT-tier BMA triggered; plan produces no biomarker actionability
+    # context — hidden from gallery to keep its focus on ESCAT-rich
+    # demonstrators. Still useful as a per-disease example on /try.html.
+    "hcc-atezo-bev-imbrave150",
+    "hcc-durva-treme-stride",
+    "breast-brca-germline-olaparib",
+    # RCC patient cases — engine produces full 4-track plans post engine
+    # fix (commit f366848, 2026-05-08), so they are no longer broken.
+    # RCC has limited ESCAT-tier coverage in CIViC, so we keep them out
+    # of the curated gallery while still surfacing them in /try.html.
+    "rcc-imdc-fav-axi-pembro",
+    "rcc-imdc-int-nivo-ipi",
+}
+
+GALLERY_EXCLUDED_CASE_IDS: set[str] = BROKEN_CASE_IDS | GALLERY_ONLY_HIDDEN_CASE_IDS
 
 GALLERY_FEATURED_CASE_IDS: set[str] = {
     # Public gallery is intentionally small: these curated cases demonstrate

@@ -428,14 +428,61 @@ def _disease_ids(data: dict[str, Any]) -> list[str]:
     return sorted(ids)
 
 
+def _disease_ids_via_drug_usage(
+    drug_id: str,
+    reverse_refs: dict[str, list["KbEntity"]],
+) -> list[str]:
+    """Walk drug → regimens → indications → disease_id.
+
+    Drug YAMLs typically lack a `relevant_diseases` field — a 5-FU file
+    does not enumerate every cancer where 5-FU is used. The information
+    is in the indication YAMLs (`applicable_to.disease_id`). This 2-hop
+    lookup recovers those diseases without touching clinical content.
+
+    Direct indication references (an indication that names the drug
+    without going through a regimen) are also picked up.
+    """
+    diseases: set[str] = set()
+    for ref in reverse_refs.get(drug_id, []):
+        if ref.kind == "indications":
+            diseases.update(_disease_ids(ref.data))
+        elif ref.kind == "regimens":
+            for sub in reverse_refs.get(ref.id, []):
+                if sub.kind == "indications":
+                    diseases.update(_disease_ids(sub.data))
+    return sorted(diseases)
+
+
+# UA-locale translations for free-form status enums that authors write
+# directly into YAML (`ukrainian_review_status: pending_clinical_signoff`,
+# etc.). Without this, the UA wiki page surfaces raw snake_case strings
+# next to the localized "Статус переглянуто YYYY-MM-DD" prefix.
+_REVIEW_STATUS_UK = {
+    "pending_clinical_signoff": "очікує клінічного підпису",
+    "pending_clinical_review": "очікує клінічного рев'ю",
+    "approved": "схвалено",
+    "approved_provisional": "схвалено умовно",
+    "rejected": "відхилено",
+    "draft": "чернетка",
+    "needs_revision": "потребує перегляду",
+}
+
+
+def _localized_review_status(value: str, locale: str) -> str:
+    if locale != "uk":
+        return value
+    return _REVIEW_STATUS_UK.get(value.strip().lower(), value)
+
+
 def _status(entity: KbEntity, locale: str = "en") -> str:
     data = entity.data
     labels = FIELD_LABELS[locale]
     flags = []
     if data.get("last_reviewed") or data.get("last_verified"):
         flags.append(f"{labels['reviewed']} {data.get('last_reviewed') or data.get('last_verified')}")
-    if data.get("ukrainian_review_status"):
-        flags.append(str(data["ukrainian_review_status"]))
+    review_status = data.get("ukrainian_review_status")
+    if review_status:
+        flags.append(_localized_review_status(str(review_status), locale))
     if data.get("actionability_review_required"):
         flags.append(labels["actionability_review_required"])
     return " | ".join(flags) or labels["status_not_declared"]
@@ -458,6 +505,17 @@ def _entity_link(
     entity = entities.get(entity_id)
     if entity and entity.kind in SEARCH_KINDS:
         return f'<a href="{root_prefix}{html.escape(_entity_url(entity, locale))}"><code>{html.escape(entity_id)}</code></a>'
+    # Diseases don't have a per-entity wiki page (kept out of SEARCH_KINDS
+    # because the disease coverage page already lists every DIS-*), but
+    # `/diseases.html` and `/ukr/diseases.html` carry `id="DIS-..."`
+    # anchors, so link chips there so a clinician clicking DIS-CRC on a
+    # drug page lands on the disease summary instead of plain code text.
+    if entity_id.startswith("DIS-"):
+        diseases_path = "ukr/diseases.html" if locale == "uk" else "diseases.html"
+        return (
+            f'<a href="{root_prefix}{diseases_path}#{html.escape(entity_id)}">'
+            f'<code>{html.escape(entity_id)}</code></a>'
+        )
     return f"<code>{html.escape(entity_id)}</code>"
 
 
@@ -572,23 +630,48 @@ def _page_shell(
 """
 
 
-def _frontmatter(entity: KbEntity, entities: dict[str, KbEntity], *, locale: str = "en") -> str:
+def _source_chip(source_id: str, entities: dict[str, KbEntity]) -> str:
+    """Render a source chip. Sources have no dedicated wiki page yet, but
+    most carry a `url` field pointing at the upstream guideline / paper —
+    link the chip directly to that so a clinician clicking SRC-NCCN-...
+    lands on the authoritative source, not a 404.
+    """
+    src = entities.get(source_id)
+    title = src.title if src else source_id
+    url = (src.data.get("url") if src else None) or None
+    label = f'<code>{html.escape(source_id)}</code>'
+    if isinstance(url, str) and url.startswith(("http://", "https://")):
+        label = (
+            f'<a href="{html.escape(url)}" target="_blank" rel="noopener noreferrer">'
+            f'{label}</a>'
+        )
+    return f'<span class="kb-chip" title="{html.escape(title)}">{label}</span>'
+
+
+def _frontmatter(
+    entity: KbEntity,
+    entities: dict[str, KbEntity],
+    reverse_refs: dict[str, list[KbEntity]],
+    *,
+    locale: str = "en",
+) -> str:
     data = entity.data
     sources = _source_ids(data)
     diseases = _disease_ids(data)
+    # Drugs almost never enumerate the diseases they treat in their own
+    # YAML — that information lives in the indication YAMLs. Recover it
+    # by walking reverse refs (drug → regimens → indications → disease).
+    if entity.kind == "drugs":
+        diseases = sorted(set(diseases) | set(_disease_ids_via_drug_usage(entity.id, reverse_refs)))
     labels = FIELD_LABELS[locale]
     rows = [
         (labels["id"], f"<code>{html.escape(entity.id)}</code>"),
         (labels["type"], html.escape(_kind_label(entity.kind, locale))),
         (labels["status"], html.escape(_status(entity, locale))),
-        (labels["file"], f"<code>{html.escape(entity.rel_path)}</code>"),
         (labels["diseases"], _chips(diseases, entities, locale=locale)),
         (
             labels["sources"],
-            " ".join(
-                f'<span class="kb-chip" title="{html.escape(_source_title(s, entities))}"><code>{html.escape(s)}</code></span>'
-                for s in sources
-            )
+            " ".join(_source_chip(s, entities) for s in sources)
             if sources
             else f'<span class="kb-muted">{html.escape(labels["none_declared"])}</span>',
         ),
@@ -671,8 +754,7 @@ def _reverse_ref_section(entity: KbEntity, reverse_refs: dict[str, list[KbEntity
     parts = [f"<h2>{html.escape(labels['used_by_heading'])}</h2>"]
     for kind, items in sorted(by_kind.items()):
         rows = "".join(
-            f'<li><code>{html.escape(item.id)}</code> - {html.escape(item.title)} '
-            f'<span class="kb-muted">({html.escape(item.rel_path)})</span></li>'
+            f'<li><code>{html.escape(item.id)}</code> - {html.escape(item.title)}</li>'
             for item in items[:40]
         )
         more = f'<li class="kb-muted">... {len(items) - 40} {html.escape(labels["more"])}</li>' if len(items) > 40 else ""
@@ -710,7 +792,7 @@ def render_entity_page(
   <p class="kb-breadcrumb"><a href="{t["kb_href"]}">{html.escape(t["kb_search"])}</a> / {html.escape(_kind_label(entity.kind, locale))}</p>
   <h1>{html.escape(entity.title)}</h1>
   <p class="kb-lead">{html.escape(t["entity_lead"])}</p>
-  {_frontmatter(entity, entities, locale=locale)}
+  {_frontmatter(entity, entities, reverse_refs, locale=locale)}
   {specifics}
   {notes_html}
   {_reverse_ref_section(entity, reverse_refs, locale=locale)}

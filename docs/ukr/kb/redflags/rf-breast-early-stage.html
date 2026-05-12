@@ -114,10 +114,9 @@
   <p class="kb-lead">Детермінований перегляд YAML-сутності з джерельної бази. Клінічний авторитет лишається за вказаними source ID та статусом клінічного sign-off.</p>
   <table class="kb-facts"><tr><th>ID</th><td><code>RF-BREAST-EARLY-STAGE</code></td></tr>
 <tr><th>Тип</th><td>Тривожна ознака</td></tr>
-<tr><th>Статус</th><td>переглянуто 2026-05-08 | pending_clinical_signoff</td></tr>
-<tr><th>Файл</th><td><code>knowledge_base/hosted/content/redflags/rf_breast_early_stage.yaml</code></td></tr>
-<tr><th>Хвороби</th><td><span class="kb-chip"><code>DIS-BREAST</code></span></td></tr>
-<tr><th>Джерела</th><td><span class="kb-chip" title="NCCN Clinical Practice Guidelines — Breast Cancer"><code>SRC-NCCN-BREAST-2025</code></span></td></tr></table>
+<tr><th>Статус</th><td>переглянуто 2026-05-08 | очікує клінічного підпису</td></tr>
+<tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-BREAST"><code>DIS-BREAST</code></a></span></td></tr>
+<tr><th>Джерела</th><td><span class="kb-chip" title="NCCN Clinical Practice Guidelines — Breast Cancer"><a href="https://www.nccn.org/professionals/physician_gls/pdf/breast.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BREAST-2025</code></a></span></td></tr></table>
   <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Early-stage (non-metastatic) breast cancer: clinical or pathological stage I, II, or III. Defined by absence of distant metastasis (M0 per TNM 8th edition). Early-stage breast cancer is potentially curable with locoregional and systemic therapy; the treatment intent is curative, not palliative. Early stage is the gating criterion for neoadjuvant (pre-operative) or adjuvant (post-operative) systemic therapy rather than palliative 1L metastatic regimens. Neoadjuvant therapy (TCHP for HER2+; pembro+chemo for TNBC KEYNOTE-522; endocrine ± CDK4/6i for HR+) is preferred for stage II-III tumors. Stage I HR+ tumors may receive adjuvant endocrine therapy without neoadjuvant chemotherapy. Fires to route ALGO-BREAST-1L step 2 (HER2+ branch) to neoadjuvant therapy (IND-BREAST-HER2-POS-EARLY-NEOADJUVANT) rather than metastatic 1L (IND-BREAST-HER2-POS-MET-1L-THP).</td></tr>
 <tr><th>Клінічний напрям</th><td>intensify</td></tr>
 <tr><th>Категорія</th><td>other</td></tr>
@@ -200,7 +199,7 @@
 }</pre>
   <h2>Нотатки</h2><p>W5c RF authoring. Converts free-text `{condition: &quot;Stage I-III (early)&quot;}` in ALGO-BREAST-1L step 2 (HER2+ branch) into a formal RF entity. The trigger uses a positive stage group match (I/II/III with substages) combined with a negative M0 check. The `any_of: [stage_group: &quot;I&quot;...]` covers TNM 8th-edition staging codes; the `any_of: [stage_group ≠ &quot;IV&quot;, distant_metastasis: false]` adds belt-and-suspenders exclusion of M1. Note: The `value_not` field is non-standard — the engine team should confirm whether this negation syntax is supported. If not, use the positive stage_group values as the sole trigger (stages I, II, III) without the M0 negation check. The M0 confirmation is belt-and-suspenders. ALGO-BREAST-1L step 2 routes: if_true (RF fires = early stage): IND-BREAST-HER2-POS-EARLY-NEOADJUVANT if_false (RF doesn&#x27;t fire = metastatic/unknown): IND-BREAST-HER2-POS-MET-1L-THP CHARTER §6.1: Two-reviewer clinical co-lead signoff required before removing draft: true.</p>
   <h2>Де використовується</h2>
-<h3>Algorithms</h3><ul><li><code>ALGO-BREAST-1L</code> - ALGO-BREAST-1L <span class="kb-muted">(knowledge_base/hosted/content/algorithms/algo_breast_1l.yaml)</span></li></ul>
+<h3>Algorithms</h3><ul><li><code>ALGO-BREAST-1L</code> - ALGO-BREAST-1L</li></ul>
 </main>
 </body>
 </html>
