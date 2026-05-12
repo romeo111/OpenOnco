@@ -77,7 +77,7 @@
       Indication before it can be considered «published»). Right now this
       is a proposed plan: structured data + algorithm + sources are in
       place, but without dual sign-off. State as of
-      <code>2026-05-11 10:45 UTC</code>. This is a decision-support
+      <code>2026-05-12 06:26 UTC</code>. This is a decision-support
       tool, not a medical device.
     </div>
 
@@ -89,7 +89,7 @@
       </h2>
       <p class="promo-sub">
         A declarative rule engine over <strong>78 diseases</strong>,
-        488 red flags, 434 indications, 369 regimens.
+        488 red flags, 436 indications, 370 regimens.
         No LLM in the clinical decision, no server, no logs.
         The patient JSON never leaves the machine.
       </p>
@@ -100,7 +100,7 @@
           <div class="promo-stat-lbl">Diseases in KB</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">434</div>
+          <div class="promo-stat-num">436</div>
           <div class="promo-stat-lbl">Indications</div>
         </div>
         <div class="promo-stat">
@@ -200,6 +200,77 @@
     </div>
 
     <div class="info-section">
+      <h2>Who it's for</h2>
+      <p class="info-text">
+        Four audiences map onto the same engine. The data is shared;
+        the framing differs.
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card num-card--accent">
+          <div class="num-big">MD</div>
+          <div class="num-lbl">For the oncologist — less manual cross-checking, more clinical focus</div>
+          <p class="num-text">
+            NCCN, ESMO, MoH, dosing, contraindications, drug access —
+            currently 2–4 hours of manual lookups per case. OpenOnco
+            drafts a guideline-grade <strong>standard</strong> plan and
+            an <strong>aggressive</strong> alternative (trials /
+            higher-efficacy options) with a citation under every line.
+            No black box: LLMs don't choose regimens, a declarative rule
+            engine does, and the «why» is traceable —
+            biomarker → drug → evidence → monitoring → risk. Renal /
+            hepatic function, age, weight, CTCAE, supportive care are
+            first-class signals.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">NGS</div>
+          <div class="num-lbl">For NGS labs — turn a variant report into a clinical action</div>
+          <p class="num-text">
+            OpenOnco can sit on top of your variant report as an
+            interpretation layer. Point mutations, fusions, rearrangements
+            and variant actionability are first-class. <strong>CIViC
+            (CC0)</strong> replaces closed evidence bases; ESCAT tier is
+            the clinician-facing signal. Integration via structured
+            formats — FHIR R4 / mCODE, JSON, disease-coverage API. The
+            handoff to the clinician changes from «a mutation was found»
+            to «what it can mean for treatment, monitoring, or trial
+            matching». We don't replace the molecular pathologist or
+            assign a diagnosis — we make their output actionable downstream.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">Pt</div>
+          <div class="num-lbl">For patients — the plan in plain language</div>
+          <p class="num-text">
+            Patients don't read NCCN, but they need to know what is
+            happening. OpenOnco can render a simplified companion report:
+            no Latin, no acronyms, no fear-by-jargon. Why this regimen
+            was chosen, which tests are needed, what to watch between
+            visits. Hard line: an information aid for the conversation
+            with the oncologist, not a substitute. The demo doesn't
+            require real personal data.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">$</div>
+          <div class="num-lbl">For investors and partners — open oncology infrastructure with a real technical moat</div>
+          <p class="num-text">
+            Not «another AI chatbot» — a clinical infrastructure stack:
+            rule engine, knowledge base, citations, FHIR/mCODE, CIViC,
+            PubMed, ClinicalTrials.gov, DailyMed, openFDA. Over
+            <strong>100M AI tokens</strong> already invested in authoring,
+            verification, and refactor; the work continues weekly. Current
+            scale: 78 diseases, 488 red flags,
+            436 indications, 370 regimens,
+            152 treatment algorithms. Partnership models: grants,
+            clinical validation, NGS integrations, hospital pilots, donor
+            funding, infrastructure sponsorship.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
       <h2>0. What's new this past week</h2>
       <p class="info-text">
         The KB and engine picked up several structural updates over the
@@ -294,13 +365,13 @@
         <div class="num-card">
           <div class="num-big">78</div>
           <div class="num-lbl">Diseases in KB</div>
-          <div class="num-detail">38 heme · 40 solid · 76 with full chain · 55 have 2L+ algorithm</div>
+          <div class="num-detail">38 heme · 40 solid · 77 with full chain · 55 have 2L+ algorithm</div>
           <p class="num-text">
             Each disease has its own <strong>archetype</strong>
             (etiologically_driven, risk_stratified, biomarker_driven,
             stage_driven) which determines the treatment-selection
             algorithm. 1L is covered for all 78
-            (89 algorithms), 2L+ — for 34 heme
+            (91 algorithms), 2L+ — for 34 heme
             and 21 solid (61 algorithms).
           </p>
         </div>
@@ -349,9 +420,9 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">369</div>
+          <div class="num-big">370</div>
           <div class="num-lbl">Regimens</div>
-          <div class="num-detail">434 indications (228 1L · 172 2L+)</div>
+          <div class="num-detail">436 indications (230 1L · 172 2L+)</div>
           <p class="num-text">
             Every regimen is a list of drugs with doses, cycle schedule,
             dose adjustments (renal impairment, FIB-4, frailty),
@@ -989,8 +1060,8 @@
       <table class="kv-table">
         <thead><tr><th>Category</th><th>State</th><th>What it means</th></tr></thead>
         <tbody>
-          <tr><td>Diseases with full chain</td><td>76 / 78</td><td>The rest are partially modelled; the engine may emit a warning «no Algorithm found for disease=X»</td></tr>
-          <tr><td>Indications 1L</td><td>228</td><td>First line is covered for all 78 diseases</td></tr>
+          <tr><td>Diseases with full chain</td><td>77 / 78</td><td>The rest are partially modelled; the engine may emit a warning «no Algorithm found for disease=X»</td></tr>
+          <tr><td>Indications 1L</td><td>230</td><td>First line is covered for all 78 diseases</td></tr>
           <tr><td>Indications 2L+</td><td>172</td><td>Second to fourth line: 34 heme + 21 solid. Remaining solid-tumour 2L+ — partial (CRC, breast, urothelial), not systematic.</td></tr>
           <tr><td>RedFlags</td><td>488</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own.</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — a separate specialization track</td></tr>
