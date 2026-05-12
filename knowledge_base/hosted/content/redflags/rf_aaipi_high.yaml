@@ -1,21 +1,23 @@
 id: RF-AAIPI-HIGH
-definition: "Age-adjusted IPI ≥2 in patient <60 yo — high-risk young-adult DLBCL; supports DA-EPOCH-R consideration over R-CHOP per CALGB 50303 / Wilson and AYA-DLBCL series"
-definition_ua: "Вік-адаптований IPI ≥2 у пацієнта <60 років — DLBCL високого ризику молодого віку; підтримує розгляд DA-EPOCH-R замість R-CHOP за CALGB 50303 / Wilson та серіями AYA-DLBCL"
+definition: "Age-adjusted IPI ≥2 in patient <60 yo — high-risk young-adult DLBCL; supports DA-EPOCH-R
+  consideration over R-CHOP per CALGB 50303 / Wilson and AYA-DLBCL series"
+definition_ua: "Вік-адаптований IPI ≥2 у пацієнта <60 років — DLBCL високого ризику молодого віку; підтримує
+  розгляд DA-EPOCH-R замість R-CHOP за CALGB 50303 / Wilson та серіями AYA-DLBCL"
 
 trigger:
   type: composite_score
   all_of:
-    - finding: "age_years"
-      threshold: 60
-      comparator: "<"
-    - any_of:
-        - finding: "aaipi_score"
-          threshold: 2
-          comparator: ">="
-        - finding: "aaipi_risk_group"
-          value: "high"
-        - finding: "aaipi_risk_group"
-          value: "high_intermediate"
+  - finding: "age_years"
+    threshold: 60
+    comparator: "<"
+  - any_of:
+    - finding: "aaipi_score"
+      threshold: 2
+      comparator: ">="
+    - finding: "aaipi_risk_group"
+      value: "high"
+    - finding: "aaipi_risk_group"
+      value: "high_intermediate"
 
 clinical_direction: intensify
 
@@ -23,12 +25,12 @@ severity: major
 priority: 80
 category: risk-score
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-04-27"
 notes: >
@@ -40,3 +42,13 @@ notes: >
   patients with double-hit / MYC-rearrangement (handled separately by
   RF-DLBCL-HIGH-RISK-BIOLOGY). Kept as a discussion trigger; final
   regimen choice still goes to MDT (CHARTER §8.3).
+notes_ua: >
+  Вік-адаптований IPI (Shipp 1993) використовує 3 фактори (стадія III–IV, ЛДГ >ВМН, ECOG ≥2) та валідований
+  у пацієнтів <60 років; aaIPI ≥2 відповідає групі високого/проміжно-високого ризику з 5-річною загальною
+  виживаністю ~50–60% при R-CHOP. CALGB 50303 не продемонстрував переваги DA-EPOCH-R над R-CHOP загалом,
+  проте ретроспективні дані та дані щодо HIV-DLBCL підтримують DA-EPOCH-R у молодших пацієнтів із double-hit
+  / перебудовою MYC (окремо відстежується через RF-DLBCL-HIGH-RISK-BIOLOGY). Зберігається як тригер для
+  обговорення; остаточний вибір схеми залишається за МДК (CHARTER §8.3).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

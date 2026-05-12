@@ -1,22 +1,26 @@
 id: RF-APL-EMERGENCY-DIC
-definition: "APL with active disseminated intravascular coagulation (DIC): fibrinogen <150 mg/dL, prolonged PT/PTT, elevated D-dimer, thrombocytopenia + bleeding manifestations. Initiate ATRA AT CLINICAL SUSPICION before cytogenetic confirmation."
-definition_ua: "Гострий промієлоцитарний лейкоз з активним ДВЗ-синдромом: фібриноген <150 мг/дл, подовження ПЧ/АЧТЧ, високий D-dimer, тромбоцитопенія + кровотечі. ATRA — НЕГАЙНО за клінічною підозрою, до цитогенетичного підтвердження."
+definition: "APL with active disseminated intravascular coagulation (DIC): fibrinogen <150 mg/dL, prolonged
+  PT/PTT, elevated D-dimer, thrombocytopenia + bleeding manifestations. Initiate ATRA AT CLINICAL SUSPICION
+  before cytogenetic confirmation."
+definition_ua: "Гострий промієлоцитарний лейкоз з активним ДВЗ-синдромом: фібриноген <150 мг/дл, подовження
+  ПЧ/АЧТЧ, високий D-dimer, тромбоцитопенія + кровотечі. ATRA — НЕГАЙНО за клінічною підозрою, до цитогенетичного
+  підтвердження."
 
 trigger:
   type: composite
   any_of:
-    - finding: "fibrinogen_mg_dl"
-      threshold: 150
-      comparator: "<"
-    - finding: "d_dimer_elevated"
-      value: true
-    - finding: "active_bleeding"
-      value: true
-    - finding: "dic_active"
-      value: true
-    - finding: "platelet_count_k_ul"
-      threshold: 50
-      comparator: "<"
+  - finding: "fibrinogen_mg_dl"
+    threshold: 150
+    comparator: "<"
+  - finding: "d_dimer_elevated"
+    value: true
+  - finding: "active_bleeding"
+    value: true
+  - finding: "dic_active"
+    value: true
+  - finding: "platelet_count_k_ul"
+    threshold: 50
+    comparator: "<"
 
 clinical_direction: hold
 
@@ -24,14 +28,14 @@ severity: critical
 priority: 20
 category: organ-dysfunction
 relevant_diseases:
-  - DIS-APL
+- DIS-APL
 shifts_algorithm:
-  - ALGO-APL-1L
+- ALGO-APL-1L
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-APL-2019
-  - SRC-APL0406-LOCOCO-2013
+- SRC-NCCN-AML-2025
+- SRC-ELN-APL-2019
+- SRC-APL0406-LOCOCO-2013
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -45,6 +49,12 @@ notes: >
   stabilization. Priority 5 (lowest = wins all conflicts).
   STUB — requires clinical co-lead signoff.
 notes_ua: >
-  Triggers утримати on схема-choice algorithm pending DIC stabilization: агресивний transfusion (plt to >30-50K, fibrinogen >150, INR <1.5), ATRA initiation IMMEDIATELY (even before PML-RARα confirmation), ATO initiation as soon as confirmed. Per CHARTER §15.2 C2 this is partially time-critical (early-death prevention is the dominant APL outcome driver — historical 80% bleeding mortality without immediate ATRA). OpenOnco scope is обстеження + plan AFTER initial stabilization. Priority 5 (найнижча = wins all conflicts). STUB — requires clinical co-lead signoff.
+  Ініціює режим УТРИМАТИ щодо вибору схеми до стабілізації ДВЗ-синдрому: агресивна трансфузійна підтримка
+  (тромбоцити до >30–50К, фібриноген >150 мг/дл, МНВ <1.5), негайний початок ATRA (навіть до підтвердження
+  PML-RARα), початок ATO щойно підтверджено. Відповідно до CHARTER §15.2 C2 ситуація є частково невідкладною
+  (рання профілактика летальних кровотеч є основним рушієм результатів при ГПЛ — історична смертність
+  від кровотеч 80% без негайного ATRA). Сфера OpenOnco — обстеження + план ПІСЛЯ початкової стабілізації.
+  Пріоритет 5 (найнижчий = виграє всі конфлікти). СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2
