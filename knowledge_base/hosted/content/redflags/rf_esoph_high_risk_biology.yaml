@@ -12,25 +12,25 @@ definition_ua: >
 trigger:
   type: biomarker
   any_of:
-    - all_of:
-        - finding: "histology"
-          value: "adeno"
-        - finding: "her2_status"
-          value: "positive"
-    - all_of:
-        - finding: "histology"
-          value: "squamous"
-        - finding: "pdl1_cps"
-          threshold: 10
-          comparator: ">="
-    - all_of:
-        - finding: "histology"
-          value: "adeno"
-        - finding: "pdl1_cps"
-          threshold: 1
-          comparator: ">="
-    - finding: "msi_status"
-      value: "MSI-H"
+  - all_of:
+    - finding: "histology"
+      value: "adeno"
+    - finding: "her2_status"
+      value: "positive"
+  - all_of:
+    - finding: "histology"
+      value: "squamous"
+    - finding: "pdl1_cps"
+      threshold: 10
+      comparator: ">="
+  - all_of:
+    - finding: "histology"
+      value: "adeno"
+    - finding: "pdl1_cps"
+      threshold: 1
+      comparator: ">="
+  - finding: "msi_status"
+    value: "MSI-H"
 
 clinical_direction: intensify
 severity: critical
@@ -38,7 +38,7 @@ priority: 60
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-ESOPHAGEAL
+- DIS-ESOPHAGEAL
 shifts_algorithm: []  # Histology-stratified algorithm not yet built;
                       # biomarkers for now surface in trace.
 
@@ -52,6 +52,9 @@ notes: >
   histologies regardless of CPS in many centers. T-DXd 2L+ for HER2+
   adeno (DESTINY-Gastric01 included GEJ subgroup).
 notes_ua: >
-  Squamous CPS-cutoff vs adeno differs (KEYNOTE-590 used ≥10 for enrichment). реальна клінічна практика: chemo+ICI is becoming default 1L for both histologies regardless of CPS in many centers. T-DXd 2L+ for HER2+ adeno (DESTINY-Gastric01 included GEJ subgroup).
+  Поріг CPS для плоскоклітинного раку відрізняється від аденокарциноми (KEYNOTE-590 використовував ≥10
+  для збагачення). Реальна клінічна практика: хімія+ICI стає стандартом 1L для обох гістологій незалежно
+  від CPS у багатьох центрах. T-DXd 2L+ для HER2+ адено (DESTINY-Gastric01 включало підгрупу GEJ).
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

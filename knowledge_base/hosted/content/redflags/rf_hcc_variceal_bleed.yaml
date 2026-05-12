@@ -12,12 +12,12 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: "active_variceal_bleed"
-      value: true
-    - finding: "recent_variceal_bleed_6mo"
-      value: true
-    - finding: "untreated_high_risk_varices"
-      value: true
+  - finding: "active_variceal_bleed"
+    value: true
+  - finding: "recent_variceal_bleed_6mo"
+    value: true
+  - finding: "untreated_high_risk_varices"
+    value: true
 
 clinical_direction: hold
 
@@ -26,15 +26,15 @@ priority: 40
 category: organ-dysfunction
 
 relevant_diseases:
-  - DIS-HCC
+- DIS-HCC
 shifts_algorithm:
-  - ALGO-HCC-SYSTEMIC-1L
+- ALGO-HCC-SYSTEMIC-1L
 branch_targets:
   ALGO-HCC-SYSTEMIC-1L: "step-1"
 
 sources:
-  - SRC-NCCN-HCC-2025
-  - SRC-AASLD-HCC-2023
+- SRC-NCCN-HCC-2025
+- SRC-AASLD-HCC-2023
 
 last_reviewed: "2026-04-26"
 draft: false
@@ -45,6 +45,9 @@ notes: >
   alternative (HIMALAYA — no bev exposure) OR to TKI (sorafenib /
   lenvatinib) alone if anti-angiogenic risk also unacceptable.
 notes_ua: >
-  IMbrave150 explicitly excluded patients with високого ризику varices not treated by ligation/banding. Routes patient to durva+treme (STRIDE) alternative (HIMALAYA — ні bev exposure) OR to TKI (сорафеніб / ленватиніб) alone if anti-angiogenic risk also unacceptable.
+  IMbrave150 явно виключало пацієнтів з варикозами високого ризику без лікування лігуванням/бандажуванням.
+  Маршрутизує пацієнта на durva+treme (STRIDE) альтернативу (HIMALAYA — без bev-впливу) АБО на TKI (сорафеніб
+  / ленватиніб) самостійно при неприйнятному антиангіогенному ризику.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

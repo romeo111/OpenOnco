@@ -1,14 +1,16 @@
 id: RF-HBV-COINFECTION
-definition: "Hepatitis B coinfection: HBsAg positive OR anti-HBc total positive (occult HBV risk). HCV-MZL-specific surveillance flag — universal HBV reactivation handling lives in RF-UNIVERSAL-HBV-REACTIVATION-RISK."
-definition_ua: "Коінфекція HBV (HCV-MZL контекст): HBsAg+ АБО anti-HBc total+. Універсальне поводження з HBV-реактивацією — у RF-UNIVERSAL-HBV-REACTIVATION-RISK."
+definition: "Hepatitis B coinfection: HBsAg positive OR anti-HBc total positive (occult HBV risk). HCV-MZL-specific
+  surveillance flag — universal HBV reactivation handling lives in RF-UNIVERSAL-HBV-REACTIVATION-RISK."
+definition_ua: "Коінфекція HBV (HCV-MZL контекст): HBsAg+ АБО anti-HBc total+. Універсальне поводження
+  з HBV-реактивацією — у RF-UNIVERSAL-HBV-REACTIVATION-RISK."
 
 trigger:
   type: lab_value
   any_of:
-    - finding: "hbsag"
-      value: "positive"
-    - finding: "anti_hbc_total"
-      value: "positive"
+  - finding: "hbsag"
+    value: "positive"
+  - finding: "anti_hbc_total"
+    value: "positive"
 
 # Reclassified 2026-04-25 from `hold` to `investigate` after clinical
 # review (CLINICAL_REVIEW_QUEUE_REDFLAGS §B.1, Option 2). Rationale:
@@ -26,12 +28,12 @@ priority: 100
 category: infection-screening
 
 relevant_diseases:
-  - DIS-HCV-MZL
+- DIS-HCV-MZL
 shifts_algorithm: []
 
 sources:
-  - SRC-EASL-HCV-2023
-  - SRC-NCCN-BCELL-2025
+- SRC-EASL-HCV-2023
+- SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -48,8 +50,15 @@ notes: >
   for backwards compatibility with existing HCV-MZL plans; new diseases
   should rely on the universal flag instead.
 notes_ua: >
-  HBV co-infection in HCV-MZL patients triggers MDT-brief annotation recommending HBV-prophylaxis (entecavir or TDF) before any anti-CD20 exposure. Reactivation rates without prophylaxis: ~50% in HBsAg+, 5-10% in anti-HBc+ (occult HBV). Algorithm choice між ANTIVIRAL and BR-агресивний arms is not affected — both arms can proceed with HBV prophylaxis in parallel.
+  Коінфекція HBV у пацієнтів з HCV-MZL потребує анотації MDT-брифу з рекомендацією HBV-профілактики (ентекавір
+  або TDF) перед будь-яким anti-CD20-впливом. Частота реактивації без профілактики: ~50% при HBsAg+, 5-10%
+  при anti-HBc+ (прихований HBV). Вибір алгоритму між ANTIVIRAL та BR-AGGRESSIVE гілками не зачіпається
+  — обидві гілки можуть продовжуватися паралельно з HBV-профілактикою.
 
-  The cross-хвороба/universal HBV reactivation handling (HBsAg+, anti-HBc+, HBV-DNA detectable) is consolidated into RF-UNIVERSAL-HBV-REACTIVATION-RISK. This хвороба-specific entry kept for backwards compatibility with existing HCV-MZL plans; new diseases should rely on the universal flag instead.
+
+  Міжхворобна/універсальна обробка реактивації HBV (HBsAg+, anti-HBc+, HBV-ДНК виявляється) консолідована
+  в RF-UNIVERSAL-HBV-REACTIVATION-RISK. Цей хвороба-специфічний запис збережено для зворотної сумісності
+  з існуючими HCV-MZL планами; нові хвороби повинні покладатися на універсальний прапор.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

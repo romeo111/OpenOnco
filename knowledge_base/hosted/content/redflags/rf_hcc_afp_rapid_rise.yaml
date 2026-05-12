@@ -10,15 +10,15 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: "afp_rise_50pct_in_4_8wk"
-      value: true
-    - all_of:
-        - finding: "afp_baseline_ng_ml"
-          threshold: 100
-          comparator: ">="
-        - finding: "afp_doubling_time_weeks"
-          threshold: 8
-          comparator: "<="
+  - finding: "afp_rise_50pct_in_4_8wk"
+    value: true
+  - all_of:
+    - finding: "afp_baseline_ng_ml"
+      threshold: 100
+      comparator: ">="
+    - finding: "afp_doubling_time_weeks"
+      threshold: 8
+      comparator: "<="
 
 clinical_direction: investigate
 
@@ -27,12 +27,12 @@ priority: 100
 category: transformation-progression
 
 relevant_diseases:
-  - DIS-HCC
+- DIS-HCC
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-HCC-2025
-  - SRC-AASLD-HCC-2023
+- SRC-NCCN-HCC-2025
+- SRC-AASLD-HCC-2023
 
 last_reviewed: "2026-04-26"
 draft: false
@@ -43,6 +43,9 @@ notes: >
   ~30% remain AFP-non-secretors. Always re-image (CECT or MRI) before
   declaring progression — pseudoprogression on ICI mimics rise.
 notes_ua: >
-  AFP velocity is a recognized відповідь/прогресування signal in AFP-secretors (pre-лікування AFP ≥100). Not all HCCs secrete AFP — ~30% remain AFP-non-secretors. Always re-image (CECT or MRI) before declaring прогресування — pseudoprogression on ICI mimics підвищення.
+  Швидкість AFP є визнаним сигналом відповіді/прогресування у AFP-секретуючих пацієнтів (AFP до лікування
+  ≥100). Не всі ГЦК секретують AFP — ~30% залишаються AFP-несекретуючими. Завжди повторно візуалізувати
+  (ККРТ або МРТ) перед констатацією прогресування — псевдопрогресія на ICI імітує підвищення.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

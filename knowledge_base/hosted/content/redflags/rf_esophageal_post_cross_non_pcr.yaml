@@ -20,16 +20,16 @@ definition_ua: >
 trigger:
   type: post_treatment_pathology_composite
   any_of:
-    - finding: "post_cross_residual_disease_ypT_or_ypN_positive"
-      value: true
-    - all_of:
-        - finding: "post_cross_pCR"
-          value: false
-        - any_of:
-            - finding: "ypT_residual"
-              value: true
-            - finding: "ypN_residual"
-              value: true
+  - finding: "post_cross_residual_disease_ypT_or_ypN_positive"
+    value: true
+  - all_of:
+    - finding: "post_cross_pCR"
+      value: false
+    - any_of:
+      - finding: "ypT_residual"
+        value: true
+      - finding: "ypN_residual"
+        value: true
 
 clinical_direction: intensify
 
@@ -38,14 +38,14 @@ priority: 60
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-ESOPHAGEAL
+- DIS-ESOPHAGEAL
 shifts_algorithm:
-  - ALGO-ESOPH-RESECTABLE-1L
-  - ALGO-ESOPHAGEAL-ADJUVANT-1L
+- ALGO-ESOPH-RESECTABLE-1L
+- ALGO-ESOPHAGEAL-ADJUVANT-1L
 
 sources:
-  - SRC-NCCN-ESOPHAGEAL-2025
-  - SRC-ESMO-ESOPHAGEAL-2024
+- SRC-NCCN-ESOPHAGEAL-2025
+- SRC-ESMO-ESOPHAGEAL-2024
 
 last_reviewed: "2026-04-30"
 draft: false
@@ -76,3 +76,6 @@ notes_ua: >
   надлишковим (досі безпечно — additive). pCR пацієнти (ypT0N0M0)
   виключені з CheckMate-577 — ад'ювантний ніво — протипоказано в цій
   підгрупі.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

@@ -1,22 +1,25 @@
 id: RF-GLIOMA-LOW-GRADE-INTRACRANIAL-PRESSURE
-definition: "Low-grade glioma with raised intracranial pressure or refractory seizures requiring emergency intervention: midline shift ≥5 mm, papilledema, GCS drop, status epilepticus or breakthrough seizures despite ≥2 AEDs"
-definition_ua: "Гліома низького ступеня з підвищеним внутрішньочерепним тиском або рефрактерними судомами: дислокація ≥5 мм, набряк диска, зниження GCS, епілептичний статус або зриви на тлі ≥2 АЕП"
+definition: "Low-grade glioma with raised intracranial pressure or refractory seizures requiring emergency
+  intervention: midline shift ≥5 mm, papilledema, GCS drop, status epilepticus or breakthrough seizures
+  despite ≥2 AEDs"
+definition_ua: "Гліома низького ступеня з підвищеним внутрішньочерепним тиском або рефрактерними судомами:
+  дислокація ≥5 мм, набряк диска, зниження GCS, епілептичний статус або зриви на тлі ≥2 АЕП"
 
 trigger:
   type: composite
   any_of:
-    - finding: "raised_intracranial_pressure"
-      value: true
-    - finding: "midline_shift_mm"
-      threshold: 5
-      comparator: ">="
-    - finding: "status_epilepticus"
-      value: true
-    - finding: "refractory_seizures_on_2_aeds"
-      value: true
-    - finding: "gcs_score"
-      threshold: 12
-      comparator: "<"
+  - finding: "raised_intracranial_pressure"
+    value: true
+  - finding: "midline_shift_mm"
+    threshold: 5
+    comparator: ">="
+  - finding: "status_epilepticus"
+    value: true
+  - finding: "refractory_seizures_on_2_aeds"
+    value: true
+  - finding: "gcs_score"
+    threshold: 12
+    comparator: "<"
 
 clinical_direction: hold
 
@@ -24,13 +27,13 @@ severity: critical
 priority: 20
 category: organ-dysfunction
 relevant_diseases:
-  - DIS-GLIOMA-LOW-GRADE
+- DIS-GLIOMA-LOW-GRADE
 shifts_algorithm:
-  - ALGO-GLIOMA-LGG-1L
+- ALGO-GLIOMA-LGG-1L
 
 sources:
-  - SRC-NCCN-CNS-2025
-  - SRC-EANO-GBM-2024
+- SRC-NCCN-CNS-2025
+- SRC-EANO-GBM-2024
 
 last_reviewed: "2026-04-27"
 draft: true
@@ -45,6 +48,11 @@ notes: >
   systemic / RT therapy until ICP managed and resection assessed.
   Priority 8. STUB — requires clinical co-lead signoff.
 notes_ua: >
-  Per NCCN-CNS + EANO 2024: dexamethasone 4-16 mg/day for vasogenic edema; urgent neurosurgical evaluation for resection (max safe resection покращує OS in LGG); levetiracetam переважний AED (ні P450 індукція → preserves chemo ефективність); status epilepticus treated per neurology emergency protocol. Direction утримати on systemic / RT терапія until ICP managed and resection assessed. Priority 8. STUB — requires clinical co-lead signoff.
+  За NCCN-CNS + EANO 2024: дексаметазон 4-16 mg/day при вазогенному набряку; термінова нейрохірургічна
+  оцінка для резекції (максимально безпечна резекція покращує ЗВ при LGG); леветирацетам — переважний
+  AED (без P450 індукції → зберігає ефективність хімії); епілептичний статус лікується за невропатологічним
+  протоколом невідкладної допомоги. Напрямок УТРИМАТИ системну / RT терапію до контролю ВЧТ та оцінки
+  резекції. Пріоритет 8. СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2
