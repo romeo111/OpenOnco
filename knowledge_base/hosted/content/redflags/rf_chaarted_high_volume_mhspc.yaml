@@ -1,20 +1,24 @@
 id: RF-CHAARTED-HIGH-VOLUME-MHSPC
-definition: "Metastatic hormone-sensitive prostate cancer meeting CHAARTED high-volume criteria — visceral metastases OR ≥4 bone metastases with at least 1 outside vertebral column / pelvis — supports docetaxel + ADT triplet (with or without darolutamide / abiraterone)"
-definition_ua: "Метастатичний гормон-чутливий рак передміхурової залози з критеріями CHAARTED для великого об'єму — вісцеральні метастази АБО ≥4 кісткових метастази з принаймні 1 поза хребтом / тазом — підтримує доцетаксел + АДТ як трійник (з або без даролутаміду / абіратерону)"
+definition: "Metastatic hormone-sensitive prostate cancer meeting CHAARTED high-volume criteria — visceral
+  metastases OR ≥4 bone metastases with at least 1 outside vertebral column / pelvis — supports docetaxel
+  + ADT triplet (with or without darolutamide / abiraterone)"
+definition_ua: "Метастатичний гормон-чутливий рак передміхурової залози з критеріями CHAARTED для великого
+  об'єму — вісцеральні метастази АБО ≥4 кісткових метастази з принаймні 1 поза хребтом / тазом — підтримує
+  доцетаксел + АДТ як трійник (з або без даролутаміду / абіратерону)"
 
 trigger:
   type: composite_clinical
   any_of:
-    - finding: "prostate_chaarted_volume"
-      value: "high"
-    - finding: "visceral_metastases_present"
+  - finding: "prostate_chaarted_volume"
+    value: "high"
+  - finding: "visceral_metastases_present"
+    value: true
+  - all_of:
+    - finding: "bone_metastases_count"
+      threshold: 4
+      comparator: ">="
+    - finding: "bone_metastases_outside_axial"
       value: true
-    - all_of:
-        - finding: "bone_metastases_count"
-          threshold: 4
-          comparator: ">="
-        - finding: "bone_metastases_outside_axial"
-          value: true
 
 clinical_direction: intensify
 
@@ -22,14 +26,14 @@ severity: major
 priority: 80
 category: risk-score
 relevant_diseases:
-  - DIS-PROSTATE
+- DIS-PROSTATE
 shifts_algorithm:
-  - ALGO-PROSTATE-MHSPC-1L
+- ALGO-PROSTATE-MHSPC-1L
 
 sources:
-  - SRC-NCCN-PROSTATE-2025
-  - SRC-ESMO-PROSTATE-2024
-  - SRC-EAU-PROSTATE-2024
+- SRC-NCCN-PROSTATE-2025
+- SRC-ESMO-PROSTATE-2024
+- SRC-EAU-PROSTATE-2024
 
 last_reviewed: "2026-04-27"
 notes: >
@@ -43,3 +47,14 @@ notes: >
   ADT+ARSI alone in CHAARTED high-volume. Co-fires with
   RF-LATITUDE-HIGH-RISK-MHSPC for LATITUDE high-risk overlap;
   triplet preferred when both fire.
+notes_ua: >
+  CHAARTED (Sweeney NEJM 2015) визначив великий об'єм як вісцеральні метастази АБО ≥4 кісткових метастази
+  з ≥1 поза хребцями та тазом. Когорта великого об'єму показала покращення ЗВ на 17 міс при доцетаксел
+  + АДТ порівняно з АДТ монотерапією (ВР 0.60). ARASENS (Smith 2022) розширив до трійника даролутамід
+  + доцетаксел + АДТ з додатковою перевагою ЗВ (ВР 0.68 для ЗВ) — великий об'єм є перевагою для трійника.
+  PEACE-1 (Fizazi 2022) показав подібне для абіратерон + доцетаксел + АДТ. Напрямок «інтенсифікація» до
+  трійника над дублетом АДТ+АРСІ монотерапії при CHAARTED великому об'ємі. Паралельне спрацювання з RF-LATITUDE-HIGH-RISK-MHSPC
+  при перекритті з LATITUDE-ризиком; трійник є перевагою при спрацюванні обох.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

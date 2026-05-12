@@ -1,18 +1,22 @@
 id: RF-CML-INFECTION-SCREENING
-definition: "CML patient with positive HBV serology (HBsAg+ or anti-HBc+) — TKI therapy is associated with HBV reactivation in case reports; mandatory HBV testing pre-TKI + active prophylaxis (entecavir / tenofovir) if HBsAg+, monitoring if anti-HBc+ only"
-definition_ua: "Пацієнт з ХМЛ з позитивною HBV-серологією (HBsAg+ або anti-HBc+) — терапія ТКІ асоційована з реактивацією HBV у випадках; обов'язкове тестування HBV перед ТКІ + активна профілактика (ентекавір / тенофовір) якщо HBsAg+, моніторинг якщо лише anti-HBc+"
+definition: "CML patient with positive HBV serology (HBsAg+ or anti-HBc+) — TKI therapy is associated
+  with HBV reactivation in case reports; mandatory HBV testing pre-TKI + active prophylaxis (entecavir
+  / tenofovir) if HBsAg+, monitoring if anti-HBc+ only"
+definition_ua: "Пацієнт з ХМЛ з позитивною HBV-серологією (HBsAg+ або anti-HBc+) — терапія ТКІ асоційована
+  з реактивацією HBV у випадках; обов'язкове тестування HBV перед ТКІ + активна профілактика (ентекавір
+  / тенофовір) якщо HBsAg+, моніторинг якщо лише anti-HBc+"
 
 trigger:
   type: composite
   any_of:
-    - finding: "hbsag"
-      value: "positive"
-    - finding: "anti_hbc_total"
-      value: "positive"
-    - finding: "hcv_rna"
-      value: "positive"
-    - finding: "hiv_status"
-      value: "positive"
+  - finding: "hbsag"
+    value: "positive"
+  - finding: "anti_hbc_total"
+    value: "positive"
+  - finding: "hcv_rna"
+    value: "positive"
+  - finding: "hiv_status"
+    value: "positive"
 
 clinical_direction: investigate
 
@@ -20,12 +24,12 @@ severity: minor
 priority: 40
 category: infection-screening
 relevant_diseases:
-  - DIS-CML
+- DIS-CML
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-ELN-CML-2020
+- SRC-NCCN-MPN-2025
+- SRC-ELN-CML-2020
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -35,6 +39,11 @@ notes: >
   testing recommended before initiating any TKI per ELN 2020 + NCCN.
   STUB — requires clinical co-lead signoff.
 notes_ua: >
-  Direction "investigate" — surfaces a обстеження-prerequisite annotation. CML TKI-related HBV reactivation is рідкісний but reported (особливо with immunosuppression-доза TKI shifts and post-TFR припинення). HBV testing рекомендований before initiating any TKI per ELN 2020 + NCCN. STUB — requires clinical co-lead signoff.
+  HBV-реактивація при ХМЛ частіше пов'язана з тривалим застосуванням ТКІ. Ібатиніб, дазатиніб мають задокументовану
+  асоціацію з реактивацією HBV, особливо при HBsAg+ базовому статусі. Перед початком будь-якого ТКІ: базовий
+  скринінг HBsAg + anti-HBc total per рекомендацій — якщо HBsAg+ або HBsAg-/anti-HBc+ з HBV-ДНК: профілактика
+  ентекавіром або ТДФ. Моніторинг ВГВ-ДНК кожні 3 місяці під час ТКІ. СТАБ — потребує підпису клінічного
+  співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

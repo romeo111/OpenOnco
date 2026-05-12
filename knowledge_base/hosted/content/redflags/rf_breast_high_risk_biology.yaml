@@ -1,20 +1,22 @@
 id: RF-BREAST-HIGH-RISK-BIOLOGY
-definition: "Germline or somatic BRCA1/2 mutation, PIK3CA mutation, ESR1 mutation, HER2-amplification, or PD-L1 positivity — each opens distinct biomarker-driven indications."
-definition_ua: "Гермінальна або соматична мутація BRCA1/2, PIK3CA, ESR1, HER2-ампліфікація або PD-L1+ — кожен відкриває окремі біомаркер-направлені показання."
+definition: "Germline or somatic BRCA1/2 mutation, PIK3CA mutation, ESR1 mutation, HER2-amplification,
+  or PD-L1 positivity — each opens distinct biomarker-driven indications."
+definition_ua: "Гермінальна або соматична мутація BRCA1/2, PIK3CA, ESR1, HER2-ампліфікація або PD-L1+
+  — кожен відкриває окремі біомаркер-направлені показання."
 
 trigger:
   type: biomarker
   any_of:
-    - finding: "BIO-BRCA-GERMLINE"
-      value: "positive"
-    - finding: "BIO-PIK3CA-MUTATION"
-      value: "positive"
-    - finding: "BIO-HER2-SOLID"
-      value: "positive"
-    - finding: "BIO-PDL1-EXPRESSION"
-      value: "positive"
-    - finding: "esr1_mutation"
-      value: true
+  - finding: "BIO-BRCA-GERMLINE"
+    value: "positive"
+  - finding: "BIO-PIK3CA-MUTATION"
+    value: "positive"
+  - finding: "BIO-HER2-SOLID"
+    value: "positive"
+  - finding: "BIO-PDL1-EXPRESSION"
+    value: "positive"
+  - finding: "esr1_mutation"
+    value: true
 
 clinical_direction: intensify
 severity: major
@@ -25,8 +27,8 @@ relevant_diseases: [DIS-BREAST]
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-BREAST-2025
-  - SRC-ESMO-BREAST-METASTATIC-2024
+- SRC-NCCN-BREAST-2025
+- SRC-ESMO-BREAST-METASTATIC-2024
 
 last_reviewed:
 draft: false
@@ -38,6 +40,10 @@ notes: >
   targeted agents; PD-L1 → pembrolizumab + chemo; ESR1 → elacestrant.
   The Algorithm decision_tree resolves these per disease state.
 notes_ua: >
-  на основі біомаркерів branching is the dominant breast-рак pattern. Each positive біомаркер opens distinct targeted-терапія options: BRCA → олапариб/талазопариб; PIK3CA → алпелісиб; HER2-amp → HER2- targeted agents; PD-L1 → пембролізумаб + chemo; ESR1 → елацестрант. The Algorithm decision_tree resolves these per хвороба state.
+  Розгалуження на основі біомаркерів є домінуючою схемою при раку молочної залози. Кожен позитивний біомаркер
+  відкриває окремі варіанти таргетної терапії: BRCA → олапариб/талазопариб; PIK3CA → алпелісиб; HER2-ампліфікація
+  → HER2-таргетні агенти; PD-L1 → пембролізумаб + хіміо; ESR1 → елацестрант. Дерево рішень алгоритму розв'язує
+  ці варіанти відповідно до стадії захворювання.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

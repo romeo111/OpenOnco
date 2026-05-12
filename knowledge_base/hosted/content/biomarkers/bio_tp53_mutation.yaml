@@ -81,31 +81,41 @@ notes: >
   (e.g., 2L CAR-T flag) without re-encoding the source citation in
   multiple places.
 notes_ua: >
-  Universal несприятливий marker across найбільш hematologic + solid malignancies — predicts poor відповідь to chemo + chemoimmuno; selects for novel- agent схеми / targeted therapies / cellular терапія / алоТГСК.
+  Універсальний несприятливий маркер при більшості гематологічних і солідних
+  злоякісних пухлин — передбачає погану відповідь на хімотерапію та
+  хімоімунотерапію; відбирає для схем з новими агентами / цільовою терапією
+  / клітинною терапією / алоТГСК.
 
-  **Cross-хвороба decision impact in our KB (current scope):**
+  **Вплив на вибір терапії в нашій БЗ (поточний обсяг):**
 
-  - **CLL/SLL**: TP53-mut OR del(17p) → contraindicates chemoimmuno
-    (FCR/BR); favors fixed-duration VenO (CLL14) over BTKi continuous
-    in some настанови. Captured in composite BIO-CLL-високого ризику-GENETICS
-    + RF-CLL-високого ризику.
+  - **ХЛЛ/МЛЛ**: TP53-мут АБО del(17p) → протипоказання до хімоімунотерапії
+    (FCR/BR); перевага фіксованій тривалості VenO (CLL14) над безперервним
+    BTKi за деякими настановами. Закодовано в BIO-CLL-HIGH-RISK-GENETICS
+    + RF-CLL-HIGH-RISK.
 
-  - **MCL**: TP53-mut → predicts chemoimmuno failure (intensive
-    R-CHOP/R-DHAP+аутоТГСК outcomes substantially гірше); routes to
-    BTKi-based 1L (акалабрутиніб+R) regardless of fitness. Captured in
-    RF-MCL-BLASTOID-OR-TP53.
+  - **МКЛ**: TP53-мут → передбачає невдачу хімоімунотерапії (результати
+    інтенсивного R-CHOP/R-DHAP+аутоТГСК суттєво гірші); маршрутизація до
+    BTKi-ГЦБ першої лінії (акалабрутиніб + R) незалежно від фізичного стану.
+    Закодовано в RF-MCL-BLASTOID-OR-TP53.
 
-  - **MM**: del(17p) part of високого ризику cytogenetics composite — drives
-    quadruplet (D-VRd) over триплет (VRd). Captured in
-    BIO-MM-CYTOGENETICS-HR + RF-MM-високого ризику-CYTOGENETICS.
+  - **ММ**: del(17p) є частиною цитогенетичного комплексу високого ризику —
+    визначає вибір квартету (D-VRd) над триплетом (VRd). Закодовано в
+    BIO-MM-CYTOGENETICS-HR + RF-MM-HIGH-RISK-CYTOGENETICS.
 
-  - **DLBCL** (future scope): predicts R-CHOP failure; flag for early
-    CAR-T pathway consideration at 2L+. Not yet driving 1L algorithm.
+  - **ДВКЛ** (майбутній напрям): передбачає невдачу R-CHOP; позначка для
+    раннього розгляду CAR-T при 2L+. Ще не визначає алгоритм першої лінії.
 
-  - **AML** (future scope, not in KB yet): TP53-mut AML has dismal
-    chemo outcomes — currently routes directly to алоТГСК consideration
-    + венетоклакс-азацитидин for unfit + клінічні дослідження.
+  - **ГМЛ** (майбутній напрям, поки не в БЗ): TP53-мутантна ГМЛ має
+    катастрофічні результати при хімотерапії — наразі маршрутизується
+    безпосередньо до розгляду алоТГСК + венетоклакс-азацитидин
+    для непридатних до інтенсивного лікування + клінічні дослідження.
 
-  This сутність is the **standalone marker citation** for all the above. Engine algorithms reference it indirectly via composite біомаркери (CLL-високого ризику-GENETICS, MM-CYTOGENETICS-HR) or via RedFlags (RF-MCL-BLASTOID-OR-TP53). Centralizing it here gives clean traceability + ready ground for future direct-driving rules (e.g., 2L CAR-T flag) without re-encoding the source citation in multiple places.
+  Ця сутність є **самостійним маркерним цитуванням** для всіх наведених
+  вище ситуацій. Алгоритми рушія посилаються на неї опосередковано через
+  BIO-CLL-HIGH-RISK-GENETICS, BIO-MM-CYTOGENETICS-HR або RF-MCL-BLASTOID-OR-TP53.
+  Централізація тут забезпечує чисту відстежуваність + готову основу для
+  майбутніх правил прямого керування (наприклад, позначка CAR-T при 2L+)
+  без повторного кодування цитування джерела в кількох місцях.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_02
+draft_revision: 2

@@ -1,19 +1,23 @@
 id: RF-AML-TRANSFORMATION-PROGRESSION
-definition: "AML refractory or relapsed: <5% blast clearance after induction, or relapse after CR (early relapse <6 mo, late relapse ≥6 mo). Switch to salvage chemotherapy (FLAG-IDA, MEC) ± targeted (FLT3+: gilteritinib; IDH+: ivosidenib/enasidenib) + alloHCT bridge"
-definition_ua: "Гострий мієлоїдний лейкоз, рефрактерний або в рецидиві: <5% зменшення бластів після індукції або рецидив після ПР (ранній <6 міс, пізній ≥6 міс). Перехід на сальвадж-хіміотерапію (FLAG-IDA, MEC) ± таргетну (FLT3+: гілтеритиніб; IDH+: івосиденіб/енасиденіб) + bridge до аллоТГСК"
+definition: "AML refractory or relapsed: <5% blast clearance after induction, or relapse after CR (early
+  relapse <6 mo, late relapse ≥6 mo). Switch to salvage chemotherapy (FLAG-IDA, MEC) ± targeted (FLT3+:
+  gilteritinib; IDH+: ivosidenib/enasidenib) + alloHCT bridge"
+definition_ua: "Гострий мієлоїдний лейкоз, рефрактерний або в рецидиві: <5% зменшення бластів після індукції
+  або рецидив після ПР (ранній <6 міс, пізній ≥6 міс). Перехід на сальвадж-хіміотерапію (FLAG-IDA, MEC)
+  ± таргетну (FLT3+: гілтеритиніб; IDH+: івосиденіб/енасиденіб) + bridge до аллоТГСК"
 
 trigger:
   type: composite
   any_of:
-    - finding: "aml_refractory"
-      value: true
-    - finding: "aml_relapse"
-      value: true
-    - finding: "bm_blasts_post_induction_pct"
-      threshold: 5
-      comparator: ">="
-    - finding: "mrd_positive"
-      value: true
+  - finding: "aml_refractory"
+    value: true
+  - finding: "aml_relapse"
+    value: true
+  - finding: "bm_blasts_post_induction_pct"
+    threshold: 5
+    comparator: ">="
+  - finding: "mrd_positive"
+    value: true
 
 clinical_direction: intensify
 
@@ -21,13 +25,13 @@ severity: critical
 priority: 100
 category: transformation-progression
 relevant_diseases:
-  - DIS-AML
+- DIS-AML
 shifts_algorithm:
-  - ALGO-AML-1L
+- ALGO-AML-1L
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-AML-2022
+- SRC-NCCN-AML-2025
+- SRC-ELN-AML-2022
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -38,6 +42,10 @@ notes: >
   5 years); alloHCT after CR2 is the only consistent curative path.
   STUB — requires clinical co-lead signoff.
 notes_ua: >
-  Direction "intensify" — but operationally this is a 2L+ flag that re-routes plan generation to сальвадж обстеження rather than 1L choice. At 1L this flag implies "the patient is not fitting the 1L pathway — switch to рефрактерний-AML algorithm". OS in р/р AML is poor (<20% at 5 years); alloHCT after CR2 is the only consistent curative path. STUB — requires clinical co-lead signoff.
+  Напрямок «інтенсифікація» — але операційно це прапор 2L+, що перенаправляє генерацію плану на сальвадж-обстеження
+  замість вибору 1L. На рівні 1L цей прапор означає: «пацієнт не відповідає маршруту 1L — перехід до алгоритму
+  рефрактерної ГМЛ». ЗВ при р/р ГМЛ несприятлива (<20% через 5 років); алоТГСК після ПР2 — єдиний послідовно
+  курабельний шлях. СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

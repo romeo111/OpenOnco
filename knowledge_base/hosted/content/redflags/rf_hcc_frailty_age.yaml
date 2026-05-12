@@ -13,17 +13,17 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: "ecog"
-      threshold: 3
+  - finding: "ecog"
+    threshold: 3
+    comparator: ">="
+  - all_of:
+    - finding: "age"
+      threshold: 75
       comparator: ">="
-    - all_of:
-        - finding: "age"
-          threshold: 75
-          comparator: ">="
-        - finding: "child_pugh_class"
-          value: "B"
-        - finding: "sarcopenia_present"
-          value: true
+    - finding: "child_pugh_class"
+      value: "B"
+    - finding: "sarcopenia_present"
+      value: true
 
 clinical_direction: de-escalate
 severity: major
@@ -31,15 +31,15 @@ priority: 100
 category: frailty-age
 
 relevant_diseases:
-  - DIS-HCC
+- DIS-HCC
 shifts_algorithm:
-  - ALGO-HCC-SYSTEMIC-1L
+- ALGO-HCC-SYSTEMIC-1L
 branch_targets:
   ALGO-HCC-SYSTEMIC-1L: "step-2"
 
 sources:
-  - SRC-NCCN-HCC-2025
-  - SRC-AASLD-HCC-2023
+- SRC-NCCN-HCC-2025
+- SRC-AASLD-HCC-2023
 
 last_reviewed: "2026-04-26"
 draft: false
@@ -51,6 +51,10 @@ notes: >
   ≤60 kg). Best supportive care + palliative referral when life
   expectancy <3 months.
 notes_ua: >
-  IMbrave150 + HIMALAYA both обов'язковий ECOG ≤1 — frail літнього віку excluded from pivotal trials. реальна клінічна практика: сорафеніб 200 mg BID start with cautious escalation; ленватиніб body-weight-based дозування (8 mg якщо ≤60 kg). найкраще підтримуюче лікування + паліативний referral when очікувана тривалість життя <3 місяців.
+  IMbrave150 + HIMALAYA обидва вимагали ECOG ≤1 — крихкі літні виключені з опорних досліджень. Реальна
+  клінічна практика: сорафеніб 200 mg BID початок з обережною ескалацією; ленватиніб дозування за масою
+  тіла (8 mg якщо ≤60 kg). Найкраще підтримуюче лікування + паліативне направлення при очікуваній тривалості
+  життя <3 міс.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

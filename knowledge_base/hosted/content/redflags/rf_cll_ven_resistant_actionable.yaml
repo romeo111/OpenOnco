@@ -21,22 +21,22 @@ definition_ua: >
 trigger:
   type: biomarker
   any_of:
-    - finding: "bcl2_g101v_mutation"
+  - finding: "bcl2_g101v_mutation"
+    value: true
+  - finding: "bcl2_resistance_mutation"
+    value: "positive"
+  - finding: "venetoclax_resistance"
+    value: true
+  - all_of:
+    - finding: "prior_venetoclax_received"
       value: true
-    - finding: "bcl2_resistance_mutation"
-      value: "positive"
-    - finding: "venetoclax_resistance"
+    - finding: "best_response_to_venetoclax"
+      value: "PD"
+  - all_of:
+    - finding: "prior_venetoclax_received"
       value: true
-    - all_of:
-        - finding: "prior_venetoclax_received"
-          value: true
-        - finding: "best_response_to_venetoclax"
-          value: "PD"
-    - all_of:
-        - finding: "prior_venetoclax_received"
-          value: true
-        - finding: "venetoclax_progression"
-          value: true
+    - finding: "venetoclax_progression"
+      value: true
 
 clinical_direction: intensify
 
@@ -45,13 +45,13 @@ priority: 60
 category: prior-therapy-class
 
 relevant_diseases:
-  - DIS-CLL
+- DIS-CLL
 shifts_algorithm:
-  - ALGO-CLL-2L
+- ALGO-CLL-2L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-CLL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-CLL-2024
 
 last_reviewed: "2026-04-27"
 draft: false
@@ -80,3 +80,6 @@ notes_ua: >
   ddPCR (краще — висока чутливість для low-VAF subclones) або NGS;
   можуть передувати клінічній PD на 12-24 міс. Доступ в Україні:
   венетоклакс — у НСЗУ-списку для CLL R/R; піртобрутиніб ще не в списку.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

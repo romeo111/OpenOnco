@@ -1,14 +1,16 @@
 id: RF-CML-T315I-MUTATION
-definition: "CML with T315I gatekeeper mutation in the BCR-ABL1 kinase domain — resistant to all 1st/2nd-gen TKIs; requires ponatinib or asciminib (STAMP)"
-definition_ua: "Хронічна мієлоїдна лейкемія з мутацією T315I у кіназному домені BCR-ABL1 — резистентність до всіх ТКІ 1-го та 2-го поколінь; потребує понатинібу або асцимінібу (STAMP)"
+definition: "CML with T315I gatekeeper mutation in the BCR-ABL1 kinase domain — resistant to all 1st/2nd-gen
+  TKIs; requires ponatinib or asciminib (STAMP)"
+definition_ua: "Хронічна мієлоїдна лейкемія з мутацією T315I у кіназному домені BCR-ABL1 — резистентність
+  до всіх ТКІ 1-го та 2-го поколінь; потребує понатинібу або асцимінібу (STAMP)"
 
 trigger:
   type: biomarker
   any_of:
-    - finding: "bcr_abl_t315i"
-      value: true
-    - finding: "kinase_domain_mutation"
-      value: "T315I"
+  - finding: "bcr_abl_t315i"
+    value: true
+  - finding: "kinase_domain_mutation"
+    value: "T315I"
 
 clinical_direction: intensify
 
@@ -16,13 +18,13 @@ severity: critical
 priority: 100
 category: high-risk-biology
 relevant_diseases:
-  - DIS-CML
+- DIS-CML
 shifts_algorithm:
-  - ALGO-CML-1L
+- ALGO-CML-1L
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-ELN-CML-2020
+- SRC-NCCN-MPN-2025
+- SRC-ELN-CML-2020
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -34,6 +36,11 @@ notes: >
   resistance mutation screening at TKI failure or suboptimal response per
   ELN 2020 milestones. STUB — requires clinical co-lead signoff.
 notes_ua: >
-  T315I emergence on іматиніб / 2nd-gen TKI mandates switch to понатиніб (full-доза 45 mg → відповідь-adjusted to 15 mg per OPTIC) or асциминіб STAMP (відповідь rates ~50% in T315I-positive). Both NOT registered in Ukraine — major access barrier. AlloHCT remains alternative for fit patients without понатиніб/асциминіб access. обов'язковий kinase-domain резистентна мутація screening at TKI failure or suboptimal відповідь per ELN 2020 milestones. STUB — requires clinical co-lead signoff.
+  Мутація T315I (Бетта) є «привратником» BCR-ABL — стійка до всіх ТКІ 1-2-го покоління (ібатиніб, нілотиніб,
+  дазатиніб, бозутиніб). Понатиніб (дози: 45 mg для нового, 15 mg для підтримуючого або хронічної фази
+  при досягненні MMR; зниження дози на ~50% ризик тромботичних подій) або азедексіб — єдині схвалені варіанти.
+  Обидва НЕ зареєстровані в Україні. АлоТГСК залишається альтернативою для придатних пацієнтів без доступу.
+  Скринінг T315I слід проводити при будь-якій невдачі ТКІ. СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

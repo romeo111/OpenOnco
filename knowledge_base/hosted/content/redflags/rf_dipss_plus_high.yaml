@@ -1,17 +1,21 @@
 id: RF-DIPSS-PLUS-HIGH
-definition: "Primary myelofibrosis with DIPSS-Plus intermediate-2 or high risk — alloHCT referral mandatory in eligible patients (only curative option); ruxolitinib for symptom + spleen control while awaiting transplant"
-definition_ua: "Первинний мієлофіброз з ризиком DIPSS-Plus проміжний-2 або високий — обов'язкове направлення на аллоТГСК у придатних пацієнтів (єдина радикальна опція); руксолітиніб для контролю симптомів та спленомегалії під час очікування трансплантації"
+definition: "Primary myelofibrosis with DIPSS-Plus intermediate-2 or high risk — alloHCT referral mandatory
+  in eligible patients (only curative option); ruxolitinib for symptom + spleen control while awaiting
+  transplant"
+definition_ua: "Первинний мієлофіброз з ризиком DIPSS-Plus проміжний-2 або високий — обов'язкове направлення
+  на аллоТГСК у придатних пацієнтів (єдина радикальна опція); руксолітиніб для контролю симптомів та спленомегалії
+  під час очікування трансплантації"
 
 trigger:
   type: composite_score
   any_of:
-    - finding: "dipss_plus_risk"
-      value: "intermediate_2"
-    - finding: "dipss_plus_risk"
-      value: "high"
-    - finding: "dipss_plus_score"
-      threshold: 3
-      comparator: ">="
+  - finding: "dipss_plus_risk"
+    value: "intermediate_2"
+  - finding: "dipss_plus_risk"
+    value: "high"
+  - finding: "dipss_plus_score"
+    threshold: 3
+    comparator: ">="
 
 clinical_direction: intensify
 
@@ -19,14 +23,14 @@ severity: critical
 priority: 100
 category: risk-score
 relevant_diseases:
-  - DIS-PMF
+- DIS-PMF
 shifts_algorithm:
-  - ALGO-PMF-1L
+- ALGO-PMF-1L
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-DIPSS-PLUS-GANGAT-2011
-  - SRC-ESMO-MPN-2015
+- SRC-NCCN-MPN-2025
+- SRC-DIPSS-PLUS-GANGAT-2011
+- SRC-ESMO-MPN-2015
 
 last_reviewed: "2026-04-27"
 notes: >
@@ -38,3 +42,13 @@ notes: >
   (existing, similar trigger): kept as a separately-named cross-cutting
   flag using the canonical risk-score nomenclature so future MDT
   briefs can target the named score directly.
+notes_ua: >
+  DIPSS-Plus (Gangat 2011) розширює DIPSS тромбоцитами <100К, залежністю від трансфузій еритроцитів, несприятливим
+  каріотипом. Проміжний-2/високий ризик → медіана ЗВ ~2.9/1.3 роки без алоТГСК. АлоТГСК є єдиною курабельною
+  модальністю, але летальність від трансплантації 30–50% у літніх пацієнтів. MIPSS70/MIPSS70+v2.0 — новіші
+  молекулярні розширення. Супутній до RF-PMF-HIGH-RISK-DIPSS (наявний, подібний тригер): збережений як
+  окремо іменований перехресний прапор з канонічною номенклатурою шкали ризику для прямого таргетування
+  у майбутніх МДК-оглядах.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

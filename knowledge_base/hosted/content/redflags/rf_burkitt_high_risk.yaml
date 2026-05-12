@@ -1,20 +1,22 @@
 id: RF-BURKITT-HIGH-RISK
-definition: "Burkitt lymphoma high-risk features: HIV+ AND CD4 <100 OR ECOG ≥3 OR LDH >3× ULN OR CNS involvement OR bulky abdominal disease — selects more intensive CODOX-M/IVAC over DA-EPOCH-R"
-definition_ua: "Burkitt з ознаками високого ризику: ВІЛ+ AND CD4 <100 АБО ECOG ≥3 АБО LDH >3× ULN АБО ураження ЦНС АБО bulky абдомінальна хвороба — обирає інтенсивніший CODOX-M/IVAC замість DA-EPOCH-R"
+definition: "Burkitt lymphoma high-risk features: HIV+ AND CD4 <100 OR ECOG ≥3 OR LDH >3× ULN OR CNS involvement
+  OR bulky abdominal disease — selects more intensive CODOX-M/IVAC over DA-EPOCH-R"
+definition_ua: "Burkitt з ознаками високого ризику: ВІЛ+ AND CD4 <100 АБО ECOG ≥3 АБО LDH >3× ULN АБО
+  ураження ЦНС АБО bulky абдомінальна хвороба — обирає інтенсивніший CODOX-M/IVAC замість DA-EPOCH-R"
 
 trigger:
   type: composite_clinical
   any_of:
-    - finding: "burkitt_high_risk"
-      value: true
-    - finding: "cns_involvement"
-      value: true
-    - finding: "ldh_above_3x_uln"
-      value: true
-    - finding: "leukemic_phase"
-      value: true
-    - finding: "bulky_abdominal"
-      value: true
+  - finding: "burkitt_high_risk"
+    value: true
+  - finding: "cns_involvement"
+    value: true
+  - finding: "ldh_above_3x_uln"
+    value: true
+  - finding: "leukemic_phase"
+    value: true
+  - finding: "bulky_abdominal"
+    value: true
 
 clinical_direction: intensify
 
@@ -31,6 +33,12 @@ notes: >
   push to CODOX-M/IVAC (Magrath) or hyper-CVAD/MA. CNS involvement is
   mandatory CODOX-M/IVAC (HD-MTX dose-intense regimen).
 notes_ua: >
-  CALGB 10002 / CALGB 50202 докази that DA-EPOCH-R is sufficient for найбільш дорослий Burkitt включаючи HIV-associated, but високого ризику features push to CODOX-M/IVAC (Magrath) or hyper-CVAD/MA. CNS involvement is обов'язковий CODOX-M/IVAC (HD-MTX доза-intense схема).
+  Критерії «Burkitt що відрізняється від BL» за NCCN/WHO: вік >40, ЦНС-ураження, локалізація кісткового
+  мозку, ECOG ≥2, LDH >4×ULN — всі виштовхують до CODOX-M/IVAC або DA-EPOCH-R. Педіатричні особливості
+  (BFM) надійніші у молодших пацієнтів: ≤25 частка проміжного ризику достатня для A-схеми. Дорослий «высокий
+  ризик» включає більшість пацієнтів, оскільки Burkitt рідкісний у дорослих за відсутності ЦНС/кістковомозкового
+  ураження. DA-EPOCH-R дедалі більше використовується як альтернатива CODOX-M/IVAC у дорослих через прийнятну
+  токсичність. СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2
