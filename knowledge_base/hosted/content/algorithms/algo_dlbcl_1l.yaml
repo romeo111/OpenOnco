@@ -71,6 +71,50 @@ notes: "IPI + biology are the primary regimen determinants; frailty / organ dysf
   \ not by branching the indication tree. DA-EPOCH-R-for-HIV-DLBCL is currently represented at the rationale layer; future\
   \ round may add IND-DLBCL- 1L-DAEPOCHR-HIV as a separate plan-track entity once HIV co-infection is wired as a first-class\
   \ biomarker (BIO-HIV-STATUS missing — flagged).\n"
+notes_ua: >
+  IPI та біологія є основними детермінантами режиму; крихкість / органна
+  дисфункція де-ескалуються перед інтенсифікацією (крок 1 переважає крок 2,
+  якщо обидва спрацьовують). Рушій все одно виводить всі спрацьовані RF
+  у трасі — конфлікт видимий для МДТ.
+  RF-DLBCL-CNS-RISK та RF-DLBCL-INFECTION-SCREENING навмисно НЕ включені
+  до decision_tree, оскільки вони не перемикають показання: CNS-RISK додає
+  профілактику ЦНС (оброблено у рендері плану); INFECTION-SCREENING додає
+  профілактику HBV/ВІЛ (паралельні тригери SUP-*). Клітинне походження
+  (Hans GCB проти ABC) записано як біомаркер; non-GCB + високий IPI
+  охоплено RF-DLBCL-HIGH-RISK-BIOLOGY.
+  Етіологічні рейки (паралельно до вибору показання — жодна не перемикає
+  R-CHOP проти Pola-R-CHP):
+  - HBV (HBsAg+ АБО anti-HBc+) — RF-UNIVERSAL-HBV-REACTIVATION-RISK +
+    RF-DLBCL-INFECTION-SCREENING спрацьовують; ентекавір 0.5 mg ПО щоденно
+    перед першою дозою ритуксимабу, продовжується через індукцію +12 місяців
+    після останнього анти-CD20. CI-HBV-NO-PROPHYLAXIS є жорстким
+    протипоказанням для обох показань, блокує фіналізацію плану до
+    підтвердження SUP-HBV-PROPHYLAXIS.
+  - HCV (HCV-RNA визначається) — на відміну від індолентного HCV-MZL,
+    агресивний ДBКЛ НЕ спрямовується спочатку на DAA. R-CHOP / Pola-R-CHP
+    проводиться без затримки; DAA (sofosбувір/велпатасвір) розпочинається
+    одночасно або після індукції залежно від функції печінки (ESMO DLBCL
+    2024 §HCV; NCCN B-Cell 2.2025). Виняток: DLBCL з дуже низьким пухлинним
+    навантаженням + HCV+ в CP-A — неврегульована область; направляти на МДТ
+    + гепатолог. Уникати софосбувіру + аміодарону (виражена брадикардія).
+  - ВІЛ (позитивна серологія) — продовжувати АРТ протягом R-CHOP /
+    DA-EPOCH-R (DA-EPOCH-R є переважним для ВІЛ-DLBCL за AMC 034 /
+    Sparano 2010 з кращими результатами проти R-CHOP у ВІЛ+ підгрупі).
+    Уникати TMP-SMX з HD-метотрексатом (цикли профілактики ЦНС);
+    координувати розклад PJP-профілактики. Моніторинг CD4 + HIV-VL перед
+    циклом. Взаємодії препаратів: уникати ритонавір-бустованих ІП з
+    вінкристином (посилена нейротоксичність); перейти на АРТ-скелет
+    інгібіторів інтегрази, якщо можливо. Емпіричне зниження дози R-CHOP
+    за самим лише ВІЛ не потрібне (лише за CD4).
+  Всі три рейки функціонують через паралельні поверхні SUP-* / RF-*, а не
+  через розгалуження дерева показань. DA-EPOCH-R для ВІЛ-DLBCL наразі
+  представлено на рівні обґрунтування; майбутній раунд може додати
+  IND-DLBCL- 1L-DAEPOCHR-HIV як окремий ентитет плану після підключення
+  ВІЛ-коінфекції як першокласного біомаркера (BIO-HIV-STATUS відсутній —
+  відмічено).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_13
+draft_revision: 2
 reviewer_signoffs_v2:
 - reviewer_id: REV-HEME-LEAD-PLACEHOLDER
   signoff_date: '2026-04-26'

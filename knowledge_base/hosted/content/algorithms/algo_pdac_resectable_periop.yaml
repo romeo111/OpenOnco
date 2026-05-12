@@ -119,3 +119,23 @@ notes: >
   indication pending); adjuvant gemcitabine + capecitabine (ESPAC-4,
   alternative if FOLFIRINOX-CI); resectable PDAC neoadjuvant chemo
   (NEONAX / SWOG-1505 — not yet definitive standard).
+notes_ua: >
+  Пакет D2 gi3-d2-algo-extensions-2026-05-08-2300 — перша маршрутизація для
+  IND-PDAC-ADJUVANT-MFOLFIRINOX (Фаза C C1) та IND-PDAC-BORDERLINE-
+  RESECTABLE-NEOADJ-FOLFIRINOX (Фаза C C2). Алгоритм використовує
+  applicable_to_disease_state="pdac_resectable_or_borderline" для розрізнення
+  від стан-агностичного ALGO-PDAC-METASTATIC-1L (лінія=1) відповідно до
+  конвенції рушія _find_algorithm (урок рефакторингу §10.4).
+  Дискримінатор всередині дерева: resectability_status ∈ {resectable, borderline}
+  спрямовує до відповідного фазованого показання. Фітнес-гейти
+  (RF-FITNESS-ECOG-FIT + RF-PDAC-FIT-FOR-FOLFIRINOX) є спільними з
+  маршрутизацією FOLFIRINOX 1Л при метастатичному; неуспіх спрямовує до
+  резервного за замовчуванням з ескалацією МДТ-огляду.
+  Поза обсягом: гем-наб-пакл периопераційні альтернативи для
+  пацієнтів, що не пройшли фітнес-гейти (окреме показання в очікуванні);
+  ад'ювантний гемцитабін + капецитабін (ESPAC-4, альтернатива при FOLFIRINOX-КП);
+  неоад'ювантна хіміотерапія резектабельного PDAC (NEONAX / SWOG-1505 —
+  ще не визначений стандарт).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_13
+draft_revision: 2
