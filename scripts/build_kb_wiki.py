@@ -453,6 +453,29 @@ def _disease_ids_via_drug_usage(
     return sorted(diseases)
 
 
+def _disease_ids_via_biomarker_usage(
+    biomarker_id: str,
+    reverse_refs: dict[str, list["KbEntity"]],
+) -> list[str]:
+    """Walk biomarker → (BMAs | indications | redflags) → disease_id.
+
+    Biomarker YAMLs almost never enumerate the diseases where the
+    biomarker is actionable — a BIO-BRAF-V600E file says nothing about
+    melanoma vs CRC vs NSCLC vs thyroid. That information lives in the
+    BMA YAMLs (`disease_id` at top level), the indication YAMLs
+    (`applicable_to.disease_id` for indications that gate on this
+    biomarker), and the redflag YAMLs (`applicable_to_disease`).
+
+    All three ref kinds expose disease via `_disease_ids`, so this is a
+    single-hop walk of reverse_refs[biomarker_id].
+    """
+    diseases: set[str] = set()
+    for ref in reverse_refs.get(biomarker_id, []):
+        if ref.kind in ("biomarker_actionability", "indications", "redflags"):
+            diseases.update(_disease_ids(ref.data))
+    return sorted(diseases)
+
+
 # UA-locale translations for free-form status enums that authors write
 # directly into YAML (`ukrainian_review_status: pending_clinical_signoff`,
 # etc.). Without this, the UA wiki page surfaces raw snake_case strings
@@ -658,11 +681,18 @@ def _frontmatter(
     data = entity.data
     sources = _source_ids(data)
     diseases = _disease_ids(data)
-    # Drugs almost never enumerate the diseases they treat in their own
-    # YAML — that information lives in the indication YAMLs. Recover it
-    # by walking reverse refs (drug → regimens → indications → disease).
+    # Drugs and biomarkers almost never enumerate the diseases they
+    # touch in their own YAML — that information lives in the indication
+    # / BMA / redflag YAMLs. Recover it via reverse-ref walks:
+    #   drug      → regimens → indications → disease  (2-hop)
+    #   biomarker → BMA | indication | redflag → disease (1-hop, all
+    #               three ref kinds carry disease_id directly).
+    # RedFlags + BMAs already declare disease_id on their own YAML and
+    # render correctly without this enrichment.
     if entity.kind == "drugs":
         diseases = sorted(set(diseases) | set(_disease_ids_via_drug_usage(entity.id, reverse_refs)))
+    elif entity.kind == "biomarkers":
+        diseases = sorted(set(diseases) | set(_disease_ids_via_biomarker_usage(entity.id, reverse_refs)))
     labels = FIELD_LABELS[locale]
     rows = [
         (labels["id"], f"<code>{html.escape(entity.id)}</code>"),
