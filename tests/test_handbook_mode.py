@@ -130,3 +130,65 @@ def test_build_handbook_writes_index_and_chapter(tmp_path: Path):
         "HB-MM-1L": "/handbook/hb-mm-1l.html",
         "HB-NSCLC-METASTATIC-1L": "/handbook/hb-nsclc-metastatic-1l.html",
     }
+
+
+def test_handbook_index_carries_search_fields(tmp_path: Path):
+    payload = build_handbook(KB_ROOT, tmp_path)
+
+    chapters_by_id = {chapter["id"]: chapter for chapter in payload["chapters"]}
+    dlbcl = chapters_by_id["HB-DLBCL-1L"]
+
+    # Backward-compatible fields still present.
+    assert dlbcl["url"] == "/handbook/hb-dlbcl-1l.html"
+    assert dlbcl["question_count"] == 3
+    assert "SRC-POLARIX-TILLY-2022" in dlbcl["source_ids"]
+    assert dlbcl["disease_ids"] == ["DIS-DLBCL-NOS"]
+
+    # New filter/search-friendly fields land deterministically.
+    assert "first-line" in dlbcl["topic_tags"]
+    assert "lymphoma" in dlbcl["topic_tags"]
+    assert dlbcl["learning_objectives"], "learning_objectives must surface in index for search"
+    assert dlbcl["at_a_glance"], "at_a_glance must surface in index for search"
+    # Disease labels resolve, not just IDs.
+    assert dlbcl["disease_labels"], "disease_labels must resolve so the filter UI shows readable names"
+
+    # Per-chapter records must always carry these keys (search UI relies on them).
+    for chapter in payload["chapters"]:
+        for key in (
+            "topic_tags",
+            "learning_objectives",
+            "at_a_glance",
+            "disease_labels",
+        ):
+            assert key in chapter, f"{chapter['id']} missing {key}"
+
+
+def test_handbook_index_page_renders_filter_controls(tmp_path: Path):
+    build_handbook(KB_ROOT, tmp_path)
+    index = (tmp_path / "handbook.html").read_text(encoding="utf-8")
+
+    # Filter + search controls present and dependency-free (inline JS, no
+    # bundler or framework reference).
+    assert 'id="hb-search"' in index
+    assert 'id="hb-filter-disease"' in index
+    assert 'id="hb-filter-tag"' in index
+    assert 'id="hb-filter-status"' in index
+    assert 'id="hb-result-count"' in index
+
+    # Cards carry the data-* attributes the JS needs to filter without
+    # rebuilding the page.
+    assert 'data-diseases="DIS-DLBCL-NOS"' in index
+    assert 'data-status="draft"' in index
+    assert 'data-tags="' in index
+    assert 'data-search="' in index
+
+    # Disease dropdown is populated server-side with the actual chapter
+    # diseases so the filter is meaningful at page load.
+    assert 'value="DIS-CRC"' in index
+    assert 'value="DIS-NSCLC"' in index
+    assert 'value="DIS-MM"' in index
+    assert 'value="DIS-DLBCL-NOS"' in index
+
+    # Topic tag options come from the chapter YAMLs.
+    assert 'value="first-line"' in index
+    assert 'value="biomarkers"' in index

@@ -74,6 +74,44 @@ def _render_badge(text: str, class_name: str = "") -> str:
     return f'<span class="{cls}">{_esc(text)}</span>'
 
 
+def _chapter_index_record(load, chapter: dict[str, Any]) -> dict[str, Any]:
+    """Per-chapter record carried in handbook_index.json and inlined into
+    the index page for client-side filter/search. Adds a few resolved
+    labels to keep the search UI working without a second fetch."""
+    questions = _chapter_questions(load, chapter["id"])
+    disease_labels = [
+        _entity_label(load.entities_by_id.get(did), did)
+        for did in chapter.get("disease_ids") or []
+    ]
+    return {
+        "id": chapter["id"],
+        "title": chapter["title"],
+        "review_status": chapter.get("review_status", "draft"),
+        "url": f"/handbook/{_slug(chapter['id'])}.html",
+        "question_count": len(questions),
+        "source_ids": list(chapter.get("source_ids") or []),
+        "disease_ids": list(chapter.get("disease_ids") or []),
+        "disease_labels": disease_labels,
+        "topic_tags": list(chapter.get("topic_tags") or []),
+        "learning_objectives": list(chapter.get("learning_objectives") or []),
+        "at_a_glance": list(chapter.get("at_a_glance") or []),
+    }
+
+
+def _search_blob(record: dict[str, Any]) -> str:
+    """Lowercased haystack for substring search. Includes the fields the
+    handoff names: title, learning objectives, at-a-glance bullets,
+    source IDs, disease labels."""
+    parts: list[str] = [record.get("title") or "", record.get("id") or ""]
+    parts.extend(record.get("learning_objectives") or [])
+    parts.extend(record.get("at_a_glance") or [])
+    parts.extend(record.get("source_ids") or [])
+    parts.extend(record.get("disease_ids") or [])
+    parts.extend(record.get("disease_labels") or [])
+    parts.extend(record.get("topic_tags") or [])
+    return " \n ".join(p for p in parts if p).lower()
+
+
 def _render_source_list(load, source_ids: list[str]) -> str:
     items = []
     for sid in source_ids:
@@ -157,7 +195,16 @@ def _page_shell(title: str, body: str) -> str:
     .hb-answer-toggle {{ border: 1px solid #0f766e; background: #0f766e; color: #fff; border-radius: 6px; padding: 7px 10px; cursor: pointer; }}
     .hb-answer {{ margin-top: 12px; border-left: 3px solid #0f766e; padding-left: 12px; color: #1f2937; }}
     .hb-disclaimer {{ border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px; color: #78350f; }}
-    @media (max-width: 860px) {{ .hb-layout {{ grid-template-columns: 1fr; }} .hb-hero h1 {{ font-size: 28px; }} }}
+    .hb-controls {{ display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(150px, 1fr)); gap: 10px 14px; align-items: end; margin-top: 22px; padding: 14px; border: 1px solid #d6dee8; border-radius: 8px; background: #f8fafc; }}
+    .hb-control {{ display: grid; gap: 4px; font-size: 12px; color: #475569; }}
+    .hb-control span {{ font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }}
+    .hb-control input, .hb-control select {{ font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #0f172a; }}
+    .hb-control input:focus, .hb-control select:focus {{ outline: 2px solid #0f766e; outline-offset: 1px; }}
+    .hb-result-count {{ grid-column: 1 / -1; margin: 4px 0 0; font-size: 13px; color: #475569; }}
+    .hb-empty {{ grid-column: 1 / -1; margin: 0; padding: 12px; border: 1px dashed #cbd5e1; border-radius: 6px; background: #fff; color: #475569; text-align: center; }}
+    .hb-tag-row {{ display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }}
+    .hb-tag {{ display: inline-flex; padding: 2px 8px; font-size: 11px; border-radius: 999px; background: #e0f2f1; color: #115e59; border: 1px solid #99f6e4; }}
+    @media (max-width: 860px) {{ .hb-layout {{ grid-template-columns: 1fr; }} .hb-hero h1 {{ font-size: 28px; }} .hb-controls {{ grid-template-columns: 1fr; }} }}
   </style>
 </head>
 <body>
@@ -179,27 +226,52 @@ def _page_shell(title: str, body: str) -> str:
 
 
 def render_handbook_index(load) -> str:
+    chapters = _chapter_cards(load)
+    records = [_chapter_index_record(load, chapter) for chapter in chapters]
+
     cards = []
-    for chapter in _chapter_cards(load):
-        questions = _chapter_questions(load, chapter["id"])
+    for chapter, record in zip(chapters, records):
         chapter_href = f"handbook/{_slug(chapter['id'])}.html"
-        disease_labels = [
-            _entity_label(load.entities_by_id.get(did), did)
-            for did in chapter.get("disease_ids") or []
-        ]
+        diseases_attr = "|".join(record["disease_ids"])
+        tags_attr = "|".join(record["topic_tags"])
+        search_attr = _search_blob(record)
         cards.append(
             f"""
-            <article class="hb-card">
-              <h2><a href="{_esc(chapter_href)}">{_esc(chapter['title'])}</a></h2>
-              <p>{_esc('; '.join(chapter.get('learning_objectives') or [])[:260])}</p>
+            <article class="hb-card"
+                     data-id="{_esc(record['id'])}"
+                     data-diseases="{_esc(diseases_attr)}"
+                     data-tags="{_esc(tags_attr)}"
+                     data-status="{_esc(record['review_status'])}"
+                     data-search="{_esc(search_attr)}">
+              <h2><a href="{_esc(chapter_href)}">{_esc(record['title'])}</a></h2>
+              <p>{_esc('; '.join(record['learning_objectives'])[:260])}</p>
               <div class="hb-meta">
-                {_render_badge(chapter.get('review_status', 'draft'), 'hb-badge--draft')}
-                {_render_badge(f"{len(questions)} questions")}
-                {_render_badge(", ".join(disease_labels) or "no disease")}
+                {_render_badge(record['review_status'], 'hb-badge--draft')}
+                {_render_badge(f"{record['question_count']} questions")}
+                {_render_badge(", ".join(record['disease_labels']) or "no disease")}
+              </div>
+              <div class="hb-tag-row">
+                {''.join(f'<span class="hb-tag">{_esc(t)}</span>' for t in record['topic_tags'])}
               </div>
             </article>
             """
         )
+
+    # Sorted union of values for each filter, so the UI is deterministic
+    # across builds.
+    all_diseases = sorted(
+        {(did, label) for r in records for did, label in zip(r["disease_ids"], r["disease_labels"])}
+    )
+    all_tags = sorted({t for r in records for t in r["topic_tags"]})
+    all_statuses = sorted({r["review_status"] for r in records})
+
+    disease_options = "".join(
+        f'<option value="{_esc(did)}">{_esc(label or did)}</option>'
+        for did, label in all_diseases
+    )
+    tag_options = "".join(f'<option value="{_esc(t)}">{_esc(t)}</option>' for t in all_tags)
+    status_options = "".join(f'<option value="{_esc(s)}">{_esc(s)}</option>' for s in all_statuses)
+
     body = f"""
     <section class="hb-hero">
       <div class="hb-kicker">OpenOnco Handbook</div>
@@ -208,9 +280,81 @@ def render_handbook_index(load) -> str:
       YAML entities, source IDs, synthetic cases, and review metadata. This is
       not official ESMO content and does not grant CME credit.</p>
     </section>
-    <section class="hb-grid">
+    <section class="hb-controls" aria-label="Filter and search chapters">
+      <label class="hb-control hb-control--search">
+        <span>Search</span>
+        <input type="search" id="hb-search" placeholder="Title, objective, source ID…" autocomplete="off">
+      </label>
+      <label class="hb-control">
+        <span>Disease</span>
+        <select id="hb-filter-disease">
+          <option value="">All diseases</option>
+          {disease_options}
+        </select>
+      </label>
+      <label class="hb-control">
+        <span>Topic tag</span>
+        <select id="hb-filter-tag">
+          <option value="">All tags</option>
+          {tag_options}
+        </select>
+      </label>
+      <label class="hb-control">
+        <span>Review status</span>
+        <select id="hb-filter-status">
+          <option value="">All statuses</option>
+          {status_options}
+        </select>
+      </label>
+      <p class="hb-result-count" id="hb-result-count" aria-live="polite"></p>
+      <p class="hb-empty" id="hb-empty" hidden>No chapters match the current filters.</p>
+    </section>
+    <section class="hb-grid" id="hb-grid">
       {''.join(cards) or '<p>No handbook chapters are authored yet.</p>'}
     </section>
+    <script>
+      (function() {{
+        var cards = Array.prototype.slice.call(document.querySelectorAll('#hb-grid .hb-card'));
+        var total = cards.length;
+        var search = document.getElementById('hb-search');
+        var disease = document.getElementById('hb-filter-disease');
+        var tag = document.getElementById('hb-filter-tag');
+        var status = document.getElementById('hb-filter-status');
+        var count = document.getElementById('hb-result-count');
+        var empty = document.getElementById('hb-empty');
+        if (!search || !disease || !tag || !status) {{ return; }}
+        function listFor(card, name) {{
+          var v = card.getAttribute('data-' + name) || '';
+          return v ? v.split('|') : [];
+        }}
+        function apply() {{
+          var q = (search.value || '').trim().toLowerCase();
+          var d = disease.value;
+          var t = tag.value;
+          var s = status.value;
+          var visible = 0;
+          cards.forEach(function(card) {{
+            var diseases = listFor(card, 'diseases');
+            var tags = listFor(card, 'tags');
+            var blob = card.getAttribute('data-search') || '';
+            var show = true;
+            if (q && blob.indexOf(q) === -1) {{ show = false; }}
+            if (show && d && diseases.indexOf(d) === -1) {{ show = false; }}
+            if (show && t && tags.indexOf(t) === -1) {{ show = false; }}
+            if (show && s && card.getAttribute('data-status') !== s) {{ show = false; }}
+            card.hidden = !show;
+            if (show) {{ visible += 1; }}
+          }});
+          count.textContent = visible + ' of ' + total + ' chapter' + (total === 1 ? '' : 's');
+          empty.hidden = visible !== 0;
+        }}
+        [search, disease, tag, status].forEach(function(el) {{
+          el.addEventListener('input', apply);
+          el.addEventListener('change', apply);
+        }});
+        apply();
+      }})();
+    </script>
     """
     return _page_shell("OpenOnco Handbook", body)
 
@@ -326,18 +470,7 @@ def build_handbook(kb_root: Path = DEFAULT_KB_ROOT, output_dir: Path = DEFAULT_O
     payload = {
         "kind": "openonco_handbook_index",
         "count": len(chapters),
-        "chapters": [
-            {
-                "id": chapter["id"],
-                "title": chapter["title"],
-                "review_status": chapter.get("review_status", "draft"),
-                "url": f"/handbook/{_slug(chapter['id'])}.html",
-                "question_count": len(_chapter_questions(load, chapter["id"])),
-                "source_ids": chapter.get("source_ids") or [],
-                "disease_ids": chapter.get("disease_ids") or [],
-            }
-            for chapter in chapters
-        ],
+        "chapters": [_chapter_index_record(load, chapter) for chapter in chapters],
     }
     (output_dir / "handbook_index.json").write_text(
         json.dumps(payload, indent=2, ensure_ascii=False),

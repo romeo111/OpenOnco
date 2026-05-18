@@ -52,7 +52,16 @@
     .hb-answer-toggle { border: 1px solid #0f766e; background: #0f766e; color: #fff; border-radius: 6px; padding: 7px 10px; cursor: pointer; }
     .hb-answer { margin-top: 12px; border-left: 3px solid #0f766e; padding-left: 12px; color: #1f2937; }
     .hb-disclaimer { border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px; color: #78350f; }
-    @media (max-width: 860px) { .hb-layout { grid-template-columns: 1fr; } .hb-hero h1 { font-size: 28px; } }
+    .hb-controls { display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(150px, 1fr)); gap: 10px 14px; align-items: end; margin-top: 22px; padding: 14px; border: 1px solid #d6dee8; border-radius: 8px; background: #f8fafc; }
+    .hb-control { display: grid; gap: 4px; font-size: 12px; color: #475569; }
+    .hb-control span { font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .hb-control input, .hb-control select { font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #0f172a; }
+    .hb-control input:focus, .hb-control select:focus { outline: 2px solid #0f766e; outline-offset: 1px; }
+    .hb-result-count { grid-column: 1 / -1; margin: 4px 0 0; font-size: 13px; color: #475569; }
+    .hb-empty { grid-column: 1 / -1; margin: 0; padding: 12px; border: 1px dashed #cbd5e1; border-radius: 6px; background: #fff; color: #475569; text-align: center; }
+    .hb-tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .hb-tag { display: inline-flex; padding: 2px 8px; font-size: 11px; border-radius: 999px; background: #e0f2f1; color: #115e59; border: 1px solid #99f6e4; }
+    @media (max-width: 860px) { .hb-layout { grid-template-columns: 1fr; } .hb-hero h1 { font-size: 28px; } .hb-controls { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -65,9 +74,62 @@
       YAML entities, source IDs, synthetic cases, and review metadata. This is
       not official ESMO content and does not grant CME credit.</p>
     </section>
-    <section class="hb-grid">
+    <section class="hb-controls" aria-label="Filter and search chapters">
+      <label class="hb-control hb-control--search">
+        <span>Search</span>
+        <input type="search" id="hb-search" placeholder="Title, objective, source ID…" autocomplete="off">
+      </label>
+      <label class="hb-control">
+        <span>Disease</span>
+        <select id="hb-filter-disease">
+          <option value="">All diseases</option>
+          <option value="DIS-CRC">Colorectal carcinoma</option><option value="DIS-DLBCL-NOS">Diffuse Large B-Cell Lymphoma, Not Otherwise Specified</option><option value="DIS-MM">Multiple Myeloma</option><option value="DIS-NSCLC">Non-small cell lung cancer</option>
+        </select>
+      </label>
+      <label class="hb-control">
+        <span>Topic tag</span>
+        <select id="hb-filter-tag">
+          <option value="">All tags</option>
+          <option value="biomarkers">biomarkers</option><option value="colorectal-cancer">colorectal-cancer</option><option value="first-line">first-line</option><option value="lymphoma">lymphoma</option><option value="metastatic">metastatic</option><option value="multiple-myeloma">multiple-myeloma</option><option value="nsclc">nsclc</option><option value="risk-stratification">risk-stratification</option><option value="supportive-care">supportive-care</option><option value="treatment-selection">treatment-selection</option>
+        </select>
+      </label>
+      <label class="hb-control">
+        <span>Review status</span>
+        <select id="hb-filter-status">
+          <option value="">All statuses</option>
+          <option value="draft">draft</option>
+        </select>
+      </label>
+      <p class="hb-result-count" id="hb-result-count" aria-live="polite"></p>
+      <p class="hb-empty" id="hb-empty" hidden>No chapters match the current filters.</p>
+    </section>
+    <section class="hb-grid" id="hb-grid">
       
-            <article class="hb-card">
+            <article class="hb-card"
+                     data-id="HB-DLBCL-1L"
+                     data-diseases="DIS-DLBCL-NOS"
+                     data-tags="lymphoma|first-line|biomarkers|treatment-selection"
+                     data-status="draft"
+                     data-search="diffuse large b-cell lymphoma: first-line reasoning 
+ hb-dlbcl-1l 
+ identify the minimum diagnostic and biomarker inputs needed before first-line dlbcl treatment selection. 
+ explain how ipi risk, fitness, organ function, and biology influence r-chop versus pola-r-chp reasoning. 
+ recognize red flags that do not switch the regimen but must change supportive care or mdt discussion. 
+ confirmed histology and cd20 positivity are required before first-line treatment planning. 
+ ipi and fitness gates drive the first-line algorithm in openonco. 
+ r-chop remains the standard track; pola-r-chp is modeled as the intensified track for higher-risk disease when accessible. 
+ hbv, hcv, hiv, cardiac function, pregnancy, and cns-risk checks sit beside regimen selection and must not be skipped. 
+ this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity. 
+ src-nccn-bcell-2025 
+ src-esmo-dlbcl-2024 
+ src-esmo-lymphoma-2025 
+ src-polarix-tilly-2022 
+ dis-dlbcl-nos 
+ diffuse large b-cell lymphoma, not otherwise specified 
+ lymphoma 
+ first-line 
+ biomarkers 
+ treatment-selection">
               <h2><a href="handbook/hb-dlbcl-1l.html">Diffuse large B-cell lymphoma: first-line reasoning</a></h2>
               <p>Identify the minimum diagnostic and biomarker inputs needed before first-line DLBCL treatment selection.; Explain how IPI risk, fitness, organ function, and biology influence R-CHOP versus Pola-R-CHP reasoning.; Recognize red flags that do not switch the regim</p>
               <div class="hb-meta">
@@ -75,9 +137,36 @@
                 <span class="hb-badge">3 questions</span>
                 <span class="hb-badge">Diffuse Large B-Cell Lymphoma, Not Otherwise Specified</span>
               </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">lymphoma</span><span class="hb-tag">first-line</span><span class="hb-tag">biomarkers</span><span class="hb-tag">treatment-selection</span>
+              </div>
             </article>
             
-            <article class="hb-card">
+            <article class="hb-card"
+                     data-id="HB-CRC-METASTATIC-1L"
+                     data-diseases="DIS-CRC"
+                     data-tags="colorectal-cancer|metastatic|first-line|biomarkers"
+                     data-status="draft"
+                     data-search="metastatic colorectal cancer: first-line biomarker reasoning 
+ hb-crc-metastatic-1l 
+ prioritize msi/mmr, ras, braf, her2, sidedness, and oligometastatic status before first-line mcrc treatment selection. 
+ explain why msi-h/dmmr disease takes precedence over routine chemotherapy backbones. 
+ recognize when ras wild-type left-sided disease and braf v600e disease push the learner toward different systemic strategies. 
+ mcrc first-line reasoning starts with resectability/oligometastatic status and molecular classification. 
+ msi-h/dmmr is treatment-defining and can route to pembrolizumab monotherapy in the openonco model. 
+ extended ras status and primary tumor sidedness gate egfr-antibody eligibility. 
+ braf v600e is a poor-prognosis signal; fit patients may need intensified chemotherapy reasoning. 
+ the chapter is openonco-authored educational content, not official esmo or cme material. 
+ src-nccn-colon-2025 
+ src-esmo-crc-2024 
+ src-esmo-colon-2024 
+ src-keynote-177-andre-2020 
+ dis-crc 
+ colorectal carcinoma 
+ colorectal-cancer 
+ metastatic 
+ first-line 
+ biomarkers">
               <h2><a href="handbook/hb-crc-metastatic-1l.html">Metastatic colorectal cancer: first-line biomarker reasoning</a></h2>
               <p>Prioritize MSI/MMR, RAS, BRAF, HER2, sidedness, and oligometastatic status before first-line mCRC treatment selection.; Explain why MSI-H/dMMR disease takes precedence over routine chemotherapy backbones.; Recognize when RAS wild-type left-sided disease and BR</p>
               <div class="hb-meta">
@@ -85,9 +174,37 @@
                 <span class="hb-badge">3 questions</span>
                 <span class="hb-badge">Colorectal carcinoma</span>
               </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">colorectal-cancer</span><span class="hb-tag">metastatic</span><span class="hb-tag">first-line</span><span class="hb-tag">biomarkers</span>
+              </div>
             </article>
             
-            <article class="hb-card">
+            <article class="hb-card"
+                     data-id="HB-NSCLC-METASTATIC-1L"
+                     data-diseases="DIS-NSCLC"
+                     data-tags="nsclc|metastatic|first-line|biomarkers"
+                     data-status="draft"
+                     data-search="metastatic nsclc: driver-first treatment reasoning 
+ hb-nsclc-metastatic-1l 
+ explain why metastatic nsclc first-line reasoning starts with actionable driver testing before pd-l1-only decisions. 
+ distinguish egfr, alk, ros1, met exon 14, ret, braf v600e, and ntrk driver branches from driver-negative immunotherapy branches. 
+ recognize pd-l1 tps as a treatment-stratifying marker only after actionable drivers are excluded or addressed. 
+ comprehensive molecular testing is the central first-line gate in metastatic nsclc. 
+ actionable drivers route to targeted therapy branches before pd-l1 immunotherapy branches. 
+ pd-l1 tps still matters, but mainly in the driver-negative pathway. 
+ brain metastases, frailty, organ dysfunction, and urgent complications remain parallel mdt concerns. 
+ the chapter is openonco-authored educational content, not official esmo or cme material. 
+ src-nccn-nsclc-2025 
+ src-esmo-nsclc-metastatic-2024 
+ src-flaura-soria-2018 
+ src-keynote-024-reck-2016 
+ src-keynote-189-gandhi-2018 
+ dis-nsclc 
+ non-small cell lung cancer 
+ nsclc 
+ metastatic 
+ first-line 
+ biomarkers">
               <h2><a href="handbook/hb-nsclc-metastatic-1l.html">Metastatic NSCLC: driver-first treatment reasoning</a></h2>
               <p>Explain why metastatic NSCLC first-line reasoning starts with actionable driver testing before PD-L1-only decisions.; Distinguish EGFR, ALK, ROS1, MET exon 14, RET, BRAF V600E, and NTRK driver branches from driver-negative immunotherapy branches.; Recognize PD</p>
               <div class="hb-meta">
@@ -95,9 +212,36 @@
                 <span class="hb-badge">3 questions</span>
                 <span class="hb-badge">Non-small cell lung cancer</span>
               </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">nsclc</span><span class="hb-tag">metastatic</span><span class="hb-tag">first-line</span><span class="hb-tag">biomarkers</span>
+              </div>
             </article>
             
-            <article class="hb-card">
+            <article class="hb-card"
+                     data-id="HB-MM-1L"
+                     data-diseases="DIS-MM"
+                     data-tags="multiple-myeloma|first-line|risk-stratification|supportive-care"
+                     data-status="draft"
+                     data-search="multiple myeloma: first-line risk and fitness reasoning 
+ hb-mm-1l 
+ use cytogenetic risk, iss/r-iss features, renal function, frailty, and transplant eligibility as separate first-line mm reasoning axes. 
+ explain why vrd and d-vrd appear as standard and alternative first-line tracks in the openonco model. 
+ recognize myeloma emergencies and supportive-care obligations that run beside induction selection. 
+ first-line mm reasoning is risk-stratified rather than purely stage-driven. 
+ high-risk cytogenetics and aggressive biology route toward d-vrd in the openonco model. 
+ frailty and renal dysfunction often affect dosing and safety planning rather than simply changing the disease indication. 
+ bone disease, hypercalcemia, renal impairment, infection risk, and cord compression are core safety checks. 
+ the chapter is openonco-authored educational content, not official esmo or cme material. 
+ src-nccn-mm-2025 
+ src-esmo-mm-2023 
+ src-perseus-sonneveld-2024 
+ src-griffin-voorhees-2020 
+ dis-mm 
+ multiple myeloma 
+ multiple-myeloma 
+ first-line 
+ risk-stratification 
+ supportive-care">
               <h2><a href="handbook/hb-mm-1l.html">Multiple myeloma: first-line risk and fitness reasoning</a></h2>
               <p>Use cytogenetic risk, ISS/R-ISS features, renal function, frailty, and transplant eligibility as separate first-line MM reasoning axes.; Explain why VRd and D-VRd appear as standard and alternative first-line tracks in the OpenOnco model.; Recognize myeloma em</p>
               <div class="hb-meta">
@@ -105,9 +249,55 @@
                 <span class="hb-badge">3 questions</span>
                 <span class="hb-badge">Multiple Myeloma</span>
               </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">multiple-myeloma</span><span class="hb-tag">first-line</span><span class="hb-tag">risk-stratification</span><span class="hb-tag">supportive-care</span>
+              </div>
             </article>
             
     </section>
+    <script>
+      (function() {
+        var cards = Array.prototype.slice.call(document.querySelectorAll('#hb-grid .hb-card'));
+        var total = cards.length;
+        var search = document.getElementById('hb-search');
+        var disease = document.getElementById('hb-filter-disease');
+        var tag = document.getElementById('hb-filter-tag');
+        var status = document.getElementById('hb-filter-status');
+        var count = document.getElementById('hb-result-count');
+        var empty = document.getElementById('hb-empty');
+        if (!search || !disease || !tag || !status) { return; }
+        function listFor(card, name) {
+          var v = card.getAttribute('data-' + name) || '';
+          return v ? v.split('|') : [];
+        }
+        function apply() {
+          var q = (search.value || '').trim().toLowerCase();
+          var d = disease.value;
+          var t = tag.value;
+          var s = status.value;
+          var visible = 0;
+          cards.forEach(function(card) {
+            var diseases = listFor(card, 'diseases');
+            var tags = listFor(card, 'tags');
+            var blob = card.getAttribute('data-search') || '';
+            var show = true;
+            if (q && blob.indexOf(q) === -1) { show = false; }
+            if (show && d && diseases.indexOf(d) === -1) { show = false; }
+            if (show && t && tags.indexOf(t) === -1) { show = false; }
+            if (show && s && card.getAttribute('data-status') !== s) { show = false; }
+            card.hidden = !show;
+            if (show) { visible += 1; }
+          });
+          count.textContent = visible + ' of ' + total + ' chapter' + (total === 1 ? '' : 's');
+          empty.hidden = visible !== 0;
+        }
+        [search, disease, tag, status].forEach(function(el) {
+          el.addEventListener('input', apply);
+          el.addEventListener('change', apply);
+        });
+        apply();
+      })();
+    </script>
     
   </main>
   <script>
