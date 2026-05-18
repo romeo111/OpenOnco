@@ -337,6 +337,63 @@ def test_engine_bundle_excludes_heavy_unused_subtrees(site_dir: Path):
 # ── Examples payload ──────────────────────────────────────────────────────
 
 
+def test_try_page_has_example_search_input(site_dir: Path):
+    """A search input must be available near the examples picker so
+    users can find examples across diseases (not just the active one)."""
+    for path in (site_dir / "try.html", site_dir / "ukr" / "try.html"):
+        html = path.read_text(encoding="utf-8")
+        assert 'id="exampleSearch"' in html, f"{path}: missing exampleSearch input"
+        assert 'id="exampleSearchCount"' in html, f"{path}: missing search count chip"
+        assert 'id="exampleSearchClear"' in html, f"{path}: missing clear button"
+        assert "function exampleSearchBlob" in html, f"{path}: missing JS search helper"
+        assert "function exampleSearchMatches" in html, f"{path}: missing match helper"
+
+
+def test_examples_manifest_carries_searchable_fields(site_dir: Path):
+    """The inlined EXAMPLES_MANIFEST on /try.html must include the
+    enriched search tokens — disease names, biomarker ids, regimen
+    name, line of therapy — otherwise the search bar would find nothing."""
+    html = (site_dir / "try.html").read_text(encoding="utf-8")
+    # Locate the inline manifest JS array.
+    import re as _re
+    m = _re.search(r"const EXAMPLES_MANIFEST = (\[.*?\]);\nconst PAGE_LANG", html, _re.S)
+    assert m, "EXAMPLES_MANIFEST inline literal not found"
+    manifest = json.loads(m.group(1))
+    assert manifest, "EXAMPLES_MANIFEST is empty"
+    # Spot-check every required field is present on at least 50% of entries
+    # (every entry should have these — diagnostic-only profiles may lack a
+    # regimen/line, which is fine).
+    keys_required = {
+        "case_id", "label", "label_en", "summary", "summary_en",
+        "disease_id", "disease_name_en", "disease_name_ua",
+        "biomarker_ids", "category",
+    }
+    sample = manifest[0]
+    for k in keys_required:
+        assert k in sample, f"manifest entry missing key: {k}"
+    # At least some entries carry line_of_therapy + regimen_name (verified ones).
+    assert any(e.get("regimen_name") for e in manifest), \
+        "no manifest entry has regimen_name — search by FOLFOX/CHOEP/etc will fail"
+    assert any(e.get("line_of_therapy") is not None for e in manifest), \
+        "no manifest entry has line_of_therapy — search by '2L' will fail"
+
+
+def test_verified_examples_reach_public_payload(site_dir: Path):
+    """Verified-treatment-example case ids must show up in docs/examples.json."""
+    payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
+    verified = [e for e in payload if (e.get("case_id") or "").startswith("verified-")]
+    # At least 10 — generator runs may produce more or fewer, but a near-zero
+    # count signals the auto-block wasn't picked up by the build.
+    assert len(verified) >= 10, (
+        f"only {len(verified)} verified examples in payload — site_cases "
+        f"auto-block may be missing or unreadable"
+    )
+    for entry in verified:
+        assert entry.get("quality_label_en"), entry["case_id"]
+        # Every verified patient JSON carries the target indication.
+        assert entry["json"].get("_target_indication_id"), entry["case_id"]
+
+
 def test_examples_payload_matches_cases(site_dir: Path):
     payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
     case_ids_payload = {e["case_id"] for e in payload}
