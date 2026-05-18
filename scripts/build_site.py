@@ -1147,8 +1147,12 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
             f'<a href="/ukr/capabilities.html"{cls("capabilities")}>Можливості</a>'
         )
     else:  # target_lang == "en"
+        # Handbook is EN-only MVP — only surfaced on EN nav. When UA chapters
+        # land, mirror this into the UA branch and add the page kind to
+        # _lang_switch_href.
         extra_links = (
             f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>'
+            f'<a href="/handbook.html"{cls("handbook")}>Handbook</a>'
         )
 
     # Stable visual order is always [UA · EN] regardless of which language
