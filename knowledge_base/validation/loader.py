@@ -72,6 +72,13 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
     "workups": [
         # required_tests handled specially (list of Test IDs)
     ],
+    "handbook_chapters": [
+        # disease_ids, source_ids, and linked_entities handled specially
+    ],
+    "handbook_questions": [
+        ("chapter_id", "handbook_chapters"),
+        # source_ids and linked_entity_ids handled specially
+    ],
     "reviewers": [],
     # §17 ratified 2026-05-07 — Surgery + RadiationCourse first-class entities.
     "procedures": [
@@ -406,6 +413,14 @@ def _load_content_impl(
                  f"{field_label}: '{ref_id}' found but as {actual_type}, expected {target_type}")
             )
 
+    def check_any_ref(path: Path, ref_id, field_label: str) -> None:
+        if ref_id is None or ref_id == "":
+            return
+        if ref_id not in result.entities_by_id:
+            result.ref_errors.append(
+                (path, f"{field_label}: '{ref_id}' not found in any loaded entity")
+            )
+
     for eid, info in result.entities_by_id.items():
         etype = info["type"]
         data = info["data"]
@@ -568,6 +583,43 @@ def _load_content_impl(
             roles_block = data.get("triggers_mdt_roles") or {}
             # role IDs are NOT validated against KB entities — they're a
             # closed enum in mdt_orchestrator._ROLE_CATALOG, not KB content
+
+        elif etype == "handbook_chapters":
+            for i, did in enumerate(data.get("disease_ids") or []):
+                check_ref(path, did, "diseases", f"disease_ids[{i}]")
+            for i, sid in enumerate(data.get("source_ids") or []):
+                check_ref(path, sid, "sources", f"source_ids[{i}]")
+            linked = data.get("linked_entities") or {}
+            linked_targets = {
+                "diseases": "diseases",
+                "algorithms": "algorithms",
+                "indications": "indications",
+                "regimens": "regimens",
+                "redflags": "redflags",
+                "biomarkers": "biomarkers",
+                "workups": "workups",
+                "tests": "tests",
+            }
+            for field_name, target_type in linked_targets.items():
+                for i, ref_id in enumerate(linked.get(field_name) or []):
+                    check_ref(
+                        path,
+                        ref_id,
+                        target_type,
+                        f"linked_entities.{field_name}[{i}]",
+                    )
+            for section_i, section in enumerate(data.get("sections") or []):
+                if not isinstance(section, dict):
+                    continue
+                for i, sid in enumerate(section.get("source_ids") or []):
+                    check_ref(path, sid, "sources", f"sections[{section_i}].source_ids[{i}]")
+                for i, ref_id in enumerate(section.get("linked_entity_ids") or []):
+                    check_any_ref(path, ref_id, f"sections[{section_i}].linked_entity_ids[{i}]")
+        elif etype == "handbook_questions":
+            for i, sid in enumerate(data.get("source_ids") or []):
+                check_ref(path, sid, "sources", f"source_ids[{i}]")
+            for i, ref_id in enumerate(data.get("linked_entity_ids") or []):
+                check_any_ref(path, ref_id, f"linked_entity_ids[{i}]")
 
         # Generic top-level sources list (lots of entities have it).
         # Drafts skip ref-check on sources because authors leave SRC-TODO

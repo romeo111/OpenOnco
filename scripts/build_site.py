@@ -68,6 +68,7 @@ from knowledge_base import __version__ as OPENONCO_VERSION
 from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
 from knowledge_base.stats import collect_stats
 from scripts.audit_clinical_gaps import write_outputs as write_clinical_gap_outputs
+from scripts.build_handbook import build_handbook
 from scripts.build_kb_wiki import build_kb_wiki
 from scripts.site_cases import (
     BROKEN_CASE_IDS,
@@ -9258,6 +9259,7 @@ def build_site(output_dir: Path) -> dict:
     case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
     disease_coverage_payload = bundle_disease_coverage(output_dir)
     kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
+    handbook_payload = build_handbook(KB_ROOT, output_dir)
     clinical_gap_payload = write_clinical_gap_outputs(output_dir)
     discovery_payload = finalize_site_discovery(output_dir)
 
@@ -9273,6 +9275,7 @@ def build_site(output_dir: Path) -> dict:
         "questionnaires_payload": questionnaires_payload,
         "disease_coverage_payload": disease_coverage_payload,
         "kb_wiki_payload": kb_wiki_payload,
+        "handbook_payload": handbook_payload,
         "clinical_gap_payload": clinical_gap_payload,
         "discovery_payload": discovery_payload,
         "landing_assets": landing_assets,

@@ -1,0 +1,116 @@
+id: HB-DLBCL-1L
+title: "Diffuse large B-cell lymphoma: first-line reasoning"
+audience: hcp_learner
+language: en
+disease_ids:
+  - DIS-DLBCL-NOS
+topic_tags:
+  - lymphoma
+  - first-line
+  - biomarkers
+  - treatment-selection
+learning_objectives:
+  - "Identify the minimum diagnostic and biomarker inputs needed before first-line DLBCL treatment selection."
+  - "Explain how IPI risk, fitness, organ function, and biology influence R-CHOP versus Pola-R-CHP reasoning."
+  - "Recognize red flags that do not switch the regimen but must change supportive care or MDT discussion."
+at_a_glance:
+  - "Confirmed histology and CD20 positivity are required before first-line treatment planning."
+  - "IPI and fitness gates drive the first-line algorithm in OpenOnco."
+  - "R-CHOP remains the standard track; Pola-R-CHP is modeled as the intensified track for higher-risk disease when accessible."
+  - "HBV, HCV, HIV, cardiac function, pregnancy, and CNS-risk checks sit beside regimen selection and must not be skipped."
+  - "This chapter is an OpenOnco-authored learning aid, not official ESMO content or a CME-credit activity."
+linked_entities:
+  diseases:
+    - DIS-DLBCL-NOS
+  algorithms:
+    - ALGO-DLBCL-1L
+  indications:
+    - IND-DLBCL-1L-RCHOP
+    - IND-DLBCL-1L-POLA-R-CHP
+  regimens:
+    - REG-R-CHOP
+    - REG-POLA-R-CHP
+  redflags:
+    - RF-DLBCL-HIGH-IPI
+    - RF-DLBCL-HIGH-RISK-BIOLOGY
+    - RF-DLBCL-CNS-RISK
+    - RF-DLBCL-ORGAN-DYSFUNCTION
+    - RF-DLBCL-FRAILTY-AGE
+  biomarkers:
+    - BIO-CD20-IHC
+    - BIO-DLBCL-IPI
+    - BIO-HBV-STATUS
+    - BIO-HCV-STATUS
+    - BIO-HIV-STATUS
+    - BIO-DLBCL-COO-HANS
+    - BIO-BCL2-EXPRESSION-IHC
+  tests:
+    - TEST-CBC
+    - TEST-CMP
+    - TEST-LDH
+    - TEST-HBV-SEROLOGY
+    - TEST-HCV-ANTIBODY
+    - TEST-HIV-SEROLOGY
+    - TEST-CD20-IHC
+    - TEST-PET-CT
+    - TEST-ECHO
+    - TEST-FISH-PANEL
+source_ids:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+  - SRC-ESMO-LYMPHOMA-2025
+  - SRC-POLARIX-TILLY-2022
+sections:
+  - heading: "Diagnostic minimum"
+    body: "The learning path starts after histology confirms DLBCL NOS. The chapter expects a CD20 result, baseline staging, LDH, ECOG/fitness, cardiac function, viral screening, pregnancy status when relevant, and FISH or equivalent testing to rule out high-grade double-hit biology."
+    source_ids:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-DLBCL-2024
+    linked_entity_ids:
+      - DIS-DLBCL-NOS
+      - BIO-CD20-IHC
+      - TEST-PET-CT
+      - TEST-FISH-PANEL
+  - heading: "First-line decision logic"
+    body: "OpenOnco models the first-line decision as a standard R-CHOP track and an intensified Pola-R-CHP track. Frailty or organ dysfunction is evaluated before intensification. Higher IPI or high-risk biology can move the learner toward the intensified track if access and contraindications are addressed."
+    source_ids:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-DLBCL-2024
+      - SRC-POLARIX-TILLY-2022
+    linked_entity_ids:
+      - ALGO-DLBCL-1L
+      - IND-DLBCL-1L-RCHOP
+      - IND-DLBCL-1L-POLA-R-CHP
+      - RF-DLBCL-HIGH-IPI
+      - RF-DLBCL-HIGH-RISK-BIOLOGY
+  - heading: "Common traps"
+    body: "Do not treat regimen selection as the whole task. HBV reactivation prevention, HIV drug interaction review, HCV coordination, CNS-risk assessment, baseline LVEF, and pregnancy screening are parallel obligations. Some of these do not change the selected indication but still change safety planning."
+    source_ids:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-DLBCL-2024
+    linked_entity_ids:
+      - RF-DLBCL-CNS-RISK
+      - RF-DLBCL-ORGAN-DYSFUNCTION
+      - BIO-HBV-STATUS
+      - BIO-HIV-STATUS
+case_links:
+  - id: patient_dlbcl_low_ipi
+    title: "Low-IPI newly diagnosed DLBCL"
+    path: "examples/patient_dlbcl_low_ipi.json"
+    learning_focus:
+      - "standard-track reasoning"
+      - "baseline workup completeness"
+  - id: patient_dlbcl_high_ipi
+    title: "High-IPI newly diagnosed DLBCL"
+    path: "examples/patient_dlbcl_high_ipi.json"
+    learning_focus:
+      - "intensification trigger"
+      - "Pola-R-CHP access caveat"
+question_ids:
+  - HQ-DLBCL-1L-001
+  - HQ-DLBCL-1L-002
+  - HQ-DLBCL-1L-003
+review_status: draft
+last_reviewed: null
+legal_notes: "OpenOnco-authored educational content. Do not copy ESMO handbook text, tables, figures, or CME questions into this entity."
+notes: "MVP seed chapter for Handbook Mode implementation."

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diffuse large B-cell lymphoma: first-line reasoning - OpenOnco Handbook</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .hb-wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; }
+    .hb-kicker { color: #4b5563; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+    .hb-hero { display: grid; gap: 14px; border-bottom: 1px solid #d6dee8; padding-bottom: 22px; }
+    .hb-hero h1 { margin: 0; font-size: 34px; line-height: 1.08; }
+    .hb-lead { max-width: 820px; color: #334155; font-size: 17px; line-height: 1.55; }
+    .hb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+    .hb-card, .hb-panel, .hb-question { border: 1px solid #d6dee8; border-radius: 8px; background: #fff; padding: 16px; }
+    .hb-card h2, .hb-panel h2 { margin-top: 0; font-size: 20px; }
+    .hb-card a { color: #0f766e; font-weight: 700; text-decoration: none; }
+    .hb-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .hb-badge { display: inline-flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 999px; padding: 3px 8px; font-size: 12px; background: #f8fafc; color: #334155; }
+    .hb-badge--draft { border-color: #f59e0b; background: #fffbeb; color: #92400e; }
+    .hb-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; margin-top: 24px; }
+    .hb-main { display: grid; gap: 18px; }
+    .hb-side { display: grid; gap: 16px; align-content: start; }
+    .hb-chip-grid { display: grid; gap: 8px; }
+    .hb-chip { display: grid; gap: 3px; border: 1px solid #d6dee8; border-radius: 6px; padding: 8px; }
+    .hb-chip small { color: #64748b; }
+    .hb-question-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .hb-answer-toggle { border: 1px solid #0f766e; background: #0f766e; color: #fff; border-radius: 6px; padding: 7px 10px; cursor: pointer; }
+    .hb-answer { margin-top: 12px; border-left: 3px solid #0f766e; padding-left: 12px; color: #1f2937; }
+    .hb-disclaimer { border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px; color: #78350f; }
+    @media (max-width: 860px) { .hb-layout { grid-template-columns: 1fr; } .hb-hero h1 { font-size: 28px; } }
+  </style>
+</head>
+<body>
+  <main class="hb-wrap">
+    
+    <section class="hb-hero">
+      <div class="hb-kicker"><a href="/handbook.html">OpenOnco Handbook</a></div>
+      <h1>Diffuse large B-cell lymphoma: first-line reasoning</h1>
+      <div class="hb-meta">
+        <span class="hb-badge hb-badge--draft">draft</span>
+        <span class="hb-badge">hcp_learner</span>
+        <span class="hb-badge">en</span>
+      </div>
+      <p class="hb-lead">Deterministic learning chapter over OpenOnco KB entities,
+      synthetic cases, and source records.</p>
+    </section>
+    <div class="hb-layout">
+      <div class="hb-main">
+        <section class="hb-panel">
+          <h2>Learning objectives</h2>
+          <ol><li>Identify the minimum diagnostic and biomarker inputs needed before first-line DLBCL treatment selection.</li><li>Explain how IPI risk, fitness, organ function, and biology influence R-CHOP versus Pola-R-CHP reasoning.</li><li>Recognize red flags that do not switch the regimen but must change supportive care or MDT discussion.</li></ol>
+        </section>
+        <section class="hb-panel">
+          <h2>At a glance</h2>
+          <ul><li>Confirmed histology and CD20 positivity are required before first-line treatment planning.</li><li>IPI and fitness gates drive the first-line algorithm in OpenOnco.</li><li>R-CHOP remains the standard track; Pola-R-CHP is modeled as the intensified track for higher-risk disease when accessible.</li><li>HBV, HCV, HIV, cardiac function, pregnancy, and CNS-risk checks sit beside regimen selection and must not be skipped.</li><li>This chapter is an OpenOnco-authored learning aid, not official ESMO content or a CME-credit activity.</li></ul>
+        </section>
+        
+            <section class="hb-panel">
+              <h2>Diagnostic minimum</h2>
+              <p>The learning path starts after histology confirms DLBCL NOS. The chapter expects a CD20 result, baseline staging, LDH, ECOG/fitness, cardiac function, viral screening, pregnancy status when relevant, and FISH or equivalent testing to rule out high-grade double-hit biology.</p>
+              <h3>Linked entities</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-DLBCL-NOS</code><span>Diffuse Large B-Cell Lymphoma, Not Otherwise Specified</span><small>diseases</small></span><span class="hb-chip"><code>BIO-CD20-IHC</code><span>CD20 expression (IHC)</span><small>biomarkers</small></span><span class="hb-chip"><code>TEST-PET-CT</code><span>FDG PET/CT (whole body)</span><small>tests</small></span><span class="hb-chip"><code>TEST-FISH-PANEL</code><span>FISH (Fluorescence In Situ Hybridization)</span><small>tests</small></span></div>
+              <h3>Section sources</h3>
+              <ul><li><code>SRC-NCCN-BCELL-2025</code> NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas</li><li><code>SRC-ESMO-DLBCL-2024</code> ESMO Clinical Practice Guideline on Diffuse Large B-Cell Lymphoma</li></ul>
+            </section>
+            
+            <section class="hb-panel">
+              <h2>First-line decision logic</h2>
+              <p>OpenOnco models the first-line decision as a standard R-CHOP track and an intensified Pola-R-CHP track. Frailty or organ dysfunction is evaluated before intensification. Higher IPI or high-risk biology can move the learner toward the intensified track if access and contraindications are addressed.</p>
+              <h3>Linked entities</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>ALGO-DLBCL-1L</code><span>ALGO-DLBCL-1L</span><small>algorithms</small></span><span class="hb-chip"><code>IND-DLBCL-1L-RCHOP</code><span>IND-DLBCL-1L-RCHOP</span><small>indications</small></span><span class="hb-chip"><code>IND-DLBCL-1L-POLA-R-CHP</code><span>IND-DLBCL-1L-POLA-R-CHP</span><small>indications</small></span><span class="hb-chip"><code>RF-DLBCL-HIGH-IPI</code><span>DLBCL with International Prognostic Index ≥2 — selects intensified Pola-R-CHP over R-CHOP per POLARIX evidence</span><small>redflags</small></span><span class="hb-chip"><code>RF-DLBCL-HIGH-RISK-BIOLOGY</code><span>High-risk biology in DLBCL NOS: double-expressor (MYC + BCL2 by IHC, no rearrangement), TP53 mutation, or non-GCB cell-of-origin in elderly / high-IPI context. Distinct from HGBL &quot;double-hit&quot; which is its own entity (DIS-HGBL-DH) — but double-expressor remains DLBCL NOS and shifts toward intensified backbone.
+</span><small>redflags</small></span></div>
+              <h3>Section sources</h3>
+              <ul><li><code>SRC-NCCN-BCELL-2025</code> NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas</li><li><code>SRC-ESMO-DLBCL-2024</code> ESMO Clinical Practice Guideline on Diffuse Large B-Cell Lymphoma</li><li><code>SRC-POLARIX-TILLY-2022</code> Polatuzumab Vedotin in Previously Untreated Diffuse Large B-Cell Lymphoma</li></ul>
+            </section>
+            
+            <section class="hb-panel">
+              <h2>Common traps</h2>
+              <p>Do not treat regimen selection as the whole task. HBV reactivation prevention, HIV drug interaction review, HCV coordination, CNS-risk assessment, baseline LVEF, and pregnancy screening are parallel obligations. Some of these do not change the selected indication but still change safety planning.</p>
+              <h3>Linked entities</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>RF-DLBCL-CNS-RISK</code><span>DLBCL with high CNS-IPI risk (CNS-IPI ≥4) OR specific anatomic sites (testicular, breast, kidney/adrenal, paranasal sinus, bone marrow with high-risk pathology) — triggers CNS prophylaxis pathway</span><small>redflags</small></span><span class="hb-chip"><code>RF-DLBCL-ORGAN-DYSFUNCTION</code><span>Baseline organ dysfunction precluding standard R-CHOP doses: LVEF &lt;50% (anthracycline contraindicated), CrCl &lt;30 mL/min (severe cyclophosphamide / methotrexate dose constraints), bilirubin &gt;3× ULN (vincristine / doxorubicin metabolism), or DLCO &lt;60% (lung-toxicity risk on CHOP-based therapy).
+</span><small>redflags</small></span><span class="hb-chip"><code>BIO-HBV-STATUS</code><span>Hepatitis B virus status</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-HIV-STATUS</code><span>HIV status</span><small>biomarkers</small></span></div>
+              <h3>Section sources</h3>
+              <ul><li><code>SRC-NCCN-BCELL-2025</code> NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas</li><li><code>SRC-ESMO-DLBCL-2024</code> ESMO Clinical Practice Guideline on Diffuse Large B-Cell Lymphoma</li></ul>
+            </section>
+            
+        <section class="hb-panel">
+          <h2>Worked synthetic cases</h2>
+          <ul><li><code>patient_dlbcl_low_ipi</code> Low-IPI newly diagnosed DLBCL - <span>standard-track reasoning, baseline workup completeness</span> <small>examples/patient_dlbcl_low_ipi.json</small></li><li><code>patient_dlbcl_high_ipi</code> High-IPI newly diagnosed DLBCL - <span>intensification trigger, Pola-R-CHP access caveat</span> <small>examples/patient_dlbcl_high_ipi.json</small></li></ul>
+        </section>
+        <section class="hb-panel">
+          <h2>Practice questions</h2>
+          
+      <article class="hb-question" data-answer="A">
+        <div class="hb-question-top">
+          <span>Question 1</span>
+          <span class="hb-badge">type_a</span>
+          <span class="hb-badge">intro</span>
+        </div>
+        <p>A fit patient has newly diagnosed CD20-positive DLBCL NOS with IPI 0-1 and no major organ dysfunction. In the OpenOnco first-line learning model, which track is the standard default?</p>
+        <ol><li><strong>A.</strong> R-CHOP standard track</li><li><strong>B.</strong> Pola-R-CHP intensified track</li><li><strong>C.</strong> DA-EPOCH-R for all DLBCL patients</li><li><strong>D.</strong> Observation until progression</li></ol>
+        <button type="button" class="hb-answer-toggle">Show answer</button>
+        <div class="hb-answer" hidden>
+          <strong>Answer: A</strong>
+          <p>The first-line DLBCL algorithm keeps R-CHOP as the standard default when low-risk features are present and no intensification red flag dominates. Pola-R-CHP is modeled as the intensified track for higher-risk disease where access and contraindications are addressed.</p>
+        </div>
+      </article>
+    
+      <article class="hb-question" data-answer="A">
+        <div class="hb-question-top">
+          <span>Question 2</span>
+          <span class="hb-badge">type_a</span>
+          <span class="hb-badge">intro</span>
+        </div>
+        <p>Which missing baseline item most directly blocks safe anthracycline-containing regimen planning in this chapter?</p>
+        <ol><li><strong>A.</strong> Baseline LVEF or equivalent cardiac assessment</li><li><strong>B.</strong> Favorite patient-reported diet</li><li><strong>C.</strong> Hair color</li><li><strong>D.</strong> Non-clinical travel preference</li></ol>
+        <button type="button" class="hb-answer-toggle">Show answer</button>
+        <div class="hb-answer" hidden>
+          <strong>Answer: A</strong>
+          <p>R-CHOP and Pola-R-CHP are anthracycline-containing pathways. Baseline cardiac function is a safety gate because low LVEF can contraindicate anthracycline exposure.</p>
+        </div>
+      </article>
+    
+      <article class="hb-question" data-answer="A,B,D">
+        <div class="hb-question-top">
+          <span>Question 3</span>
+          <span class="hb-badge">type_k</span>
+          <span class="hb-badge">intermediate</span>
+        </div>
+        <p>For first-line DLBCL reasoning, which statements are true in the OpenOnco handbook model?</p>
+        <ol><li><strong>A.</strong> HBV screening is a parallel safety requirement with anti-CD20 treatment.</li><li><strong>B.</strong> CNS-risk assessment may change prophylaxis discussion without necessarily switching the main regimen.</li><li><strong>C.</strong> The chapter should be treated as official ESMO CME content.</li><li><strong>D.</strong> IPI can influence whether intensified-track reasoning is considered.</li></ol>
+        <button type="button" class="hb-answer-toggle">Show answer</button>
+        <div class="hb-answer" hidden>
+          <strong>Answer: A,B,D</strong>
+          <p>HBV screening, CNS-risk assessment, and IPI-driven risk stratification are all relevant. The handbook chapter is OpenOnco-authored educational content and must not be represented as official ESMO material.</p>
+        </div>
+      </article>
+    
+        </section>
+      </div>
+      <aside class="hb-side">
+        <section class="hb-panel hb-disclaimer">
+          <strong>Educational use only.</strong>
+          <p>This OpenOnco-authored chapter is not official ESMO material,
+          not a CME-credit activity, and not patient-specific medical advice.</p>
+        </section>
+        <section class="hb-panel">
+          <h2>Chapter sources</h2>
+          <ul><li><code>SRC-NCCN-BCELL-2025</code> NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas</li><li><code>SRC-ESMO-DLBCL-2024</code> ESMO Clinical Practice Guideline on Diffuse Large B-Cell Lymphoma</li><li><code>SRC-ESMO-LYMPHOMA-2025</code> Lymphomas: ESMO Clinical Practice Guideline for diagnosis, treatment and follow-up</li><li><code>SRC-POLARIX-TILLY-2022</code> Polatuzumab Vedotin in Previously Untreated Diffuse Large B-Cell Lymphoma</li></ul>
+        </section>
+        <section class="hb-panel">
+          <h2>Entity map</h2>
+          <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-DLBCL-NOS</code><span>Diffuse Large B-Cell Lymphoma, Not Otherwise Specified</span><small>diseases</small></span><span class="hb-chip"><code>ALGO-DLBCL-1L</code><span>ALGO-DLBCL-1L</span><small>algorithms</small></span><span class="hb-chip"><code>IND-DLBCL-1L-RCHOP</code><span>IND-DLBCL-1L-RCHOP</span><small>indications</small></span><span class="hb-chip"><code>IND-DLBCL-1L-POLA-R-CHP</code><span>IND-DLBCL-1L-POLA-R-CHP</span><small>indications</small></span><span class="hb-chip"><code>REG-R-CHOP</code><span>Rituximab + CHOP (R-CHOP), 6 cycles</span><small>regimens</small></span><span class="hb-chip"><code>REG-POLA-R-CHP</code><span>Polatuzumab vedotin + Rituximab + CHP (Pola-R-CHP), 6 cycles + 2× rituximab</span><small>regimens</small></span><span class="hb-chip"><code>RF-DLBCL-HIGH-IPI</code><span>DLBCL with International Prognostic Index ≥2 — selects intensified Pola-R-CHP over R-CHOP per POLARIX evidence</span><small>redflags</small></span><span class="hb-chip"><code>RF-DLBCL-HIGH-RISK-BIOLOGY</code><span>High-risk biology in DLBCL NOS: double-expressor (MYC + BCL2 by IHC, no rearrangement), TP53 mutation, or non-GCB cell-of-origin in elderly / high-IPI context. Distinct from HGBL &quot;double-hit&quot; which is its own entity (DIS-HGBL-DH) — but double-expressor remains DLBCL NOS and shifts toward intensified backbone.
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-DLBCL-CNS-RISK</code><span>DLBCL with high CNS-IPI risk (CNS-IPI ≥4) OR specific anatomic sites (testicular, breast, kidney/adrenal, paranasal sinus, bone marrow with high-risk pathology) — triggers CNS prophylaxis pathway</span><small>redflags</small></span><span class="hb-chip"><code>RF-DLBCL-ORGAN-DYSFUNCTION</code><span>Baseline organ dysfunction precluding standard R-CHOP doses: LVEF &lt;50% (anthracycline contraindicated), CrCl &lt;30 mL/min (severe cyclophosphamide / methotrexate dose constraints), bilirubin &gt;3× ULN (vincristine / doxorubicin metabolism), or DLCO &lt;60% (lung-toxicity risk on CHOP-based therapy).
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-DLBCL-FRAILTY-AGE</code><span>Frailty profile precluding full-dose R-CHOP: ECOG ≥3, OR (age ≥80 with ≥1 grade-2 comorbidity), OR composite frailty (age ≥75 + hypoalbuminemia &lt;3.0 + ≥2 concomitant comorbidities).
+</span><small>redflags</small></span><span class="hb-chip"><code>BIO-CD20-IHC</code><span>CD20 expression (IHC)</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-DLBCL-IPI</code><span>International Prognostic Index for DLBCL</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-HBV-STATUS</code><span>Hepatitis B virus status</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-HCV-STATUS</code><span>Hepatitis C virus status</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-HIV-STATUS</code><span>HIV status</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-DLBCL-COO-HANS</code><span>Cell-of-origin classification by Hans algorithm</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-BCL2-EXPRESSION-IHC</code><span>BCL2 expression by immunohistochemistry</span><small>biomarkers</small></span><span class="hb-chip"><code>TEST-CBC</code><span>Complete Blood Count with Differential</span><small>tests</small></span><span class="hb-chip"><code>TEST-CMP</code><span>Comprehensive Metabolic Panel</span><small>tests</small></span><span class="hb-chip"><code>TEST-LDH</code><span>Lactate Dehydrogenase</span><small>tests</small></span><span class="hb-chip"><code>TEST-HBV-SEROLOGY</code><span>Hepatitis B Serology Panel (HBsAg, anti-HBc total, anti-HBs)</span><small>tests</small></span><span class="hb-chip"><code>TEST-HCV-ANTIBODY</code><span>HCV Antibody</span><small>tests</small></span><span class="hb-chip"><code>TEST-HIV-SEROLOGY</code><span>HIV Antibody/Antigen</span><small>tests</small></span><span class="hb-chip"><code>TEST-CD20-IHC</code><span>CD20 Immunohistochemistry</span><small>tests</small></span><span class="hb-chip"><code>TEST-PET-CT</code><span>FDG PET/CT (whole body)</span><small>tests</small></span><span class="hb-chip"><code>TEST-ECHO</code><span>Echocardiography</span><small>tests</small></span><span class="hb-chip"><code>TEST-FISH-PANEL</code><span>FISH (Fluorescence In Situ Hybridization)</span><small>tests</small></span></div>
+        </section>
+      </aside>
+    </div>
+    
+  </main>
+  <script>
+    document.querySelectorAll('.hb-answer-toggle').forEach((button) => {
+      button.addEventListener('click', () => {
+        const answer = button.parentElement.querySelector('.hb-answer');
+        answer.hidden = !answer.hidden;
+        button.textContent = answer.hidden ? 'Show answer' : 'Hide answer';
+      });
+    });
+  </script>
+</body>
+</html>

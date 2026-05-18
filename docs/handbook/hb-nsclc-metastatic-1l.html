@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Metastatic NSCLC: driver-first treatment reasoning - OpenOnco Handbook</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .hb-wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; }
+    .hb-kicker { color: #4b5563; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+    .hb-hero { display: grid; gap: 14px; border-bottom: 1px solid #d6dee8; padding-bottom: 22px; }
+    .hb-hero h1 { margin: 0; font-size: 34px; line-height: 1.08; }
+    .hb-lead { max-width: 820px; color: #334155; font-size: 17px; line-height: 1.55; }
+    .hb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+    .hb-card, .hb-panel, .hb-question { border: 1px solid #d6dee8; border-radius: 8px; background: #fff; padding: 16px; }
+    .hb-card h2, .hb-panel h2 { margin-top: 0; font-size: 20px; }
+    .hb-card a { color: #0f766e; font-weight: 700; text-decoration: none; }
+    .hb-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .hb-badge { display: inline-flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 999px; padding: 3px 8px; font-size: 12px; background: #f8fafc; color: #334155; }
+    .hb-badge--draft { border-color: #f59e0b; background: #fffbeb; color: #92400e; }
+    .hb-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; margin-top: 24px; }
+    .hb-main { display: grid; gap: 18px; }
+    .hb-side { display: grid; gap: 16px; align-content: start; }
+    .hb-chip-grid { display: grid; gap: 8px; }
+    .hb-chip { display: grid; gap: 3px; border: 1px solid #d6dee8; border-radius: 6px; padding: 8px; }
+    .hb-chip small { color: #64748b; }
+    .hb-question-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .hb-answer-toggle { border: 1px solid #0f766e; background: #0f766e; color: #fff; border-radius: 6px; padding: 7px 10px; cursor: pointer; }
+    .hb-answer { margin-top: 12px; border-left: 3px solid #0f766e; padding-left: 12px; color: #1f2937; }
+    .hb-disclaimer { border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px; color: #78350f; }
+    @media (max-width: 860px) { .hb-layout { grid-template-columns: 1fr; } .hb-hero h1 { font-size: 28px; } }
+  </style>
+</head>
+<body>
+  <main class="hb-wrap">
+    
+    <section class="hb-hero">
+      <div class="hb-kicker"><a href="/handbook.html">OpenOnco Handbook</a></div>
+      <h1>Metastatic NSCLC: driver-first treatment reasoning</h1>
+      <div class="hb-meta">
+        <span class="hb-badge hb-badge--draft">draft</span>
+        <span class="hb-badge">hcp_learner</span>
+        <span class="hb-badge">en</span>
+      </div>
+      <p class="hb-lead">Deterministic learning chapter over OpenOnco KB entities,
+      synthetic cases, and source records.</p>
+    </section>
+    <div class="hb-layout">
+      <div class="hb-main">
+        <section class="hb-panel">
+          <h2>Learning objectives</h2>
+          <ol><li>Explain why metastatic NSCLC first-line reasoning starts with actionable driver testing before PD-L1-only decisions.</li><li>Distinguish EGFR, ALK, ROS1, MET exon 14, RET, BRAF V600E, and NTRK driver branches from driver-negative immunotherapy branches.</li><li>Recognize PD-L1 TPS as a treatment-stratifying marker only after actionable drivers are excluded or addressed.</li></ol>
+        </section>
+        <section class="hb-panel">
+          <h2>At a glance</h2>
+          <ul><li>Comprehensive molecular testing is the central first-line gate in metastatic NSCLC.</li><li>Actionable drivers route to targeted therapy branches before PD-L1 immunotherapy branches.</li><li>PD-L1 TPS still matters, but mainly in the driver-negative pathway.</li><li>Brain metastases, frailty, organ dysfunction, and urgent complications remain parallel MDT concerns.</li><li>The chapter is OpenOnco-authored educational content, not official ESMO or CME material.</li></ul>
+        </section>
+        
+            <section class="hb-panel">
+              <h2>Driver-first cascade</h2>
+              <p>The metastatic NSCLC chapter emphasizes driver-first routing. EGFR, ALK, ROS1, MET exon 14, RET, BRAF V600E, and NTRK are evaluated before the driver-negative PD-L1 immunotherapy pathway.</p>
+              <h3>Linked entities</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>ALGO-NSCLC-METASTATIC-1L</code><span>ALGO-NSCLC-METASTATIC-1L</span><small>algorithms</small></span><span class="hb-chip"><code>RF-NSCLC-HIGH-RISK-BIOLOGY</code><span>Actionable molecular driver detected (EGFR / ALK / ROS1 / KRAS G12C / BRAF V600E / MET ex14 / RET / NTRK / HER2 mut) — driver-targeted TKI / ADC takes precedence over ICI ± chemo regardless of PD-L1 TPS.</span><small>redflags</small></span><span class="hb-chip"><code>TEST-NGS-COMPREHENSIVE</code><span>Comprehensive NGS tumor panel (DNA + RNA, ≥300 genes)</span><small>tests</small></span></div>
+              <h3>Section sources</h3>
+              <ul><li><code>SRC-NCCN-NSCLC-2025</code> NCCN Clinical Practice Guidelines — Non-Small Cell Lung Cancer</li><li><code>SRC-ESMO-NSCLC-METASTATIC-2024</code> ESMO Clinical Practice Guideline on Metastatic Non-Small Cell Lung Cancer</li></ul>
+            </section>
+            
+            <section class="hb-panel">
+              <h2>EGFR branch</h2>
+              <p>Classical sensitizing EGFR alterations route to the EGFR first-line branch in the OpenOnco model. PD-L1 expression should not be used to skip driver-directed reasoning.</p>
+              <h3>Linked entities</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>BIO-EGFR-MUTATION</code><span>EGFR mutation status (NSCLC actionable)</span><small>biomarkers</small></span><span class="hb-chip"><code>IND-NSCLC-EGFR-MUT-MET-1L</code><span>IND-NSCLC-EGFR-MUT-MET-1L</span><small>indications</small></span><span class="hb-chip"><code>REG-OSIMERTINIB-NSCLC</code><span>Osimertinib monotherapy (EGFR-mut NSCLC, 1L metastatic OR adjuvant)</span><small>regimens</small></span></div>
+              <h3>Section sources</h3>
+              <ul><li><code>SRC-FLAURA-SORIA-2018</code> Osimertinib in Untreated EGFR-Mutated Advanced Non-Small-Cell Lung Cancer</li><li><code>SRC-NCCN-NSCLC-2025</code> NCCN Clinical Practice Guidelines — Non-Small Cell Lung Cancer</li></ul>
+            </section>
+            
+            <section class="hb-panel">
+              <h2>Driver-negative pathway</h2>
+              <p>When no actionable driver is found, PD-L1 TPS helps separate pembrolizumab monotherapy from chemo-immunotherapy strategies. Frailty, organ dysfunction, and urgent thoracic complications remain safety gates.</p>
+              <h3>Linked entities</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>BIO-PDL1-TPS</code><span>PD-L1 Tumor Proportion Score (TPS)</span><small>biomarkers</small></span><span class="hb-chip"><code>RF-NSCLC-PDL1-50-PLUS</code><span>Metastatic NSCLC with PD-L1 tumor proportion score (TPS) ≥50% by 22C3 IHC, no actionable driver mutations (EGFR/ALK/ROS1/BRAF/RET/MET/NTRK/ KRAS-G12C/HER2 wild-type or unselected). KEYNOTE-024 (Reck NEJM 2016; 5-year update Reck JCO 2021) established pembrolizumab monotherapy 1L over platinum-doublet chemo for TPS ≥50% (mOS 26.3 vs 13.4 mo, 5y OS 31.9% vs 16.3%). FDA-approved 2016. Atezolizumab (IMpower-110) and cemiplimab (EMPOWER-Lung-1) similarly approved. ESMO/NCCN 2024 prefer pembrolizumab monotherapy 1L for TPS ≥50% over chemo + IO combinations (KEYNOTE-189 / -407) when patient is fit and the TPS-50% determination is reliable.
+</span><small>redflags</small></span><span class="hb-chip"><code>IND-NSCLC-PDL1-HIGH-MET-1L</code><span>IND-NSCLC-PDL1-HIGH-MET-1L</span><small>indications</small></span><span class="hb-chip"><code>IND-NSCLC-PDL1-LOW-NONSQ-MET-1L</code><span>IND-NSCLC-PDL1-LOW-NONSQ-MET-1L</span><small>indications</small></span></div>
+              <h3>Section sources</h3>
+              <ul><li><code>SRC-KEYNOTE-024-RECK-2016</code> Pembrolizumab versus Chemotherapy for PD-L1-Positive Non-Small-Cell Lung Cancer</li><li><code>SRC-KEYNOTE-189-GANDHI-2018</code> Pembrolizumab plus Chemotherapy in Metastatic Non-Small-Cell Lung Cancer</li></ul>
+            </section>
+            
+        <section class="hb-panel">
+          <h2>Worked synthetic cases</h2>
+          <ul><li><code>patient_nsclc_egfr_ex19del_1l_osimertinib</code> EGFR exon 19 deletion metastatic NSCLC - <span>driver-first routing, EGFR-targeted branch</span> <small>examples/patient_nsclc_egfr_ex19del_1l_osimertinib.json</small></li><li><code>patient_nsclc_pdl1_high_pembro_mono</code> Driver-negative PD-L1 high metastatic NSCLC - <span>PD-L1 high branch, driver-negative assumption</span> <small>examples/patient_nsclc_pdl1_high_pembro_mono.json</small></li></ul>
+        </section>
+        <section class="hb-panel">
+          <h2>Practice questions</h2>
+          
+      <article class="hb-question" data-answer="A">
+        <div class="hb-question-top">
+          <span>Question 1</span>
+          <span class="hb-badge">type_a</span>
+          <span class="hb-badge">intro</span>
+        </div>
+        <p>In metastatic NSCLC, what is the first major routing concept in the OpenOnco handbook chapter?</p>
+        <ol><li><strong>A.</strong> Actionable driver testing before PD-L1-only immunotherapy decisions</li><li><strong>B.</strong> PD-L1 monotherapy for every patient</li><li><strong>C.</strong> No molecular testing before first-line treatment</li><li><strong>D.</strong> Use chemotherapy only if EGFR testing is positive</li></ol>
+        <button type="button" class="hb-answer-toggle">Show answer</button>
+        <div class="hb-answer" hidden>
+          <strong>Answer: A</strong>
+          <p>The NSCLC chapter uses a driver-first cascade. Actionable drivers are evaluated before the driver-negative PD-L1 pathway.</p>
+        </div>
+      </article>
+    
+      <article class="hb-question" data-answer="A">
+        <div class="hb-question-top">
+          <span>Question 2</span>
+          <span class="hb-badge">type_a</span>
+          <span class="hb-badge">intermediate</span>
+        </div>
+        <p>A metastatic NSCLC case has an EGFR exon 19 deletion. In this learning model, which branch should be considered before PD-L1 monotherapy?</p>
+        <ol><li><strong>A.</strong> EGFR-targeted first-line branch</li><li><strong>B.</strong> Driver-negative PD-L1 high branch</li><li><strong>C.</strong> Observation only</li><li><strong>D.</strong> CRC MSI-H branch</li></ol>
+        <button type="button" class="hb-answer-toggle">Show answer</button>
+        <div class="hb-answer" hidden>
+          <strong>Answer: A</strong>
+          <p>Classical sensitizing EGFR alterations route to an EGFR-targeted first-line branch. PD-L1 expression should not be used to bypass driver-directed reasoning.</p>
+        </div>
+      </article>
+    
+      <article class="hb-question" data-answer="A,B,C">
+        <div class="hb-question-top">
+          <span>Question 3</span>
+          <span class="hb-badge">type_k</span>
+          <span class="hb-badge">intermediate</span>
+        </div>
+        <p>Which statements are true for the OpenOnco metastatic NSCLC first-line chapter?</p>
+        <ol><li><strong>A.</strong> PD-L1 TPS is most useful after actionable drivers are excluded or addressed.</li><li><strong>B.</strong> EGFR and ALK branches are part of the driver-first cascade.</li><li><strong>C.</strong> Brain metastases and frailty are parallel MDT/safety issues.</li><li><strong>D.</strong> Comprehensive molecular testing is irrelevant in metastatic NSCLC.</li></ol>
+        <button type="button" class="hb-answer-toggle">Show answer</button>
+        <div class="hb-answer" hidden>
+          <strong>Answer: A,B,C</strong>
+          <p>The chapter keeps molecular driver testing central, uses PD-L1 for the driver-negative pathway, and still surfaces safety and MDT issues such as brain metastases and frailty.</p>
+        </div>
+      </article>
+    
+        </section>
+      </div>
+      <aside class="hb-side">
+        <section class="hb-panel hb-disclaimer">
+          <strong>Educational use only.</strong>
+          <p>This OpenOnco-authored chapter is not official ESMO material,
+          not a CME-credit activity, and not patient-specific medical advice.</p>
+        </section>
+        <section class="hb-panel">
+          <h2>Chapter sources</h2>
+          <ul><li><code>SRC-NCCN-NSCLC-2025</code> NCCN Clinical Practice Guidelines — Non-Small Cell Lung Cancer</li><li><code>SRC-ESMO-NSCLC-METASTATIC-2024</code> ESMO Clinical Practice Guideline on Metastatic Non-Small Cell Lung Cancer</li><li><code>SRC-FLAURA-SORIA-2018</code> Osimertinib in Untreated EGFR-Mutated Advanced Non-Small-Cell Lung Cancer</li><li><code>SRC-KEYNOTE-024-RECK-2016</code> Pembrolizumab versus Chemotherapy for PD-L1-Positive Non-Small-Cell Lung Cancer</li><li><code>SRC-KEYNOTE-189-GANDHI-2018</code> Pembrolizumab plus Chemotherapy in Metastatic Non-Small-Cell Lung Cancer</li></ul>
+        </section>
+        <section class="hb-panel">
+          <h2>Entity map</h2>
+          <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-NSCLC</code><span>Non-small cell lung cancer</span><small>diseases</small></span><span class="hb-chip"><code>ALGO-NSCLC-METASTATIC-1L</code><span>ALGO-NSCLC-METASTATIC-1L</span><small>algorithms</small></span><span class="hb-chip"><code>IND-NSCLC-EGFR-MUT-MET-1L</code><span>IND-NSCLC-EGFR-MUT-MET-1L</span><small>indications</small></span><span class="hb-chip"><code>IND-NSCLC-ALK-MET-1L</code><span>IND-NSCLC-ALK-MET-1L</span><small>indications</small></span><span class="hb-chip"><code>IND-NSCLC-PDL1-HIGH-MET-1L</code><span>IND-NSCLC-PDL1-HIGH-MET-1L</span><small>indications</small></span><span class="hb-chip"><code>IND-NSCLC-PDL1-LOW-NONSQ-MET-1L</code><span>IND-NSCLC-PDL1-LOW-NONSQ-MET-1L</span><small>indications</small></span><span class="hb-chip"><code>REG-OSIMERTINIB-NSCLC</code><span>Osimertinib monotherapy (EGFR-mut NSCLC, 1L metastatic OR adjuvant)</span><small>regimens</small></span><span class="hb-chip"><code>REG-PEMBRO-MONO-NSCLC</code><span>Pembrolizumab monotherapy (NSCLC PD-L1 ≥50%, driver-negative, 1L)</span><small>regimens</small></span><span class="hb-chip"><code>REG-PEMBRO-CHEMO-NSCLC-NONSQ</code><span>Pembrolizumab + carboplatin + pemetrexed (NSCLC non-squamous, 1L)</span><small>regimens</small></span><span class="hb-chip"><code>RF-NSCLC-HIGH-RISK-BIOLOGY</code><span>Actionable molecular driver detected (EGFR / ALK / ROS1 / KRAS G12C / BRAF V600E / MET ex14 / RET / NTRK / HER2 mut) — driver-targeted TKI / ADC takes precedence over ICI ± chemo regardless of PD-L1 TPS.</span><small>redflags</small></span><span class="hb-chip"><code>RF-NSCLC-EGFR-EX19DEL-ACTIONABLE</code><span>EGFR exon 19 deletion is the most common actionable EGFR-sensitizing mutation in NSCLC adenocarcinoma (~45-50% of EGFR-mutant cases). FDA/EMA-approved 1L targeted therapy is osimertinib (FLAURA — mPFS 18.9 vs 10.2 mo, OS 38.6 vs 31.8 mo); MARIPOSA-2 establishes 2L amivantamab + lazertinib + chemo post-osimertinib progression.
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-NSCLC-ALK-FUSION-ACTIONABLE</code><span>ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC adenocarcinoma; never-smoker / younger enriched. Treatment-defining: alectinib (ALEX — mPFS 34.8 mo) or lorlatinib (CROWN — 5-y PFS 60%) preferred 1L over crizotinib. Adjuvant alectinib 2 y after resection (ALINA).
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-NSCLC-PDL1-50-PLUS</code><span>Metastatic NSCLC with PD-L1 tumor proportion score (TPS) ≥50% by 22C3 IHC, no actionable driver mutations (EGFR/ALK/ROS1/BRAF/RET/MET/NTRK/ KRAS-G12C/HER2 wild-type or unselected). KEYNOTE-024 (Reck NEJM 2016; 5-year update Reck JCO 2021) established pembrolizumab monotherapy 1L over platinum-doublet chemo for TPS ≥50% (mOS 26.3 vs 13.4 mo, 5y OS 31.9% vs 16.3%). FDA-approved 2016. Atezolizumab (IMpower-110) and cemiplimab (EMPOWER-Lung-1) similarly approved. ESMO/NCCN 2024 prefer pembrolizumab monotherapy 1L for TPS ≥50% over chemo + IO combinations (KEYNOTE-189 / -407) when patient is fit and the TPS-50% determination is reliable.
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-NSCLC-BRAIN-METS-EMERGENCY</code><span>NSCLC with symptomatic brain metastases requiring emergency intervention: focal deficit, new seizure, raised intracranial pressure, or impending herniation. Asymptomatic / oligometastatic brain disease handled separately</span><small>redflags</small></span><span class="hb-chip"><code>RF-NSCLC-FRAILTY-AGE</code><span>Age ≥75 + ECOG ≥2 + significant comorbidity — concurrent CRT and platinum-doublet chemo poorly tolerated; consider sequential CRT, weekly chemo + ICI, or single-agent / best-supportive-care for fragile patients.</span><small>redflags</small></span><span class="hb-chip"><code>BIO-EGFR-MUTATION</code><span>EGFR mutation status (NSCLC actionable)</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-EGFR-EXON19-DELETION</code><span>EGFR Exon 19 deletion</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-EGFR-L858R</code><span>EGFR L858R</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-ALK-FUSION</code><span>ALK rearrangement / fusion</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-PDL1-TPS</code><span>PD-L1 Tumor Proportion Score (TPS)</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-BRAF-V600E</code><span>BRAF V600E</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-KRAS-G12C</code><span>KRAS G12C mutation</span><small>biomarkers</small></span><span class="hb-chip"><code>TEST-NGS-COMPREHENSIVE</code><span>Comprehensive NGS tumor panel (DNA + RNA, ≥300 genes)</span><small>tests</small></span><span class="hb-chip"><code>TEST-PET-CT</code><span>FDG PET/CT (whole body)</span><small>tests</small></span><span class="hb-chip"><code>TEST-CBC</code><span>Complete Blood Count with Differential</span><small>tests</small></span><span class="hb-chip"><code>TEST-CMP</code><span>Comprehensive Metabolic Panel</span><small>tests</small></span></div>
+        </section>
+      </aside>
+    </div>
+    
+  </main>
+  <script>
+    document.querySelectorAll('.hb-answer-toggle').forEach((button) => {
+      button.addEventListener('click', () => {
+        const answer = button.parentElement.querySelector('.hb-answer');
+        answer.hidden = !answer.hidden;
+        button.textContent = answer.hidden ? 'Show answer' : 'Hide answer';
+      });
+    });
+  </script>
+</body>
+</html>
