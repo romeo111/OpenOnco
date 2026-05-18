@@ -317,6 +317,20 @@ def _text(value: Any, *, limit: int | None = None) -> str:
     return text
 
 
+def _localized(d: dict, base_key: str, locale: str) -> Any:
+    """Return the UA twin of `base_key` (e.g. `definition_ua` for
+    `definition`) when locale=="uk" and it carries content, else fall
+    back to the canonical EN field. Keeps EN as the source of truth and
+    the schema canonical; UA renders only when an authored translation
+    exists, so untranslated entries don't silently flip back to EN
+    without a UA reader noticing the gap."""
+    if locale == "uk":
+        ua = d.get(f"{base_key}_ua")
+        if ua not in (None, "", [], {}):
+            return ua
+    return d.get(base_key)
+
+
 def _load_yaml(path: Path) -> dict[str, Any] | None:
     try:
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -747,7 +761,7 @@ def _redflag_sections(entity: KbEntity, *, locale: str = "en") -> str:
     d = entity.data
     labels = FIELD_LABELS[locale]
     rows = [
-        (labels["definition"], html.escape(_text(d.get("definition"), limit=900))),
+        (labels["definition"], html.escape(_text(_localized(d, "definition", locale), limit=900))),
         (labels["clinical_direction"], html.escape(_text(d.get("clinical_direction")))),
         (labels["category"], html.escape(_text(d.get("category")))),
         (labels["shifts_algorithm"], html.escape(", ".join(str(x) for x in _as_list(d.get("shifts_algorithm"))))),
@@ -812,7 +826,10 @@ def render_entity_page(
 
     labels = FIELD_LABELS[locale]
     t = T[locale]
-    notes = entity.data.get("notes") or entity.data.get("evidence_summary")
+    notes = (
+        _localized(entity.data, "notes", locale)
+        or _localized(entity.data, "evidence_summary", locale)
+    )
     notes_html = (
         f"<h2>{html.escape(labels['notes'])}</h2><p>{html.escape(_text(notes, limit=1200))}</p>"
         if notes

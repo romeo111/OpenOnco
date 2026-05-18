@@ -294,6 +294,10 @@ a.lab-chip:hover { text-decoration: underline; }
     font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
     display: block; margin-top: 2px;
 }
+.pc-col .rf-note {
+    font-size: 12px; color: var(--gray-600); line-height: 1.5;
+    margin-top: 4px; padding-left: 8px; border-left: 2px solid var(--gray-200);
+}
 
 /* Branch-explanation — actually-fired RFs from the engine trace, with
    the conflict-resolution winner highlighted. Distinct from PRO/CONTRA

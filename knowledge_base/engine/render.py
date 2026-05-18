@@ -302,6 +302,22 @@ def _h_t(text, target_lang: str = "uk", source_lang: str = "uk") -> str:
     return html.escape(_translate_kb_text(str(text), target_lang, source_lang))
 
 
+def _truncate_note(text, limit: int = 240) -> str:
+    """Collapse whitespace and clip long free-text fields (`notes`,
+    `notes_ua`) for summary surfaces like the plan's PRO/CONTRA list.
+    Cuts at a word boundary when possible to avoid mid-word ellipsis."""
+    if text is None:
+        return ""
+    flat = " ".join(str(text).split())
+    if len(flat) <= limit:
+        return flat
+    cut = flat[: limit - 1]
+    last_space = cut.rfind(" ")
+    if last_space >= limit - 60:
+        cut = cut[:last_space]
+    return cut.rstrip(",.;:- ") + "…"
+
+
 def _pick_name(names: dict | None, target_lang: str = "uk", default: str = "") -> str:
     """Pick the right localized name from a `names: {ukrainian, english,
     preferred, ...}` block based on target_lang.
@@ -1546,10 +1562,23 @@ def _render_red_flags_pro_contra(plan, kb_resolved: dict, target_lang: str = "uk
         # call when curator already provided an English definition. Fall back
         # to translating the UA field if only UA is present.
         if target_lang == "en" and rf.get("definition"):
-            defn = rf["definition"]
-            return f'<li>{_h(defn)}<span class="rf-id">{_h(rid)}</span></li>'
-        defn = rf.get("definition_ua") or rf.get("definition") or "—"
-        return f'<li>{_h_t(defn, target_lang)}<span class="rf-id">{_h(rid)}</span></li>'
+            defn_html = _h(rf["definition"])
+        else:
+            defn = rf.get("definition_ua") or rf.get("definition") or "—"
+            defn_html = _h_t(defn, target_lang)
+
+        # Surface curator-authored clinical context (notes / notes_ua) below
+        # the one-line definition. PRO/CONTRA is a summary view, so we cap
+        # length — full notes live on the KB wiki page.
+        if target_lang == "en" and rf.get("notes"):
+            note_html = _h(_truncate_note(rf["notes"]))
+        elif rf.get("notes_ua") or rf.get("notes"):
+            note = rf.get("notes_ua") or rf["notes"]
+            note_html = _h_t(_truncate_note(note), target_lang)
+        else:
+            note_html = ""
+        note_block = f'<div class="rf-note">{note_html}</div>' if note_html else ""
+        return f'<li>{defn_html}{note_block}<span class="rf-id">{_h(rid)}</span></li>'
 
     def _ci_li(c: dict) -> str:
         cid = c.get("id", "?")
