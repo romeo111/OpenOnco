@@ -10,6 +10,7 @@ import argparse
 import re
 import sys
 from dataclasses import dataclass, field
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -22,6 +23,12 @@ from knowledge_base.schemas.biomarker_actionability import (
 from knowledge_base.schemas.indication import normalize_legacy_indication_payload
 from knowledge_base.schemas.regimen import normalize_legacy_regimen_payload
 from knowledge_base.schemas.source import normalize_legacy_source_payload
+
+
+# Days after which a `review_status: reviewed` Handbook entity should be
+# transitioned to `needs_refresh`. Per HANDBOOK_MODE_SPEC §4 — annual
+# refresh cycle is the standard for educational clinical content.
+HANDBOOK_REVIEW_STALE_DAYS = 365
 
 
 # Which fields on which entity types carry IDs that must resolve elsewhere.
@@ -620,6 +627,41 @@ def _load_content_impl(
                 check_ref(path, sid, "sources", f"source_ids[{i}]")
             for i, ref_id in enumerate(data.get("linked_entity_ids") or []):
                 check_any_ref(path, ref_id, f"linked_entity_ids[{i}]")
+
+        # Handbook review-workflow cross-checks (HANDBOOK_MODE_SPEC §4):
+        # validate reviewer_id refs and surface stale `reviewed` content
+        # so it can be transitioned to `needs_refresh`. The schema already
+        # rejects status/metadata mismatches; here we do the cross-entity
+        # and time-sensitive checks.
+        if etype in {"handbook_chapters", "handbook_questions"}:
+            for i, signoff in enumerate(data.get("reviewer_signoffs") or []):
+                if not isinstance(signoff, dict):
+                    continue
+                rid = signoff.get("reviewer_id")
+                if rid:
+                    check_ref(path, rid, "reviewers", f"reviewer_signoffs[{i}].reviewer_id")
+            review_status = data.get("review_status", "draft")
+            last_reviewed = data.get("last_reviewed")
+            if review_status == "reviewed" and last_reviewed:
+                try:
+                    review_date = date.fromisoformat(str(last_reviewed).split("T", 1)[0])
+                except (TypeError, ValueError):
+                    result.contract_warnings.append(
+                        (path, f"{eid}: last_reviewed={last_reviewed!r} is not a valid ISO date")
+                    )
+                else:
+                    age_days = (date.today() - review_date).days
+                    if age_days > HANDBOOK_REVIEW_STALE_DAYS:
+                        result.contract_warnings.append((
+                            path,
+                            f"{eid}: last_reviewed={last_reviewed} is {age_days} days old "
+                            f"(>{HANDBOOK_REVIEW_STALE_DAYS}-day threshold); transition to "
+                            "review_status: needs_refresh"
+                        ))
+            if review_status == "draft":
+                result.contract_warnings.append(
+                    (path, f"{eid}: handbook draft — needs clinical review before merge")
+                )
 
         # Generic top-level sources list (lots of entities have it).
         # Drafts skip ref-check on sources because authors leave SRC-TODO

@@ -10,15 +10,16 @@ import argparse
 import html
 import json
 import sys
+from datetime import date
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from knowledge_base.validation.loader import load_content  # noqa: E402
+from knowledge_base.validation.loader import HANDBOOK_REVIEW_STALE_DAYS, load_content  # noqa: E402
 
 DEFAULT_KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "docs"
@@ -72,6 +73,51 @@ def _chapter_cards(load) -> list[dict[str, Any]]:
 def _render_badge(text: str, class_name: str = "") -> str:
     cls = "hb-badge" + (f" {class_name}" if class_name else "")
     return f'<span class="{cls}">{_esc(text)}</span>'
+
+
+_STATUS_BADGE_CLASS = {
+    "draft": "hb-badge--draft",
+    "proposed": "hb-badge--proposed",
+    "reviewed": "hb-badge--reviewed",
+    "needs_refresh": "hb-badge--stale",
+    "retired": "hb-badge--retired",
+}
+
+
+def _status_badge_class(status: str) -> str:
+    return _STATUS_BADGE_CLASS.get(status, "hb-badge--draft")
+
+
+def _is_stale_review(review_status: str, last_reviewed: Optional[str]) -> bool:
+    """Mirror the loader-side `HANDBOOK_REVIEW_STALE_DAYS` check at build
+    time so the render layer can surface a stale badge for review:reviewed
+    content that the loader would warn about."""
+    if review_status != "reviewed" or not last_reviewed:
+        return False
+    try:
+        review_date = date.fromisoformat(str(last_reviewed).split("T", 1)[0])
+    except (TypeError, ValueError):
+        return False
+    return (date.today() - review_date).days > HANDBOOK_REVIEW_STALE_DAYS
+
+
+def _reviewer_display_label(load, reviewer_id: str) -> str:
+    """Resolve a REV-* reviewer to a display name. Placeholder profiles
+    have `name.preferred` like `[Solid-Tumor Co-Lead — to be filled]`;
+    fall back to the role/specialty in that case so the rendered HTML
+    doesn't expose bracketed placeholder text as a real signature."""
+    reviewer = load.entities_by_id.get(reviewer_id)
+    if not reviewer:
+        return reviewer_id
+    data = reviewer.get("data") or {}
+    name = data.get("name") or {}
+    preferred = (name.get("preferred") if isinstance(name, dict) else None) or ""
+    if preferred and not preferred.lstrip().startswith("["):
+        return preferred
+    specialty = data.get("specialty") or ""
+    if specialty:
+        return f"{specialty} (placeholder)"
+    return reviewer_id
 
 
 def _chapter_index_record(load, chapter: dict[str, Any]) -> dict[str, Any]:
@@ -266,6 +312,18 @@ def _page_shell(title: str, body: str) -> str:
     .hb-meta {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }}
     .hb-badge {{ display: inline-flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 999px; padding: 3px 8px; font-size: 12px; background: #f8fafc; color: #334155; }}
     .hb-badge--draft {{ border-color: #f59e0b; background: #fffbeb; color: #92400e; }}
+    .hb-badge--proposed {{ border-color: #2563eb; background: #eff6ff; color: #1e3a8a; }}
+    .hb-badge--reviewed {{ border-color: #16a34a; background: #f0fdf4; color: #166534; }}
+    .hb-badge--stale {{ border-color: #dc2626; background: #fef2f2; color: #991b1b; }}
+    .hb-badge--retired {{ border-color: #6b7280; background: #f3f4f6; color: #374151; }}
+    .hb-review-panel dl.hb-review-meta {{ margin: 0 0 10px; display: grid; grid-template-columns: 110px 1fr; gap: 4px 10px; font-size: 13px; }}
+    .hb-review-panel dt {{ color: #475569; font-weight: 600; }}
+    .hb-review-panel dd {{ margin: 0; color: #0f172a; }}
+    .hb-review-panel h3 {{ margin: 4px 0 6px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.04em; color: #475569; }}
+    .hb-signoff-list {{ margin: 0; padding-left: 18px; font-size: 13px; }}
+    .hb-signoff-list li {{ margin-bottom: 6px; }}
+    .hb-signoff-empty {{ margin: 0; font-size: 13px; color: #64748b; }}
+    .hb-review-rules {{ margin: 12px 0 0; font-size: 12px; color: #64748b; }}
     .hb-layout {{ display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; margin-top: 24px; }}
     .hb-main {{ display: grid; gap: 18px; }}
     .hb-side {{ display: grid; gap: 16px; align-content: start; }}
@@ -496,12 +554,48 @@ def render_chapter(load, chapter: dict[str, Any]) -> str:
     for values in (chapter.get("linked_entities") or {}).values():
         if isinstance(values, list):
             linked_all.extend(values)
+
+    review_status = chapter.get("review_status") or "draft"
+    last_reviewed = chapter.get("last_reviewed")
+    signoffs = chapter.get("reviewer_signoffs") or []
+    stale = _is_stale_review(review_status, last_reviewed)
+    status_badge_html = _render_badge(review_status, _status_badge_class(review_status))
+    stale_badge_html = (
+        _render_badge(
+            f"stale (>{HANDBOOK_REVIEW_STALE_DAYS}d)", "hb-badge--stale"
+        )
+        if stale
+        else ""
+    )
+
+    if signoffs:
+        signoff_rows = []
+        for signoff in signoffs:
+            rid = signoff.get("reviewer_id") if isinstance(signoff, dict) else None
+            timestamp = signoff.get("timestamp") if isinstance(signoff, dict) else None
+            rationale = signoff.get("rationale") if isinstance(signoff, dict) else None
+            display = _reviewer_display_label(load, rid) if rid else "unknown reviewer"
+            ts = f' · {_esc(timestamp)}' if timestamp else ""
+            rationale_html = f'<br><small>{_esc(rationale)}</small>' if rationale else ""
+            signoff_rows.append(
+                f"<li><code>{_esc(rid or '')}</code> {_esc(display)}{ts}{rationale_html}</li>"
+            )
+        signoffs_html = "<ul class='hb-signoff-list'>" + "".join(signoff_rows) + "</ul>"
+    else:
+        signoffs_html = "<p class='hb-signoff-empty'>No clinical sign-offs recorded yet.</p>"
+
+    last_reviewed_html = (
+        f"<dt>Last reviewed</dt><dd>{_esc(last_reviewed)}</dd>"
+        if last_reviewed
+        else "<dt>Last reviewed</dt><dd><em>not yet reviewed</em></dd>"
+    )
     body = f"""
     <section class="hb-hero">
       <div class="hb-kicker"><a href="/handbook.html">OpenOnco Handbook</a></div>
       <h1>{_esc(chapter['title'])}</h1>
       <div class="hb-meta">
-        {_render_badge(chapter.get('review_status', 'draft'), 'hb-badge--draft')}
+        {status_badge_html}
+        {stale_badge_html}
         {_render_badge(chapter.get('audience', 'hcp_learner'))}
         {_render_badge(chapter.get('language', 'en'))}
       </div>
@@ -542,6 +636,19 @@ def render_chapter(load, chapter: dict[str, Any]) -> str:
           <strong>Educational use only.</strong>
           <p>This OpenOnco-authored chapter is not official ESMO material,
           not a CME-credit activity, and not patient-specific medical advice.</p>
+        </section>
+        <section class="hb-panel hb-review-panel">
+          <h2>Review status</h2>
+          <dl class="hb-review-meta">
+            <dt>Current status</dt>
+            <dd>{status_badge_html}{stale_badge_html}</dd>
+            {last_reviewed_html}
+          </dl>
+          <h3>Clinical sign-offs</h3>
+          {signoffs_html}
+          <p class="hb-review-rules"><a href="/specs.html">HANDBOOK_MODE_SPEC §4</a>
+          governs status transitions and the {HANDBOOK_REVIEW_STALE_DAYS}-day
+          staleness threshold.</p>
         </section>
         <section class="hb-panel">
           <h2>Chapter sources</h2>

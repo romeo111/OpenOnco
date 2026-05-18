@@ -253,3 +253,249 @@ def test_correct_keys_handles_both_single_and_multi(tmp_path: Path):
     assert _correct_keys({"correct_answer": " a | c "}) == ["A", "C"]
     # short_answer has no correct_answer in option-key form.
     assert _correct_keys({"correct_answer": None}) == []
+
+
+# ---------------------------------------------------------------------------
+# Phase 4: reviewer workflow — schema and loader checks.
+# ---------------------------------------------------------------------------
+
+import pytest
+from pydantic import ValidationError
+
+
+_MINIMAL_CHAPTER = {
+    "id": "HB-TEST",
+    "title": "Test",
+    "learning_objectives": ["x"],
+    "at_a_glance": ["x"],
+    "source_ids": ["SRC-FAKE"],
+}
+
+
+def _chapter(**overrides):
+    from knowledge_base.schemas.handbook import HandbookChapter
+    payload = dict(_MINIMAL_CHAPTER, **overrides)
+    return HandbookChapter(**payload)
+
+
+def test_chapter_draft_status_needs_no_review_metadata():
+    chapter = _chapter()  # default review_status='draft'
+    assert chapter.review_status == "draft"
+    assert chapter.last_reviewed is None
+    assert chapter.reviewer_signoffs == []
+
+
+def test_chapter_reviewed_requires_last_reviewed_and_two_distinct_signoffs():
+    # Missing last_reviewed → reject.
+    with pytest.raises(ValidationError, match="last_reviewed"):
+        _chapter(
+            review_status="reviewed",
+            reviewer_signoffs=[
+                {"reviewer_id": "REV-A", "timestamp": "2026-01-01"},
+                {"reviewer_id": "REV-B", "timestamp": "2026-01-01"},
+            ],
+        )
+
+    # Only one signoff → reject (need ≥2 per CHARTER §6.1).
+    with pytest.raises(ValidationError, match="≥2 reviewer_signoffs"):
+        _chapter(
+            review_status="reviewed",
+            last_reviewed="2026-05-01",
+            reviewer_signoffs=[
+                {"reviewer_id": "REV-A", "timestamp": "2026-01-01"},
+            ],
+        )
+
+    # Two signoffs from the *same* reviewer → reject. Distinct reviewer
+    # identities are the whole point of the two-reviewer gate.
+    with pytest.raises(ValidationError, match="distinct reviewers"):
+        _chapter(
+            review_status="reviewed",
+            last_reviewed="2026-05-01",
+            reviewer_signoffs=[
+                {"reviewer_id": "REV-A", "timestamp": "2026-01-01"},
+                {"reviewer_id": "REV-A", "timestamp": "2026-02-01"},
+            ],
+        )
+
+    # Two distinct reviewers + last_reviewed → accepted.
+    chapter = _chapter(
+        review_status="reviewed",
+        last_reviewed="2026-05-01",
+        reviewer_signoffs=[
+            {"reviewer_id": "REV-A", "timestamp": "2026-01-01"},
+            {"reviewer_id": "REV-B", "timestamp": "2026-02-01"},
+        ],
+    )
+    assert chapter.review_status == "reviewed"
+    assert len(chapter.reviewer_signoffs) == 2
+
+
+def test_chapter_proposed_requires_at_least_one_signoff():
+    with pytest.raises(ValidationError, match="≥1 reviewer_signoff"):
+        _chapter(review_status="proposed", last_reviewed="2026-05-01")
+
+    chapter = _chapter(
+        review_status="proposed",
+        last_reviewed="2026-05-01",
+        reviewer_signoffs=[{"reviewer_id": "REV-A", "timestamp": "2026-01-01"}],
+    )
+    assert chapter.review_status == "proposed"
+
+
+def test_chapter_needs_refresh_requires_last_reviewed():
+    with pytest.raises(ValidationError, match="last_reviewed"):
+        _chapter(review_status="needs_refresh")
+    chapter = _chapter(review_status="needs_refresh", last_reviewed="2024-01-01")
+    assert chapter.review_status == "needs_refresh"
+
+
+def test_chapter_retired_is_permissive_terminal_state():
+    chapter = _chapter(review_status="retired")
+    assert chapter.review_status == "retired"
+
+
+def test_handbook_question_status_rules_match_chapter():
+    from knowledge_base.schemas.handbook import HandbookQuestion
+
+    base = {
+        "id": "HQ-TEST",
+        "chapter_id": "HB-TEST",
+        "type": "type_a",
+        "stem": "?",
+        "options": [{"key": "A", "text": "x"}, {"key": "B", "text": "y"}],
+        "correct_answer": "A",
+        "explanation": "x",
+        "source_ids": ["SRC-FAKE"],
+    }
+    # reviewed without enough signoffs → reject.
+    with pytest.raises(ValidationError, match="≥2 reviewer_signoffs"):
+        HandbookQuestion(
+            **base,
+            review_status="reviewed",
+            last_reviewed="2026-05-01",
+            reviewer_signoffs=[{"reviewer_id": "REV-A", "timestamp": "2026-01-01"}],
+        )
+
+
+def test_loader_flags_unresolved_reviewer_signoff(tmp_path: Path):
+    clear_load_cache()
+    chapter_dir = tmp_path / "handbook_chapters"
+    chapter_dir.mkdir()
+    (chapter_dir / "ghost.yaml").write_text(
+        """
+id: HB-GHOST
+title: Ghost
+learning_objectives:
+  - "x"
+at_a_glance:
+  - "x"
+source_ids:
+  - SRC-FAKE
+review_status: proposed
+last_reviewed: "2026-05-01"
+reviewer_signoffs:
+  - reviewer_id: REV-DOES-NOT-EXIST
+    timestamp: "2026-05-01"
+""",
+        encoding="utf-8",
+    )
+
+    result = load_content(tmp_path)
+    messages = "\n".join(message for _, message in result.ref_errors)
+    assert "reviewer_signoffs[0].reviewer_id" in messages
+    assert "REV-DOES-NOT-EXIST" in messages
+
+
+def test_loader_warns_on_stale_reviewed_handbook(tmp_path: Path):
+    from knowledge_base.validation.loader import HANDBOOK_REVIEW_STALE_DAYS
+    clear_load_cache()
+    chapter_dir = tmp_path / "handbook_chapters"
+    chapter_dir.mkdir()
+    # Two distinct REV-* peers so the schema accepts review_status=reviewed.
+    reviewers_dir = tmp_path / "reviewers"
+    reviewers_dir.mkdir()
+    for rid, name in [("REV-X", "X"), ("REV-Y", "Y")]:
+        (reviewers_dir / f"{rid.lower()}.yaml").write_text(
+            f"""
+id: {rid}
+name:
+  preferred: "{name} Reviewer"
+  ukrainian: "{name}"
+  english: "{name} Reviewer"
+  suffix: "MD"
+specialty: "Test"
+qualifications: []
+sign_off_scope: {{}}
+last_active: "2026-01-01"
+""",
+            encoding="utf-8",
+        )
+    (chapter_dir / "stale.yaml").write_text(
+        """
+id: HB-STALE
+title: Old chapter
+learning_objectives:
+  - "x"
+at_a_glance:
+  - "x"
+source_ids:
+  - SRC-FAKE
+review_status: reviewed
+last_reviewed: "2020-01-01"
+reviewer_signoffs:
+  - reviewer_id: REV-X
+    timestamp: "2020-01-01"
+  - reviewer_id: REV-Y
+    timestamp: "2020-01-01"
+""",
+        encoding="utf-8",
+    )
+
+    result = load_content(tmp_path)
+    messages = "\n".join(message for _, message in result.contract_warnings)
+    assert "HB-STALE" in messages
+    assert f">{HANDBOOK_REVIEW_STALE_DAYS}-day threshold" in messages
+    assert "needs_refresh" in messages
+
+
+def test_loader_emits_draft_review_warning_on_seed():
+    """The four seed chapters are still drafts; the loader surfaces them
+    as needs-clinical-review so contributors see them without scanning
+    each YAML."""
+    result = load_content(KB_ROOT)
+    messages = [m for _, m in result.contract_warnings if "handbook draft" in m]
+    chapter_ids_in_warnings = {m.split(":", 1)[0].strip() for m in messages}
+    assert {"HB-DLBCL-1L", "HB-CRC-METASTATIC-1L", "HB-MM-1L", "HB-NSCLC-METASTATIC-1L"}.issubset(
+        chapter_ids_in_warnings
+    )
+
+
+def test_chapter_page_renders_review_panel(tmp_path: Path):
+    build_handbook(KB_ROOT, tmp_path)
+    chapter_html = (tmp_path / "handbook" / "hb-dlbcl-1l.html").read_text(encoding="utf-8")
+
+    # Status-aware badge class for the seed draft chapter.
+    assert 'hb-badge hb-badge--draft' in chapter_html
+    # Sidebar review panel present.
+    assert "hb-review-panel" in chapter_html
+    assert "Clinical sign-offs" in chapter_html
+    assert "No clinical sign-offs recorded yet" in chapter_html
+    assert "not yet reviewed" in chapter_html
+    # Spec link present so reviewers can find the rules.
+    assert "HANDBOOK_MODE_SPEC §4" in chapter_html
+
+
+def test_is_stale_review_helper():
+    from scripts.build_handbook import _is_stale_review
+    # Draft never stale even if last_reviewed is ancient.
+    assert _is_stale_review("draft", "2020-01-01") is False
+    # reviewed + recent date → not stale.
+    from datetime import date, timedelta
+    recent = (date.today() - timedelta(days=10)).isoformat()
+    old = (date.today() - timedelta(days=500)).isoformat()
+    assert _is_stale_review("reviewed", recent) is False
+    assert _is_stale_review("reviewed", old) is True
+    # Missing or malformed → not stale (loader handles the validation).
+    assert _is_stale_review("reviewed", None) is False
+    assert _is_stale_review("reviewed", "not-a-date") is False
