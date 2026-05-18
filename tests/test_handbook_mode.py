@@ -192,3 +192,64 @@ def test_handbook_index_page_renders_filter_controls(tmp_path: Path):
     # Topic tag options come from the chapter YAMLs.
     assert 'value="first-line"' in index
     assert 'value="biomarkers"' in index
+
+
+def test_chapter_page_renders_quiz_forms_with_grading_attrs(tmp_path: Path):
+    build_handbook(KB_ROOT, tmp_path)
+    dlbcl_chapter = (tmp_path / "handbook" / "hb-dlbcl-1l.html").read_text(encoding="utf-8")
+
+    # Practice section now hosts a quiz with a per-chapter score widget
+    # and reset, not a "Show answer" toggle.
+    assert 'id="hb-score"' in dlbcl_chapter
+    assert 'id="hb-quiz-reset"' in dlbcl_chapter
+    assert "0 of 3 answered" in dlbcl_chapter, "score widget seeds with graded_total"
+    assert "hb-answer-toggle" not in dlbcl_chapter, "old reveal-toggle must be gone"
+
+    # Single-best-answer (type_a) renders as radios with the correct key
+    # as the data-correct-answer.
+    assert 'data-question-id="HQ-DLBCL-1L-001"' in dlbcl_chapter
+    assert 'data-question-type="type_a"' in dlbcl_chapter
+    assert 'data-correct-answer="A"' in dlbcl_chapter
+
+    # Multi-select (type_k) renders as checkboxes; correct keys are
+    # normalized to sorted, pipe-separated form so JS can do exact
+    # set-equality without parsing commas at runtime.
+    assert 'data-question-id="HQ-DLBCL-1L-003"' in dlbcl_chapter
+    assert 'data-question-type="type_k"' in dlbcl_chapter
+    assert 'data-correct-answer="A|B|D"' in dlbcl_chapter
+
+    # Submit + reset controls are wired per-question.
+    assert 'data-action="submit"' in dlbcl_chapter
+    assert 'data-action="reset"' in dlbcl_chapter
+
+    # Source IDs remain visible in the result block (Phase 3 acceptance).
+    assert 'class="hb-result-source">SRC-NCCN-BCELL-2025' in dlbcl_chapter
+    assert 'class="hb-result-source">SRC-POLARIX-TILLY-2022' in dlbcl_chapter
+
+    # Quiz JS is inlined (no external script tag added) and keys
+    # storage per chapter so different chapters don't share score state.
+    assert 'CHAPTER_ID = "HB-DLBCL-1L"' in dlbcl_chapter
+    assert "sessionStorage" in dlbcl_chapter
+
+
+def test_chapter_page_uses_radios_for_type_a_and_checkboxes_for_type_k(tmp_path: Path):
+    build_handbook(KB_ROOT, tmp_path)
+    dlbcl_chapter = (tmp_path / "handbook" / "hb-dlbcl-1l.html").read_text(encoding="utf-8")
+
+    # DLBCL chapter has 2 type_a + 1 type_k question, all with 4 options.
+    radio_count = dlbcl_chapter.count('type="radio"')
+    checkbox_count = dlbcl_chapter.count('type="checkbox"')
+    assert radio_count == 8, f"expected 8 radio inputs (2 type_a × 4 options), got {radio_count}"
+    assert checkbox_count == 4, f"expected 4 checkbox inputs (1 type_k × 4 options), got {checkbox_count}"
+
+
+def test_correct_keys_handles_both_single_and_multi(tmp_path: Path):
+    """Direct unit test on the normalization helper."""
+    from scripts.build_handbook import _correct_keys
+
+    assert _correct_keys({"correct_answer": "A"}) == ["A"]
+    assert _correct_keys({"correct_answer": "A,B,D"}) == ["A", "B", "D"]
+    # Robust to whitespace, alternative separators, case variants.
+    assert _correct_keys({"correct_answer": " a | c "}) == ["A", "C"]
+    # short_answer has no correct_answer in option-key form.
+    assert _correct_keys({"correct_answer": None}) == []

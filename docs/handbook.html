@@ -48,9 +48,37 @@
     .hb-chip-grid { display: grid; gap: 8px; }
     .hb-chip { display: grid; gap: 3px; border: 1px solid #d6dee8; border-radius: 6px; padding: 8px; }
     .hb-chip small { color: #64748b; }
-    .hb-question-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
-    .hb-answer-toggle { border: 1px solid #0f766e; background: #0f766e; color: #fff; border-radius: 6px; padding: 7px 10px; cursor: pointer; }
-    .hb-answer { margin-top: 12px; border-left: 3px solid #0f766e; padding-left: 12px; color: #1f2937; }
+    .hb-question { display: grid; gap: 10px; }
+    .hb-question-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .hb-question-id { margin-left: auto; font-size: 12px; color: #64748b; }
+    .hb-question-stem { margin: 0; font-size: 15px; line-height: 1.5; color: #0f172a; }
+    .hb-options { display: grid; gap: 6px; }
+    .hb-option { display: grid; grid-template-columns: auto auto 1fr; gap: 8px; align-items: start; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; transition: border-color .12s, background .12s; }
+    .hb-option:hover { border-color: #99f6e4; background: #f0fdfa; }
+    .hb-option input { margin-top: 3px; }
+    .hb-option-key { font-weight: 700; color: #115e59; }
+    .hb-option--short { grid-template-columns: 1fr; }
+    .hb-option--short input { font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; }
+    .hb-question-buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .hb-question-status { font-size: 13px; color: #475569; }
+    .hb-btn { font: inherit; cursor: pointer; padding: 7px 12px; border-radius: 6px; border: 1px solid #0f766e; background: #0f766e; color: #fff; }
+    .hb-btn--reset, .hb-btn--ghost { background: transparent; color: #0f766e; }
+    .hb-btn--reveal { background: #475569; border-color: #475569; }
+    .hb-result { margin-top: 4px; padding: 12px; border-left: 4px solid #0f766e; border-radius: 6px; background: #f8fafc; color: #1f2937; }
+    .hb-result--correct { border-left-color: #16a34a; background: #f0fdf4; }
+    .hb-result--incorrect { border-left-color: #dc2626; background: #fef2f2; }
+    .hb-result--reveal { border-left-color: #475569; background: #f1f5f9; }
+    .hb-result-headline { margin: 0 0 6px; font-weight: 600; }
+    .hb-result-explanation { margin: 0 0 8px; }
+    .hb-result-sources { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: #475569; }
+    .hb-result-source { background: #fff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; }
+    .hb-result-tags { margin-top: 6px; font-size: 12px; color: #475569; }
+    .hb-result-tag { display: inline-block; background: #e0f2fe; border-radius: 999px; padding: 2px 8px; margin-right: 4px; color: #075985; }
+    .hb-quiz-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+    .hb-quiz-header h2 { margin: 0; }
+    .hb-quiz-tools { display: flex; align-items: center; gap: 10px; }
+    .hb-score { font-size: 13px; color: #0f172a; background: #f1f5f9; padding: 4px 10px; border-radius: 999px; }
+    .hb-quiz-note { margin: 6px 0 12px; font-size: 13px; color: #475569; }
     .hb-disclaimer { border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px; color: #78350f; }
     .hb-controls { display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(150px, 1fr)); gap: 10px 14px; align-items: end; margin-top: 22px; padding: 14px; border: 1px solid #d6dee8; border-radius: 8px; background: #f8fafc; }
     .hb-control { display: grid; gap: 4px; font-size: 12px; color: #475569; }
@@ -300,14 +328,5 @@
     </script>
     
   </main>
-  <script>
-    document.querySelectorAll('.hb-answer-toggle').forEach((button) => {
-      button.addEventListener('click', () => {
-        const answer = button.parentElement.querySelector('.hb-answer');
-        answer.hidden = !answer.hidden;
-        button.textContent = answer.hidden ? 'Show answer' : 'Hide answer';
-      });
-    });
-  </script>
 </body>
 </html>

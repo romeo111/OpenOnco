@@ -137,30 +137,111 @@ def _render_entity_chips(load, entity_ids: list[str]) -> str:
     return '<div class="hb-chip-grid">' + "".join(chips) + "</div>"
 
 
+def _correct_keys(question: dict[str, Any]) -> list[str]:
+    """Normalize `correct_answer` (e.g. "A" or "A,B,D") into a sorted list
+    of option keys. Empty for short_answer (free-text) questions."""
+    raw = question.get("correct_answer")
+    if raw is None:
+        return []
+    keys = [k.strip().upper() for k in str(raw).replace("|", ",").split(",") if k.strip()]
+    return sorted(set(keys))
+
+
+def _question_input_type(question_type: str) -> str:
+    """type_k is multi-select; type_a/mcq are single best answer."""
+    return "checkbox" if question_type == "type_k" else "radio"
+
+
 def _render_question(question: dict[str, Any], ordinal: int) -> str:
-    options = []
-    for option in question.get("options") or []:
-        options.append(
-            "<li>"
-            f'<strong>{_esc(option.get("key"))}.</strong> {_esc(option.get("text"))}'
-            "</li>"
-        )
-    options_html = "<ol>" + "".join(options) + "</ol>" if options else ""
+    """Render one practice question as an interactive quiz form.
+
+    Per Phase 3 of the handbook handoff: replaces the old reveal-toggle
+    with a real self-check workflow — pick an answer, submit, see
+    correct/incorrect + explanation + source IDs. Multi-select (type_k)
+    correctness is set-equality: every correct key chosen, no extras.
+    short_answer falls back to a reveal-only "model answer" panel
+    because we can't grade free text in JS.
+    """
+    qtype = question.get("type") or "type_a"
+    qid = question.get("id") or ""
+    correct_keys = _correct_keys(question)
+    correct_attr = "|".join(correct_keys)
+    input_type = _question_input_type(qtype)
+
+    is_short_answer = qtype == "short_answer"
+
+    if is_short_answer:
+        controls_html = f"""
+          <label class="hb-option hb-option--short">
+            <span>Your answer (free text — not graded)</span>
+            <input type="text" name="hb-answer-{_esc(qid)}" autocomplete="off">
+          </label>
+        """
+        buttons_html = """
+          <button type="button" class="hb-btn hb-btn--reveal" data-action="reveal">Reveal model answer</button>
+        """
+    else:
+        option_rows = []
+        for option in question.get("options") or []:
+            key = (option.get("key") or "").upper()
+            option_rows.append(
+                f"""
+                <label class="hb-option">
+                  <input type="{input_type}" name="hb-answer-{_esc(qid)}" value="{_esc(key)}">
+                  <span class="hb-option-key">{_esc(key)}.</span>
+                  <span class="hb-option-text">{_esc(option.get('text'))}</span>
+                </label>
+                """
+            )
+        controls_html = f'<div class="hb-options">{"".join(option_rows)}</div>'
+        buttons_html = """
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Submit answer</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Reset</button>
+        """
+
+    source_chips = "".join(
+        f'<code class="hb-result-source">{_esc(sid)}</code>'
+        for sid in question.get("source_ids") or []
+    )
+    reasoning_chips = "".join(
+        f'<span class="hb-result-tag">{_esc(tag)}</span>'
+        for tag in question.get("tests_reasoning") or []
+    )
+    reasoning_html = (
+        f'<div class="hb-result-tags">Reasoning tags: {reasoning_chips}</div>'
+        if reasoning_chips
+        else ""
+    )
+    correct_text = (
+        "" if is_short_answer else f"<strong>Correct answer:</strong> {_esc(', '.join(correct_keys))}"
+    )
+
     return f"""
-      <article class="hb-question" data-answer="{_esc(question.get('correct_answer'))}">
+      <form class="hb-question"
+            data-question-id="{_esc(qid)}"
+            data-question-type="{_esc(qtype)}"
+            data-correct-answer="{_esc(correct_attr)}"
+            data-graded="{('false' if is_short_answer else 'true')}"
+            novalidate>
         <div class="hb-question-top">
-          <span>Question {ordinal}</span>
-          {_render_badge(question.get("type", "question"))}
-          {_render_badge(question.get("difficulty", "intermediate"))}
+          <span class="hb-question-ord">Question {ordinal}</span>
+          {_render_badge(qtype)}
+          {_render_badge(question.get('difficulty', 'intermediate'))}
+          <span class="hb-question-id"><code>{_esc(qid)}</code></span>
         </div>
-        <p>{_esc(question.get("stem"))}</p>
-        {options_html}
-        <button type="button" class="hb-answer-toggle">Show answer</button>
-        <div class="hb-answer" hidden>
-          <strong>Answer: {_esc(question.get("correct_answer"))}</strong>
-          <p>{_esc(question.get("explanation"))}</p>
+        <p class="hb-question-stem">{_esc(question.get('stem'))}</p>
+        {controls_html}
+        <div class="hb-question-buttons">
+          {buttons_html}
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
         </div>
-      </article>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline">{correct_text}</p>
+          <p class="hb-result-explanation">{_esc(question.get('explanation'))}</p>
+          <div class="hb-result-sources"><span>Sources:</span> {source_chips or '<em>none</em>'}</div>
+          {reasoning_html}
+        </div>
+      </form>
     """
 
 
@@ -191,9 +272,37 @@ def _page_shell(title: str, body: str) -> str:
     .hb-chip-grid {{ display: grid; gap: 8px; }}
     .hb-chip {{ display: grid; gap: 3px; border: 1px solid #d6dee8; border-radius: 6px; padding: 8px; }}
     .hb-chip small {{ color: #64748b; }}
-    .hb-question-top {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }}
-    .hb-answer-toggle {{ border: 1px solid #0f766e; background: #0f766e; color: #fff; border-radius: 6px; padding: 7px 10px; cursor: pointer; }}
-    .hb-answer {{ margin-top: 12px; border-left: 3px solid #0f766e; padding-left: 12px; color: #1f2937; }}
+    .hb-question {{ display: grid; gap: 10px; }}
+    .hb-question-top {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }}
+    .hb-question-id {{ margin-left: auto; font-size: 12px; color: #64748b; }}
+    .hb-question-stem {{ margin: 0; font-size: 15px; line-height: 1.5; color: #0f172a; }}
+    .hb-options {{ display: grid; gap: 6px; }}
+    .hb-option {{ display: grid; grid-template-columns: auto auto 1fr; gap: 8px; align-items: start; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; transition: border-color .12s, background .12s; }}
+    .hb-option:hover {{ border-color: #99f6e4; background: #f0fdfa; }}
+    .hb-option input {{ margin-top: 3px; }}
+    .hb-option-key {{ font-weight: 700; color: #115e59; }}
+    .hb-option--short {{ grid-template-columns: 1fr; }}
+    .hb-option--short input {{ font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; }}
+    .hb-question-buttons {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }}
+    .hb-question-status {{ font-size: 13px; color: #475569; }}
+    .hb-btn {{ font: inherit; cursor: pointer; padding: 7px 12px; border-radius: 6px; border: 1px solid #0f766e; background: #0f766e; color: #fff; }}
+    .hb-btn--reset, .hb-btn--ghost {{ background: transparent; color: #0f766e; }}
+    .hb-btn--reveal {{ background: #475569; border-color: #475569; }}
+    .hb-result {{ margin-top: 4px; padding: 12px; border-left: 4px solid #0f766e; border-radius: 6px; background: #f8fafc; color: #1f2937; }}
+    .hb-result--correct {{ border-left-color: #16a34a; background: #f0fdf4; }}
+    .hb-result--incorrect {{ border-left-color: #dc2626; background: #fef2f2; }}
+    .hb-result--reveal {{ border-left-color: #475569; background: #f1f5f9; }}
+    .hb-result-headline {{ margin: 0 0 6px; font-weight: 600; }}
+    .hb-result-explanation {{ margin: 0 0 8px; }}
+    .hb-result-sources {{ display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: #475569; }}
+    .hb-result-source {{ background: #fff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; }}
+    .hb-result-tags {{ margin-top: 6px; font-size: 12px; color: #475569; }}
+    .hb-result-tag {{ display: inline-block; background: #e0f2fe; border-radius: 999px; padding: 2px 8px; margin-right: 4px; color: #075985; }}
+    .hb-quiz-header {{ display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }}
+    .hb-quiz-header h2 {{ margin: 0; }}
+    .hb-quiz-tools {{ display: flex; align-items: center; gap: 10px; }}
+    .hb-score {{ font-size: 13px; color: #0f172a; background: #f1f5f9; padding: 4px 10px; border-radius: 999px; }}
+    .hb-quiz-note {{ margin: 6px 0 12px; font-size: 13px; color: #475569; }}
     .hb-disclaimer {{ border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px; color: #78350f; }}
     .hb-controls {{ display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(150px, 1fr)); gap: 10px 14px; align-items: end; margin-top: 22px; padding: 14px; border: 1px solid #d6dee8; border-radius: 8px; background: #f8fafc; }}
     .hb-control {{ display: grid; gap: 4px; font-size: 12px; color: #475569; }}
@@ -211,15 +320,6 @@ def _page_shell(title: str, body: str) -> str:
   <main class="hb-wrap">
     {body}
   </main>
-  <script>
-    document.querySelectorAll('.hb-answer-toggle').forEach((button) => {{
-      button.addEventListener('click', () => {{
-        const answer = button.parentElement.querySelector('.hb-answer');
-        answer.hidden = !answer.hidden;
-        button.textContent = answer.hidden ? 'Show answer' : 'Hide answer';
-      }});
-    }});
-  </script>
 </body>
 </html>
 """
@@ -390,6 +490,8 @@ def render_chapter(load, chapter: dict[str, Any]) -> str:
     question_html = "".join(
         _render_question(question, index + 1) for index, question in enumerate(questions)
     )
+    graded_questions = [q for q in questions if (q.get("type") or "type_a") != "short_answer"]
+    graded_total = len(graded_questions)
     linked_all = []
     for values in (chapter.get("linked_entities") or {}).values():
         if isinstance(values, list):
@@ -421,8 +523,17 @@ def render_chapter(load, chapter: dict[str, Any]) -> str:
           <h2>Worked synthetic cases</h2>
           <ul>{''.join(cases) or '<li>No cases linked yet.</li>'}</ul>
         </section>
-        <section class="hb-panel">
-          <h2>Practice questions</h2>
+        <section class="hb-panel hb-quiz">
+          <div class="hb-quiz-header">
+            <h2>Practice questions</h2>
+            <div class="hb-quiz-tools">
+              <span class="hb-score" id="hb-score" aria-live="polite">0 of {graded_total} answered · 0 correct</span>
+              <button type="button" class="hb-btn hb-btn--ghost" id="hb-quiz-reset">Reset quiz</button>
+            </div>
+          </div>
+          <p class="hb-quiz-note">Answers, score, and reasoning tags are kept in your
+          browser session only and clear when you close this tab. Multi-select
+          questions require every correct option (and no extras) for a credit.</p>
           {question_html or '<p>No questions linked yet.</p>'}
         </section>
       </div>
@@ -442,6 +553,151 @@ def render_chapter(load, chapter: dict[str, Any]) -> str:
         </section>
       </aside>
     </div>
+    <script>
+      (function() {{
+        var CHAPTER_ID = {json.dumps(chapter['id'])};
+        var GRADED_TOTAL = {graded_total};
+        var STORAGE_KEY = 'openonco-handbook-' + CHAPTER_ID + '-quiz';
+        var forms = Array.prototype.slice.call(document.querySelectorAll('.hb-quiz .hb-question'));
+        var scoreEl = document.getElementById('hb-score');
+        var resetAllBtn = document.getElementById('hb-quiz-reset');
+        var storage;
+        try {{ storage = window.sessionStorage; }} catch (e) {{ storage = null; }}
+        var state = {{}};
+        if (storage) {{
+          try {{ state = JSON.parse(storage.getItem(STORAGE_KEY) || '{{}}') || {{}}; }} catch (e) {{ state = {{}}; }}
+        }}
+        function persist() {{
+          if (!storage) {{ return; }}
+          try {{ storage.setItem(STORAGE_KEY, JSON.stringify(state)); }} catch (e) {{}}
+        }}
+        function normalize(list) {{
+          return (list || []).map(function(k) {{ return String(k).toUpperCase(); }}).slice().sort().join('|');
+        }}
+        function updateScore() {{
+          var answered = 0;
+          var correct = 0;
+          Object.keys(state).forEach(function(qid) {{
+            var entry = state[qid];
+            if (entry && entry.submitted && entry.graded) {{
+              answered += 1;
+              if (entry.correct) {{ correct += 1; }}
+            }}
+          }});
+          if (scoreEl) {{
+            scoreEl.textContent = answered + ' of ' + GRADED_TOTAL + ' answered · ' + correct + ' correct';
+          }}
+        }}
+        forms.forEach(function(form) {{
+          var qid = form.getAttribute('data-question-id');
+          var qtype = form.getAttribute('data-question-type');
+          var graded = form.getAttribute('data-graded') === 'true';
+          var correctAttr = form.getAttribute('data-correct-answer') || '';
+          var correctKey = correctAttr.split('|').filter(Boolean).slice().sort().join('|');
+          var resultEl = form.querySelector('.hb-result');
+          var headlineEl = form.querySelector('[data-role="headline"]');
+          var statusEl = form.querySelector('[data-role="status"]');
+          var submitBtn = form.querySelector('[data-action="submit"]');
+          var resetBtn = form.querySelector('[data-action="reset"]');
+          var revealBtn = form.querySelector('[data-action="reveal"]');
+          function selectedKeys() {{
+            return Array.prototype.slice.call(
+              form.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked')
+            ).map(function(input) {{ return input.value; }});
+          }}
+          function setResultClass(isCorrect) {{
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (isCorrect === true) {{ resultEl.classList.add('hb-result--correct'); }}
+            else if (isCorrect === false) {{ resultEl.classList.add('hb-result--incorrect'); }}
+            else {{ resultEl.classList.add('hb-result--reveal'); }}
+          }}
+          function showResult(entry) {{
+            resultEl.hidden = false;
+            if (graded) {{
+              setResultClass(entry.correct);
+              if (statusEl) {{
+                statusEl.textContent = entry.correct ? '✓ Correct' : '✗ Not yet — see explanation';
+              }}
+            }} else {{
+              setResultClass(null);
+              if (statusEl) {{ statusEl.textContent = 'Model answer revealed'; }}
+            }}
+          }}
+          function clearResult() {{
+            resultEl.hidden = true;
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (statusEl) {{ statusEl.textContent = ''; }}
+          }}
+          function rehydrate() {{
+            var entry = state[qid];
+            if (!entry) {{ return; }}
+            (entry.selected || []).forEach(function(key) {{
+              var input = form.querySelector('input[value="' + key + '"]');
+              if (input) {{ input.checked = true; }}
+            }});
+            if (entry.submitted) {{ showResult(entry); }}
+          }}
+          function submitGraded(event) {{
+            if (event && event.preventDefault) {{ event.preventDefault(); }}
+            var selected = selectedKeys();
+            if (selected.length === 0) {{
+              if (statusEl) {{ statusEl.textContent = 'Pick an option first.'; }}
+              return;
+            }}
+            var selectedKey = normalize(selected);
+            var isCorrect = selectedKey === correctKey;
+            state[qid] = {{ submitted: true, graded: true, selected: selected, correct: isCorrect }};
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }}
+          function revealOnly(event) {{
+            if (event && event.preventDefault) {{ event.preventDefault(); }}
+            state[qid] = {{ submitted: true, graded: false, selected: [], correct: null }};
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }}
+          function resetQuestion(event) {{
+            if (event && event.preventDefault) {{ event.preventDefault(); }}
+            Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {{
+              if (input.type === 'radio' || input.type === 'checkbox') {{ input.checked = false; }}
+              else {{ input.value = ''; }}
+            }});
+            delete state[qid];
+            persist();
+            clearResult();
+            updateScore();
+          }}
+          if (submitBtn) {{ submitBtn.addEventListener('click', submitGraded); }}
+          if (resetBtn) {{ resetBtn.addEventListener('click', resetQuestion); }}
+          if (revealBtn) {{ revealBtn.addEventListener('click', revealOnly); }}
+          form.addEventListener('submit', function(event) {{ event.preventDefault(); if (graded) {{ submitGraded(event); }} }});
+          rehydrate();
+        }});
+        if (resetAllBtn) {{
+          resetAllBtn.addEventListener('click', function() {{
+            state = {{}};
+            persist();
+            forms.forEach(function(form) {{
+              Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {{
+                if (input.type === 'radio' || input.type === 'checkbox') {{ input.checked = false; }}
+                else {{ input.value = ''; }}
+              }});
+              var resultEl = form.querySelector('.hb-result');
+              var statusEl = form.querySelector('[data-role="status"]');
+              if (resultEl) {{
+                resultEl.hidden = true;
+                resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+              }}
+              if (statusEl) {{ statusEl.textContent = ''; }}
+            }});
+            updateScore();
+          }});
+        }}
+        updateScore();
+      }})();
+    </script>
     """
     return _page_shell(chapter["title"], body)
 

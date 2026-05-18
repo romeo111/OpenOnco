@@ -48,9 +48,37 @@
     .hb-chip-grid { display: grid; gap: 8px; }
     .hb-chip { display: grid; gap: 3px; border: 1px solid #d6dee8; border-radius: 6px; padding: 8px; }
     .hb-chip small { color: #64748b; }
-    .hb-question-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
-    .hb-answer-toggle { border: 1px solid #0f766e; background: #0f766e; color: #fff; border-radius: 6px; padding: 7px 10px; cursor: pointer; }
-    .hb-answer { margin-top: 12px; border-left: 3px solid #0f766e; padding-left: 12px; color: #1f2937; }
+    .hb-question { display: grid; gap: 10px; }
+    .hb-question-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .hb-question-id { margin-left: auto; font-size: 12px; color: #64748b; }
+    .hb-question-stem { margin: 0; font-size: 15px; line-height: 1.5; color: #0f172a; }
+    .hb-options { display: grid; gap: 6px; }
+    .hb-option { display: grid; grid-template-columns: auto auto 1fr; gap: 8px; align-items: start; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; transition: border-color .12s, background .12s; }
+    .hb-option:hover { border-color: #99f6e4; background: #f0fdfa; }
+    .hb-option input { margin-top: 3px; }
+    .hb-option-key { font-weight: 700; color: #115e59; }
+    .hb-option--short { grid-template-columns: 1fr; }
+    .hb-option--short input { font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; }
+    .hb-question-buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .hb-question-status { font-size: 13px; color: #475569; }
+    .hb-btn { font: inherit; cursor: pointer; padding: 7px 12px; border-radius: 6px; border: 1px solid #0f766e; background: #0f766e; color: #fff; }
+    .hb-btn--reset, .hb-btn--ghost { background: transparent; color: #0f766e; }
+    .hb-btn--reveal { background: #475569; border-color: #475569; }
+    .hb-result { margin-top: 4px; padding: 12px; border-left: 4px solid #0f766e; border-radius: 6px; background: #f8fafc; color: #1f2937; }
+    .hb-result--correct { border-left-color: #16a34a; background: #f0fdf4; }
+    .hb-result--incorrect { border-left-color: #dc2626; background: #fef2f2; }
+    .hb-result--reveal { border-left-color: #475569; background: #f1f5f9; }
+    .hb-result-headline { margin: 0 0 6px; font-weight: 600; }
+    .hb-result-explanation { margin: 0 0 8px; }
+    .hb-result-sources { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: #475569; }
+    .hb-result-source { background: #fff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; }
+    .hb-result-tags { margin-top: 6px; font-size: 12px; color: #475569; }
+    .hb-result-tag { display: inline-block; background: #e0f2fe; border-radius: 999px; padding: 2px 8px; margin-right: 4px; color: #075985; }
+    .hb-quiz-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+    .hb-quiz-header h2 { margin: 0; }
+    .hb-quiz-tools { display: flex; align-items: center; gap: 10px; }
+    .hb-score { font-size: 13px; color: #0f172a; background: #f1f5f9; padding: 4px 10px; border-radius: 999px; }
+    .hb-quiz-note { margin: 6px 0 12px; font-size: 13px; color: #475569; }
     .hb-disclaimer { border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px; color: #78350f; }
     .hb-controls { display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(150px, 1fr)); gap: 10px 14px; align-items: end; margin-top: 22px; padding: 14px; border: 1px solid #d6dee8; border-radius: 8px; background: #f8fafc; }
     .hb-control { display: grid; gap: 4px; font-size: 12px; color: #475569; }
@@ -122,53 +150,176 @@
           <h2>Worked synthetic cases</h2>
           <ul><li><code>patient_dlbcl_low_ipi</code> Low-IPI newly diagnosed DLBCL - <span>standard-track reasoning, baseline workup completeness</span> <small>examples/patient_dlbcl_low_ipi.json</small></li><li><code>patient_dlbcl_high_ipi</code> High-IPI newly diagnosed DLBCL - <span>intensification trigger, Pola-R-CHP access caveat</span> <small>examples/patient_dlbcl_high_ipi.json</small></li></ul>
         </section>
-        <section class="hb-panel">
-          <h2>Practice questions</h2>
+        <section class="hb-panel hb-quiz">
+          <div class="hb-quiz-header">
+            <h2>Practice questions</h2>
+            <div class="hb-quiz-tools">
+              <span class="hb-score" id="hb-score" aria-live="polite">0 of 3 answered · 0 correct</span>
+              <button type="button" class="hb-btn hb-btn--ghost" id="hb-quiz-reset">Reset quiz</button>
+            </div>
+          </div>
+          <p class="hb-quiz-note">Answers, score, and reasoning tags are kept in your
+          browser session only and clear when you close this tab. Multi-select
+          questions require every correct option (and no extras) for a credit.</p>
           
-      <article class="hb-question" data-answer="A">
+      <form class="hb-question"
+            data-question-id="HQ-DLBCL-1L-001"
+            data-question-type="type_a"
+            data-correct-answer="A"
+            data-graded="true"
+            novalidate>
         <div class="hb-question-top">
-          <span>Question 1</span>
+          <span class="hb-question-ord">Question 1</span>
           <span class="hb-badge">type_a</span>
           <span class="hb-badge">intro</span>
+          <span class="hb-question-id"><code>HQ-DLBCL-1L-001</code></span>
         </div>
-        <p>A fit patient has newly diagnosed CD20-positive DLBCL NOS with IPI 0-1 and no major organ dysfunction. In the OpenOnco first-line learning model, which track is the standard default?</p>
-        <ol><li><strong>A.</strong> R-CHOP standard track</li><li><strong>B.</strong> Pola-R-CHP intensified track</li><li><strong>C.</strong> DA-EPOCH-R for all DLBCL patients</li><li><strong>D.</strong> Observation until progression</li></ol>
-        <button type="button" class="hb-answer-toggle">Show answer</button>
-        <div class="hb-answer" hidden>
-          <strong>Answer: A</strong>
-          <p>The first-line DLBCL algorithm keeps R-CHOP as the standard default when low-risk features are present and no intensification red flag dominates. Pola-R-CHP is modeled as the intensified track for higher-risk disease where access and contraindications are addressed.</p>
+        <p class="hb-question-stem">A fit patient has newly diagnosed CD20-positive DLBCL NOS with IPI 0-1 and no major organ dysfunction. In the OpenOnco first-line learning model, which track is the standard default?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-DLBCL-1L-001" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">R-CHOP standard track</span>
+                </label>
+                
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-DLBCL-1L-001" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Pola-R-CHP intensified track</span>
+                </label>
+                
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-DLBCL-1L-001" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">DA-EPOCH-R for all DLBCL patients</span>
+                </label>
+                
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-DLBCL-1L-001" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Observation until progression</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+          
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Submit answer</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Reset</button>
+        
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
         </div>
-      </article>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Correct answer:</strong> A</p>
+          <p class="hb-result-explanation">The first-line DLBCL algorithm keeps R-CHOP as the standard default when low-risk features are present and no intensification red flag dominates. Pola-R-CHP is modeled as the intensified track for higher-risk disease where access and contraindications are addressed.</p>
+          <div class="hb-result-sources"><span>Sources:</span> <code class="hb-result-source">SRC-NCCN-BCELL-2025</code><code class="hb-result-source">SRC-ESMO-DLBCL-2024</code></div>
+          <div class="hb-result-tags">Reasoning tags: <span class="hb-result-tag">regimen_selection</span><span class="hb-result-tag">risk_stratification</span></div>
+        </div>
+      </form>
     
-      <article class="hb-question" data-answer="A">
+      <form class="hb-question"
+            data-question-id="HQ-DLBCL-1L-002"
+            data-question-type="type_a"
+            data-correct-answer="A"
+            data-graded="true"
+            novalidate>
         <div class="hb-question-top">
-          <span>Question 2</span>
+          <span class="hb-question-ord">Question 2</span>
           <span class="hb-badge">type_a</span>
           <span class="hb-badge">intro</span>
+          <span class="hb-question-id"><code>HQ-DLBCL-1L-002</code></span>
         </div>
-        <p>Which missing baseline item most directly blocks safe anthracycline-containing regimen planning in this chapter?</p>
-        <ol><li><strong>A.</strong> Baseline LVEF or equivalent cardiac assessment</li><li><strong>B.</strong> Favorite patient-reported diet</li><li><strong>C.</strong> Hair color</li><li><strong>D.</strong> Non-clinical travel preference</li></ol>
-        <button type="button" class="hb-answer-toggle">Show answer</button>
-        <div class="hb-answer" hidden>
-          <strong>Answer: A</strong>
-          <p>R-CHOP and Pola-R-CHP are anthracycline-containing pathways. Baseline cardiac function is a safety gate because low LVEF can contraindicate anthracycline exposure.</p>
+        <p class="hb-question-stem">Which missing baseline item most directly blocks safe anthracycline-containing regimen planning in this chapter?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-DLBCL-1L-002" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Baseline LVEF or equivalent cardiac assessment</span>
+                </label>
+                
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-DLBCL-1L-002" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Favorite patient-reported diet</span>
+                </label>
+                
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-DLBCL-1L-002" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Hair color</span>
+                </label>
+                
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-DLBCL-1L-002" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Non-clinical travel preference</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+          
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Submit answer</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Reset</button>
+        
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
         </div>
-      </article>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Correct answer:</strong> A</p>
+          <p class="hb-result-explanation">R-CHOP and Pola-R-CHP are anthracycline-containing pathways. Baseline cardiac function is a safety gate because low LVEF can contraindicate anthracycline exposure.</p>
+          <div class="hb-result-sources"><span>Sources:</span> <code class="hb-result-source">SRC-NCCN-BCELL-2025</code><code class="hb-result-source">SRC-ESMO-DLBCL-2024</code></div>
+          <div class="hb-result-tags">Reasoning tags: <span class="hb-result-tag">contraindication</span><span class="hb-result-tag">workup_gap</span></div>
+        </div>
+      </form>
     
-      <article class="hb-question" data-answer="A,B,D">
+      <form class="hb-question"
+            data-question-id="HQ-DLBCL-1L-003"
+            data-question-type="type_k"
+            data-correct-answer="A|B|D"
+            data-graded="true"
+            novalidate>
         <div class="hb-question-top">
-          <span>Question 3</span>
+          <span class="hb-question-ord">Question 3</span>
           <span class="hb-badge">type_k</span>
           <span class="hb-badge">intermediate</span>
+          <span class="hb-question-id"><code>HQ-DLBCL-1L-003</code></span>
         </div>
-        <p>For first-line DLBCL reasoning, which statements are true in the OpenOnco handbook model?</p>
-        <ol><li><strong>A.</strong> HBV screening is a parallel safety requirement with anti-CD20 treatment.</li><li><strong>B.</strong> CNS-risk assessment may change prophylaxis discussion without necessarily switching the main regimen.</li><li><strong>C.</strong> The chapter should be treated as official ESMO CME content.</li><li><strong>D.</strong> IPI can influence whether intensified-track reasoning is considered.</li></ol>
-        <button type="button" class="hb-answer-toggle">Show answer</button>
-        <div class="hb-answer" hidden>
-          <strong>Answer: A,B,D</strong>
-          <p>HBV screening, CNS-risk assessment, and IPI-driven risk stratification are all relevant. The handbook chapter is OpenOnco-authored educational content and must not be represented as official ESMO material.</p>
+        <p class="hb-question-stem">For first-line DLBCL reasoning, which statements are true in the OpenOnco handbook model?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-DLBCL-1L-003" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">HBV screening is a parallel safety requirement with anti-CD20 treatment.</span>
+                </label>
+                
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-DLBCL-1L-003" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">CNS-risk assessment may change prophylaxis discussion without necessarily switching the main regimen.</span>
+                </label>
+                
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-DLBCL-1L-003" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">The chapter should be treated as official ESMO CME content.</span>
+                </label>
+                
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-DLBCL-1L-003" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">IPI can influence whether intensified-track reasoning is considered.</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+          
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Submit answer</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Reset</button>
+        
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
         </div>
-      </article>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Correct answer:</strong> A, B, D</p>
+          <p class="hb-result-explanation">HBV screening, CNS-risk assessment, and IPI-driven risk stratification are all relevant. The handbook chapter is OpenOnco-authored educational content and must not be represented as official ESMO material.</p>
+          <div class="hb-result-sources"><span>Sources:</span> <code class="hb-result-source">SRC-NCCN-BCELL-2025</code><code class="hb-result-source">SRC-ESMO-DLBCL-2024</code><code class="hb-result-source">SRC-POLARIX-TILLY-2022</code></div>
+          <div class="hb-result-tags">Reasoning tags: <span class="hb-result-tag">safety_screening</span><span class="hb-result-tag">risk_stratification</span><span class="hb-result-tag">legal_boundary</span></div>
+        </div>
+      </form>
     
         </section>
       </div>
@@ -191,16 +342,152 @@
         </section>
       </aside>
     </div>
+    <script>
+      (function() {
+        var CHAPTER_ID = "HB-DLBCL-1L";
+        var GRADED_TOTAL = 3;
+        var STORAGE_KEY = 'openonco-handbook-' + CHAPTER_ID + '-quiz';
+        var forms = Array.prototype.slice.call(document.querySelectorAll('.hb-quiz .hb-question'));
+        var scoreEl = document.getElementById('hb-score');
+        var resetAllBtn = document.getElementById('hb-quiz-reset');
+        var storage;
+        try { storage = window.sessionStorage; } catch (e) { storage = null; }
+        var state = {};
+        if (storage) {
+          try { state = JSON.parse(storage.getItem(STORAGE_KEY) || '{}') || {}; } catch (e) { state = {}; }
+        }
+        function persist() {
+          if (!storage) { return; }
+          try { storage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        }
+        function normalize(list) {
+          return (list || []).map(function(k) { return String(k).toUpperCase(); }).slice().sort().join('|');
+        }
+        function updateScore() {
+          var answered = 0;
+          var correct = 0;
+          Object.keys(state).forEach(function(qid) {
+            var entry = state[qid];
+            if (entry && entry.submitted && entry.graded) {
+              answered += 1;
+              if (entry.correct) { correct += 1; }
+            }
+          });
+          if (scoreEl) {
+            scoreEl.textContent = answered + ' of ' + GRADED_TOTAL + ' answered · ' + correct + ' correct';
+          }
+        }
+        forms.forEach(function(form) {
+          var qid = form.getAttribute('data-question-id');
+          var qtype = form.getAttribute('data-question-type');
+          var graded = form.getAttribute('data-graded') === 'true';
+          var correctAttr = form.getAttribute('data-correct-answer') || '';
+          var correctKey = correctAttr.split('|').filter(Boolean).slice().sort().join('|');
+          var resultEl = form.querySelector('.hb-result');
+          var headlineEl = form.querySelector('[data-role="headline"]');
+          var statusEl = form.querySelector('[data-role="status"]');
+          var submitBtn = form.querySelector('[data-action="submit"]');
+          var resetBtn = form.querySelector('[data-action="reset"]');
+          var revealBtn = form.querySelector('[data-action="reveal"]');
+          function selectedKeys() {
+            return Array.prototype.slice.call(
+              form.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked')
+            ).map(function(input) { return input.value; });
+          }
+          function setResultClass(isCorrect) {
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (isCorrect === true) { resultEl.classList.add('hb-result--correct'); }
+            else if (isCorrect === false) { resultEl.classList.add('hb-result--incorrect'); }
+            else { resultEl.classList.add('hb-result--reveal'); }
+          }
+          function showResult(entry) {
+            resultEl.hidden = false;
+            if (graded) {
+              setResultClass(entry.correct);
+              if (statusEl) {
+                statusEl.textContent = entry.correct ? '✓ Correct' : '✗ Not yet — see explanation';
+              }
+            } else {
+              setResultClass(null);
+              if (statusEl) { statusEl.textContent = 'Model answer revealed'; }
+            }
+          }
+          function clearResult() {
+            resultEl.hidden = true;
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (statusEl) { statusEl.textContent = ''; }
+          }
+          function rehydrate() {
+            var entry = state[qid];
+            if (!entry) { return; }
+            (entry.selected || []).forEach(function(key) {
+              var input = form.querySelector('input[value="' + key + '"]');
+              if (input) { input.checked = true; }
+            });
+            if (entry.submitted) { showResult(entry); }
+          }
+          function submitGraded(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            var selected = selectedKeys();
+            if (selected.length === 0) {
+              if (statusEl) { statusEl.textContent = 'Pick an option first.'; }
+              return;
+            }
+            var selectedKey = normalize(selected);
+            var isCorrect = selectedKey === correctKey;
+            state[qid] = { submitted: true, graded: true, selected: selected, correct: isCorrect };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function revealOnly(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            state[qid] = { submitted: true, graded: false, selected: [], correct: null };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function resetQuestion(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+              if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+              else { input.value = ''; }
+            });
+            delete state[qid];
+            persist();
+            clearResult();
+            updateScore();
+          }
+          if (submitBtn) { submitBtn.addEventListener('click', submitGraded); }
+          if (resetBtn) { resetBtn.addEventListener('click', resetQuestion); }
+          if (revealBtn) { revealBtn.addEventListener('click', revealOnly); }
+          form.addEventListener('submit', function(event) { event.preventDefault(); if (graded) { submitGraded(event); } });
+          rehydrate();
+        });
+        if (resetAllBtn) {
+          resetAllBtn.addEventListener('click', function() {
+            state = {};
+            persist();
+            forms.forEach(function(form) {
+              Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+                if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+                else { input.value = ''; }
+              });
+              var resultEl = form.querySelector('.hb-result');
+              var statusEl = form.querySelector('[data-role="status"]');
+              if (resultEl) {
+                resultEl.hidden = true;
+                resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+              }
+              if (statusEl) { statusEl.textContent = ''; }
+            });
+            updateScore();
+          });
+        }
+        updateScore();
+      })();
+    </script>
     
   </main>
-  <script>
-    document.querySelectorAll('.hb-answer-toggle').forEach((button) => {
-      button.addEventListener('click', () => {
-        const answer = button.parentElement.querySelector('.hb-answer');
-        answer.hidden = !answer.hidden;
-        button.textContent = answer.hidden ? 'Show answer' : 'Hide answer';
-      });
-    });
-  </script>
 </body>
 </html>
