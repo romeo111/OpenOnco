@@ -11,6 +11,10 @@ KB_ROOT = Path("knowledge_base/hosted/content")
 
 
 def test_handbook_seed_loads_with_questions():
+    """The MVP chapters + the Phase 5 expansion chapters all load and
+    pass schema + reference validation. Uses subset checks so future
+    chapter additions don't break the test — assert what *must* be
+    present, not what may not be."""
     result = load_content(KB_ROOT)
 
     chapter_ids = {
@@ -18,31 +22,56 @@ def test_handbook_seed_loads_with_questions():
         for eid, info in result.entities_by_id.items()
         if info["type"] == "handbook_chapters"
     }
-    assert chapter_ids == {
+    assert {
+        # MVP set
         "HB-CRC-METASTATIC-1L",
         "HB-DLBCL-1L",
         "HB-MM-1L",
         "HB-NSCLC-METASTATIC-1L",
-    }
+        # Phase 5 expansion
+        "HB-BREAST-HR-POS-HER2-NEG-1L",
+        "HB-BREAST-HER2-POS-MET-1L",
+        "HB-PROSTATE-MCRPC-1L",
+        "HB-OVARIAN-MAINTENANCE-1L",
+        "HB-MELANOMA-METASTATIC-1L",
+    }.issubset(chapter_ids)
 
     chapter = result.entities_by_id["HB-DLBCL-1L"]
     assert chapter["type"] == "handbook_chapters"
     assert chapter["data"]["review_status"] == "draft"
     assert "SRC-POLARIX-TILLY-2022" in chapter["data"]["source_ids"]
 
+    # Phase 5 chapter — confirm it loaded with the linked entities the
+    # render layer expects (signals the loader actually validated the
+    # cross-references rather than letting them slip through).
+    breast = result.entities_by_id["HB-BREAST-HR-POS-HER2-NEG-1L"]
+    assert "ALGO-BREAST-1L" in (breast["data"].get("linked_entities") or {}).get(
+        "algorithms", []
+    )
+    assert "SRC-NCCN-BREAST-2025" in breast["data"]["source_ids"]
+
     question_ids = {
         eid
         for eid, info in result.entities_by_id.items()
         if info["type"] == "handbook_questions"
     }
-    assert len(question_ids) == 12
+    assert len(question_ids) >= 27, (
+        "expected at least 27 questions (12 MVP + 15 Phase 5 — 3 per new chapter)"
+    )
     assert {
+        # MVP coverage spot-check.
         "HQ-DLBCL-1L-001",
         "HQ-DLBCL-1L-002",
         "HQ-DLBCL-1L-003",
         "HQ-CRC-MET-1L-001",
         "HQ-NSCLC-MET-1L-001",
         "HQ-MM-1L-001",
+        # Phase 5 coverage spot-check — every new chapter exposes Q1.
+        "HQ-BREAST-HR-POS-1L-001",
+        "HQ-BREAST-HER2-POS-1L-001",
+        "HQ-PROSTATE-MCRPC-1L-001",
+        "HQ-OVARIAN-MAINTENANCE-1L-001",
+        "HQ-MELANOMA-MET-1L-001",
     }.issubset(question_ids)
 
 
@@ -89,14 +118,21 @@ def test_build_handbook_writes_index_and_chapter(tmp_path: Path):
 
     chapters_by_id = {chapter["id"]: chapter for chapter in payload["chapters"]}
 
-    assert payload["count"] == 4
-    assert set(chapters_by_id) == {
+    assert payload["count"] >= 9, "MVP (4) + Phase 5 expansion (5) should be in the payload"
+    assert {
         "HB-CRC-METASTATIC-1L",
         "HB-DLBCL-1L",
         "HB-MM-1L",
         "HB-NSCLC-METASTATIC-1L",
-    }
-    assert all(chapter["question_count"] == 3 for chapter in chapters_by_id.values())
+        "HB-BREAST-HR-POS-HER2-NEG-1L",
+        "HB-BREAST-HER2-POS-MET-1L",
+        "HB-PROSTATE-MCRPC-1L",
+        "HB-OVARIAN-MAINTENANCE-1L",
+        "HB-MELANOMA-METASTATIC-1L",
+    }.issubset(chapters_by_id)
+    # Every chapter seeds 3 questions (handoff Phase-5 acceptance: 3-5
+    # practice questions per chapter; we chose the lower bound).
+    assert all(chapter["question_count"] >= 3 for chapter in chapters_by_id.values())
 
     index = (tmp_path / "handbook.html").read_text(encoding="utf-8")
     dlbcl_chapter = (tmp_path / "handbook" / "hb-dlbcl-1l.html").read_text(
@@ -109,6 +145,12 @@ def test_build_handbook_writes_index_and_chapter(tmp_path: Path):
         encoding="utf-8"
     )
     mm_chapter = (tmp_path / "handbook" / "hb-mm-1l.html").read_text(encoding="utf-8")
+    breast_hr_chapter = (
+        tmp_path / "handbook" / "hb-breast-hr-pos-her2-neg-1l.html"
+    ).read_text(encoding="utf-8")
+    melanoma_chapter = (
+        tmp_path / "handbook" / "hb-melanoma-metastatic-1l.html"
+    ).read_text(encoding="utf-8")
     search = json.loads((tmp_path / "handbook_index.json").read_text(encoding="utf-8"))
 
     assert "OpenOnco Handbook" in index
@@ -116,20 +158,39 @@ def test_build_handbook_writes_index_and_chapter(tmp_path: Path):
     assert "Metastatic colorectal cancer" in index
     assert "Metastatic NSCLC" in index
     assert "Multiple myeloma" in index
+    # Phase 5 chapters surface in the index.
+    assert "HR+/HER2- metastatic breast cancer" in index
+    assert "HER2+ metastatic breast cancer" in index
+    assert "castration-resistant prostate cancer" in index
+    assert "ovarian cancer: HRD/BRCA" in index
+    assert "BRAF / IO first-line reasoning" in index
+
     assert "Practice questions" in dlbcl_chapter
     assert "Question 1" in dlbcl_chapter
     assert "SRC-POLARIX-TILLY-2022" in dlbcl_chapter
     assert "MSI-H/dMMR is treatment-defining" in crc_chapter
     assert "driver-first routing" in nsclc_chapter
     assert "transplant-eligible" in mm_chapter
+    # Phase 5 chapters render their distinctive reasoning.
+    assert "CDK4/6 inhibitor" in breast_hr_chapter
+    assert "Nivolumab + ipilimumab" in melanoma_chapter
 
     urls_by_id = {chapter["id"]: chapter["url"] for chapter in search["chapters"]}
-    assert urls_by_id == {
+    # MVP URLs remain stable; Phase 5 URLs derive deterministically from
+    # the chapter ID via the same `_slug` helper, so we assert both sets.
+    expected_urls = {
         "HB-CRC-METASTATIC-1L": "/handbook/hb-crc-metastatic-1l.html",
         "HB-DLBCL-1L": "/handbook/hb-dlbcl-1l.html",
         "HB-MM-1L": "/handbook/hb-mm-1l.html",
         "HB-NSCLC-METASTATIC-1L": "/handbook/hb-nsclc-metastatic-1l.html",
+        "HB-BREAST-HR-POS-HER2-NEG-1L": "/handbook/hb-breast-hr-pos-her2-neg-1l.html",
+        "HB-BREAST-HER2-POS-MET-1L": "/handbook/hb-breast-her2-pos-met-1l.html",
+        "HB-PROSTATE-MCRPC-1L": "/handbook/hb-prostate-mcrpc-1l.html",
+        "HB-OVARIAN-MAINTENANCE-1L": "/handbook/hb-ovarian-maintenance-1l.html",
+        "HB-MELANOMA-METASTATIC-1L": "/handbook/hb-melanoma-metastatic-1l.html",
     }
+    for cid, url in expected_urls.items():
+        assert urls_by_id.get(cid) == url, f"unexpected URL for {cid}: {urls_by_id.get(cid)}"
 
 
 def test_handbook_index_carries_search_fields(tmp_path: Path):

@@ -1,0 +1,165 @@
+id: HB-BREAST-HR-POS-HER2-NEG-1L
+title: "HR+/HER2- metastatic breast cancer: first-line reasoning"
+audience: hcp_learner
+language: en
+disease_ids:
+  - DIS-BREAST
+topic_tags:
+  - breast-cancer
+  - metastatic
+  - first-line
+  - biomarkers
+  - endocrine-cdk46
+learning_objectives:
+  - "Prioritize ER/PR, HER2 (including HER2-low), germline BRCA, PIK3CA, ESR1, and AKT1 status before first-line HR+/HER2- metastatic breast cancer treatment selection."
+  - "Explain why an aromatase inhibitor plus a CDK4/6 inhibitor is the standard first-line backbone, and recognize where prior CDK4/6i exposure or visceral crisis changes the conversation."
+  - "Recognize red flags that do not switch the first-line regimen but change parallel obligations (cardiac baseline, contraception, CNS-mets workup, supportive care)."
+at_a_glance:
+  - "Histology + ER/PR + HER2 (with HER2-low captured) + germline BRCA testing are required before first-line treatment planning."
+  - "Aromatase inhibitor + CDK4/6 inhibitor is the standard first-line backbone for endocrine-sensitive disease in OpenOnco's first-line model."
+  - "Inavolisib + palbociclib + fulvestrant is modeled as the intensified track when PIK3CA co-alteration is present and access permits."
+  - "Visceral crisis, leptomeningeal disease, and active CNS mets are parallel obligations — they shape supportive care and MDT discussion even when the systemic regimen is unchanged."
+  - "This chapter is an OpenOnco-authored learning aid, not official ESMO content or a CME-credit activity."
+linked_entities:
+  diseases:
+    - DIS-BREAST
+  algorithms:
+    - ALGO-BREAST-1L
+  indications:
+    - IND-BREAST-HR-POS-MET-1L-CDKI
+    - IND-BREAST-HR-POS-1L-INAVOLISIB
+    - IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB
+    - IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
+    - IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT
+    - IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
+    - IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
+    - IND-BREAST-BRCA-MET-TALAZOPARIB
+  regimens:
+    - REG-AI-PALBOCICLIB
+    - REG-AI-RIBOCICLIB
+    - REG-ALPELISIB-FULVESTRANT-BREAST
+    - REG-CAPIVASERTIB-FULVESTRANT-BREAST
+    - REG-ELACESTRANT-BREAST
+    - REG-EVEROLIMUS-EXEMESTANE
+    - REG-OLAPARIB-BREAST
+    - REG-TALAZOPARIB-MONO-BREAST
+  redflags:
+    - RF-BREAST-STAGE-IV-METASTATIC
+    - RF-BREAST-HER2-LOW-ACTIONABLE
+    - RF-BREAST-ESR1-MUT-ACTIONABLE
+    - RF-BREAST-PIK3CA-MUT-ACTIONABLE
+    - RF-BREAST-AKT1-E17K-ACTIONABLE
+    - RF-BREAST-BRCA-GERMLINE-ACTIONABLE
+    - RF-PRIOR-CDK46I-PROGRESSION
+    - RF-CNS-METASTASES-ACTIVE
+  biomarkers:
+    - BIO-ESTROGEN-RECEPTOR
+    - BIO-PROGESTERONE-RECEPTOR
+    - BIO-HER2-SOLID
+    - BIO-HER2-LOW
+    - BIO-ESR1
+    - BIO-PIK3CA-MUTATION
+    - BIO-AKT1
+    - BIO-BRCA-GERMLINE
+    - BIO-HRD-STATUS
+  tests:
+    - TEST-ER-PR-IHC
+    - TEST-HER2-IHC-FISH
+    - TEST-PIK3CA-NGS
+    - TEST-GERMLINE-BRCA-PANEL
+    - TEST-NGS-COMPREHENSIVE
+    - TEST-ECHO
+    - TEST-LVEF-ECHO
+    - TEST-ECG-BASELINE
+    - TEST-CT-CHEST-ABDOMEN-PELVIS
+    - TEST-BRAIN-MRI-CONTRAST
+source_ids:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-MONALEESA-2-HORTOBAGYI-2016
+  - SRC-MONARCH-3-GOETZ-2017
+  - SRC-PALOMA-2-FINN-2016
+  - SRC-SOLAR1-ANDRE-2019
+  - SRC-EMERALD-BIDARD-2022
+  - SRC-CAPITELLO291-TURNER-2023
+  - SRC-OLYMPIAD-ROBSON-2017
+sections:
+  - heading: "Diagnostic minimum"
+    body: "The learning path starts after histology confirms invasive breast carcinoma with metastatic disease. Before any first-line plan is drafted the chapter expects a complete ER/PR result, a HER2 result that captures the HER2-low band (IHC 1+ or 2+ ISH-negative) for later 2L options, germline BRCA1/2 testing, an ECOG/fitness summary, baseline LVEF and ECG before any drug with cardiac risk, and brain imaging when CNS symptoms are present. Comprehensive NGS (PIK3CA, ESR1, AKT1, ERBB2 activating mutations) becomes treatment-defining at progression and may be ordered up-front when access permits."
+    source_ids:
+      - SRC-NCCN-BREAST-2025
+      - SRC-ESMO-BREAST-METASTATIC-2024
+    linked_entity_ids:
+      - DIS-BREAST
+      - BIO-ESTROGEN-RECEPTOR
+      - BIO-HER2-SOLID
+      - BIO-HER2-LOW
+      - BIO-BRCA-GERMLINE
+      - TEST-ER-PR-IHC
+      - TEST-HER2-IHC-FISH
+      - TEST-GERMLINE-BRCA-PANEL
+  - heading: "First-line decision logic"
+    body: "OpenOnco models the first-line decision as an aromatase inhibitor plus a CDK4/6 inhibitor (palbociclib, ribociclib, or abemaciclib) for endocrine-sensitive metastatic disease. The intensified track is inavolisib + palbociclib + fulvestrant when the patient has a PIK3CA co-alteration in the inavolisib-eligible setting and access conditions are addressed. Germline BRCA1/2 mutation pulls a parallel option (talazoparib monotherapy or olaparib post-endocrine progression) into the discussion. Visceral crisis or imminent organ failure is an explicit gate that may push the learner toward chemotherapy even in endocrine-sensitive disease."
+    source_ids:
+      - SRC-NCCN-BREAST-2025
+      - SRC-ESMO-BREAST-METASTATIC-2024
+      - SRC-MONALEESA-2-HORTOBAGYI-2016
+      - SRC-PALOMA-2-FINN-2016
+    linked_entity_ids:
+      - ALGO-BREAST-1L
+      - IND-BREAST-HR-POS-MET-1L-CDKI
+      - IND-BREAST-HR-POS-1L-INAVOLISIB
+      - IND-BREAST-BRCA-MET-TALAZOPARIB
+      - RF-BREAST-STAGE-IV-METASTATIC
+  - heading: "Post-CDK4/6i biomarker triage"
+    body: "When the patient has already progressed on a CDK4/6 inhibitor, the chapter expects the learner to test for PIK3CA (alpelisib + fulvestrant), AKT1 E17K (capivasertib + fulvestrant), ESR1 (elacestrant), and HER2-low (T-DXd as a 2L option) before defaulting to fulvestrant ± everolimus. The order of these biomarker checks matters because access, toxicity profile, and overlap with prior endocrine exposure differ. The chapter explicitly maps each biomarker to its OpenOnco indication so the learner sees the same routing the engine uses at progression."
+    source_ids:
+      - SRC-SOLAR1-ANDRE-2019
+      - SRC-CAPITELLO291-TURNER-2023
+      - SRC-EMERALD-BIDARD-2022
+      - SRC-OLYMPIAD-ROBSON-2017
+    linked_entity_ids:
+      - RF-PRIOR-CDK46I-PROGRESSION
+      - RF-BREAST-PIK3CA-MUT-ACTIONABLE
+      - RF-BREAST-AKT1-E17K-ACTIONABLE
+      - RF-BREAST-ESR1-MUT-ACTIONABLE
+      - RF-BREAST-HER2-LOW-ACTIONABLE
+      - IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB
+      - IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
+      - IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT
+      - IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
+  - heading: "Common traps"
+    body: "Do not treat regimen selection as the whole task. Baseline LVEF and ECG must precede CDK4/6i exposure when cardiac risk is unclear; contraception and pregnancy planning are required for premenopausal patients on endocrine therapy; CNS metastases or leptomeningeal disease change supportive care and surveillance even when the systemic regimen is unchanged; and HER2-low must be re-checked at progression because results can shift between primary and metastatic samples. None of these change the first-line CDK4/6i call by themselves, but missing them changes the safety plan."
+    source_ids:
+      - SRC-NCCN-BREAST-2025
+      - SRC-ESMO-BREAST-METASTATIC-2024
+    linked_entity_ids:
+      - RF-CNS-METASTASES-ACTIVE
+      - RF-BREAST-HER2-LOW-ACTIONABLE
+      - BIO-HER2-LOW
+case_links:
+  - id: patient_breast_hr_pos_her2_neg_met_1l_cdk46i
+    title: "HR+/HER2- 1L on aromatase inhibitor + CDK4/6i"
+    path: "examples/patient_breast_hr_pos_her2_neg_met_1l_cdk46i.json"
+    learning_focus:
+      - "standard-track reasoning"
+      - "baseline cardiac and endocrine workup"
+  - id: patient_breast_hr_pos_post_cdk46i_pik3ca_alpelisib
+    title: "Post-CDK4/6i PIK3CA-mut: alpelisib + fulvestrant"
+    path: "examples/patient_breast_hr_pos_post_cdk46i_pik3ca_alpelisib.json"
+    learning_focus:
+      - "post-progression biomarker triage"
+      - "PIK3CA-defined intensification"
+  - id: patient_breast_brca_germline_met_olaparib
+    title: "Germline BRCA: PARP-inhibitor reasoning"
+    path: "examples/patient_breast_brca_germline_met_olaparib.json"
+    learning_focus:
+      - "germline-driven alternative track"
+question_ids:
+  - HQ-BREAST-HR-POS-1L-001
+  - HQ-BREAST-HR-POS-1L-002
+  - HQ-BREAST-HR-POS-1L-003
+review_status: draft
+last_reviewed: null
+legal_notes: "OpenOnco-authored educational content. Do not copy ESMO handbook text, tables, figures, or CME questions into this entity."
+notes: "Phase 5 expansion chapter for Handbook Mode."
