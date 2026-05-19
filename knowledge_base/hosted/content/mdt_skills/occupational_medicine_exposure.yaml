@@ -1,0 +1,103 @@
+id: MDT-OCCUPATIONAL-MEDICINE-EXPOSURE
+role_id: occupational_medicine_exposure
+name: Лікар з професійної медицини (IARC Group 1 експозиції)
+names:
+  preferred: Occupational medicine specialist — IARC Group 1 exposure assessment
+  ukrainian: Лікар з професійної медицини (експозиція до канцерогенів
+    IARC Group 1, нагляд на робочому місці, експертиза з компенсації)
+  english: Occupational medicine specialist (IARC-Group-1 exposure
+    assessment, workplace surveillance, worker's compensation)
+version: 0.1.0
+last_reviewed: '2026-05-18'
+domain: occupational_medicine
+responsibilities:
+  - Occupational-exposure history capture — job tasks, duration,
+    co-exposures, PPE adequacy, latency since last exposure (cancers
+    can manifest 10-40 years after exposure ends)
+  - Quantitative exposure-reconstruction when records are weak —
+    industrial-hygiene inference, job-exposure matrices, biomarker
+    measurement where available (urinary cotinine, blood lead, etc.)
+  - IARC-Group-1 carcinogen-specific surveillance protocols — asbestos
+    (HRCT cadence), benzene (CBC + reticulocytes), aromatic amines
+    (urine cytology + cystoscopy), silica (HRCT + spirometry), PAHs /
+    diesel exhaust, hexavalent chromium, beryllium, cadmium, nickel,
+    formaldehyde, ionizing radiation, vinyl chloride, mineral oils, soot
+  - Smoking-cessation + dual-exposure risk amplification counseling
+    (asbestos × tobacco, radon × tobacco multiplicative risk)
+  - Worker's-compensation documentation — diagnosis-causation linkage
+    statements per Ukrainian regulation + ILO occupational-disease list
+  - Coordination with primary-care prevention navigator (universal
+    occupational-exposure indication) and with the hematologist /
+    pulmonologist / urologist receiving end-organ surveillance findings
+  - Firefighter and painter cohort-specific surveillance (recently
+    classified IARC Group 1 / 2A)
+required_for_indications:
+  - IND-OCC-ASBESTOS-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-BENZENE-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-SILICA-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-IONIZING-RADIATION-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-DIESEL-EXHAUST-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-AROMATIC-AMINES-PREVENTION-SURVEILLANCE
+  - IND-OCC-FORMALDEHYDE-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-HEXAVALENT-CHROMIUM-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-NICKEL-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-CADMIUM-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-BERYLLIUM-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-PAH-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-MINERAL-OILS-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-SOOT-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-WOOD-LEATHER-DUST-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-PAINTERS-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-OCC-FIREFIGHTER-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-UNIVERSAL-OCCUPATIONAL-EXPOSURE-PREVENTION-INTENSIFIED-SURVEILLANCE
+  - IND-RADON-PREVENTION-MITIGATION-AND-SCREENING
+required_for_diseases:
+  - DIS-NSCLC
+  - DIS-MESOTHELIOMA
+  - DIS-AML
+  - DIS-UROTHELIAL
+  - DIS-BCC
+  - DIS-MELANOMA
+patient_facing_summary:
+  ukrainian: >-
+    Лікар з професійної медицини оцінює, з якими канцерогенами IARC
+    Group 1 ви контактували на роботі — азбест, бензол, кремнієвий
+    пил, дизельні вихлопи, радон, іонізуюче випромінювання та інші —
+    і будує план посиленого спостереження за цільовими органами:
+    наприклад, HRCT легень для азбесту, цитологія сечі для ароматичних
+    амінів, аналіз крові для бензолу. Він також документує зв'язок
+    діагноз-експозиція для випадків професійних захворювань і
+    координується з сімейним лікарем і відповідними спеціалістами.
+  english: >-
+    An occupational medicine specialist assesses which IARC Group 1
+    carcinogens you have been exposed to at work — asbestos, benzene,
+    crystalline silica, diesel exhaust, radon, ionising radiation, and
+    others — and builds a targeted-organ surveillance plan: HRCT for
+    asbestos, urine cytology for aromatic amines, CBC for benzene, and
+    so on. They also document the diagnosis-exposure link for
+    occupational-disease claims and coordinate with the primary-care
+    physician and relevant subspecialists.
+sources:
+  - SRC-IARC-100A-TOBACCO-SMOKING
+  - SRC-IARC-100C-ASBESTOS
+  - SRC-IARC-100C-SILICA
+  - SRC-IARC-100C-AROMATIC-AMINES
+  - SRC-IARC-100D-IONIZING-RADIATION
+  - SRC-IARC-100D-RADON
+  - SRC-IARC-100E-ALCOHOL
+  - SRC-IARC-100F-BENZENE
+  - SRC-IARC-100F-FORMALDEHYDE
+  - SRC-IARC-100F-VINYL-CHLORIDE
+  - SRC-IARC-105-DIESEL-EXHAUST
+  - SRC-IARC-132-FIREFIGHTERS
+  - SRC-USPSTF-LUNG-LDCT-2021
+notes: >-
+  STUB — prevention-persona role authored 2026-05-18 from CHARTER §3
+  amendment + KSS §20. Pending Clinical Co-Lead sign-off per CHARTER §6.1.
+  Aromatic-amines indication ID follows the project's
+  `ind_occ_aromatic_amines_prevention_surveillance.yaml` filename;
+  the IND ID file does not have a `-intensified-` segment unlike most
+  occupational indications and resolves to
+  IND-OCC-AROMATIC-AMINES-PREVENTION-SURVEILLANCE. Loader does not
+  enforce IND-* refs on mdt_skills so this is informational rather than
+  structural.
