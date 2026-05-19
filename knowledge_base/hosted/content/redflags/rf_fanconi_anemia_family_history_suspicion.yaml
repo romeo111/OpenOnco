@@ -1,0 +1,60 @@
+id: RF-FANCONI-ANEMIA-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family pedigree suggestive of Fanconi Anemia (FA) — biallelic germline
+  pathogenic variants in any FA-pathway gene (FANCA, FANCB, FANCC, FANCD1/
+  BRCA2, FANCD2, FANCE, FANCF, FANCG, FANCI, FANCJ/BRIP1, FANCL, FANCM,
+  FANCN/PALB2, FANCO/RAD51C, FANCP/SLX4, FANCQ/ERCC4, others) confirmed
+  in family OR characteristic phenotype cluster (progressive bone marrow
+  failure / pancytopenia in childhood + congenital anomalies — short
+  stature, café-au-lait macules, skeletal anomalies of thumb / radius,
+  microcephaly, GU malformations + chromosome fragility on
+  diepoxybutane / mitomycin-C testing). FA lifetime cancer risk ~30%
+  for AML / MDS, ~25-30% for head-and-neck SCC, plus gynecologic /
+  vulvovaginal / esophageal SCC + alkylator/radiation
+  hypersensitivity. Prevention-persona RedFlag (§20 v0.2-B).
+definition_ua: >-
+  Сімейний родовід, підозрілий на Fanconi Anemia (FA) — biallelic
+  germline патогенні варіанти у будь-якому FA-pathway гені (FANCA,
+  FANCB, FANCC, FANCD1/BRCA2, FANCD2, FANCG, FANCN/PALB2, та інші),
+  підтверджені у родині АБО характерний фенотип-кластер (progressive
+  bone marrow failure / pancytopenia у дитинстві + congenital
+  anomalies — short stature, café-au-lait macules, skeletal anomalies
+  thumb/radius, microcephaly, GU malformations + chromosome fragility
+  на diepoxybutane / mitomycin-C testing). FA lifetime cancer risk
+  ~30% для AML / MDS, ~25-30% для head-and-neck SCC, плюс gynecologic
+  / vulvovaginal / esophageal SCC + alkylator/radiation
+  hypersensitivity.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_fanconi_anemia_known_biallelic_pathogenic_variants"
+      value: true
+    - finding: "proband_pancytopenia_childhood_with_short_stature_or_cafe_au_lait_or_skeletal_anomalies"
+      value: true
+    - finding: "proband_positive_chromosome_fragility_diepoxybutane_or_mitomycin_c"
+      value: true
+    - finding: "family_fa_phenotype_cluster_marrow_failure_congenital_anomalies"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-AML
+  - DIS-MDS-HR
+  - DIS-HNSCC
+
+shifts_algorithm: []
+sources: [SRC-NCCN-AML-2025, SRC-NCCN-HNSCC-2025, SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025]
+
+last_reviewed: "2026-05-18"
+reviewer_signoffs: 0
+notes: "Prevention-persona RedFlag for Fanconi Anemia. STUB pending two-Co-Lead signoff. Critical: alkylator + radiation hypersensitivity precludes conventional cytotoxic chemotherapy + therapeutic radiation; reduced-intensity regimens for HSCT."
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v03_rare_hereditary
+draft_revision: 1

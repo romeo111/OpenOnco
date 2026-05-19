@@ -1,0 +1,64 @@
+id: RF-WERNER-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family or proband pedigree suggestive of Werner syndrome — biallelic
+  germline WRN (RECQL2) pathogenic variants OR characteristic adult-
+  onset progeroid phenotype (lack of pubertal growth spurt + short
+  stature + bird-like facies + premature graying / alopecia in 20s +
+  bilateral cataracts in 20s-30s + scleroderma-like skin changes
+  predominantly on extremities + soft-tissue calcifications + early-
+  onset atherosclerosis + type-2 diabetes mellitus + hypogonadism +
+  high-pitched voice). Werner syndrome confers broad cancer-spectrum
+  predisposition with characteristic enrichment of mesenchymal /
+  unusual neoplasms: soft-tissue sarcomas (especially of distal
+  extremities), osteosarcoma, follicular thyroid carcinoma, acral
+  lentiginous melanoma, meningioma, plus elevated rates of common
+  carcinomas. Median age at first malignancy ~37 years. Prevention-
+  persona RedFlag (§20 v0.2-B).
+definition_ua: >-
+  Сімейний або probandний родовід, підозрілий на Werner syndrome —
+  biallelic germline WRN (RECQL2) patogenic variants АБО характерний
+  adult-onset progeroid фенотип (відсутність pubertal growth spurt +
+  short stature + bird-like facies + premature graying / alopecia
+  у 20-х + bilateral cataracts у 20-30-х + scleroderma-like skin
+  changes на extremities + soft-tissue calcifications + early-
+  onset atherosclerosis + type-2 diabetes mellitus + hypogonadism +
+  high-pitched voice). Werner syndrome дає broad cancer-spectrum
+  predisposition з характерним збагаченням mesenchymal / необычних
+  neoplasms: soft-tissue sarcomas (особливо distal extremities),
+  osteosarcoma, follicular thyroid carcinoma, acral lentiginous
+  melanoma, meningioma, плюс elevated rates common carcinomas.
+  Median age first malignancy ~37 років.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_wrn_biallelic_known_pathogenic_variants"
+      value: true
+    - finding: "proband_adult_onset_progeroid_phenotype_with_bilateral_cataracts_under_30"
+      value: true
+    - finding: "family_werner_phenotype_cluster_short_stature_premature_aging_cataracts"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-SOFT-TISSUE-SARCOMA
+  - DIS-OSTEOSARCOMA
+  - DIS-THYROID-PAPILLARY
+  - DIS-MELANOMA
+  - DIS-MENINGIOMA
+
+shifts_algorithm: []
+sources: [SRC-NCCN-BONE-SARCOMA, SRC-NCCN-MELANOMA-2025]
+
+last_reviewed: "2026-05-18"
+reviewer_signoffs: 0
+notes: "Prevention-persona RedFlag for Werner syndrome (WRN biallelic). STUB pending two-Co-Lead signoff. Median age at first malignancy ~37y; multi-cancer surveillance spectrum; concurrent management of metabolic / cardiovascular comorbidities required."
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v03_rare_hereditary
+draft_revision: 1

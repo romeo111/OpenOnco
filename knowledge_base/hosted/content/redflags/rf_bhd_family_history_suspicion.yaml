@@ -1,0 +1,60 @@
+id: RF-BHD-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family or proband pedigree suggestive of Birt-Hogg-Dubé (BHD) syndrome —
+  germline FLCN (folliculin, 17p11.2) pathogenic variant in family OR
+  characteristic phenotype triad (cutaneous fibrofolliculomas /
+  trichodiscomas / acrochordons — typically ≥5 facial / neck / upper-
+  trunk lesions appearing 3rd-4th decade + multiple pulmonary cysts
+  on chest CT predominantly basilar / subpleural + ≥1 spontaneous
+  pneumothorax — often recurrent and earlier-onset than primary
+  spontaneous PTX) + family history of bilateral / multifocal renal
+  tumors, particularly hybrid chromophobe-oncocytoma /
+  hybrid-oncocytic tumors / chromophobe RCC / oncocytoma. Distinct
+  from HLRCC (FH-deficient papillary type-2), HPRC (MET papillary
+  type-1), VHL (clear-cell), SDH (SDH-deficient). Lifetime RCC risk
+  in FLCN carriers ~15-30%. Prevention-persona RedFlag (§20 v0.2-B).
+definition_ua: >-
+  Сімейний або probandний родовід, підозрілий на Birt-Hogg-Dubé (BHD)
+  syndrome — germline FLCN (folliculin, 17p11.2) patogenic variant у
+  родині АБО характерна phenotypic тріада (cutaneous fibrofolliculomas
+  / trichodiscomas / acrochordons — зазвичай ≥5 facial / neck / upper-
+  trunk lesions у 3-4 декаді + multiple pulmonary cysts на chest CT
+  переважно basilar / subpleural + ≥1 spontaneous pneumothorax —
+  often recurrent і earlier-onset ніж primary spontaneous PTX) +
+  family history bilateral / multifocal renal tumors, particularly
+  hybrid chromophobe-oncocytoma / hybrid-oncocytic tumors /
+  chromophobe RCC / oncocytoma. Відмінний від HLRCC (FH-deficient
+  papillary type-2), HPRC (MET papillary type-1), VHL (clear-cell),
+  SDH (SDH-deficient). Lifetime RCC risk у FLCN carriers ~15-30%.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_flcn_known_pathogenic_variant"
+      value: true
+    - finding: "proband_cutaneous_fibrofolliculomas_multiple_with_family_pneumothorax_or_rcc"
+      value: true
+    - finding: "proband_spontaneous_pneumothorax_with_pulmonary_cysts_basilar_distribution"
+      value: true
+    - finding: "family_bhd_hybrid_oncocytic_or_chromophobe_rcc"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-RCC
+
+shifts_algorithm: []
+sources: [SRC-NCCN-KIDNEY-2025]
+
+last_reviewed: "2026-05-18"
+reviewer_signoffs: 0
+notes: "Prevention-persona RedFlag for Birt-Hogg-Dubé (FLCN). STUB pending two-Co-Lead signoff. Separate from HLRCC RF (RF-HLRCC-*). Characteristic chromophobe / oncocytic-hybrid histology — RCC surveillance via q3y abdominal MRI."
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v03_rare_hereditary
+draft_revision: 1

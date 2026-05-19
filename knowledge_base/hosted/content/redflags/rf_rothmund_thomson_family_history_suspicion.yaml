@@ -1,0 +1,54 @@
+id: RF-ROTHMUND-THOMSON-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family or proband pedigree suggestive of Rothmund-Thomson syndrome
+  (RTS) — biallelic germline RECQL4 pathogenic variants OR characteristic
+  phenotype (poikiloderma — atrophy + telangiectasias + pigmentary
+  changes appearing on cheeks in infancy then extending + sparse hair /
+  eyebrows / eyelashes + dental + skeletal anomalies + short stature +
+  juvenile cataracts + congenital radial ray defects). Type-II RTS
+  (RECQL4 truncating biallelic) carries lifetime osteosarcoma risk
+  ~30% (frequently multifocal / metachronous, often presenting in
+  childhood / adolescence) plus elevated non-melanoma skin cancer
+  (BCC + SCC). Prevention-persona RedFlag (§20 v0.2-B).
+definition_ua: >-
+  Сімейний або probandний родовід, підозрілий на Rothmund-Thomson
+  syndrome (RTS) — biallelic germline RECQL4 patogenic variants АБО
+  характерний фенотип (poikiloderma — atrophy + telangiectasias +
+  pigmentary changes на щоках з раннього дитинства потім поширюються +
+  sparse hair/eyebrows/eyelashes + dental + skeletal anomalies + short
+  stature + juvenile cataracts + congenital radial ray defects).
+  Type-II RTS (RECQL4 truncating biallelic) carries lifetime osteosarcoma
+  risk ~30% (часто мультифокальна / metachronous, presenting у
+  childhood / adolescence) плюс elevated non-melanoma skin cancer
+  (BCC + SCC).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_recql4_biallelic_known_pathogenic_variants"
+      value: true
+    - finding: "proband_poikiloderma_with_skeletal_or_radial_ray_anomalies"
+      value: true
+    - finding: "family_rothmund_thomson_phenotype_cluster"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-OSTEOSARCOMA
+  - DIS-BCC
+
+shifts_algorithm: []
+sources: [SRC-NCCN-BONE-SARCOMA, SRC-NCCN-MELANOMA-2025]
+
+last_reviewed: "2026-05-18"
+reviewer_signoffs: 0
+notes: "Prevention-persona RedFlag for Rothmund-Thomson Type-II (RECQL4). STUB pending two-Co-Lead signoff. Radiation sensitivity reported — favor MR-based surveillance, minimize diagnostic ionizing imaging where feasible."
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v03_rare_hereditary
+draft_revision: 1

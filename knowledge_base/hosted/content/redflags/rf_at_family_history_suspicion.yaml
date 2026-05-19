@@ -1,0 +1,55 @@
+id: RF-AT-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family pedigree suggestive of Ataxia-Telangiectasia (A-T) — confirmed
+  family biallelic germline ATM pathogenic variants OR characteristic
+  phenotype cluster (progressive cerebellar ataxia in early childhood
+  + oculocutaneous telangiectasias + recurrent sinopulmonary infections
+  reflecting humoral + cellular immunodeficiency + clinical radiation
+  hypersensitivity + elevated serum AFP). A-T (biallelic ATM) lifetime
+  malignancy risk ~25-40%, dominated by hematologic malignancies in
+  childhood (T-cell ALL, T-PLL, B-cell NHL including DLBCL) and solid
+  tumors later (breast in heterozygous carrier relatives). Prevention-
+  persona RedFlag (§20 v0.2-B).
+definition_ua: >-
+  Сімейний родовід, підозрілий на Ataxia-Telangiectasia (A-T) —
+  підтверджені biallelic germline ATM patogenic variants у родині АБО
+  характерний фенотип-cluster (progressive cerebellar ataxia у ранньому
+  дитинстві + oculocutaneous telangiectasias + recurrent sinopulmonary
+  infections з humoral + cellular immunodeficiency + clinical radiation
+  hypersensitivity + підвищений serum AFP). A-T (biallelic ATM)
+  lifetime malignancy risk ~25-40%, з домінуванням hematologic
+  malignancies у дитинстві (T-cell ALL, T-PLL, B-NHL включно DLBCL)
+  та solid tumors пізніше (breast у heterozygous родичок-carriers).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_atm_biallelic_known_pathogenic_variants"
+      value: true
+    - finding: "proband_progressive_cerebellar_ataxia_early_childhood_with_telangiectasias"
+      value: true
+    - finding: "family_at_phenotype_cluster_ataxia_telangiectasias_immunodeficiency"
+      value: true
+    - finding: "proband_elevated_afp_with_ataxia_phenotype"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-DLBCL-NOS
+  - DIS-BREAST
+
+shifts_algorithm: []
+sources: [SRC-NCCN-BCELL-2025, SRC-NCCN-BREAST-2025, SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025]
+
+last_reviewed: "2026-05-18"
+reviewer_signoffs: 0
+notes: "Prevention-persona RedFlag for Ataxia-Telangiectasia (biallelic ATM). STUB pending two-Co-Lead signoff. Critical: radiation hypersensitivity precludes diagnostic CT + therapeutic radiation when feasible."
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v03_rare_hereditary
+draft_revision: 1
