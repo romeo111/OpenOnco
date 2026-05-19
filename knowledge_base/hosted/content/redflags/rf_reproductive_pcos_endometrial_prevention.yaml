@@ -36,6 +36,14 @@ trigger:
       value: true
     - finding: "pcos_with_obesity_or_t2dm"
       value: true
+    # Migrated 2026-05-19 from RF-REPRODUCTIVE-BREAST-ENDOMETRIAL-
+    # PREVENTION to consolidate PCOS-specific routing here. Patients
+    # documenting "persistent anovulation or PCOS" without Rotterdam-
+    # criteria specificity still receive the PCOS-specific pathway
+    # (closest evidence-based match; counseling rationale documents
+    # any uncertainty about Rotterdam confirmation).
+    - finding: "persistent_anovulation_or_pcos"
+      value: true
 
 clinical_direction: investigate
 severity: minor
