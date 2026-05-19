@@ -1,0 +1,96 @@
+id: RF-ATM-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family pedigree pattern suggestive of germline ATM heterozygous
+  carrier state in an asymptomatic individual who has NOT yet had
+  multi-gene panel testing. Triggers include any of (a) first- or
+  second-degree relative with a confirmed ATM pathogenic / likely-
+  pathogenic variant; (b) family-history clustering of breast cancer
+  AND pancreatic adenocarcinoma in close relatives (multi-cancer
+  ATM-spectrum signal) — e.g., FDR with breast cancer + FDR/SDR with
+  PDAC; (c) family history of pancreatic adenocarcinoma in ≥2 first/
+  second-degree relatives (ATM is the most common moderate-penetrance
+  gene identified in familial PDAC kindreds); (d) presence of a
+  sibling, parent, or child with confirmed homozygous Ataxia-
+  Telangiectasia phenotype (implies both parents are obligate ATM
+  heterozygotes; the at-risk individual has 50% prior probability of
+  being a carrier and elevated cancer risk independent of the
+  neurologic phenotype). No current personal cancer diagnosis in the
+  at-risk individual being assessed (current cancer diagnosis routes
+  to treatment-track plan with germline-testing recommendation
+  embedded). Prevention-persona RedFlag (§20, v0.3 moderate-penetrance
+  breast/pancreatic gene expansion — pre-testing suspicion variant).
+definition_ua: >-
+  Сімейний родовід з патерном, що нагадує гермінативний heterozygous
+  carrier ATM, у асимптомної особи, яка ще НЕ пройшла multi-gene
+  panel тестування. Тригери включають будь-яке з (а) родич першого/
+  другого ступеня з підтвердженим патогенним / ймовірно-патогенним
+  варіантом ATM; (б) сімейне накопичення раку молочної залози ТА
+  pancreatic adenocarcinoma у близьких родичів (multi-cancer ATM-
+  спектр сигнал) — напр., FDR з раком молочної залози + FDR/SDR з
+  PDAC; (в) сімейна історія pancreatic adenocarcinoma у ≥2 родичів
+  першого/другого ступеня (ATM — найпоширеніший moderate-penetrance
+  ген ідентифікований у familial PDAC kindreds); (г) наявність
+  сиблінга, батьків або дитини з підтвердженим homozygous Ataxia-
+  Telangiectasia фенотипом (це означає, що обидва батьки —
+  obligate ATM heterozygotes; ризикова особа має 50% prior probability
+  бути carrier та підвищений ризик раку незалежно від неврологічного
+  фенотипу). Поточний особистий діагноз раку у пацієнта з ризиком
+  відсутній. Prevention-персона RedFlag (§20, v0.3 moderate-penetrance
+  breast/pancreatic gene expansion — pre-testing suspicion варіант).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_atm_known_pathogenic_variant"
+      value: true
+    - finding: "family_breast_and_pancreatic_cluster"
+      value: true
+    - finding: "family_pancreatic_two_or_more_first_or_second_degree"
+      value: true
+    - finding: "family_homozygous_ataxia_telangiectasia_relative"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 115
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-BREAST
+  - DIS-PDAC
+  - DIS-PROSTATE
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  v0.3 Wave M suspicion variant — pre-testing family-history-suspicion
+  counterpart to RF-ATM-CONFIRMED-CARRIER. Fires when family pedigree
+  pattern suggests ATM carrier state but germline panel testing has
+  not yet been completed. Standard pathway = referral for genetic
+  counseling + multi-gene HBOC/PDAC-inclusive panel (covering BRCA1/2,
+  PALB2, ATM, CHEK2, RAD51C/D, BRIP1 minimum; pancreatic-extended
+  panels add CDKN2A, STK11, MLH1/MSH2/MSH6/PMS2). If panel returns
+  positive for ATM, the patient transitions to the
+  RF-ATM-CONFIRMED-CARRIER pathway (IND-ATM-CARRIER-PREVENTION-
+  SURVEILLANCE for standard track). If panel returns negative for
+  ATM but family history remains, empirical surveillance based on
+  family-history alone is offered as the aggressive-track
+  alternative. Distinct trigger findings from the confirmed-carrier
+  RF (carrier RF fires on `germline_atm_pathogenic_variant_confirmed`
+  / `germline_atm_likely_pathogenic_variant`; suspicion RF fires on
+  family-history-based findings only) — engine cleanly routes one or
+  the other based on testing status. STUB pending two-Clinical-Co-
+  Lead signoff per CHARTER §6.1 dev-mode. Sources cite NCCN Genetic/
+  Familial High-Risk: Breast, Ovarian, and Pancreatic v2.2025 ATM
+  testing criteria + CAPS Consortium 2022 familial pancreatic kindred
+  testing recommendations.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_suspicion_variant_wave_m
+draft_revision: 1

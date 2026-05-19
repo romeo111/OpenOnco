@@ -1,0 +1,238 @@
+id: IND-ATM-SUSPICION-PREVENTION-TESTING
+plan_track: standard
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-BREAST
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-ATM-FAMILY-HISTORY-SUSPICION
+
+# No drug regimen — intervention is genetic counseling referral +
+# multi-gene panel ordering + pre/post-test counseling.
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Diagnostic yield of multi-gene HBOC/PDAC-inclusive panel testing
+    in ATM-suspicion populations: ~10-20% positive carrier
+    identification overall (variable by criterion — known-familial-
+    variant cascade testing ~50%, two-PDAC-FDR cluster ~15-25%, single
+    breast-pancreatic cluster ~5-10%). Confirmed ATM carriers
+    transition to enhanced breast surveillance (annual mammography
+    from 40 ± MRI per NCCN moderate-elevated tier) and pancreatic
+    surveillance (CAPS Consortium 2022: alternating EUS + MRI/MRCP
+    annually from age 50 or 10 years before earliest PDAC in family)
+    for FDR-of-PDAC carriers. CAPS Consortium cohorts show ~30-60%
+    early-stage PDAC detection in high-risk surveillance vs ~10-15%
+    in unscreened controls.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Standard-track prevention pathway for individuals with pedigree-
+  based suspicion of germline ATM carrier state. Two parallel
+  referrals:
+
+  **(1) Genetic counseling referral.** Pre-test counseling covers:
+  inheritance pattern (autosomal dominant for the cancer-predisposing
+  carrier state; autosomal recessive for the biallelic Ataxia-
+  Telangiectasia phenotype — critical distinction), penetrance
+  (moderate breast RR ~2.0-2.4, lifetime ~20-30%; pancreatic RR
+  ~5-10 in FDR-of-PDAC subset, lifetime ~5-9%; prostate RR ~2-3
+  with high-grade enrichment), implications for FDRs (cascade
+  testing if positive — ~50% of FDRs are also carriers), GINA /
+  insurance considerations (US protections + check Ukrainian / EU
+  jurisdiction equivalents), reproductive implications (carrier-by-
+  carrier couples have 25% biallelic A-T risk per pregnancy —
+  preimplantation genetic testing for monogenic disorders / PGT-M
+  available), psychological aspects (lower cancer-anxiety load
+  than BRCA but pancreatic-cancer family history is highly
+  distressing). Per ACMG / ASCO / NCCN, pre-test counseling by a
+  certified genetic counselor or trained clinician is the standard
+  of care before germline testing.
+
+  **(2) Germline multi-gene HBOC/PDAC-inclusive panel testing.**
+  Modern panels (e.g., Invitae Common Hereditary Cancers panel,
+  Color hereditary cancer panel, GeneDx OncoGene Comprehensive,
+  Myriad MyRisk, Ambry CancerNext) cover BRCA1, BRCA2, PALB2,
+  CHEK2, ATM, RAD51C, RAD51D, BRIP1, plus contextual genes (TP53,
+  PTEN, STK11, CDH1, NF1). For pancreatic-extended risk pedigrees,
+  panels add CDKN2A (FAMMM), STK11 (Peutz-Jeghers), and MMR genes
+  (Lynch). Variant classification per ACMG framework: pathogenic /
+  likely pathogenic / VUS / likely benign / benign.
+
+  **Sequel pathway (positive panel — confirmed ATM carrier):**
+  Transition to ATM-carrier surveillance pathway
+  (IND-ATM-CARRIER-PREVENTION-SURVEILLANCE — standard track for
+  RF-ATM-CONFIRMED-CARRIER):
+  - Annual mammography from age 40 (consider 35-40 for ATM
+    c.7271T>G + truncating variants per NCCN moderate-elevated
+    modifier risk).
+  - Annual breast MRI consideration from age 40 (NCCN moderate-
+    elevated tier — shared decision with patient about specificity
+    + cost trade-offs).
+  - Clinical breast exam q6-12mo from age 25-30.
+  - Pancreatic surveillance — alternating EUS + MRI/MRCP annually
+    from age 50 OR 10 years before earliest PDAC in family, for
+    carriers with FDR or SDR of PDAC (CAPS Consortium 2022 / NCCN
+    2025). NOT indicated for ATM carriers without PDAC family
+    history — yield is low, harms from repeated imaging not
+    justified.
+  - Prostate awareness (males): PSA + DRE from age 40 with shared
+    decision-making.
+  - Cascade testing of FDRs for the family-specific ATM variant
+    (~50% will be carriers).
+  - Reproductive counseling: PGT-M available for couples planning
+    children when both partners may carry ATM variants (1%
+    population frequency).
+  - Radiation avoidance: therapeutic radiation tolerance is normal
+    in heterozygotes (unlike biallelic A-T) — no radiation contra-
+    indication for cancer treatment.
+
+  **Sequel pathway (positive panel — non-ATM variant identified):**
+  route to gene-specific carrier pathway (BRCA1/2, PALB2, CHEK2,
+  RAD51C/D, BRIP1, etc.). Multi-gene panels are designed precisely
+  to avoid the "wrong gene tested" scenario.
+
+  **Sequel pathway (negative panel for ATM and all panel genes):**
+  empirical enhanced surveillance based on family history alone is
+  offered as the aggressive-track alternative
+  (IND-ATM-SUSPICION-PREVENTION-EMPIRICAL-SURVEILLANCE) —
+  quantitative risk model (Tyrer-Cuzick for breast risk; family
+  pancreatic history independently triggers CAPS-program eligibility
+  per family pedigree even without identified gene) may indicate
+  residual elevated risk warranting enhanced surveillance.
+
+  **Sequel pathway (VUS):** managed as pedigree-suspicion (this
+  pathway) until segregation analysis or functional studies
+  reclassify. VUS does NOT drive clinical management decisions.
+
+  In Ukraine, multi-gene panel testing is available via Institute
+  of Genetics + select private labs at out-of-pocket cost
+  (~8000-20000 UAH for comprehensive HBOC/PDAC-inclusive panel).
+  Genetic counseling is available at major academic centers in
+  Kyiv, Lviv, Odesa, Kharkiv; rural / regional access is limited
+  and may rely on tele-counseling.
+
+rationale_ua: >
+  Стандартний-трек prevention шлях для осіб з родовідною підозрою
+  на гермінативний heterozygous carrier ATM. Два паралельні
+  направлення:
+
+  **(1) Направлення на генетичне консультування.** Pre-test
+  консультування охоплює: спадкування (autosomal dominant для
+  cancer-predisposing carrier state; autosomal recessive для
+  biallelic Ataxia-Telangiectasia фенотипу — критична відмінність),
+  пенетрантність (moderate breast RR ~2.0-2.4, lifetime ~20-30%;
+  pancreatic RR ~5-10 у FDR-of-PDAC subset, lifetime ~5-9%; prostate
+  RR ~2-3 з high-grade enrichment), наслідки для FDRs (cascade
+  тестування при позитиві — ~50% FDRs також carriers), GINA /
+  страхові міркування, репродуктивні наслідки (carrier-by-carrier
+  пари мають 25% biallelic A-T ризик на вагітність — PGT-M
+  доступний), психологічні аспекти. За ACMG / ASCO / NCCN, pre-
+  test консультування у сертифікованого генетичного консультанта
+  або навченого клініциста — standard of care перед germline
+  тестуванням.
+
+  **(2) Germline мультигенне HBOC/PDAC-inclusive панельне
+  тестування.** Сучасні панелі (напр., Invitae Common Hereditary
+  Cancers panel, Color hereditary cancer panel, GeneDx OncoGene
+  Comprehensive, Myriad MyRisk, Ambry CancerNext) покривають BRCA1,
+  BRCA2, PALB2, CHEK2, ATM, RAD51C, RAD51D, BRIP1, плюс контекстуальні
+  гени. Для pancreatic-extended ризику панелі додають CDKN2A
+  (FAMMM), STK11 (Peutz-Jeghers), MMR гени (Lynch). Класифікація
+  варіантів за рамкою ACMG.
+
+  **Наступний шлях (позитивна панель — підтверджений ATM carrier):**
+  перехід на ATM-carrier surveillance шлях
+  (IND-ATM-CARRIER-PREVENTION-SURVEILLANCE — standard track для
+  RF-ATM-CONFIRMED-CARRIER):
+  - Mammography щорічно з 40 років (consider 35-40 для ATM
+    c.7271T>G + truncating variants).
+  - Annual breast MRI consideration з 40 років (NCCN moderate-
+    elevated tier — shared decision).
+  - Clinical breast exam q6-12 міс з 25-30 років.
+  - Pancreatic surveillance — alternating EUS + MRI/MRCP щорічно з
+    50 років АБО 10 років до earliest PDAC у family, для carriers
+    з FDR або SDR of PDAC (CAPS Consortium 2022).
+  - Prostate awareness (males): PSA + DRE з 40 років.
+  - Cascade testing FDRs (~50% будуть carriers).
+  - Reproductive counseling: PGT-M для couples planning children.
+  - Radiation avoidance: therapeutic radiation tolerance normal у
+    heterozygotes (unlike biallelic A-T).
+
+  **Наступний шлях (позитивна панель — non-ATM variant):**
+  маршрутизація на gene-specific carrier шлях.
+
+  **Наступний шлях (негативна панель):** empіричне посилене
+  спостереження на основі сімейної історії пропонується як
+  aggressive-track альтернатива
+  (IND-ATM-SUSPICION-PREVENTION-EMPIRICAL-SURVEILLANCE).
+
+  **Наступний шлях (VUS):** ведеться як родовідна підозра до
+  реклассифікації.
+
+  В Україні multi-gene panel testing via Institute of Genetics +
+  select private labs (~8000-20000 UAH); консультування у академічних
+  центрах Києва, Львова, Одеси, Харкова.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_suspicion_variant_wave_m
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+    position: supports
+    relevant_quote_paraphrase: >-
+      "ATM is included in NCCN multi-gene panel testing
+      recommendations for individuals meeting Genetic/Familial
+      High-Risk Assessment Breast/Ovarian/Pancreatic criteria, with
+      pancreatic surveillance for ATM carriers with FDR/SDR of
+      pancreatic cancer per CAPS Consortium recommendations."
+  - source_id: SRC-NCCN-BREAST-2025
+    position: supports
+    relevant_quote_paraphrase: >-
+      "Hereditary breast cancer susceptibility testing should be
+      offered to patients meeting NCCN criteria; multi-gene panel
+      testing preferred when multiple hereditary cancer syndromes
+      are in the differential."
+
+do_not_do:
+  - "Не призначати germline тестування без pre-test консультування — інформована згода, психологічна підготовка та обговорення GINA-наслідків обов'язкові."
+  - "Не трактувати VUS результат як патогенний — управляйте як родовідну підозру до подальших даних з segregation analysis або functional studies."
+  - "Не екстраполювати biallelic A-T radiation-sensitivity на heterozygote carriers — therapeutic radiation безпечна у carriers після позитивного панельного результату."
+  - "Не пропускати pancreatic surveillance у carrier-positive subset з PDAC сімейною історією — CAPS Consortium 2022 endorses EUS + MRI/MRCP щорічно з 50 років або 10 років до earliest PDAC у family для FDR/SDR-PDAC carriers."
+  - "Не призначати pancreatic surveillance ATM-carrier без PDAC сімейної історії — yield низький, harms imaging exposure не виправдані."
+  - "Не пропускати cascade тестування FDRs після positive carrier confirmation — ~50% будуть carriers і отримують відповідне surveillance."
+
+do_not_do_en:
+  - "Do not order germline testing without pre-test counseling — informed consent, psychological preparation, and GINA-implication discussion are mandatory."
+  - "Do not treat a VUS result as pathogenic — manage as pedigree suspicion pending further data from segregation analysis or functional studies."
+  - "Do not extrapolate biallelic A-T radiation-sensitivity to heterozygote carriers — therapeutic radiation is safe in carriers after positive panel confirmation."
+  - "Do not skip pancreatic surveillance in the carrier-positive subset with PDAC family history — CAPS Consortium 2022 endorses EUS + MRI/MRCP annually from age 50 or 10 years before earliest PDAC in family for FDR/SDR-PDAC carriers."
+  - "Do not order pancreatic surveillance in an ATM carrier without PDAC family history — yield is low and the imaging-exposure harms are not justified."
+  - "Do not skip cascade testing of FDRs after positive carrier confirmation — ~50% will be carriers and receive appropriate surveillance."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-19"
+reviewers: []
+reviewer_signoffs: 0
+notes: STUB — v0.3 Wave M suspicion variant for ATM hereditary prevention pilot. Pre-testing pathway — patient transitions to RF-ATM-CONFIRMED-CARRIER / IND-ATM-CARRIER-PREVENTION-SURVEILLANCE upon positive panel result. Two-Clinical-Co-Lead signoff queued per CHARTER §6.1 dev-mode.
