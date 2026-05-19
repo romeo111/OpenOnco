@@ -8,18 +8,18 @@
 
 | Metric | Baseline | Wave L | Δ |
 |---|---|---|---|
-| Total entities | ~3,770 | 3,868 | +98 |
-| RedFlags (all categories) | 100 | 121 | +21 |
-| Prevention indications | 188 | 246 | +58 |
+| Total entities | ~3,770 | 3,903 | +133 |
+| RedFlags (all categories) | 100 | 148 | +48 |
+| Prevention indications | 188 | 272 | +84 |
 | Ref errors | 0 | 0 | — |
 | Contract errors | 0 | 0 | — |
 | Pre-existing biomarker schema errors | 15 | 15 | — |
 
 ## RedFlag breakdown by `risk_category`
 
-| Category | Baseline | Wave L | Δ | Notes |
+| Category | Baseline | Wave L+M | Δ | Notes |
 |---|---|---|---|---|
-| genetic | 28 | 45 | +17 | ATM/PALB2/CHEK2/BARD1/BRIP1/RAD51C-D carriers (6); NF1/CDH1/CMMRD (3); cascade pilots Lynch/BRCA/LFS/VHL/FAP (5) |
+| genetic | 28 | 53 | +25 | Carriers (6 confirmed + 7 suspicion + 1 DICER1); NF1/CDH1/CMMRD (3 + DICER1); cascade pilots Lynch/BRCA/LFS/VHL/FAP (5); pediatric Beckwith/Costello/Rhabdoid (3) |
 | occupational | 17 | 21 | +4 | IARC 2A: glyphosate, shiftwork, PCB, frying-emissions |
 | iatrogenic | 20 | 22 | +2 | MTX-LPD, I-131 secondary cancer |
 | chronic_condition | 14 | 16 | +2 | T2DM multi-organ, NAFLD/MASLD HCC |
@@ -62,9 +62,13 @@
 - Wave K pediatric agent (Beckwith-Wiedemann, Costello, Rhabdoid) silently failed; 3 of 6 pediatric pilots (NF1, CDH1, CMMRD) authored by Wave L instead.
 - Wave M pediatric agent re-launched for Beckwith-Wiedemann + Costello + Rhabdoid; status running.
 
-### 🟡 Family-history-suspicion variants missing
-- Wave L added 7 confirmed-carrier RFs (ATM/PALB2/CHEK2/BARD1/BRIP1/RAD51C-D/NF1) but only 5 of 7 have suspicion variants per pre-existing convention.
-- Wave M suspicion-variant agent running; status running.
+### 🟡 Suspicion-variant cross-firing (Wave M; expected behavior)
+- The 7 family-history-suspicion RFs (ATM/PALB2/CHEK2/BARD1/BRIP1/RAD51C-D/NF1) intentionally share certain trigger findings that fire multiple RFs simultaneously:
+  - `family_breast_and_pancreatic_cluster` → ATM + PALB2 fire together
+  - `family_brca_like_pedigree_brca_negative` → PALB2 + BARD1 fire together
+- This matches clinical reality (BRCA-negative breast/pancreatic pedigree → multi-gene panel covers all candidates simultaneously).
+- Engine behavior: routing picks any one suspicion-testing indication as default + any other as alternative. Since every `*_suspicion_prevention_testing` indication advises "refer to genetic counselor + multi-gene panel" identically, the patient receives appropriate clinical guidance regardless of which specific gene-RF wins the default slot. Naming attribution is semi-random for cross-firing patients.
+- v0.4 follow-up: either generalize to a single "MULTI-GENE-PANEL-SUSPICION" RF aggregating all moderate-penetrance triggers, or accept the documented cross-firing behavior.
 
 ### 🟡 Pre-existing baseline test failures (not Wave L regressions)
 - `tests/test_workup_catalog.py` reports 1 failure on master baseline — pre-existing.
