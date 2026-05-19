@@ -1072,9 +1072,11 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 _NAV_LABELS = {
     "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "План лікування",
-           "diseases": "Хвороби", "ask": "Туморборд", "kb": "Онко-вікі"},
+           "diseases": "Хвороби", "ask": "Туморборд", "kb": "Онко-вікі",
+           "prevention": "Профілактика"},
     "en": {"home": "Home", "about": "About", "try_cta": "Plan Builder",
-           "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki"},
+           "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki",
+           "prevention": "Prevention"},
 }
 
 
@@ -1164,6 +1166,8 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     kb_current = ' aria-current="page"' if active in {"kb", "diseases"} else ""
     ask_current = ' aria-current="page"' if active == "ask" else ""
     try_current = ' aria-current="page"' if active == "try" else ""
+    prevention_path = "/ukr/prevention.html" if target_lang == "uk" else "/prevention.html"
+    prevention_current = ' aria-current="page"' if active == "prevention" else ""
 
     return f"""<header class="top-bar">
   <div class="brand-line">
@@ -1172,6 +1176,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
     {extra_links}
+    <a href="{prevention_path}"{prevention_current}>{labels['prevention']}</a>
     <a href="{about_path}"{cls("about")}>{labels['about']}</a>
   </nav>
   <div class="top-right">
