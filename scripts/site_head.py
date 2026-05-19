@@ -37,6 +37,28 @@ AI_DISCLOSURE_UK = (
 )
 SEO_START = "<!-- openonco-seo:start -->"
 SEO_END = "<!-- openonco-seo:end -->"
+LANG_REDIRECT_START = "<!-- openonco-lang-redirect:start -->"
+LANG_REDIRECT_END = "<!-- openonco-lang-redirect:end -->"
+
+# Auto-detect Ukrainian-language visitors on the homepage and redirect to
+# /ukr/. Privacy note: signal is navigator.languages only — no IP lookup, no
+# external request. localStorage['openonco_lang'] = 'en'|'uk' both records
+# the auto-decision (so we don't keep redirecting) and stickies any explicit
+# choice the visitor makes via the .lang-switch links in the nav. Inlined
+# (not a separate .js file) so the redirect runs before any paint.
+LANG_REDIRECT_SCRIPT = (
+    "<script>(function(){try{var L=localStorage,K='openonco_lang',s=L.getItem(K),"
+    "p=location.pathname,onUA=p.indexOf('/ukr/')===0,"
+    "home=(p==='/'||p==='/index.html'||p==='/ukr/'||p==='/ukr/index.html');"
+    "if(home&&!onUA){var go=s==='uk';"
+    "if(!s){var ls=(navigator.languages&&navigator.languages.length)?navigator.languages:[navigator.language||''];"
+    r"go=ls.some(function(l){return /^uk\b/i.test(l);});L.setItem(K,go?'uk':'en');}"
+    "if(go){location.replace('/ukr/'+location.search+location.hash);return;}}"
+    "document.addEventListener('click',function(e){"
+    "var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a');"
+    r"if(!a)return;L.setItem(K,/^\/ukr/.test(a.getAttribute('href')||'')?'uk':'en');},true);"
+    "}catch(e){}})();</script>"
+)
 
 
 def _escape(value: str) -> str:
@@ -277,6 +299,39 @@ def inject_seo_metadata(html_text: str, *, path: str) -> str:
     )
 
 
+def inject_lang_redirect(html_text: str) -> str:
+    """Insert the auto-language-detect script just after </title>.
+
+    Idempotent: a previously injected block (delimited by the marker
+    comments) is replaced in place, so re-running over a built tree
+    refreshes the snippet without duplicating it. Pages with no <head>
+    (raw fragments, JSON) are returned unchanged.
+    """
+    if "<head" not in html_text.lower():
+        return html_text
+
+    block = f"{LANG_REDIRECT_START}{LANG_REDIRECT_SCRIPT}{LANG_REDIRECT_END}"
+    # Lambdas (not literal replacement strings) — the JS regex /^uk\b/i
+    # contains a literal \b which re.sub would otherwise reinterpret as
+    # a backspace escape in the replacement.
+    replacement_existing = lambda _m: block + "\n"
+    replacement_new = lambda m: m.group(1) + block + "\n"
+
+    existing = re.compile(
+        rf"{re.escape(LANG_REDIRECT_START)}.*?{re.escape(LANG_REDIRECT_END)}\s*",
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    if existing.search(html_text):
+        return existing.sub(replacement_existing, html_text, count=1)
+    return re.sub(
+        r"(</title>\s*)",
+        replacement_new,
+        html_text,
+        count=1,
+        flags=re.IGNORECASE,
+    )
+
+
 def _html_pages(output_dir: Path) -> list[Path]:
     return sorted(p for p in output_dir.rglob("*.html") if p.is_file())
 
@@ -391,6 +446,7 @@ def finalize_site_discovery(output_dir: Path) -> dict[str, str | int]:
         rel = page.relative_to(output_dir).as_posix()
         original = page.read_text(encoding="utf-8")
         updated = inject_seo_metadata(original, path=rel)
+        updated = inject_lang_redirect(updated)
         if updated != original:
             page.write_text(updated, encoding="utf-8")
             changed += 1
