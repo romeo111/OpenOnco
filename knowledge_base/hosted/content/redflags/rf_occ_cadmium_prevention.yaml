@@ -1,0 +1,132 @@
+id: RF-OCC-CADMIUM-PREVENTION
+definition: >-
+  Documented historical occupational exposure to cadmium and cadmium
+  compounds — typical high-risk occupations include cadmium-smelting
+  workers, nickel-cadmium battery manufacturing workers,
+  cadmium-pigment production (yellow / red / orange pigments for
+  ceramics, plastics, paints), cadmium-electroplating operators,
+  cadmium-zinc-mining and ore-processing workers, brazing-alloy
+  workers (cadmium-silver braze), and PVC-stabilizer manufacturing
+  workers — with cumulative occupational tenure ≥10 years — in an
+  individual without a current cadmium-associated malignancy
+  diagnosis. Cadmium and cadmium compounds are IARC Group 1
+  carcinogens (Monograph 100C, 2012) — established etiologic driver
+  of lung cancer (primary endpoint; exposure-response documented in
+  smelter + battery cohorts) with limited but suggestive evidence
+  for prostate cancer and kidney cancer. Latency from first exposure
+  to lung cancer is 15-30 years and is smoking-modified
+  (additive-to-multiplicative interaction; smoking is also an
+  independent cadmium-exposure source). Latency to prostate cancer
+  is typically 20-40 years. There is NO curative intervention for
+  prior exposure — exposure cessation / PPE (if active),
+  smoking-cessation counseling, risk-adjusted LDCT lung surveillance,
+  and shared-decision-making PSA screening for prostate-cancer
+  surveillance are the levers. Prevention-persona RedFlag
+  (§20 ratification 2026-05-18, v0.3 occupational batch-3 pilot).
+definition_ua: >-
+  Документоване історичне професійне впливу кадмію та сполук кадмію
+  — типові високоризикові професії: працівники кадмієвої виплавки,
+  працівники виробництва нікель-кадмієвих батарей, виробництво
+  кадмієвих пігментів (жовті / червоні / оранжеві пігменти для
+  кераміки, пластмас, фарб), оператори кадмієвого
+  електроплакування, працівники кадмієво-цинкових копалень та
+  переробки руди, працівники з паяльними сплавами (cadmium-silver
+  braze), працівники виробництва PVC-стабілізаторів — з кумулятивним
+  професійним стажем ≥10 років — у пацієнта без поточного діагнозу
+  кадмій-асоційованої малігнізації. Кадмій та сполуки кадмію —
+  канцерогени IARC Group 1 (Monograph 100C, 2012), встановлений
+  етіологічний драйвер раку легень (первинна кінцева точка;
+  експозиційно-відповідна залежність задокументована у когортах
+  виплавки + батарей) з обмеженими, але суггестивними даними щодо
+  раку передміхурової залози та раку нирки. Латентність від першого
+  впливу до раку легень — 15-30 років, модифікується курінням
+  (адитивно-мультиплікативна взаємодія; куріння — також незалежне
+  джерело cadmium-впливу). Латентність до раку передміхурової
+  залози зазвичай 20-40 років. КУРАТИВНОГО втручання для попереднього
+  впливу НЕМАЄ — припинення впливу / PPE (при активному),
+  counseling щодо припинення куріння, risk-adjusted LDCT-спостереження
+  легень, shared-decision-making PSA-скринінг для prostate-cancer
+  спостереження — наявні важелі. Prevention-persona RedFlag
+  (§20 ратифікація 2026-05-18, v0.3 occupational batch-3 пілот).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "occupational_cadmium_exposure_documented"
+      value: true
+    - finding: "occupational_cadmium_years_ge_10"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+
+risk_category: occupational
+
+# Cadmium-compound-associated cancers (in-KB Disease entities):
+# - DIS-NSCLC + DIS-SCLC (lung; primary endpoint; IARC Group 1).
+# - DIS-PROSTATE (limited but suggestive evidence; included for
+#   PSA-based shared-decision-making counseling).
+relevant_diseases:
+  - DIS-NSCLC
+  - DIS-SCLC
+  - DIS-PROSTATE
+
+shifts_algorithm: []
+
+# Source caveat: IARC Monograph 100C (2012) is canonical for
+# cadmium-compound Group-1 status; NOT yet a separate SRC entity.
+# v0.3 source-authoring backlog.
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-NCCN-NSCLC-2025
+
+last_reviewed: "2026-05-18"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 pilot. Fires
+  when patient profile carries documented ≥10 years occupational
+  cadmium exposure AND no confirmed cadmium-attributable malignancy
+  diagnosis. Engine routes to 2-track PreventionPlan:
+    (a) IND-OCC-CADMIUM-PREVENTION-INTENSIFIED-SURVEILLANCE (standard)
+        — risk-adjusted annual LDCT chest screening (cadmium-modified
+        USPSTF criteria for cumulative exposure); shared-decision-
+        making PSA discussion at usual age-stratified intervals
+        (NCCN prostate-cancer-early-detection guidance) framed with
+        occupational-exposure context; smoking-cessation counseling
+        (paramount).
+    (b) IND-OCC-CADMIUM-PREVENTION-OBSERVATION (surveillance) —
+        routine general-population USPSTF screening only; patient
+        declines cadmium-modified intensified imaging surveillance
+        and / or PSA-based prostate-cancer screening.
+
+  Trigger findings are computed booleans from occupational-history
+  intake at the patient-profile layer.
+
+  Evidence base: IARC Monograph 100C (2012); Sorahan & Lancashire
+  1997 (UK Ni-Cd battery cohort — lung-cancer SMR ~1.3-1.5x);
+  Stayner et al. 1992 (US cadmium-smelter cohort — exposure-response
+  for lung-cancer mortality); Verougstraete 2003 (pooled review;
+  prostate-cancer evidence inconsistent across cohorts, IARC
+  classified as limited).
+
+  Sources TODO: IARC Monograph 100C (2012) as a new SRC entity. v0.3
+  source-authoring backlog.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+notes_ua: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 пілот.
+  Спрацьовує при документованому ≥10 років професійному впливі
+  кадмію без підтвердженого діагнозу. Engine маршрутизує до 2-track
+  PreventionPlan: (а) intensified — LDCT + shared-decision-making
+  PSA + припинення куріння; (б) observation — USPSTF тільки. STUB —
+  очікує підпис двох Clinical Co-Lead за §6.1 dev-mode exemption.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_occupational_batch3
+draft_revision: 1
+
+draft: true

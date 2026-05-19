@@ -1,0 +1,154 @@
+id: RF-OCC-MINERAL-OILS-PREVENTION
+definition: >-
+  Documented historical occupational exposure to untreated or
+  mildly-treated mineral oils — typical high-risk occupations
+  include machinists / metal-working-fluid (MWF) operators (lathe,
+  mill, grinder, screw-machine work with straight or soluble oil
+  coolant), automotive engine + transmission repair (used motor oil
+  contact), printing-press operators (historic ink + roller-cleaning
+  solvent exposure), jute / cotton-mule-spinning operators
+  (historical lubricant-spray cohort with documented scrotal-SCC
+  excess — "mule-spinner's cancer"), and metal-machining workers
+  in heavy-industry settings — with cumulative occupational tenure
+  ≥10 years — in an individual without a current mineral-oil-
+  associated malignancy diagnosis. Untreated and mildly-treated
+  mineral oils are IARC Group 1 carcinogens (Monograph 100F, 2012)
+  — established etiologic driver of skin cancer (cutaneous squamous-
+  cell carcinoma at sun-exposed AND oil-contact sites: face, hands,
+  forearms, scrotum). The historic scrotal-SCC cohort (Mule's
+  jute-spinners; British cotton operatives; Lancashire textile
+  workers) is foundational occupational-carcinogenesis evidence
+  (post-Pott chimney-sweep observation). Modern highly-refined
+  (severely-hydrotreated) mineral oils used in current MWF and
+  motor oils carry lower risk; risk concentrates in workers with
+  pre-1980 historical exposure or in industries that have retained
+  less-refined product. Latency to cutaneous SCC is 10-30 years.
+  There is NO curative intervention for prior exposure — exposure
+  cessation / PPE (if active), avoidance of oil-soaked clothing,
+  rigorous skin hygiene, sun-protection at oil-contact sites, and
+  annual dermatology consultation with full-skin exam are the
+  levers. Prevention-persona RedFlag (§20 ratification 2026-05-18,
+  v0.3 occupational batch-3 pilot).
+definition_ua: >-
+  Документоване історичне професійне впливу необроблених або
+  слабко-оброблених мінеральних масел — типові високоризикові
+  професії: машиністи / оператори metal-working fluids (MWF)
+  (токарна, фрезерна, шліфувальна, screw-machine робота з straight
+  або soluble oil coolant), ремонт автомобільних двигунів та
+  трансмісій (контакт з використаним motor oil), оператори
+  друкарських пресів (історичний вплив фарб + roller-cleaning
+  розчинників), jute / cotton-mule-spinning оператори (історична
+  cohort з lubricant-spray впливом і задокументованим надлишком
+  scrotal-SCC — "mule-spinner's cancer"), працівники
+  metal-machining у важкопромислових умовах — з кумулятивним
+  професійним стажем ≥10 років — у пацієнта без поточного діагнозу
+  mineral-oil-асоційованої малігнізації. Необроблені та слабко-
+  оброблені мінеральні масла — канцерогени IARC Group 1
+  (Monograph 100F, 2012), встановлений етіологічний драйвер раку
+  шкіри (cutaneous SCC на сонцеекспонованих ТА oil-contact
+  ділянках: обличчя, руки, передпліччя, мошонка). Історична
+  scrotal-SCC cohort (Mule's jute-spinners; British cotton
+  operatives; Lancashire textile workers) — foundational
+  occupational-carcinogenesis evidence (post-Pott chimney-sweep
+  observation). Сучасні highly-refined (severely-hydrotreated)
+  мінеральні масла у поточних MWF та motor oils мають нижчий
+  ризик; ризик концентрується у працівників з pre-1980
+  історичним впливом або у галузях, які зберегли less-refined
+  product. Латентність до cutaneous SCC — 10-30 років.
+  КУРАТИВНОГО втручання для попереднього впливу НЕМАЄ —
+  припинення впливу / PPE (при активному), уникнення oil-soaked
+  одягу, рігорозна гігієна шкіри, sun-protection на oil-contact
+  ділянках, щорічна дерматологічна консультація з повним оглядом
+  шкіри — наявні важелі. Prevention-persona RedFlag
+  (§20 ратифікація 2026-05-18, v0.3 occupational batch-3 пілот).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "occupational_mineral_oils_exposure_documented"
+      value: true
+    - finding: "occupational_mineral_oils_years_ge_10"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+
+risk_category: occupational
+
+# Mineral-oil-associated cancers (in-KB Disease entities):
+# - DIS-BCC (closest in-KB cutaneous anchor for cutaneous SCC —
+#   DIS-CUTANEOUS-SCC not a separate entity).
+relevant_diseases:
+  - DIS-BCC
+
+shifts_algorithm: []
+
+# Source caveat: IARC Monograph 100F (2012) is canonical for
+# untreated / mildly-treated mineral oils Group-1 status;
+# NOT yet a separate SRC entity. v0.3 source-authoring backlog.
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-NCCN-SKIN-2025
+
+last_reviewed: "2026-05-18"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 pilot. Fires
+  when patient profile carries documented ≥10 years occupational
+  untreated / mildly-treated mineral-oil exposure AND no confirmed
+  mineral-oil-attributable malignancy diagnosis. Engine routes to
+  2-track PreventionPlan:
+    (a) IND-OCC-MINERAL-OILS-PREVENTION-INTENSIFIED-SURVEILLANCE
+        (standard) — annual dermatology consultation with full-skin
+        exam (focus on oil-contact areas: face, neck, hands,
+        forearms, scrotum); patient counseled to perform monthly
+        self-skin-checks; sun-protection counseling for oil-contact
+        sites; PPE + oil-soaked-clothing-avoidance counseling if
+        active exposure persists.
+    (b) IND-OCC-MINERAL-OILS-PREVENTION-OBSERVATION (surveillance) —
+        routine general-population care only; patient declines
+        annual professional dermatology cadence but receives
+        symptom-triggered evaluation and self-skin-check counseling.
+
+  Cohort-anchoring NOTE: scrotal SCC is rare at modern general-
+  population baseline but historically constituted a near-
+  pathognomonic occupational signature in cotton-mule-spinners
+  (Mule's cancer, late-19th-century British textile workers) — this
+  is the foundational post-Pott chimney-sweep observation in
+  occupational carcinogenesis. Modern at-risk cohorts are
+  metal-machinists with pre-1980 straight-mineral-oil MWF exposure
+  + automotive workers with chronic used-motor-oil contact.
+  Anchor disease is DIS-BCC as closest in-KB cutaneous-cancer
+  proxy — DIS-CUTANEOUS-SCC is not a separate KB entity.
+
+  Trigger findings are computed booleans from occupational-history
+  intake at the patient-profile layer.
+
+  Evidence base: IARC Monograph 100F (2012); Cruickshank & Squire
+  1950 (mule-spinners scrotal SCC historic series); Tolbert 1997
+  (US metal-working fluids review); Hogstedt 2017 (Swedish
+  metal-working cohort — skin-cancer SIR ~1.3-1.7x).
+
+  Sources TODO: IARC Monograph 100F (2012) as a new SRC entity.
+  v0.3 source-authoring backlog.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+notes_ua: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 пілот.
+  Спрацьовує при документованому ≥10 років професійному впливі
+  необроблених / слабко-оброблених мінеральних масел без
+  підтвердженого діагнозу. Engine маршрутизує до 2-track
+  PreventionPlan: (а) intensified — щорічна дерматологічна
+  консультація + self-skin-checks + sun-protection + PPE-counseling;
+  (б) observation — symptom-triggered тільки. STUB — очікує підпис
+  двох Clinical Co-Lead за §6.1 dev-mode exemption.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_occupational_batch3
+draft_revision: 1
+
+draft: true

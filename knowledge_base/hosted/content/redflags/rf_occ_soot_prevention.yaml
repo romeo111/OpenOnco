@@ -1,0 +1,156 @@
+id: RF-OCC-SOOT-PREVENTION
+definition: >-
+  Documented historical occupational exposure to soot — typical
+  high-risk occupations include chimney sweeps (the historic
+  foundational occupational-cancer cohort — Sir Percivall Pott's
+  1775 scrotal-cancer observation in young London climbing-boys
+  established the first chemical-carcinogen → cancer link in
+  medicine), commercial / residential roofing workers (coal-tar
+  + asphalt roofing felt + roofing-bitumen exposure), asphalt-paving
+  workers (hot-mix asphalt fume), boiler / furnace cleaners,
+  industrial-stack maintenance workers, and incinerator-ash handlers
+  — with cumulative occupational tenure ≥10 years — in an individual
+  without a current soot-associated malignancy diagnosis. Soot is an
+  IARC Group 1 carcinogen (Monograph 100F, 2012; classified jointly
+  with chimney-sweep occupation given the irreplaceable historical
+  evidence base) — established etiologic driver of skin cancer
+  (cutaneous SCC, especially scrotal SCC — Pott's foundational
+  cohort) and lung cancer (consistent excess in modern roofing /
+  asphalt-paving cohorts). Latency to skin cancer can be relatively
+  short (10-30 years; Pott's London-climbing-boys cohort developed
+  scrotal SCC in young adulthood after pre-pubertal chimney-sweep
+  exposure). Latency to lung cancer is 20-40 years and is
+  smoking-modified (additive-to-multiplicative interaction). There
+  is NO curative intervention for prior exposure — exposure
+  cessation / PPE (if active), avoidance of soot-saturated clothing,
+  rigorous skin hygiene, sun-protection at soot-contact sites,
+  smoking-cessation counseling, risk-adjusted LDCT lung surveillance,
+  and annual dermatology consultation with full-skin exam are the
+  levers. Prevention-persona RedFlag (§20 ratification 2026-05-18,
+  v0.3 occupational batch-3 pilot).
+definition_ua: >-
+  Документоване історичне професійне впливу сажі — типові
+  високоризикові професії: сажотруси (історична foundational
+  occupational-cancer cohort — спостереження Sir Percivall Pott
+  1775 року scrotal-cancer у юних London climbing-boys встановило
+  перший зв'язок chemical-carcinogen → cancer у медицині),
+  commercial / residential roofing працівники (coal-tar + asphalt
+  roofing felt + roofing-bitumen вплив), asphalt-paving працівники
+  (hot-mix asphalt fume), чистильники котлів / печей, працівники
+  з обслуговування промислових димарів, обробники incinerator-ash —
+  з кумулятивним професійним стажем ≥10 років — у пацієнта без
+  поточного діагнозу soot-асоційованої малігнізації. Сажа —
+  канцероген IARC Group 1 (Monograph 100F, 2012; класифіковано
+  спільно з chimney-sweep occupation з огляду на irreplaceable
+  historical evidence base), встановлений етіологічний драйвер раку
+  шкіри (cutaneous SCC, особливо scrotal SCC — foundational cohort
+  Pott) та раку легень (consistent excess у сучасних roofing /
+  asphalt-paving когортах). Латентність до раку шкіри може бути
+  відносно короткою (10-30 років; London-climbing-boys cohort Pott
+  розвивала scrotal SCC у юнацькому віці після pre-pubertal
+  chimney-sweep впливу). Латентність до раку легень — 20-40 років,
+  модифікується курінням (адитивно-мультиплікативна взаємодія).
+  КУРАТИВНОГО втручання для попереднього впливу НЕМАЄ —
+  припинення впливу / PPE (при активному), уникнення soot-saturated
+  одягу, рігорозна гігієна шкіри, sun-protection на soot-contact
+  ділянках, counseling щодо припинення куріння, risk-adjusted
+  LDCT-спостереження легень, щорічна дерматологічна консультація
+  з повним оглядом шкіри — наявні важелі. Prevention-persona
+  RedFlag (§20 ратифікація 2026-05-18, v0.3 occupational batch-3
+  пілот).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "occupational_soot_exposure_documented"
+      value: true
+    - finding: "occupational_soot_years_ge_10"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+
+risk_category: occupational
+
+# Soot-associated cancers (in-KB Disease entities):
+# - DIS-BCC (closest in-KB cutaneous anchor for cutaneous SCC,
+#   scrotal SCC — DIS-CUTANEOUS-SCC not a separate entity).
+# - DIS-NSCLC + DIS-SCLC (lung; consistent excess in modern
+#   roofing / asphalt-paving cohorts).
+relevant_diseases:
+  - DIS-BCC
+  - DIS-NSCLC
+  - DIS-SCLC
+
+shifts_algorithm: []
+
+# Source caveat: IARC Monograph 100F (2012) is canonical for soot
+# Group-1 status; NOT yet a separate SRC entity. v0.3 source-
+# authoring backlog.
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-NCCN-SKIN-2025
+
+last_reviewed: "2026-05-18"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 pilot. Fires
+  when patient profile carries documented ≥10 years occupational
+  soot exposure AND no confirmed soot-attributable malignancy
+  diagnosis. Engine routes to 2-track PreventionPlan:
+    (a) IND-OCC-SOOT-PREVENTION-INTENSIFIED-SURVEILLANCE (standard)
+        — annual dermatology consultation with full-skin exam
+        (focus on soot-contact areas: face, neck, hands, forearms,
+        scrotum); risk-adjusted annual LDCT chest screening
+        (soot-modified USPSTF criteria); smoking-cessation
+        counseling (paramount for lung component); patient
+        counseled to perform monthly self-skin-checks; sun-protection
+        + PPE + soot-saturated-clothing-avoidance counseling.
+    (b) IND-OCC-SOOT-PREVENTION-OBSERVATION (surveillance) —
+        routine general-population USPSTF screening only; patient
+        declines soot-modified intensified surveillance but
+        receives symptom-triggered evaluation, self-skin-check
+        counseling, and smoking-cessation counseling.
+
+  Historic anchor: Pott 1775 scrotal-cancer in chimney-sweep
+  London-climbing-boys (Percivall Pott, "Chirurgical Observations
+  Relative to the Cataract, the Polypus of the Nose, the Cancer of
+  the Scrotum, the Different Kinds of Ruptures, and the Mortification
+  of the Toes and Feet") is the foundational occupational-
+  carcinogenesis observation in medicine — first chemical-
+  carcinogen → cancer link. Modern at-risk cohorts are commercial
+  roofers + asphalt-pavers + boiler cleaners.
+
+  Trigger findings are computed booleans from occupational-history
+  intake at the patient-profile layer.
+
+  Evidence base: IARC Monograph 100F (2012); Pott 1775
+  (foundational); Hansen 1989 (Danish chimney-sweep cohort —
+  lung-cancer SMR ~1.9x, bladder-cancer SMR ~1.7x); Partanen &
+  Boffetta 1994 (asphalt-worker meta-analysis — lung-cancer
+  RR ~1.2-1.5x).
+
+  Sources TODO: IARC Monograph 100F (2012) as a new SRC entity.
+  v0.3 source-authoring backlog.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+notes_ua: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 пілот.
+  Спрацьовує при документованому ≥10 років професійному впливі
+  сажі без підтвердженого діагнозу. Engine маршрутизує до 2-track
+  PreventionPlan: (а) intensified — щорічна дерматологічна
+  консультація + LDCT + припинення куріння + self-skin-checks +
+  PPE-counseling; (б) observation — symptom-triggered тільки.
+  Історичний anchor — спостереження Pott 1775 — foundational
+  occupational-carcinogenesis у медицині. STUB — очікує підпис
+  двох Clinical Co-Lead за §6.1 dev-mode exemption.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_occupational_batch3
+draft_revision: 1
+
+draft: true

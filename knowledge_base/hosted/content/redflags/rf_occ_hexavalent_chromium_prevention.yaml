@@ -1,0 +1,132 @@
+id: RF-OCC-HEXAVALENT-CHROMIUM-PREVENTION
+definition: >-
+  Documented historical occupational exposure to hexavalent chromium
+  (Cr(VI)) compounds — typical high-risk occupations include
+  chrome-plating operators (electroplating shops), stainless-steel
+  welders (especially shielded-metal-arc welding on austenitic
+  stainless), chromate-pigment manufacturing workers, chromite-ore
+  refining, leather tanning (chrome-tanning), ferrochrome alloy
+  production, and dichromate-spray-painting workers — with cumulative
+  occupational tenure ≥10 years — in an individual without a current
+  Cr(VI)-associated malignancy diagnosis. Hexavalent chromium is an
+  IARC Group 1 carcinogen (Monograph 100C, 2012) — established
+  etiologic driver of lung cancer (primary endpoint; exposure-response
+  documented across electroplating + chromate-production cohorts) and
+  sinonasal cancer (rare baseline, near-pathognomonic in heavily-
+  exposed chromate workers). Latency from first exposure to lung
+  cancer is 15-30 years and is smoking-modified (additive-to-
+  multiplicative interaction). Latency to sinonasal cancer is
+  typically longer (20-40 years). There is NO curative intervention
+  for prior exposure — exposure cessation / PPE (if active),
+  smoking-cessation counseling, risk-adjusted LDCT lung surveillance,
+  and ENT consultation with low-threshold nasal endoscopy / CT sinus
+  for sinonasal surveillance are the levers. Prevention-persona
+  RedFlag (§20 ratification 2026-05-18, v0.3 occupational batch-3 pilot).
+definition_ua: >-
+  Документоване історичне професійне впливу сполук шестивалентного
+  хрому (Cr(VI)) — типові високоризикові професії: оператори
+  хром-плакування (електроплакувальні цехи), зварювальники нержавіючої
+  сталі (особливо ручне дугове зварювання покритим електродом по
+  аустенітній нержавіючій сталі), працівники виробництва хроматних
+  пігментів, переробка хромітової руди, шкіряне дублення (хромове
+  дублення), виробництво ферохромових сплавів, малярі-розпилювачі
+  дихроматних фарб — з кумулятивним професійним стажем ≥10 років — у
+  пацієнта без поточного діагнозу Cr(VI)-асоційованої малігнізації.
+  Шестивалентний хром — канцероген IARC Group 1 (Monograph 100C, 2012),
+  встановлений етіологічний драйвер раку легень (первинна кінцева
+  точка; експозиційно-відповідна залежність задокументована у
+  електроплакувальних та хроматно-виробничих когортах) та
+  синоназального раку (рідкісний у популяції, майже-патогномонічний у
+  важко-експонованих хроматних працівників). Латентність від першого
+  впливу до раку легень — 15-30 років, модифікується курінням
+  (адитивно-мультиплікативна взаємодія). Латентність до синоназального
+  раку зазвичай довша (20-40 років). КУРАТИВНОГО втручання для
+  попереднього впливу НЕМАЄ — припинення впливу / PPE (при активному),
+  counseling щодо припинення куріння, risk-adjusted LDCT-спостереження
+  легень, ENT-консультація з low-threshold назальною ендоскопією /
+  CT-синусами для синоназального спостереження — наявні важелі.
+  Prevention-persona RedFlag (§20 ратифікація 2026-05-18, v0.3
+  occupational batch-3 пілот).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "occupational_hexavalent_chromium_exposure_documented"
+      value: true
+    - finding: "occupational_hexavalent_chromium_years_ge_10"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+
+risk_category: occupational
+
+# Hexavalent-chromium-associated cancers (in-KB Disease entities):
+# - DIS-NSCLC + DIS-SCLC (lung; primary endpoint; IARC Group 1).
+# - DIS-HNSCC (closest in-KB anchor for sinonasal cancer —
+#   DIS-SINONASAL not a separate entity).
+relevant_diseases:
+  - DIS-NSCLC
+  - DIS-SCLC
+  - DIS-HNSCC
+
+shifts_algorithm: []
+
+# Source caveat: IARC Monograph 100C (2012) is canonical for
+# hexavalent-chromium Group-1 status; NOT yet a separate SRC entity.
+# v0.3 source-authoring backlog.
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-NCCN-NSCLC-2025
+
+last_reviewed: "2026-05-18"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 pilot. Fires
+  when patient profile carries documented ≥10 years occupational
+  hexavalent-chromium exposure AND no confirmed Cr(VI)-attributable
+  malignancy diagnosis. Engine routes to 2-track PreventionPlan:
+    (a) IND-OCC-HEXAVALENT-CHROMIUM-PREVENTION-INTENSIFIED-SURVEILLANCE
+        (standard) — risk-adjusted annual LDCT chest screening
+        (Cr(VI)-modified USPSTF criteria for cumulative exposure);
+        annual ENT consultation with symptom-review (unilateral nasal
+        obstruction, epistaxis, anosmia, persistent rhinorrhea) and
+        low-threshold nasal endoscopy / CT sinus on symptom develop;
+        smoking-cessation counseling (paramount).
+    (b) IND-OCC-HEXAVALENT-CHROMIUM-PREVENTION-OBSERVATION (surveillance)
+        — routine general-population USPSTF screening only; patient
+        declines Cr(VI)-modified intensified imaging + ENT surveillance.
+
+  Trigger findings are computed booleans from occupational-history
+  intake at the patient-profile layer (FHIR Patient + Observation /
+  Condition extensions; computation pipeline downstream of KB and
+  not yet implemented).
+
+  Evidence base: IARC Monograph 100C (2012); Gibb et al. 2000
+  (Baltimore chromate-production cohort — lung-cancer SMR ~2-3x);
+  Birk et al. 2006 (German chrome-platers — SMR ~1.5-2x);
+  Langård 1990 (chromate pigment workers — sinonasal cancer excess
+  SMR ~20-50x baseline).
+
+  Sources TODO: IARC Monograph 100C (2012) as a new SRC entity. v0.3
+  source-authoring backlog.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+notes_ua: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 пілот.
+  Спрацьовує при документованому ≥10 років професійному впливі
+  Cr(VI) без підтвердженого діагнозу. Engine маршрутизує до 2-track
+  PreventionPlan: (а) intensified — LDCT + ENT-консультація з
+  low-threshold назальною ендоскопією + припинення куріння;
+  (б) observation — symptom-triggered тільки. STUB — очікує підпис
+  двох Clinical Co-Lead за §6.1 dev-mode exemption.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_occupational_batch3
+draft_revision: 1
+
+draft: true

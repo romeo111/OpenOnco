@@ -1,0 +1,130 @@
+id: RF-OCC-NICKEL-PREVENTION
+definition: >-
+  Documented historical occupational exposure to nickel compounds —
+  typical high-risk occupations include nickel-refinery workers
+  (matte / electrolytic / Mond-process refining), nickel-cadmium
+  battery manufacturing workers, nickel-electroplating operators,
+  nickel-alloy welders, and nickel-catalyst handlers in petrochemical
+  / hydrogenation operations — with cumulative occupational tenure
+  ≥10 years — in an individual without a current nickel-associated
+  malignancy diagnosis. Nickel compounds (soluble + insoluble) are
+  IARC Group 1 carcinogens (Monograph 100C, 2012) — established
+  etiologic driver of lung cancer (primary endpoint; exposure-response
+  documented in refinery cohorts) and sinonasal cancer
+  (near-pathognomonic in heavily-exposed nickel-refinery workers,
+  particularly Mond-process pre-modernization). Latency from first
+  exposure to lung cancer is 15-30 years and is smoking-modified
+  (additive-to-multiplicative interaction). Latency to sinonasal
+  cancer is typically 20-40 years. There is NO curative intervention
+  for prior exposure — exposure cessation / PPE (if active),
+  smoking-cessation counseling, risk-adjusted LDCT lung surveillance,
+  and ENT consultation with low-threshold nasal endoscopy / CT sinus
+  for sinonasal surveillance are the levers. Prevention-persona
+  RedFlag (§20 ratification 2026-05-18, v0.3 occupational batch-3 pilot).
+definition_ua: >-
+  Документоване історичне професійне впливу сполук нікелю — типові
+  високоризикові професії: працівники нікелевих рафінерій
+  (matte / електролітичне / Mond-процес рафінування), працівники
+  виробництва нікель-кадмієвих батарей, оператори нікелевого
+  електроплакування, зварювальники нікелевих сплавів, обробники
+  нікелевих каталізаторів у нафтохімічних / гідрогенізаційних
+  операціях — з кумулятивним професійним стажем ≥10 років — у
+  пацієнта без поточного діагнозу нікель-асоційованої малігнізації.
+  Сполуки нікелю (розчинні + нерозчинні) — канцерогени IARC Group 1
+  (Monograph 100C, 2012), встановлений етіологічний драйвер раку
+  легень (первинна кінцева точка; експозиційно-відповідна залежність
+  задокументована у refinery когортах) та синоназального раку
+  (майже-патогномонічний у важко-експонованих nickel-refinery
+  працівниках, особливо Mond-процес до-модернізації). Латентність
+  від першого впливу до раку легень — 15-30 років, модифікується
+  курінням (адитивно-мультиплікативна взаємодія). Латентність до
+  синоназального раку зазвичай 20-40 років. КУРАТИВНОГО втручання для
+  попереднього впливу НЕМАЄ — припинення впливу / PPE (при активному),
+  counseling щодо припинення куріння, risk-adjusted LDCT-спостереження
+  легень, ENT-консультація з low-threshold назальною ендоскопією /
+  CT-синусами — наявні важелі. Prevention-persona RedFlag
+  (§20 ратифікація 2026-05-18, v0.3 occupational batch-3 пілот).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "occupational_nickel_exposure_documented"
+      value: true
+    - finding: "occupational_nickel_years_ge_10"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+
+risk_category: occupational
+
+# Nickel-compound-associated cancers (in-KB Disease entities):
+# - DIS-NSCLC + DIS-SCLC (lung; primary endpoint; IARC Group 1).
+# - DIS-HNSCC (closest in-KB anchor for sinonasal cancer —
+#   DIS-SINONASAL not a separate entity).
+relevant_diseases:
+  - DIS-NSCLC
+  - DIS-SCLC
+  - DIS-HNSCC
+
+shifts_algorithm: []
+
+# Source caveat: IARC Monograph 100C (2012) is canonical for
+# nickel-compound Group-1 status; NOT yet a separate SRC entity.
+# v0.3 source-authoring backlog.
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-NCCN-NSCLC-2025
+
+last_reviewed: "2026-05-18"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 pilot. Fires
+  when patient profile carries documented ≥10 years occupational
+  nickel-compound exposure AND no confirmed nickel-attributable
+  malignancy diagnosis. Engine routes to 2-track PreventionPlan:
+    (a) IND-OCC-NICKEL-PREVENTION-INTENSIFIED-SURVEILLANCE (standard)
+        — risk-adjusted annual LDCT chest screening (nickel-modified
+        USPSTF criteria for cumulative exposure); annual ENT
+        consultation with symptom-review (unilateral nasal obstruction,
+        epistaxis, anosmia, persistent rhinorrhea) and low-threshold
+        nasal endoscopy / CT sinus on symptom develop; smoking-
+        cessation counseling (paramount).
+    (b) IND-OCC-NICKEL-PREVENTION-OBSERVATION (surveillance) —
+        routine general-population USPSTF screening only; patient
+        declines nickel-modified intensified imaging + ENT
+        surveillance.
+
+  Trigger findings are computed booleans from occupational-history
+  intake at the patient-profile layer.
+
+  Evidence base: IARC Monograph 100C (2012); ICNCM (International
+  Committee on Nickel Carcinogenesis in Man) 1990 multi-cohort
+  pooled analysis — lung-cancer SMR ~1.5-2.5x, sinonasal-cancer SMR
+  ~100-200x in pre-modernization Kristiansand (Norway) +
+  Clydach (Wales) refinery cohorts. Modern electrolytic refining +
+  PPE substantially reduces excess but residual elevated risk
+  persists in long-tenure workers.
+
+  Sources TODO: IARC Monograph 100C (2012) as a new SRC entity. v0.3
+  source-authoring backlog.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+notes_ua: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 пілот.
+  Спрацьовує при документованому ≥10 років професійному впливі
+  сполук нікелю без підтвердженого діагнозу. Engine маршрутизує до
+  2-track PreventionPlan: (а) intensified — LDCT + ENT-консультація +
+  припинення куріння; (б) observation — symptom-triggered тільки.
+  STUB — очікує підпис двох Clinical Co-Lead за §6.1 dev-mode
+  exemption.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_occupational_batch3
+draft_revision: 1
+
+draft: true

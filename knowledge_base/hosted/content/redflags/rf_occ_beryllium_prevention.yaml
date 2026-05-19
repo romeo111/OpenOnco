@@ -1,0 +1,156 @@
+id: RF-OCC-BERYLLIUM-PREVENTION
+definition: >-
+  Documented historical occupational exposure to beryllium and
+  beryllium compounds — typical high-risk occupations include
+  aerospace / defense beryllium machining (beryllium alloys for
+  satellite + missile + aircraft components), electronics /
+  semiconductor / heat-sink manufacturing, nuclear-weapons +
+  nuclear-reactor component manufacture (beryllium reflectors /
+  neutron moderators), dental-alloy production (Be-containing
+  Ni-Cr-Be precision-cast crown / bridge alloys, historic),
+  beryllium-copper alloy production for tools / springs / electrical
+  contacts, and ceramics / pigment manufacturing using beryllium
+  oxide — with cumulative occupational tenure ≥10 years — in an
+  individual without a current beryllium-associated malignancy
+  diagnosis. Beryllium and beryllium compounds are IARC Group 1
+  carcinogens (Monograph 100C, 2012) — established etiologic driver
+  of lung cancer (primary endpoint; exposure-response documented in
+  US beryllium-machining + extraction cohorts). Latency from first
+  exposure to lung cancer is 15-30 years; long latency (≥20 years)
+  also characteristic. Smoking-modified (additive-to-multiplicative
+  interaction). NOTE: Chronic Beryllium Disease (CBD) is a separate
+  occupational lung disease — granulomatous + non-malignant — but
+  arises from the same exposure cohort and frequently co-occurs.
+  CBD evaluation (beryllium lymphocyte-proliferation test [BeLPT],
+  HRCT chest, pulmonary-function testing) is a parallel non-
+  oncologic occupational-medicine pathway that this Indication does
+  NOT replace. There is NO curative intervention for prior exposure
+  in terms of cancer prevention — exposure cessation / PPE (if
+  active), smoking-cessation counseling, risk-adjusted LDCT lung
+  surveillance, and coordination with occupational-medicine for CBD
+  surveillance are the levers. Prevention-persona RedFlag
+  (§20 ratification 2026-05-18, v0.3 occupational batch-3 pilot).
+definition_ua: >-
+  Документоване історичне професійне впливу берилію та сполук
+  берилію — типові високоризикові професії: aerospace / defense
+  beryllium machining (Be-сплави для супутникових + ракетних +
+  авіаційних компонентів), електроніка / напівпровідники /
+  виробництво тепловідводів, виробництво компонентів ядерної зброї +
+  ядерних реакторів (Be-відбивачі / нейтронні модератори),
+  виробництво стоматологічних сплавів (Be-вмісні Ni-Cr-Be precision-
+  cast crown / bridge сплави, історично), виробництво Be-Cu сплавів
+  для інструментів / пружин / електричних контактів, кераміка /
+  виробництво пігментів з beryllium oxide — з кумулятивним
+  професійним стажем ≥10 років — у пацієнта без поточного діагнозу
+  berylllium-асоційованої малігнізації. Берилій та сполуки берилію —
+  канцерогени IARC Group 1 (Monograph 100C, 2012), встановлений
+  етіологічний драйвер раку легень (первинна кінцева точка;
+  експозиційно-відповідна залежність задокументована у когортах
+  US beryllium-machining + extraction). Латентність від першого
+  впливу до раку легень — 15-30 років; довга латентність (≥20 років)
+  також характерна. Модифікується курінням (адитивно-
+  мультиплікативна взаємодія). УВАГА: Chronic Beryllium Disease
+  (CBD) — окремe occupational lung disease — гранулематозне +
+  non-malignant — але виникає з тієї ж exposure-cohort та часто
+  ко-існує. CBD-оцінка (beryllium lymphocyte-proliferation test
+  [BeLPT], HRCT грудної клітки, pulmonary-function testing) —
+  паралельний non-oncologic occupational-medicine шлях, який ця
+  Indication НЕ замінює. КУРАТИВНОГО втручання для попереднього
+  впливу у контексті cancer prevention НЕМАЄ — припинення впливу /
+  PPE (при активному), counseling щодо припинення куріння,
+  risk-adjusted LDCT-спостереження легень, координація з
+  occupational-medicine для CBD-спостереження — наявні важелі.
+  Prevention-persona RedFlag (§20 ратифікація 2026-05-18, v0.3
+  occupational batch-3 пілот).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "occupational_beryllium_exposure_documented"
+      value: true
+    - finding: "occupational_beryllium_years_ge_10"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+
+risk_category: occupational
+
+# Beryllium-compound-associated cancers (in-KB Disease entities):
+# - DIS-NSCLC + DIS-SCLC (lung; primary endpoint; IARC Group 1).
+# - NOTE: CBD is occupational lung disease distinct from cancer
+#   and is not represented as a Disease entity here.
+relevant_diseases:
+  - DIS-NSCLC
+  - DIS-SCLC
+
+shifts_algorithm: []
+
+# Source caveat: IARC Monograph 100C (2012) is canonical for
+# beryllium-compound Group-1 status; NOT yet a separate SRC entity.
+# v0.3 source-authoring backlog.
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-NCCN-NSCLC-2025
+
+last_reviewed: "2026-05-18"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 pilot. Fires
+  when patient profile carries documented ≥10 years occupational
+  beryllium exposure AND no confirmed beryllium-attributable
+  malignancy diagnosis. Engine routes to 2-track PreventionPlan:
+    (a) IND-OCC-BERYLLIUM-PREVENTION-INTENSIFIED-SURVEILLANCE
+        (standard) — risk-adjusted annual LDCT chest screening
+        (beryllium-modified USPSTF criteria for cumulative exposure);
+        coordination with occupational-medicine for CBD surveillance
+        (BeLPT screening, HRCT, PFTs) which is a parallel non-
+        oncologic pathway; smoking-cessation counseling (paramount).
+    (b) IND-OCC-BERYLLIUM-PREVENTION-OBSERVATION (surveillance) —
+        routine general-population USPSTF screening only; patient
+        declines beryllium-modified intensified imaging surveillance;
+        CBD-surveillance referral remains offered separately
+        through occupational-medicine.
+
+  CBD context: Chronic Beryllium Disease is a Type-IV cellular
+  hypersensitivity granulomatous lung disease arising from beryllium
+  exposure in genetically susceptible individuals (HLA-DPB1 Glu69
+  polymorphism associated). It mimics sarcoidosis radiographically
+  and is non-malignant; however, the workup overlaps with
+  lung-cancer surveillance (HRCT, PFTs, sometimes lung biopsy) and
+  CBD itself elevates lung-cancer risk modestly. CBD evaluation is
+  handled by occupational-medicine specialists and is OUTSIDE the
+  scope of this oncology-prevention Indication — referred in
+  parallel.
+
+  Trigger findings are computed booleans from occupational-history
+  intake at the patient-profile layer.
+
+  Evidence base: IARC Monograph 100C (2012); Ward et al. 1992 +
+  Sanderson et al. 2001 (US beryllium-processing cohort —
+  lung-cancer SMR ~1.2-1.7x); Schubauer-Berigan et al. 2011
+  (NIOSH pooled cohort meta-analysis — exposure-response gradient).
+
+  Sources TODO: IARC Monograph 100C (2012) as a new SRC entity. v0.3
+  source-authoring backlog.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+notes_ua: >
+  Prevention-persona RedFlag — v0.3 occupational batch-3 пілот.
+  Спрацьовує при документованому ≥10 років професійному впливі
+  берилію без підтвердженого діагнозу. Engine маршрутизує до 2-track
+  PreventionPlan: (а) intensified — LDCT + координація з
+  occupational-medicine для CBD-спостереження + припинення куріння;
+  (б) observation — USPSTF тільки. CBD — паралельний non-oncologic
+  шлях. STUB — очікує підпис двох Clinical Co-Lead за §6.1 dev-mode
+  exemption.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_occupational_batch3
+draft_revision: 1
+
+draft: true
