@@ -1,0 +1,48 @@
+id: RF-BECKWITH-WIEDEMANN-CONFIRMED-CARRIER
+definition: >-
+  Patient has a confirmed Beckwith-Wiedemann syndrome (BWS) molecular
+  diagnosis — pathogenic alteration at the 11p15.5 imprinting locus
+  (CDKN1C, H19, KCNQ1OT1, IGF2). BWS confers an estimated 5-10% lifetime
+  embryonal tumor risk during infancy and early childhood (especially
+  Wilms tumor with IC1/H19 hypermethylation subtype, hepatoblastoma
+  across subtypes). The risk window is narrow — most tumors arise before
+  age 8 — so intensive prevention-time surveillance is critical.
+  Prevention-persona confirmed-carrier RedFlag (§20).
+definition_ua: >-
+  Пацієнт має підтверджений молекулярний діагноз синдрому
+  Беквіта-Відемана (BWS) — патогенне порушення локусу імпринтингу 11p15.5
+  (CDKN1C, H19, KCNQ1OT1, IGF2). BWS супроводжується ~5-10% довічним
+  ризиком ембріональних пухлин у ранньому дитинстві (особливо пухлина
+  Вілмса при підтипі IC1/H19 гіперметилювання, гепатобластома при всіх
+  підтипах). Вікно ризику вузьке — більшість пухлин виникає до 8 років,
+  тому інтенсивне prevention-time спостереження критичне.
+  Prevention-persona confirmed-carrier RedFlag (§20).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_bws_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+severity: critical
+priority: 65
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-WILMS
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-AASLD-HCC-2023
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_pediatric_predisposition_wave_m
+notes: "Prevention-persona BWS confirmed-carrier RedFlag (pediatric cancer predisposition Wave M). Engine routes to PreventionPlan for Wilms tumor + hepatoblastoma surveillance: abdominal US q3mo from infancy through age 8, AFP monthly through age 3-4 then q3mo through age 4. STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode. Disease anchor DIS-WILMS used per Wave-M brief; hepatoblastoma cancer-spectrum noted in rationale of paired Indications."
