@@ -1,0 +1,80 @@
+id: AP-LAMIVUDINE-NSZU-LEGACY-HBV
+name: "Lamivudine via НСЗУ HBV programme (legacy; entecavir/TAF preferred)"
+name_ua: "Ламівудин через програму НСЗУ з лікування HBV (застаріле — перевага ентекавіру/TAF)"
+
+applies_to_drug_ids:
+  - DRUG-LAMIVUDINE
+applies_to_regimen_ids: []
+
+pathway_type: nszu_program
+
+country_options: ["UA"]
+
+cost_orientation:
+  currency: UAH
+  min: 0
+  max: 0
+  per_unit: month
+  notes: >
+    Pacient out-of-pocket cost: 0 UAH/month у межах НСЗУ-пакету
+    "Антивірусна терапія хворих на хронічний вірусний гепатит"
+    (пакет 5004) АБО як компонент HIV-ART через Центр СНІДу.
+    Retail price поза програмою — приблизно 250-800 UAH/місяць
+    для генеричного lamivudine 100 mg (HBV-формуляція) та
+    300-900 UAH/місяць для 150 mg/300 mg (HIV-формуляція)
+    станом на 2026-05; перевірено drlz.com.ua.
+    Ламівудин — найдешевший з нуклеозидних аналогів НСЗУ-формуляру,
+    але клінічно витіснений ентекавіром і TAF (DRUG-ENTECAVIR,
+    DRUG-TENOFOVIR-AF) для HBV-treatment per AASLD-2024.
+
+typical_lead_time_weeks: [1, 4]
+
+contact_pattern: >
+  Сімейний лікар або інфекціоніст за місцем декларації НСЗУ →
+  скеровує до закладу-надавача пакета 5004 (Антивірусна терапія
+  хворих на хронічний вірусний гепатит). НА ПРАКТИЦІ для нових
+  HBV-treatment-cases клініцист обирає entecavir або TAF;
+  lamivudine залишається у формулярі переважно для:
+  (a) HIV-ART через Центр СНІДу (як один з NRTI у комбінованому
+  режимі); (b) post-liver-transplant HBV-prophylaxis у комбінації
+  з HBIg; (c) ресурсо-обмежений сценарій без TAF/ETV доступу.
+  Для HBV-reactivation-prophylaxis при анти-CD20 therapy —
+  TAF / entecavir завжди preferred.
+
+eligibility_caveats:
+  - "HBV-ДНК позитивна (для treatment) АБО HBsAg+/anti-HBc+ (для prophylaxis)"
+  - "Активна декларація НСЗУ"
+  - "ВІЛ-коінфекція — НЕ використовувати lamivudine як HBV monotherapy (швидка резистентність та подвійний HIV/HBV-failure); потребує повного ARV з TDF/TAF backbone"
+  - "Попередня lamivudine-експозиція (>24 тижні) — висока ймовірність M204V/I rtM204V мутації; switch до TAF або ETV з адекватним моніторингом"
+  - "При наявності TAF або ETV у регіональному формулярі — НЕ ініціювати lamivudine de novo (AASLD-2024 strong recommendation)"
+
+requires_documentation:
+  - "HBsAg позитивний АБО HBV-ДНК ПЛР кількісна"
+  - "ALT / печінкові ензими baseline + q3-6 місяців"
+  - "HIV-тест (виключення коінфекції перед монотерапією)"
+  - "Декларація НСЗУ підтверджена"
+  - "Документація resistance-screening для пацієнтів з попередньою lamivudine-експозицією"
+
+verified_by: null
+last_verified: "2026-05-18"
+
+sources:
+  - SRC-AASLD-HBV-2024
+
+notes: >
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode.
+
+  Lamivudine — найстаріший доступний NRTI для HBV з найвищою
+  частотою резистентності (~70% за 5 років монотерапії). НСЗУ
+  історично включила lamivudine у пакет 5004; станом на 2026-05
+  фактично майже виключно entecavir та TAF призначаються для
+  нових HBV-treatment cases (драг-файл lamivudine reimbursement_indications
+  явно зазначає "historically; зараз entecavir/tenofovir перевага").
+
+  Ця AccessPathway документує fact-of-availability через НСЗУ, але
+  явно не рекомендує lamivudine як first-line — render layer
+  має показувати pacient'у, що дешевший препарат formally доступний,
+  але клінічно subordinate до entecavir/TAF.
+
+  AccessPathway render-time-only метадані; engine не використовує
+  pathway-availability як signal вибору терапії (CHARTER §8.3).

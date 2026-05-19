@@ -1,0 +1,91 @@
+id: AP-ASPIRIN-LOW-DOSE-PHARMACY-OOP
+name: "Low-dose aspirin for chemoprevention (Lynch / CRC primary prevention) — pharmacy out-of-pocket"
+name_ua: "Низькодозова ацетилсаліцилова кислота (хіміопрофілактика КРР / синдром Лінча) — оплата з кишені в аптеці"
+
+applies_to_drug_ids:
+  - DRUG-ASPIRIN-LOW-DOSE-CHEMOPREVENTION
+applies_to_regimen_ids: []
+
+pathway_type: self_pay
+
+country_options: ["UA"]
+
+cost_orientation:
+  currency: UAH
+  min: 30
+  max: 150
+  per_unit: month
+  notes: >
+    Pacient out-of-pocket cost за низькодозовий aspirin 75-100 mg
+    daily станом на 2026-05:
+    - Генерики (Аспірин Кардіо, Кардіомагніл, Магнікор, Лоспірин,
+      Полокард-Кардіо) — 30-150 UAH/місяць у залежності від
+      бренду та дозування (75 mg vs 100 mg vs 81 mg). Найдешевші
+      genericки (Polфarma, Borshchagivsky) — ~30-60 UAH/місяць.
+    - Brand bayer Aspirin Cardio — 80-150 UAH/місяць (premium-tier).
+    - drlz.com.ua perевірено; aptekan.ua, apteka911.com.ua,
+      tabletki.ua усі підтверджують range.
+    - НЕ входить у програму Affordable Medicines НСЗУ для primary-
+      prevention onкологічних показань. Affordable Medicines покриває
+      aspirin тільки для secondary cardiovascular prevention (post-
+      MI, post-stroke).
+
+typical_lead_time_weeks: [0, 1]
+
+contact_pattern: >
+  Сімейний лікар або онколог-генетик призначає aspirin за наявності:
+  - Documented Lynch syndrome germline variant (MLH1/MSH2/MSH6/PMS2/
+    EPCAM) — CAPP2 evidence: aspirin 600 mg daily x 2-4 років
+    знижує CRC-incidence у Lynch-carrier на ~50% за 10-річний
+    follow-up (Burn 2011, Lancet; Burn 2020, Lancet follow-up).
+    Modern dosing — переважно 75-100 mg daily-100 mg daily згідно
+    з CAPP2-based кишеньково ризику стратифікації.
+  - Average-risk CRC primary prevention — USPSTF-2022 NOT
+    recommending aspirin de novo для primary prevention (значне
+    bleeding risk vs modest CRC benefit; updated 2022 reversal від
+    USPSTF-2016 recommendation).
+  Pacient купує aspirin у будь-якій приватній аптеці без рецепта
+  (OTC у УА), сплачує OOP.
+
+eligibility_caveats:
+  - "Lynch syndrome germline-carrier — strong consideration per CAPP2 evidence (B-recommendation у NCCN-Lynch-2025)"
+  - "Active GI bleeding / peptic ulcer / aspirin-allergy / NSAID-induced asthma — absolute contraindications"
+  - "Anticoagulant therapy (warfarin, DOAC) — bleed-risk additive; co-prescribing рідко"
+  - "Age >70 + low CRC-risk — USPSTF-2022 проти routine aspirin (bleed risk перевершує CRC benefit)"
+  - "Pregnancy — low-dose aspirin acceptable у акушерських показаннях (preeclampsia prevention), але не для cancer-chemoprevention у gravid"
+
+requires_documentation:
+  - "Genetic-test report з Lynch / FAP germline variant (для Lynch chemoprevention indication)"
+  - "Сімейний родовід або Amsterdam II / Bethesda criteria"
+  - "GI-anamnesis: попередня кровотеча, ПУ, гастрит"
+  - "Список ко-medication (антикоагулянти, NSAIDs, кортикостероїди)"
+  - "Інформоване consent щодо bleed-risk (peptic ulcer 1-2%/yr; hemorrhagic stroke ~0.1%/yr)"
+
+verified_by: null
+last_verified: "2026-05-18"
+
+sources:
+  - SRC-CAPP2-LYNCH-ASPIRIN-BURN-2011
+
+notes: >
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode.
+
+  Low-dose aspirin — найдешевша prevention-intervention у нашій KB
+  (~30-150 UAH/місяць). Indication-evidence:
+  - **Lynch syndrome chemoprevention** — CAPP2 trial (Burn 2011 Lancet;
+    Burn 2020 follow-up) показав ~50% CRC-risk reduction у Lynch-
+    carriers після 2-4 рік aspirin 600 mg daily. Modern dosing
+    переважно 75-300 mg daily (нижчий bleed-risk; similar
+    chemoprevention efficacy на тривалому follow-up).
+  - **Average-risk primary CRC prevention** — USPSTF-2022
+    significant policy-reversal: aspirin більш НЕ рекомендований
+    для primary CRC prevention у average-risk adults age 50+ (bleed-
+    risk перевершує modest benefit). Engine має reflect цю позицію.
+  - **Secondary prevention after CRC** — emerging evidence (e.g.,
+    PRIORITY-2018, ASCOLT ongoing) — поки що не standard-of-care.
+
+  АП показує що aspirin доступний широко за дуже низьку OOP-вартість,
+  але indication має бути strictly Lynch-syndrome-carrier для cancer-
+  prevention; average-risk primary prevention — НЕ recommend.
+
+  AccessPathway render-time-only.

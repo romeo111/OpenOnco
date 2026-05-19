@@ -1,0 +1,106 @@
+id: AP-METFORMIN-NSZU-DM-ONLY
+name: "Metformin — НСЗУ Affordable Medicines reimburse for DM-2 only, NOT for cancer chemoprevention"
+name_ua: "Метформін — програма Доступні Ліки НСЗУ покриває для ЦД-2, але НЕ для онкологічної хіміопрофілактики"
+
+applies_to_drug_ids:
+  - DRUG-METFORMIN-CHEMOPREVENTION
+applies_to_regimen_ids: []
+
+pathway_type: nszu_program_partial
+# Канонічний enum-набір не охоплює "reimbursed за один indication
+# (ЦД-2 через Affordable Medicines), але OOP за інше indication
+# (cancer chemoprevention)". Розширення вперед-сумісним value per
+# test_pathway_type_is_freeform_but_documented.
+
+country_options: ["UA"]
+
+cost_orientation:
+  currency: UAH
+  min: 0
+  max: 250
+  per_unit: month
+  notes: >
+    Pacient out-of-pocket cost для metformin 500-1000 mg BID станом
+    на 2026-05:
+    - **DM-2 indication через програму Доступні Ліки НСЗУ**:
+      pacient OOP 0 UAH/місяць (deluxe-tariff) або 30-80 UAH/місяць
+      (reduced co-payment залежно від конкретного бренду на
+      Affordable-Medicines-list). Pacient має DM-2 диагноз з ICD-10
+      E11.x, активна декларація з сімейним лікарем або endocrinologist.
+      Pacient отримує electronic prescription, реалізує в acquired
+      аптеці-партнері Доступні Ліки.
+    - **Cancer chemoprevention indication (OOP self-pay)**:
+      pacient купує metformin у звичайній аптеці без Affordable-Medicines
+      програми. Pacient OOP 50-250 UAH/місяць у залежності від бренду
+      (Сіофор, Глюкофаж, Diaformin, Метформін-Тева, генерики).
+      drlz.com.ua / apteka911 / tabletki.ua перевірено: середня ціна
+      ~50-100 UAH/місяць (за 60-90 шт 500 mg). Bayer Glucophage XR
+      — premium до 250 UAH/місяць.
+
+typical_lead_time_weeks: [0, 1]
+
+contact_pattern: >
+  **DM-2 pathway (Affordable Medicines):**
+  Сімейний лікар АБО endocrinologist (за декларацією НСЗУ) →
+  верифікує DM-2 diagnosis (ICD-10 E11.x) + reasonable HbA1c-target
+  → виписує electronic prescription у системі ЕСОЗ для metformin
+  → pacient реалізує у будь-якій partner-аптеці Доступні Ліки
+  (мережа охоплює >7000 аптек у УА). Refill q1-3 місяців.
+
+  **Cancer chemoprevention pathway (self-pay):**
+  Онколог-генетик або сімейний лікар обговорює evidence-mixed
+  evidence для metformin chemoprevention у:
+  - Type-2 diabetic з підвищеним cancer-risk (Lynch, BRCA, високий
+    BMI з diabetes-progression) — emerging-evidence обсерваційний;
+    randomized trials (METAL, MA32) показали mixed-results.
+  - Cowden syndrome (PTEN germline) — speculative; не standard-of-care.
+  Pacient купує metformin OOP у звичайній аптеці. Жодна Affordable
+  Medicines reimbursement за cancer-indication.
+
+eligibility_caveats:
+  - "Reimbursement через Affordable Medicines — ВИКЛЮЧНО для DM-2 (ICD-10 E11.x); cancer-chemoprevention indication НЕ reimbursed"
+  - "GFR <30 мл/хв — contraindicated (lactic acidosis risk)"
+  - "Decompensated heart failure / liver failure — relative contraindications"
+  - "Активна декларація НСЗУ + DM-2 диагноз (для Affordable Medicines)"
+  - "Cancer-chemoprevention indication — еvidence-mixed; clinical-trial-only context переважно (METAL, MA32 negative для breast cancer; positive observational data для CRC/endometrial)"
+
+requires_documentation:
+  - "DM-2 diagnosis з ICD-10 E11.x + HbA1c (для Affordable Medicines)"
+  - "GFR / creatinine baseline (>30 мл/хв)"
+  - "Декларація НСЗУ підтверджена"
+  - "Список ко-medication (особливо iodinated contrast — hold metformin перед/після imaging study)"
+  - "Якщо cancer-prevention indication: documented genetic-syndrome АБО клінічний trial enrollment"
+
+verified_by: null
+last_verified: "2026-05-18"
+
+sources:
+  - SRC-USPSTF-CRC-2021
+
+notes: >
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode.
+
+  Metformin — найважливіший приклад indication-asymmetric reimbursement
+  у УА: безкоштовний для DM-2 через Affordable Medicines, але OOP
+  для cancer-chemoprevention indication. Engine має чітко
+  distinguish ці два scenarios у render-output:
+  - DM-2 patient з ризиком raku (e.g., insulin-resistance + Lynch
+    carrier) — metformin вже covered за DM indication, NOT за
+    chemoprevention.
+  - Non-diabetic carrier of cancer-predisposition (Lynch, BRCA) —
+    metformin OOP, але evidence для chemoprevention поки mixed.
+
+  Clinical-trial-context evidence:
+  - **METAL trial (Goodwin 2022, JAMA)** — phase III metformin
+    у early-stage breast cancer; negative for survival improvement.
+  - **MA32 trial** — similar negative result.
+  - **Observational studies** — consistent ~30% CRC + endometrial
+    cancer-risk reduction в diabetic-users; confounders abundant.
+  - **Active prevention trials** — METformin-COWDEN, MERIT-COWDEN,
+    обмежений набір; не доступні в УА.
+
+  AccessPathway розрізняє ці indication-pathways через notes;
+  render layer має показувати pacient'у correct cost-orientation
+  залежно від indication-context.
+
+  AccessPathway render-time-only.

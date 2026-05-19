@@ -1,0 +1,99 @@
+id: AP-FIT-FECAL-IMMUNOCHEMICAL-NSZU
+name: "Fecal immunochemical test (FIT) for CRC screening — НСЗУ-covered through primary care"
+name_ua: "Імунохімічний тест калу на приховану кров (FIT) для скринінгу КРР — покриття НСЗУ через ПМД"
+
+# Test-anchored AP. TEST-FIT-FECAL-IMMUNOCHEMICAL — forward-compatible
+# identifier (test stub not yet authored). Engine ignores `applies_to_test_ids`.
+applies_to_drug_ids: []
+applies_to_regimen_ids: []
+applies_to_test_ids:
+  - TEST-FIT-FECAL-IMMUNOCHEMICAL
+
+pathway_type: nszu_program
+
+country_options: ["UA"]
+
+cost_orientation:
+  currency: UAH
+  min: 0
+  max: 400
+  per_unit: dose
+  notes: >
+    Pacient OOP per FIT test станом на 2026-05:
+    - НСЗУ пакет 1001 "Первинна медична допомога дорослого і дитячого
+      населення" — FIT входить як preventive-screening component
+      сімейного лікаря за активної декларації. Pacient OOP 0 UAH.
+      Pacient отримує kit (single-stool sampling), повертає у
+      первинну ланку; analyzed у laboratory з якісним або кількісним
+      hemoglobin-immunoassay.
+    - Приватні лабораторії (Synevo, DILA, INVITRO, Esculab) —
+      150-400 UAH per FIT-kit + analysis станом на 2026-05.
+    - Quantitative FIT (Hb-cutoff 10-20 µg/g feces) — preferred над
+      qualitative FOBT-guaiac; має lower-false-positive rate та
+      higher specificity.
+    - НСЗУ-covered FIT: q1y (USPSTF / EU Council 2003 baseline);
+      q2y у EU programmatic-cohort (Finland, Netherlands).
+
+typical_lead_time_weeks: [1, 3]
+
+contact_pattern: >
+  Сімейний лікар (за декларацією НСЗУ) → видає FIT-kit на
+  preventive-visit АБО за direct-request пацієнта. Pacient
+  виконує single-stool collection дома (не вимагає dietary
+  restriction для FIT; на відміну від gFOBT). Sample повертає
+  у первинну ланку у консервант-tube; analyzed у klinic-
+  laboratory.
+
+  Positive-result management per USPSTF-2021 / NCCN-CRC-Screening
+  2025:
+  - Positive FIT → колоноскопія (НСЗУ пакет 2202 АБО регіональна
+    онкопрограма) у часовому вікні ≤4-8 тижнів.
+  - Negative — repeat q1y (target screening interval age 45/50-75
+    per USPSTF-2021 / EU-Council).
+  - Symptomatic patient — НЕ використовувати FIT як diagnostic
+    tool; пряма колоноскопія.
+
+eligibility_caveats:
+  - "Age 45-75 (USPSTF-2021 lowered лимит до 45 у 2021; EU Council 2003 рекомендує 50-74; UA Cancer Screening Program — переважно 50-65, локальні варіанти)"
+  - "Активна декларація НСЗУ для безкоштовного FIT-kit через сімейного лікаря"
+  - "Average-risk пацієнт — БЕЗ FAP / Lynch / IBD / prior adenoma history (high-risk — direct колоноскопія; не FIT)"
+  - "Visible blood per rectum / iron-deficiency anemia / weight loss / change у bowel habits → НЕ використовувати FIT; пряма діагностична колоноскопія"
+  - "Recent menstruation / hemorrhoid bleeding — possible false-positive; pacient education щодо timing of sampling"
+
+requires_documentation:
+  - "Декларація НСЗУ підтверджена"
+  - "Анамнез CRC / adenoma / IBD / family history Lynch / FAP (виключити high-risk)"
+  - "Попередні FIT / colonoscopy результати (для interval визначення)"
+  - "Інформоване consent для post-positive FIT colonoscopy follow-up"
+
+verified_by: null
+last_verified: "2026-05-18"
+
+sources:
+  - SRC-USPSTF-CRC-2021
+
+notes: >
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode.
+
+  Fecal Immunochemical Test (FIT) — найбільш-cost-effective та
+  широко-впроваджуваний модальність CRC-screening для average-risk
+  cohort age 45/50-75. USPSTF-2021 пропонує FIT q1y АБО колоноскопію
+  q10y як equivalent options.
+
+  В Україні: FIT входить у НСЗУ-пакет 1001 (ПМД) як preventive-screening
+  компонент. Implementation challenges:
+  1. Pacient-уявомленість невисока; many пацієнтів очікують direct-
+     колоноскопію (asymmetric awareness vs FIT).
+  2. Positive-FIT colonoscopy follow-up — bottleneck у деяких регіонах
+     з обмеженою endoscopic-capacity (>8-12 weeks lead-time).
+  3. Quantitative FIT-cutoff — деякі первинні-laboratory використовують
+     qualitative kit з вищою false-positive rate; quantitative kit
+     (Hb-cutoff 10-20 µg/g) — preferred per EU-Quality-Assurance
+     Guidelines.
+  4. Adherence-rate низька — UA-cohort estimated ~15-25% age-eligible
+     populace бере FIT q1y (vs ~50-65% у некоторих EU countries).
+
+  Gap у схемі: TEST-FIT-FECAL-IMMUNOCHEMICAL — forward-compatible
+  identifier; test stub потребує authoring у наступному chunk-batch.
+
+  AccessPathway render-time-only.

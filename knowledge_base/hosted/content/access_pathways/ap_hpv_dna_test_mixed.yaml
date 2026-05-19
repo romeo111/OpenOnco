@@ -1,0 +1,105 @@
+id: AP-HPV-DNA-TEST-MIXED
+name: "HPV DNA testing (cervical) — mixed availability, NSZU partial, private clinics OOP"
+name_ua: "HPV-ДНК тест (цервікальний) — змішана доступність, НСЗУ часткова, приватні клініки OOP"
+
+# Test-anchored AP. TEST-HPV-DNA-CERVICAL — forward-compatible identifier
+# (test stub not yet authored). Engine ignores `applies_to_test_ids`.
+applies_to_drug_ids: []
+applies_to_regimen_ids: []
+applies_to_test_ids:
+  - TEST-HPV-DNA-CERVICAL
+
+pathway_type: mixed_fragmented
+# Канонічний enum-набір не охоплює змішаний "частина НСЗУ-онкоцентрів
+# виконує безкоштовно за reflex-показаннями; інші регіони / safe-routine-
+# screening — OOP у приватних лабораторіях". Розширення вперед-сумісним
+# value per test_pathway_type_is_freeform_but_documented.
+
+country_options: ["UA"]
+
+cost_orientation:
+  currency: UAH
+  min: 0
+  max: 2500
+  per_unit: dose
+  notes: >
+    Pacient OOP per HPV-DNA test станом на 2026-05:
+    - Reflex HPV-DNA при ASC-US у державних онкоцентрах — 0 UAH
+      (НСЗУ-пакет 2010 "Діагностика та лікування злоякісних
+      новоутворень у дорослих та дітей" приймає reflex-cytology
+      follow-up).
+    - Co-testing routine screening (Pap + HPV-DNA q5y, age 30-65) —
+      переважно OOP у приватних лабораторіях; державна НСЗУ-програма
+      Cervical Cancer Screening наразі не виокремила HPV-DNA-routine
+      покриття для age 30-65 (станом на 2026-05).
+    - Приватні лабораторії: Synevo, DILA, INVITRO, Esculab, Medlab —
+      HPV-DNA hrHPV (high-risk types pooled) — 500-1500 UAH; HPV
+      16/18 genotyping + pooled hrHPV — 800-2500 UAH. Verified
+      web-prices Synevo / DILA станом на 2026-05.
+    - Primary HPV-DNA screening (без cytology, age 30+) — не
+      впроваджено програмно в УА (станом на 2026-05); pacient OOP
+      якщо запит.
+
+typical_lead_time_weeks: [1, 3]
+
+contact_pattern: >
+  Reflex HPV-DNA — призначається акушером-гінекологом у державному
+  онкоцентрі при ASC-US Pap-результаті (no patient referral required;
+  cytology lab автоматично проводить reflex hrHPV на тому-же зразку).
+  Routine co-testing АБО primary HPV-DNA — pacient звертається у
+  приватну лабораторію OOP; sample-collection переважно вакуумна
+  тубейка з консервантом (LBC vial) у акушера-гінеколога АБО
+  self-sampling kit (нова option у деяких приватних лабораторіях
+  з 2025 року, переважно для screening-resistant women).
+
+  Result-interpretation per ASCCP 2019 risk-based management:
+  - hrHPV-positive + cytology normal → colposcopy АБО repeat co-test
+    q12mo (залежно від age + history).
+  - HPV 16/18-positive + cytology normal → colposcopy.
+  - hrHPV-positive + ASC-US/LSIL → colposcopy.
+
+eligibility_caveats:
+  - "Жінка віком 30-65 (primary HPV screening АБО co-testing); 21-29 — cytology-only переважно (HPV-DNA не рекомендована як primary screen)"
+  - "Activна декларація НСЗУ для reflex-HPV-DNA у державному онкоцентрі"
+  - "Імунокомпрометований / HIV+ — більш-часте surveillance + ширша HPV-DNA-індикація"
+  - "Cervix присутній"
+  - "Якщо self-sampling — pacient має inform про вибірку відповідно інструкції; sensitivity-deviation possible (≤15% у деяких meta-analyses) vs провайдер-collected sample"
+
+requires_documentation:
+  - "Попередні cytology / HPV-results (для risk-management interval)"
+  - "Декларація НСЗУ підтверджена (для reflex-HPV у держ-онкоцентрі)"
+  - "Інформоване consent для self-sampling якщо обрано"
+  - "Genotyping-результат (HPV 16/18 status) — впливає на ASCCP-management алгоритм"
+
+verified_by: null
+last_verified: "2026-05-18"
+
+sources:
+  - SRC-USPSTF-CERVICAL-2018
+  - SRC-ESMO-CERVICAL-2024
+  - SRC-NCCN-CERVICAL-2025
+
+notes: >
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode.
+
+  HPV-DNA testing — gold standard sensitivity для high-risk HPV
+  detection (~95-100% sens for CIN2+; cytology ~50-60%). USPSTF-2018
+  + ESMO-2024 +- WHO Global Cervical Cancer Elimination Strategy
+  пропонують primary HPV-DNA screening age 30+ q5y як preferred-mode.
+  Україна станом на 2026-05 переважно лишається cytology-primary;
+  HPV-DNA — переважно reflex-testing при ASC-US у державних онкоцентрах
+  АБО routine self-pay у приватних.
+
+  Implementation gaps:
+  1. Програмно primary HPV-DNA screening не впроваджено; вимагає
+     національної програмної solution + НСЗУ-пакет update.
+  2. Self-sampling — emerging option, але не входить у державну
+     програму; недостатня pacient education щодо validity.
+  3. HPV-vaccinated cohort (age 9-14 since 2017 у деяких regions) —
+     surveillance interval може shift, потребує national epidemiological
+     update.
+
+  Gap у схемі: TEST-HPV-DNA-CERVICAL — forward-compatible identifier;
+  test stub потребує authoring у наступному chunk-batch.
+
+  AccessPathway render-time-only.

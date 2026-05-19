@@ -1,0 +1,100 @@
+id: AP-EGD-SURVEILLANCE-BARRETT-MIXED
+name: "EGD surveillance for Barrett's esophagus — НСЗУ-covered diagnostic, surveillance pricing varies"
+name_ua: "ФГДС-нагляд при стравоході Барретта — діагностика покривається НСЗУ, ціна surveillance варіює"
+
+# Test-anchored AP. Engine-side `_find_access_pathways` читає тільки
+# `applies_to_drug_ids`, тому matching до AccessMatrix-row не відбувається,
+# але pacient-facing render використовує `applies_to_test_ids` (схема
+# `extra="allow"`).
+applies_to_drug_ids: []
+applies_to_regimen_ids: []
+applies_to_test_ids:
+  - TEST-EGD-SURVEILLANCE
+
+pathway_type: nszu_program_partial
+# Канонічний enum-набір не охоплює "діагностика покрита НСЗУ, але
+# рутинне surveillance у безсимптомного Barrett-пацієнта частіше OOP".
+# Розширення вперед-сумісним value per
+# test_pathway_type_is_freeform_but_documented.
+
+country_options: ["UA"]
+
+cost_orientation:
+  currency: UAH
+  min: 0
+  max: 6000
+  per_unit: dose
+  notes: >
+    Pacient OOP per EGD-session станом на 2026-05:
+    - НСЗУ пакет 2202 "Діагностика та лікування дорослих та дітей
+      у стаціонарних та амбулаторних умовах при гострих та хронічних
+      захворюваннях органів травлення" — покриває діагностичну ФГДС
+      за наявності клінічних показань (рефлюкс-симптоми, дисфагія,
+      кровотеча). Pacient OOP 0-1500 UAH (можливі co-payments на
+      седацію та витратні матеріали у державних закладах).
+    - Surveillance-показання у задокументованого Barrett'а (NDBE
+      q3-5y, LGD q6-12mo, HGD ablation) — НСЗУ-приймається якщо
+      попередня патогістологія підтверджена; інтервальне surveillance
+      у безсимптомного пацієнта частіше OOP.
+    - Приватні клініки (Borys, ISIDA, Dobrobut, Medikom) — 2500-6000
+      UAH за сеанс з седацією та біопсіями за Seattle protocol.
+    - Chromoendoscopy / NBI з targeted biopsy + 4-quadrant Seattle
+      protocol — у частині регіональних центрів технічно недоступні;
+      потребує референс до більших центрів (Київ, Львів, Харків).
+
+typical_lead_time_weeks: [2, 12]
+
+contact_pattern: >
+  Сімейний лікар → гастроентеролог (за декларацією НСЗУ) → направлення
+  на ФГДС у заклад з ендоскопічним обладнанням. Барретт-діагноз
+  потребує патогістологічного заключення з confirmed intestinal
+  metaplasia + dysplasia-grading (NDBE / indefinite / LGD / HGD).
+  Surveillance-frequency визначається dysplasia-status:
+  - NDBE: q3-5y (AGA-2022) АБО q5y (BSG / ESGE 2023).
+  - Indefinite dysplasia: PPI optimization → repeat q6-12mo.
+  - LGD-confirmed: ablation АБО q6mo surveillance.
+  - HGD: endoscopic eradication therapy (EET) — RFA / cryotherapy
+    + EMR для visible lesions.
+
+  В Україні EET (radiofrequency ablation Barrx system) — концентрована
+  у частині приватних та академічних центрів; державна НСЗУ не
+  виокремлює EET-пакет; pacient OOP за ablation-сесії становить
+  15 000-45 000 UAH (за технологію + расхідні).
+
+eligibility_caveats:
+  - "Документована Barrett's esophagus з intestinal metaplasia (patho-confirmed)"
+  - "Активна декларація НСЗУ для пакетної ФГДС"
+  - "Chromoendoscopy / NBI / Seattle-protocol biopsy — обмежено доступні у державних закладах; частіше доступні приватно"
+  - "Седація з пропофолом — додатковий co-pay 1500-3500 UAH у державних та 2000-4500 UAH у приватних"
+  - "Endoscopic Eradication Therapy (RFA + EMR) для HGD/EAC — обмежена кількість центрів (переважно Київ, Львів); державна НСЗУ не покриває OOP в межах 15 000-45 000 UAH/session"
+
+requires_documentation:
+  - "Попередня патогістологія з Barrett's diagnosis (intestinal metaplasia + dysplasia-grade)"
+  - "Симптоматичні скарги АБО endoscopic findings у попередньому скринінгу"
+  - "Декларація НСЗУ підтверджена (для пакетної ФГДС)"
+  - "Рецепт на PPI для acid-suppression (часто непокривається НСЗУ-Affordable Medicines)"
+
+verified_by: null
+last_verified: "2026-05-18"
+
+sources:
+  - SRC-AGA-BARRETTS-2022
+
+notes: >
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode.
+
+  Barrett's esophagus — premalignant condition з ризиком прогресування
+  до esophageal adenocarcinoma (EAC). Surveillance EGD з Seattle-protocol
+  biopsy + chromoendoscopy/NBI — корінь strategy detection-ranней-неоплазії
+  ще на dysplasia-stage, коли endoscopic eradication therapy (EET) дає
+  >90% complete eradication rate.
+
+  В Україні: ФГДС-діагностика входить у НСЗУ-пакет 2202 (clinical-symptom-
+  driven); routine surveillance у task-prevention контексті частіше
+  потребує OOP-витрати. Doсвід Seattle-protocol biopsy + chromoendoscopy
+  — нерівномірно розподілений: концентрований у Київі, Львові, Харкові;
+  у малих обласних центрах часто виконують standard-WLE-only без
+  targeted-biopsy. EET — concentrated у обмеженій кількості академічних/
+  приватних центрів з Barrx RFA system.
+
+  AccessPathway render-time-only.

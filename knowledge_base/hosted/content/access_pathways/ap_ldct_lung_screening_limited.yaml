@@ -1,0 +1,132 @@
+id: AP-LDCT-LUNG-SCREENING-LIMITED
+name: "Low-dose chest CT (LDCT) lung-cancer screening — limited availability in Ukraine, concentrated in major centers, OOP common"
+name_ua: "Низькодозова КТ органів грудної клітки (LDCT) для скринінгу раку легені — обмежена доступність в Україні, концентровано у великих центрах, переважно OOP"
+
+# Test-anchored AP. Engine-side `_find_access_pathways` читає тільки
+# `applies_to_drug_ids`; pacient-facing render використовує
+# `applies_to_test_ids` (extra="allow").
+applies_to_drug_ids: []
+applies_to_regimen_ids: []
+applies_to_test_ids:
+  - TEST-LDCT-LUNG
+
+pathway_type: mixed_fragmented
+# Канонічний enum-набір не охоплює "concentrated technical availability
+# у великих містах + переважно OOP". Розширення вперед-сумісним value
+# per test_pathway_type_is_freeform_but_documented.
+
+country_options: ["UA"]
+
+cost_orientation:
+  currency: UAH
+  min: 0
+  max: 4500
+  per_unit: dose
+  notes: >
+    Pacient OOP per LDCT-session станом на 2026-05:
+    - **НСЗУ-покриття обмежене** — LDCT не виокремлений як standalone
+      preventive-screening пакет у НСЗУ-номенклатурі. Технічно
+      покривається через пакет 2010 "Діагностика та лікування
+      злоякісних новоутворень у дорослих та дітей" за наявності
+      клінічної підозри (узлові утвори за RTG, hemoptysis,
+      hоарзенесс), але NOT за asymptomatic screening-indication
+      у high-risk smoker.
+    - **Регіональні онкоцентри** (Київський, Львівський, Харківський,
+      Одеський, Дніпровський) — мають LDCT-протокол на спіральних
+      CT-сканерах; pacient OOP 0 UAH якщо ordered onkologist
+      після нодуля на скринінговій RTG; OOP 800-2500 UAH якщо
+      asymptomatic-screening направлений сімейним лікарем.
+    - **Приватні діагностичні центри** (Borys, ISIDA, Medikom,
+      Dobrobut, Universum Clinic) — 1500-4500 UAH per LDCT-session
+      залежно від contrast / dual-energy / AI-assisted reading.
+      LDCT specifically (низькодозовий протокол з ~1.5 mSv vs
+      standard CT з ~7-10 mSv) — не завжди доступний у малих
+      регіональних центрах; deault-CT-chest часто substituted з
+      вищою радіаційною дозою.
+    - **Географічне розподілення:** концентровано у обласних
+      центрах + 5-7 великих місцях; rural / районний rівень —
+      обмежено або відсутній.
+
+typical_lead_time_weeks: [2, 12]
+
+contact_pattern: >
+  Сімейний лікар обговорює LDCT-screening eligibility з high-risk
+  smoker / former-smoker (USPSTF-2021: age 50-80, ≥20 pack-years
+  smoking history, current smoker OR quit ≤15 years ago).
+
+  - **Якщо asymptomatic screening:** OOP-пакет переважно. Pacient
+    обирає приватний CT-центр з low-dose-протоколом + radiologist
+    з Lung-RADS reporting experience. Direct-pay при visit.
+  - **Якщо суспіція на neoplasm (узлове утворення на RTG, persistent
+    cough >3 weeks, hemoptysis):** сімейний лікар скеровує до
+    pulmonologist / onкологa регіонального онкоцентру; LDCT
+    через НСЗУ-пакет 2010.
+  - **Якщо positive screening (Lung-RADS 4):** clinical workup
+    через регіональний онкоцентр з biopsy / PET-CT / multidisciplinary
+    tumor board (через НСЗУ-пакети 2010 + 2202).
+
+  Lung-RADS classification + management:
+  - 1-2: 12-month follow-up LDCT.
+  - 3: 6-month follow-up.
+  - 4A: 3-month follow-up + PET-CT consideration.
+  - 4B/4X: tissue-diagnosis + tumor-board.
+
+eligibility_caveats:
+  - "Age 50-80 (USPSTF-2021 lowered limit від 55 до 50 у 2021)"
+  - "≥20 pack-years smoking history (USPSTF-2021)"
+  - "Current smoker OR quit ≤15 років"
+  - "Здоров'я-status достатній для curative-intent treatment якщо screen-detected cancer (i.e., не imminent end-of-life)"
+  - "Active Декларація НСЗУ для symptom-driven screening через onkologist"
+  - "Технічна доступність LDCT-protocol — concentrated у Києві, Львові, Харкові, Одесі, Дніпрі; обмежено в малих обласних центрах + districts"
+
+requires_documentation:
+  - "Smoking-anamnesis з pack-years calculation"
+  - "Quit-date (якщо former smoker)"
+  - "Lung-RADS report з попередніх screening-LDCT (для interval визначення)"
+  - "Декларація НСЗУ підтверджена (для symptom-driven визивання)"
+  - "Інформоване consent щодо radiation exposure (~1.5 mSv per LDCT vs natural background ~3 mSv/year)"
+  - "Shared decision-making documentation per USPSTF-2021 (counseling щодо benefits + harms — false-positive ~13-30%; incidental findings; overdiagnosis ~10-20%)"
+
+verified_by: null
+last_verified: "2026-05-18"
+
+sources:
+  - SRC-USPSTF-LUNG-LDCT-2021
+
+notes: >
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode.
+
+  LDCT — найважливіший evidence-based screening для lung cancer mortality
+  reduction. NLST (Aberle 2011 NEJM): 20% lung-cancer-mortality reduction;
+  6.7% all-cause-mortality reduction у high-risk smoker cohort (age
+  55-74; ≥30 pack-years). NELSON trial (de Koning 2020 NEJM):
+  confirmed European-cohort evidence — 24% lung-cancer mortality
+  reduction у male; 33% у female-smokers.
+
+  Україна — substantial implementation gap:
+  - **No national LDCT-screening program** станом на 2026-05;
+    pilot regional initiatives обмежено.
+  - **Technical capacity** — спіральні низькодозовіCT-сканери з
+    Lung-RADS-trained radiologists концентровані у Києві, Львові,
+    Харкові, Одесі, Дніпрі. Малі регіональні центри і districts —
+    обмеженно.
+  - **OOP cost barrier** 1500-4500 UAH/session — significant для
+    high-risk-cohort (smoker-prevalence корелює з lower SES у УА).
+  - **Smoking-cessation integration** — критичний компонент будь-якої
+    LDCT screening program; pacient має отримати smoking-cessation
+    counseling + pharmacotherapy access (див. AP-VARENICLINE-OOP-
+    CESSATION, AP-NRT-PHARMACY-OOP).
+
+  Public-health-policy implications:
+  - National LDCT-screening program — pending Міністерство охорони
+    здоров'я decision; advocate-coalition (включаючи Ukrainian Society
+    of Pulmonologists, IASLC-affiliates) активно advocate-у-2024-2025
+    за національну програму з incremental rollout у regional cancer-
+    centers.
+  - WHO IARC-IPLEX guidelines (2024) — recommend organized LDCT
+    program з integrated smoking-cessation для LMIC + tier-2
+    economies (включаючи UA).
+  - HEMS / war-related healthcare disruption — additional barrier
+    у конфліктних регіонах.
+
+  AccessPathway render-time-only.

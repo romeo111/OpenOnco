@@ -1,0 +1,92 @@
+id: AP-PAP-SMEAR-CERVICAL-NSZU
+name: "Cervical Pap smear screening — НСЗУ primary-care covered"
+name_ua: "ПАП-мазок (цервікальний скринінг) — покриття НСЗУ через ПМД / акушера-гінеколога"
+
+# Test-anchored AP. Engine-side `_find_access_pathways` читає тільки
+# `applies_to_drug_ids`; pacient-facing render використовує forward-
+# compatible test-id (схема `extra="allow"`). TEST-PAP-SMEAR-CYTOLOGY
+# — referenced as forward-compatible identifier; test stub not yet
+# authored (manifest gap noted in notes).
+applies_to_drug_ids: []
+applies_to_regimen_ids: []
+applies_to_test_ids:
+  - TEST-PAP-SMEAR-CYTOLOGY
+
+pathway_type: nszu_program
+
+country_options: ["UA"]
+
+cost_orientation:
+  currency: UAH
+  min: 0
+  max: 800
+  per_unit: dose
+  notes: >
+    Pacient OOP per Pap-smear-session станом на 2026-05:
+    - НСЗУ пакет 1001 "Первинна медична допомога дорослого і дитячого
+      населення" — Pap-смear входить у baseline сімейного лікаря
+      / акушера-гінеколога за direct contract. Pacient OOP 0 UAH у
+      державному закладі за активної декларації.
+    - Цитологічна лабораторія державного онкоцентру — 0 UAH (НСЗУ-
+      покриття), якщо направлення оформлене сімейним лікарем.
+    - Приватні лабораторії (Synevo, DILA, INVITRO, Esculab) —
+      LBC (liquid-based cytology) 300-800 UAH; conventional smear
+      150-400 UAH; на drlz.com.ua / appropriate-lab websites.
+    - Co-pay на gynecological speculum-exam — 0-300 UAH (державний)
+      або 400-1200 UAH (приватний акушер-гінеколог).
+
+typical_lead_time_weeks: [1, 4]
+
+contact_pattern: >
+  Сімейний лікар (за декларацією НСЗУ) → направлення до акушера-
+  гінеколога в державному закладі АБО direct contract з акушером-
+  гінекологом у первинній мережі. Cytology — конвенційний Pap-smear
+  АБО liquid-based cytology (LBC) — обробляється у клініко-діагностичній
+  лабораторії державного онкоцентру АБО у приватній лабораторії.
+  Frequency — USPSTF-2018 cytology-only q3y, age 21-65 (UA national
+  guideline переважно мирорить USPSTF). Co-testing з HPV-DNA — q5y
+  age 30-65 (див. AP-HPV-DNA-TEST-MIXED для HPV-DNA розподілу).
+
+eligibility_caveats:
+  - "Жінка, віком 21-65 (USPSTF-2018; UA Cervical Cancer Screening Program — переважно 18-65)"
+  - "Активна декларація НСЗУ з ПМД-провайдером АБО гінекологом"
+  - "Cervix присутній (post-hysterectomy без anamnesis cervical neoplasia — припинити скринінг)"
+  - "Immunocompromised / HIV+ / DES-expose — частіше surveillance (>q3y) per USPSTF"
+  - "Якщо попередній abnormal Pap → repeat / colposcopy per ASCCP-2019 risk-based management"
+
+requires_documentation:
+  - "Декларація НСЗУ підтверджена"
+  - "Анамнез попередніх Pap / HPV-результатів (для risk-based interval визначення)"
+  - "Інформоване addressed-consent для cytology + reflex HPV-DNA (якщо ASC-US)"
+  - "Реєстр у НСЗУ-системі звітування (Ukraine Cervical Cancer Screening Program — заохочується electronic tracking)"
+
+verified_by: null
+last_verified: "2026-05-18"
+
+sources:
+  - SRC-USPSTF-CERVICAL-2018
+  - SRC-ESMO-CERVICAL-2024
+
+notes: >
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode.
+
+  Cervical Pap smear — найкраще-evidence-based prevention для cervical
+  cancer; в Україні з 2018 року функціонує Cervical Cancer Screening
+  Program з focal pap-cytology через НСЗУ-ПМД мережу. Coverage
+  залежить від декларації-активності та регіональної diagnostic-
+  capacity (cytopathology-fellows — концентровані переважно у Києві,
+  Львові, Харкові, Одесі).
+
+  Сітка cytology-laboratories — переважно державні онкоцентри з
+  капацитет 50-200 smears/day; приватні лабораторії (Synevo, DILA)
+  — швидший turn-around (3-7 дн.) та автоматизована screening
+  technology (ThinPrep, SurePath LBC). Self-pay у приватному
+  секторі — невелика часткова (300-800 UAH) пов'язана з convenience,
+  не доступністю.
+
+  Gap у схемі: TEST-PAP-SMEAR-CYTOLOGY — forward-compatible identifier;
+  test stub потребує authoring у наступному chunk-batch. Engine-side
+  `applies_to_test_ids` ігнорується; render-side gracefully handles
+  missing test-entity per AccessMatrix-fallback-logic.
+
+  AccessPathway render-time-only.
