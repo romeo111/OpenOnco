@@ -441,11 +441,11 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "what_not":                    {"uk": "Що НЕ робити", "en": "What NOT to do"},
     "what_not_sub":                {"uk": "Прямі прохібітивні правила, кожне з обґрунтуванням у regimen / supportive care / contraindication",
                                     "en": "Explicit prohibitive rules, each grounded in a regimen / supportive care / contraindication entity"},
-    "monitoring":                  {"uk": "Monitoring schedule", "en": "Monitoring schedule"},
+    "monitoring":                  {"uk": "Графік моніторингу", "en": "Monitoring schedule"},
     "monitoring_sub":              {"uk": "Графік моніторингу за фазами лікування",
                                     "en": "Monitoring schedule by treatment phase"},
-    "timeline":                    {"uk": "Timeline", "en": "Timeline"},
-    "timeline_sub":                {"uk": "Хронологія лікування — derived from regimen + monitoring schedule",
+    "timeline":                    {"uk": "Хронологія", "en": "Timeline"},
+    "timeline_sub":                {"uk": "Хронологія лікування — виведено зі схеми та графіка моніторингу",
                                     "en": "Treatment timeline — derived from regimen + monitoring schedule"},
     "skills_required":             {"uk": "Скіли (required) — обов'язкові віртуальні спеціалісти",
                                     "en": "Skills (required) — mandatory virtual specialists"},
@@ -567,11 +567,11 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "contra_aggressive_sub":       {"uk": "Жорсткі протипоказання до ескалації",
                                     "en": "Hard contraindications to escalation"},
     # Timeline phase names
-    "tl_baseline":                 {"uk": "Baseline", "en": "Baseline"},
-    "tl_induction":                {"uk": "Induction", "en": "Induction"},
-    "tl_response":                 {"uk": "Response assessment", "en": "Response assessment"},
-    "tl_maintenance":              {"uk": "Maintenance", "en": "Maintenance"},
-    "tl_followup":                 {"uk": "Follow-up", "en": "Follow-up"},
+    "tl_baseline":                 {"uk": "Базова оцінка", "en": "Baseline"},
+    "tl_induction":                {"uk": "Індукція", "en": "Induction"},
+    "tl_response":                 {"uk": "Оцінка відповіді", "en": "Response assessment"},
+    "tl_maintenance":              {"uk": "Підтримуюча терапія", "en": "Maintenance"},
+    "tl_followup":                 {"uk": "Спостереження", "en": "Follow-up"},
     # Disclaimers
     "medical_disclaimer":          {
         "uk": "Цей документ — інформаційний ресурс для підтримки обговорення в "
@@ -800,6 +800,87 @@ def _t(key: str, target_lang: str = "uk") -> str:
 def _track_label(track_id: str, target_lang: str = "uk") -> str:
     """Map a track_id to its localized display label."""
     return _t(f"track_{track_id}", target_lang) or track_id
+
+
+# Snake_case MonitoringPhase.name → display label, per language.
+# These names act as enum identifiers in the YAML; the table renders the
+# UA column literally to UA-speaking clinicians. Fallback for unknown
+# names: title-case with underscores → spaces (e.g. "novel_phase" →
+# "Novel phase"), so adding a new phase to a YAML doesn't break the
+# render — it just shows the snake_case prettified.
+_MONITORING_PHASE_LABELS: dict[str, dict[str, str]] = {
+    "baseline":                     {"uk": "Базова оцінка",                          "en": "Baseline"},
+    "on_treatment":                 {"uk": "Під час лікування",                      "en": "On treatment"},
+    "on_treatment_btki":            {"uk": "Під час лікування (BTKi)",               "en": "On treatment (BTKi)"},
+    "on_treatment_veno":            {"uk": "Під час лікування (венетоклакс)",        "en": "On treatment (venetoclax)"},
+    "induction":                    {"uk": "Індукція",                               "en": "Induction"},
+    "response_assessment":          {"uk": "Оцінка відповіді",                       "en": "Response assessment"},
+    "interim_response_assessment":  {"uk": "Проміжна оцінка відповіді",              "en": "Interim response assessment"},
+    "maintenance":                  {"uk": "Підтримуюча терапія",                    "en": "Maintenance"},
+    "post_transplant_consolidation":{"uk": "Консолідація після трансплантації",      "en": "Post-transplant consolidation"},
+    "post_treatment_immediate":     {"uk": "Раннє посттерапевтичне спостереження",   "en": "Immediate post-treatment"},
+    "progression_monitoring":       {"uk": "Моніторинг прогресування",               "en": "Progression monitoring"},
+    "end_of_treatment":             {"uk": "Завершення лікування",                   "en": "End of treatment"},
+    "follow_up":                    {"uk": "Спостереження",                          "en": "Follow-up"},
+    "follow_up_short":              {"uk": "Спостереження (короткострокове)",        "en": "Follow-up (short-term)"},
+    "follow_up_long":               {"uk": "Спостереження (довгострокове)",          "en": "Follow-up (long-term)"},
+    "active_surveillance_short":    {"uk": "Активне спостереження (короткострокове)", "en": "Active surveillance (short-term)"},
+    "active_surveillance_long":     {"uk": "Активне спостереження (довгострокове)",  "en": "Active surveillance (long-term)"},
+}
+
+
+def _phase_display_label(name: str, target_lang: str = "uk") -> str:
+    """Map MonitoringPhase.name (snake_case) → display label.
+
+    Falls back to a title-cased prettification of the raw name if unknown
+    so new phases authored in YAML render without a code change."""
+    if not name:
+        return "?"
+    entry = _MONITORING_PHASE_LABELS.get(name)
+    if entry is not None:
+        return entry.get(target_lang) or entry.get("uk") or name
+    return name.replace("_", " ").strip().capitalize()
+
+
+def _phase_window(ph: dict, target_lang: str = "uk") -> str:
+    """Pick the localized MonitoringPhase.window. Prefers `window_ua` when
+    target_lang=='uk' and the field is present in the YAML; otherwise
+    falls back to `window`. The YAML source-of-truth is English, with
+    optional `window_ua` as a parallel UA field (machine-translated under
+    CHARTER §8.3 dev-mode exemption, awaiting clinical review)."""
+    if target_lang == "uk":
+        win = ph.get("window_ua")
+        if win:
+            return str(win)
+    return str(ph.get("window") or "—")
+
+
+def _phase_checkpoints(ph: dict, target_lang: str = "uk") -> list[str]:
+    """Pick the localized MonitoringPhase.checkpoints list. Prefers
+    `checkpoints_ua` when target_lang=='uk' and the field is present;
+    otherwise falls back to `checkpoints`. Same source-of-truth pattern
+    as `_phase_window`."""
+    if target_lang == "uk":
+        ua = ph.get("checkpoints_ua")
+        if ua:
+            return list(ua)
+    return list(ph.get("checkpoints") or [])
+
+
+def _format_cycle_window(cycle_len, total_cycles, target_lang: str = "uk") -> str:
+    """Format the engine-generated "X-day cycles × N" timeline window text.
+    Both halves localized for UA so the rendered string is "X-денні цикли ×
+    N" instead of leaking English into a UA plan."""
+    cycles_str = str(total_cycles).strip() if total_cycles else ""
+    if target_lang == "uk":
+        base = f"{cycle_len}-денні цикли"
+        if cycles_str and cycles_str != "—":
+            return f"{base} × {cycles_str}"
+        return base
+    base = f"{cycle_len}-day cycles"
+    if cycles_str and cycles_str != "—":
+        return f"{base} × {cycles_str}"
+    return base
 
 
 def _localize_html(html_text: str, target_lang: str) -> str:
@@ -1658,16 +1739,16 @@ def _render_monitoring_phases(plan, target_lang: str = "uk") -> str:
         rows = []
         for ph in phases:
             tests = ", ".join(ph.get("tests") or []) or "—"
-            checks = ph.get("checkpoints") or []
+            checks = _phase_checkpoints(ph, target_lang)
             checks_html = (
                 "<ul style='padding-left:16px;margin:0;'>"
-                + "".join(f"<li>{_h_t(c, target_lang)}</li>" for c in checks)
+                + "".join(f"<li>{_h(c)}</li>" for c in checks)
                 + "</ul>"
             ) if checks else "—"
             rows.append(
-                f'<tr><td><strong>{_h_t(ph.get("name", "?"), target_lang)}</strong></td>'
-                f'<td>{_h_t(ph.get("window", "—"), target_lang)}</td>'
-                f'<td style="font-family:var(--font-mono);font-size:11px;">{_h_t(tests, target_lang)}</td>'
+                f'<tr><td><strong>{_h(_phase_display_label(ph.get("name", "?"), target_lang))}</strong></td>'
+                f'<td>{_h(_phase_window(ph, target_lang))}</td>'
+                f'<td style="font-family:var(--font-mono);font-size:11px;">{_h(tests)}</td>'
                 f'<td>{checks_html}</td></tr>'
             )
         blocks.append(
@@ -1715,7 +1796,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--baseline">'
                 f'<div class="name">{_h(_t("tl_baseline", target_lang))}</div>'
-                f'<div class="window">{_h_t(baseline.get("window", "—"), target_lang)}</div>'
+                f'<div class="window">{_h(_phase_window(baseline, target_lang))}</div>'
                 '</div>'
             )
 
@@ -1723,12 +1804,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
         cycle_len = reg.get("cycle_length_days")
         total_cycles = reg.get("total_cycles") or "—"
         if cycle_len:
-            cycles_str = str(total_cycles).strip()
-            window = (
-                f"{cycle_len}-day cycles × {cycles_str}"
-                if cycles_str and cycles_str != "—"
-                else f"{cycle_len}-day cycles"
-            )
+            window = _format_cycle_window(cycle_len, total_cycles, target_lang)
             phases_html.append(
                 '<div class="tl-phase tl-phase--induction">'
                 f'<div class="name">{_h(_t("tl_induction", target_lang))} · {_h(reg.get("name", "—"))}</div>'
@@ -1742,7 +1818,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--response">'
                 f'<div class="name">{_h(_t("tl_response", target_lang))}</div>'
-                f'<div class="window">{_h_t(ra.get("window", "—"), target_lang)}</div>'
+                f'<div class="window">{_h(_phase_window(ra, target_lang))}</div>'
                 '</div>'
             )
 
@@ -1752,7 +1828,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--maintenance">'
                 f'<div class="name">{_h(_t("tl_maintenance", target_lang))}</div>'
-                f'<div class="window">{_h_t(maint.get("window", "—"), target_lang)}</div>'
+                f'<div class="window">{_h(_phase_window(maint, target_lang))}</div>'
                 '</div>'
             )
 
@@ -1765,7 +1841,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--followup">'
                 f'<div class="name">{_h(_t("tl_followup", target_lang))}</div>'
-                f'<div class="window">{_h_t(fu.get("window", "—"), target_lang)}</div>'
+                f'<div class="window">{_h(_phase_window(fu, target_lang))}</div>'
                 '</div>'
             )
 
