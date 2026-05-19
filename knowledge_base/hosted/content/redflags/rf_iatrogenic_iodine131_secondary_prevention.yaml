@@ -1,0 +1,67 @@
+id: RF-IATROGENIC-IODINE131-SECONDARY-PREVENTION
+definition: >-
+  Therapeutic radioiodine (I-131) exposure for differentiated thyroid
+  cancer (DTC) ablation/treatment OR Graves' disease — cumulative
+  doses ≥100 mCi (3.7 GBq) lifetime confer small-but-real increased
+  risk of secondary malignancies. Strongest signal: leukemia (RR
+  ~1.5-2.0 above population baseline; latency 2-10 years), salivary
+  gland cancer (RR ~1.3-2.0; latency 5-15 years), breast cancer in
+  females (RR ~1.2-1.4; lower-quality evidence, dose-dependent),
+  bladder cancer (modest signal). Iodine concentrates in salivary
+  glands + stomach + bladder during excretion; non-target dose drives
+  secondary cancer signal. Risk modestly higher at younger ages of
+  exposure (proliferating tissues more radiosensitive). Prevention-
+  persona RedFlag (§20, v0.3 iatrogenic expansion).
+definition_ua: >-
+  Therapeutic radioiodine (I-131) експозиція для differentiated thyroid
+  cancer (DTC) ablation/treatment АБО Graves' disease — cumulative
+  doses ≥100 mCi (3.7 GBq) lifetime дають small-but-real increased
+  ризик secondary malignancies. Найсильніший signal: leukemia (RR
+  ~1.5-2.0 above population baseline; latency 2-10 років), salivary
+  gland cancer (RR ~1.3-2.0; latency 5-15 років), breast cancer у жінок
+  (RR ~1.2-1.4; lower-quality evidence, dose-dependent), bladder cancer
+  (modest signal). Iodine concentrates у salivary glands + stomach +
+  bladder during excretion; non-target dose drives secondary cancer
+  signal. Ризик скромно вищий при younger ages of exposure
+  (proliferating tissues more radiosensitive). Prevention-персона
+  RedFlag (§20, v0.3 iatrogenic expansion).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "iodine_131_cumulative_ge_100mci"
+      value: true
+    - finding: "i131_therapy_dtc_completed"
+      value: true
+    - finding: "i131_therapy_graves_completed"
+      value: true
+
+clinical_direction: investigate
+severity: minor
+priority: 120
+category: other
+risk_category: iatrogenic
+
+relevant_diseases:
+  - DIS-BREAST
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-IARC-100D-IONIZING-RADIATION
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for I-131 therapeutic-dose lifetime
+  cumulative exposure. Surveillance: CBC q12mo for leukemia signal
+  (sensitivity modest); breast surveillance per general-population
+  USPSTF unless additional risk factors; oral + salivary symptom
+  awareness. Highest-impact preventive intervention is hydration +
+  lemon-juice sialagogue during I-131 administration (reduces salivary
+  gland uptake) — retrospectively non-actionable for prior exposure.
+  STUB pending two-Co-Lead signoff per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_iatrogenic_expansion
+draft_revision: 1
