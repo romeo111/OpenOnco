@@ -1,0 +1,110 @@
+id: RF-CASCADE-LYNCH-FDR-POSITIVE
+definition: >-
+  A first-degree relative of the patient (parent, sibling, or child) has
+  a documented positive germline test result for a Lynch syndrome
+  (MMR / EPCAM) gene — MLH1, MSH2, MSH6, PMS2, or EPCAM (3' deletion
+  silencing MSH2). The patient themself has NOT yet been germline-tested
+  and has no current personal cancer diagnosis. Per autosomal-dominant
+  inheritance, the patient carries a **50% prior probability** of also
+  being a Lynch carrier — substantially higher than the ~15-25% positive
+  yield of pedigree-suspicion testing — providing strong clinical
+  motivation for cascade germline testing. Distinct from
+  RF-LYNCH-FAMILY-HISTORY-SUSPICION (fires on phenotype / pedigree
+  pattern alone, before any relative has tested positive) and from
+  RF-LYNCH-CONFIRMED-CARRIER (fires after the patient's own positive
+  germline test). Prevention-persona RedFlag (§20, v0.2-B
+  cascade-testing pilot 2026-05-19).
+definition_ua: >-
+  Родич першого ступеня пацієнта (батько/мати, рідний брат/сестра або
+  дитина) має задокументований позитивний результат germline тестування
+  на ген синдрому Lynch (MMR / EPCAM) — MLH1, MSH2, MSH6, PMS2 або
+  EPCAM (3' делеція, що замовчує MSH2). Сам пацієнт ще не пройшов
+  germline тестування і не має поточного особистого діагнозу раку. За
+  аутосомно-домінантним типом успадкування пацієнт має **50%
+  апріорну ймовірність** також бути носієм Lynch — суттєво вище за
+  ~15-25% позитивний результат тестування за родовідною підозрою —
+  що забезпечує сильну клінічну мотивацію для cascade germline
+  тестування. Відрізняється від RF-LYNCH-FAMILY-HISTORY-SUSPICION
+  (спрацьовує на фенотип / pedigree pattern до позитиву родича) та
+  від RF-LYNCH-CONFIRMED-CARRIER (спрацьовує після власного позитиву
+  пацієнта). Prevention-persona RedFlag (§20, v0.2-B
+  cascade-testing пілот 2026-05-19).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_first_degree_relative_lynch_carrier_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+
+# §20 prevention extension — drives engine routing to PreventionPlan
+# when patient carries this RF and no confirmed Disease (KSS §20.2).
+risk_category: genetic
+
+# Lynch-spectrum cancers (KB Disease entities). DIS-CRC is the primary
+# anchor per task brief — the most penetrant Lynch tumor and the only
+# one with universal NCCN-Cat-1 surveillance protocol from age 25.
+relevant_diseases:
+  - DIS-CRC
+  - DIS-ENDOMETRIAL
+  - DIS-GASTRIC
+  - DIS-OVARIAN
+  - DIS-UROTHELIAL
+  - DIS-PROSTATE
+  - DIS-PDAC
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+  - SRC-ASCO-ACMG-LYNCH-2014
+  - SRC-ESMO-CRC-2024
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  v0.2-B cascade-testing pilot (2026-05-19). Fires when a first-degree
+  relative (FDR — parent, sibling, child) of an asymptomatic patient
+  has a confirmed positive germline test for an MMR / EPCAM gene.
+  Engine routes to PreventionPlan recommending:
+    (a) IND-CASCADE-LYNCH-FDR-POSITIVE-TESTING (standard) — cascade
+        germline MMR / EPCAM panel testing for the patient + pre/
+        post-test genetic counseling. The known familial variant
+        anchors site-specific (single-variant) testing as the most
+        efficient first-line option, with expansion to full-gene
+        sequencing if site-specific is negative and high suspicion
+        persists.
+    (b) IND-CASCADE-LYNCH-FDR-POSITIVE-SURVEILLANCE (alternative) —
+        empirical enhanced surveillance per the carrier protocol for
+        patients who decline cascade germline testing for any reason
+        (cost, insurance, psychological, family privacy).
+
+  **50% prior probability** in autosomal-dominant inheritance (one
+  parent heterozygous) is the cornerstone of cascade-testing
+  cost-effectiveness — vastly outperforms pedigree-suspicion
+  populations (~15-25% positive yield) and supports the strong
+  recommendation to test rather than rely on phenotype.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1
+  dev-mode exemption.
+
+  Penetrance reference (NCCN Genetic / Familial High-Risk: Colorectal
+  v2.2025) — if the patient tests positive on cascade:
+    - CRC lifetime risk: ~70-80% (MLH1 / MSH2); ~25-50% (MSH6 / PMS2)
+    - Endometrial (women): ~40-60% (MLH1 / MSH2); ~17-44% (MSH6)
+    - Gastric: ~6-13%; Ovarian: ~4-20%; Urothelial: ~4-25%;
+      Pancreas: ~3-6%
+
+  Site-specific (familial-variant) testing carries the highest
+  positive predictive value and lowest VUS rate per ACMG / ASCO
+  cascade testing guidance — the relative's variant is already
+  classified, so the patient's result is unambiguous.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_b_cascade_pilot
+draft_revision: 1
