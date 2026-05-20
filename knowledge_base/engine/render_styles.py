@@ -294,6 +294,12 @@ a.lab-chip:hover { text-decoration: underline; }
     font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
     display: block; margin-top: 2px;
 }
+a.rf-id, .rf-id-link {
+    color: inherit; text-decoration: none;
+}
+a.rf-id:hover, .rf-id-link:hover {
+    text-decoration: underline; color: var(--gray-700);
+}
 .pc-col .rf-note {
     font-size: 12px; color: var(--gray-600); line-height: 1.5;
     margin-top: 4px; padding-left: 8px; border-left: 2px solid var(--gray-200);

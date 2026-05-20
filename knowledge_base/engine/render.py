@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import functools
 import html
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, Union
@@ -316,6 +317,16 @@ def _truncate_note(text, limit: int = 240) -> str:
     if last_space >= limit - 60:
         cut = cut[:last_space]
     return cut.rstrip(",.;:- ") + "…"
+
+
+def _rf_wiki_href(rid: str, target_lang: str = "uk") -> str:
+    """KB-wiki URL for a RedFlag id, locale-aware. Mirrors the slug
+    convention in `scripts/build_kb_wiki.py` (lowercase, non-alnum →
+    `-`, collapsed) so the rendered plan links to the existing
+    `/kb/redflags/<slug>.html` page without a separate URL registry."""
+    slug = re.sub(r"[^a-z0-9]+", "-", str(rid).lower()).strip("-") or "rf"
+    prefix = "/ukr/" if (target_lang or "").lower().startswith("uk") else "/"
+    return f"{prefix}kb/redflags/{slug}.html"
 
 
 def _pick_name(names: dict | None, target_lang: str = "uk", default: str = "") -> str:
@@ -1474,8 +1485,12 @@ def _render_branch_explanation(
                 ' <span class="rf-winner-tag">★ winner</span>'
                 if rid == winner else ""
             )
+            rid_link = (
+                f'<a class="rf-id-link" href="{_h(_rf_wiki_href(rid, target_lang))}">'
+                f'{_h(rid)}</a>'
+            )
             rf_items.append(
-                f'<li><strong>{_h(rid)}</strong>{winner_mark}: '
+                f'<li><strong>{rid_link}</strong>{winner_mark}: '
                 f'{_h(defn)} {src_chips}</li>'
             )
 
@@ -1578,7 +1593,11 @@ def _render_red_flags_pro_contra(plan, kb_resolved: dict, target_lang: str = "uk
         else:
             note_html = ""
         note_block = f'<div class="rf-note">{note_html}</div>' if note_html else ""
-        return f'<li>{defn_html}{note_block}<span class="rf-id">{_h(rid)}</span></li>'
+        rid_chip = (
+            f'<a class="rf-id" href="{_h(_rf_wiki_href(rid, target_lang))}">'
+            f'{_h(rid)}</a>'
+        )
+        return f'<li>{defn_html}{note_block}{rid_chip}</li>'
 
     def _ci_li(c: dict) -> str:
         cid = c.get("id", "?")
