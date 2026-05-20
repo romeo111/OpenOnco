@@ -1,0 +1,151 @@
+id: RF-CHRONIC-IBD-CROHNS-SPECIFIC-PREVENTION
+definition: >-
+  Crohn's disease (CD) with specific features that elevate cancer risk
+  beyond the broader RF-IBD-CRC-PREVENTION (which covers UC and Crohn-
+  colitis sharing colon-inflammation pathway). This Crohn-specific
+  anchor captures the distinct cancer signals: (1) small bowel
+  adenocarcinoma — Crohn's patients with chronic small-bowel
+  inflammation (especially distal ileum) carry RR ~20-40 vs. population
+  baseline for small bowel adenocarcinoma; absolute lifetime risk
+  remains low (~0.5-2%) because small-bowel adenocarcinoma is rare at
+  baseline, but Crohn's is one of the few definable high-risk cohorts
+  worth flagging. (2) Lymphoma — Crohn's disease per se elevates
+  lymphoma risk modestly (RR ~1.5-2 in immunosuppressant-naive
+  cohorts; higher with anti-TNF + thiopurine combinations, but that
+  iatrogenic signal is captured by RF-IATROGENIC-ANTI-TNF-LYMPHOMA-
+  PREVENTION and RF-IATROGENIC-AZATHIOPRINE-LONGTERM-PREVENTION).
+  (3) Colorectal cancer in extensive Crohn-colitis — captured by RF-
+  IBD-CRC-PREVENTION; this Crohn-specific RF adds non-CRC signals
+  on top of that overlap. Prevention-persona RedFlag — fires
+  COMPLEMENTARY to (not in place of) RF-IBD-CRC-PREVENTION when the
+  patient has Crohn's disease with small-bowel involvement.
+definition_ua: >-
+  Хвороба Крона (CD) зі specific features що elevate cancer risk поза
+  ширшим RF-IBD-CRC-PREVENTION (який покриває UC і Crohn-colitis з
+  shared colon-inflammation pathway). Цей Crohn-specific anchor
+  capturers distinct cancer signals: (1) small bowel adenocarcinoma
+  — Crohn's з chronic small-bowel inflammation (особливо distal ileum)
+  carry RR ~20-40 vs. population baseline; absolute lifetime risk
+  залишається low (~0.5-2%) тому що small-bowel adenocarcinoma rare
+  at baseline, але Crohn's — одна з небагатьох definable high-risk
+  cohorts worth flagging. (2) Lymphoma — Crohn's per se elevates
+  lymphoma risk modestly (RR ~1.5-2 у immunosuppressant-naive
+  cohorts; higher з anti-TNF + thiopurine combinations, але цей
+  iatrogenic signal captured by RF-IATROGENIC-ANTI-TNF-LYMPHOMA-
+  PREVENTION + RF-IATROGENIC-AZATHIOPRINE-LONGTERM-PREVENTION).
+  (3) Colorectal cancer у extensive Crohn-colitis — captured by RF-
+  IBD-CRC-PREVENTION. Prevention-persona RedFlag — fires
+  COMPLEMENTARY до (не in place of) RF-IBD-CRC-PREVENTION.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "inflammatory_bowel_disease_crohn_disease_small_bowel_ge_8y"
+      value: true
+    - finding: "inflammatory_bowel_disease_crohn_disease_with_stricture_or_fistula"
+      value: true
+    - finding: "inflammatory_bowel_disease_crohn_disease_extensive_disease_ge_10y"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+risk_category: chronic_condition
+
+# Crohn-specific cancer-spectrum: small bowel adenocarcinoma (RR
+# ~20-40, low absolute), lymphoma (RR ~1.5-2, modest), CRC (covered
+# separately). Anchor here is CRC because the strongest immediately
+# actionable surveillance pathway is shared with colonoscopy; small-
+# bowel adenocarcinoma surveillance has no validated protocol but
+# clinician-vigilance is critical.
+relevant_diseases:
+  - DIS-CRC
+
+shifts_algorithm: []
+
+sources:
+  - SRC-AGA-IBD-CRC-2024
+  - SRC-ESMO-CRC-2024
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  v0.3 wave-N niche pathway — Crohn's-disease-specific cancer
+  prevention. Distinct from the broader RF-IBD-CRC-PREVENTION (which
+  covers UC ≥8y + Crohn-colitis ≥8y + PSC-IBD — focused on colorectal
+  cancer via colitis-associated dysplasia pathway).
+
+  This Crohn-specific RF adds three signals:
+    (1) Small bowel adenocarcinoma in chronic distal-ileum
+        inflammation cohort (RR ~20-40 vs. population, absolute ~0.5-
+        2%). No validated surveillance protocol — capsule endoscopy
+        or MR enterography has been studied in case series but no
+        evidence-based recommendation. Clinical vigilance for
+        new-onset obstructive symptoms, unexplained anemia,
+        unintended weight loss is the actionable component.
+    (2) Lymphoma — Crohn's per se RR ~1.5-2 (immunosuppressant-
+        naive). The iatrogenic component (anti-TNF + thiopurine
+        combination → hepatosplenic T-cell lymphoma + EBV-driven
+        post-transplant-like B-cell lymphomas) is captured by
+        existing dedicated iatrogenic RFs (RF-IATROGENIC-ANTI-TNF-
+        LYMPHOMA-PREVENTION, RF-IATROGENIC-AZATHIOPRINE-LONGTERM-
+        PREVENTION). When a patient is on those therapies, all
+        three RFs fire — engine routes to PreventionPlan with
+        deduplication; the iatrogenic RFs carry their own
+        surveillance protocols that supersede this RF's lymphoma
+        component.
+    (3) Colorectal cancer in extensive Crohn-colitis is captured by
+        RF-IBD-CRC-PREVENTION via its
+        inflammatory_bowel_disease_crohn_colitis_ge_8y finding.
+        Patients with extensive Crohn-colitis fire BOTH this RF and
+        RF-IBD-CRC-PREVENTION — overlapping but separately-anchored
+        PreventionPlan tracks (this RF's small-bowel + lymphoma
+        signal; the other RF's CRC chromoendoscopy protocol).
+
+  Engine routes to PreventionPlan recommending:
+    (a) IND-CROHN-SPECIFIC-CANCER-PREVENTION-VIGILANCE (standard) —
+        symptom-vigilance education for small-bowel adenocarcinoma
+        (obstructive symptoms, anemia, weight loss) with low-
+        threshold MR enterography / capsule endoscopy workup;
+        treat-to-target Crohn's disease management with goal of
+        sustained mucosal healing to interrupt chronic-inflammation-
+        to-cancer pathway; lymphoma awareness with low-threshold
+        lymphadenopathy / B-symptom workup; periodic re-evaluation
+        of Crohn's-disease activity; integration with iatrogenic-
+        therapy RFs when applicable.
+    (b) IND-CROHN-SPECIFIC-CANCER-PREVENTION-OBSERVATION
+        (alternative) — symptom-driven evaluation only without
+        structured vigilance + treat-to-target framework. Per
+        CHARTER §11 patient-autonomy framing.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Source-set TODO: Beaugerie et al. CESAME prospective
+  cohort lymphoma + small-bowel-adenocarcinoma risk (Gastroenterology
+  2009, 2013, 2015); ECCO Crohn-cancer-risk consensus 2024;
+  Annese et al. ECCO surveillance and management 2013; Magro et al.
+  ECCO 2020 Crohn-extra-intestinal manifestations; ongoing v0.3
+  wave-N authoring backlog new SRC entities for Crohn-specific
+  cancer-risk evidence base.
+
+  Cancer-risk signals in Crohn's disease (Beaugerie 2009-2015;
+  ECCO consensus 2024):
+    - Small bowel adenocarcinoma: RR ~20-40 in chronic distal-ileum
+      inflammation cohort; absolute lifetime ~0.5-2%.
+    - Lymphoma (predominantly non-Hodgkin B-cell): RR ~1.5-2 in
+      immunosuppressant-naive Crohn's; RR rises with anti-TNF +
+      thiopurine combinations (captured by dedicated iatrogenic
+      RFs).
+    - Colorectal cancer in extensive Crohn-colitis: cumulative ~10-
+      18% at 30y in colonoscopic surveillance-naive cohorts;
+      captured by RF-IBD-CRC-PREVENTION.
+    - Anal carcinoma in perianal-fistula Crohn's: RR ~5-10 in chronic
+      perianal-fistulizing disease; absolute lifetime risk low but
+      worth clinical-vigilance flag.
+    - Cholangiocarcinoma in PSC-Crohn's: covered by RF-PSC-
+      CHOLANGIOCARCINOMA-PREVENTION.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_n_niche
+draft_revision: 1

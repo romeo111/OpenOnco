@@ -1,0 +1,123 @@
+id: RF-FAMILIAL-PANCREATIC-CANCER-SYNDROME
+definition: >-
+  Familial Pancreatic Cancer (FPC) — operational definition: an
+  individual with ≥2 first-degree relatives diagnosed with pancreatic
+  ductal adenocarcinoma (PDAC), in the absence of a confirmed germline
+  pathogenic variant in a known PDAC-susceptibility gene (BRCA1, BRCA2,
+  PALB2, ATM, CDKN2A, STK11/Peutz-Jeghers, MLH1/MSH2/MSH6/PMS2/Lynch,
+  TP53/Li-Fraumeni, PRSS1/SPINK1 hereditary pancreatitis). Negative
+  expanded hereditary-cancer panel + ≥2-FDR PDAC family history
+  satisfies the criterion. Lifetime PDAC risk for FPC kindreds is
+  estimated at ~7-16% (vs. ~1.6% population baseline); risk scales
+  with number of affected FDRs (2 FDR ~7%, 3+ FDR ~16-32%). CAPS
+  Consortium 2020 + NCCN Pancreatic 2025 endorse pancreatic
+  surveillance with annual MRI/MRCP and/or EUS in FPC kindreds
+  starting age 50 (or 10y before youngest familial diagnosis).
+  Prevention-persona RedFlag — distinct from RF-CHRONIC-
+  PANCREATITIS-PDAC-PREVENTION (chronic pancreatitis is a different
+  etiology), distinct from confirmed-carrier RFs for the named
+  susceptibility genes (BRCA2, PALB2, etc.), and distinct from
+  population-cadence PDAC screening (which is not endorsed in average-
+  risk individuals because of low yield).
+definition_ua: >-
+  Сімейний рак підшлункової залози (FPC) — operational definition:
+  індивід з ≥2 first-degree родичами з діагнозом PDAC, за відсутності
+  підтвердженого гермінативного патогенного варіанту у відомих PDAC-
+  susceptibility генах (BRCA1, BRCA2, PALB2, ATM, CDKN2A, STK11,
+  MLH1/MSH2/MSH6/PMS2, TP53, PRSS1/SPINK1). Негативна expanded
+  hereditary-cancer panel + ≥2-FDR PDAC family history задовольняє
+  критерій. Lifetime PDAC ризик для FPC kindreds оцінюється у ~7-16%
+  (vs. ~1.6% population baseline); ризик масштабується з кількістю
+  affected FDR (2 FDR ~7%, 3+ FDR ~16-32%). CAPS Consortium 2020 +
+  NCCN Pancreatic 2025 endorse pancreatic surveillance з annual
+  MRI/MRCP та/або EUS у FPC kindreds з 50 років (або за 10 років до
+  наймолодшого сімейного діагнозу). Prevention-persona RedFlag —
+  distinct from RF-CHRONIC-PANCREATITIS-PDAC-PREVENTION та confirmed-
+  carrier RFs для названих susceptibility генів.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_pancreatic_cancer_fdr_two_or_more"
+      value: true
+
+clinical_direction: investigate
+
+severity: critical
+priority: 80
+category: other
+risk_category: genetic
+
+# FPC anchor: PDAC. Cumulative lifetime risk ~7-16% scaling with
+# affected-FDR count; surveillance cadence per CAPS Consortium + NCCN
+# Pancreatic.
+relevant_diseases:
+  - DIS-PDAC
+
+shifts_algorithm: []
+
+sources:
+  - SRC-CAPS-CONSORTIUM-PANCREATIC-2020
+  - SRC-NCCN-PANCREATIC-2025
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  v0.3 wave-N niche pathway — Familial Pancreatic Cancer (FPC).
+  Fires on documented ≥2-FDR PDAC family history AFTER negative
+  expanded hereditary-cancer panel (BRCA1, BRCA2, PALB2, ATM, CDKN2A,
+  STK11, Lynch MMR genes, TP53, PRSS1/SPINK1). The negative-panel
+  requirement is essential — patients positive for any of those genes
+  are routed via the corresponding confirmed-carrier RF (which carry
+  their own well-defined surveillance recommendations) rather than
+  through FPC.
+
+  Severity is `critical` rather than `major` because:
+    1. Lifetime PDAC risk in 3+ FDR FPC kindreds (~16-32%) approaches
+       BRCA2-carrier PDAC risk (~5-10%) and substantially exceeds
+       population baseline (~1.6%).
+    2. PDAC carries the worst 5-year OS (~12% overall, ~3% in late-
+       stage disease) of any common cancer — surveillance-detected
+       early-stage disease offers the best (and arguably only) chance
+       at meaningful long-term survival.
+    3. The clinical action window is narrow — pancreatic surveillance
+       requires referral to an experienced center, and missed
+       surveillance opportunities are difficult to recover.
+
+  Engine routes to PreventionPlan recommending:
+    (a) IND-FPC-PANCREATIC-SURVEILLANCE (standard) — annual MRI/MRCP
+        + EUS alternating (or both annually) from age 50 (or 10y
+        before youngest familial diagnosis) at PDAC-experienced
+        center; smoking cessation; alcohol moderation; diabetes
+        management.
+    (b) IND-FPC-PANCREATIC-OBSERVATION (alternative) — symptom-driven
+        evaluation when access to PDAC-experienced surveillance center
+        is impractical. Per CHARTER §11 patient-autonomy framing.
+        Counsel that this is sub-optimal vs. structured surveillance.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Source-set TODO: EUROPAC consortium FPC registry
+  publications (Greenhalf 2009; Vasen 2018); Klatte et al. CAPS5
+  prospective surveillance results (Gastroenterology 2022); v0.3
+  wave-N authoring backlog new SRC entities for FPC-specific evidence.
+
+  Cumulative PDAC risk in FPC by number of affected FDRs (per
+  EUROPAC + CAPS Consortium pooled data):
+    - 2 affected FDRs: ~7% lifetime (RR ~4-6x baseline)
+    - 3 affected FDRs: ~16-18% lifetime (RR ~10-15x baseline)
+    - ≥4 affected FDRs: ~32% lifetime (RR ~30x+ baseline)
+    - Onset 10+ years younger in successive generations
+      (anticipation-like pattern, etiology unclear)
+
+  Surveillance modality considerations:
+    - MRI/MRCP non-invasive but lower lesion-level sensitivity for
+      sub-cm IPMN / cystic lesions.
+    - EUS sensitive for small parenchymal lesions but invasive +
+      operator-dependent.
+    - Combined annual MRI + EUS (or alternating q6-month) is the
+      preferred CAPS Consortium / NCCN approach for FPC kindreds with
+      ≥3 affected FDRs.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_n_niche
+draft_revision: 1

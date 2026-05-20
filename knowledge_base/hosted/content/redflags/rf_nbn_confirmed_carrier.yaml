@@ -1,0 +1,120 @@
+id: RF-NBN-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in the NBN
+  gene (also known as NBS1) — Nijmegen Breakage Syndrome carrier status.
+  Biallelic NBN inactivation (homozygous or compound-heterozygous) causes
+  Nijmegen Breakage Syndrome (NBS) — autosomal-recessive chromosomal-
+  instability disorder with microcephaly, immunodeficiency, growth failure,
+  and dramatically elevated lymphoid-malignancy risk (~40% lifetime by
+  age 20). Heterozygous (carrier) status — the focus of this RedFlag —
+  confers moderate-penetrance breast-cancer risk (RR ~2.0-3.0, lifetime
+  ~20-25%) and a more modest signal for lymphoma / prostate cancer. The
+  Slavic founder variant c.657del5 (p.Lys219AsnfsTer16) is population-
+  prevalent in Polish, Ukrainian, Czech, and other Eastern-European
+  populations (~0.5-1% carrier frequency), making NBN moderate-penetrance
+  testing particularly relevant for Ukrainian familial breast-cancer
+  panels. No current personal cancer diagnosis in the carrier being
+  assessed. Mandates enhanced breast-cancer screening and reproductive
+  counseling (biallelic risk to offspring of two carriers). Prevention-
+  persona RedFlag (§20, v0.3 wave-N niche moderate-penetrance pathway —
+  distinct from population-screening BRCA1/2 pathway because NBN is
+  panel-tested as part of expanded hereditary-breast-and-ovarian-cancer
+  panels rather than a single-gene focus).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант у
+  гені NBN (також відомий як NBS1) — носійство Nijmegen Breakage Syndrome.
+  Біалельна інактивація NBN (гомозигота / складена гетерозигота) спричиняє
+  Nijmegen Breakage Syndrome (NBS) — аутосомно-рецесивне розлад
+  хромосомної нестабільності з мікроцефалією, імунодефіцитом, затримкою
+  росту та різко підвищеним ризиком лімфоїдних malignancies (~40% lifetime
+  до 20 років). Гетерозиготний (carrier) статус — фокус цього RedFlag —
+  надає moderate-penetrance ризик раку молочної залози (RR ~2.0-3.0,
+  lifetime ~20-25%) і більш помірний сигнал для лімфоми / раку простати.
+  Слов'янський founder варіант c.657del5 (p.Lys219AsnfsTer16) популяційно
+  поширений у польській, українській, чеській та інших східноєвропейських
+  популяціях (~0.5-1% carrier frequency), що робить NBN moderate-
+  penetrance тестування особливо релевантним для українських панелей
+  familial breast-cancer. Поточний особистий діагноз раку відсутній.
+  Mandates посилений скринінг раку молочної залози та репродуктивне
+  консультування (біалельний ризик для нащадків двох носіїв). Prevention-
+  persona RedFlag (§20, v0.3 wave-N niche moderate-penetrance шлях).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_nbn_pathogenic_variant_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+risk_category: genetic
+
+# NBN heterozygote-spectrum: breast cancer (~20-25% lifetime,
+# RR ~2.0-3.0); modest lymphoma / prostate signals. Biallelic = NBS
+# phenotype (childhood lymphoid malignancy + immunodeficiency) — outside
+# the asymptomatic-adult prevention persona for this RF.
+relevant_diseases:
+  - DIS-BREAST
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  v0.3 wave-N niche moderate-penetrance carrier pathway — NBN
+  heterozygosity. Fires on documented germline NBN pathogenic variant
+  positivity in an asymptomatic individual. Engine routes to
+  PreventionPlan recommending:
+    (a) IND-NBN-CARRIER-SURVEILLANCE (standard) — annual breast MRI from
+        age 30; annual mammography from age 30-35 (alternating with MRI
+        q6mo); clinical breast exam q6-12mo from age 25; cascade testing
+        of first-degree relatives; reproductive counseling for partners
+        who are also carriers (biallelic offspring NBS risk).
+    (b) IND-NBN-CARRIER-OBSERVATION (alternative) — population-cadence
+        breast screening only; counsel that this is sub-optimal vs.
+        intensified MRI surveillance comparator. Per CHARTER §11
+        patient-autonomy framing.
+
+  Slavic founder allele context: c.657del5 (p.Lys219AsnfsTer16) is the
+  dominant pathogenic variant in Polish, Ukrainian, Czech, Slovak, and
+  other Eastern-European populations (population carrier frequency
+  ~0.5-1%). The OpenOnco Ukrainian patient cohort therefore has a
+  meaningful prior probability for NBN heterozygote breast-cancer risk
+  beyond what NCCN's North-American-cohort base rates suggest. NCCN
+  Genetic/Familial High-Risk Breast/Ovarian acknowledges NBN as a
+  moderate-penetrance breast-cancer gene appropriate for inclusion on
+  expanded hereditary-cancer panels but does NOT recommend prophylactic
+  bilateral mastectomy on the basis of carrier status alone (in contrast
+  to BRCA1/2, where RR-mastectomy is a standard option). Enhanced
+  surveillance is the consensus carrier-management approach.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Source-set TODO: Bogdanova et al. NBN heterozygote breast-
+  cancer risk meta-analysis (Breast Cancer Res Treat 2008); di Masi et
+  al. NBN molecular review (Mutat Res 2012); Damiola et al. CHEK2/NBN/
+  PALB2 Slavic founder (Eur J Hum Genet 2014); ongoing v0.3 wave-N
+  authoring backlog new SRC entities for NBN-specific evidence.
+
+  Lifetime cancer risk in confirmed NBN heterozygotes (Bogdanova 2008;
+  di Masi 2012; NCCN Genetic/Familial High-Risk Breast/Ovarian 2025):
+    - Breast cancer (women): ~20-25% lifetime; RR ~2.0-3.0 vs.
+      population baseline; some studies suggest higher RR in bilateral
+      / early-onset disease.
+    - Prostate cancer: modest RR (~1.5-2.0); insufficient evidence
+      for dedicated surveillance protocol.
+    - Lymphoma (predominantly non-Hodgkin, B-cell): modest RR; no
+      surveillance protocol — clinical-vigilance basis.
+    - Other Slavic-founder-variant adjacent cancers (melanoma, CRC,
+      colorectal): inconsistent signals across cohort studies; not
+      target organs for NBN-specific surveillance.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_n_niche
+draft_revision: 1
