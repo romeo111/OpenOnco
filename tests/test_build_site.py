@@ -24,11 +24,13 @@ from scripts.build_site import (
     GALLERY_EXCLUDED_CASE_IDS,
     GALLERY_FEATURED_CASE_IDS,
     _public_example_entries,
+    build_one_case_patient,
     build_site,
     _example_sort_key,
     _render_top_bar,
     render_diseases,
 )
+from knowledge_base.engine import is_diagnostic_profile
 
 
 @pytest.fixture(scope="module")
@@ -361,6 +363,101 @@ def test_examples_payload_matches_cases(site_dir: Path):
         assert "Auto-stub" not in entry.get("label_en", "")
         # Engine-required top-level fields exist for non-diagnostic patients
         # (diagnostic patients have a different shape)
+
+
+def test_examples_payload_flags_patient_mode(site_dir: Path):
+    """PATIENT_MODE_SPEC §3: patient mode is treatment-only.
+
+    Every example in examples.json must carry a `has_patient_mode` flag.
+    The flag is True iff the example is treatment-shape (not diagnostic),
+    so the try-page modal knows whether to enable the audience toggle.
+    """
+    payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
+    for entry in payload:
+        assert "has_patient_mode" in entry, (
+            f"Example {entry.get('case_id')} missing has_patient_mode flag"
+        )
+        # Verify the flag matches the engine's diagnostic-profile detector
+        ex_json = entry.get("json", {})
+        expected = not is_diagnostic_profile(ex_json)
+        assert entry["has_patient_mode"] == expected, (
+            f"Example {entry.get('case_id')}: has_patient_mode="
+            f"{entry['has_patient_mode']} but is_diagnostic_profile="
+            f"{is_diagnostic_profile(ex_json)}"
+        )
+
+
+def test_curated_treatment_examples_have_patient_twin(site_dir: Path):
+    """Every treatment-shape curated example has a patient twin built at
+    /cases/<id>.patient.html (UA-only per PATIENT_MODE_SPEC §3 — a single
+    file serves both EN and UA visitors)."""
+    payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
+    treatment_ids = [
+        e["case_id"] for e in payload if e.get("has_patient_mode")
+    ]
+    assert treatment_ids, "expected at least one treatment-shape example"
+    missing = [
+        cid for cid in treatment_ids
+        if not (site_dir / "cases" / f"{cid}.patient.html").exists()
+    ]
+    assert not missing, f"Missing patient twins: {missing[:5]}"
+    # Patient twins for diagnostic examples MUST NOT exist (would mislead)
+    diagnostic_ids = [
+        e["case_id"] for e in payload if not e.get("has_patient_mode")
+    ]
+    stray = [
+        cid for cid in diagnostic_ids
+        if (site_dir / "cases" / f"{cid}.patient.html").exists()
+    ]
+    assert not stray, f"Patient twin generated for diagnostic example: {stray}"
+
+
+def test_patient_twin_has_required_anchors(site_dir: Path):
+    """PATIENT_MODE_SPEC §3 anchors must be present in the patient HTML so
+    downstream tests + accessibility tooling can locate the major sections.
+    """
+    # Pick a known-curated treatment example
+    payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
+    pick = next(
+        (e for e in payload
+         if e.get("has_patient_mode") and e["case_id"] == "aitl-cd30-negative"),
+        None,
+    )
+    assert pick is not None, "expected aitl-cd30-negative in curated examples"
+    twin = site_dir / "cases" / f"{pick['case_id']}.patient.html"
+    assert twin.exists()
+    body = twin.read_text(encoding="utf-8")
+    for anchor in (
+        'class="patient-report"',
+        'class="what-was-found"',
+        'class="what-now"',
+        'class="emergency-signals"',
+        'class="ask-doctor"',
+        'class="patient-disclaimer"',
+    ):
+        assert anchor in body, f"Patient twin missing anchor: {anchor}"
+    # Sibling chip back to the UA clinician twin so deep-linked patient
+    # pages round-trip to the doctor view
+    assert "/ukr/cases/aitl-cd30-negative.html" in body
+
+
+def test_try_html_wires_patient_mode_for_examples(site_dir: Path):
+    """The audience toggle in /try.html must be wired for example-source
+    plans (not just engine-generated ones). The wiring is a build-time
+    JS constant (EXAMPLE_PATIENT_MODE_BY_ID) plus an updated mode-switch
+    handler that loads /cases/<id>.patient.html in the iframe.
+    """
+    for path in (site_dir / "try.html", site_dir / "ukr" / "try.html"):
+        body = path.read_text(encoding="utf-8")
+        assert "EXAMPLE_PATIENT_MODE_BY_ID" in body, (
+            f"{path} missing EXAMPLE_PATIENT_MODE_BY_ID lookup"
+        )
+        assert "activeExampleHasPatient" in body, (
+            f"{path} missing activeExampleHasPatient state"
+        )
+        assert ".patient.html" in body, (
+            f"{path} mode-switch never loads a patient twin"
+        )
 
 
 def test_examples_are_quality_ranked_in_try_picker(site_dir: Path):

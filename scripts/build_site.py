@@ -747,6 +747,9 @@ def _remove_excluded_case_pages(output_dir: Path) -> int:
         for rel_path in (
             Path("cases") / f"{case_id}.html",
             Path("ukr") / "cases" / f"{case_id}.html",
+            # PATIENT_MODE_SPEC §3 — patient twin shares the /cases/
+            # directory but uses a `.patient.html` suffix.
+            Path("cases") / f"{case_id}.patient.html",
         ):
             path = output_dir / rel_path
             if path.exists():
@@ -775,6 +778,13 @@ def bundle_examples(
         if not p.exists():
             return None
         ex_json = json.loads(p.read_text(encoding="utf-8"))
+        # Patient-mode twin only exists for treatment-shape profiles
+        # (PATIENT_MODE_SPEC §3 — patient mode is treatment-only).
+        # The build emits `cases/<id>.patient.html` for these and the
+        # try-page modal flips the audience toggle on for them.
+        has_patient_mode = (
+            has_case_page and not is_diagnostic_profile(ex_json)
+        )
         disease = ex_json.get("disease", {}) if isinstance(ex_json, dict) else {}
         disease_icd = disease.get("icd_o_3_morphology")
         disease_id = (
@@ -802,6 +812,7 @@ def bundle_examples(
             "disease_id": disease_id,
             "file": c.file,
             "json": ex_json,
+            "has_patient_mode": has_patient_mode,
             **quality_meta,
         }
         manifest_entry = {
@@ -810,6 +821,7 @@ def bundle_examples(
             "label_en": label_en,
             "disease_id": disease_id,
             "disease_icd": disease_icd,
+            "has_patient_mode": has_patient_mode,
             **quality_meta,
         }
         if not has_case_page:
@@ -3357,6 +3369,14 @@ let offlineCacheFailed = 0;
 const QUESTIONNAIRES_MANIFEST = {qm_json};
 const EXAMPLES_MANIFEST = {em_json};
 const PAGE_LANG = '{target_lang}';
+// Flat case_id → bool lookup so loadExamplePlan() can resolve the
+// patient-twin flag without iterating the full manifest. Built from
+// EXAMPLES_MANIFEST at script load.
+const EXAMPLE_PATIENT_MODE_BY_ID = Object.fromEntries(
+  EXAMPLES_MANIFEST
+    .filter(e => e && e.case_id && e.has_patient_mode)
+    .map(e => [e.case_id, true])
+);
 let questionnaires = null;   // lazy-fetched from /questionnaires.json on first need
 let examples = null;         // lazy-fetched from /examples.json on first need
 let _questionnairesPromise = null;
@@ -3402,8 +3422,9 @@ let currentResultLang = PAGE_LANG;
 // Audience mode for the plan render — 'clinician' (default, full tumor-
 // board brief) or 'patient' (plain-UA simplified report). Per
 // PATIENT_MODE_SPEC §3, patient mode is treatment-plan only; the toggle
-// is disabled for diagnostic-mode results and for example-mode bundles
-// (pre-built /cases/<id>.html files don't have a patient-rendered twin).
+// is disabled for diagnostic-mode results. For example-mode bundles the
+// patient twin is pre-built at /cases/<id>.patient.html when the example
+// is treatment-shape — see `activeExampleHasPatient` below.
 let currentResultMode = 'clinician';
 
 // planSource tracks where the plan currently shown in the modal came from:
@@ -3418,6 +3439,10 @@ let currentResultMode = 'clinician';
 let planSource = null;
 let planDirty = false;
 let activeExampleCaseId = null;
+// True when the loaded example has a pre-built patient twin at
+// /cases/<id>.patient.html (treatment-shape examples only — diagnostic
+// profiles are clinician-only per PATIENT_MODE_SPEC §3).
+let activeExampleHasPatient = false;
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 function setStatus(msg, kind = 'info', topMode = 'auto') {{
@@ -3558,22 +3583,30 @@ function setLockedTitle(el, locked) {{
 }}
 
 // Patient mode is render-only on top of an already-generated treatment
-// PlanResult. It can't toggle for:
+// PlanResult, OR an example with a pre-built patient twin. It can't
+// toggle for:
 //   * diagnostic-mode bundles (no `_render_patient_mode` for DiagnosticPlan)
-//   * example-mode (pre-built /cases/*.html — no Pyodide engine running)
+//   * generated plans with a dirty form (planDirty)
 //   * pre-generation (planSource === null)
+//   * examples without a patient twin (activeExampleHasPatient === false —
+//     diagnostic-shape examples)
 function refreshModeButtonAvailability() {{
   const locked = isInteractionLocked();
-  const canPatient = (
+  const canPatientGenerated = (
     pyodide
     && planSource === 'generated'
     && !planDirty
   );
+  const canPatientExample = (
+    planSource === 'example'
+    && activeExampleHasPatient
+  );
+  const canPatient = canPatientGenerated || canPatientExample;
   modePatientBtn.disabled = locked || !canPatient;
   if (!canPatient) {{
     modePatientBtn.title = (
       planSource === 'example'
-        ? '{ "Patient view is available for plans you generate yourself — not for example bundles yet" if target_lang == "en" else "Пацієнтська версія доступна лише для планів, які ви згенерували — не для прикладів" }'
+        ? '{ "Patient view is not available for diagnostic examples — only for treatment plans" if target_lang == "en" else "Пацієнтська версія доступна лише для планів лікування — не для діагностичних прикладів" }'
         : '{ "Generate a plan first to enable Patient view" if target_lang == "en" else "Згенеруйте план, щоб увімкнути пацієнтську версію" }'
     );
     if (currentResultMode === 'patient') {{
@@ -3623,6 +3656,40 @@ function downloadPdf() {{
 async function switchResultMode(newMode) {{
   if (newMode === currentResultMode) return;
   if (modePatientBtn.disabled && newMode === 'patient') return;
+  if (modeClinicianBtn.disabled && newMode === 'clinician') return;
+  // Example-source: swap the iframe between the clinician twin
+  // (/cases/<id>.html or /ukr/cases/<id>.html) and the patient twin
+  // (/cases/<id>.patient.html — UA-text, single file for both langs).
+  if (planSource === 'example') {{
+    if (!activeExampleCaseId) return;
+    if (newMode === 'patient' && !activeExampleHasPatient) return;
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
+      modeClinicianBtn.disabled = true;
+      modePatientBtn.disabled = true;
+      try {{
+        const frameReady = waitForFrameLoad();
+        let nextSrc;
+        if (newMode === 'patient') {{
+          // Single shared UA file at /cases/<id>.patient.html.
+          nextSrc = '/cases/' + activeExampleCaseId + '.patient.html';
+        }} else {{
+          const langPrefix = (currentResultLang === 'en')
+            ? '/cases/' : '/ukr/cases/';
+          nextSrc = langPrefix + activeExampleCaseId + '.html';
+        }}
+        resultFrame.removeAttribute('srcdoc');
+        resultFrame.src = nextSrc;
+        currentResultMode = newMode;
+        highlightModeButtons();
+        await frameReady;
+      }} catch (e) {{
+        setError('Re-render failed: ' + (e.message || e));
+      }} finally {{
+        refreshModeButtonAvailability();
+      }}
+    }});
+    return;
+  }}
   if (!pyodide || planSource !== 'generated') return;
   await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
     modeClinicianBtn.disabled = true;
@@ -3685,9 +3752,20 @@ async function switchResultLang(newLang) {{
   if (planSource === 'example') {{
     // Pre-built case file: just swap the iframe src to the matching
     // language variant. EN at /cases/<id>.html, UA at /ukr/cases/<id>.html.
+    // In patient mode the body is UA-only (PATIENT_MODE_SPEC §3) so the
+    // language toggle still updates the EN/UA selection — but the iframe
+    // keeps showing the shared /cases/<id>.patient.html, since both EN and
+    // UA visitors get the same plain-UA report.
     if (!activeExampleCaseId) return;
     await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {{
       const frameReady = waitForFrameLoad();
+      if (currentResultMode === 'patient') {{
+        // Patient twin is shared — just update the lang state for any
+        // subsequent mode toggle back to clinician.
+        currentResultLang = newLang;
+        highlightLangButtons();
+        return;
+      }}
       resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + '.html';
       currentResultLang = newLang;
       highlightLangButtons();
@@ -3749,14 +3827,20 @@ async function loadExamplePlan(caseId) {{
   // user edits something (which sets planDirty).
   if (!caseId) return;
   activeExampleCaseId = caseId;
+  // Resolve whether this example has a pre-built patient twin at
+  // /cases/<id>.patient.html — set by bundle_examples() per
+  // PATIENT_MODE_SPEC §3 (treatment-shape examples only; diagnostic
+  // examples stay clinician-only).
+  activeExampleHasPatient = !!(
+    EXAMPLE_PATIENT_MODE_BY_ID && EXAMPLE_PATIENT_MODE_BY_ID[caseId]
+  );
   resultFrame.removeAttribute('srcdoc');
   const frameReady = waitForFrameLoad();
   resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/') + caseId + '.html';
   planSource = 'example';
   planDirty = false;
-  // Example bundles are always rendered as the clinician view (the
-  // pre-built /cases/*.html doesn't have a patient twin yet — see
-  // PATIENT_MODE_SPEC §3 + roadmap).
+  // Default to clinician view on example load; the user can flip to
+  // patient via the audience toggle if `activeExampleHasPatient` is true.
   currentResultMode = 'clinician';
   highlightModeButtons();
   refreshModeButtonAvailability();
@@ -3769,6 +3853,7 @@ function clearPlanState() {{
   planSource = null;
   planDirty = false;
   activeExampleCaseId = null;
+  activeExampleHasPatient = false;
   resultFrame.removeAttribute('src');
   resultFrame.removeAttribute('srcdoc');
   viewPlanBtn.disabled = true;
@@ -9068,30 +9153,61 @@ def render_about(stats, *, target_lang: str = "en") -> str:
 
 def _build_one_case_worker(args: tuple) -> dict:
     """Top-level wrapper for ProcessPoolExecutor (must be picklable).
-    Returns the dict shape that build_site() collects into case_paths_uk/en."""
-    case, output_dir, target_lang = args
-    p = build_one_case(case, output_dir, target_lang=target_lang)
+
+    `target` is either a language code ('en' | 'uk') for the clinician
+    twin or the literal 'patient' for the UA-text patient twin.
+    Returns the dict shape that build_site() collects into
+    case_paths_uk / case_paths_en / case_paths_patient. For diagnostic
+    profiles in patient mode the worker returns path=None — patient
+    mode is treatment-only per PATIENT_MODE_SPEC §3.
+    """
+    case, output_dir, target = args
+    if target == "patient":
+        p = build_one_case_patient(case, output_dir)
+        return {
+            "case_id": case.case_id,
+            "lang": "patient",
+            "path": str(p.relative_to(output_dir)) if p is not None else None,
+        }
+    p = build_one_case(case, output_dir, target_lang=target)
     return {
         "case_id": case.case_id,
-        "lang": target_lang,
+        "lang": target,
         "path": str(p.relative_to(output_dir)),
     }
 
 
-def _build_all_cases_parallel(output_dir: Path) -> tuple[list[dict], list[dict]]:
-    """Render every CASE × {uk, en} in a process pool.
+def _build_all_cases_parallel(
+    output_dir: Path,
+) -> tuple[list[dict], list[dict], list[dict]]:
+    """Render every CASE × {uk, en, patient} in a process pool.
 
     Each worker re-imports knowledge_base and reloads the YAML KB once on
     startup, then handles a chunk of cases — so a 4-worker pool amortises
     the import cost across ~50 cases per worker. On Windows (spawn) this
     cuts the 99×2-case build from ~12 min serial to ~2 min on 4 cores.
+
+    Patient twins are UA-only (one file per case) per PATIENT_MODE_SPEC §3
+    ("plain-Ukrainian simplified report"). Diagnostic profiles are skipped
+    in the patient pass — the worker emits path=None and the result is
+    filtered out of the returned list.
     """
     import os
     from concurrent.futures import ProcessPoolExecutor
 
     public_cases = _public_case_entries()
-    tasks = [(c, output_dir, "uk") for c in public_cases] + \
-            [(c, output_dir, "en") for c in public_cases]
+    # Patient twins are restricted to the curated example set
+    # (_public_example_entries) — auto-stub and variant-matrix cases are
+    # low-fill engine/render QA, and a patient-facing render of a low-fill
+    # plan would read as misleading clinical content. Clinician twins
+    # still build for all 677 (auto-* shows in disease/case deep links
+    # for QA visibility).
+    public_examples = _public_example_entries()
+    tasks = (
+        [(c, output_dir, "uk") for c in public_cases]
+        + [(c, output_dir, "en") for c in public_cases]
+        + [(c, output_dir, "patient") for c in public_examples]
+    )
     env_workers = os.environ.get("OPENONCO_BUILD_WORKERS")
     if env_workers:
         try:
@@ -9115,7 +9231,8 @@ def _build_all_cases_parallel(output_dir: Path) -> tuple[list[dict], list[dict]]
 
     uk = [r for r in results if r["lang"] == "uk"]
     en = [r for r in results if r["lang"] == "en"]
-    return uk, en
+    patient = [r for r in results if r["lang"] == "patient" and r["path"]]
+    return uk, en, patient
 
 
 def build_one_case(case: CaseEntry, output_dir: Path,
@@ -9144,6 +9261,47 @@ def build_one_case(case: CaseEntry, output_dir: Path,
     wrapped = _wrap_case_html(html, case, target_lang=target_lang)
     sub = "ukr/cases" if target_lang == "uk" else "cases"
     out_path = output_dir / sub / f"{case.case_id}.html"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(wrapped, encoding="utf-8")
+    return out_path
+
+
+def build_one_case_patient(
+    case: CaseEntry, output_dir: Path,
+) -> Path | None:
+    """Render the patient-mode twin for one treatment-shape case.
+
+    Patient mode is treatment-only per PATIENT_MODE_SPEC §3; diagnostic
+    profiles return None (caller skips them). Output is UA-text — a
+    single file at ``cases/<id>.patient.html`` serves both EN and UA
+    visitors because the patient bundle is defined as "plain Ukrainian
+    simplified report" in PATIENT_MODE_SPEC §3 (not a translation of
+    the clinician brief into the visitor's UI language). The sibling
+    chip rendered into the HTML body points to the UA clinician twin
+    so a deep-linked patient page round-trips to the UA doctor view.
+    """
+    patient_path = EXAMPLES / case.file
+    patient = json.loads(patient_path.read_text(encoding="utf-8"))
+    if is_diagnostic_profile(patient):
+        return None
+    result = generate_plan(
+        patient,
+        kb_root=KB_ROOT,
+        experimental_search_fn=search_trials,
+        experimental_cache_root=CTGOV_CACHE,
+    )
+    mdt = orchestrate_mdt(patient, result, kb_root=KB_ROOT)
+    html = render_plan_html(
+        result,
+        mdt=mdt,
+        target_lang="uk",
+        mode="patient",
+        sibling_link=f"/ukr/cases/{case.case_id}.html",
+    )
+    # UA wrapper around the UA body so the surrounding chrome (top-bar,
+    # case-bar) matches the language of the patient report itself.
+    wrapped = _wrap_case_html(html, case, target_lang="uk")
+    out_path = output_dir / "cases" / f"{case.case_id}.patient.html"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(wrapped, encoding="utf-8")
     return out_path
@@ -9260,7 +9418,9 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / "ukr" / "ask.html").write_text(
         render_ask(target_lang="uk"), encoding="utf-8")
 
-    case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
+    case_paths_uk, case_paths_en, case_paths_patient = (
+        _build_all_cases_parallel(output_dir)
+    )
     disease_coverage_payload = bundle_disease_coverage(output_dir)
     kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
     clinical_gap_payload = write_clinical_gap_outputs(output_dir)
@@ -9268,9 +9428,12 @@ def build_site(output_dir: Path) -> dict:
 
     return {
         "output_dir": str(output_dir),
-        "cases_built": len(case_paths_uk) + len(case_paths_en),
+        "cases_built": (
+            len(case_paths_uk) + len(case_paths_en) + len(case_paths_patient)
+        ),
         "cases_uk": case_paths_uk,
         "cases_en": case_paths_en,
+        "cases_patient": case_paths_patient,
         "engine_bundle": engine_bundle,
         "service_worker": sw_payload,
         "web_manifest": manifest_payload,
