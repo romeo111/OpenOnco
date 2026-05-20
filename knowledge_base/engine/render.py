@@ -1597,7 +1597,24 @@ def _render_red_flags_pro_contra(plan, kb_resolved: dict, target_lang: str = "uk
             f'<a class="rf-id" href="{_h(_rf_wiki_href(rid, target_lang))}">'
             f'{_h(rid)}</a>'
         )
-        return f'<li>{defn_html}{note_block}{rid_chip}</li>'
+        # Source chips next to rf-id — first 3 cites, mirroring the
+        # branch-explanation row. Closes the audit-trail question right
+        # at the bullet so the clinician doesn't need to leave PRO/CONTRA
+        # to see "where does this assertion come from?".
+        src_chips = "".join(
+            f'<span class="rf-src-chip">{_h(sid)}</span>'
+            for sid in (rf.get("sources") or [])[:3]
+        )
+        src_block = f'<span class="rf-src-row">{src_chips}</span>' if src_chips else ""
+        # Severity drives a marker-color hint (no extra layout) so the eye
+        # can scan critical vs minor inside a column. Defaults to "major"
+        # per RedFlag schema.
+        sev = rf.get("severity") or "major"
+        return (
+            f'<li data-severity="{_h(sev)}">'
+            f'{defn_html}{note_block}{rid_chip}{src_block}'
+            f'</li>'
+        )
 
     def _ci_li(c: dict) -> str:
         cid = c.get("id", "?")
