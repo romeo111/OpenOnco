@@ -117,7 +117,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-05-09 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-UROTHELIAL"><code>DIS-UROTHELIAL</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="Enfortumab Vedotin and Pembrolizumab in Untreated Advanced Urothelial Cancer"><a href="https://www.nejm.org/doi/full/10.1056/NEJMoa2312117" target="_blank" rel="noopener noreferrer"><code>SRC-EV302-POWLES-2024</code></a></span> <span class="kb-chip" title="NCCN Bladder Cancer"><a href="https://www.nccn.org/professionals/physician_gls/pdf/bladder.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BLADDER-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Enfortumab vedotin (EV) contraindication in urothelial carcinoma — MMAE-related toxicity exclusions that preclude EV+pembrolizumab (EV-302/KEYNOTE-A39 exclusion criteria): (1) pre-existing severe peripheral neuropathy (Grade ≥2) — MMAE causes additive neuropathy; (2) uncontrolled diabetes mellitus — EV-related hyperglycemia risk; (3) severe corneal disease or active keratopathy — EV-class ocular toxicity. Fires to route EV-ineligible patients to platinum-based chemotherapy + avelumab maintenance.</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Протипоказання до енфортумабу ведотину (EV) при уротеліальній карциномі — MMAE-пов&#x27;язані токсичні виключення для EV+пембролізумабу (EV-302/KEYNOTE-A39): (1) вже існуюча тяжка периферична нейропатія (ступінь ≥2); (2) неконтрольований цукровий діабет; (3) тяжке рогівкове захворювання або активна кератопатія. Спрацьовує для направлення EV-неприйнятних пацієнтів до платинової хіміотерапії + підтримуючий авелумаб.</td></tr>
 <tr><th>Клінічний напрям</th><td>de-escalate</td></tr>
 <tr><th>Категорія</th><td>fitness-eligibility</td></tr>
 <tr><th>Змінює алгоритм</th><td>ALGO-UROTHELIAL-METASTATIC-1L</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
@@ -142,7 +142,7 @@
   ],
   &quot;type&quot;: &quot;eligibility&quot;
 }</pre>
-  <h2>Нотатки</h2><p>EV contraindication composite. Patient fixture ev_pembro_eligible=true, neuropathy_grade=0, diabetic_neuropathy=false, skin_disease_severe=false, ocular_disease=&quot;none&quot; → RF does NOT fire → algo step 1 none_of passes → IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO selected. ocular_disease==&quot;severe&quot; check: fixture has &quot;none&quot; so this is false. Partial — full CTCAE grading and HbA1c checks would improve precision.</p>
+  <h2>Нотатки</h2><p>Складений критерій протипоказання EV. При фіксаторах пацієнта ev_pembro_eligible=true, neuropathy_grade=0, diabetic_neuropathy=false, skin_disease_severe=false, ocular_disease=&quot;none&quot; → RF не спрацьовує → none_of алгоритму крок 1 проходить → обирається IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO. Частковий — повна градація CTCAE та перевірка HbA1c підвищили б точність.</p>
   <h2>Де використовується</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-UROTHELIAL-METASTATIC-1L</code> - ALGO-UROTHELIAL-METASTATIC-1L</li></ul>
 </main>

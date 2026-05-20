@@ -117,7 +117,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-04-26 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-PROSTATE"><code>DIS-PROSTATE</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="EAU - EANM - ESTRO - ESUR - ISUP - SIOG Guidelines on Prostate Cancer"><a href="https://uroweb.org/guidelines/prostate-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-EAU-PROSTATE-2024</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Prostate Cancer"><a href="https://www.nccn.org/professionals/physician_gls/pdf/prostate.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-PROSTATE-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>PCWG3-defined PSA progression on systemic prostate-cancer therapy: ≥25% rise from nadir + ≥2 ng/mL absolute increase, confirmed by a second value ≥3 weeks later. Triggers re-imaging + MDT consideration of next-line therapy switch — but NOT alone sufficient to change line if radiographic + clinical disease stable (per PCWG3 + STAR criteria).</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Прогресія за PSA по PCWG3: зростання ≥25% від nadir + ≥2 нг/мл абсолютного приросту, підтверджено повторним вимірюванням через ≥3 тижні. Тригер для переоцінки візуалізацією + MDT. Окремо без радіографічної прогресії — не привід механічно міняти лінію терапії.</td></tr>
 <tr><th>Клінічний напрям</th><td>investigate</td></tr>
 <tr><th>Категорія</th><td>transformation-progression</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
   &quot;any_of&quot;: [
@@ -146,7 +146,7 @@
   ],
   &quot;type&quot;: &quot;composite_score&quot;
 }</pre>
-  <h2>Нотатки</h2><p>PSA-only progression on ARPI / chemotherapy is common (~30-40% of patients show PSA flare or transient rise). PCWG3 explicitly cautions against line switch on PSA alone — radiographic progression (RECIST 1.1 for soft tissue, PCWG3 bone-scan rules) or new symptomatic events must accompany the PSA finding. This RF surfaces the signal for MDT; it does not auto-switch tracks. Action lives in monitoring schedule (re-image at PSA-progression event), not in `shifts_algorithm`.</p>
+  <h2>Нотатки</h2><p>Частина пацієнтів демонструє ПСА-спалах або транзиторне підвищення на початку ARSI або ЛУTL-PSMA. NCCN прямо застерігає від переходу лінії лише на підставі ПСА. Підтверджена радіографічна прогресія або нові симптоматичні події повинні супроводжувати ПСА-динаміку при прийнятті рішень. Цей RF відображає сигнал для МДТ-огляду, але не переключає автоматично лінію терапії. ПСА-флеш або транзиторне підвищення у ~30-40% пацієнтів.</p>
   <h2>Де використовується</h2>
 <h3>Indications</h3><ul><li><code>IND-PROSTATE-MCRPC-1L-ARPI</code> - IND-PROSTATE-MCRPC-1L-ARPI</li><li><code>IND-PROSTATE-MCRPC-1L-PARPI</code> - IND-PROSTATE-MCRPC-1L-PARPI</li><li><code>IND-PROSTATE-MCRPC-2L-PARPI</code> - IND-PROSTATE-MCRPC-2L-PARPI</li><li><code>IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET</code> - IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET</li><li><code>IND-PROSTATE-MHSPC-1L-TRIPLET</code> - IND-PROSTATE-MHSPC-1L-TRIPLET</li></ul>
 </main>

@@ -3062,6 +3062,7 @@ def render_try(
     <div class="quest-readiness-critical" id="readinessCriticalText">
       {'Pick a disease to start.' if target_lang == 'en' else 'Оберіть хворобу, щоб почати.'}
     </div>
+    <div class="quest-fired-redflags" id="firedRedflagsList"></div>
   </div>
 
   <div class="try-actions quest-cta quest-actions-top" aria-label="{'Plan actions' if target_lang == 'en' else 'Дії з планом'}">
@@ -4357,6 +4358,7 @@ function updateImpactPanelLocal() {{
   if (!activeQuest) {{
     setProgress(0, 0);
     setReadinessCritical([]);
+    setFiredRedflags([], '{target_lang}');
     return;
   }}
   let total = 0, filled = 0;
@@ -4401,6 +4403,63 @@ function setReadinessCritical(missing) {{
   readinessCriticalText.dataset.kind = 'warn';
 }}
 
+// Locale-aware URL prefix for KB wiki links (matches build_kb_wiki.py
+// slug convention). Built once at page-render time.
+const FIRED_RF_URL_PREFIX = '{("/ukr" if target_lang == "uk" else "")}';
+const FIRED_RF_HEAD_LABEL = '{("Red flags triggered" if target_lang == "en" else "Активовані тривожні ознаки")}';
+const FIRED_RF_MORE_LABEL = '{("more" if target_lang == "en" else "ще")}';
+
+function _rfSlug(rid) {{
+  return String(rid || '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'rf';
+}}
+
+function setFiredRedflags(items, lang) {{
+  const root = document.getElementById('firedRedflagsList');
+  if (!root) return;
+  root.innerHTML = '';
+  if (!items || !items.length) return;
+
+  const head = document.createElement('div');
+  head.className = 'qfr-head';
+  head.textContent = FIRED_RF_HEAD_LABEL;
+  root.appendChild(head);
+
+  const cap = 5;
+  items.slice(0, cap).forEach(rf => {{
+    const rid = rf.id || '';
+    const href = FIRED_RF_URL_PREFIX + '/kb/redflags/' + _rfSlug(rid) + '.html';
+    const defn = (lang === 'en' ? rf.definition : (rf.definition_ua || rf.definition)) || '—';
+    const sev = rf.severity || 'major';
+
+    const card = document.createElement('a');
+    card.className = 'qfr-card qfr-sev-' + sev;
+    card.href = href;
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
+
+    const ridSpan = document.createElement('span');
+    ridSpan.className = 'qfr-rid';
+    ridSpan.textContent = rid;
+    card.appendChild(ridSpan);
+
+    const defnSpan = document.createElement('span');
+    defnSpan.className = 'qfr-defn';
+    defnSpan.textContent = defn;
+    card.appendChild(defnSpan);
+
+    root.appendChild(card);
+  }});
+
+  if (items.length > cap) {{
+    const more = document.createElement('div');
+    more.className = 'qfr-more';
+    more.textContent = '+ ' + (items.length - cap) + ' ' + FIRED_RF_MORE_LABEL;
+    root.appendChild(more);
+  }}
+}}
+
 function updateImpactPanel(result) {{
   if (!result) {{
     updateImpactPanelLocal();
@@ -4408,6 +4467,7 @@ function updateImpactPanel(result) {{
   }}
   setProgress(result.filled_count, result.total_questions);
   setReadinessCritical(result.missing_critical || []);
+  setFiredRedflags(result.fired_redflags_detail || [], '{target_lang}');
 }}
 
 // ── Bundle lazy-load (CSD-6E + CSD-9C) ────────────────────────────────────
