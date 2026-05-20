@@ -436,6 +436,10 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
                                     "en": "Pre-treatment investigations"},
     "pretreatment_sub":            {"uk": "Дослідження перед стартом терапії · критичні / стандарт / бажано · поєднані по треках",
                                     "en": "Investigations before treatment start · critical / standard / desired · merged across tracks"},
+    "prevention_investigations":   {"uk": "Baseline / surveillance investigations",
+                                    "en": "Baseline / surveillance investigations"},
+    "prevention_investigations_sub": {"uk": "Дослідження для baseline + регулярного surveillance · поєднані по треках",
+                                      "en": "Investigations for baseline + ongoing surveillance · merged across tracks"},
     "redflags_pro_contra":         {"uk": "Red flags — PRO / CONTRA aggressive",
                                     "en": "Red flags — PRO / CONTRA aggressive"},
     "what_not":                    {"uk": "Що НЕ робити", "en": "What NOT to do"},
@@ -1332,7 +1336,7 @@ def _render_lab_availability_cell(test: dict, target_lang: str = "uk") -> str:
 
 
 def _render_pretreatment_investigations(
-    plan, kb_resolved: dict, target_lang: str = "uk"
+    plan, kb_resolved: dict, target_lang: str = "uk", is_prevention: bool = False
 ) -> str:
     """Pre-treatment investigations table: union of required + desired tests
     across all tracks, sorted by priority_class. Each row shows test name,
@@ -1397,10 +1401,12 @@ def _render_pretreatment_investigations(
             f'<td>{_h(scope)}</td></tr>'
         )
 
+    heading_key = "prevention_investigations" if is_prevention else "pretreatment"
+    subheading_key = "prevention_investigations_sub" if is_prevention else "pretreatment_sub"
     return (
         '<section>'
-        f'<h2>{_h(_t("pretreatment", target_lang))}</h2>'
-        f'<div class="section-sub">{_h(_t("pretreatment_sub", target_lang))}</div>'
+        f'<h2>{_h(_t(heading_key, target_lang))}</h2>'
+        f'<div class="section-sub">{_h(_t(subheading_key, target_lang))}</div>'
         '<table class="tbl">'
         f'<thead><tr><th>{_h(_t("th_id", target_lang))}</th>'
         f'<th>{_h(_t("th_name", target_lang))}</th>'
@@ -3166,16 +3172,33 @@ def render_plan_html(
         )
     primary_html = track_html[0] if track_html else ""
     if primary_html:
+        primary_h2 = (
+            "Recommended prevention/surveillance pathway"
+            if is_prevention_plan
+            else "Primary current-line option"
+        )
         body.append(
-            "<section><h2>Primary current-line option</h2>"
+            f"<section><h2>{primary_h2}</h2>"
             f'<div class="tracks">{primary_html}</div></section>'
         )
     alternative_html = "".join(track_html[1:])
     if alternative_html:
+        if is_prevention_plan:
+            alt_h2 = f"Alternative pathway ({len(track_html) - 1} tracks)"
+            alt_sub = (
+                "Same prevention/surveillance scope; review when patient preference, "
+                "access, contraindication, or risk-modifier assumptions change."
+            )
+        else:
+            alt_h2 = f"Other current-line alternatives ({len(track_html) - 1} tracks)"
+            alt_sub = (
+                "Same treatment line; review when biomarker, access, contraindication, "
+                "or patient-context assumptions change."
+            )
         body.append(
             "<section><details>"
-            f"<summary><h2>Other current-line alternatives ({len(track_html) - 1} tracks)</h2>"
-            "<span class=\"section-sub\">Same treatment line; review when biomarker, access, contraindication, or patient-context assumptions change.</span>"
+            f"<summary><h2>{alt_h2}</h2>"
+            f'<span class="section-sub">{alt_sub}</span>'
             "</summary>"
             f'<div class="tracks">{alternative_html}</div>'
             "</details></section>"
@@ -3216,7 +3239,7 @@ def render_plan_html(
 
     # Pre-treatment investigations · RedFlag PRO/CONTRA · What NOT to do ·
     # Monitoring phases · Timeline (REFERENCE_CASE_SPECIFICATION §1.3)
-    body.append(_render_pretreatment_investigations(plan, plan_result.kb_resolved, target_lang))
+    body.append(_render_pretreatment_investigations(plan, plan_result.kb_resolved, target_lang, is_prevention=is_prevention_plan))
     body.append(_render_red_flags_pro_contra(plan, plan_result.kb_resolved, target_lang))
     body.append(_render_what_not_to_do(plan, target_lang))
 
@@ -3266,7 +3289,11 @@ def render_plan_html(
     body.append(f'<div class="medical-disclaimer">{_h(_MEDICAL_DISCLAIMER)}</div>')
     body.append('</div>')
 
-    out = _doc_shell(f"План лікування — {disease_title}", "".join(body))
+    if is_prevention_plan:
+        doc_shell_title = f"План профілактики — {disease_title}"
+    else:
+        doc_shell_title = f"План лікування — {disease_title}"
+    out = _doc_shell(doc_shell_title, "".join(body))
     return _localize_html(out, target_lang)
 
 
