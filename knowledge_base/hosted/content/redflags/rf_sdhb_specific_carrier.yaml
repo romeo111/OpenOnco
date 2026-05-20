@@ -1,0 +1,128 @@
+id: RF-SDHB-SPECIFIC-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in SDHB
+  (succinate dehydrogenase complex subunit B) — paraganglioma syndrome
+  type 4 (PGL4). SDHB carries the HIGHEST aggregate lifetime
+  paraganglioma + pheochromocytoma risk among the SDHx subunits
+  (~30-50% by age 60, ~50-70% lifetime in some kindreds) AND the
+  highest metastatic / malignant rate (~30-70% of incident PPGL events
+  metastasize, vs <10% in other SDHx subunits). Tumor distribution is
+  predominantly sympathetic abdominal + thoracic paragangliomas (peri-
+  aortic, organ-of-Zuckerkandl) rather than the head + neck
+  parasympathetic distribution characteristic of SDHD / SDHC.
+  Additional risk: SDH-deficient renal cell carcinoma (~14% lifetime,
+  often aggressive type-2-papillary or oncocytic morphology) and
+  SDH-deficient gastrointestinal stromal tumor. Pediatric onset is
+  documented — index PPGL events before age 10 occur in ~10% of
+  pedigrees. Inheritance is autosomal-dominant without SDHD / SDHAF2
+  maternal-imprinting (penetrant from either parent). Mandates the
+  most intensive surveillance of any SDHx subunit: whole-body MRI
+  annually from age 6-10, plasma metanephrines + methoxytyramine
+  (3-MT) q6-12mo, with 18F-FDG PET / 68Ga-DOTATATE PET considered for
+  staging confirmed lesions given high SDHB-PPGL FDG-avidity. CRITICAL
+  severity justified by pediatric onset + metastatic disease as
+  dominant mortality driver. Prevention-persona RedFlag distinct from
+  the multi-gene RF-SDH-CONFIRMED-CARRIER — uses
+  `germline_sdhb_specific_carrier` finding to avoid double-firing.
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант
+  у SDHB (succinate dehydrogenase complex subunit B) — paraganglioma
+  syndrome type 4 (PGL4). SDHB несе НАЙВИЩИЙ aggregate lifetime
+  PPGL ризик серед SDHx subunits (~30-50% до 60 років, ~50-70%
+  lifetime в деяких кіндредах) ТА найвищий metastatic / malignant
+  rate (~30-70% incident PPGL events metastasize, vs <10% у інших
+  SDHx). Tumor distribution predominantly sympathetic abdominal +
+  thoracic paragangliomas (peri-aortic, organ-of-Zuckerkandl), не
+  head + neck parasympathetic distribution характерний для SDHD /
+  SDHC. Additional risk: SDH-deficient RCC (~14% lifetime, часто
+  aggressive type-2-papillary або oncocytic morphology) та
+  SDH-deficient GIST. Pediatric onset documented — index PPGL
+  events до 10 років у ~10% pedigrees. Успадкування autosomal-
+  dominant без SDHD / SDHAF2 maternal-imprinting (penetrant від
+  будь-якого з батьків). Mandates найінтенсивніше спостереження
+  серед SDHx: whole-body MRI annually з 6-10 років, plasma
+  метанефрини + methoxytyramine (3-MT) q6-12mo, з 18F-FDG PET /
+  68Ga-DOTATATE PET для staging confirmed lesions через high
+  SDHB-PPGL FDG-avidity. CRITICAL severity виправдана pediatric
+  onset + metastatic disease як dominant mortality driver.
+  Prevention-persona RedFlag distinct від multi-gene
+  RF-SDH-CONFIRMED-CARRIER — використовує
+  `germline_sdhb_specific_carrier` finding для уникнення
+  double-firing.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_sdhb_specific_carrier"
+      value: true
+    - finding: "paraganglioma_pgl4_clinical_criteria_met"
+      value: true
+
+clinical_direction: investigate
+
+# CRITICAL per SDHB pediatric-onset + metastatic disease as dominant
+# mortality driver; surveillance from age 6-10 with annual whole-body MRI.
+severity: critical
+priority: 70
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-PHEOCHROMOCYTOMA
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NET-2025
+  - SRC-ENDOCRINE-SOCIETY-MEN-2023
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Gene-specific paraganglioma syndrome 4 (PGL4) confirmed-carrier RF —
+  CRITICAL severity. Fires on documented germline SDHB pathogenic /
+  likely-pathogenic variant positivity in an asymptomatic individual.
+  Distinct from the multi-gene RF-SDH-CONFIRMED-CARRIER which fires on
+  the legacy `germline_sdhb_pathogenic_variant_confirmed` finding; this
+  RF uses `germline_sdhb_specific_carrier` (or `paraganglioma_pgl4_
+  clinical_criteria_met`) to avoid double-firing under the new gene-
+  stratified surveillance pathway. Engine routes to PreventionPlan:
+    (a) IND-SDHB-CARRIER-SURVEILLANCE (standard) — whole-body MRI
+        annually from age 6-10 (younger if family-specific proband
+        younger); plasma free metanephrines + methoxytyramine (3-MT)
+        q6-12mo; head + neck MRI q2-3y; abdominal MRI annually for
+        sympathetic PGL + RCC + GIST; 68Ga-DOTATATE PET reserved for
+        staging confirmed lesions (high SSTR2 expression in SDHx-PPGL);
+        18F-FDG PET as alternative functional modality (SDHB-PPGL high
+        FDG-avidity reported); pre-operative alpha-blockade mandatory
+        for any PPGL resection; cascade testing.
+    (b) IND-SDHB-CARRIER-INTENSIFIED (aggressive) — earlier baseline
+        (age 5 in pediatric-onset kindreds) + q6mo biochemistry +
+        functional imaging supplement (annual 18F-FDG PET or 68Ga-
+        DOTATATE PET in highest-risk subset — prior PPGL history,
+        metastatic pedigree).
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+
+  Lifetime tumor risk in confirmed SDHB carriers (Andrews et al. JCEM
+  2018; Rijken et al. Endocr Relat Cancer 2017; international PPGL
+  registry data):
+    - PPGL aggregate ~30-50% by age 60 (~50-70% lifetime); predominantly
+      sympathetic abdominal + thoracic paragangliomas + pheochromocytoma.
+    - Metastatic rate ~30-70% of incident PPGL events (dominant
+      mortality driver — far higher than SDHD ~10% / SDHC <5%).
+    - RCC ~14% lifetime; often aggressive type-2-papillary or oncocytic
+      morphology; nephron-sparing surgery preferred when feasible.
+    - SDH-deficient GIST: indolent multifocal, wild-type c-KIT /
+      PDGFRA; imatinib-non-responsive.
+    - Pediatric onset documented (~10% of kindreds index PPGL before
+      age 10) — surveillance baseline age 6-10 (younger if family
+      proband younger).
+    - Inheritance pattern: autosomal-dominant without SDHD / SDHAF2
+      maternal-imprinting.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_paraganglioma_nf2
+draft_revision: 1
