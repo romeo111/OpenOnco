@@ -3008,26 +3008,74 @@ def render_plan_html(
 
     fda = plan.fda_compliance
 
+    # Detect PreventionPlan shape (KSS §20.2): no Disease + no Algorithm,
+    # routed by fired prevention RedFlag(s). When True, swap the "Treatment
+    # Plan" label/title for prevention-specific phrasing and skip the
+    # disease-anchored etiological-driver block (it has nothing to render
+    # without a disease entity).
+    is_prevention_plan = (
+        plan_result.disease_id is None and plan.algorithm_id is None
+    )
+
     # Header
     body: list[str] = []
-    disease_title = _diagnosis_name(plan_result, target_lang) or plan_result.disease_id
     cross_link = _render_mode_toggle(sibling_link, "Версія для пацієнта →")
-    body.append(
-        '<div class="doc-header">'
-        '<div class="doc-label">OpenOnco · Treatment Plan</div>'
-        f'<div class="doc-title">План лікування — {_h(disease_title)}</div>'
-        f'<div class="doc-sub">{_h(plan.id)} · v{_h(plan.version)} · {_h(plan.generated_at[:10])}</div>'
-        f'{cross_link}'
-        '</div>'
-    )
+    # Always set disease_title so the final _doc_shell call below has a value;
+    # for prevention plans it falls back to the joined RF list.
+    if is_prevention_plan:
+        # Build a comma-separated list of fired prevention RFs as the
+        # diagnosis-equivalent anchor for the title. Prevention path
+        # writes one trace entry per fired RF with `rf_id` key; legacy
+        # treatment path uses `fired_red_flags` list per step. Handle both.
+        fired_rf_ids: list[str] = []
+        if plan.trace:
+            seen: set[str] = set()
+            for entry in plan.trace:
+                # Prevention-path format: {step: 'prevention_rf_fired', rf_id: 'RF-…'}
+                single_rf = entry.get("rf_id")
+                if isinstance(single_rf, str) and single_rf not in seen:
+                    seen.add(single_rf)
+                    fired_rf_ids.append(single_rf)
+                # Treatment-path format: {fired_red_flags: ['RF-…', …]}
+                for rf_id in entry.get("fired_red_flags") or []:
+                    if rf_id not in seen:
+                        seen.add(rf_id)
+                        fired_rf_ids.append(rf_id)
+        disease_title = (
+            ", ".join(fired_rf_ids) if fired_rf_ids else "профілактичний маршрут"
+        )
+        doc_label = "OpenOnco · Prevention Plan"
+        doc_title_text = "План профілактики — " + disease_title
+        if (target_lang or "uk").lower() == "en":
+            doc_title_text = "Prevention plan — " + disease_title
+        body.append(
+            '<div class="doc-header">'
+            f'<div class="doc-label">{doc_label}</div>'
+            f'<div class="doc-title">{_h(doc_title_text)}</div>'
+            f'<div class="doc-sub">{_h(plan.id)} · v{_h(plan.version)} · {_h(plan.generated_at[:10])}</div>'
+            f'{cross_link}'
+            '</div>'
+        )
+    else:
+        disease_title = _diagnosis_name(plan_result, target_lang) or plan_result.disease_id
+        body.append(
+            '<div class="doc-header">'
+            '<div class="doc-label">OpenOnco · Treatment Plan</div>'
+            f'<div class="doc-title">План лікування — {_h(disease_title)}</div>'
+            f'<div class="doc-sub">{_h(plan.id)} · v{_h(plan.version)} · {_h(plan.generated_at[:10])}</div>'
+            f'{cross_link}'
+            '</div>'
+        )
 
     # Patient strip
     body.append(_render_patient_strip(plan_result, target_lang))
 
-    # Etiological driver — only for etiologically_driven archetype
-    body.append(_render_etiological_driver(
-        (plan_result.kb_resolved or {}).get("disease"), target_lang
-    ))
+    # Etiological driver — only for etiologically_driven archetype.
+    # Skipped for PreventionPlan output: no disease anchor → no driver to surface.
+    if not is_prevention_plan:
+        body.append(_render_etiological_driver(
+            (plan_result.kb_resolved or {}).get("disease"), target_lang
+        ))
 
     # Variant actionability (ESCAT) — inserted between the
     # diagnostic profile and the treatment-plan tracks. Render-time
