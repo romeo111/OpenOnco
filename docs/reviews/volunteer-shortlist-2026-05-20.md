@@ -297,31 +297,42 @@ resolution, may need a non-NCCN replacement source.
 
 ---
 
-## 4. Drafted chunk spec for first claim
+## 4. Drafted chunk specs ready to push to `task_torrent`
 
-Written to
-[contributions/task_torrent_chunks_2026-05-20-1500/algo-branch-wiring-ovarian-2l.md](../../contributions/task_torrent_chunks_2026-05-20-1500/algo-branch-wiring-ovarian-2l.md)
+All five drafts written under
+[contributions/task_torrent_chunks_2026-05-20-1500/](../../contributions/task_torrent_chunks_2026-05-20-1500/)
 in v0.4 chunk-spec format (12 required sections + Severity / Min
-Contributor Tier / Queue soft-required). Patch needs to be pushed
+Contributor Tier / Queue soft-required). Each needs to be pushed
 to `romeo111/task_torrent` as
-`chunks/openonco/algo-branch-wiring-ovarian-2l.md`, then a `[Chunk]`
-issue opened against it for the volunteer to claim.
+`chunks/openonco/<name>.md` and a `[Chunk]` issue opened.
 
-**Why this one as the first new chunk:**
+| # | Chunk file | Severity / Tier | Drops | Closes which §3 candidate | First-claim fit |
+|---|---|---|---|---|---|
+| 1 | [`algo-branch-wiring-ovarian-2l.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/algo-branch-wiring-ovarian-2l.md) | low / new | ~1 | §3.1 (top of backlog, 6 unreached) | **Recommended first-claim for any volunteer** — lowest cognitive load, worked example PR #597, no clinical sign-off needed |
+| 2 | [`algo-branch-wiring-breast-1l.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/algo-branch-wiring-breast-1l.md) | low / new | ~1 | §3.1 (#2 in backlog, 5 unreached) | Same pattern as #1; natural second claim |
+| 3 | [`algo-branch-wiring-esoph-metastatic-1l.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/algo-branch-wiring-esoph-metastatic-1l.md) | low / new | ~1 | §3.1 (#3 in backlog, 5 unreached) | Same pattern; natural third claim |
+| 4 | [`prevention-regimen-authoring-wave1.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/prevention-regimen-authoring-wave1.md) | medium / established | ~2-3 | §3.2 (6 named regimens) | Different skill set (source-verbatim dose extraction); good for a contributor with a clinical background |
+| 5 | [`workup-thyroid-papillary.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/workup-thyroid-papillary.md) | low / new | ~1 | §3.3 (smallest of 5 source-available zero-RF diseases) | Smallest possible KB-authoring scope; good first KB-authoring chunk if volunteer wants to write content not just wire |
+| 6 | [`hereditary-brca-carrier-surveillance.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/hereditary-brca-carrier-surveillance.md) | medium / established | ~1.5 | §3.5 (most-mature of 5 syndromes) | v0.2-B continuation; visible KB delta for user-facing v0.2 story |
 
-- **Lowest cognitive load** — translates existing prose to engine-
-  readable form; volunteer doesn't invent clinical content.
-- **Worked example exists** (PR #597) — copy-and-adapt pattern, not
-  blank-page authoring.
-- **Smallest verifiable diff** — ~5-line YAML change + 1
-  generator-rerun; acceptance is "target indications are reachable
-  via `generate_plan()`."
-- **No clinical sign-off bottleneck** — semantics-preserving
-  translation, not new clinical content; doesn't sit gated on
-  Co-Lead review.
-- **Pool of 51 follow-up chunks** — same volunteer can keep claiming
-  one-per-week without re-onboarding. Big repository of
-  comparable-shape work for any future contributor too.
+**Why these five together (not just one):**
+
+- **Variety across complexity** — 3 mechanical wire-up chunks for
+  first-time volunteers; 2 KB-authoring chunks for contributors with
+  clinical background.
+- **Variety across domains** — engine wiring, prevention regimens,
+  diagnostic workups, hereditary surveillance — different KB areas
+  exercised so the contributor doesn't pigeonhole.
+- **Spin-up template established** — once `algo-branch-wiring-ovarian-2l`
+  validates, maintainer can clone for the remaining 49 algorithms in
+  ~15 min each. Same for `workup-thyroid-papillary` (4 sibling
+  diseases) and `hereditary-brca-carrier-surveillance` (4 sibling
+  syndromes).
+
+**No chunk drafted for §3.4 (MDT per-disease rules):** higher
+complexity, needs clinical judgment about which MM-specific roles
+to add. Hold for a contributor who's already landed one chunk and
+shown clinical fluency.
 
 ---
 
