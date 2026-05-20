@@ -9150,17 +9150,9 @@ def build_one_case(case: CaseEntry, output_dir: Path,
 
 
 def _copy_landing_assets(output_dir: Path) -> list[str]:
-    """Copy infographic images used by the landing into docs/. Source-of-truth
-    lives in infograph/ (gitignored except these). Listed by name so we don't
-    accidentally copy patient HTMLs (CHARTER §9.3)."""
-    src_root = REPO_ROOT / "infograph"
-    assets = ["MDT.png", "MDT-light.png"]
+    """Copy brand SVGs into docs/. Listed by name so we don't accidentally
+    copy patient HTMLs (CHARTER §9.3)."""
     copied: list[str] = []
-    for name in assets:
-        src = src_root / name
-        if src.exists():
-            shutil.copyfile(src, output_dir / name)
-            copied.append(name)
     # Small brand SVGs live directly under docs/ (committed) - preserve on --clean.
     for asset_name in ("favicon.svg", "logo.svg"):
         asset_src = REPO_ROOT / "docs" / asset_name

@@ -18,7 +18,6 @@ SITE_FAVICON_LINK = '<link rel="icon" type="image/svg+xml" href="/favicon.svg">'
 
 SITE_BASE_URL = "https://openonco.info"
 SITE_NAME = "OpenOnco"
-SITE_IMAGE = f"{SITE_BASE_URL}/MDT.png"
 DEFAULT_DESCRIPTION_EN = (
     "OpenOnco is an open, auditable oncology decision-support knowledge base "
     "and browser demo for clinicians, laboratories, investors, and patients."
@@ -153,13 +152,6 @@ def _schema_type(path: str) -> str:
     return "WebPage"
 
 
-def _social_image_for(path: str) -> str | None:
-    normalized = path.replace("\\", "/").lstrip("/")
-    if normalized.endswith("ask.html"):
-        return None
-    return SITE_IMAGE
-
-
 def _alternate_urls(path: str) -> tuple[str, str, str]:
     normalized = path.replace("\\", "/").lstrip("/")
     if normalized.startswith("ukr/"):
@@ -177,7 +169,6 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
     lang = "uk-UA" if locale == "uk" else "en-US"
     robots = "noindex, follow" if noindex else "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     disclosure = AI_DISCLOSURE_UK if locale == "uk" else AI_DISCLOSURE_EN
-    social_image = _social_image_for(path)
     schema = {
         "@context": "https://schema.org",
         "@type": _schema_type(path),
@@ -232,17 +223,12 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
         f'<meta property="og:description" content="{_escape(description)}">',
         f'<meta property="og:url" content="{canonical}">',
         f'<meta property="og:locale" content="{lang.replace("-", "_")}">',
-        f'<meta name="twitter:card" content="{"summary_large_image" if social_image else "summary"}">',
+        f'<meta name="twitter:card" content="summary">',
         f'<meta name="twitter:title" content="{_escape(title)}">',
         f'<meta name="twitter:description" content="{_escape(description)}">',
         f'<script type="application/ld+json">{json_ld}</script>',
         SEO_END,
     ]
-    if social_image:
-        og_url_index = lines.index(f'<meta property="og:url" content="{canonical}">')
-        lines.insert(og_url_index + 1, f'<meta property="og:image" content="{social_image}">')
-        twitter_description_index = lines.index(f'<meta name="twitter:description" content="{_escape(description)}">')
-        lines.insert(twitter_description_index + 1, f'<meta name="twitter:image" content="{social_image}">')
     return "\n".join(lines)
 
 
