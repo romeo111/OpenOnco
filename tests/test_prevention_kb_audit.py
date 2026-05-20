@@ -419,9 +419,15 @@ def _synthesize_findings_for_trigger(trigger: dict) -> dict | None:
     return None
 
 
-def _stratified_rf_sample(rfs: dict[str, dict], per_category: int = 5) -> list[tuple[str, dict]]:
+def _stratified_rf_sample(rfs: dict[str, dict], per_category: int = 100) -> list[tuple[str, dict]]:
     """Pick up to `per_category` RFs from each risk_category enum value.
-    Stable order — sorts by RF id within each category."""
+    Stable order — sorts by RF id within each category.
+
+    Raised from per_category=5 to 100 in Wave L+M+N+O+P (2026-05-20) —
+    KB grew from ~30 prevention RFs to 165 across Waves L-P; full per-RF
+    coverage now catches regressions for every shipped RF rather than a
+    sparse 5-per-category sample. With current KB this exercises ~150
+    distinct RFs as separate parametrize cases."""
     by_cat: dict[str, list[tuple[str, dict]]] = defaultdict(list)
     for eid, data in rfs.items():
         by_cat[data.get("risk_category")].append((eid, data))
