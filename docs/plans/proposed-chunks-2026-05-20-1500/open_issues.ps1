@@ -9,7 +9,7 @@
 # README.md in this folder for the recommended push sequence.
 #
 # Run from this folder:
-#   cd contributions/task_torrent_chunks_2026-05-20-1500
+#   cd docs/plans/proposed-chunks-2026-05-20-1500
 #   pwsh ./open_issues.ps1
 #
 # Each command targets romeo111/task_torrent and reads its body from the

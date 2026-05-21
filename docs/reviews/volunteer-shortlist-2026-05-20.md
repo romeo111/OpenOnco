@@ -13,7 +13,7 @@ TaskTorrent shelf, and proposing five new chunk-spec candidates.
 queued chunk specs** — see §2. The volunteer can claim one of those
 *today*. The five new candidates in §3 fill gaps the existing shelf
 does not cover, and §4 fully drafts one of them as
-`contributions/task_torrent_chunks_2026-05-20-1500/algo-branch-wiring-ovarian-2l.md`
+`docs/plans/proposed-chunks-2026-05-20-1500/algo-branch-wiring-ovarian-2l.md`
 ready to push to `romeo111/task_torrent` and open a `[Chunk]` issue
 against.
 
@@ -300,7 +300,7 @@ resolution, may need a non-NCCN replacement source.
 ## 4. Drafted chunk specs ready to push to `task_torrent`
 
 All five drafts written under
-[contributions/task_torrent_chunks_2026-05-20-1500/](../../contributions/task_torrent_chunks_2026-05-20-1500/)
+[docs/plans/proposed-chunks-2026-05-20-1500/](../plans/proposed-chunks-2026-05-20-1500/)
 in v0.4 chunk-spec format (12 required sections + Severity / Min
 Contributor Tier / Queue soft-required). Each needs to be pushed
 to `romeo111/task_torrent` as
@@ -308,12 +308,12 @@ to `romeo111/task_torrent` as
 
 | # | Chunk file | Severity / Tier | Drops | Closes which §3 candidate | First-claim fit |
 |---|---|---|---|---|---|
-| 1 | [`algo-branch-wiring-ovarian-2l.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/algo-branch-wiring-ovarian-2l.md) | low / new | ~1 | §3.1 (top of backlog, 6 unreached) | **Recommended first-claim for any volunteer** — lowest cognitive load, worked example PR #597, no clinical sign-off needed |
-| 2 | [`algo-branch-wiring-breast-1l.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/algo-branch-wiring-breast-1l.md) | low / new | ~1 | §3.1 (#2 in backlog, 5 unreached) | Same pattern as #1; natural second claim |
-| 3 | [`algo-branch-wiring-esoph-metastatic-1l.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/algo-branch-wiring-esoph-metastatic-1l.md) | low / new | ~1 | §3.1 (#3 in backlog, 5 unreached) | Same pattern; natural third claim |
-| 4 | [`prevention-regimen-authoring-wave1.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/prevention-regimen-authoring-wave1.md) | medium / established | ~2-3 | §3.2 (6 named regimens) | Different skill set (source-verbatim dose extraction); good for a contributor with a clinical background |
-| 5 | [`workup-thyroid-papillary.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/workup-thyroid-papillary.md) | low / new | ~1 | §3.3 (smallest of 5 source-available zero-RF diseases) | Smallest possible KB-authoring scope; good first KB-authoring chunk if volunteer wants to write content not just wire |
-| 6 | [`hereditary-brca-carrier-surveillance.md`](../../contributions/task_torrent_chunks_2026-05-20-1500/hereditary-brca-carrier-surveillance.md) | medium / established | ~1.5 | §3.5 (most-mature of 5 syndromes) | v0.2-B continuation; visible KB delta for user-facing v0.2 story |
+| 1 | [`algo-branch-wiring-ovarian-2l.md`](../plans/proposed-chunks-2026-05-20-1500/algo-branch-wiring-ovarian-2l.md) | low / new | ~1 | §3.1 (top of backlog, 6 unreached) | **Recommended first-claim for any volunteer** — lowest cognitive load, worked example PR #597, no clinical sign-off needed |
+| 2 | [`algo-branch-wiring-breast-1l.md`](../plans/proposed-chunks-2026-05-20-1500/algo-branch-wiring-breast-1l.md) | low / new | ~1 | §3.1 (#2 in backlog, 5 unreached) | Same pattern as #1; natural second claim |
+| 3 | [`algo-branch-wiring-esoph-metastatic-1l.md`](../plans/proposed-chunks-2026-05-20-1500/algo-branch-wiring-esoph-metastatic-1l.md) | low / new | ~1 | §3.1 (#3 in backlog, 5 unreached) | Same pattern; natural third claim |
+| 4 | [`prevention-regimen-authoring-wave1.md`](../plans/proposed-chunks-2026-05-20-1500/prevention-regimen-authoring-wave1.md) | medium / established | ~2-3 | §3.2 (6 named regimens) | Different skill set (source-verbatim dose extraction); good for a contributor with a clinical background |
+| 5 | [`workup-thyroid-papillary.md`](../plans/proposed-chunks-2026-05-20-1500/workup-thyroid-papillary.md) | low / new | ~1 | §3.3 (smallest of 5 source-available zero-RF diseases) | Smallest possible KB-authoring scope; good first KB-authoring chunk if volunteer wants to write content not just wire |
+| 6 | [`hereditary-brca-carrier-surveillance.md`](../plans/proposed-chunks-2026-05-20-1500/hereditary-brca-carrier-surveillance.md) | medium / established | ~1.5 | §3.5 (most-mature of 5 syndromes) | v0.2-B continuation; visible KB delta for user-facing v0.2 story |
 
 **Why these five together (not just one):**
 

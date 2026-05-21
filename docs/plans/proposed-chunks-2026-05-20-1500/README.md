@@ -51,7 +51,7 @@ After the chunk specs are on `task_torrent` `main`, run from this
 folder:
 
 ```powershell
-cd contributions/task_torrent_chunks_2026-05-20-1500
+cd docs/plans/proposed-chunks-2026-05-20-1500
 pwsh ./open_issues.ps1
 ```
 
