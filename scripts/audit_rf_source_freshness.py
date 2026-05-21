@@ -112,7 +112,9 @@ def audit(kb_root: Path = KB_ROOT) -> dict:
     sources_index = _load_sources_index(kb_root / "sources")
     findings: list[dict] = []
     total = 0
-    for path in sorted((kb_root / "redflags").glob("*.yaml")):
+    # rglob — `redflags/universal/*.yaml` holds the cross-disease RFs
+    # (HBV reactivation, TLS, infusion reaction); a flat glob misses them.
+    for path in sorted((kb_root / "redflags").rglob("*.yaml")):
         try:
             data = yaml.safe_load(path.read_text(encoding="utf-8"))
         except yaml.YAMLError:
