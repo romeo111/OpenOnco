@@ -3371,6 +3371,26 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
     plan = plan_result.plan
     hits = list((plan and plan.variant_actionability) or [])
     if not hits:
+        # PreventionPlan: no tumor → no variant actionability is expected;
+        # we're looking at germline / lifestyle / chronic-condition risk
+        # factors. Substitute a prevention-appropriate fallback so the
+        # patient doesn't see a confusing "treatment is still possible"
+        # message for what isn't a treatment scenario.
+        is_prevention_shape = (
+            plan_result.disease_id is None
+            and (plan is None or plan.algorithm_id is None)
+        )
+        if is_prevention_shape:
+            return (
+                '<p>За результатами заповнених даних значущих ризик-факторів '
+                "виявлено саме той, що вказано вище. Це означає, що ви "
+                "потрапляєте у когорту з підвищеним ризиком для певних "
+                "видів раку — план нижче описує, що з цим робити: "
+                "програма спостереження, рекомендовані обстеження, цикл "
+                "візитів до лікаря. Це не діагноз і не означає, що ви "
+                "хворієте — це інформація про ризик і про те, як його "
+                "зменшити або вчасно виявити проблему.</p>"
+            )
         return (
             '<p>За результатами наявних аналізів значущих молекулярних мішеней '
             "поки не виявлено. Це не означає, що лікування неможливе — стандартна терапія "
@@ -3921,6 +3941,25 @@ _PATIENT_DISCLAIMER_HTML = (
 )
 
 
+# Prevention-mode disclaimer: at-risk asymptomatic carrier audience.
+# Substitutes "лікування" with "програма профілактики / спостереження"
+# and routes to genetic-counselor + primary care + specialist depending
+# on the syndrome, rather than naming "your oncologist" as the sole
+# decision-maker.
+_PATIENT_DISCLAIMER_PREVENTION_HTML = (
+    "<p>Цей звіт — інформаційний інструмент, не медичний прилад. "
+    "Усі рішення щодо вашої програми профілактики і спостереження ухвалює "
+    "ваш лікар (зазвичай це сімейний лікар, генетичний консультант або "
+    "профільний спеціаліст залежно від виявленого ризик-фактора). Звіт "
+    "оновлюється, коли з'являються нові дані. Не змінюйте призначене "
+    "спостереження на основі лише цього звіту.</p>"
+    "<p>Якщо у вас виникли симптоми, які потребують уваги — звертайтесь "
+    "до вашого лікаря, не чекайте планового візиту.</p>"
+    "<p>Питання про сам інструмент: "
+    '<a href="https://github.com/romeo111/OpenOnco/issues">github.com/romeo111/OpenOnco</a></p>'
+)
+
+
 def _render_patient_mode(
     plan_result: PlanResult,
     target_lang: str,
@@ -4005,8 +4044,13 @@ def _render_patient_mode(
     body_parts.append(_render_emergency_section(plan_result))
     body_parts.append(_render_ask_doctor_section(plan_result))
 
+    disclaimer_html = (
+        _PATIENT_DISCLAIMER_PREVENTION_HTML
+        if is_prevention_plan
+        else _PATIENT_DISCLAIMER_HTML
+    )
     body_parts.append(
-        f'<footer class="patient-disclaimer">{_PATIENT_DISCLAIMER_HTML}</footer>'
+        f'<footer class="patient-disclaimer">{disclaimer_html}</footer>'
     )
 
     doc_title = (
