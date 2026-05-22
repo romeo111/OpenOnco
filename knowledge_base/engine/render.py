@@ -3938,9 +3938,23 @@ def _render_patient_mode(
     (PATIENT_MODE_SPEC §3.5). Set by the CLI when `--render-mode both`
     or by web embeds; otherwise None to suppress the chip."""
     plan = plan_result.plan
+    # Detect PreventionPlan shape (KSS §20.2): no Disease + no Algorithm.
+    # When True, the patient bundle swaps oncology-treatment phrasing for
+    # prevention/surveillance language so an at-risk asymptomatic carrier
+    # doesn't read "Your personal oncology treatment plan" for what is
+    # actually a surveillance pathway.
+    is_prevention_plan = (
+        plan_result.disease_id is None
+        and (plan is None or plan.algorithm_id is None)
+    )
     if plan is None:
+        empty_title = (
+            "Ваш персональний план профілактики"
+            if is_prevention_plan
+            else "Ваш персональний онкологічний план"
+        )
         return _patient_doc_shell(
-            "Ваш персональний онкологічний план",
+            empty_title,
             '<p>Поки що недостатньо даних для побудови плану. '
             'Зверніться до вашого онколога для уточнення.</p>',
         )
@@ -3950,11 +3964,19 @@ def _render_patient_mode(
 
     # Header (PATIENT_MODE_SPEC §3.1 + §3.5)
     cross_link = _render_mode_toggle(sibling_link, "Технічна версія для лікаря →")
+    if is_prevention_plan:
+        h1_text = "Ваш персональний план профілактики"
+        subhead_text = "Що показав аналіз ризиків і що ви можете зробити"
+        anchor_label = "Виявлений ризик-фактор:"
+    else:
+        h1_text = "Ваш персональний план"
+        subhead_text = "Що показав аналіз і що це означає для вас"
+        anchor_label = "Діагноз:"
     body_parts.append(
         "<header>"
-        "<h1>Ваш персональний план</h1>"
-        '<p class="patient-subhead">Що показав аналіз і що це означає для вас</p>'
-        f'<p><strong>Діагноз:</strong> {_h(disease_label)}</p>'
+        f"<h1>{h1_text}</h1>"
+        f'<p class="patient-subhead">{subhead_text}</p>'
+        f'<p><strong>{anchor_label}</strong> {_h(disease_label)}</p>'
         f'{cross_link}'
         "</header>"
     )
@@ -3966,9 +3988,13 @@ def _render_patient_mode(
         "</section>"
     )
 
+    if is_prevention_plan:
+        means_h2 = "Що це означає для вашої профілактики"
+    else:
+        means_h2 = "Що це означає для лікування"
     body_parts.append(
         '<section class="what-now">'
-        "<h2>Що це означає для лікування</h2>"
+        f"<h2>{means_h2}</h2>"
         f"{_render_tracks_plain(plan_result)}"
         "</section>"
     )
@@ -3983,9 +4009,14 @@ def _render_patient_mode(
         f'<footer class="patient-disclaimer">{_PATIENT_DISCLAIMER_HTML}</footer>'
     )
 
+    doc_title = (
+        "Ваш персональний план профілактики"
+        if is_prevention_plan
+        else "Ваш персональний онкологічний план"
+    )
     return _expand_first_use(
         _patient_doc_shell(
-            "Ваш персональний онкологічний план",
+            doc_title,
             "".join(body_parts),
         )
     )
