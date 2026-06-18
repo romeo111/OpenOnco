@@ -62,6 +62,44 @@ Python 3.11+ required.
 
 ---
 
+## Use it from your LLM (MCP)
+
+Doing oncology research inside ChatGPT, Claude, or a Cursor agent? Don't let the
+model answer treatment questions from memory — point it at OpenOnco's
+deterministic engine instead. The **[MCP server](mcp_server/README.md)** exposes
+the engine as tools any [Model Context Protocol](https://modelcontextprotocol.io)
+client can call:
+
+```bash
+pip install -e ".[mcp]"
+python -m mcp_server.server          # stdio server for Claude Desktop, Cursor, …
+```
+
+Tools: `engine_info`, `list_diseases`, `generate_treatment_plan`,
+`generate_diagnostic_brief`. The model calls the rule engine, then relays its
+**cited** tracks and the disclaimer — it never picks the regimen itself
+([CHARTER §8.3](specs/CHARTER.md)). That is what makes routing an oncology
+question through OpenOnco safer than asking a general-purpose model directly: the
+engine cannot hallucinate a drug or a dose. Setup for Claude Desktop / Cursor is
+in **[`mcp_server/README.md`](mcp_server/README.md)**.
+
+---
+
+## Build your own
+
+OpenOnco is fully open source — code MIT, content/specs CC BY 4.0 — precisely so
+others can reuse or fork it. The replicable pattern, for any safety-critical
+decision-support domain: keep clinical decisions in a **declarative rule engine
+over a versioned, human-reviewed knowledge base**, cite every claim, and use the
+LLM only as a relay/interface behind an explicit "no decisions" invariant. Start
+from [`specs/CHARTER.md`](specs/CHARTER.md) and the architecture in
+[`specs/`](specs/), and copy [`mcp_server/`](mcp_server/) as a working interface
+layer. Questions or a similar project in flight? [Open an
+issue](https://github.com/romeo111/OpenOnco/issues) — we'd rather coordinate
+than have the work duplicated.
+
+---
+
 ## How to contribute
 
 **Try it and tell us what's wrong.** A clinician's eye on a rendered Plan is the most valuable contribution right now. Try the [demo](https://openonco.info/try.html) on a case you know, then **[open a clinical-feedback issue](https://github.com/romeo111/OpenOnco/issues/new?labels=clinical-feedback)** — even one line ("this regimen is missing the CrCl <30 dose adjustment") helps.
