@@ -49,8 +49,8 @@ These are pre-cleared against the fact sheet's `approved_claims`, `forbidden_cla
 
 | Registry | Mechanism | Outward action required? | Who acts |
 |---|---|---|---|
-| `modelcontextprotocol/servers` (community list) | PR to README | **Yes — PR** | Maintainer |
-| `punkpeye/awesome-mcp-servers` | PR to README | **Yes — PR** | Maintainer |
+| Official MCP Registry (`registry.modelcontextprotocol.io`) | `server.json` + `mcp-publisher` CLI (GitHub auth) | **Yes — auth-gated publish** | Maintainer |
+| `punkpeye/awesome-mcp-servers` | PR to README | **DONE — PR [#8276](https://github.com/punkpeye/awesome-mcp-servers/pull/8276) open** | — |
 | PulseMCP | Web form / submit page (auto-enriches from GitHub) | **Yes — web form** | Maintainer |
 | Glama | Auto-indexes public GitHub repos; can claim/submit | Mostly automatic; **optional submit/claim** | Maintainer (optional) |
 | mcp.so | Web "Submit" form | **Yes — web form** | Maintainer |
@@ -60,22 +60,30 @@ These are pre-cleared against the fact sheet's `approved_claims`, `forbidden_cla
 
 ---
 
-## 1. `modelcontextprotocol/servers` — community servers list
+## 1. Official MCP Registry (`registry.modelcontextprotocol.io`)
 
-- **Repo:** `https://github.com/modelcontextprotocol/servers`
-- **Mechanism:** Pull request adding a one-line entry under the community/third-party servers section of the README.
-- **Auto-index?** No. **Outward action: open a PR.**
+> **Updated 2026-06-18:** `modelcontextprotocol/servers` is now **reference-servers-only**
+> (its README explicitly houses just the steering-group's reference servers).
+> **Do NOT open a README PR there for a community server — it will be declined.**
+> Community servers now live in the **official MCP Registry**.
+
+- **Registry:** `https://registry.modelcontextprotocol.io`
+- **Mechanism:** add a `server.json` manifest to the repo (registry schema; namespace
+  like `io.github.romeo111/openonco`) and publish with the GitHub-authenticated
+  `mcp-publisher` CLI (or a GitHub Action). **Auth-gated → maintainer action.**
+- **Auto-index?** No — requires the maintainer to authenticate and publish.
 
 **Steps (maintainer):**
-1. Fork `modelcontextprotocol/servers`.
-2. Read its `README.md` and `CONTRIBUTING` for the current section name and alphabetical/format conventions (the community section and its formatting move around — match what's there now).
-3. Add the entry in the correct (usually alphabetical) position.
-4. Open a PR; in the PR description note it's an oncology CDS server, informational/not-a-medical-device, and that the LLM never picks treatment.
-
-**Exact entry line (Markdown):**
-```markdown
-- [OpenOnco](https://github.com/romeo111/OpenOnco/tree/main/mcp_server) — Rules-first, source-cited oncology clinical decision support for clinicians. A deterministic rule engine drafts two alternative treatment plans for a clinician to verify; no LLM picks the regimen or dose. Informational support, not a medical device; early-stage (v0.1).
-```
+1. Add a `server.json` to the repo (server root or `mcp_server/`) per the current
+   registry schema, declaring the four tools and the start command
+   (`python -m mcp_server.server`). Open it as a normal feature-branch PR into
+   OpenOnco (never commit to `master`).
+2. Install the `mcp-publisher` CLI, authenticate with GitHub (proves ownership of
+   the `io.github.romeo111` namespace), and `mcp-publisher publish`.
+3. Verify the listing surfaces the disclaimer-bearing description and the canonical
+   links; use the **short blurb** for the description.
+4. Confirm the schema/CLI names against the current registry docs at submission
+   time — the registry is young and its tooling changes.
 
 ---
 
