@@ -628,6 +628,62 @@ def test_en_landing_links_use_en_paths(site_dir: Path):
     assert '<html lang="uk">' in ua_index
 
 
+# ── IP → language auto-selection ──────────────────────────────────────────
+# openonco.info is a static site, so language auto-selection by IP runs
+# client-side: a head script redirects English pages to their /ukr/ twin only
+# when the visitor's IP resolves to Ukraine. Default is English everywhere.
+
+
+def test_geo_lang_redirect_injected_on_every_page(site_dir: Path):
+    """Every built page (EN root, UA mirror, case pages) carries the geo
+    language-redirect script in its <head>, and it is injected exactly once."""
+    for page in ("index.html", "ukr/index.html", "gallery.html",
+                 "ukr/gallery.html", "kb.html", "ukr/kb.html"):
+        html = (site_dir / page).read_text(encoding="utf-8")
+        assert html.count("<!-- openonco-geo-lang:start -->") == 1, (
+            f"{page} missing/duplicated geo-lang block"
+        )
+        assert "<!-- openonco-geo-lang:end -->" in html
+        # Script lives inside <head>, after the charset meta (charset stays first).
+        start = html.index("<!-- openonco-geo-lang:start -->")
+        assert html.lower().index("<head") < start < html.lower().index("</head")
+        assert html.lower().index("charset") < start
+
+
+def test_geo_lang_redirect_behaviour_markers(site_dir: Path):
+    """Guard the core behavioural contract of the redirect script so a future
+    refactor cannot silently drop a safety rail."""
+    html = (site_dir / "index.html").read_text(encoding="utf-8")
+    block = html.split("<!-- openonco-geo-lang:start -->", 1)[1].split(
+        "<!-- openonco-geo-lang:end -->", 1
+    )[0]
+    # Ukraine is the only country that flips to Ukrainian.
+    assert "cc==='UA'?'uk':'en'" in block
+    # Manual choice is remembered and read back so it overrides the IP guess.
+    assert "localStorage.setItem('oo_lang'" in block
+    assert "localStorage.getItem('oo_lang')" in block
+    # Iframed previews (try.html result frame) are skipped.
+    assert "window.top!==window.self" in block
+    # Bots are not redirected (keeps both language trees crawlable).
+    assert "Googlebot" not in block  # matched generically, not by name
+    assert "/bot|crawl|spider" in block
+    # No API key is embedded (static public site) and referrers are not leaked.
+    assert "referrerPolicy:'no-referrer'" in block
+    assert "api_key" not in block.lower() and "apikey" not in block.lower()
+
+
+def test_geo_lang_does_not_break_charset_or_seo(site_dir: Path):
+    """The injection must not displace the SEO block or the charset meta."""
+    html = (site_dir / "index.html").read_text(encoding="utf-8")
+    assert "<!-- openonco-seo:start -->" in html
+    # charset < geo-lang < seo-block ordering keeps charset within the first bytes
+    assert (
+        html.lower().index("charset")
+        < html.index("<!-- openonco-geo-lang:start -->")
+        < html.index("<!-- openonco-seo:start -->")
+    )
+
+
 # ── Privacy guard ─────────────────────────────────────────────────────────
 
 
