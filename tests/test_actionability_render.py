@@ -92,7 +92,7 @@ def test_format_skips_src_oncokb_entirely():
             "evidence_ids": ["12345"],
         },
     ]
-    out = _format_evidence_sources(es)
+    out = _format_evidence_sources(es, target_lang="en")
     assert "ONCOKB" not in out.upper()
     assert "SRC-CIVIC" in out
     assert "Level B" in out
@@ -145,7 +145,7 @@ def test_format_dedupes_multiple_civic_entries_at_same_level():
         {"source": "SRC-CIVIC", "level": "B", "evidence_ids": ["101"]},
         {"source": "SRC-CIVIC", "level": "B", "evidence_ids": ["102"]},
     ]
-    out = _format_evidence_sources(es)
+    out = _format_evidence_sources(es, target_lang="en")
     assert out.count("Level B") == 1
 
 
@@ -155,7 +155,7 @@ def test_format_keeps_distinct_levels_separate():
         {"source": "SRC-CIVIC", "level": "B"},
         {"source": "SRC-CIVIC", "level": "D"},
     ]
-    out = _format_evidence_sources(es)
+    out = _format_evidence_sources(es, target_lang="en")
     assert "Level A" in out
     assert "Level B" in out
     assert "Level D" in out
@@ -163,7 +163,7 @@ def test_format_keeps_distinct_levels_separate():
 
 def test_format_groups_civic_support_as_molecular_evidence_option():
     es = [{"source": "SRC-CIVIC", "level": "A", "evidence_ids": ["100"]}]
-    out = _format_evidence_sources(es)
+    out = _format_evidence_sources(es, target_lang="en")
     assert "Molecular evidence option" in out
     assert "evidence-lane--molecular_evidence_option" in out
 
@@ -177,7 +177,7 @@ def test_format_respects_persisted_lane_metadata():
             "evidence_ids": ["100"],
         }
     ]
-    out = _format_evidence_sources(es)
+    out = _format_evidence_sources(es, target_lang="en")
     assert "Standard care" in out
     assert "Molecular evidence option" not in out
 
@@ -191,7 +191,7 @@ def test_format_groups_resistance_lane():
             "significance": "Sensitivity/Response",
         }
     ]
-    out = _format_evidence_sources(es)
+    out = _format_evidence_sources(es, target_lang="en")
     assert "Resistance or avoidance signal" in out
     assert "evidence-lane--resistance_or_avoidance_signal" in out
 
@@ -201,7 +201,7 @@ def test_format_fallback_when_only_oncokb_in_evidence_sources():
     rendered (sans OncoKB)."""
     es = [{"source": "SRC-ONCOKB", "level": "1"}]
     primary = ["SRC-NCCN-MPN-2025", "SRC-ONCOKB", "SRC-ESMO-MPN-2015"]
-    out = _format_evidence_sources(es, primary_sources=primary)
+    out = _format_evidence_sources(es, primary_sources=primary, target_lang="en")
     # OncoKB still suppressed
     assert "ONCOKB" not in out.upper()
     # Non-OncoKB primary sources promoted
@@ -213,7 +213,7 @@ def test_format_fallback_when_only_oncokb_in_evidence_sources():
 
 
 def test_format_fallback_when_evidence_sources_empty():
-    out = _format_evidence_sources([], primary_sources=["SRC-NCCN-NSCLC-2026"])
+    out = _format_evidence_sources([], primary_sources=["SRC-NCCN-NSCLC-2026"], target_lang="en")
     assert "SRC-NCCN-NSCLC-2026" in out
     assert "Phase-2-of-CIViC-pivot" in out
 
@@ -265,7 +265,7 @@ def test_render_actionability_section_skips_oncokb_in_hcp_mode():
             primary_sources=["SRC-NCCN-NSCLC-2026"],
         )
     ])
-    html = _render_variant_actionability(plan)
+    html = _render_variant_actionability(plan, target_lang="en")
     assert "ONCOKB" not in html.upper()
     assert "SRC-CIVIC" in html
     assert "Level A" in html
@@ -288,7 +288,7 @@ def test_render_actionability_section_fallback_when_only_oncokb_in_evidence():
             primary_sources=["SRC-NCCN-MPN-2025", "SRC-ONCOKB", "SRC-ESMO-MPN-2015"],
         )
     ])
-    html = _render_variant_actionability(plan)
+    html = _render_variant_actionability(plan, target_lang="en")
     # OncoKB never surfaces
     assert "ONCOKB" not in html.upper()
     # Fallback citation cards rendered
@@ -337,7 +337,7 @@ def test_render_actionability_section_collapses_duplicate_civic_levels():
             primary_sources=["SRC-NCCN"],
         )
     ])
-    html = _render_variant_actionability(plan)
+    html = _render_variant_actionability(plan, target_lang="en")
     # One Level A line, not three
     assert html.count("Level A") == 1
 

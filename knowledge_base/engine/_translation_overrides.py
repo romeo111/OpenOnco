@@ -124,6 +124,14 @@ OVERRIDES_UK_TO_EN: dict[str, str] = {
 
     # ── Provenance event summaries (mdt_orchestrator._bootstrap_provenance) ─
     # Per-RedFlag-fired summary uses a fixed UA prefix; covered via PREFIX list.
+
+    # ── plan.py selection_reason: fixed-text (no interpolation) templates ──
+    "Лінія терапії не вказана авторами; залишено для розгляду лікарем.":
+        "No authored line_of_therapy; retained for HCP review.",
+    "Варіант лікування поточної лінії.":
+        "Current-line treatment candidate.",
+    "Альтернативний варіант поточної лінії, представлений для розгляду лікарем.":
+        "Current-line alternative presented for HCP consideration.",
 }
 
 
@@ -158,6 +166,72 @@ PREFIX_OVERRIDES_UK_TO_EN: list[tuple[str, str]] = [
     (
         "Підняте питання для",
         "Question raised for",
+    ),
+
+    # ── plan.py selection_reason: templates with interpolated algo_id /
+    # line numbers / step text (`_line_context_reason`,
+    # `_format_current_default_reason`, `generate_plan`'s promoted-default
+    # fallback). Split around the dynamic content — same technique as the
+    # drug-availability / diff-diagnosis fragments above. "step {n}" is
+    # left untouched (English word already, matches the "RedFlag {id}
+    # спрацював на step {n}" convention in mdt_orchestrator.py).
+    (
+        "Кандидат лише попередньої лінії: лінія показання ",
+        "Prior-line candidate only: indication line ",
+    ),
+    (
+        "Кандидат для наступної лінії (секвенування): лінія показання ",
+        "Later-line sequencing candidate: indication line ",
+    ),
+    (
+        ", лінія пацієнта ",
+        ", patient line ",
+    ),
+    (
+        "; не є поточним варіантом лікування.",
+        "; not a current treatment option.",
+    ),
+    (
+        "Попередній основний варіант поточної лінії за алгоритмом ",
+        "Provisional current-line default from algorithm ",
+    ),
+    (
+        ": гілку лікування не визначено (",
+        ": no treatment branch was determined (",
+    ),
+    (
+        "Основний варіант поточної лінії обрано алгоритмом ",
+        "Primary current-line option selected by algorithm ",
+    ),
+    (
+        "; визначальний RedFlag: ",
+        "; branch-driving RedFlag: ",
+    ),
+    (
+        "; спрацювали RedFlags: ",
+        "; fired RedFlags: ",
+    ),
+    (
+        "Основний варіант поточної лінії за алгоритмом ",
+        "Primary current-line option from algorithm ",
+    ),
+    (
+        "; трасування рішення не зафіксовано.",
+        "; no decision trace was recorded.",
+    ),
+    (
+        "; деталі — у трасуванні рішення.",
+        "; review the decision trace for details.",
+    ),
+    (
+        ": обраний за замовчуванням варіант було відфільтровано; "
+        "підвищено перший залишковий варіант поточної лінії.",
+        ": the selected default was filtered; promoted the first "
+        "remaining current-line track.",
+    ),
+    (
+        "резервний шлях",
+        "the fallback path",
     ),
 ]
 

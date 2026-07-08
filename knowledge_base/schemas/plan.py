@@ -153,6 +153,7 @@ class VariantActionabilityHit(Base):
     escat_tier: str                   # "IA"|"IB"|"IIA"|"IIB"|"IIIA"|"IIIB"|"IV"|"X"
     evidence_sources: list[dict] = Field(default_factory=list)
     evidence_summary: str
+    evidence_summary_ua: Optional[str] = None  # translated companion; None if not yet drafted
     recommended_combinations: list[str] = Field(default_factory=list)
     primary_sources: list[str] = Field(default_factory=list)  # SRC-* IDs
 

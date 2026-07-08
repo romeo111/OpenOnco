@@ -430,21 +430,20 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     # Section headers
     "treatment_options":           {"uk": "Варіанти лікування", "en": "Treatment options"},
     "etiological_driver":          {"uk": "Етіологічний драйвер", "en": "Etiological driver"},
-    "etiological_driver_label":    {"uk": "Etiological driver · etiologically_driven archetype",
-                                    "en": "Etiological driver · etiologically_driven archetype"},
-    "pretreatment":                {"uk": "Pre-treatment investigations",
+    "etiological_driver_label":    {"uk": "Архетип", "en": "Archetype"},
+    "pretreatment":                {"uk": "Обстеження перед лікуванням",
                                     "en": "Pre-treatment investigations"},
     "pretreatment_sub":            {"uk": "Дослідження перед стартом терапії · критичні / стандарт / бажано · поєднані по треках",
                                     "en": "Investigations before treatment start · critical / standard / desired · merged across tracks"},
-    "redflags_pro_contra":         {"uk": "Red flags — PRO / CONTRA aggressive",
+    "redflags_pro_contra":         {"uk": "RedFlags — ЗА / ПРОТИ агресивного лікування",
                                     "en": "Red flags — PRO / CONTRA aggressive"},
     "what_not":                    {"uk": "Що НЕ робити", "en": "What NOT to do"},
     "what_not_sub":                {"uk": "Прямі прохібітивні правила, кожне з обґрунтуванням у regimen / supportive care / contraindication",
                                     "en": "Explicit prohibitive rules, each grounded in a regimen / supportive care / contraindication entity"},
-    "monitoring":                  {"uk": "Monitoring schedule", "en": "Monitoring schedule"},
+    "monitoring":                  {"uk": "Моніторинг", "en": "Monitoring schedule"},
     "monitoring_sub":              {"uk": "Графік моніторингу за фазами лікування",
                                     "en": "Monitoring schedule by treatment phase"},
-    "timeline":                    {"uk": "Timeline", "en": "Timeline"},
+    "timeline":                    {"uk": "Хронологія лікування", "en": "Timeline"},
     "timeline_sub":                {"uk": "Хронологія лікування — derived from regimen + monitoring schedule",
                                     "en": "Treatment timeline — derived from regimen + monitoring schedule"},
     "skills_required":             {"uk": "Скіли (required) — обов'язкові віртуальні спеціалісти",
@@ -453,7 +452,7 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
                                     "en": "Skills (recommended) — for consideration"},
     "skills_optional":             {"uk": "Скіли (optional) — опціональні",
                                     "en": "Skills (optional)"},
-    "mdt_brief":                   {"uk": "MDT brief", "en": "MDT brief"},
+    "mdt_brief":                   {"uk": "MDT: стислий огляд", "en": "MDT brief"},
     "open_questions":              {"uk": "Питання для обговорення", "en": "Discussion questions"},
     "data_quality":                {"uk": "Якість даних", "en": "Data quality"},
     "dq_status_complete":          {"uk": "Готово до розгляду MDT", "en": "Complete for MDT review"},
@@ -496,8 +495,48 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "dq_biomarker_action_constraint": {"uk": "Очікуване значення/умова", "en": "Expected/constraint"},
     "dq_more_missing_data":        {"uk": "більше відсутніх пунктів даних", "en": "more missing data items"},
     "dq_more_missing_biomarkers":  {"uk": "більше відсутніх вимог до біомаркерів", "en": "more missing biomarker requirements"},
-    "blocking":                    {"uk": "BLOCKING", "en": "BLOCKING"},
-    "sources_cited":               {"uk": "Sources cited", "en": "Sources cited"},
+    "blocking":                    {"uk": "БЛОКУЄ", "en": "BLOCKING"},
+    "sources_cited":               {"uk": "Цитовані джерела", "en": "Sources cited"},
+    "primary_track_heading":       {"uk": "Пріоритетна опція поточної лінії", "en": "Primary current-line option"},
+    "other_alternatives_sub":      {"uk": "Та сама лінія лікування; переглянути, якщо зміняться біомаркер, доступність, протипоказання або клінічний контекст пацієнта.",
+                                    "en": "Same treatment line; review when biomarker, access, contraindication, or patient-context assumptions change."},
+    "sequencing_heading":          {"uk": "Секвенування / кандидати не поточної лінії", "en": "Sequencing / non-current-line candidates"},
+    "sequencing_sub":              {"uk": "Показано для аудиту та контексту майбутніх ліній; не є частиною поточного вибору лікування.",
+                                    "en": "Shown for audit and future-line context; not part of the current treatment choice."},
+    "line_prefix":                 {"uk": "лінія", "en": "line"},
+    "line_not_authored":           {"uk": "лінія не вказана", "en": "line not authored"},
+    "seq_th_indication":           {"uk": "Показання", "en": "Indication"},
+    "seq_th_authored_line":        {"uk": "Вказана лінія", "en": "Authored line"},
+    "seq_th_regimen":              {"uk": "Схема", "en": "Regimen"},
+    "seq_th_why_separated":        {"uk": "Чому окремо", "en": "Why separated"},
+    "mdt_talk_tree_more_prefix":   {"uk": "ще", "en": "more"},
+    "evidence_level_prefix":       {"uk": "Рівень", "en": "Level"},
+    "resistance_evidence_badge":   {"uk": "⚠ Резистентність", "en": "⚠ Resistance"},
+    "resistance_evidence_title":   {"uk": "Доказ резистентності", "en": "Resistance evidence"},
+    "evidence_lane_standard_care":     {"uk": "Стандарт лікування", "en": "Standard care"},
+    "evidence_lane_molecular_option":  {"uk": "Молекулярна опція", "en": "Molecular evidence option"},
+    "evidence_lane_resistance":        {"uk": "Сигнал резистентності/уникнення", "en": "Resistance or avoidance signal"},
+    "evidence_lane_trial":             {"uk": "Дослідницька опція", "en": "Trial or research option"},
+    "evidence_lane_insufficient":      {"uk": "Недостатньо доказів", "en": "Insufficient evidence"},
+    "evidence_fallback_note":     {"uk": "Джерела цитовані з клінічних настанов; рівень доказовості за кожним джерелом ще не структуровано.",
+                                    "en": "Evidence cited from clinical guidelines; per-source evidence levels not yet structured. See Phase-2-of-CIViC-pivot for re-cite roadmap."},
+    "no_plan_title":              {"uk": "OpenOnco — індикацій не знайдено", "en": "OpenOnco — no indications found"},
+    "no_plan_heading":            {"uk": "⚠ План лікування не згенеровано", "en": "⚠ No treatment plan generated"},
+    "no_plan_body":               {"uk": "Рушій не знайшов <strong>активних показань</strong> для цього профілю пацієнта.",
+                                    "en": "The engine matched <strong>no active indications</strong> for this patient profile."},
+    "no_plan_engine_details":     {"uk": "Деталі рушія:", "en": "Engine details:"},
+    "no_plan_no_warning":         {"uk": "Рушій не повернув конкретного попередження.", "en": "No specific warning was returned by the engine."},
+    "no_plan_common_causes":      {"uk": "Типові причини:", "en": "Common causes:"},
+    "no_plan_cause_disease":      {"uk": "Захворювання ще не покрито — перевірте <a href='/diseases.html'>покриття захворювань</a>",
+                                    "en": "Disease not yet covered — check <a href='/diseases.html'>disease coverage</a>"},
+    "no_plan_cause_profile":      {"uk": "У профілі пацієнта відсутнє поле <code>disease.id</code> або <code>disease.icd_o_3</code>",
+                                    "en": "Patient profile missing <code>disease.id</code> or <code>disease.icd_o_3</code>"},
+    "no_plan_cause_blocked":      {"uk": "Усі відповідні треки лікування заблоковано порогом ECOG PS ≥ 4 або активними протипоказаннями",
+                                    "en": "All matching treatment tracks blocked by ECOG PS ≥ 4 gate or active contraindications"},
+    "no_plan_cause_diagnostic":   {"uk": "Діагностичний профіль без поля <code>disease.suspicion</code>",
+                                    "en": "Diagnostic profile without <code>disease.suspicion</code> field"},
+    "no_plan_review":             {"uk": "Перегляньте JSON пацієнта, заповніть обов'язкові поля та згенеруйте план знову.",
+                                    "en": "Review the patient JSON, fill required fields, and generate again."},
     # Track labels (matches plan.py track id semantics)
     "track_standard":              {"uk": "Стандартний план", "en": "Standard plan"},
     "track_aggressive":            {"uk": "Агресивний план", "en": "Aggressive plan"},
@@ -508,27 +547,27 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "track_local_therapy":         {"uk": "Локальна терапія", "en": "Local therapy plan"},
     "track_transplant":            {"uk": "Трансплантаційний план", "en": "Transplant plan"},
     # Document headers
-    "doc_label_plan":              {"uk": "OpenOnco · Treatment Plan", "en": "OpenOnco · Treatment Plan"},
+    "doc_label_plan":              {"uk": "OpenOnco · План лікування", "en": "OpenOnco · Treatment Plan"},
     "doc_title_plan_prefix":       {"uk": "План лікування", "en": "Treatment plan"},
-    "doc_label_brief":             {"uk": "OpenOnco · Workup Brief · DIAGNOSTIC PHASE",
+    "doc_label_brief":             {"uk": "OpenOnco · Brief тумор-борду · ДІАГНОСТИЧНА ФАЗА",
                                     "en": "OpenOnco · Workup Brief · DIAGNOSTIC PHASE"},
     "doc_title_brief":             {"uk": "Brief підготовки до тумор-борду", "en": "Pre-tumor-board workup brief"},
-    "doc_label_revision":          {"uk": "OpenOnco · Revision Note", "en": "OpenOnco · Revision Note"},
+    "doc_label_revision":          {"uk": "OpenOnco · Нотатка про перегляд плану", "en": "OpenOnco · Revision Note"},
     "doc_title_revision":          {"uk": "Перегляд плану", "en": "Plan revision"},
     # Banners and labels
-    "diagnostic_banner_strong":    {"uk": "⚠ DIAGNOSTIC PHASE — TREATMENT PLAN NOT YET APPLICABLE",
+    "diagnostic_banner_strong":    {"uk": "⚠ ДІАГНОСТИЧНА ФАЗА — ПЛАН ЛІКУВАННЯ ЩЕ НЕ ЗАСТОСОВНИЙ",
                                     "en": "⚠ DIAGNOSTIC PHASE — TREATMENT PLAN NOT YET APPLICABLE"},
     "patient_label":               {"uk": "Пацієнт", "en": "Patient"},
     "diagnosis_label":             {"uk": "Діагноз", "en": "Diagnosis"},
     "moh_icd10_label":             {"uk": "МОЗ / ICD-10", "en": "MOH / ICD-10"},
     "stage_label":                 {"uk": "Стадія", "en": "Stage"},
     "histology_label":             {"uk": "Гістологія", "en": "Histology"},
-    "default_badge":                {"uk": "★ DEFAULT", "en": "★ DEFAULT"},
-    "indication_label":            {"uk": "Indication", "en": "Indication"},
-    "regimen_label":               {"uk": "Regimen", "en": "Regimen"},
-    "supportive_label":            {"uk": "Supportive care", "en": "Supportive care"},
-    "ci_label":                    {"uk": "Hard contraindications", "en": "Hard contraindications"},
-    "reason_label":                {"uk": "Reason", "en": "Reason"},
+    "default_badge":                {"uk": "★ ОСНОВНИЙ", "en": "★ DEFAULT"},
+    "indication_label":            {"uk": "Показання", "en": "Indication"},
+    "regimen_label":               {"uk": "Схема лікування", "en": "Regimen"},
+    "supportive_label":            {"uk": "Супровідна терапія", "en": "Supportive care"},
+    "ci_label":                    {"uk": "Абсолютні протипоказання", "en": "Hard contraindications"},
+    "reason_label":                {"uk": "Обґрунтування", "en": "Reason"},
     # Skill catalog
     "skill_catalog_prefix":        {"uk": "Технічні метадані MDT skills", "en": "Technical MDT skill metadata"},
     "skill_catalog_active_in":     {"uk": "активовано в цьому плані", "en": "activated in this plan"},
@@ -537,9 +576,9 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "th_specialist":               {"uk": "Спеціаліст", "en": "Specialist"},
     "th_skill_id":                 {"uk": "skill_id", "en": "skill_id"},
     "th_version":                  {"uk": "Версія", "en": "Version"},
-    "th_last_reviewed":            {"uk": "Last reviewed", "en": "Last reviewed"},
-    "th_signoffs":                 {"uk": "Sign-offs", "en": "Sign-offs"},
-    "th_domain":                   {"uk": "Domain", "en": "Domain"},
+    "th_last_reviewed":            {"uk": "Востаннє переглянуто", "en": "Last reviewed"},
+    "th_signoffs":                 {"uk": "Підписання", "en": "Sign-offs"},
+    "th_domain":                   {"uk": "Домен", "en": "Domain"},
     "th_id":                       {"uk": "ID", "en": "ID"},
     "th_name":                     {"uk": "Назва", "en": "Name"},
     "th_priority":                 {"uk": "Пріоритет", "en": "Priority"},
@@ -567,11 +606,11 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "contra_aggressive_sub":       {"uk": "Жорсткі протипоказання до ескалації",
                                     "en": "Hard contraindications to escalation"},
     # Timeline phase names
-    "tl_baseline":                 {"uk": "Baseline", "en": "Baseline"},
-    "tl_induction":                {"uk": "Induction", "en": "Induction"},
-    "tl_response":                 {"uk": "Response assessment", "en": "Response assessment"},
-    "tl_maintenance":              {"uk": "Maintenance", "en": "Maintenance"},
-    "tl_followup":                 {"uk": "Follow-up", "en": "Follow-up"},
+    "tl_baseline":                 {"uk": "Вихідний рівень", "en": "Baseline"},
+    "tl_induction":                {"uk": "Індукція", "en": "Induction"},
+    "tl_response":                 {"uk": "Оцінка відповіді", "en": "Response assessment"},
+    "tl_maintenance":              {"uk": "Підтримуюча терапія", "en": "Maintenance"},
+    "tl_followup":                 {"uk": "Подальше спостереження", "en": "Follow-up"},
     # Disclaimers
     "medical_disclaimer":          {
         "uk": "Цей документ — інформаційний ресурс для підтримки обговорення в "
@@ -581,7 +620,7 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
               "discussion (per CHARTER §11). It is not a system that makes clinical "
               "decisions. Every recommendation must be verified by the treating physician.",
     },
-    "fda_disclosure_label":        {"uk": "Per FDA non-device CDS positioning (CHARTER §15):",
+    "fda_disclosure_label":        {"uk": "Відповідно до позиціонування FDA як non-device CDS (CHARTER §15):",
                                     "en": "Per FDA non-device CDS positioning (CHARTER §15):"},
     # Variant actionability (ESCAT)
     "actionability_heading":       {"uk": "Клінічна значущість мутацій (ESCAT)",
@@ -661,25 +700,25 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "matrix_th_option":            {"uk": "Опція", "en": "Option"},
     "matrix_th_registration":      {"uk": "Реєстрація UA", "en": "UA registration"},
     "matrix_th_nszu":              {"uk": "НСЗУ", "en": "NSZU"},
-    "matrix_th_cost":              {"uk": "Cost orientation", "en": "Cost orientation"},
-    "matrix_th_pathway":           {"uk": "Access pathway", "en": "Access pathway"},
+    "matrix_th_cost":              {"uk": "Орієнтовна вартість", "en": "Cost orientation"},
+    "matrix_th_pathway":           {"uk": "Шлях доступу", "en": "Access pathway"},
     "matrix_avail_registered":     {"uk": "зареєстровано", "en": "registered"},
     "matrix_avail_not_registered": {"uk": "не зареєстровано", "en": "not registered"},
     "matrix_avail_covered":        {"uk": "покривається", "en": "covered"},
-    "matrix_avail_oop":            {"uk": "out-of-pocket", "en": "out-of-pocket"},
+    "matrix_avail_oop":            {"uk": "власний кошт", "en": "out-of-pocket"},
     "matrix_avail_unknown":        {"uk": "— невідомо", "en": "— unknown"},
-    "matrix_path_trial_sponsor":   {"uk": "Trial sponsor", "en": "Trial sponsor"},
-    "matrix_path_nszu_formulary":  {"uk": "НСЗУ formulary", "en": "NSZU formulary"},
-    "matrix_path_not_recorded":    {"uk": "not recorded", "en": "not recorded"},
+    "matrix_path_trial_sponsor":   {"uk": "Спонсор дослідження", "en": "Trial sponsor"},
+    "matrix_path_nszu_formulary":  {"uk": "Формуляр НСЗУ", "en": "NSZU formulary"},
+    "matrix_path_not_recorded":    {"uk": "не зафіксовано", "en": "not recorded"},
     "matrix_cost_trial":           {"uk": "0 для пацієнта (sponsor pays)",
                                     "en": "0 for patient (sponsor pays)"},
     "matrix_cost_unknown":         {"uk": "₴-? — verify pathway",
                                     "en": "₴-? — verify pathway"},
     "matrix_cost_label_nszu":      {"uk": "НСЗУ:", "en": "NSZU:"},
-    "matrix_cost_label_selfpay":   {"uk": "self-pay:", "en": "self-pay:"},
-    "matrix_disclaimer":           {"uk": "Інформація про ціни — orientation. Перевіряти у конкретній аптеці / foundation / трайл-сайті.",
+    "matrix_cost_label_selfpay":   {"uk": "самооплата:", "en": "self-pay:"},
+    "matrix_disclaimer":           {"uk": "Інформація про ціни — орієнтовна. Перевіряти у конкретній аптеці / фонді / на сайті дослідження.",
                                     "en": "Cost information is orientation. Verify with a specific pharmacy / foundation / trial site."},
-    "matrix_status_updated":       {"uk": "Status updated:", "en": "Status updated:"},
+    "matrix_status_updated":       {"uk": "Статус оновлено:", "en": "Status updated:"},
     # ── MDT orchestrator strings ──────────────────────────────────────────
     # The orchestrator (knowledge_base/engine/mdt_orchestrator.py) emits
     # role `reason`s and OpenQuestion `question`/`rationale` strings as
@@ -800,6 +839,17 @@ def _t(key: str, target_lang: str = "uk") -> str:
 def _track_label(track_id: str, target_lang: str = "uk") -> str:
     """Map a track_id to its localized display label."""
     return _t(f"track_{track_id}", target_lang) or track_id
+
+
+def _uk_plural(n: int, one: str, few: str, many: str) -> str:
+    """Ukrainian plural-form selection for a count (1/2-4/5+ with the
+    11-14 exception), e.g. трек/треки/треків, крок/кроки/кроків."""
+    n_abs = abs(n)
+    if n_abs % 10 == 1 and n_abs % 100 != 11:
+        return one
+    if 2 <= n_abs % 10 <= 4 and not (12 <= n_abs % 100 <= 14):
+        return few
+    return many
 
 
 def _localize_html(html_text: str, target_lang: str) -> str:
@@ -944,7 +994,7 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
         items = []
         for q in qs:
             cls = " blocking" if q.blocking else ""
-            tag = '<span class="badge badge--blocking">BLOCKING</span> ' if q.blocking else ""
+            tag = f'<span class="badge badge--blocking">{_h(_t("blocking", target_lang))}</span> ' if q.blocking else ""
             items.append(
                 f'<li class="{cls.strip()}">'
                 f'<div class="q-id">{tag}{_h(q.id)}</div>'
@@ -967,7 +1017,7 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
             topic = getattr(node, "topic", "")
             action = getattr(node, "action", "")
             blocking = getattr(node, "blocking", False)
-            badge = '<span class="badge badge--blocking">BLOCKING</span>' if blocking else ""
+            badge = f'<span class="badge badge--blocking">{_h(_t("blocking", target_lang))}</span>' if blocking else ""
             rows.append(
                 "<tr>"
                 f'<td class="mono">{_h(step if step is not None else "")}</td>'
@@ -977,12 +1027,19 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
                 "</tr>"
             )
         more = len(talk_tree) - 14
-        more_txt = (
-            f'<div class="section-sub">+{more} more MDT talk steps.</div>'
-            if more > 0 else ""
-        )
+        if more > 0:
+            if target_lang == "uk":
+                more_txt = f'<div class="section-sub">+{more} {_t("mdt_talk_tree_more_prefix", target_lang)} {_uk_plural(more, "крок", "кроки", "кроків")} обговорення MDT.</div>'
+            else:
+                more_txt = f'<div class="section-sub">+{more} more MDT talk steps.</div>'
+        else:
+            more_txt = ""
+        if target_lang == "uk":
+            tree_heading = f'Дерево обговорення MDT ({len(talk_tree)} {_uk_plural(len(talk_tree), "крок", "кроки", "кроків")})'
+        else:
+            tree_heading = f"MDT talk tree ({len(talk_tree)} steps)"
         parts.append(
-            f"<h3>MDT talk tree ({len(talk_tree)} steps)</h3>"
+            f"<h3>{_h(tree_heading)}</h3>"
             '<table class="tbl"><thead><tr>'
             '<th>#</th><th>Owner</th><th>Topic</th><th>Action</th>'
             '</tr></thead><tbody>'
@@ -1659,15 +1716,26 @@ def _render_monitoring_phases(plan, target_lang: str = "uk") -> str:
         for ph in phases:
             tests = ", ".join(ph.get("tests") or []) or "—"
             checks = ph.get("checkpoints") or []
+            # NOTE: MonitoringPhase.window/visits/checkpoints are free-text
+            # authored fields with no `_ua` companion in the schema
+            # (specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md §12 has no UA
+            # convention for this entity — unlike every other entity type).
+            # `_h_t` was previously called here assuming these strings were
+            # already Ukrainian; they are English source text, so `_h_t`
+            # silently no-op'd (and would mistranslate if a live client
+            # were ever configured, since source_lang defaults to "uk").
+            # Plain-escaping until the schema gains window_ua/checkpoints_ua
+            # and content is translated — tracked as a known gap, not
+            # invented here per CLAUDE.md's "don't invent fields" rule.
             checks_html = (
                 "<ul style='padding-left:16px;margin:0;'>"
-                + "".join(f"<li>{_h_t(c, target_lang)}</li>" for c in checks)
+                + "".join(f"<li>{_h(c)}</li>" for c in checks)
                 + "</ul>"
             ) if checks else "—"
             rows.append(
-                f'<tr><td><strong>{_h_t(ph.get("name", "?"), target_lang)}</strong></td>'
-                f'<td>{_h_t(ph.get("window", "—"), target_lang)}</td>'
-                f'<td style="font-family:var(--font-mono);font-size:11px;">{_h_t(tests, target_lang)}</td>'
+                f'<tr><td><strong>{_h(_monitoring_phase_name(ph.get("name", "?"), target_lang))}</strong></td>'
+                f'<td>{_h(ph.get("window", "—"))}</td>'
+                f'<td style="font-family:var(--font-mono);font-size:11px;">{_h(tests)}</td>'
                 f'<td>{checks_html}</td></tr>'
             )
         blocks.append(
@@ -1715,7 +1783,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--baseline">'
                 f'<div class="name">{_h(_t("tl_baseline", target_lang))}</div>'
-                f'<div class="window">{_h_t(baseline.get("window", "—"), target_lang)}</div>'
+                f'<div class="window">{_h(baseline.get("window", "—"))}</div>'
                 '</div>'
             )
 
@@ -1742,7 +1810,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--response">'
                 f'<div class="name">{_h(_t("tl_response", target_lang))}</div>'
-                f'<div class="window">{_h_t(ra.get("window", "—"), target_lang)}</div>'
+                f'<div class="window">{_h(ra.get("window", "—"))}</div>'
                 '</div>'
             )
 
@@ -1752,7 +1820,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--maintenance">'
                 f'<div class="name">{_h(_t("tl_maintenance", target_lang))}</div>'
-                f'<div class="window">{_h_t(maint.get("window", "—"), target_lang)}</div>'
+                f'<div class="window">{_h(maint.get("window", "—"))}</div>'
                 '</div>'
             )
 
@@ -1765,7 +1833,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--followup">'
                 f'<div class="name">{_h(_t("tl_followup", target_lang))}</div>'
-                f'<div class="window">{_h_t(fu.get("window", "—"), target_lang)}</div>'
+                f'<div class="window">{_h(fu.get("window", "—"))}</div>'
                 '</div>'
             )
 
@@ -2266,6 +2334,67 @@ _BRIDGING_OPTIONS_LABEL = {
     "en": "If wait for main therapy >2 weeks — acceptable bridging regimens",
 }
 
+# MonitoringPhase.name vocabulary (closed set — KNOWLEDGE_SCHEMA_SPECIFICATION
+# §12 doesn't define a UA companion field for it; this is a render-layer
+# lookup, not a KB content change). Unknown names pass through unchanged.
+_MONITORING_PHASE_NAME_UK = {
+    "baseline": "Вихідний рівень",
+    "on_treatment": "Під час лікування",
+    "on_treatment_btki": "Під час лікування BTKi",
+    "on_treatment_veno": "Під час лікування VenO",
+    "response_assessment": "Оцінка відповіді",
+    "interim_response_assessment": "Проміжна оцінка відповіді",
+    "end_of_treatment": "Завершення лікування",
+    "follow_up": "Подальше спостереження",
+    "follow_up_short": "Спостереження (короткострокове)",
+    "follow_up_long": "Спостереження (довгострокове)",
+    "induction": "Індукція",
+    "maintenance": "Підтримуюча терапія",
+    "progression_monitoring": "Моніторинг прогресування",
+    "active_surveillance_long": "Активний нагляд (довгостроковий)",
+    "active_surveillance_short": "Активний нагляд (короткостроковий)",
+    "adult_annual_surveillance": "Щорічний нагляд (дорослі)",
+    "alternating_imaging_age_25_29": "Почергова візуалізація, вік 25-29",
+    "alternating_imaging_age_30_plus": "Почергова візуалізація, вік 30+",
+    "attenuated_fap_surveillance": "Нагляд при атенуйованому FAP",
+    "cardiac_surveillance": "Кардіологічний нагляд",
+    "classical_fap_pediatric_surveillance": "Педіатричний нагляд при класичному FAP",
+    "crc_surveillance_active": "Активний нагляд при колоректальному раку",
+    "dysplasia_or_eac_pathway": "Шлях при дисплазії / аденокарциномі стравоходу",
+    "endocrine_surveillance": "Ендокринологічний нагляд",
+    "gynecologic_surveillance_annual": "Щорічний гінекологічний нагляд",
+    "high_risk_annual_surveillance": "Щорічний нагляд групи високого ризику",
+    "interim_surveillance": "Проміжний нагляд",
+    "low_risk_q5y_surveillance": "Нагляд групи низького ризику (кожні 5 років)",
+    "neurocognitive_audiologic_renal_surveillance": "Нейрокогнітивний / аудіологічний / нирковий нагляд",
+    "non_dysplastic_long_segment": "Без дисплазії, довгий сегмент",
+    "non_dysplastic_short_segment": "Без дисплазії, короткий сегмент",
+    "pediatric_intensive_surveillance": "Інтенсивний педіатричний нагляд",
+    "pediatric_surveillance": "Педіатричний нагляд",
+    "post_colectomy_surveillance": "Нагляд після колектомії",
+    "post_curative_surveillance": "Нагляд після куративного лікування",
+    "post_resection_surveillance": "Нагляд після резекції",
+    "post_rrso_surveillance": "Нагляд після профілактичної сальпінго-оваріоектомії (RRSO)",
+    "post_surgical_followup": "Спостереження після операції",
+    "post_surgical_or_age_75_plus": "Після операції або вік 75+",
+    "post_thyroidectomy_lifelong": "Довічний нагляд після тиреоїдектомії",
+    "post_transplant_consolidation": "Консолідація після трансплантації",
+    "post_treatment_immediate": "Одразу після лікування",
+    "pre_thyroidectomy_surveillance": "Нагляд перед тиреоїдектомією",
+    "psychosocial_lifestyle_fertility": "Психосоціальний статус, спосіб життя, фертильність",
+    "recall_imaging": "Повторна візуалізація",
+    "routine_surveillance": "Рутинний нагляд",
+    "second_malignancy_surveillance": "Нагляд щодо другої пухлини",
+    "standard_risk_q1_2y_surveillance": "Нагляд групи стандартного ризику (кожні 1-2 роки)",
+    "upper_gi_surveillance_spigelman": "Нагляд верхніх відділів ШКТ (шкала Spigelman)",
+}
+
+
+def _monitoring_phase_name(name: str, target_lang: str = "uk") -> str:
+    if target_lang == "uk":
+        return _MONITORING_PHASE_NAME_UK.get(name, name)
+    return name
+
 
 def _render_nszu_badge(drug_entity, patient_disease_id, disease_names, target_lang="uk") -> str:
     """One drug → one `<span class="nszu-badge nszu-{status}">…</span>`.
@@ -2530,11 +2659,11 @@ def _is_resistance_entry(direction, significance) -> bool:
 
 
 _EVIDENCE_LANE_LABELS = {
-    "standard_care": "Standard care",
-    "molecular_evidence_option": "Molecular evidence option",
-    "resistance_or_avoidance_signal": "Resistance or avoidance signal",
-    "trial_research_option": "Trial or research option",
-    "insufficient_evidence": "Insufficient evidence",
+    "standard_care": "evidence_lane_standard_care",
+    "molecular_evidence_option": "evidence_lane_molecular_option",
+    "resistance_or_avoidance_signal": "evidence_lane_resistance",
+    "trial_research_option": "evidence_lane_trial",
+    "insufficient_evidence": "evidence_lane_insufficient",
 }
 
 
@@ -2562,7 +2691,8 @@ def _evidence_lane_for_source_ref(es, is_resistance: bool) -> str:
 
 
 def _format_evidence_sources(
-    evidence_sources: list, primary_sources: Optional[list] = None
+    evidence_sources: list, primary_sources: Optional[list] = None,
+    target_lang: str = "uk",
 ) -> str:
     """Render evidence_sources entries as a short list per BMA cell.
 
@@ -2615,7 +2745,8 @@ def _format_evidence_sources(
         if is_resistance:
             badge = (
                 ' <span class="evidence-resistance" '
-                'title="Resistance evidence">⚠ Resistance</span>'
+                f'title="{_h(_t("resistance_evidence_title", target_lang))}">'
+                f'{_h(_t("resistance_evidence_badge", target_lang))}</span>'
             )
         else:
             badge = ""
@@ -2635,17 +2766,17 @@ def _format_evidence_sources(
         )
 
         lane_items[lane].append(
-            f'<li>{source_label}: Level {_h(level)}{badge}{suffix}</li>'
+            f'<li>{source_label}: {_h(_t("evidence_level_prefix", target_lang))} {_h(level)}{badge}{suffix}</li>'
         )
 
     rendered_lanes: list[str] = []
-    for lane, label in _EVIDENCE_LANE_LABELS.items():
+    for lane, label_key in _EVIDENCE_LANE_LABELS.items():
         items = lane_items[lane]
         if not items:
             continue
         rendered_lanes.append(
             f'<div class="evidence-lane evidence-lane--{_h(lane)}">'
-            f'<div class="evidence-lane-title">{_h(label)}</div>'
+            f'<div class="evidence-lane-title">{_h(_t(label_key, target_lang))}</div>'
             f'<ul class="evidence-sources">{"".join(items)}</ul>'
             "</div>"
         )
@@ -2670,9 +2801,7 @@ def _format_evidence_sources(
     if fallback_items:
         note = (
             '<div class="evidence-fallback-note">'
-            'Evidence cited from clinical guidelines; per-source evidence '
-            'levels not yet structured. See Phase-2-of-CIViC-pivot for '
-            're-cite roadmap.'
+            f'{_h(_t("evidence_fallback_note", target_lang))}'
             '</div>'
         )
         return (
@@ -2796,8 +2925,14 @@ def _render_variant_actionability(
             evidence_cell = _format_evidence_sources(
                 getattr(h, "evidence_sources", None) or [],
                 primary_sources=list(h.primary_sources or []),
+                target_lang=target_lang,
             )
-            summary = _h_t(h.evidence_summary or "", target_lang)
+            summary_src = (
+                h.evidence_summary_ua
+                if target_lang == "uk" and getattr(h, "evidence_summary_ua", None)
+                else h.evidence_summary
+            )
+            summary = _h(summary_src or "")
             combos = (
                 "<br>".join(_h(c) for c in (h.recommended_combinations or []))
                 or '<span style="color:var(--gray-500)">—</span>'
@@ -2981,29 +3116,30 @@ def render_plan_html(
                 f"<li><code>{_h(w)}</code></li>" for w in warnings
             )
             warning_html = (
-                "<p><strong>Engine details:</strong></p>"
+                f'<p><strong>{_h(_t("no_plan_engine_details", target_lang))}</strong></p>'
                 f"<ul style='line-height:1.65'>{warning_items}</ul>"
             )
         else:
             warning_html = (
-                "<p><strong>Engine details:</strong> "
-                "No specific warning was returned by the engine.</p>"
+                f'<p><strong>{_h(_t("no_plan_engine_details", target_lang))}</strong> '
+                f'{_h(_t("no_plan_no_warning", target_lang))}</p>'
             )
         return _doc_shell(
-            "OpenOnco — no indications found",
+            _t("no_plan_title", target_lang),
             "<div style='padding:2rem 2.5rem;font-family:system-ui,sans-serif;max-width:52rem'>"
-            "<h2 style='color:#c0392b;margin-top:0'>⚠ No treatment plan generated</h2>"
-            "<p>The engine matched <strong>no active indications</strong> for this patient profile.</p>"
+            f'<h2 style=\'color:#c0392b;margin-top:0\'>{_h(_t("no_plan_heading", target_lang))}</h2>'
+            f'<p>{_t("no_plan_body", target_lang)}</p>'
             f"{warning_html}"
-            "<p><strong>Common causes:</strong></p>"
+            f'<p><strong>{_h(_t("no_plan_common_causes", target_lang))}</strong></p>'
             "<ul style='line-height:1.8'>"
-            "<li>Disease not yet covered — check <a href='/diseases.html'>disease coverage</a></li>"
-            "<li>Patient profile missing <code>disease.id</code> or <code>disease.icd_o_3</code></li>"
-            "<li>All matching treatment tracks blocked by ECOG PS ≥ 4 gate or active contraindications</li>"
-            "<li>Diagnostic profile without <code>disease.suspicion</code> field</li>"
+            f'<li>{_t("no_plan_cause_disease", target_lang)}</li>'
+            f'<li>{_t("no_plan_cause_profile", target_lang)}</li>'
+            f'<li>{_t("no_plan_cause_blocked", target_lang)}</li>'
+            f'<li>{_t("no_plan_cause_diagnostic", target_lang)}</li>'
             "</ul>"
-            "<p style='color:#666;font-size:.9rem'>Review the patient JSON, fill required fields, and generate again.</p>"
+            f'<p style=\'color:#666;font-size:.9rem\'>{_h(_t("no_plan_review", target_lang))}</p>'
             "</div>",
+            target_lang,
         )
 
     fda = plan.fda_compliance
@@ -3014,8 +3150,8 @@ def render_plan_html(
     cross_link = _render_mode_toggle(sibling_link, "Версія для пацієнта →")
     body.append(
         '<div class="doc-header">'
-        '<div class="doc-label">OpenOnco · Treatment Plan</div>'
-        f'<div class="doc-title">План лікування — {_h(disease_title)}</div>'
+        f'<div class="doc-label">{_h(_t("doc_label_plan", target_lang))}</div>'
+        f'<div class="doc-title">{_h(_t("doc_title_plan_prefix", target_lang))} — {_h(disease_title)}</div>'
         f'<div class="doc-sub">{_h(plan.id)} · v{_h(plan.version)} · {_h(plan.generated_at[:10])}</div>'
         f'{cross_link}'
         '</div>'
@@ -3044,16 +3180,16 @@ def render_plan_html(
     for t in plan.tracks:
         track_class = f"track track--{(t.track_id or 'standard')}"
         if t.is_default:
-            badge = '<span class="track-default-badge">★ DEFAULT</span>'
+            badge = f'<span class="track-default-badge">{_h(_t("default_badge", target_lang))}</span>'
         else:
             badge = ""
         regimen_str = (t.regimen_data or {}).get("name", "—") if t.regimen_data else "—"
         sup = (
-            f'<dt>Supportive care</dt><dd>{_h(", ".join(s.get("id", "?") for s in t.supportive_care_data))}</dd>'
+            f'<dt>{_h(_t("supportive_label", target_lang))}</dt><dd>{_h(", ".join(s.get("id", "?") for s in t.supportive_care_data))}</dd>'
             if t.supportive_care_data else ""
         )
         ci = (
-            f'<dt>Hard contraindications</dt><dd>{_h(", ".join(c.get("id", "?") for c in t.contraindications_data))}</dd>'
+            f'<dt>{_h(_t("ci_label", target_lang))}</dt><dd>{_h(", ".join(c.get("id", "?") for c in t.contraindications_data))}</dd>'
             if t.contraindications_data else ""
         )
         # Treatment phases — phase-aware drug list (PR2 of phases-refactor).
@@ -3107,27 +3243,32 @@ def render_plan_html(
             f'<div class="track-head"><div class="track-name">{_h(t.label)}</div>{badge}</div>'
             f'{actionability_inline}'
             f'<dl>'
-            f'<dt>Indication</dt>{ind_dd}'
-            f'<dt>Regimen</dt>{reg_dd}'
+            f'<dt>{_h(_t("indication_label", target_lang))}</dt>{ind_dd}'
+            f'<dt>{_h(_t("regimen_label", target_lang))}</dt>{reg_dd}'
             f'{drugs_dd}'
             f'{sup}'
             f'{ci}'
-            f'<dt>Reason</dt><dd>{_h(t.selection_reason)}</dd>'
+            f'<dt>{_h(_t("reason_label", target_lang))}</dt><dd>{_h_t(t.selection_reason, target_lang)}</dd>'
             f'</dl>'
             f'</div>'
         )
     primary_html = track_html[0] if track_html else ""
     if primary_html:
         body.append(
-            "<section><h2>Primary current-line option</h2>"
+            f'<section><h2>{_h(_t("primary_track_heading", target_lang))}</h2>'
             f'<div class="tracks">{primary_html}</div></section>'
         )
     alternative_html = "".join(track_html[1:])
     if alternative_html:
+        n_alt = len(track_html) - 1
+        if target_lang == "uk":
+            alt_heading = f'Інші варіанти поточної лінії ({n_alt} {_uk_plural(n_alt, "трек", "треки", "треків")})'
+        else:
+            alt_heading = f"Other current-line alternatives ({n_alt} tracks)"
         body.append(
             "<section><details>"
-            f"<summary><h2>Other current-line alternatives ({len(track_html) - 1} tracks)</h2>"
-            "<span class=\"section-sub\">Same treatment line; review when biomarker, access, contraindication, or patient-context assumptions change.</span>"
+            f"<summary><h2>{_h(alt_heading)}</h2>"
+            f'<span class="section-sub">{_h(_t("other_alternatives_sub", target_lang))}</span>'
             "</summary>"
             f'<div class="tracks">{alternative_html}</div>'
             "</details></section>"
@@ -3142,22 +3283,29 @@ def render_plan_html(
         for t in sequencing_tracks:
             authored_line = ((t.indication_data or {}).get("applicable_to") or {}).get("line_of_therapy")
             regimen_name = (t.regimen_data or {}).get("name", "-") if t.regimen_data else "-"
-            line_note = f"line {authored_line}" if authored_line is not None else "line not authored"
+            line_note = (
+                f'{_t("line_prefix", target_lang)} {authored_line}'
+                if authored_line is not None
+                else _t("line_not_authored", target_lang)
+            )
             seq_rows.append(
                 "<tr>"
                 f"<td><code>{_h(t.indication_id)}</code></td>"
                 f"<td>{_h(line_note)}</td>"
                 f"<td>{_h(regimen_name)}</td>"
-                f"<td>{_h(t.selection_reason or '')}</td>"
+                f"<td>{_h_t(t.selection_reason or '', target_lang)}</td>"
                 "</tr>"
             )
         body.append(
             "<section><details>"
-            "<summary><h2>Sequencing / non-current-line candidates</h2>"
-            "<span class=\"section-sub\">Shown for audit and future-line context; not part of the current treatment choice.</span>"
+            f'<summary><h2>{_h(_t("sequencing_heading", target_lang))}</h2>'
+            f'<span class="section-sub">{_h(_t("sequencing_sub", target_lang))}</span>'
             "</summary>"
             "<table class=\"tbl\"><thead><tr>"
-            "<th>Indication</th><th>Authored line</th><th>Regimen</th><th>Why separated</th>"
+            f'<th>{_h(_t("seq_th_indication", target_lang))}</th>'
+            f'<th>{_h(_t("seq_th_authored_line", target_lang))}</th>'
+            f'<th>{_h(_t("seq_th_regimen", target_lang))}</th>'
+            f'<th>{_h(_t("seq_th_why_separated", target_lang))}</th>'
             "</tr></thead><tbody>"
             f"{''.join(seq_rows)}"
             "</tbody></table>"
@@ -3192,7 +3340,7 @@ def render_plan_html(
     # Sources
     if fda.data_sources_summary:
         items = "".join(f"<li>{_h(s)}</li>" for s in fda.data_sources_summary)
-        body.append(f"<section><h2>Sources cited</h2><ul class='sources'>{items}</ul></section>")
+        body.append(f"<section><h2>{_h(_t('sources_cited', target_lang))}</h2><ul class='sources'>{items}</ul></section>")
 
     # Cited trials — live status decoration for cited pivotal NCT IDs.
     # Scans the in-progress body for `NCT\d{8}` occurrences and looks up
@@ -3937,15 +4085,17 @@ def render_diagnostic_brief_html(
     _ = strict_citation_guard  # reserved for future diagnostic guard
     dp = diag_result.diagnostic_plan
     if dp is None:
-        return _doc_shell("OpenOnco — empty diagnostic brief", "<p>Empty DiagnosticPlanResult.</p>")
+        title = "OpenOnco — порожній diagnostic brief" if target_lang == "uk" else "OpenOnco — empty diagnostic brief"
+        msg = "Порожній DiagnosticPlanResult." if target_lang == "uk" else "Empty DiagnosticPlanResult."
+        return _doc_shell(title, f"<p>{msg}</p>", target_lang)
 
     body: list[str] = []
 
     # Header
     body.append(
         '<div class="doc-header">'
-        '<div class="doc-label">OpenOnco · Workup Brief · DIAGNOSTIC PHASE</div>'
-        '<div class="doc-title">Brief підготовки до тумор-борду</div>'
+        f'<div class="doc-label">{_h(_t("doc_label_brief", target_lang))}</div>'
+        f'<div class="doc-title">{_h(_t("doc_title_brief", target_lang))}</div>'
         f'<div class="doc-sub">{_h(dp.id)} · v{_h(dp.version)} · {_h(dp.generated_at[:10])}</div>'
         '</div>'
     )
@@ -3953,7 +4103,7 @@ def render_diagnostic_brief_html(
     # MANDATORY diagnostic banner (CHARTER §15.2 C7)
     body.append(
         '<div class="banner banner--diagnostic">'
-        '<strong>⚠ DIAGNOSTIC PHASE — TREATMENT PLAN NOT YET APPLICABLE</strong>'
+        f'<strong>{_h(_t("diagnostic_banner_strong", target_lang))}</strong>'
         f'{_h(_DIAGNOSTIC_BANNER)}'
         '</div>'
     )
@@ -4041,7 +4191,7 @@ def render_diagnostic_brief_html(
     body.append(f'<div class="medical-disclaimer">{_h(_MEDICAL_DISCLAIMER)}</div>')
     body.append('</div>')
 
-    out = _doc_shell("OpenOnco · Workup Brief", "".join(body))
+    out = _doc_shell(_t("doc_label_brief", target_lang), "".join(body))
     return _localize_html(out, target_lang)
 
 
@@ -4082,8 +4232,8 @@ def render_revision_note_html(
     body: list[str] = []
     body.append(
         '<div class="doc-header">'
-        '<div class="doc-label">OpenOnco · Revision Note</div>'
-        '<div class="doc-title">Перегляд плану</div>'
+        f'<div class="doc-label">{_h(_t("doc_label_revision", target_lang))}</div>'
+        f'<div class="doc-title">{_h(_t("doc_title_revision", target_lang))}</div>'
         f'<div class="doc-sub">Transition: {_h(transition)} · {_h(_now_iso())}</div>'
         '</div>'
     )
@@ -4115,7 +4265,7 @@ def render_revision_note_html(
     else:
         body.append(inner)
 
-    out = _doc_shell("OpenOnco · Revision Note", "".join(body))
+    out = _doc_shell(_t("doc_label_revision", target_lang), "".join(body))
     return _localize_html(out, target_lang)
 
 

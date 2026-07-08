@@ -22,10 +22,14 @@ def test_selection_reasons_do_not_render_raw_trace_dicts():
 
 
 def test_null_algorithm_branch_uses_provisional_reason():
+    # `generate_plan` stores `selection_reason` in Ukrainian (source
+    # language) by default — the render layer's `_h_t()` handles the
+    # UA->EN mirror at render time via `_translation_overrides.py`. See
+    # `knowledge_base/engine/plan.py::_format_current_default_reason`.
     reasons = _reason_texts(Path("examples/auto_anal_scc.json"))
     assert reasons
     assert reasons[0].startswith(
-        "Provisional current-line default from ALGO-ANAL-SCC-1L"
+        "Попередній основний варіант поточної лінії за алгоритмом ALGO-ANAL-SCC-1L"
     )
-    assert "did not select a treatment branch" in reasons[0]
+    assert "гілку лікування не визначено" in reasons[0]
     assert "Histological confirmation" in reasons[0]

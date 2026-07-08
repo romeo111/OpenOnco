@@ -619,20 +619,25 @@ def _is_current_line_indication(indication: Optional[dict], patient_line: int) -
 
 
 def _line_context_reason(indication: Optional[dict], patient_line: int) -> str:
+    # Authored in Ukrainian by default (render layer produces UA first —
+    # see render.py `_localize_html` / `_h_t`). EN mirrors for these
+    # templates are registered in `_translation_overrides.py`
+    # (PREFIX_OVERRIDES_UK_TO_EN) since `authored_line`/`patient_line`
+    # are interpolated mid-sentence.
     authored_line = _indication_line_of_therapy(indication)
     if authored_line is None:
-        return "No authored line_of_therapy; retained for HCP review"
+        return "Лінія терапії не вказана авторами; залишено для розгляду лікарем."
     if authored_line < patient_line:
         return (
-            f"Prior-line candidate only: indication line {authored_line}, "
-            f"patient line {patient_line}; not a current treatment option"
+            f"Кандидат лише попередньої лінії: лінія показання {authored_line}, "
+            f"лінія пацієнта {patient_line}; не є поточним варіантом лікування."
         )
     if authored_line > patient_line:
         return (
-            f"Later-line sequencing candidate: indication line {authored_line}, "
-            f"patient line {patient_line}; not a current treatment option"
+            f"Кандидат для наступної лінії (секвенування): лінія показання {authored_line}, "
+            f"лінія пацієнта {patient_line}; не є поточним варіантом лікування."
         )
-    return "Current-line treatment candidate"
+    return "Варіант лікування поточної лінії."
 
 
 def _compact_trace_note(note: Any, limit: int = 280) -> str:
@@ -650,9 +655,15 @@ def _format_current_default_reason(
     selected_indication_id: Optional[str],
     default_indication_id: Optional[str],
 ) -> str:
+    # Authored in Ukrainian by default — see note in `_line_context_reason`
+    # above. `step_text` deliberately avoids case-inflected prepositions
+    # ("на кроці"/"на резервному шляху") by being wrapped in parentheses,
+    # so the same fragment works whether it's a numbered step or the
+    # fallback-path string (matches the "RedFlag {id} спрацював на step {n}"
+    # convention already used in mdt_orchestrator.py — "step" stays Latin).
     algo_id = algorithm.get("id", "algorithm")
     if not trace:
-        return f"Primary current-line option from {algo_id}; no decision trace was recorded."
+        return f"Основний варіант поточної лінії за алгоритмом {algo_id}; трасування рішення не зафіксовано."
 
     last = trace[-1] or {}
     step = last.get("step")
@@ -662,12 +673,12 @@ def _format_current_default_reason(
     fired = [str(x) for x in (last.get("fired_red_flags") or [])]
     winner = last.get("winner_red_flag")
 
-    step_text = f"step {step}" if step is not None else "the fallback path"
+    step_text = f"step {step}" if step is not None else "резервний шлях"
 
     if selected_indication_id is None and branch_result is None:
         reason = (
-            f"Provisional current-line default from {algo_id}: {step_text} "
-            "did not select a treatment branch."
+            f"Попередній основний варіант поточної лінії за алгоритмом {algo_id}: "
+            f"гілку лікування не визначено ({step_text})."
         )
         if note:
             reason += f" {note}"
@@ -676,25 +687,25 @@ def _format_current_default_reason(
     if selected_indication_id == default_indication_id or branch_result == default_indication_id:
         if winner:
             return (
-                f"Primary current-line option selected by {algo_id} at {step_text}; "
-                f"branch-driving red flag: {winner}."
+                f"Основний варіант поточної лінії обрано алгоритмом {algo_id} ({step_text}); "
+                f"визначальний RedFlag: {winner}."
             )
         if fired:
             return (
-                f"Primary current-line option selected by {algo_id} at {step_text}; "
-                f"fired red flags: {', '.join(fired)}."
+                f"Основний варіант поточної лінії обрано алгоритмом {algo_id} ({step_text}); "
+                f"спрацювали RedFlags: {', '.join(fired)}."
             )
-        return f"Primary current-line option selected by {algo_id} at {step_text}."
+        return f"Основний варіант поточної лінії обрано алгоритмом {algo_id} ({step_text})."
 
     if selected_indication_id:
         if winner:
             return (
-                f"Primary current-line option selected by {algo_id} at {step_text}; "
-                f"branch-driving red flag: {winner}."
+                f"Основний варіант поточної лінії обрано алгоритмом {algo_id} ({step_text}); "
+                f"визначальний RedFlag: {winner}."
             )
-        return f"Primary current-line option selected by {algo_id} at {step_text}."
+        return f"Основний варіант поточної лінії обрано алгоритмом {algo_id} ({step_text})."
 
-    return f"Primary current-line option from {algo_id}; review decision trace for details."
+    return f"Основний варіант поточної лінії за алгоритмом {algo_id}; деталі — у трасуванні рішення."
 
 
 # ── Track materialization ─────────────────────────────────────────────────────
@@ -987,7 +998,7 @@ def generate_plan(
         reason = (
             _format_current_default_reason(algo, trace, selected, current_default_id)
             if is_default
-            else "Current-line alternative presented for HCP consideration"
+            else "Альтернативний варіант поточної лінії, представлений для розгляду лікарем."
         )
         tracks.append(_materialize_track(track_label, ind_id, is_default, reason, entities))
 
@@ -1005,8 +1016,9 @@ def generate_plan(
     if tracks and not any(t.is_default for t in tracks):
         tracks[0].is_default = True
         tracks[0].selection_reason = (
-            f"Primary current-line option per algorithm {algo['id']}: "
-            "selected default was filtered; promoted first remaining current-line track"
+            f"Основний варіант поточної лінії за алгоритмом {algo['id']}: "
+            "обраний за замовчуванням варіант було відфільтровано; "
+            "підвищено перший залишковий варіант поточної лінії."
         )
 
     fda = _build_fda_compliance(algo, tracks, entities, result.warnings)

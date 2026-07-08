@@ -196,6 +196,7 @@ def find_matching_actionability(
                 "escat_tier": cell.get("escat_tier"),
                 "evidence_sources": list(cell.get("evidence_sources") or []),
                 "evidence_summary": (cell.get("evidence_summary") or "").strip(),
+                "evidence_summary_ua": (cell.get("evidence_summary_ua") or "").strip() or None,
                 "recommended_combinations": list(cell.get("recommended_combinations") or []),
                 "primary_sources": list(cell.get("primary_sources") or []),
             }

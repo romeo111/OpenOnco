@@ -99,7 +99,7 @@ def test_treatment_plan_renders_mdt_when_provided():
     plan = generate_plan(p, kb_root=KB_ROOT)
     mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
     html = render_plan_html(plan, mdt=mdt)
-    assert "MDT brief" in html
+    assert "MDT: стислий огляд" in html
     assert "hematologist" in html or "Гематолог" in html
 
 
@@ -202,7 +202,7 @@ def test_revision_note_shows_transition_and_ids():
     )
     html = render_revision_note_html(revised_prev, plan_v1, "diagnostic→treatment", mdt=None)
 
-    assert "Revision Note" in html
+    assert "Нотатка про перегляд плану" in html
     assert "diagnostic→treatment" in html
     assert diag_v1.diagnostic_plan.id in html
     assert plan_v1.plan.id in html
@@ -405,6 +405,6 @@ def test_treatment_plan_renders_mdt_talk_tree():
     mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
     html = render_plan_html(plan, mdt=mdt)
 
-    assert "MDT talk tree" in html
+    assert "Дерево обговорення MDT" in html
     assert "<th>Owner</th>" in html
     assert "<th>Action</th>" in html
