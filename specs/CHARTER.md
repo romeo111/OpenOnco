@@ -31,7 +31,7 @@ The project is an **information resource to support tumor board discussion**, no
 - Claim to provide recommendations for rare or exceptional cases
 - Work with pediatric patients (scope — adults)
 - Constitute a medical device in the regulatory sense (per §15)
-- **Is not intended for patients / caregivers directly** — HCP only (oncologist/hematologist in a clinical context). Direct-to-patient deployment would require re-classification as a medical device — outside CHARTER scope (per §15).
+- **Is not intended for patients / caregivers directly** — HCP only (oncologist/hematologist in a clinical context). Direct-to-patient deployment would require re-classification as a medical device — outside CHARTER scope (per §15). *(Scoped exception ratified 2026-07-08: a patient-facing education / question-preparation layer — "understand your plan, prepare questions for your oncologist," no verdicts, no treatment recommendations to the patient. A full direct-to-patient clinical service remains parked. See §15 CHANGELOG + `docs/plans/patient_facing_tumorboard_scope_2026-07-08.md`.)*
 - **Is not intended for time-critical/urgent decisions** — outpatient planning only. Acute conditions (active TLS management, neutropenic fever, spinal cord compression) — outside scope (per §15).
 
 ---
@@ -423,6 +423,19 @@ The text is standardized and is not negotiated on a per-case basis.
   stored product vision to fit current CHARTER; Path B is parked for
   v1.0+ explicit pivot).
 
+- **2026-07-08 — §15.3 scoped patient-facing pivot** (Initiator-only,
+  dev-mode §6.1 exemption). Ratified a **scoped patient-facing education
+  layer**: the homepage patient door routes patients into the AI Tumor
+  Board (`ask.html`) to *understand a plan their own oncologist gave them
+  and prepare questions for their next visit* — never a verdict on their
+  plan, never a treatment recommendation to the patient. §15.2 C4/C6/C7
+  invariants unchanged; C1 now carries a scoped exception (education/
+  question-prep only). A **full direct-to-patient clinical service**
+  remains parked (v1.0+) and still requires Clinical Co-Lead expansion
+  (§4.3), legal-structure formalization (§13), and a separate regulatory
+  pathway. Safeguards, honest-trade-off note, and open follow-ups:
+  `docs/plans/patient_facing_tumorboard_scope_2026-07-08.md`.
+
 ---
 
 ## 13. Current status and limitations
@@ -509,7 +522,7 @@ advice. A formal regulatory review is required before US deployment.
 
 | # | Constraint | What becomes a device |
 |---|---|---|
-| C1 | HCP-only, never patient-facing | Direct-to-patient → device |
+| C1 | HCP-only, never patient-facing (scoped education/question-prep patient layer ratified 2026-07-08 — see CHANGELOG; full direct-to-patient clinical service still parked) | Direct-to-patient **clinical service** → device |
 | C2 | Outpatient/non-time-critical only (`Indication.time_critical: false`) | Acute/emergency modules → device |
 | C3 | No raw image / signal / NGS read input | Adding such → device |
 | C4 | Always ≥2 tracks, never single binding directive | "System prescribes X" UX → device |

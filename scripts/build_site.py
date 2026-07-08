@@ -1207,33 +1207,113 @@ def _landing_stat_counts(stats) -> dict[str, int]:
 
 
 def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
+    from urllib.parse import quote
+
     counts = _landing_stat_counts(stats)
     is_en = target_lang == "en"
 
     if is_en:
-        title = "OpenOnco — oncology decisions you can audit"
-        kicker = "Open-source clinical decision support"
-        h1 = "Cross-checks NCCN, ESMO, and drug labels for you — so you verify, not research."
+        title = "OpenOnco — free, cited cancer treatment options"
+        kicker = "Free · open-source · no sign-up"
+        h1 = "A second opinion on cancer treatment — free, cited, and open."
         sub = (
-            f"One JSON patient profile in, a standard <em>and</em> an aggressive treatment "
-            f"plan out — side by side, with a citation under every recommendation. The engine "
-            f"reads {counts['sources']} sources for you and surfaces {counts['redflags']} "
-            f"red flags worth a second look.",
-            "Rules-first, not LLM-driven. The plan cannot hallucinate a drug or a dose. "
-            "The clinical decision stays with you; the engine is the second pair of eyes "
-            "that read every guideline at once.",
+            "Enter a case and OpenOnco lays out two treatment plans side by side — a "
+            "standard option and a more aggressive one — with a source you can open under "
+            "every line. Built on NCCN, ESMO and CIViC. Pick your path below.",
         )
-        primary = "Try the plan builder"
-        secondary = "See a sample plan →"
-        tertiary = "Ask the AI Tumor Board"
-        gallery_href = "/gallery.html"
-        diseases_href = "/diseases.html"
-        note = "Open-data inputs: CIViC (CC0) for biomarker actionability, ClinicalTrials.gov for trial-aware options, PubMed/PMID/DOI and DailyMed/openFDA for literature and drug-label context. No LLM chooses treatment: plans are rules-first with YAML provenance, so LLM hallucinations are excluded from the plan. The clinician remains the final authority (CHARTER §11)."
-        footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
         try_href = "/try.html"
+        gallery_href = "/gallery.html"
         kb_href = "/kb.html"
         ask_href = "/ask.html"
         about_href = "/about.html"
+        diseases_href = "/diseases.html"
+        pharma_q = (
+            "A patient on a chemotherapy regimen (for example FOLFOX) is also taking "
+            "other drugs (for example warfarin and fluconazole). What drug interactions, "
+            "dose adjustments or monitoring should I flag before dispensing?"
+        )
+        # Synthetic, de-identified template. Seeds the Tumor Board textarea so a patient
+        # arrives at "understand my plan + prepare questions", never "is my plan right".
+        # Never place a patient's real pasted plan into a ?case= URL (leaks to history).
+        patient_q = (
+            "My own oncologist has diagnosed me with stomach cancer and gave me a written "
+            "treatment plan that starts with chemotherapy. I'd like to understand it before "
+            "my next appointment. Can you explain, in plain language, what each part of the "
+            "plan is for, and help me write down clear questions to ask my own oncologist at "
+            "my next visit — including which side effects I should ask them to watch for? "
+            "Please do not tell me to start, stop, or change any treatment; my oncologist "
+            "makes those decisions. (I have removed my name, date of birth and any ID numbers "
+            "before pasting. My text is sent to a server to be analysed, so I have pasted "
+            "only the parts I have questions about — not my whole document.)"
+        )
+        doors_label = "Choose your path"
+        doors_h = "What brings you here?"
+        doors_sub = (
+            "Three ways in — each goes straight to the right tool. No account, nothing to "
+            "install, works in your browser."
+        )
+        doors = [
+            {
+                "key": "doctor",
+                "icon": "🩺",
+                "role": "I'm a clinician",
+                "line": (
+                    "Turn a case into a tumor-board-ready draft: a standard and an "
+                    "aggressive plan side by side, red flags surfaced, every line cited."
+                ),
+                "buttons": [
+                    ("btn-primary", try_href, "Build a plan"),
+                    ("btn-secondary", ask_href, "Ask the Tumor Board"),
+                ],
+            },
+            {
+                "key": "patient",
+                "icon": "🎗️",
+                "role": "I'm a patient or caregiver",
+                "line": (
+                    "Understand the treatment plan your own oncologist already gave you — in "
+                    "plain language — and turn it into clear questions to bring to your next "
+                    "visit. Information to support the conversation with your doctor, not "
+                    "medical advice, and never a replacement for your oncologist."
+                ),
+                "buttons": [
+                    ("btn-primary", ask_href + "?case=" + quote(patient_q), "Prepare questions for your visit"),
+                    ("btn-secondary", gallery_href, "See an example plan"),
+                ],
+                "disclaimer": (
+                    "OpenOnco is an information tool — not a medical device and not medical "
+                    "advice. It does not replace your oncologist. Never start, stop, or "
+                    "change any treatment based on this site; decide together with your "
+                    "treating oncologist."
+                ),
+            },
+            {
+                "key": "pharma",
+                "icon": "💊",
+                "role": "I'm a pharmacist",
+                "line": (
+                    "Check interactions, renal and hepatic dose adjustments, and red flags "
+                    "against a regimen before it reaches the patient."
+                ),
+                "buttons": [
+                    ("btn-primary", ask_href + "?case=" + quote(pharma_q), "Check an interaction"),
+                    ("btn-secondary", kb_href, "Browse red flags & labels"),
+                ],
+            },
+        ]
+        steps_label = "How it works"
+        steps_h = "From a case to a cited plan in three steps"
+        steps = [
+            ("1", "Describe the case",
+             "Pick a disease and fill a short form, load a ready-made example, or paste a "
+             "vignette in plain English."),
+            ("2", "The engine cross-checks",
+             f"NCCN, ESMO, drug labels and CIViC are resolved in a single pass — right in "
+             f"your browser, in about 200&nbsp;ms, across {counts['sources']} sources."),
+            ("3", "Get two cited plans",
+             f"Standard and aggressive, side by side — every line sourced and "
+             f"{counts['redflags']} red flags checked against the profile for you to review."),
+        ]
         stats_label = "Knowledge base scale"
         stat_labels = {
             "diseases": "Diseases",
@@ -1243,161 +1323,127 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             "sources": "Cited sources",
             "perf": "Per profile",
         }
-        pillars_label = "What OpenOnco does for the clinician"
-        pillar_time_h = "Saves the routine work"
-        pillar_time_sub = (
-            "Five tabs collapse into one. The engine does the cross-checking so you can "
-            "spend the time on the call, not the lookup."
+        trust = (
+            "Rules-first, not an LLM — no drug or dose is ever invented. Patient data stays "
+            "in your browser. A qualified clinician is always the final authority."
         )
-        pillar_time_cards = [
-            ("Pass", "One pass replaces five tabs",
-             "The engine resolves NCCN, ESMO, drug labels, and CIViC actionability in a "
-             "single pass. No more switching between guidelines, label PDFs, and biomarker "
-             "databases for each case."),
-            ("Cite", "Citations attached automatically",
-             "Every line in the plan ships with the PMID, DOI, DailyMed link, or guideline "
-             "section. You verify in 10 seconds instead of running a literature search to "
-             "back up each recommendation."),
-            ("Sync", f"{counts['sources']} sources refreshed for you",
-             "NCCN, ESMO, EHA, BSH, EASL, MoH, WHO, CTCAE, FDA, CIViC — refreshed on a "
-             "schedule. No more monitoring every guideline update yourself to know what "
-             "changed since last quarter."),
-            ("Pair", "Standard + aggressive built together",
-             "Both alternatives are generated side by side every time — you don't manually "
-             "construct the second option to weigh against the first. CHARTER §15.2 C6: the "
-             "alternative is never buried."),
-        ]
-        pillar_miss_h = "Surfaces what's easy to overlook"
-        pillar_miss_sub = (
-            "The engine is a checklist that runs against every profile. It cannot replace "
-            "clinical judgment — but it can stop a tired Friday afternoon from missing a "
-            "contraindication."
+        note = (
+            "Open-data inputs: CIViC (CC0), ClinicalTrials.gov, PubMed, DailyMed/openFDA and "
+            "NCCN/ESMO/EHA/BSH guidelines. No LLM chooses treatment — plans are rules-first "
+            "with YAML provenance (CHARTER §11)."
         )
-        pillar_miss_cards = [
-            ("Flag", f"{counts['redflags']} red flags worth a second look",
-             "Drug interactions, contraindications, organ-function thresholds, high-risk "
-             "cytogenetics, bulky disease — every red flag fires automatically against the "
-             "profile and surfaces in the plan for review."),
-            ("Match", "Targetable mutations don't slip past",
-             "CIViC actionability lookup is fusion-aware. A BRAF V600E or a BCR::ABL1 "
-             "finding maps to ESCAT-tier evidence before it can quietly disappear into a "
-             "long workup report."),
-            ("Rules", "No hallucinated drugs or doses",
-             "The plan is assembled by a declarative rule engine, not by an LLM. A drug "
-             "must exist in the KB with a real label entry; a dose must come from a curated "
-             "Regimen YAML. No creative invention."),
-            ("Ask", "Refuses to default silently",
-             "When the profile lacks data — missing cytogenetics, no ECOG, incomplete "
-             "biomarker panel — the engine emits an Open Question instead of guessing. "
-             "CHARTER §15.2 C6: anti automation-bias is mandatory."),
+        explore_label = "Explore more"
+        explore = [
+            (diseases_href, f"Browse {counts['diseases']} diseases"),
+            (kb_href, "Onco Wiki"),
+            (about_href, "About the project"),
         ]
-        cta_doors_label = "Where to go next"
-        cta_doors = [
-            ("btn-primary", try_href, "Build a plan from a case"),
-            ("btn-secondary", ask_href, "Ask the AI Tumor Board"),
-            ("btn-secondary", kb_href, "Browse Onco Wiki"),
-        ]
+        footer = "Informational tool, not a medical device (CHARTER §15 + §11)."
         perf_value = "~200"
         perf_unit = "ms"
-        carousel_label = "Audience"
-        carousel_slides = [
-            {
-                "key": "doctor",
-                "tab": "For clinicians",
-                "eyebrow": "Clinical workflow",
-                "title": "From structured case facts to a cited plan draft.",
-                "body": (
-                    "OpenOnco gives the oncologist a transparent second layer for MDT prep: "
-                    "standard and aggressive tracks, red flags, dose context, source IDs and "
-                    "review status in one view."
-                ),
-                "items": [
-                    "Two-track treatment plan: guideline-grade and trial-aware",
-                    "Biomarker, renal, hepatic and infection risks surfaced before sign-off",
-                    "Every branch remains auditable by source and YAML provenance",
-                ],
-                "href": try_href,
-                "cta": "Build a virtual plan",
-            },
-            {
-                "key": "investor",
-                "tab": "For investors",
-                "eyebrow": "Infrastructure thesis",
-                "title": "A governed open layer for oncology decision infrastructure.",
-                "body": (
-                    "The asset is not a chatbot wrapper. It is a growing clinical knowledge graph, "
-                    "rules engine, public specification stack and distribution path for hospitals, "
-                    "labs and AI-assisted contributors."
-                ),
-                "items": [
-                    "Public corpus, rules engine and specs evolve as separate auditable assets",
-                    "Clear non-device CDS positioning and visible clinical review gates",
-                    "Open corpus creates trust, auditability and ecosystem leverage",
-                ],
-                "href": about_href,
-                "cta": "Review the project",
-            },
-            {
-                "key": "lab",
-                "tab": "For laboratories",
-                "eyebrow": "Molecular handoff",
-                "title": "Make biomarker reports immediately actionable for the care team.",
-                "body": (
-                    "A lab can hand clinicians a structured bridge from NGS and pathology findings "
-                    "to disease-specific actionability, trial-aware options and patient-profile "
-                    "prefill without exposing private data on the public site."
-                ),
-                "items": [
-                    "Variant and biomarker context connects to disease, regimen and monitoring",
-                    "QR/profile handoff can prefill the browser-side plan builder",
-                    "CIViC-derived evidence remains citable and inspectable",
-                ],
-                "href": kb_href,
-                "cta": "Explore actionability",
-            },
-            {
-                "key": "patient",
-                "tab": "For patients",
-                "eyebrow": "Patient-facing explanation",
-                "title": "A clearer version of the plan to discuss with the doctor.",
-                "body": (
-                    "OpenOnco can render the same clinical logic in plain language: what the "
-                    "plan is trying to do, why tests and biomarkers matter, and what questions "
-                    "the patient should bring back to the oncology team."
-                ),
-                "items": [
-                    "Plain-language summary without changing the clinician-owned decision",
-                    "Helps patients understand biomarkers, monitoring and warning signs",
-                    "Keeps the doctor as the final authority for treatment choices",
-                ],
-                "href": try_href,
-                "cta": "See a patient-friendly plan",
-            },
-        ]
     else:
-        title = "OpenOnco — онкологічні рішення, які можна перевірити"
-        kicker = "Відкрита підтримка клінічних рішень"
-        h1 = "Звіряє за вас NCCN, ESMO і label-и — ви перевіряєте, не досліджуєте."
+        title = "OpenOnco — безкоштовні варіанти лікування раку з джерелами"
+        kicker = "Безкоштовно · відкритий код · без реєстрації"
+        h1 = "Друга думка щодо лікування раку — безкоштовно, з джерелами, відкрито."
         sub = (
-            f"Один JSON-профіль пацієнта на вході — план standard <em>і</em> aggressive "
-            f"поруч, із цитатою під кожною рекомендацією. Engine читає за вас "
-            f"{counts['sources']} джерела і виносить на огляд {counts['redflags']} red flag, "
-            f"які варті повторного погляду.",
-            "Rules-first, а не LLM. План не може «вигадати» препарат чи дозу. "
-            "Клінічне рішення лишається за вами; engine — це друга пара очей, "
-            "що читає всі гайдлайни одночасно.",
+            "Введіть кейс — і OpenOnco покаже два плани лікування поруч: стандартний і "
+            "агресивніший, із джерелом під кожним рядком. Побудовано на NCCN, ESMO та CIViC. "
+            "Оберіть свій шлях нижче.",
         )
-        primary = "Спробувати конструктор плану"
-        secondary = "Подивитися приклад плану →"
-        tertiary = "Запитати AI-туморборд"
-        gallery_href = "/ukr/gallery.html"
-        diseases_href = "/ukr/diseases.html"
-        note = "Відкриті джерела: CIViC (CC0) для біомаркерної клінічної значущості, ClinicalTrials.gov для trial-aware опцій, PubMed/PMID/DOI та DailyMed/openFDA для літератури й контексту інструкцій до препаратів. LLM не обирає лікування: план збирається rules-first із YAML provenance, тому LLM-галюцинації виключені з плану. Фінальне рішення лишається за лікарем (CHARTER §11)."
-        footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
         try_href = "/ukr/try.html"
+        gallery_href = "/ukr/gallery.html"
         kb_href = "/ukr/kb.html"
         ask_href = "/ukr/ask.html"
         about_href = "/ukr/about.html"
+        diseases_href = "/ukr/diseases.html"
+        pharma_q = (
+            "Пацієнт на режимі хіміотерапії (наприклад FOLFOX) також приймає інші препарати "
+            "(наприклад варфарин і флуконазол). Які взаємодії, корекції доз чи моніторинг "
+            "варто відзначити до видачі?"
+        )
+        # Синтетичний знеособлений шаблон — заповнює поле туморборду так, щоб пацієнт
+        # прийшов до «зрозуміти план + підготувати питання», а не «чи правильний план».
+        # Ніколи не класти реальний вставлений план пацієнта в ?case= URL (витік в історію).
+        patient_q = (
+            "Мій онколог діагностував у мене рак шлунка і дав письмовий план лікування, "
+            "який починається з хіміотерапії. Я хочу зрозуміти його до наступного прийому. "
+            "Поясніть, будь ласка, простою мовою, для чого потрібна кожна частина плану, і "
+            "допоможіть мені сформулювати зрозумілі питання, які я поставлю своєму онкологу "
+            "на наступному візиті, — зокрема які побічні ефекти варто попросити його "
+            "відстежувати. Будь ласка, не радьте мені починати, припиняти чи змінювати "
+            "лікування — ці рішення приймає мій онколог. (Перед вставленням я прибрав(-ла) "
+            "ім'я, дату народження та будь-які номери документів. Текст надсилається на "
+            "сервер для аналізу, тому я вставив(-ла) лише ті частини, щодо яких маю питання, "
+            "а не весь документ.)"
+        )
+        doors_label = "Оберіть свій шлях"
+        doors_h = "Що вас сюди привело?"
+        doors_sub = (
+            "Три входи — кожен веде одразу до потрібного інструменту. Без реєстрації, нічого "
+            "не треба встановлювати, працює у браузері."
+        )
+        doors = [
+            {
+                "key": "doctor",
+                "icon": "🩺",
+                "role": "Я лікар",
+                "line": (
+                    "Перетворіть кейс на чернетку для туморборду: стандартний і агресивний "
+                    "план поруч, red flags на поверхні, кожен рядок із джерелом."
+                ),
+                "buttons": [
+                    ("btn-primary", try_href, "Побудувати план"),
+                    ("btn-secondary", ask_href, "Запитати туморборд"),
+                ],
+            },
+            {
+                "key": "patient",
+                "icon": "🎗️",
+                "role": "Я пацієнт або близький",
+                "line": (
+                    "Зрозумійте план лікування, який вам уже дав ваш онколог, — простою "
+                    "мовою — і перетворіть його на зрозумілі питання до наступного візиту. "
+                    "Це інформація на допомогу вашій розмові з лікарем, а не медична порада, "
+                    "і вона ніколи не замінює вашого онколога."
+                ),
+                "buttons": [
+                    ("btn-primary", ask_href + "?case=" + quote(patient_q), "Підготувати питання до візиту"),
+                    ("btn-secondary", gallery_href, "Подивитися приклад плану"),
+                ],
+                "disclaimer": (
+                    "OpenOnco — інформаційний інструмент, а не медичний виріб і не медична "
+                    "порада. Він не замінює вашого онколога. Ніколи не починайте, не "
+                    "припиняйте і не змінюйте лікування на основі цього сайту — рішення "
+                    "приймайте разом зі своїм лікарем-онкологом."
+                ),
+            },
+            {
+                "key": "pharma",
+                "icon": "💊",
+                "role": "Я фармацевт",
+                "line": (
+                    "Перевірте взаємодії, корекції доз (нирки/печінка) і red flags для "
+                    "режиму до видачі пацієнту."
+                ),
+                "buttons": [
+                    ("btn-primary", ask_href + "?case=" + quote(pharma_q), "Перевірити взаємодію"),
+                    ("btn-secondary", kb_href, "Переглянути red flags і label-и"),
+                ],
+            },
+        ]
+        steps_label = "Як це працює"
+        steps_h = "Від кейсу до плану з джерелами — за три кроки"
+        steps = [
+            ("1", "Опишіть кейс",
+             "Оберіть хворобу й заповніть коротку форму, завантажте готовий приклад або "
+             "вставте віньєтку звичайною мовою."),
+            ("2", "Engine робить крос-чек",
+             f"NCCN, ESMO, інструкції до препаратів і CIViC розв'язуються за один прохід — "
+             f"прямо у вашому браузері, приблизно за 200&nbsp;мс, по {counts['sources']} джерелах."),
+            ("3", "Отримайте два плани з джерелами",
+             f"Стандартний і агресивний поруч — кожен рядок із джерелом, і "
+             f"{counts['redflags']} red flags перевірено на профілі для вашого огляду."),
+        ]
         stats_label = "Масштаб бази знань"
         stat_labels = {
             "diseases": "Хвороби",
@@ -1407,162 +1453,63 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             "sources": "Цитованих джерел",
             "perf": "На профіль",
         }
-        pillars_label = "Що OpenOnco робить для лікаря"
-        pillar_time_h = "Економить рутинну роботу"
-        pillar_time_sub = (
-            "П'ять вкладок згортаються в один прохід. Engine робить крос-чек, а ви "
-            "витрачаєте час на саме рішення, а не на пошук джерел."
+        trust = (
+            "Rules-first, а не LLM — жоден препарат чи доза не вигадуються. Дані пацієнта "
+            "лишаються у вашому браузері. Фінальне рішення завжди за кваліфікованим лікарем."
         )
-        pillar_time_cards = [
-            ("Pass", "Один прохід замість п'яти вкладок",
-             "Engine за один прохід розв'язує NCCN, ESMO, інструкції до препаратів і "
-             "CIViC-actionability. Більше не треба перемикатися між гайдлайнами, "
-             "label-PDF і базами біомаркерів для кожного кейсу."),
-            ("Cite", "Цитати додаються автоматично",
-             "Кожен рядок плану несе PMID, DOI, посилання на DailyMed або секцію "
-             "гайдлайну. Ви перевіряєте за 10 секунд, а не запускаєте літ. пошук, "
-             "щоб обґрунтувати кожну рекомендацію."),
-            ("Sync", f"{counts['sources']} джерела оновлюються за вас",
-             "NCCN, ESMO, EHA, BSH, EASL, МОЗ, WHO, CTCAE, FDA, CIViC — оновлюються "
-             "за розкладом. Більше не треба самостійно моніторити кожен апдейт "
-             "гайдлайну, щоб знати, що змінилося за останній квартал."),
-            ("Pair", "Standard + aggressive будуються разом",
-             "Обидві альтернативи генеруються поруч щоразу — ви не будуєте другий "
-             "варіант вручну, щоб зважити його проти першого. CHARTER §15.2 C6: "
-             "альтернатива ніколи не схована."),
-        ]
-        pillar_miss_h = "Виносить на огляд те, що легко пропустити"
-        pillar_miss_sub = (
-            "Engine — це чек-лист, що пробігає кожен профіль. Він не замінює клінічне "
-            "судження — але може не дати втомленому п'ятничному вечору пропустити "
-            "протипоказання."
+        note = (
+            "Відкриті джерела: CIViC (CC0), ClinicalTrials.gov, PubMed, DailyMed/openFDA і "
+            "гайдлайни NCCN/ESMO/EHA/BSH. LLM не обирає лікування — план збирається rules-first "
+            "із YAML provenance (CHARTER §11)."
         )
-        pillar_miss_cards = [
-            ("Flag", f"{counts['redflags']} red flag, варті повторного погляду",
-             "Drug interactions, протипоказання, пороги органної функції, high-risk "
-             "цитогенетика, bulky disease — кожен red flag спрацьовує автоматично "
-             "на профілі й виноситься в план для огляду."),
-            ("Match", "Таргетні мутації не загубляться",
-             "CIViC actionability lookup — fusion-aware. Знахідка BRAF V600E чи "
-             "BCR::ABL1 мапиться на ESCAT-tier evidence до того, як могла б тихо "
-             "зникнути в довгому workup-звіті."),
-            ("Rules", "Жодного «вигаданого» препарату чи дози",
-             "План збирається декларативним rule engine, а не LLM. Препарат мусить "
-             "існувати в KB зі справжньою label-інструкцією; доза мусить прийти з "
-             "кураторського Regimen YAML. Жодного творчого винаходу."),
-            ("Ask", "Відмовляється мовчки додумувати",
-             "Коли в профілі бракує даних — немає цитогенетики, немає ECOG, неповна "
-             "біомаркерна панель — engine видає Open Question замість здогадки. "
-             "CHARTER §15.2 C6: anti automation-bias обов'язковий."),
+        explore_label = "Дізнатися більше"
+        explore = [
+            (diseases_href, f"Переглянути {counts['diseases']} хвороб"),
+            (kb_href, "Онко-вікі"),
+            (about_href, "Про проєкт"),
         ]
-        cta_doors_label = "Куди далі"
-        cta_doors = [
-            ("btn-primary", try_href, "Побудувати план із кейсу"),
-            ("btn-secondary", ask_href, "Запитати AI-туморборд"),
-            ("btn-secondary", kb_href, "Переглянути Онко-вікі"),
-        ]
+        footer = "Інформаційний інструмент, не медичний пристрій (CHARTER §15 + §11)."
         perf_value = "~200"
         perf_unit = "мс"
-        carousel_label = "Аудиторія"
-        carousel_slides = [
-            {
-                "key": "doctor",
-                "tab": "Для лікаря",
-                "eyebrow": "Клінічний workflow",
-                "title": "Від структурованих фактів кейсу до цитованого draft-плану.",
-                "body": (
-                    "OpenOnco дає онкологу прозорий другий шар для підготовки MDT: стандартний "
-                    "і агресивний треки, red flags, контекст дозування, source IDs і статус "
-                    "ревʼю в одному вікні."
-                ),
-                "items": [
-                    "Два треки лікування: guideline-grade та trial-aware",
-                    "Біомаркери, ниркові, печінкові й інфекційні ризики видно до sign-off",
-                    "Кожна гілка аудіюється через джерела та YAML provenance",
-                ],
-                "href": try_href,
-                "cta": "Побудувати віртуальний план",
-            },
-            {
-                "key": "investor",
-                "tab": "Для інвестора",
-                "eyebrow": "Infrastructure thesis",
-                "title": "Керований open layer для онкологічної decision infrastructure.",
-                "body": (
-                    "Це не wrapper навколо chatbot. Це клінічна knowledge graph, rule engine, "
-                    "публічний стек специфікацій і канал дистрибуції для лікарень, лабораторій "
-                    "та AI-assisted contributors."
-                ),
-                "items": [
-                    "Публічний корпус, rule engine і specs розвиваються як окремі auditable assets",
-                    "Чітке non-device CDS positioning і видимі clinical review gates",
-                    "Відкритий корпус створює trust, auditability та ecosystem leverage",
-                ],
-                "href": about_href,
-                "cta": "Подивитись проєкт",
-            },
-            {
-                "key": "lab",
-                "tab": "Для лабораторії",
-                "eyebrow": "Molecular handoff",
-                "title": "Перетворюйте біомаркерні звіти на actionable context для команди.",
-                "body": (
-                    "Лабораторія може передати лікарю структурований міст від NGS і патології "
-                    "до disease-specific actionability, trial-aware опцій і prefill профілю "
-                    "пацієнта без приватних даних на публічному сайті."
-                ),
-                "items": [
-                    "Variant і biomarker context звʼязаний із хворобою, режимом і monitoring",
-                    "QR/profile handoff може заповнити браузерний plan builder",
-                    "CIViC-derived evidence залишається citable та inspectable",
-                ],
-                "href": kb_href,
-                "cta": "Відкрити actionability",
-            },
-            {
-                "key": "patient",
-                "tab": "Для пацієнта",
-                "eyebrow": "Пояснення для пацієнта",
-                "title": "Зрозуміла версія плану для розмови з лікарем.",
-                "body": (
-                    "OpenOnco може показати ту саму клінічну логіку простою мовою: що "
-                    "план має зробити, чому важливі аналізи й біомаркери, і які питання "
-                    "пацієнт має повернути онкологічній команді."
-                ),
-                "items": [
-                    "Plain-language summary без заміни рішення лікаря",
-                    "Допомагає зрозуміти біомаркери, monitoring і warning signs",
-                    "Фінальний вибір лікування залишається за лікарем",
-                ],
-                "href": try_href,
-                "cta": "Подивитись patient-friendly план",
-            },
-        ]
-
-    carousel_tabs_html = "\n".join(
-        f'        <button type="button" class="home-carousel-tab{" is-active" if i == 0 else ""}" '
-        f'data-home-slide="{slide["key"]}" aria-controls="home-slide-{slide["key"]}" '
-        f'aria-selected="{str(i == 0).lower()}">{slide["tab"]}</button>'
-        for i, slide in enumerate(carousel_slides)
-    )
-    carousel_slides_html = "\n".join(
-        f"""        <article class="home-carousel-slide{' is-active' if i == 0 else ''}" id="home-slide-{slide['key']}" data-home-panel="{slide['key']}">
-          <p class="home-carousel-eyebrow">{slide['eyebrow']}</p>
-          <h2>{slide['title']}</h2>
-          <p>{slide['body']}</p>
-          <ul>
-{chr(10).join(f'            <li>{item}</li>' for item in slide['items'])}
-          </ul>
-          <a class="home-carousel-cta" href="{slide['href']}">{slide['cta']} →</a>
-        </article>"""
-        for i, slide in enumerate(carousel_slides)
-    )
 
     sub_paragraphs = sub if isinstance(sub, (list, tuple)) else (sub,)
     sub_html = "\n      ".join(
         f'<p class="home-sub">{paragraph}</p>'
         for paragraph in sub_paragraphs
     )
+
+    def _door_block(d: dict) -> str:
+        btns = "\n          ".join(
+            f'<a class="btn {cls}" href="{href}">{html.escape(text)}</a>'
+            for cls, href, text in d["buttons"]
+        )
+        disclaimer = (
+            f'\n        <p class="door-disclaimer">{html.escape(d["disclaimer"])}</p>'
+            if d.get("disclaimer") else ""
+        )
+        return (
+            f'      <article class="door-card door-card--{d["key"]}">\n'
+            f'        <div class="door-icon" aria-hidden="true">{d["icon"]}</div>\n'
+            f'        <h3 class="door-role">{html.escape(d["role"])}</h3>\n'
+            f'        <p class="door-line">{d["line"]}</p>\n'
+            f'        <div class="door-actions">\n'
+            f'          {btns}\n'
+            f'        </div>{disclaimer}\n'
+            f'      </article>'
+        )
+
+    doors_html = "\n".join(_door_block(d) for d in doors)
+
+    def _step_block(num: str, step_title: str, body: str) -> str:
+        return (
+            f'      <div class="step-card">\n'
+            f'        <div class="step-num">{html.escape(num)}</div>\n'
+            f'        <div class="step-title">{html.escape(step_title)}</div>\n'
+            f'        <p class="step-text">{body}</p>\n'
+            f'      </div>'
+        )
+
+    steps_html = "\n".join(_step_block(n, t, b) for n, t, b in steps)
 
     def _stat_block(num_html: str, lbl: str, href: str | None = None) -> str:
         inner = (
@@ -1593,28 +1540,9 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
         ),
     ])
 
-    def _pillar_card_block(tag: str, lbl: str, body: str, *, accent: bool) -> str:
-        css = "num-card num-card--accent" if accent else "num-card"
-        return (
-            f'      <div class="{css}">\n'
-            f'        <div class="num-big">{html.escape(tag)}</div>\n'
-            f'        <div class="num-lbl">{lbl}</div>\n'
-            f'        <p class="num-text">{body}</p>\n'
-            '      </div>'
-        )
-
-    pillar_time_html = "\n\n".join(
-        _pillar_card_block(tag, lbl, body, accent=True)
-        for tag, lbl, body in pillar_time_cards
-    )
-    pillar_miss_html = "\n\n".join(
-        _pillar_card_block(tag, lbl, body, accent=False)
-        for tag, lbl, body in pillar_miss_cards
-    )
-
-    cta_doors_html = "\n      ".join(
-        f'<a class="btn {cls}" href="{href}">{html.escape(text)}</a>'
-        for cls, href, text in cta_doors
+    explore_html = " · ".join(
+        f'<a href="{href}">{html.escape(text)}</a>'
+        for href, text in explore
     )
 
     return f"""<!DOCTYPE html>
@@ -1639,10 +1567,21 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
       <p class="home-kicker">{kicker}</p>
       <h1>{h1}</h1>
       {sub_html}
-      <div class="cta-row">
-        <a class="btn btn-primary" href="{try_href}">{primary}</a>
-        <a class="btn btn-secondary" href="{gallery_href}">{secondary}</a>
-      </div>
+    </div>
+  </section>
+
+  <section class="home-doors" aria-label="{doors_label}">
+    <h2 class="home-doors-h">{doors_h}</h2>
+    <p class="home-doors-sub">{doors_sub}</p>
+    <div class="home-doors-grid">
+{doors_html}
+    </div>
+  </section>
+
+  <section class="home-steps" aria-label="{steps_label}">
+    <h2 class="home-steps-h">{steps_h}</h2>
+    <div class="home-steps-grid">
+{steps_html}
     </div>
   </section>
 
@@ -1652,32 +1591,10 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
     </div>
   </section>
 
-  <section class="home-pillars" aria-label="{pillars_label}">
-    <h2 class="home-pillar-h">{pillar_time_h}</h2>
-    <p class="home-pillar-sub">{pillar_time_sub}</p>
-    <div class="num-grid num-grid--rich">
-
-{pillar_time_html}
-
-    </div>
-
-    <h2 class="home-pillar-h home-pillar-h--alt">{pillar_miss_h}</h2>
-    <p class="home-pillar-sub">{pillar_miss_sub}</p>
-    <div class="num-grid num-grid--rich">
-
-{pillar_miss_html}
-
-    </div>
-  </section>
-
-  <section class="home-source-band" aria-label="OpenOnco sources">
+  <section class="home-trust" aria-label="How OpenOnco stays safe">
+    <p class="home-trust-line">{trust}</p>
     <p class="home-note">{note}</p>
-  </section>
-
-  <section class="home-cta-doors" aria-label="{cta_doors_label}">
-    <div class="cta-row">
-      {cta_doors_html}
-    </div>
+    <p class="home-explore" aria-label="{explore_label}">{explore_html}</p>
   </section>
 
   <footer class="page-foot">
@@ -2656,8 +2573,46 @@ def render_ask(*, target_lang: str = "en") -> str:
         if is_en else
         "Не вставляйте реальні персональні дані пацієнта. Це чернетка для tumor board, а не автономна медична порада."
     )
+    # Patient-welcome layer (additive). The `safety` line above is load-bearing and
+    # renders verbatim; the lines below sit alongside it, never replacing it.
+    patient_welcome = (
+        "For clinicians and for patients alike: if your own oncologist gave you a plan, use "
+        "this page to understand it in plain language and prepare questions for your next "
+        "visit. It does not evaluate whether your plan is right and does not replace your "
+        "oncologist."
+        if is_en else
+        "Для лікарів і для пацієнтів: якщо ваш онколог дав вам план, скористайтеся цією "
+        "сторінкою, щоб зрозуміти його простою мовою та підготувати питання до наступного "
+        "візиту. Вона не оцінює, чи правильний ваш план, і не замінює вашого онколога."
+    )
+    patient_safety = (
+        "This does not replace your own doctor. Never start, stop, or change treatment based "
+        "on this page — always discuss it with your treating oncologist."
+        if is_en else
+        "Це не замінює вашого лікаря. Ніколи не починайте, не припиняйте і не змінюйте "
+        "лікування на основі цієї сторінки — завжди обговорюйте це зі своїм лікарем-онкологом."
+    )
+    deid_note = (
+        "Before pasting, remove your name, date of birth and any ID numbers — the text is "
+        "sent to our server to be analysed. Paste only the parts you have questions about, "
+        "not the whole document. If you cannot remove your identifying details, don't paste "
+        "— bring the plan to your visit instead."
+        if is_en else
+        "Перед вставленням приберіть ім'я, дату народження та будь-які номери документів — "
+        "текст надсилається на наш сервер для аналізу. Вставляйте лише ті частини, щодо яких "
+        "маєте питання, а не весь документ. Якщо не можете прибрати особисті дані, не "
+        "вставляйте — краще принесіть план на візит."
+    )
     examples = (
         [
+            (
+                "Patient · understand my plan",
+                "My oncologist gave me a written treatment plan for bowel cancer that begins with chemotherapy before surgery. In plain language, what is each part of the plan meant to do, and why might it be given in this order? Please help me turn this into clear questions to ask my own oncologist — do not tell me to start, stop, or change anything."
+            ),
+            (
+                "Patient · questions before my visit",
+                "I have breast cancer and my oncologist has recommended hormone tablets after surgery. I don't fully understand why. Can you help me write down plain-language questions to bring to my next appointment, so I can ask my oncologist about the reasons, how long I would take it, and what to watch for? Please don't advise me to change my treatment."
+            ),
             (
                 "Gastric 1L",
                 "62-year-old patient with metastatic gastric cancer and diffuse peritoneal carcinomatosis. Histology: poorly differentiated adenocarcinoma with signet-ring cells, MSS, HER2-negative, PD-L1 CPS 25. What is the optimal first-line treatment?"
@@ -2697,6 +2652,14 @@ def render_ask(*, target_lang: str = "en") -> str:
         ]
         if is_en else
         [
+            (
+                "Пацієнт · зрозуміти мій план",
+                "Онколог дав мені письмовий план лікування раку кишківника, який починається з хіміотерапії перед операцією. Поясніть простою мовою, для чого потрібна кожна частина плану і чому їх можуть призначати саме в такому порядку. Допоможіть перетворити це на зрозумілі питання до мого онколога — не радьте мені щось починати, припиняти чи змінювати."
+            ),
+            (
+                "Пацієнт · питання перед візитом",
+                "У мене рак грудної залози, і онколог рекомендував приймати гормональні таблетки після операції. Я не до кінця розумію чому. Допоможіть сформулювати простою мовою питання до наступного прийому, щоб я міг(-ла) запитати онколога про причини, тривалість прийому та на що звертати увагу. Будь ласка, не радьте змінювати лікування."
+            ),
             (
                 "Gastric 1L",
                 "62-річний пацієнт із метастатичним раком шлунка, поширений перитонеальний канцероматоз. Гістологія: недиференційована аденокарцинома з перснеподібними клітинами, MSS, HER2-негативний, PD-L1 CPS = 25. Яка оптимальна перша лінія лікування?"
@@ -2769,6 +2732,9 @@ def render_ask(*, target_lang: str = "en") -> str:
 .ask-result {{ white-space:pre-wrap; font:14px/1.55 var(--mono); background:#102018; color:#ecfdf5; border:1px solid #244d38; border-radius:8px; padding:16px; min-height:380px; overflow:auto; box-shadow:inset 0 1px 0 rgba(255,255,255,0.06); }}
 .ask-result:empty::before {{ content:""; display:block; min-height:1px; }}
 .ask-muted {{ color:#647067; font-size:14px; }}
+.ask-patient-note {{ margin-top:8px; }}
+.ask-patient-safety {{ margin:8px 0 0; padding:8px 12px; border-left:3px solid #f59e0b; background:#fffbeb; color:#7c2d12; font-weight:700; font-size:13.5px; line-height:1.4; border-radius:0 6px 6px 0; }}
+.ask-deid-note {{ margin:8px 0 0; color:#475569; font-size:13px; line-height:1.45; }}
 .ask-examples {{ display:grid; gap:10px; margin:12px 0 14px; max-height:460px; overflow:auto; padding-right:4px; }}
 .ask-example {{ display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; border:1px solid #dbe7df; border-radius:8px; padding:12px; background:#f8fbf8; }}
 .ask-example-title {{ font-weight:800; margin-bottom:4px; color:#073b22; }}
@@ -2804,6 +2770,8 @@ def render_ask(*, target_lang: str = "en") -> str:
       <h1>{html.escape(title)}</h1>
       <p class="lead">{lead}</p>
       <p class="ask-muted">{safety}</p>
+      <p class="ask-muted ask-patient-note">{patient_welcome}</p>
+      <p class="ask-patient-safety">{patient_safety}</p>
     </div>
     <div class="ask-hero-meter" aria-label="{quota_label}">
       <div class="ask-stat"><strong>3</strong><span>{quota_hero_label}</span></div>
@@ -2821,6 +2789,7 @@ def render_ask(*, target_lang: str = "en") -> str:
         {case_label}
         <textarea id="caseText" spellcheck="true" placeholder="{html.escape(placeholder)}"></textarea>
       </label>
+      <p class="ask-deid-note">{deid_note}</p>
       <div class="ask-quota">
         <span>{quota_label}</span>
         <strong><span id="quotaUsed">0</span> / 3</strong>
@@ -3164,6 +3133,16 @@ def render_ask(*, target_lang: str = "en") -> str:
     resetProgress();
   }});
   renderExamples();
+  (function prefillFromUrl() {{
+    try {{
+      const params = new URLSearchParams(window.location.search);
+      const preset = params.get('case') || params.get('q');
+      if (preset) {{
+        caseText.value = preset;
+        caseText.focus();
+      }}
+    }} catch (e) {{ /* ignore malformed query */ }}
+  }})();
   getUserId();
   updateQuota();
   resetProgress();
