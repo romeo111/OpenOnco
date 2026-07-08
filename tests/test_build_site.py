@@ -670,6 +670,47 @@ def test_geo_lang_redirect_behaviour_markers(site_dir: Path):
     # No API key is embedded (static public site) and referrers are not leaked.
     assert "referrerPolicy:'no-referrer'" in block
     assert "api_key" not in block.lower() and "apikey" not in block.lower()
+    # Legacy /en/ redirect stubs bail (no /ukr/en/ twin exists).
+    assert "/^\\/en(\\/|$)/" in block
+    # A slow async lookup must not yank a visitor who has started interacting.
+    assert "if(!touched)go(want(code))" in block
+    # Third-party surface minimized: GeoJS + ipapi.co only (ipwho.is dropped);
+    # exactly two https geo endpoints in the fallback chain.
+    assert "get.geojs.io" in block and "ipapi.co" in block
+    assert "ipwho.is" not in block
+    assert block.count("https://") == 2
+
+
+def test_geo_lang_redirect_skips_redirect_stubs_and_404():
+    """inject_geo_lang_redirect must never place (and must strip) the script on
+    redirect stubs (legacy /en/ tree carries <meta http-equiv=refresh> and has
+    no /ukr/en/ twin) or on 404.html (served for arbitrary missing paths, so a
+    mirror hop only 404s again)."""
+    from scripts.site_head import GEO_LANG_START, inject_geo_lang_redirect
+
+    normal = ('<!DOCTYPE html><html><head><meta charset="utf-8">'
+              "<title>x</title></head><body></body></html>")
+    stub = ('<!DOCTYPE html><html><head><meta charset="utf-8">'
+            '<meta http-equiv="refresh" content="0; url=/">'
+            "</head><body></body></html>")
+
+    # normal content page gets the block
+    injected = inject_geo_lang_redirect(normal, path="index.html")
+    assert GEO_LANG_START in injected
+
+    # redirect stub never gets it (regardless of path)
+    assert GEO_LANG_START not in inject_geo_lang_redirect(stub)
+    assert GEO_LANG_START not in inject_geo_lang_redirect(stub, path="en/index.html")
+
+    # 404 page (detected by path) never gets it
+    assert GEO_LANG_START not in inject_geo_lang_redirect(normal, path="404.html")
+
+    # already-injected page that is a stub -> block stripped back out (idempotent)
+    stubbed = injected.replace(
+        '<meta charset="utf-8">',
+        '<meta charset="utf-8"><meta http-equiv="refresh" content="0; url=/">',
+    )
+    assert GEO_LANG_START not in inject_geo_lang_redirect(stubbed, path="en/index.html")
 
 
 def test_geo_lang_does_not_break_charset_or_seo(site_dir: Path):

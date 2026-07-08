@@ -19,7 +19,14 @@
     // Bots: leave both language trees crawlable — no auto-redirect.
     if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
     var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
     var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
     function mirror(){
       var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
       return p+(location.search||'')+(location.hash||'');
@@ -39,16 +46,17 @@
     var cc=null;
     try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
     if(cc){go(want(cc));return;}
-    // 3) look up country by IP (keyless, CORS, no-referrer). Any failure stays English.
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
     var eps=[
       ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
-      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}],
-      ['https://ipwho.is/',function(j){return j&&j.country_code;}]
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
     ];
     (function tryEp(i){
       if(i>=eps.length)return;                          // all endpoints failed → English default
       var ctl=('AbortController'in window)?new AbortController():null;
-      var to=ctl?setTimeout(function(){ctl.abort();},1800):null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
       fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
         .then(function(r){return r.ok?r.json():Promise.reject();})
         .then(function(j){
@@ -56,7 +64,7 @@
           var code=((eps[i][1](j))||'').toString().toUpperCase();
           if(/^[A-Z]{2}$/.test(code)){
             try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
-            go(want(code));
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
           }else{tryEp(i+1);}
         })
         .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
@@ -65,7 +73,7 @@
 })();
 </script>
 <!-- openonco-geo-lang:end -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bowel perforation, severe malabsorption (albumin &lt;2.5 g/dL), or surgical complication — d... - OpenOnco</title>
   <!-- openonco-seo:start -->
 <meta name="description" content="Bowel perforation, severe malabsorption (albumin &amp;lt;2.5 g/dL), or surgical complication — d...: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">

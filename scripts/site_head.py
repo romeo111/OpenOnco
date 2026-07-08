@@ -88,7 +88,14 @@ GEO_LANG_SCRIPT = GEO_LANG_START + r"""
     // Bots: leave both language trees crawlable — no auto-redirect.
     if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
     var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
     var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
     function mirror(){
       var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
       return p+(location.search||'')+(location.hash||'');
@@ -108,16 +115,17 @@ GEO_LANG_SCRIPT = GEO_LANG_START + r"""
     var cc=null;
     try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
     if(cc){go(want(cc));return;}
-    // 3) look up country by IP (keyless, CORS, no-referrer). Any failure stays English.
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
     var eps=[
       ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
-      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}],
-      ['https://ipwho.is/',function(j){return j&&j.country_code;}]
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
     ];
     (function tryEp(i){
       if(i>=eps.length)return;                          // all endpoints failed → English default
       var ctl=('AbortController'in window)?new AbortController():null;
-      var to=ctl?setTimeout(function(){ctl.abort();},1800):null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
       fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
         .then(function(r){return r.ok?r.json():Promise.reject();})
         .then(function(j){
@@ -125,7 +133,7 @@ GEO_LANG_SCRIPT = GEO_LANG_START + r"""
           var code=((eps[i][1](j))||'').toString().toUpperCase();
           if(/^[A-Z]{2}$/.test(code)){
             try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
-            go(want(code));
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
           }else{tryEp(i+1);}
         })
         .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
@@ -385,13 +393,21 @@ def inject_seo_metadata(html_text: str, *, path: str) -> str:
     )
 
 
-def inject_geo_lang_redirect(html_text: str) -> str:
+def inject_geo_lang_redirect(html_text: str, *, path: str | None = None) -> str:
     """Insert the client-side IP → language auto-selection script into <head>.
 
     Idempotent: an existing block is replaced, otherwise the script is placed
     immediately after the ``<meta charset...>`` tag (keeping charset first in
     the document) or, failing that, right after the opening ``<head>`` tag.
     Pages without a head are returned unchanged.
+
+    The script is deliberately NOT injected into (and is stripped from) two page
+    kinds, since geo-redirecting them only produces broken or wasteful hops:
+      * redirect stubs — the legacy ``/en/`` tree carries its own
+        ``<meta http-equiv="refresh">`` to the canonical page and has no
+        ``/ukr/`` twin, so a mirror hop would 404 (``/ukr/en/...``);
+      * ``404.html`` — GitHub Pages serves it for arbitrary missing paths, so a
+        mirror hop just yields another 404 (there is no ``/ukr/`` 404 twin).
     """
     if "<head" not in html_text.lower():
         return html_text
@@ -400,6 +416,15 @@ def inject_geo_lang_redirect(html_text: str) -> str:
         rf"{re.escape(GEO_LANG_START)}.*?{re.escape(GEO_LANG_END)}\s*",
         flags=re.IGNORECASE | re.DOTALL,
     )
+
+    is_redirect_stub = bool(
+        re.search(r'<meta[^>]+http-equiv=["\']?\s*refresh', html_text, flags=re.IGNORECASE)
+    )
+    is_404 = bool(path and path.replace("\\", "/").lstrip("/").endswith("404.html"))
+    if is_redirect_stub or is_404:
+        # Never carry the script here; strip a previously-injected block if present.
+        return existing.sub("", html_text, count=1) if existing.search(html_text) else html_text
+
     if existing.search(html_text):
         return existing.sub(GEO_LANG_SCRIPT + "\n", html_text, count=1)
 
@@ -720,7 +745,7 @@ def finalize_site_discovery(
     for page in _html_pages(output_dir):
         rel = page.relative_to(output_dir).as_posix()
         original = page.read_text(encoding="utf-8")
-        updated = inject_geo_lang_redirect(inject_seo_metadata(original, path=rel))
+        updated = inject_geo_lang_redirect(inject_seo_metadata(original, path=rel), path=rel)
         if updated != original:
             page.write_text(updated, encoding="utf-8")
             changed += 1
