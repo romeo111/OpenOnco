@@ -1792,14 +1792,21 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
         total_cycles = reg.get("total_cycles") or "—"
         if cycle_len:
             cycles_str = str(total_cycles).strip()
+            cycles_word = "циклів" if target_lang == "uk" else "cycles"
+            days_word = "днів" if target_lang == "uk" else "day"
             window = (
-                f"{cycle_len}-day cycles × {cycles_str}"
+                f"{cycle_len}-{days_word} {cycles_word} × {cycles_str}"
                 if cycles_str and cycles_str != "—"
-                else f"{cycle_len}-day cycles"
+                else f"{cycle_len}-{days_word} {cycles_word}"
+            )
+            reg_name = (
+                reg.get("name_ua") or reg.get("name", "—")
+                if target_lang == "uk"
+                else reg.get("name", "—")
             )
             phases_html.append(
                 '<div class="tl-phase tl-phase--induction">'
-                f'<div class="name">{_h(_t("tl_induction", target_lang))} · {_h(reg.get("name", "—"))}</div>'
+                f'<div class="name">{_h(_t("tl_induction", target_lang))} · {_h(reg_name)}</div>'
                 f'<div class="window">{_h(window)}</div>'
                 '</div>'
             )
@@ -3183,7 +3190,14 @@ def render_plan_html(
             badge = f'<span class="track-default-badge">{_h(_t("default_badge", target_lang))}</span>'
         else:
             badge = ""
-        regimen_str = (t.regimen_data or {}).get("name", "—") if t.regimen_data else "—"
+        if t.regimen_data:
+            regimen_str = (
+                t.regimen_data.get("name_ua") or t.regimen_data.get("name", "—")
+                if target_lang == "uk"
+                else t.regimen_data.get("name", "—")
+            )
+        else:
+            regimen_str = "—"
         sup = (
             f'<dt>{_h(_t("supportive_label", target_lang))}</dt><dd>{_h(", ".join(s.get("id", "?") for s in t.supportive_care_data))}</dd>'
             if t.supportive_care_data else ""
@@ -3282,7 +3296,14 @@ def render_plan_html(
         seq_rows: list[str] = []
         for t in sequencing_tracks:
             authored_line = ((t.indication_data or {}).get("applicable_to") or {}).get("line_of_therapy")
-            regimen_name = (t.regimen_data or {}).get("name", "-") if t.regimen_data else "-"
+            if t.regimen_data:
+                regimen_name = (
+                    t.regimen_data.get("name_ua") or t.regimen_data.get("name", "-")
+                    if target_lang == "uk"
+                    else t.regimen_data.get("name", "-")
+                )
+            else:
+                regimen_name = "-"
             line_note = (
                 f'{_t("line_prefix", target_lang)} {authored_line}'
                 if authored_line is not None
@@ -3633,7 +3654,8 @@ def _render_tracks_plain(plan_result: PlanResult) -> str:
         regimen_data = t.regimen_data or {}
         regimen_id = regimen_data.get("id", "") if isinstance(regimen_data, dict) else ""
         regimen_name = (
-            regimen_data.get("name", "") if isinstance(regimen_data, dict) else ""
+            (regimen_data.get("name_ua") or regimen_data.get("name", ""))
+            if isinstance(regimen_data, dict) else ""
         )
         schedule_str = _regimen_schedule_ua(regimen_data)
         signoff_badge = _render_signoff_badge_patient(t.indication_data)
