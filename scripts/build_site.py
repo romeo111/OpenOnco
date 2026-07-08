@@ -8321,6 +8321,14 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
              "We do not duplicate external databases; hosting requires explicit H1-H5 justification."),
             ("Free public resource → non-commercial", "CHARTER.md §2",
              "Many licences (ESMO CC-BY-NC-ND, OncoKB academic, ATC) depend on this. A paid tier would trigger a license audit."),
+            ("IP-based language auto-select", "client-side, opt-out",
+             "To show the interface in your language, your browser looks up your country from your IP via a third-party service "
+             "(<a href=\"https://www.geojs.io/\" target=\"_blank\" rel=\"noopener\">GeoJS</a>, with "
+             "<a href=\"https://ipapi.co/\" target=\"_blank\" rel=\"noopener\">ipapi.co</a> as fallback). Only your IP is sent, with no "
+             "referrer; we run no server and keep no logs of our own. The detected country and your manual EN/UA choice are stored only "
+             "in your browser (localStorage) and the manual switch always overrides the IP guess. Ukrainian is shown only for Ukrainian "
+             "IP addresses; English everywhere else. By using the site you consent to this country lookup — to avoid it, pick a language "
+             "manually and your choice is remembered."),
         ]
         footer_disclaimer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
     else:
@@ -8383,6 +8391,14 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
              "Не дублюємо external бази; hosting потребує explicit H1-H5 justification."),
             ("Free public resource → non-commercial", "CHARTER.md §2",
              "Багато ліцензій (ESMO CC-BY-NC-ND, OncoKB academic, ATC) залежать від цього. Paid tier тригернув би license audit."),
+            ("Автовибір мови за IP", "на клієнті, opt-out",
+             "Щоб показати інтерфейс вашою мовою, браузер визначає країну за вашою IP-адресою через сторонній сервіс "
+             "(<a href=\"https://www.geojs.io/\" target=\"_blank\" rel=\"noopener\">GeoJS</a>, резерв — "
+             "<a href=\"https://ipapi.co/\" target=\"_blank\" rel=\"noopener\">ipapi.co</a>). Передається лише ваш IP, без referrer; "
+             "ми не маємо власного сервера й не ведемо логів. Визначена країна та ваш ручний вибір EN/UA зберігаються лише у вашому "
+             "браузері (localStorage), а ручний перемикач завжди перекриває визначення за IP. Українська показується тільки для "
+             "українських IP-адрес; в усіх інших випадках — англійська. Користуючись сайтом, ви погоджуєтесь на це визначення країни — "
+             "щоб його уникнути, оберіть мову вручну, і ваш вибір запам'ятається."),
         ]
         footer_disclaimer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
 
