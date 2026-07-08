@@ -14,15 +14,17 @@ definition: >
 definition_ua: >
   Рецидивна/рефрактерна DLBCL після ≥2 попередніх системних терапій,
   НЕ кандидат для анти-CD19 CAR-T (axi-cel / liso-cel / tisa-cel)
-  через frailty, органну дисфункцію, коморбідне навантаження,
-  manufacturing-window ризик, попередню невдачу CAR-T або відсутність
-  funded referral pathway. Маршрутизує 3L+ на лонкастуксимаб тезирин
-  (LOTIS-2 Caimi 2021; ORR 48%, CR 24%, мПФВ 4.9 міс, мОВ 9.5 міс)
-  — off-the-shelf амбулаторний ADC ідеально для non-CAR-T-eligible
-  frail пацієнта. Відрізняти від універсального
+  через крихкість, органну дисфункцію, коморбідне навантаження, ризик,
+  пов'язаний із тривалістю виготовлення клітинного продукту, попередню
+  невдачу CAR-T або відсутність фінансованого маршруту направлення.
+  Маршрутизує 3L+ на лонкастуксимаб тезирин (LOTIS-2 Caimi 2021;
+  ORR 48%, CR 24%, мПФВ 4.9 міс, мОВ 9.5 міс) — готовий до застосування
+  (off-the-shelf) амбулаторний ADC, ідеально придатний для крихкого
+  пацієнта, не прийнятного для CAR-T. Відрізняти від універсального
   RF-CAR-T-INELIGIBLE-AGE-COMORBID (вік ≥75 + Charlson ≥4) — цей
-  флаг охоплює ширший DLBCL-специфічний композит ineligibility,
-  включаючи UA-access обмеження (без funded міжнародного referral pathway).
+  флаг охоплює ширший DLBCL-специфічний композит непридатності,
+  включаючи обмеження доступу в Україні (відсутність фінансованого
+  міжнародного маршруту направлення).
 
 trigger:
   type: composite_score
@@ -79,16 +81,17 @@ notes: >
   are folded in via red_flag refs — this composite RF is the broader
   DLBCL-specific ineligibility signal.
 notes_ua: >
-  Truthy lookup `cart_ineligibility_reason` — якщо patient JSON встановлює
-  це поле на БУДЬ-ЯКИЙ explanatory string, тригер спрацьовує. Забезпечує
-  гнучкість для клініцистів які документують case-specific обґрунтування
-  (наприклад "frailty_age_71_ECOG_2_no_international_referral_pathway",
+  Перевірка заповненості поля `cart_ineligibility_reason` — якщо в JSON
+  пацієнта це поле містить БУДЬ-ЯКИЙ пояснювальний рядок, тригер
+  спрацьовує. Забезпечує гнучкість для клініцистів, які документують
+  case-specific обґрунтування (наприклад
+  "frailty_age_71_ECOG_2_no_international_referral_pathway",
   "prior_axicel_failure", "manufacturing_window_too_short_for_pd_kinetics").
-  Альтернативний композитний шлях: явні ECOG ≥2 + вік ≥70 (frail older
-  cohort) як в критеріях зарахування LOTIS-2. Універсальні
-  CAR-T-ineligible RFs (вік ≥75 + Charlson ≥4 АБО органна дисфункція)
+  Альтернативний композитний шлях: явні ECOG ≥2 + вік ≥70 (крихка
+  старша когорта) як у критеріях зарахування LOTIS-2. Універсальні
+  CAR-T-ineligible RF (вік ≥75 + Charlson ≥4 АБО органна дисфункція)
   включені через red_flag refs — цей композитний RF є ширшим
-  DLBCL-специфічним сигналом ineligibility.
+  DLBCL-специфічним сигналом непридатності.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_09
-draft_revision: 2
+draft_revision: 3

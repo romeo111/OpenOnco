@@ -19,23 +19,26 @@ definition: >-
   Prevention-persona RedFlag (§20 ratification 2026-05-18, v0.3
   chronic-condition pilot).
 definition_ua: >-
-  Мієлопроліферативне новоутворення (поліцитемія вера [PV], essential
-  thrombocythemia [ET] або первинний мієлофіброз [PMF]) per WHO 2022
-  критеріями, АБО клінічний фенотип, що suggestive MPN (driver-mutation
-  позитивність — JAK2 V617F, JAK2 exon 12, CALR exon 9 або MPL W515 —
-  з постійною myeloproliferative blood-count абнормальністю, але ще не
-  задовольняє full WHO критерії) у пацієнта без поточного діагнозу
-  гострого мієлоїдного лейкозу (AML) або post-MPN мієлофіброзу. MPN
-  клон-носить inherent ризик clonal evolution до higher-grade myeloid
-  neoplasia: cumulative ризик лейкемічної трансформації (sAML /
-  blast-phase MPN) ~5% у PV, ~3% у ET, ~10-20% у PMF за 10-15 років;
-  cumulative ризик прогресії PV/ET до post-PV/post-ET мієлофіброзу
-  ~10-15% за 15 років. Стандартний MPN менеджмент знижує тромбоз
-  (домінуючий short-term mortality driver) але не abolish
-  leukemic-transformation ризик. Спостереження з CBC + peripheral
-  smear + bone marrow evaluation на cytopenia або blast emergence —
-  стандартний secondary-prevention підхід. Prevention-persona RedFlag
-  (ратифікація §20, 2026-05-18, v0.3 пілот chronic-condition).
+  Мієлопроліферативне новоутворення (поліцитемія вера [PV], есенціальна
+  тромбоцитемія [ET] або первинний мієлофіброз [PMF]) за критеріями
+  WHO 2022, АБО клінічний фенотип, підозрілий щодо MPN (наявність
+  драйверної мутації — JAK2 V617F, JAK2 exon 12, CALR exon 9 або
+  MPL W515 — зі стійкою мієлопроліферативною зміною показників крові,
+  що ще не відповідає повним критеріям WHO) у пацієнта без поточного
+  діагнозу гострого мієлоїдного лейкозу (AML) або мієлофіброзу після
+  MPN. Клони MPN несуть притаманний їм ризик клональної еволюції до
+  мієлоїдного новоутворення вищого ступеня злоякісності: кумулятивний
+  ризик лейкемічної трансформації (sAML / бластна фаза MPN) ~5% при PV,
+  ~3% при ET, ~10-20% при PMF за 10-15 років; кумулятивний ризик
+  прогресування від PV/ET до мієлофіброзу після PV/ET ~10-15% за
+  15 років. Стандартне лікування MPN знижує ризик тромбозу (основного
+  фактора смертності у короткостроковій перспективі), але не усуває
+  ризику лейкемічної трансформації. Стандартний підхід вторинної
+  профілактики — спостереження із загальним аналізом крові, мазком
+  периферичної крові та дослідженням кісткового мозку в разі появи
+  цитопенії або бластних клітин. RedFlag профілю профілактики
+  (ратифікація §20, 2026-05-18, пілотний проєкт v0.3 для хронічних
+  станів).
 
 trigger:
   type: lab_value
@@ -134,30 +137,31 @@ notes: >
   STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
   exemption.
 notes_ua: >
-  v0.3 пілот prevention chronic-condition — MPN / secondary AML
-  prevention. Prevention-persona RedFlag (CHARTER §3 поправка
-  2026-05-18). Спрацьовує коли профіль пацієнта показує MPN-driver-
-  mutation позитивність (JAK2 V617F, CALR exon 9, MPL W515) БЕЗ
-  підтвердженого MPN Disease entity (DIS-PV, DIS-ET, DIS-PMF) ТА
-  відсутнього підтвердженого AML або post-MPN MF.
+  v0.3 пілотний проєкт профілактики для хронічних станів — профілактика
+  MPN / вторинного AML. RedFlag профілю профілактики (CHARTER §3,
+  поправка 2026-05-18). Спрацьовує, коли профіль пацієнта показує
+  позитивність за драйверною мутацією MPN (JAK2 V617F, CALR exon 9,
+  MPL W515) БЕЗ підтвердженого entity Disease для MPN (DIS-PV, DIS-ET,
+  DIS-PMF) ТА без підтвердженого AML або мієлофіброзу після MPN.
 
-  Engine design note: пацієнти з підтвердженим DIS-PV / DIS-ET /
-  DIS-PMF маршрутизуються через treatment-persona MPN management
-  алгоритм (cytoreduction з hydroxyurea або ruxolitinib, аспірин для
-  thrombosis prevention, phlebotomy для PV, тощо) і НЕ входять у §20
-  prevention path. Цей RF покриває driver-mutation-позитивних
-  пацієнтів у pre-MPN-criteria фазі.
+  Примітка щодо логіки рушія: пацієнти з підтвердженим DIS-PV / DIS-ET /
+  DIS-PMF маршрутизуються через алгоритм лікування MPN (циторедукція
+  гідроксисечовиною або руксолітинібом, аспірин для профілактики
+  тромбозу, флеботомія при PV тощо) і НЕ входять до шляху профілактики
+  §20. Цей RF покриває вужчу групу пацієнтів, позитивних за драйверною
+  мутацією, у фазі до відповідності критеріям MPN.
 
-  Доказова база: cumulative sAML incidence ~3-5% у PV (Cervantes Blood
-  2009); ~3% у ET (Tefferi Leukemia 2014); ~10-20% у PMF (Cervantes
-  Blood 2009). Bone marrow surveillance — для нової cytopenia,
-  circulating blasts, splenomegaly progression, не routine. Allo-HCT
-  — єдина potentially curative опція для post-MPN sAML.
+  Доказова база: кумулятивна частота sAML ~3-5% при PV (Cervantes,
+  Blood, 2009); ~3% при ET (Tefferi, Leukemia, 2014); ~10-20% при PMF
+  (Cervantes, Blood, 2009). Спостереження кісткового мозку — при новій
+  цитопенії, циркулюючих бластах, прогресуванні спленомегалії; не
+  рутинно. Алогенна ТГСК — єдина потенційно курабельна опція при sAML
+  після MPN.
 
-  Це STUB, очікує підпис двох Clinical Co-Lead за §6.1 dev-mode
-  exemption.
+  Це STUB, очікує підпису двох Clinical Co-Lead за винятком §6.1 для
+  режиму розробки.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_v0_3_chronic_condition_pilot
-draft_revision: 1
+draft_revision: 2
 
 draft: true

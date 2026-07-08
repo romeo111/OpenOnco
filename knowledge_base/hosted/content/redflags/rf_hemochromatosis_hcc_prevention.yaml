@@ -16,21 +16,23 @@ definition: >-
   AFP q6mo recommended in HH-associated cirrhosis. Prevention-persona
   RedFlag (§20 ratification 2026-05-18, v0.3 chronic-condition pilot).
 definition_ua: >-
-  Спадковий гемохроматоз (HFE-пов'язаний; C282Y гомозиготний генотип
-  переважно, compound C282Y/H63D гетерозиготний рідше) з біохімічним
-  або гістологічним надлишком заліза у пацієнта без поточного діагнозу
-  HCC. Найсильніший генетичний HCC фактор ризику серед метаболічно-
-  генетичних захворювань печінки: відносний ризик ~20-200x у cirrhotic
-  HFE C282Y гомозиготів (популяційний baseline рідкий; абсолютна HCC
-  incidence ~3-5%/рік у cirrhotic HH когортах). Non-cirrhotic
-  HFE-позитивні пацієнти з iron-overload несуть near-baseline HCC
-  ризик; cirrhotic transition — inflection point. Лікування
-  флеботомією для виснаження запасів заліза (target ferritin
-  <50 нг/мл, transferrin saturation <50%) зупиняє подальшу iron-driven
-  hepatic injury, але не реверсує встановлену cirrhosis або елімінує
-  HCC ризик у cirrhotic пацієнтів. AASLD HCC surveillance з US ± AFP
-  q6 міс рекомендована в HH-асоційованому цирозі. Prevention-persona
-  RedFlag (ратифікація §20, 2026-05-18, v0.3 пілот chronic-condition).
+  Спадковий гемохроматоз (HFE-асоційований; переважно гомозиготний
+  генотип C282Y, рідше — компаунд-гетерозиготний варіант C282Y/H63D)
+  з біохімічним або гістологічним перевантаженням залізом у пацієнта
+  без поточного діагнозу HCC. Найсильніший генетичний фактор ризику
+  HCC серед метаболічно-генетичних захворювань печінки: відносний
+  ризик ~20-200x у гомозиготних за HFE C282Y пацієнтів із цирозом
+  (популяційний базовий рівень рідкісний; абсолютна захворюваність
+  на HCC ~3-5%/рік у когортах HH із цирозом). У HFE-позитивних
+  пацієнтів з перевантаженням залізом без цирозу ризик HCC близький
+  до базового; перехід до цирозу є переломним моментом. Лікування
+  флеботомією для виснаження запасів заліза (цільовий феритин
+  <50 нг/мл, насичення трансферину <50%) зупиняє подальше зумовлене
+  залізом ушкодження печінки, але не усуває вже сформований цироз і
+  не знижує ризик HCC у пацієнтів із цирозом. Скринінг HCC за AASLD
+  (УЗД ± AFP кожні 6 міс) рекомендований при HH-асоційованому цирозі.
+  RedFlag профілю профілактики (ратифікація §20, 2026-05-18, пілот
+  v0.3 щодо хронічних станів).
 
 trigger:
   type: lab_value
@@ -103,33 +105,36 @@ notes: >
   STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
   exemption.
 notes_ua: >
-  v0.3 пілот prevention chronic-condition — спадковий гемохроматоз
-  (HFE) / HCC. Prevention-persona RedFlag (CHARTER §3 поправка
-  2026-05-18). Спрацьовує коли профіль пацієнта показує підтверджений
-  HFE-пов'язаний гемохроматоз (особливо C282Y гомозиготний з
-  iron-overload) ТА відсутній підтверджений HCC. Engine маршрутизує
-  до PreventionPlan з 2 треками: phlebotomy treatment + ferritin/
-  transferrin saturation моніторинг + AASLD HCC surveillance якщо
-  cirrhotic (IND-HEMOCHROMATOSIS-HCC-PREVENTION-SURVEILLANCE) як
-  стандарт; hepatology-driven спостереження у non-cirrhotic
-  iron-controlled HH (IND-HEMOCHROMATOSIS-HCC-PREVENTION-OBSERVATION)
-  як альтернатива.
+  Пілот v0.3 щодо профілактики хронічних станів — спадковий
+  гемохроматоз (HFE) / HCC. RedFlag профілю профілактики (поправка
+  до CHARTER §3, 2026-05-18). Спрацьовує, коли профіль пацієнта
+  показує підтверджений HFE-асоційований гемохроматоз (особливо
+  гомозиготний C282Y з перевантаженням залізом) ТА відсутній
+  підтверджений HCC. Система спрямовує до плану профілактики
+  (PreventionPlan) за двома напрямками: лікування флеботомією +
+  моніторинг феритину/насичення трансферину + скринінг HCC за AASLD
+  за наявності цирозу (IND-HEMOCHROMATOSIS-HCC-PREVENTION-SURVEILLANCE)
+  як стандарт; спостереження під контролем гепатолога за відсутності
+  цирозу при контрольованому рівні заліза
+  (IND-HEMOCHROMATOSIS-HCC-PREVENTION-OBSERVATION) як альтернатива.
 
-  Доказова база: HCC SIR ~21-200 у cirrhotic HH (Niederau NEJM 1996;
-  Elmberg Gastroenterology 2003); ~3-5%/рік absolute incidence —
-  перевищує AASLD 1.5%/рік. Non-cirrhotic iron-controlled — дуже
-  низький абсолютний ризик. Phlebotomy нормалізує тривалість життя
-  для non-cirrhotic; для cirrhotic — поліпшує виживання, але
-  залишковий HCC ризик persistent.
+  Доказова база: HCC SIR ~21-219 у пацієнтів з HH і цирозом (Niederau
+  NEJM 1996; Elmberg Gastroenterology 2003); ~3-5%/рік абсолютна
+  захворюваність — перевищує поріг AASLD 1,5%/рік для скринінгу. За
+  відсутності цирозу при контрольованому залізі — дуже низький
+  абсолютний ризик. Флеботомія нормалізує тривалість життя за
+  відсутності цирозу; за наявності цирозу — покращує виживаність,
+  але залишковий ризик HCC зберігається.
 
-  Phlebotomy режим: 500 мл щотижнево-біwknownight індукція (до
-  ferritin <50 нг/мл), далі maintenance q2-4 міс (ferritin 50-100
-  нг/мл). Iron chelation для пацієнтів, що не можуть phlebotomy.
+  Режим флеботомії: 500 мл щотижнево або раз на два тижні під час
+  індукції (до феритину <50 нг/мл), далі підтримувальна флеботомія
+  кожні 2-4 міс (феритин 50-100 нг/мл). Хелація заліза (деферазирокс,
+  дефероксамін) — для пацієнтів, яким флеботомія протипоказана.
 
-  Це STUB, очікує підпис двох Clinical Co-Lead за §6.1 dev-mode
-  exemption.
+  Це STUB, очікує підпис двох Clinical Co-Lead за винятком dev-mode
+  §6.1.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_v0_3_chronic_condition_pilot
-draft_revision: 1
+draft_revision: 2
 
 draft: true
