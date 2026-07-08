@@ -11,6 +11,9 @@ purpose: >
 output_indications:
 - IND-FL-2L-OBG-BENDA
 - IND-FL-2L-R2
+- IND-FL-3L-AXICEL-CART
+- IND-FL-3L-MOSUNETUZUMAB
+- IND-FL-3L-TAZEMETOSTAT
 default_indication: IND-FL-2L-OBG-BENDA
 alternative_indication: IND-FL-2L-R2
 
@@ -22,7 +25,7 @@ decision_tree:
       threshold: 1
       comparator: "<="
   if_true:
-    next_step: 01
+    next_step: "2l"
   if_false:
     next_step: 1
   notes: >
@@ -30,7 +33,7 @@ decision_tree:
     routing (step 01). prior_lines ≥2 → existing 3L+ routing (step 1 EZH2 gate).
     This step ensures OBG+Benda and R² are only offered at the correct 2L context.
 
-- step: 01
+- step: "2l"
   evaluate:
     any_of:
     - condition: "Rituximab-refractory (progression on or within 6 months of last rituximab)"
