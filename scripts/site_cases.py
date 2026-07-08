@@ -134,7 +134,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-nsclc-alk-fusion-1l",
         file="patient_showcase_nsclc_alk_fusion_1l.json",
-        label_ua="NSCLC - ALK fusion - ESCAT IA / CIViC evidence",
+        label_ua="NSCLC - ALK-злиття - ESCAT IA / докази CIViC",
         summary_ua="Метастатична аденокарцинома легень з ALK fusion і метастазами в мозок. Показує сильний ESCAT IA сигнал, CIViC evidence lanes і те, що actionability подається як контекст для MDT, а не як прихований ranking engine.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -145,7 +145,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-crc-braf-v600e-2l",
         file="patient_showcase_crc_braf_v600e_2l.json",
-        label_ua="mCRC - BRAF V600E - tumor-specific actionability",
+        label_ua="mCRC - BRAF V600E - пухлино-специфічна actionability",
         summary_ua="BRAF V600E після прогресії на FOLFOX. Кейс показує, чому один і той самий варіант не можна трактувати поза пухлинним контекстом: у CRC потрібна EGFR-комбінація, а не проста BRAF-монотерапія.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -156,7 +156,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-breast-pik3ca-h1047r-2l",
         file="patient_showcase_breast_pik3ca_h1047r_2l.json",
-        label_ua="Breast HR+/HER2- - PIK3CA H1047R - post-CDK4/6i",
+        label_ua="Рак молочної залози HR+/HER2- - PIK3CA H1047R - після CDK4/6i",
         summary_ua="HR+/HER2- метастатичний рак молочної залози після CDK4/6i з PIK3CA H1047R. Показує, як ESCAT/CIViC шар додає молекулярний контекст до 2L endocrine-targeted опцій і одночасно залишає клінічні обмеження видимими.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -167,7 +167,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-ovarian-brca1-maintenance",
         file="patient_showcase_ovarian_brca1_maintenance.json",
-        label_ua="Ovarian - germline BRCA1 - PARPi maintenance",
+        label_ua="Рак яєчників - герміногенний BRCA1 - підтримуюча терапія PARPi",
         summary_ua="Платин-чутливий рецидив high-grade serous ovarian carcinoma з germline BRCA1. Показує ESCAT IA, CIViC sensitivity/resistance evidence і практичний контекст для підтримувальної PARPi та каскадного тестування родини.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -178,7 +178,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-nsclc-egfr-t790m-2l",
         file="patient_showcase_nsclc_egfr_t790m_2l.json",
-        label_ua="NSCLC - acquired EGFR T790M - resistance-aware review",
+        label_ua="NSCLC - набута мутація EGFR T790M - огляд з урахуванням резистентності",
         summary_ua="EGFR-mutated NSCLC з прогресією після першого покоління TKI і acquired T790M. Показує, як resistance/actionability evidence стає видимим для MDT замість того, щоб губитися в загальному списку мутацій.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -189,7 +189,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-ifs-ntrk-fusion",
         file="patient_showcase_ifs_ntrk_fusion.json",
-        label_ua="Infantile fibrosarcoma - NTRK fusion - rare tumor target",
+        label_ua="Інфантильна фібросаркома - NTRK злиття - рідкісна пухлинна мішень",
         summary_ua="Рідкісна пухлина з ETV6-NTRK3 fusion. Кейс показує, як молекулярна actionability допомагає не загубити targetable alteration у діагнозі, де традиційні сценарії лікування часто неповні.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -200,7 +200,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-melanoma-braf-v600e-1l",
         file="patient_showcase_melanoma_braf_v600e_1l.json",
-        label_ua="Melanoma - BRAF V600E - targeted vs immunotherapy context",
+        label_ua="Меланома - BRAF V600E - контекст: таргетна терапія проти імунотерапії",
         summary_ua="Метастатична меланома з BRAF V600E. Показує класичний ESCAT IA / CIViC приклад, де biomarker actionability пояснює BRAF/MEK чутливість, але MDT усе одно бачить клінічний контекст для вибору послідовності з immunotherapy.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -211,7 +211,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-cholangio-idh1-r132-2l",
         file="patient_showcase_cholangio_idh1_r132_2l.json",
-        label_ua="Cholangiocarcinoma - IDH1 R132 - 2L molecular option",
+        label_ua="Холангіокарцинома - IDH1 R132 - 2L молекулярна опція",
         summary_ua="Внутрішньопечінкова холангіокарцинома з IDH1 R132C після gem/cis/durvalumab. Кейс показує, як ESCAT/CIViC шар не дає втратити 2L molecular option у пухлині, де стандартні chemotherapy tracks швидко вичерпуються.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -222,7 +222,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-gastric-her2-amp-1l",
         file="patient_showcase_gastric_her2_amp_1l.json",
-        label_ua="Gastric/GEJ - HER2 amplification - IHC/ISH actionability",
+        label_ua="Шлунок/GEJ - ампліфікація HER2 - IHC/ISH клінічна значущість",
         summary_ua="Метастатична gastric/GEJ adenocarcinoma з HER2 IHC 3+. Показує, як actionability шар розділяє IHC/ISH evidence, 1L trastuzumab-based tracks і подальший T-DXd контекст.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -233,7 +233,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-prostate-brca2-germline-mcrpc",
         file="patient_showcase_prostate_brca2_germline_mcrpc.json",
-        label_ua="mCRPC - germline BRCA2 - PARP/HRR context",
+        label_ua="mCRPC - герміногенний BRCA2 - контекст PARP/HRR",
         summary_ua="Метастатичний castration-resistant prostate cancer з germline BRCA2 після NHA. Показує, як ESCAT IA actionability додає HRR/PARP контекст, включно з родинним каскадним тестуванням і відмінністю BRCA2 від ширшого HRD label.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -244,7 +244,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-endometrial-dmmr-msh2-1l",
         file="patient_showcase_endometrial_dmmr_msh2_1l.json",
-        label_ua="Endometrial - dMMR/MSH2 - immunotherapy evidence",
+        label_ua="Рак ендометрія - dMMR/MSH2 - докази для імунотерапії",
         summary_ua="Поширений endometrial carcinoma з dMMR/MSI-H через втрату MSH2. Кейс показує tumor-specific і tissue-agnostic immunotherapy evidence в одному місці, не змішуючи його з неспецифічним MSI label.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -255,7 +255,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-thyroid-ret-fusion-rai-refractory",
         file="patient_showcase_thyroid_ret_fusion_rai_refractory.json",
-        label_ua="Papillary thyroid - RET fusion - RAI-refractory target",
+        label_ua="Папілярний рак щитоподібної залози - RET-злиття - RAI-рефрактерна мішень",
         summary_ua="RAI-refractory papillary thyroid carcinoma з RET fusion. Показує, як actionability відрізняє RET fusion у PTC від RET mutations у MTC і підсвічує selective RET-TKI.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -266,7 +266,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-gist-kit-exon11-1l",
         file="patient_showcase_gist_kit_exon11_1l.json",
-        label_ua="GIST - KIT exon 11 - genotype sets TKI dose",
+        label_ua="GIST - KIT екзон 11 - генотип визначає дозу TKI",
         summary_ua="Метастатичний GIST з KIT exon 11 deletion. Кейс показує практичну перевагу структурованого biomarker layer: exon 11 підтримує стандартну 1L imatinib дозу, а не змішується з exon 9 чи PDGFRA D842V сценаріями.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -277,7 +277,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-aml-flt3-itd-1l",
         file="patient_showcase_aml_flt3_itd_1l.json",
-        label_ua="AML - FLT3-ITD - heme actionability and risk",
+        label_ua="AML - FLT3-ITD - гематологічна значущість та ризик",
         summary_ua="Новодіагностований fit AML з FLT3-ITD. Додає hematology приклад: BMA evidence пояснює targeted induction context, а ризик і transplant discussion лишаються окремими клінічними рішеннями.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -288,7 +288,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-bcc-labcc-hhi-1l",
         file="patient_showcase_bcc_labcc_hhi_1l.json",
-        label_ua="BCC - locally advanced - hedgehog inhibitor 1L",
+        label_ua="BCC - місцево поширена - інгібітор Hedgehog, 1Л",
         summary_ua="Locally advanced BCC in Gorlin syndrome: surgery and radiation are not appropriate, so the engine should route to 1L SMO/Hedgehog inhibition instead of exposing only an auto-stub starter.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -300,7 +300,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="hcv-mzl-reference",
         file="patient_zero_reference_case.json",
-        label_ua="HCV-MZL · Reference Case (Patient Zero)",
+        label_ua="HCV-MZL · Референтний випадок (Пацієнт нуль)",
         summary_ua="Чоловік 49, ECOG 1, 5.3 см ураження кореня язика, HCV генотип 1b, indolent presentation. Acceptance test для P0.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -311,7 +311,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="hcv-mzl-bulky",
         file="patient_hcv_mzl_aggressive_burden.json",
-        label_ua="HCV-MZL · Aggressive Burden (BR + concurrent DAA)",
+        label_ua="HCV-MZL · Агресивне навантаження (BR + одночасний DAA)",
         summary_ua="HCV-MZL із bulky disease (>7 см) — RF-BULKY-DISEASE fired. Engine обирає BR (бендамустин+ритуксимаб) + concurrent DAA. Поєднує колишні patient_zero_bulky та новий fixture aggressive_burden.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -322,7 +322,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="hcv-mzl-post-daa",
         file="patient_hcv_mzl_post_daa_responder.json",
-        label_ua="HCV-MZL · Post-DAA Responder (Surveillance)",
+        label_ua="HCV-MZL · Респондер після DAA (Нагляд)",
         summary_ua="Пацієнт post-DAA з SVR12 + lymphoma response — engine обирає surveillance only; план для re-treatment trigger при relapse.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -333,7 +333,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mm-standard-risk",
         file="patient_mm_standard_risk.json",
-        label_ua="Multiple Myeloma · Standard-Risk",
+        label_ua="Множинна мієлома · Стандартний ризик",
         summary_ua="Newly-diagnosed MM, t(11;14) + hyperdiploid, R-ISS II — engine обирає триплет VRd як default.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -344,7 +344,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mm-high-risk",
         file="patient_mm_high_risk.json",
-        label_ua="Multiple Myeloma · High-Risk",
+        label_ua="Множинна мієлома · Високий ризик",
         summary_ua="Newly-diagnosed MM, t(4;14) + gain 1q21, R2-ISS III — RF-MM-HIGH-RISK-CYTOGENETICS, engine обирає квадруплет D-VRd.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -355,7 +355,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-lymphoma-suspect",
         file="patient_diagnostic_lymphoma_suspect.json",
-        label_ua="Suspect Lymphoma · Pre-Biopsy (Diagnostic Brief)",
+        label_ua="Підозра на лімфому · До біопсії (короткий діагностичний огляд)",
         summary_ua="Pre-biopsy режим — engine генерує Workup Brief, не Treatment Plan (CHARTER §15.2 C7 — без histology немає лікування).",
         badge="Diagnostic Brief",
         badge_class="bdg-diag",
@@ -366,7 +366,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-lymphoma-confirmed",
         file="patient_diagnostic_lymphoma_confirmed.json",
-        label_ua="Lymphoma Confirmed · Post-Biopsy (Treatment Plan)",
+        label_ua="Лімфома підтверджена · Після біопсії (план лікування)",
         summary_ua="Той самий пацієнт після підтвердження гістології — diagnostic→treatment promotion через revise_plan.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -378,7 +378,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="dlbcl-low-ipi",
         file="patient_dlbcl_low_ipi.json",
-        label_ua="DLBCL NOS · Low-IPI (R-CHOP standard)",
+        label_ua="DLBCL NOS · Низький IPI (R-CHOP стандартний)",
         summary_ua="Чоловік 54, ECOG 1, IPI 1, GCB cell-of-origin — engine обирає R-CHOP × 6 циклів як default. Найпоширеніша агресивна лімфома (~30% NHL).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -389,7 +389,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="dlbcl-high-ipi",
         file="patient_dlbcl_high_ipi.json",
-        label_ua="DLBCL NOS · High-IPI (Pola-R-CHP)",
+        label_ua="DLBCL NOS · Високий IPI (Pola-R-CHP)",
         summary_ua="Жінка 67, IPI 4, multiple extranodal — RF-DLBCL-HIGH-IPI fired. Engine ескалує до Pola-R-CHP (POLARIX trial); Ukraine-funding caveat.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -400,7 +400,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="fl-low-burden",
         file="patient_fl_low_burden.json",
-        label_ua="Follicular · Low Burden (Watch-and-Wait)",
+        label_ua="Фолікулярна · Низьке навантаження (Спостереження та очікування)",
         summary_ua="FL grade 1-2, asymptomatic, no GELF criteria — engine обирає surveillance трек (3 plans usable side-by-side, default = W&W).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -411,7 +411,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="fl-high-burden",
         file="patient_fl_high_burden.json",
-        label_ua="Follicular · High Burden (BR)",
+        label_ua="Фолікулярна · Високе навантаження (BR)",
         summary_ua="FL з 8 cm масою + B-symptoms + LDH↑ — RF-FL-HIGH-TUMOR-BURDEN-GELF fired. Engine обирає BR (бендамустин + ритуксимаб); reuse REG-BR-STANDARD з HCV-MZL.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -422,7 +422,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="fl-transformation",
         file="patient_fl_transformation.json",
-        label_ua="Follicular · Transformation Suspect (R-CHOP)",
+        label_ua="Фолікулярна · Підозра на трансформацію (R-CHOP)",
         summary_ua="FL з rapid progression + LDH doubling — RF-FL-TRANSFORMATION-SUSPECT fired. Engine обирає R-CHOP (трактує як DLBCL pathway).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -433,7 +433,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="cll-low-risk",
         file="patient_cll_low_risk.json",
-        label_ua="CLL/SLL · Low-Risk (BTKi continuous)",
+        label_ua="CLL/SLL · Низький ризик (BTKi безперервно)",
         summary_ua="ХЛЛ зі стандартним ризиком (no TP53/del 17p/IGHV-unmut) — engine обирає acalabrutinib continuous; modern era замість FCR/BR.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -444,7 +444,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="cll-high-risk",
         file="patient_cll_high_risk.json",
-        label_ua="CLL/SLL · High-Risk (VenO time-limited)",
+        label_ua="CLL/SLL · Високий ризик (VenO фіксованої тривалості)",
         summary_ua="ХЛЛ з TP53 mutation + IGHV-unmut + complex karyotype — RF-CLL-HIGH-RISK fired. Engine ескалує до venetoclax+obinutuzumab (CLL14).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -455,7 +455,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mcl-fit-younger",
         file="patient_mcl_fit_younger.json",
-        label_ua="Mantle Cell · Fit Younger (Intensive + autoSCT)",
+        label_ua="Мантійноклітинна · Молодший придатний (Інтенсивна + autoSCT)",
         summary_ua="MCL вік 58, ECOG 0, TP53-wt — engine обирає intensive R-CHOP/R-DHAP × 6 + autoSCT + R-maintenance × 3 years (Nordic protocol).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -466,7 +466,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mcl-unfit-tp53",
         file="patient_mcl_unfit_or_tp53.json",
-        label_ua="Mantle Cell · Unfit / TP53-mutant (BTKi+R)",
+        label_ua="Мантійноклітинна лімфома · Непридатний / TP53-мутований (BTKi+R)",
         summary_ua="MCL вік 71, ECOG 2, TP53 mutation — RF-MCL-BLASTOID-OR-TP53 fired. Engine обирає acalabrutinib + rituximab (BTKi-based).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -478,7 +478,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="smzl-hcv-positive",
         file="patient_smzl_hcv_positive.json",
-        label_ua="Splenic MZL · HCV-positive (DAA antiviral)",
+        label_ua="Селезінкова MZL · HCV-позитивний (противірусна терапія DAA)",
         summary_ua="Селезінкова MZL із HCV-позитивним статусом — engine обирає DAA antiviral (sofosbuvir/velpatasvir 12 тижнів) як 1L; reuse REG-DAA-SOF-VEL з HCV-MZL extranodal.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -489,7 +489,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="smzl-hcv-negative",
         file="patient_smzl_hcv_negative.json",
-        label_ua="Splenic MZL · HCV-negative (Rituximab mono)",
+        label_ua="Селезінкова MZL · HCV-негативний (ритуксимаб, монотерапія)",
         summary_ua="Селезінкова MZL HCV-negative — engine обирає rituximab monotherapy (4 weekly + 2-year maintenance).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -500,7 +500,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nmzl-low-burden",
         file="patient_nmzl_low_burden.json",
-        label_ua="Nodal MZL · Low Burden (W&W)",
+        label_ua="Нодальна MZL · Низьке навантаження (W&W)",
         summary_ua="Нодальна MZL без GELF-критеріїв — engine обирає surveillance трек (повторює FL-парадигму).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -511,7 +511,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="burkitt-low-risk",
         file="patient_burkitt_low_risk.json",
-        label_ua="Burkitt · Low/Intermediate Risk (DA-EPOCH-R)",
+        label_ua="Лімфома Беркітта · Низький/проміжний ризик (DA-EPOCH-R)",
         summary_ua="Burkitt без CNS+, LDH в нормі — engine обирає DA-EPOCH-R (CALGB 10002, ~90% CR including HIV+).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -522,7 +522,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="burkitt-high-risk",
         file="patient_burkitt_high_risk.json",
-        label_ua="Burkitt · High Risk (CODOX-M / IVAC)",
+        label_ua="Лімфома Беркітта · Високий ризик (CODOX-M / IVAC)",
         summary_ua="Burkitt з CNS involvement + LDH >3× ULN + bulky abdomen — RF-BURKITT-HIGH-RISK fired. Engine обирає Magrath protocol з HD-MTX + IT MTX/cytarabine.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -533,7 +533,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="hcl-typical",
         file="patient_hcl_typical.json",
-        label_ua="Hairy Cell Leukemia (Cladribine 7-day)",
+        label_ua="Волосатоклітинний лейкоз (Cladribine 7 днів)",
         summary_ua="Волосатоклітинний лейкоз з cytopenia + splenomegaly — engine обирає 1 курс cladribine 7 днів. ~85% durable CR.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -544,7 +544,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="wm-myd88-positive",
         file="patient_wm_myd88_positive.json",
-        label_ua="Waldenström · MYD88-positive (Zanubrutinib)",
+        label_ua="Вальденстрем · MYD88-позитивний (Занубрутиніб)",
         summary_ua="WM з MYD88 L265P + iwWM treatment indication — engine обирає zanubrutinib (ASPEN — superior до ibrutinib).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -567,7 +567,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="alcl-alk-negative",
         file="patient_alcl_alk_negative.json",
-        label_ua="ALCL · ALK-negative (CHP-Bv)",
+        label_ua="ALCL · ALK-негативна (CHP-Bv)",
         summary_ua="Системна анапластична великоклітинна лімфома, ALK-negative — universally CD30+. Engine обирає CHP-Bv (ECHELON-2: brentuximab замість vincristine).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -578,7 +578,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="ptcl-cd30-negative",
         file="patient_ptcl_cd30_negative.json",
-        label_ua="PTCL NOS · CD30-negative (CHOEP)",
+        label_ua="PTCL NOS · CD30-негативний (CHOEP)",
         summary_ua="Периферична T-клітинна лімфома, CD30-negative — engine обирає CHOEP (CHOP + etoposide). CD30+ варіант ескалював би до CHP-Bv.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -589,7 +589,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="aitl-cd30-positive",
         file="patient_aitl_cd30_positive.json",
-        label_ua="AITL · CD30-positive (CHP-Bv)",
+        label_ua="AITL · CD30-позитивна (CHP-Bv)",
         summary_ua="Ангіоімунобластна T-клітинна лімфома, CD30+ — RF-TCELL-CD30-POSITIVE fired. Engine обирає CHP-Bv.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -600,7 +600,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="chl-advanced",
         file="patient_chl_advanced.json",
-        label_ua="Classical Hodgkin · Advanced (A+AVD)",
+        label_ua="Класична лімфома Ходжкіна · Поширена (A+AVD)",
         summary_ua="Стадія IV cHL — RF-CHL-ADVANCED-STAGE fired. Engine обирає A+AVD (ECHELON-1: brentuximab замість bleomycin, superior OS).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -611,7 +611,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="chl-early",
         file="patient_chl_early.json",
-        label_ua="Classical Hodgkin · Early Stage (ABVD)",
+        label_ua="Класична лімфома Ходжкіна · Рання стадія (ABVD)",
         summary_ua="Стадія IIA cHL, без advanced criteria — engine обирає ABVD × 2-4 + ISRT (response-adapted).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -622,7 +622,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nlpbl-early",
         file="patient_nlpbl_early.json",
-        label_ua="NLPBL · Early Stage (Observation / RT)",
+        label_ua="NLPBL · Рання стадія (Спостереження / RT)",
         summary_ua="Нодулярна лімфоцит-домінантна B-клітинна лімфома (перекласифіковано WHO 5th-ed з NLPHL у B-cell) — early stage. Engine обирає observation / ISRT alone.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -634,7 +634,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="aitl-cd30-negative",
         file="patient_aitl_cd30_negative.json",
-        label_ua="AITL · CD30-negative (CHOEP + AITL-specific workup)",
+        label_ua="AITL · CD30-негативна (CHOEP + специфічне обстеження AITL)",
         summary_ua="AITL з CD30-negative біопсією — engine обирає AITL-specific CHOEP. Layered workup: EBER-ISH (EBV+ B-cell мікрооточення), IgG quant (paraneoplastic hypogamma), DAT (AIHA risk).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -645,7 +645,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mf-early-stage",
         file="patient_mf_early_stage.json",
-        label_ua="Mycosis Fungoides · Early Stage (Skin-Directed)",
+        label_ua="Грибоподібний мікоз · Рання стадія (шкірно-спрямована терапія)",
         summary_ua="MF stage IB без B2/LCT — engine обирає skin-directed (NBUVB / topicals / TSEBT). Жодного системного режиму — preserves chemo для прогресу. Workup rules out occult Sézary (B2 count) + LCT.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -656,7 +656,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="sezary-advanced",
         file="patient_sezary_advanced.json",
-        label_ua="Sézary Syndrome · Advanced (Mogamulizumab)",
+        label_ua="Синдром Сезарі · Поширений (Могамулізумаб)",
         summary_ua="Sézary syndrome (B2 leukemic, generalized erythroderma) — RF-MF-SEZARY-LEUKEMIC fired. Engine обирає mogamulizumab (MAVORIC: anti-CCR4 ADCC, найкраща blood-compartment відповідь).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -667,7 +667,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mf-advanced-cd30",
         file="patient_mf_advanced_cd30.json",
-        label_ua="MF · Advanced + CD30+ LCT (Brentuximab mono)",
+        label_ua="MF · Поширений + CD30+ LCT (Brentuximab моно)",
         summary_ua="Advanced MF stage IIB з large-cell transformation, CD30+ — RF-MF-LARGE-CELL-TRANSFORMATION + RF-TCELL-CD30-POSITIVE fired. Engine обирає brentuximab vedotin monotherapy (ALCANZA).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -678,7 +678,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nlpbl-ia-rituximab",
         file="patient_nlpbl_ia_rituximab.json",
-        label_ua="NLPBL · IA + RT-contraindicated (Rituximab mono)",
+        label_ua="NLPBL · IA + RT-протипоказана (Ритуксимаб моно)",
         summary_ua="NLPBL stage IA у молодої жінки з cervical adenopathy — RT-contraindicated через breast/thyroid field overlap. Engine обирає rituximab monotherapy alternative (CD20+ B-cell biology, НЕ ABVD).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -690,7 +690,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="dlbcl-chemorefractory-cart",
         file="patient_dlbcl_chemorefractory_for_cart.json",
-        label_ua="DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)",
+        label_ua="DLBCL NOS · Первинно хіміорефрактерний (CAR-T axi-cel)",
         summary_ua="DLBCL з primary refractory disease (PD на R-CHOP) — engine обирає axi-cel CAR-T (ZUMA-7: 2L CAR-T > salvage+autoSCT для early-failure).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)",
@@ -699,7 +699,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="dlbcl-relapsed-te-ineligible",
         file="patient_dlbcl_relapsed_transplant_ineligible.json",
-        label_ua="DLBCL NOS · Relapsed (Transplant-Ineligible)",
+        label_ua="DLBCL NOS · Рецидив (Не підходить для трансплантації)",
         summary_ua="DLBCL relapsed, transplant-ineligible через age + comorbidity — engine обирає Pola-BR (POLARGO) або loncastuximab tesirine.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="DLBCL NOS · Relapsed (Transplant-Ineligible)",
@@ -708,7 +708,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="hgbl-primary-refractory",
         file="patient_hgbl_primary_refractory.json",
-        label_ua="HGBL · Primary Refractory (Early CAR-T)",
+        label_ua="HGBL · Первинно рефрактерний (Ранній CAR-T)",
         summary_ua="HGBL-DH що не відповів на DA-EPOCH-R — engine обирає axi-cel CAR-T (ZUMA-7); chemosensitivity-test позитивний для late-relapse → salvage+autoSCT.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="HGBL · Primary Refractory (Early CAR-T)",
@@ -717,7 +717,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pmbcl-typical",
         file="patient_pmbcl_typical.json",
-        label_ua="PMBCL · Typical (DA-EPOCH-R)",
+        label_ua="PMBCL · Типовий (DA-EPOCH-R)",
         summary_ua="Молода жінка з anterior mediastinal mass — engine обирає DA-EPOCH-R без RT (NCI 2013: ~93% EFS, обхід RT-токсичності для AYA).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="PMBCL · Typical (DA-EPOCH-R)",
@@ -726,7 +726,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pmbcl-bulky-svc",
         file="patient_pmbcl_bulky_svc.json",
-        label_ua="PMBCL · Bulky + SVC Syndrome",
+        label_ua="PMBCL · Масивна пухлина + синдром ВПВ",
         summary_ua="PMBCL з bulky mediastinal mass + SVC compression — engine додає upfront pre-phase steroids + airway management до DA-EPOCH-R.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="PMBCL · Bulky + SVC Syndrome",
@@ -735,7 +735,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pmbcl-relapsed-post-rchop",
         file="patient_pmbcl_relapsed_post_rchop.json",
-        label_ua="PMBCL · Relapsed post-R-CHOP (Pembrolizumab)",
+        label_ua="PMBCL · Рецидив після R-CHOP (Пембролізумаб)",
         summary_ua="PMBCL relapsed/refractory після R-CHOP — engine обирає R-ICE+autoSCT (eligible) або pembrolizumab (KEYNOTE-170, ineligible/refractory).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="PMBCL · Relapsed post-R-CHOP (Pembrolizumab)",
@@ -744,7 +744,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pcnsl-typical",
         file="patient_pcnsl_typical.json",
-        label_ua="PCNSL · Typical (R-MPV → autoSCT)",
+        label_ua="PCNSL · Типовий (R-MPV → autoSCT)",
         summary_ua="Імунокомпетентний пацієнт з biopsy-confirmed PCNSL — engine обирає R-MPV induction → thiotepa-based autoSCT consolidation (MATRix/IELSG 32).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="PCNSL · Typical (R-MPV → autoSCT)",
@@ -753,7 +753,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pcnsl-elderly-frail",
         file="patient_pcnsl_elderly_frail.json",
-        label_ua="PCNSL · Elderly Frail (R-MTX-attenuated)",
+        label_ua="PCNSL · Похилий вік, ослаблений (деескалований R-MTX)",
         summary_ua="PCNSL вік 75, ECOG 2 — engine обирає attenuated MTX-based induction без autoSCT consolidation; lenalidomide maintenance як альтернатива.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="PCNSL · Elderly Frail (R-MTX-attenuated)",
@@ -762,7 +762,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pcnsl-immunocompromised-ebv",
         file="patient_pcnsl_immunocompromised_ebv.json",
-        label_ua="PCNSL · Immunocompromised + EBV+ (Restore Immunity)",
+        label_ua="PCNSL · Імунокомпрометований + EBV+ (Відновлення імунітету)",
         summary_ua="PCNSL у HIV+/post-transplant пацієнта, EBER+ — engine додає immune-restoration (HAART / RIS) перед HD-MTX; rituximab якщо CD20+.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="PCNSL · Immunocompromised + EBV+ (Restore Immunity)",
@@ -772,7 +772,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="cll-post-btki",
         file="patient_cll_post_btki_progression.json",
-        label_ua="CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)",
+        label_ua="CLL/SLL · Прогресування після BTKi (Pirtobrutinib / VenR)",
         summary_ua="CLL з прогресією на covalent BTKi — engine обирає pirtobrutinib (BRUIN, non-covalent) або venetoclax+rituximab (MURANO).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
         label_en="CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)",
@@ -781,7 +781,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="hcl-relapsed-braf",
         file="patient_hcl_relapsed_braf.json",
-        label_ua="HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)",
+        label_ua="HCL · Рецидивний BRAF-V600E+ (Vemurafenib + Rituximab)",
         summary_ua="HCL relapsed з BRAF-V600E+ — engine обирає vemurafenib+rituximab (Tiacci); BRAF-WT route → cladribine retreatment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
         label_en="HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)",
@@ -790,7 +790,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="wm-cxcr4-mut",
         file="patient_wm_cxcr4_mut.json",
-        label_ua="Waldenström · CXCR4-mutant (BR fixed-duration)",
+        label_ua="Вальденстрем · CXCR4-мутований (BR фіксованої тривалості)",
         summary_ua="WM з MYD88+ AND CXCR4-mutant — RF-WM-CXCR4-MUT fired (CXCR4 знижує BTKi response). Engine обирає BR fixed-duration або zanubrutinib з extended observation.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
         label_en="Waldenström · CXCR4-mutant (BR fixed-duration)",
@@ -799,7 +799,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nmzl-high-burden",
         file="patient_nmzl_high_burden.json",
-        label_ua="Nodal MZL · High Burden (BR)",
+        label_ua="Нодальна MZL · Високе навантаження (BR)",
         summary_ua="Нодальна MZL з GELF+ — engine обирає BR (1L); 2L після rituximab/W&W failure теж BR.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
         label_en="Nodal MZL · High Burden (BR)",
@@ -809,7 +809,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="alcl-alk-positive-typical",
         file="patient_alcl_alk_positive_typical.json",
-        label_ua="ALCL · ALK-positive Typical (CHP-Bv)",
+        label_ua="ALCL · ALK-позитивна, типова (CHP-Bv)",
         summary_ua="Молода особа з ALK+ ALCL — engine обирає CHP-Bv (ECHELON-2). ALK+ має значно кращий прогноз vs ALK-.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="ALCL · ALK-positive Typical (CHP-Bv)",
@@ -818,7 +818,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="alcl-relapsed-bv-naive",
         file="patient_alcl_relapsed_bv_naive.json",
-        label_ua="ALCL · Relapsed BV-naive (Brentuximab → autoSCT)",
+        label_ua="ALCL · Рецидив, BV-наївна (Брентуксимаб → autoSCT)",
         summary_ua="Relapsed ALCL без попереднього brentuximab — engine обирає brentuximab mono → autoSCT consolidation; BV maintenance per ECHELON-2 update.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="ALCL · Relapsed BV-naive (Brentuximab → autoSCT)",
@@ -827,7 +827,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="ptcl-cd30-positive",
         file="patient_ptcl_cd30_positive.json",
-        label_ua="PTCL NOS · CD30-positive (CHP-Bv)",
+        label_ua="PTCL NOS · CD30-позитивний (CHP-Bv)",
         summary_ua="PTCL NOS, CD30≥10% — RF-TCELL-CD30-POSITIVE fired. Engine обирає CHP-Bv (ECHELON-2 inclusion threshold).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="PTCL NOS · CD30-positive (CHP-Bv)",
@@ -836,7 +836,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="ptcl-relapsed",
         file="patient_ptcl_relapsed.json",
-        label_ua="PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)",
+        label_ua="PTCL NOS · Рецидив після ауто-ТГСК (Ромідепсин / Пралатрексат)",
         summary_ua="PTCL NOS relapsed після autoSCT — engine обирає romidepsin або pralatrexate; alloHCT як curative-intent для chemosensitive.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)",
@@ -845,7 +845,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="aitl-relapsed-2l",
         file="patient_aitl_relapsed_2l.json",
-        label_ua="AITL · Relapsed 2L (Azacitidine)",
+        label_ua="AITL · Рецидив, 2Л (Азацитидин)",
         summary_ua="AITL relapsed з TET2/DNMT3A epigenetic profile — engine обирає azacitidine (epigenetic targeting; AITL — найбільш azacitidine-responsive TCL subtype).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="AITL · Relapsed 2L (Azacitidine)",
@@ -854,7 +854,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="eatl-typical",
         file="patient_eatl_typical.json",
-        label_ua="EATL · Typical (Celiac, CHOEP → autoSCT)",
+        label_ua="EATL · Типовий (Целіакія, CHOEP → autoSCT)",
         summary_ua="EATL у пацієнта з celiac disease — engine обирає CHOEP induction → autoSCT consolidation (NLG-T-01).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="EATL · Typical (Celiac, CHOEP → autoSCT)",
@@ -863,7 +863,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="eatl-relapsed-post-choep",
         file="patient_eatl_relapsed_post_choep.json",
-        label_ua="EATL · Relapsed post-CHOEP (ICE Salvage)",
+        label_ua="EATL · Рецидив після CHOEP (ICE сальвадж)",
         summary_ua="EATL relapsed після CHOEP — engine обирає ICE salvage; alloHCT для chemosensitive.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="EATL · Relapsed post-CHOEP (ICE Salvage)",
@@ -872,7 +872,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="hstcl-fit-younger",
         file="patient_hstcl_fit_younger.json",
-        label_ua="HSTCL · Fit Younger (ICE/IVAC → alloHCT)",
+        label_ua="HSTCL · Молодший придатний (ICE/IVAC → alloHCT)",
         summary_ua="Hepatosplenic T-cell Lymphoma у молодої особи, ECOG 0 — engine обирає intensive ICE/IVAC → upfront alloHCT (CHOP неадекватний).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="HSTCL · Fit Younger (ICE/IVAC → alloHCT)",
@@ -881,7 +881,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="hstcl-iatrogenic-ibd",
         file="patient_hstcl_iatrogenic_ibd.json",
-        label_ua="HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)",
+        label_ua="HSTCL · Ятрогенні ЗЗК (резерв при непридатності до CHOEP)",
         summary_ua="HSTCL у IBD-пацієнта на тривалій thiopurine+anti-TNF therapy — engine припиняє imunosuppression + CHOEP-unfit fallback з branching algorithm.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)",
@@ -890,7 +890,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="t-pll-typical",
         file="patient_t_pll_typical.json",
-        label_ua="T-PLL · Typical (Alemtuzumab IV)",
+        label_ua="T-PLL · Типовий (Алемтузумаб в/в)",
         summary_ua="T-PLL з ATM mutation + TCL1A rearrangement — engine обирає alemtuzumab IV (~90% ORR) → alloHCT consolidation.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="T-PLL · Typical (Alemtuzumab IV)",
@@ -899,7 +899,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="t-pll-alem-refractory",
         file="patient_t_pll_alemtuzumab_refractory.json",
-        label_ua="T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)",
+        label_ua="T-PLL · Рефрактерний до алемтузумабу (Венетоклакс + Alem)",
         summary_ua="T-PLL refractory до alemtuzumab mono — engine обирає venetoclax + alemtuzumab combo (Boidol/Hampel).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)",
@@ -908,7 +908,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="atll-acute",
         file="patient_atll_acute.json",
-        label_ua="ATLL · Acute (mLSG15 / EPOCH)",
+        label_ua="ATLL · Гостра (mLSG15 / EPOCH)",
         summary_ua="Adult T-cell Leukemia/Lymphoma, acute subtype, HTLV-1+ — engine обирає intensive mLSG15 або EPOCH; alloHCT consolidation для responders.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="ATLL · Acute (mLSG15 / EPOCH)",
@@ -917,7 +917,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="atll-indolent-smoldering",
         file="patient_atll_indolent_smoldering.json",
-        label_ua="ATLL · Indolent / Smoldering (Watchful Waiting)",
+        label_ua="ATLL · Індолентна / тліюча (активне спостереження)",
         summary_ua="ATLL indolent/smoldering — engine обирає observation; system trigger для transformation.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="ATLL · Indolent / Smoldering (Watchful Waiting)",
@@ -926,7 +926,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nk-t-nasal-localized",
         file="patient_nk_t_nasal_localized.json",
-        label_ua="NK/T-Nasal · Localized (P-GEMOX + RT)",
+        label_ua="NK/T-Nasal · Локалізований (P-GEMOX + RT)",
         summary_ua="Localized extranodal NK/T-cell lymphoma, nasal type — engine обирає concurrent P-GEMOX + RT (anthracycline-resistant biology).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="NK/T-Nasal · Localized (P-GEMOX + RT)",
@@ -935,7 +935,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nk-t-nasal-relapsed",
         file="patient_nk_t_nasal_relapsed.json",
-        label_ua="NK/T-Nasal · Relapsed (Avelumab)",
+        label_ua="NK/T-Nasal · Рецидив (Авелумаб)",
         summary_ua="NK/T-nasal relapsed — engine обирає avelumab (NCCN-listed PD-L1 inhibitor; promoted from stub).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="NK/T-Nasal · Relapsed (Avelumab)",
@@ -944,7 +944,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mf-relapsed-post-moga",
         file="patient_mf_relapsed_post_moga.json",
-        label_ua="MF · Relapsed post-Mogamulizumab (Bexarotene)",
+        label_ua="MF · Рецидив після Mogamulizumab (Bexarotene)",
         summary_ua="MF/Sézary relapsed після mogamulizumab — engine обирає bexarotene 2L з low-dose maintenance (RXR-targeted oral retinoid).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="MF · Relapsed post-Mogamulizumab (Bexarotene)",
@@ -953,7 +953,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="ptld-polymorphic-ebv",
         file="patient_ptld_polymorphic_ebv.json",
-        label_ua="PTLD · Polymorphic EBV+ (RIS + Rituximab)",
+        label_ua="PTLD · Поліморфний EBV+ (RIS + Ритуксимаб)",
         summary_ua="Post-transplant LPD, polymorphic EBV+ — engine обирає RIS (reduce immunosuppression) + sequential PTLD-1 rituximab maintenance.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="PTLD · Polymorphic EBV+ (RIS + Rituximab)",
@@ -962,7 +962,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="ptld-monomorphic-dlbcl-like",
         file="patient_ptld_monomorphic_dlbcl_like.json",
-        label_ua="PTLD · Monomorphic DLBCL-like (R-CHOP)",
+        label_ua="PTLD · Мономорфний DLBCL-подібний (R-CHOP)",
         summary_ua="Monomorphic PTLD з DLBCL morphology — engine обирає R-CHOP після RIS-failure; sequential treatment per PTLD-1.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
         label_en="PTLD · Monomorphic DLBCL-like (R-CHOP)",
@@ -972,7 +972,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="chl-pediatric-bulky",
         file="patient_chl_pediatric_bulky_mediastinal.json",
-        label_ua="cHL · AYA Stage IIB Bulky Mediastinal",
+        label_ua="cHL · AYA (підлітки/молоді дорослі), стадія IIB, масивне медіастинальне ураження",
         summary_ua="AYA пацієнт з cHL stage IIB + bulky mediastinal mass + B-symptoms — RF-CHL-BULKY-MEDIASTINAL fired. Response-adapted intensification.",
         badge="Treatment Plan", badge_class="bdg-plan", category="hodgkin",
         label_en="cHL · AYA Stage IIB Bulky Mediastinal",
@@ -981,7 +981,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="chl-relapsed-salvage",
         file="patient_chl_relapsed_for_salvage.json",
-        label_ua="cHL · Relapsed (Salvage → autoSCT + BV maint.)",
+        label_ua="cHL · Рецидив (сальвадж-терапія → ауто-ТГСК + підтримуюча терапія BV)",
         summary_ua="cHL relapsed після ABVD/A+AVD — engine обирає salvage chemo (ICE/DHAP) → autoSCT → brentuximab maintenance (AETHERA).",
         badge="Treatment Plan", badge_class="bdg-plan", category="hodgkin",
         label_en="cHL · Relapsed (Salvage → autoSCT + BV maint.)",
@@ -991,7 +991,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mm-post-vrd-progression",
         file="patient_mm_post_vrd_progression.json",
-        label_ua="Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)",
+        label_ua="Множинна мієлома · Прогресія після VRd (DPd / IsaPd)",
         summary_ua="MM relapsed після VRd induction — engine обирає daratumumab+pomalidomide+dex (APOLLO) або isatuximab+Pd (ICARIA).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloma",
         label_en="Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)",
@@ -1000,7 +1000,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mm-triple-class-refractory",
         file="patient_mm_triple_class_refractory.json",
-        label_ua="Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)",
+        label_ua="Множинна мієлома · Рефрактерний до трьох класів препаратів (CAR-T / Теклістамаб)",
         summary_ua="MM triple-class refractory (PI + IMiD + anti-CD38) — engine обирає cilta-cel/ide-cel CAR-T або teclistamab BCMA-T-cell engager.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloma",
         label_en="Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)",
@@ -1010,7 +1010,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="aml-fit-1l-7-3",
         file="patient_aml_fit_1l_seven_three.json",
-        label_ua="AML · Fit 1L (7+3 Induction)",
+        label_ua="AML · Придатний, 1Л (7+3 індукція)",
         summary_ua="Newly-diagnosed AML, fit, ELN intermediate — engine обирає 7+3 induction (cytarabine + daunorubicin) → consolidation HiDAC.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="AML · Fit 1L (7+3 Induction)",
@@ -1019,7 +1019,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="aml-unfit-ven-aza",
         file="patient_aml_unfit_ven_aza.json",
-        label_ua="AML · Unfit (Venetoclax + Azacitidine)",
+        label_ua="AML · Непридатний (Венетоклакс + Азацитидин)",
         summary_ua="AML вік 78, ECOG 2 — engine обирає ven+aza (VIALE-A: ~65% CR/CRi, OS 14.7 mo, краще ніж aza alone).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="AML · Unfit (Venetoclax + Azacitidine)",
@@ -1028,7 +1028,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="aml-flt3-relapse",
         file="patient_aml_flt3_relapse.json",
-        label_ua="AML · FLT3-mutant Relapse (Gilteritinib)",
+        label_ua="AML · FLT3-мутантний рецидив (Гілтеритиніб)",
         summary_ua="AML relapsed з FLT3-ITD/TKD — engine обирає gilteritinib mono (ADMIRAL: superior до salvage chemo); alloHCT для responders.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="AML · FLT3-mutant Relapse (Gilteritinib)",
@@ -1037,7 +1037,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="apl-low-risk",
         file="patient_apl_low_risk.json",
-        label_ua="APL · Low Risk (ATRA + ATO chemo-free)",
+        label_ua="APL · Низький ризик (ATRA + ATO, без хіміотерапії)",
         summary_ua="APL з WBC <10K (low-risk Sanz) — engine обирає ATRA+ATO chemo-free (APL0406: ~98% CR, без anthracycline).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="APL · Low Risk (ATRA + ATO chemo-free)",
@@ -1046,7 +1046,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="apl-high-risk",
         file="patient_apl_high_risk.json",
-        label_ua="APL · High Risk + DIC (ATRA + ATO + Idarubicin)",
+        label_ua="APL · Високий ризик + ДВЗ (ATRA + ATO + Ідарубіцин)",
         summary_ua="APL з WBC >10K + active DIC — RF-APL-DIC + RF-APL-HIGH-RISK fired. Engine додає idarubicin до ATRA+ATO; emergency cryoprecipitate/platelets.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="APL · High Risk + DIC (ATRA + ATO + Idarubicin)",
@@ -1055,7 +1055,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="cml-chronic-newdx",
         file="patient_cml_chronic_phase_newdx.json",
-        label_ua="CML · Chronic Phase Newly Diagnosed (TKI 1L)",
+        label_ua="CML · Хронічна фаза, вперше діагностований (TKI 1L)",
         summary_ua="Newly-diagnosed CML chronic phase, BCR-ABL1+ — engine обирає imatinib (low-risk Sokal) або 2G TKI (intermediate/high).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="CML · Chronic Phase Newly Diagnosed (TKI 1L)",
@@ -1064,7 +1064,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="cml-t315i",
         file="patient_cml_t315i.json",
-        label_ua="CML · T315I-mutated (Ponatinib / Asciminib)",
+        label_ua="CML · З мутацією T315I (Ponatinib / Asciminib)",
         summary_ua="CML з T315I gatekeeper mutation post-2G TKI — engine обирає ponatinib (PACE) або asciminib (allosteric STAMP-inhibitor).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="CML · T315I-mutated (Ponatinib / Asciminib)",
@@ -1073,7 +1073,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="cml-blast-crisis",
         file="patient_cml_blast_crisis_at_presentation.json",
-        label_ua="CML · Blast Crisis at Presentation (TKI + Chemo + alloHCT)",
+        label_ua="CML · Бластний криз на момент звернення (TKI + хіміотерапія + alloHCT)",
         summary_ua="CML що дебютує як blast crisis — engine обирає TKI + intensive chemo bridge → urgent alloHCT (без alloHCT медіана OS <12 mo).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="CML · Blast Crisis at Presentation (TKI + Chemo + alloHCT)",
@@ -1082,7 +1082,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mds-hr-transplant-eligible",
         file="patient_mds_hr_transplant_eligible.json",
-        label_ua="MDS-HR · Transplant-Eligible (Aza Bridge → alloHCT)",
+        label_ua="MDS-HR · Придатний до трансплантації (Aza-місток → alloHCT)",
         summary_ua="MDS IPSS-R high, fit, donor available — engine обирає azacitidine bridge → upfront alloHCT (curative).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="MDS-HR · Transplant-Eligible (Aza Bridge → alloHCT)",
@@ -1091,7 +1091,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mds-hr-unfit-aza",
         file="patient_mds_hr_unfit_aza.json",
-        label_ua="MDS-HR · Unfit (Azacitidine Maintenance)",
+        label_ua="MDS-HR · Непридатний (підтримуюча терапія Azacitidine)",
         summary_ua="MDS-HR transplant-ineligible — engine обирає azacitidine indefinite (AZA-001: median OS 24 mo vs 15 mo для conventional care).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="MDS-HR · Unfit (Azacitidine Maintenance)",
@@ -1100,7 +1100,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mds-hr-progression-aml",
         file="patient_mds_hr_progression_to_aml.json",
-        label_ua="MDS-HR · Progression to Secondary AML",
+        label_ua="MDS-HR · Прогресування до вторинного AML",
         summary_ua="MDS на azacitidine з progression до sAML — engine реагує AML-reroute: ven+aza або 7+3 induction (за fitness).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="MDS-HR · Progression to Secondary AML",
@@ -1118,7 +1118,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mds-lr-rs-luspatercept",
         file="patient_mds_lr_rs_luspatercept.json",
-        label_ua="MDS-LR · RS+ EPO-failure (Luspatercept)",
+        label_ua="MDS-LR · RS+ неефективність ЕПО (Luspatercept)",
         summary_ua="MDS-LR з ring sideroblasts + EPO-high (>500) → ESA-failure — engine обирає luspatercept (COMMANDS).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="MDS-LR · RS+ EPO-failure (Luspatercept)",
@@ -1127,7 +1127,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mds-lr-hypoplastic-ist",
         file="patient_mds_lr_hypoplastic_ist.json",
-        label_ua="MDS-LR · Hypoplastic / IST candidate",
+        label_ua="MDS-LR · Гіпопластичний / кандидат на ІСТ",
         summary_ua="Hypoplastic MDS, mimics aplastic anemia — engine обирає immunosuppressive therapy (ATG+CsA) як alternative до transfusion-only.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="MDS-LR · Hypoplastic / IST candidate",
@@ -1136,7 +1136,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pv-high-risk-hu",
         file="patient_pv_high_risk_hu.json",
-        label_ua="Polycythemia Vera · High Risk (HU 1L)",
+        label_ua="Істинна поліцитемія · Високий ризик (HU 1L)",
         summary_ua="PV вік >60 + thrombosis history — engine обирає phlebotomy + low-dose ASA + cytoreduction hydroxyurea.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="Polycythemia Vera · High Risk (HU 1L)",
@@ -1145,7 +1145,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pv-hu-resistant-rux",
         file="patient_pv_hu_resistant_ruxolitinib.json",
-        label_ua="PV · HU-resistant (Ruxolitinib 2L)",
+        label_ua="PV · Резистентний до гідроксисечовини (HU) · Руксолітиніб 2L",
         summary_ua="PV з HU-intolerance/resistance per ELN — engine обирає ruxolitinib (RESPONSE-2: hematocrit control + symptom relief).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="PV · HU-resistant (Ruxolitinib 2L)",
@@ -1154,7 +1154,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pv-pregnancy-planning",
         file="patient_pv_pregnancy_planning.json",
-        label_ua="PV · Pregnancy Planning (Peg-IFN)",
+        label_ua="PV · Планування вагітності (Peg-IFN)",
         summary_ua="Reproductive-age жінка з PV, planning pregnancy — engine обирає peg-IFN α-2a (non-teratogenic, fetus-safe).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="PV · Pregnancy Planning (Peg-IFN)",
@@ -1163,7 +1163,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="et-high-risk-hu",
         file="patient_et_high_risk_hu.json",
-        label_ua="Essential Thrombocythemia · High Risk (HU)",
+        label_ua="Есенціальна тромбоцитемія · Високий ризик (HU)",
         summary_ua="ET high-risk (age >60 + JAK2+ + thrombosis) — engine обирає hydroxyurea + ASA; anagrelide як 2L (PT-1).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="Essential Thrombocythemia · High Risk (HU)",
@@ -1172,7 +1172,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pmf-anemia-dominant",
         file="patient_pmf_anemia_dominant.json",
-        label_ua="PMF · Anemia-Dominant (Momelotinib)",
+        label_ua="PMF · З переважанням анемії (Момелотиніб)",
         summary_ua="PMF DIPSS-Plus int-1, anemia-dominant — engine обирає momelotinib (MOMENTUM: anemia-friendly JAKi).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="PMF · Anemia-Dominant (Momelotinib)",
@@ -1181,7 +1181,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pmf-int2-symptomatic-rux",
         file="patient_pmf_int2_symptomatic_ruxolitinib.json",
-        label_ua="PMF · Int-2 Symptomatic (Ruxolitinib)",
+        label_ua="PMF · Симптоматичний, проміжний-2 (Руксолітиніб)",
         summary_ua="PMF DIPSS-Plus int-2 з splenomegaly + constitutional symptoms — engine обирає ruxolitinib (COMFORT-I/II).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="PMF · Int-2 Symptomatic (Ruxolitinib)",
@@ -1190,7 +1190,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pmf-post-rux-allohct",
         file="patient_pmf_post_rux_allohct_bridge.json",
-        label_ua="PMF · Post-Rux alloHCT Bridge (Urgent)",
+        label_ua="PMF · Місток до алоТГСК після руксолітинібу (терміново)",
         summary_ua="PMF post-ruxolitinib failure з massive splenomegaly + transfusion-dependence — engine обирає alloHCT bridge (curative-intent, urgent).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="PMF · Post-Rux alloHCT Bridge (Urgent)",
@@ -1200,7 +1200,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="b-all-ph-pos-adult",
         file="patient_b_all_ph_pos_adult.json",
-        label_ua="B-ALL · Ph+ Adult (TKI + Chemo)",
+        label_ua="B-ALL · Ph+ у дорослих (TKI + хіміо)",
         summary_ua="Adult B-ALL Ph+ (BCR-ABL1+) — engine обирає dasatinib + chemo (hyper-CVAD або pediatric-inspired); alloHCT для CR1 high-risk.",
         badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
         label_en="B-ALL · Ph+ Adult (TKI + Chemo)",
@@ -1209,7 +1209,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="b-all-mrd-positive",
         file="patient_b_all_mrd_positive.json",
-        label_ua="B-ALL · MRD-positive (Blinatumomab)",
+        label_ua="B-ALL · MRD-позитивна (Блінатумомаб)",
         summary_ua="B-ALL MRD-positive після induction — engine обирає blinatumomab (BLAST: MRD eradication у >75%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
         label_en="B-ALL · MRD-positive (Blinatumomab)",
@@ -1218,7 +1218,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="b-all-t315i-post-tki",
         file="patient_b_all_t315i_post_tki.json",
-        label_ua="B-ALL · T315I-mutated post-TKI (Ponatinib + alloHCT)",
+        label_ua="B-ALL · T315I-мутація, після TKI (Понатиніб + alloHCT)",
         summary_ua="Ph+ B-ALL relapsed з T315I gatekeeper — engine обирає ponatinib + chemo bridge → alloHCT.",
         badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
         label_en="B-ALL · T315I-mutated post-TKI (Ponatinib + alloHCT)",
@@ -1227,7 +1227,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="t-all-relapsed",
         file="patient_t_all_relapsed_post_hyper_cvad.json",
-        label_ua="T-ALL · Relapsed post-hyper-CVAD (Nelarabine)",
+        label_ua="T-ALL · Рецидив після hyper-CVAD (Неларабін)",
         summary_ua="T-ALL relapsed після hyper-CVAD — engine обирає nelarabine (T-cell selective; alloHCT consolidation).",
         badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
         label_en="T-ALL · Relapsed post-hyper-CVAD (Nelarabine)",
@@ -1236,7 +1236,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="t-lbl-mediastinal",
         file="patient_t_lbl_mediastinal.json",
-        label_ua="T-LBL · Mediastinal Mass (Pediatric-inspired ALL)",
+        label_ua="T-LBL · Медіастинальне утворення (за педіатричним протоколом ALL)",
         summary_ua="T-lymphoblastic lymphoma з mediastinal mass — engine обирає pediatric-inspired ALL regimen (CALGB 10403 / GMALL); CNS prophylaxis обов'язкове.",
         badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
         label_en="T-LBL · Mediastinal Mass (Pediatric-inspired ALL)",
@@ -1246,7 +1246,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="cervical-locally-advanced",
         file="patient_cervical_locally_advanced.json",
-        label_ua="Cervical · Locally Advanced (CCRT + Pembrolizumab)",
+        label_ua="Рак шийки матки · Місцево поширений (CCRT + Pembrolizumab)",
         summary_ua="Locally advanced cervical cancer (FIGO IIB-IVA) — engine обирає cisplatin-based CCRT + brachytherapy; pembrolizumab maintenance (KEYNOTE-A18).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Cervical · Locally Advanced (CCRT + Pembrolizumab)",
@@ -1255,7 +1255,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="gbm-stupp",
         file="patient_gbm_newly_diagnosed_stupp.json",
-        label_ua="Glioblastoma · Newly Diagnosed (Stupp Protocol)",
+        label_ua="Гліобластома · Вперше діагностований (Протокол Stupp)",
         summary_ua="GBM IDH-WT WHO grade 4 — engine обирає Stupp: maximal safe resection → RT + concurrent TMZ → adjuvant TMZ × 6; TTFields для MGMT-methylated.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Glioblastoma · Newly Diagnosed (Stupp Protocol)",
@@ -1264,7 +1264,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="ovarian-advanced-hrd",
         file="patient_ovarian_advanced_hrd.json",
-        label_ua="Ovarian · Advanced HRD+ (PARPi maintenance)",
+        label_ua="Рак яєчників · Поширений HRD+ (підтримуюча терапія PARPi)",
         summary_ua="Advanced high-grade serous ovarian, HRD+ — engine обирає platinum-doublet → PARPi maintenance (olaparib/niraparib; SOLO-1, PRIMA).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Ovarian · Advanced HRD+ (PARPi maintenance)",
@@ -1274,7 +1274,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-anal-scc-la-1l",
         file="patient_coverage_anal_scc_la_1l.json",
-        label_ua="Anal SCC - locally advanced - Nigro CRT",
+        label_ua="Анальна SCC - місцево поширена - Nigro CRT",
         summary_ua="Engine-verified coverage plan for locally advanced anal SCC; routes to concurrent chemoradiation instead of an auto-stub-only picker entry.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Anal SCC - locally advanced - Nigro CRT",
@@ -1283,7 +1283,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-chondrosarcoma-advanced-1l",
         file="patient_coverage_chondrosarcoma_advanced_1l.json",
-        label_ua="Chondrosarcoma - advanced - doxorubicin 1L",
+        label_ua="Хондросаркома - поширена - doxorubicin 1L",
         summary_ua="Engine-verified coverage plan for advanced chondrosarcoma with systemic 1L routing.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Chondrosarcoma - advanced - doxorubicin 1L",
@@ -1292,7 +1292,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-epithelioid-sarcoma-tazemetostat-1l",
         file="patient_coverage_epithelioid_sarcoma_tazemetostat_1l.json",
-        label_ua="Epithelioid sarcoma - tazemetostat 1L",
+        label_ua="Епітеліоїдна саркома - tazemetostat 1L",
         summary_ua="Engine-verified coverage plan for epithelioid sarcoma routing to tazemetostat.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Epithelioid sarcoma - tazemetostat 1L",
@@ -1301,7 +1301,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-gi-net-lanreotide-1l",
         file="patient_coverage_gi_net_lanreotide_1l.json",
-        label_ua="GI NET - well differentiated - lanreotide 1L",
+        label_ua="GI NET - високодиференційований - lanreotide 1L",
         summary_ua="Engine-verified coverage plan for advanced well-differentiated GI NET routing to lanreotide.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="GI NET - well differentiated - lanreotide 1L",
@@ -1310,7 +1310,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-granulosa-cell-carbotaxol-1l",
         file="patient_coverage_granulosa_cell_carbotaxol_1l.json",
-        label_ua="Granulosa cell tumor - carboplatin/paclitaxel 1L",
+        label_ua="Гранульозоклітинна пухлина - carboplatin/paclitaxel 1L",
         summary_ua="Engine-verified coverage plan for granulosa cell tumor routing to carboplatin/paclitaxel.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Granulosa cell tumor - carboplatin/paclitaxel 1L",
@@ -1319,7 +1319,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-imt-alk-crizotinib-1l",
         file="patient_coverage_imt_alk_crizotinib_1l.json",
-        label_ua="IMT - ALK-actionable - crizotinib 1L",
+        label_ua="IMT - ALK-мішень - crizotinib 1L",
         summary_ua="Engine-verified coverage plan for inflammatory myofibroblastic tumor routing to crizotinib.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="IMT - ALK-actionable - crizotinib 1L",
@@ -1337,7 +1337,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-mastocytosis-midostaurin-1l",
         file="patient_coverage_mastocytosis_midostaurin_1l.json",
-        label_ua="Advanced systemic mastocytosis - midostaurin 1L",
+        label_ua="Поширений системний мастоцитоз - мідостаурин, 1Л",
         summary_ua="Engine-verified coverage plan for advanced systemic mastocytosis routing to midostaurin.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="Advanced systemic mastocytosis - midostaurin 1L",
@@ -1346,7 +1346,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-mesothelioma-nivo-ipi-1l",
         file="patient_coverage_mesothelioma_nivo_ipi_1l.json",
-        label_ua="Mesothelioma - nivolumab/ipilimumab 1L",
+        label_ua="Мезотеліома - ніволумаб/іпілімумаб 1L",
         summary_ua="Engine-verified coverage plan for malignant mesothelioma routing to nivolumab/ipilimumab.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Mesothelioma - nivolumab/ipilimumab 1L",
@@ -1364,7 +1364,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-mtc-selpercatinib-1l",
         file="patient_coverage_mtc_selpercatinib_1l.json",
-        label_ua="Medullary thyroid carcinoma - RET-targeted 1L",
+        label_ua="Медулярна карцинома щитовидної залози - RET-таргетна терапія 1L",
         summary_ua="Engine-verified coverage plan for advanced medullary thyroid carcinoma routing to selpercatinib.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Medullary thyroid carcinoma - RET-targeted 1L",
@@ -1382,7 +1382,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-pnet-everolimus-1l",
         file="patient_coverage_pnet_everolimus_1l.json",
-        label_ua="Pancreatic NET - everolimus 1L",
+        label_ua="Панкреатична NET - еверолімус 1L",
         summary_ua="Engine-verified coverage plan for metastatic pancreatic NET routing to everolimus.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Pancreatic NET - everolimus 1L",
@@ -1391,7 +1391,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-salivary-pacli-carbo-1l",
         file="patient_coverage_salivary_pacli_carbo_1l.json",
-        label_ua="Salivary carcinoma - paclitaxel/carboplatin 1L",
+        label_ua="Карцинома слинної залози - паклітаксел/карбоплатин 1L",
         summary_ua="Engine-verified coverage plan for advanced salivary carcinoma routing to paclitaxel/carboplatin.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Salivary carcinoma - paclitaxel/carboplatin 1L",
@@ -1400,7 +1400,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-sts-doxorubicin-1l",
         file="patient_coverage_sts_doxorubicin_1l.json",
-        label_ua="Soft-tissue sarcoma - doxorubicin 1L",
+        label_ua="Саркома м'яких тканин - доксорубіцин 1L",
         summary_ua="Engine-verified coverage plan for advanced soft-tissue sarcoma routing to doxorubicin.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Soft-tissue sarcoma - doxorubicin 1L",
@@ -1409,7 +1409,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-testicular-gct-bep-1l",
         file="patient_coverage_testicular_gct_bep_1l.json",
-        label_ua="Testicular GCT - BEP 1L",
+        label_ua="Тестикулярна GCT - BEP 1L",
         summary_ua="Engine-verified coverage plan for metastatic testicular GCT routing to BEP.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Testicular GCT - BEP 1L",
@@ -1418,7 +1418,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-tgct-pexidartinib-1l",
         file="patient_coverage_tgct_pexidartinib_1l.json",
-        label_ua="TGCT - pexidartinib 1L",
+        label_ua="TGCT - пексидартиніб 1L",
         summary_ua="Engine-verified coverage plan for TGCT routing to pexidartinib.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="TGCT - pexidartinib 1L",
@@ -1427,7 +1427,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-thyroid-anaplastic-carbo-pacli-1l",
         file="patient_coverage_atc_carbo_pacli_1l.json",
-        label_ua="Anaplastic thyroid carcinoma - carboplatin/paclitaxel 1L",
+        label_ua="Анапластична карцинома щитоподібної залози - карбоплатин/паклітаксел, 1Л",
         summary_ua="Engine-verified coverage plan for anaplastic thyroid carcinoma routing to carboplatin/paclitaxel.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Anaplastic thyroid carcinoma - carboplatin/paclitaxel 1L",
@@ -1436,7 +1436,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-lgg-rt-pcv-1l",
         file="patient_coverage_lgg_rt_pcv_1l.json",
-        label_ua="Low-grade glioma - high-risk IDH-mutant - RT plus PCV",
+        label_ua="Гліома низького ступеня - високого ризику, IDH-мутована - променева терапія плюс PCV",
         summary_ua="Engine-verified coverage plan for high-risk IDH-mutant low-grade glioma routing to RT plus PCV.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Low-grade glioma - high-risk IDH-mutant - RT plus PCV",
@@ -1445,7 +1445,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-jmml-allohct-1l",
         file="patient_coverage_jmml_allohct_1l.json",
-        label_ua="JMML - pediatric transplant pathway",
+        label_ua="JMML - педіатричний шлях трансплантації",
         summary_ua="Engine-verified coverage plan for pediatric JMML routing to allogeneic HCT pathway.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="JMML - pediatric transplant pathway",
@@ -1454,7 +1454,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="coverage-meningioma-resection-rt-1l",
         file="patient_coverage_meningioma_resection_rt_1l.json",
-        label_ua="Meningioma - resection plus adjuvant RT review",
+        label_ua="Менінгіома - резекція плюс ад'ювантна променева терапія",
         summary_ua="Engine-verified coverage plan for treatment-requiring meningioma routing to maximal safe resection plus adjuvant RT review.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Meningioma - resection plus adjuvant RT review",
@@ -2214,7 +2214,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-aitl-high-risk",
         file="variant_aitl_high_risk.json",
-        label_ua="DIS-AITL · High-risk biology / bulky disease",
+        label_ua="DIS-AITL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
         label_en="DIS-AITL · High-risk biology / bulky disease",
@@ -2268,7 +2268,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-alcl-high-risk",
         file="variant_alcl_high_risk.json",
-        label_ua="DIS-ALCL · High-risk biology / bulky disease",
+        label_ua="DIS-ALCL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
         label_en="DIS-ALCL · High-risk biology / bulky disease",
@@ -2322,7 +2322,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-aml-high-risk",
         file="variant_aml_high_risk.json",
-        label_ua="DIS-AML · High-risk biology / bulky disease",
+        label_ua="DIS-AML · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
         label_en="DIS-AML · High-risk biology / bulky disease",
@@ -2376,7 +2376,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-apl-high-risk",
         file="variant_apl_high_risk.json",
-        label_ua="DIS-APL · High-risk biology / bulky disease",
+        label_ua="DIS-APL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
         label_en="DIS-APL · High-risk biology / bulky disease",
@@ -2430,7 +2430,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-atll-high-risk",
         file="variant_atll_high_risk.json",
-        label_ua="DIS-ATLL · High-risk biology / bulky disease",
+        label_ua="DIS-ATLL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
         label_en="DIS-ATLL · High-risk biology / bulky disease",
@@ -2484,7 +2484,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-b_all-high-risk",
         file="variant_b_all_high_risk.json",
-        label_ua="DIS-B-ALL · High-risk biology / bulky disease",
+        label_ua="DIS-B-ALL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
         label_en="DIS-B-ALL · High-risk biology / bulky disease",
@@ -2538,7 +2538,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-breast-high-risk",
         file="variant_breast_high_risk.json",
-        label_ua="DIS-BREAST · High-risk biology / bulky disease",
+        label_ua="DIS-BREAST · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 6 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-BREAST · High-risk biology / bulky disease",
@@ -2592,7 +2592,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-burkitt-high-risk",
         file="variant_burkitt_high_risk.json",
-        label_ua="DIS-BURKITT · High-risk biology / bulky disease",
+        label_ua="DIS-BURKITT · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
         label_en="DIS-BURKITT · High-risk biology / bulky disease",
@@ -2637,7 +2637,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-cervical-high-risk",
         file="variant_cervical_high_risk.json",
-        label_ua="DIS-CERVICAL · High-risk biology / bulky disease",
+        label_ua="DIS-CERVICAL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-CERVICAL · High-risk biology / bulky disease",
@@ -2691,7 +2691,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-chl-high-risk",
         file="variant_chl_high_risk.json",
-        label_ua="DIS-CHL · High-risk biology / bulky disease",
+        label_ua="DIS-CHL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
         label_en="DIS-CHL · High-risk biology / bulky disease",
@@ -2745,7 +2745,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-cholangiocarcinoma-high-risk",
         file="variant_cholangiocarcinoma_high_risk.json",
-        label_ua="DIS-CHOLANGIOCARCINOMA · High-risk biology / bulky disease",
+        label_ua="DIS-CHOLANGIOCARCINOMA · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-CHOLANGIOCARCINOMA · High-risk biology / bulky disease",
@@ -2790,7 +2790,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-chondrosarcoma-high-risk",
         file="variant_chondrosarcoma_high_risk.json",
-        label_ua="DIS-CHONDROSARCOMA · High-risk biology / bulky disease",
+        label_ua="DIS-CHONDROSARCOMA · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-CHONDROSARCOMA · High-risk biology / bulky disease",
@@ -2844,7 +2844,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-cll-high-risk",
         file="variant_cll_high_risk.json",
-        label_ua="DIS-CLL · High-risk biology / bulky disease",
+        label_ua="DIS-CLL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
         label_en="DIS-CLL · High-risk biology / bulky disease",
@@ -2898,7 +2898,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-cml-high-risk",
         file="variant_cml_high_risk.json",
-        label_ua="DIS-CML · High-risk biology / bulky disease",
+        label_ua="DIS-CML · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
         label_en="DIS-CML · High-risk biology / bulky disease",
@@ -2952,7 +2952,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-crc-high-risk",
         file="variant_crc_high_risk.json",
-        label_ua="DIS-CRC · High-risk biology / bulky disease",
+        label_ua="DIS-CRC · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-CRC · High-risk biology / bulky disease",
@@ -3006,7 +3006,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-dlbcl_nos-high-risk",
         file="variant_dlbcl_nos_high_risk.json",
-        label_ua="DIS-DLBCL-NOS · High-risk biology / bulky disease",
+        label_ua="DIS-DLBCL-NOS · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
         label_en="DIS-DLBCL-NOS · High-risk biology / bulky disease",
@@ -3051,7 +3051,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-eatl-high-risk",
         file="variant_eatl_high_risk.json",
-        label_ua="DIS-EATL · High-risk biology / bulky disease",
+        label_ua="DIS-EATL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
         label_en="DIS-EATL · High-risk biology / bulky disease",
@@ -3105,7 +3105,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-endometrial-high-risk",
         file="variant_endometrial_high_risk.json",
-        label_ua="DIS-ENDOMETRIAL · High-risk biology / bulky disease",
+        label_ua="DIS-ENDOMETRIAL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-ENDOMETRIAL · High-risk biology / bulky disease",
@@ -3159,7 +3159,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-esophageal-high-risk",
         file="variant_esophageal_high_risk.json",
-        label_ua="DIS-ESOPHAGEAL · High-risk biology / bulky disease",
+        label_ua="DIS-ESOPHAGEAL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-ESOPHAGEAL · High-risk biology / bulky disease",
@@ -3213,7 +3213,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-et-high-risk",
         file="variant_et_high_risk.json",
-        label_ua="DIS-ET · High-risk biology / bulky disease",
+        label_ua="DIS-ET · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
         label_en="DIS-ET · High-risk biology / bulky disease",
@@ -3258,7 +3258,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-fl-high-risk",
         file="variant_fl_high_risk.json",
-        label_ua="DIS-FL · High-risk biology / bulky disease",
+        label_ua="DIS-FL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
         label_en="DIS-FL · High-risk biology / bulky disease",
@@ -3312,7 +3312,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-gastric-high-risk",
         file="variant_gastric_high_risk.json",
-        label_ua="DIS-GASTRIC · High-risk biology / bulky disease",
+        label_ua="DIS-GASTRIC · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-GASTRIC · High-risk biology / bulky disease",
@@ -3357,7 +3357,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-gbm-high-risk",
         file="variant_gbm_high_risk.json",
-        label_ua="DIS-GBM · High-risk biology / bulky disease",
+        label_ua="DIS-GBM · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-GBM · High-risk biology / bulky disease",
@@ -3402,7 +3402,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-gist-high-risk",
         file="variant_gist_high_risk.json",
-        label_ua="DIS-GIST · High-risk biology / bulky disease",
+        label_ua="DIS-GIST · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-GIST · High-risk biology / bulky disease",
@@ -3447,7 +3447,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-hcc-high-risk",
         file="variant_hcc_high_risk.json",
-        label_ua="DIS-HCC · High-risk biology / bulky disease",
+        label_ua="DIS-HCC · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-HCC · High-risk biology / bulky disease",
@@ -3501,7 +3501,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-hcl-high-risk",
         file="variant_hcl_high_risk.json",
-        label_ua="DIS-HCL · High-risk biology / bulky disease",
+        label_ua="DIS-HCL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
         label_en="DIS-HCL · High-risk biology / bulky disease",
@@ -3555,7 +3555,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-hcv_mzl-high-risk",
         file="variant_hcv_mzl_high_risk.json",
-        label_ua="DIS-HCV-MZL · High-risk biology / bulky disease",
+        label_ua="DIS-HCV-MZL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
         label_en="DIS-HCV-MZL · High-risk biology / bulky disease",
@@ -3609,7 +3609,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-hgbl_dh-high-risk",
         file="variant_hgbl_dh_high_risk.json",
-        label_ua="DIS-HGBL-DH · High-risk biology / bulky disease",
+        label_ua="DIS-HGBL-DH · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
         label_en="DIS-HGBL-DH · High-risk biology / bulky disease",
@@ -3654,7 +3654,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-hnscc-high-risk",
         file="variant_hnscc_high_risk.json",
-        label_ua="DIS-HNSCC · High-risk biology / bulky disease",
+        label_ua="DIS-HNSCC · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-HNSCC · High-risk biology / bulky disease",
@@ -3699,7 +3699,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-hstcl-high-risk",
         file="variant_hstcl_high_risk.json",
-        label_ua="DIS-HSTCL · High-risk biology / bulky disease",
+        label_ua="DIS-HSTCL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
         label_en="DIS-HSTCL · High-risk biology / bulky disease",
@@ -3744,7 +3744,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-ifs-high-risk",
         file="variant_ifs_high_risk.json",
-        label_ua="DIS-IFS · High-risk biology / bulky disease",
+        label_ua="DIS-IFS · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-IFS · High-risk biology / bulky disease",
@@ -3789,7 +3789,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-imt-high-risk",
         file="variant_imt_high_risk.json",
-        label_ua="DIS-IMT · High-risk biology / bulky disease",
+        label_ua="DIS-IMT · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-IMT · High-risk biology / bulky disease",
@@ -3834,7 +3834,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-mastocytosis-high-risk",
         file="variant_mastocytosis_high_risk.json",
-        label_ua="DIS-MASTOCYTOSIS · High-risk biology / bulky disease",
+        label_ua="DIS-MASTOCYTOSIS · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
         label_en="DIS-MASTOCYTOSIS · High-risk biology / bulky disease",
@@ -3888,7 +3888,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-mcl-high-risk",
         file="variant_mcl_high_risk.json",
-        label_ua="DIS-MCL · High-risk biology / bulky disease",
+        label_ua="DIS-MCL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
         label_en="DIS-MCL · High-risk biology / bulky disease",
@@ -3942,7 +3942,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-mds_hr-high-risk",
         file="variant_mds_hr_high_risk.json",
-        label_ua="DIS-MDS-HR · High-risk biology / bulky disease",
+        label_ua="DIS-MDS-HR · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
         label_en="DIS-MDS-HR · High-risk biology / bulky disease",
@@ -3996,7 +3996,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-mds_lr-high-risk",
         file="variant_mds_lr_high_risk.json",
-        label_ua="DIS-MDS-LR · High-risk biology / bulky disease",
+        label_ua="DIS-MDS-LR · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
         label_en="DIS-MDS-LR · High-risk biology / bulky disease",
@@ -4050,7 +4050,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-melanoma-high-risk",
         file="variant_melanoma_high_risk.json",
-        label_ua="DIS-MELANOMA · High-risk biology / bulky disease",
+        label_ua="DIS-MELANOMA · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-MELANOMA · High-risk biology / bulky disease",
@@ -4104,7 +4104,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-mf_sezary-high-risk",
         file="variant_mf_sezary_high_risk.json",
-        label_ua="DIS-MF-SEZARY · High-risk biology / bulky disease",
+        label_ua="DIS-MF-SEZARY · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
         label_en="DIS-MF-SEZARY · High-risk biology / bulky disease",
@@ -4158,7 +4158,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-mm-high-risk",
         file="variant_mm_high_risk.json",
-        label_ua="DIS-MM · High-risk biology / bulky disease",
+        label_ua="DIS-MM · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloma",
         label_en="DIS-MM · High-risk biology / bulky disease",
@@ -4203,7 +4203,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-mpnst-high-risk",
         file="variant_mpnst_high_risk.json",
-        label_ua="DIS-MPNST · High-risk biology / bulky disease",
+        label_ua="DIS-MPNST · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-MPNST · High-risk biology / bulky disease",
@@ -4248,7 +4248,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-mtc-high-risk",
         file="variant_mtc_high_risk.json",
-        label_ua="DIS-MTC · High-risk biology / bulky disease",
+        label_ua="DIS-MTC · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-MTC · High-risk biology / bulky disease",
@@ -4302,7 +4302,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-nk_t_nasal-high-risk",
         file="variant_nk_t_nasal_high_risk.json",
-        label_ua="DIS-NK-T-NASAL · High-risk biology / bulky disease",
+        label_ua="DIS-NK-T-NASAL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
         label_en="DIS-NK-T-NASAL · High-risk biology / bulky disease",
@@ -4356,7 +4356,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-nlpbl-high-risk",
         file="variant_nlpbl_high_risk.json",
-        label_ua="DIS-NLPBL · High-risk biology / bulky disease",
+        label_ua="DIS-NLPBL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
         label_en="DIS-NLPBL · High-risk biology / bulky disease",
@@ -4410,7 +4410,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-nodal_mzl-high-risk",
         file="variant_nodal_mzl_high_risk.json",
-        label_ua="DIS-NODAL-MZL · High-risk biology / bulky disease",
+        label_ua="DIS-NODAL-MZL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
         label_en="DIS-NODAL-MZL · High-risk biology / bulky disease",
@@ -4464,7 +4464,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-nsclc-high-risk",
         file="variant_nsclc_high_risk.json",
-        label_ua="DIS-NSCLC · High-risk biology / bulky disease",
+        label_ua="DIS-NSCLC · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 5 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-NSCLC · High-risk biology / bulky disease",
@@ -4518,7 +4518,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-ovarian-high-risk",
         file="variant_ovarian_high_risk.json",
-        label_ua="DIS-OVARIAN · High-risk biology / bulky disease",
+        label_ua="DIS-OVARIAN · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-OVARIAN · High-risk biology / bulky disease",
@@ -4572,7 +4572,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-pcnsl-high-risk",
         file="variant_pcnsl_high_risk.json",
-        label_ua="DIS-PCNSL · High-risk biology / bulky disease",
+        label_ua="DIS-PCNSL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
         label_en="DIS-PCNSL · High-risk biology / bulky disease",
@@ -4617,7 +4617,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-pdac-high-risk",
         file="variant_pdac_high_risk.json",
-        label_ua="DIS-PDAC · High-risk biology / bulky disease",
+        label_ua="DIS-PDAC · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-PDAC · High-risk biology / bulky disease",
@@ -4671,7 +4671,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-pmbcl-high-risk",
         file="variant_pmbcl_high_risk.json",
-        label_ua="DIS-PMBCL · High-risk biology / bulky disease",
+        label_ua="DIS-PMBCL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
         label_en="DIS-PMBCL · High-risk biology / bulky disease",
@@ -4725,7 +4725,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-pmf-high-risk",
         file="variant_pmf_high_risk.json",
-        label_ua="DIS-PMF · High-risk biology / bulky disease",
+        label_ua="DIS-PMF · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
         label_en="DIS-PMF · High-risk biology / bulky disease",
@@ -4770,7 +4770,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-prostate-high-risk",
         file="variant_prostate_high_risk.json",
-        label_ua="DIS-PROSTATE · High-risk biology / bulky disease",
+        label_ua="DIS-PROSTATE · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-PROSTATE · High-risk biology / bulky disease",
@@ -4824,7 +4824,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-ptcl_nos-high-risk",
         file="variant_ptcl_nos_high_risk.json",
-        label_ua="DIS-PTCL-NOS · High-risk biology / bulky disease",
+        label_ua="DIS-PTCL-NOS · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
         label_en="DIS-PTCL-NOS · High-risk biology / bulky disease",
@@ -4878,7 +4878,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-ptld-high-risk",
         file="variant_ptld_high_risk.json",
-        label_ua="DIS-PTLD · High-risk biology / bulky disease",
+        label_ua="DIS-PTLD · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
         label_en="DIS-PTLD · High-risk biology / bulky disease",
@@ -4932,7 +4932,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-pv-high-risk",
         file="variant_pv_high_risk.json",
-        label_ua="DIS-PV · High-risk biology / bulky disease",
+        label_ua="DIS-PV · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
         label_en="DIS-PV · High-risk biology / bulky disease",
@@ -4986,7 +4986,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-rcc-high-risk",
         file="variant_rcc_high_risk.json",
-        label_ua="DIS-RCC · High-risk biology / bulky disease",
+        label_ua="DIS-RCC · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-RCC · High-risk biology / bulky disease",
@@ -5031,7 +5031,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-salivary-high-risk",
         file="variant_salivary_high_risk.json",
-        label_ua="DIS-SALIVARY · High-risk biology / bulky disease",
+        label_ua="DIS-SALIVARY · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-SALIVARY · High-risk biology / bulky disease",
@@ -5076,7 +5076,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-sclc-high-risk",
         file="variant_sclc_high_risk.json",
-        label_ua="DIS-SCLC · High-risk biology / bulky disease",
+        label_ua="DIS-SCLC · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-SCLC · High-risk biology / bulky disease",
@@ -5130,7 +5130,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-splenic_mzl-high-risk",
         file="variant_splenic_mzl_high_risk.json",
-        label_ua="DIS-SPLENIC-MZL · High-risk biology / bulky disease",
+        label_ua="DIS-SPLENIC-MZL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
         label_en="DIS-SPLENIC-MZL · High-risk biology / bulky disease",
@@ -5184,7 +5184,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-t_all-high-risk",
         file="variant_t_all_high_risk.json",
-        label_ua="DIS-T-ALL · High-risk biology / bulky disease",
+        label_ua="DIS-T-ALL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
         label_en="DIS-T-ALL · High-risk biology / bulky disease",
@@ -5238,7 +5238,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-t_pll-high-risk",
         file="variant_t_pll_high_risk.json",
-        label_ua="DIS-T-PLL · High-risk biology / bulky disease",
+        label_ua="DIS-T-PLL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
         label_en="DIS-T-PLL · High-risk biology / bulky disease",
@@ -5283,7 +5283,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-thyroid_anaplastic-high-risk",
         file="variant_thyroid_anaplastic_high_risk.json",
-        label_ua="DIS-THYROID-ANAPLASTIC · High-risk biology / bulky disease",
+        label_ua="DIS-THYROID-ANAPLASTIC · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-THYROID-ANAPLASTIC · High-risk biology / bulky disease",
@@ -5328,7 +5328,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-thyroid_papillary-high-risk",
         file="variant_thyroid_papillary_high_risk.json",
-        label_ua="DIS-THYROID-PAPILLARY · High-risk biology / bulky disease",
+        label_ua="DIS-THYROID-PAPILLARY · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-THYROID-PAPILLARY · High-risk biology / bulky disease",
@@ -5373,7 +5373,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-urothelial-high-risk",
         file="variant_urothelial_high_risk.json",
-        label_ua="DIS-UROTHELIAL · High-risk biology / bulky disease",
+        label_ua="DIS-UROTHELIAL · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
         label_en="DIS-UROTHELIAL · High-risk biology / bulky disease",
@@ -5427,7 +5427,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="variant-wm-high-risk",
         file="variant_wm_high_risk.json",
-        label_ua="DIS-WM · High-risk biology / bulky disease",
+        label_ua="DIS-WM · Високоризикова біологія / масивне захворювання",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
         label_en="DIS-WM · High-risk biology / bulky disease",
@@ -5445,7 +5445,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nsclc-egfr-ex19del-1l",
         file="patient_nsclc_egfr_ex19del_1l_osimertinib.json",
-        label_ua="NSCLC · EGFR ex19del · 1L Osimertinib (FLAURA)",
+        label_ua="NSCLC · EGFR ex19del · 1L Осимертиніб (FLAURA)",
         summary_ua="Метастатична NSCLC аденокарцинома, ніколи-курив. Engine: ALGO-1L step 2 → IND-NSCLC-EGFR-MUT-MET-1L (osimertinib FLAURA, mPFS 18.9 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="NSCLC · EGFR ex19del · 1L Osimertinib (FLAURA)",
@@ -5463,7 +5463,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nsclc-pdl1-high-pembro-mono",
         file="patient_nsclc_pdl1_high_pembro_mono.json",
-        label_ua="NSCLC · PD-L1 TPS≥50% · 1L Pembro mono (KEYNOTE-024)",
+        label_ua="NSCLC · PD-L1 TPS≥50% · 1L Пембро моно (KEYNOTE-024)",
         summary_ua="Метастатична NSCLC squamous, ex-курий, PD-L1 TPS 85%, driver-negative. Engine: step 5 → IND-NSCLC-PDL1-HIGH-MET-1L (pembro mono, 5-yr OS 31.9%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="NSCLC · PD-L1 TPS≥50% · 1L Pembro mono (KEYNOTE-024)",
@@ -5472,7 +5472,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nsclc-pdl1-low-chemo-io",
         file="patient_nsclc_pdl1_low_chemo_io.json",
-        label_ua="NSCLC · PD-L1 1-49% · 1L Pembro+chemo (KEYNOTE-189)",
+        label_ua="NSCLC · PD-L1 1-49% · 1L Пембро+хіміо (KEYNOTE-189)",
         summary_ua="Метастатична NSCLC adeno non-sq, PD-L1 TPS 25%, driver-negative. Engine: step 5 default → IND-NSCLC-PDL1-LOW-NONSQ-MET-1L (pembro+carbo+pem KEYNOTE-189).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="NSCLC · PD-L1 1-49% · 1L Pembro+chemo (KEYNOTE-189)",
@@ -5481,7 +5481,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nsclc-tmb-high-pembro-mono",
         file="patient_nsclc_tmb_high_pembro_mono.json",
-        label_ua="NSCLC · TMB-high (≥10 mut/Mb) · 1L Pembro+chemo",
+        label_ua="NSCLC · TMB-high (≥10 mut/Mb) · 1L Пембро+хіміо",
         summary_ua="TMB 18 mut/Mb, PD-L1 low, driver-negative. Engine default = PDL1-LOW-NONSQ; IND-NSCLC-TMB-HIGH-MET-1L surfaces як alternative track для HCP.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="NSCLC · TMB-high (≥10 mut/Mb) · 1L Pembro+chemo",
@@ -5490,7 +5490,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nsclc-egfr-t790m-2l",
         file="patient_nsclc_egfr_t790m_2l_post_1g_tki.json",
-        label_ua="NSCLC · EGFR T790M post-1G TKI · 2L (MARIPOSA-2)",
+        label_ua="NSCLC · EGFR T790M після TKI 1-го покоління · 2L (MARIPOSA-2)",
         summary_ua="L858R → erlotinib 24 мо → acquired T790M. Algo резолвить IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ; post-filter dropає (KB drift documented in comment).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="NSCLC · EGFR T790M post-1G TKI · 2L (MARIPOSA-2)",
@@ -5499,7 +5499,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nsclc-alk-2l-lorlatinib",
         file="patient_nsclc_alk_2l_lorlatinib.json",
-        label_ua="NSCLC · ALK 2L · Lorlatinib post-alectinib",
+        label_ua="NSCLC · ALK 2L · Лорлатініб після алектинібу",
         summary_ua="Post-alectinib 22 мо → CNS PD з новими brain mets. Engine: ALGO-2L step 4-5 → IND-NSCLC-ALK-2L-LORLATINIB (CROWN follow-up).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="NSCLC · ALK 2L · Lorlatinib post-alectinib",
@@ -5508,7 +5508,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nsclc-ros1-2l-entrectinib",
         file="patient_nsclc_ros1_2l_entrectinib.json",
-        label_ua="NSCLC · ROS1 2L · Entrectinib post-chemoIO",
+        label_ua="NSCLC · ROS1 2L · Ентректиніб після хіміоімунотерапії",
         summary_ua="ROS1 fusion (CD74-ROS1) виявлено на RNA-NGS після 1L PD. Engine: step 6-7 → IND-NSCLC-2L-ROS1-POST-CRIZ-ENTRECTINIB (intracranial ORR 79%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="NSCLC · ROS1 2L · Entrectinib post-chemoIO",
@@ -5517,7 +5517,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nsclc-kras-g12c-2l-sotorasib",
         file="patient_nsclc_kras_g12c_2l_sotorasib.json",
-        label_ua="NSCLC · KRAS G12C 2L · Sotorasib (CodeBreaK 200)",
+        label_ua="NSCLC · KRAS G12C 2L · Соторасиб (CodeBreaK 200)",
         summary_ua="ex-курий, KRAS G12C, post-pembro+chemo PD. Engine: step 8-9 → IND-NSCLC-2L-KRAS-G12C-SOTORASIB (mPFS 5.6 мо vs docetaxel).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="NSCLC · KRAS G12C 2L · Sotorasib (CodeBreaK 200)",
@@ -5526,7 +5526,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nsclc-braf-v600e-2l",
         file="patient_nsclc_braf_v600e_2l_dab_tram.json",
-        label_ua="NSCLC · BRAF V600E 2L · Dabrafenib+trametinib",
+        label_ua="NSCLC · BRAF V600E 2L · Дабрафеніб+траметиніб",
         summary_ua="BRAF V600E confirmed на rebiopsy після 1L pembro+chemo. Engine: step 12 → IND-NSCLC-2L-BRAF-V600E-DAB-TRAM (BRF113928, ORR 64%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="NSCLC · BRAF V600E 2L · Dabrafenib+trametinib",
@@ -5535,7 +5535,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nsclc-metex14-2l-capmatinib",
         file="patient_nsclc_metex14_2l_capmatinib.json",
-        label_ua="NSCLC · MET ex14 skipping 2L · Capmatinib (GEOMETRY mono-1)",
+        label_ua="NSCLC · MET ex14 skipping 2L · Капматиніб (GEOMETRY mono-1)",
         summary_ua="Ніколи-курила 73, autoimmune RA (chemo-only 1L). Engine: step 10-11 → IND-NSCLC-2L-MET-EX14-CAPMATINIB (ORR 41% pretreated).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="NSCLC · MET ex14 skipping 2L · Capmatinib (GEOMETRY mono-1)",
@@ -5544,7 +5544,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="nsclc-ret-fusion-2l-selpercatinib",
         file="patient_nsclc_ret_fusion_2l_selpercatinib.json",
-        label_ua="NSCLC · RET fusion 2L · Selpercatinib (LIBRETTO-001)",
+        label_ua="NSCLC · RET-злиття 2L · Селперкатиніб (LIBRETTO-001)",
         summary_ua="KIF5B-RET виявлено на RNA-NGS rebiopsy. Engine: step 13 → IND-NSCLC-2L-RET-FUSION-SELPERCATINIB (intracranial ORR 91%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="NSCLC · RET fusion 2L · Selpercatinib (LIBRETTO-001)",
@@ -5555,7 +5555,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-hr-pos-met-1l-cdk46i",
         file="patient_breast_hr_pos_her2_neg_met_1l_cdk46i.json",
-        label_ua="Breast · HR+/HER2- met 1L · AI+palbociclib (PALOMA-2)",
+        label_ua="Рак молочної залози · HR+/HER2-, метастатичний, 1Л · AI+палбоцикліб (PALOMA-2)",
         summary_ua="Метастатична HR+/HER2-, postmenopausal. Engine: ALGO-1L → IND-BREAST-HR-POS-MET-1L-CDKI (PALOMA-2 mPFS 27.6 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · HR+/HER2- met 1L · AI+palbociclib (PALOMA-2)",
@@ -5564,7 +5564,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-hr-pos-pik3ca-alpelisib",
         file="patient_breast_hr_pos_post_cdk46i_pik3ca_alpelisib.json",
-        label_ua="Breast · HR+ post-CDK4/6i · PIK3CA H1047R · Alpelisib (SOLAR-1)",
+        label_ua="Рак молочної залози · HR+, після CDK4/6i · PIK3CA H1047R · Алпелісиб (SOLAR-1)",
         summary_ua="Прогрес на CDK4/6i, PIK3CA H1047R hot-spot. Engine drift: HER2-2L дефолт; alpelisib+fulvestrant анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · HR+ post-CDK4/6i · PIK3CA H1047R · Alpelisib (SOLAR-1)",
@@ -5573,7 +5573,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-her2-pos-early-katherine",
         file="patient_breast_her2_pos_early_neoadj_kn522_path.json",
-        label_ua="Breast · HER2+ early · Neoadj TCHP → KATHERINE T-DM1",
+        label_ua="Рак молочної залози · HER2+, ранній · Неоад'ювант TCHP → KATHERINE T-DM1",
         summary_ua="HER2+ early-stage, неоадʼювантна TCHP → adjuvant T-DM1 при non-pCR (KATHERINE 50% iDFS benefit). Drift: engine routes до met-1L.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · HER2+ early · Neoadj TCHP → KATHERINE T-DM1",
@@ -5582,7 +5582,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-her2-pos-met-1l-thp",
         file="patient_breast_her2_pos_met_1l_thp.json",
-        label_ua="Breast · HER2+ met 1L · Docetaxel+THP (CLEOPATRA)",
+        label_ua="Рак молочної залози · HER2+, метастатичний, 1Л · Доцетаксел+THP (CLEOPATRA)",
         summary_ua="HER2+ метастатична 1L, docetaxel+trastuzumab+pertuzumab. Engine: ALGO-1L → IND-BREAST-HER2-POS-MET-1L-THP (CLEOPATRA mOS 57 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · HER2+ met 1L · Docetaxel+THP (CLEOPATRA)",
@@ -5591,7 +5591,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-her2-pos-met-2l-tdxd",
         file="patient_breast_her2_pos_met_2l_tdxd.json",
-        label_ua="Breast · HER2+ met 2L · T-DXd (DESTINY-Breast03)",
+        label_ua="Рак молочної залози · HER2+, метастатичний, 2Л · T-DXd (DESTINY-Breast03)",
         summary_ua="HER2+ метастатична 2L після THP. Engine: ALGO-HER2-POS-2L → IND-BREAST-HER2-POS-MET-2L-TDXD (DB03 mPFS 28.8 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · HER2+ met 2L · T-DXd (DESTINY-Breast03)",
@@ -5600,7 +5600,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-tnbc-neoadj-kn522",
         file="patient_breast_tnbc_neoadj_kn522_pembro_chemo.json",
-        label_ua="Breast · TNBC stage II-III · Neoadj pembro+chemo (KEYNOTE-522)",
+        label_ua="Рак молочної залози · TNBC, стадія II-III · Неоад'ювант пембро+хіміо (KEYNOTE-522)",
         summary_ua="TNBC II-III, неоадʼювантна pembro+carbo+pacli→AC (pCR 64%). Drift: engine routes до HR+ default; clinical anchor у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · TNBC stage II-III · Neoadj pembro+chemo (KEYNOTE-522)",
@@ -5609,7 +5609,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-brca-germline-olaparib",
         file="patient_breast_brca_germline_met_olaparib.json",
-        label_ua="Breast · BRCA1 germline met · Olaparib (OlympiAD)",
+        label_ua="Рак молочної залози · BRCA1 герміногенна, метастатичний · Олапариб (OlympiAD)",
         summary_ua="BRCA1 germline pathogenic, метастатична HER2-. PARPi мono. Drift: engine routes до HR+/HER2- 1L CDK4/6i default; clinical anchor у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · BRCA1 germline met · Olaparib (OlympiAD)",
@@ -5618,7 +5618,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-tnbc-met-2l-sacituzumab",
         file="patient_breast_tnbc_met_sacituzumab_2l.json",
-        label_ua="Breast · TNBC met 2L · Sacituzumab govitecan (ASCENT)",
+        label_ua="Рак молочної залози · TNBC, метастатичний, 2Л · Сацитузумаб говітекан (ASCENT)",
         summary_ua="TNBC метастатична 2L+. Drift: engine routes до HER2-2L default; sacituzumab анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · TNBC met 2L · Sacituzumab govitecan (ASCENT)",
@@ -5629,7 +5629,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-her2-pos-2l-brain-mets-tucatinib",
         file="patient_breast_her2_pos_2l_brain_mets_tucatinib.json",
-        label_ua="Breast · HER2+ met 2L · Tucatinib+tras+capec (HER2CLIMB, brain mets)",
+        label_ua="Рак молочної залози · HER2+, метастатичний, 2Л · Тукатиніб+tras+capec (HER2CLIMB, метастази в мозок)",
         summary_ua="HER2+ метастатична 2L, мозкові метастази після SRS. Engine: ALGO-HER2-POS-2L step 2 brain-mets → IND-BREAST-HER2-POS-3L-TUCATINIB (CNS-PFS 9.9 vs 4.2 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · HER2+ met 2L · Tucatinib+tras+capec (HER2CLIMB, brain mets)",
@@ -5638,7 +5638,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-hr-pos-2l-akt1-capivasertib",
         file="patient_breast_hr_pos_2l_akt1_capivasertib.json",
-        label_ua="Breast · HR+/HER2- met 2L · Capivasertib+fulvestrant (AKT1 E17K, CAPItello-291)",
+        label_ua="Рак молочної залози · HR+/HER2-, метастатичний, 2Л · Капівасертиб+фулвестрант (AKT1 E17K, CAPItello-291)",
         summary_ua="HR+/HER2- метастатична 2L після AI+CDK4/6i, AKT1 E17K мутація. Engine: ALGO-HR-POS-2L step 1 RF-AKT1-E17K → IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB (мПФВ 7.3 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · HR+/HER2- met 2L · Capivasertib+fulvestrant (AKT1 E17K, CAPItello-291)",
@@ -5647,7 +5647,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-hr-pos-2l-esr1-elacestrant",
         file="patient_breast_hr_pos_2l_esr1_elacestrant.json",
-        label_ua="Breast · HR+/HER2- met 2L · Elacestrant (ESR1 D538G, EMERALD)",
+        label_ua="Рак молочної залози · HR+/HER2-, метастатичний, 2Л · Елацестрант (ESR1 D538G, EMERALD)",
         summary_ua="HR+/HER2- метастатична 2L після AI+CDK4/6i, ctDNA ESR1 D538G. Engine: ALGO-HR-POS-2L step 2 RF-ESR1-MUT → IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT (мПФВ 3.8 vs 1.9 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · HR+/HER2- met 2L · Elacestrant (ESR1 D538G, EMERALD)",
@@ -5656,7 +5656,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-hr-pos-2l-her2-low-tdxd",
         file="patient_breast_hr_pos_2l_her2_low_tdxd.json",
-        label_ua="Breast · HR+/HER2-low met 2L · T-DXd (DESTINY-Breast06)",
+        label_ua="Рак молочної залози · HR+/HER2-низький, метастатичний, 2Л · T-DXd (DESTINY-Breast06)",
         summary_ua="HR+/HER2-low (ІГХ 1+) метастатична 2L після AI+CDK4/6i, без таргетних мутацій. Engine: ALGO-HR-POS-2L step 3 RF-HER2-LOW → IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW (DB06 мПФВ 13.2 vs 8.1 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · HR+/HER2-low met 2L · T-DXd (DESTINY-Breast06)",
@@ -5665,7 +5665,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-hr-pos-2l-everolimus",
         file="patient_breast_hr_pos_2l_everolimus.json",
-        label_ua="Breast · HR+/HER2 IHC 0 met 2L · Everolimus+fulvestrant (BOLERO-2)",
+        label_ua="Рак молочної залози · HR+/HER2 ІГХ 0, метастатичний, 2Л · Еверолімус+фулвестрант (BOLERO-2)",
         summary_ua="HR+/HER2 IHC 0 метастатична 2L після AI+CDK4/6i, без мутацій. Engine: ALGO-HR-POS-2L step 5 default → IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS (BOLERO-2 мПФВ 10.6 vs 4.1 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · HR+/HER2 IHC 0 met 2L · Everolimus+fulvestrant (BOLERO-2)",
@@ -5674,7 +5674,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-tnbc-2l-brca-talazoparib",
         file="patient_breast_tnbc_2l_brca_talazoparib.json",
-        label_ua="Breast · TNBC met 2L · PARPi — talazoparib (BRCA1, EMBRACA)",
+        label_ua="Рак молочної залози · TNBC, метастатичний, 2Л · PARPi — талазопариб (BRCA1, EMBRACA)",
         summary_ua="TNBC метастатична 2L, BRCA1 germline патогенна. Engine: ALGO-TNBC-2L step 1 RF-BRCA-GERMLINE → IND-BREAST-TNBC-2L-BRCA-OLAPARIB (default); talazoparib — aggressive/alternative plan.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · TNBC met 2L · PARPi — talazoparib (BRCA1, EMBRACA)",
@@ -5683,7 +5683,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="breast-tnbc-2l-her2-low-tdxd",
         file="patient_breast_tnbc_2l_her2_low_tdxd.json",
-        label_ua="Breast · TNBC/HER2-low met 2L · T-DXd (DESTINY-Breast04 subset)",
+        label_ua="Рак молочної залози · TNBC/HER2-низький, метастатичний, 2Л · T-DXd (DESTINY-Breast04, підгрупа)",
         summary_ua="TNBC HER2-low (ІГХ 1+) метастатична 2L після пембролізумаб+хіміотерапія. Engine: ALGO-TNBC-2L step 2 RF-HER2-LOW → IND-BREAST-TNBC-2L-T-DXD-HER2-LOW.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Breast · TNBC/HER2-low met 2L · T-DXd (DESTINY-Breast04 subset)",
@@ -5694,7 +5694,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="crc-stage-iii-adjuvant-folfox",
         file="patient_crc_stage_iii_adjuvant_folfox.json",
-        label_ua="CRC · stage III adjuvant FOLFOX (MOSAIC)",
+        label_ua="CRC · Стадія III, ад'ювантний FOLFOX (MOSAIC)",
         summary_ua="Stage III після резекції (R0), 62F, MSI-S/BRAF-WT. Engine: disease_state=adjuvant → ALGO-CRC-ADJUVANT. Крок 1 умова free-text (нееvalуйована) → fallback до IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX; клінічний анкер MOSAIC у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="CRC · stage III adjuvant FOLFOX (MOSAIC)",
@@ -5703,7 +5703,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="crc-mcrc-ras-wt-left-folfox-cetux",
         file="patient_crc_metastatic_ras_wt_left_folfox_cetux.json",
-        label_ua="mCRC · RAS-WT left-sided 1L · FOLFOX+cetuximab (CRYSTAL)",
+        label_ua="mCRC · RAS-WT лівобічний 1L · FOLFOX+цетуксимаб (CRYSTAL)",
         summary_ua="RAS-WT левобічна mCRC. Engine: ALGO step 2 → IND-CRC-METASTATIC-1L-RAS-WT-LEFT (CRYSTAL/FIRE-3).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="mCRC · RAS-WT left-sided 1L · FOLFOX+cetuximab (CRYSTAL)",
@@ -5712,7 +5712,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="crc-mcrc-ras-mut-folfox-bev",
         file="patient_crc_metastatic_ras_mut_folfox_bev.json",
-        label_ua="mCRC · RAS-mutated 1L · FOLFOX+bevacizumab",
+        label_ua="mCRC · RAS-мутований 1L · FOLFOX+бевацизумаб",
         summary_ua="KRAS-мутована mCRC, 1L FOLFOX+bevacizumab. Engine: ALGO default → IND-CRC-METASTATIC-1L-FOLFOX-BEV.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="mCRC · RAS-mutated 1L · FOLFOX+bevacizumab",
@@ -5721,7 +5721,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="crc-mcrc-msi-h-pembro",
         file="patient_crc_metastatic_msi_h_pembro_mono.json",
-        label_ua="mCRC · MSI-H 1L · Pembrolizumab mono (KEYNOTE-177)",
+        label_ua="mCRC · MSI-H 1L · Пембролізумаб, монотерапія (KEYNOTE-177)",
         summary_ua="MSI-high mCRC. Engine: ALGO step 1 (MSI-H fires) → IND-CRC-METASTATIC-1L-MSI-H-PEMBRO (KEYNOTE-177 mPFS 16.5 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="mCRC · MSI-H 1L · Pembrolizumab mono (KEYNOTE-177)",
@@ -5730,7 +5730,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="crc-mcrc-2l-folfiri-bev",
         file="patient_crc_metastatic_2l_folfiri_bev.json",
-        label_ua="mCRC · 2L FOLFIRI+bev post-FOLFOX (E3200/ML18147)",
+        label_ua="mCRC · 2L FOLFIRI+bev після FOLFOX (E3200/ML18147)",
         summary_ua="Прогрес на FOLFOX+bev 1L. Engine: ALGO-2L → IND-CRC-METASTATIC-2L-FOLFIRI-BEV (continuum-of-care).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="mCRC · 2L FOLFIRI+bev post-FOLFOX (E3200/ML18147)",
@@ -5739,7 +5739,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="crc-mcrc-3l-regorafenib",
         file="patient_crc_metastatic_3l_regorafenib.json",
-        label_ua="mCRC · 3L+ Regorafenib (CORRECT)",
+        label_ua="mCRC · 3L+ Регорафеніб (CORRECT)",
         summary_ua="Хеморефрактерна mCRC. Drift: engine default = TAS-102+bev (SUNLIGHT); regorafenib як alternative track.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="mCRC · 3L+ Regorafenib (CORRECT)",
@@ -5750,7 +5750,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="melanoma-braf-v600-dab-tram",
         file="patient_melanoma_braf_v600_dab_tram.json",
-        label_ua="Melanoma · BRAF V600 · 1L Dab+tram (COMBI-d/v)",
+        label_ua="Меланома · BRAF V600 · 1L Дабра+траме (COMBI-d/v)",
         summary_ua="BRAF V600 метастатична. Engine: → IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME (COMBI-d/v).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Melanoma · BRAF V600 · 1L Dab+tram (COMBI-d/v)",
@@ -5759,7 +5759,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="melanoma-braf-v600-nivo-ipi",
         file="patient_melanoma_braf_v600_nivo_ipi.json",
-        label_ua="Melanoma · BRAF V600 · 1L Nivo+ipi (CheckMate-067)",
+        label_ua="Меланома · BRAF V600 · 1L Ніво+іпі (CheckMate-067)",
         summary_ua="BRAF V600 метастатична, IO doublet. Engine: → IND-MELANOMA-METASTATIC-1L-NIVO-IPI (CM-067 5-yr OS 52%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Melanoma · BRAF V600 · 1L Nivo+ipi (CheckMate-067)",
@@ -5768,7 +5768,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="melanoma-braf-wt-pembro-mono",
         file="patient_melanoma_braf_wt_pembro_mono.json",
-        label_ua="Melanoma · BRAF-WT · 1L Pembro mono (KEYNOTE-006)",
+        label_ua="Меланома · BRAF-WT · 1L Пембро моно (KEYNOTE-006)",
         summary_ua="BRAF-WT метастатична. Drift: KEYNOTE-006 не wired у KB; engine fallback до nivo+ipi; анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Melanoma · BRAF-WT · 1L Pembro mono (KEYNOTE-006)",
@@ -5777,7 +5777,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="melanoma-nivo-relatlimab",
         file="patient_melanoma_nivo_relatlimab.json",
-        label_ua="Melanoma · 1L Nivolumab+relatlimab (RELATIVITY-047)",
+        label_ua="Меланома · 1L Ніволумаб+релатлімаб (RELATIVITY-047)",
         summary_ua="Drift: KB scopeє nivo+rela до 2L post-BRAFi; модельовано як 2L з frailty. RELATIVITY-047 анкер 1L FDA.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Melanoma · 1L Nivolumab+relatlimab (RELATIVITY-047)",
@@ -5786,7 +5786,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="melanoma-adjuvant-pembro-stage-iii",
         file="patient_melanoma_adjuvant_pembro_stage_iii.json",
-        label_ua="Melanoma · Stage III resected · Adjuvant pembro (KEYNOTE-054)",
+        label_ua="Меланома · Стадія III резектована · Ад'ювантний пембро (KEYNOTE-054)",
         summary_ua="Drift: adjuvant melanoma algo не існує в KB; engine output = met-1L IO doublet. KEYNOTE-054 анкер у comment, motivation для майбутнього ALGO-MELANOMA-ADJUVANT.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Melanoma · Stage III resected · Adjuvant pembro (KEYNOTE-054)",
@@ -5797,7 +5797,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="prostate-mcrpc-brca-olaparib",
         file="patient_prostate_mcrpc_brca_olaparib_profound.json",
-        label_ua="Prostate · mCRPC · BRCA-mut · Olaparib (PROfound)",
+        label_ua="Рак простати · mCRPC · BRCA-мут · Олапариб (PROfound)",
         summary_ua="mCRPC з BRCA-pathogenic, PARPi мono. Engine: ALGO-PROSTATE-MCRPC-1L step 1 → IND-PROSTATE-MCRPC-1L-PARPI (PROfound mPFS 7.4 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Prostate · mCRPC · BRCA-mut · Olaparib (PROfound)",
@@ -5808,7 +5808,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="rcc-imdc-int-nivo-ipi",
         file="patient_rcc_imdc_int_nivo_ipi.json",
-        label_ua="RCC · IMDC int/poor 1L · Nivo+ipi (CheckMate-214)",
+        label_ua="RCC · IMDC проміжний/несприятливий 1L · Nivo+ipi (CheckMate-214)",
         summary_ua="Clear-cell RCC IMDC intermediate-poor. Drift: engine default = pembro+axi; nivo+ipi анкер CM-214 у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="RCC · IMDC int/poor 1L · Nivo+ipi (CheckMate-214)",
@@ -5817,7 +5817,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="rcc-imdc-fav-axi-pembro",
         file="patient_rcc_imdc_fav_axi_pembro.json",
-        label_ua="RCC · IMDC favorable 1L · Axi+pembro (KEYNOTE-426)",
+        label_ua="RCC · IMDC сприятливий 1L · Axi+pembro (KEYNOTE-426)",
         summary_ua="Clear-cell RCC IMDC favorable. Engine: → IND-RCC-METASTATIC-1L-PEMBRO-AXI (KEYNOTE-426 5-yr OS).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="RCC · IMDC favorable 1L · Axi+pembro (KEYNOTE-426)",
@@ -5826,7 +5826,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="urothelial-muc-ev-pembro",
         file="patient_urothelial_muc_ev_pembro.json",
-        label_ua="Urothelial · mUC 1L · EV+pembro (EV-302)",
+        label_ua="Уротеліальний · mUC 1L · EV+pembro (EV-302)",
         summary_ua="Метастатична мUC. Drift: free-text condition unevaluable; engine default = platinum+avelumab; EV-302 анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Urothelial · mUC 1L · EV+pembro (EV-302)",
@@ -5835,7 +5835,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="endometrial-dmmr-pembro-kn775",
         file="patient_endometrial_dmmr_pembro_kn775.json",
-        label_ua="Endometrial · advanced dMMR · Pembro+chemo (NRG-GY018)",
+        label_ua="Рак ендометрія · поширений dMMR · Pembro+хіміо (NRG-GY018)",
         summary_ua="Advanced/recurrent dMMR endometrial. Engine: → IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO (NRG-GY018 mPFS NR vs 7.6).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Endometrial · advanced dMMR · Pembro+chemo (NRG-GY018)",
@@ -5844,7 +5844,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="endometrial-p53-abn-dosta-ruby",
         file="patient_endometrial_p53_abn_dosta_kn775.json",
-        label_ua="Endometrial · p53-abnormal · Carbo+pacli+dostarlimab (RUBY)",
+        label_ua="Рак ендометрія · p53-аномальний · Carbo+pacli+dostarlimab (RUBY)",
         summary_ua="Advanced p53-abnormal endometrial. Drift: engine default = pembro+chemo; RUBY dostarlimab анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Endometrial · p53-abnormal · Carbo+pacli+dostarlimab (RUBY)",
@@ -5853,7 +5853,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="ovarian-hrd-neg-no-parpi",
         file="patient_ovarian_hrd_neg_carbo_pacli_no_parpi.json",
-        label_ua="Ovarian · HRD-neg · Carbo+pacli, no PARPi maintenance",
+        label_ua="Рак яєчників · HRD-neg · Карбо+паклі, без підтримуючої терапії PARPi",
         summary_ua="HRD-negative ovarian (контраст до patient_ovarian_advanced_hrd). Engine: → IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Ovarian · HRD-neg · Carbo+pacli, no PARPi maintenance",
@@ -5882,7 +5882,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="gastric-her2-pos-toga",
         file="patient_gastric_her2_pos_toga.json",
-        label_ua="Gastric · met HER2+ 1L · Trastuzumab+chemo (TOGA)",
+        label_ua="Рак шлунка · метастатичний HER2+ 1L · Trastuzumab+хіміо (TOGA)",
         summary_ua="Метастатична HER2+ gastric. Engine: RF-HIGH-RISK-BIOLOGY → IND-GASTRIC-METASTATIC-1L-HER2-TOGA (TOGA mOS 13.8 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Gastric · met HER2+ 1L · Trastuzumab+chemo (TOGA)",
@@ -5891,7 +5891,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="gastric-pdl1-cps-chemo-nivo",
         file="patient_gastric_pdl1_cps_high_chemo_nivo.json",
-        label_ua="Gastric · met CPS≥5 1L · Chemo+nivolumab (CheckMate-649)",
+        label_ua="Рак шлунка · метастатичний CPS≥5 1L · Хіміо+nivolumab (CheckMate-649)",
         summary_ua="Метастатична HER2- CPS≥5 gastric. Engine: HER2- step 2 → IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI (CM-649 mOS 14.4 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Gastric · met CPS≥5 1L · Chemo+nivolumab (CheckMate-649)",
@@ -5900,7 +5900,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="esophageal-cross-then-nivo",
         file="patient_esophageal_adeno_neoadj_cross_then_nivo.json",
-        label_ua="Esophageal · adeno · Neoadj CROSS → adjuvant nivolumab (CheckMate-577)",
+        label_ua="Рак стравоходу · аденокарцинома · Неоад'ювант CROSS → ад'ювант nivolumab (CheckMate-577)",
         summary_ua="Resectable adeno з ypT+/ypN+ residual. Drift: ALGO-1L emit only CROSS-NEOADJUVANT; CheckMate-577 adjuvant nivo неreachable (PROPOSAL §17 territory).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="Esophageal · adeno · Neoadj CROSS → adjuvant nivolumab (CheckMate-577)",
@@ -5909,7 +5909,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="pdac-folfirinox-fit",
         file="patient_pdac_metastatic_folfirinox_fit.json",
-        label_ua="PDAC · met fit · FOLFIRINOX (PRODIGE-4)",
+        label_ua="PDAC · метастатичний, придатний до інтенсивної терапії · FOLFIRINOX (PRODIGE-4)",
         summary_ua="Fit метастатична PDAC. Drift: ALGO step 3 condition free-text; engine default = gem-nab-pac; FOLFIRINOX як alternative track.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="PDAC · met fit · FOLFIRINOX (PRODIGE-4)",
@@ -5920,7 +5920,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="sclc-ls-chemo-rt",
         file="patient_sclc_ls_chemo_rt.json",
-        label_ua="SCLC · LS · Chemo + concurrent RT",
+        label_ua="SCLC · LS · Хіміотерапія + одночасна променева терапія",
         summary_ua="Limited-stage SCLC. RT не modellable per CHARTER §17 — engine emit chemo backbone EP, RT як free-text. Drift: engine default = ES-1L.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="SCLC · LS · Chemo + concurrent RT",
@@ -5929,7 +5929,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="sclc-es-atezo-impower133",
         file="patient_sclc_es_atezo_chemo_impower133.json",
-        label_ua="SCLC · ES · Atezo+carbo+etoposide (IMpower133)",
+        label_ua="SCLC · ES · Atezo+carbo+етопозид (IMpower133)",
         summary_ua="Extensive-stage SCLC. Engine: → IND-SCLC-EXTENSIVE-1L. Drift: дефолт REG-EP-DURVA не IMpower133 атезо; атезо regimen не wired.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="SCLC · ES · Atezo+carbo+etoposide (IMpower133)",
@@ -5938,7 +5938,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="hnscc-cps-high-pembro-mono",
         file="patient_hnscc_cps_high_pembro_mono.json",
-        label_ua="HNSCC · R/M CPS≥1 1L · Pembro mono (KEYNOTE-048)",
+        label_ua="HNSCC · R/M CPS≥1 1L · Pembro моно (KEYNOTE-048)",
         summary_ua="R/M HNSCC CPS≥20. Engine: → IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH (KEYNOTE-048 mOS 14.9 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
         label_en="HNSCC · R/M CPS≥1 1L · Pembro mono (KEYNOTE-048)",
@@ -5958,7 +5958,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="aml-flt3-itd-midostaurin",
         file="patient_aml_flt3_itd_midostaurin_7_3.json",
-        label_ua="AML · FLT3-ITD fit · 7+3 + Midostaurin (RATIFY)",
+        label_ua="AML · FLT3-ITD, придатний · 7+3 + Мідостаурин (RATIFY)",
         summary_ua="Fit AML FLT3-ITD. Engine: ALGO-1L → IND-AML-1L-7-3 (default); midostaurin/RATIFY як regimen-layer note у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="AML · FLT3-ITD fit · 7+3 + Midostaurin (RATIFY)",
@@ -5967,7 +5967,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="aml-cbf-inv16-7-3-go",
         file="patient_aml_cbf_inv16_7_3_go.json",
-        label_ua="AML · CBF inv(16) · 7+3 + Gemtuzumab (ALFA-0701)",
+        label_ua="AML · CBF inv(16) · 7+3 + Гемтузумаб (ALFA-0701)",
         summary_ua="Fit CBF AML. Drift: 7+3+GO indication відсутня; engine default = 7+3 plain; ALFA-0701 анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="AML · CBF inv(16) · 7+3 + Gemtuzumab (ALFA-0701)",
@@ -5976,7 +5976,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="aml-secondary-cpx351",
         file="patient_aml_secondary_cpx351.json",
-        label_ua="AML · secondary/t-AML · CPX-351 (Vyxeos)",
+        label_ua="AML · вторинна/t-AML · CPX-351 (Vyxeos)",
         summary_ua="Secondary AML post-MDS. Drift: CPX-351 indication відсутня у ALGO-1L; engine default = 7+3; Vyxeos анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="AML · secondary/t-AML · CPX-351 (Vyxeos)",
@@ -5985,7 +5985,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="aml-rr-gilteritinib",
         file="patient_aml_rr_gilteritinib.json",
-        label_ua="AML · R/R FLT3-mut · Gilteritinib (ADMIRAL)",
+        label_ua="AML · Р/Р FLT3-мут. · Гілтеритиніб (ADMIRAL)",
         summary_ua="Primary-refractory FLT3-TKD AML. Engine: ALGO-2L → IND-AML-2L-GILTERITINIB-FLT3 (ADMIRAL mOS 9.3 мо vs salvage chemo).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
         label_en="AML · R/R FLT3-mut · Gilteritinib (ADMIRAL)",
@@ -5996,7 +5996,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="dlbcl-2l-pola-r-b",
         file="patient_dlbcl_2l_pola_r_b.json",
-        label_ua="DLBCL · 2L · Pola-R-B transplant-ineligible (POLARIX 2L)",
+        label_ua="DLBCL · 2L · Pola-R-B, не підходить для трансплантації (POLARIX 2L)",
         summary_ua="ASCT-ineligible cardiac-comorbidity, late relapse. Engine: ALGO-2L → IND-DLBCL-2L-POLA-R-BENDAMUSTINE (distinct від існуючого relapsed_transplant_ineligible).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="DLBCL · 2L · Pola-R-B transplant-ineligible (POLARIX 2L)",
@@ -6005,7 +6005,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="dlbcl-3l-axi-cel",
         file="patient_dlbcl_3l_axi_cel.json",
-        label_ua="DLBCL · 3L+ · Axi-cel post-2L (ZUMA-1)",
+        label_ua="DLBCL · 3L+ · Axi-cel після 2L (ZUMA-1)",
         summary_ua="Прогрес після RCHOP→Pola-BR. Engine: ALGO-2L default = Pola-BR; axi-cel surfaces як aggressive alternative track. Distinct від chemorefractory_for_cart.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="DLBCL · 3L+ · Axi-cel post-2L (ZUMA-1)",
@@ -6014,7 +6014,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="dlbcl-primary-refractory-loncast",
         file="patient_dlbcl_primary_refractory_loncast_post_pola.json",
-        label_ua="DLBCL · primary-refractory · Loncastuximab post-pola (LOTIS-2)",
+        label_ua="DLBCL · первинно рефрактерний · Loncastuximab після pola (LOTIS-2)",
         summary_ua="Primary-refractory frail non-CAR-T-eligible. Drift: REG-LONCASTUXIMAB-TESIRINE відсутній; engine default = Pola-BR (re-MMAE inappropriate); LOTIS-2 анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
         label_en="DLBCL · primary-refractory · Loncastuximab post-pola (LOTIS-2)",
@@ -6025,7 +6025,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="cll-venr-2l-murano",
         file="patient_cll_venr_2l_murano.json",
-        label_ua="CLL · 2L post-BTKi · VenR fixed-duration (MURANO)",
+        label_ua="CLL · 2Л, після BTKi · VenR, фіксована тривалість (MURANO)",
         summary_ua="Post-acalabrutinib PD без C481/BCL2-resistance. Engine: ALGO-CLL-2L step 2 (RF-PRIOR-BTKI-PROGRESSION) → IND-CLL-2L-VENR-MURANO (24-mo, mPFS 53.6 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
         label_en="CLL · 2L post-BTKi · VenR fixed-duration (MURANO)",
@@ -6034,7 +6034,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="mcl-pirtobrutinib-3l",
         file="patient_mcl_pirtobrutinib_3l_post_btki.json",
-        label_ua="MCL · 3L+ · Pirtobrutinib post-covalent-BTKi (BRUIN MCL-321)",
+        label_ua="MCL · 3L+ · Pirtobrutinib після ковалентного BTKi (BRUIN MCL-321)",
         summary_ua="Вік 74, ECOG 2, LVEF 38% — CAR-T ineligible. ALGO-MCL-3L крок 1 false (LVEF<40) → IND-MCL-3L-PIRTOBRUTINIB (BRUIN MCL-321, ORR 50%). ≥2 попередніх ліній включаючи cBTKi (1Л R-CHOP + 2Л акалабрутиніб).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
         label_en="MCL · 3L+ · Pirtobrutinib post-covalent-BTKi (BRUIN MCL-321)",
@@ -6045,7 +6045,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-breast-lump-prebiopsy",
         file="patient_diagnostic_breast_lump_prebiopsy.json",
-        label_ua="Diagnostic · Suspect breast lump · BI-RADS 4-5 pre-biopsy",
+        label_ua="Діагностика · Підозра на утворення молочної залози · BI-RADS 4-5 перед біопсією",
         summary_ua="Pre-biopsy: pальпабельне утворення, BI-RADS 4-5. Engine: WORKUP-SUSPECTED-BREAST (mammography + US + MRI + core biopsy + IHC). Diagnostic Brief mode (CHARTER §15.2 C7).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect breast lump · BI-RADS 4-5 pre-biopsy",
@@ -6054,7 +6054,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-lung-mass-prebiopsy",
         file="patient_diagnostic_lung_mass_smoker_prebiopsy.json",
-        label_ua="Diagnostic · Suspect lung mass · Smoker hx pre-biopsy",
+        label_ua="Діагностика · Підозра на утворення легені · Анамнез куріння, перед біопсією",
         summary_ua="Pre-biopsy: incidental lung mass, smoker 30 pack-years. Engine: WORKUP-SUSPECTED-NSCLC (CT-guided biopsy + NGS + PD-L1 IHC + staging FDG-PET + brain MRI).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect lung mass · Smoker hx pre-biopsy",
@@ -6063,7 +6063,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-prostate-psa-prebiopsy",
         file="patient_diagnostic_prostate_psa_elevated_prebiopsy.json",
-        label_ua="Diagnostic · Elevated PSA · mp-MRI PI-RADS 4 pre-biopsy",
+        label_ua="Діагностика · Підвищений PSA · mp-MRI PI-RADS 4 перед біопсією",
         summary_ua="Pre-biopsy: PSA 12.4 ng/mL, mp-MRI PI-RADS 4. Engine: WORKUP-SUSPECTED-PROSTATE (transperineal mp-MRI-targeted biopsy + Gleason + PSMA-PET if int/high-risk).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Elevated PSA · mp-MRI PI-RADS 4 pre-biopsy",
@@ -6081,7 +6081,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-acute-leukemia-circulating-blasts",
         file="patient_diagnostic_acute_leukemia_circulating_blasts.json",
-        label_ua="Diagnostic · Acute leukemia · Pancytopenia + 38% circulating blasts",
+        label_ua="Діагностика · Гострий лейкоз · Панцитопенія + 38% циркулюючих бластів",
         summary_ua="Pre-biopsy: WBC 95k з 38% blasts на peripheral smear, DIC labs, hyperleukocytosis. Engine: WORKUP-SUSPECTED-ACUTE-LEUKEMIA (BM aspirate + flow + cytogenetics + NPM1/FLT3/IDH/CEBPA NGS).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Acute leukemia · Pancytopenia + 38% circulating blasts",
@@ -6090,7 +6090,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-crc-lgib-iron-deficiency",
         file="patient_diagnostic_crc_lgib_iron_deficiency.json",
-        label_ua="Diagnostic · Suspect CRC · Iron-deficiency + LGIB + colon mass",
+        label_ua="Діагностика · Підозра на CRC · Залізодефіцит + LGIB + утворення товстої кишки",
         summary_ua="Pre-biopsy: Hgb 8.4, ferritin 9, рectal bleeding, 4.5 cm right-colon mass на CT. Engine: WORKUP-SUSPECTED-CRC (colonoscopy + biopsy + KRAS/NRAS/BRAF + MSI/MMR-IHC + CEA + staging CT).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect CRC · Iron-deficiency + LGIB + colon mass",
@@ -6099,7 +6099,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-endometrial-pmb",
         file="patient_diagnostic_endometrial_pmb.json",
-        label_ua="Diagnostic · Suspect endometrial · PMB + thickened endometrium 14 mm",
+        label_ua="Діагностика · Підозра на рак ендометрія · Постменопаузальна кровотеча + потовщення ендометрія 14 mm",
         summary_ua="Pre-biopsy: postmenopausal bleeding + endometrial stripe 14 mm на TVUS. Engine: WORKUP-SUSPECTED-ENDOMETRIAL (Pipelle ± hysteroscopy → histology + grade + POLE/dMMR/p53/NSMP molecular).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect endometrial · PMB + thickened endometrium 14 mm",
@@ -6108,7 +6108,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-gbm-focal-neuro-deficit",
         file="patient_diagnostic_gbm_focal_neuro_deficit.json",
-        label_ua="Diagnostic · Suspect GBM · 4.2 cm ring-enhancing left frontal mass",
+        label_ua="Діагностика · Підозра на GBM · Утворення 4.2 cm лівої лобної частки з кільцеподібним контрастуванням",
         summary_ua="Pre-biopsy: focal motor deficit + aphasia + ring-enhancing brain mass з central necrosis. Engine: WORKUP-SUSPECTED-GBM (neurosurgical biopsy/resection + IDH-1/2 + MGMT methylation + 1p/19q).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect GBM · 4.2 cm ring-enhancing left frontal mass",
@@ -6117,7 +6117,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-hcc-cirrhosis-li-rads",
         file="patient_diagnostic_hcc_cirrhosis_li_rads.json",
-        label_ua="Diagnostic · Suspect HCC · HCV-cirrhosis + LI-RADS 5 + AFP 480",
+        label_ua="Діагностика · Підозра на HCC · HCV-цироз + LI-RADS 5 + AFP 480",
         summary_ua="Pre-biopsy: post-DAA SVR12 4 yr + 3.8 cm liver mass + AFP rise 12→480. Engine: WORKUP-SUSPECTED-HCC (LI-RADS 5 = imaging-only diagnosis у cirrhosis per AASLD; Child-Pugh + BCLC + variceal screening).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect HCC · HCV-cirrhosis + LI-RADS 5 + AFP 480",
@@ -6126,7 +6126,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-melanoma-atypical-lesion",
         file="patient_diagnostic_melanoma_atypical_lesion.json",
-        label_ua="Diagnostic · Suspect melanoma · Atypical pigmented lesion (ABCDE+)",
+        label_ua="Діагностика · Підозра на меланому · Атипове пігментне утворення (ABCDE+)",
         summary_ua="Pre-biopsy: changing pigmented lesion 1.4 cm з ABCDE positive на dorsal back. Engine: WORKUP-SUSPECTED-MELANOMA (excisional biopsy 1-3 mm margins + Breslow + ulceration + sentinel LN if ≥0.8 mm + BRAF V600).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect melanoma · Atypical pigmented lesion (ABCDE+)",
@@ -6135,7 +6135,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-mm-bone-pain-m-protein",
         file="patient_diagnostic_mm_bone_pain_m_protein.json",
-        label_ua="Diagnostic · Suspect MM · Bone pain + IgG-kappa M-spike + lytic L2",
+        label_ua="Діагностика · Підозра на MM · Біль у кістках + IgG-kappa М-градієнт + літична L2",
         summary_ua="Pre-biopsy: thoracic back pain + IgG-kappa 32 g/L + Cr 1.6 + Ca 11.8 + L2 lytic 1.8 cm (CRAB+). Engine: WORKUP-SUSPECTED-MULTIPLE-MYELOMA (BM ≥10% plasma cells + skeletal survey/WB-MRI + FLC + cytogenetics FISH).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect MM · Bone pain + IgG-kappa M-spike + lytic L2",
@@ -6144,7 +6144,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-mpn-mds-pancytopenia",
         file="patient_diagnostic_mpn_mds_pancytopenia.json",
-        label_ua="Diagnostic · Suspect MDS · Pancytopenia + dysplastic changes + JAK2-neg",
+        label_ua="Діагностика · Підозра на MDS · Панцитопенія + диспластичні зміни + JAK2-neg",
         summary_ua="Pre-biopsy: 71F з pancytopenia × 4 mo + macrocytosis + dysplastic neutrophils + Pelger-Huet. Engine: WORKUP-CYTOPENIA-EVALUATION (BM aspirate + cytogenetics + IPSS-R/IPSS-M + JAK2/CALR/SF3B1/ASXL1/TET2 NGS).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect MDS · Pancytopenia + dysplastic changes + JAK2-neg",
@@ -6153,7 +6153,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-mpn-polycythemia-pruritus",
         file="patient_diagnostic_mpn_polycythemia_pruritus.json",
-        label_ua="Diagnostic · Suspect PV · Erythrocytosis (Hgb 19.2) + low EPO + aquagenic pruritus",
+        label_ua="Діагностика · Підозра на PV · Еритроцитоз (Hgb 19.2) + низький EPO + аквагенний свербіж",
         summary_ua="Pre-biopsy: facial plethora + aquagenic pruritus + Hgb 19.2 + EPO 2.1 + splenomegaly. Engine: WORKUP-SUSPECTED-MPN-MDS (JAK2 V617F + JAK2 exon 12 + serum EPO + BM biopsy для WHO 2022 PV).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect PV · Erythrocytosis (Hgb 19.2) + low EPO + aquagenic pruritus",
@@ -6162,7 +6162,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-ovarian-pelvic-mass-ca125",
         file="patient_diagnostic_ovarian_pelvic_mass_ca125.json",
-        label_ua="Diagnostic · Suspect ovarian · Bilateral adnexal masses + CA-125 412 + ascites",
+        label_ua="Діагностика · Підозра на рак яєчників · Двобічні утворення придатків + CA-125 412 + асцит",
         summary_ua="Pre-biopsy: bilateral complex adnexal masses (8.5 + 4.2 cm) + CA-125 412 + omental thickening + ascites. Engine: WORKUP-SUSPECTED-OVARIAN (primary cytoreduction + histology + HRD + BRCA1/2 germline).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect ovarian · Bilateral adnexal masses + CA-125 412 + ascites",
@@ -6171,7 +6171,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-rcc-incidental-mass",
         file="patient_diagnostic_rcc_incidental_mass.json",
-        label_ua="Diagnostic · Suspect RCC · 5.4 cm incidental enhancing renal mass",
+        label_ua="Діагностика · Підозра на RCC · Випадково виявлене контрастне утворення нирки 5.4 cm",
         summary_ua="Pre-biopsy: incidental 5.4 cm right-kidney mass на CT abd для LBP. RENAL nephrometry 9. Engine: WORKUP-SUSPECTED-RCC (staging CT chest/abd/pelvis + radical/partial nephrectomy + histology + IMDC risk).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect RCC · 5.4 cm incidental enhancing renal mass",
@@ -6180,7 +6180,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-sclc-central-lung-siadh",
         file="patient_diagnostic_sclc_central_lung_siadh.json",
-        label_ua="Diagnostic · Suspect SCLC · Central 5.8 cm mass + paraneoplastic SIADH (Na 124)",
+        label_ua="Діагностика · Підозра на SCLC · Центральне утворення 5.8 cm + паранеопластичний SIADH (Na 124)",
         summary_ua="Pre-biopsy: heavy smoker + central perihilar mass + bulky mediastinal LAD + Na 124 (SIADH). Engine: WORKUP-SUSPECTED-SCLC (bronchoscopic biopsy + EBUS + brain MRI + LDH staging для LS vs ES).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect SCLC · Central 5.8 cm mass + paraneoplastic SIADH (Na 124)",
@@ -6189,7 +6189,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-urothelial-gross-hematuria",
         file="patient_diagnostic_urothelial_gross_hematuria.json",
-        label_ua="Diagnostic · Suspect urothelial · Gross painless hematuria + 2.8 cm bladder mass",
+        label_ua="Діагностика · Підозра на уротеліальний рак · Безболісна макрогематурія + утворення сечового міхура 2.8 cm",
         summary_ua="Pre-biopsy: heavy smoker + 3 episodes gross hematuria + 2.8 cm right-wall papillary bladder mass. Engine: WORKUP-SUSPECTED-UROTHELIAL (TURBT + EUA + muscle invasion assessment + FGFR3/PDL1/HER2).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Suspect urothelial · Gross painless hematuria + 2.8 cm bladder mass",
@@ -6211,7 +6211,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-lymphadenopathy-undifferentiated",
         file="patient_diagnostic_lymphadenopathy_undifferentiated.json",
-        label_ua="Diagnostic · Persistent LAD undifferentiated · Reactive vs lymphoma vs metastatic",
+        label_ua="Діагностика · Персистуюча недиференційована лімфаденопатія · Реактивний процес проти лімфоми проти метастазів",
         summary_ua="Pre-biopsy: 35F з білатеральною LAD × 7 тижнів, ESR 38, без B-симптомів. Engine: WORKUP-LYMPHADENOPATHY-NONSPECIFIC (triage; CBC + LDH + ESR + viral serology + excisional biopsy найбільшого вузла).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Persistent LAD undifferentiated · Reactive vs lymphoma vs metastatic",
@@ -6220,7 +6220,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-metastatic-prostate-rising-psa",
         file="patient_diagnostic_metastatic_prostate_rising_psa.json",
-        label_ua="Diagnostic · mPC restage · Rising PSA + bone mets post-RP (Gleason 9)",
+        label_ua="Діагностика · Рестадіювання mPC · Зростання PSA + кісткові метастази після RP (Gleason 9)",
         summary_ua="Post-confirmed: Gleason 9 prostate post-RP 4 yr, PSA 0.05→12.4, новий біль + bone scan позитивний. Engine: WORKUP-METASTATIC-PROSTATE (PSMA-PET + germline BRCA + somatic HRR + testosterone для mHSPC vs mCRPC Tx).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · mPC restage · Rising PSA + bone mets post-RP (Gleason 9)",
@@ -6229,7 +6229,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-mgus-incidental-m-spike",
         file="patient_diagnostic_mgus_incidental_m_spike.json",
-        label_ua="Diagnostic · MGUS · Asymptomatic M-spike 8 g/L IgG-kappa (incidental)",
+        label_ua="Діагностика · MGUS · Безсимптомний М-градієнт 8 g/L IgG-kappa (випадково виявлений)",
         summary_ua="Pre-biopsy: 71M asymptomatic, M-spike 8 g/L, no CRAB criteria, FLC ratio 1.33. Engine: WORKUP-MONOCLONAL-GAMMOPATHY-INCIDENTAL (IMWG 2014 risk stratification — low-risk MGUS, BM biopsy може бути skipped).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · MGUS · Asymptomatic M-spike 8 g/L IgG-kappa (incidental)",
@@ -6238,7 +6238,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-lung-cancer-indeterminate",
         file="patient_diagnostic_lung_cancer_indeterminate.json",
-        label_ua="Diagnostic · Lung cancer suspect · LDCT screening + 3.2 cm RUL mass (NSCLC vs SCLC)",
+        label_ua="Діагностика · Підозра на рак легені · LDCT-скринінг + утворення 3.2 cm у RUL (NSCLC проти SCLC)",
         summary_ua="Pre-biopsy: heavy smoker 40 PY + 3.2 cm RUL mass на LDCT screening + persistent cough + hemoptysis. Engine: WORKUP-NSCLC-DIAGNOSIS (broader lung-cancer workup — bronchoscopy + cytology + IHC TTF-1/CK7/p40/synaptophysin для NSCLC vs SCLC).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Lung cancer suspect · LDCT screening + 3.2 cm RUL mass (NSCLC vs SCLC)",
@@ -6247,7 +6247,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-cup-unknown-primary",
         file="patient_diagnostic_cup_unknown_primary.json",
-        label_ua="Diagnostic · CUP · 4 liver mets + bone lesions, occult primary",
+        label_ua="Діагностика · CUP · 4 метастази в печінку + ураження кісток, невідоме первинне вогнище",
         summary_ua="Pre-biopsy: 67F з multiple liver mets + bone + CK7+/CK20-/TTF-1- adenoCa, primary не знайдено на PET. Engine: WORKUP-SUSPECTED-SOLID-TUMOR (CUP catch-all; tumor-of-origin classifier + comprehensive NGS).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · CUP · 4 liver mets + bone lesions, occult primary",
@@ -6256,7 +6256,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-breast-post-imaging-staging",
         file="patient_diagnostic_breast_post_imaging_staging.json",
-        label_ua="Diagnostic · Breast post-biopsy staging · ER+/HER2-low + axillary node + family hx",
+        label_ua="Діагностика · Молочна залоза, стадіювання після біопсії · ER+/HER2-low + аксилярний лімфовузол + сімейний анамнез",
         summary_ua="Post-biopsy: 47F з invasive ductal G2 ER+/HER2-low (IHC 2+ FISH-) + 1.4 cm axillary node + strong family hx. Engine: WORKUP-BREAST-DIAGNOSIS (staging CT + germline + Oncotype-DX + sentinel-LN planning).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Breast post-biopsy staging · ER+/HER2-low + axillary node + family hx",
@@ -6265,7 +6265,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="diagnostic-gu-skin-gyn-combined",
         file="patient_diagnostic_gu_skin_gyn_combined.json",
-        label_ua="Diagnostic · Multi-system suspicion · Renal mass + atypical melanocytic + endometrial thickening",
+        label_ua="Діагностика · Підозра на мультисистемне ураження · Утворення нирки + атиповий меланоцитарний + потовщення ендометрія",
         summary_ua="Pre-biopsy: 56F з 4.0 cm right kidney mass + ABCDE-positive foot lesion + endometrial stripe 12 mm. Engine: WORKUP-SOLID-GU-SKIN-GYN (coordinated biopsy planning + germline panel BAP1/BRCA/HRR/Lynch для multi-cancer susceptibility).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
         label_en="Diagnostic · Multi-system suspicion · Renal mass + atypical melanocytic + endometrial thickening",
@@ -6414,7 +6414,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="prevention-cowden-pedigree",
         file="patient_cowden_pedigree_prevention.json",
-        label_ua="Cowden (PTEN) · macrocephaly + mucocutaneous papillomas",
+        label_ua="Коуден (PTEN) · макроцефалія + слизово-шкірні папіломи",
         summary_ua="35-річна жінка з макроцефалією + мукокутанеозними папіломами. PreventionPlan: стандарт = germline PTEN-панель + breast cancer screening з 30 + thyroid US q1y; альтернатива = empirical surveillance.",
         badge="Prevention Plan", badge_class="bdg-plan", category="prevention",
         label_en="Cowden (PTEN) · macrocephaly + mucocutaneous papillomas",
@@ -6479,7 +6479,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="prevention-radon",
         file="patient_residential_radon_prevention.json",
-        label_ua="Residential radon (8.5 pCi/L) · mitigation + LDCT + smoking cessation",
+        label_ua="Радон у житлі (8.5 пКі/л) · зниження рівня + НДКТ + відмова від куріння",
         summary_ua="58-річна жінка, residential radon 8.5 pCi/L + former smoker. PreventionPlan: стандарт = radon mitigation (sub-slab depressurization) + annual LDCT + smoking cessation; альтернатива = routine cadence.",
         badge="Prevention Plan", badge_class="bdg-plan", category="prevention",
         label_en="Residential radon (8.5 pCi/L) · mitigation + LDCT + smoking cessation",
@@ -6488,7 +6488,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="prevention-occ-aromatic-amines",
         file="patient_occupational_aromatic_amines_prevention.json",
-        label_ua="Aromatic amines → urothelial · annual urinalysis + cytology",
+        label_ua="Ароматичні аміни → уротеліальний рак · щорічний аналіз сечі + цитологія",
         summary_ua="68-річний чоловік, 22 роки в pre-regulation dye industry. PreventionPlan: стандарт = annual urinalysis + urine cytology + low-threshold cystoscopy; альтернатива = symptom-driven.",
         badge="Prevention Plan", badge_class="bdg-plan", category="prevention",
         label_en="Aromatic amines → urothelial · annual urinalysis + cytology",
@@ -6497,7 +6497,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="prevention-barretts",
         file="patient_barretts_esophagus_prevention.json",
-        label_ua="Barrett's esophagus → esophageal AC · EGD surveillance q3-5y",
+        label_ua="Стравохід Барретта → аденокарцинома стравоходу · ЕГДС кожні 3-5 років",
         summary_ua="54-річний чоловік з long-segment Barrett's, non-dysplastic. PreventionPlan: стандарт = EGD q3-5y per ACG + high-dose PPI; альтернатива = q5y cadence для non-dysplastic.",
         badge="Prevention Plan", badge_class="bdg-plan", category="prevention",
         label_en="Barrett's esophagus → esophageal AC · EGD surveillance q3-5y",
@@ -6506,7 +6506,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="prevention-ibd-uc",
         file="patient_ibd_uc_long_standing_prevention.json",
-        label_ua="Long-standing UC → CRC · chromoendoscopy q1-2y",
+        label_ua="Тривалий виразковий коліт → колоректальний рак · хромоендоскопія кожні 1-2 роки",
         summary_ua="44-річна жінка з UC ×22 роки extensive colitis. PreventionPlan: стандарт = surveillance colonoscopy з random+targeted біопсіями q1-2y (chromoendoscopy preferred per AGA); альтернатива = q3-5y.",
         badge="Prevention Plan", badge_class="bdg-plan", category="prevention",
         label_en="Long-standing UC → CRC · chromoendoscopy q1-2y",
@@ -6524,7 +6524,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="prevention-celiac-refractory",
         file="patient_celiac_refractory_prevention.json",
-        label_ua="Refractory celiac type 2 → EATL · small-bowel imaging q1-2y",
+        label_ua="Рефрактерна целіакія 2 типу → EATL · візуалізація тонкої кишки кожні 1-2 роки",
         summary_ua="51-річна жінка з refractory celiac type 2 + aberrant IEL clonality. PreventionPlan: стандарт = strict GFD + VCE/MR enterography q1-2y + IEL clonality monitoring + immunosuppression discussion; альтернатива = GFD alone.",
         badge="Prevention Plan", badge_class="bdg-plan", category="prevention",
         label_en="Refractory celiac type 2 → EATL · small-bowel imaging q1-2y",
@@ -6571,7 +6571,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="prevention-prior-radiation",
         file="patient_prior_radiation_prevention.json",
-        label_ua="Post-mantle-RT survivor (Hodgkin age 18) · COG-LTFU surveillance",
+        label_ua="Виживший після mantle-опромінення (Ходжкін, вік 18) · нагляд за протоколом COG-LTFU",
         summary_ua="33-річна жінка, mantle field RT для Hodgkin lymphoma в 18 років. PreventionPlan: стандарт = COG-LTFU protocol (breast MRI з 25; mammogram з 30; LDCT eligibility; thyroid US); альтернатива = general USPSTF cadence.",
         badge="Prevention Plan", badge_class="bdg-plan", category="prevention",
         label_en="Post-mantle-RT survivor (Hodgkin age 18) · COG-LTFU surveillance",
@@ -6580,7 +6580,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="prevention-post-transplant",
         file="patient_post_transplant_prevention.json",
-        label_ua="Post-kidney-transplant 6y · EBV-DNA + skin/Pap/anal screening",
+        label_ua="Через 6 років після трансплантації нирки · ДНК EBV + скринінг шкіри/Пап-тест/аноскопія",
         summary_ua="44-річна жінка, post-kidney-transplant 6р, на tacrolimus + mycophenolate. PreventionPlan: стандарт = annual skin exam + EBV-DNA q3-6mo + cervical Pap + anal cytology + oral cancer awareness; альтернатива = general USPSTF cadence.",
         badge="Prevention Plan", badge_class="bdg-plan", category="prevention",
         label_en="Post-kidney-transplant 6y · EBV-DNA + skin/Pap/anal screening",
@@ -6598,7 +6598,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="prevention-reproductive",
         file="patient_reproductive_prevention.json",
-        label_ua="Reproductive risk · nulliparous + late menopause + HRT ≥5y",
+        label_ua="Репродуктивний ризик · нульпаритет + пізня менопауза + ЗГТ ≥5 років",
         summary_ua="62-річна нерожала постменопаузальна жінка, менопауза в 56, 8 років combined HRT. PreventionPlan: стандарт = risk stratification + HRT minimization + tamoxifen chemoprevention discussion + screening adherence; альтернатива = USPSTF screening + brief intervention.",
         badge="Prevention Plan", badge_class="bdg-plan", category="prevention",
         label_en="Reproductive risk · nulliparous + late menopause + HRT ≥5y",

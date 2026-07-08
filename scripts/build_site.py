@@ -1486,7 +1486,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             {
                 "key": "investor",
                 "tab": "Для інвестора",
-                "eyebrow": "Infrastructure thesis",
+                "eyebrow": "Інфраструктурна теза",
                 "title": "Керований open layer для онкологічної decision infrastructure.",
                 "body": (
                     "Це не wrapper навколо chatbot. Це клінічна knowledge graph, rule engine, "
@@ -1504,7 +1504,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             {
                 "key": "lab",
                 "tab": "Для лабораторії",
-                "eyebrow": "Molecular handoff",
+                "eyebrow": "Молекулярна передача",
                 "title": "Перетворюйте біомаркерні звіти на actionable context для команди.",
                 "body": (
                     "Лабораторія може передати лікарю структурований міст від NGS і патології "
@@ -2595,7 +2595,7 @@ def render_ask(*, target_lang: str = "en") -> str:
         "OpenOnco звіряє його з алгоритмами, а сторінка повертає відповідь, обґрунтовані "
         "альтернативи або уточнювальні питання."
     )
-    endpoint_label = "API endpoint" if is_en else "API endpoint"
+    endpoint_label = "API endpoint" if is_en else "Кінцева точка API"
     case_label = "Clinical situation" if is_en else "Клінічна ситуація"
     run_label = "Answer with OpenOnco" if is_en else "Відповісти через OpenOnco"
     clear_label = "Clear" if is_en else "Очистити"
@@ -3263,7 +3263,7 @@ def render_try(
     <div class="qt-spacer"></div>
     <div class="qt-modes">
       <button id="modeFormBtn" class="mode-btn active" data-mode="form">{'Form' if target_lang == 'en' else 'Форма'}</button>
-      <button id="modeJsonBtn" class="mode-btn" data-mode="json">Raw JSON (advanced)</button>
+      <button id="modeJsonBtn" class="mode-btn" data-mode="json">{'Raw JSON (advanced)' if target_lang == 'en' else 'Необроблений JSON (розширено)'}</button>
     </div>
     <button id="resetBtn" class="btn btn-secondary qt-reset">{'Clear' if target_lang == 'en' else 'Очистити'}</button>
   </div>
@@ -3396,7 +3396,7 @@ def render_try(
           <div><dt>Core</dt><dd id="coreVersion">v{bundle_version or 'pending'}</dd></div>
           <div><dt>{'Disease' if target_lang == 'en' else 'Хвороба'}</dt><dd id="diseaseVersion">—</dd></div>
           <div><dt>{'Cache' if target_lang == 'en' else 'Кеш'}</dt><dd id="cacheState">{'Checking…' if target_lang == 'en' else 'Перевіряю…'}</dd></div>
-          <div><dt>{'Offline' if target_lang == 'en' else 'Offline'}</dt><dd id="offlineState">{'Network required for first launch' if target_lang == 'en' else 'Мережа потрібна для першого запуску'}</dd></div>
+          <div><dt>{'Offline' if target_lang == 'en' else 'Офлайн'}</dt><dd id="offlineState">{'Network required for first launch' if target_lang == 'en' else 'Мережа потрібна для першого запуску'}</dd></div>
           <div><dt>{'Modules' if target_lang == 'en' else 'Модулі'}</dt><dd id="offlineModulesState">{'Waiting for index' if target_lang == 'en' else 'Чекаю індекс'}</dd></div>
         </dl>
         <div class="offline-cache-progress" id="offlineCacheProgress">
@@ -3828,7 +3828,7 @@ function downloadPdf() {{
     resultFrame.contentWindow.focus();
     resultFrame.contentWindow.print();
   }} catch (e) {{
-    setError('Print failed: ' + (e.message || e));
+    setError('{"Print failed: " if target_lang == "en" else "Не вдалося надрукувати: "}' + (e.message || e));
   }}
 }}
 
@@ -3858,7 +3858,7 @@ html
       currentResultMode = newMode;
       highlightModeButtons();
     }} catch (e) {{
-      setError('Re-render failed: ' + (e.message || e));
+      setError('{"Re-render failed: " if target_lang == "en" else "Не вдалося перерендерити: "}' + (e.message || e));
     }} finally {{
       refreshModeButtonAvailability();
     }}
@@ -3873,7 +3873,7 @@ function downloadHtml() {{
     try {{
       html = '<!DOCTYPE html>\\n' + resultFrame.contentDocument.documentElement.outerHTML;
     }} catch (e) {{
-      setError('Could not read the rendered document: ' + (e.message || e));
+      setError('{"Could not read the rendered document: " if target_lang == "en" else "Не вдалося прочитати згенерований документ: "}' + (e.message || e));
       return;
     }}
   }}
@@ -3929,7 +3929,7 @@ html
       currentResultLang = newLang;
       highlightLangButtons();
     }} catch (e) {{
-      setError('Re-render failed: ' + (e.message || e));
+      setError('{"Re-render failed: " if target_lang == "en" else "Не вдалося перерендерити: "}' + (e.message || e));
     }} finally {{
       langUaBtn.disabled = false;
       langEnBtn.disabled = false;
@@ -5600,7 +5600,7 @@ async function loadFromUrlHash() {{
     banner.className = 'case-token-banner-error';
     banner.textContent = '{"⚠ Failed to load profile from QR code. Enter JSON manually or pick an example." if target_lang == "en" else "⚠ Не вдалося завантажити профіль із QR-коду. Введіть JSON вручну або оберіть приклад."}';
     mainTryEl.parentNode.insertBefore(banner, mainTryEl);
-    setError('QR token decode failed: ' + (err.message || err));
+    setError('{"QR token decode failed: " if target_lang == "en" else "Не вдалося розкодувати QR-токен: "}' + (err.message || err));
   }}
 }}
 
@@ -5608,7 +5608,7 @@ async function loadFromUrlHash() {{
 // findQuestionnaireForProfile/populateFormFromProfile can do their job.
 loadAssets()
   .then(() => loadFromUrlHash())
-  .catch(e => setError('Initialization failed: ' + e));
+  .catch(e => setError('{"Initialization failed: " if target_lang == "en" else "Помилка ініціалізації: "}' + e));
 window.addEventListener('hashchange', loadFromUrlHash);
 
 // CSD-6E: kick off the bundle index fetch as soon as the page loads —
@@ -7619,7 +7619,7 @@ def _build_disease_coverage_rows() -> list[dict]:
 _DISEASES_PAGE_LABELS = {
     "uk": {
         "title": "Хвороби · OpenOnco",
-        "h1": "Хвороби в Onco Wiki",
+        "h1": "Хвороби в Онко-вікі",
         "lead": (
             "Покриття OpenOnco за {n} онкологічними діагнозами: біомаркери, "
             "препарати, показання, режими, тривожні ознаки, алгоритми та "
@@ -8261,7 +8261,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
         color = _SPEC_TAG_COLORS.get(sp["tag"], "var(--gray-500)")
         tag_label = _SPEC_TAG_LABELS.get(sp["tag"], sp["tag"])
         read_label = "Read on GitHub →" if is_en else "Читати на GitHub →"
-        raw_label = "Raw markdown" if is_en else "Raw markdown"
+        raw_label = "Raw markdown" if is_en else "Необроблений markdown"
         spec_cards.append(f"""
         <div class="spec-card">
           <div class="spec-card-head">
@@ -8369,7 +8369,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
             "цитує конкретні criteria 1-4 з цього документа для обґрунтування OpenOnco "
             "positioning як non-device."
         )
-        regulatory_link = "View PDF on GitHub →"
+        regulatory_link = "Переглянути PDF на GitHub →"
         process_h = "Як ми оновлюємо специфікації"
         process_p1 = (
             "Кожна зміна під <code>specs/</code> або <code>knowledge_base/hosted/content/</code> "
@@ -8386,7 +8386,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
             "на minor/major залежно від breaking changes."
         )
         compliance_h = "Compliance + Privacy (короткий зріз)"
-        compliance_th = ("Гарантія", "Specification", "Що це означає")
+        compliance_th = ("Гарантія", "Специфікація", "Що це означає")
         compliance_rows = [
             ("FDA non-device CDS", "CHARTER.md §15",
              "OpenOnco проектується під §520(o)(1)(E) carve-out — не медичний пристрій. Constraints C1-C7 hard-enforced."),
@@ -8546,8 +8546,8 @@ def render_about(stats, *, target_lang: str = "en") -> str:
             "algorithms": "algorithms",
         }
     else:
-        page_title = "About"
-        h1 = "About OpenOnco"
+        page_title = "Про проєкт"
+        h1 = "Про OpenOnco"
         lead = (
             "OpenOnco — відкритий проєкт клінічної бази знань і rule engine для онкології. "
             "На цій сторінці зібрано те, що раніше було окремими пунктами верхнього меню: "
@@ -8575,10 +8575,10 @@ def render_about(stats, *, target_lang: str = "en") -> str:
         ]
         principles_h = "Форма проєкту"
         principles = [
-            ("Open by default", "Код має MIT-style usage; специфікації та згенерований контент — CC BY 4.0."),
+            ("Відкритість за замовчуванням", "Код має MIT-style usage; специфікації та згенерований контент — CC BY 4.0."),
             ("Синтетичні публічні дані", "Публічний сайт не містить реальних пацієнтських записів чи приватних patient artifacts."),
-            ("Clinical review gate", "Клінічний контент потребує reviewer sign-off перед статусом trusted content."),
-            ("Auditable automation", "Правила, джерела й reasoning видимі, а не сховані за black box."),
+            ("Бар'єр клінічної перевірки", "Клінічний контент потребує reviewer sign-off перед статусом trusted content."),
+            ("Прозора автоматизація", "Правила, джерела й reasoning видимі, а не сховані за black box."),
         ]
         stats_h = "Поточний публічний корпус"
         release_note = f"Поточна публічна збірка: v{OPENONCO_VERSION}, release {OPENONCO_RELEASE_DATE}."
