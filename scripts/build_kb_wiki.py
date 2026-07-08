@@ -212,6 +212,8 @@ FIELD_LABELS = {
         "used_by_heading": "Used By",
         "no_reverse_refs": "No reverse references found in the YAML corpus.",
         "more": "more",
+        "yes": "Yes",
+        "no": "No",
     },
     "uk": {
         "id": "ID",
@@ -257,6 +259,8 @@ FIELD_LABELS = {
         "used_by_heading": "Де використовується",
         "no_reverse_refs": "У YAML-корпусі не знайдено зворотних посилань.",
         "more": "ще",
+        "yes": "Так",
+        "no": "Ні",
     },
 }
 
@@ -315,6 +319,47 @@ def _text(value: Any, *, limit: int | None = None) -> str:
     if limit and len(text) > limit:
         return text[: limit - 1].rstrip() + "..."
     return text
+
+
+def _uk_plural(n: int, one: str, few: str, many: str) -> str:
+    """Ukrainian plural-form selection for a count (1/2-4/5+ with the
+    11-14 exception), e.g. режим/режими/режимів. Mirrors
+    `knowledge_base.engine.render._uk_plural`."""
+    n_abs = abs(n)
+    if n_abs % 10 == 1 and n_abs % 100 != 11:
+        return one
+    if 2 <= n_abs % 10 <= 4 and not (12 <= n_abs % 100 <= 14):
+        return few
+    return many
+
+
+def _localized_field(data: dict[str, Any], key: str, locale: str) -> Any:
+    """Prefer the `<key>_ua` companion field for the Ukrainian locale when
+    it has been drafted; otherwise fall back to the English `<key>` field.
+
+    Only a handful of free-text KB fields currently carry a `_ua`
+    companion in the corpus (`notes_ua`, `definition_ua`,
+    `evidence_summary_ua`). Fields with no `_ua` counterpart anywhere in
+    the KB (`mechanism`, `typical_dosing`, `mutation_details`,
+    `measurement`, `clinical_direction`, `category`, ...) simply fall
+    through to the English value on both locales — that is a content
+    gap, not something this render helper can invent.
+    """
+    if locale == "uk":
+        ua_value = data.get(f"{key}_ua")
+        if ua_value:
+            return ua_value
+    return data.get(key)
+
+
+def _bool_label(value: Any, locale: str) -> str:
+    """Render a YAML boolean as a localized Yes/No, instead of Python's
+    `str(True)` / `str(False)` leaking the literal English tokens "True"
+    / "False" onto the Ukrainian page (they are not Ukrainian words)."""
+    if value is None or value == "":
+        return ""
+    labels = FIELD_LABELS[locale]
+    return labels["yes"] if value else labels["no"]
 
 
 def _load_yaml(path: Path) -> dict[str, Any] | None:
@@ -720,8 +765,8 @@ def _drug_sections(entity: KbEntity, *, locale: str = "en") -> str:
         (labels["class"], html.escape(_text(d.get("drug_class")))),
         (labels["mechanism"], html.escape(_text(d.get("mechanism"), limit=900))),
         (labels["typical_dosing"], html.escape(_text(d.get("typical_dosing"), limit=700))),
-        (labels["ukraine_registered"], html.escape(str(reg.get("registered"))) if reg else ""),
-        (labels["nszu_reimbursed"], html.escape(str(reg.get("reimbursed_nszu"))) if reg else ""),
+        (labels["ukraine_registered"], html.escape(_bool_label(reg.get("registered"), locale)) if reg else ""),
+        (labels["nszu_reimbursed"], html.escape(_bool_label(reg.get("reimbursed_nszu"), locale)) if reg else ""),
         (labels["ukraine_last_verified"], html.escape(str(reg.get("last_verified"))) if reg.get("last_verified") else ""),
     ]
     warnings = "".join(f"<li>{html.escape(_text(w))}</li>" for w in _as_list(d.get("black_box_warnings"))[:8])
@@ -747,7 +792,7 @@ def _redflag_sections(entity: KbEntity, *, locale: str = "en") -> str:
     d = entity.data
     labels = FIELD_LABELS[locale]
     rows = [
-        (labels["definition"], html.escape(_text(d.get("definition"), limit=900))),
+        (labels["definition"], html.escape(_text(_localized_field(d, "definition", locale), limit=900))),
         (labels["clinical_direction"], html.escape(_text(d.get("clinical_direction")))),
         (labels["category"], html.escape(_text(d.get("category")))),
         (labels["shifts_algorithm"], html.escape(", ".join(str(x) for x in _as_list(d.get("shifts_algorithm"))))),
@@ -768,7 +813,7 @@ def _actionability_sections(entity: KbEntity, entities: dict[str, KbEntity], *, 
         (labels["escat_tier"], html.escape(_text(d.get("escat_tier")))),
         (labels["recommended_combinations"], html.escape(", ".join(str(x) for x in _as_list(d.get("recommended_combinations"))))),
         (labels["contraindicated_monotherapy"], html.escape(", ".join(str(x) for x in _as_list(d.get("contraindicated_monotherapy"))))),
-        (labels["evidence_summary"], html.escape(_text(d.get("evidence_summary"), limit=1100))),
+        (labels["evidence_summary"], html.escape(_text(_localized_field(d, "evidence_summary", locale), limit=1100))),
     ]
     return f'<h2>{html.escape(labels["actionability_facts"])}</h2><table class="kb-facts">{_rows(rows)}</table>'
 
@@ -787,7 +832,18 @@ def _reverse_ref_section(entity: KbEntity, reverse_refs: dict[str, list[KbEntity
             f'<li><code>{html.escape(item.id)}</code> - {html.escape(item.title)}</li>'
             for item in items[:40]
         )
-        more = f'<li class="kb-muted">... {len(items) - 40} {html.escape(labels["more"])}</li>' if len(items) > 40 else ""
+        more = ""
+        if len(items) > 40:
+            remaining = len(items) - 40
+            # "N more" reads fine in English word order, but a literal
+            # "N ще" reads as broken Ukrainian — "ще N" (still/more N) is
+            # the natural word order.
+            more_text = (
+                f'... {html.escape(labels["more"])} {remaining}'
+                if locale == "uk"
+                else f'... {remaining} {html.escape(labels["more"])}'
+            )
+            more = f'<li class="kb-muted">{more_text}</li>'
         parts.append(f"<h3>{html.escape(kind)}</h3><ul>{rows}{more}</ul>")
     return "\n".join(parts)
 
@@ -812,7 +868,9 @@ def render_entity_page(
 
     labels = FIELD_LABELS[locale]
     t = T[locale]
-    notes = entity.data.get("notes") or entity.data.get("evidence_summary")
+    notes = _localized_field(entity.data, "notes", locale) or _localized_field(
+        entity.data, "evidence_summary", locale
+    )
     notes_html = (
         f"<h2>{html.escape(labels['notes'])}</h2><p>{html.escape(_text(notes, limit=1200))}</p>"
         if notes
@@ -888,16 +946,39 @@ def _disease_search_entries(kb_root: Path, *, locale: str = "en") -> list[dict[s
         name = _text(row.get("name")) or disease_id
         family = _text(row.get("family"))
         icd10 = _text(row.get("icd10"))
-        subtitle_parts = [
-            f"ICD-10: {icd10}" if icd10 else "",
-            f"family: {family}" if family and locale == "en" else "",
-            f"родина: {family}" if family and locale == "uk" else "",
-            f"fill {row['fill_pct']}%",
-            f"verified {row['verified_pct']}%",
-            f"{row['n_inds']} indications",
-            f"{row['n_regs']} regimens",
-            f"{row['n_rfs']} red flags",
-        ]
+        # Subtitle text is rendered verbatim into <small> on the results
+        # list (see KB_ENTRIES / renderResults() below) — it must be
+        # locale-correct, not just the disease name/ICD-10 code. Labels
+        # here mirror the established UA terms from the diseases-page
+        # table (scripts/build_site.py `_DISEASES_PAGE_LABELS["uk"]`):
+        # "наповненість"/"верифіковано" for fill/verified, "показання" for
+        # indications, "режим" for regimens, "тривожна ознака" for red
+        # flags (matches this file's own ENTITY_DIRS["redflags"]["uk"]).
+        if locale == "uk":
+            subtitle_parts = [
+                f"ICD-10: {icd10}" if icd10 else "",
+                f"родина: {family}" if family else "",
+                f"наповненість {row['fill_pct']}%",
+                f"верифіковано {row['verified_pct']}%",
+                f"{row['n_inds']} {_uk_plural(row['n_inds'], 'показання', 'показання', 'показань')}",
+                f"{row['n_regs']} {_uk_plural(row['n_regs'], 'режим', 'режими', 'режимів')}",
+                f"{row['n_rfs']} {_uk_plural(row['n_rfs'], 'тривожна ознака', 'тривожні ознаки', 'тривожних ознак')}",
+            ]
+        else:
+            subtitle_parts = [
+                f"ICD-10: {icd10}" if icd10 else "",
+                f"family: {family}" if family else "",
+                f"fill {row['fill_pct']}%",
+                f"verified {row['verified_pct']}%",
+                f"{row['n_inds']} indications",
+                f"{row['n_regs']} regimens",
+                f"{row['n_rfs']} red flags",
+            ]
+        # search_text only feeds the client-side substring matcher (never
+        # rendered), so it is safe/beneficial to carry both English and
+        # (for the UA page) Ukrainian tokens — a UA-speaking clinician
+        # typing "показання" or "тривожна ознака" should still find
+        # matching diseases on the UA Onco Wiki.
         search_text = " ".join(
             [
                 disease_id,
@@ -916,6 +997,23 @@ def _disease_search_entries(kb_root: Path, *, locale: str = "en") -> list[dict[s
                 "2l algorithm" if row["algo_2l"] else "",
                 "questionnaire" if row["has_quest"] else "",
                 "workup" if row["has_workup"] else "",
+                *(
+                    [
+                        "наповненість",
+                        "верифіковано",
+                        "біомаркер",
+                        "препарат",
+                        "показання",
+                        "режим",
+                        "тривожна ознака",
+                        "алгоритм 1л" if row["algo_1l"] else "",
+                        "алгоритм 2л" if row["algo_2l"] else "",
+                        "опитувальник" if row["has_quest"] else "",
+                        "обстеження" if row["has_workup"] else "",
+                    ]
+                    if locale == "uk"
+                    else []
+                ),
             ]
         )
         entries.append(
