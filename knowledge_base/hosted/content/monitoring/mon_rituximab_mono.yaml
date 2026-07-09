@@ -4,6 +4,7 @@ linked_to_regimen: REG-RITUXIMAB-MONO
 phases:
   - name: baseline
     window: "Within 2 weeks before first dose"
+    window_ua: "Протягом 2 тижнів до першої дози"
     tests:
       - TEST-CBC
       - TEST-LFT
@@ -13,29 +14,47 @@ phases:
       - TEST-HCV-ANTIBODY
       - TEST-FLOW-CYTOMETRY
     visits: ["Treatment planning visit"]
+    visits_ua: ["Візит з планування лікування"]
     checkpoints:
       - "Confirm CD20+ histology"
       - "HBV status + entecavir prophylaxis if HBsAg+ or anti-HBc+"
+    checkpoints_ua:
+      - "Підтвердити CD20+ гістологію"
+      - "Статус HBV + профілактика ентекавіром за HBsAg+ або анти-HBc+"
 
   - name: induction
     window: "Day 1 of each weekly induction × 4"
+    window_ua: "1-й день кожного тижневого введення індукції × 4"
     tests: [TEST-CBC, TEST-LFT]
     visits: ["Pre-infusion clinical assessment + infusion"]
+    visits_ua: ["Клінічна оцінка перед інфузією + інфузія"]
     checkpoints: ["Infusion reactions especially first dose"]
+    checkpoints_ua: ["Інфузійні реакції, особливо за першої дози"]
 
   - name: maintenance
     window: "Every 2 months × 2 years"
+    window_ua: "Кожні 2 місяці × 2 роки"
     tests: [TEST-CBC, TEST-LFT, TEST-LDH]
     visits: ["Pre-infusion clinical + lab review"]
+    visits_ua: ["Клінічна оцінка перед інфузією + огляд лабораторних показників"]
     checkpoints:
       - "HBV-DNA quarterly during therapy and 12 mo post"
       - "Disease assessment clinically; imaging if concern"
+    checkpoints_ua:
+      - "HBV-ДНК щоквартально протягом лікування та 12 місяців після завершення"
+      - "Оцінка захворювання клінічно; візуалізація за наявності підозри"
 
   - name: follow_up
     window: "Every 6 months × 5 years post-treatment"
+    window_ua: "Кожні 6 місяців протягом 5 років після лікування"
     tests: [TEST-CBC, TEST-LFT, TEST-LDH]
     visits: ["Clinical assessment"]
+    visits_ua: ["Клінічна оцінка"]
     checkpoints: ["Surveillance for relapse + transformation"]
+    checkpoints_ua: ["Спостереження щодо рецидиву та трансформації"]
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v01_monitoring_ua
+draft_revision: 1

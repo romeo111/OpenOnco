@@ -4,6 +4,7 @@ linked_to_regimen: REG-ACALABRUTINIB-CONTINUOUS
 phases:
   - name: baseline
     window: "Within 2 weeks before start"
+    window_ua: "Протягом 2 тижнів до початку лікування"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -19,57 +20,87 @@ phases:
       - TEST-CECT-CAP
       - TEST-ECHO
     visits: ["Treatment planning visit + cardiology if BTKi (acalabrutinib lower cardiac risk than ibrutinib but baseline ECG advised)"]
+    visits_ua: ["Візит з планування лікування + консультація кардіолога за призначення BTKi (акалабрутиніб має нижчий кардіальний ризик, ніж ібрутиніб, але вихідна ЕКГ рекомендована)"]
     checkpoints:
       - "Confirm CLL diagnosis: CD19+ CD5+ CD23+ flow on PB ≥5K monoclonal B-cells"
       - "Risk stratification: del(17p), TP53, IGHV mutational status, karyotype"
       - "iwCLL treatment indication documented (if asymptomatic — defer to surveillance)"
       - "Cardiac baseline (atrial fibrillation history, hypertension control)"
       - "HBV status + entecavir prophylaxis if HBsAg+ or anti-HBc+ (anti-CD20 in VenO regimen)"
+    checkpoints_ua:
+      - "Підтвердити діагноз ХЛЛ: проточна цитометрія CD19+ CD5+ CD23+ у периферичній крові, ≥5K моноклональних B-клітин"
+      - "Стратифікація ризику: del(17p), TP53, мутаційний статус IGHV, каріотип"
+      - "Задокументовано показання до лікування за iwCLL (за безсимптомного перебігу — перевести на спостереження)"
+      - "Вихідний кардіологічний статус (анамнез фібриляції передсердь, контроль артеріальної гіпертензії)"
+      - "Статус HBV + профілактика ентекавіром за HBsAg+ або анти-HBc+ (анти-CD20 у режимі VenO)"
 
   - name: on_treatment_btki
     window: "Monthly × 3 months, then every 3 months"
+    window_ua: "Щомісяця протягом 3 місяців, потім кожні 3 місяці"
     tests:
       - TEST-CBC
       - TEST-CMP
       - TEST-LFT
     visits: ["Clinical assessment + bleeding/bruising screen + AF screen"]
+    visits_ua: ["Клінічна оцінка + скринінг кровотеч/синців + скринінг фібриляції передсердь"]
     checkpoints:
       - "ALC trend (lymphocytosis early on BTKi is expected — not progression)"
       - "Bleeding events; major bleed → hold BTKi"
       - "AF symptoms → ECG; if AF → cardiology + anticoagulation strategy"
+    checkpoints_ua:
+      - "Динаміка абсолютної кількості лімфоцитів (лімфоцитоз на початку терапії BTKi очікуваний — не є прогресуванням)"
+      - "Кровотечі; значна кровотеча → призупинити BTKi"
+      - "Симптоми фібриляції передсердь → ЕКГ; за наявності фібриляції передсердь → консультація кардіолога + стратегія антикоагуляції"
 
   - name: on_treatment_veno
     window: "Per CLL14 schedule during 12-month VenO course"
+    window_ua: "За схемою CLL14 протягом 12-місячного курсу VenO"
     tests:
       - TEST-CBC
       - TEST-CMP
       - TEST-LFT
       - TEST-URIC-ACID
     visits: ["Pre-cycle obinutuzumab visits; venetoclax ramp-up visits with q6-8h labs at high-burden disease"]
+    visits_ua: ["Візити перед циклами обінутузумабу; візити для ескалації дози венетоклаксу з лабораторним контролем кожні 6-8 год за високого пухлинного навантаження"]
     checkpoints:
       - "TLS labs (K+, phosphate, calcium, uric acid, creatinine) per ramp-up schedule"
       - "ANC + platelets pre each obinutuzumab dose"
       - "Infusion reactions to obinutuzumab (especially first dose)"
+    checkpoints_ua:
+      - "Лабораторний контроль щодо синдрому лізису пухлини (K+, фосфат, кальцій, сечова кислота, креатинін) за графіком ескалації дози"
+      - "АЧН + тромбоцити перед кожною дозою обінутузумабу"
+      - "Інфузійні реакції на обінутузумаб (особливо перша доза)"
 
   - name: response_assessment
     window: "After cycle 6 (VenO) or every 6 months on BTKi"
+    window_ua: "Після 6-го циклу (VenO) або кожні 6 місяців на BTKi"
     tests:
       - TEST-CBC
       - TEST-CECT-CAP
       - TEST-FLOW-CYTOMETRY
     visits: ["Restaging — clinical, lab, imaging"]
+    visits_ua: ["Рестадіювання — клінічне обстеження, лабораторні аналізи, візуалізація"]
     checkpoints:
       - "iwCLL response criteria (CR, PR, PR-L on BTKi, SD, PD)"
       - "MRD assessment by flow on PB at end of VenO 12-month course"
+    checkpoints_ua:
+      - "Критерії відповіді iwCLL (CR, PR, PR-L на BTKi, SD, PD)"
+      - "Оцінка МЗХ методом проточної цитометрії в периферичній крові наприкінці 12-місячного курсу VenO"
 
   - name: follow_up
     window: "Every 3-6 months after treatment / continuously on BTKi"
+    window_ua: "Кожні 3-6 місяців після лікування / безперервно на BTKi"
     tests: [TEST-CBC, TEST-CMP, TEST-LFT]
     visits: ["Clinical + labs"]
+    visits_ua: ["Клінічна оцінка + лабораторні аналізи"]
     checkpoints:
       - "Surveillance for relapse (median PFS years for both regimens)"
       - "Watch for Richter transformation (rapid LDH rise, new B-symptoms, isolated mass) — re-biopsy"
       - "Second primary malignancy screening"
+    checkpoints_ua:
+      - "Спостереження щодо рецидиву (медіана виживаності без прогресування (PFS) у роках для обох режимів)"
+      - "Стежити за трансформацією Ріхтера (швидке зростання ЛДГ, нові B-симптоми, ізольоване утворення) — повторна біопсія"
+      - "Скринінг другого первинного раку"
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
@@ -77,3 +108,11 @@ notes: >
   Shared between BTKi (acalabrutinib continuous) and VenO time-limited
   paths. BTKi-specific cardiac/bleeding surveillance; VenO-specific TLS
   protocol during ramp.
+notes_ua: >
+  Спільний для BTKi (акалабрутиніб безперервно) та часово обмеженого
+  курсу VenO. Специфічне для BTKi кардіологічне/геморагічне
+  спостереження; специфічний для VenO протокол профілактики синдрому
+  лізису пухлини під час ескалації дози.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v01_monitoring_ua
+draft_revision: 1

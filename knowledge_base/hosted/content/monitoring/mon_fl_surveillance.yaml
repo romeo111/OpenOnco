@@ -4,6 +4,7 @@ linked_to_regimen: null  # surveillance — no regimen
 phases:
   - name: baseline
     window: "At diagnosis confirmation"
+    window_ua: "На момент підтвердження діагнозу"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -18,36 +19,54 @@ phases:
       - TEST-BM-TREPHINE
       - TEST-HBV-SEROLOGY
     visits: ["Treatment planning visit — confirm GELF-low-burden status"]
+    visits_ua: ["Візит з планування лікування — підтвердити статус низького пухлинного навантаження за GELF"]
     checkpoints:
       - "Confirm CD20+ FL grade 1-2 or 3A by histology + IHC (CD10, BCL2, BCL6 typical)"
       - "Confirm GELF criteria NOT met (otherwise route to active treatment)"
       - "FLIPI calculation documented"
       - "Discuss with patient: median time-to-treatment 2-5 years; OS not compromised"
+    checkpoints_ua:
+      - "Підтвердити CD20+ ФЛ 1-2 ступеня або 3A за гістологією + ІГХ (типово CD10, BCL2, BCL6)"
+      - "Підтвердити, що критерії GELF НЕ виконані (інакше — направити на активне лікування)"
+      - "Розрахунок FLIPI задокументовано"
+      - "Обговорити з пацієнтом: медіана часу до початку лікування 2-5 років; загальна виживаність (OS) не погіршується"
 
   - name: active_surveillance_short
     window: "Every 3 months × first 1 year"
+    window_ua: "Кожні 3 місяці протягом першого року"
     tests:
       - TEST-CBC
       - TEST-CMP
       - TEST-LFT
       - TEST-LDH
     visits: ["Clinical assessment + labs + lymph-node exam + symptom screen"]
+    visits_ua: ["Клінічна оцінка + лабораторні аналізи + огляд лімфовузлів + скринінг симптомів"]
     checkpoints:
       - "Re-evaluate GELF criteria each visit — trigger active treatment if any criterion newly met"
       - "Symptom screen: B-symptoms, fatigue, new mass, performance decline"
       - "Imaging only if clinical concern (no routine surveillance imaging)"
+    checkpoints_ua:
+      - "Переоцінювати критерії GELF на кожному візиті — за появи будь-якого нового критерію ініціювати активне лікування"
+      - "Скринінг симптомів: B-симптоми, втома, нове утворення, зниження функціонального статусу"
+      - "Візуалізація лише за клінічної підозри (рутинна візуалізація для спостереження не проводиться)"
 
   - name: active_surveillance_long
     window: "Every 6 months × years 2-5, then annually"
+    window_ua: "Кожні 6 місяців у роки 2-5, потім щорічно"
     tests:
       - TEST-CBC
       - TEST-CMP
       - TEST-LDH
     visits: ["Clinical + labs"]
+    visits_ua: ["Клінічна оцінка + лабораторні аналізи"]
     checkpoints:
       - "Re-stage with PET-CT only on suspected progression"
       - "Watch for transformation (RF-FL-TRANSFORMATION-SUSPECT) — re-biopsy if rapidly-growing dominant mass"
       - "Annual flu + 5-yearly pneumococcal vaccination (non-live only if anti-CD20 ever planned)"
+    checkpoints_ua:
+      - "Рестадіювання методом PET-CT лише за підозри на прогресування"
+      - "Стежити за трансформацією (RF-FL-TRANSFORMATION-SUSPECT) — повторна біопсія за швидкого росту домінантного утворення"
+      - "Щорічна вакцинація проти грипу + вакцинація проти пневмокока кожні 5 років (лише неживі вакцини за планованого застосування анти-CD20)"
 
 sources:
   - SRC-NCCN-BCELL-2025
@@ -58,3 +77,13 @@ notes: >
   2014) showing no OS benefit from immediate treatment for asymptomatic
   low-burden FL. Patient counsel is critical — many find waiting
   psychologically difficult and benefit from explicit education.
+notes_ua: >
+  Тактика активного спостереження (watch-and-wait) підтверджена
+  кількома РКД (Ardeshna 2014, RESORT 2014), які не показали переваги
+  загальної виживаності від негайного лікування безсимптомної ФЛ
+  низького пухлинного навантаження. Консультування пацієнта є критично
+  важливим — багато пацієнтів психологічно важко переносять очікування
+  і потребують докладного пояснення.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v01_monitoring_ua
+draft_revision: 1

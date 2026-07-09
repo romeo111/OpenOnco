@@ -4,6 +4,7 @@ linked_to_regimen: REG-BR-STANDARD
 phases:
   - name: baseline
     window: "Within 2 weeks before cycle 1"
+    window_ua: "Протягом 2 тижнів до 1-го циклу"
     tests:
       - TEST-CBC
       - TEST-LFT
@@ -13,51 +14,76 @@ phases:
       - TEST-CD20-IHC
       - TEST-PET-CT
     visits: ["Treatment planning visit with oncology and infectious disease consult"]
+    visits_ua: ["Візит з планування лікування за участю онколога та консультації інфекціоніста"]
     checkpoints:
       - "Confirm CD20+ histology"
       - "Confirm HBV status and prophylaxis plan"
       - "FIB-4 + LFT determine bendamustine dose adjustment"
+    checkpoints_ua:
+      - "Підтвердити CD20+ гістологію"
+      - "Підтвердити статус HBV та план профілактики"
+      - "FIB-4 + печінкові проби визначають корекцію дози бендамустину"
 
   - name: on_treatment
     window: "Day 1 of every 28-day cycle"
+    window_ua: "1-й день кожного 28-денного циклу"
     tests:
       - TEST-CBC
       - TEST-LFT
     visits: ["Pre-cycle clinical assessment + infusion-day labs"]
+    visits_ua: ["Клінічна оцінка перед циклом + лабораторні аналізи в день інфузії"]
     checkpoints:
       - "ANC ≥ 1500/µL and platelets ≥ 75K before each cycle (delay otherwise)"
       - "ALT/AST trend (rising values may signal HBV reactivation or hepatotoxicity)"
+    checkpoints_ua:
+      - "АЧН ≥ 1500/µL та тромбоцити ≥ 75K перед кожним циклом (інакше — відтермінувати)"
+      - "Динаміка АЛТ/АСТ (зростання може вказувати на реактивацію HBV або гепатотоксичність)"
 
   - name: response_assessment
     window: "After cycles 3 and 6"
+    window_ua: "Після 3-го та 6-го циклів"
     tests:
       - TEST-PET-CT
       - TEST-LDH
     visits: ["Restaging visit"]
+    visits_ua: ["Візит для рестадіювання"]
     checkpoints:
       - "Lugano response criteria (CR, PR, SD, PD)"
       - "If <PR after cycle 3 → consider regimen change"
+    checkpoints_ua:
+      - "Критерії відповіді Lugano (CR, PR, SD, PD)"
+      - "Якщо <PR після 3-го циклу → розглянути зміну режиму"
 
   - name: follow_up_short
     window: "Every 3 months for 2 years post-treatment"
+    window_ua: "Кожні 3 місяці протягом 2 років після завершення лікування"
     tests:
       - TEST-CBC
       - TEST-LFT
       - TEST-LDH
     visits: ["Clinical assessment + labs"]
+    visits_ua: ["Клінічна оцінка + лабораторні аналізи"]
     checkpoints:
       - "Surveillance for relapse"
       - "HBV reactivation monitoring continues for 12 months post anti-CD20"
+    checkpoints_ua:
+      - "Спостереження щодо рецидиву"
+      - "Моніторинг реактивації HBV триває 12 місяців після завершення анти-CD20 терапії"
 
   - name: follow_up_long
     window: "Every 6 months years 3-5"
+    window_ua: "Кожні 6 місяців у роки 3-5"
     tests:
       - TEST-CBC
       - TEST-LFT
     visits: ["Annual oncology + hepatology follow-up"]
+    visits_ua: ["Щорічне спостереження онколога + гепатолога"]
 
 sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-MZL-2024
 
 last_reviewed: "2026-04-25"
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v01_monitoring_ua
+draft_revision: 1

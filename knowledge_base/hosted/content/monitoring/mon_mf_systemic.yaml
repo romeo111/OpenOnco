@@ -4,6 +4,7 @@ linked_to_regimen: REG-MOGAMULIZUMAB
 phases:
   - name: baseline
     window: "Within 2 weeks before first dose"
+    window_ua: "Протягом 2 тижнів до першої дози"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -18,44 +19,71 @@ phases:
       - TEST-HIV-SEROLOGY
       - TEST-PET-CT  # rule out nodal involvement (N-stage)
     visits: ["Treatment planning visit (hematology + dermatology + photopheresis center if available)"]
+    visits_ua: ["Візит з планування лікування (гематологія + дерматологія + центр фотоферезу за наявності)"]
     checkpoints:
       - "Confirm TNMB stage; document T/N/M/B + IA-IVB stage"
       - "Skin photograph baseline (mSWAT score) for response tracking"
       - "If allo-SCT planned downstream — defer mogamulizumab (severe GVHD risk per FDA black box)"
       - "Dermatology partnership for AE management (mogamulizumab rash ~25%)"
+    checkpoints_ua:
+      - "Підтвердити стадію TNMB; задокументувати T/N/M/B + стадію IA-IVB"
+      - "Вихідне фотографування шкіри (показник mSWAT) для відстеження відповіді"
+      - "Якщо надалі планується алогенна трансплантація стовбурових клітин — відтермінувати могамулізумаб (значний ризик реакції трансплантат-проти-господаря за спеціальним попередженням FDA)"
+      - "Співпраця з дерматологією для ведення небажаних явищ (висип на тлі могамулізумабу ~25%)"
 
   - name: induction
     window: "Weekly × 5 doses (mogamulizumab) OR every 3 weeks (BV-mono)"
+    window_ua: "Щотижня × 5 доз (могамулізумаб) АБО кожні 3 тижні (BV-моно)"
     tests: [TEST-CBC, TEST-CMP]
     visits: ["Pre-infusion clinical + skin assessment + infusion"]
+    visits_ua: ["Клінічна оцінка перед інфузією + оцінка стану шкіри + інфузія"]
     checkpoints:
       - "Infusion reactions (especially mogamulizumab first dose)"
       - "Skin AE grading (CTCAE) — interrupt if severe rash; differentiate drug rash from disease progression"
+    checkpoints_ua:
+      - "Інфузійні реакції (особливо перша доза могамулізумабу)"
+      - "Оцінка ступеня шкірних небажаних явищ (CTCAE) — за тяжкого висипу перервати лікування; відрізняти медикаментозний висип від прогресування хвороби"
 
   - name: maintenance
     window: "Every 2 weeks (mogamulizumab) OR every 3 weeks (BV-mono) until progression / toxicity"
+    window_ua: "Кожні 2 тижні (могамулізумаб) АБО кожні 3 тижні (BV-моно) до прогресування / токсичності"
     tests: [TEST-CBC, TEST-CMP, TEST-LFT]
     visits: ["Pre-infusion clinical + skin + lab review"]
+    visits_ua: ["Клінічна оцінка перед інфузією + огляд шкіри + огляд лабораторних показників"]
     checkpoints:
       - "mSWAT skin response every 2-3 months"
       - "Sézary count repeat at 3 months (mogamulizumab — blood compartment response)"
       - "Neuropathy grading on BV-mono"
+    checkpoints_ua:
+      - "Шкірна відповідь за mSWAT кожні 2-3 місяці"
+      - "Повторний підрахунок клітин Сезарі через 3 місяці (могамулізумаб — відповідь у кров'яному компартменті)"
+      - "Оцінка ступеня нейропатії на BV-моно"
 
   - name: response_assessment
     window: "After 12-16 weeks of therapy"
+    window_ua: "Після 12-16 тижнів терапії"
     tests: [TEST-PET-CT, TEST-SEZARY-COUNT]
     visits: ["Restaging visit"]
+    visits_ua: ["Візит для рестадіювання"]
     checkpoints:
       - "Global response per ISCL/EORTC consensus (skin + nodes + viscera + blood)"
       - "Continue if responding; switch line if stable/progressive"
+    checkpoints_ua:
+      - "Загальна відповідь за консенсусом ISCL/EORTC (шкіра + лімфовузли + внутрішні органи + кров)"
+      - "Продовжити за наявності відповіді; змінити лінію лікування за стабільного/прогресуючого перебігу"
 
   - name: follow_up
     window: "Every 3 months × 2 years post-treatment, then every 6 months"
+    window_ua: "Кожні 3 місяці протягом 2 років після лікування, потім кожні 6 місяців"
     tests: [TEST-CBC, TEST-LFT, TEST-LDH, TEST-SEZARY-COUNT]
     visits: ["Clinical + dermatology"]
+    visits_ua: ["Клінічна оцінка + дерматологія"]
     checkpoints:
       - "Surveillance for relapse + LCT"
       - "Skin cancer screening (CTCL + treatment increases risk)"
+    checkpoints_ua:
+      - "Спостереження щодо рецидиву та великоклітинної трансформації (LCT)"
+      - "Скринінг раку шкіри — сама Т-клітинна лімфома шкіри (CTCL) та лікування підвищують ризик"
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
@@ -65,3 +93,12 @@ notes: >
   response + blood compartment + dermatology partnership). Distinct
   from skin-directed phototherapy (separate, lower-touch dermatology
   follow-up).
+notes_ua: >
+  Повторно використовується для REG-MOGAMULIZUMAB та REG-BV-MONO-MF —
+  обидва препарати є системною монотерапією зі схожою частотою
+  спостереження (шкірна відповідь + гематологічний моніторинг +
+  співпраця з дерматологією). Відрізняється від шкірно-спрямованої
+  фототерапії (окреме, менш інтенсивне дерматологічне спостереження).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v01_monitoring_ua
+draft_revision: 1

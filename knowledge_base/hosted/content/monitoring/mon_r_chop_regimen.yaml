@@ -4,6 +4,7 @@ linked_to_regimen: REG-R-CHOP
 phases:
   - name: baseline
     window: "Within 2 weeks before cycle 1"
+    window_ua: "Протягом 2 тижнів до 1-го циклу"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -22,6 +23,7 @@ phases:
       - TEST-BM-ASPIRATE
       - TEST-BM-TREPHINE
     visits: ["Treatment planning visit with hematology + cardiology + ID + reproductive counseling"]
+    visits_ua: ["Візит з планування лікування за участю гематології + кардіології + інфекціоніста + репродуктивного консультування"]
     checkpoints:
       - "Confirm CD20+ DLBCL histology; rule out double-hit (FISH for MYC/BCL2/BCL6)"
       - "Confirm HBV status + entecavir prophylaxis plan if HBsAg+ or anti-HBc+"
@@ -29,63 +31,96 @@ phases:
       - "IPI calculation documented (age, ECOG, LDH, stage, extranodal sites)"
       - "CNS-IPI calculation if anatomic risk sites or composite score concerning"
       - "Fertility preservation discussion (sperm banking / oocyte cryo) for childbearing-age"
+    checkpoints_ua:
+      - "Підтвердити CD20+ гістологію ДВКЛ; виключити double-hit (FISH на MYC/BCL2/BCL6)"
+      - "Підтвердити статус HBV + план профілактики ентекавіром за HBsAg+ або анти-HBc+"
+      - "Вихідна LVEF ≥50% перед доксорубіцином"
+      - "Розрахунок IPI задокументовано (вік, ECOG, ЛДГ, стадія, екстранодальні вогнища)"
+      - "Розрахунок CNS-IPI за наявності анатомічних зон ризику або тривожного сукупного показника"
+      - "Обговорення збереження фертильності (кріоконсервація сперми / ооцитів) для пацієнтів репродуктивного віку"
 
   - name: on_treatment
     window: "Day 1 of every 21-day cycle"
+    window_ua: "1-й день кожного 21-денного циклу"
     tests:
       - TEST-CBC
       - TEST-CMP
       - TEST-LFT
     visits: ["Pre-cycle clinical assessment + infusion-day labs + neuropathy screen"]
+    visits_ua: ["Клінічна оцінка перед циклом + лабораторні аналізи в день інфузії + скринінг нейропатії"]
     checkpoints:
       - "ANC ≥1500 + platelets ≥100K before each cycle (delay or G-CSF if not)"
       - "Neuropathy grade documented (CTCAE) — vincristine modification if ≥2"
       - "LVEF re-check after cumulative doxorubicin ~300 mg/m²"
+    checkpoints_ua:
+      - "АЧН ≥1500 + тромбоцити ≥100K перед кожним циклом (інакше — відтермінувати або призначити G-CSF)"
+      - "Ступінь нейропатії задокументовано (CTCAE) — корекція дози вінкристину за ступеня ≥2"
+      - "Повторна оцінка LVEF після кумулятивної дози доксорубіцину ~300 mg/m²"
 
   - name: interim_response_assessment
     window: "After cycles 2-4 (interim PET-CT)"
+    window_ua: "Після 2-4-го циклів (проміжний PET-CT)"
     tests:
       - TEST-PET-CT
       - TEST-LDH
     visits: ["Restaging visit"]
+    visits_ua: ["Візит для рестадіювання"]
     checkpoints:
       - "Lugano response criteria + Deauville score"
       - "If Deauville 4-5 with mass progression → consider salvage or trial"
+    checkpoints_ua:
+      - "Критерії відповіді Lugano + шкала Deauville"
+      - "За Deauville 4-5 з прогресуванням маси → розглянути сальвадж-терапію або клінічне дослідження"
 
   - name: end_of_treatment
     window: "After cycle 6 (within 6-8 weeks)"
+    window_ua: "Після 6-го циклу (протягом 6-8 тижнів)"
     tests:
       - TEST-PET-CT
       - TEST-CBC
       - TEST-CMP
       - TEST-LDH
     visits: ["End-of-treatment restaging + survivorship transition"]
+    visits_ua: ["Підсумкове рестадіювання після лікування + перехід до супроводу після лікування"]
     checkpoints:
       - "Confirm CR vs PR vs SD vs PD by Lugano/Deauville"
       - "Begin survivorship plan: cardiac surveillance schedule, vaccination catch-up, second-cancer screening"
+    checkpoints_ua:
+      - "Підтвердити CR, PR, SD чи PD за Lugano/Deauville"
+      - "Розпочати план супроводу після завершення лікування: графік кардіологічного спостереження, надолуження вакцинації, скринінг другого раку"
 
   - name: follow_up_short
     window: "Every 3 months × 2 years post-treatment"
+    window_ua: "Кожні 3 місяці протягом 2 років після лікування"
     tests:
       - TEST-CBC
       - TEST-CMP
       - TEST-LFT
       - TEST-LDH
     visits: ["Clinical assessment + labs"]
+    visits_ua: ["Клінічна оцінка + лабораторні аналізи"]
     checkpoints:
       - "Surveillance for relapse (~40% relapse risk by 2 years overall)"
       - "HBV reactivation monitoring continues for 12 months post anti-CD20"
+    checkpoints_ua:
+      - "Спостереження щодо рецидиву (загальний ризик рецидиву ~40% протягом 2 років)"
+      - "Моніторинг реактивації HBV триває 12 місяців після завершення анти-CD20 терапії"
 
   - name: follow_up_long
     window: "Every 6 months years 3-5, then annually"
+    window_ua: "Кожні 6 місяців у роки 3-5, потім щорічно"
     tests:
       - TEST-CBC
       - TEST-LFT
       - TEST-ECHO
     visits: ["Clinical + cardiac surveillance"]
+    visits_ua: ["Клінічна оцінка + кардіологічне спостереження"]
     checkpoints:
       - "Late cardiomyopathy screening (LVEF) annually if cumulative dox >300"
       - "Annual second-malignancy screening (skin, breast, etc. age-appropriate)"
+    checkpoints_ua:
+      - "Щорічний скринінг пізньої кардіоміопатії (LVEF) за кумулятивної дози доксорубіцину >300"
+      - "Щорічний скринінг другого раку (шкіра, молочна залоза тощо, відповідно до віку)"
 
 sources:
   - SRC-NCCN-BCELL-2025
@@ -95,3 +130,11 @@ notes: >
   Shared by REG-R-CHOP and REG-POLA-R-CHP (Pola-R-CHP differs only in
   cycle composition; monitoring is identical). HBV-DNA quarterly for
   duration of therapy and 12 months post if anti-CD20 used.
+notes_ua: >
+  Спільний для REG-R-CHOP та REG-POLA-R-CHP (Pola-R-CHP відрізняється
+  лише складом циклу; спостереження ідентичне). HBV-ДНК щоквартально
+  протягом усього лікування та 12 місяців після завершення, якщо
+  застосовувався анти-CD20.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v01_monitoring_ua
+draft_revision: 1

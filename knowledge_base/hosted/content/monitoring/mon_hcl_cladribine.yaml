@@ -4,32 +4,52 @@ linked_to_regimen: REG-CLADRIBINE-SINGLE
 phases:
   - name: baseline
     window: "Within 1 week before start"
+    window_ua: "Протягом 1 тижня до початку лікування"
     tests: [TEST-CBC, TEST-CMP, TEST-LFT, TEST-PERIPHERAL-SMEAR, TEST-BM-ASPIRATE, TEST-BM-TREPHINE, TEST-FLOW-CYTOMETRY, TEST-CECT-CAP]
     visits: ["Treatment planning visit"]
+    visits_ua: ["Візит з планування лікування"]
     checkpoints:
       - "Confirm HCL: hairy cells on PB smear, BM trephine annexin-A1+, flow CD11c+CD25+CD103+CD123+"
       - "Document BRAF V600E status (informational; required for second-line targeted therapy if relapse)"
       - "Treatment indication confirmed (significant cytopenia or symptomatic splenomegaly)"
+    checkpoints_ua:
+      - "Підтвердити волосистоклітинний лейкоз (HCL): волосисті клітини в мазку периферичної крові, трепанобіопсія кісткового мозку annexin-A1+, проточна цитометрія CD11c+CD25+CD103+CD123+"
+      - "Задокументувати статус BRAF V600E (інформативно; необхідний для таргетної терапії другої лінії в разі рецидиву)"
+      - "Показання до лікування підтверджено (значуща цитопенія або симптомна спленомегалія)"
 
   - name: post_treatment_immediate
     window: "Weeks 2-4 post-cladribine"
+    window_ua: "Тижні 2-4 після кладрибіну"
     tests: [TEST-CBC]
     visits: ["Clinical assessment + lab; expect deepening cytopenia first 1-2 weeks"]
+    visits_ua: ["Клінічна оцінка + лабораторний аналіз; очікується поглиблення цитопенії в перші 1-2 тижні"]
     checkpoints: ["Febrile neutropenia management; transfusion support as needed"]
+    checkpoints_ua: ["Ведення фебрильної нейтропенії; трансфузійна підтримка за потреби"]
 
   - name: response_assessment
     window: "Month 4-6 post-cladribine"
+    window_ua: "Місяці 4-6 після кладрибіну"
     tests: [TEST-CBC, TEST-PERIPHERAL-SMEAR, TEST-BM-ASPIRATE, TEST-BM-TREPHINE, TEST-FLOW-CYTOMETRY]
     visits: ["Restaging visit"]
+    visits_ua: ["Візит для рестадіювання"]
     checkpoints: ["CR / PR / persistent disease; if persistent — repeat cladribine course or rituximab consolidation"]
+    checkpoints_ua: ["CR / PR / персистуюче захворювання; за персистенції — повторний курс кладрибіну або консолідація ритуксимабом"]
 
   - name: follow_up
     window: "Every 6 months × 5 years, then annually"
+    window_ua: "Кожні 6 місяців протягом 5 років, потім щорічно"
     tests: [TEST-CBC, TEST-CMP]
     visits: ["Clinical + labs"]
+    visits_ua: ["Клінічна оцінка + лабораторні аналізи"]
     checkpoints:
       - "Surveillance for relapse (median PFS >10 years; relapse can occur)"
       - "PJP + HSV prophylaxis continuing ≥1 year"
+    checkpoints_ua:
+      - "Спостереження щодо рецидиву (медіана виживаності без прогресування (PFS) >10 років; рецидив можливий)"
+      - "Профілактика PJP + HSV триває ≥1 рік"
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v01_monitoring_ua
+draft_revision: 1
