@@ -164,6 +164,16 @@ class BiomarkerClinicalContext(str, Enum):
     Default-on-read for legacy biomarkers is `[tumor_profiling]`, which
     matches current implicit behavior across the ~170 existing Biomarker
     YAMLs.
+
+    The four PRECURSOR_LESION/DYSPLASIA_GRADING/HEREDITARY_SURVEILLANCE/
+    DIAGNOSTIC_WORKUP values were added 2026-07-09 to ratify a finer-
+    grained taxonomy already in consistent use across the prevention-
+    persona screening/surveillance biomarker YAMLs (FIT, Pap cytology,
+    dermoscopy, LungRADS, etc.) — the content was authored against this
+    richer vocabulary before the enum caught up. Distinct from
+    `SCREENING_SURVEILLANCE`: that value covers testing an asymptomatic
+    population; these four cover what happens once something is found
+    (grading/monitoring a known lesion or hereditary risk).
     """
 
     GERMLINE_SUSCEPTIBILITY = "germline_susceptibility"
@@ -171,6 +181,10 @@ class BiomarkerClinicalContext(str, Enum):
     SCREENING_SURVEILLANCE = "screening_surveillance"
     PROGNOSTIC = "prognostic"
     PREDICTIVE = "predictive"
+    PRECURSOR_LESION = "precursor_lesion"
+    DYSPLASIA_GRADING = "dysplasia_grading"
+    HEREDITARY_SURVEILLANCE = "hereditary_surveillance"
+    DIAGNOSTIC_WORKUP = "diagnostic_workup"
 
 
 class PreventionRiskCategory(str, Enum):

@@ -1891,10 +1891,21 @@ clinical_context:        # NEW array enum, multi-valued. Default on read:
                          # Valid values:
                          #   germline_susceptibility  — hereditary risk variants (BRCA1/2, VHL, FH, MMR, ...)
                          #   tumor_profiling          — current implicit (HER2, KRAS, ...)
-                         #   screening_surveillance   — used for asymptomatic monitoring in high-risk subgroups
+                         #   screening_surveillance   — testing an asymptomatic population
                          #                              (AFP in cirrhosis, calcitonin in MEN2, ...)
                          #   prognostic               — affects prognosis of known disease
                          #   predictive               — predicts response to a specific therapy
+                         #   precursor_lesion         — detects/monitors a known pre-cancerous
+                         #                              lesion (dermoscopy of atypical naevi, ...)
+                         #   dysplasia_grading        — grades dysplasia in tissue already sampled
+                         #                              (p16/p53 IHC, Ki-67 index, ...)
+                         #   hereditary_surveillance  — surveillance driven by known hereditary
+                         #                              risk, distinct from the germline test itself
+                         #                              (MGMT methylation in Lynch-related glioma, ...)
+                         #   diagnostic_workup        — used to work up a finding, not to screen or
+                         #                              grade (p16 IHC as an HPV-status proxy, ...)
+                         # Added 2026-07-09 (ratifying prevention-persona content already using
+                         # this taxonomy — see docs/reviews/ for detail).
                          # One marker MAY carry multiple contexts (e.g., MMR/MSI =
                          # germline_susceptibility + tumor_profiling + predictive).
   - tumor_profiling
