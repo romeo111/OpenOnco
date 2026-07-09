@@ -1716,25 +1716,29 @@ def _render_monitoring_phases(plan, target_lang: str = "uk") -> str:
         for ph in phases:
             tests = ", ".join(ph.get("tests") or []) or "—"
             checks = ph.get("checkpoints") or []
-            # NOTE: MonitoringPhase.window/visits/checkpoints are free-text
-            # authored fields with no `_ua` companion in the schema
-            # (specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md §12 has no UA
-            # convention for this entity — unlike every other entity type).
-            # `_h_t` was previously called here assuming these strings were
-            # already Ukrainian; they are English source text, so `_h_t`
-            # silently no-op'd (and would mistranslate if a live client
-            # were ever configured, since source_lang defaults to "uk").
-            # Plain-escaping until the schema gains window_ua/checkpoints_ua
-            # and content is translated — tracked as a known gap, not
-            # invented here per CLAUDE.md's "don't invent fields" rule.
+            # MonitoringPhase.window/checkpoints have `_ua` companions
+            # (window_ua: str, checkpoints_ua: list[str] index-aligned with
+            # checkpoints) as of specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md
+            # §12.2 — prefer them when present, fall back to English
+            # otherwise (same pattern as Regimen.name_ua).
+            window_src = (
+                (ph.get("window_ua") or ph.get("window", "—"))
+                if target_lang == "uk"
+                else ph.get("window", "—")
+            )
+            checks_ua = ph.get("checkpoints_ua") or []
+            if target_lang == "uk" and len(checks_ua) == len(checks):
+                checks_display = checks_ua
+            else:
+                checks_display = checks
             checks_html = (
                 "<ul style='padding-left:16px;margin:0;'>"
-                + "".join(f"<li>{_h(c)}</li>" for c in checks)
+                + "".join(f"<li>{_h(c)}</li>" for c in checks_display)
                 + "</ul>"
-            ) if checks else "—"
+            ) if checks_display else "—"
             rows.append(
                 f'<tr><td><strong>{_h(_monitoring_phase_name(ph.get("name", "?"), target_lang))}</strong></td>'
-                f'<td>{_h(ph.get("window", "—"))}</td>'
+                f'<td>{_h(window_src)}</td>'
                 f'<td style="font-family:var(--font-mono);font-size:11px;">{_h(tests)}</td>'
                 f'<td>{checks_html}</td></tr>'
             )
@@ -1783,7 +1787,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--baseline">'
                 f'<div class="name">{_h(_t("tl_baseline", target_lang))}</div>'
-                f'<div class="window">{_h(baseline.get("window", "—"))}</div>'
+                f'<div class="window">{_h(_monitoring_window(baseline, target_lang))}</div>'
                 '</div>'
             )
 
@@ -1817,7 +1821,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--response">'
                 f'<div class="name">{_h(_t("tl_response", target_lang))}</div>'
-                f'<div class="window">{_h(ra.get("window", "—"))}</div>'
+                f'<div class="window">{_h(_monitoring_window(ra, target_lang))}</div>'
                 '</div>'
             )
 
@@ -1827,7 +1831,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--maintenance">'
                 f'<div class="name">{_h(_t("tl_maintenance", target_lang))}</div>'
-                f'<div class="window">{_h(maint.get("window", "—"))}</div>'
+                f'<div class="window">{_h(_monitoring_window(maint, target_lang))}</div>'
                 '</div>'
             )
 
@@ -1840,7 +1844,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
             phases_html.append(
                 '<div class="tl-phase tl-phase--followup">'
                 f'<div class="name">{_h(_t("tl_followup", target_lang))}</div>'
-                f'<div class="window">{_h(fu.get("window", "—"))}</div>'
+                f'<div class="window">{_h(_monitoring_window(fu, target_lang))}</div>'
                 '</div>'
             )
 
@@ -2401,6 +2405,13 @@ def _monitoring_phase_name(name: str, target_lang: str = "uk") -> str:
     if target_lang == "uk":
         return _MONITORING_PHASE_NAME_UK.get(name, name)
     return name
+
+
+def _monitoring_window(phase: dict, target_lang: str = "uk") -> str:
+    """MonitoringPhase.window, preferring window_ua when present."""
+    if target_lang == "uk":
+        return phase.get("window_ua") or phase.get("window", "—")
+    return phase.get("window", "—")
 
 
 def _render_nszu_badge(drug_entity, patient_disease_id, disease_names, target_lang="uk") -> str:

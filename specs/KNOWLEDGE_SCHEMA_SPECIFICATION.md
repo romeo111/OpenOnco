@@ -1350,6 +1350,23 @@ last_reviewed: "2026-04-15"
 reviewers: [reviewer-id]
 ```
 
+Note: the example above predates the field names in the current
+`knowledge_base/schemas/monitoring.py` implementation (`name` not
+`phase_name`; a flat `tests` list rather than
+`required_tests`/`desired_tests`/`recurring_tests`) — pending a
+dedicated spec-accuracy pass, not addressed here.
+
+### 12.2. Ukrainian translation fields (added 2026-07-09)
+
+`MonitoringPhase` carries `window_ua: Optional[str]`,
+`visits_ua: list[str]` (index-aligned with `visits`),
+`checkpoints_ua: list[str]` (index-aligned with `checkpoints`), and
+`notes_ua: Optional[str]`, following the `<field>_ua` companion
+convention used across every other entity type. Render layer prefers
+the `_ua` companion when `target_lang == "uk"` and it is populated,
+falling back to the English field otherwise (same pattern as
+`Regimen.name_ua`, `BiomarkerActionability.evidence_summary_ua`, etc.).
+
 ---
 
 ## 13. Entity: Algorithm
