@@ -59,7 +59,8 @@ decision_tree:
 - step: 3
   evaluate:
     all_of:
-    - condition: "PSMA-PET/CT positive (all lesions PSMA-avid, no PSMA-negative sites with metastases)"
+    - finding: "BIO-PSMA-PET"
+      value: "positive"
     - condition: "Prior taxane AND prior ARPI both received (Lu-PSMA eligibility per VISION)"
   if_true:
     result: IND-PROSTATE-MCRPC-2L-LU-PSMA
@@ -74,7 +75,9 @@ decision_tree:
 - step: 4
   evaluate:
     all_of:
-    - condition: "ECOG PS 0-2 (docetaxel eligible)"
+    - finding: "ecog"
+      threshold: 2
+      comparator: "<="
     - condition: "No prior taxane in mHSPC or mCRPC"
   if_true:
     result: IND-PROSTATE-MCRPC-1L-ARPI

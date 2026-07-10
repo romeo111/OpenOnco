@@ -26,7 +26,8 @@ decision_tree:
   evaluate:
     all_of:
     - condition: ≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38
-    - condition: Triple-class refractory (refractory to last line of each class)
+    - finding: "triple_class_refractory"
+      value: true
     - any_of:
       - red_flag: RF-FITNESS-ECOG-FIT
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
@@ -35,7 +36,7 @@ decision_tree:
     result: IND-MM-4L-TECLISTAMAB
   if_false:
     next_step: 3
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; triple-class-refractory clause mechanically rewired into finding: triple_class_refractory (same key used in RF-MM-BCMA-EXPRESSION-POS trigger, DIS-MM). Remaining conditions (compound ≥3-prior-lines+drug-class composite; adequate organ function for bispecific) kept as MDT-evaluated text (no matching finding/RF for those criteria)."
 - step: 3
   evaluate:
     any_of:

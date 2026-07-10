@@ -13,7 +13,12 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic"
+        - all_of:
+            - finding: "ecog"
+              threshold: 2
+              comparator: "<="
+            - finding: "unresectable_or_metastatic"
+              value: true
     if_true:
       result: IND-CHONDROSARCOMA-ADVANCED-DOXORUBICIN
 

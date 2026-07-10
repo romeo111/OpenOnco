@@ -18,12 +18,13 @@ decision_tree:
   evaluate:
     all_of:
     - condition: "≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38 monoclonal antibody"
-    - condition: "Refractory (progressed during or within 60 days of last line of each class)"
+    - finding: "triple_class_refractory"
+      value: true
   if_true:
     result: IND-MM-4L-TECLISTAMAB
   if_false:
     next_step: 2
-  notes: "MDT-only — triple-class refractory definition. No RF for this composite criterion; evaluated as clinical MDT gate. If true, teclistamab BCMA bispecific (MajesTEC-1) is preferred (NCCN Cat 2A); ISA-Kd not indicated in triple-class refractory."
+  notes: "Refractory-definition clause mechanically rewired into finding: triple_class_refractory (same key used in RF-MM-BCMA-EXPRESSION-POS trigger, DIS-MM). Remaining ≥3-prior-lines-including-IMiD/PI/anti-CD38 composite has no matching finding key — kept as MDT-evaluated text. If finding fires, teclistamab BCMA bispecific (MajesTEC-1) is preferred (NCCN Cat 2A); ISA-Kd not indicated in triple-class refractory."
 - step: 2
   evaluate:
     all_of:

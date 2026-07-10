@@ -38,14 +38,15 @@ decision_tree:
   - step: 2
     evaluate:
       all_of:
-        - condition: "HDAC-inhibitor-naive"
-        - condition: "Romidepsin accessible (named-patient or trial)"
+        - red_flag: RF-PRIOR-HDACI-NAIVE
+        - finding: "romidepsin_accessible"
+          value: true
         - condition: "No baseline cardiac arrhythmia / QTc prolongation precluding HDACi"
     if_true:
       result: IND-AITL-2L-ROMIDEPSIN
     if_false:
       next_step: 3
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Mechanical rewire of 2 of 3 free-text gates: 'HDAC-inhibitor-naive' now wired via red_flag: RF-PRIOR-HDACI-NAIVE (universal eligibility-gate RF; its own notes explicitly cite AITL HDACi sensitivity). 'Romidepsin accessible (named-patient or trial)' now wired via finding: romidepsin_accessible=true (mirrors this file's own step 3 and RF-AITL-ROMIDEPSIN-INELIGIBLE's romidepsin_accessible=false trigger). 'No baseline cardiac arrhythmia / QTc prolongation precluding HDACi' remains free-text MDT-composite — RF-AITL-ROMIDEPSIN-INELIGIBLE's own notes confirm this cardiac gate intentionally lives in step 2 as MDT judgment, and its trigger ORs four separate cardiac/access/intolerance fields as one non-decomposable ineligibility rollup. Original clinical criteria unchanged."
 
   # Step 3 — alternative HDACi: belinostat (less cardiotoxic than
   # romidepsin in some series; use when romidepsin not accessible).

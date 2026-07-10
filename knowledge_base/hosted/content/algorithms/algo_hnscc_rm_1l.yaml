@@ -56,7 +56,9 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "PD-L1 CPS ≥1"
+        - finding: "pdl1_cps"
+          threshold: 1
+          comparator: ">="
     if_true:
       result: IND-HNSCC-RM-1L-PEMBRO-CHEMO
     if_false:
@@ -66,6 +68,9 @@ decision_tree:
       already handled in step 0 (→ EXTREME), so any patient reaching this
       step has CPS ≥1 and pembro-chemo is the correct default. Remove step
       when CPS 1-19 vs ≥20 gets a further bifurcating Indication.
+      Mechanical rewire of the original free-text gate (PD-L1 CPS ≥1) into
+      a finding: clause using pdl1_cps (mirrors step 0's negated CPS<1
+      bound in this same file). Original clinical criteria unchanged.
 
 sources:
   - SRC-NCCN-HNSCC-2025

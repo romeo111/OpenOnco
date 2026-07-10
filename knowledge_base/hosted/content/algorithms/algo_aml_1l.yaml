@@ -136,12 +136,12 @@ decision_tree:
   - step: 7
     evaluate:
       any_of:
-        - condition: "Fit for intensive chemotherapy (default if no fitness flags)"
+        - {finding: "fit_for_intensive_chemo", value: true}
     if_true:
       result: IND-AML-1L-7-3
     if_false:
       result: IND-AML-1L-7-3
-    notes: "Default fall-through — fit patient with no biomarker flags routes to 7+3."
+    notes: "Default fall-through — fit patient with no biomarker flags routes to 7+3. Mechanical rewire of the original free-text gate (fitness for intensive chemotherapy) into finding: clause using fit_for_intensive_chemo. Original clinical criteria unchanged; if_true/if_false already both routed to IND-AML-1L-7-3."
 
 sources:
   - SRC-NCCN-AML-2025

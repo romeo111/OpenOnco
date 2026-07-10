@@ -68,12 +68,13 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Platinum-sensitive, HRD-negative or unknown — default re-induction chemo+bev"
+        - finding: "hrd_status"
+          value: "HRD-negative"
     if_true:
       result: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV
     if_false:
       result: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV
-    notes: "Default fall-through for platinum-sensitive HRD-negative cohort; no biomarker gate required."
+    notes: "Mechanical rewire of the original free-text gate (platinum-sensitive, HRD-negative or unknown) into a finding: clause using hrd_status='HRD-negative' (mirrors the HRD-positive red_flag: gates in step 3 of this same file). Original clinical criteria unchanged. if_true and if_false already resolved to the identical result before this edit (no biomarker gate required for this fall-through cohort), so the conversion changes no patient-facing routing."
 
   # Step 5 — platinum-resistant: FRα-high (≥75% TPS by VENTANA FOLR1
   # RxDx) → mirvetuximab soravtansine (MIRASOL, ESCAT IA).
