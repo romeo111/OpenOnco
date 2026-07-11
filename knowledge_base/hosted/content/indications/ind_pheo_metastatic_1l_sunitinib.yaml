@@ -1,0 +1,82 @@
+id: IND-PHEO-METASTATIC-1L-SUNITINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PHEOCHROMOCYTOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Unresectable, locally advanced, or metastatic pheochromocytoma or paraganglioma"
+    - "MIBG-non-avid disease (or MIBG-avid disease where radiopharmaceutical therapy is not feasible/available), OR progression after I-131 MIBG"
+    - "Multidisciplinary (endocrinology / medical oncology) review"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-SUNITINIB-PHEO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: {value: "FIRSTMAPPP was powered on 12-month progression-free survival, not response rate; exact ORR figure not asserted here", source: SRC-FIRSTMAPPP-BAUDIN-2024}
+  complete_response:
+  progression_free_survival: {value: "12-month progression-free survival 36% (90% CI 23-50) with sunitinib vs 19% (90% CI 11-31) with placebo -- primary endpoint met (FIRSTMAPPP)", source: SRC-FIRSTMAPPP-BAUDIN-2024}
+  overall_survival_5y: "Not asserted here pending source-verified figures -- FIRSTMAPPP was not powered for overall survival and permitted placebo-arm crossover at progression"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-METANEPHRINES-PLASMA-PARAGANGLIOMA
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests: []
+
+rationale: >
+  For metastatic pheochromocytoma/paraganglioma that is not MIBG-avid
+  (or where I-131 MIBG has already failed / is not feasible), sunitinib
+  is the default systemic option: FIRSTMAPPP is the only randomized,
+  placebo-controlled trial of a systemic agent in this disease and
+  demonstrated a progression-free-survival benefit for sunitinib (12-mo
+  PFS 36% vs 19% placebo; primary endpoint met). Cabozantinib
+  (IND-PHEO-METASTATIC-1L-CABOZANTINIB) is an NCCN-listed alternative
+  with weaker (single-arm/retrospective) evidence and is modelled as the
+  algorithm's alternative_indication rather than the default. No
+  high-quality cytotoxic regimen exists for PPGL; historical CVD
+  (cyclophosphamide+vincristine+dacarbazine) is not authored here -- see
+  DIS-PHEOCHROMOCYTOMA metadata for that deferred gap.
+
+sources:
+  - source_id: SRC-FIRSTMAPPP-BAUDIN-2024
+    position: supports
+  - source_id: SRC-NCCN-NET-2025
+    position: supports
+
+do_not_do:
+  - "Не призначати сунітиніб як терапію першого вибору при MIBG-позитивному захворюванні без розгляду I-131 MIBG."
+  - "Не ігнорувати артеріальну гіпертензію на фоні сунітинібу в пацієнта з катехоламін-продукуючою пухлиною -- можлива адитивна дія."
+
+do_not_do_en:
+  - "Do not use sunitinib as first-choice therapy in MIBG-avid disease without considering I-131 MIBG first."
+  - "Do not disregard hypertension on sunitinib in a patient with a catecholamine-secreting tumor -- effects may be additive."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+review_status: stub
+drafted_by: claude_pheo_treatment_pathway
+notes: >
+  Coverage-enabling metastatic-disease indication for
+  DIS-PHEOCHROMOCYTOMA, default non-MIBG-avid systemic branch
+  (FIRSTMAPPP evidence). Reuses DRUG-SUNITINIB. expected_outcomes uses
+  OutcomeValue wrappers pointing at SRC-FIRSTMAPPP-BAUDIN-2024; the
+  file under independent review had cited this trial under a 2023
+  year-suffix id with null DOI/PMID and had deliberately omitted the
+  effect size out of an abundance of caution -- this session
+  independently confirmed the trial via PubMed (PMID 38402886; Lancet
+  2024;403(10431):1061-1070) and corrected the source id/year and
+  populated the verified 12-month PFS figures (36% vs 19%) rather than
+  leaving them unstated. Requires medical oncology co-lead signoff
+  before clinical publication.

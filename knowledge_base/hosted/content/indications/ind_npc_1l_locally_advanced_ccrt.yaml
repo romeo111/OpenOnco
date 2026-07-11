@@ -1,0 +1,122 @@
+id: IND-NPC-1L-LOCALLY-ADVANCED-CCRT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NPC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Locoregionally confined NPC, Stage I-IVA (AJCC/UICC 8th ed), M0 (no distant metastasis)"
+    - "No prior definitive treatment for NPC"
+    - "Multidisciplinary (radiation oncology + medical oncology) review"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-NPC-GC-INDUCTION-CCRT
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  progression_free_survival:
+    value: "Induction GC + CCRT significantly improved recurrence-free survival vs CCRT alone in locoregionally advanced (Stage III-IVA) NPC (approximate reported figures ~85% vs ~77% at 3 years; exact numbers pending verification against the primary source)"
+    source: SRC-NPC-GC-INDUCTION-ZHANG-2019
+  complete_response:
+    value: "NPC is highly chemo/radio-sensitive — high rates of clinical/radiographic complete response are typically reported after definitive CCRT; exact figures not asserted here pending primary-source verification"
+    source: SRC-NCCN-HNSCC-2025
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CT-NECK-THORAX-ABDOMEN-PELVIS
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-EBV-VIRAL-LOAD
+  - TEST-AUDIOMETRY
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+desired_tests:
+  - TEST-PET-CT
+
+rationale: >
+  NPC is EBV-associated, lymphoepithelial-histology, and markedly
+  chemo/radio-sensitive, making definitive concurrent chemoradiation
+  (cisplatin + IMRT) the standard curative-intent approach for
+  non-metastatic (Stage I-IVA) disease. Concurrent cisplatin
+  radiosensitization traces to Intergroup-0099 (Al-Sarraf et al., JCO
+  1998), which established chemoradiation superior to RT alone.
+  Adding induction gemcitabine-cisplatin (GC) before CCRT further
+  improves recurrence-free and overall survival in locoregionally
+  advanced (higher-risk, Stage III-IVA) disease (Zhang et al., NEJM
+  2019 GC-induction trial) — hence "+/- induction" in this Indication's
+  regimen (REG-NPC-GC-INDUCTION-CCRT), where the induction phase is
+  marked optional and primarily indicated for higher-stage disease per
+  MDT assessment. Baseline and post-treatment plasma EBV-DNA
+  (BIO-EBV-DNA; see RF-NPC-EBV-DNA-POST-TREATMENT-SURVEILLANCE) is used
+  for surveillance — rising or persistently detectable EBV-DNA after
+  treatment can predict relapse before it is visible on imaging.
+
+rationale_ua: >
+  NPC є EBV-асоційованою, лімфоепітеліальної гістології та вкрай
+  чутливою до хіміо-/променевої терапії, що робить дефінітивну
+  одночасну хіміопроменеву терапію (цисплатин + IMRT) стандартним
+  підходом з куративним наміром для неметастатичної (Stage I-IVA)
+  хвороби. Одночасна радіосенсибілізація цисплатином походить від
+  Intergroup-0099 (Al-Sarraf та співавт., JCO 1998). Додавання
+  індукційного гемцитабін-цисплатину (GC) перед CCRT додатково
+  покращує безрецидивну та загальну виживаність при локорегіонарно
+  поширеній (Stage III-IVA) хворобі (Zhang та співавт., NEJM 2019) —
+  звідси "+/- індукція" в цьому показанні. EBV-ДНК у плазмі
+  (BIO-EBV-DNA) до та після лікування використовується для
+  спостереження — зростання або стійка виявлюваність можуть
+  передбачити рецидив до появи на візуалізації.
+
+sources:
+  - source_id: SRC-INTERGROUP-0099-ALSARRAF-1998
+    position: supports
+    relevant_quote_paraphrase: "Concurrent cisplatin chemoradiation superior to radiation alone in locally advanced NPC"
+  - source_id: SRC-NPC-GC-INDUCTION-ZHANG-2019
+    position: supports
+    relevant_quote_paraphrase: "Induction gemcitabine-cisplatin before concurrent chemoradiotherapy improves recurrence-free/overall survival vs concurrent chemoradiotherapy alone in locoregionally advanced NPC"
+  - source_id: SRC-NCCN-HNSCC-2025
+    position: supports
+
+do_not_do:
+  - "НЕ призначати системну ІКІ-терапію (PD-1) замість дефінітивної CCRT при неметастатичній (M0) хворобі — це показання для метастатичного 1L (IND-NPC-1L-METASTATIC-GC-PD1), не для локально поширеної хвороби."
+  - "НЕ пропускати базову аудіометрію та функцію нирок перед цисплатином — кумулятивна ото-/нефротоксичність зростає при поєднанні індукції + одночасної фази."
+  - "НЕ ігнорувати EBV-ДНК спостереження після лікування — зростання рівня може передувати рентгенологічному рецидиву."
+  - "НЕ подовжувати опромінення понад стандартний дефінітивний курс без документованої клінічної підстави."
+do_not_do_en:
+  - "Do NOT use systemic PD-1 immunotherapy instead of definitive CCRT in non-metastatic (M0) disease — that is the metastatic-1L indication (IND-NPC-1L-METASTATIC-GC-PD1), not locally advanced disease."
+  - "Do NOT omit baseline audiometry and renal function before cisplatin — cumulative oto-/nephrotoxicity risk increases when induction + concurrent phases are combined."
+  - "Do NOT ignore post-treatment EBV-DNA surveillance — a rising level can precede radiographic relapse."
+  - "Do NOT extend radiation beyond the standard definitive course without a documented clinical rationale."
+
+known_controversies:
+  - topic: "Universal induction GC vs CCRT-alone for all locoregionally-advanced NPC"
+    positions:
+      - position: "Add induction GC x3 before CCRT for Stage III-IVA (higher nodal/tumor burden) — improves recurrence-free/overall survival"
+        sources: [SRC-NPC-GC-INDUCTION-ZHANG-2019]
+        evidence_note: "Phase 3 RCT; exact effect-size figures pending verification against primary source"
+      - position: "CCRT alone (no induction) remains acceptable, particularly for lower-burden Stage II disease"
+        sources: [SRC-NCCN-HNSCC-2025]
+    our_default: "Induction GC marked optional (phase-level optional:true on REG-NPC-GC-INDUCTION-CCRT) rather than mandatory for all patients; MDT decides based on stage/nodal burden — exact stage cutoff not asserted here pending Clinical Co-Lead confirmation"
+    rationale: "Narrative supplied for this authoring pass states induction shows an OS benefit 'in recent trials' without specifying a hard stage cutoff; we preserve that ambiguity rather than inventing a precise threshold"
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — draft entity pending Clinical Co-Lead sign-off (CHARTER §6.1;
+  dev-mode-exempted). Coverage-enabling locally-advanced indication for
+  DIS-NPC. RT dose/fractionation intentionally not modeled as a formal
+  RadiationCourse entity in this authoring pass (see REG-NPC-GC-
+  INDUCTION-CCRT notes). Post-treatment EBV-DNA surveillance
+  (RF-NPC-EBV-DNA-POST-TREATMENT-SURVEILLANCE) documented but not
+  algorithmically wired — Phase 4 backlog.

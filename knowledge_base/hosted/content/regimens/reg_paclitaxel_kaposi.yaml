@@ -1,0 +1,93 @@
+id: REG-PACLITAXEL-KAPOSI
+name: "Paclitaxel monotherapy (Kaposi sarcoma, post-anthracycline)"
+name_ua: "Паклітаксел моно (саркома Капоші, після антрацикліну)"
+alternate_names:
+  - "Paclitaxel Kaposi sarcoma 2L"
+
+components:
+  - drug_id: DRUG-PACLITAXEL
+    dose: "NOT YET SPECIFIED -- dose/schedule for this indication has not been verified against a primary source in this KB; do not administer using this stub. See regimen `notes`."
+    schedule: "NOT YET SPECIFIED -- pending clinical co-lead verification"
+    route: IV
+    duration: "Until progression or unacceptable toxicity (typical for taxane monotherapy in this setting)"
+
+cycle_length_days:
+total_cycles: "Until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication:
+  - "Dexamethasone 20 mg PO at 12h and 6h before infusion (OR 20 mg IV at 30 min before) -- per DRUG-PACLITAXEL mandatory premedication"
+  - "Diphenhydramine 50 mg IV at 30 min before infusion"
+  - "H2 blocker (ranitidine 50 mg IV or famotidine 20 mg IV) at 30 min before infusion"
+mandatory_supportive_care: []
+
+dose_adjustments:
+  - condition: "Grade 3-4 peripheral neuropathy"
+    modification: "Discontinue paclitaxel per standard taxane dose-modification practice"
+    rationale: "Standard paclitaxel neuropathy management (see DRUG-PACLITAXEL entity); cumulative dose-dependent"
+    source_refs: []
+  - condition: "Grade >=3 hypersensitivity reaction despite premedication"
+    modification: "Discontinue; do not rechallenge without allergy/oncology co-management"
+    rationale: "Cremophor-EL-mediated hypersensitivity (class effect)"
+    source_refs: []
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Паклітаксел зареєстрований та реімбурсується НСЗУ для низки показань (за даними DRUG-PACLITAXEL); реімбурсація конкретно для показання саркоми Капоші не підтверджена окремо."
+
+between_visit_watchpoints:
+  - trigger_ua: "Оніміння або поколювання пальців рук/ніг"
+    action_ua: "Занотуйте і обговоріть на візиті -- периферична нейропатія, дозозалежна"
+    urgency: log_at_next_visit
+    sources: []
+  - trigger_ua: "Утруднене дихання, набряк обличчя, висип під час/одразу після інфузії"
+    action_ua: "Негайно повідомте медперсонал під час інфузії -- реакція гіперчутливості"
+    urgency: er_now
+    sources: []
+
+sources: []
+
+last_reviewed: "2026-07-11"
+notes: >
+  New Regimen entity reusing the existing DRUG-PACLITAXEL Drug entity.
+  DRUG-PACLITAXEL already documents "Kaposi sarcoma (AIDS-related, 2L)"
+  as an FDA-approved indication (regulatory_status.fda.indications_brief
+  -- pre-existing fact, transcribed not invented, verified by direct
+  read of drugs/paclitaxel.yaml during independent review) but its
+  typical_dosing field does not carry a Kaposi-specific mg/m²/schedule
+  figure, and no KB-verifiable primary source for that figure was
+  available at authoring time. Per CHARTER §8.3 ("must NEVER invent a
+  dose ..."), the `dose`/`schedule` component fields are deliberately
+  left as an explicit flagged gap rather than a fabricated number --
+  this is an intentional, disclosed omission, not an authoring
+  oversight. The mandatory Cremophor-EL hypersensitivity premedication
+  IS transcribed from the existing DRUG-PACLITAXEL entity because that
+  fact is dose-independent and already verified in the KB.
+
+  INDEPENDENT REVIEW CORRECTION (2026-07-11): an earlier draft cited
+  SRC-NCCN-SKIN-2025 for the dose-adjustment items and the file's
+  top-level sources. That source documents only basal-cell/squamous-
+  cell skin cancer (confirmed by direct inspection of its own KB
+  record) and does not mention Kaposi sarcoma, so citing it here would
+  misrepresent evidentiary support; it was removed (`sources: []`,
+  empty `source_refs`). This regimen has NO verified source for either
+  its (deliberately omitted) dose or its toxicity-management content
+  beyond the reused DRUG-PACLITAXEL entity itself -- a real,
+  fully-disclosed evidentiary gap. STUB pending two-Clinical-Co-Lead
+  signoff (CHARTER §6.1 -- dev-mode-exempted; safe to merge as draft
+  content, NOT as published/verified clinical advice; this regimen
+  additionally requires a dosing fill-in before it could ever be used
+  clinically).
+notes_ua: >
+  Новий Regimen, що повторно використовує вже наявний Drug
+  DRUG-PACLITAXEL. Конкретна доза мг/м² та режим для показання
+  саркоми Капоші НЕ вказані навмисно -- на момент авторства не було
+  доступного верифікованого джерела в базі. Це свідомо розкрита
+  прогалина, а не недогляд. Премедикація проти гіперчутливості
+  перенесена з наявного запису Drug, оскільки цей факт не залежить
+  від дози. Незалежна перевірка видалила посилання на
+  SRC-NCCN-SKIN-2025 (не стосується саркоми Капоші) як недостовірне.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_kaposi_treatment
+draft_revision: 1
