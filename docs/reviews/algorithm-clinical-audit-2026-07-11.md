@@ -2,6 +2,38 @@
 
 _Automated multi-agent audit (Claude Fable 5). Every finding below was raised by one clinical-review agent and independently CONFIRMED by a separate adversarial verifier, PubMed-grounded where a specific trial/guideline claim was at stake. **These are LLM-generated findings and require oncologist sign-off before any KB change** (CHARTER §8.3). No files were modified by the audit._
 
+## Remediation status (updated 2026-07-11 after two fix passes)
+
+Only **mechanical fixes that restore already-authored intent** were applied (CHARTER §8.3 — no new clinical
+content, no routing preference invented). Everything requiring new clinical authoring or a clinical decision
+is **deferred to clinician triage** and remains listed below. A 44-finding classify→independently-verify→apply
+pipeline proposed edits; independent verification (generate_plan + validator + per-diff review) then rejected
+3 of 4 auto-applied edits as flawed — that filtering is itself part of the result.
+
+**FIXED (mechanical wiring / clear bug, all verified via generate_plan + validator + full pytest before/after):**
+- `aml_2l` — KMT2A-rearranged → **revumenib** now reachable (author-declared-deferred wiring). [commit e07f108c6a]
+- `hnscc_rm_1l` — CPS≥20 → **pembrolizumab monotherapy** stratum wired (was unreachable prose). [e07f108c6a]
+- `rcc_metastatic_2l` — authored **cabozantinib** surfaced as the alternative 2L track. [e07f108c6a]
+- `aml_1l` (**safety**) — TLS/hyperleukocytosis emergency no longer pinned to venetoclax; now routes to the
+  authored supportive-care stabilization indication (IND-EMERG-TLS-PROPHYLAXIS-RASBURICASE). Also corrected
+  that indication's mislabeled `plan_track: standard` → `supportive_care`.
+- `pv_1l` — authored **ropeginterferon** (NCCN Cat-1 1L) surfaced as a track.
+
+**DEFERRED after attempted fix (edit reverted — looked mechanical but was not, still a CONFIRMED defect):**
+- `hcl_2l` (**safety**) — BRAF-V600E-negative (HCL-variant) still routes to **vemurafenib**. The whole tree
+  uses an unsupported `biomarker:` clause shape the engine cannot evaluate, so every patient hits the
+  vemurafenib default regardless. Needs the `biomarker:` gates converted to structured `finding:` clauses
+  (with care re: absence≠false) — not blind wiring.
+- `urothelial_metastatic_2l` — FGFR-altered post-EV+pembro still routed to platinum, not **erdafitinib**.
+  The erdafitinib gate is all-prose (unevaluable); needs a proper FGFR2/3 biomarker gate authored (no
+  urothelial-specific FGFR RedFlag exists yet).
+
+**DEFERRED (needs clinical authoring or a clinical decision — NOT auto-fixable):** the remaining ~38 confirmed
+findings below, including all `missing_option` gaps that require authoring a new Indication/Regimen (cervical
+KEYNOTE-A18, esophageal FLOT, MCL chemoimmuno, PCNSL ibrutinib, melanoma nivo+relatlimab, NSCLC squamous
+KEYNOTE-407, gastric KEYNOTE-811, etc.) and clinical-precedence decisions (apl_1l DIC-vs-Sanz ordering,
+mm_2l anti-CD38 gating, dlbcl_2l CAR-T gate).
+
 ## Method + scale
 
 - Scope: **161 base treatment algorithms** (hereditary-risk calculators excluded), reviewed in 23 domain-coherent batches.
