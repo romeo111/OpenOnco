@@ -15,6 +15,7 @@ purpose: >
 output_indications:
 - IND-AML-2L-GILTERITINIB-FLT3
 - IND-AML-2L-IDH2-ENASIDENIB
+- IND-AML-2L-KMT2A-REVUMENIB
 - IND-AML-1L-VEN-AZA
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-2L-GILTERITINIB-FLT3
@@ -98,8 +99,30 @@ decision_tree:
   if_true:
     result: IND-AML-1L-VEN-AZA
   if_false:
-    next_step: 7
+    next_step: 6b
   notes: "MDT-only — IDH1 R/R: switch to ivosidenib (AG-120) monotherapy per FDA-approved R/R-AML labelling. Pinned to ven+aza Indication as backbone (no dedicated IDH1 IND in KB). IDH2 captured at step 5."
+
+  # Step 6b — KMT2A-rearranged at relapse → revumenib (menin inhibitor).
+  # Wiring fix (2026-07-11): IND-AML-2L-KMT2A-REVUMENIB (REG-REVUMENIB-AML,
+  # AUGMENT-101, FDA-approved Nov 2024 for R/R KMT2A-r AML) and its gate
+  # RF-AML-KMT2A-ACTIONABLE are both fully authored in the KB, but this
+  # algorithm had no branch to them and the indication was absent from
+  # output_indications — so a KMT2A-rearranged relapse could never reach
+  # revumenib. Added as the LAST biomarker gate (after FLT3 step 4 / IDH2
+  # step 5 / IDH1 step 6, before the frailty fall-through) so it cannot
+  # override any pre-existing biomarker routing; it fires only for a patient
+  # negative for those drivers, which is the typical pure-KMT2A-r case.
+  # Mirrors the FLT3/IDH2 dedicated-indication gate pattern already in this
+  # file; restores authored intent, introduces no new clinical criterion.
+- step: 6b
+  evaluate:
+    any_of:
+    - red_flag: RF-AML-KMT2A-ACTIONABLE
+  if_true:
+    result: IND-AML-2L-KMT2A-REVUMENIB
+  if_false:
+    next_step: 7
+  notes: "KMT2A-rearranged R/R AML → revumenib monotherapy (AUGMENT-101; ORR ~63%, CR/CRh ~23%). Bridge to alloHCT for fit responders — revumenib alone is not curative. Confirm KMT2A rearrangement at relapse (karyotype + FISH break-apart)."
 
   # Step 7 — frailty / organ dysfunction at relapse → ven+aza (lower
   # toxicity than re-induction; also covers FLT3-WT R/R unfit).
