@@ -1,5 +1,13 @@
 # OpenOnco
 
+[![Code license: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](LICENSE)
+[![Content: CC BY 4.0](https://img.shields.io/badge/content-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Latest release](https://img.shields.io/github/v/release/romeo111/OpenOnco)](https://github.com/romeo111/OpenOnco/releases)
+[![Website](https://img.shields.io/badge/site-openonco.info-14532d.svg)](https://openonco.info)
+[![MCP server](https://img.shields.io/badge/MCP-server-7c3aed.svg)](mcp_server/README.md)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/romeo111/OpenOnco/compare)
+[![Stars](https://img.shields.io/github/stars/romeo111/OpenOnco?style=social)](https://github.com/romeo111/OpenOnco/stargazers)
+
 > **Open-source clinical decision support for oncology tumor boards.**
 > Upload a patient profile → get two alternative treatment plans
 > (standard + aggressive), side by side, with every recommendation cited.
@@ -8,7 +16,7 @@
 > picks regimens** ([CHARTER §8.3](specs/CHARTER.md)).
 
 **Live demo:** **[openonco.info](https://openonco.info)** — try it in the browser, no install needed.
-**Knowledge base:** 420 indications · 377 sources · 140 algorithms across hematologic + GI + pulmonary oncology (growing).
+**Knowledge base:** 92 diseases · 664 indications · 444 cited sources across hematologic + solid-tumor oncology (growing). Most content is draft/STUB pending two-reviewer clinical sign-off.
 **FDA non-device CDS positioning** per [CHARTER §15](specs/CHARTER.md) — informational support tool, not a medical device.
 **License:** Code MIT · Content / specs CC BY 4.0.
 
