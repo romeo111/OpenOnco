@@ -11,9 +11,10 @@ engine over a versioned knowledge base, then relays its output with citations
 and a disclaimer.
 
 No LLM picks the regimen. The recommendation comes from a declarative rule
-engine over peer-reviewed clinical content; the clinical decision stays with the
-engine and the treating oncologist ([CHARTER §8.3](../specs/CHARTER.md)). That
-is the whole point — **safer results, by construction.**
+engine over human-reviewed, source-cited clinical content (most entities are
+still STUB — not yet dual-reviewer signed off); the clinical decision stays with
+the engine and the treating oncologist ([CHARTER §8.3](../specs/CHARTER.md)).
+That is the whole point — **safer results, by construction.**
 
 > Informational decision support, **not** a medical device. Every output must be
 > verified by a qualified oncologist. See [CHARTER §11 + §15](../specs/CHARTER.md).
