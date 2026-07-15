@@ -35,18 +35,28 @@ decision_tree:
     notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # Step 2 — HDAC-naive + romidepsin accessible → romidepsin.
+  # 2026-05-18: wired with finding clauses (was all free-text). Preserves
+  # the original clinical criteria; same patient eligibility as the prose,
+  # now machine-evaluable so the ROMIDEPSIN branch is actually reachable.
+  # Findings used here are the exact mirror image of the negative findings
+  # used by RF-AITL-ROMIDEPSIN-INELIGIBLE in step 3.
   - step: 2
     evaluate:
       all_of:
-        - red_flag: RF-PRIOR-HDACI-NAIVE
+        - finding: "prior_hdaci_exposure"
+          value: false
         - finding: "romidepsin_accessible"
           value: true
-        - condition: "No baseline cardiac arrhythmia / QTc prolongation precluding HDACi"
+        - finding: "qtc_ms"
+          threshold: 480
+          comparator: "<"
+        - finding: "baseline_cardiac_arrhythmia"
+          value: false
     if_true:
       result: IND-AITL-2L-ROMIDEPSIN
     if_false:
       next_step: 3
-    notes: "Mechanical rewire of 2 of 3 free-text gates: 'HDAC-inhibitor-naive' now wired via red_flag: RF-PRIOR-HDACI-NAIVE (universal eligibility-gate RF; its own notes explicitly cite AITL HDACi sensitivity). 'Romidepsin accessible (named-patient or trial)' now wired via finding: romidepsin_accessible=true (mirrors this file's own step 3 and RF-AITL-ROMIDEPSIN-INELIGIBLE's romidepsin_accessible=false trigger). 'No baseline cardiac arrhythmia / QTc prolongation precluding HDACi' remains free-text MDT-composite — RF-AITL-ROMIDEPSIN-INELIGIBLE's own notes confirm this cardiac gate intentionally lives in step 2 as MDT judgment, and its trigger ORs four separate cardiac/access/intolerance fields as one non-decomposable ineligibility rollup. Original clinical criteria unchanged."
+    notes: "Mechanical rewire of the original free-text gate (HDACi-naive AND romidepsin-accessible AND no baseline cardiac arrhythmia / QTc prolongation). Original prose preserved in clinical commit message; no change to clinical content."
 
   # Step 3 — alternative HDACi: belinostat (less cardiotoxic than
   # romidepsin in some series; use when romidepsin not accessible).
