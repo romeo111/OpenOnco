@@ -289,12 +289,16 @@ def _find_prevention_indications(
     """
     relevant_disease_ids: set[str] = set()
     fired_rf_ids: set[str] = set()
+    has_wildcard_rf = False  # any fired RF that targets all diseases via "*"
     for rf in fired_rfs:
         rid = rf.get("id")
         if rid:
             fired_rf_ids.add(rid)
         for did in rf.get("relevant_diseases") or []:
-            if did and did != "*":
+            if did == "*":
+                has_wildcard_rf = True
+                continue
+            if did:
                 relevant_disease_ids.add(did)
 
     seen: set[str] = set()
@@ -307,7 +311,12 @@ def _find_prevention_indications(
             continue
         applicable = ind.get("applicable_to") or {}
         ind_disease = applicable.get("disease_id")
-        if ind_disease not in relevant_disease_ids:
+        # If a fired RF declared relevant_diseases: ["*"] (umbrella / universal
+        # RFs that apply across all cancer types), any prevention indication
+        # the RF triggers via `triggered_by_redflags` is acceptable regardless
+        # of its disease_id. Otherwise the indication's disease_id must
+        # appear in the union of relevant_diseases from the fired RFs.
+        if not has_wildcard_rf and ind_disease not in relevant_disease_ids:
             continue
         # §20 cross-etiology contamination guard: if the Indication declares
         # `triggered_by_redflags` (one or more RF IDs), require at least one

@@ -1,0 +1,142 @@
+id: RF-TSC-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in TSC1
+  (hamartin) or TSC2 (tuberin) — Tuberous Sclerosis Complex (TSC).
+  Patient has had germline panel testing returned positive, OR meets
+  clinical diagnostic criteria per International TSC Consensus 2012
+  / 2021 (≥2 major features OR 1 major + ≥2 minor features). Autosomal-
+  dominant multi-organ hamartoma syndrome — mTOR pathway hyperactivation
+  drives benign tumors in essentially every organ system: cortical /
+  subependymal tubers + subependymal giant cell astrocytoma (SEGA) +
+  cardiac rhabdomyoma (infants) + facial angiofibromas + shagreen
+  patch + ungual fibromas + dental enamel pits + retinal hamartomas +
+  renal angiomyolipoma (AML, ~80% lifetime) + lymphangioleiomyomatosis
+  (LAM, adult women) + neurocognitive / epileptic phenotype (TSC-
+  Associated Neuropsychiatric Disorders, TAND). Malignant transformation
+  is rare but cancer is real: renal cell carcinoma (~2-4% lifetime,
+  often within / adjacent to AML, often early-onset and clear-cell
+  variant), SEGA (slow-growing but anatomic compromise of foramen of
+  Monro → obstructive hydrocephalus). mTOR inhibitor (everolimus,
+  sirolimus) is TSC-specific therapy for SEGA + renal AML — a unique
+  feature distinguishing TSC from other hereditary tumor predispositions.
+  Prevention-persona RedFlag (§20, Wave O confirmed-carrier
+  surveillance pathway).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант у
+  TSC1 (hamartin) або TSC2 (tuberin) — комплекс туберозного склерозу
+  (TSC). Пацієнт пройшов germline panel тестування з позитивним
+  результатом, АБО відповідає клінічним діагностичним критеріям per
+  International TSC Consensus 2012 / 2021 (≥2 major features АБО
+  1 major + ≥2 minor features). Autosomal-dominant multi-organ
+  hamartoma синдром — mTOR pathway hyperactivation: cortical /
+  subependymal tubers + SEGA + кардіальна rhabdomyoma (немовлята) +
+  facial angiofibromas + shagreen patch + ungual fibromas + dental
+  enamel pits + retinal hamartomas + ниркова ангіоміоліпома (AML,
+  ~80% lifetime) + лімфангіолейоміоматоз (LAM, дорослі жінки) +
+  neurocognitive / epileptic phenotype (TAND). Малігнізація рідкісна,
+  але рак реальний: нирково-клітинний рак (~2-4% lifetime, часто в /
+  суміжно з AML, часто early-onset clear-cell variant), SEGA
+  (slow-growing але anatomic compromise foramen Monro → obstructive
+  hydrocephalus). mTOR inhibitor (everolimus, sirolimus) — TSC-
+  specific therapy для SEGA + renal AML — унікальна особливість,
+  що відрізняє TSC від інших спадкових tumor predispositions.
+  Prevention-persona RedFlag (§20, Wave O шлях спостереження
+  підтверджених носіїв).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_tsc1_pathogenic_variant_confirmed"
+      value: true
+    - finding: "germline_tsc2_pathogenic_variant_confirmed"
+      value: true
+    - finding: "tuberous_sclerosis_clinical_diagnostic_criteria_met"
+      value: true
+
+clinical_direction: investigate
+
+# CRITICAL — childhood-onset multi-organ surveillance + risk of SEGA
+# obstructive hydrocephalus + LAM in adult women (pulmonary
+# pneumothorax risk) + early-onset RCC.
+severity: critical
+priority: 70
+category: other
+risk_category: genetic
+
+# TSC-spectrum primary cancer anchors: DIS-RCC (renal cell carcinoma
+# arising from AML or de novo), DIS-LAM (lymphangioleiomyomatosis in
+# adult women). Renal AML and SEGA are surveillance-managed without
+# dedicated DIS-* malignancy entities. CNS surveillance overlaps
+# DIS-GBM only loosely (SEGA is grade I, not glioblastoma).
+relevant_diseases:
+  - DIS-RCC
+  - DIS-LAM
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-KIDNEY-2025
+  - SRC-NCCN-CNS-2025
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Wave O confirmed-carrier surveillance pathway — Tuberous Sclerosis
+  Complex (TSC / TSC1 / TSC2). Fires on documented germline TSC1 / TSC2
+  pathogenic variant positivity OR clinical-diagnostic criteria met per
+  International TSC Consensus 2012 / 2021. Engine routes to PreventionPlan
+  recommending:
+    (a) IND-TSC-CARRIER-SURVEILLANCE (standard) — International TSC
+        Consensus 2021 protocol: brain MRI q1-3y from infancy to age 25,
+        then symptom-driven (SEGA detection); renal MRI / contrast US
+        q1-3y from infancy (renal AML + RCC); cardiac echo in infancy
+        (rhabdomyoma — usually involutes; surveillance into adulthood
+        only if persistent); pulmonary function testing + chest HRCT
+        baseline at age 18 in females (LAM screening); dermatologic
+        exam q1y; ophthalmologic exam q1-3y (retinal hamartomas);
+        neuropsychiatric screening q1y (TAND); dental exam q6mo.
+    (b) IND-TSC-CARRIER-INTENSIFIED (aggressive) — standard PLUS
+        proactive mTOR inhibitor (everolimus or sirolimus) initiation
+        for renal AML > 3 cm or growing, AND for SEGA showing growth
+        on serial MRI (replaces / delays surgical resection in many
+        cases); intensified LAM management in adult women.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Source-set TODO: International TSC Consensus Conference
+  recommendations (Northrup et al. Pediatr Neurol 2021; Krueger /
+  Northrup updates) — Wave O authoring backlog new SRC entities.
+
+  Lifetime tumor risk in confirmed TSC1 / TSC2 carriers (Krueger et
+  al. Pediatr Neurol 2013 / 2021):
+    - Renal angiomyolipoma (AML): ~80% lifetime; multifocal, bilateral
+      typical; size > 4 cm increases bleed risk; > 3 cm responsive to
+      mTOR inhibitor.
+    - Subependymal giant cell astrocytoma (SEGA): ~10-15% lifetime;
+      arises in childhood / adolescence near foramen of Monro;
+      obstructive hydrocephalus is the dreaded complication.
+    - Renal cell carcinoma: ~2-4% lifetime; can arise from AML or
+      de novo; often clear-cell, may present at younger age than
+      sporadic RCC.
+    - Cardiac rhabdomyoma: ~50-70% in infants; typically involutes
+      spontaneously by age 5-10 (rare surveillance need after that);
+      pre-natal detection on fetal echo can lead to TSC diagnosis.
+    - Lymphangioleiomyomatosis (LAM): ~30-40% of TSC adult women;
+      progressive cystic lung disease with pneumothorax risk; sirolimus
+      slows progression; lung transplant for end-stage.
+    - Facial angiofibromas + skin findings: highly prevalent (>90%);
+      topical sirolimus / surgical / laser treatment for symptomatic.
+    - TAND (TSC-Associated Neuropsychiatric Disorders): ~90% have
+      some manifestation (autism spectrum, ADHD, intellectual
+      disability, anxiety, depression); under-recognized.
+    - Epilepsy: ~80-90% lifetime; often infantile-onset; vigabatrin
+      for infantile spasms; refractory epilepsy common driver of
+      surgical resection of cortical tubers.
+
+  Therapy implications: mTOR inhibitor (everolimus, sirolimus) is
+  FDA-approved for SEGA (everolimus) and TSC-associated renal AML
+  (everolimus) plus TSC-associated LAM (sirolimus). Cabozantinib /
+  axitinib / RCC standard agents apply if RCC develops.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_o_rare_hereditary
+draft_revision: 1

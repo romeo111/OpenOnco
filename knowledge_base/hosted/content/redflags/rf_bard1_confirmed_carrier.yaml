@@ -1,0 +1,61 @@
+id: RF-BARD1-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in BARD1
+  (BRCA1-associated RING domain 1) — partner of BRCA1 in the BRCA1-
+  BARD1 heterodimer essential for homologous-recombination repair.
+  Heterozygous BARD1 carriers have moderate-penetrance breast cancer
+  risk (RR ~2.0-3.0; lifetime ~20-30%; some evidence higher in triple-
+  negative breast cancer subset). Modest ovarian cancer risk signal
+  (RR ~1.5-2.0). Less common multi-gene panel finding (~0.2-0.3% of
+  unselected breast cancer cohorts). Patient has confirmed positive
+  germline test; no current personal cancer diagnosis in the carrier
+  being assessed. Prevention-persona RedFlag (§20, v0.3 moderate-
+  penetrance breast/ovarian gene expansion).
+definition_ua: >-
+  Підтверджений germline pathogenic / likely-pathogenic variant у BARD1
+  (BRCA1-associated RING domain 1) — partner BRCA1 у BRCA1-BARD1
+  heterodimer essential для homologous-recombination repair.
+  Heterozygous BARD1 carriers мають moderate-penetrance breast cancer
+  ризик (RR ~2.0-3.0; lifetime ~20-30%; вищий у triple-negative breast
+  cancer subset). Modest ovarian cancer ризик signal (RR ~1.5-2.0).
+  Less common multi-gene panel finding (~0.2-0.3% unselected breast
+  cancer cohorts). Prevention-персона RedFlag (§20, v0.3 moderate-
+  penetrance breast/ovarian gene expansion).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_bard1_pathogenic_variant_confirmed"
+      value: true
+    - finding: "germline_bard1_likely_pathogenic_variant"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 105
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-BREAST
+  - DIS-OVARIAN
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for BARD1 heterozygous carriers. Engine
+  routes to enhanced breast surveillance + ovarian symptom-driven
+  workup. NCCN places BARD1 in moderate-elevated breast tier (annual
+  mammography from age 40; consider MRI). Triple-negative subset
+  signal may justify earlier or MRI-inclusive screening in family-
+  history-stratified cohorts. STUB pending two-Co-Lead signoff per
+  CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_moderate_penetrance_panel
+draft_revision: 1
