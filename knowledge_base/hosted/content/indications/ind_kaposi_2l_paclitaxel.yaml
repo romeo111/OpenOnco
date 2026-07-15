@@ -1,0 +1,107 @@
+id: IND-KAPOSI-2L-VISCERAL-PACLITAXEL
+plan_track: standard
+intent: treatment
+
+applicable_to:
+  disease_id: DIS-KAPOSI
+  line_of_therapy: 2
+  stage_requirements:
+    - "Visceral/extensive Kaposi sarcoma with progression on, or intolerance to, first-line pegylated liposomal doxorubicin (IND-KAPOSI-1L-VISCERAL-PLD); or PLD unavailable/contraindicated (e.g. cumulative anthracycline dose limit reached, cardiac dysfunction)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PACLITAXEL-KAPOSI
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Paclitaxel is FDA-approved for AIDS-related Kaposi sarcoma as
+    second-line therapy (see DRUG-PACLITAXEL.regulatory_status). Used
+    after progression on, or intolerance to, first-line anthracycline
+    (PLD) therapy.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests: []
+
+rationale: >
+  Paclitaxel is FDA-approved for AIDS-related Kaposi sarcoma as a
+  second-line agent after progression on, or intolerance to, first-line
+  pegylated liposomal doxorubicin (see DRUG-PACLITAXEL entity,
+  regulatory_status.fda.indications_brief: "Kaposi sarcoma (AIDS-
+  related, 2L)" -- pre-existing fact already documented in the KB,
+  verified by direct read during independent review). The specific
+  mg/m² dose and schedule for this indication are NOT yet transcribed
+  into REG-PACLITAXEL-KAPOSI because no KB-verifiable primary source
+  documenting the Kaposi-specific dose was available at authoring time
+  (CHARTER §8.3 -- do not invent a numeric dose); this is an explicit,
+  flagged gap pending clinical co-lead input, not an oversight.
+  Standard paclitaxel hypersensitivity premedication (dexamethasone +
+  diphenhydramine + H2 blocker) applies regardless of the eventual
+  KS-specific dose, and is already transcribed into
+  REG-PACLITAXEL-KAPOSI from the existing DRUG-PACLITAXEL entity.
+
+rationale_ua: >
+  Паклітаксел схвалений FDA для ВІЛ-асоційованої саркоми Капоші як
+  препарат другої лінії після прогресування на PLD або її
+  непереносимості (вже задокументований факт у записі DRUG-
+  PACLITAXEL). Конкретна доза мг/м² та режим ЩЕ НЕ перенесені в
+  REG-PACLITAXEL-KAPOSI, оскільки на момент авторства не було
+  доступного джерела в базі, що верифікує специфічну для Kaposi дозу
+  (CHARTER §8.3). Це явно позначена прогалина, а не недогляд.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_kaposi_treatment
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-SKIN-2025
+    position: context
+
+known_controversies: []
+
+do_not_do:
+  - "Не застосовувати паклітаксел без стандартної премедикації проти гіперчутливості."
+  - "Не використовувати цю Indication без підтвердження прогресування/непереносимості PLD або документованого протипоказання до PLD."
+
+do_not_do_en:
+  - "Do not administer paclitaxel without standard hypersensitivity premedication."
+  - "Do not use this Indication without documented progression/intolerance on PLD or a documented contraindication to PLD."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB -- new TREATMENT-intent 2L Indication for DIS-KAPOSI (v0.3
+  continuation). Introduces new Regimen REG-PACLITAXEL-KAPOSI (reuses
+  the existing DRUG-PACLITAXEL entity). evidence_level set to `low`
+  and strength_of_recommendation to `conditional` specifically because
+  of the unresolved KS-specific dosing gap (see `rationale` and the
+  Regimen's own `notes`) -- NOT because the FDA-approved-2L-status fact
+  itself is uncertain. Not referenced from ALGO-KAPOSI-1L's
+  output_indications (that Algorithm is explicitly scoped to 1L
+  routing); reachable via IND-KAPOSI-1L-VISCERAL-PLD.followed_by. A
+  dedicated 2L algorithm is out of scope for this authoring pass.
+
+  INDEPENDENT REVIEW CORRECTION (2026-07-11): an earlier draft cited
+  SRC-NCCN-SKIN-2025 with position "supports". That source documents
+  only basal-cell/squamous-cell skin cancer (confirmed by direct
+  inspection of its own KB record), not Kaposi sarcoma -- downgraded
+  to "context". The FDA-2L-approval fact is independently supported by
+  the already-verified DRUG-PACLITAXEL entity, not by this citation.
+  Pending two-Clinical-Co-Lead signoff (CHARTER §6.1 -- dev-mode-
+  exempted; safe to merge as draft content, NOT as published/verified
+  clinical advice).

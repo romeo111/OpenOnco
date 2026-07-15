@@ -1,0 +1,117 @@
+id: REG-EDP-M-ACC
+name: "EDP-M (etoposide + doxorubicin + cisplatin + mitotane) — FIRM-ACT regimen"
+name_ua: "EDP-M (етопозид + доксорубіцин + цисплатин + мітотан) — режим FIRM-ACT"
+alternate_names: ["EDP+M", "Etoposide-doxorubicin-cisplatin plus mitotane"]
+disease_context: DIS-ADRENOCORTICAL-CARCINOMA
+line_of_therapy: 1
+plan_track: standard
+
+components:
+- drug_id: DRUG-ETOPOSIDE
+  dose: "100 mg/m²/day IV"
+  route: IV
+  schedule: "Days 2, 3, 4 of each 28-day cycle"
+- drug_id: DRUG-DOXORUBICIN
+  dose: "40 mg/m² IV"
+  route: IV
+  schedule: "Day 1 of each 28-day cycle"
+  dose_modifications:
+  - trigger: "Cumulative doxorubicin dose approaching commonly-cited lifetime cardiotoxicity thresholds (~450-500 mg/m²)"
+    action: "Cardio-oncology input; consider discontinuing the doxorubicin component and continuing etoposide+cisplatin+mitotane, per cardiotoxicity risk"
+- drug_id: DRUG-CISPLATIN
+  dose: "40 mg/m²/day IV"
+  route: IV
+  schedule: "Days 3 and 4 of each 28-day cycle"
+  hydration: "Aggressive IV pre- and post-cisplatin hydration per institutional protocol"
+  dose_modifications:
+  - trigger: "CrCl <50-60 mL/min or significant peripheral neuropathy"
+    action: "Dose-reduce or substitute carboplatin per institutional practice; consult"
+- drug_id: DRUG-MITOTANE
+  dose: "Continuous oral dosing, titrated toward a target blood level of 14-20 mg/L (see REG-MITOTANE-ADJUVANT-ACC for titration principles)"
+  route: PO
+  schedule: "Continuous throughout chemotherapy and beyond, independent of the 28-day EDP cycle boundary"
+
+premedication:
+- "Antiemetic prophylaxis for a highly emetogenic regimen (cisplatin- and doxorubicin-containing): 5-HT3 antagonist + NK1 antagonist + dexamethasone"
+- "Aggressive IV hydration before and after cisplatin"
+
+mandatory_supportive_care:
+- SUP-ANTIEMETIC-PREMED
+
+monitoring_schedule_id:
+dose_adjustments: []
+
+cycle_length_days: 28
+total_cycles: "Until progression, unacceptable toxicity, or maximal response per treating team — FIRM-ACT protocol design; a fixed maximum cycle count is not specified in this KB pass, verify against the primary source/institutional protocol"
+
+toxicity_profile: severe
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Etoposide, doxorubicin, and cisplatin are individually registered in
+    Ukraine for other indications per their respective Drug entities; the
+    mitotane component is the limiting factor for combined-regimen
+    availability (see DRUG-MITOTANE / REG-MITOTANE-ADJUVANT-ACC). Combined
+    regimen availability not separately verified in this pass.
+
+monitoring:
+- "CBC with differential before each cycle and at nadir — myelosuppression"
+- "Renal function (BMP/creatinine clearance) before each cycle — cisplatin nephrotoxicity"
+- "LVEF/echocardiogram at baseline and periodically — cumulative doxorubicin cardiotoxicity"
+- "Mitotane blood level periodically (per REG-MITOTANE-ADJUVANT-ACC schedule) — target 14-20 mg/L"
+- "Morning cortisol / ACTH and clinical assessment for adrenal insufficiency — near-universal with mitotane"
+- "LFTs — hepatotoxicity"
+- "Cross-sectional imaging (CT) for response assessment per institutional schedule"
+
+key_toxicities:
+- "Myelosuppression (neutropenia, thrombocytopenia, anemia)"
+- "Cisplatin nephrotoxicity"
+- "Cisplatin peripheral neuropathy / ototoxicity"
+- "Doxorubicin cardiotoxicity (cumulative-dose-dependent)"
+- "Nausea/vomiting (highly emetogenic combination)"
+- "Alopecia"
+- "Mitotane-induced adrenal insufficiency (near-universal — requires glucocorticoid +/- mineralocorticoid replacement)"
+- "Mitotane CNS toxicity at supratherapeutic blood levels"
+- "Mitotane-associated hypercholesterolemia"
+
+sources:
+- SRC-FIRM-ACT-FASSNACHT-2012
+- SRC-ESMO-ACC-2020
+- SRC-ENSAT-ACC-2018
+
+last_reviewed: "2026-07-11"
+review_status: stub
+drafted_by: claude_extraction
+reviewer_signoffs: []
+
+notes: >
+  STUB pending clinical co-lead sign-off (CHARTER §6.1). Regimen doses and
+  schedule (etoposide 100 mg/m² days 2-4, doxorubicin 40 mg/m² day 1,
+  cisplatin 40 mg/m²/day days 3-4, every 28 days, plus continuous mitotane
+  targeting 14-20 mg/L) reproduced from the FIRM-ACT trial (Fassnacht 2012
+  NEJM) as corroborated by secondary search sources this session; verify
+  against the primary NEJM publication before clinical use. FIRM-ACT
+  results: response rate 23.2% (EDP-M) vs 9.2% (streptozocin+mitotane),
+  p<0.001; median PFS 5.0 vs 2.1 months; median OS 14.8 vs 12.0 months
+  (p=0.07, not significant — confounded by permitted crossover at
+  progression). EDP-M is the preferred 1L combination based on the
+  response/PFS advantage. Per the disease-level "mitotane +/- EDP"
+  narrative, mitotane monotherapy alone (without full EDP) remains a
+  reasonable alternative for patients unfit for combination cytotoxic
+  chemotherapy or with more indolent/lower-burden disease — not
+  separately authored as a distinct Regimen/Indication in this KB pass
+  (see ALGO-ACC-1L step 3 null-branch notes).
+notes_ua: >
+  STUB, очікує підпису клінічного co-lead (CHARTER §6.1). Дози та схема
+  (етопозид 100 мг/м² дні 2-4, доксорубіцин 40 мг/м² день 1, цисплатин
+  40 мг/м²/день дні 3-4, кожні 28 днів, плюс безперервний мітотан з
+  цільовим рівнем 14-20 мг/л) відтворені за дослідженням FIRM-ACT
+  (Fassnacht 2012, NEJM). Результати FIRM-ACT: частота відповіді 23.2%
+  (EDP-M) проти 9.2% (стрептозоцин+мітотан), p<0.001; медіана ВБП 5.0
+  проти 2.1 місяців; медіана ЗВ 14.8 проти 12.0 місяців (p=0.07,
+  незначуще).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+draft_revision: 1

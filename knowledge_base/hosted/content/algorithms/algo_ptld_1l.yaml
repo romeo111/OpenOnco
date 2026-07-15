@@ -37,8 +37,13 @@ decision_tree:
     evaluate:
       all_of:
         - red_flag: RF-PTLD-INFECTION-SCREENING  # EBV viral load + EBER-ISH status
-        - condition: "EBV-positive on tumor EBER-ISH OR detectable plasma EBV-DNA"
-        - condition: "CD20-positive histology"
+        - any_of:
+            - finding: "ebv_status_tumor"
+              value: "positive"
+            - finding: "ebv_pcr_blood_positive"
+              value: true
+        - finding: "BIO-CD20-IHC"
+          value: "positive"
     if_true:
       result: IND-PTLD-1L-REDUCE-IS
     if_false:
@@ -50,13 +55,18 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "EBV-negative on tumor EBER-ISH AND undetectable plasma EBV-DNA"
-        - condition: "CD20-positive histology"
+        - all_of:
+            - finding: "ebv_status_tumor"
+              value: "negative"
+            - finding: "ebv_pcr_blood_positive"
+              value: false
+        - finding: "BIO-CD20-IHC"
+          value: "positive"
     if_true:
       result: IND-PTLD-1L-REDUCE-IS
     if_false:
       result: IND-PTLD-1L-RCHOP
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Mechanical rewire of the original free-text gates (EBV-negative on tumor EBER-ISH AND undetectable plasma EBV-DNA; CD20-positive histology) into finding: clauses using ebv_status_tumor/ebv_pcr_blood_positive/BIO-CD20-IHC. Original clinical criteria unchanged."
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-27"

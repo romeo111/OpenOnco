@@ -276,6 +276,112 @@ def _alternate_urls(path: str) -> tuple[str, str, str]:
     return _page_url(en_path), _page_url(uk_path), f"{SITE_BASE_URL}/"
 
 
+# FAQPage structured data (GEO: AI search and LLMs lift Q&A markup, and
+# authoritative declarative answers get cited more often). Injected on the
+# homepage only — duplicating identical FAQ markup across many pages reads as
+# manipulative to search engines. Answers are accurate, declarative, and carry
+# the not-a-medical-device framing so any LLM that surfaces them stays safe.
+_FAQ_EN = [
+    (
+        "What is OpenOnco?",
+        "OpenOnco is a free, open-source clinical decision support resource for "
+        "oncology tumor boards. A deterministic rule engine over a versioned, "
+        "source-cited knowledge base drafts two alternative treatment plans "
+        "(standard and aggressive) for the treating oncologist to verify. It is "
+        "informational support for healthcare professionals, not a medical device.",
+    ),
+    (
+        "How is OpenOnco different from asking ChatGPT for a cancer treatment?",
+        "No large language model picks the regimen or dose in OpenOnco. All "
+        "clinical logic is a deterministic rule engine over a peer-reviewed "
+        "knowledge base, and every recommendation carries a source citation, so it "
+        "cannot hallucinate a drug or a dose.",
+    ),
+    (
+        "Can I use OpenOnco from ChatGPT, Claude, or Cursor?",
+        "Yes. OpenOnco provides a Model Context Protocol (MCP) server, so an AI "
+        "assistant can call the deterministic engine and relay its cited output "
+        "instead of answering from memory. The assistant never picks the treatment.",
+    ),
+    (
+        "Is OpenOnco free and open source?",
+        "Yes. The code is MIT-licensed and the content and specifications are "
+        "CC BY 4.0. It is designed to be forked and reused for other "
+        "safety-critical decision-support domains.",
+    ),
+    (
+        "Is OpenOnco a medical device or a replacement for an oncologist?",
+        "No. It is an early-stage informational tool and most content is draft "
+        "pending clinical sign-off. It does not diagnose or treat cancer, and "
+        "every recommendation must be verified by a qualified oncologist.",
+    ),
+]
+_FAQ_UK = [
+    (
+        "Що таке OpenOnco?",
+        "OpenOnco - безкоштовний відкритий ресурс підтримки клінічних рішень в "
+        "онкології. Детермінований engine на основі версіонованої бази знань із "
+        "джерелами формує два альтернативні плани лікування (стандартний і "
+        "агресивний) для перевірки лікарем-онкологом. Це інформаційна підтримка "
+        "для медичних працівників, а не медичний виріб.",
+    ),
+    (
+        "Чим OpenOnco відрізняється від запиту лікування до ChatGPT?",
+        "Жодна велика мовна модель не обирає схему чи дозу в OpenOnco. Уся клінічна "
+        "логіка - це детермінований engine правил над рецензованою базою знань, і "
+        "кожна рекомендація має посилання на джерело, тож система не може "
+        "«вигадати» препарат чи дозу.",
+    ),
+    (
+        "Чи можу я використовувати OpenOnco з ChatGPT, Claude або Cursor?",
+        "Так. OpenOnco має MCP-сервер (Model Context Protocol), тож AI-асистент "
+        "може викликати детермінований engine і передавати його рекомендації з "
+        "джерелами замість відповіді з пам'яті. Асистент ніколи не обирає лікування.",
+    ),
+    (
+        "OpenOnco безкоштовний і з відкритим кодом?",
+        "Так. Код під ліцензією MIT, а контент і специфікації - CC BY 4.0. Проєкт "
+        "створено так, щоб його можна було форкнути й повторно використати.",
+    ),
+    (
+        "OpenOnco - це медичний виріб або заміна онколога?",
+        "Ні. Це інструмент ранньої стадії, більшість контенту - чернетки до "
+        "клінічного підпису. Він не діагностує і не лікує, а кожну рекомендацію "
+        "має перевірити кваліфікований онколог.",
+    ),
+]
+
+
+def _faq_for(path: str, locale: str) -> list[tuple[str, str]]:
+    """Return FAQ Q&A pairs for pages that should carry FAQPage markup.
+
+    Homepage only (EN root + UA root), to avoid duplicate-markup penalties.
+    """
+    normalized = path.replace("\\", "/").lstrip("/")
+    if normalized in {"", "index.html", "ukr/index.html"}:
+        return _FAQ_UK if locale == "uk" else _FAQ_EN
+    return []
+
+
+def _faq_jsonld(path: str, locale: str) -> str | None:
+    faq = _faq_for(path, locale)
+    if not faq:
+        return None
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": q,
+                "acceptedAnswer": {"@type": "Answer", "text": a},
+            }
+            for q, a in faq
+        ],
+    }
+    return json.dumps(schema, ensure_ascii=False, separators=(",", ":"))
+
+
 def render_seo_metadata(*, path: str, title: str, description: str, locale: str, noindex: bool = False) -> str:
     canonical = _page_url(path)
     en_url, uk_url, default_url = _alternate_urls(path)
@@ -354,6 +460,12 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
         f'<script type="application/ld+json">{json_ld}</script>',
         SEO_END,
     ]
+    faq_ld = _faq_jsonld(path, locale)
+    if faq_ld:
+        lines.insert(
+            lines.index(SEO_END),
+            f'<script type="application/ld+json">{faq_ld}</script>',
+        )
     if social_image:
         og_url_index = lines.index(f'<meta property="og:url" content="{canonical}">')
         lines.insert(og_url_index + 1, f'<meta property="og:image" content="{social_image}">')

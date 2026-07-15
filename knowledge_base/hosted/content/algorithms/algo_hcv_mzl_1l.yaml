@@ -47,13 +47,14 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "HCV RNA positive"
+        - finding: "BIO-HCV-RNA"
+          value: "positive"
         - condition: "Indolent presentation (non-bulky, asymptomatic or minimally symptomatic)"
     if_true:
       result: IND-HCV-MZL-1L-ANTIVIRAL
     if_false:
       result: IND-HCV-MZL-1L-BR-AGGRESSIVE
-    notes: "Disease-burden + viral-status combination; default routes by viral status (HCV-RNA+ indolent → antiviral DAA, otherwise BR)."
+    notes: "Mechanical rewire of the free-text gate 'HCV RNA positive' into finding: BIO-HCV-RNA (value: 'positive') — the field + enum value defined by this disease's own questionnaire (quest_hcv_mzl_1l.yaml: biomarkers.BIO-HCV-RNA, options positive/negative) and populated identically across every HCV-MZL example patient (patient_zero_indolent.json, patient_zero_bulky.json, patient_zero_reference_case.json). Corrected 2026-07 from an earlier revision that used finding: hcv_rna (value: 'detectable') — that key/value pair mirrors RF-CHRONIC-HCV-NHL-PREVENTION-OPPORTUNITY's screening-time trigger, a different (prevention-workstream) convention that does not match this disease's treatment-side biomarker field; the mismatch broke the antiviral-default reference-case tests, caught by full-suite verification before merge. The indolent-presentation clause (non-bulky, asymptomatic or minimally symptomatic) remains free-text prose — no single existing finding/RedFlag captures the full composite (would require combining RF-BULKY-DISEASE + RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION negations); wireable only via a dedicated disease-specific composite RF in a future round. Original clinical criteria unchanged. Disease-burden + viral-status combination; default routes by viral status (HCV-RNA+ indolent → antiviral DAA, otherwise BR)."
 
 sources:
   - SRC-ESMO-MZL-2024

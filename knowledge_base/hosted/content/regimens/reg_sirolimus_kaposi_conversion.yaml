@@ -1,0 +1,103 @@
+id: REG-SIROLIMUS-KAPOSI-CONVERSION
+name: "Sirolimus conversion (iatrogenic/transplant-associated Kaposi sarcoma)"
+name_ua: "Конверсія на сіролімус (ятрогенна/трансплант-асоційована саркома Капоші)"
+alternate_names:
+  - "mTOR-inhibitor conversion for post-transplant Kaposi sarcoma"
+
+components:
+  - drug_id: DRUG-SIROLIMUS
+    dose: "Per transplant-team protocol -- typically initiated at low dose (e.g. 1-2 mg PO once daily) and titrated to institutional/transplant-program target trough level while the calcineurin-inhibitor component of the immunosuppression regimen is tapered"
+    schedule: "Continuous; conversion performed under transplant-team supervision with graft-function monitoring"
+    route: PO
+    duration: "Long-term, so long as sirolimus is graft-safe and tolerated"
+
+cycle_length_days: 28
+total_cycles: "Long-term continuous"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care: []
+
+dose_adjustments:
+  - condition: "Allograft dysfunction or biopsy-proven rejection during/after conversion"
+    modification: "Revert toward calcineurin-inhibitor-based regimen per transplant-team direction; sirolimus conversion is NOT graft-safe in all patients"
+    rationale: "Sirolimus conversion trades anti-Kaposi/anti-angiogenic activity against a real risk of impaired graft protection relative to calcineurin-inhibitor-based regimens; transplant-team co-management is mandatory, never a unilateral oncology-only decision"
+    source_refs: []
+  - condition: "Grade >=2 stomatitis, significant dyslipidemia, or impaired wound healing"
+    modification: "Dose reduction or temporary interruption per transplant-team protocol; class mTOR-inhibitor toxicity"
+    rationale: "Documented mTOR-inhibitor class toxicities (see DRUG-SIROLIMUS common_adverse_events / black_box_warnings)"
+    source_refs: []
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Sirolimus (Rapamune) зареєстрований в Україні як імуносупресант для трансплантації органів -- реєстрація вже покриває цей use case. Конверсія при Kaposi sarcoma -- off-label показання в межах уже зареєстрованого застосування; фінансування через трансплантологічну програму."
+
+between_visit_watchpoints:
+  - trigger_ua: "Зменшення діурезу, набряки, підвищення артеріального тиску"
+    action_ua: "Зателефонуйте в клініку того ж дня -- ознаки можливої дисфункції трансплантата, потрібна термінова оцінка трансплантологом"
+    urgency: call_clinic_same_day
+    sources: []
+  - trigger_ua: "Виразки в роті, труднощі з ковтанням"
+    action_ua: "Поширений побічний ефект (стоматит) -- занотуйте; обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources: []
+  - trigger_ua: "Нова задишка або кашель"
+    action_ua: "Зателефонуйте в клініку -- потрібна оцінка (пневмоніт як побічний ефект mTOR-інгібіторів)"
+    urgency: call_clinic_same_day
+    sources: []
+
+sources: []
+
+last_reviewed: "2026-07-11"
+notes: >
+  New Regimen entity -- reuses the existing DRUG-SIROLIMUS Drug entity
+  (already in the KB for the LAM indication) but is authored separately
+  from REG-SIROLIMUS-LAM because the clinical context (transplant
+  immunosuppression-conversion vs. LAM antiproliferative monotherapy),
+  monitoring priorities (graft function vs. pulmonary function), and
+  evidence base differ. Dosing is deliberately described qualitatively
+  ("per transplant-team protocol") rather than with a single asserted
+  mg/target-trough number: no KB-verifiable primary source for a
+  Kaposi-conversion-specific sirolimus target trough was available at
+  authoring time (CHARTER §8.3 -- do not invent a numeric threshold not
+  already stated in a verified source). Conversion from calcineurin-
+  inhibitor-based to mTOR-inhibitor-based immunosuppression for
+  post-transplant Kaposi sarcoma is well described in the transplant
+  literature (documented tumor regression in a meaningful fraction of
+  patients) but must always be transplant-team-directed -- graft
+  rejection is a real risk.
+
+  INDEPENDENT REVIEW CORRECTION (2026-07-11): an earlier draft cited
+  SRC-NIH-AIDS-2024 as the source for this regimen's dose-adjustment
+  and between-visit-watchpoint items. That source is the NIH HHS
+  antiretroviral / opportunistic-infection guideline set (confirmed
+  from its own KB record) and does not address transplant
+  immunosuppression management, mTOR-inhibitor conversion, or
+  sirolimus dosing/toxicity -- citing it here would misrepresent
+  evidentiary support, so all such citations were removed
+  (`sources: []`, empty `source_refs` / watchpoint `sources`). The
+  underlying drug-class toxicity facts (stomatitis, pneumonitis,
+  dyslipidemia, impaired wound healing) are drawn from the
+  already-verified DRUG-SIROLIMUS entity itself, not fabricated. This
+  is a real, disclosed evidentiary gap -- no Kaposi-specific
+  transplant-conversion source is cited anywhere in this file. STUB
+  pending two-Clinical-Co-Lead signoff (CHARTER §6.1 -- dev-mode-
+  exempted; safe to merge as draft content, NOT as published/verified
+  clinical advice).
+notes_ua: >
+  Новий Regimen -- повторно використовує вже наявний Drug
+  DRUG-SIROLIMUS (вже присутній у базі для показання LAM), але
+  описаний окремо від REG-SIROLIMUS-LAM, оскільки клінічний контекст
+  відрізняється. Дозування описано якісно ("за протоколом
+  трансплантологічної команди"), а не як єдине число -- на момент
+  авторства не було доступного джерела в базі, що верифікує цільовий
+  рівень для показання конверсії при Kaposi. Конверсія завжди має
+  бути під контролем трансплантологічної команди -- ризик
+  відторгнення трансплантата реальний. Незалежна перевірка видалила
+  посилання на SRC-NIH-AIDS-2024 (гайдлайн з АРТ/опортуністичних
+  інфекцій, не стосується трансплантаційної імуносупресії) як
+  недостовірне для цього файлу.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_kaposi_treatment
+draft_revision: 1

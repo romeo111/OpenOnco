@@ -26,12 +26,14 @@ decision_tree:
     evaluate:
       all_of:
         - condition: "Standard / intermediate risk"
-        - condition: "ECOG ≤ 3"
+        - finding: "ecog"
+          threshold: 3
+          comparator: "<="
     if_true:
       result: IND-BURKITT-1L-DAEPOCHR
     if_false:
       result: IND-BURKITT-1L-DAEPOCHR
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "MDT-only after CSD-7A audit — mechanical rewire of the original free-text ECOG gate into finding: \"ecog\" (threshold 3, comparator <=), mirroring RF-BURKITT-FRAILTY-AGE / RF-FITNESS-ECOG-POOR. 'Standard / intermediate risk' clause remains free-text — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies; wireable only via dedicated disease-specific RFs in a future round. Original clinical criteria unchanged."
 
 sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-BURKITT-2024]
 last_reviewed: "2026-04-27"

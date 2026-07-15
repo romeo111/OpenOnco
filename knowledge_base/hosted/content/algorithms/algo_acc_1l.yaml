@@ -1,0 +1,111 @@
+id: ALGO-ACC-1L
+applicable_to_disease: DIS-ADRENOCORTICAL-CARCINOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  Route 1L management of adrenocortical carcinoma (ACC) by
+  resectability/stage. Resectable ENSAT stage I-III disease routes to
+  adrenalectomy with curative intent, plus adjuvant mitotane for the
+  high-recurrence-risk subgroup (stage III, Ki-67 >10%, or R1/RX margin).
+  Unresectable locally advanced or metastatic (stage IV) disease routes to
+  systemic therapy, preferring mitotane + EDP combination chemotherapy
+  (FIRM-ACT) for fit patients.
+
+output_indications:
+- IND-ACC-1L-RESECTION-MITOTANE
+- IND-ACC-1L-MITOTANE-EDP
+
+default_indication: IND-ACC-1L-RESECTION-MITOTANE
+alternative_indication: IND-ACC-1L-MITOTANE-EDP
+
+decision_tree:
+  # Step 1 — Resectability/stage gate.
+- step: 1
+  evaluate:
+    any_of:
+    - condition: "ENSAT stage I, II, or III adrenocortical carcinoma, surgically resectable — no distant metastasis and primary tumor (+/- locoregional extension) amenable to complete (R0) resection — confirmed by multidisciplinary endocrine surgery/oncology review"
+  if_true:
+    next_step: 2
+    notes: "Resectable stage I-III: route to the surgical/adjuvant pathway (step 2 further stratifies by recurrence risk)."
+  if_false:
+    next_step: 3
+    notes: "ENSAT stage IV (distant metastatic) disease, locally advanced disease not amenable to complete resection, or unresectable locoregional recurrence: route to the systemic-therapy pathway (step 3)."
+
+  # Step 2 — High-recurrence-risk gate within the resectable branch.
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-ACC-HIGH-RECURRENCE-RISK-BIOLOGY
+  if_true:
+    result: IND-ACC-1L-RESECTION-MITOTANE
+    notes: >
+      Resectable stage I-III + high recurrence risk (ENSAT stage III,
+      Ki-67 >10%, or R1/RX resection margin): adrenalectomy + adjuvant
+      mitotane. The ADIUVO trial enrolled a lower/intermediate-risk
+      population (stage I-III, R0, Ki-67 <=10%) and found no significant
+      benefit — supporting restriction of adjuvant mitotane to this
+      higher-risk branch, where retrospective cohort evidence is most
+      supportive.
+  if_false:
+    result: null
+    notes: >
+      Resectable stage I-III + low/intermediate recurrence risk (R0
+      resection, Ki-67 <=10%, stage I-II): the randomized ADIUVO trial
+      found no significant recurrence-free-survival benefit from adjuvant
+      mitotane in this population (5-yr RFS 79% mitotane vs 75%
+      surveillance, HR 0.74, not significant) — surveillance alone is a
+      reasonable option per MDT discretion. An observation-only
+      Indication is not yet authored in this KB pass; this branch is an
+      intentional coverage gap, not a clinical-content error.
+
+  # Step 3 — Fitness gate within the unresectable/metastatic branch.
+- step: 3
+  evaluate:
+    any_of:
+    - red_flag: RF-FITNESS-ECOG-FIT
+    - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    - condition: "ECOG 0-2 and adequate organ function for combination cytotoxic chemotherapy (cardiac, renal, hepatic, marrow reserve)"
+  if_true:
+    result: IND-ACC-1L-MITOTANE-EDP
+    notes: >
+      Unresectable/metastatic + fit for combination chemotherapy:
+      mitotane + EDP (etoposide+doxorubicin+cisplatin) per FIRM-ACT —
+      preferred over mitotane+streptozocin based on superior response rate
+      and progression-free survival.
+  if_false:
+    result: null
+    notes: >
+      Unresectable/metastatic + ECOG >=3 or unfit for full combination
+      cytotoxic chemotherapy: mitotane monotherapy alone (+/- later /
+      dose-reduced chemotherapy as tolerance allows) is a reasonable
+      alternative per the "mitotane +/- EDP" framing in the disease-level
+      narrative, but a dedicated mitotane-monotherapy-for-advanced-disease
+      Indication is not yet authored in this KB pass — only the adjuvant
+      regimen (REG-MITOTANE-ADJUVANT-ACC) exists, scoped to the
+      post-resection setting. Best-supportive-care / palliative-care
+      consultation should also be considered. This branch is an
+      intentional coverage gap.
+
+sources:
+- SRC-FIRM-ACT-FASSNACHT-2012
+- SRC-ESMO-ACC-2020
+- SRC-ENSAT-ACC-2018
+- SRC-ADIUVO-TERZOLO-2023
+- SRC-NCCN-NET-2025
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+notes: >
+  First-pass 1L algorithm for DIS-ADRENOCORTICAL-CARCINOMA, closing the
+  content gap flagged in the Disease entity's metadata.awaiting_proposal.
+  Two intentional null-branches (step 2 if_false; step 3 if_false) reflect
+  Indications this KB pass deliberately did NOT author (surveillance-alone
+  for low/intermediate-risk resected disease; mitotane monotherapy alone
+  for advanced disease unfit for combination chemo) — both are reasonable
+  future-authoring targets, not errors, mirroring the null-branch
+  convention used in ALGO-RCC-METASTATIC-1L and
+  ALGO-THYROID-ANAPLASTIC-1L. RF-ACC-HIGH-RECURRENCE-RISK-BIOLOGY (new in
+  this pass) operationalizes "high recurrence risk" from the ADIUVO
+  trial's risk-stratified enrollment criteria. Germline TP53 testing
+  (Li-Fraumeni) is addressed at the Indication level (required_tests)
+  rather than as a separate algorithm branch, since it does not change 1L
+  treatment selection in this pass.

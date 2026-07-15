@@ -436,6 +436,10 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
                                     "en": "Pre-treatment investigations"},
     "pretreatment_sub":            {"uk": "Дослідження перед стартом терапії · критичні / стандарт / бажано · поєднані по треках",
                                     "en": "Investigations before treatment start · critical / standard / desired · merged across tracks"},
+    "prevention_investigations":   {"uk": "Baseline / surveillance investigations",
+                                    "en": "Baseline / surveillance investigations"},
+    "prevention_investigations_sub": {"uk": "Дослідження для baseline + регулярного surveillance · поєднані по треках",
+                                      "en": "Investigations for baseline + ongoing surveillance · merged across tracks"},
     "redflags_pro_contra":         {"uk": "Red flags — PRO / CONTRA aggressive",
                                     "en": "Red flags — PRO / CONTRA aggressive"},
     "what_not":                    {"uk": "Що НЕ робити", "en": "What NOT to do"},
@@ -1413,7 +1417,7 @@ def _render_lab_availability_cell(test: dict, target_lang: str = "uk") -> str:
 
 
 def _render_pretreatment_investigations(
-    plan, kb_resolved: dict, target_lang: str = "uk"
+    plan, kb_resolved: dict, target_lang: str = "uk", is_prevention: bool = False
 ) -> str:
     """Pre-treatment investigations table: union of required + desired tests
     across all tracks, sorted by priority_class. Each row shows test name,
@@ -1478,10 +1482,12 @@ def _render_pretreatment_investigations(
             f'<td>{_h(scope)}</td></tr>'
         )
 
+    heading_key = "prevention_investigations" if is_prevention else "pretreatment"
+    subheading_key = "prevention_investigations_sub" if is_prevention else "pretreatment_sub"
     return (
         '<section>'
-        f'<h2>{_h(_t("pretreatment", target_lang))}</h2>'
-        f'<div class="section-sub">{_h(_t("pretreatment_sub", target_lang))}</div>'
+        f'<h2>{_h(_t(heading_key, target_lang))}</h2>'
+        f'<div class="section-sub">{_h(_t(subheading_key, target_lang))}</div>'
         '<table class="tbl">'
         f'<thead><tr><th>{_h(_t("th_id", target_lang))}</th>'
         f'<th>{_h(_t("th_name", target_lang))}</th>'
@@ -3084,26 +3090,74 @@ def render_plan_html(
 
     fda = plan.fda_compliance
 
+    # Detect PreventionPlan shape (KSS §20.2): no Disease + no Algorithm,
+    # routed by fired prevention RedFlag(s). When True, swap the "Treatment
+    # Plan" label/title for prevention-specific phrasing and skip the
+    # disease-anchored etiological-driver block (it has nothing to render
+    # without a disease entity).
+    is_prevention_plan = (
+        plan_result.disease_id is None and plan.algorithm_id is None
+    )
+
     # Header
     body: list[str] = []
-    disease_title = _diagnosis_name(plan_result, target_lang) or plan_result.disease_id
     cross_link = _render_mode_toggle(sibling_link, "Версія для пацієнта →")
-    body.append(
-        '<div class="doc-header">'
-        '<div class="doc-label">OpenOnco · Treatment Plan</div>'
-        f'<div class="doc-title">План лікування — {_h(disease_title)}</div>'
-        f'<div class="doc-sub">{_h(plan.id)} · v{_h(plan.version)} · {_h(plan.generated_at[:10])}</div>'
-        f'{cross_link}'
-        '</div>'
-    )
+    # Always set disease_title so the final _doc_shell call below has a value;
+    # for prevention plans it falls back to the joined RF list.
+    if is_prevention_plan:
+        # Build a comma-separated list of fired prevention RFs as the
+        # diagnosis-equivalent anchor for the title. Prevention path
+        # writes one trace entry per fired RF with `rf_id` key; legacy
+        # treatment path uses `fired_red_flags` list per step. Handle both.
+        fired_rf_ids: list[str] = []
+        if plan.trace:
+            seen: set[str] = set()
+            for entry in plan.trace:
+                # Prevention-path format: {step: 'prevention_rf_fired', rf_id: 'RF-…'}
+                single_rf = entry.get("rf_id")
+                if isinstance(single_rf, str) and single_rf not in seen:
+                    seen.add(single_rf)
+                    fired_rf_ids.append(single_rf)
+                # Treatment-path format: {fired_red_flags: ['RF-…', …]}
+                for rf_id in entry.get("fired_red_flags") or []:
+                    if rf_id not in seen:
+                        seen.add(rf_id)
+                        fired_rf_ids.append(rf_id)
+        disease_title = (
+            ", ".join(fired_rf_ids) if fired_rf_ids else "профілактичний маршрут"
+        )
+        doc_label = "OpenOnco · Prevention Plan"
+        doc_title_text = "План профілактики — " + disease_title
+        if (target_lang or "uk").lower() == "en":
+            doc_title_text = "Prevention plan — " + disease_title
+        body.append(
+            '<div class="doc-header">'
+            f'<div class="doc-label">{doc_label}</div>'
+            f'<div class="doc-title">{_h(doc_title_text)}</div>'
+            f'<div class="doc-sub">{_h(plan.id)} · v{_h(plan.version)} · {_h(plan.generated_at[:10])}</div>'
+            f'{cross_link}'
+            '</div>'
+        )
+    else:
+        disease_title = _diagnosis_name(plan_result, target_lang) or plan_result.disease_id
+        body.append(
+            '<div class="doc-header">'
+            '<div class="doc-label">OpenOnco · Treatment Plan</div>'
+            f'<div class="doc-title">План лікування — {_h(disease_title)}</div>'
+            f'<div class="doc-sub">{_h(plan.id)} · v{_h(plan.version)} · {_h(plan.generated_at[:10])}</div>'
+            f'{cross_link}'
+            '</div>'
+        )
 
     # Patient strip
     body.append(_render_patient_strip(plan_result, target_lang))
 
-    # Etiological driver — only for etiologically_driven archetype
-    body.append(_render_etiological_driver(
-        (plan_result.kb_resolved or {}).get("disease"), target_lang
-    ))
+    # Etiological driver — only for etiologically_driven archetype.
+    # Skipped for PreventionPlan output: no disease anchor → no driver to surface.
+    if not is_prevention_plan:
+        body.append(_render_etiological_driver(
+            (plan_result.kb_resolved or {}).get("disease"), target_lang
+        ))
 
     # Variant actionability (ESCAT) — inserted between the
     # diagnostic profile and the treatment-plan tracks. Render-time
@@ -3194,16 +3248,33 @@ def render_plan_html(
         )
     primary_html = track_html[0] if track_html else ""
     if primary_html:
+        primary_h2 = (
+            "Recommended prevention/surveillance pathway"
+            if is_prevention_plan
+            else "Primary current-line option"
+        )
         body.append(
-            "<section><h2>Primary current-line option</h2>"
+            f"<section><h2>{primary_h2}</h2>"
             f'<div class="tracks">{primary_html}</div></section>'
         )
     alternative_html = "".join(track_html[1:])
     if alternative_html:
+        if is_prevention_plan:
+            alt_h2 = f"Alternative pathway ({len(track_html) - 1} tracks)"
+            alt_sub = (
+                "Same prevention/surveillance scope; review when patient preference, "
+                "access, contraindication, or risk-modifier assumptions change."
+            )
+        else:
+            alt_h2 = f"Other current-line alternatives ({len(track_html) - 1} tracks)"
+            alt_sub = (
+                "Same treatment line; review when biomarker, access, contraindication, "
+                "or patient-context assumptions change."
+            )
         body.append(
             "<section><details>"
-            f"<summary><h2>Other current-line alternatives ({len(track_html) - 1} tracks)</h2>"
-            "<span class=\"section-sub\">Same treatment line; review when biomarker, access, contraindication, or patient-context assumptions change.</span>"
+            f"<summary><h2>{alt_h2}</h2>"
+            f'<span class="section-sub">{alt_sub}</span>'
             "</summary>"
             f'<div class="tracks">{alternative_html}</div>'
             "</details></section>"
@@ -3244,7 +3315,7 @@ def render_plan_html(
 
     # Pre-treatment investigations · RedFlag PRO/CONTRA · What NOT to do ·
     # Monitoring phases · Timeline (REFERENCE_CASE_SPECIFICATION §1.3)
-    body.append(_render_pretreatment_investigations(plan, plan_result.kb_resolved, target_lang))
+    body.append(_render_pretreatment_investigations(plan, plan_result.kb_resolved, target_lang, is_prevention=is_prevention_plan))
     body.append(_render_red_flags_pro_contra(plan, plan_result.kb_resolved, target_lang))
     body.append(_render_what_not_to_do(plan, target_lang))
 
@@ -3294,7 +3365,11 @@ def render_plan_html(
     body.append(f'<div class="medical-disclaimer">{_h(_MEDICAL_DISCLAIMER)}</div>')
     body.append('</div>')
 
-    out = _doc_shell(f"План лікування — {disease_title}", "".join(body))
+    if is_prevention_plan:
+        doc_shell_title = f"План профілактики — {disease_title}"
+    else:
+        doc_shell_title = f"План лікування — {disease_title}"
+    out = _doc_shell(doc_shell_title, "".join(body))
     return _localize_html(out, target_lang)
 
 
@@ -3372,6 +3447,26 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
     plan = plan_result.plan
     hits = list((plan and plan.variant_actionability) or [])
     if not hits:
+        # PreventionPlan: no tumor → no variant actionability is expected;
+        # we're looking at germline / lifestyle / chronic-condition risk
+        # factors. Substitute a prevention-appropriate fallback so the
+        # patient doesn't see a confusing "treatment is still possible"
+        # message for what isn't a treatment scenario.
+        is_prevention_shape = (
+            plan_result.disease_id is None
+            and (plan is None or plan.algorithm_id is None)
+        )
+        if is_prevention_shape:
+            return (
+                '<p>За результатами заповнених даних значущих ризик-факторів '
+                "виявлено саме той, що вказано вище. Це означає, що ви "
+                "потрапляєте у когорту з підвищеним ризиком для певних "
+                "видів раку — план нижче описує, що з цим робити: "
+                "програма спостереження, рекомендовані обстеження, цикл "
+                "візитів до лікаря. Це не діагноз і не означає, що ви "
+                "хворієте — це інформація про ризик і про те, як його "
+                "зменшити або вчасно виявити проблему.</p>"
+            )
         return (
             '<p>За результатами наявних аналізів значущих молекулярних мішеней '
             "поки не виявлено. Це не означає, що лікування неможливе — стандартна терапія "
@@ -3922,6 +4017,25 @@ _PATIENT_DISCLAIMER_HTML = (
 )
 
 
+# Prevention-mode disclaimer: at-risk asymptomatic carrier audience.
+# Substitutes "лікування" with "програма профілактики / спостереження"
+# and routes to genetic-counselor + primary care + specialist depending
+# on the syndrome, rather than naming "your oncologist" as the sole
+# decision-maker.
+_PATIENT_DISCLAIMER_PREVENTION_HTML = (
+    "<p>Цей звіт — інформаційний інструмент, не медичний прилад. "
+    "Усі рішення щодо вашої програми профілактики і спостереження ухвалює "
+    "ваш лікар (зазвичай це сімейний лікар, генетичний консультант або "
+    "профільний спеціаліст залежно від виявленого ризик-фактора). Звіт "
+    "оновлюється, коли з'являються нові дані. Не змінюйте призначене "
+    "спостереження на основі лише цього звіту.</p>"
+    "<p>Якщо у вас виникли симптоми, які потребують уваги — звертайтесь "
+    "до вашого лікаря, не чекайте планового візиту.</p>"
+    "<p>Питання про сам інструмент: "
+    '<a href="https://github.com/romeo111/OpenOnco/issues">github.com/romeo111/OpenOnco</a></p>'
+)
+
+
 def _render_patient_mode(
     plan_result: PlanResult,
     target_lang: str,
@@ -3939,9 +4053,23 @@ def _render_patient_mode(
     (PATIENT_MODE_SPEC §3.5). Set by the CLI when `--render-mode both`
     or by web embeds; otherwise None to suppress the chip."""
     plan = plan_result.plan
+    # Detect PreventionPlan shape (KSS §20.2): no Disease + no Algorithm.
+    # When True, the patient bundle swaps oncology-treatment phrasing for
+    # prevention/surveillance language so an at-risk asymptomatic carrier
+    # doesn't read "Your personal oncology treatment plan" for what is
+    # actually a surveillance pathway.
+    is_prevention_plan = (
+        plan_result.disease_id is None
+        and (plan is None or plan.algorithm_id is None)
+    )
     if plan is None:
+        empty_title = (
+            "Ваш персональний план профілактики"
+            if is_prevention_plan
+            else "Ваш персональний онкологічний план"
+        )
         return _patient_doc_shell(
-            "Ваш персональний онкологічний план",
+            empty_title,
             '<p>Поки що недостатньо даних для побудови плану. '
             'Зверніться до вашого онколога для уточнення.</p>',
         )
@@ -3951,11 +4079,19 @@ def _render_patient_mode(
 
     # Header (PATIENT_MODE_SPEC §3.1 + §3.5)
     cross_link = _render_mode_toggle(sibling_link, "Технічна версія для лікаря →")
+    if is_prevention_plan:
+        h1_text = "Ваш персональний план профілактики"
+        subhead_text = "Що показав аналіз ризиків і що ви можете зробити"
+        anchor_label = "Виявлений ризик-фактор:"
+    else:
+        h1_text = "Ваш персональний план"
+        subhead_text = "Що показав аналіз і що це означає для вас"
+        anchor_label = "Діагноз:"
     body_parts.append(
         "<header>"
-        "<h1>Ваш персональний план</h1>"
-        '<p class="patient-subhead">Що показав аналіз і що це означає для вас</p>'
-        f'<p><strong>Діагноз:</strong> {_h(disease_label)}</p>'
+        f"<h1>{h1_text}</h1>"
+        f'<p class="patient-subhead">{subhead_text}</p>'
+        f'<p><strong>{anchor_label}</strong> {_h(disease_label)}</p>'
         f'{cross_link}'
         "</header>"
     )
@@ -3967,9 +4103,13 @@ def _render_patient_mode(
         "</section>"
     )
 
+    if is_prevention_plan:
+        means_h2 = "Що це означає для вашої профілактики"
+    else:
+        means_h2 = "Що це означає для лікування"
     body_parts.append(
         '<section class="what-now">'
-        "<h2>Що це означає для лікування</h2>"
+        f"<h2>{means_h2}</h2>"
         f"{_render_tracks_plain(plan_result)}"
         "</section>"
     )
@@ -3980,13 +4120,23 @@ def _render_patient_mode(
     body_parts.append(_render_emergency_section(plan_result))
     body_parts.append(_render_ask_doctor_section(plan_result))
 
+    disclaimer_html = (
+        _PATIENT_DISCLAIMER_PREVENTION_HTML
+        if is_prevention_plan
+        else _PATIENT_DISCLAIMER_HTML
+    )
     body_parts.append(
-        f'<footer class="patient-disclaimer">{_PATIENT_DISCLAIMER_HTML}</footer>'
+        f'<footer class="patient-disclaimer">{disclaimer_html}</footer>'
     )
 
+    doc_title = (
+        "Ваш персональний план профілактики"
+        if is_prevention_plan
+        else "Ваш персональний онкологічний план"
+    )
     return _expand_first_use(
         _patient_doc_shell(
-            "Ваш персональний онкологічний план",
+            doc_title,
             "".join(body_parts),
         )
     )

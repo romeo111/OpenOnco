@@ -1,0 +1,167 @@
+id: RF-NF2-SCHWANNOMATOSIS-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in NF2
+  (neurofibromin 2 / merlin / Moesin-Ezrin-Radixin-like protein),
+  OR a confirmed germline SMARCB1 schwannomatosis-spectrum variant
+  (typically missense / splice / non-truncating in the carboxy-
+  terminal domain — DISTINCT from N-terminal truncating SMARCB1
+  variants causing rhabdoid tumor predisposition syndrome / RTPS),
+  OR fulfilment of the revised Manchester / Baser clinical
+  diagnostic criteria for NF2-related schwannomatosis. NF2-related
+  schwannomatosis (renamed from neurofibromatosis type 2 in 2022
+  international consensus, Plotkin et al. Genet Med 2022) is an
+  autosomal-dominant tumor-suppressor syndrome whose hallmark is
+  bilateral vestibular schwannoma (~95% of NF2 patients by adulthood)
+  + cranial / spinal schwannomas + meningioma (~60% — often multiple;
+  cumulative risk drives morbidity) + spinal ependymoma (~30% — often
+  intramedullary cervical / thoracic) + juvenile posterior subcapsular
+  lenticular cataract (~60%) + retinal hamartoma. Mosaicism is common
+  (~50% of de-novo NF2 cases) and gives variable expressivity. Patient
+  has had germline NF2 / SMARCB1 testing returned positive on a known
+  pedigree-specific variant OR meets clinical diagnostic criteria; no
+  current personal cancer diagnosis assumed for the prevention persona
+  (active disease routes to the treatment plan). Mandates lifelong
+  surveillance: brain MRI with thin-cut internal-auditory-canal
+  sequences q1-2y from age 10, spine MRI q3-5y, audiology q1y,
+  ophthalmology q1-2y. NF2-related schwannomatosis is a NON-malignant
+  syndrome (schwannomas, meningiomas, and ependymomas are
+  histologically benign) but tumor burden + brainstem / cranial-nerve
+  compression drives morbidity + mortality (median survival historically
+  ~36-69 years, improving with modern surveillance + targeted therapy).
+  CRITICAL severity justified by tumor burden + bilateral deafness +
+  cranial-nerve / brainstem-compression mortality risk.
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант
+  у NF2 (neurofibromin 2 / merlin), АБО підтверджений germline SMARCB1
+  schwannomatosis-spectrum варіант (зазвичай missense / splice /
+  non-truncating у carboxy-terminal domain — DISTINCT від N-terminal
+  truncating SMARCB1 варіантів, що викликають rhabdoid tumor
+  predisposition syndrome / RTPS), АБО виконання revised Manchester /
+  Baser clinical diagnostic criteria для NF2-related schwannomatosis.
+  NF2-related schwannomatosis (renamed з neurofibromatosis type 2 у
+  2022 international consensus, Plotkin et al. Genet Med 2022) —
+  autosomal-dominant tumor-suppressor syndrome, hallmark якого
+  bilateral vestibular schwannoma (~95% NF2 пацієнтів до дорослого
+  віку) + cranial / spinal schwannomas + meningioma (~60% — часто
+  multiple) + spinal ependymoma (~30% — часто intramedullary cervical
+  / thoracic) + juvenile posterior subcapsular lenticular cataract
+  (~60%) + retinal hamartoma. Mosaicism поширений (~50% de-novo NF2)
+  з variable expressivity. Пацієнт має позитивне germline NF2 /
+  SMARCB1 тестування на known pedigree-specific варіант АБО відповідає
+  clinical diagnostic criteria; поточний особистий діагноз раку
+  відсутній для prevention persona. Mandates lifelong спостереження:
+  brain MRI з thin-cut internal-auditory-canal sequences q1-2y з 10
+  років, spine MRI q3-5y, audiology q1y, ophthalmology q1-2y. NF2-
+  related schwannomatosis — NON-malignant синдром (schwannomas,
+  meningiomas, ependymomas histologically benign), але tumor burden +
+  brainstem / cranial-nerve compression драйвить morbidity +
+  mortality (median survival historically ~36-69 років, improving з
+  modern surveillance + targeted therapy). CRITICAL severity
+  виправдана tumor burden + bilateral deafness + cranial-nerve /
+  brainstem-compression mortality risk.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_nf2_pathogenic_variant_confirmed"
+      value: true
+    - finding: "nf2_clinical_diagnostic_criteria_met"
+      value: true
+    - finding: "germline_smarcb1_schwannomatosis_variant"
+      value: true
+
+clinical_direction: investigate
+
+# CRITICAL per bilateral vestibular schwannoma + brainstem compression
+# mortality risk + multi-tumor burden across decades; surveillance from age 10.
+severity: critical
+priority: 60
+category: other
+risk_category: genetic
+
+# DIS-GLIOMA-LOW-GRADE used as approximation — NF2 tumor spectrum is
+# vestibular schwannoma + meningioma + spinal ependymoma, none of which
+# have dedicated DIS-* entities in v0.3 KB. Flagged for v0.4 cleanup
+# when DIS-VESTIBULAR-SCHWANNOMA / DIS-MENINGIOMA / DIS-EPENDYMOMA
+# entities land.
+relevant_diseases:
+  - DIS-GLIOMA-LOW-GRADE
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Gene-specific NF2-related schwannomatosis + SMARCB1-schwannomatosis
+  confirmed-carrier RF — CRITICAL severity. Fires on documented
+  germline NF2 pathogenic variant, OR germline SMARCB1 schwannomatosis-
+  spectrum variant (distinct from N-terminal truncating RTPS variants),
+  OR fulfilment of revised Manchester / Baser clinical criteria.
+
+  DISEASE-ANCHOR LIMITATION: DIS-GLIOMA-LOW-GRADE is used as the
+  best-available approximation in v0.3 KB — the actual NF2 tumor
+  spectrum (vestibular schwannoma + meningioma + spinal ependymoma) has
+  no dedicated DIS-* entities yet. Flagged for v0.4 cleanup when
+  DIS-VESTIBULAR-SCHWANNOMA / DIS-MENINGIOMA / DIS-EPENDYMOMA entities
+  land. The indication-level rationale narrates the actual NF2 tumor
+  spectrum + surveillance / treatment specifics — disease-anchor
+  inaccuracy does not propagate into the clinical content.
+
+  Engine routes to PreventionPlan:
+    (a) IND-NF2-CARRIER-SURVEILLANCE (standard) — brain MRI with thin-
+        cut internal-auditory-canal sequences q1-2y from age 10 (or
+        baseline at diagnosis if older); whole-spine MRI q3-5y for
+        intramedullary / extramedullary schwannomas + ependymomas;
+        audiology + speech-discrimination annually; ophthalmology
+        q1-2y for juvenile posterior subcapsular cataract + retinal
+        hamartoma; dermatology q1-2y for cutaneous schwannomas; brain-
+        and-spine MRI baselines obtained earlier if family-specific
+        proband had pediatric onset; cascade testing.
+    (b) IND-NF2-CARRIER-INTENSIFIED (aggressive) — earlier brain MRI
+        baseline (age 5-8 in pediatric-onset kindreds); high-resolution
+        IAC sequences q1y; consideration of bevacizumab for growing
+        / symptomatic vestibular schwannoma (off-label; expert-center
+        indication — preserves / improves hearing in some patients;
+        NF2 mTOR pathway research ongoing); shared-decision-making
+        re: prophylactic hearing-preservation surgery (microsurgery vs
+        stereotactic radiosurgery — radiosurgery debated in NF2 given
+        possible secondary-tumor / malignant-transformation reports);
+        multidisciplinary NF2 expert-center referral; sign-language /
+        cochlear-implant pre-emptive planning.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+
+  Background — NF2 / SMARCB1-schwannomatosis epidemiology + risk:
+    - Bilateral vestibular schwannoma: ~95% of NF2 patients by
+      adulthood (hallmark feature); progressive sensorineural hearing
+      loss and facial-nerve / trigeminal-nerve symptoms drive
+      morbidity.
+    - Meningioma: ~60% (often multiple cranial + spinal); cumulative
+      burden across decades.
+    - Spinal ependymoma: ~30% (often intramedullary cervical /
+      thoracic); usually asymptomatic but driver of late morbidity.
+    - Juvenile posterior subcapsular lenticular cataract: ~60% (often
+      detected in childhood — earliest detectable feature).
+    - Retinal hamartoma + epiretinal membrane: additional
+      ophthalmologic stigmata.
+    - Mosaicism in ~50% of de-novo NF2 cases (variable expressivity;
+      cascade-testing in mosaic probands may miss carrier offspring —
+      tumor genotyping informative).
+    - Median survival historically 36-69y; improving with modern
+      surveillance + bevacizumab targeted therapy + expert-center
+      management.
+    - SMARCB1-schwannomatosis: phenotypic overlap with NF2 (multi-
+      tumor schwannoma burden) but typically WITHOUT bilateral
+      vestibular schwannoma and WITHOUT high meningioma burden; key
+      distinguishing feature is variant-class (carboxy-terminal /
+      non-truncating SMARCB1 — schwannomatosis; N-terminal truncating
+      SMARCB1 — rhabdoid tumor predisposition syndrome / RTPS).
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_paraganglioma_nf2
+draft_revision: 1

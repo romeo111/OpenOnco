@@ -1,0 +1,127 @@
+id: IND-KAPOSI-1L-VISCERAL-PLD
+plan_track: standard
+intent: treatment
+
+applicable_to:
+  disease_id: DIS-KAPOSI
+  line_of_therapy: 1
+  stage_requirements:
+    - "Visceral (pulmonary, GI, or other organ) involvement OR extensive/rapidly progressive mucocutaneous disease (widespread skin lesions, tumor-associated lymphedema, or ulceration) -- RF-KAPOSI-VISCERAL-EXTENSIVE-DISEASE triggered -- of any epidemiologic form (AIDS-associated, iatrogenic, classic, or endemic)"
+    - "Continue/optimize form-specific immune restoration concurrently -- ART for AIDS-KS (never interrupt ART for chemotherapy); transplant-team-directed mTOR-inhibitor conversion for iatrogenic KS where graft-safe"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PLD-KAPOSI
+concurrent_therapy: []
+followed_by:
+  - IND-KAPOSI-2L-VISCERAL-PACLITAXEL
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Pegylated liposomal doxorubicin is FDA-approved for AIDS-related
+    Kaposi sarcoma and is the standard first-line systemic chemotherapy
+    for extensive/visceral disease of any epidemiologic form. Response
+    assessment and duration of therapy are individualized; progression
+    or intolerance moves to second-line paclitaxel -- see
+    IND-KAPOSI-2L-VISCERAL-PACLITAXEL.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-EXCISIONAL-SKIN-BIOPSY
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-ECHO
+  - TEST-HIV-SEROLOGY
+desired_tests:
+  - TEST-BRONCHOSCOPY-WITH-EBUS
+
+rationale: >
+  Visceral (pulmonary, gastrointestinal, or other organ) involvement,
+  or extensive/rapidly progressive mucocutaneous disease, is not
+  expected to be adequately controlled by immune restoration or local
+  therapy alone in any epidemiologic form of Kaposi sarcoma, and
+  requires systemic chemotherapy. Pegylated liposomal doxorubicin (PLD)
+  is FDA-approved for AIDS-related Kaposi sarcoma and is the standard
+  first-line systemic agent, at 20 mg/m² IV every 2-3 weeks (see
+  REG-PLD-KAPOSI). Form-specific immune restoration is continued
+  concurrently, not replaced, by chemotherapy: ART must never be
+  interrupted for AIDS-KS during chemotherapy; transplant-team-directed
+  mTOR-inhibitor conversion continues where graft-safe for iatrogenic
+  KS. Baseline and serial LVEF assessment is mandatory before and
+  during PLD given anthracycline cardiotoxicity risk. Progression or
+  intolerance on PLD moves to second-line paclitaxel -- see
+  IND-KAPOSI-2L-VISCERAL-PACLITAXEL.
+
+rationale_ua: >
+  Вісцеральне ураження або поширене/швидко прогресуюче мукокутанне
+  захворювання не контролюється лише відновленням імунітету чи
+  локальною терапією і потребує системної хіміотерапії. Пегільований
+  ліпосомальний доксорубіцин (PLD) схвалений FDA для ВІЛ-асоційованої
+  саркоми Капоші та є стандартним препаратом першої лінії, у дозі 20
+  мг/м² в/в кожні 2-3 тижні (REG-PLD-KAPOSI). Форма-специфічне
+  відновлення імунітету триває паралельно з хіміотерапією: АРТ ніколи
+  не переривається; конверсія на mTOR-інгібітор триває, де це
+  безпечно для трансплантата. Базова і серійна оцінка ФВЛШ
+  обов'язкова. Прогресування чи непереносимість PLD -- перехід на
+  паклітаксел другої лінії (IND-KAPOSI-2L-VISCERAL-PACLITAXEL).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_kaposi_treatment
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-SKIN-2025
+    position: context
+  - source_id: SRC-NIH-AIDS-2024
+    position: context
+
+known_controversies: []
+
+do_not_do:
+  - "Не переривати АРТ під час хіміотерапії PLD при ВІЛ-асоційованій формі."
+  - "Не змінювати імуносупресію трансплант-реципієнта без консиліуму трансплантологічної команди навіть під час хіміотерапії."
+  - "Не пропускати базову і серійну оцінку ФВЛШ -- кумулятивна кардіотоксичність антрациклінів."
+  - "Не розводити PLD у фізіологічному розчині -- руйнує ліпосоми; лише 5% розчин глюкози."
+
+do_not_do_en:
+  - "Do not interrupt ART during PLD chemotherapy for the AIDS-associated form."
+  - "Do not change a transplant recipient's immunosuppression without transplant-team consult, even during chemotherapy."
+  - "Do not skip baseline and serial LVEF assessment -- cumulative anthracycline cardiotoxicity risk."
+  - "Do not dilute PLD in normal saline -- disrupts the liposomes; D5W only."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB -- new TREATMENT-intent Indication for DIS-KAPOSI (v0.3
+  continuation), covering visceral/extensive disease of ANY
+  epidemiologic form. Introduces new Regimen REG-PLD-KAPOSI (reuses
+  the existing DRUG-PEGYLATED-LIPOSOMAL-DOXORUBICIN entity; dosing
+  transcribed from that entity's pre-existing typical_dosing field,
+  not newly invented -- verified by direct read during independent
+  review). `concurrent_therapy` is deliberately left empty rather than
+  hard-coding REG-HIV-BIKTARVY or REG-SIROLIMUS-KAPOSI-CONVERSION,
+  because this Indication spans ALL epidemiologic forms and only a
+  subset needs concurrent form-specific immune-restoration therapy --
+  see `rationale` for the form-specific guidance instead.
+
+  INDEPENDENT REVIEW CORRECTION (2026-07-11): an earlier draft cited
+  SRC-NCCN-SKIN-2025 with position "supports". That source documents
+  only basal-cell/squamous-cell skin cancer (confirmed by direct
+  inspection of its own KB record), not Kaposi sarcoma chemotherapy --
+  downgraded to "context". SRC-NIH-AIDS-2024 kept as "context" (not
+  "supports") because it substantiates the concurrent-ART-continuation
+  guidance but not the PLD dosing/chemotherapy content itself, which
+  is drawn from the DRUG entity as noted above. Pending two-Clinical-
+  Co-Lead signoff (CHARTER §6.1 -- dev-mode-exempted; safe to merge as
+  draft content, NOT as published/verified clinical advice).

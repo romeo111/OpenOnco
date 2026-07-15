@@ -1,0 +1,119 @@
+id: RF-SDHA-SPECIFIC-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in SDHA
+  (succinate dehydrogenase complex subunit A) — paraganglioma syndrome
+  type 5 (PGL5). SDHA is the newer-recognized SDHx gene with lower and
+  later-onset penetrance than SDHB / SDHD: lifetime risk of
+  pheochromocytoma + paraganglioma is approximately 10-20% by age 70,
+  with most events emerging in adulthood (median 30s-50s) rather than
+  pediatric onset. Tumor spectrum also includes SDH-deficient
+  gastrointestinal stromal tumor (SDH-deficient GIST — wild-type c-KIT
+  and PDGFRA, indolent multifocal biology, imatinib-non-responsive),
+  occasional clear-cell / type-2-papillary renal cell carcinoma, and
+  rare pituitary adenoma reports in the broader "3PAs" association.
+  Inheritance is autosomal-dominant without the SDHD / SDHAF2 maternal-
+  imprinting pattern (penetrant from either parent). Patient has had
+  germline SDHA testing returned positive on a known pedigree-specific
+  variant or via multi-gene panel; pedigree-suspicion question is
+  settled and no current personal cancer diagnosis. Surveillance is
+  lighter than SDHB given lower penetrance + adulthood onset:
+  biennial whole-body MRI from age 18-20 + annual plasma metanephrines
+  + methoxytyramine (3-MT). Prevention-persona RedFlag distinct from
+  the multi-gene RF-SDH-CONFIRMED-CARRIER (which fires on legacy
+  per-gene findings) — this gene-specific RF carries surveillance
+  intensity calibrated to SDHA's lower-risk profile.
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант
+  у SDHA (succinate dehydrogenase complex subunit A) — paraganglioma
+  syndrome type 5 (PGL5). SDHA — newer-recognized SDHx ген з нижчою та
+  пізнішою penetrance, ніж SDHB / SDHD: lifetime ризик феохромоцитоми +
+  парагангліоми приблизно 10-20% до 70 років, з більшістю подій у
+  дорослому віці (медіана 30-50 років), не pediatric onset. Tumor
+  spectrum також включає SDH-deficient GIST (wild-type c-KIT / PDGFRA,
+  indolent multifocal biology, imatinib-non-responsive), окремі
+  clear-cell / type-2-papillary RCC, та рідкісні pituitary adenoma
+  у broader "3PAs" association. Успадкування autosomal-dominant без
+  SDHD / SDHAF2 maternal-imprinting pattern (penetrant від будь-якого
+  з батьків). Пацієнт пройшов germline SDHA-тестування з позитивним
+  результатом на known pedigree-specific варіант або multi-gene panel;
+  питання родовідної підозри вирішене; поточний особистий діагноз раку
+  відсутній. Спостереження lighter порівняно з SDHB через lower
+  penetrance + adulthood onset: biennial whole-body MRI з 18-20 років
+  + annual plasma метанефрини + methoxytyramine (3-MT). Prevention-
+  persona RedFlag distinct від multi-gene RF-SDH-CONFIRMED-CARRIER
+  (який fires на legacy per-gene findings) — цей gene-specific RF несе
+  surveillance intensity calibrated до SDHA lower-risk profile.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_sdha_specific_carrier"
+      value: true
+    - finding: "paraganglioma_pgl5_clinical_criteria_met"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 80
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-PHEOCHROMOCYTOMA
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NET-2025
+  - SRC-ENDOCRINE-SOCIETY-MEN-2023
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Gene-specific paraganglioma syndrome 5 (PGL5) confirmed-carrier RF.
+  Fires on documented germline SDHA pathogenic / likely-pathogenic
+  variant positivity in an asymptomatic individual. Distinct from the
+  multi-gene RF-SDH-CONFIRMED-CARRIER which fires on the legacy per-
+  gene `germline_sdha_pathogenic_variant_confirmed` finding; this RF
+  uses `germline_sdha_specific_carrier` to avoid double-firing on
+  patients whose pedigree-specific variant is being tracked under the
+  new gene-stratified surveillance pathway. Engine routes to
+  PreventionPlan recommending:
+    (a) IND-SDHA-CARRIER-SURVEILLANCE (standard) — biennial whole-body
+        MRI from age 18-20 (no pediatric whole-body MRI given
+        adulthood-onset profile); annual plasma free metanephrines +
+        methoxytyramine (3-MT preferred — SDHx-associated PGLs
+        frequently dopaminergic); head + neck MRI q3y for parasympathetic
+        screening; abdominal MRI q2y for SDH-deficient GIST + RCC;
+        cascade testing offered to first-degree relatives.
+    (b) IND-SDHA-CARRIER-SYMPTOM-DRIVEN (aggressive in the rhetorical
+        sense — actually represents a less-intensive symptom-driven
+        approach offered as the alternative to scheduled imaging given
+        SDHA's lower penetrance; the patient-shared-decision-making
+        choice is "scheduled biennial imaging" vs "biochemistry-only
+        with symptom-driven cross-sectional"). Some referral centers
+        offer this less-intensive option for adult SDHA carriers given
+        cumulative-MRI burden vs ~10-20% lifetime PPGL risk trade-off.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+
+  Lifetime tumor risk in confirmed SDHA carriers (van der Tuin et al.
+  JCEM 2018, Bausch et al. JAMA Oncol 2017, Else et al. JCEM 2017
+  international registry):
+    - PPGL aggregate ~10-20% by age 70 (lower than SDHB ~50% and SDHD
+      ~80%); predominantly adulthood-onset (median 30s-50s).
+    - SDH-deficient GIST: documented but rare in SDHA; indolent,
+      multifocal, wild-type c-KIT / PDGFRA — imatinib-non-responsive.
+    - RCC: lower frequency than SDHB; clear-cell or type-2-papillary
+      morphology when present.
+    - Pituitary adenoma: rare; reported in broader "3PAs"
+      (Pituitary + Paraganglioma) association.
+    - Inheritance pattern: autosomal-dominant without SDHD / SDHAF2
+      maternal-imprinting; penetrant from either parent.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_paraganglioma_nf2
+draft_revision: 1

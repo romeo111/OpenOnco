@@ -1,0 +1,120 @@
+id: RF-MEN4-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in CDKN1B
+  (p27/Kip1) — Multiple Endocrine Neoplasia type 4 (MEN4). Patient has
+  had germline CDKN1B testing returned positive; the pedigree-suspicion
+  question is settled. MEN4 is a more recently characterized
+  (Pellegata et al. 2006) MEN1-like syndrome — autosomal dominant
+  inheritance with overlapping but generally less penetrant tumor
+  spectrum than classical MEN1. Tumor distribution: primary
+  hyperparathyroidism (most common manifestation, ~80% in series),
+  pituitary adenoma (~30-40%, often somatotrophs / corticotrophs),
+  GEP-NET (pancreatic + duodenal + gastric — gastrinoma less common
+  than in MEN1), adrenocortical tumors (modest), bronchial / thymic
+  NET (rare but reported), reproductive-tract neuroendocrine tumors.
+  MEN4 has later age-of-onset than MEN1 and less aggressive natural
+  history in published series, but registry data are evolving as more
+  CDKN1B carriers are identified. No current personal cancer diagnosis
+  in the carrier being assessed. Prevention-persona RedFlag (§20, Wave
+  O confirmed-carrier surveillance pathway — distinct from any future
+  RF-MEN4-FAMILY-HISTORY-SUSPICION that would fire before testing).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант у
+  CDKN1B (p27/Kip1) — синдром множинної ендокринної неоплазії типу 4
+  (MEN4). Пацієнт пройшов germline CDKN1B-тестування з позитивним
+  результатом; питання родовідної підозри вирішене. MEN4 — більш
+  recently characterized (Pellegata et al. 2006) MEN1-like синдром —
+  autosomal-dominant inheritance з overlapping але generally менш
+  penetrant пухлинним спектром ніж classical MEN1. Tumor distribution:
+  primary hyperparathyroidism (найчастіший прояв, ~80%), pituitary
+  adenoma (~30-40%, часто somatotrophs / corticotrophs), GEP-NET
+  (pancreatic + duodenal + gastric — гастринома менш поширена ніж у
+  MEN1), adrenocortical tumors (modest), bronchial / thymic NET (рідко
+  але reported), reproductive-tract neuroendocrine tumors. MEN4 — later
+  age-of-onset ніж MEN1 та менш aggressive natural history у published
+  series, але registry data evolving як більше CDKN1B-carriers
+  identified. Поточний особистий діагноз раку відсутній. Prevention-
+  persona RedFlag (§20, Wave O шлях спостереження підтверджених носіїв).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_cdkn1b_pathogenic_variant_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+# MAJOR — multi-organ endocrine surveillance burden but less aggressive
+# natural history than classical MEN1 (registry data evolving); later
+# onset; PRIMARY-HYPERPARATHYROIDISM most common but typically less
+# aggressive than MEN1 multi-glandular hyperplasia.
+severity: major
+priority: 85
+category: other
+risk_category: genetic
+
+# MEN4-spectrum: GEP-NETs (DIS-PNET dominant, plus DIS-GI-NET for
+# duodenal / bronchial / thymic NETs). Primary hyperparathyroidism +
+# pituitary adenoma + adrenocortical tumors managed via endocrinology
+# surveillance without dedicated DIS-* entities.
+relevant_diseases:
+  - DIS-PNET
+  - DIS-GI-NET
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Wave O confirmed-carrier surveillance pathway — MEN4 / CDKN1B. Fires
+  on documented germline CDKN1B pathogenic variant positivity in an
+  asymptomatic individual. Engine routes to PreventionPlan recommending:
+    (a) IND-MEN4-CARRIER-SURVEILLANCE (standard) — MEN1-like multi-organ
+        screening adapted for MEN4 lower penetrance + later onset:
+        annual PTH + ionized Ca + prolactin + IGF-1 + chromogranin-A
+        starting from late childhood / adolescence (age 10-15) — later
+        than MEN1 (age 5); pituitary MRI q3-5y from age 15 (longer
+        interval than MEN1 q3y); abdominal MRI q1-2y from age 20 for
+        GEP-NET surveillance.
+    (b) IND-MEN4-CARRIER-INTENSIFIED (aggressive) — standard PLUS
+        MEN1-equivalent surveillance intervals (rather than MEN4-
+        adjusted longer intervals) for high-risk pedigrees + intensified
+        gastrinoma / Zollinger-Ellison surveillance + earlier-threshold
+        parathyroidectomy decision-making.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Source-set TODO: MEN4-specific surveillance source —
+  Pellegata et al. PNAS 2006; ENETS / ESE MEN1 / MEN4 management
+  consensus papers; Frederiksen et al. JCEM 2019 (CDKN1B variant
+  spectrum review) — Wave O authoring backlog new SRC entities.
+
+  Lifetime tumor risk in confirmed CDKN1B carriers (Frederiksen et
+  al. JCEM 2019; Alrezk et al. Endocr Relat Cancer 2017):
+    - Primary hyperparathyroidism: ~80% in published series; often
+      single-gland adenoma (vs MEN1 multi-glandular hyperplasia) —
+      surgical approach may be more conservative.
+    - Pituitary adenoma: ~30-40%; ACTH-secreting (Cushing) +
+      somatotroph (acromegaly) over-represented vs MEN1 prolactinoma
+      predominance.
+    - GEP-NET: variable; pancreatic + duodenal + gastric. Gastrinoma
+      less common than MEN1.
+    - Adrenocortical tumors: modest (~10-20%); mostly non-functioning.
+    - Bronchial / thymic NET: rare; thymic NET in male carriers
+      similarly aggressive as MEN1 (limited data).
+    - Reproductive-tract NET (cervical, testicular): reported in
+      registry data; surveillance not standardized.
+
+  MEN4 vs MEN1: Distinctions matter for counseling:
+    - Later age-of-onset overall.
+    - Parathyroid disease often single-gland (not multi-glandular).
+    - Pituitary tumor spectrum tilts toward ACTH / GH (vs prolactinoma).
+    - Penetrance variable but generally lower than MEN1.
+    - Registry data still evolving — counseling should acknowledge
+      uncertainty rather than overstate either reassurance or worry.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_o_rare_hereditary
+draft_revision: 1

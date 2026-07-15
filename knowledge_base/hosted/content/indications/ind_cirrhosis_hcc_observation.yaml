@@ -1,0 +1,123 @@
+id: IND-CIRRHOSIS-HCC-OBSERVATION
+plan_track: surveillance
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-HCC
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-CHRONIC-CIRRHOSIS-ETIOLOGY-AGNOSTIC-HCC-PREVENTION
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Symptom-driven evaluation only: cirrhotic patients without
+    surveillance typically present with HCC at BCLC B-C stage with
+    median OS measured in months (BCLC C ~10-12 months on systemic
+    therapy; BCLC D ~3-6 months on best-supportive care). Compared
+    with the structured surveillance comparator (32% relative
+    mortality reduction; more curative-intent eligibility), this
+    track carries materially worse outcomes. Reserved for cases where
+    surveillance is impractical or where the patient is not a
+    curative-intent candidate (Child-Pugh C without transplant
+    candidacy, severe comorbidities precluding any HCC-directed
+    therapy).
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Alternative-track companion to IND-CIRRHOSIS-HCC-SURVEILLANCE.
+  Used when:
+  - Access to a center experienced with cirrhotic-liver imaging is
+    impractical (rural, low-resource, no US/MRI capacity with
+    qualified hepatobiliary radiology).
+  - Patient is Child-Pugh C without transplant candidacy and is not
+    a candidate for any curative-intent HCC treatment — surveillance
+    in this scenario yields findings that cannot be acted upon, and
+    a palliative-framing discussion is more appropriate than
+    surveillance-driven anxiety.
+  - Patient declines structured q6-month US + AFP after informed
+    discussion.
+
+  Components:
+  - Etiology-specific treatment of underlying liver disease continues
+    (HBV antivirals, HCV DAAs, alcohol abstinence support, nutrition)
+    regardless of surveillance choice — these are disease-modifying
+    even without surveillance.
+  - Symptom-vigilance education: new abdominal pain (especially RUQ),
+    weight loss, jaundice progression, decompensation events
+    (variceal bleed, ascites, encephalopathy) all trigger immediate
+    evaluation.
+  - Re-evaluate the surveillance decision periodically — Child-Pugh
+    classification can shift, transplant candidacy can change with
+    weight loss / SVR12 / sobriety / etc.
+
+  Per CHARTER §11 patient-autonomy framing.
+
+rationale_ua: >
+  Альтернативно-трекова Indication. Використовується коли:
+  - Доступ до center experienced з cirrhotic-liver imaging непрактичний.
+  - Пацієнт Child-Pugh C без transplant candidacy і не є candidate для
+    будь-якого curative-intent HCC treatment — surveillance у цьому
+    сценарії yields findings які не можуть бути acted upon, і
+    palliative-framing discussion більш appropriate.
+  - Пацієнт відмовляється від structured q6-month US + AFP після
+    informed discussion.
+
+  Компоненти:
+  - Etiology-specific treatment of underlying liver disease continues
+    (HBV antivirals, HCV DAAs, alcohol abstinence, nutrition) —
+    disease-modifying навіть без surveillance.
+  - Symptom-vigilance education: new abdominal pain (особливо RUQ),
+    weight loss, jaundice progression, decompensation events.
+  - Re-evaluate surveillance decision periodically — Child-Pugh
+    classification може shift, transplant candidacy може change з
+    weight loss / SVR12 / sobriety.
+
+  Per CHARTER §11 framing автономії пацієнта.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_n_niche
+draft_revision: 1
+
+sources:
+  - source_id: SRC-AASLD-HCC-2023
+    position: context
+  - source_id: SRC-NCCN-HCC-2025
+    position: context
+
+do_not_do:
+  - "Не презентувати observation як equivalent surveillance у Child-Pugh A/B з transplant candidacy — surveillance-detected HCC має substantially better outcomes."
+  - "Не пропускати etiology-specific treatment — HBV antivirals, HCV DAAs, alcohol abstinence — disease-modifying незалежно від surveillance choice."
+  - "Не нормалізувати surveillance refusal у curative-eligible patient — counsel що surveillance-detected HCC opens transplant / resection / ablation paths недоступних при symptomatic presentation."
+  - "Не пропускати periodic re-evaluation — Child-Pugh shifts, transplant candidacy changes; surveillance decision не permanent."
+
+do_not_do_en:
+  - "Do not present observation as equivalent to surveillance in a Child-Pugh A/B patient with transplant candidacy — surveillance-detected HCC has substantially better outcomes."
+  - "Do not skip etiology-specific treatment — HBV antivirals, HCV DAAs, alcohol abstinence are disease-modifying regardless of surveillance choice."
+  - "Do not normalize surveillance refusal in a curative-eligible patient — counsel that surveillance-detected HCC opens transplant / resection / ablation paths unavailable at symptomatic presentation."
+  - "Do not skip periodic re-evaluation — Child-Pugh shifts and transplant candidacy changes; the surveillance decision is not permanent."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-20"
+reviewers: []
+reviewer_signoffs: 0
+notes: "STUB pending two-Co-Lead signoff per CHARTER §6.1 dev-mode. v0.3 wave-N niche pathway alternative track (etiology-agnostic cirrhosis HCC). Sibling — IND-CIRRHOSIS-HCC-SURVEILLANCE. §15.2 C4 ≥2-tracks invariant."

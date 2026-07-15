@@ -1,0 +1,94 @@
+id: IND-PENILE-SCC-METASTATIC-1L-CISPLATIN-5FU
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PENILE-SCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic (M1, distant nodal/visceral metastases) OR unresectable locoregional disease not amenable to surgery / consolidative lymphadenectomy"
+    - "MSI-H/dMMR not identified or not tested — see IND-PENILE-SCC-METASTATIC-1L-MSI-H-PEMBRO when MSI-H/dMMR positive"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "Preferred over the TIP triplet (REG-TIP-PENILE) for patients with ECOG 2, borderline organ function, or otherwise unable to tolerate triplet-chemotherapy toxicity"
+
+recommended_regimen: REG-CISPLATIN-5FU-PENILE
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+
+expected_outcomes:
+  overall_response_rate: "Historic small series report partial responses in a minority of patients; no large prospective trial exists in this rare disease"
+  progression_free_survival: "Limited durable benefit; most responses are partial and not sustained"
+  overall_survival_5y: "Poor for metastatic penile SCC — DIS-PENILE-SCC epidemiology reports <20% 5-year OS for stage IV disease"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PENILE-SCC-MSI-H-ACTIONABILITY
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+
+desired_tests:
+  - TEST-MSI-PCR-OR-NGS
+  - TEST-DMMR-IHC
+
+rationale: >
+  Metastatic or unresectable penile SCC has a poor prognosis and a sparse
+  evidence base (no phase III RCTs — rare disease). Per EAU guidelines,
+  cisplatin + 5-fluorouracil is one of two chemotherapy options (alongside
+  TIP — see IND-PENILE-SCC-METASTATIC-1L-TIP), generally the
+  better-tolerated doublet for patients not fit for triplet chemotherapy
+  or with borderline organ function. MSI-H/dMMR testing should be
+  considered where feasible — a small subset of penile SCC is MSI-H and
+  may benefit from pembrolizumab (tissue-agnostic approval) instead of
+  chemotherapy; see IND-PENILE-SCC-METASTATIC-1L-MSI-H-PEMBRO.
+
+rationale_ua: >
+  Метастатична або нерезектабельна SCC пенісу має несприятливий прогноз
+  та обмежену доказову базу (немає РКД фази 3 — рідкісне захворювання).
+  За EAU guidelines, цисплатин + 5-фторурацил — один із двох
+  хіміотерапевтичних варіантів (поряд з TIP), як правило, краще
+  переносимий дублет для пацієнтів, не придатних для триплетної
+  хіміотерапії. Тестування MSI-H/dMMR варто розглянути, коли можливо.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+draft_revision: 1
+
+sources:
+  - source_id: SRC-EAU-PENILE-2024
+    position: supports
+    relevant_quote_paraphrase: "EAU Penile Cancer Guidelines: cisplatin + 5-FU or TIP as chemotherapy options for metastatic/unresectable penile SCC."
+
+do_not_do_en:
+  - "Do not start cisplatin without confirming adequate renal function (CrCl) and a hydration protocol — substitute carboplatin if CrCl <50 mL/min."
+  - "Do not treat MSI-H/dMMR-confirmed disease with chemotherapy as the automatic default without considering pembrolizumab (tissue-agnostic MSI-H approval)."
+  - "Do not withhold a best-supportive-care discussion — the evidence base for cytotoxic benefit in this setting is limited and treatment intent should be clearly communicated as disease-control, not curative."
+
+do_not_do:
+  - "Не розпочинати цисплатин без підтвердження адекватної ниркової функції та протоколу гідратації — замінити карбоплатином при CrCl <50 мл/хв."
+  - "Не лікувати MSI-H/dMMR-підтверджене захворювання хіміотерапією за замовчуванням без розгляду пембролізумабу."
+  - "Не оминати обговорення найкращої підтримуючої терапії — доказова база обмежена."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — Phase 1. Transcribed from DIS-PENILE-SCC narrative ("cisplatin +
+  5-FU OR TIP per EAU"). Regimen dosing (REG-CISPLATIN-5FU-PENILE) drafted
+  using the standard cisplatin+5-FU SCC-doublet convention (analogous to
+  head & neck / cervical / anal SCC use of this doublet) — no
+  penile-specific phase III dosing trial exists to cite. Requires
+  medical-oncology co-lead signoff before clinical publication (CHARTER
+  §6.1; dev-mode-exempted for draft merge).

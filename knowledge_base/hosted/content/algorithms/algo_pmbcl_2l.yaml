@@ -21,12 +21,14 @@ decision_tree:
   evaluate:
     all_of:
     - condition: R-ICE x 2 cycles completed
-    - condition: Interim Deauville ≥4 (no metabolic response) — chemorefractory
+    - finding: "pet_deauville_score"
+      threshold: 4
+      comparator: ">="
   if_true:
     result: IND-PMBCL-2L-RICE-AUTOSCT
   if_false:
     next_step: 3
-  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+  notes: "Mechanical rewire of the original free-text gate (Interim Deauville ≥4 chemorefractory check) into a finding: clause using pet_deauville_score (matches RF-PMBCL-TRANSFORMATION-PROGRESSION's same-disease DIS-PMBCL trigger, already used in step 4 of this algorithm). 'R-ICE x 2 cycles completed' remains free-text — no cycles-completed/treatment-milestone finding or RF exists anywhere in the KB; step still requires MDT evaluation overall (all_of needs both clauses to fire). Original clinical criteria unchanged."
 - step: 3
   evaluate:
     all_of:
@@ -37,12 +39,13 @@ decision_tree:
       - red_flag: RF-ORGAN-CARDIAC-LVEF-LOW
     - condition: Age ≤65-70, (transplant-eligible)
     - condition: First relapse OR primary refractory with chemosensitive disease
-    - condition: CD20+ confirmed at relapse biopsy
+    - finding: "BIO-CD20-IHC"
+      value: "positive"
   if_true:
     result: IND-PMBCL-2L-RICE-AUTOSCT
   if_false:
     next_step: 4
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Mechanical rewire of the original free-text gate (CD20+ confirmed at relapse biopsy) into a finding: clause using BIO-CD20-IHC=positive (same-disease DIS-PMBCL questionnaire field biomarkers.BIO-CD20-IHC). Fitness/eligibility gates (ECOG, renal, cardiac) remain wired via CSD-7A pan-disease RFs as before. 'Age ≤65-70' (ambiguous dual threshold) and 'First relapse OR primary refractory with chemosensitive disease' (no matching finding/RF for chemosensitivity or relapse-count) remain MDT-evaluated free-text. Original clinical criteria unchanged."
 - step: 4
   evaluate:
     any_of:

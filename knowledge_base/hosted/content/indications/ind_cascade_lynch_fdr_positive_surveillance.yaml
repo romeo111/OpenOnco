@@ -1,0 +1,148 @@
+id: IND-CASCADE-LYNCH-FDR-POSITIVE-SURVEILLANCE
+plan_track: surveillance
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-CRC
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-CASCADE-LYNCH-FDR-POSITIVE
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Empirical enhanced surveillance applied to a first-degree relative
+    of a confirmed Lynch carrier — without genetic confirmation —
+    captures cancer at earliest detectable stage in the **50% of
+    patients who are actual carriers** (autosomal-dominant prior
+    probability), but subjects the **other 50%** (non-carriers) to
+    intensive surveillance they could have safely declined had cascade
+    testing been completed. Diagnostic precision of confirmed carrier
+    status is absent; this pathway accepts that loss in exchange for
+    surveillance benefit when the patient declines testing.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Alternative-track companion to IND-CASCADE-LYNCH-FDR-POSITIVE-TESTING.
+  Applied when a first-degree relative of a confirmed Lynch (MMR /
+  EPCAM) carrier declines cascade germline testing — for any reason
+  (cost, insurance concerns, psychological / anxiety considerations,
+  family privacy, geographic access constraints) — and is offered
+  empirical enhanced surveillance applied as if Lynch were confirmed.
+  The **50% prior probability** of carrier status is high enough to
+  justify intensive surveillance without genetic confirmation, but
+  patient autonomy (CHARTER §11) governs the choice.
+
+  **Colorectal:** Colonoscopy q1-2 years starting age 25 (or 10 years
+  before youngest CRC dx in family, whichever earlier). Removal of all
+  polyps; histologic review for adenomas / serrated lesions. Cadence
+  shortens to annual after age 40 or with any adenoma history.
+
+  **Endometrial / ovarian (women):** Annual endometrial sampling +
+  transvaginal ultrasound starting age 30-35. Patient education on
+  abnormal uterine bleeding — earliest presentation is the strongest
+  factor in mortality reduction. Risk-reducing hysterectomy + BSO
+  post-childbearing age 40+ is NOT offered empirically — that decision
+  requires genetic confirmation (CHARTER §11 shared-decision-making,
+  surgical irreversibility, menopausal-sequelae weight).
+
+  **Urothelial:** Annual urinalysis ± urine cytology starting age 30-35.
+  Low-threshold cystoscopy for hematuria.
+
+  **Gastric:** Surveillance EGD q3-5y from age 30-35 if family history
+  includes gastric cancer; H. pylori eradication regardless.
+
+  **Pancreatic (PDAC):** No routine pancreatic screening unless ≥2
+  first/second-degree affected family members — empirical
+  surveillance via EUS / MRI is not warranted by single relative's
+  carrier status alone.
+
+  **Periodic re-discussion of cascade testing** is appropriate at every
+  surveillance visit. Most patients eventually accept testing after
+  additional visits and reduced anxiety; the alternative track does
+  not preclude future genetic testing.
+
+  Routing reconsiderations: if patient eventually accepts cascade
+  testing, results route to (a) confirmed-carrier pathway via
+  RF-LYNCH-CONFIRMED-CARRIER, or (b) general-population pathway if
+  familial variant is absent.
+
+rationale_ua: >
+  Альтернативно-трекова Indication — компаньйон до
+  IND-CASCADE-LYNCH-FDR-POSITIVE-TESTING. Застосовується коли родич
+  першого ступеня підтвердженого Lynch (MMR / EPCAM) носія
+  відмовляється від cascade germline тестування — з будь-якої причини
+  (вартість, страхові міркування, психологічні / тривожні міркування,
+  сімейна приватність, географічні обмеження) — і отримує empіричне
+  посилене спостереження, як якщо б Lynch був підтверджений. **50%
+  апріорна ймовірність** носійства достатньо висока, щоб виправдати
+  інтенсивне спостереження без генетичного підтвердження, але
+  автономія пацієнта (CHARTER §11) керує вибором.
+
+  **Колоректальне:** Колоноскопія q1-2 роки з 25-річного віку (або 10
+  років до наймолодшого КРР діагнозу в сім'ї).
+
+  **Ендометріальне / оваріальне (жінки):** Щорічна біопсія
+  ендометрію + TVUS з 30-35 років. Risk-reducing гістеректомія + BSO
+  НЕ пропонується empіричнo — це потребує генетичного підтвердження.
+
+  **Уротеліальне:** Щорічний аналіз сечі з 30-35 років.
+
+  **Шлункове:** EGD q3-5y з 30-35 років при сімейній історії раку
+  шлунка.
+
+  **Підшлункова (PDAC):** Без routine surveillance.
+
+  **Periodic re-discussion** cascade тестування доречне на кожному
+  surveillance візиті. Більшість пацієнтів врешті приймають
+  тестування. Per CHARTER §11 framing автономії пацієнта.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_b_cascade_pilot
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+    position: supports
+  - source_id: SRC-ASCO-ACMG-LYNCH-2014
+    position: supports
+  - source_id: SRC-ESMO-CRC-2024
+    position: supports
+
+do_not_do:
+  - "Не презентувати empirical surveillance як еквівалент genetic confirmation — diagnostic precision відсутня; 50% пацієнтів — non-carriers, які могли б безпечно decline surveillance."
+  - "Не рекомендувати risk-reducing hysterectomy / BSO без genetic confirmation — surgical irreversibility + menopausal наслідки потребують підтвердженого carrier diagnosis."
+  - "Не пропускати periodic re-discussion про cascade testing — більшість пацієнтів врешті приймають тестування після додаткових візитів."
+  - "Не використовувати empirical pancreatic screening без ≥2 first/second-degree-affected — single FDR-positive не warrant EUS / MRI surveillance."
+  - "Не auto-prescribe аспірин (CAPP2) empіричнo без підтвердженого carrier статусу — CAPP2 ефекти документовані у MLH1 / MSH2 carriers, не в FDR-positive cohort."
+
+do_not_do_en:
+  - "Do not present empirical surveillance as equivalent to genetic confirmation — diagnostic precision is absent; 50% of patients are non-carriers who could safely decline surveillance."
+  - "Do not recommend risk-reducing hysterectomy / BSO without genetic confirmation — surgical irreversibility and menopausal sequelae require confirmed carrier diagnosis."
+  - "Do not skip periodic re-discussion of cascade testing — most patients eventually accept testing after additional visits."
+  - "Do not use empirical pancreatic screening without ≥2 first/second-degree-affected — single FDR-positive does not warrant EUS / MRI surveillance."
+  - "Do not auto-prescribe aspirin (CAPP2) empirically without confirmed carrier status — CAPP2 effects are documented in MLH1 / MSH2 carriers, not in FDR-positive cohorts."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-19"
+reviewers: []
+reviewer_signoffs: 0
+notes: STUB — alternative-track companion for Lynch cascade-testing pilot. §15.2 C4 ≥2-tracks invariant compliance.

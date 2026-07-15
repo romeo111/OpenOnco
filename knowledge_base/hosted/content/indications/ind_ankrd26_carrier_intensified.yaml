@@ -1,0 +1,149 @@
+id: IND-ANKRD26-CARRIER-INTENSIFIED
+plan_track: aggressive
+intent: surveillance
+
+applicable_to:
+  disease_id: DIS-MDS-HR
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-ANKRD26-CONFIRMED-CARRIER
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Intensified-track surveillance (scheduled BMA every 3-5 years
+    regardless of CBC stability, q3-month CBC during pregnancy /
+    perioperative windows, preemptive donor germline mapping) carries
+    higher patient-burden and is appropriate where the carrier prefers
+    the higher-intensity option after shared-decision-making. Lifetime
+    cumulative myeloid malignancy risk (~5-10% per Noris 2011) is
+    lower than RUNX1 or DDX41 carriers, making the marginal-benefit
+    over standard track narrower.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests:
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-BM-ASPIRATE
+  - TEST-NGS-MYELOID-PANEL
+  - TEST-COAG-PANEL
+
+rationale: >
+  Alternative-track companion to IND-ANKRD26-CARRIER-SURVEILLANCE.
+  Intensified cadence reflects carrier-preference for proactive
+  monitoring in the THC2 phenotype despite the lower-than-RUNX1 /
+  DDX41 lifetime malignancy incidence.
+
+  **CBC + smear q3 months during pregnancy + perioperative windows:**
+  Standard surveillance cadence is q6 months; intensified track adds
+  q3-month windows around pregnancy (each trimester + postpartum) and
+  major-surgery / dental-procedure windows (pre-procedure within 4
+  weeks + post-procedure at 2 + 6 weeks). Pregnancy-aware monitoring
+  accounts for the carrier's baseline thrombocytopenia compounding
+  with pregnancy-physiologic changes.
+
+  **Scheduled BMA every 3-5 years from carrier confirmation:**
+  Provoked BMA (any unexplained change in non-platelet lineage)
+  remains the primary trigger, but scheduled BMA at 3-5 year intervals
+  is added in this track regardless of CBC stability. The myeloid
+  NGS panel must include ANKRD26 (full coding + 5′UTR), ASXL1, BCOR,
+  monosomy-7 / del(5q), TP53.
+
+  **Preemptive HLA typing of candidate sibling-donor cohort +
+  germline-testing of all candidates:** Performed BEFORE any MDS /
+  AML diagnosis. ANKRD26-carrier siblings excluded from donor
+  candidacy. Unrelated-donor search initiated if no eligible
+  sibling. This step is identical to the other hereditary-myeloid
+  carrier syndromes and applies regardless of the lower-than-
+  RUNX1 / DDX41 lifetime malignancy incidence in ANKRD26 — the
+  consequence of donor-derived disease is catastrophic regardless
+  of base rate.
+
+  **Structured bleeding-risk plan for major surgery / obstetric
+  care:** Pre-procedure platelet-function-aware coagulation
+  consultation; tranexamic acid + DDAVP considerations; platelet
+  transfusion thresholds individualized; multidisciplinary
+  obstetric-hematology plan for any pregnancy.
+
+  Per CHARTER §11 patient-autonomy framing: intensified cadence
+  carries higher procedural burden and a narrower marginal-benefit
+  in ANKRD26 compared to higher-penetrance hereditary-myeloid
+  carriers (CEBPA, DDX41, RUNX1); explicit shared-decision-making
+  is essential.
+
+rationale_ua: >
+  Альтернативно-трекова Indication, sibling до IND-ANKRD26-CARRIER-
+  SURVEILLANCE. Інтенсифікована cadence відображає carrier-preference
+  для проактивного моніторингу у THC2 фенотипі попри нижчу-за-RUNX1 /
+  DDX41 довічну malignancy incidence.
+
+  **ЗАК + мазок q3 місяці під час вагітності + періопераційних вікон:**
+  Стандартна surveillance cadence — q6 місяців; інтенсифікований трек
+  додає q3-місячні вікна навколо вагітності (кожен триместр + post-
+  partum) і major-surgery / dental-procedure вікон.
+
+  **Запланована BMA кожні 3-5 років від підтвердження носійства:**
+  Provoked BMA залишається primary тригером, але запланована BMA на
+  3-5 річних інтервалах додана в цьому треку незалежно від CBC
+  stability. Myeloid NGS panel має включати ANKRD26 (повний coding +
+  5′UTR), ASXL1, BCOR, моносомію-7 / del(5q), TP53.
+
+  **Pre-emptive HLA-типування кандидат-сиблінг-донор-cohort +
+  germline-тестування всіх кандидатів:** Виконується ДО будь-якого
+  діагнозу МДС / ГМЛ. ANKRD26-носії-сиблінги виключаються з donor-
+  candidacy. Unrelated-donor search розпочатий, якщо немає eligible
+  сиблінга.
+
+  **Структурований bleeding-risk план для major surgery / obstetric
+  care:** Pre-procedure platelet-function-aware coagulation
+  консультація; tranexamic acid + DDAVP міркування; platelet
+  transfusion thresholds індивідуалізовані; multidisciplinary
+  obstetric-hematology план для будь-якої вагітності.
+
+  Per CHARTER §11 framing автономії пацієнта.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_hereditary_myeloid
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: context
+  - source_id: SRC-ESMO-MDS-2021
+    position: context
+  - source_id: SRC-ELN-AML-2022
+    position: context
+
+do_not_do:
+  - "Не рекомендувати інтенсифіковану-трек cadence без явного shared-decision-making — у ANKRD26 marginal-benefit над стандартним треком вужча ніж у вищо-penetrance hereditary-myeloid carriers (CEBPA, DDX41, RUNX1)."
+  - "Не виконувати запланованої BMA без супутнього myeloid NGS panel — somatic-acquired clones at low VAF можуть бути пропущені без NGS."
+  - "Не використовувати кандидат-сиблінг-донора, доки germline-screening не завершений — навіть нижчий-base-rate ANKRD26 не звільняє від цієї вимоги."
+  - "Не пропускати pre-procedure hematology консультацію перед major surgery в інтенсифікованому-треку — bleeding-risk planning є невід'ємною частиною плану."
+
+do_not_do_en:
+  - "Do not recommend the intensified-track cadence without explicit shared-decision-making — in ANKRD26 the marginal benefit over the standard track is narrower than in higher-penetrance hereditary-myeloid carriers (CEBPA, DDX41, RUNX1)."
+  - "Do not perform scheduled BMA without companion myeloid NGS panel — somatic-acquired clones at low VAF can be missed without NGS."
+  - "Do not use a candidate sibling donor before germline-screening is completed — the lower-base-rate ANKRD26 does not exempt from this requirement."
+  - "Do not skip pre-procedure hematology consultation before major surgery in the intensified track — bleeding-risk planning is integral to the plan."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-20"
+reviewers: []
+reviewer_signoffs: 0
+notes: "STUB — Wave P ANKRD26 intensified-track. §15.2 C4 ≥2-tracks invariant. Sibling — IND-ANKRD26-CARRIER-SURVEILLANCE (standard plan_track)."

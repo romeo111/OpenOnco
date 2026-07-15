@@ -1,0 +1,88 @@
+id: IND-PITUITARY-ADENOMA-1L-NFPA-SURGERY-MASS-EFFECT
+plan_track: local_therapy
+
+applicable_to:
+  disease_id: DIS-PITUITARY-ADENOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Nonfunctioning pituitary adenoma (NFPA) confirmed: no biochemical evidence of hormone hypersecretion (prolactin, IGF-1, ACTH/cortisol, TSH/free T4, gonadotropins/sex hormones within expected range or elevation attributable to stalk-effect hyperprolactinemia only) — see RF-PITUITARY-MASS-EFFECT-VISUAL-COMPROMISE for the surgical-urgency gate"
+    - "Radiographic mass effect on the optic chiasm with visual field/acuity compromise, other compressive cranial neuropathy, or hypopituitarism attributable to sellar/suprasellar mass effect — RF-PITUITARY-MASS-EFFECT-VISUAL-COMPROMISE positive"
+    - "Asymptomatic, non-compressive NFPA (small incidental microadenoma or macroadenoma without chiasm involvement) is managed with observation and surveillance MRI, not covered by this active-therapy Indication"
+  biomarker_requirements_required:
+    - biomarker_id: "adenoma_hormone_type"
+      required: true
+      value_constraint: "nonfunctioning (no hormone hypersecretion)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+
+expected_outcomes:
+  overall_response_rate: "Visual field/acuity improvement in most patients with timely surgical decompression; degree of recovery depends on severity and duration of pre-operative chiasm compression"
+  complete_response:
+  progression_free_survival: "Recurrence/regrowth risk depends on extent of resection and residual tumor; long-term MRI surveillance required after subtotal resection"
+  overall_survival_5y:
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-OPHTHALMOLOGIC-EXAM
+  - TEST-CBC
+  - TEST-CMP
+desired_tests: []
+
+rationale: >
+  Per the Disease narrative, nonfunctioning pituitary adenoma is managed
+  with surgery only for mass effect / visual compromise — asymptomatic,
+  non-compressive NFPA is observed rather than actively treated (mirrors
+  the existing "active surveillance, not a separate indication" pattern
+  used elsewhere in this KB, e.g. ALGO-GI-NET-ADVANCED-1L). Management is
+  primarily local therapy (maximal safe transsphenoidal resection); a
+  dedicated Procedure/Surgery entity for pituitary surgery has not yet been
+  authored in this KB (open gap — see DIS-PITUITARY-ADENOMA proposal
+  notes), so `recommended_regimen` and `phases:` are left unset and surgery
+  is described here in prose only, consistent with the meningioma
+  local-therapy Indication's structure but without its `phases:`/surgery_id
+  fields. Terminal, parallel cohort — not a sequential line relative to the
+  other three hormone-hypersecretion cohorts.
+
+sources:
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+
+do_not_do:
+  - "Не оперувати безсимптомну, некомпресивну нефункціонуючу аденому гіпофіза — показане спостереження з контрольною МРТ."
+  - "Не пропускати повне біохімічне обстеження гормонів гіпофіза перед класифікацією аденоми як нефункціонуючої."
+
+do_not_do_en:
+  - "Do not operate on asymptomatic, non-compressive nonfunctioning pituitary adenoma — observation with surveillance MRI is indicated."
+  - "Do not skip a complete pituitary hormone biochemical panel before classifying an adenoma as nonfunctioning."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+review_status: stub
+drafted_by: claude_v0_2_a_anchor
+reviewer_signoffs: []
+notes: >
+  STUB pending clinical co-lead signoff (CHARTER §6.1 — dev-mode-exempted,
+  safe to merge as draft content, not published/verified clinical advice).
+  One of four parallel, cohort-specific 1L Indications for
+  DIS-PITUITARY-ADENOMA, routed by ALGO-PITUITARY-ADENOMA-1L (steps 4-5:
+  nonfunctioning hormone type AND RF-PITUITARY-MASS-EFFECT-VISUAL-
+  COMPROMISE positive). Coverage-enabling local-therapy indication;
+  requires neurosurgery co-lead signoff before clinical publication.
+notes_ua: >
+  ЗАГЛУШКА (STUB) до підпису клінічного співкерівника. Одна з чотирьох
+  паралельних когорт-специфічних показань першої лінії для аденоми гіпофіза
+  (нефункціонуюча аденома з мас-ефектом).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_a_anchor
+draft_revision: 1
