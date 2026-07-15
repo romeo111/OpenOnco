@@ -10,6 +10,7 @@ import argparse
 import re
 import sys
 from dataclasses import dataclass, field
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -22,6 +23,12 @@ from knowledge_base.schemas.biomarker_actionability import (
 from knowledge_base.schemas.indication import normalize_legacy_indication_payload
 from knowledge_base.schemas.regimen import normalize_legacy_regimen_payload
 from knowledge_base.schemas.source import normalize_legacy_source_payload
+
+
+# Days after which a `review_status: reviewed` Handbook entity should be
+# transitioned to `needs_refresh`. Per HANDBOOK_MODE_SPEC §4 — annual
+# refresh cycle is the standard for educational clinical content.
+HANDBOOK_REVIEW_STALE_DAYS = 365
 
 
 # Which fields on which entity types carry IDs that must resolve elsewhere.
@@ -71,6 +78,13 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
     "sources": [],
     "workups": [
         # required_tests handled specially (list of Test IDs)
+    ],
+    "handbook_chapters": [
+        # disease_ids, source_ids, and linked_entities handled specially
+    ],
+    "handbook_questions": [
+        ("chapter_id", "handbook_chapters"),
+        # source_ids and linked_entity_ids handled specially
     ],
     "reviewers": [],
     # §17 ratified 2026-05-07 — Surgery + RadiationCourse first-class entities.
@@ -406,6 +420,14 @@ def _load_content_impl(
                  f"{field_label}: '{ref_id}' found but as {actual_type}, expected {target_type}")
             )
 
+    def check_any_ref(path: Path, ref_id, field_label: str) -> None:
+        if ref_id is None or ref_id == "":
+            return
+        if ref_id not in result.entities_by_id:
+            result.ref_errors.append(
+                (path, f"{field_label}: '{ref_id}' not found in any loaded entity")
+            )
+
     for eid, info in result.entities_by_id.items():
         etype = info["type"]
         data = info["data"]
@@ -568,6 +590,78 @@ def _load_content_impl(
             roles_block = data.get("triggers_mdt_roles") or {}
             # role IDs are NOT validated against KB entities — they're a
             # closed enum in mdt_orchestrator._ROLE_CATALOG, not KB content
+
+        elif etype == "handbook_chapters":
+            for i, did in enumerate(data.get("disease_ids") or []):
+                check_ref(path, did, "diseases", f"disease_ids[{i}]")
+            for i, sid in enumerate(data.get("source_ids") or []):
+                check_ref(path, sid, "sources", f"source_ids[{i}]")
+            linked = data.get("linked_entities") or {}
+            linked_targets = {
+                "diseases": "diseases",
+                "algorithms": "algorithms",
+                "indications": "indications",
+                "regimens": "regimens",
+                "redflags": "redflags",
+                "biomarkers": "biomarkers",
+                "workups": "workups",
+                "tests": "tests",
+            }
+            for field_name, target_type in linked_targets.items():
+                for i, ref_id in enumerate(linked.get(field_name) or []):
+                    check_ref(
+                        path,
+                        ref_id,
+                        target_type,
+                        f"linked_entities.{field_name}[{i}]",
+                    )
+            for section_i, section in enumerate(data.get("sections") or []):
+                if not isinstance(section, dict):
+                    continue
+                for i, sid in enumerate(section.get("source_ids") or []):
+                    check_ref(path, sid, "sources", f"sections[{section_i}].source_ids[{i}]")
+                for i, ref_id in enumerate(section.get("linked_entity_ids") or []):
+                    check_any_ref(path, ref_id, f"sections[{section_i}].linked_entity_ids[{i}]")
+        elif etype == "handbook_questions":
+            for i, sid in enumerate(data.get("source_ids") or []):
+                check_ref(path, sid, "sources", f"source_ids[{i}]")
+            for i, ref_id in enumerate(data.get("linked_entity_ids") or []):
+                check_any_ref(path, ref_id, f"linked_entity_ids[{i}]")
+
+        # Handbook review-workflow cross-checks (HANDBOOK_MODE_SPEC §4):
+        # validate reviewer_id refs and surface stale `reviewed` content
+        # so it can be transitioned to `needs_refresh`. The schema already
+        # rejects status/metadata mismatches; here we do the cross-entity
+        # and time-sensitive checks.
+        if etype in {"handbook_chapters", "handbook_questions"}:
+            for i, signoff in enumerate(data.get("reviewer_signoffs") or []):
+                if not isinstance(signoff, dict):
+                    continue
+                rid = signoff.get("reviewer_id")
+                if rid:
+                    check_ref(path, rid, "reviewers", f"reviewer_signoffs[{i}].reviewer_id")
+            review_status = data.get("review_status", "draft")
+            last_reviewed = data.get("last_reviewed")
+            if review_status == "reviewed" and last_reviewed:
+                try:
+                    review_date = date.fromisoformat(str(last_reviewed).split("T", 1)[0])
+                except (TypeError, ValueError):
+                    result.contract_warnings.append(
+                        (path, f"{eid}: last_reviewed={last_reviewed!r} is not a valid ISO date")
+                    )
+                else:
+                    age_days = (date.today() - review_date).days
+                    if age_days > HANDBOOK_REVIEW_STALE_DAYS:
+                        result.contract_warnings.append((
+                            path,
+                            f"{eid}: last_reviewed={last_reviewed} is {age_days} days old "
+                            f"(>{HANDBOOK_REVIEW_STALE_DAYS}-day threshold); transition to "
+                            "review_status: needs_refresh"
+                        ))
+            if review_status == "draft":
+                result.contract_warnings.append(
+                    (path, f"{eid}: handbook draft — needs clinical review before merge")
+                )
 
         # Generic top-level sources list (lots of entities have it).
         # Drafts skip ref-check on sources because authors leave SRC-TODO
