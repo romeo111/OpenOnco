@@ -1,0 +1,71 @@
+id: REG-CINACALCET-HYPERCALCEMIA
+name: "Cinacalcet for hypercalcemia of parathyroid carcinoma"
+name_ua: "Цинакалцет при гіперкальціємії внаслідок карциноми паращитоподібної залози"
+alternate_names: ["Calcimimetic therapy for PTC-associated hypercalcemia"]
+disease_context: DIS-PARATHYROID-CARCINOMA
+plan_track: standard
+regimen_type: "calcimimetic_supportive_care"
+
+components:
+  - drug_id: DRUG-CINACALCET
+    dose: "30 mg PO BID initial; titrate no more than q2-4wk to 60 mg BID → 90 mg BID → 90 mg TID → 90 mg QID (max) to normalize serum calcium"
+    schedule: "Continuous, with food; dose escalation guided by serial serum calcium"
+    route: PO
+
+total_cycles: "Continuous — until hypercalcemia is controlled, disease progression, or intolerance"
+
+toxicity_profile: low
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Serum calcium normalizes or approaches the lower limit of normal during titration"
+    modification: "Hold further dose escalation; consider dose reduction if calcium falls below normal"
+    rationale: "Cinacalcet has a narrow therapeutic window between hypercalcemia control and iatrogenic hypocalcemia"
+    source_refs: [SRC-NCCN-THYROID-2025]
+  - condition: "Symptomatic hypocalcemia or serum calcium below the normal range"
+    modification: "Hold cinacalcet; correct calcium; if still indicated, resume at a lower dose once calcium normalizes"
+    rationale: "Dose-dependent hypocalcemia is the principal on-target toxicity"
+    source_refs: [SRC-NCCN-THYROID-2025]
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Ukraine registration/reimbursement status for cinacalcet not
+    independently verified for this draft — likely limited/
+    out-of-pocket access given the rarity of the FDA-labeled indication.
+
+sources:
+  - SRC-NCCN-THYROID-2025
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+review_status: stub
+drafted_by: claude_agent_draft
+notes: >
+  STUB pending clinical co-lead signoff (CHARTER §6.1 — dev-mode-
+  exempted draft content). Cinacalcet controls PTH-driven hypercalcemia
+  in unresectable, recurrent, or metastatic parathyroid carcinoma; it
+  has no direct antitumor effect. Re-resection of accessible disease,
+  where surgically feasible, remains the preferred disease-directed
+  intervention alongside this regimen in the recurrent/metastatic
+  setting (see IND-PARATHYROID-CARCINOMA-2L-CINACALCET) — not encoded
+  as a regimen component because surgical feasibility is
+  patient/anatomy-specific, not a fixed pharmacologic step.
+  Bisphosphonates (DRUG-ZOLEDRONATE) or denosumab (DRUG-DENOSUMAB) are
+  complementary options for skeletal-related-event prevention in
+  bone-metastatic disease and for hypercalcemia refractory to
+  cinacalcet alone — not bundled into this regimen because they act on
+  a distinct mechanism (osteoclast-mediated bone turnover vs. PTH
+  secretion) and no fixed combination schedule is established in
+  guidelines; use per concurrent clinical need alongside this regimen.
+notes_ua: >
+  СТАБ — очікує підпису клінічного співкерівника. Цинакалцет контролює
+  ПТГ-залежну гіперкальціємію при нерезектабельній, рецидивній або
+  метастатичній карциномі паращитоподібної залози; прямого
+  протипухлинного ефекту не має.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_agent_draft

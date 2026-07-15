@@ -1,0 +1,158 @@
+id: IND-RHABDOID-PREDISPOSITION-CARRIER-SURVEILLANCE
+plan_track: standard
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-GLIOMA-LOW-GRADE
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-RHABDOID-PREDISPOSITION-CONFIRMED-CARRIER
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Standard-track surveillance for confirmed Rhabdoid Tumor Predisposition
+  Syndrome (RTPS1 / SMARCB1 or RTPS2 / SMARCA4) carriers per Foulkes
+  et al. 2017 (Clin Cancer Res, AACR Childhood Cancer Predisposition
+  Workshop) and the European Rhabdoid Registry / EU-RHAB consensus.
+
+  **Disease-spectrum note.** The KB anchor `DIS-GLIOMA-LOW-GRADE` is the
+  closest CNS entity currently available. The actual cancer spectrum
+  surveilled here is **distinct from low-grade glioma**: it comprises
+  atypical teratoid / rhabdoid tumor (ATRT — embryonal CNS tumor, WHO
+  grade 4, infancy peak), extracranial malignant rhabdoid tumor (MRT —
+  kidney / liver / soft tissue), and small cell carcinoma of the ovary
+  hypercalcemic type (SCCOHT — SMARCA4 carriers only, adolescent/young-
+  adult presentation). HCP-side rendering must surface this entity
+  distinction; the engine routing uses the disease anchor for
+  algorithmic matching only.
+
+  **(1) Brain MRI q3 months from birth through age 4, then q6 months
+  through age 5** — covers the steep ATRT incidence peak in the first
+  24 months. Contrast (gadolinium) is included for early detection of
+  sub-centimeter tumors; sedation logistics in infants are a known
+  constraint but the benefit-risk profile favors imaging in this
+  population. MRI ends at age 5; the residual lifetime risk after age
+  5 is sufficiently low that routine CNS imaging stops.
+
+  **(2) Whole-body MRI q3-6 months through age 5** — covers extracranial
+  MRT (kidney being the most common site, then liver, then paraspinal
+  soft tissue). Some EU-RHAB centers use abdominal US as an interim
+  modality between WB-MRI rounds. q3mo is the EU-RHAB-recommended
+  cadence; some sites use q6mo to limit sedation burden.
+
+  **(3) SMARCA4-specific SCCOHT surveillance (female carriers):**
+  transvaginal ultrasound + bimanual pelvic exam starting at menarche
+  (or age 12 if menarche is delayed), annually. SCCOHT presents
+  aggressively in adolescents and young adults; risk-reducing
+  bilateral salpingo-oophorectomy may be discussed after reproductive
+  decisions are complete. Discussion is intensive-counseling, not
+  Indication-driven recommendation in the prevention track.
+
+  **(4) Surveillance discontinues largely at age 5 for SMARCB1
+  carriers; SMARCA4 carriers continue the SCCOHT-specific protocol
+  lifelong (women) and transition to adult-onset schwannomatosis
+  surveillance (both sexes) per neurology / genetics co-management.**
+
+  **(5) Avoid unnecessary radiation:** these tumors are SWI/SNF-pathway
+  driven and the chemo/RT response of established disease is poor;
+  the prevention rationale is early detection enabling complete
+  resection, not radiotherapy-based prophylaxis. CT use should be
+  diagnostic, not routine screening.
+
+  **Routing intent:** prevention-time HCP-mediated counseling for the
+  family of an infant with confirmed RTPS1 / RTPS2. Cancer-specific
+  treatment Indications are not recommended at this stage — the
+  intervention here is intensive structured early detection plus
+  genetic-counseling follow-up for at-risk relatives.
+
+rationale_ua: >
+  Стандартний-трек спостереження для підтверджених носіїв Rhabdoid
+  Tumor Predisposition Syndrome (RTPS1 / SMARCB1 або RTPS2 / SMARCA4)
+  per Foulkes et al. 2017 та EU-RHAB консенсус.
+
+  **Замітка про спектр захворювання.** Якір `DIS-GLIOMA-LOW-GRADE` — це
+  найближча CNS-сутність, наявна у KB. Фактичний спектр пухлин, що тут
+  спостерігається, **відмінний від low-grade glioma**: atypical
+  teratoid / rhabdoid tumor (ATRT — ембріональна пухлина ЦНС, WHO
+  grade 4, пік у дитинстві), екстракраніальна malignant rhabdoid
+  tumor (MRT — нирка / печінка / м'які тканини), small cell carcinoma
+  яєчника гіперкальціємічного типу (SCCOHT — лише SMARCA4 носії).
+  Render-шар повинен показати це розрізнення; engine routing
+  використовує disease-anchor лише для алгоритмічного matching.
+
+  **(1) MRI мозку q3 місяців з народження до 4 років, потім q6
+  місяців до 5 років** — покриває крутий пік захворюваності ATRT у
+  перші 24 місяці. Контраст (gadolinium) необхідний для виявлення
+  sub-cm пухлин; sedation logistics — відомий обмежник.
+
+  **(2) Whole-body MRI q3-6 місяців до 5 років** — покриває
+  екстракраніальну MRT (нирка — найчастіша локалізація, потім печінка,
+  потім paraspinal soft tissue). q3mo — EU-RHAB рекомендований
+  cadence.
+
+  **(3) SMARCA4-специфічне спостереження SCCOHT (жіночі носії):**
+  трансвагінальне УЗД + bimanual pelvic огляд починаючи з менархе
+  (або 12 років при затримці), щорічно. Ризик-знижуюча bilateral
+  salpingo-oophorectomy обговорюється після репродуктивних рішень.
+
+  **(4) Спостереження SMARCB1 в основному завершується у 5 років;
+  SMARCA4 носії продовжують SCCOHT-протокол довічно (жінки) та
+  переходять на adult-onset schwannomatosis surveillance (обидві
+  статі).**
+
+  **(5) Уникати непотрібного опромінення:** ці пухлини керовані
+  SWI/SNF-pathway, відповідь встановленої хвороби на chemo/RT —
+  погана. Профілактична логіка: рання детекція з повною резекцією.
+
+  **Маршрутизація:** prevention-time консультація сім'ї дитини з
+  підтвердженим RTPS1 / RTPS2. Лікувальні Indications на цьому етапі
+  не рекомендуються.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_pediatric_predisposition_wave_m
+
+sources:
+  - source_id: SRC-NCCN-CNS-2025
+    position: context
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+    position: context
+
+do_not_do:
+  - "Не пропускати q3mo brain MRI у перші 2 роки життя — пік захворюваності ATRT, інтервал детекції критичний для resectability."
+  - "Не покладатися лише на абдомінальне УЗД у місце WB-MRI — paraspinal та intrathoracic MRT site missed by US."
+  - "Не починати щорічне SCCOHT spotting screening у SMARCA4 жінки до менархе — низька діагностична ефективність до пубертатного fundus."
+  - "Не використовувати рутинне CT як screening modality — кумулятивна радіація в malignancy-prone дитини шкідлива; MRI без контрасту як fallback при недоступності."
+  - "Не плутати DIS-GLIOMA-LOW-GRADE engine anchor з фактичним спектром пухлин — ATRT / MRT / SCCOHT distinct entities, surface in patient-facing render."
+
+do_not_do_en:
+  - "Do not skip q3mo brain MRI during the first 2 years of life — peak ATRT incidence means the detection interval is critical for resectability."
+  - "Do not rely on abdominal ultrasound alone in place of WB-MRI — paraspinal and intrathoracic MRT sites are missed by US."
+  - "Do not initiate annual SCCOHT screening in a SMARCA4 female before menarche — diagnostic yield is low before pubertal fundus development."
+  - "Do not use routine CT as a screening modality — cumulative radiation in a malignancy-prone child is harmful; non-contrast MRI is a fallback when contrast MRI is inaccessible."
+  - "Do not conflate the DIS-GLIOMA-LOW-GRADE engine anchor with the actual tumor spectrum — ATRT / MRT / SCCOHT are distinct entities and must surface in patient-facing render."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-19"
+reviewers: []
+reviewer_signoffs: 0
+notes: "STUB pending two-Co-Lead signoff per CHARTER §6.1 dev-mode. Standard-track RTPS1/RTPS2 confirmed-carrier surveillance per Foulkes et al. 2017 / EU-RHAB consensus. Disease anchor DIS-GLIOMA-LOW-GRADE used as closest CNS entity available; actual surveilled spectrum is ATRT / extracranial MRT / SCCOHT (SMARCA4) — distinction surfaced in rationale + do_not_do."

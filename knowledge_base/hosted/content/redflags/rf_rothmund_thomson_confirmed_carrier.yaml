@@ -1,0 +1,123 @@
+id: RF-ROTHMUND-THOMSON-CONFIRMED-CARRIER
+definition: >-
+  Confirmed biallelic germline pathogenic / likely-pathogenic variants
+  in RECQL4 (RecQ-like helicase 4) — Rothmund-Thomson Syndrome (RTS).
+  Patient has had germline RECQL4 testing returned positive in both
+  alleles (autosomal-recessive inheritance), or meets clinical
+  diagnostic criteria (poikiloderma in infancy + sparse / abnormal hair
+  + skeletal anomalies + ± juvenile cataracts). No current personal
+  cancer diagnosis in the carrier being assessed (current cancer
+  diagnosis routes to treatment-track plan with RTS status driving
+  systemic-therapy selection — RECQL4-deficient cells are
+  hypersensitive to ionizing radiation and DNA-damaging
+  chemotherapy / alkylators, with implications for radiotherapy dose
+  modification and avoidance of camptothecin / etoposide-style
+  topoisomerase agents). Lifetime osteosarcoma risk ~30%, plus
+  non-melanoma skin cancer (especially in poikiloderma-affected skin),
+  and lymphoma. Prevention-persona RedFlag (§20, Wave O confirmed-
+  carrier surveillance pathway).
+definition_ua: >-
+  Підтверджені biallelic гермінативні патогенні / ймовірно-патогенні
+  варіанти у RECQL4 — синдром Rothmund-Thomson (RTS). Пацієнт пройшов
+  germline RECQL4-тестування з позитивним результатом в обох алелях
+  (autosomal-recessive inheritance), або відповідає клінічним
+  діагностичним критеріям (poikiloderma в infancy + sparse / abnormal
+  hair + skeletal anomalies ± juvenile cataracts). Поточний особистий
+  діагноз раку відсутній (поточний діагноз раку routes до treatment-
+  track plan з RTS-статусом, який визначає systemic-therapy selection
+  — RECQL4-deficient клітини гіперчутливі до ionizing radiation та
+  DNA-damaging chemotherapy / alkylators, з implications для
+  radiotherapy dose modification та avoidance camptothecin / etoposide
+  topoisomerase agents). Lifetime osteosarcoma ризик ~30%, плюс
+  non-melanoma skin cancer (особливо у poikiloderma-affected skin) та
+  лімфома. Prevention-persona RedFlag (§20, Wave O шлях спостереження
+  підтверджених носіїв).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_recql4_biallelic_pathogenic"
+      value: true
+    - finding: "rothmund_thomson_clinical_criteria_met"
+      value: true
+
+clinical_direction: investigate
+
+# CRITICAL — pediatric onset osteosarcoma + DNA-damaging-chemo
+# hypersensitivity dramatically affects treatment if cancer arises.
+severity: critical
+priority: 70
+category: other
+risk_category: genetic
+
+# RTS-spectrum: osteosarcoma dominant (DIS-OSTEOSARCOMA), BCC / SCC
+# (DIS-BCC), lymphoma — no dedicated DIS-RTS-SPECTRUM-LYMPHOMA entity;
+# multiple subtypes possible. Soft-tissue sarcoma also reported but
+# rarer than osteosarcoma in RTS.
+relevant_diseases:
+  - DIS-OSTEOSARCOMA
+  - DIS-BCC
+  - DIS-SOFT-TISSUE-SARCOMA
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BONE-SARCOMA
+  - SRC-NCCN-SKIN-2025
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Wave O confirmed-carrier surveillance pathway — Rothmund-Thomson
+  Syndrome (RTS / RECQL4). Fires on documented germline RECQL4
+  biallelic pathogenic variants OR clinical-diagnostic criteria met
+  (poikiloderma + sparse hair + skeletal anomalies). Engine routes to
+  PreventionPlan recommending:
+    (a) IND-ROTHMUND-THOMSON-CARRIER-SURVEILLANCE (standard) — annual
+        skeletal survey (whole-body imaging — plain films + targeted
+        US / MRI as warranted) + immediate X-ray / MRI of any
+        persistent bone pain or palpable mass; dermatologic exam q6-12mo
+        with biopsy of any suspicious lesion (poikiloderma background
+        complicates clinical recognition); ophthalmologic exam annually
+        (juvenile cataracts).
+    (b) IND-ROTHMUND-THOMSON-CARRIER-INTENSIFIED (aggressive) — standard
+        PLUS whole-body MRI q1y (replacing skeletal survey, especially
+        in adolescent peak osteosarcoma years 10-20) + bone-pain
+        symptom-driven low-threshold imaging + bone-tumor specialist
+        co-management.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Source-set TODO: RTS-specific surveillance source —
+  Wang et al. Cancer 2003; International RTS Registry recommendations;
+  Larizza et al. Orphanet J Rare Dis 2010 — Wave O authoring backlog
+  new SRC entities.
+
+  Lifetime tumor risk in confirmed RECQL4 biallelic carriers (Wang et
+  al. Cancer 2003; Larizza et al. 2010):
+    - Osteosarcoma: ~30% lifetime; median age 11-12 years; often
+      multiple primaries; preferential distal-femur / proximal-tibia
+      distribution (similar to sporadic but earlier onset).
+    - Non-melanoma skin cancer (BCC + SCC): elevated, especially in
+      poikiloderma-affected skin and sun-exposed areas; usually
+      adult-onset.
+    - Lymphoma (multiple subtypes — Hodgkin, NHL): modest elevation;
+      surveillance less standardized.
+    - Other rare: gastric, breast, lung, colon — sporadic-pattern
+      with modest aggregate elevation.
+    - Non-cancer features: poikiloderma (cardinal — present in
+      infancy), sparse / brittle hair, juvenile cataracts (Type II
+      RTS = RECQL4 + cancer-prone form), skeletal dysplasia (radial
+      ray defects, dental anomalies, short stature), GI / GU anomalies.
+
+  Therapy implications if cancer arises: RECQL4-deficient cells
+  show hypersensitivity to ionizing radiation and DNA-damaging
+  chemotherapy. Osteosarcoma chemotherapy (high-dose methotrexate +
+  doxorubicin + cisplatin = MAP) is given with caution; etoposide /
+  topoisomerase inhibitors particularly problematic. RT dose
+  modification routine. These are TREATMENT-time considerations
+  (recorded here for context — RF surfaces them via render to alert
+  oncologists at the moment of diagnosis).
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_o_rare_hereditary
+draft_revision: 1

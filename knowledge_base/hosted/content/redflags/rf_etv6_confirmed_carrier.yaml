@@ -1,0 +1,119 @@
+id: RF-ETV6-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in ETV6
+  (Thrombocytopenia 5, THC5; OMIM 616216). Most pathogenic variants are
+  missense alleles in the ETS or PNT (pointed) domain that disrupt
+  ETV6 transcription-factor function. Patient has had germline panel
+  testing returned positive, ideally on buccal / fibroblast germline
+  tissue. The carrier presents from infancy / childhood with mild-to-
+  moderate isolated thrombocytopenia (platelet count typically
+  50-130 x10⁹/L, with red-cell macrocytosis a documented secondary
+  feature) plus variably-penetrant bleeding diathesis. The malignancy
+  risk profile is distinctive among the inherited-thrombocytopenia
+  syndromes: pediatric B-cell acute lymphoblastic leukemia (B-ALL) is
+  the dominant cancer phenotype, with ~25-30% cumulative incidence
+  in confirmed-carrier pedigrees and onset typically in the first
+  two decades of life. Adult onset MDS / AML accounts for an
+  additional ~10-15% cumulative risk. Solid tumors (colorectal, breast,
+  thyroid, others) have been reported in ETV6 pedigrees as a modest
+  excess, mechanism not yet fully characterized. Prevention-persona
+  RedFlag (KSS §20, confirmed-carrier surveillance pathway).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант
+  у ETV6 (Thrombocytopenia 5, THC5; OMIM 616216). Більшість патогенних
+  варіантів — missense алелі в ETS або PNT (pointed) домені, що
+  порушують ETV6 транскрипційну-факторну функцію. Пацієнт пройшов
+  germline-тестування з позитивним результатом, ідеально на buccal /
+  fibroblast germline тканині. Носій представляє з немовлячого /
+  дитячого віку з м'яко-помірною ізольованою тромбоцитопенією
+  (тромбоцити типово 50-130 x10⁹/л, з макроцитозом red-cell як
+  задокументованою вторинною ознакою) плюс варіабельно-penetrant
+  bleeding diathesis. Профіль ризику malignancy специфічний серед
+  спадкових тромбоцитопенічних синдромів: педіатричний B-клітинний
+  гострий лімфобластний лейкоз (B-ALL) — домінантний раковий фенотип,
+  з ~25-30% кумулятивною incidence у підтверджених-носіїв родоводах
+  і onset типово у перших двох декадах життя. Дорослий onset МДС /
+  ГМЛ становить додаткові ~10-15% кумулятивного ризику. Солідні
+  пухлини (колоректальний, breast, thyroid, інші) повідомлені у
+  ETV6 родоводах як помірний надлишок, механізм не повністю
+  характеризований. Prevention-persona RedFlag (KSS §20, шлях
+  спостереження підтверджених носіїв).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_etv6_pathogenic_variant_confirmed"
+      value: true
+    - finding: "thrombocytopenia_5_clinical_criteria_met"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 80
+category: other
+risk_category: genetic
+
+# ETV6 carrier malignancy spectrum: pediatric B-ALL (dominant, ~25-30%
+# cumulative), adult-onset MDS / AML (~10-15% cumulative). DIS-B-ALL
+# anchor primary; DIS-AML + DIS-MDS-HR included because adult
+# malignancy spectrum is well-documented. Combined cumulative risk
+# (~35-40%) calibrates this carrier syndrome to `major`.
+relevant_diseases:
+  - DIS-B-ALL
+  - DIS-AML
+  - DIS-MDS-HR
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-MDS-2021
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Wave P confirmed-carrier surveillance pathway — germline ETV6
+  (Thrombocytopenia 5). Fires on documented germline ETV6 pathogenic
+  variant positivity (typically PNT or ETS domain missense) OR
+  documented THC5 clinical criteria (childhood-onset thrombocytopenia
+  + ETV6-targeted genetic test positive + family pattern of B-ALL or
+  inherited thrombocytopenia). Engine routes to PreventionPlan
+  recommending:
+    (a) IND-ETV6-CARRIER-SURVEILLANCE (standard) — CBC + smear q3-6
+        months lifelong from infancy through adulthood; BMA + flow
+        cytometry + cytogenetics + myeloid NGS panel at any new /
+        unexplained cytopenia, lymphadenopathy, or persistent
+        cytological abnormality; pediatric oncology consultation
+        on initial carrier confirmation in a child (B-ALL is the
+        dominant childhood phenotype and early-detection planning
+        differs from adult myeloid surveillance); annual review of
+        bleeding history; cascade testing to first-degree relatives
+        with documented buccal / fibroblast germline confirmation.
+    (b) IND-ETV6-CARRIER-INTENSIFIED (aggressive) — standard protocol
+        PLUS q3-month CBC + smear from infancy through age 20 (peak
+        pediatric B-ALL incidence); BMA every 2-3 years from age 5
+        even without provoked indication during peak risk; preemptive
+        HLA typing on candidate sibling donors with germline ETV6
+        screening required (sibling carriers must NOT donate);
+        structured pediatric-oncology + hematology co-management plan
+        from initial confirmation.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Penetrance reference: Noetzli et al. Nat Genet 2015 +
+  Zhang et al. Nat Genet 2015 (concurrent original descriptions);
+  Topka et al. PLoS Genet 2015; Moriyama et al. Lancet Oncol 2015
+  (B-ALL cohort screening showed ~1% of pediatric B-ALL has germline
+  ETV6); Feurstein & Godley 2017 review (cumulative malignancy risk
+  ~35-40% combining B-ALL pediatric + adult MDS/AML).
+
+  Pediatric-specific consideration: B-ALL treatment in confirmed ETV6
+  carriers does NOT require modification per current guidelines, but
+  carrier status influences relapse-monitoring intensity and donor
+  selection if transplant becomes necessary; sibling-donor germline
+  ETV6 testing mandatory pre-transplant.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_hereditary_myeloid
+draft_revision: 1

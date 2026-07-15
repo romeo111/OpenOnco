@@ -1,0 +1,53 @@
+id: RF-PITUITARY-MASS-EFFECT-VISUAL-COMPROMISE
+definition: "Pituitary adenoma (typically nonfunctioning macroadenoma) causing compressive mass effect — visual field deficit / optic chiasm compression, new cranial neuropathy, or hypopituitarism attributable to sellar/suprasellar compression — indicating surgical resection is required rather than observation."
+definition_ua: "Аденома гіпофіза (зазвичай нефункціонуюча макроаденома), що спричиняє компресійний масс-ефект — дефект поля зору / компресія хіазми зорових нервів, нову краніальну нейропатію або гіпопітуїтаризм внаслідок компресії селярної/супраселярної ділянки — що вказує на необхідність хірургічного втручання, а не спостереження."
+
+trigger:
+  type: symptom_composite
+  any_of:
+    - finding: "visual_field_deficit"
+      value: true
+    - finding: "optic_chiasm_compression"
+      value: true
+    - finding: "pituitary_mass_effect_symptoms"
+      value: true
+    - condition: "Macroadenoma with radiographic optic chiasm/nerve compression, new cranial neuropathy, or hypopituitarism attributable to mass effect"
+
+clinical_direction: intensify
+severity: major
+priority: 100
+category: organ-dysfunction
+
+branch_targets:
+  ALGO-PITUITARY-ADENOMA-1L: "5"
+
+relevant_diseases: [DIS-PITUITARY-ADENOMA]
+shifts_algorithm: [ALGO-PITUITARY-ADENOMA-1L]
+
+sources:
+  - SRC-NCCN-CNS-2025
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+draft: true
+
+notes: >
+  STUB pending clinical co-lead signoff (CHARTER §6.1 — dev-mode-exempted).
+  Per the Disease narrative, nonfunctioning pituitary adenoma is managed
+  with surgery only for mass effect / visual compromise; asymptomatic
+  non-compressive NFPA is appropriate for observation with surveillance
+  imaging and is deliberately not modeled as an active-therapy Indication
+  in this KB (mirrors the existing "active surveillance, not a separate
+  indication" pattern used in ALGO-GI-NET-ADVANCED-1L). "visual_field_deficit",
+  "optic_chiasm_compression", and "pituitary_mass_effect_symptoms" are new
+  free-form finding keys — no engine-side data-collection wiring confirmed
+  to exist yet for these keys; the `condition:` free-text leaf in the
+  trigger preserves the clinical criterion regardless of finding wiring
+  status, consistent with existing KB precedent (e.g. RF/algorithm notes in
+  ALGO-RCC-METASTATIC-1L for unwired finding keys).
+notes_ua: >
+  ЗАГЛУШКА (STUB) до підпису клінічного співкерівника. Хірургія показана
+  лише при мас-ефекті / порушенні зору при нефункціонуючій аденомі гіпофіза.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_a_anchor
+draft_revision: 1

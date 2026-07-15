@@ -1,0 +1,138 @@
+id: IND-KAPOSI-1L-CLASSIC-LOCAL-OBSERVATION
+plan_track: local_therapy
+intent: treatment
+
+applicable_to:
+  disease_id: DIS-KAPOSI
+  line_of_therapy: 1
+  stage_requirements:
+    - "Classic (Mediterranean/elderly, HHV-8+, HIV-negative) or endemic (sub-Saharan African, HIV-negative) Kaposi sarcoma, histologically confirmed"
+    - "Limited, indolent, non-visceral cutaneous disease -- RF-KAPOSI-VISCERAL-EXTENSIVE-DISEASE not triggered"
+    - "Not HIV-associated and not on iatrogenic immunosuppression (see IND-KAPOSI-1L-AIDS-ART / IND-KAPOSI-1L-IATROGENIC-MTOR-CONVERSION for those forms)"
+    - "Extensive, rapidly progressive, or visceral disease -> see IND-KAPOSI-1L-VISCERAL-PLD"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HIV-STATUS
+      required: false
+      value_constraint: "positive"
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by:
+  - IND-KAPOSI-1L-VISCERAL-PLD
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Classic and endemic Kaposi sarcoma are frequently indolent, slowly
+    progressive diseases; asymptomatic, cosmetically insignificant
+    lesions can often be safely observed for years. Symptomatic,
+    cosmetically significant, or slowly enlarging localized lesions are
+    managed with local (non-systemic) therapy per MDT/dermatology-
+    oncology discretion. Extensive, rapidly progressive, or visceral
+    disease is uncommon in the classic/endemic forms but, when present,
+    requires systemic chemotherapy -- see IND-KAPOSI-1L-VISCERAL-PLD.
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-KAPOSI-VISCERAL-EXTENSIVE-DISEASE
+
+required_tests:
+  - TEST-EXCISIONAL-SKIN-BIOPSY
+  - TEST-HIV-SEROLOGY
+  - TEST-CBC
+desired_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+
+rationale: >
+  Classic (elderly, HHV-8-seroprevalent-region) and endemic
+  (sub-Saharan African, HIV-negative) Kaposi sarcoma are typically
+  indolent, slowly progressive cutaneous diseases without the
+  aggressive HIV-driven or iatrogenic-immunosuppression-driven biology
+  of the other two forms. There is no systemic immune-restoration
+  intervention analogous to ART or immunosuppression rebalance for
+  these forms -- management is expectant (observation) for
+  asymptomatic, limited, cosmetically insignificant disease, or local
+  (non-systemic) destructive/excisional therapy for symptomatic or
+  cosmetically significant lesions, per MDT/dermatology-oncology
+  discretion. The disease narrative underlying this KB entry does not
+  specify a single preferred local modality or dosing regimen, so none
+  is asserted here -- this Indication intentionally has no
+  `recommended_regimen` (systemic drug therapy is not indicated for
+  this population) and defers the specific local-therapy modality
+  choice to clinical judgment. Extensive, rapidly progressive, or
+  visceral disease -- uncommon in these forms but reported -- requires
+  systemic chemotherapy; see IND-KAPOSI-1L-VISCERAL-PLD.
+
+rationale_ua: >
+  Класична та ендемічна саркома Капоші зазвичай є повільно
+  прогресуючим шкірним захворюванням без агресивної біології,
+  притаманної ВІЛ-асоційованій або ятрогенній формам. Системного
+  втручання з відновлення імунітету для цих форм не існує -- тактика
+  очікувальна (спостереження) при безсимптомному, обмеженому
+  захворюванні, або локальна (несистемна) деструктивна/ексцизійна
+  терапія при симптоматичних вогнищах, за рішенням МДТ/
+  дерматоонколога. Ця Indication навмисно не має `recommended_regimen`
+  (системна медикаментозна терапія не показана цій популяції).
+  Поширене або вісцеральне захворювання потребує системної
+  хіміотерапії (IND-KAPOSI-1L-VISCERAL-PLD).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_kaposi_treatment
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-SKIN-2025
+    position: context
+  - source_id: SRC-IARC-MONO-100B-2012
+    position: context
+
+known_controversies:
+  - topic: "Threshold for treating vs. observing classic/endemic KS"
+    positions:
+      - position: "Observe all asymptomatic, cosmetically insignificant lesions indefinitely"
+        sources: []
+      - position: "Treat early with local therapy to limit lesion accumulation, even if asymptomatic"
+        sources: []
+    our_default: "Observation for asymptomatic/cosmetically-insignificant disease; local therapy for symptomatic/significant lesions -- individualized MDT/dermatology-oncology decision"
+
+do_not_do:
+  - "Не пропускати гістологічне підтвердження та виключення ВІЛ- і ятрогенної форм перед вибором тактики спостереження."
+  - "Не застосовувати системну хіміотерапію як терапію першої лінії при обмеженому шкірному захворюванні класичної/ендемічної форми."
+  - "Не ігнорувати ознаки прогресування -- потребують переоцінки на IND-KAPOSI-1L-VISCERAL-PLD."
+
+do_not_do_en:
+  - "Do not skip histologic confirmation and exclusion of HIV-associated / iatrogenic forms before choosing an observation strategy."
+  - "Do not use systemic chemotherapy as first-line therapy for limited cutaneous classic/endemic disease."
+  - "Do not ignore signs of progression -- reassess against IND-KAPOSI-1L-VISCERAL-PLD."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB -- new TREATMENT-intent Indication for DIS-KAPOSI (v0.3
+  continuation), covering classic and endemic forms. Deliberately has
+  `recommended_regimen: null` -- the disease narrative specifies only
+  "local therapy or observation" without a preferred modality or dose,
+  and CHARTER §8.3 prohibits inventing one; local-therapy modality
+  selection is left to MDT/dermatology-oncology discretion pending
+  future authoring of a dedicated local-therapy Regimen/Surgery/
+  RadiationCourse entity if the clinical co-leads want one formalized.
+
+  INDEPENDENT REVIEW CORRECTION (2026-07-11): an earlier draft cited
+  SRC-NCCN-SKIN-2025 with position "supports" and populated the
+  `known_controversies[].positions[].sources` with the same id. That
+  source documents only basal-cell/squamous-cell skin cancer
+  (confirmed by direct inspection of its own KB record), not classic/
+  endemic Kaposi management -- downgraded the top-level citation to
+  "context" and removed it from the controversy positions (no
+  verifiable source for either side of that controversy exists in this
+  KB, so left empty rather than fabricated). Pending two-Clinical-
+  Co-Lead signoff (CHARTER §6.1 -- dev-mode-exempted; safe to merge as
+  draft content, NOT as published/verified clinical advice).

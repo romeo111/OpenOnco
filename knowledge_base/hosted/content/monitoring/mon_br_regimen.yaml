@@ -4,6 +4,7 @@ linked_to_regimen: REG-BR-STANDARD
 phases:
   - name: baseline
     window: "Within 2 weeks before cycle 1"
+    window_ua: "Протягом 2 тижнів до циклу 1"
     tests:
       - TEST-CBC
       - TEST-LFT
@@ -17,9 +18,14 @@ phases:
       - "Confirm CD20+ histology"
       - "Confirm HBV status and prophylaxis plan"
       - "FIB-4 + LFT determine bendamustine dose adjustment"
+    checkpoints_ua:
+      - "Підтвердити CD20+ гістологію"
+      - "Підтвердити статус HBV та план профілактики"
+      - "FIB-4 + LFT визначають коригування дози бендамустину"
 
   - name: on_treatment
     window: "Day 1 of every 28-day cycle"
+    window_ua: "День 1 кожного 28-денного циклу"
     tests:
       - TEST-CBC
       - TEST-LFT
@@ -27,9 +33,13 @@ phases:
     checkpoints:
       - "ANC ≥ 1500/µL and platelets ≥ 75K before each cycle (delay otherwise)"
       - "ALT/AST trend (rising values may signal HBV reactivation or hepatotoxicity)"
+    checkpoints_ua:
+      - "ANC ≥ 1500/мкл і тромбоцити ≥ 75 тис. перед кожним циклом (інакше — відстрочка)"
+      - "Тренд ALT/AST (зростання значень може сигналізувати про реактивацію HBV або гепатотоксичність)"
 
   - name: response_assessment
     window: "After cycles 3 and 6"
+    window_ua: "Після циклів 3 і 6"
     tests:
       - TEST-PET-CT
       - TEST-LDH
@@ -37,9 +47,13 @@ phases:
     checkpoints:
       - "Lugano response criteria (CR, PR, SD, PD)"
       - "If <PR after cycle 3 → consider regimen change"
+    checkpoints_ua:
+      - "Критерії відповіді за Lugano (CR, PR, SD, PD)"
+      - "Якщо <PR після циклу 3 → розглянути зміну схеми"
 
   - name: follow_up_short
     window: "Every 3 months for 2 years post-treatment"
+    window_ua: "Кожні 3 місяці протягом 2 років після лікування"
     tests:
       - TEST-CBC
       - TEST-LFT
@@ -48,9 +62,13 @@ phases:
     checkpoints:
       - "Surveillance for relapse"
       - "HBV reactivation monitoring continues for 12 months post anti-CD20"
+    checkpoints_ua:
+      - "Спостереження щодо рецидиву"
+      - "Моніторинг реактивації HBV триває 12 місяців після anti-CD20"
 
   - name: follow_up_long
     window: "Every 6 months years 3-5"
+    window_ua: "Кожні 6 місяців у роки 3–5"
     tests:
       - TEST-CBC
       - TEST-LFT
@@ -61,3 +79,8 @@ sources:
   - SRC-ESMO-MZL-2024
 
 last_reviewed: "2026-04-25"
+machine_translated_review_pending: true
+notes: >
+  UA translations of window / checkpoints added 2026-05-19 under CHARTER
+  §8.3 dev-mode exemption; awaiting Clinical Co-Lead sign-off before
+  exit from v0.1.

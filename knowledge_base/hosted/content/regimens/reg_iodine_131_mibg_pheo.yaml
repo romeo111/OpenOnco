@@ -1,0 +1,56 @@
+id: REG-IODINE-131-MIBG-PHEO
+name: "I-131 MIBG radiopharmaceutical therapy (MIBG-avid metastatic pheochromocytoma/paraganglioma)"
+name_ua: "Радіофармацевтична терапія I-131 MIBG (MIBG-позитивна метастатична феохромоцитома/парагангліома)"
+alternate_names:
+  - "131I-MIBG therapy"
+  - "Iobenguane I-131 therapy"
+
+components:
+  - drug_id: DRUG-IODINE-131-MIBG
+    dose: "Weight-based / patient-specific therapeutic activity per pre-therapy dosimetry and current product labeling -- see DRUG-IODINE-131-MIBG typical_dosing"
+    schedule: "Administered as one or more staged intravenous therapeutic doses in a specialized nuclear-medicine facility with radiation-safety isolation"
+    route: IV
+
+cycle_length_days:
+total_cycles: "Per patient-specific dosimetry and response -- typically a small number of staged administrations, not an open-ended cycle count"
+toxicity_profile: moderate
+
+premedication:
+  - "Thyroid blockade with potassium iodide/iodate before and after administration to protect the thyroid from free radioiodine uptake"
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Cumulative/dose-limiting myelosuppression"
+    modification: "Delay or omit subsequent therapeutic administration pending hematologic recovery; specialist nuclear-medicine/hematology input"
+    rationale: "Myelosuppression is the principal dose-limiting toxicity of I-131 MIBG therapy (delayed-onset, weeks after administration)"
+    source_refs:
+      - SRC-NCCN-NET-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Not verified as available in Ukraine in this session. Requires
+    specialized nuclear-medicine infrastructure with radiation-safety-
+    licensed inpatient isolation capable of administering high-activity
+    therapeutic I-131 -- mirrors the same access-barrier pattern already
+    documented for radium-223 and Lu-177-PSMA-617 in this KB.
+    Cross-border referral to an EU nuclear-medicine center is the likely
+    access pathway pending local verification.
+
+sources:
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-07-11"
+notes: >
+  Requires a positive diagnostic MIBG scan (MIBG avidity) before
+  therapeutic administration -- this is a prerequisite modelled as a
+  free-text decision-tree condition in ALGO-PHEO-1L rather than a
+  Test/Biomarker entity (none exists in the KB for MIBG-scan positivity
+  as of this authoring pass). Exact activity/kg dosing intentionally
+  left qualitative pending maintainer verification -- see
+  DRUG-IODINE-131-MIBG. STUB pending clinical co-lead signoff (CHARTER
+  §6.1, dev-mode-exempted).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_pheo_treatment_pathway

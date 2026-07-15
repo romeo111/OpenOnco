@@ -1,0 +1,74 @@
+id: REG-NPC-GC-CAMRELIZUMAB
+name: "Camrelizumab + gemcitabine + cisplatin (CAPTAIN-1st) — 1L recurrent/metastatic nasopharyngeal carcinoma"
+name_ua: "Камрелізумаб + гемцитабін + цисплатин (CAPTAIN-1st) — 1L рецидивуюча/метастатична назофарингеальна карцинома"
+alternate_names: ["CAPTAIN-1st regimen", "Camrelizumab-GP"]
+
+components:
+  - drug_id: DRUG-CAMRELIZUMAB
+    dose: "200 mg IV"
+    schedule: "Day 1 of every 21-day cycle, concurrent with GP cycles 1-6, then continued as monotherapy maintenance q3w until progression/unacceptable toxicity or up to 2 years total"
+    route: IV
+  - drug_id: DRUG-GEMCITABINE
+    dose: "1000 mg/m² IV"
+    schedule: "Days 1 and 8 of every 21-day cycle, cycles 1-6 only"
+    route: IV
+  - drug_id: DRUG-CISPLATIN
+    dose: "80 mg/m² IV"
+    schedule: "Day 1 of every 21-day cycle, cycles 1-6 only"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "GP chemo backbone capped at 6 cycles per CAPTAIN-1st protocol; camrelizumab continues as monotherapy maintenance until progression, unacceptable toxicity, or ~2 years total"
+toxicity_profile: severe
+
+premedication:
+  - "Standard cisplatin hydration: pre/post IV fluids 1-2 L NS with Mg/K repletion"
+  - "Triple antiemetic prophylaxis MANDATORY (highly-emetogenic cisplatin): 5-HT3 antagonist + NK1-RA (aprepitant/fosaprepitant) + dexamethasone"
+  - "Baseline audiometry and renal function before cycle 1"
+  - "Counsel patient on expected reactive cutaneous capillary endothelial proliferation (RCCEP) — camrelizumab-class-characteristic, usually benign/self-limited"
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Cisplatin-ineligible (CrCl <50, hearing loss, neuropathy)"
+    modification: "Carboplatin substitution per institutional/MDT protocol (not separately validated in CAPTAIN-1st, extrapolated from general platinum-substitution practice)"
+    source_refs: [SRC-NCCN-HNSCC-2025]
+  - condition: "Grade 3-4 neutropenia / thrombocytopenia"
+    modification: "Hold GP until recovery; reduce gemcitabine dose on resumption; consider G-CSF support"
+  - condition: "Extensive/symptomatic RCCEP"
+    modification: "Dermatology referral; dose interruption if severe or functionally limiting; not typically treatment-limiting"
+  - condition: "Immune-mediated AE (camrelizumab) — grade 3-4"
+    modification: "Permanent discontinuation of camrelizumab; high-dose corticosteroids 1-2 mg/kg/day; specialist consultation"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Гемцитабін і цисплатин повністю зареєстровані та реімбурсуються (НСЗУ). Камрелізумаб НЕ зареєстрований в Україні, ЄС або США станом на дату авторства (лише NMPA/Китай) — доступ практично обмежений клінічними випробуваннями."
+
+sources:
+  - SRC-CAPTAIN-1ST-YANG-2021
+
+last_reviewed: "2026-07-11"
+notes: >
+  STUB — draft entity pending Clinical Co-Lead sign-off (CHARTER §6.1;
+  dev-mode-exempted). CAPTAIN-1st (Yang Y et al., Lancet Oncol 2021):
+  camrelizumab + gemcitabine/cisplatin vs placebo + gemcitabine/
+  cisplatin in treatment-naive recurrent/metastatic NPC. Approximate
+  reported results (pending verification against primary source): mPFS
+  ~9.7 vs ~6.9 months (HR ~0.55), ORR high in both arms (GP backbone
+  alone is highly active in NPC). NOT FDA-approved — China/NMPA only,
+  which is why toripalimab + GP (REG-NPC-GC-TORIPALIMAB) is the
+  recommended default and this regimen is positioned as the equally-
+  evidenced alternative. See IND-NPC-1L-METASTATIC-GC-PD1
+  known_controversies.
+notes_ua: >
+  ЗАГОТОВКА — чернетковий запис, очікує підпису клінічного ко-лідера
+  (CHARTER §6.1; наразі звільнено в dev-режимі). CAPTAIN-1st (Yang Y
+  та співавт., Lancet Oncol 2021): камрелізумаб + гемцитабін/цисплатин
+  проти плацебо у нелікованій рецидивуючій/метастатичній NPC.
+  Орієнтовні результати: мПВБ ~9.7 vs ~6.9 міс (HR ~0.55). НЕ схвалений
+  FDA (лише NMPA/Китай) — тому торипалімаб + GP є рекомендованим за
+  замовчуванням, а ця схема — рівноцінною альтернативою.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_a_anchor
+draft_revision: 1

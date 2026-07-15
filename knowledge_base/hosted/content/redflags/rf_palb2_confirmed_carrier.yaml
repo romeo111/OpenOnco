@@ -1,0 +1,68 @@
+id: RF-PALB2-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic monoallelic variant
+  in PALB2 (heterozygous; biallelic PALB2 is the autosomal-recessive
+  Fanconi anemia complementation group N, distinct from the cancer-
+  predisposition carrier state covered here). PALB2 functions in the
+  same homologous-recombination repair pathway as BRCA1/BRCA2; carriers
+  have moderate-to-high-penetrance breast cancer risk (lifetime ~33-58%
+  per Yang et al. JCO 2020 — comparable to BRCA2), pancreatic
+  adenocarcinoma (lifetime ~2-3% baseline, ~5-15% in PALB2-FDR-of-
+  PDAC cohorts), and ovarian cancer (modest increase, ~5% lifetime).
+  Common multi-gene panel finding among unselected breast cancer
+  cohorts (~0.5-1%). Patient has confirmed positive germline test; no
+  current personal cancer diagnosis in the carrier being assessed.
+  Prevention-persona RedFlag (§20, v0.3 moderate-penetrance breast/
+  pancreatic gene expansion).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний
+  monoallelic варіант у PALB2 (heterozygous; biallelic PALB2 —
+  autosomal-recessive Fanconi anemia complementation group N).
+  PALB2 функціонує у тому ж homologous-recombination repair pathway
+  що й BRCA1/BRCA2; carriers мають moderate-to-high-penetrance breast
+  cancer ризик (lifetime ~33-58% per Yang et al. JCO 2020 — comparable
+  to BRCA2), pancreatic adenocarcinoma (lifetime ~2-3% baseline,
+  ~5-15% у PALB2-FDR-of-PDAC cohorts), ovarian cancer (modest increase,
+  ~5% lifetime). Common multi-gene panel finding серед unselected breast
+  cancer cohorts (~0.5-1%). Prevention-персона RedFlag (§20, v0.3
+  moderate-penetrance breast/pancreatic gene expansion).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_palb2_pathogenic_variant_confirmed"
+      value: true
+    - finding: "germline_palb2_likely_pathogenic_variant"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 95
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-BREAST
+  - DIS-PDAC
+  - DIS-OVARIAN
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for PALB2 heterozygous carriers. PALB2
+  approaches BRCA2 breast-cancer penetrance and warrants BRCA-style
+  surveillance with annual breast MRI + mammography from age 30, plus
+  pancreatic surveillance (EUS or MRI alternating annually from age 50,
+  or 10 years before earliest PDAC in family) for FDR-of-PDAC carriers
+  per CAPS consortium 2022. RRSO discussion deferred to BRCA-style
+  threshold given lower ovarian penetrance. STUB pending two-Co-Lead
+  signoff per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_moderate_penetrance_panel
+draft_revision: 1

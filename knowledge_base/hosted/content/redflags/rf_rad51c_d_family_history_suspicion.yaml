@@ -1,0 +1,99 @@
+id: RF-RAD51C-D-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family pedigree pattern suggestive of germline RAD51C or RAD51D
+  heterozygous carrier state in an asymptomatic individual who has
+  NOT yet had multi-gene panel testing. RAD51C/D are RAD51 paralogs
+  essential for homologous-recombination repair; carriers approach
+  BRCA-level ovarian penetrance (lifetime ovarian cancer ~10-15%
+  RAD51C, ~12-20% RAD51D; RR ~5.9 and ~6.6 respectively). Triggers
+  include any of (a) first- or second-degree relative with a
+  confirmed RAD51C or RAD51D pathogenic / likely-pathogenic variant;
+  (b) family-history cluster of multiple ovarian / fallopian-tube /
+  primary peritoneal carcinomas (≥2 first/second-degree affected
+  relatives) with negative BRCA1/2 testing in affected relative —
+  RAD51C/D are the most common moderate-penetrance findings (after
+  BRIP1) in BRCA-negative ovarian-predominant pedigrees;
+  (c) BRCA-negative HBOC-spectrum pedigree with predominantly
+  ovarian rather than breast clustering and high-grade serous
+  histology; (d) family history of multiple high-grade serous
+  ovarian carcinomas across two or more generations regardless of
+  BRCA status (RAD51C/D should be on every modern panel). No
+  current personal cancer diagnosis in the at-risk individual being
+  assessed. Prevention-persona RedFlag (§20, v0.3 moderate-
+  penetrance ovarian gene expansion — pre-testing suspicion
+  variant).
+definition_ua: >-
+  Сімейний родовід з патерном, що нагадує гермінативний heterozygous
+  carrier RAD51C або RAD51D, у асимптомної особи, яка ще НЕ пройшла
+  multi-gene panel тестування. RAD51C/D — RAD51 paralogs essential
+  для homologous-recombination repair; carriers approach BRCA-level
+  ovarian penetrance (lifetime ovarian cancer ~10-15% RAD51C,
+  ~12-20% RAD51D; RR ~5.9 і ~6.6 відповідно). Тригери включають
+  будь-яке з (а) родич першого/другого ступеня з підтвердженим
+  патогенним / ймовірно-патогенним варіантом RAD51C або RAD51D;
+  (б) сімейне накопичення множинних ovarian / fallopian-tube /
+  primary peritoneal carcinomas (≥2 first/second-degree affected
+  relatives) з негативним BRCA1/2 тестуванням у ураженого
+  родича — RAD51C/D — найпоширеніші moderate-penetrance findings
+  (після BRIP1) у BRCA-negative ovarian-predominant pedigrees;
+  (в) BRCA-negative HBOC-spectrum родовід з переважно ovarian, а
+  не breast clustering і high-grade serous histology; (г) сімейна
+  історія множинних high-grade serous ovarian carcinomas across
+  two or more generations незалежно від BRCA status.
+  Поточний особистий діагноз раку у пацієнта з ризиком відсутній.
+  Prevention-персона RedFlag (§20, v0.3 — pre-testing suspicion
+  варіант).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_rad51c_or_rad51d_known_pathogenic_variant"
+      value: true
+    - finding: "family_multiple_ovarian_brca_negative_two_or_more"
+      value: true
+    - finding: "family_brca_negative_hboc_ovarian_predominant_high_grade_serous"
+      value: true
+    - finding: "family_multiple_high_grade_serous_ovarian_multi_generation"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 115
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-OVARIAN
+  - DIS-BREAST
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  v0.3 Wave M suspicion variant — pre-testing family-history-
+  suspicion counterpart to RF-RAD51C-D-CONFIRMED-CARRIER. Fires
+  when family pedigree pattern suggests RAD51C or RAD51D carrier
+  state but germline panel testing has not yet been completed.
+  Standard pathway = referral for genetic counseling + multi-gene
+  HBOC panel covering BRCA1/2 + RAD51C/D + BRIP1 minimum. If panel
+  returns positive for RAD51C or RAD51D, the patient transitions
+  to the RF-RAD51C-D-CONFIRMED-CARRIER pathway with NCCN-endorsed
+  RRSO at completed childbearing or age 45-50 (RAD51C/D approach
+  BRCA-level penetrance), individualised breast surveillance with
+  MRI consideration in elevated-family-history subset, and PARP
+  inhibitor relevance for any future ovarian-cancer diagnosis
+  (PROfound + GEN-ALL trials). Distinct trigger findings from the
+  confirmed-carrier RF (carrier RF fires on `germline_rad51c_
+  pathogenic_variant_confirmed` / `germline_rad51d_pathogenic_
+  variant_confirmed`; suspicion RF fires on family-history-based
+  findings only). STUB pending two-Clinical-Co-Lead signoff per
+  CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_suspicion_variant_wave_m
+draft_revision: 1

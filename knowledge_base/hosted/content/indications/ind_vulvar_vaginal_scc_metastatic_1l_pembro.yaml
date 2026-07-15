@@ -1,0 +1,128 @@
+id: IND-VULVAR-VAGINAL-SCC-METASTATIC-1L-PEMBRO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-VULVAR-VAGINAL-SCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic (distant metastatic disease) OR recurrent/persistent vulvar or vaginal SCC not amenable to curative-intent surgery or definitive chemoradiation"
+    - "Previously treated advanced disease per KEYNOTE-158 vulvar cohort enrollment (post-platinum / post-chemoradiation or other prior systemic therapy) — positioned here as the 1L systemic option for metastatic disease in this KB pass because no platinum-based cytotoxic chemotherapy Indication is yet authored for vulvar/vaginal SCC (open gap; see notes)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-CPS
+      required: false
+      value_constraint: "PD-L1 CPS ≥1 by 22C3 IHC preferred per cross-tumor pembrolizumab-eligibility convention; KEYNOTE-158 vulvar cohort (n=101) showed responses in BOTH PD-L1-positive (ORR 9.5%, n=84) and PD-L1-negative (ORR 28.6%, n=7, wide 95% CI 3.7-71.0%) subgroups — CPS≥1 is NOT a validated hard predictive cutoff for vulvar SCC pembrolizumab response, unlike the CPS≥1 FDA label for cervical cancer (KEYNOTE-826)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PEMBROLIZUMAB-MONO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category:
+
+expected_outcomes:
+  overall_response_rate: "10.9% (95% CI 5.6-18.7%) all comers (n=101, KEYNOTE-158 vulvar cohort); 9.5% (4.2-17.9%) among 84 PD-L1 CPS≥1 patients; 28.6% (3.7-71.0%) among 7 PD-L1-negative patients (small subgroup)"
+  progression_free_survival: "Median PFS 2.1 months (95% CI 2.0-2.1)"
+  overall_survival_median: "Median OS 6.2 months (95% CI 4.9-9.4)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK
+
+required_tests:
+  - TEST-PDL1-IHC
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-TSH
+desired_tests: []
+
+rationale: >
+  Pembrolizumab monotherapy (200 mg IV q3w, or 400 mg q6w) is an option
+  for metastatic or recurrent/persistent vulvar (and, by extension,
+  vaginal) SCC not amenable to curative-intent local therapy, based on
+  the KEYNOTE-158 basket-trial vulvar cohort (Shapira-Frommer et al.,
+  Gynecol Oncol 2022; NCT02628067): n=101 previously treated advanced
+  vulvar SCC, ORR 10.9%, median duration of response 20.4 months among
+  responders — durable disease control in a minority of patients.
+  Responses occurred in both PD-L1-positive and PD-L1-negative
+  subgroups, so PD-L1 CPS is included here as an eligibility-informing
+  (not hard-gating) biomarker, distinct from the CPS≥1 FDA-label
+  requirement for cervical cancer (KEYNOTE-826). Median PFS was short
+  (2.1 months), reflecting that most patients do not respond; treatment
+  is reasonable to discuss for fit patients given the durability of
+  response in the responding subset and the limited alternative
+  systemic options authored in this KB for this rare, previously-
+  treated population.
+
+rationale_ua: >
+  Пембролізумаб у монотерапії (200 мг в/в кожні 3 тижні, або 400 мг
+  кожні 6 тижнів) є опцією при метастатичній або рецидивній/
+  персистуючій SCC вульви (і, за аналогією, піхви), не придатній до
+  курабельного місцевого лікування, на основі кошикового кагорту
+  KEYNOTE-158 (Shapira-Frommer та співавт., Gynecol Oncol 2022;
+  NCT02628067): n=101 попередньо лікованих поширених SCC вульви, ORR
+  10.9%, медіана тривалості відповіді 20.4 місяців серед відповідачів
+  — стійкий контроль захворювання у меншості пацієнток. Відповіді
+  спостерігались як у PD-L1-позитивних, так і у PD-L1-негативних
+  підгрупах, тому статус PD-L1 CPS включено тут як маркер, що
+  інформує (а не строго обмежує) вибір, на відміну від вимоги CPS≥1
+  у FDA-схваленні для цервікального раку (KEYNOTE-826). Медіана ВБП
+  була короткою (2.1 місяців), що відображає відсутність відповіді у
+  більшості пацієнток.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_search_agent_algorithm_review
+draft_revision: 1
+
+sources:
+  - source_id: SRC-KEYNOTE-158-VULVAR-SHAPIRA-FROMMER-2022
+    position: supports
+    relevant_quote_paraphrase: "KEYNOTE-158 vulvar SCC cohort (n=101): ORR 10.9% overall; 9.5% PD-L1 CPS≥1 vs 28.6% PD-L1-negative (small subgroup); median DOR 20.4 months; median PFS 2.1 months; median OS 6.2 months — responses occur regardless of PD-L1 status"
+
+do_not_do:
+  - "Не пропускати тестування PD-L1 CPS перед початком лікування, навіть якщо результат не є суворо обмежуючим для цієї нозології"
+  - "Не призначати пембролізумаб пацієнткам з активним аутоімунним захворюванням, що потребує системної імуносупресії, без ретельної мультидисциплінарної оцінки ризику/користі"
+  - "Не очікувати високої частоти відповіді — ORR ~11%; обговорювати реалістичні очікування з пацієнткою перед початком"
+
+do_not_do_en:
+  - "Do not skip PD-L1 CPS testing before treatment, even though the result is not strictly gating for this tumor type"
+  - "Do not prescribe pembrolizumab in patients with active autoimmune disease requiring systemic immunosuppression without careful multidisciplinary risk/benefit review"
+  - "Do not set expectations for a high response rate — ORR ~11%; discuss realistic expectations with the patient before starting"
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB pending clinical co-lead signoff (CHARTER §6.1; dev-mode-exempted
+  per CHARTER §8.3 — draft content only, NOT published/verified clinical
+  advice). KEYNOTE-158 vulvar cohort enrolled PREVIOUSLY TREATED
+  advanced disease (typically post-platinum or post-chemoradiation),
+  not treatment-naive metastatic disease — this Indication is
+  nonetheless positioned as the metastatic '1L systemic' option in
+  ALGO-VULVAR-VAGINAL-SCC-1L per this authoring pass's scope, because
+  no platinum-based cytotoxic chemotherapy Indication is yet authored
+  for metastatic vulvar/vaginal SCC (open gap). PD-L1 CPS gating is a
+  cross-tumor convention applied here for consistency with other
+  pembrolizumab Indications in this KB, NOT a vulvar-SCC-validated
+  cutoff — KEYNOTE-158 vulvar cohort responses occurred regardless of
+  PD-L1 status (see RF-VULVAR-VAGINAL-SCC-PDL1-CPS-1-PLUS notes).
+  Reuses REG-PEMBROLIZUMAB-MONO and DRUG-PEMBROLIZUMAB entirely
+  unchanged — no existing file was modified.
+notes_ua: >
+  ЧЕРНЕТКА до підпису клінічного співкерівника. Кагорт KEYNOTE-158 при
+  SCC вульви включав ПОПЕРЕДНЬО ЛІКОВАНУ поширену хворобу (зазвичай
+  після платини або хіміопроменевої терапії), а не нелікованну
+  метастатичну хворобу — ця Indication, тим не менш, позиціонується як
+  метастатична опція "1L системного лікування" в ALGO-VULVAR-VAGINAL-
+  SCC-1L в межах цього етапу, оскільки платино-вмісна цитотоксична
+  хіміотерапія для метастатичної SCC вульви/піхви ще не описана
+  (відкрита прогалина). Повторно використовує REG-PEMBROLIZUMAB-MONO
+  та DRUG-PEMBROLIZUMAB повністю без змін.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_search_agent_algorithm_review
+draft_revision: 1

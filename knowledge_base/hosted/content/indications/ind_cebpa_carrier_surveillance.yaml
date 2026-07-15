@@ -1,0 +1,180 @@
+id: IND-CEBPA-CARRIER-SURVEILLANCE
+plan_track: standard
+intent: surveillance
+
+applicable_to:
+  disease_id: DIS-AML
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-CEBPA-CONFIRMED-CARRIER
+
+# No drug regimen — intervention is structured surveillance of an
+# at-risk asymptomatic carrier. Treatment-time AML indications
+# (induction, consolidation, alloHCT) apply at diagnosis, not during
+# surveillance.
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Germline CEBPA carrier surveillance enables earlier detection of
+    incident AML — the Tawana 2015 cohort (Blood) showed median age at
+    AML in family-known carriers ~25 years, with cumulative incidence
+    ~80% by age 50 in classic biallelic-pattern pedigrees. Pre-AML
+    detection of cytopenia or persistent blast on smear shortens time-
+    to-diagnosis and enables a planned induction in a carrier-aware
+    transplant-team setting, rather than emergency presentation.
+    Donor-screening protocols (cascade-tested + germline-confirmed
+    sibling candidates) reduce the rare-but-documented risk of
+    donor-derived AML in CEBPA / RUNX1 / DDX41 kindreds.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests:
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-BM-ASPIRATE
+  - TEST-NGS-MYELOID-PANEL
+
+rationale: >
+  Standard-track confirmed-carrier surveillance pathway for individuals
+  with a documented germline CEBPA pathogenic variant. The protocol
+  below assumes the genetic-test question is already settled (germline-
+  testing on buccal / fibroblast / cultured-skin tissue, not blood-only).
+
+  **CBC + peripheral smear q3-6 months, lifelong:** Cytopenia (any
+  lineage), persistent immature myeloid forms, or unexplained
+  leukocytosis are clinical-change thresholds that prompt BMA + myeloid
+  NGS panel + cytogenetics. CEBPA-driven AML typically emerges in the
+  twenties or thirties — surveillance must begin from carrier
+  confirmation and continue lifelong, even if early years are
+  uneventful.
+
+  **BMA + cytogenetics + myeloid NGS at any suspicious change:**
+  Lowered BMA threshold compared with sporadic-AML pre-diagnostic
+  evaluation — the pre-test probability of incident myeloid neoplasm
+  is high enough that BMA is justified by any unexplained CBC
+  abnormality. Myeloid NGS panel must include CEBPA C-terminal /
+  bZIP coverage so that the somatic-second-hit pattern (in-frame indel
+  acquired in cis with the germline N-terminal allele) is captured if
+  present in low-burden disease.
+
+  **Cascade germline testing for first-degree relatives:** Documented
+  buccal / fibroblast / cultured-skin germline confirmation required
+  — NOT blood-only. The somatic CEBPA second hit can contaminate
+  blood-based germline assay and obscure germline status; this is a
+  well-recognized pitfall in CEBPA / RUNX1 / DDX41 family-screening
+  programs and must be communicated to genetic-counseling teams.
+
+  **Donor-screening protocol:** Any candidate sibling donor must be
+  germline-tested before HSC mobilization. CEBPA-carrier siblings
+  must not donate to affected sibling (donor-derived AML documented
+  in CEBPA, RUNX1, DDX41 syndromes). HLA-typing of the candidate
+  donor cohort early in the surveillance phase enables timely
+  donor identification at AML diagnosis.
+
+  **Treatment-time implications recorded but not actioned here:** When
+  AML emerges in a CEBPA carrier, standard 7+3 induction applies;
+  biallelic CEBPA in tumor (germline + somatic-second-hit) is a
+  favorable-cytogenetic-equivalent prognostic category per ELN 2022;
+  alloHCT in CR1 is individualized by co-occurring mutations + MRD
+  trajectory + donor germline-status.
+
+  Per CHARTER §11 patient-autonomy framing: surveillance cadence,
+  threshold for BMA, and donor-screening sequencing are all shared-
+  decision-making with the patient and the carrier-aware center.
+
+rationale_ua: >
+  Стандартний-трек шлях спостереження підтверджених носіїв для осіб з
+  задокументованим гермінативним патогенним варіантом CEBPA. Протокол
+  нижче передбачає, що питання генетичного тестування вже вирішене
+  (germline-тестування на buccal / fibroblast / cultured-skin тканині,
+  не лише на крові).
+
+  **ЗАК + периферичний мазок q3-6 місяців, життєво:** Цитопенія (будь-
+  яка лінія), персистуючі незрілі мієлоїдні форми, або нез'ясований
+  лейкоцитоз — порогові клінічно-зміни, що ініціюють BMA + myeloid
+  NGS panel + цитогенетику. CEBPA-driven ГМЛ типово виникає у 20-30
+  роках — спостереження має починатися від підтвердження носійства і
+  тривати життєво, навіть якщо ранні роки безсимптомні.
+
+  **BMA + цитогенетика + myeloid NGS при будь-якій підозрілій зміні:**
+  Знижений поріг BMA порівняно зі sporadic-ГМЛ pre-diagnostic оцінкою
+  — pre-test probability incident myeloid neoplasm достатньо висока,
+  щоб BMA був виправданий будь-якою нез'ясованою аномалією ЗАК.
+  Myeloid NGS panel має включати CEBPA C-кінцеве / bZIP покриття,
+  щоб somatic-second-hit pattern (in-frame indel набутий в cis з
+  germline N-кінцевим алелем) був захоплений при low-burden
+  захворюванні.
+
+  **Cascade germline тестування для родичів першого ступеня:**
+  Задокументоване buccal / fibroblast / cultured-skin germline
+  підтвердження потрібне — НЕ лише на крові. Соматичний CEBPA second
+  hit може контамінувати blood-based germline assay і затушовувати
+  germline-статус; це well-recognized pitfall у CEBPA / RUNX1 / DDX41
+  family-screening програмах.
+
+  **Donor-screening протокол:** Будь-який кандидат-сиблінг-донор має
+  бути germline-тестований перед HSC mobilization. CEBPA-носії
+  сиблінги НЕ можуть донорити ураженому сиблінгу (donor-derived ГМЛ
+  задокументоване у CEBPA, RUNX1, DDX41 синдромах). HLA-типування
+  кандидат-донор-cohort рано в surveillance-фазі дозволяє вчасну
+  ідентифікацію донора при діагностиці ГМЛ.
+
+  **Treatment-time implications записані але не виконуються тут:**
+  Коли ГМЛ виникає у CEBPA-носія, стандартна 7+3 індукція
+  застосовується; біалельний CEBPA в пухлині — favorable-cytogenetic-
+  equivalent prognostic category per ELN 2022; alloHCT у CR1 —
+  індивідуалізований за co-occurring мутаціями + МЗХ-trajectory +
+  germline-статусом донора.
+
+  Per CHARTER §11 framing автономії пацієнта.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_hereditary_myeloid
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: >-
+      "Familial AML with germline CEBPA mutations confers high lifetime
+      AML penetrance and warrants lifelong CBC + smear surveillance,
+      cascade germline testing (with caveat of blood-contamination by
+      somatic second-hit), and donor-germline-screening before
+      transplant from any sibling candidate."
+  - source_id: SRC-ELN-AML-2022
+    position: supports
+    relevant_quote_paraphrase: >-
+      "Biallelic CEBPA in AML is favorable-risk; germline status must
+      be ascertained on non-hematopoietic tissue. Carrier status
+      influences donor selection and post-transplant monitoring."
+
+do_not_do:
+  - "Не використовувати лише blood-based germline тестування для підтвердження CEBPA carrier-статусу — somatic second-hit clone у крові контамінує assay; необхідне buccal / fibroblast / cultured-skin testing."
+  - "Не пропускати donor-germline-screening перед HSC mobilization у CEBPA родини — donor-derived ГМЛ задокументоване; кандидат-сиблінг має бути germline-протестований першим."
+  - "Не відкладати BMA при будь-якому unexplained цитопенії або persistent blast на смазку у підтвердженого CEBPA-носія — pre-test probability incident myeloid neoplasm значно вища ніж у general population."
+
+do_not_do_en:
+  - "Do not rely on blood-only germline testing to confirm CEBPA carrier status — somatic second-hit clones in blood can contaminate the assay; buccal / fibroblast / cultured-skin testing is required."
+  - "Do not skip donor-germline-screening before HSC mobilization in a CEBPA family — donor-derived AML is documented; candidate sibling donors must be germline-tested first."
+  - "Do not defer BMA on any unexplained cytopenia or persistent blast on smear in a confirmed CEBPA carrier — the pre-test probability of incident myeloid neoplasm is substantially higher than in the general population."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-20"
+reviewers: []
+reviewer_signoffs: 0
+notes: "STUB — Wave P confirmed-carrier surveillance pathway (CEBPA). Two-Clinical-Co-Lead signoff queued. Sibling — IND-CEBPA-CARRIER-INTENSIFIED (aggressive plan_track)."

@@ -1,0 +1,151 @@
+id: IND-ETV6-CARRIER-INTENSIFIED
+plan_track: aggressive
+intent: surveillance
+
+applicable_to:
+  disease_id: DIS-B-ALL
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-ETV6-CONFIRMED-CARRIER
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Intensified-track surveillance (q3-month CBC + smear from infancy
+    through age 20, scheduled BMA every 2-3 years from age 5 during
+    peak pediatric B-ALL window, preemptive HLA + donor germline
+    mapping) is justified by the dominant pediatric B-ALL phenotype
+    (~25-30% cumulative incidence with first two decades onset) and
+    explicit structured pediatric-oncology + adult-hematology co-
+    management plan. Patient-burden tradeoff (frequent pediatric
+    visits, repeat sedation for BMA in a child) is shared-decision-
+    making with family + pediatric oncology team per CHARTER §11.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests:
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-BM-ASPIRATE
+  - TEST-NGS-MYELOID-PANEL
+  - TEST-FLOW-CYTOMETRY
+
+rationale: >
+  Alternative-track companion to IND-ETV6-CARRIER-SURVEILLANCE.
+  Intensified cadence reflects the dominant pediatric B-ALL phenotype
+  in ETV6 carriers and explicit pre-emptive transplant-team
+  engagement.
+
+  **CBC + peripheral smear q3 months from infancy through age 20:**
+  Half the standard-track cadence during the peak pediatric B-ALL
+  window. After age 20, cadence relaxes to q6 months (adult MDS / AML
+  risk is meaningful but onset window is much wider, making frequent
+  surveillance lower-yield).
+
+  **Scheduled BMA + flow cytometry + cytogenetics + myeloid NGS
+  every 2-3 years from age 5 during peak risk window:** Provoked
+  BMA (any unexplained CBC change, lymphadenopathy, unexplained
+  fatigue / weight loss) remains the primary trigger, but scheduled
+  BMA + flow at 2-3 year intervals from age 5 through age 18 is
+  added in this track regardless of CBC stability — the pediatric
+  B-ALL onset window is the primary driver. BMA in a child requires
+  general anesthesia / deep sedation in most centers; patient-burden
+  is meaningful and the indication must be discussed with family +
+  pediatric oncology.
+
+  **Preemptive HLA typing of candidate sibling-donor cohort +
+  germline-testing of all candidates:** Performed BEFORE any B-ALL /
+  MDS / AML diagnosis. ETV6-carrier siblings excluded from donor
+  candidacy. Unrelated-donor search initiated if no eligible sibling.
+
+  **Structured pediatric-oncology + adult-hematology co-management
+  plan from initial confirmation:** Care relationships established
+  before any malignancy event so that transitions at puberty / young
+  adulthood are seamless. Pediatric oncology leads through age 18-21
+  (institution-dependent); adult hematology takes over for ongoing
+  adult-onset MDS / AML surveillance.
+
+  Per CHARTER §11 patient-autonomy framing: intensified cadence
+  carries higher procedural burden, especially in a child where BMA
+  requires sedation. Family + patient (when age-appropriate) +
+  pediatric oncology team co-decide on cadence intensity.
+
+rationale_ua: >
+  Альтернативно-трекова Indication, sibling до IND-ETV6-CARRIER-
+  SURVEILLANCE. Інтенсифікована cadence відображає домінантний
+  pediatric B-ALL фенотип у ETV6-носіїв і явне pre-emptive
+  transplant-team engagement.
+
+  **ЗАК + периферичний мазок q3 місяці від немовлячого віку до 20
+  років:** Половина стандартно-трекової cadence під час peak
+  pediatric B-ALL вікна. Після 20 років, cadence релаксує до q6
+  місяців (adult MDS / AML ризик — meaningful, але onset window
+  набагато ширше).
+
+  **Запланована BMA + flow cytometry + цитогенетика + myeloid NGS
+  кожні 2-3 роки з 5 років під час peak risk вікна:** Provoked BMA
+  залишається primary тригером, але запланована BMA + flow на 2-3
+  річних інтервалах з 5 до 18 років додана в цьому треку незалежно
+  від CBC stability — pediatric B-ALL onset window — primary driver.
+  BMA у дитини потребує загальної анестезії / deep sedation у
+  більшості центрів; patient-burden — meaningful і indication має
+  бути обговорена з родиною + pediatric oncology.
+
+  **Pre-emptive HLA-типування кандидат-сиблінг-донор-cohort +
+  germline-тестування всіх кандидатів:** Виконується ДО будь-якого
+  діагнозу B-ALL / МДС / ГМЛ. ETV6-носії-сиблінги виключаються з
+  donor-candidacy. Unrelated-donor search розпочатий, якщо немає
+  eligible сиблінга.
+
+  **Структурований pediatric-oncology + adult-hematology co-management
+  план від початкового підтвердження:** Care-relationships встановлені
+  перед будь-якою malignancy подією. Pediatric oncology веде через
+  18-21 рік (institution-dependent); adult hematology переймає для
+  ongoing adult-onset MDS / AML surveillance.
+
+  Per CHARTER §11 framing автономії пацієнта.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_hereditary_myeloid
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: context
+  - source_id: SRC-ESMO-MDS-2021
+    position: context
+  - source_id: SRC-ELN-AML-2022
+    position: context
+
+do_not_do:
+  - "Не рекомендувати інтенсифіковану-трек cadence без явного shared-decision-making — q3-month візити в дитинстві + scheduled BMA з sedation несуть значущий patient + family burden."
+  - "Не виконувати запланованої pediatric BMA без супутнього flow cytometry — pediatric B-ALL — головна загроза і immunophenotyping визначає лінію; myeloid NGS sam недостатній."
+  - "Не пропускати pediatric-to-adult transition planning — care-relationships мають бути встановлені заздалегідь, без gap у surveillance при переході до adult hematology."
+  - "Не використовувати кандидат-сиблінг-донора, доки germline-screening не завершений — sibling-carrier донор не може використовуватись регардлес інтенсифікованого треку."
+
+do_not_do_en:
+  - "Do not recommend the intensified-track cadence without explicit shared-decision-making — q3-month visits in childhood + scheduled BMA with sedation carry meaningful patient + family burden."
+  - "Do not perform scheduled pediatric BMA without companion flow cytometry — pediatric B-ALL is the dominant threat and immunophenotyping identifies the lineage; myeloid NGS alone is insufficient."
+  - "Do not skip pediatric-to-adult transition planning — care relationships should be established in advance, with no gap in surveillance at the handoff to adult hematology."
+  - "Do not use a candidate sibling donor before germline-screening is completed — a sibling-carrier donor cannot be used regardless of intensified-track designation."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-20"
+reviewers: []
+reviewer_signoffs: 0
+notes: "STUB — Wave P ETV6 intensified-track. §15.2 C4 ≥2-tracks invariant. Sibling — IND-ETV6-CARRIER-SURVEILLANCE (standard plan_track)."

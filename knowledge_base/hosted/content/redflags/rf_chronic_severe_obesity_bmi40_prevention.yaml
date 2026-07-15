@@ -1,0 +1,131 @@
+id: RF-CHRONIC-SEVERE-OBESITY-BMI40-PREVENTION
+definition: >-
+  Severe obesity — BMI ≥40 kg/m² (WHO class III obesity), distinct from
+  the broader RF-LIFESTYLE-OBESITY-CANCER-PREVENTION (which covers BMI
+  ≥30 class I-III). Severe obesity carries multiplicative cancer-risk
+  effects (linear-then-accelerating dose-response per WCRF/AICR + IARC
+  Working Group on obesity-related cancers) particularly for hormonally-
+  driven cancers: endometrial (RR ~7-10 vs. ~1 baseline), esophageal
+  adenocarcinoma (RR ~4-5), post-menopausal breast cancer (RR ~1.5-2),
+  colorectal (RR ~1.5-2), renal cell carcinoma (RR ~2), hepatocellular
+  carcinoma (RR ~2-4 via NAFLD/MASH), pancreatic adenocarcinoma
+  (RR ~2). Severe obesity also defines the bariatric-surgery-candidate
+  cohort (BMI ≥40 alone, or BMI ≥35 with obesity-related comorbidity),
+  and bariatric surgery has documented cancer-incidence reduction
+  (~30% relative reduction for hormonally-driven cancers in long-term
+  follow-up cohorts). Categorized as chronic_condition rather than
+  lifestyle because severe obesity carries metabolic + endocrine
+  pathophysiology distinct from sedentary-only lifestyle elevation.
+  Prevention-persona RedFlag — complementary to (not redundant with)
+  RF-LIFESTYLE-OBESITY-CANCER-PREVENTION.
+definition_ua: >-
+  Тяжке ожиріння — BMI ≥40 кг/м² (WHO class III ожиріння), відмінне від
+  ширшого RF-LIFESTYLE-OBESITY-CANCER-PREVENTION (який покриває BMI
+  ≥30 class I-III). Тяжке ожиріння carries multiplicative cancer-risk
+  effects (linear-then-accelerating dose-response per WCRF/AICR + IARC)
+  особливо для hormonally-driven cancers: endometrial (RR ~7-10),
+  esophageal adenocarcinoma (RR ~4-5), post-menopausal breast (RR
+  ~1.5-2), colorectal (RR ~1.5-2), RCC (RR ~2), HCC (RR ~2-4 via
+  NAFLD/MASH), PDAC (RR ~2). Severe obesity also defines bariatric-
+  surgery-candidate cohort (BMI ≥40 alone, або BMI ≥35 з obesity-
+  related comorbidity), і bariatric surgery has documented cancer-
+  incidence reduction (~30% relative для hormonally-driven cancers).
+  Categorized як chronic_condition тому що severe obesity carries
+  metabolic + endocrine pathophysiology distinct від sedentary-only
+  lifestyle elevation. Prevention-persona RedFlag — complementary до
+  RF-LIFESTYLE-OBESITY-CANCER-PREVENTION.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "bmi_ge_40_severe_obesity_bariatric_candidate"
+      value: true
+    - finding: "severe_obesity_class_3_diagnosis"
+      value: "positive"
+    - finding: "bmi_ge_35_with_obesity_comorbidity_bariatric_candidate"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+risk_category: chronic_condition
+
+# Severe-obesity cancer-spectrum (multiplicative effect): endometrial,
+# breast (post-menopausal), CRC, esophageal adenocarcinoma, HCC, RCC,
+# PDAC. Anchors here are the cancers with strongest dose-response
+# signal and best documented bariatric-surgery-mediated risk reduction.
+relevant_diseases:
+  - DIS-BREAST
+  - DIS-ENDOMETRIAL
+  - DIS-CRC
+
+shifts_algorithm: []
+
+sources:
+  - SRC-WCRF-AICR-CUP-2018
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  v0.3 wave-N niche pathway — severe obesity (BMI ≥40) prevention.
+  Fires on documented BMI ≥40 kg/m² OR BMI ≥35 with documented
+  obesity-related comorbidity (T2DM, sleep apnea, NAFLD, hypertension,
+  hyperlipidemia) — the bariatric-surgery-candidate cohort definition.
+  Distinct finding name from the broader-obesity RF (which fires on
+  bmi_ge_40 alone) so that the engine can present BOTH tracks when
+  applicable but they are not redundant (severe obesity opens
+  bariatric-surgery pathway + intensified screening discussion that
+  the general obesity RF does not specifically cover).
+
+  Engine routes to PreventionPlan recommending:
+    (a) IND-SEVERE-OBESITY-CANCER-PREVENTION-INTENSIFIED (standard) —
+        structured weight-loss intervention with multidisciplinary
+        bariatric program (medical weight loss including GLP-1
+        agonists / semaglutide / tirzepatide, behavioral, surgical
+        referral when BMI ≥40 alone or BMI ≥35 with comorbidity);
+        intensified cancer screening per affected-organ guideline
+        (mammography from age 40, colonoscopy from age 45 with no
+        upward-deferral, endometrial-symptom awareness with low-
+        threshold ultrasound for postmenopausal bleeding); NAFLD
+        screening + management; comorbidity management.
+    (b) IND-SEVERE-OBESITY-CANCER-PREVENTION-OBSERVATION (alternative)
+        — population-cadence cancer screening only when intensified
+        weight-loss + screening program is impractical or declined.
+        Per CHARTER §11 patient-autonomy framing.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Source-set TODO: Adams et al. bariatric-surgery cancer-
+  incidence reduction long-term follow-up (NEJM 2007 + updates);
+  Schauer et al. STAMPEDE bariatric outcomes long-term (NEJM 2017);
+  WCRF/AICR Continuous Update Project obesity-cancer dose-response
+  meta-analyses; ASMBS bariatric-surgery selection criteria; ASCO
+  Survivorship + Prevention obesity-cancer recommendations; ongoing
+  v0.3 wave-N authoring backlog new SRC entities.
+
+  Cancer-risk multiplicative effects in severe obesity (BMI ≥40,
+  WCRF/AICR CUP 2018 + IARC Working Group 2016 meta-analyses):
+    - Endometrial cancer: RR ~7-10 (largest single-cancer effect)
+    - Esophageal adenocarcinoma: RR ~4-5
+    - Hepatocellular carcinoma: RR ~2-4 (via NAFLD/MASH pathway)
+    - Renal cell carcinoma: RR ~2
+    - Pancreatic adenocarcinoma: RR ~2
+    - Post-menopausal breast cancer: RR ~1.5-2
+    - Colorectal cancer: RR ~1.5-2
+    - Multiple myeloma: RR ~1.5
+    - Gallbladder cancer: RR ~2-3
+    - Ovarian cancer: RR ~1.3
+    - Thyroid cancer: RR ~1.3
+
+  Bariatric surgery cancer-incidence reduction (long-term cohort
+  data, Adams 2007 + updates; Schauer 2017):
+    - ~30% relative reduction in all-cancer incidence
+    - Larger effects for hormonally-driven cancers (endometrial,
+      post-menopausal breast)
+    - Less consistent for hepatobiliary cancers
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_n_niche
+draft_revision: 1

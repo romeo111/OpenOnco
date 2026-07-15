@@ -1,0 +1,98 @@
+id: RF-LIFESTYLE-HOT-MATE-ESOPHAGEAL-PREVENTION
+definition: >-
+  Regular consumption of maté (Ilex paraguariensis infusion) prepared and
+  drunk at very high temperatures (≥65°C / ≥149°F) — characteristic of
+  traditional gourd-and-bombilla preparation in southern South America
+  (Argentina, Brazil, Paraguay, Uruguay, southern Chile) and diaspora
+  communities. IARC Monograph 116 (2016) classified drinking very hot
+  beverages above 65°C as Group 2A (probably carcinogenic) — limited
+  evidence in humans (consistent associations with esophageal squamous
+  cell carcinoma in maté-drinking, hot-tea, and hot-coffee cohorts,
+  with residual confounding from tobacco / alcohol co-exposure not fully
+  excluded), sufficient evidence in experimental animals (thermal injury
+  → chronic inflammation → field carcinogenesis in rodent esophagus
+  models). Important: at temperatures <60°C, no association is observed;
+  maté per se (the herb / its phytochemicals) is NOT classified as
+  carcinogenic — the carcinogenic exposure is the thermal injury,
+  independent of beverage type. Effect size: maté-attributable ESCC
+  OR ~1.5-2.0 in southern South America cohorts (highest in those
+  drinking very hot AND tobacco/alcohol co-exposed). Prevention-persona
+  RedFlag (§20 ratification 2026-05-18, v0.3 IARC 2A probable-carcinogen
+  batch).
+definition_ua: >-
+  Регулярне споживання матэ (інфузія Ilex paraguariensis), приготованого
+  і випитого при дуже високих температурах (≥65°C) — характерне для
+  традиційного gourd-and-bombilla приготування в південній Південній
+  Америці (Аргентина, Бразилія, Парагвай, Уругвай, південне Чилі) та
+  діаспорних спільнотах. IARC Monograph 116 (2016) класифікував
+  drinking very hot beverages >65°C як Group 2A (probably carcinogenic) —
+  limited evidence in humans (узгоджені асоціації з esophageal squamous
+  cell carcinoma в матэ-, hot-tea- та hot-coffee-когортах з residual
+  confounding від tobacco / alcohol co-exposure), sufficient evidence
+  in experimental animals (thermal injury → chronic inflammation → field
+  carcinogenesis в rodent esophagus моделях). Важливо: при <60°C
+  асоціація НЕ спостерігається; матэ per se (рослина / її phytochemicals)
+  НЕ класифікується як канцероген — канцерогенною експозицією є thermal
+  injury, незалежно від типу напою. Розмір ефекту: матэ-attributable
+  ESCC OR ~1.5-2.0 в когортах південної Південної Америки (highest при
+  drinking very hot AND tobacco/alcohol co-exposed).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "very_hot_mate_consumption_ge_65c"
+      value: true
+    - finding: "traditional_mate_culture_high_temperature_regular"
+      value: true
+
+clinical_direction: investigate
+
+severity: minor
+priority: 110
+category: other
+
+risk_category: lifestyle
+
+# Anchor — esophageal cancer (squamous cell carcinoma predominantly).
+# IARC Group 2A classification specifically implicates ESCC as the
+# primary cancer endpoint for very-hot-beverage thermal injury.
+relevant_diseases:
+  - DIS-ESOPHAGEAL
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 IARC 2A probable-carcinogen batch
+  (2026-05-19). IARC Group 2A probable — limited human evidence;
+  clinical recommendation more conservative than Group 1. IARC Monograph
+  116 (2016) is the canonical evidence anchor and is NOT yet a separate
+  SRC entity in KB; cited in notes only.
+
+  Coexistence with RF-LIFESTYLE-HOT-BEVERAGES-PREVENTION (predecessor
+  generic-hot-beverages RF covering teas / coffees / water at ≥65°C
+  across all regional traditions) is deliberate. This new RF is the
+  maté-specific narrowing — fires on the highly characteristic gourd-
+  and-bombilla preparation pattern with documented southern-South-
+  American epidemiology, lets the engine surface culturally-tuned
+  counseling (target audience: diaspora communities, immigrants from
+  Argentina/Brazil/Paraguay/Uruguay/southern Chile). Both RFs may
+  fire on the same patient when both thresholds are met; engine
+  treats them as additive.
+
+  Crucial framing point: the carcinogen is thermal injury, NOT maté
+  per se. Counseling targets temperature (cool to <60°C / wait
+  several minutes before drinking) NOT cessation of maté consumption.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_iarc_2a_batch
+draft_revision: 1

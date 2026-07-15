@@ -1,0 +1,71 @@
+id: RF-CHEK2-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic monoallelic variant
+  in CHEK2. Most common population variant is c.1100delC truncating
+  loss-of-function (~1.5% European population frequency); other
+  pathogenic variants include c.444+1G>A (splice), p.Ile157Thr (missense
+  with modest effect), and large deletions. Heterozygous CHEK2 carriers
+  have moderate-penetrance breast cancer risk (RR ~2.0-3.0; lifetime
+  ~20-30% for truncating variants, lower for missense), modest CRC risk
+  (RR ~1.5-2.0; lifetime ~5-10% over baseline), prostate cancer (RR
+  ~2-3 with high-grade enrichment for c.1100delC), thyroid cancer
+  (smaller signal). Most common moderate-penetrance variant in multi-
+  gene panels among European-ancestry cohorts. Patient has confirmed
+  positive germline test; no current personal cancer diagnosis in the
+  carrier being assessed. Prevention-persona RedFlag (§20, v0.3
+  moderate-penetrance breast gene expansion).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний
+  monoallelic варіант у CHEK2. Найпоширеніший population variant —
+  c.1100delC truncating loss-of-function (~1.5% European population
+  frequency); інші pathogenic variants — c.444+1G>A (splice),
+  p.Ile157Thr (missense з modest effect), large deletions. Heterozygous
+  CHEK2 carriers мають moderate-penetrance breast cancer ризик (RR
+  ~2.0-3.0; lifetime ~20-30% для truncating variants), modest CRC ризик
+  (RR ~1.5-2.0; lifetime ~5-10% over baseline), prostate cancer (RR
+  ~2-3 з high-grade enrichment для c.1100delC), thyroid cancer (менший
+  signal). Найпоширеніший moderate-penetrance variant у multi-gene
+  panels серед European-ancestry cohorts. Prevention-персона RedFlag
+  (§20, v0.3 moderate-penetrance breast gene expansion).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_chek2_pathogenic_variant_confirmed"
+      value: true
+    - finding: "germline_chek2_1100delc_confirmed"
+      value: true
+    - finding: "germline_chek2_likely_pathogenic_variant"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 105
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-BREAST
+  - DIS-CRC
+  - DIS-PROSTATE
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for CHEK2 heterozygous carriers. Risk
+  estimates vary substantially by variant: truncating > splice >
+  missense. Engine routes to enhanced breast surveillance (annual
+  mammography from age 40 + MRI consideration), modestly tightened CRC
+  screening (colonoscopy from age 40 with q5y interval per NCCN), and
+  prostate awareness from age 40-45 for males with c.1100delC. STUB
+  pending two-Co-Lead signoff per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_moderate_penetrance_panel
+draft_revision: 1
