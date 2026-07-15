@@ -1,0 +1,15 @@
+{
+  "patient_id": "SCREEN-GAP-NO-HISTORY-PREV-001",
+  "comment": "55yo healthy adult (male) — no personal cancer diagnosis, no first-degree-relative cancer history, no documented age-appropriate cancer screening completed within the past 5+ years. Never-smoker (no LDCT applicability), no documented CRC modality on file (no colonoscopy / FIT / CTC / FIT-DNA), no documented PSA discussion or testing in last decade. Universal demographic screening-gap RF cohort: pre-clinical malignancy detection below USPSTF / NCCN / NCI population-screening cadence. Sister to existing patient_age_55_screening_gap.json (55yo female; this case is 55yo male — different sex-specific screening profile). Engine fires RF-UNIVERSAL-AGE-50PLUS-SCREENING-GAP (composite trigger: age>=50 AND age_50plus_screening_gap_documented:true; relevant_diseases:['*'] — sidecar documentation per plan.py exclusion) and routes to PreventionPlan: standard = comprehensive USPSTF catch-up — CRC modality choice per USPSTF 2021 (colonoscopy q10y / FIT q1y / CTC q5y / FIT-DNA q3y for 45-75 with extension to 76-85 individualized) + shared-decision PSA discussion per USPSTF 2018 (50-69 individualized) + skin-cancer awareness given age; alternative = highest-yield-only modality (FIT q1y as low-burden CRC entry). No mammography (male) / cervical co-test (male) — female-specific modalities excluded. Validates v0.3 universal demographic RF — male-axis sister case.",
+  "biomarkers": {},
+  "demographics": {"age": 55, "sex": "male", "ecog": 0, "smoking_status": "never_smoker"},
+  "findings": {
+    "age": 55,
+    "age_50plus_screening_gap_documented": true,
+    "No documented CRC screening modality on file in past decade": true,
+    "No PSA discussion or testing documented in past decade": true,
+    "No first-degree-relative cancer history": true,
+    "Lifelong never-smoker (LDCT not applicable)": true,
+    "No personal cancer diagnosis": true
+  }
+}

@@ -1,0 +1,116 @@
+id: IND-NPC-1L-METASTATIC-GC-PD1
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NPC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Recurrent, unresectable, or de novo distant metastatic NPC (Stage IVB / M1)"
+    - "Systemic-therapy-naive for recurrent/metastatic disease"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-NPC-GC-TORIPALIMAB
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  progression_free_survival:
+    value: "Approximate reported mPFS ~11.7 vs ~8.0 months (toripalimab+GP vs placebo+GP), HR ~0.52 (JUPITER-02); exact figures pending verification against primary source"
+    source: SRC-JUPITER-02-MAI-2021
+  overall_response_rate:
+    value: "Approximate reported ORR ~77% vs ~66% (toripalimab+GP vs placebo+GP); exact figures pending verification against primary source"
+    source: SRC-JUPITER-02-MAI-2021
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CT-NECK-THORAX-ABDOMEN-PELVIS
+  - TEST-PET-CT
+  - TEST-EBV-VIRAL-LOAD
+  - TEST-AUDIOMETRY
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+desired_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+
+rationale: >
+  Recurrent/metastatic NPC is systemic disease requiring chemo-
+  immunotherapy rather than local therapy. Two near-identical Chinese
+  phase 3 trials established gemcitabine+cisplatin (GP) plus an
+  anti-PD-1 antibody as the 1L standard: JUPITER-02 (toripalimab;
+  Mai HQ et al., Nat Med 2021) and CAPTAIN-1st (camrelizumab; Yang Y
+  et al., Lancet Oncol 2021). Both showed a substantial PFS benefit
+  over GP chemotherapy alone. Toripalimab+GP is set as the
+  recommended_regimen here because toripalimab is specifically
+  FDA-approved (Loqtorzi, Oct 2023) for this exact indication, giving
+  it the broadest regulatory/access basis; camrelizumab+GP
+  (REG-NPC-GC-CAMRELIZUMAB) is an equally trial-supported substitute
+  where toripalimab is unavailable or camrelizumab is locally
+  registered/preferred (see known_controversies). Post-treatment
+  plasma EBV-DNA (BIO-EBV-DNA; RF-NPC-EBV-DNA-POST-TREATMENT-
+  SURVEILLANCE) is used alongside imaging for response/relapse
+  monitoring.
+
+rationale_ua: >
+  Рецидивуюча/метастатична NPC є системним захворюванням, що потребує
+  хіміоімунотерапії, а не локальної терапії. Два майже ідентичні
+  китайські дослідження фази 3 встановили гемцитабін+цисплатин (GP) у
+  поєднанні з анти-PD-1 антитілом як стандарт 1L: JUPITER-02
+  (торипалімаб; Mai HQ та співавт., Nat Med 2021) і CAPTAIN-1st
+  (камрелізумаб; Yang Y та співавт., Lancet Oncol 2021). Торипалімаб+GP
+  встановлено як recommended_regimen, оскільки торипалімаб має
+  специфічне схвалення FDA (Loqtorzi, жовтень 2023) для цього
+  показання; камрелізумаб+GP — рівноцінна за доказовістю альтернатива.
+
+sources:
+  - source_id: SRC-JUPITER-02-MAI-2021
+    position: supports
+    relevant_quote_paraphrase: "Toripalimab + gemcitabine/cisplatin significantly improved PFS vs placebo + gemcitabine/cisplatin as first-line treatment of recurrent/metastatic NPC"
+  - source_id: SRC-CAPTAIN-1ST-YANG-2021
+    position: supports
+    relevant_quote_paraphrase: "Camrelizumab + gemcitabine/cisplatin significantly improved PFS vs placebo + gemcitabine/cisplatin as first-line treatment of recurrent/metastatic NPC"
+  - source_id: SRC-NCCN-HNSCC-2025
+    position: supports
+
+do_not_do:
+  - "НЕ призначати торипалімаб/камрелізумаб монотерапію 1L без хіміотерапевтичного каркасу поза межами паліативної platinum-непридатної ситуації — обидва дослідження вивчали PD-1 + GP комбінацію, не монотерапію, у 1L."
+  - "НЕ перевищувати обмеження циклів цисплатину/гемцитабіну (6 циклів) — хіміо-каркас GP зупиняється на 6-му циклі за протоколом дослідження; PD-1 препарат продовжується як підтримуюча монотерапія."
+  - "НЕ пропускати базову аудіометрію та функцію нирок перед цисплатин-вмісним GP каркасом."
+  - "НЕ продовжувати анти-PD-1 терапію під час імуно-опосередкованих небажаних явищ ступеня 3-4 без кортикостероїдної терапії та консультації спеціаліста."
+do_not_do_en:
+  - "Do NOT use toripalimab/camrelizumab monotherapy as 1L without a chemotherapy backbone outside of the platinum-ineligible palliative setting — both JUPITER-02 and CAPTAIN-1st studied PD-1 + GP combination, not monotherapy, in 1L."
+  - "Do NOT exceed the cisplatin/gemcitabine cycle cap (6 cycles) — the GP chemo backbone stops at cycle 6 per trial protocol; the PD-1 agent continues as maintenance monotherapy."
+  - "Do NOT omit baseline audiometry and renal function before the cisplatin-containing GP backbone."
+  - "Do NOT continue anti-PD-1 therapy through grade 3-4 immune-related adverse events without corticosteroid management and specialist input."
+
+known_controversies:
+  - topic: "Toripalimab vs camrelizumab as the PD-1 partner for 1L gem-cis in recurrent/metastatic NPC"
+    positions:
+      - position: "Toripalimab + GP (JUPITER-02) — FDA-approved (Loqtorzi, Oct 2023) specifically for this indication; broadest regulatory/access basis"
+        sources: [SRC-JUPITER-02-MAI-2021]
+      - position: "Camrelizumab + GP (CAPTAIN-1st) — NMPA (China)-approved; comparable phase 3 efficacy signal; no FDA approval and limited access outside China"
+        sources: [SRC-CAPTAIN-1ST-YANG-2021]
+        evidence_note: "No head-to-head trial exists between toripalimab and camrelizumab in NPC"
+    our_default: "Toripalimab + GP (REG-NPC-GC-TORIPALIMAB) as recommended_regimen given FDA approval and broader international access; camrelizumab + GP (REG-NPC-GC-CAMRELIZUMAB) is an equally evidence-supported substitute where toripalimab is unavailable or camrelizumab is locally registered/preferred"
+    rationale: "Both are anti-PD-1 antibodies studied in near-identical Chinese phase 3 trials (GP backbone, broadly similar eligibility, similar PFS/ORR magnitude); selection here is access/registration-driven rather than efficacy-driven"
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — draft entity pending Clinical Co-Lead sign-off (CHARTER §6.1;
+  dev-mode-exempted). Coverage-enabling metastatic-1L indication for
+  DIS-NPC. Numeric trial results throughout are approximate/recalled
+  and explicitly flagged for verification against JUPITER-02 (Nat Med
+  2021) and CAPTAIN-1st (Lancet Oncol 2021) primary sources before any
+  non-draft/clinical use.

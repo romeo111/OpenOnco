@@ -1,0 +1,126 @@
+id: RF-CHRONIC-CIRRHOSIS-ETIOLOGY-AGNOSTIC-HCC-PREVENTION
+definition: >-
+  Established cirrhosis of any etiology (Child-Pugh A, B, or C) when
+  the specific cause is either not yet classified, multi-factorial, or
+  falls outside the dedicated etiology-specific RedFlags
+  (RF-CHRONIC-HBV-MALIGNANCY-PREVENTION for chronic hepatitis B,
+  RF-CHRONIC-HCV-NHL-PREVENTION for chronic hepatitis C, and any
+  future dedicated RFs for chronic NAFLD/MASH, alpha-1 antitrypsin
+  deficiency, hemochromatosis, Wilson disease, autoimmune hepatitis,
+  primary biliary cholangitis, primary sclerosing cholangitis). This
+  etiology-agnostic anchor exists because the AASLD HCC Guidance
+  2023 endorses HCC surveillance in ALL cirrhotic patients regardless
+  of underlying cause — the cirrhotic liver itself is the dominant
+  HCC risk driver (annual HCC incidence ~1-4% across etiologies, far
+  above population baseline ~0.001-0.01%). Surveillance with abdominal
+  US ± AFP every 6 months reduces HCC-specific mortality through
+  early-stage detection enabling curative-intent treatment (resection,
+  ablation, transplant). Prevention-persona RedFlag — distinct from
+  etiology-specific RFs by virtue of firing on the cirrhosis
+  diagnosis itself rather than on a specific causal exposure.
+definition_ua: >-
+  Встановлений цироз будь-якої етіології (Child-Pugh A, B або C) коли
+  специфічна причина або ще не класифікована, мультифакторна, або
+  поза межами dedicated etiology-specific RedFlags (RF-CHRONIC-HBV,
+  RF-CHRONIC-HCV, та майбутні dedicated RFs для chronic NAFLD/MASH,
+  alpha-1 antitrypsin deficiency, hemochromatosis, Wilson, autoimmune
+  hepatitis, PBC, PSC). Цей etiology-agnostic anchor існує тому що
+  AASLD HCC Guidance 2023 endorses HCC surveillance у ВСІХ cirrhotic
+  пацієнтів незалежно від underlying cause — cirrhotic liver сам по
+  собі — dominant HCC risk driver (annual HCC incidence ~1-4% across
+  etiologies, far above population baseline ~0.001-0.01%). Surveillance
+  з abdominal US ± AFP кожні 6 місяців reduces HCC-specific mortality
+  через early-stage detection що дозволяє curative-intent treatment
+  (resection, ablation, transplant). Prevention-persona RedFlag —
+  distinct від etiology-specific RFs тим, що fires на cirrhosis
+  diagnosis сама по собі rather than на specific causal exposure.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "cirrhosis_established_etiology_agnostic"
+      value: true
+    - finding: "cirrhosis_child_pugh_a"
+      value: true
+    - finding: "cirrhosis_child_pugh_b"
+      value: true
+    - finding: "cirrhosis_child_pugh_c"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+risk_category: chronic_condition
+
+# HCC is the prevention target. Annual incidence in cirrhosis ~1-4%
+# across all etiologies (higher in HCV-cured F4 cirrhotics ~2-4%,
+# HBV cirrhotics ~3-4%, NAFLD cirrhotics ~1-2%, alcoholic cirrhotics
+# ~1-2%). Surveillance with abdominal US ± AFP q6 months per AASLD
+# HCC Guidance 2023 + EASL.
+relevant_diseases:
+  - DIS-HCC
+
+shifts_algorithm: []
+
+sources:
+  - SRC-AASLD-HCC-2023
+  - SRC-NCCN-HCC-2025
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  v0.3 wave-N niche pathway — etiology-agnostic cirrhosis HCC
+  surveillance. Fires on documented cirrhosis (clinical diagnosis,
+  biopsy-proven, or imaging-consistent advanced fibrosis F4) when
+  the specific causal etiology is unclassified, multi-factorial, or
+  outside the dedicated etiology-specific RFs. This is the workhorse
+  RF for the substantial population of cirrhotic patients whose
+  etiology is alcoholic (where we currently don't have a dedicated
+  alcoholic-cirrhosis RF), NAFLD/MASH (no dedicated RF yet), mixed
+  alcoholic-NAFLD, cryptogenic, or hemochromatosis / Wilson / A1AT /
+  autoimmune hepatitis (each rare enough that they share this
+  etiology-agnostic anchor).
+
+  Engine routes to PreventionPlan recommending:
+    (a) IND-CIRRHOSIS-HCC-SURVEILLANCE (standard) — abdominal US +
+        AFP q6 months at center experienced with cirrhotic-liver
+        imaging; alcohol abstinence; obesity management (NAFLD
+        subset); etiology-specific treatment of underlying liver
+        disease (HBV antivirals, HCV DAAs, weight loss for NAFLD,
+        venesection for hemochromatosis, etc.) where applicable;
+        nutrition + sarcopenia management; pre-transplant evaluation
+        when MELD ≥15 or HCC found within Milan criteria.
+    (b) IND-CIRRHOSIS-HCC-OBSERVATION (alternative) — symptom-driven
+        evaluation only when US ± AFP surveillance is impractical
+        (access, decompensation precluding transplant candidacy).
+        Per CHARTER §11 patient-autonomy framing. Counsel sub-
+        optimal vs. structured surveillance.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Source-set TODO: dedicated AASLD HCC Guidance 2023
+  (Singal et al. Hepatology 2023) full citation; EASL HCC Guidelines
+  2018 / forthcoming update; APASL HCC Consensus; Cancer Genome Atlas
+  HCC etiology-stratified surveillance yield data; ongoing v0.3
+  wave-N authoring backlog new SRC entities for etiology-agnostic
+  cirrhosis HCC evidence base.
+
+  AASLD HCC Guidance 2023 surveillance summary:
+    - All cirrhotic patients regardless of etiology — surveillance
+      indicated.
+    - Modality: abdominal US ± AFP every 6 months. Sensitivity for
+      early-stage HCC ~63% US-only, ~80% US+AFP. Specificity high.
+    - Hepatobiliary MRI as second-line / problem-solving when US is
+      technically inadequate (severe obesity, prior bariatric anatomy,
+      severe ascites).
+    - Decompensation (Child-Pugh C) without transplant candidacy →
+      surveillance cessation may be appropriate (curative options
+      lost; patient-autonomy + palliative-framing discussion).
+    - Annual HCC incidence by etiology in F4 cirrhotics: HCV-treated
+      ~2-4%, HBV ~3-4%, alcoholic ~1-2%, NAFLD ~1-2%, A1AT/
+      hemochromatosis ~3-5%, PSC/PBC ~1-3%.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_n_niche
+draft_revision: 1

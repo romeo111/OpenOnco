@@ -56,7 +56,9 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "ECOG PS 0-2"
+        - finding: "ecog"
+          threshold: 2
+          comparator: "<="
         - condition: "No prior pelvic RT to dose-limiting cumulative dose"
         - condition: "CrCl ≥50 mL/min and adequate hepatic function"
     if_true:
@@ -87,7 +89,7 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "ECOG PS 0-1"
+        - red_flag: RF-FITNESS-ECOG-FIT
         - condition: "No active autoimmune disease requiring systemic immunosuppression"
         - condition: "Adequate organ function (CrCl ≥50 mL/min, normal LFTs)"
     if_true:

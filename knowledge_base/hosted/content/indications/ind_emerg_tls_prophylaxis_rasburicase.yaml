@@ -1,5 +1,11 @@
 id: IND-EMERG-TLS-PROPHYLAXIS-RASBURICASE
-plan_track: standard
+# plan_track corrected 2026-07-11 standard -> supportive_care: this is a
+# supportive-care prophylaxis indication (rasburicase + hydration + allopurinol
+# before cytotoxic therapy), NOT an active anti-leukemic regimen with a
+# recommended_regimen. `standard` triggered the routing-contract validator
+# (standard/aggressive tracks require a Regimen); supportive_care is the
+# correct non-regimen track. Only ALGO-AML-1L routes to this indication.
+plan_track: supportive_care
 applicable_to:
   disease_id: DIS-AML
   line_of_therapy: 1

@@ -1,0 +1,76 @@
+id: RF-LARYNGEAL-POOR-PRESERVATION-CANDIDACY
+definition: >
+  Feature precluding larynx-preservation chemoradiation (RTOG 91-11
+  concurrent cisplatin + RT) as the preferred locally advanced
+  treatment pathway, favoring primary total laryngectomy instead:
+  radiographic cartilage invasion / destruction, tumor extension
+  through cartilage into extralaryngeal soft tissue, substantial
+  (≥1 cm) invasion of the tongue base, or pretreatment laryngeal
+  dysfunction (severe aspiration, or feeding-tube / tracheostomy
+  dependence) indicating a non-functional larynx that organ-
+  preservation therapy would not salvage.
+definition_ua: >
+  Ознака, що виключає ларингоз-берігаючу хіміопроменеву терапію (RTOG
+  91-11, конкурентний цисплатин + RT) як переважний шлях лікування
+  локально поширеного раку гортані, на користь первинної тотальної
+  ларингектомії: рентгенологічна інвазія / деструкція хряща,
+  поширення пухлини через хрящ у позагортанні м'які тканини, суттєва
+  (≥1 см) інвазія кореня язика, або догоспітальна дисфункція гортані
+  (тяжка аспірація, залежність від зонда для годування / трахеостоми).
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "laryngeal_cartilage_invasion"
+      value: true
+    - finding: "extralaryngeal_soft_tissue_extension"
+      value: true
+    - finding: "tongue_base_invasion_cm"
+      threshold: 1
+      comparator: ">="
+    - finding: "pretreatment_laryngeal_dysfunction"
+      value: true
+
+clinical_direction: intensify
+severity: major
+priority: 100
+category: fitness-eligibility
+
+relevant_diseases:
+  - DIS-LARYNGEAL
+shifts_algorithm:
+  - ALGO-LARYNGEAL-1L
+
+sources:
+  - SRC-NCCN-HNSCC-2025
+  - SRC-RTOG-9111-FORASTIERE-2003
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+draft: true
+
+notes: >
+  STUB pending Clinical Co-Lead sign-off (CHARTER §6.1). Larynx-
+  preservation-candidacy gate for locally advanced laryngeal SCC —
+  routes ALGO-LARYNGEAL-1L step 5 to primary total laryngectomy
+  instead of RTOG 91-11 concurrent chemoradiation. Grounded in the
+  Disease-level narrative's "patient preference/fitness drives choice"
+  framing plus well-established organ-preservation-candidacy criteria
+  (RTOG 91-11 itself excluded T4 disease with cartilage destruction /
+  >1 cm tongue-base invasion from its organ-preservation comparison).
+  Distinct from RF-HNSCC-ORGAN-DYSFUNCTION (reused unchanged at
+  ALGO-LARYNGEAL-1L step 6), which gates cisplatin FITNESS rather than
+  larynx-preservation CANDIDACY. clinical_direction set to `intensify`
+  (not `investigate`) per independent safety-review fix: this RF
+  escalates from organ-preservation CRT to primary radical surgery
+  when it fires, and every other algorithm-shifting RedFlag in this KB
+  uses intensify/de-escalate/hold, never investigate (confirmed by
+  grepping redflags/ sibling files) — the loader's
+  _check_redflag_contracts flags investigate+non-empty
+  shifts_algorithm as a re-classification warning.
+notes_ua: >
+  STUB, очікує підпису клінічного співкерівника. Гейт кандидатності на
+  ларингоз-берігаюче лікування при локально поширеному раку гортані.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_draft
+draft_revision: 1

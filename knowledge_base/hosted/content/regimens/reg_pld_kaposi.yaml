@@ -1,0 +1,108 @@
+id: REG-PLD-KAPOSI
+name: "Pegylated liposomal doxorubicin monotherapy (Kaposi sarcoma)"
+name_ua: "Пегільований ліпосомальний доксорубіцин моно (саркома Капоші)"
+alternate_names:
+  - "PLD monotherapy Kaposi sarcoma"
+  - "Doxil/Caelyx Kaposi sarcoma"
+
+components:
+  - drug_id: DRUG-PEGYLATED-LIPOSOMAL-DOXORUBICIN
+    dose: "20 mg/m² IV every 2-3 weeks"
+    schedule: "Day 1 of each 14-21 day cycle"
+    route: IV
+    duration: "Until progression, unacceptable toxicity, or cumulative anthracycline dose limit reached"
+
+cycle_length_days: 21
+total_cycles: "Until progression or unacceptable toxicity (typically reassess response after 3-6 cycles)"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care: []
+
+dose_adjustments:
+  - condition: "Grade 3-4 palmar-plantar erythrodysesthesia (PPE) or Grade 3-4 stomatitis"
+    modification: "Hold until resolved to <= Grade 1; resume at reduced dose or extended interval"
+    rationale: "Dose-limiting toxicities of pegylated liposomal doxorubicin (per DRUG-PEGYLATED-LIPOSOMAL-DOXORUBICIN entity typical_dosing/notes)"
+    source_refs: []
+  - condition: "ANC <1.5 x10^9/L or platelets <75 x10^9/L on day of planned dosing"
+    modification: "Delay cycle until recovery"
+    rationale: "Myelosuppression, though substantially less than conventional doxorubicin"
+    source_refs: []
+  - condition: "LVEF decline >=10% from baseline or below institutional lower limit of normal"
+    modification: "Hold; cardiology referral; do not resume without cardiology clearance"
+    rationale: "Cumulative-dose-dependent cardiomyopathy risk -- lower per-dose risk than conventional doxorubicin but lifetime cumulative tracking is mandatory"
+    source_refs: []
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Пегільований ліпосомальний доксорубіцин зареєстрований в Україні; НСЗУ зазвичай покриває стандартний доксорубіцин, PLD переважно self-pay або приватна страховка (за даними DRUG-PEGYLATED-LIPOSOMAL-DOXORUBICIN, перевірено 2026-04-27)."
+
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, набряк або біль долонь/стоп"
+    action_ua: "Поширений побічний ефект (долонно-підошовна еритродизестезія) -- занотуйте, обговоріть на візиті; за посилення -- зателефонуйте в клініку"
+    urgency: log_at_next_visit
+    sources: []
+  - trigger_ua: "Виразки в роті, біль при ковтанні"
+    action_ua: "Зателефонуйте в клініку того ж дня -- може знадобитись корекція дози"
+    urgency: call_clinic_same_day
+    sources: []
+  - trigger_ua: "Задишка, набряки ніг, серцебиття"
+    action_ua: "Зателефонуйте в клініку того ж дня -- оцінка кардіотоксичності"
+    urgency: call_clinic_same_day
+    sources: []
+  - trigger_ua: "Гарячка >=38°C, ознаки інфекції"
+    action_ua: "Зателефонуйте в клініку негайно -- нейтропенія підвищує ризик"
+    urgency: er_now
+    sources: []
+
+sources: []
+
+last_reviewed: "2026-07-11"
+notes: >
+  New Regimen entity reusing the existing DRUG-PEGYLATED-LIPOSOMAL-
+  DOXORUBICIN Drug entity. The 20 mg/m² IV q2-3wk Kaposi sarcoma dose
+  and toxicity-management triggers (hold thresholds for PPE, stomatitis,
+  ANC/platelet nadir, LVEF decline) are transcribed directly from that
+  ALREADY-EXISTING Drug entity's `typical_dosing`/`notes` fields (which
+  independently document "Kaposi sarcoma: 20 mg/m² IV every 2-3 weeks"
+  and the hold criteria -- verified by direct read of
+  drugs/pegylated_liposomal_doxorubicin.yaml during independent review)
+  -- not a newly invented figure. Pegylated liposomal doxorubicin is
+  FDA-approved for AIDS-related Kaposi sarcoma (see
+  DRUG-PEGYLATED-LIPOSOMAL-DOXORUBICIN.regulatory_status.fda.
+  indications_brief).
+
+  INDEPENDENT REVIEW CORRECTION (2026-07-11): an earlier draft cited
+  SRC-NCCN-SKIN-2025 throughout this file (top-level sources, every
+  dose-adjustment, every watchpoint) as the evidentiary support for
+  the dosing/toxicity-management content above. Direct inspection of
+  that source's own KB record (sources/src_nccn_skin_2025.yaml) shows
+  its title is "NCCN Clinical Practice Guidelines in Oncology: Basal
+  Cell Skin Cancer" and its notes explicitly scope it to basal-cell
+  and squamous-cell skin cancer -- Kaposi sarcoma is not mentioned.
+  Citing it as if it substantiated this regimen's Kaposi-specific
+  dosing/toxicity content would misrepresent evidentiary support, so
+  all such citations were removed (`sources: []`, empty `source_refs`
+  / watchpoint `sources`). The underlying dosing facts remain
+  non-fabricated (see above -- transcribed from the existing Drug
+  entity), but no independent Kaposi-sarcoma-specific trial or
+  guideline source is cited in this file. This is a real, disclosed
+  evidentiary gap flagged for future ingestion of a dedicated
+  Kaposi-sarcoma-chemotherapy primary source (e.g. a PLD-vs-ABV
+  randomized comparison), which was not named in the authoring
+  narrative and so was not fabricated as a new Source stub. STUB
+  pending two-Clinical-Co-Lead signoff (CHARTER §6.1 -- dev-mode-
+  exempted; safe to merge as draft content, NOT as published/verified
+  clinical advice).
+notes_ua: >
+  Новий Regimen, що повторно використовує вже наявний Drug
+  DRUG-PEGYLATED-LIPOSOMAL-DOXORUBICIN. Доза 20 мг/м² в/в кожні 2-3
+  тижні та критерії корекції дози перенесені безпосередньо з уже
+  наявного запису Drug, а не вигадані заново. Незалежна перевірка
+  видалила посилання на SRC-NCCN-SKIN-2025 (гайдлайн з базальноклітинного
+  раку шкіри, саркома Капоші там не згадується) як недостовірне для
+  цього файлу -- реальна прогалина в доказовій базі, позначена явно.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_kaposi_treatment
+draft_revision: 1

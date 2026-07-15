@@ -1,0 +1,98 @@
+id: REG-TIP-PENILE
+name: "TIP (paclitaxel + ifosfamide + cisplatin, penile SCC)"
+name_ua: "TIP (паклітаксел + іфосфамід + цисплатин, SCC пенісу)"
+alternate_names: ["Paclitaxel-ifosfamide-cisplatin, penile cancer"]
+disease_context: DIS-PENILE-SCC
+line_of_therapy: 1
+plan_track: aggressive
+regimen_type: "chemotherapy_triplet"
+
+components:
+  - drug_id: DRUG-PACLITAXEL
+    dose: "175 mg/m² IV over 3 hours"
+    route: IV
+    schedule: "Day 1 of each 21-day cycle"
+    premedication:
+      - "Dexamethasone 20 mg IV/PO 30 min pre-paclitaxel"
+      - "Diphenhydramine 50 mg IV 30 min pre"
+      - "H2 antagonist (e.g. famotidine) 30 min pre"
+  - drug_id: DRUG-IFOSFAMIDE
+    dose: "1200 mg/m²/day IV"
+    route: IV
+    schedule: "Days 1-3 of each 21-day cycle (after paclitaxel on day 1)"
+    mesna_mandatory: true
+    mesna_dose: "Mesna co-administered per standard fractionated or continuous-infusion schedule (≥60-100% of ifosfamide dose); monitor for hematuria"
+    dose_modifications:
+      - trigger: "Ifosfamide encephalopathy (confusion, somnolence, seizure)"
+        action: "Stop ifosfamide immediately; methylene blue 50 mg IV q4h until resolution"
+  - drug_id: DRUG-CISPLATIN
+    dose: "25 mg/m²/day IV"
+    route: IV
+    schedule: "Days 1-3 of each 21-day cycle (after ifosfamide)"
+    dose_modifications:
+      - trigger: "CrCl <50 mL/min"
+        action: "Carboplatin substitution required — cisplatin nephrotoxicity"
+
+growth_factor_support:
+  mandatory: true
+  agent: "G-CSF (filgrastim or pegfilgrastim)"
+  timing: "Starting ~day 4-5 until ANC recovery (or pegfilgrastim day 4)"
+  rationale: "Significant myelosuppression from TIP triplet; growth-factor support is standard"
+
+hydration:
+  mandatory: true
+  protocol: >
+    Aggressive IV hydration on cisplatin days (d1-3): pre- and post-
+    cisplatin hydration with adequate urine output monitoring; mannitol
+    if urine output is inadequate.
+
+when_to_use: >
+  Metastatic or regionally advanced (bulky/fixed inguinal or pelvic
+  nodal) penile SCC per EAU guidelines, as an alternative to the
+  cisplatin+5-FU doublet (REG-CISPLATIN-5FU-PENILE) in patients fit
+  for triplet chemotherapy (ECOG 0-1, adequate renal/hepatic/marrow
+  reserve). Also used, at specialized centers, as neoadjuvant
+  chemotherapy before consolidative inguinal/pelvic lymphadenectomy in
+  regionally advanced nodal disease.
+  NOT for patients with borderline renal function, poor performance
+  status, or inability to tolerate triplet myelosuppression — prefer
+  the doublet in that setting.
+
+monitoring:
+  - "CBC: before each cycle and as clinically indicated during ifosfamide days"
+  - "Creatinine + electrolytes: before each cycle and during hydration"
+  - "Neurologic status: daily during ifosfamide days (encephalopathy warning)"
+  - "Urine dipstick: during ifosfamide days — hematuria = mesna insufficiency"
+  - "Restaging imaging (CT CAP): every 2-3 cycles for response assessment"
+
+cycle_length_days: 21
+total_cycles: "4 cycles (or per response / MDT reassessment)"
+
+toxicity_profile: severe
+
+sources:
+  - SRC-EAU-PENILE-2024
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: 0
+notes: >
+  STUB. TIP composition and general dosing convention (paclitaxel d1;
+  ifosfamide+cisplatin d1-3 with mandatory mesna; q21d) mirrors the
+  EAU-guideline TIP regimen for penile SCC, and is distinct in schedule
+  from the germ-cell-tumor salvage TIP already in this KB
+  (REG-TIP-GCT-SALVAGE — 24h paclitaxel infusion, ifosfamide/cisplatin
+  days 2-5). Drafted pending clinical co-lead signoff (CHARTER §6.1;
+  dev-mode-exempted for draft merge). No phase III RCT exists in this
+  rare disease — evidence base is small phase II / retrospective series;
+  EAU guidelines list TIP as an option alongside cisplatin+5-FU, and
+  additionally as neoadjuvant therapy before consolidative nodal surgery
+  in regionally advanced disease.
+notes_ua: >
+  СТАБ. Склад TIP та загальна конвенція дозування (паклітаксел д1;
+  іфосфамід+цисплатин д1-3 з обов'язковою месною; q21д) відображає
+  TIP-схему за EAU guidelines для SCC пенісу, за розкладом відмінну
+  від рятівної TIP при гермінативно-клітинних пухлинах, вже наявної
+  в базі (REG-TIP-GCT-SALVAGE). Очікує підпису клінічного співкерівника.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+draft_revision: 1

@@ -81,7 +81,8 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "No active autoimmune disease requiring systemic treatment"
+        - none_of:
+            - red_flag: RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK
         - condition: "No solid organ transplant"
         - condition: "No prior immune-mediated pneumonitis Grade ≥2"
     if_true:

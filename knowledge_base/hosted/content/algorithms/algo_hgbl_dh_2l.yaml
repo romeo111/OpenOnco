@@ -31,20 +31,22 @@ decision_tree:
 - step: 3
   evaluate:
     all_of:
-    - condition: 'Late relapse: ≥12 months from end of 1L therapy'
+    - finding: "early_relapse_under_12mo"
+      value: false
     - red_flag: RF-FITNESS-ECOG-FIT
     - none_of:
       - red_flag: RF-ORGAN-RENAL-IMPAIRED
     - none_of:
       - red_flag: RF-ORGAN-CARDIAC-LVEF-LOW
-    - condition: 'Transplant-eligible: age ≤65-70, adequate organ function'
+    - red_flag: RF-ASCT-ELIGIBLE-COMPOSITE
     - condition: Chemosensitive disease (≥PR to 2 cycles of salvage)
-    - condition: CD20+ confirmed at relapse biopsy
+    - finding: "cd20_status"
+      value: "positive"
   if_true:
     result: IND-HGBL-DH-2L-CART-AXICEL
   if_false:
     next_step: 4
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: 'Mechanical rewire of the original free-text gates (late relapse >=12mo, transplant-eligibility, CD20+ at relapse biopsy) into finding/red_flag clauses using early_relapse_under_12mo (negated), RF-ASCT-ELIGIBLE-COMPOSITE, cd20_status. Original clinical criteria unchanged. Chemosensitivity-to-salvage response remains MDT-evaluated text (no finding/RF available for that criterion) — step still unreachable-as-such until that clause is wired.'
 - step: 4
   evaluate:
     any_of:

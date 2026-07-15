@@ -94,7 +94,11 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Child-Pugh A AND ECOG 0-1 AND no prior TKI in 1L"
+        - all_of:
+          - finding: "child_pugh_class"
+            value: "A"
+          - red_flag: RF-FITNESS-ECOG-FIT
+          - condition: "no prior TKI in 1L"
     if_true:
       result: IND-HCC-SYSTEMIC-2L-CABOZANTINIB
       notes: >

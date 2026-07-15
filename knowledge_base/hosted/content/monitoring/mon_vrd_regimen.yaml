@@ -4,6 +4,7 @@ linked_to_regimen: REG-VRD
 phases:
   - name: baseline
     window: "Within 2 weeks before cycle 1"
+    window_ua: "Протягом 2 тижнів до циклу 1"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -26,9 +27,16 @@ phases:
       - "Confirm HBV status and prophylaxis plan if anti-CD38 or anti-CD20 in regimen"
       - "Dental evaluation before zoledronate / denosumab"
       - "Red-cell phenotyping BEFORE first daratumumab dose"
+    checkpoints_ua:
+      - "Підтвердити відсоток CD138+ плазматичних клітин і категорію цитогенетичного ризику за FISH"
+      - "Документувати стадіювання R-ISS / R2-ISS"
+      - "Підтвердити статус HBV та план профілактики, якщо в схемі є anti-CD38 або anti-CD20"
+      - "Стоматологічне обстеження перед золедронатом / деносумабом"
+      - "Фенотипування еритроцитів ПЕРЕД першою дозою даратумумабу"
 
   - name: on_treatment
     window: "Day 1 of every 28-day cycle + mid-cycle CBC for high-risk patients"
+    window_ua: "День 1 кожного 28-денного циклу + CBC всередині циклу для пацієнтів високого ризику"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -41,9 +49,15 @@ phases:
       - "Neuropathy grade documented at each visit (NCCN/CTCAE)"
       - "Renal function trend (lenalidomide dose adjustment if CrCl drops)"
       - "Glucose monitoring for steroid-induced hyperglycemia"
+    checkpoints_ua:
+      - "ANC ≥ 1000/мкл і тромбоцити ≥ 75 тис. перед кожним циклом (інакше — відстрочка або редукція)"
+      - "Ступінь нейропатії документується на кожному візиті (NCCN/CTCAE)"
+      - "Тренд функції нирок (коригування дози леналідоміду при зниженні CrCl)"
+      - "Моніторинг глікемії на тлі стероїд-індукованої гіперглікемії"
 
   - name: response_assessment
     window: "After cycles 2 and 4 (before transplant) or every 2-3 cycles (transplant-ineligible)"
+    window_ua: "Після циклів 2 і 4 (перед трансплантацією) або кожні 2–3 цикли (для пацієнтів без трансплантації)"
     tests:
       - TEST-FREE-LIGHT-CHAINS
       - TEST-SPEP-UPEP
@@ -55,9 +69,14 @@ phases:
       - "IMWG response criteria (sCR, CR, VGPR, PR, MR, SD, PD)"
       - "MRD assessment by flow cytometry or NGS at suspected CR"
       - "If <PR after cycle 2 → consider regimen change or trial enrollment"
+    checkpoints_ua:
+      - "Критерії відповіді за IMWG (sCR, CR, VGPR, PR, MR, SD, PD)"
+      - "Оцінка MRD методом flow-цитометрії або NGS при підозрі на CR"
+      - "Якщо <PR після циклу 2 → розглянути зміну схеми або включення в клінічне дослідження"
 
   - name: post_transplant_consolidation
     window: "Cycles 5-6 post-transplant (transplant-eligible only)"
+    window_ua: "Цикли 5–6 після трансплантації (лише для пацієнтів з трансплантацією)"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -67,9 +86,13 @@ phases:
     checkpoints:
       - "Recovery of counts post-transplant before consolidation start"
       - "Confirm depth of response before starting maintenance"
+    checkpoints_ua:
+      - "Відновлення показників крові після трансплантації перед стартом консолідації"
+      - "Підтвердити глибину відповіді перед початком підтримуючої терапії"
 
   - name: maintenance
     window: "Lenalidomide 10-15 mg daily until progression or intolerance"
+    window_ua: "Леналідомід 10–15 мг щодня до прогресування або непереносимості"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -80,9 +103,14 @@ phases:
       - "Surveillance for second primary malignancies (annual skin / GU exam)"
       - "Lenalidomide dose adjustment if cytopenias or worsening renal function"
       - "Annual influenza + pneumococcal vaccination (non-live only)"
+    checkpoints_ua:
+      - "Спостереження щодо других первинних злоякісних пухлин (щорічне обстеження шкіри / урогенітальне обстеження)"
+      - "Коригування дози леналідоміду при цитопеніях або погіршенні функції нирок"
+      - "Щорічна вакцинація проти грипу + пневмокока (тільки неживі вакцини)"
 
   - name: progression_monitoring
     window: "On clinical or biochemical progression"
+    window_ua: "При клінічному або біохімічному прогресуванні"
     tests:
       - TEST-FREE-LIGHT-CHAINS
       - TEST-SPEP-UPEP
@@ -93,13 +121,19 @@ phases:
     checkpoints:
       - "IMWG progression criteria (>25% increase in M-protein, new lytic lesions, hypercalcemia, etc.)"
       - "Re-do FISH on relapse — high-risk clones may emerge"
+    checkpoints_ua:
+      - "Критерії прогресування за IMWG (>25% зростання M-протеїну, нові літичні вогнища, гіперкальціємія тощо)"
+      - "Повторити FISH при рецидиві — можуть з'явитися клони високого ризику"
 
 sources:
   - SRC-NCCN-MM-2025
 
 last_reviewed: "2026-04-25"
+machine_translated_review_pending: true
 notes: >
   Monitoring schedule covers both VRd and D-VRd induction; D-VRd patients
   add HBV reactivation surveillance (HBV-DNA quarterly during therapy and
   for 12 months post-daratumumab). Free light chains + SPEP/UPEP are the
   primary disease-tracking labs cycle-by-cycle.
+  UA translations of window / checkpoints added 2026-05-19 under CHARTER
+  §8.3 dev-mode exemption; awaiting Clinical Co-Lead sign-off.

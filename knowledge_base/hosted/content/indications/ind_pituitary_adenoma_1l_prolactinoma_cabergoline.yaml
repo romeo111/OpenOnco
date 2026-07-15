@@ -1,0 +1,80 @@
+id: IND-PITUITARY-ADENOMA-1L-PROLACTINOMA-CABERGOLINE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PITUITARY-ADENOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Biochemically confirmed prolactinoma (lactotroph PitNET): hyperprolactinemia with a pituitary MRI-visible adenoma; secondary causes of hyperprolactinemia (medication effect, primary hypothyroidism, renal failure, pregnancy, macroprolactin/assay artifact) excluded"
+    - "Applies to both microprolactinoma and macroprolactinoma; dopamine agonist is first-line regardless of size unless acute visual compromise from a rapidly enlarging macroadenoma requires urgent surgical decompression (see IND-PITUITARY-ADENOMA-1L-NFPA-SURGERY-MASS-EFFECT-style urgent-surgery pathway, not separately modeled for prolactinoma in this pass)"
+  biomarker_requirements_required:
+    - biomarker_id: "adenoma_hormone_type"
+      required: true
+      value_constraint: "prolactinoma (lactotroph hormone hypersecretion)"
+  biomarker_requirements_excluded: []
+  demographic_constraints: {}
+
+recommended_regimen: REG-CABERGOLINE-PROLACTINOMA
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+
+expected_outcomes:
+  overall_response_rate: "Biochemical response (prolactin normalization) in the majority of patients on cabergoline; response is generally more consistent in microprolactinoma than in macroprolactinoma"
+  complete_response:
+  progression_free_survival:
+  overall_survival_5y:
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-CBC
+  - TEST-CMP
+desired_tests: []
+
+rationale: >
+  Per the Disease narrative, prolactinoma is managed with a dopamine agonist
+  first-line — cabergoline preferred over bromocriptine for superior
+  prolactin-normalization, tumor-shrinkage, and tolerability. Surgery
+  (transsphenoidal resection) is reserved for dopamine-agonist-resistant or
+  -intolerant disease; a dedicated Procedure/Surgery entity for pituitary
+  surgery has not yet been authored in this KB (open gap — see
+  DIS-PITUITARY-ADENOMA proposal notes), so the resistant/intolerant
+  surgical-salvage pathway is not modeled as a separate Indication in this
+  pass. This is a terminal, parallel cohort — not a sequential "line of
+  therapy" relative to the other three hormone-hypersecretion cohorts.
+
+sources:
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+
+do_not_do:
+  - "Не призначати хірургію як терапію першої лінії при пролактиномі — дофамін-агоністи (каберголін) є першою лінією незалежно від розміру аденоми."
+  - "Не діагностувати пролактиному без виключення вторинних причин гіперпролактинемії (медикаменти, гіпотиреоз, ниркова недостатність, вагітність)."
+
+do_not_do_en:
+  - "Do not offer surgery as first-line therapy for prolactinoma — dopamine agonists (cabergoline) are first-line regardless of adenoma size."
+  - "Do not diagnose prolactinoma without excluding secondary causes of hyperprolactinemia (medication effect, hypothyroidism, renal failure, pregnancy)."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+review_status: stub
+drafted_by: claude_v0_2_a_anchor
+reviewer_signoffs: []
+notes: >
+  STUB pending clinical co-lead signoff (CHARTER §6.1 — dev-mode-exempted,
+  safe to merge as draft content, not published/verified clinical advice).
+  One of four parallel, cohort-specific 1L Indications for
+  DIS-PITUITARY-ADENOMA (prolactinoma / acromegaly / Cushing disease /
+  nonfunctioning), routed by ALGO-PITUITARY-ADENOMA-1L on the
+  adenoma_hormone_type finding.
+notes_ua: >
+  ЗАГЛУШКА (STUB) до підпису клінічного співкерівника. Одна з чотирьох
+  паралельних когорт-специфічних показань першої лінії для аденоми гіпофіза.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_a_anchor
+draft_revision: 1
