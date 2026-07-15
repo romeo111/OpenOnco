@@ -318,7 +318,7 @@
       Dual sign-off: <strong>15/1061</strong>
       (CHARTER §6.1 вимагає два Clinical Co-Lead approvals).
       Це proposed-plan: structured data + algorithm + sources на місці, але без dual sign-off.
-      Інструмент підтримки рішень, не медичний пристрій. Стан на <code>2026-07-15 10:09 UTC</code>.
+      Інструмент підтримки рішень, не медичний пристрій. Стан на <code>2026-07-15 10:22 UTC</code>.
     </div>
 
     <nav class="cap-tabs" role="tablist" aria-label="Розділи">
@@ -335,7 +335,7 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — pipeline: JSON-профіль → engine → Plan з двома треками">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">OpenOnco · engine у двох словах</span>
-          <span class="pipeline-version">v0.1.4 · 2026-07-15 10:09 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-07-15 10:22 UTC</span>
         </div>
         <h2 class="pipeline-title">
           Один JSON-профіль → <em>два плани лікування</em> з citation під кожною claim.
@@ -407,7 +407,7 @@
       <div class="key-nums">
         <div class="key-num"><div class="key-num-val">103</div><div class="key-num-lbl">хвороб у KB</div></div>
         <div class="key-num"><div class="key-num-val">831</div><div class="key-num-lbl">показань (262 1L · 175 2L+)</div></div>
-        <div class="key-num"><div class="key-num-val">404</div><div class="key-num-lbl">режимів лікування</div></div>
+        <div class="key-num"><div class="key-num-val">404</div><div class="key-num-lbl">схем лікування</div></div>
         <div class="key-num"><div class="key-num-val">321</div><div class="key-num-lbl">препаратів (ATC/RxNorm)</div></div>
         <div class="key-num"><div class="key-num-val">669</div><div class="key-num-lbl">red flags</div></div>
         <div class="key-num"><div class="key-num-val">471</div><div class="key-num-lbl">цитованих джерел</div></div>
@@ -512,7 +512,7 @@
           <code>Regimen.phases</code> — впорядкований список named blocks (induction → consolidation → maintenance),
           кожен зі своїм cycle schedule і тригером переходу. Реальні протоколи (R-CHOP × 6 → maintenance,
           AML 7+3 → HiDAC consolidation, axi-cel bridging → infusion). <code>bridging_options</code> — список
-          регіменів-мостів між фазами (для CAR-T). Старі однофазні YAMLs auto-wrap у one-phase form через
+          схем лікування-мостів між фазами (для CAR-T). Старі однофазні YAMLs auto-wrap у one-phase form через
           <code>auto_wrap_legacy_components()</code>.
         </p>
       </div>
@@ -737,7 +737,7 @@
           <div class="gap-card gap-hard">
             <div class="gap-tag">§8.3</div>
             <h3>LLM не приймає клінічні рішення</h3>
-            <p>LLM лише: boilerplate, doc drafts, extraction (з human verification), translation з clinical review. <strong>Не</strong>: вибір режиму, дози, інтерпретація biomarker.</p>
+            <p>LLM лише: boilerplate, doc drafts, extraction (з human verification), translation з clinical review. <strong>Не</strong>: вибір схеми лікування, дози, інтерпретація biomarker.</p>
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§15.2 C7</div>
@@ -790,7 +790,7 @@
             <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope MVP — окремий track</td></tr>
             <tr><td>Радіотерапія</td><td>частково</td><td>RT у мультимодальних Indications; як окрема сутність — не моделюється</td></tr>
             <tr><td>Хірургія</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
-            <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Hard-coded на режимах; не auto-refresh</td></tr>
+            <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Hard-coded на схемах лікування; не auto-refresh</td></tr>
             <tr><td>Reviewer dual sign-off</td><td><strong>15/1061</strong></td><td>Основна bottleneck-метрика — capacity план: 1061 → ≥85% verified</td></tr>
             <tr><td>Live gap dashboard</td><td><a href="/ukr/clinical-gaps.html">→ link</a></td><td>Build-generated audit (sign-off, solid 2L+, surgery, RT, supportive)</td></tr>
           </tbody>

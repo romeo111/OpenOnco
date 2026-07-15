@@ -1301,19 +1301,6 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
                 ],
             },
         ]
-        steps_label = "How it works"
-        steps_h = "From a case to a cited plan in three steps"
-        steps = [
-            ("1", "Describe the case",
-             "Pick a disease and fill a short form, load a ready-made example, or paste a "
-             "vignette in plain English."),
-            ("2", "The engine cross-checks",
-             f"NCCN, ESMO, drug labels and CIViC are resolved in a single pass — right in "
-             f"your browser, in about 200&nbsp;ms, across {counts['sources']} sources."),
-            ("3", "Get two cited plans",
-             f"Standard and aggressive, side by side — every line sourced and "
-             f"{counts['redflags']} red flags checked against the profile for you to review."),
-        ]
         stats_label = "Knowledge base scale"
         stat_labels = {
             "diseases": "Diseases",
@@ -1344,11 +1331,13 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
     else:
         title = "OpenOnco — безкоштовні варіанти лікування раку з джерелами"
         kicker = "Безкоштовно · відкритий код · без реєстрації"
-        h1 = "Друга думка щодо лікування раку — безкоштовно, з джерелами, відкрито."
+        h1 = "Зрозумійте варіанти лікування раку — з доказовим джерелом під кожним рядком."
         sub = (
-            "Введіть кейс — і OpenOnco покаже два плани лікування поруч: стандартний і "
-            "агресивніший, із джерелом під кожним рядком. Побудовано на NCCN, ESMO та CIViC. "
-            "Оберіть свій шлях нижче.",
+            "OpenOnco безкоштовно збирає докази з настанов NCCN, ESMO і бази CIViC у два "
+            "плани лікування поруч — стандартний і агресивніший. Лікарю це пришвидшує "
+            "підготовку туморборду, хворому — допомагає зрозуміти призначене лікування і "
+            "скласти питання до онколога, фармацевту — перевірити взаємодії та корекції доз. "
+            "Без реєстрації, дані лишаються у вашому браузері.",
         )
         try_href = "/ukr/try.html"
         gallery_href = "/ukr/gallery.html"
@@ -1357,7 +1346,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
         about_href = "/ukr/about.html"
         diseases_href = "/ukr/diseases.html"
         pharma_q = (
-            "Пацієнт на режимі хіміотерапії (наприклад FOLFOX) також приймає інші препарати "
+            "Пацієнт на схемі лікування хіміотерапії (наприклад FOLFOX) також приймає інші препарати "
             "(наприклад варфарин і флуконазол). Які взаємодії, корекції доз чи моніторинг "
             "варто відзначити до видачі?"
         )
@@ -1377,16 +1366,13 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             "а не весь документ.)"
         )
         doors_label = "Оберіть свій шлях"
-        doors_h = "Що вас сюди привело?"
-        doors_sub = (
-            "Три входи — кожен веде одразу до потрібного інструменту. Без реєстрації, нічого "
-            "не треба встановлювати, працює у браузері."
-        )
+        doors_h = "Кому це допоможе"
+        doors_sub = ""
         doors = [
             {
                 "key": "doctor",
                 "icon": "🩺",
-                "role": "Я лікар",
+                "role": "Лікарю",
                 "line": (
                     "Перетворіть кейс на чернетку для туморборду: стандартний і агресивний "
                     "план поруч, red flags на поверхні, кожен рядок із джерелом."
@@ -1399,7 +1385,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             {
                 "key": "patient",
                 "icon": "🎗️",
-                "role": "Я пацієнт або близький",
+                "role": "Хворому",
                 "line": (
                     "Зрозумійте план лікування, який вам уже дав ваш онколог, — простою "
                     "мовою — і перетворіть його на зрозумілі питання до наступного візиту. "
@@ -1420,10 +1406,10 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             {
                 "key": "pharma",
                 "icon": "💊",
-                "role": "Я фармацевт",
+                "role": "Фармацевту",
                 "line": (
                     "Перевірте взаємодії, корекції доз (нирки/печінка) і red flags для "
-                    "режиму до видачі пацієнту."
+                    "схеми лікування до видачі пацієнту."
                 ),
                 "buttons": [
                     ("btn-primary", ask_href + "?case=" + quote(pharma_q), "Перевірити взаємодію"),
@@ -1431,24 +1417,11 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
                 ],
             },
         ]
-        steps_label = "Як це працює"
-        steps_h = "Від кейсу до плану з джерелами — за три кроки"
-        steps = [
-            ("1", "Опишіть кейс",
-             "Оберіть хворобу й заповніть коротку форму, завантажте готовий приклад або "
-             "вставте віньєтку звичайною мовою."),
-            ("2", "Engine робить крос-чек",
-             f"NCCN, ESMO, інструкції до препаратів і CIViC розв'язуються за один прохід — "
-             f"прямо у вашому браузері, приблизно за 200&nbsp;мс, по {counts['sources']} джерелах."),
-            ("3", "Отримайте два плани з джерелами",
-             f"Стандартний і агресивний поруч — кожен рядок із джерелом, і "
-             f"{counts['redflags']} red flags перевірено на профілі для вашого огляду."),
-        ]
         stats_label = "Масштаб бази знань"
         stat_labels = {
             "diseases": "Хвороби",
             "indications": "Показання",
-            "regimens": "Режими",
+            "regimens": "Схеми лікування",
             "redflags": "Red flag",
             "sources": "Цитованих джерел",
             "perf": "На профіль",
@@ -1477,6 +1450,11 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
         f'<p class="home-sub">{paragraph}</p>'
         for paragraph in sub_paragraphs
     )
+    # Optional standfirst under the doors heading — omitted entirely when blank
+    # so no empty paragraph gap is left behind.
+    doors_sub_html = (
+        f'\n    <p class="home-doors-sub">{doors_sub}</p>' if doors_sub else ""
+    )
 
     def _door_block(d: dict) -> str:
         btns = "\n          ".join(
@@ -1491,25 +1469,14 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             f'      <article class="door-card door-card--{d["key"]}">\n'
             f'        <div class="door-icon" aria-hidden="true">{d["icon"]}</div>\n'
             f'        <h3 class="door-role">{html.escape(d["role"])}</h3>\n'
-            f'        <p class="door-line">{d["line"]}</p>\n'
+            f'        <p class="door-line">{d["line"]}</p>{disclaimer}\n'
             f'        <div class="door-actions">\n'
             f'          {btns}\n'
-            f'        </div>{disclaimer}\n'
+            f'        </div>\n'
             f'      </article>'
         )
 
     doors_html = "\n".join(_door_block(d) for d in doors)
-
-    def _step_block(num: str, step_title: str, body: str) -> str:
-        return (
-            f'      <div class="step-card">\n'
-            f'        <div class="step-num">{html.escape(num)}</div>\n'
-            f'        <div class="step-title">{html.escape(step_title)}</div>\n'
-            f'        <p class="step-text">{body}</p>\n'
-            f'      </div>'
-        )
-
-    steps_html = "\n".join(_step_block(n, t, b) for n, t, b in steps)
 
     def _stat_block(num_html: str, lbl: str, href: str | None = None) -> str:
         inner = (
@@ -1571,17 +1538,9 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
   </section>
 
   <section class="home-doors" aria-label="{doors_label}">
-    <h2 class="home-doors-h">{doors_h}</h2>
-    <p class="home-doors-sub">{doors_sub}</p>
+    <h2 class="home-doors-h">{doors_h}</h2>{doors_sub_html}
     <div class="home-doors-grid">
 {doors_html}
-    </div>
-  </section>
-
-  <section class="home-steps" aria-label="{steps_label}">
-    <h2 class="home-steps-h">{steps_h}</h2>
-    <div class="home-steps-grid">
-{steps_html}
     </div>
   </section>
 
@@ -1833,7 +1792,7 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
         )
         df3_li_1 = f"{n_redflags} червоних прапорців по {n_diseases} діагнозах"
         df3_li_2 = "корекції на нирки, печінку, вік, вагу"
-        df3_li_3 = "зв&rsquo;язок біомаркер ↔ режим ↔ моніторинг"
+        df3_li_3 = "зв&rsquo;язок біомаркер ↔ схема лікування ↔ моніторинг"
         df4_title = "Два плани з повними цитатами"
         df4_body = (
             "<strong>Стандартний</strong> (за керівницями) + <strong>агресивний</strong> "
@@ -1863,7 +1822,7 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
              "покривається державною програмою медичних гарантій (НСЗУ). Лікар одразу "
              "бачить, що доступно безкоштовно, що — за рецептом, а що доведеться шукати "
              "окремо. Доступність — це <strong>метадані поряд із рекомендацією</strong>, "
-             "а не фільтр: вибір режиму керується доказами, а не реєстраційним статусом."),
+             "а не фільтр: вибір схеми лікування керується доказами, а не реєстраційним статусом."),
             ("Спрощений звіт для пацієнта",
              "Окремий режим генерує версію плану зрозумілою мовою для пацієнта: без "
              "латини, без абревіатур, з поясненням, чому призначено саме це і на що "
@@ -1875,7 +1834,7 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
              "інвестори."),
             ("Готово до пацієнтів сьогодні",
              f"{n_diseases} діагнозів, {n_redflags} червоних прапорців, {n_indications} "
-             f"індикацій, {n_regimens} режимів, {n_algorithms} алгоритмів лікування — "
+             f"індикацій, {n_regimens} схем лікування, {n_algorithms} алгоритмів лікування — "
              "клінічний sign-off отриманий. Перші реальні плани вже верифіковані "
              "практикуючими онкологами як сильні. KB росте щотижня, але це вже найщільніший "
              "відкритий шар «доказ → план» для української онкології, що існує. Немає сенсу чекати."),
@@ -1890,7 +1849,7 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
             ("Per-disease coverage matrix — публічна і чесна",
              f"<a href=\"/ukr/diseases.html\"><strong>/ukr/diseases.html</strong></a> показує для "
              f"кожної з {n_diseases} хвороб, що саме у нас є: counts по біомаркерах, "
-             "препаратах, показаннях, режимах, red flags, checkmarks для алгоритмів 1L/2L, "
+             "препаратах, показаннях, схемах лікування, red flags, checkmarks для алгоритмів 1L/2L, "
              "статус анкети, fill% і verified%. Згрупована за лімфоїдною / мієлоїдною "
              "гематологією і солідними пухлинами. Ті ж дані доступні машинно як "
              "<code>disease_coverage.json</code>. Без «там же є щось» — є матриця."),
@@ -6203,7 +6162,7 @@ def _render_capabilities_uk(stats) -> str:
       <div class="key-nums">
         <div class="key-num"><div class="key-num-val">{n_diseases}</div><div class="key-num-lbl">хвороб у KB</div></div>
         <div class="key-num"><div class="key-num-val">{n_indications}</div><div class="key-num-lbl">показань ({n_inds_1l} 1L · {n_inds_2l} 2L+)</div></div>
-        <div class="key-num"><div class="key-num-val">{n_regimens}</div><div class="key-num-lbl">режимів лікування</div></div>
+        <div class="key-num"><div class="key-num-val">{n_regimens}</div><div class="key-num-lbl">схем лікування</div></div>
         <div class="key-num"><div class="key-num-val">{n_drugs}</div><div class="key-num-lbl">препаратів (ATC/RxNorm)</div></div>
         <div class="key-num"><div class="key-num-val">{n_redflags}</div><div class="key-num-lbl">red flags</div></div>
         <div class="key-num"><div class="key-num-val">{n_sources}</div><div class="key-num-lbl">цитованих джерел</div></div>
@@ -6308,7 +6267,7 @@ def _render_capabilities_uk(stats) -> str:
           <code>Regimen.phases</code> — впорядкований список named blocks (induction → consolidation → maintenance),
           кожен зі своїм cycle schedule і тригером переходу. Реальні протоколи (R-CHOP × 6 → maintenance,
           AML 7+3 → HiDAC consolidation, axi-cel bridging → infusion). <code>bridging_options</code> — список
-          регіменів-мостів між фазами (для CAR-T). Старі однофазні YAMLs auto-wrap у one-phase form через
+          схем лікування-мостів між фазами (для CAR-T). Старі однофазні YAMLs auto-wrap у one-phase form через
           <code>auto_wrap_legacy_components()</code>.
         </p>
       </div>
@@ -6533,7 +6492,7 @@ def _render_capabilities_uk(stats) -> str:
           <div class="gap-card gap-hard">
             <div class="gap-tag">§8.3</div>
             <h3>LLM не приймає клінічні рішення</h3>
-            <p>LLM лише: boilerplate, doc drafts, extraction (з human verification), translation з clinical review. <strong>Не</strong>: вибір режиму, дози, інтерпретація biomarker.</p>
+            <p>LLM лише: boilerplate, doc drafts, extraction (з human verification), translation з clinical review. <strong>Не</strong>: вибір схеми лікування, дози, інтерпретація biomarker.</p>
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§15.2 C7</div>
@@ -6586,7 +6545,7 @@ def _render_capabilities_uk(stats) -> str:
             <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope MVP — окремий track</td></tr>
             <tr><td>Радіотерапія</td><td>частково</td><td>RT у мультимодальних Indications; як окрема сутність — не моделюється</td></tr>
             <tr><td>Хірургія</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
-            <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Hard-coded на режимах; не auto-refresh</td></tr>
+            <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Hard-coded на схемах лікування; не auto-refresh</td></tr>
             <tr><td>Reviewer dual sign-off</td><td><strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong></td><td>Основна bottleneck-метрика — capacity план: {stats.reviewer_signoffs_total} → ≥85% verified</td></tr>
             <tr><td>Live gap dashboard</td><td><a href="/ukr/clinical-gaps.html">→ link</a></td><td>Build-generated audit (sign-off, solid 2L+, surgery, RT, supportive)</td></tr>
           </tbody>
@@ -7601,7 +7560,7 @@ _DISEASES_PAGE_LABELS = {
         "h1": "Хвороби в Onco Wiki",
         "lead": (
             "Покриття OpenOnco за {n} онкологічними діагнозами: біомаркери, "
-            "препарати, показання, режими, тривожні ознаки, алгоритми та "
+            "препарати, показання, схеми лікування, тривожні ознаки, алгоритми та "
             "практична наповненість бази знань."
         ),
         "sum_diseases": "Усього діагнозів",
@@ -7613,7 +7572,7 @@ _DISEASES_PAGE_LABELS = {
         "fam_solid": "Солідні пухлини",
         "th_disease": "Хвороба", "th_icd": "ICD-10",
         "th_bio": "Біомарк.", "th_drug": "Преп.",
-        "th_ind": "Показ.", "th_reg": "Режими", "th_rf": "Трив. озн.",
+        "th_ind": "Показ.", "th_reg": "Схеми лік.", "th_rf": "Трив. озн.",
         "th_1l": "1L", "th_2l": "2L+", "th_quest": "Опитувальник",
         "th_fill": "Наповн.", "th_ver": "Вериф.",
         "yes": "✓", "no": "—",
@@ -7622,10 +7581,10 @@ _DISEASES_PAGE_LABELS = {
         "search_empty": "Жодна хвороба не підходить під запит.",
         "metrics": [
             "<b>Біомаркери / Препарати</b> — кількість унікальних сутностей, які використовуються у правилах цієї хвороби.",
-            "<b>Показання / Режими / Тривожні ознаки</b> — кількість відповідних записів у базі знань.",
+            "<b>Показання / Схеми лікування / Тривожні ознаки</b> — кількість відповідних записів у базі знань.",
             "<b>1L / 2L+</b> — наявність алгоритму для першої або другої й наступних ліній лікування.",
             "<b>Опитувальник</b> — ✓ якщо для хвороби є ручний клінічний опитувальник; — якщо його ще немає.",
-            "<b>Наповненість</b> — зведена оцінка за ключовими типами сутностей: показання, режими, біомаркери, препарати, тривожні ознаки, алгоритм, опитувальник і workup.",
+            "<b>Наповненість</b> — зведена оцінка за ключовими типами сутностей: показання, схеми лікування, біомаркери, препарати, тривожні ознаки, алгоритм, опитувальник і workup.",
             "<b>Верифікація</b> — частка показань із достатньою кількістю клінічних sign-off за правилами проєкту.",
         ],
         "verified_note": "",
@@ -8382,7 +8341,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
             ("Two-reviewer merge", "CHARTER.md §6.1",
              "Clinical content потребує 2 з 3 Clinical Co-Lead approvals; інакше Indication залишається STUB."),
             ("No LLM clinical judgment", "CHARTER.md §8.3",
-             "LLM не вибирає режими, не генерує дози, не інтерпретує biomarkers для therapy selection."),
+             "LLM не вибирає схеми лікування, не генерує дози, не інтерпретує biomarkers для therapy selection."),
             ("No treatment without histology", "CHARTER.md §15.2 C7",
              "Engine відмовляється generate'ити treatment Plan без <code>disease.id</code> або <code>icd_o_3_morphology</code>; тільки DiagnosticPlan."),
             ("Anti automation-bias", "CHARTER.md §15.2 C6",
@@ -8582,7 +8541,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
             "diseases": "хвороб",
             "redflags": "red flags",
             "indications": "індикацій",
-            "regimens": "режимів",
+            "regimens": "схем лікування",
             "algorithms": "алгоритмів",
         }
 
