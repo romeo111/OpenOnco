@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import functools
 import html
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, Union
@@ -300,6 +301,32 @@ def _h_t(text, target_lang: str = "uk", source_lang: str = "uk") -> str:
     if text is None:
         return ""
     return html.escape(_translate_kb_text(str(text), target_lang, source_lang))
+
+
+def _truncate_note(text, limit: int = 240) -> str:
+    """Collapse whitespace and clip long free-text fields (`notes`,
+    `notes_ua`) for summary surfaces like the plan's PRO/CONTRA list.
+    Cuts at a word boundary when possible to avoid mid-word ellipsis."""
+    if text is None:
+        return ""
+    flat = " ".join(str(text).split())
+    if len(flat) <= limit:
+        return flat
+    cut = flat[: limit - 1]
+    last_space = cut.rfind(" ")
+    if last_space >= limit - 60:
+        cut = cut[:last_space]
+    return cut.rstrip(",.;:- ") + "…"
+
+
+def _rf_wiki_href(rid: str, target_lang: str = "uk") -> str:
+    """KB-wiki URL for a RedFlag id, locale-aware. Mirrors the slug
+    convention in `scripts/build_kb_wiki.py` (lowercase, non-alnum →
+    `-`, collapsed) so the rendered plan links to the existing
+    `/kb/redflags/<slug>.html` page without a separate URL registry."""
+    slug = re.sub(r"[^a-z0-9]+", "-", str(rid).lower()).strip("-") or "rf"
+    prefix = "/ukr/" if (target_lang or "").lower().startswith("uk") else "/"
+    return f"{prefix}kb/redflags/{slug}.html"
 
 
 def _pick_name(names: dict | None, target_lang: str = "uk", default: str = "") -> str:
@@ -1545,8 +1572,12 @@ def _render_branch_explanation(
                 ' <span class="rf-winner-tag">★ winner</span>'
                 if rid == winner else ""
             )
+            rid_link = (
+                f'<a class="rf-id-link" href="{_h(_rf_wiki_href(rid, target_lang))}">'
+                f'{_h(rid)}</a>'
+            )
             rf_items.append(
-                f'<li><strong>{_h(rid)}</strong>{winner_mark}: '
+                f'<li><strong>{rid_link}</strong>{winner_mark}: '
                 f'{_h(defn)} {src_chips}</li>'
             )
 
@@ -1633,10 +1664,44 @@ def _render_red_flags_pro_contra(plan, kb_resolved: dict, target_lang: str = "uk
         # call when curator already provided an English definition. Fall back
         # to translating the UA field if only UA is present.
         if target_lang == "en" and rf.get("definition"):
-            defn = rf["definition"]
-            return f'<li>{_h(defn)}<span class="rf-id">{_h(rid)}</span></li>'
-        defn = rf.get("definition_ua") or rf.get("definition") or "—"
-        return f'<li>{_h_t(defn, target_lang)}<span class="rf-id">{_h(rid)}</span></li>'
+            defn_html = _h(rf["definition"])
+        else:
+            defn = rf.get("definition_ua") or rf.get("definition") or "—"
+            defn_html = _h_t(defn, target_lang)
+
+        # Surface curator-authored clinical context (notes / notes_ua) below
+        # the one-line definition. PRO/CONTRA is a summary view, so we cap
+        # length — full notes live on the KB wiki page.
+        if target_lang == "en" and rf.get("notes"):
+            note_html = _h(_truncate_note(rf["notes"]))
+        elif rf.get("notes_ua") or rf.get("notes"):
+            note = rf.get("notes_ua") or rf["notes"]
+            note_html = _h_t(_truncate_note(note), target_lang)
+        else:
+            note_html = ""
+        note_block = f'<div class="rf-note">{note_html}</div>' if note_html else ""
+        rid_chip = (
+            f'<a class="rf-id" href="{_h(_rf_wiki_href(rid, target_lang))}">'
+            f'{_h(rid)}</a>'
+        )
+        # Source chips next to rf-id — first 3 cites, mirroring the
+        # branch-explanation row. Closes the audit-trail question right
+        # at the bullet so the clinician doesn't need to leave PRO/CONTRA
+        # to see "where does this assertion come from?".
+        src_chips = "".join(
+            f'<span class="rf-src-chip">{_h(sid)}</span>'
+            for sid in (rf.get("sources") or [])[:3]
+        )
+        src_block = f'<span class="rf-src-row">{src_chips}</span>' if src_chips else ""
+        # Severity drives a marker-color hint (no extra layout) so the eye
+        # can scan critical vs minor inside a column. Defaults to "major"
+        # per RedFlag schema.
+        sev = rf.get("severity") or "major"
+        return (
+            f'<li data-severity="{_h(sev)}">'
+            f'{defn_html}{note_block}{rid_chip}{src_block}'
+            f'</li>'
+        )
 
     def _ci_li(c: dict) -> str:
         cid = c.get("id", "?")

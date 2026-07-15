@@ -1676,6 +1676,39 @@ body.home-page .home-carousel {
 }
 .quest-readiness-critical[data-kind="ok"] { color: var(--green-700); font-weight: 600; }
 .quest-readiness-critical[data-kind="warn"] { color: var(--amber); font-weight: 600; }
+.quest-fired-redflags {
+  margin-top: 10px; display: flex; flex-direction: column; gap: 4px;
+}
+.quest-fired-redflags:empty { margin-top: 0; }
+.quest-fired-redflags .qfr-head {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase; color: var(--gray-600);
+  margin-bottom: 4px;
+}
+.quest-fired-redflags .qfr-card {
+  display: flex; align-items: baseline; gap: 8px; padding: 6px 10px;
+  background: var(--gray-50); border-radius: 6px; text-decoration: none;
+  color: inherit; font-size: 12.5px; border-left: 3px solid var(--gray-300);
+  transition: background 120ms, border-color 120ms;
+}
+.quest-fired-redflags .qfr-card:hover {
+  background: var(--green-50); border-left-color: var(--green-500);
+}
+.quest-fired-redflags .qfr-sev-critical { border-left-color: var(--red); }
+.quest-fired-redflags .qfr-sev-major    { border-left-color: var(--amber); }
+.quest-fired-redflags .qfr-sev-minor    { border-left-color: var(--gray-300); }
+.quest-fired-redflags .qfr-rid {
+  font-family: var(--font-mono); font-size: 10px; color: var(--gray-600);
+  white-space: nowrap;
+}
+.quest-fired-redflags .qfr-defn {
+  flex: 1; color: var(--gray-800); line-height: 1.4;
+  overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.quest-fired-redflags .qfr-more {
+  font-size: 11.5px; color: var(--gray-500); padding-left: 10px;
+}
 .quest-actions-top.quest-cta {
   display: grid; grid-template-columns: minmax(220px, 1.4fr) minmax(150px, 1fr) minmax(150px, 1fr);
   gap: 10px; margin: -4px 0 18px; padding: 12px;
