@@ -64,7 +64,8 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "PSMA-PET/CT positive (68Ga-PSMA-11 or 18F-DCFPyL) — ALL metastatic lesions PSMA-avid; no PSMA-negative metastatic sites"
+        - finding: "BIO-PSMA-PET"
+          value: "positive"
         - condition: "Prior ARPI (enzalutamide, abiraterone, darolutamide, or apalutamide)"
         - condition: "Prior taxane-based chemotherapy (docetaxel) OR documented taxane-ineligible"
     if_true:
@@ -110,7 +111,8 @@ decision_tree:
   - step: 5
     evaluate:
       any_of:
-        - condition: "Visceral metastases present (liver, lung, brain, or peritoneal mets)"
+        - finding: "visceral_metastases_present"
+          value: true
     if_true:
       result: IND-PROSTATE-MCRPC-2L-CABAZITAXEL
       notes: >
@@ -131,7 +133,9 @@ decision_tree:
     evaluate:
       all_of:
         - condition: "Symptomatic bone metastases (bone pain or prior SSE)"
-        - condition: "ECOG PS 0-2"
+        - finding: "ecog"
+          threshold: 2
+          comparator: "<="
         - condition: "No concurrent novel ARPI planned (ERA 223 fracture harm)"
         - condition: "Nuclear medicine theranostics center accessible"
     if_true:

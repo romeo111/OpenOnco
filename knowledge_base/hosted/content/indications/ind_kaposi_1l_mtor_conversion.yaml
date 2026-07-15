@@ -1,0 +1,124 @@
+id: IND-KAPOSI-1L-IATROGENIC-MTOR-CONVERSION
+plan_track: standard
+intent: treatment
+
+applicable_to:
+  disease_id: DIS-KAPOSI
+  line_of_therapy: 1
+  stage_requirements:
+    - "Iatrogenic (post-transplant) Kaposi sarcoma, histologically confirmed, in a solid-organ transplant recipient on chronic immunosuppression"
+    - "Limited/non-visceral disease -- RF-KAPOSI-VISCERAL-EXTENSIVE-DISEASE not triggered"
+    - "Extensive or visceral disease -> see IND-KAPOSI-1L-VISCERAL-PLD (systemic chemotherapy added to, not substituted for, immunosuppression rebalance)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: REG-SIROLIMUS-KAPOSI-CONVERSION
+concurrent_therapy: []
+followed_by:
+  - IND-KAPOSI-1L-VISCERAL-PLD
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Conversion from a calcineurin-inhibitor-based to an mTOR-inhibitor
+    (sirolimus)-based immunosuppression regimen has documented direct
+    anti-Kaposi activity (anti-angiogenic effect plus restored immune
+    surveillance) and triggers tumor regression in a meaningful
+    fraction of post-transplant Kaposi sarcoma. Extensive or visceral
+    disease typically requires added systemic chemotherapy -- see
+    IND-KAPOSI-1L-VISCERAL-PLD.
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-KAPOSI-VISCERAL-EXTENSIVE-DISEASE
+
+required_tests:
+  - TEST-EXCISIONAL-SKIN-BIOPSY
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+desired_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+
+rationale: >
+  Iatrogenic Kaposi sarcoma arises from pharmacologic immunosuppression
+  permitting HHV-8-driven tumorigenesis in a transplant recipient. The
+  first-line intervention is a transplant-team-directed review and
+  rebalancing of the immunosuppression regimen -- specifically,
+  conversion from a calcineurin-inhibitor-based regimen to an
+  mTOR-inhibitor (sirolimus)-based regimen, which has documented direct
+  anti-Kaposi activity distinct from simple immunosuppression
+  reduction. This MUST be coordinated with the transplant team --
+  unilateral oncology-only changes to immunosuppression carry a real
+  risk of allograft rejection. Reduction of net immunosuppression to
+  the minimum necessary for graft preservation is pursued in parallel
+  where graft-safe. Extensive, rapidly progressive, or visceral
+  disease is not expected to be adequately controlled by
+  immunosuppression rebalancing alone and requires added systemic
+  chemotherapy -- see IND-KAPOSI-1L-VISCERAL-PLD.
+
+rationale_ua: >
+  Ятрогенна саркома Капоші виникає внаслідок фармакологічної
+  імуносупресії у реципієнта трансплантата. Терапія першої лінії --
+  перегляд і ребаланс режиму імуносупресії під керівництвом
+  транспланталогічної команди, зокрема конверсія з інгібітора
+  кальциневрину на режим на основі mTOR-інгібітора (сіролімус). Це
+  ОБОВ'ЯЗКОВО координується з транспланталогічною командою --
+  самостійні онкологічні зміни несуть реальний ризик відторгнення
+  трансплантата. Поширене або вісцеральне захворювання потребує
+  додаткової системної хіміотерапії (IND-KAPOSI-1L-VISCERAL-PLD).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_kaposi_treatment
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-SKIN-2025
+    position: context
+  - source_id: SRC-IARC-MONO-100B-2012
+    position: context
+
+known_controversies: []
+
+do_not_do:
+  - "Не змінювати режим імуносупресії трансплант-реципієнта самостійно, без консиліуму трансплантологічної команди."
+  - "Не використовувати конверсію на mTOR-інгібітор як єдину терапію при вісцеральному або поширеному ураженні."
+  - "Не припиняти імуносупресію повністю -- мета це ребаланс, а не відміна."
+
+do_not_do_en:
+  - "Do not change a transplant recipient's immunosuppression regimen unilaterally, without transplant-team consult."
+  - "Do not use mTOR-inhibitor conversion as sole therapy for visceral or extensive disease."
+  - "Do not discontinue immunosuppression entirely -- the goal is rebalancing, not withdrawal."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB -- new TREATMENT-intent Indication for DIS-KAPOSI (v0.3
+  continuation). Distinct from the pre-existing PREVENTION-intent
+  IND-CHRONIC-HHV8-PREVENTION-IMMUNE-RESTORATION -- this Indication
+  applies to patients with a CONFIRMED Kaposi sarcoma diagnosis.
+  Introduces new Regimen REG-SIROLIMUS-KAPOSI-CONVERSION (reuses the
+  existing DRUG-SIROLIMUS entity; see that Regimen's notes for the
+  CHARTER §8.3 dosing-gap disclosure).
+
+  INDEPENDENT REVIEW CORRECTION (2026-07-11): an earlier draft cited
+  SRC-NCCN-SKIN-2025 with position "supports". That source documents
+  only basal-cell/squamous-cell skin cancer (confirmed by direct
+  inspection of its own KB record) -- it has no bearing on transplant
+  immunosuppression management or mTOR-inhibitor conversion.
+  Downgraded to "context" (loose disease-level background only,
+  matching how dis_kaposi.yaml itself cites it) rather than removed
+  outright, since the core clinical claim (mTOR conversion for
+  iatrogenic KS) traces directly to the authoring narrative, not to
+  this citation. No source in this KB currently documents the
+  transplant-immunosuppression-conversion literature specifically --
+  a real, disclosed evidentiary gap. Pending two-Clinical-Co-Lead
+  signoff (CHARTER §6.1 -- dev-mode-exempted; safe to merge as draft
+  content, NOT as published/verified clinical advice).

@@ -1,0 +1,126 @@
+id: IND-REPRODUCTIVE-DES-EXPOSURE-PREVENTION-OBSERVATION
+plan_track: aggressive
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-CERVICAL
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-REPRODUCTIVE-DES-IN-UTERO-EXPOSURE-PREVENTION
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Less-intensified pathway for DES-exposed daughters who decline annual
+    cytology + accept the residual risk: alternative is general-
+    population cervical screening every 3 years per USPSTF, with
+    intensified breast surveillance retained. Suboptimal for CCAC early
+    detection given the ~40-fold relative risk — counseling should
+    emphasize quantitative trade-offs.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Aggressive-track alternative for DES-exposed daughters who, after
+  shared decision-making, prefer less-frequent cervical/vaginal
+  surveillance. The default standard-track pathway (annual cytology +
+  colposcopy threshold) is markedly preferred for the absolute-risk
+  reduction it provides; this alternative pathway exists to honor
+  patient autonomy and document the trade-off explicitly.
+
+  Components:
+    - Cervical cytology every 3 years per USPSTF 2018 general-population
+      schedule (NOT the annual schedule of the standard pathway).
+    - Pelvic exam annually with vaginal-wall inspection retained.
+    - Mammography from age 40 retained (the breast surveillance
+      intensification is non-negotiable given the 2-fold lifetime
+      risk).
+    - Symptom-driven workup for any abnormal bleeding or new pelvic
+      mass.
+
+  Documentation must include explicit patient acknowledgment of the
+  elevated CCAC risk and the absolute-risk increase of choosing the
+  3-year vs annual cytology interval. Re-evaluate annually for
+  patient preference change.
+
+rationale_ua: >
+  Aggressive-трек альтернатива для DES-exposed дочок які після shared
+  decision-making надають перевагу less-frequent cervical/vaginal
+  surveillance. Default стандартний шлях (щорічна cytology + colposcopy
+  threshold) markedly preferred за абсолютне ризик-зниження; ця
+  альтернатива існує для пошани patient autonomy + explicit документації
+  trade-off.
+
+  Компоненти:
+    - Cervical cytology кожні 3 роки per USPSTF 2018 general-population
+      schedule (НЕ щорічна standard pathway).
+    - Pelvic exam щорічно з vaginal-wall inspection.
+    - Mammography з 40 років (breast surveillance intensification
+      non-negotiable за 2-кратний lifetime ризик).
+    - Symptom-driven workup при abnormal bleeding або new pelvic mass.
+
+  Документація має включати explicit patient acknowledgment elevated
+  CCAC ризику + абсолютне ризик-збільшення 3-річного vs щорічного
+  cytology interval. Re-evaluate щорічно.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_reproductive_expansion
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-CERVICAL-2025
+    position: context
+  - source_id: SRC-USPSTF-CERVICAL-2018
+    position: supports
+    relevant_quote_paraphrase: >-
+      "General-population cervical cancer screening at 3-year intervals
+      with cytology alone, age 21-65. DES-exposed daughters fall outside
+      the average-risk population and standard-population recommendations
+      do not apply directly."
+
+do_not_do:
+  - "Не дозволяти 3-річний interval без явного patient acknowledgment квантифікованого elevated ризику."
+  - "Не пропускати mammography з 40 років — breast component non-negotiable."
+
+do_not_do_en:
+  - "Do not permit 3-year interval without explicit patient acknowledgment of the quantified elevated risk."
+  - "Do not skip mammography from age 40 — the breast component is non-negotiable."
+
+known_controversies:
+  - topic: "USPSTF average-risk schedule applicability to DES-exposed cohort"
+    positions:
+      - position: "USPSTF 3-year cytology applies"
+        rationale: "No formal exclusion of DES cohort from USPSTF 2018; pragmatic choice when annual schedule is declined."
+      - position: "Annual cytology required"
+        rationale: "DES-exposed daughters have ~40x CCAC risk; average-risk schedule not formally validated for this cohort."
+    our_default: "Default to annual cytology unless explicitly declined after shared decision-making."
+    rationale: "Standard pathway recommends annual; this observation pathway exists only with documented patient acceptance of higher residual risk."
+
+time_critical: false
+last_reviewed: "2026-05-19"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — v0.3 reproductive prevention expansion. Two-Co-Lead signoff
+  queued per CHARTER §6.1 dev-mode. Aggressive track here means "less
+  aggressive surveillance, accept higher residual risk" — naming
+  convention follows existing prevention indications where aggressive =
+  alternative track. Track invariant satisfied: standard (intensified
+  surveillance) + aggressive (general-population schedule).

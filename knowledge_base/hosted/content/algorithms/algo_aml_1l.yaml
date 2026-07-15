@@ -14,6 +14,7 @@ output_indications:
   - IND-AML-1L-7-3
   - IND-AML-1L-7-3-GO-CBF
   - IND-AML-1L-CPX351-SECONDARY
+  - IND-EMERG-TLS-PROPHYLAXIS-RASBURICASE
 
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-1L-7-3
@@ -28,7 +29,7 @@ decision_tree:
       any_of:
         - red_flag: RF-AML-EMERGENCY-TLS-LEUKOSTASIS
     if_true:
-      result: IND-AML-1L-VEN-AZA
+      result: IND-EMERG-TLS-PROPHYLAXIS-RASBURICASE
     if_false:
       next_step: 2
 
@@ -136,12 +137,12 @@ decision_tree:
   - step: 7
     evaluate:
       any_of:
-        - condition: "Fit for intensive chemotherapy (default if no fitness flags)"
+        - {finding: "fit_for_intensive_chemo", value: true}
     if_true:
       result: IND-AML-1L-7-3
     if_false:
       result: IND-AML-1L-7-3
-    notes: "Default fall-through — fit patient with no biomarker flags routes to 7+3."
+    notes: "Default fall-through — fit patient with no biomarker flags routes to 7+3. Mechanical rewire of the original free-text gate (fitness for intensive chemotherapy) into finding: clause using fit_for_intensive_chemo. Original clinical criteria unchanged; if_true/if_false already both routed to IND-AML-1L-7-3."
 
 sources:
   - SRC-NCCN-AML-2025
@@ -172,7 +173,7 @@ notes_ua: >
   ALFA-0701); CBF без явної CD33-позитивності залишається на шляху
   звичайного 7+3, зберігаючи попередню поведінку. Придатність до
   трансплантації — паралельний рівень, відображений у плануванні
-  режиму та підтримуючої терапії. RF-AML-INFECTION-SCREENING має
+  схеми лікування та підтримуючої терапії. RF-AML-INFECTION-SCREENING має
   еквівалент «дослідити» та виводиться як анотація, а не гілка дерева.
   CPX-351 (IND-AML-1L-CPX351-
   SECONDARY) для tAML / AML-MRC у пацієнтів 60–75 років придатних

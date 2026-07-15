@@ -1,0 +1,133 @@
+id: RF-IATROGENIC-ASCT-SECONDARY-MDS-AML-PREVENTION
+definition: >-
+  History of autologous stem-cell transplantation (ASCT) as
+  consolidation or salvage therapy for a previously-treated hematologic
+  or lymphoid malignancy (multiple myeloma, Hodgkin lymphoma, non-
+  Hodgkin lymphoma, germ-cell tumor salvage, etc.). ASCT survivors
+  carry a 10-year cumulative risk of therapy-related myelodysplastic
+  syndrome (t-MDS) / therapy-related AML (t-AML) of approximately 1-5%,
+  with risk dominated by the cumulative pre-ASCT alkylator dose and
+  the conditioning-regimen-related additional alkylator exposure
+  (high-dose melphalan in MM, BEAM in lymphoma, etc.). Median latency
+  3-7 years post-ASCT; risk plateaus by 10 years but does not return
+  to baseline. Distinct from RF-IATROGENIC-ALKYLATOR-TAML-PREVENTION
+  (general alkylator-exposure RF) by virtue of identifying the
+  specific ASCT-survivor cohort which has documented higher absolute
+  risk than alkylator-exposure-without-ASCT cohorts (the ASCT-
+  conditioning regimen adds bone-marrow stress on top of pre-ASCT
+  cytotoxic exposure). Prevention-persona RedFlag (§20 v0.3 wave-N
+  iatrogenic pathway).
+definition_ua: >-
+  Історія autologous stem-cell transplantation (ASCT) як consolidation
+  або salvage therapy для previously-treated hematologic / lymphoid
+  malignancy (multiple myeloma, Hodgkin lymphoma, non-Hodgkin lymphoma,
+  germ-cell tumor salvage). ASCT survivors carry 10-year cumulative
+  ризик therapy-related MDS (t-MDS) / therapy-related AML (t-AML)
+  приблизно 1-5%, з ризиком dominated cumulative pre-ASCT alkylator
+  dose + conditioning-regimen-related additional alkylator exposure
+  (high-dose melphalan у MM, BEAM у lymphoma). Median latency 3-7
+  років post-ASCT; risk plateaus до 10 років але не повертається до
+  baseline. Distinct від RF-IATROGENIC-ALKYLATOR-TAML-PREVENTION
+  (general alkylator-exposure RF) тим, що identifies specific ASCT-
+  survivor cohort з documented higher absolute risk. Prevention-persona
+  RedFlag (§20 v0.3 wave-N iatrogenic pathway).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "prior_autologous_stem_cell_transplant_asct"
+      value: true
+    - finding: "prior_asct_for_multiple_myeloma"
+      value: true
+    - finding: "prior_asct_for_lymphoma"
+      value: true
+    - finding: "prior_asct_for_germ_cell_tumor_salvage"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+
+risk_category: iatrogenic
+
+# Anchor disease: DIS-AML (t-AML is the higher-mortality end of the
+# t-MDS/t-AML spectrum; t-MDS evolves to t-AML in many cases). DIS-
+# MDS-HR (high-risk MDS) is the closer histopathologic anchor for the
+# preceding-cytopenic phase. Both disease IDs included in
+# relevant_diseases so the engine has options; surveillance Indication
+# anchors on DIS-AML as the primary mortality endpoint.
+relevant_diseases:
+  - DIS-AML
+  - DIS-MDS-HR
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-COG-LTFU-V5-2018
+  - SRC-EINHORN-HDCT-ASCT-2007
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  v0.3 wave-N niche pathway — ASCT-survivor t-MDS/t-AML prevention.
+  Fires on documented history of autologous stem-cell transplantation
+  in a prior hematologic / lymphoid malignancy (multiple myeloma,
+  Hodgkin lymphoma, non-Hodgkin lymphoma, primary CNS lymphoma, germ-
+  cell tumor salvage). The pre-ASCT cytotoxic exposure plus the
+  high-dose-conditioning regimen (melphalan in MM, BEAM in lymphoma,
+  CBV or carboplatin/etoposide/ifosfamide in salvage settings) drive
+  bone-marrow stress and clonal-hematopoiesis emergence that
+  predisposes to t-MDS / t-AML over the subsequent decade.
+
+  Engine routes to PreventionPlan recommending:
+    (a) IND-ASCT-SECONDARY-MDS-AML-PREVENTION-SURVEILLANCE (standard)
+        — CBC with differential q3-6 months for the first 10 years
+        post-ASCT, then q12mo lifelong; low-threshold marrow
+        evaluation for any unexplained cytopenia, persistent
+        macrocytosis (MCV >100), dysplastic peripheral smear, or
+        unexplained monocytosis; clonal hematopoiesis-of-indeterminate-
+        potential (CHIP) screening + risk-stratification where
+        available; avoid additional bone-marrow-toxic exposures
+        (additional alkylator-based therapy, benzene exposure);
+        allogeneic HSCT eligibility pre-assessment so that if t-MDS
+        emerges, the path to definitive treatment is open.
+    (b) IND-ASCT-SECONDARY-MDS-AML-PREVENTION-OBSERVATION
+        (alternative) — symptom-driven evaluation + lower-cadence
+        CBC (q12mo from year 1) when patient declines structured
+        q3-6mo schedule. Per CHARTER §11 patient-autonomy framing.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Source-set TODO: dedicated ASCT-t-MDS/t-AML cohort
+  publications — Krishnan et al. ASCT-t-MDS in MM (Blood 2003); Howe
+  et al. multiple myeloma ASCT-late-effects (Lancet Haematol 2016);
+  Mailankody et al. CHIP in MM-ASCT cohort (Blood 2019); Bolton et
+  al. CHIP and t-MDS in lymphoma-ASCT (J Clin Oncol 2020); ongoing
+  v0.3 wave-N authoring backlog new SRC entities for ASCT-specific
+  late-effect evidence base.
+
+  Cumulative t-MDS/t-AML risk in ASCT survivors (pooled cohort data,
+  Krishnan 2003 + Mailankody 2019 + various):
+    - Multiple myeloma ASCT: ~2-5% cumulative at 10 years
+    - Lymphoma (Hodgkin + NHL) ASCT: ~3-5% cumulative at 10 years
+    - Germ-cell tumor salvage ASCT (high-dose chemotherapy with stem-
+      cell rescue): ~1-2% cumulative at 10 years (lower than hemato/
+      lymphoid because shorter alkylator exposure pre-ASCT)
+
+  Surveillance modality considerations:
+    - CBC with differential is the workhorse — sensitive for early
+      cytopenia signal that precedes overt t-AML.
+    - MCV >100 (macrocytosis) is an early dysplastic marker; trend
+      tracking matters more than absolute single-time-point.
+    - Routine prophylactic bone-marrow biopsy NOT recommended in
+      asymptomatic patients with normal CBC; yield poor.
+    - Clonal hematopoiesis (CHIP) screening with targeted-NGS panel
+      identifies high-risk subset (TP53, U2AF1, SRSF2 mutations
+      carry higher t-MDS-progression risk); availability and
+      reimbursement vary by jurisdiction.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_n_niche
+draft_revision: 1

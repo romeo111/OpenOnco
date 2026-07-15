@@ -1,0 +1,93 @@
+id: IND-PARATHYROID-CARCINOMA-1L-RESECTION
+plan_track: local_therapy
+
+applicable_to:
+  disease_id: DIS-PARATHYROID-CARCINOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Localized disease at presentation, including any parathyroid mass with clinical/biochemical/intraoperative features raising suspicion for carcinoma (markedly elevated PTH/calcium, palpable/fixed/invasive mass, recurrent laryngeal nerve involvement) — carcinoma diagnosis itself requires histologic evidence of invasion (capsular/vascular/soft-tissue/lymph node/metastasis) per WHO 2022, which is often confirmed only on final pathology"
+    - "Multidisciplinary endocrine-surgery review; index surgery is the single highest-leverage intervention for this disease"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+
+expected_outcomes:
+  progression_free_survival: "R0 en-bloc resection is the strongest prognostic factor for disease-free survival; capsule violation or enucleation is strongly associated with local recurrence"
+  overall_survival_5y: "~70-85% in localized, completely resected disease (per DIS-PARATHYROID-CARCINOMA epidemiology)"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CT-NECK-THORAX-ABDOMEN-PELVIS
+  - TEST-CBC
+  - TEST-CMP
+desired_tests: []
+
+rationale: >
+  Diagnosis of parathyroid carcinoma requires histologic evidence of
+  invasion (capsular, vascular, soft-tissue, lymph node, or distant
+  metastasis) — atypical histology alone is not sufficient (WHO
+  Endocrine and Neuroendocrine Tumours, 5th ed., 2022). Because this
+  distinction is frequently made only on final pathology, any
+  parathyroid mass with clinical features raising suspicion for
+  carcinoma should be approached at index surgery with en-bloc
+  resection of the parathyroid tumor together with the ipsilateral
+  thyroid lobe and central-compartment lymph nodes, without violating
+  the tumor capsule. R0 resection is the strongest prognostic factor
+  for disease-free and overall survival; enucleation or piecemeal
+  removal markedly increases local recurrence risk and should not be
+  performed. Germline CDC73/HRPT2 testing is recommended at diagnosis
+  for any parathyroid carcinoma to identify Hyperparathyroidism-Jaw
+  Tumor (HPT-JT) syndrome and trigger family-cascade testing (see
+  BMA-CDC73-GERMLINE-HPT-JT).
+
+sources:
+  - source_id: SRC-NCCN-THYROID-2025
+    position: supports
+  - source_id: SRC-NCCN-NET-2025
+    position: supports
+
+do_not_do:
+  - "Do not enucleate or shell out a parathyroid tumor suspicious for carcinoma — capsule violation markedly increases local recurrence risk."
+  - "Do not treat atypical parathyroid adenoma histology alone as sufficient for a carcinoma diagnosis — invasion (capsular/vascular/soft-tissue/lymph node/metastasis) is required."
+  - "Do not omit germline CDC73/HRPT2 testing at diagnosis — it identifies HPT-JT syndrome and triggers family-cascade screening."
+
+do_not_do_en:
+  - "Do not enucleate or shell out a parathyroid tumor suspicious for carcinoma — capsule violation markedly increases local recurrence risk."
+  - "Do not treat atypical parathyroid adenoma histology alone as sufficient for a carcinoma diagnosis — invasion (capsular/vascular/soft-tissue/lymph node/metastasis) is required."
+  - "Do not omit germline CDC73/HRPT2 testing at diagnosis — it identifies HPT-JT syndrome and triggers family-cascade screening."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+review_status: stub
+drafted_by: claude_agent_draft
+notes: >
+  STUB — coverage-enabling local-therapy indication for
+  DIS-PARATHYROID-CARCINOMA. Requires endocrine-surgery / endocrine-
+  oncology co-lead signoff before clinical publication (CHARTER §6.1 —
+  dev-mode-exempted, safe to merge as draft content). No systemic or
+  adjuvant drug regimen is indicated for localized, completely resected
+  disease — surgery alone is standard of care; `recommended_regimen` is
+  intentionally left unset (surgery-only local_therapy track, mirroring
+  IND-MENINGIOMA-1L-RESECTION-RT). This Indication deliberately does
+  NOT use the `phases:` / `surgery_id` mechanism (as
+  IND-MENINGIOMA-1L-RESECTION-RT does via SUR-MENINGIOMA-RESECTION)
+  because no Surgery entity for the en-bloc parathyroidectomy procedure
+  has been authored yet — a follow-up authoring pass should add a
+  Surgery/Procedure entity (proposed id
+  SUR-PARATHYROID-EN-BLOC-RESECTION under
+  knowledge_base/hosted/content/procedures/) and wire it via `phases`
+  for full parity with the Meningioma pattern. The full procedure (en-
+  bloc resection of the parathyroid tumor + ipsilateral thyroid lobe +
+  central lymph nodes, no capsule violation) is described here in prose
+  (rationale / do_not_do) in the interim.

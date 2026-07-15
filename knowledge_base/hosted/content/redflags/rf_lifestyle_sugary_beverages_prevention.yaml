@@ -1,0 +1,73 @@
+id: RF-LIFESTYLE-SUGARY-BEVERAGES-PREVENTION
+definition: >-
+  High habitual intake of sugar-sweetened beverages (SSBs) — sodas, fruit
+  drinks, sports drinks, sweetened teas/coffees — ≥1 serving (~250 mL)
+  per day. Associated with increased risk of obesity-related cancers
+  including colorectal cancer (RR ~1.2-1.3 in women with ≥2 servings/
+  day per Nurses' Health Study II; Hur et al. Gut 2021), pancreatic
+  cancer (modest signal in some cohorts), early-onset CRC (under age 50
+  — Hur 2021 reported ~RR 2.2 for ≥2 servings/day vs <1/wk), and
+  endometrial + post-menopausal breast cancer via obesity pathway.
+  Mechanism: rapid glycemic load → insulin/IGF-1 axis activation +
+  weight gain + adiposity. SSBs are the largest single dietary source
+  of added sugar in many populations. Risk modifiable via substitution
+  with water, unsweetened beverages, low-calorie sweeteners (though
+  recent evidence raises questions about non-nutritive sweetener safety —
+  see controversies). Prevention-persona RedFlag (§20 v0.3 lifestyle
+  expansion).
+definition_ua: >-
+  Habitual high intake sugar-sweetened beverages (SSBs) — sodas, fruit
+  drinks, sports drinks, sweetened teas/coffees — ≥1 порція (~250 мл)
+  на день. Associated зі збільшеним ризиком obesity-related cancers
+  включаючи colorectal cancer (RR ~1.2-1.3 у жінок з ≥2 servings/день
+  per Nurses' Health Study II; Hur et al. Gut 2021), pancreatic cancer
+  (помірний signal у деяких cohorts), early-onset CRC (до 50 років —
+  Hur 2021 reported ~RR 2.2 для ≥2 servings/день vs <1/тиж),
+  endometrial + post-menopausal breast cancer via obesity pathway.
+  Механізм: rapid glycemic load → insulin/IGF-1 axis активація + weight
+  gain + adiposity. SSBs — найбільше джерело added sugar у багатьох
+  populations. Ризик модифікований через substitution з water, unsweetened
+  beverages, low-calorie sweeteners. Prevention-персона RedFlag (§20
+  v0.3 lifestyle expansion).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "ssb_daily_consumption_ge_1"
+      value: true
+    - finding: "ssb_consumption_ge_2_per_day"
+      value: true
+    - finding: "early_onset_crc_risk_diet"
+      value: true
+
+clinical_direction: investigate
+severity: minor
+priority: 130
+category: other
+risk_category: lifestyle
+
+relevant_diseases:
+  - DIS-CRC
+  - DIS-PDAC
+  - DIS-ENDOMETRIAL
+  - DIS-BREAST
+
+shifts_algorithm: []
+sources:
+  - SRC-USPSTF-CRC-2021
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for sugar-sweetened beverage habitual
+  intake. Counseling: substitute water/unsweetened beverages;
+  reduce gradually if abrupt cessation difficult; assess for
+  contribution to weight gain + glycemic dysregulation. Modest
+  individual RR but very common exposure → large absolute
+  population-attributable fraction. STUB pending two-Co-Lead signoff
+  per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_lifestyle_expansion
+draft_revision: 1

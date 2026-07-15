@@ -1,0 +1,92 @@
+id: IND-PHEO-LOCALIZED-1L-ALPHA-BLOCKADE-ADRENALECTOMY
+plan_track: local_therapy
+
+applicable_to:
+  disease_id: DIS-PHEOCHROMOCYTOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Localized, resectable pheochromocytoma (adrenal) or paraganglioma confirmed on cross-sectional and functional imaging -- no distant metastatic disease"
+    - "Biochemical diagnosis confirmed (elevated plasma free metanephrines / 24-h urinary fractionated metanephrines)"
+    - "Adequate preoperative alpha-adrenergic blockade completed (phenoxybenzamine or doxazosin) -- HARD PRECONDITION, see RF-PHEO-INADEQUATE-ALPHA-BLOCKADE; do not proceed to surgery until satisfied"
+    - "Multidisciplinary (endocrinology / endocrine surgery / anesthesiology) review before scheduling surgery"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ALPHA-BLOCKADE-PREOP-PHEO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "Complete resection generally curative for benign, localized pheochromocytoma/paraganglioma; long-term surveillance still required given lifelong recurrence/metastatic risk, especially in hereditary (e.g. SDHB) disease"
+  complete_response:
+  progression_free_survival: "Not applicable in the RCT sense -- outcome is durable surgical cure vs recurrence, tracked by lifelong biochemical/imaging surveillance rather than a PFS endpoint"
+  overall_survival_5y: "Favorable for completely resected, non-metastatic disease; malignant potential and hereditary risk (particularly SDHB) drive the need for lifelong surveillance rather than a fixed 5-year figure"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PHEO-INADEQUATE-ALPHA-BLOCKADE
+
+required_tests:
+  - TEST-METANEPHRINES-PLASMA-PARAGANGLIOMA
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests:
+  - TEST-GERMLINE-MULTI-GENE-PANEL
+
+rationale: >
+  For localized, resectable pheochromocytoma or paraganglioma, surgery
+  is the only potentially curative treatment. Because tumor manipulation
+  during surgery can trigger massive catecholamine release,
+  intraoperative hypertensive crisis is a life-threatening risk unless
+  the patient has undergone adequate preoperative alpha-adrenergic
+  blockade (phenoxybenzamine or doxazosin) -- a mandatory sequencing
+  step modelled here as a hard hold via RF-PHEO-INADEQUATE-ALPHA-
+  BLOCKADE, not an optional preference. Once alpha-blockade is adequate,
+  laparoscopic adrenalectomy is standard for unilateral adrenal tumors;
+  cortical-sparing (partial) adrenalectomy is preferred for bilateral or
+  hereditary disease to preserve adrenocortical function and avoid
+  lifelong steroid replacement. Germline genetic testing is recommended
+  for essentially all PPGL patients given the ~30-40% hereditary
+  fraction (see DIS-PHEOCHROMOCYTOMA notes and the separate
+  IND-SDH-CARRIER-* / IND-SDH-SUSPICION-* surveillance pathways, which
+  this Indication does not modify).
+
+sources:
+  - source_id: SRC-ENDOCRINE-SOCIETY-PPGL-2014
+    position: supports
+  - source_id: SRC-NCCN-NET-2025
+    position: supports
+
+do_not_do:
+  - "Не проводити адреналектомію чи резекцію парагангліоми без задокументованої адекватної передопераційної альфа-блокади -- ризик інтраопераційного гіпертензивного кризу."
+  - "Не призначати бета-блокатор до початку альфа-блокади -- неопонована альфа-стимуляція може спричинити гіпертензивний криз."
+  - "Не проводити тотальну білатеральну адреналектомію без розгляду кортикозберігаючої техніки при білатеральному/спадковому захворюванні -- ризик довічної недостатності надниркових залоз."
+
+do_not_do_en:
+  - "Do not proceed to adrenalectomy or paraganglioma resection without documented adequate preoperative alpha-blockade -- risk of intraoperative hypertensive crisis."
+  - "Do not start a beta-blocker before alpha-blockade is underway -- unopposed alpha-stimulation can precipitate hypertensive crisis."
+  - "Do not default to total bilateral adrenalectomy without considering cortical-sparing technique in bilateral/hereditary disease -- risk of lifelong adrenal insufficiency."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+review_status: stub
+drafted_by: claude_pheo_treatment_pathway
+notes: >
+  Coverage-enabling local-therapy indication for DIS-PHEOCHROMOCYTOMA.
+  Models surgery NARRATIVELY (via stage_requirements/rationale/do_not_do)
+  rather than via the phases:/surgery_id mechanism used by the
+  meningioma gold-standard example, because no Surgery/Procedure entity
+  for laparoscopic or cortical-sparing adrenalectomy exists in the KB
+  yet and creating one was outside the entity set this pass was scoped
+  to (Algorithm/Indication/Regimen/Drug/RedFlag/Source only) -- flagged
+  as a follow-up PR on the Disease file. recommended_regimen therefore
+  points at the mandatory alpha-blockade regimen
+  (REG-ALPHA-BLOCKADE-PREOP-PHEO), the actual drug-level component of
+  this pathway, with the hard RF-PHEO-INADEQUATE-ALPHA-BLOCKADE gate
+  carrying the sequencing rule. Requires endocrine surgery /
+  anesthesiology co-lead signoff before clinical publication.

@@ -1,0 +1,160 @@
+id: IND-CASCADE-LFS-FDR-POSITIVE-SURVEILLANCE
+plan_track: surveillance
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-BREAST
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-CASCADE-LFS-FDR-POSITIVE
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Empirical Toronto-Protocol-style surveillance applied to a
+    first-degree relative of a confirmed TP53 carrier — without
+    genetic confirmation — captures early-stage cancer in the **50% of
+    patients who are actual carriers** (autosomal-dominant prior
+    probability), but subjects the **other 50%** (non-carriers) to a
+    resource-intensive, anxiety-provoking surveillance regimen they
+    could have safely declined had cascade testing been completed.
+    Toronto Protocol surveillance in confirmed carriers (Villani et
+    al. 2016) showed 5-year survival 88.8% (surveillance arm) vs
+    59.6% (non-surveillance arm); applied empirically, the absolute
+    benefit halves but remains substantial in the high-risk
+    population.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Alternative-track companion to IND-CASCADE-LFS-FDR-POSITIVE-TESTING.
+  Applied when a first-degree relative of a confirmed TP53 carrier
+  declines cascade germline testing — for any reason (cost,
+  insurance, the substantial psychological burden of TP53 carrier
+  status, family privacy, geographic access) — and is offered
+  empirical Toronto-Protocol surveillance applied as if LFS were
+  confirmed. The **50% prior probability** of carrier status
+  combined with the extreme penetrance of confirmed TP53 makes the
+  surveillance benefit substantial even without genetic confirmation,
+  but patient autonomy (CHARTER §11) governs the choice.
+
+  **Toronto Protocol (empirical):**
+  - Annual whole-body MRI from any age — soft-tissue sarcoma,
+    osteosarcoma, deep visceral tumors.
+  - Annual brain MRI from any age — choroid plexus carcinoma in
+    children, glioma / astrocytoma in adults.
+  - Breast MRI annually from age 20-25 in women (NOT mammography —
+    radiation avoidance even in pre-cascade phase, given the **50%
+    prior** is high enough to warrant precaution).
+  - Colonoscopy q2-5y from age 25.
+  - Annual comprehensive dermatology + skin exam.
+  - Annual blood cell counts (CBC) — leukemia surveillance.
+  - Annual abdominal + pelvic ultrasound (children + adults) —
+    adrenocortical carcinoma surveillance, particularly in
+    pediatric carriers.
+  - Pediatric carriers (children of TP53-positive FDR): brain MRI +
+    abdominal ultrasound from infancy per Toronto Protocol pediatric
+    arm.
+
+  **Radiation avoidance even pre-cascade:** Given the 50% prior, the
+  alternative track adopts radiation-avoidance principles
+  empirically — MRI over CT, ultrasound over X-ray when feasible —
+  to minimize harm in the case the patient is a non-carrier (where
+  the harm is small) and prevent harm in the case the patient is a
+  carrier (where radiation-induced secondary cancer risk is
+  documented).
+
+  **Risk-reducing mastectomy (RRM):** NOT offered empirically.
+  Surgical irreversibility, body-image implications, and the ~50%
+  probability of being a non-carrier require confirmed carrier
+  diagnosis. Risk-reducing surgery discussion is reserved for the
+  confirmed-carrier pathway.
+
+  **Periodic re-discussion of cascade testing** is essential at every
+  visit. LFS surveillance burden is substantial — many patients
+  initially decline testing but accept it later when the
+  surveillance fatigue motivates the desire for certainty.
+
+  Routing reconsiderations: if patient eventually accepts cascade
+  testing, results route to (a) confirmed-LFS pathway, or (b)
+  general-population pathway if familial variant is absent.
+
+rationale_ua: >
+  Альтернативно-трекова Indication — компаньйон до
+  IND-CASCADE-LFS-FDR-POSITIVE-TESTING. Застосовується коли родич
+  першого ступеня підтвердженого TP53-носія відмовляється від
+  cascade germline тестування — з будь-якої причини (вартість,
+  страхування, суттєвий психологічний тягар TP53 carrier статусу,
+  сімейна приватність) — і отримує empіричне Toronto-Protocol
+  спостереження, як якщо б LFS був підтверджений. **50% апріорна
+  ймовірність** у поєднанні з екстремальною пенетрантністю TP53
+  робить surveillance benefit substantial навіть без підтвердження.
+
+  **Toronto Protocol (empirical):**
+  - Annual whole-body MRI з будь-якого віку.
+  - Annual brain MRI з будь-якого віку.
+  - Breast MRI annually з 20-25 років у жінок (НЕ mammography —
+    radiation avoidance навіть у pre-cascade phase).
+  - Колоноскопія q2-5y з 25 років.
+  - Annual dermatology + skin exam.
+  - Annual CBC — leukemia surveillance.
+  - Annual abdominal + pelvic ultrasound — adrenocortical carcinoma
+    surveillance (особливо у педіатричних carriers).
+
+  **Radiation avoidance pre-cascade:** З огляду на 50% prior,
+  alternative track приймає radiation-avoidance empіричнo — MRI
+  замість CT, ultrasound замість X-ray коли можливо.
+
+  **Risk-reducing мастектомія (RRM):** НЕ пропонується empіричнo.
+
+  **Periodic re-discussion** cascade тестування essential на кожному
+  візиті. Per CHARTER §11 framing автономії пацієнта.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_b_cascade_pilot
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+    position: supports
+  - source_id: SRC-NCCN-BREAST-2025
+    position: supports
+  - source_id: SRC-ASCO-ACMG-LYNCH-2014
+    position: supports
+
+do_not_do:
+  - "Не презентувати empirical Toronto surveillance як еквівалент genetic confirmation — 50% пацієнтів — non-carriers, які могли б безпечно decline burden."
+  - "Не використовувати mammography empіричнo у LFS-suspicion жінок — radiation-avoidance принцип застосовується pre-cascade за 50% prior; breast MRI preferred."
+  - "Не пропонувати risk-reducing mastectomy empіричнo — surgical irreversibility вимагає підтвердженого carrier діагнозу."
+  - "Не пропускати pediatric surveillance у дітей TP53-positive FDR — Toronto Protocol pediatric arm включає brain MRI + abdominal ultrasound з infancy через ризик choroid plexus carcinoma + adrenocortical carcinoma."
+  - "Не пропускати periodic re-discussion про cascade testing — LFS surveillance burden substantial; багато пацієнтів врешті приймають тестування коли surveillance fatigue motivates desire for certainty."
+
+do_not_do_en:
+  - "Do not present empirical Toronto surveillance as equivalent to genetic confirmation — 50% of patients are non-carriers who could safely decline the burden."
+  - "Do not use mammography empirically in LFS-suspicion women — radiation-avoidance principle applies pre-cascade given the 50% prior; breast MRI is preferred."
+  - "Do not offer risk-reducing mastectomy empirically — surgical irreversibility requires confirmed carrier diagnosis."
+  - "Do not skip pediatric surveillance in children of TP53-positive FDRs — Toronto Protocol pediatric arm includes brain MRI + abdominal ultrasound from infancy given the risk of choroid plexus carcinoma + adrenocortical carcinoma."
+  - "Do not skip periodic re-discussion of cascade testing — LFS surveillance burden is substantial; many patients eventually accept testing when surveillance fatigue motivates desire for certainty."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-19"
+reviewers: []
+reviewer_signoffs: 0
+notes: STUB — alternative-track companion for LFS cascade-testing pilot. §15.2 C4 ≥2-tracks invariant compliance. Toronto Protocol empirically applied at 50% prior probability.
