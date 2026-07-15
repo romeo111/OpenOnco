@@ -1,22 +1,25 @@
 id: RF-CML-FRAILTY-AGE
-definition: "CML patient elderly or frail (age ≥75, ECOG ≥2 with multiple comorbidities) where toxicity profile + life-expectancy considerations favor imatinib over higher-toxicity 2nd-gen TKIs"
-definition_ua: "Пацієнт з ХМЛ літнього віку або з низьким функціональним статусом (вік ≥75, ECOG ≥2 + множинні коморбідності), де профіль токсичності та очікувана тривалість життя надають перевагу іматинібу над більш токсичними ТКІ 2-го покоління"
+definition: "CML patient elderly or frail (age ≥75, ECOG ≥2 with multiple comorbidities) where toxicity
+  profile + life-expectancy considerations favor imatinib over higher-toxicity 2nd-gen TKIs"
+definition_ua: "Пацієнт з ХМЛ літнього віку або з низьким функціональним статусом (вік ≥75, ECOG ≥2 +
+  множинні коморбідності), де профіль токсичності та очікувана тривалість життя надають перевагу іматинібу
+  над більш токсичними ТКІ 2-го покоління"
 
 trigger:
   type: composite
   any_of:
-    - finding: "age_years"
-      threshold: 75
+  - finding: "age_years"
+    threshold: 75
+    comparator: ">="
+  - finding: "cml_frail_unfit"
+    value: true
+  - all_of:
+    - finding: "ecog_performance_status"
+      threshold: 2
       comparator: ">="
-    - finding: "cml_frail_unfit"
-      value: true
-    - all_of:
-        - finding: "ecog_performance_status"
-          threshold: 2
-          comparator: ">="
-        - finding: "comorbidities_count"
-          threshold: 2
-          comparator: ">="
+    - finding: "comorbidities_count"
+      threshold: 2
+      comparator: ">="
 
 clinical_direction: de-escalate
 
@@ -24,13 +27,13 @@ severity: minor
 priority: 40
 category: frailty-age
 relevant_diseases:
-  - DIS-CML
+- DIS-CML
 shifts_algorithm:
-  - ALGO-CML-1L
+- ALGO-CML-1L
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-ELN-CML-2020
+- SRC-NCCN-MPN-2025
+- SRC-ELN-CML-2020
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -40,6 +43,12 @@ notes: >
   (3) cost / generic availability + Ukraine reimbursement.
   STUB — requires clinical co-lead signoff.
 notes_ua: >
-  іматиніб загалом переважний for літнього віку / frail patients given: (1) lifetime CV-event risk on нілотиніб збільшує with age; (2) лікування-free ремісія less of a goal in літнього віку; (3) cost / generic availability + Ukraine відшкодування. STUB — requires clinical co-lead signoff.
+  Пацієнти похилого/крихкого віку з ХМЛ: ібатиніб / нілотиніб та бозутиніб — загалом добре переносяться,
+  оскільки ХМЛ є рідкісною хворобою з досвідом ТКІ в >70-річних. Нілотиніб: серцево-судинна токсичність
+  (периферична артеріальна хвороба, серцева ішемія) обмежує застосування при відомій ССЗ або метаболічному
+  синдромі — довічний ризик ССП-події при нілотинібі. Бозутиніб: краще серцево-судинний профіль, але діарея/гепатотоксичність
+  обмежує у крихких. Мета відповіді ТГМ менш пріоритетна у пацієнтів похилого віку — зупинка ТКІ не є
+  першочерговою метою. СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

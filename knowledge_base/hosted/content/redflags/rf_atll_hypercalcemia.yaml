@@ -1,15 +1,19 @@
 id: RF-ATLL-HYPERCALCEMIA
-definition: "Adult T-cell leukemia/lymphoma (ATLL) with paraneoplastic hypercalcemia (corrected calcium ≥11 mg/dL): present in ~50-70% of acute-type ATLL at diagnosis, driven by HTLV-1-induced PTHrP and RANKL expression"
-definition_ua: "Дорослий T-клітинний лейкоз/лімфома (ATLL) з паранеопластичною гіперкальціємією (скоригований кальцій ≥11 мг/дл): присутня в ~50-70% при гострому типі ATLL, керована HTLV-1-індукованою експресією PTHrP та RANKL"
+definition: "Adult T-cell leukemia/lymphoma (ATLL) with paraneoplastic hypercalcemia (corrected calcium
+  ≥11 mg/dL): present in ~50-70% of acute-type ATLL at diagnosis, driven by HTLV-1-induced PTHrP and RANKL
+  expression"
+definition_ua: "Дорослий T-клітинний лейкоз/лімфома (ATLL) з паранеопластичною гіперкальціємією (скоригований
+  кальцій ≥11 мг/дл): присутня в ~50-70% при гострому типі ATLL, керована HTLV-1-індукованою експресією
+  PTHrP та RANKL"
 
 trigger:
   type: composite
   any_of:
-    - finding: "calcium_corrected_mg_dl"
-      threshold: 11
-      comparator: ">="
-    - finding: "hypercalcemia_symptomatic"
-      value: true
+  - finding: "calcium_corrected_mg_dl"
+    threshold: 11
+    comparator: ">="
+  - finding: "hypercalcemia_symptomatic"
+    value: true
 
 clinical_direction: hold
 
@@ -17,13 +21,13 @@ severity: critical
 priority: 20
 category: organ-dysfunction
 relevant_diseases:
-  - DIS-ATLL
+- DIS-ATLL
 shifts_algorithm:
-  - ALGO-ATLL-1L
+- ALGO-ATLL-1L
 
 sources:
-  - SRC-IMC-HTLV-2017
-  - SRC-ESMO-PTCL-2024
+- SRC-IMC-HTLV-2017
+- SRC-ESMO-PTCL-2024
 
 last_reviewed: "2026-04-27"
 draft: true
@@ -38,6 +42,11 @@ notes: >
   Direction HOLD on routine induction until calcium <12 mg/dL and
   AKI resolved; priority 12. STUB — requires clinical co-lead signoff.
 notes_ua: >
-  Hypercalcemia is the second-найбільш-поширений ATLL emergency presentation after lymphocytosis; per IMC-HTLV-2017 (Tsukasaki/IACR consensus) + ESMO-PTCL 2024 ATLL section: агресивний IV hydration, zoledronic acid, calcitonin; cytoreduction with EPOCH-based схема + zidovudine/ інтерферон (acute) or watchful-wait → AZT/IFN (chronic/smoldering). Direction утримати on routine індукція until calcium <12 mg/dL and AKI resolved; priority 12. STUB — requires clinical co-lead signoff.
+  Гіперкальціємія є другим за поширеністю невідкладним проявом ATLL після лімфоцитозу; відповідно до IMC-HTLV-2017
+  (консенсус Tsukasaki/IACR) + розділу ESMO-PTCL 2024 щодо ATLL: агресивна в/в гідратація, золедронова
+  кислота, кальцитонін; циторедукція схемою на основі EPOCH + зидовудин/інтерферон (гострий тип) або watchful-wait
+  → AZT/IFN (хронічний/тліючий тип). Напрямок УТРИМАТИ щодо рутинної індукції до зниження кальцію <12
+  mg/дл та розрішення гострого пошкодження нирок; пріоритет 12. СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

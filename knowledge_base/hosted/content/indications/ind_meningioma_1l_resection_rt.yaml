@@ -1,0 +1,79 @@
+id: IND-MENINGIOMA-1L-RESECTION-RT
+plan_track: local_therapy
+
+applicable_to:
+  disease_id: DIS-MENINGIOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Symptomatic, growing, mass-effect, atypical, anaplastic, or otherwise treatment-requiring meningioma"
+    - "Multidisciplinary neurosurgery/radiation-oncology review; observation remains appropriate for small asymptomatic incidental WHO grade I-appearing tumors"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+phases:
+  - phase: surgery
+    type: surgery
+    surgery_id: SUR-MENINGIOMA-RESECTION
+    duration_weeks: 1
+  - phase: adjuvant
+    type: radiation
+    radiation_id: RC-MENINGIOMA-ADJUVANT-594-33
+    duration_weeks: 7
+
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "Local control depends on WHO grade, location, and Simpson extent of resection; grade I GTR is often durable"
+  complete_response:
+  progression_free_survival: "Adjuvant RT improves local control for high-risk, recurrent, subtotal-resected, or WHO grade III disease"
+  overall_survival_5y: "Highly grade-dependent; WHO grade I generally favorable, grade III substantially worse"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+desired_tests: []
+
+rationale: >
+  Meningioma management is primarily local therapy. Symptomatic, growing, or
+  mass-effect lesions are managed with maximal safe resection when feasible.
+  Adjuvant fractionated RT is considered for WHO grade III, recurrent tumors,
+  subtotal resection with high-risk histology, or selected grade II cases
+  after MDT review. Systemic therapy has limited evidence and is not the
+  default first-line pathway.
+
+sources:
+  - source_id: SRC-EANO-MENINGIOMA-2024
+    position: supports
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+
+do_not_do:
+  - "Do not offer systemic therapy as default first-line treatment for resectable or radiation-manageable meningioma."
+  - "Do not pursue gross total resection at the cost of unacceptable neurologic morbidity; maximal safe resection is the target."
+  - "Do not omit postoperative pathology grade, brain invasion assessment, and residual-disease MRI before deciding on adjuvant RT."
+
+do_not_do_en:
+  - "Do not offer systemic therapy as default first-line treatment for resectable or radiation-manageable meningioma."
+  - "Do not pursue gross total resection at the cost of unacceptable neurologic morbidity; maximal safe resection is the target."
+  - "Do not omit postoperative pathology grade, brain invasion assessment, and residual-disease MRI before deciding on adjuvant RT."
+
+time_critical: false
+last_reviewed: "2026-05-11"
+review_status: stub
+drafted_by: codex
+notes: >
+  Coverage-enabling local-therapy indication for DIS-MENINGIOMA. Requires
+  neurosurgery/radiation oncology co-lead signoff before clinical publication.

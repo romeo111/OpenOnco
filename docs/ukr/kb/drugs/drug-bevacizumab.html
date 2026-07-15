@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bevacizumab - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="Bevacizumab - OpenOnco">
 <meta property="og:description" content="Bevacizumab: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/drugs/drug-bevacizumab.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bevacizumab - OpenOnco">
 <meta name="twitter:description" content="Bevacizumab: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Bevacizumab - OpenOnco","description":"Bevacizumab: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-bevacizumab.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-bevacizumab.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Bevacizumab - OpenOnco","description":"Bevacizumab: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-bevacizumab.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-bevacizumab.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -115,10 +185,9 @@
   <table class="kb-facts"><tr><th>ID</th><td><code>DRUG-BEVACIZUMAB</code></td></tr>
 <tr><th>Тип</th><td>Препарат</td></tr>
 <tr><th>Синоніми</th><td><div class="kb-alias-list"><span class="kb-alias">Alymsys (biosimilar)</span><span class="kb-alias">Avastin</span><span class="kb-alias">Mvasi (biosimilar)</span><span class="kb-alias">Vegzelma (biosimilar)</span><span class="kb-alias">Zirabev (biosimilar)</span><span class="kb-alias">Бевацизумаб</span></div></td></tr>
-<tr><th>Статус</th><td>переглянуто 2026-04-26</td></tr>
-<tr><th>Файл</th><td><code>knowledge_base/hosted/content/drugs/bevacizumab.yaml</code></td></tr>
-<tr><th>Хвороби</th><td><span class="kb-muted">Не вказано</span></td></tr>
-<tr><th>Джерела</th><td><span class="kb-chip" title="NCCN Colon / Rectal Cancer"><code>SRC-NCCN-COLON-2025</code></span> <span class="kb-chip" title="NCCN Hepatocellular Carcinoma"><code>SRC-NCCN-HCC-2025</code></span></td></tr></table>
+<tr><th>Статус</th><td>переглянуто 2026-04-26 | очікує клінічного підпису</td></tr>
+<tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-CERVICAL"><code>DIS-CERVICAL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-CRC"><code>DIS-CRC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-GBM"><code>DIS-GBM</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-HCC"><code>DIS-HCC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-OVARIAN"><code>DIS-OVARIAN</code></a></span></td></tr>
+<tr><th>Джерела</th><td><span class="kb-chip" title="NCCN Colon / Rectal Cancer"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1428" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-COLON-2025</code></a></span> <span class="kb-chip" title="NCCN Hepatocellular Carcinoma"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1438" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-HCC-2025</code></a></span></td></tr></table>
   <h2>Дані про препарат</h2><table class="kb-facts"><tr><th>Клас</th><td>Anti-VEGF-A humanized IgG1 monoclonal antibody (anti-angiogenic)</td></tr>
 <tr><th>Механізм дії</th><td>Recombinant humanized IgG1 monoclonal antibody binding all isoforms of vascular endothelial growth factor A (VEGF-A) in plasma and extracellular space, preventing VEGF-A from engaging VEGFR-1 (Flt-1) and VEGFR-2 (KDR) on vascular endothelium. Net effects: inhibition of tumor angiogenesis, regression of existing tumor microvasculature, and transient vessel normalization improving drug delivery. Adds approximately 2-4 months PFS in metastatic CRC when added to FOLFOX/FOLFIRI; combined with atezolizumab in 1L unresectable HCC (IMbrave150) and with chemo in NSCLC, ovarian, cervical. Class effects (HTN, proteinuria, bleeding, perforation) derive from systemic VEGF blockade.</td></tr>
 <tr><th>Типове дозування</th><td>CRC metastatic with FOLFOX/FOLFIRI: 5 mg/kg IV q14d. CRC metastatic with CAPOX: 7.5 mg/kg IV q21d. NSCLC (with carbo/paclitaxel): 15 mg/kg IV q21d × 6 cycles, then maintenance. Ovarian (1L with carbo/paclitaxel): 15 mg/kg IV q21d × 6 cycles + 15 mo maintenance. Cervical: 15 mg/kg IV q21d. Glioblastoma: 10 mg/kg IV q14d. HCC (with atezolizumab): 15 mg/kg IV q21d. Hold ≥28 days pre-elective surgery; resume ≥28 days post-op with full wound healing.</td></tr>
@@ -127,7 +196,7 @@
 <tr><th>Остання перевірка для України</th><td>2026-04-27</td></tr></table><h2>Застереження</h2><ul><li>GI perforation (incidence 1-3% in CRC; higher in ovarian, cervical, GBM)</li><li>Surgery / wound healing complications (hold ≥28 days pre-op; restart ≥28 days post-op only with full healing)</li><li>Hemorrhage (severe pulmonary, GI, CNS — including fatal hemoptysis)</li></ul>
   <h2>Нотатки</h2><p>HCC IMbrave150 prerequisites: pre-treatment EGD to assess varices; high-risk varices need ligation/banding before atezo+bev. Hold ≥28 days pre-elective surgery; resume ≥28 days post-op with full wound healing. Discontinue permanently for: GI perforation, tracheoesophageal fistula, any Grade 4 fistula, any Grade 4 bleeding event, severe arterial thromboembolic event, hypertensive crisis, nephrotic syndrome, PRES. Biosimilars (Mvasi, Zirabev, Alymsys, Vegzelma) clinically interchangeable per FDA / EMA.</p>
   <h2>Де використовується</h2>
-<h3>Regimens</h3><ul><li><code>REG-5FU-LV-BEV-CKD-MODIFIED</code> - 5-FU + Leucovorin + Bevacizumab (sLV5FU2-Bev, CRC severe CKD CrCl &lt;30 — oxali/cape unsafe) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_5fu_lv_bev_ckd_modified.yaml)</span></li><li><code>REG-ATEZO-BEV</code> - Atezolizumab + Bevacizumab <span class="kb-muted">(knowledge_base/hosted/content/regimens/atezolizumab_bevacizumab.yaml)</span></li><li><code>REG-BEV-MAINTENANCE-OVARIAN</code> - Bevacizumab maintenance (post 1L platinum, ovarian/fallopian/primary peritoneal) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_bev_maintenance_ovarian.yaml)</span></li><li><code>REG-BEVACIZUMAB-GBM</code> - Bevacizumab for recurrent GBM <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_bevacizumab_gbm.yaml)</span></li><li><code>REG-CAPE-BEV-MAINTENANCE</code> - Capecitabine + Bevacizumab maintenance (post-FOLFOX/CapOx induction, mCRC) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_cape_bev_maintenance.yaml)</span></li><li><code>REG-CARBO-GEM-BEV-OVARIAN</code> - Carboplatin + Gemcitabine + Bevacizumab (platinum-sensitive recurrent ovarian, OCEANS reg... <span class="kb-muted">(knowledge_base/hosted/content/regimens/carbo_gem_bev_ovarian.yaml)</span></li><li><code>REG-CARBO-PLD-BEV-OVARIAN</code> - Carboplatin + PLD + Bevacizumab (platinum-sensitive recurrent ovarian) <span class="kb-muted">(knowledge_base/hosted/content/regimens/carbo_pld_bev_ovarian.yaml)</span></li><li><code>REG-FOLFIRI-BEV</code> - FOLFIRI + Bevacizumab (or ± cetuximab if RAS-WT left-sided) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_folfiri_bev.yaml)</span></li><li><code>REG-FOLFOX-BEV</code> - FOLFOX + Bevacizumab <span class="kb-muted">(knowledge_base/hosted/content/regimens/folfox_bevacizumab.yaml)</span></li><li><code>REG-FOLFOXIRI-BEV</code> - FOLFOXIRI + Bevacizumab <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_folfoxiri_bev.yaml)</span></li><li><code>REG-PEMBRO-PACLI-CARBO-BEV-CERVICAL</code> - Pembrolizumab + paclitaxel + carboplatin ± bevacizumab (cervical cancer, 1L) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_pembro_pacli_carbo_bev_cervical.yaml)</span></li><li><code>REG-PEMBROLIZUMAB-CERVICAL-1L</code> - Pembrolizumab + carboplatin + paclitaxel ± bevacizumab (persistent/recurrent/metastatic c... <span class="kb-muted">(knowledge_base/hosted/content/regimens/regimen_pembrolizumab_cervical_1l.yaml)</span></li><li><code>REG-PLD-BEV-OVARIAN</code> - PLD + Bevacizumab (platinum-resistant recurrent ovarian, AURELIA) <span class="kb-muted">(knowledge_base/hosted/content/regimens/pld_bev_ovarian.yaml)</span></li><li><code>REG-TRIFLURIDINE-TIPIRACIL-BEV</code> - Trifluridine-Tipiracil + Bevacizumab (SUNLIGHT) — 3L+ mCRC <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_trifluridine_tipiracil_bev.yaml)</span></li><li><code>REG-WEEKLY-PAC-BEV-OVARIAN</code> - Weekly Paclitaxel + Bevacizumab (platinum-resistant recurrent ovarian, AURELIA) <span class="kb-muted">(knowledge_base/hosted/content/regimens/weekly_pac_bev_ovarian.yaml)</span></li></ul>
+<h3>Regimens</h3><ul><li><code>REG-5FU-LV-BEV-CKD-MODIFIED</code> - 5-FU + Leucovorin + Bevacizumab (sLV5FU2-Bev, CRC severe CKD CrCl &lt;30 — oxali/cape unsafe)</li><li><code>REG-ATEZO-BEV</code> - Atezolizumab + Bevacizumab</li><li><code>REG-BEV-MAINTENANCE-OVARIAN</code> - Bevacizumab maintenance (post 1L platinum, ovarian/fallopian/primary peritoneal)</li><li><code>REG-BEVACIZUMAB-GBM</code> - Bevacizumab for recurrent GBM</li><li><code>REG-CAPE-BEV-MAINTENANCE</code> - Capecitabine + Bevacizumab maintenance (post-FOLFOX/CapOx induction, mCRC)</li><li><code>REG-CARBO-GEM-BEV-OVARIAN</code> - Carboplatin + Gemcitabine + Bevacizumab (platinum-sensitive recurrent ovarian, OCEANS reg...</li><li><code>REG-CARBO-PLD-BEV-OVARIAN</code> - Carboplatin + PLD + Bevacizumab (platinum-sensitive recurrent ovarian)</li><li><code>REG-FOLFIRI-BEV</code> - FOLFIRI + Bevacizumab (or ± cetuximab if RAS-WT left-sided)</li><li><code>REG-FOLFOX-BEV</code> - FOLFOX + Bevacizumab</li><li><code>REG-FOLFOXIRI-BEV</code> - FOLFOXIRI + Bevacizumab</li><li><code>REG-PEMBRO-PACLI-CARBO-BEV-CERVICAL</code> - Pembrolizumab + paclitaxel + carboplatin ± bevacizumab (cervical cancer, 1L)</li><li><code>REG-PEMBROLIZUMAB-CERVICAL-1L</code> - Pembrolizumab + carboplatin + paclitaxel ± bevacizumab (persistent/recurrent/metastatic c...</li><li><code>REG-PLD-BEV-OVARIAN</code> - PLD + Bevacizumab (platinum-resistant recurrent ovarian, AURELIA)</li><li><code>REG-TRIFLURIDINE-TIPIRACIL-BEV</code> - Trifluridine-Tipiracil + Bevacizumab (SUNLIGHT) — 3L+ mCRC</li><li><code>REG-WEEKLY-PAC-BEV-OVARIAN</code> - Weekly Paclitaxel + Bevacizumab (platinum-resistant recurrent ovarian, AURELIA)</li></ul>
 </main>
 </body>
 </html>

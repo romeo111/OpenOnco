@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Leucovorin (Folinic acid) - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="Leucovorin (Folinic acid) - OpenOnco">
 <meta property="og:description" content="Leucovorin (Folinic acid): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/drugs/drug-leucovorin.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Leucovorin (Folinic acid) - OpenOnco">
 <meta name="twitter:description" content="Leucovorin (Folinic acid): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Leucovorin (Folinic acid) - OpenOnco","description":"Leucovorin (Folinic acid): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-leucovorin.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-leucovorin.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Leucovorin (Folinic acid) - OpenOnco","description":"Leucovorin (Folinic acid): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-leucovorin.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-leucovorin.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -115,10 +185,9 @@
   <table class="kb-facts"><tr><th>ID</th><td><code>DRUG-LEUCOVORIN</code></td></tr>
 <tr><th>Type</th><td>Drug</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">Folinic acid</span><span class="kb-alias">Leucovorin</span><span class="kb-alias">Лейковорин (Фолінова кислота)</span></div></td></tr>
-<tr><th>Status</th><td>reviewed 2026-04-26</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/drugs/leucovorin.yaml</code></td></tr>
-<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
-<tr><th>Sources</th><td><span class="kb-chip" title="NCCN Colon / Rectal Cancer"><code>SRC-NCCN-COLON-2025</code></span></td></tr></table>
+<tr><th>Status</th><td>reviewed 2026-04-26 | pending_clinical_signoff</td></tr>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-CRC"><code>DIS-CRC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-ESOPHAGEAL"><code>DIS-ESOPHAGEAL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-GASTRIC"><code>DIS-GASTRIC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-PDAC"><code>DIS-PDAC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-PTCL-NOS"><code>DIS-PTCL-NOS</code></a></span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="NCCN Colon / Rectal Cancer"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1428" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-COLON-2025</code></a></span></td></tr></table>
   <h2>Drug Facts</h2><table class="kb-facts"><tr><th>Class</th><td>Reduced folate (5-formyltetrahydrofolate) — biomodulator</td></tr>
 <tr><th>Mechanism</th><td>Tetrahydrofolate donor that stabilizes the 5-FU/thymidylate-synthase ternary complex, potentiating 5-FU cytotoxicity. NOT a chemotherapy agent itself in this role — it is given alongside 5-FU. Separately, high-dose leucovorin is used as MTX rescue.</td></tr>
 <tr><th>Ukraine registered</th><td>True</td></tr>
@@ -126,7 +195,7 @@
 <tr><th>Ukraine last verified</th><td>2026-04-27</td></tr></table>
   <h2>Notes</h2><p>Most 5-FU regimens require leucovorin for activity modulation; doses are protocol-specific: Mayo Clinic (20 mg/m² IV bolus pre-5FU), Roswell Park (500 mg/m² IV 2-h infusion), de Gramont / FOLFOX / FOLFIRI (200-400 mg/m² IV 2-h infusion Day 1 ± Day 2). Levoleucovorin (l-isomer) is the active enantiomer; half the dose of racemic leucovorin (10 mg/m² Mayo equivalent). In high-dose methotrexate rescue: 15 mg PO/IV q6h starting 24 h post-MTX, continued until MTX level &lt;0.05-0.1 µM (escalate dose if MTX clearance delayed). Critical safety point: leucovorin rescue dose must be matched to MTX level — under-rescue causes fatal MTX toxicity. UA: зареєстрований; НСЗУ-reimbursed for 5-FU modulation in CRC and as MTX rescue. Generic widely available.</p>
   <h2>Used By</h2>
-<h3>Regimens</h3><ul><li><code>REG-5FU-LV-BEV-CKD-MODIFIED</code> - 5-FU + Leucovorin + Bevacizumab (sLV5FU2-Bev, CRC severe CKD CrCl &lt;30 — oxali/cape unsafe) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_5fu_lv_bev_ckd_modified.yaml)</span></li><li><code>REG-BEMARITUZUMAB-MFOLFOX6</code> - Bemarituzumab + mFOLFOX6 (FORTITUDE-101) — 1L FGFR2b-overexpressing HER2-non-positive gas... <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_bemarituzumab_mfolfox6.yaml)</span></li><li><code>REG-FLOT</code> - FLOT <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_flot.yaml)</span></li><li><code>REG-FOLFIRI-BEV</code> - FOLFIRI + Bevacizumab (or ± cetuximab if RAS-WT left-sided) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_folfiri_bev.yaml)</span></li><li><code>REG-FOLFIRINOX</code> - FOLFIRINOX <span class="kb-muted">(knowledge_base/hosted/content/regimens/folfirinox.yaml)</span></li><li><code>REG-FOLFOX</code> - FOLFOX (mFOLFOX6) <span class="kb-muted">(knowledge_base/hosted/content/regimens/folfox.yaml)</span></li><li><code>REG-FOLFOX-BEV</code> - FOLFOX + Bevacizumab <span class="kb-muted">(knowledge_base/hosted/content/regimens/folfox_bevacizumab.yaml)</span></li><li><code>REG-FOLFOX-CETUX</code> - FOLFOX + Cetuximab <span class="kb-muted">(knowledge_base/hosted/content/regimens/folfox_cetuximab.yaml)</span></li><li><code>REG-FOLFOX-NIVO</code> - FOLFOX + Nivolumab <span class="kb-muted">(knowledge_base/hosted/content/regimens/folfox_nivolumab.yaml)</span></li><li><code>REG-FOLFOXIRI-BEV</code> - FOLFOXIRI + Bevacizumab <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_folfoxiri_bev.yaml)</span></li><li><code>REG-MFOLFIRINOX</code> - mFOLFIRINOX (modified FOLFIRINOX, PRODIGE-24 protocol) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_mfolfirinox.yaml)</span></li><li><code>REG-NAL-IRI-5FU-LV-PDAC</code> - Nal-IRI + 5-FU/LV (PDAC, 2L nanoliposomal irinotecan) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nal_iri_5fu_lv_pdac.yaml)</span></li><li><code>REG-NALIRIFOX</code> - NALIRIFOX <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nalirifox.yaml)</span></li><li><code>REG-PRALATREXATE-PTCL</code> - Pralatrexate 30 mg/m² IV weekly × 6 of 7-week cycle (PROPEL schedule) — r/r PTCL <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_pralatrexate_ptcl.yaml)</span></li><li><code>REG-ZOLBETUXIMAB-CHEMO</code> - Zolbetuximab + mFOLFOX6 (SPOTLIGHT) — 1L CLDN18.2-positive HER2-negative gastric/GEJ <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_zolbetuximab_chemo.yaml)</span></li></ul>
+<h3>Regimens</h3><ul><li><code>REG-5FU-LV-BEV-CKD-MODIFIED</code> - 5-FU + Leucovorin + Bevacizumab (sLV5FU2-Bev, CRC severe CKD CrCl &lt;30 — oxali/cape unsafe)</li><li><code>REG-BEMARITUZUMAB-MFOLFOX6</code> - Bemarituzumab + mFOLFOX6 (FORTITUDE-101) — 1L FGFR2b-overexpressing HER2-non-positive gas...</li><li><code>REG-FLOT</code> - FLOT</li><li><code>REG-FOLFIRI-BEV</code> - FOLFIRI + Bevacizumab (or ± cetuximab if RAS-WT left-sided)</li><li><code>REG-FOLFIRINOX</code> - FOLFIRINOX</li><li><code>REG-FOLFOX</code> - FOLFOX (mFOLFOX6)</li><li><code>REG-FOLFOX-BEV</code> - FOLFOX + Bevacizumab</li><li><code>REG-FOLFOX-CETUX</code> - FOLFOX + Cetuximab</li><li><code>REG-FOLFOX-NIVO</code> - FOLFOX + Nivolumab</li><li><code>REG-FOLFOXIRI-BEV</code> - FOLFOXIRI + Bevacizumab</li><li><code>REG-MFOLFIRINOX</code> - mFOLFIRINOX (modified FOLFIRINOX, PRODIGE-24 protocol)</li><li><code>REG-NAL-IRI-5FU-LV-PDAC</code> - Nal-IRI + 5-FU/LV (PDAC, 2L nanoliposomal irinotecan)</li><li><code>REG-NALIRIFOX</code> - NALIRIFOX</li><li><code>REG-PRALATREXATE-PTCL</code> - Pralatrexate 30 mg/m² IV weekly × 6 of 7-week cycle (PROPEL schedule) — r/r PTCL</li><li><code>REG-ZOLBETUXIMAB-CHEMO</code> - Zolbetuximab + mFOLFOX6 (SPOTLIGHT) — 1L CLDN18.2-positive HER2-negative gastric/GEJ</li></ul>
 </main>
 </body>
 </html>

@@ -1,24 +1,26 @@
 id: RF-CLL-HIGH-RISK
-definition: "CLL with high-risk genetics: TP53 mutation OR del(17p) OR IGHV-unmutated OR complex karyotype (≥3 abnormalities)"
-definition_ua: "ХЛЛ з цитогенетикою високого ризику: мутація TP53 АБО del(17p) АБО IGHV-unmutated АБО комплексний каріотип (≥3 аномалії)"
+definition: "CLL with high-risk genetics: TP53 mutation OR del(17p) OR IGHV-unmutated OR complex karyotype
+  (≥3 abnormalities)"
+definition_ua: "ХЛЛ з цитогенетикою високого ризику: мутація TP53 АБО del(17p) АБО IGHV-unmutated АБО
+  комплексний каріотип (≥3 аномалії)"
 
 trigger:
   type: biomarker
   any_of:
-    - finding: "BIO-CLL-HIGH-RISK-GENETICS"
-      value: "positive"
-    - finding: "BIO-TP53-MUTATION"
-      value: "positive"
-    - finding: "BIO-IGHV-MUTATIONAL-STATUS"
-      value: "unmutated"
-    - finding: "tp53_mutation"
-      value: true
-    - finding: "del_17p"
-      value: true
-    - finding: "ighv_unmutated"
-      value: true
-    - finding: "complex_karyotype"
-      value: true
+  - finding: "BIO-CLL-HIGH-RISK-GENETICS"
+    value: "positive"
+  - finding: "BIO-TP53-MUTATION"
+    value: "positive"
+  - finding: "BIO-IGHV-MUTATIONAL-STATUS"
+    value: "unmutated"
+  - finding: "tp53_mutation"
+    value: true
+  - finding: "del_17p"
+    value: true
+  - finding: "ighv_unmutated"
+    value: true
+  - finding: "complex_karyotype"
+    value: true
 
 clinical_direction: intensify
 
@@ -35,6 +37,11 @@ notes: >
   contraindicates chemoimmunotherapy (FCR/BR). High-risk CLL must NEVER
   receive chemoimmuno 1L — survival impact substantial.
 notes_ua: >
-  Triggers preference for fixed-duration венетоклакс+обінутузумаб (CLL14) over BTKi continuous in some patient profiles, AND absolutely contraindicates хіміоімунотерапія (FCR/BR). високого ризику CLL must NEVER receive chemoimmuno 1L — виживаність impact substantial.
+  TP53-дефектний/del17p ХЛЛ НІКОЛИ не повинен отримувати хімпоімунотерапію (FCR/BR) — відповіді рідкісні
+  та короткочасні. Ібрутиніб або акалабрутиніб (BTKi) або фіксована тривалість венетоклакс+обінутузумаб
+  (CLL14) є прийнятними. Незмінений IGHV → перевага BTKi безперервної терапії; del11q → BTKi перевага
+  над FCR за даними CLL8. IGHV-мутований без TP53/del17p: FCR або венетоклакс+ритуксимаб (MURANO) є варіантами.
+  Клональна еволюція під BTKi (мутація BTK C481, PLCG2) → перехід на венетоклакс.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

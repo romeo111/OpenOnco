@@ -1,15 +1,17 @@
 id: RF-ATLL-ORGAN-DYSFUNCTION
-definition: "Hypercalcemia (Ca >12 mg/dL) at diagnosis — hallmark of aggressive ATLL; requires bisphosphonate/calcitonin urgently and predicts aggressive subtype regardless of WBC."
-definition_ua: "Гіперкальціємія (Ca >12 мг/дл) на діагнозі — маркер агресивної ATLL; потребує бісфосфонат/кальцитонін терміново і передбачає агресивний підтип незалежно від WBC."
+definition: "Hypercalcemia (Ca >12 mg/dL) at diagnosis — hallmark of aggressive ATLL; requires bisphosphonate/calcitonin
+  urgently and predicts aggressive subtype regardless of WBC."
+definition_ua: "Гіперкальціємія (Ca >12 мг/дл) на діагнозі — маркер агресивної ATLL; потребує бісфосфонат/кальцитонін
+  терміново і передбачає агресивний підтип незалежно від WBC."
 
 trigger:
   type: lab_value
   any_of:
-    - finding: "calcium_mg_dl"
-      threshold: 12
-      comparator: ">"
-    - finding: "atll_hypercalcemia"
-      value: true
+  - finding: "calcium_mg_dl"
+    threshold: 12
+    comparator: ">"
+  - finding: "atll_hypercalcemia"
+    value: true
 
 
 clinical_direction: intensify
@@ -21,15 +23,20 @@ relevant_diseases: [DIS-ATLL]
 shifts_algorithm: [ALGO-ATLL-1L]
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-PTCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-PTCL-2024
 
 last_reviewed: "2026-04-25"
 draft: false
 
 notes: >
-  Hypercalcemia in ATLL is paraneoplastic (RANKL-driven by HTLV-1+ T cells) — its presence overrides Shimoyama subtyping toward aggressive variant; AZT+IFN-α inadequate. Immediate hypercalcemia management + aggressive chemo (mLSG-15 / EPOCH-like) standard.
+  Hypercalcemia in ATLL is paraneoplastic (RANKL-driven by HTLV-1+ T cells) — its presence overrides Shimoyama
+  subtyping toward aggressive variant; AZT+IFN-α inadequate. Immediate hypercalcemia management + aggressive
+  chemo (mLSG-15 / EPOCH-like) standard.
 notes_ua: >
-  Hypercalcemia in ATLL is paraneoplastic (RANKL-driven by HTLV-1+ T cells) — its presence overrides Shimoyama subtyping toward агресивний варіант; AZT+IFN-α inadequate. Immediate hypercalcemia management + агресивний chemo (mLSG-15 / EPOCH-like) стандарт.
+  Гіперкальціємія при ATLL є паранеопластичною (RANKL-опосередкованою HTLV-1+ Т-клітинами) — її наявність
+  переважає над підтипізацією за Shimoyama до агресивного варіанта; AZT+IFN-α є недостатнім. Невідкладне
+  лікування гіперкальціємії + агресивна хіміотерапія (mLSG-15 / EPOCH-подібна) є стандартом.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

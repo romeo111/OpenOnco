@@ -1,15 +1,18 @@
 id: RF-APL-HIGH-RISK-BIOLOGY
-definition: "APL high-risk by Sanz score: presenting WBC >10 K/μL — requires anthracycline addition (idarubicin) to ATRA + ATO (or AIDA-style) rather than chemo-free ATRA + ATO"
-definition_ua: "Гострий промієлоцитарний лейкоз високого ризику за Санцем: WBC при дебюті >10 К/мкл — потребує додавання антрацикліну (ідарубіцину) до ATRA + ATO (або схема AIDA) замість безхіміотерапевтичної ATRA + ATO"
+definition: "APL high-risk by Sanz score: presenting WBC >10 K/μL — requires anthracycline addition (idarubicin)
+  to ATRA + ATO (or AIDA-style) rather than chemo-free ATRA + ATO"
+definition_ua: "Гострий промієлоцитарний лейкоз високого ризику за Санцем: WBC при дебюті >10 К/мкл —
+  потребує додавання антрацикліну (ідарубіцину) до ATRA + ATO (або схема AIDA) замість безхіміотерапевтичної
+  ATRA + ATO"
 
 trigger:
   type: composite
   any_of:
-    - finding: "wbc_k_ul"
-      threshold: 10
-      comparator: ">"
-    - finding: "apl_sanz_risk"
-      value: "high"
+  - finding: "wbc_k_ul"
+    threshold: 10
+    comparator: ">"
+  - finding: "apl_sanz_risk"
+    value: "high"
 
 clinical_direction: intensify
 
@@ -17,14 +20,14 @@ severity: critical
 priority: 100
 category: high-risk-biology
 relevant_diseases:
-  - DIS-APL
+- DIS-APL
 shifts_algorithm:
-  - ALGO-APL-1L
+- ALGO-APL-1L
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-APL-2019
-  - SRC-APL0406-LOCOCO-2013
+- SRC-NCCN-AML-2025
+- SRC-ELN-APL-2019
+- SRC-APL0406-LOCOCO-2013
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -35,6 +38,11 @@ notes: >
   ATRA + ATO + idarubicin is preferred if ATO available.
   STUB — requires clinical co-lead signoff.
 notes_ua: >
-  Sanz risk: low (WBC ≤10 + plt >40), intermediate (WBC ≤10 + plt ≤40), high (WBC >10). високого ризику patients NOT придатний для chemo-free ATRA + ATO (APL0406 дослідження enrolled only low/intermediate). ATRA + ATO + idarubicin OR classic AIDA (ATRA + idarubicin) are accepted високого ризику options; ATRA + ATO + idarubicin is переважний if ATO available. STUB — requires clinical co-lead signoff.
+  Ризик за Санцем: низький (WBC ≤10 + тромбоцити >40), проміжний (WBC ≤10 + тромбоцити ≤40), високий (WBC
+  >10). Пацієнти високого ризику НЕ є придатними для безхіміотерапевтичної ATRA + ATO (дослідження APL0406
+  включало лише низький/проміжний ризик). ATRA + ATO + ідарубіцин АБО класична AIDA (ATRA + ідарубіцин)
+  є прийнятними варіантами для високого ризику; ATRA + ATO + ідарубіцин є переважною при наявності ATO.
+  СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>EGFR mutation status (NSCLC actionable) - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="EGFR mutation status (NSCLC actionable) - OpenOnco">
 <meta property="og:description" content="EGFR mutation status (NSCLC actionable): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/biomarkers/bio-egfr-mutation.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EGFR mutation status (NSCLC actionable) - OpenOnco">
 <meta name="twitter:description" content="EGFR mutation status (NSCLC actionable): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"EGFR mutation status (NSCLC actionable) - OpenOnco","description":"EGFR mutation status (NSCLC actionable): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-egfr-mutation.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-egfr-mutation.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"EGFR mutation status (NSCLC actionable) - OpenOnco","description":"EGFR mutation status (NSCLC actionable): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-egfr-mutation.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-egfr-mutation.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -116,8 +186,7 @@
 <tr><th>Type</th><td>Biomarker</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">Статус мутацій EGFR (NSCLC actionable)</span></div></td></tr>
 <tr><th>Status</th><td>pending_clinical_signoff</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/biomarkers/bio_egfr_mutation.yaml</code></td></tr>
-<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-GBM"><code>DIS-GBM</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-NSCLC"><code>DIS-NSCLC</code></a></span></td></tr>
 <tr><th>Sources</th><td><span class="kb-muted">None declared</span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>gene_mutation</td></tr>
 <tr><th>Mutation details</th><td>{&quot;functional_impact&quot;: &quot;Constitutive EGFR signaling activation; T790M confers gefitinib/erlotinib resistance&quot;, &quot;gene&quot;: &quot;EGFR&quot;, &quot;hotspots&quot;: [&quot;exon 19 deletion (Δ746-750 most common)&quot;, &quot;L858R&quot;, &quot;L861Q&quot;, &quot;G719X&quot;, &quot;S768I&quot;, &quot;T790M (resistance)&quot;, &quot;exon 20 insertion (variable)&quot;], &quot;type&quot;: &quot;activating + resistance&quot;}</td></tr>
@@ -125,14 +194,15 @@
 <tr><th>Related biomarkers</th><td><span class="kb-muted">None declared</span></td></tr></table>
   <h2>Notes</h2><p>NCCN 2025 mandates universal EGFR testing for advanced non-squamous NSCLC.</p>
   <h2>Used By</h2>
-<h3>Actionability</h3><ul><li><code>BMA-EGFR-C797S-NSCLC</code> - EGFR C797S is the principal acquired resistance mutation to osimertinib. Cis-configuratio... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_egfr_c797s_nsclc.yaml)</span></li><li><code>BMA-EGFR-EX19DEL-NSCLC</code> - EGFR exon 19 deletion in advanced NSCLC: osimertinib 1L improves OS vs first-generation E... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_egfr_ex19del_nsclc.yaml)</span></li><li><code>BMA-EGFR-EX20INS-NSCLC</code> - EGFR exon 20 insertions (excluding A763_Y764insFQEA) are insensitive to classical EGFR-TK... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_egfr_ex20ins_nsclc.yaml)</span></li><li><code>BMA-EGFR-G719X-NSCLC</code> - EGFR exon 18 G719X (G719A/C/S) is an &quot;uncommon&quot; sensitizing mutation (~3% of EGFR-mut NSC... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_egfr_g719x_nsclc.yaml)</span></li><li><code>BMA-EGFR-L858R-NSCLC</code> - EGFR L858R in advanced NSCLC: osimertinib 1L is standard (FLAURA); L858R historically sho... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_egfr_l858r_nsclc.yaml)</span></li><li><code>BMA-EGFR-MUTATION-GBM</code> - EGFR amplification (~40%) and EGFRvIII variant (~25%) are common in glioblastoma but no t... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_egfr_mutation_gbm.yaml)</span></li><li><code>BMA-EGFR-T790M-NSCLC</code> - EGFR T790M is the dominant acquired-resistance mechanism after 1st/2nd-gen EGFR-TKI (gefi... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_egfr_t790m_nsclc.yaml)</span></li></ul>
-<h3>Algorithms</h3><ul><li><code>ALGO-NSCLC-METASTATIC-2L</code> - ALGO-NSCLC-METASTATIC-2L <span class="kb-muted">(knowledge_base/hosted/content/algorithms/algo_nsclc_metastatic_2l.yaml)</span></li></ul>
-<h3>Biomarker</h3><ul><li><code>BIO-EGFR-C797S</code> - EGFR C797S resistance mutation <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_egfr_c797s.yaml)</span></li><li><code>BIO-EGFR-EXON19-DELETION</code> - EGFR Exon 19 deletion <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_egfr_exon19_deletion.yaml)</span></li><li><code>BIO-EGFR-EXON20-INSERTION</code> - EGFR Exon 20 insertion <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_egfr_exon20_insertion.yaml)</span></li><li><code>BIO-EGFR-L858R</code> - EGFR L858R mutation <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_egfr_l858r.yaml)</span></li><li><code>BIO-EGFR-T790M</code> - EGFR T790M (acquired resistance / gatekeeper) <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_egfr_t790m.yaml)</span></li><li><code>BIO-MET</code> - MET alterations (exon 14 skipping or amplification) <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_met.yaml)</span></li><li><code>BIO-MET-AMPLIFICATION</code> - MET amplification (high-level copy-number gain) <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_met_amplification.yaml)</span></li></ul>
-<h3>Diseases</h3><ul><li><code>DIS-HNSCC</code> - Head and neck squamous cell carcinoma (HNSCC) <span class="kb-muted">(knowledge_base/hosted/content/diseases/hnscc.yaml)</span></li></ul>
-<h3>Indications</h3><ul><li><code>IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB</code> - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_2l_docetaxel_ramucirumab.yaml)</span></li><li><code>IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB</code> - IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_2l_egfr_ex20ins_amivantamab.yaml)</span></li><li><code>IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ</code> - IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_2l_egfr_post_osi_ami_laz.yaml)</span></li><li><code>IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL</code> - IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_2l_pdl1_post_io_docetaxel.yaml)</span></li><li><code>IND-NSCLC-3L-OSI-FAILURE-AMI</code> - IND-NSCLC-3L-OSI-FAILURE-AMI <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_3l_osi_failure_ami.yaml)</span></li><li><code>IND-NSCLC-ADJUVANT-ATEZO-PDL1POS</code> - IND-NSCLC-ADJUVANT-ATEZO-PDL1POS <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_adjuvant_atezo_pdl1pos.yaml)</span></li><li><code>IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO</code> - IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_driver_neg_met_1l_nivo_ipi_chemo.yaml)</span></li><li><code>IND-NSCLC-EGFR-1L-AMI-LAZ</code> - IND-NSCLC-EGFR-1L-AMI-LAZ <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_egfr_1l_ami_laz.yaml)</span></li><li><code>IND-NSCLC-EGFR-1L-OSI-CHEMO</code> - IND-NSCLC-EGFR-1L-OSI-CHEMO <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_egfr_1l_osi_chemo.yaml)</span></li><li><code>IND-NSCLC-EGFR-MAINT-OSIMERTINIB</code> - IND-NSCLC-EGFR-MAINT-OSIMERTINIB <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_egfr_maint_osimertinib.yaml)</span></li><li><code>IND-NSCLC-EGFR-MUT-MET-1L</code> - IND-NSCLC-EGFR-MUT-MET-1L <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_egfr_mut_met_1l.yaml)</span></li><li><code>IND-NSCLC-ELDERLY-CARBO-PEM-MOD</code> - IND-NSCLC-ELDERLY-CARBO-PEM-MOD <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_elderly_carbo_pem_mod.yaml)</span></li><li><code>IND-NSCLC-PERIOPERATIVE-PEMBRO</code> - IND-NSCLC-PERIOPERATIVE-PEMBRO <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_perioperative_pembro.yaml)</span></li><li><code>IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO</code> - IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO <span class="kb-muted">(knowledge_base/hosted/content/indications/ind_nsclc_tmb_high_met_1l_pembro_mono.yaml)</span></li></ul>
-<h3>Questionnaires</h3><ul><li><code>QUEST-NSCLC-1L-STUB</code> - Non-small cell lung cancer — first line <span class="kb-muted">(knowledge_base/hosted/content/questionnaires/quest_nsclc_1l.yaml)</span></li></ul>
-<h3>Red flag</h3><ul><li><code>RF-NSCLC-HIGH-RISK-BIOLOGY</code> - Actionable molecular driver detected (EGFR / ALK / ROS1 / KRAS G12C / BRAF V600E / MET ex... <span class="kb-muted">(knowledge_base/hosted/content/redflags/rf_nsclc_high_risk_biology.yaml)</span></li></ul>
-<h3>Tests</h3><ul><li><code>TEST-NSCLC-NGS-PANEL</code> - NSCLC comprehensive NGS panel (DNA + RNA fusion) <span class="kb-muted">(knowledge_base/hosted/content/tests/test_nsclc_ngs_panel.yaml)</span></li></ul>
+<h3>Actionability</h3><ul><li><code>BMA-EGFR-C797S-NSCLC</code> - EGFR C797S is the principal acquired resistance mutation to osimertinib. Cis-configuratio...</li><li><code>BMA-EGFR-EX19DEL-NSCLC</code> - EGFR exon 19 deletion in advanced NSCLC: osimertinib 1L improves OS vs first-generation E...</li><li><code>BMA-EGFR-EX20INS-NSCLC</code> - EGFR exon 20 insertions (excluding A763_Y764insFQEA) are insensitive to classical EGFR-TK...</li><li><code>BMA-EGFR-G719X-NSCLC</code> - EGFR exon 18 G719X (G719A/C/S) is an &quot;uncommon&quot; sensitizing mutation (~3% of EGFR-mut NSC...</li><li><code>BMA-EGFR-L858R-NSCLC</code> - EGFR L858R in advanced NSCLC: osimertinib 1L is standard (FLAURA); L858R historically sho...</li><li><code>BMA-EGFR-MUTATION-GBM</code> - EGFR amplification (~40%) and EGFRvIII variant (~25%) are common in glioblastoma but no t...</li><li><code>BMA-EGFR-T790M-NSCLC</code> - EGFR T790M is the dominant acquired-resistance mechanism after 1st/2nd-gen EGFR-TKI (gefi...</li></ul>
+<h3>Algorithms</h3><ul><li><code>ALGO-NSCLC-METASTATIC-2L</code> - ALGO-NSCLC-METASTATIC-2L</li></ul>
+<h3>Biomarker</h3><ul><li><code>BIO-EGFR-C797S</code> - EGFR C797S resistance mutation</li><li><code>BIO-EGFR-EXON19-DELETION</code> - EGFR Exon 19 deletion</li><li><code>BIO-EGFR-EXON20-INSERTION</code> - EGFR Exon 20 insertion</li><li><code>BIO-EGFR-L858R</code> - EGFR L858R mutation</li><li><code>BIO-EGFR-T790M</code> - EGFR T790M (acquired resistance / gatekeeper)</li><li><code>BIO-MET</code> - MET alterations (exon 14 skipping or amplification)</li><li><code>BIO-MET-AMPLIFICATION</code> - MET amplification (high-level copy-number gain)</li></ul>
+<h3>Diseases</h3><ul><li><code>DIS-HNSCC</code> - Head and neck squamous cell carcinoma (HNSCC)</li></ul>
+<h3>Indications</h3><ul><li><code>IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB</code> - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB</li><li><code>IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB</code> - IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB</li><li><code>IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ</code> - IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ</li><li><code>IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL</code> - IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL</li><li><code>IND-NSCLC-3L-OSI-FAILURE-AMI</code> - IND-NSCLC-3L-OSI-FAILURE-AMI</li><li><code>IND-NSCLC-ADJUVANT-ATEZO-PDL1POS</code> - IND-NSCLC-ADJUVANT-ATEZO-PDL1POS</li><li><code>IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO</code> - IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO</li><li><code>IND-NSCLC-EGFR-1L-AMI-LAZ</code> - IND-NSCLC-EGFR-1L-AMI-LAZ</li><li><code>IND-NSCLC-EGFR-1L-OSI-CHEMO</code> - IND-NSCLC-EGFR-1L-OSI-CHEMO</li><li><code>IND-NSCLC-EGFR-MAINT-OSIMERTINIB</code> - IND-NSCLC-EGFR-MAINT-OSIMERTINIB</li><li><code>IND-NSCLC-EGFR-MUT-MET-1L</code> - IND-NSCLC-EGFR-MUT-MET-1L</li><li><code>IND-NSCLC-ELDERLY-CARBO-PEM-MOD</code> - IND-NSCLC-ELDERLY-CARBO-PEM-MOD</li><li><code>IND-NSCLC-PERIOPERATIVE-PEMBRO</code> - IND-NSCLC-PERIOPERATIVE-PEMBRO</li><li><code>IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO</code> - IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO</li></ul>
+<h3>Questionnaires</h3><ul><li><code>QUEST-NSCLC-1L-STUB</code> - Non-small cell lung cancer — first line</li></ul>
+<h3>Red flag</h3><ul><li><code>RF-NSCLC-HIGH-RISK-BIOLOGY</code> - Actionable molecular driver detected (EGFR / ALK / ROS1 / KRAS G12C / BRAF V600E / MET ex...</li></ul>
+<h3>Sources</h3><ul><li><code>SRC-NCIT</code> - NCI Thesaurus — controlled cancer vocabulary</li></ul>
+<h3>Tests</h3><ul><li><code>TEST-NSCLC-NGS-PANEL</code> - NSCLC comprehensive NGS panel (DNA + RNA fusion)</li></ul>
 </main>
 </body>
 </html>

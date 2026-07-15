@@ -1,28 +1,30 @@
 id: RF-DLBCL-HIGH-IPI
-definition: "DLBCL with International Prognostic Index ≥2 — selects intensified Pola-R-CHP over R-CHOP per POLARIX evidence"
-definition_ua: "DLBCL з міжнародним прогностичним індексом IPI ≥2 — обирає інтенсифікований Pola-R-CHP замість R-CHOP за даними POLARIX"
+definition: "DLBCL with International Prognostic Index ≥2 — selects intensified Pola-R-CHP over R-CHOP
+  per POLARIX evidence"
+definition_ua: "DLBCL з міжнародним прогностичним індексом IPI ≥2 — обирає інтенсифікований Pola-R-CHP
+  замість R-CHOP за даними POLARIX"
 
 trigger:
   type: composite_score
   any_of:
-    - finding: "ipi_score"
-      threshold: 2
-      comparator: ">="
-    - finding: "high_ipi"
-      value: true
+  - finding: "ipi_score"
+    threshold: 2
+    comparator: ">="
+  - finding: "high_ipi"
+    value: true
 
 clinical_direction: intensify
 
 category: risk-score
 priority: 60
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm:
-  - ALGO-DLBCL-1L
+- ALGO-DLBCL-1L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -32,6 +34,10 @@ notes: >
   access constraint in Ukraine — polatuzumab not НСЗУ-reimbursed; flag
   funding pathway in Plan.
 notes_ua: >
-  Per POLARIX дослідження: in IPI ≥2 newly-diagnosed DLBCL, Pola-R-CHP showed перевершує PFS (~6.5% absolute at 2 years) vs R-CHOP. профіль токсичності співставний except higher периферична нейропатія with polatuzumab. Major access constraint in Ukraine — polatuzumab not НСЗУ-відшкодовуваний; flag funding pathway in Plan.
+  Відповідно до дослідження POLARIX: при IPI ≥2 вперше діагностованій DLBCL, Pola-R-CHP показав перевагу
+  ЗВБп (~6.5% абсолютних на 2 роки) проти R-CHOP. Профіль токсичності співставний, крім вищої периферичної
+  нейропатії при polatuzumab. Суттєве обмеження доступу в Україні — polatuzumab не відшкодовується НСЗУ;
+  необхідно позначити шлях фінансування в Плані.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

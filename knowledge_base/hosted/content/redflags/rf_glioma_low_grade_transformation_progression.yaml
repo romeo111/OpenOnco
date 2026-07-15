@@ -1,18 +1,22 @@
 id: RF-GLIOMA-LOW-GRADE-TRANSFORMATION-PROGRESSION
-definition: "Low-grade glioma with transformation to anaplastic (grade 3) or glioblastoma (grade 4): new contrast-enhancing lesion, rapid growth on MRI, new neurological deficit, biopsy showing higher-grade features"
-definition_ua: "Гліома низького ступеня з трансформацією в анапластичну (grade 3) або гліобластому (grade 4): нове контраст-підсилене вогнище, швидкий ріст на МРТ, новий неврологічний дефіцит, біопсія з ознаками вищого ступеня"
+definition: "Low-grade glioma with transformation to anaplastic (grade 3) or glioblastoma (grade 4): new
+  contrast-enhancing lesion, rapid growth on MRI, new neurological deficit, biopsy showing higher-grade
+  features"
+definition_ua: "Гліома низького ступеня з трансформацією в анапластичну (grade 3) або гліобластому (grade
+  4): нове контраст-підсилене вогнище, швидкий ріст на МРТ, новий неврологічний дефіцит, біопсія з ознаками
+  вищого ступеня"
 
 trigger:
   type: composite
   any_of:
-    - finding: "new_contrast_enhancement_mri"
-      value: true
-    - finding: "rapid_volume_growth_mri"
-      value: true
-    - finding: "biopsy_higher_grade_features"
-      value: true
-    - finding: "new_focal_neurologic_deficit"
-      value: true
+  - finding: "new_contrast_enhancement_mri"
+    value: true
+  - finding: "rapid_volume_growth_mri"
+    value: true
+  - finding: "biopsy_higher_grade_features"
+    value: true
+  - finding: "new_focal_neurologic_deficit"
+    value: true
 
 clinical_direction: intensify
 
@@ -20,13 +24,13 @@ severity: critical
 priority: 20
 category: transformation-progression
 relevant_diseases:
-  - DIS-GLIOMA-LOW-GRADE
+- DIS-GLIOMA-LOW-GRADE
 shifts_algorithm:
-  - ALGO-GLIOMA-LGG-1L
+- ALGO-GLIOMA-LGG-1L
 
 sources:
-  - SRC-NCCN-CNS-2025
-  - SRC-EANO-GBM-2024
+- SRC-NCCN-CNS-2025
+- SRC-EANO-GBM-2024
 
 last_reviewed: "2026-04-27"
 draft: true
@@ -41,6 +45,11 @@ notes: >
   INTENSIFY — shifts to GBM algorithm. STUB — requires clinical
   co-lead signoff.
 notes_ua: >
-  трансформація rate of LGG to higher grade: ~50-70% over 5-10 years. Per EANO 2024 + NCCN-CNS: трансформація triggers re-resection + re-біопсія, then GBM-like Stupp protocol (RT + concurrent and ад'ювантний TMZ); IDH-mut трансформований glioma still has slightly краще OS than de novo IDH-wt GBM but managed similarly. Direction INTENSIFY — shifts to GBM algorithm. STUB — requires clinical co-lead signoff.
+  Частота трансформації LGG до вищого grade: ~50-70% за 5-10 років. За EANO 2024 + NCCN-CNS: трансформація
+  ініціює повторну резекцію + повторну біопсію, потім GBM-подібний протокол Stupp (RT + конкурентний та
+  ад'ювантний TMZ); IDH-мут трансформована гліома все ще має дещо кращу ЗВ, ніж de novo IDH-wt GBM, але
+  ведеться аналогічно. Напрямок ІНТЕНСИФІКУВАТИ — переключає на алгоритм GBM. СТАБ — потребує підпису
+  клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

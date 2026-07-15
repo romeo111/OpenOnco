@@ -1,13 +1,15 @@
 id: RF-ATC-BRAF-V600E-ACTIONABLE
-definition: "Anaplastic thyroid carcinoma with BRAF V600E mutation (~25-50% of ATC) — dabrafenib + trametinib produces dramatic responses (ROAR ORR ~70%); preferred over palliative chemotherapy."
-definition_ua: "Анапластична карцинома з мутацією BRAF V600E (~25-50% ATC) — дабрафеніб + траметиніб дає драматичні відповіді (ROAR ORR ~70%); перевага над паліативною хіміотерапією."
+definition: "Anaplastic thyroid carcinoma with BRAF V600E mutation (~25-50% of ATC) — dabrafenib + trametinib
+  produces dramatic responses (ROAR ORR ~70%); preferred over palliative chemotherapy."
+definition_ua: "Анапластична карцинома з мутацією BRAF V600E (~25-50% ATC) — дабрафеніб + траметиніб дає
+  драматичні відповіді (ROAR ORR ~70%); перевага над паліативною хіміотерапією."
 
 trigger:
   type: composite_clinical
   all_of:
-    - finding: "BRAF_V600E"
-      threshold: true
-      comparator: "=="
+  - finding: "BRAF_V600E"
+    threshold: true
+    comparator: "=="
 
 clinical_direction: intensify
 severity: major
@@ -18,19 +20,27 @@ relevant_diseases: [DIS-THYROID-ANAPLASTIC]
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-THYROID-2025
-  - SRC-ATA-ATC-2021
+- SRC-NCCN-THYROID-2025
+- SRC-ATA-ATC-2021
 
 last_reviewed: '2026-04-30'
 draft: false
 
 reviewer_signoffs:
-  - reviewer_id: REV-DENISOVA-OLGA
-    timestamp: "2026-04-30T13:30:00Z"
-    rationale: "Reviewed clinical correctness of trigger and intensify-direction recommendation; ATA-ATC-2021 + NCCN-Thyroid-2025 jointly support BRAF V600E actionability via dabrafenib + trametinib (ROAR sub-cohort)."
+- reviewer_id: REV-DENISOVA-OLGA
+  timestamp: "2026-04-30T13:30:00Z"
+  rationale: "Reviewed clinical correctness of trigger and intensify-direction recommendation; ATA-ATC-2021
+    + NCCN-Thyroid-2025 jointly support BRAF V600E actionability via dabrafenib + trametinib (ROAR sub-cohort)."
 
 notes: >
   ATC universally aggressive (median OS ~5-6 mo with chemo alone).
   BRAF V600E found in 25-50%; FDA-approved dabrafenib + trametinib
   (ROAR sub-cohort, Subbiah JCO 2018) — ORR ~69%. Time-critical: BRAF
   testing must return within days of diagnosis.
+notes_ua: >
+  АТК є універсально агресивним захворюванням (медіана ЗВ ~5–6 міс лише з хіміотерапією). BRAF V600E виявляється
+  у 25–50%; FDA-схвалена комбінація дабрафеніб + траметиніб (підгрупа ROAR, Subbiah JCO 2018) — ORR ~69%.
+  Час-критичне: тестування BRAF має бути отримано протягом кількох днів від встановлення діагнозу.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

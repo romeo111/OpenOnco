@@ -25,21 +25,21 @@ definition_ua: >
 trigger:
   type: biomarker
   any_of:
-    - finding: "aml_mrd_positive"
-      value: true
-    - finding: "aml_mrd_status"
-      value: "positive"
-    - finding: "aml_mrd_post_induction"
-      value: "positive"
-    - finding: "mfc_mrd_percent"
-      threshold: 0.1
-      comparator: ">="
-    - finding: "molecular_mrd_npm1"
-      threshold: 0.001
-      comparator: ">="
-    - finding: "wt1_transcript_pb"
-      threshold: 0.0025
-      comparator: ">"
+  - finding: "aml_mrd_positive"
+    value: true
+  - finding: "aml_mrd_status"
+    value: "positive"
+  - finding: "aml_mrd_post_induction"
+    value: "positive"
+  - finding: "mfc_mrd_percent"
+    threshold: 0.1
+    comparator: ">="
+  - finding: "molecular_mrd_npm1"
+    threshold: 0.001
+    comparator: ">="
+  - finding: "wt1_transcript_pb"
+    threshold: 0.0025
+    comparator: ">"
 
 clinical_direction: intensify
 
@@ -48,15 +48,15 @@ priority: 60
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-AML
+- DIS-AML
 shifts_algorithm:
-  - ALGO-AML-1L
-  - ALGO-AML-2L
+- ALGO-AML-1L
+- ALGO-AML-2L
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-AML-2022
-  - SRC-QUAZAR-WEI-2020
+- SRC-NCCN-AML-2025
+- SRC-ELN-AML-2022
+- SRC-QUAZAR-WEI-2020
 
 last_reviewed: "2026-04-27"
 draft: false
@@ -87,3 +87,6 @@ notes_ua: >
   RF співіснує з RF-AML-FLT3-ACTIONABLE (різні осі; FLT3-mut + МЗХ+ =
   сильна показання до alloHCT у CR1 + post-transplant гілтеритиніб
   maintenance за MORPHO).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

@@ -62,11 +62,11 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     assert 'class="kb-info-box"' in kb_home
     assert 'id="kbSearchBtn"' in kb_home
     assert 'id="kbPagination"' in kb_home
-    assert 'class="brand-logo"' in kb_home
+    assert 'class="brand-mini"' in kb_home
     assert 'class="lang-switch"' in kb_home
     assert "<h1>Onco Wiki</h1>" in kb_home
     assert 'href="/diseases.html">Diseases</a>' not in kb_home
-    assert 'href="/ask.html">Tumor board Q</a>' in kb_home
+    assert 'href="/ask.html"' in kb_home  # Tumor Board CTA link
     assert "Source-grounded browser" in kb_home
     assert 'data-kind-key="diseases"' in kb_home
     assert 'data-kind-key="drugs"' in kb_home
@@ -81,11 +81,11 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     uk_kb_home = (wiki_dir / "ukr" / "kb.html").read_text(encoding="utf-8")
     assert 'lang="uk"' in uk_kb_home
     assert 'id="kbPagination"' in uk_kb_home
-    assert 'class="brand-logo"' in uk_kb_home
+    assert 'class="brand-mini"' in uk_kb_home
     assert 'class="lang-switch"' in uk_kb_home
     assert "<h1>Onco Wiki</h1>" in uk_kb_home
     assert 'href="/ukr/diseases.html">Хвороби</a>' not in uk_kb_home
-    assert 'href="/ukr/ask.html">Tumor board Q</a>' in uk_kb_home
+    assert 'href="/ukr/ask.html"' in uk_kb_home  # Туморборд CTA link
     assert "const PAGE_SIZE = 50;" in uk_kb_home
     assert "Браузер, прив’язаний до джерел" in uk_kb_home
     assert ">Шукати</button>" in uk_kb_home

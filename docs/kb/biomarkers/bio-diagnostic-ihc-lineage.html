@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Diagnostic lineage immunohistochemistry marker panel - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="Diagnostic lineage immunohistochemistry marker panel - OpenOnco">
 <meta property="og:description" content="Diagnostic lineage immunohistochemistry marker panel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/biomarkers/bio-diagnostic-ihc-lineage.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Diagnostic lineage immunohistochemistry marker panel - OpenOnco">
 <meta name="twitter:description" content="Diagnostic lineage immunohistochemistry marker panel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Diagnostic lineage immunohistochemistry marker panel - OpenOnco","description":"Diagnostic lineage immunohistochemistry marker panel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-diagnostic-ihc-lineage.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-diagnostic-ihc-lineage.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Diagnostic lineage immunohistochemistry marker panel - OpenOnco","description":"Diagnostic lineage immunohistochemistry marker panel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-diagnostic-ihc-lineage.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-diagnostic-ihc-lineage.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -116,9 +186,8 @@
 <tr><th>Type</th><td>Biomarker</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">AE1/AE3</span><span class="kb-alias">AFP</span><span class="kb-alias">ALK</span><span class="kb-alias">AMACR</span><span class="kb-alias">AR</span><span class="kb-alias">ARID1A</span><span class="kb-alias">ATRX</span><span class="kb-alias">ATRX loss</span><span class="kb-alias">Annexin A1</span><span class="kb-alias">BAP1</span><span class="kb-alias">BAP1 loss</span><span class="kb-alias">BCL2</span><span class="kb-alias">BCL6</span><span class="kb-alias">BRG1</span><span class="kb-alias">BRG1 loss</span><span class="kb-alias">BerEP4</span><span class="kb-alias">CAIX</span><span class="kb-alias">CAM5.2</span><span class="kb-alias">CCND1</span><span class="kb-alias">CD10</span><span class="kb-alias">CD117</span><span class="kb-alias">CD11c</span><span class="kb-alias">CD123</span><span class="kb-alias">CD138</span><span class="kb-alias">CD15</span><span class="kb-alias">CD163</span><span class="kb-alias">CD1a</span><span class="kb-alias">CD2</span><span class="kb-alias">CD20</span><span class="kb-alias">CD23</span><span class="kb-alias">CD3</span><span class="kb-alias">CD30</span><span class="kb-alias">CD31</span><span class="kb-alias">CD34</span><span class="kb-alias">CD4</span><span class="kb-alias">CD45</span><span class="kb-alias">CD5</span><span class="kb-alias">CD56</span><span class="kb-alias">CD68</span><span class="kb-alias">CD7</span><span class="kb-alias">CD79a</span><span class="kb-alias">CD8</span><span class="kb-alias">CDK4</span><span class="kb-alias">CDX2</span><span class="kb-alias">CEA</span><span class="kb-alias">CK AE1/AE3</span><span class="kb-alias">CK19</span><span class="kb-alias">CK20</span><span class="kb-alias">CK5</span><span class="kb-alias">CK5/6</span><span class="kb-alias">CK6</span><span class="kb-alias">CK7</span><span class="kb-alias">CK8/18</span><span class="kb-alias">D2-40</span><span class="kb-alias">DBA44</span><span class="kb-alias">DOG1</span><span class="kb-alias">DPC4</span><span class="kb-alias">Diagnostic lineage IHC markers</span><span class="kb-alias">EBER</span><span class="kb-alias">EBER ISH</span><span class="kb-alias">EMA</span><span class="kb-alias">ER</span><span class="kb-alias">ERG</span><span class="kb-alias">EpCAM</span><span class="kb-alias">FLI1</span><span class="kb-alias">GATA3</span><span class="kb-alias">GCDFP-15</span><span class="kb-alias">GFAP</span><span class="kb-alias">GPC3</span><span class="kb-alias">HMB-45</span><span class="kb-alias">HMB45</span><span class="kb-alias">HNF1-beta</span><span class="kb-alias">HNF1B</span><span class="kb-alias">HPV ISH</span><span class="kb-alias">IDH1 R132H</span><span class="kb-alias">INI1</span><span class="kb-alias">INI1 loss</span><span class="kb-alias">INSM1</span><span class="kb-alias">IRF4</span><span class="kb-alias">KIT</span><span class="kb-alias">Ki-67</span><span class="kb-alias">Ki67</span><span class="kb-alias">LCA</span><span class="kb-alias">MART-1</span><span class="kb-alias">MDM2</span><span class="kb-alias">MITF</span><span class="kb-alias">MOC31</span><span class="kb-alias">MPO</span><span class="kb-alias">MSA</span><span class="kb-alias">MTAP</span><span class="kb-alias">MTAP loss</span><span class="kb-alias">MUC1</span><span class="kb-alias">MUC2</span><span class="kb-alias">MUC5AC</span><span class="kb-alias">MUC6</span><span class="kb-alias">MUM1</span><span class="kb-alias">Melan-A</span><span class="kb-alias">MyoD1</span><span class="kb-alias">NCAM</span><span class="kb-alias">NKX3.1</span><span class="kb-alias">Napsin A</span><span class="kb-alias">OCT3/4</span><span class="kb-alias">OCT4</span><span class="kb-alias">OLIG2</span><span class="kb-alias">P504S</span><span class="kb-alias">PAX5</span><span class="kb-alias">PAX8</span><span class="kb-alias">PLAP</span><span class="kb-alias">PR</span><span class="kb-alias">PRAME</span><span class="kb-alias">PSA</span><span class="kb-alias">PSAP</span><span class="kb-alias">RCC Ma</span><span class="kb-alias">RCC marker</span><span class="kb-alias">S-100</span><span class="kb-alias">S100</span><span class="kb-alias">SALL4</span><span class="kb-alias">SATB2</span><span class="kb-alias">SMA</span><span class="kb-alias">SMAD4</span><span class="kb-alias">SMARCA4</span><span class="kb-alias">SMARCB1</span><span class="kb-alias">SOX10</span><span class="kb-alias">SOX11</span><span class="kb-alias">STAT6</span><span class="kb-alias">TCL1</span><span class="kb-alias">TLE1</span><span class="kb-alias">TRAP</span><span class="kb-alias">TRPS1</span><span class="kb-alias">TTF-1</span><span class="kb-alias">TTF1</span><span class="kb-alias">TdT</span><span class="kb-alias">WT1</span><span class="kb-alias">androgen receptor</span><span class="kb-alias">annexin-1</span><span class="kb-alias">beta catenin</span><span class="kb-alias">beta-catenin</span><span class="kb-alias">beta-hCG</span><span class="kb-alias">calcitonin</span><span class="kb-alias">caldesmon</span><span class="kb-alias">calretinin</span><span class="kb-alias">carbonic anhydrase IX</span><span class="kb-alias">chromogranin</span><span class="kb-alias">chromogranin A</span><span class="kb-alias">claudin-4</span><span class="kb-alias">cyclin D1</span><span class="kb-alias">cytokeratin</span><span class="kb-alias">cytokeratin 20</span><span class="kb-alias">cytokeratin 5/6</span><span class="kb-alias">cytokeratin 7</span><span class="kb-alias">cytokeratin AE1/AE3</span><span class="kb-alias">desmin</span><span class="kb-alias">epithelial membrane antigen</span><span class="kb-alias">estrogen receptor</span><span class="kb-alias">factor VIII</span><span class="kb-alias">glypican-3</span><span class="kb-alias">gross cystic disease fluid protein 15</span><span class="kb-alias">h-caldesmon</span><span class="kb-alias">hCG</span><span class="kb-alias">kappa</span><span class="kb-alias">lambda</span><span class="kb-alias">langerin</span><span class="kb-alias">leukocyte common antigen</span><span class="kb-alias">mammaglobin</span><span class="kb-alias">monoclonal CEA</span><span class="kb-alias">muscle specific actin</span><span class="kb-alias">myeloperoxidase</span><span class="kb-alias">myogenin</span><span class="kb-alias">p16</span><span class="kb-alias">p40</span><span class="kb-alias">p53</span><span class="kb-alias">p63</span><span class="kb-alias">pan CK</span><span class="kb-alias">pan-CK</span><span class="kb-alias">pan-cytokeratin</span><span class="kb-alias">pancytokeratin</span><span class="kb-alias">podoplanin</span><span class="kb-alias">polyclonal CEA</span><span class="kb-alias">progesterone receptor</span><span class="kb-alias">prostate specific antigen</span><span class="kb-alias">prostatic acid phosphatase</span><span class="kb-alias">smooth muscle actin</span><span class="kb-alias">synaptophysin</span><span class="kb-alias">thrombomodulin</span><span class="kb-alias">thyroglobulin</span><span class="kb-alias">thyroid transcription factor-1</span><span class="kb-alias">uroplakin</span><span class="kb-alias">uroplakin II</span><span class="kb-alias">uroplakin III</span><span class="kb-alias">villin</span></div></td></tr>
 <tr><th>Status</th><td>reviewed 2026-05-08</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/biomarkers/bio_diagnostic_ihc_lineage_markers.yaml</code></td></tr>
 <tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
-<tr><th>Sources</th><td><span class="kb-chip" title="Biopsy and Cytology Tests: Special Tests"><code>SRC-ACS-BIOPSY-SPECIAL-TESTS</code></span> <span class="kb-chip" title="HemOnc.org Pathology reference hub"><code>SRC-HEMONC-PATHOLOGY</code></span></td></tr></table>
+<tr><th>Sources</th><td><span class="kb-chip" title="Biopsy and Cytology Tests: Special Tests"><a href="https://www.cancer.org/cancer/diagnosis-staging/tests/biopsy-and-cytology-tests/testing-biopsy-and-cytology-samples-for-cancer/special-tests.html" target="_blank" rel="noopener noreferrer"><code>SRC-ACS-BIOPSY-SPECIAL-TESTS</code></a></span> <span class="kb-chip" title="HemOnc.org Pathology reference hub"><a href="https://hemonc.org/Pathology" target="_blank" rel="noopener noreferrer"><code>SRC-HEMONC-PATHOLOGY</code></a></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>protein_expression_ihc</td></tr>
 <tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Immunohistochemistry or in situ hybridization on FFPE tissue as part of a diagnostic lineage/differentiation panel</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical staining pattern or expression status</span></div></div></td></tr>
 <tr><th>Related biomarkers</th><td><span class="kb-muted">None declared</span></td></tr></table>

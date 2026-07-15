@@ -1657,7 +1657,7 @@ jobs:
 - Not validated against other diagnoses
 
 **Known limitations:**
-- Not modeled: clinical trial matching (requires a separate entity), genetic syndromes (such as germline BRCA), multidisciplinary coordination
+- Not modeled: clinical trial matching (requires a separate entity), ~~genetic syndromes (such as germline BRCA)~~ — *germline-syndrome modeling addressed for the prevention persona by §20 (ratified 2026-05-18); treatment-time germline integration still pending* — multidisciplinary coordination
 - Fine-grained dose modifications — simplified
 - Temporal reasoning (what happens when) — limited
 - Interaction with patient preferences — not yet modeled
@@ -1824,3 +1824,544 @@ lands:
    render fixtures land alongside steps 4-5 in Phase C.
 7. **Done 2026-05-07.** Re-stamped 5 GI diseases as
    `proposal_status: full` and removed the `awaiting_proposal` field.
+
+---
+
+## 20. Prevention extensions (RATIFIED 2026-05-18)
+
+**Status:** ratified 2026-05-18 under CHARTER §12 dev-mode exemption
+(Initiator-only, v0.1 phase). Drives the prevention / early-diagnosis
+deliverable scoped by CHARTER §3 (amended 2026-05-18) and proposed in
+`docs/plans/openonco_prevention_scope_2026-05-18-1500.md` (Path A —
+HCP-mediated). Engine, validator, and render passes are deferred to the
+v0.2 implementation waves; this section ratifies only the schema-level
+contract.
+
+**Why now:** CHARTER §3 was amended on 2026-05-18 to include
+HCP-mediated prevention / early-diagnosis recommendations for at-risk
+asymptomatic individuals. The existing schema can compose most of the
+required pattern (`Disease.archetype = etiologically_driven` already
+covers infectious causation; `RedFlag` already drives Indication routing;
+`Algorithm` already encodes decision trees), but **five** fields are
+missing to disambiguate prevention output from treatment output, to
+mark biomarkers usable in asymptomatic patients, and to bind prevention
+Indications to their specific etiological RedFlags. This section adds
+those five fields without introducing any new top-level entity.
+
+The fifth field (`Indication.triggered_by_redflags`) was added during
+v0.2-B implementation (commit `8e1b05e43f`, 2026-05-18) after the
+v0.2-B Lynch pilot surfaced a real cross-etiology contamination bug:
+Lynch RF lists DIS-GASTRIC in `relevant_diseases` because Lynch carriers
+have elevated gastric-cancer risk, but H. pylori prevention indications
+also target DIS-GASTRIC — without explicit RF binding, a Lynch patient
+received 4 tracks (Lynch + H. pylori) instead of 2. §20.1 amended in
+place to document the field; ratification timestamp unchanged
+(same dev-mode session).
+
+### 20.1. Ratified additive fields
+
+```yaml
+# Indication additions (extend §7 schema)
+intent: treatment        # NEW enum, default = "treatment" (on read; no
+                         # backfill required across existing ~400 YAMLs).
+                         # Valid values:
+                         #   treatment    — current implicit behaviour
+                         #   prevention   — for at-risk asymptomatic individuals
+                         #   screening    — population/risk-group screening cadence
+                         #   surveillance — known carriers / post-treatment monitoring
+
+triggered_by_redflags:   # NEW list of RedFlag IDs. When populated AND
+                         # intent ∈ {prevention, screening, surveillance},
+                         # the engine prevention path only matches this
+                         # Indication when ≥1 of the listed RFs fired.
+                         # Empty list = back-compat (match by disease_id
+                         # only). Disambiguator for cross-etiology overlap
+                         # — e.g., Lynch RF lists DIS-GASTRIC because Lynch
+                         # elevates gastric risk, but Lynch-prevention
+                         # indications must not pull in H. pylori
+                         # eradication indications which also target
+                         # DIS-GASTRIC. Treatment-intent indications ignore
+                         # this field (engine prevention guard is only
+                         # consulted on the prevention path).
+  - <RF-id>
+
+# Biomarker additions (extend §4 schema)
+clinical_context:        # NEW array enum, multi-valued. Default on read:
+                         # ["tumor_profiling"] (current implicit behaviour).
+                         # Valid values:
+                         #   germline_susceptibility  — hereditary risk variants (BRCA1/2, VHL, FH, MMR, ...)
+                         #   tumor_profiling          — current implicit (HER2, KRAS, ...)
+                         #   screening_surveillance   — used for asymptomatic monitoring in high-risk subgroups
+                         #                              (AFP in cirrhosis, calcitonin in MEN2, ...)
+                         #   prognostic               — affects prognosis of known disease
+                         #   predictive               — predicts response to a specific therapy
+                         # One marker MAY carry multiple contexts (e.g., MMR/MSI =
+                         # germline_susceptibility + tumor_profiling + predictive).
+  - tumor_profiling
+
+applicable_in_asymptomatic: false   # NEW bool, default false. Fast filter for
+                                    # prevention-plan composition; only true for
+                                    # markers with established asymptomatic use
+                                    # (germline panels, syndrome-specific monitoring
+                                    # markers).
+
+# RedFlag addition (extends §9 schema)
+risk_category:           # NEW enum, optional (current treatment-time RedFlag
+                         # categories continue to work without this field).
+                         # Valid values (prevention persona):
+                         #   genetic            — pedigree-driven, germline-test indication
+                         #   infectious         — chronic infection that elevates cancer risk
+                         #   chronic_condition  — autoimmune / inflammatory / metabolic precondition
+                         #   occupational       — IARC-classified workplace exposure
+                         #   iatrogenic         — prior radiation / immunosuppression / cytotoxic Rx
+                         #   lifestyle          — smoking, alcohol, BMI, diet, UV
+                         #   reproductive       — parity, menarche/menopause, HRT
+```
+
+### 20.2. Engine + render impact (deferred to v0.2 implementation waves)
+
+- `engine.plan` introduces a `PreventionPlan` output shape parallel to
+  the existing `Plan`. Same `tracks` architecture (≥2 tracks per
+  CHARTER §15.2 C4 — e.g., standard-surveillance vs. intensified-
+  surveillance, or treat-the-cause vs. monitor).
+- The Plan-vs-PreventionPlan branch is selected on patient input:
+  - patient carries a confirmed Disease → Plan (treatment, existing).
+  - patient carries no confirmed Disease but ≥1 prevention-eligible
+    RedFlag (genetic / infectious / occupational / ...) → PreventionPlan.
+- Engine filters `Indication` entities by `intent`: Plan uses
+  `intent = treatment` (or unset → defaults to treatment); PreventionPlan
+  uses `intent ∈ {prevention, screening, surveillance}`.
+- Engine filters `Biomarker` entities for the asymptomatic case by
+  `applicable_in_asymptomatic = true` AND `clinical_context` ∋
+  `{germline_susceptibility, screening_surveillance}`.
+- Render: PreventionPlan reuses the existing clinician + patient-mode
+  render contracts (PATIENT_MODE_SPEC). The patient bundle remains a
+  translation, not a separate clinical product — preserving the §15 C1
+  HCP-only positioning.
+- Validator: existing referential-integrity rules apply unchanged. New
+  enum constraints on `Indication.intent`, `Biomarker.clinical_context`,
+  `RedFlag.risk_category` are loader-level Pydantic validation.
+
+### 20.3. Pilot sequence (deferred to v0.2 chunk specs)
+
+Per the originating scope proposal:
+
+- **v0.2-A: Infectious etiologies** (recommended starter). HepB, HepC,
+  HPV, H. pylori, EBV, HIV, HTLV-1 as `Indication(intent=prevention)`
+  cases. Highest ROI in Ukraine; validated by patient-zero (HCV-MZL DAA
+  pathway); cleanest source-license posture (IARC Group 1 public, WHO,
+  AASLD/NCCN already in KB).
+- **v0.2-B: Hereditary risk** (germline + pedigree triage). Multi-syndrome
+  (BRCA/HBOC, Lynch, Li-Fraumeni, FAP/MAP, hereditary RCC syndromes
+  VHL/HLRCC/BHD/HPRC/BAP1). Lynch pilots the architecture first. Risk
+  models (Amsterdam II, PREMM5, Manchester, Tyrer-Cuzick v8, BOADICEA)
+  encoded as declarative `Algorithm` entities re-implemented from
+  published primary papers. NCCN Genetic/Familial High-Risk license
+  posture must be verified before relying on it (open question #7 in
+  the scope proposal).
+- **v0.3: Occupational + chronic conditions** (IARC Group 1 environmental
+  + inflammatory predispositions like Barrett's, IBD, PSC, celiac).
+- **v0.3+: Lifestyle, iatrogenic, reproductive** (full 7-category
+  coverage).
+
+### 20.4. Resolution path
+
+1. Clinical Co-Leads review §20.1 and either ratify or counter-propose.
+   **Ratified 2026-05-18** under CHARTER §12 dev-mode exemption
+   (Initiator-only, v0.1 phase). Formal Co-Lead ratification queued for
+   first-Co-Lead appointment.
+2. Pydantic schema additions:
+     - `Indication.intent: Literal[...] = "treatment"`
+     - `Indication.triggered_by_redflags: list[str] = []`
+     - `Biomarker.clinical_context: list[Literal[...]] = ["tumor_profiling"]`
+     - `Biomarker.applicable_in_asymptomatic: bool = False`
+     - `RedFlag.risk_category: Optional[Literal[...]] = None`
+
+   **DONE 2026-05-18** (commits `553595b2f5` foundation +
+   `8e1b05e43f` cross-etiology fix). Default-on-read; no backfill
+   required across 450+ Indication / 181+ Biomarker / 532+ RedFlag YAMLs.
+3. Loader-side enum validation. **DONE 2026-05-18** (Pydantic
+   `Literal[...]` typing handles this automatically; KB validator
+   green: 3142/3142 entities load, all refs resolve).
+4. Engine: `PreventionPlan` shape + intent-filtering branch in
+   `plan.generate_plan()`. **DONE 2026-05-18** (commit `24ff626661`).
+   `_try_generate_prevention_plan` orchestrator + 6 helpers; cross-
+   etiology isolation guard via `triggered_by_redflags` matching
+   (commit `8e1b05e43f`). 21 e2e tests in
+   `tests/test_prevention_engine.py`. `Plan.algorithm_id` made
+   `Optional[str] = None`.
+5. Render: PreventionPlan render contract (likely reuses `_render_plan`
+   with intent-aware section labels). **Pending v0.2 follow-up** —
+   render layer not yet verified for null-algorithm PreventionPlan
+   output; minor f-string in `mdt_orchestrator.py:1481` references
+   `plan.algorithm_id` and would render "None" for prevention paths
+   if exercised (not currently routed through MDT orchestrator).
+6. Tests: golden fixtures for v0.2-A infectious-etiology cases.
+   **DONE 2026-05-18** (commits `24ff626661` + `7bfda90209` +
+   `8e1b05e43f`). 8 prevention pilots covered: HCV, H.pylori, HBV,
+   HPV, HIV, EBV (immunocompromised), HTLV-1, Lynch. 21 prevention
+   tests + 6 parametrized pilot scenarios + 2 cross-etiology
+   isolation regression guards.
+
+### 20.5. Banned sources reminder
+
+Per CHARTER §2 and project policy, the following sources remain banned
+for the OpenOnco pilot and must not appear in any prevention-side
+sources/citations: **OncoKB** (ToS conflict with CHARTER §2 free public
+resource), **SNOMED CT** (license), **MedDRA** (license). Substitutes
+for the prevention domain: IARC Monographs (public), WHO, USPSTF (public
+domain), AASLD, NCCN (existing license; Genetic/Familial sub-license to
+be verified before use), ESMO, peer-reviewed primary publications.
+
+### 20.6. v0.3 ratification (2026-05-20) — Wave L+M+N+O+P additions
+
+**Status:** ratified 2026-05-20 under CHARTER §12 dev-mode exemption
+(Initiator-only, v0.1 phase). Supersedes nothing in §20.1–§20.5 — all
+v0.2-A schema-field definitions (`Indication.intent`,
+`Indication.triggered_by_redflags`, `Biomarker.clinical_context`,
+`Biomarker.applicable_in_asymptomatic`, `RedFlag.risk_category`) remain
+in force unchanged. v0.3 ratifies the **engine semantics, render-layer
+behaviour, and knowledge-base scale** added during the prevention
+implementation waves K-parallel through P.
+
+Cross-references:
+- `docs/reviews/wave-l-kb-coverage-2026-05-19.md` — KB coverage matrix
+  produced at the start of Wave L (RF/indication counts, gap list,
+  cohort coverage).
+- `docs/reviews/wave-l-clinical-verification-checklist-2026-05-20.md` —
+  261-line Clinical Co-Lead triage doc + 5 primary-literature sources
+  cited; supports the Wave L+M+N+O+P risk-factor + indication content
+  through the §20.4 step-1 ratification path.
+
+#### 20.6.1. Risk-factor scale (post-Wave P)
+
+156 prevention-shaped RedFlag entities now carry `risk_category` (up from
+~50 at v0.2-A ratification). Distribution by category:
+
+| `risk_category`     | Count | Examples                                                                 |
+|---------------------|-------|--------------------------------------------------------------------------|
+| `genetic`           | 74    | BRCA1/2, Lynch (4 genes), Li-Fraumeni, FAP, VHL, NF1/NF2, ATM, PALB2,    |
+|                     |       | CHEK2, RUNX1, DDX41, SDHA-D, MEN1/2/4, TSC, JPS, RTS, Werner, ...        |
+| `iatrogenic`        | 23    | prior chest RT < age 30, hodgkin-survivor, BMT/ASCT, MTX-LPD, I-131, DES |
+| `occupational`      | 21    | asbestos, vinyl chloride, aromatic amines, benzene, silica, hardwood ... |
+| `chronic_condition` | 19    | Barrett's, IBD, PSC, celiac, NAFLD, T2DM, cirrhosis-NOS, severe-obesity  |
+| `lifestyle`         | 16    | current-smoker, heavy-alcohol, elevated-BMI, smokeless-tobacco, SSB,     |
+|                     |       | high-salt, UV-exposure, sedentary, processed-meat                        |
+| `infectious`        | 13    | HepB, HepC, HPV, H. pylori, EBV, HIV, HTLV-1, HHV-8, Schistosoma, ...    |
+| `reproductive`      |  7    | early menarche, late menopause, nulliparity, HRT use, OCP exposure,     |
+|                     |       | breastfeeding deficit, DES-in-utero                                      |
+| **Total**           | **156** |                                                                        |
+
+#### 20.6.2. Prevention indication scale (post-Wave P)
+
+| `intent`       | Count   | Notes                                                              |
+|----------------|---------|--------------------------------------------------------------------|
+| `prevention`   | 272+    | Primary prevention + most screening-cadence indications (see gap)  |
+| `surveillance` | 40+     | Known carriers / post-treatment monitoring                         |
+| `screening`    | 0       | Gap — many "screening-flavored" indications currently mis-labelled |
+|                |         | under `intent: prevention`. Retro-label is queued for v0.4         |
+|                |         | (see §20.6.6).                                                     |
+
+#### 20.6.3. Engine semantics added since v0.2-A
+
+The PreventionPlan path (introduced in v0.2-A, commit `24ff626661`) now
+supports three additional behaviours; all are additive — the original
+disease-anchored prevention path continues to work unchanged.
+
+**A. Wildcard `"*"` in `Indication.applicable_to.disease_id`.**
+
+Universal / umbrella RedFlags (e.g., `RF-CURRENT-SMOKER`,
+`RF-ELEVATED-BMI`, `RF-HEAVY-ALCOHOL`, `RF-AGE-50-PLUS-SCREENING-GAP`,
+`RF-FDR-CANCER-ANY`) fire across many disease anchors at once. To avoid
+authoring one Indication YAML per `(RF, disease)` pair, these RFs declare
+`relevant_diseases: ["*"]`. When the engine sees a fired RF whose
+`relevant_diseases` contains `"*"`, the `Indication.applicable_to.disease_id`
+filter is **skipped** for indications gated by that RF — routing falls
+back entirely on `triggered_by_redflags`. Cross-etiology contamination
+is still prevented because `triggered_by_redflags` remains a hard gate
+(the §20.1 / v0.2-B fix is preserved).
+
+**Worked example — universal RF fanning out:**
+
+```yaml
+# RF — declared umbrella
+# File: knowledge_base/hosted/content/redflags/rf_elevated_bmi.yaml
+id: RF-ELEVATED-BMI
+risk_category: lifestyle
+relevant_diseases: ["*"]      # umbrella — fires across all disease anchors
+trigger:
+  condition: "BMI ≥ 30 kg/m²"
+
+# Indication A — colorectal screening for elevated BMI
+# File: knowledge_base/hosted/content/indications/elevated_bmi_crc_screening.yaml
+id: IND-ELEVATED-BMI-CRC-SCREENING
+intent: prevention
+triggered_by_redflags: [RF-ELEVATED-BMI]
+applicable_to:
+  disease_id: DIS-COLORECTAL    # routed because RF declares "*"
+                                # — disease filter skipped, RF gate honoured
+
+# Indication B — endometrial screening for elevated BMI
+# File: knowledge_base/hosted/content/indications/elevated_bmi_endometrial_screening.yaml
+id: IND-ELEVATED-BMI-ENDOMETRIAL-SCREENING
+intent: prevention
+triggered_by_redflags: [RF-ELEVATED-BMI]
+applicable_to:
+  disease_id: DIS-ENDOMETRIAL   # routed for same patient, same RF firing
+
+# Indication C — postmenopausal breast surveillance for elevated BMI
+# File: knowledge_base/hosted/content/indications/elevated_bmi_breast_surveillance.yaml
+id: IND-ELEVATED-BMI-BREAST-SURV
+intent: surveillance
+triggered_by_redflags: [RF-ELEVATED-BMI]
+applicable_to:
+  disease_id: DIS-BREAST-POSTMENOPAUSAL
+```
+
+Patient input: BMI 32 kg/m², female, age 55, no confirmed disease.
+Engine fires `RF-ELEVATED-BMI`. PreventionPlan output composes the three
+indications above into tracks (≥2 per CHARTER §15.2 C4 — see §20.6.4).
+Without the wildcard convention, indication content would require an
+explicit `(RF-ELEVATED-BMI, DIS-COLORECTAL)`, `(RF-ELEVATED-BMI,
+DIS-ENDOMETRIAL)`, `(RF-ELEVATED-BMI, DIS-BREAST-POSTMENOPAUSAL)` triple
+gating in `RF.relevant_diseases` — multiplicative blow-up for umbrella
+RFs.
+
+**B. Trace-key naming on the prevention path.**
+
+The prevention path writes one trace entry per fired RF, shape:
+
+```python
+{"step": "prevention_rf_fired", "rf_id": "RF-ELEVATED-BMI"}
+```
+
+Singular `rf_id` per entry, distinct from the treatment-path entries
+which carry a plural `fired_red_flags` list per step:
+
+```python
+{"step": "rule_engine.evaluate", "fired_red_flags": ["RF-ECOG-3", "RF-HEPATIC-IMPAIRMENT"]}
+```
+
+Both shapes are accepted by the render layer; the differentiation lets
+the renderer pick the right surface vocabulary (prevention vs. treatment)
+without an explicit `is_prevention` boolean.
+
+**C. Cross-firing tolerated for suspicion-variant RFs.**
+
+Wave M added 7 family-history-suspicion RF variants (e.g., the
+`family_breast_and_pancreatic_cluster` group encompassing
+`RF-ATM-FAMILY-HISTORY`, `RF-PALB2-FAMILY-HISTORY`,
+`RF-CHEK2-FAMILY-HISTORY`, `RF-BARD1-FAMILY-HISTORY`,
+`RF-BRIP1-FAMILY-HISTORY`, `RF-RAD51C-D-FAMILY-HISTORY`). Multiple of
+these may fire on a single patient with one mixed-cluster pedigree.
+Routing semantics: the engine selects any one matching
+suspicion-testing Indication as `default` and any other as
+`alternative` — the choice is order-dependent (effectively semi-random
+across runs because the matching iteration is set-based). This is
+acceptable because **all suspicion-testing indications in this cohort
+converge to the same clinical guidance** — "refer to genetic counselor,
+order multi-gene hereditary panel" — and the gene-RF that wins the
+default slot does not change the prescription. v0.4 (§20.6.6) tracks
+the generalize-to-`RF-MULTI-GENE-PANEL-SUSPICION` candidate.
+
+#### 20.6.4. Render-layer prevention awareness (KSS §20.2 extension)
+
+The §20.2 render contract is extended so the renderer can produce
+prevention-shaped phrasing when no disease anchor exists. The trigger
+condition (chosen to avoid a separate `is_prevention` flag):
+
+```python
+if plan.disease_id is None and plan.algorithm_id is None:
+    # prevention-shaped phrasing
+```
+
+Substituted strings (clinician + patient surfaces):
+
+| Surface     | Treatment phrasing (existing)                  | Prevention phrasing (added in v0.3)                              |
+|-------------|------------------------------------------------|------------------------------------------------------------------|
+| Clinician   | `OpenOnco · Treatment plan`                    | `OpenOnco · Prevention plan`                                     |
+| Clinician   | `План лікування — <diagnosis>`                 | `План профілактики — <fired RF IDs>`                              |
+| Clinician   | `Recommended treatment pathway`                | `Recommended prevention / surveillance pathway`                  |
+| Clinician   | `Alternative pathway`                          | `Alternative pathway` (label retained; semantics is alternative   |
+|             |                                                | prevention/screening cadence, not alternative therapy)           |
+| Clinician   | `Pre-treatment investigations`                 | `Baseline / surveillance investigations`                         |
+| Patient UA  | `Ваш персональний план лікування`              | `Ваш персональний план профілактики`                              |
+| Patient UA  | `Що це означає для вашого лікування`           | `Що це означає для вашої профілактики`                            |
+| Patient UA  | `Діагноз:`                                     | `Виявлений ризик-фактор:`                                         |
+
+Etiological-driver block (which surfaces the `Disease.etiological_drivers`
+array) is skipped on prevention plans because there is no `Disease`
+anchor to read from.
+
+#### 20.6.5. CHARTER §15.2 C4 invariant — 2 tracks per plan
+
+Prevention plans **always** satisfy the C4 invariant (≥2 tracks per
+plan). The 2-track shape is satisfied in one of three ways depending on
+the fired RF set:
+
+1. **Standard cadence vs. intensified cadence.** Single RF, single
+   target disease, two surveillance intensities (e.g., Barrett's
+   esophagus — annual surveillance EGD vs. 3-monthly surveillance EGD
+   if dysplasia ever documented).
+2. **Treat-the-cause vs. monitor.** Infectious-etiology RFs (HepC RF
+   → DAA cure track + abdominal-US/AFP surveillance track for HCC
+   pre-cure window).
+3. **Default suspicion-test vs. alternative suspicion-test.** Under
+   the cross-firing tolerance rule (§20.6.3-C), the default + alternative
+   slot are both filled by suspicion-testing Indications. Because all
+   converge to "refer to genetic counselor + multi-gene panel," the
+   2-track invariant is *clinically* satisfied even when the routing
+   attribution between gene-specific suspicion RFs is semi-random.
+
+If none of the three patterns can be composed (e.g., a single isolated
+RF with one and only one indication), the engine emits a
+`PreventionPlanConstructionError` and the patient input is reported as
+out-of-scope rather than producing a single-track plan. C4 is never
+silently violated.
+
+#### 20.6.6. Known limitations — v0.4 follow-up queue
+
+The following items are documented as deferred to a future v0.4
+ratification cycle. They are not blockers for v0.3 ratification.
+
+1. **DES content duplication.** `iatrogenic-DES` and `reproductive-DES`
+   cover overlapping cohorts under disjoint finding keys. Consolidate to
+   the iatrogenic categorization (DES is medication-induced; the
+   reproductive category is a misclassification artefact of the
+   in-utero exposure timing). Queued — v0.4 single-categorize.
+
+2. **Suspicion-variant cross-firing.** Routing attribution is
+   semi-random across the family-history-suspicion RF cohort
+   (§20.6.3-C). Clinically defensible because all routes converge to
+   the same prescription, but the audit trail does not deterministically
+   reflect which gene-RF "won" the default slot. v0.4 candidate to
+   either (a) generalize to a `RF-MULTI-GENE-PANEL-SUSPICION` umbrella
+   RF replacing the per-gene variants, or (b) explicitly accept the
+   documented behaviour with a `non_deterministic_routing: true` flag
+   on the affected Indication entities.
+
+3. **Biomarker schema enum gaps.** The following `clinical_context`
+   values are used in biomarker YAML but **absent from the
+   `BiomarkerClinicalContext` enum**: `screening`, `precursor_lesion`,
+   `dysplasia_grading`, `hereditary_surveillance`, `diagnostic_workup`.
+   15 pre-existing schema errors. v0.4: either add to enum or relabel
+   to the existing enum values
+   (`screening_surveillance` / `germline_susceptibility` etc.).
+
+4. **`intent: screening` defined but unused.** The enum admits
+   `screening` (§20.1) but 0 indications currently carry it. Many
+   "screening-flavored" indications are filed under `intent:
+   prevention`. v0.4 retro-label pass to set the right `intent` value
+   for clearer routing — improves both engine semantics and patient
+   surface phrasing.
+
+5. **`environmental` risk_category not in enum.** Multiple
+   `rf_environmental_*` filenames exist but the
+   `PreventionRiskCategory` enum does not admit `environmental`.
+   Current workaround: file under `occupational`. v0.4: either add
+   `environmental` to the enum or split the existing
+   `rf_environmental_*` entities into `occupational` (workplace
+   exposure) vs. `lifestyle` (consumer / ambient exposure) per IARC
+   classification.
+
+6. **Disease-anchor approximations.** Several pediatric / rare-tumor
+   prevention indications anchor to the closest available disease ID
+   pending entity creation:
+     - Rhabdoid / ATRT indications anchor to `DIS-GLIOMA-LOW-GRADE`
+       (closest CNS anchor) until `DIS-ATRT` is added.
+     - Beckwith-Wiedemann (BWS) indications partially anchor to
+       `DIS-WILMS` only, with hepatoblastoma risk covered in
+       `rationale` text only (`DIS-HEPATOBLASTOMA` was added during
+       Wave L; remaining BWS YAMLs need rewiring).
+   v0.4: thread proper disease anchors once entities exist.
+
+#### 20.6.7. Wave naming + content additions
+
+Brief enumeration of what landed in each wave between v0.2-A
+ratification (2026-05-18) and v0.3 ratification (2026-05-20):
+
+- **Wave K parallel** (background batches concurrent with foreground):
+  - Examples batch 8 — 15 demo-patient JSONs.
+  - KB audit tests — 42 sub-tests covering enum coverage, RF→Indication
+    binding, disease-anchor cross-checks.
+  - Cascade-testing pilots — 5 RFs / 10 indications (proband + FDR).
+  - Chemoprevention drugs — 12 drug YAMLs (tamoxifen, aspirin, finasteride,
+    raloxifene, exemestane, anastrozole, ...).
+  - IARC Group 2A — 6 RFs / 12 indications (red meat, hot beverages > 65°C,
+    night-shift work, glyphosate, very hot maté, processed-meat exposure).
+
+- **Wave L** (foreground):
+  - Reproductive expansion — 4 RFs (early menarche, late menopause,
+    nulliparity, HRT use).
+  - Chronic condition — T2DM + NAFLD.
+  - Lifestyle expansion — smokeless tobacco + sugar-sweetened beverages
+    + dietary salt.
+  - HR moderate-penetrance — ATM, PALB2, CHEK2, BARD1, BRIP1, RAD51C-D.
+  - Pediatric high-penetrance — NF1, CDH1, CMMRD, DICER1.
+  - Iatrogenic — MTX-LPD (methotrexate-associated lymphoproliferative
+    disorder) + I-131 (radioactive iodine downstream cancer risk).
+
+- **Wave M**:
+  - Family-history-suspicion variants — 7 (per §20.6.3-C cohort).
+  - Demo-patient JSONs — 18.
+  - Pediatric BWS / Costello / Rhabdoid — 3 syndromes.
+
+- **Wave N**:
+  - Niche moderate-penetrance — NBN, BLM, FPC (familial pancreatic
+    cancer).
+  - Chronic gaps — severe obesity (BMI ≥ 40), Crohn-specific, cirrhosis-NOS.
+  - Iatrogenic — ASCT (autologous stem-cell transplant downstream risk).
+
+- **Wave O**:
+  - Rare hereditary — JPS (juvenile polyposis), RTS (Rothmund-Thomson),
+    Werner syndrome, TSC (tuberous sclerosis complex), MEN4.
+
+- **Wave P**:
+  - Hereditary myeloid — CEBPA, RUNX1, DDX41, ANKRD26, ETV6.
+  - Paraganglioma gene-specific — SDHA, SDHB, SDHC.
+  - NF2 schwannomatosis.
+
+- **Verification packet** (referenced under §20.6 cross-refs):
+  - 261-line Clinical Co-Lead triage doc.
+  - 5 primary-literature sources cited in support of the wave content.
+
+#### 20.6.8. Test coverage
+
+| Suite                          | v0.2-A | v0.3 | Delta                                            |
+|--------------------------------|--------|------|--------------------------------------------------|
+| `test_prevention_engine.py`    | 21     | ~75  | +per-RF parametrize bump (5 → 100 per category)  |
+| `test_prevention_render.py`    | 0      | ~70  | new — render-layer prevention-aware phrasing     |
+| `test_prevention_kb_audit.py`  | 52     | ~70  | KB-side referential + enum checks                |
+| **Total prevention tests**     | **73** | **215** | **+192%** (largely from per-RF parametrize)  |
+
+All 215 tests passing as of the v0.3 ratification timestamp.
+
+#### 20.6.9. Schema-field stability statement
+
+No schema fields are added, removed, or repurposed in v0.3. The five
+fields ratified in v0.2-A (`Indication.intent`,
+`Indication.triggered_by_redflags`, `Biomarker.clinical_context`,
+`Biomarker.applicable_in_asymptomatic`, `RedFlag.risk_category`) remain
+the complete set of prevention-related schema additions. v0.3 is a
+ratification of **scale + engine semantics + render contract + known
+limitations** rather than a schema change.
+
+Default-on-read behaviour is unchanged: `Indication.intent` still
+defaults to `treatment`; `Indication.triggered_by_redflags` still
+defaults to `[]`; `Biomarker.clinical_context` still defaults to
+`["tumor_profiling"]`; `Biomarker.applicable_in_asymptomatic` still
+defaults to `False`; `RedFlag.risk_category` is still optional.
+
+#### 20.6.10. Resolution path (v0.3)
+
+1. Clinical Co-Leads review §20.6 and either ratify or counter-propose.
+   **Ratified 2026-05-20** under CHARTER §12 dev-mode exemption
+   (Initiator-only, v0.1 phase). Formal Co-Lead ratification queued for
+   first-Co-Lead appointment alongside the v0.2-A queued ratification.
+2. KB content waves K-parallel through P landed in their respective
+   chunks (see §20.6.7).
+3. Engine semantics A/B/C landed in prevention engine commits between
+   2026-05-18 and 2026-05-20 inclusive.
+4. Render-layer prevention awareness landed alongside §20.6.4 phrasing
+   table.
+5. v0.4 follow-up queue (§20.6.6) tracked as separate chunk specs.

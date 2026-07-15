@@ -1,34 +1,38 @@
 id: RF-BULKY-DISEASE
-definition: "Bulky lymphoma disease: single nodal mass >=7 cm OR mediastinal mass >1/3 thoracic diameter OR significant symptomatic burden"
-definition_ua: "Массивне лімфопроліферативне ураження: нодальна маса >=7 см АБО медіастінальна маса >1/3 діаметру грудної клітки АБО значний симптоматичний тягар"
+definition: "Bulky lymphoma disease: single nodal mass >=7 cm OR mediastinal mass >1/3 thoracic diameter
+  OR significant symptomatic burden"
+definition_ua: "Массивне лімфопроліферативне ураження: нодальна маса >=7 см АБО медіастінальна маса >1/3
+  діаметру грудної клітки АБО значний симптоматичний тягар"
 
 trigger:
   type: imaging_finding
   any_of:
-    - finding: "dominant_nodal_mass_cm"
-      threshold: 7.0
-      comparator: ">="
-    - finding: "mediastinal_ratio"
-      threshold: 0.33
-      comparator: ">"
-    - finding: "symptomatic_b_symptoms_severe"
-      value: true
+  - finding: "dominant_nodal_mass_cm"
+    threshold: 7.0
+    comparator: ">="
+  - finding: "mediastinal_ratio"
+    threshold: 0.33
+    comparator: ">"
+  - finding: "symptomatic_b_symptoms_severe"
+    value: true
 
 clinical_direction: intensify
 
 category: high-risk-biology
 priority: 60
 relevant_diseases:
-  - DIS-HCV-MZL
+- DIS-HCV-MZL
 shifts_algorithm:
-  - ALGO-HCV-MZL-1L
+- ALGO-HCV-MZL-1L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-MZL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-MZL-2024
 
 last_reviewed: "2026-04-24"
 notes: "Standard bulky-disease definition adapted from B-cell lymphoma guidelines."
-notes_ua: стандарт bulky-хвороба definition adapted from B-cell лімфома настанови.
+notes_ua: >
+  Стандартне визначення масивного ураження адаптовано з настанов B-клітинних лімфом.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

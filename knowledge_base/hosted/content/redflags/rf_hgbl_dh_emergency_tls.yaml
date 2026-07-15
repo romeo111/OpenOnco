@@ -1,24 +1,27 @@
 id: RF-HGBL-DH-EMERGENCY-TLS
-definition: "High-grade B-cell lymphoma double-/triple-hit with active or imminent TLS at diagnosis: LDH >2× ULN, uric acid >7.5 mg/dL, hyperkalemia, hyperphosphatemia, hypocalcemia, AKI"
-definition_ua: "Високозлоякісна B-клітинна лімфома double-/triple-hit з активним або неминучим TLS при діагностиці: ЛДГ >2× ВМН, сечова кислота >7.5 мг/дл, гіперкаліємія, гіперфосфатемія, гіпокальціємія, ГНН"
+definition: "High-grade B-cell lymphoma double-/triple-hit with active or imminent TLS at diagnosis: LDH
+  >2× ULN, uric acid >7.5 mg/dL, hyperkalemia, hyperphosphatemia, hypocalcemia, AKI"
+definition_ua: "Високозлоякісна B-клітинна лімфома double-/triple-hit з активним або неминучим TLS при
+  діагностиці: ЛДГ >2× ВМН, сечова кислота >7.5 мг/дл, гіперкаліємія, гіперфосфатемія, гіпокальціємія,
+  ГНН"
 
 trigger:
   type: composite
   any_of:
-    - finding: "ldh_ulnratio"
-      threshold: 2
-      comparator: ">"
-    - finding: "uric_acid_mg_dl"
-      threshold: 7.5
-      comparator: ">"
-    - finding: "potassium_mmol_l"
-      threshold: 5.5
-      comparator: ">"
-    - finding: "phosphate_mg_dl"
-      threshold: 4.5
-      comparator: ">"
-    - finding: "tls_active"
-      value: true
+  - finding: "ldh_ulnratio"
+    threshold: 2
+    comparator: ">"
+  - finding: "uric_acid_mg_dl"
+    threshold: 7.5
+    comparator: ">"
+  - finding: "potassium_mmol_l"
+    threshold: 5.5
+    comparator: ">"
+  - finding: "phosphate_mg_dl"
+    threshold: 4.5
+    comparator: ">"
+  - finding: "tls_active"
+    value: true
 
 clinical_direction: hold
 
@@ -26,13 +29,13 @@ severity: critical
 priority: 20
 category: organ-dysfunction
 relevant_diseases:
-  - DIS-HGBL-DH
+- DIS-HGBL-DH
 shifts_algorithm:
-  - ALGO-HGBL-DH-1L
+- ALGO-HGBL-DH-1L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-04-27"
 draft: true
@@ -45,6 +48,10 @@ notes: >
   pre-cycle-1 + IV hydration mandatory. Direction HOLD until stabilized;
   priority 10. STUB — requires clinical co-lead signoff.
 notes_ua: >
-  HGBL-DH (MYC + BCL2 ± BCL6 перебудова) behaves biologically like Burkitt — high proliferation index, strong TLS predisposition. Per NCCN B-cell v.X.2025 HGBL section: DA-EPOCH-R is переважний 1L; rasburicase pre-цикл-1 + IV hydration обов'язковий. Direction утримати until stabilized; priority 10. STUB — requires clinical co-lead signoff.
+  HGBL-DH (MYC + BCL2 ± BCL6 перебудова) поводиться біологічно як Burkitt — високий індекс проліферації,
+  сильна схильність до TLS. За розділом NCCN B-cell v.X.2025 HGBL: DA-EPOCH-R переважний 1L; расбуриказа
+  перед циклом 1 + в/в гідратація обов'язкові. Напрямок УТРИМАТИ до стабілізації; пріоритет 10. СТАБ —
+  потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

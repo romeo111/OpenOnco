@@ -1,29 +1,30 @@
 id: RF-DECOMP-CIRRHOSIS
-definition: "Decompensated cirrhosis (Child-Pugh B or C): ascites, encephalopathy, variceal bleeding, or jaundice from cirrhosis"
+definition: "Decompensated cirrhosis (Child-Pugh B or C): ascites, encephalopathy, variceal bleeding,
+  or jaundice from cirrhosis"
 definition_ua: "Декомпенсований цироз (Child-Pugh B або C)"
 
 trigger:
   type: lab_value
   any_of:
-    - finding: "child_pugh_class"
-      value: "B"
-    - finding: "child_pugh_class"
-      value: "C"
-    - finding: "decompensated_cirrhosis"
-      value: true
+  - finding: "child_pugh_class"
+    value: "B"
+  - finding: "child_pugh_class"
+    value: "C"
+  - finding: "decompensated_cirrhosis"
+    value: true
 
 clinical_direction: de-escalate
 
 category: organ-dysfunction
 priority: 60
 relevant_diseases:
-  - DIS-HCV-MZL
+- DIS-HCV-MZL
 shifts_algorithm:
-  - ALGO-HCV-MZL-1L
+- ALGO-HCV-MZL-1L
 
 sources:
-  - SRC-EASL-HCV-2023
-  - SRC-ESMO-MZL-2024
+- SRC-EASL-HCV-2023
+- SRC-ESMO-MZL-2024
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -31,6 +32,8 @@ notes: >
   (glecaprevir/pibrentasvir) — switch to SOF/VEL+RBV. Also restricts
   bendamustine dosing severely.
 notes_ua: >
-  Major modifier: contraindicates protease-інгібітор-containing DAA (glecaprevir/pibrentasvir) — switch to SOF/VEL+RBV. Also restricts бендамустин дозування severely.
+  Major modifier: contraindicates protease-інгібітор-containing DAA (glecaprevir/pibrentasvir) — switch
+  to SOF/VEL+RBV. Also restricts бендамустин дозування severely.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

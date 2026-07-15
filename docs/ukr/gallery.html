@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Готові приклади</title>
 <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="OpenOnco · Готові приклади">
 <meta property="og:description" content="Синтетичні приклади OpenOnco з перевірюваними планами та diagnostic brief.">
 <meta property="og:url" content="https://openonco.info/ukr/gallery.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OpenOnco · Готові приклади">
 <meta name="twitter:description" content="Синтетичні приклади OpenOnco з перевірюваними планами та diagnostic brief.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Готові приклади","description":"Синтетичні приклади OpenOnco з перевірюваними планами та diagnostic brief.","url":"https://openonco.info/ukr/gallery.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/gallery.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Готові приклади","description":"Синтетичні приклади OpenOnco з перевірюваними планами та diagnostic brief.","url":"https://openonco.info/ukr/gallery.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/gallery.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -52,6 +121,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -60,7 +130,7 @@
 
 <main class="gallery">
   <h1>Готові приклади</h1>
-  <p class="lead">14 синтетичних профілів пацієнтів, згрупованих за хворобою. Оберіть хворобу зі списку — кожен клік відкриває повний Plan або Diagnostic Brief, як його побачить лікар у tumor-board. Якщо щось виглядає клінічно неправильно — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.</p>
+  <p class="lead">16 синтетичних профілів пацієнтів, згрупованих за хворобою. Оберіть хворобу зі списку — кожен клік відкриває повний Plan або Diagnostic Brief, як його побачить лікар у tumor-board. Якщо щось виглядає клінічно неправильно — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.</p>
 
   <!-- Stage 1: disease grid (default visible) -->
   <section id="diseaseStage" class="disease-stage">
@@ -68,14 +138,16 @@
       <input type="search" id="diseaseSearch" class="disease-search"
              placeholder="Шукати хворобу або ICD-O-3…" autocomplete="off"
              aria-label="Шукати хворобу або ICD-O-3…">
-      <span class="disease-search-count" id="diseaseSearchCount">13</span>
+      <span class="disease-search-count" id="diseaseSearchCount">15</span>
     </div>
     <div class="disease-tile-grid" id="diseaseTileGrid">
     <button type="button" class="disease-tile" data-disease-id="DIS-PROSTATE" data-search="аденокарцинома передміхурової залози prostate adenocarcinoma"><span class="dt-label">Аденокарцинома передміхурової залози</span><span class="dt-count">1 приклад</span><span class="dt-quality">кураторські першими</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-GASTRIC" data-search="аденокарцинома шлунка / gej gastric and gastroesophageal junction adenocarcinoma"><span class="dt-label">Аденокарцинома шлунка / GEJ</span><span class="dt-count">1 приклад</span><span class="dt-quality">кураторські першими</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-BCC" data-search="базально-клітинна карцинома (бкк) basal cell carcinoma"><span class="dt-label">Базально-клітинна карцинома (БКК)</span><span class="dt-count">1 приклад</span><span class="dt-quality">кураторські першими</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-GIST" data-search="гастроінтестинальна стромальна пухлина (gist) gastrointestinal stromal tumor"><span class="dt-label">Гастроінтестинальна стромальна пухлина (GIST)</span><span class="dt-count">1 приклад</span><span class="dt-quality">кураторські першими</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-AML" data-search="гострий мієлоїдний лейкоз (не-apl) acute myeloid leukemia"><span class="dt-label">Гострий мієлоїдний лейкоз (не-APL)</span><span class="dt-count">1 приклад</span><span class="dt-quality">кураторські першими</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-ENDOMETRIAL" data-search="карцинома ендометрія endometrial carcinoma"><span class="dt-label">Карцинома ендометрія</span><span class="dt-count">1 приклад</span><span class="dt-quality">кураторські першими</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CERVICAL" data-search="карцинома шийки матки cervical carcinoma"><span class="dt-label">Карцинома шийки матки</span><span class="dt-count">1 приклад</span><span class="dt-quality">кураторські першими</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-OVARIAN" data-search="карцинома яєчників (переважно high-grade серозна) ovarian carcinoma"><span class="dt-label">Карцинома яєчників (переважно high-grade серозна)</span><span class="dt-count">1 приклад</span><span class="dt-quality">кураторські першими</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-CRC" data-search="колоректальний рак colorectal carcinoma"><span class="dt-label">Колоректальний рак</span><span class="dt-count">1 приклад</span><span class="dt-quality">кураторські першими</span></button>
     <button type="button" class="disease-tile" data-disease-id="DIS-NSCLC" data-search="недрібноклітинний рак легені non-small cell lung cancer"><span class="dt-label">Недрібноклітинний рак легені</span><span class="dt-count">2 приклади</span><span class="dt-quality">кураторські першими</span></button>
@@ -129,6 +201,26 @@
   <h3>Gastric/GEJ - HER2 amplification - IHC/ISH actionability</h3>
   <p>Метастатична gastric/GEJ adenocarcinoma з HER2 IHC 3+. Показує, як actionability шар розділяє IHC/ISH evidence, 1L trastuzumab-based tracks і подальший T-DXd контекст.</p>
   <div class="case-foot">patient_showcase_gastric_her2_amp_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-BCC" hidden>
+  <header class="case-list-header">
+    <h2>Базально-клітинна карцинома (БКК)</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/showcase-bcc-labcc-hhi-1l.html"
+   data-default-order="14"
+   data-name="BCC - locally advanced - hedgehog inhibitor 1L">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-quality quality-showcase">Кураторський showcase</span>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>BCC - locally advanced - hedgehog inhibitor 1L</h3>
+  <p>Locally advanced BCC in Gorlin syndrome: surgery and radiation are not appropriate, so the engine should route to 1L SMO/Hedgehog inhibition instead of exposing only an auto-stub starter.</p>
+  <div class="case-foot">patient_showcase_bcc_labcc_hhi_1l.json</div>
 </a>
   </div>
 </section>
@@ -189,6 +281,26 @@
   <h3>Endometrial - dMMR/MSH2 - immunotherapy evidence</h3>
   <p>Поширений endometrial carcinoma з dMMR/MSI-H через втрату MSH2. Кейс показує tumor-specific і tissue-agnostic immunotherapy evidence в одному місці, не змішуючи його з неспецифічним MSI label.</p>
   <div class="case-foot">patient_showcase_endometrial_dmmr_msh2_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-CERVICAL" hidden>
+  <header class="case-list-header">
+    <h2>Карцинома шийки матки</h2>
+    <span class="case-list-count">1 приклад</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/ukr/cases/cervical-locally-advanced.html"
+   data-default-order="15"
+   data-name="Cervical · Locally Advanced (CCRT + Pembrolizumab)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-quality quality-curated">Кураторський план</span>
+    <span class="case-json-only" title="Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON">JSON-only</span>
+  </div>
+  <h3>Cervical · Locally Advanced (CCRT + Pembrolizumab)</h3>
+  <p>Locally advanced cervical cancer (FIGO IIB-IVA) — engine обирає cisplatin-based CCRT + brachytherapy; pembrolizumab maintenance (KEYNOTE-A18).</p>
+  <div class="case-foot">patient_cervical_locally_advanced.json</div>
 </a>
   </div>
 </section>

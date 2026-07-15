@@ -124,13 +124,13 @@ decision_tree:
 - step: 5
   evaluate:
     all_of:
-    - condition: "Stage I-III (early HR+/HER2-)"
+    - red_flag: RF-BREAST-EARLY-STAGE
     - condition: "High-risk: ≥4 axillary nodes OR (1-3 nodes + Ki67 ≥20% or grade 3) — monarchE eligibility"
   if_true:
     result: IND-BREAST-HR-POS-EARLY-ADJ-CDK46I
   if_false:
     result: IND-BREAST-HR-POS-MET-1L-CDKI
-  notes: "Wired 2026-05-09 (BREAST-1 D1). Routes to abemaciclib (IND-BREAST-HR-POS-EARLY-ADJ-CDK46I, monarchE default). Alternative: ribociclib (IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB, NATALEE — broader eligibility incl. node-negative + QTc monitoring required). MDT chooses based on node status, QTc risk, access. Free-text conditions — no disease-scoped RF available yet; metastatic cases default to IND-BREAST-HR-POS-MET-1L-CDKI."
+  notes: "Wired 2026-05-09 (BREAST-1 D1). Routes to abemaciclib (IND-BREAST-HR-POS-EARLY-ADJ-CDK46I, monarchE default). Alternative: ribociclib (IND-BREAST-HR-POS-EARLY-ADJ-RIBOCICLIB, NATALEE — broader eligibility incl. node-negative + QTc monitoring required). MDT chooses based on node status, QTc risk, access. Mechanical rewire of the Stage I-III (early HR+/HER2-) gate into a red_flag: clause using RF-BREAST-EARLY-STAGE; original clinical criteria unchanged. The monarchE high-risk clause remains free-text — no matching finding/RF infrastructure exists yet. Metastatic cases default to IND-BREAST-HR-POS-MET-1L-CDKI."
 
   # Step 6 — Metastatic TNBC: BRCA mutation gate → PARPi vs pembro+chemo.
   # BRCA-mutated mTNBC: olaparib or talazoparib preferred 1L (OlympiAD, EMBRACA).

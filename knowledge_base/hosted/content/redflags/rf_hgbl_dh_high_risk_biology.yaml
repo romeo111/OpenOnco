@@ -1,24 +1,27 @@
 id: RF-HGBL-DH-HIGH-RISK-BIOLOGY
-definition: "MYC + BCL2 (and/or BCL6) rearrangement (double-/triple-hit) confirmed by FISH — DA-EPOCH-R + IT methotrexate prophylaxis preferred over R-CHOP per multiple retrospective and small prospective series."
-definition_ua: "MYC + BCL2 (та/або BCL6) перебудова (double-/triple-hit) підтверджена FISH — DA-EPOCH-R + IT-MTX профілактика над R-CHOP за ретроспективними і малими проспективними даними."
+definition: "MYC + BCL2 (and/or BCL6) rearrangement (double-/triple-hit) confirmed by FISH — DA-EPOCH-R
+  + IT methotrexate prophylaxis preferred over R-CHOP per multiple retrospective and small prospective
+  series."
+definition_ua: "MYC + BCL2 (та/або BCL6) перебудова (double-/triple-hit) підтверджена FISH — DA-EPOCH-R
+  + IT-MTX профілактика над R-CHOP за ретроспективними і малими проспективними даними."
 
 trigger:
   type: biomarker
   any_of:
-    - all_of:
-        - finding: "myc_rearrangement"
-          value: true
-        - finding: "bcl2_rearrangement"
-          value: true
-    - all_of:
-        - finding: "myc_rearrangement"
-          value: true
-        - finding: "bcl6_rearrangement"
-          value: true
-    - finding: "double_hit_lymphoma"
+  - all_of:
+    - finding: "myc_rearrangement"
       value: true
-    - finding: "triple_hit_lymphoma"
+    - finding: "bcl2_rearrangement"
       value: true
+  - all_of:
+    - finding: "myc_rearrangement"
+      value: true
+    - finding: "bcl6_rearrangement"
+      value: true
+  - finding: "double_hit_lymphoma"
+    value: true
+  - finding: "triple_hit_lymphoma"
+    value: true
 
 
 clinical_direction: intensify
@@ -30,15 +33,18 @@ relevant_diseases: [DIS-HGBL-DH]
 shifts_algorithm: [ALGO-HGBL-DH-1L]
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-04-25"
 draft: false
 
 notes: >
-  WHO 2022/ICC define HGBL-DH/-TH as distinct entity. NCCN explicitly endorses DA-EPOCH-R for HGBL-DH; CNS prophylaxis (IT MTX × 4-8 doses) standard regardless of CNS-IPI in this subtype.
+  WHO 2022/ICC define HGBL-DH/-TH as distinct entity. NCCN explicitly endorses DA-EPOCH-R for HGBL-DH;
+  CNS prophylaxis (IT MTX × 4-8 doses) standard regardless of CNS-IPI in this subtype.
 notes_ua: >
-  WHO 2022/ICC define HGBL-DH/-TH as distinct сутність. NCCN explicitly endorses DA-EPOCH-R for HGBL-DH; CNS prophylaxis (IT MTX × 4-8 doses) стандарт regardless of CNS-IPI in this підтип.
+  WHO 2022/ICC визначають HGBL-DH/-TH як окрему сутність. NCCN явно підтримує DA-EPOCH-R для HGBL-DH;
+  CNS-профілактика (IT MTX × 4-8 доз) є стандартом незалежно від CNS-IPI при цьому підтипі.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

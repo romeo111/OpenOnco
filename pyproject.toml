@@ -16,6 +16,12 @@ ingestion = [
     "pdfplumber>=0.11",
     "pytesseract>=0.3.10",
 ]
+# MCP server: exposes the deterministic engine to LLM clients (Claude Desktop,
+# Cursor, etc.) so an assistant calls OpenOnco instead of guessing regimens.
+# See mcp_server/README.md.
+mcp = [
+    "mcp>=1.2",
+]
 dev = [
     "pytest>=8.0",
     "ruff>=0.5",
@@ -30,7 +36,7 @@ build-backend = "setuptools.build_meta"
 # but contain __init__.py-less or otherwise non-package YAML / docs / data.
 # Without this, setuptools' flat-layout auto-discovery errors with
 # "Multiple top-level packages discovered" on pip install -e .
-include = ["knowledge_base*"]
+include = ["knowledge_base*", "mcp_server*"]
 exclude = [
     "contributions*",
     "specs*",

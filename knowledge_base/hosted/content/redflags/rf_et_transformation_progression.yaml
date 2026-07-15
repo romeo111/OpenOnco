@@ -1,24 +1,28 @@
 id: RF-ET-TRANSFORMATION-PROGRESSION
-definition: "ET transformation to post-ET myelofibrosis (~5-10% over 15 years) or to AML / MDS (rare ~1-5%): rising LDH, new splenomegaly, leukoerythroblastic smear, increasing reticulin fibrosis on trephine, blast appearance — re-stage, switch to MF or AML algorithm"
-definition_ua: "Трансформація ET у пост-ET мієлофіброз (~5-10% за 15 років) або в ГМЛ / МДС (рідкісно ~1-5%): підвищення ЛДГ, нова спленомегалія, лейкоеритробластичний smear, прогресуючий ретикулін-фіброз на трепанобіопсії, поява бластів — повторне стадіювання, перехід на алгоритм ПМФ або ГМЛ"
+definition: "ET transformation to post-ET myelofibrosis (~5-10% over 15 years) or to AML / MDS (rare ~1-5%):
+  rising LDH, new splenomegaly, leukoerythroblastic smear, increasing reticulin fibrosis on trephine,
+  blast appearance — re-stage, switch to MF or AML algorithm"
+definition_ua: "Трансформація ET у пост-ET мієлофіброз (~5-10% за 15 років) або в ГМЛ / МДС (рідкісно
+  ~1-5%): підвищення ЛДГ, нова спленомегалія, лейкоеритробластичний smear, прогресуючий ретикулін-фіброз
+  на трепанобіопсії, поява бластів — повторне стадіювання, перехід на алгоритм ПМФ або ГМЛ"
 
 trigger:
   type: composite
   any_of:
-    - finding: "post_et_mf_transformation"
-      value: true
-    - finding: "post_et_aml_transformation"
-      value: true
-    - finding: "blasts_pb_pct"
-      threshold: 5
-      comparator: ">="
-    - finding: "blasts_bm_pct"
-      threshold: 5
-      comparator: ">="
-    - finding: "rapid_splenomegaly_progression"
-      value: true
-    - finding: "leukoerythroblastic_smear"
-      value: true
+  - finding: "post_et_mf_transformation"
+    value: true
+  - finding: "post_et_aml_transformation"
+    value: true
+  - finding: "blasts_pb_pct"
+    threshold: 5
+    comparator: ">="
+  - finding: "blasts_bm_pct"
+    threshold: 5
+    comparator: ">="
+  - finding: "rapid_splenomegaly_progression"
+    value: true
+  - finding: "leukoerythroblastic_smear"
+    value: true
 
 clinical_direction: intensify
 
@@ -26,13 +30,13 @@ severity: critical
 priority: 100
 category: transformation-progression
 relevant_diseases:
-  - DIS-ET
+- DIS-ET
 shifts_algorithm:
-  - ALGO-ET-1L
+- ALGO-ET-1L
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-ESMO-MPN-2015
+- SRC-NCCN-MPN-2025
+- SRC-ESMO-MPN-2015
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -42,6 +46,9 @@ notes: >
   cytoreduction (especially anagrelide vs HU per PT-1). STUB —
   requires clinical co-lead signoff.
 notes_ua: >
-  Triggers re-route from ET 1L algorithm to PMF algorithm (post-ET MF) or AML algorithm (post-ET AML / MDS). Annual incidence is low; risk підвищується with хвороба duration + JAK2-мутація status + exposure to cytoreduction (особливо анагрелід vs HU per PT-1). STUB — requires clinical co-lead signoff.
+  Ініціює перенаправлення від алгоритму ET 1L до алгоритму PMF (пост-ET МФ) або алгоритму ГМЛ (пост-ET
+  ГМЛ / МДС). Річна захворюваність низька; ризик зростає з тривалістю хвороби + статусом JAK2-мутації
+  + впливом циторедукції (особливо анагрелід vs HU за PT-1). СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

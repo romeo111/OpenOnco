@@ -45,3 +45,39 @@ sources:
 - SRC-AASLD-HCC-2023
 last_reviewed: '2026-04-27'
 notes: "Scaffold systemic-only algorithm. Out of scope for this commit (awaits PROPOSAL §17 ratification): hepatic resection (BCLC 0-A, single tumor ≤5 cm, CP-A, no significant portal HTN), liver transplant (Milan or UCSF expanded criteria), thermal ablation (RFA / MWA for ≤3 nodules ≤3 cm), TACE / TARE for BCLC B intermediate, SBRT for unresectable liver-confined unable to undergo other LRT. These are first-line curative-or-loco-regional modalities; systemic therapy is a downstream fallback.\nEtiology branching (parallel to indication selection, does NOT shift the atezo+bev / durva+treme / sorafenib choice — handled as parallel supportive_care rails):\n- HBV+ (HBsAg+ OR anti-HBc+ OR HBV-DNA detectable) — RF-HCC-HBV-\n  REACTIVATION-RISK fires → entecavir or tenofovir prophylaxis\n  initiated before first systemic dose, continued through treatment\n  + ≥12 months post (per AASLD HCC 2023 §antiviral-during-systemic).\n  Anti-VEGF (bevacizumab) + ICI both trigger reactivation in\n  unprophylaxed HBsAg+ patients with reported decompensation.\n\n- HCV+ (HCV-RNA detectable, NOT just anti-HCV seropositive) — DAA\n  therapy (sofosbuvir/velpatasvir 12 weeks; alternative glec/pibr if\n  DAA-experienced) should be initiated before or concurrently with\n  atezo+bev when feasible. SVR12 reduces hepatic decompensation risk\n  and may improve OS in HCC-on-HCV-cirrhosis cohorts (Singal et al.\n  Gastroenterology 2019; AASLD HCC 2023). Concurrent DAA + atezo+bev\n  is acceptable when liver function CP-A; defer atezo+bev start by\n  2-4 weeks if rapid HCV clearance feasible AND tumor biology not\n  aggressive (no rapid AFP doubling, no extrahepatic spread). Do\n  NOT combine sofosbuvir with amiodarone (severe bradycardia).\n\nBoth viral pathways operate as parallel SUP-* rails (entecavir + DAA-coordination); the algorithm's indication choice is unchanged. Future round: add SUP-HCV-DAA-PERI-HCC supportive_care entity to formalize this coordination (currently noted in atezo+bev do_not_do).\n"
+notes_ua: >
+  Скаффолд алгоритму лише для системної терапії. Поза обсягом цього
+  коміту (очікується ратифікація PROPOSAL §17): резекція печінки
+  (BCLC 0-A, одиночна пухлина ≤5 см, CP-A, без значної портальної ГТ),
+  трансплантація печінки (критерії Мілана або розширені UCSF), термічна
+  абляція (RFA/MWA для ≤3 вузлів ≤3 см), ТASE/TARE для BCLC B проміжного,
+  SBRT для нерезектабельного печінково-обмеженого без можливості іншої ЛРТ.
+  Це першолінійні курабельні або лорегіональні методи; системна терапія є
+  наступним резервним варіантом.
+  Розгалуження за етіологією (паралельно до вибору показання, НЕ змінює
+  вибір атезолізумаб+бев / дурвалумаб+трем / сорафеніб — обробляється
+  як паралельні рейки supportive_care):
+  - HBV+ (HBsAg+ АБО anti-HBc+ АБО HBV-DNA визначається) — спрацьовує
+    RF-HCC-HBV-
+  REACTIVATION-RISK → профілактика ентекавіром або тенофовіром
+    починається перед першою системною дозою, продовжується протягом
+    лікування + ≥12 місяців після (AASLD HCC 2023 §antiviral-during-systemic).
+    Анти-VEGF (бевацизумаб) + ICI обидва запускають реактивацію у
+    непрофілактованих HBsAg+ пацієнтів із задокументованою декомпенсацією.
+  - HCV+ (HCV-RNA визначається, НЕ лише анти-HCV серопозитивний) — DAA
+    (sofosбувір/велпатасвір 12 тижнів; альтернатива глекапревір/пібрентасвір
+    при попередньому DAA) слід розпочинати до або одночасно з атезолізумаб+бев,
+    якщо можливо. SVR12 зменшує ризик декомпенсації печінки та може покращити
+    OS у когортах ГЦК-на-HCV-цирозі (Singal et al. Gastroenterology 2019;
+    AASLD HCC 2023). Паралельний DAA + атезолізумаб+бев є прийнятним при CP-A;
+    відкласти початок атезолізумаб+бев на 2–4 тижні, якщо можливе швидке
+    очищення HCV ТА біологія пухлини не агресивна (без швидкого подвоєння AFP,
+    без позапечінкового поширення). НЕ поєднувати sofosбувір з аміодароном
+    (виражена брадикардія).
+  Обидва вірусні шляхи функціонують як паралельні рейки SUP-*
+  (ентекавір + координація DAA); вибір показання алгоритму незмінний.
+  Майбутній раунд: додати SUP-HCV-DAA-PERI-HCC supportive_care entity для
+  формалізації цієї координації (наразі відзначено в do_not_do атезолізумаб+бев).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_13
+draft_revision: 2

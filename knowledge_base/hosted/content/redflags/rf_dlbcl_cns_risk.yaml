@@ -1,29 +1,32 @@
 id: RF-DLBCL-CNS-RISK
-definition: "DLBCL with high CNS-IPI risk (CNS-IPI ≥4) OR specific anatomic sites (testicular, breast, kidney/adrenal, paranasal sinus, bone marrow with high-risk pathology) — triggers CNS prophylaxis pathway"
-definition_ua: "DLBCL з високим ризиком ураження ЦНС (CNS-IPI ≥4) АБО з anatomic risk локалізаціями (тестикулярна, молочна залоза, нирка/наднирник, параназальні синуси, кістковий мозок з high-risk pathology) — активує CNS prophylaxis"
+definition: "DLBCL with high CNS-IPI risk (CNS-IPI ≥4) OR specific anatomic sites (testicular, breast,
+  kidney/adrenal, paranasal sinus, bone marrow with high-risk pathology) — triggers CNS prophylaxis pathway"
+definition_ua: "DLBCL з високим ризиком ураження ЦНС (CNS-IPI ≥4) АБО з anatomic risk локалізаціями (тестикулярна,
+  молочна залоза, нирка/наднирник, параназальні синуси, кістковий мозок з high-risk pathology) — активує
+  CNS prophylaxis"
 
 trigger:
   type: composite_score
   any_of:
-    - finding: "cns_ipi_score"
-      threshold: 4
-      comparator: ">="
-    - finding: "anatomic_cns_risk_site"
-      value: true
-    - finding: "testicular_involvement"
-      value: true
+  - finding: "cns_ipi_score"
+    threshold: 4
+    comparator: ">="
+  - finding: "anatomic_cns_risk_site"
+    value: true
+  - finding: "testicular_involvement"
+    value: true
 
 clinical_direction: investigate
 
 category: high-risk-biology
 priority: 60
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -36,6 +39,12 @@ notes: >
   shift main regimen, but mandates additional CNS-directed therapy as
   particularity in the Plan.
 notes_ua: >
-  CNS-IPI: age >60, LDH >ULN, ECOG ≥2, stage III/IV, ≥2 extranodal sites, kidney/adrenal involvement (each 1 point; max 6). Score ≥4 = ~12% CNS рецидив risk. Anatomic високого ризику sites independently warrant prophylaxis regardless of score. стандарт prophylaxis: high-доза метотрексат (3-3.5 g/m² IV) intercalated with R-CHOP цикли, OR intrathecal MTX (less переважний — modest ефективність). Direction "investigate" — does not shift main схема, but mandates additional CNS-directed терапія as particularity in the Plan.
+  CNS-IPI: вік >60, ЛДГ >ULN, ECOG ≥2, стадія III/IV, ≥2 екстранодальних сайти, ураження нирки/наднирника
+  (кожен 1 бал; максимум 6). Бал ≥4 = ~12% ризик рецидиву в ЦНС. Анатомічні сайти високого ризику незалежно
+  потребують профілактики незалежно від балу. Стандартна профілактика: високодозований метотрексат (3-3.5
+  g/m² в/в) в чергуванні з циклами R-CHOP, або інтратекальний MTX (менш переважний — скромна ефективність).
+  Напрямок «обстеження» — не переключає основну схему, але вимагає додаткової ЦНС-спрямованої терапії
+  як особливості плану.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lifileucel - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="Lifileucel - OpenOnco">
 <meta property="og:description" content="Lifileucel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/drugs/drug-lifileucel.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lifileucel - OpenOnco">
 <meta name="twitter:description" content="Lifileucel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Lifileucel - OpenOnco","description":"Lifileucel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-lifileucel.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-lifileucel.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Lifileucel - OpenOnco","description":"Lifileucel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-lifileucel.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-lifileucel.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -115,10 +185,9 @@
   <table class="kb-facts"><tr><th>ID</th><td><code>DRUG-LIFILEUCEL</code></td></tr>
 <tr><th>Type</th><td>Drug</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">Amtagvi</span><span class="kb-alias">LN-144</span><span class="kb-alias">lifileucel-tarmunileucel</span><span class="kb-alias">Ліфілейцел</span></div></td></tr>
-<tr><th>Status</th><td>reviewed 2026-04-27</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/drugs/lifileucel.yaml</code></td></tr>
-<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
-<tr><th>Sources</th><td><span class="kb-chip" title="ESMO Cutaneous Melanoma"><code>SRC-ESMO-MELANOMA-2024</code></span> <span class="kb-chip" title="NCCN Cutaneous Melanoma"><code>SRC-NCCN-MELANOMA-2025</code></span></td></tr></table>
+<tr><th>Status</th><td>reviewed 2026-04-27 | pending_clinical_signoff</td></tr>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-MELANOMA"><code>DIS-MELANOMA</code></a></span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="ESMO Cutaneous Melanoma"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-cutaneous-melanoma" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-MELANOMA-2024</code></a></span> <span class="kb-chip" title="NCCN Cutaneous Melanoma"><a href="https://www.nccn.org/professionals/physician_gls/pdf/cutaneous_melanoma.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-MELANOMA-2025</code></a></span></td></tr></table>
   <h2>Drug Facts</h2><table class="kb-facts"><tr><th>Class</th><td>Autologous tumor-infiltrating lymphocyte (TIL) cell therapy</td></tr>
 <tr><th>Mechanism</th><td>Patient-specific autologous polyclonal cell-therapy product manufactured ex vivo from a fresh resected tumor specimen (typically a single ≥1.5 cm cutaneous, subcutaneous, lymph-node, or visceral metastasis). The tumor is enzymatically dissociated; endogenous tumor-infiltrating lymphocytes (TILs — predominantly CD8+ effector T cells with native polyclonal TCR repertoire recognizing patient-unique tumor neoantigens) are expanded over ~22 days using interleukin-2 (IL-2) and an OKT3 anti-CD3 stimulus, then cryopreserved and shipped back. Treatment requires three steps: (1) non-myeloablative lymphodepleting chemotherapy (cyclophosphamide + fludarabine) to deplete suppressive Tregs and create homeostatic cytokine sinks; (2) single IV infusion of the expanded TIL product (target 7.5–72 × 10⁹ viable cells); (3) short-course high-dose IL-2 (aldesleukin 600,000 IU/kg IV q8-12 h for up to 6 doses)...</td></tr>
 <tr><th>Typical dosing</th><td>Single intravenous infusion of 7.5 × 10⁹ to 72 × 10⁹ viable TIL cells (median ~21 × 10⁹) administered after non-myeloablative lymphodepletion: cyclophosphamide 60 mg/kg/day IV × 2 days (Days -7 and -6), then fludarabine 25 mg/m²/day IV × 5 days (Days -5 through -1). TIL infusion on Day 0. Post-infusion IL-2 support: aldesleukin 600,000 IU/kg IV every 8-12 hours starting 3-24 h after TIL infusion, for up to 6 doses (often fewer due to cumulative IL-2 toxicity — capillary leak, hypotension, oliguria). Single course; no maintenance. Manufacturing takes ~22 days from tumor harvest to shipment, with bridging therapy as needed.</td></tr>
@@ -127,7 +196,7 @@
 <tr><th>Ukraine last verified</th><td>2026-04-27</td></tr></table><h2>Warnings</h2><ul><li>Treatment-related mortality (~7-8% in trial cohorts; multifactorial — lymphodepletion, IL-2, immune effects)</li><li>Prolonged severe cytopenia (lymphodepletion + cellular product)</li><li>Severe infection (fungal, bacterial, viral; including opportunistic)</li><li>Cardiopulmonary disorders (IL-2-mediated capillary leak, arrhythmia, MI)</li><li>Renal failure (IL-2-mediated)</li></ul>
   <h2>Notes</h2><p>First cell-therapy approved for any solid tumor. Logistics resemble CAR-T but more demanding: requires fresh tumor harvest (single accessible ≥1.5 cm lesion; surgical or interventional- radiology biopsy not adequate — needs gross tissue), centralized manufacturing (~22 days), bridging therapy during manufacturing, in-patient lymphodepletion + TIL infusion + IL-2 administration in ICU-capable cell-therapy center, prolonged cytopenia recovery, and ~7-8% treatment-related mortality. Eligibility per FDA label: ECOG 0-1, adequate organ function, anti-PD-1 ± BRAFi+MEKi failure, accessible lesion for harvest, anticipated tolerance of IL-2. Patient selection is critical — frail patients have prohibitive mortality risk. UA access in MVP effectively zero; the only realistic pathway is cross-border referral to a US (or eventually EU) Iovance-accredited center via &#x27;Лікування за кордоном&#x27; (наказ МОЗ 988) with private / charitable funding — total cost USD 500K-1M. Listed for completeness; rule-engine inclusion as a referral-only option in melanoma post-anti-PD-1.</p>
   <h2>Used By</h2>
-<h3>Regimens</h3><ul><li><code>REG-LIFILEUCEL-TIL-MELANOMA</code> - Lifileucel TIL therapy (Amtagvi, melanoma 3L+) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_lifileucel_til_melanoma.yaml)</span></li></ul>
+<h3>Regimens</h3><ul><li><code>REG-LIFILEUCEL-TIL-MELANOMA</code> - Lifileucel TIL therapy (Amtagvi, melanoma 3L+)</li></ul>
 </main>
 </body>
 </html>

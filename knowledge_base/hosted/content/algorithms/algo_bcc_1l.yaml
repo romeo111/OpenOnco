@@ -19,13 +19,13 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Metastatic BCC (distant metastases)"
+        - {finding: distant_metastasis, value: true}
     if_true:
       result: IND-BCC-1L-VISMODEGIB
       notes: "Sonidegib FDA label restricted to laBCC; vismodegib approved for both laBCC and mBCC"
     if_false:
       next_step: 2
-    notes: "Free-text condition without RF; engine routes to default."
+    notes: "Mechanical rewire of the original free-text gate (Metastatic BCC / distant metastases) into a finding: clause using distant_metastasis. Original clinical criteria unchanged."
   - step: 2
     evaluate:
       any_of:
@@ -46,3 +46,13 @@ notes: >
   routes to vismodegib as default with sonidegib as explicit alternative
   track (aggressive). Cemiplimab (anti-PD-1) is the standard after HHI
   failure; not encoded here (2L scope).
+notes_ua: >
+  Обидва — вісмодегіб та сонідегіб — є NCCN Category 1 для місцево
+  поширеного BCC. Вісмодегіб має ширше схвалення FDA (laBCC + mBCC);
+  сонідегіб обмежений лише laBCC. Дерево рішень наразі спрощено — обидва
+  шляхи ведуть до вісмодегібу як стандарту, з сонідегібом як явним
+  альтернативним треком (агресивна гілка). Цемiплімаб (анти-PD-1) є
+  стандартом після невдачі HHI; у цьому алгоритмі не закодований (обсяг 2L).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_13
+draft_revision: 2

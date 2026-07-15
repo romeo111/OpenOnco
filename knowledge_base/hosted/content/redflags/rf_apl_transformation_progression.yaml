@@ -1,25 +1,28 @@
 id: RF-APL-TRANSFORMATION-PROGRESSION
-definition: "APL differentiation syndrome (formerly RA-syndrome): fever, dyspnea, weight gain ≥5 kg, pleuropericardial effusions, pulmonary infiltrates, hypotension, AKI — typically days 2-21 of induction"
-definition_ua: "Синдром диференціації при гострому промієлоцитарному лейкозі (раніше RA-синдром): лихоманка, задишка, набір ваги ≥5 кг, плевроперикардіальний випіт, легеневі інфільтрати, гіпотензія, гостре пошкодження нирок — зазвичай дні 2-21 індукції"
+definition: "APL differentiation syndrome (formerly RA-syndrome): fever, dyspnea, weight gain ≥5 kg, pleuropericardial
+  effusions, pulmonary infiltrates, hypotension, AKI — typically days 2-21 of induction"
+definition_ua: "Синдром диференціації при гострому промієлоцитарному лейкозі (раніше RA-синдром): лихоманка,
+  задишка, набір ваги ≥5 кг, плевроперикардіальний випіт, легеневі інфільтрати, гіпотензія, гостре пошкодження
+  нирок — зазвичай дні 2-21 індукції"
 
 trigger:
   type: symptom_composite
   any_of:
-    - finding: "differentiation_syndrome_active"
+  - finding: "differentiation_syndrome_active"
+    value: true
+  - finding: "rising_wbc_on_atra"
+    value: true
+  - finding: "wbc_rise_during_induction"
+    threshold: 10
+    comparator: ">"
+  - all_of:
+    - finding: "fever_unexplained"
       value: true
-    - finding: "rising_wbc_on_atra"
+    - finding: "new_dyspnea"
       value: true
-    - finding: "wbc_rise_during_induction"
-      threshold: 10
-      comparator: ">"
-    - all_of:
-        - finding: "fever_unexplained"
-          value: true
-        - finding: "new_dyspnea"
-          value: true
-        - finding: "weight_gain_kg"
-          threshold: 5
-          comparator: ">="
+    - finding: "weight_gain_kg"
+      threshold: 5
+      comparator: ">="
 
 clinical_direction: investigate
 
@@ -27,12 +30,12 @@ severity: critical
 priority: 100
 category: transformation-progression
 relevant_diseases:
-  - DIS-APL
+- DIS-APL
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-APL-2019
+- SRC-NCCN-AML-2025
+- SRC-ELN-APL-2019
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -45,6 +48,12 @@ notes: >
   and is a leading cause of induction mortality if not promptly recognized.
   STUB — requires clinical co-lead signoff.
 notes_ua: >
-  Direction "investigate" — surfaces a моніторинг annotation rather than shifting показання. Triggers immediate dexamethasone 10 mg IV BID, consideration of temporary ATRA/ATO утримати (per severity), агресивний diuresis, ICU моніторинг. Prophylactic steroids (prednisone 0.5 mg/kg or dexamethasone 2.5 mg/m² BID) are рекомендований for високого ризику (WBC >10) and any patient with rising WBC during індукція. DS occurs in ~5-25% and is a leading cause of індукція mortality if not promptly recognized. STUB — requires clinical co-lead signoff.
+  Напрямок «обстеження» — виводить анотацію моніторингу, а не переключає показання. Ініціює негайний дексаметазон
+  10 mg в/в двічі на добу, розгляд тимчасового утримання ATRA/ATO (залежно від тяжкості), агресивний форсований
+  діурез, моніторинг у відділенні інтенсивної терапії. Профілактичні стероїди (преднізон 0.5 mg/kg або
+  дексаметазон 2.5 mg/m² двічі на добу) рекомендовані для пацієнтів високого ризику (WBC >10) та будь-якого
+  пацієнта зі зростанням WBC під час індукції. Синдром диференціації виникає у ~5–25% та є провідною причиною
+  летальності під час індукції при несвоєчасному розпізнаванні. СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

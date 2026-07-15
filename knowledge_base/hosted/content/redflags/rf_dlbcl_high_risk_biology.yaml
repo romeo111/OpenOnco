@@ -14,15 +14,15 @@ definition_ua: >
 trigger:
   type: biomarker
   any_of:
-    - finding: "double_expressor_status"
+  - finding: "double_expressor_status"
+    value: true
+  - finding: "tp53_mutation"
+    value: true
+  - all_of:
+    - finding: "cell_of_origin_hans"
+      value: "non-GCB"
+    - finding: "high_ipi"
       value: true
-    - finding: "tp53_mutation"
-      value: true
-    - all_of:
-        - finding: "cell_of_origin_hans"
-          value: "non-GCB"
-        - finding: "high_ipi"
-          value: true
 
 clinical_direction: intensify
 
@@ -31,13 +31,13 @@ priority: 80
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm:
-  - ALGO-DLBCL-1L
+- ALGO-DLBCL-1L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-04-25"
 draft: false
@@ -50,6 +50,10 @@ notes: >
   triple-hit (FISH break-apart) is captured by the separate
   DIS-HGBL-DH entity per WHO 5th classification, not here.
 notes_ua: >
-  Double-expressor (≈30% of DLBCL): поступається PFS/OS on R-CHOP; POLARIX аналіз підгруп shows Pola-R-CHP виграш largest in non-GCB + double-expressor. TP53 мутація: PFS halved on R-CHOP; consider Pola-R-CHP and earlier консолідація discussion. Strict double-/ triple-hit (FISH break-apart) is captured by the separate DIS-HGBL-DH сутність per WHO 5th classification, not here.
+  Double-expressor (≈30% DLBCL): нижча ЗВБп/ЗВ на R-CHOP; аналіз підгруп POLARIX показує, що користь Pola-R-CHP
+  найбільша при non-GCB + double-expressor. Мутація TP53: ЗВБп скорочена вдвічі на R-CHOP; розглянути
+  Pola-R-CHP та більш ранню дискусію щодо консолідації. Строге double-/triple-hit (FISH break-apart) зафіксовано
+  окремою сутністю DIS-HGBL-DH за класифікацією WHO 5-го видання, а не тут.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

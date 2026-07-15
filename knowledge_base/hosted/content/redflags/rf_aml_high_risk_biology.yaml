@@ -1,34 +1,38 @@
 id: RF-AML-HIGH-RISK-BIOLOGY
-definition: "AML with adverse-risk biology per ELN 2022: TP53 mutation, complex / monosomal karyotype, RUNX1 / ASXL1 mutation, KMT2A rearrangement (other than t(9;11)), inv(3) / t(3;3), -5/del(5q), -7, FLT3-ITD without NPM1, or therapy-related"
-definition_ua: "Гострий мієлоїдний лейкоз з біологією несприятливого ризику за ELN 2022: TP53 мутація, складний / моносомний каріотип, мутація RUNX1 / ASXL1, перебудова KMT2A (крім t(9;11)), inv(3) / t(3;3), -5/del(5q), -7, FLT3-ITD без NPM1, або вторинний (терапія-індукований)"
+definition: "AML with adverse-risk biology per ELN 2022: TP53 mutation, complex / monosomal karyotype,
+  RUNX1 / ASXL1 mutation, KMT2A rearrangement (other than t(9;11)), inv(3) / t(3;3), -5/del(5q), -7, FLT3-ITD
+  without NPM1, or therapy-related"
+definition_ua: "Гострий мієлоїдний лейкоз з біологією несприятливого ризику за ELN 2022: TP53 мутація,
+  складний / моносомний каріотип, мутація RUNX1 / ASXL1, перебудова KMT2A (крім t(9;11)), inv(3) / t(3;3),
+  -5/del(5q), -7, FLT3-ITD без NPM1, або вторинний (терапія-індукований)"
 
 trigger:
   type: biomarker
   any_of:
-    - finding: "tp53_mutation"
-      value: true
-    - finding: "complex_karyotype"
-      value: true
-    - finding: "monosomal_karyotype"
-      value: true
-    - finding: "monosomy_7"
-      value: true
-    - finding: "del_5q"
-      value: true
-    - finding: "inv_3_or_t_3_3"
-      value: true
-    - finding: "kmt2a_rearrangement_non_t911"
-      value: true
-    - finding: "runx1_mutation"
-      value: true
-    - finding: "asxl1_mutation"
-      value: true
-    - finding: "flt3_itd_without_npm1"
-      value: true
-    - finding: "therapy_related_aml"
-      value: true
-    - finding: "aml_eln_risk"
-      value: "adverse"
+  - finding: "tp53_mutation"
+    value: true
+  - finding: "complex_karyotype"
+    value: true
+  - finding: "monosomal_karyotype"
+    value: true
+  - finding: "monosomy_7"
+    value: true
+  - finding: "del_5q"
+    value: true
+  - finding: "inv_3_or_t_3_3"
+    value: true
+  - finding: "kmt2a_rearrangement_non_t911"
+    value: true
+  - finding: "runx1_mutation"
+    value: true
+  - finding: "asxl1_mutation"
+    value: true
+  - finding: "flt3_itd_without_npm1"
+    value: true
+  - finding: "therapy_related_aml"
+    value: true
+  - finding: "aml_eln_risk"
+    value: "adverse"
 
 clinical_direction: intensify
 
@@ -36,13 +40,13 @@ severity: critical
 priority: 100
 category: high-risk-biology
 relevant_diseases:
-  - DIS-AML
+- DIS-AML
 shifts_algorithm:
-  - ALGO-AML-1L
+- ALGO-AML-1L
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-AML-2022
+- SRC-NCCN-AML-2025
+- SRC-ELN-AML-2022
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -53,6 +57,11 @@ notes: >
   from intermediate in ELN-2017). STUB — requires clinical co-lead
   signoff.
 notes_ua: >
-  ELN-2022 несприятливий-risk patients are alloHCT candidates перша лінія if fit. Adds urgency to donor search and shifts the після індукції pathway (skip консолідація HiDAC if rapidly bridging to allo). FLT3-ITD with high allelic ratio + NPM1-wt is now classified несприятливий (down-graded from intermediate in ELN-2017). STUB — requires clinical co-lead signoff.
+  Пацієнти з несприятливим ризиком за ELN-2022 є кандидатами на алоТГСК у ПР1 при придатності. Підвищує
+  терміновість пошуку донора та переключає постіндукційний маршрут (пропустити HiDAC-консолідацію при
+  швидкому переході до алогенної трансплантації). FLT3-ITD з високим алельним співвідношенням + NPM1-WT
+  нині класифікується як несприятливий (знижено з проміжного в ELN-2017). СТАБ — потребує підпису клінічного
+  співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

@@ -1,0 +1,94 @@
+id: RF-CHEK2-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family pedigree pattern suggestive of germline CHEK2 heterozygous
+  carrier state in an asymptomatic individual who has NOT yet had
+  multi-gene panel testing. CHEK2 c.1100delC is one of the most
+  common moderate-penetrance variants in European-ancestry populations
+  (~1.5% carrier frequency). Triggers include any of (a) first- or
+  second-degree relative with a confirmed CHEK2 pathogenic / likely-
+  pathogenic variant (most commonly c.1100delC); (b) family-history
+  cluster of breast cancer (moderate-penetrance ~RR 2-3) plus
+  colorectal cancer in close relatives — a recognized CHEK2 multi-
+  cancer signature; (c) family history of multiple high-grade
+  prostate cancers (CHEK2 c.1100delC has documented high-grade /
+  metastatic prostate enrichment); (d) Slavic/Baltic/Polish/Ashkenazi
+  ancestry combined with personal or family history of breast,
+  colorectal, prostate, or thyroid cancer — CHEK2 c.1100delC has
+  elevated founder-mutation prevalence in these populations.
+  No current personal cancer diagnosis in the at-risk individual
+  being assessed. Prevention-persona RedFlag (§20, v0.3 moderate-
+  penetrance breast gene expansion — pre-testing suspicion variant).
+definition_ua: >-
+  Сімейний родовід з патерном, що нагадує гермінативний heterozygous
+  carrier CHEK2, у асимптомної особи, яка ще НЕ пройшла multi-gene
+  panel тестування. CHEK2 c.1100delC — один з найпоширеніших
+  moderate-penetrance варіантів у European-ancestry populations
+  (~1.5% carrier frequency). Тригери включають будь-яке з (а) родич
+  першого/другого ступеня з підтвердженим патогенним / ймовірно-
+  патогенним варіантом CHEK2 (найчастіше c.1100delC); (б) сімейне
+  накопичення раку молочної залози (moderate-penetrance ~RR 2-3)
+  плюс колоректального раку у близьких родичів — визнана CHEK2
+  multi-cancer signature; (в) сімейна історія множинних high-grade
+  prostate раків (CHEK2 c.1100delC має задокументоване high-grade /
+  metastatic prostate enrichment); (г) Slavic/Baltic/Polish/
+  Ashkenazi походження у поєднанні з особистою або сімейною
+  історією раку молочної залози, колоректального, простатичного
+  або щитоподібної залози — CHEK2 c.1100delC має підвищену
+  засновницьку поширеність у цих популяціях.
+  Поточний особистий діагноз раку у пацієнта з ризиком відсутній.
+  Prevention-персона RedFlag (§20, v0.3 — pre-testing suspicion
+  варіант).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_chek2_known_pathogenic_variant"
+      value: true
+    - finding: "family_breast_and_colorectal_cluster"
+      value: true
+    - finding: "family_high_grade_prostate_multiple"
+      value: true
+    - finding: "family_slavic_baltic_polish_ashkenazi_with_breast_or_crc_or_prostate"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 115
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-BREAST
+  - DIS-CRC
+  - DIS-PROSTATE
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  v0.3 Wave M suspicion variant — pre-testing family-history-
+  suspicion counterpart to RF-CHEK2-CONFIRMED-CARRIER. Fires when
+  family pedigree pattern suggests CHEK2 carrier state but germline
+  panel testing has not yet been completed. Standard pathway =
+  referral for genetic counseling + multi-gene panel testing
+  covering BRCA1/2 + relevant moderate-penetrance genes (CHEK2 is
+  on every HBOC panel; if CRC family history dominates, an
+  expanded CRC-inclusive panel covering Lynch + APC + MUTYH should
+  be ordered). If panel returns positive for CHEK2, the patient
+  transitions to the RF-CHEK2-CONFIRMED-CARRIER pathway with
+  variant-specific surveillance (truncating > splice > missense
+  risk tiers). Distinct trigger findings from the confirmed-
+  carrier RF (carrier RF fires on `germline_chek2_pathogenic_
+  variant_confirmed` / `germline_chek2_1100delc_confirmed`;
+  suspicion RF fires on family-history-based findings only).
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1
+  dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_suspicion_variant_wave_m
+draft_revision: 1

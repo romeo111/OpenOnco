@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Liposomal irinotecan - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="Liposomal irinotecan - OpenOnco">
 <meta property="og:description" content="Liposomal irinotecan: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/drugs/drug-liposomal-irinotecan.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Liposomal irinotecan - OpenOnco">
 <meta name="twitter:description" content="Liposomal irinotecan: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Liposomal irinotecan - OpenOnco","description":"Liposomal irinotecan: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-liposomal-irinotecan.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-liposomal-irinotecan.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Liposomal irinotecan - OpenOnco","description":"Liposomal irinotecan: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-liposomal-irinotecan.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-liposomal-irinotecan.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -116,9 +186,8 @@
 <tr><th>Type</th><td>Drug</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">MM-398</span><span class="kb-alias">Onivyde</span><span class="kb-alias">PEP02</span><span class="kb-alias">nal-IRI</span><span class="kb-alias">nanoliposomal irinotecan</span><span class="kb-alias">Ліпосомальний іринотекан</span></div></td></tr>
 <tr><th>Status</th><td>reviewed 2026-05-08</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/drugs/drug_liposomal_irinotecan.yaml</code></td></tr>
-<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
-<tr><th>Sources</th><td><span class="kb-chip" title="ESMO Pancreatic Cancer"><code>SRC-ESMO-PANCREATIC-2024</code></span> <span class="kb-chip" title="NALIRIFOX versus nab-paclitaxel and gemcitabine in treatment-naive patients with metastat..."><code>SRC-NAPOLI-3-WAINBERG-2024</code></span> <span class="kb-chip" title="NCCN Pancreatic Adenocarcinoma"><code>SRC-NCCN-PANCREATIC-2025</code></span></td></tr></table>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-PDAC"><code>DIS-PDAC</code></a></span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="ESMO Pancreatic Cancer"><a href="https://www.esmo.org/guidelines/guidelines-by-topic/esmo-clinical-practice-guidelines-gastrointestinal-cancers/cancer-of-the-pancreas-esmo-clinical-practice-guidelines" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-PANCREATIC-2024</code></a></span> <span class="kb-chip" title="NALIRIFOX versus nab-paclitaxel and gemcitabine in treatment-naive patients with metastat..."><a href="https://pubmed.ncbi.nlm.nih.gov/37708904" target="_blank" rel="noopener noreferrer"><code>SRC-NAPOLI-3-WAINBERG-2024</code></a></span> <span class="kb-chip" title="NCCN Pancreatic Adenocarcinoma"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1455" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-PANCREATIC-2025</code></a></span></td></tr></table>
   <h2>Drug Facts</h2><table class="kb-facts"><tr><th>Class</th><td>Topoisomerase I inhibitor (PEGylated liposomal nanoparticle formulation of irinotecan)</td></tr>
 <tr><th>Mechanism</th><td>Nanoliposomal (PEGylated) formulation of irinotecan that prolongs circulation time and enhances tumor accumulation via the enhanced permeability and retention (EPR) effect, increasing intra-tumoral conversion to active metabolite SN-38 (~100-1000× more potent than parent). SN-38 stabilizes the topoisomerase-I/DNA cleavable complex, producing single-strand DNA breaks that become lethal double-strand breaks during S-phase replication. SN-38 glucuronidation by UGT1A1 to inactive SN-38G is the main inactivation pathway; UGT1A1*28 homozygotes (Gilbert-syndrome variant) and *6 carriers have impaired clearance and increased risk of severe neutropenia and diarrhea — starting-dose reduction recommended. Compared with conventional irinotecan, the liposomal carrier delivers higher and more sustained intra-tumoral SN-38 exposure at lower peak plasma drug concentrations.</td></tr>
 <tr><th>Typical dosing</th><td>NALIRIFOX (1L mPDAC, NAPOLI-3): 50 mg/m² (free base, equivalent to ~60 mg/m² salt) IV over 90 min day 1 every 14 d, with oxaliplatin 60 mg/m² + leucovorin 400 mg/m² + 5-FU 2400 mg/m² CIV over 46 h. 2L mPDAC (NAPOLI-1, with 5-FU/LV): 70 mg/m² (free base, equivalent to ~80 mg/m² salt) IV over 90 min day 1 every 14 d. UGT1A1 *28/*28 or *6/*6: reduce starting dose ~25-30% (e.g. NAPOLI-1 schedule → 50 mg/m² free base; NALIRIFOX schedule → 40 mg/m² free base starting dose, escalate to 50 mg/m² if tolerated). Bilirubin &gt;2× ULN: do not initiate — relieve biliary obstruction first.</td></tr>
@@ -127,7 +196,7 @@
 <tr><th>Ukraine last verified</th><td>2026-05-08</td></tr></table><h2>Warnings</h2><ul><li>Severe diarrhea — early cholinergic (within 24 h) and late delayed (&gt;24 h, can be life-threatening)</li><li>Severe and life-threatening neutropenia (febrile neutropenia, sepsis)</li></ul>
   <h2>Notes</h2><p>ONIVYDE (liposomal irinotecan) is FDA-approved for two PDAC indications: (1) 1L mPDAC in combination with oxaliplatin + 5-FU + leucovorin (NALIRIFOX regimen) based on NAPOLI-3 (Wainberg, Lancet 2023; FDA approval 2024); (2) 2L mPDAC after gemcitabine-based 1L therapy in combination with 5-FU + leucovorin based on NAPOLI-1 (Wang-Gillam, Lancet 2016; FDA approval 2015). Dose is expressed in free-base equivalents per FDA label — the salt-equivalent conversion (free base × ~1.15) is found in older literature and may cause confusion; NAPOLI-3 used 50 mg/m² free base (NALIRIFOX), NAPOLI-1 used 70 mg/m² free base (2L). Liposomal formulation is NOT interchangeable with conventional irinotecan — different pharmacokinetics, different approved indications, distinct dosing. UGT1A1 testing strongly recommended before initiation; *28/*28 homozygotes need starting-dose reduction. Atropine 0.25-1 mg SC/IV for acute cholinergic syndrome (within 30 min of infusion). Loperamide schedule for late diarrhea: 4 mg at first loose stool then 2 mg q2h until 12 h diarrhea-free. ONIVYDE not registered in Ukraine — significant access barrier.</p>
   <h2>Used By</h2>
-<h3>Regimens</h3><ul><li><code>REG-NALIRIFOX</code> - NALIRIFOX <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nalirifox.yaml)</span></li></ul>
+<h3>Regimens</h3><ul><li><code>REG-NALIRIFOX</code> - NALIRIFOX</li></ul>
 </main>
 </body>
 </html>

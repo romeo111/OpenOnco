@@ -348,13 +348,13 @@ def test_render_target_lang_preserves_entity_ids_and_doses():
     """Entity IDs / doses must survive the localization pass unchanged
     (they're in the substitution corpus only as values, never as keys).
 
-    Note: regimen IDs (REG-*) are not surfaced in the rendered HTML —
-    only regimen NAMES are — so we check IDs that actually appear in
-    the document (disease, indication, source IDs)."""
+    Note: regimen IDs (REG-*) and disease IDs (DIS-*) are not surfaced in
+    the rendered HTML — only human-readable names are. Indication IDs
+    (IND-*) and source IDs (SRC-*) do appear in the output."""
     p = _patient("patient_zero_indolent.json")
     plan = generate_plan(p, kb_root=KB_ROOT)
     html = render_plan_html(plan, mdt=None, target_lang="en")
-    for token in ("DIS-HCV-MZL", "IND-HCV-MZL-1L-ANTIVIRAL", "SRC-NCCN-BCELL-2025"):
+    for token in ("IND-HCV-MZL-1L-ANTIVIRAL", "SRC-NCCN-BCELL-2025"):
         assert token in html, f"localization swallowed entity ID '{token}'"
 
 

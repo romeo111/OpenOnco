@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Etoposide - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="Etoposide - OpenOnco">
 <meta property="og:description" content="Etoposide: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/drugs/drug-etoposide.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Etoposide - OpenOnco">
 <meta name="twitter:description" content="Etoposide: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Etoposide - OpenOnco","description":"Etoposide: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-etoposide.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-etoposide.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Etoposide - OpenOnco","description":"Etoposide: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-etoposide.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-etoposide.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -115,10 +185,9 @@
   <table class="kb-facts"><tr><th>ID</th><td><code>DRUG-ETOPOSIDE</code></td></tr>
 <tr><th>Type</th><td>Drug</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">Etopophos</span><span class="kb-alias">Etoposide phosphate (Etopophos)</span><span class="kb-alias">Toposar</span><span class="kb-alias">VP-16</span><span class="kb-alias">VePesid</span><span class="kb-alias">Vepeside</span><span class="kb-alias">Етопозид</span></div></td></tr>
-<tr><th>Status</th><td>reviewed 2026-04-26</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/drugs/etoposide.yaml</code></td></tr>
-<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
-<tr><th>Sources</th><td><span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><code>SRC-NCCN-BCELL-2025</code></span></td></tr></table>
+<tr><th>Status</th><td>reviewed 2026-04-26 | pending_clinical_signoff</td></tr>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-ADRENOCORTICAL-CARCINOMA"><code>DIS-ADRENOCORTICAL-CARCINOMA</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-AITL"><code>DIS-AITL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-AML"><code>DIS-AML</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-ATLL"><code>DIS-ATLL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-BURKITT"><code>DIS-BURKITT</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-EATL"><code>DIS-EATL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-HGBL-DH"><code>DIS-HGBL-DH</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-HSTCL"><code>DIS-HSTCL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-NK-T-NASAL"><code>DIS-NK-T-NASAL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-PMBCL"><code>DIS-PMBCL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-PTCL-NOS"><code>DIS-PTCL-NOS</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-SCLC"><code>DIS-SCLC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-TESTICULAR-GCT"><code>DIS-TESTICULAR-GCT</code></a></span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BCELL-2025</code></a></span></td></tr></table>
   <h2>Drug Facts</h2><table class="kb-facts"><tr><th>Class</th><td>antineoplastic — topoisomerase II inhibitor (epipodophyllotoxin)</td></tr>
 <tr><th>Mechanism</th><td>Semi-synthetic podophyllotoxin derivative; stabilizes the cleavable topoisomerase II–DNA complex, preventing strand religation and producing protein-linked DNA double-strand breaks that trigger apoptosis. Cell-cycle S/G2 phase active. Etoposide phosphate (Etopophos) is a water-soluble prodrug rapidly converted to etoposide by serum phosphatases, allowing faster IV administration without solvent reactions.</td></tr>
 <tr><th>Typical dosing</th><td>DA-EPOCH-R (DLBCL / Burkitt / HGBL): 50 mg/m²/day continuous IV days 1-4 (96-h infusion), starting dose; dose-adjusted up by ~20% per cycle if ANC nadir &gt;0.5. BEACOPP escalated (Hodgkin): 200 mg/m² IV days 1-3. ICE (R/R DLBCL pre-ASCT): 100 mg/m² IV days 1-3. ESHAP: 40 mg/m²/day continuous IV days 1-4 (96-h infusion). AML 7+3 alternative / induction reinforcement: 100-150 mg/m² IV days 1-5. HLH-94/2004: 150 mg/m² IV twice weekly × 2 weeks then weekly. BEP (testicular): 100 mg/m² IV days 1-5 every 21 days × 3-4 cycles.</td></tr>
@@ -127,7 +196,7 @@
 <tr><th>Ukraine last verified</th><td>2026-04-27</td></tr></table><h2>Warnings</h2><ul><li>Severe myelosuppression (dose-limiting at all schedules)</li><li>Anaphylactoid reactions during IV infusion (avoid rapid bolus; infuse over ≥30-60 min for VP-16, faster acceptable for Etopophos)</li><li>Secondary AML with 11q23 (KMT2A/MLL) translocation — well-documented therapy-related risk</li></ul>
   <h2>Notes</h2><p>Used widely in heme: DA-EPOCH-R (DLBCL / Burkitt / HGBL / PMBL), BEACOPP-escalated (Hodgkin), ICE / RICE (R/R DLBCL salvage), ESHAP (R/R lymphoma salvage), HLH-94/2004 (hemophagocytic lymphohistiocytosis), AML salvage / induction-intensification protocols, and BEP (germ-cell). Therapy-related AML with 11q23 (KMT2A/MLL fusion) is the principal late toxicity, more frequent with weekly than 3-weekly dosing (cumulative exposure threshold ~2 g/m²). Slow infusion (≥30-60 min) to avoid hypotension and infusion reactions; Etopophos phosphate prodrug allows faster infusion without solvent toxicity. Oral bioavailability variable (~50%) — IV preferred for curative protocols.</p>
   <h2>Used By</h2>
-<h3>Regimens</h3><ul><li><code>REG-AAML1031-PEDIATRIC</code> - AAML1031-style induction (Cytarabine + Daunorubicin + Etoposide, pediatric AML 1L) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_aaml1031_pediatric.yaml)</span></li><li><code>REG-BEP-GCT</code> - BEP (bleomycin + etoposide + cisplatin, germ cell tumor) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_bep_gct.yaml)</span></li><li><code>REG-CE-SCLC</code> - Carboplatin + etoposide (SCLC, 1L) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_ce_sclc.yaml)</span></li><li><code>REG-CHOEP</code> - CHOEP (cyclophosphamide + doxorubicin + vincristine + etoposide + prednisone), 6 cycles <span class="kb-muted">(knowledge_base/hosted/content/regimens/choep.yaml)</span></li><li><code>REG-CHOEP-ALLOSCT-CONSOLIDATION</code> - CHOEP × 6 + allogeneic SCT consolidation in CR1 (fit transplant-eligible PTCL NOS) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_choep_allosct_consolidation.yaml)</span></li><li><code>REG-CODOX-M-IVAC</code> - CODOX-M / IVAC alternating × 4 (Magrath protocol) <span class="kb-muted">(knowledge_base/hosted/content/regimens/codox_m_ivac.yaml)</span></li><li><code>REG-DA-EPOCH-R</code> - Dose-Adjusted EPOCH + Rituximab (DA-EPOCH-R), 6 cycles <span class="kb-muted">(knowledge_base/hosted/content/regimens/da_epoch_r.yaml)</span></li><li><code>REG-EP-ATEZO-SCLC</code> - Etoposide-platinum + atezolizumab (extensive SCLC, 1L) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_ep_atezo_sclc.yaml)</span></li><li><code>REG-EP-CONCURRENT-RT-SCLC-LIMITED</code> - Etoposide-platinum + concurrent thoracic RT (limited SCLC) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_ep_concurrent_rt_sclc_limited.yaml)</span></li><li><code>REG-EP-DURVA-SCLC</code> - Etoposide-platinum + durvalumab (extensive SCLC, 1L) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_ep_durva_sclc.yaml)</span></li><li><code>REG-EP-GCT</code> - EP (etoposide + cisplatin, germ cell tumor) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_ep_gct.yaml)</span></li><li><code>REG-ICE</code> - ICE (Ifosfamide + Carboplatin + Etoposide), 3 cycles <span class="kb-muted">(knowledge_base/hosted/content/regimens/ice.yaml)</span></li><li><code>REG-R-ICE-PMBCL</code> - R-ICE salvage with autoSCT consolidation (relapsed/refractory PMBCL) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_r_ice_pmbcl.yaml)</span></li><li><code>REG-RICE-BURKITT</code> - R-ICE (Rituximab + Ifosfamide + Carboplatin + Etoposide) × 2-3 cycles → ASCT in CR2 (r/r... <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_rice_burkitt.yaml)</span></li><li><code>REG-SMILE</code> - SMILE (Steroid + MTX + Ifosfamide + L-asparaginase + Etoposide), 2-4 cycles <span class="kb-muted">(knowledge_base/hosted/content/regimens/smile.yaml)</span></li></ul>
+<h3>Regimens</h3><ul><li><code>REG-AAML1031-PEDIATRIC</code> - AAML1031-style induction (Cytarabine + Daunorubicin + Etoposide, pediatric AML 1L)</li><li><code>REG-BEP-GCT</code> - BEP (bleomycin + etoposide + cisplatin, germ cell tumor)</li><li><code>REG-CE-SCLC</code> - Carboplatin + etoposide (SCLC, 1L)</li><li><code>REG-CHOEP</code> - CHOEP (cyclophosphamide + doxorubicin + vincristine + etoposide + prednisone), 6 cycles</li><li><code>REG-CHOEP-ALLOSCT-CONSOLIDATION</code> - CHOEP × 6 + allogeneic SCT consolidation in CR1 (fit transplant-eligible PTCL NOS)</li><li><code>REG-CODOX-M-IVAC</code> - CODOX-M / IVAC alternating × 4 (Magrath protocol)</li><li><code>REG-DA-EPOCH-R</code> - Dose-Adjusted EPOCH + Rituximab (DA-EPOCH-R), 6 cycles</li><li><code>REG-EDP-M-ACC</code> - EDP-M (etoposide + doxorubicin + cisplatin + mitotane) — FIRM-ACT regimen</li><li><code>REG-EP-ATEZO-SCLC</code> - Etoposide-platinum + atezolizumab (extensive SCLC, 1L)</li><li><code>REG-EP-CONCURRENT-RT-SCLC-LIMITED</code> - Etoposide-platinum + concurrent thoracic RT (limited SCLC)</li><li><code>REG-EP-DURVA-SCLC</code> - Etoposide-platinum + durvalumab (extensive SCLC, 1L)</li><li><code>REG-EP-GCT</code> - EP (etoposide + cisplatin, germ cell tumor)</li><li><code>REG-ICE</code> - ICE (Ifosfamide + Carboplatin + Etoposide), 3 cycles</li><li><code>REG-R-ICE-PMBCL</code> - R-ICE salvage with autoSCT consolidation (relapsed/refractory PMBCL)</li><li><code>REG-RICE-BURKITT</code> - R-ICE (Rituximab + Ifosfamide + Carboplatin + Etoposide) × 2-3 cycles → ASCT in CR2 (r/r...</li><li><code>REG-SMILE</code> - SMILE (Steroid + MTX + Ifosfamide + L-asparaginase + Etoposide), 2-4 cycles</li></ul>
 </main>
 </body>
 </html>

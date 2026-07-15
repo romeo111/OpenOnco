@@ -1,0 +1,128 @@
+id: RF-ENVIRONMENTAL-FRYING-EMISSIONS-PREVENTION
+definition: >-
+  Sustained domestic exposure to indoor combustion emissions from high-
+  temperature cooking — particularly stir-frying and deep-frying with
+  vegetable oils at temperatures sufficient for thermal-degradation
+  product release — in poorly ventilated kitchens. The epidemiologic
+  signal is strongest among East Asian women cooking for the household
+  on traditional gas / coal / solid-fuel stoves with absent or
+  inadequate range-hood exhaust ventilation. IARC Monograph 95 (2010,
+  "Household Use of Solid Fuels and High-Temperature Frying")
+  classified emissions from high-temperature frying as Group 2A
+  (probably carcinogenic to humans) — limited evidence in humans
+  (Chinese / Taiwanese / Singaporean case-control studies showing
+  elevated lung-cancer risk in non-smoking women whose kitchen
+  ventilation was inadequate, dose-response by hours/day of cooking
+  and years of exposure), sufficient evidence in experimental animals
+  (rodent inhalation studies with stir-fry / deep-fry aerosols).
+  Aerosol composition: polycyclic aromatic hydrocarbons (PAHs),
+  aldehydes (acrolein, formaldehyde, acetaldehyde), heterocyclic
+  amines, ultrafine particulate matter. Effect size: pooled OR ~1.5-2.5
+  for non-smoking women with high-frequency stir-fry exposure +
+  inadequate ventilation, against a notably elevated lung-cancer
+  baseline (Chinese / Taiwanese non-smoking women have lung-cancer
+  rates 2-3x higher than equivalent demographics in Western
+  populations; cooking-emissions exposure is a leading hypothesized
+  driver of the gap, alongside genetic susceptibility, secondhand
+  smoke, and outdoor air pollution). Latency: 20-40 years from
+  characteristic exposure onset to lung-cancer presentation. NO
+  curative intervention for prior exposure — installing / upgrading
+  range-hood ventilation, modifying cooking methods (lower
+  temperatures, less stir-frying, more steaming / boiling), and
+  guideline-baseline lung-cancer screening adherence are the available
+  levers. Prevention-persona RedFlag (§20 ratification 2026-05-18,
+  v0.3 IARC 2A probable-carcinogen batch).
+definition_ua: >-
+  Sustained domestic експозиція indoor combustion emissions від high-
+  temperature cooking — особливо stir-frying та deep-frying з vegetable
+  oils при температурах достатніх для thermal-degradation product
+  release — в погано вентильованих кухнях. Епідеміологічний сигнал —
+  найсильніший серед East Asian жінок, які готують для домогосподарства
+  на традиційних gas / coal / solid-fuel stoves з absent або
+  inadequate range-hood exhaust ventilation. IARC Monograph 95 (2010,
+  "Household Use of Solid Fuels and High-Temperature Frying")
+  класифікував emissions від high-temperature frying як Group 2A
+  (probably carcinogenic) — limited evidence in humans (китайські /
+  тайванські / сінгапурські case-control studies показують elevated
+  lung-cancer risk у non-smoking жінок з inadequate kitchen ventilation,
+  dose-response за hours/day cooking та years of exposure), sufficient
+  evidence in experimental animals (rodent inhalation studies зі
+  stir-fry / deep-fry aerosols). Aerosol composition: PAH, aldehydes
+  (acrolein, formaldehyde, acetaldehyde), heterocyclic amines,
+  ultrafine particulate matter. Розмір ефекту: pooled OR ~1.5-2.5
+  для non-smoking жінок з high-frequency stir-fry expoзицією +
+  inadequate ventilation, на тлі notably elevated lung-cancer baseline
+  (китайські / тайванські non-smoking жінки мають lung-cancer rates
+  2-3x вищі за equivalent demographics в Western populations).
+  Латентність: 20-40 років. КУРАТИВНОГО втручання для попереднього
+  впливу НЕМАЄ — installing / upgrading range-hood ventilation,
+  modifying cooking methods (lower temperatures, less stir-frying,
+  more steaming / boiling), та guideline-baseline lung-cancer
+  screening adherence — наявні важелі.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "domestic_high_temperature_cooking_inadequate_ventilation"
+      value: true
+    - finding: "domestic_stir_fry_daily_decades_exposure"
+      value: true
+    - finding: "indoor_combustion_frying_emissions_chronic"
+      value: true
+
+clinical_direction: investigate
+
+severity: minor
+priority: 110
+category: other
+
+risk_category: occupational
+
+# Anchor — NSCLC (the dominant histology in the East-Asian non-smoking
+# women lung-cancer signal that IARC 95 documents). EGFR-mutant
+# adenocarcinoma is over-represented in this population, but that is
+# a tumor-biology characteristic not encoded at the RF level.
+relevant_diseases:
+  - DIS-NSCLC
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 IARC 2A probable-carcinogen batch
+  (2026-05-19). IARC Group 2A probable — limited human evidence;
+  clinical recommendation more conservative than Group 1. IARC
+  Monograph 95 (2010) is the canonical evidence anchor and is NOT
+  yet a separate SRC entity in KB; cited in notes only.
+
+  Population-specific framing: the lung-cancer signal is most
+  characteristic in East Asian non-smoking women (Chinese / Taiwanese /
+  Singaporean / Korean / Vietnamese populations) where cooking-emissions
+  exposure is sustained over decades on traditional cookware in
+  homes with limited ventilation. The same exposure pattern in
+  Western kitchens (different cooking-style mix, generally better
+  ventilation, lower cumulative dose) carries less population-level
+  evidence — but the IARC 2A classification applies wherever
+  high-temperature frying with inadequate ventilation occurs.
+
+  Engine routes to 2-track PreventionPlan:
+    (a) IND-ENVIRONMENTAL-FRYING-EMISSIONS-PREVENTION-INTENSIFIED-
+        SURVEILLANCE (standard) — ventilation-upgrade counseling,
+        cooking-method counseling, risk-adjusted LDCT consideration
+        when clustering with other lung-cancer risk factors.
+    (b) IND-ENVIRONMENTAL-FRYING-EMISSIONS-PREVENTION-OBSERVATION
+        (surveillance) — routine general-population care; patient
+        declines structured counseling.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_iarc_2a_batch
+draft_revision: 1

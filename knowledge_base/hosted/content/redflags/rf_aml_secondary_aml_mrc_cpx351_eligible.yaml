@@ -23,18 +23,18 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: "therapy_related_aml"
-      value: true
-    - finding: "antecedent_mds"
-      value: true
-    - finding: "antecedent_cmml"
-      value: true
-    - finding: "aml_mrc"
-      value: true
-    - finding: "aml_secondary"
-      value: true
-    - finding: "aml_with_mds_related_changes"
-      value: true
+  - finding: "therapy_related_aml"
+    value: true
+  - finding: "antecedent_mds"
+    value: true
+  - finding: "antecedent_cmml"
+    value: true
+  - finding: "aml_mrc"
+    value: true
+  - finding: "aml_secondary"
+    value: true
+  - finding: "aml_with_mds_related_changes"
+    value: true
 
 clinical_direction: intensify
 
@@ -43,13 +43,13 @@ priority: 60
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-AML
+- DIS-AML
 shifts_algorithm:
-  - ALGO-AML-1L
+- ALGO-AML-1L
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-AML-2022
+- SRC-NCCN-AML-2025
+- SRC-ELN-AML-2022
 
 last_reviewed: "2026-05-01"
 draft: false
@@ -75,3 +75,6 @@ notes_ua: >
   IND-AML-1L-CPX351-SECONDARY.applicable_to.demographic_constraints —
   engine track-filter дропає indication для пацієнтів поза діапазоном.
   Існуюча маршрутизація для unfit (step 2 → ven+aza) збережена.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

@@ -36,25 +36,25 @@ decision_tree:
   - step: 2
     evaluate:
       all_of:
-        - condition: "Brentuximab vedotin not used in prior line"
-        - condition: "No baseline Grade ≥2 peripheral neuropathy"
+        - red_flag: RF-PRIOR-BV-NAIVE
+        - {finding: "peripheral_neuropathy_grade", threshold: 2, comparator: "<"}
     if_true:
       result: IND-ALCL-2L-BRENTUXIMAB-MONO
     if_false:
       next_step: 3
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Mechanical rewire of the original free-text gate (BV-naive prior-line status, baseline Grade ≥2 peripheral neuropathy) into red_flag:/finding: clauses using RF-PRIOR-BV-NAIVE/peripheral_neuropathy_grade. Original clinical criteria unchanged."
 
   # Step 3 — ALK-positive AND BV-exposed → crizotinib
   - step: 3
     evaluate:
       all_of:
-        - condition: "ALK-positive ALCL"
-        - condition: "Brentuximab vedotin previously administered"
+        - {finding: "alk_status", value: "positive"}
+        - {finding: "prior_brentuximab_received", value: true}
     if_true:
       result: IND-ALCL-2L-CRIZOTINIB-ALKPOS
     if_false:
       result: IND-ALCL-2L-BENDAMUSTINE
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Mechanical rewire of the original free-text gate (ALK-positive ALCL biomarker status, prior brentuximab vedotin exposure) into finding: clauses using alk_status/prior_brentuximab_received. Original clinical criteria unchanged."
 
 sources:
   - SRC-NCCN-BCELL-2025
@@ -67,3 +67,13 @@ notes: >
   alloSCT bridging in BV-exposed ALK-negative patients. Allo-SCT is
   the only curative option for chemo-refractory disease and is
   surfaced via MDT brief.
+notes_ua: >
+  Показання на підтримуючу терапію включено у гілку 1 для стану після
+  аутоТГСК у CR з ознаками високого ризику. Гілка бендамустину є
+  рятівним варіантом останньої лінії перед мостом до алоТГСК у
+  BV-опромінених ALK-негативних пацієнтів. Ало-ТГСК залишається
+  єдиним потенційно курабельним методом при хіміорезистентному
+  захворюванні та виводиться через бриф МДТ.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_13
+draft_revision: 2

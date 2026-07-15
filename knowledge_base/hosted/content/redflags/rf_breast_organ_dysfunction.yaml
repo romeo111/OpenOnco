@@ -1,15 +1,17 @@
 id: RF-BREAST-ORGAN-DYSFUNCTION
-definition: "Cardiac dysfunction (LVEF <50%) — anthracycline + trastuzumab/pertuzumab + T-DM1/T-DXd all carry cardiotoxicity risk; baseline echo + serial monitoring required."
-definition_ua: "Кардіальна дисфункція (LVEF <50%) — антрациклін + трастузумаб/пертузумаб + T-DM1/T-DXd мають ризик кардіотоксичності; echo на старті + серійний моніторинг."
+definition: "Cardiac dysfunction (LVEF <50%) — anthracycline + trastuzumab/pertuzumab + T-DM1/T-DXd all
+  carry cardiotoxicity risk; baseline echo + serial monitoring required."
+definition_ua: "Кардіальна дисфункція (LVEF <50%) — антрациклін + трастузумаб/пертузумаб + T-DM1/T-DXd
+  мають ризик кардіотоксичності; echo на старті + серійний моніторинг."
 
 trigger:
   type: lab_value
   any_of:
-    - finding: "lvef_percent"
-      threshold: 50
-      comparator: "<"
-    - finding: "cardiac_dysfunction_baseline"
-      value: true
+  - finding: "lvef_percent"
+    threshold: 50
+    comparator: "<"
+  - finding: "cardiac_dysfunction_baseline"
+    value: true
 
 clinical_direction: investigate
 severity: major
@@ -20,8 +22,8 @@ relevant_diseases: [DIS-BREAST]
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-BREAST-2025
-  - SRC-ESMO-BREAST-EARLY-2024
+- SRC-NCCN-BREAST-2025
+- SRC-ESMO-BREAST-EARLY-2024
 
 last_reviewed:
 draft: false
@@ -32,6 +34,9 @@ notes: >
   regimen (TC for HER2-) or modified HER2-backbone if anthracycline
   contraindicated. T-DXd cardiotoxicity less than naked trastuzumab.
 notes_ua: >
-  Anthracycline + трастузумаб cumulative кардіотоксичність well-усталений. Modern strategies: cardio-oncology consult; substitute non-anthracycline схема (TC for HER2-) or modified HER2-основа схеми if anthracycline протипоказаний. T-DXd кардіотоксичність менше ніж naked трастузумаб.
+  Anthracycline + трастузумаб cumulative кардіотоксичність well-усталений. Modern strategies: cardio-oncology
+  consult; substitute non-anthracycline схема (TC for HER2-) or modified HER2-основа схеми if anthracycline
+  протипоказаний. T-DXd кардіотоксичність менше ніж naked трастузумаб.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

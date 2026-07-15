@@ -19,20 +19,20 @@ definition_ua: >
 trigger:
   type: biomarker
   all_of:
-    - any_of:
-        - finding: "prior_btki_received"
-          value: true
-        - finding: "prior_cbtki_received"
-          value: true
-    - any_of:
-        - finding: "btk_c481s_mutation"
-          value: true
-        - finding: "btk_c481_mutation"
-          value: "positive"
-        - finding: "btk_resistance_mutation"
-          value: "C481S"
-        - finding: "plcg2_mutation"
-          value: true
+  - any_of:
+    - finding: "prior_btki_received"
+      value: true
+    - finding: "prior_cbtki_received"
+      value: true
+  - any_of:
+    - finding: "btk_c481s_mutation"
+      value: true
+    - finding: "btk_c481_mutation"
+      value: "positive"
+    - finding: "btk_resistance_mutation"
+      value: "C481S"
+    - finding: "plcg2_mutation"
+      value: true
 
 clinical_direction: intensify
 
@@ -41,13 +41,13 @@ priority: 60
 category: prior-therapy-class
 
 relevant_diseases:
-  - DIS-CLL
+- DIS-CLL
 shifts_algorithm:
-  - ALGO-CLL-2L
+- ALGO-CLL-2L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-CLL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-CLL-2024
 
 last_reviewed: "2026-04-27"
 draft: false
@@ -83,3 +83,6 @@ notes_ua: >
 
 # MISSING SOURCE: SRC-BRUIN-MATO-2021 (Lancet 2021) — phase-1/2 pirtobrutinib
 # in cBTKi-pretreated B-cell malignancies. Tier-2.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

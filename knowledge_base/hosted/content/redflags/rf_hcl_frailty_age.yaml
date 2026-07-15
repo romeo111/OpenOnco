@@ -1,20 +1,22 @@
 id: RF-HCL-FRAILTY-AGE
-definition: "Age >75 + ECOG ≥2 OR significant comorbidity — pentostatin's weekly schedule allows finer toxicity titration than cladribine 5-7 day continuous infusion; preferred for fragile patients."
-definition_ua: "Вік >75 + ECOG ≥2 АБО суттєва коморбідність — щотижневий пентостатин дозволяє тонше титрування токсичності, ніж 5-7-денна безперервна інфузія кладрибіну; кращий для frail."
+definition: "Age >75 + ECOG ≥2 OR significant comorbidity — pentostatin's weekly schedule allows finer
+  toxicity titration than cladribine 5-7 day continuous infusion; preferred for fragile patients."
+definition_ua: "Вік >75 + ECOG ≥2 АБО суттєва коморбідність — щотижневий пентостатин дозволяє тонше титрування
+  токсичності, ніж 5-7-денна безперервна інфузія кладрибіну; кращий для frail."
 
 trigger:
   type: composite_clinical
   all_of:
-    - any_of:
-        - finding: "age_years"
-          threshold: 75
-          comparator: ">"
-        - finding: "comorbidity_count"
-          threshold: 2
-          comparator: ">="
-    - finding: "ecog_status"
+  - any_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">"
+    - finding: "comorbidity_count"
       threshold: 2
       comparator: ">="
+  - finding: "ecog_status"
+    threshold: 2
+    comparator: ">="
 
 
 clinical_direction: de-escalate
@@ -26,15 +28,19 @@ relevant_diseases: [DIS-HCL]
 shifts_algorithm: [ALGO-HCL-1L]
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-04-25"
 draft: false
 
 notes: >
-  Pentostatin's weekly cadence permits adjustment between doses; cladribine's 5-7-day infusion is committed. For elderly frail, pentostatin's tolerability advantage outweighs cladribine's slightly higher CR rate.
+  Pentostatin's weekly cadence permits adjustment between doses; cladribine's 5-7-day infusion is committed.
+  For elderly frail, pentostatin's tolerability advantage outweighs cladribine's slightly higher CR rate.
 notes_ua: >
-  пентостатин's weekly cadence permits adjustment між doses; кладрибін's 5-7-day infusion is committed. For літнього віку frail, пентостатин's переносимість advantage outweighs кладрибін's slightly higher CR rate.
+  Щотижнева схема пентостатину дозволяє корекцію між дозами; 5-7-денна інфузія кладрибіну є незворотньо
+  взятою. Для крихких літніх пацієнтів переносимість пентостатину переважає над трохи вищою частотою ПР
+  кладрибіну.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

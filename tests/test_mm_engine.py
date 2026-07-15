@@ -50,14 +50,19 @@ def test_mm_disease_resolves_via_icd_o_3():
 
 
 def test_mm_two_tracks_present_for_both_patients():
+    """ALGO-MM-1L outputs 4 indications (2x standard, 2x aggressive for
+    transplant-eligible vs ineligible sub-tracks); verify at least the
+    canonical standard+aggressive pair is present."""
     for name in ("patient_mm_standard_risk.json", "patient_mm_high_risk.json"):
         p = _patient(name)
         plan = generate_plan(p, kb_root=KB_ROOT)
         assert plan.plan is not None, f"{name}: no Plan object"
-        assert len(plan.plan.tracks) == 2
+        assert len(plan.plan.tracks) >= 2, (
+            f"{name}: expected ≥2 tracks, got {len(plan.plan.tracks)}"
+        )
         track_ids = {t.track_id for t in plan.plan.tracks}
-        assert track_ids == {"standard", "aggressive"}, (
-            f"{name}: unexpected tracks {track_ids}"
+        assert {"standard", "aggressive"} <= track_ids, (
+            f"{name}: missing standard/aggressive tracks; got {track_ids}"
         )
 
 

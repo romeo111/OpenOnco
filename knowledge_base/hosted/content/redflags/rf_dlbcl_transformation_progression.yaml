@@ -23,18 +23,18 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: "primary_refractory_dlbcl"
-      value: true
-    - finding: "early_relapse_under_12mo"
-      value: true
-    - finding: "transformation_to_hgbl_or_burkitt"
-      value: true
-    - all_of:
-        - finding: "post_4_cycle_response"
-          value: "stable_or_progressive"
-        - finding: "line_of_therapy"
-          threshold: 1
-          comparator: ">="
+  - finding: "primary_refractory_dlbcl"
+    value: true
+  - finding: "early_relapse_under_12mo"
+    value: true
+  - finding: "transformation_to_hgbl_or_burkitt"
+    value: true
+  - all_of:
+    - finding: "post_4_cycle_response"
+      value: "stable_or_progressive"
+    - finding: "line_of_therapy"
+      threshold: 1
+      comparator: ">="
 
 clinical_direction: intensify
 
@@ -43,13 +43,13 @@ priority: 80
 category: transformation-progression
 
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm:
-  - ALGO-DLBCL-2L
+- ALGO-DLBCL-2L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-04-26"
 draft: true
@@ -83,21 +83,26 @@ notes: >
 
   reviewer_signoffs: 0
 notes_ua: >
-  Closes the 5-type matrix gap for DLBCL-NOS (REDFLAG_AUTHORING_GUIDE §2 — every хвороба should have a трансформація-прогресування entry).
+  Закриває прогалину матриці 5 типів для DLBCL-NOS (§2 REDFLAG_AUTHORING_GUIDE — кожна хвороба повинна
+  мати запис трансформації-прогресування).
 
-  The clinical concept differs from індолентний-лімфома трансформація (FL → DLBCL or CLL → DLBCL Richter): DLBCL is already агресивний на старті, so "трансформація" here means either (a) відповідь failure to перша лінія стандарт схеми, або (b) histologic re-classification to an even more агресивний сутність (HGBL with MYC + BCL2/BCL6 rearrangements, or Burkitt-like) on re-біопсія at рецидив.
 
-  Operationally drives: - CAR-T eligibility assessment (axi-cel / liso-cel / тисагенлеклеуцел
-    per FDA/EMA labels for р/р DLBCL ≥2L; ZUMA-7 / TRANSFORM /
-    BELINDA support 2L use in early-рецидив / рефрактерний хвороба)
-  - сальвадж chemo (R-DHAP / R-ICE) + аутоТГСК for chemo-sensitive
-    рецидив > 12 months
-  - біспецифічний antibodies (epcoritamab, glofitamab) in CAR-T-ineligible
-    or post-CAR-T рецидив
-  - Pola-BR for непридатний до трансплантації or post-CAR-T
+  Клінічна концепція відрізняється від трансформації індолентних лімфом (FL → DLBCL або CLL → DLBCL Ріхтера):
+  DLBCL вже агресивна на базовому рівні, тому «трансформація» тут означає або (а) невдачу відповіді на
+  стандартні схеми першої лінії, або (б) гістологічну рекласифікацію до ще більш агресивної сутності (HGBL
+  з перебудовами MYC+BCL2/BCL6, або Burkitt-подібна) при повторній біопсії при рецидиві.
 
-  STUB — content reflects стандарт 2026 practice; clinical reviewer must confirm the trigger thresholds (особливо the "primary рефрактерний" definition, which varies між SCHOLAR-1 and FDA-label conventions) before this RedFlag is wired into ALGO-DLBCL-2L decision_tree.
 
+  Операційно визначає: оцінку придатності до CAR-T (axi-cel / liso-cel / тисагенлеклеуцел за FDA/EMA-реєстрацією
+  для р/р DLBCL ≥2L; ZUMA-7 / TRANSFORM / BELINDA підтримують 2L при ранньому рецидиві/рефрактерності);
+  сальвадж-хімія (R-DHAP / R-ICE) + аутоТГСК при хімічуйному рецидиві >12 міс; біспецифічні антитіла (epcoritamab,
+  glofitamab) при непридатності до CAR-T або пост-CAR-T рецидиві; Pola-BR для не-трансплантабельних або
+  пост-CAR-T.
+
+
+  СТАБ — клінічний рецензент повинен підтвердити пороги спрацювання (особливо визначення «первинно рефрактерний»,
+  яке варіює між SCHOLAR-1 та конвенціями FDA-реєстрації) перед підключенням до ALGO-DLBCL-2L decision_tree.
   reviewer_signoffs: 0
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

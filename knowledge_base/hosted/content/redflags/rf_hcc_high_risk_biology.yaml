@@ -14,16 +14,16 @@ definition_ua: >
 trigger:
   type: composite_score
   any_of:
-    - finding: "portal_vein_tumor_thrombus"
-      value: true
-    - finding: "afp_baseline_ng_ml"
-      threshold: 1000
-      comparator: ">="
-    - finding: "tumor_doubling_time_months"
-      threshold: 3
-      comparator: "<"
-    - finding: "poorly_differentiated_histology"
-      value: true
+  - finding: "portal_vein_tumor_thrombus"
+    value: true
+  - finding: "afp_baseline_ng_ml"
+    threshold: 1000
+    comparator: ">="
+  - finding: "tumor_doubling_time_months"
+    threshold: 3
+    comparator: "<"
+  - finding: "poorly_differentiated_histology"
+    value: true
 
 clinical_direction: intensify
 severity: critical
@@ -31,14 +31,14 @@ priority: 60
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-HCC
+- DIS-HCC
 shifts_algorithm: []  # Surfaces in plan trace; algorithm choice already
                       # routes via Child-Pugh (CP-A → atezo+bev / durva+treme),
                       # this RF reinforces ICI-combination over TKI-mono.
 
 sources:
-  - SRC-NCCN-HCC-2025
-  - SRC-AASLD-HCC-2023
+- SRC-NCCN-HCC-2025
+- SRC-AASLD-HCC-2023
 
 last_reviewed: "2026-04-26"
 draft: false
@@ -49,6 +49,9 @@ notes: >
   invasion (Vp1-4) traditionally precluded surgical / loco-regional
   options, but doesn't preclude systemic ICI-combination.
 notes_ua: >
-  IMbrave150 аналіз підгруп: AFP >400 derives larger виграш from atezo+bev vs сорафеніб (HR 0.55 проти 0.85 overall). Macrovascular invasion (Vp1-4) traditionally precluded surgical / loco-regional options, but doesn't preclude systemic ICI-комбінація.
+  IMbrave150 аналіз підгруп: AFP >400 derives larger виграш from atezo+bev vs сорафеніб (HR 0.55 проти
+  0.85 overall). Macrovascular invasion (Vp1-4) traditionally precluded surgical / loco-regional options,
+  but doesn't preclude systemic ICI-комбінація.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

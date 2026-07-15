@@ -1,27 +1,29 @@
 id: RF-GLIOMA-LOW-GRADE-FRAILTY-AGE
-definition: "Low-grade glioma patient with frailty: age ≥75 with ≥2 comorbidities + albumin <3.5 g/dL, OR ECOG ≥3, OR Karnofsky <60 — limits tolerance of RT + PCV / TMZ chemoradiation"
-definition_ua: "Гліома низького ступеня злоякісності у крихкого пацієнта: вік ≥75 з ≥2 коморбідностями + альбумін <3.5 г/дл, АБО ECOG ≥3, АБО Karnofsky <60"
+definition: "Low-grade glioma patient with frailty: age ≥75 with ≥2 comorbidities + albumin <3.5 g/dL,
+  OR ECOG ≥3, OR Karnofsky <60 — limits tolerance of RT + PCV / TMZ chemoradiation"
+definition_ua: "Гліома низького ступеня злоякісності у крихкого пацієнта: вік ≥75 з ≥2 коморбідностями
+  + альбумін <3.5 г/дл, АБО ECOG ≥3, АБО Karnofsky <60"
 
 trigger:
   type: composite
   all_of:
-    - any_of:
-        - finding: "age_years"
-          threshold: 75
-          comparator: ">="
-        - finding: "ecog"
-          threshold: 3
-          comparator: ">="
-        - finding: "karnofsky_performance_status"
-          threshold: 60
-          comparator: "<"
-    - any_of:
-        - finding: "comorbidity_count"
-          threshold: 2
-          comparator: ">="
-        - finding: "albumin_g_dl"
-          threshold: 3.5
-          comparator: "<"
+  - any_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+    - finding: "karnofsky_performance_status"
+      threshold: 60
+      comparator: "<"
+  - any_of:
+    - finding: "comorbidity_count"
+      threshold: 2
+      comparator: ">="
+    - finding: "albumin_g_dl"
+      threshold: 3.5
+      comparator: "<"
 
 clinical_direction: de-escalate
 
@@ -29,13 +31,13 @@ severity: major
 priority: 100
 category: frailty-age
 relevant_diseases:
-  - DIS-GLIOMA-LOW-GRADE
+- DIS-GLIOMA-LOW-GRADE
 shifts_algorithm:
-  - ALGO-GLIOMA-LGG-1L
+- ALGO-GLIOMA-LGG-1L
 
 sources:
-  - SRC-NCCN-CNS-2025
-  - SRC-EANO-GBM-2024
+- SRC-NCCN-CNS-2025
+- SRC-EANO-GBM-2024
 
 last_reviewed: "2026-04-27"
 draft: true
@@ -51,6 +53,11 @@ notes: >
   glioma frailty; a dedicated EANO-LGG source would be a follow-up
   ingestion.
 notes_ua: >
-  Per NCCN-CNS LGG section + EANO 2024 glioma дряхлість considerations: RT + PCV (procarbazine, lomustine, вінкристин) is найбільш efficacious in fit IDH-mut LGG (RTOG 9802) but myelosuppressive and lengthy. дряхлість steers toward RT alone (54 Gy/30 fx) or TMZ-only or observation in IDH-mut низького ризику варіанти. STUB — requires clinical co-lead signoff. NOTE: EANO-GBM is the closest in-repo source for glioma дряхлість; a dedicated EANO-LGG source would be a спостереження ingestion.
+  Відповідно до розділу LGG NCCN-CNS + рекомендацій EANO 2024 щодо крихкості при гліомах: RT + PCV (procarbazine,
+  lomustine, vincristine) є найбільш ефективним при придатних IDH-мут LGG (RTOG 9802), але мієлосупресивний
+  і тривалий. Крихкість скеровує до RT alone (54 Gy/30 fx) або лише TMZ або спостереження при IDH-мут
+  низькоризикових варіантах. СТАБ — потребує підпису клінічного співкерівника. ПРИМІТКА: EANO-GBM є найближчим
+  in-repo джерелом для крихкості при гліомах; виділений EANO-LGG джерело потребуватиме окремої інгестії.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

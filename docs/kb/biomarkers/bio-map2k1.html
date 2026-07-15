@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MAP2K1 activating mutation (MEK1) - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="MAP2K1 activating mutation (MEK1) - OpenOnco">
 <meta property="og:description" content="MAP2K1 activating mutation (MEK1): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/biomarkers/bio-map2k1.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MAP2K1 activating mutation (MEK1) - OpenOnco">
 <meta name="twitter:description" content="MAP2K1 activating mutation (MEK1): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"MAP2K1 activating mutation (MEK1) - OpenOnco","description":"MAP2K1 activating mutation (MEK1): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-map2k1.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-map2k1.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"MAP2K1 activating mutation (MEK1) - OpenOnco","description":"MAP2K1 activating mutation (MEK1): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-map2k1.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-map2k1.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -116,9 +186,8 @@
 <tr><th>Type</th><td>Biomarker</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">MAP2K1 / MEK1 mutation</span><span class="kb-alias">Активуюча мутація MAP2K1 (MEK1)</span></div></td></tr>
 <tr><th>Status</th><td>reviewed 2026-05-04 | pending_clinical_signoff</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/biomarkers/bio_map2k1.yaml</code></td></tr>
-<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
-<tr><th>Sources</th><td><span class="kb-chip" title="EANO guidelines on the diagnosis and treatment of diffuse gliomas of adulthood"><code>SRC-EANO-LGG-2024</code></span> <span class="kb-chip" title="NCCN Central Nervous System Cancers"><code>SRC-NCCN-CNS-2025</code></span></td></tr></table>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-GLIOMA-LOW-GRADE"><code>DIS-GLIOMA-LOW-GRADE</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-HCL"><code>DIS-HCL</code></a></span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="EANO guidelines on the diagnosis and treatment of diffuse gliomas of adulthood"><a href="https://www.nature.com/articles/s41571-020-00447-z" target="_blank" rel="noopener noreferrer"><code>SRC-EANO-LGG-2024</code></a></span> <span class="kb-chip" title="NCCN Central Nervous System Cancers"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1425" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-CNS-2025</code></a></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>gene_mutation</td></tr>
 <tr><th>Mutation details</th><td>{&quot;exon&quot;: &quot;2, 3 (kinase domain)&quot;, &quot;functional_impact&quot;: &quot;activating&quot;, &quot;gene&quot;: &quot;MAP2K1&quot;, &quot;variant_type&quot;: &quot;missense activating&quot;}</td></tr>
 <tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Tumor NGS panel; key variants: K57E (~30% of HCL-V), Q56P, E203K, F53L, D67N</span></div></div></td></tr>
@@ -126,7 +195,7 @@
 <tr><th>Related biomarkers</th><td><span class="kb-chip"><a href="/kb/biomarkers/bio-braf-v600e.html"><code>BIO-BRAF-V600E</code></a></span></td></tr></table>
   <h2>Notes</h2><p>MAP2K1 (MEK1) is a dual-specificity kinase directly downstream of BRAF and upstream of ERK1/2. Activating mutations constitute an alternative mechanism of MAPK pathway activation in tumors that lack BRAF mutations. Key clinical contexts: (1) Hairy cell leukemia variant (HCL-V): MAP2K1 K57E present in ~40–50% of HCL-V cases (which are BRAF V600E-negative by definition). Cobimetinib (MEK inhibitor) shows activity in MAP2K1-mutant HCL-V in small series; no FDA approval but NCCN 2B evidence. (2) Low-grade glioma (LGG): MAP2K1 mutations are one of the MAPK pathway alterations (~5–10% of BRAF-fusion-negative LGGs). Trametinib (MEK inhibitor) shows activity in pediatric LGG with MAPK pathway alterations per FIREFLY-1 trial (binimetinib/trametinib). (3) Melanoma: MAP2K1 mutations occur in ~5–8% as secondary resistance to BRAF inhibitors; MEK inhibitors still active but combination needed. (4) Histiocytic disorders (ECD, LCH): MAP2K1 mutations as alternative to BRAF V600E. Do not confuse MEK inhibitors approved for BRAF V600E indications — those approvals are as adjuncts to BRAF inhibitors (vemurafenib + cobimetinib; dabrafenib + trametinib) and are not driven by MAP2K1 mutation status.</p>
   <h2>Used By</h2>
-<h3>Actionability</h3><ul><li><code>BMA-MAP2K1-HCL</code> - Hairy cell leukemia variant (HCL-V) is a rare splenic B-cell lymphoma (~10% of HCL cases)... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_map2k1_hcl.yaml)</span></li><li><code>BMA-MAP2K1-LGG</code> - MAPK pathway activation is the hallmark of pediatric-type low-grade glioma (pLGG) and occ... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_map2k1_lgg.yaml)</span></li></ul>
+<h3>Actionability</h3><ul><li><code>BMA-MAP2K1-HCL</code> - Hairy cell leukemia variant (HCL-V) is a rare splenic B-cell lymphoma (~10% of HCL cases)...</li><li><code>BMA-MAP2K1-LGG</code> - MAPK pathway activation is the hallmark of pediatric-type low-grade glioma (pLGG) and occ...</li></ul>
 </main>
 </body>
 </html>

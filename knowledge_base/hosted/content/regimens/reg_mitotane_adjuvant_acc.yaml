@@ -1,0 +1,87 @@
+id: REG-MITOTANE-ADJUVANT-ACC
+name: "Mitotane adjuvant monotherapy (ACC)"
+name_ua: "Ад'ювантна монотерапія мітотаном (АКК)"
+alternate_names: ["Adjuvant o,p'-DDD", "Adjuvant Lysodren"]
+disease_context: DIS-ADRENOCORTICAL-CARCINOMA
+line_of_therapy: 1
+plan_track: standard
+
+components:
+- drug_id: DRUG-MITOTANE
+  dose: "Starting dose 2-3 g/day PO in divided doses (up to 4-6 g/day if urgent disease control needed); titrate upward at approximately 2-week intervals (weekly if urgent) per tolerability and mitotane blood level, toward a target therapeutic blood level of 14-20 mg/L"
+  route: PO
+  schedule: "Continuous daily dosing in 3-4 divided doses, taken with fatty meals to enhance absorption; no fixed cycle length — individualized, guided by blood-level monitoring"
+  dose_modifications:
+  - trigger: "Mitotane blood level >20 mg/L, or CNS toxicity (lethargy, dizziness, ataxia, confusion, vertigo)"
+    action: "Hold or reduce dose until level falls within/below the 14-20 mg/L window and symptoms resolve; resume at a lower dose with slower titration"
+  - trigger: "Biochemical or clinical adrenal insufficiency (fatigue, hypotension, nausea, hyponatremia, low morning cortisol)"
+    action: "Initiate or up-titrate glucocorticoid replacement (+/- mineralocorticoid); guide steroid dosing with free cortisol/ACTH per EU SmPC guidance rather than total cortisol; do not withhold mitotane solely because expected adrenal insufficiency has developed if replacement is adequate"
+  - trigger: "Intercurrent severe illness, trauma, surgery, or other physiologic stress"
+    action: "Stress-dose glucocorticoid coverage per adrenal-insufficiency protocol; continue mitotane per treating endocrinologist/oncologist unless otherwise indicated"
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments: []
+
+total_cycles: "Continuous; optimal duration not firmly established in the current evidence base — commonly continued for an extended period (often multi-year) per tolerability and institutional practice. Not asserted here as a fixed cycle/duration number to avoid overstating certainty."
+
+toxicity_profile: severe
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    STUB — mitotane (Lysodren) Ukraine registration/reimbursement status
+    not yet verified against drlz.com.ua in this pass; a rare,
+    single-source ACC-specific drug, likely accessed via named-patient
+    import / compassionate use where not locally registered. Pending
+    clinical co-lead verification.
+
+monitoring:
+- "Mitotane blood level: after each dose adjustment and every ~2 weeks during titration, then monthly at stable maintenance dose, then roughly every 2 months after any interruption — target 14-20 mg/L"
+- "Morning cortisol / ACTH (free cortisol preferred over total, given mitotane-induced elevation of cortisol-binding globulin) — guides glucocorticoid replacement dosing"
+- "Electrolytes (sodium in particular) — adrenal insufficiency / mineralocorticoid status"
+- "Lipid panel — mitotane-associated hypercholesterolemia"
+- "LFTs — hepatotoxicity"
+- "Neurologic assessment for CNS toxicity, especially at level checks"
+- "Cross-sectional imaging (CT) for recurrence surveillance per institutional schedule"
+
+key_toxicities:
+- "Drug-induced adrenal insufficiency (near-universal — 100% non-functional-tumor / ~75% functional-tumor patients per EU SmPC) — requires glucocorticoid +/- mineralocorticoid replacement"
+- "CNS toxicity at supratherapeutic blood levels (lethargy, dizziness, ataxia, confusion)"
+- "Gastrointestinal intolerance (nausea, vomiting, diarrhea, anorexia) — often dose-limiting during titration"
+- "Hypercholesterolemia"
+- "Hepatotoxicity"
+- "Gynecomastia (men)"
+
+sources:
+- SRC-ENSAT-ACC-2018
+- SRC-ESMO-ACC-2020
+- SRC-ADIUVO-TERZOLO-2023
+
+last_reviewed: "2026-07-11"
+review_status: stub
+drafted_by: claude_extraction
+reviewer_signoffs: []
+
+notes: >
+  STUB pending clinical co-lead sign-off (CHARTER §6.1). Dosing/
+  titration/monitoring figures (starting dose 2-3 g/day, up-titration
+  ~q2wk, target level 14-20 mg/L, monitoring cadence) sourced from the EU
+  SmPC for mitotane (Mitotane Esteve 500 mg tablets); broadly consistent
+  with ENSAT/ESMO guideline framing but not independently cross-checked
+  against the primary ENSAT/ESMO guideline text in this pass — verify
+  against institutional protocol before clinical use. Target population
+  (high recurrence risk after R0 resection) defined by
+  RF-ACC-HIGH-RECURRENCE-RISK-BIOLOGY.
+notes_ua: >
+  STUB, очікує підпису клінічного co-lead (CHARTER §6.1). Дозування/
+  титрація/моніторинг (стартова доза 2-3 г/день, підвищення дози кожні
+  ~2 тижні, цільовий рівень 14-20 мг/л) — за даними EU SmPC мітотану
+  (Mitotane Esteve 500 мг). Перевірити за інституційним протоколом та
+  первинним текстом ENSAT/ESMO перед клінічним застосуванням.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+draft_revision: 1

@@ -14,18 +14,18 @@ definition_ua: >
 trigger:
   type: lab_value
   any_of:
-    - finding: "lvef_percent"
-      threshold: 50
-      comparator: "<"
-    - finding: "creatinine_clearance_ml_min"
-      threshold: 30
-      comparator: "<"
-    - finding: "bilirubin_ratio_to_uln"
-      threshold: 3
-      comparator: ">="
-    - finding: "dlco_percent"
-      threshold: 60
-      comparator: "<"
+  - finding: "lvef_percent"
+    threshold: 50
+    comparator: "<"
+  - finding: "creatinine_clearance_ml_min"
+    threshold: 30
+    comparator: "<"
+  - finding: "bilirubin_ratio_to_uln"
+    threshold: 3
+    comparator: ">="
+  - finding: "dlco_percent"
+    threshold: 60
+    comparator: "<"
 
 clinical_direction: de-escalate
 
@@ -34,13 +34,13 @@ priority: 100
 category: organ-dysfunction
 
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm:
-  - ALGO-DLBCL-1L
+- ALGO-DLBCL-1L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-04-25"
 draft: false
@@ -55,6 +55,12 @@ notes: >
   toward R-CHOP standard from Pola-R-CHP intensification when both
   fire (high IPI + organ dysfunction common in elderly).
 notes_ua: >
-  LVEF <50%: substitute liposomal доксорубіцин or omit anthracycline (R-CEOP using етопозид; or R-GCVP). CrCl <30: циклофосфамід зменшити 25-50% per institutional renal-дозування protocol; HD-MTX протипоказаний for CNS prophylaxis (use IT only). DLCO <60%: document базове carefully; pulmonary токсичність is uncommon at стандарт CHOP цикли but accumulates at сальвадж. This RF de-escalates toward R-CHOP стандарт from Pola-R-CHP intensification when both fire (high IPI + organ dysfunction поширений in літнього віку).
+  LVEF <50%: заміна ліпосомального доксорубіцину або відміна антрацикліну (R-CEOP з використанням етопозиду;
+  або R-GCVP). CrCl <30: зменшити циклофосфамід на 25-50% за інституційним протоколом ниркового дозування;
+  HD-MTX протипоказаний для профілактики ЦНС (лише IT). DLCO <60%: ретельно документувати базовий рівень;
+  легенева токсичність нечаста при стандартних циклах CHOP, але накопичується при сальвадж-терапії. Цей
+  RF де-ескалує від Pola-R-CHP до стандарту R-CHOP при одночасному спрацюванні з high IPI + органна дисфункція
+  у літніх.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

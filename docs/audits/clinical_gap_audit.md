@@ -1,6 +1,6 @@
 # Clinical gap audit
 
-Generated: `2026-05-11T08:32:03Z`
+Generated: `2026-07-15T11:00:03Z`
 
 This is a coverage/governance audit, not a clinical recommendation set.
 It makes the five largest known gaps measurable and repeatable.
@@ -9,11 +9,11 @@ It makes the five largest known gaps measurable and repeatable.
 
 | Gap | Current | Target | Status |
 |---|---:|---|---|
-| Clinical sign-off | 15/1924 signoff-eligible entities reviewed (0.8%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
-| Solid tumor 2L+ coverage | 23/42 solid diseases have a 2L+ algorithm; 24/42 have a 2L+ indication | Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication. | `coverage_gap` |
-| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 421 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
-| Supportive-care depth | 135/369 regimens have mandatory supportive care (36.6%); 43 have monitoring; 327 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
-| Drug indication and off-label tracking | 812 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `schema_gap` |
+| Clinical sign-off | 15/2612 signoff-eligible entities reviewed (0.6%) | >=85% reviewed before public guideline-grade claims | `blocked_on_reviewers` |
+| Solid tumor 2L+ coverage | 23/67 solid diseases have a 2L+ algorithm; 26/67 have a 2L+ indication | Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication. | `coverage_gap` |
+| Surgery/radiation detail | structured surgery entities: no; structured radiation entities: no; 816 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `schema_gap` |
+| Supportive-care depth | 136/404 regimens have mandatory supportive care (33.7%); 43 have monitoring; 358 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
+| Drug indication and off-label tracking | 862 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `schema_gap` |
 
 ## Next actions
 
@@ -26,26 +26,32 @@ It makes the five largest known gaps measurable and repeatable.
 
 - Blocker: Missing disease-by-disease 2L+ algorithm/indication authoring queue.
 - Next action: Prioritize missing high-volume solid diseases, then rare solid diseases.
-- Missing 2L+ algorithm rows: 19
+- Missing 2L+ algorithm rows: 44
+  - `DIS-ADRENOCORTICAL-CARCINOMA`: Adrenocortical carcinoma
   - `DIS-ANAL-SCC`: Anal squamous cell carcinoma (Anal SCC)
+  - `DIS-ATRT`: Atypical teratoid/rhabdoid tumor
   - `DIS-BCC`: Basal cell carcinoma
   - `DIS-CERVICAL`: Cervical carcinoma
   - `DIS-CHONDROSARCOMA`: Chondrosarcoma
+  - `DIS-CHOROID-PLEXUS-CARCINOMA`: Choroid plexus carcinoma
+  - `DIS-CYSTIC-NEPHROMA`: Cystic nephroma
   - `DIS-EPITHELIOID-SARCOMA`: Epithelioid sarcoma
   - `DIS-GI-NET`: GI neuroendocrine tumor (carcinoid)
   - `DIS-GLIOMA-LOW-GRADE`: Low-grade glioma
   - `DIS-GRANULOSA-CELL`: Adult granulosa cell tumor
+  - `DIS-HEPATOBLASTOMA`: Hepatoblastoma
   - `DIS-IFS`: Infantile fibrosarcoma
   - `DIS-IMT`: Inflammatory myofibroblastic tumor
+  - `DIS-KAPOSI`: Kaposi sarcoma
   - `DIS-LAM`: Lymphangioleiomyomatosis
+  - `DIS-LARYNGEAL`: Laryngeal squamous cell carcinoma
+  - `DIS-LEIOMYOSARCOMA`: Leiomyosarcoma
+  - `DIS-MEDULLOBLASTOMA`: Medulloblastoma
   - `DIS-MENINGIOMA`: Meningioma
   - `DIS-MPNST`: Malignant peripheral nerve sheath tumor
   - `DIS-MTC`: Medullary thyroid carcinoma
-  - `DIS-PNET`: Pancreatic neuroendocrine tumor
-  - `DIS-SALIVARY`: Salivary gland carcinoma
-  - `DIS-TGCT`: Tenosynovial giant cell tumor
-  - `DIS-THYROID-ANAPLASTIC`: Anaplastic thyroid carcinoma
-  - `DIS-THYROID-PAPILLARY`: Papillary thyroid carcinoma
+  - `DIS-NEUROBLASTOMA`: Neuroblastoma
+  - `DIS-NPC`: Nasopharyngeal carcinoma
 
 ### Surgery/radiation detail
 
@@ -65,7 +71,9 @@ It makes the five largest known gaps measurable and repeatable.
   - `REG-ACALABRUTINIB-RITUXIMAB`
   - `REG-ADAGRASIB-NSCLC`
   - `REG-ALECTINIB-NSCLC`
+  - `REG-ALLOHCT-JMML`
   - `REG-ALPELISIB-FULVESTRANT-BREAST`
+  - `REG-ALPHA-BLOCKADE-PREOP-PHEO`
   - `REG-AMI-LAZ-NSCLC`
   - `REG-AMIVANTAMAB-LAZERTINIB-NSCLC-2L`
   - `REG-AMIVANTAMAB-MONO-NSCLC-EX20INS`
@@ -86,23 +94,21 @@ It makes the five largest known gaps measurable and repeatable.
   - `REG-BEXAROTENE-MONO-CTCL`
   - `REG-BV-MONO-MF`
   - `REG-CABAZITAXEL-MCRPC`
+  - `REG-CABERGOLINE-PROLACTINOMA`
   - `REG-CABOZANTINIB-HCC`
   - `REG-CABOZANTINIB-MTC-1L`
+  - `REG-CABOZANTINIB-PHEO`
   - `REG-CABOZANTINIB-RCC`
   - `REG-CAPE-BEV-MAINTENANCE`
   - `REG-CAPECITABINE-CRT-CONCURRENT`
   - `REG-CAPECITABINE-PALLIATIVE`
   - `REG-CAPIVASERTIB-FULVESTRANT-BREAST`
-  - `REG-CAPMATINIB-NSCLC`
-  - `REG-CAPOX`
-  - `REG-CAR-T-AXICEL-HGBL`
-  - `REG-CARBO-GEM-BEV-OVARIAN`
 
 ### Drug indication and off-label tracking
 
 - Blocker: No first-class drug_indications entity directory/schema is present.
 - Next action: Introduce a drug_indications entity, then backfill from existing indications/regimens.
-- Inferred pairs to backfill: 812
+- Inferred pairs to backfill: 862
 - Explicit labeled/off-label statuses: 0
 
 ## Machine-readable outputs

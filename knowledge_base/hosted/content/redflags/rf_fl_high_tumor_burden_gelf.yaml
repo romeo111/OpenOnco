@@ -1,34 +1,40 @@
 id: RF-FL-HIGH-TUMOR-BURDEN-GELF
-definition: "Follicular lymphoma meeting GELF criteria for high tumor burden — any of: nodal mass ≥7 cm; ≥3 nodal sites each ≥3 cm; B-symptoms; splenomegaly below umbilicus; pleural/peritoneal effusion; cytopenia (Hb <10, plt <100K, ANC <1.5K) attributable to lymphoma; LDH >ULN; β2M elevated; rapidly progressive disease"
-definition_ua: "Фолікулярна лімфома з критеріями GELF для високого пухлинного навантаження — будь-яке з: нодальна маса ≥7 см; ≥3 нодальні зони ≥3 см; B-симптоми; спленомегалія нижче пупка; плеврит/асцит; цитопенії (Hb <10, тромб <100K, нейтр <1.5K) внаслідок лімфоми; LDH >ULN; β2M підвищений; швидко прогресуюча хвороба"
+definition: "Follicular lymphoma meeting GELF criteria for high tumor burden — any of: nodal mass ≥7 cm;
+  ≥3 nodal sites each ≥3 cm; B-symptoms; splenomegaly below umbilicus; pleural/peritoneal effusion; cytopenia
+  (Hb <10, plt <100K, ANC <1.5K) attributable to lymphoma; LDH >ULN; β2M elevated; rapidly progressive
+  disease"
+definition_ua: "Фолікулярна лімфома з критеріями GELF для високого пухлинного навантаження — будь-яке
+  з: нодальна маса ≥7 см; ≥3 нодальні зони ≥3 см; B-симптоми; спленомегалія нижче пупка; плеврит/асцит;
+  цитопенії (Hb <10, тромб <100K, нейтр <1.5K) внаслідок лімфоми; LDH >ULN; β2M підвищений; швидко прогресуюча
+  хвороба"
 
 trigger:
   type: composite_clinical
   any_of:
-    - finding: "fl_gelf_high_burden"
-      value: true
-    - finding: "dominant_nodal_mass_cm"
-      threshold: 7.0
-      comparator: ">="
-    - finding: "b_symptoms_present"
-      value: true
-    - finding: "ldh_above_uln"
-      value: true
-    - finding: "rapid_progression"
-      value: true
+  - finding: "fl_gelf_high_burden"
+    value: true
+  - finding: "dominant_nodal_mass_cm"
+    threshold: 7.0
+    comparator: ">="
+  - finding: "b_symptoms_present"
+    value: true
+  - finding: "ldh_above_uln"
+    value: true
+  - finding: "rapid_progression"
+    value: true
 
 clinical_direction: intensify
 
 category: risk-score
 priority: 60
 relevant_diseases:
-  - DIS-FL
+- DIS-FL
 shifts_algorithm:
-  - ALGO-FL-1L
+- ALGO-FL-1L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-FL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-FL-2024
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -38,6 +44,9 @@ notes: >
   group have median time-to-progression of multiple years and
   identical OS to early-treatment cohorts (multiple RCTs).
 notes_ua: >
-  GELF (Groupe d'Étude des Lymphomes Folliculaires) criteria are the long-standing trigger for active лікування vs watch-and-wait. Without GELF criteria, observation is переважний — patients in this group have медіана time-to-прогресування of multiple years and identical OS to early-лікування cohorts (multiple RCTs).
+  Критерії GELF (Groupe d'Étude des Lymphomes Folliculaires) є тривалим тригером для активного лікування
+  проти watch-and-wait. Без критеріїв GELF спостереження є переважним — пацієнти в цій групі мають медіану
+  часу до прогресування кілька років та ідентичну ЗВ до когорт раннього лікування (множинні РКД).
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

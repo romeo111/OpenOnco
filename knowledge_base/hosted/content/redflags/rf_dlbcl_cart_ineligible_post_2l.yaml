@@ -27,27 +27,27 @@ definition_ua: >
 trigger:
   type: composite_score
   all_of:
-    - any_of:
-        - finding: "prior_lines_count"
-          threshold: 2
-          comparator: ">="
-        - finding: "post_pola_failure"
-          value: true
-        - finding: "primary_refractory"
-          value: true
-    - any_of:
-        - finding: "cart_ineligibility_reason"
-        - finding: "cart_ineligible"
-          value: true
-        - all_of:
-            - finding: "ecog"
-              threshold: 2
-              comparator: ">="
-            - finding: "age"
-              threshold: 70
-              comparator: ">="
-        - red_flag: RF-CAR-T-INELIGIBLE-AGE-COMORBID
-        - red_flag: RF-CAR-T-INELIGIBLE-ORGAN
+  - any_of:
+    - finding: "prior_lines_count"
+      threshold: 2
+      comparator: ">="
+    - finding: "post_pola_failure"
+      value: true
+    - finding: "primary_refractory"
+      value: true
+  - any_of:
+    - finding: "cart_ineligibility_reason"
+    - finding: "cart_ineligible"
+      value: true
+    - all_of:
+      - finding: "ecog"
+        threshold: 2
+        comparator: ">="
+      - finding: "age"
+        threshold: 70
+        comparator: ">="
+    - red_flag: RF-CAR-T-INELIGIBLE-AGE-COMORBID
+    - red_flag: RF-CAR-T-INELIGIBLE-ORGAN
 
 clinical_direction: intensify
 
@@ -56,13 +56,13 @@ priority: 60
 category: prior-therapy-class
 
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm:
-  - ALGO-DLBCL-2L
+- ALGO-DLBCL-2L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-05-01"
 draft: false
@@ -89,3 +89,6 @@ notes_ua: >
   CAR-T-ineligible RFs (вік ≥75 + Charlson ≥4 АБО органна дисфункція)
   включені через red_flag refs — цей композитний RF є ширшим
   DLBCL-специфічним сигналом ineligibility.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

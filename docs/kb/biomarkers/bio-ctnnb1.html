@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CTNNB1 activating mutation (β-catenin) - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="CTNNB1 activating mutation (β-catenin) - OpenOnco">
 <meta property="og:description" content="CTNNB1 activating mutation (β-catenin): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/biomarkers/bio-ctnnb1.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CTNNB1 activating mutation (β-catenin) - OpenOnco">
 <meta name="twitter:description" content="CTNNB1 activating mutation (β-catenin): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"CTNNB1 activating mutation (β-catenin) - OpenOnco","description":"CTNNB1 activating mutation (β-catenin): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-ctnnb1.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-ctnnb1.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"CTNNB1 activating mutation (β-catenin) - OpenOnco","description":"CTNNB1 activating mutation (β-catenin): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-ctnnb1.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-ctnnb1.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -116,9 +186,8 @@
 <tr><th>Type</th><td>Biomarker</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">CTNNB1 / beta-catenin mutation</span><span class="kb-alias">Активуюча мутація CTNNB1 (β-катенін)</span></div></td></tr>
 <tr><th>Status</th><td>reviewed 2026-05-04 | pending_clinical_signoff</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/biomarkers/bio_ctnnb1.yaml</code></td></tr>
-<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
-<tr><th>Sources</th><td><span class="kb-chip" title="ESGO-ESTRO-ESP guidelines for the management of patients with endometrial carcinoma: upda..."><code>SRC-ESGO-ENDOMETRIAL-2025</code></span> <span class="kb-chip" title="NCCN Hepatocellular Carcinoma"><code>SRC-NCCN-HCC-2025</code></span> <span class="kb-chip" title="NCCN Uterine Neoplasms"><code>SRC-NCCN-UTERINE-2025</code></span></td></tr></table>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-ENDOMETRIAL"><code>DIS-ENDOMETRIAL</code></a></span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="ESGO-ESTRO-ESP guidelines for the management of patients with endometrial carcinoma: upda..."><a href="https://www.thelancet.com/journals/lanoc/article/PIIS1470-2045(25)00167-6/abstract" target="_blank" rel="noopener noreferrer"><code>SRC-ESGO-ENDOMETRIAL-2025</code></a></span> <span class="kb-chip" title="NCCN Hepatocellular Carcinoma"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1438" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-HCC-2025</code></a></span> <span class="kb-chip" title="NCCN Uterine Neoplasms"><a href="https://www.nccn.org/professionals/physician_gls/pdf/uterine.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-UTERINE-2025</code></a></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>gene_mutation</td></tr>
 <tr><th>Mutation details</th><td>{&quot;exon&quot;: &quot;3 (phosphorylation/destruction box: codons 32–45)&quot;, &quot;functional_impact&quot;: &quot;activating&quot;, &quot;gene&quot;: &quot;CTNNB1&quot;, &quot;variant_type&quot;: &quot;missense activating (S33C, S37F, T41A, S45P, D32Y most common; prevent GSK-3β-mediated phosphorylation and proteasomal degradation)&quot;}</td></tr>
 <tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Tumor NGS panel (exon 3 sequencing); IHC (nuclear β-catenin accumulation — surrogate for mutation, ~95% concordance with exon 3 hotspot)</span></div></div></td></tr>
@@ -126,8 +195,8 @@
 <tr><th>Related biomarkers</th><td><span class="kb-muted">None declared</span></td></tr></table>
   <h2>Notes</h2><p>CTNNB1 encodes β-catenin, a dual-function protein: (1) structural (adherens junctions, E-cadherin complex); (2) transcriptional (WNT signaling effector, activating TCF/LEF target genes including MYC, CCND1). Activating mutations in exon 3 prevent destruction complex (APC/AXIN/GSK-3β/CK1) from phosphorylating β-catenin, leading to nuclear accumulation and constitutive WNT target gene activation. Key clinical contexts: (1) Endometrial cancer (EC): CTNNB1 exon 3 mutations in ~25–30%, predominantly in endometrioid histology. The TCGA molecular classification: CTNNB1 mutation is enriched in the NSMP (No Specific Molecular Profile) and POLE-ultramutated groups. Critical prognostic finding: CTNNB1 mutations, particularly in FIGO stage I-II EC, associate with L1CAM overexpression and high risk of recurrence despite low stage — this subgroup may benefit from adjuvant chemotherapy (EC-specific risk stratification per ESGO/ESMO/ESTRO 2023). CTNNB1-mutant NSMP EC is classified as intermediate/ high-intermediate risk. (2) HCC: CTNNB1 mutations in ~20–30%, associated with the β-catenin activated molecular subtype (cholestatic, hepatocytic differentiation). CTNNB1-mutant HCC has lower response r...</p>
   <h2>Used By</h2>
-<h3>Actionability</h3><ul><li><code>BMA-CTNNB1-ENDOMETRIAL</code> - CTNNB1 exon 3 mutations occur in ~25–30% of endometrial carcinoma (EC), predominantly end... <span class="kb-muted">(knowledge_base/hosted/content/biomarker_actionability/bma_ctnnb1_endometrial.yaml)</span></li></ul>
-<h3>Biomarker</h3><ul><li><code>BIO-APC</code> - APC loss-of-function mutation / truncation <span class="kb-muted">(knowledge_base/hosted/content/biomarkers/bio_apc.yaml)</span></li></ul>
+<h3>Actionability</h3><ul><li><code>BMA-CTNNB1-ENDOMETRIAL</code> - CTNNB1 exon 3 mutations occur in ~25–30% of endometrial carcinoma (EC), predominantly end...</li></ul>
+<h3>Biomarker</h3><ul><li><code>BIO-APC</code> - APC loss-of-function mutation / truncation</li></ul>
 </main>
 </body>
 </html>

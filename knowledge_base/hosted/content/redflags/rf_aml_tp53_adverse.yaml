@@ -22,29 +22,29 @@ definition_ua: >
 trigger:
   type: biomarker
   any_of:
-    - finding: "aml_tp53_adverse"
+  - finding: "aml_tp53_adverse"
+    value: true
+  - all_of:
+    - finding: "disease"
+      value: "AML"
+    - finding: "tp53_mutation"
       value: true
-    - all_of:
-        - finding: "disease"
-          value: "AML"
-        - finding: "tp53_mutation"
-          value: true
-    - all_of:
-        - finding: "disease"
-          value: "AML"
-        - finding: "tp53_biallelic"
-          value: true
-    - all_of:
-        - finding: "disease"
-          value: "AML"
-        - finding: "del_17p"
-          value: true
-    - all_of:
-        - finding: "disease"
-          value: "AML"
-        - finding: "tp53_vaf_pct"
-          threshold: 10
-          comparator: ">="
+  - all_of:
+    - finding: "disease"
+      value: "AML"
+    - finding: "tp53_biallelic"
+      value: true
+  - all_of:
+    - finding: "disease"
+      value: "AML"
+    - finding: "del_17p"
+      value: true
+  - all_of:
+    - finding: "disease"
+      value: "AML"
+    - finding: "tp53_vaf_pct"
+      threshold: 10
+      comparator: ">="
 
 clinical_direction: intensify
 
@@ -53,15 +53,15 @@ priority: 60
 category: high-risk-biology
 
 relevant_diseases:
-  - DIS-AML
+- DIS-AML
 shifts_algorithm:
-  - ALGO-AML-1L
-  - ALGO-AML-2L
+- ALGO-AML-1L
+- ALGO-AML-2L
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-AML-2022
-  - SRC-IPSS-M-BERNARD-2022
+- SRC-NCCN-AML-2025
+- SRC-ELN-AML-2022
+- SRC-IPSS-M-BERNARD-2022
 
 last_reviewed: "2026-04-30"
 draft: false
@@ -94,3 +94,6 @@ notes_ua: >
   несприятливо-ризикова анотація; ven+aza бекбон + алоТГСК-міст
   для придатних відповідно до існуючої маршрутизації кроків
   ALGO-AML-1L. STUB — потребує схвалення клінічного співкерівника.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

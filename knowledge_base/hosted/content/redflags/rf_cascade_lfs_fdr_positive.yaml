@@ -1,0 +1,130 @@
+id: RF-CASCADE-LFS-FDR-POSITIVE
+definition: >-
+  A first-degree relative of the patient (parent, sibling, or child) has
+  a documented positive germline test result for TP53 (Li-Fraumeni
+  Syndrome — one of the most penetrant hereditary cancer syndromes
+  known). The patient themself has NOT yet been germline-tested and has
+  no current personal cancer diagnosis. Per autosomal-dominant
+  inheritance, the patient carries a **50% prior probability** of also
+  being a TP53 carrier — combined with the ~70-90% lifetime cancer
+  risk of confirmed TP53 carriers and the radiation-avoidance
+  implications of confirmed carrier status — this is one of the
+  highest-stakes cascade-testing scenarios in clinical oncology
+  prevention. Distinct from RF-LI-FRAUMENI-FAMILY-HISTORY-SUSPICION
+  (fires on Chompret / classic LFS pedigree criteria before any
+  relative has tested positive). Prevention-persona RedFlag (§20,
+  v0.2-B cascade-testing pilot 2026-05-19).
+definition_ua: >-
+  Родич першого ступеня пацієнта (батько/мати, рідний брат/сестра або
+  дитина) має задокументований позитивний germline test на TP53
+  (синдром Li-Fraumeni — один з найбільш пенетрантних спадкових
+  онкосиндромів). Сам пацієнт ще не пройшов germline тестування і не
+  має поточного особистого діагнозу раку. За аутосомно-домінантним
+  типом успадкування пацієнт має **50% апріорну ймовірність** також
+  бути носієм TP53 — у поєднанні з ~70-90% lifetime ризиком раку у
+  підтверджених TP53-носіїв та radiation-avoidance імплікаціями
+  статусу підтвердженого носія — це один з найбільш high-stakes
+  сценаріїв cascade тестування у клінічній онкологічній профілактиці.
+  Відрізняється від RF-LI-FRAUMENI-FAMILY-HISTORY-SUSPICION
+  (спрацьовує на критерії Chompret / classic LFS до позитиву родича).
+  Prevention-persona RedFlag (§20, v0.2-B cascade-testing пілот
+  2026-05-19).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_first_degree_relative_lfs_carrier_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+
+# §20 prevention extension — drives engine routing to PreventionPlan
+# when patient carries this RF and no confirmed Disease (KSS §20.2).
+risk_category: genetic
+
+# LFS-spectrum cancers in KB. Breast is the primary risk anchor per
+# task brief (commonest LFS-spectrum cancer in adults, mean dx age
+# ~33y in confirmed carriers). Sarcoma, AML, GBM included.
+# Adrenocortical carcinoma, choroid plexus carcinoma, osteosarcoma do
+# not have dedicated DIS-* entities in current KB.
+relevant_diseases:
+  - DIS-BREAST
+  - DIS-SOFT-TISSUE-SARCOMA
+  - DIS-AML
+  - DIS-GBM
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-BREAST-2025
+  - SRC-ASCO-ACMG-LYNCH-2014
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  v0.2-B cascade-testing pilot (2026-05-19). Fires when a first-degree
+  relative (FDR — parent, sibling, child) of an asymptomatic patient
+  has a confirmed positive germline test for TP53 (Li-Fraumeni
+  Syndrome). Engine routes to PreventionPlan recommending:
+    (a) IND-CASCADE-LFS-FDR-POSITIVE-TESTING (standard) — cascade
+        site-specific (familial-variant) TP53 testing for the patient
+        + intensive pre/post-test genetic counseling addressing the
+        substantial psychological burden of LFS (lifetime cancer risk
+        approaches 100%; pediatric onset possible). De novo TP53
+        mutations occur — multi-gene panel expansion is appropriate
+        if site-specific testing is negative and clinical suspicion
+        persists.
+    (b) IND-CASCADE-LFS-FDR-POSITIVE-SURVEILLANCE (alternative) —
+        empirical Toronto-protocol surveillance (annual whole-body
+        MRI + brain MRI + breast MRI from age 20-25 in women +
+        colonoscopy q2-5y from age 25 + dermatology + RADIATION
+        AVOIDANCE for diagnostics) for patients who decline cascade
+        germline testing.
+
+  **50% prior probability** in autosomal-dominant inheritance (one
+  parent heterozygous) — combined with the extreme penetrance of TP53
+  pathogenic variants — makes this the highest-priority cascade
+  scenario by absolute lifetime risk burden.
+
+  **RADIATION AVOIDANCE caveat (critical, if patient tests positive):**
+  Confirmed TP53 carriers have documented elevated risk of
+  radiation-induced secondary cancers in the treatment field.
+  Diagnostic radiation (CT, mammography, X-ray) is minimized in favor
+  of MRI / ultrasound when feasible. Therapeutic radiation for index
+  cancers in TP53 carriers requires multidisciplinary discussion of
+  alternatives. This applies AFTER confirmation — for the pre-cascade
+  patient under this RedFlag, standard imaging is acceptable; the
+  caveat motivates expedited cascade testing.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1
+  dev-mode exemption.
+
+  Penetrance reference (Mai et al. NCI consortium; Bougeard 2015) —
+  if the patient tests positive on cascade:
+    - Lifetime cumulative cancer risk: ~70% by age 50 in men, ~90%
+      by age 50 in women; ≥90% lifetime in both sexes.
+    - Breast (women): ~54% by age 70; mean dx age ~33y.
+    - Soft-tissue sarcoma: ~15% lifetime.
+    - CNS tumor: ~10-15% lifetime.
+    - Adrenocortical carcinoma: ~6-13% lifetime (much higher in
+      childhood).
+    - Multiple primary cancers in lifetime: ~50%.
+
+  **Psychological burden caveat:** LFS cascade testing must explicitly
+  address that confirmed carrier status carries lifetime cancer risk
+  approaching 100%, with resource-intensive and anxiety-provoking
+  surveillance. Pre-test counseling must connect patients to
+  LFS-specific support resources (LFS Association, Living LFS).
+
+  Site-specific (familial-variant) testing carries the highest
+  positive predictive value and lowest VUS rate per ACMG / ASCO
+  cascade testing guidance.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_b_cascade_pilot
+draft_revision: 1

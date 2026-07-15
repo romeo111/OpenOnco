@@ -1,14 +1,16 @@
 id: RF-BINET-A
-definition: "CLL/SLL with Binet stage A — lymphocytosis with <3 involved lymphoid areas, no anemia, no thrombocytopenia — watch-and-wait candidate; no survival benefit from early treatment"
-definition_ua: "ХЛЛ/МЛЛ зі стадією Binet A — лімфоцитоз з <3 ураженими лімфоїдними ділянками, без анемії та тромбоцитопенії — кандидат на watch-and-wait; раннє лікування не покращує виживаність"
+definition: "CLL/SLL with Binet stage A — lymphocytosis with <3 involved lymphoid areas, no anemia, no
+  thrombocytopenia — watch-and-wait candidate; no survival benefit from early treatment"
+definition_ua: "ХЛЛ/МЛЛ зі стадією Binet A — лімфоцитоз з <3 ураженими лімфоїдними ділянками, без анемії
+  та тромбоцитопенії — кандидат на watch-and-wait; раннє лікування не покращує виживаність"
 
 trigger:
   type: composite_score
   any_of:
-    - finding: "cll_binet_stage"
-      value: "A"
-    - finding: "cll_binet_risk"
-      value: "low"
+  - finding: "cll_binet_stage"
+    value: "A"
+  - finding: "cll_binet_risk"
+    value: "low"
 
 clinical_direction: de-escalate
 
@@ -16,13 +18,13 @@ severity: major
 priority: 80
 category: risk-score
 relevant_diseases:
-  - DIS-CLL
+- DIS-CLL
 shifts_algorithm:
-  - ALGO-CLL-1L
+- ALGO-CLL-1L
 
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-CLL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-CLL-2024
 
 last_reviewed: "2026-04-27"
 notes: >
@@ -35,3 +37,14 @@ notes: >
   CLL12 (Langerbeins 2019) showed ibrutinib monotherapy in Binet A
   high-genetic-risk improved EFS but not OS — early treatment in stage A
   remains non-standard outside trials.
+notes_ua: >
+  Binet A (Binet 1981) = <3 уражені лімфоїдні ділянки (шийні, пахвові, пахвинні ± печінка/селезінка) І
+  Hb ≥10 g/дл І тромбоцити ≥100К. Медіана ЗВ >10 років. iwCLL 2018 + ESMO + NCCN погоджуються: Binet A
+  без критеріїв активного захворювання (прогресуюча цитопенія, масивна/симптомна лімфаденопатія, подвоєння
+  лімфоцитів <6 міс, автоімунна цитопенія рефрактерна до стероїдів, В-симптоми) НЕ є показанням до лікування.
+  CLL12 (Langerbeins 2019) показав, що монотерапія ібрутинібом при Binet A з генетичним ризиком покращила
+  виживаність без подій, але не ЗВ — раннє лікування при стадії A залишається нестандартним поза клінічними
+  дослідженнями.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

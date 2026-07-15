@@ -1,24 +1,28 @@
 id: RF-APL-ORGAN-DYSFUNCTION
-definition: "APL with cardiac comorbidity making ATO problematic: baseline QTc >500 ms, uncorrected hypokalemia (<3.5) or hypomagnesemia (<1.8), pre-existing arrhythmia OR severe hepatic dysfunction (bilirubin >3× ULN, transaminases >5× ULN)"
-definition_ua: "Гострий промієлоцитарний лейкоз з кардіальною коморбідністю, що ускладнює застосування триоксиду арсену: QTc >500 мс, некоригована гіпокаліємія (<3.5) або гіпомагніємія (<1.8), передіснуюча аритмія АБО тяжка печінкова дисфункція (білірубін >3× ВМН, АЛТ/АСТ >5× ВМН)"
+definition: "APL with cardiac comorbidity making ATO problematic: baseline QTc >500 ms, uncorrected hypokalemia
+  (<3.5) or hypomagnesemia (<1.8), pre-existing arrhythmia OR severe hepatic dysfunction (bilirubin >3×
+  ULN, transaminases >5× ULN)"
+definition_ua: "Гострий промієлоцитарний лейкоз з кардіальною коморбідністю, що ускладнює застосування
+  триоксиду арсену: QTc >500 мс, некоригована гіпокаліємія (<3.5) або гіпомагніємія (<1.8), передіснуюча
+  аритмія АБО тяжка печінкова дисфункція (білірубін >3× ВМН, АЛТ/АСТ >5× ВМН)"
 
 trigger:
   type: composite
   any_of:
-    - finding: "qtc_ms"
-      threshold: 500
-      comparator: ">"
-    - finding: "potassium_mmol_l"
-      threshold: 3.5
-      comparator: "<"
-    - finding: "magnesium_mmol_l"
-      threshold: 1.8
-      comparator: "<"
-    - finding: "uncontrolled_arrhythmia"
-      value: true
-    - finding: "total_bilirubin_ulnratio"
-      threshold: 3
-      comparator: ">"
+  - finding: "qtc_ms"
+    threshold: 500
+    comparator: ">"
+  - finding: "potassium_mmol_l"
+    threshold: 3.5
+    comparator: "<"
+  - finding: "magnesium_mmol_l"
+    threshold: 1.8
+    comparator: "<"
+  - finding: "uncontrolled_arrhythmia"
+    value: true
+  - finding: "total_bilirubin_ulnratio"
+    threshold: 3
+    comparator: ">"
 
 clinical_direction: investigate
 
@@ -26,12 +30,12 @@ severity: critical
 priority: 100
 category: organ-dysfunction
 relevant_diseases:
-  - DIS-APL
+- DIS-APL
 shifts_algorithm: []
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-APL-2019
+- SRC-NCCN-AML-2025
+- SRC-ELN-APL-2019
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -44,6 +48,11 @@ notes: >
   (K+ >4.0, Mg2+ >1.8) before ATO. STUB — requires clinical co-lead
   signoff.
 notes_ua: >
-  Direction "investigate" — does NOT shift показання choice (because the alternative for ATO протипоказання is classic AIDA, but that is itself surface-able through algorithm logic only after risk stratification). Triggers моніторинг + electrolyte correction + ECG protocol + potential switch to AIDA / ATRA + хіміотерапія alternative if ATO truly cannot proceed. обов'язковий базове ECG + K+ + Mg2+ + correction targets (K+ >4.0, Mg2+ >1.8) before ATO. STUB — requires clinical co-lead signoff.
+  Напрямок «обстеження» — НЕ переключає вибір показання (оскільки альтернатива при протипоказанні до ATO
+  — класична AIDA, але вона виводиться через логіку алгоритму лише після стратифікації ризику). Ініціює
+  моніторинг + корекцію електролітів + ЕКГ-протокол + можливий перехід на AIDA / ATRA + хіміотерапію,
+  якщо ATO справді не може бути продовжений. Обов'язкові вихідні ЕКГ + K+ + Mg2+ + цілі корекції (K+ >4.0
+  ммоль/л, Mg2+ >1.8 ммоль/л) до ATO. СТАБ — потребує підпису клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

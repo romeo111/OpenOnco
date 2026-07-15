@@ -1,6 +1,6 @@
 {
   "patient_id": "MCL-3L-PIRTO-001",
-  "comment": "Synthetic r/r MCL 3L post-cBTKi: 1L R-CHOP (6 cycles, PR, 18 mo), 2L acalabrutinib (14 mo, PD with BTK-C481S mutation on repeat NGS). Age 74, ECOG 2, LVEF 38% → fails RF-CAR-T-ELIGIBLE composite (LVEF<40 fails). Engine routes via ALGO-MCL-3L (line_of_therapy=3): step 1 false (RF-FITNESS-ECOG-FIT passes but RF-CAR-T-ELIGIBLE fails due to LVEF 38%) → result: IND-MCL-3L-PIRTOBRUTINIB (default). Pirtobrutinib (BRUIN MCL-321, ORR 50% post-cBTKi) is the standard-track default for CAR-T-ineligible 3L+ MCL; brexu-cel CAR-T is the alternative track (requires ECOG ≤1, LVEF ≥40%). ≥2 prior lines including a cBTKi criterion met (1L chemo + 2L acalabrutinib). Pirtobrutinib FDA-approved 2023 (Cat 2A NCCN). Major UA access barrier: not registered in Ukraine.",
+  "comment": "Synthetic r/r MCL post-cBTKi: 1L R-bendamustine + acalabrutinib (NCCN unfit-track), progression at 14 mo with BTK-C481S mutation documented on repeat NGS. Age 74, ECOG 2, LVEF 38% → fails RF-CAR-T-ELIGIBLE composite (LVEF<40 fails). Updated 2026-05-09: line_of_therapy=3, prior_lines_count=2 (added 2L salvage Bendamustine+R). ALGO-MCL-3L routes via RF-PRIOR-BTKI-PROGRESSION + RF-CAR-T-ELIGIBLE_false → IND-MCL-3L-PIRTOBRUTINIB. LVEF 38% fails CAR-T LVEF gate (requires ≥50%). BRUIN MCL-321 ORR 50% post-cBTKi.",
   "disease": {
     "id": "DIS-MCL",
     "icd_o_3_morphology": "9673/3"
@@ -23,10 +23,7 @@
     "tp53_mutation": false,
     "del_17p": false,
     "prior_lines_count": 2,
-    "prior_regimens": [
-      "R-CHOP (1L, 6 cycles, PR, 18 mo, PD)",
-      "Acalabrutinib (2L, 14 mo, PD with BTK-C481S mutation)"
-    ],
+    "prior_regimens": ["Bendamustine + rituximab + acalabrutinib (1L, 14 mo, PD)", "Bendamustine + rituximab (2L salvage attempt, 2 cycles, PD at 3 mo)"],
     "prior_btki_received": true,
     "prior_btki_progression": true,
     "best_response_to_btki": "PD",
@@ -45,22 +42,15 @@
   "clinical_record": {
     "diagnosis": {
       "primary_diagnosis": {
-        "disease_entity": "Mantle Cell Lymphoma — 3L r/r post-cBTKi, BTK-C481S+",
+        "disease_entity": "Mantle Cell Lymphoma — relapsed post-cBTKi, BTK-C481S+",
         "icd_o_3": "9673/3"
       },
       "treatment_history": {
         "first_line": {
-          "regimen": "R-CHOP (6 cycles)",
-          "best_response": "PR",
-          "duration_months": 18,
-          "progression": true
-        },
-        "second_line": {
-          "regimen": "Acalabrutinib monotherapy",
+          "regimen": "Bendamustine + rituximab + acalabrutinib (R-BAC-style unfit track)",
           "best_response": "PR",
           "duration_months": 14,
-          "progression": true,
-          "btki_resistance_mechanism": "BTK-C481S mutation"
+          "progression": true
         }
       },
       "molecular": {

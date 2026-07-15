@@ -1,16 +1,19 @@
 id: RF-CML-HIGH-RISK-ELTS
-definition: "CML high-risk by ELTS (EUTOS Long-Term Survival score) — favors 2nd-generation TKI (nilotinib / dasatinib / bosutinib) over imatinib for faster deep molecular response and improved long-term outcomes"
-definition_ua: "Хронічна мієлоїдна лейкемія високого ризику за шкалою ELTS — перевага 2-го покоління ТКІ (нілотиніб / дазатиніб / босутиніб) над іматинібом для швидшої глибокої молекулярної відповіді та покращення довгострокових результатів"
+definition: "CML high-risk by ELTS (EUTOS Long-Term Survival score) — favors 2nd-generation TKI (nilotinib
+  / dasatinib / bosutinib) over imatinib for faster deep molecular response and improved long-term outcomes"
+definition_ua: "Хронічна мієлоїдна лейкемія високого ризику за шкалою ELTS — перевага 2-го покоління ТКІ
+  (нілотиніб / дазатиніб / босутиніб) над іматинібом для швидшої глибокої молекулярної відповіді та покращення
+  довгострокових результатів"
 
 trigger:
   type: risk_score
   any_of:
-    - finding: "cml_elts_risk"
-      value: "high"
-    - finding: "cml_sokal_risk"
-      value: "high"
-    - finding: "cml_eutos_risk"
-      value: "high"
+  - finding: "cml_elts_risk"
+    value: "high"
+  - finding: "cml_sokal_risk"
+    value: "high"
+  - finding: "cml_eutos_risk"
+    value: "high"
 
 clinical_direction: intensify
 
@@ -18,14 +21,14 @@ severity: major
 priority: 80
 category: high-risk-biology
 relevant_diseases:
-  - DIS-CML
+- DIS-CML
 shifts_algorithm:
-  - ALGO-CML-1L
+- ALGO-CML-1L
 
 sources:
-  - SRC-NCCN-MPN-2025
-  - SRC-ELN-CML-2020
-  - SRC-ESMO-CML-2017
+- SRC-NCCN-MPN-2025
+- SRC-ELN-CML-2020
+- SRC-ESMO-CML-2017
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -36,6 +39,12 @@ notes: >
   Comorbidity profile (RF-CML-COMORBIDITY-COMPLEX) co-determines which
   2nd-gen agent. STUB — requires clinical co-lead signoff.
 notes_ua: >
-  ELN 2020 prefers ELTS over Sokal for predicting CML-related death and guiding 1L TKI selection in younger patients seeking лікування-free ремісія. високого ризику patients gain more from 2nd-gen TKIs in early deep molecular відповідь, but ні consistent OS difference vs іматиніб. коморбідність profile (RF-CML-коморбідність-COMPLEX) co-determines which 2nd-gen agent. STUB — requires clinical co-lead signoff.
+  NCCN та ELN 2020 надають перевагу ELTS над Sokal для прогнозування ХМЛ-специфічної смерті та вибору
+  ТКІ. ELTS «high» направляє вибір на 2-е покоління ТКІ у молодших пацієнтів, які прагнуть глибокої молекулярної
+  відповіді та зупинки ТКІ. Пацієнти ELTS «high» отримують більшу користь від ніла/дазатинібу в ранньому
+  глибокому молекулярному зниженні проти ібатинібу (DASISION, ENESTnd — EFS-перевага без послідовного
+  ЗВ-відмінності при 1L). Коморбідний конкурентний RF: RF-CML-COMORBIDITY-COMPLEX. СТАБ — потребує підпису
+  клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

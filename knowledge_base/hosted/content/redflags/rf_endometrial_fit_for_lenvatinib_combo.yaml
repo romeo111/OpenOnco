@@ -23,35 +23,35 @@ definition_ua: >
 trigger:
   type: composite_score
   all_of:
-    - any_of:
-        - finding: "uncontrolled_hypertension"
-          value: false
-        - finding: "blood_pressure_systolic_mmhg"
-          threshold: 150
-          comparator: "<"
-    - any_of:
-        - finding: "recent_surgery_within_3_weeks"
-          value: false
-        - finding: "weeks_since_last_surgery"
-          threshold: 3
-          comparator: ">="
-    - any_of:
-        - finding: "active_gi_bleed"
-          value: false
-        - finding: "gi_bleed_history_recent"
-          value: false
-    - any_of:
-        - finding: "lvef_percent"
-          threshold: 45
-          comparator: ">="
-        - finding: "severe_cardiac_dysfunction"
-          value: false
-    - any_of:
-        - finding: "proteinuria_uncontrolled"
-          value: false
-        - finding: "up_c_ratio_g_per_g"
-          threshold: 1.0
-          comparator: "<"
+  - any_of:
+    - finding: "uncontrolled_hypertension"
+      value: false
+    - finding: "blood_pressure_systolic_mmhg"
+      threshold: 150
+      comparator: "<"
+  - any_of:
+    - finding: "recent_surgery_within_3_weeks"
+      value: false
+    - finding: "weeks_since_last_surgery"
+      threshold: 3
+      comparator: ">="
+  - any_of:
+    - finding: "active_gi_bleed"
+      value: false
+    - finding: "gi_bleed_history_recent"
+      value: false
+  - any_of:
+    - finding: "lvef_percent"
+      threshold: 45
+      comparator: ">="
+    - finding: "severe_cardiac_dysfunction"
+      value: false
+  - any_of:
+    - finding: "proteinuria_uncontrolled"
+      value: false
+    - finding: "up_c_ratio_g_per_g"
+      threshold: 1.0
+      comparator: "<"
 
 clinical_direction: intensify
 
@@ -60,13 +60,13 @@ priority: 40
 category: fitness-eligibility
 
 relevant_diseases:
-  - DIS-ENDOMETRIAL
+- DIS-ENDOMETRIAL
 shifts_algorithm:
-  - ALGO-ENDOMETRIAL-2L
+- ALGO-ENDOMETRIAL-2L
 
 sources:
-  - SRC-NCCN-UTERINE-2025
-  - SRC-ESMO-ENDOMETRIAL-2022
+- SRC-NCCN-UTERINE-2025
+- SRC-ESMO-ENDOMETRIAL-2022
 
 last_reviewed: "2026-04-30"
 draft: false
@@ -93,3 +93,6 @@ notes_ua: >
   специфічні для ленватинібу передумови для усного підтвердження.
   Пацієнти позначені як неприйнятні fall back на single-agent опції
   (доксорубіцин, паклітаксел re-challenge) поза поточним KB-скоупом.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

@@ -1,26 +1,30 @@
 id: RF-AML-EMERGENCY-TLS-LEUKOSTASIS
-definition: "AML emergency triad: hyperleukocytosis (WBC ≥100 K/μL), tumor lysis syndrome (LDH >2× ULN, uric acid >7.5 mg/dL, K+ rising, phosphate rising, Ca2+ falling), or symptomatic leukostasis (dyspnea, altered mental status, retinal hemorrhage)"
-definition_ua: "Невідкладна тріада при гострому мієлоїдному лейкозі: гіперлейкоцитоз (WBC ≥100 К/мкл), синдром лізису пухлини (ЛДГ >2× ВМН, сечова кислота >7.5 мг/дл, гіперкаліємія, гіперфосфатемія, гіпокальціємія) або симптоматичний лейкостаз (задишка, порушення свідомості, сітківкові геморагії)"
+definition: "AML emergency triad: hyperleukocytosis (WBC ≥100 K/μL), tumor lysis syndrome (LDH >2× ULN,
+  uric acid >7.5 mg/dL, K+ rising, phosphate rising, Ca2+ falling), or symptomatic leukostasis (dyspnea,
+  altered mental status, retinal hemorrhage)"
+definition_ua: "Невідкладна тріада при гострому мієлоїдному лейкозі: гіперлейкоцитоз (WBC ≥100 К/мкл),
+  синдром лізису пухлини (ЛДГ >2× ВМН, сечова кислота >7.5 мг/дл, гіперкаліємія, гіперфосфатемія, гіпокальціємія)
+  або симптоматичний лейкостаз (задишка, порушення свідомості, сітківкові геморагії)"
 
 trigger:
   type: composite
   any_of:
-    - finding: "wbc_k_ul"
-      threshold: 100
-      comparator: ">="
-    - finding: "leukostasis_symptoms"
-      value: true
-    - finding: "tls_active"
-      value: true
-    - finding: "uric_acid_mg_dl"
-      threshold: 7.5
-      comparator: ">"
-    - finding: "ldh_ulnratio"
-      threshold: 2
-      comparator: ">"
-    - finding: "potassium_mmol_l"
-      threshold: 5.5
-      comparator: ">"
+  - finding: "wbc_k_ul"
+    threshold: 100
+    comparator: ">="
+  - finding: "leukostasis_symptoms"
+    value: true
+  - finding: "tls_active"
+    value: true
+  - finding: "uric_acid_mg_dl"
+    threshold: 7.5
+    comparator: ">"
+  - finding: "ldh_ulnratio"
+    threshold: 2
+    comparator: ">"
+  - finding: "potassium_mmol_l"
+    threshold: 5.5
+    comparator: ">"
 
 clinical_direction: hold
 
@@ -28,14 +32,14 @@ severity: critical
 priority: 20
 category: organ-dysfunction
 relevant_diseases:
-  - DIS-AML
+- DIS-AML
 shifts_algorithm:
-  - ALGO-AML-1L
+- ALGO-AML-1L
 
 sources:
-  - SRC-NCCN-AML-2025
-  - SRC-ELN-AML-2022
-  - SRC-ESMO-AML-2020
+- SRC-NCCN-AML-2025
+- SRC-ELN-AML-2022
+- SRC-ESMO-AML-2020
 
 last_reviewed: "2026-04-25"
 notes: >
@@ -48,6 +52,13 @@ notes: >
   the bedside order. Priority bumped to 10 to win all conflicts.
   STUB — requires clinical co-lead signoff.
 notes_ua: >
-  Triggers утримати on схема selection until emergency stabilization: cytoreduction with гідроксикарбамід ± leukapheresis, IV hydration + rasburicase / allopurinol for TLS, electrolyte correction, urgent ICU/heme consult. Plan generation does not start індукція — it describes the emergency-management обстеження. Per CHARTER §15.2 C2 this is partially time-critical; OpenOnco scope is the обстеження brief, not the bedside order. Priority bumped to 10 to win all conflicts. STUB — requires clinical co-lead signoff.
+  Ініціює режим УТРИМАТИ щодо вибору схеми до стабілізації невідкладного стану: циторедукція гідроксикарбамідом
+  ± лейкаферез, внутрішньовенна гідратація + расбуриказа / алопуринол при синдромі лізису пухлини, корекція
+  електролітів, термінова консультація у відділенні інтенсивної терапії / гематолога. Генерація плану
+  не розпочинає індукційну терапію — описує протокол екстреного обстеження та стабілізації. Відповідно
+  до CHARTER §15.2 C2 ситуація є частково невідкладною; сфера OpenOnco — стислий опис обстеження, а не
+  прийняття ліжкових рішень. Пріоритет підвищено до 10 для виграшу всіх конфліктів. СТАБ — потребує підпису
+  клінічного співкерівника.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

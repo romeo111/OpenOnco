@@ -1,13 +1,15 @@
 id: RF-AITL-EBV-DRIVEN-B-CELL
-definition: "AITL with EBV+ B-cell expansion (large B-cells, EBER+ in microenvironment) — risk of secondary EBV-driven B-cell lymphoma (DLBCL-like) emerging during/after T-cell-directed therapy"
-definition_ua: "AITL з EBV+ B-клітинною експансією (великі B-клітини, EBER+ у мікрооточенні) — ризик вторинної EBV-driven B-клітинної лімфоми (DLBCL-like) під час/після T-клітинної терапії"
+definition: "AITL with EBV+ B-cell expansion (large B-cells, EBER+ in microenvironment) — risk of secondary
+  EBV-driven B-cell lymphoma (DLBCL-like) emerging during/after T-cell-directed therapy"
+definition_ua: "AITL з EBV+ B-клітинною експансією (великі B-клітини, EBER+ у мікрооточенні) — ризик вторинної
+  EBV-driven B-клітинної лімфоми (DLBCL-like) під час/після T-клітинної терапії"
 
 trigger:
   type: composite_clinical
   any_of:
-    - {finding: "BIO-EBV-STATUS", value: "positive"}
-    - {finding: "ebv_positive_b_cells", value: true}
-    - {finding: "ebv_dna_serum_positive", value: true}
+  - {finding: "BIO-EBV-STATUS", value: "positive"}
+  - {finding: "ebv_positive_b_cells", value: true}
+  - {finding: "ebv_dna_serum_positive", value: true}
 
 clinical_direction: investigate  # not algorithm-shifting; flag for surveillance + early biopsy of new mass
 category: high-risk-biology
@@ -26,6 +28,12 @@ notes: >
   rising trend = early warning. Not an algorithm switch (still treat
   AITL backbone) but mandatory surveillance flag.
 notes_ua: >
-  AITL microenvironment classically contains EBV+ B-cells (~80-90%). Subset develops EBV-driven secondary B-cell лімфома (часто DLBCL-like) during/after T-cell-directed індукція — clonally distinct from index AITL. повторна біопсія any new dominant mass; if CD20+/EBER+ DLBCL → add ритуксимаб + treat as B-cell. Serum EBV-DNA rising trend = early warning. Not an algorithm switch (still treat AITL основа схеми) but обов'язковий спостереження flag.
+  Мікрооточення AITL класично містить EBV+ В-клітини (~80–90%). У підгрупі розвивається EBV-опосередкована
+  вторинна В-клітинна лімфома (часто подібна до DLBCL) під час/після Т-клітинної індукційної терапії —
+  клонально відмінна від індексного AITL. Повторна біопсія будь-якої нової домінантної маси обов'язкова;
+  якщо CD20+/EBER+ DLBCL — додати ритуксимаб та лікувати як В-клітинну лімфому. Зростаюча тенденція EBV-ДНК
+  у сироватці — раннє попередження. Не є перемикачем алгоритму (скелет AITL зберігається), але обов'язковий
+  прапор спостереження.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_extraction
+ukrainian_drafted_by: claude_ua_09
+draft_revision: 2

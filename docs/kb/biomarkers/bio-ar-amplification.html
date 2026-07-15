@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AR amplification (high-level androgen receptor copy-number gain) - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="AR amplification (high-level androgen receptor copy-number gain) - OpenOnco">
 <meta property="og:description" content="AR amplification (high-level androgen receptor copy-number gain): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/biomarkers/bio-ar-amplification.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AR amplification (high-level androgen receptor copy-number gain) - OpenOnco">
 <meta name="twitter:description" content="AR amplification (high-level androgen receptor copy-number gain): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"AR amplification (high-level androgen receptor copy-number gain) - OpenOnco","description":"AR amplification (high-level androgen receptor copy-number gain): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-ar-amplification.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-ar-amplification.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"AR amplification (high-level androgen receptor copy-number gain) - OpenOnco","description":"AR amplification (high-level androgen receptor copy-number gain): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-ar-amplification.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-ar-amplification.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -116,16 +186,15 @@
 <tr><th>Type</th><td>Biomarker</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">AR CN-amp</span><span class="kb-alias">AR HLA</span><span class="kb-alias">AR amplification</span><span class="kb-alias">AR high-level amplification</span><span class="kb-alias">AR ампліфікація (високорівневе підвищення копій гена рецептора андрогену)</span><span class="kb-alias">androgen receptor amplification</span></div></td></tr>
 <tr><th>Status</th><td>reviewed 2026-04-29 | pending_clinical_signoff</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/biomarkers/bio_ar_amplification.yaml</code></td></tr>
-<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
-<tr><th>Sources</th><td><span class="kb-chip" title="EAU - EANM - ESTRO - ESUR - ISUP - SIOG Guidelines on Prostate Cancer"><code>SRC-EAU-PROSTATE-2024</code></span> <span class="kb-chip" title="ESMO Clinical Practice Guideline on Prostate Cancer"><code>SRC-ESMO-PROSTATE-2024</code></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Prostate Cancer"><code>SRC-NCCN-PROSTATE-2025</code></span></td></tr></table>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-PROSTATE"><code>DIS-PROSTATE</code></a></span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="EAU - EANM - ESTRO - ESUR - ISUP - SIOG Guidelines on Prostate Cancer"><a href="https://uroweb.org/guidelines/prostate-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-EAU-PROSTATE-2024</code></a></span> <span class="kb-chip" title="ESMO Clinical Practice Guideline on Prostate Cancer"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-prostate-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-PROSTATE-2024</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Prostate Cancer"><a href="https://www.nccn.org/professionals/physician_gls/pdf/prostate.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-PROSTATE-2025</code></a></span></td></tr></table>
   <h2>Biomarker Facts</h2><table class="kb-facts"><tr><th>Biomarker type</th><td>copy_number</td></tr>
 <tr><th>Mutation details</th><td>{&quot;functional_impact&quot;: &quot;Increased AR protein abundance / pathway hyperactivation under castrate testosterone — drives ARSI resistance via receptor-overexpression hypersensitivity to residual androgen&quot;, &quot;gene&quot;: &quot;AR&quot;, &quot;gene_hugo_id&quot;: &quot;HGNC:644&quot;, &quot;variant_type&quot;: &quot;amplification&quot;}</td></tr>
 <tr><th>Measurement</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>ctDNA NGS with copy-number calling (Guardant360, FoundationOne Liquid) preferred in mCRPC; tumor-tissue NGS acceptable; FISH for AR locus (Xq12) confirmatory</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>ctDNA AR copy-number ≥2.5 (Guardant) OR tumor-tissue NGS CN-call ≥4 OR FISH AR/CEP-X ratio ≥2.0 = high-level</span></div><div class="kb-kv-item"><span class="kb-kv-key">Sensitivity requirement</span><span>ctDNA tumor fraction ≥1-2% required for reliable AR-CN call; low tumor fraction → false-negative. Threshold heterogeneity across assays — interpret with assay-specific cutoffs.</span></div></div></td></tr>
 <tr><th>Related biomarkers</th><td><span class="kb-chip"><a href="/kb/biomarkers/bio-ar-v7.html"><code>BIO-AR-V7</code></a></span> <span class="kb-chip"><code>BIO-AR-MUTATION</code></span></td></tr></table>
   <h2>Notes</h2><p>AR amplification is one of three dominant AR-pathway-driven ARSI-resistance mechanisms in mCRPC (alongside AR-V7 splice variant and AR ligand-binding- domain mutations). High-level AR-amp (ctDNA CN ≥2.5 by Guardant360, or tissue NGS CN ≥4) is detectable in 30-50% of mCRPC progressing on abiraterone or enzalutamide and correlates with shorter PFS/OS on continued ARSI. Distinct from AR-V7 (splice variant — see BIO-AR-V7): AR-amp = wild-type-AR overexpression (still ligand-binding-domain competent; can still respond to higher-affinity ARSI in some cases), AR-V7 = constitutively-active LBD-truncated isoform (ligand-independent, ARSI cannot bind). Clinical use: ctDNA AR-CN trajectory under ARSI monitors clonal selection; rising AR-CN signals impending progression. HOWEVER: NO FDA-approved Tx decision keyed on AR-amp; guidelines (NCCN, ESMO, EAU) treat it as informational / prognostic. Use in MDT brief to flag patients at risk of ARSI-resistance and to discuss switch to taxane (docetaxel, cabazitaxel), 177Lu-PSMA-617 (PSMA-positive), or PARPi (HRR-mutated). Trial sources for ARSI-resistance trajectory literature (PROfound exploratory ctDNA, SU2C-PCF dream-team) flagged as missing source...</p>
   <h2>Used By</h2>
-<h3>Red flag</h3><ul><li><code>RF-PROSTATE-AR-AMP-ARSI-RESISTANCE</code> - AR (androgen receptor) gene amplification detected on tumor or ctDNA NGS in mCRPC — INFOR... <span class="kb-muted">(knowledge_base/hosted/content/redflags/rf_prostate_ar_amp_arsi_resistance.yaml)</span></li></ul>
+<h3>Red flag</h3><ul><li><code>RF-PROSTATE-AR-AMP-ARSI-RESISTANCE</code> - AR (androgen receptor) gene amplification detected on tumor or ctDNA NGS in mCRPC — INFOR...</li></ul>
 </main>
 </body>
 </html>

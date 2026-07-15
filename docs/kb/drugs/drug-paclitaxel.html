@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Paclitaxel - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="Paclitaxel - OpenOnco">
 <meta property="og:description" content="Paclitaxel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/drugs/drug-paclitaxel.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Paclitaxel - OpenOnco">
 <meta name="twitter:description" content="Paclitaxel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Paclitaxel - OpenOnco","description":"Paclitaxel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-paclitaxel.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-paclitaxel.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Paclitaxel - OpenOnco","description":"Paclitaxel: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-paclitaxel.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-paclitaxel.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -115,10 +185,9 @@
   <table class="kb-facts"><tr><th>ID</th><td><code>DRUG-PACLITAXEL</code></td></tr>
 <tr><th>Type</th><td>Drug</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">Onxol</span><span class="kb-alias">Taxol</span><span class="kb-alias">Паклітаксель</span></div></td></tr>
-<tr><th>Status</th><td>reviewed 2026-04-26</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/drugs/paclitaxel.yaml</code></td></tr>
-<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
-<tr><th>Sources</th><td><span class="kb-chip" title="ESMO Clinical Practice Guideline on Early Breast Cancer"><code>SRC-ESMO-BREAST-EARLY-2024</code></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Breast Cancer"><code>SRC-NCCN-BREAST-2025</code></span></td></tr></table>
+<tr><th>Status</th><td>reviewed 2026-04-26 | pending_clinical_signoff</td></tr>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-ANAL-SCC"><code>DIS-ANAL-SCC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-BREAST"><code>DIS-BREAST</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-CERVICAL"><code>DIS-CERVICAL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-ENDOMETRIAL"><code>DIS-ENDOMETRIAL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-ESOPHAGEAL"><code>DIS-ESOPHAGEAL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-GASTRIC"><code>DIS-GASTRIC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-GRANULOSA-CELL"><code>DIS-GRANULOSA-CELL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-KAPOSI"><code>DIS-KAPOSI</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-NSCLC"><code>DIS-NSCLC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-OVARIAN"><code>DIS-OVARIAN</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-PENILE-SCC"><code>DIS-PENILE-SCC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-SALIVARY"><code>DIS-SALIVARY</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-TESTICULAR-GCT"><code>DIS-TESTICULAR-GCT</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-THYROID-ANAPLASTIC"><code>DIS-THYROID-ANAPLASTIC</code></a></span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="ESMO Clinical Practice Guideline on Early Breast Cancer"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-early-breast-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-BREAST-EARLY-2024</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Breast Cancer"><a href="https://www.nccn.org/professionals/physician_gls/pdf/breast.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BREAST-2025</code></a></span></td></tr></table>
   <h2>Drug Facts</h2><table class="kb-facts"><tr><th>Class</th><td>Taxane (microtubule stabilizer)</td></tr>
 <tr><th>Mechanism</th><td>Diterpenoid originally isolated from Pacific yew (Taxus brevifolia). Binds the β-subunit of polymerized tubulin at the taxane-binding site, promoting microtubule assembly and stabilizing existing microtubules against depolymerization. Cells arrest at the G2/M-phase transition unable to complete mitosis, triggering apoptosis. Solubilized in Cremophor-EL (polyoxyethylated castor oil) + dehydrated alcohol — Cremophor-EL is responsible for the characteristic hypersensitivity reactions and necessitates premedication with corticosteroids + H1 + H2 antihistamines.</td></tr>
 <tr><th>Typical dosing</th><td>Breast (weekly, dose-dense and mCa schedules): 80 mg/m² IV over 1 h weekly. Breast (every-3-weeks): 175 mg/m² IV over 3 h q21d. Ovarian 1L (with carboplatin): 175 mg/m² IV over 3 h q21d × 6. Ovarian dose-dense (Japanese GOG): 80 mg/m² weekly × 18 wks with carboplatin AUC 6 q21d × 6. NSCLC (with carbo, Bevacizumab+CP): 200 mg/m² IV q21d × 4-6. CROSS (esophageal CRT): 50 mg/m² IV weekly × 5 with carboplatin AUC 2. Mandatory premedication: dexamethasone 20 mg PO at 12 h and 6 h before, OR 20 mg IV at 30 min before; diphenhydramine 50 mg IV + H2 blocker (ranitidine 50 mg IV or famotidine 20 mg IV) at 30 min before infusion.</td></tr>
@@ -127,7 +196,8 @@
 <tr><th>Ukraine last verified</th><td>2026-04-27</td></tr></table><h2>Warnings</h2><ul><li>Severe hypersensitivity reactions (Cremophor-mediated; premedication mandatory)</li><li>Severe myelosuppression</li></ul>
   <h2>Notes</h2><p>Cross-disease entity. Standard of care in many regimens (weekly paclitaxel for breast adjuvant, dose-dense AC-T, KEYNOTE-522 phase 1 weekly carbo-paclitaxel for TNBC, carboplatin-paclitaxel for NSCLC + ovarian + gastric, CROSS for esophageal). Weekly dosing has improved DFS over q3w in node-positive breast (E1199 trial). Hypersensitivity management: stop infusion immediately at first sign (flushing, dyspnea, hypotension); IV steroids + antihistamines + epinephrine for severe; rechallenge possible after Grade 1-2 with enhanced premedication and slower infusion. Neuropathy: dose-reduce 20-25% for Grade 2 persistent; discontinue for Grade 3.</p>
   <h2>Used By</h2>
-<h3>Regimens</h3><ul><li><code>REG-CARBO-PACLI-ANAL-MET</code> - Carboplatin + paclitaxel (anal carcinoma, metastatic) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_carbo_pacli_anal_met.yaml)</span></li><li><code>REG-CARBO-PACLI-CONCURRENT-RT-ESOPH</code> - Weekly carboplatin + paclitaxel concurrent with definitive RT (esophageal) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_carbo_pacli_concurrent_rt_esoph.yaml)</span></li><li><code>REG-CARBO-PACLI-OVARIAN</code> - Carboplatin + Paclitaxel (ovarian 3-weekly) <span class="kb-muted">(knowledge_base/hosted/content/regimens/carboplatin_paclitaxel_ovarian.yaml)</span></li><li><code>REG-CARBOPLATIN-PACLITAXEL-GCT</code> - Carboplatin + Paclitaxel (adult granulosa cell tumor, advanced/recurrent) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_carboplatin_paclitaxel_gct.yaml)</span></li><li><code>REG-CARBOPLATIN-PACLITAXEL-WEEKLY</code> - Weekly carboplatin + paclitaxel (CROSS-style chemo backbone) <span class="kb-muted">(knowledge_base/hosted/content/regimens/carboplatin_paclitaxel_weekly.yaml)</span></li><li><code>REG-DOSTARLIMAB-CARBO-PACLI-ENDOM</code> - Dostarlimab + carbo + paclitaxel (endometrial advanced 1L dMMR) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_dostarlimab_carbo_pacli_endom.yaml)</span></li><li><code>REG-NIVO-IPI-CHEMO-NSCLC-1L</code> - Nivolumab + Ipilimumab + 2-Cycle Platinum-Doublet Chemotherapy (CheckMate-9LA) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivo_ipi_chemo_nsclc_1l.yaml)</span></li><li><code>REG-PACLITAXEL-CARBOPLATIN-ATC</code> - Paclitaxel + carboplatin (ATC, palliative 1L) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_paclitaxel_carboplatin_atc.yaml)</span></li><li><code>REG-PACLITAXEL-CARBOPLATIN-SALIVARY</code> - Paclitaxel + carboplatin (salivary gland carcinoma, palliative) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_paclitaxel_carboplatin_salivary.yaml)</span></li><li><code>REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC</code> - Paclitaxel + Ramucirumab (RAINBOW) — 2L gastric/GEJ <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_paclitaxel_ramucirumab_gastric.yaml)</span></li><li><code>REG-PEMBRO-CARBO-PACLI-ENDOM</code> - Pembrolizumab + carbo + paclitaxel (endometrial advanced 1L) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_pembro_carbo_pacli_endom.yaml)</span></li><li><code>REG-PEMBRO-CHEMO-TNBC-MET</code> - Pembrolizumab + chemotherapy (TNBC, metastatic PD-L1+) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_pembro_chemo_tnbc_met.yaml)</span></li><li><code>REG-PEMBRO-CHEMO-TNBC-NEOADJUVANT</code> - Pembrolizumab + chemo (TNBC neoadjuvant) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_pembro_chemo_tnbc_neoadjuvant.yaml)</span></li><li><code>REG-PEMBRO-PACLI-CARBO-BEV-CERVICAL</code> - Pembrolizumab + paclitaxel + carboplatin ± bevacizumab (cervical cancer, 1L) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_pembro_pacli_carbo_bev_cervical.yaml)</span></li><li><code>REG-PEMBROLIZUMAB-CERVICAL-1L</code> - Pembrolizumab + carboplatin + paclitaxel ± bevacizumab (persistent/recurrent/metastatic c... <span class="kb-muted">(knowledge_base/hosted/content/regimens/regimen_pembrolizumab_cervical_1l.yaml)</span></li><li><code>REG-RETIFANLIMAB-CARBO-PACLI-ANAL-1L</code> - Retifanlimab + carboplatin + paclitaxel (advanced anal SCC 1L, POD1UM-303) <span class="kb-muted">(knowledge_base/hosted/content/regimens/regimen_retifanlimab_anal_1l.yaml)</span></li><li><code>REG-TIP-GCT-SALVAGE</code> - TIP (paclitaxel + ifosfamide + cisplatin, germ cell tumor salvage) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_tip_gct_salvage.yaml)</span></li><li><code>REG-WEEKLY-PAC-BEV-OVARIAN</code> - Weekly Paclitaxel + Bevacizumab (platinum-resistant recurrent ovarian, AURELIA) <span class="kb-muted">(knowledge_base/hosted/content/regimens/weekly_pac_bev_ovarian.yaml)</span></li></ul>
+<h3>Indications</h3><ul><li><code>IND-KAPOSI-2L-VISCERAL-PACLITAXEL</code> - IND-KAPOSI-2L-VISCERAL-PACLITAXEL</li></ul>
+<h3>Regimens</h3><ul><li><code>REG-CARBO-PACLI-ANAL-MET</code> - Carboplatin + paclitaxel (anal carcinoma, metastatic)</li><li><code>REG-CARBO-PACLI-CONCURRENT-RT-ESOPH</code> - Weekly carboplatin + paclitaxel concurrent with definitive RT (esophageal)</li><li><code>REG-CARBO-PACLI-OVARIAN</code> - Carboplatin + Paclitaxel (ovarian 3-weekly)</li><li><code>REG-CARBOPLATIN-PACLITAXEL-GCT</code> - Carboplatin + Paclitaxel (adult granulosa cell tumor, advanced/recurrent)</li><li><code>REG-CARBOPLATIN-PACLITAXEL-WEEKLY</code> - Weekly carboplatin + paclitaxel (CROSS-style chemo backbone)</li><li><code>REG-DOSTARLIMAB-CARBO-PACLI-ENDOM</code> - Dostarlimab + carbo + paclitaxel (endometrial advanced 1L dMMR)</li><li><code>REG-NIVO-IPI-CHEMO-NSCLC-1L</code> - Nivolumab + Ipilimumab + 2-Cycle Platinum-Doublet Chemotherapy (CheckMate-9LA)</li><li><code>REG-PACLITAXEL-CARBOPLATIN-ATC</code> - Paclitaxel + carboplatin (ATC, palliative 1L)</li><li><code>REG-PACLITAXEL-CARBOPLATIN-SALIVARY</code> - Paclitaxel + carboplatin (salivary gland carcinoma, palliative)</li><li><code>REG-PACLITAXEL-KAPOSI</code> - Paclitaxel monotherapy (Kaposi sarcoma, post-anthracycline)</li><li><code>REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC</code> - Paclitaxel + Ramucirumab (RAINBOW) — 2L gastric/GEJ</li><li><code>REG-PEMBRO-CARBO-PACLI-ENDOM</code> - Pembrolizumab + carbo + paclitaxel (endometrial advanced 1L)</li><li><code>REG-PEMBRO-CHEMO-TNBC-MET</code> - Pembrolizumab + chemotherapy (TNBC, metastatic PD-L1+)</li><li><code>REG-PEMBRO-CHEMO-TNBC-NEOADJUVANT</code> - Pembrolizumab + chemo (TNBC neoadjuvant)</li><li><code>REG-PEMBRO-PACLI-CARBO-BEV-CERVICAL</code> - Pembrolizumab + paclitaxel + carboplatin ± bevacizumab (cervical cancer, 1L)</li><li><code>REG-PEMBROLIZUMAB-CERVICAL-1L</code> - Pembrolizumab + carboplatin + paclitaxel ± bevacizumab (persistent/recurrent/metastatic c...</li><li><code>REG-RETIFANLIMAB-CARBO-PACLI-ANAL-1L</code> - Retifanlimab + carboplatin + paclitaxel (advanced anal SCC 1L, POD1UM-303)</li><li><code>REG-TIP-GCT-SALVAGE</code> - TIP (paclitaxel + ifosfamide + cisplatin, germ cell tumor salvage)</li><li><code>REG-TIP-PENILE</code> - TIP (paclitaxel + ifosfamide + cisplatin, penile SCC)</li><li><code>REG-WEEKLY-PAC-BEV-OVARIAN</code> - Weekly Paclitaxel + Bevacizumab (platinum-resistant recurrent ovarian, AURELIA)</li></ul>
 </main>
 </body>
 </html>

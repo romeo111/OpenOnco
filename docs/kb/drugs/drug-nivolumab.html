@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nivolumab - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="Nivolumab - OpenOnco">
 <meta property="og:description" content="Nivolumab: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/drugs/drug-nivolumab.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nivolumab - OpenOnco">
 <meta name="twitter:description" content="Nivolumab: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Nivolumab - OpenOnco","description":"Nivolumab: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-nivolumab.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-nivolumab.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Nivolumab - OpenOnco","description":"Nivolumab: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-nivolumab.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-nivolumab.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -115,10 +185,9 @@
   <table class="kb-facts"><tr><th>ID</th><td><code>DRUG-NIVOLUMAB</code></td></tr>
 <tr><th>Type</th><td>Drug</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">Opdivo</span><span class="kb-alias">Opdualag (with relatlimab)</span><span class="kb-alias">Ніволумаб</span></div></td></tr>
-<tr><th>Status</th><td>reviewed 2026-04-26</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/drugs/nivolumab.yaml</code></td></tr>
-<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
-<tr><th>Sources</th><td><span class="kb-chip" title="NCCN Esophageal and EGJ Cancers"><code>SRC-NCCN-ESOPHAGEAL-2025</code></span> <span class="kb-chip" title="NCCN Gastric Cancer"><code>SRC-NCCN-GASTRIC-2025</code></span> <span class="kb-chip" title="NCCN Hepatocellular Carcinoma"><code>SRC-NCCN-HCC-2025</code></span></td></tr></table>
+<tr><th>Status</th><td>reviewed 2026-04-26 | pending_clinical_signoff</td></tr>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-CHL"><code>DIS-CHL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-ESOPHAGEAL"><code>DIS-ESOPHAGEAL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-GASTRIC"><code>DIS-GASTRIC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-HCC"><code>DIS-HCC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-HNSCC"><code>DIS-HNSCC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-MELANOMA"><code>DIS-MELANOMA</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-MESOTHELIOMA"><code>DIS-MESOTHELIOMA</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-NSCLC"><code>DIS-NSCLC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-RCC"><code>DIS-RCC</code></a></span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="NCCN Esophageal and EGJ Cancers"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1433" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-ESOPHAGEAL-2025</code></a></span> <span class="kb-chip" title="NCCN Gastric Cancer"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1434" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-GASTRIC-2025</code></a></span> <span class="kb-chip" title="NCCN Hepatocellular Carcinoma"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1438" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-HCC-2025</code></a></span></td></tr></table>
   <h2>Drug Facts</h2><table class="kb-facts"><tr><th>Class</th><td>Anti-PD-1 fully human IgG4 monoclonal antibody (immune checkpoint inhibitor)</td></tr>
 <tr><th>Mechanism</th><td>Fully human IgG4 monoclonal antibody binding programmed cell death protein 1 (PD-1) on activated T cells, blocking the inhibitory PD-1/PD-L1 and PD-1/PD-L2 interactions and restoring cytotoxic T-cell antitumor responses. IgG4 backbone with a stabilizing S228P hinge mutation minimizes ADCC. Mechanistically equivalent to pembrolizumab; combined with anti-CTLA-4 (ipilimumab) the dual blockade amplifies T-cell priming and effector activity at the cost of substantially increased irAE rates. Combined with relatlimab (anti-LAG-3) in Opdualag for melanoma. Approved as monotherapy or combination across many solid tumors and classical Hodgkin lymphoma.</td></tr>
 <tr><th>Typical dosing</th><td>Standard adult monotherapy: 240 mg IV q2w OR 480 mg IV q4w (over 30 min). Pediatric melanoma adjuvant (≥12 yrs, ≥40 kg): 240 mg q2w; &lt;40 kg: 3 mg/kg q2w. With ipilimumab (1L melanoma, RCC, MSI-H CRC): nivolumab 1 mg/kg + ipilimumab 3 mg/kg q3w × 4 doses, then nivolumab 240 mg q2w or 480 mg q4w maintenance. CheckMate-649 (gastric 1L + chemo): 360 mg q3w with chemo or 240 mg q2w. CheckMate-577 (adjuvant esophageal post-CROSS without pCR): 240 mg q2w × 16 wks, then 480 mg q4w to total 1 year. Treatment until progression, unacceptable toxicity, or specified duration (1 yr adjuvant; 2 yrs metastatic in some indications).</td></tr>
@@ -127,8 +196,9 @@
 <tr><th>Ukraine last verified</th><td>2026-04-27</td></tr></table><h2>Warnings</h2><ul><li>Severe and fatal immune-mediated adverse reactions (any organ; same spectrum as pembrolizumab)</li><li>Complications of allogeneic HSCT post-nivolumab — hyperacute GVHD, hepatic VOD, severe sepsis (fatal cases)</li></ul>
   <h2>Notes</h2><p>CheckMate-577: adjuvant nivolumab × 1 yr in patients with residual ypT+ or ypN+ post-CROSS — DFS approximately doubled (median 22.4 vs 11.0 mo). CheckMate-649: 1L gastric / GEJ / esophageal adenocarcinoma with FOLFOX or CAPOX — OS benefit in CPS ≥5 (FDA + EMA approvals restrict to CPS ≥5 / CPS ≥1 respectively). Combination with ipi amplifies irAE rates substantially: melanoma combo Grade 3-4 irAE ~45-55% vs 15-20% mono. ICI-class management protocols apply uniformly (baseline TFTs/cortisol/LFTs, serial labs, prompt steroid intervention for Grade ≥2 irAE).</p>
   <h2>Used By</h2>
-<h3>Contraindications</h3><ul><li><code>CI-PEMBROLIZUMAB-AUTOIMMUNE</code> - CI-PEMBROLIZUMAB-AUTOIMMUNE <span class="kb-muted">(knowledge_base/hosted/content/contraindications/ci_pembrolizumab_autoimmune.yaml)</span></li></ul>
-<h3>Regimens</h3><ul><li><code>REG-FOLFOX-NIVO</code> - FOLFOX + Nivolumab <span class="kb-muted">(knowledge_base/hosted/content/regimens/folfox_nivolumab.yaml)</span></li><li><code>REG-IPI-NIVO-ESOPH-SCC</code> - Nivolumab + ipilimumab (ESCC, 1L metastatic; CheckMate-648) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_ipi_nivo_esoph_scc.yaml)</span></li><li><code>REG-NIVO-ADJUVANT-ESOPH</code> - Nivolumab adjuvant — post-CROSS without pCR (CheckMate-577) <span class="kb-muted">(knowledge_base/hosted/content/regimens/nivolumab_adjuvant_esophageal.yaml)</span></li><li><code>REG-NIVO-AVD</code> - N+AVD (Nivolumab + Adriamycin + Vinblastine + Dacarbazine), 6 cycles — emerging 1L standa... <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivo_avd.yaml)</span></li><li><code>REG-NIVO-CABO-RCC</code> - Nivolumab + cabozantinib (RCC, 1L) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivo_cabo_rcc.yaml)</span></li><li><code>REG-NIVO-CHEMO-ESCC</code> - Nivolumab + platinum/fluoropyrimidine chemotherapy (ESCC) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivo_chemo_escc.yaml)</span></li><li><code>REG-NIVO-IPI-CHEMO-NSCLC-1L</code> - Nivolumab + Ipilimumab + 2-Cycle Platinum-Doublet Chemotherapy (CheckMate-9LA) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivo_ipi_chemo_nsclc_1l.yaml)</span></li><li><code>REG-NIVO-IPI-MELANOMA</code> - Nivolumab + ipilimumab (melanoma, 1L metastatic) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivo_ipi_melanoma.yaml)</span></li><li><code>REG-NIVO-IPI-MESOTHELIOMA</code> - Nivolumab + ipilimumab (mesothelioma, 1L) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivo_ipi_mesothelioma.yaml)</span></li><li><code>REG-NIVO-IPI-RCC</code> - Nivolumab + ipilimumab (RCC, 1L IMDC intermediate/poor) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivo_ipi_rcc.yaml)</span></li><li><code>REG-NIVO-MAINTENANCE-MELANOMA</code> - Nivolumab maintenance (post-induction nivo+ipi, advanced melanoma) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivo_maintenance_melanoma.yaml)</span></li><li><code>REG-NIVO-MONO-ESOPH-2L</code> - Nivolumab monotherapy — 2L esophageal squamous (ATTRACTION-3) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivo_mono_esoph_2l.yaml)</span></li><li><code>REG-NIVO-MONO-MESOTHELIOMA-2L</code> - Nivolumab monotherapy (mesothelioma 2L, CONFIRM) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivo_mono_mesothelioma_2l.yaml)</span></li><li><code>REG-NIVOLUMAB-MONO</code> - Nivolumab monotherapy <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_nivolumab_mono.yaml)</span></li><li><code>REG-RELATLIMAB-NIVOLUMAB-MELANOMA</code> - Relatlimab + nivolumab (Opdualag, melanoma) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_relatlimab_nivolumab_melanoma.yaml)</span></li></ul>
+<h3>Contraindications</h3><ul><li><code>CI-PEMBROLIZUMAB-AUTOIMMUNE</code> - CI-PEMBROLIZUMAB-AUTOIMMUNE</li></ul>
+<h3>Drug</h3><ul><li><code>DRUG-TORIPALIMAB</code> - Toripalimab</li></ul>
+<h3>Regimens</h3><ul><li><code>REG-FOLFOX-NIVO</code> - FOLFOX + Nivolumab</li><li><code>REG-IPI-NIVO-ESOPH-SCC</code> - Nivolumab + ipilimumab (ESCC, 1L metastatic; CheckMate-648)</li><li><code>REG-NIVO-ADJUVANT-ESOPH</code> - Nivolumab adjuvant — post-CROSS without pCR (CheckMate-577)</li><li><code>REG-NIVO-AVD</code> - N+AVD (Nivolumab + Adriamycin + Vinblastine + Dacarbazine), 6 cycles — emerging 1L standa...</li><li><code>REG-NIVO-CABO-RCC</code> - Nivolumab + cabozantinib (RCC, 1L)</li><li><code>REG-NIVO-CHEMO-ESCC</code> - Nivolumab + platinum/fluoropyrimidine chemotherapy (ESCC)</li><li><code>REG-NIVO-IPI-CHEMO-NSCLC-1L</code> - Nivolumab + Ipilimumab + 2-Cycle Platinum-Doublet Chemotherapy (CheckMate-9LA)</li><li><code>REG-NIVO-IPI-MELANOMA</code> - Nivolumab + ipilimumab (melanoma, 1L metastatic)</li><li><code>REG-NIVO-IPI-MESOTHELIOMA</code> - Nivolumab + ipilimumab (mesothelioma, 1L)</li><li><code>REG-NIVO-IPI-RCC</code> - Nivolumab + ipilimumab (RCC, 1L IMDC intermediate/poor)</li><li><code>REG-NIVO-MAINTENANCE-MELANOMA</code> - Nivolumab maintenance (post-induction nivo+ipi, advanced melanoma)</li><li><code>REG-NIVO-MONO-ESOPH-2L</code> - Nivolumab monotherapy — 2L esophageal squamous (ATTRACTION-3)</li><li><code>REG-NIVO-MONO-MESOTHELIOMA-2L</code> - Nivolumab monotherapy (mesothelioma 2L, CONFIRM)</li><li><code>REG-NIVOLUMAB-MONO</code> - Nivolumab monotherapy</li><li><code>REG-RELATLIMAB-NIVOLUMAB-MELANOMA</code> - Relatlimab + nivolumab (Opdualag, melanoma)</li></ul>
 </main>
 </body>
 </html>

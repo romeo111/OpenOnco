@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Topotecan - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="Topotecan - OpenOnco">
 <meta property="og:description" content="Topotecan: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/drugs/drug-topotecan.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Topotecan - OpenOnco">
 <meta name="twitter:description" content="Topotecan: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Topotecan - OpenOnco","description":"Topotecan: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-topotecan.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-topotecan.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Topotecan - OpenOnco","description":"Topotecan: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-topotecan.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-topotecan.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -103,6 +172,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -115,10 +185,9 @@
   <table class="kb-facts"><tr><th>ID</th><td><code>DRUG-TOPOTECAN</code></td></tr>
 <tr><th>Type</th><td>Drug</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">9-dimethylaminomethyl-10-hydroxy-camptothecin</span><span class="kb-alias">Hycamtin</span><span class="kb-alias">SKF-104864</span><span class="kb-alias">Топотекан</span></div></td></tr>
-<tr><th>Status</th><td>reviewed 2026-04-27</td></tr>
-<tr><th>File</th><td><code>knowledge_base/hosted/content/drugs/topotecan.yaml</code></td></tr>
-<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
-<tr><th>Sources</th><td><span class="kb-chip" title="ESMO Ovarian Cancer Clinical Practice Guideline"><code>SRC-ESMO-OVARIAN-2024</code></span> <span class="kb-chip" title="NCCN Ovarian Cancer"><code>SRC-NCCN-OVARIAN-2025</code></span></td></tr></table>
+<tr><th>Status</th><td>reviewed 2026-04-27 | pending_clinical_signoff</td></tr>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-OVARIAN"><code>DIS-OVARIAN</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-SCLC"><code>DIS-SCLC</code></a></span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="ESMO Ovarian Cancer Clinical Practice Guideline"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-epithelial-ovarian-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-OVARIAN-2024</code></a></span> <span class="kb-chip" title="NCCN Ovarian Cancer"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1453" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-OVARIAN-2025</code></a></span></td></tr></table>
   <h2>Drug Facts</h2><table class="kb-facts"><tr><th>Class</th><td>Topoisomerase I inhibitor (semisynthetic camptothecin)</td></tr>
 <tr><th>Mechanism</th><td>Semisynthetic water-soluble camptothecin analog that binds and stabilizes the covalent topoisomerase I–DNA cleavable complex, preventing religation of the single-strand DNA nick generated by the enzyme. When a replication fork encounters the trapped complex, the single-strand break is converted to a lethal double-strand break → S-phase-specific apoptosis. Crosses the blood-brain barrier modestly. Active in platinum-resistant ovarian cancer, sensitive-relapse small-cell lung cancer (SCLC; the only cytotoxic approved post-platinum monotherapy), recurrent cervical cancer (in combination with cisplatin), and rare hematologic malignancies.</td></tr>
 <tr><th>Typical dosing</th><td>IV classical (most common): 1.5 mg/m²/day IV over 30 minutes for 5 consecutive days every 21 days. Weekly schedule: 4 mg/m² IV over 30 minutes on Days 1, 8, 15 every 28 days (better tolerated in pre-treated / older patients). Oral: 2.3 mg/m²/day for 5 consecutive days every 21 days (lower neutropenia, more diarrhea). Cervical (combo cisplatin): topotecan 0.75 mg/m²/day Days 1-3 + cisplatin 50 mg/m² Day 1 every 21 days. Renal adjustment: CrCl 20-39 → 50% dose reduction; CrCl &lt;20 not recommended. Hepatic adjustment usually not required (predominantly renal clearance). Hold for ANC &lt;1.5, plt &lt;100; G-CSF support indicated for recurrent febrile neutropenia.</td></tr>
@@ -127,7 +196,7 @@
 <tr><th>Ukraine last verified</th><td>2026-04-27</td></tr></table><h2>Warnings</h2><ul><li>Severe bone-marrow suppression (boxed) — frequent CBC monitoring required; can be life-threatening; should be administered only by clinicians experienced with cytotoxic chemotherapy</li></ul>
   <h2>Notes</h2><p>Renal dose adjustment is mandatory and frequently overlooked — CrCl 20-39 requires 50% dose reduction; CrCl &lt;20 not recommended. Weekly schedule (4 mg/m² Days 1, 8, 15) is better tolerated than the 5-day continuous schedule in older / pretreated patients — cross-trial efficacy comparable in ovarian salvage. Oral formulation has more diarrhea, less neutropenia; convenient for outpatient use but logistics of oral cytotoxic handling apply (PPE for caregivers, avoid pregnancy / breastfeeding contact). Vesicant on extravasation — administer through central or large peripheral vein; have extravasation kit available. G-CSF support after first febrile neutropenia event. Baseline + serial CBC weekly. Premedicate with 5-HT3 antagonist + dexamethasone for nausea. UA: generic, available, НСЗУ-reimbursed for indicated uses.</p>
   <h2>Used By</h2>
-<h3>Regimens</h3><ul><li><code>REG-TOPOTECAN-OVARIAN</code> - Topotecan single-agent (platinum-resistant recurrent ovarian) <span class="kb-muted">(knowledge_base/hosted/content/regimens/topotecan_ovarian.yaml)</span></li><li><code>REG-TOPOTECAN-SCLC-RR</code> - Topotecan (SCLC relapsed/refractory) <span class="kb-muted">(knowledge_base/hosted/content/regimens/reg_topotecan_sclc_rr.yaml)</span></li></ul>
+<h3>Regimens</h3><ul><li><code>REG-TOPOTECAN-OVARIAN</code> - Topotecan single-agent (platinum-resistant recurrent ovarian)</li><li><code>REG-TOPOTECAN-SCLC-RR</code> - Topotecan (SCLC relapsed/refractory)</li></ul>
 </main>
 </body>
 </html>
