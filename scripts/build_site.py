@@ -47,6 +47,8 @@ import re
 import shutil
 import sys
 import zipfile
+
+import yaml
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -755,6 +757,77 @@ def _remove_excluded_case_pages(output_dir: Path) -> int:
     return removed
 
 
+def _build_searchable_indexes() -> tuple[dict, dict]:
+    """Load disease + regimen indexes used to enrich the examples manifest
+    with searchable text (disease name, regimen short name)."""
+    disease_index: dict[str, dict] = {}
+    regimen_index: dict[str, dict] = {}
+    dis_dir = KB_ROOT / "diseases"
+    reg_dir = KB_ROOT / "regimens"
+    try:
+        for p in dis_dir.glob("*.yaml"):
+            d = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+            did = d.get("id")
+            if did:
+                names = d.get("names") or {}
+                disease_index[did] = {
+                    "name_en": names.get("english") or names.get("preferred") or did,
+                    "name_ua": names.get("ua") or names.get("preferred") or did,
+                }
+    except Exception:
+        pass
+    try:
+        for p in reg_dir.glob("*.yaml"):
+            d = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+            rid = d.get("id")
+            if rid:
+                regimen_index[rid] = {
+                    "name": d.get("name") or rid,
+                    "name_ua": d.get("name_ua") or d.get("name") or rid,
+                    "alternate_names": d.get("alternate_names") or [],
+                }
+    except Exception:
+        pass
+    return disease_index, regimen_index
+
+
+def _searchable_example_meta(case: "CaseEntry", ex_json: dict, disease_id: str | None,
+                               disease_index: dict, regimen_index: dict,
+                               indication_index: dict) -> dict:
+    """Compute search-relevant tokens for an example."""
+    biomarker_ids: list[str] = []
+    bm = ex_json.get("biomarkers") if isinstance(ex_json, dict) else None
+    if isinstance(bm, dict):
+        for k in bm.keys():
+            if isinstance(k, str):
+                biomarker_ids.append(k)
+    line = ex_json.get("line_of_therapy") if isinstance(ex_json, dict) else None
+    try:
+        line_i = int(line) if line is not None else None
+    except (ValueError, TypeError):
+        line_i = None
+
+    target_ind = ex_json.get("_target_indication_id") if isinstance(ex_json, dict) else None
+    regimen_id = None
+    regimen_name = None
+    if target_ind and target_ind in indication_index:
+        regimen_id = indication_index[target_ind].get("recommended_regimen")
+    if regimen_id and regimen_id in regimen_index:
+        regimen_name = regimen_index[regimen_id].get("name")
+
+    disease_meta = disease_index.get(disease_id or "") or {}
+    return {
+        "disease_name_en": disease_meta.get("name_en"),
+        "disease_name_ua": disease_meta.get("name_ua"),
+        "line_of_therapy": line_i,
+        "biomarker_ids": sorted(set(biomarker_ids)),
+        "regimen_id": regimen_id,
+        "regimen_name": regimen_name,
+        "indication_id": target_ind,
+        "category": getattr(case, "category", None),
+    }
+
+
 def bundle_examples(
     output_dir: Path,
     questionnaires_manifest: list[dict] | None = None,
@@ -762,13 +835,23 @@ def bundle_examples(
     """Write docs/examples.json — array of {label, json} entries used as
     the 'Load example' dropdown on try.html.
 
-    Also extracts a thin manifest (label + disease_icd only, ~10× smaller)
+    Also extracts a thin manifest (label + disease_icd + searchable tokens)
     used by /try.html for instant dropdown population. Full payload is
     lazy-fetched only when a user actually picks an example.
     """
     payload = []
     manifest = []
     unique_icd_to_disease_id = _unique_questionnaire_icd_to_disease_id_map()
+    disease_index, regimen_index = _build_searchable_indexes()
+    indication_index: dict[str, dict] = {}
+    try:
+        for p in (KB_ROOT / "indications").glob("*.yaml"):
+            d = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+            iid = d.get("id")
+            if iid:
+                indication_index[iid] = d
+    except Exception:
+        pass
 
     def append_case(c: CaseEntry, *, has_case_page: bool) -> str | None:
         p = EXAMPLES / c.file
@@ -795,6 +878,9 @@ def bundle_examples(
             c, ex_json, disease_id, has_case_page=has_case_page
         )
         quality_meta = _case_quality_meta(c, has_case_page=has_case_page)
+        searchable = _searchable_example_meta(
+            c, ex_json, disease_id, disease_index, regimen_index, indication_index
+        )
         payload_entry = {
             "case_id": c.case_id,
             "label": label_ua,
@@ -808,8 +894,11 @@ def bundle_examples(
             "case_id": c.case_id,
             "label": label_ua,
             "label_en": label_en,
+            "summary": getattr(c, "summary_ua", ""),
+            "summary_en": getattr(c, "summary_en", "") or getattr(c, "summary_ua", ""),
             "disease_id": disease_id,
             "disease_icd": disease_icd,
+            **searchable,
             **quality_meta,
         }
         if not has_case_page:
@@ -3213,9 +3302,15 @@ def render_try(
     </label>
     <label class="qt-label">
       {'Load an example' if target_lang == 'en' else 'Завантажити приклад'}
+      <input id="exampleSearch" type="search"
+             placeholder="{'Search · disease, biomarker (BRCA, ALK), regimen (FOLFOX), line (2L)' if target_lang == 'en' else 'Пошук · хвороба, біомаркер (BRCA, ALK), режим (FOLFOX), лінія (2L)'}"
+             autocomplete="off"
+             aria-label="{'Filter examples' if target_lang == 'en' else 'Фільтр прикладів'}">
       <select id="exampleSelect">
         <option value="">{'— select —' if target_lang == 'en' else '— оберіть —'}</option>
       </select>
+      <span id="exampleSearchCount" class="qt-count" aria-live="polite"></span>
+      <button id="exampleSearchClear" type="button" class="qt-clear" aria-label="{'Clear example search' if target_lang == 'en' else 'Очистити пошук'}" hidden>×</button>
     </label>
     <div class="qt-spacer"></div>
     <div class="qt-modes">
@@ -5327,6 +5422,39 @@ function exampleDisplayLabel(ex) {{
   return quality ? `${{base}} · ${{quality}}` : base;
 }}
 
+// Build a search blob from an example manifest entry. Used by the
+// exampleSearch text input — covers disease name/id, biomarkers, regimen
+// name, line of therapy, label/summary in both languages. When the user
+// types a non-empty query, the disease filter is bypassed so the search
+// truly spans all public examples.
+function exampleSearchBlob(ex) {{
+  const parts = [
+    ex.label || '', ex.label_en || '', ex.summary || '', ex.summary_en || '',
+    ex.disease_id || '', ex.disease_icd || '',
+    ex.disease_name_en || '', ex.disease_name_ua || '',
+    ex.regimen_id || '', ex.regimen_name || '',
+    ex.indication_id || '',
+    ex.category || '',
+    ex.quality_tier || '', ex.quality_label || '', ex.quality_label_en || '',
+  ];
+  if (Array.isArray(ex.biomarker_ids)) parts.push(ex.biomarker_ids.join(' '));
+  if (ex.line_of_therapy != null) {{
+    parts.push(String(ex.line_of_therapy) + 'L');
+    parts.push('line ' + ex.line_of_therapy);
+  }}
+  return parts.join(' \\u00b7 ').toLowerCase();
+}}
+
+function exampleSearchMatches(ex, q) {{
+  if (!q) return true;
+  const blob = exampleSearchBlob(ex);
+  const tokens = q.toLowerCase().split(/\\s+/).filter(Boolean);
+  for (const t of tokens) {{
+    if (!blob.includes(t)) return false;
+  }}
+  return true;
+}}
+
 function repopulateExamples(activeQuestIdx) {{
   // Filter from manifest only — no need to await full examples payload
   // just to populate a dropdown (manifest carries label + disease_id).
@@ -5335,6 +5463,9 @@ function repopulateExamples(activeQuestIdx) {{
     : (QUESTIONNAIRES_MANIFEST[activeQuestIdx] || {{}});
   const wantDiseaseId = activeQuestManifest && activeQuestManifest.disease_id;
   const wantCode = activeQuestManifest && activeQuestManifest.disease_icd;
+  const searchInput = document.getElementById('exampleSearch');
+  const searchValue = searchInput ? (searchInput.value || '').trim() : '';
+  const hasSearch = searchValue.length > 0;
   exampleSelect.innerHTML = '';
   const placeholder = document.createElement('option');
   placeholder.value = '';
@@ -5347,11 +5478,13 @@ function repopulateExamples(activeQuestIdx) {{
     .map((ex, i) => ({{ ex, i }}))
     .filter((item) => {{
       const ex = item.ex;
-    if (wantDiseaseId != null) {{
+      // When the user has typed a search term, search across ALL examples.
+      if (hasSearch) return exampleSearchMatches(ex, searchValue);
+      if (wantDiseaseId != null) {{
         return ex.disease_id === wantDiseaseId;
-    }} else if (wantCode != null) {{
+      }} else if (wantCode != null) {{
         return ex.disease_icd === wantCode;
-    }}
+      }}
       return true;
     }})
     .sort((a, b) => {{
@@ -5368,16 +5501,56 @@ function repopulateExamples(activeQuestIdx) {{
     exampleSelect.appendChild(opt);
     n++;
   }});
-  if ((wantDiseaseId != null || wantCode != null) && n === 0) {{
+  if ((wantDiseaseId != null || wantCode != null) && n === 0 && !hasSearch) {{
     const noneOpt = document.createElement('option');
     noneOpt.value = '';
     noneOpt.disabled = true;
     noneOpt.textContent = '{"(no examples for this disease yet)" if target_lang == "en" else "(прикладів для цієї хвороби поки немає)"}';
     exampleSelect.appendChild(noneOpt);
   }}
+  // Update count chip
+  const countEl = document.getElementById('exampleSearchCount');
+  if (countEl) {{
+    if (hasSearch) {{
+      countEl.textContent = '{"Showing " if target_lang == "en" else "Показано "}' + n + '{" of " if target_lang == "en" else " з "}' + EXAMPLES_MANIFEST.length;
+    }} else {{
+      countEl.textContent = '';
+    }}
+  }}
+  const clearBtn = document.getElementById('exampleSearchClear');
+  if (clearBtn) clearBtn.hidden = !hasSearch;
 }}
 
 // ── Event wiring ──────────────────────────────────────────────────────────
+const exampleSearchInput = document.getElementById('exampleSearch');
+const exampleSearchClearBtn = document.getElementById('exampleSearchClear');
+function _currentQuestIdx() {{
+  const i = diseaseSelect.value;
+  return i === '' ? null : parseInt(i, 10);
+}}
+if (exampleSearchInput) {{
+  exampleSearchInput.addEventListener('input', () => {{
+    repopulateExamples(_currentQuestIdx());
+  }});
+  exampleSearchInput.addEventListener('keydown', (ev) => {{
+    if (ev.key !== 'Enter') return;
+    const real = [...exampleSelect.options].filter(o => o.value !== '' && !o.disabled);
+    if (real.length === 1) {{
+      ev.preventDefault();
+      exampleSelect.value = real[0].value;
+      exampleSelect.dispatchEvent(new Event('change', {{ bubbles: true }}));
+    }}
+  }});
+}}
+if (exampleSearchClearBtn) {{
+  exampleSearchClearBtn.addEventListener('click', () => {{
+    if (exampleSearchInput) {{
+      exampleSearchInput.value = '';
+      exampleSearchInput.focus();
+    }}
+    repopulateExamples(_currentQuestIdx());
+  }});
+}}
 if (diseaseSearch) {{
   diseaseSearch.addEventListener('input', () => {{
     renderDiseaseOptions();
