@@ -85,6 +85,35 @@ These are pre-cleared against the fact sheet's `approved_claims`, `forbidden_cla
 4. Confirm the schema/CLI names against the current registry docs at submission
    time — the registry is young and its tooling changes.
 
+**Prerequisite:** the registry's `packages` entries point at a real package
+registry (PyPI/npm/OCI/…). OpenOnco currently runs from source, so **publish the
+`openonco` package to PyPI first** (maintainer's PyPI account) — then the
+manifest below validates. Alternatively declare a `remotes` HTTP transport if a
+hosted endpoint is stood up.
+
+**Draft `server.json` (validate with `mcp-publisher` before publishing):**
+```json
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.romeo111/openonco",
+  "description": "Rules-first, source-cited oncology clinical decision support; deterministic engine drafts two cited treatment plans for a clinician to verify (no LLM picks the regimen). Informational, not a medical device.",
+  "version": "0.1.3",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "openonco",
+      "version": "0.1.3",
+      "runtimeHint": "uvx",
+      "transport": { "type": "stdio" }
+    }
+  ]
+}
+```
+The package's console entry point must launch `mcp_server.server` (add a
+`[project.scripts]` entry, e.g. `openonco-mcp = "mcp_server.server:main"`, before
+publishing to PyPI).
+
 ---
 
 ## 2. `punkpeye/awesome-mcp-servers`

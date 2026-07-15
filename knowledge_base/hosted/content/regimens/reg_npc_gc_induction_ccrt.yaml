@@ -1,0 +1,109 @@
+id: REG-NPC-GC-INDUCTION-CCRT
+name: "Induction gemcitabine-cisplatin (GC) + concurrent cisplatin chemoradiation (IMRT) — locoregionally advanced nasopharyngeal carcinoma"
+name_ua: "Індукційний гемцитабін-цисплатин (GC) + одночасна хіміопроменева терапія цисплатином (IMRT) — локорегіонарно поширена назофарингеальна карцинома"
+alternate_names: ["GC induction + CCRT", "Induction GC + concurrent cisplatin-IMRT", "GEM20110714-pattern regimen"]
+
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly (same
+                # pattern as REG-MATRIX / regimen-phases-refactor PR3).
+
+phases:
+  - name: induction
+    purpose_ua: "Індукційна хіміотерапія гемцитабін+цисплатин (GC) перед CCRT — знижує пухлинне навантаження та контролює мікрометастази; оптимальна користь показана для локорегіонарно поширеної (Stage III-IVA) NPC"
+    purpose_en: "Induction gemcitabine+cisplatin (GC) chemotherapy before CCRT — cytoreduction and micrometastasis control; benefit demonstrated for locoregionally advanced (Stage III-IVA) NPC"
+    duration: "3 cycles x 21 days (~9 weeks)"
+    timing_relative_to: "absolute"
+    optional: true
+    components:
+      - drug_id: DRUG-GEMCITABINE
+        dose: "1000 mg/m² IV"
+        schedule: "Days 1 and 8 of every 21-day cycle x 3 cycles"
+        route: IV
+      - drug_id: DRUG-CISPLATIN
+        dose: "80 mg/m² IV"
+        schedule: "Day 1 of every 21-day cycle x 3 cycles"
+        route: IV
+    sources:
+      - SRC-NPC-GC-INDUCTION-ZHANG-2019
+  - name: concurrent
+    purpose_ua: "Одночасна хіміопроменева терапія — цисплатин одночасно з дефінітивною IMRT"
+    purpose_en: "Concurrent chemoradiation — cisplatin concurrent with definitive IMRT"
+    duration: "~7 weeks, concurrent with definitive IMRT (RT dose/fractionation not modeled as a separate entity in this schema — typically ~70 Gy to gross disease in ~33 fractions per institutional/NCCN dose-painting IMRT protocol; approximate figure, not independently verified)"
+    timing_relative_to: "previous_phase_completion"
+    timing_offset_days: 0
+    optional: false
+    components:
+      - drug_id: DRUG-CISPLATIN
+        dose: "100 mg/m² IV"
+        schedule: "Day 1 and 22 (± day 43 depending on RT course length) every 3 weeks, concurrent with IMRT. Weekly cisplatin 40 mg/m² IV is an accepted lower-toxicity alternative schedule."
+        route: IV
+    sources:
+      - SRC-INTERGROUP-0099-ALSARRAF-1998
+      - SRC-NCCN-HNSCC-2025
+
+cycle_length_days: 21
+total_cycles: "Induction (optional, Stage III-IVA): 3 cycles. Concurrent: 2-3 cisplatin doses q3w (or weekly x6-7) paired with the definitive IMRT course."
+toxicity_profile: severe
+
+premedication:
+  - "Mandatory cisplatin hydration: pre/post IV fluids 1-2 L NS with Mg/K repletion, both induction and concurrent phases"
+  - "Triple antiemetic prophylaxis (highly-emetogenic cisplatin): 5-HT3 antagonist + NK1-RA (aprepitant/fosaprepitant) + dexamethasone"
+  - "Baseline audiometry before first cisplatin dose (cumulative ototoxicity risk across induction + concurrent phases)"
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "CrCl 50-60 mL/min"
+    modification: "Reduce cisplatin dose per institutional nomogram, or substitute carboplatin (case-by-case MDT decision)"
+    source_refs: [SRC-NCCN-HNSCC-2025]
+  - condition: "CrCl < 50 mL/min"
+    modification: "Cisplatin substitution or omission per MDT; concurrent RT alone with close monitoring if chemo not feasible"
+    source_refs: [SRC-NCCN-HNSCC-2025]
+  - condition: "Grade 2+ hearing loss or peripheral neuropathy"
+    modification: "Hold/discontinue cisplatin; consider carboplatin substitution"
+  - condition: "Grade 3-4 neutropenia (induction phase)"
+    modification: "Hold GC until recovery; consider dose reduction of gemcitabine on resumption"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Гемцитабін і цисплатин повністю зареєстровані та реімбурсуються в межах НСЗУ-онкопакету. IMRT — доступність інституційна (не Drug-сутність)."
+
+sources:
+  - SRC-NPC-GC-INDUCTION-ZHANG-2019
+  - SRC-INTERGROUP-0099-ALSARRAF-1998
+  - SRC-NCCN-HNSCC-2025
+
+last_reviewed: "2026-07-11"
+notes: >
+  STUB — draft entity pending Clinical Co-Lead sign-off (CHARTER §6.1;
+  dev-mode-exempted). Modern standard for locoregionally advanced NPC:
+  induction gemcitabine-cisplatin (GC) x3 cycles before concurrent
+  chemoradiation improved recurrence-free/overall survival vs
+  concurrent CRT alone in higher-risk (Stage III-IVA) disease (Zhang
+  et al., NEJM 2019 — GC-induction trial; exact effect-size figures
+  pending verification against primary source). Concurrent cisplatin +
+  RT backbone traces to Intergroup-0099 / Al-Sarraf (JCO 1998), which
+  first established chemoradiation superior to RT alone in NPC;
+  Intergroup-0099 also included an adjuvant cisplatin+5-FU tail that is
+  DELIBERATELY OMITTED here — current practice (and the GC-induction
+  trial design) favors induction-then-CCRT without a post-CRT adjuvant
+  phase, consistent with the disease narrative supplied for this
+  authoring pass. RT dose/fractionation intentionally NOT modeled as a
+  formal RadiationCourse entity in this pass (out of scope per file-
+  naming-convention guidance given); free-text approximate figures only.
+notes_ua: >
+  ЗАГОТОВКА — чернетковий запис, очікує підпису клінічного ко-лідера
+  (CHARTER §6.1; наразі звільнено в dev-режимі). Сучасний стандарт для
+  локорегіонарно поширеної NPC: індукційний гемцитабін-цисплатин (GC)
+  x3 цикли перед одночасною хіміопроменевою терапією покращує
+  безрецидивну/загальну виживаність порівняно з CCRT окремо при
+  вищому ризику (Stage III-IVA) (Zhang та співавт., NEJM 2019).
+  Одночасна основа цисплатин+RT походить від Intergroup-0099 / Al-Sarraf
+  (JCO 1998); ад'ювантний хвіст цисплатин+5-FU з цього дослідження
+  СВІДОМО ОПУЩЕНО — сучасна практика надає перевагу індукції+CCRT без
+  ад'ювантної фази. Доза/фракціонування променевої терапії свідомо НЕ
+  змодельовані як окрема сутність RadiationCourse у цьому проході.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_a_anchor
+draft_revision: 1

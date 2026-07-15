@@ -1,0 +1,68 @@
+id: RF-ATM-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic monoallelic variant
+  in ATM (heterozygous; biallelic ATM is the autosomal-recessive
+  Ataxia-Telangiectasia phenotype, distinct from the cancer-predisposition
+  carrier state covered here). Heterozygous ATM carriers have moderate-
+  penetrance breast cancer risk (RR ~2.0-2.4; lifetime breast cancer
+  risk ~20-30%), pancreatic adenocarcinoma (RR ~5-10, lifetime ~5-9%),
+  prostate cancer (RR ~2-3 with high-grade enrichment), and possibly
+  gastric + colorectal modest signals. Specific variants — c.7271T>G
+  (p.Val2424Gly) + truncating loss-of-function — confer higher breast
+  cancer risk than missense variants of uncertain significance. Common
+  multi-gene panel finding (~1% population carrier frequency). Patient
+  has confirmed positive germline test; no current personal cancer
+  diagnosis in the carrier being assessed. Prevention-persona RedFlag
+  (§20, v0.3 moderate-penetrance breast/pancreatic gene expansion).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний
+  monoallelic варіант у ATM (heterozygous; biallelic ATM — autosomal-
+  recessive Ataxia-Telangiectasia phenotype, відмінний від cancer-
+  predisposition carrier state, що розглядається тут). Heterozygous ATM
+  carriers мають moderate-penetrance breast cancer ризик (RR ~2.0-2.4;
+  lifetime breast cancer ризик ~20-30%), pancreatic adenocarcinoma
+  (RR ~5-10, lifetime ~5-9%), prostate cancer (RR ~2-3 з high-grade
+  enrichment), та можливо gastric + colorectal modest signals. Specific
+  variants — c.7271T>G (p.Val2424Gly) + truncating loss-of-function —
+  дають вищий breast cancer ризик ніж missense variants uncertain
+  significance. Common multi-gene panel finding (~1% population carrier
+  frequency). Prevention-персона RedFlag (§20, v0.3 moderate-penetrance
+  breast/pancreatic gene expansion).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_atm_pathogenic_variant_confirmed"
+      value: true
+    - finding: "germline_atm_likely_pathogenic_variant"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-BREAST
+  - DIS-PDAC
+  - DIS-PROSTATE
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for ATM heterozygous carriers. Distinction
+  from biallelic A-T phenotype is critical: heterozygotes have cancer
+  predisposition only (no neurologic phenotype). Engine routes to
+  enhanced breast surveillance + pancreatic surveillance for FDR-of-
+  PDAC carriers per CAPS consortium 2022; prostate awareness for males.
+  STUB pending two-Co-Lead signoff per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_moderate_penetrance_panel
+draft_revision: 1

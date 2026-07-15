@@ -1,0 +1,148 @@
+id: IND-CHEK2-CARRIER-PREVENTION-SURVEILLANCE
+plan_track: standard
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-BREAST
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-CHEK2-CONFIRMED-CARRIER
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Annual mammography from age 40 ± MRI in dense-breast subset shifts
+    breast cancer stage at diagnosis to early-stage. Modestly tightened
+    CRC screening (colonoscopy q5y from age 40) shifts CRC stage. PSA-
+    aware monitoring of c.1100delC males detects high-grade prostate
+    cancer earlier.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Standard-track prevention pathway for CHEK2 heterozygous carriers per
+  NCCN Genetic/Familial High-Risk Assessment Breast/Ovarian + CRC 2025.
+  CHEK2 is the most-common moderate-penetrance breast gene in European-
+  ancestry multi-gene panels.
+
+  Components:
+    - **Breast surveillance:**
+      - Annual mammography from age 40 (or 5-10y before earliest
+        family-breast-cancer diagnosis if family history present).
+      - Annual breast MRI for c.1100delC + family history of multiple
+        breast cancers OR dense breast tissue (NCCN moderate-elevated
+        tier modifier).
+      - Clinical breast examination semi-annually from age 25-30.
+    - **CRC screening:**
+      - Colonoscopy q5y from age 40 (vs general-population q10y from
+        45) per NCCN CRC 2025 for CHEK2 c.1100delC + family history
+        of CRC.
+      - Routine colonoscopy from age 40 with q5y interval even without
+        family history is acceptable in shared-decision-making.
+    - **Prostate awareness (males with c.1100delC):**
+      - PSA + DRE from age 40 with shared decision-making.
+      - Earlier evaluation of any urinary symptoms.
+    - **Thyroid awareness:** symptom-driven physical exam + neck
+      ultrasound for palpable nodule; no routine US screening.
+    - **Cascade testing:** FDRs offered testing for the family-
+      specific CHEK2 variant.
+    - **Reproductive counseling:** PGT-M discussion if reproductive-
+      age + both partners panel-tested (both partners with truncating
+      CHEK2 → biallelic-CHEK2 child has uncertain phenotype, not
+      A-T-like).
+    - **Chemoprevention discussion:** tamoxifen or raloxifene
+      consideration for highest-risk subset; modest absolute benefit.
+    - **Lifestyle:** standard cancer-prevention.
+
+  In Ukraine, c.1100delC is the dominant variant among Slavic +
+  Northern European populations; multi-gene panels include CHEK2 as
+  standard. Breast MRI at academic centers; colonoscopy widely
+  available; PSA testing accessible.
+
+rationale_ua: >
+  Стандартний-трек prevention шлях для CHEK2 heterozygous carriers per
+  NCCN Genetic/Familial High-Risk Assessment Breast/Ovarian + CRC 2025.
+  CHEK2 — most-common moderate-penetrance breast gene у European-
+  ancestry multi-gene panels.
+
+  Компоненти:
+    - **Breast surveillance:**
+      - Annual mammography з 40 років.
+      - Annual breast MRI для c.1100delC + family history multiple
+        breast cancers АБО dense breast tissue.
+      - Clinical breast examination semi-annually з 25-30 років.
+    - **CRC screening:**
+      - Colonoscopy q5y з 40 років per NCCN CRC 2025 для CHEK2
+        c.1100delC + family history of CRC.
+    - **Prostate awareness (males з c.1100delC):**
+      - PSA + DRE з 40 років з shared decision-making.
+    - **Thyroid awareness:** symptom-driven physical exam.
+    - **Cascade testing:** FDRs offered testing.
+    - **Reproductive counseling:** PGT-M discussion.
+    - **Chemoprevention discussion:** tamoxifen або raloxifene.
+    - **Lifestyle:** standard cancer-prevention.
+
+  В Україні c.1100delC dominant variant серед Slavic + Northern
+  European populations; multi-gene panels включають CHEK2 як standard.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_moderate_penetrance_panel
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+    position: supports
+    relevant_quote_paraphrase: >-
+      "CHEK2 c.1100delC carriers fall in the moderate-elevated breast
+      cancer risk tier; annual mammography from age 40 with MRI
+      consideration for those with family history or dense breast
+      tissue."
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+    position: supports
+  - source_id: SRC-NCCN-BREAST-2025
+    position: context
+
+do_not_do:
+  - "Не екстраполювати BRCA-style management до CHEK2 — penetrance істотно нижча; uniform RRM не виправдана."
+  - "Не призначати рутинну thyroid US у CHEK2 carriers — signal modest, symptom-driven."
+  - "Не пропускати cascade testing FDRs — ~50% будуть носіями + c.1100delC поширений."
+
+do_not_do_en:
+  - "Do not extrapolate BRCA-style management to CHEK2 — penetrance substantially lower; uniform RRM is not justified."
+  - "Do not order routine thyroid US in CHEK2 carriers — signal modest, symptom-driven."
+  - "Do not skip cascade testing of FDRs — ~50% will be carriers + c.1100delC is common."
+
+known_controversies:
+  - topic: "Variant-specific risk stratification (c.1100delC vs p.Ile157Thr)"
+    positions:
+      - position: "Apply higher-risk schedule to all CHEK2 pathogenic variants"
+        rationale: "Variants pooled in clinical reporting; simpler implementation."
+      - position: "Risk-stratify by variant class"
+        rationale: "p.Ile157Thr confers smaller risk (RR ~1.5) vs c.1100delC (RR ~3); different surveillance intensity reasonable."
+    our_default: "Apply standard pathway with variant-aware modifier (lighter for missense)."
+    rationale: "Patient-specific risk discussion; counseling reflects variant specifics."
+
+time_critical: false
+last_reviewed: "2026-05-19"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — v0.3 moderate-penetrance panel prevention expansion. Two-Co-Lead
+  signoff queued per CHARTER §6.1 dev-mode.

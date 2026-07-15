@@ -1,0 +1,89 @@
+id: RF-BARD1-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family pedigree pattern suggestive of germline BARD1 heterozygous
+  carrier state in an asymptomatic individual who has NOT yet had
+  multi-gene panel testing. BARD1 (BRCA1-associated RING domain 1)
+  is the obligate partner of BRCA1 in the BRCA1-BARD1 heterodimer
+  essential for homologous-recombination repair. Triggers include
+  any of (a) first- or second-degree relative with a confirmed BARD1
+  pathogenic / likely-pathogenic variant; (b) family-history cluster
+  of triple-negative breast cancer in close relatives — BARD1 shows
+  enriched signal in the TNBC subset; (c) family-history pattern
+  resembling BRCA-style HBOC but with negative BRCA1/2 testing
+  in affected relative (BARD1 is one of several moderate-penetrance
+  findings in BRCA-negative BRCA-like pedigrees); (d) early-onset
+  (<50y) breast cancer in a first-degree relative with negative
+  BRCA1/2 panel testing and additional family-history support
+  (multiple affected relatives or bilaterality). No current personal
+  cancer diagnosis in the at-risk individual being assessed.
+  Prevention-persona RedFlag (§20, v0.3 moderate-penetrance breast/
+  ovarian gene expansion — pre-testing suspicion variant).
+definition_ua: >-
+  Сімейний родовід з патерном, що нагадує гермінативний heterozygous
+  carrier BARD1, у асимптомної особи, яка ще НЕ пройшла multi-gene
+  panel тестування. BARD1 (BRCA1-associated RING domain 1) —
+  obligate партнер BRCA1 у BRCA1-BARD1 heterodimer essential для
+  homologous-recombination repair. Тригери включають будь-яке з (а)
+  родич першого/другого ступеня з підтвердженим патогенним /
+  ймовірно-патогенним варіантом BARD1; (б) сімейне накопичення
+  triple-negative breast cancer у близьких родичів — BARD1 показує
+  enriched signal у TNBC subset; (в) сімейно-історичний патерн що
+  нагадує BRCA-style HBOC але з негативним BRCA1/2 тестуванням у
+  ураженого родича (BARD1 — один з кількох moderate-penetrance
+  findings у BRCA-negative BRCA-like родоводах); (г) early-onset
+  (<50р) рак молочної залози у родича першого ступеня з негативним
+  BRCA1/2 панельним тестуванням та додатковою сімейно-історичною
+  підтримкою.
+  Поточний особистий діагноз раку у пацієнта з ризиком відсутній.
+  Prevention-персона RedFlag (§20, v0.3 — pre-testing suspicion
+  варіант).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_bard1_known_pathogenic_variant"
+      value: true
+    - finding: "family_triple_negative_breast_cluster"
+      value: true
+    - finding: "family_brca_like_pedigree_brca_negative"
+      value: true
+    - finding: "family_early_onset_breast_brca_negative_with_support"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 115
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-BREAST
+  - DIS-OVARIAN
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  v0.3 Wave M suspicion variant — pre-testing family-history-
+  suspicion counterpart to RF-BARD1-CONFIRMED-CARRIER. Fires when
+  family pedigree pattern suggests BARD1 carrier state but germline
+  panel testing has not yet been completed. Standard pathway =
+  referral for genetic counseling + multi-gene HBOC panel. If panel
+  returns positive for BARD1, the patient transitions to the
+  RF-BARD1-CONFIRMED-CARRIER pathway (annual mammography from age
+  40 + MRI consideration; earlier or MRI-inclusive screening in
+  family-history-stratified TNBC-enriched cohorts; ovarian
+  symptom-driven workup only — modest signal does not justify
+  routine ovarian surveillance). Distinct trigger findings from the
+  confirmed-carrier RF (carrier RF fires on `germline_bard1_
+  pathogenic_variant_confirmed`; suspicion RF fires on family-
+  history-based findings only). STUB pending two-Clinical-Co-Lead
+  signoff per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_suspicion_variant_wave_m
+draft_revision: 1

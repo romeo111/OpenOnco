@@ -1,0 +1,80 @@
+id: RF-NF1-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in NF1 OR
+  fulfillment of NIH/Bethesda clinical diagnostic criteria for
+  neurofibromatosis type 1 (≥2 of: ≥6 café-au-lait macules >5 mm
+  pre-pubertal or >15 mm post-pubertal, ≥2 neurofibromas or 1 plexiform
+  neurofibroma, axillary/inguinal freckling, optic pathway glioma,
+  ≥2 Lisch nodules, distinctive osseous lesion, FDR with NF1). NF1 is
+  an autosomal-dominant tumor-predisposition syndrome with ~1 in 3000
+  prevalence — most common single-gene cancer predisposition syndrome.
+  Cancer spectrum: optic pathway glioma (children, ~15-20%), other
+  CNS gliomas (low- and high-grade across the lifespan, ~5-15% adult
+  prevalence), malignant peripheral nerve sheath tumor (MPNST,
+  ~10-15% lifetime, malignant transformation of plexiform
+  neurofibroma — major life-limiting complication), breast cancer in
+  women (lifetime ~18% by age 50, ~50% by age 70 — comparable to
+  BRCA2; risk earlier than BRCA), pheochromocytoma + paraganglioma
+  (small subset), juvenile myelomonocytic leukemia (JMML, infants),
+  rhabdomyosarcoma (children), GIST. Patient has confirmed positive
+  germline test or clinical diagnosis; no current personal cancer
+  diagnosis in the carrier being assessed. Prevention-persona RedFlag
+  (§20, v0.3 pediatric predisposition expansion — adult NF1 carrier
+  surveillance also covered).
+definition_ua: >-
+  Підтверджений germline pathogenic / likely-pathogenic variant у NF1
+  АБО clinical diagnostic criteria для neurofibromatosis type 1
+  (≥2 з: ≥6 café-au-lait macules, ≥2 neurofibromas або 1 plexiform
+  neurofibroma, axillary/inguinal freckling, optic pathway glioma,
+  ≥2 Lisch nodules, distinctive osseous lesion, FDR з NF1).
+  NF1 — autosomal-dominant tumor-predisposition syndrome з ~1 у 3000
+  prevalence — найпоширеніший single-gene cancer predisposition
+  syndrome. Cancer spectrum: optic pathway glioma (діти, ~15-20%),
+  інші CNS gliomas (low- та high-grade, ~5-15% adult prevalence),
+  malignant peripheral nerve sheath tumor (MPNST, ~10-15% lifetime —
+  major life-limiting complication), breast cancer у жінок (lifetime
+  ~18% by age 50, ~50% by age 70 — порівнянно з BRCA2), pheochromocytoma
+  + paraganglioma, juvenile myelomonocytic leukemia (JMML, infants),
+  rhabdomyosarcoma (children), GIST. Prevention-персона RedFlag
+  (§20, v0.3 pediatric predisposition expansion).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_nf1_pathogenic_variant_confirmed"
+      value: true
+    - finding: "nih_nf1_clinical_diagnostic_criteria_met"
+      value: true
+    - finding: "germline_nf1_likely_pathogenic_variant"
+      value: true
+
+clinical_direction: investigate
+severity: critical
+priority: 70
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-GLIOMA-LOW-GRADE
+  - DIS-BREAST
+  - DIS-SOFT-TISSUE-SARCOMA
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for NF1 confirmed-carrier / clinical-
+  diagnostic-criteria-met cohort. Multi-organ surveillance: pediatric
+  ophthalmology q6-12mo to age 8 (optic glioma); whole-body MRI for
+  MPNST surveillance + symptom-driven biopsy of growing/painful/
+  neurologically-symptomatic plexiform neurofibromas; women: annual
+  mammography from age 30, MRI from age 30-50. STUB pending two-Co-
+  Lead signoff per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_pediatric_predisposition
+draft_revision: 1

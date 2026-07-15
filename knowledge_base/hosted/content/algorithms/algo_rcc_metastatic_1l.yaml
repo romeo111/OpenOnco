@@ -91,7 +91,7 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "ECOG PS 0-1"
+        - red_flag: RF-FITNESS-ECOG-FIT
         - condition: "High tumour burden OR conversion-to-resection intent OR rapid response needed"
     if_true:
       result: IND-RCC-METASTATIC-1L-LENV-PEMBRO
@@ -102,13 +102,22 @@ decision_tree:
         nivo+cabo if BP uncontrolled or bone metastases prominent.
     if_false:
       next_step: 5
+    notes: >
+      Mechanical rewire: "ECOG PS 0-1" leaf converted to red_flag:
+      RF-FITNESS-ECOG-FIT (fires on ecog<=1; same pan-disease RF already
+      wired for the identical concept at step 3b in this file). "High tumour
+      burden OR conversion-to-resection intent OR rapid response needed"
+      remains free-text prose — no finding key or RedFlag in the KB captures
+      this compound RCC-specific concept; step's if_true stays unreachable
+      pending future RF authoring. Original clinical criteria unchanged.
 
   # Step 5 — Bone metastases or lenv+pembro hypertension concern → nivo+cabo.
   - step: 5
     evaluate:
       any_of:
         - condition: "Significant bone metastases (MET/AXL pathway biological rationale for cabozantinib)"
-        - condition: "Uncontrolled hypertension (lenvatinib toxicity concern)"
+        - finding: "uncontrolled_hypertension"
+          value: true
         - condition: "ECOG PS 1-2 (better tolerability of nivo+cabo vs lenv+pembro)"
     if_true:
       result: IND-RCC-METASTATIC-1L-NIVO-CABO
@@ -122,6 +131,18 @@ decision_tree:
         Default ICI+TKI for fit ccRCC without specific driver to lenv+pembro or
         nivo+cabo: pembro+axi (KEYNOTE-426; PFS HR 0.69, mOS HR 0.68 across all
         IMDC risk groups including favorable). Well-tolerated, mature OS data.
+    notes: >
+      Mechanical rewire: "Uncontrolled hypertension (lenvatinib toxicity
+      concern)" leaf converted to finding: uncontrolled_hypertension,
+      value: true (same finding key already wired in
+      RF-ENDOMETRIAL-FIT-FOR-LENVATINIB-COMBO for the identical
+      lenvatinib/hypertension toxicity concern, plus RF-GIST-ORGAN-DYSFUNCTION,
+      RF-CML-COMORBIDITY-COMPLEX, and thyroid/MTC organ-dysfunction RFs).
+      "Significant bone metastases" and "ECOG PS 1-2" remain free-text prose —
+      no matching finding/RedFlag exists for either (bone_metastases_count/
+      outside_axial is a prostate-specific CHAARTED threshold, not RCC; no
+      single existing ECOG gate covers the 1-2 band). Original clinical
+      criteria unchanged.
 
 sources:
   - SRC-CHECKMATE-214-MOTZER-2018

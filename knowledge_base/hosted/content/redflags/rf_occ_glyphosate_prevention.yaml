@@ -1,0 +1,130 @@
+id: RF-OCC-GLYPHOSATE-PREVENTION
+definition: >-
+  Documented historical occupational exposure to glyphosate-based
+  herbicides (most notably Roundup® and generic equivalents) —
+  typical high-exposure occupations include agricultural workers
+  (row-crop, orchard, and vineyard pesticide applicators), groundskeepers
+  and landscape-maintenance staff (golf-course, parks, right-of-way),
+  forestry workers, railroad-track vegetation control, and farm-family
+  members involved in mixing / loading / application — with cumulative
+  high-frequency exposure ≥10 years — in an individual without a current
+  glyphosate-attributable malignancy diagnosis. IARC Monograph 112
+  (2015) classified glyphosate as Group 2A (probably carcinogenic to
+  humans) — limited evidence in humans (positive associations with
+  non-Hodgkin lymphoma, particularly diffuse-large-B-cell lymphoma,
+  across multiple agricultural-cohort studies; chance / bias /
+  confounding by other pesticides not fully excluded), sufficient
+  evidence in experimental animals (rodent malignancy at multiple
+  sites with chronic high-dose oral glyphosate; mechanistic evidence
+  for genotoxicity + oxidative stress in mammalian cells). NOTE: IARC
+  classification is contested — EFSA (2015, 2023), EPA (2020), Health
+  Canada (2017), and JMPR (2016) reached "unlikely to pose carcinogenic
+  risk" conclusions for typical occupational use, differing from IARC
+  on the weight given to specific industry-sponsored vs published
+  literature. The Agricultural Health Study (AHS, US, 2018 update)
+  found no overall association but suggested possible elevated NHL
+  risk in the highest exposure quartile. Effect size: meta-analyses
+  pooled NHL OR ~1.4-1.5 for highest-exposed strata in retrospective
+  case-control; null in AHS overall. Latency for NHL attribution
+  10-30 years. There is NO curative intervention for prior exposure —
+  exposure cessation (often not applicable to retired workers),
+  guideline-baseline NHL symptom awareness, and risk-stratified
+  surveillance are the available levers. Prevention-persona RedFlag
+  (§20 ratification 2026-05-18, v0.3 IARC 2A probable-carcinogen batch).
+definition_ua: >-
+  Документований історичний професійний вплив glyphosate-вмісних
+  гербіцидів (Roundup® та generic equivalents) — типові високоризикові
+  професії: agricultural workers (row-crop, orchard, vineyard pesticide
+  applicators), groundskeepers та landscape-maintenance staff (golf-
+  course, парки, right-of-way), forestry workers, railroad-track
+  vegetation control, та farm-family members залучені до mixing /
+  loading / application — з кумулятивною high-frequency expozицією
+  ≥10 років — в особи без поточного діагнозу glyphosate-attributable
+  malignancy. IARC Monograph 112 (2015) класифікував glyphosate як
+  Group 2A (probably carcinogenic) — limited evidence in humans
+  (позитивні асоціації з non-Hodgkin lymphoma, особливо DLBCL, в
+  багатьох agricultural-cohort studies; chance / bias / confounding
+  by other pesticides не повністю виключено), sufficient evidence
+  in experimental animals (rodent malignancy при chronic high-dose
+  oral glyphosate; mechanistic evidence — genotoxicity + oxidative
+  stress). ПРИМІТКА: IARC класифікація — contested; EFSA (2015, 2023),
+  EPA (2020), Health Canada (2017), JMPR (2016) дійшли висновку
+  "unlikely to pose carcinogenic risk" для typical occupational use,
+  різниця з IARC у weight, наданій specific industry-sponsored vs
+  published literature. Agricultural Health Study (AHS, US, 2018
+  оновлення) не виявив overall association, але suggest possibly
+  підвищений NHL risk в highest exposure quartile. Розмір ефекту:
+  meta-аналізи pooled NHL OR ~1.4-1.5 для highest-exposed strata в
+  retrospective case-control; null в AHS overall. Латентність для
+  NHL attribution 10-30 років. КУРАТИВНОГО втручання для попереднього
+  впливу НЕМАЄ.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "occupational_glyphosate_exposure_documented"
+      value: true
+    - finding: "occupational_glyphosate_exposure_years_ge_10"
+      value: true
+    - finding: "occupational_agricultural_pesticide_high_frequency"
+      value: true
+
+clinical_direction: investigate
+
+severity: minor
+priority: 110
+category: other
+
+risk_category: occupational
+
+# Anchor — DLBCL (the primary NHL endpoint in the IARC 112 limited-
+# human-evidence summary; other NHL subtypes have less specific
+# evidence). Other cancers (multiple myeloma, leukemia) have
+# inadequate or contested evidence and are not included.
+relevant_diseases:
+  - DIS-DLBCL-NOS
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 IARC 2A probable-carcinogen batch
+  (2026-05-19). IARC Group 2A probable — limited human evidence;
+  clinical recommendation more conservative than Group 1. IARC
+  Monograph 112 (2015) is the canonical evidence anchor and is NOT
+  yet a separate SRC entity in KB; cited in notes only.
+
+  Evidence-base contestation: the IARC Group 2A classification is
+  not concordant with EFSA / EPA / Health Canada / JMPR
+  "unlikely to pose carcinogenic risk" conclusions. This RF is
+  authored at severity:minor reflecting both the IARC 2A probable
+  evidence quality AND the cross-regulatory disagreement. Counseling
+  should disclose the controversy honestly rather than presenting
+  IARC as settled science.
+
+  Anchor scope: DLBCL only (the dominant NHL endpoint in IARC 112
+  limited-human-evidence summary). Other NHL subtypes (follicular,
+  marginal zone, etc.) and other hematologic malignancies (MM, AML)
+  carry inadequate or more-contested evidence and are deliberately
+  excluded from relevant_diseases.
+
+  Engine routes to 2-track PreventionPlan:
+    (a) IND-OCC-GLYPHOSATE-PREVENTION-INTENSIFIED-SURVEILLANCE
+        (standard) — symptom-awareness education, annual CBC,
+        targeted lymphadenopathy / B-symptom history at routine
+        physical, expedited workup for "B-symptom" presentations.
+    (b) IND-OCC-GLYPHOSATE-PREVENTION-OBSERVATION (surveillance) —
+        routine general-population care; patient declines structured
+        surveillance discussion.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_iarc_2a_batch
+draft_revision: 1

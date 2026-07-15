@@ -1,0 +1,93 @@
+id: RF-BRIP1-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family pedigree pattern suggestive of germline BRIP1 heterozygous
+  carrier state in an asymptomatic individual who has NOT yet had
+  multi-gene panel testing. BRIP1 (BRCA1-interacting protein 1,
+  also FANCJ) carriers have established moderate-penetrance ovarian
+  cancer risk (RR ~3.0; lifetime ~5-15%) sufficient for NCCN-endorsed
+  risk-reducing salpingo-oophorectomy at completed childbearing or
+  age 45-50. Triggers include any of (a) first- or second-degree
+  relative with a confirmed BRIP1 pathogenic / likely-pathogenic
+  variant; (b) family-history cluster of ovarian / fallopian-tube /
+  primary peritoneal carcinoma at any age (≥1 first-degree relative
+  with high-grade serous histology, or ≥2 affected relatives at any
+  age — BRIP1 is the most common moderate-penetrance gene
+  identified in BRCA-negative ovarian cancer pedigrees); (c) family
+  history of multiple ovarian cancers without confirmed BRCA1/2
+  carrier status; (d) BRCA-negative HBOC-spectrum pedigree with
+  predominantly ovarian rather than breast clustering — distinct
+  from BRCA pattern. No current personal cancer diagnosis in the
+  at-risk individual being assessed. Prevention-persona RedFlag
+  (§20, v0.3 moderate-penetrance ovarian gene expansion — pre-
+  testing suspicion variant).
+definition_ua: >-
+  Сімейний родовід з патерном, що нагадує гермінативний heterozygous
+  carrier BRIP1, у асимптомної особи, яка ще НЕ пройшла multi-gene
+  panel тестування. BRIP1 (BRCA1-interacting protein 1, також
+  FANCJ) carriers мають established moderate-penetrance ovarian
+  cancer ризик (RR ~3.0; lifetime ~5-15%) sufficient для NCCN-
+  endorsed risk-reducing salpingo-oophorectomy при completed
+  childbearing або 45-50 років. Тригери включають будь-яке з (а)
+  родич першого/другого ступеня з підтвердженим патогенним /
+  ймовірно-патогенним варіантом BRIP1; (б) сімейне накопичення
+  ovarian / fallopian-tube / primary peritoneal carcinoma будь-якого
+  віку (≥1 родич першого ступеня з high-grade serous histology
+  або ≥2 уражених родичів будь-якого віку — BRIP1 — найпоширеніший
+  moderate-penetrance ген ідентифікований у BRCA-negative ovarian
+  cancer pedigrees); (в) сімейна історія множинних ovarian раків
+  без підтвердженого BRCA1/2 carrier status; (г) BRCA-negative
+  HBOC-spectrum родовід з переважно ovarian, а не breast
+  clustering.
+  Поточний особистий діагноз раку у пацієнта з ризиком відсутній.
+  Prevention-персона RedFlag (§20, v0.3 — pre-testing suspicion
+  варіант).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_brip1_known_pathogenic_variant"
+      value: true
+    - finding: "family_ovarian_cancer_high_grade_or_multiple"
+      value: true
+    - finding: "family_multiple_ovarian_brca_negative"
+      value: true
+    - finding: "family_brca_negative_hboc_ovarian_predominant"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 115
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-OVARIAN
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-OVARIAN-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  v0.3 Wave M suspicion variant — pre-testing family-history-
+  suspicion counterpart to RF-BRIP1-CONFIRMED-CARRIER. Fires when
+  family pedigree pattern suggests BRIP1 carrier state but germline
+  panel testing has not yet been completed. Standard pathway =
+  referral for genetic counseling + multi-gene HBOC panel covering
+  BRCA1/2 + relevant moderate-penetrance ovarian-risk genes (BRIP1,
+  RAD51C, RAD51D minimum). If panel returns positive for BRIP1, the
+  patient transitions to the RF-BRIP1-CONFIRMED-CARRIER pathway
+  with NCCN-endorsed RRSO discussion at completed childbearing or
+  age 45-50, no population ovarian cancer screening recommended
+  pre-RRSO (TVUS + CA-125 demonstrated poor sensitivity in BRCA-
+  carrier cohorts, applies similarly to BRIP1). Distinct trigger
+  findings from the confirmed-carrier RF (carrier RF fires on
+  `germline_brip1_pathogenic_variant_confirmed`; suspicion RF fires
+  on family-history-based findings only). STUB pending two-Clinical-
+  Co-Lead signoff per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_suspicion_variant_wave_m
+draft_revision: 1

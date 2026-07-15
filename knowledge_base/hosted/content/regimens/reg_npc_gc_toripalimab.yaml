@@ -1,0 +1,76 @@
+id: REG-NPC-GC-TORIPALIMAB
+name: "Toripalimab + gemcitabine + cisplatin (JUPITER-02) — 1L recurrent/metastatic nasopharyngeal carcinoma"
+name_ua: "Торипалімаб + гемцитабін + цисплатин (JUPITER-02) — 1L рецидивуюча/метастатична назофарингеальна карцинома"
+alternate_names: ["JUPITER-02 regimen", "Toripalimab-GP"]
+
+components:
+  - drug_id: DRUG-TORIPALIMAB
+    dose: "240 mg IV"
+    schedule: "Day 1 of every 21-day cycle, concurrent with GP cycles 1-6, then continued as monotherapy maintenance q3w until progression/unacceptable toxicity or up to 2 years total"
+    route: IV
+  - drug_id: DRUG-GEMCITABINE
+    dose: "1000 mg/m² IV"
+    schedule: "Days 1 and 8 of every 21-day cycle, cycles 1-6 only"
+    route: IV
+  - drug_id: DRUG-CISPLATIN
+    dose: "80 mg/m² IV"
+    schedule: "Day 1 of every 21-day cycle, cycles 1-6 only"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "GP chemo backbone capped at 6 cycles per JUPITER-02 protocol; toripalimab continues as monotherapy maintenance until progression, unacceptable toxicity, or ~2 years total"
+toxicity_profile: severe
+
+premedication:
+  - "Standard cisplatin hydration: pre/post IV fluids 1-2 L NS with Mg/K repletion"
+  - "Triple antiemetic prophylaxis MANDATORY (highly-emetogenic cisplatin): 5-HT3 antagonist + NK1-RA (aprepitant/fosaprepitant) + dexamethasone"
+  - "Baseline audiometry and renal function before cycle 1"
+  - "No specific toripalimab premedication required (low infusion-reaction rate)"
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Cisplatin-ineligible (CrCl <50, hearing loss, neuropathy)"
+    modification: "Carboplatin substitution per institutional/MDT protocol (not separately validated in JUPITER-02, extrapolated from general platinum-substitution practice)"
+    source_refs: [SRC-NCCN-HNSCC-2025]
+  - condition: "Grade 3-4 neutropenia / thrombocytopenia"
+    modification: "Hold GP until recovery; reduce gemcitabine dose on resumption; consider G-CSF support"
+  - condition: "Immune-mediated AE (toripalimab) — grade 2"
+    modification: "Hold toripalimab; corticosteroids 0.5-1 mg/kg/day prednisone-equivalent; resume when grade ≤1 and steroid taper to ≤10 mg/day"
+  - condition: "Immune-mediated AE — grade 3-4"
+    modification: "Permanent discontinuation of toripalimab; high-dose corticosteroids 1-2 mg/kg/day; specialist consultation"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Гемцитабін і цисплатин повністю зареєстровані та реімбурсуються (НСЗУ). Торипалімаб НЕ зареєстрований в Україні станом на дату авторства — альтернативні шляхи доступу: клінічні випробування, іменний імпорт, програми доступу виробника, транскордонне направлення."
+
+sources:
+  - SRC-JUPITER-02-MAI-2021
+
+last_reviewed: "2026-07-11"
+notes: >
+  STUB — draft entity pending Clinical Co-Lead sign-off (CHARTER §6.1;
+  dev-mode-exempted). JUPITER-02 (Mai HQ et al., Nat Med 2021,
+  NCT03581786): toripalimab + gemcitabine/cisplatin vs placebo +
+  gemcitabine/cisplatin in treatment-naive recurrent/metastatic NPC.
+  Approximate reported results (pending verification against primary
+  source): mPFS ~11.7 vs ~8.0 months (HR ~0.52), ORR ~77% vs ~66%; a
+  later analysis reportedly also showed an OS benefit. FDA-approved
+  (Loqtorzi) Oct 2023 specifically for this indication. Camrelizumab +
+  GP (REG-NPC-GC-CAMRELIZUMAB, CAPTAIN-1st) is an equally
+  evidence-supported alternative — see IND-NPC-1L-METASTATIC-GC-PD1
+  known_controversies for the toripalimab-vs-camrelizumab access/
+  evidence discussion.
+notes_ua: >
+  ЗАГОТОВКА — чернетковий запис, очікує підпису клінічного ко-лідера
+  (CHARTER §6.1; наразі звільнено в dev-режимі). JUPITER-02 (Mai HQ та
+  співавт., Nat Med 2021): торипалімаб + гемцитабін/цисплатин проти
+  плацебо + гемцитабін/цисплатин у нелікованій рецидивуючій/
+  метастатичній NPC. Орієнтовні результати (потребують перевірки):
+  мПВБ ~11.7 vs ~8.0 міс (HR ~0.52), ЗРВ ~77% vs ~66%. Схвалення FDA
+  (Loqtorzi) жовтень 2023. Камрелізумаб + GP (REG-NPC-GC-CAMRELIZUMAB,
+  CAPTAIN-1st) — рівноцінна альтернатива за доказовістю.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_a_anchor
+draft_revision: 1

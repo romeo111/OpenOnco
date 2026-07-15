@@ -98,7 +98,9 @@ decision_tree:
     evaluate:
       all_of:
         - condition: "ECOG PS 0-2 AND adequate renal function (CrCl ≥30 mL/min)"
-        - condition: "No severe peripheral neuropathy (Grade ≥2)"
+        - finding: "peripheral_neuropathy_grade"
+          threshold: 2
+          comparator: "<"
     if_true:
       result: IND-STS-ADVANCED-2L-GEMDOC
       notes: >
