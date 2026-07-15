@@ -1,0 +1,118 @@
+id: RF-ANKRD26-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in ANKRD26
+  (Thrombocytopenia 2, THC2; OMIM 188000). Most pathogenic variants
+  cluster in the 5′-untranslated region (the ANKRD26 5′UTR hotspot,
+  chr10:27,389-27,420), disrupting RUNX1 / FLI1-mediated repression and
+  producing a persistent ANKRD26 over-expression phenotype during
+  megakaryopoiesis. Patient has had germline panel testing returned
+  positive, ideally on buccal / fibroblast germline tissue. The carrier
+  presents from birth / childhood with mild-to-moderate isolated
+  thrombocytopenia (platelet count 40-120 x10⁹/L typically) plus a
+  variably-penetrant bleeding diathesis (mild mucocutaneous bleeding,
+  surgical bleeding risk). Lifetime risk of myeloid malignancy
+  (MDS or AML) is documented as ~5-10% in cohort series and is lower
+  than in classic RUNX1 / FPD/AML pedigrees, but enough to mandate
+  lifelong surveillance — the malignant phenotype is similar to other
+  germline-myeloid-predisposition spectra (somatic second hits at
+  ASXL1, monosomy-7, del(5q) precede frank AML). Prevention-persona
+  RedFlag (KSS §20, confirmed-carrier surveillance pathway).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант
+  у ANKRD26 (Thrombocytopenia 2, THC2; OMIM 188000). Більшість
+  патогенних варіантів кластеризовані в 5′-untranslated region (ANKRD26
+  5′UTR hotspot, chr10:27,389-27,420), порушуючи RUNX1 / FLI1-медіовану
+  репресію і продукуючи персистуючий ANKRD26 over-expression фенотип
+  при мегакаріопоезі. Пацієнт пройшов germline-тестування з позитивним
+  результатом, ідеально на buccal / fibroblast germline тканині. Носій
+  представляє від народження / дитинства з м'яко-помірною ізольованою
+  тромбоцитопенією (тромбоцити 40-120 x10⁹/л зазвичай) плюс варіабельно-
+  penetrant bleeding diathesis (м'який мукокутаний bleeding, surgical
+  bleeding ризик). Довічний ризик мієлоїдного malignancy (МДС або
+  ГМЛ) задокументований як ~5-10% у когортних серіях і нижчий ніж у
+  класичних RUNX1 / FPD/AML родоводах, але достатній для життєвого
+  спостереження — malignant фенотип схожий з іншими germline-myeloid-
+  predisposition спектрами (соматичні "second hits" в ASXL1, моносомія-
+  7, del(5q) передують франкному ГМЛ). Prevention-persona RedFlag (KSS
+  §20, шлях спостереження підтверджених носіїв).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_ankrd26_pathogenic_variant_confirmed"
+      value: true
+    - finding: "thrombocytopenia_2_clinical_criteria_met"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 90
+category: other
+risk_category: genetic
+
+# ANKRD26 carrier malignancy spectrum: MDS and AML, lifetime risk
+# ~5-10% (lower than RUNX1 FPD/AML but established). DIS-MDS-HR +
+# DIS-AML anchors. Note: lifetime risk is in the brief's "below 30%"
+# bucket, but `minor` severity does not appropriately capture the
+# clinical-decision-making impact of a known myeloid-predisposition
+# syndrome (mandates lifelong CBC monitoring, donor screening, BMA
+# threshold lowering). `major` calibrated to align with the
+# surveillance-program intensity, not the absolute incidence number —
+# see notes for full context.
+relevant_diseases:
+  - DIS-AML
+  - DIS-MDS-HR
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-MDS-2021
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Wave P confirmed-carrier surveillance pathway — germline ANKRD26
+  (Thrombocytopenia 2). Fires on documented germline ANKRD26
+  pathogenic variant positivity (typically the 5′UTR hotspot) OR
+  documented THC2 clinical criteria (lifelong moderate
+  thrombocytopenia + RUNX1-negative + ANKRD26-targeted genetic test
+  positive). Engine routes to PreventionPlan recommending:
+    (a) IND-ANKRD26-CARRIER-SURVEILLANCE (standard) — CBC + smear q6
+        months lifelong from carrier confirmation; BMA + myeloid NGS
+        panel + cytogenetics at any clinically-concerning change
+        (new cytopenia in another lineage, persistent dysplasia on
+        smear, unexplained increase in WBC); annual review of bleeding
+        history + medication review (avoid antiplatelet drugs when
+        feasible); cascade testing to first-degree relatives.
+    (b) IND-ANKRD26-CARRIER-INTENSIFIED (aggressive) — standard
+        protocol PLUS BMA every 3-5 years even without provoked
+        indication; q3-month CBC during pregnancy / perioperative
+        windows; preemptive HLA typing on candidate sibling donors
+        with germline ANKRD26 screening required before any future
+        transplant use; structured-bleeding-risk plan for major
+        surgery / obstetric care.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Severity calibrated `major` despite ~5-10% lifetime
+  cumulative incidence because (a) prevention-persona RFs in this KB
+  use `major` as default for confirmed-carrier syndromes regardless of
+  absolute penetrance, and (b) the surveillance-program intensity
+  required (lifelong CBC q6mo + donor screening + perioperative
+  bleeding planning) matches what `major` signals downstream.
+
+  Penetrance reference: Noris et al. Blood 2011 (78-family ANKRD26
+  cohort, leukemia incidence ~5-10% over follow-up); Pippucci et al.
+  Am J Hum Genet 2011 (5′UTR identification); Bluteau et al. J Clin
+  Invest 2018 (mechanistic).
+
+  Donor implication identical to other germline-myeloid syndromes:
+  candidate sibling donors must be screened for ANKRD26 germline
+  variants before being used; donor-derived disease has been reported
+  in inherited bone marrow failure / predisposition syndromes broadly.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_hereditary_myeloid
+draft_revision: 1

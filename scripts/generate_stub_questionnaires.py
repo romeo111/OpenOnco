@@ -154,6 +154,7 @@ def _baseline_demographics_group(disease_short: str) -> str:
         {'value': 4, 'label': '4'},
     ],
     'helper': 'ECOG 4 → engine will not propose active treatment.',
+    'default_value': 1,
 })}
 
 {_q_yaml_dict({

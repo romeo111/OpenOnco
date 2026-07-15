@@ -1,0 +1,115 @@
+id: IND-PENILE-SCC-1L-PENECTOMY-NODAL
+plan_track: local_therapy
+
+applicable_to:
+  disease_id: DIS-PENILE-SCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "T2-T4 primary tumor (invasion beyond lamina propria/corpus spongiosum, or corpus cavernosum / urethral / adjacent-structure invasion) not amenable to an organ-sparing approach"
+    - "OR T1b / high-risk T1a (lymphovascular invasion, poor differentiation) where organ-sparing surgery is not favored by MDT"
+    - "M0 (no distant metastases) — locoregional disease"
+    - "Any cN status (cN0 through cN3) — nodal management is addressed within this indication"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen:       # primary surgery + nodal surgery = local_therapy track, not a drug regimen
+concurrent_therapy: []
+followed_by:
+  - "Adjuvant consideration (chemotherapy or radiotherapy) for pN2-3 / extranodal extension per MDT — not separately authored in this KB pass"
+  - "Surveillance per EAU follow-up schedule (higher-frequency early follow-up given nodal-relapse risk)"
+
+evidence_level: low
+strength_of_recommendation: strong
+
+expected_outcomes:
+  overall_response_rate: "Primary-site local control is high with adequate-margin penectomy"
+  progression_free_survival: "Dominated by nodal status — pN0 favorable, pN+ substantially worse, particularly with extranodal extension"
+  overall_survival_5y: "Stage-dependent: DIS-PENILE-SCC epidemiology reports ~85% for node-negative (stage I) disease down to <20% for stage IV; inguinal nodal status is the single dominant prognostic factor"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-MRI-PELVIS
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+
+desired_tests:
+  - TEST-PET-CT
+
+rationale: >
+  Advanced primary penile SCC (T2-T4, or higher-risk T1 not favored for
+  organ preservation) is managed with partial or total penectomy,
+  depending on the tumor extent and margin needed for oncologic control,
+  per EAU guidelines — reconstructive/functional considerations are
+  balanced against margin adequacy by MDT. Inguinal nodal management is
+  addressed in parallel and is risk/cN-status stratified:
+  - cN0 (clinically node-negative) with intermediate/high-risk primary
+    features: dynamic sentinel lymph node biopsy (DSNB) — minimally
+    invasive nodal staging, avoiding the morbidity of full
+    lymphadenectomy in the majority who are pathologically node-negative.
+  - cN+ (palpable/imaging-suspicious inguinal nodes) or DSNB-positive:
+    modified or complete (radical) inguinal lymphadenectomy, with
+    consideration of pelvic lymphadenectomy for bulky/multiple positive
+    inguinal nodes per EAU criteria.
+  Inguinal lymphadenectomy carries substantial morbidity (lymphedema,
+  wound complications, infection) — technique (open vs
+  video-endoscopic/robotic) and extent are individualized by MDT and
+  surgical volume/expertise. Nodal status remains the dominant
+  prognostic determinant in penile SCC regardless of primary-tumor
+  management, making accurate nodal staging a central part of this
+  indication.
+
+rationale_ua: >
+  Поширена первинна SCC пенісу (T2-T4, або T1 високого ризику, не
+  сприятливий для органозбереження) лікується частковою або тотальною
+  пенектомією залежно від поширеності пухлини та необхідних меж резекції,
+  за EAU guidelines. Ведення пахвинних лімфовузлів здійснюється
+  паралельно та стратифікується за cN-статусом: cN0 з проміжним/високим
+  ризиком первинної пухлини — dynamic sentinel node biopsy; cN+ або
+  DSNB-позитивний — модифікована чи повна пахвинна лімфаденектомія,
+  з розглядом тазової лімфаденектомії при об'ємному/множинному ураженні.
+  Статус лімфовузлів залишається домінантним прогностичним фактором
+  незалежно від підходу до первинної пухлини.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+draft_revision: 1
+
+sources:
+  - source_id: SRC-EAU-PENILE-2024
+    position: supports
+    relevant_quote_paraphrase: "EAU Penile Cancer Guidelines: partial/total penectomy for advanced primary tumor; dynamic sentinel node biopsy for cN0, (modified) inguinal lymphadenectomy for cN+."
+
+do_not_do_en:
+  - "Do not omit inguinal nodal staging/management in T2+ disease — nodal status is the dominant prognostic factor and undertreatment of clinically occult nodal disease is a major driver of preventable mortality."
+  - "Do not perform prophylactic bilateral complete inguinal lymphadenectomy in a low-risk cN0 patient when dynamic sentinel node biopsy is available — unnecessary morbidity."
+  - "Do not delay definitive primary surgery pending nodal-staging results beyond what MDT sequencing requires."
+
+do_not_do:
+  - "Не пропускати стадіювання/лікування пахвинних лімфовузлів при T2+ — статус вузлів є домінантним прогностичним фактором."
+  - "Не виконувати профілактичну двобічну повну пахвинну лімфаденектомію у пацієнта з низьким ризиком cN0, коли доступна dynamic sentinel node biopsy."
+  - "Не затримувати остаточну операцію на первинній пухлині через очікування результатів стадіювання лімфовузлів понад необхідне за МДТ-послідовністю."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — Phase 1 (zero-content disease authoring pass). Transcribed from
+  DIS-PENILE-SCC narrative (partial/total penectomy for T2-T4; dynamic
+  sentinel node biopsy vs modified inguinal lymphadenectomy per cN0 vs
+  cN+). No dedicated Surgery/Procedure entities authored for penectomy /
+  sentinel node biopsy / inguinal lymphadenectomy (mirrors the
+  no-regimen local_therapy pattern already used by
+  IND-MF-EARLY-1L-SKIN-DIRECTED) — a future Surgery-entity authoring pass
+  could formalize SUR-PENILE-PARTIAL-PENECTOMY, SUR-PENILE-TOTAL-PENECTOMY,
+  SUR-PENILE-DSNB, and SUR-PENILE-INGUINAL-LYMPHADENECTOMY as first-class
+  entities with IndicationPhase wiring. Requires urology co-lead signoff
+  before clinical publication (CHARTER §6.1; dev-mode-exempted for draft
+  merge).

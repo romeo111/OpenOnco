@@ -1,0 +1,14 @@
+{
+  "patient_id": "MPN-PV-SECONDARY-AML-PREV-001",
+  "comment": "60yo male with JAK2 V617F+ on peripheral-blood NGS (allele burden 38%) and sustained PV-suggestive phenotype (Hct 52% on iron-replete state + low serum EPO + mild splenomegaly on imaging) but bone marrow biopsy still pending — currently NOT yet meeting full WHO 2022 PV diagnostic criteria. Driver-positive pre-MPN-criteria phase. No confirmed AML or post-MPN MF. IMPORTANT engine constraint: confirmed DIS-PV / DIS-ET / DIS-PMF patients are routed via treatment-persona MPN management algorithm (cytoreduction, aspirin, phlebotomy) and do NOT enter the §20 prevention path per KSS §20.2; this case specifically validates the pre-criteria/driver-mutation-positive prevention pathway. Engine fires RF-MPN-SECONDARY-LEUKEMIA-PREVENTION (any_of: jak2_v617f_positive_without_confirmed_mpn_disease:true OR calr_exon9_mutation_positive_without_confirmed_mpn_disease:true OR mpl_w515_mutation_positive_without_confirmed_mpn_disease:true OR mpn_phenotype_pre_who_criteria:true) and routes to PreventionPlan: standard = IND-MPN-SECONDARY-LEUKEMIA-PREVENTION-SURVEILLANCE (CBC + peripheral smear q3-6mo + bone marrow on cytopenia/blast emergence + JAK2 allele-burden monitoring q12mo); alternative = IND-MPN-SECONDARY-LEUKEMIA-PREVENTION-OBSERVATION (hematology-driven, BM only on cytopenia/symptom trigger). cumulative sAML transformation risk ~5% in PV / ~3% in ET / ~10-20% in PMF at 10-15y. Validates v0.3 chronic-condition prevention pilot.",
+  "biomarkers": {"BIO-JAK2-V617F": "positive"},
+  "demographics": {"age": 60, "sex": "male", "ecog": 1},
+  "findings": {
+    "jak2_v617f_positive_without_confirmed_mpn_disease": true,
+    "mpn_phenotype_pre_who_criteria": true,
+    "JAK2 V617F positive on peripheral-blood NGS, allele burden 38%": true,
+    "Sustained Hct 52% (iron-replete), low EPO, mild splenomegaly on imaging": true,
+    "Bone marrow biopsy pending; full WHO 2022 PV criteria not yet met": true,
+    "No current AML or post-MPN myelofibrosis diagnosis": true
+  }
+}

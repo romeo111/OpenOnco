@@ -1,0 +1,82 @@
+id: IND-LARYNGEAL-LA-1L-TOTAL-LARYNGECTOMY
+plan_track: local_therapy
+
+applicable_to:
+  disease_id: DIS-LARYNGEAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Locally advanced (stage III-IVA) laryngeal SCC not suited to larynx preservation (e.g., cartilage invasion, non-functional larynx per RF-LARYNGEAL-POOR-PRESERVATION-CANDIDACY) OR patient preference for primary surgical management after MDT counseling on the CRT alternative"
+    - "Medically fit for major head & neck surgery"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+phases:
+  - phase: surgery
+    type: surgery
+    surgery_id: SUR-LARYNGEAL-TOTAL-LARYNGECTOMY
+    duration_weeks: 1
+  - phase: adjuvant
+    type: radiation
+    radiation_id: RC-LARYNGEAL-POSTOP-ADJUVANT
+    duration_weeks: 6
+
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate:
+  local_control_note: "High locoregional control with adequate surgical margins; adjuvant RT added for high-risk pathologic features. Achieved at the cost of permanent loss of natural voice, requiring voice rehabilitation."
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CT-NECK-THORAX-ABDOMEN-PELVIS
+desired_tests: []
+
+rationale: >
+  Total laryngectomy with postoperative RT for high-risk pathologic
+  features is the standard curative option for locally advanced
+  laryngeal SCC not amenable to (or not preferred for) larynx-
+  preservation chemoradiation — including extensive cartilage
+  invasion, a pretreatment non-functional larynx, or patient
+  preference after MDT counseling on the CRT alternative. Requires
+  committed voice-rehabilitation planning (tracheoesophageal
+  puncture/prosthesis, electrolarynx, or esophageal speech).
+
+sources:
+  - source_id: SRC-NCCN-HNSCC-2025
+    weight: primary
+
+do_not_do:
+  - "Do not proceed to total laryngectomy without MDT discussion of the larynx-preservation CRT alternative when the patient is a candidate."
+  - "Do not omit voice-rehabilitation counseling and referral before surgery."
+  - "Do not omit postoperative pathology review (margins, extranodal extension) when determining adjuvant RT dose / need for concurrent chemotherapy."
+
+do_not_do_en:
+  - "Do not proceed to total laryngectomy without MDT discussion of the larynx-preservation CRT alternative when the patient is a candidate."
+  - "Do not omit voice-rehabilitation counseling and referral before surgery."
+  - "Do not omit postoperative pathology review (margins, extranodal extension) when determining adjuvant RT dose / need for concurrent chemotherapy."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB pending Clinical Co-Lead sign-off (CHARTER §6.1). Locally
+  advanced surgical pathway — alternative to IND-LARYNGEAL-LA-1L-CRT.
+  Concurrent postoperative chemoradiation for positive-margin/
+  extranodal-extension disease (Bernier EORTC 22931 / Cooper RTOG
+  9501 paradigm) is a DELIBERATE GAP, not modeled here — see disease-
+  file open_gaps. Full Ukrainian rationale/do_not_do prose deferred to
+  a follow-up localization pass.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_draft
+draft_revision: 1

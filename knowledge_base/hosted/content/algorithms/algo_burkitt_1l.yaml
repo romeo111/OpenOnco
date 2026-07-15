@@ -26,12 +26,14 @@ decision_tree:
     evaluate:
       all_of:
         - condition: "Standard / intermediate risk"
-        - condition: "ECOG ≤ 3"
+        - finding: "ecog"
+          threshold: 3
+          comparator: "<="
     if_true:
       result: IND-BURKITT-1L-DAEPOCHR
     if_false:
       result: IND-BURKITT-1L-DAEPOCHR
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "MDT-only after CSD-7A audit — mechanical rewire of the original free-text ECOG gate into finding: \"ecog\" (threshold 3, comparator <=), mirroring RF-BURKITT-FRAILTY-AGE / RF-FITNESS-ECOG-POOR. 'Standard / intermediate risk' clause remains free-text — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies; wireable only via dedicated disease-specific RFs in a future round. Original clinical criteria unchanged."
 
 sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-BURKITT-2024]
 last_reviewed: "2026-04-27"
@@ -73,7 +75,7 @@ notes_ua: >
   Етіологічні рейки (паралельно до вибору показання):
 
   - ВІЛ (ВІЛ-Burkitt — 25–40% дорослого Burkitt асоційовано з ВІЛ) —
-    DA-EPOCH-R є переважним режимом 1L для ВІЛ-Burkitt згідно CALGB 10002
+    DA-EPOCH-R є переважною схемою лікування 1L для ВІЛ-Burkitt згідно CALGB 10002
     / Sparano 2010 / AMC 048 — результати близькі до ВІЛ-негативних при
     паралельній АРТ. CODOX-M/IVAC резервується для жорстких ознак
     високого ризику (ЦНС+, лейкемічна фаза, ЛДГ>3×ВМН, масивний живіт)

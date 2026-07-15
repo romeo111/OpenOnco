@@ -1,0 +1,118 @@
+id: RF-OCC-SHIFTWORK-CIRCADIAN-PREVENTION
+definition: >-
+  Documented history of night-shift work or rotating shift work
+  disrupting the normal circadian rhythm — typical high-exposure
+  occupations include nurses (especially ICU / ER night shifts), flight
+  attendants and pilots (long-haul / transmeridian routes), long-haul
+  truck drivers, police / firefighter / EMS personnel, manufacturing
+  and processing-plant night-shift workers, hospitality (24-hour hotel
+  / casino staff) — with cumulative exposure ≥10 years — in an
+  individual without a current shift-work-attributable malignancy
+  diagnosis. IARC Monograph 124 (2020, updated 2019 meeting) classified
+  "night shift work" as Group 2A (probably carcinogenic to humans) —
+  limited evidence in humans (consistent positive associations with
+  breast cancer in long-duration night-shift cohort studies; less
+  consistent / inadequate evidence for prostate, colorectal, and other
+  cancers), sufficient evidence in experimental animals (chronic
+  light-at-night disrupts melatonin synthesis → tumor growth in rodent
+  models). Mechanisms: suppression of pineal melatonin secretion;
+  disruption of core circadian clock genes (BMAL1, PER, CRY) in
+  mammary epithelium; sleep deprivation → immune dysregulation;
+  metabolic disruption (insulin resistance, weight gain). Effect size
+  for breast cancer: pooled RR ~1.2-1.4 for ≥20 years of night-shift
+  work; smaller for 10-20 years; null for <10 years in most analyses.
+  There is NO curative intervention for prior exposure — workplace
+  scheduling modifications (limiting cumulative night-shift years,
+  improving recovery between shifts), sleep-hygiene counseling, and
+  guideline-baseline breast-cancer screening adherence are the
+  available levers. Prevention-persona RedFlag (§20 ratification
+  2026-05-18, v0.3 IARC 2A probable-carcinogen batch).
+definition_ua: >-
+  Документована історія night-shift work або rotating shift work, що
+  порушує нормальний циркадний ритм — типові високоризикові професії:
+  медсестри (особливо ICU / ER night shifts), бортпровідниці та пілоти
+  (long-haul / трансмеридіанальні маршрути), водії-дальнобійники,
+  поліція / пожежники / EMS, працівники нічних змін на manufacturing
+  та processing plants, hospitality (24-годинний готельний / casino
+  персонал) — з кумулятивною експозицією ≥10 років — в особи без
+  поточного діагнозу shift-work-attributable malignancy. IARC Monograph
+  124 (2020, оновлене meeting 2019) класифікував "night shift work"
+  як Group 2A (probably carcinogenic) — limited evidence in humans
+  (узгоджені позитивні асоціації з breast cancer в long-duration
+  night-shift cohort studies; менш узгоджені / inadequate evidence
+  для prostate, colorectal та інших cancers), sufficient evidence
+  in experimental animals (chronic light-at-night порушує синтез
+  мелатоніну → tumor growth в rodent моделях). Механізми: пригнічення
+  pineal melatonin secretion; disruption core circadian clock genes
+  (BMAL1, PER, CRY) в mammary epithelium; sleep deprivation → immune
+  dysregulation; metabolic disruption (insulin resistance, weight
+  gain). Розмір ефекту для breast cancer: pooled RR ~1.2-1.4 для
+  ≥20 років night-shift work; менший для 10-20 років; null для <10
+  років в більшості аналізів. КУРАТИВНОГО втручання для попереднього
+  впливу НЕМАЄ — workplace scheduling modifications (обмеження
+  кумулятивних night-shift років, improving recovery between shifts),
+  sleep-hygiene counseling, та guideline-baseline breast-cancer
+  screening adherence — наявні важелі.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "occupational_night_shift_work_years_ge_10"
+      value: true
+    - finding: "occupational_rotating_shift_work_circadian_disruption_documented"
+      value: true
+
+clinical_direction: investigate
+
+severity: minor
+priority: 110
+category: other
+
+risk_category: occupational
+
+# Anchor — breast cancer (primary endpoint per IARC 124 limited-evidence
+# in humans). Other cancers (prostate, CRC) have inadequate evidence and
+# are NOT included here.
+relevant_diseases:
+  - DIS-BREAST
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 IARC 2A probable-carcinogen batch
+  (2026-05-19). IARC Group 2A probable — limited human evidence;
+  clinical recommendation more conservative than Group 1. IARC Monograph
+  124 (2020) is the canonical evidence anchor and is NOT yet a separate
+  SRC entity in KB; cited in notes only.
+
+  Anchor scope: breast cancer ONLY. IARC 124 classifies "limited
+  evidence in humans" specifically for breast cancer; other cancers
+  (prostate, colorectal) carry "inadequate evidence" and are
+  deliberately excluded from relevant_diseases. Female breast is the
+  dominant endpoint; male breast cancer in night-shift cohorts is
+  insufficiently powered for meaningful inference.
+
+  Engine routes to 2-track PreventionPlan:
+    (a) IND-OCC-SHIFTWORK-CIRCADIAN-PREVENTION-INTENSIFIED-SURVEILLANCE
+        (standard) — sleep-hygiene counseling, workplace-scheduling
+        discussion, guideline-baseline mammography adherence with
+        consideration of earlier baseline at age 40 (per NCCN risk-
+        stratified framework) when clustering with other breast-cancer
+        risk factors.
+    (b) IND-OCC-SHIFTWORK-CIRCADIAN-PREVENTION-OBSERVATION (surveillance)
+        — routine USPSTF mammography only; patient declines intensified
+        scheduling.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_iarc_2a_batch
+draft_revision: 1

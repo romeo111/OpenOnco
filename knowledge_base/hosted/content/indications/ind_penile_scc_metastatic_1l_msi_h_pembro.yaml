@@ -1,0 +1,100 @@
+id: IND-PENILE-SCC-METASTATIC-1L-MSI-H-PEMBRO
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PENILE-SCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic (M1) or unresectable penile SCC"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PEMBROLIZUMAB-MSI-MONO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+
+expected_outcomes:
+  overall_response_rate: "Tissue-agnostic MSI-H/dMMR solid-tumor pooled data (KEYNOTE-158/164 basket): ORR ~34-40% across tumor types; penile-SCC-specific numbers are not separately reported given the very small subset"
+  progression_free_survival: "Durable responses reported in the tissue-agnostic MSI-H cohort overall; penile-SCC-specific data are not available given the rarity of MSI-H in this disease"
+
+hard_contraindications:
+  - CI-PEMBROLIZUMAB-AUTOIMMUNE
+red_flags_triggering_alternative:
+  - RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK
+
+required_tests:
+  - TEST-MSI-PCR-OR-NGS
+  - TEST-DMMR-IHC
+
+desired_tests: []
+
+rationale: >
+  MSI-H/dMMR is uncommon but described in penile SCC, per the
+  DIS-PENILE-SCC narrative ("pembrolizumab in MSI-H subset").
+  Pembrolizumab carries FDA tissue-agnostic approval for
+  previously-treated unresectable/metastatic MSI-H/dMMR solid tumors
+  regardless of primary site (KEYNOTE-158/164 basket program), and
+  DRUG-PEMBROLIZUMAB already documents this approval in this KB. Given
+  the very small denominator for penile SCC specifically, this indication
+  reuses the existing cross-disease REG-PEMBROLIZUMAB-MSI-MONO regimen
+  rather than authoring a penile-specific dosing schedule (pembrolizumab
+  dosing is disease-agnostic). MSI-H/dMMR testing is not routine in
+  penile SCC today — this indication is a biomarker-gated alternative for
+  the minority of patients in whom testing is performed and returns
+  MSI-H/dMMR-deficient.
+
+rationale_ua: >
+  MSI-H/dMMR рідко, але описано при SCC пенісу, згідно з наративом
+  DIS-PENILE-SCC ("пембролізумаб у MSI-H підгрупі"). Пембролізумаб має
+  тканинно-агностичне схвалення FDA для попередньо лікованих
+  нерезектабельних/метастатичних MSI-H/dMMR солідних пухлин незалежно
+  від первинної локалізації (KEYNOTE-158/164). Ця індикація повторно
+  використовує наявну міжнозологічну схему REG-PEMBROLIZUMAB-MSI-MONO.
+  Тестування MSI-H/dMMR не є рутинним при SCC пенісу сьогодні.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+draft_revision: 1
+
+sources:
+  - source_id: SRC-EAU-PENILE-2024
+    position: supports
+    relevant_quote_paraphrase: "EAU Penile Cancer Guidelines: pembrolizumab considered in the MSI-H/dMMR biomarker-defined subset."
+
+do_not_do_en:
+  - "Do not order MSI-H/dMMR testing as a routine reflex test in penile SCC — reserve for cases where results would change management (metastatic/unresectable disease being considered for systemic therapy)."
+  - "Do not start pembrolizumab without excluding active autoimmune disease / recent high-dose corticosteroids / transplant history (CI-PEMBROLIZUMAB-AUTOIMMUNE)."
+  - "Do not assume penile-SCC-specific efficacy data exist — this indication extrapolates from the tissue-agnostic MSI-H approval, not a penile-SCC-specific trial."
+
+do_not_do:
+  - "Не призначати MSI-H/dMMR тестування рутинно при SCC пенісу — лише коли результат змінить тактику лікування."
+  - "Не розпочинати пембролізумаб без виключення активного аутоімунного захворювання / нещодавніх високих доз ГКС / трансплантації."
+  - "Не вважати, що існують дані ефективності специфічно для SCC пенісу — ця індикація екстраполює тканинно-агностичне MSI-H схвалення."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — bonus/4th indication beyond the 3 explicitly requested in this
+  authoring pass, added because the DIS-PENILE-SCC narrative explicitly
+  names "pembrolizumab in MSI-H subset" and nearly every referenced
+  entity already exists in the KB (DRUG-PEMBROLIZUMAB,
+  REG-PEMBROLIZUMAB-MSI-MONO, BIO-MSI-STATUS, CI-PEMBROLIZUMAB-AUTOIMMUNE,
+  RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK) — low-invention-risk, high
+  narrative fidelity. New RF-PENILE-SCC-MSI-H-ACTIONABILITY authored to
+  gate this branch in ALGO-PENILE-SCC-1L. Independent review removed a
+  proposed secondary citation to SRC-NCCN-BLADDER-2025 (that source is
+  the NCCN Bladder Cancer guideline, relates_to_diseases: [DIS-UROTHELIAL]
+  only — it does not cover penile cancer and should not be cited here;
+  SRC-EAU-PENILE-2024 alone supports this indication). Requires
+  medical-oncology co-lead signoff before clinical publication (CHARTER
+  §6.1; dev-mode-exempted for draft merge).

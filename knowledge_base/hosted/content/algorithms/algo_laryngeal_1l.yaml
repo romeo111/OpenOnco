@@ -1,0 +1,197 @@
+id: ALGO-LARYNGEAL-1L
+applicable_to_disease: DIS-LARYNGEAL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Route 1L treatment for laryngeal squamous cell carcinoma by stage /
+  resectability: (1) early-stage (T1-T2N0) glottic — or highly
+  selected supraglottic — disease chooses between definitive RT and
+  transoral laser microsurgery (TLM), both organ-preserving with
+  comparable ~90% local control and voice preservation as the key
+  endpoint; (2) locally advanced (stage III-IVA) disease chooses
+  between larynx-preservation chemoradiation (cisplatin + RT per RTOG
+  91-11) and total laryngectomy + postoperative RT, driven by
+  larynx-preservation candidacy, cisplatin fitness, and patient
+  preference; (3) recurrent / metastatic disease uses the
+  PD-L1-CPS-stratified pembrolizumab framework (KEYNOTE-048), mirrored
+  from DIS-HNSCC (laryngeal is an anatomically distinct HNSCC subsite
+  with an identical systemic-therapy evidence base in the R/M
+  setting).
+
+output_indications:
+  - IND-LARYNGEAL-EARLY-GLOTTIC-1L-RT
+  - IND-LARYNGEAL-EARLY-GLOTTIC-1L-TLM
+  - IND-LARYNGEAL-LA-1L-CRT
+  - IND-LARYNGEAL-LA-1L-TOTAL-LARYNGECTOMY
+  - IND-LARYNGEAL-RM-1L-PEMBRO-CHEMO
+  - IND-LARYNGEAL-RM-1L-PEMBRO-MONO-CPS-HIGH
+  - IND-LARYNGEAL-RM-1L-EXTREME
+
+default_indication: IND-LARYNGEAL-LA-1L-CRT
+alternative_indication: IND-LARYNGEAL-RM-1L-PEMBRO-CHEMO
+
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Histology confirmed: squamous cell carcinoma of the larynx (glottic, supraglottic, or subglottic)"
+        - condition: "Laryngoscopy / panendoscopy + cross-sectional staging imaging (CT neck ± chest) completed"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        Histologic confirmation and complete staging workup (direct
+        laryngoscopy/panendoscopy under anesthesia, cross-sectional
+        imaging) required before treatment-pathway selection.
+    notes: "Step 1 — workup gate."
+
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Recurrent or metastatic disease, not amenable to curative-intent local therapy"
+    if_true:
+      next_step: 7
+      notes: "Recurrent/metastatic → systemic-therapy branch (steps 7-9)."
+    if_false:
+      next_step: 3
+      notes: "Newly diagnosed, potentially curable disease → local/locoregional therapy branch."
+
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Early-stage (T1-T2N0M0) glottic — or highly selected early supraglottic — primary, amenable to either definitive RT or transoral laser microsurgery with comparable oncologic outcome"
+    if_true:
+      next_step: 4
+    if_false:
+      next_step: 5
+      notes: "Not early-stage/TLM-eligible → locally advanced branch (steps 5-6)."
+
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "TLM surgical expertise available AND adequate transoral glottic exposure AND patient preference for a single-modality surgical approach"
+    if_true:
+      result: IND-LARYNGEAL-EARLY-GLOTTIC-1L-TLM
+    if_false:
+      result: IND-LARYNGEAL-EARLY-GLOTTIC-1L-RT
+    notes: >
+      Both options achieve ~90% local control with voice preservation
+      as the key endpoint (Disease-level narrative). Definitive RT is
+      the more universally accessible default; TLM is selected when
+      transoral exposure and microlaryngoscopy expertise are available
+      and the patient prefers a single, shorter surgical episode. Not
+      an oncologic-superiority choice.
+
+  - step: 5
+    evaluate:
+      any_of:
+        - red_flag: RF-LARYNGEAL-POOR-PRESERVATION-CANDIDACY
+    if_true:
+      result: IND-LARYNGEAL-LA-1L-TOTAL-LARYNGECTOMY
+      notes: >
+        Cartilage invasion, extralaryngeal soft-tissue extension,
+        substantial tongue-base invasion, or a pretreatment
+        non-functional larynx make larynx-preservation CRT
+        inappropriate — primary surgery is preferred regardless of
+        cisplatin fitness.
+    if_false:
+      next_step: 6
+
+  - step: 6
+    evaluate:
+      all_of:
+        - finding: "ecog"
+          threshold: 1
+          comparator: "<="
+        - none_of:
+            - red_flag: RF-HNSCC-ORGAN-DYSFUNCTION
+    if_true:
+      result: IND-LARYNGEAL-LA-1L-CRT
+      notes: >
+        Fit for high-dose (100 mg/m² q3w) cisplatin and a candidate
+        for larynx preservation. Larynx-preservation CRT (RTOG 91-11)
+        vs total laryngectomy + postoperative RT is otherwise a
+        preference-driven MDT discussion per the Disease-level
+        narrative — both are curative-intent standards.
+    if_false:
+      result: IND-LARYNGEAL-LA-1L-TOTAL-LARYNGECTOMY
+      notes: >
+        ECOG ≥2 or RF-HNSCC-ORGAN-DYSFUNCTION (reused; renal / auditory
+        / cardiac / hepatic impairment) precludes the high-dose
+        cisplatin backbone RTOG 91-11 validated — defaults to primary
+        surgery. An RT-alone or cetuximab-RT nonsurgical alternative
+        for cisplatin-ineligible larynx-preservation candidates is a
+        deferred gap (no explicit criterion in the Disease-level
+        narrative to ground it).
+
+  - step: 7
+    evaluate:
+      any_of:
+        - condition: "pdl1_cps_negative"
+        - all_of:
+            - finding: "pdl1_cps"
+              threshold: 1
+              comparator: "<"
+    if_true:
+      result: IND-LARYNGEAL-RM-1L-EXTREME
+    if_false:
+      next_step: 8
+    notes: >
+      Mirrors ALGO-HNSCC-RM-1L step 0 (KEYNOTE-048 CPS<1 subgroup: OS
+      HR for chemo-IO crossed 1.0 vs EXTREME).
+
+  - step: 8
+    evaluate:
+      any_of:
+        - condition: "PD-L1 CPS ≥20 AND no rapid progression / visceral crisis AND ECOG 0-2"
+    if_true:
+      result: IND-LARYNGEAL-RM-1L-PEMBRO-MONO-CPS-HIGH
+    if_false:
+      next_step: 9
+    notes: "Mirrors ALGO-HNSCC-RM-1L step 1."
+
+  - step: 9
+    evaluate:
+      any_of:
+        - finding: "pdl1_cps"
+          threshold: 1
+          comparator: ">="
+    if_true:
+      result: IND-LARYNGEAL-RM-1L-PEMBRO-CHEMO
+    if_false:
+      result: IND-LARYNGEAL-RM-1L-PEMBRO-CHEMO
+    notes: >
+      Degenerate step mirroring ALGO-HNSCC-RM-1L step 2 — CPS <1 is
+      already routed at step 7, so any patient reaching step 9 has
+      CPS ≥1 and pembro-chemo is the default.
+
+sources:
+  - SRC-NCCN-HNSCC-2025
+  - SRC-RTOG-9111-FORASTIERE-2003
+  - SRC-KEYNOTE-048-BURTNESS-2019
+  - SRC-EXTREME-VERMORKEN-2008
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+notes: >
+  STUB pending Clinical Co-Lead sign-off (CHARTER §6.1; dev-mode
+  exempted — draft content, not published clinical advice). Steps 7-9
+  mechanically mirror ALGO-HNSCC-RM-1L's CPS-stratified KEYNOTE-048
+  cascade (laryngeal is an anatomically distinct HNSCC subsite sharing
+  the identical R/M systemic-therapy evidence base); the Indication
+  IDs are laryngeal-scoped (new IND-LARYNGEAL-RM-1L-* entities) but
+  reuse the existing HNSCC Regimen entities (REG-PEMBRO-CHEMO-HNSCC-1L,
+  REG-PEMBRO-MONO-HNSCC-1L, REG-EXTREME-HNSCC) and Drug entities
+  unchanged, per reuse-over-duplication guidance. RF-HNSCC-ORGAN-
+  DYSFUNCTION is reused by reference at step 6 (its relevant_diseases
+  field still lists DIS-HNSCC only — not modified, per the hard rule
+  against editing existing files; the loader does not cross-check
+  relevant_diseases against the citing entity's disease). Steps 3-6
+  (early-stage vs locally-advanced, and the larynx-preservation-
+  candidacy / cisplatin-fitness gates) are newly authored for this
+  Disease, grounded in the Disease-level narrative + RTOG 91-11 +
+  SRC-NCCN-HNSCC-2025. Prevention / tobacco-cessation surveillance
+  pathway remains out of scope (separate future authoring pass).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_draft
+draft_revision: 1

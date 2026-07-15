@@ -7,6 +7,7 @@ purpose: 'Select 2L+ metastatic gastric/GEJ Indication. Three tracks: (1) HER2+ 
 output_indications:
 - IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
 - IND-GASTRIC-METASTATIC-2L-HER2-TDXD
+- IND-GASTRIC-METASTATIC-3L-TAS102
 default_indication: IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
 alternative_indication: IND-GASTRIC-METASTATIC-2L-HER2-TDXD
 decision_tree:
@@ -14,13 +15,26 @@ decision_tree:
   evaluate:
     all_of:
     - red_flag: RF-GASTRIC-HIGH-RISK-BIOLOGY
-    - condition: HER2+ reconfirmed on archival or fresh biopsy (IHC 3+ OR 2+/ISH+)
+    - finding: "her2_status"
+      value: "positive"
     - condition: Prior trastuzumab-containing 1L
-    - condition: ECOG ≤1
+    - red_flag: RF-FITNESS-ECOG-FIT
   if_true:
     result: IND-GASTRIC-METASTATIC-2L-HER2-TDXD
   if_false:
     next_step: 2
+  notes: >
+    Mechanical rewire of two of the original free-text gates: "HER2+
+    reconfirmed on archival or fresh biopsy (IHC 3+ OR 2+/ISH+)" into
+    finding: her2_status (value: positive) — same value convention used in
+    algo_gastric_metastatic_1l.yaml, and matching RF-GASTRIC-HIGH-RISK-
+    BIOLOGY's own her2_status=positive definition text verbatim; and
+    "ECOG ≤1" into red_flag: RF-FITNESS-ECOG-FIT (universal RF, exact
+    threshold/comparator match). "Prior trastuzumab-containing 1L" is left
+    as free-text: it states 1L regimen composition/exposure, and the only
+    KB finding key close to it (prior_trastuzumab_progression) asserts the
+    narrower/different concept of progression on trastuzumab, not mere
+    receipt — no confident match. Original clinical criteria unchanged.
 - step: 2
   evaluate:
     all_of:

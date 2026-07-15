@@ -1,0 +1,60 @@
+id: RF-RHABDOID-PREDISPOSITION-CONFIRMED-CARRIER
+definition: >-
+  Patient has a confirmed germline pathogenic variant in SMARCB1
+  (chromosome 22q11.2) or SMARCA4 (chromosome 19p13.2), defining
+  rhabdoid tumor predisposition syndrome type 1 (RTPS1) or type 2
+  (RTPS2) respectively. Autosomal-dominant inheritance with near-100%
+  penetrance for early-childhood disease in classic SMARCB1 cases.
+  Cancer spectrum: atypical teratoid/rhabdoid tumor (ATRT) of the CNS
+  with infancy peak, extracranial malignant rhabdoid tumor (MRT) of
+  kidney / liver / soft tissue, small cell carcinoma of the ovary
+  hypercalcemic type (SCCOHT — SMARCA4 specifically), and schwannomatosis
+  in adolescent / adult survivors. The risk window is extremely narrow
+  (peak ATRT incidence in the first 2 years of life) so high-cadence
+  early surveillance is non-negotiable. Prevention-persona
+  confirmed-carrier RedFlag (§20).
+definition_ua: >-
+  Пацієнт має підтверджений germline патогенний варіант в SMARCB1
+  (хромосома 22q11.2) або SMARCA4 (хромосома 19p13.2), що визначає
+  rhabdoid tumor predisposition syndrome тип 1 (RTPS1) або тип 2
+  (RTPS2). Автосомно-домінантне успадкування з майже-100% пенетрантністю
+  для захворювання в ранньому дитинстві у класичних випадках SMARCB1.
+  Спектр пухлин: atypical teratoid/rhabdoid tumor (ATRT) ЦНС з піком
+  у дитинстві, екстракраніальна malignant rhabdoid tumor (MRT) нирки /
+  печінки / м'яких тканин, small cell carcinoma яєчника гіперкальціємічного
+  типу (SCCOHT — специфічно SMARCA4), та шваноматоз у підлітковому /
+  дорослому віці. Вікно ризику надзвичайно вузьке (пік ATRT — перші 2
+  роки життя), тому high-cadence ранє спостереження є необхідним.
+  Prevention-persona confirmed-carrier RedFlag (§20).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_smarcb1_pathogenic_confirmed"
+      value: true
+    - finding: "germline_smarca4_pathogenic_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+severity: critical
+priority: 60
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-GLIOMA-LOW-GRADE
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-FOULKES-RHABDOID-2017
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_pediatric_predisposition_wave_m
+notes: "Prevention-persona Rhabdoid Tumor Predisposition Syndrome confirmed-carrier RedFlag (pediatric cancer predisposition Wave M). Engine routes to PreventionPlan for ATRT / MRT / (SMARCA4: SCCOHT) surveillance: brain MRI q3mo from infancy through age 4 then q6mo through age 5, whole-body MRI q3-6mo through age 5. SMARCA4 carriers additionally surveilled for SCCOHT (transvaginal US + pelvic exam starting menarche). Disease anchor DIS-GLIOMA-LOW-GRADE used as closest CNS anchor available in KB — ATRT is a distinct embryonal CNS entity, noted in rationale of paired Indications. STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode."

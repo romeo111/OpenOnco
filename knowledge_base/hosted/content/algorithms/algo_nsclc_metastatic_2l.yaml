@@ -128,15 +128,17 @@ decision_tree:
 
   - step: 9
     # KRAS G12C 2L: active brain mets → adagrasib; otherwise sotorasib.
-    # Brain-met fitness modifier has no dedicated RF; condition retained.
+    # Brain-met fitness modifier wired via active_brain_metastases finding
+    # (active-mets branch of universal RF-CNS-METASTASES-ACTIVE); see notes.
     evaluate:
       any_of:
-        - condition: "Active untreated brain metastases (adagrasib intracranial ORR ~33%)"
+        - finding: "active_brain_metastases"
+          value: true
     if_true:
       result: IND-NSCLC-2L-KRAS-G12C-ADAGRASIB
     if_false:
       result: IND-NSCLC-2L-KRAS-G12C-SOTORASIB
-    notes: "MDT-only — sotorasib vs adagrasib choice driven by brain-met status (no dedicated RF for active untreated brain mets in NSCLC); default sotorasib."
+    notes: "Mechanical rewire of the original free-text gate (active untreated brain metastases) into a finding: clause using active_brain_metastases (the active-mets branch of universal RF-CNS-METASTASES-ACTIVE; relevant_diseases: [\"*\"]). Original clinical criteria unchanged. Intentionally narrower than a full red_flag: RF-CNS-METASTASES-ACTIVE reference — that RF's second OR branch (brain_metastases_count>=1) would also match previously-treated/stable brain mets, not just active/untreated."
 
   # ── Step 10: MET ex14 ─────────────────────────────────────────────
   - step: 10
@@ -317,7 +319,7 @@ notes_ua: >
   - Кризотиніб 1Л → ентректиніб (entrectinib) 2Л (ЦНС) АБО репотректиніб (G2032R).
   - Ентректиніб 1Л → репотректиніб 2Л (G2032R або інша резистентність).
 
-  KRAS G12C: сотораcиб + адаграсиб обидва підтверджені фазою 3 (CodeBreaK 200)
+  KRAS G12C: соторасиб + адаграсиб обидва підтверджені фазою 3 (CodeBreaK 200)
   або фазою 2 (KRYSTAL-1, KRYSTAL-12 тривають). Вибір залежить від наявності
   метастазів у ЦНС.
 

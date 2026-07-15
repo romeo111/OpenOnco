@@ -1,0 +1,74 @@
+id: RF-NPC-EBV-DNA-POST-TREATMENT-SURVEILLANCE
+definition: >
+  Detectable or rising plasma EBV-DNA (BIO-EBV-DNA, quantitative PCR)
+  after completion of definitive treatment (concurrent chemoradiation
+  +/- induction, or systemic 1L therapy) for nasopharyngeal carcinoma.
+  Post-treatment plasma EBV-DNA is a validated prognostic/surveillance
+  biomarker in NPC — persistent detectability or a rising trend can
+  precede radiographic relapse by weeks to months, and should prompt
+  accelerated re-staging workup rather than waiting for the routine
+  imaging interval.
+definition_ua: >
+  Виявлюваний або зростаючий рівень EBV-ДНК у плазмі (BIO-EBV-DNA,
+  кількісна ПЛР) після завершення дефінітивного лікування (одночасна
+  хіміопроменева терапія +/- індукція, або системна 1L терапія) при
+  назофарингеальній карциномі. EBV-ДНК у плазмі після лікування —
+  валідований прогностичний/спостережний біомаркер при NPC: стійка
+  виявлюваність або зростаюча динаміка може передувати
+  рентгенологічному рецидиву на тижні-місяці, що має спонукати до
+  прискореного повторного стадіювання, а не очікування планового
+  інтервалу візуалізації.
+
+trigger:
+  type: biomarker_threshold
+  any_of:
+    - finding: "post_treatment_ebv_dna_detectable"
+      value: true
+    - finding: "post_treatment_ebv_dna_rising"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-NPC
+shifts_algorithm: []
+
+sources:
+  - SRC-EBV-DNA-NPC-LIN-2004
+  - SRC-NCCN-HNSCC-2025
+
+last_reviewed: "2026-07-11"
+draft: true
+
+notes: >
+  Informational/surveillance-stage RedFlag — NOT currently wired into
+  ALGO-NPC-1L's decision tree (that algorithm covers 1L treatment
+  selection only; no dedicated NPC post-treatment-surveillance or
+  2L/relapse algorithm has been authored yet — Phase 4 backlog item).
+  Referenced from IND-NPC-1L-LOCALLY-ADVANCED-CCRT and
+  IND-NPC-1L-METASTATIC-GC-PD1 notes as the biomarker basis for
+  post-treatment monitoring. Underlying quantitative biomarker:
+  BIO-EBV-DNA (existing entity — reused, not duplicated), measured via
+  TEST-EBV-VIRAL-LOAD. Finding keys post_treatment_ebv_dna_detectable /
+  post_treatment_ebv_dna_rising are NEW free-text finding keys — no
+  questionnaire currently exists for DIS-NPC to populate them
+  (quest_npc_*.yaml absent), consistent with the "honest finding" /
+  "mechanical rewire" pattern used elsewhere in this KB when a finding
+  key is asserted before its questionnaire wiring exists. STUB pending
+  Clinical Co-Lead sign-off (CHARTER §6.1, dev-mode-exempted).
+notes_ua: >
+  Інформаційний RedFlag стадії спостереження — НАРАЗІ НЕ підключений
+  до дерева рішень ALGO-NPC-1L (цей алгоритм покриває лише вибір 1L
+  лікування; окремого алгоритму спостереження/2L-рецидиву для NPC ще
+  не створено). Використовується в нотатках IND-NPC-1L-LOCALLY-
+  ADVANCED-CCRT та IND-NPC-1L-METASTATIC-GC-PD1 як біомаркерна основа
+  для післялікувального моніторингу. Базовий кількісний біомаркер:
+  BIO-EBV-DNA (наявна сутність — повторно використана, не
+  дубльована), вимірюється через TEST-EBV-VIRAL-LOAD. ЗАГОТОВКА,
+  очікує підпису клінічного ко-лідера (CHARTER §6.1).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_a_anchor
+draft_revision: 1
