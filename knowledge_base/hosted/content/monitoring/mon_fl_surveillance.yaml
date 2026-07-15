@@ -4,6 +4,7 @@ linked_to_regimen: null  # surveillance — no regimen
 phases:
   - name: baseline
     window: "At diagnosis confirmation"
+    window_ua: "Після підтвердження діагнозу"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -23,9 +24,15 @@ phases:
       - "Confirm GELF criteria NOT met (otherwise route to active treatment)"
       - "FLIPI calculation documented"
       - "Discuss with patient: median time-to-treatment 2-5 years; OS not compromised"
+    checkpoints_ua:
+      - "Підтвердити CD20+ FL grade 1–2 або 3A за гістологією + IHC (типово CD10, BCL2, BCL6)"
+      - "Підтвердити, що критерії GELF НЕ виконані (інакше — перейти до активного лікування)"
+      - "Документувати розрахунок FLIPI"
+      - "Обговорити з пацієнтом: медіанний час до початку лікування 2–5 років; OS не погіршується"
 
   - name: active_surveillance_short
     window: "Every 3 months × first 1 year"
+    window_ua: "Кожні 3 місяці протягом першого року"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -36,9 +43,14 @@ phases:
       - "Re-evaluate GELF criteria each visit — trigger active treatment if any criterion newly met"
       - "Symptom screen: B-symptoms, fatigue, new mass, performance decline"
       - "Imaging only if clinical concern (no routine surveillance imaging)"
+    checkpoints_ua:
+      - "Повторна оцінка критеріїв GELF на кожному візиті — розпочати активне лікування при появі будь-якого критерію"
+      - "Скринінг симптомів: B-симптоми, втома, нова маса, зниження performance status"
+      - "Візуалізація лише при клінічних показаннях (рутинна візуалізація для спостереження не проводиться)"
 
   - name: active_surveillance_long
     window: "Every 6 months × years 2-5, then annually"
+    window_ua: "Кожні 6 місяців у роки 2–5, потім щорічно"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -48,13 +60,20 @@ phases:
       - "Re-stage with PET-CT only on suspected progression"
       - "Watch for transformation (RF-FL-TRANSFORMATION-SUSPECT) — re-biopsy if rapidly-growing dominant mass"
       - "Annual flu + 5-yearly pneumococcal vaccination (non-live only if anti-CD20 ever planned)"
+    checkpoints_ua:
+      - "Повторне стадіювання PET-CT лише при підозрі на прогресування"
+      - "Слідкувати за трансформацією (RF-FL-TRANSFORMATION-SUSPECT) — повторна біопсія при швидко зростаючій домінантній масі"
+      - "Щорічна вакцинація проти грипу + кожні 5 років проти пневмокока (тільки неживі вакцини, якщо колись планується anti-CD20)"
 
 sources:
   - SRC-NCCN-BCELL-2025
 
 last_reviewed: "2026-04-25"
+machine_translated_review_pending: true
 notes: >
   Watch-and-wait is supported by multiple RCTs (Ardeshna 2014, RESORT
   2014) showing no OS benefit from immediate treatment for asymptomatic
   low-burden FL. Patient counsel is critical — many find waiting
   psychologically difficult and benefit from explicit education.
+  UA translations of window / checkpoints added 2026-05-19 under CHARTER
+  §8.3 dev-mode exemption; awaiting Clinical Co-Lead sign-off.

@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a d... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a d... - OpenOnco">
 <meta property="og:description" content="Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a d...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/redflags/rf-crc-oligomet-liver-definition.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a d... - OpenOnco">
 <meta name="twitter:description" content="Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a d...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a d... - OpenOnco","description":"Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a d...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-crc-oligomet-liver-definition.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-crc-oligomet-liver-definition.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a d... - OpenOnco","description":"Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a d...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-crc-oligomet-liver-definition.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-crc-oligomet-liver-definition.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -118,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-05-08 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-CRC"><code>DIS-CRC</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="ESMO CRC Clinical Practice Guideline"><a href="https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-metastatic-colorectal-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-COLON-2024</code></a></span> <span class="kb-chip" title="ESMO colorectal cancer guideline (2024) (TODO: confirm citation)"><code>SRC-ESMO-CRC-2024</code></span> <span class="kb-chip" title="NCCN Colon / Rectal Cancer"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1428" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-COLON-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a distinct subset of stage IV CRC where intensified treatment with hepatic resection (or ablation) added to systemic chemo is potentially curative. Definition (per NCCN Colon v3.2025 + ESMO CRC 2024 + EORTC 40983 / Nordlinger 2008 trial framework): ≤5 liver metastatic lesions, all R0-resectable on multidisciplinary review, no extrahepatic disease, ECOG 0-1 fitness, controllable primary tumour. Triggers MDT (medical onc + hepatobiliary surgery + radiation onc + radiology) consideration of perioperative FOLFOX (or FOLFOXIRI in selected patients) + hepatic metastasectomy. Distinct from gastroesophageal OMEC-1 oligomet (RF-OLIGOMET-DEFINITION) — CRC oligomet uses ≤5 liver lesions (not ≤3 distant), restricts to liver only (extrahepatic excluded), and HER2-positive does NOT disqualify (anti-HER2 second-line...</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Олігометастатичний колоректальний рак з обмеженням у печінці (CRLM, colorectal liver metastases) — окрема підгрупа IV стадії КРР, де інтенсифіковане лікування з резекцією печінки (або абляцією) додано до системної хіміотерапії є потенційно куративним. Визначення (за NCCN Colon v3.2025 + ESMO CRC 2024 + EORTC 40983 / Nordlinger 2008): ≤5 метастатичних вогнищ у печінці, усі R0-резектабельні при мультидисциплінарному огляді, відсутність екстрапечінкової хвороби, ECOG 0-1, контрольоване первинне вогнище. Запускає MDT-обговорення (медичний онколог + гепатобіліарний хірург + радіаційний онколог + радіолог) щодо периопераційного FOLFOX (або FOLFOXIRI у відібраних) + резекції печінки. Відрізняється від гастроезофагеального OMEC-1 oligomet (RF-OLIGOMET-DEFINITION): КРР oligomet — ≤5 печінкових вогнищ (не ≤3 дистантних), обмежений печінкою (екстрапечінкова виключена), HER2-positive НЕ дискваліфік...</td></tr>
 <tr><th>Клінічний напрям</th><td>intensify</td></tr>
 <tr><th>Категорія</th><td>high-risk-biology</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
   &quot;all_of&quot;: [
@@ -153,7 +225,7 @@
   ],
   &quot;type&quot;: &quot;composite_score&quot;
 }</pre>
-  <h2>Нотатки</h2><p>Liver-limited CRC oligometastatic criteria (basis: NCCN Colon v3.2025 &quot;Resectable Synchronous Liver-Only Metastases&quot; pathway + ESMO CRC 2024 + EORTC 40983 / Nordlinger Lancet 2008 trial framework): 1. ≤5 liver metastatic lesions (numerical threshold; some series extend to ≤7 with future-liver-remnant feasibility, but ≤5 is the conservative MDT cutoff used by NCCN/ESMO consensus). 2. All liver lesions R0-resectable on hepatobiliary surgical review, with adequate future liver remnant (≥30% in normal liver, ≥40% post-chemo, ≥50% in cirrhosis). 3. NO extrahepatic disease (lung mets, peritoneal carcinomatosis, extra-hepatic LN, distant LN beyond pericolic / mesorectal — all exclusions; if extrahepatic disease is also limited and resectable, treatment is individualised outside this RF and belongs to a future &quot;CRC limited-met multi-organ&quot; indication not in scope here). 4. ECOG 0-1 (fit for hepatectomy + perioperative chemo). 5. Controllable primary tumour (resected or resectable; no perforation / obstruction at the moment of intensification decision — RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION takes precedence and routes to emergency management first). CRC-specific differences from gastroe...</p>
+  <h2>Нотатки</h2><p>Резектабельна КРР (лише печінка, ≤3 метастази, можлива резекція R0): потенційно курабельна — хірургія золотий стандарт. 5-річна ЗВ після резекції метастазів печінки ~30–40% при сприятливому відборі. Конверсійна хімія може конвертувати ~20–30% нерезектабельних. IND-CRC-OLIGOMET-LIVER-LIMITED охоплює показання до хірургії; IND-GASTRIC-OLIGOMET-SYSTEMIC є окремою сутністю. Посилання: SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024, SRC-ESMO-CRC-2024. Абляція (РЧА, МВА, SBRT) для ≤3 см уражень у неоперованих (~50% ефективність). RF-CRC-OLIGOMET-LIVER-DEFINITION та RF-OLIGOMET-DEFINITION — конкурентні прапори. RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION — пріоритетний прапор при гострій ситуації. СТАБ — потребує підпису клінічного співкерівника.</p>
   <h2>Де використовується</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-CRC-METASTATIC-1L</code> - ALGO-CRC-METASTATIC-1L</li></ul>
 <h3>Indications</h3><ul><li><code>IND-CRC-OLIGOMET-LIVER-LIMITED</code> - IND-CRC-OLIGOMET-LIVER-LIMITED</li></ul>

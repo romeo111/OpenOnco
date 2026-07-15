@@ -1,0 +1,62 @@
+id: RF-PARATHYROID-CARCINOMA-MSI-TMB-HIGH-ACTIONABILITY
+definition: >
+  MSI-high / dMMR OR TMB-high (≥10 mut/Mb) recurrent, persistent, or
+  metastatic parathyroid carcinoma — opens the tissue-agnostic
+  pembrolizumab indication and overrides the default cinacalcet-only
+  supportive-care track with a biomarker-driven systemic option.
+definition_ua: >
+  MSI-high/dMMR АБО TMB-high (≥10 mut/Mb) рецидивна, персистуюча або
+  метастатична карцинома паращитоподібної залози — відкриває
+  тканинно-агностичне показання для пембролізумабу та перекриває
+  дефолтний трек лише з цинакалцетом.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "BIO-MSI-STATUS"
+      value: "MSI-H"
+    - finding: "msi_status"
+      value: "MSI-H"
+    - finding: "BIO-DMMR-IHC"
+      value: "dMMR"
+    - finding: "dmmr_status"
+      value: "deficient"
+    - finding: "BIO-TMB-HIGH"
+      value: "positive"
+    - finding: "tmb_status"
+      value: "TMB-H"
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+relevant_diseases: [DIS-PARATHYROID-CARCINOMA]
+shifts_algorithm: [ALGO-PARATHYROID-CARCINOMA-1L]
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+draft: true
+
+notes: >
+  Parathyroid carcinoma has no standard cytotoxic regimen with
+  consistent activity; this RF exists to surface the one biomarker-
+  gated systemic option (pembrolizumab, tissue-agnostic MSI-H/dMMR +
+  TMB-high FDA approvals) for the rare recurrent/metastatic case where
+  it applies. No parathyroid-carcinoma-specific prevalence data exists
+  for MSI-H/dMMR or TMB-H given disease rarity — trigger and rationale
+  are extrapolated from general solid-tumor basket-trial eligibility,
+  matching the pattern already used by RF-CRC-MSI-H-ACTIONABILITY and
+  RF-CHOLANGIOCARCINOMA-HIGH-RISK-BIOLOGY for the same biomarkers.
+  STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Карцинома паращитоподібної залози не має стандартного цитотоксичного
+  режиму з консистентною активністю; цей RF відкриває єдину
+  біомаркер-залежну системну опцію (пембролізумаб).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_agent_draft
+draft_revision: 1

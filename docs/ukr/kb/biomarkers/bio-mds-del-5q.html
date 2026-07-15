@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MDS with del(5q) cytogenetic abnormality - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="MDS with del(5q) cytogenetic abnormality - OpenOnco">
 <meta property="og:description" content="MDS with del(5q) cytogenetic abnormality: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/biomarkers/bio-mds-del-5q.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MDS with del(5q) cytogenetic abnormality - OpenOnco">
 <meta name="twitter:description" content="MDS with del(5q) cytogenetic abnormality: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"MDS with del(5q) cytogenetic abnormality - OpenOnco","description":"MDS with del(5q) cytogenetic abnormality: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-mds-del-5q.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-mds-del-5q.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"MDS with del(5q) cytogenetic abnormality - OpenOnco","description":"MDS with del(5q) cytogenetic abnormality: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-mds-del-5q.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-mds-del-5q.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -123,7 +195,7 @@
 <tr><th>Деталі мутації</th><td>{&quot;functional_impact&quot;: &quot;haploinsufficiency of CSNK1A1 (CK1α) and ribosomal RPS14 — selectively lenalidomide-sensitive&quot;, &quot;gene&quot;: &quot;5q (commonly deleted region 5q31-q33; CDR includes RPS14, CSNK1A1, miR-145, miR-146a)&quot;, &quot;variant_type&quot;: &quot;interstitial deletion&quot;}</td></tr>
 <tr><th>Вимірювання</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Conventional karyotype (G-banding) on bone marrow ± FISH (5q31/EGR1 probe) when karyotype fails or insufficient metaphases; SNP array as adjunct</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical (positive | negative); isolated vs +1 additional non-7 abnormality vs complex karyotype subclassification</span></div></div></td></tr>
 <tr><th>Пов’язані біомаркери</th><td><span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-tp53-mutation.html"><code>BIO-TP53-MUTATION</code></a></span> <span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-aml-tp53-adverse.html"><code>BIO-AML-TP53-ADVERSE</code></a></span></td></tr></table>
-  <h2>Нотатки</h2><p>del(5q) is detected in ~10-15% of MDS-LR cases. WHO 5th edition recognizes &quot;MDS with isolated del(5q)&quot; as a distinct entity defined by the 5q deletion as the sole cytogenetic abnormality (or with one additional non-monosomy-7 abnormality), &lt;5% BM blasts, and characteristic clinical features (macrocytic anemia, normal-to-high platelets, hypolobated megakaryocytes). Lenalidomide MDS-003 (Houston phase-2) + MDS-004 (phase-3 RCT, Fenaux et al., Blood 2011) — at 10 mg PO d1-21/28d: ~56% achieve RBC transfusion independence vs 5.9% placebo at 26 weeks; ~20-25% achieve cytogenetic CR (loss of del(5q) clone). Mechanism: cereblon-mediated selective degradation of CK1α encoded within the 5q33.1 commonly-deleted region — del(5q) cells haploinsufficient and uniquely sensitive. CRITICAL: TP53 co-mutation (~20% of del(5q) MDS) predicts lenalidomide resistance + higher AML transformation risk (~30-40% at 2 years vs ~10% TP53-WT) — TP53 NGS screening mandatory before initiating lenalidomide. Triggers RF-MDS-DEL-5Q-ISOLATED (existing).</p>
+  <h2>Нотатки</h2><p>del(5q) виявляється у ~10-15% випадків МДС-LR. WHO 5-го видання визнає &quot;МДС з ізольованою del(5q)&quot; як окрему сутність, визначену делецією 5q як єдиною цитогенетичною аномалією (або з однією додатковою не-моносомією-7), &lt;5% бластів КМ та характерними клінічними ознаками (макроцитарна анемія, нормальна-висока кількість тромбоцитів, гіполобовані мегакаріоцити). Леналідомід MDS-003 (Хьюстон фаза-2) + MDS-004 (фаза-3 РКД, Fenaux et al., Blood 2011) — при 10 mg PO д1-21/28д: ~56% досягають незалежності від трансфузій еритроцитів vs 5.9% плацебо за 26 тижнів; ~20-25% досягають цитогенетичної ПР (втрата клону del(5q)). Механізм: cereblon-опосередкована селективна деградація CK1α, кодованого в 5q33.1 commonly-deleted region — клітини del(5q) гапло-недостатні та унікально чутливі. КРИТИЧНО: ко-мутація TP53 (~20% del(5q) МДС) прогнозує резистентність до леналідоміду + вищий ризик трансформації в ГМЛ (~30-40% за 2 роки vs ~10% TP53-WT) — NGS- скринінг TP53 обов&#x27;язковий перед стартом леналідоміду. Запускає RF-MDS-DEL-5Q-ISOLATED (існуючий).</p>
   <h2>Де використовується</h2>
 <h3>Біомаркер</h3><ul><li><code>BIO-AML-TP53-ADVERSE</code> - TP53-mutated AML (adverse risk)</li></ul>
 </main>

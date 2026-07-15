@@ -1,0 +1,93 @@
+id: RF-VULVAR-VAGINAL-SCC-PDL1-CPS-1-PLUS
+definition: >
+  Previously treated, recurrent, or metastatic vulvar or vaginal
+  squamous cell carcinoma with PD-L1 CPS ≥1 by 22C3 IHC. KEYNOTE-158
+  (Shapira-Frommer, Gynecol Oncol 2022) evaluated pembrolizumab
+  monotherapy in previously treated advanced vulvar SCC (n=101):
+  durable responses (ORR 10.9% overall, median DOR 20.4 months among
+  responders) occurred in BOTH PD-L1-positive (ORR 9.5%, n=84) and
+  PD-L1-negative (ORR 28.6%, n=7 — small subgroup, wide CI) patients.
+  CPS≥1 is therefore NOT a validated hard predictive cutoff for vulvar
+  SCC pembrolizumab response, unlike the CPS≥1 FDA-label requirement
+  for cervical cancer (KEYNOTE-826). This RedFlag surfaces PD-L1 CPS
+  status as an eligibility-informing (not strictly gating) marker for
+  pembrolizumab access in metastatic/recurrent vulvar-vaginal SCC,
+  consistent with cross-tumor pembrolizumab-eligibility practice
+  pending a vulvar/vaginal-specific regulatory label.
+definition_ua: >
+  Попередньо лікована, рецидивна або метастатична плоскоклітинна
+  карцинома вульви або піхви з PD-L1 CPS ≥1 за 22C3 IHC. KEYNOTE-158
+  (Shapira-Frommer, Gynecol Oncol 2022) оцінював пембролізумаб у
+  монотерапії при попередньо лікованій поширеній SCC вульви (n=101):
+  стійкі відповіді (ORR 10.9% загалом, медіана DOR 20.4 міс серед
+  відповідачів) спостерігались ЯК у PD-L1-позитивних (ORR 9.5%, n=84),
+  ТАК і у PD-L1-негативних (ORR 28.6%, n=7 — мала підгрупа, широкий ДІ)
+  пацієнтів. Тому CPS≥1 НЕ є валідованим жорстким предиктивним
+  порогом для відповіді на пембролізумаб при SCC вульви, на відміну
+  від CPS≥1 FDA-label вимоги для цервікального раку (KEYNOTE-826). Цей
+  RedFlag відображає статус PD-L1 CPS як маркер, що інформує (але не
+  строго обмежує) доступ до пембролізумабу при метастатичній/
+  рецидивній SCC вульви-піхви, узгоджено з крос-нозологічною
+  практикою pembrolizumab-eligibility до появи вульв/вагінально-
+  специфічного регуляторного маркування.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "pdl1_cps"
+      threshold: 1
+      comparator: ">="
+    - finding: "pdl1_cps_22c3"
+      threshold: 1
+      comparator: ">="
+    - finding: "BIO-PDL1-CPS"
+      threshold: 1
+      comparator: ">="
+
+clinical_direction: intensify
+
+severity: minor
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-VULVAR-VAGINAL-SCC
+shifts_algorithm:
+  - ALGO-VULVAR-VAGINAL-SCC-1L
+
+sources:
+  - SRC-KEYNOTE-158-VULVAR-SHAPIRA-FROMMER-2022
+
+last_reviewed: "2026-07-11"
+draft: true
+
+notes: >
+  Severity set to 'minor' (lower than the analogous
+  RF-CERVICAL-PDL1-CPS-1-PLUS, which is 'major') because the vulvar-
+  SCC evidence base (KEYNOTE-158 basket cohort, n=101, non-randomized)
+  does NOT show a clean PD-L1-positive vs PD-L1-negative response
+  differential — unlike cervical cancer's KEYNOTE-826 randomized
+  CPS≥1 stratification. This RF is authored as directed by the disease
+  narrative ('metastatic — pembrolizumab if PD-L1+') for consistency
+  with cross-tumor pembrolizumab-eligibility conventions in this KB,
+  but the notes above make the evidentiary caveat explicit so a
+  clinical reviewer can recalibrate severity/priority or the ALGO's
+  routing logic. STUB pending clinical co-lead signoff (CHARTER §6.1;
+  dev-mode-exempted per CHARTER §8.3 — draft content only).
+notes_ua: >
+  Рівень серйозності встановлено 'minor' (нижче, ніж аналогічний
+  RF-CERVICAL-PDL1-CPS-1-PLUS, який має 'major'), оскільки доказова
+  база для SCC вульви (кошиковий кагорт KEYNOTE-158, n=101,
+  нерандомізоване дослідження) НЕ демонструє чіткої різниці відповіді
+  між PD-L1-позитивними та PD-L1-негативними пацієнтами — на відміну
+  від рандомізованої CPS≥1-стратифікації KEYNOTE-826 при цервікальному
+  раку. Цей RF авторизовано згідно з наративом хвороби ("метастатична
+  — пембролізумаб при PD-L1+") для узгодженості з крос-нозологічними
+  конвенціями pembrolizumab-eligibility в цій базі знань, але
+  зазначені вище примітки роблять доказове застереження явним для
+  клінічного рецензента. STUB до підпису клінічного співкерівника
+  (CHARTER §6.1; dev-mode-exempted за CHARTER §8.3 — лише чернетковий
+  контент).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_search_agent_algorithm_review
+draft_revision: 1

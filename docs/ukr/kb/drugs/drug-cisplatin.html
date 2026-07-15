@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cisplatin - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="Cisplatin - OpenOnco">
 <meta property="og:description" content="Cisplatin: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/drugs/drug-cisplatin.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cisplatin - OpenOnco">
 <meta name="twitter:description" content="Cisplatin: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Cisplatin - OpenOnco","description":"Cisplatin: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-cisplatin.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-cisplatin.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Cisplatin - OpenOnco","description":"Cisplatin: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-cisplatin.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-cisplatin.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -117,7 +189,7 @@
 <tr><th>Тип</th><td>Препарат</td></tr>
 <tr><th>Синоніми</th><td><div class="kb-alias-list"><span class="kb-alias">CDDP</span><span class="kb-alias">Platinol</span><span class="kb-alias">Platinol-AQ</span><span class="kb-alias">cis-DDP</span><span class="kb-alias">Цисплатин</span></div></td></tr>
 <tr><th>Статус</th><td>переглянуто 2026-04-26 | очікує клінічного підпису</td></tr>
-<tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-BURKITT"><code>DIS-BURKITT</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-CERVICAL"><code>DIS-CERVICAL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-CHOLANGIOCARCINOMA"><code>DIS-CHOLANGIOCARCINOMA</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-ESOPHAGEAL"><code>DIS-ESOPHAGEAL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-GASTRIC"><code>DIS-GASTRIC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-HNSCC"><code>DIS-HNSCC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-MESOTHELIOMA"><code>DIS-MESOTHELIOMA</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-NSCLC"><code>DIS-NSCLC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-SCLC"><code>DIS-SCLC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-TESTICULAR-GCT"><code>DIS-TESTICULAR-GCT</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-UROTHELIAL"><code>DIS-UROTHELIAL</code></a></span></td></tr>
+<tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-ADRENOCORTICAL-CARCINOMA"><code>DIS-ADRENOCORTICAL-CARCINOMA</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-BURKITT"><code>DIS-BURKITT</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-CERVICAL"><code>DIS-CERVICAL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-CHOLANGIOCARCINOMA"><code>DIS-CHOLANGIOCARCINOMA</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-ESOPHAGEAL"><code>DIS-ESOPHAGEAL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-GASTRIC"><code>DIS-GASTRIC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-HNSCC"><code>DIS-HNSCC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-LARYNGEAL"><code>DIS-LARYNGEAL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-MESOTHELIOMA"><code>DIS-MESOTHELIOMA</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-NPC"><code>DIS-NPC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-NSCLC"><code>DIS-NSCLC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-PENILE-SCC"><code>DIS-PENILE-SCC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-SCLC"><code>DIS-SCLC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-TESTICULAR-GCT"><code>DIS-TESTICULAR-GCT</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-UROTHELIAL"><code>DIS-UROTHELIAL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-VULVAR-VAGINAL-SCC"><code>DIS-VULVAR-VAGINAL-SCC</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="ESMO Esophageal Cancer"><a href="https://www.esmo.org/guidelines/guidelines-by-topic/esmo-clinical-practice-guidelines-gastrointestinal-cancers/clinical-practice-guideline-oesophageal-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-ESOPHAGEAL-2024</code></a></span> <span class="kb-chip" title="NCCN Esophageal and EGJ Cancers"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1433" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-ESOPHAGEAL-2025</code></a></span></td></tr></table>
   <h2>Дані про препарат</h2><table class="kb-facts"><tr><th>Клас</th><td>Platinum alkylating agent (first-generation)</td></tr>
 <tr><th>Механізм дії</th><td>Square-planar platinum(II) coordination complex. After cellular uptake and aquation (Cl displaced by water in low-chloride intracellular environment), the activated species forms intra- and inter-strand DNA cross-links, predominantly 1,2-d(GpG) and 1,2-d(ApG) adducts. These adducts distort the DNA helix, blocking replication and transcription, and trigger apoptosis when not repaired. Resistance mechanisms include enhanced nucleotide excision repair, glutathione detoxification, and reduced cellular uptake (CTR1 transporter). Backbone for esophageal CRT, head-and-neck CRT, NSCLC, gastric (legacy), cervical, ovarian, testicular germ-cell, and bladder.</td></tr>
@@ -125,9 +197,10 @@
 <tr><th>Зареєстровано в Україні</th><td>True</td></tr>
 <tr><th>Відшкодовується НСЗУ</th><td>True</td></tr>
 <tr><th>Остання перевірка для України</th><td>2026-04-27</td></tr></table><h2>Застереження</h2><ul><li>Cumulative renal toxicity — mandatory hydration + electrolyte replacement</li><li>Severe nausea / vomiting (highly emetogenic — HEC tier)</li><li>Ototoxicity (irreversible high-frequency hearing loss; baseline + serial audiometry)</li><li>Anaphylactic-like reactions (epinephrine, antihistamines, corticosteroids on hand)</li><li>Myelosuppression (with high-dose schedules)</li></ul>
-  <h2>Нотатки</h2><p>Mandatory hydration ≥3 L pre-dose + 24 h post; Mg / K pre-emptive supplementation. Consider carboplatin substitution for CrCl 50-60 or pre-existing hearing loss. Highly-emetogenic chemotherapy (HEC): ondansetron + dexamethasone + NK1-RA (aprepitant or fosaprepitant) + olanzapine premedication required (NCCN antiemesis v1.2025). Baseline + serial audiometry (esp. pediatric / younger adult patients). Uridine triacetate is NOT an antidote (FU only).</p>
+  <h2>Нотатки</h2><p>Обов&#x27;язкова гідратація ≥3 L перед введенням цисплатину (cisplatin) та ≥24 год після; превентивна корекція Mg та K. Розгляд заміни на карбоплатин при CrCl 50-60 mL/min або при попередній втраті слуху. Високоемоегенна хіміотерапія (HEC): обов&#x27;язкова премедикація ондансетрон + дексаметазон + NK1-антагоніст (апрепітант або фосапрепітант) + оланзапін (NCCN antiemesis v1.2025). Базова та серійна аудіометрія (особливо у педіатричних та молодих дорослих пацієнтів). Уридин-триацетат НЕ є антидотом до цисплатину (застосовується лише при передозуванні фторурацилу).</p>
   <h2>Де використовується</h2>
-<h3>Regimens</h3><ul><li><code>REG-BEP-GCT</code> - BEP (bleomycin + etoposide + cisplatin, germ cell tumor)</li><li><code>REG-CISPLATIN-GEMCITABINE-UROTHELIAL</code> - Cisplatin + gemcitabine (urothelial neoadj + metastatic)</li><li><code>REG-CISPLATIN-RADIOSENS</code> - Cisplatin radiosensitization (concurrent with EBRT + brachytherapy)</li><li><code>REG-DURVA-GEM-CIS-CHOLANGIO</code> - Durvalumab + gemcitabine + cisplatin (TOPAZ-1) — 1L advanced biliary tract cancer</li><li><code>REG-EP-CONCURRENT-RT-SCLC-LIMITED</code> - Etoposide-platinum + concurrent thoracic RT (limited SCLC)</li><li><code>REG-EP-GCT</code> - EP (etoposide + cisplatin, germ cell tumor)</li><li><code>REG-EXTREME-HNSCC</code> - EXTREME (cetuximab + cisplatin/carboplatin + 5-FU; HNSCC R/M, 1L)</li><li><code>REG-GEMCITABINE-CISPLATIN-CHOLANGIO</code> - Gemcitabine + cisplatin (advanced biliary tract cancer, 1L — ABC-02)</li><li><code>REG-NIVO-CHEMO-ESCC</code> - Nivolumab + platinum/fluoropyrimidine chemotherapy (ESCC)</li><li><code>REG-OSI-PEM-PLATINUM-NSCLC</code> - Osimertinib + pemetrexed + carboplatin/cisplatin (FLAURA-2 regimen, EGFR-mut NSCLC, 1L)</li><li><code>REG-PEMBRO-CHEMO-HNSCC-1L</code> - Pembrolizumab + 5-FU + platinum (HNSCC R/M, 1L; PD-L1 CPS ≥1)</li><li><code>REG-PEMBRO-CHEMO-NEOADJ-NSCLC</code> - Pembrolizumab + cisplatin-based chemo (NSCLC neoadjuvant; KEYNOTE-671)</li><li><code>REG-PEMBRO-CISPLATIN-5FU-ESOPH</code> - Pembrolizumab + cisplatin + fluorouracil</li><li><code>REG-PEMBRO-GEM-CIS-CHOLANGIO</code> - Pembrolizumab + gemcitabine + cisplatin (KEYNOTE-966) — 1L advanced biliary tract cancer</li><li><code>REG-PEMETREXED-CISPLATIN-MPM</code> - Pemetrexed + cisplatin (malignant pleural mesothelioma, 1L)</li><li><code>REG-RDHAP-BURKITT</code> - R-DHAP (Rituximab + Dexamethasone + HD-Cytarabine + Cisplatin) × 2-3 cycles → ASCT/alloSC...</li><li><code>REG-TIP-GCT-SALVAGE</code> - TIP (paclitaxel + ifosfamide + cisplatin, germ cell tumor salvage)</li><li><code>REG-TRASTUZUMAB-CHEMO-TOGA</code> - Trastuzumab + capecitabine + cisplatin (TOGA / KEYNOTE-811)</li></ul>
+<h3>Indications</h3><ul><li><code>IND-LARYNGEAL-RM-1L-EXTREME</code> - IND-LARYNGEAL-RM-1L-EXTREME</li><li><code>IND-LARYNGEAL-RM-1L-PEMBRO-CHEMO</code> - IND-LARYNGEAL-RM-1L-PEMBRO-CHEMO</li></ul>
+<h3>Regimens</h3><ul><li><code>REG-BEP-GCT</code> - BEP (bleomycin + etoposide + cisplatin, germ cell tumor)</li><li><code>REG-CISPLATIN-5FU-PENILE</code> - Cisplatin + 5-fluorouracil (metastatic penile SCC, 1L)</li><li><code>REG-CISPLATIN-CONCURRENT-RT-LARYNX</code> - Cisplatin concurrent with definitive RT (larynx-preservation CRT; RTOG 91-11)</li><li><code>REG-CISPLATIN-GEMCITABINE-UROTHELIAL</code> - Cisplatin + gemcitabine (urothelial neoadj + metastatic)</li><li><code>REG-CISPLATIN-RADIOSENS</code> - Cisplatin radiosensitization (concurrent with EBRT + brachytherapy)</li><li><code>REG-DURVA-GEM-CIS-CHOLANGIO</code> - Durvalumab + gemcitabine + cisplatin (TOPAZ-1) — 1L advanced biliary tract cancer</li><li><code>REG-EDP-M-ACC</code> - EDP-M (etoposide + doxorubicin + cisplatin + mitotane) — FIRM-ACT regimen</li><li><code>REG-EP-CONCURRENT-RT-SCLC-LIMITED</code> - Etoposide-platinum + concurrent thoracic RT (limited SCLC)</li><li><code>REG-EP-GCT</code> - EP (etoposide + cisplatin, germ cell tumor)</li><li><code>REG-EXTREME-HNSCC</code> - EXTREME (cetuximab + cisplatin/carboplatin + 5-FU; HNSCC R/M, 1L)</li><li><code>REG-GEMCITABINE-CISPLATIN-CHOLANGIO</code> - Gemcitabine + cisplatin (advanced biliary tract cancer, 1L — ABC-02)</li><li><code>REG-NIVO-CHEMO-ESCC</code> - Nivolumab + platinum/fluoropyrimidine chemotherapy (ESCC)</li><li><code>REG-NPC-GC-CAMRELIZUMAB</code> - Camrelizumab + gemcitabine + cisplatin (CAPTAIN-1st) — 1L recurrent/metastatic nasopharyn...</li><li><code>REG-NPC-GC-INDUCTION-CCRT</code> - Induction gemcitabine-cisplatin (GC) + concurrent cisplatin chemoradiation (IMRT) — locor...</li><li><code>REG-NPC-GC-TORIPALIMAB</code> - Toripalimab + gemcitabine + cisplatin (JUPITER-02) — 1L recurrent/metastatic nasopharynge...</li><li><code>REG-OSI-PEM-PLATINUM-NSCLC</code> - Osimertinib + pemetrexed + carboplatin/cisplatin (FLAURA-2 regimen, EGFR-mut NSCLC, 1L)</li><li><code>REG-PEMBRO-CHEMO-HNSCC-1L</code> - Pembrolizumab + 5-FU + platinum (HNSCC R/M, 1L; PD-L1 CPS ≥1)</li><li><code>REG-PEMBRO-CHEMO-NEOADJ-NSCLC</code> - Pembrolizumab + cisplatin-based chemo (NSCLC neoadjuvant; KEYNOTE-671)</li><li><code>REG-PEMBRO-CISPLATIN-5FU-ESOPH</code> - Pembrolizumab + cisplatin + fluorouracil</li><li><code>REG-PEMBRO-GEM-CIS-CHOLANGIO</code> - Pembrolizumab + gemcitabine + cisplatin (KEYNOTE-966) — 1L advanced biliary tract cancer</li><li><code>REG-PEMETREXED-CISPLATIN-MPM</code> - Pemetrexed + cisplatin (malignant pleural mesothelioma, 1L)</li><li><code>REG-RDHAP-BURKITT</code> - R-DHAP (Rituximab + Dexamethasone + HD-Cytarabine + Cisplatin) × 2-3 cycles → ASCT/alloSC...</li><li><code>REG-TIP-GCT-SALVAGE</code> - TIP (paclitaxel + ifosfamide + cisplatin, germ cell tumor salvage)</li><li><code>REG-TIP-PENILE</code> - TIP (paclitaxel + ifosfamide + cisplatin, penile SCC)</li><li><code>REG-TRASTUZUMAB-CHEMO-TOGA</code> - Trastuzumab + capecitabine + cisplatin (TOGA / KEYNOTE-811)</li></ul>
 </main>
 </body>
 </html>

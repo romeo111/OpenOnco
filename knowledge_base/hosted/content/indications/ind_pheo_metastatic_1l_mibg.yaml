@@ -1,0 +1,75 @@
+id: IND-PHEO-METASTATIC-1L-MIBG
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PHEOCHROMOCYTOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Unresectable, locally advanced, or metastatic pheochromocytoma or paraganglioma"
+    - "Confirmed MIBG avidity on diagnostic I-123 or I-131 MIBG scintigraphy"
+    - "Multidisciplinary (endocrinology / nuclear medicine / medical oncology) review"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-IODINE-131-MIBG-PHEO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "Reported biochemical and/or radiographic response in a proportion of MIBG-avid patients; not asserted here as a specific percentage pending source-verified figures"
+  complete_response:
+  progression_free_survival: "Disease control reported in MIBG-avid metastatic PPGL; exact figures not asserted here pending source-verified data"
+  overall_survival_5y: "Not asserted here pending source-verified figures -- metastatic PPGL overall behaves indolently in many patients but SDHB-mutated disease carries markedly worse prognosis (see DIS-PHEOCHROMOCYTOMA epidemiology)"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-METANEPHRINES-PLASMA-PARAGANGLIOMA
+desired_tests:
+  - TEST-GERMLINE-MULTI-GENE-PANEL
+
+rationale: >
+  For unresectable or metastatic pheochromocytoma/paraganglioma that is
+  MIBG-avid on diagnostic scintigraphy, I-131 MIBG radiopharmaceutical
+  therapy targets the tumor's own catecholamine-uptake machinery
+  (noradrenaline transporter) to deliver localized beta-radiation.
+  MIBG-non-avid disease is not a candidate for this modality and is
+  instead routed to systemic TKI therapy (IND-PHEO-METASTATIC-1L-
+  SUNITINIB / IND-PHEO-METASTATIC-1L-CABOZANTINIB) per ALGO-PHEO-1L.
+  Requires specialized nuclear-medicine infrastructure with radiation-
+  safety-licensed inpatient isolation.
+
+sources:
+  - source_id: SRC-NCCN-NET-2025
+    position: supports
+
+do_not_do:
+  - "Не призначати терапію I-131 MIBG без підтвердженої MIBG-позитивності на діагностичній сцинтиграфії."
+  - "Не проводити терапію без попередньої тиреоїдної блокади калію йодидом/йодатом."
+
+do_not_do_en:
+  - "Do not initiate I-131 MIBG therapy without confirmed MIBG avidity on diagnostic scintigraphy."
+  - "Do not administer therapy without prior thyroid blockade (potassium iodide/iodate)."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+review_status: stub
+drafted_by: claude_pheo_treatment_pathway
+notes: >
+  Coverage-enabling metastatic-disease indication for
+  DIS-PHEOCHROMOCYTOMA, MIBG-avid branch. No Test/Biomarker entity for
+  "MIBG scan positive" exists in the KB as of this authoring pass --
+  MIBG avidity is instead expressed as a free-text decision-tree
+  condition in ALGO-PHEO-1L (mirroring the existing free-text-condition
+  pattern already used throughout ALGO-RCC-METASTATIC-1L).
+  expected_outcomes fields are deliberately left qualitative/unquantified
+  rather than populated with specific percentages the drafting agent
+  cannot verify. Requires nuclear medicine / medical oncology co-lead
+  signoff before clinical publication.

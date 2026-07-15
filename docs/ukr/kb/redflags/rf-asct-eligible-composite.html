@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Composite eligibility for autologous stem-cell transplantation (ASCT) consolidation: ECOG... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="Composite eligibility for autologous stem-cell transplantation (ASCT) consolidation: ECOG... - OpenOnco">
 <meta property="og:description" content="Composite eligibility for autologous stem-cell transplantation (ASCT) consolidation: ECOG...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/redflags/rf-asct-eligible-composite.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Composite eligibility for autologous stem-cell transplantation (ASCT) consolidation: ECOG... - OpenOnco">
 <meta name="twitter:description" content="Composite eligibility for autologous stem-cell transplantation (ASCT) consolidation: ECOG...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Composite eligibility for autologous stem-cell transplantation (ASCT) consolidation: ECOG... - OpenOnco","description":"Composite eligibility for autologous stem-cell transplantation (ASCT) consolidation: ECOG...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-asct-eligible-composite.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-asct-eligible-composite.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Composite eligibility for autologous stem-cell transplantation (ASCT) consolidation: ECOG... - OpenOnco","description":"Composite eligibility for autologous stem-cell transplantation (ASCT) consolidation: ECOG...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-asct-eligible-composite.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-asct-eligible-composite.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -118,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-04-27 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-muted">Не вказано</span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="EHA-EMN Evidence-Based Guidelines for diagnosis, treatment and follow-up of patients with..."><a href="https://www.nature.com/articles/s41571-025-01041-x" target="_blank" rel="noopener noreferrer"><code>SRC-EHA-EMN-MM-2025</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BCELL-2025</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: Multiple Myeloma"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1445" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-MM-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Composite eligibility for autologous stem-cell transplantation (ASCT) consolidation: ECOG ≤2 AND adequate cardiac function (LVEF ≥50%, no NYHA III-IV) AND adequate pulmonary function (DLCO ≥50% or absent severe COPD/fibrosis) AND adequate hepatic function (bilirubin ≤2× ULN, AST/ALT ≤3× ULN) AND adequate renal function (CrCl ≥30 mL/min) AND age &lt;70 (lymphoma/MM standard) or &lt;65 (AML standard) AND no active uncontrolled infection AND no second active malignancy. Used to gate ASCT consolidation in MM 1L (CASSIOPEIA, GRIFFIN), DLBCL/PTCL salvage (CORAL, ECHELON-2 follow-up), Hodgkin salvage (post-second-line PR/CR), AML CR1 in non-favorable risk if alloHCT donor unavailable.</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Композитна придатність до аутологічної ТСК (ASCT) як консолідації: ECOG ≤2 ТА адекватна кардіальна функція (LVEF ≥50%, без NYHA III-IV) ТА адекватна легенева функція (DLCO ≥50% або без тяжких COPD/фіброзу) ТА адекватна печінкова функція (білірубін ≤2× ULN, AST/ALT ≤3× ULN) ТА адекватна ниркова функція (CrCl ≥30 мл/хв) ТА вік &lt;70 (лімфома/MM стандарт) або &lt;65 (AML стандарт) ТА відсутність активної неконтрольованої інфекції ТА відсутність другої активної злоякісності. Використовується для гейту ASCT консолідації у MM 1L (CASSIOPEIA, GRIFFIN), DLBCL/PTCL сальвадж (CORAL, ECHELON-2 fu), Hodgkin сальвадж (post-2L PR/CR), AML CR1 у не-favorable ризику при відсутності донора для alloHCT.</td></tr>
 <tr><th>Клінічний напрям</th><td>intensify</td></tr>
 <tr><th>Категорія</th><td>other</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
   &quot;all_of&quot;: [
@@ -162,9 +234,9 @@
   ],
   &quot;type&quot;: &quot;composite_score&quot;
 }</pre>
-  <h2>Нотатки</h2><p>Composite gate harmonized across landmark ASCT trials. AML uses age &lt;65 cutoff (more restrictive than lymphoma/MM &lt;70) due to higher TRM in older AML alloHCT/ASCT pathways; chronological age is a proxy — biologic-age assessment (CGA, HCT-CI score) overrides for borderline cases. DLCO threshold 50% is a hard limit for many centers; 40-50% with cardiopulmonary fitness clearance acceptable on individual basis. Frailty score (Palumbo IMWG-frailty for MM, G8 for solid/lymphoma) preferred over isolated age cutoff. RF coexists with RF-CAR-T-ELIGIBLE for cases where both are options (DLBCL 2L: ZUMA-7/TRANSFORM established CAR-T over ASCT in early relapse &lt;12 mo or primary refractory; ASCT remains standard for late-relapse R/R DLBCL post-CR). MM tandem-ASCT (StaMINA) for high-risk cytogenetics — additional gate when this RF fires AND RF-MM-HIGH-RISK-CYTOGENETICS fires.</p>
+  <h2>Нотатки</h2><p>Композитний гейт, гармонізований за landmark ASCT трайлами. AML використовує вік &lt;65 cutoff (суворіший за лімфому/MM &lt;70) через вищий TRM у старших AML alloHCT/ASCT шляхах; хронологічний вік — proxy; biologic-age оцінка (CGA, HCT-CI score) — override для borderline кейсів. DLCO поріг 50% — жорсткий ліміт у багатьох центрах; 40-50% з cardiopulmonary fitness clearance — на індивідуальній основі. Frailty-скор (Palumbo IMWG-frailty для MM, G8 для solid/lymphoma) — переважніший за ізольований вік. RF співіснує з RF-CAR-T-ELIGIBLE для кейсів, де обидва доступні (DLBCL 2L: ZUMA-7/TRANSFORM встановили CAR-T над ASCT при ранньому рецидиві &lt;12 міс або primary refractory; ASCT — стандарт для late-relapse р/р DLBCL post-CR). MM tandem-ASCT (StaMINA) для high-risk цитогенетики — додатковий гейт коли цей RF спрацьовує ТА RF-MM-HIGH-RISK-CYTOGENETICS спрацьовує.</p>
   <h2>Де використовується</h2>
-<h3>Algorithms</h3><ul><li><code>ALGO-DLBCL-2L</code> - ALGO-DLBCL-2L</li></ul>
+<h3>Algorithms</h3><ul><li><code>ALGO-DLBCL-2L</code> - ALGO-DLBCL-2L</li><li><code>ALGO-HGBL-DH-2L</code> - ALGO-HGBL-DH-2L</li></ul>
 </main>
 </body>
 </html>

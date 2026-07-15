@@ -2,8 +2,79 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco — онкологічні рішення, які можна перевірити</title>
+<title>OpenOnco — безкоштовні варіанти лікування раку з джерелами</title>
 <!-- openonco-seo:start -->
 <meta name="description" content="OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -17,18 +88,20 @@
 <link rel="alternate" hreflang="x-default" href="https://openonco.info/">
 <meta property="og:site_name" content="OpenOnco">
 <meta property="og:type" content="website">
-<meta property="og:title" content="OpenOnco — онкологічні рішення, які можна перевірити">
+<meta property="og:title" content="OpenOnco — безкоштовні варіанти лікування раку з джерелами">
 <meta property="og:description" content="OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.">
 <meta property="og:url" content="https://openonco.info/ukr/">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OpenOnco — онкологічні рішення, які можна перевірити">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco — безкоштовні варіанти лікування раку з джерелами">
 <meta name="twitter:description" content="OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco — онкологічні рішення, які можна перевірити","description":"OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.","url":"https://openonco.info/ukr/","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco — безкоштовні варіанти лікування раку з джерелами","description":"OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.","url":"https://openonco.info/ukr/","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Що таке OpenOnco?","acceptedAnswer":{"@type":"Answer","text":"OpenOnco - безкоштовний відкритий ресурс підтримки клінічних рішень в онкології. Детермінований engine на основі версіонованої бази знань із джерелами формує два альтернативні плани лікування (стандартний і агресивний) для перевірки лікарем-онкологом. Це інформаційна підтримка для медичних працівників, а не медичний виріб."}},{"@type":"Question","name":"Чим OpenOnco відрізняється від запиту лікування до ChatGPT?","acceptedAnswer":{"@type":"Answer","text":"Жодна велика мовна модель не обирає схему чи дозу в OpenOnco. Уся клінічна логіка - це детермінований engine правил над рецензованою базою знань, і кожна рекомендація має посилання на джерело, тож система не може «вигадати» препарат чи дозу."}},{"@type":"Question","name":"Чи можу я використовувати OpenOnco з ChatGPT, Claude або Cursor?","acceptedAnswer":{"@type":"Answer","text":"Так. OpenOnco має MCP-сервер (Model Context Protocol), тож AI-асистент може викликати детермінований engine і передавати його рекомендації з джерелами замість відповіді з пам'яті. Асистент ніколи не обирає лікування."}},{"@type":"Question","name":"OpenOnco безкоштовний і з відкритим кодом?","acceptedAnswer":{"@type":"Answer","text":"Так. Код під ліцензією MIT, а контент і специфікації - CC BY 4.0. Проєкт створено так, щоб його можна було форкнути й повторно використати."}},{"@type":"Question","name":"OpenOnco - це медичний виріб або заміна онколога?","acceptedAnswer":{"@type":"Answer","text":"Ні. Це інструмент ранньої стадії, більшість контенту - чернетки до клінічного підпису. Він не діагностує і не лікує, а кожну рекомендацію має перевірити кваліфікований онколог."}}]}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#14532d">
@@ -62,24 +135,87 @@
 <main class="home-main">
   <section class="home-hero">
     <div class="home-hero-inner">
-      <p class="home-kicker">Відкрита підтримка клінічних рішень</p>
-      <h1>OpenOnco</h1>
-      <p class="home-sub">OpenOnco допомагає швидко зібрати клінічно осмислений план лікування: від діагнозу, стадії, біомаркерів і стану пацієнта до можливих терапевтичних опцій. Поруч працює Онко-вікі - онкологічна вікіпедія проєкту з хворобами, препаратами, біомаркерами та джерелами.</p>
-      <p class="home-sub">Кожна рекомендація прив'язана до джерел, стандартів і перевірених правил. Система підсвічує ключові ліки, біомаркери та обмеження, а AI-туморборд допомагає сформулювати питання для клінічного рев'ю перед фінальним рішенням.</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="/ukr/try.html">Побудувати план лікування</a>
+      <p class="home-kicker">Безкоштовно · відкритий код · без реєстрації</p>
+      <h1>Зрозумійте варіанти лікування раку — з доказовим джерелом під кожним рядком.</h1>
+      <p class="home-sub">OpenOnco безкоштовно збирає докази з настанов NCCN, ESMO і бази CIViC у два плани лікування поруч — стандартний і агресивніший. Лікарю це пришвидшує підготовку туморборду, хворому — допомагає зрозуміти призначене лікування і скласти питання до онколога, фармацевту — перевірити взаємодії та корекції доз. Без реєстрації, дані лишаються у вашому браузері.</p>
+    </div>
+  </section>
+
+  <section class="home-doors" aria-label="Оберіть свій шлях">
+    <h2 class="home-doors-h">Кому це допоможе</h2>
+    <div class="home-doors-grid">
+      <article class="door-card door-card--doctor">
+        <div class="door-icon" aria-hidden="true">🩺</div>
+        <h3 class="door-role">Лікарю</h3>
+        <p class="door-line">Перетворіть кейс на чернетку для туморборду: стандартний і агресивний план поруч, red flags на поверхні, кожен рядок із джерелом.</p>
+        <div class="door-actions">
+          <a class="btn btn-primary" href="/ukr/try.html">Побудувати план</a>
+          <a class="btn btn-secondary" href="/ukr/ask.html">Запитати туморборд</a>
+        </div>
+      </article>
+      <article class="door-card door-card--patient">
+        <div class="door-icon" aria-hidden="true">🎗️</div>
+        <h3 class="door-role">Хворому</h3>
+        <p class="door-line">Зрозумійте план лікування, який вам уже дав ваш онколог, — простою мовою — і перетворіть його на зрозумілі питання до наступного візиту. Це інформація на допомогу вашій розмові з лікарем, а не медична порада, і вона ніколи не замінює вашого онколога.</p>
+        <p class="door-disclaimer">OpenOnco — інформаційний інструмент, а не медичний виріб і не медична порада. Він не замінює вашого онколога. Ніколи не починайте, не припиняйте і не змінюйте лікування на основі цього сайту — рішення приймайте разом зі своїм лікарем-онкологом.</p>
+        <div class="door-actions">
+          <a class="btn btn-primary" href="/ukr/ask.html?case=%D0%9C%D1%96%D0%B9%20%D0%BE%D0%BD%D0%BA%D0%BE%D0%BB%D0%BE%D0%B3%20%D0%B4%D1%96%D0%B0%D0%B3%D0%BD%D0%BE%D1%81%D1%82%D1%83%D0%B2%D0%B0%D0%B2%20%D1%83%20%D0%BC%D0%B5%D0%BD%D0%B5%20%D1%80%D0%B0%D0%BA%20%D1%88%D0%BB%D1%83%D0%BD%D0%BA%D0%B0%20%D1%96%20%D0%B4%D0%B0%D0%B2%20%D0%BF%D0%B8%D1%81%D1%8C%D0%BC%D0%BE%D0%B2%D0%B8%D0%B9%20%D0%BF%D0%BB%D0%B0%D0%BD%20%D0%BB%D1%96%D0%BA%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F%2C%20%D1%8F%D0%BA%D0%B8%D0%B9%20%D0%BF%D0%BE%D1%87%D0%B8%D0%BD%D0%B0%D1%94%D1%82%D1%8C%D1%81%D1%8F%20%D0%B7%20%D1%85%D1%96%D0%BC%D1%96%D0%BE%D1%82%D0%B5%D1%80%D0%B0%D0%BF%D1%96%D1%97.%20%D0%AF%20%D1%85%D0%BE%D1%87%D1%83%20%D0%B7%D1%80%D0%BE%D0%B7%D1%83%D0%BC%D1%96%D1%82%D0%B8%20%D0%B9%D0%BE%D0%B3%D0%BE%20%D0%B4%D0%BE%20%D0%BD%D0%B0%D1%81%D1%82%D1%83%D0%BF%D0%BD%D0%BE%D0%B3%D0%BE%20%D0%BF%D1%80%D0%B8%D0%B9%D0%BE%D0%BC%D1%83.%20%D0%9F%D0%BE%D1%8F%D1%81%D0%BD%D1%96%D1%82%D1%8C%2C%20%D0%B1%D1%83%D0%B4%D1%8C%20%D0%BB%D0%B0%D1%81%D0%BA%D0%B0%2C%20%D0%BF%D1%80%D0%BE%D1%81%D1%82%D0%BE%D1%8E%20%D0%BC%D0%BE%D0%B2%D0%BE%D1%8E%2C%20%D0%B4%D0%BB%D1%8F%20%D1%87%D0%BE%D0%B3%D0%BE%20%D0%BF%D0%BE%D1%82%D1%80%D1%96%D0%B1%D0%BD%D0%B0%20%D0%BA%D0%BE%D0%B6%D0%BD%D0%B0%20%D1%87%D0%B0%D1%81%D1%82%D0%B8%D0%BD%D0%B0%20%D0%BF%D0%BB%D0%B0%D0%BD%D1%83%2C%20%D1%96%20%D0%B4%D0%BE%D0%BF%D0%BE%D0%BC%D0%BE%D0%B6%D1%96%D1%82%D1%8C%20%D0%BC%D0%B5%D0%BD%D1%96%20%D1%81%D1%84%D0%BE%D1%80%D0%BC%D1%83%D0%BB%D1%8E%D0%B2%D0%B0%D1%82%D0%B8%20%D0%B7%D1%80%D0%BE%D0%B7%D1%83%D0%BC%D1%96%D0%BB%D1%96%20%D0%BF%D0%B8%D1%82%D0%B0%D0%BD%D0%BD%D1%8F%2C%20%D1%8F%D0%BA%D1%96%20%D1%8F%20%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D1%8E%20%D1%81%D0%B2%D0%BE%D1%94%D0%BC%D1%83%20%D0%BE%D0%BD%D0%BA%D0%BE%D0%BB%D0%BE%D0%B3%D1%83%20%D0%BD%D0%B0%20%D0%BD%D0%B0%D1%81%D1%82%D1%83%D0%BF%D0%BD%D0%BE%D0%BC%D1%83%20%D0%B2%D1%96%D0%B7%D0%B8%D1%82%D1%96%2C%20%E2%80%94%20%D0%B7%D0%BE%D0%BA%D1%80%D0%B5%D0%BC%D0%B0%20%D1%8F%D0%BA%D1%96%20%D0%BF%D0%BE%D0%B1%D1%96%D1%87%D0%BD%D1%96%20%D0%B5%D1%84%D0%B5%D0%BA%D1%82%D0%B8%20%D0%B2%D0%B0%D1%80%D1%82%D0%BE%20%D0%BF%D0%BE%D0%BF%D1%80%D0%BE%D1%81%D0%B8%D1%82%D0%B8%20%D0%B9%D0%BE%D0%B3%D0%BE%20%D0%B2%D1%96%D0%B4%D1%81%D1%82%D0%B5%D0%B6%D1%83%D0%B2%D0%B0%D1%82%D0%B8.%20%D0%91%D1%83%D0%B4%D1%8C%20%D0%BB%D0%B0%D1%81%D0%BA%D0%B0%2C%20%D0%BD%D0%B5%20%D1%80%D0%B0%D0%B4%D1%8C%D1%82%D0%B5%20%D0%BC%D0%B5%D0%BD%D1%96%20%D0%BF%D0%BE%D1%87%D0%B8%D0%BD%D0%B0%D1%82%D0%B8%2C%20%D0%BF%D1%80%D0%B8%D0%BF%D0%B8%D0%BD%D1%8F%D1%82%D0%B8%20%D1%87%D0%B8%20%D0%B7%D0%BC%D1%96%D0%BD%D1%8E%D0%B2%D0%B0%D1%82%D0%B8%20%D0%BB%D1%96%D0%BA%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F%20%E2%80%94%20%D1%86%D1%96%20%D1%80%D1%96%D1%88%D0%B5%D0%BD%D0%BD%D1%8F%20%D0%BF%D1%80%D0%B8%D0%B9%D0%BC%D0%B0%D1%94%20%D0%BC%D1%96%D0%B9%20%D0%BE%D0%BD%D0%BA%D0%BE%D0%BB%D0%BE%D0%B3.%20%28%D0%9F%D0%B5%D1%80%D0%B5%D0%B4%20%D0%B2%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F%D0%BC%20%D1%8F%20%D0%BF%D1%80%D0%B8%D0%B1%D1%80%D0%B0%D0%B2%28-%D0%BB%D0%B0%29%20%D1%96%D0%BC%27%D1%8F%2C%20%D0%B4%D0%B0%D1%82%D1%83%20%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F%20%D1%82%D0%B0%20%D0%B1%D1%83%D0%B4%D1%8C-%D1%8F%D0%BA%D1%96%20%D0%BD%D0%BE%D0%BC%D0%B5%D1%80%D0%B8%20%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%96%D0%B2.%20%D0%A2%D0%B5%D0%BA%D1%81%D1%82%20%D0%BD%D0%B0%D0%B4%D1%81%D0%B8%D0%BB%D0%B0%D1%94%D1%82%D1%8C%D1%81%D1%8F%20%D0%BD%D0%B0%20%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%20%D0%B4%D0%BB%D1%8F%20%D0%B0%D0%BD%D0%B0%D0%BB%D1%96%D0%B7%D1%83%2C%20%D1%82%D0%BE%D0%BC%D1%83%20%D1%8F%20%D0%B2%D1%81%D1%82%D0%B0%D0%B2%D0%B8%D0%B2%28-%D0%BB%D0%B0%29%20%D0%BB%D0%B8%D1%88%D0%B5%20%D1%82%D1%96%20%D1%87%D0%B0%D1%81%D1%82%D0%B8%D0%BD%D0%B8%2C%20%D1%89%D0%BE%D0%B4%D0%BE%20%D1%8F%D0%BA%D0%B8%D1%85%20%D0%BC%D0%B0%D1%8E%20%D0%BF%D0%B8%D1%82%D0%B0%D0%BD%D0%BD%D1%8F%2C%20%D0%B0%20%D0%BD%D0%B5%20%D0%B2%D0%B5%D1%81%D1%8C%20%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82.%29">Підготувати питання до візиту</a>
+          <a class="btn btn-secondary" href="/ukr/gallery.html">Подивитися приклад плану</a>
+        </div>
+      </article>
+      <article class="door-card door-card--pharma">
+        <div class="door-icon" aria-hidden="true">💊</div>
+        <h3 class="door-role">Фармацевту</h3>
+        <p class="door-line">Перевірте взаємодії, корекції доз (нирки/печінка) і red flags для схеми лікування до видачі пацієнту.</p>
+        <div class="door-actions">
+          <a class="btn btn-primary" href="/ukr/ask.html?case=%D0%9F%D0%B0%D1%86%D1%96%D1%94%D0%BD%D1%82%20%D0%BD%D0%B0%20%D1%81%D1%85%D0%B5%D0%BC%D1%96%20%D0%BB%D1%96%D0%BA%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F%20%D1%85%D1%96%D0%BC%D1%96%D0%BE%D1%82%D0%B5%D1%80%D0%B0%D0%BF%D1%96%D1%97%20%28%D0%BD%D0%B0%D0%BF%D1%80%D0%B8%D0%BA%D0%BB%D0%B0%D0%B4%20FOLFOX%29%20%D1%82%D0%B0%D0%BA%D0%BE%D0%B6%20%D0%BF%D1%80%D0%B8%D0%B9%D0%BC%D0%B0%D1%94%20%D1%96%D0%BD%D1%88%D1%96%20%D0%BF%D1%80%D0%B5%D0%BF%D0%B0%D1%80%D0%B0%D1%82%D0%B8%20%28%D0%BD%D0%B0%D0%BF%D1%80%D0%B8%D0%BA%D0%BB%D0%B0%D0%B4%20%D0%B2%D0%B0%D1%80%D1%84%D0%B0%D1%80%D0%B8%D0%BD%20%D1%96%20%D1%84%D0%BB%D1%83%D0%BA%D0%BE%D0%BD%D0%B0%D0%B7%D0%BE%D0%BB%29.%20%D0%AF%D0%BA%D1%96%20%D0%B2%D0%B7%D0%B0%D1%94%D0%BC%D0%BE%D0%B4%D1%96%D1%97%2C%20%D0%BA%D0%BE%D1%80%D0%B5%D0%BA%D1%86%D1%96%D1%97%20%D0%B4%D0%BE%D0%B7%20%D1%87%D0%B8%20%D0%BC%D0%BE%D0%BD%D1%96%D1%82%D0%BE%D1%80%D0%B8%D0%BD%D0%B3%20%D0%B2%D0%B0%D1%80%D1%82%D0%BE%20%D0%B2%D1%96%D0%B4%D0%B7%D0%BD%D0%B0%D1%87%D0%B8%D1%82%D0%B8%20%D0%B4%D0%BE%20%D0%B2%D0%B8%D0%B4%D0%B0%D1%87%D1%96%3F">Перевірити взаємодію</a>
+          <a class="btn btn-secondary" href="/ukr/kb.html">Переглянути red flags і label-и</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="home-stats-band" aria-label="Масштаб бази знань">
+    <div class="promo-stats">
+      <div class="promo-stat">
+        <a class="promo-stat-link" href="/ukr/diseases.html">
+          <div class="promo-stat-num">103</div>
+        <div class="promo-stat-lbl">Хвороби</div>
+        </a>
+      </div>
+      <div class="promo-stat">
+        <div class="promo-stat-num">831</div>
+        <div class="promo-stat-lbl">Показання</div>
+      </div>
+      <div class="promo-stat">
+        <div class="promo-stat-num">404</div>
+        <div class="promo-stat-lbl">Схеми лікування</div>
+      </div>
+      <div class="promo-stat">
+        <div class="promo-stat-num">669</div>
+        <div class="promo-stat-lbl">Red flag</div>
+      </div>
+      <div class="promo-stat">
+        <div class="promo-stat-num">471</div>
+        <div class="promo-stat-lbl">Цитованих джерел</div>
+      </div>
+      <div class="promo-stat">
+        <div class="promo-stat-num">~200<span class="promo-stat-plus">мс</span></div>
+        <div class="promo-stat-lbl">На профіль</div>
       </div>
     </div>
   </section>
 
-  <section class="home-source-band" aria-label="OpenOnco sources">
-    <p class="home-note">Відкриті джерела: CIViC (CC0) для біомаркерної клінічної значущості, ClinicalTrials.gov для trial-aware опцій, PubMed/PMID/DOI та DailyMed/openFDA для літератури й контексту інструкцій до препаратів. LLM не обирає лікування: план збирається rules-first із YAML provenance.</p>
+  <section class="home-trust" aria-label="How OpenOnco stays safe">
+    <p class="home-trust-line">Rules-first, а не LLM — жоден препарат чи доза не вигадуються. Дані пацієнта лишаються у вашому браузері. Фінальне рішення завжди за кваліфікованим лікарем.</p>
+    <p class="home-note">Відкриті джерела: CIViC (CC0), ClinicalTrials.gov, PubMed, DailyMed/openFDA і гайдлайни NCCN/ESMO/EHA/BSH. LLM не обирає лікування — план збирається rules-first із YAML provenance (CHARTER §11).</p>
+    <p class="home-explore" aria-label="Дізнатися більше"><a href="/ukr/diseases.html">Переглянути 103 хвороб</a> · <a href="/ukr/kb.html">Онко-вікі</a> · <a href="/ukr/about.html">Про проєкт</a></p>
   </section>
 
   <footer class="page-foot">
     Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
     <br>
-    Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
+    Інформаційний інструмент, не медичний пристрій (CHARTER §15 + §11).
   </footer>
 </main>
 </body>

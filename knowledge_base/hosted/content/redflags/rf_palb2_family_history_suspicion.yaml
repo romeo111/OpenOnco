@@ -1,0 +1,93 @@
+id: RF-PALB2-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family pedigree pattern suggestive of germline PALB2 heterozygous
+  carrier state in an asymptomatic individual who has NOT yet had
+  multi-gene panel testing. PALB2 functions in the same homologous-
+  recombination repair pathway as BRCA1/BRCA2, and carriers approach
+  BRCA2 breast-cancer penetrance (lifetime ~33-58%). Triggers include
+  any of (a) first- or second-degree relative with a confirmed PALB2
+  pathogenic / likely-pathogenic variant; (b) family-history pattern
+  resembling BRCA-style HBOC but with negative BRCA1/2 testing in
+  affected relative (PALB2 is the most common moderate-penetrance
+  finding in BRCA-negative BRCA-like pedigrees); (c) family history
+  of pancreatic adenocarcinoma in ≥2 first/second-degree relatives
+  combined with breast cancer in a close relative — PALB2 is the
+  second most-common gene (after BRCA2) identified in familial
+  PDAC-breast kindreds; (d) early-onset (<50y) breast cancer in a
+  first-degree relative with negative BRCA1/2 panel testing.
+  No current personal cancer diagnosis in the at-risk individual
+  being assessed. Prevention-persona RedFlag (§20, v0.3 moderate-
+  penetrance breast/pancreatic gene expansion — pre-testing
+  suspicion variant).
+definition_ua: >-
+  Сімейний родовід з патерном, що нагадує гермінативний heterozygous
+  carrier PALB2, у асимптомної особи, яка ще НЕ пройшла multi-gene
+  panel тестування. PALB2 функціонує у тому ж homologous-recombination
+  repair шляху що й BRCA1/BRCA2, і carriers approach BRCA2 breast-
+  cancer пенетрантності (lifetime ~33-58%). Тригери включають
+  будь-яке з (а) родич першого/другого ступеня з підтвердженим
+  патогенним / ймовірно-патогенним варіантом PALB2; (б) сімейно-
+  історичний патерн що нагадує BRCA-style HBOC але з негативним
+  BRCA1/2 тестуванням у ураженого родича (PALB2 — найпоширеніший
+  moderate-penetrance finding у BRCA-negative BRCA-like родоводах);
+  (в) сімейна історія pancreatic adenocarcinoma у ≥2 родичів
+  першого/другого ступеня у поєднанні з раком молочної залози у
+  близького родича; (г) early-onset (<50р) рак молочної залози у
+  родича першого ступеня з негативним BRCA1/2 панельним тестуванням.
+  Поточний особистий діагноз раку у пацієнта з ризиком відсутній.
+  Prevention-персона RedFlag (§20, v0.3 — pre-testing suspicion
+  варіант).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_palb2_known_pathogenic_variant"
+      value: true
+    - finding: "family_brca_like_pedigree_brca_negative"
+      value: true
+    - finding: "family_breast_and_pancreatic_cluster"
+      value: true
+    - finding: "family_early_onset_breast_brca_negative"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 115
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-BREAST
+  - DIS-PDAC
+  - DIS-OVARIAN
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  v0.3 Wave M suspicion variant — pre-testing family-history-
+  suspicion counterpart to RF-PALB2-CONFIRMED-CARRIER. Fires when
+  family pedigree pattern suggests PALB2 carrier state but germline
+  panel testing has not yet been completed. Standard pathway =
+  referral for genetic counseling + multi-gene HBOC/PDAC-inclusive
+  panel. If panel returns positive for PALB2, the patient transitions
+  to the RF-PALB2-CONFIRMED-CARRIER pathway (IND-PALB2-CARRIER-
+  PREVENTION-SURVEILLANCE for standard track — BRCA-style management
+  given near-BRCA2 penetrance: annual breast MRI + mammography from
+  age 30, pancreatic surveillance for FDR-of-PDAC carriers, RRSO
+  discussion deferred to BRCA-style threshold given lower ovarian
+  penetrance). Distinct trigger findings from the confirmed-carrier
+  RF (carrier RF fires on `germline_palb2_pathogenic_variant_
+  confirmed`; suspicion RF fires on family-history-based findings
+  only). STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1
+  dev-mode. Sources cite NCCN Genetic/Familial High-Risk: Breast,
+  Ovarian, and Pancreatic v2.2025 PALB2 testing criteria + Yang et
+  al. JCO 2020 lifetime risk estimates.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_suspicion_variant_wave_m
+draft_revision: 1

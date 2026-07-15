@@ -1,0 +1,165 @@
+id: IND-CHEK2-SUSPICION-PREVENTION-EMPIRICAL-SURVEILLANCE
+plan_track: aggressive
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-BREAST
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-CHEK2-FAMILY-HISTORY-SUSPICION
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Empirical enhanced surveillance based on family history alone
+    (annual mammography from earliest-family-breast-cancer-age minus
+    10 years but no earlier than 30; colonoscopy q5y from age 40
+    if breast-CRC cluster present; prostate PSA + DRE from age 45
+    in males if high-grade prostate family history) is expected to
+    capture cancer at earliest detectable stage in the subset who
+    are actual CHEK2 carriers (~5-20% of pedigree-suspicion
+    individuals). Does NOT carry the diagnostic certainty of
+    germline testing — variant-specific risk-tier stratification is
+    impossible without testing (c.1100delC vs missense have
+    substantially different surveillance implications).
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Aggressive-track companion to IND-CHEK2-SUSPICION-PREVENTION-
+  TESTING. Patient with pedigree suspicion of germline CHEK2 carrier
+  state who declines genetic counseling and/or panel testing — for
+  any reason (cost, insurance / GINA concerns, psychological /
+  cancer-anxiety considerations, family privacy, geographic access
+  constraints, religious or cultural objections to genetic testing)
+  — is offered empirical enhanced surveillance based on family
+  history alone (best-available proxy in the absence of genetic
+  confirmation):
+
+  **Breast (women):**
+  - Annual mammography starting at age (earliest first-degree
+    family breast cancer age) minus 10 years, but no earlier than
+    age 30.
+  - Annual breast MRI consideration if Tyrer-Cuzick lifetime risk
+    ≥20% — CHEK2-suspicion pedigrees vary widely, often falling
+    below this threshold given moderate-penetrance signal.
+  - Clinical breast exam q6-12 months.
+  - Patient-performed monthly self-exam encouraged.
+
+  **Colorectal:** Pedigrees with breast-CRC cluster pattern receive
+  empirical colonoscopy from age 40 with q5y interval — derived
+  from NCCN CHEK2-carrier moderate-elevated CRC tier applied
+  empirically. Single-CRC family history may receive standard
+  q10y colonoscopy from age 45 per USPSTF.
+
+  **Prostate awareness (males in pedigree):** PSA + DRE from age
+  45-50 if family history of high-grade or metastatic prostate
+  cancer (lower than population threshold). CHEK2 c.1100delC-
+  associated prostate cancer is often high-grade — modest
+  empirical-surveillance benefit.
+
+  **Risk-reducing surgery:** NOT offered empirically without
+  genetic confirmation. CHEK2 moderate-penetrance does not
+  routinely justify risk-reducing mastectomy even in confirmed
+  carriers — empirical risk-reducing surgery is clearly outside
+  evidence base.
+
+  **Reproductive counseling:** PGT-M not applicable empirically;
+  CHEK2 biallelic mutations are extremely rare and the recessive
+  phenotype is not well-characterized.
+
+  Per CHARTER §11 patient-autonomy framing: patients who decline
+  testing retain access to surveillance benefit, with the explicit
+  caveat that variant-specific risk stratification is impossible
+  empirically — c.1100delC truncating variant vs p.Ile157Thr
+  missense variant carry substantially different surveillance
+  implications, and empirical surveillance averages to a moderate
+  intensity that may be over-treatment for missense-VUS-equivalent
+  patients and under-treatment for truncating-variant patients.
+
+  **Resource-intensity caveat:** Annual breast MRI is expensive
+  (~3000-8000 UAH per scan in Ukrainian private centers). Colonoscopy
+  q5y from age 40 is more invasive than population-screening q10y
+  from age 45; empirical application without variant confirmation
+  may not be cost-effective at population scale.
+
+rationale_ua: >
+  Aggressive-track компаньйон до IND-CHEK2-SUSPICION-PREVENTION-
+  TESTING. Пацієнт з родовідною підозрою на CHEK2 carrier state,
+  який відмовляється від генетичного консультування та/або
+  панельного тестування, отримує empіричне посилене спостереження
+  на основі сімейної історії:
+
+  **Молочна залоза (жінки):**
+  - Mammography щорічно з віку (earliest first-degree family breast
+    cancer age) мінус 10 років, не раніше 30.
+  - Annual breast MRI consideration, якщо Tyrer-Cuzick lifetime
+    ризик ≥20%.
+  - Clinical breast exam q6-12 міс.
+
+  **Колоректальний:** Родоводи з breast-CRC cluster patterns
+  отримують empіричну колоноскопію з 40 років q5y. Single-CRC
+  родини отримують standard q10y колоноскопію з 45 років per USPSTF.
+
+  **Prostate awareness (males):** PSA + DRE з 45-50 років, якщо
+  family history high-grade/metastatic prostate cancer.
+
+  **Risk-reducing хірургія:** НЕ пропонується emпірично без
+  genetic confirmation. CHEK2 moderate-penetrance не виправдовує
+  risk-reducing мастектомію навіть у підтверджених носіїв.
+
+  **Reproductive counseling:** PGT-M не застосовується emпірично.
+
+  Per CHARTER §11 framing автономії пацієнта. Варіант-специфічна
+  ризик-стратифікація неможлива emпірично — c.1100delC truncating
+  vs p.Ile157Thr missense мають суттєво різні surveillance
+  implications.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_suspicion_variant_wave_m
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+    position: supports
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+    position: supports
+  - source_id: SRC-NCCN-BREAST-2025
+    position: supports
+
+do_not_do:
+  - "Не презентувати enhanced surveillance як еквівалент genetic confirmation — variant-specific risk stratification неможлива emпірично."
+  - "Не рекомендувати risk-reducing хірургію (мастектомія) emпірично — CHEK2 moderate-penetrance не виправдовує навіть у підтверджених носіїв."
+  - "Не пропускати periodic re-discussion про genetic testing."
+  - "Не призначати Lynch-level CRC surveillance (q1-2y колоноскопія) для CHEK2-suspicion patients — moderate-penetrance і q5y адекватно."
+  - "Не пропускати male-line prostate розгляд при high-grade family history."
+
+do_not_do_en:
+  - "Do not present enhanced surveillance as equivalent to genetic confirmation — variant-specific risk stratification is impossible empirically."
+  - "Do not recommend risk-reducing surgery (mastectomy) empirically — CHEK2 moderate-penetrance does not justify risk-reducing surgery even in confirmed carriers."
+  - "Do not skip periodic re-discussion of genetic testing."
+  - "Do not order Lynch-level CRC surveillance (q1-2y colonoscopy) for CHEK2-suspicion patients — moderate-penetrance and q5y is adequate."
+  - "Do not skip male-line prostate consideration with high-grade family history."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-19"
+reviewers: []
+reviewer_signoffs: 0
+notes: STUB — aggressive-track companion for CHEK2 hereditary prevention suspicion pilot. §15.2 C4 ≥2-tracks invariant compliance. v0.3 Wave M.

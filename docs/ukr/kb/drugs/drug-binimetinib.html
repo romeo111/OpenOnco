@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Binimetinib - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="Binimetinib - OpenOnco">
 <meta property="og:description" content="Binimetinib: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/drugs/drug-binimetinib.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Binimetinib - OpenOnco">
 <meta name="twitter:description" content="Binimetinib: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Binimetinib - OpenOnco","description":"Binimetinib: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-binimetinib.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-binimetinib.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Binimetinib - OpenOnco","description":"Binimetinib: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-binimetinib.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-binimetinib.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -125,7 +197,7 @@
 <tr><th>Зареєстровано в Україні</th><td>False</td></tr>
 <tr><th>Відшкодовується НСЗУ</th><td>False</td></tr>
 <tr><th>Остання перевірка для України</th><td>2026-04-27</td></tr></table>
-  <h2>Нотатки</h2><p>Used exclusively in combination with encorafenib for BRAF V600 melanoma (COLUMBUS) — encorafenib monotherapy is not standard. Mandatory baseline workup: LFTs, CK, LVEF echo, ophthalmologic exam, ECG (for QTc), pregnancy test. Monitor: LFTs + CK every 2 weeks for first 8 weeks then monthly; LVEF echo at 1 month then every 3 months; ophtho for any new visual symptom. Compared with dabrafenib+trametinib the toxicity profile is broadly similar but with less pyrexia and somewhat more retinal events. In UA, access is via cross-border EU centers, EAP, or self-pay; dabrafenib+trametinib remains the НСЗУ-funded BRAFi+MEKi.</p>
+  <h2>Нотатки</h2><p>Бініметиніб (binimetinib) застосовується виключно у комбінації з енкорафенібом при BRAF V600-мутантній меланомі (COLUMBUS) — монотерапія енкорафенібом не є стандартом. Обов&#x27;язкове базове обстеження: LFTs, CK, ехокардіографія з визначенням LVEF, офтальмологічний огляд, ECG (для QTc), тест на вагітність. Моніторинг: LFTs та CK кожні 2 тижні перші 8 тижнів, далі щомісяця; ехокардіографія з LVEF через 1 місяць, далі кожні 3 місяці; офтальмологічний огляд при будь-якому новому зоровому симптомі. Профіль токсичності загалом подібний до дабрафеніб + траметиніб, проте з меншою частотою лихоманки та дещо більшою частотою ретинальних подій. В Україні доступ — через транскордонне лікування в EU-центрах, EAP або out-of-pocket; стандартом, що покривається НСЗУ, залишається комбінація дабрафеніб + траметиніб.</p>
   <h2>Де використовується</h2>
 <h3>Regimens</h3><ul><li><code>REG-ENCORAFENIB-BINIMETINIB-MELANOMA</code> - Encorafenib + binimetinib (BRAF V600E/K melanoma)</li></ul>
 </main>

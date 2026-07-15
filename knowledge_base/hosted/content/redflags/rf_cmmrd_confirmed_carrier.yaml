@@ -1,0 +1,86 @@
+id: RF-CMMRD-CONFIRMED-CARRIER
+definition: >-
+  Confirmed biallelic germline pathogenic / likely-pathogenic variants
+  in a mismatch repair (MMR) gene — MLH1, MSH2, MSH6, or PMS2 — defining
+  Constitutional Mismatch Repair Deficiency (CMMRD) syndrome. Rare
+  (~1 in 1,000,000) but severely cancer-predisposing autosomal-recessive
+  syndrome in pediatric and adolescent patients. Lifetime cancer risk
+  approaches 100% by adolescence; first malignancy typically before age
+  18, often within first decade. Cancer spectrum: hematologic
+  (non-Hodgkin lymphoma, leukemia — often before age 10), CNS
+  (medulloblastoma, glioblastoma, supratentorial PNET — often age
+  5-15), gastrointestinal (early-onset CRC + small bowel adenoma —
+  often age 10-25 with Lynch-like phenotype but more aggressive),
+  others (sarcoma, Wilms, pediatric Cushing, NF1-like phenotype
+  including café-au-lait macules). Café-au-lait spots in a young
+  cancer patient should always prompt CMMRD consideration.
+  PMS2 biallelic is the most common CMMRD genotype (most-common Lynch
+  gene is also PMS2 in carrier-frequency). Prevention-persona RedFlag
+  (§20, v0.3 pediatric predisposition expansion).
+definition_ua: >-
+  Підтверджені biallelic germline pathogenic / likely-pathogenic
+  variants у gene mismatch repair (MMR) — MLH1, MSH2, MSH6, або PMS2 —
+  defining Constitutional Mismatch Repair Deficiency (CMMRD) syndrome.
+  Rare (~1 у 1,000,000) але severely cancer-predisposing autosomal-
+  recessive syndrome у pediatric та adolescent patients. Lifetime
+  cancer ризик approaches 100% by adolescence; перший malignancy
+  типово before age 18, часто у перший десяток. Cancer spectrum:
+  hematologic (non-Hodgkin lymphoma, leukemia — часто before age 10),
+  CNS (medulloblastoma, glioblastoma, supratentorial PNET — часто
+  age 5-15), gastrointestinal (early-onset CRC + small bowel adenoma —
+  часто age 10-25), others (sarcoma, Wilms, pediatric Cushing, NF1-
+  like phenotype включаючи café-au-lait macules). Café-au-lait spots у
+  young cancer patient завжди мають prompt CMMRD consideration.
+  PMS2 biallelic — найпоширеніший CMMRD genotype. Prevention-персона
+  RedFlag (§20, v0.3 pediatric predisposition expansion).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_cmmrd_biallelic_mmr_confirmed"
+      value: true
+    - finding: "cmmrd_clinical_criteria_met"
+      value: true
+    - finding: "biallelic_pms2_pathogenic_confirmed"
+      value: true
+    - finding: "biallelic_mlh1_pathogenic_confirmed"
+      value: true
+    - finding: "biallelic_msh2_pathogenic_confirmed"
+      value: true
+    - finding: "biallelic_msh6_pathogenic_confirmed"
+      value: true
+
+clinical_direction: investigate
+severity: critical
+priority: 50
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-GLIOMA-LOW-GRADE
+  - DIS-CRC
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+  - SRC-ASCO-ACMG-LYNCH-2014
+  - SRC-WIMMER-CMMRD-2014
+  - SRC-TABORI-CMMRD-2017
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for CMMRD confirmed-carrier pediatric
+  cohort. Surveillance per Care for CMMRD (C4CMMRD) consortium 2014:
+  whole-body MRI annually from diagnosis; brain MRI q6mo from age 2;
+  colonoscopy q6mo from age 6; upper GI endoscopy + small-bowel
+  capsule annual from age 8; CBC + serum protein electrophoresis +
+  abdominal US q6mo. Cascade testing of siblings + parental MMR
+  carrier confirmation. Immunotherapy (anti-PD-1) effective in
+  established CMMRD-related cancers (Bouffet 2016, Larkin/CheckMate
+  series). STUB pending two-Co-Lead signoff per CHARTER §6.1
+  dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_pediatric_predisposition
+draft_revision: 1

@@ -70,20 +70,28 @@ def _findings_satisfying_clause(clause: dict) -> dict:
 
     if "threshold" in clause:
         threshold = clause["threshold"]
+        thr_num = _as_number(threshold)
         comparator = clause.get("comparator", ">=")
+        if thr_num is None:
+            # Non-numeric threshold (categorical) — emit the threshold
+            # value as-is so equality comparators still match. Inequality
+            # comparators against a non-numeric threshold are out of
+            # scope for the scaffolder; fixture will likely need manual
+            # adjustment, marked _skeleton already.
+            return {finding: threshold}
         if comparator == ">":
-            return {finding: threshold + 1}
+            return {finding: thr_num + 1}
         if comparator == ">=":
-            return {finding: threshold}
+            return {finding: thr_num}
         if comparator == "<":
-            return {finding: threshold - 1}
+            return {finding: thr_num - 1}
         if comparator == "<=":
-            return {finding: threshold}
+            return {finding: thr_num}
         if comparator == "==":
-            return {finding: threshold}
+            return {finding: thr_num}
         if comparator == "!=":
-            return {finding: threshold + 1}
-        return {finding: threshold}
+            return {finding: thr_num + 1}
+        return {finding: thr_num}
 
     if "value" in clause:
         return {finding: clause["value"]}
@@ -110,6 +118,21 @@ def _findings_satisfying_trigger(trigger: dict) -> dict:
         return out
 
     return _findings_satisfying_clause(trigger)
+
+
+def _as_number(value):
+    """Coerce a threshold value to float. Returns None if it can't be —
+    some RF triggers use string-typed thresholds (categorical labels) for
+    which arithmetic doesn't apply; the caller skips fixture generation
+    for those rather than crashing."""
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        try:
+            return float(value)
+        except ValueError:
+            return None
+    return None
 
 
 def _opposite(value):
@@ -146,15 +169,21 @@ def _findings_violating_clause(clause: dict, accumulator: dict) -> None:
 
     if "threshold" in clause:
         threshold = clause["threshold"]
+        thr_num = _as_number(threshold)
         comparator = clause.get("comparator", ">=")
+        if thr_num is None:
+            # Non-numeric threshold — leave the finding absent. With most
+            # comparators an absent finding fails the predicate, which is
+            # the negative semantic we want.
+            return
         if comparator in (">", ">="):
-            accumulator[finding] = threshold - 5
+            accumulator[finding] = thr_num - 5
         elif comparator in ("<", "<="):
-            accumulator[finding] = threshold + 5
+            accumulator[finding] = thr_num + 5
         elif comparator == "==":
-            accumulator[finding] = threshold + 1
+            accumulator[finding] = thr_num + 1
         elif comparator == "!=":
-            accumulator[finding] = threshold
+            accumulator[finding] = thr_num
         return
 
     if "value" in clause:

@@ -1,0 +1,72 @@
+id: RF-CHRONIC-NAFLD-MASLD-HCC-PREVENTION
+definition: >-
+  Non-alcoholic fatty liver disease (NAFLD) / metabolic-dysfunction-
+  associated steatotic liver disease (MASLD) with advanced fibrosis
+  (FibroScan ≥10 kPa, FIB-4 ≥2.67, or biopsy METAVIR F3-F4) is a major
+  emerging HCC etiology, now responsible for ~15-20% of HCC cases in
+  Western populations and rising rapidly. Cirrhotic MASLD has annual HCC
+  incidence ~1-2% (similar to HCV/HBV cirrhotic baseline). Non-cirrhotic
+  MASLD with advanced fibrosis can also develop HCC (~0.04-0.2%/year —
+  not high enough for routine surveillance per AASLD but warrants
+  closer follow-up than steatosis alone). Comorbid T2DM, obesity, and
+  metabolic syndrome amplify risk. Modifiable: weight loss (>7%
+  reverses NASH histology in many; >10% can regress fibrosis),
+  glycemic control, GLP-1 agonists (semaglutide), pioglitazone (NASH
+  benefit), resmetirom (newly approved MASH therapy 2024). Prevention-
+  persona RedFlag (§20 v0.4 chronic-condition expansion).
+definition_ua: >-
+  Non-alcoholic fatty liver disease (NAFLD) / metabolic-dysfunction-
+  associated steatotic liver disease (MASLD) з advanced fibrosis
+  (FibroScan ≥10 кПа, FIB-4 ≥2.67, або biopsy METAVIR F3-F4) — major
+  emerging HCC етіологія, тепер ~15-20% HCC випадків у Western
+  populations та швидко зростає. Cirrhotic MASLD має annual HCC
+  incidence ~1-2% (схоже на HCV/HBV cirrhotic baseline). Non-cirrhotic
+  MASLD з advanced fibrosis також може розвинути HCC (~0.04-0.2%/рік —
+  недостатньо для routine surveillance per AASLD але потребує closer
+  follow-up). Comorbid T2DM, obesity, metabolic syndrome amplify ризик.
+  Модифікований: weight loss (>7% реверсує NASH histology у багатьох;
+  >10% може регресувати фіброз), glycemic control, GLP-1 агоністи
+  (semaglutide), pioglitazone (NASH benefit), resmetirom (новий MASH
+  therapy 2024). Prevention-персона RedFlag (§20 v0.4 chronic-
+  condition expansion).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "nafld_masld_advanced_fibrosis"
+      value: true
+    - finding: "fibroscan_kpa_ge_10"
+      value: true
+    - finding: "fib_4_ge_2_67"
+      value: true
+    - finding: "biopsy_metavir_f3_f4_nash"
+      value: true
+    - finding: "masld_cirrhosis_established"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 95
+category: other
+risk_category: chronic_condition
+
+relevant_diseases:
+  - DIS-HCC
+
+shifts_algorithm: []
+sources:
+  - SRC-AASLD-HCC-2023
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for MASLD/NAFLD HCC risk. Cirrhotic MASLD
+  meets AASLD HCC-surveillance threshold (US ± AFP q6mo). Non-cirrhotic
+  advanced fibrosis is a gray zone — closer hepatology follow-up but
+  not yet routine surveillance. Major actionable lever: weight loss +
+  cardiometabolic management. STUB pending two-Co-Lead signoff per
+  CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_4_chronic_condition_expansion
+draft_revision: 1

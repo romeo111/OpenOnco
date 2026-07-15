@@ -19,13 +19,13 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Metastatic BCC (distant metastases)"
+        - {finding: distant_metastasis, value: true}
     if_true:
       result: IND-BCC-1L-VISMODEGIB
       notes: "Sonidegib FDA label restricted to laBCC; vismodegib approved for both laBCC and mBCC"
     if_false:
       next_step: 2
-    notes: "Free-text condition without RF; engine routes to default."
+    notes: "Mechanical rewire of the original free-text gate (Metastatic BCC / distant metastases) into a finding: clause using distant_metastasis. Original clinical criteria unchanged."
   - step: 2
     evaluate:
       any_of:

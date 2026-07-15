@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>KDR (VEGFR2) somatic activating mutations occur in ~2–3% of NSCLC across histologies. KDR... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="KDR (VEGFR2) somatic activating mutations occur in ~2–3% of NSCLC across histologies. KDR... - OpenOnco">
 <meta property="og:description" content="KDR (VEGFR2) somatic activating mutations occur in ~2–3% of NSCLC across histologies. KDR...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/biomarker_actionability/bma-kdr-nsclc.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="KDR (VEGFR2) somatic activating mutations occur in ~2–3% of NSCLC across histologies. KDR... - OpenOnco">
 <meta name="twitter:description" content="KDR (VEGFR2) somatic activating mutations occur in ~2–3% of NSCLC across histologies. KDR...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"KDR (VEGFR2) somatic activating mutations occur in ~2–3% of NSCLC across histologies. KDR... - OpenOnco","description":"KDR (VEGFR2) somatic activating mutations occur in ~2–3% of NSCLC across histologies. KDR...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarker_actionability/bma-kdr-nsclc.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarker_actionability/bma-kdr-nsclc.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"KDR (VEGFR2) somatic activating mutations occur in ~2–3% of NSCLC across histologies. KDR... - OpenOnco","description":"KDR (VEGFR2) somatic activating mutations occur in ~2–3% of NSCLC across histologies. KDR...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarker_actionability/bma-kdr-nsclc.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarker_actionability/bma-kdr-nsclc.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -124,7 +196,7 @@
 <tr><th>Рівень ESCAT</th><td>IIIB</td></tr>
 <tr><th>Рекомендовані комбінації</th><td>Pembrolizumab 200 mg q3w ± platinum chemotherapy — 1L NSCLC per PD-L1 and histology (KEYNOTE-189/407; not KDR-specific), Ramucirumab 10 mg/kg IV + docetaxel 75 mg/m² q3w — 2L NSCLC after platinum progression (REVEL; FDA 2014; approved regardless of KDR mutation status)</td></tr>
 <tr><th>Підсумок доказів</th><td>KDR (VEGFR2) somatic activating mutations occur in ~2–3% of NSCLC across histologies. KDR is the primary signal transducer for VEGF-driven tumor angiogenesis; multiple approved anti-angiogenic agents target KDR/VEGFR2 (ramucirumab, cabozantinib, lenvatinib, sunitinib). Clinical evidence for KDR mutation-selected therapy in NSCLC: (1) Ramucirumab + docetaxel (REVEL, FDA 2014): approved 2L NSCLC (regardless of KDR status); ramucirumab is an anti-VEGFR2 antibody but approval is biomarker-unselected. (2) Bevacizumab + chemotherapy: VEGF-A targeted, not KDR-mutation selected; contraindicated in squamous histology (central tumor, hemorrhage risk). (3) Cabozantinib, lenvatinib: multi-RTK inhibitors with VEGFR2 activity; no KDR mutation- selected NSCLC approval; under investigation in basket trials. (4) Hypothesized predictive value: KDR activating mutation may confer intrinsic VEGFR2 activation independent of VEGF-A — theoretically higher VEGFR2 dependence. No prospective evidence that KDR mutation predicts better response to ramucirumab vs. KDR wild-type. Standard of care: chemoimmunother...</td></tr></table>
-  <h2>Нотатки</h2><p>ESCAT IIIB: KDR mutation in NSCLC is an investigational marker. Practical notes: (1) KDR mutation is detectable on comprehensive NGS panels; not in NCCN&#x27;s required biomarker panel (EGFR, ALK, ROS1, BRAF, KRAS, MET, RET, NTRK, PD-L1, TMB for NSCLC). (2) Anti-angiogenic treatment decisions use VEGF/VEGFR2 protein expression (PD-L1 analogue reasoning) or histology (bevacizumab contraindicated in squamous), not KDR mutation. (3) For KDR-mutant NSCLC patients who have progressed on standard therapy, basket trial enrollment with a VEGFR2/multi-TKI arm is appropriate. (4) KDR mutation in other tumor types (e.g., angiosarcoma, renal cell carcinoma) may have different clinical significance — those contexts are outside this BMA scope.</p>
+  <h2>Нотатки</h2><p>ESCAT IIIB: мутація KDR при НМРЛ — дослідницький маркер. Практичні зауваження: (1) Мутація KDR виявляється на комплексних NGS-панелях; не входить до обов&#x27;язкової NCCN-біомаркерної панелі для НМРЛ (EGFR, ALK, ROS1, BRAF, KRAS, MET, RET, NTRK, PD-L1, TMB). (2) Рішення щодо антиангіогенної терапії базуються на експресії білка VEGF/VEGFR2 (за аналогією з PD-L1) або гістології (бевацизумаб протипоказаний при плоскоклітинній формі), а не на мутації KDR. (3) Для пацієнтів з KDR-мутованим НМРЛ, які прогресували на стандартній терапії, доречне залучення до кошикових досліджень з VEGFR2 / мульти-TKI-плечем. (4) Мутація KDR при інших типах пухлин (наприклад, ангіосаркома, нирковоклітинний рак) може мати інше клінічне значення — ці контексти за межами цієї BMA.</p>
   <h2>Де використовується</h2><p class="kb-muted">У YAML-корпусі не знайдено зворотних посилань.</p>
 </main>
 </body>

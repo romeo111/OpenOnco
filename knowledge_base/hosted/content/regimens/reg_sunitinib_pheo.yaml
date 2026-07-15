@@ -1,0 +1,69 @@
+id: REG-SUNITINIB-PHEO
+name: "Sunitinib monotherapy (metastatic non-MIBG-avid pheochromocytoma/paraganglioma; FIRSTMAPPP)"
+name_ua: "Сунітиніб монотерапія (метастатична MIBG-негативна феохромоцитома/парагангліома; FIRSTMAPPP)"
+alternate_names:
+  - "FIRSTMAPPP regimen"
+  - "Sunitinib PPGL"
+  - "Sutent PPGL"
+
+components:
+  - drug_id: DRUG-SUNITINIB
+    dose: "37.5 mg PO once daily"
+    schedule: "Continuous daily dosing until progression or unacceptable toxicity (FIRSTMAPPP protocol -- same continuous-dosing schedule already used for pNET, not the intermittent 50 mg 4-weeks-on/2-weeks-off RCC schedule)"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Grade 3-4 non-hematologic adverse event"
+    modification: "Hold until <= grade 1, then resume at reduced dose (e.g. 25 mg/day) per treating physician judgment"
+    rationale: "Standard sunitinib dose-modification approach used consistently across other sunitinib-containing regimens in this KB (see REG-SUNITINIB-RCC, REG-SUNITINIB-GIST-2L)"
+    source_refs:
+      - SRC-NCCN-NET-2025
+  - condition: "Grade 3-4 hypertension"
+    modification: "Antihypertensive therapy plus dose hold/reduction; caution -- pheochromocytoma/paraganglioma patients may already be on alpha-blockade for prior surgery/residual disease"
+    rationale: "Hypertension is a class effect of VEGFR-TKIs and is compounded by PPGL's own catecholamine physiology"
+    source_refs:
+      - SRC-NCCN-NET-2025
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Sunitinib (Sutent + generics) is registered in Ukraine (see
+    DRUG-SUNITINIB). NSZU reimbursement documented for RCC/GIST
+    indications; not confirmed for pheochromocytoma/paraganglioma --
+    likely out-of-pocket or compassionate-use access, mirroring the
+    pattern already documented for REG-SUNITINIB-RCC and
+    REG-EVEROLIMUS-MONO-PNET.
+
+sources:
+  - SRC-FIRSTMAPPP-BAUDIN-2024
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-07-11"
+notes: >
+  FIRSTMAPPP (Baudin et al, for the FIRSTMAPPP investigators; Lancet
+  2024;403(10431):1061-1070; PMID 38402886) is the only randomized,
+  placebo-controlled trial of a systemic agent in metastatic/progressive
+  PPGL and is the primary evidence basis for sunitinib as the default
+  1L systemic option in MIBG-non-avid metastatic disease, ahead of
+  cabozantinib (REG-CABOZANTINIB-PHEO), whose PPGL evidence rests on
+  smaller single-arm/retrospective data per NCCN. Primary endpoint met:
+  12-month progression-free survival 36% (90% CI 23-50) with sunitinib
+  vs 19% (90% CI 11-31) with placebo -- see SRC-FIRSTMAPPP-BAUDIN-2024
+  for full detail (figures independently verified via PubMed during
+  this authoring session; the file under review had cited this trial
+  as "2023" with unverified/null DOI-PMID -- corrected here to the
+  PubMed-confirmed 2024 Lancet publication with real identifiers).
+  Dosing (37.5 mg continuous) mirrors the dose already documented on
+  DRUG-SUNITINIB for pNET, which matches the FIRSTMAPPP protocol dose.
+  STUB pending clinical co-lead signoff (CHARTER §6.1, dev-mode-exempted).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_pheo_treatment_pathway

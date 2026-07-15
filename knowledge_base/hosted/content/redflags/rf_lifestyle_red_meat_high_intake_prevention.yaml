@@ -1,0 +1,92 @@
+id: RF-LIFESTYLE-RED-MEAT-HIGH-INTAKE-PREVENTION
+definition: >-
+  Habitual high consumption of UNPROCESSED red meat (beef, pork, lamb,
+  veal, goat) — ≥500 g/week (≥3 servings/day) of cooked weight — in an
+  individual without a current colorectal-cancer diagnosis. IARC
+  Monograph 114 (2015) classified red meat as Group 2A (probably
+  carcinogenic to humans) — limited evidence in humans (positive
+  associations across multiple cohorts, residual confounding by cooking
+  method and processed-meat co-consumption not fully excluded),
+  sufficient evidence in experimental animals (rodent ACF / tumor models
+  with high red-meat diet). WCRF/AICR 2018 third-expert-report concurs:
+  "probable" evidence for unprocessed red meat → CRC. Effect size:
+  +~17% CRC risk per 100 g/day (RR ~1.17, pooled meta-analyses).
+  Mechanisms partially overlap with processed meat (heterocyclic
+  amines, polycyclic aromatic hydrocarbons from high-temperature
+  cooking; heme iron → reactive oxygen species in colonocytes;
+  endogenous N-nitroso-compound formation) but unprocessed red meat
+  lacks the nitrite-preservative driver that gives processed meat its
+  IARC Group 1 status. Prevention-persona RedFlag (§20 ratification
+  2026-05-18, v0.3 IARC 2A probable-carcinogen batch).
+definition_ua: >-
+  Звичне високе споживання НЕперероблених сортів червоного м'яса
+  (яловичина, свинина, баранина, телятина, козлятина) — ≥500 г/тиждень
+  (≥3 порції/день) у термічно обробленій вазі — в особи без поточного
+  діагнозу колоректального раку. IARC Monograph 114 (2015) класифікував
+  red meat як Group 2A (probably carcinogenic) — limited evidence
+  in humans (позитивні асоціації в багатьох когортах, residual
+  confounding за cooking method та co-consumption processed meat не
+  повністю виключено), sufficient evidence in experimental animals
+  (rodent ACF / tumor models при дієті з high red meat). WCRF/AICR
+  2018 — "probable" evidence для unprocessed red meat → CRC. Розмір
+  ефекту: +~17% ризику CRC на 100 г/день (RR ~1.17, pooled meta-
+  аналізи). Механізми частково overlap з processed meat (гетероциклічні
+  аміни, PAH від high-temperature cooking; heme iron → ROS в колоноцитах;
+  ендогенне утворення NOC), але unprocessed red meat НЕ має драйвера
+  нітритних консервантів, який забезпечує processed meat статус IARC
+  Group 1.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "red_meat_intake_ge_500g_per_week"
+      value: true
+    - finding: "red_meat_intake_ge_3_servings_per_day"
+      value: true
+
+clinical_direction: investigate
+
+severity: minor
+priority: 110
+category: other
+
+risk_category: lifestyle
+
+# Anchor — colorectal cancer. IARC Group 2A classification specifically
+# implicates CRC as the primary cancer endpoint for unprocessed red meat.
+relevant_diseases:
+  - DIS-CRC
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 IARC 2A probable-carcinogen batch
+  (2026-05-19). IARC Group 2A probable — limited human evidence;
+  clinical recommendation more conservative than Group 1. IARC Monograph
+  114 (2015) is the canonical evidence anchor and is NOT yet a separate
+  SRC entity in KB; cited in notes only.
+
+  Coexistence with RF-LIFESTYLE-HIGH-RED-MEAT-CRC-PREVENTION (predecessor
+  combined-threshold RF that covers BOTH ≥500g/week unprocessed red meat
+  AND ≥50g/day processed meat at severity:major because processed-meat
+  exposure carries the Group-1 driver) is deliberate. This new RF is the
+  2A-pure narrowing — fires when only the unprocessed-red-meat threshold
+  is met; lets the engine surface a conservative-track PreventionPlan
+  framed on the 2A evidence quality without inheriting the Group-1
+  severity. Both RFs may fire on the same patient when both thresholds
+  are met; engine treats them as additive with the predecessor's
+  major severity taking precedence on conflict resolution.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_iarc_2a_batch
+draft_revision: 1

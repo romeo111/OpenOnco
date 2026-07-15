@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Trastuzumab deruxtecan (T-DXd, DS-8201) is FDA-approved (Aug 2022) for unresectable or me... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="Trastuzumab deruxtecan (T-DXd, DS-8201) is FDA-approved (Aug 2022) for unresectable or me... - OpenOnco">
 <meta property="og:description" content="Trastuzumab deruxtecan (T-DXd, DS-8201) is FDA-approved (Aug 2022) for unresectable or me...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/biomarker_actionability/bma-her2-low-breast.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Trastuzumab deruxtecan (T-DXd, DS-8201) is FDA-approved (Aug 2022) for unresectable or me... - OpenOnco">
 <meta name="twitter:description" content="Trastuzumab deruxtecan (T-DXd, DS-8201) is FDA-approved (Aug 2022) for unresectable or me...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Trastuzumab deruxtecan (T-DXd, DS-8201) is FDA-approved (Aug 2022) for unresectable or me... - OpenOnco","description":"Trastuzumab deruxtecan (T-DXd, DS-8201) is FDA-approved (Aug 2022) for unresectable or me...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarker_actionability/bma-her2-low-breast.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarker_actionability/bma-her2-low-breast.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Trastuzumab deruxtecan (T-DXd, DS-8201) is FDA-approved (Aug 2022) for unresectable or me... - OpenOnco","description":"Trastuzumab deruxtecan (T-DXd, DS-8201) is FDA-approved (Aug 2022) for unresectable or me...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarker_actionability/bma-her2-low-breast.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarker_actionability/bma-her2-low-breast.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -125,7 +197,7 @@
 <tr><th>Рекомендовані комбінації</th><td>trastuzumab deruxtecan (T-DXd) 5.4 mg/kg IV q3w monotherapy (post-chemotherapy; DESTINY-Breast04), trastuzumab deruxtecan (T-DXd) 5.4 mg/kg IV q3w monotherapy (post-endocrine HR+ disease; DESTINY-Breast06)</td></tr>
 <tr><th>Протипоказана монотерапія</th><td>trastuzumab or pertuzumab (no anti-HER2 activity at IHC 1+/2+ ISH- level for these agents), T-DM1 (ado-trastuzumab emtansine) — approved for HER2+ (IHC 3+ or ISH+) only, not HER2-low</td></tr>
 <tr><th>Підсумок доказів</th><td>Trastuzumab deruxtecan (T-DXd, DS-8201) is FDA-approved (Aug 2022) for unresectable or metastatic HER2-low (IHC 1+ or 2+/ISH-) breast cancer following prior chemotherapy. DESTINY-Breast04 (Modi et al. NEJM 2022): HR+/HER2-low — mPFS 10.1 vs 5.4 mo (HR 0.49, p&lt;0.001); mOS 23.9 vs 17.5 mo (HR 0.64, p=0.003). HR-/HER2-low (TNBC subgroup) — mOS 18.2 vs 8.3 mo. DESTINY-Breast06 (Curigliano et al. NEJM 2024) extended indication to HER2-low and HER2-ultralow (IHC 0 with incomplete staining) HR+/HER2- endocrine-pretreated patients — mPFS 13.2 vs 8.1 mo (HR 0.62, p&lt;0.001). T-DXd dose: 5.4 mg/kg IV q3w. Key safety: interstitial lung disease (ILD) / pneumonitis ~12% (grade ≥3 ~3%) — mandatory baseline CT and monitoring per NCCN/ESMO. HER2-low reclassification affects ~60% of previously HER2-negative metastatic breast cancer patients — large population impact.</td></tr></table>
-  <h2>Нотатки</h2><p>ESCAT IA. HER2-low reclassification (IHC 1+ or 2+/ISH-) is now clinically actionable — a paradigm shift from binary HER2+/- to a three-tier classification (HER2-positive / HER2-low / HER2-zero). Reflex HER2 IHC with careful 1+ vs 0 distinction now required on all metastatic breast specimens per NCCN/ESMO. ILD management: baseline CT chest, monitoring at each cycle, dose-reduction/hold/discontinue algorithm per NCCN. DESTINY-Breast06 further extended benefit to HER2-ultralow (IHC 0 with incomplete/faint staining) — this specific subgroup requires separate BIO entity (BIO-HER2-ULTRALOW) when reclassification is confirmed by pathology.</p>
+  <h2>Нотатки</h2><p>ESCAT IA. Рекласифікація HER2-low (IHC 1+ або IHC 2+/ISH-) тепер клінічно актіонабельна — парадигмальний зсув від бінарної моделі HER2+/- до трирівневої класифікації (HER2-позитивний / HER2-low / HER2-zero). Рефлекторне імуногістохімічне дослідження HER2 з ретельною диференціацією 1+ проти 0 наразі рекомендоване для всіх метастатичних зразків раку молочної залози згідно з NCCN/ESMO. Ведення ILD: базове КТ органів грудної клітки, моніторинг при кожному циклі, алгоритм зниження дози / зупинки / припинення згідно з NCCN. DESTINY-Breast06 додатково розширив користь на HER2-ultralow (IHC 0 з неповним/слабким забарвленням) — ця специфічна підгрупа потребує окремої BIO-сутності (BIO-HER2-ULTRALOW) у разі підтвердження рекласифікації патологом.</p>
   <h2>Де використовується</h2><p class="kb-muted">У YAML-корпусі не знайдено зворотних посилань.</p>
 </main>
 </body>

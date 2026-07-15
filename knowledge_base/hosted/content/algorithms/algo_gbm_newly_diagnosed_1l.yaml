@@ -31,7 +31,9 @@ decision_tree:
   - step: 2
     evaluate:
       all_of:
-        - condition: "Age < 70"
+        - finding: "age"
+          threshold: 70
+          comparator: "<"
         - any_of:
           - red_flag: RF-FITNESS-ECOG-FIT
           - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
@@ -49,7 +51,8 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "MGMT promoter methylated"
+        - finding: "mgmt_methylation_status"
+          value: "methylated"
     if_true:
       result: IND-GBM-NEWLY-DIAGNOSED-ELDERLY-TMZ
       notes: >

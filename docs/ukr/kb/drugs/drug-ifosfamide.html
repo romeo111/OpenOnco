@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ifosfamide - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="Ifosfamide - OpenOnco">
 <meta property="og:description" content="Ifosfamide: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/drugs/drug-ifosfamide.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ifosfamide - OpenOnco">
 <meta name="twitter:description" content="Ifosfamide: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Ifosfamide - OpenOnco","description":"Ifosfamide: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-ifosfamide.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-ifosfamide.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Ifosfamide - OpenOnco","description":"Ifosfamide: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-ifosfamide.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-ifosfamide.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -117,7 +189,7 @@
 <tr><th>Тип</th><td>Препарат</td></tr>
 <tr><th>Синоніми</th><td><div class="kb-alias-list"><span class="kb-alias">Holoxan</span><span class="kb-alias">Ifex</span><span class="kb-alias">Mitoxana</span><span class="kb-alias">Іфосфамід</span></div></td></tr>
 <tr><th>Статус</th><td>переглянуто 2026-04-26 | очікує клінічного підпису</td></tr>
-<tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-BURKITT"><code>DIS-BURKITT</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-EATL"><code>DIS-EATL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-HSTCL"><code>DIS-HSTCL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-MPNST"><code>DIS-MPNST</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-NK-T-NASAL"><code>DIS-NK-T-NASAL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-PMBCL"><code>DIS-PMBCL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-SOFT-TISSUE-SARCOMA"><code>DIS-SOFT-TISSUE-SARCOMA</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-TESTICULAR-GCT"><code>DIS-TESTICULAR-GCT</code></a></span></td></tr>
+<tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-BURKITT"><code>DIS-BURKITT</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-EATL"><code>DIS-EATL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-HSTCL"><code>DIS-HSTCL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-MPNST"><code>DIS-MPNST</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-NK-T-NASAL"><code>DIS-NK-T-NASAL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-PENILE-SCC"><code>DIS-PENILE-SCC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-PMBCL"><code>DIS-PMBCL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-SOFT-TISSUE-SARCOMA"><code>DIS-SOFT-TISSUE-SARCOMA</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-TESTICULAR-GCT"><code>DIS-TESTICULAR-GCT</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BCELL-2025</code></a></span></td></tr></table>
   <h2>Дані про препарат</h2><table class="kb-facts"><tr><th>Клас</th><td>alkylating_agent — oxazaphosphorine (nitrogen mustard analog)</td></tr>
 <tr><th>Механізм дії</th><td>Prodrug requiring hepatic CYP3A4 / CYP2B6 activation to 4-hydroxy- ifosfamide, which decomposes to ifosforamide mustard — the active DNA- alkylating species producing N7-guanine inter-strand crosslinks and apoptosis in proliferating cells. Side-chain oxidation also generates acrolein (urotoxic — drives hemorrhagic cystitis, neutralized by mesna) and chloroacetaldehyde (the principal neurotoxic metabolite responsible for ifosfamide-induced encephalopathy).</td></tr>
@@ -125,9 +197,9 @@
 <tr><th>Зареєстровано в Україні</th><td>True</td></tr>
 <tr><th>Відшкодовується НСЗУ</th><td>True</td></tr>
 <tr><th>Остання перевірка для України</th><td>2026-04-27</td></tr></table><h2>Застереження</h2><ul><li>CNS toxicity — ifosfamide-induced encephalopathy ranges from somnolence to coma; can be fatal; treat with methylene blue 50 mg IV q4-6h</li><li>Hemorrhagic cystitis without concurrent mesna and hydration</li><li>Severe myelosuppression — neutropenic sepsis risk; G-CSF support standard at high-dose ICE</li></ul>
-  <h2>Нотатки</h2><p>Mesna mandatory at 60-160% of ifosfamide dose in divided schedule (at 0, 4, 8 h after each ifosfamide dose, or in the same bag for continuous infusions). Aggressive hydration (2-3 L/day during therapy) plus daily urine dipstick for blood. Risk factors for encephalopathy: hypoalbuminemia (&lt;3.5 g/dL), elevated creatinine, prior cisplatin exposure, low bicarbonate, pelvic disease bulk. Standard ICE includes G-CSF support starting day 5; &gt;80% of R/R DLBCL patients receive ASCT mobilization with this regimen.</p>
+  <h2>Нотатки</h2><p>Іфосфамід (ifosfamide) — алкілуючий агент класу оксазафосфоринів, проліки, що потребують активації печінковими CYP3A4/CYP2B6 до 4-гідроксиіфосфаміду; активний метаболіт іфосфорамід-мустард утворює N7-гуанінові міжланцюгові поперечні зшивки в ДНК. Побічно утворюються акролеїн (уротоксичний — спричиняє геморагічний цистит, нейтралізується месною) та хлорацетальдегід (основний нейротоксичний метаболіт, відповідальний за іфосфамід-індуковану енцефалопатію). Месна обов&#x27;язкова в дозі 60-160% від дози іфосфаміду у роздільному режимі (на 0, 4 і 8 год після кожної дози іфосфаміду або в тому ж пакеті для безперервних інфузій). Агресивна гідратація (2-3 L/добу впродовж терапії) та щоденний аналіз сечі тест-смужкою на кров. Фактори ризику енцефалопатії: гіпоальбумінемія (&lt;3.5 g/dL), підвищений креатинін, попереднє застосування цисплатину, низький бікарбонат, об&#x27;ємне ураження малого таза. Стандартна схема ICE передбачає підтримку G-CSF з 5-ї доби; &gt;80% пацієнтів з рецидивним/ рефрактерним DLBCL отримують мобілізацію стовбурових клітин для аутологічної ТГСК саме за цією схемою.</p>
   <h2>Де використовується</h2>
-<h3>Regimens</h3><ul><li><code>REG-DOXORUBICIN-IFOSFAMIDE-MPNST</code> - Doxorubicin + ifosfamide (advanced/metastatic MPNST, 1L)</li><li><code>REG-DOXORUBICIN-IFOSFAMIDE-STS</code> - Doxorubicin + ifosfamide (soft tissue sarcoma, AI regimen)</li><li><code>REG-ICE</code> - ICE (Ifosfamide + Carboplatin + Etoposide), 3 cycles</li><li><code>REG-R-ICE-PMBCL</code> - R-ICE salvage with autoSCT consolidation (relapsed/refractory PMBCL)</li><li><code>REG-RICE-BURKITT</code> - R-ICE (Rituximab + Ifosfamide + Carboplatin + Etoposide) × 2-3 cycles → ASCT in CR2 (r/r...</li><li><code>REG-SMILE</code> - SMILE (Steroid + MTX + Ifosfamide + L-asparaginase + Etoposide), 2-4 cycles</li><li><code>REG-TIP-GCT-SALVAGE</code> - TIP (paclitaxel + ifosfamide + cisplatin, germ cell tumor salvage)</li></ul>
+<h3>Regimens</h3><ul><li><code>REG-DOXORUBICIN-IFOSFAMIDE-MPNST</code> - Doxorubicin + ifosfamide (advanced/metastatic MPNST, 1L)</li><li><code>REG-DOXORUBICIN-IFOSFAMIDE-STS</code> - Doxorubicin + ifosfamide (soft tissue sarcoma, AI regimen)</li><li><code>REG-ICE</code> - ICE (Ifosfamide + Carboplatin + Etoposide), 3 cycles</li><li><code>REG-R-ICE-PMBCL</code> - R-ICE salvage with autoSCT consolidation (relapsed/refractory PMBCL)</li><li><code>REG-RICE-BURKITT</code> - R-ICE (Rituximab + Ifosfamide + Carboplatin + Etoposide) × 2-3 cycles → ASCT in CR2 (r/r...</li><li><code>REG-SMILE</code> - SMILE (Steroid + MTX + Ifosfamide + L-asparaginase + Etoposide), 2-4 cycles</li><li><code>REG-TIP-GCT-SALVAGE</code> - TIP (paclitaxel + ifosfamide + cisplatin, germ cell tumor salvage)</li><li><code>REG-TIP-PENILE</code> - TIP (paclitaxel + ifosfamide + cisplatin, penile SCC)</li></ul>
 </main>
 </body>
 </html>

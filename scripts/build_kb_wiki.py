@@ -59,6 +59,8 @@ T = {
         "search_button": "Search",
         "all": "All",
         "no_matches": "No matching Onco Wiki entries.",
+        "loading": "Loading Onco Wiki index…",
+        "load_error": "Could not load the Onco Wiki index. Please reload the page.",
         "used_by": "used by",
         "clinician_faq": "Clinician FAQ",
         "faq_prescribe_q": "Does OpenOnco prescribe treatment?",
@@ -128,6 +130,8 @@ T = {
         "search_button": "Шукати",
         "all": "Усе",
         "no_matches": "Записів Onco Wiki за цим запитом не знайдено.",
+        "loading": "Завантаження індексу Onco Wiki…",
+        "load_error": "Не вдалося завантажити індекс Onco Wiki. Перезавантажте сторінку.",
         "used_by": "використовується у",
         "clinician_faq": "FAQ для клініцистів",
         "faq_prescribe_q": "Чи призначає OpenOnco лікування?",
@@ -315,6 +319,20 @@ def _text(value: Any, *, limit: int | None = None) -> str:
     if limit and len(text) > limit:
         return text[: limit - 1].rstrip() + "..."
     return text
+
+
+def _localized(d: dict, base_key: str, locale: str) -> Any:
+    """Return the UA twin of `base_key` (e.g. `definition_ua` for
+    `definition`) when locale=="uk" and it carries content, else fall
+    back to the canonical EN field. Keeps EN as the source of truth and
+    the schema canonical; UA renders only when an authored translation
+    exists, so untranslated entries don't silently flip back to EN
+    without a UA reader noticing the gap."""
+    if locale == "uk":
+        ua = d.get(f"{base_key}_ua")
+        if ua not in (None, "", [], {}):
+            return ua
+    return d.get(base_key)
 
 
 def _load_yaml(path: Path) -> dict[str, Any] | None:
@@ -747,7 +765,7 @@ def _redflag_sections(entity: KbEntity, *, locale: str = "en") -> str:
     d = entity.data
     labels = FIELD_LABELS[locale]
     rows = [
-        (labels["definition"], html.escape(_text(d.get("definition"), limit=900))),
+        (labels["definition"], html.escape(_text(_localized(d, "definition", locale), limit=900))),
         (labels["clinical_direction"], html.escape(_text(d.get("clinical_direction")))),
         (labels["category"], html.escape(_text(d.get("category")))),
         (labels["shifts_algorithm"], html.escape(", ".join(str(x) for x in _as_list(d.get("shifts_algorithm"))))),
@@ -812,7 +830,10 @@ def render_entity_page(
 
     labels = FIELD_LABELS[locale]
     t = T[locale]
-    notes = entity.data.get("notes") or entity.data.get("evidence_summary")
+    notes = (
+        _localized(entity.data, "notes", locale)
+        or _localized(entity.data, "evidence_summary", locale)
+    )
     notes_html = (
         f"<h2>{html.escape(labels['notes'])}</h2><p>{html.escape(_text(notes, limit=1200))}</p>"
         if notes
@@ -993,8 +1014,13 @@ def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, loc
   {faq}
 </main>
 <script>
-const KB_ENTRIES = {json.dumps(entries, ensure_ascii=False)};
-const KB_COPY = {json.dumps({"no_matches": t["no_matches"], "used_by": t["used_by"], "page": "Page" if locale == "en" else "Сторінка", "of": "of" if locale == "en" else "з", "results": "results" if locale == "en" else "результатів", "previous": "Previous" if locale == "en" else "Назад", "next": "Next" if locale == "en" else "Далі"}, ensure_ascii=False)};
+// KB index is fetched async from /kb_search_index.json instead of inlined
+// (~2 MB of inline JSON would block the initial paint of this page).
+// Until the fetch resolves, renderResults() shows a loading state.
+let KB_ENTRIES = [];
+let KB_LOADED = false;
+const KB_INDEX_URL = {json.dumps('/ukr/kb_search_index.json' if locale == 'uk' else '/kb_search_index.json')};
+const KB_COPY = {json.dumps({"no_matches": t["no_matches"], "loading": t["loading"], "load_error": t["load_error"], "used_by": t["used_by"], "page": "Page" if locale == "en" else "Сторінка", "of": "of" if locale == "en" else "з", "results": "results" if locale == "en" else "результатів", "previous": "Previous" if locale == "en" else "Назад", "next": "Next" if locale == "en" else "Далі"}, ensure_ascii=False)};
 const PAGE_SIZE = 50;
 const searchInput = document.getElementById('kbSearch');
 const searchButton = document.getElementById('kbSearchBtn');
@@ -1027,6 +1053,11 @@ function scoreEntry(entry, terms) {{
 }}
 
 function renderResults() {{
+  if (!KB_LOADED) {{
+    results.innerHTML = `<p class="kb-muted">${{escapeHtml(KB_COPY.loading)}}</p>`;
+    pagination.innerHTML = '';
+    return;
+  }}
   const q = (searchInput.value || '').trim().toLowerCase();
   const terms = q.split(/\\s+/).filter(Boolean);
   const ranked = KB_ENTRIES
@@ -1090,7 +1121,21 @@ pagination.addEventListener('click', event => {{
   results.scrollIntoView({{ block: 'start', behavior: 'smooth' }});
 }});
 filterButtons[0].classList.add('active');
-renderResults();
+renderResults();  // initial loading state — KB_LOADED is false until fetch resolves
+// Default cache mode: respect HTTP Cache-Control so the daily-site-refresh
+// CI job's regenerated index is picked up on revalidation. Forcing
+// 'force-cache' here would pin visitors to stale KB data.
+fetch(KB_INDEX_URL)
+  .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+  .then(payload => {{
+    KB_ENTRIES = (payload && payload.entries) || [];
+    KB_LOADED = true;
+    renderResults();
+  }})
+  .catch(() => {{
+    results.innerHTML = `<p class="kb-muted">${{escapeHtml(KB_COPY.load_error)}}</p>`;
+    pagination.innerHTML = '';
+  }});
 </script>
 """
     return _page_shell(t["page_title"], body, locale=locale)

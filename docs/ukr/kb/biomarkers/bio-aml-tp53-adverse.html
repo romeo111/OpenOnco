@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TP53-mutated AML (adverse risk) - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="TP53-mutated AML (adverse risk) - OpenOnco">
 <meta property="og:description" content="TP53-mutated AML (adverse risk): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/biomarkers/bio-aml-tp53-adverse.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TP53-mutated AML (adverse risk) - OpenOnco">
 <meta name="twitter:description" content="TP53-mutated AML (adverse risk): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"TP53-mutated AML (adverse risk) - OpenOnco","description":"TP53-mutated AML (adverse risk): сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-aml-tp53-adverse.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-aml-tp53-adverse.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"TP53-mutated AML (adverse risk) - OpenOnco","description":"TP53-mutated AML (adverse risk): сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-aml-tp53-adverse.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-aml-tp53-adverse.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -123,7 +195,7 @@
 <tr><th>Деталі мутації</th><td>{&quot;functional_impact&quot;: &quot;loss_of_function (tumor suppressor); ELN-2022 adverse-risk classifier&quot;, &quot;gene&quot;: &quot;TP53&quot;, &quot;variant_type&quot;: &quot;missense / nonsense / frameshift / splice / 17p deletion&quot;}</td></tr>
 <tr><th>Вимірювання</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>NGS panel (myeloid) + FISH for del(17p13.1); VAF reported (mono- vs biallelic distinction critical)</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical (mutated | wild-type); VAF % + zygosity (mono- / biallelic / multi-hit)</span></div></div></td></tr>
 <tr><th>Пов’язані біомаркери</th><td><span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-tp53-mutation.html"><code>BIO-TP53-MUTATION</code></a></span> <span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-mds-del-5q.html"><code>BIO-MDS-DEL-5Q</code></a></span></td></tr></table>
-  <h2>Нотатки</h2><p>TP53-mutated AML is its own ELN-2022 adverse-risk category and a WHO 5th-edition entity. Median OS 5-9 months on standard chemo or HMA-based therapy; alloHCT carries higher relapse risk vs TP53-WT AML but remains the only potentially curative pathway. Multi-hit (biallelic, often via del(17p) + point mutation) predicts even worse outcome than mono-hit. Active research questions: ven+aza (modest CR rate ~40% but short PFS), magrolimab+aza (failed ENHANCE phase-3), eprenetapopt+aza (mixed phase 2/3). NOT clear best regimen — flag triggers RF-AML-TP53-ADVERSE which routes to: (1) alloHCT consideration when fit, (2) ven+aza backbone for unfit, (3) clinical-trial referral preferentially. Distinct from BIO-TP53-MUTATION (the cross-disease standalone marker entity) and RF-MDS-TP53-MUTATION (MDS-specific RF) — this AML-scoped composite exists because the AML adverse-risk routing is distinct from MDS.</p>
+  <h2>Нотатки</h2><p>TP53-мутована ГМЛ — окрема категорія несприятливого ризику ELN-2022 та сутність WHO 5-го видання. Медіана ЗВ 5-9 місяців на стандартній хімії або HMA-базованій терапії; алоТГСК має вищий ризик рецидиву vs TP53-WT ГМЛ, але залишається єдиним потенційно курабельним шляхом. Мульти-хіт (біалельна, часто через del(17p) + точкова мутація) предиктує ще гірший прогноз ніж моно-хіт. Активні наукові питання: ven+aza (помірна частота ПР ~40%, але коротка БПВ), magrolimab+aza (провалив фазу-3 ENHANCE), eprenetapopt+aza (змішані фаза 2/3). Найкраща схема НЕ ясна — прапор запускає RF-AML-TP53-ADVERSE, що маршрутизує на: (1) розгляд алоТГСК у придатних, (2) ven+aza бекбон для непридатних, (3) направлення на клінічне дослідження preferentially. Відрізняється від BIO-TP53-MUTATION (cross-disease standalone маркер) та RF-MDS-TP53-MUTATION (МДС-специфічний RF) — цей ГМЛ-обмежений композит існує тому, що ГМЛ-маршрут несприятливого ризику відрізняється від МДС.</p>
   <h2>Де використовується</h2>
 <h3>Біомаркер</h3><ul><li><code>BIO-MDS-DEL-5Q</code> - MDS with del(5q) cytogenetic abnormality</li><li><code>BIO-WT1-MUTATION</code> - WT1 mutation (Wilms tumor 1 gene)</li></ul>
 </main>
