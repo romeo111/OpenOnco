@@ -10,9 +10,11 @@ from .base import Base
 class MonitoringPhase(Base):
     name: str  # "baseline" | "on_treatment" | "follow_up_short" | "follow_up_long"
     window: Optional[str] = None  # "Week 0" | "Every cycle" | "Every 3 months"
+    window_ua: Optional[str] = None  # UA parallel translation (CHARTER §8.3)
     tests: list[str] = Field(default_factory=list)  # Test IDs
     visits: list[str] = Field(default_factory=list)  # free-form visit descriptors
     checkpoints: list[str] = Field(default_factory=list)
+    checkpoints_ua: list[str] = Field(default_factory=list)
     notes: Optional[str] = None
 
 

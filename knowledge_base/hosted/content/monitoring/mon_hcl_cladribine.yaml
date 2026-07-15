@@ -4,32 +4,49 @@ linked_to_regimen: REG-CLADRIBINE-SINGLE
 phases:
   - name: baseline
     window: "Within 1 week before start"
+    window_ua: "Протягом 1 тижня до початку"
     tests: [TEST-CBC, TEST-CMP, TEST-LFT, TEST-PERIPHERAL-SMEAR, TEST-BM-ASPIRATE, TEST-BM-TREPHINE, TEST-FLOW-CYTOMETRY, TEST-CECT-CAP]
     visits: ["Treatment planning visit"]
     checkpoints:
       - "Confirm HCL: hairy cells on PB smear, BM trephine annexin-A1+, flow CD11c+CD25+CD103+CD123+"
       - "Document BRAF V600E status (informational; required for second-line targeted therapy if relapse)"
       - "Treatment indication confirmed (significant cytopenia or symptomatic splenomegaly)"
+    checkpoints_ua:
+      - "Підтвердити HCL: hairy cells у мазку ПК, annexin-A1+ у BM-трепанобіопсії, flow CD11c+CD25+CD103+CD123+"
+      - "Документувати статус BRAF V600E (інформативно; обов'язковий для таргетної терапії другої лінії при рецидиві)"
+      - "Підтвердити показання до лікування (значна цитопенія або симптоматична спленомегалія)"
 
   - name: post_treatment_immediate
     window: "Weeks 2-4 post-cladribine"
+    window_ua: "Тижні 2–4 після кладрибіну"
     tests: [TEST-CBC]
     visits: ["Clinical assessment + lab; expect deepening cytopenia first 1-2 weeks"]
     checkpoints: ["Febrile neutropenia management; transfusion support as needed"]
+    checkpoints_ua: ["Менеджмент фебрильної нейтропенії; трансфузійна підтримка за потребою"]
 
   - name: response_assessment
     window: "Month 4-6 post-cladribine"
+    window_ua: "Місяці 4–6 після кладрибіну"
     tests: [TEST-CBC, TEST-PERIPHERAL-SMEAR, TEST-BM-ASPIRATE, TEST-BM-TREPHINE, TEST-FLOW-CYTOMETRY]
     visits: ["Restaging visit"]
     checkpoints: ["CR / PR / persistent disease; if persistent — repeat cladribine course or rituximab consolidation"]
+    checkpoints_ua: ["CR / PR / резидуальна хвороба; при персистенції — повторний курс кладрибіну або консолідація ритуксимабом"]
 
   - name: follow_up
     window: "Every 6 months × 5 years, then annually"
+    window_ua: "Кожні 6 місяців протягом 5 років, потім щорічно"
     tests: [TEST-CBC, TEST-CMP]
     visits: ["Clinical + labs"]
     checkpoints:
       - "Surveillance for relapse (median PFS >10 years; relapse can occur)"
       - "PJP + HSV prophylaxis continuing ≥1 year"
+    checkpoints_ua:
+      - "Спостереження щодо рецидиву (медіана PFS >10 років; рецидиви можливі)"
+      - "Профілактика PJP + HSV триває ≥1 рік"
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
+machine_translated_review_pending: true
+notes: >
+  UA translations of window / checkpoints added 2026-05-19 under CHARTER
+  §8.3 dev-mode exemption; awaiting Clinical Co-Lead sign-off.
