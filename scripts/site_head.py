@@ -9,10 +9,26 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
+# Google-Fonts loading strategy:
+#  - preconnect to fonts.googleapis.com + fonts.gstatic.com so the TCP/TLS
+#    handshakes happen in parallel with HTML parsing instead of serially
+#    after the stylesheet request kicks off (~100-300 ms cold-load win).
+#  - load the stylesheet with media="print" + onload=swap so it does not
+#    block the first contentful paint; the &display=swap query already
+#    keeps text visible while web-fonts download.
+#  - a <noscript> fallback restores normal stylesheet loading when JS
+#    is disabled.
+#  - dropped Source Sans 3 weight 300 (was not used by site_styles.py).
 SITE_FONT_LINK = (
+    '<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>\n'
+    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
     '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900'
-    '&family=Source+Sans+3:wght@300;400;500;600;700'
-    '&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">'
+    '&family=Source+Sans+3:wght@400;500;600;700'
+    '&family=JetBrains+Mono:wght@400;500&display=swap"'
+    ' rel="stylesheet" media="print" onload="this.media=\'all\'">\n'
+    '<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900'
+    '&family=Source+Sans+3:wght@400;500;600;700'
+    '&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>'
 )
 SITE_FAVICON_LINK = '<link rel="icon" type="image/svg+xml" href="/favicon.svg">'
 

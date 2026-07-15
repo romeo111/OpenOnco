@@ -59,6 +59,8 @@ T = {
         "search_button": "Search",
         "all": "All",
         "no_matches": "No matching Onco Wiki entries.",
+        "loading": "Loading Onco Wiki index…",
+        "load_error": "Could not load the Onco Wiki index. Please reload the page.",
         "used_by": "used by",
         "clinician_faq": "Clinician FAQ",
         "faq_prescribe_q": "Does OpenOnco prescribe treatment?",
@@ -128,6 +130,8 @@ T = {
         "search_button": "Шукати",
         "all": "Усе",
         "no_matches": "Записів Onco Wiki за цим запитом не знайдено.",
+        "loading": "Завантаження індексу Onco Wiki…",
+        "load_error": "Не вдалося завантажити індекс Onco Wiki. Перезавантажте сторінку.",
         "used_by": "використовується у",
         "clinician_faq": "FAQ для клініцистів",
         "faq_prescribe_q": "Чи призначає OpenOnco лікування?",
@@ -993,8 +997,13 @@ def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, loc
   {faq}
 </main>
 <script>
-const KB_ENTRIES = {json.dumps(entries, ensure_ascii=False)};
-const KB_COPY = {json.dumps({"no_matches": t["no_matches"], "used_by": t["used_by"], "page": "Page" if locale == "en" else "Сторінка", "of": "of" if locale == "en" else "з", "results": "results" if locale == "en" else "результатів", "previous": "Previous" if locale == "en" else "Назад", "next": "Next" if locale == "en" else "Далі"}, ensure_ascii=False)};
+// KB index is fetched async from /kb_search_index.json instead of inlined
+// (~2 MB of inline JSON would block the initial paint of this page).
+// Until the fetch resolves, renderResults() shows a loading state.
+let KB_ENTRIES = [];
+let KB_LOADED = false;
+const KB_INDEX_URL = {json.dumps('/ukr/kb_search_index.json' if locale == 'uk' else '/kb_search_index.json')};
+const KB_COPY = {json.dumps({"no_matches": t["no_matches"], "loading": t["loading"], "load_error": t["load_error"], "used_by": t["used_by"], "page": "Page" if locale == "en" else "Сторінка", "of": "of" if locale == "en" else "з", "results": "results" if locale == "en" else "результатів", "previous": "Previous" if locale == "en" else "Назад", "next": "Next" if locale == "en" else "Далі"}, ensure_ascii=False)};
 const PAGE_SIZE = 50;
 const searchInput = document.getElementById('kbSearch');
 const searchButton = document.getElementById('kbSearchBtn');
@@ -1027,6 +1036,11 @@ function scoreEntry(entry, terms) {{
 }}
 
 function renderResults() {{
+  if (!KB_LOADED) {{
+    results.innerHTML = `<p class="kb-muted">${{escapeHtml(KB_COPY.loading)}}</p>`;
+    pagination.innerHTML = '';
+    return;
+  }}
   const q = (searchInput.value || '').trim().toLowerCase();
   const terms = q.split(/\\s+/).filter(Boolean);
   const ranked = KB_ENTRIES
@@ -1090,7 +1104,21 @@ pagination.addEventListener('click', event => {{
   results.scrollIntoView({{ block: 'start', behavior: 'smooth' }});
 }});
 filterButtons[0].classList.add('active');
-renderResults();
+renderResults();  // initial loading state — KB_LOADED is false until fetch resolves
+// Default cache mode: respect HTTP Cache-Control so the daily-site-refresh
+// CI job's regenerated index is picked up on revalidation. Forcing
+// 'force-cache' here would pin visitors to stale KB data.
+fetch(KB_INDEX_URL)
+  .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+  .then(payload => {{
+    KB_ENTRIES = (payload && payload.entries) || [];
+    KB_LOADED = true;
+    renderResults();
+  }})
+  .catch(() => {{
+    results.innerHTML = `<p class="kb-muted">${{escapeHtml(KB_COPY.load_error)}}</p>`;
+    pagination.innerHTML = '';
+  }});
 </script>
 """
     return _page_shell(t["page_title"], body, locale=locale)
