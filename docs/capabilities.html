@@ -315,10 +315,10 @@
 
     <div class="callout callout-hard">
       <strong>STUB status across all clinical content.</strong>
-      Dual sign-off: <strong>15/806</strong>
+      Dual sign-off: <strong>15/1061</strong>
       (CHARTER §6.1 requires two Clinical Co-Lead approvals).
       This is a proposed plan: structured data + algorithm + sources are in place, but without dual sign-off.
-      Decision-support tool, not a medical device. State as of <code>2026-07-15 09:26 UTC</code>.
+      Decision-support tool, not a medical device. State as of <code>2026-07-15 10:09 UTC</code>.
     </div>
 
     <nav class="cap-tabs" role="tablist" aria-label="Sections">
@@ -335,7 +335,7 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — pipeline: JSON profile → engine → Plan with two tracks">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">OpenOnco · engine in two words</span>
-          <span class="pipeline-version">v0.1.4 · 2026-07-15 09:26 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-07-15 10:09 UTC</span>
         </div>
         <h2 class="pipeline-title">
           One JSON profile → <em>two treatment plans</em>, every claim cited.
@@ -370,7 +370,7 @@
             <ol class="pipeline-stages">
               <li>Resolve algorithm</li>
               <li>Flatten findings</li>
-              <li>Eval 594 RedFlags</li>
+              <li>Eval 669 RedFlags</li>
               <li>Walk decision tree</li>
               <li>Materialize tracks</li>
               <li>Resolve regimens</li>
@@ -405,14 +405,14 @@
       </div>
 
       <div class="key-nums">
-        <div class="key-num"><div class="key-num-val">92</div><div class="key-num-lbl">diseases in KB</div></div>
-        <div class="key-num"><div class="key-num-val">664</div><div class="key-num-lbl">indications (230 1L · 172 2L+)</div></div>
-        <div class="key-num"><div class="key-num-val">384</div><div class="key-num-lbl">treatment regimens</div></div>
-        <div class="key-num"><div class="key-num-val">298</div><div class="key-num-lbl">drugs (ATC/RxNorm)</div></div>
-        <div class="key-num"><div class="key-num-val">594</div><div class="key-num-lbl">red flags</div></div>
-        <div class="key-num"><div class="key-num-val">444</div><div class="key-num-lbl">cited sources</div></div>
+        <div class="key-num"><div class="key-num-val">103</div><div class="key-num-lbl">diseases in KB</div></div>
+        <div class="key-num"><div class="key-num-val">831</div><div class="key-num-lbl">indications (262 1L · 175 2L+)</div></div>
+        <div class="key-num"><div class="key-num-val">404</div><div class="key-num-lbl">treatment regimens</div></div>
+        <div class="key-num"><div class="key-num-val">321</div><div class="key-num-lbl">drugs (ATC/RxNorm)</div></div>
+        <div class="key-num"><div class="key-num-val">669</div><div class="key-num-lbl">red flags</div></div>
+        <div class="key-num"><div class="key-num-val">471</div><div class="key-num-lbl">cited sources</div></div>
         <div class="key-num"><div class="key-num-val">16</div><div class="key-num-lbl">clinician skills (MDT)</div></div>
-        <div class="key-num is-warn"><div class="key-num-val">15/806</div><div class="key-num-lbl">with dual sign-off</div></div>
+        <div class="key-num is-warn"><div class="key-num-val">15/1061</div><div class="key-num-lbl">with dual sign-off</div></div>
       </div>
 
       <div class="pillars">
@@ -475,7 +475,7 @@
           <div class="flow-step">
             <div class="flow-num">Stage 3</div>
             <div class="flow-title">RedFlag eval</div>
-            <div class="flow-desc">594 RFs against findings (<code>any_of</code>/<code>all_of</code>/<code>none_of</code> with thresholds).</div>
+            <div class="flow-desc">669 RFs against findings (<code>any_of</code>/<code>all_of</code>/<code>none_of</code> with thresholds).</div>
           </div>
           <div class="flow-step">
             <div class="flow-num">Stage 4</div>
@@ -787,14 +787,14 @@
         <table class="kv-table">
           <thead><tr><th>Category</th><th>State</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr><td>Diseases with full chain</td><td>77 / 92</td><td>The rest are partially modeled</td></tr>
-            <tr><td>Indications 1L</td><td>230</td><td>First line for all 92 diseases</td></tr>
-            <tr><td>Indications 2L+</td><td>172</td><td>34 heme + 21 solid. Other solid 2L+ partial.</td></tr>
+            <tr><td>Diseases with full chain</td><td>86 / 103</td><td>The rest are partially modeled</td></tr>
+            <tr><td>Indications 1L</td><td>262</td><td>First line for all 103 diseases</td></tr>
+            <tr><td>Indications 2L+</td><td>175</td><td>34 heme + 21 solid. Other solid 2L+ partial.</td></tr>
             <tr><td>Pediatric oncology</td><td>0</td><td>Out of MVP scope — separate track</td></tr>
             <tr><td>Radiation therapy</td><td>partial</td><td>RT in multimodal Indications; not modeled as a standalone entity</td></tr>
             <tr><td>Surgery</td><td>not modeled</td><td>Surgical oncology indications absent</td></tr>
             <tr><td>Formulary live-feed</td><td>static flag</td><td>Hard-coded on regimens; not auto-refreshed</td></tr>
-            <tr><td>Reviewer dual sign-off</td><td><strong>15/806</strong></td><td>Primary bottleneck metric — capacity plan: 806 → ≥85% verified</td></tr>
+            <tr><td>Reviewer dual sign-off</td><td><strong>15/1061</strong></td><td>Primary bottleneck metric — capacity plan: 1061 → ≥85% verified</td></tr>
             <tr><td>Live gap dashboard</td><td><a href="/clinical-gaps.html">→ link</a></td><td>Build-generated audit (sign-off, solid 2L+, surgery, RT, supportive care)</td></tr>
           </tbody>
         </table>
@@ -823,7 +823,7 @@
       <div class="info-section">
         <h2>TaskTorrent — verify algorithms with your AI's tokens</h2>
         <p class="info-text">
-          The biggest gap — <strong>15/806</strong> dual-reviewer sign-off.
+          The biggest gap — <strong>15/1061</strong> dual-reviewer sign-off.
           The bottleneck doesn't dissolve with new code — it dissolves through contributors with AI tools
           who pick up structured chunks of work.
         </p>
