@@ -1,0 +1,101 @@
+id: IND-PENILE-SCC-METASTATIC-1L-TIP
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PENILE-SCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic (M1) OR regionally advanced/bulky nodal disease, including use as neoadjuvant chemotherapy before consolidative inguinal/pelvic lymphadenectomy in selected regionally advanced cN+ disease per EAU"
+    - "MSI-H/dMMR not identified or not tested — see IND-PENILE-SCC-METASTATIC-1L-MSI-H-PEMBRO when MSI-H/dMMR positive"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H"
+  demographic_constraints:
+    ecog_max: 1
+    notes: "ECOG 0-1 and adequate renal/hepatic/marrow reserve required for triplet-chemotherapy tolerability; ECOG 2 or borderline organ function → prefer IND-PENILE-SCC-METASTATIC-1L-CISPLATIN-5FU"
+
+recommended_regimen: REG-TIP-PENILE
+concurrent_therapy: []
+followed_by:
+  - "Consolidative inguinal/pelvic lymphadenectomy for responding regionally advanced nodal disease per MDT (neoadjuvant-intent use)"
+
+evidence_level: low
+strength_of_recommendation: conditional
+
+expected_outcomes:
+  overall_response_rate: "Small phase II / retrospective series report objective responses in a substantial minority; no large prospective trial exists in this rare disease"
+  progression_free_survival: "Limited durable benefit for widely metastatic disease; better outcomes reported when used as neoadjuvant therapy before consolidative surgery in regionally advanced (nodal-only) disease"
+  overall_survival_5y: "Poor for metastatic penile SCC — DIS-PENILE-SCC epidemiology reports <20% 5-year OS for stage IV disease"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PENILE-SCC-MSI-H-ACTIONABILITY
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+
+desired_tests:
+  - TEST-MSI-PCR-OR-NGS
+  - TEST-DMMR-IHC
+
+rationale: >
+  TIP (paclitaxel + ifosfamide + cisplatin) is the triplet-chemotherapy
+  option for metastatic/unresectable penile SCC per EAU guidelines,
+  alongside the cisplatin+5-FU doublet
+  (IND-PENILE-SCC-METASTATIC-1L-CISPLATIN-5FU). It is more
+  myelosuppressive and requires mesna + growth-factor support, so
+  triplet-fit patients (ECOG 0-1, adequate organ reserve) are the
+  intended population — MDT/patient preference is a valid tiebreaker when
+  both regimens are feasible, consistent with EAU listing both as options
+  without a strict preference hierarchy. TIP is also used, at selected
+  specialized centers, as neoadjuvant chemotherapy before consolidative
+  inguinal/pelvic lymphadenectomy in regionally advanced nodal disease —
+  response to chemotherapy can render previously unresectable nodal
+  disease resectable.
+
+rationale_ua: >
+  TIP (паклітаксел + іфосфамід + цисплатин) — триплетний
+  хіміотерапевтичний варіант при метастатичній/нерезектабельній SCC
+  пенісу за EAU guidelines, поряд з дублетом цисплатин+5-FU. Він більш
+  мієлосупресивний та потребує месни + підтримки факторами росту, тому
+  призначений пацієнтам, придатним для триплетної терапії (ECOG 0-1,
+  адекватний органний резерв). Також застосовується як неоад'ювантна
+  хіміотерапія перед консолідуючою лімфаденектомією при регіонально
+  поширеному нодальному захворюванні у спеціалізованих центрах.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+draft_revision: 1
+
+sources:
+  - source_id: SRC-EAU-PENILE-2024
+    position: supports
+    relevant_quote_paraphrase: "EAU Penile Cancer Guidelines: TIP (paclitaxel, ifosfamide, cisplatin) as a chemotherapy option for metastatic/unresectable penile SCC, and as neoadjuvant therapy before consolidative surgery in regionally advanced nodal disease."
+
+do_not_do_en:
+  - "Do not use TIP in patients with ECOG ≥2 or inadequate renal/hepatic/marrow reserve — prefer the cisplatin+5-FU doublet."
+  - "Do not administer ifosfamide without mandatory concurrent mesna and aggressive hydration — hemorrhagic cystitis risk."
+  - "Do not treat MSI-H/dMMR-confirmed disease with chemotherapy as the automatic default without considering pembrolizumab (tissue-agnostic MSI-H approval)."
+
+do_not_do:
+  - "Не застосовувати TIP у пацієнтів з ECOG ≥2 або недостатнім органним резервом — перевага дублету цисплатин+5-FU."
+  - "Не вводити іфосфамід без обов'язкової супутньої месни та агресивної гідратації."
+  - "Не лікувати MSI-H/dMMR-підтверджене захворювання хіміотерапією за замовчуванням без розгляду пембролізумабу."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — Phase 1. Transcribed from DIS-PENILE-SCC narrative ("TIP
+  (paclitaxel + ifosfamide + cisplatin) per EAU"). REG-TIP-PENILE dosing
+  drafted per the general TIP-triplet convention (paclitaxel d1;
+  ifosfamide+cisplatin d1-3 with mandatory mesna; q21d), distinct from the
+  germ-cell-tumor-salvage TIP schedule already in this KB
+  (REG-TIP-GCT-SALVAGE). Requires medical-oncology co-lead signoff before
+  clinical publication (CHARTER §6.1; dev-mode-exempted for draft merge).

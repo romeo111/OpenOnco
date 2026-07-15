@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC adenocarcinoma; never-smok... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC adenocarcinoma; never-smok... - OpenOnco">
 <meta property="og:description" content="ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC adenocarcinoma; never-smok...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/redflags/rf-nsclc-alk-fusion-actionable.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC adenocarcinoma; never-smok... - OpenOnco">
 <meta name="twitter:description" content="ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC adenocarcinoma; never-smok...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC adenocarcinoma; never-smok... - OpenOnco","description":"ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC adenocarcinoma; never-smok...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-nsclc-alk-fusion-actionable.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-nsclc-alk-fusion-actionable.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC adenocarcinoma; never-smok... - OpenOnco","description":"ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC adenocarcinoma; never-smok...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-nsclc-alk-fusion-actionable.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-nsclc-alk-fusion-actionable.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -103,6 +175,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -117,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-04-27 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-NSCLC"><code>DIS-NSCLC</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="First-Line Lorlatinib or Crizotinib in Advanced ALK-Positive Lung Cancer (CROWN)"><a href="https://pubmed.ncbi.nlm.nih.gov/33872252/" target="_blank" rel="noopener noreferrer"><code>SRC-CROWN-SOLOMON-2021</code></a></span> <span class="kb-chip" title="ESMO Clinical Practice Guideline on Metastatic Non-Small Cell Lung Cancer"><a href="https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-oncogene-addicted-metastatic-non-small-cell-lung-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-NSCLC-METASTATIC-2024</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Non-Small Cell Lung Cancer"><a href="https://www.nccn.org/professionals/physician_gls/pdf/nscl.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-NSCLC-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC adenocarcinoma; never-smoker / younger enriched. Treatment-defining: alectinib (ALEX — mPFS 34.8 mo) or lorlatinib (CROWN — 5-y PFS 60%) preferred 1L over crizotinib. Adjuvant alectinib 2 y after resection (ALINA).</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Перебудова / фузія ALK (зазвичай EML4-ALK) — ~5% НДРЛ-аденокарциноми; переважно у некурців і молодших. Лікування-визначальний маркер: алектиніб (ALEX) або лорлатиніб (CROWN) переважають кризотиніб 1L. Ад&#x27;ювантний алектиніб 2 роки після резекції (ALINA).</td></tr>
 <tr><th>Клінічний напрям</th><td>intensify</td></tr>
 <tr><th>Категорія</th><td>high-risk-biology</td></tr>
 <tr><th>Змінює алгоритм</th><td>ALGO-NSCLC-METASTATIC-1L, ALGO-NSCLC-METASTATIC-2L</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
@@ -137,7 +210,7 @@
   ],
   &quot;type&quot;: &quot;biomarker&quot;
 }</pre>
-  <h2>Нотатки</h2><p>Detection: RNA-NGS (preferred for fusion partners) OR FISH break-apart OR IHC (D5F3) screen. Crizotinib effectively obsolete 1L. Lorlatinib has the deepest CNS penetration but most CNS / lipid toxicity; alectinib is the most balanced 1L choice. Sequence: lorlatinib retains activity post-alectinib resistance (G1202R, etc.).</p>
+  <h2>Нотатки</h2><p>Виявлення: RNA-NGS (переважно для партнерів фузії) АБО FISH break-apart АБО ІГХ (D5F3) скринінг. Кризотиніб фактично застарів 1L. Лорлатиніб має найглибше проникнення в ЦНС, але найбільшу ЦНС/ ліпідну токсичність; алектиніб — найзбалансованіший 1L. Послідовність: лорлатиніб зберігає активність після резистентності алектинібу (G1202R та ін.).</p>
   <h2>Де використовується</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-NSCLC-METASTATIC-1L</code> - ALGO-NSCLC-METASTATIC-1L</li><li><code>ALGO-NSCLC-METASTATIC-2L</code> - ALGO-NSCLC-METASTATIC-2L</li><li><code>ALGO-NSCLC-RESECTABLE-PERIOP</code> - ALGO-NSCLC-RESECTABLE-PERIOP</li></ul>
 <h3>Handbook Chapters</h3><ul><li><code>HB-NSCLC-METASTATIC-1L</code> - Metastatic NSCLC: driver-first treatment reasoning</li></ul>

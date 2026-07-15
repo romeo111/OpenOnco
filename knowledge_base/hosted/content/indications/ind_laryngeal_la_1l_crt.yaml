@@ -1,0 +1,88 @@
+id: IND-LARYNGEAL-LA-1L-CRT
+plan_track: local_therapy
+
+applicable_to:
+  disease_id: DIS-LARYNGEAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Locally advanced (stage III-IVA; T2-T4a, any N, M0) laryngeal SCC amenable to larynx preservation"
+    - "Fit for high-dose (100 mg/m² q3w) cisplatin — ECOG 0-1, adequate renal/hearing/organ function"
+    - "No RF-LARYNGEAL-POOR-PRESERVATION-CANDIDACY features (e.g., cartilage invasion, non-functional larynx)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+phases:
+  - phase: definitive
+    type: chemoradiation
+    radiation_id: RC-LARYNGEAL-LA-CRT-RTOG9111
+    duration_weeks: 7
+
+recommended_regimen: REG-CISPLATIN-CONCURRENT-RT-LARYNX
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate:
+  larynx_preservation_rate: "~88% at 2 years (concurrent CRT arm, RTOG 91-11) vs ~75% induction chemo->RT vs ~70% RT alone; no significant overall-survival difference among the trial's three arms (Forastiere NEJM 2003; long-term update JCO 2013)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-LARYNGEAL-POOR-PRESERVATION-CANDIDACY
+  - RF-HNSCC-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CT-NECK-THORAX-ABDOMEN-PELVIS
+  - TEST-AUDIOMETRY
+  - TEST-RENAL-FUNCTION-EGFR
+  - TEST-CBC
+  - TEST-CMP
+desired_tests: []
+
+rationale: >
+  Concurrent cisplatin + RT (RTOG 91-11) is the standard nonsurgical
+  larynx-preservation approach for locally advanced laryngeal SCC in
+  cisplatin-fit patients, achieving the highest larynx-preservation
+  rate among the trial's tested nonsurgical strategies without an
+  overall-survival difference vs the other arms. Patient preference
+  and fitness for high-dose cisplatin drive the choice between this
+  pathway and primary total laryngectomy + postoperative RT, per the
+  Disease-level narrative.
+
+sources:
+  - source_id: SRC-RTOG-9111-FORASTIERE-2003
+    position: supports
+    relevant_quote_paraphrase: "Concurrent cisplatin 100 mg/m² (days 1,22,43) + RT 70 Gy/35 fx achieved the highest 2-year larynx-preservation rate (~88%) among three randomized arms, without an OS difference."
+  - source_id: SRC-NCCN-HNSCC-2025
+    weight: primary
+
+do_not_do:
+  - "Do not offer concurrent cisplatin CRT to patients with cartilage invasion, a non-functional larynx, or other RF-LARYNGEAL-POOR-PRESERVATION-CANDIDACY features — primary total laryngectomy is preferred."
+  - "Do not initiate high-dose cisplatin without baseline audiometry and renal function assessment."
+  - "Do not omit post-treatment surveillance laryngoscopy — salvage laryngectomy remains available for recurrence."
+
+do_not_do_en:
+  - "Do not offer concurrent cisplatin CRT to patients with cartilage invasion, a non-functional larynx, or other RF-LARYNGEAL-POOR-PRESERVATION-CANDIDACY features — primary total laryngectomy is preferred."
+  - "Do not initiate high-dose cisplatin without baseline audiometry and renal function assessment."
+  - "Do not omit post-treatment surveillance laryngoscopy — salvage laryngectomy remains available for recurrence."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB pending Clinical Co-Lead sign-off (CHARTER §6.1). Locally
+  advanced larynx-preservation pathway — default_indication of
+  ALGO-LARYNGEAL-1L overall. Alternative track:
+  IND-LARYNGEAL-LA-1L-TOTAL-LARYNGECTOMY. §17 phased indication;
+  recommended_regimen preserved for backward-compat render paths per
+  the RC-CROSS-NEOADJ precedent. Full Ukrainian rationale/do_not_do
+  prose deferred to a follow-up localization pass.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_draft
+draft_revision: 1

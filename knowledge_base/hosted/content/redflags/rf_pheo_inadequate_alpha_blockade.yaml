@@ -1,0 +1,66 @@
+id: RF-PHEO-INADEQUATE-ALPHA-BLOCKADE
+definition: >
+  Pheochromocytoma / paraganglioma surgery (adrenalectomy) is planned or
+  imminent WITHOUT documented adequate preoperative alpha-adrenergic
+  blockade (phenoxybenzamine or doxazosin). Adequate alpha-blockade is
+  mandatory before surgery to prevent an intraoperative hypertensive
+  crisis from catecholamine release during tumor manipulation
+  (Endocrine Society 2014 PPGL guideline). This is a hard sequencing /
+  safety gate, NOT a treatment-selection preference.
+definition_ua: >
+  Планується або невідворотна операція з приводу феохромоцитоми/
+  парагангліоми (адреналектомія) БЕЗ задокументованої адекватної
+  передопераційної альфа-адреноблокади (феноксибензамін або
+  доксазозин). Адекватна альфа-блокада обов'язкова перед операцією для
+  запобігання інтраопераційному гіпертензивному кризу.
+
+trigger:
+  type: clinical_precondition
+  any_of:
+    - finding: "preop_alpha_blockade_adequate"
+      value: false
+    - finding: "preop_alpha_blockade_adequate"
+      value: null
+    - condition: "Adrenalectomy or paraganglioma resection planned without a documented completed course of preoperative alpha-adrenergic blockade"
+
+clinical_direction: hold
+severity: critical
+priority: 10
+category: fitness-eligibility
+
+relevant_diseases:
+  - DIS-PHEOCHROMOCYTOMA
+shifts_algorithm:
+  - ALGO-PHEO-1L
+
+sources:
+  - SRC-ENDOCRINE-SOCIETY-PPGL-2014
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-07-11"
+draft: true
+
+notes: >
+  Models the narrative's hard requirement that "adequate preoperative
+  alpha-blockade ... is MANDATORY before surgery to prevent
+  intraoperative hypertensive crisis" as an explicit engine-visible
+  safety gate (clinical_direction: hold) rather than free prose. Wired
+  onto IND-PHEO-LOCALIZED-1L-ALPHA-BLOCKADE-ADRENALECTOMY via
+  red_flags_triggering_alternative -- firing this RedFlag means surgery
+  must be HELD, not redirected to a different regimen (the KB schema has
+  no dedicated "required precondition" field on Indication, so
+  red_flags_triggering_alternative is repurposed here for a hold-type
+  gate, consistent with clinical_direction: hold already existing
+  elsewhere in this KB for similar organ-readiness gates, e.g.
+  RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS). No specific numeric duration
+  or target BP/HR threshold is asserted -- "adequate" blockade is
+  intentionally left as a clinical-judgment finding
+  (preop_alpha_blockade_adequate), not an invented number, per CHARTER
+  §8.3. draft:true pending clinical co-lead signoff (CHARTER §6.1,
+  dev-mode-exempted).
+notes_ua: >
+  Моделює обов'язкову передопераційну альфа-блокаду як явний
+  запобіжний бар'єр (hold) для алгоритму, а не як довільний текст.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_pheo_treatment_pathway
+draft_revision: 1

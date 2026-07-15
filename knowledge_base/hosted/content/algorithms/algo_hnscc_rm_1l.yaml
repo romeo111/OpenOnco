@@ -41,22 +41,35 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "PD-L1 CPS ≥20 AND no rapid progression / visceral crisis AND ECOG 0-2"
+        - finding: "pdl1_cps"
+          threshold: 20
+          comparator: ">="
     if_true:
       result: IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH
     if_false:
       next_step: 2
     notes: >
-      RF-HNSCC-TRANSFORMATION-PROGRESSION removed (2026-05-08): it is a
-      hold/critical flag (rapid progression / airway compromise) that
-      CONTRA-indicates pembro-mono, not selects it. Patients with that RF
-      firing should fall through to step 2 (pembro-chemo default) or
-      palliative hold per MDT. Biomarker gate (CPS ≥20 numeric finding
-      lookup via RF-HNSCC-CPS-HIGH) deferred to future RF authoring round.
+      Wiring fix (2026-07-11): converted the prose gate "PD-L1 CPS ≥20 ..." into
+      the structured finding: pdl1_cps (threshold 20, >=) — the exact fix this
+      file's notes said was "deferred to future RF authoring round," using the
+      same pdl1_cps key already wired in step 0 (CPS<1) and step 2 (CPS>=1) of
+      this file. Before this fix the prose gate never evaluated true, so the
+      authored CPS>=20 pembrolizumab-MONOTHERAPY stratum (per this algorithm's
+      own purpose statement and KEYNOTE-048) was UNREACHABLE — every CPS>=1
+      patient collapsed to pembro+chemo. Now a CPS>=20 patient correctly routes
+      to pembro-mono; CPS 1-19 falls through to step 2 (pembro-chemo). The
+      dropped "no rapid progression / visceral crisis AND ECOG 0-2" sub-clauses
+      were NOT positive selectors — per this file's own note they are a
+      hold/contra-indication handled by falling through to the pembro-chemo
+      default, so omitting them from the positive gate preserves that intent.
+      Threshold 20 is stated verbatim in this algorithm's purpose; no new
+      clinical criterion introduced.
   - step: 2
     evaluate:
       any_of:
-        - condition: "PD-L1 CPS ≥1"
+        - finding: "pdl1_cps"
+          threshold: 1
+          comparator: ">="
     if_true:
       result: IND-HNSCC-RM-1L-PEMBRO-CHEMO
     if_false:
@@ -66,6 +79,9 @@ decision_tree:
       already handled in step 0 (→ EXTREME), so any patient reaching this
       step has CPS ≥1 and pembro-chemo is the correct default. Remove step
       when CPS 1-19 vs ≥20 gets a further bifurcating Indication.
+      Mechanical rewire of the original free-text gate (PD-L1 CPS ≥1) into
+      a finding: clause using pdl1_cps (mirrors step 0's negated CPS<1
+      bound in this same file). Original clinical criteria unchanged.
 
 sources:
   - SRC-NCCN-HNSCC-2025

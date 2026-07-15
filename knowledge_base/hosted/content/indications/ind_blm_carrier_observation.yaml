@@ -1,0 +1,108 @@
+id: IND-BLM-CARRIER-OBSERVATION
+plan_track: surveillance
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-CRC
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-BLM-CONFIRMED-CARRIER
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Population-cadence CRC screening only — colonoscopy q10y from age
+    45 per USPSTF. Carries modestly higher risk of CRC vs. intensified
+    q5y comparator because the BLM heterozygote signal (RR ~1.5-2.0;
+    ~10-12% lifetime) elevates risk above population baseline. Outcomes
+    typically still favorable given CRC's slow adenoma-to-carcinoma
+    progression, but later-stage detection is possible.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Alternative-track companion. Used when:
+  - Patient declines intensified q5y colonoscopy cadence (procedure
+    burden, anesthesia concerns, bowel-prep aversion).
+  - Patient is at the lower end of BLM moderate-penetrance risk range
+    (no family history of CRC despite carrier status — common given
+    the modest penetrance) and chooses population-cadence screening
+    after informed discussion.
+  - Access to colonoscopy is limited; alternative options (annual FIT
+    + flexible sigmoidoscopy q5y, or stool DNA q3y) may be reasonable
+    bridges, though colonoscopy remains gold-standard.
+
+  In all cases, frame the decision as suboptimal vs. the standard
+  q5y-colonoscopy comparator (IND-BLM-CARRIER-SURVEILLANCE): the
+  intensified protocol detects adenomas at endoscopically-removable
+  stage, preventing progression to invasive CRC.
+
+  Cascade testing of first-degree relatives + partner-carrier testing
+  + reproductive counseling continue regardless of the patient's
+  chosen surveillance cadence — these are the highest-impact
+  interventions for BLM carriers (biallelic Bloom syndrome offspring
+  prevention).
+
+  Per CHARTER §11 patient-autonomy framing.
+
+rationale_ua: >
+  Альтернативно-трекова Indication. Використовується коли:
+  - Пацієнт відмовляється від intensified q5р colonoscopy cadence
+    (procedure burden, anesthesia, bowel-prep aversion).
+  - Пацієнт на нижньому кінці BLM moderate-penetrance ризику (no
+    family history of CRC).
+  - Доступ до colonoscopy обмежений; alternative options (annual FIT
+    + flex sig q5р, або stool DNA q3р) — reasonable bridges.
+
+  В усіх випадках — framing decision як suboptimal vs. q5р-colonoscopy
+  comparator.
+
+  Cascade тестування + partner-carrier testing + reproductive
+  counseling continue незалежно — це highest-impact interventions для
+  BLM carriers.
+
+  Per CHARTER §11 framing автономії пацієнта.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_n_niche
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+    position: context
+
+do_not_do:
+  - "Не презентувати observation як equivalent intensified surveillance — q5р colonoscopy detects adenomas at removable stage."
+  - "Не пропускати cascade-тестування + partner-carrier testing + reproductive counseling — це highest-impact interventions для BLM carriers."
+  - "Не використовувати тільки FOBT (guaiac-based) — sensitivity inadequate; FIT (immunochemical) preferred як non-colonoscopy bridge."
+  - "Не нормалізувати de-intensification у high-family-history BLM carrier — family-history-positive carriers carry upper-range CRC risk."
+
+do_not_do_en:
+  - "Do not present observation as equivalent to intensified surveillance — q5y colonoscopy detects adenomas at endoscopically-removable stage."
+  - "Do not skip cascade testing, partner-carrier testing, and reproductive counseling — these are the highest-impact interventions for BLM carriers."
+  - "Do not use guaiac-based FOBT alone — sensitivity is inadequate; FIT (immunochemical) is preferred as a non-colonoscopy bridge."
+  - "Do not normalize de-intensification in a carrier with strong family history — family-history-positive carriers carry upper-range CRC risk."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-20"
+reviewers: []
+reviewer_signoffs: 0
+notes: "STUB pending two-Co-Lead signoff per CHARTER §6.1 dev-mode. v0.3 wave-N niche moderate-penetrance pathway alternative track (BLM heterozygote). Sibling — IND-BLM-CARRIER-SURVEILLANCE. §15.2 C4 ≥2-tracks invariant."

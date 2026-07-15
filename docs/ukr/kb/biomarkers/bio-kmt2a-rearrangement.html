@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>KMT2A rearrangement (MLL fusion) - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="KMT2A rearrangement (MLL fusion) - OpenOnco">
 <meta property="og:description" content="KMT2A rearrangement (MLL fusion): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/biomarkers/bio-kmt2a-rearrangement.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="KMT2A rearrangement (MLL fusion) - OpenOnco">
 <meta name="twitter:description" content="KMT2A rearrangement (MLL fusion): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"KMT2A rearrangement (MLL fusion) - OpenOnco","description":"KMT2A rearrangement (MLL fusion): сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-kmt2a-rearrangement.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-kmt2a-rearrangement.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"KMT2A rearrangement (MLL fusion) - OpenOnco","description":"KMT2A rearrangement (MLL fusion): сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-kmt2a-rearrangement.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-kmt2a-rearrangement.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -103,6 +175,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -122,7 +195,7 @@
 <tr><th>Деталі мутації</th><td>{&quot;functional_impact&quot;: &quot;Aberrant transcriptional activation of HOX-A cluster (HOXA9 / MEIS1) via menin-MLL complex; leukemogenic&quot;, &quot;gene&quot;: &quot;KMT2A&quot;, &quot;partners&quot;: [&quot;MLLT3 (AF9, t(9;11))&quot;, &quot;MLLT1 (ENL, t(11;19))&quot;, &quot;AFDN (AF6, t(6;11))&quot;, &quot;ELL, t(11;19)&quot;, &quot;AFF1 (AF4, t(4;11))&quot;, &quot;MLLT10 (AF10)&quot;], &quot;variant_type&quot;: &quot;chromosomal rearrangement (typically 11q23 translocation)&quot;}</td></tr>
 <tr><th>Вимірювання</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Karyotype + FISH (KMT2A break-apart probe) at diagnosis; RT-PCR / RNA-NGS for fusion partner identification</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical (positive | negative); fusion partner reported when known</span></div></div></td></tr>
 <tr><th>Пов’язані біомаркери</th><td><span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-npm1.html"><code>BIO-NPM1</code></a></span></td></tr></table>
-  <h2>Нотатки</h2><p>KMT2A rearrangements occur in ~5-10% of adult AML and ~70% of infant ALL/AML; ELN-2022 classifies as adverse risk in AML. Mechanism: KMT2A fusion proteins recruit menin to drive HOXA / MEIS1 expression — menin-MLL interaction is the therapeutic target. Revumenib (menin inhibitor; AUGMENT-101 phase 1/2) FDA-approved Nov 2024 for relapsed/ refractory KMT2A-rearranged acute leukemia (≥1 prior line). ORR ~63% with CR/CRh ~23% in KMT2A-r AML. Differentiation syndrome (~16%) and QTc prolongation are signature AEs. Ziftomenib is alternative menin inhibitor in late-phase trials. Common partners: AF9 (t(9;11)) and AF4 (t(4;11)) — diagnostic karyotype + FISH break-apart probe is standard; fusion partner identification by RT-PCR or RNA-NGS informs prognosis (some partners higher risk than others).</p>
+  <h2>Нотатки</h2><p>Перебудови KMT2A зустрічаються в ~5-10% дорослої ГМЛ та ~70% дитячого ГЛЛ/ГМЛ; ELN-2022 класифікує як несприятливий ризик у ГМЛ. Механізм: химерні білки KMT2A залучають менін для активації HOXA / MEIS1 — взаємодія менін-MLL є мішенню терапії. Ревуменіб (інгібітор меніну; AUGMENT-101 фаза 1/2) FDA-схвалено листопад 2024 для рецидивуючої / рефрактерної KMT2A-перебудованої гострої лейкемії (≥1 попередня лінія). ORR ~63%, ПР/ПРн ~23% у KMT2A-r ГМЛ. Синдром диференціації (~16%) та подовження QTc — сигнатурні НЯ. Зіфтоменіб — альтернативний інгібітор меніну в пізніх фазах досліджень. Часті партнери: AF9 (t(9;11)) та AF4 (t(4;11)) — каріотип + FISH break-apart стандарт; ідентифікація партнера слиття через RT-PCR або RNA-NGS інформує прогноз.</p>
   <h2>Де використовується</h2>
 <h3>Клінічна застосовність</h3><ul><li><code>BMA-KMT2A-REARR-AML</code> - Revumenib (SNDX-5613), an oral menin inhibitor, is FDA-approved (Nov 2024) for relapsed/r...</li><li><code>BMA-KMT2A-REARR-B-ALL</code> - Revumenib (menin inhibitor) FDA-approved (Nov 2024) for relapsed/refractory KMT2A-rearran...</li></ul>
 </main>

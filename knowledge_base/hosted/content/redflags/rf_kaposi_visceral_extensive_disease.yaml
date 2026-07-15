@@ -1,0 +1,87 @@
+id: RF-KAPOSI-VISCERAL-EXTENSIVE-DISEASE
+definition: >-
+  Visceral organ involvement (pulmonary, gastrointestinal, or other
+  visceral site) OR extensive/rapidly progressive mucocutaneous disease
+  (widespread cutaneous lesions, tumor-associated lymphedema, or
+  ulceration) in Kaposi sarcoma of any epidemiologic form (AIDS-
+  associated, iatrogenic, classic, or endemic). Symptomatic/extensive
+  disease of this kind is not expected to be adequately controlled by
+  immune restoration (ART / immunosuppression rebalance) or local
+  therapy alone and drives escalation to systemic chemotherapy.
+definition_ua: >-
+  Вісцеральне ураження органів (легені, шлунково-кишковий тракт або
+  інший вісцеральний орган) АБО поширене/швидко прогресуюче
+  мукокутанне захворювання (розповсюджені шкірні вогнища, пухлина-
+  асоційований лімфедема, виразкування) при саркомі Капоші будь-якої
+  епідеміологічної форми (ВІЛ-асоційована, ятрогенна, класична,
+  ендемічна). Таке симптоматичне/поширене захворювання, як
+  очікується, не буде адекватно контрольоватись лише відновленням
+  імунітету (АРТ / ребаланс імуносупресії) чи локальною терапією і
+  зумовлює ескалацію до системної хіміотерапії.
+
+trigger:
+  type: symptom_composite
+  any_of:
+    - finding: "kaposi_visceral_involvement"
+      value: true
+    - finding: "kaposi_pulmonary_involvement"
+      value: true
+    - finding: "kaposi_gi_involvement"
+      value: true
+    - finding: "kaposi_extensive_cutaneous_disease"
+      value: true
+
+clinical_direction: intensify
+severity: major
+priority: 100
+category: risk-score
+
+relevant_diseases:
+  - DIS-KAPOSI
+shifts_algorithm:
+  - ALGO-KAPOSI-1L
+
+sources:
+  - SRC-NCCN-SKIN-2025
+  - SRC-NIH-AIDS-2024
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+notes: >
+  New disease-extent gate authored for the DIS-KAPOSI treatment pathway
+  (v0.3 continuation -- closes the "missing TREATMENT-intent Indications"
+  gap). Distinct from the pre-existing PREVENTION-persona
+  RF-CHRONIC-HHV8-MALIGNANCY-PREVENTION, which fires on HHV-8
+  seropositivity in an immunocompromised host BEFORE any Kaposi
+  diagnosis. New finding keys (kaposi_visceral_involvement /
+  kaposi_pulmonary_involvement / kaposi_gi_involvement /
+  kaposi_extensive_cutaneous_disease) -- no equivalent finding existed
+  elsewhere in the KB.
+
+  INDEPENDENT REVIEW CORRECTION (2026-07-11): an earlier draft of this
+  trigger also fired on a "kaposi_actg_tumor_stage: T1" finding,
+  invoking the ACTG/Krown Kaposi-sarcoma tumor-extent staging system.
+  That specific formal sub-staging criterion is not stated in the
+  authoring narrative and is not documented by either cited source in
+  this KB, so per CHARTER §8.3 (do not invent a clinical criterion
+  beyond the narrative or a verifiable source) it was removed. The
+  remaining trigger clauses (visceral / pulmonary / GI involvement,
+  extensive cutaneous disease) map directly to language in the
+  authoring narrative ("disease extent (limited-cutaneous vs
+  visceral/advanced)"; "systemic chemotherapy ... for symptomatic/
+  visceral disease") and are retained. SRC-NCCN-SKIN-2025 and
+  SRC-NIH-AIDS-2024 are retained as loose background citations
+  (consistent with the existing KB precedent at
+  RF-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-LONGTERM-PREVENTION,
+  which already cites SRC-NCCN-SKIN-2025 for Kaposi-sarcoma-adjacent
+  risk content) -- flagged here that SRC-NCCN-SKIN-2025's own KB
+  record documents only basal-cell/squamous-cell skin cancer and does
+  not name Kaposi sarcoma; neither source should be read as
+  authoritative, disease-specific support for this trigger's precise
+  definition. STUB pending two-Clinical-Co-Lead signoff (CHARTER §6.1
+  -- dev-mode-exempted; safe to merge as draft content, NOT as
+  published/verified clinical advice).
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_kaposi_treatment
+draft_revision: 1

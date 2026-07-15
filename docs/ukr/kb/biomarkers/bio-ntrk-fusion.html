@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>NTRK1/2/3 gene fusion - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="NTRK1/2/3 gene fusion - OpenOnco">
 <meta property="og:description" content="NTRK1/2/3 gene fusion: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/biomarkers/bio-ntrk-fusion.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NTRK1/2/3 gene fusion - OpenOnco">
 <meta name="twitter:description" content="NTRK1/2/3 gene fusion: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"NTRK1/2/3 gene fusion - OpenOnco","description":"NTRK1/2/3 gene fusion: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-ntrk-fusion.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-ntrk-fusion.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"NTRK1/2/3 gene fusion - OpenOnco","description":"NTRK1/2/3 gene fusion: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-ntrk-fusion.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-ntrk-fusion.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -103,6 +175,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -122,7 +195,7 @@
 <tr><th>Деталі мутації</th><td>{&quot;functional_impact&quot;: &quot;Constitutive TRK kinase activity through 5&#x27;-partner-driven dimerization&quot;, &quot;gene&quot;: &quot;NTRK1 / NTRK2 / NTRK3&quot;, &quot;gene_hugo_id&quot;: &quot;HGNC:8031 (NTRK1) / HGNC:8032 (NTRK2) / HGNC:8033 (NTRK3)&quot;, &quot;hotspots&quot;: [&quot;ETV6-NTRK3 (canonical secretory carcinoma fusion — salivary MASC, infantile fibrosarcoma, secretory breast)&quot;, &quot;LMNA-NTRK1 (soft-tissue / GI tumors)&quot;, &quot;TPM3-NTRK1&quot;, &quot;QKI-NTRK2 (pediatric glioma)&quot;, &quot;BCAN-NTRK1 (pediatric glioma)&quot;], &quot;variant_type&quot;: &quot;chromosomal rearrangement / fus...</td></tr>
 <tr><th>Вимірювання</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>RNA-based NGS (preferred, captures partners) OR pan-TRK IHC (screening) OR FISH break-apart (per gene) OR DNA-NGS with fusion-aware caller</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>categorical (positive/negative); fusion partner + breakpoints reported</span></div><div class="kb-kv-item"><span class="kb-kv-key">Sensitivity requirement</span><span>Pan-TRK IHC ≥1+ → confirm by RNA-NGS or FISH; IHC less sensitive for NTRK3 fusions</span></div></div></td></tr>
 <tr><th>Пов’язані біомаркери</th><td><span class="kb-muted">Не вказано</span></td></tr></table>
-  <h2>Нотатки</h2><p>Tumor-agnostic FDA approval for larotrectinib (NAVIGATE / SCOUT) and entrectinib (STARTRK-1/2 + ALKA) for NTRK-fusion-positive solid tumors after progression or where no satisfactory alternative exists. Fusion frequency: ~0.3% of common adult tumors but &gt;90% in rare entities — secretory carcinoma of salivary gland (MASC), infantile fibrosarcoma, congenital mesoblastic nephroma, secretory breast carcinoma. Pan-TRK IHC is a reasonable inexpensive screen but RNA-NGS remains the gold standard. Resistance: solvent-front (G595R, G623R) and gatekeeper (F589L) mutations on progression — selitrectinib / repotrectinib in development.</p>
+  <h2>Нотатки</h2><p>Схвалення FDA незалежно від типу пухлини: ларотректиніб (larotrectinib; NAVIGATE / SCOUT) і ентректиніб (entrectinib; STARTRK-1/2 + ALKA) для NTRK-фузіопозитивних солідних пухлин після прогресування або за відсутності задовільних альтернатив. Частота злиттів: ~0.3% поширених солідних пухлин у дорослих, але &gt;90% при рідкісних нозологіях — секреторна карцинома слинних залоз (MASC), інфантильна фібросаркома, вроджена мезобластична нефрома, секреторна карцинома молочної залози. Пан-TRK ІГХ є розумним дешевим скринінгом, проте RNA-NGS залишається золотим стандартом. Резистентність: мутації solvent-front (G595R, G623R) та gatekeeper (F589L) при прогресуванні — селітректиніб (selitrectinib) / репотректиніб (repotrectinib) у розробці.</p>
   <h2>Де використовується</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-IFS-1L</code> - ALGO-IFS-1L</li></ul>
 <h3>Diseases</h3><ul><li><code>DIS-IFS</code> - Infantile fibrosarcoma (IFS)</li><li><code>DIS-IMT</code> - Inflammatory myofibroblastic tumor (IMT)</li><li><code>DIS-SALIVARY</code> - Salivary gland carcinoma</li><li><code>DIS-THYROID-ANAPLASTIC</code> - Anaplastic thyroid carcinoma (ATC)</li><li><code>DIS-THYROID-PAPILLARY</code> - Papillary thyroid carcinoma (PTC)</li></ul>

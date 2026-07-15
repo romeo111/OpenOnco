@@ -1,0 +1,121 @@
+id: RF-BLM-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in the BLM
+  gene — Bloom syndrome carrier status. Biallelic BLM inactivation
+  causes Bloom syndrome (BS) — autosomal-recessive chromosomal-
+  instability disorder with severe growth restriction, photosensitive
+  facial erythema, immunodeficiency, and dramatically elevated risk of
+  a broad spectrum of cancers (CRC, leukemia, lymphoma, breast, skin)
+  with median age of cancer diagnosis ~25-30 years. Heterozygous
+  (carrier) status — the focus of this RedFlag — confers a modest
+  signal for colorectal cancer (RR ~1.5-2.0) and possibly breast
+  cancer (RR ~1.5; evidence less consistent). The Ashkenazi Jewish
+  founder variant c.2207_2212delinsTAGATTC (p.Tyr736LeufsTer5; also
+  reported as p.Tyr736X / BLM-Ash) has population carrier frequency
+  ~1% in Ashkenazi Jews, making BLM carrier testing routine on
+  Ashkenazi preconception panels and population-relevant in any
+  Ashkenazi-ancestry cancer-risk assessment. No current personal
+  cancer diagnosis in the carrier being assessed. Mandates colorectal
+  cancer screening with mild intensification, breast-cancer awareness,
+  and reproductive counseling (biallelic-Bloom risk to offspring of
+  two carriers). Prevention-persona RedFlag (§20, v0.3 wave-N niche
+  moderate-penetrance pathway).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант у
+  гені BLM — носійство Bloom syndrome. Біалельна інактивація BLM
+  спричиняє Bloom syndrome (BS) — аутосомно-рецесивне розлад
+  хромосомної нестабільності з тяжким growth restriction,
+  photosensitive facial erythema, immunodeficiency та різко підвищеним
+  ризиком широкого спектру раків (CRC, leukemia, lymphoma, breast,
+  skin) з медіаною віку діагнозу раку ~25-30 років. Гетерозиготний
+  (carrier) статус — фокус цього RedFlag — надає modest signal для
+  колоректального раку (RR ~1.5-2.0) і можливо раку молочної залози
+  (RR ~1.5; докази менш консистентні). Ашкеназі-єврейський founder
+  варіант c.2207_2212delinsTAGATTC (p.Tyr736LeufsTer5; також BLM-Ash)
+  має population carrier frequency ~1% серед Ашкеназі євреїв. Поточний
+  особистий діагноз раку відсутній. Mandates скринінг колоректального
+  раку з помірною інтенсифікацією, breast-cancer awareness та
+  репродуктивне консультування. Prevention-persona RedFlag (§20, v0.3
+  wave-N niche moderate-penetrance шлях).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_blm_pathogenic_variant_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: other
+risk_category: genetic
+
+# BLM heterozygote-spectrum: colorectal cancer (RR ~1.5-2.0); possible
+# breast (RR ~1.5; inconsistent). Biallelic = Bloom syndrome (early-
+# onset multi-cancer phenotype) — outside the asymptomatic-adult
+# prevention persona for this RF.
+relevant_diseases:
+  - DIS-CRC
+  - DIS-BREAST
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+  - SRC-NCCN-COLON-2025
+  - SRC-CLEARY-BLM-2003
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  v0.3 wave-N niche moderate-penetrance carrier pathway — BLM
+  heterozygosity. Fires on documented germline BLM pathogenic variant
+  positivity in an asymptomatic individual. Engine routes to
+  PreventionPlan recommending:
+    (a) IND-BLM-CARRIER-SURVEILLANCE (standard) — CRC screening with
+        colonoscopy q5y from age 40 (or 10y before earliest familial
+        CRC diagnosis); breast cancer awareness + population-cadence
+        screening at standard ages; cascade testing of first-degree
+        relatives; reproductive counseling for partners who are also
+        carriers (biallelic Bloom syndrome risk to offspring).
+    (b) IND-BLM-CARRIER-OBSERVATION (alternative) — population-cadence
+        screening only (CRC q10y from age 45 per USPSTF). Counsel that
+        this is sub-optimal vs. mildly intensified surveillance
+        comparator. Per CHARTER §11 patient-autonomy framing.
+
+  Ashkenazi founder allele context: c.2207_2212delinsTAGATTC
+  (p.Tyr736X / BLM-Ash) is the dominant pathogenic variant in
+  Ashkenazi Jewish populations (population carrier frequency ~1% —
+  approximately 1 in 100). Routine inclusion on Ashkenazi
+  preconception panels alongside BRCA1/2 founder variants. NCCN
+  Genetic/Familial High-Risk CRC includes BLM in moderate-penetrance
+  CRC-gene panels but the recommendation strength is conditional and
+  evidence base is described as "limited" — surveillance
+  intensification beyond population-cadence is offered for
+  informational and shared-decision-making purposes, not as a strong
+  mandate.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Source-set TODO: Cleary et al. BLM-Ash CRC risk
+  meta-analysis (Cancer Res 2003); Gruber et al. BLM heterozygote CRC
+  (Science 2002 — early signal, later contested); Baris et al. updated
+  BLM heterozygote cancer-risk analysis (Hum Mol Genet 2007); ongoing
+  v0.3 wave-N authoring backlog new SRC entities for BLM-specific
+  evidence.
+
+  Lifetime cancer risk in confirmed BLM heterozygotes (NCCN
+  Genetic/Familial High-Risk CRC 2025; Baris 2007; Cleary 2003):
+    - Colorectal cancer: ~10-12% lifetime; RR ~1.5-2.0 vs. population
+      baseline (~5-6%); evidence base described as moderate.
+    - Breast cancer (women): possible modest elevation (RR ~1.5);
+      evidence inconsistent across cohort studies; not target for
+      surveillance intensification beyond population-cadence
+      mammography.
+    - Other Bloom-spectrum cancers in heterozygotes (leukemia,
+      lymphoma, skin cancers): minimal-to-absent signal in
+      heterozygotes; reserved as biallelic-Bloom risk only.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_n_niche
+draft_revision: 1

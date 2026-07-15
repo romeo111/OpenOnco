@@ -1,0 +1,141 @@
+id: IND-RHABDOID-PREDISPOSITION-CARRIER-INTENSIFIED
+plan_track: aggressive
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-GLIOMA-LOW-GRADE
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-RHABDOID-PREDISPOSITION-CONFIRMED-CARRIER
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Aggressive-observation alternative track for confirmed RTPS1 (SMARCB1)
+  / RTPS2 (SMARCA4) carriers, presented for HCP shared-decision-making
+  alongside the standard Foulkes / EU-RHAB schedule.
+
+  **Disease-spectrum note.** As with the standard track, the KB anchor
+  `DIS-GLIOMA-LOW-GRADE` is the closest available CNS anchor; the
+  actual surveilled spectrum is ATRT (CNS embryonal), extracranial MRT
+  (kidney / liver / soft tissue), and SCCOHT (SMARCA4 carriers only).
+
+  **(1) Brain MRI q6-8 weeks from birth through age 3, then q3 months
+  through age 5, then q12 months through age 8** — tightens the cadence
+  in the steepest part of the ATRT incidence curve and extends
+  surveillance past age 5 (the standard stopping point) to age 8. The
+  evidence base for benefit past age 5 is anecdotal — late-onset ATRT
+  in classic SMARCB1 carriers is uncommon — but some families and
+  centers prefer the residual coverage.
+
+  **(2) Whole-body MRI q2-3 months through age 5, then q12 months
+  through age 10** — tighter peak-window cadence plus extended tail.
+  Sedation cumulative burden is a major counter-argument; some centers
+  intercalate abdominal US between WB-MRI rounds to reduce GA exposure.
+
+  **(3) SMARCA4 SCCOHT track intensified:** starting from menarche,
+  transvaginal US + bimanual exam q6 months (rather than annual), plus
+  pelvic MRI annually. Risk-reducing bilateral salpingo-oophorectomy
+  is discussed earlier in the reproductive timeline. Counseling burden
+  for a teenage carrier is substantial and the trade-off is explicitly
+  patient-values-driven, not evidence-mandated.
+
+  **(4) Schwannomatosis pre-symptomatic surveillance** in adolescent /
+  adult survivors: total-spine MRI q24 months plus annual neurology
+  exam. Less well-validated than the early-childhood ATRT / MRT
+  protocol but emerging as best practice in adult RTPS carriers.
+
+  **Rationale for offering this alternative:** the case-fatality rate
+  of established ATRT and MRT remains high (median OS <12 months in
+  many series despite intensive multimodal therapy), so families
+  occasionally request the highest-cadence protocol available. The
+  trade-off is repeated GA exposure, parental anxiety, and high
+  incidental-finding rate. CHARTER §11 — aggressive intervention
+  requires shared decision-making between pediatric neuro-oncologist,
+  pediatric oncologist, genetic counselor, and family.
+
+  **Routing intent:** prevention-time HCP-mediated counseling
+  alternative to the standard track, NOT a treatment recommendation.
+
+rationale_ua: >
+  Альтернативно-трекова Indication для підтверджених носіїв RTPS1
+  (SMARCB1) / RTPS2 (SMARCA4), представлена для HCP
+  shared-decision-making поряд зі стандартним Foulkes / EU-RHAB
+  графіком.
+
+  **Замітка про спектр.** Якір `DIS-GLIOMA-LOW-GRADE` — найближчий CNS
+  anchor у KB; фактичний спектр — ATRT (CNS embryonal), екстракраніальна
+  MRT, SCCOHT (лише SMARCA4).
+
+  **(1) MRI мозку q6-8 тижнів з народження до 3 років, потім q3
+  місяців до 5 років, потім q12 місяців до 8 років** — звужує cadence
+  у найкрутіший період пік-захворюваності ATRT і подовжує
+  спостереження до 8 років.
+
+  **(2) Whole-body MRI q2-3 місяців до 5 років, потім q12 місяців до
+  10 років** — тісніший peak-window cadence плюс подовжений хвіст.
+  Sedation cumulative burden — major counter-argument.
+
+  **(3) SMARCA4 SCCOHT track інтенсифікований:** з менархе
+  трансвагінальне УЗД + bimanual огляд q6 місяців (замість щорічного),
+  плюс pelvic MRI щорічно. Ризик-знижуюча bilateral
+  salpingo-oophorectomy обговорюється раніше у репродуктивній
+  траєкторії.
+
+  **(4) Pre-symptomatic schwannomatosis surveillance** у підлітковому /
+  дорослому віці виживших: total-spine MRI q24 місяців плюс щорічний
+  огляд невролога.
+
+  **Обґрунтування:** case-fatality rate встановленої ATRT та MRT
+  залишається високим (median OS <12 місяців у багатьох серіях),
+  тому сім'ї інколи запитують найвищий-cadence протокол. Trade-off —
+  повторна GA-експозиція, батьківська тривога. CHARTER §11.
+
+  **Маршрутизація:** prevention-time альтернатива стандартному треку,
+  НЕ лікувальна рекомендація.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_pediatric_predisposition_wave_m
+
+sources:
+  - source_id: SRC-NCCN-CNS-2025
+    position: context
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+    position: context
+
+do_not_do:
+  - "Не приймати q6-8 тижневий MRI cadence без access to pediatric anesthesia + центру з досвідом інтерпретації — false-positives ведуть до інвазивних follow-ups у немовляти."
+  - "Не подовжувати ATRT-targeted brain MRI surveillance за 8 років — late-onset ATRT надзвичайно рідкісний, signal-to-noise ratio падає."
+  - "Не пропонувати risk-reducing salpingo-oophorectomy SMARCA4 жінці до завершення задокументованих репродуктивних рішень — irreversible та emotionally complex."
+  - "Не плутати DIS-GLIOMA-LOW-GRADE engine anchor з фактичним спектром — ATRT / MRT / SCCOHT distinct entities, surface in patient-facing render."
+
+do_not_do_en:
+  - "Do not adopt the q6-8 week MRI cadence without pediatric-anesthesia access and a center experienced in interpretation — false positives lead to invasive follow-ups in an infant."
+  - "Do not extend ATRT-targeted brain MRI surveillance beyond age 8 — late-onset ATRT is exceedingly rare and signal-to-noise ratio drops."
+  - "Do not offer risk-reducing salpingo-oophorectomy to a SMARCA4 female before reproductive decisions are documented — irreversible and emotionally complex."
+  - "Do not conflate the DIS-GLIOMA-LOW-GRADE engine anchor with the actual tumor spectrum — ATRT / MRT / SCCOHT are distinct entities and must surface in patient-facing render."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-19"
+reviewers: []
+reviewer_signoffs: 0
+notes: "STUB pending two-Co-Lead signoff per CHARTER §6.1 dev-mode. Aggressive-observation alternative for RTPS1/RTPS2 confirmed carriers — shortest-feasible cadence + extended duration + SMARCA4 SCCOHT intensification + schwannomatosis tail. §15.2 C4 ≥2-tracks invariant: pairs with IND-RHABDOID-PREDISPOSITION-CARRIER-SURVEILLANCE."

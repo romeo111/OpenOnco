@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HER3 (ERBB3) high-expression / actionability surrogate in EGFR-mutant NSCLC progressing o... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="HER3 (ERBB3) high-expression / actionability surrogate in EGFR-mutant NSCLC progressing o... - OpenOnco">
 <meta property="og:description" content="HER3 (ERBB3) high-expression / actionability surrogate in EGFR-mutant NSCLC progressing o...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/redflags/rf-nsclc-her3-high-patritumab-candidate.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HER3 (ERBB3) high-expression / actionability surrogate in EGFR-mutant NSCLC progressing o... - OpenOnco">
 <meta name="twitter:description" content="HER3 (ERBB3) high-expression / actionability surrogate in EGFR-mutant NSCLC progressing o...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"HER3 (ERBB3) high-expression / actionability surrogate in EGFR-mutant NSCLC progressing o... - OpenOnco","description":"HER3 (ERBB3) high-expression / actionability surrogate in EGFR-mutant NSCLC progressing o...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-nsclc-her3-high-patritumab-candidate.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-nsclc-her3-high-patritumab-candidate.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"HER3 (ERBB3) high-expression / actionability surrogate in EGFR-mutant NSCLC progressing o... - OpenOnco","description":"HER3 (ERBB3) high-expression / actionability surrogate in EGFR-mutant NSCLC progressing o...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-nsclc-her3-high-patritumab-candidate.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-nsclc-her3-high-patritumab-candidate.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -103,6 +175,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -117,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-04-29 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-NSCLC"><code>DIS-NSCLC</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="ESMO Clinical Practice Guideline on Metastatic Non-Small Cell Lung Cancer"><a href="https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-oncogene-addicted-metastatic-non-small-cell-lung-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-NSCLC-METASTATIC-2024</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Non-Small Cell Lung Cancer"><a href="https://www.nccn.org/professionals/physician_gls/pdf/nscl.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-NSCLC-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>HER3 (ERBB3) high-expression / actionability surrogate in EGFR-mutant NSCLC progressing on prior EGFR-TKI — patritumab deruxtecan (HER3-DXd) is a HER3-directed deruxtecan antibody-drug conjugate. HERTHENA-Lung01 (Yu 2023) phase-2 single-arm in EGFR-mutant NSCLC post-osimertinib + platinum chemo (n=225): ORR 29.8%, mPFS 5.5 mo, mOS 11.9 mo independent of HER3 IHC level — biomarker-unselected enrollment. FDA accelerated-approval review pending. Candidate RF until BIO-HER3-EXPRESSION lands and pivotal trial-Source SRC-HERTHENA-LUNG01-YU-2024 ingested.</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Висока експресія HER3 (ERBB3) / сурогатна актонабельність у EGFR- мутантному НДРЛ при прогресуванні на попередньому EGFR-TKI — патритумаб деруксtекан (HER3-DXd) — кон&#x27;югат антитіло-препарат деруксtекан, спрямований на HER3. HERTHENA-Lung01 (Yu 2023) фаза-2 однорукове в EGFR-мутантному НДРЛ після осимертинібу + платинової хіміотерапії (n=225): ORR 29.8%, мПФВ 5.5 міс, мЗВ 11.9 міс незалежно від рівня IHC HER3 — рекрутинг без біомаркерного відбору. Очікується розгляд прискореного схвалення FDA. RF-кандидат до появи BIO-HER3-EXPRESSION та інгестії ключового джерела випробування SRC-HERTHENA-LUNG01-YU-2024.</td></tr>
 <tr><th>Клінічний напрям</th><td>investigate</td></tr>
 <tr><th>Категорія</th><td>high-risk-biology</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
   &quot;all_of&quot;: [
@@ -136,7 +209,7 @@
   ],
   &quot;type&quot;: &quot;biomarker&quot;
 }</pre>
-  <h2>Нотатки</h2><p>Candidate RF — multiple prerequisites missing. (a) BIO-HER3-EXPRESSION not yet authored on master (W7d emerging-targeted bio chunk pending); (b) HERTHENA-Lung01 trial-Source SRC-HERTHENA-LUNG01-YU-2024 not yet ingested. clinical_direction = investigate (not intensify) because HERTHENA-Lung01 was biomarker-unselected — HER3 IHC not a gating criterion in pivotal data; eligibility is post-osimertinib + platinum-progressed EGFR-mutant. Priority 90 placed conservatively to avoid over-firing while awaiting confirmatory FDA approval (delay signal as of 2024-2025). When trigger fires the engine should surface patritumab-DXd as a candidate option for MDT discussion; not auto-route. Toxicity: thrombocytopenia (~21% G≥3), neutropenia, ILD class warning per deruxtecan platform. Promote to draft:false + clinical_direction:intensify after FDA accelerated approval + trial-Source ingestion.</p>
+  <h2>Нотатки</h2><p>Кандидатний RF — кілька передумов відсутні. (а) BIO-HER3-EXPRESSION ще не створено на master (chunk W7d emerging-targeted bio очікується); (b) джерело випробування HERTHENA-Lung01 SRC-HERTHENA-LUNG01-YU-2024 ще не інгестоване. clinical_direction = investigate (не intensify), оскільки HERTHENA-Lung01 був без біомаркерного відбору — HER3 IHC не gating-критерій у ключових даних; критерії — після осимертинібу + прогресування на платині при EGFR-мутації. Пріоритет 90 розміщено консервативно, щоб уникнути надмірного спрацьовування під час очікування підтверджуючого схвалення FDA (сигнал затримки на 2024-2025). При спрацьовуванні тригера двигун має пред&#x27;явити патритумаб-DXd як кандидатну опцію для обговорення MDT; не авто-маршрутизувати. Токсичність: тромбоцитопенія (~21% G≥3), нейтропенія, класове застереження ILD за платформою деруксtекану. Перевести на draft:false + clinical_direction:intensify після прискореного схвалення FDA + інгестії джерела випробування.</p>
   <h2>Де використовується</h2><p class="kb-muted">У YAML-корпусі не знайдено зворотних посилань.</p>
 </main>
 </body>

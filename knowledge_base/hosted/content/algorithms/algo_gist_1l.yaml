@@ -44,22 +44,24 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "KIT exon 11 mutation positive"
-        - condition: "KIT exon 9 mutation positive"
+        - finding: "BIO-KIT"
+          value: "exon-9"
         - condition: "PDGFRA non-D842V exon 18 OR exon 12 OR exon 14 mutation positive"
     if_true:
       result: IND-GIST-1L-IMATINIB
     if_false:
       next_step: 3
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Mechanical rewire of the free-text gate 'KIT exon 9 mutation positive' into a finding: clause using BIO-KIT (value exon-9), matching the RF-GIST-HIGH-RISK-BIOLOGY trigger. Original clinical criteria unchanged. 'KIT exon 11 mutation positive' and 'PDGFRA non-D842V exon 18 OR exon 12 OR exon 14 mutation positive' remain free-text — no matching disease-scoped RF/finding key exists for either (kit_exon11 is melanoma-scoped only; PDGFRA non-D842V exon 18 is explicitly out of RF-GIST-PDGFRA-D842V's scope). Flag for RF authoring."
   - step: 3
     evaluate:
       any_of:
-        - condition: "KIT/PDGFRA wild-type (SDH-deficient OR NF1-mutant OR uncharacterized)"
+        - finding: "kit_pdgfra_wildtype"
+          value: true
     if_true:
       result: IND-GIST-1L-IMATINIB
     if_false:
       result: IND-GIST-1L-IMATINIB
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Mechanical rewire of the original free-text gate (KIT/PDGFRA wild-type, encompassing SDH-deficient / NF1-mutant / uncharacterized subtypes) into a finding: clause using kit_pdgfra_wildtype, matching the RF-GIST-HIGH-RISK-BIOLOGY trigger. Original clinical criteria unchanged."
 
 sources:
   - SRC-NCCN-GIST-2025

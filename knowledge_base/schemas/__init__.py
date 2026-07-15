@@ -19,7 +19,7 @@ from .diagnostic import (
 )
 from .disease import Disease
 from .drug import Drug
-from .experimental_option import ExperimentalOption, ExperimentalTrial
+from .experimental_option import ExperimentalOption, ExperimentalTrial, UaSiteDetail
 from .handbook import (
     HandbookChapter,
     HandbookLinkedEntities,

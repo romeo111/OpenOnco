@@ -4,7 +4,7 @@ from typing import Literal, Optional
 
 from pydantic import Field, model_validator
 
-from .base import Base, NamePair
+from .base import Base, BiomarkerClinicalContext, NamePair
 
 
 # Stable machine-readable tokens for biomarkers we deliberately exclude
@@ -85,6 +85,11 @@ class BiomarkerExternalIDs(Base):
     clingen_id: Optional[str] = None
     hgvs_protein: Optional[str] = None
     hgvs_coding: Optional[str] = None
+    # NCI Thesaurus stable concept code (e.g. "C20188" = EGFR Mutation,
+    # "C17068" = EGFR Gene). Backs term normalization from free-text
+    # biomarker mentions to KB biomarker IDs. Optional in MVP; see
+    # `knowledge_base/clients/ncit_client.py`.
+    ncit: Optional[str] = None
 
 
 class Biomarker(Base):
@@ -115,6 +120,20 @@ class Biomarker(Base):
     # Cross-references to external KBs (HGNC, OncoKB, CIViC, ClinGen).
     # Optional and partial — see BiomarkerExternalIDs.
     external_ids: Optional[BiomarkerExternalIDs] = None
+
+    # §20 prevention extensions (RATIFIED 2026-05-18). Multi-valued — one
+    # marker may serve several clinical contexts (e.g., MMR / MSI is
+    # simultaneously germline_susceptibility + tumor_profiling +
+    # predictive). Default `[tumor_profiling]` matches current implicit
+    # behavior across the ~170 existing Biomarker YAMLs — no backfill
+    # required. `applicable_in_asymptomatic` is the fast filter for
+    # Prevention Plan composition: only true for markers with established
+    # asymptomatic use (germline panels, syndrome-specific monitoring like
+    # calcitonin in MEN2, AFP+US in cirrhotics).
+    clinical_context: list[BiomarkerClinicalContext] = Field(
+        default_factory=lambda: [BiomarkerClinicalContext.TUMOR_PROFILING]
+    )
+    applicable_in_asymptomatic: bool = False
 
     related_biomarkers: list[str] = Field(default_factory=list)
     knowledge_base_refs: dict[str, str] = Field(default_factory=dict)  # oncokb | civic | clinvar URL

@@ -1,0 +1,66 @@
+id: RF-IATROGENIC-METHOTREXATE-LONGTERM-LYMPHOMA-PREVENTION
+definition: >-
+  Long-term low-dose methotrexate exposure (≥1-2 years, ≥15 mg/week
+  cumulative or PO 7.5-25 mg/week chronic) for autoimmune indications
+  including rheumatoid arthritis, psoriasis, psoriatic arthritis,
+  Crohn's disease — associated with methotrexate-associated
+  lymphoproliferative disorders (MTX-LPD), most commonly diffuse large
+  B-cell lymphoma (DLBCL) or polymorphic LPD with EBV co-positivity in
+  many cases. Incidence ~1-3% over 5 years of cumulative exposure;
+  Japanese rheumatoid cohorts show higher signal (likely population
+  EBV seroprevalence). Distinctive feature: ~30-60% of MTX-LPD cases
+  regress on MTX withdrawal alone (no chemotherapy needed) — this
+  signature uniquely identifies the iatrogenic etiology. Risk also
+  modestly elevated for solid cancers (skin SCC, melanoma) — separate
+  signal. Prevention-persona RedFlag (§20, v0.3 iatrogenic expansion).
+definition_ua: >-
+  Long-term low-dose methotrexate експозиція (≥1-2 роки, ≥15 мг/тиж
+  cumulative або PO 7.5-25 мг/тиж chronic) для autoimmune indications
+  включаючи rheumatoid arthritis, psoriasis, psoriatic arthritis,
+  Crohn's disease — associated з methotrexate-associated
+  lymphoproliferative disorders (MTX-LPD), найчастіше diffuse large
+  B-cell lymphoma (DLBCL) або polymorphic LPD з EBV ко-позитивністю.
+  Incidence ~1-3% over 5 років cumulative експозиції; Japanese rheumatoid
+  cohorts мають higher signal (likely population EBV seroprevalence).
+  Distinctive feature: ~30-60% MTX-LPD cases регресують на MTX
+  withdrawal alone (no chemotherapy) — this signature uniquely
+  identifies the iatrogenic etiology. Modest risk також для solid
+  cancers (skin SCC, melanoma). Prevention-персона RedFlag (§20, v0.3
+  iatrogenic expansion).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "methotrexate_longterm_low_dose_autoimmune"
+      value: true
+    - finding: "methotrexate_ge_1y_cumulative"
+      value: true
+    - finding: "mtx_lpd_susceptible_cohort"
+      value: true
+
+clinical_direction: investigate
+severity: minor
+priority: 115
+category: other
+risk_category: iatrogenic
+
+relevant_diseases:
+  - DIS-DLBCL-NOS
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for long-term low-dose MTX exposure (RA,
+  psoriasis, IBD). Surveillance: low-threshold workup for unexplained
+  lymphadenopathy, B-symptoms, organomegaly, mass — MTX withdrawal +
+  observe 8-12 weeks first (~50% regress); persistent → DLBCL-style
+  workup. Skin examination annually. STUB pending two-Co-Lead signoff
+  per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_iatrogenic_expansion
+draft_revision: 1

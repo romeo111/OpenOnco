@@ -1,0 +1,72 @@
+id: IND-PHEO-METASTATIC-1L-CABOZANTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PHEOCHROMOCYTOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Unresectable, locally advanced, or metastatic pheochromocytoma or paraganglioma"
+    - "MIBG-non-avid disease (or MIBG-avid disease where radiopharmaceutical therapy is not feasible/available), OR progression after I-131 MIBG"
+    - "Sunitinib intolerance/contraindication, prior sunitinib exposure/progression, or MDT/patient preference for cabozantinib"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-CABOZANTINIB-PHEO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "Reported responses in small single-arm/retrospective series per NCCN; not asserted here as a specific percentage pending source-verified figures"
+  complete_response:
+  progression_free_survival: "Not asserted here pending source-verified figures"
+  overall_survival_5y: "Not asserted here pending source-verified figures"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-METANEPHRINES-PLASMA-PARAGANGLIOMA
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests: []
+
+rationale: >
+  Cabozantinib is listed by NCCN as an alternative systemic option for
+  metastatic non-MIBG-avid pheochromocytoma/paraganglioma, but its PPGL
+  evidence base is smaller and lower-quality (single-arm/retrospective)
+  than sunitinib's randomized FIRSTMAPPP trial
+  (IND-PHEO-METASTATIC-1L-SUNITINIB), so it is modelled here as the
+  alternative rather than the default option -- for patients with
+  sunitinib intolerance/contraindication, prior sunitinib
+  exposure/progression, or MDT/patient preference.
+
+sources:
+  - source_id: SRC-NCCN-NET-2025
+    position: supports
+
+do_not_do:
+  - "Не призначати кабозантиніб як терапію першого вибору замість сунітинібу без клінічного обґрунтування (непереносимість, прогресування, перевага пацієнта)."
+
+do_not_do_en:
+  - "Do not use cabozantinib ahead of sunitinib as first choice without a clinical rationale (intolerance, prior progression, patient preference)."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+review_status: stub
+drafted_by: claude_pheo_treatment_pathway
+notes: >
+  Coverage-enabling metastatic-disease indication for
+  DIS-PHEOCHROMOCYTOMA, alternative non-MIBG-avid systemic branch.
+  Reuses DRUG-CABOZANTINIB. Deliberately cited only via the existing
+  SRC-NCCN-NET-2025 guideline rather than a specific cabozantinib-in-
+  PPGL trial Source, because no specific trial name/citation could be
+  confirmed with enough confidence to author a new Source stub for it
+  (unlike sunitinib's FIRSTMAPPP, which the Disease narrative names
+  explicitly and which was independently verified via PubMed this
+  session). Requires medical oncology co-lead signoff before clinical
+  publication.

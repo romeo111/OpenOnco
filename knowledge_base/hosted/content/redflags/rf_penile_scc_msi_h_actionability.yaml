@@ -1,0 +1,50 @@
+id: RF-PENILE-SCC-MSI-H-ACTIONABILITY
+definition: >
+  MSI-high / dMMR penile squamous cell carcinoma — an uncommon but
+  described biomarker subset. Opens pembrolizumab (tissue-agnostic
+  MSI-H/dMMR FDA approval, KEYNOTE-158/164 basket) as an alternative to
+  cisplatin-based chemotherapy in metastatic/unresectable disease.
+definition_ua: >
+  MSI-high / dMMR SCC пенісу — нечастий, але описаний біомаркерний
+  підтип. Відкриває пембролізумаб (тканинно-агностичне схвалення
+  MSI-H/dMMR FDA) як альтернативу цисплатин-вмісній хіміотерапії при
+  метастатичному/нерезектабельному захворюванні.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "msi_status"
+      value: "MSI-H"
+    - finding: "dmmr_status"
+      value: "deficient"
+
+clinical_direction: intensify
+
+severity: major
+priority: 100
+category: high-risk-biology
+
+relevant_diseases: [DIS-PENILE-SCC]
+shifts_algorithm: [ALGO-PENILE-SCC-1L]
+
+sources:
+  - SRC-EAU-PENILE-2024
+
+last_reviewed: "2026-07-11"
+draft: true
+
+notes: >
+  STUB. Drafted for the DIS-PENILE-SCC Phase 1 authoring pass. MSI-H is
+  rare in penile SCC and testing is not routine — this RF fires only when
+  MSI/dMMR testing has actually been performed and returns positive.
+  Mirrors RF-CRC-MSI-H-ACTIONABILITY's trigger/finding-key convention
+  (finding: msi_status / dmmr_status) for consistency across the KB.
+  Requires clinical co-lead signoff before publication (CHARTER §6.1;
+  dev-mode-exempted for draft merge).
+notes_ua: >
+  СТАБ. Складено для DIS-PENILE-SCC. MSI-H рідкісний при SCC пенісу,
+  тестування не є рутинним — цей RF спрацьовує лише коли тестування
+  MSI/dMMR дійсно виконано і результат позитивний.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+draft_revision: 1

@@ -1,0 +1,193 @@
+id: ALGO-VULVAR-VAGINAL-SCC-1L
+applicable_to_disease: DIS-VULVAR-VAGINAL-SCC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L treatment for vulvar and vaginal squamous cell carcinoma.
+  Routes by: (1) resectability/stage — early-stage surgically
+  resectable disease vs locally advanced/unresectable-without-morbidity
+  disease vs distant metastatic/non-curable-recurrent disease,
+  (2) ECOG fitness for chemoradiation, and (3) PD-L1 status for
+  metastatic systemic therapy selection. Vaginal SCC is anatomically
+  constrained toward the chemoradiation branch — surgery is rarely
+  appropriate given proximity to bladder/rectum/urethra (flagged at
+  step 3).
+
+output_indications:
+  - IND-VULVAR-VAGINAL-SCC-1L-WLE-SLNB
+  - IND-VULVAR-VAGINAL-SCC-LA-1L-CISPLATIN-RT
+  - IND-VULVAR-VAGINAL-SCC-METASTATIC-1L-PEMBRO
+
+default_indication: IND-VULVAR-VAGINAL-SCC-1L-WLE-SLNB
+alternative_indication: IND-VULVAR-VAGINAL-SCC-LA-1L-CISPLATIN-RT
+
+decision_tree:
+  # Step 1 — Histologic confirmation + complete staging workup gate.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Histologically confirmed squamous cell carcinoma of the vulva or vagina"
+        - condition: "Complete staging workup: exam ± MRI pelvis, groin node assessment, imaging for distant disease (CT CAP)"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        Histologic confirmation + complete staging workup required
+        before treatment selection. Distinguish HPV-associated
+        (younger, basaloid/warty morphology) vs HPV-independent /
+        lichen-sclerosus-driven (older, differentiated VIN) biology —
+        both are managed by the same anatomic-staging pathway below.
+
+  # Step 2 — Distant metastasis / non-curable-recurrence gate.
+  - step: 2
+    evaluate:
+      any_of:
+        - finding: "distant_metastasis"
+          value: true
+        - condition: "Distant metastatic disease (M1) confirmed on staging imaging"
+        - condition: "Recurrent/persistent disease not amenable to further curative-intent local therapy"
+    if_true:
+      next_step: 5
+      notes: "Distant metastatic or non-curable recurrent/persistent disease → systemic therapy pathway (step 5)."
+    if_false:
+      next_step: 3
+
+  # Step 3 — Early-stage surgical (GROINSS-V SLNB) eligibility gate.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Vulvar primary tumor <4 cm, unifocal, invasion depth >1mm, clinically/radiologically node-negative groin (GROINSS-V sentinel-node eligibility) — resectable with function preservation"
+    if_true:
+      result: IND-VULVAR-VAGINAL-SCC-1L-WLE-SLNB
+      notes: >
+        Early-stage, GROINSS-V-eligible vulvar SCC: wide local excision
+        + inguinal sentinel lymph node biopsy (SLNB), omitting routine
+        complete inguinofemoral lymphadenectomy in SLN-negative patients
+        (GROINSS-V-I: isolated groin recurrence 2.3%, 3-year survival
+        97%). SLN-positive → completion lymphadenectomy or
+        inguinofemoral RT for micrometastases ≤2mm (GROINSS-V-II).
+    if_false:
+      next_step: 4
+      notes: >
+        Does not meet SLNB-eligible early-stage criteria: multifocal,
+        ≥4cm, invasion ≤1mm-excluded pathology, suspicious groin nodes,
+        or primary not resectable without unacceptable functional
+        morbidity — OR vaginal primary (anatomic constraints, proximity
+        to bladder/rectum/urethra, generally preclude primary surgery
+        regardless of formal substage).
+
+  # Step 4 — ECOG fitness + organ-function gate for definitive chemoradiation.
+  - step: 4
+    evaluate:
+      all_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - condition: "Adequate renal function for cisplatin (or carboplatin substitution per REG-CISPLATIN-RADIOSENS dose-adjustment rules) and no dose-limiting prior pelvic RT"
+    if_true:
+      result: IND-VULVAR-VAGINAL-SCC-LA-1L-CISPLATIN-RT
+      notes: >
+        Locally advanced vulvar SCC (unresectable without unacceptable
+        morbidity, or bulky/fixed groin nodes) or vaginal SCC (anatomic
+        surgical constraints): definitive concurrent chemoradiation —
+        weekly cisplatin radiosensitization (REG-CISPLATIN-RADIOSENS) +
+        EBRT to primary + regional nodes, mirroring the cervical
+        GOG-120 cisplatin-RT paradigm (no vulvar/vaginal-specific
+        pivotal RCT exists; extrapolated standard of care).
+    if_false:
+      result: null
+      notes: >
+        ECOG ≥2, renal impairment precluding radiosensitizing
+        chemotherapy, or prior dose-limiting pelvic RT: individualized
+        MDT assessment — reduced-intensity RT alone or best supportive
+        care per radiation oncology / gynecologic oncology MDT review.
+
+  # Step 5 — Metastatic/non-curable-recurrent: PD-L1-informed systemic therapy gate.
+  - step: 5
+    evaluate:
+      any_of:
+        - red_flag: RF-VULVAR-VAGINAL-SCC-PDL1-CPS-1-PLUS
+    if_true:
+      result: IND-VULVAR-VAGINAL-SCC-METASTATIC-1L-PEMBRO
+      notes: >
+        PD-L1 CPS≥1: pembrolizumab monotherapy per the KEYNOTE-158
+        vulvar cohort (ORR 10.9% all-comers; durable responses in a
+        minority, median DOR 20.4 months). NOTE: KEYNOTE-158
+        vulvar-cohort responses occurred regardless of PD-L1 status
+        (CPS<1 subgroup, n=7, numerically higher ORR but wide CI) —
+        CPS≥1 is not a validated hard predictive cutoff for this tumor
+        type; pembrolizumab may still be reasonable to discuss for
+        CPS<1 patients per MDT.
+    if_false:
+      result: null
+      notes: >
+        PD-L1 CPS<1 (or untested): pembrolizumab monotherapy remains
+        MDT-discussable given KEYNOTE-158 responses were not strictly
+        PD-L1-gated (see step notes above), but is not the algorithm's
+        default-routed result at CPS<1. Platinum-based cytotoxic
+        chemotherapy (per general NCCN gynecologic-SCC practice) is the
+        alternative systemic option — NOT YET AUTHORED as a KB
+        Indication in this pass (open gap; flagged in the disease
+        file's metadata.awaiting_proposal).
+
+sources:
+  - SRC-GROINSS-V-VANDERZEE-2008
+  - SRC-KEYNOTE-158-VULVAR-SHAPIRA-FROMMER-2022
+  - SRC-NCCN-CERVICAL-2025
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+notes: >
+  default_indication set to the early-stage surgical pathway
+  (IND-VULVAR-VAGINAL-SCC-1L-WLE-SLNB) because early-stage disease is
+  the most common presentation for vulvar SCC (disease-file
+  epidemiology: 5-year OS stage I ~90%) and is the first branch
+  resolved in the decision tree; alternative_indication set to the
+  locally advanced chemoradiation pathway as the next most common
+  curative-intent branch. Step 2's metastatic gate includes a
+  structured `finding: distant_metastasis, value: true` clause
+  (independent-review addition, mirroring the identical established
+  clause already used in algo_bcc_1l.yaml / algo_breast_1l.yaml for
+  the same clinical concept) alongside the original prose, so the
+  fork actually resolves when a questionnaire/example patient
+  populates that field; the recurrent/persistent-disease prose leaf
+  has no existing structured equivalent in this KB and is left as
+  prose. GAPS carried from the underlying Indications: (1) no
+  Surgery/procedure entity yet for vulvar WLE + inguinal SLNB —
+  step 3's result Indication describes surgery in prose, not via
+  phases:/surgery_id; (2) no vulvar/vaginal-specific chemoradiation
+  RCT — step 4's regimen is extrapolated from cervical/anal paradigms;
+  (3) step 5 if_false has no authored platinum-chemo fallback
+  Indication — routes to null pending future authoring; (4) no
+  dedicated NCCN Vulvar Cancer / NCCN Vaginal Cancer Source is hosted
+  in this KB yet — SRC-NCCN-CERVICAL-2025 is reused as a context-only
+  citation; (5) steps 1, 3, and 4's remaining condition: clauses are
+  workup-completion / eligibility criteria without an existing
+  structured finding/RedFlag match in this KB and were left as prose
+  rather than guessed, per the same policy used by the KB-wide
+  prose-to-structured mechanical pass (commit 21ce9686ec) — this means
+  step 1 in particular will not resolve true against synthetic
+  patient-finding dicts that don't carry a matching key, and the
+  engine's `selected or default_indication` fallback (knowledge_base/
+  engine/plan.py) means such patients collapse to the early-stage
+  default rather than being blocked; flagged here explicitly for
+  future RedFlag/finding authoring, consistent with ~128 other
+  KB-wide dead steps already tracked as open technical debt.
+notes_ua: >
+  default_indication встановлено на ранньостадійний хірургічний шлях
+  (IND-VULVAR-VAGINAL-SCC-1L-WLE-SLNB), оскільки ранньостадійна
+  хвороба є найпоширенішою презентацією SCC вульви (епідеміологія
+  файлу хвороби: 5-річна ЗВ стадії I ~90%) і є першою гілкою, що
+  вирішується в дереві рішень; alternative_indication встановлено на
+  шлях місцево-поширеної хіміопроменевої терапії як наступну
+  найпоширенішу курабельну гілку. ПРОГАЛИНИ: (1) ще немає Surgery-
+  сутності для широкої локальної ексцизії вульви + пахової SLNB;
+  (2) немає нозологічно-специфічного рандомізованого дослідження
+  хіміопроменевої терапії для вульви/піхви; (3) крок 5 (if_false) не
+  має авторизованої платино-хіміотерапевтичної Indication —
+  маршрутизується до null; (4) немає окремого джерела NCCN Vulvar
+  Cancer / NCCN Vaginal Cancer в цій базі знань; (5) кроки 1, 3 та 4
+  залишаються частково текстовими (prose) без структурованого
+  еквівалента — відкрита технічна прогалина, узгоджена з ~128 іншими
+  подібними кроками в базі знань.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_search_agent_algorithm_review
+draft_revision: 1

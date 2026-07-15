@@ -1,0 +1,111 @@
+id: RF-DDX41-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in DDX41 —
+  most commonly the p.D140fs (p.Asp140fs) Northern European / Ashkenazi
+  founder allele, but a growing list of recurrent loss-of-function
+  alleles is now recognized worldwide. Patient has had germline panel
+  testing returned positive, ideally confirmed on buccal / fibroblast
+  germline tissue. The penetrance pattern is distinctive: late-onset
+  MDS / AML, typically presenting in the sixth-to-eighth decade
+  (median age at AML diagnosis ~66 years), with cumulative MDS / AML
+  incidence ~50-70% by age 80 in confirmed-carrier pedigrees. A
+  hallmark biologic feature is the somatic DDX41 "second hit"
+  (usually p.R525H, the recurrent hot-spot helicase-domain missense)
+  acquired in trans within the tumor clone — this molecular pattern is
+  diagnostic of germline-DDX41-driven MDS / AML and distinguishes it
+  from sporadic disease. Clinical importance: confirmed DDX41 carriers
+  with MDS / AML show favorable response to hypomethylating-agent
+  therapy (azacitidine, decitabine) and to venetoclax-based combinations
+  (Sebert et al. Blood 2024). Prevention-persona RedFlag (KSS §20,
+  confirmed-carrier surveillance pathway).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант
+  у DDX41 — найчастіше p.D140fs (p.Asp140fs) північно-європейський /
+  Ашкеназі founder алель, але recognized список рекурентних loss-of-
+  function алелей зростає у всьому світі. Пацієнт пройшов germline-
+  тестування з позитивним результатом, ідеально підтвердженим на
+  buccal / fibroblast germline тканині. Патерн пенетрантності
+  специфічний: пізно-onset МДС / ГМЛ, типово презентує у 6-8 декаді
+  (медіана віку діагностики ГМЛ ~66 років), з кумулятивною
+  МДС / ГМЛ-incidence ~50-70% до 80 років у підтверджених-носіїв
+  родоводах. Ключова біологічна особливість: соматичний DDX41 "second
+  hit" (зазвичай p.R525H, рекурентна hot-spot helicase-domain missense)
+  набутий в trans у пухлинному клоні — цей молекулярний патерн
+  діагностичний для germline-DDX41-driven МДС / ГМЛ і відрізняє його
+  від sporadic disease. Клінічне значення: підтверджені DDX41-носії
+  з МДС / ГМЛ показують favorable response на hypomethylating-agent
+  терапію (азацитидин, децитабін) та на венетоклакс-основані
+  комбінації (Sebert et al. Blood 2024). Prevention-persona RedFlag
+  (KSS §20, шлях спостереження підтверджених носіїв).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_ddx41_pathogenic_variant_confirmed"
+      value: true
+    - finding: "germline_ddx41_d140fs_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+severity: critical
+priority: 70
+category: other
+risk_category: genetic
+
+# DDX41 carrier malignancy spectrum: late-onset MDS (often R525H
+# somatic-second-hit pattern), AML evolving from MDS, occasional
+# lymphoid malignancies (modest excess, mechanism uncertain). DIS-AML
+# + DIS-MDS-HR as primary anchors; DIS-MDS-LR carriers also see
+# evolution but engine routes to a single MDS-spectrum-aware track.
+relevant_diseases:
+  - DIS-AML
+  - DIS-MDS-HR
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-MDS-2021
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Wave P confirmed-carrier surveillance pathway — germline DDX41. Fires
+  on documented germline DDX41 pathogenic variant positivity (any allele
+  recognized as germline DDX41 LoF, with p.D140fs the Ashkenazi founder
+  and other recurrent alleles in non-Ashkenazi populations). Engine
+  routes to PreventionPlan recommending:
+    (a) IND-DDX41-CARRIER-SURVEILLANCE (standard) — CBC q6 months from
+        age 50 (or from carrier confirmation if later); BMA + cytogenetics
+        + myeloid NGS panel at any unexplained cytopenia, persistent
+        macrocytosis, or new dysplastic feature on smear; cascade
+        testing to all first-degree relatives with documented buccal /
+        fibroblast germline confirmation (NOT blood-only; somatic
+        DDX41 R525H second-hit clones in carriers can contaminate
+        blood-based germline assay).
+    (b) IND-DDX41-CARRIER-INTENSIFIED (aggressive) — standard protocol
+        PLUS q3-4 month CBC + smear from age 50; BMA + NGS every 2-3
+        years from age 50 even without provoked indication; preemptive
+        HLA typing on candidate sibling donors with germline DDX41
+        screening (sibling carriers must NOT be used as donors —
+        donor-derived disease documented in DDX41 syndrome); early
+        engagement with hereditary-myeloid-program transplant team to
+        avoid time-loss at eventual AML / high-risk MDS diagnosis.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Penetrance reference: Polprasert et al. Cancer Cell 2015
+  (original familial DDX41 description); Quesada et al. Am J Hematol
+  2019 (cohort of 33 families, median age MDS/AML 66); Sebert et al.
+  Blood 2024 (clinical-outcomes-on-HMA cohort, n=153, OS benefit).
+
+  Treatment implication (when MDS/AML emerges): hypomethylating
+  agents and venetoclax-based combinations are particularly effective
+  in DDX41-driven disease (multiple cohort studies); allogeneic
+  transplant remains the only curative modality but timing depends on
+  IPSS-M / blast burden + co-occurring mutations + donor screening.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_hereditary_myeloid
+draft_revision: 1

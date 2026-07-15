@@ -1,0 +1,66 @@
+id: RF-ACC-HIGH-RECURRENCE-RISK-BIOLOGY
+definition: "Post-resection adrenocortical carcinoma with high recurrence-risk features — ENSAT stage III, Ki-67 proliferation index >10%, or incomplete/uncertain (R1/RX) resection margin — defines the population for whom adjuvant mitotane is recommended. The randomized ADIUVO trial found no significant recurrence-free-survival benefit from adjuvant mitotane in the low/intermediate-risk group it enrolled (ENSAT stage I-III, R0 resection, Ki-67 <=10%)."
+definition_ua: "Адренокортикальна карцинома після резекції з ознаками високого ризику рецидиву — стадія III за ENSAT, індекс проліферації Ki-67 >10% або неповний/невизначений (R1/RX) край резекції — визначає популяцію, для якої рекомендований ад'ювантний мітотан. Рандомізоване дослідження ADIUVO не виявило значущої переваги ад'ювантного мітотану щодо виживаності без рецидиву в групі низького/проміжного ризику (стадія I-III за ENSAT, R0-резекція, Ki-67 <=10%)."
+
+trigger:
+  type: composite_clinical
+  any_of:
+  - finding: "acc_ensat_stage"
+    value: "III"
+  - finding: "ki67_proliferation_index_pct"
+    threshold: 10
+    comparator: ">"
+  - finding: "resection_margin_status"
+    value: "R1"
+  - finding: "resection_margin_status"
+    value: "RX"
+
+clinical_direction: intensify
+severity: major
+priority: 100
+category: high-risk-biology
+
+relevant_diseases: [DIS-ADRENOCORTICAL-CARCINOMA]
+shifts_algorithm: [ALGO-ACC-1L]
+
+sources:
+- SRC-ADIUVO-TERZOLO-2023
+- SRC-ENSAT-ACC-2018
+- SRC-ESMO-ACC-2020
+
+last_reviewed: "2026-07-11"
+draft: true
+reviewer_signoffs: []
+
+notes: >
+  ADIUVO (Terzolo 2023, Lancet Diabetes Endocrinol) defined its
+  low/intermediate-risk enrollment population as ENSAT stage I-III, R0
+  resection, Ki-67 <=10%, and found no significant recurrence-free-
+  survival benefit from adjuvant mitotane in that population (5-yr RFS
+  79% mitotane vs 75% surveillance, HR 0.74, not significant). By
+  extension, this RedFlag fires on the features that place a resected
+  patient OUTSIDE the ADIUVO low/intermediate-risk definition: stage III,
+  Ki-67 >10%, or incomplete/uncertain resection margin (R1/RX). This is
+  this KB's first-pass operationalization of "high recurrence risk" for
+  adjuvant mitotane and is STUB / pending clinical co-lead confirmation
+  against the primary ENSAT/ESMO guideline text — those guidelines may
+  specify additional or more granular risk criteria (e.g. tumor rupture,
+  vascular invasion, mitotic count / Weiss-Helsinki score components) not
+  yet encoded here. The finding keys used (acc_ensat_stage,
+  ki67_proliferation_index_pct, resection_margin_status) are newly
+  introduced in this authoring pass and not yet wired to any intake
+  questionnaire — a mechanical/data-availability gap, not a
+  clinical-content gap.
+notes_ua: >
+  ADIUVO (Terzolo 2023, Lancet Diabetes Endocrinol) визначило популяцію
+  низького/проміжного ризику для включення як стадія I-III за ENSAT,
+  R0-резекція, Ki-67 <=10%, і не виявило значущої переваги ад'ювантного
+  мітотану щодо виживаності без рецидиву в цій популяції (5-річна ВБР 79%
+  мітотан проти 75% спостереження, ВР 0.74, незначуще). Відповідно, цей
+  RedFlag спрацьовує на ознаках, які виводять пацієнта за межі визначення
+  низького/проміжного ризику ADIUVO: стадія III, Ki-67 >10% або
+  неповний/невизначений (R1/RX) край резекції. STUB, очікує підтвердження
+  клінічним co-lead за первинним текстом ENSAT/ESMO.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+draft_revision: 1

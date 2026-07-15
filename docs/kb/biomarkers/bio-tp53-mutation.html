@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TP53 mutation / del(17p) - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="TP53 mutation / del(17p) - OpenOnco">
 <meta property="og:description" content="TP53 mutation / del(17p): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
 <meta property="og:url" content="https://openonco.info/kb/biomarkers/bio-tp53-mutation.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TP53 mutation / del(17p) - OpenOnco">
 <meta name="twitter:description" content="TP53 mutation / del(17p): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"TP53 mutation / del(17p) - OpenOnco","description":"TP53 mutation / del(17p): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-tp53-mutation.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-tp53-mutation.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"TP53 mutation / del(17p) - OpenOnco","description":"TP53 mutation / del(17p): source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/biomarkers/bio-tp53-mutation.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/biomarkers/bio-tp53-mutation.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -93,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/">Home</a>
-    <a href="/capabilities.html">Capabilities</a><a href="/handbook.html">Handbook</a>
+    <a href="/capabilities.html">Capabilities</a>
     <a href="/about.html">About</a>
   </nav>
   <div class="top-right">
@@ -103,6 +175,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
       <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Onco Wiki</a>
       <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
     </div>
@@ -125,9 +198,8 @@
   <h2>Notes</h2><p>Universal adverse marker across most hematologic + solid malignancies — predicts poor response to chemo + chemoimmuno; selects for novel- agent regimens / targeted therapies / cellular therapy / alloSCT. **Cross-disease decision impact in our KB (current scope):** - **CLL/SLL**: TP53-mut OR del(17p) → contraindicates chemoimmuno (FCR/BR); favors fixed-duration VenO (CLL14) over BTKi continuous in some guidelines. Captured in composite BIO-CLL-HIGH-RISK-GENETICS + RF-CLL-HIGH-RISK. - **MCL**: TP53-mut → predicts chemoimmuno failure (intensive R-CHOP/R-DHAP+autoSCT outcomes substantially worse); routes to BTKi-based 1L (acalabrutinib+R) regardless of fitness. Captured in RF-MCL-BLASTOID-OR-TP53. - **MM**: del(17p) part of high-risk cytogenetics composite — drives quadruplet (D-VRd) over triplet (VRd). Captured in BIO-MM-CYTOGENETICS-HR + RF-MM-HIGH-RISK-CYTOGENETICS. - **DLBCL** (future scope): predicts R-CHOP failure; flag for early CAR-T pathway consideration at 2L+. Not yet driving 1L algorithm. - **AML** (future scope, not in KB yet): TP53-mut AML has dismal chemo outcomes — currently routes directly to alloSCT consideration + venetoclax-azacitidine for unfit + clinical trials....</p>
   <h2>Used By</h2>
 <h3>Actionability</h3><ul><li><code>BMA-TP53-IHC-ENDOMETRIAL</code> - p53-aberrant (p53-abn) endometrial carcinoma defines the highest-risk molecular subgroup...</li><li><code>BMA-TP53-MUT-AML</code> - TP53-mut AML — chemo-resistant, dismal outcomes (CR ~20% with 7+3, OS ~6 mo). Decitabine...</li><li><code>BMA-TP53-MUT-BREAST</code> - TP53 mutations in breast — common in TNBC and basal-like; adverse prognostic. Not directl...</li><li><code>BMA-TP53-MUT-CERVICAL</code> - TP53 mutation in CERVICAL — common, adverse prognostic; not directly targeted. Per usual...</li><li><code>BMA-TP53-MUT-CLL</code> - TP53-mut CLL contraindicates chemoimmunotherapy (FCR/BR). BTKi (acalabrutinib, zanubrutin...</li><li><code>BMA-TP53-MUT-CRC</code> - TP53 mutation in CRC — common, adverse prognostic; not directly targeted. Per usual algor...</li><li><code>BMA-TP53-MUT-DLBCL-NOS</code> - TP53-mut DLBCL — predicts R-CHOP failure; flag for early CAR-T pathway consideration at 2...</li><li><code>BMA-TP53-MUT-ENDOMETRIAL</code> - TP53 mutation in ENDOMETRIAL — common, adverse prognostic; not directly targeted. Per usu...</li><li><code>BMA-TP53-MUT-ESOPHAGEAL</code> - TP53 mutation in ESOPHAGEAL — common, adverse prognostic; not directly targeted. Per usua...</li><li><code>BMA-TP53-MUT-GASTRIC</code> - TP53 mutation in GASTRIC — common, adverse prognostic; not directly targeted. Per usual a...</li><li><code>BMA-TP53-MUT-GBM</code> - TP53 mutation in GBM — common, adverse prognostic; not directly targeted. Per usual algor...</li><li><code>BMA-TP53-MUT-HCC</code> - TP53 mutations in HCC (~30%) — adverse prognostic; not directly targeted.</li><li><code>BMA-TP53-MUT-MCL</code> - TP53-mut MCL — predicts chemoimmuno failure. Acalabrutinib + rituximab (TRIANGLE / ECHO)...</li><li><code>BMA-TP53-MUT-MDS-HR</code> - TP53-mut higher-risk MDS — dismal prognosis with HMA monotherapy (median OS ~6-10 mo). Ep...</li><li><code>BMA-TP53-MUT-MELANOMA</code> - TP53 mutation in MELANOMA — common, adverse prognostic; not directly targeted. Per usual...</li><li><code>BMA-TP53-MUT-MM</code> - TP53-mut / del(17p) myeloma — high-risk cytogenetics composite; quadruplet (D-VRd; PERSEU...</li><li><code>BMA-TP53-MUT-NSCLC</code> - TP53 mutations in NSCLC (~50%) — adverse prognostic; modulate ICI response (TP53+KRAS may...</li><li><code>BMA-TP53-MUT-OVARIAN</code> - TP53 mutation is near-universal in high-grade serous ovarian (~96%). Not actionable per s...</li><li><code>BMA-TP53-MUT-PDAC</code> - TP53 mutation in PDAC — common, adverse prognostic; not directly targeted. Per usual algo...</li><li><code>BMA-TP53-MUT-PROSTATE</code> - TP53 mutation in PROSTATE — common, adverse prognostic; not directly targeted. Per usual...</li><li><code>BMA-TP53-MUT-RCC</code> - TP53 mutation in RCC — common, adverse prognostic; not directly targeted. Per usual algor...</li><li><code>BMA-TP53-MUT-SCLC</code> - TP53 mutation in SCLC — common, adverse prognostic; not directly targeted. Per usual algo...</li><li><code>BMA-TP53-MUT-UROTHELIAL</code> - TP53 mutation in UROTHELIAL — common, adverse prognostic; not directly targeted. Per usua...</li><li><code>BMA-TP53-R175H-AML</code> - TP53 hotspot in AML — chemo-resistant pattern; venetoclax + HMA palliative; alloSCT prefe...</li><li><code>BMA-TP53-R175H-BREAST</code> - TP53 hotspot in TNBC / luminal — adverse prognostic; not directly targeted. Hotspot R175H...</li><li><code>BMA-TP53-R175H-CLL</code> - TP53 hotspot R175H in CLL — DNA-binding domain dominant-negative variant. Same therapeuti...</li><li><code>BMA-TP53-R175H-DLBCL-NOS</code> - TP53 hotspot in DLBCL — predicts R-CHOP failure; flag for early CAR-T. Hotspot R175H is a...</li><li><code>BMA-TP53-R175H-MCL</code> - TP53 hotspot in MCL — chemoimmuno failure predictor; acalabrutinib-based 1L preferred. Ho...</li><li><code>BMA-TP53-R175H-MDS-HR</code> - TP53 hotspot R175H in higher-risk MDS — dismal prognosis. Biallelic vs monoallelic per IP...</li><li><code>BMA-TP53-R175H-MM</code> - TP53 hotspot mutation in MM — high-risk genetic feature; quadruplet (D-VRd) preferred; CA...</li><li><code>BMA-TP53-R175H-NSCLC</code> - TP53 hotspot in NSCLC — adverse prognostic; modulates ICI response. Driven by usual NSCLC...</li><li><code>BMA-TP53-R175H-OVARIAN</code> - TP53 hotspot in HGSOC — near-universal disease feature; not directly targeted. Hotspot R1...</li><li><code>BMA-TP53-R248Q-AML</code> - TP53 hotspot in AML — chemo-resistant pattern; venetoclax + HMA palliative; alloSCT prefe...</li><li><code>BMA-TP53-R248Q-BREAST</code> - TP53 hotspot in TNBC / luminal — adverse prognostic; not directly targeted. Hotspot R248Q...</li><li><code>BMA-TP53-R248Q-CLL</code> - TP53 hotspot R248Q in CLL — DNA-binding domain dominant-negative variant. Same therapeuti...</li><li><code>BMA-TP53-R248Q-DLBCL-NOS</code> - TP53 hotspot in DLBCL — predicts R-CHOP failure; flag for early CAR-T. Hotspot R248Q is a...</li><li><code>BMA-TP53-R248Q-MCL</code> - TP53 hotspot in MCL — chemoimmuno failure predictor; acalabrutinib-based 1L preferred. Ho...</li><li><code>BMA-TP53-R248Q-MDS-HR</code> - TP53 hotspot R248Q in higher-risk MDS — dismal prognosis. Biallelic vs monoallelic per IP...</li><li><code>BMA-TP53-R248Q-MM</code> - TP53 hotspot mutation in MM — high-risk genetic feature; quadruplet (D-VRd) preferred; CA...</li><li><code>BMA-TP53-R248Q-NSCLC</code> - TP53 hotspot in NSCLC — adverse prognostic; modulates ICI response. Driven by usual NSCLC...</li><li class="kb-muted">... 19 more</li></ul>
-<h3>Biomarker</h3><ul><li><code>BIO-AML-TP53-ADVERSE</code> - TP53-mutated AML (adverse risk)</li><li><code>BIO-CDKN2A</code> - CDKN2A loss (homozygous deletion or biallelic inactivation)</li><li><code>BIO-CLL-HIGH-RISK-GENETICS</code> - CLL high-risk genetics (TP53 / del(17p) / IGHV-unmutated / complex karyotype)</li><li><code>BIO-MDS-DEL-5Q</code> - MDS with del(5q) cytogenetic abnormality</li><li><code>BIO-MM-CYTOGENETICS-HR</code> - High-risk cytogenetics in multiple myeloma (FISH)</li><li><code>BIO-TP53-IHC</code> - TP53 IHC (aberrant p53 expression pattern)</li><li><code>BIO-TP53-R175H</code> - TP53 R175H gain-of-function hotspot</li><li><code>BIO-TP53-R248Q</code> - TP53 R248Q DNA-contact hotspot</li><li><code>BIO-TP53-R273H</code> - TP53 R273H DNA-contact hotspot</li><li><code>BIO-TP53-R282W</code> - TP53 R282W partial loss-of-function hotspot</li></ul>
-<h3>Diseases</h3><ul><li><code>DIS-GLIOMA-LOW-GRADE</code> - Low-grade glioma (LGG, WHO grade 2 — IDH-mutant)</li><li><code>DIS-MPNST</code> - Malignant peripheral nerve sheath tumor (MPNST)</li><li><code>DIS-THYROID-ANAPLASTIC</code> - Anaplastic thyroid carcinoma (ATC)</li></ul>
-<h3>Handbook Chapters</h3><ul><li><code>HB-MM-1L</code> - Multiple myeloma: first-line risk and fitness reasoning</li></ul>
+<h3>Biomarker</h3><ul><li><code>BIO-AML-TP53-ADVERSE</code> - TP53-mutated AML (adverse risk)</li><li><code>BIO-CDKN2A</code> - CDKN2A loss (homozygous deletion or biallelic inactivation)</li><li><code>BIO-CLL-HIGH-RISK-GENETICS</code> - CLL high-risk genetics (TP53 / del(17p) / IGHV-unmutated / complex karyotype)</li><li><code>BIO-MDS-DEL-5Q</code> - MDS with del(5q) cytogenetic abnormality</li><li><code>BIO-MM-CYTOGENETICS-HR</code> - High-risk cytogenetics in multiple myeloma (FISH)</li><li><code>BIO-P53-IHC-DYSPLASIA</code> - p53 IHC for Barrett&#x27;s HGD / dysplasia (aberrant expression)</li><li><code>BIO-TP53-IHC</code> - TP53 IHC (aberrant p53 expression pattern)</li><li><code>BIO-TP53-R175H</code> - TP53 R175H gain-of-function hotspot</li><li><code>BIO-TP53-R248Q</code> - TP53 R248Q DNA-contact hotspot</li><li><code>BIO-TP53-R273H</code> - TP53 R273H DNA-contact hotspot</li><li><code>BIO-TP53-R282W</code> - TP53 R282W partial loss-of-function hotspot</li></ul>
+<h3>Diseases</h3><ul><li><code>DIS-ADRENOCORTICAL-CARCINOMA</code> - Adrenocortical carcinoma (ACC)</li><li><code>DIS-CHOROID-PLEXUS-CARCINOMA</code> - Choroid plexus carcinoma</li><li><code>DIS-GLIOMA-LOW-GRADE</code> - Low-grade glioma (LGG, WHO grade 2 — IDH-mutant)</li><li><code>DIS-LEIOMYOSARCOMA</code> - Leiomyosarcoma (LMS)</li><li><code>DIS-MPNST</code> - Malignant peripheral nerve sheath tumor (MPNST)</li><li><code>DIS-OSTEOSARCOMA</code> - Osteosarcoma</li><li><code>DIS-THYROID-ANAPLASTIC</code> - Anaplastic thyroid carcinoma (ATC)</li></ul>
 <h3>Indications</h3><ul><li><code>IND-AML-1L-7-3-GO-CBF</code> - IND-AML-1L-7-3-GO-CBF</li><li><code>IND-CLL-ELDERLY-O-CHL</code> - IND-CLL-ELDERLY-O-CHL</li></ul>
 <h3>Red flag</h3><ul><li><code>RF-CLL-HIGH-RISK</code> - CLL with high-risk genetics: TP53 mutation OR del(17p) OR IGHV-unmutated OR complex karyo...</li><li><code>RF-CLL-TP53-DELETION-ACTIONABLE</code> - CLL with del(17p) by FISH AND/OR TP53 mutation by NGS — ~5-10% at diagnosis, rising to ~3...</li><li><code>RF-MCL-BLASTOID-OR-TP53</code> - Mantle cell lymphoma with blastoid / pleomorphic morphology OR TP53 mutation OR del(17p)...</li><li><code>RF-MPNST-HIGH-RISK-BIOLOGY</code> - MPNST with adverse molecular / clinical features: biallelic CDKN2A/B loss (&gt;80% high-grad...</li><li><code>RF-THYROID-PAPILLARY-HIGH-RISK-BIOLOGY</code> - Papillary thyroid carcinoma with adverse molecular / clinical features: BRAF V600E (~60%...</li></ul>
 </main>

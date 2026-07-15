@@ -94,8 +94,12 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "ECOG PS 0-1"
-        - condition: "CrCl ≥50 mL/min"
+        - finding: "ecog"
+          threshold: 1
+          comparator: "<="
+        - finding: "creatinine_clearance_ml_min"
+          threshold: 50
+          comparator: ">="
         - condition: "No prior Grade ≥3 ifosfamide encephalopathy or hemorrhagic cystitis"
     if_true:
       result: IND-STS-ADVANCED-1L-AI

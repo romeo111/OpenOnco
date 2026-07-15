@@ -1,0 +1,94 @@
+id: IND-PARATHYROID-CARCINOMA-2L-PEMBROLIZUMAB-MSI
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PARATHYROID-CARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent, persistent, or metastatic parathyroid carcinoma not amenable to further curative-intent resection, or progressing despite re-resection and cinacalcet-based hypercalcemia control"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H"
+      required: false
+    - biomarker_id: BIO-TMB-HIGH
+      value_constraint: "≥10 mut/Mb (Foundation One CDx or comparable)"
+      required: false
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PEMBROLIZUMAB-MONO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+
+expected_outcomes:
+  overall_response_rate: "No parathyroid-carcinoma-specific cohort has been reported given disease rarity; pan-tumor MSI-H/dMMR and TMB-high basket-trial data (tissue-agnostic pembrolizumab FDA approvals) are the best available evidence"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-MSI-PCR-OR-NGS
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Parathyroid carcinoma has no standard cytotoxic chemotherapy regimen
+  with consistent activity. In the small subset with MSI-high/dMMR or
+  TMB-high (≥10 mut/Mb) tumors, pembrolizumab is supported by its FDA
+  tissue-agnostic approval for MSI-H/dMMR and TMB-high solid tumors
+  (pan-tumor basket-trial evidence — not parathyroid-carcinoma-
+  specific; no dedicated trial exists in this rare disease). This is
+  the only systemic option beyond cinacalcet-based hypercalcemia
+  control with a plausible direct antitumor mechanism in refractory
+  recurrent/metastatic disease. Reuses the existing cross-disease
+  REG-PEMBROLIZUMAB-MONO regimen and DRUG-PEMBROLIZUMAB rather than
+  duplicating them. MSI-H/dMMR and TMB-high testing should be performed
+  via comprehensive tumor genomic profiling at the time of
+  recurrence/metastasis workup.
+
+sources:
+  - source_id: SRC-NCCN-THYROID-2025
+    position: context
+  - source_id: SRC-NCCN-NET-2025
+    position: context
+
+do_not_do:
+  - "Do not offer pembrolizumab outside the MSI-H/dMMR or TMB-high (≥10 mut/Mb) biomarker-confirmed subset — routine/unselected use is not supported."
+  - "Do not substitute pembrolizumab for definitive local therapy (re-resection) when disease remains surgically approachable."
+  - "Do not delay MSI/dMMR or comprehensive genomic profiling in recurrent/metastatic disease — it is the sole gate to this treatment option."
+
+do_not_do_en:
+  - "Do not offer pembrolizumab outside the MSI-H/dMMR or TMB-high (≥10 mut/Mb) biomarker-confirmed subset — routine/unselected use is not supported."
+  - "Do not substitute pembrolizumab for definitive local therapy (re-resection) when disease remains surgically approachable."
+  - "Do not delay MSI/dMMR or comprehensive genomic profiling in recurrent/metastatic disease — it is the sole gate to this treatment option."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+review_status: stub
+drafted_by: claude_agent_draft
+notes: >
+  STUB pending clinical co-lead signoff (CHARTER §6.1 — dev-mode-
+  exempted draft content). Reuses REG-PEMBROLIZUMAB-MONO (cross-disease
+  generic pembrolizumab-monotherapy regimen already in the KB) and
+  DRUG-PEMBROLIZUMAB rather than creating a duplicate regimen. No
+  parathyroid-carcinoma-specific pembrolizumab trial exists; evidence
+  is extrapolated from the tissue-agnostic MSI-H/dMMR (KEYNOTE-158/164)
+  and TMB-high FDA approvals for solid tumors generally — see
+  DRUG-PEMBROLIZUMAB.regulatory_status.fda.indications_brief and
+  BIO-TMB-HIGH.interpretation_notes (both already in the KB) for that
+  basket-trial context. `sources` cite the two disease-level NCCN
+  guidelines already attached to DIS-PARATHYROID-CARCINOMA as
+  `position: context` (cross-cutting biomarker-driven-therapy
+  principle) rather than `supports`, because neither guideline directly
+  addresses parathyroid carcinoma pembrolizumab use — no new Source
+  stub was authored for KEYNOTE-158 because it is not explicitly named
+  in the Disease narrative supplied for this task. Given the extreme
+  rarity of parathyroid carcinoma, disease-specific prospective trial
+  data is unlikely to ever exist — this Indication documents the best
+  available (tissue-agnostic) evidence honestly rather than inventing a
+  disease-specific regimen.

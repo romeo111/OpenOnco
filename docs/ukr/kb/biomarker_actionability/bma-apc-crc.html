@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>APC somatic loss-of-function mutations occur in ~80% of sporadic colorectal carcinomas (C... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="APC somatic loss-of-function mutations occur in ~80% of sporadic colorectal carcinomas (C... - OpenOnco">
 <meta property="og:description" content="APC somatic loss-of-function mutations occur in ~80% of sporadic colorectal carcinomas (C...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/biomarker_actionability/bma-apc-crc.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="APC somatic loss-of-function mutations occur in ~80% of sporadic colorectal carcinomas (C... - OpenOnco">
 <meta name="twitter:description" content="APC somatic loss-of-function mutations occur in ~80% of sporadic colorectal carcinomas (C...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"APC somatic loss-of-function mutations occur in ~80% of sporadic colorectal carcinomas (C... - OpenOnco","description":"APC somatic loss-of-function mutations occur in ~80% of sporadic colorectal carcinomas (C...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarker_actionability/bma-apc-crc.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarker_actionability/bma-apc-crc.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"APC somatic loss-of-function mutations occur in ~80% of sporadic colorectal carcinomas (C... - OpenOnco","description":"APC somatic loss-of-function mutations occur in ~80% of sporadic colorectal carcinomas (C...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarker_actionability/bma-apc-crc.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarker_actionability/bma-apc-crc.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -103,6 +175,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -123,7 +196,7 @@
 <tr><th>Рівень ESCAT</th><td>IIIB</td></tr>
 <tr><th>Рекомендовані комбінації</th><td>FOLFOX or FOLFIRI ± bevacizumab — standard 1L mCRC regardless of APC status (NCCN Category 1), Cetuximab or panitumumab — for RAS/RAF wild-type left-sided mCRC (anti-EGFR eligibility determined by KRAS/NRAS/BRAF, not APC), Pembrolizumab 200 mg q3w — 1L for MSI-H/dMMR mCRC (KEYNOTE-158/177; APC co-mutation common but not the eligibility criterion)</td></tr>
 <tr><th>Підсумок доказів</th><td>APC somatic loss-of-function mutations occur in ~80% of sporadic colorectal carcinomas (CRC) and represent the earliest molecular event in the adenoma-carcinoma sequence. APC loss stabilizes β-catenin, driving constitutive WNT target gene transcription (MYC, CCND1). Despite its ubiquity, APC is not a direct therapeutic target for systemic therapy in CRC: (1) WNT pathway inhibitors: porcupine inhibitors (WNT-974/LGK-974, RXC004) block Wnt ligand secretion upstream of APC and are in Phase I/II trials across WNT-driven tumors including CRC. Early results show modest single-agent activity; no CRC-specific approval. (2) Tankyrase inhibitors: block AXIN degradation → restore destruction complex despite APC loss; early preclinical/Phase I (NVP-TNKS656, G007-LK); dose-limiting GI toxicity. (3) APC loss does not predict response to anti-EGFR (cetuximab/panitumumab) in CRC — RAS/RAF wild-type status determines anti-EGFR eligibility, not APC status. (4) MSI-H/dMMR CRC (~15%) frequently co-occurs with somatic APC mutation; immunotherapy (pembrolizumab 1L or 2L) is actionable via the MMR deficie...</td></tr></table>
-  <h2>Нотатки</h2><p>ESCAT IIIB: APC mutation marks the adenoma-carcinoma sequence but is not currently actionable for therapy selection. Key clinical implications: (1) Germline testing: any patient &lt;50y with CRC or with ≥10 adenomas should have germline APC testing to exclude FAP/AFAP; prophylactic colectomy is curative. (2) WNT pathway state: nuclear β-catenin IHC is a surrogate; useful when full sequencing unavailable but does not add actionability above sequencing. (3) Trial eligibility: WNT pathway basket trials (porcupine inhibitors RXC004, LGK-974) use APC mutation or CTNNB1 mutation as eligibility criteria. (4) Resistance context: APC loss in CRC that acquires KRAS or BRAF mutations represents late clonal evolution; serial ctDNA may track this.</p>
+  <h2>Нотатки</h2><p>ESCAT IIIB: мутація APC маркує послідовність аденома—карцинома, але наразі не є ознакою, що визначає вибір терапії. Ключові клінічні аспекти: (1) Герміногенне тестування: пацієнти молодше 50 років з КРР або з ≥10 аденомами повинні пройти герміногенне тестування APC для виключення FAP/AFAP; профілактична колектомія є куративним методом. (2) Стан шляху WNT: ядерний β-катенін за IHC є сурогатним маркером; застосовується при недоступності повного секвенування, однак не додає клінічної значущості понад секвенування. (3) Критерії включення у дослідження: «кошикові» дослідження WNT-шляху (порцупін- інгібітори RXC004, LGK-974) використовують мутацію APC або CTNNB1 як критерії відбору. (4) Контекст резистентності: втрата APC при КРР з набутими мутаціями KRAS або BRAF відображає пізню клональну еволюцію; серійний ctDNA може відстежувати цей процес.</p>
   <h2>Де використовується</h2><p class="kb-muted">У YAML-корпусі не знайдено зворотних посилань.</p>
 </main>
 </body>
