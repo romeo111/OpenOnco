@@ -303,11 +303,12 @@ body.home-page {
 }
 .home-hero h1 {
   font-family: var(--font-display);
-  font-size: 78px;
-  line-height: .96;
-  font-weight: 900;
+  font-size: 48px;
+  line-height: 1.06;
+  font-weight: 800;
   color: var(--green-700);
   margin-bottom: 20px;
+  max-width: 880px;
 }
 .home-sub {
   max-width: 700px;
@@ -333,6 +334,251 @@ body.home-page {
   margin: 0 auto;
   padding: 22px 24px 0;
 }
+
+/* ── Home: stats band ─────────────────────────────────────────────────
+ * Wraps the .promo-stats grid (reused from capabilities.html) on a
+ * white background. The promo-stats children are styled for the dark
+ * .promo-info block — we re-skin them here for light context.
+ */
+.home-stats-band {
+  max-width: 1100px;
+  margin: 28px auto 0;
+  padding: 0 24px;
+}
+.home-stats-band .promo-stats {
+  padding: 24px 0;
+  margin-bottom: 0;
+  border-top: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--gray-200);
+}
+.home-stats-band .promo-stat-num {
+  color: var(--green-700);
+}
+.home-stats-band .promo-stat-num .promo-stat-plus {
+  color: var(--green-900);
+}
+.home-stats-band .promo-stat-lbl {
+  color: var(--gray-500);
+}
+/* A stat may optionally be a link (e.g. "92 Diseases" → /diseases.html).
+ * The link inherits look; hover reveals it's clickable. */
+.home-stats-band .promo-stat-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .12s ease, color .12s ease;
+}
+.home-stats-band .promo-stat-link:hover .promo-stat-num,
+.home-stats-band .promo-stat-link:focus-visible .promo-stat-num {
+  color: var(--green-900);
+}
+.home-stats-band .promo-stat-link:hover .promo-stat-lbl,
+.home-stats-band .promo-stat-link:focus-visible .promo-stat-lbl {
+  color: var(--green-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Home: two-pillar grid (Saves time / Catches misses) ─────────── */
+.home-pillars {
+  max-width: 1100px;
+  margin: 36px auto 0;
+  padding: 0 24px;
+}
+.home-pillar-h {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--green-700);
+  margin: 8px 0 6px;
+}
+.home-pillar-h--alt {
+  margin-top: 48px;
+  padding-top: 36px;
+  border-top: 1px solid var(--gray-100);
+}
+.home-pillar-sub {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--gray-700);
+  margin: 0 0 22px;
+  max-width: 720px;
+}
+
+/* ── Home: bottom CTA doors row ──────────────────────────────────── */
+.home-cta-doors {
+  max-width: 1100px;
+  margin: 40px auto 24px;
+  padding: 22px 24px 0;
+  border-top: 1px solid var(--gray-100);
+}
+
+/* ── Home: role doors (clinician / patient / pharmacist) ──────────────
+ * The primary conversion surface. Each door is a self-select card that
+ * routes one audience straight to the tool built for them.
+ */
+.home-doors {
+  max-width: 1100px;
+  margin: 10px auto 0;
+  padding: 10px 24px 0;
+}
+.home-doors-h {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.12;
+  color: var(--green-700);
+  margin: 0 0 6px;
+}
+.home-doors-sub {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--gray-700);
+  margin: 0 0 22px;
+  max-width: 640px;
+}
+.home-doors-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.door-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-top: 4px solid var(--green-600);
+  border-radius: 12px;
+  padding: 22px 20px;
+  box-shadow: 0 4px 14px rgba(10, 46, 26, 0.05);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.door-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(10, 46, 26, 0.10);
+}
+.door-card--doctor { border-top-color: var(--green-600); }
+.door-card--patient { border-top-color: var(--amber); }
+.door-card--pharma { border-top-color: var(--teal); }
+.door-icon {
+  font-size: 34px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.door-role {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--green-900);
+  margin: 0 0 8px;
+}
+.door-line {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--gray-700);
+  margin: 0 0 18px;
+  flex: 1 1 auto;
+}
+.door-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.door-actions .btn {
+  font-size: 14px;
+  padding: 10px 16px;
+}
+.door-disclaimer {
+  margin: 14px 0 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--gray-500);
+  border-top: 1px solid var(--gray-100);
+  padding-top: 10px;
+}
+
+/* ── Home: three-step "how it works" ──────────────────────────────── */
+.home-steps {
+  max-width: 1100px;
+  margin: 44px auto 0;
+  padding: 0 24px;
+}
+.home-steps-h {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--green-700);
+  margin: 0 0 18px;
+}
+.home-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.step-card {
+  border-left: 3px solid var(--green-100);
+  padding: 2px 0 2px 16px;
+}
+.step-num {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--green-500);
+  line-height: 1;
+}
+.step-title {
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 8px 0 4px;
+  font-size: 15px;
+}
+.step-text {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--gray-700);
+  margin: 0;
+}
+
+/* ── Home: trust line + explore links ─────────────────────────────── */
+.home-trust {
+  max-width: 1100px;
+  margin: 40px auto 0;
+  padding: 22px 24px 0;
+  border-top: 1px solid var(--gray-100);
+}
+.home-trust-line {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--gray-900);
+  font-weight: 500;
+  margin: 0 0 12px;
+  max-width: 760px;
+}
+.home-trust .home-note {
+  margin-bottom: 0;
+}
+.home-explore {
+  margin: 14px 0 0;
+  font-size: 14px;
+  color: var(--gray-500);
+}
+.home-explore a {
+  color: var(--green-700);
+  font-weight: 600;
+  text-decoration: none;
+}
+.home-explore a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 860px) {
+  .home-doors-grid { grid-template-columns: 1fr; }
+  .home-steps-grid { grid-template-columns: 1fr; }
+  .home-doors-h { font-size: 26px; }
+}
+
 body.home-page .btn-primary,
 body.home-page .btn-primary:hover {
   background: var(--green-700);

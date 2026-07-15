@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Запит до tumor board</title>
 <!-- openonco-seo:start -->
@@ -24,7 +95,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OpenOnco · Запит до tumor board">
 <meta name="twitter:description" content="Форма OpenOnco для структурованих клінічних питань і feedback.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Запит до tumor board","description":"Форма OpenOnco для структурованих клінічних питань і feedback.","url":"https://openonco.info/ukr/ask.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/ask.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Запит до tumor board","description":"Форма OpenOnco для структурованих клінічних питань і feedback.","url":"https://openonco.info/ukr/ask.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/ask.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -50,6 +121,9 @@
 .ask-result { white-space:pre-wrap; font:14px/1.55 var(--mono); background:#102018; color:#ecfdf5; border:1px solid #244d38; border-radius:8px; padding:16px; min-height:380px; overflow:auto; box-shadow:inset 0 1px 0 rgba(255,255,255,0.06); }
 .ask-result:empty::before { content:""; display:block; min-height:1px; }
 .ask-muted { color:#647067; font-size:14px; }
+.ask-patient-note { margin-top:8px; }
+.ask-patient-safety { margin:8px 0 0; padding:8px 12px; border-left:3px solid #f59e0b; background:#fffbeb; color:#7c2d12; font-weight:700; font-size:13.5px; line-height:1.4; border-radius:0 6px 6px 0; }
+.ask-deid-note { margin:8px 0 0; color:#475569; font-size:13px; line-height:1.45; }
 .ask-examples { display:grid; gap:10px; margin:12px 0 14px; max-height:460px; overflow:auto; padding-right:4px; }
 .ask-example { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; border:1px solid #dbe7df; border-radius:8px; padding:12px; background:#f8fbf8; }
 .ask-example-title { font-weight:800; margin-bottom:4px; color:#073b22; }
@@ -106,6 +180,8 @@
       <h1>Запит до tumor board</h1>
       <p class="lead">Опишіть онкологічну клінічну ситуацію своїми словами. ChatGPT структурує кейс, OpenOnco звіряє його з алгоритмами, а сторінка повертає відповідь, обґрунтовані альтернативи або уточнювальні питання.</p>
       <p class="ask-muted">Не вставляйте реальні персональні дані пацієнта. Це чернетка для tumor board, а не автономна медична порада.</p>
+      <p class="ask-muted ask-patient-note">Для лікарів і для пацієнтів: якщо ваш онколог дав вам план, скористайтеся цією сторінкою, щоб зрозуміти його простою мовою та підготувати питання до наступного візиту. Вона не оцінює, чи правильний ваш план, і не замінює вашого онколога.</p>
+      <p class="ask-patient-safety">Це не замінює вашого лікаря. Ніколи не починайте, не припиняйте і не змінюйте лікування на основі цієї сторінки — завжди обговорюйте це зі своїм лікарем-онкологом.</p>
     </div>
     <div class="ask-hero-meter" aria-label="Використано запитів">
       <div class="ask-stat"><strong>3</strong><span>текстові запити на браузер</span></div>
@@ -123,6 +199,7 @@
         Клінічна ситуація
         <textarea id="caseText" spellcheck="true" placeholder="62-річний пацієнт із метастатичним раком шлунка, HER2-негативний, MSS, PD-L1 CPS 25. Яка оптимальна перша лінія?"></textarea>
       </label>
+      <p class="ask-deid-note">Перед вставленням приберіть ім'я, дату народження та будь-які номери документів — текст надсилається на наш сервер для аналізу. Вставляйте лише ті частини, щодо яких маєте питання, а не весь документ. Якщо не можете прибрати особисті дані, не вставляйте — краще принесіть план на візит.</p>
       <div class="ask-quota">
         <span>Використано запитів</span>
         <strong><span id="quotaUsed">0</span> / 3</strong>
@@ -162,7 +239,7 @@
 
 <script>
 (function() {
-  const ASK_EXAMPLES = [{"title": "Gastric 1L", "text": "62-річний пацієнт із метастатичним раком шлунка, поширений перитонеальний канцероматоз. Гістологія: недиференційована аденокарцинома з перснеподібними клітинами, MSS, HER2-негативний, PD-L1 CPS = 25. Яка оптимальна перша лінія лікування?"}, {"title": "GBM supportive", "text": "30-річний чоловік із гліобластомою лівої тім'яної частки 2 см, ECOG 1, без супутньої патології, судом не було. Що НЕ входить до лікування: резекція, радіотерапія, стероїди, темозоломід чи профілактичні протиепілептичні?"}, {"title": "CUP poor PS", "text": "74-річна жінка, біль через гепатомегалію, множинні метастази в печінці, низькодиференційована аденокарцинома без первинного вогнища, PET-негативна, WHO PS 3. Яка найбільш доцільна тактика?"}, {"title": "mCRC first line", "text": "52-річний чоловік із метастатичним раком сліпої кишки, нерезектабельні метастази в печінку, легені та очеревину. KRAS p.G12C, NRAS/BRAF дикого типу, MSS, HER2-негативний. Яке системне лікування першої лінії найбільш доцільне?"}, {"title": "NSCLC confusion", "text": "68-річний пацієнт із метастатичним плоскоклітинним НДРЛ з ураженням печінки, наднирників і плеври. Нова дезорієнтація та агресія; МРТ головного мозку без метастазів. Яка найбільш імовірна причина симптомів?"}, {"title": "Pharmacogenomics", "text": "Пацієнту планують фторпіримідин-вмісну хіміотерапію з приводу пухлини ШКТ. Яке фармакогеномне тестування до початку лікування рекомендоване для зниження ризику тяжкої токсичності?"}, {"title": "Breast HR+/HER2-", "text": "61-річна жінка в постменопаузі з метастатичним ER-позитивним, HER2-негативним раком молочної залози, метастази в кістки та печінку, без вісцерального кризу, ECOG 1. Яка переважна перша лінія системної терапії?"}, {"title": "Ovarian maintenance", "text": "58-річна жінка зі стадією IIIC high-grade серозного раку яєчника після циторедуктивної операції та відповіді на platinum-taxane хіміотерапію. Виявлено патогенний варіант BRCA1. Яку підтримувальну терапію слід обговорити?"}, {"title": "Pancreatic 1L", "text": "66-річний пацієнт із метастатичною аденокарциномою підшлункової залози, метастази в печінку, ECOG 1, білірубін у нормі, суттєвих супутніх хвороб немає. Які варіанти першої лінії системної терапії є обґрунтованими?"}];
+  const ASK_EXAMPLES = [{"title": "Пацієнт · зрозуміти мій план", "text": "Онколог дав мені письмовий план лікування раку кишківника, який починається з хіміотерапії перед операцією. Поясніть простою мовою, для чого потрібна кожна частина плану і чому їх можуть призначати саме в такому порядку. Допоможіть перетворити це на зрозумілі питання до мого онколога — не радьте мені щось починати, припиняти чи змінювати."}, {"title": "Пацієнт · питання перед візитом", "text": "У мене рак грудної залози, і онколог рекомендував приймати гормональні таблетки після операції. Я не до кінця розумію чому. Допоможіть сформулювати простою мовою питання до наступного прийому, щоб я міг(-ла) запитати онколога про причини, тривалість прийому та на що звертати увагу. Будь ласка, не радьте змінювати лікування."}, {"title": "Gastric 1L", "text": "62-річний пацієнт із метастатичним раком шлунка, поширений перитонеальний канцероматоз. Гістологія: недиференційована аденокарцинома з перснеподібними клітинами, MSS, HER2-негативний, PD-L1 CPS = 25. Яка оптимальна перша лінія лікування?"}, {"title": "GBM supportive", "text": "30-річний чоловік із гліобластомою лівої тім'яної частки 2 см, ECOG 1, без супутньої патології, судом не було. Що НЕ входить до лікування: резекція, радіотерапія, стероїди, темозоломід чи профілактичні протиепілептичні?"}, {"title": "CUP poor PS", "text": "74-річна жінка, біль через гепатомегалію, множинні метастази в печінці, низькодиференційована аденокарцинома без первинного вогнища, PET-негативна, WHO PS 3. Яка найбільш доцільна тактика?"}, {"title": "mCRC first line", "text": "52-річний чоловік із метастатичним раком сліпої кишки, нерезектабельні метастази в печінку, легені та очеревину. KRAS p.G12C, NRAS/BRAF дикого типу, MSS, HER2-негативний. Яке системне лікування першої лінії найбільш доцільне?"}, {"title": "NSCLC confusion", "text": "68-річний пацієнт із метастатичним плоскоклітинним НДРЛ з ураженням печінки, наднирників і плеври. Нова дезорієнтація та агресія; МРТ головного мозку без метастазів. Яка найбільш імовірна причина симптомів?"}, {"title": "Pharmacogenomics", "text": "Пацієнту планують фторпіримідин-вмісну хіміотерапію з приводу пухлини ШКТ. Яке фармакогеномне тестування до початку лікування рекомендоване для зниження ризику тяжкої токсичності?"}, {"title": "Breast HR+/HER2-", "text": "61-річна жінка в постменопаузі з метастатичним ER-позитивним, HER2-негативним раком молочної залози, метастази в кістки та печінку, без вісцерального кризу, ECOG 1. Яка переважна перша лінія системної терапії?"}, {"title": "Ovarian maintenance", "text": "58-річна жінка зі стадією IIIC high-grade серозного раку яєчника після циторедуктивної операції та відповіді на platinum-taxane хіміотерапію. Виявлено патогенний варіант BRCA1. Яку підтримувальну терапію слід обговорити?"}, {"title": "Pancreatic 1L", "text": "66-річний пацієнт із метастатичною аденокарциномою підшлункової залози, метастази в печінку, ECOG 1, білірубін у нормі, суттєвих супутніх хвороб немає. Які варіанти першої лінії системної терапії є обґрунтованими?"}];
   const MAX_QUESTIONS = 3;
   const USER_KEY = 'openonco-ask-user-id-v1';
   const COUNT_KEY = 'openonco-ask-count-v1';
@@ -466,6 +543,16 @@
     resetProgress();
   });
   renderExamples();
+  (function prefillFromUrl() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const preset = params.get('case') || params.get('q');
+      if (preset) {
+        caseText.value = preset;
+        caseText.focus();
+      }
+    } catch (e) { /* ignore malformed query */ }
+  })();
   getUserId();
   updateQuota();
   resetProgress();

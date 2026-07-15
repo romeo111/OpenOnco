@@ -4,6 +4,7 @@ linked_to_regimen: REG-RITUXIMAB-MONO
 phases:
   - name: baseline
     window: "Within 2 weeks before first dose"
+    window_ua: "Протягом 2 тижнів до першої дози"
     tests:
       - TEST-CBC
       - TEST-LFT
@@ -16,26 +17,41 @@ phases:
     checkpoints:
       - "Confirm CD20+ histology"
       - "HBV status + entecavir prophylaxis if HBsAg+ or anti-HBc+"
+    checkpoints_ua:
+      - "Підтвердити CD20+ гістологію"
+      - "Статус HBV + профілактика ентекавіром при HBsAg+ або anti-HBc+"
 
   - name: induction
     window: "Day 1 of each weekly induction × 4"
+    window_ua: "День 1 кожного тижня індукції × 4 цикли"
     tests: [TEST-CBC, TEST-LFT]
     visits: ["Pre-infusion clinical assessment + infusion"]
     checkpoints: ["Infusion reactions especially first dose"]
+    checkpoints_ua: ["Інфузійні реакції, особливо при першій дозі"]
 
   - name: maintenance
     window: "Every 2 months × 2 years"
+    window_ua: "Кожні 2 місяці протягом 2 років"
     tests: [TEST-CBC, TEST-LFT, TEST-LDH]
     visits: ["Pre-infusion clinical + lab review"]
     checkpoints:
       - "HBV-DNA quarterly during therapy and 12 mo post"
       - "Disease assessment clinically; imaging if concern"
+    checkpoints_ua:
+      - "HBV-ДНК щоквартально під час терапії та протягом 12 місяців після"
+      - "Оцінка хвороби клінічно; візуалізація при підозрі"
 
   - name: follow_up
     window: "Every 6 months × 5 years post-treatment"
+    window_ua: "Кожні 6 місяців протягом 5 років після лікування"
     tests: [TEST-CBC, TEST-LFT, TEST-LDH]
     visits: ["Clinical assessment"]
     checkpoints: ["Surveillance for relapse + transformation"]
+    checkpoints_ua: ["Спостереження щодо рецидиву + трансформації"]
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
+machine_translated_review_pending: true
+notes: >
+  UA translations of window / checkpoints added 2026-05-19 under CHARTER
+  §8.3 dev-mode exemption; awaiting Clinical Co-Lead sign-off.
