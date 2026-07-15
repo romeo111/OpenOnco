@@ -122,12 +122,12 @@ def test_landing_drops_watson_comparison(site_dir: Path):
 
 
 def test_landing_problem_block_is_single_prose(site_dir: Path):
-    """Landing v2 redesign: the 'why this is needed' prose (`how-lead`) was
-    removed from the home page to keep the first viewport focused on the product.
-    The source-band (`home-source-band`) is the canonical non-hero section,
-    replacing the old how/problem blocks. No 2-column problem-grid either."""
+    """Landing v3 (role-router redesign): the old 'why this is needed' prose
+    (`how-lead`) and 2-column problem-grid stay gone. The canonical non-hero
+    sections are now the role doors (`home-doors`) plus the how-it-works steps;
+    the old source-band prose was folded into the trust line."""
     html = (site_dir / "index.html").read_text(encoding="utf-8")
-    assert 'class="home-source-band"' in html
+    assert 'class="home-doors"' in html
     assert 'class="problem-grid"' not in html
     assert 'class="how-lead"' not in html
 
@@ -535,15 +535,20 @@ def test_try_cta_is_separate_action_button(site_dir: Path):
 
 
 def test_home_hero_avoids_duplicate_top_actions(site_dir: Path):
-    """The top bar owns the three product actions; the home hero keeps one
-    primary next step so the first viewport stays focused."""
+    """Role-router redesign: the top bar owns the product actions and the hero
+    is copy-only — the role doors immediately below it carry the primary next
+    steps, so the hero never duplicates the top-bar actions."""
     html = (site_dir / "ukr" / "index.html").read_text(encoding="utf-8")
     hero = html.split('<section class="home-hero">', 1)[1].split("</section>", 1)[0]
-    assert hero.count('class="btn ') == 1
-    assert 'href="/ukr/try.html"' in hero
+    # Hero carries no inline CTAs of its own; the doors section owns them.
+    assert hero.count('class="btn ') == 0
+    assert 'href="/ukr/try.html"' not in hero
     assert 'href="/ukr/kb.html"' not in hero
     assert 'href="/ukr/ask.html"' not in hero
-    assert 'class="home-source-band"' in html
+    # The role doors are the canonical primary-action surface.
+    assert 'class="home-doors"' in html
+    assert 'door-card--doctor' in html
+    assert 'door-card--patient' in html
 
 
 def test_top_bar_wraps_before_tablet_width(site_dir: Path):
