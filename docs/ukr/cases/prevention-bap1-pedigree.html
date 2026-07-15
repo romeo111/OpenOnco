@@ -385,6 +385,27 @@ a.lab-chip:hover { text-decoration: underline; }
     font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
     display: block; margin-top: 2px;
 }
+a.rf-id, .rf-id-link {
+    color: inherit; text-decoration: none;
+}
+a.rf-id:hover, .rf-id-link:hover {
+    text-decoration: underline; color: var(--gray-700);
+}
+.pc-col .rf-note {
+    font-size: 12px; color: var(--gray-600); line-height: 1.5;
+    margin-top: 4px; padding-left: 8px; border-left: 2px solid var(--gray-200);
+}
+.pc-col .rf-src-row { display: block; margin-top: 3px; }
+.pc-col .rf-src-chip {
+    font-family: var(--font-mono); font-size: 9.5px;
+    background: var(--gray-100); color: var(--gray-700);
+    padding: 1px 6px; border-radius: 3px; margin-right: 4px;
+    display: inline-block;
+}
+/* Severity hint via ::marker — no extra layout cost. Critical pops red,
+   minor dims, major (default) keeps the inherited bullet color. */
+.pc-col li[data-severity="critical"]::marker { color: var(--red-alert); font-weight: 800; }
+.pc-col li[data-severity="minor"]::marker    { color: var(--gray-400); }
 
 /* Branch-explanation — actually-fired RFs from the engine trace, with
    the conflict-resolution winner highlighted. Distinct from PRO/CONTRA
