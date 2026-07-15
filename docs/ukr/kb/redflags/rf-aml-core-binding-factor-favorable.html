@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AML with core-binding-factor (CBF) cytogenetics: t(8;21)(q22;q22.1) with RUNX1::RUNX1T1 f... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="AML with core-binding-factor (CBF) cytogenetics: t(8;21)(q22;q22.1) with RUNX1::RUNX1T1 f... - OpenOnco">
 <meta property="og:description" content="AML with core-binding-factor (CBF) cytogenetics: t(8;21)(q22;q22.1) with RUNX1::RUNX1T1 f...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/redflags/rf-aml-core-binding-factor-favorable.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AML with core-binding-factor (CBF) cytogenetics: t(8;21)(q22;q22.1) with RUNX1::RUNX1T1 f... - OpenOnco">
 <meta name="twitter:description" content="AML with core-binding-factor (CBF) cytogenetics: t(8;21)(q22;q22.1) with RUNX1::RUNX1T1 f...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"AML with core-binding-factor (CBF) cytogenetics: t(8;21)(q22;q22.1) with RUNX1::RUNX1T1 f... - OpenOnco","description":"AML with core-binding-factor (CBF) cytogenetics: t(8;21)(q22;q22.1) with RUNX1::RUNX1T1 f...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-aml-core-binding-factor-favorable.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-aml-core-binding-factor-favorable.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"AML with core-binding-factor (CBF) cytogenetics: t(8;21)(q22;q22.1) with RUNX1::RUNX1T1 f... - OpenOnco","description":"AML with core-binding-factor (CBF) cytogenetics: t(8;21)(q22;q22.1) with RUNX1::RUNX1T1 f...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-aml-core-binding-factor-favorable.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-aml-core-binding-factor-favorable.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -103,6 +175,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -117,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-04-27 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-AML"><code>DIS-AML</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="Diagnosis and management of AML in adults: 2022 ELN recommendations from an international..."><a href="https://ashpublications.org/blood/article/140/12/1345/485985" target="_blank" rel="noopener noreferrer"><code>SRC-ELN-AML-2022</code></a></span> <span class="kb-chip" title="Acute myeloid leukaemia in adult patients: ESMO Clinical Practice Guidelines for diagnosi..."><a href="https://www.annalsofoncology.org/article/S0923-7534(20)36079-X/fulltext" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-AML-2020</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: Acute Myeloid Leukemia"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1411" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-AML-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>AML with core-binding-factor (CBF) cytogenetics: t(8;21)(q22;q22.1) with RUNX1::RUNX1T1 fusion OR inv(16)(p13.1q22) / t(16;16)(p13.1;q22) with CBFB::MYH11 fusion. ~10-15% of de novo adult AML, ~25% of pediatric AML. ELN 2022 favorable risk; standard 7+3 induction + 3-4 cycles HiDAC consolidation is curative-intent in CR1 (5-year OS 60-75%); upfront alloHCT is NOT recommended in CR1 default. Adding gemtuzumab ozogamicin to induction (ALFA-0701, AML-19) further improves OS specifically in CBF AML (HR 0.69). c-KIT mutations (D816, exon-8) co-occur in ~25% of CBF AML and may downgrade favorability — warrant MRD-directed approach.</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>ГМЛ з core-binding-factor цитогенетикою: t(8;21)(q22;q22.1) зі злиттям RUNX1::RUNX1T1 АБО inv(16)(p13.1q22) / t(16;16)(p13.1;q22) зі злиттям CBFB::MYH11. ~10-15% de novo дорослого ГМЛ, ~25% педіатричного ГМЛ. ELN 2022 favorable-ризик; стандартна 7+3 індукція + 3-4 цикли HiDAC консолідації — curative-intent у CR1 (5-річний ЗВ 60-75%); upfront alloHCT НЕ рекомендований у CR1 за замовчуванням. Додавання гемтузумабу озогаміцину до індукції (ALFA-0701, AML-19) додатково покращує ЗВ саме при CBF AML (HR 0.69). Мутації c-KIT (D816, exon-8) співіснують у ~25% CBF AML і можуть знизити favorability — потрібен MRD-направлений підхід.</td></tr>
 <tr><th>Клінічний напрям</th><td>de-escalate</td></tr>
 <tr><th>Категорія</th><td>high-risk-biology</td></tr>
 <tr><th>Змінює алгоритм</th><td>ALGO-AML-1L</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
@@ -153,7 +226,7 @@
   ],
   &quot;type&quot;: &quot;biomarker&quot;
 }</pre>
-  <h2>Нотатки</h2><p>De-escalate direction reflects &quot;do NOT add upfront alloHCT&quot; — CBF AML receives curative chemo (7+3 ± GO + HiDAC × 3-4) without transplant in CR1; alloHCT reserved for MRD-positive after consolidation OR relapse. KIT D816 mutation (~15-25% of CBF AML) is associated with higher relapse risk — some centers add midostaurin or dasatinib (PETHEMA-CETLAM 2018), though c-KIT-targeted therapy not yet ELN-2022 standard. MRD by RT-qPCR for the fusion transcript is sensitive (10⁻⁵) and predictive: &gt;3-log reduction by end of consolidation = molecular CR; persistent positivity → consider alloHCT or salvage. Co-firing with RF-AML-FLT3- ACTIONABLE (rare in CBF) or RF-AML-MEASURABLE-RESIDUAL-DISEASE: latter takes priority and shifts to alloHCT routing despite CBF favorability.</p>
+  <h2>Нотатки</h2><p>Напрямок «де-ескалація» відображає принцип «НЕ додавати upfront алоТГСК» — пацієнти з CBF AML отримують курабельну хіміотерапію (7+3 ± GO + HiDAC × 3–4 цикли) без трансплантації у ПР1; алоТГСК резервують для МЗХ-позитивних після консолідації АБО рецидиву. Мутація KIT D816 (~15–25% CBF AML) асоційована з підвищеним ризиком рецидиву — деякі центри додають мідостаурин або дазатиніб (PETHEMA-CETLAM 2018), хоча c-KIT-таргетна терапія ще не є стандартом ELN-2022. МЗХ за RT-qPCR транскрипта злиття є чутливою (10⁻⁵) та прогностично значущою: зниження &gt;3-log до кінця консолідації = молекулярна ПР; стійка позитивність → розглянути алоТГСК або сальвадж. Паралельне спрацювання з RF-AML-FLT3 (RF-AML-FLT3-ACTIONABLE, рідко при CBF) або RF-AML-MEASURABLE-RESIDUAL-DISEASE: останній має пріоритет і переключає маршрут на алоТГСК попри favorable-статус CBF.</p>
   <h2>Де використовується</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-AML-1L</code> - ALGO-AML-1L</li></ul>
 </main>

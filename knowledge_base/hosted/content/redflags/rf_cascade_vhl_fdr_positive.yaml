@@ -1,0 +1,132 @@
+id: RF-CASCADE-VHL-FDR-POSITIVE
+definition: >-
+  A first-degree relative of the patient (parent, sibling, or child) has
+  a documented positive germline test result for the VHL gene
+  (von Hippel-Lindau syndrome). The patient themself has NOT yet been
+  germline-tested and has no current personal cancer / tumor diagnosis.
+  Per autosomal-dominant inheritance, the patient (regardless of current
+  age — including pediatric patients) carries a **50% prior
+  probability** of also being a VHL carrier. Because VHL surveillance
+  protocols begin in early childhood — ophthalmology from age 1-5,
+  catecholamines from age 5-10, brain/spine MRI from age 15-16 — the
+  cascade-testing question is **time-critical** in pediatric and
+  young-adult first-degree relatives: a missed cascade-test delays the
+  start of childhood-onset surveillance, with risk of retinal
+  hemangioblastoma vision loss or undetected pheochromocytoma. Distinct
+  from RF-VHL-FAMILY-HISTORY-SUSPICION (fires on pedigree pattern
+  before any relative has tested positive) and from
+  RF-VHL-CONFIRMED-CARRIER (fires after the patient's own positive
+  germline test). Prevention-persona RedFlag (§20, v0.2-B
+  cascade-testing pilot 2026-05-19) — severity=critical given the
+  childhood-onset surveillance dependency.
+definition_ua: >-
+  Родич першого ступеня пацієнта (батько/мати, рідний брат/сестра або
+  дитина) має задокументований позитивний germline test на ген VHL
+  (синдром von Hippel-Lindau). Сам пацієнт ще не пройшов germline
+  тестування і не має поточного особистого діагнозу раку / пухлини. За
+  аутосомно-домінантним типом успадкування пацієнт (незалежно від
+  поточного віку — включаючи педіатричних пацієнтів) має **50%
+  апріорну ймовірність** також бути носієм VHL. Оскільки VHL
+  surveillance протоколи починаються у ранньому дитинстві —
+  офтальмологія з 1-5 років, катехоламіни з 5-10 років, MRI
+  головного мозку/хребта з 15-16 років — питання cascade тестування
+  є **час-критичним** у педіатричних та молодих дорослих родичів
+  першого ступеня: пропущений cascade-test затримує початок
+  childhood-onset surveillance, з ризиком retinal hemangioblastoma
+  втрати зору або недетектованої феохромоцитоми. Відрізняється від
+  RF-VHL-FAMILY-HISTORY-SUSPICION (спрацьовує на родовід до позитиву
+  родича) та від RF-VHL-CONFIRMED-CARRIER (спрацьовує після власного
+  позитиву пацієнта). Prevention-persona RedFlag (§20, v0.2-B
+  cascade-testing пілот 2026-05-19) — severity=critical через
+  childhood-onset surveillance dependency.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_first_degree_relative_vhl_carrier_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+severity: critical
+priority: 90
+category: other
+
+# §20 prevention extension — drives engine routing to PreventionPlan
+# when patient carries this RF and no confirmed Disease (KSS §20.2).
+risk_category: genetic
+
+# VHL-spectrum tumors in KB. RCC is the primary anchor per task brief
+# (leading cause of mortality in adult VHL carriers). Pheochromocytoma,
+# HCC (closest hepatobiliary anchor for pancreatic NET / serous
+# cystadenoma) included.
+relevant_diseases:
+  - DIS-RCC
+  - DIS-PHEOCHROMOCYTOMA
+  - DIS-HCC
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-KIDNEY-2025
+  - SRC-ASCO-ACMG-LYNCH-2014
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  v0.2-B cascade-testing pilot (2026-05-19). Fires when a first-degree
+  relative (FDR — parent, sibling, child) of an asymptomatic patient
+  has a confirmed positive germline test for VHL. Engine routes to
+  PreventionPlan recommending:
+    (a) IND-CASCADE-VHL-FDR-POSITIVE-TESTING (standard) — cascade
+        site-specific (familial-variant) VHL testing for the patient
+        **from age 1** (childhood-onset surveillance dependency).
+        Pre/post-test counseling addresses childhood-onset
+        surveillance start (ophthalmology age 1-5; catecholamines age
+        5-10) and lifetime multi-organ tumor risk. De novo VHL
+        variants occur in ~20% of probands — multi-gene panel
+        expansion is reasonable if site-specific is negative and
+        clinical suspicion persists.
+    (b) IND-CASCADE-VHL-FDR-POSITIVE-SURVEILLANCE (alternative) —
+        empirical multi-organ surveillance per VHL Alliance Active
+        Surveillance Guidelines (annual ophthalmology from 1-5;
+        catecholamines from 5-10; abdominal MRI from 15; brain/spine
+        MRI from 15-16; audiology q2-3y) for patients who decline
+        cascade germline testing, applied as if VHL were confirmed
+        until testing settles the question.
+
+  **50% prior probability** in autosomal-dominant inheritance (one
+  parent heterozygous) — combined with the time-critical
+  childhood-onset surveillance dependency — makes this one of the
+  highest-priority cascade scenarios in pediatric and young-adult
+  oncology prevention. Severity=critical reflects the
+  surveillance-window urgency, not the absolute lifetime cancer risk.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1
+  dev-mode exemption.
+
+  Penetrance reference (NCCN Kidney v2.2025; VHL Alliance) — if the
+  patient tests positive on cascade:
+    - Clear-cell RCC: ~25-45% lifetime; multifocal / bilateral.
+    - Pheochromocytoma: ~10-20% lifetime; often bilateral.
+    - CNS hemangioblastoma (brain / spine): ~60-80% lifetime.
+    - Retinal hemangioblastoma: ~25-60% lifetime.
+    - Pancreatic NET / serous cystadenoma: ~10-15% lifetime.
+    - Endolymphatic sac tumor: ~10% lifetime.
+    - Epididymal / broad ligament cystadenoma: common.
+
+  Site-specific (familial-variant) testing carries the highest
+  positive predictive value and lowest VUS rate per ACMG / ASCO
+  cascade testing guidance.
+
+  **Pediatric cascade testing:** unusual in oncology — most cascade
+  protocols defer to age 18 (informed consent + autonomy). VHL is
+  one of the few syndromes where cascade testing in young children
+  (with parental consent + assent process when developmentally
+  appropriate) is the standard of care, because surveillance starts
+  in toddlerhood. Counseling addresses pediatric-specific consent
+  framework + family planning.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_b_cascade_pilot
+draft_revision: 1

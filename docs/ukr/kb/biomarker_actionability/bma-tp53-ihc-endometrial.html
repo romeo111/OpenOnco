@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>p53-aberrant (p53-abn) endometrial carcinoma defines the highest-risk molecular subgroup... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="p53-aberrant (p53-abn) endometrial carcinoma defines the highest-risk molecular subgroup... - OpenOnco">
 <meta property="og:description" content="p53-aberrant (p53-abn) endometrial carcinoma defines the highest-risk molecular subgroup...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/biomarker_actionability/bma-tp53-ihc-endometrial.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="p53-aberrant (p53-abn) endometrial carcinoma defines the highest-risk molecular subgroup... - OpenOnco">
 <meta name="twitter:description" content="p53-aberrant (p53-abn) endometrial carcinoma defines the highest-risk molecular subgroup...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"p53-aberrant (p53-abn) endometrial carcinoma defines the highest-risk molecular subgroup... - OpenOnco","description":"p53-aberrant (p53-abn) endometrial carcinoma defines the highest-risk molecular subgroup...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarker_actionability/bma-tp53-ihc-endometrial.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarker_actionability/bma-tp53-ihc-endometrial.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"p53-aberrant (p53-abn) endometrial carcinoma defines the highest-risk molecular subgroup... - OpenOnco","description":"p53-aberrant (p53-abn) endometrial carcinoma defines the highest-risk molecular subgroup...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarker_actionability/bma-tp53-ihc-endometrial.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarker_actionability/bma-tp53-ihc-endometrial.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -103,6 +175,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -124,7 +197,7 @@
 <tr><th>Рекомендовані комбінації</th><td>Carboplatin AUC5 + paclitaxel 175 mg/m² q3w x4-6 cycles ± concurrent EBRT (45 Gy) — PORTEC-3 chemoRT regimen, Sequential approach: EBRT 45 Gy → carboplatin/paclitaxel x4 (or vice versa per institutional preference), Vaginal brachytherapy (VBT) may be added for vaginal cuff coverage</td></tr>
 <tr><th>Протипоказана монотерапія</th><td>RT alone (pelvic EBRT without chemotherapy) — inferior to chemoRT in p53-abn subgroup per PORTEC-3 subgroup analysis (HR 0.52 for FFS with chemoRT)</td></tr>
 <tr><th>Підсумок доказів</th><td>p53-aberrant (p53-abn) endometrial carcinoma defines the highest-risk molecular subgroup per the ProMisE/TCGA/ESMO 2023 molecular classification (corresponding to &quot;copy-number-high/serous-like&quot; TCGA group). p53-abn tumors are typically high-grade, often serous or clear-cell histology, with the worst prognosis (5-yr OS ~55-60% in early-stage vs ~90% for POLE-ultramutated). PORTEC-3 (de Boer et al. Lancet 2019 / Oncology 2022 update): phase III RCT, 686 pts high-risk endometrial carcinoma; adjuvant chemoradiotherapy (cisplatin 45 Gy EBRT + carboplatin/paclitaxel x4 cycles) vs pelvic RT alone. Primary results: 5-yr failure-free survival 75.5% vs 68.6% (HR 0.71, p=0.022); 5-yr OS 81.4% vs 76.1% (HR 0.70, p=0.034). Molecular subgroup analysis (León-Castillo et al. JCO 2020): among p53-abn tumors (n=150), chemoRT benefit was largest — HR for FFS 0.52 (95% CI 0.30–0.89); whereas no benefit was observed in MMRd or NSMP subgroups. This biomarker-treatment interaction analysis is the primary evidence for ESMO 2023 escalation recommendation. ESMO-ESGO-ESTRO 2023 guidelines: p53-abn molecular s...</td></tr></table>
-  <h2>Нотатки</h2><p>ESCAT IB. p53-aberrant IHC pattern (not TP53 sequencing) is the clinical standard for molecular subtype assignment in the ESMO 2023 / ProMisE classification. This is distinct from BMA-TP53-MUT-ENDOMETRIAL (gene mutation level, ESCAT IIIB, no targeted therapy) — the IHC pattern&#x27;s actionability is about treatment intensification (chemoRT over RT alone), not about a targeted agent. The 4-class molecular subtyping (POLE-ultramutated → best prognosis, MMR-deficient, NSMP, p53-abn → worst prognosis) is now required in all newly diagnosed endometrial carcinomas per ESMO 2023 and NCCN 2025. Testing priority: POLE sequencing first, then MMR IHC (MLH1/MSH2/MSH6/PMS2), then p53 IHC. Practical note: p53-abn IHC CANNOT be interpreted in the context of concurrent POLE mutation — POLE-ultramutated tumors are assigned regardless of p53 IHC (POLE overrides per ESMO hierarchy rule).</p>
+  <h2>Нотатки</h2><p>ESCAT IB. ІГХ р53 є клінічним стандартом для призначення молекулярного підтипу при класифікації ESMO 2023 / ProMisE. Це відрізняється від BMA-TP53-MUT-ENDOMETRIAL (рівень генної мутації, ESCAT IIIB, без таргетної терапії). 4-класове молекулярне підтипування (POLE → MMR-дефіцитний → NSMP → p53-abn) є обов&#x27;язковим при всіх вперше діагностованих карциномах ендометрія за ESMO 2023 та NCCN 2025. Порядок тестування: спочатку секвенування POLE, потім MMR-ІГХ (MLH1/MSH2/MSH6/PMS2), потім р53-ІГХ. Практична примітка: р53-abn ІГХ НЕ може інтерпретуватись при одночасній мутації POLE — POLE-ультрамутовані пухлини призначаються незалежно від р53-ІГХ (POLE переважає за ієрархічним правилом ESMO).</p>
   <h2>Де використовується</h2><p class="kb-muted">У YAML-корпусі не знайдено зворотних посилань.</p>
 </main>
 </body>

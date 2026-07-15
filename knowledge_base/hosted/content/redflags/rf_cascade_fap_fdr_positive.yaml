@@ -1,0 +1,136 @@
+id: RF-CASCADE-FAP-FDR-POSITIVE
+definition: >-
+  A first-degree relative of the patient (parent, sibling, or child) has
+  a documented positive germline test result for the APC gene
+  (familial adenomatous polyposis — FAP, including the attenuated AFAP
+  and Gardner variants). The patient themself has NOT yet been
+  germline-tested and has no current personal cancer diagnosis. Per
+  autosomal-dominant inheritance, the patient (regardless of current
+  age — including pediatric patients) carries a **50% prior
+  probability** of also being an APC carrier. Because classic FAP
+  surveillance begins at **age 10-12 (annual sigmoidoscopy)** and
+  classic FAP carries near-100% lifetime CRC risk by age 40 without
+  colectomy, the cascade-testing question is time-critical in pediatric
+  first-degree relatives. Distinct from RF-FAP-FAMILY-HISTORY-SUSPICION
+  (fires on pedigree pattern alone, before any relative has tested
+  positive) and from RF-FAP-CONFIRMED-CARRIER (fires after the
+  patient's own positive germline test). Prevention-persona RedFlag
+  (§20, v0.2-B cascade-testing pilot 2026-05-19) — severity=critical
+  given the childhood-onset surveillance dependency and the
+  near-100% CRC penetrance of classic FAP.
+definition_ua: >-
+  Родич першого ступеня пацієнта (батько/мати, рідний брат/сестра або
+  дитина) має задокументований позитивний germline test на ген APC
+  (сімейний аденоматозний поліпоз — FAP, включаючи attenuated AFAP та
+  Gardner варіанти). Сам пацієнт ще не пройшов germline тестування і
+  не має поточного особистого діагнозу раку. За аутосомно-домінантним
+  типом успадкування пацієнт (незалежно від поточного віку —
+  включаючи педіатричних пацієнтів) має **50% апріорну ймовірність**
+  також бути носієм APC. Оскільки surveillance класичного FAP
+  починається у **10-12 років (щорічна сигмоїдоскопія)** і класичний
+  FAP має майже-100% lifetime ризик КРР до 40 років без колектомії,
+  питання cascade тестування є час-критичним у педіатричних родичів
+  першого ступеня. Відрізняється від RF-FAP-FAMILY-HISTORY-SUSPICION
+  (спрацьовує на родовід до позитиву родича) та від
+  RF-FAP-CONFIRMED-CARRIER (спрацьовує після власного позитиву
+  пацієнта). Prevention-persona RedFlag (§20, v0.2-B cascade-testing
+  пілот 2026-05-19) — severity=critical через childhood-onset
+  surveillance dependency та майже-100% CRC пенетрантність
+  класичного FAP.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_first_degree_relative_apc_carrier_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+severity: critical
+priority: 90
+category: other
+
+# §20 prevention extension — drives engine routing to PreventionPlan
+# when patient carries this RF and no confirmed Disease (KSS §20.2).
+risk_category: genetic
+
+# FAP-spectrum cancers in KB. CRC is the primary anchor per task
+# brief (~100% lifetime risk in classic FAP without colectomy).
+# Duodenal adenocarcinoma anchored via DIS-PDAC as closest upper-GI
+# anchor (no DIS-DUODENAL entity); gastric fundic-gland polyposis;
+# prostate modestly elevated.
+relevant_diseases:
+  - DIS-CRC
+  - DIS-PDAC
+  - DIS-GASTRIC
+  - DIS-PROSTATE
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-CRC-2024
+  - SRC-ASCO-ACMG-LYNCH-2014
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  v0.2-B cascade-testing pilot (2026-05-19). Fires when a first-degree
+  relative (FDR — parent, sibling, child) of an asymptomatic patient
+  has a confirmed positive germline test for APC. Engine routes to
+  PreventionPlan recommending:
+    (a) IND-CASCADE-FAP-FDR-POSITIVE-TESTING (standard) — cascade
+        site-specific (familial-variant) APC testing for the patient
+        **from age 10-12** (childhood-onset surveillance dependency).
+        Pre/post-test counseling addresses childhood-onset
+        sigmoidoscopy initiation in classic FAP, lifetime CRC risk,
+        and prophylactic colectomy timing in late teens / early 20s.
+        Modern multi-gene panels include MUTYH for MAP differential
+        (autosomal-recessive vs autosomal-dominant FAP).
+    (b) IND-CASCADE-FAP-FDR-POSITIVE-SURVEILLANCE (alternative) —
+        empirical sigmoidoscopy from age 10-12 per InSiGHT FAP
+        protocol for patients who decline cascade germline testing,
+        applied as if classic FAP were confirmed until testing
+        settles the question. Upper-GI EGD q1-3y from age 25-30 also
+        applied empirically.
+
+  **50% prior probability** in autosomal-dominant inheritance (one
+  parent heterozygous) — combined with the time-critical childhood
+  surveillance start and the near-100% CRC penetrance of classic FAP
+  — makes this one of the highest-stakes cascade scenarios in
+  pediatric oncology prevention. Severity=critical reflects the
+  combination of penetrance + surveillance window.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1
+  dev-mode exemption.
+
+  Penetrance reference (NCCN Genetic/Familial High-Risk: Colorectal
+  v2.2025) — if the patient tests positive on cascade:
+    - CRC: ~100% by age 40 in classic FAP without colectomy;
+      ~70-80% by age 80 in attenuated FAP.
+    - Duodenal adenocarcinoma: ~5-10% lifetime (post-colectomy
+      leading mortality).
+    - Gastric fundic-gland polyposis: ~30-50% (most benign).
+    - Desmoid tumors: ~10-20% lifetime, often post-surgical.
+    - Thyroid (papillary cribriform-morular variant): ~1-2%.
+    - Hepatoblastoma in children of FAP families: ~1-2% under age 5.
+    - CNS (medulloblastoma — Turcot variant): rare.
+
+  Site-specific (familial-variant) testing carries the highest
+  positive predictive value and lowest VUS rate per ACMG / ASCO
+  cascade testing guidance.
+
+  **Pediatric cascade testing:** classic FAP is one of the few
+  hereditary cancer syndromes where pediatric germline testing is
+  the standard of care, because surveillance and surgical decisions
+  begin in childhood. Pre-test counseling addresses pediatric-
+  specific informed consent + assent (developmental-stage
+  appropriate) framework, parental decision-making, and the
+  positive-result emotional support pathway. Attenuated FAP (AFAP)
+  has later surveillance start (age 18-20) and gives families more
+  flexibility on cascade-testing timing.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_b_cascade_pilot
+draft_revision: 1

@@ -1,0 +1,108 @@
+id: IND-ACC-1L-RESECTION-MITOTANE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ADRENOCORTICAL-CARCINOMA
+  line_of_therapy: 1
+  stage_stratum: STAGE_I_III_RESECTABLE
+  stage_requirements:
+  - "ENSAT stage I, II, or III adrenocortical carcinoma, surgically resectable — no distant metastasis and primary tumor (+/- locoregional extension) amenable to complete (R0) resection — confirmed by multidisciplinary endocrine surgery/oncology review"
+  - "High recurrence-risk features present after resection: ENSAT stage III, Ki-67 proliferation index >10%, or incomplete/uncertain (R1/RX) resection margin (per ADIUVO trial risk stratification and ENSAT/ESMO consensus) — this Indication targets that higher-risk group; lower-risk patients (stage I-II, R0 resection, Ki-67 <=10%) did not show a significant recurrence-free-survival benefit from adjuvant mitotane in the ADIUVO trial and may be managed with surveillance alone (not separately authored as an Indication in this KB pass)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-MITOTANE-ADJUVANT-ACC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+
+expected_outcomes:
+  disease_free_survival: "Retrospective cohort data (German ACC registry, Terzolo et al.) suggested improved recurrence-free survival with adjuvant mitotane after R0 resection; the subsequent randomized ADIUVO trial did not show a significant recurrence-free-survival benefit in a lower/intermediate-risk population (5-yr RFS 79% mitotane vs 75% surveillance, HR 0.74, 95% CI 0.30-1.85, not significant) — evidence for the higher-risk population targeted by this Indication remains retrospective/observational pending a dedicated high-risk RCT."
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+- TEST-CT-CAP
+- TEST-CORTISOL-MORNING
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-GERMLINE-MULTI-GENE-PANEL
+desired_tests: []
+
+rationale: >
+  Radical (open) adrenalectomy with curative intent is the primary
+  treatment for resectable ENSAT stage I-III adrenocortical carcinoma
+  (ACC); an open surgical approach is historically preferred over
+  laparoscopic resection given retrospective series associating the
+  laparoscopic approach with higher positive-margin and peritoneal-
+  seeding risk, particularly for larger or higher-stage tumors. For
+  patients with high-recurrence-risk features after resection — ENSAT
+  stage III, Ki-67 proliferation index >10%, or an incomplete/uncertain
+  (R1/RX) resection margin — adjuvant mitotane (o,p'-DDD) is recommended
+  based on retrospective cohort data (German ACC registry) suggesting a
+  recurrence-free-survival benefit. The subsequent randomized ADIUVO
+  trial (Terzolo 2023, Lancet Diabetes Endocrinol), which enrolled a
+  lower/intermediate-risk population (stage I-III, R0 resection, Ki-67
+  <=10%), did NOT demonstrate a significant recurrence-free-survival or
+  overall-survival benefit from adjuvant mitotane in that population — so
+  the strength of the adjuvant-mitotane recommendation here is
+  specifically tied to the higher-recurrence-risk subgroup, where the
+  (still largely retrospective) evidence base is most supportive. Mitotane
+  causes near-universal drug-induced adrenal insufficiency (100% of
+  non-functional-tumor and ~75% of functional-tumor patients per the EU
+  SmPC) requiring concomitant glucocorticoid (+/- mineralocorticoid)
+  replacement and regular mitotane blood-level monitoring (target 14-20
+  mg/L). Germline TP53 testing (Li-Fraumeni syndrome) is recommended for
+  all pediatric ACC and for adult ACC meeting Chompret criteria, given
+  ACC's strong hereditary association.
+
+sources:
+- source_id: SRC-ENSAT-ACC-2018
+  position: supports
+- source_id: SRC-ESMO-ACC-2020
+  position: supports
+- source_id: SRC-ADIUVO-TERZOLO-2023
+  position: context
+- source_id: SRC-NCCN-NET-2025
+  position: supports
+
+do_not_do:
+- "Do not offer adjuvant mitotane to every resected ACC patient regardless of recurrence risk — reserve for high-recurrence-risk stage I-III disease (stage III, Ki-67 >10%, or R1/RX margin); the randomized ADIUVO trial did not show benefit in lower/intermediate-risk disease."
+- "Do not initiate mitotane without a concurrent plan for glucocorticoid (+/- mineralocorticoid) replacement and mitotane blood-level monitoring — drug-induced adrenal insufficiency is near-universal."
+- "Do not omit discussion/offer of germline TP53 testing in pediatric ACC or adult ACC meeting Chompret criteria (Li-Fraumeni association)."
+- "Do not favor a laparoscopic surgical approach over open adrenalectomy for large or higher-stage tumors without specific expert-center rationale — retrospective data associate laparoscopic resection with higher positive-margin/peritoneal-seeding risk in this setting."
+
+do_not_do_en:
+- "Do not offer adjuvant mitotane to every resected ACC patient regardless of recurrence risk — reserve for high-recurrence-risk stage I-III disease (stage III, Ki-67 >10%, or R1/RX margin); the randomized ADIUVO trial did not show benefit in lower/intermediate-risk disease."
+- "Do not initiate mitotane without a concurrent plan for glucocorticoid (+/- mineralocorticoid) replacement and mitotane blood-level monitoring — drug-induced adrenal insufficiency is near-universal."
+- "Do not omit discussion/offer of germline TP53 testing in pediatric ACC or adult ACC meeting Chompret criteria (Li-Fraumeni association)."
+- "Do not favor a laparoscopic surgical approach over open adrenalectomy for large or higher-stage tumors without specific expert-center rationale — retrospective data associate laparoscopic resection with higher positive-margin/peritoneal-seeding risk in this setting."
+
+last_reviewed: "2026-07-11"
+review_status: stub
+drafted_by: claude_extraction
+reviewer_signoffs: []
+
+notes: >
+  STUB pending clinical co-lead sign-off (CHARTER §6.1). Authored to close
+  the DIS-ADRENOCORTICAL-CARCINOMA v0.1 content gap
+  (metadata.awaiting_proposal). "High recurrence risk" is operationalized
+  via RF-ACC-HIGH-RECURRENCE-RISK-BIOLOGY (stage III / Ki-67 >10% / R1-RX
+  margin), itself a first-pass reading of ADIUVO's low/intermediate-risk
+  enrollment criteria in reverse — pending clinical co-lead confirmation
+  against the primary ENSAT/ESMO guideline text, which may specify
+  additional risk factors (e.g. tumor rupture, vascular invasion) not yet
+  encoded. Lower-risk resected patients (surveillance-alone candidates per
+  ADIUVO) are intentionally NOT covered by this Indication — see
+  ALGO-ACC-1L step 2 null-branch. Surgery is described in prose
+  (rationale/stage_requirements) rather than via a Surgery-entity FK/
+  phases: structure — no adrenalectomy Surgery entity exists in this KB
+  and authoring one is out of scope for this task.
+
+ukrainian_review_status: pending_clinical_signoff

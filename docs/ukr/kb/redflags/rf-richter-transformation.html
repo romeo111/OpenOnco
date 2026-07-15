@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Richter transformation: histologically confirmed transformation of CLL/SLL to aggressive... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="Richter transformation: histologically confirmed transformation of CLL/SLL to aggressive... - OpenOnco">
 <meta property="og:description" content="Richter transformation: histologically confirmed transformation of CLL/SLL to aggressive...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/redflags/rf-richter-transformation.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Richter transformation: histologically confirmed transformation of CLL/SLL to aggressive... - OpenOnco">
 <meta name="twitter:description" content="Richter transformation: histologically confirmed transformation of CLL/SLL to aggressive...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Richter transformation: histologically confirmed transformation of CLL/SLL to aggressive... - OpenOnco","description":"Richter transformation: histologically confirmed transformation of CLL/SLL to aggressive...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-richter-transformation.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-richter-transformation.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Richter transformation: histologically confirmed transformation of CLL/SLL to aggressive... - OpenOnco","description":"Richter transformation: histologically confirmed transformation of CLL/SLL to aggressive...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-richter-transformation.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-richter-transformation.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -103,6 +175,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -117,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-04-27 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-CLL"><code>DIS-CLL</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="ESMO Clinical Practice Guideline on Chronic Lymphocytic Leukaemia"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-chronic-lymphocytic-leukaemia" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-CLL-2024</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BCELL-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Richter transformation: histologically confirmed transformation of CLL/SLL to aggressive lymphoma — DLBCL-type (most common, ~90%) or Hodgkin-type (~10%). Triggers immediate switch from CLL-directed therapy (BTKi, BCL2i, CIT) to DLBCL-style chemoimmunotherapy (R-CHOP, R-EPOCH; outcomes poor → consider clinical trial, CAR-T post-induction, allogeneic SCT in fit).</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Трансформація Ріхтера: гістологічно підтверджена трансформація CLL/SLL у агресивну лімфому — DLBCL-тип (найпоширеніший, ~90%) або Hodgkin-тип (~10%). Триггерує негайний перехід з CLL-направленої терапії (BTKi, BCL2i, CIT) на DLBCL-style хіміоімунотерапію (R-CHOP, R-EPOCH; результати погані → розглянути клінічний трайл, CAR-T після індукції, ало-СКТ у fit).</td></tr>
 <tr><th>Клінічний напрям</th><td>intensify</td></tr>
 <tr><th>Категорія</th><td>transformation-progression</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
   &quot;any_of&quot;: [
@@ -136,7 +209,7 @@
   ],
   &quot;type&quot;: &quot;composite_score&quot;
 }</pre>
-  <h2>Нотатки</h2><p>Incidence 5-10% over CLL course; risk factors include unmutated IGHV, TP53 disruption, NOTCH1, MYC alterations, prior fludarabine. Clonally- related Richter (&gt;80%) has worse OS (median 8-12 months) than clonally-unrelated (de novo DLBCL in CLL patient, 2-year OS 60%). Treatment paradigm: R-CHOP induction (CR 20-30%), consolidate with alloSCT or CAR-T (TRANSCEND-CLL-004 includes Richter cohort, ORR ~60%); BTKi-Richter — pirtobrutinib + venetoclax + R-CHOP under investigation (Mato), pembrolizumab + ibrutinib (Ding 2017) shows responses; Hodgkin-variant Richter — ABVD/AVD ± brentuximab. PET-CT guided biopsy of FDG-avid lesion (SUVmax &gt;5) recommended in CLL patients with rapid clinical change.</p>
+  <h2>Нотатки</h2><p>Частота 5-10% протягом перебігу CLL; фактори ризику: незмутований IGHV, ураження TP53, NOTCH1, MYC-зміни, попередній флударабін. Клонально пов&#x27;язана Ріхтер (&gt;80%) має гірший OS (медіана 8-12 міс) ніж клонально непов&#x27;язана (de novo DLBCL у CLL-пацієнта, 2-річний OS 60%). Парадигма: R-CHOP індукція (CR 20-30%), консолідація алоСКТ або CAR-T (TRANSCEND-CLL-004 включає Ріхтер-когорту, ORR ~60%); BTKi-Ріхтер — піртобрутиніб + венетоклакс + R-CHOP вивчається, пембролізумаб + ібрутиніб (Ding 2017) дає відповіді; Hodgkin-варіант — ABVD/AVD ± брентуксимаб. PET-CT направлена біопсія FDG-avid вогнища (SUVmax &gt;5) рекомендована при швидкій клінічній зміні.</p>
   <h2>Де використовується</h2><p class="kb-muted">У YAML-корпусі не знайдено зворотних посилань.</p>
 </main>
 </body>

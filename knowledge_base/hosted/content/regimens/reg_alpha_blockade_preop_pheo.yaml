@@ -1,0 +1,73 @@
+id: REG-ALPHA-BLOCKADE-PREOP-PHEO
+name: "Preoperative alpha-adrenergic blockade (phenoxybenzamine, before pheochromocytoma/paraganglioma surgery)"
+name_ua: "Передопераційна альфа-адреноблокада (феноксибензамін, перед хірургією феохромоцитоми/парагангліоми)"
+alternate_names:
+  - "Preop alpha-blockade PPGL"
+  - "Phenoxybenzamine preoperative preparation"
+
+components:
+  - drug_id: DRUG-PHENOXYBENZAMINE
+    dose: "Starting 10 mg PO BID, titrated in 10-20 mg/day increments"
+    schedule: "Daily, titrated over the preoperative period to blood-pressure normalization and symptom control (typically roughly 1-2 weeks before surgery)"
+    route: PO
+
+cycle_length_days:
+total_cycles: "Single mandatory preoperative course -- until adequate alpha-blockade achieved (see RF-PHEO-INADEQUATE-ALPHA-BLOCKADE); not a repeating cycle"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Phenoxybenzamine not available, poorly tolerated (marked orthostatic hypotension/reflex tachycardia), or local practice preference"
+    modification: "Substitute DRUG-DOXAZOSIN (selective alpha-1 blocker), starting 1-2 mg PO daily, titrated toward blood-pressure normalization and symptom control over a comparable preoperative course"
+    rationale: "Doxazosin is a widely used, better-tolerated, more available alternative alpha-1 blocker for the same mandatory preoperative-blockade indication; no head-to-head KB preference between the two agents"
+    source_refs:
+      - SRC-ENDOCRINE-SOCIETY-PPGL-2014
+  - condition: "Persistent tachycardia/arrhythmia AFTER adequate alpha-blockade is established"
+    modification: "Beta-blockade may be added only once alpha-blockade is underway -- never before, to avoid unopposed alpha-stimulation and hypertensive crisis"
+    rationale: "Sequencing rule from Endocrine Society 2014 PPGL guideline"
+    source_refs:
+      - SRC-ENDOCRINE-SOCIETY-PPGL-2014
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Phenoxybenzamine registration in Ukraine not verified in this
+    session; doxazosin (the KB-modelled alternative component of this
+    same regimen) is widely available as a generic antihypertensive.
+    See DRUG-PHENOXYBENZAMINE / DRUG-DOXAZOSIN for details.
+
+sources:
+  - SRC-ENDOCRINE-SOCIETY-PPGL-2014
+  - SRC-NCCN-NET-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Запаморочення або непритомність при вставанні"
+    action_ua: "Очікуваний ефект альфа-блокади (ортостатична гіпотензія) — повідомте клініку того ж дня, якщо часто або тяжко"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-ENDOCRINE-SOCIETY-PPGL-2014
+  - trigger_ua: "Сильне серцебиття або підвищення тиску, що не покращується"
+    action_ua: "Подзвоніть у клініку того ж дня — може знадобитись підвищення дози перед операцією"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-ENDOCRINE-SOCIETY-PPGL-2014
+
+last_reviewed: "2026-07-11"
+notes: >
+  This regimen models the mandatory preoperative alpha-adrenergic
+  blockade step described in the Disease narrative -- NOT a cytotoxic
+  or antineoplastic regimen. It is the recommended_regimen on
+  IND-PHEO-LOCALIZED-1L-ALPHA-BLOCKADE-ADRENALECTOMY and exists purely
+  to prevent intraoperative catecholamine-release hypertensive crisis
+  during adrenalectomy. Adequacy of blockade is gated by
+  RF-PHEO-INADEQUATE-ALPHA-BLOCKADE, a hard hold on proceeding to
+  surgery. No fixed target BP/HR numeric threshold is asserted here --
+  "adequate" blockade is a clinical judgment per Endocrine Society 2014
+  guidance, not a KB-invented number. STUB pending clinical co-lead
+  signoff (CHARTER §6.1, dev-mode-exempted).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_pheo_treatment_pathway

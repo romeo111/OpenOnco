@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Loncastuximab tesirine - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="Loncastuximab tesirine - OpenOnco">
 <meta property="og:description" content="Loncastuximab tesirine: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/drugs/drug-loncastuximab-tesirine.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Loncastuximab tesirine - OpenOnco">
 <meta name="twitter:description" content="Loncastuximab tesirine: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Loncastuximab tesirine - OpenOnco","description":"Loncastuximab tesirine: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-loncastuximab-tesirine.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-loncastuximab-tesirine.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Loncastuximab tesirine - OpenOnco","description":"Loncastuximab tesirine: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-loncastuximab-tesirine.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-loncastuximab-tesirine.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -103,6 +175,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -124,7 +197,7 @@
 <tr><th>Зареєстровано в Україні</th><td>False</td></tr>
 <tr><th>Відшкодовується НСЗУ</th><td>False</td></tr>
 <tr><th>Остання перевірка для України</th><td>2026-04-27</td></tr></table>
-  <h2>Нотатки</h2><p>Pivotal: LOTIS-2 (Caimi et al., Lancet Oncol 2021) — 145 R/R DLBCL patients with ≥2 prior lines (~99% prior R-CHOP, ~17% prior CAR-T), ORR 48%, CR 24%, median DoR 13.4 months in responders. Single-agent activity in heavily pretreated population including post-CAR-T failures. Position in DLBCL algorithm: 3L+ option after R-CHOP and CAR-T (or in CAR-T-ineligible patients), competing with polatuzumab vedotin + bendamustine + rituximab (Pola-BR) and bispecific antibodies (epcoritamab, glofitamab). Edema/effusion management is the principal toxicity issue: mandatory dexamethasone premedication, monitor weight + auscultation each cycle, drain effusions when symptomatic. Skin photosensitivity requires SPF50+ broad-spectrum sunscreen and protective clothing throughout treatment + 1 month after. Ukraine: NOT registered, NOT NSZU-reimbursed; access via self-pay (~USD 30-40K per 6-cycle course) or compassionate-use program through ADC Therapeutics / Sobi. LOTIS-5 (lonca + R-GemOx) ongoing for 2L use.</p>
+  <h2>Нотатки</h2><p>Лонкастуксимаб тезирин (loncastuximab tesirine, Zynlonta) — гуманізоване моноклональне антитіло IgG1κ проти CD19, кон&#x27;юговане через катепсин-розщеплюваний валін-аланіновий лінкер з SG3199 — димером піролобензодіазепіну (PBD) з ДНК-зшивальною дією. Після зв&#x27;язування з поверхневим CD19 на B-клітинах лімфоми ADC інтерналізується; катепсин B у лізосомі вивільняє PBD-вантаж, який алкілує та зшиває ДНК у малому жолобку без її викривлення — ці зшивки уникають репарації й запускають апоптоз. Реєстраційне дослідження LOTIS-2 (Caimi та співавт., Lancet Oncol 2021): 145 пацієнтів з рецидивним/рефрактерним DLBCL після ≥2 ліній (~99% попередньо R-CHOP, ~17% — після CAR-T) — ORR 48%, CR 24%, медіана тривалості відповіді у респондерів 13.4 міс. Активність у монотерапії в інтенсивно передлікованих пацієнтів, включно з post-CAR-T-неефективністю. Позиція в алгоритмі DLBCL: опція 3L+ після R-CHOP і CAR-T (або у пацієнтів, неприйнятних до CAR-T), конкурує з полатузумабом ведотином + бендамустин + ритуксимаб (Pola-BR) та біспецифічними антитілами (епкоритамаб, глофітамаб). Ключове токсикологічне питання — едема/випоти: обов&#x27;язкова премедикація дексаметазоном, моніторинг ваги та аускультація на кожному...</p>
   <h2>Де використовується</h2>
 <h3>Regimens</h3><ul><li><code>REG-LONCASTUXIMAB-TESIRINE</code> - Loncastuximab tesirine monotherapy (R/R DLBCL, 3L+; LOTIS-2)</li></ul>
 </main>

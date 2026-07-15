@@ -4,6 +4,7 @@ linked_to_regimen: REG-ACALABRUTINIB-CONTINUOUS
 phases:
   - name: baseline
     window: "Within 2 weeks before start"
+    window_ua: "Протягом 2 тижнів до початку"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -25,9 +26,16 @@ phases:
       - "iwCLL treatment indication documented (if asymptomatic — defer to surveillance)"
       - "Cardiac baseline (atrial fibrillation history, hypertension control)"
       - "HBV status + entecavir prophylaxis if HBsAg+ or anti-HBc+ (anti-CD20 in VenO regimen)"
+    checkpoints_ua:
+      - "Підтвердити діагноз CLL: CD19+ CD5+ CD23+ за flow на ПК, ≥5 тис. моноклональних B-клітин"
+      - "Стратифікація ризику: del(17p), TP53, мутаційний статус IGHV, каріотип"
+      - "Документувати показання до лікування за iwCLL (якщо безсимптомний — перевести на спостереження)"
+      - "Базова оцінка серця (анамнез фібриляції передсердь, контроль гіпертензії)"
+      - "Статус HBV + профілактика ентекавіром при HBsAg+ або anti-HBc+ (anti-CD20 у схемі VenO)"
 
   - name: on_treatment_btki
     window: "Monthly × 3 months, then every 3 months"
+    window_ua: "Щомісяця протягом 3 місяців, потім кожні 3 місяці"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -37,9 +45,14 @@ phases:
       - "ALC trend (lymphocytosis early on BTKi is expected — not progression)"
       - "Bleeding events; major bleed → hold BTKi"
       - "AF symptoms → ECG; if AF → cardiology + anticoagulation strategy"
+    checkpoints_ua:
+      - "Тренд ALC (рання лімфоцитоз на BTKi — очікуваний феномен, не прогресування)"
+      - "Кровотечі; масивна кровотеча → утримати BTKi"
+      - "Симптоми AF → ЕКГ; якщо AF → кардіолог + стратегія антикоагуляції"
 
   - name: on_treatment_veno
     window: "Per CLL14 schedule during 12-month VenO course"
+    window_ua: "За схемою CLL14 протягом 12-місячного курсу VenO"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -50,9 +63,14 @@ phases:
       - "TLS labs (K+, phosphate, calcium, uric acid, creatinine) per ramp-up schedule"
       - "ANC + platelets pre each obinutuzumab dose"
       - "Infusion reactions to obinutuzumab (especially first dose)"
+    checkpoints_ua:
+      - "Лабораторні маркери TLS (K+, фосфат, кальцій, сечова кислота, креатинін) за графіком ескалації дози"
+      - "ANC + тромбоцити перед кожною дозою обінутузумабу"
+      - "Інфузійні реакції на обінутузумаб (особливо при першій дозі)"
 
   - name: response_assessment
     window: "After cycle 6 (VenO) or every 6 months on BTKi"
+    window_ua: "Після циклу 6 (VenO) або кожні 6 місяців на BTKi"
     tests:
       - TEST-CBC
       - TEST-CECT-CAP
@@ -61,19 +79,30 @@ phases:
     checkpoints:
       - "iwCLL response criteria (CR, PR, PR-L on BTKi, SD, PD)"
       - "MRD assessment by flow on PB at end of VenO 12-month course"
+    checkpoints_ua:
+      - "Критерії відповіді за iwCLL (CR, PR, PR-L на BTKi, SD, PD)"
+      - "Оцінка MRD методом flow на ПК у кінці 12-місячного курсу VenO"
 
   - name: follow_up
     window: "Every 3-6 months after treatment / continuously on BTKi"
+    window_ua: "Кожні 3–6 місяців після лікування / постійно на BTKi"
     tests: [TEST-CBC, TEST-CMP, TEST-LFT]
     visits: ["Clinical + labs"]
     checkpoints:
       - "Surveillance for relapse (median PFS years for both regimens)"
       - "Watch for Richter transformation (rapid LDH rise, new B-symptoms, isolated mass) — re-biopsy"
       - "Second primary malignancy screening"
+    checkpoints_ua:
+      - "Спостереження щодо рецидиву (медіана PFS — роки для обох схем)"
+      - "Слідкувати за трансформацією Ріхтера (швидке зростання LDH, нові B-симптоми, ізольована маса) — повторна біопсія"
+      - "Скринінг другої первинної злоякісної пухлини"
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
+machine_translated_review_pending: true
 notes: >
   Shared between BTKi (acalabrutinib continuous) and VenO time-limited
   paths. BTKi-specific cardiac/bleeding surveillance; VenO-specific TLS
   protocol during ramp.
+  UA translations of window / checkpoints added 2026-05-19 under CHARTER
+  §8.3 dev-mode exemption; awaiting Clinical Co-Lead sign-off.

@@ -1,0 +1,137 @@
+id: IND-VULVAR-VAGINAL-SCC-LA-1L-CISPLATIN-RT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-VULVAR-VAGINAL-SCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Locally advanced vulvar SCC: primary tumor not amenable to surgical resection without unacceptable functional morbidity (urethral, anal sphincter, or bladder involvement), OR clinically/radiologically fixed or ulcerated (bulky) groin nodes, M0"
+    - "Vaginal SCC: most cases at diagnosis, given anatomic constraints limiting surgical candidacy — definitive chemoradiation is the primary curative-intent approach regardless of formal FIGO substage"
+    - "No distant metastases (M0)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-CISPLATIN-RADIOSENS
+concurrent_therapy:
+  - "Concurrent external beam radiation therapy (EBRT) to the primary tumor + regional (inguinofemoral ± pelvic) nodes — planned and delivered by radiation oncology; dose/fractionation and any brachytherapy boost are individualized and not modellable in the current OpenOnco Regimen schema (see REG-CISPLATIN-RADIOSENS notes / KNOWLEDGE_SCHEMA_SPECIFICATION §17)"
+followed_by:
+  - "Response assessment 8-12 weeks post-CRT: clinical exam ± MRI pelvis"
+  - "Residual/persistent disease: biopsy confirmation before considering salvage surgery"
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category:
+
+expected_outcomes: {}
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-MRI-PELVIS
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CREATININE-CL
+desired_tests: []
+
+rationale: >
+  Locally advanced vulvar SCC (primary not resectable without
+  unacceptable functional morbidity, or bulky/fixed groin nodes) and
+  most vaginal SCC (anatomic constraints — proximity to bladder,
+  rectum, urethra — limit surgical candidacy) are managed with
+  definitive concurrent chemoradiation: weekly cisplatin
+  radiosensitization plus external beam RT to the primary tumor and
+  regional nodes, mirroring the cisplatin + RT paradigm established for
+  locally advanced cervical cancer (GOG-120/NCIC, IND-CERVICAL-LOCALLY-
+  ADVANCED-CRT) and extrapolated by gynecologic-oncology practice to
+  vulvar and vaginal SCC given the rarity of these tumors precluding
+  disease-specific randomized trials. REG-CISPLATIN-RADIOSENS (weekly
+  cisplatin 40 mg/m², cap 70 mg, concurrent with EBRT) is reused here
+  UNCHANGED from its cervical-cancer authoring — the radiosensitizing
+  chemotherapy backbone is identical across these pelvic-SCC
+  chemoradiation protocols; only the RT field/dose (individualized by
+  radiation oncology to vulvar/vaginal/groin anatomy) differs, and RT
+  field/dose is not separately modellable in the current schema. NO
+  single pivotal randomized trial establishes cisplatin+RT specifically
+  for vulvar/vaginal SCC (unlike GOG-120 for cervical or ACT II for
+  anal SCC) — this is an extrapolated standard-of-care pathway pending
+  disease-specific evidence; flagged as an open gap for a dedicated
+  NCCN Vulvar/Vaginal Cancer Source stub.
+
+rationale_ua: >
+  Місцево-поширена SCC вульви (первинна пухлина, не резектабельна без
+  неприйнятної функціональної захворюваності, або фіксовані/об'ємні
+  пахові вузли) та більшість SCC піхви (анатомічні обмеження —
+  близькість до сечового міхура, прямої кишки, уретри — обмежують
+  хірургічну придатність) лікуються дефінітивною одночасною
+  хіміопроменевою терапією: щотижневий цисплатин-радіосенсибілізатор
+  разом з дистанційною променевою терапією на первинну пухлину та
+  регіонарні вузли, за аналогією з парадигмою цисплатин + ПТ,
+  встановленою для місцево-поширеного цервікального раку (GOG-120/
+  NCIC, IND-CERVICAL-LOCALLY-ADVANCED-CRT) та екстрапольованою
+  гінекологічно-онкологічною практикою на SCC вульви та піхви з
+  огляду на рідкісність цих пухлин, що унеможливлює нозологічно-
+  специфічні рандомізовані дослідження. REG-CISPLATIN-RADIOSENS
+  (щотижневий цисплатин 40 мг/м², макс. 70 мг, одночасно з EBRT)
+  повторно використовується тут БЕЗ ЗМІН з його авторства для
+  цервікального раку. Жодне окреме пілотне рандомізоване дослідження
+  не встановлює цисплатин+ПТ спеціально для SCC вульви/піхви — це
+  екстрапольований стандарт лікування до появи нозологічно-
+  специфічних доказів.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_search_agent_algorithm_review
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-CERVICAL-2025
+    position: context
+    relevant_quote_paraphrase: "Reused as the closest existing NCCN guideline packet already hosted in this KB for the cisplatin + RT chemoradiation paradigm; a dedicated NCCN Vulvar Cancer / NCCN Vaginal Cancer Source is not yet hosted here"
+
+do_not_do:
+  - "Не розпочинати цисплатин без вирішення гідронефрозу або обструкції сечовивідних шляхів, якщо наявні"
+  - "Не відкладати початок променевої терапії — тривалість курсу хіміопроменевої терапії впливає на локальний контроль"
+  - "Не призначати цисплатин при кліренсі креатиніну <50 мл/хв без переходу на карбоплатин або відмови від хіміосенсибілізації (див. правила дозової корекції REG-CISPLATIN-RADIOSENS)"
+
+do_not_do_en:
+  - "Do not initiate cisplatin without resolving hydronephrosis or urinary tract obstruction if present"
+  - "Do not delay radiation therapy initiation — completing chemoradiation in a timely fashion matters for local control"
+  - "Do not administer cisplatin at CrCl <50 mL/min without switching to carboplatin or omitting chemosensitization (see REG-CISPLATIN-RADIOSENS dose-adjustment rules)"
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB pending clinical co-lead signoff (CHARTER §6.1; dev-mode-exempted
+  per CHARTER §8.3 — draft content only, NOT published/verified clinical
+  advice). PARTIAL — RT dose/field not modellable per
+  KNOWLEDGE_SCHEMA_SPECIFICATION §17, mirrors the IND-CERVICAL-LOCALLY-
+  ADVANCED-CRT pattern exactly. REG-CISPLATIN-RADIOSENS is reused
+  UNCHANGED (no existing file was modified) — its own notes/notes_ua
+  describe cervical FIGO IB3-IVA dosing context, but the weekly-
+  cisplatin component dose (40 mg/m², cap 70mg) is the identical
+  radiosensitizing backbone applied here; RT field/dose for
+  vulvar/vaginal SCC (primary + groin ± pelvic nodes) is planned by
+  radiation oncology, distinct from the cervical pelvic RT +
+  brachytherapy field. No vulvar/vaginal-specific pivotal
+  chemoradiation RCT was found — evidence is extrapolated from cervical
+  (GOG-120) and anal (ACT II) chemoradiation paradigms; flagged as an
+  open evidentiary gap rather than asserting invented response-rate
+  numbers for this specific disease.
+notes_ua: >
+  ЧЕРНЕТКА до підпису клінічного співкерівника. ЧАСТКОВО — доза/поле
+  опромінення не моделюються згідно KNOWLEDGE_SCHEMA_SPECIFICATION
+  §17, повторює шаблон IND-CERVICAL-LOCALLY-ADVANCED-CRT. REG-
+  CISPLATIN-RADIOSENS використовується БЕЗ ЗМІН (жоден існуючий файл
+  не було модифіковано). Не знайдено нозологічно-специфічного
+  пілотного рандомізованого дослідження хіміопроменевої терапії для
+  SCC вульви/піхви — докази екстрапольовані з парадигм цервікального
+  (GOG-120) та анального (ACT II) раку; позначено як відкриту
+  доказову прогалину, а не вигадані показники відповіді.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_search_agent_algorithm_review
+draft_revision: 1

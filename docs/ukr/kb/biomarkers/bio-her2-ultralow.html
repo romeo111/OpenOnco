@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HER2-ultralow (breast — IHC &gt; 0 &lt; 1+; faint/incomplete membrane staining ≤10%) - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -20,15 +91,16 @@
 <meta property="og:title" content="HER2-ultralow (breast — IHC &amp;gt; 0 &amp;lt; 1+; faint/incomplete membrane staining ≤10%) - OpenOnco">
 <meta property="og:description" content="HER2-ultralow (breast — IHC &amp;gt; 0 &amp;lt; 1+; faint/incomplete membrane staining ≤10%): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
 <meta property="og:url" content="https://openonco.info/ukr/kb/biomarkers/bio-her2-ultralow.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HER2-ultralow (breast — IHC &amp;gt; 0 &amp;lt; 1+; faint/incomplete membrane staining ≤10%) - OpenOnco">
 <meta name="twitter:description" content="HER2-ultralow (breast — IHC &amp;gt; 0 &amp;lt; 1+; faint/incomplete membrane staining ≤10%): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"HER2-ultralow (breast — IHC &gt; 0 &lt; 1+; faint/incomplete membrane staining ≤10%) - OpenOnco","description":"HER2-ultralow (breast — IHC &gt; 0 &lt; 1+; faint/incomplete membrane staining ≤10%): сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-her2-ultralow.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-her2-ultralow.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"HER2-ultralow (breast — IHC &gt; 0 &lt; 1+; faint/incomplete membrane staining ≤10%) - OpenOnco","description":"HER2-ultralow (breast — IHC &gt; 0 &lt; 1+; faint/incomplete membrane staining ≤10%): сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-her2-ultralow.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-her2-ultralow.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -103,6 +175,7 @@
     </div>
     <div class="top-cta-group">
       <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
       <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page">Онко-вікі</a>
       <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
     </div>
@@ -121,7 +194,7 @@
   <h2>Дані про біомаркер</h2><table class="kb-facts"><tr><th>Тип біомаркера</th><td>protein_expression_ihc</td></tr>
 <tr><th>Вимірювання</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>IHC (4B5 / HercepTest) — HER2-ultralow defined operationally as IHC &gt; 0 but &lt; 1+: faint / barely perceptible incomplete membrane staining in ≤10% of tumor cells (DESTINY-Breast06 enrollment criterion). This sub-category sits between IHC 0 (absent) and IHC 1+ (faint complete membrane staining &gt; 10%). Pathology reproducibility is poor — central review variability documented in DESTINY-Breast06.</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>IHC ultralow | 0 | 1+ | 2+ | 3+ (HER2-ultralow excludes 0, 1+, 2+, 3+)</span></div></div></td></tr>
 <tr><th>Пов’язані біомаркери</th><td><span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-her2-low.html"><code>BIO-HER2-LOW</code></a></span> <span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-her2-solid.html"><code>BIO-HER2-SOLID</code></a></span> <span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-estrogen-receptor.html"><code>BIO-ESTROGEN-RECEPTOR</code></a></span></td></tr></table>
-  <h2>Нотатки</h2><p>HER2-ultralow extends the HER2 expression spectrum below IHC 1+. DESTINY- Breast06 (ASCO 2024 plenary; Bardia et al.) randomized HR+ HER2-low or HER2-ultralow metastatic breast post-endocrine + CDK4/6i (chemo-naive in metastatic setting) to T-DXd vs investigator-choice chemotherapy. Primary PFS endpoint met in HER2-low cohort (mPFS 13.2 vs 8.1 mo, HR 0.62, p&lt;0.0001); HER2-ultralow exploratory cohort (n=153) showed consistent benefit (mPFS 13.2 vs 8.3 mo, HR 0.78). FDA approval anticipated 2026 expanding T-DXd label below HER2-low. Pathology challenge dominant: IHC 0 vs ultralow is not part of standard ASCO/CAP scoring guideline (2018 / 2023 update); DESTINY-Breast06 used central pathology review and reported inter-observer kappa lower for ultralow than for HER2-low. Practical consequence: routine pathology reports today rarely distinguish ultralow from 0 — re-review of biopsy with ultralow scoring criteria required before T-DXd consideration. ILD class warning unchanged from HER2-low / HER2-positive T-DXd indications. Trial-Source SRC-DESTINY-BREAST06-BARDIA- 2024 not yet ingested — flag for ingestion chunk.</p>
+  <h2>Нотатки</h2><p>HER2-ultralow розширює спектр експресії HER2 нижче ІГХ 1+. Дослідження DESTINY-Breast06 (ASCO 2024 пленарне; Bardia et al.) рандомізувало HR+ HER2-low або HER2-ultralow метастатичний РМЗ після ендокрин + CDK4/6i (хіміо-naive у метастатичному стані) до T-DXd проти хіміотерапії за вибором дослідника. Первинна кінцева точка ПФВ досягнута в HER2-low когорті (мПФВ 13.2 проти 8.1 міс, HR 0.62, p&lt;0.0001); експлораторна HER2-ultralow когорта (n=153) показала послідовний виграш (мПФВ 13.2 проти 8.3 міс, HR 0.78). Схвалення FDA очікується в 2026 з розширенням мітки T-DXd нижче HER2-low. Патологічний виклик домінує: ІГХ 0 проти ultralow не входить до стандартного протоколу ASCO/CAP (оновлення 2018 / 2023); DESTINY-Breast06 використовував центральний патоморфологічний перегляд і повідомив нижчий каппа-індекс відтворюваності для ultralow ніж для HER2-low. Практичний наслідок: рутинні патоморфологічні звіти сьогодні рідко відрізняють ultralow від 0 — необхідний повторний перегляд біопсії з критеріями ultralow перед розглядом T-DXd. Класове застереження ILD без змін від показань T-DXd при HER2-low / HER2-позитивний. Джерело джерело SRC-DESTINY-BREAST06-BARDIA- 2024 ще не інгестоване — позначено...</p>
   <h2>Де використовується</h2>
 <h3>Клінічна застосовність</h3><ul><li><code>BMA-HER2-LOW-BREAST</code> - Trastuzumab deruxtecan (T-DXd, DS-8201) is FDA-approved (Aug 2022) for unresectable or me...</li></ul>
 <h3>Тривожна ознака</h3><ul><li><code>RF-BREAST-HER2-ULTRALOW-CANDIDATE</code> - HER2-ultralow breast cancer (IHC &gt; 0 &lt; 1+; faint/incomplete membrane staining ≤10% of tum...</li></ul>

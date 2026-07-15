@@ -1,0 +1,138 @@
+id: RF-WERNER-CONFIRMED-CARRIER
+definition: >-
+  Confirmed biallelic germline pathogenic / likely-pathogenic variants
+  in WRN (RECQL2; Werner syndrome RecQ-like helicase) — Werner Syndrome
+  (adult progeria). Patient has had germline WRN testing returned
+  positive in both alleles (autosomal-recessive inheritance), or meets
+  clinical diagnostic criteria (cardinal features all present:
+  bilateral cataracts, sclerodermatous skin changes, characteristic
+  facies — bird-like, short stature; plus ≥2 minor signs: gray hair
+  / alopecia, type-2 diabetes, hypogonadism, osteoporosis, abnormal
+  voice, flat feet — typically manifest in late adolescence / 20s).
+  No current personal cancer diagnosis in the carrier being assessed.
+  Werner syndrome is a premature-aging segmental progeroid syndrome
+  with a distinctive cancer spectrum dominated by soft-tissue sarcoma,
+  osteosarcoma, melanoma (acral / mucosal subtypes over-represented),
+  meningioma, thyroid follicular / anaplastic carcinoma, and
+  hematologic malignancies. Cancer incidence + cardiovascular disease
+  + type-2 diabetes account for typical mortality in 4th-5th decade.
+  Prevention-persona RedFlag (§20, Wave O confirmed-carrier
+  surveillance pathway).
+definition_ua: >-
+  Підтверджені biallelic гермінативні патогенні / ймовірно-патогенні
+  варіанти у WRN (RECQL2) — синдром Вернера (adult progeria). Пацієнт
+  пройшов germline WRN-тестування з позитивним результатом в обох
+  алелях (autosomal-recessive inheritance), або відповідає клінічним
+  діагностичним критеріям (cardinal features всі присутні: bilateral
+  cataracts, sclerodermatous skin changes, characteristic facies —
+  bird-like, low зріст; плюс ≥2 minor signs: gray hair / alopecia,
+  type-2 diabetes, hypogonadism, osteoporosis, abnormal voice, flat
+  feet — typically late adolescence / 20s). Поточний особистий діагноз
+  раку відсутній. Werner — premature-aging segmental progeroid синдром
+  з distinctive cancer spectrum: soft-tissue sarcoma, osteosarcoma,
+  melanoma (acral / mucosal subtypes over-represented), meningioma,
+  thyroid follicular / anaplastic carcinoma, hematologic malignancies.
+  Cancer + cardiovascular disease + type-2 diabetes — типова
+  смертність у 4-5 декаді. Prevention-persona RedFlag (§20, Wave O
+  шлях спостереження підтверджених носіїв).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_wrn_biallelic_pathogenic"
+      value: true
+    - finding: "werner_syndrome_clinical_criteria_met"
+      value: true
+
+clinical_direction: investigate
+
+# MAJOR — multi-organ cancer + cardiovascular + endocrine surveillance
+# burden; cancer types are aggressive when they occur but penetrance
+# is moderate (not the ≥80% lifetime of FAP / classical HBOC).
+severity: major
+priority: 85
+category: other
+risk_category: genetic
+
+# Werner-spectrum: soft-tissue sarcoma (DIS-SOFT-TISSUE-SARCOMA),
+# osteosarcoma (DIS-OSTEOSARCOMA), melanoma (DIS-MELANOMA), meningioma
+# (DIS-MENINGIOMA), thyroid (DIS-THYROID-PAPILLARY for follicular;
+# DIS-THYROID-ANAPLASTIC for the anaplastic subset).
+relevant_diseases:
+  - DIS-SOFT-TISSUE-SARCOMA
+  - DIS-OSTEOSARCOMA
+  - DIS-MELANOMA
+  - DIS-MENINGIOMA
+  - DIS-THYROID-PAPILLARY
+  - DIS-THYROID-ANAPLASTIC
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-STS-2025
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-NCCN-THYROID-2025
+  - SRC-NCCN-CNS-2025
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Wave O confirmed-carrier surveillance pathway — Werner Syndrome
+  (WRN / RECQL2). Fires on documented germline WRN biallelic pathogenic
+  variants OR clinical-diagnostic criteria met. Engine routes to
+  PreventionPlan recommending:
+    (a) IND-WERNER-CARRIER-SURVEILLANCE (standard) — annual full-body
+        skin exam by dermatologist (melanoma — acral / mucosal subtypes
+        over-represented; sclerodermatous skin complicates recognition);
+        annual thyroid US (follicular / anaplastic enrichment);
+        cardiac risk-factor surveillance (premature atherosclerosis is
+        a defining Werner feature — annual lipid panel, BP, glycemia,
+        echo q3-5y); skeletal pain-driven imaging (low threshold for
+        X-ray / MRI on any persistent musculoskeletal pain). Cancer-
+        screening colonoscopy + mammography per general-population
+        guidelines (no Werner-specific elevation of these cancers).
+    (b) IND-WERNER-CARRIER-INTENSIFIED (aggressive) — standard PLUS
+        whole-body MRI baseline + q2-3y (full-body screening given
+        diverse cancer spectrum) + intensified cardiovascular workup
+        (statin + glycemic control for premature atherosclerosis) +
+        bone-density q2y monitoring with bisphosphonate consideration
+        for premature osteoporosis.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Source-set TODO: International Werner Syndrome Registry
+  (Japan); Oshima et al. Mech Ageing Dev 2017 — Wave O authoring
+  backlog new SRC entities.
+
+  Lifetime tumor risk in confirmed WRN biallelic carriers (Lauper et
+  al. PLoS One 2013; International Werner Registry data):
+    - Soft-tissue sarcoma: ~5-10% lifetime (over-represented vs
+      general population — pleomorphic / leiomyosarcoma subtypes).
+    - Osteosarcoma: ~3-5% lifetime; can occur in adulthood (older
+      median age than RTS or LFS osteosarcoma).
+    - Melanoma: ~5-10% lifetime; acral lentiginous and mucosal
+      subtypes notably enriched — distinct from sun-driven cutaneous
+      melanoma pattern.
+    - Meningioma: ~5% lifetime; usually adult-onset; some atypical.
+    - Thyroid carcinoma: ~10-15% lifetime; follicular > papillary >
+      anaplastic; anaplastic over-represented vs general population
+      (poor-prognosis variant).
+    - Hematologic malignancies (MDS, AML, MPN): ~3-5% lifetime;
+      typically adult-onset.
+    - Other rare: meningothelial / hepatocellular / pituitary — variable.
+    - Non-cancer mortality drivers: premature cardiovascular disease
+      (~30-40% of Werner deaths); type-2 diabetes complications
+      (~20%); these dominate mortality in younger Werner cohorts and
+      surveillance addresses them.
+
+  Therapy implications if cancer arises: WRN-deficient cells show
+  variable but generally elevated chemosensitivity (especially to
+  DNA-damaging agents — topoisomerase inhibitors, alkylators) but
+  the pattern is less stereotyped than RTS / Bloom / Fanconi.
+  Premature cardiovascular disease + diabetes complicate dosing of
+  cardiotoxic agents (anthracyclines) and steroid-containing
+  regimens. These are TREATMENT-time considerations recorded for
+  render alerting at moment of new-cancer diagnosis.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_o_rare_hereditary
+draft_revision: 1

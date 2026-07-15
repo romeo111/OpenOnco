@@ -28,12 +28,13 @@ decision_tree:
     evaluate:
       all_of:
         - condition: "Treatment indication present (cytopenia or symptomatic splenomegaly)"
-        - condition: "No active uncontrolled infection"
+        - finding: "active_uncontrolled_infection"
+          value: false
     if_true:
       result: IND-HCL-1L-CLADRIBINE
     if_false:
       result: IND-HCL-1L-CLADRIBINE
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Mechanical rewire of the infection-status free-text gate ('No active uncontrolled infection') into finding: active_uncontrolled_infection (value: false), mirroring RF-HCL-INFECTION-SCREENING's same-disease infection trigger. The treatment-indication clause (cytopenia or symptomatic splenomegaly) remains free-text prose — composite is biomarker/disease-specific with no matching disease-scoped RF/finding; wireable only via dedicated disease-specific RFs in a future round. Original clinical criteria unchanged."
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"

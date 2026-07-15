@@ -4,6 +4,7 @@ linked_to_regimen: REG-MOGAMULIZUMAB
 phases:
   - name: baseline
     window: "Within 2 weeks before first dose"
+    window_ua: "Протягом 2 тижнів до першої дози"
     tests:
       - TEST-CBC
       - TEST-CMP
@@ -23,45 +24,70 @@ phases:
       - "Skin photograph baseline (mSWAT score) for response tracking"
       - "If allo-SCT planned downstream — defer mogamulizumab (severe GVHD risk per FDA black box)"
       - "Dermatology partnership for AE management (mogamulizumab rash ~25%)"
+    checkpoints_ua:
+      - "Підтвердити TNMB-стадію; документувати T/N/M/B + стадію IA–IVB"
+      - "Базові фото шкіри (бал mSWAT) для відстеження відповіді"
+      - "Якщо в подальшому планується allo-SCT — відкласти могамулізумаб (ризик тяжкого GVHD за FDA black box)"
+      - "Партнерство з дерматологом для менеджменту AE (висип на могамулізумабі ~25%)"
 
   - name: induction
     window: "Weekly × 5 doses (mogamulizumab) OR every 3 weeks (BV-mono)"
+    window_ua: "Щотижня × 5 доз (могамулізумаб) АБО кожні 3 тижні (BV-mono)"
     tests: [TEST-CBC, TEST-CMP]
     visits: ["Pre-infusion clinical + skin assessment + infusion"]
     checkpoints:
       - "Infusion reactions (especially mogamulizumab first dose)"
       - "Skin AE grading (CTCAE) — interrupt if severe rash; differentiate drug rash from disease progression"
+    checkpoints_ua:
+      - "Інфузійні реакції (особливо при першій дозі могамулізумабу)"
+      - "Градіювання шкірних AE (CTCAE) — перерва при тяжкому висипі; диференціювати медикаментозний висип від прогресування хвороби"
 
   - name: maintenance
     window: "Every 2 weeks (mogamulizumab) OR every 3 weeks (BV-mono) until progression / toxicity"
+    window_ua: "Кожні 2 тижні (могамулізумаб) АБО кожні 3 тижні (BV-mono) до прогресування / токсичності"
     tests: [TEST-CBC, TEST-CMP, TEST-LFT]
     visits: ["Pre-infusion clinical + skin + lab review"]
     checkpoints:
       - "mSWAT skin response every 2-3 months"
       - "Sézary count repeat at 3 months (mogamulizumab — blood compartment response)"
       - "Neuropathy grading on BV-mono"
+    checkpoints_ua:
+      - "Шкірна відповідь mSWAT кожні 2–3 місяці"
+      - "Повторний підрахунок клітин Сезарі через 3 місяці (могамулізумаб — відповідь у крові)"
+      - "Градіювання нейропатії на BV-mono"
 
   - name: response_assessment
     window: "After 12-16 weeks of therapy"
+    window_ua: "Через 12–16 тижнів терапії"
     tests: [TEST-PET-CT, TEST-SEZARY-COUNT]
     visits: ["Restaging visit"]
     checkpoints:
       - "Global response per ISCL/EORTC consensus (skin + nodes + viscera + blood)"
       - "Continue if responding; switch line if stable/progressive"
+    checkpoints_ua:
+      - "Глобальна відповідь за консенсусом ISCL/EORTC (шкіра + лімфовузли + вісцеральні органи + кров)"
+      - "Продовжити при відповіді; змінити лінію при стабілізації / прогресуванні"
 
   - name: follow_up
     window: "Every 3 months × 2 years post-treatment, then every 6 months"
+    window_ua: "Кожні 3 місяці протягом 2 років після лікування, потім кожні 6 місяців"
     tests: [TEST-CBC, TEST-LFT, TEST-LDH, TEST-SEZARY-COUNT]
     visits: ["Clinical + dermatology"]
     checkpoints:
       - "Surveillance for relapse + LCT"
       - "Skin cancer screening (CTCL + treatment increases risk)"
+    checkpoints_ua:
+      - "Спостереження щодо рецидиву + LCT"
+      - "Скринінг раку шкіри (CTCL + лікування підвищують ризик)"
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
+machine_translated_review_pending: true
 notes: >
   Reused for both REG-MOGAMULIZUMAB and REG-BV-MONO-MF — both are
   systemic monotherapies with similar surveillance cadence (skin
   response + blood compartment + dermatology partnership). Distinct
   from skin-directed phototherapy (separate, lower-touch dermatology
   follow-up).
+  UA translations of window / checkpoints added 2026-05-19 under CHARTER
+  §8.3 dev-mode exemption; awaiting Clinical Co-Lead sign-off.

@@ -1,0 +1,111 @@
+id: RF-NF1-FAMILY-HISTORY-SUSPICION
+definition: >-
+  Family pedigree pattern suggestive of germline NF1 carrier state in
+  an asymptomatic individual who has NOT yet had germline NF1
+  sequencing or who does NOT independently meet NIH/Bethesda
+  clinical diagnostic criteria for neurofibromatosis type 1 (full-
+  criteria-met individuals route to the confirmed-carrier RF). NF1
+  is autosomal-dominant with ~1 in 3000 prevalence — most common
+  single-gene cancer-predisposition syndrome. Triggers include any
+  of (a) first-degree relative with a confirmed NF1 pathogenic /
+  likely-pathogenic variant (carrier-by-descent at-risk individual);
+  (b) first-degree relative with full NIH-criteria-met clinical NF1
+  diagnosis (cutaneous café-au-lait pattern + neurofibromas) but no
+  confirmatory genetic testing performed on the at-risk individual;
+  (c) family-history pattern of childhood optic pathway glioma in
+  one or more first/second-degree relatives — strongly suggestive
+  of NF1 in the family (optic pathway glioma rare in general
+  population, common in NF1); (d) family-history pattern of
+  malignant peripheral nerve sheath tumor (MPNST) — extremely
+  uncommon in general population, strongly NF1-suggestive in
+  family clusters. No current personal cancer diagnosis in the
+  at-risk individual being assessed, AND the at-risk individual
+  does NOT independently meet ≥2 NIH/Bethesda criteria (individuals
+  meeting criteria are confirmed-carriers by clinical-diagnosis
+  pathway). Prevention-persona RedFlag (§20, v0.3 pediatric
+  predisposition expansion — pre-testing suspicion variant for
+  family-history-only at-risk individuals).
+definition_ua: >-
+  Сімейний родовід з патерном, що нагадує гермінативний carrier
+  NF1, у асимптомної особи, яка ще НЕ пройшла germline NF1
+  секвенування або яка НЕ незалежно відповідає NIH/Bethesda
+  clinical diagnostic criteria для neurofibromatosis type 1 (full-
+  criteria-met особи направляються на confirmed-carrier RF). NF1
+  — autosomal-dominant з ~1 у 3000 prevalence — найпоширеніший
+  single-gene cancer-predisposition syndrome. Тригери включають
+  будь-яке з (а) родич першого ступеня з підтвердженим патогенним /
+  ймовірно-патогенним варіантом NF1 (carrier-by-descent at-risk
+  особа); (б) родич першого ступеня з full NIH-criteria-met
+  clinical NF1 діагнозом але без confirmatory genetic testing у
+  at-risk особи; (в) сімейно-історичний патерн дитячої optic
+  pathway glioma у одного або більше first/second-degree родичів —
+  сильно suggestive NF1 у сім'ї; (г) сімейно-історичний патерн
+  malignant peripheral nerve sheath tumor (MPNST) у family
+  clusters. Поточний особистий діагноз раку у пацієнта з ризиком
+  відсутній, І at-risk особа НЕ незалежно відповідає ≥2 NIH/
+  Bethesda criteria. Prevention-персона RedFlag (§20, v0.3
+  pediatric predisposition expansion — pre-testing suspicion
+  варіант для family-history-only at-risk осіб).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "family_nf1_known_pathogenic_variant_fdr"
+      value: true
+    - finding: "family_first_degree_relative_with_clinical_nf1_diagnosis"
+      value: true
+    - finding: "family_childhood_optic_pathway_glioma"
+      value: true
+    - finding: "family_mpnst_in_relatives"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 115
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-GLIOMA-LOW-GRADE
+  - DIS-BREAST
+  - DIS-SOFT-TISSUE-SARCOMA
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-NCCN-BREAST-2025
+  - SRC-NCCN-CNS-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  v0.3 Wave M suspicion variant — pre-testing family-history-
+  suspicion counterpart to RF-NF1-CONFIRMED-CARRIER. Fires when
+  family pedigree pattern suggests NF1 carrier state but the at-
+  risk individual has not yet had germline NF1 sequencing AND does
+  not independently meet ≥2 NIH/Bethesda clinical diagnostic
+  criteria. Distinct trigger findings from the confirmed-carrier
+  RF — the confirmed-carrier RF fires on `germline_nf1_pathogenic_
+  variant_confirmed`, `nih_nf1_clinical_diagnostic_criteria_met`,
+  or `germline_nf1_likely_pathogenic_variant`; this suspicion RF
+  fires on family-history-only findings. NF1 has an important
+  pediatric dimension — at-risk children should have annual
+  clinical evaluation by a pediatrician familiar with NF1
+  (cutaneous evaluation, neurologic exam, vision testing) before
+  formal genetic testing. Genetic testing may be deferred until
+  age 5-10 in asymptomatic at-risk children where the clinical
+  picture remains equivocal — many NF1 features develop only in
+  childhood and the diagnosis becomes clinically evident with
+  age. Standard pathway includes referral to a specialty NF1
+  clinic (multidisciplinary — pediatric ophthalmology, genetics,
+  neurology, dermatology) where available. If germline NF1
+  testing returns positive OR NIH criteria are met clinically,
+  the patient transitions to the RF-NF1-CONFIRMED-CARRIER pathway
+  with multi-organ surveillance (pediatric ophthalmology q6-12mo
+  to age 8, whole-body MRI for MPNST surveillance, women: annual
+  mammography from age 30 + MRI from 30-50). STUB pending two-
+  Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_suspicion_variant_wave_m
+draft_revision: 1

@@ -20,6 +20,7 @@ output_indications:
 - IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
 - IND-CHOLANGIO-2L-HER2-ZANIDATAMAB
 - IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
+- IND-CHOLANGIO-ADVANCED-GEM-CIS
 default_indication: IND-CHOLANGIO-ADVANCED-GEM-CIS
 alternative_indication: IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
 
@@ -56,7 +57,8 @@ decision_tree:
 - step: 2
   evaluate:
     any_of:
-    - condition: "HER2 amplification (IHC 3+ OR IHC 2+/ISH-amp) or HER2 overexpression per ASCO/CAP gastric criteria"
+    - finding: "her2_status"
+      value: "positive"
   if_true:
     result: IND-CHOLANGIO-2L-HER2-ZANIDATAMAB
     notes: >

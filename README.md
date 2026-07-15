@@ -1,5 +1,13 @@
 # OpenOnco
 
+[![Code license: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](LICENSE)
+[![Content: CC BY 4.0](https://img.shields.io/badge/content-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Latest release](https://img.shields.io/github/v/release/romeo111/OpenOnco)](https://github.com/romeo111/OpenOnco/releases)
+[![Website](https://img.shields.io/badge/site-openonco.info-14532d.svg)](https://openonco.info)
+[![MCP server](https://img.shields.io/badge/MCP-server-7c3aed.svg)](mcp_server/README.md)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/romeo111/OpenOnco/compare)
+[![Stars](https://img.shields.io/github/stars/romeo111/OpenOnco?style=social)](https://github.com/romeo111/OpenOnco/stargazers)
+
 > **Open-source clinical decision support for oncology tumor boards.**
 > Upload a patient profile → get two alternative treatment plans
 > (standard + aggressive), side by side, with every recommendation cited.
@@ -8,7 +16,7 @@
 > picks regimens** ([CHARTER §8.3](specs/CHARTER.md)).
 
 **Live demo:** **[openonco.info](https://openonco.info)** — try it in the browser, no install needed.
-**Knowledge base:** 420 indications · 377 sources · 140 algorithms across hematologic + GI + pulmonary oncology (growing).
+**Knowledge base:** 92 diseases · 664 indications · 444 cited sources across hematologic + solid-tumor oncology (growing). Most content is draft/STUB pending two-reviewer clinical sign-off.
 **FDA non-device CDS positioning** per [CHARTER §15](specs/CHARTER.md) — informational support tool, not a medical device.
 **License:** Code MIT · Content / specs CC BY 4.0.
 
@@ -59,6 +67,44 @@ pytest tests/
 ```
 
 Python 3.11+ required.
+
+---
+
+## Use it from your LLM (MCP)
+
+Doing oncology research inside ChatGPT, Claude, or a Cursor agent? Don't let the
+model answer treatment questions from memory — point it at OpenOnco's
+deterministic engine instead. The **[MCP server](mcp_server/README.md)** exposes
+the engine as tools any [Model Context Protocol](https://modelcontextprotocol.io)
+client can call:
+
+```bash
+pip install -e ".[mcp]"
+python -m mcp_server.server          # stdio server for Claude Desktop, Cursor, …
+```
+
+Tools: `engine_info`, `list_diseases`, `generate_treatment_plan`,
+`generate_diagnostic_brief`. The model calls the rule engine, then relays its
+**cited** tracks and the disclaimer — it never picks the regimen itself
+([CHARTER §8.3](specs/CHARTER.md)). That is what makes routing an oncology
+question through OpenOnco safer than asking a general-purpose model directly: the
+engine cannot hallucinate a drug or a dose. Setup for Claude Desktop / Cursor is
+in **[`mcp_server/README.md`](mcp_server/README.md)**.
+
+---
+
+## Build your own
+
+OpenOnco is fully open source — code MIT, content/specs CC BY 4.0 — precisely so
+others can reuse or fork it. The replicable pattern, for any safety-critical
+decision-support domain: keep clinical decisions in a **declarative rule engine
+over a versioned, human-reviewed knowledge base**, cite every claim, and use the
+LLM only as a relay/interface behind an explicit "no decisions" invariant. Start
+from [`specs/CHARTER.md`](specs/CHARTER.md) and the architecture in
+[`specs/`](specs/), and copy [`mcp_server/`](mcp_server/) as a working interface
+layer. Questions or a similar project in flight? [Open an
+issue](https://github.com/romeo111/OpenOnco/issues) — we'd rather coordinate
+than have the work duplicated.
 
 ---
 

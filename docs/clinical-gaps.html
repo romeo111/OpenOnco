@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Clinical Gap Audit</title>
 <!-- openonco-seo:start -->
@@ -20,13 +91,11 @@
 <meta property="og:title" content="OpenOnco · Clinical Gap Audit">
 <meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
 <meta property="og:url" content="https://openonco.info/clinical-gaps.html">
-<meta property="og:image" content="https://openonco.info/MDT.png">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OpenOnco · Clinical Gap Audit">
 <meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
-<meta name="twitter:image" content="https://openonco.info/MDT.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Clinical Gap Audit","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/clinical-gaps.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/clinical-gaps.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Clinical Gap Audit","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/clinical-gaps.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/clinical-gaps.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -47,15 +116,15 @@
   <section class="info-page">
     <h1>Clinical Gap Audit</h1>
     <p class="lead">
-      Generated 2026-05-18T09:54:19Z. This page tracks
+      Generated 2026-07-15T11:00:03Z. This page tracks
       the largest remaining clinical-coverage gaps. It is a maintainer audit,
       not clinical guidance.
     </p>
     <table class="kv-table">
       <thead><tr><th>Gap</th><th>Current</th><th>Target</th><th>Status</th></tr></thead>
-      <tbody><tr><td>Clinical sign-off</td><td>15/1930 signoff-eligible entities reviewed (0.8%)</td><td>&gt;=85% reviewed before public guideline-grade claims</td><td><code>blocked_on_reviewers</code></td></tr><tr><td>Solid tumor 2L+ coverage</td><td>23/42 solid diseases have a 2L+ algorithm; 24/42 have a 2L+ indication</td><td>Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication.</td><td><code>coverage_gap</code></td></tr><tr><td>Surgery/radiation detail</td><td>structured surgery entities: no; structured radiation entities: no; 424 indications mention surgery/radiation in text</td><td>Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields.</td><td><code>schema_gap</code></td></tr><tr><td>Supportive-care depth</td><td>135/370 regimens have mandatory supportive care (36.5%); 43 have monitoring; 327 have dose adjustments</td><td>Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage.</td><td><code>coverage_gap</code></td></tr><tr><td>Drug indication and off-label tracking</td><td>812 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status</td><td>Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance.</td><td><code>schema_gap</code></td></tr></tbody>
+      <tbody><tr><td>Clinical sign-off</td><td>15/2612 signoff-eligible entities reviewed (0.6%)</td><td>&gt;=85% reviewed before public guideline-grade claims</td><td><code>blocked_on_reviewers</code></td></tr><tr><td>Solid tumor 2L+ coverage</td><td>23/67 solid diseases have a 2L+ algorithm; 26/67 have a 2L+ indication</td><td>Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication.</td><td><code>coverage_gap</code></td></tr><tr><td>Surgery/radiation detail</td><td>structured surgery entities: no; structured radiation entities: no; 816 indications mention surgery/radiation in text</td><td>Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields.</td><td><code>schema_gap</code></td></tr><tr><td>Supportive-care depth</td><td>136/404 regimens have mandatory supportive care (33.7%); 43 have monitoring; 358 have dose adjustments</td><td>Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage.</td><td><code>coverage_gap</code></td></tr><tr><td>Drug indication and off-label tracking</td><td>862 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status</td><td>Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance.</td><td><code>schema_gap</code></td></tr></tbody>
     </table>
-    <div class="gap-grid"><div class="gap-card"><div class="gap-tag">blocked_on_reviewers</div><h3>Clinical sign-off</h3><p><strong>Current:</strong> 15/1930 signoff-eligible entities reviewed (0.8%)</p><p><strong>Blocker:</strong> Cannot be fixed by code; requires qualified Clinical Co-Lead review.</p><p><strong>Next:</strong> Batch the largest STUB queues by entity type and assign reviewer owners.</p></div><div class="gap-card"><div class="gap-tag">coverage_gap</div><h3>Solid tumor 2L+ coverage</h3><p><strong>Current:</strong> 23/42 solid diseases have a 2L+ algorithm; 24/42 have a 2L+ indication</p><p><strong>Blocker:</strong> Missing disease-by-disease 2L+ algorithm/indication authoring queue.</p><p><strong>Next:</strong> Prioritize missing high-volume solid diseases, then rare solid diseases.</p></div><div class="gap-card"><div class="gap-tag">schema_gap</div><h3>Surgery/radiation detail</h3><p><strong>Current:</strong> structured surgery entities: no; structured radiation entities: no; 424 indications mention surgery/radiation in text</p><p><strong>Blocker:</strong> Current KB carries surgery/radiation mostly as prose inside indications.</p><p><strong>Next:</strong> Add modality schemas first; migrate prose mentions after clinical review.</p></div><div class="gap-card"><div class="gap-tag">coverage_gap</div><h3>Supportive-care depth</h3><p><strong>Current:</strong> 135/370 regimens have mandatory supportive care (36.5%); 43 have monitoring; 327 have dose adjustments</p><p><strong>Blocker:</strong> Supportive-care records exist, but regimen attachment is incomplete.</p><p><strong>Next:</strong> Audit high-toxicity regimens first, then fill missing regimen attachments.</p></div><div class="gap-card"><div class="gap-tag">schema_gap</div><h3>Drug indication and off-label tracking</h3><p><strong>Current:</strong> 812 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status</p><p><strong>Blocker:</strong> No first-class drug_indications entity directory/schema is present.</p><p><strong>Next:</strong> Introduce a drug_indications entity, then backfill from existing indications/regimens.</p></div></div>
+    <div class="gap-grid"><div class="gap-card"><div class="gap-tag">blocked_on_reviewers</div><h3>Clinical sign-off</h3><p><strong>Current:</strong> 15/2612 signoff-eligible entities reviewed (0.6%)</p><p><strong>Blocker:</strong> Cannot be fixed by code; requires qualified Clinical Co-Lead review.</p><p><strong>Next:</strong> Batch the largest STUB queues by entity type and assign reviewer owners.</p></div><div class="gap-card"><div class="gap-tag">coverage_gap</div><h3>Solid tumor 2L+ coverage</h3><p><strong>Current:</strong> 23/67 solid diseases have a 2L+ algorithm; 26/67 have a 2L+ indication</p><p><strong>Blocker:</strong> Missing disease-by-disease 2L+ algorithm/indication authoring queue.</p><p><strong>Next:</strong> Prioritize missing high-volume solid diseases, then rare solid diseases.</p></div><div class="gap-card"><div class="gap-tag">schema_gap</div><h3>Surgery/radiation detail</h3><p><strong>Current:</strong> structured surgery entities: no; structured radiation entities: no; 816 indications mention surgery/radiation in text</p><p><strong>Blocker:</strong> Current KB carries surgery/radiation mostly as prose inside indications.</p><p><strong>Next:</strong> Add modality schemas first; migrate prose mentions after clinical review.</p></div><div class="gap-card"><div class="gap-tag">coverage_gap</div><h3>Supportive-care depth</h3><p><strong>Current:</strong> 136/404 regimens have mandatory supportive care (33.7%); 43 have monitoring; 358 have dose adjustments</p><p><strong>Blocker:</strong> Supportive-care records exist, but regimen attachment is incomplete.</p><p><strong>Next:</strong> Audit high-toxicity regimens first, then fill missing regimen attachments.</p></div><div class="gap-card"><div class="gap-tag">schema_gap</div><h3>Drug indication and off-label tracking</h3><p><strong>Current:</strong> 862 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status</p><p><strong>Blocker:</strong> No first-class drug_indications entity directory/schema is present.</p><p><strong>Next:</strong> Introduce a drug_indications entity, then backfill from existing indications/regimens.</p></div></div>
     <div class="callout">
       Detailed JSON and Markdown are published under <code>/audits/clinical_gap_audit.json</code>
       and <code>/audits/clinical_gap_audit.md</code>.

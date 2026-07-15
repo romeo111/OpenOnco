@@ -1,0 +1,77 @@
+# DUPLICATE WARNING (2026-05-19): RF-IATROGENIC-DES-EXPOSURE-PREVENTION
+# already covers the in-utero DES exposure cohort with finding keys
+# `in_utero_des_exposure_documented`, `des_daughter_history`,
+# `maternal_pregnancy_des_use`. This reproductive RF uses disjoint
+# finding keys so the two RFs cannot both fire on a single patient,
+# but they describe the same clinical population. Per CHARTER §6.1
+# dev-mode, both kept pending two-Co-Lead review; expect consolidation
+# in v0.4 (likely keeping iatrogenic categorization since DES is a
+# medication-induced exposure).
+id: RF-REPRODUCTIVE-DES-IN-UTERO-EXPOSURE-PREVENTION
+definition: >-
+  In-utero exposure to diethylstilbestrol (DES) — synthetic non-steroidal
+  estrogen prescribed 1940-1971 (USA) and 1948-1978 (Europe) to women with
+  prior miscarriage or threatened miscarriage. DES-exposed daughters carry
+  ~40-fold increased risk of clear-cell adenocarcinoma of the vagina and
+  cervix (peak incidence ages 15-30 but cases continue into older ages),
+  ~2-fold lifetime risk of breast cancer (post-menopausal incidence
+  doubles after age ~40), and structural reproductive anomalies (T-shaped
+  uterus, vaginal adenosis, cervical hood). DES-exposed mothers
+  themselves have ~30% increased breast cancer risk. Although the
+  exposed cohort is aging out (most exposures pre-1978), surveillance
+  continues lifelong. Prevention-persona RedFlag (§20 v0.3 reproductive
+  expansion). Cohort still in active surveillance pathway through ~2050
+  given peak prescription years.
+definition_ua: >-
+  In-utero експозиція до diethylstilbestrol (DES) — синтетичний нестероїдний
+  естроген, призначався 1940-1971 (США) та 1948-1978 (Європа) жінкам з
+  попередніми викиднями або загрозою викидня. DES-exposed дочки мають
+  ~40-кратно підвищений ризик clear-cell adenocarcinoma вагіни/шийки матки
+  (peak incidence у віці 15-30 але випадки продовжуються у старших віках),
+  ~2-кратно lifetime ризик breast cancer, та structural reproductive
+  anomalies (T-подібна матка, vaginal adenosis, cervical hood). DES-
+  exposed матері мають ~30% збільшений ризик breast cancer. Surveillance
+  пожиттєвий. Prevention-персона RedFlag (§20 v0.3 reproductive expansion).
+  Cohort у активному surveillance до ~2050 з огляду на peak prescription
+  years.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "des_in_utero_exposure_confirmed"
+      value: true
+    - finding: "des_exposed_daughter_per_mother_history"
+      value: true
+    - finding: "des_exposed_mother_self_history"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 80
+category: other
+risk_category: reproductive
+
+relevant_diseases:
+  - DIS-CERVICAL
+  - DIS-VULVAR-VAGINAL-SCC
+  - DIS-BREAST
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-USPSTF-BREAST-2024
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for DES in-utero exposure cohort. Surveillance
+  is intensified relative to general population (annual pelvic with careful
+  vaginal/cervical inspection; colposcopy if abnormal cytology; mammography
+  at younger age threshold per NCCN modifier risk; consider MRI breast
+  screening adjunct given doubled risk). STUB pending two-Co-Lead signoff
+  per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_reproductive_expansion
+draft_revision: 1

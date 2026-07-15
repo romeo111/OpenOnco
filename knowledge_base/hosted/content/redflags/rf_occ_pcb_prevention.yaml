@@ -1,0 +1,134 @@
+id: RF-OCC-PCB-PREVENTION
+definition: >-
+  Documented historical occupational exposure to polychlorinated
+  biphenyls (PCBs) — typical high-exposure occupations include
+  capacitor / transformer manufacturing and servicing (pre-1979 US
+  ban; later in some other jurisdictions), electrical-equipment
+  maintenance / decommissioning, hydraulic-fluid handling in industrial
+  presses, carbonless-copy-paper production (pre-1971), and environmental-
+  remediation work at PCB-contaminated sites (lagoons, river-sediment
+  dredging) — in an individual without a current PCB-attributable
+  malignancy diagnosis. PCBs were historically classified by IARC as
+  Group 2A (probably carcinogenic) but were RECLASSIFIED to Group 1
+  (carcinogenic to humans) in IARC Monograph 107 (2015 publication of
+  the 2013 working-group decision) — sufficient evidence in humans
+  (positive associations with malignant melanoma + suggestive associations
+  with non-Hodgkin lymphoma + breast cancer in occupational cohort
+  studies), sufficient evidence in experimental animals (rodent liver
+  cancer with chronic PCB feeding), strong mechanistic evidence
+  (AhR-mediated genotoxic + non-genotoxic pathways). Specific PCB
+  congeners (dioxin-like PCBs 105, 114, 118, 156, 157, 167, 189) were
+  identified as primary drivers of the Group 1 classification. Effect
+  size: pooled SMR ~1.3-2.5 for melanoma and ~1.2-1.7 for NHL in
+  highest-exposed occupational cohorts (capacitor-manufacturing
+  workforces 1940s-1970s). Latency: 20-40 years from peak exposure
+  to malignancy presentation; given the 1979 US ban and similar bans
+  in other industrialized nations through the 1980s, peak cohort is
+  now in their 60s-80s. There is NO curative intervention for prior
+  exposure — exposure cessation (typically not applicable to retired
+  workers), guideline-baseline NHL + melanoma + breast surveillance,
+  and risk-adjusted dermatologic / hematologic monitoring are the
+  available levers. Prevention-persona RedFlag (§20 ratification
+  2026-05-18, v0.3 IARC 2A probable-carcinogen batch — included as
+  legacy 2A entry per batch scope).
+definition_ua: >-
+  Документований історичний професійний вплив polychlorinated biphenyls
+  (PCB) — типові високоризикові професії: capacitor / transformer
+  manufacturing та servicing (до 1979 US ban; пізніше в деяких інших
+  jurisdictions), electrical-equipment maintenance / decommissioning,
+  hydraulic-fluid handling в industrial presses, carbonless-copy-paper
+  production (до 1971), та environmental-remediation роботи на
+  PCB-contaminated sites (lagoons, river-sediment dredging) — в особи
+  без поточного діагнозу PCB-attributable malignancy. PCB були
+  історично класифіковані IARC як Group 2A (probably carcinogenic),
+  але РЕКЛАСИФІКОВАНІ до Group 1 (carcinogenic to humans) в IARC
+  Monograph 107 (публікація 2015 рішення working-group 2013) —
+  sufficient evidence in humans (позитивні асоціації з malignant
+  melanoma + suggestive асоціації з non-Hodgkin lymphoma + breast
+  cancer в occupational cohort studies), sufficient evidence in
+  experimental animals (rodent liver cancer при chronic PCB feeding),
+  strong mechanistic evidence (AhR-mediated genotoxic + non-genotoxic
+  pathways). Специфічні dioxin-like PCB congeners (105, 114, 118,
+  156, 157, 167, 189) — primary drivers Group 1 класифікації. Розмір
+  ефекту: pooled SMR ~1.3-2.5 для melanoma та ~1.2-1.7 для NHL в
+  highest-exposed occupational cohorts (capacitor-manufacturing
+  workforces 1940s-1970s). Латентність: 20-40 років від peak exposure
+  до malignancy presentation; з огляду на 1979 US ban та подібні bans
+  через 1980s, peak cohort зараз в 60-80 років. КУРАТИВНОГО втручання
+  для попереднього впливу НЕМАЄ.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "occupational_pcb_exposure_documented"
+      value: true
+    - finding: "occupational_pcb_capacitor_transformer_pre_1979"
+      value: true
+    - finding: "occupational_pcb_remediation_site_exposure"
+      value: true
+
+clinical_direction: investigate
+
+severity: minor
+priority: 110
+category: other
+
+risk_category: occupational
+
+# Anchor — DLBCL (the NHL endpoint with the most consistent
+# occupational-cohort signal in the IARC 107 evidence summary).
+# Melanoma is the strongest cancer endpoint but anchor disease is
+# DLBCL-NOS per task brief. Breast cancer is suggestive but not
+# anchored here.
+relevant_diseases:
+  - DIS-DLBCL-NOS
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag — v0.3 IARC 2A probable-carcinogen batch
+  (2026-05-19). IARC Group 2A probable — limited human evidence;
+  clinical recommendation more conservative than Group 1; reclassified
+  Group 1 in 2013 IARC Monograph 107 (published 2015) — authored at
+  2A-conservative severity per batch scope.
+
+  Reclassification context: PCBs were Group 2A from the 1970s IARC
+  assessments through the 2012 update; the 2013 working group
+  reclassified to Group 1 based on additional occupational-cohort
+  follow-up showing sufficient human evidence for melanoma and
+  mechanistic data on dioxin-like congeners. The 2A→1 transition
+  affects the evidence-quality narrative but the practical clinical
+  recommendations (no curative intervention, surveillance + symptom-
+  awareness) are similar at the individual-patient level. This RF
+  is intentionally authored to mirror the conservative IARC 2A
+  framing of the other batch pilots; a future revision may upgrade
+  severity to major to reflect the Group 1 status if maintainer
+  review favors that framing.
+
+  Anchor scope: DLBCL only (per task brief, NHL signal). Melanoma
+  is the strongest cancer endpoint in the IARC 107 reclassification
+  but is not the anchor here. A future Indication can be authored
+  for melanoma anchor if maintainer review prioritizes that
+  endpoint.
+
+  Engine routes to 2-track PreventionPlan:
+    (a) IND-OCC-PCB-PREVENTION-INTENSIFIED-SURVEILLANCE (standard) —
+        NHL-symptom-awareness education, annual CBC + LDH,
+        dermatologic exam annually (melanoma awareness),
+        guideline-baseline breast screening adherence in women.
+    (b) IND-OCC-PCB-PREVENTION-OBSERVATION (surveillance) — routine
+        general-population care; patient declines structured
+        surveillance discussion.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_iarc_2a_batch
+draft_revision: 1

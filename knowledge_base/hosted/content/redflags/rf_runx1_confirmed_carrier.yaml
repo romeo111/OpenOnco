@@ -1,0 +1,105 @@
+id: RF-RUNX1-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in RUNX1
+  (Familial Platelet Disorder with predisposition to AML / MDS — FPD/AML,
+  OMIM 601399). Patient has had germline panel testing returned positive,
+  often confirmed on buccal / fibroblast tissue to avoid somatic-clone
+  contamination of blood. The carrier presents at baseline with mild-to-
+  moderate thrombocytopenia (platelet count 80-130 x10⁹/L typically,
+  occasionally normal) and a functional platelet aggregation defect
+  (deficient dense-granule release; aspirin-like in vitro phenotype) —
+  the bleeding burden ranges from asymptomatic to clinically significant
+  in surgical / obstetric contexts. Lifetime risk of myeloid malignancy
+  (MDS or AML) is ~35-45% in classic FPD/AML pedigrees and somatic
+  RUNX1 second hits, ASXL1 + monosomy-7 + del(5q) clonal events
+  typically precede frank AML. T-cell lymphoid leukemia risk (~5%
+  lifetime) and rare hairy-cell-like presentations have also been
+  documented. Prevention-persona RedFlag (KSS §20, confirmed-carrier
+  surveillance pathway).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант
+  у RUNX1 (Familial Platelet Disorder with predisposition to AML / MDS —
+  FPD/AML, OMIM 601399). Пацієнт пройшов germline-тестування з
+  позитивним результатом, часто підтвердженим на buccal / fibroblast
+  тканині для уникнення контамінації крові соматичним клоном. Носій
+  представляє на baseline м'яко-помірну тромбоцитопенію (тромбоцити
+  80-130 x10⁹/л зазвичай, інколи в нормі) та функціональний дефект
+  агрегації тромбоцитів (дефіцитний dense-granule release; aspirin-like
+  in vitro фенотип) — bleeding burden від асимптомної до клінічно
+  значущої при хірургічних / акушерських ситуаціях. Довічний ризик
+  мієлоїдного malignancy (МДС або ГМЛ) ~35-45% у класичних FPD/AML
+  родоводах і соматичні RUNX1 "second hits", ASXL1 + моносомія-7 +
+  del(5q) клональні події зазвичай передують франкному ГМЛ. T-клітинний
+  лімфоїдний leukemia ризик (~5% довічно) та рідкісні hairy-cell-like
+  презентації також задокументовані. Prevention-persona RedFlag (KSS
+  §20, шлях спостереження підтверджених носіїв).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_runx1_pathogenic_variant_confirmed"
+      value: true
+    - finding: "familial_platelet_disorder_runx1_clinical_criteria_met"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 80
+category: other
+risk_category: genetic
+
+# RUNX1 carrier malignancy spectrum: AML (dominant, ~30-35% lifetime),
+# MDS (often precedes AML, ~10-15%), T-cell ALL (~5% lifetime), rare
+# hairy-cell-like presentations. DIS-T-ALL anchor included because
+# T-cell ALL is the second most common heme malignancy in FPD/AML.
+relevant_diseases:
+  - DIS-AML
+  - DIS-MDS-HR
+  - DIS-T-ALL
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-MDS-2021
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Wave P confirmed-carrier surveillance pathway — germline RUNX1
+  (FPD/AML). Fires on documented germline RUNX1 pathogenic variant
+  positivity OR documented FPD/AML clinical criteria (inherited
+  thrombocytopenia + dense-granule release defect + family history of
+  AML / MDS / T-ALL). Engine routes to PreventionPlan recommending:
+    (a) IND-RUNX1-CARRIER-SURVEILLANCE (standard) — CBC + smear q3-6
+        months lifelong from carrier confirmation; baseline +
+        post-clinical-change BMA with myeloid NGS panel + cytogenetics;
+        molecular monitoring (ASXL1, BCOR, monosomy-7 emergence)
+        annually; cascade testing to first-degree relatives with
+        documented buccal / fibroblast germline confirmation.
+    (b) IND-RUNX1-CARRIER-INTENSIFIED (aggressive) — standard protocol
+        PLUS HLA typing on cohort + sibling early; q3-month CBC + smear
+        (instead of q6); BMA every 1-2 years even without provoked
+        indication; preemptive transplant-team consultation; explicit
+        donor-screening protocol (sibling donor must be RUNX1-tested
+        first, NOT used if a carrier — donor-derived leukemia
+        documented in FPD/AML).
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Penetrance reference: Owen et al. Blood 2008; Schmit et al.
+  Lancet Haematol 2024; Brown et al. Blood Adv 2020 (cumulative AML/MDS
+  incidence 35-45% by age 50-60 in classic pedigrees; T-ALL ~5%
+  lifetime). Functional platelet phenotype documented since Dowton et
+  al. Blood 1985 (original FPD/AML kindred description).
+
+  Critical donor-implication note: FPD/AML carriers must NOT donate
+  bone marrow to an affected sibling — donor-derived leukemia in
+  RUNX1 / FPD/AML kindreds is well-documented (Owen et al. 2008
+  reviewed multiple cases). Pre-transplant germline testing of any
+  HLA-matched sibling donor is mandatory.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_hereditary_myeloid
+draft_revision: 1
