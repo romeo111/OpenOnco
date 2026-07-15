@@ -1,0 +1,80 @@
+id: RF-CHRONIC-T2DM-CANCER-RISK-PREVENTION
+definition: >-
+  Established type-2 diabetes mellitus (HbA1c ≥6.5% on two occasions, or
+  established T2DM diagnosis on oral hypoglycemics/insulin) confers
+  modest but reproducible increases in risk for several cancers: pancreatic
+  adenocarcinoma (RR ~1.8-2.0; up to 2.5 for recent-onset T2DM aged >50,
+  where new-onset T2DM may be a presenting feature of occult pancreatic
+  cancer — Pannala et al. JAMA 2008), colorectal cancer (RR ~1.3-1.4),
+  hepatocellular carcinoma in NAFLD/MASLD-driven cirrhosis (RR ~2-3
+  multiplicative with NAFLD), endometrial cancer (RR ~2.1; particularly
+  with obesity), and post-menopausal breast cancer (RR ~1.2-1.3).
+  Putative mechanisms: hyperinsulinemia/IGF-1 axis, chronic inflammation,
+  hyperglycemia favoring tumor metabolism, shared obesity/sedentary
+  exposures. Risk modifiable: glycemic control, weight management,
+  metformin (observational signal for reduced cancer incidence),
+  physical activity. Prevention-persona RedFlag (§20 v0.4 chronic-
+  condition expansion).
+definition_ua: >-
+  Established type-2 diabetes mellitus (HbA1c ≥6.5% на двох вимірах, або
+  established T2DM з oral hypoglycemics/insulin) дає скромні, але
+  відтворювані підвищення ризику для кількох cancers: pancreatic
+  adenocarcinoma (RR ~1.8-2.0; до 2.5 для recent-onset T2DM віком >50,
+  де new-onset T2DM може бути presenting feature occult pancreatic
+  cancer — Pannala et al. JAMA 2008), colorectal cancer (RR ~1.3-1.4),
+  hepatocellular carcinoma у NAFLD/MASLD-driven cirrhosis (RR ~2-3
+  мультиплікативно з NAFLD), endometrial cancer (RR ~2.1; особливо з
+  obesity), post-menopausal breast cancer (RR ~1.2-1.3). Putative
+  механізми: hyperinsulinemia/IGF-1 axis, chronic inflammation,
+  hyperglycemia, спільні obesity/sedentary експозиції. Ризик
+  модифікований: glycemic control, weight management, metformin
+  (observational signal), physical activity. Prevention-персона RedFlag
+  (§20 v0.4 chronic-condition expansion).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "type_2_diabetes_established"
+      value: true
+    - finding: "hba1c_ge_6_5_repeat"
+      value: true
+    - finding: "t2dm_on_pharmacotherapy"
+      value: true
+    - finding: "new_onset_t2dm_age_ge_50"
+      value: true
+
+clinical_direction: investigate
+severity: minor
+priority: 110
+category: other
+risk_category: chronic_condition
+
+relevant_diseases:
+  - DIS-PDAC
+  - DIS-CRC
+  - DIS-HCC
+  - DIS-ENDOMETRIAL
+  - DIS-BREAST
+
+shifts_algorithm: []
+sources:
+  - SRC-USPSTF-CRC-2021
+  - SRC-USPSTF-BREAST-2024
+  - SRC-AASLD-HCC-2023
+  - SRC-ESGO-ENDOMETRIAL-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for type-2 diabetes mellitus as multi-organ
+  modest cancer risk amplifier. New-onset T2DM ≥50 with weight loss has
+  ~1% absolute 3-year risk of pancreatic cancer — actionable
+  surveillance signal (EUS or MR-pancreas in high-risk subset per ACG
+  2022). Other cancer-risk contributions are background and modify
+  population-screening adherence rather than triggering off-schedule
+  imaging. STUB pending two-Co-Lead signoff per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_4_chronic_condition_expansion
+draft_revision: 1

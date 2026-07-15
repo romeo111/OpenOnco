@@ -1,0 +1,51 @@
+id: RF-COSTELLO-CONFIRMED-CARRIER
+definition: >-
+  Patient has a confirmed germline HRAS pathogenic variant — Costello
+  syndrome (CS), an autosomal-dominant RASopathy. CS confers an
+  estimated 6-15% lifetime malignancy risk concentrated in pediatric
+  embryonal sarcomas: embryonal rhabdomyosarcoma (often before age 10,
+  the most common malignancy), neuroblastoma, and adolescent/adult
+  bladder transitional cell carcinoma. Cardiac comorbidity
+  (hypertrophic cardiomyopathy, arrhythmias) is the leading cause of
+  non-cancer mortality. Prevention-persona confirmed-carrier RedFlag
+  (§20).
+definition_ua: >-
+  Пацієнт має підтверджений germline HRAS патогенний варіант — синдром
+  Костелло (CS), автосомно-домінантна RASopathy. CS супроводжується
+  6-15% довічним ризиком злоякісних новоутворень, переважно педіатричних
+  ембріональних сарком: ембріональна рабдоміосаркома (часто до 10
+  років, найпоширеніша малігнізація), нейробластома, перехідноклітинна
+  карцинома сечового міхура у підлітків/дорослих. Кардіальна коморбідність
+  (гіпертрофічна кардіоміопатія, аритмії) — провідна причина
+  не-онкологічної смертності. Prevention-persona confirmed-carrier
+  RedFlag (§20).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_hras_pathogenic_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+severity: critical
+priority: 65
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-SOFT-TISSUE-SARCOMA
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-ESMO-SARCOMA-2024
+  - SRC-NCCN-BLADDER-2025
+
+last_reviewed: "2026-05-19"
+reviewer_signoffs: 0
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_pediatric_predisposition_wave_m
+notes: "Prevention-persona Costello syndrome confirmed-carrier RedFlag (pediatric cancer predisposition Wave M). Engine routes to PreventionPlan for embryonal-sarcoma surveillance: abdominal/pelvic US q3-6mo through age 8-10, then urine cytology + bladder US from age 10 lifelong. Cardiac surveillance is comorbidity-driven and handled by paired cardiology pathway, not this RF. STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode. Disease anchor DIS-SOFT-TISSUE-SARCOMA covers embryonal RMS; neuroblastoma + bladder TCC cancer-spectrum noted in rationale of paired Indications."

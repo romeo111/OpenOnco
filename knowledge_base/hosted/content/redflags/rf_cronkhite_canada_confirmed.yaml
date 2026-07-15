@@ -1,0 +1,72 @@
+id: RF-CRONKHITE-CANADA-CONFIRMED
+definition: >-
+  Cronkhite-Canada syndrome — acquired non-Mendelian polyposis-
+  ectodermal syndrome. Rare (~1000 reported cases globally; primarily
+  middle-aged + elderly adults). Clinical presentation: gastrointestinal
+  polyposis (juvenile-like, throughout stomach + small bowel + colon
+  diffusely) + ectodermal changes (diffuse alopecia, nail dystrophy
+  with onycholysis, skin hyperpigmentation) + protein-losing
+  enteropathy (hypoalbuminemia, edema, weight loss, electrolyte
+  derangement). Lifetime CRC risk ~12-25%; gastric cancer also elevated
+  per IPCG case-series. Pathogenesis unclear — autoimmune-like; may
+  respond to immunosuppression (prednisone, azathioprine) + nutritional
+  support; untreated mortality high (~50% 5-year if uncontrolled).
+  Diagnosis is clinical + supported by classic GI biopsy + ectodermal
+  pattern. Patient has confirmed clinical diagnosis; no current personal
+  cancer diagnosis. Prevention-persona RedFlag (§20, v0.3 rare-acquired
+  expansion Wave P2). Genetic etiology unknown but clinically fits the
+  predisposition pathway since carriers need life-long GI surveillance.
+definition_ua: >-
+  Cronkhite-Canada syndrome — acquired non-Mendelian polyposis-
+  ectodermal syndrome. Rare (~1000 reported cases globally; primarily
+  middle-aged + elderly дорослі). Clinical presentation: GI polyposis
+  (juvenile-like, throughout shлунок + small bowel + colon діффузно) +
+  ectodermal changes (diffuse alopecia, nail dystrophy з onycholysis,
+  skin hyperpigmentation) + protein-losing enteropathy (hypoalbuminemia,
+  edema, weight loss). Lifetime CRC ~12-25%; gastric cancer також
+  elevated per IPCG case-series. Pathogenesis unclear — autoimmune-
+  like; may respond to immunosuppression + nutritional support;
+  untreated mortality high. Prevention-персона RedFlag (§20, v0.3
+  rare-acquired expansion Wave P2).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "cronkhite_canada_clinical_diagnostic_criteria_met"
+      value: true
+    - finding: "gastrointestinal_polyposis_with_ectodermal_changes"
+      value: true
+    - finding: "protein_losing_enteropathy_with_diffuse_gi_polyposis"
+      value: true
+
+clinical_direction: investigate
+severity: critical
+priority: 60
+category: other
+risk_category: chronic_condition
+
+relevant_diseases:
+  - DIS-CRC
+  - DIS-GASTRIC
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+  - SRC-AGA-IBD-CRC-2024
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for Cronkhite-Canada syndrome. risk_category
+  set to chronic_condition (not genetic) because etiology is acquired
+  autoimmune-like + non-Mendelian. Surveillance: colonoscopy q1-2y
+  from diagnosis; upper endoscopy q1-2y; small-bowel capsule q2y;
+  treat active disease with immunosuppression (prednisone taper +
+  azathioprine maintenance) + nutritional support (protein replacement,
+  electrolyte correction). Mortality reduced markedly with immuno-
+  suppression treatment. STUB pending two-Co-Lead signoff per CHARTER
+  §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_rare_hereditary_wave_p2
+draft_revision: 1

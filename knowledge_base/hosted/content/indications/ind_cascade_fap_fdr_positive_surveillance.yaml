@@ -1,0 +1,174 @@
+id: IND-CASCADE-FAP-FDR-POSITIVE-SURVEILLANCE
+plan_track: surveillance
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-CRC
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-CASCADE-FAP-FDR-POSITIVE
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Empirical sigmoidoscopy from age 10-12 applied to a first-degree
+    relative of a confirmed APC carrier — without genetic confirmation
+    — detects polyposis in the **50% of patients who are actual
+    carriers** (autosomal-dominant prior probability), enabling
+    timely colonoscopy escalation and prophylactic colectomy planning
+    before the near-100% CRC risk of classic FAP manifests by age 40.
+    But subjects the **other 50%** (non-carriers) to decades of
+    childhood / adolescent sigmoidoscopy + upper-GI EGD they could
+    have safely declined had cascade testing been completed —
+    substantial preventable burden in the pediatric context.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Alternative-track companion to IND-CASCADE-FAP-FDR-POSITIVE-TESTING.
+  Applied when a first-degree relative of a confirmed APC carrier
+  declines cascade germline testing — for any reason (cost, insurance,
+  parental decision against pediatric germline testing, family
+  privacy, geographic access) — and is offered empirical sigmoidoscopy
+  + upper-GI surveillance applied as if classic FAP were confirmed.
+  The **50% prior probability** of carrier status combined with the
+  near-100% CRC penetrance of classic FAP makes the surveillance
+  benefit substantial in actual carriers, but patient (and parental)
+  autonomy (CHARTER §11) governs the choice.
+
+  **Empirical FAP surveillance schedule (applied as if classic FAP):**
+
+  **Annual sigmoidoscopy from age 10-12** — earliest polyp detection;
+  if any polyps appear, escalate to colonoscopy. The 10-12 age start
+  reflects classic FAP polyposis onset timing per InSiGHT FAP
+  guidelines.
+
+  **Colonoscopy when polyps appear (typically age 12-15)** —
+  full-colon evaluation; targeted polypectomy with histologic review.
+
+  **Prophylactic colectomy decision pathway:** NOT initiated
+  empirically. The decision for total proctocolectomy with IPAA
+  vs total colectomy with IRA requires confirmed carrier diagnosis —
+  surgery in a non-carrier is irreversible harm. Surgical
+  consultation is deferred until cascade testing settles the
+  question OR until polyposis burden becomes clinically undeniable
+  on surveillance (>20-30 adenomas, dysplasia, symptoms) — at which
+  point cascade testing is strongly re-recommended.
+
+  **Upper EGD q1-3y from age 25-30** with Spigelman staging of
+  duodenal polyposis — duodenal adenocarcinoma is the leading
+  post-colectomy mortality in confirmed FAP. Applied empirically
+  given the 50% prior.
+
+  **Annual thyroid ultrasound from age 18-20** — papillary thyroid
+  cancer (cribriform-morular variant); low-cost, low-yield but
+  standard-of-care in FAP carriers.
+
+  **Annual desmoid awareness** — abdominal wall + intra-abdominal
+  desmoid tumors (the leading post-colectomy mortality after
+  duodenal cancer in some series). Physical exam for abdominal-wall
+  masses; imaging follow-up for any unexplained abdominal symptom.
+
+  **MAP differential consideration:** if family pedigree is
+  ambiguous and MUTYH-Associated Polyposis is a competing
+  differential, surveillance is similar to attenuated FAP (later
+  start, ~age 18-25). Empirical surveillance should default to the
+  more conservative (earlier) classic-FAP schedule until cascade
+  testing distinguishes.
+
+  **Periodic re-discussion of cascade testing** is essential at every
+  visit. The pediatric surveillance burden is substantial (annual
+  sigmoidoscopy in a child / adolescent, pre-procedural prep,
+  anesthesia exposure for younger ages). Many families initially
+  decline pediatric cascade testing but accept it later as the
+  surveillance burden motivates desire for certainty — or accept
+  it preemptively for younger siblings.
+
+  Routing reconsiderations: if patient eventually accepts cascade
+  testing, results route to (a) confirmed-FAP pathway via
+  RF-FAP-CONFIRMED-CARRIER, or (b) general-population pathway —
+  immediately releasing a child from the surveillance schedule.
+
+rationale_ua: >
+  Альтернативно-трекова Indication — компаньйон до
+  IND-CASCADE-FAP-FDR-POSITIVE-TESTING. Застосовується коли родич
+  першого ступеня підтвердженого APC носія відмовляється від cascade
+  germline тестування — з будь-якої причини — і отримує empіричне
+  sigmoidoscopy + upper-GI surveillance, як якщо б класичний FAP
+  був підтверджений. **50% апріорна ймовірність** + майже-100% CRC
+  penetrance класичного FAP роблять surveillance benefit substantial
+  у фактичних carriers.
+
+  **Empirical FAP surveillance schedule:**
+
+  **Annual sigmoidoscopy з 10-12 років** — earliest polyp detection.
+
+  **Colonoscopy коли поліпи з'являються (typically 12-15 років).**
+
+  **Prophylactic colectomy decision pathway:** НЕ initiated
+  empіричнo — surgical irreversibility вимагає confirmed carrier
+  діагнозу.
+
+  **Upper EGD q1-3y з 25-30 років** з Spigelman staging duodenal
+  polyposis.
+
+  **Annual thyroid ultrasound з 18-20 років.**
+
+  **Annual desmoid awareness.**
+
+  **MAP differential consideration:** при ambiguous pedigree surveillance
+  defaults до conservative (earlier) classic-FAP schedule.
+
+  **Periodic re-discussion** cascade тестування essential на кожному
+  візиті. Per CHARTER §11 framing parental + patient автономії.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_b_cascade_pilot
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+    position: supports
+  - source_id: SRC-ESMO-CRC-2024
+    position: supports
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+  - source_id: SRC-ASCO-ACMG-LYNCH-2014
+    position: supports
+
+do_not_do:
+  - "Не презентувати empirical FAP surveillance як еквівалент genetic confirmation — 50% пацієнтів — non-carriers, які могли б бути звільнені від childhood / adolescent sigmoidoscopy + decades of upper-GI EGD."
+  - "Не initiating prophylactic colectomy decision pathway empіричнo — surgical irreversibility (total proctocolectomy + IPAA) у non-carrier — нанесення irreversible harm."
+  - "Не defer first sigmoidoscopy за межі 10-12 років empіричнo якщо ризик FAP — non-trivial — це surveillance window critical для prevent CRC до 40 років."
+  - "Не пропускати MAP differential workup при ambiguous family pedigree — MUTYH панель distinguishes autosomal-recessive MAP від autosomal-dominant FAP, що змінює cascade-testing implications для siblings."
+  - "Не пропускати periodic re-discussion про cascade testing — pediatric surveillance burden substantial; many families initially decline pediatric тестування але accept later."
+
+do_not_do_en:
+  - "Do not present empirical FAP surveillance as equivalent to genetic confirmation — 50% of patients are non-carriers who could be released from childhood / adolescent sigmoidoscopy plus decades of upper-GI EGD."
+  - "Do not initiate the prophylactic colectomy decision pathway empirically — surgical irreversibility (total proctocolectomy + IPAA) in a non-carrier inflicts irreversible harm."
+  - "Do not defer the first sigmoidoscopy beyond age 10-12 empirically if FAP risk is non-trivial — this surveillance window is critical for preventing CRC before age 40."
+  - "Do not skip MAP differential workup with an ambiguous family pedigree — a MUTYH panel distinguishes autosomal-recessive MAP from autosomal-dominant FAP, which changes cascade-testing implications for siblings."
+  - "Do not skip periodic re-discussion of cascade testing — pediatric surveillance burden is substantial; many families initially decline pediatric testing but accept later."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-19"
+reviewers: []
+reviewer_signoffs: 0
+notes: STUB — alternative-track companion for FAP cascade-testing pilot. §15.2 C4 ≥2-tracks invariant compliance. Empirical surveillance burden particularly substantial given pediatric / childhood-onset start.

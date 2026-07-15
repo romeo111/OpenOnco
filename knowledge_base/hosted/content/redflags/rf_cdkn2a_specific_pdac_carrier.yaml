@@ -1,0 +1,74 @@
+id: RF-CDKN2A-SPECIFIC-PDAC-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in CDKN2A
+  (p16/INK4a) — gene-specific variant of the broader Familial Atypical
+  Multiple Mole Melanoma (FAMMM) phenotype. Distinguishing clinical
+  feature: pancreatic ductal adenocarcinoma (PDAC) signal — lifetime
+  PDAC risk ~17% in p16-Leiden cohort (Netherlands founder variant),
+  up to ~58% in some CDKN2A-3′-UTR variant families. Melanoma signal
+  also present (~70-80% lifetime), often multiple primary melanomas +
+  atypical mole syndrome. Some families show pleomorphic glial brain
+  tumors. Distinct from existing RF-FAMMM-CONFIRMED-CARRIER which
+  covers broader FAMMM phenotype without specific PDAC routing — this
+  RF anchors the gene-specific multi-organ surveillance pathway
+  including pancreatic surveillance per CAPS Consortium criteria.
+  Patient has confirmed positive germline test; no current personal
+  cancer diagnosis in the carrier being assessed. Prevention-persona
+  RedFlag (§20, v0.3 rare-hereditary expansion Wave P2).
+definition_ua: >-
+  Підтверджений germline pathogenic / likely-pathogenic variant у
+  CDKN2A (p16/INK4a) — gene-specific варіант ширшого FAMMM phenotype.
+  Distinguishing clinical feature: pancreatic ductal adenocarcinoma
+  (PDAC) signal — lifetime PDAC ~17% у p16-Leiden cohort (Netherlands
+  founder), до ~58% у деяких CDKN2A-3′-UTR variant families. Melanoma
+  signal (~70-80% lifetime), часто multiple primary melanomas +
+  atypical mole syndrome. Деякі family показують pleomorphic glial
+  brain tumors. Відмінний від existing RF-FAMMM-CONFIRMED-CARRIER —
+  цей RF anchors gene-specific multi-organ surveillance pathway
+  включаючи pancreatic surveillance per CAPS Consortium. Prevention-
+  персона RedFlag (§20, v0.3 rare-hereditary expansion Wave P2).
+
+trigger:
+  type: lab_value
+  any_of:
+    # Distinct from rf_fammm_confirmed_carrier (uses
+    # germline_cdkn2a_pathogenic_variant_confirmed broadly). This
+    # gene-specific RF fires on higher-PDAC-penetrance subset markers
+    # — p16-Leiden founder variant + documented PDAC family history.
+    - finding: "cdkn2a_p16_leiden_confirmed"
+      value: true
+    - finding: "cdkn2a_with_pdac_family_history"
+      value: true
+
+clinical_direction: investigate
+severity: critical
+priority: 70
+category: other
+risk_category: genetic
+
+relevant_diseases:
+  - DIS-PDAC
+  - DIS-MELANOMA
+
+shifts_algorithm: []
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+  - SRC-CAPS-CONSORTIUM-PANCREATIC-2020
+  - SRC-CANTO-CAPS-2018
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Prevention-persona RedFlag for CDKN2A-specific carriers (gene-specific
+  RF vs the broader FAMMM RF). Pancreatic surveillance per CAPS
+  Consortium 2018/2020: alternating EUS + abdominal MRI/MRCP every 12
+  months from age 40 OR 10 years before earliest PDAC in family
+  (whichever earlier). Melanoma surveillance: annual full-body skin
+  examination + dermoscopy from age 10-12; mapping photography for
+  multiple atypical moles. Patient should know aggressive sun
+  protection + lifelong CDKN2A-specific cohort. STUB pending two-Co-
+  Lead signoff per CHARTER §6.1 dev-mode.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_rare_hereditary_wave_p2
+draft_revision: 1
