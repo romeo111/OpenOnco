@@ -1,0 +1,92 @@
+id: IND-PARATHYROID-CARCINOMA-2L-CINACALCET
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PARATHYROID-CARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent, persistent, or metastatic parathyroid carcinoma (locoregional recurrence or distant metastasis — lung, liver, bone) following index surgery"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H"
+      required: false
+    - biomarker_id: BIO-TMB-HIGH
+      value_constraint: "≥10 mut/Mb"
+      required: false
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: REG-CINACALCET-HYPERCALCEMIA
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+
+expected_outcomes:
+  overall_response_rate: "No standard cytotoxic regimen has consistent antitumor activity in parathyroid carcinoma; the treatment goal on this track is biochemical control (serum calcium/PTH) rather than objective tumor response"
+  progression_free_survival: "Recurrent/metastatic disease typically progresses over years, with refractory hypercalcemia — not rapid tumor growth — as the dominant clinical problem"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PARATHYROID-CARCINOMA-MSI-TMB-HIGH-ACTIONABILITY
+
+required_tests:
+  - TEST-CT-NECK-THORAX-ABDOMEN-PELVIS
+  - TEST-CMP
+  - TEST-MSI-PCR-OR-NGS
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Recurrent or metastatic parathyroid carcinoma is managed with
+  re-resection of accessible disease where surgically feasible — repeat
+  resection can meaningfully palliate hypercalcemia even without cure —
+  combined with the calcimimetic cinacalcet (REG-CINACALCET-
+  HYPERCALCEMIA) to control PTH-driven hypercalcemia, which is more
+  often the dominant clinical problem in this setting than rapid tumor
+  progression. No standard cytotoxic chemotherapy regimen has
+  consistent antitumor activity in parathyroid carcinoma — this is a
+  genuine evidence gap in a very rare disease, not an authoring
+  omission. Bisphosphonates (DRUG-ZOLEDRONATE) or denosumab
+  (DRUG-DENOSUMAB) are complementary options for skeletal-related-event
+  prevention in bone-metastatic disease and for hypercalcemia
+  refractory to cinacalcet alone; they act on osteoclast-mediated bone
+  turnover rather than PTH secretion and may be used alongside
+  cinacalcet per clinical need. Tumors with MSI-H/dMMR or TMB-high
+  biology should be routed instead to
+  IND-PARATHYROID-CARCINOMA-2L-PEMBROLIZUMAB-MSI.
+
+sources:
+  - source_id: SRC-NCCN-THYROID-2025
+    position: supports
+  - source_id: SRC-NCCN-NET-2025
+    position: supports
+
+do_not_do:
+  - "Do not withhold consideration of re-resection solely because disease is recurrent or metastatic — repeat resection of accessible disease can meaningfully control hypercalcemia even without cure."
+  - "Do not use cinacalcet as an antitumor agent — it controls PTH-driven hypercalcemia only and has no established effect on tumor burden or survival."
+  - "Do not select an unproven cytotoxic chemotherapy regimen by default — no regimen has consistent activity in parathyroid carcinoma; clinical trial enrollment should be considered where available."
+
+do_not_do_en:
+  - "Do not withhold consideration of re-resection solely because disease is recurrent or metastatic — repeat resection of accessible disease can meaningfully control hypercalcemia even without cure."
+  - "Do not use cinacalcet as an antitumor agent — it controls PTH-driven hypercalcemia only and has no established effect on tumor burden or survival."
+  - "Do not select an unproven cytotoxic chemotherapy regimen by default — no regimen has consistent activity in parathyroid carcinoma; clinical trial enrollment should be considered where available."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+review_status: stub
+drafted_by: claude_agent_draft
+notes: >
+  STUB pending clinical co-lead signoff (CHARTER §6.1 — dev-mode-
+  exempted draft content). Re-resection is deliberately NOT wired as a
+  mandatory phase/Surgery FK here because feasibility is
+  patient/anatomy-specific ("where feasible" per the source narrative)
+  rather than a fixed step — see the open Surgery-entity gap noted on
+  IND-PARATHYROID-CARCINOMA-1L-RESECTION. Systemic options beyond
+  cinacalcet (hypercalcemia control) and pembrolizumab (MSI-H/TMB-high
+  subset only — separate Indication) are genuinely limited for this
+  rare disease; no chemotherapy regimen backed by real guideline
+  evidence exists, so none is authored here.

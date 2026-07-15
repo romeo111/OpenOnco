@@ -54,8 +54,10 @@ decision_tree:
       all_of:
         - condition: "No prior pelvic fistula (vesico-vaginal or recto-vaginal)"
         - condition: "No active uncontrolled hemorrhage"
-        - condition: "Blood pressure controlled (< 150/100)"
-        - condition: "Urine protein < 2 g/24h (UPCR < 2)"
+        - finding: "uncontrolled_hypertension"
+          value: false
+        - finding: "proteinuria_uncontrolled"
+          value: false
         - condition: "No therapeutic anticoagulation with active hemorrhagic risk"
     if_true:
       result: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV

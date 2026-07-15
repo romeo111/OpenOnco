@@ -1,0 +1,145 @@
+id: ALGO-KAPOSI-1L
+applicable_to_disease: DIS-KAPOSI
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L treatment for confirmed Kaposi sarcoma. Routes by (1)
+  disease extent -- visceral/extensive vs. limited-cutaneous
+  (RF-KAPOSI-VISCERAL-EXTENSIVE-DISEASE) -- and, for limited-cutaneous
+  disease, by (2) epidemiologic form: AIDS-associated (HIV+) vs.
+  iatrogenic (post-transplant immunosuppression) vs. classic/endemic
+  (neither). All four epidemiologic forms share HHV-8 as obligate
+  etiology (per DIS-KAPOSI); they differ in the immune-restoration
+  intervention available and in the threshold at which systemic
+  chemotherapy becomes necessary. This Algorithm covers TREATMENT-
+  intent pathways for a CONFIRMED Kaposi sarcoma diagnosis only -- it
+  does NOT cover the pre-existing PREVENTION-intent pathway for HHV-8-
+  seropositive-but-Kaposi-sarcoma-FREE patients (IND-CHRONIC-HHV8-
+  PREVENTION-*, IND-UNIVERSAL-IMMUNOCOMPROMISED-PREVENTION-*), which is
+  untouched by this authoring pass.
+
+output_indications:
+  - IND-KAPOSI-1L-AIDS-ART
+  - IND-KAPOSI-1L-IATROGENIC-MTOR-CONVERSION
+  - IND-KAPOSI-1L-CLASSIC-LOCAL-OBSERVATION
+  - IND-KAPOSI-1L-VISCERAL-PLD
+
+default_indication: IND-KAPOSI-1L-AIDS-ART
+alternative_indication: IND-KAPOSI-1L-VISCERAL-PLD
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-KAPOSI-VISCERAL-EXTENSIVE-DISEASE
+    if_true:
+      result: IND-KAPOSI-1L-VISCERAL-PLD
+      notes: >
+        Visceral involvement or extensive/rapidly progressive
+        mucocutaneous disease, of ANY epidemiologic form, routes
+        directly to systemic chemotherapy (pegylated liposomal
+        doxorubicin). Form-specific immune restoration (ART for
+        AIDS-KS; transplant-team-directed mTOR-inhibitor conversion for
+        iatrogenic KS) continues concurrently -- see
+        IND-KAPOSI-1L-VISCERAL-PLD.rationale.
+    if_false:
+      next_step: 2
+    notes: "RF-KAPOSI-VISCERAL-EXTENSIVE-DISEASE fires on visceral involvement (pulmonary/GI/other) or extensive cutaneous disease. Limited-cutaneous disease falls to step 2 for form-based routing."
+
+  - step: 2
+    evaluate:
+      any_of:
+        - finding: "hiv_status"
+          value: "positive"
+    if_true:
+      result: IND-KAPOSI-1L-AIDS-ART
+      notes: >
+        AIDS-associated Kaposi sarcoma, limited/non-visceral: ART
+        optimization is first-line (regardless of CD4 count). No
+        chemotherapy required for limited disease.
+    if_false:
+      next_step: 3
+    notes: "hiv_status finding is the same key already used across dozens of existing infection-screening RedFlags in this KB (e.g. rf_cll_infection_screening.yaml) -- reused directly here rather than duplicated."
+
+  - step: 3
+    evaluate:
+      any_of:
+        - finding: "post_solid_organ_transplant_immunosuppression"
+          value: true
+        - finding: "post_solid_organ_transplant_immunosuppression_ge_3y"
+          value: true
+    if_true:
+      result: IND-KAPOSI-1L-IATROGENIC-MTOR-CONVERSION
+      notes: >
+        Iatrogenic (post-transplant) Kaposi sarcoma, limited/non-
+        visceral: transplant-team-directed conversion from calcineurin-
+        inhibitor-based to mTOR-inhibitor (sirolimus)-based
+        immunosuppression is first-line. No chemotherapy required for
+        limited disease.
+    if_false:
+      result: IND-KAPOSI-1L-CLASSIC-LOCAL-OBSERVATION
+      notes: >
+        Neither HIV-positive nor on iatrogenic transplant
+        immunosuppression: classic (HHV-8-endemic-region, elderly) or
+        endemic (sub-Saharan African, HIV-negative) Kaposi sarcoma.
+        Limited/non-visceral disease -- observation or local
+        (non-systemic) therapy per MDT/dermatology-oncology discretion.
+    notes: "finding keys reused from the existing RF-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-PREVENTION (post_solid_organ_transplant_immunosuppression) / RF-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-LONGTERM-PREVENTION (post_solid_organ_transplant_immunosuppression_ge_3y) RedFlags (both already relevant_diseases-anchored to DIS-KAPOSI among others) rather than duplicated as a new finding -- verified by direct read of both files during independent review."
+
+sources:
+  - SRC-IARC-MONO-100B-2012
+  - SRC-NIH-AIDS-2024
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+notes: >
+  New 1L Algorithm for DIS-KAPOSI (v0.3 continuation -- closes the
+  "missing TREATMENT-intent pathway" gap noted in
+  dis_kaposi.yaml.metadata.awaiting_proposal). Extent gate (step 1) is
+  evaluated BEFORE the form gate (steps 2-3) because visceral/extensive
+  disease of ANY form routes to the same chemotherapy Indication
+  (IND-KAPOSI-1L-VISCERAL-PLD) -- form only determines which immune-
+  restoration therapy runs concurrently with chemo, handled in that
+  Indication's rationale text rather than as a further branch, per the
+  disease narrative ("visceral/advanced KS (any form) -- liposomal
+  doxorubicin or paclitaxel systemic chemo"). default_indication /
+  alternative_indication are structural placeholders required by the
+  schema, not a preference tiebreaker -- the four branches map to
+  disjoint patient subgroups by form/extent, not to a single
+  population's aggressiveness choice.
+
+  2L: IND-KAPOSI-2L-VISCERAL-PACLITAXEL (paclitaxel after PLD
+  progression/intolerance) -- reachable via
+  IND-KAPOSI-1L-VISCERAL-PLD.followed_by; not listed in
+  output_indications above because this Algorithm is scoped to 1L
+  routing only. A dedicated 2L algorithm is out of scope for this
+  authoring pass.
+
+  Does NOT cover: multicentric Castleman disease (MCD) or primary
+  effusion lymphoma (PEL) -- both HHV-8-driven but not yet authored as
+  distinct Disease entities in this KB (per dis_kaposi.yaml.notes).
+  Does NOT duplicate or modify the pre-existing PREVENTION-intent
+  pathway (IND-CHRONIC-HHV8-PREVENTION-*, IND-UNIVERSAL-
+  IMMUNOCOMPROMISED-PREVENTION-*, RF-CHRONIC-HHV8-MALIGNANCY-
+  PREVENTION) -- that pathway targets HHV-8-seropositive-but-Kaposi-
+  sarcoma-FREE patients and is untouched.
+
+  INDEPENDENT REVIEW CORRECTION (2026-07-11): an earlier draft also
+  cited SRC-NCCN-SKIN-2025. Direct inspection of that source's own KB
+  record shows it documents only basal-cell/squamous-cell skin cancer
+  -- Kaposi sarcoma is not named anywhere in it -- so it was removed
+  from this file's `sources:` as a mismatched citation.
+
+  STUB pending two-Clinical-Co-Lead signoff (CHARTER §6.1 -- dev-mode-
+  exempted; safe to merge as draft content, NOT as published/verified
+  clinical advice).
+notes_ua: >
+  Новий 1L Algorithm для DIS-KAPOSI. Ворота поширеності (крок 1)
+  оцінюються ПЕРЕД воротами форми (кроки 2-3), оскільки
+  вісцеральне/поширене захворювання будь-якої форми веде до тієї ж
+  Indication хіміотерапії. 2L (паклітаксел) доступний через
+  IND-KAPOSI-1L-VISCERAL-PLD.followed_by, окремий 2L-алгоритм не
+  входить в обсяг цього етапу авторства. Не дублює і не змінює
+  наявний PREVENTION-шлях (IND-CHRONIC-HHV8-PREVENTION-*).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_kaposi_treatment
+draft_revision: 1

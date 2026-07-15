@@ -1,0 +1,90 @@
+id: IND-PITUITARY-ADENOMA-1L-ACROMEGALY-SURGERY-SSA
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PITUITARY-ADENOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Biochemically confirmed acromegaly (somatotroph PitNET): elevated IGF-1 (age/sex-adjusted) with failure of GH suppression on oral glucose tolerance test, plus pituitary MRI-visible adenoma"
+    - "Transsphenoidal surgery is first-line for surgically accessible somatotroph adenomas; this Indication's recommended_regimen models the somatostatin-analogue (SSA) medical-therapy track used for biochemically persistent/residual disease after surgery, for patients awaiting surgery, or for surgery-ineligible patients — a dedicated Procedure/Surgery entity for pituitary surgery has not yet been authored in this KB (open gap — see DIS-PITUITARY-ADENOMA proposal notes)"
+  biomarker_requirements_required:
+    - biomarker_id: "adenoma_hormone_type"
+      required: true
+      value_constraint: "acromegaly_somatotroph (GH/IGF-1 hormone hypersecretion)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-SSA-ACROMEGALY
+concurrent_therapy:
+  - REG-PEGVISOMANT-ACROMEGALY
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+
+expected_outcomes:
+  overall_response_rate: "Surgery achieves biochemical remission in most microadenomas and a smaller proportion of invasive macroadenomas; SSA therapy normalizes IGF-1 in a substantial minority to about half of patients with persistent post-surgical disease, with pegvisomant add-on/switch improving control further in SSA-inadequate responders"
+  complete_response:
+  progression_free_survival:
+  overall_survival_5y:
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+desired_tests:
+  - TEST-OPHTHALMOLOGIC-EXAM
+
+rationale: >
+  Per the Disease narrative, acromegaly is managed with transsphenoidal
+  surgery first-line, followed by somatostatin analogs (octreotide LAR,
+  lanreotide, pasireotide LAR) and/or the GH-receptor antagonist
+  pegvisomant for residual disease. Lanreotide (existing DRUG-LANREOTIDE)
+  is modeled as the representative first-generation SSA, mirroring the
+  identical choice already made for GI-NET/pNET in this KB; pasireotide
+  (new DRUG-PASIREOTIDE) and pegvisomant (new DRUG-PEGVISOMANT, via
+  REG-PEGVISOMANT-ACROMEGALY concurrent_therapy) are the escalation options
+  for SSA-inadequate biochemical control. Terminal, parallel cohort — not a
+  sequential line relative to the other three hormone-hypersecretion
+  cohorts.
+
+sources:
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+  - source_id: SRC-NCCN-NET-2025
+    position: supports
+
+do_not_do:
+  - "Не покладатися лише на рівень СТГ для діагностики або моніторингу — IGF-1 та супресія СТГ при ОГТТ є основними біохімічними критеріями."
+  - "Не відкладати хірургічну оцінку при операбельній соматотрофній аденомі на користь одразу медикаментозної терапії без мультидисциплінарного обговорення."
+
+do_not_do_en:
+  - "Do not rely on GH level alone for diagnosis or monitoring — IGF-1 and OGTT GH-suppression are the primary biochemical criteria."
+  - "Do not default to medical therapy ahead of surgical evaluation for a surgically accessible somatotroph adenoma without multidisciplinary discussion."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+review_status: stub
+drafted_by: claude_v0_2_a_anchor
+reviewer_signoffs: []
+notes: >
+  STUB pending clinical co-lead signoff (CHARTER §6.1 — dev-mode-exempted,
+  safe to merge as draft content, not published/verified clinical advice).
+  One of four parallel, cohort-specific 1L Indications for
+  DIS-PITUITARY-ADENOMA, routed by ALGO-PITUITARY-ADENOMA-1L on the
+  adenoma_hormone_type finding. Pegvisomant referenced via
+  concurrent_therapy (add-on-to or switch-from ongoing SSA), not as a
+  separate Indication, since it is not a distinct line of therapy within
+  this cohort.
+notes_ua: >
+  ЗАГЛУШКА (STUB) до підпису клінічного співкерівника. Одна з чотирьох
+  паралельних когорт-специфічних показань першої лінії для аденоми гіпофіза
+  (акромегалія).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_a_anchor
+draft_revision: 1
