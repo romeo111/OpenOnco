@@ -106,7 +106,10 @@ CASE_TREATMENT_GOLDENS: dict[str, str] = {
     "patient_nsclc_alk_2l_lorlatinib.json": "IND-NSCLC-ALK-2L-LORLATINIB",
     "patient_nsclc_braf_v600e_2l_dab_tram.json": "IND-NSCLC-2L-BRAF-V600E-DAB-TRAM",
     "patient_nsclc_egfr_ex19del_1l_osimertinib.json": "IND-NSCLC-EGFR-MUT-MET-1L",
-    "patient_nsclc_egfr_t790m_2l_post_1g_tki.json": "IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ",
+    # Post-1G-TKI, osimertinib-naive (see the filename): the golden used to
+    # expect the post-osimertinib ami+laz track, which required prior
+    # osimertinib this patient never had.
+    "patient_nsclc_egfr_t790m_2l_post_1g_tki.json": "IND-NSCLC-2L-EGFR-T790M-OSIMERTINIB",
     "patient_nsclc_kras_g12c_2l_sotorasib.json": "IND-NSCLC-2L-KRAS-G12C-SOTORASIB",
     "patient_nsclc_metex14_2l_capmatinib.json": "IND-NSCLC-2L-MET-EX14-CAPMATINIB",
     "patient_nsclc_pdl1_high_pembro_mono.json": "IND-NSCLC-PDL1-HIGH-MET-1L",

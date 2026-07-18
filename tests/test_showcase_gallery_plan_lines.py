@@ -36,7 +36,11 @@ def test_showcase_targeted_defaults_are_not_generic_fallbacks():
         "patient_showcase_nsclc_alk_fusion_1l.json": "IND-NSCLC-ALK-MET-1L",
         "patient_showcase_crc_braf_v600e_2l.json": "IND-CRC-METASTATIC-2L-BRAF-BEACON",
         "patient_showcase_breast_pik3ca_h1047r_2l.json": "IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB",
-        "patient_showcase_nsclc_egfr_t790m_2l.json": "IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ",
+        # Osimertinib-naive T790M (progressed on erlotinib). This golden
+        # previously pinned IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ, whose own
+        # gate requires "progression on osimertinib 1L" — the misroute this
+        # test was meant to catch. Now routes to the osimertinib track.
+        "patient_showcase_nsclc_egfr_t790m_2l.json": "IND-NSCLC-2L-EGFR-T790M-OSIMERTINIB",
         "patient_showcase_cholangio_idh1_r132_2l.json": "IND-CHOLANGIO-2L-IDH1-IVOSIDENIB",
         "patient_showcase_gastric_her2_amp_1l.json": "IND-GASTRIC-METASTATIC-1L-HER2-TOGA",
         "patient_showcase_prostate_brca2_germline_mcrpc.json": "IND-PROSTATE-MCRPC-2L-PARPI",

@@ -13,6 +13,7 @@ purpose: >
   progressed on 1L platinum+ICI receive cytotoxic doublet.
 
 output_indications:
+  - IND-NSCLC-2L-EGFR-T790M-OSIMERTINIB
   - IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
   - IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB
   - IND-NSCLC-ALK-2L-LORLATINIB
@@ -57,20 +58,29 @@ decision_tree:
       next_step: 3
 
   - step: 3
-    # EGFR activating (ex19del / L858R / T790M / C797S) post-osimertinib 1L
-    # → ami+laz (MARIPOSA-2). T790M acquired on 1G/2G TKI also routes here.
+    # T790M acquired on a 1G/2G EGFR-TKI in an osimertinib-naive patient
+    # → osimertinib 2L (AURA3). Everything else on the EGFR branch
+    # (ex19del / L858R / C797S / transformation, and any T790M patient who
+    # already had osimertinib) → ami+laz (MARIPOSA-2), unchanged.
+    #
+    # Both gates require positive evidence. prior_egfri_received and
+    # prior_osimertinib are derived from findings.prior_lines by
+    # engine/prior_therapy.py; when prior therapy is unrecorded they stay
+    # absent, the clause is False, and the patient falls through to the
+    # pre-existing ami+laz result rather than onto this track.
     evaluate:
-      any_of:
-        - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
+      all_of:
         - red_flag: RF-NSCLC-EGFR-T790M-ACTIONABLE
-        - red_flag: RF-NSCLC-EGFR-C797S-RESISTANCE
-        - red_flag: RF-NSCLC-TRANSFORMATION-PROGRESSION
+        - finding: "prior_egfri_received"
+          value: true
+        - finding: "prior_osimertinib"
+          value: false
     if_true:
-      result: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
+      result: IND-NSCLC-2L-EGFR-T790M-OSIMERTINIB
     if_false:
       result: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
-      # nested EGFR sub-branches (post-1G/2G TKI direct-to-osimertinib,
-      # MET-amp resistance) — see notes; capped at 4 levels
+      # remaining EGFR sub-branches (MET-amp resistance, C797S) still
+      # deferred — see notes; capped at 4 levels
 
   # ── Step 4: ALK-rearranged ────────────────────────────────────────
   - step: 4
@@ -242,10 +252,14 @@ notes: >
   DEPTH CAP: nesting capped at 4 levels (per scope). Deeper logic
   surfaced as `condition` text within steps and as free-text below:
 
-  EGFR sub-branches (deferred — separate Indications when authored):
-  - Post-1G/2G TKI 1L → osimertinib 2L (FLAURA pre-arrival pathway,
-    increasingly rare).
-  - T790M-positive post-1G/2G TKI → osimertinib 2L.
+  EGFR sub-branches:
+  - T790M-positive post-1G/2G TKI, osimertinib-naive → osimertinib 2L.
+    WIRED at step 3 via IND-NSCLC-2L-EGFR-T790M-OSIMERTINIB (AURA3).
+    The osimertinib-naive discriminator comes from prior_egfri_received +
+    prior_osimertinib, derived from findings.prior_lines by
+    engine/prior_therapy.py.
+
+  Still deferred — separate Indications when authored:
   - C797S resistance post-osimertinib → next-gen 4G EGFR-TKI in
     development (no FDA approval yet).
   - MET-amp resistance post-osimertinib → osimertinib + savolitinib
@@ -285,10 +299,11 @@ notes: >
     proper red_flag binding in evaluate clauses.
   - CSD ≥3L lines not modeled — separate ALGO-NSCLC-METASTATIC-3L
     when entropy warrants.
-  - Resistance-mutation-driven precise sub-branches (T790M, C797S,
-    G2032R, G595R) deferred to dedicated future Indications +
-    biomarker entities for sub-types (currently single BIO-EGFR-MUTATION
-    covers all EGFR variants).
+  - Resistance-mutation-driven precise sub-branches: T790M is now wired
+    (step 3 → IND-NSCLC-2L-EGFR-T790M-OSIMERTINIB). C797S, G2032R and
+    G595R remain deferred to dedicated future Indications + biomarker
+    entities for sub-types (currently single BIO-EGFR-MUTATION covers
+    all EGFR variants).
 notes_ua: >
   Стратифікований за драйверами алгоритм 2Л+. Гілки в порядку пріоритету
   за дієвою мутацією; резервний варіант за замовчуванням — доцетаксел±рамуцирумаб
@@ -298,10 +313,14 @@ notes_ua: >
   Глибша логіка подана у вигляді тексту `condition` в кроках та у вільному
   тексті нижче:
 
-  Підгілки EGFR (відкладені — окремі показання при розробці):
-  - Після 1Г/2Г ТКІ 1Л → озімертиніб (osimertinib) 2Л (шлях до FLAURA,
-    все рідший).
-  - T790M-позитивні після 1Г/2Г ТКІ → озімертиніб 2Л.
+  Підгілки EGFR:
+  - T790M-позитивні після 1Г/2Г ТКІ, без попереднього озімертинібу →
+    озімертиніб 2Л. ПІДКЛЮЧЕНО на кроці 3 через
+    IND-NSCLC-2L-EGFR-T790M-OSIMERTINIB (AURA3). Ознака «без попереднього
+    озімертинібу» походить з prior_egfri_received + prior_osimertinib, які
+    виводяться з findings.prior_lines у engine/prior_therapy.py.
+
+  Досі відкладені — окремі показання при розробці:
   - Резистентність C797S після озімертинібу → ТКІ 4Г EGFR нового покоління
     у розробці (ще немає схвалення FDA).
   - Резистентність MET-amp після озімертинібу → озімертиніб + саволітиніб
@@ -344,10 +363,11 @@ notes_ua: >
     належного зв'язування red_flag у пунктах evaluate.
   - Лінії CSD ≥3Л не змодельовано — окремий ALGO-NSCLC-METASTATIC-3L
     при відповідній ентропії.
-  - Точні підгілки, керовані мутацією резистентності (T790M, C797S,
-    G2032R, G595R), відкладені до спеціальних майбутніх показань +
-    сутностей біомаркерів для підтипів (наразі один BIO-EGFR-MUTATION
-    охоплює всі варіанти EGFR).
+  - Точні підгілки, керовані мутацією резистентності: T790M тепер
+    підключено (крок 3 → IND-NSCLC-2L-EGFR-T790M-OSIMERTINIB). C797S,
+    G2032R та G595R залишаються відкладеними до спеціальних майбутніх
+    показань + сутностей біомаркерів для підтипів (наразі один
+    BIO-EGFR-MUTATION охоплює всі варіанти EGFR).
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_13
 draft_revision: 2
