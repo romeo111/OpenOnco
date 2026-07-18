@@ -43,6 +43,7 @@ from knowledge_base.engine import (  # noqa: E402
     is_diagnostic_profile,
 )
 from knowledge_base.validation.loader import load_content  # noqa: E402
+from scripts.example_demographics import sex_for_disease  # noqa: E402
 
 
 # ── Biomarker value overrides ─────────────────────────────────────────────
@@ -126,7 +127,7 @@ def _build_profile(bma: dict) -> dict:
         "_bma_variant": bma.get("variant_qualifier", ""),
         "disease": {"id": dis},
         "line_of_therapy": line,
-        "demographics": {"age": 58, "sex": "female", "ecog": 1},
+        "demographics": {"age": 58, "sex": sex_for_disease(dis, default="female"), "ecog": 1},
         "biomarkers": {},
         "findings": {
             "creatinine_clearance_ml_min": 85,

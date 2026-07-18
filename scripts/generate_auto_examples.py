@@ -30,6 +30,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.disease_coverage_matrix import per_disease_metrics  # noqa: E402
 from knowledge_base.validation.loader import load_content  # noqa: E402
+from scripts.example_demographics import sex_for_disease  # noqa: E402
 
 
 # ── Family → category mapping (matches scripts/site_cases.py CASE_CATEGORIES) ──
@@ -106,7 +107,7 @@ def _build_minimal_profile(disease_id: str, entities_by_id: dict, fill_pct: int)
         "line_of_therapy": 1,
         "demographics": {
             "age": 60,
-            "sex": "male",
+            "sex": sex_for_disease(disease_id),
             "ecog": 1,
         },
         "biomarkers": {},

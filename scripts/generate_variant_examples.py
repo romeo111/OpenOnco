@@ -47,6 +47,7 @@ from knowledge_base.engine import (  # noqa: E402
     is_diagnostic_profile,
 )
 from knowledge_base.validation.loader import load_content  # noqa: E402
+from scripts.example_demographics import sex_for_disease  # noqa: E402
 
 
 # ── Variant builders ──────────────────────────────────────────────────────
@@ -59,7 +60,7 @@ def _baseline(disease_id: str, bio_id: str | None, bio_value: str | None) -> dic
         "_auto_variant": True,
         "disease": {"id": disease_id},
         "line_of_therapy": 1,
-        "demographics": {"age": 60, "sex": "male", "ecog": 1},
+        "demographics": {"age": 60, "sex": sex_for_disease(disease_id), "ecog": 1},
         "biomarkers": {},
         "findings": {
             "creatinine_clearance_ml_min": 90,

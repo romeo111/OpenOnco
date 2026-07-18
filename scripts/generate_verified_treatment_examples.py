@@ -66,6 +66,7 @@ from scripts.audit_example_plan_coverage import (  # noqa: E402
     render_md,
 )
 from scripts.site_cases import CASES, BROKEN_CASE_IDS, GALLERY_EXCLUDED_CASE_IDS  # noqa: E402
+from scripts.example_demographics import sex_for_disease  # noqa: E402
 
 
 _AUTO_BLOCK_BEGIN = "    # ── VERIFIED TREATMENT EXAMPLES (regen via scripts/generate_verified_treatment_examples.py) ──"
@@ -193,8 +194,8 @@ def _normalize_required_value(constraint: Any) -> Any:
     return constraint
 
 
-def _demographic_defaults(constraints: dict | None) -> dict:
-    base = {"age": 60, "sex": "male", "ecog": 1}
+def _demographic_defaults(constraints: dict | None, disease_id: str | None = None) -> dict:
+    base = {"age": 60, "sex": sex_for_disease(disease_id), "ecog": 1}
     if not constraints or not isinstance(constraints, dict):
         return base
     if "age_min" in constraints:
@@ -437,7 +438,7 @@ def _find_algorithm_for(disease_id: str, line: int) -> dict | None:
 
 def _build_patient(disease_id: str, line: int, ind: dict, target_ind_id: str) -> dict:
     appl = ind.get("applicable_to") or {}
-    demographics = _demographic_defaults(appl.get("demographic_constraints"))
+    demographics = _demographic_defaults(appl.get("demographic_constraints"), disease_id)
     findings = _findings_defaults(appl.get("demographic_constraints"))
 
     biomarkers: dict[str, Any] = {}
