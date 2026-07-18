@@ -207,6 +207,31 @@ def _find_algorithm(
     return None
 
 
+def _algorithm_state_choice_is_ambiguous(
+    disease_id: str, line: int, entities_by_id: dict
+) -> bool:
+    """True if >1 algorithm serves (disease, line) with differing state scopes.
+
+    Used only to decide whether to warn. A stateless patient is routed by
+    `_find_algorithm` to the first state-agnostic algorithm, which for several
+    diseases is the *metastatic* (palliative) one — so an unstaged patient can
+    silently receive a palliative plan while a curative-intent algorithm exists
+    alongside it. Warning on that is not a routing change; it just stops the
+    ambiguity from being invisible."""
+    scopes: set = set()
+    for info in entities_by_id.values():
+        if info["type"] != "algorithms":
+            continue
+        d = info["data"]
+        if d.get("applicable_to_disease") != disease_id:
+            continue
+        if d.get("applicable_to_line_of_therapy") != line:
+            continue
+        raw = d.get("applicable_to_disease_state")
+        scopes.add(str(raw).strip().lower() if raw is not None else None)
+    return len(scopes) > 1
+
+
 def _collect_redflags(entities_by_id: dict) -> dict[str, dict]:
     return {eid: info["data"] for eid, info in entities_by_id.items() if info["type"] == "redflags"}
 
@@ -905,9 +930,9 @@ def generate_plan(
             f"No Algorithm found for disease={disease_id}, line_of_therapy={line}{state_suffix}"
         )
         return result
-    if (
-        patient_disease_state is None
-        and algo.get("applicable_to_disease_state") is not None
+    if patient_disease_state is None and (
+        algo.get("applicable_to_disease_state") is not None
+        or _algorithm_state_choice_is_ambiguous(disease_id, line, entities)
     ):
         result.warnings.append(
             f"patient.disease_state is missing — fell back to {algo['id']} by load-order; "
