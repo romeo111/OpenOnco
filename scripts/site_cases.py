@@ -134,7 +134,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-nsclc-alk-fusion-1l",
         file="patient_showcase_nsclc_alk_fusion_1l.json",
-        label_ua="NSCLC - ALK fusion - ESCAT IA / CIViC evidence",
+        label_ua="НДРЛ · ALK fusion · докази ESCAT IA / CIViC",
         summary_ua="Метастатична аденокарцинома легень з ALK fusion і метастазами в мозок. Показує сильний ESCAT IA сигнал, CIViC evidence lanes і те, що actionability подається як контекст для MDT, а не як прихований ranking engine.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -145,7 +145,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-crc-braf-v600e-2l",
         file="patient_showcase_crc_braf_v600e_2l.json",
-        label_ua="mCRC - BRAF V600E - tumor-specific actionability",
+        label_ua="мКРР · BRAF V600E · пухлиноспецифічна actionability",
         summary_ua="BRAF V600E після прогресії на FOLFOX. Кейс показує, чому один і той самий варіант не можна трактувати поза пухлинним контекстом: у CRC потрібна EGFR-комбінація, а не проста BRAF-монотерапія.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -156,7 +156,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-breast-pik3ca-h1047r-2l",
         file="patient_showcase_breast_pik3ca_h1047r_2l.json",
-        label_ua="Breast HR+/HER2- - PIK3CA H1047R - post-CDK4/6i",
+        label_ua="РМЗ HR+/HER2- · PIK3CA H1047R · після CDK4/6i",
         summary_ua="HR+/HER2- метастатичний рак молочної залози після CDK4/6i з PIK3CA H1047R. Показує, як ESCAT/CIViC шар додає молекулярний контекст до 2L endocrine-targeted опцій і одночасно залишає клінічні обмеження видимими.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -167,7 +167,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-ovarian-brca1-maintenance",
         file="patient_showcase_ovarian_brca1_maintenance.json",
-        label_ua="Ovarian - germline BRCA1 - PARPi maintenance",
+        label_ua="Рак яєчників · гермінальна BRCA1 · підтримувальна PARPi",
         summary_ua="Платин-чутливий рецидив high-grade serous ovarian carcinoma з germline BRCA1. Показує ESCAT IA, CIViC sensitivity/resistance evidence і практичний контекст для підтримувальної PARPi та каскадного тестування родини.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -178,7 +178,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-nsclc-egfr-t790m-2l",
         file="patient_showcase_nsclc_egfr_t790m_2l.json",
-        label_ua="NSCLC - acquired EGFR T790M - resistance-aware review",
+        label_ua="НДРЛ · набута EGFR T790M · огляд резистентності",
         summary_ua="EGFR-mutated NSCLC з прогресією після першого покоління TKI і acquired T790M. Показує, як resistance/actionability evidence стає видимим для MDT замість того, щоб губитися в загальному списку мутацій.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -189,7 +189,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-ifs-ntrk-fusion",
         file="patient_showcase_ifs_ntrk_fusion.json",
-        label_ua="Infantile fibrosarcoma - NTRK fusion - rare tumor target",
+        label_ua="Інфантильна фібросаркома · NTRK fusion · рідкісна мішень",
         summary_ua="Рідкісна пухлина з ETV6-NTRK3 fusion. Кейс показує, як молекулярна actionability допомагає не загубити targetable alteration у діагнозі, де традиційні сценарії лікування часто неповні.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -200,7 +200,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-melanoma-braf-v600e-1l",
         file="patient_showcase_melanoma_braf_v600e_1l.json",
-        label_ua="Melanoma - BRAF V600E - targeted vs immunotherapy context",
+        label_ua="Меланома · BRAF V600E · таргетна терапія vs імунотерапія",
         summary_ua="Метастатична меланома з BRAF V600E. Показує класичний ESCAT IA / CIViC приклад, де biomarker actionability пояснює BRAF/MEK чутливість, але MDT усе одно бачить клінічний контекст для вибору послідовності з immunotherapy.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -211,7 +211,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-cholangio-idh1-r132-2l",
         file="patient_showcase_cholangio_idh1_r132_2l.json",
-        label_ua="Cholangiocarcinoma - IDH1 R132 - 2L molecular option",
+        label_ua="Холангіокарцинома · IDH1 R132 · молекулярна опція 2L",
         summary_ua="Внутрішньопечінкова холангіокарцинома з IDH1 R132C після gem/cis/durvalumab. Кейс показує, як ESCAT/CIViC шар не дає втратити 2L molecular option у пухлині, де стандартні chemotherapy tracks швидко вичерпуються.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -222,7 +222,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-gastric-her2-amp-1l",
         file="patient_showcase_gastric_her2_amp_1l.json",
-        label_ua="Gastric/GEJ - HER2 amplification - IHC/ISH actionability",
+        label_ua="Шлунок/GEJ · ампліфікація HER2 · actionability IHC/ISH",
         summary_ua="Метастатична gastric/GEJ adenocarcinoma з HER2 IHC 3+. Показує, як actionability шар розділяє IHC/ISH evidence, 1L trastuzumab-based tracks і подальший T-DXd контекст.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -233,7 +233,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-prostate-brca2-germline-mcrpc",
         file="patient_showcase_prostate_brca2_germline_mcrpc.json",
-        label_ua="mCRPC - germline BRCA2 - PARP/HRR context",
+        label_ua="мКРРПЗ · гермінальна BRCA2 · контекст PARP/HRR",
         summary_ua="Метастатичний castration-resistant prostate cancer з germline BRCA2 після NHA. Показує, як ESCAT IA actionability додає HRR/PARP контекст, включно з родинним каскадним тестуванням і відмінністю BRCA2 від ширшого HRD label.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -244,7 +244,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-endometrial-dmmr-msh2-1l",
         file="patient_showcase_endometrial_dmmr_msh2_1l.json",
-        label_ua="Endometrial - dMMR/MSH2 - immunotherapy evidence",
+        label_ua="Ендометрій · dMMR/MSH2 · докази імунотерапії",
         summary_ua="Поширений endometrial carcinoma з dMMR/MSI-H через втрату MSH2. Кейс показує tumor-specific і tissue-agnostic immunotherapy evidence в одному місці, не змішуючи його з неспецифічним MSI label.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -255,7 +255,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-thyroid-ret-fusion-rai-refractory",
         file="patient_showcase_thyroid_ret_fusion_rai_refractory.json",
-        label_ua="Papillary thyroid - RET fusion - RAI-refractory target",
+        label_ua="Папілярний рак ЩЗ · RET fusion · радіойодрефрактерний",
         summary_ua="RAI-refractory papillary thyroid carcinoma з RET fusion. Показує, як actionability відрізняє RET fusion у PTC від RET mutations у MTC і підсвічує selective RET-TKI.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -266,7 +266,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-gist-kit-exon11-1l",
         file="patient_showcase_gist_kit_exon11_1l.json",
-        label_ua="GIST - KIT exon 11 - genotype sets TKI dose",
+        label_ua="GIST · KIT екзон 11 · генотип визначає дозу TKI",
         summary_ua="Метастатичний GIST з KIT exon 11 deletion. Кейс показує практичну перевагу структурованого biomarker layer: exon 11 підтримує стандартну 1L imatinib дозу, а не змішується з exon 9 чи PDGFRA D842V сценаріями.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -277,7 +277,7 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-aml-flt3-itd-1l",
         file="patient_showcase_aml_flt3_itd_1l.json",
-        label_ua="AML - FLT3-ITD - heme actionability and risk",
+        label_ua="ГМЛ · FLT3-ITD · actionability і стратифікація ризику",
         summary_ua="Новодіагностований fit AML з FLT3-ITD. Додає hematology приклад: BMA evidence пояснює targeted induction context, а ризик і transplant discussion лишаються окремими клінічними рішеннями.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
@@ -288,8 +288,8 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="showcase-bcc-labcc-hhi-1l",
         file="patient_showcase_bcc_labcc_hhi_1l.json",
-        label_ua="BCC - locally advanced - hedgehog inhibitor 1L",
-        summary_ua="Locally advanced BCC in Gorlin syndrome: surgery and radiation are not appropriate, so the engine should route to 1L SMO/Hedgehog inhibition instead of exposing only an auto-stub starter.",
+        label_ua="БКК · місцево-поширена · інгібітор Hedgehog 1L",
+        summary_ua="Місцево-поширена БКК при синдромі Горліна, коли резекція та променева терапія не підходять. Показує, як план веде до 1L інгібування SMO/Hedgehog, а не лише до стартового профілю для форми.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="solid",
@@ -1246,11 +1246,11 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="cervical-locally-advanced",
         file="patient_cervical_locally_advanced.json",
-        label_ua="Cervical · Locally Advanced (CCRT + Pembrolizumab)",
-        summary_ua="Locally advanced cervical cancer (FIGO IIB-IVA) — engine обирає cisplatin-based CCRT + brachytherapy; pembrolizumab maintenance (KEYNOTE-A18).",
+        label_ua="Рак шийки матки · місцево-поширений (цисплатин-ХПТ)",
+        summary_ua="Місцево-поширений рак шийки матки (FIGO IB3-IVA) — план веде до куративної цисплатин-вмісної хіміопроменевої терапії через ALGO-CERVICAL-LOCALLY-ADVANCED-1L, а не до паліативного метастатичного треку. Модальність променевої терапії (EBRT/брахітерапія) поки не моделюється окремою сутністю і подається текстом.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
-        label_en="Cervical · Locally Advanced (CCRT + Pembrolizumab)",
-        summary_en="Locally advanced cervical cancer (FIGO IIB-IVA) — engine selects cisplatin-based CCRT + brachytherapy; pembrolizumab maintenance (KEYNOTE-A18).",
+        label_en="Cervical · Locally Advanced (cisplatin chemoradiation)",
+        summary_en="Locally advanced cervical cancer (FIGO IB3-IVA) — routes through ALGO-CERVICAL-LOCALLY-ADVANCED-1L to curative-intent cisplatin-based chemoradiation rather than the palliative metastatic track. Radiation modality (EBRT/brachytherapy) is not yet modelled as a separate entity and is carried as free text.",
     ),
     CaseEntry(
         case_id="gbm-stupp",

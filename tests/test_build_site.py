@@ -176,6 +176,16 @@ def test_gallery_is_public_with_publishable_cases(site_dir: Path):
         )
     ]
     assert html.count('class="case-card"') == len(public_cases)
+    # The check above is self-referential: it derives the expectation from the
+    # same constants it validates, so it stays green even if the gallery is
+    # accidentally emptied or flooded. Pin an absolute range as well — the
+    # showcase generator has silently dropped featured ids before.
+    n_cards = html.count('class="case-card"')
+    assert 10 <= n_cards <= 40, (
+        f"gallery renders {n_cards} cards; expected a curated set of roughly "
+        "16. Near-zero means GALLERY_FEATURED_CASE_IDS lost entries; a large "
+        "number means the allowlist was emptied and auto-stubs leaked in."
+    )
     assert "Curated showcase" in html
     assert 'class="dt-quality"' in html
     assert "No treatment plan generated" not in html

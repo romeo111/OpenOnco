@@ -106,10 +106,17 @@ the metrics in §8 weekly.
 ## 7. Hand them a case (lower "try" friction)
 
 Don't say "go try it." Send a clinician a case they'll recognize and the demo
-link. Good starters (synthetic, already in the gallery): DLBCL first-line,
-follicular lymphoma, CLL, multiple myeloma, gastric, NSCLC, CRC. "Run the DLBCL
-1L case and check the track split + citations" converts far better than a generic
-invite.
+link. Good starters (all synthetic): DLBCL first-line, follicular lymphoma, CLL,
+multiple myeloma, gastric, NSCLC, CRC — load these from the example picker on
+[try.html](https://openonco.info/try.html). "Run the DLBCL 1L case and check the
+track split + citations" converts far better than a generic invite.
+
+Note the two surfaces differ: `/gallery.html` is a small curated set built around
+the CIViC/ESCAT actionability layer (NSCLC, CRC, breast, ovarian, prostate,
+melanoma, gastric/GEJ, cholangiocarcinoma, endometrial, cervical, thyroid, GIST,
+AML, BCC, infantile fibrosarcoma) and does **not** include the hematology
+starters above. Link the picker when you name a heme case, or the clinician will
+land on a gallery that doesn't have it.
 
 ## 8. Metrics (activation-first, honest)
 

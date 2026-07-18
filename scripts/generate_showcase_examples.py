@@ -13,6 +13,7 @@ Usage:
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 
@@ -70,7 +71,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-nsclc-alk-fusion-1l",
         file="patient_showcase_nsclc_alk_fusion_1l.json",
-        label_ua="NSCLC - ALK fusion - ESCAT IA / CIViC evidence",
+        label_ua="НДРЛ · ALK fusion · докази ESCAT IA / CIViC",
         summary_ua=(
             "Метастатична аденокарцинома легень з ALK fusion і метастазами в мозок. "
             "Показує сильний ESCAT IA сигнал, CIViC evidence lanes і те, що actionability "
@@ -123,7 +124,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-crc-braf-v600e-2l",
         file="patient_showcase_crc_braf_v600e_2l.json",
-        label_ua="mCRC - BRAF V600E - tumor-specific actionability",
+        label_ua="мКРР · BRAF V600E · пухлиноспецифічна actionability",
         summary_ua=(
             "BRAF V600E після прогресії на FOLFOX. Кейс показує, чому один і той самий "
             "варіант не можна трактувати поза пухлинним контекстом: у CRC потрібна "
@@ -178,7 +179,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-breast-pik3ca-h1047r-2l",
         file="patient_showcase_breast_pik3ca_h1047r_2l.json",
-        label_ua="Breast HR+/HER2- - PIK3CA H1047R - post-CDK4/6i",
+        label_ua="РМЗ HR+/HER2- · PIK3CA H1047R · після CDK4/6i",
         summary_ua=(
             "HR+/HER2- метастатичний рак молочної залози після CDK4/6i з PIK3CA H1047R. "
             "Показує, як ESCAT/CIViC шар додає молекулярний контекст до 2L endocrine-targeted "
@@ -247,7 +248,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-ovarian-brca1-maintenance",
         file="patient_showcase_ovarian_brca1_maintenance.json",
-        label_ua="Ovarian - germline BRCA1 - PARPi maintenance",
+        label_ua="Рак яєчників · гермінальна BRCA1 · підтримувальна PARPi",
         summary_ua=(
             "Платин-чутливий рецидив high-grade serous ovarian carcinoma з germline BRCA1. "
             "Показує ESCAT IA, CIViC sensitivity/resistance evidence і практичний контекст "
@@ -303,7 +304,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-nsclc-egfr-t790m-2l",
         file="patient_showcase_nsclc_egfr_t790m_2l.json",
-        label_ua="NSCLC - acquired EGFR T790M - resistance-aware review",
+        label_ua="НДРЛ · набута EGFR T790M · огляд резистентності",
         summary_ua=(
             "EGFR-mutated NSCLC з прогресією після першого покоління TKI і acquired T790M. "
             "Показує, як resistance/actionability evidence стає видимим для MDT замість "
@@ -361,7 +362,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-ifs-ntrk-fusion",
         file="patient_showcase_ifs_ntrk_fusion.json",
-        label_ua="Infantile fibrosarcoma - NTRK fusion - rare tumor target",
+        label_ua="Інфантильна фібросаркома · NTRK fusion · рідкісна мішень",
         summary_ua=(
             "Рідкісна пухлина з ETV6-NTRK3 fusion. Кейс показує, як молекулярна "
             "actionability допомагає не загубити targetable alteration у діагнозі, де "
@@ -403,7 +404,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-melanoma-braf-v600e-1l",
         file="patient_showcase_melanoma_braf_v600e_1l.json",
-        label_ua="Melanoma - BRAF V600E - targeted vs immunotherapy context",
+        label_ua="Меланома · BRAF V600E · таргетна терапія vs імунотерапія",
         summary_ua=(
             "Метастатична меланома з BRAF V600E. Показує класичний ESCAT IA / CIViC приклад, "
             "де biomarker actionability пояснює BRAF/MEK чутливість, але MDT усе одно бачить "
@@ -451,7 +452,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-cholangio-idh1-r132-2l",
         file="patient_showcase_cholangio_idh1_r132_2l.json",
-        label_ua="Cholangiocarcinoma - IDH1 R132 - 2L molecular option",
+        label_ua="Холангіокарцинома · IDH1 R132 · молекулярна опція 2L",
         summary_ua=(
             "Внутрішньопечінкова холангіокарцинома з IDH1 R132C після gem/cis/durvalumab. "
             "Кейс показує, як ESCAT/CIViC шар не дає втратити 2L molecular option у пухлині, "
@@ -506,7 +507,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-gastric-her2-amp-1l",
         file="patient_showcase_gastric_her2_amp_1l.json",
-        label_ua="Gastric/GEJ - HER2 amplification - IHC/ISH actionability",
+        label_ua="Шлунок/GEJ · ампліфікація HER2 · actionability IHC/ISH",
         summary_ua=(
             "Метастатична gastric/GEJ adenocarcinoma з HER2 IHC 3+. Показує, як actionability "
             "шар розділяє IHC/ISH evidence, 1L trastuzumab-based tracks і подальший T-DXd контекст."
@@ -553,7 +554,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-prostate-brca2-germline-mcrpc",
         file="patient_showcase_prostate_brca2_germline_mcrpc.json",
-        label_ua="mCRPC - germline BRCA2 - PARP/HRR context",
+        label_ua="мКРРПЗ · гермінальна BRCA2 · контекст PARP/HRR",
         summary_ua=(
             "Метастатичний castration-resistant prostate cancer з germline BRCA2 після NHA. "
             "Показує, як ESCAT IA actionability додає HRR/PARP контекст, включно з родинним "
@@ -610,7 +611,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-endometrial-dmmr-msh2-1l",
         file="patient_showcase_endometrial_dmmr_msh2_1l.json",
-        label_ua="Endometrial - dMMR/MSH2 - immunotherapy evidence",
+        label_ua="Ендометрій · dMMR/MSH2 · докази імунотерапії",
         summary_ua=(
             "Поширений endometrial carcinoma з dMMR/MSI-H через втрату MSH2. Кейс показує "
             "tumor-specific і tissue-agnostic immunotherapy evidence в одному місці, не змішуючи "
@@ -656,7 +657,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-thyroid-ret-fusion-rai-refractory",
         file="patient_showcase_thyroid_ret_fusion_rai_refractory.json",
-        label_ua="Papillary thyroid - RET fusion - RAI-refractory target",
+        label_ua="Папілярний рак ЩЗ · RET fusion · радіойодрефрактерний",
         summary_ua=(
             "RAI-refractory papillary thyroid carcinoma з RET fusion. Показує, як actionability "
             "відрізняє RET fusion у PTC від RET mutations у MTC і підсвічує selective RET-TKI."
@@ -706,7 +707,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-gist-kit-exon11-1l",
         file="patient_showcase_gist_kit_exon11_1l.json",
-        label_ua="GIST - KIT exon 11 - genotype sets TKI dose",
+        label_ua="GIST · KIT екзон 11 · генотип визначає дозу TKI",
         summary_ua=(
             "Метастатичний GIST з KIT exon 11 deletion. Кейс показує практичну перевагу "
             "структурованого biomarker layer: exon 11 підтримує стандартну 1L imatinib дозу, "
@@ -752,7 +753,7 @@ SHOWCASE_CASES = [
     _case(
         case_id="showcase-aml-flt3-itd-1l",
         file="patient_showcase_aml_flt3_itd_1l.json",
-        label_ua="AML - FLT3-ITD - heme actionability and risk",
+        label_ua="ГМЛ · FLT3-ITD · actionability і стратифікація ризику",
         summary_ua=(
             "Новодіагностований fit AML з FLT3-ITD. Додає hematology приклад: BMA evidence "
             "пояснює targeted induction context, а ризик і transplant discussion лишаються окремими "
@@ -816,6 +817,29 @@ def _render_case_entry(case: dict) -> str:
     ),"""
 
 
+def _assert_no_orphaned_showcase_ids() -> None:
+    """Refuse to regenerate if the showcase block holds cases we don't own.
+
+    `_patch_site_cases` rewrites the whole block, so anything inside it that
+    this script does not define would be deleted. Hand-added CaseEntries have
+    landed there before. Called as a pre-flight from `main()` so the script
+    fails before writing any example JSON, not halfway through."""
+    text = SITE_CASES.read_text(encoding="utf-8")
+    if _SHOWCASE_BLOCK_BEGIN not in text or _SHOWCASE_BLOCK_END not in text:
+        return
+    start = text.index(_SHOWCASE_BLOCK_BEGIN)
+    end = text.index(_SHOWCASE_BLOCK_END) + len(_SHOWCASE_BLOCK_END)
+    known = {case["case_id"] for case in SHOWCASE_CASES}
+    orphaned = sorted(set(re.findall(r'case_id="([^"]+)"', text[start:end])) - known)
+    if orphaned:
+        raise RuntimeError(
+            "scripts/site_cases.py showcase block contains case_ids this "
+            "generator does not define: " + ", ".join(orphaned) + ". Add "
+            "them to SHOWCASE_CASES/SHOWCASE_IDS (or move them below the "
+            "block) before regenerating — otherwise they would be deleted."
+        )
+
+
 def _patch_site_cases(entries: list[str]) -> None:
     text = SITE_CASES.read_text(encoding="utf-8")
     block = _SHOWCASE_BLOCK_BEGIN + "\n" + "\n".join(entries) + "\n" + _SHOWCASE_BLOCK_END
@@ -823,6 +847,7 @@ def _patch_site_cases(entries: list[str]) -> None:
     if _SHOWCASE_BLOCK_BEGIN in text and _SHOWCASE_BLOCK_END in text:
         start = text.index(_SHOWCASE_BLOCK_BEGIN)
         end = text.index(_SHOWCASE_BLOCK_END) + len(_SHOWCASE_BLOCK_END)
+        _assert_no_orphaned_showcase_ids()
         new = text[:start] + block + text[end:]
     else:
         marker = "CASES: list[CaseEntry] = [\n"
@@ -847,18 +872,27 @@ def _patch_featured_ids() -> None:
     if end < 0:
         raise RuntimeError("Could not find end of GALLERY_FEATURED_CASE_IDS")
 
+    # Featured is a superset of the showcase set: hand-curated cases are
+    # featured too (e.g. cervical-locally-advanced). Preserve any id this
+    # script does not own, otherwise a regen quietly shrinks the gallery.
+    existing = re.findall(r'"([^"]+)"', text[body_start:end])
+    extra = [cid for cid in existing if cid not in set(SHOWCASE_IDS)]
+
     featured = (
         marker
         + "    # Public gallery is intentionally small: these curated cases demonstrate\n"
         + "    # the CIViC/ESCAT actionability layer better than hundreds of auto\n"
         + "    # stubs. Hidden auto-stub cases are excluded from try.html examples too.\n"
         + "".join(f"    {_json_string(case_id)},\n" for case_id in SHOWCASE_IDS)
+        + ("".join(f"    {_json_string(cid)},\n" for cid in extra) if extra else "")
         + "}"
     )
     SITE_CASES.write_text(text[:start] + featured + text[end + 1 :], encoding="utf-8")
 
 
 def main() -> int:
+    # Fail closed before touching any file on disk.
+    _assert_no_orphaned_showcase_ids()
     EXAMPLES_DIR.mkdir(parents=True, exist_ok=True)
     for case in SHOWCASE_CASES:
         path = EXAMPLES_DIR / case["file"]

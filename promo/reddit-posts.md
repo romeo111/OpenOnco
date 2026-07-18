@@ -57,7 +57,7 @@ Why it might be worth your five minutes:
 - It always presents **alternatives, never one binding directive** — a deliberate hedge against automation bias.
 - Every recommendation is **sourced**, enforced by a citation guard, so you can chase the evidence behind each cell.
 
-Coverage spans lymphoid + myeloid heme and solid tumors — examples in the gallery include DLBCL, FL, CLL/SLL, MCL, MZL, MM, gastric, esophageal, PDAC, cholangiocarcinoma, CRC, NSCLC, SCLC, mesothelioma. 92 diseases total (77 with a full modeled chain), 444 cited sources, actionability from CIViC (CC0); ESCAT tier shown as a badge.
+Coverage spans lymphoid + myeloid heme and solid tumors — the gallery highlights a curated actionability subset (NSCLC, CRC, breast, ovarian, prostate, melanoma, gastric/GEJ, cholangiocarcinoma, endometrial, cervical, thyroid, GIST, AML, BCC, infantile fibrosarcoma), and the try.html example picker adds DLBCL, FL, CLL/SLL, MCL, MZL, MM, esophageal, PDAC, SCLC, mesothelioma and more. 92 diseases total (77 with a full modeled chain), 444 cited sources, actionability from CIViC (CC0); ESCAT tier shown as a badge.
 
 The honest caveats, because they matter clinically:
 - **v0.1 draft. No formal clinical validation study. No real-world deployment.**

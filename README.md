@@ -50,7 +50,7 @@ OpenOnco automates the chore work. The clinician gets a **drafted plan with ever
 
 **Tumor-board questions:** **[openonco.info/ask.html](https://openonco.info/ask.html)** — optional server-backed prototype for free-text oncology vignettes. ChatGPT structures the case, OpenOnco runs the deterministic rule engine, then the response is framed as an answer, alternatives, or clarifying questions. Do not paste identifiable real-patient data.
 
-**Sample patients:** **[openonco.info/gallery.html](https://openonco.info/gallery.html)** — pre-rendered cases across DLBCL, FL, CLL/SLL, MCL, MZL, MM (hematologic) and gastric, esophageal, PDAC, cholangiocarcinoma, CRC, NSCLC, SCLC, mesothelioma (solid tumors).
+**Sample patients:** **[openonco.info/gallery.html](https://openonco.info/gallery.html)** — a curated set chosen to demonstrate the CIViC/ESCAT actionability layer: NSCLC (ALK fusion, acquired EGFR T790M), CRC, breast, ovarian, prostate, melanoma, gastric/GEJ, cholangiocarcinoma, endometrial, cervical, papillary thyroid, GIST, AML, basal cell carcinoma, infantile fibrosarcoma. The broader set — DLBCL, FL, CLL/SLL, MCL, MZL, MM (hematologic) and esophageal, PDAC, SCLC, mesothelioma (solid) — loads from the example picker on **[try.html](https://openonco.info/try.html)**.
 
 **Contributors:** start with [`specs/`](specs/) and [`CLAUDE.md`](CLAUDE.md) — these define scope, schemas, and authoring conventions before any KB or code change.
 

@@ -22,7 +22,7 @@ Layout produced:
     .nojekyll                      # disable Jekyll
     style.css                      # shared landing/gallery styles
     index.html                     # public landing (hero + stats + comparison)
-    gallery.html                   # 7 pre-generated sample cases
+    gallery.html                   # curated sample cases (GALLERY_FEATURED_CASE_IDS)
     try.html                       # interactive Pyodide demo
     cases/<case-id>.html           # one rendered Plan / Diagnostic Brief
     openonco-engine-core.zip       # core engine + shared KB for Pyodide
@@ -569,12 +569,15 @@ def _public_example_entries() -> list[CaseEntry]:
     engine/render QA, but they read as stale low-fill clinical examples in
     the public picker. Keep them out of /try.html and examples.json.
 
-    The picker is intentionally more permissive than the case gallery: it
-    only filters out genuinely broken cases (BROKEN_CASE_IDS) and noisy
-    auto/variant smoke entries. Cases that are merely curated out of the
-    gallery (GALLERY_ONLY_HIDDEN_CASE_IDS — e.g. HCC patient cases without
-    ESCAT BMA) still show here so every supported disease has at least
+    The picker is intentionally far more permissive than the case gallery:
+    it only filters out genuinely broken cases (BROKEN_CASE_IDS) and noisy
+    auto/variant smoke entries, so every supported disease keeps at least
     one usable load-example entry.
+
+    The gap is large — the gallery renders only GALLERY_FEATURED_CASE_IDS
+    (a ~16-entry allowlist) while this picker returns a few hundred. Cases
+    curated out via GALLERY_ONLY_HIDDEN_CASE_IDS (e.g. HCC without ESCAT
+    BMA) are a small part of that difference, not its main cause.
     """
 
     return [
@@ -2183,9 +2186,36 @@ def _unique_questionnaire_icd_to_disease_id_map() -> dict[str, str]:
     }
 
 
-def _case_has_questionnaire(case: CaseEntry, codes: set) -> bool:
-    """True if the case's example JSON has a disease ICD-O-3 code that
-    matches a curated questionnaire."""
+def _questionnaire_disease_ids() -> set:
+    """DIS-* ids for which we have a curated questionnaire.
+
+    Companion to `_questionnaire_icd_o_3_codes()`. Most example profiles
+    identify their disease by canonical id rather than ICD-O-3 morphology,
+    so the id set is the primary lookup — see `_case_has_questionnaire`."""
+    qsrc = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "questionnaires"
+    ids: set = set()
+    if not qsrc.is_dir():
+        return ids
+    import yaml as _yaml
+    for path in qsrc.glob("*.yaml"):
+        try:
+            data = _yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        did = (data or {}).get("disease_id")
+        if did:
+            ids.add(str(did).upper())
+    return ids
+
+
+def _case_has_questionnaire(case: CaseEntry, codes: set, ids: set) -> bool:
+    """True if the case's example JSON resolves to a curated questionnaire.
+
+    Resolution order mirrors `findQuestionnaireForProfile()` on the try
+    page: canonical `disease.id` first, ICD-O-3 morphology as fallback.
+    The id path is required because curated showcase profiles set only
+    `disease.id` — matching on ICD alone marks every one of them
+    "form not yet available" while the try page happily opens a form."""
     p = EXAMPLES / case.file
     if not p.exists():
         return False
@@ -2193,7 +2223,11 @@ def _case_has_questionnaire(case: CaseEntry, codes: set) -> bool:
         data = json.loads(p.read_text(encoding="utf-8"))
     except Exception:
         return False
-    code = ((data or {}).get("disease") or {}).get("icd_o_3_morphology")
+    disease = (data or {}).get("disease") or {}
+    did = str(disease.get("id") or "").upper()
+    if did.startswith("DIS-") and did in ids:
+        return True
+    code = disease.get("icd_o_3_morphology")
     return bool(code and code in codes)
 
 
@@ -2284,6 +2318,54 @@ def _gallery_case_disease_meta() -> list[dict]:
     return out
 
 
+def _is_gallery_case(case: CaseEntry) -> bool:
+    """Whether a case is shown on the public gallery.
+
+    A non-empty GALLERY_FEATURED_CASE_IDS acts as an allowlist, so the
+    gallery is far smaller than the full CASES table. Prose elsewhere on
+    the site quotes this count — go through `_gallery_case_count()`
+    rather than hardcoding it."""
+    return (
+        case.case_id not in GALLERY_EXCLUDED_CASE_IDS
+        and (
+            not GALLERY_FEATURED_CASE_IDS
+            or case.case_id in GALLERY_FEATURED_CASE_IDS
+        )
+    )
+
+
+def _gallery_case_count() -> int:
+    return sum(1 for c in CASES if _is_gallery_case(c))
+
+
+def _picker_only_example_count() -> int:
+    """Try-page picker profiles that are *not* already on the gallery.
+
+    Set difference rather than `len(picker) - gallery_count`: the gallery is
+    a subset of the picker today, but that is a side effect of the badge/id
+    filters in `_public_example_entries()`, not an enforced invariant. Copy
+    that says "a further N" must not double-count the gallery cases."""
+    gallery = {c.case_id for c in CASES if _is_gallery_case(c)}
+    return sum(1 for c in _public_example_entries() if c.case_id not in gallery)
+
+
+# Case badges are authored in English in the CASES table; the UA gallery
+# needs localised display text. Display-only — `CaseEntry.badge` stays the
+# canonical value that `_public_example_entries()` filters on.
+_CASE_BADGE_UA = {
+    "Treatment Plan": "План лікування",
+    "Diagnostic Brief": "Діагностичний brief",
+    "Prevention Plan": "План профілактики",
+    "Variant": "Варіант",
+    "Auto-stub": "Авто-заготовка",
+    "BMA": "BMA",
+}
+
+
+def _badge_label(badge: str, *, is_en: bool) -> str:
+    return badge if is_en else _CASE_BADGE_UA.get(badge, badge)
+
+
 def render_gallery(*, target_lang: str = "en") -> str:
     """Disease-grouped gallery (CSD UX rev 2026-04-27).
 
@@ -2296,13 +2378,10 @@ def render_gallery(*, target_lang: str = "en") -> str:
     is_en = target_lang == "en"
     case_path_prefix = "/cases/" if is_en else "/ukr/cases/"
     quest_codes = _questionnaire_icd_o_3_codes()
+    quest_ids = _questionnaire_disease_ids()
     case_meta = [
         m for m in _gallery_case_disease_meta()
-        if m["case"].case_id not in GALLERY_EXCLUDED_CASE_IDS
-        and (
-            not GALLERY_FEATURED_CASE_IDS
-            or m["case"].case_id in GALLERY_FEATURED_CASE_IDS
-        )
+        if _is_gallery_case(m["case"])
     ]
     n_cases = len(case_meta)
 
@@ -2381,7 +2460,7 @@ def render_gallery(*, target_lang: str = "en") -> str:
         cards: list[str] = []
         for item in d["items"]:
             c: CaseEntry = item["case"]
-            has_quest = _case_has_questionnaire(c, quest_codes)
+            has_quest = _case_has_questionnaire(c, quest_codes, quest_ids)
             json_only_pill = "" if has_quest else (
                 f'<span class="case-json-only" title="'
                 f'{("Form not yet available — opens as JSON on Try-it" if is_en else "Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON")}'
@@ -2396,7 +2475,7 @@ def render_gallery(*, target_lang: str = "en") -> str:
    data-default-order="{item['default_order']}"
    data-name="{_html.escape(card_label)}">
   <div class="case-badge-row">
-    <div class="case-badge {c.badge_class}">{c.badge}</div>
+    <div class="case-badge {c.badge_class}">{_html.escape(_badge_label(c.badge, is_en=is_en))}</div>
     <span class="case-quality {quality["quality_class"]}">{_html.escape(quality_label)}</span>
     {json_only_pill}
   </div>
@@ -6544,9 +6623,10 @@ def _render_capabilities_uk(stats) -> str:
           <a href="/ukr/diseases.html"><strong>→ Дивитись матрицю</strong></a>
         </p>
         <p class="info-text">
-          <a href="/ukr/gallery.html"><code>/ukr/gallery.html</code></a> — 586 кейсів
-          (159 hand-curated + 362 verified variant profiles + 65 auto-base). Кожен — повний Plan або
-          Diagnostic Brief з усіма citation. Disease-grouped drill-down.
+          <a href="/ukr/gallery.html"><code>/ukr/gallery.html</code></a> — {_gallery_case_count()} кураторських
+          кейсів, згрупованих за хворобою. Кожен — повний Plan або Diagnostic Brief з усіма citation.
+          Ще {_picker_only_example_count()} профілів доступні через підбірку прикладів на
+          <a href="/ukr/try.html"><code>/ukr/try.html</code></a>.
           <a href="/ukr/gallery.html"><strong>→ Дивитись приклади</strong></a>
         </p>
       </div>
@@ -6985,7 +7065,7 @@ def _render_capabilities_uk(stats) -> str:
           <li><strong>Multi-phase regimens (PR1-3)</strong> — <code>Regimen.phases</code>, <code>bridging_options</code>, phases-aware render, back-compat auto-wrap.</li>
           <li><strong>Citation guard L3</strong> — render-time перевірка кожної BMA-комірки.</li>
           <li><strong>Coverage matrix</strong> — <a href="/ukr/diseases.html">/ukr/diseases.html</a> per-disease drill-down.</li>
-          <li><strong>586 кейсів у gallery</strong> — Phase 2 chunked feat: ~60 нових hand-curated за 4 дні.</li>
+          <li><strong>{len(_public_case_entries())} сторінок кейсів у поточній збірці</strong> — Phase 2 chunked feat: ~60 нових hand-curated за 4 дні.</li>
         </ul>
       </div>
     </section>
@@ -7398,9 +7478,10 @@ def _render_capabilities_en(stats) -> str:
           <a href="/diseases.html"><strong>→ View matrix</strong></a>
         </p>
         <p class="info-text">
-          <a href="/gallery.html"><code>/gallery.html</code></a> — 586 cases
-          (159 hand-curated + 362 verified variant profiles + 65 auto-base). Each — a full Plan or
-          Diagnostic Brief with all citations. Disease-grouped drill-down.
+          <a href="/gallery.html"><code>/gallery.html</code></a> — {_gallery_case_count()} curated cases,
+          disease-grouped. Each — a full Plan or Diagnostic Brief with all citations.
+          A further {_picker_only_example_count()} profiles are reachable from the example picker on
+          <a href="/try.html"><code>/try.html</code></a>.
           <a href="/gallery.html"><strong>→ View examples</strong></a>
         </p>
       </div>
@@ -7842,7 +7923,7 @@ def _render_capabilities_en(stats) -> str:
           <li><strong>Multi-phase regimens (PR1-3)</strong> — <code>Regimen.phases</code>, <code>bridging_options</code>, phases-aware render, back-compat auto-wrap.</li>
           <li><strong>Citation guard L3</strong> — render-time check on every BMA cell.</li>
           <li><strong>Coverage matrix</strong> — <a href="/diseases.html">/diseases.html</a> per-disease drill-down.</li>
-          <li><strong>586 cases in gallery</strong> — Phase 2 chunked feat: ~60 new hand-curated in 4 days.</li>
+          <li><strong>{len(_public_case_entries())} case pages rendered by the current build</strong> — Phase 2 chunked feat: ~60 new hand-curated in 4 days.</li>
         </ul>
       </div>
     </section>
