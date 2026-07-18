@@ -12,11 +12,11 @@ dropped for length.
 - [ ] **Early-stage frame present** ("v0.1 / early-stage / seeking clinician
       feedback") — not implied as finished.
 - [ ] **STUB caveat sits next to any coverage number.** If the asset cites "92
-      diseases / 664 indications / 444 sources", it must also note that most
-      content is STUB ("proposed, not approved"; 15/806 dual-signed-off).
-- [ ] **Numbers are the canonical ones** (capabilities page, state 2026-06-17):
-      92 diseases · 664 indications · 384 regimens · 298 drugs · 594 red flags ·
-      444 sources · 16 MDT skills. **Not** the README's stale figures.
+      diseases / 831 indications / 471 sources", it must also note that most
+      content is STUB ("proposed, not approved"; 15/1061 dual-signed-off).
+- [ ] **Numbers are the canonical ones** (capabilities page, state 2026-07-18):
+      103 diseases · 831 indications · 404 regimens · 321 drugs · 669 red flags ·
+      471 sources · 16 MDT skills. **Not** the README's stale figures.
 - [ ] **Links are the canonical five**: site `openonco.info`, repo
       `github.com/romeo111/OpenOnco`, demo `openonco.info/try.html`, MCP
       `…/tree/main/mcp_server`, `openonco.info/llms.txt`.

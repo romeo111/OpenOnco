@@ -52,13 +52,13 @@ Desktop, Cursor — can route an oncology question through the deterministic eng
 and relay cited output, instead of answering from memory. The model never picks the
 regimen; it's a transport for the engine's result.
 
-Current scope (capabilities page, state 2026-06-17): 92 diseases across lymphoid
-and myeloid hematology plus solid tumors, 664 indications, 384 regimens, 298 drugs
-(ATC/RxNorm coded), 594 red flags, 444 cited sources, 16 virtual MDT clinician
-skills. 77 of 92 diseases have a full modeled chain.
+Current scope (capabilities page, state 2026-07-18): 103 diseases across lymphoid
+and myeloid hematology plus solid tumors, 831 indications, 404 regimens, 321 drugs
+(ATC/RxNorm coded), 669 red flags, 471 cited sources, 16 virtual MDT clinician
+skills. 86 of 103 diseases have a full modeled chain.
 
 Honest about maturity: this is a v0.1 draft. The big caveat is clinical sign-off —
-only 15 of 806 clinical entities have passed two-Clinical-Co-Lead review. The rest
+only 15 of 1061 clinical entities have passed two-Clinical-Co-Lead review. The rest
 are STUB: structured data, algorithm, and sources are in place, but they are
 "proposed plan, not approved plan." There has been no formal clinical validation
 study and no real-world deployment validation.
@@ -110,7 +110,7 @@ refusal to emit a plan when histology isn't confirmed.
 I want to be very plain about what this is NOT, because HN will (rightly) push on it:
 it is not validated, not a medical device, not FDA-cleared, and not a replacement
 for an oncologist or a tumor board. It does not diagnose or screen. Most of the
-knowledge base is still STUB — only 15 of 806 clinical entities have two-reviewer
+knowledge base is still STUB — only 15 of 1061 clinical entities have two-reviewer
 sign-off, so please read everything else as "proposed, not approved." There has been
 no formal clinical validation study.
 

@@ -3,7 +3,7 @@
 **Asset:** `mcp-registries`
 **Purpose:** Get the OpenOnco MCP server listed in the major public Model Context Protocol directories.
 **Server path:** `https://github.com/romeo111/OpenOnco/tree/main/mcp_server`
-**State:** 2026-06-17 KB figures · v0.1 draft
+**State:** 2026-07-18 KB figures · v0.1 draft
 
 > **Read before submitting.** OpenOnco is informational clinical decision support for healthcare professionals and tumor boards — **not a medical device, not FDA-cleared/approved, not clinically validated, not for patients, not for emergencies.** No LLM ever picks the regimen or dose. Every listing below already bakes the not-a-medical-device framing into its blurb. Do not edit a blurb in a way that drops the disclaimer, implies validation/approval, or implies an LLM chooses treatment. When a directory has a hard character limit that won't fit the disclaimer, use the short form (below) and make sure the linked README/site carries the full disclaimer — which it does.
 
@@ -26,9 +26,9 @@ These are pre-cleared against the fact sheet's `approved_claims`, `forbidden_cla
 >
 > The MCP server exposes this engine to any Model Context Protocol client (Claude Desktop, Cursor, etc.) via `engine_info`, `list_diseases`, `generate_treatment_plan`, and `generate_diagnostic_brief`. The LLM relays cited engine output — **it never picks the regimen or dose itself**, so it can't hallucinate a drug or dose. The engine is deterministic (same input + same KB version = same output) and runs offline; patient JSON never leaves the user's machine.
 >
-> Covers 92 diseases across hematologic and solid-tumor oncology with 444 cited sources (state 2026-06-17). Code is MIT; specs and generated content are CC BY 4.0.
+> Covers 103 diseases across hematologic and solid-tumor oncology with 471 cited sources (state 2026-07-18). Code is MIT; specs and generated content are CC BY 4.0.
 >
-> **This is an early-stage v0.1 draft, actively seeking clinician feedback. It is informational support for healthcare professionals — not a medical device, not FDA-cleared/approved, not clinically validated, and not for direct patient use or time-critical decisions. Most clinical content is STUB (only 15 of 806 entities have two-reviewer sign-off). Every output must be verified by a qualified oncologist.**
+> **This is an early-stage v0.1 draft, actively seeking clinician feedback. It is informational support for healthcare professionals — not a medical device, not FDA-cleared/approved, not clinically validated, and not for direct patient use or time-critical decisions. Most clinical content is STUB (only 15 of 1061 entities have two-reviewer sign-off). Every output must be verified by a qualified oncologist.**
 
 **Categories / tags (reuse across registries that accept them):**
 `healthcare` · `clinical-decision-support` · `oncology` · `medical` · `knowledge-base` · `deterministic` · `rules-engine` · `research`

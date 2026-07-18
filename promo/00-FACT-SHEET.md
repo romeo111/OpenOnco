@@ -12,10 +12,10 @@ OpenOnco is an informational clinical decision support (CDS) tool for healthcare
 
 ## Key facts
 
-- Knowledge base scale (capabilities page, state 2026-06-17): 92 diseases, 664 indications (230 first-line, 172 second-line+), 384 treatment regimens, 298 drugs (ATC/RxNorm coded), 594 red flags, 444 cited sources, 16 virtual MDT clinician skills.
-- Dual clinical sign-off is the key maturity metric: only 15 of 806 clinical entities have received two-Clinical-Co-Lead sign-off; the rest are STUB (structured data + algorithm + sources in place, but not yet dual-signed-off).
+- Knowledge base scale (capabilities page, state 2026-07-18): 103 diseases, 831 indications (262 first-line, 175 second-line+), 404 treatment regimens, 321 drugs (ATC/RxNorm coded), 669 red flags, 471 cited sources, 16 virtual MDT clinician skills.
+- Dual clinical sign-off is the key maturity metric: only 15 of 1061 clinical entities have received two-Clinical-Co-Lead sign-off; the rest are STUB (structured data + algorithm + sources in place, but not yet dual-signed-off).
 - STUB means 'proposed plan, not approved plan' — structured data, algorithm, and sources exist, but it has not passed two-reviewer clinical sign-off (CHARTER §6.1).
-- Coverage spans lymphoid + myeloid hematology and solid tumors; 77 of 92 diseases have a full modeled chain, the rest partial. The gallery shows a curated actionability-focused subset (NSCLC, CRC, breast, ovarian, prostate, melanoma, gastric/GEJ, cholangiocarcinoma, endometrial, cervical, papillary thyroid, GIST, AML, BCC, infantile fibrosarcoma); the try.html example picker covers the rest, including DLBCL, FL, CLL/SLL, MCL, MZL, MM, esophageal, PDAC, SCLC and mesothelioma.
+- Coverage spans lymphoid + myeloid hematology and solid tumors; 86 of 103 diseases have a full modeled chain, the rest partial. The gallery shows a curated actionability-focused subset (NSCLC, CRC, breast, ovarian, prostate, melanoma, gastric/GEJ, cholangiocarcinoma, endometrial, cervical, papillary thyroid, GIST, AML, BCC, infantile fibrosarcoma); the try.html example picker covers the rest, including DLBCL, FL, CLL/SLL, MCL, MZL, MM, esophageal, PDAC, SCLC and mesothelioma.
 - Engine runs 6 deterministic stages (resolve algorithm, flatten findings, evaluate red flags, walk decision tree, materialize tracks, resolve regimens); ~50-200 ms per profile; same input + same KB version = same output (reproducible).
 - Privacy by design: runs locally via CLI, in-browser Pyodide (Python WASM, no backend), or Python import — patient JSON never leaves the user's machine; no server-side PHI, no logs, no DB. Public site uses synthetic examples only.
 - Actionability evidence comes from CIViC (CC0, WashU) as the primary source, read from a local nightly snapshot; ESCAT tier surfaced as a badge. OncoKB was rejected because its ToS conflicts with the project's non-commercial scope.
@@ -25,7 +25,7 @@ OpenOnco is an informational clinical decision support (CDS) tool for healthcare
 - Project status is v0.1 draft, explicitly seeking clinician feedback; no formal clinical validation study has been done and there is no real-world deployment validation (CHARTER §13).
 - Scope is adults only, HCP-only, outpatient/non-time-critical planning; explicitly excludes pediatrics, direct-to-patient use, and emergency/time-critical oncology.
 - Built for distributed AI-assisted contribution via a TaskTorrent 'chunk' workflow; contributors draft structured sidecars and open PRs, but all clinical content is reviewed by Clinical Co-Leads before merge.
-- Note for copywriters: README cites older KB numbers (420 indications, 377 sources, 140 algorithms); prefer the capabilities-page figures (state 2026-06-17) as the current canonical counts.
+- Note for copywriters: these counts are single-sourced from the live KB. Regenerate with `py -3.12 -m scripts.promo_figures`, and run `py -3.12 -m scripts.promo_figures --check` before publishing anything — it fails on any promo asset still quoting a superseded figure. (README was reconciled to these figures on 2026-07-18; it previously carried its own older set.)
 
 ## Audiences
 
@@ -68,7 +68,7 @@ OpenOnco is an informational clinical decision support (CDS) tool for healthcare
 - Transparent and auditable: a step-by-step decision trace accompanies every plan.
 - An early-stage, open-source project actively seeking clinician feedback.
 - Can be called from your LLM (Claude, Cursor, etc.) via an MCP server so the model relays cited engine output instead of guessing.
-- Covers 92 diseases across hematologic and solid-tumor oncology with 444 cited sources (state 2026-06-17).
+- Covers 103 diseases across hematologic and solid-tumor oncology with 471 cited sources (state 2026-07-18).
 - Refuses to generate a treatment plan without confirmed histology; returns a diagnostic workup brief instead.
 - Try the in-browser demo on a case you know and tell us what's wrong — clinician feedback is the most valuable contribution right now.
 
@@ -82,7 +82,7 @@ OpenOnco is an informational clinical decision support (CDS) tool for healthcare
 - Do NOT say patients can or should use it to self-treat, self-diagnose, or make their own treatment decisions — it is HCP-only.
 - Do NOT say it is for emergencies, urgent, or time-critical oncology decisions.
 - Do NOT say an LLM/AI chooses or recommends the regimen, or that it uses AI to pick treatments.
-- Do NOT imply the clinical content is fully reviewed or signed off — most entities are STUB (only 15 of 806 dual-signed-off).
+- Do NOT imply the clinical content is fully reviewed or signed off — most entities are STUB (only 15 of 1061 dual-signed-off).
 - Do NOT claim EHR integration that executes actions, real-time formulary feeds, surgery/radiation-as-standalone modeling, or pediatric coverage (these are out of scope or not modeled).
 - Do NOT cite OncoKB, SNOMED CT, or MedDRA as data sources (OncoKB rejected on ToS/license grounds; SNOMED/MedDRA out of MVP on license grounds).
 - Do NOT present synthetic/demo cases or the reference case as real patient outcomes, or imply outcome/efficacy guarantees.
@@ -100,4 +100,4 @@ OpenOnco is an informational clinical decision support (CDS) tool for healthcare
 
 ## Maturity note
 
-Early-stage v0.1 open-source draft: the engine and a 92-disease cited knowledge base are live, but only 15 of 806 clinical entities have two-reviewer sign-off and there has been no formal clinical validation study — frame it as a project actively seeking clinician feedback, not a validated product.
+Early-stage v0.1 open-source draft: the engine and a 103-disease cited knowledge base are live, but only 15 of 1061 clinical entities have two-reviewer sign-off and there has been no formal clinical validation study — frame it as a project actively seeking clinician feedback, not a validated product.

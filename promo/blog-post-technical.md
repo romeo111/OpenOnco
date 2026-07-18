@@ -94,7 +94,7 @@ healthcare professionals.
 
 ## Honest about where it is
 
-This is early-stage. ~92 diseases and 444 cited sources are in, but **most
+This is early-stage. ~103 diseases and 471 cited sources are in, but **most
 content is STUB — "proposed, not approved":** only a small fraction has passed
 two-reviewer clinical sign-off, and there's been no formal clinical validation
 study. I'm publishing it precisely to get clinicians to tear the logic apart.

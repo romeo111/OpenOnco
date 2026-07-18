@@ -12,14 +12,18 @@ OpenOnco is a **medical** tool. Before publishing anything from this kit:
    **informational decision-support tool, not a medical device**, and that every
    recommendation must be **verified by a qualified oncologist**.
 2. **Stay honest about maturity.** It is an **early-stage (v0.1) project** —
-   only **15 of 806** clinical entities have two-reviewer sign-off; the rest are
+   only **15 of 1061** clinical entities have two-reviewer sign-off; the rest are
    STUB (structured + sourced, *not* clinically approved). Never imply it is
    clinically validated, FDA-cleared, or production-ready.
 3. **Never claim** it diagnoses cancer, treats patients, replaces an oncologist,
    is for patient self-use, or that an LLM picks the regimen. See the
    `forbidden_claims` in the fact sheet.
-4. **Numbers:** use the capabilities-page figures (92 diseases · 664 indications
-   · 384 regimens · 444 sources, as of 2026-06-17), not the README's older ones.
+4. **Numbers:** never hand-copy them. Run `py -3.12 -m scripts.promo_figures`
+   for the canonical block (103 diseases · 831 indications · 404 regimens ·
+   471 sources, as of 2026-07-18) and `py -3.12 -m scripts.promo_figures --check`
+   before publishing — it fails on any asset still quoting a superseded figure.
+   Hand-copying is what let assets ship "92 diseases / 444 sources" for a month, [figures-frozen]
+   and a "15 of 806" sign-off ratio whose denominator had grown to 1061. [figures-frozen]
 
 ## Contents
 

@@ -23,8 +23,8 @@ The design decision I most want feedback on: **no LLM ever picks the regimen or 
 
 Honest about maturity — this is the important part:
 - It's **v0.1 draft.** No formal clinical validation study has been done. No real-world deployment.
-- Knowledge base today: 92 diseases, 384 regimens, 664 indications, 298 drugs, 594 red flags, 444 cited sources (state 2026-06-17).
-- **But most of that content is STUB:** structured data + algorithm + sources are in place, but only **15 of 806 clinical entities** have passed the required two-Clinical-Co-Lead sign-off. STUB = "proposed plan, not approved plan." I am not claiming this content is reviewed or safe to use as-is.
+- Knowledge base today: 103 diseases, 404 regimens, 831 indications, 321 drugs, 669 red flags, 471 cited sources (state 2026-07-18).
+- **But most of that content is STUB:** structured data + algorithm + sources are in place, but only **15 of 1061 clinical entities** have passed the required two-Clinical-Co-Lead sign-off. STUB = "proposed plan, not approved plan." I am not claiming this content is reviewed or safe to use as-is.
 - Actionability evidence is from CIViC (CC0). Source guidelines (NCCN, ESMO, EHA, BSH, EASL, Ukraine MoH/NSZU, etc.) are referenced, not redistributed.
 
 It is positioned explicitly as an FDA **non-device** CDS tool: informational support, **not a medical device**, HCP-only, adults only, outpatient/non-time-critical planning. Not for emergencies. Not for direct patient use. **Every output is a draft that must be verified by the treating oncologist.**
@@ -57,11 +57,11 @@ Why it might be worth your five minutes:
 - It always presents **alternatives, never one binding directive** — a deliberate hedge against automation bias.
 - Every recommendation is **sourced**, enforced by a citation guard, so you can chase the evidence behind each cell.
 
-Coverage spans lymphoid + myeloid heme and solid tumors — the gallery highlights a curated actionability subset (NSCLC, CRC, breast, ovarian, prostate, melanoma, gastric/GEJ, cholangiocarcinoma, endometrial, cervical, thyroid, GIST, AML, BCC, infantile fibrosarcoma), and the try.html example picker adds DLBCL, FL, CLL/SLL, MCL, MZL, MM, esophageal, PDAC, SCLC, mesothelioma and more. 92 diseases total (77 with a full modeled chain), 444 cited sources, actionability from CIViC (CC0); ESCAT tier shown as a badge.
+Coverage spans lymphoid + myeloid heme and solid tumors — the gallery highlights a curated actionability subset (NSCLC, CRC, breast, ovarian, prostate, melanoma, gastric/GEJ, cholangiocarcinoma, endometrial, cervical, thyroid, GIST, AML, BCC, infantile fibrosarcoma), and the try.html example picker adds DLBCL, FL, CLL/SLL, MCL, MZL, MM, esophageal, PDAC, SCLC, mesothelioma and more. 103 diseases total (86 with a full modeled chain), 471 cited sources, actionability from CIViC (CC0); ESCAT tier shown as a badge.
 
 The honest caveats, because they matter clinically:
 - **v0.1 draft. No formal clinical validation study. No real-world deployment.**
-- **Most content is STUB** — data + algorithm + sources exist, but only **15 of 806 entities** have two-reviewer clinical sign-off. Treat everything as a proposed draft, not an approved plan.
+- **Most content is STUB** — data + algorithm + sources exist, but only **15 of 1061 entities** have two-reviewer clinical sign-off. Treat everything as a proposed draft, not an approved plan.
 - HCP-only, adults only, outpatient/non-time-critical. Not for emergencies. Not for patient self-use.
 
 What I'd love: run a synthetic case you know well in the demo and tell me where the regimen logic, the citations, or the red flags are wrong, dated, or missing.
@@ -95,7 +95,7 @@ If you've ever watched an LLM confidently invent a cancer drug or a dose, this i
 
 Input is structured FHIR/mCODE-shaped JSON; output is one Plan with two alternative tracks (standard + aggressive) side by side, each with a step-by-step decision trace. No confirmed histology → it returns a diagnostic brief instead of a plan.
 
-Maturity, straight: it's **v0.1**. KB is 92 diseases / 384 regimens / 444 cited sources, but **most entities are STUB** — only 15 of 806 have full two-reviewer clinical sign-off — and there's been **no formal clinical validation.** It's a working pattern and a forkable architecture, not a finished product. Honestly the "engine, not the LLM, owns the decision + MCP-as-relay" pattern is reusable for any safety-critical rules-first domain, which is partly why it's open source.
+Maturity, straight: it's **v0.1**. KB is 103 diseases / 404 regimens / 471 cited sources, but **most entities are STUB** — only 15 of 1061 have full two-reviewer clinical sign-off — and there's been **no formal clinical validation.** It's a working pattern and a forkable architecture, not a finished product. Honestly the "engine, not the LLM, owns the decision + MCP-as-relay" pattern is reusable for any safety-critical rules-first domain, which is partly why it's open source.
 
 - MCP server: https://github.com/romeo111/OpenOnco/tree/main/mcp_server
 - Repo: https://github.com/romeo111/OpenOnco
@@ -131,7 +131,7 @@ Why it's a decent MCP case study:
 - Runs locally — engine is offline-capable, patient data never leaves the machine, no backend.
 - Open source: code MIT, content CC BY 4.0. Forkable as a pattern for other rules-first, safety-critical domains.
 
-Honest status: **v0.1 draft.** The KB covers 92 diseases with 444 cited sources, but **most clinical entities are STUB** (only 15 of 806 have two-reviewer sign-off) and there's been **no formal clinical validation.** Use the synthetic demo cases to kick the tires; don't point it at a real patient and trust the output.
+Honest status: **v0.1 draft.** The KB covers 103 diseases with 471 cited sources, but **most clinical entities are STUB** (only 15 of 1061 have two-reviewer sign-off) and there's been **no formal clinical validation.** Use the synthetic demo cases to kick the tires; don't point it at a real patient and trust the output.
 
 - MCP server: https://github.com/romeo111/OpenOnco/tree/main/mcp_server
 - Repo: https://github.com/romeo111/OpenOnco
@@ -150,4 +150,4 @@ Disclaimer: informational, HCP-only clinical decision support — **not a medica
 | r/LocalLLaMA | Deterministic engine + MCP vs. hallucinated regimens | Hype/medical overclaim allergy | Engineering-led, blunt maturity, short disclaimer |
 | r/mcp ↔ r/ClaudeAI | Real-world MCP-as-guardrail server | Abstract-pitch fatigue | Concrete tool list + "relays, never decides" |
 
-All four bodies use only fact-sheet figures (state 2026-06-17), the five canonical links, the rules-first/no-LLM-decides differentiator, the STUB maturity caveat, and the required not-a-medical-device + verify-with-oncologist disclaimers.
+All four bodies use only fact-sheet figures (state 2026-07-18), the five canonical links, the rules-first/no-LLM-decides differentiator, the STUB maturity caveat, and the required not-a-medical-device + verify-with-oncologist disclaimers.

@@ -33,22 +33,22 @@ Tumor-board planning is information-dense and time-pressured: clinicians must re
 
 ---
 
-## Key facts & numbers *(state 2026-06-17)*
+## Key facts & numbers *(state 2026-07-18)*
 
 | Metric | Value |
 |---|---|
-| Diseases covered | **92** (77 with a full modeled chain, rest partial) |
-| Indications | **664** (230 first-line, 172 second-line+) |
-| Treatment regimens | **384** |
-| Drugs (ATC/RxNorm coded) | **298** |
-| Red flags | **594** |
-| Cited sources | **444** |
+| Diseases covered | **103** (86 with a full modeled chain, rest partial) |
+| Indications | **831** (262 first-line, 175 second-line+) |
+| Treatment regimens | **404** |
+| Drugs (ATC/RxNorm coded) | **321** |
+| Red flags | **669** |
+| Cited sources | **471** |
 | Virtual MDT clinician skills | **16** |
 | Engine runtime | ~50–200 ms per profile, deterministic |
 
 **Coverage** spans lymphoid + myeloid hematology and solid tumors — e.g. DLBCL, FL, CLL/SLL, MCL, MZL, MM, gastric, esophageal, PDAC, cholangiocarcinoma, CRC, NSCLC, SCLC, mesothelioma.
 
-**Maturity — read this honestly:** the clinical content is mostly **STUB** — meaning the structured data, algorithm, and sources are in place, but the entity has *not* yet passed two-Clinical-Co-Lead sign-off (CHARTER §6.1). Only **15 of 806** clinical entities are dual-signed-off; the rest are "proposed plan, not approved plan." There has been **no formal clinical validation study and no real-world deployment validation** (CHARTER §13). This is a **v0.1 draft** actively seeking clinician feedback — not a validated or production-ready product.
+**Maturity — read this honestly:** the clinical content is mostly **STUB** — meaning the structured data, algorithm, and sources are in place, but the entity has *not* yet passed two-Clinical-Co-Lead sign-off (CHARTER §6.1). Only **15 of 1061** clinical entities are dual-signed-off; the rest are "proposed plan, not approved plan." There has been **no formal clinical validation study and no real-world deployment validation** (CHARTER §13). This is a **v0.1 draft** actively seeking clinician feedback — not a validated or production-ready product.
 
 **Licensing:** code is **MIT**; specifications and generated content are **CC BY 4.0**. Original source guidelines (NCCN, ESMO, EHA, BSH, EASL, Ukraine MoH/NSZU, etc.) are *referenced, not redistributed*.
 
@@ -101,7 +101,7 @@ Tumor-board planning is information-dense and time-pressured: clinicians must re
 OpenOnco is early-stage and open — the most valuable contribution right now is honest clinical feedback.
 
 - **Clinician feedback (most valuable).** Try the in-browser demo on a case you know and tell us what's wrong: https://openonco.info/try.html
-- **Clinical Co-Leads / reviewers.** Help move entities from STUB to dual-signed-off (CHARTER §6.1) — only 15 of 806 are signed off today. Oncologists, hematologists, and clinical pharmacologists especially welcome.
+- **Clinical Co-Leads / reviewers.** Help move entities from STUB to dual-signed-off (CHARTER §6.1) — only 15 of 1061 are signed off today. Oncologists, hematologists, and clinical pharmacologists especially welcome.
 - **Contributors (no clinical expertise required to start).** Draft structured sidecars and open PRs via the TaskTorrent "chunk" workflow; all clinical content is reviewed by Clinical Co-Leads before merge.
 - **Builders of safety-critical CDS.** Fork the engine + MCP pattern, kick the tires, and tell us where the rules-first design breaks.
 
@@ -116,10 +116,10 @@ OpenOnco is early-stage and open — the most valuable contribution right now is
 - **Diagnostic Brief** — the "no confirmed histology → workup steps instead of a plan" safety behavior.
 - **Citation guard in action** — a recommendation cell with its source citation (and, if showable, an uncited cell being dropped/flagged).
 - **MCP integration** — the engine called from an MCP client (e.g. Claude Desktop / Cursor) relaying cited engine output.
-- **Capabilities page** — the coverage numbers (state 2026-06-17) with the STUB-vs-signed-off maturity caveat visible.
+- **Capabilities page** — the coverage numbers (state 2026-07-18) with the STUB-vs-signed-off maturity caveat visible.
 
 ---
 
 ### Disclaimer footer
 
-*OpenOnco is an informational clinical decision support resource for healthcare professionals — it is **not a medical device**, is not FDA-approved, FDA-cleared, or CE-marked, and is **not clinically validated**. It does not diagnose, screen for, or detect cancer; it does not prescribe drugs or calculate patient-specific doses; and it does not replace or substitute for an oncologist or a tumor board. It is intended for adult, outpatient, non-time-critical planning by qualified healthcare professionals only — not for direct patient use and not for emergency or time-critical decisions. All outputs are drafts that **must be verified by a qualified oncologist** (CHARTER §11, §15). This is an early-stage v0.1 open-source project; most clinical content is STUB (only 15 of 806 entities dual-reviewer signed off) and no formal clinical validation study has been performed. All examples use synthetic data; nothing shown represents a real patient or guarantees any clinical outcome.*
+*OpenOnco is an informational clinical decision support resource for healthcare professionals — it is **not a medical device**, is not FDA-approved, FDA-cleared, or CE-marked, and is **not clinically validated**. It does not diagnose, screen for, or detect cancer; it does not prescribe drugs or calculate patient-specific doses; and it does not replace or substitute for an oncologist or a tumor board. It is intended for adult, outpatient, non-time-critical planning by qualified healthcare professionals only — not for direct patient use and not for emergency or time-critical decisions. All outputs are drafts that **must be verified by a qualified oncologist** (CHARTER §11, §15). This is an early-stage v0.1 open-source project; most clinical content is STUB (only 15 of 1061 entities dual-reviewer signed off) and no formal clinical validation study has been performed. All examples use synthetic data; nothing shown represents a real patient or guarantees any clinical outcome.*

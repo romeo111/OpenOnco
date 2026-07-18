@@ -2,7 +2,7 @@
 
 **Asset type:** Prioritized, sequenced launch/distribution plan
 **Project status:** v0.1 draft, early-stage open-source, actively seeking clinician feedback
-**Canonical date for all numbers:** state 2026-06-17 (capabilities page)
+**Canonical date for all numbers:** state 2026-07-18 (capabilities page)
 
 > **Read before posting anything.** OpenOnco is an informational clinical
 > decision-support resource for healthcare professionals and tumor boards — **not
@@ -11,7 +11,7 @@
 > the not-a-medical-device disclaimer and the "all recommendations must be
 > verified by a qualified oncologist" line. No LLM picks the regimen or dose —
 > say so, accurately, in every channel. Most clinical content is **STUB** (only
-> 15 of 806 entities are dual-signed-off); pair every coverage/number claim with
+> 15 of 1061 entities are dual-signed-off); pair every coverage/number claim with
 > that maturity caveat. Use only the five canonical links below.
 
 ---
@@ -88,15 +88,18 @@ a one-shot launch-day blast.
 **Timing: Days 1–4. Dependency for every outward action.**
 
 1. **Repo readiness pass.**
-   - Reconcile README to canonical counts. README cites older numbers (420
-     indications, 377 sources, 140 algorithms — confirmed at `README.md` line 11);
-     the capabilities-page figures are canonical: **92 diseases, 664 indications
-     (230 first-line, 172 second-line+), 384 regimens, 298 drugs, 594 red flags,
-     444 cited sources, 16 virtual MDT skills.** Either update README or make it
-     defer to the capabilities page so no asset quotes stale numbers.
+   - ~~Reconcile README to canonical counts.~~ **Done 2026-07-18** — README and
+     every promo asset were refreshed to the capabilities-page figures:
+     **103 diseases, 831 indications (262 first-line, 175 second-line+), 404
+     regimens, 321 drugs, 669 red flags, 471 cited sources, 16 virtual MDT
+     skills**, and the maturity ratio corrected to **15 of 1061** (it had read
+     "15 of 806", which understated the denominator and so overstated how much [figures-frozen]
+     of the KB is signed off).
+   - Numbers are now single-sourced: run `py -3.12 -m scripts.promo_figures` for
+     the canonical block and `--check` to fail on any asset that drifts.
    - Confirm top-of-README carries: one-liner, no-LLM-decides guarantee,
      not-a-medical-device + verify-with-oncologist disclaimer, "v0.1 draft,
-     seeking clinician feedback," STUB maturity note (15/806 dual-signed-off),
+     seeking clinician feedback," STUB maturity note (15/1061 dual-signed-off),
      and the demo link.
    - **Fix overclaim in `mcp_server/README.md`.** It currently describes the
      knowledge base as "peer-reviewed clinical content." That overstates maturity
@@ -171,7 +174,7 @@ These are low-risk, compounding, and seed inbound traffic before any spiky post.
 - **Body must include, honestly:** what it is (HCP-only CDS, two cited tracks),
   the deterministic/no-LLM-decides differentiator, 3-layer citation guard,
   local/in-browser privacy model, MIT + CC BY 4.0, the demo link, **and** the
-  honest maturity statement: v0.1 draft, only 15/806 dual-signed-off (most
+  honest maturity statement: v0.1 draft, only 15/1061 dual-signed-off (most
   content STUB), no formal clinical validation study, seeking clinician feedback.
 - **Forbidden in the post:** "validated," "FDA-cleared/approved," "diagnoses,"
   "replaces an oncologist," "for patients," "prescribes/calculates doses,"
@@ -229,7 +232,7 @@ note on any visual.
 ## Dependencies (explicit)
 
 - **Screenshots/screencast (Phase 0 #3) gate every social/community post (Phases 2–4).** Do not post visuals you haven't captured from synthetic cases.
-- **README count reconciliation + `mcp_server/README.md` wording fix (Phase 0 #1) gate all numeric and maturity claims everywhere.** Quote 2026-06-17 capabilities figures, not README's older numbers; do not let any linked asset say "peer-reviewed."
+- **README count reconciliation + `mcp_server/README.md` wording fix (Phase 0 #1) gate all numeric and maturity claims everywhere.** Quote 2026-07-18 capabilities figures, not README's older numbers; do not let any linked asset say "peer-reviewed."
 - **Disclaimers + STUB caveat locked (Phase 0) gate all outward posting.** No public post before the medical-safety framing is verified on repo, site, and demo.
 - **HN (Phase 3) before broad social (Phase 4)** so the best-tested framing/Q&A can be reused; but HN is *not* a prerequisite for registries or MCP-community.
 - **Registries/awesome-lists and MCP community first** so inbound has somewhere credible to land before any spike.
@@ -273,8 +276,8 @@ Track against the project's actual goal — clinician feedback first, reach seco
 - [ ] "Verified by a qualified oncologist" line present.
 - [ ] HCP / tumor-board framing — not patients, not caregivers.
 - [ ] "v0.1 draft, seeking clinician feedback" stated or clearly implied.
-- [ ] Any coverage/number paired with the STUB caveat (15/806 dual-signed-off).
-- [ ] Numbers match the 2026-06-17 capabilities figures.
+- [ ] Any coverage/number paired with the STUB caveat (15/1061 dual-signed-off).
+- [ ] Numbers match the 2026-07-18 capabilities figures.
 - [ ] "No LLM picks the regimen/dose; deterministic + cited" stated accurately.
 - [ ] Any visual uses synthetic data and is not labeled as a real patient.
 - [ ] Only the five canonical links used.

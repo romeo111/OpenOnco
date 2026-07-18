@@ -10,7 +10,7 @@ All facts confirmed: no `FUNDING.yml`, no `funding.json`, no `server.json`; `mcp
 >
 > **License:** code MIT, content CC BY 4.0 — non-commercial / public-good. **Links:** https://openonco.info · https://github.com/romeo111/OpenOnco
 >
-> **Honest maturity:** ~92 diseases, 444 cited sources, but **most content is STUB pending two-reviewer sign-off, with no formal clinical validation yet.** This shapes eligibility throughout (see §4).
+> **Honest maturity:** ~103 diseases, 471 cited sources, but **most content is STUB pending two-reviewer sign-off, with no formal clinical validation yet.** This shapes eligibility throughout (see §4).
 
 ---
 
@@ -131,7 +131,7 @@ Both references are real and currently plausible. The pitch is the deliverable, 
 
 **Why open-source / public-good.** Code is MIT, content CC BY 4.0; non-commercial by design. The project aligns with **UN SDG 3 (good health and well-being)** and the Digital Public Goods definition. It has Ukrainian clinical roots and a bilingual UA/EN site.
 
-**Honest status.** Early-stage **v0.1**: ~92 diseases and 444 cited sources, most content still in **stub** state pending two-reviewer clinical sign-off. **No formal clinical validation yet.** Built largely by one maintainer with AI-assisted contributors.
+**Honest status.** Early-stage **v0.1**: ~103 diseases and 471 cited sources, most content still in **stub** state pending two-reviewer clinical sign-off. **No formal clinical validation yet.** Built largely by one maintainer with AI-assisted contributors.
 
 **The ask.** Funding, compute credits, or recognition to unlock: **paid clinician-reviewer time** (two-reviewer sign-off on stubbed content), **independent clinical validation**, and **hosting/infrastructure**. In-kind support and DPG/registry recognition also move the needle.
 

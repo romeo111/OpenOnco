@@ -73,7 +73,7 @@ ICD-O-3, RxNorm, CTCAE v5**. Open development practices: public repo, tests
 - **Anti-automation-bias:** always presents ≥2 alternative tracks side by side,
   never a single binding directive (`CHARTER §15.2 C6`).
 - **Honest maturity:** most content is **STUB ("proposed, not approved")** — only
-  15 of 806 entities have two-reviewer sign-off; no formal clinical validation
+  15 of 1061 entities have two-reviewer sign-off; no formal clinical validation
   yet. This is disclosed everywhere.
 - **Data protection:** local-only processing; no PHI collection; synthetic public
   data. **Not for patient self-use**; HCP-facing, adults, non-emergency.

@@ -16,7 +16,7 @@
 > picks regimens** ([CHARTER §8.3](specs/CHARTER.md)).
 
 **Live demo:** **[openonco.info](https://openonco.info)** — try it in the browser, no install needed.
-**Knowledge base:** 92 diseases · 664 indications · 444 cited sources across hematologic + solid-tumor oncology (growing). Most content is draft/STUB pending two-reviewer clinical sign-off.
+**Knowledge base:** 103 diseases · 831 indications · 471 cited sources across hematologic + solid-tumor oncology (growing). Most content is draft/STUB pending two-reviewer clinical sign-off.
 **FDA non-device CDS positioning** per [CHARTER §15](specs/CHARTER.md) — informational support tool, not a medical device.
 **License:** Code MIT · Content / specs CC BY 4.0.
 

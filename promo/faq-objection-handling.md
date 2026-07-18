@@ -20,7 +20,7 @@ plausible fabrication. (Via the MCP server, an LLM can even *route through* the
 engine instead of guessing.)
 
 ### Most of the knowledge base is "STUB" — is it safe to use?
-Be clear-eyed: only **15 of 806** clinical entities have two-Clinical-Co-Lead
+Be clear-eyed: only **15 of 1061** clinical entities have two-Clinical-Co-Lead
 sign-off. The rest are **STUB** — structured data, algorithm, and sources are in
 place, but they are **"proposed, not approved."** Treat every output as a *draft to
 verify*, never as an approved plan. This is exactly why the project is asking for
