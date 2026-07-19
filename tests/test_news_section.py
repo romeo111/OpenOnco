@@ -6,6 +6,7 @@ site, so the suite stays fast enough to run on every change.
 
 from __future__ import annotations
 
+import html
 import json
 import sys
 from datetime import date
@@ -155,7 +156,9 @@ def test_index_lists_every_post(news_dir: Path):
     index = (news_dir / "news.html").read_text(encoding="utf-8")
     for entry in load_news_entries():
         assert f'href="/news/{entry["slug"]}.html"' in index
-        assert entry["title"]["en"] in index
+        # Escaped, not raw: a title containing an apostrophe or angle bracket
+        # must reach the page encoded.
+        assert html.escape(entry["title"]["en"], quote=True) in index
 
 
 def test_article_lang_switch_points_at_mirror(news_dir: Path):
