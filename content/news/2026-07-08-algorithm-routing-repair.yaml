@@ -1,0 +1,131 @@
+slug: algorithm-routing-repair
+date: 2026-07-08
+author: OpenOnco
+tags: [knowledge-base, engine, quality]
+
+title:
+  en: Decision-tree routing defects fixed, validator hardened
+  uk: Виправлено дефекти маршрутизації в деревах рішень, посилено валідатор
+
+summary:
+  en: >-
+    Auditing every treatment algorithm through the engine walker — rather than
+    the loader — surfaced routing defects that were silently dropping selected
+    indications from rendered plans.
+  uk: >-
+    Аудит усіх алгоритмів лікування через engine walker, а не через лоадер,
+    виявив дефекти маршрутизації, через які обрані індикації мовчки зникали зі
+    згенерованих планів.
+
+body:
+  en:
+    - type: p
+      text: >-
+        The knowledge base validated cleanly, and the plans still came out wrong
+        in specific branches. The reason is that the loader checks whether a file
+        is well-formed, while the engine walks the decision tree — and those are
+        different questions. Walking every algorithm the way the engine does
+        surfaced a class of defect the loader had no reason to catch.
+    - type: h2
+      text: The defects
+    - type: ul
+      items:
+        - >-
+          **A YAML-octal step-id collision.** In one follicular-lymphoma
+          algorithm, `step: 01` parsed as the integer 1 and collided with the
+          existing `step: 1`. The engine silently dropped the second-line
+          rituximab-refractoriness step and misrouted first relapse into the
+          third-line branch.
+        - >-
+          **34 missing `output_indications` entries across 25 files.** These
+          indications were reachable through a decision-tree result, default or
+          alternative, but absent from the algorithm's `output_indications` list.
+          The plan engine builds tracks only from that list, so those indications
+          were dropped from rendered plans — a real functional bug, not cosmetic.
+        - >-
+          **6 dead single-branch stubs** using a `branch_target` field the engine
+          never reads, one unreachable no-op step, and one broken source
+          reference.
+    - type: callout
+      tone: good
+      text: >-
+        No clinical routing was changed. Every fix was structural or referential,
+        per CHARTER §8.3 — an LLM does not get to choose regimens.
+    - type: h2
+      text: Turning the audit into a gate
+    - type: p
+      text: >-
+        A one-time audit that is not enforced decays. The validator now treats
+        five of these as hard contract errors: duplicate step ids, dangling
+        `next_step` targets, a result outside `output_indications`, a default or
+        alternative outside `output_indications`, and a result pointing at an
+        indication that does not exist. Unreachable steps and null results are
+        raised as warnings. Nine tests cover the checks.
+    - type: p
+      text: >-
+        Details are in commit `3f0b0d7e9f`. Post-fix, the algorithm contract-error
+        count is zero.
+    - type: h2
+      text: What was deliberately not auto-fixed
+    - type: p
+      text: >-
+        Roughly 237 treatment branches are gated by free-prose `condition:` text
+        rather than structured rules, which makes them unreachable to the walker.
+        Fixing those needs structured red-flag authoring plus two-reviewer clinical
+        signoff, so they stay on the backlog rather than being rewritten by a tool.
+  uk:
+    - type: p
+      text: >-
+        База знань проходила валідацію чисто, а плани в окремих гілках усе одно
+        виходили неправильними. Причина в тому, що лоадер перевіряє, чи файл
+        коректно сформований, а engine проходить дерево рішень — і це різні
+        питання. Обхід кожного алгоритму так, як це робить engine, виявив клас
+        дефектів, який лоадер і не мав шансу побачити.
+    - type: h2
+      text: Дефекти
+    - type: ul
+      items:
+        - >-
+          **Колізія id кроку через вісімкове число в YAML.** В одному алгоритмі
+          фолікулярної лімфоми `step: 01` розпарсився як ціле 1 і зіткнувся з
+          наявним `step: 1`. Engine мовчки викидав крок про рефрактерність до
+          ритуксимабу в другій лінії й спрямовував перший рецидив у гілку третьої
+          лінії.
+        - >-
+          **34 відсутні записи в `output_indications` у 25 файлах.** Ці індикації
+          були досяжні через `result`, default або альтернативу в дереві рішень,
+          але були відсутні у списку `output_indications` алгоритму. Plan engine
+          будує треки лише з цього списку, тому такі індикації зникали зі
+          згенерованих планів — це справжній функціональний баг, не косметичний.
+        - >-
+          **6 мертвих заглушок з однією гілкою**, які використовували поле
+          `branch_target`, що engine ніколи не читає, один недосяжний порожній крок
+          і одне зламане посилання на джерело.
+    - type: callout
+      tone: good
+      text: >-
+        Жодної клінічної маршрутизації не змінено. Усі виправлення структурні або
+        референційні, згідно з CHARTER §8.3 — LLM не обирає схеми лікування.
+    - type: h2
+      text: Як аудит став запобіжником
+    - type: p
+      text: >-
+        Разовий аудит, який ніхто не змушує дотримуватися, з часом знецінюється.
+        Тепер валідатор трактує пʼять із цих проблем як жорсткі помилки контракту:
+        дублікати id кроків, посилання `next_step` в нікуди, `result` поза
+        `output_indications`, default або альтернативу поза `output_indications` та
+        `result`, що вказує на неіснуючу індикацію. Недосяжні кроки й порожні
+        результати позначаються попередженнями. Перевірки покриті девʼятьма тестами.
+    - type: p
+      text: >-
+        Деталі — у коміті `3f0b0d7e9f`. Після виправлень кількість помилок
+        контракту в алгоритмах дорівнює нулю.
+    - type: h2
+      text: Що свідомо не виправляли автоматично
+    - type: p
+      text: >-
+        Близько 237 гілок лікування керуються вільним текстом у полі `condition:`
+        замість структурованих правил, через що вони недосяжні для walker.
+        Виправлення потребує структурованого авторингу red flags і клінічного
+        підпису двох рецензентів, тому вони залишаються в backlog, а не
+        переписуються інструментом.

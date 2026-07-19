@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · This section is new, and it is open for comment</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="Release notes and governance decisions now have a home on the site instead of living only in commit messages. Every post takes comments — with a few rules that a cancer-information site genuinely needs.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Release notes and governance decisions now have a home on the site instead of living only in commit messages. Every post takes comments — with a few rules that a cancer-information site genuinely needs.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/news/news-and-comments.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/news/news-and-comments.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/news/news-and-comments.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenOnco · This section is new, and it is open for comment">
+<meta property="og:description" content="Release notes and governance decisions now have a home on the site instead of living only in commit messages. Every post takes comments — with a few rules that a cancer-information site genuinely needs.">
+<meta property="og:url" content="https://openonco.info/news/news-and-comments.html">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · This section is new, and it is open for comment">
+<meta name="twitter:description" content="Release notes and governance decisions now have a home on the site instead of living only in commit messages. Every post takes comments — with a few rules that a cancer-information site genuinely needs.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","name":"OpenOnco · This section is new, and it is open for comment","description":"Release notes and governance decisions now have a home on the site instead of living only in commit messages. Every post takes comments — with a few rules that a cancer-information site genuinely needs.","url":"https://openonco.info/news/news-and-comments.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/news/news-and-comments.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/">Home</a>
+    <a href="/capabilities.html">Capabilities</a><a href="/handbook.html">Handbook</a><a href="/news.html" class="active">News</a>
+    <a href="/about.html">About</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <a class="lang-other" href="/ukr/news/news-and-comments.html"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
+      <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
+    </div>
+    <div class="top-cta-group">
+      <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
+      <a href="/kb.html" class="btn-cta-top btn-cta-secondary">Onco Wiki</a>
+      <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <article class="info-page news-article">
+    <a class="case-back-btn news-back" href="/news.html">← All news</a>
+    <div class="case-badge-row">
+      <span class="case-badge bdg-plan">July 19, 2026</span>
+          <span class="case-quality quality-starter">site</span>
+          <span class="case-quality quality-starter">community</span>
+    </div>
+    <h1>This section is new, and it is open for comment</h1>
+    <p class="lead">Release notes and governance decisions now have a home on the site instead of living only in commit messages. Every post takes comments — with a few rules that a cancer-information site genuinely needs.</p>
+    <p class="news-byline">by OpenOnco</p>
+
+    <div class="news-body info-text">
+      <p>Until now, everything about how OpenOnco changes lived in commit messages, review documents and specs. That is fine for contributors reading the repository and useless for a clinician who wants to know what moved this month. This section is the fix.</p>
+      <p>Posts are written in both English and Ukrainian, and they are checked into the repository as structured YAML under <code>content/news/</code>. They are built by the same pipeline as the rest of the site, so a post is reviewable as a diff like everything else here.</p>
+      <h2>Why comments have rules</h2>
+      <p>Open comments on a site about cancer treatment carry two risks that a comment box on a normal software project does not, so it is worth being direct about both.</p>
+      <p>The first is that people post their own medical details. A comment thread is public, permanent and indexed by search engines. Please do not put a diagnosis, test results, dates, or anything identifying you or a patient into a comment — a public page is the wrong place for it, and once it is indexed it is not really retractable.</p>
+      <p>The second is that comments can read as advice. They are not. Comments are readers&#x27; opinions; they are not reviewed by the clinical leads, and they carry none of the source-citation guarantees that the knowledge base does. Nothing on this site replaces your treating oncologist.</p>
+      <div class="callout callout-hard">Nobody monitors comments for urgent problems. In a clinical emergency, contact your treating team or emergency services — not a web page.</div>
+      <h2>Where to report a clinical error</h2>
+      <p>If you have found something clinically wrong in the knowledge base, a comment is not the fastest route. Open an issue tagged <code>clinical-error</code> instead: per CHARTER §9.1 that path has a triage SLA of 48 hours and an assessment SLA of 7 days, and it produces a public record of the fix.</p>
+      <h2>How comments work technically</h2>
+      <p>Comments are hosted on GitHub Discussions through <a href="https://giscus.app/" target="_blank" rel="noopener noreferrer">giscus</a>, so the project stores no commenter data of its own and there is no third-party advertising or tracking involved.</p>
+      <p>The widget is not loaded until you press the button. Simply reading a post sends no request to giscus or GitHub — which matters more than usual when the page someone is quietly reading is about their diagnosis.</p>
+    </div>
+  </article>
+
+  <section class="news-comments" id="comments">
+    <h2>Comments</h2>
+    <div class="news-comment-rules">
+      <h3>Before you post</h3>
+      <ul>
+        <li><strong>Do not post personal medical data</strong> — diagnosis, test results, dates, or anything that identifies you or a patient. This page is public and permanently indexed by search engines.</li>
+        <li>Comments are readers&#x27; opinions. They are <strong>not medical advice</strong> and are not reviewed by the OpenOnco clinical leads.</li>
+        <li>Nothing here is monitored for urgent problems. For a clinical emergency, contact your treating team or emergency services.</li>
+        <li>For a clinical error in the knowledge base, open a <a href="https://github.com/romeo111/OpenOnco/issues/new" target="_blank" rel="noopener noreferrer"><code>clinical-error</code> issue</a> instead — that path has a triage SLA.</li>
+      </ul>
+    </div>
+    <div class="news-comments-offline">
+      <strong>Comments are not switched on yet</strong>
+      <p>The embedded comment widget needs GitHub Discussions enabled on the repository. Until then you can discuss this post directly on GitHub.</p>
+      <a class="btn btn-secondary" href="https://github.com/romeo111/OpenOnco/discussions"
+         target="_blank" rel="noopener noreferrer">Open the discussion on GitHub →</a>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Informational tool for clinicians, not a medical device (CHARTER §15 + §11).
+  </footer>
+</main>
+</body>
+</html>

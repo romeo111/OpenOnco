@@ -1,0 +1,111 @@
+slug: civic-primary-actionability
+date: 2026-04-27
+author: OpenOnco
+tags: [knowledge-base, licensing, biomarkers]
+
+title:
+  en: Biomarker actionability moves from OncoKB to CIViC
+  uk: Actionability біомаркерів переходить з OncoKB на CIViC
+
+summary:
+  en: >-
+    A licence audit found OncoKB's terms incompatible with running OpenOnco as a
+    free public resource. Biomarker actionability now builds on CIViC, which is
+    CC0.
+  uk: >-
+    Аудит ліцензій показав, що умови OncoKB несумісні з роботою OpenOnco як
+    безкоштовного публічного ресурсу. Actionability біомаркерів тепер спирається
+    на CIViC із ліцензією CC0.
+
+body:
+  en:
+    - type: p
+      text: >-
+        OpenOnco is a free public resource, and CHARTER §2 commits it to staying
+        non-commercial. Many of the source licences we depend on are conditional
+        on exactly that. A licence and coverage audit of OncoKB concluded that its
+        terms of service conflict with that commitment, so we moved the biomarker
+        actionability layer to [CIViC](https://civicdb.org/), which is released
+        under CC0.
+    - type: p
+      text: >-
+        The full audit, including the coverage comparison that made the switch
+        defensible clinically and not just legally, is published in
+        `docs/reviews/oncokb-public-civic-coverage-2026-04-27.md`.
+    - type: h2
+      text: What has landed
+    - type: ul
+      items:
+        - >-
+          **Phase 0** — coverage and licence audit, comparing what OncoKB public
+          data and CIViC each cover for the biomarkers already in the knowledge
+          base.
+        - >-
+          **Phase 1** (commit `5384348`) — engine modules renamed from `oncokb_*`
+          to `actionability_*`, the OncoKB proxy service dropped, and the schema
+          generalised behind an `evidence_sources` block so no single vendor is
+          baked into the data model.
+        - >-
+          **Phase 1.5** (commit `c72e45b`) — YAML migration: 29 biomarker files
+          moved from `oncokb_lookup` to `actionability_lookup`, and 399
+          biomarker-actionability files replaced vendor level fields with the
+          `evidence_sources` block.
+    - type: h2
+      text: What is still open
+    - type: p
+      text: >-
+        Phases 2 through 5 are not done: the CIViC reader and fusion-aware
+        matcher, evidence reconstruction for the migrated actionability records,
+        the render and spec updates, and the final verification pass.
+    - type: callout
+      tone: warn
+      text: >-
+        Migrated records carry `actionability_review_required: true` until the
+        evidence behind them has been reconstructed from CIViC and signed off.
+        Any residual `SRC-ONCOKB` citation in the YAML is legacy migration
+        metadata — it is not surfaced in the rendered output.
+  uk:
+    - type: p
+      text: >-
+        OpenOnco — безкоштовний публічний ресурс, і CHARTER §2 зобовʼязує його
+        залишатися некомерційним. Багато ліцензій джерел, від яких ми залежимо,
+        діють саме за цієї умови. Аудит ліцензії та покриття OncoKB показав, що
+        його умови використання конфліктують із цим зобовʼязанням, тому шар
+        actionability біомаркерів переведено на [CIViC](https://civicdb.org/),
+        який публікується під CC0.
+    - type: p
+      text: >-
+        Повний аудит, разом із порівнянням покриття, яке зробило цей перехід
+        обґрунтованим клінічно, а не лише юридично, опубліковано у файлі
+        `docs/reviews/oncokb-public-civic-coverage-2026-04-27.md`.
+    - type: h2
+      text: Що вже зроблено
+    - type: ul
+      items:
+        - >-
+          **Фаза 0** — аудит покриття й ліцензій: порівняння того, що публічні
+          дані OncoKB і CIViC покривають для біомаркерів, уже наявних у базі знань.
+        - >-
+          **Фаза 1** (коміт `5384348`) — модулі engine перейменовано з `oncokb_*`
+          на `actionability_*`, проксі-сервіс OncoKB прибрано, а схему узагальнено
+          через блок `evidence_sources`, щоб жоден окремий постачальник не був
+          вшитий у модель даних.
+        - >-
+          **Фаза 1.5** (коміт `c72e45b`) — міграція YAML: 29 файлів біомаркерів
+          переведено з `oncokb_lookup` на `actionability_lookup`, а в 399 файлах
+          biomarker_actionability вендорські поля рівня замінено блоком
+          `evidence_sources`.
+    - type: h2
+      text: Що ще попереду
+    - type: p
+      text: >-
+        Фази 2–5 ще не завершені: рідер CIViC і матчер із підтримкою фьюжнів,
+        реконструкція доказової бази для мігрованих записів actionability,
+        оновлення render і специфікацій та фінальна верифікація.
+    - type: callout
+      tone: warn
+      text: >-
+        Мігровані записи мають позначку `actionability_review_required: true`, доки
+        докази за ними не будуть реконструйовані з CIViC і підписані рецензентами.
+        Будь-яка залишкова цитата `SRC-ONCOKB` у YAML — це метадані міграції, вони
+        не показуються у згенерованому виводі.
