@@ -1,0 +1,104 @@
+slug: mcp-server-for-assistants
+date: 2026-06-18
+published: 2026-07-19
+author: OpenOnco
+tags: [engine, integrations, release]
+
+title:
+  en: An AI assistant can now call the engine instead of guessing
+  uk: AI-асистент тепер може викликати engine замість того, щоб вгадувати
+
+summary:
+  en: >-
+    OpenOnco ships an MCP server, so an assistant answering an oncology
+    question can route through the rule engine and return cited output rather
+    than improvising a regimen.
+  uk: >-
+    OpenOnco отримав MCP-сервер: асистент, який відповідає на онкологічне
+    питання, може звернутися до rule engine і повернути відповідь із джерелами,
+    а не імпровізувати схему лікування.
+
+body:
+  en:
+    - type: p
+      text: >-
+        Doctors already ask general-purpose AI assistants about treatment. The
+        assistants already answer. Neither of those facts is going to change
+        because a project charter disapproves.
+    - type: p
+      text: >-
+        What can change is where the answer comes from. OpenOnco now ships an
+        MCP server, so an assistant that supports the protocol can call the
+        actual rule engine and return the engine's cited output — instead of
+        generating a plausible-sounding regimen from its own weights.
+    - type: h2
+      text: The four tools
+    - type: ul
+      items:
+        - "`engine_info` — what the engine is, and what it explicitly is not."
+        - "`list_diseases` — the disease catalog actually covered."
+        - >-
+          `generate_treatment_plan` — a cited plan; auto-routes to the
+          diagnostic path when there is no confirmed histology.
+        - "`generate_diagnostic_brief` — workup steps when the diagnosis is not settled yet."
+    - type: callout
+      tone: good
+      text: >-
+        The charter rule holds through the integration: the assistant relays,
+        the engine decides. An LLM calling a deterministic engine is a very
+        different thing from an LLM choosing a regimen.
+    - type: h2
+      text: Also shipped
+    - type: p
+      text: >-
+        `/llms.txt` and `/llms-full.txt` are live, describing what this site is
+        for, how to cite it, and which pages are synthetic examples rather than
+        patient records. Page metadata was enriched at the same time. Release
+        v0.1.3 collects the lot.
+    - type: p
+      text: >-
+        The install instructions and the "build your own" notes are in
+        `mcp_server/README.md`. It is deliberately dependency-free at the
+        bridge layer, so the engine wrapper is testable without the MCP SDK
+        installed at all.
+  uk:
+    - type: p
+      text: >-
+        Лікарі вже питають універсальних AI-асистентів про лікування. Асистенти
+        вже відповідають. Жоден із цих фактів не зміниться від того, що статут
+        проєкту їх не схвалює.
+    - type: p
+      text: >-
+        Що можна змінити — то це джерело відповіді. OpenOnco тепер має
+        MCP-сервер, тож асистент із підтримкою протоколу може викликати
+        справжній rule engine і повернути його відповідь із цитатами — замість
+        згенерувати правдоподібну на вигляд схему з власних ваг.
+    - type: h2
+      text: Чотири інструменти
+    - type: ul
+      items:
+        - "`engine_info` — що таке engine і чим він явно не є."
+        - "`list_diseases` — каталог хвороб, які справді покриті."
+        - >-
+          `generate_treatment_plan` — план із джерелами; автоматично
+          перемикається на діагностичний шлях, якщо гістологія не підтверджена.
+        - "`generate_diagnostic_brief` — кроки дообстеження, коли діагноз ще не встановлено."
+    - type: callout
+      tone: good
+      text: >-
+        Правило статуту зберігається і в інтеграції: асистент передає, рішення
+        ухвалює engine. LLM, що викликає детермінований engine, — зовсім інше,
+        ніж LLM, що обирає схему лікування.
+    - type: h2
+      text: Що вийшло разом із цим
+    - type: p
+      text: >-
+        Запрацювали `/llms.txt` і `/llms-full.txt`: вони описують, для чого цей
+        сайт, як на нього посилатися і які сторінки є синтетичними прикладами, а
+        не записами пацієнтів. Тоді ж збагатили метадані сторінок. Реліз v0.1.3
+        збирає все це разом.
+    - type: p
+      text: >-
+        Інструкції зі встановлення та нотатки «зроби свій» — у
+        `mcp_server/README.md`. Шар-місток свідомо не має залежностей, тож
+        обгортку engine можна тестувати взагалі без встановленого MCP SDK.

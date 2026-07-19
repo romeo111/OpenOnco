@@ -192,9 +192,21 @@ def load_news_entries(news_dir: Path = DEFAULT_NEWS_DIR) -> list[dict[str, Any]]
             )
         seen_slugs[slug] = source
 
-        published = raw.get("date")
-        if not isinstance(published, date):
+        event_date = raw.get("date")
+        if not isinstance(event_date, date):
             raise NewsContentError(f"{source}: 'date' must be an ISO date (YYYY-MM-DD)")
+
+        # Optional. Set it when a post is written up after the fact: `date` is
+        # what the post is about, `published` is when it actually appeared. The
+        # page then says so, rather than implying the news section existed all
+        # along.
+        published = raw.get("published")
+        if published is not None and not isinstance(published, date):
+            raise NewsContentError(f"{source}: 'published' must be an ISO date (YYYY-MM-DD)")
+        if published is not None and published < event_date:
+            raise NewsContentError(
+                f"{source}: 'published' ({published}) precedes 'date' ({event_date})"
+            )
 
         body_raw = raw.get("body")
         if not isinstance(body_raw, dict):
@@ -206,7 +218,8 @@ def load_news_entries(news_dir: Path = DEFAULT_NEWS_DIR) -> list[dict[str, Any]]
 
         entries.append({
             "slug": slug,
-            "date": published,
+            "date": event_date,
+            "published": published,
             "tags": [str(t).strip() for t in tags if str(t).strip()],
             "author": str(raw.get("author", "OpenOnco")).strip() or "OpenOnco",
             "title": _require_bilingual(raw, "title", source),
@@ -576,6 +589,18 @@ def render_news_article(entry: dict[str, Any], *, target_lang: str,
     tags_html = _render_tags(entry["tags"])
     body_html = _render_blocks(entry["body"][target_lang])
 
+    # Say so when a post documents something from before the news section
+    # existed, instead of quietly implying it was published at the time.
+    retro_html = ""
+    if entry.get("published"):
+        when = _format_date(entry["published"], target_lang)
+        retro = (
+            f"Written retrospectively and published on {when}."
+            if is_en else
+            f"Написано ретроспективно, опубліковано {when}."
+        )
+        retro_html = f'\n    <p class="news-retro">{_esc(retro)}</p>'
+
     main_html = f"""  <article class="info-page news-article">
     <a class="case-back-btn news-back" href="{index_path(target_lang)}">{_esc(back)}</a>
     <div class="case-badge-row">
@@ -584,7 +609,7 @@ def render_news_article(entry: dict[str, Any], *, target_lang: str,
     </div>
     <h1>{_esc(title)}</h1>
     <p class="lead">{_esc(entry['summary'][target_lang])}</p>
-    <p class="news-byline">{_esc(by_line)} {_esc(entry['author'])}</p>
+    <p class="news-byline">{_esc(by_line)} {_esc(entry['author'])}</p>{retro_html}
 
     <div class="news-body info-text">
       {body_html}
@@ -654,6 +679,7 @@ def build_news(
             {
                 "slug": e["slug"],
                 "date": e["date"].isoformat(),
+                "published": e["published"].isoformat() if e["published"] else None,
                 "tags": e["tags"],
                 "author": e["author"],
                 "title": e["title"],

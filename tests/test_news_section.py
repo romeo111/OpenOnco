@@ -25,6 +25,7 @@ from scripts.build_news import (  # noqa: E402
     load_news_entries,
     render_comments,
 )
+from scripts import site_head  # noqa: E402
 from scripts.build_site import _render_top_bar, write_service_worker  # noqa: E402
 from scripts.site_head import _description_for, _schema_type  # noqa: E402
 
@@ -187,6 +188,44 @@ def test_news_index_json_shape(news_dir: Path):
     for post in payload["posts"]:
         assert post["url"]["en"].startswith("/news/")
         assert post["url"]["uk"].startswith("/ukr/news/")
+
+
+# ── backfilled posts ────────────────────────────────────────────────────────
+
+def test_backfilled_post_says_it_was_written_later(tmp_path):
+    """A post about an old event must not imply it was published back then."""
+    _write_post(tmp_path, "x.yaml", date=date(2026, 4, 27), published=date(2026, 7, 19))
+    entry = load_news_entries(tmp_path)[0]
+    en = build_news.render_news_article(entry, target_lang="en", top_bar_html="")
+    ua = build_news.render_news_article(entry, target_lang="uk", top_bar_html="")
+    assert "Written retrospectively and published on July 19, 2026." in en
+    assert "Написано ретроспективно, опубліковано 19 липня 2026." in ua
+    # The dateline still shows the date of the event being described.
+    assert "April 27, 2026" in en
+
+
+def test_ordinary_post_has_no_retro_note(tmp_path):
+    _write_post(tmp_path, "x.yaml")
+    entry = load_news_entries(tmp_path)[0]
+    html = build_news.render_news_article(entry, target_lang="en", top_bar_html="")
+    assert "retrospectively" not in html
+    assert entry["published"] is None
+
+
+def test_published_before_date_is_rejected(tmp_path):
+    _write_post(tmp_path, "x.yaml", date=date(2026, 7, 19), published=date(2026, 4, 27))
+    with pytest.raises(NewsContentError, match="precedes"):
+        load_news_entries(tmp_path)
+
+
+def test_structured_data_reports_real_publication_date():
+    """datePublished must be when the post appeared, not what it is about."""
+    entry = load_news_entries()[0]
+    published, modified = site_head._news_dates(f"news/{entry['slug']}.html")
+    expected = (entry["published"] or entry["date"]).isoformat()
+    assert published == expected
+    assert modified == entry["date"].isoformat()
+    assert site_head._news_dates("about.html") is None
 
 
 # ── navigation ──────────────────────────────────────────────────────────────

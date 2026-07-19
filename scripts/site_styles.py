@@ -2616,6 +2616,13 @@ body.home-page .home-carousel {
   color: var(--gray-500);
   margin-bottom: 26px;
 }
+.news-retro {
+  font-size: 12.5px;
+  color: var(--gray-500);
+  font-style: italic;
+  margin-top: -18px;
+  margin-bottom: 26px;
+}
 .news-body {
   font-size: 15.5px;
   color: var(--gray-700);

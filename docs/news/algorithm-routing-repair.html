@@ -95,7 +95,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OpenOnco · Decision-tree routing defects fixed, validator hardened">
 <meta name="twitter:description" content="Auditing every treatment algorithm through the engine walker — rather than the loader — surfaced routing defects that were silently dropping selected indications from rendered plans.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","name":"OpenOnco · Decision-tree routing defects fixed, validator hardened","description":"Auditing every treatment algorithm through the engine walker — rather than the loader — surfaced routing defects that were silently dropping selected indications from rendered plans.","url":"https://openonco.info/news/algorithm-routing-repair.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/news/algorithm-routing-repair.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","name":"OpenOnco · Decision-tree routing defects fixed, validator hardened","description":"Auditing every treatment algorithm through the engine walker — rather than the loader — surfaced routing defects that were silently dropping selected indications from rendered plans.","url":"https://openonco.info/news/algorithm-routing-repair.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/news/algorithm-routing-repair.html"},"datePublished":"2026-07-19","dateModified":"2026-07-15","author":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info"}}</script>
 <!-- openonco-seo:end -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -132,7 +132,7 @@
   <article class="info-page news-article">
     <a class="case-back-btn news-back" href="/news.html">← All news</a>
     <div class="case-badge-row">
-      <span class="case-badge bdg-plan">July 8, 2026</span>
+      <span class="case-badge bdg-plan">July 15, 2026</span>
           <span class="case-quality quality-starter">knowledge-base</span>
           <span class="case-quality quality-starter">engine</span>
           <span class="case-quality quality-starter">quality</span>
@@ -140,6 +140,7 @@
     <h1>Decision-tree routing defects fixed, validator hardened</h1>
     <p class="lead">Auditing every treatment algorithm through the engine walker — rather than the loader — surfaced routing defects that were silently dropping selected indications from rendered plans.</p>
     <p class="news-byline">by OpenOnco</p>
+    <p class="news-retro">Written retrospectively and published on July 19, 2026.</p>
 
     <div class="news-body info-text">
       <p>The knowledge base validated cleanly, and the plans still came out wrong in specific branches. The reason is that the loader checks whether a file is well-formed, while the engine walks the decision tree — and those are different questions. Walking every algorithm the way the engine does surfaced a class of defect the loader had no reason to catch.</p>
@@ -148,7 +149,7 @@
       <div class="callout callout-good">No clinical routing was changed. Every fix was structural or referential, per CHARTER §8.3 — an LLM does not get to choose regimens.</div>
       <h2>Turning the audit into a gate</h2>
       <p>A one-time audit that is not enforced decays. The validator now treats five of these as hard contract errors: duplicate step ids, dangling <code>next_step</code> targets, a result outside <code>output_indications</code>, a default or alternative outside <code>output_indications</code>, and a result pointing at an indication that does not exist. Unreachable steps and null results are raised as warnings. Nine tests cover the checks.</p>
-      <p>Details are in commit <code>3f0b0d7e9f</code>. Post-fix, the algorithm contract-error count is zero.</p>
+      <p>Details are in commit <code>3f0b0d7e9f</code>, merged to master as <code>161534aa73</code> (PR #629). Post-fix, the algorithm contract-error count is zero.</p>
       <h2>What was deliberately not auto-fixed</h2>
       <p>Roughly 237 treatment branches are gated by free-prose <code>condition:</code> text rather than structured rules, which makes them unreachable to the walker. Fixing those needs structured red-flag authoring plus two-reviewer clinical signoff, so they stay on the backlog rather than being rewritten by a tool.</p>
     </div>

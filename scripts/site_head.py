@@ -194,28 +194,50 @@ def _title_from_html(html_text: str) -> str:
     return title or SITE_NAME
 
 
-_NEWS_SUMMARY_CACHE: dict[str, dict[str, str]] | None = None
+_NEWS_CACHE: dict[str, dict] | None = None
 
 
-def _news_summaries() -> dict[str, dict[str, str]]:
-    """Map news slug → {'en': summary, 'uk': summary}, loaded once.
+def _news_entries_by_slug() -> dict[str, dict]:
+    """Map news slug → the parsed entry, loaded once.
 
     Imported lazily: site_head is imported by build_site, which imports
     build_news, so a module-level import here would close the cycle.
     """
-    global _NEWS_SUMMARY_CACHE
-    if _NEWS_SUMMARY_CACHE is None:
+    global _NEWS_CACHE
+    if _NEWS_CACHE is None:
         try:
             from scripts.build_news import load_news_entries
 
-            _NEWS_SUMMARY_CACHE = {
-                entry["slug"]: entry["summary"] for entry in load_news_entries()
-            }
+            _NEWS_CACHE = {entry["slug"]: entry for entry in load_news_entries()}
         except Exception:  # pylint: disable=broad-except
             # A broken news file must not take down metadata for the whole site;
             # build_news itself already fails loudly on malformed content.
-            _NEWS_SUMMARY_CACHE = {}
-    return _NEWS_SUMMARY_CACHE
+            _NEWS_CACHE = {}
+    return _NEWS_CACHE
+
+
+def _news_slug_for(path: str) -> str | None:
+    normalized = path.replace("\\", "/").lstrip("/")
+    if not (normalized.startswith("news/") or normalized.startswith("ukr/news/")):
+        return None
+    return normalized.removeprefix("ukr/").removeprefix("news/").removesuffix(".html")
+
+
+def _news_dates(path: str) -> tuple[str, str] | None:
+    """(datePublished, dateModified) for a news article, or None.
+
+    `date` is the date of the event the post describes — it drives ordering and
+    the visible dateline. `published` is when the post actually went on the
+    site, and only differs for entries written retrospectively. Structured data
+    must report the real publication date, not the date being written about.
+    """
+    slug = _news_slug_for(path)
+    entry = _news_entries_by_slug().get(slug) if slug else None
+    if not entry:
+        return None
+    event_date = entry["date"].isoformat()
+    published = entry.get("published")
+    return (published.isoformat() if published else event_date, event_date)
 
 
 def _description_for(path: str, title: str, locale: str) -> str:
@@ -287,8 +309,9 @@ def _description_for(path: str, title: str, locale: str) -> str:
             "Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів."
         )
     if normalized.startswith("news/") or normalized.startswith("ukr/news/"):
-        slug = normalized.removeprefix("ukr/").removeprefix("news/").removesuffix(".html")
-        summary = _news_summaries().get(slug, {}).get("uk" if is_uk else "en")
+        slug = _news_slug_for(normalized)
+        entry = _news_entries_by_slug().get(slug) if slug else None
+        summary = entry["summary"]["uk" if is_uk else "en"] if entry else None
         if summary:
             return summary
         return (
@@ -497,6 +520,11 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
         schema["operatingSystem"] = "Web browser"
         schema["codeRepository"] = GITHUB_URL
         schema["offers"] = {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+
+    news_dates = _news_dates(path)
+    if news_dates:
+        schema["datePublished"], schema["dateModified"] = news_dates
+        schema["author"] = {"@type": "Organization", "name": SITE_NAME, "url": SITE_BASE_URL}
 
     json_ld = json.dumps(schema, ensure_ascii=False, separators=(",", ":"))
     og_type = "article" if _schema_type(path) in _ARTICLE_SCHEMA_TYPES else "website"

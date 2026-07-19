@@ -1,0 +1,108 @@
+slug: rule-engine-not-an-llm
+date: 2026-04-26
+published: 2026-07-19
+author: OpenOnco
+tags: [governance, engine]
+
+title:
+  en: Why an LLM never picks the treatment
+  uk: Чому лікування обирає не LLM
+
+summary:
+  en: >-
+    The project started out asking a language model to rank treatments. That
+    approach is now archived, and the rule that replaced it shapes everything
+    else: recommendations come from a versioned knowledge base, not a model.
+  uk: >-
+    Проєкт починався з того, що мовна модель ранжувала варіанти лікування. Той
+    підхід тепер в архіві, а правило, що прийшло на заміну, визначає все інше:
+    рекомендації дає версіонована база знань, а не модель.
+
+body:
+  en:
+    - type: p
+      text: >-
+        There is an earlier version of this project in the repository, under
+        `legacy/`. It worked the obvious way: feed a patient profile to a
+        language model, ask it which treatments look best, rank the answers.
+        It is retired rather than deleted, because how it failed is worth
+        keeping.
+    - type: p
+      text: >-
+        The problem is not that such a model is usually wrong. It is that you
+        cannot tell when it is. There is no trace to inspect, no source to
+        check, and the same input can produce a different answer tomorrow. For
+        a tool a clinician is meant to reason with, that is disqualifying.
+    - type: p
+      text: >-
+        So the rule is written into the project charter (§8.3) rather than left
+        as a preference:
+    - type: quote
+      text: >-
+        Clinical recommendations come from a declarative rule engine reading a
+        versioned knowledge base. LLMs do not choose regimens, generate dosing,
+        or interpret biomarkers for treatment selection.
+    - type: h2
+      text: What language models are still allowed to do
+    - type: p
+      text: >-
+        Draft prose. Translate, with clinical review. Extract structured data
+        from a clinical document, for a human to verify. Write boilerplate
+        code. All of it upstream of the decision, none of it inside the
+        decision.
+    - type: h2
+      text: What this costs
+    - type: p
+      text: >-
+        Coverage. A model will answer anything; a rule engine only answers what
+        someone has authored and cited. That is why so much of this project is
+        the unglamorous work of writing knowledge base entries with sources
+        attached, and why the coverage gaps are published rather than hidden.
+    - type: p
+      text: >-
+        The trade is deliberate. A narrower tool whose reasoning you can audit
+        beats a broader one you have to trust.
+  uk:
+    - type: p
+      text: >-
+        У репозиторії лишилася рання версія цього проєкту — у теці `legacy/`.
+        Вона працювала очевидним способом: подати профіль пацієнта мовній
+        моделі, спитати, які варіанти лікування виглядають найкраще, ранжувати
+        відповіді. Її не видалено, а відправлено в архів, бо те, як саме вона
+        не спрацювала, варто памʼятати.
+    - type: p
+      text: >-
+        Проблема не в тому, що така модель зазвичай помиляється. Проблема в
+        тому, що не видно, коли саме. Немає трасування, яке можна перевірити,
+        немає джерела, яке можна відкрити, а той самий вхід завтра може дати
+        іншу відповідь. Для інструмента, з яким лікар має міркувати, це
+        дискваліфікація.
+    - type: p
+      text: >-
+        Тому правило записане в статуті проєкту (§8.3), а не лишене на розсуд:
+    - type: quote
+      text: >-
+        Клінічні рекомендації дає декларативний rule engine, який читає
+        версіоновану базу знань. LLM не обирають схеми лікування, не
+        розраховують дозування і не інтерпретують біомаркери для вибору терапії.
+    - type: h2
+      text: Що мовним моделям усе ще дозволено
+    - type: p
+      text: >-
+        Писати чернетки тексту. Перекладати — з клінічною перевіркою. Витягати
+        структуровані дані з клінічного документа, щоб людина їх звірила.
+        Писати рутинний код. Усе це — до рішення, і нічого з цього — всередині
+        рішення.
+    - type: h2
+      text: Чого це коштує
+    - type: p
+      text: >-
+        Покриття. Модель відповість на будь-що; rule engine відповідає лише на
+        те, що хтось написав і підкріпив джерелом. Саме тому така велика
+        частина цього проєкту — це непоказна робота зі створення записів бази
+        знань із посиланнями, і саме тому прогалини в покритті ми публікуємо, а
+        не ховаємо.
+    - type: p
+      text: >-
+        Цей обмін свідомий. Вужчий інструмент, міркування якого можна
+        перевірити, кращий за ширший, якому доводиться просто вірити.
