@@ -209,51 +209,89 @@ def test_active_news_marks_nav_link():
 
 # ── comments ────────────────────────────────────────────────────────────────
 
-def test_house_rules_present_in_both_languages(news_dir: Path):
+@pytest.fixture
+def waline(monkeypatch):
+    monkeypatch.setitem(build_news.COMMENTS, "provider", "waline")
+    monkeypatch.setitem(build_news.COMMENTS, "server_url", "https://comments.example.test")
+    return load_news_entries()[0]
+
+
+def test_both_language_versions_share_one_thread(waline):
+    """The whole point: one discussion per article, not one per translation."""
+    en = render_comments(waline, "en")
+    ua = render_comments(waline, "uk")
+    key = f'"path": "/news/{waline["slug"]}"'
+    assert key in en
+    assert key in ua
+    # No language prefix may leak into the thread key.
+    assert "/ukr/" not in en.split('"path"')[1].split(",")[0]
+    assert "/ukr/" not in ua.split('"path"')[1].split(",")[0]
+
+
+def test_commenting_needs_no_account(waline):
+    html = render_comments(waline, "en")
+    assert '"login": "disable"' in html
+    assert '"requiredMeta": []' in html
+
+
+def test_no_third_party_emoji_fetch(waline):
+    """Waline's default emoji packs are fetched from unpkg at runtime."""
+    assert '"emoji": false' in render_comments(waline, "en")
+
+
+def test_ukrainian_ui_strings_supplied_not_russian(waline):
+    """Waline has no Ukrainian locale and must never fall back to Russian."""
+    ua = render_comments(waline, "uk")
+    assert '"locale"' in ua
+    assert "Надіслати" in ua
+    assert '"lang": "ru"' not in ua
+    assert '"locale"' not in render_comments(waline, "en")
+
+
+def test_short_note_replaces_the_old_rules_panel(news_dir: Path):
     slug = load_news_entries()[0]["slug"]
     en = (news_dir / "news" / f"{slug}.html").read_text(encoding="utf-8")
     ua = (news_dir / "ukr" / "news" / f"{slug}.html").read_text(encoding="utf-8")
-    assert "Do not post personal medical data" in en
-    assert "not medical advice" in en
-    assert "Не публікуйте персональні медичні дані" in ua
-    assert "не є медичною порадою" in ua
+    assert "personal medical data" in en
+    assert "персональні медичні дані" in ua
+    assert "news-comments-note" in en
+    assert "news-comment-rules" not in en, "the heavy rules panel should be gone"
 
 
-def test_comments_degrade_to_link_when_unconfigured(monkeypatch):
-    monkeypatch.setitem(build_news.GISCUS, "repo_id", "")
-    monkeypatch.setitem(build_news.GISCUS, "category_id", "")
+def test_config_cannot_break_out_of_the_script_tag(monkeypatch):
+    monkeypatch.setitem(build_news.COMMENTS, "provider", "waline")
+    monkeypatch.setitem(
+        build_news.COMMENTS, "server_url", "https://x.test/</script><img src=x>",
+    )
+    html = render_comments(load_news_entries()[0], "uk")
+    assert "</script><img" not in html
+    assert "<\\/script>" in html
+
+
+def test_comments_say_so_when_unconfigured(monkeypatch):
+    monkeypatch.setitem(build_news.COMMENTS, "server_url", "")
     entry = load_news_entries()[0]
     html = render_comments(entry, "en")
-    assert "giscus.app/client.js" not in html
-    assert "github.com/romeo111/OpenOnco/discussions" in html
+    assert "not switched on yet" in html
+    assert "waline.js" not in html
 
 
-def test_configured_comments_are_click_to_load(monkeypatch):
-    """The widget must not auto-load: no third-party request on a passive read."""
-    monkeypatch.setitem(build_news.GISCUS, "repo_id", "R_test")
-    monkeypatch.setitem(build_news.GISCUS, "category_id", "DIC_test")
-    entry = load_news_entries()[0]
-    html = render_comments(entry, "en")
-    assert 'id="load-comments"' in html
-    assert "addEventListener('click'" in html
-    # The giscus script tag must be created by JS, never present in the markup.
-    assert "<script src=" not in html
-    assert 'data-repo-id="R_test"' in html
-    assert f'data-term="news/{entry["slug"]}"' in html
-
-
-def test_giscus_language_follows_page_locale(monkeypatch):
-    monkeypatch.setitem(build_news.GISCUS, "repo_id", "R_test")
-    monkeypatch.setitem(build_news.GISCUS, "category_id", "DIC_test")
-    entry = load_news_entries()[0]
-    assert 'data-lang="uk"' in render_comments(entry, "uk")
-    assert 'data-lang="en"' in render_comments(entry, "en")
+@pytest.mark.parametrize("provider,needle", [
+    ("remark42", "remark_config"),
+    ("disqus", "disqus_thread"),
+])
+def test_provider_is_swappable(monkeypatch, provider, needle):
+    """Cusdis was archived 2026-07-17; no single vendor may be load-bearing."""
+    monkeypatch.setitem(build_news.COMMENTS, "provider", provider)
+    monkeypatch.setitem(build_news.COMMENTS, "server_url", "https://c.example.test")
+    monkeypatch.setitem(build_news.COMMENTS, "shortname", "openonco")
+    assert needle in render_comments(load_news_entries()[0], "en")
 
 
 # ── service worker ──────────────────────────────────────────────────────────
 
 def test_service_worker_ignores_cross_origin(tmp_path):
-    """Without this guard the SW intercepts the giscus iframe navigation."""
+    """Without this guard the SW intercepts the comment widget's iframe."""
     write_service_worker(tmp_path, core_version="testver")
     sw = (tmp_path / "sw.js").read_text(encoding="utf-8")
     guard = sw.index("url.origin !== self.location.origin")

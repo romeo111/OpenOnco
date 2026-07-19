@@ -11,10 +11,10 @@ pyyaml, and no Markdown parser is importable under the required Python 3.12
 interpreter or in CI. Leaf text is HTML-escaped first, then a small inline
 formatter re-introduces links, bold and code. Raw HTML in YAML stays escaped.
 
-Comments use giscus (GitHub Discussions) and are loaded only after an explicit
-click, so no third-party request leaves the browser until a reader opts in.
-Until the repo owner enables Discussions and installs the giscus app, the
-widget degrades to a plain link to the GitHub discussion space — see
+Comments are open: no account, no login, no mandatory name or email. The EN and
+UA versions of a post share one thread, so a discussion is not split by which
+translation the reader opened. The backend is configurable (see COMMENTS) —
+this layer churns, and pinning one vendor is how the section rots. Setup is in
 `docs/news-comments-setup.md`.
 """
 
@@ -40,20 +40,23 @@ DEFAULT_OUTPUT_DIR = REPO_ROOT / "docs"
 
 GH_REPO = "romeo111/OpenOnco"
 
-# ── giscus configuration ────────────────────────────────────────────────────
-# `repo_id` and `category_id` come from https://giscus.app after the repo owner
-# (a) turns on GitHub Discussions and (b) installs the giscus app. Both are
-# public identifiers, not secrets. While either is blank, comments render as a
-# link-out instead of an embedded widget — the section still ships and works.
-GISCUS = {
-    "repo": GH_REPO,
-    "repo_id": "",
-    "category": "Announcements",
-    "category_id": "",
-    "host": "https://giscus.app",
+# ── comment backend ─────────────────────────────────────────────────────────
+# Readers comment with no account and no login. The provider is swappable on
+# purpose: this layer churns, and Cusdis — a leading privacy-first option — was
+# archived on 2026-07-17, so hard-wiring one vendor is how the section breaks.
+#
+# provider: "waline" | "remark42" | "disqus" | "none"
+# Fill in `server_url` (plus `site_id` for remark42, `shortname` for disqus) and
+# rebuild. While it is blank the section still ships; each post just says
+# comments are not switched on yet. See docs/news-comments-setup.md.
+COMMENTS = {
+    "provider": "waline",
+    "server_url": "",
+    "site_id": "openonco",
+    "shortname": "",
+    # Client assets. Point at a self-hosted copy to avoid a third-party CDN.
+    "client_base": "https://unpkg.com/@waline/client@v3/dist",
 }
-
-DISCUSSIONS_URL = f"https://github.com/{GH_REPO}/discussions"
 
 BLOCK_TYPES = {"p", "h2", "h3", "ul", "ol", "quote", "callout", "code"}
 CALLOUT_TONES = {"info": "", "good": " callout-good", "warn": " callout-hard"}
@@ -249,130 +252,199 @@ def index_path(target_lang: str) -> str:
     return "/ukr/news.html" if target_lang == "uk" else "/news.html"
 
 
+def thread_id(slug: str) -> str:
+    """Comment-thread key for an article.
+
+    Deliberately carries no language prefix: the EN and UA versions of a post
+    share one thread, so a discussion is not split by which translation the
+    reader happened to open.
+    """
+    return f"/news/{slug}"
+
+
 def comments_enabled() -> bool:
-    return bool(GISCUS["repo_id"] and GISCUS["category_id"])
+    provider = COMMENTS.get("provider", "none")
+    if provider == "none":
+        return False
+    if provider == "disqus":
+        return bool(COMMENTS.get("shortname"))
+    return bool(COMMENTS.get("server_url"))
+
+
+# Waline ships no Ukrainian UI (zh/en/jp/ko/pt-BR/ru/fr/vi/es only). Falling
+# back to its Russian locale on a Ukrainian site is not acceptable, so the UA
+# pages pass their own strings via the `locale` override and keep `en` as the
+# base for anything not listed here.
+_WALINE_LOCALE_UK = {
+    "nick": "Імʼя",
+    "nickError": "Імʼя має містити щонайменше 3 символи.",
+    "mail": "Email",
+    "mailError": "Перевірте адресу email.",
+    "link": "Сайт",
+    "optional": "Необовʼязково",
+    "placeholder": "Напишіть коментар…",
+    "sofa": "Коментарів ще немає.",
+    "submit": "Надіслати",
+    "comment": "Коментарі",
+    "refresh": "Оновити",
+    "more": "Показати ще",
+    "preview": "Перегляд",
+    "emoji": "Емодзі",
+    "uploadImage": "Завантажити зображення",
+    "uploading": "Завантаження…",
+    "reply": "Відповісти",
+    "cancelReply": "Скасувати",
+    "like": "Подобається",
+    "cancelLike": "Скасувати",
+    "admin": "Адміністрація",
+    "sticky": "Закріплено",
+    "word": "символів",
+    "anonymous": "Анонім",
+    "oldest": "Найстаріші",
+    "latest": "Найновіші",
+    "hottest": "Найпопулярніші",
+    "approved": "Схвалено",
+    "waiting": "Очікує перевірки",
+    "spam": "Спам",
+    "seconds": "с тому",
+    "minutes": "хв тому",
+    "hours": "год тому",
+    "days": "дн тому",
+    "now": "щойно",
+}
+
+
+def _js_object(value: Any) -> str:
+    """JSON for embedding inside a <script> block.
+
+    `</` is neutralised because it would close the enclosing script element
+    early wherever it appeared, turning a config typo into broken markup.
+    """
+    return json.dumps(value, ensure_ascii=False, indent=8).replace("</", "<\\/")
+
+
+def _waline_embed(entry: dict[str, Any], target_lang: str) -> str:
+    base = COMMENTS["client_base"].rstrip("/")
+    server = COMMENTS["server_url"].rstrip("/")
+    options = {
+        "el": "#waline-thread",
+        "serverURL": server,
+        # Constant, with no /ukr prefix — this is what makes both language
+        # versions of a post share one thread.
+        "path": thread_id(entry["slug"]),
+        "lang": "en",
+        # No account, and nothing mandatory: name and email are both optional
+        # (requiredMeta stays empty), and a blank name posts as "Anonymous".
+        "login": "disable",
+        "meta": ["nick", "mail"],
+        "requiredMeta": [],
+        # Waline's default emoji set is Weibo packs fetched from unpkg — an
+        # odd and needless third-party request for this site.
+        "emoji": False,
+        "search": False,
+        "reaction": False,
+        "dark": "auto",
+    }
+    if target_lang == "uk":
+        options["locale"] = _WALINE_LOCALE_UK
+    return f"""    <link rel="stylesheet" href="{_esc(base)}/waline.css">
+    <div id="waline-thread"></div>
+    <script type="module">
+      import {{ init }} from '{base}/waline.js';
+      init({_js_object(options)});
+    </script>"""
+
+
+def _remark42_embed(entry: dict[str, Any], target_lang: str) -> str:
+    # Remark42 has no Ukrainian locale either; 'en' rather than its 'ru'.
+    config = {
+        "host": COMMENTS["server_url"].rstrip("/"),
+        "site_id": COMMENTS["site_id"],
+        "url": f"https://openonco.info{thread_id(entry['slug'])}",
+        "components": ["embed"],
+        "locale": "en",
+        "theme": "light",
+    }
+    return f"""    <div id="remark42"></div>
+    <script>
+      window.remark_config = {_js_object(config)};
+      (function (c) {{
+        for (var i = 0; i < c.length; i++) {{
+          var d = document, s = d.createElement('script');
+          s.src = window.remark_config.host + '/web/' + c[i] + '.js';
+          s.defer = true;
+          d.head.appendChild(s);
+        }}
+      }})(window.remark_config.components);
+    </script>"""
+
+
+def _disqus_embed(entry: dict[str, Any], target_lang: str) -> str:
+    # Last resort only: Disqus' free tier is ad-supported and it runs
+    # cross-context behavioural advertising, which sits badly on pages where
+    # someone is reading about a cancer diagnosis.
+    config = {
+        "identifier": thread_id(entry["slug"]),
+        "url": f"https://openonco.info{thread_id(entry['slug'])}",
+        "src": f"https://{COMMENTS['shortname']}.disqus.com/embed.js",
+    }
+    return f"""    <div id="disqus_thread"></div>
+    <script>
+      var openoncoDisqus = {_js_object(config)};
+      window.disqus_config = function () {{
+        this.page.identifier = openoncoDisqus.identifier;
+        this.page.url = openoncoDisqus.url;
+      }};
+      (function () {{
+        var d = document, s = d.createElement('script');
+        s.src = openoncoDisqus.src;
+        s.setAttribute('data-timestamp', +new Date());
+        d.head.appendChild(s);
+      }})();
+    </script>"""
 
 
 def render_comments(entry: dict[str, Any], target_lang: str) -> str:
-    """Comment area: house rules, then click-to-load giscus.
+    """Open comment section: anyone can post, no account, no login.
 
-    The widget is not embedded on page load. Nothing is requested from
-    giscus.app until the reader presses the button, so a passive visit to a
-    cancer-information page makes no third-party request at all.
+    The EN and UA pages of a post share one thread (see thread_id), so the
+    discussion is not split by translation.
     """
     is_en = target_lang == "en"
     heading = "Comments" if is_en else "Коментарі"
-    rules_title = "Before you post" if is_en else "Перед тим, як писати"
     if is_en:
-        rules = [
-            "**Do not post personal medical data** — diagnosis, test results, dates, "
-            "or anything that identifies you or a patient. This page is public and "
-            "permanently indexed by search engines.",
-            "Comments are readers' opinions. They are **not medical advice** and are "
-            "not reviewed by the OpenOnco clinical leads.",
-            "Nothing here is monitored for urgent problems. For a clinical emergency, "
-            "contact your treating team or emergency services.",
-            "For a clinical error in the knowledge base, open a "
-            f"[`clinical-error` issue](https://github.com/{GH_REPO}/issues/new) instead — "
-            "that path has a triage SLA.",
-        ]
-        load_label = "Load comments"
-        privacy_note = (
-            "Comments are hosted on GitHub Discussions via giscus. Pressing the button "
-            "loads content from giscus.app and github.com; nothing is sent before that."
+        note = (
+            "Threads are public and indexed — please keep personal medical data out "
+            "of them. Found a clinical error? "
+            f"[Open an issue](https://github.com/{GH_REPO}/issues/new) instead."
         )
-        offline_title = "Comments are not switched on yet"
-        offline_body = (
-            "The embedded comment widget needs GitHub Discussions enabled on the "
-            "repository. Until then you can discuss this post directly on GitHub."
+        offline = (
+            "Comments are not switched on yet — the backend still needs to be "
+            "configured."
         )
-        offline_cta = "Open the discussion on GitHub"
     else:
-        rules = [
-            "**Не публікуйте персональні медичні дані** — діагноз, результати аналізів, "
-            "дати чи будь-що, що ідентифікує вас або пацієнта. Ця сторінка публічна й "
-            "постійно індексується пошуковими системами.",
-            "Коментарі — це думки читачів. Вони **не є медичною порадою** і не проходять "
-            "перевірку клінічними лідами OpenOnco.",
-            "Тут ніхто не відстежує термінові проблеми. У невідкладній ситуації "
-            "звертайтеся до лікуючої команди або екстреної допомоги.",
-            "Якщо ви знайшли клінічну помилку в базі знань, натомість відкрийте "
-            f"[issue з міткою `clinical-error`](https://github.com/{GH_REPO}/issues/new) — "
-            "там діє SLA на розбір.",
-        ]
-        load_label = "Завантажити коментарі"
-        privacy_note = (
-            "Коментарі розміщені в GitHub Discussions через giscus. Натискання кнопки "
-            "завантажує вміст із giscus.app і github.com; до цього нічого не надсилається."
+        note = (
+            "Гілки публічні й індексуються — будь ласка, не пишіть у них персональні "
+            "медичні дані. Знайшли клінічну помилку? "
+            f"[Відкрийте issue](https://github.com/{GH_REPO}/issues/new)."
         )
-        offline_title = "Коментарі ще не увімкнено"
-        offline_body = (
-            "Вбудований віджет коментарів потребує увімкнених GitHub Discussions у "
-            "репозиторії. Поки що обговорити цей пост можна напряму на GitHub."
+        offline = (
+            "Коментарі ще не увімкнено — бекенд потрібно налаштувати."
         )
-        offline_cta = "Відкрити обговорення на GitHub"
-
-    rules_html = "\n        ".join(f"<li>{_inline(rule)}</li>" for rule in rules)
-    rules_block = f"""    <div class="news-comment-rules">
-      <h3>{_esc(rules_title)}</h3>
-      <ul>
-        {rules_html}
-      </ul>
-    </div>"""
 
     if not comments_enabled():
-        body = f"""    <div class="news-comments-offline">
-      <strong>{_esc(offline_title)}</strong>
-      <p>{_esc(offline_body)}</p>
-      <a class="btn btn-secondary" href="{_esc(DISCUSSIONS_URL)}"
-         target="_blank" rel="noopener noreferrer">{_esc(offline_cta)} →</a>
-    </div>"""
+        body = f'    <p class="news-comments-offline">{_esc(offline)}</p>'
     else:
-        giscus_lang = "uk" if target_lang == "uk" else "en"
-        term = f"news/{entry['slug']}"
-        body = f"""    <div class="news-comments-mount" id="giscus-mount"
-         data-repo="{_esc(GISCUS['repo'])}"
-         data-repo-id="{_esc(GISCUS['repo_id'])}"
-         data-category="{_esc(GISCUS['category'])}"
-         data-category-id="{_esc(GISCUS['category_id'])}"
-         data-term="{_esc(term)}"
-         data-lang="{giscus_lang}"
-         data-host="{_esc(GISCUS['host'])}">
-      <button type="button" class="btn btn-secondary news-comments-load"
-              id="load-comments">{_esc(load_label)}</button>
-      <p class="news-comments-privacy">{_esc(privacy_note)}</p>
-    </div>
-    <script>
-    (function () {{
-      var mount = document.getElementById('giscus-mount');
-      var button = document.getElementById('load-comments');
-      if (!mount || !button) return;
-      button.addEventListener('click', function () {{
-        button.disabled = true;
-        var script = document.createElement('script');
-        script.src = mount.dataset.host + '/client.js';
-        script.async = true;
-        script.crossOrigin = 'anonymous';
-        script.setAttribute('data-repo', mount.dataset.repo);
-        script.setAttribute('data-repo-id', mount.dataset.repoId);
-        script.setAttribute('data-category', mount.dataset.category);
-        script.setAttribute('data-category-id', mount.dataset.categoryId);
-        script.setAttribute('data-mapping', 'specific');
-        script.setAttribute('data-term', mount.dataset.term);
-        script.setAttribute('data-reactions-enabled', '1');
-        script.setAttribute('data-emit-metadata', '0');
-        script.setAttribute('data-input-position', 'top');
-        script.setAttribute('data-theme', 'light');
-        script.setAttribute('data-lang', mount.dataset.lang);
-        script.setAttribute('data-loading', 'lazy');
-        mount.appendChild(script);
-      }});
-    }})();
-    </script>"""
+        embed = {
+            "waline": _waline_embed,
+            "remark42": _remark42_embed,
+            "disqus": _disqus_embed,
+        }[COMMENTS["provider"]]
+        body = embed(entry, target_lang)
 
     return f"""  <section class="news-comments" id="comments">
     <h2>{_esc(heading)}</h2>
-{rules_block}
+    <p class="news-comments-note">{_inline(note)}</p>
 {body}
   </section>"""
 

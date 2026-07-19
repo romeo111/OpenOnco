@@ -2676,9 +2676,8 @@ body.home-page .home-carousel {
   padding: 0;
 }
 
-/* Comments. The house rules sit above the widget so they are read before the
-   box, not after — this is a cancer-information site and the first rule is
-   "do not post personal medical data". */
+/* Comments. Open to anyone, no account. One quiet line above the box rather
+   than a warning panel — this is a news thread, not a treatment plan. */
 .news-comments {
   max-width: 760px;
   margin-top: 46px;
@@ -2689,68 +2688,23 @@ body.home-page .home-carousel {
   font-family: var(--font-display);
   font-size: 23px;
   color: var(--green-900);
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
-.news-comment-rules {
-  background: var(--amber-bg);
-  border-left: 3px solid var(--amber);
-  border-radius: 4px;
-  padding: 14px 18px;
-  margin-bottom: 20px;
+.news-comments-note {
+  font-size: 13px;
+  color: var(--gray-500);
+  line-height: 1.5;
+  margin-bottom: 22px;
 }
-.news-comment-rules h3 {
-  font-family: var(--font-display);
-  font-size: 15px;
-  color: var(--gray-900);
-  margin-bottom: 8px;
-}
-.news-comment-rules ul {
-  padding-left: 18px;
-}
-.news-comment-rules li {
-  font-size: 13.5px;
-  color: var(--gray-700);
-  line-height: 1.55;
-  margin-bottom: 6px;
-}
-.news-comment-rules a {
+.news-comments-note a {
   color: var(--green-700);
 }
-.news-comment-rules code {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  background: white;
-  padding: 1px 5px;
-  border-radius: 3px;
-}
-.news-comments-privacy {
-  font-size: 12.5px;
-  color: var(--gray-500);
-  margin-top: 10px;
-  line-height: 1.5;
-}
-.news-comments-load {
-  cursor: pointer;
-}
-.news-comments-load:disabled {
-  opacity: 0.55;
-  cursor: default;
-}
 .news-comments-offline {
+  font-size: 13.5px;
+  color: var(--gray-500);
   background: var(--gray-50);
   border: 1px solid var(--gray-200);
   border-radius: 8px;
-  padding: 16px 18px;
-}
-.news-comments-offline strong {
-  display: block;
-  color: var(--gray-900);
-  margin-bottom: 6px;
-}
-.news-comments-offline p {
-  font-size: 13.5px;
-  color: var(--gray-700);
-  margin-bottom: 12px;
-  line-height: 1.55;
+  padding: 14px 16px;
 }
 """

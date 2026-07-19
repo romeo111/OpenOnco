@@ -485,7 +485,7 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
 
-  // Never touch cross-origin traffic. Embedded third-party frames (the giscus
+  // Never touch cross-origin traffic. Embedded third-party frames (the news
   // comment widget) load with request.mode === 'navigate', so without this
   // guard the navigation branch below would re-issue them as no-store fetches
   // and break them. It also stops the pathname-only matching further down from

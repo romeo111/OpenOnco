@@ -143,36 +143,19 @@
     <div class="news-body info-text">
       <p>Until now, everything about how OpenOnco changes lived in commit messages, review documents and specs. That is fine for contributors reading the repository and useless for a clinician who wants to know what moved this month. This section is the fix.</p>
       <p>Posts are written in both English and Ukrainian, and they are checked into the repository as structured YAML under <code>content/news/</code>. They are built by the same pipeline as the rest of the site, so a post is reviewable as a diff like everything else here.</p>
-      <h2>Why comments have rules</h2>
-      <p>Open comments on a site about cancer treatment carry two risks that a comment box on a normal software project does not, so it is worth being direct about both.</p>
-      <p>The first is that people post their own medical details. A comment thread is public, permanent and indexed by search engines. Please do not put a diagnosis, test results, dates, or anything identifying you or a patient into a comment — a public page is the wrong place for it, and once it is indexed it is not really retractable.</p>
-      <p>The second is that comments can read as advice. They are not. Comments are readers&#x27; opinions; they are not reviewed by the clinical leads, and they carry none of the source-citation guarantees that the knowledge base does. Nothing on this site replaces your treating oncologist.</p>
-      <div class="callout callout-hard">Nobody monitors comments for urgent problems. In a clinical emergency, contact your treating team or emergency services — not a web page.</div>
-      <h2>Where to report a clinical error</h2>
-      <p>If you have found something clinically wrong in the knowledge base, a comment is not the fastest route. Open an issue tagged <code>clinical-error</code> instead: per CHARTER §9.1 that path has a triage SLA of 48 hours and an assessment SLA of 7 days, and it produces a public record of the fix.</p>
-      <h2>How comments work technically</h2>
-      <p>Comments are hosted on GitHub Discussions through <a href="https://giscus.app/" target="_blank" rel="noopener noreferrer">giscus</a>, so the project stores no commenter data of its own and there is no third-party advertising or tracking involved.</p>
-      <p>The widget is not loaded until you press the button. Simply reading a post sends no request to giscus or GitHub — which matters more than usual when the page someone is quietly reading is about their diagnosis.</p>
+      <h2>One request</h2>
+      <p>Comment threads are public and indexed by search engines, so please keep your own medical details out of them — a diagnosis or a set of test results is not something you can really take back once it is on a public page.</p>
+      <p>And if you have found something clinically wrong in the knowledge base, a comment is not the fastest route. Open an issue tagged <code>clinical-error</code> instead: per CHARTER §9.1 that path has a triage SLA of 48 hours, and it leaves a public record of the fix.</p>
+      <h2>How comments work</h2>
+      <p>You do not need an account. Type a name and a comment and post it — no sign-up, no login, no GitHub. The comment box runs on infrastructure the project controls, so there is no third-party advertising and no tracking network attached to it.</p>
+      <p>Each article has one comment thread shared between its English and Ukrainian versions, so a discussion does not get split in half by which language you happened to be reading in.</p>
     </div>
   </article>
 
   <section class="news-comments" id="comments">
     <h2>Comments</h2>
-    <div class="news-comment-rules">
-      <h3>Before you post</h3>
-      <ul>
-        <li><strong>Do not post personal medical data</strong> — diagnosis, test results, dates, or anything that identifies you or a patient. This page is public and permanently indexed by search engines.</li>
-        <li>Comments are readers&#x27; opinions. They are <strong>not medical advice</strong> and are not reviewed by the OpenOnco clinical leads.</li>
-        <li>Nothing here is monitored for urgent problems. For a clinical emergency, contact your treating team or emergency services.</li>
-        <li>For a clinical error in the knowledge base, open a <a href="https://github.com/romeo111/OpenOnco/issues/new" target="_blank" rel="noopener noreferrer"><code>clinical-error</code> issue</a> instead — that path has a triage SLA.</li>
-      </ul>
-    </div>
-    <div class="news-comments-offline">
-      <strong>Comments are not switched on yet</strong>
-      <p>The embedded comment widget needs GitHub Discussions enabled on the repository. Until then you can discuss this post directly on GitHub.</p>
-      <a class="btn btn-secondary" href="https://github.com/romeo111/OpenOnco/discussions"
-         target="_blank" rel="noopener noreferrer">Open the discussion on GitHub →</a>
-    </div>
+    <p class="news-comments-note">Threads are public and indexed — please keep personal medical data out of them. Found a clinical error? <a href="https://github.com/romeo111/OpenOnco/issues/new" target="_blank" rel="noopener noreferrer">Open an issue</a> instead.</p>
+    <p class="news-comments-offline">Comments are not switched on yet — the backend still needs to be configured.</p>
   </section>
 
   <footer class="page-foot">
