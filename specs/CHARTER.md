@@ -349,10 +349,24 @@ the system should work. Requirements:
   dates, institution, region, any combination of data allowing re-identification)
 - **Ethics committee approval** from the institution where treatment was
   provided
+- **The de-identification has been reviewed by a clinician who did not
+  perform it**, specifically for re-identification risk — the person who
+  removed the identifiers is not well placed to judge what remains
+- **The evidence is recorded** in `REFERENCE_CASE_SPECIFICATION.md` §0:
+  date and scope of consent, approving ethics body and decision reference,
+  who performed the de-identification, and who reviewed it. An
+  undocumented approval cannot be audited, withdrawn against, or defended
 - Case is available in the public repository as "Reference Case #0"
 - If consent is withdrawn — the case is removed from public access
 
 Until all of these conditions are met — the case remains internal, not public.
+
+**Status (2026-07-19):** the Project Initiator reports informed consent,
+de-identification and ethics approval obtained. The independent
+re-identification review and the §0 evidence record are outstanding, so the
+case remains internal until they are complete. Publishing *about* the
+milestone — with no patient-level clinical detail — is not restricted by this
+section and has already happened (`/news/first-clinician-reviewed-plans.html`).
 
 ---
 
@@ -412,6 +426,22 @@ The text is standardized and is not negotiated on a per-case basis.
 - Changes are recorded in the CHANGELOG of this document
 
 **CHANGELOG (dev-mode amendments):**
+
+- **2026-07-19 — §9.3 reference-case conditions** (Initiator-only,
+  dev-mode §6.1 exemption). The Initiator reports informed consent,
+  de-identification and ethics-committee approval obtained for the
+  reference case. Two requirements **added** to §9.3 rather than removed:
+  an independent re-identification review by a clinician who did not
+  perform the de-identification, and a documented evidence record
+  (`REFERENCE_CASE_SPECIFICATION.md` §0). Separately, the "approval from
+  all Clinical Co-Leads" condition in
+  `REFERENCE_CASE_SPECIFICATION.md` — structurally impossible with no
+  Co-Leads appointed — is suspended under this §12 dev-mode exemption and
+  queued for ratification on first Co-Lead appointment. §15 C1–C7
+  invariants unchanged; publishing a de-identified retrospective case
+  touches none of them. The case remains **internal** until the review and
+  the record are complete. Publishing *about* the milestone with no
+  patient-level detail is unrestricted and has already happened.
 
 - **2026-05-18 — §3 scope amendment** (Initiator-only, dev-mode §6.1
   exemption). Added HCP-mediated prevention / early-diagnosis as
