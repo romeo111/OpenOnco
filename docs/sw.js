@@ -6,7 +6,7 @@
 //      background, so the dropdowns aren't gated on the HTML download.
 // Cache name is stamped with the core bundle's SHA-256 prefix so a KB
 // push automatically rotates the cache key.
-const CACHE_NAME = 'openonco-bundle-l3-2d8cf3ce724e';
+const CACHE_NAME = 'openonco-bundle-l4-c49c176bb4d5';
 const PRECACHE = [
   '/manifest.webmanifest',
   '/logo.svg',
@@ -20,7 +20,11 @@ const PRECACHE = [
 // Routes that use stale-while-revalidate (instant from cache, refresh
 // in background). HTML pages must be on this list — never cache-first,
 // or the user gets stuck on an old build.
-const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html', '/style.css'];
+const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html',
+  '/style.css', '/news.html', '/ukr/news.html'];
+// Per-article news pages are matched by prefix rather than listed, since slugs
+// are added by content authors without touching this file.
+const SWR_PREFIXES = ['/news/', '/ukr/news/'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -69,12 +73,20 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
 
+  // Never touch cross-origin traffic. Embedded third-party frames (the news
+  // comment widget) load with request.mode === 'navigate', so without this
+  // guard the navigation branch below would re-issue them as no-store fetches
+  // and break them. It also stops the pathname-only matching further down from
+  // hijacking a third-party URL that happens to share a path with ours.
+  if (url.origin !== self.location.origin) return;
+
   if (event.request.mode === 'navigate') {
     return networkFirstNavigation(event);
   }
 
   // SWR for the small interactive shell (HTML + CSS).
-  if (SWR_PATHS.indexOf(url.pathname) !== -1) {
+  if (SWR_PATHS.indexOf(url.pathname) !== -1 ||
+      SWR_PREFIXES.some((p) => url.pathname.startsWith(p))) {
     return staleWhileRevalidate(event);
   }
 

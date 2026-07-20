@@ -194,6 +194,52 @@ def _title_from_html(html_text: str) -> str:
     return title or SITE_NAME
 
 
+_NEWS_CACHE: dict[str, dict] | None = None
+
+
+def _news_entries_by_slug() -> dict[str, dict]:
+    """Map news slug → the parsed entry, loaded once.
+
+    Imported lazily: site_head is imported by build_site, which imports
+    build_news, so a module-level import here would close the cycle.
+    """
+    global _NEWS_CACHE
+    if _NEWS_CACHE is None:
+        try:
+            from scripts.build_news import load_news_entries
+
+            _NEWS_CACHE = {entry["slug"]: entry for entry in load_news_entries()}
+        except Exception:  # pylint: disable=broad-except
+            # A broken news file must not take down metadata for the whole site;
+            # build_news itself already fails loudly on malformed content.
+            _NEWS_CACHE = {}
+    return _NEWS_CACHE
+
+
+def _news_slug_for(path: str) -> str | None:
+    normalized = path.replace("\\", "/").lstrip("/")
+    if not (normalized.startswith("news/") or normalized.startswith("ukr/news/")):
+        return None
+    return normalized.removeprefix("ukr/").removeprefix("news/").removesuffix(".html")
+
+
+def _news_dates(path: str) -> tuple[str, str] | None:
+    """(datePublished, dateModified) for a news article, or None.
+
+    `date` is the date of the event the post describes — it drives ordering and
+    the visible dateline. `published` is when the post actually went on the
+    site, and only differs for entries written retrospectively. Structured data
+    must report the real publication date, not the date being written about.
+    """
+    slug = _news_slug_for(path)
+    entry = _news_entries_by_slug().get(slug) if slug else None
+    if not entry:
+        return None
+    event_date = entry["date"].isoformat()
+    published = entry.get("published")
+    return (published.isoformat() if published else event_date, event_date)
+
+
 def _description_for(path: str, title: str, locale: str) -> str:
     normalized = path.replace("\\", "/").lstrip("/")
     is_uk = locale == "uk"
@@ -256,13 +302,37 @@ def _description_for(path: str, title: str, locale: str) -> str:
             if not is_uk else
             "Специфікації та implementation notes OpenOnco для перевірюваної підтримки рішень."
         )
+    if normalized.endswith("news.html"):
+        return (
+            "OpenOnco release notes, knowledge-base milestones and governance decisions, open for comment."
+            if not is_uk else
+            "Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів."
+        )
+    if normalized.startswith("news/") or normalized.startswith("ukr/news/"):
+        slug = _news_slug_for(normalized)
+        entry = _news_entries_by_slug().get(slug) if slug else None
+        summary = entry["summary"]["uk" if is_uk else "en"] if entry else None
+        if summary:
+            return summary
+        return (
+            f"{title_clean}: an OpenOnco project update."
+            if not is_uk else
+            f"{title_clean}: оновлення проєкту OpenOnco."
+        )
     return default
+
+
+"""Schema types that describe a dated, authored piece rather than a standing
+page — these also drive `og:type=article`."""
+_ARTICLE_SCHEMA_TYPES = {"MedicalWebPage", "NewsArticle"}
 
 
 def _schema_type(path: str) -> str:
     normalized = path.replace("\\", "/").lstrip("/")
     if normalized.endswith("try.html"):
         return "SoftwareApplication"
+    if normalized.startswith("news/") or normalized.startswith("ukr/news/"):
+        return "NewsArticle"
     if (
         normalized.endswith("kb.html")
         or normalized.startswith("kb/")
@@ -451,7 +521,13 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
         schema["codeRepository"] = GITHUB_URL
         schema["offers"] = {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
 
+    news_dates = _news_dates(path)
+    if news_dates:
+        schema["datePublished"], schema["dateModified"] = news_dates
+        schema["author"] = {"@type": "Organization", "name": SITE_NAME, "url": SITE_BASE_URL}
+
     json_ld = json.dumps(schema, ensure_ascii=False, separators=(",", ":"))
+    og_type = "article" if _schema_type(path) in _ARTICLE_SCHEMA_TYPES else "website"
     lines = [
         SEO_START,
         f'<meta name="description" content="{_escape(description)}">',
@@ -465,7 +541,7 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
         f'<link rel="alternate" hreflang="uk" href="{uk_url}">',
         f'<link rel="alternate" hreflang="x-default" href="{default_url}">',
         f'<meta property="og:site_name" content="{SITE_NAME}">',
-        f'<meta property="og:type" content="{"website" if _schema_type(path) != "MedicalWebPage" else "article"}">',
+        f'<meta property="og:type" content="{og_type}">',
         f'<meta property="og:title" content="{_escape(title)}">',
         f'<meta property="og:description" content="{_escape(description)}">',
         f'<meta property="og:url" content="{canonical}">',
@@ -735,6 +811,7 @@ knowledge base, use the LLM only as a relay/interface, and cite every claim.
 - Disease coverage: {SITE_BASE_URL}/diseases.html
 - Synthetic examples: {SITE_BASE_URL}/gallery.html
 - Capabilities and limitations: {SITE_BASE_URL}/capabilities.html
+- Project news: {SITE_BASE_URL}/news.html
 - Ukrainian homepage: {SITE_BASE_URL}/ukr/
 
 ## Machine-readable indexes
@@ -749,7 +826,11 @@ knowledge base, use the LLM only as a relay/interface, and cite every claim.
 
 Prefer canonical URLs from page metadata. Treat `/cases/` and `/ukr/cases/` pages as
 synthetic examples, not patient records. Treat `/kb/` and `/ukr/kb/` pages as source-linked
-knowledge-base facts for retrieval and citation discovery.
+knowledge-base facts for retrieval and citation discovery. Treat `/news/` and `/ukr/news/`
+pages as dated project announcements — they describe changes to the project, are not
+source-cited clinical claims, and go stale; cite `/kb/` pages for clinical facts instead.
+Reader comments on news pages are unmoderated third-party opinions, not project
+statements, and carry none of the source-citation guarantees of `/kb/` pages.
 """
     out = output_dir / "llms.txt"
     out.write_text(body, encoding="utf-8")
@@ -850,6 +931,8 @@ Read the repository `README.md`, the `specs/` folder (CHARTER first), and copy
 - Onco Wiki (source-linked KB): {SITE_BASE_URL}/kb.html
 - Disease coverage: {SITE_BASE_URL}/diseases.html
 - Capabilities and limitations: {SITE_BASE_URL}/capabilities.html
+- Project news: {SITE_BASE_URL}/news.html
+- News index JSON: {SITE_BASE_URL}/news_index.json
 - Sitemap: {SITE_BASE_URL}/sitemap.xml
 - Disease coverage JSON: {SITE_BASE_URL}/disease_coverage.json
 - Search index: {SITE_BASE_URL}/kb_search_index.json

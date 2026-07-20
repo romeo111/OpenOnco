@@ -72,6 +72,7 @@ from knowledge_base.stats import collect_stats
 from scripts.audit_clinical_gaps import write_outputs as write_clinical_gap_outputs
 from scripts.build_handbook import build_handbook
 from scripts.build_kb_wiki import build_kb_wiki
+from scripts.build_news import build_news
 from scripts.site_cases import (
     BROKEN_CASE_IDS,
     CASE_CATEGORIES,
@@ -405,10 +406,10 @@ def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
     SHA-256 prefix) automatically invalidates stale bundles on next
     fetch. CSD-6E polish — speeds up cold loads on repeat visits past
     what localStorage can hold (entire core + all visited diseases)."""
-    # 'l3' = navigation network-first. Bumping the layout prefix forces
+    # 'l4' = same-origin guard + news routes. Bumping the layout prefix forces
     # a hard cache invalidation for users whose browser still has an old
     # service worker/cache after a landing-page redesign.
-    cache_name = "openonco-bundle-l3-" + (core_version or "v1")
+    cache_name = "openonco-bundle-l4-" + (core_version or "v1")
     sw_js = """// OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
 // Two strategies in one SW:
 //   1. Cache-first for engine bundle artifacts (large, infrequent).
@@ -431,7 +432,11 @@ const PRECACHE = [
 // Routes that use stale-while-revalidate (instant from cache, refresh
 // in background). HTML pages must be on this list — never cache-first,
 // or the user gets stuck on an old build.
-const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html', '/style.css'];
+const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html',
+  '/style.css', '/news.html', '/ukr/news.html'];
+// Per-article news pages are matched by prefix rather than listed, since slugs
+// are added by content authors without touching this file.
+const SWR_PREFIXES = ['/news/', '/ukr/news/'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -480,12 +485,20 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
 
+  // Never touch cross-origin traffic. Embedded third-party frames (the news
+  // comment widget) load with request.mode === 'navigate', so without this
+  // guard the navigation branch below would re-issue them as no-store fetches
+  // and break them. It also stops the pathname-only matching further down from
+  // hijacking a third-party URL that happens to share a path with ours.
+  if (url.origin !== self.location.origin) return;
+
   if (event.request.mode === 'navigate') {
     return networkFirstNavigation(event);
   }
 
   // SWR for the small interactive shell (HTML + CSS).
-  if (SWR_PATHS.indexOf(url.pathname) !== -1) {
+  if (SWR_PATHS.indexOf(url.pathname) !== -1 ||
+      SWR_PREFIXES.some((p) => url.pathname.startsWith(p))) {
     return staleWhileRevalidate(event);
   }
 
@@ -1175,10 +1188,10 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 _NAV_LABELS = {
     "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "План лікування",
            "diseases": "Хвороби", "ask": "Туморборд", "kb": "Онко-вікі",
-           "prevent": "Профілактика"},
+           "prevent": "Профілактика", "news": "Новини"},
     "en": {"home": "Home", "about": "About", "try_cta": "Plan Builder",
            "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki",
-           "prevent": "Prevention"},
+           "prevent": "Prevention", "news": "News"},
 }
 
 
@@ -1205,6 +1218,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "diseases":     return "/diseases.html"
         if page_kind == "contribute":   return "/"
         if page_kind == "specs":        return "/specs.html"
+        if page_kind == "news":         return "/news.html"
     else:
         # EN page (at root) → switcher points to UA mirror at /ukr/
         if page_kind == "home":         return f"{uk_prefix}/"
@@ -1217,6 +1231,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "diseases":     return f"{uk_prefix}/diseases.html"
         if page_kind == "contribute":   return f"{uk_prefix}/"
         if page_kind == "specs":        return f"{uk_prefix}/specs.html"
+        if page_kind == "news":         return f"{uk_prefix}/news.html"
     return "/"
 
 
@@ -1244,10 +1259,13 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
 
     # Capabilities now folds in the former Limitations section. GitHub,
     # Examples and Specs are grouped under About to keep the main nav focused.
+    # News is bilingual from day one, so it appears on both navs (unlike
+    # Handbook, which is EN-only MVP).
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
             f'<a href="/ukr/capabilities.html"{cls("capabilities")}>Можливості</a>'
+            f'<a href="/ukr/news.html"{cls("news")}>{labels["news"]}</a>'
         )
     else:  # target_lang == "en"
         # Handbook is EN-only MVP — only surfaced on EN nav. When UA chapters
@@ -1256,6 +1274,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
         extra_links = (
             f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>'
             f'<a href="/handbook.html"{cls("handbook")}>Handbook</a>'
+            f'<a href="/news.html"{cls("news")}>{labels["news"]}</a>'
         )
 
     # Stable visual order is always [UA · EN] regardless of which language
@@ -9254,6 +9273,7 @@ def build_site(output_dir: Path) -> dict:
     disease_coverage_payload = bundle_disease_coverage(output_dir)
     kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
     handbook_payload = build_handbook(KB_ROOT, output_dir)
+    news_payload = build_news(output_dir, top_bar=_render_top_bar)
     clinical_gap_payload = write_clinical_gap_outputs(output_dir)
     discovery_payload = finalize_site_discovery(output_dir)
 
@@ -9273,6 +9293,7 @@ def build_site(output_dir: Path) -> dict:
         "disease_coverage_payload": disease_coverage_payload,
         "kb_wiki_payload": kb_wiki_payload,
         "handbook_payload": handbook_payload,
+        "news_payload": news_payload,
         "clinical_gap_payload": clinical_gap_payload,
         "discovery_payload": discovery_payload,
         "landing_assets": landing_assets,

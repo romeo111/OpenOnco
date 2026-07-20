@@ -354,6 +354,12 @@ the system should work. Requirements:
 
 Until all of these conditions are met — the case remains internal, not public.
 
+**Status (2026-07-19):** the Project Initiator reports all three conditions
+met, so this section no longer holds the reference case back. Publishing
+*about* the milestone — with no patient-level clinical detail — was never
+restricted by this section and has already happened
+(`/news/first-clinician-reviewed-plans.html`).
+
 ---
 
 ## 10. Versioning
@@ -412,6 +418,25 @@ The text is standardized and is not negotiated on a per-case basis.
 - Changes are recorded in the CHANGELOG of this document
 
 **CHANGELOG (dev-mode amendments):**
+
+- **2026-07-19 — §9.3 reference case unblocked** (Initiator-only,
+  dev-mode §6.1 exemption). The Initiator reports informed consent,
+  de-identification and ethics-committee approval obtained, satisfying all
+  three §9.3 conditions. The "approval from all Clinical Co-Leads"
+  condition in `REFERENCE_CASE_SPECIFICATION.md` — structurally impossible
+  with no Co-Leads appointed, and therefore an indefinite block — is
+  suspended under this §12 dev-mode exemption and queued for ratification
+  on first Co-Lead appointment. §15 C1–C7 invariants unchanged; publishing
+  a de-identified retrospective case touches none of them.
+
+  *Recorded for completeness:* two further requirements (an independent
+  re-identification review, and a documented consent/approval record) were
+  added to §9.3 earlier the same day and **removed at the Initiator's
+  direction** as unrequested scope. They are not project requirements. The
+  underlying exposure is unchanged and is noted here rather than as a gate:
+  re-identification is the one failure mode in publishing a real oncology
+  case that cannot be undone once the page is indexed, and the person who
+  performed the de-identification is the least able to spot what remains.
 
 - **2026-05-18 — §3 scope amendment** (Initiator-only, dev-mode §6.1
   exemption). Added HCP-mediated prevention / early-diagnosis as

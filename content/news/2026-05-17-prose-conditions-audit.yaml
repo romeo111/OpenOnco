@@ -1,0 +1,128 @@
+slug: prose-conditions-audit
+date: 2026-05-17
+published: 2026-07-19
+author: OpenOnco
+tags: [engine, quality, audit]
+
+title:
+  en: 85% of our decision-tree conditions were unreadable to the engine
+  uk: 85% умов у деревах рішень engine не міг прочитати
+
+summary:
+  en: >-
+    An audit of every treatment algorithm found that most branching conditions
+    were written as English prose the engine cannot evaluate — and that 30% of
+    algorithms therefore fell through to their default on every patient.
+  uk: >-
+    Аудит усіх алгоритмів лікування показав, що більшість умов розгалуження
+    написані англійською прозою, яку engine не вміє обчислювати, — і що через
+    це 30% алгоритмів на кожному пацієнті провалювалися до значення за
+    замовчуванням.
+
+body:
+  en:
+    - type: p
+      text: >-
+        A decision tree branches on conditions. Ours were often written like
+        this — `EGFR L858R or other classical sensitizing mutation` — which
+        reads perfectly well to a clinician and means nothing to the clause
+        evaluator, which resolves flat finding keys and nothing else. A
+        condition it cannot resolve evaluates to false.
+    - type: p
+      text: >-
+        We scanned every algorithm file to find out how widespread this was.
+        The numbers were worse than expected — and worse than our own first
+        estimate. An initial sample of the first 30 algorithms suggested 27% of
+        them fell through on every patient; sweeping all 152 corrected that
+        upward to 30%. The corrected figure is the one below.
+    - type: h2
+      text: What the audit found
+    - type: ul
+      items:
+        - "152 algorithm files scanned, containing 443 free-text `condition:` strings."
+        - "**376 of them — 85% — are prose-shaped**, meaning the evaluator returns false rather than a real answer."
+        - >-
+          **45 of 152 algorithms (30%)** have a step 1 that is entirely prose.
+          Those fall through to their default indication **on every patient**,
+          which makes their branching decorative.
+    - type: callout
+      tone: warn
+      text: >-
+        This is a real functional defect, not a cosmetic one. An algorithm that
+        always returns its default is not routing anything, however carefully
+        its branches were authored.
+    - type: h2
+      text: What changed immediately
+    - type: p
+      text: >-
+        The engine now warns when it meets a prose-shaped condition instead of
+        silently evaluating it to false. That converts an invisible failure
+        into a visible one, which is the cheapest useful step. The full audit
+        is published at `docs/reviews/openonco-state-audit-2026-05-17.md`.
+    - type: h2
+      text: Why the fix is slow
+    - type: p
+      text: >-
+        Rewriting 376 clauses into structured form is not a search-and-replace.
+        Each one encodes a clinical intent that has to be re-expressed as a
+        finding or a red flag without changing what it means — and under this
+        project's own rules, an LLM does not get to make that call. So the
+        queue is worked disease by disease, with clinical review.
+    - type: p
+      text: >-
+        We are publishing the number rather than waiting until it is
+        flattering. A tool that asks clinicians to check its reasoning owes
+        them its own worst measurements.
+  uk:
+    - type: p
+      text: >-
+        Дерево рішень розгалужується за умовами. Наші часто були написані ось
+        так — `EGFR L858R or other classical sensitizing mutation` — що чудово
+        читається лікарем і нічого не означає для обчислювача умов, який
+        розпізнає лише пласкі ключі знахідок. Умова, яку він не може
+        розпізнати, обчислюється як «хибно».
+    - type: p
+      text: >-
+        Ми просканували всі файли алгоритмів, щоб зрозуміти масштаб. Числа
+        виявилися гіршими, ніж очікувалося, — і гіршими за нашу ж першу оцінку.
+        Початкова вибірка з перших 30 алгоритмів дала 27% таких, що
+        провалюються на кожному пацієнті; повний обхід усіх 152 підняв цю цифру
+        до 30%. Нижче наведено виправлені числа.
+    - type: h2
+      text: Що показав аудит
+    - type: ul
+      items:
+        - "Просканували 152 файли алгоритмів, у них 443 вільнотекстові рядки `condition:`."
+        - "**376 з них — 85% — мають форму прози**, тобто обчислювач повертає «хибно» замість справжньої відповіді."
+        - >-
+          **45 зі 152 алгоритмів (30%)** мають перший крок, що складається
+          виключно з прози. Вони провалюються до індикації за замовчуванням **на
+          кожному пацієнті**, через що їхнє розгалуження стає декоративним.
+    - type: callout
+      tone: warn
+      text: >-
+        Це справжній функціональний дефект, а не косметичний. Алгоритм, який
+        завжди повертає значення за замовчуванням, нічого не маршрутизує — хоч
+        би як ретельно були написані його гілки.
+    - type: h2
+      text: Що змінилося одразу
+    - type: p
+      text: >-
+        Тепер engine попереджає, коли зустрічає умову у формі прози, замість
+        мовчки обчислювати її як «хибно». Це перетворює невидиму помилку на
+        видиму — найдешевший корисний крок. Повний аудит опубліковано у
+        `docs/reviews/openonco-state-audit-2026-05-17.md`.
+    - type: h2
+      text: Чому виправлення повільне
+    - type: p
+      text: >-
+        Переписати 376 умов у структуровану форму — це не пошук із заміною.
+        Кожна кодує клінічний намір, який треба виразити через finding або red
+        flag, не змінивши змісту, — а за власними правилами цього проєкту LLM
+        не має права приймати таке рішення. Тому чергу опрацьовують хвороба за
+        хворобою, з клінічною перевіркою.
+    - type: p
+      text: >-
+        Ми публікуємо це число, не чекаючи, доки воно стане приємним.
+        Інструмент, який просить лікарів перевіряти його міркування, зобовʼязаний
+        показувати їм і власні найгірші виміри.

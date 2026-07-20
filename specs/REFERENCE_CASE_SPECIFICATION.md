@@ -3,8 +3,10 @@
 **Project:** OpenOnco
 **Document:** Reference Case Specification — "Patient Zero"
 **Version:** v0.1 (draft)
-**Status:** Draft for discussion; final entry of patient data
-is deferred until formal consent is obtained
+**Status:** Draft for discussion. Consent, de-identification and ethics
+approval reported obtained (2026-07-19); the Co-Lead approval condition is
+suspended under the CHARTER §12 dev-mode exemption — see "Critical caveat
+on status" below
 **Prerequisite documents:** CHARTER.md, CLINICAL_CONTENT_STANDARDS.md,
 KNOWLEDGE_SCHEMA_SPECIFICATION.md, DATA_STANDARDS.md
 
@@ -43,8 +45,18 @@ Chosen because:
 - Inclusion of real data requires:
   1. Formal **written patient consent** to use their case as a public reference
   2. Full **de-identification** per Data Standards §14
-  3. **Re-identification review** by an independent clinician
-  4. Approval from all Clinical Co-Leads
+  3. **Ethics committee approval** from the treating institution (CHARTER §9.3)
+  4. Approval from all Clinical Co-Leads — *suspended in dev mode, see box*
+
+> **⚠ Temporary dev mode (from 2026-07-19):** no Clinical Co-Leads are
+> appointed, so condition 4 is structurally impossible and would block this
+> case indefinitely. Under the CHARTER §12 dev-mode exemption, condition 4 is
+> ratified by the Project Initiator alone, on the same terms as the §3 and
+> §15.3 amendments: recorded in the CHARTER CHANGELOG, no §15 C1–C7 invariant
+> weakened, and queued for formal Co-Lead ratification once the first Co-Lead
+> is appointed.
+>
+> Conditions 1–3 are reported met by the Initiator as of 2026-07-19.
 
 Until these conditions are met, the document functions as a **template**
 describing the structure and requirements. After they are met, real data is

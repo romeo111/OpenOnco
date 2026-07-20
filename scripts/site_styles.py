@@ -2591,4 +2591,165 @@ body.home-page .home-carousel {
   color: #721c24;
   border: 1px solid #f5c6cb;
 }
+
+/* ── News section ──────────────────────────────────────────────────────── */
+/* The list reuses .case-grid / .case-card; only the dateline colour and the
+   article body need rules of their own. .info-section deliberately styles
+   only h2 and p, so long-form prose gets its own block here. */
+/* Datelines are prose, not labels — the shared .case-badge uppercasing makes
+   a Ukrainian date read as shouting. */
+.news-card .case-badge.bdg-plan,
+.news-article .case-badge.bdg-plan {
+  text-transform: none;
+  letter-spacing: 0.3px;
+}
+.news-article {
+  max-width: 760px;
+}
+.news-back {
+  display: inline-block;
+  text-decoration: none;
+}
+.news-byline {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-bottom: 26px;
+}
+.news-retro {
+  font-size: 12.5px;
+  color: var(--gray-500);
+  font-style: italic;
+  margin-top: -18px;
+  margin-bottom: 26px;
+}
+/* Explainer posts assert things about the world rather than about our own
+   commits, so they carry a standing note and a reference list. */
+.news-kind-note {
+  background: var(--amber-bg);
+  border-left: 3px solid var(--amber);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--gray-900);
+  line-height: 1.5;
+}
+.news-sources {
+  max-width: 760px;
+  margin-top: 38px;
+  padding-top: 20px;
+  border-top: 1px solid var(--gray-200);
+}
+.news-sources h2 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--green-900);
+  margin-bottom: 12px;
+}
+.news-sources ol {
+  padding-left: 20px;
+}
+.news-sources li {
+  font-size: 13px;
+  color: var(--gray-700);
+  line-height: 1.55;
+  margin-bottom: 8px;
+}
+.news-sources a {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--green-700);
+}
+.news-body {
+  font-size: 15.5px;
+  color: var(--gray-700);
+  line-height: 1.68;
+}
+.news-body p {
+  margin-bottom: 16px;
+}
+.news-body h2 {
+  font-family: var(--font-display);
+  font-size: 23px;
+  color: var(--green-900);
+  margin: 34px 0 12px;
+}
+.news-body h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--green-900);
+  margin: 26px 0 10px;
+}
+.news-body ul,
+.news-body ol {
+  padding-left: 22px;
+  margin-bottom: 16px;
+}
+.news-body li {
+  margin-bottom: 8px;
+}
+.news-body blockquote {
+  border-left: 3px solid var(--green-600);
+  background: var(--green-50);
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin: 18px 0;
+  color: var(--gray-900);
+}
+.news-body code {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  background: var(--gray-100);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--green-800);
+}
+.news-body a {
+  color: var(--green-700);
+}
+.news-code {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  padding: 12px 14px;
+  overflow-x: auto;
+  margin-bottom: 16px;
+}
+.news-code code {
+  background: none;
+  padding: 0;
+}
+
+/* Comments. Open to anyone, no account. One quiet line above the box rather
+   than a warning panel — this is a news thread, not a treatment plan. */
+.news-comments {
+  max-width: 760px;
+  margin-top: 46px;
+  padding-top: 26px;
+  border-top: 1px solid var(--gray-200);
+}
+.news-comments h2 {
+  font-family: var(--font-display);
+  font-size: 23px;
+  color: var(--green-900);
+  margin-bottom: 10px;
+}
+.news-comments-note {
+  font-size: 13px;
+  color: var(--gray-500);
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+.news-comments-note a {
+  color: var(--green-700);
+}
+.news-comments-offline {
+  font-size: 13.5px;
+  color: var(--gray-500);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
 """

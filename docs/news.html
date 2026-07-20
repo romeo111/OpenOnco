@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · News</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco release notes, knowledge-base milestones and governance decisions, open for comment.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco release notes, knowledge-base milestones and governance decisions, open for comment.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/news.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/news.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/news.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco · News">
+<meta property="og:description" content="OpenOnco release notes, knowledge-base milestones and governance decisions, open for comment.">
+<meta property="og:url" content="https://openonco.info/news.html">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · News">
+<meta name="twitter:description" content="OpenOnco release notes, knowledge-base milestones and governance decisions, open for comment.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · News","description":"OpenOnco release notes, knowledge-base milestones and governance decisions, open for comment.","url":"https://openonco.info/news.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/news.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/">Home</a>
+    <a href="/capabilities.html">Capabilities</a><a href="/handbook.html">Handbook</a><a href="/news.html" class="active">News</a>
+    <a href="/about.html">About</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <a class="lang-other" href="/ukr/news.html"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
+      <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
+    </div>
+    <div class="top-cta-group">
+      <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
+      <a href="/kb.html" class="btn-cta-top btn-cta-secondary">Onco Wiki</a>
+      <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="info-page">
+    <p class="home-kicker">OpenOnco</p>
+    <h1>Project news</h1>
+    <p class="lead">Release notes, knowledge-base milestones and governance decisions. Every post is open for comment.</p>
+
+    <div class="case-list-header">
+      <h2>News</h2>
+      <span class="case-list-count">12 posts</span>
+    </div>
+    <div class="case-grid">
+      <a class="case-card news-card" href="/news/cancer-mutations-in-normal-skin.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">July 21, 2026</span>
+          <span class="case-badge bdg-diag">Explainer</span>
+          <span class="case-quality quality-starter">biology</span>
+          <span class="case-quality quality-starter">biomarkers</span>
+        </div>
+        <h3>Normal skin is already full of &quot;cancer&quot; mutations</h3>
+        <p>Sequencing physiologically normal eyelid skin found driver mutations — the same ones found in tumours — in roughly a quarter of cells, at about 140 per square centimetre. The skin was working fine. A driver mutation alone does not make cancer.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+      <a class="case-card news-card" href="/news/what-nccn-2a-actually-means.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">July 20, 2026</span>
+          <span class="case-badge bdg-diag">Explainer</span>
+          <span class="case-quality quality-starter">guidelines</span>
+          <span class="case-quality quality-starter">evidence</span>
+        </div>
+        <h3>What NCCN category 2A actually means</h3>
+        <p>2A is widely read as &quot;weak evidence, weak recommendation.&quot; It is not. The panel agreement behind 2A is the same as behind category 1 — and 2A is what you get by default when no category is printed at all.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+      <a class="case-card news-card" href="/news/news-and-comments.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">July 19, 2026</span>
+
+          <span class="case-quality quality-starter">site</span>
+          <span class="case-quality quality-starter">community</span>
+        </div>
+        <h3>This section is new, and it is open for comment</h3>
+        <p>Release notes and governance decisions now have a home on the site instead of living only in commit messages. Every post takes comments — with a few rules that a cancer-information site genuinely needs.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+      <a class="case-card news-card" href="/news/algorithm-routing-repair.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">July 15, 2026</span>
+
+          <span class="case-quality quality-starter">knowledge-base</span>
+          <span class="case-quality quality-starter">engine</span>
+          <span class="case-quality quality-starter">quality</span>
+        </div>
+        <h3>Decision-tree routing defects fixed, validator hardened</h3>
+        <p>Auditing every treatment algorithm through the engine walker — rather than the loader — surfaced routing defects that were silently dropping selected indications from rendered plans.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+      <a class="case-card news-card" href="/news/two-doors.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">July 8, 2026</span>
+
+          <span class="case-quality quality-starter">site</span>
+          <span class="case-quality quality-starter">governance</span>
+          <span class="case-quality quality-starter">patients</span>
+        </div>
+        <h3>Two doors — and why patients get a different one</h3>
+        <p>The homepage now routes clinicians and patients to different places. Patients get help understanding a plan and preparing questions, not treatment recommendations — a line that has to hold for both safety and regulatory reasons.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+      <a class="case-card news-card" href="/news/mcp-server-for-assistants.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">June 18, 2026</span>
+
+          <span class="case-quality quality-starter">engine</span>
+          <span class="case-quality quality-starter">integrations</span>
+          <span class="case-quality quality-starter">release</span>
+        </div>
+        <h3>An AI assistant can now call the engine instead of guessing</h3>
+        <p>OpenOnco ships an MCP server, so an assistant answering an oncology question can route through the rule engine and return cited output rather than improvising a regimen.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+      <a class="case-card news-card" href="/news/prevention-plans-live.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">May 19, 2026</span>
+
+          <span class="case-quality quality-starter">prevention</span>
+          <span class="case-quality quality-starter">governance</span>
+          <span class="case-quality quality-starter">knowledge-base</span>
+        </div>
+        <h3>Prevention plans, for people who do not have cancer yet</h3>
+        <p>The charter was amended to cover people at elevated risk but without a diagnosis. The engine now produces a Prevention Plan alongside the Treatment Plan, and the first pilots are live on the site.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+      <a class="case-card news-card" href="/news/prose-conditions-audit.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">May 17, 2026</span>
+
+          <span class="case-quality quality-starter">engine</span>
+          <span class="case-quality quality-starter">quality</span>
+          <span class="case-quality quality-starter">audit</span>
+        </div>
+        <h3>85% of our decision-tree conditions were unreadable to the engine</h3>
+        <p>An audit of every treatment algorithm found that most branching conditions were written as English prose the engine cannot evaluate — and that 30% of algorithms therefore fell through to their default on every patient.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+      <a class="case-card news-card" href="/news/spring-kb-wave.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">May 11, 2026</span>
+
+          <span class="case-quality quality-starter">knowledge-base</span>
+          <span class="case-quality quality-starter">regimens</span>
+        </div>
+        <h3>What landed in the knowledge base, 30 April to 11 May</h3>
+        <p>A digest of one busy fortnight: haematology, thoracic and breast regimen waves, rare-tumour red flags, CIViC actionability backfill, and a batch of routing fixes.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+      <a class="case-card news-card" href="/news/civic-primary-actionability.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">April 27, 2026</span>
+
+          <span class="case-quality quality-starter">knowledge-base</span>
+          <span class="case-quality quality-starter">licensing</span>
+          <span class="case-quality quality-starter">biomarkers</span>
+        </div>
+        <h3>Biomarker actionability moves from OncoKB to CIViC</h3>
+        <p>A licence audit found OncoKB&#x27;s terms incompatible with running OpenOnco as a free public resource. Biomarker actionability now builds on CIViC, which is CC0.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+      <a class="case-card news-card" href="/news/rule-engine-not-an-llm.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">April 26, 2026</span>
+
+          <span class="case-quality quality-starter">governance</span>
+          <span class="case-quality quality-starter">engine</span>
+        </div>
+        <h3>Why an LLM never picks the treatment</h3>
+        <p>The project started out asking a language model to rank treatments. That approach is now archived, and the rule that replaced it shapes everything else: recommendations come from a versioned knowledge base, not a model.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+      <a class="case-card news-card" href="/news/first-clinician-reviewed-plans.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">April 24, 2026</span>
+
+          <span class="case-quality quality-starter">validation</span>
+          <span class="case-quality quality-starter">clinical</span>
+        </div>
+        <h3>Practising oncologists reviewed the engine&#x27;s plans for the first time</h3>
+        <p>The engine produced treatment plans for a real patient, and the oncologists who read them judged them strong. One case does not validate a system — but it is the first signal from outside the project&#x27;s own scoring.</p>
+        <div class="case-foot">Read →</div>
+      </a>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Informational tool for clinicians, not a medical device (CHARTER §15 + §11).
+  </footer>
+</main>
+</body>
+</html>
