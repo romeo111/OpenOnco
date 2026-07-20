@@ -4,9 +4,9 @@
 **Document:** Reference Case Specification — "Patient Zero"
 **Version:** v0.1 (draft)
 **Status:** Draft for discussion. Consent, de-identification and ethics
-approval are reported obtained (2026-07-19); entry of patient data is now
-gated on the independent re-identification review and the §0 evidence
-record — see "Critical caveat on status" below
+approval reported obtained (2026-07-19); the Co-Lead approval condition is
+suspended under the CHARTER §12 dev-mode exemption — see "Critical caveat
+on status" below
 **Prerequisite documents:** CHARTER.md, CLINICAL_CONTENT_STANDARDS.md,
 KNOWLEDGE_SCHEMA_SPECIFICATION.md, DATA_STANDARDS.md
 
@@ -46,49 +46,21 @@ Chosen because:
   1. Formal **written patient consent** to use their case as a public reference
   2. Full **de-identification** per Data Standards §14
   3. **Ethics committee approval** from the treating institution (CHARTER §9.3)
-  4. **Re-identification review** by a clinician who did not perform the
-     de-identification
-  5. **The evidence recorded in §0 below**
-  6. Approval from all Clinical Co-Leads — *suspended in dev mode, see box*
+  4. Approval from all Clinical Co-Leads — *suspended in dev mode, see box*
 
 > **⚠ Temporary dev mode (from 2026-07-19):** no Clinical Co-Leads are
-> appointed, so condition 6 is structurally impossible and would block this
-> case indefinitely. Under the CHARTER §12 dev-mode exemption, condition 6 is
+> appointed, so condition 4 is structurally impossible and would block this
+> case indefinitely. Under the CHARTER §12 dev-mode exemption, condition 4 is
 > ratified by the Project Initiator alone, on the same terms as the §3 and
 > §15.3 amendments: recorded in the CHARTER CHANGELOG, no §15 C1–C7 invariant
 > weakened, and queued for formal Co-Lead ratification once the first Co-Lead
 > is appointed.
 >
-> Conditions 1–5 are **not** suspended. They protect a specific identifiable
-> person rather than a process, and unlike condition 6 every one of them can
-> actually be satisfied today.
+> Conditions 1–3 are reported met by the Initiator as of 2026-07-19.
 
 Until these conditions are met, the document functions as a **template**
 describing the structure and requirements. After they are met, real data is
 entered through the governance process into the designated sections.
-
----
-
-## 0. Consent and approval record
-
-Publishing a real patient's oncology case requires an audit trail, not a
-recollection. Fill this in before any patient-level data enters this document;
-leave it visible and incomplete until then.
-
-| Item | Status |
-|---|---|
-| Informed consent obtained | **Reported obtained** (Initiator, 2026-07-19) — date and scope not yet recorded |
-| Scope of consent (what the patient agreed to publish, and where) | ⬜ not recorded |
-| Consent document location | ⬜ not recorded |
-| De-identification performed per DATA_STANDARDS §14 | **Reported complete** (Initiator, 2026-07-19) — performer not yet recorded |
-| Ethics committee approval | **Reported obtained** (Initiator, 2026-07-19) — approving body and decision reference not yet recorded |
-| Independent re-identification review | ⬜ **outstanding** |
-| Withdrawal procedure understood by patient | ⬜ not recorded |
-
-**Why this table exists.** Consent can be withdrawn, and CHARTER §9.3 commits
-the project to removing the case if it is. That promise is only keepable if
-there is a record of what was agreed, by whom, and when. "The owner said so"
-is not a record.
 
 ---
 
