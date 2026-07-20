@@ -231,6 +231,77 @@ def test_structured_data_reports_real_publication_date():
     assert site_head._news_dates("about.html") is None
 
 
+# ── explainer posts ─────────────────────────────────────────────────────────
+
+SRC = [{"citation": "Martincorena et al., Science 2015", "id": "25999502"}]
+
+
+def test_explainer_without_sources_is_rejected(tmp_path):
+    """An uncited clinical claim must not reach a public medical page."""
+    _write_post(tmp_path, "x.yaml", kind="explainer")
+    with pytest.raises(NewsContentError, match="must cite at least one source"):
+        load_news_entries(tmp_path)
+
+
+def test_project_post_needs_no_sources(tmp_path):
+    _write_post(tmp_path, "x.yaml")
+    entry = load_news_entries(tmp_path)[0]
+    assert entry["kind"] == "project"
+    assert entry["sources"] == []
+
+
+def test_unknown_kind_is_rejected(tmp_path):
+    _write_post(tmp_path, "x.yaml", kind="opinion")
+    with pytest.raises(NewsContentError, match="'kind' must be one of"):
+        load_news_entries(tmp_path)
+
+
+@pytest.mark.parametrize("bad,fragment", [
+    ([{"citation": "No id here"}], "needs an 'id'"),
+    ([{"id": "25999502"}], "needs a 'citation'"),
+])
+def test_incomplete_source_is_rejected(tmp_path, bad, fragment):
+    _write_post(tmp_path, "x.yaml", kind="explainer", sources=bad)
+    with pytest.raises(NewsContentError, match=fragment):
+        load_news_entries(tmp_path)
+
+
+def test_explainer_renders_note_and_reference_list(tmp_path):
+    _write_post(tmp_path, "x.yaml", kind="explainer", sources=SRC)
+    entry = load_news_entries(tmp_path)[0]
+    en = build_news.render_news_article(entry, target_lang="en", top_bar_html="")
+    ua = build_news.render_news_article(entry, target_lang="uk", top_bar_html="")
+    assert "Background reading, not clinical guidance" in en
+    assert "не клінічна настанова" in ua
+    assert "news-sources" in en
+    assert "Martincorena" in en
+    # A bare PMID becomes a PubMed link.
+    assert "https://pubmed.ncbi.nlm.nih.gov/25999502/" in en
+
+
+def test_project_post_has_no_explainer_furniture(tmp_path):
+    _write_post(tmp_path, "x.yaml")
+    entry = load_news_entries(tmp_path)[0]
+    html = build_news.render_news_article(entry, target_lang="en", top_bar_html="")
+    assert "news-kind-note" not in html
+    assert "news-sources" not in html
+
+
+@pytest.mark.parametrize("identifier,expected", [
+    ("25999502", "https://pubmed.ncbi.nlm.nih.gov/25999502/"),
+    ("PMID:25999502", "https://pubmed.ncbi.nlm.nih.gov/25999502/"),
+    ("10.1126/science.aaa6806", "https://doi.org/10.1126/science.aaa6806"),
+    ("doi:10.1126/science.aaa6806", "https://doi.org/10.1126/science.aaa6806"),
+    ("https://www.nccn.org/x", "https://www.nccn.org/x"),
+])
+def test_source_identifiers_become_links(identifier, expected):
+    assert build_news._source_href(identifier) == expected
+
+
+def test_unlinkable_source_identifier_stays_plain_text():
+    assert build_news._source_href("NCCN Guidelines v3.2026") is None
+
+
 # ── navigation ──────────────────────────────────────────────────────────────
 
 @pytest.mark.parametrize("lang,label,href", [

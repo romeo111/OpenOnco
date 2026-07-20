@@ -2,6 +2,42 @@
 
 Companion to `docs/news-comments-setup.md`, which covers the mechanics.
 
+## Two kinds of post
+
+Set `kind:` in the YAML. It defaults to `project`.
+
+**`project`** — what changed in OpenOnco and why. Everything published so far.
+Claims are about our own commits, so the commit is the evidence and citations
+are optional.
+
+**`explainer`** — background on cancer biology, or on how the clinical
+literature and guidelines actually work. These assert things about the world,
+not about our repository, so two things are enforced by the build:
+
+- **`sources:` is mandatory** and the build fails without it. Each entry needs
+  a `citation` and an `id` (PMID, DOI or URL); bare PMIDs and DOIs are turned
+  into links automatically. This is CLINICAL_CONTENT_STANDARDS applied to
+  editorial content — a claim about cancer biology on a public medical site
+  needs the same grounding as a claim in the knowledge base.
+- **A standing note** appears above the body saying this is background reading
+  rather than clinical guidance, and that cited studies may have been
+  superseded. Someone arriving from search at a page about tumour biology
+  should not have to infer that.
+
+Explainers are also badged on the index so they are not mistaken for release
+notes.
+
+**Where the line is.** An explainer describes published research. It does not
+tell a reader what to do about their own case, does not compare named drugs as
+better or worse, and does not turn a mechanism into an implication for
+treatment. If a draft starts doing that, it is no longer editorial content and
+belongs in the knowledge base, behind CHARTER §6.1 two-reviewer signoff.
+
+Prefer topics where the honest finding is a limitation — how evidence grades
+are misread, why a cell-line result may not transfer, where precision oncology
+underdelivered. Those are useful to a clinician and carry little risk of being
+read as advice.
+
 ## How long a post should be
 
 Three tiers. Word counts are **per language** — every post ships EN and UA.

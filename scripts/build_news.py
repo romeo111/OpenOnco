@@ -58,6 +58,13 @@ COMMENTS = {
     "client_base": "https://unpkg.com/@waline/client@v3/dist",
 }
 
+# "project" = what changed in OpenOnco. "explainer" = background on cancer
+# biology or how the clinical literature works. The distinction is not
+# cosmetic: an explainer asserts things about the world rather than about our
+# own commits, so it must carry citations and says on the page that it is not
+# clinical advice.
+POST_KINDS = {"project", "explainer"}
+
 BLOCK_TYPES = {"p", "h2", "h3", "ul", "ol", "quote", "callout", "code"}
 CALLOUT_TONES = {"info": "", "good": " callout-good", "warn": " callout-hard"}
 
@@ -135,6 +142,41 @@ def _require_bilingual(raw: dict[str, Any], field: str, source: str) -> dict[str
     if missing:
         raise NewsContentError(f"{source}: '{field}' missing {'/'.join(missing)} text")
     return {"en": str(value["en"]).strip(), "uk": str(value["uk"]).strip()}
+
+
+def _validate_sources(raw: object, source: str, kind: str) -> list[dict[str, str]]:
+    """Reference list for a post.
+
+    Optional for project news, which reports on our own commits. **Required**
+    for `explainer` posts: those make factual claims about cancer biology and
+    the clinical literature, and CLINICAL_CONTENT_STANDARDS requires a citation
+    behind every such claim. Enforcing it here means the build fails rather
+    than an uncited claim reaching a public medical page.
+    """
+    if raw is None:
+        raw = []
+    if not isinstance(raw, list):
+        raise NewsContentError(f"{source}: 'sources' must be a list")
+
+    checked: list[dict[str, str]] = []
+    for index, item in enumerate(raw):
+        where = f"{source}: sources[{index}]"
+        if not isinstance(item, dict):
+            raise NewsContentError(f"{where} must be a mapping with 'citation' and 'id'")
+        citation = str(item.get("citation", "")).strip()
+        identifier = str(item.get("id", "")).strip()
+        if not citation:
+            raise NewsContentError(f"{where} needs a 'citation'")
+        if not identifier:
+            raise NewsContentError(f"{where} needs an 'id' (PMID, DOI or URL)")
+        checked.append({"citation": citation, "id": identifier})
+
+    if kind == "explainer" and not checked:
+        raise NewsContentError(
+            f"{source}: an 'explainer' post makes clinical claims and must cite "
+            f"at least one source (CLINICAL_CONTENT_STANDARDS)"
+        )
+    return checked
 
 
 def _validate_blocks(blocks: object, source: str, lang: str) -> list[dict[str, Any]]:
@@ -216,10 +258,20 @@ def load_news_entries(news_dir: Path = DEFAULT_NEWS_DIR) -> list[dict[str, Any]]
         if not isinstance(tags, list):
             raise NewsContentError(f"{source}: 'tags' must be a list")
 
+        kind = str(raw.get("kind", "project")).strip()
+        if kind not in POST_KINDS:
+            raise NewsContentError(
+                f"{source}: 'kind' must be one of {sorted(POST_KINDS)}, got {kind!r}"
+            )
+
+        sources = _validate_sources(raw.get("sources"), source, kind)
+
         entries.append({
             "slug": slug,
             "date": event_date,
             "published": published,
+            "kind": kind,
+            "sources": sources,
             "tags": [str(t).strip() for t in tags if str(t).strip()],
             "author": str(raw.get("author", "OpenOnco")).strip() or "OpenOnco",
             "title": _require_bilingual(raw, "title", source),
@@ -233,6 +285,67 @@ def load_news_entries(news_dir: Path = DEFAULT_NEWS_DIR) -> list[dict[str, Any]]
 
     entries.sort(key=lambda e: (e["date"], e["slug"]), reverse=True)
     return entries
+
+
+def _source_href(identifier: str) -> str | None:
+    """Turn a PMID / DOI / URL into a link target."""
+    value = identifier.strip()
+    low = value.lower()
+    if low.startswith(("http://", "https://")):
+        return value
+    if low.startswith("pmid:"):
+        return f"https://pubmed.ncbi.nlm.nih.gov/{value.split(':', 1)[1].strip()}/"
+    if low.startswith("doi:"):
+        return f"https://doi.org/{value.split(':', 1)[1].strip()}"
+    if low.startswith("10."):
+        return f"https://doi.org/{value}"
+    if value.isdigit():
+        return f"https://pubmed.ncbi.nlm.nih.gov/{value}/"
+    return None
+
+
+def _render_sources(entry: dict[str, Any], target_lang: str) -> str:
+    if not entry.get("sources"):
+        return ""
+    is_en = target_lang == "en"
+    heading = "Sources" if is_en else "Джерела"
+    items = []
+    for src in entry["sources"]:
+        href = _source_href(src["id"])
+        label = _esc(src["id"])
+        link = (
+            f'<a href="{_esc(href)}" target="_blank" rel="noopener noreferrer">{label}</a>'
+            if href else label
+        )
+        items.append(f"      <li>{_esc(src['citation'])} · {link}</li>")
+    return f"""  <section class="news-sources">
+    <h2>{_esc(heading)}</h2>
+    <ol>
+{chr(10).join(items)}
+    </ol>
+  </section>"""
+
+
+def _render_explainer_note(target_lang: str) -> str:
+    """Shown on explainer posts only.
+
+    A reader who arrives from search at a page about tumour biology should not
+    have to infer that it is background reading rather than guidance for their
+    own case.
+    """
+    if target_lang == "en":
+        text = (
+            "Background reading, not clinical guidance. This describes published "
+            "research; it is not a recommendation for any individual case, and the "
+            "cited studies may have been superseded."
+        )
+    else:
+        text = (
+            "Матеріал для загального розуміння, а не клінічна настанова. Тут описані "
+            "опубліковані дослідження; це не рекомендація для конкретного випадку, а "
+            "згадані праці могли бути переглянуті пізнішими даними."
+        )
+    return f'    <p class="news-kind-note">{_esc(text)}</p>'
 
 
 def _render_blocks(blocks: list[dict[str, Any]]) -> str:
@@ -526,10 +639,12 @@ def render_news_index(entries: list[dict[str, Any]], *, target_lang: str,
         count_word = "дописів"
 
     if entries:
+        kind_label = "Explainer" if is_en else "Пояснення"
         cards = "\n".join(
             f"""      <a class="case-card news-card" href="{article_path(e['slug'], target_lang)}">
         <div class="case-badge-row">
           <span class="case-badge bdg-plan">{_esc(_format_date(e['date'], target_lang))}</span>
+{f'          <span class="case-badge bdg-diag">{_esc(kind_label)}</span>' if e['kind'] == 'explainer' else ''}
 {_render_tags(e['tags'])}
         </div>
         <h3>{_esc(e['title'][target_lang])}</h3>
@@ -610,12 +725,13 @@ def render_news_article(entry: dict[str, Any], *, target_lang: str,
     <h1>{_esc(title)}</h1>
     <p class="lead">{_esc(entry['summary'][target_lang])}</p>
     <p class="news-byline">{_esc(by_line)} {_esc(entry['author'])}</p>{retro_html}
-
+{_render_explainer_note(target_lang) if entry['kind'] == 'explainer' else ''}
     <div class="news-body info-text">
       {body_html}
     </div>
   </article>
 
+{_render_sources(entry, target_lang)}
 {render_comments(entry, target_lang)}"""
 
     return _page_shell(
@@ -680,6 +796,8 @@ def build_news(
                 "slug": e["slug"],
                 "date": e["date"].isoformat(),
                 "published": e["published"].isoformat() if e["published"] else None,
+                "kind": e["kind"],
+                "sources": e["sources"],
                 "tags": e["tags"],
                 "author": e["author"],
                 "title": e["title"],
