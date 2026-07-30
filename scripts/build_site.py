@@ -1194,6 +1194,11 @@ _NAV_LABELS = {
            "prevent": "Prevention", "news": "News"},
 }
 
+# Prevention feature is incomplete — prevent.html still builds and stays
+# reachable by direct URL, but the nav CTA is withheld until it ships.
+# Flip to True to surface the button again.
+_PREVENT_NAV_ENABLED = False
+
 
 def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> str:
     """Build the URL the language-toggle should point to.
@@ -1294,6 +1299,22 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     prevent_href = "/ukr/prevent.html" if target_lang == "uk" else "/prevent.html"
     prevent_current = ' aria-current="page"' if active == "prevent" else ""
 
+    cta_links = [
+        f'<a href="{try_path}" class="btn-cta-top btn-cta-try"{try_current}>{labels["try_cta"]}</a>',
+    ]
+    if _PREVENT_NAV_ENABLED:
+        cta_links.append(
+            f'<a href="{prevent_href}" class="btn-cta-top btn-cta-secondary"'
+            f'{prevent_current}>{labels["prevent"]}</a>'
+        )
+    cta_links.append(
+        f'<a href="{kb_href}" class="btn-cta-top btn-cta-secondary"{kb_current}>{labels["kb"]}</a>'
+    )
+    cta_links.append(
+        f'<a href="{ask_path}" class="btn-cta-top btn-cta-secondary"{ask_current}>{labels["ask"]}</a>'
+    )
+    cta_group = "\n      ".join(cta_links)
+
     return f"""<header class="top-bar">
   <div class="brand-line">
     <a href="{home_path}" class="brand-mini">OpenOnco</a>
@@ -1309,10 +1330,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
       <{en_tag} class="{en_cls}"{en_attr}><span class="lang-flag flag-en" aria-hidden="true"></span>EN</{en_tag}>
     </div>
     <div class="top-cta-group">
-      <a href="{try_path}" class="btn-cta-top btn-cta-try"{try_current}>{labels['try_cta']}</a>
-      <a href="{prevent_href}" class="btn-cta-top btn-cta-secondary"{prevent_current}>{labels['prevent']}</a>
-      <a href="{kb_href}" class="btn-cta-top btn-cta-secondary"{kb_current}>{labels['kb']}</a>
-      <a href="{ask_path}" class="btn-cta-top btn-cta-secondary"{ask_current}>{labels['ask']}</a>
+      {cta_group}
     </div>
   </div>
 </header>"""
