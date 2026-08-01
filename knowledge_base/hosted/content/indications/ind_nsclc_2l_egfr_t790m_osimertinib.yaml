@@ -1,0 +1,143 @@
+id: IND-NSCLC-2L-EGFR-T790M-OSIMERTINIB
+plan_track: standard
+
+# DRAFT — CHARTER §6.1 gate. Requires two Clinical Co-Lead sign-offs before
+# merge. See docs/plans/nsclc_t790m_osimertinib_2l_2026-07-18-1550.md §6 for
+# the four open questions this draft deliberately does not resolve.
+draft: true
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: EGFR_T790M_POST_1G2G_TKI
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic EGFR-mutated NSCLC with acquired T790M at progression"
+    - "Disease progression on a 1st/2nd-generation EGFR-TKI (gefitinib, erlotinib, afatinib, dacomitinib)"
+    - "Osimertinib-naive — no prior 3rd-generation EGFR-TKI (distinguishes this track from IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ)"
+    - "T790M confirmed on plasma ctDNA NGS or tissue re-biopsy (negative ctDNA → tissue re-biopsy, false-negative rate)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "Acquired EGFR T790M resistance mutation confirmed at progression on a 1st/2nd-generation EGFR-TKI"
+      required: true
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "Histologic transformation to small-cell or squamous (excluded — different treatment pathway)"
+
+recommended_regimen: REG-OSIMERTINIB-NSCLC
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ  # on osimertinib failure — post-osimertinib resistance pathway
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  progression_free_survival:
+    value: "Median PFS 10.1 vs 4.4 mo with platinum-pemetrexed (AURA3)"
+    source: SRC-AURA3-MOK-2017
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+  - RF-NSCLC-BRAIN-METS-EMERGENCY
+  - RF-NSCLC-CORD-COMPRESSION
+  - RF-NSCLC-SVC-SYNDROME
+  - RF-NSCLC-MALIGNANT-EFFUSION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # confirms T790M and rules out transformation
+desired_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+
+rationale: >
+  Osimertinib, a 3rd-generation irreversible EGFR-TKI selective for
+  activating mutations and the T790M gatekeeper mutation, for stage IV
+  EGFR-mutated NSCLC that has acquired T790M at progression on a
+  1st/2nd-generation EGFR-TKI. AURA3 (Mok et al., NEJM 2017) randomised
+  T790M-positive patients progressing on prior EGFR-TKI to osimertinib
+  versus platinum-pemetrexed and showed median PFS 10.1 vs 4.4 months.
+  Osimertinib has substantially better CNS penetration than the earlier
+  generations, which matters in a population with frequent brain
+  metastases. This track is for the osimertinib-naive patient; a patient
+  who progressed on osimertinib in 1L is a different molecular and
+  clinical situation and routes to IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
+  (MARIPOSA-2). Since FLAURA moved osimertinib into 1L, the pathway
+  modelled here is increasingly uncommon but remains live for patients
+  who started a 1st/2nd-generation TKI.
+
+sources:
+  - source_id: SRC-AURA3-MOK-2017
+    position: supports
+    relevant_quote_paraphrase: "In T790M-positive advanced NSCLC progressing on first-line EGFR-TKI therapy, osimertinib produced significantly longer progression-free survival than platinum-pemetrexed (median 10.1 vs 4.4 months)"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Osimertinib is recommended for EGFR T790M-positive NSCLC progressing on a 1st/2nd-generation EGFR-TKI"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Osimertinib is the standard option for T790M-positive disease after progression on an earlier-generation EGFR-TKI"
+
+known_controversies:
+  - topic: "Relevance of the T790M 2L pathway now that osimertinib is standard 1L"
+    positions:
+      - position: "Model the pathway faithfully — patients who began a 1st/2nd-generation TKI still progress with T790M and osimertinib remains their standard 2L"
+        sources: [SRC-AURA3-MOK-2017, SRC-NCCN-NSCLC-2025]
+      - position: "Treat 1st/2nd-generation TKI in 1L as non-standard prior care in 2026 and flag it for MDT review"
+        sources: [SRC-ESMO-NSCLC-METASTATIC-2024]
+    our_default: "UNRESOLVED — open question 1 for the Clinical Co-Leads (see plan §6)."
+    rationale: "The BMA calls T790M 'rarely encountered de novo since osimertinib has moved to 1L'; ALGO-NSCLC-METASTATIC-2L calls the pathway 'increasingly rare'. Neither states whether the KB should treat the prior care as legacy-but-valid or as a deviation worth surfacing."
+  - topic: "Platinum-pemetrexed as an authored alternative track"
+    positions:
+      - position: "Single osimertinib track is sufficient — AURA3 established superiority over the comparator"
+        sources: [SRC-AURA3-MOK-2017]
+      - position: "Author platinum-pemetrexed as the alternative track, reflecting the AURA3 randomisation and access-limited settings"
+        sources: [SRC-NCCN-NSCLC-2025]
+    our_default: "UNRESOLVED — open question 2 for the Clinical Co-Leads (see plan §6)."
+    rationale: "CHARTER §15 C4 expects ≥2 tracks. This Indication currently contributes one; the comparator arm from AURA3 is the obvious candidate but is not authored."
+
+do_not_do_en:
+  - "Do NOT use this track for a patient who progressed on osimertinib — post-osimertinib resistance is a different pathway (IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ, MARIPOSA-2)."
+  - "Do NOT initiate without confirming T790M at progression — T790M status from the original diagnostic specimen does not establish acquired resistance."
+  - "Do NOT accept a negative plasma ctDNA result as excluding T790M — false-negative rate is material; proceed to tissue re-biopsy."
+  - "Do NOT miss histologic transformation to small-cell — it requires platinum-etoposide, not an EGFR-TKI."
+  - "Do NOT ignore new dyspnoea or dry cough — osimertinib pneumonitis/ILD can be fatal; obtain CT chest."
+
+time_critical: false
+# Authoring date, not a clinical sign-off — sign-off is reviewer_signoffs,
+# which stays 0 until two Clinical Co-Leads approve (CHARTER §6.1).
+last_reviewed: "2026-07-18"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  DRAFT pending Clinical Co-Lead sign-off (CHARTER §6.1). Standard-track 2L
+  for osimertinib-naive EGFR T790M-positive NSCLC after progression on a
+  1st/2nd-generation EGFR-TKI. Reuses REG-OSIMERTINIB-NSCLC; no dosing is
+  restated here — the regimen entity is the single source for it.
+
+  Ratifies a position already asserted in four KB locations
+  (BMA-EGFR-T790M-NSCLC escat_tier IA, RF-NSCLC-EGFR-T790M-ACTIONABLE, and
+  twice in ALGO-NSCLC-METASTATIC-2L deferred-work notes) rather than
+  introducing a new clinical claim.
+
+  Reviewer notes:
+  - REG-OSIMERTINIB-NSCLC is titled "1L metastatic OR adjuvant" and its
+    total_cycles text names FLAURA/ADAURA only. Reusing it for a 2L T790M
+    indication is a scope mismatch in the regimen's own naming. Options:
+    reuse as-is, widen the regimen name, or author a separate AURA3 2L
+    regimen. Not decided here — the regimen is itself clinical content.
+  - `followed_by: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ` points a 2L
+    Indication at another 2L Indication. Clinically this is the correct
+    successor (progression on osimertinib → MARIPOSA-2 pathway) but the
+    line_of_therapy metadata does not express the 3L position. Confirm.
+  - ORR is deliberately unstated. AURA3 response-rate figures are not
+    attested anywhere in this knowledge base, and CLAUDE.md forbids
+    authoring efficacy numbers from memory. Add with citation if wanted.
+  - No `rationale_ua` / `do_not_do` (Ukrainian) yet — Ukrainian drafting
+    for this entity is deliberately deferred until the English clinical
+    content is signed off, so translation review is not spent on text that
+    may change.

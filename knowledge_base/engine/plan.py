@@ -50,6 +50,7 @@ from .access_matrix import build_access_matrix
 from .algorithm_eval import walk_algorithm
 from .experimental_options import SearchFn, enumerate_experimental_options
 from .actionability_types import ActionabilityLayer
+from .prior_therapy import build_drug_index, derive_prior_therapy_findings
 from .redflag_eval import evaluate_redflag_trigger
 
 
@@ -211,7 +212,7 @@ def _collect_redflags(entities_by_id: dict) -> dict[str, dict]:
     return {eid: info["data"] for eid, info in entities_by_id.items() if info["type"] == "redflags"}
 
 
-def _flatten_findings(patient: dict) -> dict:
+def _flatten_findings(patient: dict, entities: Optional[dict] = None) -> dict:
     """Build the flat findings dict used by RF trigger evaluation.
 
     Composes patient.findings + patient.biomarkers + patient.demographics
@@ -219,12 +220,23 @@ def _flatten_findings(patient: dict) -> dict:
     biomarker / demographic name collisions. Used by both the treatment
     path (after algorithm resolution) and the prevention path (KSS §20.2
     — RF firing detection without a Disease).
+
+    When `entities` is supplied, scalar prior-therapy findings are derived
+    from `findings.prior_lines` (see `prior_therapy`). `prior_lines` is a
+    list, and the clause evaluator resolves flat scalars only, so without
+    this step no `finding:` clause can express "the prior line was
+    osimertinib". Derived keys are merged with `setdefault`, so anything
+    authored explicitly in the profile wins.
     """
     findings = dict(patient.get("findings") or {})
     for k, v in (patient.get("biomarkers") or {}).items():
         findings.setdefault(k, v)
     for k, v in (patient.get("demographics") or {}).items():
         findings.setdefault(k, v)
+    if entities:
+        drug_index = build_drug_index(entities)
+        for k, v in derive_prior_therapy_findings(findings, drug_index).items():
+            findings.setdefault(k, v)
     return findings
 
 
@@ -465,7 +477,7 @@ def _try_generate_prevention_plan(
     content side (add a second prevention Indication for that RF / disease
     bucket), not for the engine to synthesize.
     """
-    findings = _flatten_findings(patient)
+    findings = _flatten_findings(patient, entities)
     fired_rfs = _find_fired_prevention_rfs(findings, redflag_lookup)
     if not fired_rfs:
         return False
@@ -915,8 +927,9 @@ def generate_plan(
         )
     result.algorithm_id = algo["id"]
 
-    # Flatten findings + biomarkers + demographics for clause evaluation
-    findings = _flatten_findings(patient)
+    # Flatten findings + biomarkers + demographics for clause evaluation,
+    # plus prior-therapy scalars derived from findings.prior_lines
+    findings = _flatten_findings(patient, entities)
 
     # Hard gate: ECOG PS ≥ 4 — active treatment is clinically inappropriate.
     # Standard and aggressive tracks are suppressed; palliative/surveillance/trial
