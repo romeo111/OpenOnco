@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ваш персональний онкологічний план</title>
 <!-- openonco-seo:start -->
@@ -24,7 +95,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ваш персональний онкологічний план">
 <meta name="twitter:description" content="Ваш персональний онкологічний план: синтетичний кейс OpenOnco з перевірюваною логікою та без реальних даних пацієнтів.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Ваш персональний онкологічний план","description":"Ваш персональний онкологічний план: синтетичний кейс OpenOnco з перевірюваною логікою та без реальних даних пацієнтів.","url":"https://openonco.info/ukr/cases/nmzl-low-burden.patient.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/cases/nmzl-low-burden.patient.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Ваш персональний онкологічний план","description":"Ваш персональний онкологічний план: синтетичний кейс OpenOnco з перевірюваною логікою та без реальних даних пацієнтів.","url":"https://openonco.info/ukr/cases/nmzl-low-burden.patient.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/cases/nmzl-low-burden.patient.html"}}</script>
 <!-- openonco-seo:end -->
 <style>
 :root {
@@ -313,6 +384,27 @@ a.lab-chip:hover { text-decoration: underline; }
     font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
     display: block; margin-top: 2px;
 }
+a.rf-id, .rf-id-link {
+    color: inherit; text-decoration: none;
+}
+a.rf-id:hover, .rf-id-link:hover {
+    text-decoration: underline; color: var(--gray-700);
+}
+.pc-col .rf-note {
+    font-size: 12px; color: var(--gray-600); line-height: 1.5;
+    margin-top: 4px; padding-left: 8px; border-left: 2px solid var(--gray-200);
+}
+.pc-col .rf-src-row { display: block; margin-top: 3px; }
+.pc-col .rf-src-chip {
+    font-family: var(--font-mono); font-size: 9.5px;
+    background: var(--gray-100); color: var(--gray-700);
+    padding: 1px 6px; border-radius: 3px; margin-right: 4px;
+    display: inline-block;
+}
+/* Severity hint via ::marker — no extra layout cost. Critical pops red,
+   minor dims, major (default) keeps the inherited bullet color. */
+.pc-col li[data-severity="critical"]::marker { color: var(--red-alert); font-weight: 800; }
+.pc-col li[data-severity="minor"]::marker    { color: var(--gray-400); }
 
 /* Branch-explanation — actually-fired RFs from the engine trace, with
    the conflict-resolution winner highlighted. Distinct from PRO/CONTRA
@@ -969,7 +1061,10 @@ a.lab-chip:hover { text-decoration: underline; }
   .patient-disclaimer { page-break-before: avoid; }
 }
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>.oo-topbar-host{position:sticky;top:0;z-index:100;}.oo-topbar-host .top-bar{background:#fff;color:#111827;padding:13px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;border-bottom:1px solid #e5e7eb;width:100%;max-width:100%;overflow-x:clip;}.oo-topbar-host .brand-line{display:flex;align-items:center;gap:12px;margin-right:30px;}.oo-topbar-host .brand-logo{display:none;}.oo-topbar-host .brand-mini{display:inline-flex;align-items:center;gap:9px;font-family:Playfair Display,Georgia,serif;font-size:26px;font-weight:900;color:#14532d;text-decoration:none;letter-spacing:0;}.oo-topbar-host .top-nav{display:flex;align-items:center;flex:1;margin:0 24px 0 16px;gap:4px;}.oo-topbar-host .top-nav a{color:#374151;padding:6px 10px;text-decoration:none;font-size:14.5px;font-weight:700;border-radius:4px;}.oo-topbar-host .top-nav a:hover{color:#14532d;background:transparent;}.oo-topbar-host .top-right{display:flex;align-items:center;gap:14px;flex-shrink:0;}.oo-topbar-host .top-cta-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;}.oo-topbar-host .lang-switch{display:inline-flex;align-items:center;gap:0;background:#fff;border:1px solid #e5e7eb;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.5px;overflow:hidden;flex-shrink:0;}.oo-topbar-host .lang-switch .lang-current,.oo-topbar-host .lang-switch .lang-other{width:56px;box-sizing:border-box;padding:4px 9px;display:inline-flex;align-items:center;justify-content:center;gap:5px;}.oo-topbar-host .lang-switch .lang-current{background:#14532d;color:white;font-weight:600;}.oo-topbar-host .lang-switch .lang-other{color:#374151;text-decoration:none;transition:background .12s;}.oo-topbar-host .lang-switch .lang-other:hover{background:transparent;color:#14532d;}.oo-topbar-host .lang-switch .lang-flag{display:inline-block;width:14px;height:10px;border-radius:1.5px;box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;}.oo-topbar-host .lang-switch .lang-flag.flag-ua{background:linear-gradient(to bottom,#0057b7 50%,#ffd500 50%);}.oo-topbar-host .lang-switch .lang-flag.flag-en{background:#012169 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E") center/cover no-repeat;}.oo-topbar-host .btn-cta-top{color:#14532d;background:white;padding:10px 16px;border-radius:7px;font-weight:700;font-size:15px;text-decoration:none;border:1px solid #e5e7eb;box-shadow:none;white-space:nowrap;min-width:112px;box-sizing:border-box;text-align:center;display:inline-block;}.oo-topbar-host .btn-cta-try{min-width:132px;}.oo-topbar-host .btn-cta-top:hover{filter:none;}.case-bar{background:#0d3f24;color:#dcfce7;padding:8px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;font-size:13px;}.case-bar a{color:#86efac;text-decoration:none;margin-left:14px;}.case-bar a:hover{text-decoration:underline;}.example-verification{background:#fffbeb;border:1px solid #f59e0b;color:#713f12;padding:10px 14px;margin:14px auto 0;max-width:1150px;border-radius:6px;font:600 14px/1.45 Source Sans 3,sans-serif;}@media print{.oo-topbar-host,.case-bar{display:none;}}@media (max-width:700px){.oo-topbar-host .top-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 12px;align-items:center;padding:12px max(14px,env(safe-area-inset-right)) 14px max(14px,env(safe-area-inset-left));}.oo-topbar-host .brand-line{grid-column:1;grid-row:1;min-width:0;margin-right:0;}.oo-topbar-host .brand-mini{max-width:100%;font-size:22px;overflow:hidden;text-overflow:ellipsis;}.oo-topbar-host .top-right{display:contents;}.oo-topbar-host .lang-switch{grid-column:2;grid-row:1;justify-self:end;font-size:10px;}.oo-topbar-host .lang-switch .lang-current,.oo-topbar-host .lang-switch .lang-other{width:48px;padding:4px 6px;}.oo-topbar-host .top-nav{grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;margin:0;gap:4px;justify-content:stretch;}.oo-topbar-host .top-nav a{min-width:0;padding:8px 4px;text-align:center;overflow-wrap:anywhere;line-height:1.15;}.oo-topbar-host .top-cta-group{grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:6px;justify-content:stretch;}.oo-topbar-host .btn-cta-top{display:flex;align-items:center;justify-content:center;width:100%;min-width:0;min-height:44px;padding:8px 6px;font-size:13px;line-height:1.12;white-space:normal;overflow-wrap:anywhere;}.oo-topbar-host .btn-cta-try{min-width:0;}.case-bar{display:grid;gap:6px;padding:8px max(14px,env(safe-area-inset-right)) 8px max(14px,env(safe-area-inset-left));}.case-bar a{margin-left:0;margin-right:12px;}}</style>
 </head>

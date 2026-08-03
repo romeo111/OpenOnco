@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Wilson&#x27;s disease (autosomal recessive ATP7B-mutated copper-transport disorder with hepati... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Wilson&amp;#x27;s disease (autosomal recessive ATP7B-mutated copper-transport disorder with hepati... - OpenOnco">
 <meta name="twitter:description" content="Wilson&amp;#x27;s disease (autosomal recessive ATP7B-mutated copper-transport disorder with hepati...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Wilson&#x27;s disease (autosomal recessive ATP7B-mutated copper-transport disorder with hepati... - OpenOnco","description":"Wilson&#x27;s disease (autosomal recessive ATP7B-mutated copper-transport disorder with hepati...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-wilsons-disease-hcc-prevention.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-wilsons-disease-hcc-prevention.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Wilson&#x27;s disease (autosomal recessive ATP7B-mutated copper-transport disorder with hepati... - OpenOnco","description":"Wilson&#x27;s disease (autosomal recessive ATP7B-mutated copper-transport disorder with hepati...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-wilsons-disease-hcc-prevention.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-wilsons-disease-hcc-prevention.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -91,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
@@ -116,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-05-18 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-HCC"><code>DIS-HCC</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="AASLD Practice Guidance on HCC"><a href="https://aasld.org/practice-guidelines" target="_blank" rel="noopener noreferrer"><code>SRC-AASLD-HCC-2023</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BCELL-2025</code></a></span> <span class="kb-chip" title="NCCN Hepatocellular Carcinoma"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1438" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-HCC-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Wilson&#x27;s disease (autosomal recessive ATP7B-mutated copper-transport disorder with hepatic and/or neuropsychiatric manifestations; Leipzig score ≥4 confirmatory) in an individual without a current HCC diagnosis. Historically considered a low-risk cirrhosis etiology for HCC, but contemporary cohorts (van Meer et al. Liver Int 2015; Pfeiffenberger et al. J Hepatol 2018) report HCC incidence of ~0.5-1%/year in cirrhotic Wilson&#x27;s — exceeding the AASLD 1.5%/year surveillance-threshold in the cirrhotic subset. Risk concentrated in patients with established cirrhosis (especially decompensated disease) and those with prolonged uncontrolled copper accumulation. Adherent copper-chelation therapy (penicillamine, trientine, zinc) reduces hepatic copper burden but does not eliminate residual HCC risk in patients who already developed cirrhosis. AASLD HCC surveillance with US ± AFP q6mo recommended i...</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Хвороба Вільсона (autosomal recessive ATP7B-мутаційний copper- transport розлад з печінковими та/або нейропсихіатричними проявами; Leipzig score ≥4 підтверджує) у пацієнта без поточного діагнозу HCC. Історично розглядалася як низько-ризикова cirrhosis етіологія для HCC, але сучасні когорти (van Meer Liver Int 2015; Pfeiffenberger J Hepatol 2018) повідомляють HCC incidence ~0.5-1%/рік у cirrhotic Вільсона — перевищує AASLD 1.5%/рік surveillance-поріг у cirrhotic підгрупі. Ризик концентрований у пацієнтів з встановленим цирозом (особливо decompensated) та з тривалим неконтрольованим накопиченням міді. Adherent copper-chelation терапія (пеніциламін, трієнтин, цинк) знижує hepatic copper burden, але не елімінує залишковий HCC ризик у пацієнтів з вже розвиненим цирозом. AASLD HCC surveillance з US ± AFP q6 міс рекомендована в cirrhotic Вільсоні. Prevention-persona RedFlag (ратифікація §20, 2...</td></tr>
 <tr><th>Клінічний напрям</th><td>investigate</td></tr>
 <tr><th>Категорія</th><td>other</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
   &quot;any_of&quot;: [
@@ -135,7 +209,7 @@
   ],
   &quot;type&quot;: &quot;lab_value&quot;
 }</pre>
-  <h2>Нотатки</h2><p>v0.3 chronic-condition prevention pilot — Wilson&#x27;s disease / HCC. Prevention-persona RedFlag (CHARTER §3 amended 2026-05-18 Path A, HCP-mediated). Fires when patient profile shows confirmed Wilson&#x27;s disease (especially with cirrhosis) AND no confirmed HCC. Engine routes to PreventionPlan with 2 tracks: AASLD HCC surveillance with US + AFP q6mo if cirrhotic + transplant evaluation for advanced disease (IND-WILSONS-DISEASE-HCC-PREVENTION-SURVEILLANCE) as standard; hepatology-driven observation without scheduled HCC imaging in non-cirrhotic Wilson&#x27;s (IND-WILSONS-DISEASE-HCC-PREVENTION- OBSERVATION) as alternative. Evidence base: - **HCC risk magnitude:** historically rare (case-report literature pre-2000) but contemporary cohorts revise upward — van Meer Liver Int 2015 (Dutch cohort, HCC incidence ~1%/year in cirrhotic Wilson&#x27;s); Pfeiffenberger J Hepatol 2018 (German multicenter, similar). Non-cirrhotic Wilson&#x27;s HCC incidence remains very low (&lt;0.1%/year). - **AASLD 2023 guideline:** HCC surveillance with US ± AFP q6mo recommended for any cirrhosis with incidence &gt;1.5%/year. Wilson&#x27;s cirrhosis crosses this threshold in modern series → surveillance indicated. - **Chelation adherence:*...</p>
+  <h2>Нотатки</h2><p>v0.3 пілот prevention chronic-condition — хвороба Вільсона / HCC. Prevention-persona RedFlag (CHARTER §3 поправка 2026-05-18). Спрацьовує коли профіль пацієнта показує підтверджену хворобу Вільсона (особливо з цирозом) ТА відсутній підтверджений HCC. Engine маршрутизує до PreventionPlan з 2 треками: AASLD HCC surveillance з US + AFP q6 міс якщо cirrhotic + transplant evaluation для advanced захворювання (IND-WILSONS-DISEASE-HCC-PREVENTION-SURVEILLANCE) як стандарт; hepatology-driven спостереження без запланованого HCC imaging в non-cirrhotic Вільсона (IND-WILSONS-DISEASE-HCC-PREVENTION- OBSERVATION) як альтернатива. Доказова база: HCC incidence ~1%/рік в cirrhotic Вільсона (van Meer Liver Int 2015; Pfeiffenberger J Hepatol 2018) — перевищує AASLD 1.5%/рік поріг для surveillance. Chelation arrest подальшого hepatic injury, але не реверсує встановлену cirrhosis HCC траєкторію. Liver transplantation для decompensated cirrhosis або HCC у Milan. Co-існуючі HBV, HCV, або алкоголь додатково підвищують HCC ризик. Це STUB, очікує підпис двох Clinical Co-Lead за §6.1 dev-mode exemption.</p>
   <h2>Де використовується</h2>
 <h3>Indications</h3><ul><li><code>IND-WILSONS-DISEASE-HCC-PREVENTION-OBSERVATION</code> - IND-WILSONS-DISEASE-HCC-PREVENTION-OBSERVATION</li><li><code>IND-WILSONS-DISEASE-HCC-PREVENTION-SURVEILLANCE</code> - IND-WILSONS-DISEASE-HCC-PREVENTION-SURVEILLANCE</li></ul>
 </main>

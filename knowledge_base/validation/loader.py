@@ -10,6 +10,7 @@ import argparse
 import re
 import sys
 from dataclasses import dataclass, field
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -22,6 +23,12 @@ from knowledge_base.schemas.biomarker_actionability import (
 from knowledge_base.schemas.indication import normalize_legacy_indication_payload
 from knowledge_base.schemas.regimen import normalize_legacy_regimen_payload
 from knowledge_base.schemas.source import normalize_legacy_source_payload
+
+
+# Days after which a `review_status: reviewed` Handbook entity should be
+# transitioned to `needs_refresh`. Per HANDBOOK_MODE_SPEC §4 — annual
+# refresh cycle is the standard for educational clinical content.
+HANDBOOK_REVIEW_STALE_DAYS = 365
 
 
 # Which fields on which entity types carry IDs that must resolve elsewhere.
@@ -76,6 +83,13 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
     "sources": [],
     "workups": [
         # required_tests handled specially (list of Test IDs)
+    ],
+    "handbook_chapters": [
+        # disease_ids, source_ids, and linked_entities handled specially
+    ],
+    "handbook_questions": [
+        ("chapter_id", "handbook_chapters"),
+        # source_ids and linked_entity_ids handled specially
     ],
     "reviewers": [],
     # §17 ratified 2026-05-07 — Surgery + RadiationCourse first-class entities.
@@ -413,6 +427,14 @@ def _load_content_impl(
                  f"{field_label}: '{ref_id}' found but as {actual_type}, expected {target_type}")
             )
 
+    def check_any_ref(path: Path, ref_id, field_label: str) -> None:
+        if ref_id is None or ref_id == "":
+            return
+        if ref_id not in result.entities_by_id:
+            result.ref_errors.append(
+                (path, f"{field_label}: '{ref_id}' not found in any loaded entity")
+            )
+
     for eid, info in result.entities_by_id.items():
         etype = info["type"]
         data = info["data"]
@@ -604,6 +626,78 @@ def _load_content_impl(
             # role IDs are NOT validated against KB entities — they're a
             # closed enum in mdt_orchestrator._ROLE_CATALOG, not KB content
 
+        elif etype == "handbook_chapters":
+            for i, did in enumerate(data.get("disease_ids") or []):
+                check_ref(path, did, "diseases", f"disease_ids[{i}]")
+            for i, sid in enumerate(data.get("source_ids") or []):
+                check_ref(path, sid, "sources", f"source_ids[{i}]")
+            linked = data.get("linked_entities") or {}
+            linked_targets = {
+                "diseases": "diseases",
+                "algorithms": "algorithms",
+                "indications": "indications",
+                "regimens": "regimens",
+                "redflags": "redflags",
+                "biomarkers": "biomarkers",
+                "workups": "workups",
+                "tests": "tests",
+            }
+            for field_name, target_type in linked_targets.items():
+                for i, ref_id in enumerate(linked.get(field_name) or []):
+                    check_ref(
+                        path,
+                        ref_id,
+                        target_type,
+                        f"linked_entities.{field_name}[{i}]",
+                    )
+            for section_i, section in enumerate(data.get("sections") or []):
+                if not isinstance(section, dict):
+                    continue
+                for i, sid in enumerate(section.get("source_ids") or []):
+                    check_ref(path, sid, "sources", f"sections[{section_i}].source_ids[{i}]")
+                for i, ref_id in enumerate(section.get("linked_entity_ids") or []):
+                    check_any_ref(path, ref_id, f"sections[{section_i}].linked_entity_ids[{i}]")
+        elif etype == "handbook_questions":
+            for i, sid in enumerate(data.get("source_ids") or []):
+                check_ref(path, sid, "sources", f"source_ids[{i}]")
+            for i, ref_id in enumerate(data.get("linked_entity_ids") or []):
+                check_any_ref(path, ref_id, f"linked_entity_ids[{i}]")
+
+        # Handbook review-workflow cross-checks (HANDBOOK_MODE_SPEC §4):
+        # validate reviewer_id refs and surface stale `reviewed` content
+        # so it can be transitioned to `needs_refresh`. The schema already
+        # rejects status/metadata mismatches; here we do the cross-entity
+        # and time-sensitive checks.
+        if etype in {"handbook_chapters", "handbook_questions"}:
+            for i, signoff in enumerate(data.get("reviewer_signoffs") or []):
+                if not isinstance(signoff, dict):
+                    continue
+                rid = signoff.get("reviewer_id")
+                if rid:
+                    check_ref(path, rid, "reviewers", f"reviewer_signoffs[{i}].reviewer_id")
+            review_status = data.get("review_status", "draft")
+            last_reviewed = data.get("last_reviewed")
+            if review_status == "reviewed" and last_reviewed:
+                try:
+                    review_date = date.fromisoformat(str(last_reviewed).split("T", 1)[0])
+                except (TypeError, ValueError):
+                    result.contract_warnings.append(
+                        (path, f"{eid}: last_reviewed={last_reviewed!r} is not a valid ISO date")
+                    )
+                else:
+                    age_days = (date.today() - review_date).days
+                    if age_days > HANDBOOK_REVIEW_STALE_DAYS:
+                        result.contract_warnings.append((
+                            path,
+                            f"{eid}: last_reviewed={last_reviewed} is {age_days} days old "
+                            f"(>{HANDBOOK_REVIEW_STALE_DAYS}-day threshold); transition to "
+                            "review_status: needs_refresh"
+                        ))
+            if review_status == "draft":
+                result.contract_warnings.append(
+                    (path, f"{eid}: handbook draft — needs clinical review before merge")
+                )
+
         # Generic top-level sources list (lots of entities have it).
         # Drafts skip ref-check on sources because authors leave SRC-TODO
         # placeholders during scaffolding; the contract pass still emits
@@ -697,6 +791,7 @@ def _load_content_impl(
     _check_redflag_contracts(result)
     _check_source_precedence_policy(result)
     _check_algorithm_regimen_routing_contracts(result)
+    _check_algorithm_decision_tree_integrity(result)
 
     return result
 
@@ -877,6 +972,174 @@ def _check_algorithm_regimen_routing_contracts(result: LoadResult) -> None:
                 f"plan_track ({sorted(_NON_REGIMEN_PLAN_TRACKS)}) or author "
                 "a Regimen before routing.",
             ))
+
+
+def _algorithm_step_keys(algo: dict) -> list:
+    """Replicate the engine's step-keying (`s.get("step", i+1)` per dict entry
+    in decision_tree — see knowledge_base/engine/algorithm_eval.py::evaluate_algorithm).
+    Non-dict entries are skipped. Returns the keys in decision_tree order, so a
+    step authored as ``01`` (YAML-octal int 1) collides with an explicit ``1``
+    exactly as it would in the engine's step map.
+    """
+    keys: list = []
+    for i, entry in enumerate(algo.get("decision_tree") or []):
+        if not isinstance(entry, dict):
+            continue
+        keys.append(entry.get("step", i + 1))
+    return keys
+
+
+def _check_algorithm_decision_tree_integrity(result: LoadResult) -> None:
+    """Decision-tree structural integrity for Algorithms.
+
+    Mirrors the engine traversal in
+    knowledge_base/engine/algorithm_eval.py::evaluate_algorithm (entry = first
+    step in the list; each branch is terminal via `result` or jumps via
+    `next_step`).
+
+    Contract errors (block CI):
+      E1  Duplicate step ids — two steps that key to the same value. Catches the
+          YAML-octal collision (e.g. authored ``01`` and ``1`` both parse to
+          int 1); the engine's ``{s.get("step", i+1): s}`` dict would silently
+          drop one step.
+      E2  Dangling next_step — an if_true/if_false ``next_step: N`` where N is
+          not a step id in this algorithm's decision_tree.
+      E3  result-not-in-output_indications — an if_true/if_false ``result:``
+          that is an ``IND…`` string not listed in ``output_indications``.
+      E4  default/alternative not in output_indications — ``default_indication``
+          or ``alternative_indication``, when an ``IND…`` string, not listed in
+          ``output_indications``.
+      E5  result references a non-existent Indication — an if_true/if_false
+          ``result:`` ``IND…`` string that is not a known Indication entity id.
+          (The routing-contract check silently skips these; here it is hard.)
+
+    Contract warnings (advisory; do not affect ``.ok``):
+      W1  Unreachable step — a step (other than the first/entry step) that is
+          not the target of any ``next_step``.
+      W2  Falsy result terminal — an if_true/if_false ``result:`` that is
+          ``null`` or ``false`` (the engine collapses it to
+          ``default_indication``; flag so authors make intent explicit).
+          String results are never flagged here.
+    """
+    known_indication_ids = {
+        eid
+        for eid, info in result.entities_by_id.items()
+        if info["type"] == "indications"
+    }
+
+    for algo_id, info in result.entities_by_id.items():
+        if info["type"] != "algorithms":
+            continue
+        algo = info["data"]
+        path = info["path"]
+        tree = algo.get("decision_tree") or []
+        if not isinstance(tree, list):
+            continue
+
+        output_inds = {
+            ind
+            for ind in (algo.get("output_indications") or [])
+            if isinstance(ind, str)
+        }
+
+        step_keys = _algorithm_step_keys(algo)
+        step_key_set = set(step_keys)
+        entry_key = step_keys[0] if step_keys else None
+
+        # E1 — duplicate step ids (report each colliding id once)
+        seen: set = set()
+        dup_reported: set = set()
+        for key in step_keys:
+            if key in seen and key not in dup_reported:
+                dup_reported.add(key)
+                result.contract_errors.append((
+                    path,
+                    f"{algo_id}: duplicate decision_tree step id {key!r} — two "
+                    "steps key to the same value (YAML-octal / default-index "
+                    "collision); the engine's step map silently drops one.",
+                ))
+            seen.add(key)
+
+        # E4 — default / alternative indication must be advertised in output
+        for key in ("default_indication", "alternative_indication"):
+            ind = algo.get(key)
+            if (
+                isinstance(ind, str)
+                and ind.startswith("IND")
+                and ind not in output_inds
+            ):
+                result.contract_errors.append((
+                    path,
+                    f"{algo_id}: {key}={ind!r} is not listed in "
+                    "output_indications.",
+                ))
+
+        next_step_targets: set = set()
+        for i, entry in enumerate(tree):
+            if not isinstance(entry, dict):
+                continue
+            step_key = entry.get("step", i + 1)
+            for branch_name in ("if_true", "if_false"):
+                branch = entry.get(branch_name)
+                if not isinstance(branch, dict):
+                    continue
+
+                # E2 — next_step must resolve to a real step id
+                if "next_step" in branch:
+                    target = branch["next_step"]
+                    next_step_targets.add(target)
+                    if target not in step_key_set:
+                        result.contract_errors.append((
+                            path,
+                            f"{algo_id}: step {step_key!r} {branch_name}."
+                            f"next_step={target!r} is not a step id in "
+                            "decision_tree.",
+                        ))
+
+                # E3/E5 for IND-string results; W2 for falsy terminals.
+                # Only a str starting with "IND" is treated as an Indication
+                # reference — bool/None/other results are covered by W2 or are
+                # hereditary-risk-calculator classifications and are skipped.
+                if "result" in branch:
+                    res = branch["result"]
+                    if isinstance(res, str) and res.startswith("IND"):
+                        if res not in output_inds:
+                            result.contract_errors.append((
+                                path,
+                                f"{algo_id}: step {step_key!r} {branch_name}."
+                                f"result={res!r} is not listed in "
+                                "output_indications.",
+                            ))
+                        if res not in known_indication_ids:
+                            result.contract_errors.append((
+                                path,
+                                f"{algo_id}: step {step_key!r} {branch_name}."
+                                f"result={res!r} does not resolve to a known "
+                                "Indication entity.",
+                            ))
+                    elif res is None or res is False:
+                        result.contract_warnings.append((
+                            path,
+                            f"{algo_id}: step {step_key!r} {branch_name}.result "
+                            f"is {res!r} (falsy) — the engine collapses this to "
+                            "default_indication; set an explicit result or "
+                            "next_step to make the intent clear.",
+                        ))
+
+        # W1 — unreachable steps (not the entry step, not any next_step target)
+        seen_w1: set = set()
+        for key in step_keys:
+            if key in seen_w1:
+                continue
+            seen_w1.add(key)
+            if key == entry_key:
+                continue
+            if key not in next_step_targets:
+                result.contract_warnings.append((
+                    path,
+                    f"{algo_id}: decision_tree step {key!r} is unreachable — "
+                    "not the entry step and not the target of any next_step.",
+                ))
 
 
 def _check_source_precedence_policy(result: LoadResult) -> None:

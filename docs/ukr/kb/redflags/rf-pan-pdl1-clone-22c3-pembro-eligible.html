@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PD-L1 IHC result generated using the Dako 22C3 pharmDx clone — the FDA-approved companion... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PD-L1 IHC result generated using the Dako 22C3 pharmDx clone — the FDA-approved companion... - OpenOnco">
 <meta name="twitter:description" content="PD-L1 IHC result generated using the Dako 22C3 pharmDx clone — the FDA-approved companion...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"PD-L1 IHC result generated using the Dako 22C3 pharmDx clone — the FDA-approved companion... - OpenOnco","description":"PD-L1 IHC result generated using the Dako 22C3 pharmDx clone — the FDA-approved companion...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-pan-pdl1-clone-22c3-pembro-eligible.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-pan-pdl1-clone-22c3-pembro-eligible.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"PD-L1 IHC result generated using the Dako 22C3 pharmDx clone — the FDA-approved companion... - OpenOnco","description":"PD-L1 IHC result generated using the Dako 22C3 pharmDx clone — the FDA-approved companion...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-pan-pdl1-clone-22c3-pembro-eligible.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-pan-pdl1-clone-22c3-pembro-eligible.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -91,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
@@ -116,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-04-29 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-muted">Не вказано</span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="CIViC — Clinical Interpretations of Variants in Cancer"><a href="https://civicdb.org/" target="_blank" rel="noopener noreferrer"><code>SRC-CIVIC</code></a></span> <span class="kb-chip" title="Pembrolizumab versus Chemotherapy for PD-L1-Positive Non-Small-Cell Lung Cancer"><a href="https://pubmed.ncbi.nlm.nih.gov/27718847" target="_blank" rel="noopener noreferrer"><code>SRC-KEYNOTE-024-RECK-2016</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Breast Cancer"><a href="https://www.nccn.org/professionals/physician_gls/pdf/breast.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BREAST-2025</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines — Non-Small Cell Lung Cancer"><a href="https://www.nccn.org/professionals/physician_gls/pdf/nscl.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-NSCLC-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>PD-L1 IHC result generated using the Dako 22C3 pharmDx clone — the FDA-approved companion-diagnostic clone for pembrolizumab indications across NSCLC (TPS), gastric / GEJ adenocarcinoma (CPS), esophageal squamous (CPS), urothelial (CPS), TNBC (CPS), cervical (CPS), and H&amp;N squamous (CPS). Clone-platform identity matters because the Blueprint PD-L1 Comparison phase 1 + 2 studies (Hirsch JTO 2017; Tsao JTO 2018) showed 22C3 / 28-8 / SP263 as analytically near- equivalent for tumor-cell staining (NSCLC TPS), but SP142 (Ventana, atezolizumab CDx) markedly under-stains tumor cells and is NOT interchangeable. CPS (combined positive score; tumor + lymphocyte + macrophage staining) is operationally clone-22C3-anchored across pembrolizumab indications — substituting SP263 / 28-8 / SP142 for CPS-driven indication selection is off-label. Action: confirm 22C3 on the report; if a non-22C3 clone is t...</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Результат PD-L1 ІГХ, отриманий клоном Dako 22C3 pharmDx — FDA- схвалений companion-діагностичний клон для індикацій пембролізумабу при НДРЛ (TPS), gastric / GEJ-аденокарциномі (CPS), стравохідній плоскоклітинній (CPS), уротеліальній (CPS), TNBC (CPS), шийковій (CPS), H&amp;N плоскоклітинній (CPS). Ідентичність клон-платформи має значення, бо дослідження Blueprint PD-L1 Comparison phase 1 + 2 (Hirsch JTO 2017; Tsao JTO 2018) показали 22C3 / 28-8 / SP263 як аналітично майже еквівалентні для забарвлення пухлинних клітин (TPS у НДРЛ), але SP142 (Ventana, атезолізумаб-CDx) суттєво недо-фарбує пухлинні клітини і НЕ взаємозамінний. CPS (combined positive score; пухлина + лімфоцит + макрофаг) операційно якорено клоном 22C3 для всіх pembrolizumab-індикацій — заміна SP263 / 28-8 / SP142 для CPS-driven вибору індикації — off-label. Дія: підтвердити 22C3 у звіті; якщо не-22C3 клон — єдине джерело PD-L1...</td></tr>
 <tr><th>Клінічний напрям</th><td>investigate</td></tr>
 <tr><th>Категорія</th><td>high-risk-biology</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
   &quot;all_of&quot;: [
@@ -165,7 +239,7 @@
   ],
   &quot;type&quot;: &quot;biomarker&quot;
 }</pre>
-  <h2>Нотатки</h2><p>**Why clone identity matters (Blueprint PD-L1 Comparison summary):** Clone | Platform | Companion drug | Interchangeable for TPS? | Interchangeable for CPS? -------------------------------------------------------------- 22C3 | Dako Autostainer Link 48 | pembrolizumab | reference | reference 28-8 | Dako | nivolumab | yes (TPS within 5%) | not validated for pembro-CPS thresholds SP263 | Ventana BenchMark | durvalumab / atezolizumab (some) | yes (TPS within 5%) | not validated for pembro-CPS thresholds SP142 | Ventana | atezolizumab | NO — under-stains tumor cells, separate &quot;IC%&quot; score | NO **Indication-specific 22C3 cut-points (pembrolizumab):** - NSCLC 1L mono: TPS ≥50 (KEYNOTE-024) - NSCLC 1L combo eligibility: TPS ≥1 (KEYNOTE-189 / -407) - Gastric / GEJ adeno 1L combo: CPS ≥1 (KEYNOTE-859); FDA pivot to ≥5 in subgroups (label evolution 2024) - Esophageal squamous 1L combo: CPS ≥10 (KEYNOTE-590) - TNBC 1L combo: CPS ≥10 (KEYNOTE-355) - Cervical 1L combo: CPS ≥1 (KEYNOTE-826) - H&amp;N squamous 1L: CPS ≥1 (KEYNOTE-048 mono); CPS ≥20 mono- superior subgroup - Urothelial 1L: CPS ≥10 (KEYNOTE-052 cisplatin-ineligible); label evolution 2024 narrowed mono use **Action when this RF fires:**...</p>
+  <h2>Нотатки</h2><p>**Чому ідентичність клону важлива (Blueprint PD-L1 Comparison):** Клон | Платформа | Companion-препарат | Взаємозамін. TPS? | Взаємозамін. CPS? -------------------------------------------------------------- 22C3 | Dako Autostainer Link 48 | пембролізумаб | reference | reference 28-8 | Dako | ніволумаб | так (TPS ±5%) | не валідовано для pembro-CPS порогів SP263 | Ventana BenchMark | дурвалумаб / атезолізумаб | так (TPS ±5%) | не валідовано для pembro-CPS порогів SP142 | Ventana | атезолізумаб | НІ — недо-фарбує пухлинні клітини, окремий &quot;IC%&quot; скор | НІ **Індикаційно-специфічні 22C3 cut-points (пембролізумаб):** - НДРЛ 1L моно: TPS ≥50 (KEYNOTE-024) - НДРЛ 1L комбо eligibility: TPS ≥1 (KEYNOTE-189 / -407) - Gastric / GEJ адено 1L комбо: CPS ≥1 (KEYNOTE-859); FDA-зсув до ≥5 у підгрупах (еволюція label 2024) - Стравохідна плоскоклітинна 1L комбо: CPS ≥10 (KEYNOTE-590) - TNBC 1L комбо: CPS ≥10 (KEYNOTE-355) - Шийкова 1L комбо: CPS ≥1 (KEYNOTE-826) - H&amp;N плоскоклітинна 1L: CPS ≥1 (KEYNOTE-048 моно); CPS ≥20 моно-superior підгрупа - Уротеліальна 1L: CPS ≥10 (KEYNOTE-052 cisplatin-ineligible); еволюція label 2024 звузила mono-використання **Дія при спрацюванні RF:** 1. Підтвердити 22C3 к...</p>
   <h2>Де використовується</h2><p class="kb-muted">У YAML-корпусі не знайдено зворотних посилань.</p>
 </main>
 </body>

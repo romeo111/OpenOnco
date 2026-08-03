@@ -1,6 +1,6 @@
 # CSD-5B engine-bundle composition profile — 2026-04-26
 
-Bundle: `docs/openonco-engine.zip`  
+Bundle: `docs/openonco-engine.zip`
 Compressed size: **1775.7 KB** (1,818,317 bytes)
 
 ## Breakdown by top-level subtree (compressed)

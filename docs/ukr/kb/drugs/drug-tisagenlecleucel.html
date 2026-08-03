@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tisagenlecleucel - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tisagenlecleucel - OpenOnco">
 <meta name="twitter:description" content="Tisagenlecleucel: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Tisagenlecleucel - OpenOnco","description":"Tisagenlecleucel: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-tisagenlecleucel.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-tisagenlecleucel.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Tisagenlecleucel - OpenOnco","description":"Tisagenlecleucel: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-tisagenlecleucel.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-tisagenlecleucel.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -91,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
@@ -123,7 +197,7 @@
 <tr><th>Зареєстровано в Україні</th><td>False</td></tr>
 <tr><th>Відшкодовується НСЗУ</th><td>False</td></tr>
 <tr><th>Остання перевірка для України</th><td>2026-04-27</td></tr></table><h2>Застереження</h2><ul><li>Cytokine release syndrome (CRS) — Grade ≥3 ~46% in ELIANA; tocilizumab + ICU support mandatory</li><li>Immune effector cell-associated neurotoxicity syndrome (ICANS) — Grade ≥3 ~13%</li><li>REMS / FACT-JACIE accreditation required for administration</li></ul>
-  <h2>Нотатки</h2><p>Pivotal: ELIANA (Maude et al., NEJM 2018) — single-arm phase-2 in R/R B-ALL ages 3-21 (later expanded to ≤25); ORR 81%; CR/CRi 60%; MRD-negativity in CR/CRi 100%; 12-month EFS 50%, OS 76%. FDA approval Aug 2017 (first FDA-approved CAR-T). EMA Aug 2018. CRITICAL: REMS / FACT-JACIE-accredited center required; tocilizumab on-site (≥2 doses) before infusion mandatory; CNS exclusion (CNS-2/3 symptomatic) per registration. Ukraine: NOT registered, NO domestic manufacturing — international referral (Israel / Poland / Germany / Spain) required, USD 350-500K all-in. Adult (&gt;25) DLBCL CAR-T variants (axi-cel, liso-cel, brexu-cel for B-ALL adults) are separate products with distinct costimulatory designs (CD28 vs 4-1BB) and AE profiles (axi-cel CD28 → faster, more severe CRS / ICANS; tisa-cel 4-1BB → slower onset, more durable persistence). Ukraine: NOT registered — no domestic CAR-T manufacturing capacity; access only via cross- border to EBMT/JACIE-accredited EU centers (Charité, Karolinska, Saint-Louis) under &quot;Лікування за кордоном&quot; (наказ МОЗ 988). All-in cost USD 350-500K including manufacturing, lymphodepletion, ICU support, post-CAR-T B-cell-aplasia management.</p>
+  <h2>Нотатки</h2><p>Опорне дослідження ELIANA (Maude et al., NEJM 2018) — одноруке дослідження фази 2 у пацієнтів з рецидивним/ рефрактерним В-клітинним гострим лімфобластним лейкозом (B-ALL) віком 3-21 років (надалі розширене до ≤25 років); загальна частота відповіді (ORR) 81%; повна відповідь або CRi 60%; MRD-негативність у пацієнтів з CR/CRi 100%; безподійна виживаність на 12 міс 50%, загальна виживаність 76%. FDA схвалила тисагенлеклеуцел (tisagenlecleucel) у серпні 2017 (перша CAR-T-терапія, схвалена FDA); EMA — у серпні 2018. КРИТИЧНО: для введення обов’язково потрібен центр з акредитацією REMS / FACT-JACIE; наявність тоцилізумабу на місці (щонайменше 2 дози) перед інфузією є обов’язковою; виключення пацієнтів із симптомним ураженням ЦНС (CNS-2/3) згідно з умовами реєстрації. Дорослі (понад 25 років) з DLBCL отримують варіанти CAR-T (axi-cel, liso-cel, brexu-cel для дорослих з B-ALL), що є окремими продуктами з різним дизайном костимуляторного домену (CD28 проти 4-1BB) та різними профілями небажаних явищ (axi-cel з CD28 — швидший і тяжчий CRS/ICANS; tisa-cel з 4-1BB — повільніший початок, більш тривала персистенція). Україна: препарат НЕ зареєстрований; немає локальних потужностей виробництва C...</p>
   <h2>Де використовується</h2>
 <h3>Regimens</h3><ul><li><code>REG-TISAGENLECLEUCEL-B-ALL</code> - Tisagenlecleucel CD19 CAR-T for R/R B-ALL ≤25 years</li></ul>
 </main>

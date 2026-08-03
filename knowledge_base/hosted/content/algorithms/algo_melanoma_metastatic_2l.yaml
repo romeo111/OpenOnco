@@ -14,6 +14,7 @@ output_indications:
 - IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
 - IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
 - IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
+- IND-MELANOMA-3L-LIFILEUCEL
 default_indication: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
 alternative_indication: IND-MELANOMA-3L-LIFILEUCEL
 
@@ -75,8 +76,8 @@ decision_tree:
 
 - step: 41
     # Sub-step: ipi+nivo fitness check (ECOG 0-1, no autoimmunity).
-    # Free-text retained — no melanoma-scoped RF for "fit for high-grade
-    # irAE risk" combination.
+    # Wired via RF-FITNESS-ECOG-FIT (pan-disease) + none_of(RF-ACTIVE-
+    # AUTOIMMUNE-DISEASE-ICI-RISK) (DIS-MELANOMA listed in relevant_diseases).
   evaluate:
     any_of:
     - clinician_confirmation:
@@ -87,7 +88,7 @@ decision_tree:
     result: IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
   if_false:
     next_step: 5
-  notes: "MDT-only — ipi+nivo fitness has no dedicated RF (composite ECOG + autoimmunity); falls through to rela+nivo / lifileucel for unfit patients."
+  notes: "Mechanical rewire of the original free-text gate (ipi+nivo fitness: ECOG 0-1, no significant baseline autoimmunity) into red_flag: clauses using RF-FITNESS-ECOG-FIT + none_of(RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK). Original clinical criteria unchanged. Falls through to rela+nivo / lifileucel for unfit patients."
 
   # Step 5 — Patient unfit for ipi+nivo OR strongly prefers
   # tolerability profile → rela+nivo (Opdualag) as IO-naive 2L

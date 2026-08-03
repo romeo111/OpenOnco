@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>EBV-DNA viral load (quantitative PCR, plasma) - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EBV-DNA viral load (quantitative PCR, plasma) - OpenOnco">
 <meta name="twitter:description" content="EBV-DNA viral load (quantitative PCR, plasma): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"EBV-DNA viral load (quantitative PCR, plasma) - OpenOnco","description":"EBV-DNA viral load (quantitative PCR, plasma): сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-ebv-dna.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-ebv-dna.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"EBV-DNA viral load (quantitative PCR, plasma) - OpenOnco","description":"EBV-DNA viral load (quantitative PCR, plasma): сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/biomarkers/bio-ebv-dna.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/biomarkers/bio-ebv-dna.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -91,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
@@ -115,15 +189,18 @@
 <tr><th>Тип</th><td>Біомаркер</td></tr>
 <tr><th>Синоніми</th><td><div class="kb-alias-list"><span class="kb-alias">EBV PCR</span><span class="kb-alias">EBV viral load</span><span class="kb-alias">EBV-DNA quantitative load</span><span class="kb-alias">Plasma EBV-DNA</span><span class="kb-alias">Вірусне навантаження EBV-DNA (кількісна ПЛР, плазма)</span></div></td></tr>
 <tr><th>Статус</th><td>переглянуто 2026-04-26 | очікує клінічного підпису</td></tr>
-<tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-NK-T-NASAL"><code>DIS-NK-T-NASAL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-PTLD"><code>DIS-PTLD</code></a></span></td></tr>
+<tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-NK-T-NASAL"><code>DIS-NK-T-NASAL</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-NPC"><code>DIS-NPC</code></a></span> <span class="kb-chip"><a href="/ukr/diseases.html#DIS-PTLD"><code>DIS-PTLD</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BCELL-2025</code></a></span></td></tr></table>
   <h2>Дані про біомаркер</h2><table class="kb-facts"><tr><th>Тип біомаркера</th><td>viral_load</td></tr>
 <tr><th>Вимірювання</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Method</span><span>Real-time quantitative PCR for EBV-DNA on cell-free plasma (preferred) or whole blood. Plasma EBV-DNA reflects active viral replication and tumor lysis; whole-blood EBV-DNA includes latent virus in B-cells and is less specific for active disease. Standardized in IU/mL via WHO international standard.</span></div><div class="kb-kv-item"><span class="kb-kv-key">Units</span><span>IU/mL (or copies/mL with assay-specific conversion)</span></div><div class="kb-kv-item"><span class="kb-kv-key">Typical range</span><span><ul class="kb-inline-list"><li>0</li><li>100000000</li></ul></span></div></div></td></tr>
 <tr><th>Пов’язані біомаркери</th><td><span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-ebv-status.html"><code>BIO-EBV-STATUS</code></a></span> <span class="kb-chip"><a href="/ukr/kb/biomarkers/bio-hiv-status.html"><code>BIO-HIV-STATUS</code></a></span></td></tr></table>
-  <h2>Нотатки</h2><p>Companion to BIO-EBV-STATUS (qualitative tissue EBER-ISH). EBV-DNA is the *quantitative* serum marker used for: - **Extranodal NK/T nasal-type lymphoma**: pre-treatment baseline; monitoring during SMILE / DDGP / asparaginase-based regimens; post-treatment surveillance. Rising EBV-DNA on therapy correlates with poor response; persistent post-treatment positivity predicts relapse. - **PTLD**: EBV-driven PTLD shows EBV-DNA load decrease with rituximab + reduced immunosuppression; trend is response surrogate. - **HIV-associated EBV+ DLBCL / plasmablastic / primary effusion**: contextual; not standardly used for treatment decisions. - **Post-HSCT monitoring**: weekly EBV-DNA used to detect early PTLD risk; preemptive rituximab if doubling. Wired into: ALGO-NK-T-NASAL-1L (notes only — full Monitoring entity with thresholds and frequency to be authored). reviewer_signoffs: 0 # STUB — pending two Clinical Co-Lead approvals</p>
+  <h2>Нотатки</h2><p>Доповнює BIO-EBV-STATUS (якісний EBER-ISH на тканині). EBV-DNA є *кількісним* сироватковим маркером, що використовується при: - **Екстранодальній NK/T-лімфомі назального типу**: вихідний рівень до лікування; моніторинг під час схем SMILE / DDGP / на основі аспарагінази; спостереження після лікування. Зростання EBV-DNA на фоні терапії корелює з поганою відповіддю; стійка позитивність після лікування передбачає рецидив. - **ПТЛП**: EBV-керована ПТЛП демонструє зниження вірусного навантаження EBV-DNA на тлі ритуксимабу (rituximab) + зменшення імуносупресії; тенденція є сурогатом відповіді. - **ВІЛ-асоційована EBV+ ДВКЛ / плазмобластна / первинна ексудативна**: контекстуально; стандартно не використовується для прийняття терапевтичних рішень. - **Пост-ТГСК моніторинг**: щотижневе визначення EBV-DNA для раннього виявлення ризику ПТЛП; превентивний ритуксимаб при подвоєнні навантаження. Інтегровано до: ALGO-NK-T-NASAL-1L (лише нотатки — повну сутність моніторингу з порогами та частотою ще належить написати). reviewer_signoffs: 0 # STUB — очікує на схвалення двох клінічних ко-лідів</p>
   <h2>Де використовується</h2>
-<h3>Indications</h3><ul><li><code>IND-NK-T-NASAL-1L-P-GEMOX</code> - IND-NK-T-NASAL-1L-P-GEMOX</li><li><code>IND-NK-T-NASAL-1L-SMILE</code> - IND-NK-T-NASAL-1L-SMILE</li><li><code>IND-PTLD-1L-REDUCE-IS</code> - IND-PTLD-1L-REDUCE-IS</li></ul>
+<h3>Diseases</h3><ul><li><code>DIS-NPC</code> - Nasopharyngeal carcinoma (NPC)</li></ul>
+<h3>Indications</h3><ul><li><code>IND-NK-T-NASAL-1L-P-GEMOX</code> - IND-NK-T-NASAL-1L-P-GEMOX</li><li><code>IND-NK-T-NASAL-1L-SMILE</code> - IND-NK-T-NASAL-1L-SMILE</li><li><code>IND-NPC-1L-LOCALLY-ADVANCED-CCRT</code> - IND-NPC-1L-LOCALLY-ADVANCED-CCRT</li><li><code>IND-NPC-1L-METASTATIC-GC-PD1</code> - IND-NPC-1L-METASTATIC-GC-PD1</li><li><code>IND-PTLD-1L-REDUCE-IS</code> - IND-PTLD-1L-REDUCE-IS</li></ul>
 <h3>Questionnaires</h3><ul><li><code>QUEST-NK-T-NASAL-1L-STUB</code> - Extranodal NK/T-Cell Lymphoma, Nasal Type — first line</li><li><code>QUEST-PTLD-1L-STUB</code> - Post-Transplant Lymphoproliferative Disorder — first line</li></ul>
+<h3>Sources</h3><ul><li><code>SRC-EBV-DNA-NPC-LIN-2004</code> - Quantification of plasma Epstein-Barr virus DNA in patients with advanced nasopharyngeal...</li></ul>
+<h3>Тривожна ознака</h3><ul><li><code>RF-NPC-EBV-DNA-POST-TREATMENT-SURVEILLANCE</code> - Detectable or rising plasma EBV-DNA (BIO-EBV-DNA, quantitative PCR) after completion of d...</li></ul>
 </main>
 </body>
 </html>

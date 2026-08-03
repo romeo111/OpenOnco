@@ -25,11 +25,13 @@ from scripts.build_site import (
     GALLERY_FEATURED_CASE_IDS,
     _public_case_entries,
     _public_example_entries,
+    build_one_case_patient,
     build_site,
     _example_sort_key,
     _render_top_bar,
     render_diseases,
 )
+from knowledge_base.engine import is_diagnostic_profile
 
 
 @pytest.fixture(scope="module")
@@ -123,12 +125,12 @@ def test_landing_drops_watson_comparison(site_dir: Path):
 
 
 def test_landing_problem_block_is_single_prose(site_dir: Path):
-    """Landing v2 redesign: the 'why this is needed' prose (`how-lead`) was
-    removed from the home page to keep the first viewport focused on the product.
-    The source-band (`home-source-band`) is the canonical non-hero section,
-    replacing the old how/problem blocks. No 2-column problem-grid either."""
+    """Landing v3 (role-router redesign): the old 'why this is needed' prose
+    (`how-lead`) and 2-column problem-grid stay gone. The canonical non-hero
+    sections are now the role doors (`home-doors`) plus the how-it-works steps;
+    the old source-band prose was folded into the trust line."""
     html = (site_dir / "index.html").read_text(encoding="utf-8")
-    assert 'class="home-source-band"' in html
+    assert 'class="home-doors"' in html
     assert 'class="problem-grid"' not in html
     assert 'class="how-lead"' not in html
 
@@ -211,6 +213,18 @@ def test_try_page_wires_pyodide_and_form(site_dir: Path):
     assert "openonco-engine-index.json" in html
     # Example dropdown source
     assert "examples.json" in html
+
+
+def test_loading_example_keeps_personalize_button_reachable(site_dir: Path):
+    """Loading an example preloads its plan without opening a modal over
+    the banner that unlocks the prefilled fields."""
+    for path in (site_dir / "try.html", site_dir / "ukr" / "try.html"):
+        html = path.read_text(encoding="utf-8")
+        loader = html.split("async function loadExamplePlan", 1)[1].split(
+            "function clearPlanState", 1
+        )[0]
+        assert "resultFrame.src =" in loader, f"{path}: example plan is not preloaded"
+        assert "openPlanModal" not in loader, f"{path}: modal blocks personalize button"
 
 
 def test_try_page_has_pwa_manifest_and_build_status(site_dir: Path):
@@ -339,6 +353,63 @@ def test_engine_bundle_excludes_heavy_unused_subtrees(site_dir: Path):
 # ── Examples payload ──────────────────────────────────────────────────────
 
 
+def test_try_page_has_example_search_input(site_dir: Path):
+    """A search input must be available near the examples picker so
+    users can find examples across diseases (not just the active one)."""
+    for path in (site_dir / "try.html", site_dir / "ukr" / "try.html"):
+        html = path.read_text(encoding="utf-8")
+        assert 'id="exampleSearch"' in html, f"{path}: missing exampleSearch input"
+        assert 'id="exampleSearchCount"' in html, f"{path}: missing search count chip"
+        assert 'id="exampleSearchClear"' in html, f"{path}: missing clear button"
+        assert "function exampleSearchBlob" in html, f"{path}: missing JS search helper"
+        assert "function exampleSearchMatches" in html, f"{path}: missing match helper"
+
+
+def test_examples_manifest_carries_searchable_fields(site_dir: Path):
+    """The inlined EXAMPLES_MANIFEST on /try.html must include the
+    enriched search tokens — disease names, biomarker ids, regimen
+    name, line of therapy — otherwise the search bar would find nothing."""
+    html = (site_dir / "try.html").read_text(encoding="utf-8")
+    # Locate the inline manifest JS array.
+    import re as _re
+    m = _re.search(r"const EXAMPLES_MANIFEST = (\[.*?\]);\nconst PAGE_LANG", html, _re.S)
+    assert m, "EXAMPLES_MANIFEST inline literal not found"
+    manifest = json.loads(m.group(1))
+    assert manifest, "EXAMPLES_MANIFEST is empty"
+    # Spot-check every required field is present on at least 50% of entries
+    # (every entry should have these — diagnostic-only profiles may lack a
+    # regimen/line, which is fine).
+    keys_required = {
+        "case_id", "label", "label_en", "summary", "summary_en",
+        "disease_id", "disease_name_en", "disease_name_ua",
+        "biomarker_ids", "category",
+    }
+    sample = manifest[0]
+    for k in keys_required:
+        assert k in sample, f"manifest entry missing key: {k}"
+    # At least some entries carry line_of_therapy + regimen_name (verified ones).
+    assert any(e.get("regimen_name") for e in manifest), \
+        "no manifest entry has regimen_name — search by FOLFOX/CHOEP/etc will fail"
+    assert any(e.get("line_of_therapy") is not None for e in manifest), \
+        "no manifest entry has line_of_therapy — search by '2L' will fail"
+
+
+def test_verified_examples_reach_public_payload(site_dir: Path):
+    """Verified-treatment-example case ids must show up in docs/examples.json."""
+    payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
+    verified = [e for e in payload if (e.get("case_id") or "").startswith("verified-")]
+    # At least 10 — generator runs may produce more or fewer, but a near-zero
+    # count signals the auto-block wasn't picked up by the build.
+    assert len(verified) >= 10, (
+        f"only {len(verified)} verified examples in payload — site_cases "
+        f"auto-block may be missing or unreadable"
+    )
+    for entry in verified:
+        assert entry.get("quality_label_en"), entry["case_id"]
+        # Every verified patient JSON carries the target indication.
+        assert entry["json"].get("_target_indication_id"), entry["case_id"]
+
+
 def test_examples_payload_matches_cases(site_dir: Path):
     payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
     case_ids_payload = {e["case_id"] for e in payload}
@@ -365,6 +436,101 @@ def test_examples_payload_matches_cases(site_dir: Path):
         assert "Auto-stub" not in entry.get("label_en", "")
         # Engine-required top-level fields exist for non-diagnostic patients
         # (diagnostic patients have a different shape)
+
+
+def test_examples_payload_flags_patient_mode(site_dir: Path):
+    """PATIENT_MODE_SPEC §3: patient mode is treatment-only.
+
+    Every example in examples.json must carry a `has_patient_mode` flag.
+    The flag is True iff the example is treatment-shape (not diagnostic),
+    so the try-page modal knows whether to enable the audience toggle.
+    """
+    payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
+    for entry in payload:
+        assert "has_patient_mode" in entry, (
+            f"Example {entry.get('case_id')} missing has_patient_mode flag"
+        )
+        # Verify the flag matches the engine's diagnostic-profile detector
+        ex_json = entry.get("json", {})
+        expected = not is_diagnostic_profile(ex_json)
+        assert entry["has_patient_mode"] == expected, (
+            f"Example {entry.get('case_id')}: has_patient_mode="
+            f"{entry['has_patient_mode']} but is_diagnostic_profile="
+            f"{is_diagnostic_profile(ex_json)}"
+        )
+
+
+def test_curated_treatment_examples_have_patient_twin(site_dir: Path):
+    """Every treatment-shape curated example has a patient twin built at
+    /cases/<id>.patient.html (UA-only per PATIENT_MODE_SPEC §3 — a single
+    file serves both EN and UA visitors)."""
+    payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
+    treatment_ids = [
+        e["case_id"] for e in payload if e.get("has_patient_mode")
+    ]
+    assert treatment_ids, "expected at least one treatment-shape example"
+    missing = [
+        cid for cid in treatment_ids
+        if not (site_dir / "cases" / f"{cid}.patient.html").exists()
+    ]
+    assert not missing, f"Missing patient twins: {missing[:5]}"
+    # Patient twins for diagnostic examples MUST NOT exist (would mislead)
+    diagnostic_ids = [
+        e["case_id"] for e in payload if not e.get("has_patient_mode")
+    ]
+    stray = [
+        cid for cid in diagnostic_ids
+        if (site_dir / "cases" / f"{cid}.patient.html").exists()
+    ]
+    assert not stray, f"Patient twin generated for diagnostic example: {stray}"
+
+
+def test_patient_twin_has_required_anchors(site_dir: Path):
+    """PATIENT_MODE_SPEC §3 anchors must be present in the patient HTML so
+    downstream tests + accessibility tooling can locate the major sections.
+    """
+    # Pick a known-curated treatment example
+    payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
+    pick = next(
+        (e for e in payload
+         if e.get("has_patient_mode") and e["case_id"] == "aitl-cd30-negative"),
+        None,
+    )
+    assert pick is not None, "expected aitl-cd30-negative in curated examples"
+    twin = site_dir / "cases" / f"{pick['case_id']}.patient.html"
+    assert twin.exists()
+    body = twin.read_text(encoding="utf-8")
+    for anchor in (
+        'class="patient-report"',
+        'class="what-was-found"',
+        'class="what-now"',
+        'class="emergency-signals"',
+        'class="ask-doctor"',
+        'class="patient-disclaimer"',
+    ):
+        assert anchor in body, f"Patient twin missing anchor: {anchor}"
+    # Sibling chip back to the UA clinician twin so deep-linked patient
+    # pages round-trip to the doctor view
+    assert "/ukr/cases/aitl-cd30-negative.html" in body
+
+
+def test_try_html_wires_patient_mode_for_examples(site_dir: Path):
+    """The audience toggle in /try.html must be wired for example-source
+    plans (not just engine-generated ones). The wiring is a build-time
+    JS constant (EXAMPLE_PATIENT_MODE_BY_ID) plus an updated mode-switch
+    handler that loads /cases/<id>.patient.html in the iframe.
+    """
+    for path in (site_dir / "try.html", site_dir / "ukr" / "try.html"):
+        body = path.read_text(encoding="utf-8")
+        assert "EXAMPLE_PATIENT_MODE_BY_ID" in body, (
+            f"{path} missing EXAMPLE_PATIENT_MODE_BY_ID lookup"
+        )
+        assert "activeExampleHasPatient" in body, (
+            f"{path} missing activeExampleHasPatient state"
+        )
+        assert ".patient.html" in body, (
+            f"{path} mode-switch never loads a patient twin"
+        )
 
 
 def test_examples_are_quality_ranked_in_try_picker(site_dir: Path):
@@ -579,15 +745,20 @@ def test_try_cta_is_separate_action_button(site_dir: Path):
 
 
 def test_home_hero_avoids_duplicate_top_actions(site_dir: Path):
-    """The top bar owns the three product actions; the home hero keeps one
-    primary next step so the first viewport stays focused."""
+    """Role-router redesign: the top bar owns the product actions and the hero
+    is copy-only — the role doors immediately below it carry the primary next
+    steps, so the hero never duplicates the top-bar actions."""
     html = (site_dir / "ukr" / "index.html").read_text(encoding="utf-8")
     hero = html.split('<section class="home-hero">', 1)[1].split("</section>", 1)[0]
-    assert hero.count('class="btn ') == 1
-    assert 'href="/ukr/try.html"' in hero
+    # Hero carries no inline CTAs of its own; the doors section owns them.
+    assert hero.count('class="btn ') == 0
+    assert 'href="/ukr/try.html"' not in hero
     assert 'href="/ukr/kb.html"' not in hero
     assert 'href="/ukr/ask.html"' not in hero
-    assert 'class="home-source-band"' in html
+    # The role doors are the canonical primary-action surface.
+    assert 'class="home-doors"' in html
+    assert 'door-card--doctor' in html
+    assert 'door-card--patient' in html
 
 
 def test_top_bar_wraps_before_tablet_width(site_dir: Path):
@@ -670,6 +841,103 @@ def test_en_landing_links_use_en_paths(site_dir: Path):
     assert "/ukr/try.html" in ua_index
     # html lang attr is uk
     assert '<html lang="uk">' in ua_index
+
+
+# ── IP → language auto-selection ──────────────────────────────────────────
+# openonco.info is a static site, so language auto-selection by IP runs
+# client-side: a head script redirects English pages to their /ukr/ twin only
+# when the visitor's IP resolves to Ukraine. Default is English everywhere.
+
+
+def test_geo_lang_redirect_injected_on_every_page(site_dir: Path):
+    """Every built page (EN root, UA mirror, case pages) carries the geo
+    language-redirect script in its <head>, and it is injected exactly once."""
+    for page in ("index.html", "ukr/index.html", "gallery.html",
+                 "ukr/gallery.html", "kb.html", "ukr/kb.html"):
+        html = (site_dir / page).read_text(encoding="utf-8")
+        assert html.count("<!-- openonco-geo-lang:start -->") == 1, (
+            f"{page} missing/duplicated geo-lang block"
+        )
+        assert "<!-- openonco-geo-lang:end -->" in html
+        # Script lives inside <head>, after the charset meta (charset stays first).
+        start = html.index("<!-- openonco-geo-lang:start -->")
+        assert html.lower().index("<head") < start < html.lower().index("</head")
+        assert html.lower().index("charset") < start
+
+
+def test_geo_lang_redirect_behaviour_markers(site_dir: Path):
+    """Guard the core behavioural contract of the redirect script so a future
+    refactor cannot silently drop a safety rail."""
+    html = (site_dir / "index.html").read_text(encoding="utf-8")
+    block = html.split("<!-- openonco-geo-lang:start -->", 1)[1].split(
+        "<!-- openonco-geo-lang:end -->", 1
+    )[0]
+    # Ukraine is the only country that flips to Ukrainian.
+    assert "cc==='UA'?'uk':'en'" in block
+    # Manual choice is remembered and read back so it overrides the IP guess.
+    assert "localStorage.setItem('oo_lang'" in block
+    assert "localStorage.getItem('oo_lang')" in block
+    # Iframed previews (try.html result frame) are skipped.
+    assert "window.top!==window.self" in block
+    # Bots are not redirected (keeps both language trees crawlable).
+    assert "Googlebot" not in block  # matched generically, not by name
+    assert "/bot|crawl|spider" in block
+    # No API key is embedded (static public site) and referrers are not leaked.
+    assert "referrerPolicy:'no-referrer'" in block
+    assert "api_key" not in block.lower() and "apikey" not in block.lower()
+    # Legacy /en/ redirect stubs bail (no /ukr/en/ twin exists).
+    assert "/^\\/en(\\/|$)/" in block
+    # A slow async lookup must not yank a visitor who has started interacting.
+    assert "if(!touched)go(want(code))" in block
+    # Third-party surface minimized: GeoJS + ipapi.co only (ipwho.is dropped);
+    # exactly two https geo endpoints in the fallback chain.
+    assert "get.geojs.io" in block and "ipapi.co" in block
+    assert "ipwho.is" not in block
+    assert block.count("https://") == 2
+
+
+def test_geo_lang_redirect_skips_redirect_stubs_and_404():
+    """inject_geo_lang_redirect must never place (and must strip) the script on
+    redirect stubs (legacy /en/ tree carries <meta http-equiv=refresh> and has
+    no /ukr/en/ twin) or on 404.html (served for arbitrary missing paths, so a
+    mirror hop only 404s again)."""
+    from scripts.site_head import GEO_LANG_START, inject_geo_lang_redirect
+
+    normal = ('<!DOCTYPE html><html><head><meta charset="utf-8">'
+              "<title>x</title></head><body></body></html>")
+    stub = ('<!DOCTYPE html><html><head><meta charset="utf-8">'
+            '<meta http-equiv="refresh" content="0; url=/">'
+            "</head><body></body></html>")
+
+    # normal content page gets the block
+    injected = inject_geo_lang_redirect(normal, path="index.html")
+    assert GEO_LANG_START in injected
+
+    # redirect stub never gets it (regardless of path)
+    assert GEO_LANG_START not in inject_geo_lang_redirect(stub)
+    assert GEO_LANG_START not in inject_geo_lang_redirect(stub, path="en/index.html")
+
+    # 404 page (detected by path) never gets it
+    assert GEO_LANG_START not in inject_geo_lang_redirect(normal, path="404.html")
+
+    # already-injected page that is a stub -> block stripped back out (idempotent)
+    stubbed = injected.replace(
+        '<meta charset="utf-8">',
+        '<meta charset="utf-8"><meta http-equiv="refresh" content="0; url=/">',
+    )
+    assert GEO_LANG_START not in inject_geo_lang_redirect(stubbed, path="en/index.html")
+
+
+def test_geo_lang_does_not_break_charset_or_seo(site_dir: Path):
+    """The injection must not displace the SEO block or the charset meta."""
+    html = (site_dir / "index.html").read_text(encoding="utf-8")
+    assert "<!-- openonco-seo:start -->" in html
+    # charset < geo-lang < seo-block ordering keeps charset within the first bytes
+    assert (
+        html.lower().index("charset")
+        < html.index("<!-- openonco-geo-lang:start -->")
+        < html.index("<!-- openonco-seo:start -->")
+    )
 
 
 # ── Privacy guard ─────────────────────────────────────────────────────────

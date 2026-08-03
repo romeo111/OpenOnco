@@ -2,9 +2,11 @@ id: ALGO-RCC-METASTATIC-2L
 applicable_to_disease: DIS-RCC
 applicable_to_line_of_therapy: 2
 purpose: "Select 2L+ therapy for metastatic clear-cell RCC after prior PD-(L)1 + VEGF-TKI."
-output_indications: [IND-RCC-METASTATIC-2L-BELZUTIFAN]
+output_indications:
+  - IND-RCC-METASTATIC-2L-BELZUTIFAN
+  - IND-RCC-METASTATIC-2L-CABOZANTINIB
 default_indication: IND-RCC-METASTATIC-2L-BELZUTIFAN
-alternative_indication: IND-RCC-METASTATIC-2L-BELZUTIFAN  # single-option algorithm; Pydantic alt is required
+alternative_indication: IND-RCC-METASTATIC-2L-CABOZANTINIB
 decision_tree:
   - step: 1
     evaluate:
@@ -16,11 +18,17 @@ decision_tree:
     if_true: {result: IND-RCC-METASTATIC-2L-BELZUTIFAN}
     if_false: {result: IND-RCC-METASTATIC-2L-BELZUTIFAN}  # default — algorithm only fires post-1L
     notes: >
-      Degenerate step — single-track algorithm: both branches route to
-      belzutifan. Condition is informational only (prior PD-(L)1 + VEGF-TKI
-      failure is the entry criterion for this algo, not a bifurcating gate).
-      No RF can change outcome until ≥2 Indications are wired (cabozantinib,
-      lenvatinib + everolimus, tivozanib). Remove step when second track added.
+      Wiring fix (2026-07-11, restoring authored intent flagged in this file's
+      own notes): IND-RCC-METASTATIC-2L-CABOZANTINIB is fully authored in the KB
+      (METEOR; NCCN Cat-1 2L) but was absent from output_indications, so the plan
+      engine (which builds tracks only from output_indications) could never
+      surface it. Added it as the alternative track so a 2L ccRCC plan now shows
+      both belzutifan (LITESPARK-005) and cabozantinib. The decision tree stays
+      a single-selected-default passthrough — belzutifan remains the
+      engine-selected default; this change only makes the second NCCN Cat-1
+      option VISIBLE for MDT consideration, it does NOT assert a routing rule
+      to prefer one over the other (that is a clinical decision, deliberately
+      not made here). lenvatinib+everolimus / tivozanib remain future expansion.
 sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
 last_reviewed: "2026-04-26"
 notes: >

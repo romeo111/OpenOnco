@@ -1,0 +1,129 @@
+slug: spring-kb-wave
+date: 2026-05-11
+published: 2026-07-19
+author: OpenOnco
+tags: [knowledge-base, regimens]
+
+title:
+  en: What landed in the knowledge base, 30 April to 11 May
+  uk: Що зʼявилося в базі знань з 30 квітня до 11 травня
+
+summary:
+  en: >-
+    A digest of one busy fortnight: haematology, thoracic and breast regimen
+    waves, rare-tumour red flags, CIViC actionability backfill, and a batch of
+    routing fixes.
+  uk: >-
+    Дайджест одного насиченого двотижня: хвилі схем лікування в гематології,
+    торакальній онкології та раку грудної залози, red flags для рідкісних
+    пухлин, доповнення actionability з CIViC і пакет виправлень маршрутизації.
+
+body:
+  en:
+    - type: p
+      text: >-
+        Coverage moved fast enough over this fortnight that the commit log
+        stopped being a reasonable way to follow it. This is the same work
+        grouped by theme. Everything below is a statement about what was added
+        to the knowledge base, with its trial grounding named — not a treatment
+        recommendation.
+    - type: h2
+      text: Regimen waves
+    - type: ul
+      items:
+        - >-
+          **Haematology** — CLL, DLBCL, myeloma and follicular lymphoma:
+          AMPLIFY, POLARIX, TRANSFORM/liso-cel, PERSEUS (D-VRd with ASCT and
+          dara-len maintenance), IKEMA, MURANO/VenR, GADOLIN, AUGMENT.
+        - >-
+          **Thoracic** — NSCLC EGFR (FLAURA-2, MARIPOSA), limited-stage SCLC
+          (ADRIATIC), tarlatamab (DeLLphi-301), perioperative pembrolizumab
+          (KEYNOTE-671), adjuvant atezolizumab (IMpower010), CheckMate-9LA, and
+          second-line nivolumab in mesothelioma (CONFIRM).
+        - >-
+          **Breast** — triple-negative neoadjuvant (KEYNOTE-522) and adjuvant
+          CDK4/6 inhibition in early HR+/HER2−: abemaciclib (monarchE),
+          ribociclib (NATALEE).
+    - type: h2
+      text: Safety and actionability
+    - type: ul
+      items:
+        - >-
+          **Rare-tumour red flags** — GIST PDGFRA D842V, medullary thyroid RET,
+          Waldenström CXCR4-WHIM, advanced systemic mastocytosis KIT D816V,
+          dMMR gates, ATLL/AITL/NLPBL, essential thrombocythaemia
+          hydroxyurea resistance, Burkitt ifosfamide.
+        - >-
+          **CIViC actionability backfill** — FLT3 TKD, FOXL2 and KRAS G12V
+          moved onto the `evidence_sources` block.
+    - type: h2
+      text: Engine and routing
+    - type: ul
+      items:
+        - "An ECOG performance status ≥ 4 hard gate."
+        - "English translations of the Ukrainian questionnaires."
+        - "Alignment with МОЗ наказ №473/2026."
+        - >-
+          A cross-line-of-therapy routing cleanup across 27 algorithms,
+          correcting `output_indications` membership so selected indications
+          stop being dropped from rendered plans.
+    - type: p
+      text: >-
+        Internal plumbing — validator baselines, upsert batches, session notes —
+        is deliberately left out. It is in the repository for anyone who wants
+        it.
+  uk:
+    - type: p
+      text: >-
+        За ці два тижні покриття зростало так швидко, що стежити за ним по
+        журналу комітів стало неможливо. Це та сама робота, згрупована за
+        темами. Усе нижче — твердження про те, що додано до бази знань, із
+        назвою дослідження, на яке воно спирається, а не рекомендація щодо
+        лікування.
+    - type: h2
+      text: Хвилі схем лікування
+    - type: ul
+      items:
+        - >-
+          **Гематологія** — ХЛЛ, ДВКЛ, мієлома та фолікулярна лімфома: AMPLIFY,
+          POLARIX, TRANSFORM/liso-cel, PERSEUS (D-VRd з АТСК і підтримкою
+          дара-лен), IKEMA, MURANO/VenR, GADOLIN, AUGMENT.
+        - >-
+          **Торакальна онкологія** — НДРЛ з EGFR (FLAURA-2, MARIPOSA),
+          дрібноклітинний рак обмеженої стадії (ADRIATIC), тарлатамаб
+          (DeLLphi-301), періопераційний пембролізумаб (KEYNOTE-671),
+          адʼювантний атезолізумаб (IMpower010), CheckMate-9LA та ніволумаб
+          другої лінії при мезотеліомі (CONFIRM).
+        - >-
+          **Рак грудної залози** — неоадʼювант при тричі негативному
+          (KEYNOTE-522) та адʼювантні інгібітори CDK4/6 при ранньому
+          HR+/HER2−: абемациклib (monarchE), рибоциклib (NATALEE).
+    - type: h2
+      text: Безпека та actionability
+    - type: ul
+      items:
+        - >-
+          **Red flags для рідкісних пухлин** — GIST PDGFRA D842V, медулярний
+          рак щитоподібної залози з RET, макроглобулінемія Вальденстрема
+          CXCR4-WHIM, розповсюджений системний мастоцитоз KIT D816V, гейти
+          dMMR, ATLL/AITL/NLPBL, резистентність до гідроксисечовини при
+          есенційній тромбоцитемії, іфосфамід при лімфомі Беркітта.
+        - >-
+          **Доповнення actionability з CIViC** — FLT3 TKD, FOXL2 і KRAS G12V
+          переведено на блок `evidence_sources`.
+    - type: h2
+      text: Engine і маршрутизація
+    - type: ul
+      items:
+        - "Жорсткий гейт за статусом ECOG ≥ 4."
+        - "Англійські переклади українських опитувальників."
+        - "Узгодження з наказом МОЗ №473/2026."
+        - >-
+          Чистка маршрутизації між лініями терапії у 27 алгоритмах: виправлено
+          склад `output_indications`, щоб обрані індикації більше не зникали зі
+          згенерованих планів.
+    - type: p
+      text: >-
+        Внутрішню технічну частину — базові показники валідатора, пакетні
+        upsert-и, робочі нотатки — свідомо лишено поза дайджестом. Вона є в
+        репозиторії для всіх, кому потрібна.

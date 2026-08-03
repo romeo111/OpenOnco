@@ -1,0 +1,149 @@
+id: IND-CASCADE-BRCA-FDR-POSITIVE-SURVEILLANCE
+plan_track: surveillance
+intent: prevention
+
+applicable_to:
+  disease_id: DIS-BREAST
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+triggered_by_redflags:
+  - RF-CASCADE-BRCA-FDR-POSITIVE
+
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >-
+    Empirical enhanced surveillance applied to a first-degree relative
+    of a confirmed BRCA1 / BRCA2 carrier — without genetic confirmation
+    — captures early-stage breast cancer in the **50% of patients who
+    are actual carriers** (autosomal-dominant prior probability), but
+    subjects the **other 50%** (non-carriers) to intensive surveillance
+    + radiation exposure (mammography) they could have safely declined
+    had cascade testing been completed. Risk-reducing surgery (RRM,
+    RRSO) is NOT offered empirically — that decision requires genetic
+    confirmation.
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Alternative-track companion to IND-CASCADE-BRCA-FDR-POSITIVE-TESTING.
+  Applied when a first-degree relative of a confirmed BRCA1 / BRCA2
+  carrier declines cascade germline testing — for any reason (cost,
+  insurance, psychological / anxiety, family privacy, geographic
+  access) — and is offered empirical enhanced surveillance applied
+  as if BRCA were confirmed. The **50% prior probability** of carrier
+  status is high enough to justify intensive surveillance without
+  genetic confirmation, but patient autonomy (CHARTER §11) governs
+  the choice.
+
+  **Breast (women):** Annual breast MRI starting age 25, alternating
+  every 6 months with annual mammogram from age 30 (q6mo combined
+  cadence). Clinical breast exam q6-12mo from age 25. Breast
+  awareness education. The MRI / mammogram alternating cadence
+  detects DCIS and small invasive cancer with >90% sensitivity in
+  high-risk populations.
+
+  **Ovarian (women):** TVUS + CA-125 q6mo from age 30-35, framed
+  honestly as suboptimal — sensitivity for early-stage high-grade
+  serous carcinoma is poor (~50%). Risk-reducing BSO is NOT offered
+  empirically — the surgical decision requires confirmed carrier
+  status (premature surgical menopause has lifelong cardiovascular,
+  bone-health, and cognitive sequelae).
+
+  **Risk-reducing mastectomy (RRM):** NOT offered empirically.
+  Surgical irreversibility, body-image implications, and the
+  ~50% probability of being a non-carrier mean RRM requires
+  confirmed carrier diagnosis before being on the table as a
+  shared-decision option.
+
+  **Prostate (men, especially with BRCA2 FDR-positive):** Annual
+  PSA + DRE from age 40 — applied empirically given BRCA2's
+  enriched high-grade / metastatic prostate cancer signal.
+
+  **Pancreatic (PDAC):** Surveillance via EUS / MRI considered if
+  the family additionally has ≥1 affected first / second-degree
+  relative with PDAC — not warranted by BRCA FDR-positivity alone.
+
+  **Periodic re-discussion of cascade testing** is appropriate at
+  every surveillance visit. Most patients eventually accept testing
+  after additional visits, particularly as life decisions (childbearing,
+  surgical timing) crystallize.
+
+  Routing reconsiderations: if patient eventually accepts cascade
+  testing, results route to (a) confirmed-carrier pathway via
+  RF-BRCA-CONFIRMED-CARRIER, or (b) general-population pathway.
+
+rationale_ua: >
+  Альтернативно-трекова Indication — компаньйон до
+  IND-CASCADE-BRCA-FDR-POSITIVE-TESTING. Застосовується коли родич
+  першого ступеня підтвердженого BRCA1 / BRCA2 носія відмовляється
+  від cascade germline тестування — з будь-якої причини — і отримує
+  empіричне посилене спостереження, як якщо б BRCA був підтверджений.
+  **50% апріорна ймовірність** носійства достатньо висока, щоб
+  виправдати інтенсивне спостереження без генетичного підтвердження.
+
+  **Груди (жінки):** Annual breast MRI з 25 років, alternating
+  q6mo з annual mammogram з 30 років. CBE q6-12mo з 25 років.
+
+  **Яєчники (жінки):** TVUS + CA-125 q6mo з 30-35 років (sensitivity
+  для ранніх стадій high-grade serous — погана; framing має бути
+  чесним). Risk-reducing BSO НЕ пропонується empіричнo.
+
+  **Risk-reducing mastectomy (RRM):** НЕ пропонується empіричнo —
+  surgical irreversibility вимагає підтвердженого carrier діагнозу.
+
+  **Простата (чоловіки, особливо BRCA2 FDR-positive):** Annual PSA +
+  DRE з 40 років.
+
+  **Підшлункова:** Surveillance розглядається при ≥1 додатковому
+  афектованому first / second-degree родичі з PDAC.
+
+  **Periodic re-discussion** cascade тестування доречне на кожному
+  surveillance візиті. Per CHARTER §11 framing автономії пацієнта.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_b_cascade_pilot
+draft_revision: 1
+
+sources:
+  - source_id: SRC-NCCN-GENETIC-FAMILIAL-BREAST-OVARIAN-2025
+    position: supports
+  - source_id: SRC-NCCN-BREAST-2025
+    position: supports
+  - source_id: SRC-ASCO-ACMG-LYNCH-2014
+    position: supports
+
+do_not_do:
+  - "Не презентувати empirical surveillance як еквівалент genetic confirmation — 50% пацієнтів — non-carriers, які могли б безпечно decline mammography radiation exposure."
+  - "Не пропонувати risk-reducing мастектомію (RRM) empіричнo — surgical irreversibility + body-image наслідки вимагають підтвердженого carrier діагнозу."
+  - "Не пропонувати risk-reducing BSO empіричнo — premature surgical menopause має lifelong cardiovascular, bone-health, cognitive наслідки."
+  - "Не презентувати CA-125 + TVUS як ефективний скринінг яєчників — sensitivity для ранніх стадій high-grade serous погана; framing має бути чесним."
+  - "Не пропускати periodic re-discussion про cascade testing — більшість пацієнтів врешті приймають тестування."
+
+do_not_do_en:
+  - "Do not present empirical surveillance as equivalent to genetic confirmation — 50% of patients are non-carriers who could safely decline mammography radiation exposure."
+  - "Do not offer risk-reducing mastectomy (RRM) empirically — surgical irreversibility and body-image implications require confirmed carrier diagnosis."
+  - "Do not offer risk-reducing BSO empirically — premature surgical menopause has lifelong cardiovascular, bone-health, and cognitive sequelae."
+  - "Do not present CA-125 + TVUS as effective ovarian screening — sensitivity for early-stage high-grade serous carcinoma is poor; framing must be honest."
+  - "Do not skip periodic re-discussion of cascade testing — most patients eventually accept testing."
+
+known_controversies: []
+time_critical: false
+last_reviewed: "2026-05-19"
+reviewers: []
+reviewer_signoffs: 0
+notes: STUB — alternative-track companion for BRCA cascade-testing pilot. §15.2 C4 ≥2-tracks invariant compliance.

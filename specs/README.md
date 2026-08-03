@@ -50,6 +50,9 @@ for the language policy.
 - **[`SKILL_ARCHITECTURE_SPEC.md`](SKILL_ARCHITECTURE_SPEC.md)** —
   versioned skill registry, per-skill `last_reviewed`,
   `clinical_lead`, `verified_by`.
+- **[`HANDBOOK_MODE_SPEC.md`](HANDBOOK_MODE_SPEC.md)** —
+  source-grounded educational chapters and practice questions over the
+  OpenOnco KB; explicitly not official ESMO content or CME credit.
 
 ## Operations and integrations
 

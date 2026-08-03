@@ -187,7 +187,7 @@ Per CLAUDE.md `3a60901b`: chunks self-push when all gates pass. Branch names fol
 Day 1 (parallel):
   W2 (regression fixture + #Curated column)  →  ships first as baseline
   W5a (engine drift fixes #1-#3)              →  optional but high-value before W1
-  
+
 Day 2 (parallel):
   W1.B1 (myeloid)                             ┐
   W1.B2 (solid GI)                            │  4 chunks parallel
@@ -200,10 +200,10 @@ Day 3:
 Week 2+:
   W5b (KB authoring drift fixes #5-#10 + bonus) — gradual chunks
   W5c (RF authoring drift fix #4)
-  
+
 Month 2+:
   W3 Tier-2 biomarkers (per v0.2 milestone planning)
-  
+
 Post-v1.0:
   W4 Tier-3 + W6 LymphGen (gated by clinical evidence + engine extension)
 ```

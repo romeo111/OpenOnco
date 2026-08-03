@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AITL patient frail or elderly unfit for full-dose CHOEP / CHP-Bv induction: ECOG ≥3, OR a... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AITL patient frail or elderly unfit for full-dose CHOEP / CHP-Bv induction: ECOG ≥3, OR a... - OpenOnco">
 <meta name="twitter:description" content="AITL patient frail or elderly unfit for full-dose CHOEP / CHP-Bv induction: ECOG ≥3, OR a...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"AITL patient frail or elderly unfit for full-dose CHOEP / CHP-Bv induction: ECOG ≥3, OR a... - OpenOnco","description":"AITL patient frail or elderly unfit for full-dose CHOEP / CHP-Bv induction: ECOG ≥3, OR a...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-aitl-frailty-age.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-aitl-frailty-age.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"AITL patient frail or elderly unfit for full-dose CHOEP / CHP-Bv induction: ECOG ≥3, OR a... - OpenOnco","description":"AITL patient frail or elderly unfit for full-dose CHOEP / CHP-Bv induction: ECOG ≥3, OR a...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-aitl-frailty-age.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-aitl-frailty-age.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -91,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
@@ -116,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-04-27 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-AITL"><code>DIS-AITL</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="ESMO Clinical Practice Guideline on Peripheral T-cell Lymphomas"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-peripheral-t-cell-lymphomas" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-PTCL-2024</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BCELL-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>AITL patient frail or elderly unfit for full-dose CHOEP / CHP-Bv induction: ECOG ≥3, OR age ≥75, OR (age ≥70 + ≥2 comorbidities + albumin &lt;3.5), OR explicit clinical assessment &quot;unfit for intensive chemotherapy&quot;. AITL median age at diagnosis is 65-70 — most patients fall close to this threshold.</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>AITL у літнього або непридатного для інтенсивної індукції пацієнта: ECOG ≥3, АБО вік ≥75, АБО (вік ≥70 + ≥2 коморбідності + альбумін &lt;3.5), АБО клінічне рішення &quot;unfit for intensive chemotherapy&quot;. Медіана віку при діагностиці AITL — 65-70 років, більшість пацієнтів близько цього порогу.</td></tr>
 <tr><th>Клінічний напрям</th><td>de-escalate</td></tr>
 <tr><th>Категорія</th><td>frailty-age</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
   &quot;any_of&quot;: [
@@ -156,7 +230,7 @@
   ],
   &quot;type&quot;: &quot;composite_score&quot;
 }</pre>
-  <h2>Нотатки</h2><p>AITL is the second-most-common PTCL subtype and predominantly affects older adults (median 65-70). ECHELON-2 (brentuximab-CHP) included patients up to age 80 but post-hoc subgroups suggest tolerability concern &gt;75. Frailty options: CHOP (drop etoposide), mini-CHOP (50-60% doses) per GELA LNH03-7B paradigm extrapolated from DLBCL, GEM-P (gemcitabine + methylprednisolone + cisplatin) as outpatient alternative, or romidepsin-monotherapy in unfit relapse. Geriatric assessment (G8 / CGA) prior to regimen selection. Direction &quot;de-escalate&quot; conflicts with HIGH-RISK-BIOLOGY &quot;intensify&quot; — engine surfaces conflict to MDT.</p>
+  <h2>Нотатки</h2><p>AITL is the second-найбільш-поширений PTCL підтип and переважно affects older adults (медіана 65-70). ECHELON-2 (brentuximab-CHP) included patients до age 80 but post-hoc subgroups suggest переносимість concern &gt;75. дряхлість options: CHOP (drop етопозид), mini-CHOP (50-60% doses) per GELA LNH03-7B paradigm extrapolated from DLBCL, GEM-P (гемцитабін + methylprednisolone + цисплатин) as outpatient alternative, or romidepsin-монотерапія in unfit рецидив. Geriatric assessment (G8 / CGA) prior to схема selection. Direction &quot;деескалувати&quot; conflicts with високого ризику-BIOLOGY &quot;intensify&quot; — engine surfaces conflict to MDT.</p>
   <h2>Де використовується</h2><p class="kb-muted">У YAML-корпусі не знайдено зворотних посилань.</p>
 </main>
 </body>

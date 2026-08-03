@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ivosidenib - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ivosidenib - OpenOnco">
 <meta name="twitter:description" content="Ivosidenib: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Ivosidenib - OpenOnco","description":"Ivosidenib: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-ivosidenib.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-ivosidenib.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Ivosidenib - OpenOnco","description":"Ivosidenib: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-ivosidenib.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-ivosidenib.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -91,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
@@ -123,7 +197,7 @@
 <tr><th>Зареєстровано в Україні</th><td>False</td></tr>
 <tr><th>Відшкодовується НСЗУ</th><td>False</td></tr>
 <tr><th>Остання перевірка для України</th><td>2026-05-07</td></tr></table><h2>Застереження</h2><ul><li>Differentiation syndrome (in IDH1-mutant AML) — potentially fatal; manifests within 1 day to 3 months of therapy start; symptoms include fever, dyspnea, hypoxia, pulmonary infiltrates, pleural / pericardial effusion, rapid weight gain, peripheral edema, hepatic / renal / multi-organ dysfunction. Initiate corticosteroids (dexamethasone 10 mg IV q12h) and hemodynamic monitoring at first suspicion; do not wait for confirmation. Boxed warning applies to AML indication; clinically relevant in cholangiocarcinoma at much lower frequency</li></ul>
-  <h2>Нотатки</h2><p>Mutant-selective IDH1 inhibitor (Servier; formerly Agios Pharmaceuticals, development code AG-120; transferred to Servier in 2021 with the Agios oncology divestiture). FDA-approved July 2018 for relapsed/refractory IDH1-mutant AML on the basis of AG120-C-001 phase 1 (DiNardo et al. NEJM 2018 — ORR 41.6%, CR+CRh 30.4%). FDA-approved August 2021 for previously-treated IDH1-mutant locally advanced / metastatic cholangiocarcinoma on the basis of ClarIDHy phase 3 (Abou-Alfa et al. Lancet Oncol 2020 — ivosidenib vs placebo: mPFS 2.7 vs 1.4 mo, HR 0.37, p&lt;0.0001; OS HR 0.79 with 70.5% placebo-arm crossover, RPSFT-adjusted OS HR 0.49). FDA-approved May 2022 for newly-diagnosed IDH1-mutant AML in combination with azacitidine on the basis of AGILE phase 3 (Montesinos et al. NEJM 2022 — ivosidenib+aza vs placebo+aza: mOS 24.0 vs 7.9 mo, HR 0.44). FDA-approved October 2023 for r/r IDH1-mutant MDS. EMA approved 2023 for cholangiocarcinoma + AML. IDH1 R132 mutations are mutually exclusive with FGFR2 fusions in intrahepatic cholangiocarcinoma (~13–20% prevalence) and with FLT3 / NPM1 mutations in AML at lower mutual-exclusivity rates. IDH1 R132C is the dominant variant in cholangio (~70% of IDH1...</p>
+  <h2>Нотатки</h2><p>Івосиденіб (ivosidenib) — мутант-селективний інгібітор IDH1 (Servier; раніше Agios Pharmaceuticals, девелопмент-код AG-120; передано Servier у 2021 році з онкологічним дивестиціюванням Agios). FDA-схвалено у липні 2018 для рецидивного/рефрактерного IDH1-мутантного ГМЛ за результатами AG120-C-001 фази 1 (DiNardo et al., NEJM 2018 — ORR 41.6%, CR+CRh 30.4%). FDA-схвалено у серпні 2021 для попередньо лікованої локально поширеної / метастатичної IDH1-мутантної холангіокарциноми за результатами ClarIDHy фази 3 (Abou-Alfa et al., Lancet Oncol 2020 — івосиденіб vs плацебо: mPFS 2.7 vs 1.4 mo, HR 0.37, p&lt;0.0001; OS HR 0.79 при кросовері 70.5% з плацебо-групи, RPSFT-скоригована OS HR 0.49). FDA-схвалено у травні 2022 для вперше діагностованого IDH1-мутантного ГМЛ у комбінації з азацитидином за результатами AGILE фази 3 (Montesinos et al., NEJM 2022 — івосиденіб + аза vs плацебо + аза: mOS 24.0 vs 7.9 mo, HR 0.44). FDA-схвалено у жовтні 2023 для R/R IDH1-мутантного МДС. EMA схвалено у 2023 для холангіокарциноми та ГМЛ. Мутації IDH1 R132 взаємно виключають FGFR2-злиття у внутрішньопечінковій холангіокарциномі (~13-20% поширеність) та FLT3 / NPM1 мутації при ГМЛ на нижчих рівнях взаємного вик...</p>
   <h2>Де використовується</h2>
 <h3>Regimens</h3><ul><li><code>REG-IVOSIDENIB-CHOLANGIO</code> - Ivosidenib monotherapy (ClarIDHy) — 2L+ IDH1-mutated cholangiocarcinoma</li></ul>
 <h3>Препарат</h3><ul><li><code>DRUG-OLUTASIDENIB</code> - Olutasidenib</li></ul>

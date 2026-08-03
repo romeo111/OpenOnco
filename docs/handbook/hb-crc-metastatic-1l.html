@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Metastatic colorectal cancer: first-line biomarker reasoning - OpenOnco Handbook</title>
+  <!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/handbook/hb-crc-metastatic-1l.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/handbook/hb-crc-metastatic-1l.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/handbook/hb-crc-metastatic-1l.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Metastatic colorectal cancer: first-line biomarker reasoning - OpenOnco Handbook">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/handbook/hb-crc-metastatic-1l.html">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Metastatic colorectal cancer: first-line biomarker reasoning - OpenOnco Handbook">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Metastatic colorectal cancer: first-line biomarker reasoning - OpenOnco Handbook","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/handbook/hb-crc-metastatic-1l.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/handbook/hb-crc-metastatic-1l.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="stylesheet" href="/style.css">
+  <style>
+    .hb-wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; }
+    .hb-kicker { color: #4b5563; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+    .hb-hero { display: grid; gap: 14px; border-bottom: 1px solid #d6dee8; padding-bottom: 22px; }
+    .hb-hero h1 { margin: 0; font-size: 34px; line-height: 1.08; }
+    .hb-lead { max-width: 820px; color: #334155; font-size: 17px; line-height: 1.55; }
+    .hb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+    .hb-card, .hb-panel, .hb-question { border: 1px solid #d6dee8; border-radius: 8px; background: #fff; padding: 16px; }
+    .hb-card h2, .hb-panel h2 { margin-top: 0; font-size: 20px; }
+    .hb-card a { color: #0f766e; font-weight: 700; text-decoration: none; }
+    .hb-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .hb-badge { display: inline-flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 999px; padding: 3px 8px; font-size: 12px; background: #f8fafc; color: #334155; }
+    .hb-badge--draft { border-color: #f59e0b; background: #fffbeb; color: #92400e; }
+    .hb-badge--proposed { border-color: #2563eb; background: #eff6ff; color: #1e3a8a; }
+    .hb-badge--reviewed { border-color: #16a34a; background: #f0fdf4; color: #166534; }
+    .hb-badge--stale { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+    .hb-badge--retired { border-color: #6b7280; background: #f3f4f6; color: #374151; }
+    .hb-review-panel dl.hb-review-meta { margin: 0 0 10px; display: grid; grid-template-columns: 110px 1fr; gap: 4px 10px; font-size: 13px; }
+    .hb-review-panel dt { color: #475569; font-weight: 600; }
+    .hb-review-panel dd { margin: 0; color: #0f172a; }
+    .hb-review-panel h3 { margin: 4px 0 6px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.04em; color: #475569; }
+    .hb-signoff-list { margin: 0; padding-left: 18px; font-size: 13px; }
+    .hb-signoff-list li { margin-bottom: 6px; }
+    .hb-signoff-empty { margin: 0; font-size: 13px; color: #64748b; }
+    .hb-review-rules { margin: 12px 0 0; font-size: 12px; color: #64748b; }
+    .hb-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; margin-top: 24px; }
+    .hb-main { display: grid; gap: 18px; }
+    .hb-side { display: grid; gap: 16px; align-content: start; }
+    .hb-chip-grid { display: grid; gap: 8px; }
+    .hb-chip { display: grid; gap: 3px; border: 1px solid #d6dee8; border-radius: 6px; padding: 8px; }
+    .hb-chip small { color: #64748b; }
+    .hb-question { display: grid; gap: 10px; }
+    .hb-question-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .hb-question-id { margin-left: auto; font-size: 12px; color: #64748b; }
+    .hb-question-stem { margin: 0; font-size: 15px; line-height: 1.5; color: #0f172a; }
+    .hb-options { display: grid; gap: 6px; }
+    .hb-option { display: grid; grid-template-columns: auto auto 1fr; gap: 8px; align-items: start; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; transition: border-color .12s, background .12s; }
+    .hb-option:hover { border-color: #99f6e4; background: #f0fdfa; }
+    .hb-option input { margin-top: 3px; }
+    .hb-option-key { font-weight: 700; color: #115e59; }
+    .hb-option--short { grid-template-columns: 1fr; }
+    .hb-option--short input { font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; }
+    .hb-question-buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .hb-question-status { font-size: 13px; color: #475569; }
+    .hb-btn { font: inherit; cursor: pointer; padding: 7px 12px; border-radius: 6px; border: 1px solid #0f766e; background: #0f766e; color: #fff; }
+    .hb-btn--reset, .hb-btn--ghost { background: transparent; color: #0f766e; }
+    .hb-btn--reveal { background: #475569; border-color: #475569; }
+    .hb-result { margin-top: 4px; padding: 12px; border-left: 4px solid #0f766e; border-radius: 6px; background: #f8fafc; color: #1f2937; }
+    .hb-result--correct { border-left-color: #16a34a; background: #f0fdf4; }
+    .hb-result--incorrect { border-left-color: #dc2626; background: #fef2f2; }
+    .hb-result--reveal { border-left-color: #475569; background: #f1f5f9; }
+    .hb-result-headline { margin: 0 0 6px; font-weight: 600; }
+    .hb-result-explanation { margin: 0 0 8px; }
+    .hb-result-sources { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: #475569; }
+    .hb-result-source { background: #fff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; }
+    .hb-result-tags { margin-top: 6px; font-size: 12px; color: #475569; }
+    .hb-result-tag { display: inline-block; background: #e0f2fe; border-radius: 999px; padding: 2px 8px; margin-right: 4px; color: #075985; }
+    .hb-quiz-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+    .hb-quiz-header h2 { margin: 0; }
+    .hb-quiz-tools { display: flex; align-items: center; gap: 10px; }
+    .hb-score { font-size: 13px; color: #0f172a; background: #f1f5f9; padding: 4px 10px; border-radius: 999px; }
+    .hb-quiz-note { margin: 6px 0 12px; font-size: 13px; color: #475569; }
+    .hb-disclaimer { border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px; color: #78350f; }
+    .hb-controls { display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(150px, 1fr)); gap: 10px 14px; align-items: end; margin-top: 22px; padding: 14px; border: 1px solid #d6dee8; border-radius: 8px; background: #f8fafc; }
+    .hb-control { display: grid; gap: 4px; font-size: 12px; color: #475569; }
+    .hb-control span { font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .hb-control input, .hb-control select { font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #0f172a; }
+    .hb-control input:focus, .hb-control select:focus { outline: 2px solid #0f766e; outline-offset: 1px; }
+    .hb-result-count { grid-column: 1 / -1; margin: 4px 0 0; font-size: 13px; color: #475569; }
+    .hb-empty { grid-column: 1 / -1; margin: 0; padding: 12px; border: 1px dashed #cbd5e1; border-radius: 6px; background: #fff; color: #475569; text-align: center; }
+    .hb-tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .hb-tag { display: inline-flex; padding: 2px 8px; font-size: 11px; border-radius: 999px; background: #e0f2f1; color: #115e59; border: 1px solid #99f6e4; }
+    @media (max-width: 860px) { .hb-layout { grid-template-columns: 1fr; } .hb-hero h1 { font-size: 28px; } .hb-controls { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="hb-wrap">
+
+    <section class="hb-hero">
+      <div class="hb-kicker"><a href="/handbook.html">OpenOnco Handbook</a></div>
+      <h1>Metastatic colorectal cancer: first-line biomarker reasoning</h1>
+      <div class="hb-meta">
+        <span class="hb-badge hb-badge--draft">draft</span>
+
+        <span class="hb-badge">hcp_learner</span>
+        <span class="hb-badge">en</span>
+      </div>
+      <p class="hb-lead">Deterministic learning chapter over OpenOnco KB entities,
+      synthetic cases, and source records.</p>
+    </section>
+    <div class="hb-layout">
+      <div class="hb-main">
+        <section class="hb-panel">
+          <h2>Learning objectives</h2>
+          <ol><li>Prioritize MSI/MMR, RAS, BRAF, HER2, sidedness, and oligometastatic status before first-line mCRC treatment selection.</li><li>Explain why MSI-H/dMMR disease takes precedence over routine chemotherapy backbones.</li><li>Recognize when RAS wild-type left-sided disease and BRAF V600E disease push the learner toward different systemic strategies.</li></ol>
+        </section>
+        <section class="hb-panel">
+          <h2>At a glance</h2>
+          <ul><li>mCRC first-line reasoning starts with resectability/oligometastatic status and molecular classification.</li><li>MSI-H/dMMR is treatment-defining and can route to pembrolizumab monotherapy in the OpenOnco model.</li><li>Extended RAS status and primary tumor sidedness gate EGFR-antibody eligibility.</li><li>BRAF V600E is a poor-prognosis signal; fit patients may need intensified chemotherapy reasoning.</li><li>The chapter is OpenOnco-authored educational content, not official ESMO or CME material.</li></ul>
+        </section>
+
+            <section class="hb-panel">
+              <h2>Biomarker hierarchy</h2>
+              <p>The mCRC first-line chapter treats MSI/MMR, extended RAS, BRAF V600E, HER2, and sidedness as pre-treatment gates. MSI-H/dMMR disease is evaluated before routine cytotoxic doublet or triplet selection.</p>
+              <h3>Linked entities</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>ALGO-CRC-METASTATIC-1L</code><span>ALGO-CRC-METASTATIC-1L</span><small>algorithms</small></span><span class="hb-chip"><code>BIO-MSI-STATUS</code><span>MSI status (MSI-H / MSI-L / MSS)</span><small>biomarkers</small></span><span class="hb-chip"><code>RF-CRC-MSI-H-ACTIONABILITY</code><span>MSI-high / dMMR mCRC — treatment-defining biomarker. KEYNOTE-177 established pembrolizumab 1L over FOLFOX+bev (PFS 16.5 vs 8.2 mo). This RF intensifies toward the immunotherapy track and overrides the default RAS/BRAF-driven chemo algorithm.
+</span><small>redflags</small></span></div>
+              <h3>Section sources</h3>
+              <ul><li><code>SRC-NCCN-COLON-2025</code> NCCN Colon / Rectal Cancer</li><li><code>SRC-ESMO-CRC-2024</code> ESMO colorectal cancer guideline (2024) (TODO: confirm citation)</li><li><code>SRC-KEYNOTE-177-ANDRE-2020</code> Pembrolizumab versus Chemotherapy for Microsatellite Instability-High/Mismatch Repair-Deficient Metastatic Colorectal Cancer</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>RAS and sidedness</h2>
+              <p>RAS wild-type status is necessary but not sufficient for EGFR-antibody reasoning. The OpenOnco algorithm also expects left-sided primary tumor context before routing to the RAS-WT left-sided track.</p>
+              <h3>Linked entities</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>RF-CRC-RAS-WT</code><span>Metastatic colorectal cancer with RAS wild-type status: KRAS exon 2 (codons 12, 13), exon 3 (codons 59, 61), exon 4 (codons 117, 146) AND NRAS exon 2/3/4 ALL wild-type by NGS or extended-RAS PCR. Defines the ~50% of mCRC eligible for anti-EGFR monoclonal antibody therapy (cetuximab, panitumumab) when combined with chemotherapy backbone. Left-sided RAS-WT mCRC particularly benefits from 1L anti-EGFR + FOLFOX/ FOLFIRI (CALGB/SWOG-80405, FIRE-3, PRIME, CRYSTAL — survival benefit driven by left-sided primaries; right-sided RAS-WT does NOT benefit and routes to bevacizumab + chemo).
+</span><small>redflags</small></span><span class="hb-chip"><code>IND-CRC-METASTATIC-1L-RAS-WT-LEFT</code><span>IND-CRC-METASTATIC-1L-RAS-WT-LEFT</span><small>indications</small></span><span class="hb-chip"><code>REG-FOLFOX-CETUX</code><span>FOLFOX + Cetuximab</span><small>regimens</small></span></div>
+              <h3>Section sources</h3>
+              <ul><li><code>SRC-NCCN-COLON-2025</code> NCCN Colon / Rectal Cancer</li><li><code>SRC-ESMO-CRC-2024</code> ESMO colorectal cancer guideline (2024) (TODO: confirm citation)</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Common traps</h2>
+              <p>Do not start with chemotherapy backbone choice before confirming MSI/MMR and RAS/BRAF status. Do not ignore liver-limited oligometastatic disease, obstruction or perforation risk, and frailty because they change the intent or feasibility of the plan.</p>
+              <h3>Linked entities</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>RF-CRC-OLIGOMET-LIVER-DEFINITION</code><span>Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a distinct subset of stage IV CRC where intensified treatment with hepatic resection (or ablation) added to systemic chemo is potentially curative. Definition (per NCCN Colon v3.2025 + ESMO CRC 2024 + EORTC 40983 / Nordlinger 2008 trial framework): ≤5 liver metastatic lesions, all R0-resectable on multidisciplinary review, no extrahepatic disease, ECOG 0-1 fitness, controllable primary tumour. Triggers MDT (medical onc + hepatobiliary surgery + radiation onc + radiology) consideration of perioperative FOLFOX (or FOLFOXIRI in selected patients) + hepatic metastasectomy. Distinct from gastroesophageal OMEC-1 oligomet (RF-OLIGOMET-DEFINITION) — CRC oligomet uses ≤5 liver lesions (not ≤3 distant), restricts to liver only (extrahepatic excluded), and HER2-positive does NOT disqualify (anti-HER2 second-line track separate from periop intensification decision).
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-CRC-BRAF-V600E-POOR-PROGNOSIS</code><span>BRAF V600E mutation in mCRC: ~8-10% prevalence, poor prognosis (median OS halved vs BRAF-WT on standard chemo). Cetuximab/panitumumab ineffective. Encorafenib + cetuximab (BEACON CRC) is preferred 2L+; some 1L data favor FOLFOXIRI + bev intensification in MSS BRAF-mutant.
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-CRC-FRAILTY-AGE</code><span>Frailty/age profile precluding doublet-intensive or triplet chemo: ECOG ≥3, OR (age ≥80 + Charlson ≥3), OR composite (age ≥75 + albumin &lt;3.0 + ≥2 comorbidities). Triggers de-escalation toward 5-FU/LV mono, capecitabine mono, or best supportive care.
+</span><small>redflags</small></span></div>
+              <h3>Section sources</h3>
+              <ul><li><code>SRC-NCCN-COLON-2025</code> NCCN Colon / Rectal Cancer</li><li><code>SRC-ESMO-CRC-2024</code> ESMO colorectal cancer guideline (2024) (TODO: confirm citation)</li></ul>
+            </section>
+
+        <section class="hb-panel">
+          <h2>Worked synthetic cases</h2>
+          <ul><li><code>patient_crc_metastatic_msi_h_pembro_mono</code> MSI-H metastatic CRC - <span>MSI-H first-line immunotherapy, biomarker hierarchy</span> <small>examples/patient_crc_metastatic_msi_h_pembro_mono.json</small></li><li><code>patient_crc_metastatic_ras_wt_left_folfox_cetux</code> RAS-WT left-sided mCRC - <span>RAS and sidedness, EGFR-antibody eligibility</span> <small>examples/patient_crc_metastatic_ras_wt_left_folfox_cetux.json</small></li></ul>
+        </section>
+        <section class="hb-panel hb-quiz">
+          <div class="hb-quiz-header">
+            <h2>Practice questions</h2>
+            <div class="hb-quiz-tools">
+              <span class="hb-score" id="hb-score" aria-live="polite">0 of 3 answered · 0 correct</span>
+              <button type="button" class="hb-btn hb-btn--ghost" id="hb-quiz-reset">Reset quiz</button>
+            </div>
+          </div>
+          <p class="hb-quiz-note">Answers, score, and reasoning tags are kept in your
+          browser session only and clear when you close this tab. Multi-select
+          questions require every correct option (and no extras) for a credit.</p>
+
+      <form class="hb-question"
+            data-question-id="HQ-CRC-MET-1L-001"
+            data-question-type="type_a"
+            data-correct-answer="A"
+            data-graded="true"
+            novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Question 1</span>
+          <span class="hb-badge">type_a</span>
+          <span class="hb-badge">intro</span>
+          <span class="hb-question-id"><code>HQ-CRC-MET-1L-001</code></span>
+        </div>
+        <p class="hb-question-stem">In the OpenOnco mCRC first-line learning model, which biomarker state is evaluated before routine cytotoxic doublet selection?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-CRC-MET-1L-001" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">MSI-H/dMMR status</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-CRC-MET-1L-001" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Favorite infusion day</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-CRC-MET-1L-001" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Hair color</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-CRC-MET-1L-001" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Non-clinical travel distance alone</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Submit answer</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Reset</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Correct answer:</strong> A</p>
+          <p class="hb-result-explanation">MSI-H/dMMR is treatment-defining in metastatic CRC and is routed before routine chemotherapy backbone selection in the handbook model.</p>
+          <div class="hb-result-sources"><span>Sources:</span> <code class="hb-result-source">SRC-NCCN-COLON-2025</code><code class="hb-result-source">SRC-ESMO-CRC-2024</code><code class="hb-result-source">SRC-KEYNOTE-177-ANDRE-2020</code></div>
+          <div class="hb-result-tags">Reasoning tags: <span class="hb-result-tag">biomarker_hierarchy</span><span class="hb-result-tag">regimen_selection</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question"
+            data-question-id="HQ-CRC-MET-1L-002"
+            data-question-type="type_a"
+            data-correct-answer="A"
+            data-graded="true"
+            novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Question 2</span>
+          <span class="hb-badge">type_a</span>
+          <span class="hb-badge">intermediate</span>
+          <span class="hb-question-id"><code>HQ-CRC-MET-1L-002</code></span>
+        </div>
+        <p class="hb-question-stem">A metastatic CRC case is extended-RAS wild-type. What additional clinical feature is modeled as important before routing to the RAS-WT left-sided EGFR-antibody track?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-CRC-MET-1L-002" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Left-sided primary tumor context</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-CRC-MET-1L-002" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Any BRAF V600E mutation</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-CRC-MET-1L-002" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Untested MSI status</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-CRC-MET-1L-002" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Ignoring primary tumor location</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Submit answer</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Reset</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Correct answer:</strong> A</p>
+          <p class="hb-result-explanation">The OpenOnco algorithm gates EGFR-antibody reasoning with RAS wild-type status and left-sided primary tumor context. RAS wild-type alone is not the whole decision.</p>
+          <div class="hb-result-sources"><span>Sources:</span> <code class="hb-result-source">SRC-NCCN-COLON-2025</code><code class="hb-result-source">SRC-ESMO-CRC-2024</code></div>
+          <div class="hb-result-tags">Reasoning tags: <span class="hb-result-tag">biomarker_selection</span><span class="hb-result-tag">clinical_context</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question"
+            data-question-id="HQ-CRC-MET-1L-003"
+            data-question-type="type_k"
+            data-correct-answer="A|B|C"
+            data-graded="true"
+            novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Question 3</span>
+          <span class="hb-badge">type_k</span>
+          <span class="hb-badge">intermediate</span>
+          <span class="hb-question-id"><code>HQ-CRC-MET-1L-003</code></span>
+        </div>
+        <p class="hb-question-stem">Which statements are true for OpenOnco first-line metastatic CRC reasoning?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-CRC-MET-1L-003" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">MSI-H/dMMR can route to a pembrolizumab monotherapy track.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-CRC-MET-1L-003" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Extended RAS status is relevant before EGFR-antibody use.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-CRC-MET-1L-003" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">BRAF V600E is a poor-prognosis signal.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-CRC-MET-1L-003" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Molecular testing can be skipped because all mCRC starts with the same regimen.</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Submit answer</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Reset</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Correct answer:</strong> A, B, C</p>
+          <p class="hb-result-explanation">MSI/MMR, RAS, and BRAF status are all central to the first-line mCRC learning model. The chapter explicitly rejects one-size-fits-all regimen selection before biomarker review.</p>
+          <div class="hb-result-sources"><span>Sources:</span> <code class="hb-result-source">SRC-NCCN-COLON-2025</code><code class="hb-result-source">SRC-ESMO-CRC-2024</code><code class="hb-result-source">SRC-KEYNOTE-177-ANDRE-2020</code></div>
+          <div class="hb-result-tags">Reasoning tags: <span class="hb-result-tag">biomarker_hierarchy</span><span class="hb-result-tag">common_traps</span></div>
+        </div>
+      </form>
+
+        </section>
+      </div>
+      <aside class="hb-side">
+        <section class="hb-panel hb-disclaimer">
+          <strong>Educational use only.</strong>
+          <p>This OpenOnco-authored chapter is not official ESMO material,
+          not a CME-credit activity, and not patient-specific medical advice.</p>
+        </section>
+        <section class="hb-panel hb-review-panel">
+          <h2>Review status</h2>
+          <dl class="hb-review-meta">
+            <dt>Current status</dt>
+            <dd><span class="hb-badge hb-badge--draft">draft</span></dd>
+            <dt>Last reviewed</dt><dd><em>not yet reviewed</em></dd>
+          </dl>
+          <h3>Clinical sign-offs</h3>
+          <p class='hb-signoff-empty'>No clinical sign-offs recorded yet.</p>
+          <p class="hb-review-rules"><a href="/specs.html">HANDBOOK_MODE_SPEC §4</a>
+          governs status transitions and the 365-day
+          staleness threshold.</p>
+        </section>
+        <section class="hb-panel">
+          <h2>Chapter sources</h2>
+          <ul><li><code>SRC-NCCN-COLON-2025</code> NCCN Colon / Rectal Cancer</li><li><code>SRC-ESMO-CRC-2024</code> ESMO colorectal cancer guideline (2024) (TODO: confirm citation)</li><li><code>SRC-ESMO-COLON-2024</code> ESMO CRC Clinical Practice Guideline</li><li><code>SRC-KEYNOTE-177-ANDRE-2020</code> Pembrolizumab versus Chemotherapy for Microsatellite Instability-High/Mismatch Repair-Deficient Metastatic Colorectal Cancer</li></ul>
+        </section>
+        <section class="hb-panel">
+          <h2>Entity map</h2>
+          <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-CRC</code><span>Colorectal carcinoma</span><small>diseases</small></span><span class="hb-chip"><code>ALGO-CRC-METASTATIC-1L</code><span>ALGO-CRC-METASTATIC-1L</span><small>algorithms</small></span><span class="hb-chip"><code>IND-CRC-METASTATIC-1L-MSI-H-PEMBRO</code><span>IND-CRC-METASTATIC-1L-MSI-H-PEMBRO</span><small>indications</small></span><span class="hb-chip"><code>IND-CRC-METASTATIC-1L-RAS-WT-LEFT</code><span>IND-CRC-METASTATIC-1L-RAS-WT-LEFT</span><small>indications</small></span><span class="hb-chip"><code>IND-CRC-METASTATIC-1L-FOLFOX-BEV</code><span>IND-CRC-METASTATIC-1L-FOLFOX-BEV</span><small>indications</small></span><span class="hb-chip"><code>IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV</code><span>IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV</span><small>indications</small></span><span class="hb-chip"><code>REG-PEMBROLIZUMAB-MSI-MONO</code><span>Pembrolizumab monotherapy (MSI-H mCRC 1L)</span><small>regimens</small></span><span class="hb-chip"><code>REG-FOLFOX-BEV</code><span>FOLFOX + Bevacizumab</span><small>regimens</small></span><span class="hb-chip"><code>REG-FOLFOX-CETUX</code><span>FOLFOX + Cetuximab</span><small>regimens</small></span><span class="hb-chip"><code>REG-FOLFOXIRI-BEV</code><span>FOLFOXIRI + Bevacizumab</span><small>regimens</small></span><span class="hb-chip"><code>RF-CRC-MSI-H-ACTIONABILITY</code><span>MSI-high / dMMR mCRC — treatment-defining biomarker. KEYNOTE-177 established pembrolizumab 1L over FOLFOX+bev (PFS 16.5 vs 8.2 mo). This RF intensifies toward the immunotherapy track and overrides the default RAS/BRAF-driven chemo algorithm.
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-CRC-RAS-WT</code><span>Metastatic colorectal cancer with RAS wild-type status: KRAS exon 2 (codons 12, 13), exon 3 (codons 59, 61), exon 4 (codons 117, 146) AND NRAS exon 2/3/4 ALL wild-type by NGS or extended-RAS PCR. Defines the ~50% of mCRC eligible for anti-EGFR monoclonal antibody therapy (cetuximab, panitumumab) when combined with chemotherapy backbone. Left-sided RAS-WT mCRC particularly benefits from 1L anti-EGFR + FOLFOX/ FOLFIRI (CALGB/SWOG-80405, FIRE-3, PRIME, CRYSTAL — survival benefit driven by left-sided primaries; right-sided RAS-WT does NOT benefit and routes to bevacizumab + chemo).
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-CRC-RAS-MUTANT</code><span>Metastatic colorectal cancer with KRAS or NRAS hotspot mutation (KRAS exon 2 codons 12/13 — most common ~40% of mCRC, exon 3 codons 59/61, exon 4 codons 117/146; NRAS exon 2/3/4 ~5%). RAS-mutant mCRC is REFRACTORY to anti-EGFR monoclonal antibodies (cetuximab, panitumumab) — PRIME post-hoc analysis (Douillard JCO 2013) showed OS detriment with panitumumab + FOLFOX in RAS-mutant patients (mOS 15.5 vs 19.3 mo). Routes 1L mCRC to bevacizumab + FOLFOX/FOLFIRI/FOLFOXIRI; KRAS-G12C subset (~3% of mCRC) eligible for sotorasib + panitumumab 2L+ (CodeBreaK-300, Fakih NEJM 2023). MSI-H or BRAF-V600E status takes priority over RAS for routing.
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-CRC-BRAF-V600E-POOR-PROGNOSIS</code><span>BRAF V600E mutation in mCRC: ~8-10% prevalence, poor prognosis (median OS halved vs BRAF-WT on standard chemo). Cetuximab/panitumumab ineffective. Encorafenib + cetuximab (BEACON CRC) is preferred 2L+; some 1L data favor FOLFOXIRI + bev intensification in MSS BRAF-mutant.
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-CRC-OLIGOMET-LIVER-DEFINITION</code><span>Liver-limited oligometastatic colorectal cancer (CRLM, colorectal liver metastases) — a distinct subset of stage IV CRC where intensified treatment with hepatic resection (or ablation) added to systemic chemo is potentially curative. Definition (per NCCN Colon v3.2025 + ESMO CRC 2024 + EORTC 40983 / Nordlinger 2008 trial framework): ≤5 liver metastatic lesions, all R0-resectable on multidisciplinary review, no extrahepatic disease, ECOG 0-1 fitness, controllable primary tumour. Triggers MDT (medical onc + hepatobiliary surgery + radiation onc + radiology) consideration of perioperative FOLFOX (or FOLFOXIRI in selected patients) + hepatic metastasectomy. Distinct from gastroesophageal OMEC-1 oligomet (RF-OLIGOMET-DEFINITION) — CRC oligomet uses ≤5 liver lesions (not ≤3 distant), restricts to liver only (extrahepatic excluded), and HER2-positive does NOT disqualify (anti-HER2 second-line track separate from periop intensification decision).
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-CRC-FRAILTY-AGE</code><span>Frailty/age profile precluding doublet-intensive or triplet chemo: ECOG ≥3, OR (age ≥80 + Charlson ≥3), OR composite (age ≥75 + albumin &lt;3.0 + ≥2 comorbidities). Triggers de-escalation toward 5-FU/LV mono, capecitabine mono, or best supportive care.
+</span><small>redflags</small></span><span class="hb-chip"><code>BIO-MSI-STATUS</code><span>MSI status (MSI-H / MSI-L / MSS)</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-RAS-MUTATION</code><span>RAS mutation status</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-BRAF-V600E</code><span>BRAF V600E</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-KRAS-G12C</code><span>KRAS G12C mutation</span><small>biomarkers</small></span><span class="hb-chip"><code>TEST-COLONOSCOPY-FULL</code><span>Full colonoscopy with biopsy</span><small>tests</small></span><span class="hb-chip"><code>TEST-CEA</code><span>CEA</span><small>tests</small></span><span class="hb-chip"><code>TEST-NGS-COMPREHENSIVE</code><span>Comprehensive NGS tumor panel (DNA + RNA, ≥300 genes)</span><small>tests</small></span><span class="hb-chip"><code>TEST-CBC</code><span>Complete Blood Count with Differential</span><small>tests</small></span><span class="hb-chip"><code>TEST-CMP</code><span>Comprehensive Metabolic Panel</span><small>tests</small></span></div>
+        </section>
+      </aside>
+    </div>
+    <script>
+      (function() {
+        var CHAPTER_ID = "HB-CRC-METASTATIC-1L";
+        var GRADED_TOTAL = 3;
+        var STORAGE_KEY = 'openonco-handbook-' + CHAPTER_ID + '-quiz';
+        var forms = Array.prototype.slice.call(document.querySelectorAll('.hb-quiz .hb-question'));
+        var scoreEl = document.getElementById('hb-score');
+        var resetAllBtn = document.getElementById('hb-quiz-reset');
+        var storage;
+        try { storage = window.sessionStorage; } catch (e) { storage = null; }
+        var state = {};
+        if (storage) {
+          try { state = JSON.parse(storage.getItem(STORAGE_KEY) || '{}') || {}; } catch (e) { state = {}; }
+        }
+        function persist() {
+          if (!storage) { return; }
+          try { storage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        }
+        function normalize(list) {
+          return (list || []).map(function(k) { return String(k).toUpperCase(); }).slice().sort().join('|');
+        }
+        function updateScore() {
+          var answered = 0;
+          var correct = 0;
+          Object.keys(state).forEach(function(qid) {
+            var entry = state[qid];
+            if (entry && entry.submitted && entry.graded) {
+              answered += 1;
+              if (entry.correct) { correct += 1; }
+            }
+          });
+          if (scoreEl) {
+            scoreEl.textContent = answered + ' of ' + GRADED_TOTAL + ' answered · ' + correct + ' correct';
+          }
+        }
+        forms.forEach(function(form) {
+          var qid = form.getAttribute('data-question-id');
+          var qtype = form.getAttribute('data-question-type');
+          var graded = form.getAttribute('data-graded') === 'true';
+          var correctAttr = form.getAttribute('data-correct-answer') || '';
+          var correctKey = correctAttr.split('|').filter(Boolean).slice().sort().join('|');
+          var resultEl = form.querySelector('.hb-result');
+          var headlineEl = form.querySelector('[data-role="headline"]');
+          var statusEl = form.querySelector('[data-role="status"]');
+          var submitBtn = form.querySelector('[data-action="submit"]');
+          var resetBtn = form.querySelector('[data-action="reset"]');
+          var revealBtn = form.querySelector('[data-action="reveal"]');
+          function selectedKeys() {
+            return Array.prototype.slice.call(
+              form.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked')
+            ).map(function(input) { return input.value; });
+          }
+          function setResultClass(isCorrect) {
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (isCorrect === true) { resultEl.classList.add('hb-result--correct'); }
+            else if (isCorrect === false) { resultEl.classList.add('hb-result--incorrect'); }
+            else { resultEl.classList.add('hb-result--reveal'); }
+          }
+          function showResult(entry) {
+            resultEl.hidden = false;
+            if (graded) {
+              setResultClass(entry.correct);
+              if (statusEl) {
+                statusEl.textContent = entry.correct ? '✓ Correct' : '✗ Not yet — see explanation';
+              }
+            } else {
+              setResultClass(null);
+              if (statusEl) { statusEl.textContent = 'Model answer revealed'; }
+            }
+          }
+          function clearResult() {
+            resultEl.hidden = true;
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (statusEl) { statusEl.textContent = ''; }
+          }
+          function rehydrate() {
+            var entry = state[qid];
+            if (!entry) { return; }
+            (entry.selected || []).forEach(function(key) {
+              var input = form.querySelector('input[value="' + key + '"]');
+              if (input) { input.checked = true; }
+            });
+            if (entry.submitted) { showResult(entry); }
+          }
+          function submitGraded(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            var selected = selectedKeys();
+            if (selected.length === 0) {
+              if (statusEl) { statusEl.textContent = 'Pick an option first.'; }
+              return;
+            }
+            var selectedKey = normalize(selected);
+            var isCorrect = selectedKey === correctKey;
+            state[qid] = { submitted: true, graded: true, selected: selected, correct: isCorrect };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function revealOnly(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            state[qid] = { submitted: true, graded: false, selected: [], correct: null };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function resetQuestion(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+              if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+              else { input.value = ''; }
+            });
+            delete state[qid];
+            persist();
+            clearResult();
+            updateScore();
+          }
+          if (submitBtn) { submitBtn.addEventListener('click', submitGraded); }
+          if (resetBtn) { resetBtn.addEventListener('click', resetQuestion); }
+          if (revealBtn) { revealBtn.addEventListener('click', revealOnly); }
+          form.addEventListener('submit', function(event) { event.preventDefault(); if (graded) { submitGraded(event); } });
+          rehydrate();
+        });
+        if (resetAllBtn) {
+          resetAllBtn.addEventListener('click', function() {
+            state = {};
+            persist();
+            forms.forEach(function(form) {
+              Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+                if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+                else { input.value = ''; }
+              });
+              var resultEl = form.querySelector('.hb-result');
+              var statusEl = form.querySelector('[data-role="status"]');
+              if (resultEl) {
+                resultEl.hidden = true;
+                resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+              }
+              if (statusEl) { statusEl.textContent = ''; }
+            });
+            updateScore();
+          });
+        }
+        updateScore();
+      })();
+    </script>
+
+  </main>
+</body>
+</html>

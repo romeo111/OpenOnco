@@ -1,8 +1,8 @@
 # RedFlag + Indication Coverage Audit — 2026-04-27
 
-**Branch:** feat/oncokb-wiring  
-**Drafted by:** Claude Code (extraction-from-source agent), per CHARTER §8.3.  
-**Status:** PENDING CLINICAL SIGN-OFF.  
+**Branch:** feat/oncokb-wiring
+**Drafted by:** Claude Code (extraction-from-source agent), per CHARTER §8.3.
+**Status:** PENDING CLINICAL SIGN-OFF.
 **Scope:** Deep + comprehensive coverage audit of all RedFlag and
 Indication entities in `knowledge_base/hosted/content/` against the
 expected coverage per `specs/REDFLAG_AUTHORING_GUIDE.md` §2 and

@@ -21,6 +21,13 @@ from .disease import Disease
 from .drug import Drug
 from .drug_indication import DrugIndication, DrugUseStatus, JurisdictionUseStatus
 from .experimental_option import ExperimentalOption, ExperimentalTrial, UaSiteDetail
+from .handbook import (
+    HandbookChapter,
+    HandbookLinkedEntities,
+    HandbookQuestion,
+    HandbookQuestionOption,
+    HandbookSection,
+)
 from .indication import (
     Indication,
     IndicationPhase,
@@ -76,6 +83,8 @@ ENTITY_BY_DIR: dict[str, type] = {
     "sources": Source,
     "workups": DiagnosticWorkup,
     "questionnaires": Questionnaire,
+    "handbook_chapters": HandbookChapter,
+    "handbook_questions": HandbookQuestion,
     "access_pathways": AccessPathway,
     "mdt_skills": MdtSkill,
     "reviewers": ReviewerProfile,
@@ -108,6 +117,11 @@ __all__ = [
     "ExperimentalOption",
     "ExperimentalTrial",
     "FDAComplianceMetadata",
+    "HandbookChapter",
+    "HandbookLinkedEntities",
+    "HandbookQuestion",
+    "HandbookQuestionOption",
+    "HandbookSection",
     "TrialOutlook",
     "IHCPanel",
     "Indication",

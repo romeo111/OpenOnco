@@ -1,0 +1,108 @@
+id: HB-CRC-METASTATIC-1L
+title: "Metastatic colorectal cancer: first-line biomarker reasoning"
+audience: hcp_learner
+language: en
+disease_ids:
+  - DIS-CRC
+topic_tags:
+  - colorectal-cancer
+  - metastatic
+  - first-line
+  - biomarkers
+learning_objectives:
+  - "Prioritize MSI/MMR, RAS, BRAF, HER2, sidedness, and oligometastatic status before first-line mCRC treatment selection."
+  - "Explain why MSI-H/dMMR disease takes precedence over routine chemotherapy backbones."
+  - "Recognize when RAS wild-type left-sided disease and BRAF V600E disease push the learner toward different systemic strategies."
+at_a_glance:
+  - "mCRC first-line reasoning starts with resectability/oligometastatic status and molecular classification."
+  - "MSI-H/dMMR is treatment-defining and can route to pembrolizumab monotherapy in the OpenOnco model."
+  - "Extended RAS status and primary tumor sidedness gate EGFR-antibody eligibility."
+  - "BRAF V600E is a poor-prognosis signal; fit patients may need intensified chemotherapy reasoning."
+  - "The chapter is OpenOnco-authored educational content, not official ESMO or CME material."
+linked_entities:
+  diseases:
+    - DIS-CRC
+  algorithms:
+    - ALGO-CRC-METASTATIC-1L
+  indications:
+    - IND-CRC-METASTATIC-1L-MSI-H-PEMBRO
+    - IND-CRC-METASTATIC-1L-RAS-WT-LEFT
+    - IND-CRC-METASTATIC-1L-FOLFOX-BEV
+    - IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
+  regimens:
+    - REG-PEMBROLIZUMAB-MSI-MONO
+    - REG-FOLFOX-BEV
+    - REG-FOLFOX-CETUX
+    - REG-FOLFOXIRI-BEV
+  redflags:
+    - RF-CRC-MSI-H-ACTIONABILITY
+    - RF-CRC-RAS-WT
+    - RF-CRC-RAS-MUTANT
+    - RF-CRC-BRAF-V600E-POOR-PROGNOSIS
+    - RF-CRC-OLIGOMET-LIVER-DEFINITION
+    - RF-CRC-FRAILTY-AGE
+  biomarkers:
+    - BIO-MSI-STATUS
+    - BIO-RAS-MUTATION
+    - BIO-BRAF-V600E
+    - BIO-KRAS-G12C
+  tests:
+    - TEST-COLONOSCOPY-FULL
+    - TEST-CEA
+    - TEST-NGS-COMPREHENSIVE
+    - TEST-CBC
+    - TEST-CMP
+source_ids:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-CRC-2024
+  - SRC-ESMO-COLON-2024
+  - SRC-KEYNOTE-177-ANDRE-2020
+sections:
+  - heading: "Biomarker hierarchy"
+    body: "The mCRC first-line chapter treats MSI/MMR, extended RAS, BRAF V600E, HER2, and sidedness as pre-treatment gates. MSI-H/dMMR disease is evaluated before routine cytotoxic doublet or triplet selection."
+    source_ids:
+      - SRC-NCCN-COLON-2025
+      - SRC-ESMO-CRC-2024
+      - SRC-KEYNOTE-177-ANDRE-2020
+    linked_entity_ids:
+      - ALGO-CRC-METASTATIC-1L
+      - BIO-MSI-STATUS
+      - RF-CRC-MSI-H-ACTIONABILITY
+  - heading: "RAS and sidedness"
+    body: "RAS wild-type status is necessary but not sufficient for EGFR-antibody reasoning. The OpenOnco algorithm also expects left-sided primary tumor context before routing to the RAS-WT left-sided track."
+    source_ids:
+      - SRC-NCCN-COLON-2025
+      - SRC-ESMO-CRC-2024
+    linked_entity_ids:
+      - RF-CRC-RAS-WT
+      - IND-CRC-METASTATIC-1L-RAS-WT-LEFT
+      - REG-FOLFOX-CETUX
+  - heading: "Common traps"
+    body: "Do not start with chemotherapy backbone choice before confirming MSI/MMR and RAS/BRAF status. Do not ignore liver-limited oligometastatic disease, obstruction or perforation risk, and frailty because they change the intent or feasibility of the plan."
+    source_ids:
+      - SRC-NCCN-COLON-2025
+      - SRC-ESMO-CRC-2024
+    linked_entity_ids:
+      - RF-CRC-OLIGOMET-LIVER-DEFINITION
+      - RF-CRC-BRAF-V600E-POOR-PROGNOSIS
+      - RF-CRC-FRAILTY-AGE
+case_links:
+  - id: patient_crc_metastatic_msi_h_pembro_mono
+    title: "MSI-H metastatic CRC"
+    path: "examples/patient_crc_metastatic_msi_h_pembro_mono.json"
+    learning_focus:
+      - "MSI-H first-line immunotherapy"
+      - "biomarker hierarchy"
+  - id: patient_crc_metastatic_ras_wt_left_folfox_cetux
+    title: "RAS-WT left-sided mCRC"
+    path: "examples/patient_crc_metastatic_ras_wt_left_folfox_cetux.json"
+    learning_focus:
+      - "RAS and sidedness"
+      - "EGFR-antibody eligibility"
+question_ids:
+  - HQ-CRC-MET-1L-001
+  - HQ-CRC-MET-1L-002
+  - HQ-CRC-MET-1L-003
+review_status: draft
+last_reviewed: null
+legal_notes: "OpenOnco-authored educational content. Do not copy ESMO handbook text, tables, figures, or CME questions into this entity."

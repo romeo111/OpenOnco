@@ -1,0 +1,110 @@
+id: HB-NSCLC-METASTATIC-1L
+title: "Metastatic NSCLC: driver-first treatment reasoning"
+audience: hcp_learner
+language: en
+disease_ids:
+  - DIS-NSCLC
+topic_tags:
+  - nsclc
+  - metastatic
+  - first-line
+  - biomarkers
+learning_objectives:
+  - "Explain why metastatic NSCLC first-line reasoning starts with actionable driver testing before PD-L1-only decisions."
+  - "Distinguish EGFR, ALK, ROS1, MET exon 14, RET, BRAF V600E, and NTRK driver branches from driver-negative immunotherapy branches."
+  - "Recognize PD-L1 TPS as a treatment-stratifying marker only after actionable drivers are excluded or addressed."
+at_a_glance:
+  - "Comprehensive molecular testing is the central first-line gate in metastatic NSCLC."
+  - "Actionable drivers route to targeted therapy branches before PD-L1 immunotherapy branches."
+  - "PD-L1 TPS still matters, but mainly in the driver-negative pathway."
+  - "Brain metastases, frailty, organ dysfunction, and urgent complications remain parallel MDT concerns."
+  - "The chapter is OpenOnco-authored educational content, not official ESMO or CME material."
+linked_entities:
+  diseases:
+    - DIS-NSCLC
+  algorithms:
+    - ALGO-NSCLC-METASTATIC-1L
+  indications:
+    - IND-NSCLC-EGFR-MUT-MET-1L
+    - IND-NSCLC-ALK-MET-1L
+    - IND-NSCLC-PDL1-HIGH-MET-1L
+    - IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
+  regimens:
+    - REG-OSIMERTINIB-NSCLC
+    - REG-PEMBRO-MONO-NSCLC
+    - REG-PEMBRO-CHEMO-NSCLC-NONSQ
+  redflags:
+    - RF-NSCLC-HIGH-RISK-BIOLOGY
+    - RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
+    - RF-NSCLC-ALK-FUSION-ACTIONABLE
+    - RF-NSCLC-PDL1-50-PLUS
+    - RF-NSCLC-BRAIN-METS-EMERGENCY
+    - RF-NSCLC-FRAILTY-AGE
+  biomarkers:
+    - BIO-EGFR-MUTATION
+    - BIO-EGFR-EXON19-DELETION
+    - BIO-EGFR-L858R
+    - BIO-ALK-FUSION
+    - BIO-PDL1-TPS
+    - BIO-BRAF-V600E
+    - BIO-KRAS-G12C
+  tests:
+    - TEST-NGS-COMPREHENSIVE
+    - TEST-PET-CT
+    - TEST-CBC
+    - TEST-CMP
+source_ids:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-FLAURA-SORIA-2018
+  - SRC-KEYNOTE-024-RECK-2016
+  - SRC-KEYNOTE-189-GANDHI-2018
+sections:
+  - heading: "Driver-first cascade"
+    body: "The metastatic NSCLC chapter emphasizes driver-first routing. EGFR, ALK, ROS1, MET exon 14, RET, BRAF V600E, and NTRK are evaluated before the driver-negative PD-L1 immunotherapy pathway."
+    source_ids:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-ESMO-NSCLC-METASTATIC-2024
+    linked_entity_ids:
+      - ALGO-NSCLC-METASTATIC-1L
+      - RF-NSCLC-HIGH-RISK-BIOLOGY
+      - TEST-NGS-COMPREHENSIVE
+  - heading: "EGFR branch"
+    body: "Classical sensitizing EGFR alterations route to the EGFR first-line branch in the OpenOnco model. PD-L1 expression should not be used to skip driver-directed reasoning."
+    source_ids:
+      - SRC-FLAURA-SORIA-2018
+      - SRC-NCCN-NSCLC-2025
+    linked_entity_ids:
+      - BIO-EGFR-MUTATION
+      - IND-NSCLC-EGFR-MUT-MET-1L
+      - REG-OSIMERTINIB-NSCLC
+  - heading: "Driver-negative pathway"
+    body: "When no actionable driver is found, PD-L1 TPS helps separate pembrolizumab monotherapy from chemo-immunotherapy strategies. Frailty, organ dysfunction, and urgent thoracic complications remain safety gates."
+    source_ids:
+      - SRC-KEYNOTE-024-RECK-2016
+      - SRC-KEYNOTE-189-GANDHI-2018
+    linked_entity_ids:
+      - BIO-PDL1-TPS
+      - RF-NSCLC-PDL1-50-PLUS
+      - IND-NSCLC-PDL1-HIGH-MET-1L
+      - IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
+case_links:
+  - id: patient_nsclc_egfr_ex19del_1l_osimertinib
+    title: "EGFR exon 19 deletion metastatic NSCLC"
+    path: "examples/patient_nsclc_egfr_ex19del_1l_osimertinib.json"
+    learning_focus:
+      - "driver-first routing"
+      - "EGFR-targeted branch"
+  - id: patient_nsclc_pdl1_high_pembro_mono
+    title: "Driver-negative PD-L1 high metastatic NSCLC"
+    path: "examples/patient_nsclc_pdl1_high_pembro_mono.json"
+    learning_focus:
+      - "PD-L1 high branch"
+      - "driver-negative assumption"
+question_ids:
+  - HQ-NSCLC-MET-1L-001
+  - HQ-NSCLC-MET-1L-002
+  - HQ-NSCLC-MET-1L-003
+review_status: draft
+last_reviewed: null
+legal_notes: "OpenOnco-authored educational content. Do not copy ESMO handbook text, tables, figures, or CME questions into this entity."

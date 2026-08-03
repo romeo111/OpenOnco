@@ -1,0 +1,75 @@
+id: IND-LARYNGEAL-RM-1L-EXTREME
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-LARYNGEAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Recurrent / metastatic laryngeal SCC, not amenable to curative-intent local therapy"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-CPS
+      required: false
+      value_constraint: "EXTREME is preferred 1L when PD-L1 CPS <1 (where chemo-IO benefit is attenuated per KEYNOTE-048 subgroup analysis); EXTREME is alternative 1L when IO is contraindicated regardless of CPS"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-EXTREME-HNSCC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~36% (vs 20% platin+5-FU; EXTREME)"
+  progression_free_survival: "Median PFS 5.6 vs 3.3 mo (HR 0.54)"
+  overall_survival_5y: "Median OS 10.1 vs 7.4 mo (HR 0.80, p=0.04)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-HNSCC-INFECTION-SCREENING
+  - RF-HNSCC-ORGAN-DYSFUNCTION
+required_tests:
+  - TEST-PDL1-IHC
+desired_tests: []
+
+rationale: >
+  EXTREME (cetuximab + platinum + 5-FU) is Category 1 standard 1L for
+  recurrent/metastatic laryngeal SCC per Vermorken NEJM 2008,
+  positioned post-KEYNOTE-048 as preferred 1L for PD-L1 CPS <1 (where
+  chemo-IO subgroup OS HR crossed 1.0) and for IO-contraindicated
+  patients. Mirrors IND-HNSCC-RM-1L-EXTREME — laryngeal R/M shares the
+  identical systemic-therapy evidence base as broader HNSCC.
+
+sources:
+  - source_id: SRC-NCCN-HNSCC-2025
+    weight: primary
+  - source_id: SRC-EXTREME-VERMORKEN-2008
+    position: supports
+    relevant_quote_paraphrase: "EXTREME phase-3: cetuximab + platinum + 5-FU vs platinum + 5-FU; mOS 10.1 vs 7.4 mo (HR 0.80, p=0.04); ORR 36% vs 20%."
+
+do_not_do:
+  - "Do not prescribe EXTREME without HPV testing — HPV+ status does not change EXTREME selection in the recurrent setting, but is prognostically relevant."
+  - "Do not skip baseline GFR / audiogram / neuropathy assessment before cisplatin — carboplatin is an acceptable substitute if there are any contraindications."
+  - "Do not use cetuximab without premedication at the first infusion — anaphylaxis risk (alpha-gal IgE)."
+
+do_not_do_en:
+  - "Do not prescribe EXTREME without HPV testing — HPV+ status does not change EXTREME selection in the recurrent setting, but is prognostically relevant."
+  - "Do not skip baseline GFR / audiogram / neuropathy assessment before cisplatin — carboplatin is an acceptable substitute if there are any contraindications."
+  - "Do not use cetuximab without premedication at the first infusion — anaphylaxis risk (alpha-gal IgE)."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB pending Clinical Co-Lead sign-off (CHARTER §6.1). Mirrors
+  IND-HNSCC-RM-1L-EXTREME field-for-field. Reuses REG-EXTREME-HNSCC,
+  DRUG-CETUXIMAB, DRUG-CISPLATIN, DRUG-CARBOPLATIN, DRUG-5-FLUOROURACIL,
+  and the pre-existing SRC-EXTREME-VERMORKEN-2008 unchanged — no new
+  Regimen, Drug, or Source authored for this arm.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_draft
+draft_revision: 1

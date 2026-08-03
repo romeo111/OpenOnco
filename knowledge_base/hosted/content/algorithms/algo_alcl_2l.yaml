@@ -54,7 +54,7 @@ decision_tree:
       result: IND-ALCL-2L-BRENTUXIMAB-MONO
     if_false:
       next_step: 3
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Mechanical rewire of the original free-text gate (BV-naive prior-line status, baseline Grade ≥2 peripheral neuropathy) into red_flag:/finding: clauses using RF-PRIOR-BV-NAIVE/peripheral_neuropathy_grade. Original clinical criteria unchanged."
 
   # Step 3 — ALK-positive AND BV-exposed → crizotinib
   - step: 3
@@ -69,7 +69,7 @@ decision_tree:
       result: IND-ALCL-2L-CRIZOTINIB-ALKPOS
     if_false:
       result: IND-ALCL-2L-BENDAMUSTINE
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Mechanical rewire of the original free-text gate (ALK-positive ALCL biomarker status, prior brentuximab vedotin exposure) into finding: clauses using alk_status/prior_brentuximab_received. Original clinical criteria unchanged."
 
 sources:
   - SRC-NCCN-BCELL-2025

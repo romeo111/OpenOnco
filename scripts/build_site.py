@@ -47,6 +47,8 @@ import re
 import shutil
 import sys
 import zipfile
+
+import yaml
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -68,7 +70,9 @@ from knowledge_base import __version__ as OPENONCO_VERSION
 from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
 from knowledge_base.stats import collect_stats
 from scripts.audit_clinical_gaps import write_outputs as write_clinical_gap_outputs
+from scripts.build_handbook import build_handbook
 from scripts.build_kb_wiki import build_kb_wiki
+from scripts.build_news import build_news
 from scripts.site_cases import (
     BROKEN_CASE_IDS,
     CASE_CATEGORIES,
@@ -402,10 +406,10 @@ def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
     SHA-256 prefix) automatically invalidates stale bundles on next
     fetch. CSD-6E polish — speeds up cold loads on repeat visits past
     what localStorage can hold (entire core + all visited diseases)."""
-    # 'l3' = navigation network-first. Bumping the layout prefix forces
+    # 'l4' = same-origin guard + news routes. Bumping the layout prefix forces
     # a hard cache invalidation for users whose browser still has an old
     # service worker/cache after a landing-page redesign.
-    cache_name = "openonco-bundle-l3-" + (core_version or "v1")
+    cache_name = "openonco-bundle-l4-" + (core_version or "v1")
     sw_js = """// OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
 // Two strategies in one SW:
 //   1. Cache-first for engine bundle artifacts (large, infrequent).
@@ -428,7 +432,11 @@ const PRECACHE = [
 // Routes that use stale-while-revalidate (instant from cache, refresh
 // in background). HTML pages must be on this list — never cache-first,
 // or the user gets stuck on an old build.
-const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html', '/style.css'];
+const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html',
+  '/style.css', '/news.html', '/ukr/news.html'];
+// Per-article news pages are matched by prefix rather than listed, since slugs
+// are added by content authors without touching this file.
+const SWR_PREFIXES = ['/news/', '/ukr/news/'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -477,12 +485,20 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
 
+  // Never touch cross-origin traffic. Embedded third-party frames (the news
+  // comment widget) load with request.mode === 'navigate', so without this
+  // guard the navigation branch below would re-issue them as no-store fetches
+  // and break them. It also stops the pathname-only matching further down from
+  // hijacking a third-party URL that happens to share a path with ours.
+  if (url.origin !== self.location.origin) return;
+
   if (event.request.mode === 'navigate') {
     return networkFirstNavigation(event);
   }
 
   // SWR for the small interactive shell (HTML + CSS).
-  if (SWR_PATHS.indexOf(url.pathname) !== -1) {
+  if (SWR_PATHS.indexOf(url.pathname) !== -1 ||
+      SWR_PREFIXES.some((p) => url.pathname.startsWith(p))) {
     return staleWhileRevalidate(event);
   }
 
@@ -711,12 +727,107 @@ def _remove_excluded_case_pages(output_dir: Path) -> int:
         for rel_path in (
             Path("cases") / f"{case_id}.html",
             Path("ukr") / "cases" / f"{case_id}.html",
+            # PATIENT_MODE_SPEC §3 — patient twin shares the /cases/
+            # directory but uses a `.patient.html` suffix.
+            Path("cases") / f"{case_id}.patient.html",
         ):
             path = output_dir / rel_path
             if path.exists():
                 path.unlink()
                 removed += 1
     return removed
+
+
+def _normalize_generated_text_whitespace(output_dir: Path) -> int:
+    """Strip trailing whitespace from generated human-readable artifacts.
+
+    The renderer intentionally uses indented multi-line fragments.  Keeping
+    that source readable must not introduce trailing whitespace into the
+    deployable HTML or Markdown artifacts.
+    """
+    normalized_files = 0
+    for path in output_dir.rglob("*"):
+        if not path.is_file() or path.suffix not in {".html", ".md", ".txt"}:
+            continue
+        original = path.read_text(encoding="utf-8")
+        normalized = re.sub(r"[ \t]+(?=\r?\n|\Z)", "", original)
+        if normalized:
+            normalized = normalized.rstrip("\r\n") + "\n"
+        if normalized != original:
+            path.write_text(normalized, encoding="utf-8")
+            normalized_files += 1
+    return normalized_files
+
+
+def _build_searchable_indexes() -> tuple[dict, dict]:
+    """Load disease + regimen indexes used to enrich the examples manifest
+    with searchable text (disease name, regimen short name)."""
+    disease_index: dict[str, dict] = {}
+    regimen_index: dict[str, dict] = {}
+    dis_dir = KB_ROOT / "diseases"
+    reg_dir = KB_ROOT / "regimens"
+    try:
+        for p in dis_dir.glob("*.yaml"):
+            d = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+            did = d.get("id")
+            if did:
+                names = d.get("names") or {}
+                disease_index[did] = {
+                    "name_en": names.get("english") or names.get("preferred") or did,
+                    "name_ua": names.get("ua") or names.get("preferred") or did,
+                }
+    except Exception:
+        pass
+    try:
+        for p in reg_dir.glob("*.yaml"):
+            d = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+            rid = d.get("id")
+            if rid:
+                regimen_index[rid] = {
+                    "name": d.get("name") or rid,
+                    "name_ua": d.get("name_ua") or d.get("name") or rid,
+                    "alternate_names": d.get("alternate_names") or [],
+                }
+    except Exception:
+        pass
+    return disease_index, regimen_index
+
+
+def _searchable_example_meta(case: "CaseEntry", ex_json: dict, disease_id: str | None,
+                               disease_index: dict, regimen_index: dict,
+                               indication_index: dict) -> dict:
+    """Compute search-relevant tokens for an example."""
+    biomarker_ids: list[str] = []
+    bm = ex_json.get("biomarkers") if isinstance(ex_json, dict) else None
+    if isinstance(bm, dict):
+        for k in bm.keys():
+            if isinstance(k, str):
+                biomarker_ids.append(k)
+    line = ex_json.get("line_of_therapy") if isinstance(ex_json, dict) else None
+    try:
+        line_i = int(line) if line is not None else None
+    except (ValueError, TypeError):
+        line_i = None
+
+    target_ind = ex_json.get("_target_indication_id") if isinstance(ex_json, dict) else None
+    regimen_id = None
+    regimen_name = None
+    if target_ind and target_ind in indication_index:
+        regimen_id = indication_index[target_ind].get("recommended_regimen")
+    if regimen_id and regimen_id in regimen_index:
+        regimen_name = regimen_index[regimen_id].get("name")
+
+    disease_meta = disease_index.get(disease_id or "") or {}
+    return {
+        "disease_name_en": disease_meta.get("name_en"),
+        "disease_name_ua": disease_meta.get("name_ua"),
+        "line_of_therapy": line_i,
+        "biomarker_ids": sorted(set(biomarker_ids)),
+        "regimen_id": regimen_id,
+        "regimen_name": regimen_name,
+        "indication_id": target_ind,
+        "category": getattr(case, "category", None),
+    }
 
 
 def bundle_examples(
@@ -726,7 +837,7 @@ def bundle_examples(
     """Write docs/examples.json — array of {label, json} entries used as
     the 'Load example' dropdown on try.html.
 
-    Also extracts a thin manifest (label + disease_icd only, ~10× smaller)
+    Also extracts a thin manifest (label + disease_icd + searchable tokens)
     used by /try.html for instant dropdown population. Full payload is
     lazy-fetched only when a user actually picks an example.
     """
@@ -744,6 +855,13 @@ def bundle_examples(
         if not p.exists():
             return None
         ex_json = json.loads(p.read_text(encoding="utf-8"))
+        # Patient-mode twin only exists for treatment-shape profiles
+        # (PATIENT_MODE_SPEC §3 — patient mode is treatment-only).
+        # The build emits `cases/<id>.patient.html` for these and the
+        # try-page modal flips the audience toggle on for them.
+        has_patient_mode = (
+            has_case_page and not is_diagnostic_profile(ex_json)
+        )
         disease = ex_json.get("disease", {}) if isinstance(ex_json, dict) else {}
         disease_icd = disease.get("icd_o_3_morphology")
         disease_id = (
@@ -784,6 +902,8 @@ def bundle_examples(
             "case_id": c.case_id,
             "label": label_ua,
             "label_en": label_en,
+            "summary": getattr(c, "summary_ua", ""),
+            "summary_en": getattr(c, "summary_en", "") or getattr(c, "summary_ua", ""),
             "disease_id": disease_id,
             "disease_icd": disease_icd,
             "scenario_type": c.scenario_type,
@@ -1149,10 +1269,10 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 _NAV_LABELS = {
     "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "План лікування",
            "diseases": "Хвороби", "ask": "Туморборд", "kb": "Онко-вікі",
-           "prevent": "Профілактика"},
+           "prevent": "Профілактика", "news": "Новини"},
     "en": {"home": "Home", "about": "About", "try_cta": "Plan Builder",
            "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki",
-           "prevent": "Prevention"},
+           "prevent": "Prevention", "news": "News"},
 }
 
 
@@ -1179,6 +1299,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "diseases":     return "/diseases.html"
         if page_kind == "contribute":   return "/"
         if page_kind == "specs":        return "/specs.html"
+        if page_kind == "news":         return "/news.html"
     else:
         # EN page (at root) → switcher points to UA mirror at /ukr/
         if page_kind == "home":         return f"{uk_prefix}/"
@@ -1191,6 +1312,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "diseases":     return f"{uk_prefix}/diseases.html"
         if page_kind == "contribute":   return f"{uk_prefix}/"
         if page_kind == "specs":        return f"{uk_prefix}/specs.html"
+        if page_kind == "news":         return f"{uk_prefix}/news.html"
     return "/"
 
 
@@ -1218,14 +1340,22 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
 
     # Capabilities now folds in the former Limitations section. GitHub,
     # Examples and Specs are grouped under About to keep the main nav focused.
+    # News is bilingual from day one, so it appears on both navs (unlike
+    # Handbook, which is EN-only MVP).
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
             f'<a href="/ukr/capabilities.html"{cls("capabilities")}>Можливості</a>'
+            f'<a href="/ukr/news.html"{cls("news")}>{labels["news"]}</a>'
         )
     else:  # target_lang == "en"
+        # Handbook is EN-only MVP — only surfaced on EN nav. When UA chapters
+        # land, mirror this into the UA branch and add the page kind to
+        # _lang_switch_href.
         extra_links = (
             f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>'
+            f'<a href="/handbook.html"{cls("handbook")}>Handbook</a>'
+            f'<a href="/news.html"{cls("news")}>{labels["news"]}</a>'
         )
 
     # Stable visual order is always [UA · EN] regardless of which language
@@ -1283,30 +1413,104 @@ def _landing_stat_counts(stats) -> dict[str, int]:
 
 
 def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
+    from urllib.parse import quote
+
     counts = _landing_stat_counts(stats)
     is_en = target_lang == "en"
 
     if is_en:
-        title = "OpenOnco — oncology decisions you can audit"
-        kicker = "Open-source clinical decision support"
-        h1 = "Cross-checks NCCN, ESMO, and drug labels for you — so you verify, not research."
+        title = "OpenOnco — free, cited cancer treatment options"
+        kicker = "Free · open-source · no sign-up"
+        h1 = "A second opinion on cancer treatment — free, cited, and open."
         sub = (
-            f"One JSON patient profile in, a standard <em>and</em> an aggressive treatment "
-            f"plan out — side by side, with a citation under every recommendation. The engine "
-            f"reads {counts['sources']} sources for you and surfaces {counts['redflags']} "
-            f"red flags worth a second look.",
-            "Rules-first, not LLM-driven. The plan cannot hallucinate a drug or a dose. "
-            "The clinical decision stays with you; the engine is the second pair of eyes "
-            "that read every guideline at once.",
+            "Enter a case and OpenOnco lays out two treatment plans side by side — a "
+            "standard option and a more aggressive one — with a source you can open under "
+            "every line. Built on NCCN, ESMO and CIViC. Pick your path below.",
         )
         primary = "Try the plan builder"
         diseases_href = "/diseases.html"
         note = "Open-data inputs: CIViC (CC0) for biomarker actionability, ClinicalTrials.gov for trial-aware options, PubMed/PMID/DOI and DailyMed/openFDA for literature and drug-label context. No LLM chooses treatment: plans are rules-first with YAML provenance, so LLM hallucinations are excluded from the plan. The clinician remains the final authority (CHARTER §11)."
         footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
         try_href = "/try.html"
+        gallery_href = "/gallery.html"
         kb_href = "/kb.html"
         ask_href = "/ask.html"
         about_href = "/about.html"
+        diseases_href = "/diseases.html"
+        pharma_q = (
+            "A patient on a chemotherapy regimen (for example FOLFOX) is also taking "
+            "other drugs (for example warfarin and fluconazole). What drug interactions, "
+            "dose adjustments or monitoring should I flag before dispensing?"
+        )
+        # Synthetic, de-identified template. Seeds the Tumor Board textarea so a patient
+        # arrives at "understand my plan + prepare questions", never "is my plan right".
+        # Never place a patient's real pasted plan into a ?case= URL (leaks to history).
+        patient_q = (
+            "My own oncologist has diagnosed me with stomach cancer and gave me a written "
+            "treatment plan that starts with chemotherapy. I'd like to understand it before "
+            "my next appointment. Can you explain, in plain language, what each part of the "
+            "plan is for, and help me write down clear questions to ask my own oncologist at "
+            "my next visit — including which side effects I should ask them to watch for? "
+            "Please do not tell me to start, stop, or change any treatment; my oncologist "
+            "makes those decisions. (I have removed my name, date of birth and any ID numbers "
+            "before pasting. My text is sent to a server to be analysed, so I have pasted "
+            "only the parts I have questions about — not my whole document.)"
+        )
+        doors_label = "Choose your path"
+        doors_h = "What brings you here?"
+        doors_sub = (
+            "Three ways in — each goes straight to the right tool. No account, nothing to "
+            "install, works in your browser."
+        )
+        doors = [
+            {
+                "key": "doctor",
+                "icon": "🩺",
+                "role": "I'm a clinician",
+                "line": (
+                    "Turn a case into a tumor-board-ready draft: a standard and an "
+                    "aggressive plan side by side, red flags surfaced, every line cited."
+                ),
+                "buttons": [
+                    ("btn-primary", try_href, "Build a plan"),
+                    ("btn-secondary", ask_href, "Ask the Tumor Board"),
+                ],
+            },
+            {
+                "key": "patient",
+                "icon": "🎗️",
+                "role": "I'm a patient or caregiver",
+                "line": (
+                    "Understand the treatment plan your own oncologist already gave you — in "
+                    "plain language — and turn it into clear questions to bring to your next "
+                    "visit. Information to support the conversation with your doctor, not "
+                    "medical advice, and never a replacement for your oncologist."
+                ),
+                "buttons": [
+                    ("btn-primary", ask_href + "?case=" + quote(patient_q), "Prepare questions for your visit"),
+                    ("btn-secondary", gallery_href, "See an example plan"),
+                ],
+                "disclaimer": (
+                    "OpenOnco is an information tool — not a medical device and not medical "
+                    "advice. It does not replace your oncologist. Never start, stop, or "
+                    "change any treatment based on this site; decide together with your "
+                    "treating oncologist."
+                ),
+            },
+            {
+                "key": "pharma",
+                "icon": "💊",
+                "role": "I'm a pharmacist",
+                "line": (
+                    "Check interactions, renal and hepatic dose adjustments, and red flags "
+                    "against a regimen before it reaches the patient."
+                ),
+                "buttons": [
+                    ("btn-primary", ask_href + "?case=" + quote(pharma_q), "Check an interaction"),
+                    ("btn-secondary", kb_href, "Browse red flags & labels"),
+                ],
+            },
+        ]
         stats_label = "Knowledge base scale"
         stat_labels = {
             "diseases": "Diseases",
@@ -1316,323 +1520,177 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             "sources": "Cited sources",
             "perf": "Per profile",
         }
-        pillars_label = "What OpenOnco does for the clinician"
-        pillar_time_h = "Saves the routine work"
-        pillar_time_sub = (
-            "Five tabs collapse into one. The engine does the cross-checking so you can "
-            "spend the time on the call, not the lookup."
+        trust = (
+            "Rules-first, not an LLM — no drug or dose is ever invented. Patient data stays "
+            "in your browser. A qualified clinician is always the final authority."
         )
-        pillar_time_cards = [
-            ("Pass", "One pass replaces five tabs",
-             "The engine resolves NCCN, ESMO, drug labels, and CIViC actionability in a "
-             "single pass. No more switching between guidelines, label PDFs, and biomarker "
-             "databases for each case."),
-            ("Cite", "Citations attached automatically",
-             "Every line in the plan ships with the PMID, DOI, DailyMed link, or guideline "
-             "section. You verify in 10 seconds instead of running a literature search to "
-             "back up each recommendation."),
-            ("Sync", f"{counts['sources']} sources refreshed for you",
-             "NCCN, ESMO, EHA, BSH, EASL, MoH, WHO, CTCAE, FDA, CIViC — refreshed on a "
-             "schedule. No more monitoring every guideline update yourself to know what "
-             "changed since last quarter."),
-            ("Pair", "Standard + aggressive built together",
-             "Both alternatives are generated side by side every time — you don't manually "
-             "construct the second option to weigh against the first. CHARTER §15.2 C6: the "
-             "alternative is never buried."),
-        ]
-        pillar_miss_h = "Surfaces what's easy to overlook"
-        pillar_miss_sub = (
-            "The engine is a checklist that runs against every profile. It cannot replace "
-            "clinical judgment — but it can stop a tired Friday afternoon from missing a "
-            "contraindication."
+        note = (
+            "Open-data inputs: CIViC (CC0), ClinicalTrials.gov, PubMed, DailyMed/openFDA and "
+            "NCCN/ESMO/EHA/BSH guidelines. No LLM chooses treatment — plans are rules-first "
+            "with YAML provenance (CHARTER §11)."
         )
-        pillar_miss_cards = [
-            ("Flag", f"{counts['redflags']} red flags worth a second look",
-             "Drug interactions, contraindications, organ-function thresholds, high-risk "
-             "cytogenetics, bulky disease — every red flag fires automatically against the "
-             "profile and surfaces in the plan for review."),
-            ("Match", "Targetable mutations don't slip past",
-             "CIViC actionability lookup is fusion-aware. A BRAF V600E or a BCR::ABL1 "
-             "finding maps to ESCAT-tier evidence before it can quietly disappear into a "
-             "long workup report."),
-            ("Rules", "No hallucinated drugs or doses",
-             "The plan is assembled by a declarative rule engine, not by an LLM. A drug "
-             "must exist in the KB with a real label entry; a dose must come from a curated "
-             "Regimen YAML. No creative invention."),
-            ("Ask", "Refuses to default silently",
-             "When the profile lacks data — missing cytogenetics, no ECOG, incomplete "
-             "biomarker panel — the engine emits an Open Question instead of guessing. "
-             "CHARTER §15.2 C6: anti automation-bias is mandatory."),
+        explore_label = "Explore more"
+        explore = [
+            (diseases_href, f"Browse {counts['diseases']} diseases"),
+            (kb_href, "Onco Wiki"),
+            (about_href, "About the project"),
         ]
-        cta_doors_label = "Where to go next"
-        cta_doors = [
-            ("btn-primary", try_href, "Build a plan from a case"),
-            ("btn-secondary", ask_href, "Ask the AI Tumor Board"),
-            ("btn-secondary", kb_href, "Browse Onco Wiki"),
-        ]
+        footer = "Informational tool, not a medical device (CHARTER §15 + §11)."
         perf_value = "~200"
         perf_unit = "ms"
-        carousel_label = "Audience"
-        carousel_slides = [
-            {
-                "key": "doctor",
-                "tab": "For clinicians",
-                "eyebrow": "Clinical workflow",
-                "title": "From structured case facts to a cited plan draft.",
-                "body": (
-                    "OpenOnco gives the oncologist a transparent second layer for MDT prep: "
-                    "standard and aggressive tracks, red flags, dose context, source IDs and "
-                    "review status in one view."
-                ),
-                "items": [
-                    "Two-track treatment plan: guideline-grade and trial-aware",
-                    "Biomarker, renal, hepatic and infection risks surfaced before sign-off",
-                    "Every branch remains auditable by source and YAML provenance",
-                ],
-                "href": try_href,
-                "cta": "Build a virtual plan",
-            },
-            {
-                "key": "investor",
-                "tab": "For investors",
-                "eyebrow": "Infrastructure thesis",
-                "title": "A governed open layer for oncology decision infrastructure.",
-                "body": (
-                    "The asset is not a chatbot wrapper. It is a growing clinical knowledge graph, "
-                    "rules engine, public specification stack and distribution path for hospitals, "
-                    "labs and AI-assisted contributors."
-                ),
-                "items": [
-                    "Public corpus, rules engine and specs evolve as separate auditable assets",
-                    "Clear non-device CDS positioning and visible clinical review gates",
-                    "Open corpus creates trust, auditability and ecosystem leverage",
-                ],
-                "href": about_href,
-                "cta": "Review the project",
-            },
-            {
-                "key": "lab",
-                "tab": "For laboratories",
-                "eyebrow": "Molecular handoff",
-                "title": "Make biomarker reports immediately actionable for the care team.",
-                "body": (
-                    "A lab can hand clinicians a structured bridge from NGS and pathology findings "
-                    "to disease-specific actionability, trial-aware options and patient-profile "
-                    "prefill without exposing private data on the public site."
-                ),
-                "items": [
-                    "Variant and biomarker context connects to disease, regimen and monitoring",
-                    "QR/profile handoff can prefill the browser-side plan builder",
-                    "CIViC-derived evidence remains citable and inspectable",
-                ],
-                "href": kb_href,
-                "cta": "Explore actionability",
-            },
-            {
-                "key": "patient",
-                "tab": "For patients",
-                "eyebrow": "Patient-facing explanation",
-                "title": "A clearer version of the plan to discuss with the doctor.",
-                "body": (
-                    "OpenOnco can render the same clinical logic in plain language: what the "
-                    "plan is trying to do, why tests and biomarkers matter, and what questions "
-                    "the patient should bring back to the oncology team."
-                ),
-                "items": [
-                    "Plain-language summary without changing the clinician-owned decision",
-                    "Helps patients understand biomarkers, monitoring and warning signs",
-                    "Keeps the doctor as the final authority for treatment choices",
-                ],
-                "href": try_href,
-                "cta": "See a patient-friendly plan",
-            },
-        ]
     else:
-        title = "OpenOnco — онкологічні рішення, які можна перевірити"
-        kicker = "Відкрита підтримка клінічних рішень"
-        h1 = "Звіряє за вас NCCN, ESMO і label-и — ви перевіряєте, не досліджуєте."
+        title = "OpenOnco — безкоштовні варіанти лікування раку з джерелами"
+        kicker = "Безкоштовно · відкритий код · без реєстрації"
+        h1 = "Зрозумійте варіанти лікування раку — з доказовим джерелом під кожним рядком."
         sub = (
-            f"Один JSON-профіль пацієнта на вході — план standard <em>і</em> aggressive "
-            f"поруч, із цитатою під кожною рекомендацією. Engine читає за вас "
-            f"{counts['sources']} джерела і виносить на огляд {counts['redflags']} red flag, "
-            f"які варті повторного погляду.",
-            "Rules-first, а не LLM. План не може «вигадати» препарат чи дозу. "
-            "Клінічне рішення лишається за вами; engine — це друга пара очей, "
-            "що читає всі гайдлайни одночасно.",
+            "OpenOnco безкоштовно збирає докази з настанов NCCN, ESMO і бази CIViC у два "
+            "плани лікування поруч — стандартний і агресивніший. Лікарю це пришвидшує "
+            "підготовку туморборду, хворому — допомагає зрозуміти призначене лікування і "
+            "скласти питання до онколога, фармацевту — перевірити взаємодії та корекції доз. "
+            "Без реєстрації, дані лишаються у вашому браузері.",
         )
         primary = "Спробувати конструктор плану"
         diseases_href = "/ukr/diseases.html"
         note = "Відкриті джерела: CIViC (CC0) для біомаркерної клінічної значущості, ClinicalTrials.gov для trial-aware опцій, PubMed/PMID/DOI та DailyMed/openFDA для літератури й контексту інструкцій до препаратів. LLM не обирає лікування: план збирається rules-first із YAML provenance, тому LLM-галюцинації виключені з плану. Фінальне рішення лишається за лікарем (CHARTER §11)."
         footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
         try_href = "/ukr/try.html"
+        gallery_href = "/ukr/gallery.html"
         kb_href = "/ukr/kb.html"
         ask_href = "/ukr/ask.html"
         about_href = "/ukr/about.html"
+        diseases_href = "/ukr/diseases.html"
+        pharma_q = (
+            "Пацієнт на схемі лікування хіміотерапії (наприклад FOLFOX) також приймає інші препарати "
+            "(наприклад варфарин і флуконазол). Які взаємодії, корекції доз чи моніторинг "
+            "варто відзначити до видачі?"
+        )
+        # Синтетичний знеособлений шаблон — заповнює поле туморборду так, щоб пацієнт
+        # прийшов до «зрозуміти план + підготувати питання», а не «чи правильний план».
+        # Ніколи не класти реальний вставлений план пацієнта в ?case= URL (витік в історію).
+        patient_q = (
+            "Мій онколог діагностував у мене рак шлунка і дав письмовий план лікування, "
+            "який починається з хіміотерапії. Я хочу зрозуміти його до наступного прийому. "
+            "Поясніть, будь ласка, простою мовою, для чого потрібна кожна частина плану, і "
+            "допоможіть мені сформулювати зрозумілі питання, які я поставлю своєму онкологу "
+            "на наступному візиті, — зокрема які побічні ефекти варто попросити його "
+            "відстежувати. Будь ласка, не радьте мені починати, припиняти чи змінювати "
+            "лікування — ці рішення приймає мій онколог. (Перед вставленням я прибрав(-ла) "
+            "ім'я, дату народження та будь-які номери документів. Текст надсилається на "
+            "сервер для аналізу, тому я вставив(-ла) лише ті частини, щодо яких маю питання, "
+            "а не весь документ.)"
+        )
+        doors_label = "Оберіть свій шлях"
+        doors_h = "Кому це допоможе"
+        doors_sub = ""
+        doors = [
+            {
+                "key": "doctor",
+                "icon": "🩺",
+                "role": "Лікарю",
+                "line": (
+                    "Перетворіть кейс на чернетку для туморборду: стандартний і агресивний "
+                    "план поруч, red flags на поверхні, кожен рядок із джерелом."
+                ),
+                "buttons": [
+                    ("btn-primary", try_href, "Побудувати план"),
+                    ("btn-secondary", ask_href, "Запитати туморборд"),
+                ],
+            },
+            {
+                "key": "patient",
+                "icon": "🎗️",
+                "role": "Хворому",
+                "line": (
+                    "Зрозумійте план лікування, який вам уже дав ваш онколог, — простою "
+                    "мовою — і перетворіть його на зрозумілі питання до наступного візиту. "
+                    "Це інформація на допомогу вашій розмові з лікарем, а не медична порада, "
+                    "і вона ніколи не замінює вашого онколога."
+                ),
+                "buttons": [
+                    ("btn-primary", ask_href + "?case=" + quote(patient_q), "Підготувати питання до візиту"),
+                    ("btn-secondary", gallery_href, "Подивитися приклад плану"),
+                ],
+                "disclaimer": (
+                    "OpenOnco — інформаційний інструмент, а не медичний виріб і не медична "
+                    "порада. Він не замінює вашого онколога. Ніколи не починайте, не "
+                    "припиняйте і не змінюйте лікування на основі цього сайту — рішення "
+                    "приймайте разом зі своїм лікарем-онкологом."
+                ),
+            },
+            {
+                "key": "pharma",
+                "icon": "💊",
+                "role": "Фармацевту",
+                "line": (
+                    "Перевірте взаємодії, корекції доз (нирки/печінка) і red flags для "
+                    "схеми лікування до видачі пацієнту."
+                ),
+                "buttons": [
+                    ("btn-primary", ask_href + "?case=" + quote(pharma_q), "Перевірити взаємодію"),
+                    ("btn-secondary", kb_href, "Переглянути red flags і label-и"),
+                ],
+            },
+        ]
         stats_label = "Масштаб бази знань"
         stat_labels = {
             "diseases": "Хвороби",
             "indications": "Показання",
-            "regimens": "Режими",
+            "regimens": "Схеми лікування",
             "redflags": "Red flag",
             "sources": "Цитованих джерел",
             "perf": "На профіль",
         }
-        pillars_label = "Що OpenOnco робить для лікаря"
-        pillar_time_h = "Економить рутинну роботу"
-        pillar_time_sub = (
-            "П'ять вкладок згортаються в один прохід. Engine робить крос-чек, а ви "
-            "витрачаєте час на саме рішення, а не на пошук джерел."
+        trust = (
+            "Rules-first, а не LLM — жоден препарат чи доза не вигадуються. Дані пацієнта "
+            "лишаються у вашому браузері. Фінальне рішення завжди за кваліфікованим лікарем."
         )
-        pillar_time_cards = [
-            ("Pass", "Один прохід замість п'яти вкладок",
-             "Engine за один прохід розв'язує NCCN, ESMO, інструкції до препаратів і "
-             "CIViC-actionability. Більше не треба перемикатися між гайдлайнами, "
-             "label-PDF і базами біомаркерів для кожного кейсу."),
-            ("Cite", "Цитати додаються автоматично",
-             "Кожен рядок плану несе PMID, DOI, посилання на DailyMed або секцію "
-             "гайдлайну. Ви перевіряєте за 10 секунд, а не запускаєте літ. пошук, "
-             "щоб обґрунтувати кожну рекомендацію."),
-            ("Sync", f"{counts['sources']} джерела оновлюються за вас",
-             "NCCN, ESMO, EHA, BSH, EASL, МОЗ, WHO, CTCAE, FDA, CIViC — оновлюються "
-             "за розкладом. Більше не треба самостійно моніторити кожен апдейт "
-             "гайдлайну, щоб знати, що змінилося за останній квартал."),
-            ("Pair", "Standard + aggressive будуються разом",
-             "Обидві альтернативи генеруються поруч щоразу — ви не будуєте другий "
-             "варіант вручну, щоб зважити його проти першого. CHARTER §15.2 C6: "
-             "альтернатива ніколи не схована."),
-        ]
-        pillar_miss_h = "Виносить на огляд те, що легко пропустити"
-        pillar_miss_sub = (
-            "Engine — це чек-лист, що пробігає кожен профіль. Він не замінює клінічне "
-            "судження — але може не дати втомленому п'ятничному вечору пропустити "
-            "протипоказання."
+        note = (
+            "Відкриті джерела: CIViC (CC0), ClinicalTrials.gov, PubMed, DailyMed/openFDA і "
+            "гайдлайни NCCN/ESMO/EHA/BSH. LLM не обирає лікування — план збирається rules-first "
+            "із YAML provenance (CHARTER §11)."
         )
-        pillar_miss_cards = [
-            ("Flag", f"{counts['redflags']} red flag, варті повторного погляду",
-             "Drug interactions, протипоказання, пороги органної функції, high-risk "
-             "цитогенетика, bulky disease — кожен red flag спрацьовує автоматично "
-             "на профілі й виноситься в план для огляду."),
-            ("Match", "Таргетні мутації не загубляться",
-             "CIViC actionability lookup — fusion-aware. Знахідка BRAF V600E чи "
-             "BCR::ABL1 мапиться на ESCAT-tier evidence до того, як могла б тихо "
-             "зникнути в довгому workup-звіті."),
-            ("Rules", "Жодного «вигаданого» препарату чи дози",
-             "План збирається декларативним rule engine, а не LLM. Препарат мусить "
-             "існувати в KB зі справжньою label-інструкцією; доза мусить прийти з "
-             "кураторського Regimen YAML. Жодного творчого винаходу."),
-            ("Ask", "Відмовляється мовчки додумувати",
-             "Коли в профілі бракує даних — немає цитогенетики, немає ECOG, неповна "
-             "біомаркерна панель — engine видає Open Question замість здогадки. "
-             "CHARTER §15.2 C6: anti automation-bias обов'язковий."),
+        explore_label = "Дізнатися більше"
+        explore = [
+            (diseases_href, f"Переглянути {counts['diseases']} хвороб"),
+            (kb_href, "Онко-вікі"),
+            (about_href, "Про проєкт"),
         ]
-        cta_doors_label = "Куди далі"
-        cta_doors = [
-            ("btn-primary", try_href, "Побудувати план із кейсу"),
-            ("btn-secondary", ask_href, "Запитати AI-туморборд"),
-            ("btn-secondary", kb_href, "Переглянути Онко-вікі"),
-        ]
+        footer = "Інформаційний інструмент, не медичний пристрій (CHARTER §15 + §11)."
         perf_value = "~200"
         perf_unit = "мс"
-        carousel_label = "Аудиторія"
-        carousel_slides = [
-            {
-                "key": "doctor",
-                "tab": "Для лікаря",
-                "eyebrow": "Клінічний workflow",
-                "title": "Від структурованих фактів кейсу до цитованого draft-плану.",
-                "body": (
-                    "OpenOnco дає онкологу прозорий другий шар для підготовки MDT: стандартний "
-                    "і агресивний треки, red flags, контекст дозування, source IDs і статус "
-                    "ревʼю в одному вікні."
-                ),
-                "items": [
-                    "Два треки лікування: guideline-grade та trial-aware",
-                    "Біомаркери, ниркові, печінкові й інфекційні ризики видно до sign-off",
-                    "Кожна гілка аудіюється через джерела та YAML provenance",
-                ],
-                "href": try_href,
-                "cta": "Побудувати віртуальний план",
-            },
-            {
-                "key": "investor",
-                "tab": "Для інвестора",
-                "eyebrow": "Infrastructure thesis",
-                "title": "Керований open layer для онкологічної decision infrastructure.",
-                "body": (
-                    "Це не wrapper навколо chatbot. Це клінічна knowledge graph, rule engine, "
-                    "публічний стек специфікацій і канал дистрибуції для лікарень, лабораторій "
-                    "та AI-assisted contributors."
-                ),
-                "items": [
-                    "Публічний корпус, rule engine і specs розвиваються як окремі auditable assets",
-                    "Чітке non-device CDS positioning і видимі clinical review gates",
-                    "Відкритий корпус створює trust, auditability та ecosystem leverage",
-                ],
-                "href": about_href,
-                "cta": "Подивитись проєкт",
-            },
-            {
-                "key": "lab",
-                "tab": "Для лабораторії",
-                "eyebrow": "Molecular handoff",
-                "title": "Перетворюйте біомаркерні звіти на actionable context для команди.",
-                "body": (
-                    "Лабораторія може передати лікарю структурований міст від NGS і патології "
-                    "до disease-specific actionability, trial-aware опцій і prefill профілю "
-                    "пацієнта без приватних даних на публічному сайті."
-                ),
-                "items": [
-                    "Variant і biomarker context звʼязаний із хворобою, режимом і monitoring",
-                    "QR/profile handoff може заповнити браузерний plan builder",
-                    "CIViC-derived evidence залишається citable та inspectable",
-                ],
-                "href": kb_href,
-                "cta": "Відкрити actionability",
-            },
-            {
-                "key": "patient",
-                "tab": "Для пацієнта",
-                "eyebrow": "Пояснення для пацієнта",
-                "title": "Зрозуміла версія плану для розмови з лікарем.",
-                "body": (
-                    "OpenOnco може показати ту саму клінічну логіку простою мовою: що "
-                    "план має зробити, чому важливі аналізи й біомаркери, і які питання "
-                    "пацієнт має повернути онкологічній команді."
-                ),
-                "items": [
-                    "Plain-language summary без заміни рішення лікаря",
-                    "Допомагає зрозуміти біомаркери, monitoring і warning signs",
-                    "Фінальний вибір лікування залишається за лікарем",
-                ],
-                "href": try_href,
-                "cta": "Подивитись patient-friendly план",
-            },
-        ]
-
-    carousel_tabs_html = "\n".join(
-        f'        <button type="button" class="home-carousel-tab{" is-active" if i == 0 else ""}" '
-        f'data-home-slide="{slide["key"]}" aria-controls="home-slide-{slide["key"]}" '
-        f'aria-selected="{str(i == 0).lower()}">{slide["tab"]}</button>'
-        for i, slide in enumerate(carousel_slides)
-    )
-    carousel_slides_html = "\n".join(
-        f"""        <article class="home-carousel-slide{' is-active' if i == 0 else ''}" id="home-slide-{slide['key']}" data-home-panel="{slide['key']}">
-          <p class="home-carousel-eyebrow">{slide['eyebrow']}</p>
-          <h2>{slide['title']}</h2>
-          <p>{slide['body']}</p>
-          <ul>
-{chr(10).join(f'            <li>{item}</li>' for item in slide['items'])}
-          </ul>
-          <a class="home-carousel-cta" href="{slide['href']}">{slide['cta']} →</a>
-        </article>"""
-        for i, slide in enumerate(carousel_slides)
-    )
 
     sub_paragraphs = sub if isinstance(sub, (list, tuple)) else (sub,)
     sub_html = "\n      ".join(
         f'<p class="home-sub">{paragraph}</p>'
         for paragraph in sub_paragraphs
     )
+    # Optional standfirst under the doors heading — omitted entirely when blank
+    # so no empty paragraph gap is left behind.
+    doors_sub_html = (
+        f'\n    <p class="home-doors-sub">{doors_sub}</p>' if doors_sub else ""
+    )
+
+    def _door_block(d: dict) -> str:
+        btns = "\n          ".join(
+            f'<a class="btn {cls}" href="{href}">{html.escape(text)}</a>'
+            for cls, href, text in d["buttons"]
+        )
+        disclaimer = (
+            f'\n        <p class="door-disclaimer">{html.escape(d["disclaimer"])}</p>'
+            if d.get("disclaimer") else ""
+        )
+        return (
+            f'      <article class="door-card door-card--{d["key"]}">\n'
+            f'        <div class="door-icon" aria-hidden="true">{d["icon"]}</div>\n'
+            f'        <h3 class="door-role">{html.escape(d["role"])}</h3>\n'
+            f'        <p class="door-line">{d["line"]}</p>{disclaimer}\n'
+            f'        <div class="door-actions">\n'
+            f'          {btns}\n'
+            f'        </div>\n'
+            f'      </article>'
+        )
+
+    doors_html = "\n".join(_door_block(d) for d in doors)
 
     def _stat_block(num_html: str, lbl: str, href: str | None = None) -> str:
         inner = (
@@ -1663,28 +1721,9 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
         ),
     ])
 
-    def _pillar_card_block(tag: str, lbl: str, body: str, *, accent: bool) -> str:
-        css = "num-card num-card--accent" if accent else "num-card"
-        return (
-            f'      <div class="{css}">\n'
-            f'        <div class="num-big">{html.escape(tag)}</div>\n'
-            f'        <div class="num-lbl">{lbl}</div>\n'
-            f'        <p class="num-text">{body}</p>\n'
-            '      </div>'
-        )
-
-    pillar_time_html = "\n\n".join(
-        _pillar_card_block(tag, lbl, body, accent=True)
-        for tag, lbl, body in pillar_time_cards
-    )
-    pillar_miss_html = "\n\n".join(
-        _pillar_card_block(tag, lbl, body, accent=False)
-        for tag, lbl, body in pillar_miss_cards
-    )
-
-    cta_doors_html = "\n      ".join(
-        f'<a class="btn {cls}" href="{href}">{html.escape(text)}</a>'
-        for cls, href, text in cta_doors
+    explore_html = " · ".join(
+        f'<a href="{href}">{html.escape(text)}</a>'
+        for href, text in explore
     )
 
     return f"""<!DOCTYPE html>
@@ -1693,7 +1732,10 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title}</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#14532d">
@@ -1721,32 +1763,10 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
     </div>
   </section>
 
-  <section class="home-pillars" aria-label="{pillars_label}">
-    <h2 class="home-pillar-h">{pillar_time_h}</h2>
-    <p class="home-pillar-sub">{pillar_time_sub}</p>
-    <div class="num-grid num-grid--rich">
-
-{pillar_time_html}
-
-    </div>
-
-    <h2 class="home-pillar-h home-pillar-h--alt">{pillar_miss_h}</h2>
-    <p class="home-pillar-sub">{pillar_miss_sub}</p>
-    <div class="num-grid num-grid--rich">
-
-{pillar_miss_html}
-
-    </div>
-  </section>
-
-  <section class="home-source-band" aria-label="OpenOnco sources">
+  <section class="home-trust" aria-label="How OpenOnco stays safe">
+    <p class="home-trust-line">{trust}</p>
     <p class="home-note">{note}</p>
-  </section>
-
-  <section class="home-cta-doors" aria-label="{cta_doors_label}">
-    <div class="cta-row">
-      {cta_doors_html}
-    </div>
+    <p class="home-explore" aria-label="{explore_label}">{explore_html}</p>
   </section>
 
   <footer class="page-foot">
@@ -1985,7 +2005,7 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
         )
         df3_li_1 = f"{n_redflags} червоних прапорців по {n_diseases} діагнозах"
         df3_li_2 = "корекції на нирки, печінку, вік, вагу"
-        df3_li_3 = "зв&rsquo;язок біомаркер ↔ режим ↔ моніторинг"
+        df3_li_3 = "зв&rsquo;язок біомаркер ↔ схема лікування ↔ моніторинг"
         df4_title = "Два плани з повними цитатами"
         df4_body = (
             "<strong>Стандартний</strong> (за керівницями) + <strong>агресивний</strong> "
@@ -2015,7 +2035,7 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
              "покривається державною програмою медичних гарантій (НСЗУ). Лікар одразу "
              "бачить, що доступно безкоштовно, що — за рецептом, а що доведеться шукати "
              "окремо. Доступність — це <strong>метадані поряд із рекомендацією</strong>, "
-             "а не фільтр: вибір режиму керується доказами, а не реєстраційним статусом."),
+             "а не фільтр: вибір схеми лікування керується доказами, а не реєстраційним статусом."),
             ("Спрощений звіт для пацієнта",
              "Окремий режим генерує версію плану зрозумілою мовою для пацієнта: без "
              "латини, без абревіатур, з поясненням, чому призначено саме це і на що "
@@ -2027,7 +2047,7 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
              "інвестори."),
             ("Готово до пацієнтів сьогодні",
              f"{n_diseases} діагнозів, {n_redflags} червоних прапорців, {n_indications} "
-             f"індикацій, {n_regimens} режимів, {n_algorithms} алгоритмів лікування — "
+             f"індикацій, {n_regimens} схем лікування, {n_algorithms} алгоритмів лікування — "
              "клінічний sign-off отриманий. Перші реальні плани вже верифіковані "
              "практикуючими онкологами як сильні. KB росте щотижня, але це вже найщільніший "
              "відкритий шар «доказ → план» для української онкології, що існує. Немає сенсу чекати."),
@@ -2042,7 +2062,7 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
             ("Per-disease coverage matrix — публічна і чесна",
              f"<a href=\"/ukr/diseases.html\"><strong>/ukr/diseases.html</strong></a> показує для "
              f"кожної з {n_diseases} хвороб, що саме у нас є: counts по біомаркерах, "
-             "препаратах, показаннях, режимах, red flags, checkmarks для алгоритмів 1L/2L, "
+             "препаратах, показаннях, схемах лікування, red flags, checkmarks для алгоритмів 1L/2L, "
              "статус анкети, fill% і verified%. Згрупована за лімфоїдною / мієлоїдною "
              "гематологією і солідними пухлинами. Ті ж дані доступні машинно як "
              "<code>disease_coverage.json</code>. Без «там же є щось» — є матриця."),
@@ -2077,7 +2097,10 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco — Open-source CDS for oncology</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#0a2e1a">
@@ -2532,7 +2555,10 @@ def render_gallery(*, target_lang: str = "en") -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · {page_title}</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#0a2e1a">
@@ -2725,8 +2751,46 @@ def render_ask(*, target_lang: str = "en") -> str:
         if is_en else
         "Не вставляйте реальні персональні дані пацієнта. Це чернетка для tumor board, а не автономна медична порада."
     )
+    # Patient-welcome layer (additive). The `safety` line above is load-bearing and
+    # renders verbatim; the lines below sit alongside it, never replacing it.
+    patient_welcome = (
+        "For clinicians and for patients alike: if your own oncologist gave you a plan, use "
+        "this page to understand it in plain language and prepare questions for your next "
+        "visit. It does not evaluate whether your plan is right and does not replace your "
+        "oncologist."
+        if is_en else
+        "Для лікарів і для пацієнтів: якщо ваш онколог дав вам план, скористайтеся цією "
+        "сторінкою, щоб зрозуміти його простою мовою та підготувати питання до наступного "
+        "візиту. Вона не оцінює, чи правильний ваш план, і не замінює вашого онколога."
+    )
+    patient_safety = (
+        "This does not replace your own doctor. Never start, stop, or change treatment based "
+        "on this page — always discuss it with your treating oncologist."
+        if is_en else
+        "Це не замінює вашого лікаря. Ніколи не починайте, не припиняйте і не змінюйте "
+        "лікування на основі цієї сторінки — завжди обговорюйте це зі своїм лікарем-онкологом."
+    )
+    deid_note = (
+        "Before pasting, remove your name, date of birth and any ID numbers — the text is "
+        "sent to our server to be analysed. Paste only the parts you have questions about, "
+        "not the whole document. If you cannot remove your identifying details, don't paste "
+        "— bring the plan to your visit instead."
+        if is_en else
+        "Перед вставленням приберіть ім'я, дату народження та будь-які номери документів — "
+        "текст надсилається на наш сервер для аналізу. Вставляйте лише ті частини, щодо яких "
+        "маєте питання, а не весь документ. Якщо не можете прибрати особисті дані, не "
+        "вставляйте — краще принесіть план на візит."
+    )
     examples = (
         [
+            (
+                "Patient · understand my plan",
+                "My oncologist gave me a written treatment plan for bowel cancer that begins with chemotherapy before surgery. In plain language, what is each part of the plan meant to do, and why might it be given in this order? Please help me turn this into clear questions to ask my own oncologist — do not tell me to start, stop, or change anything."
+            ),
+            (
+                "Patient · questions before my visit",
+                "I have breast cancer and my oncologist has recommended hormone tablets after surgery. I don't fully understand why. Can you help me write down plain-language questions to bring to my next appointment, so I can ask my oncologist about the reasons, how long I would take it, and what to watch for? Please don't advise me to change my treatment."
+            ),
             (
                 "Gastric 1L",
                 "62-year-old patient with metastatic gastric cancer and diffuse peritoneal carcinomatosis. Histology: poorly differentiated adenocarcinoma with signet-ring cells, MSS, HER2-negative, PD-L1 CPS 25. What is the optimal first-line treatment?"
@@ -2766,6 +2830,14 @@ def render_ask(*, target_lang: str = "en") -> str:
         ]
         if is_en else
         [
+            (
+                "Пацієнт · зрозуміти мій план",
+                "Онколог дав мені письмовий план лікування раку кишківника, який починається з хіміотерапії перед операцією. Поясніть простою мовою, для чого потрібна кожна частина плану і чому їх можуть призначати саме в такому порядку. Допоможіть перетворити це на зрозумілі питання до мого онколога — не радьте мені щось починати, припиняти чи змінювати."
+            ),
+            (
+                "Пацієнт · питання перед візитом",
+                "У мене рак грудної залози, і онколог рекомендував приймати гормональні таблетки після операції. Я не до кінця розумію чому. Допоможіть сформулювати простою мовою питання до наступного прийому, щоб я міг(-ла) запитати онколога про причини, тривалість прийому та на що звертати увагу. Будь ласка, не радьте змінювати лікування."
+            ),
             (
                 "Gastric 1L",
                 "62-річний пацієнт із метастатичним раком шлунка, поширений перитонеальний канцероматоз. Гістологія: недиференційована аденокарцинома з перснеподібними клітинами, MSS, HER2-негативний, PD-L1 CPS = 25. Яка оптимальна перша лінія лікування?"
@@ -2814,7 +2886,10 @@ def render_ask(*, target_lang: str = "en") -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · {html.escape(title)}</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 <style>
@@ -2838,6 +2913,9 @@ def render_ask(*, target_lang: str = "en") -> str:
 .ask-result {{ white-space:pre-wrap; font:14px/1.55 var(--mono); background:#102018; color:#ecfdf5; border:1px solid #244d38; border-radius:8px; padding:16px; min-height:380px; overflow:auto; box-shadow:inset 0 1px 0 rgba(255,255,255,0.06); }}
 .ask-result:empty::before {{ content:""; display:block; min-height:1px; }}
 .ask-muted {{ color:#647067; font-size:14px; }}
+.ask-patient-note {{ margin-top:8px; }}
+.ask-patient-safety {{ margin:8px 0 0; padding:8px 12px; border-left:3px solid #f59e0b; background:#fffbeb; color:#7c2d12; font-weight:700; font-size:13.5px; line-height:1.4; border-radius:0 6px 6px 0; }}
+.ask-deid-note {{ margin:8px 0 0; color:#475569; font-size:13px; line-height:1.45; }}
 .ask-examples {{ display:grid; gap:10px; margin:12px 0 14px; max-height:460px; overflow:auto; padding-right:4px; }}
 .ask-example {{ display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; border:1px solid #dbe7df; border-radius:8px; padding:12px; background:#f8fbf8; }}
 .ask-example-title {{ font-weight:800; margin-bottom:4px; color:#073b22; }}
@@ -2873,6 +2951,8 @@ def render_ask(*, target_lang: str = "en") -> str:
       <h1>{html.escape(title)}</h1>
       <p class="lead">{lead}</p>
       <p class="ask-muted">{safety}</p>
+      <p class="ask-muted ask-patient-note">{patient_welcome}</p>
+      <p class="ask-patient-safety">{patient_safety}</p>
     </div>
     <div class="ask-hero-meter" aria-label="{quota_label}">
       <div class="ask-stat"><strong>3</strong><span>{quota_hero_label}</span></div>
@@ -2890,6 +2970,7 @@ def render_ask(*, target_lang: str = "en") -> str:
         {case_label}
         <textarea id="caseText" spellcheck="true" placeholder="{html.escape(placeholder)}"></textarea>
       </label>
+      <p class="ask-deid-note">{deid_note}</p>
       <div class="ask-quota">
         <span>{quota_label}</span>
         <strong><span id="quotaUsed">0</span> / 3</strong>
@@ -3233,6 +3314,16 @@ def render_ask(*, target_lang: str = "en") -> str:
     resetProgress();
   }});
   renderExamples();
+  (function prefillFromUrl() {{
+    try {{
+      const params = new URLSearchParams(window.location.search);
+      const preset = params.get('case') || params.get('q');
+      if (preset) {{
+        caseText.value = preset;
+        caseText.focus();
+      }}
+    }} catch (e) {{ /* ignore malformed query */ }}
+  }})();
   getUserId();
   updateQuota();
   resetProgress();
@@ -3284,7 +3375,14 @@ def render_try(
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · {page_title}</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Pyodide is lazily imported on first Generate-click from cdn.jsdelivr.net.
+     Preconnecting now lets the TLS handshake finish in parallel with HTML
+     parsing so the dynamic import does not pay a serial RTT later. -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#0a2e1a">
@@ -3325,9 +3423,15 @@ def render_try(
     </label>
     <label class="qt-label">
       {'Load an example' if target_lang == 'en' else 'Завантажити приклад'}
+      <input id="exampleSearch" type="search"
+             placeholder="{'Search · disease, biomarker (BRCA, ALK), regimen (FOLFOX), line (2L)' if target_lang == 'en' else 'Пошук · хвороба, біомаркер (BRCA, ALK), режим (FOLFOX), лінія (2L)'}"
+             autocomplete="off"
+             aria-label="{'Filter examples' if target_lang == 'en' else 'Фільтр прикладів'}">
       <select id="exampleSelect">
         <option value="">{'— select —' if target_lang == 'en' else '— оберіть —'}</option>
       </select>
+      <span id="exampleSearchCount" class="qt-count" aria-live="polite"></span>
+      <button id="exampleSearchClear" type="button" class="qt-clear" aria-label="{'Clear example search' if target_lang == 'en' else 'Очистити пошук'}" hidden>×</button>
     </label>
     <div class="qt-spacer"></div>
     <div class="qt-modes">
@@ -3348,6 +3452,7 @@ def render_try(
     <div class="quest-readiness-critical" id="readinessCriticalText">
       {'Pick a disease to start.' if target_lang == 'en' else 'Оберіть хворобу, щоб почати.'}
     </div>
+    <div class="quest-fired-redflags" id="firedRedflagsList"></div>
   </div>
 
   <div class="try-actions quest-cta quest-actions-top" aria-label="{'Plan actions' if target_lang == 'en' else 'Дії з планом'}">
@@ -3641,6 +3746,14 @@ let offlineCacheFailed = 0;
 const QUESTIONNAIRES_MANIFEST = {qm_json};
 const EXAMPLES_MANIFEST = {em_json};
 const PAGE_LANG = '{target_lang}';
+// Flat case_id → bool lookup so loadExamplePlan() can resolve the
+// patient-twin flag without iterating the full manifest. Built from
+// EXAMPLES_MANIFEST at script load.
+const EXAMPLE_PATIENT_MODE_BY_ID = Object.fromEntries(
+  EXAMPLES_MANIFEST
+    .filter(e => e && e.case_id && e.has_patient_mode)
+    .map(e => [e.case_id, true])
+);
 let questionnaires = null;   // lazy-fetched from /questionnaires.json on first need
 let examples = null;         // lazy-fetched from /examples.json on first need
 let _questionnairesPromise = null;
@@ -3701,7 +3814,7 @@ let currentResultMode = 'clinician';
 let planSource = null;
 let planDirty = false;
 let activeExampleCaseId = null;
-let activeExamplePatientView = false;
+let activeExampleHasPatient = false;
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 function setStatus(msg, kind = 'info', topMode = 'auto') {{
@@ -3842,15 +3955,20 @@ function setLockedTitle(el, locked) {{
 }}
 
 // Patient mode is render-only on top of an already-generated treatment
-// PlanResult. It can't toggle for:
+// PlanResult, OR an example with a pre-built patient twin. It can't
+// toggle for:
 //   * diagnostic-mode bundles (no `_render_patient_mode` for DiagnosticPlan)
 //   * pre-generation (planSource === null)
+//   * examples without a patient twin (activeExampleHasPatient === false —
+//     diagnostic-shape examples)
 function refreshModeButtonAvailability() {{
   const locked = isInteractionLocked();
-  const canPatient = (
-    (pyodide && planSource === 'generated' && !planDirty)
-    || (planSource === 'example' && activeExamplePatientView)
+  const canPatientGenerated = pyodide && planSource === 'generated' && !planDirty;
+  const canPatientExample = (
+    planSource === 'example'
+    && activeExampleHasPatient
   );
+  const canPatient = canPatientGenerated || canPatientExample;
   modePatientBtn.disabled = locked || !canPatient;
   if (!canPatient) {{
     modePatientBtn.title = (
@@ -3906,7 +4024,7 @@ async function switchResultMode(newMode) {{
   if (newMode === currentResultMode) return;
   if (modePatientBtn.disabled && newMode === 'patient') return;
   if (planSource === 'example') {{
-    if (!activeExampleCaseId || (newMode === 'patient' && !activeExamplePatientView)) return;
+    if (!activeExampleCaseId || (newMode === 'patient' && !activeExampleHasPatient)) return;
     await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {{
       const frameReady = waitForFrameLoad();
       const suffix = newMode === 'patient' ? '.patient.html' : '.html';
@@ -4045,7 +4163,7 @@ async function loadExamplePlan(caseId, patientViewAvailable = true) {{
   // user edits something (which sets planDirty).
   if (!caseId) return;
   activeExampleCaseId = caseId;
-  activeExamplePatientView = patientViewAvailable;
+  activeExampleHasPatient = patientViewAvailable;
   resultFrame.removeAttribute('srcdoc');
   const frameReady = waitForFrameLoad();
   resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/') + caseId + '.html';
@@ -4056,7 +4174,9 @@ async function loadExamplePlan(caseId, patientViewAvailable = true) {{
   highlightModeButtons();
   refreshModeButtonAvailability();
   updateWorkflowControls();
-  openPlanModal({{ force: true }});
+  // Keep the example plan ready in the background, but do not open its
+  // modal automatically. The example lock banner sits behind that modal,
+  // which made its “Personalise” button impossible to click.
   await frameReady;
 }}
 
@@ -4064,7 +4184,7 @@ function clearPlanState() {{
   planSource = null;
   planDirty = false;
   activeExampleCaseId = null;
-  activeExamplePatientView = false;
+  activeExampleHasPatient = false;
   resultFrame.removeAttribute('src');
   resultFrame.removeAttribute('srcdoc');
   viewPlanBtn.disabled = true;
@@ -4658,6 +4778,7 @@ function updateImpactPanelLocal() {{
   if (!activeQuest) {{
     setProgress(0, 0);
     setReadinessCritical([]);
+    setFiredRedflags([], '{target_lang}');
     return;
   }}
   let total = 0, filled = 0;
@@ -4702,6 +4823,63 @@ function setReadinessCritical(missing) {{
   readinessCriticalText.dataset.kind = 'warn';
 }}
 
+// Locale-aware URL prefix for KB wiki links (matches build_kb_wiki.py
+// slug convention). Built once at page-render time.
+const FIRED_RF_URL_PREFIX = '{("/ukr" if target_lang == "uk" else "")}';
+const FIRED_RF_HEAD_LABEL = '{("Red flags triggered" if target_lang == "en" else "Активовані тривожні ознаки")}';
+const FIRED_RF_MORE_LABEL = '{("more" if target_lang == "en" else "ще")}';
+
+function _rfSlug(rid) {{
+  return String(rid || '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'rf';
+}}
+
+function setFiredRedflags(items, lang) {{
+  const root = document.getElementById('firedRedflagsList');
+  if (!root) return;
+  root.innerHTML = '';
+  if (!items || !items.length) return;
+
+  const head = document.createElement('div');
+  head.className = 'qfr-head';
+  head.textContent = FIRED_RF_HEAD_LABEL;
+  root.appendChild(head);
+
+  const cap = 5;
+  items.slice(0, cap).forEach(rf => {{
+    const rid = rf.id || '';
+    const href = FIRED_RF_URL_PREFIX + '/kb/redflags/' + _rfSlug(rid) + '.html';
+    const defn = (lang === 'en' ? rf.definition : (rf.definition_ua || rf.definition)) || '—';
+    const sev = rf.severity || 'major';
+
+    const card = document.createElement('a');
+    card.className = 'qfr-card qfr-sev-' + sev;
+    card.href = href;
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
+
+    const ridSpan = document.createElement('span');
+    ridSpan.className = 'qfr-rid';
+    ridSpan.textContent = rid;
+    card.appendChild(ridSpan);
+
+    const defnSpan = document.createElement('span');
+    defnSpan.className = 'qfr-defn';
+    defnSpan.textContent = defn;
+    card.appendChild(defnSpan);
+
+    root.appendChild(card);
+  }});
+
+  if (items.length > cap) {{
+    const more = document.createElement('div');
+    more.className = 'qfr-more';
+    more.textContent = '+ ' + (items.length - cap) + ' ' + FIRED_RF_MORE_LABEL;
+    root.appendChild(more);
+  }}
+}}
+
 function updateImpactPanel(result) {{
   if (!result) {{
     updateImpactPanelLocal();
@@ -4709,6 +4887,7 @@ function updateImpactPanel(result) {{
   }}
   setProgress(result.filled_count, result.total_questions);
   setReadinessCritical(result.missing_critical || []);
+  setFiredRedflags(result.fired_redflags_detail || [], '{target_lang}');
 }}
 
 // ── Bundle lazy-load (CSD-6E + CSD-9C) ────────────────────────────────────
@@ -5107,7 +5286,7 @@ html
       planSource = 'generated';
       planDirty = false;
       activeExampleCaseId = null;
-      activeExamplePatientView = false;
+      activeExampleHasPatient = false;
       // Fresh generation always lands on clinician view; user toggles to
       // patient view via the toolbar (PATIENT_MODE_SPEC §3.5).
       currentResultMode = 'clinician';
@@ -5398,6 +5577,39 @@ function exampleDisplayLabel(ex) {{
   return (quality ? `${{base}} · ${{quality}}` : base) + profileMode;
 }}
 
+// Build a search blob from an example manifest entry. Used by the
+// exampleSearch text input — covers disease name/id, biomarkers, regimen
+// name, line of therapy, label/summary in both languages. When the user
+// types a non-empty query, the disease filter is bypassed so the search
+// truly spans all public examples.
+function exampleSearchBlob(ex) {{
+  const parts = [
+    ex.label || '', ex.label_en || '', ex.summary || '', ex.summary_en || '',
+    ex.disease_id || '', ex.disease_icd || '',
+    ex.disease_name_en || '', ex.disease_name_ua || '',
+    ex.regimen_id || '', ex.regimen_name || '',
+    ex.indication_id || '',
+    ex.category || '',
+    ex.quality_tier || '', ex.quality_label || '', ex.quality_label_en || '',
+  ];
+  if (Array.isArray(ex.biomarker_ids)) parts.push(ex.biomarker_ids.join(' '));
+  if (ex.line_of_therapy != null) {{
+    parts.push(String(ex.line_of_therapy) + 'L');
+    parts.push('line ' + ex.line_of_therapy);
+  }}
+  return parts.join(' \\u00b7 ').toLowerCase();
+}}
+
+function exampleSearchMatches(ex, q) {{
+  if (!q) return true;
+  const blob = exampleSearchBlob(ex);
+  const tokens = q.toLowerCase().split(/\\s+/).filter(Boolean);
+  for (const t of tokens) {{
+    if (!blob.includes(t)) return false;
+  }}
+  return true;
+}}
+
 function repopulateExamples(activeQuestIdx) {{
   // Filter from manifest only — no need to await full examples payload
   // just to populate a dropdown (manifest carries label + disease_id).
@@ -5406,6 +5618,9 @@ function repopulateExamples(activeQuestIdx) {{
     : (QUESTIONNAIRES_MANIFEST[activeQuestIdx] || {{}});
   const wantDiseaseId = activeQuestManifest && activeQuestManifest.disease_id;
   const wantCode = activeQuestManifest && activeQuestManifest.disease_icd;
+  const searchInput = document.getElementById('exampleSearch');
+  const searchValue = searchInput ? (searchInput.value || '').trim() : '';
+  const hasSearch = searchValue.length > 0;
   exampleSelect.innerHTML = '';
   const placeholder = document.createElement('option');
   placeholder.value = '';
@@ -5418,11 +5633,13 @@ function repopulateExamples(activeQuestIdx) {{
     .map((ex, i) => ({{ ex, i }}))
     .filter((item) => {{
       const ex = item.ex;
-    if (wantDiseaseId != null) {{
+      // When the user has typed a search term, search across ALL examples.
+      if (hasSearch) return exampleSearchMatches(ex, searchValue);
+      if (wantDiseaseId != null) {{
         return ex.disease_id === wantDiseaseId;
-    }} else if (wantCode != null) {{
+      }} else if (wantCode != null) {{
         return ex.disease_icd === wantCode;
-    }}
+      }}
       return true;
     }})
     .sort((a, b) => {{
@@ -5439,16 +5656,56 @@ function repopulateExamples(activeQuestIdx) {{
     exampleSelect.appendChild(opt);
     n++;
   }});
-  if ((wantDiseaseId != null || wantCode != null) && n === 0) {{
+  if ((wantDiseaseId != null || wantCode != null) && n === 0 && !hasSearch) {{
     const noneOpt = document.createElement('option');
     noneOpt.value = '';
     noneOpt.disabled = true;
     noneOpt.textContent = '{"(no examples for this disease yet)" if target_lang == "en" else "(прикладів для цієї хвороби поки немає)"}';
     exampleSelect.appendChild(noneOpt);
   }}
+  // Update count chip
+  const countEl = document.getElementById('exampleSearchCount');
+  if (countEl) {{
+    if (hasSearch) {{
+      countEl.textContent = '{"Showing " if target_lang == "en" else "Показано "}' + n + '{" of " if target_lang == "en" else " з "}' + EXAMPLES_MANIFEST.length;
+    }} else {{
+      countEl.textContent = '';
+    }}
+  }}
+  const clearBtn = document.getElementById('exampleSearchClear');
+  if (clearBtn) clearBtn.hidden = !hasSearch;
 }}
 
 // ── Event wiring ──────────────────────────────────────────────────────────
+const exampleSearchInput = document.getElementById('exampleSearch');
+const exampleSearchClearBtn = document.getElementById('exampleSearchClear');
+function _currentQuestIdx() {{
+  const i = diseaseSelect.value;
+  return i === '' ? null : parseInt(i, 10);
+}}
+if (exampleSearchInput) {{
+  exampleSearchInput.addEventListener('input', () => {{
+    repopulateExamples(_currentQuestIdx());
+  }});
+  exampleSearchInput.addEventListener('keydown', (ev) => {{
+    if (ev.key !== 'Enter') return;
+    const real = [...exampleSelect.options].filter(o => o.value !== '' && !o.disabled);
+    if (real.length === 1) {{
+      ev.preventDefault();
+      exampleSelect.value = real[0].value;
+      exampleSelect.dispatchEvent(new Event('change', {{ bubbles: true }}));
+    }}
+  }});
+}}
+if (exampleSearchClearBtn) {{
+  exampleSearchClearBtn.addEventListener('click', () => {{
+    if (exampleSearchInput) {{
+      exampleSearchInput.value = '';
+      exampleSearchInput.focus();
+    }}
+    repopulateExamples(_currentQuestIdx());
+  }});
+}}
 if (diseaseSearch) {{
   diseaseSearch.addEventListener('input', () => {{
     renderDiseaseOptions();
@@ -5563,7 +5820,7 @@ exampleSelect.addEventListener('change', async () => {{
       // /cases/<id>.html page.
       if (ex.case_id && ex.has_case_page !== false) {{
         await loadExamplePlan(ex.case_id, ex.patient_view_available !== false);
-        setStatus('{'Example loaded ✓ Plan shown — edit any field to generate your own.' if target_lang == 'en' else 'Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.'}', 'ok');
+        setStatus('{'Example loaded ✓ Edit any field, or open the pre-built plan when you are ready.' if target_lang == 'en' else 'Приклад завантажено ✓ Зміни поле або відкрий готовий план, коли буде потрібно.'}', 'ok');
       }} else {{
         clearPlanState();
         setStatus('{'Starter example loaded ✓ Click «Generate» to build a plan.' if target_lang == 'en' else 'Стартовий приклад завантажено ✓ Натисни «Згенерувати», щоб побудувати план.'}', 'ok');
@@ -6036,7 +6293,10 @@ def _render_capabilities_uk(stats) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Можливості</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 <style>
@@ -6325,7 +6585,7 @@ def _render_capabilities_uk(stats) -> str:
       <div class="key-nums">
         <div class="key-num"><div class="key-num-val">{n_diseases}</div><div class="key-num-lbl">хвороб у KB</div></div>
         <div class="key-num"><div class="key-num-val">{n_indications}</div><div class="key-num-lbl">показань ({n_inds_1l} 1L · {n_inds_2l} 2L+)</div></div>
-        <div class="key-num"><div class="key-num-val">{n_regimens}</div><div class="key-num-lbl">режимів лікування</div></div>
+        <div class="key-num"><div class="key-num-val">{n_regimens}</div><div class="key-num-lbl">схем лікування</div></div>
         <div class="key-num"><div class="key-num-val">{n_drugs}</div><div class="key-num-lbl">препаратів (ATC/RxNorm)</div></div>
         <div class="key-num"><div class="key-num-val">{n_redflags}</div><div class="key-num-lbl">red flags</div></div>
         <div class="key-num"><div class="key-num-val">{n_sources}</div><div class="key-num-lbl">цитованих джерел</div></div>
@@ -6445,7 +6705,7 @@ def _render_capabilities_uk(stats) -> str:
           <code>Regimen.phases</code> — впорядкований список named blocks (induction → consolidation → maintenance),
           кожен зі своїм cycle schedule і тригером переходу. Реальні протоколи (R-CHOP × 6 → maintenance,
           AML 7+3 → HiDAC consolidation, axi-cel bridging → infusion). <code>bridging_options</code> — список
-          регіменів-мостів між фазами (для CAR-T). Старі однофазні YAMLs auto-wrap у one-phase form через
+          схем лікування-мостів між фазами (для CAR-T). Старі однофазні YAMLs auto-wrap у one-phase form через
           <code>auto_wrap_legacy_components()</code>.
         </p>
       </div>
@@ -6670,7 +6930,7 @@ def _render_capabilities_uk(stats) -> str:
           <div class="gap-card gap-hard">
             <div class="gap-tag">§8.3</div>
             <h3>LLM не приймає клінічні рішення</h3>
-            <p>LLM лише: boilerplate, doc drafts, extraction (з human verification), translation з clinical review. <strong>Не</strong>: вибір режиму, дози, інтерпретація biomarker.</p>
+            <p>LLM лише: boilerplate, doc drafts, extraction (з human verification), translation з clinical review. <strong>Не</strong>: вибір схеми лікування, дози, інтерпретація biomarker.</p>
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§15.2 C7</div>
@@ -6723,7 +6983,7 @@ def _render_capabilities_uk(stats) -> str:
             <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope MVP — окремий track</td></tr>
             <tr><td>Радіотерапія</td><td>частково</td><td>RT у мультимодальних Indications; як окрема сутність — не моделюється</td></tr>
             <tr><td>Хірургія</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
-            <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Hard-coded на режимах; не auto-refresh</td></tr>
+            <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Hard-coded на схемах лікування; не auto-refresh</td></tr>
             <tr><td>Reviewer dual sign-off</td><td><strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong></td><td>Основна bottleneck-метрика — capacity план: {stats.reviewer_signoffs_total} → ≥85% verified</td></tr>
             <tr><td>Live gap dashboard</td><td><a href="/ukr/clinical-gaps.html">→ link</a></td><td>Build-generated audit (sign-off, solid 2L+, surgery, RT, supportive)</td></tr>
           </tbody>
@@ -6903,7 +7163,10 @@ def _render_capabilities_en(stats) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Capabilities</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 <style>
@@ -7754,7 +8017,7 @@ _DISEASES_PAGE_LABELS = {
         "h1": "Хвороби в Onco Wiki",
         "lead": (
             "Покриття OpenOnco за {n} онкологічними діагнозами: біомаркери, "
-            "препарати, показання, режими, тривожні ознаки, алгоритми та "
+            "препарати, показання, схеми лікування, тривожні ознаки, алгоритми та "
             "практична наповненість бази знань."
         ),
         "sum_diseases": "Усього діагнозів",
@@ -7766,7 +8029,7 @@ _DISEASES_PAGE_LABELS = {
         "fam_solid": "Солідні пухлини",
         "th_disease": "Хвороба", "th_icd": "ICD-10",
         "th_bio": "Біомарк.", "th_drug": "Преп.",
-        "th_ind": "Показ.", "th_reg": "Режими", "th_rf": "Трив. озн.",
+        "th_ind": "Показ.", "th_reg": "Схеми лік.", "th_rf": "Трив. озн.",
         "th_1l": "1L", "th_2l": "2L+", "th_quest": "Опитувальник",
         "th_fill": "Наповн.", "th_ver": "Вериф.",
         "yes": "✓", "no": "—",
@@ -7775,10 +8038,10 @@ _DISEASES_PAGE_LABELS = {
         "search_empty": "Жодна хвороба не підходить під запит.",
         "metrics": [
             "<b>Біомаркери / Препарати</b> — кількість унікальних сутностей, які використовуються у правилах цієї хвороби.",
-            "<b>Показання / Режими / Тривожні ознаки</b> — кількість відповідних записів у базі знань.",
+            "<b>Показання / Схеми лікування / Тривожні ознаки</b> — кількість відповідних записів у базі знань.",
             "<b>1L / 2L+</b> — наявність алгоритму для першої або другої й наступних ліній лікування.",
             "<b>Опитувальник</b> — ✓ якщо для хвороби є ручний клінічний опитувальник; — якщо його ще немає.",
-            "<b>Наповненість</b> — зведена оцінка за ключовими типами сутностей: показання, режими, біомаркери, препарати, тривожні ознаки, алгоритм, опитувальник і workup.",
+            "<b>Наповненість</b> — зведена оцінка за ключовими типами сутностей: показання, схеми лікування, біомаркери, препарати, тривожні ознаки, алгоритм, опитувальник і workup.",
             "<b>Верифікація</b> — частка показань із достатньою кількістю клінічних sign-off за правилами проєкту.",
         ],
         "verified_note": "",
@@ -8041,7 +8304,10 @@ def render_diseases(stats, *, target_lang: str = "en") -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{_html.escape(lbl['title'])}</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 <style>
@@ -8474,6 +8740,14 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
              "We do not duplicate external databases; hosting requires explicit H1-H5 justification."),
             ("Free public resource → non-commercial", "CHARTER.md §2",
              "Many licences (ESMO CC-BY-NC-ND, OncoKB academic, ATC) depend on this. A paid tier would trigger a license audit."),
+            ("IP-based language auto-select", "client-side, opt-out",
+             "To show the interface in your language, your browser looks up your country from your IP via a third-party service "
+             "(<a href=\"https://www.geojs.io/\" target=\"_blank\" rel=\"noopener\">GeoJS</a>, with "
+             "<a href=\"https://ipapi.co/\" target=\"_blank\" rel=\"noopener\">ipapi.co</a> as fallback). Only your IP is sent, with no "
+             "referrer; we run no server and keep no logs of our own. The detected country and your manual EN/UA choice are stored only "
+             "in your browser (localStorage) and the manual switch always overrides the IP guess. Ukrainian is shown only for Ukrainian "
+             "IP addresses; English everywhere else. By using the site you consent to this country lookup — to avoid it, pick a language "
+             "manually and your choice is remembered."),
         ]
         footer_disclaimer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
     else:
@@ -8527,7 +8801,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
             ("Two-reviewer merge", "CHARTER.md §6.1",
              "Clinical content потребує 2 з 3 Clinical Co-Lead approvals; інакше Indication залишається STUB."),
             ("No LLM clinical judgment", "CHARTER.md §8.3",
-             "LLM не вибирає режими, не генерує дози, не інтерпретує biomarkers для therapy selection."),
+             "LLM не вибирає схеми лікування, не генерує дози, не інтерпретує biomarkers для therapy selection."),
             ("No treatment without histology", "CHARTER.md §15.2 C7",
              "Engine відмовляється generate'ити treatment Plan без <code>disease.id</code> або <code>icd_o_3_morphology</code>; тільки DiagnosticPlan."),
             ("Anti automation-bias", "CHARTER.md §15.2 C6",
@@ -8536,6 +8810,14 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
              "Не дублюємо external бази; hosting потребує explicit H1-H5 justification."),
             ("Free public resource → non-commercial", "CHARTER.md §2",
              "Багато ліцензій (ESMO CC-BY-NC-ND, OncoKB academic, ATC) залежать від цього. Paid tier тригернув би license audit."),
+            ("Автовибір мови за IP", "на клієнті, opt-out",
+             "Щоб показати інтерфейс вашою мовою, браузер визначає країну за вашою IP-адресою через сторонній сервіс "
+             "(<a href=\"https://www.geojs.io/\" target=\"_blank\" rel=\"noopener\">GeoJS</a>, резерв — "
+             "<a href=\"https://ipapi.co/\" target=\"_blank\" rel=\"noopener\">ipapi.co</a>). Передається лише ваш IP, без referrer; "
+             "ми не маємо власного сервера й не ведемо логів. Визначена країна та ваш ручний вибір EN/UA зберігаються лише у вашому "
+             "браузері (localStorage), а ручний перемикач завжди перекриває визначення за IP. Українська показується тільки для "
+             "українських IP-адрес; в усіх інших випадках — англійська. Користуючись сайтом, ви погоджуєтесь на це визначення країни — "
+             "щоб його уникнути, оберіть мову вручну, і ваш вибір запам'ятається."),
         ]
         footer_disclaimer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
 
@@ -8554,7 +8836,10 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · {page_title}</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 </head>
@@ -8719,7 +9004,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
             "diseases": "хвороб",
             "redflags": "red flags",
             "indications": "індикацій",
-            "regimens": "режимів",
+            "regimens": "схем лікування",
             "algorithms": "алгоритмів",
         }
 
@@ -8749,7 +9034,10 @@ def render_about(stats, *, target_lang: str = "en") -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · {page_title}</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 </head>
@@ -8799,30 +9087,61 @@ def render_about(stats, *, target_lang: str = "en") -> str:
 
 def _build_one_case_worker(args: tuple) -> dict:
     """Top-level wrapper for ProcessPoolExecutor (must be picklable).
-    Returns the dict shape that build_site() collects into case_paths_uk/en."""
-    case, output_dir, target_lang = args
-    p = build_one_case(case, output_dir, target_lang=target_lang)
+
+    `target` is either a language code ('en' | 'uk') for the clinician
+    twin or the literal 'patient' for the UA-text patient twin.
+    Returns the dict shape that build_site() collects into
+    case_paths_uk / case_paths_en / case_paths_patient. For diagnostic
+    profiles in patient mode the worker returns path=None — patient
+    mode is treatment-only per PATIENT_MODE_SPEC §3.
+    """
+    case, output_dir, target = args
+    if target == "patient":
+        p = build_one_case_patient(case, output_dir)
+        return {
+            "case_id": case.case_id,
+            "lang": "patient",
+            "path": str(p.relative_to(output_dir)) if p is not None else None,
+        }
+    p = build_one_case(case, output_dir, target_lang=target)
     return {
         "case_id": case.case_id,
-        "lang": target_lang,
+        "lang": target,
         "path": str(p.relative_to(output_dir)),
     }
 
 
-def _build_all_cases_parallel(output_dir: Path) -> tuple[list[dict], list[dict]]:
-    """Render every CASE × {uk, en} in a process pool.
+def _build_all_cases_parallel(
+    output_dir: Path,
+) -> tuple[list[dict], list[dict], list[dict]]:
+    """Render every CASE × {uk, en, patient} in a process pool.
 
     Each worker re-imports knowledge_base and reloads the YAML KB once on
     startup, then handles a chunk of cases — so a 4-worker pool amortises
     the import cost across ~50 cases per worker. On Windows (spawn) this
     cuts the 99×2-case build from ~12 min serial to ~2 min on 4 cores.
+
+    Patient twins are UA-only (one file per case) per PATIENT_MODE_SPEC §3
+    ("plain-Ukrainian simplified report"). Diagnostic profiles are skipped
+    in the patient pass — the worker emits path=None and the result is
+    filtered out of the returned list.
     """
     import os
     from concurrent.futures import ProcessPoolExecutor
 
     public_cases = _public_case_entries()
-    tasks = [(c, output_dir, "uk") for c in public_cases] + \
-            [(c, output_dir, "en") for c in public_cases]
+    # Patient twins are restricted to the curated example set
+    # (_public_example_entries) — auto-stub and variant-matrix cases are
+    # low-fill engine/render QA, and a patient-facing render of a low-fill
+    # plan would read as misleading clinical content. Clinician twins
+    # still build for all 677 (auto-* shows in disease/case deep links
+    # for QA visibility).
+    public_examples = _public_example_entries()
+    tasks = (
+        [(c, output_dir, "uk") for c in public_cases]
+        + [(c, output_dir, "en") for c in public_cases]
+        + [(c, output_dir, "patient") for c in public_examples]
+    )
     env_workers = os.environ.get("OPENONCO_BUILD_WORKERS")
     if env_workers:
         try:
@@ -8846,7 +9165,8 @@ def _build_all_cases_parallel(output_dir: Path) -> tuple[list[dict], list[dict]]
 
     uk = [r for r in results if r["lang"] == "uk"]
     en = [r for r in results if r["lang"] == "en"]
-    return uk, en
+    patient = [r for r in results if r["lang"] == "patient" and r["path"]]
+    return uk, en, patient
 
 
 def build_one_case(case: CaseEntry, output_dir: Path,
@@ -8886,6 +9206,47 @@ def build_one_case(case: CaseEntry, output_dir: Path,
     if patient_html is not None:
         patient_path = out_path.with_name(f"{case.case_id}.patient.html")
         patient_path.write_text(_wrap_case_html(patient_html, case, target_lang=target_lang), encoding="utf-8")
+    return out_path
+
+
+def build_one_case_patient(
+    case: CaseEntry, output_dir: Path,
+) -> Path | None:
+    """Render the patient-mode twin for one treatment-shape case.
+
+    Patient mode is treatment-only per PATIENT_MODE_SPEC §3; diagnostic
+    profiles return None (caller skips them). Output is UA-text — a
+    single file at ``cases/<id>.patient.html`` serves both EN and UA
+    visitors because the patient bundle is defined as "plain Ukrainian
+    simplified report" in PATIENT_MODE_SPEC §3 (not a translation of
+    the clinician brief into the visitor's UI language). The sibling
+    chip rendered into the HTML body points to the UA clinician twin
+    so a deep-linked patient page round-trips to the UA doctor view.
+    """
+    patient_path = EXAMPLES / case.file
+    patient = json.loads(patient_path.read_text(encoding="utf-8"))
+    if is_diagnostic_profile(patient):
+        return None
+    result = generate_plan(
+        patient,
+        kb_root=KB_ROOT,
+        experimental_search_fn=search_trials,
+        experimental_cache_root=CTGOV_CACHE,
+    )
+    mdt = orchestrate_mdt(patient, result, kb_root=KB_ROOT)
+    html = render_plan_html(
+        result,
+        mdt=mdt,
+        target_lang="uk",
+        mode="patient",
+        sibling_link=f"/ukr/cases/{case.case_id}.html",
+    )
+    # UA wrapper around the UA body so the surrounding chrome (top-bar,
+    # case-bar) matches the language of the patient report itself.
+    wrapped = _wrap_case_html(html, case, target_lang="uk")
+    out_path = output_dir / "cases" / f"{case.case_id}.patient.html"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(wrapped, encoding="utf-8")
     return out_path
 
 
@@ -9005,17 +9366,25 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / "ukr" / "ask.html").write_text(
         render_ask(target_lang="uk"), encoding="utf-8")
 
-    case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
+    case_paths_uk, case_paths_en, case_paths_patient = (
+        _build_all_cases_parallel(output_dir)
+    )
     disease_coverage_payload = bundle_disease_coverage(output_dir)
     kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
+    handbook_payload = build_handbook(KB_ROOT, output_dir)
+    news_payload = build_news(output_dir, top_bar=_render_top_bar)
     clinical_gap_payload = write_clinical_gap_outputs(output_dir)
     discovery_payload = finalize_site_discovery(output_dir)
+    whitespace_normalized_files = _normalize_generated_text_whitespace(output_dir)
 
     return {
         "output_dir": str(output_dir),
-        "cases_built": len(case_paths_uk) + len(case_paths_en),
+        "cases_built": (
+            len(case_paths_uk) + len(case_paths_en) + len(case_paths_patient)
+        ),
         "cases_uk": case_paths_uk,
         "cases_en": case_paths_en,
+        "cases_patient": case_paths_patient,
         "engine_bundle": engine_bundle,
         "service_worker": sw_payload,
         "web_manifest": manifest_payload,
@@ -9023,10 +9392,13 @@ def build_site(output_dir: Path) -> dict:
         "questionnaires_payload": questionnaires_payload,
         "disease_coverage_payload": disease_coverage_payload,
         "kb_wiki_payload": kb_wiki_payload,
+        "handbook_payload": handbook_payload,
+        "news_payload": news_payload,
         "clinical_gap_payload": clinical_gap_payload,
         "discovery_payload": discovery_payload,
         "landing_assets": landing_assets,
         "excluded_case_pages_removed": excluded_case_pages_removed,
+        "whitespace_normalized_files": whitespace_normalized_files,
     }
 
 

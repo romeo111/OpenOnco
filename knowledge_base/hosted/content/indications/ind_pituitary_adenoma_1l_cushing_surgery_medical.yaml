@@ -1,0 +1,85 @@
+id: IND-PITUITARY-ADENOMA-1L-CUSHING-SURGERY-MEDICAL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PITUITARY-ADENOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Biochemically confirmed Cushing disease (ACTH-dependent, pituitary-source hypercortisolism): elevated 24-hour urinary free cortisol / late-night salivary cortisol / abnormal low-dose dexamethasone suppression, with non-suppressed or inappropriately normal ACTH, and pituitary MRI-visible or high-probability corticotroph adenoma (inferior petrosal sinus sampling for MRI-negative cases per endocrinology workup)"
+    - "Transsphenoidal surgery is first-line for surgically accessible corticotroph adenomas; this Indication's recommended_regimen models the medical cortisol-control track used for persistent/recurrent disease after surgery or for surgery-ineligible patients — a dedicated Procedure/Surgery entity for pituitary surgery has not yet been authored in this KB (open gap — see DIS-PITUITARY-ADENOMA proposal notes)"
+  biomarker_requirements_required:
+    - biomarker_id: "adenoma_hormone_type"
+      required: true
+      value_constraint: "cushing_disease_corticotroph (ACTH hormone hypersecretion)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PASIREOTIDE-CUSHING
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+
+expected_outcomes:
+  overall_response_rate: "Surgery achieves biochemical remission in the majority of microadenomas with an experienced pituitary surgeon; pasireotide normalizes urinary free cortisol in a minority to roughly a third of patients with persistent/recurrent post-surgical disease, with hyperglycemia as the main on-target trade-off"
+  complete_response:
+  progression_free_survival:
+  overall_survival_5y:
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-CORTISOL-MORNING
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+desired_tests: []
+
+rationale: >
+  Per the Disease narrative, Cushing disease is managed with transsphenoidal
+  surgery first-line, followed by pasireotide and/or steroidogenesis
+  inhibitors (ketoconazole, metyrapone, osilodrostat) for cortisol control
+  in persistent/recurrent disease. Pasireotide (new DRUG-PASIREOTIDE) is
+  modeled as the recommended_regimen because it is pituitary-directed
+  (targets the corticotroph adenoma via SSTR5) rather than purely
+  steroidogenesis-blocking; ketoconazole/metyrapone/osilodrostat are named
+  in the narrative as additional cortisol-lowering options but are not
+  separately authored as Drug/Regimen entities in this pass (open gap — see
+  DIS-PITUITARY-ADENOMA proposal notes). Terminal, parallel cohort — not a
+  sequential line relative to the other three hormone-hypersecretion
+  cohorts.
+
+sources:
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+
+do_not_do:
+  - "Не розпочинати пасиреотид без вихідного та подальшого моніторингу глюкози — гіперглікемія є очікуваним класовим ефектом."
+  - "Не встановлювати діагноз хвороби Кушинга без підтвердження АКТГ-залежності та джерела гіперкортизолізму (гіпофізарного, а не ектопічного чи наднирникового)."
+
+do_not_do_en:
+  - "Do not initiate pasireotide without baseline and ongoing glucose monitoring — hyperglycemia is an expected class effect."
+  - "Do not diagnose Cushing disease without confirming ACTH-dependence and a pituitary (not ectopic or adrenal) source of hypercortisolism."
+
+time_critical: false
+last_reviewed: "2026-07-11"
+review_status: stub
+drafted_by: claude_v0_2_a_anchor
+reviewer_signoffs: []
+notes: >
+  STUB pending clinical co-lead signoff (CHARTER §6.1 — dev-mode-exempted,
+  safe to merge as draft content, not published/verified clinical advice).
+  One of four parallel, cohort-specific 1L Indications for
+  DIS-PITUITARY-ADENOMA, routed by ALGO-PITUITARY-ADENOMA-1L on the
+  adenoma_hormone_type finding.
+notes_ua: >
+  ЗАГЛУШКА (STUB) до підпису клінічного співкерівника. Одна з чотирьох
+  паралельних когорт-специфічних показань першої лінії для аденоми гіпофіза
+  (хвороба Кушинга).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_2_a_anchor
+draft_revision: 1

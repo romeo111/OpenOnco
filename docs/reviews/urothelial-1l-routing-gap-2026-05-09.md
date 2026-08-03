@@ -1,7 +1,7 @@
 # Urothelial 1L Routing Gap — CI Failure Diagnosis
 
-**Date:** 2026-05-09  
-**Test:** `tests/test_curated_chunk_e2e.py::test_curated_case_e2e[patient_urothelial_muc_ev_pembro.json]`  
+**Date:** 2026-05-09
+**Test:** `tests/test_curated_chunk_e2e.py::test_curated_case_e2e[patient_urothelial_muc_ev_pembro.json]`
 **Status:** Pre-existing CI failure — diagnosis only. Clinical re-authoring required.
 
 ---

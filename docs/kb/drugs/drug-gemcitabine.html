@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gemcitabine - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gemcitabine - OpenOnco">
 <meta name="twitter:description" content="Gemcitabine: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Gemcitabine - OpenOnco","description":"Gemcitabine: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-gemcitabine.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-gemcitabine.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Gemcitabine - OpenOnco","description":"Gemcitabine: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/drugs/drug-gemcitabine.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/drugs/drug-gemcitabine.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -91,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/">Home</a>
-    <a href="/capabilities.html">Capabilities</a>
+    <a href="/capabilities.html">Capabilities</a><a href="/handbook.html">Handbook</a><a href="/news.html">News</a>
     <a href="/about.html">About</a>
   </nav>
   <div class="top-right">
@@ -115,7 +189,7 @@
 <tr><th>Type</th><td>Drug</td></tr>
 <tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">2&#x27;,2&#x27;-difluorodeoxycytidine</span><span class="kb-alias">Gemzar</span><span class="kb-alias">Infugem</span><span class="kb-alias">dFdC</span><span class="kb-alias">Гемцитабін</span></div></td></tr>
 <tr><th>Status</th><td>reviewed 2026-04-26 | pending_clinical_signoff</td></tr>
-<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-BREAST"><code>DIS-BREAST</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-CHOLANGIOCARCINOMA"><code>DIS-CHOLANGIOCARCINOMA</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-NK-T-NASAL"><code>DIS-NK-T-NASAL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-OVARIAN"><code>DIS-OVARIAN</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-PDAC"><code>DIS-PDAC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-SOFT-TISSUE-SARCOMA"><code>DIS-SOFT-TISSUE-SARCOMA</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-UROTHELIAL"><code>DIS-UROTHELIAL</code></a></span></td></tr>
+<tr><th>Diseases</th><td><span class="kb-chip"><a href="/diseases.html#DIS-BREAST"><code>DIS-BREAST</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-CHOLANGIOCARCINOMA"><code>DIS-CHOLANGIOCARCINOMA</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-NK-T-NASAL"><code>DIS-NK-T-NASAL</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-NPC"><code>DIS-NPC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-OVARIAN"><code>DIS-OVARIAN</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-PDAC"><code>DIS-PDAC</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-SOFT-TISSUE-SARCOMA"><code>DIS-SOFT-TISSUE-SARCOMA</code></a></span> <span class="kb-chip"><a href="/diseases.html#DIS-UROTHELIAL"><code>DIS-UROTHELIAL</code></a></span></td></tr>
 <tr><th>Sources</th><td><span class="kb-chip" title="ESMO Pancreatic Cancer"><a href="https://www.esmo.org/guidelines/guidelines-by-topic/esmo-clinical-practice-guidelines-gastrointestinal-cancers/cancer-of-the-pancreas-esmo-clinical-practice-guidelines" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-PANCREATIC-2024</code></a></span> <span class="kb-chip" title="NCCN Pancreatic Adenocarcinoma"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1455" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-PANCREATIC-2025</code></a></span></td></tr></table>
   <h2>Drug Facts</h2><table class="kb-facts"><tr><th>Class</th><td>Antimetabolite (deoxycytidine analog)</td></tr>
 <tr><th>Mechanism</th><td>Pyrimidine nucleoside analog of deoxycytidine. Phosphorylated by deoxycytidine kinase (rate-limiting) to active metabolites gemcitabine diphosphate (dFdCDP) and triphosphate (dFdCTP). dFdCDP inhibits ribonucleotide reductase, depleting deoxynucleotide pools required for DNA synthesis (self-potentiation effect — increases cellular dFdCTP). dFdCTP is incorporated into DNA, after which one additional natural nucleotide is added before DNA polymerase stalls — &quot;masked chain termination&quot; — making the lesion resistant to exonucleolytic repair. Cell cycle phase-specific (S phase) with G1/S blockade. PDAC backbone (gem-nab-pac MPACT, gem mono in frail), biliary tract cancers, NSCLC, bladder, NK/T-nasal lymphoma (SMILE), Hodgkin / DLBCL salvage (GDP).</td></tr>
@@ -125,7 +199,7 @@
 <tr><th>Ukraine last verified</th><td>2026-04-27</td></tr></table><h2>Warnings</h2><ul><li>Hemolytic-uremic syndrome / thrombotic microangiopathy (rare but catastrophic; may occur after weeks-to-months of therapy; permanent discontinuation if confirmed)</li><li>Pulmonary toxicity (interstitial pneumonitis, pulmonary edema, ARDS — can be fatal)</li><li>Capillary leak syndrome (rare)</li></ul>
   <h2>Notes</h2><p>Day-15 dose often held for ANC &lt;1.5 or platelets &lt;100. HUS / TMA rare but catastrophic — monitor renal function + hemolysis labs (LDH, haptoglobin, schistocytes) periodically; discontinue permanently if confirmed. Pulmonary toxicity (cough, dyspnea, new hypoxia) requires immediate workup including CT and discontinuation. Already used in NK/T SMILE — reuse this entity rather than duplicate. Radiation recall: severe mucocutaneous reactions in prior RT field — increase awareness when sequencing or combining with RT (esp. esophageal, lung, pelvic). For PDAC: gem-nab-pac modestly outperforms gem mono (MPACT mOS 8.5 vs 6.7); FOLFIRINOX preferred in fit ECOG 0; gem mono for frail.</p>
   <h2>Used By</h2>
-<h3>Regimens</h3><ul><li><code>REG-CARBO-GEM-BEV-OVARIAN</code> - Carboplatin + Gemcitabine + Bevacizumab (platinum-sensitive recurrent ovarian, OCEANS reg...</li><li><code>REG-CISPLATIN-GEMCITABINE-UROTHELIAL</code> - Cisplatin + gemcitabine (urothelial neoadj + metastatic)</li><li><code>REG-DURVA-GEM-CIS-CHOLANGIO</code> - Durvalumab + gemcitabine + cisplatin (TOPAZ-1) — 1L advanced biliary tract cancer</li><li><code>REG-GEM-CARBO-UROTHELIAL</code> - Gemcitabine + carboplatin (urothelial carcinoma, cisplatin-ineligible)</li><li><code>REG-GEM-NAB-PAC</code> - Gemcitabine + nab-paclitaxel (MPACT)</li><li><code>REG-GEMCITABINE-CISPLATIN-CHOLANGIO</code> - Gemcitabine + cisplatin (advanced biliary tract cancer, 1L — ABC-02)</li><li><code>REG-GEMCITABINE-DOCETAXEL-STS</code> - Gemcitabine + docetaxel (soft tissue sarcoma)</li><li><code>REG-P-GEMOX-NK-T</code> - P-GEMOX (pegaspargase + gemcitabine + oxaliplatin) for NK/T-cell nasal lymphoma</li><li><code>REG-PEMBRO-CHEMO-TNBC-MET</code> - Pembrolizumab + chemotherapy (TNBC, metastatic PD-L1+)</li><li><code>REG-PEMBRO-GEM-CIS-CHOLANGIO</code> - Pembrolizumab + gemcitabine + cisplatin (KEYNOTE-966) — 1L advanced biliary tract cancer</li></ul>
+<h3>Regimens</h3><ul><li><code>REG-CARBO-GEM-BEV-OVARIAN</code> - Carboplatin + Gemcitabine + Bevacizumab (platinum-sensitive recurrent ovarian, OCEANS reg...</li><li><code>REG-CISPLATIN-GEMCITABINE-UROTHELIAL</code> - Cisplatin + gemcitabine (urothelial neoadj + metastatic)</li><li><code>REG-DURVA-GEM-CIS-CHOLANGIO</code> - Durvalumab + gemcitabine + cisplatin (TOPAZ-1) — 1L advanced biliary tract cancer</li><li><code>REG-GEM-CARBO-UROTHELIAL</code> - Gemcitabine + carboplatin (urothelial carcinoma, cisplatin-ineligible)</li><li><code>REG-GEM-NAB-PAC</code> - Gemcitabine + nab-paclitaxel (MPACT)</li><li><code>REG-GEMCITABINE-CISPLATIN-CHOLANGIO</code> - Gemcitabine + cisplatin (advanced biliary tract cancer, 1L — ABC-02)</li><li><code>REG-GEMCITABINE-DOCETAXEL-STS</code> - Gemcitabine + docetaxel (soft tissue sarcoma)</li><li><code>REG-NPC-GC-CAMRELIZUMAB</code> - Camrelizumab + gemcitabine + cisplatin (CAPTAIN-1st) — 1L recurrent/metastatic nasopharyn...</li><li><code>REG-NPC-GC-INDUCTION-CCRT</code> - Induction gemcitabine-cisplatin (GC) + concurrent cisplatin chemoradiation (IMRT) — locor...</li><li><code>REG-NPC-GC-TORIPALIMAB</code> - Toripalimab + gemcitabine + cisplatin (JUPITER-02) — 1L recurrent/metastatic nasopharynge...</li><li><code>REG-P-GEMOX-NK-T</code> - P-GEMOX (pegaspargase + gemcitabine + oxaliplatin) for NK/T-cell nasal lymphoma</li><li><code>REG-PEMBRO-CHEMO-TNBC-MET</code> - Pembrolizumab + chemotherapy (TNBC, metastatic PD-L1+)</li><li><code>REG-PEMBRO-GEM-CIS-CHOLANGIO</code> - Pembrolizumab + gemcitabine + cisplatin (KEYNOTE-966) — 1L advanced biliary tract cancer</li></ul>
 </main>
 </body>
 </html>

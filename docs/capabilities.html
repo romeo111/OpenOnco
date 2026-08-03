@@ -2,6 +2,77 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Capabilities</title>
 <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OpenOnco · Capabilities">
 <meta name="twitter:description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Capabilities","description":"OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.","url":"https://openonco.info/capabilities.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/capabilities.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Capabilities","description":"OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.","url":"https://openonco.info/capabilities.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/capabilities.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 <style>
@@ -216,7 +290,7 @@
   </div>
   <nav class="top-nav">
     <a href="/">Home</a>
-    <a href="/capabilities.html" class="active">Capabilities</a>
+    <a href="/capabilities.html" class="active">Capabilities</a><a href="/handbook.html">Handbook</a><a href="/news.html">News</a>
     <a href="/about.html">About</a>
   </nav>
   <div class="top-right">
@@ -244,10 +318,10 @@
 
     <div class="callout callout-hard">
       <strong>STUB status across all clinical content.</strong>
-      Dual sign-off: <strong>15/808</strong>
+      Dual sign-off: <strong>15/1063</strong>
       (CHARTER §6.1 requires two Clinical Co-Lead approvals).
       This is a proposed plan: structured data + algorithm + sources are in place, but without dual sign-off.
-      Decision-support tool, not a medical device. State as of <code>2026-08-03 08:13 UTC</code>.
+      Decision-support tool, not a medical device. State as of <code>2026-08-03 09:05 UTC</code>.
     </div>
 
     <nav class="cap-tabs" role="tablist" aria-label="Sections">
@@ -264,7 +338,7 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — pipeline: JSON profile → engine → Plan with two tracks">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">OpenOnco · engine in two words</span>
-          <span class="pipeline-version">v0.1.4 · 2026-08-03 08:13 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-08-03 09:05 UTC</span>
         </div>
         <h2 class="pipeline-title">
           One JSON profile → <em>two treatment plans</em>, every claim cited.
@@ -299,7 +373,7 @@
             <ol class="pipeline-stages">
               <li>Resolve algorithm</li>
               <li>Flatten findings</li>
-              <li>Eval 596 RedFlags</li>
+              <li>Eval 671 RedFlags</li>
               <li>Walk decision tree</li>
               <li>Materialize tracks</li>
               <li>Resolve regimens</li>
@@ -334,14 +408,14 @@
       </div>
 
       <div class="key-nums">
-        <div class="key-num"><div class="key-num-val">92</div><div class="key-num-lbl">diseases in KB</div></div>
-        <div class="key-num"><div class="key-num-val">664</div><div class="key-num-lbl">indications (230 1L · 172 2L+)</div></div>
-        <div class="key-num"><div class="key-num-val">384</div><div class="key-num-lbl">treatment regimens</div></div>
-        <div class="key-num"><div class="key-num-val">298</div><div class="key-num-lbl">drugs (ATC/RxNorm)</div></div>
-        <div class="key-num"><div class="key-num-val">596</div><div class="key-num-lbl">red flags</div></div>
-        <div class="key-num"><div class="key-num-val">515</div><div class="key-num-lbl">cited sources</div></div>
+        <div class="key-num"><div class="key-num-val">103</div><div class="key-num-lbl">diseases in KB</div></div>
+        <div class="key-num"><div class="key-num-val">831</div><div class="key-num-lbl">indications (262 1L · 175 2L+)</div></div>
+        <div class="key-num"><div class="key-num-val">404</div><div class="key-num-lbl">treatment regimens</div></div>
+        <div class="key-num"><div class="key-num-val">321</div><div class="key-num-lbl">drugs (ATC/RxNorm)</div></div>
+        <div class="key-num"><div class="key-num-val">671</div><div class="key-num-lbl">red flags</div></div>
+        <div class="key-num"><div class="key-num-val">542</div><div class="key-num-lbl">cited sources</div></div>
         <div class="key-num"><div class="key-num-val">16</div><div class="key-num-lbl">clinician skills (MDT)</div></div>
-        <div class="key-num is-warn"><div class="key-num-val">15/808</div><div class="key-num-lbl">with dual sign-off</div></div>
+        <div class="key-num is-warn"><div class="key-num-val">15/1063</div><div class="key-num-lbl">with dual sign-off</div></div>
       </div>
 
       <div class="pillars">
@@ -367,14 +441,14 @@
         <h2>What is in the knowledge base</h2>
         <p class="info-text">This is an inventory of published records, not a measure of clinical completeness. Disease-level coverage and verification status are shown separately in the matrix below.</p>
         <div class="num-grid num-grid--rich">
-          <div class="num-card"><div class="num-big">92</div><div class="num-lbl">Diseases in KB</div><p class="num-text">Diseases with dedicated structured records.</p></div>
+          <div class="num-card"><div class="num-big">103</div><div class="num-lbl">Diseases in KB</div><p class="num-text">Diseases with dedicated structured records.</p></div>
           <div class="num-card"><div class="num-big">16</div><div class="num-lbl">Clinician skills</div><p class="num-text">MDT roles represented in routing.</p></div>
-          <div class="num-card"><div class="num-big">384</div><div class="num-lbl">Treatment regimens</div><p class="num-text">Structured regimens, not automatic prescriptions.</p></div>
-          <div class="num-card"><div class="num-big">298</div><div class="num-lbl">Drugs</div><p class="num-text">Drug records with machine-readable context.</p></div>
+          <div class="num-card"><div class="num-big">404</div><div class="num-lbl">Treatment regimens</div><p class="num-text">Structured regimens, not automatic prescriptions.</p></div>
+          <div class="num-card"><div class="num-big">321</div><div class="num-lbl">Drugs</div><p class="num-text">Drug records with machine-readable context.</p></div>
           <div class="num-card"><div class="num-big">131</div><div class="num-lbl">Tests</div><p class="num-text">Diagnostic and molecular tests represented in the KB.</p></div>
           <div class="num-card"><div class="num-big">24</div><div class="num-lbl">Workups</div><p class="num-text">Structured work-up sets.</p></div>
-          <div class="num-card"><div class="num-big">596</div><div class="num-lbl">Red flags</div><p class="num-text">Signals that require a clinician's second look.</p></div>
-          <div class="num-card"><div class="num-big">515</div><div class="num-lbl">Sources</div><p class="num-text">Cited source records linked to claims.</p></div>
+          <div class="num-card"><div class="num-big">671</div><div class="num-lbl">Red flags</div><p class="num-text">Signals that require a clinician's second look.</p></div>
+          <div class="num-card"><div class="num-big">542</div><div class="num-lbl">Sources</div><p class="num-text">Cited source records linked to claims.</p></div>
         </div>
       </div>
 
@@ -388,7 +462,7 @@
           <a href="/diseases.html"><strong>→ View matrix</strong></a>
         </p>
         <p class="info-text">
-          <a href="/gallery.html"><code>/gallery.html</code></a> — 352 public examples.
+          <a href="/gallery.html"><code>/gallery.html</code></a> — 446 public examples.
           Each contains a full Plan, Diagnostic Brief, or molecular scenario with source links.
           Internal QA profiles do not appear in the user-facing library.
           <a href="/gallery.html"><strong>→ View examples</strong></a>
@@ -419,7 +493,7 @@
           <div class="flow-step">
             <div class="flow-num">Stage 3</div>
             <div class="flow-title">RedFlag eval</div>
-            <div class="flow-desc">596 RFs against findings (<code>any_of</code>/<code>all_of</code>/<code>none_of</code> with thresholds).</div>
+            <div class="flow-desc">671 RFs against findings (<code>any_of</code>/<code>all_of</code>/<code>none_of</code> with thresholds).</div>
           </div>
           <div class="flow-step">
             <div class="flow-num">Stage 4</div>
@@ -731,14 +805,14 @@
         <table class="kv-table">
           <thead><tr><th>Category</th><th>State</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr><td>Diseases with full chain</td><td>77 / 92</td><td>The rest are partially modeled</td></tr>
-            <tr><td>Indications 1L</td><td>230</td><td>First line for all 92 diseases</td></tr>
-            <tr><td>Indications 2L+</td><td>172</td><td>34 heme + 21 solid. Other solid 2L+ partial.</td></tr>
+            <tr><td>Diseases with full chain</td><td>86 / 103</td><td>The rest are partially modeled</td></tr>
+            <tr><td>Indications 1L</td><td>262</td><td>First line for all 103 diseases</td></tr>
+            <tr><td>Indications 2L+</td><td>175</td><td>34 heme + 21 solid. Other solid 2L+ partial.</td></tr>
             <tr><td>Pediatric oncology</td><td>0</td><td>Out of MVP scope — separate track</td></tr>
             <tr><td>Radiation therapy</td><td>partial</td><td>RT in multimodal Indications; not modeled as a standalone entity</td></tr>
             <tr><td>Surgery</td><td>not modeled</td><td>Surgical oncology indications absent</td></tr>
             <tr><td>Formulary live-feed</td><td>static flag</td><td>Hard-coded on regimens; not auto-refreshed</td></tr>
-            <tr><td>Reviewer dual sign-off</td><td><strong>15/808</strong></td><td>Primary bottleneck metric — capacity plan: 808 → ≥85% verified</td></tr>
+            <tr><td>Reviewer dual sign-off</td><td><strong>15/1063</strong></td><td>Primary bottleneck metric — capacity plan: 1063 → ≥85% verified</td></tr>
             <tr><td>Live gap dashboard</td><td><a href="/clinical-gaps.html">→ link</a></td><td>Build-generated audit (sign-off, solid 2L+, surgery, RT, supportive care)</td></tr>
           </tbody>
         </table>
@@ -767,7 +841,7 @@
       <div class="info-section">
         <h2>TaskTorrent — verify algorithms with your AI's tokens</h2>
         <p class="info-text">
-          The biggest gap — <strong>15/808</strong> dual-reviewer sign-off.
+          The biggest gap — <strong>15/1063</strong> dual-reviewer sign-off.
           The bottleneck doesn't dissolve with new code — it dissolves through contributors with AI tools
           who pick up structured chunks of work.
         </p>
@@ -832,7 +906,7 @@
           <li><strong>Multi-phase regimens (PR1-3)</strong> — <code>Regimen.phases</code>, <code>bridging_options</code>, phases-aware render, back-compat auto-wrap.</li>
           <li><strong>Citation guard L3</strong> — render-time check on every BMA cell.</li>
           <li><strong>Coverage matrix</strong> — <a href="/diseases.html">/diseases.html</a> per-disease drill-down.</li>
-          <li><strong>352 public examples in the gallery</strong> — ready plans, diagnostic briefs, and molecular scenarios for review and verification.</li>
+          <li><strong>446 public examples in the gallery</strong> — ready plans, diagnostic briefs, and molecular scenarios for review and verification.</li>
         </ul>
       </div>
     </section>

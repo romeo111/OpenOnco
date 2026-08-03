@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ipilimumab - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ipilimumab - OpenOnco">
 <meta name="twitter:description" content="Ipilimumab: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Ipilimumab - OpenOnco","description":"Ipilimumab: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-ipilimumab.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-ipilimumab.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Ipilimumab - OpenOnco","description":"Ipilimumab: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/drugs/drug-ipilimumab.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/drugs/drug-ipilimumab.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -91,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
@@ -123,7 +197,7 @@
 <tr><th>Зареєстровано в Україні</th><td>True</td></tr>
 <tr><th>Відшкодовується НСЗУ</th><td>True</td></tr>
 <tr><th>Остання перевірка для України</th><td>2026-04-27</td></tr></table><h2>Застереження</h2><ul><li>Severe and fatal immune-mediated adverse reactions — colitis, hepatitis, dermatitis (SJS/TEN), neuropathy, endocrinopathies; can occur during or after ipilimumab; substantially more frequent and more severe than with anti-PD-1 alone</li></ul>
-  <h2>Нотатки</h2><p>CTLA-4 irAE pattern differs from PD-1: earlier onset (often within first cycle), more colitis, more hypophysitis, less pneumonitis / thyroiditis (vs PD-1). Cumulative cycle count rather than ongoing exposure drives toxicity (because of long half-life and IgG1 effector functions); after 4-cycle induction the irAE risk trajectory continues for weeks-to-months. Hypophysitis is often permanent — patients require lifelong corticosteroid + thyroid hormone replacement. Baseline workup before any combo with anti- PD-1: TFTs, LFTs, creatinine, cortisol (AM), HbA1c, lipase / amylase, troponin if cardiac risk, HBV/HCV, CT chest, dermatologic exam. Monitor TFTs / LFTs / creatinine / cortisol before each cycle for first 4 cycles then before each nivo dose. Hospitalize early and treat aggressively with high-dose IV methylprednisolone for any G3-4 irAE; escalate to infliximab / mycophenolate / IVIG / ATG for steroid-refractory. Cross-disease entity: ipilimumab is used in melanoma (1L combo nivo, adjuvant mono superseded by nivo), RCC (1L combo nivo intermediate/poor risk), MSI-H/dMMR CRC (combo nivo), HCC (combo nivo post sorafenib), mesothelioma (1L combo nivo), NSCLC (1L combo nivo ± chemo), e...</p>
+  <h2>Нотатки</h2><p>Іпілімумаб (ipilimumab) — повністю людське моноклональне антитіло IgG1κ, спрямоване проти CTLA-4 (CD152) — інгібіторного рецептора на активованих T-клітинах та конститутивно на регуляторних T-клітинах. Блокує взаємодію CTLA-4 / B7 на стадії праймінгу T-клітин у лімфатичних вузлах, знімаючи &quot;ранню гальму&quot; T-клітинної активації; ізотип IgG1 додатково елімінує внутрішньопухлинні Treg-клітини за рахунок Fc-опосередкованої ADCC. Механізм комплементарний і неперекривний з анти-PD-1 (який діє на ефекторній фазі в мікрооточенні пухлини), що дає чіткий приріст ефективності в комбінації, але водночас значно вищий тягар імуноопосередкованих небажаних явищ (irAE). Перший у класі інгібітор контрольних точок (FDA 2011, меланома; Hodi, NEJM 2010 — перша терапія, яка подовжила загальну виживаність при метастатичній меланомі). Профіль irAE при анти-CTLA-4 відрізняється від анти-PD-1: ранішій початок (часто впродовж першого циклу), більше колітів, більше гіпофізитів, менше пневмонітів/тиреоїдитів. Токсичність визначається сумарним числом циклів, а не безперервною експозицією (через довгий період напіввиведення та ефекторні функції IgG1); після 4-циклової індукції траєкторія ризику irAE триває ще ти...</p>
   <h2>Де використовується</h2>
 <h3>Regimens</h3><ul><li><code>REG-IPI-NIVO-ESOPH-SCC</code> - Nivolumab + ipilimumab (ESCC, 1L metastatic; CheckMate-648)</li><li><code>REG-NIVO-IPI-CHEMO-NSCLC-1L</code> - Nivolumab + Ipilimumab + 2-Cycle Platinum-Doublet Chemotherapy (CheckMate-9LA)</li><li><code>REG-NIVO-IPI-MELANOMA</code> - Nivolumab + ipilimumab (melanoma, 1L metastatic)</li><li><code>REG-NIVO-IPI-MESOTHELIOMA</code> - Nivolumab + ipilimumab (mesothelioma, 1L)</li><li><code>REG-NIVO-IPI-RCC</code> - Nivolumab + ipilimumab (RCC, 1L IMDC intermediate/poor)</li></ul>
 </main>

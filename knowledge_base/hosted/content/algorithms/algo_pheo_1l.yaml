@@ -1,0 +1,145 @@
+id: ALGO-PHEO-1L
+applicable_to_disease: DIS-PHEOCHROMOCYTOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  Route 1L treatment for confirmed pheochromocytoma/paraganglioma (PPGL)
+  by resectability, then -- for unresectable/metastatic disease -- by
+  MIBG avidity. Localized/resectable disease: mandatory preoperative
+  alpha-blockade (RF-PHEO-INADEQUATE-ALPHA-BLOCKADE hard gate) then
+  adrenalectomy. Metastatic/unresectable, MIBG-avid: I-131 MIBG.
+  Metastatic/unresectable, MIBG-non-avid: sunitinib (default, FIRSTMAPPP)
+  or cabozantinib (alternative, NCCN-listed, weaker evidence). Does NOT
+  cover the separate hereditary-risk / carrier-surveillance pathway
+  (IND-SDH-CARRIER-*, IND-SDH-SUSPICION-*), which applies to
+  asymptomatic germline SDHx carriers rather than confirmed PPGL.
+
+output_indications:
+  - IND-PHEO-LOCALIZED-1L-ALPHA-BLOCKADE-ADRENALECTOMY
+  - IND-PHEO-METASTATIC-1L-MIBG
+  - IND-PHEO-METASTATIC-1L-SUNITINIB
+  - IND-PHEO-METASTATIC-1L-CABOZANTINIB
+
+default_indication: IND-PHEO-LOCALIZED-1L-ALPHA-BLOCKADE-ADRENALECTOMY
+alternative_indication: IND-PHEO-METASTATIC-1L-CABOZANTINIB
+
+decision_tree:
+  # Step 1 -- Resectability gate. No dedicated finding/RedFlag exists
+  # for PPGL resectability in the KB as of this pass; free-text
+  # condition leaf mirrors the same pattern already used throughout
+  # ALGO-RCC-METASTATIC-1L for concepts without a backing finding.
+  - step: 1
+    evaluate:
+      any_of:
+        - clinician_confirmation:
+            id: CC-ALGO-PHEO-1L-FF2E60F98F19
+            label: "Localized, resectable pheochromocytoma or paraganglioma confirmed by MDT on cross-sectional and functional imaging (no distant metastatic disease)"
+            legacy_condition: "Localized, resectable pheochromocytoma or paraganglioma confirmed by MDT on cross-sectional and functional imaging (no distant metastatic disease)"
+    if_true:
+      result: IND-PHEO-LOCALIZED-1L-ALPHA-BLOCKADE-ADRENALECTOMY
+      notes: >
+        Routes to the local-therapy pathway. Surgery itself is gated by
+        RF-PHEO-INADEQUATE-ALPHA-BLOCKADE -- the engine result is the
+        same Indication regardless of current blockade status, but that
+        Indication's red_flags_triggering_alternative carries the hard
+        hold on proceeding to the operating room until alpha-blockade is
+        adequate.
+    if_false:
+      next_step: 2
+
+  # Step 2 -- MIBG avidity gate for unresectable/metastatic disease.
+  # No Test/Biomarker entity for "MIBG scan positive" exists in the KB
+  # yet; free-text condition leaf, same pattern as step 1.
+  - step: 2
+    evaluate:
+      any_of:
+        - clinician_confirmation:
+            id: CC-ALGO-PHEO-1L-8D037C62324F
+            label: "MIBG avidity confirmed on diagnostic I-123 or I-131 MIBG scintigraphy"
+            legacy_condition: "MIBG avidity confirmed on diagnostic I-123 or I-131 MIBG scintigraphy"
+    if_true:
+      result: IND-PHEO-METASTATIC-1L-MIBG
+      notes: "MIBG-avid unresectable/metastatic disease -- I-131 MIBG radiopharmaceutical therapy."
+    if_false:
+      next_step: 3
+
+  # Step 3 -- MIBG-non-avid metastatic disease: sunitinib (default,
+  # FIRSTMAPPP RCT evidence) vs cabozantinib (alternative, NCCN-listed,
+  # weaker evidence). No finding/RedFlag exists for "prior sunitinib
+  # exposure/intolerance"; free-text condition leaf.
+  - step: 3
+    evaluate:
+      any_of:
+        - clinician_confirmation:
+            id: CC-ALGO-PHEO-1L-60E3E5C3D79B
+            label: "Sunitinib intolerance/contraindication, prior sunitinib exposure or progression, or MDT/patient preference for cabozantinib"
+            legacy_condition: "Sunitinib intolerance/contraindication, prior sunitinib exposure or progression, or MDT/patient preference for cabozantinib"
+    if_true:
+      result: IND-PHEO-METASTATIC-1L-CABOZANTINIB
+      notes: "Cabozantinib preferred when sunitinib is unsuitable or has already been tried -- weaker (single-arm/retrospective) evidence base than sunitinib's FIRSTMAPPP RCT, so reserved as the alternative rather than default."
+    if_false:
+      result: null
+      notes: >
+        Default MIBG-non-avid metastatic systemic therapy -- sunitinib
+        (IND-PHEO-METASTATIC-1L-SUNITINIB) per FIRSTMAPPP (only
+        randomized, placebo-controlled trial of a systemic agent in
+        metastatic PPGL; 12-mo PFS 36% vs 19% placebo).
+        WIRING NOTE (independent post-hoc review, 2026-07-11): result
+        set to null rather than IND-PHEO-METASTATIC-1L-SUNITINIB
+        directly. Steps 1 (resectability) and 2 (MIBG avidity) are both
+        prose-only and never fire true, so EVERY patient reaching this
+        algorithm -- including localized/resectable disease, the most
+        common PPGL presentation -- was falling through all three steps
+        to this branch. A real (non-null) result here would have
+        silently overridden the correctly-declared default_indication
+        (IND-PHEO-LOCALIZED-1L-ALPHA-BLOCKADE-ADRENALECTOMY), routing
+        resectable patients to a systemic drug instead of potentially
+        curative surgery. null lets the engine's existing `selected or
+        default_indication` fallback (knowledge_base/engine/plan.py)
+        restore the intended default. This does not fix steps 1-2's
+        underlying gaps (still open, still need dedicated RFs/findings
+        for resectability and MIBG-avidity) -- it only prevents those
+        gaps from silently overriding an already-correct declared
+        default. Flag for clinical co-lead: this trade-off (defaulting
+        toward surgery-track over systemic-therapy-track when
+        resectability is unknown) was not an independently-derived
+        clinical judgment -- it mirrors the algorithm's own
+        pre-declared default_indication, set by the original authoring
+        pass, not invented by this review.
+
+sources:
+  - SRC-ENDOCRINE-SOCIETY-PPGL-2014
+  - SRC-FIRSTMAPPP-BAUDIN-2024
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-07-11"
+notes: >
+  1L pheochromocytoma/paraganglioma (PPGL) routing algorithm covering
+  the resectable-local-therapy, MIBG-avid-metastatic, and MIBG-non-avid-
+  metastatic (sunitinib/cabozantinib) tracks described in the Disease
+  narrative.
+
+  Deferred paths (mirroring the "deferred paths" pattern already used in
+  ALGO-GI-NET-ADVANCED-1L / ALGO-PNET-METASTATIC-1L):
+  - Lu-177 DOTATATE / PRRT for somatostatin-receptor-avid metastatic
+    disease -- requires SSTR-avidity scaffolding + a shared
+    DRUG-LUTETIUM-177-DOTATATE entity that does not yet exist anywhere
+    in this KB (GI-NET and PNET algorithms defer the identical entity);
+    out of scope for this pass.
+  - Historical CVD (cyclophosphamide + vincristine + dacarbazine)
+    cytotoxic regimen -- narrative explicitly frames this as a
+    low-quality legacy fallback ("no high-quality cytotoxic regimen"),
+    not a guideline-anchored recommendation; not authored here.
+  - Surgery/Procedure entities for laparoscopic and cortical-sparing
+    adrenalectomy -- not created in this pass (entity type outside the
+    requested new-file bundle); IND-PHEO-LOCALIZED-1L-ALPHA-BLOCKADE-
+    ADRENALECTOMY describes the operation narratively instead of via
+    phases:/surgery_id pending a future Surgery-entity PR.
+  - Hereditary-risk / carrier-surveillance pathway (IND-SDH-CARRIER-*,
+    IND-SDH-SUSPICION-*) is a pre-existing, separate pathway for
+    asymptomatic germline SDHx carriers and is untouched by this
+    algorithm, which applies only to confirmed PPGL requiring treatment.
+
+  Independent review note: the FIRSTMAPPP source stub as originally
+  proposed carried a 2023 year-suffix id; it was corrected to
+  SRC-FIRSTMAPPP-BAUDIN-2024 after PubMed verification confirmed the
+  Lancet publication year is 2024 (PMID 38402886), not 2023.

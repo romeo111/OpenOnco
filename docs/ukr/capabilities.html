@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Можливості</title>
 <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OpenOnco · Можливості">
 <meta name="twitter:description" content="Можливості, покриття, обмеження та джерельна база OpenOnco.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Можливості","description":"Можливості, покриття, обмеження та джерельна база OpenOnco.","url":"https://openonco.info/ukr/capabilities.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/capabilities.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Можливості","description":"Можливості, покриття, обмеження та джерельна база OpenOnco.","url":"https://openonco.info/ukr/capabilities.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/capabilities.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 <style>
@@ -216,7 +290,7 @@
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html" class="active">Можливості</a>
+    <a href="/ukr/capabilities.html" class="active">Можливості</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
@@ -244,10 +318,10 @@
 
     <div class="callout callout-hard">
       <strong>STUB-статус клінічного контенту.</strong>
-      Dual sign-off: <strong>15/808</strong>
+      Dual sign-off: <strong>15/1063</strong>
       (CHARTER §6.1 вимагає два Clinical Co-Lead approvals).
       Це proposed-plan: structured data + algorithm + sources на місці, але без dual sign-off.
-      Інструмент підтримки рішень, не медичний пристрій. Стан на <code>2026-08-03 08:13 UTC</code>.
+      Інструмент підтримки рішень, не медичний пристрій. Стан на <code>2026-08-03 09:05 UTC</code>.
     </div>
 
     <nav class="cap-tabs" role="tablist" aria-label="Розділи">
@@ -264,7 +338,7 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — pipeline: JSON-профіль → engine → Plan з двома треками">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">OpenOnco · engine у двох словах</span>
-          <span class="pipeline-version">v0.1.4 · 2026-08-03 08:13 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-08-03 09:05 UTC</span>
         </div>
         <h2 class="pipeline-title">
           Один JSON-профіль → <em>два плани лікування</em> з citation під кожною claim.
@@ -299,7 +373,7 @@
             <ol class="pipeline-stages">
               <li>Resolve algorithm</li>
               <li>Flatten findings</li>
-              <li>Eval 596 RedFlags</li>
+              <li>Eval 671 RedFlags</li>
               <li>Walk decision tree</li>
               <li>Materialize tracks</li>
               <li>Resolve regimens</li>
@@ -334,14 +408,14 @@
       </div>
 
       <div class="key-nums">
-        <div class="key-num"><div class="key-num-val">92</div><div class="key-num-lbl">хвороб у KB</div></div>
-        <div class="key-num"><div class="key-num-val">664</div><div class="key-num-lbl">показань (230 1L · 172 2L+)</div></div>
-        <div class="key-num"><div class="key-num-val">384</div><div class="key-num-lbl">режимів лікування</div></div>
-        <div class="key-num"><div class="key-num-val">298</div><div class="key-num-lbl">препаратів (ATC/RxNorm)</div></div>
-        <div class="key-num"><div class="key-num-val">596</div><div class="key-num-lbl">red flags</div></div>
-        <div class="key-num"><div class="key-num-val">515</div><div class="key-num-lbl">цитованих джерел</div></div>
+        <div class="key-num"><div class="key-num-val">103</div><div class="key-num-lbl">хвороб у KB</div></div>
+        <div class="key-num"><div class="key-num-val">831</div><div class="key-num-lbl">показань (262 1L · 175 2L+)</div></div>
+        <div class="key-num"><div class="key-num-val">404</div><div class="key-num-lbl">схем лікування</div></div>
+        <div class="key-num"><div class="key-num-val">321</div><div class="key-num-lbl">препаратів (ATC/RxNorm)</div></div>
+        <div class="key-num"><div class="key-num-val">671</div><div class="key-num-lbl">red flags</div></div>
+        <div class="key-num"><div class="key-num-val">542</div><div class="key-num-lbl">цитованих джерел</div></div>
         <div class="key-num"><div class="key-num-val">16</div><div class="key-num-lbl">лікар-скілів (MDT)</div></div>
-        <div class="key-num is-warn"><div class="key-num-val">15/808</div><div class="key-num-lbl">з dual sign-off</div></div>
+        <div class="key-num is-warn"><div class="key-num-val">15/1063</div><div class="key-num-lbl">з dual sign-off</div></div>
       </div>
 
       <div class="pillars">
@@ -367,14 +441,14 @@
         <h2>Що є в базі знань</h2>
         <p class="info-text">Це інвентар опублікованих записів, а не оцінка клінічної повноти. Для кожної нозології покриття й стан перевірки показано окремо в матриці нижче.</p>
         <div class="num-grid num-grid--rich">
-          <div class="num-card"><div class="num-big">92</div><div class="num-lbl">Хвороби в KB</div><p class="num-text">Нозології з окремими структурованими записами.</p></div>
+          <div class="num-card"><div class="num-big">103</div><div class="num-lbl">Хвороби в KB</div><p class="num-text">Нозології з окремими структурованими записами.</p></div>
           <div class="num-card"><div class="num-big">16</div><div class="num-lbl">Лікарі-скіли</div><p class="num-text">Ролі MDT, які система враховує у маршрутизації.</p></div>
-          <div class="num-card"><div class="num-big">384</div><div class="num-lbl">Режими лікування</div><p class="num-text">Структуровані схеми, а не автоматичні призначення.</p></div>
-          <div class="num-card"><div class="num-big">298</div><div class="num-lbl">Препарати</div><p class="num-text">Записи препаратів з машинозчитуваним контекстом.</p></div>
+          <div class="num-card"><div class="num-big">404</div><div class="num-lbl">Режими лікування</div><p class="num-text">Структуровані схеми, а не автоматичні призначення.</p></div>
+          <div class="num-card"><div class="num-big">321</div><div class="num-lbl">Препарати</div><p class="num-text">Записи препаратів з машинозчитуваним контекстом.</p></div>
           <div class="num-card"><div class="num-big">131</div><div class="num-lbl">Тести</div><p class="num-text">Діагностичні й молекулярні тести в KB.</p></div>
           <div class="num-card"><div class="num-big">24</div><div class="num-lbl">Workups</div><p class="num-text">Структуровані набори дообстеження.</p></div>
-          <div class="num-card"><div class="num-big">596</div><div class="num-lbl">Red flags</div><p class="num-text">Сигнали для повторної перевірки клініцистом.</p></div>
-          <div class="num-card"><div class="num-big">515</div><div class="num-lbl">Джерела</div><p class="num-text">Цитовані записи джерел, пов'язані з твердженнями.</p></div>
+          <div class="num-card"><div class="num-big">671</div><div class="num-lbl">Red flags</div><p class="num-text">Сигнали для повторної перевірки клініцистом.</p></div>
+          <div class="num-card"><div class="num-big">542</div><div class="num-lbl">Джерела</div><p class="num-text">Цитовані записи джерел, пов'язані з твердженнями.</p></div>
         </div>
       </div>
 
@@ -388,7 +462,7 @@
           <a href="/ukr/diseases.html"><strong>→ Дивитись матрицю</strong></a>
         </p>
         <p class="info-text">
-          <a href="/ukr/gallery.html"><code>/ukr/gallery.html</code></a> — 352 публічні приклади.
+          <a href="/ukr/gallery.html"><code>/ukr/gallery.html</code></a> — 446 публічні приклади.
           Кожен містить повний Plan, Diagnostic Brief або молекулярний сценарій з посиланнями на джерела.
           Приховані QA-профілі не змішуються з бібліотекою для користувача.
           <a href="/ukr/gallery.html"><strong>→ Дивитись приклади</strong></a>
@@ -419,7 +493,7 @@
           <div class="flow-step">
             <div class="flow-num">Stage 3</div>
             <div class="flow-title">RedFlag eval</div>
-            <div class="flow-desc">596 RF проти findings (<code>any_of</code>/<code>all_of</code>/<code>none_of</code> з threshold-ами).</div>
+            <div class="flow-desc">671 RF проти findings (<code>any_of</code>/<code>all_of</code>/<code>none_of</code> з threshold-ами).</div>
           </div>
           <div class="flow-step">
             <div class="flow-num">Stage 4</div>
@@ -456,7 +530,7 @@
           <code>Regimen.phases</code> — впорядкований список named blocks (induction → consolidation → maintenance),
           кожен зі своїм cycle schedule і тригером переходу. Реальні протоколи (R-CHOP × 6 → maintenance,
           AML 7+3 → HiDAC consolidation, axi-cel bridging → infusion). <code>bridging_options</code> — список
-          регіменів-мостів між фазами (для CAR-T). Старі однофазні YAMLs auto-wrap у one-phase form через
+          схем лікування-мостів між фазами (для CAR-T). Старі однофазні YAMLs auto-wrap у one-phase form через
           <code>auto_wrap_legacy_components()</code>.
         </p>
       </div>
@@ -681,7 +755,7 @@
           <div class="gap-card gap-hard">
             <div class="gap-tag">§8.3</div>
             <h3>LLM не приймає клінічні рішення</h3>
-            <p>LLM лише: boilerplate, doc drafts, extraction (з human verification), translation з clinical review. <strong>Не</strong>: вибір режиму, дози, інтерпретація biomarker.</p>
+            <p>LLM лише: boilerplate, doc drafts, extraction (з human verification), translation з clinical review. <strong>Не</strong>: вибір схеми лікування, дози, інтерпретація biomarker.</p>
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§15.2 C7</div>
@@ -728,14 +802,14 @@
         <table class="kv-table">
           <thead><tr><th>Категорія</th><th>Стан</th><th>Що це означає</th></tr></thead>
           <tbody>
-            <tr><td>Хвороби з повним ланцюгом</td><td>77 / 92</td><td>Решта частково модельовані</td></tr>
-            <tr><td>Indications 1L</td><td>230</td><td>Перша лінія для всіх 92 хвороб</td></tr>
-            <tr><td>Indications 2L+</td><td>172</td><td>34 гематол. + 21 солід. Решта solid 2L+ частково</td></tr>
+            <tr><td>Хвороби з повним ланцюгом</td><td>86 / 103</td><td>Решта частково модельовані</td></tr>
+            <tr><td>Indications 1L</td><td>262</td><td>Перша лінія для всіх 103 хвороб</td></tr>
+            <tr><td>Indications 2L+</td><td>175</td><td>34 гематол. + 21 солід. Решта solid 2L+ частково</td></tr>
             <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope MVP — окремий track</td></tr>
             <tr><td>Радіотерапія</td><td>частково</td><td>RT у мультимодальних Indications; як окрема сутність — не моделюється</td></tr>
             <tr><td>Хірургія</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
-            <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Hard-coded на режимах; не auto-refresh</td></tr>
-            <tr><td>Reviewer dual sign-off</td><td><strong>15/808</strong></td><td>Основна bottleneck-метрика — capacity план: 808 → ≥85% verified</td></tr>
+            <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Hard-coded на схемах лікування; не auto-refresh</td></tr>
+            <tr><td>Reviewer dual sign-off</td><td><strong>15/1063</strong></td><td>Основна bottleneck-метрика — capacity план: 1063 → ≥85% verified</td></tr>
             <tr><td>Live gap dashboard</td><td><a href="/ukr/clinical-gaps.html">→ link</a></td><td>Build-generated audit (sign-off, solid 2L+, surgery, RT, supportive)</td></tr>
           </tbody>
         </table>
@@ -763,7 +837,7 @@
       <div class="info-section">
         <h2>TaskTorrent — верифікувати алгоритми токенами вашого AI</h2>
         <p class="info-text">
-          Найбільший gap — <strong>15/808</strong> dual-reviewer sign-off.
+          Найбільший gap — <strong>15/1063</strong> dual-reviewer sign-off.
           Bottleneck не вирішується новим кодом — він вирішується контрибуторами з AI-tool'ами,
           що беруть structured chunks роботи.
         </p>
@@ -829,7 +903,7 @@
           <li><strong>Multi-phase regimens (PR1-3)</strong> — <code>Regimen.phases</code>, <code>bridging_options</code>, phases-aware render, back-compat auto-wrap.</li>
           <li><strong>Citation guard L3</strong> — render-time перевірка кожної BMA-комірки.</li>
           <li><strong>Coverage matrix</strong> — <a href="/ukr/diseases.html">/ukr/diseases.html</a> per-disease drill-down.</li>
-          <li><strong>352 публічні приклади у gallery</strong> — готові плани, діагностичні briefs і молекулярні сценарії для перегляду та перевірки.</li>
+          <li><strong>446 публічні приклади у gallery</strong> — готові плани, діагностичні briefs і молекулярні сценарії для перегляду та перевірки.</li>
         </ul>
       </div>
     </section>

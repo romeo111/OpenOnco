@@ -6,6 +6,8 @@ purpose: 'Select 2L+/maintenance MM Indication based on prior exposures and ASCT
   '
 output_indications:
 - IND-MM-2L-DKD
+- IND-MM-4L-TECLISTAMAB
+- IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
 default_indication: IND-MM-2L-DKD
 alternative_indication: IND-MM-4L-TECLISTAMAB
 decision_tree:
@@ -51,7 +53,7 @@ decision_tree:
     result: IND-MM-4L-TECLISTAMAB
   if_false:
     next_step: 3
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; triple-class-refractory clause mechanically rewired into finding: triple_class_refractory (same key used in RF-MM-BCMA-EXPRESSION-POS trigger, DIS-MM). Remaining conditions (compound ≥3-prior-lines+drug-class composite; adequate organ function for bispecific) kept as MDT-evaluated text (no matching finding/RF for those criteria)."
 - step: 3
   evaluate:
     any_of:

@@ -765,13 +765,13 @@ Cross-tab of categorization vs Phase-3-N SRC-CIVIC entry presence:
 
 ## 6. Top-3 most-actionable findings
 
-**Finding 6.1 — `civic_variant_matcher.matches_civic_entry` Rule 1 is case-sensitive, missing NPM1 W288fs.**  
+**Finding 6.1 — `civic_variant_matcher.matches_civic_entry` Rule 1 is case-sensitive, missing NPM1 W288fs.**
 Query `(NPM1, W288fs)` returns 0 therapeutic options against a snapshot that contains 2 W288FS items with therapies (CIViC IDs 152 `[NSC348884]`, 153 `[Etoposide, Daunorubicin, Cytarabine]`). Cause: `qv == cv` at `knowledge_base/engine/civic_variant_matcher.py:171` compares `"W288fs" == "W288FS"` → False. Rule 2 (fusion-component) and the descriptor path (Rule 2 fallback) are case-insensitive, so the bug only bites single-gene exact-match queries where the CIViC variant string differs in case from the normalized query. **Recommended fix:** change Rule 1 to `qg == cg.upper() and qv.casefold() == cv.casefold()`. Add a regression test for `(NPM1, W288fs)` and `(NPM1, w288fs)` returning ≥1 therapeutic option. This single fix would convert NPM1-AML from NO-EVIDENCE to CONFIRMED-WITH-DRUGS (or LEVEL-ONLY — its CIViC drugs are NSC348884 / Etoposide / Daunorubicin / Cytarabine, none of which match the BMA's `7+3 / venetoclax+aza` recs; LEVEL-ONLY classification more likely).
 
-**Finding 6.2 — 18 of 23 J-drafts cannot be cross-checked against any redistributable variant-level source, by construction.**  
+**Finding 6.2 — 18 of 23 J-drafts cannot be cross-checked against any redistributable variant-level source, by construction.**
 All 18 NO-LOOKUP/NO-EVIDENCE BMAs reference biomarkers that are either non-variant (IHC, methylation, composite signature) or multi-allele (CALR exon 9 indels, IDH1/2 family). This matches the prior audit's §5 conclusion that public-only is NOT viable for the BMA layer as J-authored, and OncoKB itself does not cover these at variant level either. **Action item:** for each, replace the `oncokb_level: "1"` claim — which currently has no traceable source — with explicit NCCN/ESMO citations in `primary_sources` plus `escat_tier` set by clinical judgment under two-reviewer signoff. Highest-priority targets are CD30-IHC ×2 (the brentuximab indication is FDA-approved and well-documented in NCCN) and HRD-STATUS ×4 (PARPi indications are FDA-approved, again well-documented in NCCN/ESMO).
 
-**Finding 6.3 — Phase-3-N + Phase-4 render-skip create a 'silent zero evidence' bucket of 18 BMAs.**  
+**Finding 6.3 — Phase-3-N + Phase-4 render-skip create a 'silent zero evidence' bucket of 18 BMAs.**
 Phase 4's render rule (skip `evidence_sources` entries with `source=SRC-ONCOKB`) is correct per the OncoKB ToS audit, but it leaves 18 J-drafts with zero `evidence_sources` rows visible to the HCP. Their citation-bearing content is in `primary_sources` (NCCN, ESMO) and `regulatory_approval` (FDA, EMA) which the current render template may not surface as 'evidence' rows. **Recommended:** before flipping the Phase-4 render rule on, add a render fallback that promotes `primary_sources` (filtered to non-stub Source entities) into the rendered evidence section when `evidence_sources` is empty after the SRC-ONCOKB skip. This is read-only logic in the template; no schema change needed.
 
 ---

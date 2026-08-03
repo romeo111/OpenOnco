@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Adult patient aged ≥50 years WITHOUT documented age-appropriate cancer screening complete... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Adult patient aged ≥50 years WITHOUT documented age-appropriate cancer screening complete... - OpenOnco">
 <meta name="twitter:description" content="Adult patient aged ≥50 years WITHOUT documented age-appropriate cancer screening complete...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Adult patient aged ≥50 years WITHOUT documented age-appropriate cancer screening complete... - OpenOnco","description":"Adult patient aged ≥50 years WITHOUT documented age-appropriate cancer screening complete...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-universal-age-50plus-screening-gap.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-universal-age-50plus-screening-gap.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Adult patient aged ≥50 years WITHOUT documented age-appropriate cancer screening complete... - OpenOnco","description":"Adult patient aged ≥50 years WITHOUT documented age-appropriate cancer screening complete...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-universal-age-50plus-screening-gap.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-universal-age-50plus-screening-gap.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -91,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
@@ -116,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-05-18 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-muted">Не вказано</span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="USPSTF Recommendation Statement: Screening for Breast Cancer (2024)"><a href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/breast-cancer-screening" target="_blank" rel="noopener noreferrer"><code>SRC-USPSTF-BREAST-2024</code></a></span> <span class="kb-chip" title="USPSTF Recommendation Statement: Screening for Cervical Cancer (2018)"><a href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/cervical-cancer-screening" target="_blank" rel="noopener noreferrer"><code>SRC-USPSTF-CERVICAL-2018</code></a></span> <span class="kb-chip" title="USPSTF Recommendation Statement: Screening for Colorectal Cancer (2021)"><a href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/colorectal-cancer-screening" target="_blank" rel="noopener noreferrer"><code>SRC-USPSTF-CRC-2021</code></a></span> <span class="kb-chip" title="USPSTF Recommendation Statement: Screening for Lung Cancer (2021)"><a href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/lung-cancer-screening" target="_blank" rel="noopener noreferrer"><code>SRC-USPSTF-LUNG-LDCT-2021</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Adult patient aged ≥50 years WITHOUT documented age-appropriate cancer screening completed within the past 5 years. Captures the cohort whose pre-clinical malignancy detection is below USPSTF / NCCN / NCI population-screening cadence. Age-appropriate screening at the ≥50 cohort includes: colorectal cancer (colonoscopy q10y / FIT q1y / CTC q5y / FIT-DNA q3y per USPSTF 2021; ages 45-75 with extension to 76-85 individualized), breast cancer (biennial mammography ages 40-74 per USPSTF 2024), cervical cancer (hr-HPV-primary q5y or co-test q5y or cytology q3y per USPSTF 2018, age cessation at 65 with adequate prior screening), lung cancer (annual LDCT for ages 50-80 with ≥20 pack-year history who currently smoke or quit ≤15y per USPSTF 2021). Universal RedFlag (relevant_diseases [&quot;*&quot;]) — routes to a comprehensive screening catch-up plan (CRC + breast + cervical + LDCT-if- eligible) prioritize...</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Дорослий пацієнт у віці ≥50 років БЕЗ задокументованого age- appropriate скринінгу, завершеного протягом останніх 5 років. Охоплює когорту, чий pre-clinical malignancy detection нижче USPSTF / NCCN / NCI population-screening cadence. Age-appropriate скринінг у ≥50 когорті: colorectal (colonoscopy q10р / FIT q1р / CTC q5р / FIT-DNA q3р per USPSTF 2021; 45-75р з indiv extension до 76-85), breast (двостор. мамографія q2р 40-74 per USPSTF 2024), cervical (hr-HPV-primary q5р або co-test q5р або cytology q3р per USPSTF 2018, припинення в 65р при достатньому prior screening), lung (щорічний LDCT для 50-80 з ≥20 pack-year поточних курців або quit ≤15р per USPSTF 2021). Universal RedFlag (relevant_diseases [&quot;*&quot;]) — routes до comprehensive screening catch-up plan (CRC + breast + cervical + LDCT-if-eligible) prioritized за highest-yield modality, з shared-decision overlay для individuals з limited...</td></tr>
 <tr><th>Клінічний напрям</th><td>investigate</td></tr>
 <tr><th>Категорія</th><td>other</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
   &quot;all_of&quot;: [

@@ -12,6 +12,7 @@ purpose: >
 
 output_indications:
 - IND-BREAST-HER2-POS-MET-2L-TDXD
+- IND-BREAST-HER2-POS-3L-TUCATINIB
 default_indication: IND-BREAST-HER2-POS-MET-2L-TDXD
 alternative_indication: IND-BREAST-HER2-POS-3L-TUCATINIB
 
@@ -48,7 +49,7 @@ decision_tree:
     result: IND-BREAST-HER2-POS-3L-TUCATINIB
   if_false:
     next_step: 3
-  notes: "MDT-only — brain-met status has no dedicated breast-scoped RF; positive branch routes to HER2CLIMB triplet (CNS-PFS doubling proven)."
+  notes: "Mechanical rewire of the brain-metastases-present gate (active OR previously treated, stable or progressing) into a red_flag: clause using RF-CNS-METASTASES-ACTIVE (universal CNS-mets RF; fires on active_brain_metastases=true OR brain_metastases_count>=1). Original clinical criteria unchanged. The MRI-size-threshold sub-clause (≤2cm / symptomatic ≥2cm post-local-therapy) remains free-text — no matching finding key exists yet. Positive branch routes to HER2CLIMB triplet (CNS-PFS doubling proven)."
 
   # Step 3 — default: T-DXd 2L (DESTINY-Breast03 — superior to T-DM1).
 - step: 3

@@ -1,0 +1,198 @@
+id: ALGO-PENILE-SCC-1L
+applicable_to_disease: DIS-PENILE-SCC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L treatment for penile squamous cell carcinoma. Routes by:
+  (1) completeness of staging workup, (2) distant metastasis (M0 vs
+  M1/unresectable), (3) for M0 — primary-tumor extent (organ-sparing-
+  eligible vs requiring penectomy + nodal management), (4) for
+  M1/unresectable — MSI-H/dMMR biomarker status (opens pembrolizumab),
+  then (5) fitness for triplet (TIP) vs doublet (cisplatin+5-FU)
+  chemotherapy.
+  KEY PRINCIPLE: organ-sparing approaches are preferred whenever
+  oncologically appropriate (Tis/Ta/T1a, selected T2) per EAU guidelines;
+  inguinal nodal management (sentinel node biopsy vs lymphadenectomy) is
+  addressed within the local-therapy indications by cN status, not as a
+  separate algorithm branch.
+
+output_indications:
+  - IND-PENILE-SCC-1L-ORGAN-SPARING
+  - IND-PENILE-SCC-1L-PENECTOMY-NODAL
+  - IND-PENILE-SCC-METASTATIC-1L-MSI-H-PEMBRO
+  - IND-PENILE-SCC-METASTATIC-1L-TIP
+  - IND-PENILE-SCC-METASTATIC-1L-CISPLATIN-5FU
+
+default_indication: IND-PENILE-SCC-1L-ORGAN-SPARING
+alternative_indication: IND-PENILE-SCC-1L-PENECTOMY-NODAL
+
+decision_tree:
+  # Step 1 — Staging completeness gate.
+  - step: 1
+    evaluate:
+      all_of:
+        - clinician_confirmation:
+            id: CC-ALGO-PENILE-SCC-1L-F8EEDA61D586
+            label: "Histology confirmed: squamous cell carcinoma of the penis"
+            legacy_condition: "Histology confirmed: squamous cell carcinoma of the penis"
+        - clinician_confirmation:
+            id: CC-ALGO-PENILE-SCC-1L-0A47BFBBB6E9
+            label: "Local (T) staging (exam ± MRI pelvis) and distant-metastasis workup (CT CAP) completed"
+            legacy_condition: "Local (T) staging (exam ± MRI pelvis) and distant-metastasis workup (CT CAP) completed"
+        - clinician_confirmation:
+            id: CC-ALGO-PENILE-SCC-1L-730AF64214FA
+            label: "Inguinal nodal exam (cN status) documented"
+            legacy_condition: "Inguinal nodal exam (cN status) documented"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        Complete T/N/M staging is required before treatment selection:
+        physical exam of the primary lesion + bilateral groins, MRI pelvis
+        for local extent, CT CAP for distant staging. Biopsy confirmation
+        of the primary lesion is mandatory. HPV/p16 status may be
+        documented for prognostic context but is not treatment-modifying
+        per current EAU guidance.
+
+  # Step 2 — Distant metastasis / unresectability check.
+  - step: 2
+    evaluate:
+      any_of:
+        - clinician_confirmation:
+            id: CC-ALGO-PENILE-SCC-1L-7C1F938496CF
+            label: "Distant metastatic disease (M1) confirmed on staging"
+            legacy_condition: "Distant metastatic disease (M1) confirmed on staging"
+        - clinician_confirmation:
+            id: CC-ALGO-PENILE-SCC-1L-38589D98C96A
+            label: "Locoregional disease unresectable and not amenable to primary surgery ± consolidative nodal surgery"
+            legacy_condition: "Locoregional disease unresectable and not amenable to primary surgery ± consolidative nodal surgery"
+    if_true:
+      next_step: 4
+      notes: "Metastatic/unresectable disease: systemic chemotherapy ± MSI-H-gated immunotherapy. Palliative/disease-control intent for widely metastatic disease; TIP is occasionally used with neoadjuvant-to-surgery intent in regionally advanced nodal-only disease."
+    if_false:
+      next_step: 3
+      notes: "M0, resectable locoregional disease: local therapy (organ-sparing or penectomy + nodal management) is standard."
+
+  # Step 3 — Primary-tumor extent gate for M0 disease: organ-sparing vs penectomy.
+  - step: 3
+    evaluate:
+      any_of:
+        - clinician_confirmation:
+            id: CC-ALGO-PENILE-SCC-1L-4C81E3066573
+            label: "Tis (carcinoma in situ) confined to epithelium"
+            legacy_condition: "Tis (carcinoma in situ) confined to epithelium"
+        - clinician_confirmation:
+            id: CC-ALGO-PENILE-SCC-1L-00CA511BDD0C
+            label: "Ta or T1a (non-invasive or lamina-propria-confined invasion), favorable grade, no lymphovascular invasion"
+            legacy_condition: "Ta or T1a (non-invasive or lamina-propria-confined invasion), favorable grade, no lymphovascular invasion"
+        - clinician_confirmation:
+            id: CC-ALGO-PENILE-SCC-1L-59B9A3505B64
+            label: "Selected small T2 confined to glans/corpus spongiosum, favorable anatomy, MDT-endorsed for glansectomy"
+            legacy_condition: "Selected small T2 confined to glans/corpus spongiosum, favorable anatomy, MDT-endorsed for glansectomy"
+    if_true:
+      result: IND-PENILE-SCC-1L-ORGAN-SPARING
+      notes: >
+        Organ-sparing local therapy: topical 5-FU/imiquimod (Tis),
+        CO2-laser or wide local excision (T1a), glansectomy (selected T2).
+        Nodal management (sentinel node biopsy vs surveillance) is
+        addressed per primary-tumor risk features, not by this algorithm
+        step.
+    if_false:
+      result: IND-PENILE-SCC-1L-PENECTOMY-NODAL
+      notes: >
+        T2-T4 (or higher-risk T1 not favored for organ preservation):
+        partial or total penectomy per the extent needed for oncologic
+        margins, plus nodal management (dynamic sentinel node biopsy for
+        cN0, modified/complete inguinal lymphadenectomy for cN+) addressed
+        within this indication.
+
+  # Step 4 — MSI-H/dMMR biomarker gate for M1/unresectable disease.
+  - step: 4
+    evaluate:
+      any_of:
+        - red_flag: RF-PENILE-SCC-MSI-H-ACTIONABILITY
+    if_true:
+      result: IND-PENILE-SCC-METASTATIC-1L-MSI-H-PEMBRO
+      notes: >
+        MSI-H/dMMR confirmed (uncommon in penile SCC; testing is not
+        routine — this branch only fires when testing was actually
+        performed and is positive): pembrolizumab (tissue-agnostic
+        MSI-H/dMMR approval) preferred over chemotherapy.
+    if_false:
+      next_step: 5
+      notes: "MSI-H/dMMR not identified or not tested (the majority of patients): proceed to the chemotherapy fitness gate."
+
+  # Step 5 — Fitness gate: TIP triplet vs cisplatin+5-FU doublet.
+  - step: 5
+    evaluate:
+      all_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - clinician_confirmation:
+            id: CC-ALGO-PENILE-SCC-1L-386459ABE5C9
+            label: "Adequate renal (CrCl ≥50 mL/min), hepatic, and marrow reserve for triplet chemotherapy"
+            legacy_condition: "Adequate renal (CrCl ≥50 mL/min), hepatic, and marrow reserve for triplet chemotherapy"
+    if_true:
+      result: IND-PENILE-SCC-METASTATIC-1L-TIP
+      notes: >
+        Triplet-fit (ECOG 0-1, adequate organ reserve): TIP per EAU — also
+        considered as neoadjuvant chemotherapy before consolidative
+        inguinal/pelvic lymphadenectomy in selected regionally advanced
+        nodal disease. The cisplatin+5-FU doublet remains an equally
+        valid EAU-listed alternative; MDT/patient preference is a valid
+        tiebreaker (mirrors ALGO-RCC-METASTATIC-1L's tiebreaker pattern
+        for equally-valid regimen options).
+    if_false:
+      result: IND-PENILE-SCC-METASTATIC-1L-CISPLATIN-5FU
+      notes: >
+        ECOG ≥2, borderline organ function, or otherwise unfit for
+        triplet chemotherapy: cisplatin + 5-FU doublet per EAU — better
+        tolerated and does not require ifosfamide/mesna infrastructure.
+
+sources:
+  - SRC-EAU-PENILE-2024
+
+last_reviewed: "2026-07-11"
+notes: >
+  STUB — Phase 1 (zero-content disease authoring pass) 1L algorithm for
+  DIS-PENILE-SCC. Step 3 (organ-sparing vs penectomy) intentionally does
+  NOT branch further on cN status — nodal-management logic is addressed
+  in prose within IND-PENILE-SCC-1L-PENECTOMY-NODAL and
+  IND-PENILE-SCC-1L-ORGAN-SPARING's rationale rather than as separate
+  algorithm output branches, keeping this pass's scope to the 3
+  explicitly-requested Indications (organ-sparing, penectomy+nodal,
+  metastatic) plus the narrative-supported MSI-H/pembrolizumab bonus
+  branch. GAP: 2L salvage after chemotherapy progression not yet
+  authored. GAP: dedicated Surgery/Procedure entities for glansectomy,
+  penectomy, sentinel node biopsy, and inguinal lymphadenectomy not yet
+  authored — local-therapy indications use prose modality description
+  (IndicationPhase / Surgery-entity wiring deferred to a future pass).
+  ROUTING CAVEAT (independent-review note): steps 1-3 use free-text
+  `condition:` clauses that are not wired to structured patient-questionnaire
+  finding keys (no matching flat finding exists for "staging complete" /
+  "M1 confirmed" / T-stage bucket concepts anywhere else in this KB, so
+  none could be mechanically converted per the standard applied in commit
+  21ce9686ec). This means the decision tree cannot actually discriminate
+  patients on those steps today and the engine falls back to
+  `default_indication` (engine/plan.py: `default_id = selected or
+  algo.get("default_indication")`) — identical, pre-existing behavior to
+  the template this algorithm was modeled on (ALGO-ANAL-SCC-1L step 1) and
+  consistent with the documented KB-wide state (~27% of algorithms have an
+  unreachable step 1, per docs/reviews/openonco-state-audit-2026-05-17.md).
+  Steps 4 and 5's clinically load-bearing gates (MSI-H biomarker, ECOG
+  fitness) ARE correctly wired to structured red_flag: clauses
+  (RF-PENILE-SCC-MSI-H-ACTIONABILITY, RF-FITNESS-ECOG-FIT) and will
+  evaluate correctly once patient data reaches step 4/5 through some
+  other path (e.g. a future patch to steps 1-3, or direct algorithm
+  re-entry at step 4). Not a defect introduced by this file; flagged here
+  for whoever picks up the KB-wide prose-condition remediation effort.
+notes_ua: >
+  СТАБ — 1L алгоритм для DIS-PENILE-SCC. Крок 3 (органозбереження проти
+  пенектомії) навмисно не розгалужується далі за cN-статусом — логіка
+  ведення лімфовузлів описана прозою всередині відповідних індикацій.
+  ПРОГАЛИНА: рятівна 2L терапія після прогресування хіміотерапії ще не
+  описана. ПРОГАЛИНА: окремі Surgery/Procedure сутності для глансектомії,
+  пенектомії, біопсії сторожового вузла та пахвинної лімфаденектомії ще
+  не створені.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+draft_revision: 1

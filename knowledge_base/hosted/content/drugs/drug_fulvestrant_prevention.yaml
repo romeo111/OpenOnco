@@ -1,0 +1,116 @@
+id: DRUG-FULVESTRANT-PREVENTION
+names:
+  preferred: "Fulvestrant (breast-cancer chemoprevention research context — investigational only)"
+  ukrainian: "Фулвестрант (хіміопрофілактика раку молочної залози — лише дослідницький контекст)"
+  english: "Fulvestrant (breast-cancer chemoprevention)"
+  synonyms: ["SERD chemoprevention research — fulvestrant"]
+  brand_names: ["Faslodex"]
+atc_code: L02BA03
+rxnorm_id: null
+drug_class: "Selective estrogen receptor degrader (SERD) — research-only chemoprevention context"
+mechanism: >
+  Pure estrogen-receptor antagonist that binds ER-α and induces its
+  proteasomal degradation — no agonist activity in any tissue (true ER
+  downregulator). Standard of care SECOND-LINE ENDOCRINE TREATMENT for
+  HR+/HER2-negative metastatic breast cancer, especially after AI
+  failure (paired with CDK4/6i, alpelisib, capivasertib). The chemoprev-
+  ention RATIONALE is purely mechanistic — total ER blockade should
+  theoretically prevent ER-driven carcinogenesis — but there is NO
+  RCT-level primary-prevention evidence and the IM injection route plus
+  toxicity profile preclude use in disease-free women. Listed here as
+  a class-completeness entity for the SERD class only; engine MUST NOT
+  surface for prevention.
+
+regulatory_status:
+  fda:
+    approved: true
+    first_approval_year: 2002
+    indications_brief:
+      - "HR-positive HER2-negative advanced/metastatic breast cancer (post-progression on AI, or first-line with CDK4/6i, or with alpelisib for PIK3CA-mutant disease)"
+      - "NOT FDA-labeled for chemoprevention — NO primary-prevention RCT exists"
+      - "NOT recommended for chemoprevention by USPSTF, NCCN-Breast, or ESMO"
+  ema:
+    approved: true
+  ukraine_registration:
+    registered: true
+    registration_number: null
+    reimbursed_nszu: true
+    reimbursement_indications:
+      - "Метастатичний HR+/HER2- рак молочної залози (НЕ хіміопрофілактика)"
+    last_verified: "2026-05-18"
+    notes: "Реімбурсується НСЗУ для ЛІКУВАННЯ метастатичного HR+/HER2- РМЗ; для хіміопрофілактики — НЕ застосовується, off-label-only research context."
+typical_dosing: >
+  TREATMENT (metastatic HR+ breast cancer — for context):
+    500 mg IM on days 1, 15, 29, then 500 mg IM monthly. Two 250 mg / 5 mL
+    injections, one in each gluteal muscle.
+  CHEMOPREVENTION: NO established dose. NOT recommended for chemoprevention
+  in any guideline. Engine should NEVER surface this drug for primary
+  prevention.
+formulations:
+  - "Pre-filled syringe 250 mg / 5 mL (intramuscular)"
+
+absolute_contraindications:
+  - "Pregnancy / lactation / women of reproductive potential"
+  - "Hypersensitivity to fulvestrant or castor oil"
+  - "Severe hepatic impairment (Child-Pugh C)"
+  - "Bleeding diathesis / anticoagulation requiring frequent INR monitoring (IM injection)"
+absolute_contraindications_prevention_context:
+  - "ANY use in disease-free women for primary prevention (no evidence base; route + toxicity disqualifies)"
+black_box_warnings: []
+major_interactions:
+  - "No clinically significant CYP-mediated interactions at therapeutic doses"
+  - "Anticoagulants — caution with IM injection; consider tamoxifen/raloxifene/AI oral alternatives"
+common_adverse_events:
+  - "Injection-site pain (~14%)"
+  - "Hot flushes / vasomotor symptoms (~10-20%)"
+  - "Nausea (~10-15%)"
+  - "Bone pain (~10-15%)"
+  - "Fatigue (~10-15%)"
+  - "Headache (~10%)"
+  - "Arthralgia (~5-10%)"
+  - "Mild transaminase elevations (~5%)"
+serious_adverse_events:
+  - "Injection-site reactions / sciatic-nerve irritation (rare with proper technique)"
+  - "Hepatic dysfunction (rare)"
+  - "Severe hypersensitivity (rare)"
+  - "Thromboembolic events (small absolute ↑; less than tamoxifen)"
+
+pharmacology: {half_life_hours: 1200, clearance: "Hepatic CYP3A4 metabolism (minor) + sulfation + glucuronidation; biliary excretion; very long terminal half-life (~50 days) due to slow IM depot release"}
+
+sources:
+  - SRC-USPSTF-BREAST-2024
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-18"
+notes: >
+  STUB — v0.2 chemoprevention-workstream authoring (batch 3); pending two-
+  Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode. CLASS-COMPLETENESS
+  entity for the SERD class — distinct from DRUG-FULVESTRANT (the
+  treatment-context entity at drugs/fulvestrant.yaml). NO primary-
+  prevention RCT exists for fulvestrant; the IM route + monthly clinic
+  visit burden + toxicity profile preclude use in disease-free women.
+  USPSTF 2024 (Grade B chemoprevention recommendation) and NCCN-Breast
+  2025 list tamoxifen, raloxifene, exemestane, anastrozole as
+  chemoprevention options — NOT fulvestrant. Engine MUST NOT surface
+  fulvestrant as a chemoprevention option. This entity exists only so
+  SERD-class queries return a member; it is a research-only / discussion
+  entity. Newer oral SERDs (elacestrant, giredestrant, camizestrant,
+  imlunestrant) are in trials for treatment indications only and are
+  also NOT prevention candidates as of 2026-05.
+
+notes_ua: >
+  Фулвестрант (контекст хіміопрофілактики раку) — це лише ДОСЛІДНИЦЬКА /
+  обговорювальна позиція для повноти класу SERD; жодне сучасне керівництво
+  (USPSTF 2024, NCCN-Breast 2025, ESMO) НЕ рекомендує фулвестрант для
+  первинної профілактики раку молочної залози. Немає завершеного РКД
+  первинної профілактики; внутрішньом'язовий шлях введення + щомісячні
+  візити + профіль токсичності виключають застосування у здорових жінок.
+  Двигун НЕ повинен пропонувати фулвестрант як хіміопрофілактику. Для
+  справжньої хіміопрофілактики РМЗ — тамоксифен / ралоксифен (у
+  пременопаузі або при VTE-факторах) або анастрозол / екземестан / летрозол
+  (у постменопаузі). Окрема сутність DRUG-FULVESTRANT — для лікувального
+  контексту (метастатичний HR+ РМЗ, реімбурсація НСЗУ).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_chemoprevention_drugs_batch3_2026-05-19
+draft_revision: 1

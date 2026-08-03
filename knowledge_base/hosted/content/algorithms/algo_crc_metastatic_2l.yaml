@@ -17,6 +17,7 @@ output_indications:
 - IND-CRC-METASTATIC-2L-HER2-AMP-T-DXD
 - IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE
 - IND-CRC-METASTATIC-2L-FOLFIRI-BEV
+- IND-CRC-METASTATIC-3L-TAS102-BEV
 default_indication: IND-CRC-METASTATIC-2L-FOLFIRI-BEV
 alternative_indication: IND-CRC-METASTATIC-3L-TAS102-BEV
 
@@ -67,7 +68,7 @@ decision_tree:
     result: IND-CRC-METASTATIC-2L-KRAS-G12C-SOTORASIB-CETUXIMAB
   if_false:
     next_step: 4
-  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+  notes: "Mechanical rewire of the BRAF-exclusion gate: mirrors step 2's RF-CRC-BRAF-V600E-POOR-PROGNOSIS finding key (finding: braf_v600e_mutation / value: false — same key, negated). Original clinical criteria unchanged. KRAS G12C leaf remains MDT-text: MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
   # Step 4 — HER2 amplified (~3% of mCRC) AND RAS-WT. MOUNTAINEER
   # tucatinib + trastuzumab default; T-DXd alternative noted in
@@ -124,7 +125,7 @@ decision_tree:
     result: IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE
   if_false:
     next_step: 6
-  notes: "Partially wired - RF-CRC-RAS-WT gates extended-RAS wild-type baseline (CHRONOS biomarker selection for cetuximab rechallenge post-FOLFOX failure); ctDNA-timepoint RAS-WT, prior-EGFR-response, and intervening-line criteria remain MDT-text (CHRONOS-style ctDNA timing and prior-response history not RF-modelled)."
+  notes: "Partially wired - RF-CRC-RAS-WT gates extended-RAS wild-type baseline (CHRONOS biomarker selection for cetuximab rechallenge post-FOLFOX failure); BRAF-exclusion leaf mechanically rewired to finding: braf_v600e_mutation / value: false (mirrors step 2/3's same key, negated — original clinical criteria unchanged). ctDNA-timepoint RAS-WT, prior-EGFR-response, and intervening-line criteria remain MDT-text (CHRONOS-style ctDNA timing and prior-response history not RF-modelled)."
 
   # Step 6 — 2L cytotoxic-switch default (FOLFOX → FOLFIRI + biologic
   # continuation per TML/ML18147). Standard track.

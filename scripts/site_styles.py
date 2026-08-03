@@ -422,6 +422,132 @@ body.home-page {
   border-top: 1px solid var(--gray-100);
 }
 
+/* ── Home: role doors (clinician / patient / pharmacist) ──────────────
+ * The primary conversion surface. Each door is a self-select card that
+ * routes one audience straight to the tool built for them.
+ */
+.home-doors {
+  max-width: 1100px;
+  margin: 10px auto 0;
+  padding: 10px 24px 0;
+}
+.home-doors-h {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.12;
+  color: var(--green-700);
+  margin: 0 0 6px;
+}
+.home-doors-sub {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--gray-700);
+  margin: 0 0 22px;
+  max-width: 640px;
+}
+.home-doors-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.door-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-top: 4px solid var(--green-600);
+  border-radius: 12px;
+  padding: 22px 20px;
+  box-shadow: 0 4px 14px rgba(10, 46, 26, 0.05);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.door-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(10, 46, 26, 0.10);
+}
+.door-card--doctor { border-top-color: var(--green-600); }
+.door-card--patient { border-top-color: var(--amber); }
+.door-card--pharma { border-top-color: var(--teal); }
+.door-icon {
+  font-size: 34px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.door-role {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--green-900);
+  margin: 0 0 8px;
+}
+.door-line {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--gray-700);
+  margin: 0 0 18px;
+}
+/* Stacked buttons + margin-top:auto pin the action row to the card floor as a
+ * fixed two-row block, so the buttons line up across all three doors regardless
+ * of copy, label length, or disclaimer. */
+.door-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: auto;
+}
+.door-actions .btn {
+  font-size: 14px;
+  padding: 10px 16px;
+}
+.door-disclaimer {
+  margin: 0 0 18px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--gray-500);
+  border-top: 1px solid var(--gray-100);
+  padding-top: 10px;
+}
+
+/* ── Home: trust line + explore links ─────────────────────────────── */
+.home-trust {
+  max-width: 1100px;
+  margin: 40px auto 0;
+  padding: 22px 24px 0;
+  border-top: 1px solid var(--gray-100);
+}
+.home-trust-line {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--gray-900);
+  font-weight: 500;
+  margin: 0 0 12px;
+  max-width: 760px;
+}
+.home-trust .home-note {
+  margin-bottom: 0;
+}
+.home-explore {
+  margin: 14px 0 0;
+  font-size: 14px;
+  color: var(--gray-500);
+}
+.home-explore a {
+  color: var(--green-700);
+  font-weight: 600;
+  text-decoration: none;
+}
+.home-explore a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 860px) {
+  .home-doors-grid { grid-template-columns: 1fr; }
+  .home-doors-h { font-size: 26px; }
+}
+
 body.home-page .btn-primary,
 body.home-page .btn-primary:hover {
   background: var(--green-700);
@@ -1520,6 +1646,18 @@ body.home-page .home-carousel {
   outline: none; border-color: var(--green-500);
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
 }
+.qt-count {
+  font-size: 11px; color: var(--gray-700); text-transform: none;
+  letter-spacing: normal; font-weight: 500;
+  margin-top: 2px;
+}
+.qt-clear {
+  align-self: flex-end;
+  background: transparent; border: none; color: var(--gray-700);
+  font-size: 18px; cursor: pointer; padding: 0 6px;
+  margin-top: -28px; line-height: 1; align-self: flex-end;
+}
+.qt-clear:hover { color: var(--green-700); }
 .qt-spacer { flex: 1; }
 .quest-toolbar > .qt-modes,
 .quest-toolbar > .qt-reset {
@@ -1560,6 +1698,39 @@ body.home-page .home-carousel {
 }
 .quest-readiness-critical[data-kind="ok"] { color: var(--green-700); font-weight: 600; }
 .quest-readiness-critical[data-kind="warn"] { color: var(--amber); font-weight: 600; }
+.quest-fired-redflags {
+  margin-top: 10px; display: flex; flex-direction: column; gap: 4px;
+}
+.quest-fired-redflags:empty { margin-top: 0; }
+.quest-fired-redflags .qfr-head {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase; color: var(--gray-600);
+  margin-bottom: 4px;
+}
+.quest-fired-redflags .qfr-card {
+  display: flex; align-items: baseline; gap: 8px; padding: 6px 10px;
+  background: var(--gray-50); border-radius: 6px; text-decoration: none;
+  color: inherit; font-size: 12.5px; border-left: 3px solid var(--gray-300);
+  transition: background 120ms, border-color 120ms;
+}
+.quest-fired-redflags .qfr-card:hover {
+  background: var(--green-50); border-left-color: var(--green-500);
+}
+.quest-fired-redflags .qfr-sev-critical { border-left-color: var(--red); }
+.quest-fired-redflags .qfr-sev-major    { border-left-color: var(--amber); }
+.quest-fired-redflags .qfr-sev-minor    { border-left-color: var(--gray-300); }
+.quest-fired-redflags .qfr-rid {
+  font-family: var(--font-mono); font-size: 10px; color: var(--gray-600);
+  white-space: nowrap;
+}
+.quest-fired-redflags .qfr-defn {
+  flex: 1; color: var(--gray-800); line-height: 1.4;
+  overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.quest-fired-redflags .qfr-more {
+  font-size: 11.5px; color: var(--gray-500); padding-left: 10px;
+}
 .quest-actions-top.quest-cta {
   display: grid; grid-template-columns: minmax(220px, 1.4fr) minmax(150px, 1fr) minmax(150px, 1fr);
   gap: 10px; margin: -4px 0 18px; padding: 12px;
@@ -2429,5 +2600,166 @@ body.home-page .home-carousel {
   background: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
+}
+
+/* ── News section ──────────────────────────────────────────────────────── */
+/* The list reuses .case-grid / .case-card; only the dateline colour and the
+   article body need rules of their own. .info-section deliberately styles
+   only h2 and p, so long-form prose gets its own block here. */
+/* Datelines are prose, not labels — the shared .case-badge uppercasing makes
+   a Ukrainian date read as shouting. */
+.news-card .case-badge.bdg-plan,
+.news-article .case-badge.bdg-plan {
+  text-transform: none;
+  letter-spacing: 0.3px;
+}
+.news-article {
+  max-width: 760px;
+}
+.news-back {
+  display: inline-block;
+  text-decoration: none;
+}
+.news-byline {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-bottom: 26px;
+}
+.news-retro {
+  font-size: 12.5px;
+  color: var(--gray-500);
+  font-style: italic;
+  margin-top: -18px;
+  margin-bottom: 26px;
+}
+/* Explainer posts assert things about the world rather than about our own
+   commits, so they carry a standing note and a reference list. */
+.news-kind-note {
+  background: var(--amber-bg);
+  border-left: 3px solid var(--amber);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--gray-900);
+  line-height: 1.5;
+}
+.news-sources {
+  max-width: 760px;
+  margin-top: 38px;
+  padding-top: 20px;
+  border-top: 1px solid var(--gray-200);
+}
+.news-sources h2 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--green-900);
+  margin-bottom: 12px;
+}
+.news-sources ol {
+  padding-left: 20px;
+}
+.news-sources li {
+  font-size: 13px;
+  color: var(--gray-700);
+  line-height: 1.55;
+  margin-bottom: 8px;
+}
+.news-sources a {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--green-700);
+}
+.news-body {
+  font-size: 15.5px;
+  color: var(--gray-700);
+  line-height: 1.68;
+}
+.news-body p {
+  margin-bottom: 16px;
+}
+.news-body h2 {
+  font-family: var(--font-display);
+  font-size: 23px;
+  color: var(--green-900);
+  margin: 34px 0 12px;
+}
+.news-body h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--green-900);
+  margin: 26px 0 10px;
+}
+.news-body ul,
+.news-body ol {
+  padding-left: 22px;
+  margin-bottom: 16px;
+}
+.news-body li {
+  margin-bottom: 8px;
+}
+.news-body blockquote {
+  border-left: 3px solid var(--green-600);
+  background: var(--green-50);
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin: 18px 0;
+  color: var(--gray-900);
+}
+.news-body code {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  background: var(--gray-100);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--green-800);
+}
+.news-body a {
+  color: var(--green-700);
+}
+.news-code {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  padding: 12px 14px;
+  overflow-x: auto;
+  margin-bottom: 16px;
+}
+.news-code code {
+  background: none;
+  padding: 0;
+}
+
+/* Comments. Open to anyone, no account. One quiet line above the box rather
+   than a warning panel — this is a news thread, not a treatment plan. */
+.news-comments {
+  max-width: 760px;
+  margin-top: 46px;
+  padding-top: 26px;
+  border-top: 1px solid var(--gray-200);
+}
+.news-comments h2 {
+  font-family: var(--font-display);
+  font-size: 23px;
+  color: var(--green-900);
+  margin-bottom: 10px;
+}
+.news-comments-note {
+  font-size: 13px;
+  color: var(--gray-500);
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+.news-comments-note a {
+  color: var(--green-700);
+}
+.news-comments-offline {
+  font-size: 13.5px;
+  color: var(--gray-500);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 14px 16px;
 }
 """

@@ -1,0 +1,115 @@
+id: RF-CEBPA-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in CEBPA —
+  most commonly an N-terminal frameshift / nonsense allele that disrupts
+  the p42 isoform while preserving p30 (the canonical familial AML
+  germline configuration). Patient has had germline panel testing
+  returned positive; the pedigree-suspicion phase is settled. No current
+  personal AML diagnosis in the carrier being assessed (a current
+  diagnosis routes to a treatment-track plan with carrier status driving
+  donor-selection counseling and post-remission monitoring). Germline
+  CEBPA carriers have a near-complete lifetime penetrance for AML — most
+  series report ~80-100% by adulthood — with a typical disease pattern
+  of a somatic CEBPA second hit acquired in cis (commonly the bZIP
+  C-terminal in-frame indel) producing the AML clone. Prevention-persona
+  RedFlag (KSS §20, confirmed-carrier surveillance pathway, distinct
+  from a family-history-suspicion phase RF that would fire before
+  testing). Important contrast with sporadic AML: biallelic CEBPA in
+  tumor is also common in non-hereditary AML and is favorable-risk
+  cytogenetic-equivalent — germline status must be ruled in / out by
+  buccal-swab / fibroblast / cultured-skin germline confirmation, NOT
+  blood-only testing, because the somatic clone contaminates blood.
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант
+  у гені CEBPA — найчастіше N-кінцевий frameshift / nonsense алель, що
+  порушує p42 ізоформу зі збереженням p30 (канонічна конфігурація
+  родинного ГМЛ). Пацієнт пройшов germline-тестування з позитивним
+  результатом; питання родовідної підозри вирішене. Поточний особистий
+  діагноз ГМЛ у носія, що оцінюється, відсутній (поточний діагноз ГМЛ
+  routes до treatment-track плану зі статусом носія, що визначає
+  консультування донора та post-remission моніторинг). Гермінативні
+  CEBPA-носії мають майже повну довічну пенетрантність ГМЛ — більшість
+  серій повідомляють ~80-100% до дорослого віку — з типовим патерном
+  захворювання у вигляді соматичного "second hit" у CEBPA, набутого
+  в cis (зазвичай bZIP C-кінцевий in-frame indel), що формує
+  ГМЛ-клон. Prevention-persona RedFlag (KSS §20, шлях спостереження
+  підтверджених носіїв, відрізняється від родовідного підозрового
+  шляху). Важливий контраст зі sporadic ГМЛ: біалельний CEBPA в пухлині
+  також зустрічається у не-спадковому ГМЛ і є favorable-risk cytogenetic-
+  equivalent — гермінативний статус має бути підтверджений buccal-swab
+  / fibroblast / cultured-skin germline testing, НЕ blood-only, бо
+  соматичний клон контамінує кров.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_cebpa_pathogenic_variant_confirmed"
+      value: true
+    - finding: "germline_cebpa_n_terminal_variant_confirmed"
+      value: true
+
+clinical_direction: investigate
+
+severity: critical
+priority: 60
+category: other
+risk_category: genetic
+
+# Germline CEBPA carrier risk is almost entirely myeloid (AML). No
+# documented extra-hematologic malignancy excess. Disease anchor is
+# DIS-AML; MDS is a rare precursor in this syndrome and does not
+# warrant a separate disease entity here.
+relevant_diseases:
+  - DIS-AML
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-AML-2020
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Wave P confirmed-carrier surveillance pathway — germline CEBPA
+  familial AML. Fires on documented germline CEBPA pathogenic variant
+  positivity in an asymptomatic individual. Engine routes to
+  PreventionPlan recommending:
+    (a) IND-CEBPA-CARRIER-SURVEILLANCE (standard) — CBC + smear q3-6
+        months from diagnosis of carrier status, lifelong; BMA +
+        myeloid NGS at any suspicious cytopenia, persistent blast on
+        smear, or unexplained leukocytosis; annual molecular check for
+        the inherited variant allele-burden if a sensitive assay is
+        available; cascade germline testing to first-degree relatives
+        with documented buccal / fibroblast germline confirmation (NOT
+        blood-only, to avoid somatic clone contamination of result).
+    (b) IND-CEBPA-CARRIER-INTENSIFIED (aggressive) — standard protocol
+        PLUS HLA typing on cohort + sibling early to map donor
+        candidates; q3-month CBC + smear (instead of q6); BMA at
+        clinical milestones (every 2-3 years from age 20+) even
+        without provoked indication; preemptive consultation with a
+        hereditary-myeloid-program transplant team so that go-to-
+        transplant decisions at AML diagnosis are not delayed.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption. Penetrance reference: Tawana et al. Blood 2015 (median
+  age at AML diagnosis ~25 years, cumulative incidence ~80% by age
+  50, ~100% by age 60-70 in classic biallelic-germline-pattern
+  pedigrees); Pabst et al. Nat Genet 2008 / 2009; Stelljes et al.
+  Blood 2023 review of familial CEBPA.
+
+  Donor implication: HLA-matched sibling who is also a CEBPA carrier
+  must NOT be used as donor — risk of donor-derived leukemia
+  documented in CEBPA, RUNX1, and DDX41 families. Pre-transplant
+  germline testing of any candidate sibling donor is mandatory.
+
+  Treatment implication (when AML emerges): standard 7+3 induction
+  applies; favorable-cytogenetic-equivalent prognosis when biallelic
+  CEBPA is present in tumor (the somatic second hit configuration);
+  alloHCT in CR1 considered based on co-occurring mutations + MRD
+  trajectory + donor germline-status.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_hereditary_myeloid
+draft_revision: 1

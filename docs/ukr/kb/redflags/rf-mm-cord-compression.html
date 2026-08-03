@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Multiple myeloma with malignant epidural spinal cord compression: new motor deficit, sens... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Multiple myeloma with malignant epidural spinal cord compression: new motor deficit, sens... - OpenOnco">
 <meta name="twitter:description" content="Multiple myeloma with malignant epidural spinal cord compression: new motor deficit, sens...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Multiple myeloma with malignant epidural spinal cord compression: new motor deficit, sens... - OpenOnco","description":"Multiple myeloma with malignant epidural spinal cord compression: new motor deficit, sens...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-mm-cord-compression.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-mm-cord-compression.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Multiple myeloma with malignant epidural spinal cord compression: new motor deficit, sens... - OpenOnco","description":"Multiple myeloma with malignant epidural spinal cord compression: new motor deficit, sens...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-mm-cord-compression.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-mm-cord-compression.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -91,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
@@ -116,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-04-27 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-MM"><code>DIS-MM</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="EHA-EMN Evidence-Based Guidelines for diagnosis, treatment and follow-up of patients with..."><a href="https://www.nature.com/articles/s41571-025-01041-x" target="_blank" rel="noopener noreferrer"><code>SRC-EHA-EMN-MM-2025</code></a></span> <span class="kb-chip" title="ESMO Clinical Practice Guideline on Multiple Myeloma"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-multiple-myeloma" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-MM-2023</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: Multiple Myeloma"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1445" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-MM-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Multiple myeloma with malignant epidural spinal cord compression: new motor deficit, sensory level, severe back pain with vertebral plasmacytoma / lytic lesion + canal invasion — MM is a leading hematologic cause of MESCC</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Множинна мієлома із синдромом стиснення спинного мозку: новий моторний дефіцит, сенсорний рівень, біль у спині з вертебральною плазмоцитомою / літичним вогнищем + інвазією каналу — MM є провідною гематологічною причиною MESCC</td></tr>
 <tr><th>Клінічний напрям</th><td>hold</td></tr>
 <tr><th>Категорія</th><td>organ-dysfunction</td></tr>
 <tr><th>Змінює алгоритм</th><td>ALGO-MM-1L</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
@@ -140,8 +214,10 @@
   ],
   &quot;type&quot;: &quot;composite&quot;
 }</pre>
-  <h2>Нотатки</h2><p>Per NCCN-MM + ESMO-MM 2023 + EHA-EMN-MM 2025: dexamethasone 40 mg PO/IV bolus, MRI whole spine, urgent RT (8 Gy ×1 or 20-30 Gy fractionated) ± neurosurgical decompression for instability/large mass; bortezomib- based induction begun in parallel (rapid cytoreduction). Direction HOLD on routine induction start until decompression initiated; priority 8. STUB — requires clinical co-lead signoff.</p>
+  <h2>Нотатки</h2><p>За NCCN-MM + ESMO-MM 2023 + EHA-EMN-MM 2025: дексаметазон 40 mg PO/IV болюс, МРТ всього хребта, термінова ПТ (8 Gy ×1 або 20-30 Gy фракціоновано) ± нейрохірургічна декомпресія при нестабільності/великій масі; бортезоміб-вмісна індукція розпочинається паралельно (швидка циторедукція). Напрям «hold» на рутинний початок індукції до ініціації декомпресії; пріоритет 8. STUB — потребує клінічного підпису провідного спеціаліста.</p>
   <h2>Де використовується</h2>
+<h3>Handbook Chapters</h3><ul><li><code>HB-MM-1L</code> - Multiple myeloma: first-line risk and fitness reasoning</li></ul>
+<h3>Handbook Questions</h3><ul><li><code>HQ-MM-1L-002</code> - HQ-MM-1L-002</li></ul>
 <h3>Indications</h3><ul><li><code>IND-MM-1L-DARA-RD</code> - IND-MM-1L-DARA-RD</li><li><code>IND-MM-1L-DVRD</code> - IND-MM-1L-DVRD</li><li><code>IND-MM-1L-RD</code> - IND-MM-1L-RD</li><li><code>IND-MM-1L-VRD</code> - IND-MM-1L-VRD</li><li><code>IND-MM-2L-DKD</code> - IND-MM-2L-DKD</li><li><code>IND-MM-4L-CILTACEL-CART</code> - IND-MM-4L-CILTACEL-CART</li><li><code>IND-MM-4L-TECLISTAMAB</code> - IND-MM-4L-TECLISTAMAB</li><li><code>IND-MM-ELDERLY-FRAIL-VRD-LIGHT</code> - IND-MM-ELDERLY-FRAIL-VRD-LIGHT</li><li><code>IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE</code> - IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE</li><li><code>IND-MM-RR-2L-CILTACEL</code> - IND-MM-RR-2L-CILTACEL</li><li><code>IND-MM-RR-3L-CILTACEL</code> - IND-MM-RR-3L-CILTACEL</li><li><code>IND-MM-RR-3L-ELRANATAMAB</code> - IND-MM-RR-3L-ELRANATAMAB</li><li><code>IND-MM-RR-3L-IDECEL</code> - IND-MM-RR-3L-IDECEL</li><li><code>IND-MM-RR-3L-TALQUETAMAB</code> - IND-MM-RR-3L-TALQUETAMAB</li><li><code>IND-MM-RR-3L-TECLISTAMAB</code> - IND-MM-RR-3L-TECLISTAMAB</li></ul>
 </main>
 </body>

@@ -2,6 +2,77 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Uveal (intraocular — choroidal, ciliary-body, iris) melanoma with somatic BAP1 loss-of-fu... - OpenOnco</title>
   <!-- openonco-seo:start -->
@@ -24,9 +95,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Uveal (intraocular — choroidal, ciliary-body, iris) melanoma with somatic BAP1 loss-of-fu... - OpenOnco">
 <meta name="twitter:description" content="Uveal (intraocular — choroidal, ciliary-body, iris) melanoma with somatic BAP1 loss-of-fu...: сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Uveal (intraocular — choroidal, ciliary-body, iris) melanoma with somatic BAP1 loss-of-fu... - OpenOnco","description":"Uveal (intraocular — choroidal, ciliary-body, iris) melanoma with somatic BAP1 loss-of-fu...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-uveal-melanoma-bap1-mut-candidate.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg"},"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-uveal-melanoma-bap1-mut-candidate.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Uveal (intraocular — choroidal, ciliary-body, iris) melanoma with somatic BAP1 loss-of-fu... - OpenOnco","description":"Uveal (intraocular — choroidal, ciliary-body, iris) melanoma with somatic BAP1 loss-of-fu...: сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/redflags/rf-uveal-melanoma-bap1-mut-candidate.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/redflags/rf-uveal-melanoma-bap1-mut-candidate.html"}}</script>
 <!-- openonco-seo:end -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
@@ -91,7 +165,7 @@
   </div>
   <nav class="top-nav">
     <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
   </nav>
   <div class="top-right">
@@ -116,7 +190,7 @@
 <tr><th>Статус</th><td>переглянуто 2026-04-29 | очікує клінічного підпису</td></tr>
 <tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/diseases.html#DIS-MELANOMA"><code>DIS-MELANOMA</code></a></span></td></tr>
 <tr><th>Джерела</th><td><span class="kb-chip" title="CIViC — Clinical Interpretations of Variants in Cancer"><a href="https://civicdb.org/" target="_blank" rel="noopener noreferrer"><code>SRC-CIVIC</code></a></span> <span class="kb-chip" title="NCCN Cutaneous Melanoma"><a href="https://www.nccn.org/professionals/physician_gls/pdf/cutaneous_melanoma.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-MELANOMA-2025</code></a></span></td></tr></table>
-  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Uveal (intraocular — choroidal, ciliary-body, iris) melanoma with somatic BAP1 loss-of-function mutation OR loss of BAP1 nuclear staining by IHC. BAP1-loss in uveal melanoma is the strongest single prognostic marker for metastasis-prone disease — class-2 GEP (gene-expression profile) tumors per Harbour 2010 / Onken 2010 carry ~70-80% 5-year metastasis rate vs. ~5% for class-1 (BAP1- intact) tumors. Metastatic uveal melanoma was historically unresponsive to ICI (ORR &lt;5% with anti-PD-1 mono; ORR ~12-18% with ipi/nivo combo) due to low TMB; tebentafusp (gp100 × CD3 ImmTAC, IMCgp100-202 phase 3, Nathan NEJM 2021) is the first approved systemic therapy for HLA-A*02:01+ metastatic uveal melanoma, with mOS 21.7 vs 16.0 mo vs investigator-choice. Informational at MVP: uveal melanoma is not a separately-modeled disease (DIS-UVEAL not defined); RF surfaces (a) the BAP1-loss → high-metastasis-risk...</td></tr>
+  <h2>Походження тривожної ознаки</h2><table class="kb-facts"><tr><th>Визначення</th><td>Увеальна (внутрішньоочна — хоріоїдальна, циліарного тіла, райдужки) меланома з соматичною BAP1 LOF-мутацією АБО втратою ядерного забарвлення BAP1 за ІГХ. BAP1-loss в увеальній меланомі — найсильніший окремий прогностичний маркер метастаз-схильної хвороби: class-2 GEP (gene-expression profile) пухлини за Harbour 2010 / Onken 2010 мають ~70-80% 5-річну частоту метастазування проти ~5% для class-1 (BAP1- intact) пухлин. Метастатична увеальна меланома історично не відповідала на ICI (ORR &lt;5% при anti-PD-1 монотерапії; ORR ~12-18% при ipi/nivo комбо) через низьку TMB; tebentafusp (gp100 × CD3 ImmTAC, IMCgp100-202 phase 3, Nathan NEJM 2021) — перша схвалена системна терапія для HLA-A*02:01+ метастатичної увеальної меланоми, мОВ 21.7 проти 16.0 міс vs investigator-choice. На MVP — лише інформаційний: увеальна меланома не моделюється окремо (DIS-UVEAL не визначено); RF поверхневлює (а) прогност...</td></tr>
 <tr><th>Клінічний напрям</th><td>investigate</td></tr>
 <tr><th>Категорія</th><td>high-risk-biology</td></tr></table><h2>Логіка спрацьовування</h2><pre>{
   &quot;all_of&quot;: [
@@ -175,7 +249,7 @@
   ],
   &quot;type&quot;: &quot;biomarker&quot;
 }</pre>
-  <h2>Нотатки</h2><p>**Why uveal melanoma is biologically distinct from cutaneous:** Uveal arises from choroidal/ciliary/iris melanocytes (neural-crest origin, post-migration to the eye), drivers are GNAQ / GNA11 / CYSLTR2 / PLCB4 (Gαq-pathway, ~95%), NOT BRAF / NRAS / NF1. Mutational burden is ~10× lower than cutaneous (low TMB → poor ICI substrate). BAP1 (3p21) is the second hit in ~50% of metastatic-prone uveal — the seminal Harbour Science 2010 finding that linked BAP1-loss to class-2 GEP and metastatic dissemination. **Prognostic stratification (uveal-specific):** - Class-1A GEP (BAP1-intact, low PRAME): 5-yr metastasis ~2-5% - Class-1B GEP (BAP1-intact, high PRAME): 5-yr metastasis ~20% - Class-2 GEP (BAP1-loss): 5-yr metastasis 70-80% Liver is the dominant metastatic site (&gt;90% of metastases involve liver as first site). **Therapeutic implications (metastatic uveal):** - HLA-A*02:01-positive: tebentafusp (FDA-approved 2022) — required HLA testing before treatment selection. mOS 21.7 mo (IMCgp100-202). Cytokine-release toxicity dominates — initial inpatient or monitored-outpatient escalation per protocol. - HLA-A*02:01-negative: ipilimumab + nivolumab off-label (per GEM1402 / single-arm phase 2...</p>
+  <h2>Нотатки</h2><p>**Чому увеальна меланома біологічно відрізняється від шкірної:** Увеальна виникає з хоріоїдальних / циліарних / райдужних меланоцитів (нейроектодермальне походження, постміграція в око); драйвери — GNAQ / GNA11 / CYSLTR2 / PLCB4 (Gαq-шлях, ~95%), НЕ BRAF / NRAS / NF1. Мутаційне навантаження ~10× нижче за шкірну (низька TMB → поганий субстрат для ICI). BAP1 (3p21) — другий &quot;hit&quot; у ~50% метастаз-схильних увеальних, ключове відкриття Harbour Science 2010, що пов&#x27;язало BAP1-loss з class-2 GEP і метастатичною дисемінацією. **Прогностична стратифікація (увеал-специфічна):** - Class-1A GEP (BAP1-intact, low PRAME): 5-р. метастази ~2-5% - Class-1B GEP (BAP1-intact, high PRAME): 5-р. метастази ~20% - Class-2 GEP (BAP1-loss): 5-р. метастази 70-80% Печінка — домінуюче місце метастазування (&gt;90% мають печінку як першу локацію). **Терапевтичні наслідки (метастатична увеальна):** - HLA-A*02:01-позитивні: тебентафусп (FDA-схвалено 2022) — обов&#x27;язкове HLA-тестування перед вибором терапії. мОВ 21.7 міс (IMCgp100-202). Cytokine-release токсичність домінує — стаціонарне або моніторинг- амбулаторне підвищення дози за протоколом. - HLA-A*02:01-негативні: іпілімумаб + ніволумаб off-label (GEM1402 / sin...</p>
   <h2>Де використовується</h2><p class="kb-muted">У YAML-корпусі не знайдено зворотних посилань.</p>
 </main>
 </body>

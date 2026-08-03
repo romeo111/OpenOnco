@@ -1,0 +1,110 @@
+id: ALGO-NPC-1L
+applicable_to_disease: DIS-NPC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Route first-line nasopharyngeal carcinoma (NPC) patients by disease
+  extent. Non-metastatic (Stage I-IVA, M0) locoregionally confined
+  disease routes to definitive concurrent chemoradiation +/- induction
+  gemcitabine-cisplatin (IND-NPC-1L-LOCALLY-ADVANCED-CCRT). Distant
+  metastatic (Stage IVB/M1) disease at diagnosis or recurrence routes
+  to systemic gemcitabine+cisplatin+PD-1 inhibitor
+  (IND-NPC-1L-METASTATIC-GC-PD1). Induction-chemotherapy sub-selection
+  within the locally-advanced track and toripalimab-vs-camrelizumab
+  sub-selection within the metastatic track are both handled inside
+  the respective Indication/Regimen entities, not as separate
+  algorithm branches.
+
+output_indications:
+  - IND-NPC-1L-LOCALLY-ADVANCED-CCRT
+  - IND-NPC-1L-METASTATIC-GC-PD1
+
+default_indication: IND-NPC-1L-LOCALLY-ADVANCED-CCRT
+alternative_indication: IND-NPC-1L-METASTATIC-GC-PD1
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - finding: "distant_metastasis"
+          value: true
+        - finding: "m_stage"
+          value: "M1"
+        - finding: "stage_group"
+          value: "metastatic"
+        - clinician_confirmation:
+            id: CC-ALGO-NPC-1L-0F95A1C46A5D
+            label: "Distant metastatic disease (Stage IVB / M1) at diagnosis or recurrence"
+            legacy_condition: "Distant metastatic disease (Stage IVB / M1) at diagnosis or recurrence"
+    if_true:
+      result: IND-NPC-1L-METASTATIC-GC-PD1
+      notes: >
+        Distant metastatic (M1) NPC: systemic gemcitabine+cisplatin+
+        PD-1 inhibitor is standard 1L per JUPITER-02 (toripalimab,
+        FDA-approved) / CAPTAIN-1st (camrelizumab) — two recent
+        Chinese phase 3 trials. Toripalimab+GP is the algorithm
+        default within this branch (see Indication known_controversies
+        for the camrelizumab alternative).
+    if_false:
+      result: IND-NPC-1L-LOCALLY-ADVANCED-CCRT
+      notes: >
+        Non-metastatic (Stage I-IVA) NPC: definitive concurrent
+        chemoradiation (cisplatin + IMRT), with induction gemcitabine-
+        cisplatin added for locoregionally advanced (higher-risk,
+        Stage III-IVA per the GC-induction trial's general eligibility
+        framing) disease per MDT assessment. This algorithm's single
+        non-metastatic branch defaults uniformly to the CCRT
+        indication; a separate RT-alone pathway for very-early
+        Stage I disease is NOT modeled here (out of scope for this
+        authoring pass — MDT judgment call).
+    notes: >
+      Mechanical stage-gate: finding keys distant_metastasis / m_stage /
+      stage_group follow the same free-text finding-key conventions
+      already used elsewhere in this KB (algo_bcc_1l.yaml: finding
+      distant_metastasis; algo_breast_1l.yaml: finding m_stage /
+      stage_group). No RedFlag entity currently exists for NPC-specific
+      M1 detection; this uses the pan-disease finding-key pattern
+      rather than inventing a new RedFlag for a plain staging fact.
+
+sources:
+  - SRC-JUPITER-02-MAI-2021
+  - SRC-CAPTAIN-1ST-YANG-2021
+  - SRC-NPC-GC-INDUCTION-ZHANG-2019
+  - SRC-NCCN-HNSCC-2025
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+notes: >
+  STUB — draft entity pending Clinical Co-Lead sign-off (CHARTER §6.1;
+  dev-mode-exempted). Single stage-gate step splits mutually-exclusive
+  locoregionally-confined (Stage I-IVA, M0) vs distant metastatic
+  (Stage IVB/M1) disease into two entirely different treatment tracks
+  (definitive CRT vs systemic chemo-immunotherapy). default_indication/
+  alternative_indication here denote the two mutually-exclusive stage
+  branches, NOT a standard/aggressive pair for the same patient (the
+  usual CHARTER §2 two-plan convention) — flagged explicitly because
+  this differs from how those two fields are used in most other
+  algorithms in this KB. IMPORTANT CAVEAT (added at independent-review
+  time, see knowledge_base/engine/plan.py generate_plan): the engine
+  currently materializes a track for EVERY id in `output_indications`
+  regardless of which branch the decision tree actually selects —
+  `stage_requirements` text is NOT machine-enforced. This means, as
+  authored, a non-metastatic patient's plan will also show the
+  metastatic gem-cis+PD-1 track as the "alternative" option, and a
+  metastatic patient's plan will show the CCRT track as the
+  "alternative" option, even though neither is a clinically valid
+  alternative for that patient's disease extent. This exact pattern
+  (disjoint sub-populations sharing one output_indications list) is
+  already present in ALGO-BCC-1L and ALGO-BREAST-1L, so it is not a
+  defect unique to this file, but it is a pre-existing engine/product
+  gap worth escalating rather than a reason to reject this specific
+  proposal. 2L (post-CRT relapse; post-metastatic-1L progression) not
+  yet authored — plasma EBV-DNA surveillance
+  (RF-NPC-EBV-DNA-POST-TREATMENT-SURVEILLANCE) may inform a future
+  2L/relapse-detection algorithm (Phase 4 backlog).
+notes_ua: >
+  ЗАГОТОВКА — чернетковий запис, очікує підпису клінічного ко-лідера
+  (CHARTER §6.1). Один крок стадійного розгалуження розділяє
+  взаємовиключні локорегіонарно обмежену (Stage I-IVA, M0) та
+  віддалено метастатичну (Stage IVB/M1) хворобу на два різні шляхи
+  лікування. 2L (рецидив після CCRT; прогресування після метастатичної
+  1L) ще не створено.

@@ -1,0 +1,116 @@
+id: RF-JPS-CONFIRMED-CARRIER
+definition: >-
+  Confirmed germline pathogenic / likely-pathogenic variant in SMAD4 or
+  BMPR1A — Juvenile Polyposis Syndrome (JPS). Patient has had germline
+  panel testing returned positive (or, in the SMAD4 / BMPR1A-negative
+  ~20% of clinically diagnosed JPS, meets clinical diagnostic criteria:
+  ≥5 juvenile polyps in colorectum, juvenile polyps throughout the GI
+  tract, or any number of juvenile polyps with a JPS family history).
+  Autosomal-dominant hamartomatous polyposis distinct from FAP
+  (adenomatous) and PJS (hamartomatous-STK11) — JPS polyps are juvenile-
+  type (mucus-filled lamina propria, smooth surface) with malignant
+  potential through retention-polyp → mixed → adenomatous → carcinoma
+  pathway. Lifetime CRC risk ~40%, gastric ~21%, small bowel + pancreatic
+  modest. SMAD4 carriers have a distinct ~22% overlap with Hereditary
+  Hemorrhagic Telangiectasia (HHT, Osler-Weber-Rendu) requiring
+  cardiovascular AVM screening (pulmonary, hepatic, cerebral) absent in
+  BMPR1A carriers — clinically important pre-procedure assessment.
+  Prevention-persona RedFlag (§20, v0.2-B confirmed-carrier surveillance
+  pathway — distinct from any future RF-JPS-FAMILY-HISTORY-SUSPICION
+  that would fire before testing).
+definition_ua: >-
+  Підтверджений гермінативний патогенний / ймовірно-патогенний варіант у
+  SMAD4 або BMPR1A — синдром ювенільного поліпозу (JPS). Пацієнт пройшов
+  germline panel тестування з позитивним результатом (або, у SMAD4 /
+  BMPR1A-negative ~20% клінічно діагностованого JPS, відповідає клінічним
+  діагностичним критеріям: ≥5 ювенільних поліпів у колоректумі,
+  ювенільні поліпи по всьому GI-тракту, або будь-яка кількість
+  ювенільних поліпів з JPS-family-history). Autosomal-dominant
+  hamartomatous polyposis відрізняється від FAP (adenomatous) та PJS
+  (hamartomatous-STK11) — JPS-поліпи juvenile-type (mucus-filled lamina
+  propria, smooth surface) з malignant potential через retention-polyp →
+  mixed → adenomatous → carcinoma pathway. Lifetime CRC ризик ~40%,
+  gastric ~21%, тонкокишковий + pancreatic modest. SMAD4-носії мають
+  distinct ~22% overlap з Hereditary Hemorrhagic Telangiectasia (HHT,
+  Osler-Weber-Rendu) — потребують cardiovascular AVM screening
+  (pulmonary, hepatic, cerebral), відсутнього у BMPR1A-носіїв —
+  клінічно важлива pre-procedure оцінка. Prevention-persona RedFlag
+  (§20, v0.2-B шлях спостереження підтверджених носіїв).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "germline_smad4_pathogenic_variant_confirmed"
+      value: true
+    - finding: "germline_bmpr1a_pathogenic_variant_confirmed"
+      value: true
+    - finding: "jps_clinical_diagnostic_criteria_met"
+      value: true
+
+clinical_direction: investigate
+
+# CRITICAL — lifetime CRC ~40% + gastric ~21% + intussusception /
+# obstruction risk + SMAD4-HHT pulmonary AVM peri-procedure stroke risk.
+severity: critical
+priority: 70
+category: other
+risk_category: genetic
+
+# JPS-spectrum: CRC dominant (DIS-CRC), gastric (DIS-GASTRIC), pancreatic
+# (DIS-PDAC) modest, small-bowel (no dedicated entity — under DIS-CRC
+# surveillance umbrella).
+relevant_diseases:
+  - DIS-CRC
+  - DIS-GASTRIC
+  - DIS-PDAC
+
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-GENETIC-FAMILIAL-CRC-2025
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-CRC-2024
+
+last_reviewed: "2026-05-20"
+reviewer_signoffs: 0
+notes: >
+  Wave O confirmed-carrier surveillance pathway — Juvenile Polyposis
+  Syndrome (JPS / SMAD4 / BMPR1A). Fires on documented germline SMAD4 /
+  BMPR1A pathogenic variant positivity OR clinical-diagnostic criteria
+  met in SMAD4 / BMPR1A-negative phenotypic JPS. Engine routes to
+  PreventionPlan recommending:
+    (a) IND-JPS-CARRIER-SURVEILLANCE (standard) — colonoscopy q1-3y from
+        age 12-15 (intensified to every 6 months once polyps appear);
+        upper endoscopy q1-3y from age 15 (intensified once polyps
+        appear); juvenile-polyp-burden-driven prophylactic colectomy
+        decision; SMAD4-specific HHT screening at diagnosis (pulse
+        oximetry, contrast echocardiography for pulmonary AVMs, brain
+        MRI for cerebral AVMs).
+    (b) IND-JPS-CARRIER-INTENSIFIED (aggressive) — standard PLUS earlier
+        prophylactic colectomy discussion for polyp-burden patients
+        (juvenile-polyp count rapidly exceeding endoscopic-clearance
+        capacity) + intensified SMAD4-HHT AVM management discussion.
+
+  STUB pending two-Clinical-Co-Lead signoff per CHARTER §6.1 dev-mode
+  exemption.
+
+  Lifetime cancer risk in confirmed SMAD4 / BMPR1A carriers (NCCN
+  Genetic Familial High-Risk: Colorectal v2.2025; Brosens et al. Gut
+  2007):
+    - Colorectal: ~40% lifetime (range 17-68% across cohorts)
+    - Gastric: ~21% lifetime (SMAD4 enriched, BMPR1A modest)
+    - Small-bowel adenocarcinoma: ~6-10% lifetime
+    - Pancreatic: modest (~5%; weaker than PJS or FAMMM signal)
+    - Childhood symptoms: anemia, rectal bleeding, intussusception,
+      protein-losing enteropathy from high polyp burden
+
+  SMAD4-HHT overlap (~22% of SMAD4 carriers): pulmonary AVM (with
+  paradoxical embolism / stroke risk; peri-procedural air-embolism
+  precautions needed), hepatic AVM, cerebral AVM, recurrent epistaxis,
+  GI bleeding from telangiectases. BMPR1A carriers do not have HHT
+  overlap. Distinction matters for genetic counseling and pre-procedure
+  workup.
+draft: true
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_v0_3_wave_o_rare_hereditary
+draft_revision: 1

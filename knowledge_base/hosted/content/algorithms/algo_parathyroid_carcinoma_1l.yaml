@@ -1,0 +1,114 @@
+id: ALGO-PARATHYROID-CARCINOMA-1L
+applicable_to_disease: DIS-PARATHYROID-CARCINOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  Route parathyroid carcinoma management by resectability and
+  recurrence/metastasis status at presentation: localized/resectable
+  disease (including any parathyroid mass with clinical suspicion of
+  carcinoma) goes to en-bloc index surgery; recurrent, persistent, or
+  metastatic disease is further gated by MSI-H/dMMR or TMB-high
+  biomarker status to select between tissue-agnostic pembrolizumab and
+  re-resection + cinacalcet-based hypercalcemia control as the default
+  supportive/systemic track.
+
+output_indications:
+  - IND-PARATHYROID-CARCINOMA-1L-RESECTION
+  - IND-PARATHYROID-CARCINOMA-2L-PEMBROLIZUMAB-MSI
+  - IND-PARATHYROID-CARCINOMA-2L-CINACALCET
+
+default_indication: IND-PARATHYROID-CARCINOMA-1L-RESECTION
+alternative_indication: IND-PARATHYROID-CARCINOMA-2L-CINACALCET
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - clinician_confirmation:
+            id: CC-ALGO-PARATHYROID-CARCINOMA-1L-B0F722BB01CB
+            label: "Localized, resectable disease at presentation — including any parathyroid mass with clinical/biochemical/intraoperative features suspicious for carcinoma (markedly elevated PTH/calcium, invasive/fixed mass) even pending final histology"
+            legacy_condition: "Localized, resectable disease at presentation — including any parathyroid mass with clinical/biochemical/intraoperative features suspicious for carcinoma (markedly elevated PTH/calcium, invasive/fixed mass) even pending final histology"
+    if_true:
+      result: IND-PARATHYROID-CARCINOMA-1L-RESECTION
+      notes: >
+        En-bloc resection at index surgery (parathyroid + ipsilateral
+        thyroid lobe + central lymph nodes, no capsule violation) is
+        the single highest-leverage intervention — R0 is the strongest
+        prognostic factor. Do NOT enucleate.
+    if_false:
+      next_step: 2
+    notes: >
+      No RedFlag or structured finding key exists yet for
+      "localized/resectable at presentation" — remains free-text prose
+      pending future RF authoring. This is the primary branch point and
+      the most common real-world presentation (most parathyroid
+      carcinoma is diagnosed as an apparently localized neck mass, with
+      carcinoma confirmed only on final pathology after en-bloc
+      resection).
+
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-PARATHYROID-CARCINOMA-MSI-TMB-HIGH-ACTIONABILITY
+    if_true:
+      result: IND-PARATHYROID-CARCINOMA-2L-PEMBROLIZUMAB-MSI
+      notes: >
+        Recurrent/metastatic disease with MSI-H/dMMR or TMB-high
+        biology: pembrolizumab (tissue-agnostic FDA approval) is the
+        preferred systemic option, in addition to (not necessarily
+        instead of) cinacalcet-based hypercalcemia control.
+    if_false:
+      result: null
+      notes: >
+        Recurrent, persistent, or metastatic disease without an
+        actionable MSI-H/TMB-high result: re-resection where feasible
+        plus cinacalcet for PTH-driven hypercalcemia control
+        (IND-PARATHYROID-CARCINOMA-2L-CINACALCET) is the intended track.
+        No standard cytotoxic chemotherapy regimen has consistent
+        activity in parathyroid carcinoma — a genuine evidence gap in
+        this rare disease, not an authoring omission.
+        WIRING NOTE (independent post-hoc review, 2026-07-11): result
+        set to null rather than IND-PARATHYROID-CARCINOMA-2L-CINACALCET
+        directly. Step 1 (localized/resectable gate) is prose-only and
+        never fires true, so EVERY patient reaching this algorithm —
+        including the localized/resectable majority the algorithm's own
+        notes call "the most common real-world presentation" — was
+        falling through to this branch. A real (non-null) result here
+        would have silently overridden the correctly-declared
+        default_indication (IND-PARATHYROID-CARCINOMA-1L-RESECTION),
+        routing surgical candidates to medical hypercalcemia management
+        instead of curative-intent resection. null lets the engine's
+        existing `selected or default_indication` fallback
+        (knowledge_base/engine/plan.py) restore the intended default.
+        This does not fix step 1's underlying gap (still open, still
+        needs a dedicated RF/finding) — it only prevents that gap from
+        silently overriding an already-correct declared default.
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+notes: >
+  STUB — 1L algorithm for DIS-PARATHYROID-CARCINOMA covering the three
+  Indications authored alongside it (review_status: stub on each).
+  Step 1 (localized/resectable vs. recurrent/metastatic) is free-text
+  prose pending a dedicated RedFlag — no existing finding key captures
+  "localized/resectable parathyroid mass," and this is a genuinely
+  disease-specific gate not shared with other diseases in the KB,
+  unlike step 2, which reuses the MSI-H/dMMR/TMB-high biomarker pattern
+  already established by RF-CRC-MSI-H-ACTIONABILITY /
+  IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO via a new disease-scoped RF
+  (RF-PARATHYROID-CARCINOMA-MSI-TMB-HIGH-ACTIONABILITY). The
+  IND-PARATHYROID-CARCINOMA-1L-RESECTION output omits the
+  `phases:`/`surgery_id` FK mechanism used by the Meningioma
+  gold-standard pattern because no Surgery entity for the en-bloc
+  parathyroidectomy procedure has been authored yet — flagged as an
+  open gap on that Indication. Germline CDC73/HRPT2 (HPT-JT) cascade
+  surveillance and MEN1/MEN2A-axis screening are OUT OF SCOPE for this
+  treatment-time algorithm — see BMA-CDC73-GERMLINE-HPT-JT (already in
+  the KB) for carrier-surveillance content; a dedicated
+  screening/surveillance Indication for HPT-JT carriers remains
+  unauthored. Requires endocrine-surgery / endocrine-oncology co-lead
+  signoff before clinical publication (CHARTER §6.1 — dev-mode-
+  exempted, safe to merge as draft content).

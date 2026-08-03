@@ -1,0 +1,64 @@
+id: REG-CISPLATIN-5FU-PENILE
+name: "Cisplatin + 5-fluorouracil (metastatic penile SCC, 1L)"
+name_ua: "Цисплатин + 5-фторурацил (метастатична SCC пенісу, 1L)"
+disease_context: DIS-PENILE-SCC
+line_of_therapy: 1
+plan_track: standard
+regimen_type: "chemotherapy_doublet"
+
+components:
+  - drug_id: DRUG-CISPLATIN
+    dose: "100 mg/m² IV day 1 (or 25 mg/m²/day × 4 days in patients with borderline tolerance)"
+    route: IV
+    schedule: "Day 1 of each 28-day cycle (or days 1-4 if fractionated)"
+    administration_notes: "Requires standard pre/post cisplatin hydration protocol; consider fractionated dosing or carboplatin substitution for borderline renal function."
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "1000 mg/m²/day IV continuous infusion"
+    route: IV
+    schedule: "Days 1-4 of each 28-day cycle (concurrent with cisplatin days)"
+
+cycle_length_days: 28
+total_cycles: "4-6 cycles or until progression / unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Antiemetic prophylaxis per highly-emetogenic-chemotherapy protocol (5-HT3 antagonist + dexamethasone + NK1 antagonist on cisplatin day)"
+
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "CrCl <50 mL/min"
+    modification: "Substitute carboplatin AUC 5 for cisplatin; reduce 5-FU per renal/hepatic function"
+    rationale: "Cisplatin nephrotoxicity; carboplatin substitution is standard practice for platinum-doublet regimens with renal impairment"
+    source_refs: [SRC-EAU-PENILE-2024]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Cisplatin and 5-FU are both generic and widely available/reimbursed in Ukraine — the most UA-accessible metastatic option for penile SCC (vs TIP, which requires ifosfamide + mesna + growth-factor infrastructure)."
+
+sources:
+  - SRC-EAU-PENILE-2024
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: 0
+notes: >
+  STUB. Cisplatin + 5-FU is the classic doublet for metastatic/unresectable
+  penile SCC per EAU guidelines, alongside TIP (REG-TIP-PENILE). No phase
+  III RCT exists in this rare disease — evidence base is small
+  retrospective/phase II series; regimen composition and general
+  SCC-doublet dosing convention (analogous to head & neck / cervical /
+  anal SCC cisplatin+5-FU protocols) drafted pending clinical co-lead
+  signoff (CHARTER §6.1; dev-mode-exempted for draft merge). Choice
+  between this doublet and TIP is MDT/fitness-based — see
+  ALGO-PENILE-SCC-1L step 5.
+notes_ua: >
+  СТАБ. Цисплатин + 5-фторурацил — класична дублетна схема при
+  метастатичній/нерезектабельній SCC пенісу за EAU guidelines, поряд
+  з TIP (REG-TIP-PENILE). Немає РКД фази 3 при цьому рідкісному
+  захворюванні. Очікує підпису клінічного співкерівника.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+draft_revision: 1

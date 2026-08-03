@@ -49,6 +49,7 @@ decision_tree:
       result: IND-NMZL-1L-HCV-POSITIVE
     if_false:
       next_step: 3
+    notes: "Mechanical rewire of 2 of 3 free-text gates. 'HCV RNA positive (anti-HCV alone insufficient)' now wired via finding: hcv_rna_positive=true — mirrors ALGO-SMZL-1L step 1's identical flat leaf for the same HCV-DAA-first routing decision; RF-SMZL-INFECTION-SCREENING's own trigger confirms hcv_rna_positive is a distinct field from anti_hcv, matching the 'anti-HCV alone insufficient' caveat. 'Indolent / low-burden presentation (GELF-negative)' now wired via red_flag: RF-GELF-LOW-BURDEN — mirrors this file's own step 3, which already cross-reuses RF-FL-HIGH-TUMOR-BURDEN-GELF from FL for the identical GELF framework; RF-GELF-LOW-BURDEN is its exact negated-polarity companion (already live in ALGO-FL-1L step 3, and matches examples/patient_nmzl_low_burden.json's finding shape). 'Compensated liver function (no decompensated cirrhosis)' remains free-text: a flat finding: decompensated_cirrhosis=false leaf is NOT confirmed equivalent to the only existing KB precedent for this field (ALGO-SMZL-1L step 1's none_of: [{finding: decompensated_cirrhosis, value: true}]) — the two forms diverge when the finding is unset (common today, since neither NMZL's stub questionnaire nor demographics collects it), so left as prose pending clarification. Original clinical criteria unchanged."
 
   # Step 3 — high tumor burden (GELF) → BR; otherwise watch-and-wait.
   - step: 3

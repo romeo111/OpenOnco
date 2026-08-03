@@ -1,8 +1,8 @@
 # RCC 1L Routing Gap — Diagnostic Report
 
-**Date:** 2026-05-09  
-**Author:** Diagnostic agent (claude/romantic-ellis-de1a2b worktree)  
-**Status:** Gap resolved in current master; stale artefacts remain. See §3.  
+**Date:** 2026-05-09
+**Author:** Diagnostic agent (claude/romantic-ellis-de1a2b worktree)
+**Status:** Gap resolved in current master; stale artefacts remain. See §3.
 **Clinical authoring needed:** Yes — two-reviewer signoff on RF pending. See §4.
 
 ---

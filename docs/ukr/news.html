@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Новини</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів.">
+<meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
+<link rel="canonical" href="https://openonco.info/ukr/news.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/news.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/news.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco · Новини">
+<meta property="og:description" content="Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів.">
+<meta property="og:url" content="https://openonco.info/ukr/news.html">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Новини">
+<meta name="twitter:description" content="Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Новини","description":"Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів.","url":"https://openonco.info/ukr/news.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/news.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/ukr/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html" class="active">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
+      <a class="lang-other" href="/news.html"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
+    </div>
+    <div class="top-cta-group">
+      <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary">Онко-вікі</a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="info-page">
+    <p class="home-kicker">OpenOnco</p>
+    <h1>Новини проєкту</h1>
+    <p class="lead">Нотатки до релізів, віхи бази знань і рішення governance. Кожен допис відкритий для коментарів.</p>
+
+    <div class="case-list-header">
+      <h2>Новини</h2>
+      <span class="case-list-count">12 дописів</span>
+    </div>
+    <div class="case-grid">
+      <a class="case-card news-card" href="/ukr/news/cancer-mutations-in-normal-skin.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">21 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">biology</span>
+          <span class="case-quality quality-starter">biomarkers</span>
+        </div>
+        <h3>Здорова шкіра вже повна «ракових» мутацій</h3>
+        <p>Секвенування фізіологічно нормальної шкіри повік виявило драйверні мутації — ті самі, що й у пухлинах, — приблизно у чверті клітин, близько 140 на квадратний сантиметр. Шкіра працювала нормально. Сама лише драйверна мутація ще не робить рак.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/what-nccn-2a-actually-means.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">20 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">guidelines</span>
+          <span class="case-quality quality-starter">evidence</span>
+        </div>
+        <h3>Що насправді означає категорія 2A у NCCN</h3>
+        <p>2A часто читають як «слабкі докази, слабка рекомендація». Це не так. Узгодженість панелі за 2A така сама, як за категорією 1, — а ще 2A діє за замовчуванням, коли категорію взагалі не вказано.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/news-and-comments.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">19 липня 2026</span>
+
+          <span class="case-quality quality-starter">site</span>
+          <span class="case-quality quality-starter">community</span>
+        </div>
+        <h3>Цей розділ новий, і він відкритий для коментарів</h3>
+        <p>Нотатки до релізів і рішення governance тепер мають місце на сайті, а не живуть лише в повідомленнях комітів. Кожен допис приймає коментарі — з кількома правилами, які справді потрібні сайту про онкологію.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/algorithm-routing-repair.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">15 липня 2026</span>
+
+          <span class="case-quality quality-starter">knowledge-base</span>
+          <span class="case-quality quality-starter">engine</span>
+          <span class="case-quality quality-starter">quality</span>
+        </div>
+        <h3>Виправлено дефекти маршрутизації в деревах рішень, посилено валідатор</h3>
+        <p>Аудит усіх алгоритмів лікування через engine walker, а не через лоадер, виявив дефекти маршрутизації, через які обрані індикації мовчки зникали зі згенерованих планів.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/two-doors.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">8 липня 2026</span>
+
+          <span class="case-quality quality-starter">site</span>
+          <span class="case-quality quality-starter">governance</span>
+          <span class="case-quality quality-starter">patients</span>
+        </div>
+        <h3>Двоє дверей — і чому пацієнти заходять в інші</h3>
+        <p>Головна сторінка тепер веде лікарів і пацієнтів у різні місця. Пацієнти отримують допомогу в розумінні плану й підготовці запитань, а не рекомендації щодо лікування — ця межа має триматися і з міркувань безпеки, і з регуляторних.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/mcp-server-for-assistants.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">18 червня 2026</span>
+
+          <span class="case-quality quality-starter">engine</span>
+          <span class="case-quality quality-starter">integrations</span>
+          <span class="case-quality quality-starter">release</span>
+        </div>
+        <h3>AI-асистент тепер може викликати engine замість того, щоб вгадувати</h3>
+        <p>OpenOnco отримав MCP-сервер: асистент, який відповідає на онкологічне питання, може звернутися до rule engine і повернути відповідь із джерелами, а не імпровізувати схему лікування.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/prevention-plans-live.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">19 травня 2026</span>
+
+          <span class="case-quality quality-starter">prevention</span>
+          <span class="case-quality quality-starter">governance</span>
+          <span class="case-quality quality-starter">knowledge-base</span>
+        </div>
+        <h3>Плани профілактики — для тих, хто ще не має раку</h3>
+        <p>Статут доповнено, щоб охопити людей із підвищеним ризиком, але без діагнозу. Engine тепер будує План профілактики поряд із Планом лікування, а перші пілоти вже доступні на сайті.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/prose-conditions-audit.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">17 травня 2026</span>
+
+          <span class="case-quality quality-starter">engine</span>
+          <span class="case-quality quality-starter">quality</span>
+          <span class="case-quality quality-starter">audit</span>
+        </div>
+        <h3>85% умов у деревах рішень engine не міг прочитати</h3>
+        <p>Аудит усіх алгоритмів лікування показав, що більшість умов розгалуження написані англійською прозою, яку engine не вміє обчислювати, — і що через це 30% алгоритмів на кожному пацієнті провалювалися до значення за замовчуванням.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/spring-kb-wave.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">11 травня 2026</span>
+
+          <span class="case-quality quality-starter">knowledge-base</span>
+          <span class="case-quality quality-starter">regimens</span>
+        </div>
+        <h3>Що зʼявилося в базі знань з 30 квітня до 11 травня</h3>
+        <p>Дайджест одного насиченого двотижня: хвилі схем лікування в гематології, торакальній онкології та раку грудної залози, red flags для рідкісних пухлин, доповнення actionability з CIViC і пакет виправлень маршрутизації.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/civic-primary-actionability.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">27 квітня 2026</span>
+
+          <span class="case-quality quality-starter">knowledge-base</span>
+          <span class="case-quality quality-starter">licensing</span>
+          <span class="case-quality quality-starter">biomarkers</span>
+        </div>
+        <h3>Actionability біомаркерів переходить з OncoKB на CIViC</h3>
+        <p>Аудит ліцензій показав, що умови OncoKB несумісні з роботою OpenOnco як безкоштовного публічного ресурсу. Actionability біомаркерів тепер спирається на CIViC із ліцензією CC0.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/rule-engine-not-an-llm.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">26 квітня 2026</span>
+
+          <span class="case-quality quality-starter">governance</span>
+          <span class="case-quality quality-starter">engine</span>
+        </div>
+        <h3>Чому лікування обирає не LLM</h3>
+        <p>Проєкт починався з того, що мовна модель ранжувала варіанти лікування. Той підхід тепер в архіві, а правило, що прийшло на заміну, визначає все інше: рекомендації дає версіонована база знань, а не модель.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/first-clinician-reviewed-plans.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">24 квітня 2026</span>
+
+          <span class="case-quality quality-starter">validation</span>
+          <span class="case-quality quality-starter">clinical</span>
+        </div>
+        <h3>Практикуючі онкологи вперше перевірили плани, згенеровані engine</h3>
+        <p>Engine побудував плани лікування для реального пацієнта, і онкологи, які їх прочитали, оцінили їх як сильні. Один випадок не валідує систему — але це перший сигнал ззовні, а не з власної системи оцінювання проєкту.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
+  </footer>
+</main>
+</body>
+</html>

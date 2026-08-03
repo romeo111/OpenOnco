@@ -1,0 +1,148 @@
+id: ALGO-PITUITARY-ADENOMA-1L
+applicable_to_disease: DIS-PITUITARY-ADENOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  Route pituitary adenoma to one of four parallel, cohort-specific 1L
+  Indications based on hormone-hypersecretion type (prolactinoma /
+  acromegaly-somatotroph / Cushing-disease-corticotroph / nonfunctioning).
+  "Line of therapy" barely applies here — these are parallel endocrine
+  cohorts, not sequential lines — so this algorithm models a first-step
+  gate on the adenoma_hormone_type finding, with each branch terminal. The
+  nonfunctioning branch carries one additional gate (mass effect / visual
+  compromise) since asymptomatic NFPA is observed rather than actively
+  treated.
+
+output_indications:
+  - IND-PITUITARY-ADENOMA-1L-PROLACTINOMA-CABERGOLINE
+  - IND-PITUITARY-ADENOMA-1L-ACROMEGALY-SURGERY-SSA
+  - IND-PITUITARY-ADENOMA-1L-CUSHING-SURGERY-MEDICAL
+  - IND-PITUITARY-ADENOMA-1L-NFPA-SURGERY-MASS-EFFECT
+
+default_indication:
+alternative_indication:
+
+decision_tree:
+  # Step 1 — Prolactinoma gate. Most common functioning subtype (~40%).
+  - step: 1
+    evaluate:
+      any_of:
+        - finding: "adenoma_hormone_type"
+          value: "prolactinoma"
+        - clinician_confirmation:
+            id: CC-ALGO-PITUITARY-ADENOMA-1L-520F86D38CE0
+            label: "Lactotroph adenoma with hyperprolactinemia confirmed as the cause of hormone hypersecretion (prolactinoma)"
+            legacy_condition: "Lactotroph adenoma with hyperprolactinemia confirmed as the cause of hormone hypersecretion (prolactinoma)"
+    if_true:
+      result: IND-PITUITARY-ADENOMA-1L-PROLACTINOMA-CABERGOLINE
+      notes: "Prolactinoma is managed with a dopamine agonist first-line. Terminal branch."
+    if_false:
+      next_step: 2
+
+  # Step 2 — Acromegaly (somatotroph) gate.
+  - step: 2
+    evaluate:
+      any_of:
+        - finding: "adenoma_hormone_type"
+          value: "acromegaly_somatotroph"
+        - clinician_confirmation:
+            id: CC-ALGO-PITUITARY-ADENOMA-1L-B923D1FCAFB8
+            label: "Somatotroph adenoma with GH/IGF-1 hypersecretion confirmed as acromegaly"
+            legacy_condition: "Somatotroph adenoma with GH/IGF-1 hypersecretion confirmed as acromegaly"
+    if_true:
+      result: IND-PITUITARY-ADENOMA-1L-ACROMEGALY-SURGERY-SSA
+      notes: >
+        Acromegaly: transsphenoidal surgery first-line; terminal branch —
+        SSA / pegvisomant medical therapy for persistent or residual
+        disease is captured within the Indication's recommended_regimen +
+        concurrent_therapy, not as separate algorithm steps.
+    if_false:
+      next_step: 3
+
+  # Step 3 — Cushing disease (corticotroph) gate.
+  - step: 3
+    evaluate:
+      any_of:
+        - finding: "adenoma_hormone_type"
+          value: "cushing_disease_corticotroph"
+        - clinician_confirmation:
+            id: CC-ALGO-PITUITARY-ADENOMA-1L-44C42FE8CBBF
+            label: "Corticotroph adenoma with ACTH-dependent hypercortisolism confirmed as Cushing disease"
+            legacy_condition: "Corticotroph adenoma with ACTH-dependent hypercortisolism confirmed as Cushing disease"
+    if_true:
+      result: IND-PITUITARY-ADENOMA-1L-CUSHING-SURGERY-MEDICAL
+      notes: >
+        Cushing disease: transsphenoidal surgery first-line; terminal
+        branch — medical cortisol-control therapy for persistent/recurrent
+        or surgery-ineligible disease is captured within the Indication's
+        recommended_regimen, not as a separate algorithm step.
+    if_false:
+      next_step: 4
+
+  # Step 4 — Nonfunctioning gate.
+  - step: 4
+    evaluate:
+      any_of:
+        - finding: "adenoma_hormone_type"
+          value: "nonfunctioning"
+        - clinician_confirmation:
+            id: CC-ALGO-PITUITARY-ADENOMA-1L-FC00D7FE3EF1
+            label: "No biochemical evidence of hormone hypersecretion (nonfunctioning pituitary adenoma / NFPA)"
+            legacy_condition: "No biochemical evidence of hormone hypersecretion (nonfunctioning pituitary adenoma / NFPA)"
+    if_true:
+      next_step: 5
+    if_false:
+      result: null
+      notes: >
+        Hormone-hypersecretion type not yet classified (e.g. rare
+        thyrotroph/gonadotroph functioning adenoma, or incomplete
+        biochemical workup). This algorithm does not cover rare functioning
+        subtypes or unclassified adenomas — complete the biochemical
+        screening panel (prolactin, IGF-1, ACTH/cortisol, TSH/free T4,
+        gonadotropins/sex hormones) before assigning a cohort.
+
+  # Step 5 — NFPA: mass effect / visual compromise gate. Determines
+  # surgery vs observation.
+  - step: 5
+    evaluate:
+      any_of:
+        - red_flag: RF-PITUITARY-MASS-EFFECT-VISUAL-COMPROMISE
+    if_true:
+      result: IND-PITUITARY-ADENOMA-1L-NFPA-SURGERY-MASS-EFFECT
+      notes: "NFPA with mass effect / visual compromise: surgery indicated. Terminal branch."
+    if_false:
+      result: null
+      notes: >
+        NFPA without mass effect or visual compromise (asymptomatic
+        microadenoma or non-compressive macroadenoma): observation with
+        surveillance MRI is appropriate; not an active-therapy Indication
+        in this KB (mirrors the existing "active surveillance, not a
+        separate indication" pattern used in ALGO-GI-NET-ADVANCED-1L).
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-07-11"
+reviewer_signoffs: []
+notes: >
+  STUB pending clinical co-lead signoff (CHARTER §6.1 — dev-mode-exempted,
+  safe to merge as draft content, not published/verified clinical advice).
+  4-cohort parallel-endocrine-track algorithm — no single default_indication
+  or alternative_indication exists across cohorts since the
+  adenoma_hormone_type gate is intended to be exhaustive and mutually
+  exclusive by diagnosis, not a fitness/preference tiebreaker (contrast
+  with ALGO-RCC-METASTATIC-1L-style default/alternative pairs). "finding:
+  adenoma_hormone_type" is a new free-form finding key (values:
+  prolactinoma | acromegaly_somatotroph | cushing_disease_corticotroph |
+  nonfunctioning), used consistently across this algorithm and all four
+  output Indications' applicable_to.biomarker_requirements_required — no
+  formal Biomarker (BIO-*) entity exists for it yet (open gap; not
+  authored in this pass since Biomarker is outside this task's entity-type
+  scope). Surgery (transsphenoidal resection) — first-line for acromegaly,
+  Cushing disease, and mass-effect NFPA — is not modeled via
+  Indication.phases/surgery_id in this pass because no SUR-PITUITARY-*
+  Procedure entity yet exists in this KB (open gap — see
+  DIS-PITUITARY-ADENOMA proposal notes); surgery sequencing is described
+  in each Indication's stage_requirements/rationale text instead.
+  MEN1-associated pituitary adenoma cascade surveillance is handled
+  separately by ALGO-MEN1-CARRIER-SURVEILLANCE and is out of scope here.

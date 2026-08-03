@@ -31,7 +31,7 @@ The project is an **information resource to support tumor board discussion**, no
 - Claim to provide recommendations for rare or exceptional cases
 - Work with pediatric patients (scope — adults)
 - Constitute a medical device in the regulatory sense (per §15)
-- **Is not intended for patients / caregivers directly** — HCP only (oncologist/hematologist in a clinical context). Direct-to-patient deployment would require re-classification as a medical device — outside CHARTER scope (per §15).
+- **Is not intended for patients / caregivers directly** — HCP only (oncologist/hematologist in a clinical context). Direct-to-patient deployment would require re-classification as a medical device — outside CHARTER scope (per §15). *(Scoped exception ratified 2026-07-08: a patient-facing education / question-preparation layer — "understand your plan, prepare questions for your oncologist," no verdicts, no treatment recommendations to the patient. A full direct-to-patient clinical service remains parked. See §15 CHANGELOG + `docs/plans/patient_facing_tumorboard_scope_2026-07-08.md`.)*
 - **Is not intended for time-critical/urgent decisions** — outpatient planning only. Acute conditions (active TLS management, neutropenic fever, spinal cord compression) — outside scope (per §15).
 
 ---
@@ -354,6 +354,12 @@ the system should work. Requirements:
 
 Until all of these conditions are met — the case remains internal, not public.
 
+**Status (2026-07-19):** the Project Initiator reports all three conditions
+met, so this section no longer holds the reference case back. Publishing
+*about* the milestone — with no patient-level clinical detail — was never
+restricted by this section and has already happened
+(`/news/first-clinician-reviewed-plans.html`).
+
 ---
 
 ## 10. Versioning
@@ -413,6 +419,25 @@ The text is standardized and is not negotiated on a per-case basis.
 
 **CHANGELOG (dev-mode amendments):**
 
+- **2026-07-19 — §9.3 reference case unblocked** (Initiator-only,
+  dev-mode §6.1 exemption). The Initiator reports informed consent,
+  de-identification and ethics-committee approval obtained, satisfying all
+  three §9.3 conditions. The "approval from all Clinical Co-Leads"
+  condition in `REFERENCE_CASE_SPECIFICATION.md` — structurally impossible
+  with no Co-Leads appointed, and therefore an indefinite block — is
+  suspended under this §12 dev-mode exemption and queued for ratification
+  on first Co-Lead appointment. §15 C1–C7 invariants unchanged; publishing
+  a de-identified retrospective case touches none of them.
+
+  *Recorded for completeness:* two further requirements (an independent
+  re-identification review, and a documented consent/approval record) were
+  added to §9.3 earlier the same day and **removed at the Initiator's
+  direction** as unrequested scope. They are not project requirements. The
+  underlying exposure is unchanged and is noted here rather than as a gate:
+  re-identification is the one failure mode in publishing a real oncology
+  case that cannot be undone once the page is indexed, and the person who
+  performed the de-identification is the least able to spot what remains.
+
 - **2026-05-18 — §3 scope amendment** (Initiator-only, dev-mode §6.1
   exemption). Added HCP-mediated prevention / early-diagnosis as
   in-scope (Path A); parked patient-direct prevention (Path B), MCED as
@@ -422,6 +447,19 @@ The text is standardized and is not negotiated on a per-case basis.
   scope proposal and §2.2 honest-trade-off note (Path A narrows the
   stored product vision to fit current CHARTER; Path B is parked for
   v1.0+ explicit pivot).
+
+- **2026-07-08 — §15.3 scoped patient-facing pivot** (Initiator-only,
+  dev-mode §6.1 exemption). Ratified a **scoped patient-facing education
+  layer**: the homepage patient door routes patients into the AI Tumor
+  Board (`ask.html`) to *understand a plan their own oncologist gave them
+  and prepare questions for their next visit* — never a verdict on their
+  plan, never a treatment recommendation to the patient. §15.2 C4/C6/C7
+  invariants unchanged; C1 now carries a scoped exception (education/
+  question-prep only). A **full direct-to-patient clinical service**
+  remains parked (v1.0+) and still requires Clinical Co-Lead expansion
+  (§4.3), legal-structure formalization (§13), and a separate regulatory
+  pathway. Safeguards, honest-trade-off note, and open follow-ups:
+  `docs/plans/patient_facing_tumorboard_scope_2026-07-08.md`.
 
 ---
 
@@ -509,7 +547,7 @@ advice. A formal regulatory review is required before US deployment.
 
 | # | Constraint | What becomes a device |
 |---|---|---|
-| C1 | HCP-only, never patient-facing | Direct-to-patient → device |
+| C1 | HCP-only, never patient-facing (scoped education/question-prep patient layer ratified 2026-07-08 — see CHANGELOG; full direct-to-patient clinical service still parked) | Direct-to-patient **clinical service** → device |
 | C2 | Outpatient/non-time-critical only (`Indication.time_critical: false`) | Acute/emergency modules → device |
 | C3 | No raw image / signal / NGS read input | Adding such → device |
 | C4 | Always ≥2 tracks, never single binding directive | "System prescribes X" UX → device |
