@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Чи повертається рак до одноклітинного минулого?</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="Деякі пухлини сильніше експресують давніші еволюційні генні програми й слабше — програми багатоклітинності. Це реальне спостереження, але пояснення через «атавізм» лишається дискусійною гіпотезою.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Деякі пухлини сильніше експресують давніші еволюційні генні програми й слабше — програми багатоклітинності. Це реальне спостереження, але пояснення через «атавізм» лишається дискусійною гіпотезою.">
+<meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
+<link rel="canonical" href="https://openonco.info/ukr/news/cancer-atavism.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/news/cancer-atavism.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/news/cancer-atavism.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenOnco · Чи повертається рак до одноклітинного минулого?">
+<meta property="og:description" content="Деякі пухлини сильніше експресують давніші еволюційні генні програми й слабше — програми багатоклітинності. Це реальне спостереження, але пояснення через «атавізм» лишається дискусійною гіпотезою.">
+<meta property="og:url" content="https://openonco.info/ukr/news/cancer-atavism.html">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Чи повертається рак до одноклітинного минулого?">
+<meta name="twitter:description" content="Деякі пухлини сильніше експресують давніші еволюційні генні програми й слабше — програми багатоклітинності. Це реальне спостереження, але пояснення через «атавізм» лишається дискусійною гіпотезою.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","name":"OpenOnco · Чи повертається рак до одноклітинного минулого?","description":"Деякі пухлини сильніше експресують давніші еволюційні генні програми й слабше — програми багатоклітинності. Це реальне спостереження, але пояснення через «атавізм» лишається дискусійною гіпотезою.","url":"https://openonco.info/ukr/news/cancer-atavism.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/news/cancer-atavism.html"},"datePublished":"2026-08-03","dateModified":"2026-07-22","author":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/ukr/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/news.html" class="active">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
+      <a class="lang-other" href="/news/cancer-atavism.html"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
+    </div>
+    <div class="top-cta-group">
+      <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary">Онко-вікі</a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <article class="info-page news-article">
+    <a class="case-back-btn news-back" href="/ukr/news.html">← Усі новини</a>
+    <div class="case-badge-row">
+      <span class="case-badge bdg-plan">22 липня 2026</span>
+          <span class="case-quality quality-starter">biology</span>
+          <span class="case-quality quality-starter">evolution</span>
+          <span class="case-quality quality-starter">research</span>
+    </div>
+    <h1>Чи повертається рак до одноклітинного минулого?</h1>
+    <p class="lead">Деякі пухлини сильніше експресують давніші еволюційні генні програми й слабше — програми багатоклітинності. Це реальне спостереження, але пояснення через «атавізм» лишається дискусійною гіпотезою.</p>
+    <p class="news-byline">— OpenOnco</p>
+    <p class="news-retro">Написано ретроспективно, опубліковано 3 серпня 2026.</p>
+    <p class="news-kind-note">Матеріал для загального розуміння, а не клінічна настанова. Тут описані опубліковані дослідження; це не рекомендація для конкретного випадку, а згадані праці могли бути переглянуті пізнішими даними.</p>
+    <div class="news-body info-text">
+      <p>Рак іноді описують як повернення до давнього одноклітинного способу життя. Ця фраза походить з гіпотези атавізму: пухлина нібито знову вмикає програми, старші за багатоклітинних тварин, і втрачає програми співпраці клітин у тканині.</p>
+      <p>У дослідженні 2017 року порівняли пухлинну та відповідну нормальну тканину в семи когортах TCGA. Гени з дуже давнім еволюційним походженням частіше були активнішими в пухлинах, а гени, що виникли разом із багатоклітинністю тварин, — менш активними. Спостереження цікаве, і автори прямо обговорювали його мовою атавізму.</p>
+      <h2>Чому це не усталене пояснення раку</h2>
+      <p>До давніх генів належить значна частина механізмів клітинного циклу, реплікації ДНК і базового метаболізму. З багатоклітинністю пов’язані диференціація, адгезія та сигнали між тканинами. Тому швидко поділювані, погано диференційовані клітини можуть давати такий патерн без буквального «руху назад» еволюцією.</p>
+      <div class="callout">Модель атавізму допомагає ставити наукові питання, але не є валідованим біомаркером, мішенню лікування чи підставою для вибору терапії.</div>
+      <p>Критичні огляди нагадують і про методологічну проблему: визначати еволюційний вік генів складно, а метод змінює картину. Обережний висновок вужчий за яскравий заголовок: пухлини часто порушують баланс між давніми базовими функціями та функціями багатоклітинної тканини; причина цього ще відкрита.</p>
+    </div>
+  </article>
+
+  <section class="news-sources">
+    <h2>Джерела</h2>
+    <ol>
+      <li>Trigos AS, Pearson RB, Papenfuss AT, Goode DL. Altered interactions between unicellular and multicellular genes drive hallmarks of transformation in a diverse range of solid tumours. PNAS. 2017. · <a href="https://doi.org/10.1073/pnas.1617743114" target="_blank" rel="noopener noreferrer">10.1073/pnas.1617743114</a></li>
+      <li>Daignan-Fornier B, Pradeu T. Critically assessing atavism, an evolution-centered and deterministic hypothesis on cancer. BioEssays. 2024. · <a href="https://doi.org/10.1002/bies.202300221" target="_blank" rel="noopener noreferrer">10.1002/bies.202300221</a></li>
+    </ol>
+  </section>
+  <section class="news-comments" id="comments">
+    <h2>Коментарі</h2>
+    <p class="news-comments-note">Гілки публічні й індексуються — будь ласка, не пишіть у них персональні медичні дані. Знайшли клінічну помилку? <a href="https://github.com/romeo111/OpenOnco/issues/new" target="_blank" rel="noopener noreferrer">Відкрийте issue</a>.</p>
+    <p class="news-comments-offline">Коментарі ще не увімкнено — бекенд потрібно налаштувати.</p>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
+  </footer>
+</main>
+</body>
+</html>

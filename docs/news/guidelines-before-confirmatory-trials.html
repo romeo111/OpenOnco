@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Why a guideline can list a regimen before a phase 3 trial reports</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="In a study of new multiple-myeloma regimens, NCCN listing often preceded reported phase 3 data. That is a description of one guideline history, not evidence that guidelines routinely run ahead of regulators or that all early listings are equally supported.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="In a study of new multiple-myeloma regimens, NCCN listing often preceded reported phase 3 data. That is a description of one guideline history, not evidence that guidelines routinely run ahead of regulators or that all early listings are equally supported.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/news/guidelines-before-confirmatory-trials.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/news/guidelines-before-confirmatory-trials.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/news/guidelines-before-confirmatory-trials.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenOnco · Why a guideline can list a regimen before a phase 3 trial reports">
+<meta property="og:description" content="In a study of new multiple-myeloma regimens, NCCN listing often preceded reported phase 3 data. That is a description of one guideline history, not evidence that guidelines routinely run ahead of regulators or that all early listings are equally supported.">
+<meta property="og:url" content="https://openonco.info/news/guidelines-before-confirmatory-trials.html">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Why a guideline can list a regimen before a phase 3 trial reports">
+<meta name="twitter:description" content="In a study of new multiple-myeloma regimens, NCCN listing often preceded reported phase 3 data. That is a description of one guideline history, not evidence that guidelines routinely run ahead of regulators or that all early listings are equally supported.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","name":"OpenOnco · Why a guideline can list a regimen before a phase 3 trial reports","description":"In a study of new multiple-myeloma regimens, NCCN listing often preceded reported phase 3 data. That is a description of one guideline history, not evidence that guidelines routinely run ahead of regulators or that all early listings are equally supported.","url":"https://openonco.info/news/guidelines-before-confirmatory-trials.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/news/guidelines-before-confirmatory-trials.html"},"datePublished":"2026-08-03","dateModified":"2026-07-27","author":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/">Home</a>
+    <a href="/capabilities.html">Capabilities</a><a href="/handbook.html">Handbook</a><a href="/news.html" class="active">News</a>
+    <a href="/about.html">About</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <a class="lang-other" href="/ukr/news/guidelines-before-confirmatory-trials.html"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
+      <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
+    </div>
+    <div class="top-cta-group">
+      <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
+      <a href="/kb.html" class="btn-cta-top btn-cta-secondary">Onco Wiki</a>
+      <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <article class="info-page news-article">
+    <a class="case-back-btn news-back" href="/news.html">← All news</a>
+    <div class="case-badge-row">
+      <span class="case-badge bdg-plan">July 27, 2026</span>
+          <span class="case-quality quality-starter">guidelines</span>
+          <span class="case-quality quality-starter">evidence</span>
+          <span class="case-quality quality-starter">clinical-trials</span>
+    </div>
+    <h1>Why a guideline can list a regimen before a phase 3 trial reports</h1>
+    <p class="lead">In a study of new multiple-myeloma regimens, NCCN listing often preceded reported phase 3 data. That is a description of one guideline history, not evidence that guidelines routinely run ahead of regulators or that all early listings are equally supported.</p>
+    <p class="news-byline">by OpenOnco</p>
+    <p class="news-retro">Written retrospectively and published on August 3, 2026.</p>
+    <p class="news-kind-note">Background reading, not clinical guidance. This describes published research; it is not a recommendation for any individual case, and the cited studies may have been superseded.</p>
+    <div class="news-body info-text">
+      <p>Randomised phase 3 trials are valuable, but they are not the only information a guideline panel sees. A panel can weigh prospective phase 1 or 2 data, biological rationale, feasibility, safety, unmet need and other evidence while confirmatory trials are still running.</p>
+      <p>A 2025 study followed 21 regimens newly added to NCCN guidance for newly diagnosed multiple myeloma. The median interval from first prospective clinical data to guideline listing was 15 months. Where phase 3 data later appeared after a listing, the median interval was about three and a half years.</p>
+      <h2>What the study does — and does not — show</h2>
+      <p>The sequence was not universal. Some phase 3 data preceded listing, and four of the 21 regimens still had no phase 3 trial at the study’s cutoff. The analysis looked at a specific disease and a specific guideline history, not every cancer recommendation.</p>
+      <p>It also did not analyse FDA approval dates. It can support the narrower conclusion that NCCN listing in this setting frequently preceded reported randomised confirmatory data — not the larger claim that guidelines generally precede regulators.</p>
+      <div class="callout">Evidence develops over time. A guideline category and its cited studies are more informative than the simple question of whether a phase 3 paper has appeared.</div>
+    </div>
+  </article>
+
+  <section class="news-sources">
+    <h2>Sources</h2>
+    <ol>
+      <li>Mohyuddin GR, Almasri J, Goodman A, Haslam A, Prasad V. The lifecycle and evolution of new regimens on the NCCN Guidelines for newly diagnosed multiple myeloma. The Oncologist. 2025. · <a href="https://doi.org/10.1093/oncolo/oyae332" target="_blank" rel="noopener noreferrer">10.1093/oncolo/oyae332</a></li>
+    </ol>
+  </section>
+  <section class="news-comments" id="comments">
+    <h2>Comments</h2>
+    <p class="news-comments-note">Threads are public and indexed — please keep personal medical data out of them. Found a clinical error? <a href="https://github.com/romeo111/OpenOnco/issues/new" target="_blank" rel="noopener noreferrer">Open an issue</a> instead.</p>
+    <p class="news-comments-offline">Comments are not switched on yet — the backend still needs to be configured.</p>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Informational tool for clinicians, not a medical device (CHARTER §15 + §11).
+  </footer>
+</main>
+</body>
+</html>

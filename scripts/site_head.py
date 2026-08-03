@@ -252,7 +252,7 @@ def _description_for(path: str, title: str, locale: str) -> str:
         return (
             "OpenOnco project overview, GitHub, examples, specifications, release information, and governance notes."
             if not is_uk else
-            "Огляд OpenOnco: GitHub, приклади, специфікації, релізи та governance-нотатки."
+            "Що таке OpenOnco, як працює його перевірювана онкологічна підтримка, який результат уже створено та де її межі."
         )
     if normalized.endswith("try.html"):
         return (
@@ -570,12 +570,16 @@ def inject_seo_metadata(html_text: str, *, path: str) -> str:
     if "<head" not in html_text.lower():
         return html_text
 
+    normalized = path.replace("\\", "/").lstrip("/")
+    # The Ukrainian capabilities material moved into the project page. Keep
+    # bookmarks working while asking crawlers to index the canonical page only.
+    canonical_path = "ukr/about.html" if normalized == "ukr/capabilities.html" else path
     locale = _path_locale(path)
     title = _title_from_html(html_text)
-    description = _description_for(path, title, locale)
-    noindex = path.replace("\\", "/").endswith("404.html")
+    description = _description_for(canonical_path, title, locale)
+    noindex = normalized.endswith("404.html") or normalized == "ukr/capabilities.html"
     block = render_seo_metadata(
-        path=path,
+        path=canonical_path,
         title=title,
         description=description,
         locale=locale,
@@ -654,6 +658,7 @@ def write_sitemap(output_dir: Path) -> Path:
     pages = [
         p for p in _html_pages(output_dir)
         if p.name != "404.html"
+        and p.relative_to(output_dir).as_posix() != "ukr/capabilities.html"
     ]
     today = datetime.now(timezone.utc).date().isoformat()
     urls = []

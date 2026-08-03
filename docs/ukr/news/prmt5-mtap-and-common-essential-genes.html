@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Як «загально необхідний» ген може приховувати вибіркову вразливість</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="Втрата MTAP може зробити ракові клітини чутливішими до інгібування PRMT5, хоча PRMT5 широко необхідний клітинам, що проліферують. Це історія про те, як тип генетичного скринінгу може приховати сигнал біомаркера.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Втрата MTAP може зробити ракові клітини чутливішими до інгібування PRMT5, хоча PRMT5 широко необхідний клітинам, що проліферують. Це історія про те, як тип генетичного скринінгу може приховати сигнал біомаркера.">
+<meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
+<link rel="canonical" href="https://openonco.info/ukr/news/prmt5-mtap-and-common-essential-genes.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/news/prmt5-mtap-and-common-essential-genes.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/news/prmt5-mtap-and-common-essential-genes.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenOnco · Як «загально необхідний» ген може приховувати вибіркову вразливість">
+<meta property="og:description" content="Втрата MTAP може зробити ракові клітини чутливішими до інгібування PRMT5, хоча PRMT5 широко необхідний клітинам, що проліферують. Це історія про те, як тип генетичного скринінгу може приховати сигнал біомаркера.">
+<meta property="og:url" content="https://openonco.info/ukr/news/prmt5-mtap-and-common-essential-genes.html">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Як «загально необхідний» ген може приховувати вибіркову вразливість">
+<meta name="twitter:description" content="Втрата MTAP може зробити ракові клітини чутливішими до інгібування PRMT5, хоча PRMT5 широко необхідний клітинам, що проліферують. Це історія про те, як тип генетичного скринінгу може приховати сигнал біомаркера.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","name":"OpenOnco · Як «загально необхідний» ген може приховувати вибіркову вразливість","description":"Втрата MTAP може зробити ракові клітини чутливішими до інгібування PRMT5, хоча PRMT5 широко необхідний клітинам, що проліферують. Це історія про те, як тип генетичного скринінгу може приховати сигнал біомаркера.","url":"https://openonco.info/ukr/news/prmt5-mtap-and-common-essential-genes.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/news/prmt5-mtap-and-common-essential-genes.html"},"datePublished":"2026-08-03","dateModified":"2026-08-02","author":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/ukr/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/news.html" class="active">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
+      <a class="lang-other" href="/news/prmt5-mtap-and-common-essential-genes.html"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
+    </div>
+    <div class="top-cta-group">
+      <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary">Онко-вікі</a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <article class="info-page news-article">
+    <a class="case-back-btn news-back" href="/ukr/news.html">← Усі новини</a>
+    <div class="case-badge-row">
+      <span class="case-badge bdg-plan">2 серпня 2026</span>
+          <span class="case-quality quality-starter">synthetic-lethality</span>
+          <span class="case-quality quality-starter">prmt5</span>
+          <span class="case-quality quality-starter">research-methods</span>
+    </div>
+    <h1>Як «загально необхідний» ген може приховувати вибіркову вразливість</h1>
+    <p class="lead">Втрата MTAP може зробити ракові клітини чутливішими до інгібування PRMT5, хоча PRMT5 широко необхідний клітинам, що проліферують. Це історія про те, як тип генетичного скринінгу може приховати сигнал біомаркера.</p>
+    <p class="news-byline">— OpenOnco</p>
+    <p class="news-retro">Написано ретроспективно, опубліковано 3 серпня 2026.</p>
+    <p class="news-kind-note">Матеріал для загального розуміння, а не клінічна настанова. Тут описані опубліковані дослідження; це не рекомендація для конкретного випадку, а згадані праці могли бути переглянуті пізнішими даними.</p>
+    <div class="news-body info-text">
+      <p>Синтетична летальність — ситуація, коли дві порушені функції разом шкодять значно більше, ніж кожна окремо. Три незалежні роботи 2016 року показали, що втрата MTAP, часто спільна з делецією CDKN2A, може посилити залежність від метилтрансферази PRMT5.</p>
+      <p>Тонкість у тому, що PRMT5 — не залежність, унікальна для пухлин без MTAP. Він загалом необхідний клітинам, що проліферують, і входить до списків DepMap загально необхідних генів. Втрата MTAP, імовірно, створює частково пригнічений стан і може розширити терапевтичне вікно, а не створює залежність із нуля.</p>
+      <h2>Чому важливий тип скринінгу</h2>
+      <p>Повний нокаут CRISPR може зробити ген панлетальним і приховати вибірковий зв’язок із біомаркером. RNAi лише частково пригнічує гени; порівняння підходів назвали PRMT5 прикладом, де сигнал MTAP стає видимим за часткового пригнічення.</p>
+      <p>Це методологічне застереження, а не твердження, що якийсь ранній фільтр буквально відкинув первинне відкриття PRMT5. Воно походило зі RNAi-скринінгів. Клінічна перевірка ще рання, і станом на липень 2026 інгібіторів PRMT5, схвалених FDA, не було.</p>
+      <div class="callout">Правдоподібне терапевтичне вікно в лабораторних моделях — не рекомендація лікування. Це причина перевірити обережну клінічну гіпотезу.</div>
+    </div>
+  </article>
+
+  <section class="news-sources">
+    <h2>Джерела</h2>
+    <ol>
+      <li>Kryukov GV, Wilson FH, Ruth JR, et al. MTAP deletion confers enhanced dependency on the PRMT5 arginine methyltransferase in cancer cells. Science. 2016. · <a href="https://doi.org/10.1126/science.aad5214" target="_blank" rel="noopener noreferrer">10.1126/science.aad5214</a></li>
+      <li>Krill-Burger JM, Dempster JM, Borah AA, et al. Partial gene suppression improves identification of cancer vulnerabilities when CRISPR-Cas9 knockout is pan-lethal. Genome Biology. 2023. · <a href="https://doi.org/10.1186/s13059-023-03020-w" target="_blank" rel="noopener noreferrer">10.1186/s13059-023-03020-w</a></li>
+      <li>Engstrom LD, Aranda R, Waters L, et al. MRTX1719 is an MTA-cooperative PRMT5 inhibitor that exhibits synthetic lethality in MTAP-deleted cancer. Cancer Discovery. 2023. · <a href="https://doi.org/10.1158/2159-8290.CD-23-0669" target="_blank" rel="noopener noreferrer">10.1158/2159-8290.CD-23-0669</a></li>
+    </ol>
+  </section>
+  <section class="news-comments" id="comments">
+    <h2>Коментарі</h2>
+    <p class="news-comments-note">Гілки публічні й індексуються — будь ласка, не пишіть у них персональні медичні дані. Знайшли клінічну помилку? <a href="https://github.com/romeo111/OpenOnco/issues/new" target="_blank" rel="noopener noreferrer">Відкрийте issue</a>.</p>
+    <p class="news-comments-offline">Коментарі ще не увімкнено — бекенд потрібно налаштувати.</p>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
+  </footer>
+</main>
+</body>
+</html>

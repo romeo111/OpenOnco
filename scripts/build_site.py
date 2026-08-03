@@ -1338,14 +1338,14 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     ask_path = "/ukr/ask.html" if target_lang == "uk" else "/ask.html"
     about_path = "/ukr/about.html" if target_lang == "uk" else "/about.html"
 
-    # Capabilities now folds in the former Limitations section. GitHub,
-    # Examples and Specs are grouped under About to keep the main nav focused.
+    # The Ukrainian project page now folds in the former Capabilities and
+    # Limitations material. GitHub, examples and specs stay grouped under
+    # About to keep the main nav focused.
     # News is bilingual from day one, so it appears on both navs (unlike
     # Handbook, which is EN-only MVP).
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
-            f'<a href="/ukr/capabilities.html"{cls("capabilities")}>Можливості</a>'
             f'<a href="/ukr/news.html"{cls("news")}>{labels["news"]}</a>'
         )
     else:  # target_lang == "en"
@@ -6261,6 +6261,24 @@ def render_capabilities(stats, *, target_lang: str = "en") -> str:
 
 
 def _render_capabilities_uk(stats) -> str:
+    """Keep the former Ukrainian URL usable after moving its content to About."""
+    return """<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Про проєкт</title>
+<meta http-equiv="refresh" content="0; url=/ukr/about.html">
+<script>window.location.replace("/ukr/about.html" + (window.location.search || "") + (window.location.hash || ""));</script>
+</head>
+<body>
+<p>Сторінка <a href="/ukr/about.html">переїхала до розділу «Про проєкт»</a>.</p>
+</body>
+</html>
+"""
+
+
+def _render_capabilities_uk_legacy(stats) -> str:
     by_type = {e.type: e.count for e in stats.entities}
     n_diseases = by_type.get("diseases", 0)
     n_indications = by_type.get("indications", 0)
@@ -8962,43 +8980,45 @@ def render_about(stats, *, target_lang: str = "en") -> str:
             "regimens": "regimens",
             "algorithms": "algorithms",
         }
+        story_html = ""
+        cta_html = ""
     else:
-        page_title = "About"
-        h1 = "About OpenOnco"
+        page_title = "Про проєкт"
+        h1 = "OpenOnco: щоб рішення в онкології можна було перевірити"
         lead = (
-            "OpenOnco — відкритий проєкт клінічної бази знань і rule engine для онкології. "
-            "На цій сторінці зібрано те, що раніше було окремими пунктами верхнього меню: "
-            "приклади, специфікації та GitHub."
+            "OpenOnco — безоплатний відкритий інструмент, який перетворює клінічні "
+            "настанови та джерела на зрозумілу, перевірювану логіку. Він допомагає "
+            "підготувати фахову розмову про лікування — але не замінює лікаря-онколога."
         )
         cards = [
             (
                 "Приклади",
                 "/ukr/gallery.html",
-                "Синтетичні кейси з готовими планами й diagnostic briefs. Через них зручно перевіряти пояснення engine.",
+                "Синтетичні клінічні кейси: подивіться, як система показує варіанти, джерела та важливі застереження.",
                 "Відкрити приклади",
             ),
             (
                 "Специфікації",
                 "/ukr/specs.html",
-                "Авторитетний контракт проєкту: charter, правила клінічного контенту, схеми, ingestion і governance.",
+                "Правила, за якими створюються й перевіряються дані: межі системи, якість контенту та відповідальність.",
                 "Читати специфікації",
             ),
             (
                 "GitHub",
                 f"https://github.com/{GH_REPO}",
-                "Код, YAML бази знань, issues, pull requests і публічна історія ревʼю.",
+                "Відкритий код, база знань, історія змін і публічна робота над якістю проєкту.",
                 "Відкрити репозиторій",
             ),
         ]
-        principles_h = "Форма проєкту"
+        principles_h = "На чому тримається довіра"
         principles = [
-            ("Open by default", "Код має MIT-style usage; специфікації та згенерований контент — CC BY 4.0."),
-            ("Синтетичні публічні дані", "Публічний сайт не містить реальних пацієнтських записів чи приватних patient artifacts."),
-            ("Clinical review gate", "Клінічний контент потребує reviewer sign-off перед статусом trusted content."),
-            ("Auditable automation", "Правила, джерела й reasoning видимі, а не сховані за black box."),
+            ("Жодних «вигаданих» призначень", "LLM не обирає лікування і не складає дози: варіанти збирає детермінований механізм із зафіксованих правил."),
+            ("Джерело під кожним твердженням", "Клінічна логіка пов’язана з настановами, дослідженнями та версіями бази знань — її можна простежити й перевірити."),
+            ("Лікар лишається відповідальним", "OpenOnco показує матеріал для обговорення. Остаточне рішення завжди ухвалює кваліфікований лікар з урахуванням повної картини."),
+            ("Приватність за задумом", "У публічному сайті немає реальних історій хвороби; приклади створено зі синтетичних, знеособлених даних."),
         ]
-        stats_h = "Поточний публічний корпус"
-        release_note = f"Поточна публічна збірка: v{OPENONCO_VERSION}, release {OPENONCO_RELEASE_DATE}."
+        stats_h = "Результат, який уже можна перевірити"
+        release_note = f"Поточна публічна збірка: v{OPENONCO_VERSION}. Дані та правила версіонуються; дата релізу — {OPENONCO_RELEASE_DATE}."
         footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
         stat_labels = {
             "diseases": "хвороб",
@@ -9007,6 +9027,78 @@ def render_about(stats, *, target_lang: str = "en") -> str:
             "regimens": "схем лікування",
             "algorithms": "алгоритмів",
         }
+        story_html = f"""
+  <section class="about-purpose" aria-labelledby="about-purpose-title">
+    <div>
+      <p class="about-eyebrow">Наша мета</p>
+      <h2 id="about-purpose-title">Менше непрозорості у складних клінічних рішеннях</h2>
+      <p>Онкологічне лікування рідко зводиться до однієї очевидної відповіді. Лікарю потрібно зіставити діагноз, стадію, біомаркери, попереднє лікування та ризики — а пацієнту важливо розуміти, про що говорити на прийомі.</p>
+      <p>Мета OpenOnco — зробити цей шлях видимим: показати можливі треки поруч, пояснити, що саме впливає на вибір, і дати посилання на джерела. Це опора для підготовки й спільного обговорення, а не автоматичне призначення.</p>
+    </div>
+    <aside class="about-commitment">
+      <p class="about-eyebrow">Просте правило</p>
+      <p>Якщо твердження не можна простежити до правила та джерела, воно не має ставати частиною плану.</p>
+    </aside>
+  </section>
+
+  <section class="about-work" aria-labelledby="about-work-title">
+    <div class="about-section-heading">
+      <p class="about-eyebrow">Підхід</p>
+      <h2 id="about-work-title">Не «відповідь від AI», а відтворюваний шлях до розмови з лікарем</h2>
+    </div>
+    <div class="about-steps">
+      <article class="about-step">
+        <span>01</span>
+        <h3>Структуруємо клінічний контекст</h3>
+        <p>Профіль описує важливі для рішення факти: тип пухлини, стадію, біомаркери, стан людини та вже проведене лікування.</p>
+      </article>
+      <article class="about-step">
+        <span>02</span>
+        <h3>Зіставляємо його з правилами та джерелами</h3>
+        <p>Правила працюють із версіонованою базою знань. Вони не вгадують препарат чи дозу, а показують, чому певний варіант потрапив у поле зору.</p>
+      </article>
+      <article class="about-step">
+        <span>03</span>
+        <h3>Показуємо результат так, щоб його можна було перевірити</h3>
+        <p>Користувач бачить варіанти поруч, застереження й посилання на першоджерела — щоб підготувати питання для консиліуму або онколога.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="about-effort" aria-labelledby="about-effort-title">
+    <div class="about-section-heading">
+      <p class="about-eyebrow">Вкладена робота</p>
+      <h2 id="about-effort-title">Найбільше зусиль — не в красивій відповіді, а в тому, щоб вона була обґрунтованою</h2>
+    </div>
+    <div class="about-effort-grid">
+      <article>
+        <h3>База знань замість довільного тексту</h3>
+        <p>Команда описує хвороби, схеми лікування, індикації, застереження та джерела як окремі пов’язані сутності. Так зміни не губляться в абзацах, а проходять через версії й перевірки.</p>
+      </article>
+      <article>
+        <h3>Перевірюваність на кожному кроці</h3>
+        <p>Для клінічних тверджень фіксується походження. Правила, результат і публічні приклади можна переглянути, а не просто прийняти «на віру».</p>
+      </article>
+      <article>
+        <h3>Безпека як межа, а не примітка дрібним шрифтом</h3>
+        <p>Система не підміняє діагностику, не працює з невідкладними станами, не виконує персональний розрахунок доз і не приймає рішення замість лікаря.</p>
+      </article>
+    </div>
+  </section>
+"""
+        cta_html = """
+  <section class="about-action" aria-label="Перейти до інструментів OpenOnco">
+    <div>
+      <p class="about-eyebrow">Наступний крок</p>
+      <h2>Подивіться, як виглядає перевірюваний план</h2>
+      <p>Спробуйте синтетичний приклад або відкрийте конструктор. Не вводьте персональні дані пацієнта.</p>
+    </div>
+    <div class="about-action-links">
+      <a class="btn btn-primary" href="/ukr/try.html">Відкрити конструктор плану</a>
+      <a class="btn btn-secondary" href="/ukr/gallery.html">Переглянути приклади</a>
+    </div>
+  </section>
+"""
 
     cards_html = "\n".join(
         f"""        <a class="about-link-card" href="{href}"{' target="_blank" rel="noopener"' if href.startswith('https://') else ''}>
@@ -9051,6 +9143,8 @@ def render_about(stats, *, target_lang: str = "en") -> str:
     <p>{lead}</p>
   </section>
 
+{story_html}
+
   <section class="about-link-grid">
 {cards_html}
   </section>
@@ -9070,6 +9164,8 @@ def render_about(stats, *, target_lang: str = "en") -> str:
       <p class="about-release">{release_note}</p>
     </div>
   </section>
+
+{cta_html}
 
   <footer class="page-foot">
     Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
