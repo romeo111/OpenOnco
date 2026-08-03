@@ -150,7 +150,15 @@ class VariantActionabilityHit(Base):
     bma_id: str                       # FK → BiomarkerActionability.id
     biomarker_id: str                 # FK → BIO-* (denormalized for render)
     variant_qualifier: Optional[str] = None  # null = gene-level cell
-    escat_tier: str                   # "IA"|"IB"|"IIA"|"IIB"|"IIIA"|"IIIB"|"IV"|"X"
+    # ``None`` is possible for an explicitly non-applicable record. ``IV`` is
+    # a legacy broad bucket; newly reviewed records use IVA or IVB.
+    escat_tier: Optional[str] = None  # IA|IB|IC|IIA|IIB|IIIA|IIIB|IVA|IVB|IV|V|X
+    actionability_scope: str = "unclassified"
+    escat_applicability: str = "review_required"
+    # Derived from the BMA's explicit dossier and current sign-offs. This is
+    # presentation/audit metadata only, never an input to track selection.
+    clinical_use_ready: bool = False
+    clinical_use_reasons: list[str] = Field(default_factory=list)
     evidence_sources: list[dict] = Field(default_factory=list)
     evidence_summary: str
     recommended_combinations: list[str] = Field(default_factory=list)

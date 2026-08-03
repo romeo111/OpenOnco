@@ -17,11 +17,14 @@ is open-license and source-neutral. CIViC, OncoKB, NCCN page-section
 references, ESMO sections, etc. all become entries inside
 `evidence_sources`.
 
-Not in KNOWLEDGE_SCHEMA_SPECIFICATION yet (added 2026-04-26 for the CSD Lab
-partnership pitch). When the spec is updated, register this entity there.
+The canonical structure is registered in KNOWLEDGE_SCHEMA_SPECIFICATION.
+ESCAT assignment remains a clinician-owned adjudication: this schema records
+the evidence and review state, but never derives a tier from source-native
+levels or from a model.
 """
 
-from typing import Literal, Optional
+from dataclasses import dataclass
+from typing import Any, Literal, Mapping, Optional
 
 from pydantic import Field, field_validator, model_validator
 
@@ -31,7 +34,37 @@ from .base import Base, ClinicalClaim
 
 # ── ESCAT (ESMO Scale for Clinical Actionability of molecular Targets) ────────
 # Mateo et al. 2018, Ann Oncol 29(9):1895-1902. Tiers I–V plus X (no evidence).
-EscatTier = Literal["IA", "IB", "IIA", "IIB", "IIIA", "IIIB", "IV", "X"]
+# ``IV`` is retained only as a legacy broad bucket; newly reviewed cells use
+# the framework's ``IVA`` or ``IVB`` sub-tier where applicable.
+EscatTier = Literal[
+    "IA", "IB", "IC",
+    "IIA", "IIB",
+    "IIIA", "IIIB",
+    "IVA", "IVB", "IV",
+    "V", "X",
+]
+ActionabilityScope = Literal[
+    "therapeutic_predictive",
+    "therapeutic_resistance",
+    "diagnostic",
+    "prognostic",
+    "monitoring",
+    "screening",
+    "surveillance",
+    "germline_risk",
+    "unclassified",
+]
+EscatApplicability = Literal["applicable", "not_applicable", "review_required"]
+EscatAssessmentStatus = Literal["not_started", "draft", "clinically_reviewed"]
+EscatStudyDesign = Literal[
+    "prospective_randomized",
+    "prospective_non_randomized",
+    "basket_trial",
+    "retrospective",
+    "preclinical",
+    "in_silico",
+    "other",
+]
 EvidenceLaneToken = Literal[
     "standard_care",
     "molecular_evidence_option",
@@ -39,6 +72,92 @@ EvidenceLaneToken = Literal[
     "trial_research_option",
     "insufficient_evidence",
 ]
+
+
+class EscatEvidenceRecord(Base):
+    """One source-grounded alteration-therapy assessment for ESCAT review.
+
+    ESCAT is assigned to a specific alteration-drug pair in a tumour
+    context; it cannot safely be derived from a CIViC level, a regulatory
+    label, or a guideline reference alone. This compact dossier records
+    reviewer-visible evidence coordinates without duplicating source
+    content in the KB.
+    """
+
+    source: str
+    therapy_context: str
+    tumour_context: str
+    study_design: EscatStudyDesign
+    endpoint: Optional[str] = None
+    outcome_summary: Optional[str] = None
+    same_tumour_type: Optional[bool] = None
+
+
+class EscatEvidenceDossier(Base):
+    """Reviewer-owned rationale for a clinically adjudicated ESCAT tier."""
+
+    assessment_status: EscatAssessmentStatus = "not_started"
+    tier_rationale: Optional[str] = None
+    evidence_records: list[EscatEvidenceRecord] = Field(default_factory=list)
+    civic_snapshot_id: Optional[str] = None
+    reviewed_against: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class ActionabilityReleaseReadiness:
+    """Result of the clinical-use gate for one BMA cell.
+
+    The result carries human-readable reasons so release tooling can create
+    a reviewer queue rather than silently dropping a BMA entry. It is never
+    used to choose treatment tracks.
+    """
+
+    ready: bool
+    reasons: tuple[str, ...]
+
+
+def actionability_release_readiness(data: Mapping[str, Any]) -> ActionabilityReleaseReadiness:
+    """Return whether a BMA can be shown as clinically reviewed ESCAT context.
+
+    Passing requires an explicitly applicable therapeutic-predictive claim,
+    a clinically reviewed evidence dossier, current-version sign-offs from
+    two distinct in-scope reviewers, and a non-empty tier. All other BMA
+    cells remain labelled context for review; they never participate in
+    treatment-track selection.
+    """
+
+    reasons: list[str] = []
+    if data.get("actionability_scope") != "therapeutic_predictive":
+        reasons.append("ESCAT scope is not clinically classified as therapeutic_predictive")
+    if data.get("escat_applicability") != "applicable":
+        reasons.append("ESCAT applicability is not clinically approved")
+    if not data.get("escat_tier"):
+        reasons.append("ESCAT tier is absent")
+
+    dossier = data.get("escat_evidence_dossier") or {}
+    if not isinstance(dossier, Mapping) or dossier.get("assessment_status") != "clinically_reviewed":
+        reasons.append("ESCAT evidence dossier is not clinically reviewed")
+    elif not dossier.get("tier_rationale") or not dossier.get("evidence_records"):
+        reasons.append("ESCAT evidence dossier lacks rationale or evidence records")
+
+    # A sign-off is current only when it is explicitly in scope and pinned
+    # to the BMA's current verification revision. The sign-off CLI writes
+    # this version for BMAs; changing `last_verified` invalidates earlier
+    # approvals until the evidence is re-reviewed.
+    current_version = str(data.get("last_verified") or "").strip()
+    reviewer_ids: set[str] = set()
+    raw_signoffs = data.get("reviewer_signoffs") or []
+    if isinstance(raw_signoffs, list):
+        for signoff in raw_signoffs:
+            if not isinstance(signoff, Mapping) or signoff.get("scope_match") is False:
+                continue
+            reviewer_id = str(signoff.get("reviewer_id") or "").strip()
+            if reviewer_id and str(signoff.get("entity_version") or "").strip() == current_version:
+                reviewer_ids.add(reviewer_id)
+    if len(reviewer_ids) < 2:
+        reasons.append("fewer than two current, in-scope reviewer sign-offs")
+
+    return ActionabilityReleaseReadiness(ready=not reasons, reasons=tuple(reasons))
 
 
 class RegulatoryApproval(Base):
@@ -113,9 +232,12 @@ class BiomarkerActionability(Base):
     `primary_sources`. Phase 1.5 migration populates `evidence_sources` from
     legacy `oncokb_level` claims plus existing `primary_sources`.
 
-    `escat_tier` is the **primary** actionability tier — source-neutral,
-    open-license, and stable. Per-source levels live in
-    `evidence_sources[*].level`.
+    `escat_tier` is the **primary** actionability tier only after an explicit
+    therapeutic-predictive applicability decision and clinical review. It is
+    source-neutral and open-license; per-source levels live in
+    `evidence_sources[*].level`. Unclassified legacy records retain their
+    historical tier for audit visibility, but cannot pass the clinical-use
+    release gate.
     """
 
     id: str  # BMA-{biomarker}-{variant?}-{disease}
@@ -124,7 +246,15 @@ class BiomarkerActionability(Base):
     disease_id: str  # FK → DIS-*
 
     # Primary actionability tier — source-neutral, open-license.
-    escat_tier: EscatTier
+    escat_tier: Optional[EscatTier] = None
+
+    # ESCAT applies only to a therapeutic-predictive alteration-drug claim.
+    # Older cells default to `unclassified` / `review_required` so migration
+    # does not silently reinterpret their clinical meaning.
+    actionability_scope: ActionabilityScope = "unclassified"
+    escat_applicability: EscatApplicability = "review_required"
+    escat_non_applicable_reason: Optional[str] = None
+    escat_evidence_dossier: Optional[EscatEvidenceDossier] = None
 
     # Per-source attestations (CIViC level + direction + significance,
     # NCCN page-section, OncoKB legacy, etc.). Populated by Phase 1.5
@@ -162,6 +292,41 @@ class BiomarkerActionability(Base):
     @classmethod
     def _normalize_legacy_shape(cls, v):
         return normalize_legacy_biomarker_actionability_payload(v)
+
+    @model_validator(mode="after")
+    def _validate_escat_applicability(self):
+        """Prevent a reviewed non-therapeutic record from carrying ESCAT.
+
+        The validator intentionally does not infer scope for pre-existing
+        cells. A clinical reviewer must make that classification explicitly.
+        """
+
+        if self.escat_applicability == "not_applicable":
+            if self.escat_tier is not None:
+                raise ValueError("ESCAT-not-applicable BMA cells must not carry escat_tier")
+            if not self.escat_non_applicable_reason:
+                raise ValueError(
+                    "ESCAT-not-applicable BMA cells require escat_non_applicable_reason"
+                )
+
+        if self.escat_applicability == "applicable":
+            if self.actionability_scope != "therapeutic_predictive":
+                raise ValueError(
+                    "ESCAT-applicable BMA cells must use therapeutic_predictive scope"
+                )
+            if self.escat_tier is None:
+                raise ValueError("ESCAT-applicable BMA cells require escat_tier")
+            dossier = self.escat_evidence_dossier
+            if dossier is None or dossier.assessment_status != "clinically_reviewed":
+                raise ValueError(
+                    "ESCAT-applicable BMA cells require a clinically reviewed evidence dossier"
+                )
+            if not dossier.tier_rationale or not dossier.evidence_records:
+                raise ValueError(
+                    "clinically reviewed ESCAT dossier requires rationale and evidence records"
+                )
+
+        return self
 
 
 def normalize_legacy_biomarker_actionability_payload(raw: object) -> object:

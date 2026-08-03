@@ -60,6 +60,14 @@ jobs:
           echo "latest_dir=$latest_dir" >> "$GITHUB_OUTPUT"
           echo "diff_path=$latest_dir/diff_summary.md" >> "$GITHUB_OUTPUT"
 
+      - name: Audit ESCAT readiness queue
+        run: |
+          python -m scripts.audit_escat_readiness \
+            --as-of "$(date -u +%F)" \
+            --markdown-output "${{ steps.refresh.outputs.latest_dir }}/escat_readiness.md" \
+            --json-output "${{ steps.refresh.outputs.latest_dir }}/escat_readiness.json"
+          cat "${{ steps.refresh.outputs.latest_dir }}/escat_readiness.md" >> "${{ steps.refresh.outputs.diff_path }}"
+
       - name: Detect changes
         id: diff
         run: |

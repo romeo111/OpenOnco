@@ -420,7 +420,19 @@ variant_qualifier: null               # null → весь варіант, що �
 disease_id: DIS-CRC                  # FK → DIS-*
 
 # ── Primary actionability tier (vendor-neutral) ────────────────────────
-escat_tier: "IA"                     # ESCAT IA|IB|IIA|IIB|IIIA|IIIB|IV|X
+actionability_scope: therapeutic_predictive
+escat_applicability: applicable
+escat_tier: "IA"                     # ESCAT IA|IB|IC|IIA|IIB|IIIA|IIIB|IVA|IVB|V|X
+escat_evidence_dossier:
+  assessment_status: clinically_reviewed
+  tier_rationale: "Пояснення рев'юера, пов'язане з наведеними записами."
+  evidence_records:
+    - source: SRC-NCCN-COLORECTAL-2025
+      therapy_context: "encorafenib + cetuximab"
+      tumour_context: "BRAF V600E метастатичний колоректальний рак"
+      study_design: prospective_randomized
+      endpoint: "клінічно значуща кінцева точка виживаності"
+      same_tumour_type: true
 
 # ── Evidence sources block (canonical post-pivot) ──────────────────────
 # Замінює legacy-поля oncokb_level / oncokb_snapshot_version. Список
@@ -482,10 +494,9 @@ EvidenceSourceRef = {
 ```
 
 `level` — це **source-native токен** (CIViC `A|B|C|D|E`, NCCN
-`category_1|2A|2B|3`, ESMO `I|II|III|IV|V`). Vendor-mapping (наприклад,
-CIViC-A → ESCAT IA) лежить у render-шарі, не в YAML — клінічна
-відповідальність за сumulative-tier (`escat_tier`) залишається на
-рев'юері BMA, не на автоматичному маппінгу.
+`category_1|2A|2B|3`, ESMO `I|II|III|IV|V`). Автоматичного маппінгу
+source-native level у ESCAT **немає**: клініцист явно фіксує
+`escat_tier` і досьє доказів. Render лише показує tier, але не обчислює його.
 
 Поле `direction == "does_not_support"` є load-bearing: render має
 показати такий запис як **anti-evidence card** (negative recommendation),
@@ -494,11 +505,20 @@ CIViC-A → ESCAT IA) лежить у render-шарі, не в YAML — клін
 
 #### 4.4.3. `escat_tier` як primary actionability tier
 
-`escat_tier` — vendor-neutral, опубліковано-стабільний (Mateo 2018 не
-оновлюється щодня, на відміну від OncoKB level scheme). Це поле — те,
-що render використовує як основний тіер у Plan-картках. Окремі
-`evidence_sources[*].level` — це доказова база для sign-off, не
-користувацький рендер-токен.
+`escat_tier` — vendor-neutral і стабільний у публікації (Mateo 2018 не
+оновлюється щодня, на відміну від OncoKB level scheme). Повний словник:
+`IA|IB|IC|IIA|IIB|IIIA|IIIB|IVA|IVB|V|X`; широке legacy-значення `IV`
+дозволене лише для міграції та має бути уточнене під час рев’ю. ESCAT
+застосовний лише до явно позначеної `therapeutic_predictive` заяви.
+Діагностичні, прогностичні, моніторингові, скринінгові, surveillance,
+germline-risk та resistance записи мають бути `not_applicable` (без tier,
+із причиною) або `review_required` до рев’ю.
+
+Для клінічного використання BMA потребує: застосовного scope, клінічно
+переглянутого досьє з поясненням і записами доказів, а також двох різних
+sign-off у scope, прив’язаних до `last_verified`. Інакше запис може бути
+показаний лише як контекст із позначкою про очікуване клінічне рев’ю і
+ніколи не бере участі у виборі треку лікування.
 
 #### 4.4.4. Legacy-поля та ToS-обмеження
 

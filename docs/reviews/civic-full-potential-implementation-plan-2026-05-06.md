@@ -7,6 +7,11 @@ OpenOnco clinically conservative and license-compliant.
 ESMO, regulatory labels, and primary trials are non-hosted guardrails for
 standard-of-care classification.
 
+**Safety update (2026-08-03):** BMA/ESCAT records now require explicit
+applicability, a clinician-authored evidence dossier, and two current
+version-pinned sign-offs before they can be presented as clinically reviewed
+context. See [ESCAT actionability safety implementation plan](escat-safety-implementation-plan-2026-08-03.md).
+
 ---
 
 ## 1. Operating model

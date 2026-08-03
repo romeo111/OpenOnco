@@ -7,7 +7,14 @@ these models on load. See `validation/loader.py`.
 from .access_pathway import AccessPathway, CostOrientation
 from .algorithm import Algorithm
 from .biomarker import Biomarker
-from .biomarker_actionability import BiomarkerActionability, RegulatoryApproval
+from .biomarker_actionability import (
+    ActionabilityReleaseReadiness,
+    BiomarkerActionability,
+    EscatEvidenceDossier,
+    EscatEvidenceRecord,
+    RegulatoryApproval,
+    actionability_release_readiness,
+)
 from .contraindication import Contraindication
 from .diagnostic import (
     BiopsyApproach,
@@ -100,6 +107,7 @@ __all__ = [
     "AccessMatrixRow",
     "AccessPathway",
     "Algorithm",
+    "ActionabilityReleaseReadiness",
     "Biomarker",
     "BiomarkerActionability",
     "CostOrientation",
@@ -111,6 +119,8 @@ __all__ = [
     "Drug",
     "DrugIndication",
     "DrugUseStatus",
+    "EscatEvidenceDossier",
+    "EscatEvidenceRecord",
     "ENTITY_BY_DIR",
     "BiomarkerStratification",
     "DesignFlag",
@@ -144,6 +154,7 @@ __all__ = [
     "RegimenComponent",
     "RegimenPhase",
     "RegulatoryApproval",
+    "actionability_release_readiness",
     "ReviewerProfile",
     "ReviewerSignoff",
     "SignOffScope",

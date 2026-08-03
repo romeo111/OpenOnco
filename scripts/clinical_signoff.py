@@ -352,6 +352,14 @@ def _today_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 
+def _approval_entity_version(data: dict, dir_name: str, fallback: str) -> str:
+    """Return the review revision to which a sign-off must be pinned."""
+
+    if dir_name == "biomarker_actionability":
+        return data.get("last_verified") or fallback
+    return data.get("last_reviewed") or fallback
+
+
 def _append_audit(row: dict) -> None:
     AUDIT_LOG.parent.mkdir(parents=True, exist_ok=True)
     line = json.dumps(row, ensure_ascii=False, sort_keys=True)
@@ -408,11 +416,26 @@ def cmd_approve(args: argparse.Namespace) -> int:
             else:
                 print(f"  WARN (scope mismatch, proceeding): {eid} — {reason}")
 
+        # BMA approvals are pinned to ``last_verified`` because that field
+        # names the evidence revision. A reviewer may therefore sign a newer
+        # BMA revision without using ``--force``; only a duplicate approval
+        # for the same current revision is rejected.
+        entity_version = _approval_entity_version(data, dir_name, today)
+
         # Duplicate check
         existing = data.get("reviewer_signoffs") or []
         if not isinstance(existing, list):
             existing = []
-        if any(isinstance(s, dict) and s.get("reviewer_id") == args.reviewer for s in existing):
+        is_duplicate = any(
+            isinstance(s, dict)
+            and s.get("reviewer_id") == args.reviewer
+            and (
+                dir_name != "biomarker_actionability"
+                or s.get("entity_version") == entity_version
+            )
+            for s in existing
+        )
+        if is_duplicate:
             if not args.force:
                 print(f"  SKIP (duplicate sign-off, use --force to override): {eid}")
                 skipped_dup += 1
@@ -422,7 +445,7 @@ def cmd_approve(args: argparse.Namespace) -> int:
             "reviewer_id": args.reviewer,
             "timestamp": ts,
             "rationale": args.rationale,
-            "entity_version": data.get("last_reviewed") or today,
+            "entity_version": entity_version,
             "scope_match": in_scope,
         }
         existing.append(signoff_entry)
@@ -501,7 +524,7 @@ def cmd_withdraw(args: argparse.Namespace) -> int:
         "entity_id": eid,
         "entity_type": ENTITY_TYPE_LABEL.get(dir_name, dir_name),
         "rationale": args.rationale or "",
-        "entity_version_at_signoff": data.get("last_reviewed") or _today_iso(),
+        "entity_version_at_signoff": _approval_entity_version(data, dir_name, _today_iso()),
         "scope_match": True,  # withdraw never blocked by scope
     })
     print(f"WITHDRAW: {eid} — {args.reviewer}")

@@ -45,6 +45,8 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
+from knowledge_base.schemas.biomarker_actionability import actionability_release_readiness
+
 
 def _normalize_gene_stem(key: str) -> str:
     """Extract the gene-symbol stem from a patient biomarker key.
@@ -189,11 +191,16 @@ def find_matching_actionability(
             # attestations. Default empty for back-compat with legacy
             # YAML still using `oncokb_level`; Phase 1.5 migrates the
             # latter into `evidence_sources` entries.
+            readiness = actionability_release_readiness(cell)
             hits[bma_id] = {
                 "bma_id": bma_id,
                 "biomarker_id": cell_bid,
                 "variant_qualifier": cell.get("variant_qualifier"),
                 "escat_tier": cell.get("escat_tier"),
+                "actionability_scope": cell.get("actionability_scope") or "unclassified",
+                "escat_applicability": cell.get("escat_applicability") or "review_required",
+                "clinical_use_ready": readiness.ready,
+                "clinical_use_reasons": list(readiness.reasons),
                 "evidence_sources": list(cell.get("evidence_sources") or []),
                 "evidence_summary": (cell.get("evidence_summary") or "").strip(),
                 "recommended_combinations": list(cell.get("recommended_combinations") or []),

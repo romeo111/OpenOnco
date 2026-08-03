@@ -640,6 +640,8 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
                                     "en": "Clinical significance of mutations (ESCAT)"},
     "actionability_sub":           {"uk": "Контекст для тумор-борду — інженер не використовує ці тіри для вибору треку",
                                     "en": "Tumor-board context — the engine does not use these tiers to rank tracks"},
+    "actionability_review_pending": {"uk": "ESCAT: потрібен клінічний перегляд",
+                                      "en": "ESCAT: clinical review pending"},
     "actionability_th_biomarker":  {"uk": "Біомаркер", "en": "Biomarker"},
     "actionability_th_variant":    {"uk": "Варіант", "en": "Variant"},
     "actionability_th_escat":      {"uk": "ESCAT", "en": "ESCAT"},
@@ -2641,7 +2643,7 @@ def _escat_class(tier: Optional[str]) -> str:
     """ESCAT tier → CSS class. Falls back to escat-X for unknown values."""
     if not tier:
         return "escat-X"
-    valid = {"IA", "IB", "IIA", "IIB", "IIIA", "IIIB", "IV", "X"}
+    valid = {"IA", "IB", "IC", "IIA", "IIB", "IIIA", "IIIB", "IVA", "IVB", "IV", "V", "X"}
     t = str(tier).strip().upper()
     return f"escat-{t}" if t in valid else "escat-X"
 
@@ -2987,10 +2989,22 @@ def _render_variant_actionability(
                 if _citation_needs_guard(cell_status["status"])
                 else ""
             )
+            # A BMA retains its historical ESCAT label for audit visibility,
+            # but must carry an explicit dossier and two current sign-offs
+            # before it is shown as clinically reviewed context.
+            review_badge_html = (
+                ""
+                if getattr(h, "clinical_use_ready", False)
+                else (
+                    '<span class="actionability-review-badge">'
+                    f'{_h(_t("actionability_review_pending", target_lang))}'
+                    "</span>"
+                )
+            )
 
             rows.append(
                 "<tr>"
-                f'<td>{badge_html}<span class="gene">{biomarker}</span></td>'
+                f'<td>{badge_html}{review_badge_html}<span class="gene">{biomarker}</span></td>'
                 f'<td><span class="variant">{variant_cell}</span></td>'
                 f'<td><span class="tier-badge {escat_cls}">{escat_label}</span></td>'
                 f'<td class="evidence">{evidence_cell}</td>'

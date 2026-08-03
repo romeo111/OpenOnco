@@ -126,12 +126,24 @@ def _make_temp_kb(tmp_path: Path) -> dict:
         "last_reviewed": "2026-04-27",
     })
 
+    bma_path = kb_root / "biomarker_actionability" / "bma_crc_test.yaml"
+    _write_yaml(bma_path, {
+        "id": "BMA-CRC-TEST",
+        "biomarker_id": "BIO-TEST",
+        "disease_id": "DIS-CRC",
+        "escat_tier": "IA",
+        "evidence_summary": "Test-only BMA.",
+        "primary_sources": ["SRC-TEST"],
+        "last_verified": "2026-07-31",
+    })
+
     return {
         "kb_root": kb_root,
         "audit_log": audit_log,
         "reviewers_dir": kb_root / "reviewers",
         "heme_ind_path": heme_ind,
         "solid_ind_path": solid_ind,
+        "bma_path": bma_path,
     }
 
 
@@ -204,6 +216,39 @@ def test_approve_writes_audit_log_entry(temp_kb: dict) -> None:
     assert row["reviewer_id"] == "REV-HEME-LEAD-PLACEHOLDER"
     assert row["entity_id"] == "IND-DLBCL-TEST"
     assert row["entity_type"] == "Indication"
+
+
+def test_approve_bma_pins_signoff_to_last_verified(temp_kb: dict) -> None:
+    rc = cli.main([
+        "approve",
+        "--reviewer", "REV-SOLID-LEAD-PLACEHOLDER",
+        "--entity-id", "BMA-CRC-TEST",
+        "--rationale", "Evidence revision reviewed",
+    ])
+    assert rc == 0
+    data = _read_yaml(temp_kb["bma_path"])
+    assert data["reviewer_signoffs"][0]["entity_version"] == "2026-07-31"
+
+
+def test_approve_bma_allows_same_reviewer_after_evidence_revision(temp_kb: dict) -> None:
+    data = _read_yaml(temp_kb["bma_path"])
+    data["reviewer_signoffs"] = [{
+        "reviewer_id": "REV-SOLID-LEAD-PLACEHOLDER",
+        "timestamp": "2026-07-01T00:00:00Z",
+        "entity_version": "2026-07-01",
+        "scope_match": True,
+    }]
+    _write_yaml(temp_kb["bma_path"], data)
+
+    rc = cli.main([
+        "approve",
+        "--reviewer", "REV-SOLID-LEAD-PLACEHOLDER",
+        "--entity-id", "BMA-CRC-TEST",
+        "--rationale", "New evidence revision reviewed",
+    ])
+    assert rc == 0
+    signoffs = _read_yaml(temp_kb["bma_path"])["reviewer_signoffs"]
+    assert {signoff["entity_version"] for signoff in signoffs} == {"2026-07-01", "2026-07-31"}
 
 
 def test_approve_dry_run_no_writes(temp_kb: dict) -> None:

@@ -62,7 +62,7 @@ def bma_records():
 
 
 # ── Valid enum sets per the schema ───────────────────────────────────────
-VALID_ESCAT = {"IA", "IB", "IIA", "IIB", "IIIA", "IIIB", "IV", "X"}
+VALID_ESCAT = {"IA", "IB", "IC", "IIA", "IIB", "IIIA", "IIIB", "IVA", "IVB", "IV", "V", "X"}
 VALID_ONCOKB = {"1", "2", "3A", "3B", "4", "R1", "R2"}
 
 

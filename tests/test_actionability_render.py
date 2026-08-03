@@ -46,6 +46,7 @@ def _hit(**kw):
         evidence_summary="",
         recommended_combinations=[],
         primary_sources=[],
+        clinical_use_ready=False,
     )
     defaults.update(kw)
     return SimpleNamespace(**defaults)
@@ -380,3 +381,11 @@ def test_render_actionability_section_escat_tier_is_prominent():
     html = _render_variant_actionability(plan)
     assert 'tier-badge escat-IIA' in html
     assert ">IIA<" in html
+
+
+def test_render_marks_unready_escat_context_for_clinical_review():
+    html = _render_variant_actionability(_plan([_hit(clinical_use_ready=False)]), target_lang="en")
+    assert "ESCAT: clinical review pending" in html
+
+    ready_html = _render_variant_actionability(_plan([_hit(clinical_use_ready=True)]), target_lang="en")
+    assert "ESCAT: clinical review pending" not in ready_html

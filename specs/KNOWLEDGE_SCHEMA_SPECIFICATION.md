@@ -428,7 +428,19 @@ variant_qualifier: null               # null → entire variant encoded in bioma
 disease_id: DIS-CRC                  # FK → DIS-*
 
 # ── Primary actionability tier (vendor-neutral) ────────────────────────
-escat_tier: "IA"                     # ESCAT IA|IB|IIA|IIB|IIIA|IIIB|IV|X
+actionability_scope: therapeutic_predictive
+escat_applicability: applicable
+escat_tier: "IA"                     # ESCAT IA|IB|IC|IIA|IIB|IIIA|IIIB|IVA|IVB|V|X
+escat_evidence_dossier:
+  assessment_status: clinically_reviewed
+  tier_rationale: "Reviewer-authored rationale linked to the records below."
+  evidence_records:
+    - source: SRC-NCCN-COLORECTAL-2025
+      therapy_context: "encorafenib + cetuximab"
+      tumour_context: "BRAF V600E metastatic colorectal cancer"
+      study_design: prospective_randomized
+      endpoint: "clinically meaningful survival endpoint"
+      same_tumour_type: true
 
 # ── Evidence sources block (canonical post-pivot) ──────────────────────
 # Replaces legacy fields oncokb_level / oncokb_snapshot_version. A list
@@ -490,10 +502,10 @@ EvidenceSourceRef = {
 ```
 
 `level` is a **source-native token** (CIViC `A|B|C|D|E`, NCCN
-`category_1|2A|2B|3`, ESMO `I|II|III|IV|V`). Vendor mapping (e.g.,
-CIViC-A → ESCAT IA) lives in the render layer, not in the YAML —
-clinical responsibility for the cumulative tier (`escat_tier`) rests
-with the BMA reviewer, not with automated mapping.
+`category_1|2A|2B|3`, ESMO `I|II|III|IV|V`). There is **no automated
+mapping** from a source-native level to ESCAT: the clinician records the
+cumulative tier (`escat_tier`) and its evidence dossier explicitly. The
+render shows, but never calculates, either tier.
 
 The field `direction == "does_not_support"` is load-bearing: the render
 must display such an entry as an **anti-evidence card** (negative
@@ -504,10 +516,19 @@ drop.
 #### 4.4.3. `escat_tier` as the primary actionability tier
 
 `escat_tier` is vendor-neutral and publication-stable (Mateo 2018 does
-not update daily, unlike the OncoKB level scheme). This field is what
-the render uses as the primary tier in Plan cards. The individual
-`evidence_sources[*].level` fields are the evidence base for sign-off,
-not a user-facing render token.
+not update daily, unlike the OncoKB level scheme). Its full vocabulary is
+`IA|IB|IC|IIA|IIB|IIIA|IIIB|IVA|IVB|V|X`; legacy broad `IV` is accepted
+only for migration and must be resolved during review. It is applicable
+only to an explicitly `therapeutic_predictive` claim. Diagnostic,
+prognostic, monitoring, screening, surveillance, germline-risk, and
+resistance records must be marked `not_applicable` (with no tier and a
+reason) or `review_required` until reviewed.
+
+For clinical-use presentation, a BMA requires all of: `applicable` scope,
+a clinically reviewed dossier with rationale and evidence records, and two
+distinct in-scope reviewer sign-offs pinned to `last_verified`. Failing
+records may remain visible as review context but have a pending-review
+marker; they never take part in treatment-track selection.
 
 #### 4.4.4. Legacy fields and ToS restrictions
 
