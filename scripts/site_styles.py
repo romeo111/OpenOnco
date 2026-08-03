@@ -1651,6 +1651,7 @@ body.home-page .home-carousel {
   letter-spacing: normal; font-weight: 500;
   margin-top: 2px;
 }
+.qt-count:empty { display: none; }
 .qt-clear {
   align-self: flex-end;
   background: transparent; border: none; color: var(--gray-700);
@@ -1992,6 +1993,31 @@ body.home-page .home-carousel {
 .quest-cta button { width: 100%; }
 .quest-cta button:disabled {
   opacity: 0.5; cursor: not-allowed;
+}
+/* At tablet widths the two primary field groups still fit side by side, but
+   the format and reset controls do not. Give them their own row instead of
+   letting the toolbar extend beyond the viewport. */
+@media (min-width: 761px) and (max-width: 1040px) {
+  .quest-toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .quest-toolbar > .qt-label:nth-of-type(-n+2) {
+    min-width: 0;
+  }
+  .quest-toolbar > .qt-spacer {
+    display: none;
+  }
+  .quest-toolbar > .qt-modes {
+    grid-column: 1;
+    justify-self: end;
+    align-self: start;
+  }
+  .quest-toolbar > .qt-reset {
+    grid-column: 2;
+    justify-self: start;
+    align-self: start;
+  }
 }
 @media (max-width: 760px) {
   .try-page {
