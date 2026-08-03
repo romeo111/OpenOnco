@@ -1066,4 +1066,3 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **C
 | `RF-WM-INFECTION-SCREENING` | ⚠ unused | 0 | infection-screening | hold | critical | ✓ | — | DIS-WM |
 | `RF-WM-MYD88-L265P-ACTIONABLE` | ✓ | 4 | high-risk-biology | intensify | major | ✓ | — | DIS-WM |
 | `RF-WM-TRANSFORMATION-PROGRESSION` | ✓ | 1 | transformation-progression | intensify | critical | ✓ | — | DIS-WM |
-

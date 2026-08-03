@@ -400,4 +400,3 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-TSC1` | ✓ | 1 | TSC1 loss-of-function mutation (hamartin) | NGS | — | 1× ✓ | low | Lymphangioleiomyomatos |
 | `BIO-VHL-STATUS` | ✓ | 1 | VHL gene status | NGS | — | 7× ✓ | low | Renal cell carcinoma |
 | `BIO-WT1-MUTATION` | ⚠ unused | 0 | WT1 mutation (Wilms tumor 1 gene) | NGS | — | — | low | — |
-

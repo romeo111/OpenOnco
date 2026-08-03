@@ -786,4 +786,3 @@ Phase 4's render rule (skip `evidence_sources` entries with `source=SRC-ONCOKB`)
 ## Appendix B. Files touched
 
 - `docs/reviews/bma-j-drafts-civic-diff-2026-04-27.md` — this file (only write).
-

@@ -93,4 +93,3 @@ Snapshot: `knowledge_base/hosted/civic/2026-04-25/evidence.yaml`
 | Colorectal Cancer | Panitumumab | 53 |
 | Chronic Myeloid Leukemia | Bosutinib | 50 |
 | Melanoma | Vemurafenib | 48 |
-

@@ -95,4 +95,3 @@ Best-effort tagging: a YAML is attributed to a disease when it cites `disease_id
 - Estimated core bundle (code + shared content + disease metadata): **~1402.3 KB** compressed.
 
 - Estimated per-disease tail (indications + algorithms + regimens + disease-specific RFs + BMA cells): **~650.4 KB** total, distributed.
-
