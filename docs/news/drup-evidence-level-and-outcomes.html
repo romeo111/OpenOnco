@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · DRUP: a basket trial does not make all biomarkers equally strong</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="Cohorts in the Dutch DRUP programme produced sharply different outcomes. The contrast is not evidence that actionability tiers do not matter; its own later analysis argues that strong biological and prior clinical evidence tracked with the better-performing targets.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Cohorts in the Dutch DRUP programme produced sharply different outcomes. The contrast is not evidence that actionability tiers do not matter; its own later analysis argues that strong biological and prior clinical evidence tracked with the better-performing targets.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/news/drup-evidence-level-and-outcomes.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/news/drup-evidence-level-and-outcomes.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/news/drup-evidence-level-and-outcomes.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenOnco · DRUP: a basket trial does not make all biomarkers equally strong">
+<meta property="og:description" content="Cohorts in the Dutch DRUP programme produced sharply different outcomes. The contrast is not evidence that actionability tiers do not matter; its own later analysis argues that strong biological and prior clinical evidence tracked with the better-performing targets.">
+<meta property="og:url" content="https://openonco.info/news/drup-evidence-level-and-outcomes.html">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · DRUP: a basket trial does not make all biomarkers equally strong">
+<meta name="twitter:description" content="Cohorts in the Dutch DRUP programme produced sharply different outcomes. The contrast is not evidence that actionability tiers do not matter; its own later analysis argues that strong biological and prior clinical evidence tracked with the better-performing targets.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","name":"OpenOnco · DRUP: a basket trial does not make all biomarkers equally strong","description":"Cohorts in the Dutch DRUP programme produced sharply different outcomes. The contrast is not evidence that actionability tiers do not matter; its own later analysis argues that strong biological and prior clinical evidence tracked with the better-performing targets.","url":"https://openonco.info/news/drup-evidence-level-and-outcomes.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/news/drup-evidence-level-and-outcomes.html"},"datePublished":"2026-08-03","dateModified":"2026-07-31","author":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/">Home</a>
+    <a href="/capabilities.html">Capabilities</a><a href="/handbook.html">Handbook</a><a href="/news.html" class="active">News</a>
+    <a href="/about.html">About</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <a class="lang-other" href="/ukr/news/drup-evidence-level-and-outcomes.html"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
+      <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
+    </div>
+    <div class="top-cta-group">
+      <a href="/try.html" class="btn-cta-top btn-cta-try">Plan Builder</a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary">Prevention</a>
+      <a href="/kb.html" class="btn-cta-top btn-cta-secondary">Onco Wiki</a>
+      <a href="/ask.html" class="btn-cta-top btn-cta-secondary">Tumor Board</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <article class="info-page news-article">
+    <a class="case-back-btn news-back" href="/news.html">← All news</a>
+    <div class="case-badge-row">
+      <span class="case-badge bdg-plan">July 31, 2026</span>
+          <span class="case-quality quality-starter">precision-oncology</span>
+          <span class="case-quality quality-starter">basket-trials</span>
+          <span class="case-quality quality-starter">evidence</span>
+    </div>
+    <h1>DRUP: a basket trial does not make all biomarkers equally strong</h1>
+    <p class="lead">Cohorts in the Dutch DRUP programme produced sharply different outcomes. The contrast is not evidence that actionability tiers do not matter; its own later analysis argues that strong biological and prior clinical evidence tracked with the better-performing targets.</p>
+    <p class="news-byline">by OpenOnco</p>
+    <p class="news-retro">Written retrospectively and published on August 3, 2026.</p>
+    <p class="news-kind-note">Background reading, not clinical guidance. This describes published research; it is not a recommendation for any individual case, and the cited studies may have been superseded.</p>
+    <div class="news-body info-text">
+      <p>Drug rediscovery trials test approved cancer drugs outside their usual indication when a tumour has a potentially relevant molecular feature. They are an efficient way to learn, but their inclusion rule is broader than a guarantee that every drug–biomarker pair is equally convincing.</p>
+      <p>DRUP’s tumour-agnostic cohort of microsatellite-instable tumours treated with nivolumab reported a clinical benefit rate of 63%. By contrast, palbociclib or ribociclib alone in cancers with cyclin D–CDK4/6-pathway alterations had a 16-week clinical benefit rate of 15% and an objective response rate of 0% in a pooled DRUP and MoST analysis.</p>
+      <h2>Keep the endpoints straight</h2>
+      <p>Both headline percentages are clinical benefit rates, not response rates. They count either a confirmed response or stable disease lasting at least sixteen weeks. Calling the 15% figure a response rate would turn a zero-response cohort into a misleadingly positive one.</p>
+      <p>The lesson is not that formal evidence levels fail to predict outcomes. A 2026 DRUP analysis concluded that high-performing targets shared strong biological rationale and prior clinical activity, whereas some weaker biomarkers had modest activity. Equal access to a basket-trial cohort is not equal evidence.</p>
+    </div>
+  </article>
+
+  <section class="news-sources">
+    <h2>Sources</h2>
+    <ol>
+      <li>van der Velden DL, Hoes LR, van der Wijngaart H, et al. The Drug Rediscovery Protocol facilitates the expanded use of existing anticancer drugs. Nature. 2019. · <a href="https://doi.org/10.1038/s41586-019-1600-x" target="_blank" rel="noopener noreferrer">10.1038/s41586-019-1600-x</a></li>
+      <li>Zeverijn LJ, Looze EJ, Thavaneswaran S, et al. Limited clinical activity of palbociclib and ribociclib monotherapy in advanced cancers with cyclin D-CDK4/6 pathway alterations. International Journal of Cancer. 2023. · <a href="https://doi.org/10.1002/ijc.34649" target="_blank" rel="noopener noreferrer">10.1002/ijc.34649</a></li>
+      <li>Verkerk K, Spiekman AC, Haj Mohammad SF, et al. Prospective evaluation of genomics-guided off-label treatment. Nature. 2026. · <a href="https://doi.org/10.1038/s41586-026-10405-x" target="_blank" rel="noopener noreferrer">10.1038/s41586-026-10405-x</a></li>
+    </ol>
+  </section>
+  <section class="news-comments" id="comments">
+    <h2>Comments</h2>
+    <p class="news-comments-note">Threads are public and indexed — please keep personal medical data out of them. Found a clinical error? <a href="https://github.com/romeo111/OpenOnco/issues/new" target="_blank" rel="noopener noreferrer">Open an issue</a> instead.</p>
+    <p class="news-comments-offline">Comments are not switched on yet — the backend still needs to be configured.</p>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Informational tool for clinicians, not a medical device (CHARTER §15 + §11).
+  </footer>
+</main>
+</body>
+</html>

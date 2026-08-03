@@ -2,101 +2,8 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<!-- openonco-geo-lang:start -->
-<script>
-(function(){
-  try{
-    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
-    var UARE=/^\/ukr(\/|$)/;
-    // Remember an explicit language choice so IP detection never overrides it.
-    document.addEventListener('click',function(e){
-      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
-      if(!a)return;
-      var href=a.getAttribute('href')||'';
-      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
-    },true);
-    var ua=navigator.userAgent||'';
-    // Bots: leave both language trees crawlable — no auto-redirect.
-    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
-    var path=location.pathname||'/';
-    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
-    var pageLang=UARE.test(path)?'uk':'en';
-    // Track first real interaction so a slow async lookup never discards typed
-    // input (e.g. the /try.html plan form) by navigating out from under the user.
-    var touched=false,mark=function(){touched=true;};
-    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
-      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
-    });
-    function mirror(){
-      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
-      return p+(location.search||'')+(location.hash||'');
-    }
-    function go(lang){
-      if(lang===pageLang)return;
-      var target=mirror();
-      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
-      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
-      location.replace(target);
-    }
-    function want(cc){return cc==='UA'?'uk':'en';}
-    // 1) explicit choice wins
-    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
-    if(pref==='uk'||pref==='en'){go(pref);return;}
-    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
-    var cc=null;
-    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
-    if(cc){go(want(cc));return;}
-    // 3) look up country by IP. Third-party surface kept minimal for a medical
-    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
-    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
-    var eps=[
-      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
-      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
-    ];
-    (function tryEp(i){
-      if(i>=eps.length)return;                          // all endpoints failed → English default
-      var ctl=('AbortController'in window)?new AbortController():null;
-      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
-      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
-        .then(function(r){return r.ok?r.json():Promise.reject();})
-        .then(function(j){
-          if(to)clearTimeout(to);
-          var code=((eps[i][1](j))||'').toString().toUpperCase();
-          if(/^[A-Z]{2}$/.test(code)){
-            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
-            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
-          }else{tryEp(i+1);}
-        })
-        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
-    })(0);
-  }catch(_){}
-})();
-</script>
-<!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Новини</title>
-<!-- openonco-seo:start -->
-<meta name="description" content="Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів.">
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="ai-summary" content="Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів.">
-<meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
-<link rel="canonical" href="https://openonco.info/ukr/news.html">
-<link rel="alternate" hreflang="en" href="https://openonco.info/news.html">
-<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/news.html">
-<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
-<meta property="og:site_name" content="OpenOnco">
-<meta property="og:type" content="website">
-<meta property="og:title" content="OpenOnco · Новини">
-<meta property="og:description" content="Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів.">
-<meta property="og:url" content="https://openonco.info/ukr/news.html">
-<meta property="og:locale" content="uk_UA">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="OpenOnco · Новини">
-<meta name="twitter:description" content="Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Новини","description":"Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів.","url":"https://openonco.info/ukr/news.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/news.html"}}</script>
-<!-- openonco-seo:end -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -136,9 +43,165 @@
 
     <div class="case-list-header">
       <h2>Новини</h2>
-      <span class="case-list-count">12 дописів</span>
+      <span class="case-list-count">25 дописів</span>
     </div>
     <div class="case-grid">
+      <a class="case-card news-card" href="/ukr/news/tmb-ten-is-assay-specific.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">3 серпня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">biomarkers</span>
+          <span class="case-quality quality-starter">immunotherapy</span>
+          <span class="case-quality quality-starter">tmb</span>
+        </div>
+        <h3>Чому TMB ≥10 мутацій/Мб — не універсальна біологічна межа</h3>
+        <p>Пухлинно-незалежне показання FDA для пембролізумабу за високого TMB використовувало конкретний тест і правило підрахунку. Той самий числовий поріг не можна просто переносити на кожну панель секвенування чи тип пухлини.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/prmt5-mtap-and-common-essential-genes.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">2 серпня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">synthetic-lethality</span>
+          <span class="case-quality quality-starter">prmt5</span>
+          <span class="case-quality quality-starter">research-methods</span>
+        </div>
+        <h3>Як «загально необхідний» ген може приховувати вибіркову вразливість</h3>
+        <p>Втрата MTAP може зробити ракові клітини чутливішими до інгібування PRMT5, хоча PRMT5 широко необхідний клітинам, що проліферують. Це історія про те, як тип генетичного скринінгу може приховати сигнал біомаркера.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/cell-line-drift-between-labs.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">1 серпня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">research-methods</span>
+          <span class="case-quality quality-starter">cell-lines</span>
+          <span class="case-quality quality-starter">reproducibility</span>
+        </div>
+        <h3>Та сама клітинна лінія раку може стати різними експериментами</h3>
+        <p>Лабораторні версії широко вживаної лінії раку молочної залози MCF7 відрізнялися генетично й за відповіддю на препарати. Це нагадує, що назва клітинної лінії — не повний опис експерименту.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/drup-evidence-level-and-outcomes.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">31 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">precision-oncology</span>
+          <span class="case-quality quality-starter">basket-trials</span>
+          <span class="case-quality quality-starter">evidence</span>
+        </div>
+        <h3>DRUP: basket-дослідження не робить усі біомаркери однаково сильними</h3>
+        <p>Когорти нідерландської програми DRUP дали дуже різні результати. Цей контраст не доводить, що рівні actionability неважливі; пізніший власний аналіз програми показує, що кращим мішеням відповідали сильне біологічне та попереднє клінічне обґрунтування.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/precision-oncology-reality-check.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">30 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">precision-oncology</span>
+          <span class="case-quality quality-starter">biomarkers</span>
+          <span class="case-quality quality-starter">clinical-trials</span>
+        </div>
+        <h3>Precision oncology: що насправді показали відомі «перевірки реальністю»</h3>
+        <p>SHIVA та NCI-MATCH не показали, що вся терапія за біомаркером не працює. Вони показали, наскільки стрімкий шлях від секвенування до лікування і як поєднання зі слабкими доказами в пізніх лініях часто дають менше, ніж очікується.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/esmo-mcbs-statistical-significance.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">29 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">evidence</span>
+          <span class="case-quality quality-starter">esmo</span>
+          <span class="case-quality quality-starter">clinical-trials</span>
+        </div>
+        <h3>Статистично значуще — не автоматично клінічно важливе</h3>
+        <p>ESMO-MCBS оцінює розмір користі в дослідженнях, які вже статистично позитивні. Її мета — відрізнити невеликий формальний ефект від ефекту, що ймовірно має значення для пацієнтів.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/esmo-d-and-e-grades.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">28 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">guidelines</span>
+          <span class="case-quality quality-starter">esmo</span>
+          <span class="case-quality quality-starter">evidence</span>
+        </div>
+        <h3>Що насправді означають оцінки ESMO D та E</h3>
+        <p>Оцінки ESMO D та E означають дані проти ефективності або дані про несприятливий наслідок. Вони не означають просто відсутність доказів: для цього існує оцінка C.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/guidelines-before-confirmatory-trials.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">27 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">guidelines</span>
+          <span class="case-quality quality-starter">evidence</span>
+          <span class="case-quality quality-starter">clinical-trials</span>
+        </div>
+        <h3>Чому настанова може містити схему раніше за звіт фази 3</h3>
+        <p>У дослідженні нових схем при мієломі внесення до NCCN часто передувало оприлюдненню даних фази 3. Це опис історії однієї настанови, а не доказ, що настанови систематично випереджають регуляторів або що всі ранні внесення однаково підкріплені.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/who-can-submit-evidence-to-nccn.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">26 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">guidelines</span>
+          <span class="case-quality quality-starter">nccn</span>
+          <span class="case-quality quality-starter">transparency</span>
+        </div>
+        <h3>Хто може попросити NCCN змінити настанову?</h3>
+        <p>NCCN приймає запити на зміну настанов від клініцистів, пацієнтських адвокатів, організацій, платників та індустрії. Процес має спільну форму й чіткі строки, але не гарантує, що кожен запит дійде до голосування.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/transmissible-cancers-in-animals.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">25 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">comparative-oncology</span>
+          <span class="case-quality quality-starter">evolution</span>
+          <span class="case-quality quality-starter">biology</span>
+        </div>
+        <h3>Раки, що передаються між тваринами</h3>
+        <p>Кілька раків у тварин існують як клональні лінії, здатні переходити між господарями. Найдавніший відомий приклад у собак існує тисячі, а не одинадцять тисяч років. Це не природно поширюваний рак людини.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/adaptive-mutability-under-drug-pressure.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">24 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">resistance</span>
+          <span class="case-quality quality-starter">colorectal-cancer</span>
+          <span class="case-quality quality-starter">research</span>
+        </div>
+        <h3>Чи можуть стійкі до лікування клітини тимчасово ставати більш мутабельними?</h3>
+        <p>У моделях колоректального раку невелика популяція клітин, що виживає під час таргетного лікування, тимчасово змінювала програми ремонту ДНК. Це цікава гіпотеза механізму, але її внесок у резистентність у пацієнтів ще не встановлено.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/chromothripsis-and-genome-chaos.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">23 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">genomics</span>
+          <span class="case-quality quality-starter">chromothripsis</span>
+          <span class="case-quality quality-starter">research</span>
+        </div>
+        <h3>Коли хромосома руйнується за одну подію</h3>
+        <p>Хромотрипсис — добре встановлений патерн катастрофічних перебудов хромосом. «Геномний хаос» — ширше й менш стандартне тлумачення таких криз, а не синонім і не доведена стратегія виживання.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
+      <a class="case-card news-card" href="/ukr/news/cancer-atavism.html">
+        <div class="case-badge-row">
+          <span class="case-badge bdg-plan">22 липня 2026</span>
+          <span class="case-badge bdg-diag">Пояснення</span>
+          <span class="case-quality quality-starter">biology</span>
+          <span class="case-quality quality-starter">evolution</span>
+          <span class="case-quality quality-starter">research</span>
+        </div>
+        <h3>Чи повертається рак до одноклітинного минулого?</h3>
+        <p>Деякі пухлини сильніше експресують давніші еволюційні генні програми й слабше — програми багатоклітинності. Це реальне спостереження, але пояснення через «атавізм» лишається дискусійною гіпотезою.</p>
+        <div class="case-foot">Читати →</div>
+      </a>
       <a class="case-card news-card" href="/ukr/news/cancer-mutations-in-normal-skin.html">
         <div class="case-badge-row">
           <span class="case-badge bdg-plan">21 липня 2026</span>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Хто може попросити NCCN змінити настанову?</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="NCCN приймає запити на зміну настанов від клініцистів, пацієнтських адвокатів, організацій, платників та індустрії. Процес має спільну форму й чіткі строки, але не гарантує, що кожен запит дійде до голосування.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="NCCN приймає запити на зміну настанов від клініцистів, пацієнтських адвокатів, організацій, платників та індустрії. Процес має спільну форму й чіткі строки, але не гарантує, що кожен запит дійде до голосування.">
+<meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
+<link rel="canonical" href="https://openonco.info/ukr/news/who-can-submit-evidence-to-nccn.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/news/who-can-submit-evidence-to-nccn.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/news/who-can-submit-evidence-to-nccn.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenOnco · Хто може попросити NCCN змінити настанову?">
+<meta property="og:description" content="NCCN приймає запити на зміну настанов від клініцистів, пацієнтських адвокатів, організацій, платників та індустрії. Процес має спільну форму й чіткі строки, але не гарантує, що кожен запит дійде до голосування.">
+<meta property="og:url" content="https://openonco.info/ukr/news/who-can-submit-evidence-to-nccn.html">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Хто може попросити NCCN змінити настанову?">
+<meta name="twitter:description" content="NCCN приймає запити на зміну настанов від клініцистів, пацієнтських адвокатів, організацій, платників та індустрії. Процес має спільну форму й чіткі строки, але не гарантує, що кожен запит дійде до голосування.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","name":"OpenOnco · Хто може попросити NCCN змінити настанову?","description":"NCCN приймає запити на зміну настанов від клініцистів, пацієнтських адвокатів, організацій, платників та індустрії. Процес має спільну форму й чіткі строки, але не гарантує, що кожен запит дійде до голосування.","url":"https://openonco.info/ukr/news/who-can-submit-evidence-to-nccn.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/news/who-can-submit-evidence-to-nccn.html"},"datePublished":"2026-08-03","dateModified":"2026-07-26","author":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/ukr/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/news.html" class="active">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
+      <a class="lang-other" href="/news/who-can-submit-evidence-to-nccn.html"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
+    </div>
+    <div class="top-cta-group">
+      <a href="/ukr/try.html" class="btn-cta-top btn-cta-try">План лікування</a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary">Профілактика</a>
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary">Онко-вікі</a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary">Туморборд</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <article class="info-page news-article">
+    <a class="case-back-btn news-back" href="/ukr/news.html">← Усі новини</a>
+    <div class="case-badge-row">
+      <span class="case-badge bdg-plan">26 липня 2026</span>
+          <span class="case-quality quality-starter">guidelines</span>
+          <span class="case-quality quality-starter">nccn</span>
+          <span class="case-quality quality-starter">transparency</span>
+    </div>
+    <h1>Хто може попросити NCCN змінити настанову?</h1>
+    <p class="lead">NCCN приймає запити на зміну настанов від клініцистів, пацієнтських адвокатів, організацій, платників та індустрії. Процес має спільну форму й чіткі строки, але не гарантує, що кожен запит дійде до голосування.</p>
+    <p class="news-byline">— OpenOnco</p>
+    <p class="news-retro">Написано ретроспективно, опубліковано 3 серпня 2026.</p>
+    <p class="news-kind-note">Матеріал для загального розуміння, а не клінічна настанова. Тут описані опубліковані дослідження; це не рекомендація для конкретного випадку, а згадані праці могли бути переглянуті пізнішими даними.</p>
+    <div class="news-body info-text">
+      <p>Клінічну настанову пише не лише її названа панель. За оприлюдненим процесом NCCN приймає зовнішні запити на зміни від індустрії, організацій, клініцистів і клінічних груп, пацієнтських адвокатів та платників. Усі користуються однією онлайн-формою; обліковий запис NCCN потрібен, але його можна створити безкоштовно.</p>
+      <p>Важливий строк. Запит треба подати щонайменше за чотири тижні, або 28 днів, до відповідного щорічного засідання панелі. Дати щорічних засідань публічні, проміжних — ні. Запізнілий запит може чекати наступного річного оновлення, а не кілька тижнів.</p>
+      <h2>Що відбувається після подання</h2>
+      <p>NCCN повідомляє, що запити, які відповідають вимогам, панель обговорює й ставить на голосування. У підсумковому документі прозорості є рішення та сукупний голос панелі. Там немає голосу кожного учасника чи конфіденційного обговорення.</p>
+      <p>У фрази «кожен запит голосується» є важлива умова. Запит можуть закрити на етапі прийому, якщо він не відповідає вимогам; повторний уже розглянутий запит без нових даних також можуть закрити. Результат зазвичай з’являється разом з оновленням настанови — в середньому через місяці після засідання.</p>
+      <div class="callout">Це опис опублікованої політики NCCN, а не незалежний аудит того, чи всі подання мають однаковий результат.</div>
+    </div>
+  </article>
+
+  <section class="news-sources">
+    <h2>Джерела</h2>
+    <ol>
+      <li>National Comprehensive Cancer Network. Development and Update of Guidelines, NCCN Guidelines Process. Accessed 2026-07-20. · <a href="https://www.nccn.org/guidelines/guidelines-process/development-and-update-of-guidelines" target="_blank" rel="noopener noreferrer">https://www.nccn.org/guidelines/guidelines-process/development-and-update-of-guidelines</a></li>
+      <li>National Comprehensive Cancer Network. NCCN Guidelines Submission Process FAQs, 27 November 2024. · <a href="https://www.nccn.org/docs/default-source/default-document-library/gl-submission-process-faqs_11_27-24.pdf?sfvrsn=88670faf_3" target="_blank" rel="noopener noreferrer">https://www.nccn.org/docs/default-source/default-document-library/gl-submission-process-faqs_11_27-24.pdf?sfvrsn=88670faf_3</a></li>
+    </ol>
+  </section>
+  <section class="news-comments" id="comments">
+    <h2>Коментарі</h2>
+    <p class="news-comments-note">Гілки публічні й індексуються — будь ласка, не пишіть у них персональні медичні дані. Знайшли клінічну помилку? <a href="https://github.com/romeo111/OpenOnco/issues/new" target="_blank" rel="noopener noreferrer">Відкрийте issue</a>.</p>
+    <p class="news-comments-offline">Коментарі ще не увімкнено — бекенд потрібно налаштувати.</p>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
+  </footer>
+</main>
+</body>
+</html>
