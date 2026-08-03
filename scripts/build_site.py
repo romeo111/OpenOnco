@@ -1297,6 +1297,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "capabilities": return "/capabilities.html"
         if page_kind == "about":        return "/about.html"
         if page_kind == "diseases":     return "/diseases.html"
+        if page_kind == "prevent":      return "/prevent.html"
         if page_kind == "contribute":   return "/"
         if page_kind == "specs":        return "/specs.html"
         if page_kind == "news":         return "/news.html"
@@ -1310,6 +1311,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "capabilities": return f"{uk_prefix}/capabilities.html"
         if page_kind == "about":        return f"{uk_prefix}/about.html"
         if page_kind == "diseases":     return f"{uk_prefix}/diseases.html"
+        if page_kind == "prevent":      return f"{uk_prefix}/prevent.html"
         if page_kind == "contribute":   return f"{uk_prefix}/"
         if page_kind == "specs":        return f"{uk_prefix}/specs.html"
         if page_kind == "news":         return f"{uk_prefix}/news.html"
@@ -2672,6 +2674,1271 @@ def render_gallery(*, target_lang: str = "en") -> str:
 </body>
 </html>
 """
+
+
+# ── Consumer prevention / early-diagnosis page ───────────────────────────
+
+
+def render_prevent(*, target_lang: str = "en") -> str:
+    """Consumer-facing prevention and early-diagnosis risk intake.
+
+    This page deliberately stays browser-only and non-diagnostic. It creates
+    an OpenOnco-compatible handoff profile that a clinician can review or use
+    as a starting point in the Plan Builder, while the consumer sees concrete
+    next steps rather than raw engine JSON.
+    """
+    is_en = target_lang == "en"
+    try_href = "/try.html" if is_en else "/ukr/try.html"
+
+    if is_en:
+        copy = {
+            "page_title": "Risk & early detection check",
+            "meta_description": (
+                "A browser-only cancer risk, family-history, screening and early-signal "
+                "checker that turns consumer inputs into a clinician-readable OpenOnco profile."
+            ),
+            "kicker": "For worried people, not only oncologists",
+            "h1": "Check risk, family history, screenings, and early warning signs.",
+            "lead": (
+                "Answer a few structured questions. OpenOnco will not diagnose cancer; it will "
+                "prioritize what to discuss with a doctor, which routine screenings may be due, "
+                "and whether family history suggests genetic counseling."
+            ),
+            "privacy": "Browser-only. Do not enter names, phone numbers, addresses, or identifiers.",
+            "not_diagnosis": "This is not a diagnosis and not a replacement for a clinician.",
+            "market_title": "What successful products taught us",
+            "market_lead": (
+                "The redesign borrows the parts that work in high-growth cancer-prevention "
+                "products: simple intake, clear risk lanes, family-history capture, navigation "
+                "to the next action, and honesty that new tests complement routine screening."
+            ),
+            "form_title": "Your check",
+            "quick_title": "Quick examples",
+            "quick_brca": "Young BRCA-like family history",
+            "quick_smoker": "Smoker eligible for LDCT",
+            "quick_fit": "Positive FIT / blood in stool",
+            "about_you": "1. About you",
+            "what_worries": "2. What worries you right now",
+            "screening": "3. Screening status",
+            "family": "4. Family history / pedigree",
+            "exposures": "5. Risk factors and exposures",
+            "diagnostic_data": "6. Existing diagnostic data",
+            "age": "Age",
+            "sex": "Sex",
+            "sex_female": "Female",
+            "sex_male": "Male",
+            "sex_other": "Other / prefer not to say",
+            "bmi": "BMI",
+            "smoking": "Smoking",
+            "smoke_never": "Never",
+            "smoke_current": "Current smoker",
+            "smoke_former": "Former smoker",
+            "pack_years": "Pack-years",
+            "quit_years": "Years since quitting",
+            "alcohol": "Alcohol drinks / week",
+            "symptom_note": "Select persistent, unexplained, or new findings.",
+            "screen_note": "Approximate is enough. This does not replace local screening rules.",
+            "last_mammo": "Last mammogram",
+            "last_colon": "Last colon cancer screening",
+            "last_cervical": "Last cervical screening",
+            "last_ldct": "Last low-dose CT lung screen",
+            "screen_recent": "Up to date / recent",
+            "screen_due": "Due or unsure",
+            "screen_never": "Never",
+            "screen_na": "Not applicable",
+            "add_relative": "Add relative",
+            "run": "Build my risk route",
+            "reset": "Clear",
+            "result_title": "Risk route",
+            "result_empty": "Complete the form and click “Build my risk route”.",
+            "next_steps": "Next steps",
+            "lanes": "Why this route",
+            "profile": "Clinician handoff profile",
+            "copy_json": "Copy JSON",
+            "download_json": "Download JSON",
+            "open_builder": "Open in Plan Builder",
+            "print": "Print",
+            "relation": "Relation",
+            "relation_first": "1st degree",
+            "relation_second": "2nd degree",
+            "relation_third": "More distant",
+            "family_cancer": "Cancer",
+            "family_age_dx": "Age dx",
+            "family_side": "Side",
+            "maternal": "maternal",
+            "paternal": "paternal",
+            "unknown": "unknown",
+            "remove": "Remove",
+            "cancer_blank": "—",
+            "cancer_breast": "breast",
+            "cancer_ovarian": "ovarian / tubal / peritoneal",
+            "cancer_colon": "colorectal",
+            "cancer_endometrial": "endometrial",
+            "cancer_pancreatic": "pancreatic",
+            "cancer_prostate": "metastatic/high-risk prostate",
+            "cancer_male_breast": "male breast",
+            "cancer_sarcoma_brain_adrenal": "sarcoma/brain/adrenal childhood",
+            "cancer_other": "other",
+            "exposure_known_mutation": "BRCA / Lynch / APC / TP53 / other known pathogenic variant in family",
+            "exposure_ashkenazi": "Ashkenazi Jewish ancestry with breast/ovarian family history",
+            "exposure_hbv": "HBsAg positive / chronic HBV",
+            "exposure_hcv": "HCV RNA positive / chronic HCV",
+            "exposure_hpv": "Persistent high-risk HPV",
+            "exposure_hpylori": "Positive H. pylori test",
+            "exposure_hiv": "HIV or long-term immunosuppression",
+            "exposure_radiation": "Prior chest/pelvic radiation or childhood cancer treatment",
+            "exposure_radon": "Home radon ≥4 pCi/L or high radon exposure",
+            "exposure_occupation": "Asbestos, benzene, aromatic amines, diesel or ionizing-radiation work exposure",
+            "exposure_barrett": "Barrett esophagus / long GERD history",
+            "exposure_ibd_psc": "Long-standing IBD, PSC, chronic pancreatitis or cirrhosis",
+            "fit_stool": "FIT / stool blood",
+            "fit_positive": "positive",
+            "fit_negative": "negative",
+            "mammography_us": "Mammography / US",
+            "birads45": "BI-RADS 4/5",
+            "benign_birads": "benign / BI-RADS 1-2",
+            "imaging_report": "Imaging report",
+            "suspicious_imaging": "suspicious mass / nodule / lesion",
+            "incidental_finding": "incidental finding awaiting follow-up",
+            "normal": "normal",
+            "hemoglobin": "Hemoglobin g/L",
+            "wbc": "WBC ×10⁹/L",
+            "platelets": "Platelets ×10⁹/L",
+            "sources_title": "Evidence anchors",
+            "source_guidelines": "Guidelines used for routing",
+            "source_market": "Market patterns reviewed",
+            "urgent_label": "Urgent clinical review",
+            "high_label": "Elevated risk",
+            "routine_label": "Routine prevention",
+            "low_label": "Baseline route",
+            "urgent_summary": (
+                "One or more current symptoms or abnormal tests need clinician review soon. "
+                "The tool cannot tell whether this is cancer; the next step is diagnostic workup."
+            ),
+            "high_summary": (
+                "Family history, exposures, or overdue screening suggest an above-routine prevention route."
+            ),
+            "routine_summary": (
+                "No emergency signal was entered, but at least one routine screening or prevention item is due."
+            ),
+            "low_summary": (
+                "No high-priority signal was entered. Keep routine screening current and update this check if facts change."
+            ),
+            "doctor_now": "Book a clinician visit promptly; seek emergency care for severe bleeding, chest symptoms, neurologic deficits, or rapidly worsening condition.",
+            "genetics": "Ask for genetic counseling or hereditary cancer risk assessment.",
+            "screening_due": "Update age-appropriate screening with your primary-care clinician.",
+            "prevention": "Work on modifiable risks and exposure mitigation.",
+            "data_gap": "Bring missing dates/results to the visit; unknowns can change the route.",
+            "no_signals": "No major signal selected yet.",
+            "copied": "Copied.",
+            "copy_failed": "Copy failed in this browser.",
+            "download_name": "openonco-risk-profile.json",
+            "handoff_family_entries": "Family-history entries",
+            "handoff_take_json": "Take this JSON to a clinician if you want an OpenOnco prevention or diagnostic brief.",
+        }
+        market_cards = [
+            ("Color Health", "Integrated virtual cancer care: early detection, personalized guidance, clinical follow-up.", "https://www.color.com/"),
+            ("CancerIQ", "Risk assessment, genetic screening, and patient navigation as one health-system workflow.", "https://www.canceriq.com/"),
+            ("Freenome", "Early detection framed as multimodal signals rather than one magic test.", "https://www.freenome.com/"),
+            ("GRAIL Galleri", "MCED positioning is additive: it does not replace routine recommended screening.", "https://grail.com/galleri-test/the-science/mced/"),
+            ("Prenuvo", "Consumer demand for proactive checks, visual results, and a guided next step.", "https://prenuvo.com/"),
+        ]
+        guideline_cards = [
+            ("CDC family history", "Family history helps decide which screening tests may be needed, when to start, and whether genetic counseling/testing is appropriate.", "https://www.cdc.gov/cancer/risk-factors/family-health-history.html"),
+            ("NCI genetic testing", "Genetic counseling is generally recommended before inherited cancer-risk testing.", "https://www.cancer.gov/about-cancer/causes-prevention/genetics/genetic-testing-fact-sheet"),
+            ("USPSTF breast", "Biennial mammography for women aged 40 to 74.", "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/breast-cancer-screening1"),
+            ("USPSTF colorectal", "Screen adults aged 45 to 75 for colorectal cancer.", "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/colorectal-cancer-screening"),
+            ("USPSTF lung", "Annual LDCT for adults aged 50 to 80 with at least 20 pack-years who smoke or quit within 15 years.", "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/lung-cancer-screening"),
+            ("USPSTF cervical", "Cervical screening from 21 to 65 with cytology and/or HPV strategies by age.", "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/cervical-cancer-screening"),
+        ]
+        symptoms = [
+            ("symptom_breast_lump", "New breast lump, nipple blood, skin dimpling, or BI-RADS concern", "Diagnostic breast imaging / breast clinic"),
+            ("symptom_blood_stool", "Blood in stool, positive FIT, or unexplained iron-deficiency anemia", "Colonoscopy pathway"),
+            ("symptom_cough", "Cough, blood in sputum, chest pain, or hoarseness lasting more than 3 weeks", "Chest imaging / lung evaluation"),
+            ("symptom_weight_loss", "Unexplained weight loss, night sweats, persistent fever, or enlarged lymph nodes", "Primary-care or hematology workup"),
+            ("symptom_hematuria", "Visible blood in urine or persistent urinary symptoms", "Urinalysis and urology review"),
+            ("symptom_postmeno_bleed", "Bleeding after menopause or abnormal uterine bleeding", "Gynecology review"),
+            ("symptom_neuro", "New seizure, focal weakness, severe persistent headache, or neurologic change", "Urgent neurologic evaluation"),
+            ("symptom_skin", "Changing mole, non-healing lesion, or bleeding skin spot", "Dermatology / biopsy consideration"),
+        ]
+    else:
+        copy = {
+            "page_title": "Перевірка ризику та ранніх сигналів",
+            "meta_description": (
+                "Браузерна перевірка онкоризику, сімейної історії, скринінгу та ранніх "
+                "сигналів із формуванням OpenOnco-профілю для лікаря."
+            ),
+            "kicker": "Для людей, які хвилюються, не лише для онкологів",
+            "h1": "Перевірте ризик, родовід, скринінги та ранні тривожні сигнали.",
+            "lead": (
+                "Заповніть структуровану анкету. OpenOnco не ставить діагноз; він "
+                "показує, що обговорити з лікарем, які планові скринінги можуть бути "
+                "прострочені, і чи родовід схожий на привід для генетичного консультування."
+            ),
+            "privacy": "Усе рахується у браузері. Не вводьте ПІБ, телефон, адресу чи інші ідентифікатори.",
+            "not_diagnosis": "Це не діагноз і не заміна консультації лікаря.",
+            "market_title": "Що підказали успішні продукти",
+            "market_lead": (
+                "Переробка бере робочі патерни cancer-prevention стартапів: простий intake, "
+                "окремі лінії ризику, родовід, навігацію до наступної дії і чесність, що "
+                "нові тести доповнюють, а не замінюють стандартний скринінг."
+            ),
+            "form_title": "Ваша перевірка",
+            "quick_title": "Швидкі приклади",
+            "quick_brca": "Молодий BRCA-подібний родовід",
+            "quick_smoker": "Курець для LDCT",
+            "quick_fit": "Позитивний FIT / кров у калі",
+            "about_you": "1. Про вас",
+            "what_worries": "2. Що турбує зараз",
+            "screening": "3. Статус скринінгу",
+            "family": "4. Сімейна історія / родовід",
+            "exposures": "5. Фактори ризику та впливи",
+            "diagnostic_data": "6. Вже наявні діагностичні дані",
+            "age": "Вік",
+            "sex": "Стать",
+            "sex_female": "Жінка",
+            "sex_male": "Чоловік",
+            "sex_other": "Інше / не хочу вказувати",
+            "bmi": "ІМТ",
+            "smoking": "Куріння",
+            "smoke_never": "Ніколи",
+            "smoke_current": "Курю зараз",
+            "smoke_former": "Курив/курила раніше",
+            "pack_years": "Пачко-роки",
+            "quit_years": "Скільки років не курите",
+            "alcohol": "Алкоголь, порцій / тиждень",
+            "symptom_note": "Позначайте стійкі, незрозумілі або нові знахідки.",
+            "screen_note": "Можна приблизно. Це не замінює локальні правила скринінгу.",
+            "last_mammo": "Остання мамографія",
+            "last_colon": "Останній скринінг колоректального раку",
+            "last_cervical": "Останній скринінг шийки матки",
+            "last_ldct": "Останній низькодозовий КТ-скринінг легень",
+            "screen_recent": "Актуально / недавно",
+            "screen_due": "Потрібно або не знаю",
+            "screen_never": "Ніколи",
+            "screen_na": "Не стосується",
+            "add_relative": "Додати родича",
+            "run": "Побудувати маршрут ризику",
+            "reset": "Очистити",
+            "result_title": "Маршрут ризику",
+            "result_empty": "Заповніть форму й натисніть «Побудувати маршрут ризику».",
+            "next_steps": "Наступні кроки",
+            "lanes": "Чому такий маршрут",
+            "profile": "Профіль для лікаря",
+            "copy_json": "Копіювати JSON",
+            "download_json": "Скачати JSON",
+            "open_builder": "Відкрити в генераторі планів",
+            "print": "Друк",
+            "relation": "Родич",
+            "relation_first": "1-й ступінь",
+            "relation_second": "2-й ступінь",
+            "relation_third": "Дальший родич",
+            "family_cancer": "Тип раку",
+            "family_age_dx": "Вік діагн.",
+            "family_side": "Лінія",
+            "maternal": "материнська",
+            "paternal": "батьківська",
+            "unknown": "невідомо",
+            "remove": "Видалити",
+            "cancer_blank": "—",
+            "cancer_breast": "молочна залоза",
+            "cancer_ovarian": "яєчник / труба / перитонеальний",
+            "cancer_colon": "колоректальний",
+            "cancer_endometrial": "ендометрій",
+            "cancer_pancreatic": "підшлункова",
+            "cancer_prostate": "метастатичний/високоризиковий простати",
+            "cancer_male_breast": "рак молочної залози у чоловіка",
+            "cancer_sarcoma_brain_adrenal": "саркома/мозок/наднирник у дитинстві",
+            "cancer_other": "інший",
+            "exposure_known_mutation": "BRCA / Lynch / APC / TP53 / інший відомий патогенний варіант у сім'ї",
+            "exposure_ashkenazi": "Ашкеназьке єврейське походження + рак молочної залози/яєчника в родині",
+            "exposure_hbv": "HBsAg positive / хронічний HBV",
+            "exposure_hcv": "HCV RNA positive / хронічний HCV",
+            "exposure_hpv": "Персистуючий high-risk HPV",
+            "exposure_hpylori": "Позитивний тест на H. pylori",
+            "exposure_hiv": "HIV або тривала імуносупресія",
+            "exposure_radiation": "Опромінення грудної клітки/таза або лікування раку в дитинстві",
+            "exposure_radon": "Радон удома ≥4 pCi/L або високий вплив радону",
+            "exposure_occupation": "Азбест, бензен, ароматичні аміни, дизель або іонізуюче випромінювання на роботі",
+            "exposure_barrett": "Стравохід Барретта / довгий анамнез GERD",
+            "exposure_ibd_psc": "Тривалий IBD, PSC, хронічний панкреатит або цироз",
+            "fit_stool": "FIT / кров у калі",
+            "fit_positive": "позитивний",
+            "fit_negative": "негативний",
+            "mammography_us": "Мамографія / УЗД",
+            "birads45": "BI-RADS 4/5",
+            "benign_birads": "доброякісно / BI-RADS 1-2",
+            "imaging_report": "Звіт візуалізації",
+            "suspicious_imaging": "підозріла маса / вузол / утворення",
+            "incidental_finding": "випадкова знахідка, потрібен follow-up",
+            "normal": "норма",
+            "hemoglobin": "Гемоглобін г/л",
+            "wbc": "Лейкоцити ×10⁹/л",
+            "platelets": "Тромбоцити ×10⁹/л",
+            "sources_title": "Доказові опори",
+            "source_guidelines": "Гайдлайни для маршрутизації",
+            "source_market": "Ринкові патерни, які переглянуто",
+            "urgent_label": "Терміновий клінічний огляд",
+            "high_label": "Підвищений ризик",
+            "routine_label": "Планова профілактика",
+            "low_label": "Базовий маршрут",
+            "urgent_summary": (
+                "Є поточні симптоми або аномальні тести, які потребують швидкого огляду. "
+                "Інструмент не визначає, чи це рак; наступний крок — діагностичний workup."
+            ),
+            "high_summary": (
+                "Родовід, впливи або прострочений скринінг схожі на маршрут вище за рутинний."
+            ),
+            "routine_summary": (
+                "Термінового сигналу не введено, але є плановий скринінг або профілактичний пункт."
+            ),
+            "low_summary": (
+                "Високопріоритетного сигналу не введено. Тримайте плановий скринінг актуальним і оновіть перевірку, якщо факти зміняться."
+            ),
+            "doctor_now": "Запишіться до лікаря найближчим часом; при сильній кровотечі, грудних симптомах, неврологічному дефіциті або швидкому погіршенні звертайтесь по невідкладну допомогу.",
+            "genetics": "Попросіть направлення на генетичне консультування або оцінку спадкового онкоризику.",
+            "screening_due": "Оновіть віковий скринінг із сімейним лікарем або профільним спеціалістом.",
+            "prevention": "Працюйте з модифікованими ризиками та зменшенням шкідливих впливів.",
+            "data_gap": "Візьміть на прийом відсутні дати й результати; невідомі дані можуть змінити маршрут.",
+            "no_signals": "Поки що не вибрано великого сигналу.",
+            "copied": "Скопійовано.",
+            "copy_failed": "Не вдалося скопіювати в цьому браузері.",
+            "download_name": "openonco-risk-profile.json",
+            "handoff_family_entries": "Записів сімейної історії",
+            "handoff_take_json": "Візьміть цей JSON до лікаря, якщо хочете OpenOnco prevention або diagnostic brief.",
+        }
+        market_cards = [
+            ("Color Health", "Віртуальна онкоклініка: раннє виявлення, персональні поради, клінічний супровід.", "https://www.color.com/"),
+            ("CancerIQ", "Risk assessment, генетичний скринінг і patient navigation в одному workflow для health systems.", "https://www.canceriq.com/"),
+            ("Freenome", "Раннє виявлення як мультимодальні сигнали, а не один «магічний» тест.", "https://www.freenome.com/"),
+            ("GRAIL Galleri", "MCED позиціонується як додаток: він не замінює рекомендовані routine screenings.", "https://grail.com/galleri-test/the-science/mced/"),
+            ("Prenuvo", "Попит користувачів на proactive checks, зрозумілі результати та guided next step.", "https://prenuvo.com/"),
+        ]
+        guideline_cards = [
+            ("CDC family history", "Сімейна історія допомагає вирішити, які скринінги потрібні, коли починати і чи доречне генетичне консультування/тестування.", "https://www.cdc.gov/cancer/risk-factors/family-health-history.html"),
+            ("NCI genetic testing", "Генетичне консультування зазвичай рекомендоване до тестування на спадковий онкоризик.", "https://www.cancer.gov/about-cancer/causes-prevention/genetics/genetic-testing-fact-sheet"),
+            ("USPSTF breast", "Мамографія раз на два роки для жінок 40-74 років.", "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/breast-cancer-screening1"),
+            ("USPSTF colorectal", "Скринінг колоректального раку для дорослих 45-75 років.", "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/colorectal-cancer-screening"),
+            ("USPSTF lung", "Щорічний LDCT для 50-80 років із 20+ пачко-роками, якщо людина курить або кинула впродовж 15 років.", "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/lung-cancer-screening"),
+            ("USPSTF cervical", "Скринінг шийки матки з 21 до 65 років: цитологія та/або HPV-стратегії залежно від віку.", "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/cervical-cancer-screening"),
+        ]
+        symptoms = [
+            ("symptom_breast_lump", "Нове ущільнення в молочній залозі, кров із соска, втягнення шкіри або BI-RADS-підозра", "Діагностична мамографія / УЗД / breast clinic"),
+            ("symptom_blood_stool", "Кров у калі, позитивний FIT або незрозуміла залізодефіцитна анемія", "Маршрут колоноскопії"),
+            ("symptom_cough", "Кашель, кров у мокротинні, біль у грудях або охриплість понад 3 тижні", "Візуалізація грудної клітки / оцінка легень"),
+            ("symptom_weight_loss", "Незрозуміла втрата ваги, нічна пітливість, стійка температура або збільшені лімфовузли", "Первинний огляд або гематологічний workup"),
+            ("symptom_hematuria", "Видима кров у сечі або стійкі сечові симптоми", "Аналіз сечі та уролог"),
+            ("symptom_postmeno_bleed", "Кровотеча після менопаузи або нетипова маткова кровотеча", "Гінекологічний огляд"),
+            ("symptom_neuro", "Новий судомний напад, слабкість у кінцівці, сильний стійкий головний біль або неврологічні зміни", "Термінова неврологічна оцінка"),
+            ("symptom_skin", "Зміна родимки, незагойна ранка або кровоточива пляма на шкірі", "Дерматолог / розгляд біопсії"),
+        ]
+
+    def _cards(items: list[tuple[str, str, str]]) -> str:
+        return "\n".join(
+            f"""      <a class="risk-source-card" href="{html.escape(url)}" target="_blank" rel="noopener">
+        <strong>{html.escape(title)}</strong>
+        <span>{html.escape(body)}</span>
+      </a>"""
+            for title, body, url in items
+        )
+
+    symptom_html = "\n".join(
+        f"""          <label class="risk-check">
+            <input type="checkbox" name="{name}">
+            <span>{html.escape(label)}</span>
+          </label>"""
+        for name, label, _ in symptoms
+    )
+    copy_json = json.dumps(copy, ensure_ascii=False).replace("</", "<\\/")
+    symptoms_json = json.dumps(
+        [
+            {"name": name, "label": label, "action": action}
+            for name, label, action in symptoms
+        ],
+        ensure_ascii=False,
+    ).replace("</", "<\\/")
+
+    template = """<!DOCTYPE html>
+<html lang="__LANG__">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · __TITLE__</title>
+<meta name="description" content="__META__">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://openonco.info__CANONICAL__">
+<link rel="alternate" hreflang="en" href="https://openonco.info/prevent.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/prevent.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/prevent.html">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#14532d">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/style.css" rel="stylesheet">
+<style>
+.risk-page { max-width: 1280px; }
+.risk-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(320px, .72fr); gap: 28px; align-items: end; padding: 34px 0 22px; }
+.risk-kicker { color: #0f766e; font-weight: 900; text-transform: uppercase; font-size: 12px; letter-spacing: .08em; margin-bottom: 8px; }
+.risk-hero h1 { font-family: var(--font-display); font-size: clamp(38px, 6vw, 70px); line-height: .98; letter-spacing: 0; color: #092c1b; max-width: 900px; }
+.risk-hero .lead { max-width: 780px; margin-top: 18px; }
+.risk-safety { display: grid; gap: 10px; }
+.risk-safety-note { border: 1px solid #f5c26b; background: #fff8eb; border-radius: 8px; padding: 14px 16px; color: #6b4f00; font-weight: 700; }
+.risk-safety-note strong { color: #8a3b12; }
+.risk-privacy { border: 1px solid #b7d7ff; background: #eef6ff; border-radius: 8px; padding: 14px 16px; color: #1e3a5f; font-weight: 700; }
+.risk-market { margin: 10px 0 26px; padding: 22px 0; border-top: 1px solid #dce8e0; border-bottom: 1px solid #dce8e0; }
+.risk-market h2, .risk-tool h2, .risk-result h2, .risk-sources h2 { font-family: var(--font-display); color: #092c1b; font-size: 30px; margin: 0 0 8px; }
+.risk-market p { color: #4b5a52; max-width: 920px; margin-bottom: 16px; }
+.risk-source-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.risk-source-card { min-height: 128px; border: 1px solid #d6e4de; background: #fff; border-radius: 8px; padding: 14px; text-decoration: none; display: flex; flex-direction: column; gap: 8px; color: #374151; }
+.risk-source-card:hover { border-color: #0f766e; color: #0f513c; }
+.risk-source-card strong { color: #073b22; font-size: 16px; }
+.risk-source-card span { font-size: 13px; line-height: 1.35; }
+.risk-tool { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(360px, .78fr); gap: 22px; align-items: start; }
+.risk-panel { background: #fff; border: 1px solid #dbe7df; border-radius: 8px; padding: 18px; box-shadow: 0 16px 40px rgba(9, 44, 27, .07); }
+.risk-form { display: grid; gap: 16px; }
+.risk-fieldset { border: 1px solid #dbe7df; border-radius: 8px; padding: 14px; margin: 0; background: #fbfdfc; }
+.risk-fieldset legend { padding: 0 8px; font-weight: 900; color: #073b22; }
+.risk-fieldset .hint { color: #647067; font-size: 13px; margin-bottom: 10px; }
+.risk-grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.risk-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.risk-label { display: grid; gap: 5px; font-weight: 800; color: #28352d; font-size: 13px; }
+.risk-label input, .risk-label select { width: 100%; min-height: 42px; border: 1px solid #cbd8d0; border-radius: 6px; padding: 8px 10px; font: 15px/1.2 var(--font-sans); background: #fff; }
+.risk-check-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.risk-check { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 8px; align-items: start; border: 1px solid #e1e8e4; border-radius: 8px; padding: 10px; background: #fff; min-height: 54px; }
+.risk-check input { margin-top: 3px; }
+.risk-check span { font-size: 14px; line-height: 1.25; color: #2f3b35; }
+.family-table { display: grid; gap: 8px; }
+.family-row { display: grid; grid-template-columns: 1fr 1fr .7fr .9fr auto; gap: 8px; align-items: end; border: 1px solid #e1e8e4; border-radius: 8px; padding: 10px; background: #fff; }
+.family-row label { font-size: 12px; color: #4b5a52; font-weight: 800; display: grid; gap: 4px; }
+.family-row input, .family-row select { min-height: 38px; border: 1px solid #cbd8d0; border-radius: 6px; padding: 7px 8px; font: 14px/1.2 var(--font-sans); }
+.family-remove { min-height: 38px; border: 1px solid #e7b6b6; background: #fff5f5; color: #9f1239; border-radius: 6px; padding: 0 10px; cursor: pointer; font-weight: 900; }
+.risk-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.risk-actions .btn { min-height: 44px; }
+.quick-scenarios { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.quick-scenarios button { border: 1px solid #cbd8d0; background: #f8fafc; color: #23372c; border-radius: 6px; padding: 8px 10px; cursor: pointer; font-weight: 800; }
+.quick-scenarios button:hover { border-color: #0f766e; color: #0f513c; }
+.risk-result { position: sticky; top: 14px; max-height: calc(100vh - 28px); overflow: auto; }
+.risk-score-card { border: 1px solid #d6e4de; background: #f8fbf8; border-radius: 8px; padding: 16px; margin: 12px 0; }
+.risk-level { display: inline-flex; align-items: center; min-height: 36px; padding: 6px 12px; border-radius: 999px; font-weight: 900; margin-bottom: 10px; }
+.risk-level.urgent { background: #fee2e2; color: #991b1b; }
+.risk-level.high { background: #ffedd5; color: #9a3412; }
+.risk-level.routine { background: #dbeafe; color: #1e3a8a; }
+.risk-level.low { background: #dcfce7; color: #14532d; }
+.risk-meter { height: 12px; border-radius: 999px; background: #e5e7eb; overflow: hidden; margin-top: 12px; }
+.risk-meter-fill { height: 100%; width: var(--risk-score, 0%); border-radius: 999px; background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444); transition: width .18s ease; }
+.result-list { display: grid; gap: 9px; margin: 12px 0; }
+.result-item { border: 1px solid #e1e8e4; background: #fff; border-radius: 8px; padding: 11px 12px; }
+.result-item strong { display: block; color: #073b22; margin-bottom: 3px; }
+.result-item span { color: #4b5a52; font-size: 14px; }
+.profile-box { background: #111827; color: #e5e7eb; border-radius: 8px; padding: 12px; overflow: auto; max-height: 260px; font: 12px/1.45 var(--font-mono); white-space: pre; }
+.handoff-box { background: #f8fafc; border: 1px solid #dbe7df; color: #23372c; border-radius: 8px; padding: 12px; font-size: 14px; line-height: 1.45; margin: 10px 0; }
+.pedigree-map { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.pedigree-chip { display: inline-flex; align-items: center; gap: 5px; min-height: 28px; border-radius: 999px; background: #eef6ff; color: #1e3a5f; padding: 4px 9px; font-size: 12px; font-weight: 800; }
+.risk-sources { margin-top: 28px; padding-top: 20px; border-top: 1px solid #dce8e0; }
+.risk-sources h3 { color: #073b22; margin: 14px 0 8px; }
+@media (max-width: 1050px) {
+  .risk-hero, .risk-tool { grid-template-columns: 1fr; }
+  .risk-result { position: static; max-height: none; }
+  .risk-source-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .risk-page { padding-left: 14px; padding-right: 14px; }
+  .risk-grid-2, .risk-grid-3, .risk-check-grid { grid-template-columns: 1fr; }
+  .family-row { grid-template-columns: 1fr; }
+  .risk-source-grid { grid-template-columns: 1fr; }
+}
+@media print {
+  .top-bar, .risk-market, .risk-form, .risk-sources, .quick-scenarios, .risk-actions, .risk-safety { display: none !important; }
+  .risk-tool, .risk-hero { display: block; }
+  .risk-result { position: static; max-height: none; overflow: visible; box-shadow: none; }
+  body { background: #fff; }
+}
+</style>
+</head>
+<body>
+__TOP_BAR__
+<main class="risk-page consumer-risk-assessment">
+  <section class="risk-hero">
+    <div>
+      <p class="risk-kicker">__KICKER__</p>
+      <h1>__H1__</h1>
+      <p class="lead">__LEAD__</p>
+    </div>
+    <div class="risk-safety">
+      <div class="risk-safety-note"><strong>__NOT_DIAGNOSIS__</strong></div>
+      <div class="risk-privacy">__PRIVACY__</div>
+    </div>
+  </section>
+
+  <section class="risk-market">
+    <h2>__MARKET_TITLE__</h2>
+    <p>__MARKET_LEAD__</p>
+    <div class="risk-source-grid">
+__MARKET_CARDS__
+    </div>
+  </section>
+
+  <section class="risk-tool">
+    <div class="risk-panel">
+      <h2>__FORM_TITLE__</h2>
+      <div class="quick-scenarios" aria-label="__QUICK_TITLE__">
+        <button type="button" data-scenario="brca">__QUICK_BRCA__</button>
+        <button type="button" data-scenario="smoker">__QUICK_SMOKER__</button>
+        <button type="button" data-scenario="fit">__QUICK_FIT__</button>
+      </div>
+      <form id="riskForm" class="risk-form">
+        <fieldset class="risk-fieldset">
+          <legend>__ABOUT_YOU__</legend>
+          <div class="risk-grid-3">
+            <label class="risk-label">__AGE__ <input name="age" type="number" min="0" max="120" inputmode="numeric"></label>
+            <label class="risk-label">__SEX__
+              <select name="sex">
+                <option value="female">__SEX_FEMALE__</option>
+                <option value="male">__SEX_MALE__</option>
+                <option value="other">__SEX_OTHER__</option>
+              </select>
+            </label>
+            <label class="risk-label">__BMI__ <input name="bmi" type="number" min="10" max="80" step="0.1" inputmode="decimal"></label>
+          </div>
+          <div class="risk-grid-3" style="margin-top:12px">
+            <label class="risk-label">__SMOKING__
+              <select name="smoking">
+                <option value="never">__SMOKE_NEVER__</option>
+                <option value="current">__SMOKE_CURRENT__</option>
+                <option value="former">__SMOKE_FORMER__</option>
+              </select>
+            </label>
+            <label class="risk-label">__PACK_YEARS__ <input name="pack_years" type="number" min="0" max="200" step="1" inputmode="numeric"></label>
+            <label class="risk-label">__QUIT_YEARS__ <input name="quit_years" type="number" min="0" max="80" step="1" inputmode="numeric"></label>
+          </div>
+          <div class="risk-grid-3" style="margin-top:12px">
+            <label class="risk-label">__ALCOHOL__ <input name="alcohol" type="number" min="0" max="100" step="1" inputmode="numeric"></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="risk-fieldset">
+          <legend>__WHAT_WORRIES__</legend>
+          <p class="hint">__SYMPTOM_NOTE__</p>
+          <div class="risk-check-grid">
+__SYMPTOMS__
+          </div>
+        </fieldset>
+
+        <fieldset class="risk-fieldset">
+          <legend>__SCREENING__</legend>
+          <p class="hint">__SCREEN_NOTE__</p>
+          <div class="risk-grid-2">
+            <label class="risk-label">__LAST_MAMMO__
+              <select name="last_mammo">
+                <option value="recent">__SCREEN_RECENT__</option>
+                <option value="due">__SCREEN_DUE__</option>
+                <option value="never">__SCREEN_NEVER__</option>
+                <option value="na">__SCREEN_NA__</option>
+              </select>
+            </label>
+            <label class="risk-label">__LAST_COLON__
+              <select name="last_colon">
+                <option value="recent">__SCREEN_RECENT__</option>
+                <option value="due">__SCREEN_DUE__</option>
+                <option value="never">__SCREEN_NEVER__</option>
+                <option value="na">__SCREEN_NA__</option>
+              </select>
+            </label>
+            <label class="risk-label">__LAST_CERVICAL__
+              <select name="last_cervical">
+                <option value="recent">__SCREEN_RECENT__</option>
+                <option value="due">__SCREEN_DUE__</option>
+                <option value="never">__SCREEN_NEVER__</option>
+                <option value="na">__SCREEN_NA__</option>
+              </select>
+            </label>
+            <label class="risk-label">__LAST_LDCT__
+              <select name="last_ldct">
+                <option value="recent">__SCREEN_RECENT__</option>
+                <option value="due">__SCREEN_DUE__</option>
+                <option value="never">__SCREEN_NEVER__</option>
+                <option value="na">__SCREEN_NA__</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="risk-fieldset">
+          <legend>__FAMILY__</legend>
+          <div id="familyCancerRows" class="family-table"></div>
+          <button id="addRelativeBtn" type="button" class="btn btn-secondary">__ADD_RELATIVE__</button>
+          <div id="pedigreeMap" class="pedigree-map" aria-live="polite"></div>
+        </fieldset>
+
+        <fieldset class="risk-fieldset">
+          <legend>__EXPOSURES__</legend>
+          <div class="risk-check-grid">
+            <label class="risk-check"><input type="checkbox" name="known_family_mutation"><span>__EXPOSURE_KNOWN_MUTATION__</span></label>
+            <label class="risk-check"><input type="checkbox" name="ashkenazi"><span>__EXPOSURE_ASHKENAZI__</span></label>
+            <label class="risk-check"><input type="checkbox" name="hbv"><span>__EXPOSURE_HBV__</span></label>
+            <label class="risk-check"><input type="checkbox" name="hcv"><span>__EXPOSURE_HCV__</span></label>
+            <label class="risk-check"><input type="checkbox" name="hpv"><span>__EXPOSURE_HPV__</span></label>
+            <label class="risk-check"><input type="checkbox" name="hpylori"><span>__EXPOSURE_HPYLORI__</span></label>
+            <label class="risk-check"><input type="checkbox" name="hiv"><span>__EXPOSURE_HIV__</span></label>
+            <label class="risk-check"><input type="checkbox" name="prior_radiation"><span>__EXPOSURE_RADIATION__</span></label>
+            <label class="risk-check"><input type="checkbox" name="radon"><span>__EXPOSURE_RADON__</span></label>
+            <label class="risk-check"><input type="checkbox" name="asbestos"><span>__EXPOSURE_OCCUPATION__</span></label>
+            <label class="risk-check"><input type="checkbox" name="barrett"><span>__EXPOSURE_BARRETT__</span></label>
+            <label class="risk-check"><input type="checkbox" name="ibd_psc"><span>__EXPOSURE_IBD_PSC__</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="risk-fieldset">
+          <legend>__DIAGNOSTIC_DATA__</legend>
+          <div class="risk-grid-3">
+            <label class="risk-label">__FIT_STOOL__
+              <select name="fit_result">
+                <option value="">—</option>
+                <option value="positive">__FIT_POSITIVE__</option>
+                <option value="negative">__FIT_NEGATIVE__</option>
+              </select>
+            </label>
+            <label class="risk-label">__MAMMOGRAPHY_US__
+              <select name="breast_imaging">
+                <option value="">—</option>
+                <option value="birads45">__BIRADS45__</option>
+                <option value="benign">__BENIGN_BIRADS__</option>
+              </select>
+            </label>
+            <label class="risk-label">__IMAGING_REPORT__
+              <select name="imaging_result">
+                <option value="">—</option>
+                <option value="suspicious">__SUSPICIOUS_IMAGING__</option>
+                <option value="incidental">__INCIDENTAL_FINDING__</option>
+                <option value="normal">__NORMAL__</option>
+              </select>
+            </label>
+            <label class="risk-label">__HEMOGLOBIN__ <input name="hemoglobin" type="number" min="20" max="220" step="1"></label>
+            <label class="risk-label">__WBC__ <input name="wbc" type="number" min="0" max="300" step="0.1"></label>
+            <label class="risk-label">__PLATELETS__ <input name="platelets" type="number" min="0" max="1500" step="1"></label>
+          </div>
+        </fieldset>
+
+        <div class="risk-actions">
+          <button class="btn btn-primary" type="submit">__RUN__</button>
+          <button id="resetRiskBtn" class="btn btn-secondary" type="button">__RESET__</button>
+        </div>
+      </form>
+    </div>
+
+    <aside class="risk-panel risk-result" aria-live="polite">
+      <h2>__RESULT_TITLE__</h2>
+      <div id="resultEmpty" class="handoff-box">__RESULT_EMPTY__</div>
+      <div id="resultWrap" hidden>
+        <div class="risk-score-card">
+          <div id="riskLevel" class="risk-level low">__LOW_LABEL__</div>
+          <p id="resultSummary"></p>
+          <div class="risk-meter" aria-hidden="true"><div id="riskMeterFill" class="risk-meter-fill"></div></div>
+        </div>
+        <h3>__NEXT_STEPS__</h3>
+        <div id="nextSteps" class="result-list"></div>
+        <h3>__LANES__</h3>
+        <div id="riskLanes" class="result-list"></div>
+        <h3>__PROFILE__</h3>
+        <div id="handoffText" class="handoff-box"></div>
+        <pre id="profileJson" class="profile-box"></pre>
+        <div class="risk-actions">
+          <button id="copyJsonBtn" class="btn btn-secondary" type="button">__COPY_JSON_LABEL__</button>
+          <button id="downloadJsonBtn" class="btn btn-secondary" type="button">__DOWNLOAD_JSON__</button>
+          <a id="openTryBtn" class="btn btn-primary" href="__TRY_HREF__">__OPEN_BUILDER__</a>
+          <button id="printRiskBtn" class="btn btn-secondary" type="button">__PRINT__</button>
+        </div>
+        <p id="copyStatus" class="small" role="status"></p>
+      </div>
+    </aside>
+  </section>
+
+  <section class="risk-sources">
+    <h2>__SOURCES_TITLE__</h2>
+    <h3>__SOURCE_GUIDELINES__</h3>
+    <div class="risk-source-grid">
+__GUIDELINE_CARDS__
+    </div>
+    <h3>__SOURCE_MARKET__</h3>
+    <div class="risk-source-grid">
+__MARKET_CARDS__
+    </div>
+  </section>
+</main>
+
+<script>
+(function() {
+  const COPY = __COPY_DATA_JSON__;
+  const SYMPTOMS = __SYMPTOMS_JSON__;
+  const TRY_HREF = "__TRY_HREF__";
+  const form = document.getElementById('riskForm');
+  const familyRows = document.getElementById('familyCancerRows');
+  const addRelativeBtn = document.getElementById('addRelativeBtn');
+  const pedigreeMap = document.getElementById('pedigreeMap');
+  const resultEmpty = document.getElementById('resultEmpty');
+  const resultWrap = document.getElementById('resultWrap');
+  const riskLevel = document.getElementById('riskLevel');
+  const riskMeterFill = document.getElementById('riskMeterFill');
+  const resultSummary = document.getElementById('resultSummary');
+  const nextSteps = document.getElementById('nextSteps');
+  const riskLanes = document.getElementById('riskLanes');
+  const handoffText = document.getElementById('handoffText');
+  const profileJson = document.getElementById('profileJson');
+  const copyJsonBtn = document.getElementById('copyJsonBtn');
+  const downloadJsonBtn = document.getElementById('downloadJsonBtn');
+  const openTryBtn = document.getElementById('openTryBtn');
+  const printRiskBtn = document.getElementById('printRiskBtn');
+  const resetRiskBtn = document.getElementById('resetRiskBtn');
+  const copyStatus = document.getElementById('copyStatus');
+  let lastProfile = null;
+
+  function t(name) {
+    const el = form.elements[name];
+    return el ? String(el.value || '').trim() : '';
+  }
+  function n(name) {
+    const raw = t(name);
+    if (!raw) return null;
+    const value = Number(raw);
+    return Number.isFinite(value) ? value : null;
+  }
+  function checked(name) {
+    const el = form.elements[name];
+    return !!(el && el.checked);
+  }
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  function itemHtml(title, body) {
+    return '<div class="result-item"><strong>' + escapeHtml(title) + '</strong><span>' + escapeHtml(body) + '</span></div>';
+  }
+  function optionHtml(value, label, selected) {
+    return '<option value="' + escapeHtml(value) + '"' + (selected ? ' selected' : '') + '>' + escapeHtml(label) + '</option>';
+  }
+
+  function addFamilyRow(data) {
+    const row = document.createElement('div');
+    row.className = 'family-row';
+    row.innerHTML = [
+      '<label>' + escapeHtml(COPY.relation) + '<select name="family_relation">' +
+        optionHtml('first', COPY.relation_first, data && data.relation === 'first') +
+        optionHtml('second', COPY.relation_second, data && data.relation === 'second') +
+        optionHtml('third', COPY.relation_third, data && data.relation === 'third') +
+      '</select></label>',
+      '<label>' + escapeHtml(COPY.family_cancer) + '<select name="family_cancer">' +
+        optionHtml('', COPY.cancer_blank, !data || !data.cancer) +
+        optionHtml('breast', COPY.cancer_breast, data && data.cancer === 'breast') +
+        optionHtml('ovarian', COPY.cancer_ovarian, data && data.cancer === 'ovarian') +
+        optionHtml('colon', COPY.cancer_colon, data && data.cancer === 'colon') +
+        optionHtml('endometrial', COPY.cancer_endometrial, data && data.cancer === 'endometrial') +
+        optionHtml('pancreatic', COPY.cancer_pancreatic, data && data.cancer === 'pancreatic') +
+        optionHtml('prostate', COPY.cancer_prostate, data && data.cancer === 'prostate') +
+        optionHtml('male_breast', COPY.cancer_male_breast, data && data.cancer === 'male_breast') +
+        optionHtml('sarcoma_brain_adrenal', COPY.cancer_sarcoma_brain_adrenal, data && data.cancer === 'sarcoma_brain_adrenal') +
+        optionHtml('other', COPY.cancer_other, data && data.cancer === 'other') +
+      '</select></label>',
+      '<label>' + escapeHtml(COPY.family_age_dx) + '<input name="family_age" type="number" min="0" max="120" value="' + escapeHtml(data && data.age || '') + '"></label>',
+      '<label>' + escapeHtml(COPY.family_side) + '<select name="family_side">' +
+        optionHtml('maternal', COPY.maternal, data && data.side === 'maternal') +
+        optionHtml('paternal', COPY.paternal, data && data.side === 'paternal') +
+        optionHtml('unknown', COPY.unknown, !data || data.side === 'unknown') +
+      '</select></label>',
+      '<button class="family-remove" type="button" aria-label="' + escapeHtml(COPY.remove) + '">×</button>'
+    ].join('');
+    row.querySelector('.family-remove').addEventListener('click', function() {
+      row.remove();
+      updatePedigree();
+    });
+    row.querySelectorAll('select,input').forEach(function(el) {
+      el.addEventListener('input', updatePedigree);
+      el.addEventListener('change', updatePedigree);
+    });
+    familyRows.appendChild(row);
+    updatePedigree();
+  }
+
+  function readFamily() {
+    return Array.prototype.slice.call(familyRows.querySelectorAll('.family-row')).map(function(row) {
+      const rel = row.querySelector('[name="family_relation"]').value;
+      const cancer = row.querySelector('[name="family_cancer"]').value;
+      const ageRaw = row.querySelector('[name="family_age"]').value;
+      const age = ageRaw ? Number(ageRaw) : null;
+      const side = row.querySelector('[name="family_side"]').value;
+      return { relation: rel, cancer, age: Number.isFinite(age) ? age : null, side };
+    }).filter(function(x) { return x.cancer; });
+  }
+
+  function updatePedigree() {
+    const relatives = readFamily();
+    pedigreeMap.innerHTML = relatives.length ? relatives.map(function(r) {
+      const age = r.age == null ? '?' : r.age;
+      return '<span class="pedigree-chip">' + escapeHtml(r.relation + ' · ' + r.cancer + ' · dx ' + age + ' · ' + r.side) + '</span>';
+    }).join('') : '<span class="pedigree-chip">' + escapeHtml(COPY.no_signals) + '</span>';
+  }
+
+  function addSignal(signals, lane, weight, title, body, action) {
+    signals.push({ lane, weight, title, body, action });
+  }
+
+  function calculate() {
+    const age = n('age');
+    const sex = t('sex');
+    const bmi = n('bmi');
+    const smoking = t('smoking');
+    const packYears = n('pack_years') || 0;
+    const quitYears = n('quit_years');
+    const alcohol = n('alcohol') || 0;
+    const relatives = readFamily();
+    const signals = [];
+    const findings = { no_current_confirmed_cancer: true };
+    const biomarkers = {};
+    const screening = {
+      mammogram: t('last_mammo'),
+      colorectal: t('last_colon'),
+      cervical: t('last_cervical'),
+      lung_ldct: t('last_ldct')
+    };
+
+    SYMPTOMS.forEach(function(def) {
+      if (checked(def.name)) {
+        findings[def.name] = true;
+        addSignal(signals, 'urgent', 35, def.label, def.action, COPY.doctor_now);
+      }
+    });
+
+    if (t('fit_result') === 'positive') {
+      findings.positive_fit_or_fobt = true;
+      addSignal(signals, 'urgent', 38, 'Positive FIT / stool blood', 'Colonoscopy pathway should be discussed promptly.', COPY.doctor_now);
+    }
+    if (t('breast_imaging') === 'birads45') {
+      findings.birads_score = 5;
+      addSignal(signals, 'urgent', 42, 'BI-RADS 4/5', 'Needs diagnostic breast pathway and tissue confirmation if appropriate.', COPY.doctor_now);
+    }
+    if (t('imaging_result') === 'suspicious') {
+      findings.suspicious_imaging_report = true;
+      addSignal(signals, 'urgent', 35, 'Suspicious imaging finding', 'Bring the report and images to a clinician for diagnostic routing.', COPY.doctor_now);
+    }
+    const hb = n('hemoglobin');
+    const wbc = n('wbc');
+    const plt = n('platelets');
+    if (hb !== null && hb < 100) {
+      findings.hemoglobin_low_g_l = hb;
+      addSignal(signals, 'urgent', 24, 'Low hemoglobin', 'Unexplained anemia needs clinical evaluation and source search.', COPY.doctor_now);
+    }
+    if (wbc !== null && wbc > 30) {
+      findings.wbc_high_x10e9_l = wbc;
+      addSignal(signals, 'urgent', 28, 'High WBC', 'Marked leukocytosis needs prompt hematology/primary-care review.', COPY.doctor_now);
+    }
+    if (plt !== null && plt < 100) {
+      findings.platelets_low_x10e9_l = plt;
+      addSignal(signals, 'urgent', 24, 'Low platelets', 'Unexplained thrombocytopenia needs clinical review.', COPY.doctor_now);
+    }
+
+    let earlyFamily = 0;
+    let lynchSpectrum = 0;
+    let hbocSpectrum = 0;
+    relatives.forEach(function(r) {
+      if (r.age !== null && r.age < 50) earlyFamily += 1;
+      if (['colon', 'endometrial'].includes(r.cancer)) lynchSpectrum += 1;
+      if (['breast', 'ovarian', 'pancreatic', 'prostate', 'male_breast'].includes(r.cancer)) hbocSpectrum += 1;
+      if (r.relation === 'first' && r.age !== null && r.age < 50) {
+        addSignal(signals, 'genetic', 26, 'First-degree relative with early cancer', 'Early diagnosis in a close relative can justify hereditary-risk review.', COPY.genetics);
+      }
+      if (['ovarian', 'pancreatic', 'male_breast'].includes(r.cancer)) {
+        addSignal(signals, 'genetic', 24, 'Hereditary-pattern cancer in family', 'Ovarian, pancreatic, or male breast cancer is a genetic-counseling trigger.', COPY.genetics);
+      }
+    });
+    if (checked('known_family_mutation')) {
+      findings.known_pathogenic_variant_in_family = true;
+      addSignal(signals, 'genetic', 42, 'Known pathogenic variant in family', 'A cascade-testing discussion is appropriate.', COPY.genetics);
+    }
+    if (checked('ashkenazi') && hbocSpectrum > 0) {
+      findings.family_ashkenazi_jewish_ancestry_with_breast_or_ovarian = true;
+      addSignal(signals, 'genetic', 24, 'Ancestry plus HBOC-spectrum family history', 'Discuss BRCA1/2-oriented risk assessment.', COPY.genetics);
+    }
+    if (hbocSpectrum >= 2 || earlyFamily >= 2) {
+      findings.family_breast_cancer_under_50 = relatives.some(r => r.cancer === 'breast' && r.age !== null && r.age < 50);
+      findings.family_ovarian_cancer_any_age = relatives.some(r => r.cancer === 'ovarian');
+      addSignal(signals, 'genetic', 28, 'Multiple cancer events in family', 'A structured three-generation pedigree should be reviewed.', COPY.genetics);
+    }
+    if (lynchSpectrum >= 2) {
+      findings.family_amsterdam_ii_criteria_met = lynchSpectrum >= 3 || earlyFamily >= 1;
+      findings.family_first_degree_lynch_spectrum_under_50 = relatives.some(r => r.relation === 'first' && ['colon', 'endometrial'].includes(r.cancer) && r.age !== null && r.age < 50);
+      addSignal(signals, 'genetic', 30, 'Lynch-spectrum family pattern', 'Ask about genetic counseling and colonoscopy timing.', COPY.genetics);
+    }
+
+    if (sex === 'female' && age !== null && age >= 40 && age <= 74 && ['due', 'never'].includes(screening.mammogram)) {
+      addSignal(signals, 'screening', 18, 'Breast screening may be due', 'USPSTF: biennial mammography from 40 to 74 for average-risk women.', COPY.screening_due);
+    }
+    if (age !== null && age >= 45 && age <= 75 && ['due', 'never'].includes(screening.colorectal)) {
+      addSignal(signals, 'screening', 20, 'Colorectal screening may be due', 'USPSTF: screen adults 45 to 75.', COPY.screening_due);
+    }
+    if (sex === 'female' && age !== null && age >= 21 && age <= 65 && ['due', 'never'].includes(screening.cervical)) {
+      addSignal(signals, 'screening', 16, 'Cervical screening may be due', 'Cytology/HPV strategy depends on age and local availability.', COPY.screening_due);
+    }
+    if (age !== null && age >= 50 && age <= 80 && packYears >= 20 && (smoking === 'current' || (smoking === 'former' && (quitYears === null || quitYears <= 15)))) {
+      findings.tobacco_pack_years_ge_20 = true;
+      if (smoking === 'current') findings.tobacco_status_current_smoker = true;
+      if (['due', 'never'].includes(screening.lung_ldct)) {
+        addSignal(signals, 'screening', 24, 'LDCT lung screening eligibility', 'USPSTF: annual LDCT for eligible 50-80 year-old current/former smokers.', COPY.screening_due);
+      }
+    }
+    if (sex === 'male' && age !== null && age >= 50 && age <= 69) {
+      addSignal(signals, 'screening', 8, 'PSA is a shared-decision topic', 'Ask your clinician whether PSA screening fits your values and risk.', COPY.screening_due);
+    }
+
+    if (smoking === 'current') addSignal(signals, 'prevention', 22, 'Current smoking', 'Stopping tobacco is the highest-yield cancer prevention step.', COPY.prevention);
+    if (bmi !== null && bmi >= 30) addSignal(signals, 'prevention', 12, 'BMI in obesity range', 'Weight, activity, metabolic risk and screening adherence should be addressed.', COPY.prevention);
+    if (alcohol >= 14) addSignal(signals, 'prevention', 14, 'High alcohol intake', 'Alcohol reduction lowers several cancer risks.', COPY.prevention);
+    if (checked('hbv')) {
+      findings.hbsag = 'positive';
+      biomarkers['BIO-HBV-HBSAG'] = 'positive';
+      addSignal(signals, 'prevention', 24, 'Chronic HBV', 'Discuss antiviral eligibility and HCC surveillance.', COPY.prevention);
+    }
+    if (checked('hcv')) {
+      findings.hcv_rna_positive = true;
+      biomarkers['BIO-HCV-RNA'] = 'detectable';
+      addSignal(signals, 'prevention', 24, 'Chronic HCV', 'Discuss curative antiviral therapy and liver-risk assessment.', COPY.prevention);
+    }
+    if (checked('hpv')) {
+      findings.hpv_high_risk_status = 'positive';
+      addSignal(signals, 'prevention', 20, 'Persistent high-risk HPV', 'Keep cervical/anal screening and vaccination discussion current.', COPY.prevention);
+    }
+    if (checked('hpylori')) {
+      findings.h_pylori_status = 'positive';
+      addSignal(signals, 'prevention', 18, 'H. pylori positive', 'Discuss eradication and confirmation of cure.', COPY.prevention);
+    }
+    if (checked('hiv')) {
+      findings.hiv_status = 'positive_or_immunosuppressed';
+      addSignal(signals, 'prevention', 20, 'HIV or immunosuppression', 'Cancer screening cadence may need adjustment.', COPY.prevention);
+    }
+    if (checked('prior_radiation')) {
+      findings.prior_chest_or_pelvic_radiation = true;
+      addSignal(signals, 'prevention', 20, 'Prior radiation exposure', 'Survivorship screening can start earlier than routine population screening.', COPY.prevention);
+    }
+    if (checked('radon')) {
+      findings.residential_radon_exposure_ge_4_pci_per_l = true;
+      if (packYears >= 20) findings.residential_radon_exposure_documented_high_with_smoking_hx = true;
+      addSignal(signals, 'prevention', 18, 'Radon exposure', 'Mitigate the source and review lung-risk context.', COPY.prevention);
+    }
+    if (checked('asbestos')) {
+      findings.occupational_carcinogen_exposure = true;
+      addSignal(signals, 'prevention', 18, 'Occupational carcinogen exposure', 'Document the exposure and ask about targeted surveillance.', COPY.prevention);
+    }
+    if (checked('barrett')) {
+      findings.barrett_esophagus = true;
+      addSignal(signals, 'prevention', 18, 'Barrett / chronic reflux risk', 'Review EGD surveillance and symptom control.', COPY.prevention);
+    }
+    if (checked('ibd_psc')) {
+      findings.ibd_psc_pancreatitis_or_cirrhosis = true;
+      addSignal(signals, 'prevention', 20, 'Chronic inflammatory or liver/pancreas risk', 'Specialized surveillance may be needed.', COPY.prevention);
+    }
+
+    ['age', 'last_mammo', 'last_colon', 'last_cervical'].forEach(function(name) {
+      if (!t(name)) addSignal(signals, 'gap', 4, 'Missing ' + name, 'Unknown data can change screening timing.', COPY.data_gap);
+    });
+
+    const urgent = signals.some(s => s.lane === 'urgent');
+    const highRisk = signals.some(s => s.lane === 'genetic') || signals.filter(s => s.lane === 'prevention').length >= 2;
+    const routine = signals.some(s => s.lane === 'screening' || s.lane === 'prevention');
+    const rawScore = signals.reduce((sum, s) => sum + s.weight, 0);
+    const score = Math.max(0, Math.min(100, rawScore));
+    let level = 'low';
+    let label = COPY.low_label;
+    let summary = COPY.low_summary;
+    if (urgent) {
+      level = 'urgent';
+      label = COPY.urgent_label;
+      summary = COPY.urgent_summary;
+    } else if (highRisk || score >= 45) {
+      level = 'high';
+      label = COPY.high_label;
+      summary = COPY.high_summary;
+    } else if (routine || score >= 18) {
+      level = 'routine';
+      label = COPY.routine_label;
+      summary = COPY.routine_summary;
+    }
+
+    const profile = {
+      patient_id: 'OPENONCO-RISK-' + new Date().toISOString().slice(0, 10),
+      triage_context: {
+        purpose: 'consumer_prevention_and_early_detection_check',
+        non_diagnostic: true,
+        generated_at: new Date().toISOString(),
+        route_level: level,
+        route_score: score
+      },
+      demographics: {
+        age: age,
+        sex: sex,
+        bmi: bmi,
+        ecog: 0
+      },
+      history: {
+        smoking_status: smoking,
+        pack_years: packYears || null,
+        years_since_quit: quitYears,
+        alcohol_drinks_per_week: alcohol || null,
+        family_history: relatives,
+        screening_history: screening
+      },
+      biomarkers: biomarkers,
+      findings: findings,
+      openonco_handoff: signals.map(function(s) {
+        return { lane: s.lane, signal: s.title, rationale: s.body, suggested_action: s.action };
+      })
+    };
+    return { level, label, summary, score, signals, profile };
+  }
+
+  function render(result) {
+    lastProfile = result.profile;
+    resultEmpty.hidden = true;
+    resultWrap.hidden = false;
+    riskLevel.className = 'risk-level ' + result.level;
+    riskLevel.textContent = result.label;
+    resultSummary.textContent = result.summary;
+    riskMeterFill.style.setProperty('--risk-score', result.score + '%');
+    const steps = [];
+    if (result.signals.some(s => s.lane === 'urgent')) steps.push(['1', COPY.doctor_now]);
+    if (result.signals.some(s => s.lane === 'genetic')) steps.push(['2', COPY.genetics]);
+    if (result.signals.some(s => s.lane === 'screening')) steps.push(['3', COPY.screening_due]);
+    if (result.signals.some(s => s.lane === 'prevention')) steps.push(['4', COPY.prevention]);
+    if (!steps.length) steps.push(['1', COPY.low_summary]);
+    nextSteps.innerHTML = steps.map(function(step) { return itemHtml(step[0], step[1]); }).join('');
+
+    const byLane = {};
+    result.signals.forEach(function(s) {
+      if (!byLane[s.lane]) byLane[s.lane] = [];
+      byLane[s.lane].push(s.title + ' — ' + s.body);
+    });
+    const laneOrder = ['urgent', 'genetic', 'screening', 'prevention', 'gap'];
+    riskLanes.innerHTML = laneOrder.filter(function(lane) { return byLane[lane] && byLane[lane].length; }).map(function(lane) {
+      return itemHtml(lane, byLane[lane].slice(0, 5).join(' | '));
+    }).join('') || itemHtml('baseline', COPY.no_signals);
+
+    const familyCount = (result.profile.history.family_history || []).length;
+    handoffText.textContent = [
+      result.label + ': ' + result.summary,
+      COPY.handoff_family_entries + ': ' + familyCount + '.',
+      COPY.handoff_take_json
+    ].join(' ');
+    profileJson.textContent = JSON.stringify(result.profile, null, 2);
+    updateTryLink(result.profile);
+  }
+
+  async function profileToToken(profile) {
+    if (!('CompressionStream' in window)) return '';
+    const json = JSON.stringify(profile);
+    const stream = new Blob([json], { type: 'application/json' }).stream().pipeThrough(new CompressionStream('gzip'));
+    const bytes = new Uint8Array(await new Response(stream).arrayBuffer());
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) {
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    }
+    return btoa(binary).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');
+  }
+
+  async function updateTryLink(profile) {
+    openTryBtn.href = TRY_HREF;
+    try {
+      const token = await profileToToken(profile);
+      if (token) openTryBtn.href = TRY_HREF + '#p=' + token;
+    } catch (err) {
+      console.warn('profile token failed', err);
+    }
+  }
+
+  function applyScenario(name) {
+    form.reset();
+    familyRows.innerHTML = '';
+    if (name === 'brca') {
+      form.elements.age.value = '32';
+      form.elements.sex.value = 'female';
+      form.elements.last_mammo.value = 'due';
+      form.elements.last_colon.value = 'na';
+      form.elements.last_cervical.value = 'recent';
+      form.elements.known_family_mutation.checked = false;
+      form.elements.ashkenazi.checked = true;
+      addFamilyRow({ relation: 'first', cancer: 'breast', age: 38, side: 'maternal' });
+      addFamilyRow({ relation: 'second', cancer: 'ovarian', age: 52, side: 'maternal' });
+    } else if (name === 'smoker') {
+      form.elements.age.value = '57';
+      form.elements.sex.value = 'male';
+      form.elements.smoking.value = 'current';
+      form.elements.pack_years.value = '30';
+      form.elements.last_ldct.value = 'never';
+      addFamilyRow({});
+    } else if (name === 'fit') {
+      form.elements.age.value = '48';
+      form.elements.sex.value = 'female';
+      form.elements.last_colon.value = 'never';
+      form.elements.fit_result.value = 'positive';
+      form.elements.symptom_blood_stool.checked = true;
+      addFamilyRow({});
+    }
+    updatePedigree();
+    render(calculate());
+  }
+
+  form.addEventListener('submit', function(ev) {
+    ev.preventDefault();
+    render(calculate());
+  });
+  addRelativeBtn.addEventListener('click', function() { addFamilyRow({}); });
+  resetRiskBtn.addEventListener('click', function() {
+    form.reset();
+    familyRows.innerHTML = '';
+    addFamilyRow({});
+    resultWrap.hidden = true;
+    resultEmpty.hidden = false;
+    profileJson.textContent = '';
+    copyStatus.textContent = '';
+  });
+  document.querySelectorAll('[data-scenario]').forEach(function(btn) {
+    btn.addEventListener('click', function() { applyScenario(btn.dataset.scenario); });
+  });
+  copyJsonBtn.addEventListener('click', async function() {
+    if (!lastProfile) return;
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(lastProfile, null, 2));
+      copyStatus.textContent = COPY.copied;
+    } catch (err) {
+      copyStatus.textContent = COPY.copy_failed;
+    }
+  });
+  downloadJsonBtn.addEventListener('click', function() {
+    if (!lastProfile) return;
+    const blob = new Blob([JSON.stringify(lastProfile, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = COPY.download_name;
+    a.click();
+    setTimeout(function() { URL.revokeObjectURL(a.href); }, 1000);
+  });
+  printRiskBtn.addEventListener('click', function() { window.print(); });
+  addFamilyRow({});
+})();
+</script>
+</body>
+</html>
+"""
+
+    replacements = {
+        "__LANG__": "en" if is_en else "uk",
+        "__TITLE__": html.escape(copy["page_title"]),
+        "__META__": html.escape(copy["meta_description"]),
+        "__CANONICAL__": "/prevent.html" if is_en else "/ukr/prevent.html",
+        "__TOP_BAR__": _render_top_bar(
+            active="prevent",
+            target_lang=target_lang,
+            lang_switch_href=_lang_switch_href("prevent", target_lang),
+        ),
+        "__KICKER__": html.escape(copy["kicker"]),
+        "__H1__": html.escape(copy["h1"]),
+        "__LEAD__": html.escape(copy["lead"]),
+        "__NOT_DIAGNOSIS__": html.escape(copy["not_diagnosis"]),
+        "__PRIVACY__": html.escape(copy["privacy"]),
+        "__MARKET_TITLE__": html.escape(copy["market_title"]),
+        "__MARKET_LEAD__": html.escape(copy["market_lead"]),
+        "__FORM_TITLE__": html.escape(copy["form_title"]),
+        "__QUICK_TITLE__": html.escape(copy["quick_title"]),
+        "__QUICK_BRCA__": html.escape(copy["quick_brca"]),
+        "__QUICK_SMOKER__": html.escape(copy["quick_smoker"]),
+        "__QUICK_FIT__": html.escape(copy["quick_fit"]),
+        "__ABOUT_YOU__": html.escape(copy["about_you"]),
+        "__WHAT_WORRIES__": html.escape(copy["what_worries"]),
+        "__SCREENING__": html.escape(copy["screening"]),
+        "__FAMILY__": html.escape(copy["family"]),
+        "__EXPOSURES__": html.escape(copy["exposures"]),
+        "__DIAGNOSTIC_DATA__": html.escape(copy["diagnostic_data"]),
+        "__AGE__": html.escape(copy["age"]),
+        "__SEX__": html.escape(copy["sex"]),
+        "__SEX_FEMALE__": html.escape(copy["sex_female"]),
+        "__SEX_MALE__": html.escape(copy["sex_male"]),
+        "__SEX_OTHER__": html.escape(copy["sex_other"]),
+        "__BMI__": html.escape(copy["bmi"]),
+        "__SMOKING__": html.escape(copy["smoking"]),
+        "__SMOKE_NEVER__": html.escape(copy["smoke_never"]),
+        "__SMOKE_CURRENT__": html.escape(copy["smoke_current"]),
+        "__SMOKE_FORMER__": html.escape(copy["smoke_former"]),
+        "__PACK_YEARS__": html.escape(copy["pack_years"]),
+        "__QUIT_YEARS__": html.escape(copy["quit_years"]),
+        "__ALCOHOL__": html.escape(copy["alcohol"]),
+        "__SYMPTOM_NOTE__": html.escape(copy["symptom_note"]),
+        "__SCREEN_NOTE__": html.escape(copy["screen_note"]),
+        "__LAST_MAMMO__": html.escape(copy["last_mammo"]),
+        "__LAST_COLON__": html.escape(copy["last_colon"]),
+        "__LAST_CERVICAL__": html.escape(copy["last_cervical"]),
+        "__LAST_LDCT__": html.escape(copy["last_ldct"]),
+        "__SCREEN_RECENT__": html.escape(copy["screen_recent"]),
+        "__SCREEN_DUE__": html.escape(copy["screen_due"]),
+        "__SCREEN_NEVER__": html.escape(copy["screen_never"]),
+        "__SCREEN_NA__": html.escape(copy["screen_na"]),
+        "__ADD_RELATIVE__": html.escape(copy["add_relative"]),
+        "__RUN__": html.escape(copy["run"]),
+        "__RESET__": html.escape(copy["reset"]),
+        "__RESULT_TITLE__": html.escape(copy["result_title"]),
+        "__RESULT_EMPTY__": html.escape(copy["result_empty"]),
+        "__LOW_LABEL__": html.escape(copy["low_label"]),
+        "__NEXT_STEPS__": html.escape(copy["next_steps"]),
+        "__LANES__": html.escape(copy["lanes"]),
+        "__PROFILE__": html.escape(copy["profile"]),
+        "__COPY_JSON_LABEL__": html.escape(copy["copy_json"]),
+        "__DOWNLOAD_JSON__": html.escape(copy["download_json"]),
+        "__OPEN_BUILDER__": html.escape(copy["open_builder"]),
+        "__PRINT__": html.escape(copy["print"]),
+        "__EXPOSURE_KNOWN_MUTATION__": html.escape(copy["exposure_known_mutation"]),
+        "__EXPOSURE_ASHKENAZI__": html.escape(copy["exposure_ashkenazi"]),
+        "__EXPOSURE_HBV__": html.escape(copy["exposure_hbv"]),
+        "__EXPOSURE_HCV__": html.escape(copy["exposure_hcv"]),
+        "__EXPOSURE_HPV__": html.escape(copy["exposure_hpv"]),
+        "__EXPOSURE_HPYLORI__": html.escape(copy["exposure_hpylori"]),
+        "__EXPOSURE_HIV__": html.escape(copy["exposure_hiv"]),
+        "__EXPOSURE_RADIATION__": html.escape(copy["exposure_radiation"]),
+        "__EXPOSURE_RADON__": html.escape(copy["exposure_radon"]),
+        "__EXPOSURE_OCCUPATION__": html.escape(copy["exposure_occupation"]),
+        "__EXPOSURE_BARRETT__": html.escape(copy["exposure_barrett"]),
+        "__EXPOSURE_IBD_PSC__": html.escape(copy["exposure_ibd_psc"]),
+        "__FIT_STOOL__": html.escape(copy["fit_stool"]),
+        "__FIT_POSITIVE__": html.escape(copy["fit_positive"]),
+        "__FIT_NEGATIVE__": html.escape(copy["fit_negative"]),
+        "__MAMMOGRAPHY_US__": html.escape(copy["mammography_us"]),
+        "__BIRADS45__": html.escape(copy["birads45"]),
+        "__BENIGN_BIRADS__": html.escape(copy["benign_birads"]),
+        "__IMAGING_REPORT__": html.escape(copy["imaging_report"]),
+        "__SUSPICIOUS_IMAGING__": html.escape(copy["suspicious_imaging"]),
+        "__INCIDENTAL_FINDING__": html.escape(copy["incidental_finding"]),
+        "__NORMAL__": html.escape(copy["normal"]),
+        "__HEMOGLOBIN__": html.escape(copy["hemoglobin"]),
+        "__WBC__": html.escape(copy["wbc"]),
+        "__PLATELETS__": html.escape(copy["platelets"]),
+        "__SOURCES_TITLE__": html.escape(copy["sources_title"]),
+        "__SOURCE_GUIDELINES__": html.escape(copy["source_guidelines"]),
+        "__SOURCE_MARKET__": html.escape(copy["source_market"]),
+        "__TRY_HREF__": try_href,
+        "__SYMPTOMS__": symptom_html,
+        "__MARKET_CARDS__": _cards(market_cards),
+        "__GUIDELINE_CARDS__": _cards(guideline_cards),
+        "__COPY_DATA_JSON__": copy_json,
+        "__SYMPTOMS_JSON__": symptoms_json,
+    }
+    out = template
+    # Replace longer JSON placeholders first so subsequent text replacement
+    # cannot accidentally touch content inside the serialized strings.
+    out = out.replace("__COPY_DATA_JSON__", copy_json)
+    out = out.replace("__SYMPTOMS_JSON__", symptoms_json)
+    for key, value in replacements.items():
+        if key in {"__COPY_DATA_JSON__", "__SYMPTOMS_JSON__"}:
+            continue
+        out = out.replace(key, value)
+    return out
 
 
 # ── Clinical question page (optional LLM adapter) ─────────────────────────
@@ -9432,6 +10699,8 @@ def build_site(output_dir: Path) -> dict:
             questionnaires_manifest=questionnaires_manifest,
             examples_manifest=examples_manifest,
         ), encoding="utf-8")
+    (output_dir / "prevent.html").write_text(
+        render_prevent(target_lang="en"), encoding="utf-8")
     (output_dir / "ask.html").write_text(
         render_ask(target_lang="en"), encoding="utf-8")
 
@@ -9459,6 +10728,8 @@ def build_site(output_dir: Path) -> dict:
             questionnaires_manifest=questionnaires_manifest,
             examples_manifest=examples_manifest,
         ), encoding="utf-8")
+    (output_dir / "ukr" / "prevent.html").write_text(
+        render_prevent(target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "ask.html").write_text(
         render_ask(target_lang="uk"), encoding="utf-8")
 

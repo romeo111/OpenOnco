@@ -47,8 +47,10 @@ def site_dir(tmp_path_factory) -> Path:
 def test_static_assets_present(site_dir: Path):
     # CSD-9C dropped monolithic openonco-engine.zip — replaced by core + per-disease + index.
     for f in (".nojekyll", "CNAME", "style.css", "index.html", "gallery.html",
-              "try.html", "ask.html", "openonco-engine-core.zip", "openonco-engine-index.json",
+              "try.html", "prevent.html", "ask.html",
+              "openonco-engine-core.zip", "openonco-engine-index.json",
               "examples.json", "manifest.webmanifest", "kb.html", "kb_search_index.json",
+              "ukr/prevent.html",
               "ukr/kb.html", "ukr/kb_search_index.json",
               "clinical-gaps.html", "ukr/clinical-gaps.html",
               "audits/clinical_gap_audit.md", "audits/clinical_gap_audit.json"):
@@ -147,7 +149,7 @@ def test_landing_how_section_uses_dataflow_stages(site_dir: Path):
 
 def test_top_bar_drops_tester_pill(site_dir: Path):
     """Per user direction: 'Тестувальник · OSS preview' pill removed from header."""
-    for page in ("index.html", "gallery.html", "try.html", "ask.html"):
+    for page in ("index.html", "gallery.html", "try.html", "prevent.html", "ask.html"):
         html = (site_dir / page).read_text(encoding="utf-8")
         assert "Тестувальник · OSS preview" not in html, (
             f"tester pill still in {page} header"
@@ -287,6 +289,35 @@ def test_ask_page_wires_clinical_question_endpoint(site_dir: Path):
         assert 'name="twitter:image"' not in ask_html
         assert 'name="twitter:card" content="summary"' in ask_html
         assert 'name="twitter:card" content="summary_large_image"' not in ask_html
+
+
+def test_prevent_page_is_consumer_diagnostic_flow(site_dir: Path):
+    """The prevention page is a real consumer-facing risk and early-signal
+    workflow, not a clinician-only JSON form."""
+    html = (site_dir / "prevent.html").read_text(encoding="utf-8")
+    uk_html = (site_dir / "ukr" / "prevent.html").read_text(encoding="utf-8")
+
+    for page_html in (html, uk_html):
+        assert 'class="risk-page consumer-risk-assessment"' in page_html
+        assert 'id="riskForm"' in page_html
+        assert 'id="familyCancerRows"' in page_html
+        assert 'id="pedigreeMap"' in page_html
+        assert 'name="fit_result"' in page_html
+        assert 'name="breast_imaging"' in page_html
+        assert 'id="profileJson"' in page_html
+        assert "consumer_prevention_and_early_detection_check" in page_html
+        assert "CompressionStream" in page_html
+        assert "openTryBtn.href = TRY_HREF + '#p='" in page_html
+        assert "Color Health" in page_html
+        assert "CancerIQ" in page_html
+        assert "Freenome" in page_html
+        assert "GRAIL Galleri" in page_html
+        assert "Prenuvo" in page_html
+        assert "USPSTF" in page_html
+        assert "not a diagnosis" in page_html or "не діагноз" in page_html
+
+    assert "Check risk, family history, screenings" in html
+    assert "Перевірте ризик, родовід, скринінги" in uk_html
 
 
 # ── Engine bundle (Pyodide-loadable zip) ──────────────────────────────────
@@ -689,7 +720,7 @@ def test_case_files_have_back_link_and_no_auth(site_dir: Path):
 def test_en_mirror_built_alongside_ua(site_dir: Path):
     """Every public page has a /ukr/ counterpart so the language toggle
     can navigate between them without 404."""
-    for page in ("index.html", "gallery.html", "try.html", "ask.html"):
+    for page in ("index.html", "gallery.html", "try.html", "prevent.html", "ask.html"):
         assert (site_dir / "ukr" / page).exists(), f"missing ukr/{page}"
     assert (site_dir / "ukr").is_dir()
     assert (site_dir / "ukr" / "cases").is_dir()
@@ -705,7 +736,7 @@ def test_en_mirror_built_alongside_ua(site_dir: Path):
 
 def test_lang_switch_present_on_every_top_level_page(site_dir: Path):
     """Toggle in the top bar lets the user flip EN↔UA on landing/gallery/try."""
-    for page in ("index.html", "gallery.html", "try.html", "ask.html"):
+    for page in ("index.html", "gallery.html", "try.html", "prevent.html", "ask.html"):
         en = (site_dir / page).read_text(encoding="utf-8")
         ua = (site_dir / "ukr" / page).read_text(encoding="utf-8")
         # Toggle markup
