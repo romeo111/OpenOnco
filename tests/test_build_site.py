@@ -179,6 +179,9 @@ def test_gallery_is_public_with_publishable_cases(site_dir: Path):
     assert html.count('class="case-card"') == len(public_cases)
     assert "Curated showcase" in html
     assert 'class="dt-quality"' in html
+    assert 'class="showcase-card"' in html
+    assert "Start with a scenario" in html
+    assert 'id="catalog"' in html
     assert "No treatment plan generated" not in html
     for c in public_cases:
         assert f"cases/{c.case_id}.html" in html
@@ -189,6 +192,14 @@ def test_gallery_is_public_with_publishable_cases(site_dir: Path):
     # (UA-leak cleanup on the EN gallery surface).
     # Feedback path
     assert "tester-feedback" in html
+
+
+def test_ukrainian_gallery_leads_with_clear_example_scenarios(site_dir: Path):
+    html = (site_dir / "ukr" / "gallery.html").read_text(encoding="utf-8")
+    assert "Приклади планів лікування" in html
+    assert html.count('class="showcase-card"') == 4
+    assert "Почніть із цих сценаріїв" in html
+    assert "Усі приклади" in html
 
 
 # ── Try page (Pyodide demo) ───────────────────────────────────────────────

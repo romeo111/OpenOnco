@@ -2410,6 +2410,36 @@ def render_gallery(*, target_lang: str = "en") -> str:
     ]
     n_cases = len(case_meta)
 
+    # A conventional examples page should show useful material immediately,
+    # rather than make a visitor discover a second-level catalogue first.
+    # CASES is deliberately ordered with the clearest showcase scenarios at
+    # the top, so retain that curation here instead of deriving an arbitrary
+    # order from the disease taxonomy.
+    showcase_items = case_meta[:4]
+
+    def _render_showcase_card(item: dict, position: int) -> str:
+        case: CaseEntry = item["case"]
+        label = (case.label_en or case.label_ua) if is_en else case.label_ua
+        summary = (case.summary_en or case.summary_ua) if is_en else case.summary_ua
+        kind = (
+            "Diagnostic brief" if case.badge_class == "bdg-diag" else "Treatment plan"
+        ) if is_en else (
+            "Діагностичний розбір" if case.badge_class == "bdg-diag" else "План лікування"
+        )
+        number = f"{position:02d}"
+        return f'''<a class="showcase-card" href="{case_path_prefix}{case.case_id}.html">
+  <span class="showcase-card-number">{number}</span>
+  <span class="showcase-card-kind">{kind}</span>
+  <h3>{_html.escape(label)}</h3>
+  <p>{_html.escape(summary)}</p>
+  <span class="showcase-card-link">{"Open example" if is_en else "Відкрити приклад"} <span aria-hidden="true">→</span></span>
+</a>'''
+
+    showcase_cards_html = "\n".join(
+        _render_showcase_card(item, position)
+        for position, item in enumerate(showcase_items, start=1)
+    )
+
     # Group cases by disease_id, preserving CASES order within each group.
     grouped: dict[str, dict] = {}
     for i, m in enumerate(case_meta):
@@ -2524,27 +2554,55 @@ def render_gallery(*, target_lang: str = "en") -> str:
 
     if is_en:
         lead_html = (
-            f'{n_cases} synthetic patient profiles run through the engine, '
-            f'grouped by disease. Pick a disease to see its examples — each '
-            f'click opens a full Plan or Diagnostic Brief as a clinician would '
-            f'see it in tumor-board. If something looks clinically wrong — '
-            f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
-            f'target="_blank" rel="noopener">open an issue</a>.'
+            "Each example is a synthetic clinical scenario. Open one to see "
+            "the patient profile, treatment options, safety flags, and sources "
+            "that support the plan."
         )
-        page_title = "Sample cases"
+        page_title = "Treatment plan examples"
+        eyebrow = "See how a plan is built"
+        showcase_title = "Start with a scenario"
+        what_title = "What you will find in every example"
+        what_items = (
+            "<li><strong>Clinical context</strong><span>— the synthetic patient details used by the engine.</span></li>"
+            "<li><strong>Options to discuss</strong><span>— standard and alternative tracks, with safety checks.</span></li>"
+            "<li><strong>Sources</strong><span>— guideline and evidence references under the relevant recommendations.</span></li>"
+        )
+        catalogue_title = "Browse all examples"
+        catalogue_lead = f"{n_cases} synthetic scenarios, grouped by diagnosis."
+        try_label = "Build a plan for another scenario"
+        safety_note = (
+            "All profiles are synthetic; this is information for discussion with a "
+            "treating clinician, not medical advice. "
+            f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
+            'target="_blank" rel="noopener">Report an issue</a>. '
+        )
         search_ph = "Search disease or ICD-O-3…"
         back_label = "← All diseases"
         empty_label = "No diseases match your search."
     else:
         lead_html = (
-            f'{n_cases} синтетичних профілів пацієнтів, згрупованих за хворобою. '
-            f'Оберіть хворобу зі списку — кожен клік відкриває повний Plan або '
-            f'Diagnostic Brief, як його побачить лікар у tumor-board. Якщо '
-            f'щось виглядає клінічно неправильно — '
-            f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
-            f'target="_blank" rel="noopener">відкрий issue</a>.'
+            "Кожен приклад — вигаданий клінічний сценарій. Відкрийте його, "
+            "щоб побачити профіль пацієнта, варіанти лікування, сигнали безпеки "
+            "та джерела, на яких ґрунтується план."
         )
-        page_title = "Готові приклади"
+        page_title = "Приклади планів лікування"
+        eyebrow = "Подивіться, як формується план"
+        showcase_title = "Почніть із цих сценаріїв"
+        what_title = "Що є всередині кожного прикладу"
+        what_items = (
+            "<li><strong>Клінічний контекст</strong><span>— вигадані дані пацієнта, з якими працює система.</span></li>"
+            "<li><strong>Варіанти для обговорення</strong><span>— основний та альтернативний підходи з перевірками безпеки.</span></li>"
+            "<li><strong>Джерела</strong><span>— настанови й докази поруч із відповідними рекомендаціями.</span></li>"
+        )
+        catalogue_title = "Усі приклади"
+        catalogue_lead = f"{n_cases} синтетичних сценаріїв, згрупованих за діагнозом."
+        try_label = "Сформувати план для іншого сценарію"
+        safety_note = (
+            "Усі профілі синтетичні. Це інформація для обговорення з лікуючим "
+            "лікарем, а не медична порада. "
+            f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
+            'target="_blank" rel="noopener">Повідомити про проблему</a>. '
+        )
         search_ph = "Шукати хворобу або ICD-O-3…"
         back_label = "← Усі хвороби"
         empty_label = "Жодна хвороба не підходить під запит."
@@ -2569,11 +2627,38 @@ def render_gallery(*, target_lang: str = "en") -> str:
 {_render_top_bar(active="gallery", target_lang=target_lang, lang_switch_href=_lang_switch_href("gallery", target_lang))}
 
 <main class="gallery">
-  <h1>{page_title}</h1>
-  <p class="lead">{lead_html}</p>
+  <section class="gallery-hero" aria-labelledby="gallery-title">
+    <p class="gallery-eyebrow">{eyebrow}</p>
+    <h1 id="gallery-title">{page_title}</h1>
+    <p class="lead">{lead_html}</p>
+    <p class="gallery-safety-note">{safety_note}</p>
+  </section>
+
+  <section class="showcase-section" aria-labelledby="showcase-title">
+    <div class="gallery-section-heading">
+      <h2 id="showcase-title">{showcase_title}</h2>
+      <a class="gallery-section-link" href="#catalog">{catalogue_title} <span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="showcase-grid">
+{showcase_cards_html}
+    </div>
+  </section>
+
+  <section class="gallery-explainer" aria-labelledby="what-to-expect-title">
+    <h2 id="what-to-expect-title">{what_title}</h2>
+    <ol>{what_items}</ol>
+  </section>
 
   <!-- Stage 1: disease grid (default visible) -->
-  <section id="diseaseStage" class="disease-stage">
+  <section id="catalog" class="gallery-catalog" aria-labelledby="catalog-title">
+    <div class="gallery-section-heading">
+      <div>
+        <h2 id="catalog-title">{catalogue_title}</h2>
+        <p>{catalogue_lead}</p>
+      </div>
+      <a class="gallery-try-link" href="{'/try.html' if is_en else '/ukr/try.html'}">{try_label} <span aria-hidden="true">→</span></a>
+    </div>
+    <section id="diseaseStage" class="disease-stage" aria-label="{catalogue_title}">
     <div class="disease-search-row">
       <input type="search" id="diseaseSearch" class="disease-search"
              placeholder="{search_ph}" autocomplete="off"
@@ -2584,6 +2669,7 @@ def render_gallery(*, target_lang: str = "en") -> str:
     {disease_tiles_html}
     </div>
     <p class="disease-empty" id="diseaseEmpty" hidden>{empty_label}</p>
+  </section>
   </section>
 
   <!-- Stage 2: case list for the selected disease (hidden by default) -->

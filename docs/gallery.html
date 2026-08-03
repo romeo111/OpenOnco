@@ -2,101 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- openonco-geo-lang:start -->
-<script>
-(function(){
-  try{
-    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
-    var UARE=/^\/ukr(\/|$)/;
-    // Remember an explicit language choice so IP detection never overrides it.
-    document.addEventListener('click',function(e){
-      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
-      if(!a)return;
-      var href=a.getAttribute('href')||'';
-      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
-    },true);
-    var ua=navigator.userAgent||'';
-    // Bots: leave both language trees crawlable — no auto-redirect.
-    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
-    var path=location.pathname||'/';
-    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
-    var pageLang=UARE.test(path)?'uk':'en';
-    // Track first real interaction so a slow async lookup never discards typed
-    // input (e.g. the /try.html plan form) by navigating out from under the user.
-    var touched=false,mark=function(){touched=true;};
-    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
-      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
-    });
-    function mirror(){
-      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
-      return p+(location.search||'')+(location.hash||'');
-    }
-    function go(lang){
-      if(lang===pageLang)return;
-      var target=mirror();
-      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
-      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
-      location.replace(target);
-    }
-    function want(cc){return cc==='UA'?'uk':'en';}
-    // 1) explicit choice wins
-    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
-    if(pref==='uk'||pref==='en'){go(pref);return;}
-    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
-    var cc=null;
-    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
-    if(cc){go(want(cc));return;}
-    // 3) look up country by IP. Third-party surface kept minimal for a medical
-    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
-    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
-    var eps=[
-      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
-      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
-    ];
-    (function tryEp(i){
-      if(i>=eps.length)return;                          // all endpoints failed → English default
-      var ctl=('AbortController'in window)?new AbortController():null;
-      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
-      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
-        .then(function(r){return r.ok?r.json():Promise.reject();})
-        .then(function(j){
-          if(to)clearTimeout(to);
-          var code=((eps[i][1](j))||'').toString().toUpperCase();
-          if(/^[A-Z]{2}$/.test(code)){
-            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
-            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
-          }else{tryEp(i+1);}
-        })
-        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
-    })(0);
-  }catch(_){}
-})();
-</script>
-<!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · Sample cases</title>
-<!-- openonco-seo:start -->
-<meta name="description" content="Synthetic OpenOnco examples showing auditable oncology plan and diagnostic brief outputs.">
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="ai-summary" content="Synthetic OpenOnco examples showing auditable oncology plan and diagnostic brief outputs.">
-<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
-<link rel="canonical" href="https://openonco.info/gallery.html">
-<link rel="alternate" hreflang="en" href="https://openonco.info/gallery.html">
-<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/gallery.html">
-<link rel="alternate" hreflang="x-default" href="https://openonco.info/">
-<meta property="og:site_name" content="OpenOnco">
-<meta property="og:type" content="website">
-<meta property="og:title" content="OpenOnco · Sample cases">
-<meta property="og:description" content="Synthetic OpenOnco examples showing auditable oncology plan and diagnostic brief outputs.">
-<meta property="og:url" content="https://openonco.info/gallery.html">
-<meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="OpenOnco · Sample cases">
-<meta name="twitter:description" content="Synthetic OpenOnco examples showing auditable oncology plan and diagnostic brief outputs.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Sample cases","description":"Synthetic OpenOnco examples showing auditable oncology plan and diagnostic brief outputs.","url":"https://openonco.info/gallery.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/gallery.html"}}</script>
-<!-- openonco-seo:end -->
+<title>OpenOnco · Treatment plan examples</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -132,11 +39,65 @@
 </header>
 
 <main class="gallery">
-  <h1>Sample cases</h1>
-  <p class="lead">16 synthetic patient profiles run through the engine, grouped by disease. Pick a disease to see its examples — each click opens a full Plan or Diagnostic Brief as a clinician would see it in tumor-board. If something looks clinically wrong — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">open an issue</a>.</p>
+  <section class="gallery-hero" aria-labelledby="gallery-title">
+    <p class="gallery-eyebrow">See how a plan is built</p>
+    <h1 id="gallery-title">Treatment plan examples</h1>
+    <p class="lead">Each example is a synthetic clinical scenario. Open one to see the patient profile, treatment options, safety flags, and sources that support the plan.</p>
+    <p class="gallery-safety-note">All profiles are synthetic; this is information for discussion with a treating clinician, not medical advice. <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">Report an issue</a>. </p>
+  </section>
+
+  <section class="showcase-section" aria-labelledby="showcase-title">
+    <div class="gallery-section-heading">
+      <h2 id="showcase-title">Start with a scenario</h2>
+      <a class="gallery-section-link" href="#catalog">Browse all examples <span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="showcase-grid">
+<a class="showcase-card" href="/cases/showcase-nsclc-alk-fusion-1l.html">
+  <span class="showcase-card-number">01</span>
+  <span class="showcase-card-kind">Treatment plan</span>
+  <h3>NSCLC - ALK fusion - ESCAT IA / CIViC evidence</h3>
+  <p>Metastatic lung adenocarcinoma with ALK fusion and brain metastases. Demonstrates a strong ESCAT IA signal, CIViC evidence lanes, and the separation between MDT context and treatment-track selection.</p>
+  <span class="showcase-card-link">Open example <span aria-hidden="true">→</span></span>
+</a>
+<a class="showcase-card" href="/cases/showcase-crc-braf-v600e-2l.html">
+  <span class="showcase-card-number">02</span>
+  <span class="showcase-card-kind">Treatment plan</span>
+  <h3>mCRC - BRAF V600E - tumor-specific actionability</h3>
+  <p>BRAF V600E after FOLFOX progression. Shows why a variant cannot be interpreted outside tumor context: CRC needs an EGFR-combination strategy, not simple BRAF monotherapy.</p>
+  <span class="showcase-card-link">Open example <span aria-hidden="true">→</span></span>
+</a>
+<a class="showcase-card" href="/cases/showcase-breast-pik3ca-h1047r-2l.html">
+  <span class="showcase-card-number">03</span>
+  <span class="showcase-card-kind">Treatment plan</span>
+  <h3>Breast HR+/HER2- - PIK3CA H1047R - post-CDK4/6i</h3>
+  <p>HR+/HER2- metastatic breast cancer after CDK4/6i with PIK3CA H1047R. Shows how the ESCAT/CIViC layer adds molecular context to 2L endocrine-targeted options while keeping clinical constraints visible.</p>
+  <span class="showcase-card-link">Open example <span aria-hidden="true">→</span></span>
+</a>
+<a class="showcase-card" href="/cases/showcase-ovarian-brca1-maintenance.html">
+  <span class="showcase-card-number">04</span>
+  <span class="showcase-card-kind">Treatment plan</span>
+  <h3>Ovarian - germline BRCA1 - PARPi maintenance</h3>
+  <p>Platinum-sensitive recurrent high-grade serous ovarian carcinoma with germline BRCA1. Shows ESCAT IA, CIViC sensitivity/resistance evidence, and the practical context for PARPi maintenance plus family cascade testing.</p>
+  <span class="showcase-card-link">Open example <span aria-hidden="true">→</span></span>
+</a>
+    </div>
+  </section>
+
+  <section class="gallery-explainer" aria-labelledby="what-to-expect-title">
+    <h2 id="what-to-expect-title">What you will find in every example</h2>
+    <ol><li><strong>Clinical context</strong><span>— the synthetic patient details used by the engine.</span></li><li><strong>Options to discuss</strong><span>— standard and alternative tracks, with safety checks.</span></li><li><strong>Sources</strong><span>— guideline and evidence references under the relevant recommendations.</span></li></ol>
+  </section>
 
   <!-- Stage 1: disease grid (default visible) -->
-  <section id="diseaseStage" class="disease-stage">
+  <section id="catalog" class="gallery-catalog" aria-labelledby="catalog-title">
+    <div class="gallery-section-heading">
+      <div>
+        <h2 id="catalog-title">Browse all examples</h2>
+        <p>16 synthetic scenarios, grouped by diagnosis.</p>
+      </div>
+      <a class="gallery-try-link" href="/try.html">Build a plan for another scenario <span aria-hidden="true">→</span></a>
+    </div>
+    <section id="diseaseStage" class="disease-stage" aria-label="Browse all examples">
     <div class="disease-search-row">
       <input type="search" id="diseaseSearch" class="disease-search"
              placeholder="Search disease or ICD-O-3…" autocomplete="off"
@@ -161,6 +122,7 @@
     <button type="button" class="disease-tile" data-disease-id="DIS-PROSTATE" data-search="аденокарцинома передміхурової залози prostate adenocarcinoma"><span class="dt-label">Prostate adenocarcinoma</span><span class="dt-count">1 example</span><span class="dt-quality">curated first</span></button>
     </div>
     <p class="disease-empty" id="diseaseEmpty" hidden>No diseases match your search.</p>
+  </section>
   </section>
 
   <!-- Stage 2: case list for the selected disease (hidden by default) -->
