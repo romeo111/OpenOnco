@@ -16,8 +16,14 @@ decision_tree:
     - any_of:
       - red_flag: RF-FITNESS-ECOG-FIT
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
-    - condition: Age ≤ 65 OR fit
-    - condition: AlloSCT donor pathway feasible (matched donor identified or imminent)
+    - clinician_confirmation:
+        id: CC-ALGO-HSTCL-1L-1481F26AFC71
+        label: "Age ≤ 65 OR fit"
+        legacy_condition: "Age ≤ 65 OR fit"
+    - clinician_confirmation:
+        id: CC-ALGO-HSTCL-1L-A1D220FB5CFB
+        label: "AlloSCT donor pathway feasible (matched donor identified or imminent)"
+        legacy_condition: "AlloSCT donor pathway feasible (matched donor identified or imminent)"
   if_true:
     result: IND-HSTCL-1L-ICE-ALLOSCT
   if_false:

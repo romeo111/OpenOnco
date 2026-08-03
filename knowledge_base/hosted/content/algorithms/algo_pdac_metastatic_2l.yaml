@@ -35,7 +35,10 @@ decision_tree:
 - step: 2
   evaluate:
     any_of:
-    - condition: "Total bilirubin ≤ 2× ULN OR biliary obstruction drained with stent/drain"
+    - clinician_confirmation:
+        id: CC-ALGO-PDAC-METASTATIC-2L-A23052E9EB0F
+        label: "Total bilirubin ≤ 2× ULN OR biliary obstruction drained with stent/drain"
+        legacy_condition: "Total bilirubin ≤ 2× ULN OR biliary obstruction drained with stent/drain"
   if_true:
     next_step: 3
   if_false:
@@ -53,7 +56,10 @@ decision_tree:
 - step: 3
   evaluate:
     any_of:
-    - condition: "Prior 1L was gemcitabine-based (gemcitabine monotherapy, gem+nab-paclitaxel, or gem+erlotinib)"
+    - clinician_confirmation:
+        id: CC-ALGO-PDAC-METASTATIC-2L-AE1F9779E5D1
+        label: "Prior 1L was gemcitabine-based (gemcitabine monotherapy, gem+nab-paclitaxel, or gem+erlotinib)"
+        legacy_condition: "Prior 1L was gemcitabine-based (gemcitabine monotherapy, gem+nab-paclitaxel, or gem+erlotinib)"
   if_true:
     result: IND-PDAC-METASTATIC-2L-NAL-IRI
     notes: >

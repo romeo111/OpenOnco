@@ -18,6 +18,7 @@ from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
 from .base import (
     Base,
     Citation,
+    ClinicalClaim,
     EvidenceLevel,
     IndicationIntent,
     StrengthOfRecommendation,
@@ -262,6 +263,7 @@ class Indication(Base):
 
     rationale: Optional[str] = None
     sources: list[Citation] = Field(default_factory=list)
+    clinical_claims: list[ClinicalClaim] = Field(default_factory=list)
     known_controversies: list[KnownControversy] = Field(default_factory=list)
 
     # "What NOT to do" list per REFERENCE_CASE_SPECIFICATION §1.3 critical:

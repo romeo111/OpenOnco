@@ -23,7 +23,10 @@ decision_tree:
 - step: 1
   evaluate:
     any_of:
-    - condition: "Prior cisplatin-containing chemotherapy received (BEP or EP 1L)"
+    - clinician_confirmation:
+        id: CC-ALGO-GCT-SALVAGE-2L-63D208E10443
+        label: "Prior cisplatin-containing chemotherapy received (BEP or EP 1L)"
+        legacy_condition: "Prior cisplatin-containing chemotherapy received (BEP or EP 1L)"
   if_true:
     next_step: 2
     notes: "Post-BEP/EP relapse: salvage pathway."
@@ -40,7 +43,10 @@ decision_tree:
 - step: 2
   evaluate:
     any_of:
-    - condition: "Cisplatin-refractory: disease progression during BEP/EP OR within 4 weeks of last cisplatin administration"
+    - clinician_confirmation:
+        id: CC-ALGO-GCT-SALVAGE-2L-BA6B1943E8FC
+        label: "Cisplatin-refractory: disease progression during BEP/EP OR within 4 weeks of last cisplatin administration"
+        legacy_condition: "Cisplatin-refractory: disease progression during BEP/EP OR within 4 weeks of last cisplatin administration"
   if_true:
     result: IND-GCT-SALVAGE-2L-HDCT-ASCT
     notes: >
@@ -60,9 +66,18 @@ decision_tree:
 - step: 3
   evaluate:
     any_of:
-    - condition: "Poor Indiana prognostic score: AFP ≥1000 ng/mL OR hCG ≥1000 IU/L at relapse"
-    - condition: "Liver, bone, or brain metastases at relapse"
-    - condition: "Incomplete response to 1L (AFP/hCG never normalized after BEP completion)"
+    - clinician_confirmation:
+        id: CC-ALGO-GCT-SALVAGE-2L-76052CE4525C
+        label: "Poor Indiana prognostic score: AFP ≥1000 ng/mL OR hCG ≥1000 IU/L at relapse"
+        legacy_condition: "Poor Indiana prognostic score: AFP ≥1000 ng/mL OR hCG ≥1000 IU/L at relapse"
+    - clinician_confirmation:
+        id: CC-ALGO-GCT-SALVAGE-2L-D2078DB3BDA6
+        label: "Liver, bone, or brain metastases at relapse"
+        legacy_condition: "Liver, bone, or brain metastases at relapse"
+    - clinician_confirmation:
+        id: CC-ALGO-GCT-SALVAGE-2L-1F4D5BEB75E6
+        label: "Incomplete response to 1L (AFP/hCG never normalized after BEP completion)"
+        legacy_condition: "Incomplete response to 1L (AFP/hCG never normalized after BEP completion)"
   if_true:
     next_step: 4
     notes: "Poor Indiana score or incomplete 1L response: assess ASCT candidacy (step 4)."
@@ -79,10 +94,22 @@ decision_tree:
 - step: 4
   evaluate:
     all_of:
-    - condition: "ECOG PS 0-1"
-    - condition: "LVEF ≥45%"
-    - condition: "CrCl ≥30 mL/min"
-    - condition: "ASCT-capable center accessible"
+    - clinician_confirmation:
+        id: CC-ALGO-GCT-SALVAGE-2L-7D8F3BCD92EE
+        label: "ECOG PS 0-1"
+        legacy_condition: "ECOG PS 0-1"
+    - clinician_confirmation:
+        id: CC-ALGO-GCT-SALVAGE-2L-0B9F248FDFDC
+        label: "LVEF ≥45%"
+        legacy_condition: "LVEF ≥45%"
+    - clinician_confirmation:
+        id: CC-ALGO-GCT-SALVAGE-2L-3CA8DD7A402F
+        label: "CrCl ≥30 mL/min"
+        legacy_condition: "CrCl ≥30 mL/min"
+    - clinician_confirmation:
+        id: CC-ALGO-GCT-SALVAGE-2L-AA557BEC887A
+        label: "ASCT-capable center accessible"
+        legacy_condition: "ASCT-capable center accessible"
   if_true:
     result: IND-GCT-SALVAGE-2L-HDCT-ASCT
     notes: >

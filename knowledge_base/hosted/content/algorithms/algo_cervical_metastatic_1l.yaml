@@ -19,9 +19,18 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "FIGO IVB (distant metastases)"
-        - condition: "Recurrent cervical cancer not amenable to curative-intent surgery or RT"
-        - condition: "Persistent disease after definitive CRT, not curable with further local therapy"
+        - clinician_confirmation:
+            id: CC-ALGO-CERVICAL-METASTATIC-1L-E4FC4357FB38
+            label: "FIGO IVB (distant metastases)"
+            legacy_condition: "FIGO IVB (distant metastases)"
+        - clinician_confirmation:
+            id: CC-ALGO-CERVICAL-METASTATIC-1L-DBDA79B46808
+            label: "Recurrent cervical cancer not amenable to curative-intent surgery or RT"
+            legacy_condition: "Recurrent cervical cancer not amenable to curative-intent surgery or RT"
+        - clinician_confirmation:
+            id: CC-ALGO-CERVICAL-METASTATIC-1L-1A76EC2C0900
+            label: "Persistent disease after definitive CRT, not curable with further local therapy"
+            legacy_condition: "Persistent disease after definitive CRT, not curable with further local therapy"
     if_true:
       next_step: 2
     if_false:
@@ -33,7 +42,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "PD-L1 CPS ≥ 1 (22C3 assay)"
+        - clinician_confirmation:
+            id: CC-ALGO-CERVICAL-METASTATIC-1L-693B91970014
+            label: "PD-L1 CPS ≥ 1 (22C3 assay)"
+            legacy_condition: "PD-L1 CPS ≥ 1 (22C3 assay)"
     if_true:
       next_step: 3
       notes: "CPS≥1 (primary KEYNOTE-826 population): mOS 28.6 vs 16.5 mo (HR 0.64); mPFS 10.4 vs 8.2 mo (HR 0.62). Pembrolizumab addition clearly indicated."
@@ -52,11 +64,26 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "No prior pelvic fistula (vesico-vaginal or recto-vaginal)"
-        - condition: "No active uncontrolled hemorrhage"
-        - condition: "Blood pressure controlled (< 150/100)"
-        - condition: "Urine protein < 2 g/24h (UPCR < 2)"
-        - condition: "No therapeutic anticoagulation with active hemorrhagic risk"
+        - clinician_confirmation:
+            id: CC-ALGO-CERVICAL-METASTATIC-1L-F3C0FDB16C15
+            label: "No prior pelvic fistula (vesico-vaginal or recto-vaginal)"
+            legacy_condition: "No prior pelvic fistula (vesico-vaginal or recto-vaginal)"
+        - clinician_confirmation:
+            id: CC-ALGO-CERVICAL-METASTATIC-1L-E35DC7D01791
+            label: "No active uncontrolled hemorrhage"
+            legacy_condition: "No active uncontrolled hemorrhage"
+        - clinician_confirmation:
+            id: CC-ALGO-CERVICAL-METASTATIC-1L-AA5757A5A753
+            label: "Blood pressure controlled (< 150/100)"
+            legacy_condition: "Blood pressure controlled (< 150/100)"
+        - clinician_confirmation:
+            id: CC-ALGO-CERVICAL-METASTATIC-1L-273C806292C2
+            label: "Urine protein < 2 g/24h (UPCR < 2)"
+            legacy_condition: "Urine protein < 2 g/24h (UPCR < 2)"
+        - clinician_confirmation:
+            id: CC-ALGO-CERVICAL-METASTATIC-1L-A43F70D4FFE1
+            label: "No therapeutic anticoagulation with active hemorrhagic risk"
+            legacy_condition: "No therapeutic anticoagulation with active hemorrhagic risk"
     if_true:
       result: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
       notes: >

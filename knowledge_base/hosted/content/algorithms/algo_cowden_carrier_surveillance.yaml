@@ -44,8 +44,14 @@ decision_tree:
     # clinical diagnosis without confirmed gene.
     evaluate:
       any_of:
-        - condition: "Confirmed PTEN germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
-        - condition: "Clinical PHTS / Cowden syndrome (NCCN Cowden / PHTS major + minor criteria met) without confirmed PTEN variant — empirical-surveillance pathway"
+        - clinician_confirmation:
+            id: CC-ALGO-COWDEN-CARRIER-SURVEILLANCE-DAE135C5DD50
+            label: "Confirmed PTEN germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+            legacy_condition: "Confirmed PTEN germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+        - clinician_confirmation:
+            id: CC-ALGO-COWDEN-CARRIER-SURVEILLANCE-1FF93E182EE4
+            label: "Clinical PHTS / Cowden syndrome (NCCN Cowden / PHTS major + minor criteria met) without confirmed PTEN variant — empirical-surveillance pathway"
+            legacy_condition: "Clinical PHTS / Cowden syndrome (NCCN Cowden / PHTS major + minor criteria met) without confirmed PTEN variant — empirical-surveillance pathway"
     if_true:
       next_step: 2
     if_false:
@@ -57,7 +63,10 @@ decision_tree:
     # and adolescence / early adulthood for breast.
     evaluate:
       all_of:
-        - condition: "Carrier is age ≥7 (thyroid surveillance entry) — pediatric thyroid US recommended from age 7-10 per NCCN PHTS"
+        - clinician_confirmation:
+            id: CC-ALGO-COWDEN-CARRIER-SURVEILLANCE-69366FA72E33
+            label: "Carrier is age ≥7 (thyroid surveillance entry) — pediatric thyroid US recommended from age 7-10 per NCCN PHTS"
+            legacy_condition: "Carrier is age ≥7 (thyroid surveillance entry) — pediatric thyroid US recommended from age 7-10 per NCCN PHTS"
     if_true:
       next_step: 3
     if_false:
@@ -69,8 +78,14 @@ decision_tree:
     # age 30 for breast MRI + mammography per NCCN PHTS.
     evaluate:
       all_of:
-        - condition: "Carrier is female age ≥30 OR carrier of any sex with personal history of Cowden-spectrum cancer"
-        - condition: "Annual breast MRI from age 30 + annual mammography from age 30-35 (alternating q6 mo cadence acceptable per NCCN); clinical breast exam q6 mo from age 25; breast self-awareness counseling"
+        - clinician_confirmation:
+            id: CC-ALGO-COWDEN-CARRIER-SURVEILLANCE-ADFA109EE2CF
+            label: "Carrier is female age ≥30 OR carrier of any sex with personal history of Cowden-spectrum cancer"
+            legacy_condition: "Carrier is female age ≥30 OR carrier of any sex with personal history of Cowden-spectrum cancer"
+        - clinician_confirmation:
+            id: CC-ALGO-COWDEN-CARRIER-SURVEILLANCE-0DCE6905713B
+            label: "Annual breast MRI from age 30 + annual mammography from age 30-35 (alternating q6 mo cadence acceptable per NCCN); clinical breast exam q6 mo from age 25; breast self-awareness counseling"
+            legacy_condition: "Annual breast MRI from age 30 + annual mammography from age 30-35 (alternating q6 mo cadence acceptable per NCCN); clinical breast exam q6 mo from age 25; breast self-awareness counseling"
     if_true:
       next_step: 4
     if_false:
@@ -84,11 +99,26 @@ decision_tree:
     # age 40, dermatologic exam q1y.
     evaluate:
       all_of:
-        - condition: "Thyroid US q1y from age 7 (pediatric entry) or from identification if adult — entry irrespective of carrier sex"
-        - condition: "Endometrial sampling (transvaginal US ± endometrial biopsy) q1y from age 30-35 in female carriers; alternately patient education on early-symptom reporting (abnormal uterine bleeding) — sampling q1y is conservative cadence; some centers defer to symptom-driven evaluation per NCCN PHTS"
-        - condition: "Colonoscopy q5y from age 35 (NCCN PHTS — earlier cadence q1-3y if hamartomatous polyposis identified)"
-        - condition: "Renal imaging (US or MRI) q2y from age 40"
-        - condition: "Annual whole-body dermatologic exam (mucocutaneous features + melanoma surveillance)"
+        - clinician_confirmation:
+            id: CC-ALGO-COWDEN-CARRIER-SURVEILLANCE-C456C2E2D654
+            label: "Thyroid US q1y from age 7 (pediatric entry) or from identification if adult — entry irrespective of carrier sex"
+            legacy_condition: "Thyroid US q1y from age 7 (pediatric entry) or from identification if adult — entry irrespective of carrier sex"
+        - clinician_confirmation:
+            id: CC-ALGO-COWDEN-CARRIER-SURVEILLANCE-22053485427E
+            label: "Endometrial sampling (transvaginal US ± endometrial biopsy) q1y from age 30-35 in female carriers; alternately patient education on early-symptom reporting (abnormal uterine bleeding) — sampling q1y is conservative cadence; some centers defer to symptom-driven evaluation per NCCN PHTS"
+            legacy_condition: "Endometrial sampling (transvaginal US ± endometrial biopsy) q1y from age 30-35 in female carriers; alternately patient education on early-symptom reporting (abnormal uterine bleeding) — sampling q1y is conservative cadence; some centers defer to symptom-driven evaluation per NCCN PHTS"
+        - clinician_confirmation:
+            id: CC-ALGO-COWDEN-CARRIER-SURVEILLANCE-352E4C1EB99F
+            label: "Colonoscopy q5y from age 35 (NCCN PHTS — earlier cadence q1-3y if hamartomatous polyposis identified)"
+            legacy_condition: "Colonoscopy q5y from age 35 (NCCN PHTS — earlier cadence q1-3y if hamartomatous polyposis identified)"
+        - clinician_confirmation:
+            id: CC-ALGO-COWDEN-CARRIER-SURVEILLANCE-1426F4BC28A8
+            label: "Renal imaging (US or MRI) q2y from age 40"
+            legacy_condition: "Renal imaging (US or MRI) q2y from age 40"
+        - clinician_confirmation:
+            id: CC-ALGO-COWDEN-CARRIER-SURVEILLANCE-7C6A041A8087
+            label: "Annual whole-body dermatologic exam (mucocutaneous features + melanoma surveillance)"
+            legacy_condition: "Annual whole-body dermatologic exam (mucocutaneous features + melanoma surveillance)"
     if_true:
       result: IND-COWDEN-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Standard Cowden / PHTS carrier surveillance — multi-organ cadence per NCCN PHTS V.3.2025. Breast: MRI + mammography q1y from age 30. Thyroid: US q1y from age 7. Endometrial: TVUS + sampling q1y from age 30-35 (or symptom-driven). CRC: colonoscopy q5y from age 35. RCC: imaging q2y from age 40. Dermatology: q1y. Risk-reducing mastectomy + hysterectomy + BSO discussions appropriate at age 35-40 for high-anxiety / personal-cancer-history carriers. Cascade testing for all first-degree relatives. Engine should re-route to IND-COWDEN-CARRIER-SURVEILLANCE (standard) or IND-COWDEN-CARRIER-INTENSIFIED (aggressive) at downstream layer based on PTEN domain + personal-cancer-history + family-history modifiers."

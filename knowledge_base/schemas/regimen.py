@@ -24,7 +24,7 @@ from typing import Literal, Optional
 from pydantic import Field, field_validator, model_validator
 
 from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
-from .base import Base, UkraineRegistration
+from .base import Base, ClinicalClaim, UkraineRegistration
 
 
 _LEGACY_DRUG_ID_ALIASES = {
@@ -200,6 +200,7 @@ class Regimen(Base):
     # CHARTER §6.1: ≥2 sign-offs to publish. Structured form — legacy
     # `reviewer_signoffs: 0` (int) coerced to [] by the validator below.
     reviewer_signoffs: list[ReviewerSignoff] = Field(default_factory=list)
+    clinical_claims: list[ClinicalClaim] = Field(default_factory=list)
     notes: Optional[str] = None
 
     @field_validator("reviewer_signoffs", mode="before")

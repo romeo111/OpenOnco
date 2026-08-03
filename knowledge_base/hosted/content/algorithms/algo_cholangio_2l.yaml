@@ -36,7 +36,10 @@ decision_tree:
   evaluate:
     any_of:
     - red_flag: RF-CHOLANGIO-IDH1-R132-ACTIONABLE
-    - condition: "IDH1-R132 mutation confirmed by NGS (any of R132C/H/G/L/S)"
+    - clinician_confirmation:
+        id: CC-ALGO-CHOLANGIO-2L-C3D13FD93F6A
+        label: "IDH1-R132 mutation confirmed by NGS (any of R132C/H/G/L/S)"
+        legacy_condition: "IDH1-R132 mutation confirmed by NGS (any of R132C/H/G/L/S)"
   if_true:
     result: IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
     notes: >
@@ -56,7 +59,10 @@ decision_tree:
 - step: 2
   evaluate:
     any_of:
-    - condition: "HER2 amplification (IHC 3+ OR IHC 2+/ISH-amp) or HER2 overexpression per ASCO/CAP gastric criteria"
+    - clinician_confirmation:
+        id: CC-ALGO-CHOLANGIO-2L-C46419AA7696
+        label: "HER2 amplification (IHC 3+ OR IHC 2+/ISH-amp) or HER2 overexpression per ASCO/CAP gastric criteria"
+        legacy_condition: "HER2 amplification (IHC 3+ OR IHC 2+/ISH-amp) or HER2 overexpression per ASCO/CAP gastric criteria"
   if_true:
     result: IND-CHOLANGIO-2L-HER2-ZANIDATAMAB
     notes: >
@@ -75,7 +81,10 @@ decision_tree:
   evaluate:
     any_of:
     - red_flag: RF-CHOLANGIO-FGFR2-FUSION-ACTIONABLE
-    - condition: "FGFR2 fusion or rearrangement confirmed by RNA-NGS / DNA-NGS fusion-aware / FISH break-apart"
+    - clinician_confirmation:
+        id: CC-ALGO-CHOLANGIO-2L-D9274834305C
+        label: "FGFR2 fusion or rearrangement confirmed by RNA-NGS / DNA-NGS fusion-aware / FISH break-apart"
+        legacy_condition: "FGFR2 fusion or rearrangement confirmed by RNA-NGS / DNA-NGS fusion-aware / FISH break-apart"
   if_true:
     result: IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
   if_false:
@@ -88,7 +97,10 @@ decision_tree:
 - step: 4
   evaluate:
     any_of:
-    - condition: "Disease progression on 1L gem+cis ± durvalumab; no actionable driver biomarker"
+    - clinician_confirmation:
+        id: CC-ALGO-CHOLANGIO-2L-002850CFBEE8
+        label: "Disease progression on 1L gem+cis ± durvalumab; no actionable driver biomarker"
+        legacy_condition: "Disease progression on 1L gem+cis ± durvalumab; no actionable driver biomarker"
   if_true:
     result: IND-CHOLANGIO-ADVANCED-GEM-CIS
   if_false:

@@ -38,8 +38,14 @@ decision_tree:
           value: "smoldering"
         - finding: "shimoyama_indolent"
           value: true
-        - condition: "Shimoyama subtype: smoldering"
-        - condition: "Shimoyama subtype: chronic favourable (no LDH > 2× ULN, no BUN > ULN, no albumin < ULN)"
+        - clinician_confirmation:
+            id: CC-ALGO-ATLL-1L-5C2A6D12AC30
+            label: "Shimoyama subtype: smoldering"
+            legacy_condition: "Shimoyama subtype: smoldering"
+        - clinician_confirmation:
+            id: CC-ALGO-ATLL-1L-BAF5D89336C5
+            label: "Shimoyama subtype: chronic favourable (no LDH > 2× ULN, no BUN > ULN, no albumin < ULN)"
+            legacy_condition: "Shimoyama subtype: chronic favourable (no LDH > 2× ULN, no BUN > ULN, no albumin < ULN)"
     if_true:
       result: IND-ATLL-1L-INDOLENT-AZT-IFN
     if_false:

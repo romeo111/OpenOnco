@@ -21,7 +21,10 @@ decision_tree:
     - {finding: cxcr4_mutation_status, value: WHIM}
     - {finding: cxcr4_mutation_status, value: mutant}
     # Clinical fallback — not covered by RF (MDT-evaluated):
-    - condition: Bortezomib-intolerant due to baseline neuropathy AND PI-class still indicated
+    - clinician_confirmation:
+        id: CC-ALGO-WM-2L-AC67AD421B45
+        label: "Bortezomib-intolerant due to baseline neuropathy AND PI-class still indicated"
+        legacy_condition: "Bortezomib-intolerant due to baseline neuropathy AND PI-class still indicated"
   if_true:
     result: IND-WM-2L-CARFILZOMIB-CXCR4MUT
     notes: >
@@ -44,7 +47,10 @@ decision_tree:
       - red_flag: RF-PRIOR-BTKI-PROGRESSION
     - any_of:
       - red_flag: RF-WM-MYD88-L265P-ACTIONABLE
-    - condition: No high atrial fibrillation / cardiac risk precluding BTKi
+    - clinician_confirmation:
+        id: CC-ALGO-WM-2L-BD28899E92BF
+        label: "No high atrial fibrillation / cardiac risk precluding BTKi"
+        legacy_condition: "No high atrial fibrillation / cardiac risk precluding BTKi"
   if_true:
     result: IND-WM-2L-ZANUBRUTINIB
   if_false:
@@ -53,9 +59,18 @@ decision_tree:
 - step: 3
   evaluate:
     any_of:
-    - condition: Chemo-tolerant fixed-duration preference (avoid continuous BTKi)
-    - condition: Post-cBTKi failure / progression
-    - condition: MYD88-WT (BTKi response markedly weaker)
+    - clinician_confirmation:
+        id: CC-ALGO-WM-2L-F888A10D1B0F
+        label: "Chemo-tolerant fixed-duration preference (avoid continuous BTKi)"
+        legacy_condition: "Chemo-tolerant fixed-duration preference (avoid continuous BTKi)"
+    - clinician_confirmation:
+        id: CC-ALGO-WM-2L-8D3A5667927F
+        label: "Post-cBTKi failure / progression"
+        legacy_condition: "Post-cBTKi failure / progression"
+    - clinician_confirmation:
+        id: CC-ALGO-WM-2L-1CF1E593C062
+        label: "MYD88-WT (BTKi response markedly weaker)"
+        legacy_condition: "MYD88-WT (BTKi response markedly weaker)"
     - red_flag: RF-WM-TRANSFORMATION-PROGRESSION
   if_true:
     result: IND-WM-2L-VRD

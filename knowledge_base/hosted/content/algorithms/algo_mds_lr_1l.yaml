@@ -61,7 +61,10 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "Default LR-MDS symptomatic anemia"
+        - clinician_confirmation:
+            id: CC-ALGO-MDS-LR-1L-B74AA246205E
+            label: "Default LR-MDS symptomatic anemia"
+            legacy_condition: "Default LR-MDS symptomatic anemia"
     if_true:
       result: IND-MDS-LR-1L-ESA
     if_false:

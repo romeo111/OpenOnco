@@ -20,9 +20,18 @@ decision_tree:
 - step: 2
   evaluate:
     any_of:
-    - condition: 'Early relapse: <12 months from end of 1L therapy'
-    - condition: 'Primary refractory: residual FDG-avid disease at end-of-treatment (Deauville 4-5)'
-    - condition: 'Chemorefractory: failure to achieve PR after 2 cycles of any salvage'
+    - clinician_confirmation:
+        id: CC-ALGO-HGBL-DH-2L-97DBA481EE7B
+        label: "Early relapse: <12 months from end of 1L therapy"
+        legacy_condition: "Early relapse: <12 months from end of 1L therapy"
+    - clinician_confirmation:
+        id: CC-ALGO-HGBL-DH-2L-9A01D89D82A5
+        label: "Primary refractory: residual FDG-avid disease at end-of-treatment (Deauville 4-5)"
+        legacy_condition: "Primary refractory: residual FDG-avid disease at end-of-treatment (Deauville 4-5)"
+    - clinician_confirmation:
+        id: CC-ALGO-HGBL-DH-2L-66288293CDE4
+        label: "Chemorefractory: failure to achieve PR after 2 cycles of any salvage"
+        legacy_condition: "Chemorefractory: failure to achieve PR after 2 cycles of any salvage"
     - red_flag: RF-HGBL-DH-HIGH-RISK-BIOLOGY
   if_true:
     result: IND-HGBL-DH-2L-CART-AXICEL
@@ -31,15 +40,27 @@ decision_tree:
 - step: 3
   evaluate:
     all_of:
-    - condition: 'Late relapse: ≥12 months from end of 1L therapy'
+    - clinician_confirmation:
+        id: CC-ALGO-HGBL-DH-2L-EC6A60B86F84
+        label: "Late relapse: ≥12 months from end of 1L therapy"
+        legacy_condition: "Late relapse: ≥12 months from end of 1L therapy"
     - red_flag: RF-FITNESS-ECOG-FIT
     - none_of:
       - red_flag: RF-ORGAN-RENAL-IMPAIRED
     - none_of:
       - red_flag: RF-ORGAN-CARDIAC-LVEF-LOW
-    - condition: 'Transplant-eligible: age ≤65-70, adequate organ function'
-    - condition: Chemosensitive disease (≥PR to 2 cycles of salvage)
-    - condition: CD20+ confirmed at relapse biopsy
+    - clinician_confirmation:
+        id: CC-ALGO-HGBL-DH-2L-33B4B0C1E770
+        label: "Transplant-eligible: age ≤65-70, adequate organ function"
+        legacy_condition: "Transplant-eligible: age ≤65-70, adequate organ function"
+    - clinician_confirmation:
+        id: CC-ALGO-HGBL-DH-2L-667B04BDF4B0
+        label: "Chemosensitive disease (≥PR to 2 cycles of salvage)"
+        legacy_condition: "Chemosensitive disease (≥PR to 2 cycles of salvage)"
+    - clinician_confirmation:
+        id: CC-ALGO-HGBL-DH-2L-0E905E408FCD
+        label: "CD20+ confirmed at relapse biopsy"
+        legacy_condition: "CD20+ confirmed at relapse biopsy"
   if_true:
     result: IND-HGBL-DH-2L-CART-AXICEL
   if_false:
@@ -48,7 +69,10 @@ decision_tree:
 - step: 4
   evaluate:
     any_of:
-    - condition: HGBL-DH relapsed/refractory, CAR-T-eligible, no specific salvage-chemo+autoSCT preference
+    - clinician_confirmation:
+        id: CC-ALGO-HGBL-DH-2L-96646FD7E27E
+        label: "HGBL-DH relapsed/refractory, CAR-T-eligible, no specific salvage-chemo+autoSCT preference"
+        legacy_condition: "HGBL-DH relapsed/refractory, CAR-T-eligible, no specific salvage-chemo+autoSCT preference"
     - red_flag: RF-HGBL-DH-TRANSFORMATION-PROGRESSION
   if_true:
     result: IND-HGBL-DH-2L-CART-AXICEL

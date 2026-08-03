@@ -23,7 +23,10 @@ decision_tree:
   evaluate:
     any_of:
     - red_flag: RF-PROSTATE-HIGH-RISK-BIOLOGY
-    - condition: "BRCA1 or BRCA2 somatic or germline pathogenic variant"
+    - clinician_confirmation:
+        id: CC-ALGO-PROSTATE-MCRPC-1L-0849F618727D
+        label: "BRCA1 or BRCA2 somatic or germline pathogenic variant"
+        legacy_condition: "BRCA1 or BRCA2 somatic or germline pathogenic variant"
   if_true:
     result: IND-PROSTATE-MCRPC-1L-PARPI
     notes: >
@@ -43,7 +46,10 @@ decision_tree:
 - step: 2
   evaluate:
     any_of:
-    - condition: "No prior ARPI (enzalutamide/abiraterone/apalutamide/darolutamide) in mHSPC"
+    - clinician_confirmation:
+        id: CC-ALGO-PROSTATE-MCRPC-1L-29462CEB882A
+        label: "No prior ARPI (enzalutamide/abiraterone/apalutamide/darolutamide) in mHSPC"
+        legacy_condition: "No prior ARPI (enzalutamide/abiraterone/apalutamide/darolutamide) in mHSPC"
   if_true:
     result: IND-PROSTATE-MCRPC-1L-ARPI
     notes: >
@@ -58,8 +64,14 @@ decision_tree:
 - step: 3
   evaluate:
     all_of:
-    - condition: "PSMA-PET/CT positive (all lesions PSMA-avid, no PSMA-negative sites with metastases)"
-    - condition: "Prior taxane AND prior ARPI both received (Lu-PSMA eligibility per VISION)"
+    - clinician_confirmation:
+        id: CC-ALGO-PROSTATE-MCRPC-1L-DA5068EFED57
+        label: "PSMA-PET/CT positive (all lesions PSMA-avid, no PSMA-negative sites with metastases)"
+        legacy_condition: "PSMA-PET/CT positive (all lesions PSMA-avid, no PSMA-negative sites with metastases)"
+    - clinician_confirmation:
+        id: CC-ALGO-PROSTATE-MCRPC-1L-F59DF724E2F5
+        label: "Prior taxane AND prior ARPI both received (Lu-PSMA eligibility per VISION)"
+        legacy_condition: "Prior taxane AND prior ARPI both received (Lu-PSMA eligibility per VISION)"
   if_true:
     result: IND-PROSTATE-MCRPC-2L-LU-PSMA
     notes: >
@@ -73,8 +85,14 @@ decision_tree:
 - step: 4
   evaluate:
     all_of:
-    - condition: "ECOG PS 0-2 (docetaxel eligible)"
-    - condition: "No prior taxane in mHSPC or mCRPC"
+    - clinician_confirmation:
+        id: CC-ALGO-PROSTATE-MCRPC-1L-5B707FFF9B0F
+        label: "ECOG PS 0-2 (docetaxel eligible)"
+        legacy_condition: "ECOG PS 0-2 (docetaxel eligible)"
+    - clinician_confirmation:
+        id: CC-ALGO-PROSTATE-MCRPC-1L-1B195FE6B33E
+        label: "No prior taxane in mHSPC or mCRPC"
+        legacy_condition: "No prior taxane in mHSPC or mCRPC"
   if_true:
     result: IND-PROSTATE-MCRPC-1L-ARPI
     notes: >

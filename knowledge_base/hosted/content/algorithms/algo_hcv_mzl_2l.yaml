@@ -34,7 +34,10 @@ decision_tree:
 - step: 1
   evaluate:
     any_of:
-    - condition: "Aggressive histology suspected at relapse (rapid growth, B-symptoms, LDH ↑↑, extranodal sites)"
+    - clinician_confirmation:
+        id: CC-ALGO-HCV-MZL-2L-80161451535E
+        label: "Aggressive histology suspected at relapse (rapid growth, B-symptoms, LDH ↑↑, extranodal sites)"
+        legacy_condition: "Aggressive histology suspected at relapse (rapid growth, B-symptoms, LDH ↑↑, extranodal sites)"
     - red_flag: RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
   if_true:
     result: IND-HCV-MZL-POST-DAA-SURVEILLANCE    # placeholder; see notes — routes to ALGO-DLBCL
@@ -64,7 +67,10 @@ decision_tree:
     all_of:
     - biomarker: BIO-HCV-RNA
       comparator: "undetectable at SVR12 (HCV cleared)"
-    - condition: "Documented lymphoma progression on imaging or biopsy after DAA"
+    - clinician_confirmation:
+        id: CC-ALGO-HCV-MZL-2L-9B38415A8E29
+        label: "Documented lymphoma progression on imaging or biopsy after DAA"
+        legacy_condition: "Documented lymphoma progression on imaging or biopsy after DAA"
   if_true:
     result: IND-HCV-MZL-POST-DAA-SURVEILLANCE    # placeholder; see notes — BR salvage
   if_false:
@@ -78,7 +84,10 @@ decision_tree:
     all_of:
     - biomarker: BIO-HCV-STATUS
       comparator: "categorical (post-DAA)"
-    - condition: "No documented relapse / progression"
+    - clinician_confirmation:
+        id: CC-ALGO-HCV-MZL-2L-D7DC0B6BB314
+        label: "No documented relapse / progression"
+        legacy_condition: "No documented relapse / progression"
   if_true:
     result: IND-HCV-MZL-POST-DAA-SURVEILLANCE
   if_false:

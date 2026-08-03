@@ -17,13 +17,13 @@ SDK. Active clinical skill modules must remain free of LLM client imports.
 from __future__ import annotations
 
 import json
-import copy
 import os
 import re
-import traceback
+import ipaddress
+import time
 import urllib.error
 import urllib.request
-import hashlib
+from collections import OrderedDict
 from datetime import datetime, timezone
 from dataclasses import dataclass
 from functools import lru_cache
@@ -44,17 +44,24 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses"
 DEFAULT_MODEL = "gpt-5.2"
-MAX_QUESTIONS_PER_USER = 3
-_USAGE_COUNTS: dict[str, int] = {}
-_ANSWER_CACHE: dict[tuple[str, str], dict[str, Any]] = {}
+MAX_QUESTIONS_PER_IP = 3
+QUOTA_WINDOW_SECONDS = 60 * 60
+MAX_QUOTA_PRINCIPALS = 4096
+MAX_REQUEST_BODY_BYTES = 16_384
+# Bound the process-local limiter: this is only an abuse-control backstop, not
+# durable authentication or an authorization mechanism.
+_USAGE_COUNTS: OrderedDict[str, tuple[float, int]] = OrderedDict()
 
 DISCLAIMER_UK = (
     "OpenOnco формує чернетку для tumor board. Це не медична порада, "
-    "не автономне клінічне рішення і потребує перевірки лікарем."
+    "не автономне клінічне рішення. Не займайтеся самолікуванням: покажіть "
+    "цю відповідь своєму лікарю, який має підтвердити або спростувати її "
+    "для вашого конкретного випадку."
 )
 DISCLAIMER_EN = (
     "OpenOnco returns a tumor-board draft. It is not medical advice, not an "
-    "autonomous clinical decision, and must be verified by a clinician."
+    "autonomous clinical decision. Do not self-medicate: show this response "
+    "to your clinician, who must confirm or reject it for your specific case."
 )
 
 
@@ -825,6 +832,7 @@ def call_openai_json(
 
     body = {
         "model": model or os.environ.get("OPENAI_MODEL", DEFAULT_MODEL),
+        "store": False,
         "input": [
             {"role": "system", "content": system},
             {"role": "user", "content": user},
@@ -851,8 +859,9 @@ def call_openai_json(
         with urllib.request.urlopen(req, timeout=45) as resp:
             raw = resp.read().decode("utf-8")
     except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"OpenAI API error {exc.code}: {detail}") from exc
+        # Do not expose an upstream response, which can contain request or
+        # provider details, to callers of the public endpoint.
+        raise RuntimeError(f"OpenAI API error {exc.code}") from exc
     text = _response_text(json.loads(raw))
     if not text:
         raise RuntimeError("OpenAI response did not contain output_text")
@@ -1106,6 +1115,21 @@ def _track_summary(track: Any) -> dict[str, Any]:
 
 def run_engine(patient: dict[str, Any]) -> EngineSummary:
     try:
+        load = load_content(KB_ROOT)
+        if not load.ok:
+            warnings = [
+                *(f"schema error in {path.name}: {msg[:120]}" for path, msg in load.schema_errors),
+                *(f"ref error in {path.name}: {msg}" for path, msg in load.ref_errors),
+                *(f"contract error in {path.name}: {msg}" for path, msg in load.contract_errors),
+                "Knowledge base validation failed; deterministic clinical output is unavailable.",
+            ]
+            return EngineSummary(
+                mode="unavailable",
+                ok=False,
+                payload={},
+                warnings=warnings,
+                error="knowledge_base_validation_failed",
+            )
         if is_diagnostic_profile(patient) and not is_treatment_profile(patient):
             result = generate_diagnostic_brief(patient, kb_root=KB_ROOT)
             mdt = orchestrate_mdt(patient, result, kb_root=KB_ROOT)
@@ -1351,6 +1375,10 @@ def _request_header(meta: dict[str, Any] | None, name: str) -> str:
 
 
 def _request_ip(meta: dict[str, Any] | None) -> str:
+    """Return a client address, trusting proxy headers only by explicit opt-in."""
+
+    if os.environ.get("OPENONCO_TRUST_PROXY_HEADERS") != "1":
+        return str((meta or {}).get("client_ip") or "").strip()
     cf_ip = _request_header(meta, "CF-Connecting-IP")
     if cf_ip:
         return cf_ip
@@ -1365,6 +1393,43 @@ def _request_ip(meta: dict[str, Any] | None) -> str:
     if match:
         return match.group(1).strip("[]")
     return str((meta or {}).get("client_ip") or "").strip()
+
+
+def _quota_principal(meta: dict[str, Any] | None) -> str:
+    """Return a normalized, server-derived limiter key.
+
+    Request JSON is deliberately never used here: a browser-supplied user_id
+    can be changed on every request and cannot enforce a quota. Deployments
+    behind a trusted proxy must set OPENONCO_TRUST_PROXY_HEADERS=1.
+    """
+
+    address = _request_ip(meta)
+    try:
+        normalized = ipaddress.ip_address(address).compressed
+    except ValueError:
+        return "ip:unknown"
+    return f"ip:{normalized}"
+
+
+def _quota_usage(principal: str, now: float) -> int:
+    entry = _USAGE_COUNTS.get(principal)
+    if entry is None:
+        return 0
+    window_started, count = entry
+    if now - window_started >= QUOTA_WINDOW_SECONDS:
+        del _USAGE_COUNTS[principal]
+        return 0
+    _USAGE_COUNTS.move_to_end(principal)
+    return count
+
+
+def _record_quota_usage(principal: str, used: int, now: float) -> int:
+    if principal not in _USAGE_COUNTS:
+        while len(_USAGE_COUNTS) >= MAX_QUOTA_PRINCIPALS:
+            _USAGE_COUNTS.popitem(last=False)
+    _USAGE_COUNTS[principal] = (now, used + 1)
+    _USAGE_COUNTS.move_to_end(principal)
+    return used + 1
 
 
 def _audit_log_path() -> Path | None:
@@ -1387,22 +1452,14 @@ def _write_ask_audit_log(
     case_text = str(body.get("case_text") or "")
     row: dict[str, Any] = {
         "ts": datetime.now(timezone.utc).isoformat(),
-        "ip": _request_ip(request_meta),
-        "user_id": str(body.get("user_id") or ""),
         "locale": str(body.get("locale") or "uk"),
         "http_status": http_status,
         "status": response.get("status"),
         "questions_used": response.get("questions_used"),
         "case_text_len": len(case_text),
-        "case_text_sha256": hashlib.sha256(case_text.encode("utf-8")).hexdigest(),
     }
-    if os.environ.get("OPENONCO_ASK_LOG_RAW_INPUT") == "1":
-        row["case_text"] = case_text
-    disease = response.get("patient_profile")
-    if isinstance(disease, dict):
-        disease_obj = disease.get("disease")
-        if isinstance(disease_obj, dict):
-            row["disease_id"] = disease_obj.get("id")
+    # Operational logs are intentionally metadata-only. Do not add client
+    # identifiers, case text, hashes of case text, or inferred diagnoses.
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
@@ -1419,69 +1476,60 @@ def _finalize_json_request(
     try:
         _write_ask_audit_log(body=body, request_meta=request_meta, http_status=status, response=response)
     except Exception:  # pragma: no cover - audit logging must not break answers
-        if os.environ.get("OPENONCO_DEBUG") == "1":
-            response = {**response, "audit_log_error": traceback.format_exc()}
+        pass
     return status, headers, response
-
-
-def _answer_cache_key(case_text: str, locale: str) -> tuple[str, str]:
-    normalized_text = re.sub(r"\s+", " ", case_text.strip())
-    normalized_locale = (locale or "uk").casefold()
-    digest = hashlib.sha256(normalized_text.encode("utf-8")).hexdigest()
-    return normalized_locale, digest
 
 
 def handle_json_request(
     body: dict[str, Any],
     request_meta: dict[str, Any] | None = None,
 ) -> tuple[int, dict[str, str], dict[str, Any]]:
-    locale = str(body.get("locale") or "uk")
-    user_id = str(body.get("user_id") or "").strip()
-    if not user_id:
+    if not isinstance(body, dict):
         return _finalize_json_request(400, _cors_headers(), {
             "status": "error",
-            "message": "user_id is required for per-user quota enforcement",
-            "safety_note": _disclaimer(locale),
-        }, body=body, request_meta=request_meta)
-    used = _USAGE_COUNTS.get(user_id, 0)
-    if used >= MAX_QUESTIONS_PER_USER:
+            "message": "JSON request body must be an object.",
+        }, body={}, request_meta=request_meta)
+    locale = str(body.get("locale") or "uk")
+    principal = _quota_principal(request_meta)
+    used = _quota_usage(principal, time.monotonic())
+    if used >= MAX_QUESTIONS_PER_IP:
         return _finalize_json_request(429, _cors_headers(), {
             "status": "quota_exceeded",
-            "message": f"Question limit reached: {MAX_QUESTIONS_PER_USER} per user.",
+            "message": f"Question limit reached: {MAX_QUESTIONS_PER_IP} per hour.",
             "questions_used": used,
-            "questions_limit": MAX_QUESTIONS_PER_USER,
+            "questions_limit": MAX_QUESTIONS_PER_IP,
             "safety_note": _disclaimer(locale),
         }, body=body, request_meta=request_meta)
+    # Spend the quota before downstream work. An upstream timeout/error still
+    # consumes server and provider resources, so recording only successes
+    # would let callers evade the limiter by repeatedly causing failures.
+    questions_used = _record_quota_usage(principal, used, time.monotonic())
     try:
         case_text = str(body.get("case_text") or "")
-        cache_key = _answer_cache_key(case_text, locale)
-        cached_result = _ANSWER_CACHE.get(cache_key)
-        if cached_result is None:
-            result = answer_clinical_question(case_text, locale=locale)
-            _ANSWER_CACHE[cache_key] = copy.deepcopy(result)
-        else:
-            result = copy.deepcopy(cached_result)
-        _USAGE_COUNTS[user_id] = used + 1
-        result["questions_used"] = _USAGE_COUNTS[user_id]
-        result["questions_limit"] = MAX_QUESTIONS_PER_USER
+        # Do not retain generated answers or patient profiles in process memory.
+        result = answer_clinical_question(case_text, locale=locale)
+        result["questions_used"] = questions_used
+        result["questions_limit"] = MAX_QUESTIONS_PER_IP
         return _finalize_json_request(200, _cors_headers(), result, body=body, request_meta=request_meta)
-    except Exception as exc:  # pylint: disable=broad-except
+    except Exception:  # pylint: disable=broad-except
         return _finalize_json_request(500, _cors_headers(), {
             "status": "error",
-            "message": str(exc),
-            "questions_used": _USAGE_COUNTS.get(user_id, 0),
-            "questions_limit": MAX_QUESTIONS_PER_USER,
-            "trace": traceback.format_exc() if os.environ.get("OPENONCO_DEBUG") == "1" else "",
+            "message": "Clinical request could not be processed. Please try again later.",
+            "questions_used": questions_used,
+            "questions_limit": MAX_QUESTIONS_PER_IP,
             "safety_note": _disclaimer(locale),
         }, body=body, request_meta=request_meta)
 
 
 def _cors_headers() -> dict[str, str]:
-    origin = os.environ.get("OPENONCO_ALLOWED_ORIGIN", "*")
+    origin = os.environ.get("OPENONCO_ALLOWED_ORIGIN", "https://openonco.info").strip()
+    if not origin or origin == "*":
+        origin = "https://openonco.info"
     return {
         "Access-Control-Allow-Origin": origin,
         "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Vary": "Origin",
         "Content-Type": "application/json; charset=utf-8",
     }
 

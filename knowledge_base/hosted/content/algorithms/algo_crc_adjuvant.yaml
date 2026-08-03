@@ -22,8 +22,14 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Stage II (T3-4 N0 M0) post-R0 resection"
-        - condition: "Stage III (any T, N1-2, M0) post-R0 resection"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-283706166661
+            label: "Stage II (T3-4 N0 M0) post-R0 resection"
+            legacy_condition: "Stage II (T3-4 N0 M0) post-R0 resection"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-BDC3BE67F9B1
+            label: "Stage III (any T, N1-2, M0) post-R0 resection"
+            legacy_condition: "Stage III (any T, N1-2, M0) post-R0 resection"
     if_true:
       next_step: 2
     if_false:
@@ -35,7 +41,10 @@ decision_tree:
   - step: 2
     evaluate:
       all_of:
-        - condition: "Stage II (T3-4 N0 M0)"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-1212A2F296E9
+            label: "Stage II (T3-4 N0 M0)"
+            legacy_condition: "Stage II (T3-4 N0 M0)"
         - red_flag: RF-CRC-MSI-H-ACTIONABILITY
     if_true:
       result: null
@@ -51,8 +60,14 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "Stage II (T3-4 N0 M0)"
-        - condition: "High-risk features absent: T3, ≥12 nodes examined, no perforation, no obstruction, no LVI, no PNI, moderately differentiated"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-1212A2F296E9
+            label: "Stage II (T3-4 N0 M0)"
+            legacy_condition: "Stage II (T3-4 N0 M0)"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-63EBA9D05BB7
+            label: "High-risk features absent: T3, ≥12 nodes examined, no perforation, no obstruction, no LVI, no PNI, moderately differentiated"
+            legacy_condition: "High-risk features absent: T3, ≥12 nodes examined, no perforation, no obstruction, no LVI, no PNI, moderately differentiated"
     if_true:
       result: null
       notes: >
@@ -66,8 +81,14 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Stage III (any T, N1-2, M0)"
-        - condition: "Stage II high-risk (T4 OR <12 nodes OR perforation OR obstruction OR LVI OR PNI OR poor differentiation)"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-9EBD05A1257B
+            label: "Stage III (any T, N1-2, M0)"
+            legacy_condition: "Stage III (any T, N1-2, M0)"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-33A8C8F84EDD
+            label: "Stage II high-risk (T4 OR <12 nodes OR perforation OR obstruction OR LVI OR PNI OR poor differentiation)"
+            legacy_condition: "Stage II high-risk (T4 OR <12 nodes OR perforation OR obstruction OR LVI OR PNI OR poor differentiation)"
     if_true:
       next_step: 5
 
@@ -79,8 +100,14 @@ decision_tree:
   - step: 5
     evaluate:
       all_of:
-        - condition: "Stage III (N1-2 M0)"
-        - condition: "Low-risk: T1-3 N1 (not T4, not N2)"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-ABC6ACC956C0
+            label: "Stage III (N1-2 M0)"
+            legacy_condition: "Stage III (N1-2 M0)"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-48FDABFA4F59
+            label: "Low-risk: T1-3 N1 (not T4, not N2)"
+            legacy_condition: "Low-risk: T1-3 N1 (not T4, not N2)"
     if_true:
       result: IND-CRC-ADJUVANT-STAGE3-CAPOX
       notes: >
@@ -103,8 +130,14 @@ decision_tree:
   - step: 6
     evaluate:
       any_of:
-        - condition: "Stage III high-risk: T4 or N2 (per IDEA stratification)"
-        - condition: "Stage II high-risk (T4 OR adverse features, MSS)"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-6D4467B88987
+            label: "Stage III high-risk: T4 or N2 (per IDEA stratification)"
+            legacy_condition: "Stage III high-risk: T4 or N2 (per IDEA stratification)"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-822C6B81186C
+            label: "Stage II high-risk (T4 OR adverse features, MSS)"
+            legacy_condition: "Stage II high-risk (T4 OR adverse features, MSS)"
     if_true:
       next_step: 7
 
@@ -112,7 +145,10 @@ decision_tree:
   - step: 7
     evaluate:
       any_of:
-        - condition: "CrCl <30 mL/min OR patient cannot reliably take oral medications"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-ADJUVANT-ABCB28EB0CA3
+            label: "CrCl <30 mL/min OR patient cannot reliably take oral medications"
+            legacy_condition: "CrCl <30 mL/min OR patient cannot reliably take oral medications"
     if_true:
       result: IND-CRC-ADJUVANT-STAGE3-FOLFOX
       notes: "FOLFOX 6 months (mFOLFOX6 q2w × 12 cycles). Renal contraindication to capecitabine."

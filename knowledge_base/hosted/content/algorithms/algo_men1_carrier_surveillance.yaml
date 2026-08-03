@@ -47,8 +47,14 @@ decision_tree:
     # phenocopy CDKN1B (MEN4) variant.
     evaluate:
       any_of:
-        - condition: "Confirmed MEN1 germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
-        - condition: "Confirmed CDKN1B (p27Kip1) germline pathogenic variant (MEN4 — clinical phenocopy with overlapping surveillance protocol)"
+        - clinician_confirmation:
+            id: CC-ALGO-MEN1-CARRIER-SURVEILLANCE-282BE45A45F7
+            label: "Confirmed MEN1 germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+            legacy_condition: "Confirmed MEN1 germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+        - clinician_confirmation:
+            id: CC-ALGO-MEN1-CARRIER-SURVEILLANCE-EB7671608B35
+            label: "Confirmed CDKN1B (p27Kip1) germline pathogenic variant (MEN4 — clinical phenocopy with overlapping surveillance protocol)"
+            legacy_condition: "Confirmed CDKN1B (p27Kip1) germline pathogenic variant (MEN4 — clinical phenocopy with overlapping surveillance protocol)"
     if_true:
       next_step: 2
     if_false:
@@ -61,7 +67,10 @@ decision_tree:
     # earlier in carriers with family-history of childhood-onset pNET.
     evaluate:
       all_of:
-        - condition: "Carrier is age ≥5 (pediatric pediatric entry) OR pediatric carrier under family-history-modified entry (e.g., proband sibling with onset <10) — see notes"
+        - clinician_confirmation:
+            id: CC-ALGO-MEN1-CARRIER-SURVEILLANCE-030A0C8B0700
+            label: "Carrier is age ≥5 (pediatric pediatric entry) OR pediatric carrier under family-history-modified entry (e.g., proband sibling with onset <10) — see notes"
+            legacy_condition: "Carrier is age ≥5 (pediatric pediatric entry) OR pediatric carrier under family-history-modified entry (e.g., proband sibling with onset <10) — see notes"
     if_true:
       next_step: 3
     if_false:
@@ -74,7 +83,10 @@ decision_tree:
     # chromogranin A + IGF-1 + prolactin (Endocrine Society 2012/2023).
     evaluate:
       all_of:
-        - condition: "Annual biochemical surveillance ordered: calcium, ionised calcium, PTH (parathyroid); fasting glucose, insulin, proinsulin (insulinoma); gastrin, chromogranin A (gastrinoma); pancreatic polypeptide, glucagon, VIP, somatostatin (other functional NETs); prolactin, IGF-1 (pituitary); ACTH / cortisol / DHEA-S (adrenal — every 1-3 years per imaging findings)"
+        - clinician_confirmation:
+            id: CC-ALGO-MEN1-CARRIER-SURVEILLANCE-BED83B5E00C5
+            label: "Annual biochemical surveillance ordered: calcium, ionised calcium, PTH (parathyroid); fasting glucose, insulin, proinsulin (insulinoma); gastrin, chromogranin A (gastrinoma); pancreatic polypeptide, glucagon, VIP, somatostatin (other functional NETs); prolactin, IGF-1 (pituitary); ACTH / cortisol / DHEA-S (adrenal — every 1-3 years per imaging findings)"
+            legacy_condition: "Annual biochemical surveillance ordered: calcium, ionised calcium, PTH (parathyroid); fasting glucose, insulin, proinsulin (insulinoma); gastrin, chromogranin A (gastrinoma); pancreatic polypeptide, glucagon, VIP, somatostatin (other functional NETs); prolactin, IGF-1 (pituitary); ACTH / cortisol / DHEA-S (adrenal — every 1-3 years per imaging findings)"
     if_true:
       next_step: 4
     if_false:
@@ -87,9 +99,18 @@ decision_tree:
     # parathyroid.
     evaluate:
       all_of:
-        - condition: "Pituitary MRI ordered: baseline at age 5-10, then q3y (more frequent if symptoms or biochemical abnormality)"
-        - condition: "Abdominal MRI (with pancreatic protocol) ordered: from age 10 q1-3y; or EUS q1-3y as preferred high-sensitivity modality for small pNETs (≤1cm)"
-        - condition: "Thymic / bronchial imaging: chest CT (low-dose) or MRI q1-2y from age 15-20 — thymic NETs in MEN1 are high-mortality (median 9.5y survival per Goudet 2015 PMID 25646800)"
+        - clinician_confirmation:
+            id: CC-ALGO-MEN1-CARRIER-SURVEILLANCE-4E860E89FD85
+            label: "Pituitary MRI ordered: baseline at age 5-10, then q3y (more frequent if symptoms or biochemical abnormality)"
+            legacy_condition: "Pituitary MRI ordered: baseline at age 5-10, then q3y (more frequent if symptoms or biochemical abnormality)"
+        - clinician_confirmation:
+            id: CC-ALGO-MEN1-CARRIER-SURVEILLANCE-90EC7BE6CC1C
+            label: "Abdominal MRI (with pancreatic protocol) ordered: from age 10 q1-3y; or EUS q1-3y as preferred high-sensitivity modality for small pNETs (≤1cm)"
+            legacy_condition: "Abdominal MRI (with pancreatic protocol) ordered: from age 10 q1-3y; or EUS q1-3y as preferred high-sensitivity modality for small pNETs (≤1cm)"
+        - clinician_confirmation:
+            id: CC-ALGO-MEN1-CARRIER-SURVEILLANCE-21C3BBE83D34
+            label: "Thymic / bronchial imaging: chest CT (low-dose) or MRI q1-2y from age 15-20 — thymic NETs in MEN1 are high-mortality (median 9.5y survival per Goudet 2015 PMID 25646800)"
+            legacy_condition: "Thymic / bronchial imaging: chest CT (low-dose) or MRI q1-2y from age 15-20 — thymic NETs in MEN1 are high-mortality (median 9.5y survival per Goudet 2015 PMID 25646800)"
     if_true:
       result: IND-MEN1-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Standard MEN1 carrier surveillance protocol — biochemistry + imaging per Endocrine Society / NCCN cadence. Carriers with aggressive-phenotype MEN1 mutations (specific JunD-binding-loss codons per Thevenon 2013 PMID 23348160) or family-history of childhood-onset pNET / thymic NET may benefit from intensified cadence. pNET >1-2 cm typically prompts surgical evaluation; insulinoma is the most surgical-indication-triggering functional MEN1 pNET. Cascade testing required for all first-degree relatives at age 5 (parathyroid biochemistry) / age 10 (full panel + imaging). Indication routes to MEN1-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE (proper non-regimen plan_track); engine should select sibling IND-MEN1-CARRIER-SURVEILLANCE / IND-MEN1-CARRIER-INTENSIFIED Indications at downstream layer for confirmed-carrier routing."

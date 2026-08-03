@@ -193,6 +193,9 @@ def audit(root: Path = KB_ROOT) -> dict[str, Any]:
     algorithms = _entity_type(result, "algorithms")
     indications = _entity_type(result, "indications")
     regimens = _entity_type(result, "regimens")
+    drug_indications = _entity_type(result, "drug_indications")
+    procedures = _entity_type(result, "procedures")
+    radiation_courses = _entity_type(result, "radiation_courses")
     regimen_by_id = _entity_map(result, "regimens")
 
     # 1. Clinical sign-off.
@@ -225,8 +228,11 @@ def audit(root: Path = KB_ROOT) -> dict[str, Any]:
     solid_missing_2l = sorted(set(solid_diseases) - solid_with_2l_algo)
 
     # 3. Surgery/radiation structure.
-    has_surgery_dir = (root / "surgery").is_dir()
-    has_radiation_dir = (root / "radiation").is_dir() or (root / "radiotherapy").is_dir()
+    # Current KSS §17 entity names are `procedures/` and
+    # `radiation_courses/`; the retired surgery/radiation directory names
+    # must not make the audit report existing structured content as absent.
+    has_procedures = bool(procedures)
+    has_radiation_courses = bool(radiation_courses)
     indication_text_rows = [
         i
         for i in indications
@@ -269,8 +275,30 @@ def audit(root: Path = KB_ROOT) -> dict[str, Any]:
             indication_pairs_with_evidence += len(drugs)
         for drug_id in drugs:
             indication_drug_pairs.add((drug_id, disease_id, ind_id))
-    explicit_label_status_pairs = 0
-    label_status_schema_present = (root / "drug_indications").is_dir()
+    explicit_pairs = {
+        (
+            str(item.get("drug_id")),
+            str(item.get("disease_id")),
+            str(item.get("indication_id")),
+        )
+        for item in drug_indications
+    }
+    assessed_pairs = {
+        (
+            str(item.get("drug_id")),
+            str(item.get("disease_id")),
+            str(item.get("indication_id")),
+        )
+        for item in drug_indications
+        if any(
+            status.get("status") != "not_assessed"
+            for status in (item.get("statuses") or [])
+            if isinstance(status, dict)
+        )
+    }
+    unassessed_pairs = explicit_pairs - assessed_pairs
+    missing_explicit_pairs = indication_drug_pairs - explicit_pairs
+    label_status_entity_dir_present = (root / "drug_indications").is_dir()
 
     gaps = [
         GapMetric(
@@ -308,18 +336,19 @@ def audit(root: Path = KB_ROOT) -> dict[str, Any]:
             id="surgery_radiation_structure",
             title="Surgery/radiation detail",
             current=(
-                "structured surgery entities: "
-                f"{'yes' if has_surgery_dir else 'no'}; structured radiation entities: "
-                f"{'yes' if has_radiation_dir else 'no'}; "
+                f"{len(procedures)} structured procedure entities; "
+                f"{len(radiation_courses)} structured radiation-course entities; "
                 f"{len(indication_text_rows)} indications mention surgery/radiation in text"
             ),
             target="Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields.",
-            status="schema_gap",
-            blocker="Current KB carries surgery/radiation mostly as prose inside indications.",
-            next_action="Add modality schemas first; migrate prose mentions after clinical review.",
+            status="coverage_gap",
+            blocker="The modality schemas and initial entities exist, but many indication-level references remain prose-only.",
+            next_action="Prioritize high-volume prose mentions; attach an existing or newly verified procedure/radiation-course entity to each reviewed indication phase.",
             details={
-                "has_surgery_entity_dir": has_surgery_dir,
-                "has_radiation_entity_dir": has_radiation_dir,
+                "structured_procedure_count": len(procedures),
+                "structured_radiation_course_count": len(radiation_courses),
+                "has_structured_procedures": has_procedures,
+                "has_structured_radiation_courses": has_radiation_courses,
                 "surgery_mentions": sorted(x for x in surgery_mentions if x)[:80],
                 "radiation_mentions": sorted(x for x in radiation_mentions if x)[:80],
                 "mention_count": len(indication_text_rows),
@@ -353,18 +382,25 @@ def audit(root: Path = KB_ROOT) -> dict[str, Any]:
             id="drug_indication_tracking",
             title="Drug indication and off-label tracking",
             current=(
-                f"{len(indication_drug_pairs)} drug-disease-indication pairs inferred from regimens; "
-                f"{explicit_label_status_pairs} carry explicit labeled/off-label status"
+                f"{len(explicit_pairs)}/{len(indication_drug_pairs)} inferred drug-disease-indication pairs "
+                f"have a first-class record; {len(assessed_pairs)} carry a source-backed assessed status"
             ),
             target="Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance.",
-            status="schema_gap",
-            blocker="No first-class drug_indications entity directory/schema is present.",
-            next_action="Introduce a drug_indications entity, then backfill from existing indications/regimens.",
+            status="coverage_gap",
+            blocker="The first-class model is present, but most regimen-derived drug-use pairs still need source-backed assessment.",
+            next_action="Backfill high-volume and high-risk pairs from current regulatory labels first; keep uncertain pairs explicitly not_assessed until verified.",
             details={
-                "drug_indications_schema_present": label_status_schema_present,
+                "drug_indications_entity_dir_present": label_status_entity_dir_present,
+                "drug_indication_records": len(explicit_pairs),
                 "inferred_drug_disease_indication_pairs": len(indication_drug_pairs),
                 "pairs_with_indication_evidence_context": indication_pairs_with_evidence,
-                "explicit_label_status_pairs": explicit_label_status_pairs,
+                "source_backed_assessed_pairs": len(assessed_pairs),
+                "explicitly_not_assessed_pairs": len(unassessed_pairs),
+                "missing_explicit_pair_count": len(missing_explicit_pairs),
+                "missing_explicit_pairs": [
+                    {"drug_id": drug, "disease_id": disease, "indication_id": ind}
+                    for drug, disease, ind in sorted(missing_explicit_pairs)[:80]
+                ],
                 "sample_pairs": [
                     {"drug_id": drug, "disease_id": disease, "indication_id": ind}
                     for drug, disease, ind in sorted(indication_drug_pairs)[:80]
@@ -429,7 +465,9 @@ def render_markdown(report: dict[str, Any]) -> str:
                 f"- Inferred pairs to backfill: {details.get('inferred_drug_disease_indication_pairs', 0)}"
             )
             lines.append(
-                f"- Explicit labeled/off-label statuses: {details.get('explicit_label_status_pairs', 0)}"
+                f"- First-class records: {details.get('drug_indication_records', 0)}; "
+                f"source-backed assessed statuses: {details.get('source_backed_assessed_pairs', 0)}; "
+                f"explicitly not assessed: {details.get('explicitly_not_assessed_pairs', 0)}"
             )
         lines.append("")
     lines.append("## Machine-readable outputs")

@@ -48,7 +48,10 @@ decision_tree:
     # Free-text retained — no fitness RF for chemo-line count exists.
     evaluate:
       any_of:
-        - condition: "≥1 prior chemo line for metastatic disease"
+        - clinician_confirmation:
+            id: CC-ALGO-BREAST-TNBC-2L-BE3119274828
+            label: "≥1 prior chemo line for metastatic disease"
+            legacy_condition: "≥1 prior chemo line for metastatic disease"
     if_true:
       result: IND-BREAST-TNBC-2L-T-DXD-HER2-LOW
     if_false:
@@ -60,7 +63,10 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Non-BRCA AND HER2 IHC 0 metastatic TNBC ≥2L"
+        - clinician_confirmation:
+            id: CC-ALGO-BREAST-TNBC-2L-B6E03FB567F9
+            label: "Non-BRCA AND HER2 IHC 0 metastatic TNBC ≥2L"
+            legacy_condition: "Non-BRCA AND HER2 IHC 0 metastatic TNBC ≥2L"
     if_true:
       result: IND-BREAST-TNBC-2L-SACITUZUMAB
     if_false:

@@ -36,7 +36,10 @@ decision_tree:
     # of attenuated FAP (AFAP) pedigrees as Lynch.
     evaluate:
       any_of:
-        - condition: "Familial adenomatous polyposis (FAP) confirmed or strongly suspected in pedigree"
+        - clinician_confirmation:
+            id: CC-ALGO-AMSTERDAM-II-LYNCH-E86B66B35096
+            label: "Familial adenomatous polyposis (FAP) confirmed or strongly suspected in pedigree"
+            legacy_condition: "Familial adenomatous polyposis (FAP) confirmed or strongly suspected in pedigree"
     if_true:
       result: null
       notes: "FAP exclusion fires — route to ALGO-CLASSIC-FAP-CRITERIA instead."
@@ -50,8 +53,14 @@ decision_tree:
     # revised guidelines — kept inclusive here.
     evaluate:
       all_of:
-        - condition: "≥3 relatives with histologically verified Lynch-spectrum cancer (CRC, endometrial, small bowel, urothelial, gastric, ovarian, hepatobiliary, brain, sebaceous skin)"
-        - condition: "One is a first-degree relative of the other two"
+        - clinician_confirmation:
+            id: CC-ALGO-AMSTERDAM-II-LYNCH-8BBEC9C26C97
+            label: "≥3 relatives with histologically verified Lynch-spectrum cancer (CRC, endometrial, small bowel, urothelial, gastric, ovarian, hepatobiliary, brain, sebaceous skin)"
+            legacy_condition: "≥3 relatives with histologically verified Lynch-spectrum cancer (CRC, endometrial, small bowel, urothelial, gastric, ovarian, hepatobiliary, brain, sebaceous skin)"
+        - clinician_confirmation:
+            id: CC-ALGO-AMSTERDAM-II-LYNCH-96F073D9F9D7
+            label: "One is a first-degree relative of the other two"
+            legacy_condition: "One is a first-degree relative of the other two"
     if_true:
       next_step: 3
     if_false:
@@ -61,7 +70,10 @@ decision_tree:
     # Criterion 2: ≥2 successive generations affected.
     evaluate:
       all_of:
-        - condition: "Lynch-spectrum cancers span at least two successive generations"
+        - clinician_confirmation:
+            id: CC-ALGO-AMSTERDAM-II-LYNCH-ABA35BCABAE5
+            label: "Lynch-spectrum cancers span at least two successive generations"
+            legacy_condition: "Lynch-spectrum cancers span at least two successive generations"
     if_true:
       next_step: 4
     if_false:
@@ -71,7 +83,10 @@ decision_tree:
     # Criterion 3: ≥1 cancer diagnosed before age 50.
     evaluate:
       all_of:
-        - condition: "At least one Lynch-spectrum cancer diagnosed at age <50 years"
+        - clinician_confirmation:
+            id: CC-ALGO-AMSTERDAM-II-LYNCH-BD31574D886E
+            label: "At least one Lynch-spectrum cancer diagnosed at age <50 years"
+            legacy_condition: "At least one Lynch-spectrum cancer diagnosed at age <50 years"
     if_true:
       next_step: 5
     if_false:
@@ -81,7 +96,10 @@ decision_tree:
     # Criterion 4: tumors histologically verified.
     evaluate:
       all_of:
-        - condition: "Tumors verified by pathology (histologic confirmation)"
+        - clinician_confirmation:
+            id: CC-ALGO-AMSTERDAM-II-LYNCH-C7964D850078
+            label: "Tumors verified by pathology (histologic confirmation)"
+            legacy_condition: "Tumors verified by pathology (histologic confirmation)"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Amsterdam II SATISFIED — route to enhanced surveillance pathway which begins with genetic counseling + germline MMR/EPCAM panel testing as the first action. Carrier-positive patients continue on the carrier-surveillance arm; declined / VUS / negative patients continue on the empirical-surveillance arm. The Indication's rationale field documents the bifurcation."

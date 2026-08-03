@@ -44,7 +44,10 @@ decision_tree:
     # Lynch-specific cascade.
     evaluate:
       all_of:
-        - condition: "Index patient (proband) has confirmed Lynch syndrome germline pathogenic or likely-pathogenic (ACMG class 4/5) variant in MLH1, MSH2, MSH6, PMS2, or EPCAM"
+        - clinician_confirmation:
+            id: CC-ALGO-CARRIER-CASCADE-LYNCH-24C596760D90
+            label: "Index patient (proband) has confirmed Lynch syndrome germline pathogenic or likely-pathogenic (ACMG class 4/5) variant in MLH1, MSH2, MSH6, PMS2, or EPCAM"
+            legacy_condition: "Index patient (proband) has confirmed Lynch syndrome germline pathogenic or likely-pathogenic (ACMG class 4/5) variant in MLH1, MSH2, MSH6, PMS2, or EPCAM"
     if_true:
       next_step: 2
     if_false:
@@ -55,7 +58,10 @@ decision_tree:
     # onset only), age threshold is 18 — no pediatric testing.
     evaluate:
       any_of:
-        - condition: "Index patient has living first-degree relatives (parents, full siblings, biological children) age ≥18"
+        - clinician_confirmation:
+            id: CC-ALGO-CARRIER-CASCADE-LYNCH-3A572A745C0A
+            label: "Index patient has living first-degree relatives (parents, full siblings, biological children) age ≥18"
+            legacy_condition: "Index patient has living first-degree relatives (parents, full siblings, biological children) age ≥18"
     if_true:
       next_step: 3
     if_false:
@@ -67,8 +73,14 @@ decision_tree:
     # known family variant; ~$250-500 typical cost.
     evaluate:
       all_of:
-        - condition: "Each adult FDR offered pre-test genetic counseling (informed consent, implications, GINA/EU GDPR considerations)"
-        - condition: "Targeted single-site testing for the known family variant ordered (NOT full Lynch panel — wasteful when family variant is documented)"
+        - clinician_confirmation:
+            id: CC-ALGO-CARRIER-CASCADE-LYNCH-2255DEA52CF8
+            label: "Each adult FDR offered pre-test genetic counseling (informed consent, implications, GINA/EU GDPR considerations)"
+            legacy_condition: "Each adult FDR offered pre-test genetic counseling (informed consent, implications, GINA/EU GDPR considerations)"
+        - clinician_confirmation:
+            id: CC-ALGO-CARRIER-CASCADE-LYNCH-406717EE398E
+            label: "Targeted single-site testing for the known family variant ordered (NOT full Lynch panel — wasteful when family variant is documented)"
+            legacy_condition: "Targeted single-site testing for the known family variant ordered (NOT full Lynch panel — wasteful when family variant is documented)"
     if_true:
       next_step: 5
     if_false:
@@ -78,7 +90,10 @@ decision_tree:
     # SDR / TDR fallback when adult FDRs unavailable.
     evaluate:
       any_of:
-        - condition: "Second- or third-degree relative is available (≥18), eligible (consent + counseling), and motivated to test"
+        - clinician_confirmation:
+            id: CC-ALGO-CARRIER-CASCADE-LYNCH-59D147960A83
+            label: "Second- or third-degree relative is available (≥18), eligible (consent + counseling), and motivated to test"
+            legacy_condition: "Second- or third-degree relative is available (≥18), eligible (consent + counseling), and motivated to test"
     if_true:
       next_step: 5
     if_false:
@@ -91,7 +106,10 @@ decision_tree:
     # relatives of confirmed carriers).
     evaluate:
       all_of:
-        - condition: "Single-site test result available + post-test disclosure counseling completed"
+        - clinician_confirmation:
+            id: CC-ALGO-CARRIER-CASCADE-LYNCH-DEFF1C0DE8EC
+            label: "Single-site test result available + post-test disclosure counseling completed"
+            legacy_condition: "Single-site test result available + post-test disclosure counseling completed"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Lynch cascade complete. CARRIER-POSITIVE FDRs → route to Lynch carrier surveillance. Gene-specific surveillance entry: MLH1/MSH2 colonoscopy q1y from 20-25 (or 5y younger than youngest family CRC); MSH6 colonoscopy q1-2y from 25-30; PMS2 colonoscopy q1-2y from 30-35; EPCAM colonoscopy q1y from 25 (mimics MSH2). Women: discuss risk-reducing hysterectomy + BSO at age 40-45 (or post-childbearing). Annual aspirin 600 mg discussion (CAPP2 trial: ~50% CRC risk reduction; v0.2 dedicated chemoprevention Indication pending). CARRIER-NEGATIVE FDRs → reassure (general-population risk), CRC screening per USPSTF (colonoscopy q10y from 45), no need for Lynch cascade in their descendants. NEXT-WAVE CASCADE: confirmed-carrier FDRs' children become eligible at age 18 — trigger next cascade wave. Indication routes to SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE pending v0.2 authoring of dedicated post-cascade Lynch-carrier-confirmed Indication."

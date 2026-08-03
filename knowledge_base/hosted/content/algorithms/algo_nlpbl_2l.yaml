@@ -42,7 +42,10 @@ decision_tree:
     description: "MANDATORY re-biopsy before 2L treatment selection"
     evaluate:
       any_of:
-        - condition: "Re-biopsy NOT performed at relapse site"
+        - clinician_confirmation:
+            id: CC-ALGO-NLPBL-2L-1F0FF572AAEC
+            label: "Re-biopsy NOT performed at relapse site"
+            legacy_condition: "Re-biopsy NOT performed at relapse site"
         - red_flag: RF-NLPBL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-NLPBL-2L-RCHOP-TRANSFORMATION  # halt placeholder; see notes — algo MUST stop here until biopsy supplied
@@ -59,7 +62,10 @@ decision_tree:
       any_of:
         - red_flag: RF-NLPBL-TRANSFORMATION-PROGRESSION
         - red_flag: RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
-        - condition: "Re-biopsy confirms THRLBCL or DLBCL-like transformation"
+        - clinician_confirmation:
+            id: CC-ALGO-NLPBL-2L-89FAC3A1CD87
+            label: "Re-biopsy confirms THRLBCL or DLBCL-like transformation"
+            legacy_condition: "Re-biopsy confirms THRLBCL or DLBCL-like transformation"
     if_true:
       result: IND-NLPBL-2L-RCHOP-TRANSFORMATION
     if_false:
@@ -73,8 +79,14 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "Re-biopsy: NLPBL histology preserved (LP-cells, CD20+ CD15- CD30-)"
-        - condition: "Indolent presentation, no B-symptoms, no LDH elevation"
+        - clinician_confirmation:
+            id: CC-ALGO-NLPBL-2L-328A8B7FAFA3
+            label: "Re-biopsy: NLPBL histology preserved (LP-cells, CD20+ CD15- CD30-)"
+            legacy_condition: "Re-biopsy: NLPBL histology preserved (LP-cells, CD20+ CD15- CD30-)"
+        - clinician_confirmation:
+            id: CC-ALGO-NLPBL-2L-728F44E681F2
+            label: "Indolent presentation, no B-symptoms, no LDH elevation"
+            legacy_condition: "Indolent presentation, no B-symptoms, no LDH elevation"
     if_true:
       result: IND-NLPBL-2L-RCHOP-TRANSFORMATION  # placeholder; see notes — R-mono retreatment ± ISRT alternative
     if_false:
@@ -87,7 +99,10 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Transformation suspected at relapse — biopsy pending or inconclusive"
+        - clinician_confirmation:
+            id: CC-ALGO-NLPBL-2L-5AF0C064B68F
+            label: "Transformation suspected at relapse — biopsy pending or inconclusive"
+            legacy_condition: "Transformation suspected at relapse — biopsy pending or inconclusive"
         - red_flag: RF-NLPBL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-NLPBL-2L-RCHOP-TRANSFORMATION

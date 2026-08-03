@@ -33,7 +33,10 @@ decision_tree:
     # Gate 1: classic FAP phenotype (≥100 adenomas) — pathognomonic.
     evaluate:
       any_of:
-        - condition: "≥100 colorectal adenomatous polyps on endoscopy or pathology, at any age"
+        - clinician_confirmation:
+            id: CC-ALGO-CLASSIC-FAP-CRITERIA-2DD47684517C
+            label: "≥100 colorectal adenomatous polyps on endoscopy or pathology, at any age"
+            legacy_condition: "≥100 colorectal adenomatous polyps on endoscopy or pathology, at any age"
     if_true:
       result: IND-FAP-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Classic FAP phenotype satisfied (≥100 adenomas) — refer for germline APC + MUTYH testing (MUTYH for biallelic recessive AP — phenocopies FAP), genetic counseling, surgical evaluation for colectomy timing. Children of confirmed APC carriers warrant cascade testing + sigmoidoscopy from age 10-12."
@@ -43,7 +46,10 @@ decision_tree:
     # Gate 2: family APC pathogenic variant identified.
     evaluate:
       any_of:
-        - condition: "Known family history of APC germline pathogenic / likely-pathogenic variant identified in first-degree relative"
+        - clinician_confirmation:
+            id: CC-ALGO-CLASSIC-FAP-CRITERIA-794D382A3DE4
+            label: "Known family history of APC germline pathogenic / likely-pathogenic variant identified in first-degree relative"
+            legacy_condition: "Known family history of APC germline pathogenic / likely-pathogenic variant identified in first-degree relative"
     if_true:
       result: IND-FAP-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Family APC mutation known — cascade testing for at-risk relatives. Counseling, predictive testing (single-site analysis for the known family variant), surveillance from age 10-12 for classic FAP families or 18-20 for AFAP families."
@@ -54,11 +60,23 @@ decision_tree:
     # warrants APC + MUTYH biallelic testing.
     evaluate:
       all_of:
-        - condition: "10-99 colorectal adenomatous polyps cumulative on endoscopy / pathology"
+        - clinician_confirmation:
+            id: CC-ALGO-CLASSIC-FAP-CRITERIA-4306D90C884F
+            label: "10-99 colorectal adenomatous polyps cumulative on endoscopy / pathology"
+            legacy_condition: "10-99 colorectal adenomatous polyps cumulative on endoscopy / pathology"
         - any_of:
-            - condition: "Personal history of colorectal cancer + polyposis"
-            - condition: "First-degree relative with polyposis (≥10 polyps) or CRC <50"
-            - condition: "Extracolonic FAP-spectrum features: desmoid tumor, congenital hypertrophy of retinal pigment epithelium (CHRPE), osteoma, epidermoid cyst, duodenal/ampullary adenoma, hepatoblastoma in childhood, papillary thyroid cancer (cribriform-morular variant)"
+            - clinician_confirmation:
+                id: CC-ALGO-CLASSIC-FAP-CRITERIA-B4CFAA020145
+                label: "Personal history of colorectal cancer + polyposis"
+                legacy_condition: "Personal history of colorectal cancer + polyposis"
+            - clinician_confirmation:
+                id: CC-ALGO-CLASSIC-FAP-CRITERIA-FE3C872788B2
+                label: "First-degree relative with polyposis (≥10 polyps) or CRC <50"
+                legacy_condition: "First-degree relative with polyposis (≥10 polyps) or CRC <50"
+            - clinician_confirmation:
+                id: CC-ALGO-CLASSIC-FAP-CRITERIA-CE14A3999F9D
+                label: "Extracolonic FAP-spectrum features: desmoid tumor, congenital hypertrophy of retinal pigment epithelium (CHRPE), osteoma, epidermoid cyst, duodenal/ampullary adenoma, hepatoblastoma in childhood, papillary thyroid cancer (cribriform-morular variant)"
+                legacy_condition: "Extracolonic FAP-spectrum features: desmoid tumor, congenital hypertrophy of retinal pigment epithelium (CHRPE), osteoma, epidermoid cyst, duodenal/ampullary adenoma, hepatoblastoma in childhood, papillary thyroid cancer (cribriform-morular variant)"
     if_true:
       result: IND-FAP-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "AFAP phenotype with supporting feature — refer for germline APC + biallelic MUTYH testing (MAP — MUTYH-associated polyposis — phenocopies AFAP and is autosomal recessive). Genetic counseling, surveillance per NCCN Genetic/Familial High-Risk CRC AFAP protocol."
@@ -69,10 +87,22 @@ decision_tree:
     # — e.g., desmoid before colorectal manifestation).
     evaluate:
       any_of:
-        - condition: "Desmoid tumor at any age in patient without other known cause"
-        - condition: "Hepatoblastoma in infancy / childhood"
-        - condition: "Cribriform-morular variant papillary thyroid cancer"
-        - condition: "Multiple CHRPE lesions on ophthalmologic exam"
+        - clinician_confirmation:
+            id: CC-ALGO-CLASSIC-FAP-CRITERIA-53D035B6CF87
+            label: "Desmoid tumor at any age in patient without other known cause"
+            legacy_condition: "Desmoid tumor at any age in patient without other known cause"
+        - clinician_confirmation:
+            id: CC-ALGO-CLASSIC-FAP-CRITERIA-0EFD502C49A7
+            label: "Hepatoblastoma in infancy / childhood"
+            legacy_condition: "Hepatoblastoma in infancy / childhood"
+        - clinician_confirmation:
+            id: CC-ALGO-CLASSIC-FAP-CRITERIA-86DFBBBC149C
+            label: "Cribriform-morular variant papillary thyroid cancer"
+            legacy_condition: "Cribriform-morular variant papillary thyroid cancer"
+        - clinician_confirmation:
+            id: CC-ALGO-CLASSIC-FAP-CRITERIA-C458B04B15FB
+            label: "Multiple CHRPE lesions on ophthalmologic exam"
+            legacy_condition: "Multiple CHRPE lesions on ophthalmologic exam"
     if_true:
       result: IND-FAP-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Isolated extracolonic FAP-spectrum feature — consider germline APC testing (yield variable: 10-15% for isolated desmoid, ~70% for hepatoblastoma when family history of polyposis, near-100% for multiple CHRPE). Concurrent colonoscopy / sigmoidoscopy to evaluate for polyposis."

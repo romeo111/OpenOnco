@@ -36,7 +36,10 @@ decision_tree:
     # multiple Lynch-spectrum cancers + early-onset CRC + endometrial.
     evaluate:
       any_of:
-        - condition: "MMRPRO combined MLH1 + MSH2 + MSH6 + PMS2 carrier probability ≥20%"
+        - clinician_confirmation:
+            id: CC-ALGO-MMRPRO-71CD4113B7E6
+            label: "MMRPRO combined MLH1 + MSH2 + MSH6 + PMS2 carrier probability ≥20%"
+            legacy_condition: "MMRPRO combined MLH1 + MSH2 + MSH6 + PMS2 carrier probability ≥20%"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "MMRPRO ≥20% — strong indication for germline MMR/EPCAM panel testing + genetic counseling. Diagnostic yield ~40-50% at this threshold. Order tumor MMR-IHC / MSI on proband tissue if available + germline panel concurrently for maximum diagnostic efficiency."
@@ -46,7 +49,10 @@ decision_tree:
     # NCCN testing-recommendation threshold ≥5%.
     evaluate:
       any_of:
-        - condition: "MMRPRO combined MLH1 + MSH2 + MSH6 + PMS2 carrier probability ≥5%"
+        - clinician_confirmation:
+            id: CC-ALGO-MMRPRO-1AEE3A9FC8B5
+            label: "MMRPRO combined MLH1 + MSH2 + MSH6 + PMS2 carrier probability ≥5%"
+            legacy_condition: "MMRPRO combined MLH1 + MSH2 + MSH6 + PMS2 carrier probability ≥5%"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "MMRPRO ≥5% — NCCN testing-recommendation threshold met. Refer for genetic counseling + germline MMR/EPCAM panel. Diagnostic yield ~15-20% at this threshold."
@@ -56,7 +62,10 @@ decision_tree:
     # PREMM5-aligned broader threshold ≥2.5%.
     evaluate:
       any_of:
-        - condition: "MMRPRO combined MLH1 + MSH2 + MSH6 + PMS2 carrier probability ≥2.5%"
+        - clinician_confirmation:
+            id: CC-ALGO-MMRPRO-252BA67E2671
+            label: "MMRPRO combined MLH1 + MSH2 + MSH6 + PMS2 carrier probability ≥2.5%"
+            legacy_condition: "MMRPRO combined MLH1 + MSH2 + MSH6 + PMS2 carrier probability ≥2.5%"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "MMRPRO ≥2.5% — broader testing-suggested threshold (parallel to PREMM5 cutoff). Genetic counseling for shared decision; many programs offer testing at this range given falling cost + high impact. Default-route to enhanced empirical-surveillance pathway if testing declined."

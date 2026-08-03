@@ -24,7 +24,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "STS subtype confirmed as non-GIST, non-Ewing, non-RMS"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-2L-DF697C4DB081
+            label: "STS subtype confirmed as non-GIST, non-Ewing, non-RMS"
+            legacy_condition: "STS subtype confirmed as non-GIST, non-Ewing, non-RMS"
     if_true:
       next_step: 2
     if_false:
@@ -38,7 +41,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "ECOG PS 0-2"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-2L-2819AEB5AB6E
+            label: "ECOG PS 0-2"
+            legacy_condition: "ECOG PS 0-2"
     if_true:
       next_step: 3
     if_false:
@@ -55,7 +61,10 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "STS subtype = leiomyosarcoma (uterine LMS or extra-uterine LMS) OR undifferentiated pleomorphic sarcoma (UPS)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-2L-B5B97185D2CC
+            label: "STS subtype = leiomyosarcoma (uterine LMS or extra-uterine LMS) OR undifferentiated pleomorphic sarcoma (UPS)"
+            legacy_condition: "STS subtype = leiomyosarcoma (uterine LMS or extra-uterine LMS) OR undifferentiated pleomorphic sarcoma (UPS)"
     if_true:
       result: IND-STS-ADVANCED-2L-GEMDOC
       notes: >
@@ -75,7 +84,10 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "STS subtype = liposarcoma (well-differentiated, dedifferentiated, myxoid, pleomorphic)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-2L-D508D7B13E02
+            label: "STS subtype = liposarcoma (well-differentiated, dedifferentiated, myxoid, pleomorphic)"
+            legacy_condition: "STS subtype = liposarcoma (well-differentiated, dedifferentiated, myxoid, pleomorphic)"
     if_true:
       result: null
       notes: >
@@ -97,8 +109,14 @@ decision_tree:
   - step: 5
     evaluate:
       all_of:
-        - condition: "ECOG PS 0-2 AND adequate renal function (CrCl ≥30 mL/min)"
-        - condition: "No severe peripheral neuropathy (Grade ≥2)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-2L-F9C2E4069EF7
+            label: "ECOG PS 0-2 AND adequate renal function (CrCl ≥30 mL/min)"
+            legacy_condition: "ECOG PS 0-2 AND adequate renal function (CrCl ≥30 mL/min)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-2L-1E298CEFB33F
+            label: "No severe peripheral neuropathy (Grade ≥2)"
+            legacy_condition: "No severe peripheral neuropathy (Grade ≥2)"
     if_true:
       result: IND-STS-ADVANCED-2L-GEMDOC
       notes: >

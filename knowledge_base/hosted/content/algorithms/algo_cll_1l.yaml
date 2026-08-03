@@ -53,7 +53,10 @@ decision_tree:
     evaluate:
       all_of:
         - red_flag: RF-FITNESS-ECOG-FIT
-        - condition: "No major anti-CD20 or obinutuzumab contraindication (e.g., active HBV reactivation risk unmanaged, severe infusion history)"
+        - clinician_confirmation:
+            id: CC-ALGO-CLL-1L-5D3D2E370BAE
+            label: "No major anti-CD20 or obinutuzumab contraindication (e.g., active HBV reactivation risk unmanaged, severe infusion history)"
+            legacy_condition: "No major anti-CD20 or obinutuzumab contraindication (e.g., active HBV reactivation risk unmanaged, severe infusion history)"
     if_true:
       result: IND-CLL-1L-AVO
     if_false:

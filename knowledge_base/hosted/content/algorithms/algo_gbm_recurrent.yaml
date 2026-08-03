@@ -20,7 +20,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "No available clinical trial OR patient declines trial"
+        - clinician_confirmation:
+            id: CC-ALGO-GBM-RECURRENT-4DD636C603B3
+            label: "No available clinical trial OR patient declines trial"
+            legacy_condition: "No available clinical trial OR patient declines trial"
     if_true:
       next_step: 2
     if_false:
@@ -34,8 +37,14 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "Progression confirmed on MRI (RANO criteria) OR biopsy-confirmed recurrence"
-        - condition: "Pseudoprogression excluded (>12 weeks from end of RT, or biopsy)"
+        - clinician_confirmation:
+            id: CC-ALGO-GBM-RECURRENT-E3D675581917
+            label: "Progression confirmed on MRI (RANO criteria) OR biopsy-confirmed recurrence"
+            legacy_condition: "Progression confirmed on MRI (RANO criteria) OR biopsy-confirmed recurrence"
+        - clinician_confirmation:
+            id: CC-ALGO-GBM-RECURRENT-00F0ECEC1E79
+            label: "Pseudoprogression excluded (>12 weeks from end of RT, or biopsy)"
+            legacy_condition: "Pseudoprogression excluded (>12 weeks from end of RT, or biopsy)"
     if_true:
       next_step: 3
     if_false:
@@ -60,9 +69,18 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "MGMT promoter methylated"
-        - condition: "Prior TMZ completed (≥6 adjuvant cycles or discontinued due to progression)"
-        - condition: "No prior bevacizumab"
+        - clinician_confirmation:
+            id: CC-ALGO-GBM-RECURRENT-BB291CFC615C
+            label: "MGMT promoter methylated"
+            legacy_condition: "MGMT promoter methylated"
+        - clinician_confirmation:
+            id: CC-ALGO-GBM-RECURRENT-318F847B8FC6
+            label: "Prior TMZ completed (≥6 adjuvant cycles or discontinued due to progression)"
+            legacy_condition: "Prior TMZ completed (≥6 adjuvant cycles or discontinued due to progression)"
+        - clinician_confirmation:
+            id: CC-ALGO-GBM-RECURRENT-1BB3F1798008
+            label: "No prior bevacizumab"
+            legacy_condition: "No prior bevacizumab"
     if_true:
       result: IND-GBM-RECURRENT-BEVACIZUMAB
       notes: >

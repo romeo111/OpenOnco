@@ -16,8 +16,14 @@ decision_tree:
 - step: 1
   evaluate:
     all_of:
-    - condition: "≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38 monoclonal antibody"
-    - condition: "Refractory (progressed during or within 60 days of last line of each class)"
+    - clinician_confirmation:
+        id: CC-ALGO-MM-3L-2A67033AC9EC
+        label: "≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38 monoclonal antibody"
+        legacy_condition: "≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38 monoclonal antibody"
+    - clinician_confirmation:
+        id: CC-ALGO-MM-3L-8A76C36B21F6
+        label: "Refractory (progressed during or within 60 days of last line of each class)"
+        legacy_condition: "Refractory (progressed during or within 60 days of last line of each class)"
   if_true:
     result: IND-MM-4L-TECLISTAMAB
   if_false:
@@ -26,8 +32,14 @@ decision_tree:
 - step: 2
   evaluate:
     all_of:
-    - condition: "Carfilzomib-naive (no prior carfilzomib or carfilzomib-based regimen)"
-    - condition: "≥2 prior lines including ≥1 PI (non-carfilzomib) + ≥1 IMiD"
+    - clinician_confirmation:
+        id: CC-ALGO-MM-3L-1D4F84AD5F93
+        label: "Carfilzomib-naive (no prior carfilzomib or carfilzomib-based regimen)"
+        legacy_condition: "Carfilzomib-naive (no prior carfilzomib or carfilzomib-based regimen)"
+    - clinician_confirmation:
+        id: CC-ALGO-MM-3L-98419569AF53
+        label: "≥2 prior lines including ≥1 PI (non-carfilzomib) + ≥1 IMiD"
+        legacy_condition: "≥2 prior lines including ≥1 PI (non-carfilzomib) + ≥1 IMiD"
     - red_flag: RF-FITNESS-ECOG-FIT
   if_true:
     result: IND-MM-3L-ISA-KD

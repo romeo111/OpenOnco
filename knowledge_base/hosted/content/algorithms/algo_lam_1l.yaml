@@ -18,8 +18,14 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "FEV1 <70% predicted OR declining FEV1 (≥90 mL/year loss)"
-        - condition: "Serum VEGF-D ≥800 pg/mL with bilateral cystic lung disease"
+        - clinician_confirmation:
+            id: CC-ALGO-LAM-1L-24227A3EA133
+            label: "FEV1 <70% predicted OR declining FEV1 (≥90 mL/year loss)"
+            legacy_condition: "FEV1 <70% predicted OR declining FEV1 (≥90 mL/year loss)"
+        - clinician_confirmation:
+            id: CC-ALGO-LAM-1L-58ABC128EF1C
+            label: "Serum VEGF-D ≥800 pg/mL with bilateral cystic lung disease"
+            legacy_condition: "Serum VEGF-D ≥800 pg/mL with bilateral cystic lung disease"
     if_true:
       result: IND-LAM-1L-SIROLIMUS
     if_false:
@@ -28,7 +34,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "Stable LAM with normal lung function (FEV1 ≥70%)"
+        - clinician_confirmation:
+            id: CC-ALGO-LAM-1L-7B28EF3C38CC
+            label: "Stable LAM with normal lung function (FEV1 ≥70%)"
+            legacy_condition: "Stable LAM with normal lung function (FEV1 ≥70%)"
     if_true:
       result: IND-LAM-1L-SIROLIMUS
       notes: "Close monitoring reasonable; treatment threshold FEV1 <70% or decline ≥90 mL/year — sirolimus if threshold met"

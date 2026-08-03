@@ -46,8 +46,14 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "CrCl <50 mL/min OR baseline hearing loss / tinnitus precluding cisplatin"
-        - condition: "Prior cisplatin cumulative exposure ≥300 mg/m^2"
+        - clinician_confirmation:
+            id: CC-ALGO-BURKITT-2L-2CCA0485A347
+            label: "CrCl <50 mL/min OR baseline hearing loss / tinnitus precluding cisplatin"
+            legacy_condition: "CrCl <50 mL/min OR baseline hearing loss / tinnitus precluding cisplatin"
+        - clinician_confirmation:
+            id: CC-ALGO-BURKITT-2L-553EFED5CC7D
+            label: "Prior cisplatin cumulative exposure ≥300 mg/m^2"
+            legacy_condition: "Prior cisplatin cumulative exposure ≥300 mg/m^2"
         - red_flag: RF-BURKITT-ORGAN-DYSFUNCTION
     if_true:
       result: IND-BURKITT-2L-RICE-ASCT
@@ -75,9 +81,18 @@ decision_tree:
           comparator: ">="
         - finding: "bladder_dysfunction"
           value: true
-        - condition: "Prior hemorrhagic cystitis OR pelvic RT field overlap"
-        - condition: "Pre-existing grade ≥2 peripheral neuropathy"
-        - condition: "Bladder dysfunction precluding mesna-protected ifosfamide"
+        - clinician_confirmation:
+            id: CC-ALGO-BURKITT-2L-003825250012
+            label: "Prior hemorrhagic cystitis OR pelvic RT field overlap"
+            legacy_condition: "Prior hemorrhagic cystitis OR pelvic RT field overlap"
+        - clinician_confirmation:
+            id: CC-ALGO-BURKITT-2L-681ED29A2E12
+            label: "Pre-existing grade ≥2 peripheral neuropathy"
+            legacy_condition: "Pre-existing grade ≥2 peripheral neuropathy"
+        - clinician_confirmation:
+            id: CC-ALGO-BURKITT-2L-7B7FF152EF40
+            label: "Bladder dysfunction precluding mesna-protected ifosfamide"
+            legacy_condition: "Bladder dysfunction precluding mesna-protected ifosfamide"
     if_true:
       result: IND-BURKITT-2L-RDHAP-ASCT
     if_false:
@@ -89,7 +104,10 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Fit transplant-eligible relapsed/refractory Burkitt, no R-ICE-specific contraindication"
+        - clinician_confirmation:
+            id: CC-ALGO-BURKITT-2L-DE09A758C8CE
+            label: "Fit transplant-eligible relapsed/refractory Burkitt, no R-ICE-specific contraindication"
+            legacy_condition: "Fit transplant-eligible relapsed/refractory Burkitt, no R-ICE-specific contraindication"
         - red_flag: RF-BURKITT-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-BURKITT-2L-RICE-ASCT

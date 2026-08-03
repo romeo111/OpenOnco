@@ -1,12 +1,11 @@
-"""Generate one minimal auto-stub example per disease with fill >= 50%.
+"""Generate one minimal internal QA profile per supported disease.
 
 For each qualifying disease:
   - examples/auto_<disease_short>.json — minimal valid patient profile
     (disease.id + line_of_therapy + age + ECOG + 1 representative biomarker
     if biomarker_driven)
-  - Label encodes the fill% so the user sees readiness right in the
-    /try.html "Завантажити приклад" dropdown
-    ("DIS-NSCLC — Auto-stub (88% fill)")
+  - Profiles deliberately cover even a 0%-fill disease, because they are
+    used for engine/render regression tests, not as public clinical examples.
 
 Idempotent: skips files that already exist; generator file (CaseEntry list
 patch) is rewritten in place each run.

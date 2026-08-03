@@ -23,8 +23,14 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Unresectable MPM (multidisciplinary assessment: IMIG stage III-IV, bilateral disease, poor PS, or patient declines surgery)"
-        - condition: "Technical unresectability confirmed by thoracic surgery + MDT"
+        - clinician_confirmation:
+            id: CC-ALGO-MESOTHELIOMA-1L-44CCFAEBB990
+            label: "Unresectable MPM (multidisciplinary assessment: IMIG stage III-IV, bilateral disease, poor PS, or patient declines surgery)"
+            legacy_condition: "Unresectable MPM (multidisciplinary assessment: IMIG stage III-IV, bilateral disease, poor PS, or patient declines surgery)"
+        - clinician_confirmation:
+            id: CC-ALGO-MESOTHELIOMA-1L-5EE97CA310D8
+            label: "Technical unresectability confirmed by thoracic surgery + MDT"
+            legacy_condition: "Technical unresectability confirmed by thoracic surgery + MDT"
     if_true:
       next_step: 2
     if_false:
@@ -62,7 +68,10 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "Non-epithelioid histology (sarcomatoid, desmoplastic, or biphasic with sarcomatoid component ≥50%)"
+        - clinician_confirmation:
+            id: CC-ALGO-MESOTHELIOMA-1L-16A3A1060196
+            label: "Non-epithelioid histology (sarcomatoid, desmoplastic, or biphasic with sarcomatoid component ≥50%)"
+            legacy_condition: "Non-epithelioid histology (sarcomatoid, desmoplastic, or biphasic with sarcomatoid component ≥50%)"
     if_true:
       result: IND-MESOTHELIOMA-1L-NIVO-IPI
       notes: >
@@ -81,9 +90,18 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "No active autoimmune disease requiring systemic treatment"
-        - condition: "No solid organ transplant"
-        - condition: "No prior immune-mediated pneumonitis Grade ≥2"
+        - clinician_confirmation:
+            id: CC-ALGO-MESOTHELIOMA-1L-279292E9C2DB
+            label: "No active autoimmune disease requiring systemic treatment"
+            legacy_condition: "No active autoimmune disease requiring systemic treatment"
+        - clinician_confirmation:
+            id: CC-ALGO-MESOTHELIOMA-1L-464F88C26025
+            label: "No solid organ transplant"
+            legacy_condition: "No solid organ transplant"
+        - clinician_confirmation:
+            id: CC-ALGO-MESOTHELIOMA-1L-5D1C3E8E9242
+            label: "No prior immune-mediated pneumonitis Grade ≥2"
+            legacy_condition: "No prior immune-mediated pneumonitis Grade ≥2"
     if_true:
       result: IND-MESOTHELIOMA-1L-NIVO-IPI
       notes: >

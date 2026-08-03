@@ -19,7 +19,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Metastatic BCC (distant metastases)"
+        - clinician_confirmation:
+            id: CC-ALGO-BCC-1L-6DE620C2B0DB
+            label: "Metastatic BCC (distant metastases)"
+            legacy_condition: "Metastatic BCC (distant metastases)"
     if_true:
       result: IND-BCC-1L-VISMODEGIB
       notes: "Sonidegib FDA label restricted to laBCC; vismodegib approved for both laBCC and mBCC"
@@ -29,7 +32,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "Locally advanced BCC (unresectable or radiation-inappropriate)"
+        - clinician_confirmation:
+            id: CC-ALGO-BCC-1L-83D44E6ABB3A
+            label: "Locally advanced BCC (unresectable or radiation-inappropriate)"
+            legacy_condition: "Locally advanced BCC (unresectable or radiation-inappropriate)"
     if_true:
       result: IND-BCC-1L-VISMODEGIB
     if_false:

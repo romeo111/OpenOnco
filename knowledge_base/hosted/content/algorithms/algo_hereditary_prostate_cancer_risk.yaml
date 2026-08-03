@@ -45,11 +45,26 @@ decision_tree:
     # other prostate-risk gene.
     evaluate:
       any_of:
-        - condition: "Confirmed BRCA2 germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
-        - condition: "Confirmed BRCA1 germline pathogenic / likely-pathogenic variant"
-        - condition: "Confirmed HOXB13 G84E (or other HOXB13 P/LP) germline variant"
-        - condition: "Confirmed MLH1 / MSH2 / MSH6 / PMS2 / EPCAM germline pathogenic / likely-pathogenic variant (Lynch syndrome)"
-        - condition: "Confirmed ATM / PALB2 / CHEK2 (modest-risk) germline variant in male carrier with family-history of high-grade prostate cancer"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-1A5A56703FFC
+            label: "Confirmed BRCA2 germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+            legacy_condition: "Confirmed BRCA2 germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-230F891BBC24
+            label: "Confirmed BRCA1 germline pathogenic / likely-pathogenic variant"
+            legacy_condition: "Confirmed BRCA1 germline pathogenic / likely-pathogenic variant"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-8E2C18E51439
+            label: "Confirmed HOXB13 G84E (or other HOXB13 P/LP) germline variant"
+            legacy_condition: "Confirmed HOXB13 G84E (or other HOXB13 P/LP) germline variant"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-A7EACFA989CE
+            label: "Confirmed MLH1 / MSH2 / MSH6 / PMS2 / EPCAM germline pathogenic / likely-pathogenic variant (Lynch syndrome)"
+            legacy_condition: "Confirmed MLH1 / MSH2 / MSH6 / PMS2 / EPCAM germline pathogenic / likely-pathogenic variant (Lynch syndrome)"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-702BF28F38BC
+            label: "Confirmed ATM / PALB2 / CHEK2 (modest-risk) germline variant in male carrier with family-history of high-grade prostate cancer"
+            legacy_condition: "Confirmed ATM / PALB2 / CHEK2 (modest-risk) germline variant in male carrier with family-history of high-grade prostate cancer"
     if_true:
       next_step: 2
     if_false:
@@ -59,8 +74,14 @@ decision_tree:
     # BRCA2 — highest absolute risk; aggressive phenotype. Entry: age 40.
     evaluate:
       all_of:
-        - condition: "Male carrier with confirmed BRCA2 P/LP variant"
-        - condition: "Carrier age ≥40"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-BA89D5FA3B90
+            label: "Male carrier with confirmed BRCA2 P/LP variant"
+            legacy_condition: "Male carrier with confirmed BRCA2 P/LP variant"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-1ACEED85C0CB
+            label: "Carrier age ≥40"
+            legacy_condition: "Carrier age ≥40"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BRCA2 male carrier age ≥40 — standard hereditary prostate-cancer surveillance: annual PSA + annual DRE from age 40 (NCCN Genetic / Familial V.3.2025; IMPACT 2022 evidence-based). PSA threshold for prostate biopsy lower than USPSTF general-population (typical: ≥3.0 ng/mL or any rising PSA velocity above age-adjusted norm; some centers use ≥1.5 ng/mL with shared-decision). Multiparametric prostate MRI (mpMRI) before any biopsy decision for elevated PSA OR abnormal DRE — BRCA2 cancers are biologically aggressive + higher Gleason at diagnosis. Engine should re-route to IND-BRCA-CARRIER-SURVEILLANCE (standard) or IND-BRCA-CARRIER-INTENSIFIED (aggressive — mpMRI inclusion, family-history-of-high-grade) at downstream layer."
@@ -70,8 +91,14 @@ decision_tree:
     # BRCA2 carrier <40 — pre-surveillance counseling + baseline.
     evaluate:
       all_of:
-        - condition: "Male carrier with confirmed BRCA2 P/LP variant"
-        - condition: "Carrier age <40"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-BA89D5FA3B90
+            label: "Male carrier with confirmed BRCA2 P/LP variant"
+            legacy_condition: "Male carrier with confirmed BRCA2 P/LP variant"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-52D7F4B03E01
+            label: "Carrier age <40"
+            legacy_condition: "Carrier age <40"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BRCA2 male carrier age <40 — counseling re: future prostate surveillance entry at age 40; some centers obtain baseline PSA + DRE at age 35-40 for trajectory baselining. No imaging surveillance indicated <40 unless symptomatic. Cascade testing for at-risk male siblings + sons. Engine should re-route to IND-BRCA-CARRIER-SURVEILLANCE at downstream layer for confirmed-carrier routing."
@@ -83,8 +110,14 @@ decision_tree:
     # given lower absolute risk vs BRCA2.
     evaluate:
       all_of:
-        - condition: "Male carrier with confirmed BRCA1 P/LP variant"
-        - condition: "Carrier age ≥40"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-936C2279A5F1
+            label: "Male carrier with confirmed BRCA1 P/LP variant"
+            legacy_condition: "Male carrier with confirmed BRCA1 P/LP variant"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-1ACEED85C0CB
+            label: "Carrier age ≥40"
+            legacy_condition: "Carrier age ≥40"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BRCA1 male carrier age ≥40 — annual PSA + annual DRE from age 40 per NCCN Genetic / Familial V.3.2025. BRCA1 absolute prostate-cancer risk ~21% lifetime — lower than BRCA2 (~27-60%) but still meaningfully elevated; aggressive-phenotype evidence less robust than BRCA2. PSA threshold + mpMRI principles as for BRCA2 (shared-decision). Engine should re-route to IND-BRCA-CARRIER-SURVEILLANCE (standard) at downstream layer."
@@ -95,8 +128,14 @@ decision_tree:
     # Stott-Miller 2013 mostly Northern European founder).
     evaluate:
       all_of:
-        - condition: "Male carrier with confirmed HOXB13 G84E (or other HOXB13 P/LP) variant"
-        - condition: "Carrier age ≥40"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-91B8DB0C7FDD
+            label: "Male carrier with confirmed HOXB13 G84E (or other HOXB13 P/LP) variant"
+            legacy_condition: "Male carrier with confirmed HOXB13 G84E (or other HOXB13 P/LP) variant"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-1ACEED85C0CB
+            label: "Carrier age ≥40"
+            legacy_condition: "Carrier age ≥40"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "HOXB13 G84E male carrier age ≥40 — annual PSA + annual DRE from age 40. Lifetime prostate cancer risk ~33% (Ewing NJ et al. N Engl J Med 2012;366:141-149 PMID 22236224). Modal earlier onset than sporadic prostate cancer. Engine routes to BRCA-CARRIER-SURVEILLANCE (HPC umbrella) at downstream layer pending v0.2 authoring of dedicated IND-HOXB13-CARRIER-SURVEILLANCE."
@@ -107,8 +146,14 @@ decision_tree:
     # (~30% lifetime); MLH1 moderate (~15%); MSH6 / PMS2 modest.
     evaluate:
       all_of:
-        - condition: "Male carrier with confirmed MLH1 / MSH2 / MSH6 / PMS2 / EPCAM germline P/LP variant"
-        - condition: "Carrier age ≥40"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-281CAF28DBD1
+            label: "Male carrier with confirmed MLH1 / MSH2 / MSH6 / PMS2 / EPCAM germline P/LP variant"
+            legacy_condition: "Male carrier with confirmed MLH1 / MSH2 / MSH6 / PMS2 / EPCAM germline P/LP variant"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-PROSTATE-CANCER-RISK-1ACEED85C0CB
+            label: "Carrier age ≥40"
+            legacy_condition: "Carrier age ≥40"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Lynch MMR male carrier age ≥40 — annual PSA + annual DRE from age 40 (or age 50 for PMS2 / MSH6 with lower absolute risk). Most pathogenic for MSH2 (lifetime risk up to ~30% per Win 2017 PMID 28837799). MMR-deficient prostate cancers are more responsive to ICI (PD-1 / CTLA-4) at advanced stages — biomarker testing should include MSI / MMR-IHC at biopsy. Engine routes to BRCA-CARRIER-SURVEILLANCE (HPC umbrella) at downstream layer. Concurrent Lynch CRC / endometrial / urothelial surveillance per ALGO-CARRIER-CASCADE-LYNCH."

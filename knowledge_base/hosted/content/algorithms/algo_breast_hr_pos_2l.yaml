@@ -46,7 +46,10 @@ decision_tree:
       any_of:
         - red_flag: RF-BREAST-PIK3CA-MUT-ACTIONABLE
         - red_flag: RF-BREAST-AKT1-E17K-ACTIONABLE
-        - condition: "PTEN loss-of-function (biallelic NGS or complete IHC loss + NGS confirmation)"
+        - clinician_confirmation:
+            id: CC-ALGO-BREAST-HR-POS-2L-7CD17BF908C8
+            label: "PTEN loss-of-function (biallelic NGS or complete IHC loss + NGS confirmation)"
+            legacy_condition: "PTEN loss-of-function (biallelic NGS or complete IHC loss + NGS confirmation)"
     if_true:
       result: IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
     if_false:
@@ -81,7 +84,10 @@ decision_tree:
     # is an MDT confirmation, not a contraindication).
     evaluate:
       any_of:
-        - condition: "≥1 prior chemo line for metastatic disease OR rapid progression on endocrine"
+        - clinician_confirmation:
+            id: CC-ALGO-BREAST-HR-POS-2L-B69D6F264F37
+            label: "≥1 prior chemo line for metastatic disease OR rapid progression on endocrine"
+            legacy_condition: "≥1 prior chemo line for metastatic disease OR rapid progression on endocrine"
     if_true:
       result: IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
     if_false:
@@ -94,7 +100,10 @@ decision_tree:
   - step: 5
     evaluate:
       any_of:
-        - condition: "No PIK3CA / AKT1 / PTEN / ESR1 alteration AND HER2 IHC 0"
+        - clinician_confirmation:
+            id: CC-ALGO-BREAST-HR-POS-2L-4D8A1F152976
+            label: "No PIK3CA / AKT1 / PTEN / ESR1 alteration AND HER2 IHC 0"
+            legacy_condition: "No PIK3CA / AKT1 / PTEN / ESR1 alteration AND HER2 IHC 0"
     if_true:
       result: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
     if_false:

@@ -17,7 +17,10 @@ decision_tree:
     evaluate:
       all_of:
         - red_flag: RF-HGBL-DH-HIGH-RISK-BIOLOGY  # MYC + BCL2/BCL6 confirmed
-        - condition: "Continuous-infusion DA-EPOCH-R logistically feasible"
+        - clinician_confirmation:
+            id: CC-ALGO-HGBL-DH-1L-EB0C38EC3637
+            label: "Continuous-infusion DA-EPOCH-R logistically feasible"
+            legacy_condition: "Continuous-infusion DA-EPOCH-R logistically feasible"
     if_true:
       result: IND-HGBL-DH-1L-DAEPOCHR
     if_false:

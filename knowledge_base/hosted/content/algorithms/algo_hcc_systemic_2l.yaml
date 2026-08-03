@@ -47,7 +47,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "Prior 1L was TKI-based (sorafenib OR lenvatinib monotherapy)"
+        - clinician_confirmation:
+            id: CC-ALGO-HCC-SYSTEMIC-2L-23C79B14FCCD
+            label: "Prior 1L was TKI-based (sorafenib OR lenvatinib monotherapy)"
+            legacy_condition: "Prior 1L was TKI-based (sorafenib OR lenvatinib monotherapy)"
     if_true:
       next_step: 3
       notes: "Post-TKI 1L: RCT-supported 2L options available (RESORCE, CELESTIAL, REACH-2). AFP gate determines best agent."
@@ -64,7 +67,10 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "Sorafenib was tolerated in 1L (≥21 days at ≥400 mg/d, stopped for progression not toxicity)"
+        - clinician_confirmation:
+            id: CC-ALGO-HCC-SYSTEMIC-2L-3996FEA8CCCD
+            label: "Sorafenib was tolerated in 1L (≥21 days at ≥400 mg/d, stopped for progression not toxicity)"
+            legacy_condition: "Sorafenib was tolerated in 1L (≥21 days at ≥400 mg/d, stopped for progression not toxicity)"
     if_true:
       result: IND-HCC-SYSTEMIC-2L-REGORAFENIB
       notes: >
@@ -94,7 +100,10 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Child-Pugh A AND ECOG 0-1 AND no prior TKI in 1L"
+        - clinician_confirmation:
+            id: CC-ALGO-HCC-SYSTEMIC-2L-C1D085215B47
+            label: "Child-Pugh A AND ECOG 0-1 AND no prior TKI in 1L"
+            legacy_condition: "Child-Pugh A AND ECOG 0-1 AND no prior TKI in 1L"
     if_true:
       result: IND-HCC-SYSTEMIC-2L-CABOZANTINIB
       notes: >

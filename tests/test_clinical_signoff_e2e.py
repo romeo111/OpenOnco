@@ -177,12 +177,12 @@ def test_approve_single_entity_writes_signoff(temp_kb: dict) -> None:
     assert rc == 0
 
     data = _read_yaml(temp_kb["heme_ind_path"])
-    sigs = data.get("reviewer_signoffs_v2") or []
+    sigs = data.get("reviewer_signoffs") or []
     assert len(sigs) == 1
     s = sigs[0]
     assert s["reviewer_id"] == "REV-HEME-LEAD-PLACEHOLDER"
     assert s["rationale"] == "NCCN-aligned, evidence reviewed"
-    assert "signoff_date" in s
+    assert "timestamp" in s
     assert s.get("scope_match") is True
 
 
@@ -218,7 +218,7 @@ def test_approve_dry_run_no_writes(temp_kb: dict) -> None:
 
     # YAML untouched
     data = _read_yaml(temp_kb["heme_ind_path"])
-    assert not data.get("reviewer_signoffs_v2"), (
+    assert not data.get("reviewer_signoffs"), (
         "dry-run must not touch the YAML"
     )
     # Audit log not created (or, if created, empty)
@@ -247,7 +247,7 @@ def test_withdraw_removes_signoff_keeps_audit(temp_kb: dict) -> None:
 
     # YAML: signoff removed
     data = _read_yaml(temp_kb["heme_ind_path"])
-    assert (data.get("reviewer_signoffs_v2") or []) == [], (
+    assert (data.get("reviewer_signoffs") or []) == [], (
         "withdraw must remove the sign-off entry from the YAML"
     )
 
@@ -271,7 +271,7 @@ def test_approve_duplicate_refused_without_force(temp_kb: dict) -> None:
     ])
     assert rc1 == 0
     data1 = _read_yaml(temp_kb["heme_ind_path"])
-    assert len(data1.get("reviewer_signoffs_v2") or []) == 1
+    assert len(data1.get("reviewer_signoffs") or []) == 1
 
     # Second approve by same reviewer is skipped (no second entry written)
     rc2 = cli.main([
@@ -284,7 +284,7 @@ def test_approve_duplicate_refused_without_force(temp_kb: dict) -> None:
     # important guarantee is that nothing was duplicated in the YAML.
     assert rc2 == 0
     data2 = _read_yaml(temp_kb["heme_ind_path"])
-    assert len(data2.get("reviewer_signoffs_v2") or []) == 1, (
+    assert len(data2.get("reviewer_signoffs") or []) == 1, (
         "duplicate sign-off must be skipped without --force"
     )
 
@@ -298,7 +298,7 @@ def test_approve_duplicate_refused_without_force(temp_kb: dict) -> None:
     ])
     assert rc3 == 0
     data3 = _read_yaml(temp_kb["heme_ind_path"])
-    assert len(data3.get("reviewer_signoffs_v2") or []) == 2, (
+    assert len(data3.get("reviewer_signoffs") or []) == 2, (
         "--force should permit a re-affirmation entry"
     )
 
@@ -318,7 +318,7 @@ def test_approve_unknown_reviewer_refused(temp_kb: dict) -> None:
     assert rc != 0, "unknown reviewer must produce non-zero exit"
     # YAML must remain untouched
     data = _read_yaml(temp_kb["heme_ind_path"])
-    assert not data.get("reviewer_signoffs_v2")
+    assert not data.get("reviewer_signoffs")
 
 
 def test_approve_strict_scope_mismatch_refused(temp_kb: dict) -> None:
@@ -333,7 +333,7 @@ def test_approve_strict_scope_mismatch_refused(temp_kb: dict) -> None:
     # CLI returns 0 with `0 approved` in strict-skip mode; the contract we
     # care about is that the YAML stayed clean.
     data = _read_yaml(temp_kb["solid_ind_path"])
-    assert not data.get("reviewer_signoffs_v2"), (
+    assert not data.get("reviewer_signoffs"), (
         "scope-mismatched approval must not be persisted under --strict"
     )
 
@@ -348,7 +348,7 @@ def test_approve_strict_scope_mismatch_warning_default(temp_kb: dict) -> None:
     ])
     assert rc == 0
     data = _read_yaml(temp_kb["solid_ind_path"])
-    sigs = data.get("reviewer_signoffs_v2") or []
+    sigs = data.get("reviewer_signoffs") or []
     assert len(sigs) == 1, "warn-only mode should still write the sign-off"
     assert sigs[0]["scope_match"] is False, (
         "scope_match flag must surface as False on a warn-only mismatch"
@@ -436,7 +436,7 @@ def test_dashboard_includes_per_reviewer_activity(
 def test_render_signoff_badge_pending_for_zero_signoffs() -> None:
     html = _render_signoff_badge({
         "id": "IND-X",
-        "reviewer_signoffs_v2": [],
+        "reviewer_signoffs": [],
     })
     assert "signoff-pending" in html
     assert "Очікує підпису" in html
@@ -447,11 +447,11 @@ def test_render_signoff_badge_pending_for_zero_signoffs() -> None:
 def test_render_signoff_badge_complete_for_two_plus_signoffs() -> None:
     html = _render_signoff_badge({
         "id": "IND-X",
-        "reviewer_signoffs_v2": [
+        "reviewer_signoffs": [
             {"reviewer_id": "REV-HEME-LEAD-PLACEHOLDER",
-             "signoff_date": "2026-04-27"},
+             "timestamp": "2026-04-27T00:00:00Z"},
             {"reviewer_id": "REV-SOLID-LEAD-PLACEHOLDER",
-             "signoff_date": "2026-04-27"},
+             "timestamp": "2026-04-27T00:00:00Z"},
         ],
     })
     assert "signoff-complete" in html

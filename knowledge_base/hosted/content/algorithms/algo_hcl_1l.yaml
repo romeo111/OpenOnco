@@ -27,8 +27,14 @@ decision_tree:
   - step: 2
     evaluate:
       all_of:
-        - condition: "Treatment indication present (cytopenia or symptomatic splenomegaly)"
-        - condition: "No active uncontrolled infection"
+        - clinician_confirmation:
+            id: CC-ALGO-HCL-1L-F2CFEE582717
+            label: "Treatment indication present (cytopenia or symptomatic splenomegaly)"
+            legacy_condition: "Treatment indication present (cytopenia or symptomatic splenomegaly)"
+        - clinician_confirmation:
+            id: CC-ALGO-HCL-1L-B610945F1726
+            label: "No active uncontrolled infection"
+            legacy_condition: "No active uncontrolled infection"
     if_true:
       result: IND-HCL-1L-CLADRIBINE
     if_false:

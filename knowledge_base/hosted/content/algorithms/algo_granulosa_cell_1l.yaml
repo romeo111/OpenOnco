@@ -19,7 +19,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Advanced stage III–IV AGCT OR recurrent AGCT with rapid progression"
+        - clinician_confirmation:
+            id: CC-ALGO-GRANULOSA-CELL-1L-3D6ABFF93FF6
+            label: "Advanced stage III–IV AGCT OR recurrent AGCT with rapid progression"
+            legacy_condition: "Advanced stage III–IV AGCT OR recurrent AGCT with rapid progression"
     if_true:
       result: IND-GRANULOSA-CELL-1L-CARBOPLATIN-PACLITAXEL
     if_false:
@@ -28,7 +31,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "Recurrent hormone receptor-positive AGCT with slow progression"
+        - clinician_confirmation:
+            id: CC-ALGO-GRANULOSA-CELL-1L-5DF878BA15BC
+            label: "Recurrent hormone receptor-positive AGCT with slow progression"
+            legacy_condition: "Recurrent hormone receptor-positive AGCT with slow progression"
     if_true:
       result: IND-GRANULOSA-CELL-1L-CARBOPLATIN-PACLITAXEL
       notes: "Hormone-directed therapy (leuprolide, letrozole) is a reasonable alternative for slow-progression recurrence — not encoded here (no separate indication yet)"

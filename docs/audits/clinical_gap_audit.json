@@ -1,20 +1,21 @@
 {
-  "generated_at_utc": "2026-05-21T15:48:42Z",
+  "generated_at_utc": "2026-08-03T08:14:50Z",
   "kb_root": "C:\\Users\\805\\cancer-autoresearch\\knowledge_base\\hosted\\content",
   "entity_counts": {
     "diseases": 92,
     "drugs": 298,
+    "drug_indications": 1,
     "regimens": 384,
     "indications": 664,
-    "biomarkers": 242,
+    "biomarkers": 257,
     "biomarker_actionability": 475,
     "contraindications": 21,
-    "redflags": 638,
+    "redflags": 640,
     "algorithms": 180,
     "tests": 131,
     "supportive_care": 13,
     "monitoring": 20,
-    "sources": 444,
+    "sources": 515,
     "workups": 24,
     "questionnaires": 78,
     "access_pathways": 12,
@@ -23,18 +24,18 @@
     "procedures": 19,
     "radiation_courses": 6
   },
-  "loader_ok": false,
+  "loader_ok": true,
   "loader_error_counts": {
-    "schema_errors": 15,
+    "schema_errors": 0,
     "ref_errors": 0,
     "contract_errors": 0,
-    "contract_warnings": 305
+    "contract_warnings": 169
   },
   "gaps": [
     {
       "id": "clinical_signoff",
       "title": "Clinical sign-off",
-      "current": "15/2341 signoff-eligible entities reviewed (0.6%)",
+      "current": "15/2343 signoff-eligible entities reviewed (0.6%)",
       "target": ">=85% reviewed before public guideline-grade claims",
       "status": "blocked_on_reviewers",
       "blocker": "Cannot be fixed by code; requires qualified Clinical Co-Lead review.",
@@ -57,9 +58,9 @@
             "gap": 384
           },
           "redflags": {
-            "total": 638,
+            "total": 640,
             "reviewed": 0,
-            "gap": 638
+            "gap": 640
           },
           "biomarker_actionability": {
             "total": 475,
@@ -269,14 +270,16 @@
     {
       "id": "surgery_radiation_structure",
       "title": "Surgery/radiation detail",
-      "current": "structured surgery entities: no; structured radiation entities: no; 649 indications mention surgery/radiation in text",
+      "current": "19 structured procedure entities; 6 structured radiation-course entities; 649 indications mention surgery/radiation in text",
       "target": "Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields.",
-      "status": "schema_gap",
-      "blocker": "Current KB carries surgery/radiation mostly as prose inside indications.",
-      "next_action": "Add modality schemas first; migrate prose mentions after clinical review.",
+      "status": "coverage_gap",
+      "blocker": "The modality schemas and initial entities exist, but many indication-level references remain prose-only.",
+      "next_action": "Prioritize high-volume prose mentions; attach an existing or newly verified procedure/radiation-course entity to each reviewed indication phase.",
       "details": {
-        "has_surgery_entity_dir": false,
-        "has_radiation_entity_dir": false,
+        "structured_procedure_count": 19,
+        "structured_radiation_course_count": 6,
+        "has_structured_procedures": true,
+        "has_structured_radiation_courses": true,
         "surgery_mentions": [
           "IND-A1AT-DEFICIENCY-HCC-LUNG-PREVENTION-SURVEILLANCE",
           "IND-ANAL-SCC-LA-1L-NIGRO-CRT",
@@ -586,16 +589,421 @@
     {
       "id": "drug_indication_tracking",
       "title": "Drug indication and off-label tracking",
-      "current": "821 drug-disease-indication pairs inferred from regimens; 0 carry explicit labeled/off-label status",
+      "current": "1/821 inferred drug-disease-indication pairs have a first-class record; 1 carry a source-backed assessed status",
       "target": "Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance.",
-      "status": "schema_gap",
-      "blocker": "No first-class drug_indications entity directory/schema is present.",
-      "next_action": "Introduce a drug_indications entity, then backfill from existing indications/regimens.",
+      "status": "coverage_gap",
+      "blocker": "The first-class model is present, but most regimen-derived drug-use pairs still need source-backed assessment.",
+      "next_action": "Backfill high-volume and high-risk pairs from current regulatory labels first; keep uncertain pairs explicitly not_assessed until verified.",
       "details": {
-        "drug_indications_schema_present": false,
+        "drug_indications_entity_dir_present": true,
+        "drug_indication_records": 1,
         "inferred_drug_disease_indication_pairs": 821,
         "pairs_with_indication_evidence_context": 821,
-        "explicit_label_status_pairs": 0,
+        "source_backed_assessed_pairs": 1,
+        "explicitly_not_assessed_pairs": 0,
+        "missing_explicit_pair_count": 820,
+        "missing_explicit_pairs": [
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-ANAL-SCC",
+            "indication_id": "IND-ANAL-SCC-LA-1L-NIGRO-CRT"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-CRC",
+            "indication_id": "IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-CRC",
+            "indication_id": "IND-CRC-ADJUVANT-STAGE3-FOLFOX"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-CRC",
+            "indication_id": "IND-CRC-METASTATIC-1L-FOLFOX-BEV"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-CRC",
+            "indication_id": "IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-CRC",
+            "indication_id": "IND-CRC-METASTATIC-1L-RAS-WT-LEFT"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-CRC",
+            "indication_id": "IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-CRC",
+            "indication_id": "IND-CRC-METASTATIC-2L-FOLFIRI-BEV"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-CRC",
+            "indication_id": "IND-CRC-OLIGOMET-LIVER-LIMITED"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-ESOPHAGEAL",
+            "indication_id": "IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-ESOPHAGEAL",
+            "indication_id": "IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-ESOPHAGEAL",
+            "indication_id": "IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-GASTRIC",
+            "indication_id": "IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-GASTRIC",
+            "indication_id": "IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-GASTRIC",
+            "indication_id": "IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-GASTRIC",
+            "indication_id": "IND-GASTRIC-OLIGOMET-SYSTEMIC-PLUS-LOCAL"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-HNSCC",
+            "indication_id": "IND-HNSCC-RM-1L-EXTREME"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-HNSCC",
+            "indication_id": "IND-HNSCC-RM-1L-PEMBRO-CHEMO"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-PDAC",
+            "indication_id": "IND-PDAC-METASTATIC-1L-FOLFIRINOX"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-PDAC",
+            "indication_id": "IND-PDAC-METASTATIC-1L-NALIRIFOX"
+          },
+          {
+            "drug_id": "DRUG-5-FLUOROURACIL",
+            "disease_id": "DIS-PDAC",
+            "indication_id": "IND-PDAC-METASTATIC-2L-NAL-IRI"
+          },
+          {
+            "drug_id": "DRUG-ABEMACICLIB",
+            "disease_id": "DIS-BREAST",
+            "indication_id": "IND-BREAST-HR-POS-EARLY-ADJ-CDK46I"
+          },
+          {
+            "drug_id": "DRUG-ABIRATERONE",
+            "disease_id": "DIS-PROSTATE",
+            "indication_id": "IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET"
+          },
+          {
+            "drug_id": "DRUG-ACALABRUTINIB",
+            "disease_id": "DIS-CLL",
+            "indication_id": "IND-CLL-1L-AVO"
+          },
+          {
+            "drug_id": "DRUG-ACALABRUTINIB",
+            "disease_id": "DIS-CLL",
+            "indication_id": "IND-CLL-1L-BTKI"
+          },
+          {
+            "drug_id": "DRUG-ACALABRUTINIB",
+            "disease_id": "DIS-MCL",
+            "indication_id": "IND-MCL-1L-BTKI-R"
+          },
+          {
+            "drug_id": "DRUG-ACALABRUTINIB",
+            "disease_id": "DIS-MCL",
+            "indication_id": "IND-MCL-2L-ACALABRUTINIB"
+          },
+          {
+            "drug_id": "DRUG-ADAGRASIB",
+            "disease_id": "DIS-NSCLC",
+            "indication_id": "IND-NSCLC-2L-KRAS-G12C-ADAGRASIB"
+          },
+          {
+            "drug_id": "DRUG-ALECTINIB",
+            "disease_id": "DIS-NSCLC",
+            "indication_id": "IND-NSCLC-ALK-MAINT-ALECTINIB"
+          },
+          {
+            "drug_id": "DRUG-ALECTINIB",
+            "disease_id": "DIS-NSCLC",
+            "indication_id": "IND-NSCLC-ALK-MET-1L"
+          },
+          {
+            "drug_id": "DRUG-ALEMTUZUMAB",
+            "disease_id": "DIS-T-PLL",
+            "indication_id": "IND-T-PLL-1L-ALEMTUZUMAB"
+          },
+          {
+            "drug_id": "DRUG-ALEMTUZUMAB",
+            "disease_id": "DIS-T-PLL",
+            "indication_id": "IND-T-PLL-2L-VENETOCLAX-ALEMTUZUMAB"
+          },
+          {
+            "drug_id": "DRUG-ALLOPURINOL",
+            "disease_id": "DIS-CLL",
+            "indication_id": "IND-CLL-1L-VENO"
+          },
+          {
+            "drug_id": "DRUG-ALLOPURINOL",
+            "disease_id": "DIS-CLL",
+            "indication_id": "IND-CLL-2L-VENR-MURANO"
+          },
+          {
+            "drug_id": "DRUG-AMIVANTAMAB",
+            "disease_id": "DIS-NSCLC",
+            "indication_id": "IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB"
+          },
+          {
+            "drug_id": "DRUG-AMIVANTAMAB",
+            "disease_id": "DIS-NSCLC",
+            "indication_id": "IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ"
+          },
+          {
+            "drug_id": "DRUG-AMIVANTAMAB",
+            "disease_id": "DIS-NSCLC",
+            "indication_id": "IND-NSCLC-EGFR-1L-AMI-LAZ"
+          },
+          {
+            "drug_id": "DRUG-ANAGRELIDE",
+            "disease_id": "DIS-ET",
+            "indication_id": "IND-ET-2L-ANAGRELIDE"
+          },
+          {
+            "drug_id": "DRUG-ANAGRELIDE",
+            "disease_id": "DIS-PV",
+            "indication_id": "IND-PV-ANAGRELIDE-CONTINUOUS"
+          },
+          {
+            "drug_id": "DRUG-ASCIMINIB",
+            "disease_id": "DIS-CML",
+            "indication_id": "IND-CML-3L-ASCIMINIB"
+          },
+          {
+            "drug_id": "DRUG-ASPIRIN",
+            "disease_id": "DIS-ET",
+            "indication_id": "IND-ET-1L-ASA"
+          },
+          {
+            "drug_id": "DRUG-ASPIRIN",
+            "disease_id": "DIS-ET",
+            "indication_id": "IND-ET-1L-HU"
+          },
+          {
+            "drug_id": "DRUG-ASPIRIN",
+            "disease_id": "DIS-PV",
+            "indication_id": "IND-PV-1L-HU"
+          },
+          {
+            "drug_id": "DRUG-ASPIRIN",
+            "disease_id": "DIS-PV",
+            "indication_id": "IND-PV-1L-PHLEBOTOMY-ASA"
+          },
+          {
+            "drug_id": "DRUG-ASPIRIN",
+            "disease_id": "DIS-PV",
+            "indication_id": "IND-PV-1L-ROPEGINTERFERON"
+          },
+          {
+            "drug_id": "DRUG-ASPIRIN",
+            "disease_id": "DIS-PV",
+            "indication_id": "IND-PV-2L-RUXOLITINIB"
+          },
+          {
+            "drug_id": "DRUG-ASPIRIN",
+            "disease_id": "DIS-PV",
+            "indication_id": "IND-PV-PREGNANCY-PEG-IFN"
+          },
+          {
+            "drug_id": "DRUG-ATEZOLIZUMAB",
+            "disease_id": "DIS-HCC",
+            "indication_id": "IND-HCC-SYSTEMIC-1L-ATEZO-BEV"
+          },
+          {
+            "drug_id": "DRUG-ATEZOLIZUMAB",
+            "disease_id": "DIS-NSCLC",
+            "indication_id": "IND-NSCLC-ADJUVANT-ATEZO-PDL1POS"
+          },
+          {
+            "drug_id": "DRUG-ATO",
+            "disease_id": "DIS-APL",
+            "indication_id": "IND-APL-1L-ATRA-ATO"
+          },
+          {
+            "drug_id": "DRUG-ATO",
+            "disease_id": "DIS-APL",
+            "indication_id": "IND-APL-1L-ATRA-ATO-IDA"
+          },
+          {
+            "drug_id": "DRUG-ATO",
+            "disease_id": "DIS-APL",
+            "indication_id": "IND-APL-RELAPSED-GEMTUZUMAB"
+          },
+          {
+            "drug_id": "DRUG-ATO",
+            "disease_id": "DIS-APL",
+            "indication_id": "IND-APL-SALVAGE-ATRA-ATO"
+          },
+          {
+            "drug_id": "DRUG-ATRA",
+            "disease_id": "DIS-APL",
+            "indication_id": "IND-APL-1L-ATRA-ATO"
+          },
+          {
+            "drug_id": "DRUG-ATRA",
+            "disease_id": "DIS-APL",
+            "indication_id": "IND-APL-1L-ATRA-ATO-IDA"
+          },
+          {
+            "drug_id": "DRUG-ATRA",
+            "disease_id": "DIS-APL",
+            "indication_id": "IND-APL-RELAPSED-GEMTUZUMAB"
+          },
+          {
+            "drug_id": "DRUG-ATRA",
+            "disease_id": "DIS-APL",
+            "indication_id": "IND-APL-SALVAGE-ATRA-ATO"
+          },
+          {
+            "drug_id": "DRUG-AVAPRITINIB",
+            "disease_id": "DIS-GIST",
+            "indication_id": "IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V"
+          },
+          {
+            "drug_id": "DRUG-AVAPRITINIB",
+            "disease_id": "DIS-MASTOCYTOSIS",
+            "indication_id": "IND-ADVSM-1L-AVAPRITINIB"
+          },
+          {
+            "drug_id": "DRUG-AVELUMAB",
+            "disease_id": "DIS-NK-T-NASAL",
+            "indication_id": "IND-NK-T-NASAL-2L-AVELUMAB"
+          },
+          {
+            "drug_id": "DRUG-AXICABTAGENE-CILOLEUCEL",
+            "disease_id": "DIS-DLBCL-NOS",
+            "indication_id": "IND-DLBCL-3L-AXICEL-CART"
+          },
+          {
+            "drug_id": "DRUG-AXICABTAGENE-CILOLEUCEL",
+            "disease_id": "DIS-FL",
+            "indication_id": "IND-FL-3L-AXICEL-CART"
+          },
+          {
+            "drug_id": "DRUG-AXICABTAGENE-CILOLEUCEL",
+            "disease_id": "DIS-HGBL-DH",
+            "indication_id": "IND-HGBL-DH-2L-CART-AXICEL"
+          },
+          {
+            "drug_id": "DRUG-AXITINIB",
+            "disease_id": "DIS-RCC",
+            "indication_id": "IND-RCC-METASTATIC-1L-PEMBRO-AXI"
+          },
+          {
+            "drug_id": "DRUG-AZACITIDINE",
+            "disease_id": "DIS-AITL",
+            "indication_id": "IND-AITL-2L-AZACITIDINE"
+          },
+          {
+            "drug_id": "DRUG-AZACITIDINE",
+            "disease_id": "DIS-AML",
+            "indication_id": "IND-AML-1L-VEN-AZA"
+          },
+          {
+            "drug_id": "DRUG-AZACITIDINE",
+            "disease_id": "DIS-AML",
+            "indication_id": "IND-AML-CR1-ORAL-AZA-MAINTENANCE"
+          },
+          {
+            "drug_id": "DRUG-AZACITIDINE",
+            "disease_id": "DIS-MDS-HR",
+            "indication_id": "IND-MDS-HR-1L-AZA"
+          },
+          {
+            "drug_id": "DRUG-AZACITIDINE",
+            "disease_id": "DIS-MDS-HR",
+            "indication_id": "IND-MDS-HR-1L-VEN-AZA"
+          },
+          {
+            "drug_id": "DRUG-AZACITIDINE",
+            "disease_id": "DIS-MDS-HR",
+            "indication_id": "IND-MDS-HR-ALLOHCT"
+          },
+          {
+            "drug_id": "DRUG-BELINOSTAT",
+            "disease_id": "DIS-AITL",
+            "indication_id": "IND-AITL-2L-BELINOSTAT"
+          },
+          {
+            "drug_id": "DRUG-BELZUTIFAN",
+            "disease_id": "DIS-RCC",
+            "indication_id": "IND-RCC-METASTATIC-2L-BELZUTIFAN"
+          },
+          {
+            "drug_id": "DRUG-BELZUTIFAN",
+            "disease_id": "DIS-RCC",
+            "indication_id": "IND-RCC-VHL-DISEASE-BELZUTIFAN"
+          },
+          {
+            "drug_id": "DRUG-BEMARITUZUMAB",
+            "disease_id": "DIS-GASTRIC",
+            "indication_id": "IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB"
+          },
+          {
+            "drug_id": "DRUG-BENDAMUSTINE",
+            "disease_id": "DIS-ALCL",
+            "indication_id": "IND-ALCL-2L-BENDAMUSTINE"
+          },
+          {
+            "drug_id": "DRUG-BENDAMUSTINE",
+            "disease_id": "DIS-DLBCL-NOS",
+            "indication_id": "IND-DLBCL-2L-POLA-R-BENDAMUSTINE"
+          },
+          {
+            "drug_id": "DRUG-BENDAMUSTINE",
+            "disease_id": "DIS-FL",
+            "indication_id": "IND-FL-1L-BR"
+          },
+          {
+            "drug_id": "DRUG-BENDAMUSTINE",
+            "disease_id": "DIS-FL",
+            "indication_id": "IND-FL-2L-OBG-BENDA"
+          },
+          {
+            "drug_id": "DRUG-BENDAMUSTINE",
+            "disease_id": "DIS-HCV-MZL",
+            "indication_id": "IND-HCV-MZL-1L-BR-AGGRESSIVE"
+          },
+          {
+            "drug_id": "DRUG-BENDAMUSTINE",
+            "disease_id": "DIS-NODAL-MZL",
+            "indication_id": "IND-NMZL-1L-BR"
+          }
+        ],
         "sample_pairs": [
           {
             "drug_id": "DRUG-5-FLUOROURACIL",

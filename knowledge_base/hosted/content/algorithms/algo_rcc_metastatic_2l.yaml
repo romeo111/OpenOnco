@@ -9,7 +9,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - {condition: "Prior PD-(L)1 + VEGF-TKI failure"}
+        - clinician_confirmation:
+            id: CC-ALGO-RCC-METASTATIC-2L-C00E09D1A517
+            label: "Prior PD-(L)1 + VEGF-TKI failure"
+            legacy_condition: "Prior PD-(L)1 + VEGF-TKI failure"
     if_true: {result: IND-RCC-METASTATIC-2L-BELZUTIFAN}
     if_false: {result: IND-RCC-METASTATIC-2L-BELZUTIFAN}  # default — algorithm only fires post-1L
     notes: >

@@ -34,7 +34,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic AND no IO contraindication (active autoimmune disease, prior solid-organ transplant, ICI-incompatible immunosuppression)"
+        - clinician_confirmation:
+            id: CC-ALGO-CHOLANGIO-1L-EADD255484D1
+            label: "ECOG 0-2 AND advanced/unresectable/metastatic AND no IO contraindication (active autoimmune disease, prior solid-organ transplant, ICI-incompatible immunosuppression)"
+            legacy_condition: "ECOG 0-2 AND advanced/unresectable/metastatic AND no IO contraindication (active autoimmune disease, prior solid-organ transplant, ICI-incompatible immunosuppression)"
     if_true:
       result: IND-CHOLANGIO-METASTATIC-1L-DURVA-CHEMO
       notes: >
@@ -51,7 +54,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "IO-eligible patient without durvalumab access (regional formulary / reimbursement)"
+        - clinician_confirmation:
+            id: CC-ALGO-CHOLANGIO-1L-C47A60D2D8A2
+            label: "IO-eligible patient without durvalumab access (regional formulary / reimbursement)"
+            legacy_condition: "IO-eligible patient without durvalumab access (regional formulary / reimbursement)"
     if_true:
       result: IND-CHOLANGIO-METASTATIC-1L-PEMBRO-CHEMO
       notes: >
@@ -69,7 +75,10 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "IO contraindicated (active autoimmune, transplant, immunosuppression) OR no IO access"
+        - clinician_confirmation:
+            id: CC-ALGO-CHOLANGIO-1L-3B6A36EBF9A9
+            label: "IO contraindicated (active autoimmune, transplant, immunosuppression) OR no IO access"
+            legacy_condition: "IO contraindicated (active autoimmune, transplant, immunosuppression) OR no IO access"
     if_true:
       result: IND-CHOLANGIO-ADVANCED-GEM-CIS
       notes: >

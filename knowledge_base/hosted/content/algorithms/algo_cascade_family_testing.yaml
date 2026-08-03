@@ -52,7 +52,10 @@ decision_tree:
     # pending reclassification.
     evaluate:
       all_of:
-        - condition: "Index patient (proband) has confirmed germline pathogenic or likely-pathogenic (ACMG class 4/5) variant in any hereditary cancer syndrome gene"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-FAMILY-TESTING-EF0D2E1A36B7
+            label: "Index patient (proband) has confirmed germline pathogenic or likely-pathogenic (ACMG class 4/5) variant in any hereditary cancer syndrome gene"
+            legacy_condition: "Index patient (proband) has confirmed germline pathogenic or likely-pathogenic (ACMG class 4/5) variant in any hereditary cancer syndrome gene"
     if_true:
       next_step: 2
     if_false:
@@ -63,7 +66,10 @@ decision_tree:
     # probability under autosomal-dominant inheritance.
     evaluate:
       any_of:
-        - condition: "Index patient has living first-degree relatives (parents, full siblings, biological children)"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-FAMILY-TESTING-D5542C225078
+            label: "Index patient has living first-degree relatives (parents, full siblings, biological children)"
+            legacy_condition: "Index patient has living first-degree relatives (parents, full siblings, biological children)"
     if_true:
       next_step: 3
     if_false:
@@ -73,8 +79,14 @@ decision_tree:
     # FDR testing eligibility — age, capacity, informed consent.
     evaluate:
       all_of:
-        - condition: "FDR is age ≥18 OR is a minor with confirmed pediatric-onset syndrome (FAP / LFS / VHL / MEN2 / DICER1 / Beckwith-Wiedemann / retinoblastoma — testing from age of clinical surveillance initiation, typically 5-12 depending on syndrome)"
-        - condition: "FDR has decision-making capacity OR a legal surrogate consents (for minors / cognitively impaired adults)"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-FAMILY-TESTING-2BAB50E5149F
+            label: "FDR is age ≥18 OR is a minor with confirmed pediatric-onset syndrome (FAP / LFS / VHL / MEN2 / DICER1 / Beckwith-Wiedemann / retinoblastoma — testing from age of clinical surveillance initiation, typically 5-12 depending on syndrome)"
+            legacy_condition: "FDR is age ≥18 OR is a minor with confirmed pediatric-onset syndrome (FAP / LFS / VHL / MEN2 / DICER1 / Beckwith-Wiedemann / retinoblastoma — testing from age of clinical surveillance initiation, typically 5-12 depending on syndrome)"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-FAMILY-TESTING-34F72EB3349E
+            label: "FDR has decision-making capacity OR a legal surrogate consents (for minors / cognitively impaired adults)"
+            legacy_condition: "FDR has decision-making capacity OR a legal surrogate consents (for minors / cognitively impaired adults)"
     if_true:
       next_step: 5
     if_false:
@@ -86,7 +98,10 @@ decision_tree:
     # (TDR) per generation.
     evaluate:
       any_of:
-        - condition: "Second- or third-degree relative is available, eligible (age + consent + counseling), and motivated to test"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-FAMILY-TESTING-CC25FC56BBAB
+            label: "Second- or third-degree relative is available, eligible (age + consent + counseling), and motivated to test"
+            legacy_condition: "Second- or third-degree relative is available, eligible (age + consent + counseling), and motivated to test"
     if_true:
       next_step: 5
     if_false:
@@ -96,8 +111,14 @@ decision_tree:
     # Pre-test counseling + targeted single-site analysis.
     evaluate:
       all_of:
-        - condition: "Relative completes pre-test genetic counseling (informed consent, implications discussion, insurance/GINA considerations)"
-        - condition: "Targeted single-site (or family-variant-specific) germline test ordered — NOT full panel (faster, cheaper ~$250-500, higher analytic specificity for the known variant)"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-FAMILY-TESTING-DFD02425DCBF
+            label: "Relative completes pre-test genetic counseling (informed consent, implications discussion, insurance/GINA considerations)"
+            legacy_condition: "Relative completes pre-test genetic counseling (informed consent, implications discussion, insurance/GINA considerations)"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-FAMILY-TESTING-91E080872A35
+            label: "Targeted single-site (or family-variant-specific) germline test ordered — NOT full panel (faster, cheaper ~$250-500, higher analytic specificity for the known variant)"
+            legacy_condition: "Targeted single-site (or family-variant-specific) germline test ordered — NOT full panel (faster, cheaper ~$250-500, higher analytic specificity for the known variant)"
     if_true:
       next_step: 6
     if_false:
@@ -107,7 +128,10 @@ decision_tree:
     # Post-test routing based on carrier status.
     evaluate:
       all_of:
-        - condition: "Single-site germline test result available + post-test counseling completed"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-FAMILY-TESTING-1AA41B3E0362
+            label: "Single-site germline test result available + post-test counseling completed"
+            legacy_condition: "Single-site germline test result available + post-test counseling completed"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Cascade testing complete. CARRIER-POSITIVE relatives → route to the syndrome-specific carrier-surveillance pathway (Lynch / FAP / BRCA / LFS / VHL / etc.) — annual surveillance schedule + discussion of risk-reducing surgery where applicable. CARRIER-NEGATIVE relatives → reassure (general-population risk), reduce surveillance to population baseline, NO need for cascade in their own descendants. Document outcome in the family pedigree, update the family-history record across the clinic / national hereditary cancer registry, and trigger the next cascade wave (children of newly-confirmed carriers reach testing eligibility in 18-25 years). Indication routing is to the SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE family pending v0.2 authoring of dedicated post-cascade-confirmation Indications (carrier-confirmed routing is v0.2 follow-up backlog)."

@@ -92,7 +92,7 @@ def _walk_entities() -> list[dict]:
                 continue
             if not isinstance(data, dict):
                 continue
-            signoffs = data.get("reviewer_signoffs_v2") or []
+            signoffs = data.get("reviewer_signoffs") or []
             if not isinstance(signoffs, list):
                 signoffs = []
             out.append({

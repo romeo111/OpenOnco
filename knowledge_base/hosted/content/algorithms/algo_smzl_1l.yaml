@@ -30,8 +30,14 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "HCV RNA negative OR no antiviral candidate"
-        - condition: "CD20+ histology confirmed"
+        - clinician_confirmation:
+            id: CC-ALGO-SMZL-1L-2D2EC1BC9F16
+            label: "HCV RNA negative OR no antiviral candidate"
+            legacy_condition: "HCV RNA negative OR no antiviral candidate"
+        - clinician_confirmation:
+            id: CC-ALGO-SMZL-1L-0539E1930F51
+            label: "CD20+ histology confirmed"
+            legacy_condition: "CD20+ histology confirmed"
     if_true:
       result: IND-SMZL-1L-RITUXIMAB
     if_false:

@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout (full history so we can commit back)
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
           # Use a token that can push to master; default GITHUB_TOKEN works
@@ -39,15 +39,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
           cache: pip
+          cache-dependency-path: requirements.lock
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install -e ".[dev]"
+          python -m pip install --requirement requirements.lock
+          python -m pip install --no-build-isolation --no-deps -e .
+
+      - name: Validate knowledge base before publication
+        run: |
+          python scripts/audit_validator.py --human
 
       # Per-NCT ctgov cache for the cited-trials status section (PR #595,
       # #596). Caches `knowledge_base/hosted/content/cache/ctgov_studies/`
@@ -57,7 +62,7 @@ jobs:
       # `restore-keys` falls back to any older snapshot so a small KB
       # edit doesn't invalidate the whole cache.
       - name: Restore ctgov-studies cache
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: knowledge_base/hosted/content/cache/ctgov_studies
           key: ctgov-studies-${{ hashFiles('knowledge_base/hosted/content/sources/*.yaml', 'knowledge_base/hosted/content/indications/*.yaml') }}
@@ -67,12 +72,9 @@ jobs:
       # Populate / refresh the per-NCT cache for cited pivotal trials.
       # Script enforces a 30-day TTL on cache entries; restored entries
       # within TTL are skipped, only new or stale NCTs hit upstream.
-      # `continue-on-error: true` — if api.clinicaltrials.gov is
-      # unreachable, the rendered Plans simply omit the cited-trials
-      # section (the render layer suppresses silently when cache is
-      # empty); daily refresh still publishes the rest of the site.
+      # A sync failure blocks publication: do not silently publish a site
+      # with an incomplete cited-trials section.
       - name: Sync ctgov-studies cache for cited pivotal trials
-        continue-on-error: true
         run: |
           python scripts/sync_ctgov_studies.py --sleep 0.3
 

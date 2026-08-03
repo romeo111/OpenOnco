@@ -17,7 +17,10 @@ decision_tree:
 - step: 1
   evaluate:
     all_of:
-    - condition: "CR or PR after initial rituximab × 4 weekly induction"
+    - clinician_confirmation:
+        id: CC-ALGO-PTLD-2L-F6A9BEBAE62B
+        label: "CR or PR after initial rituximab × 4 weekly induction"
+        legacy_condition: "CR or PR after initial rituximab × 4 weekly induction"
     - condition: "CD20+ B-PTLD"
   if_true:
     result: IND-PTLD-MAINTENANCE-RITUXIMAB

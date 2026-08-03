@@ -24,7 +24,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "BRAF V600E mutation confirmed (IHC VE1 or sequencing)"
+        - clinician_confirmation:
+            id: CC-ALGO-THYROID-ANAPLASTIC-1L-B4FF31AB585D
+            label: "BRAF V600E mutation confirmed (IHC VE1 or sequencing)"
+            legacy_condition: "BRAF V600E mutation confirmed (IHC VE1 or sequencing)"
     if_true:
       next_step: 2
       notes: "BRAF V600E confirmed: route to targeted therapy. Do NOT start chemotherapy first — BRAFi+MEKi offers dramatically superior outcomes."

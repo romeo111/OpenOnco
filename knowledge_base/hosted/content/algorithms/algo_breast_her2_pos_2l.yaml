@@ -36,8 +36,14 @@ decision_tree:
 - step: 2
   evaluate:
     any_of:
-    - condition: "Brain metastases present (active OR previously treated, stable or progressing)"
-    - condition: "MRI brain confirms intracranial disease ≤2 cm OR symptomatic ≥2 cm post-local therapy"
+    - clinician_confirmation:
+        id: CC-ALGO-BREAST-HER2-POS-2L-02D4D078BF84
+        label: "Brain metastases present (active OR previously treated, stable or progressing)"
+        legacy_condition: "Brain metastases present (active OR previously treated, stable or progressing)"
+    - clinician_confirmation:
+        id: CC-ALGO-BREAST-HER2-POS-2L-F050852DE27A
+        label: "MRI brain confirms intracranial disease ≤2 cm OR symptomatic ≥2 cm post-local therapy"
+        legacy_condition: "MRI brain confirms intracranial disease ≤2 cm OR symptomatic ≥2 cm post-local therapy"
   if_true:
     result: IND-BREAST-HER2-POS-3L-TUCATINIB
   if_false:
@@ -48,7 +54,10 @@ decision_tree:
 - step: 3
   evaluate:
     any_of:
-    - condition: "No brain metastases OR brain mets not the dominant clinical issue"
+    - clinician_confirmation:
+        id: CC-ALGO-BREAST-HER2-POS-2L-C0ED954F73BD
+        label: "No brain metastases OR brain mets not the dominant clinical issue"
+        legacy_condition: "No brain metastases OR brain mets not the dominant clinical issue"
   if_true:
     result: IND-BREAST-HER2-POS-MET-2L-TDXD
   if_false:

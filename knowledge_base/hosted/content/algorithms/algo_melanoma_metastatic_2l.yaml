@@ -79,7 +79,10 @@ decision_tree:
     # irAE risk" combination.
   evaluate:
     any_of:
-    - condition: "Patient fit for ipi+nivo Grade 3-4 irAE risk (ECOG 0-1, no significant baseline autoimmunity)"
+    - clinician_confirmation:
+        id: CC-ALGO-MELANOMA-METASTATIC-2L-7BF75D1680DC
+        label: "Patient fit for ipi+nivo Grade 3-4 irAE risk (ECOG 0-1, no significant baseline autoimmunity)"
+        legacy_condition: "Patient fit for ipi+nivo Grade 3-4 irAE risk (ECOG 0-1, no significant baseline autoimmunity)"
   if_true:
     result: IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
   if_false:
@@ -94,7 +97,10 @@ decision_tree:
 - step: 5
   evaluate:
     any_of:
-    - condition: "Patient unfit for ipi+nivo (baseline autoimmunity, frailty, advanced age) but IO-naive"
+    - clinician_confirmation:
+        id: CC-ALGO-MELANOMA-METASTATIC-2L-09C22A6567C9
+        label: "Patient unfit for ipi+nivo (baseline autoimmunity, frailty, advanced age) but IO-naive"
+        legacy_condition: "Patient unfit for ipi+nivo (baseline autoimmunity, frailty, advanced age) but IO-naive"
     - red_flag: RF-MELANOMA-FRAILTY-AGE
   if_true:
     result: IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB

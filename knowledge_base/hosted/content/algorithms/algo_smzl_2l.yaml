@@ -51,9 +51,18 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "Symptomatic relapse after 1L (cytopenia, progressive splenomegaly, B-symptoms)"
-        - condition: "CD20+ confirmed at relapse biopsy"
-        - condition: "Adequate marrow + organ function for bendamustine"
+        - clinician_confirmation:
+            id: CC-ALGO-SMZL-2L-5F2C5025425D
+            label: "Symptomatic relapse after 1L (cytopenia, progressive splenomegaly, B-symptoms)"
+            legacy_condition: "Symptomatic relapse after 1L (cytopenia, progressive splenomegaly, B-symptoms)"
+        - clinician_confirmation:
+            id: CC-ALGO-SMZL-2L-0E905E408FCD
+            label: "CD20+ confirmed at relapse biopsy"
+            legacy_condition: "CD20+ confirmed at relapse biopsy"
+        - clinician_confirmation:
+            id: CC-ALGO-SMZL-2L-54E0CB1644A8
+            label: "Adequate marrow + organ function for bendamustine"
+            legacy_condition: "Adequate marrow + organ function for bendamustine"
         - red_flag: RF-SMZL-ORGAN-DYSFUNCTION
         - red_flag: RF-SMZL-TRANSFORMATION-PROGRESSION
     if_true:

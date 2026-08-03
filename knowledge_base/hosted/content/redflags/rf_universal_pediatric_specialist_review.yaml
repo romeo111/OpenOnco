@@ -1,0 +1,33 @@
+id: RF-UNIVERSAL-PEDIATRIC-SPECIALIST-REVIEW
+definition: >
+  Patient younger than 18 years with a cancer diagnosis — ensure treatment
+  planning and supportive care are coordinated by a pediatric oncology team
+  experienced with the condition. This flag does not select, withhold, or
+  modify a treatment regimen.
+definition_ua: >
+  Пацієнт молодший 18 років із онкологічним діагнозом — планування лікування
+  та підтримувальної допомоги має координувати команда дитячої онкології з
+  досвідом ведення цього стану. Це правило не обирає, не скасовує і не
+  змінює режим лікування.
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: age_years
+      threshold: 18
+      comparator: "<"
+clinical_direction: investigate
+severity: minor
+priority: 900
+category: frailty-age
+relevant_diseases: ["*"]
+shifts_algorithm: []
+branch_targets: {}
+sources:
+  - SRC-NCI-CHILDHOOD-CANCERS-2025
+  - SRC-NCI-PDQ-PEDIATRIC-TREATMENT-2025
+last_reviewed: '2026-08-02'
+draft: false
+notes: >
+  Universal because specialist pediatric coordination is a care-setting
+  requirement across childhood cancers. It surfaces a safety check only;
+  the treating team confirms all diagnosis- and protocol-specific choices.

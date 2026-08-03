@@ -25,8 +25,14 @@ decision_tree:
   - step: 2
     evaluate:
       all_of:
-        - condition: "Standard / intermediate risk"
-        - condition: "ECOG ≤ 3"
+        - clinician_confirmation:
+            id: CC-ALGO-BURKITT-1L-F08C149D5A0C
+            label: "Standard / intermediate risk"
+            legacy_condition: "Standard / intermediate risk"
+        - clinician_confirmation:
+            id: CC-ALGO-BURKITT-1L-E20FD88CF985
+            label: "ECOG ≤ 3"
+            legacy_condition: "ECOG ≤ 3"
     if_true:
       result: IND-BURKITT-1L-DAEPOCHR
     if_false:

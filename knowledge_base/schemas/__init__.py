@@ -19,6 +19,7 @@ from .diagnostic import (
 )
 from .disease import Disease
 from .drug import Drug
+from .drug_indication import DrugIndication, DrugUseStatus, JurisdictionUseStatus
 from .experimental_option import ExperimentalOption, ExperimentalTrial, UaSiteDetail
 from .indication import (
     Indication,
@@ -61,6 +62,7 @@ from .test import Test
 ENTITY_BY_DIR: dict[str, type] = {
     "diseases": Disease,
     "drugs": Drug,
+    "drug_indications": DrugIndication,
     "regimens": Regimen,
     "indications": Indication,
     "biomarkers": Biomarker,
@@ -98,6 +100,8 @@ __all__ = [
     "DiagnosticWorkup",
     "Disease",
     "Drug",
+    "DrugIndication",
+    "DrugUseStatus",
     "ENTITY_BY_DIR",
     "BiomarkerStratification",
     "DesignFlag",
@@ -137,5 +141,6 @@ __all__ = [
     "SuspicionSnapshot",
     "Test",
     "VariantActionabilityHit",
+    "JurisdictionUseStatus",
     "WorkupStep",
 ]

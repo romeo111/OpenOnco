@@ -114,7 +114,7 @@ def _iter_regimen_components(regimen_dict: Optional[dict]):
 
 # ── Sign-off badge (CHARTER §6.1) ─────────────────────────────────────────
 #
-# Indications carry `reviewer_signoffs_v2: list[ReviewerSignoff]` after the
+# Indications carry `reviewer_signoffs: list[ReviewerSignoff]` after the
 # `scripts/clinical_signoff.py` CLI is run. The plan render surfaces the
 # coverage state as a coloured badge so the clinician sees at a glance
 # whether the recommendation has the two Clinical Co-Lead approvals
@@ -143,6 +143,29 @@ def _signoff_label(reviewer_id: str) -> str:
     return _load_reviewer_labels().get(reviewer_id, reviewer_id)
 
 
+def _usable_signoffs(entity_data: dict) -> list[dict]:
+    """Return distinct, in-scope structured sign-offs for display.
+
+    `reviewer_signoffs` is the schema-owned field. The obsolete
+    `reviewer_signoffs_v2` spelling is deliberately ignored: accepting it in
+    the renderer would make unvalidated legacy metadata look like approval.
+    """
+    raw = entity_data.get("reviewer_signoffs") or []
+    if not isinstance(raw, list):
+        return []
+    seen: set[str] = set()
+    out: list[dict] = []
+    for signoff in raw:
+        if not isinstance(signoff, dict):
+            continue
+        reviewer_id = str(signoff.get("reviewer_id") or "").strip()
+        if not reviewer_id or reviewer_id in seen or signoff.get("scope_match") is False:
+            continue
+        seen.add(reviewer_id)
+        out.append(signoff)
+    return out
+
+
 @functools.lru_cache(maxsize=1)
 def _load_defined_bio_ids() -> frozenset:
     """Return frozenset of BIO-* ids defined in biomarkers/. Cached."""
@@ -165,8 +188,7 @@ def _render_signoff_badge(entity_data: Optional[dict]) -> str:
     """Render a clinician-mode sign-off badge. 0/1/≥2 sign-offs."""
     if not isinstance(entity_data, dict):
         return ""
-    sigs = entity_data.get("reviewer_signoffs_v2") or []
-    sigs = [s for s in sigs if isinstance(s, dict) and s.get("reviewer_id")]
+    sigs = _usable_signoffs(entity_data)
     n = len(sigs)
     if n == 0:
         return (
@@ -194,8 +216,7 @@ def _render_signoff_badge_patient(entity_data: Optional[dict]) -> str:
     """Patient-mode sign-off — simpler vocabulary, no reviewer names."""
     if not isinstance(entity_data, dict):
         return ""
-    sigs = entity_data.get("reviewer_signoffs_v2") or []
-    sigs = [s for s in sigs if isinstance(s, dict) and s.get("reviewer_id")]
+    sigs = _usable_signoffs(entity_data)
     n = len(sigs)
     if n >= 2:
         return (

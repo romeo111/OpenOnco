@@ -51,7 +51,10 @@ decision_tree:
       all_of:
         - biomarker: BIO-BRAF-V600E
           comparator: "positive"
-        - condition: "HCL relapse documented (cytopenia, splenomegaly, marrow infiltration) OR primary refractory after 1L purine"
+        - clinician_confirmation:
+            id: CC-ALGO-HCL-2L-41D4BF781649
+            label: "HCL relapse documented (cytopenia, splenomegaly, marrow infiltration) OR primary refractory after 1L purine"
+            legacy_condition: "HCL relapse documented (cytopenia, splenomegaly, marrow infiltration) OR primary refractory after 1L purine"
     if_true:
       result: IND-HCL-2L-VEMURAFENIB
     if_false:
@@ -68,8 +71,14 @@ decision_tree:
       any_of:
         - biomarker: BIO-BRAF-V600E
           comparator: "negative (HCL-variant or rare WT)"
-        - condition: "Vemurafenib inaccessible / contraindicated (severe arthralgia history, QTc prolongation, hepatic dysfunction)"
-        - condition: "Late relapse (>1y from 1L) — cladribine retreatment retains efficacy"
+        - clinician_confirmation:
+            id: CC-ALGO-HCL-2L-99FBD3B28D08
+            label: "Vemurafenib inaccessible / contraindicated (severe arthralgia history, QTc prolongation, hepatic dysfunction)"
+            legacy_condition: "Vemurafenib inaccessible / contraindicated (severe arthralgia history, QTc prolongation, hepatic dysfunction)"
+        - clinician_confirmation:
+            id: CC-ALGO-HCL-2L-B6BD886FAA0C
+            label: "Late relapse (>1y from 1L) — cladribine retreatment retains efficacy"
+            legacy_condition: "Late relapse (>1y from 1L) — cladribine retreatment retains efficacy"
         - red_flag: RF-HCL-ORGAN-DYSFUNCTION
         - red_flag: RF-HCL-TRANSFORMATION-PROGRESSION
     if_true:
@@ -82,7 +91,10 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Classic HCL (BRAF-V600E+), 2L+ relapsed/refractory"
+        - clinician_confirmation:
+            id: CC-ALGO-HCL-2L-65F256E85918
+            label: "Classic HCL (BRAF-V600E+), 2L+ relapsed/refractory"
+            legacy_condition: "Classic HCL (BRAF-V600E+), 2L+ relapsed/refractory"
         - red_flag: RF-HCL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-HCL-2L-VEMURAFENIB

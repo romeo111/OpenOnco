@@ -39,6 +39,7 @@ Usage:
   python scripts/audit_validator.py                          # JSON to stdout
   python scripts/audit_validator.py --output validator.json  # write to file
   python scripts/audit_validator.py --human                  # readable summary
+  python scripts/audit_validator.py --strict-source-refs     # include prose SRC-* gaps
 """
 
 from __future__ import annotations
@@ -57,7 +58,11 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 
-def collect_validator_state(kb_root: Path = KB_ROOT) -> dict[str, Any]:
+def collect_validator_state(
+    kb_root: Path = KB_ROOT,
+    *,
+    strict_source_refs: bool = False,
+) -> dict[str, Any]:
     """Run the loader, capture errors, normalize to JSON-friendly dict.
 
     Returned dict is stable across runs at the same git SHA — same
@@ -69,7 +74,7 @@ def collect_validator_state(kb_root: Path = KB_ROOT) -> dict[str, Any]:
     from knowledge_base.validation.loader import load_content
 
     try:
-        result = load_content(kb_root)
+        result = load_content(kb_root, strict_source_refs=strict_source_refs)
     except Exception as exc:  # pylint: disable=broad-except
         # Catastrophic: e.g. Pydantic upgrade incompatibility.
         return {
@@ -211,9 +216,16 @@ def main() -> int:
         "--kb-root", type=Path, default=KB_ROOT,
         help=f"Path to KB content root (default: {KB_ROOT}).",
     )
+    parser.add_argument(
+        "--strict-source-refs", action="store_true",
+        help="Treat unresolved SRC-* tokens in narrative prose as ref errors.",
+    )
     args = parser.parse_args()
 
-    state = collect_validator_state(args.kb_root)
+    state = collect_validator_state(
+        args.kb_root,
+        strict_source_refs=args.strict_source_refs,
+    )
 
     if args.human:
         out = render_human(state)

@@ -21,8 +21,14 @@ decision_tree:
   - step: 1
     evaluate:
       all_of:
-        - condition: "Early stage I-II"
-        - condition: "Localized disease amenable to RT"
+        - clinician_confirmation:
+            id: CC-ALGO-NLPBL-1L-79ADB9500C19
+            label: "Early stage I-II"
+            legacy_condition: "Early stage I-II"
+        - clinician_confirmation:
+            id: CC-ALGO-NLPBL-1L-16EF53F25C48
+            label: "Localized disease amenable to RT"
+            legacy_condition: "Localized disease amenable to RT"
     if_true:
       next_step: 2
     if_false:
@@ -43,7 +49,10 @@ decision_tree:
           value: true
         - finding: "patient_refuses_radiotherapy"
           value: true
-        - condition: "RT contraindicated (young patient breast/thyroid field overlap, prior RT, patient refuses)"
+        - clinician_confirmation:
+            id: CC-ALGO-NLPBL-1L-49B71E8F1649
+            label: "RT contraindicated (young patient breast/thyroid field overlap, prior RT, patient refuses)"
+            legacy_condition: "RT contraindicated (young patient breast/thyroid field overlap, prior RT, patient refuses)"
     if_true:
       result: IND-NLPBL-1L-RITUXIMAB-MONO
     if_false:

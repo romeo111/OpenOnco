@@ -14,8 +14,14 @@ decision_tree:
   evaluate:
     all_of:
     - red_flag: RF-PRIOR-HDACI-NAIVE
-    - condition: Romidepsin accessible (named-patient or trial)
-    - condition: No baseline cardiac arrhythmia / QTc prolongation precluding HDACi
+    - clinician_confirmation:
+        id: CC-ALGO-PTCL-2L-546D34C50A2E
+        label: "Romidepsin accessible (named-patient or trial)"
+        legacy_condition: "Romidepsin accessible (named-patient or trial)"
+    - clinician_confirmation:
+        id: CC-ALGO-PTCL-2L-C628A82D26BB
+        label: "No baseline cardiac arrhythmia / QTc prolongation precluding HDACi"
+        legacy_condition: "No baseline cardiac arrhythmia / QTc prolongation precluding HDACi"
   if_true:
     result: IND-PTCL-2L-ROMIDEPSIN
   if_false:
@@ -24,8 +30,14 @@ decision_tree:
 - step: 2
   evaluate:
     all_of:
-    - condition: Pralatrexate accessible (named-patient or trial)
-    - condition: No prior Grade ≥3 mucositis from antifolates
+    - clinician_confirmation:
+        id: CC-ALGO-PTCL-2L-0DF1C5C6AE66
+        label: "Pralatrexate accessible (named-patient or trial)"
+        legacy_condition: "Pralatrexate accessible (named-patient or trial)"
+    - clinician_confirmation:
+        id: CC-ALGO-PTCL-2L-252344BA84BB
+        label: "No prior Grade ≥3 mucositis from antifolates"
+        legacy_condition: "No prior Grade ≥3 mucositis from antifolates"
     - none_of:
       - red_flag: RF-ORGAN-RENAL-IMPAIRED
   if_true:

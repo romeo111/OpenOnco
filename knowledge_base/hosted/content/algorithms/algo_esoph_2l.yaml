@@ -40,10 +40,19 @@ decision_tree:
 - step: 1
   evaluate:
     all_of:
-    - condition: PD-L1 CPS ≥10 (22C3 assay)
-    - condition: No prior ICI in 1L
+    - clinician_confirmation:
+        id: CC-ALGO-ESOPH-2L-1F036E770371
+        label: "PD-L1 CPS ≥10 (22C3 assay)"
+        legacy_condition: "PD-L1 CPS ≥10 (22C3 assay)"
+    - clinician_confirmation:
+        id: CC-ALGO-ESOPH-2L-574B4E8F3AAC
+        label: "No prior ICI in 1L"
+        legacy_condition: "No prior ICI in 1L"
     - red_flag: RF-FITNESS-ECOG-FIT
-    - condition: No active autoimmune disease
+    - clinician_confirmation:
+        id: CC-ALGO-ESOPH-2L-9755FD8D93C9
+        label: "No active autoimmune disease"
+        legacy_condition: "No active autoimmune disease"
   if_true:
     result: IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
   if_false:
@@ -52,10 +61,19 @@ decision_tree:
 - step: 2
   evaluate:
     all_of:
-    - condition: Squamous-cell histology
-    - condition: No prior ICI in 1L
+    - clinician_confirmation:
+        id: CC-ALGO-ESOPH-2L-4EAC22883A1B
+        label: "Squamous-cell histology"
+        legacy_condition: "Squamous-cell histology"
+    - clinician_confirmation:
+        id: CC-ALGO-ESOPH-2L-574B4E8F3AAC
+        label: "No prior ICI in 1L"
+        legacy_condition: "No prior ICI in 1L"
     - red_flag: RF-FITNESS-ECOG-FIT
-    - condition: No active autoimmune disease
+    - clinician_confirmation:
+        id: CC-ALGO-ESOPH-2L-9755FD8D93C9
+        label: "No active autoimmune disease"
+        legacy_condition: "No active autoimmune disease"
   if_true:
     result: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
   if_false:

@@ -27,8 +27,14 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "Center cannot deliver infusional DA-EPOCH-R safely"
-        - condition: "Patient prefers shorter chemo + RT"
+        - clinician_confirmation:
+            id: CC-ALGO-PMBCL-1L-AB1FE7E81344
+            label: "Center cannot deliver infusional DA-EPOCH-R safely"
+            legacy_condition: "Center cannot deliver infusional DA-EPOCH-R safely"
+        - clinician_confirmation:
+            id: CC-ALGO-PMBCL-1L-C8C08EC75625
+            label: "Patient prefers shorter chemo + RT"
+            legacy_condition: "Patient prefers shorter chemo + RT"
         - red_flag: RF-PMBCL-ORGAN-DYSFUNCTION
     if_true:
       result: IND-PMBCL-1L-RCHOP-RT

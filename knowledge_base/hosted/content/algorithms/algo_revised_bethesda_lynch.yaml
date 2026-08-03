@@ -31,7 +31,10 @@ decision_tree:
     # Criterion 1: CRC <50.
     evaluate:
       any_of:
-        - condition: "Colorectal cancer diagnosed in a patient <50 years of age"
+        - clinician_confirmation:
+            id: CC-ALGO-REVISED-BETHESDA-LYNCH-9F9281BC9BAD
+            label: "Colorectal cancer diagnosed in a patient <50 years of age"
+            legacy_condition: "Colorectal cancer diagnosed in a patient <50 years of age"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Revised Bethesda criterion 1 met (CRC <50) — tumor MSI/MMR-IHC + genetic counseling + germline panel referral (within surveillance pathway)."
@@ -42,8 +45,14 @@ decision_tree:
     # tumors regardless of age.
     evaluate:
       any_of:
-        - condition: "Synchronous (≥2 simultaneous) CRC, OR metachronous CRC (separate primaries at different times), regardless of age"
-        - condition: "Synchronous or metachronous Lynch-spectrum cancers (CRC + endometrial / gastric / ovarian / pancreatic / urothelial / small bowel / hepatobiliary / brain / sebaceous skin), regardless of age"
+        - clinician_confirmation:
+            id: CC-ALGO-REVISED-BETHESDA-LYNCH-32850A184D90
+            label: "Synchronous (≥2 simultaneous) CRC, OR metachronous CRC (separate primaries at different times), regardless of age"
+            legacy_condition: "Synchronous (≥2 simultaneous) CRC, OR metachronous CRC (separate primaries at different times), regardless of age"
+        - clinician_confirmation:
+            id: CC-ALGO-REVISED-BETHESDA-LYNCH-B6DCB9A89425
+            label: "Synchronous or metachronous Lynch-spectrum cancers (CRC + endometrial / gastric / ovarian / pancreatic / urothelial / small bowel / hepatobiliary / brain / sebaceous skin), regardless of age"
+            legacy_condition: "Synchronous or metachronous Lynch-spectrum cancers (CRC + endometrial / gastric / ovarian / pancreatic / urothelial / small bowel / hepatobiliary / brain / sebaceous skin), regardless of age"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Revised Bethesda criterion 2 met (synchronous/metachronous Lynch-spectrum) — tumor MSI/MMR-IHC + germline panel referral."
@@ -53,12 +62,27 @@ decision_tree:
     # Criterion 3: CRC with MSI-H histologic features dx <60.
     evaluate:
       all_of:
-        - condition: "Colorectal cancer diagnosed at age <60"
+        - clinician_confirmation:
+            id: CC-ALGO-REVISED-BETHESDA-LYNCH-BFA526338CD9
+            label: "Colorectal cancer diagnosed at age <60"
+            legacy_condition: "Colorectal cancer diagnosed at age <60"
         - any_of:
-            - condition: "MSI-H histologic features: tumor-infiltrating lymphocytes (TILs)"
-            - condition: "MSI-H histologic features: Crohn-like lymphocytic reaction"
-            - condition: "MSI-H histologic features: mucinous / signet-ring differentiation"
-            - condition: "MSI-H histologic features: medullary growth pattern"
+            - clinician_confirmation:
+                id: CC-ALGO-REVISED-BETHESDA-LYNCH-AC0399E9A9AC
+                label: "MSI-H histologic features: tumor-infiltrating lymphocytes (TILs)"
+                legacy_condition: "MSI-H histologic features: tumor-infiltrating lymphocytes (TILs)"
+            - clinician_confirmation:
+                id: CC-ALGO-REVISED-BETHESDA-LYNCH-2DEC5FA98958
+                label: "MSI-H histologic features: Crohn-like lymphocytic reaction"
+                legacy_condition: "MSI-H histologic features: Crohn-like lymphocytic reaction"
+            - clinician_confirmation:
+                id: CC-ALGO-REVISED-BETHESDA-LYNCH-82BA1FB40F79
+                label: "MSI-H histologic features: mucinous / signet-ring differentiation"
+                legacy_condition: "MSI-H histologic features: mucinous / signet-ring differentiation"
+            - clinician_confirmation:
+                id: CC-ALGO-REVISED-BETHESDA-LYNCH-0C8AD0D96314
+                label: "MSI-H histologic features: medullary growth pattern"
+                legacy_condition: "MSI-H histologic features: medullary growth pattern"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Revised Bethesda criterion 3 met (MSI-H histology <60) — tumor MSI/MMR-IHC."
@@ -69,9 +93,18 @@ decision_tree:
     # cancer, one <50.
     evaluate:
       all_of:
-        - condition: "Patient has colorectal cancer"
-        - condition: "≥1 first-degree relative with Lynch-spectrum cancer (CRC, endometrial, urothelial, small bowel, gastric, ovarian, pancreatic, hepatobiliary, brain, sebaceous)"
-        - condition: "At least one of these cancers (patient or relative) diagnosed at age <50"
+        - clinician_confirmation:
+            id: CC-ALGO-REVISED-BETHESDA-LYNCH-3FC11C9F8D9A
+            label: "Patient has colorectal cancer"
+            legacy_condition: "Patient has colorectal cancer"
+        - clinician_confirmation:
+            id: CC-ALGO-REVISED-BETHESDA-LYNCH-C6BB10BAD01F
+            label: "≥1 first-degree relative with Lynch-spectrum cancer (CRC, endometrial, urothelial, small bowel, gastric, ovarian, pancreatic, hepatobiliary, brain, sebaceous)"
+            legacy_condition: "≥1 first-degree relative with Lynch-spectrum cancer (CRC, endometrial, urothelial, small bowel, gastric, ovarian, pancreatic, hepatobiliary, brain, sebaceous)"
+        - clinician_confirmation:
+            id: CC-ALGO-REVISED-BETHESDA-LYNCH-F6E6E46EC2D6
+            label: "At least one of these cancers (patient or relative) diagnosed at age <50"
+            legacy_condition: "At least one of these cancers (patient or relative) diagnosed at age <50"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Revised Bethesda criterion 4 met (CRC + first-degree Lynch-spectrum, ≥1 dx <50)."
@@ -82,8 +115,14 @@ decision_tree:
     # spectrum cancer regardless of age.
     evaluate:
       all_of:
-        - condition: "Patient has colorectal cancer"
-        - condition: "≥2 first-degree or second-degree relatives with Lynch-spectrum cancer, regardless of age"
+        - clinician_confirmation:
+            id: CC-ALGO-REVISED-BETHESDA-LYNCH-3FC11C9F8D9A
+            label: "Patient has colorectal cancer"
+            legacy_condition: "Patient has colorectal cancer"
+        - clinician_confirmation:
+            id: CC-ALGO-REVISED-BETHESDA-LYNCH-5764D91E4084
+            label: "≥2 first-degree or second-degree relatives with Lynch-spectrum cancer, regardless of age"
+            legacy_condition: "≥2 first-degree or second-degree relatives with Lynch-spectrum cancer, regardless of age"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Revised Bethesda criterion 5 met (CRC + 2 first/second-degree Lynch-spectrum)."

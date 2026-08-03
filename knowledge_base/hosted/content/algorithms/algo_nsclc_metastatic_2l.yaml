@@ -109,7 +109,10 @@ decision_tree:
     # by a dedicated RF; condition retained as plain text + MDT flag.
     evaluate:
       any_of:
-        - condition: "G2032R solvent-front resistance mutation OR post-entrectinib failure"
+        - clinician_confirmation:
+            id: CC-ALGO-NSCLC-METASTATIC-2L-A62D74A5E73B
+            label: "G2032R solvent-front resistance mutation OR post-entrectinib failure"
+            legacy_condition: "G2032R solvent-front resistance mutation OR post-entrectinib failure"
     if_true:
       result: IND-NSCLC-2L-ROS1-REPOTRECTINIB
     if_false:
@@ -131,7 +134,10 @@ decision_tree:
     # Brain-met fitness modifier has no dedicated RF; condition retained.
     evaluate:
       any_of:
-        - condition: "Active untreated brain metastases (adagrasib intracranial ORR ~33%)"
+        - clinician_confirmation:
+            id: CC-ALGO-NSCLC-METASTATIC-2L-8361C4279107
+            label: "Active untreated brain metastases (adagrasib intracranial ORR ~33%)"
+            legacy_condition: "Active untreated brain metastases (adagrasib intracranial ORR ~33%)"
     if_true:
       result: IND-NSCLC-2L-KRAS-G12C-ADAGRASIB
     if_false:
@@ -153,7 +159,10 @@ decision_tree:
     # Adherence preference is not a clinical-finding RF; condition retained.
     evaluate:
       any_of:
-        - condition: "Once-daily dosing preferred (adherence / convenience)"
+        - clinician_confirmation:
+            id: CC-ALGO-NSCLC-METASTATIC-2L-BDA21443A402
+            label: "Once-daily dosing preferred (adherence / convenience)"
+            legacy_condition: "Once-daily dosing preferred (adherence / convenience)"
     if_true:
       result: IND-NSCLC-2L-MET-EX14-TEPOTINIB
     if_false:
@@ -220,7 +229,10 @@ decision_tree:
   - step: 16
     evaluate:
       any_of:
-        - condition: "Driver-negative disease, progression on 1L platinum + ICI"
+        - clinician_confirmation:
+            id: CC-ALGO-NSCLC-METASTATIC-2L-8E61B60E081F
+            label: "Driver-negative disease, progression on 1L platinum + ICI"
+            legacy_condition: "Driver-negative disease, progression on 1L platinum + ICI"
         - red_flag: RF-NSCLC-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL

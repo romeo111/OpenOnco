@@ -25,9 +25,18 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "≥1 prior systemic line failed (post-CHOEP/CHP-Bv)"
-        - condition: "AITL-typical epigenetic mutations documented (TET2/DNMT3A/IDH2)"
-        - condition: "Hypomethylating agent accessible / preferred"
+        - clinician_confirmation:
+            id: CC-ALGO-AITL-2L-21F20FD78C47
+            label: "≥1 prior systemic line failed (post-CHOEP/CHP-Bv)"
+            legacy_condition: "≥1 prior systemic line failed (post-CHOEP/CHP-Bv)"
+        - clinician_confirmation:
+            id: CC-ALGO-AITL-2L-083E2B8B211B
+            label: "AITL-typical epigenetic mutations documented (TET2/DNMT3A/IDH2)"
+            legacy_condition: "AITL-typical epigenetic mutations documented (TET2/DNMT3A/IDH2)"
+        - clinician_confirmation:
+            id: CC-ALGO-AITL-2L-F1641C69A52D
+            label: "Hypomethylating agent accessible / preferred"
+            legacy_condition: "Hypomethylating agent accessible / preferred"
     if_true:
       result: IND-AITL-2L-AZACITIDINE
     if_false:
@@ -39,8 +48,14 @@ decision_tree:
     evaluate:
       all_of:
         - condition: "HDAC-inhibitor-naive"
-        - condition: "Romidepsin accessible (named-patient or trial)"
-        - condition: "No baseline cardiac arrhythmia / QTc prolongation precluding HDACi"
+        - clinician_confirmation:
+            id: CC-ALGO-AITL-2L-546D34C50A2E
+            label: "Romidepsin accessible (named-patient or trial)"
+            legacy_condition: "Romidepsin accessible (named-patient or trial)"
+        - clinician_confirmation:
+            id: CC-ALGO-AITL-2L-C628A82D26BB
+            label: "No baseline cardiac arrhythmia / QTc prolongation precluding HDACi"
+            legacy_condition: "No baseline cardiac arrhythmia / QTc prolongation precluding HDACi"
     if_true:
       result: IND-AITL-2L-ROMIDEPSIN
     if_false:
@@ -61,8 +76,14 @@ decision_tree:
           value: true
         - finding: "hdaci_cardiac_contraindication"
           value: true
-        - condition: "Romidepsin inaccessible / intolerant"
-        - condition: "Mild baseline arrhythmia, prefer belinostat profile"
+        - clinician_confirmation:
+            id: CC-ALGO-AITL-2L-08BBB0B70D29
+            label: "Romidepsin inaccessible / intolerant"
+            legacy_condition: "Romidepsin inaccessible / intolerant"
+        - clinician_confirmation:
+            id: CC-ALGO-AITL-2L-8758693B635A
+            label: "Mild baseline arrhythmia, prefer belinostat profile"
+            legacy_condition: "Mild baseline arrhythmia, prefer belinostat profile"
     if_true:
       result: IND-AITL-2L-BELINOSTAT
     if_false:

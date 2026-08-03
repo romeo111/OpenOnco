@@ -67,6 +67,11 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
     ],
     "tests": [],
     "drugs": [],
+    "drug_indications": [
+        ("drug_id", "drugs"),
+        ("indication_id", "indications"),
+        ("disease_id", "diseases"),
+    ],
     "diseases": [],
     "sources": [],
     "workups": [
@@ -292,11 +297,12 @@ def load_content(
     Parameters
     ----------
     strict_source_refs:
-        When False (default), unresolved SRC-* citations land in
-        `result.contract_warnings` — the load still reports `ok=True`, so
-        legacy callers and existing tests continue to pass. When True,
-        unresolved SRC-* citations land in `result.ref_errors` and break
-        `ok` (suitable for production CI gates).
+        Structured source foreign keys always land in `result.ref_errors`:
+        a missing source must never permit a clinical plan. When False
+        (default), unresolved SRC-* tokens found only in narrative prose
+        land in `result.contract_warnings`. When True, those narrative
+        tokens also land in `result.ref_errors`, suitable for a fully
+        source-complete production gate.
     """
     key = (Path(root).resolve(), bool(strict_source_refs))
     cached = _LOAD_CACHE.get(key)
@@ -390,10 +396,11 @@ def _load_content_impl(
                 and ref_id.startswith("SRC-")
             ):
                 msg = _format_unresolved_src_msg(ref_id, field_label, known_src_ids)
-                if strict_source_refs:
-                    result.ref_errors.append((path, msg))
-                else:
-                    result.contract_warnings.append((path, msg))
+                # This path is only reached from typed source-reference
+                # fields (for example, `sources[]`). Unlike a prose mention,
+                # a dangling FK can affect provenance of an engine decision
+                # and must always make the KB invalid.
+                result.ref_errors.append((path, msg))
                 return
             result.ref_errors.append(
                 (path, f"{field_label}: '{ref_id}' not found in any loaded entity")
@@ -447,6 +454,34 @@ def _load_content_impl(
         elif etype == "algorithms":
             for sid in data.get("output_indications") or []:
                 check_ref(path, sid, "indications", "output_indications[]")
+        elif etype == "drug_indications":
+            for i, regimen_id in enumerate(data.get("regimen_ids") or []):
+                check_ref(path, regimen_id, "regimens", f"regimen_ids[{i}]")
+            for i, source_id in enumerate(data.get("evidence_sources") or []):
+                check_ref(path, source_id, "sources", f"evidence_sources[{i}]")
+            for status_i, status in enumerate(data.get("statuses") or []):
+                if not isinstance(status, dict):
+                    continue
+                for source_i, source_id in enumerate(status.get("source_ids") or []):
+                    check_ref(
+                        path,
+                        source_id,
+                        "sources",
+                        f"statuses[{status_i}].source_ids[{source_i}]",
+                    )
+
+            indication_info = result.entities_by_id.get(data.get("indication_id"))
+            indication = indication_info.get("data") if indication_info else None
+            applicable = indication.get("applicable_to") if isinstance(indication, dict) else None
+            indication_disease_id = (
+                applicable.get("disease_id") if isinstance(applicable, dict) else None
+            )
+            if indication_disease_id and indication_disease_id != data.get("disease_id"):
+                result.contract_errors.append((
+                    path,
+                    "disease_id must match indication.applicable_to.disease_id "
+                    f"({data.get('disease_id')!r} != {indication_disease_id!r})",
+                ))
         elif etype == "indications":
             for i, cit in enumerate(data.get("sources") or []):
                 if isinstance(cit, dict):
@@ -582,7 +617,40 @@ def _load_content_impl(
         # resolve to a ReviewerProfile entity. Legacy `reviewer_signoffs: 0`
         # is coerced to [] by the schema validator before we see it here,
         # but the raw YAML may still hold `0`; skip non-list values.
+        # Structured clinical_claims[] are field-local provenance records.
+        # Unlike narrative prose, their source_ids are explicit foreign keys:
+        # a typed claim with a dangling source must not silently look
+        # evidence-backed. Duplicate claim IDs within one entity would make a
+        # future release graph/database mirror ambiguous, so reject them too.
+        claims = data.get("clinical_claims") or []
+        if isinstance(claims, list):
+            seen_claim_ids: set[str] = set()
+            for i, claim in enumerate(claims):
+                if not isinstance(claim, dict):
+                    continue
+                claim_id = claim.get("claim_id")
+                if isinstance(claim_id, str):
+                    if claim_id in seen_claim_ids:
+                        result.contract_errors.append((
+                            path,
+                            f"clinical_claims[{i}].claim_id duplicates {claim_id!r}",
+                        ))
+                    seen_claim_ids.add(claim_id)
+                for j, source_id in enumerate(claim.get("source_ids") or []):
+                    check_ref(
+                        path,
+                        source_id,
+                        "sources",
+                        f"clinical_claims[{i}].source_ids[{j}]",
+                    )
+
         if etype in REVIEWER_SIGNOFF_TYPES:
+            if "reviewer_signoffs_v2" in data:
+                result.contract_errors.append((
+                    path,
+                    "reviewer_signoffs_v2 is deprecated and is not a validated "
+                    "clinical approval; migrate entries to reviewer_signoffs",
+                ))
             signoffs = data.get("reviewer_signoffs")
             if isinstance(signoffs, list):
                 for i, so in enumerate(signoffs):

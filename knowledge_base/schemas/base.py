@@ -169,6 +169,15 @@ class BiomarkerClinicalContext(str, Enum):
     GERMLINE_SUSCEPTIBILITY = "germline_susceptibility"
     TUMOR_PROFILING = "tumor_profiling"
     SCREENING_SURVEILLANCE = "screening_surveillance"
+    # These additional contexts preserve the authored prevention / early-
+    # detection vocabulary.  They are intentionally distinct from
+    # SCREENING_SURVEILLANCE, which remains the engine's eligibility signal
+    # for asymptomatic-plan generation.
+    SCREENING = "screening"
+    PRECURSOR_LESION = "precursor_lesion"
+    DYSPLASIA_GRADING = "dysplasia_grading"
+    HEREDITARY_SURVEILLANCE = "hereditary_surveillance"
+    DIAGNOSTIC_WORKUP = "diagnostic_workup"
     PROGNOSTIC = "prognostic"
     PREDICTIVE = "predictive"
 
@@ -205,6 +214,10 @@ class Base(BaseModel):
     """Common config for all entities — forgiving to YAML schema evolution."""
 
     model_config = ConfigDict(extra="allow", populate_by_name=True)
+    # Optional until existing YAML has been migrated. New schema-sensitive
+    # content should declare the version it was authored against; release
+    # manifests expose the remaining migration inventory.
+    schema_version: Optional[str] = None
 
 
 class License(Base):
@@ -248,6 +261,21 @@ class Citation(Base):
     quote_paraphrase: Optional[str] = None
     relevant_quote_paraphrase: Optional[str] = None  # alias used in some YAMLs
     position: Optional[Literal["supports", "contradicts", "context"]] = None
+
+
+class ClinicalClaim(Base):
+    """A source-addressable clinical statement owned by a KB entity.
+
+    This is provenance metadata, not a treatment-selection instruction and
+    not a substitute for qualified clinical review. The containing entity's
+    normal review/sign-off workflow remains authoritative.
+    """
+
+    claim_id: str
+    text: str
+    source_ids: list[str] = Field(min_length=1)
+    scope: Optional[str] = None
+    source_locator: Optional[str] = None
 
 
 class CostRange(Base):
@@ -340,6 +368,7 @@ __all__ = [
     "IngestionConfig",
     "CachePolicy",
     "Citation",
+    "ClinicalClaim",
     "CostRange",
     "UkraineRegistration",
     "RegulatoryStatus",

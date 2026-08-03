@@ -16,7 +16,10 @@ decision_tree:
 - step: 1
   evaluate:
     any_of:
-    - condition: "PDGFRA D842V mutation positive"
+    - clinician_confirmation:
+        id: CC-ALGO-GIST-2L-905006955598
+        label: "PDGFRA D842V mutation positive"
+        legacy_condition: "PDGFRA D842V mutation positive"
   if_true:
     result: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
     notes: "Avapritinib active at any line for PDGFRA D842V; sunitinib has no meaningful activity in this genotype"
@@ -26,7 +29,10 @@ decision_tree:
 - step: 2
   evaluate:
     any_of:
-    - condition: "Imatinib-resistant GIST (any KIT genotype or WT)"
+    - clinician_confirmation:
+        id: CC-ALGO-GIST-2L-F8D3E1BC823D
+        label: "Imatinib-resistant GIST (any KIT genotype or WT)"
+        legacy_condition: "Imatinib-resistant GIST (any KIT genotype or WT)"
     - condition: "Imatinib-intolerant GIST"
   if_true:
     result: IND-GIST-2L-SUNITINIB

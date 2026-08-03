@@ -52,7 +52,10 @@ decision_tree:
     # VUS-only families remain in periodic re-evaluation.
     evaluate:
       all_of:
-        - condition: "Index patient (proband) has confirmed Li-Fraumeni syndrome germline pathogenic or likely-pathogenic (ACMG class 4/5) variant in TP53"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-LFS-CARRIER-FAMILY-TESTING-B5D90927332A
+            label: "Index patient (proband) has confirmed Li-Fraumeni syndrome germline pathogenic or likely-pathogenic (ACMG class 4/5) variant in TP53"
+            legacy_condition: "Index patient (proband) has confirmed Li-Fraumeni syndrome germline pathogenic or likely-pathogenic (ACMG class 4/5) variant in TP53"
     if_true:
       next_step: 2
     if_false:
@@ -64,7 +67,10 @@ decision_tree:
     # counseling first; second-degree fallback when FDRs unavailable.
     evaluate:
       any_of:
-        - condition: "Index patient has living first-degree relatives (parents, full siblings, biological children) at any age"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-LFS-CARRIER-FAMILY-TESTING-FED518EBFD19
+            label: "Index patient has living first-degree relatives (parents, full siblings, biological children) at any age"
+            legacy_condition: "Index patient has living first-degree relatives (parents, full siblings, biological children) at any age"
     if_true:
       next_step: 3
     if_false:
@@ -80,8 +86,14 @@ decision_tree:
     # cancer; age 5-8 if family history adult-onset-only.
     evaluate:
       all_of:
-        - condition: "FDR is age ≥18 (adult capacity for consent) OR FDR is age <18 + family + pediatric-genetics team consensus that testing supports clinical surveillance entry per Toronto Protocol"
-        - condition: "FDR / legal surrogate provides informed consent after pre-test counseling addressing: lifetime ~85-100% cancer risk, surveillance burden, psychological implications, GINA / EU GDPR insurance considerations, family-system implications"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-LFS-CARRIER-FAMILY-TESTING-DC54C3A83F1A
+            label: "FDR is age ≥18 (adult capacity for consent) OR FDR is age <18 + family + pediatric-genetics team consensus that testing supports clinical surveillance entry per Toronto Protocol"
+            legacy_condition: "FDR is age ≥18 (adult capacity for consent) OR FDR is age <18 + family + pediatric-genetics team consensus that testing supports clinical surveillance entry per Toronto Protocol"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-LFS-CARRIER-FAMILY-TESTING-AABF8FDAECEB
+            label: "FDR / legal surrogate provides informed consent after pre-test counseling addressing: lifetime ~85-100% cancer risk, surveillance burden, psychological implications, GINA / EU GDPR insurance considerations, family-system implications"
+            legacy_condition: "FDR / legal surrogate provides informed consent after pre-test counseling addressing: lifetime ~85-100% cancer risk, surveillance burden, psychological implications, GINA / EU GDPR insurance considerations, family-system implications"
     if_true:
       next_step: 5
     if_false:
@@ -91,7 +103,10 @@ decision_tree:
     # SDR / TDR fallback when FDRs unavailable.
     evaluate:
       any_of:
-        - condition: "Second- or third-degree relative is available, eligible (age + consent + counseling), and motivated to test"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-LFS-CARRIER-FAMILY-TESTING-CC25FC56BBAB
+            label: "Second- or third-degree relative is available, eligible (age + consent + counseling), and motivated to test"
+            legacy_condition: "Second- or third-degree relative is available, eligible (age + consent + counseling), and motivated to test"
     if_true:
       next_step: 5
     if_false:
@@ -103,8 +118,14 @@ decision_tree:
     # via single-site sequencing.
     evaluate:
       all_of:
-        - condition: "Relative completes pre-test genetic counseling — LFS-specific intensified content: lifetime ~85-100% cancer risk, multi-organ surveillance burden including annual whole-body MRI from infancy / childhood (Toronto Protocol), psychological support pathway, insurance / GINA / EU GDPR considerations, family-system implications, reproductive-options discussion (PGT-M, prenatal testing)"
-        - condition: "Targeted single-site TP53 test ordered (NOT full LFS panel — wasteful when family variant is documented); for sentinel-tumor probands without family history, comprehensive TP53 sequencing + del/dup analysis indicated"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-LFS-CARRIER-FAMILY-TESTING-99A9ECDAAAC4
+            label: "Relative completes pre-test genetic counseling — LFS-specific intensified content: lifetime ~85-100% cancer risk, multi-organ surveillance burden including annual whole-body MRI from infancy / childhood (Toronto Protocol), psychological support pathway, insurance / GINA / EU GDPR considerations, family-system implications, reproductive-options discussion (PGT-M, prenatal testing)"
+            legacy_condition: "Relative completes pre-test genetic counseling — LFS-specific intensified content: lifetime ~85-100% cancer risk, multi-organ surveillance burden including annual whole-body MRI from infancy / childhood (Toronto Protocol), psychological support pathway, insurance / GINA / EU GDPR considerations, family-system implications, reproductive-options discussion (PGT-M, prenatal testing)"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-LFS-CARRIER-FAMILY-TESTING-C81D66A726E7
+            label: "Targeted single-site TP53 test ordered (NOT full LFS panel — wasteful when family variant is documented); for sentinel-tumor probands without family history, comprehensive TP53 sequencing + del/dup analysis indicated"
+            legacy_condition: "Targeted single-site TP53 test ordered (NOT full LFS panel — wasteful when family variant is documented); for sentinel-tumor probands without family history, comprehensive TP53 sequencing + del/dup analysis indicated"
     if_true:
       next_step: 6
     if_false:
@@ -117,7 +138,10 @@ decision_tree:
     # relatives have population-baseline risk).
     evaluate:
       all_of:
-        - condition: "Single-site test result available + post-test disclosure counseling + multidisciplinary follow-up plan (medical oncology + medical genetics + radiology + psychology) confirmed"
+        - clinician_confirmation:
+            id: CC-ALGO-CASCADE-LFS-CARRIER-FAMILY-TESTING-2F5EFDD96500
+            label: "Single-site test result available + post-test disclosure counseling + multidisciplinary follow-up plan (medical oncology + medical genetics + radiology + psychology) confirmed"
+            legacy_condition: "Single-site test result available + post-test disclosure counseling + multidisciplinary follow-up plan (medical oncology + medical genetics + radiology + psychology) confirmed"
     if_true:
       result: IND-LI-FRAUMENI-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "LFS cascade complete. CARRIER-POSITIVE FDRs → Toronto Protocol surveillance (Villani 2016 PMID 27300673): annual whole-body MRI + brain MRI + ultrasound abdomen + dermatology + breast MRI in adult women from age 30 (or 5y younger than youngest family breast cancer); CBC q3-4mo; abdominal US q3-4mo in children; biochemistry q3-4mo in children including 17-hydroxyprogesterone (adrenocortical carcinoma surveillance). Pediatric surveillance begins infancy for confirmed pediatric carriers. Adult risk-reducing mastectomy + adnexal surveillance per shared-decision. CARRIER-NEGATIVE FDRs → general-population screening; no enhanced cadence needed for confirmed-negative relatives of confirmed carriers. NEXT-WAVE CASCADE: confirmed-positive carriers' future children → 50% a priori risk, may benefit from PGT-M / prenatal testing decisions (reproductive-counseling). Indication routes to SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE pending v0.2 dedicated post-cascade LFS-carrier-confirmed Indication (LFS-CARRIER-SURVEILLANCE / LFS-CARRIER-INTENSIFIED exist as v0.2-B siblings for treatment-active LFS patients)."

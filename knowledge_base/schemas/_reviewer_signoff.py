@@ -29,6 +29,11 @@ class ReviewerSignoff(Base):
     # Optional: pin the reviewer's approval to a specific entity revision
     # (typically the entity's `last_reviewed` value at sign-off time).
     entity_version: Optional[str] = None
+    # The sign-off CLI records whether the reviewer's declared scope matches
+    # the entity.  A false value must never count toward a public release;
+    # keeping it structured makes that decision auditable instead of relying
+    # on a free-text audit-log note.
+    scope_match: Optional[bool] = None
 
 
 def _migrate_int_signoffs(v):

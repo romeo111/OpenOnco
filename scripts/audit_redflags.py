@@ -157,6 +157,66 @@ def _collect_rule_references(rule_dirs: list[Path] = None) -> Counter:
 # ── Issue detection ─────────────────────────────────────────────────────
 
 
+# Only explicit rule fields create graph edges. The legacy prose scanner above
+# is retained temporarily for backwards-compatible imports, but is overridden
+# below: it treated explanatory text and source IDs such as
+# ``SRC-WCRF-AICR-CUP-2018`` as RedFlag references.
+RED_FLAG_REFERENCE_KEYS = frozenset(
+    {
+        "red_flag",
+        "red_flag_id",
+        "red_flags_triggering_alternative",
+        "triggered_by_redflags",
+    }
+)
+
+
+def _reference_values(value):
+    """Yield IDs only from explicit RedFlag reference field values."""
+    if isinstance(value, str):
+        if value.startswith("RF-"):
+            yield value
+    elif isinstance(value, list):
+        for item in value:
+            yield from _reference_values(item)
+    elif isinstance(value, dict):
+        for item in value.values():
+            yield from _reference_values(item)
+
+
+def _walk_explicit_references(obj):
+    """Yield RedFlag IDs from decision-bearing fields, never free prose."""
+    if isinstance(obj, dict):
+        for key, value in obj.items():
+            if key in RED_FLAG_REFERENCE_KEYS:
+                yield from _reference_values(value)
+            else:
+                yield from _walk_explicit_references(value)
+    elif isinstance(obj, list):
+        for item in obj:
+            yield from _walk_explicit_references(item)
+
+
+def _collect_rule_references(rule_dirs: list[Path] = None) -> Counter:
+    """Return executable RedFlag-reference counts from rule data.
+
+    A prose mention documents an idea; it does not alter a decision tree and
+    must not be reported as a broken graph edge.
+    """
+    refs: Counter = Counter()
+    dirs = rule_dirs if rule_dirs is not None else RULE_DIRS
+    for directory in dirs:
+        for path in _walk_yaml(directory):
+            data = _load_yaml(path)
+            if not isinstance(data, dict):
+                continue
+            self_id = data.get("id")
+            for ref_id in _walk_explicit_references(data):
+                if ref_id != self_id:
+                    refs[ref_id] += 1
+    return refs
+
+
 def _detect_naming_mismatches(
     defined: dict[str, dict],
     referenced: Counter,

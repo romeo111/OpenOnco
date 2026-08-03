@@ -35,6 +35,10 @@ through to `default_indication` on every patient). To avoid changing
 routing semantics retroactively, this module *warns* — it does not
 re-interpret. Routing is unchanged; authors get told the tree isn't
 walked the way it reads.
+
+Those counts are a historical baseline. The Algorithm catalog now migrates
+prose-shaped gates to explicit `clinician_confirmation` mappings; this
+warning remains for historical or third-party content.
 """
 
 from __future__ import annotations
@@ -169,6 +173,30 @@ def _eval_clause(clause: dict, findings: dict[str, Any]) -> bool:
         return any(_eval_clause(c, findings) for c in clause["any_of"])
     if "none_of" in clause:
         return not any(_eval_clause(c, findings) for c in clause["none_of"])
+
+    # A prose gate that cannot safely be inferred from other data is stored
+    # as an explicit clinician/MDT confirmation. Omitted remains False: the
+    # engine never turns an unanswered question into an affirmative fact.
+    # `legacy_condition` retains compatibility with existing fixtures that
+    # used the prose label itself as a findings key.
+    if "clinician_confirmation" in clause:
+        confirmation = clause["clinician_confirmation"]
+        if isinstance(confirmation, str):
+            confirmation_id = confirmation
+            legacy_condition = None
+        elif isinstance(confirmation, dict):
+            confirmation_id = confirmation.get("id")
+            legacy_condition = confirmation.get("legacy_condition")
+        else:
+            return False
+        if not isinstance(confirmation_id, str) or not confirmation_id:
+            return False
+        actual = _resolve_finding(
+            findings, f"clinician_confirmation.{confirmation_id}"
+        )
+        if actual in (None, "") and isinstance(legacy_condition, str):
+            actual = _resolve_finding(findings, legacy_condition)
+        return bool(actual)
 
     finding_key = clause.get("finding") or clause.get("condition")
     if finding_key is None:

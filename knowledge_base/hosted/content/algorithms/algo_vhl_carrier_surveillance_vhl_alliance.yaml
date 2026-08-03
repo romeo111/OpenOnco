@@ -45,7 +45,10 @@ decision_tree:
     # Confirmed-carrier gate — VHL germline P/LP variant.
     evaluate:
       all_of:
-        - condition: "Confirmed VHL germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+        - clinician_confirmation:
+            id: CC-ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE-F6952591BF21
+            label: "Confirmed VHL germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+            legacy_condition: "Confirmed VHL germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
     if_true:
       next_step: 2
     if_false:
@@ -57,7 +60,10 @@ decision_tree:
     # life; untreated → vision loss).
     evaluate:
       all_of:
-        - condition: "Carrier is age ≥1 — ophthalmologic surveillance entry"
+        - clinician_confirmation:
+            id: CC-ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE-156F9D5E807C
+            label: "Carrier is age ≥1 — ophthalmologic surveillance entry"
+            legacy_condition: "Carrier is age ≥1 — ophthalmologic surveillance entry"
     if_true:
       next_step: 3
     if_false:
@@ -67,9 +73,18 @@ decision_tree:
     # Ophthalmologic + audiology + neurology imaging — pediatric.
     evaluate:
       all_of:
-        - condition: "Dilated fundus exam (ophthalmologist with retinal expertise) q6-12 months in childhood; q1y from adolescence — retinal hemangioblastoma surveillance"
-        - condition: "Audiology q1-2y from age 5 — endolymphatic sac tumor surveillance (hearing loss is sentinel feature)"
-        - condition: "Brain + spinal cord MRI with contrast (gadolinium) q2y from age 11-15 — cerebellar / brainstem / spinal cord hemangioblastoma surveillance; from age 30 q1y or based on growth"
+        - clinician_confirmation:
+            id: CC-ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE-D6A8AF1F9140
+            label: "Dilated fundus exam (ophthalmologist with retinal expertise) q6-12 months in childhood; q1y from adolescence — retinal hemangioblastoma surveillance"
+            legacy_condition: "Dilated fundus exam (ophthalmologist with retinal expertise) q6-12 months in childhood; q1y from adolescence — retinal hemangioblastoma surveillance"
+        - clinician_confirmation:
+            id: CC-ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE-5E534296C525
+            label: "Audiology q1-2y from age 5 — endolymphatic sac tumor surveillance (hearing loss is sentinel feature)"
+            legacy_condition: "Audiology q1-2y from age 5 — endolymphatic sac tumor surveillance (hearing loss is sentinel feature)"
+        - clinician_confirmation:
+            id: CC-ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE-A7092C079872
+            label: "Brain + spinal cord MRI with contrast (gadolinium) q2y from age 11-15 — cerebellar / brainstem / spinal cord hemangioblastoma surveillance; from age 30 q1y or based on growth"
+            legacy_condition: "Brain + spinal cord MRI with contrast (gadolinium) q2y from age 11-15 — cerebellar / brainstem / spinal cord hemangioblastoma surveillance; from age 30 q1y or based on growth"
     if_true:
       next_step: 4
     if_false:
@@ -79,9 +94,18 @@ decision_tree:
     # Biochemical + abdominal imaging — pheochromocytoma + RCC + pNET.
     evaluate:
       all_of:
-        - condition: "Plasma OR urinary fractionated metanephrines q1y from age 5 — pheochromocytoma surveillance (bilateral / multifocal pattern typical of VHL); plasma free metanephrines preferred"
-        - condition: "Abdominal MRI with contrast q2y from age 15 — RCC + pancreatic NET / cyst + adrenal pheochromocytoma surveillance; from age 30 alternate q1y MRI / q1y US or maintain q2y MRI"
-        - condition: "BP measurement q1y (symptomatic pheochromocytoma may present with hypertension)"
+        - clinician_confirmation:
+            id: CC-ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE-9549DB62DDC6
+            label: "Plasma OR urinary fractionated metanephrines q1y from age 5 — pheochromocytoma surveillance (bilateral / multifocal pattern typical of VHL); plasma free metanephrines preferred"
+            legacy_condition: "Plasma OR urinary fractionated metanephrines q1y from age 5 — pheochromocytoma surveillance (bilateral / multifocal pattern typical of VHL); plasma free metanephrines preferred"
+        - clinician_confirmation:
+            id: CC-ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE-3AC69048E254
+            label: "Abdominal MRI with contrast q2y from age 15 — RCC + pancreatic NET / cyst + adrenal pheochromocytoma surveillance; from age 30 alternate q1y MRI / q1y US or maintain q2y MRI"
+            legacy_condition: "Abdominal MRI with contrast q2y from age 15 — RCC + pancreatic NET / cyst + adrenal pheochromocytoma surveillance; from age 30 alternate q1y MRI / q1y US or maintain q2y MRI"
+        - clinician_confirmation:
+            id: CC-ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE-03CC8D81D8CF
+            label: "BP measurement q1y (symptomatic pheochromocytoma may present with hypertension)"
+            legacy_condition: "BP measurement q1y (symptomatic pheochromocytoma may present with hypertension)"
     if_true:
       next_step: 5
     if_false:
@@ -91,9 +115,18 @@ decision_tree:
     # Surgical thresholds + cascade testing.
     evaluate:
       all_of:
-        - condition: "RCC surgical threshold: tumor diameter ≥3 cm typically triggers partial nephrectomy / nephron-sparing surgery (delayed surgery for tumors <3 cm preserves renal function across lifetime per VHL Alliance — active surveillance with q6-12 month imaging is acceptable for sub-3-cm tumors)"
-        - condition: "Pheochromocytoma surgical threshold: any functional pheochromocytoma + asymptomatic adrenal lesion >3 cm OR with biochemical elevation"
-        - condition: "Cascade testing offered to all first-degree relatives at any age (pediatric appropriate — surveillance entry from age 1)"
+        - clinician_confirmation:
+            id: CC-ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE-7C79CF7AE9FD
+            label: "RCC surgical threshold: tumor diameter ≥3 cm typically triggers partial nephrectomy / nephron-sparing surgery (delayed surgery for tumors <3 cm preserves renal function across lifetime per VHL Alliance — active surveillance with q6-12 month imaging is acceptable for sub-3-cm tumors)"
+            legacy_condition: "RCC surgical threshold: tumor diameter ≥3 cm typically triggers partial nephrectomy / nephron-sparing surgery (delayed surgery for tumors <3 cm preserves renal function across lifetime per VHL Alliance — active surveillance with q6-12 month imaging is acceptable for sub-3-cm tumors)"
+        - clinician_confirmation:
+            id: CC-ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE-600727E2BE8B
+            label: "Pheochromocytoma surgical threshold: any functional pheochromocytoma + asymptomatic adrenal lesion >3 cm OR with biochemical elevation"
+            legacy_condition: "Pheochromocytoma surgical threshold: any functional pheochromocytoma + asymptomatic adrenal lesion >3 cm OR with biochemical elevation"
+        - clinician_confirmation:
+            id: CC-ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE-9F12ACE5C203
+            label: "Cascade testing offered to all first-degree relatives at any age (pediatric appropriate — surveillance entry from age 1)"
+            legacy_condition: "Cascade testing offered to all first-degree relatives at any age (pediatric appropriate — surveillance entry from age 1)"
     if_true:
       result: IND-VHL-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Standard VHL carrier surveillance — Active Surveillance Protocol per VHL Alliance 2020 + NCCN Kidney V.4.2025. Ophthalmology: dilated fundus q6-12mo from infancy. Audiology: q1-2y from age 5. CNS MRI: q2y from age 11-15. Pheochromocytoma biochemistry: q1y from age 5. Abdominal MRI: q2y from age 15. RCC delayed-surgery threshold: 3 cm (nephron-sparing partial nephrectomy preferred; total nephrectomy is last resort given lifelong dialysis risk in young VHL carriers). Pheochromocytoma: any functional or >3 cm. Cascade testing: from age 1 (pediatric appropriate). Belzutifan (HIF-2α inhibitor) FDA-approved for VHL-associated RCC / hemangioblastoma / pNET not requiring immediate surgery — coordinate with VHL specialist for systemic-therapy decisions in unresectable / multifocal disease. Engine should re-route to IND-VHL-CARRIER-SURVEILLANCE (standard) or IND-VHL-CARRIER-INTENSIFIED (aggressive) at downstream layer."

@@ -17,7 +17,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "R/R T-ALL or T-LBL after ≥1 prior systemic line"
+        - clinician_confirmation:
+            id: CC-ALGO-T-ALL-2L-29D457BB8E44
+            label: "R/R T-ALL or T-LBL after ≥1 prior systemic line"
+            legacy_condition: "R/R T-ALL or T-LBL after ≥1 prior systemic line"
         - red_flag: RF-T-ALL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-T-ALL-2L-NELARABINE

@@ -47,8 +47,14 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "HCV RNA positive"
-        - condition: "Indolent presentation (non-bulky, asymptomatic or minimally symptomatic)"
+        - clinician_confirmation:
+            id: CC-ALGO-HCV-MZL-1L-68106227E7A1
+            label: "HCV RNA positive"
+            legacy_condition: "HCV RNA positive"
+        - clinician_confirmation:
+            id: CC-ALGO-HCV-MZL-1L-CD83B6A63EE4
+            label: "Indolent presentation (non-bulky, asymptomatic or minimally symptomatic)"
+            legacy_condition: "Indolent presentation (non-bulky, asymptomatic or minimally symptomatic)"
     if_true:
       result: IND-HCV-MZL-1L-ANTIVIRAL
     if_false:

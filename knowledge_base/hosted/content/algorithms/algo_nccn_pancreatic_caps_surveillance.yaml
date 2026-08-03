@@ -47,8 +47,14 @@ decision_tree:
     # entry: age 30-35 per CAPS 2020.
     evaluate:
       any_of:
-        - condition: "Confirmed STK11 germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
-        - condition: "Clinical Peutz-Jeghers syndrome (mucocutaneous pigmentation + hamartomatous polyposis + family pattern) without confirmed STK11 variant"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-A714E8035444
+            label: "Confirmed STK11 germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+            legacy_condition: "Confirmed STK11 germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-C036EB928B00
+            label: "Clinical Peutz-Jeghers syndrome (mucocutaneous pigmentation + hamartomatous polyposis + family pattern) without confirmed STK11 variant"
+            legacy_condition: "Clinical Peutz-Jeghers syndrome (mucocutaneous pigmentation + hamartomatous polyposis + family pattern) without confirmed STK11 variant"
     if_true:
       result: IND-PEUTZ-JEGHERS-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Peutz-Jeghers CAPS-eligible — annual EUS or MRI/MRCP from age 30-35. Lifetime PDAC risk ~36% (Hearle 2006 PMID 16707622). Continuous surveillance regardless of family-history of pancreatic cancer (PJ alone is sufficient given absolute risk)."
@@ -60,7 +66,10 @@ decision_tree:
     # population estimates). Surveillance entry: age 40 per CAPS 2020.
     evaluate:
       any_of:
-        - condition: "Confirmed CDKN2A germline pathogenic / likely-pathogenic variant (FAMMM)"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-481E9CD9966A
+            label: "Confirmed CDKN2A germline pathogenic / likely-pathogenic variant (FAMMM)"
+            legacy_condition: "Confirmed CDKN2A germline pathogenic / likely-pathogenic variant (FAMMM)"
     if_true:
       result: IND-FAMMM-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "FAMMM CAPS-eligible — annual EUS or MRI/MRCP from age 40 (or 10y younger than youngest family PDAC). Smoking cessation essential — smoking multiplicatively raises CDKN2A pancreatic risk. Whole-body dermatology + total body photography + dermoscopy q1y is the concurrent melanoma-surveillance arm."
@@ -73,9 +82,18 @@ decision_tree:
     # reaches PDAC suspicion pathway via family-history-pattern routing.
     evaluate:
       any_of:
-        - condition: "Confirmed PRSS1 germline pathogenic variant (hereditary pancreatitis, autosomal dominant)"
-        - condition: "Biallelic SPINK1 / CTRC / CFTR pathogenic variants with chronic pancreatitis phenotype"
-        - condition: "Clinical hereditary pancreatitis (≥2 family members with chronic pancreatitis, onset <30, AD pattern) without confirmed gene"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-FCAF4B2A7E70
+            label: "Confirmed PRSS1 germline pathogenic variant (hereditary pancreatitis, autosomal dominant)"
+            legacy_condition: "Confirmed PRSS1 germline pathogenic variant (hereditary pancreatitis, autosomal dominant)"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-0C73A426706E
+            label: "Biallelic SPINK1 / CTRC / CFTR pathogenic variants with chronic pancreatitis phenotype"
+            legacy_condition: "Biallelic SPINK1 / CTRC / CFTR pathogenic variants with chronic pancreatitis phenotype"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-FB2519DBFECC
+            label: "Clinical hereditary pancreatitis (≥2 family members with chronic pancreatitis, onset <30, AD pattern) without confirmed gene"
+            legacy_condition: "Clinical hereditary pancreatitis (≥2 family members with chronic pancreatitis, onset <30, AD pattern) without confirmed gene"
     if_true:
       result: IND-FAMMM-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Hereditary pancreatitis CAPS-eligible — annual EUS or MRI/MRCP from age 40 (CAPS 2020) or 20y after pancreatitis onset, whichever earlier. Lifetime PDAC risk ~40-55% (highest among CAPS-eligible) but surveillance entry deferred to age 40 because earlier scans are confounded by chronic-pancreatitis parenchymal changes. Smoking cessation critical (multiplicative risk). Indication routes to FAMMM-SUSPICION pending v0.2 dedicated IND-HEREDITARY-PANCREATITIS-CAPS-SURVEILLANCE."
@@ -89,8 +107,14 @@ decision_tree:
     # evidence but reasonable per CAPS 2020 inclusive interpretation.
     evaluate:
       all_of:
-        - condition: "Confirmed BRCA2 OR BRCA1 OR PALB2 germline pathogenic / likely-pathogenic variant"
-        - condition: "≥1 first-degree or second-degree relative with pancreatic adenocarcinoma at any age"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-FACA7F9C352C
+            label: "Confirmed BRCA2 OR BRCA1 OR PALB2 germline pathogenic / likely-pathogenic variant"
+            legacy_condition: "Confirmed BRCA2 OR BRCA1 OR PALB2 germline pathogenic / likely-pathogenic variant"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-F908026BF8A9
+            label: "≥1 first-degree or second-degree relative with pancreatic adenocarcinoma at any age"
+            legacy_condition: "≥1 first-degree or second-degree relative with pancreatic adenocarcinoma at any age"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BRCA2 / BRCA1 / PALB2 carrier with family-history of PDAC — CAPS-eligible. Annual EUS or MRI/MRCP from age 45-50 (or 10y younger than youngest family PDAC). Lifetime PDAC risk BRCA2 ~5-7%, BRCA1 ~2-3%, PALB2 ~5%. BRCA carriers WITHOUT family-history of PDAC are NOT CAPS-eligible per 2020 consensus — counsel re: absolute risk + smoking cessation but no imaging surveillance."
@@ -102,8 +126,14 @@ decision_tree:
     # inclusive interpretation.
     evaluate:
       all_of:
-        - condition: "Confirmed ATM germline pathogenic / likely-pathogenic variant"
-        - condition: "≥1 first-degree relative with pancreatic adenocarcinoma at any age"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-DC7A76DF3E4B
+            label: "Confirmed ATM germline pathogenic / likely-pathogenic variant"
+            legacy_condition: "Confirmed ATM germline pathogenic / likely-pathogenic variant"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-29A2852F8A3E
+            label: "≥1 first-degree relative with pancreatic adenocarcinoma at any age"
+            legacy_condition: "≥1 first-degree relative with pancreatic adenocarcinoma at any age"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "ATM carrier with family-history of PDAC — CAPS-eligible per 2020 inclusive interpretation. Annual EUS or MRI/MRCP from age 50 (or 10y younger than youngest family PDAC). Lifetime PDAC risk ~5-10%. Indication routes to BRCA-HBOC-SUSPICION (encompasses ATM in modern HBOC panel) pending v0.2 dedicated IND-ATM-PDAC-CAPS-SURVEILLANCE."
@@ -115,8 +145,14 @@ decision_tree:
     # only with confirmed family PDAC per 2020 consensus.
     evaluate:
       all_of:
-        - condition: "Confirmed MLH1 / MSH2 / MSH6 / PMS2 / EPCAM germline pathogenic / likely-pathogenic variant (Lynch syndrome)"
-        - condition: "≥1 first-degree relative with pancreatic adenocarcinoma at any age"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-A7EACFA989CE
+            label: "Confirmed MLH1 / MSH2 / MSH6 / PMS2 / EPCAM germline pathogenic / likely-pathogenic variant (Lynch syndrome)"
+            legacy_condition: "Confirmed MLH1 / MSH2 / MSH6 / PMS2 / EPCAM germline pathogenic / likely-pathogenic variant (Lynch syndrome)"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-29A2852F8A3E
+            label: "≥1 first-degree relative with pancreatic adenocarcinoma at any age"
+            legacy_condition: "≥1 first-degree relative with pancreatic adenocarcinoma at any age"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Lynch carrier with family-history of PDAC — CAPS-eligible. Annual EUS or MRI/MRCP from age 50 (or 10y younger than youngest family PDAC). Lifetime PDAC risk modest (~3-4% MLH1/MSH2). Surveillance is in addition to the standard Lynch CRC / endometrial / urothelial protocol."
@@ -127,8 +163,14 @@ decision_tree:
     # first-degree relatives with PDAC. CAPS-eligible per 2020 consensus.
     evaluate:
       all_of:
-        - condition: "≥2 first-degree relatives with pancreatic adenocarcinoma"
-        - condition: "Comprehensive hereditary cancer panel performed and negative for known PDAC-risk genes (BRCA1/2, PALB2, ATM, CDKN2A, STK11, MMR, TP53, etc.)"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-C6AA22799720
+            label: "≥2 first-degree relatives with pancreatic adenocarcinoma"
+            legacy_condition: "≥2 first-degree relatives with pancreatic adenocarcinoma"
+        - clinician_confirmation:
+            id: CC-ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE-D7CC570B3B3B
+            label: "Comprehensive hereditary cancer panel performed and negative for known PDAC-risk genes (BRCA1/2, PALB2, ATM, CDKN2A, STK11, MMR, TP53, etc.)"
+            legacy_condition: "Comprehensive hereditary cancer panel performed and negative for known PDAC-risk genes (BRCA1/2, PALB2, ATM, CDKN2A, STK11, MMR, TP53, etc.)"
     if_true:
       result: IND-FAMMM-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Familial pancreatic cancer kindred (FPC, ≥2 FDRs with PDAC, panel-negative) — CAPS-eligible. Annual EUS or MRI/MRCP from age 50 (or 10y younger than youngest family PDAC). Lifetime PDAC risk in FPC kindreds ~8-12% (Klein 2004 PMID 15375080). Indication routes to FAMMM-SUSPICION pending v0.2 dedicated IND-FPC-CAPS-SURVEILLANCE."

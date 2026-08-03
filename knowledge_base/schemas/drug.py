@@ -19,12 +19,22 @@ class Drug(Base):
 
     typical_dosing: Optional[str] = None
     formulations: list[str] = Field(default_factory=list)
+    route: Optional[str] = None
 
     absolute_contraindications: list[str] = Field(default_factory=list)
     black_box_warnings: list[str] = Field(default_factory=list)
     major_interactions: list[str] = Field(default_factory=list)
     common_adverse_events: list[str] = Field(default_factory=list)
     serious_adverse_events: list[str] = Field(default_factory=list)
+    # Some established records contain a clinically curated safety summary
+    # instead of splitting events into common/serious buckets. Preserve it as
+    # a first-class field rather than treating evidence-bearing content as an
+    # unknown schema extension.
+    # Historical YAML includes both plain statements and a small number of
+    # labelled toxicity statements parsed by YAML as ``{label: detail}``.
+    # Retain both forms so a schema upgrade cannot silently discard the
+    # clinical qualifier embedded in those records.
+    key_toxicities: list[str | dict[str, str]] = Field(default_factory=list)
 
     pharmacology: Optional[dict] = None  # half-life, clearance, etc.
 

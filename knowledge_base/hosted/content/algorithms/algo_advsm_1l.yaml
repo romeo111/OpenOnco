@@ -28,9 +28,15 @@ decision_tree:
             - {finding: BIO-KIT, value: D816V}
             - {finding: kit_d816v_status, value: positive}
             - {finding: kit_d816v_status, value: detected}
-            - condition: "KIT D816V positive"
+            - clinician_confirmation:
+                id: CC-ALGO-ADVSM-1L-57A9287D1313
+                label: "KIT D816V positive"
+                legacy_condition: "KIT D816V positive"
         # Platelet threshold — MDT-evaluated, no platelet-threshold RF entity:
-        - condition: "Platelet count ≥50 ×10⁹/L"
+        - clinician_confirmation:
+            id: CC-ALGO-ADVSM-1L-CD7E7A495C57
+            label: "Platelet count ≥50 ×10⁹/L"
+            legacy_condition: "Platelet count ≥50 ×10⁹/L"
     if_true:
       result: IND-ADVSM-1L-AVAPRITINIB
       notes: >
@@ -48,9 +54,18 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "KIT D816V negative"
-        - condition: "Platelet count <50 ×10⁹/L"
-        - condition: "Avapritinib contraindicated OR inaccessible"
+        - clinician_confirmation:
+            id: CC-ALGO-ADVSM-1L-B4348A731330
+            label: "KIT D816V negative"
+            legacy_condition: "KIT D816V negative"
+        - clinician_confirmation:
+            id: CC-ALGO-ADVSM-1L-32A9896376D4
+            label: "Platelet count <50 ×10⁹/L"
+            legacy_condition: "Platelet count <50 ×10⁹/L"
+        - clinician_confirmation:
+            id: CC-ALGO-ADVSM-1L-5C458A49B4AD
+            label: "Avapritinib contraindicated OR inaccessible"
+            legacy_condition: "Avapritinib contraindicated OR inaccessible"
     if_true:
       result: IND-ADVSM-1L-MIDOSTAURIN
     if_false:

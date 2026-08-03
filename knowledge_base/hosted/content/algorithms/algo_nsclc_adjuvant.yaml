@@ -30,7 +30,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "PD-L1 SP142 IHC ≥1% on resected tumour specimen (IMpower010 SP142 assay; not interchangeable with 22C3 TPS)"
+        - clinician_confirmation:
+            id: CC-ALGO-NSCLC-ADJUVANT-ACC2A930324E
+            label: "PD-L1 SP142 IHC ≥1% on resected tumour specimen (IMpower010 SP142 assay; not interchangeable with 22C3 TPS)"
+            legacy_condition: "PD-L1 SP142 IHC ≥1% on resected tumour specimen (IMpower010 SP142 assay; not interchangeable with 22C3 TPS)"
         - red_flag: RF-NSCLC-PDL1-50-PLUS
     if_true:
       result: IND-NSCLC-ADJUVANT-ATEZO-PDL1POS

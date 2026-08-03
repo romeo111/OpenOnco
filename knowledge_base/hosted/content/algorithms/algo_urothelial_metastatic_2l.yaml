@@ -24,7 +24,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "No available clinical trial OR patient declines trial enrollment"
+        - clinician_confirmation:
+            id: CC-ALGO-UROTHELIAL-METASTATIC-2L-5B1B6A3F2511
+            label: "No available clinical trial OR patient declines trial enrollment"
+            legacy_condition: "No available clinical trial OR patient declines trial enrollment"
     if_true:
       next_step: 2
     if_false:
@@ -35,7 +38,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "ECOG PS 0-2"
+        - clinician_confirmation:
+            id: CC-ALGO-UROTHELIAL-METASTATIC-2L-2819AEB5AB6E
+            label: "ECOG PS 0-2"
+            legacy_condition: "ECOG PS 0-2"
     if_true:
       next_step: 3
     if_false:
@@ -49,8 +55,14 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "FGFR2/3 activating mutation OR FGFR2/FGFR3 gene fusion detected (Therascreen or NGS)"
-        - condition: "Prior platinum-containing therapy AND prior anti-PD-(L)1 therapy"
+        - clinician_confirmation:
+            id: CC-ALGO-UROTHELIAL-METASTATIC-2L-DBB2949CF62E
+            label: "FGFR2/3 activating mutation OR FGFR2/FGFR3 gene fusion detected (Therascreen or NGS)"
+            legacy_condition: "FGFR2/3 activating mutation OR FGFR2/FGFR3 gene fusion detected (Therascreen or NGS)"
+        - clinician_confirmation:
+            id: CC-ALGO-UROTHELIAL-METASTATIC-2L-3289AF839C0B
+            label: "Prior platinum-containing therapy AND prior anti-PD-(L)1 therapy"
+            legacy_condition: "Prior platinum-containing therapy AND prior anti-PD-(L)1 therapy"
     if_true:
       result: IND-UROTHELIAL-2L-ERDAFITINIB
       notes: >
@@ -71,7 +83,10 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Prior 1L regimen contained EV (enfortumab vedotin) — i.e., EV+pembro (EV-302 pathway)"
+        - clinician_confirmation:
+            id: CC-ALGO-UROTHELIAL-METASTATIC-2L-AF8C98B3E655
+            label: "Prior 1L regimen contained EV (enfortumab vedotin) — i.e., EV+pembro (EV-302 pathway)"
+            legacy_condition: "Prior 1L regimen contained EV (enfortumab vedotin) — i.e., EV+pembro (EV-302 pathway)"
     if_true:
       next_step: 5
       notes: "EV-experienced patients: EV re-challenge not validated; route to platinum chemo or other options."
@@ -86,8 +101,14 @@ decision_tree:
   - step: 5
     evaluate:
       all_of:
-        - condition: "CrCl ≥30 mL/min"
-        - condition: "No prior platinum within 6 months (de novo platinum-eligible)"
+        - clinician_confirmation:
+            id: CC-ALGO-UROTHELIAL-METASTATIC-2L-3CA8DD7A402F
+            label: "CrCl ≥30 mL/min"
+            legacy_condition: "CrCl ≥30 mL/min"
+        - clinician_confirmation:
+            id: CC-ALGO-UROTHELIAL-METASTATIC-2L-D9D71660E0AD
+            label: "No prior platinum within 6 months (de novo platinum-eligible)"
+            legacy_condition: "No prior platinum within 6 months (de novo platinum-eligible)"
     if_true:
       result: IND-UROTHELIAL-2L-PLATINUM-CHEMO
       notes: >
@@ -110,9 +131,18 @@ decision_tree:
   - step: 6
     evaluate:
       all_of:
-        - condition: "No prior EV-containing therapy"
-        - condition: "ECOG PS 0-1"
-        - condition: "No severe peripheral neuropathy (Grade ≥2), no uncontrolled DM, no severe ocular disease"
+        - clinician_confirmation:
+            id: CC-ALGO-UROTHELIAL-METASTATIC-2L-737911F1CE35
+            label: "No prior EV-containing therapy"
+            legacy_condition: "No prior EV-containing therapy"
+        - clinician_confirmation:
+            id: CC-ALGO-UROTHELIAL-METASTATIC-2L-7D8F3BCD92EE
+            label: "ECOG PS 0-1"
+            legacy_condition: "ECOG PS 0-1"
+        - clinician_confirmation:
+            id: CC-ALGO-UROTHELIAL-METASTATIC-2L-0AA67F0DB067
+            label: "No severe peripheral neuropathy (Grade ≥2), no uncontrolled DM, no severe ocular disease"
+            legacy_condition: "No severe peripheral neuropathy (Grade ≥2), no uncontrolled DM, no severe ocular disease"
     if_true:
       result: IND-UROTHELIAL-2L-EV
       notes: >

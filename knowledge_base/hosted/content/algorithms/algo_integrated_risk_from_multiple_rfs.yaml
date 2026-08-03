@@ -56,7 +56,10 @@ decision_tree:
     # Single-bucket fires route through bucket-specific algorithms.
     evaluate:
       all_of:
-        - condition: "Patient has ≥2 fired prevention RedFlags AND fires span ≥2 PreventionRiskCategory buckets (genetic / infectious / chronic_condition / occupational / iatrogenic / lifestyle / reproductive)"
+        - clinician_confirmation:
+            id: CC-ALGO-INTEGRATED-RISK-FROM-MULTIPLE-RFS-D536F5708AF0
+            label: "Patient has ≥2 fired prevention RedFlags AND fires span ≥2 PreventionRiskCategory buckets (genetic / infectious / chronic_condition / occupational / iatrogenic / lifestyle / reproductive)"
+            legacy_condition: "Patient has ≥2 fired prevention RedFlags AND fires span ≥2 PreventionRiskCategory buckets (genetic / infectious / chronic_condition / occupational / iatrogenic / lifestyle / reproductive)"
     if_true:
       next_step: 2
     if_false:
@@ -69,7 +72,10 @@ decision_tree:
     # is empirically calibrated per IARC Monographs.
     evaluate:
       any_of:
-        - condition: "Patient has fired RF combination known to be multiplicatively synergistic per IARC: smoking + asbestos / smoking + occupational radon / smoking + alcohol (UADT cancers) / smoking + HPV (oropharyngeal) / smoking + diesel exhaust / chronic HBV + chronic HCV / chronic HBV + aflatoxin (HCC)"
+        - clinician_confirmation:
+            id: CC-ALGO-INTEGRATED-RISK-FROM-MULTIPLE-RFS-B2C22D992470
+            label: "Patient has fired RF combination known to be multiplicatively synergistic per IARC: smoking + asbestos / smoking + occupational radon / smoking + alcohol (UADT cancers) / smoking + HPV (oropharyngeal) / smoking + diesel exhaust / chronic HBV + chronic HCV / chronic HBV + aflatoxin (HCC)"
+            legacy_condition: "Patient has fired RF combination known to be multiplicatively synergistic per IARC: smoking + asbestos / smoking + occupational radon / smoking + alcohol (UADT cancers) / smoking + HPV (oropharyngeal) / smoking + diesel exhaust / chronic HBV + chronic HCV / chronic HBV + aflatoxin (HCC)"
     if_true:
       next_step: 3
       notes: "Multiplicative-synergy RF pair identified — priority elevated for joint intervention. Both/all interacting RFs require simultaneous intervention; addressing one alone gives ~50% of combined risk reduction. Engine should flag this in the integrated risk-profile output."
@@ -81,8 +87,14 @@ decision_tree:
     # is paramount. Multi-target divergent RFs → multi-track surveillance.
     evaluate:
       any_of:
-        - condition: "Patient has ≥2 fired prevention RFs targeting the SAME cancer (e.g., chronic HCV + chronic HBV both target HCC; chronic HCV + family Lynch both target intra-abdominal cancer hot zone)"
-        - condition: "Patient has ≥2 fired prevention RFs targeting DIFFERENT cancers with overlapping surveillance modalities (e.g., chronic HBV + Lynch — both require upper GI surveillance)"
+        - clinician_confirmation:
+            id: CC-ALGO-INTEGRATED-RISK-FROM-MULTIPLE-RFS-DF9CFD6CAABA
+            label: "Patient has ≥2 fired prevention RFs targeting the SAME cancer (e.g., chronic HCV + chronic HBV both target HCC; chronic HCV + family Lynch both target intra-abdominal cancer hot zone)"
+            legacy_condition: "Patient has ≥2 fired prevention RFs targeting the SAME cancer (e.g., chronic HCV + chronic HBV both target HCC; chronic HCV + family Lynch both target intra-abdominal cancer hot zone)"
+        - clinician_confirmation:
+            id: CC-ALGO-INTEGRATED-RISK-FROM-MULTIPLE-RFS-AC280497A594
+            label: "Patient has ≥2 fired prevention RFs targeting DIFFERENT cancers with overlapping surveillance modalities (e.g., chronic HBV + Lynch — both require upper GI surveillance)"
+            legacy_condition: "Patient has ≥2 fired prevention RFs targeting DIFFERENT cancers with overlapping surveillance modalities (e.g., chronic HBV + Lynch — both require upper GI surveillance)"
     if_true:
       next_step: 4
     if_false:
@@ -103,7 +115,10 @@ decision_tree:
     #      diet) — lower individual effect, broader cancer coverage
     evaluate:
       all_of:
-        - condition: "Integrated-risk profile and prioritized intervention list constructed"
+        - clinician_confirmation:
+            id: CC-ALGO-INTEGRATED-RISK-FROM-MULTIPLE-RFS-6DDA7BD2F1D1
+            label: "Integrated-risk profile and prioritized intervention list constructed"
+            legacy_condition: "Integrated-risk profile and prioritized intervention list constructed"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Integrated risk-profile + prioritized intervention list constructed. Multi-track prevention plan: address each cancer-target independently with appropriate cadence, but consolidate counseling visits + surveillance scheduling to reduce patient burden. Patient receives a SINGLE consolidated prevention plan (not N independent silos). Indication routes to Lynch suspicion as default highest-mortality-impact hereditary RF; engine should re-route to the actual highest-priority Indication based on integrated-risk scoring. v0.2 follow-up: dedicated IND-INTEGRATED-PREVENTION-PROFILE Indication with explicit multi-track support."

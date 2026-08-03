@@ -258,6 +258,11 @@ def generate_diagnostic_brief(
         result.warnings.append(f"schema error in {path.name}: {msg[:120]}")
     for path, msg in load.ref_errors:
         result.warnings.append(f"ref error in {path.name}: {msg}")
+    for path, msg in load.contract_errors:
+        result.warnings.append(f"contract error in {path.name}: {msg}")
+    if not load.ok:
+        result.warnings.append("Knowledge base validation failed; diagnostic brief generation stopped.")
+        return result
 
     workup = _match_workup(suspicion, entities)
     if workup is None:

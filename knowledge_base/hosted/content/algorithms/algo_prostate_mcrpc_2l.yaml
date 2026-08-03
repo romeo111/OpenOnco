@@ -27,7 +27,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "ECOG PS 0-2"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-2819AEB5AB6E
+            label: "ECOG PS 0-2"
+            legacy_condition: "ECOG PS 0-2"
     if_true:
       next_step: 2
     if_false:
@@ -45,8 +48,14 @@ decision_tree:
   - step: 2
     evaluate:
       all_of:
-        - condition: "BRCA1 or BRCA2 somatic or germline pathogenic variant (or ATM, CDK12, PALB2, RAD51C/D, BRIP1, FANCA)"
-        - condition: "No prior PARPi therapy (olaparib, rucaparib, niraparib)"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-46CF3DCE6B97
+            label: "BRCA1 or BRCA2 somatic or germline pathogenic variant (or ATM, CDK12, PALB2, RAD51C/D, BRIP1, FANCA)"
+            legacy_condition: "BRCA1 or BRCA2 somatic or germline pathogenic variant (or ATM, CDK12, PALB2, RAD51C/D, BRIP1, FANCA)"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-DBD2FECFD33C
+            label: "No prior PARPi therapy (olaparib, rucaparib, niraparib)"
+            legacy_condition: "No prior PARPi therapy (olaparib, rucaparib, niraparib)"
     if_true:
       result: IND-PROSTATE-MCRPC-2L-PARPI
       notes: >
@@ -64,9 +73,18 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "PSMA-PET/CT positive (68Ga-PSMA-11 or 18F-DCFPyL) — ALL metastatic lesions PSMA-avid; no PSMA-negative metastatic sites"
-        - condition: "Prior ARPI (enzalutamide, abiraterone, darolutamide, or apalutamide)"
-        - condition: "Prior taxane-based chemotherapy (docetaxel) OR documented taxane-ineligible"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-48A4353FE152
+            label: "PSMA-PET/CT positive (68Ga-PSMA-11 or 18F-DCFPyL) — ALL metastatic lesions PSMA-avid; no PSMA-negative metastatic sites"
+            legacy_condition: "PSMA-PET/CT positive (68Ga-PSMA-11 or 18F-DCFPyL) — ALL metastatic lesions PSMA-avid; no PSMA-negative metastatic sites"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-0FE0F765C022
+            label: "Prior ARPI (enzalutamide, abiraterone, darolutamide, or apalutamide)"
+            legacy_condition: "Prior ARPI (enzalutamide, abiraterone, darolutamide, or apalutamide)"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-189C88D6F14C
+            label: "Prior taxane-based chemotherapy (docetaxel) OR documented taxane-ineligible"
+            legacy_condition: "Prior taxane-based chemotherapy (docetaxel) OR documented taxane-ineligible"
     if_true:
       result: IND-PROSTATE-MCRPC-2L-LU-PSMA
       notes: >
@@ -87,7 +105,10 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Prior docetaxel-based chemotherapy (mHSPC or mCRPC setting)"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-25D439CD79F7
+            label: "Prior docetaxel-based chemotherapy (mHSPC or mCRPC setting)"
+            legacy_condition: "Prior docetaxel-based chemotherapy (mHSPC or mCRPC setting)"
     if_true:
       next_step: 5
       notes: >
@@ -110,7 +131,10 @@ decision_tree:
   - step: 5
     evaluate:
       any_of:
-        - condition: "Visceral metastases present (liver, lung, brain, or peritoneal mets)"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-A1FEDAA7C89E
+            label: "Visceral metastases present (liver, lung, brain, or peritoneal mets)"
+            legacy_condition: "Visceral metastases present (liver, lung, brain, or peritoneal mets)"
     if_true:
       result: IND-PROSTATE-MCRPC-2L-CABAZITAXEL
       notes: >
@@ -130,10 +154,22 @@ decision_tree:
   - step: 6
     evaluate:
       all_of:
-        - condition: "Symptomatic bone metastases (bone pain or prior SSE)"
-        - condition: "ECOG PS 0-2"
-        - condition: "No concurrent novel ARPI planned (ERA 223 fracture harm)"
-        - condition: "Nuclear medicine theranostics center accessible"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-E223ADA0A324
+            label: "Symptomatic bone metastases (bone pain or prior SSE)"
+            legacy_condition: "Symptomatic bone metastases (bone pain or prior SSE)"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-2819AEB5AB6E
+            label: "ECOG PS 0-2"
+            legacy_condition: "ECOG PS 0-2"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-13804BEB3B0A
+            label: "No concurrent novel ARPI planned (ERA 223 fracture harm)"
+            legacy_condition: "No concurrent novel ARPI planned (ERA 223 fracture harm)"
+        - clinician_confirmation:
+            id: CC-ALGO-PROSTATE-MCRPC-2L-CA22B2834E93
+            label: "Nuclear medicine theranostics center accessible"
+            legacy_condition: "Nuclear medicine theranostics center accessible"
     if_true:
       result: IND-PROSTATE-MCRPC-2L-RADIUM223
       notes: >

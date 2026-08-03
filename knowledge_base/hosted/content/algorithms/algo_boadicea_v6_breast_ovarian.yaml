@@ -40,7 +40,10 @@ decision_tree:
     # High lifetime breast cancer risk ≥30% (NICE high-risk threshold).
     evaluate:
       any_of:
-        - condition: "BOADICEA v6 lifetime breast cancer risk ≥30% (NICE high-risk threshold)"
+        - clinician_confirmation:
+            id: CC-ALGO-BOADICEA-V6-BREAST-OVARIAN-F51D7029617B
+            label: "BOADICEA v6 lifetime breast cancer risk ≥30% (NICE high-risk threshold)"
+            legacy_condition: "BOADICEA v6 lifetime breast cancer risk ≥30% (NICE high-risk threshold)"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BOADICEA lifetime breast ≥30% (NICE high-risk) — annual MRI from age 30 + annual mammography from 40, discussion of risk-reducing salpingo-oophorectomy + risk-reducing mastectomy where carrier probability ≥10% or pedigree strongly suggests HBOC, chemoprevention discussion (tamoxifen / raloxifene / aromatase inhibitor). Refer for genetic counseling + germline HBOC panel."
@@ -50,7 +53,10 @@ decision_tree:
     # Moderate-high lifetime breast ≥20% (ACS / NCCN MRI threshold).
     evaluate:
       any_of:
-        - condition: "BOADICEA v6 lifetime breast cancer risk ≥20% (ACS/NCCN MRI-eligibility threshold)"
+        - clinician_confirmation:
+            id: CC-ALGO-BOADICEA-V6-BREAST-OVARIAN-0E3699B99665
+            label: "BOADICEA v6 lifetime breast cancer risk ≥20% (ACS/NCCN MRI-eligibility threshold)"
+            legacy_condition: "BOADICEA v6 lifetime breast cancer risk ≥20% (ACS/NCCN MRI-eligibility threshold)"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BOADICEA lifetime breast ≥20% (ACS/NCCN moderate-high) — annual MRI + annual mammography, chemoprevention discussion. Genetic counseling referral if pedigree suggests HBOC features OR carrier probability ≥10%."
@@ -61,7 +67,10 @@ decision_tree:
     # cutoff). BOADICEA combines per-gene probabilities into composite.
     evaluate:
       any_of:
-        - condition: "BOADICEA v6 carrier probability ≥10% for any of BRCA1, BRCA2, PALB2, CHEK2, ATM, RAD51C, RAD51D, BARD1 (combined or per-gene)"
+        - clinician_confirmation:
+            id: CC-ALGO-BOADICEA-V6-BREAST-OVARIAN-79D82D0D268C
+            label: "BOADICEA v6 carrier probability ≥10% for any of BRCA1, BRCA2, PALB2, CHEK2, ATM, RAD51C, RAD51D, BARD1 (combined or per-gene)"
+            legacy_condition: "BOADICEA v6 carrier probability ≥10% for any of BRCA1, BRCA2, PALB2, CHEK2, ATM, RAD51C, RAD51D, BARD1 (combined or per-gene)"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BOADICEA carrier probability ≥10% for any HBOC-spectrum gene — refer for germline panel testing. NCCN testing-recommendation threshold met. Pre-test counseling required."
@@ -74,7 +83,10 @@ decision_tree:
     # lifetime; BRCA2 ~15-25%; BOADICEA stratifies finely.
     evaluate:
       any_of:
-        - condition: "BOADICEA v6 lifetime ovarian / fallopian / primary peritoneal cancer risk ≥3%"
+        - clinician_confirmation:
+            id: CC-ALGO-BOADICEA-V6-BREAST-OVARIAN-21A514BF1A25
+            label: "BOADICEA v6 lifetime ovarian / fallopian / primary peritoneal cancer risk ≥3%"
+            legacy_condition: "BOADICEA v6 lifetime ovarian / fallopian / primary peritoneal cancer risk ≥3%"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BOADICEA lifetime ovarian ≥3% — NCCN risk-reducing salpingo-oophorectomy discussion threshold. Genetic counseling + germline panel + transvaginal ultrasound + CA-125 surveillance pending RRSO decision. RRSO typically discussed at age 35-40 for BRCA1 + 40-45 for BRCA2."
@@ -84,7 +96,10 @@ decision_tree:
     # Pancreatic lifetime ≥5% (CAPS Consortium 2022 surveillance threshold).
     evaluate:
       any_of:
-        - condition: "BOADICEA v6 lifetime pancreatic cancer risk ≥5%"
+        - clinician_confirmation:
+            id: CC-ALGO-BOADICEA-V6-BREAST-OVARIAN-CF106EEB69BF
+            label: "BOADICEA v6 lifetime pancreatic cancer risk ≥5%"
+            legacy_condition: "BOADICEA v6 lifetime pancreatic cancer risk ≥5%"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BOADICEA lifetime pancreatic ≥5% — annual MRI / MRCP ± EUS pancreatic surveillance per CAPS Consortium 2022. Most common in BRCA2 / PALB2 / ATM carriers with family history of pancreatic cancer. Indication routes to HBOC enhanced surveillance pending dedicated IND-PANCREATIC-HEREDITARY-SURVEILLANCE authoring (v0.2 follow-up)."

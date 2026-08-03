@@ -18,7 +18,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "IDH-wildtype LGG with EGFR amplification / +7-10 / TERT-promoter mutation"
+        - clinician_confirmation:
+            id: CC-ALGO-GLIOMA-LGG-1L-B1F6D53F739F
+            label: "IDH-wildtype LGG with EGFR amplification / +7-10 / TERT-promoter mutation"
+            legacy_condition: "IDH-wildtype LGG with EGFR amplification / +7-10 / TERT-promoter mutation"
     if_true:
       result: null
       notes: "Reclassify to GBM per WHO 5th ed. — route to ALGO-GBM-1L (Stupp protocol); NOT to LGG algorithm"
@@ -28,7 +31,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "High-risk features: age ≥40 OR subtotal resection/biopsy-only OR symptomatic/large residual"
+        - clinician_confirmation:
+            id: CC-ALGO-GLIOMA-LGG-1L-0FAFB7F30E9C
+            label: "High-risk features: age ≥40 OR subtotal resection/biopsy-only OR symptomatic/large residual"
+            legacy_condition: "High-risk features: age ≥40 OR subtotal resection/biopsy-only OR symptomatic/large residual"
     if_true:
       result: IND-GLIOMA-LOW-GRADE-1L-RT-PCV
     if_false:
@@ -37,7 +43,10 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "Low-risk LGG: age <40 AND gross total resection AND asymptomatic"
+        - clinician_confirmation:
+            id: CC-ALGO-GLIOMA-LGG-1L-D569CB91FD64
+            label: "Low-risk LGG: age <40 AND gross total resection AND asymptomatic"
+            legacy_condition: "Low-risk LGG: age <40 AND gross total resection AND asymptomatic"
     if_true:
       result: IND-GLIOMA-LOW-GRADE-1L-RT-PCV
       notes: "Observation after GTR is a guideline-endorsed option for low-risk LGG; RT+PCV is an alternative — clinician/patient discussion needed"

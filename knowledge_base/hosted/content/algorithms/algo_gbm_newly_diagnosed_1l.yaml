@@ -20,7 +20,10 @@ decision_tree:
   - step: 1
     evaluate:
       all_of:
-        - condition: "IDH-WT confirmed (IDH1 R132H IHC negative + IDH1/2 sequencing)"
+        - clinician_confirmation:
+            id: CC-ALGO-GBM-NEWLY-DIAGNOSED-1L-AD59F748339F
+            label: "IDH-WT confirmed (IDH1 R132H IHC negative + IDH1/2 sequencing)"
+            legacy_condition: "IDH-WT confirmed (IDH1 R132H IHC negative + IDH1/2 sequencing)"
     if_true:
       next_step: 2
     if_false:
@@ -31,7 +34,10 @@ decision_tree:
   - step: 2
     evaluate:
       all_of:
-        - condition: "Age < 70"
+        - clinician_confirmation:
+            id: CC-ALGO-GBM-NEWLY-DIAGNOSED-1L-B2962A3F86A9
+            label: "Age < 70"
+            legacy_condition: "Age < 70"
         - any_of:
           - red_flag: RF-FITNESS-ECOG-FIT
           - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
@@ -49,7 +55,10 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "MGMT promoter methylated"
+        - clinician_confirmation:
+            id: CC-ALGO-GBM-NEWLY-DIAGNOSED-1L-BB291CFC615C
+            label: "MGMT promoter methylated"
+            legacy_condition: "MGMT promoter methylated"
     if_true:
       result: IND-GBM-NEWLY-DIAGNOSED-ELDERLY-TMZ
       notes: >

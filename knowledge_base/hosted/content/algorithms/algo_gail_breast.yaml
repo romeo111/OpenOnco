@@ -38,10 +38,22 @@ decision_tree:
     # cases (Manchester, Tyrer-Cuzick, BRCAPRO, BOADICEA).
     evaluate:
       any_of:
-        - condition: "Patient has known BRCA1/BRCA2 pathogenic variant"
-        - condition: "Patient has strong family history suggesting HBOC (use Manchester / Tyrer-Cuzick / BOADICEA instead)"
-        - condition: "Patient had prior chest/thoracic radiation (e.g., Hodgkin lymphoma treatment)"
-        - condition: "Patient has personal history of breast cancer or LCIS / DCIS"
+        - clinician_confirmation:
+            id: CC-ALGO-GAIL-BREAST-7FC6D759991C
+            label: "Patient has known BRCA1/BRCA2 pathogenic variant"
+            legacy_condition: "Patient has known BRCA1/BRCA2 pathogenic variant"
+        - clinician_confirmation:
+            id: CC-ALGO-GAIL-BREAST-F3B8D4273C12
+            label: "Patient has strong family history suggesting HBOC (use Manchester / Tyrer-Cuzick / BOADICEA instead)"
+            legacy_condition: "Patient has strong family history suggesting HBOC (use Manchester / Tyrer-Cuzick / BOADICEA instead)"
+        - clinician_confirmation:
+            id: CC-ALGO-GAIL-BREAST-B6ED20809654
+            label: "Patient had prior chest/thoracic radiation (e.g., Hodgkin lymphoma treatment)"
+            legacy_condition: "Patient had prior chest/thoracic radiation (e.g., Hodgkin lymphoma treatment)"
+        - clinician_confirmation:
+            id: CC-ALGO-GAIL-BREAST-9F8AD0604169
+            label: "Patient has personal history of breast cancer or LCIS / DCIS"
+            legacy_condition: "Patient has personal history of breast cancer or LCIS / DCIS"
     if_true:
       result: null
       notes: "Gail model not appropriate — apply pedigree-based model (Tyrer-Cuzick v8 / BRCAPRO / BOADICEA / Manchester) or hereditary cancer panel pathway."
@@ -51,7 +63,10 @@ decision_tree:
     # USPSTF chemoprevention threshold — Gail 5y ≥1.66%.
     evaluate:
       any_of:
-        - condition: "Gail 5-year invasive breast cancer risk ≥1.66%"
+        - clinician_confirmation:
+            id: CC-ALGO-GAIL-BREAST-C10A747638E2
+            label: "Gail 5-year invasive breast cancer risk ≥1.66%"
+            legacy_condition: "Gail 5-year invasive breast cancer risk ≥1.66%"
     if_true:
       next_step: 3
     if_false:
@@ -62,8 +77,14 @@ decision_tree:
     # high risk warranting enhanced surveillance discussion.
     evaluate:
       any_of:
-        - condition: "Gail 5-year invasive breast cancer risk ≥3.0%"
-        - condition: "Gail lifetime risk ≥20%"
+        - clinician_confirmation:
+            id: CC-ALGO-GAIL-BREAST-DC3C5D36B403
+            label: "Gail 5-year invasive breast cancer risk ≥3.0%"
+            legacy_condition: "Gail 5-year invasive breast cancer risk ≥3.0%"
+        - clinician_confirmation:
+            id: CC-ALGO-GAIL-BREAST-4EDF946C9F23
+            label: "Gail lifetime risk ≥20%"
+            legacy_condition: "Gail lifetime risk ≥20%"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Gail 5y ≥3% OR lifetime ≥20% — moderate-to-high risk. Enhanced surveillance (consider annual mammography; MRI typically requires lifetime ≥20-30% by ACS/NICE, which Gail tends to underestimate vs Tyrer-Cuzick) + chemoprevention discussion (tamoxifen / raloxifene / aromatase inhibitor per USPSTF grade B). Population-risk chemoprevention indication is v0.2 follow-up; routed to enhanced surveillance as interim."

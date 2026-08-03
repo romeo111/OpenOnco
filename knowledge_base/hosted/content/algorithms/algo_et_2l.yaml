@@ -54,10 +54,22 @@ decision_tree:
         - finding: "hu_status"
           value: "intolerant"
         - red_flag: RF-PV-ET-HIGH-THROMBOSIS-RISK
-        - condition: "HU resistance (platelets ≥600 ×10^9/L on max-tolerated HU ≥3mo)"
-        - condition: "HU intolerance (cytopenia, mucocutaneous toxicity, leg ulcers, GI)"
-        - condition: "Thrombotic event on HU therapy"
-        - condition: "Age <60 preferring non-cytotoxic option"
+        - clinician_confirmation:
+            id: CC-ALGO-ET-2L-E1A8F984BDAE
+            label: "HU resistance (platelets ≥600 ×10^9/L on max-tolerated HU ≥3mo)"
+            legacy_condition: "HU resistance (platelets ≥600 ×10^9/L on max-tolerated HU ≥3mo)"
+        - clinician_confirmation:
+            id: CC-ALGO-ET-2L-2F82B293ECF2
+            label: "HU intolerance (cytopenia, mucocutaneous toxicity, leg ulcers, GI)"
+            legacy_condition: "HU intolerance (cytopenia, mucocutaneous toxicity, leg ulcers, GI)"
+        - clinician_confirmation:
+            id: CC-ALGO-ET-2L-B744D326EBF4
+            label: "Thrombotic event on HU therapy"
+            legacy_condition: "Thrombotic event on HU therapy"
+        - clinician_confirmation:
+            id: CC-ALGO-ET-2L-F207A23EC699
+            label: "Age <60 preferring non-cytotoxic option"
+            legacy_condition: "Age <60 preferring non-cytotoxic option"
     if_true:
       result: IND-ET-2L-ANAGRELIDE
     if_false:
@@ -68,7 +80,10 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "Persistent high-risk ET requiring switch from 1L"
+        - clinician_confirmation:
+            id: CC-ALGO-ET-2L-C96BD8636C2C
+            label: "Persistent high-risk ET requiring switch from 1L"
+            legacy_condition: "Persistent high-risk ET requiring switch from 1L"
     if_true:
       result: IND-ET-2L-ANAGRELIDE
     if_false:

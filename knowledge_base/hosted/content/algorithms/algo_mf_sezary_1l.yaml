@@ -24,7 +24,10 @@ decision_tree:
       any_of:
         - red_flag: RF-MF-SEZARY-LEUKEMIC
         - red_flag: RF-MF-LARGE-CELL-TRANSFORMATION
-        - condition: "Stage IIB or higher (advanced disease)"
+        - clinician_confirmation:
+            id: CC-ALGO-MF-SEZARY-1L-BC8EB1932E87
+            label: "Stage IIB or higher (advanced disease)"
+            legacy_condition: "Stage IIB or higher (advanced disease)"
     if_true:
       next_step: 2
     if_false:

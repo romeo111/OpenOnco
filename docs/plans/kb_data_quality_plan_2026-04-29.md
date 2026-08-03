@@ -110,6 +110,10 @@ Open tasks:
 - Remediate critical recommendation-wording findings first.
 - Add claim-level source anchors where `expected_outcomes` or line-of-therapy
   text is currently detached from a specific trial/guideline source.
+- For new or remediated wording, prefer `clinical_claims[]` with a stable
+  `claim_id`, explicit `source_ids`, scope, and optional source locator. This
+  captures provenance without letting an automated process declare a claim
+  clinically approved.
 
 Acceptance:
 - Claim-bearing text either maps to a source row or is downgraded to a
@@ -125,12 +129,16 @@ Open tasks:
   only described in prose: citation density, outcome coverage, source age, and
   signoff readiness.
 - Add CI warnings for newly introduced unsourced claim text.
+- Generate a deterministic release manifest and reference graph; review the
+  extension-field inventory before normalizing any `extra="allow"` field.
 - Make TaskTorrent chunk specs require a `Quality Gate` section.
 
 Acceptance:
 - The matrix shows quality movement over time.
 - New chunks cannot be accepted when they improve coverage while degrading
   provenance, license, recency, or signoff status.
+- A database mirror, when needed, is derived from the release artifacts and
+  reconciles content hashes before it can serve reads.
 
 ## Active Chunk Mapping
 
@@ -182,4 +190,3 @@ Before opening a new data chunk:
 - Keep manifests small enough that one reviewer can verify them.
 - Require structured unresolved reasons.
 - Re-run the matrix after accepted sidecars are applied.
-

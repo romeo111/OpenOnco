@@ -33,9 +33,18 @@ decision_tree:
     evaluate:
       all_of:
         - red_flag: RF-NMZL-INFECTION-SCREENING  # HCV serology / RNA positive (and HBV/HIV gating)
-        - condition: "HCV RNA positive (anti-HCV alone insufficient)"
-        - condition: "Compensated liver function (no decompensated cirrhosis)"
-        - condition: "Indolent / low-burden presentation (GELF-negative)"
+        - clinician_confirmation:
+            id: CC-ALGO-NMZL-1L-DB167E4F7C7A
+            label: "HCV RNA positive (anti-HCV alone insufficient)"
+            legacy_condition: "HCV RNA positive (anti-HCV alone insufficient)"
+        - clinician_confirmation:
+            id: CC-ALGO-NMZL-1L-25E06988F1ED
+            label: "Compensated liver function (no decompensated cirrhosis)"
+            legacy_condition: "Compensated liver function (no decompensated cirrhosis)"
+        - clinician_confirmation:
+            id: CC-ALGO-NMZL-1L-3D88729CE34A
+            label: "Indolent / low-burden presentation (GELF-negative)"
+            legacy_condition: "Indolent / low-burden presentation (GELF-negative)"
     if_true:
       result: IND-NMZL-1L-HCV-POSITIVE
     if_false:

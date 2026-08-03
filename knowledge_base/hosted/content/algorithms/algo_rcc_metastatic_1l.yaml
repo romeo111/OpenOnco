@@ -30,7 +30,10 @@ decision_tree:
           value: "CLEAR_CELL"
         - finding: "histologic_subtype"
           value: "clear_cell"
-        - condition: "Clear-cell (conventional) RCC confirmed on pathology"
+        - clinician_confirmation:
+            id: CC-ALGO-RCC-METASTATIC-1L-13B89A6CAC9A
+            label: "Clear-cell (conventional) RCC confirmed on pathology"
+            legacy_condition: "Clear-cell (conventional) RCC confirmed on pathology"
     if_true:
       next_step: 2
     if_false:
@@ -60,8 +63,14 @@ decision_tree:
   - step: 3a
     evaluate:
       all_of:
-        - condition: "IMDC favorable risk (0 adverse factors)"
-        - condition: "ECOG PS 0-1 AND fit for ICI+TKI combination"
+        - clinician_confirmation:
+            id: CC-ALGO-RCC-METASTATIC-1L-5C22EFEFB71C
+            label: "IMDC favorable risk (0 adverse factors)"
+            legacy_condition: "IMDC favorable risk (0 adverse factors)"
+        - clinician_confirmation:
+            id: CC-ALGO-RCC-METASTATIC-1L-9C4EB1E3A7B4
+            label: "ECOG PS 0-1 AND fit for ICI+TKI combination"
+            legacy_condition: "ECOG PS 0-1 AND fit for ICI+TKI combination"
     if_true:
       next_step: 4
     if_false:
@@ -91,8 +100,14 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "ECOG PS 0-1"
-        - condition: "High tumour burden OR conversion-to-resection intent OR rapid response needed"
+        - clinician_confirmation:
+            id: CC-ALGO-RCC-METASTATIC-1L-7D8F3BCD92EE
+            label: "ECOG PS 0-1"
+            legacy_condition: "ECOG PS 0-1"
+        - clinician_confirmation:
+            id: CC-ALGO-RCC-METASTATIC-1L-4B37D64E10FB
+            label: "High tumour burden OR conversion-to-resection intent OR rapid response needed"
+            legacy_condition: "High tumour burden OR conversion-to-resection intent OR rapid response needed"
     if_true:
       result: IND-RCC-METASTATIC-1L-LENV-PEMBRO
       notes: >
@@ -107,9 +122,18 @@ decision_tree:
   - step: 5
     evaluate:
       any_of:
-        - condition: "Significant bone metastases (MET/AXL pathway biological rationale for cabozantinib)"
-        - condition: "Uncontrolled hypertension (lenvatinib toxicity concern)"
-        - condition: "ECOG PS 1-2 (better tolerability of nivo+cabo vs lenv+pembro)"
+        - clinician_confirmation:
+            id: CC-ALGO-RCC-METASTATIC-1L-9C2CF01B202E
+            label: "Significant bone metastases (MET/AXL pathway biological rationale for cabozantinib)"
+            legacy_condition: "Significant bone metastases (MET/AXL pathway biological rationale for cabozantinib)"
+        - clinician_confirmation:
+            id: CC-ALGO-RCC-METASTATIC-1L-5307A7FB153E
+            label: "Uncontrolled hypertension (lenvatinib toxicity concern)"
+            legacy_condition: "Uncontrolled hypertension (lenvatinib toxicity concern)"
+        - clinician_confirmation:
+            id: CC-ALGO-RCC-METASTATIC-1L-04A667280853
+            label: "ECOG PS 1-2 (better tolerability of nivo+cabo vs lenv+pembro)"
+            legacy_condition: "ECOG PS 1-2 (better tolerability of nivo+cabo vs lenv+pembro)"
     if_true:
       result: IND-RCC-METASTATIC-1L-NIVO-CABO
       notes: >

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from http.server import BaseHTTPRequestHandler
 
-from serverless.clinical_question import _cors_headers, handle_json_request
+from serverless.clinical_question import MAX_REQUEST_BODY_BYTES, _cors_headers, handle_json_request
 
 
 class handler(BaseHTTPRequestHandler):  # pylint: disable=invalid-name
@@ -22,12 +22,26 @@ class handler(BaseHTTPRequestHandler):  # pylint: disable=invalid-name
         self._send_json(204, _cors_headers(), {})
 
     def do_POST(self) -> None:  # noqa: N802
-        length = int(self.headers.get("Content-Length") or "0")
-        raw = self.rfile.read(length).decode("utf-8") if length else "{}"
+        try:
+            length = int(self.headers.get("Content-Length") or "0")
+        except ValueError:
+            self._send_json(400, _cors_headers(), {"status": "error", "message": "Invalid Content-Length"})
+            return
+        if length < 0 or length > MAX_REQUEST_BODY_BYTES:
+            self._send_json(413, _cors_headers(), {"status": "error", "message": "Request body too large"})
+            return
+        try:
+            raw = self.rfile.read(length).decode("utf-8") if length else "{}"
+        except UnicodeDecodeError:
+            self._send_json(400, _cors_headers(), {"status": "error", "message": "Request body must be UTF-8 JSON"})
+            return
         try:
             payload = json.loads(raw)
         except json.JSONDecodeError:
             self._send_json(400, _cors_headers(), {"status": "error", "message": "Invalid JSON body"})
+            return
+        if not isinstance(payload, dict):
+            self._send_json(400, _cors_headers(), {"status": "error", "message": "JSON request body must be an object"})
             return
         status, headers, response = handle_json_request(
             payload,

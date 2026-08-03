@@ -45,9 +45,18 @@ decision_tree:
         - finding: histology
           value: squamous
         - any_of:
-            - condition: "cT4b — unresectable due to invasion of adjacent structures"
-            - condition: "M0 medically inoperable (cardiopulmonary or comorbidity contraindications)"
-            - condition: "Patient declines surgery"
+            - clinician_confirmation:
+                id: CC-ALGO-ESOPH-DEFINITIVE-1L-7EBCEF958DC8
+                label: "cT4b — unresectable due to invasion of adjacent structures"
+                legacy_condition: "cT4b — unresectable due to invasion of adjacent structures"
+            - clinician_confirmation:
+                id: CC-ALGO-ESOPH-DEFINITIVE-1L-37880033D2D4
+                label: "M0 medically inoperable (cardiopulmonary or comorbidity contraindications)"
+                legacy_condition: "M0 medically inoperable (cardiopulmonary or comorbidity contraindications)"
+            - clinician_confirmation:
+                id: CC-ALGO-ESOPH-DEFINITIVE-1L-3A421CD903CE
+                label: "Patient declines surgery"
+                legacy_condition: "Patient declines surgery"
     if_true:
       result: IND-ESOPH-DEFINITIVE-CRT-SCC
       notes: >

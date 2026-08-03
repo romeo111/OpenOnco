@@ -12,7 +12,10 @@ decision_tree:
     any_of:
     - red_flag: RF-PCNSL-FRAILTY-AGE
     - red_flag: RF-PCNSL-ORGAN-DYSFUNCTION
-    - condition: CrCl <50 mL/min OR severe hepatic dysfunction (HD-MTX contraindicated)
+    - clinician_confirmation:
+        id: CC-ALGO-PCNSL-2L-D41D25B76C23
+        label: "CrCl <50 mL/min OR severe hepatic dysfunction (HD-MTX contraindicated)"
+        legacy_condition: "CrCl <50 mL/min OR severe hepatic dysfunction (HD-MTX contraindicated)"
   if_true:
     result: IND-PCNSL-2L-RMPV-SALVAGE
   if_false:
@@ -20,9 +23,18 @@ decision_tree:
 - step: 2
   evaluate:
     any_of:
-    - condition: 'Primary refractory: residual contrast-enhancing lesion ≥4 weeks post-1L'
-    - condition: 'Early relapse: <6 months from 1L completion'
-    - condition: Failure to achieve CR to 1L R-MPV / MATRix
+    - clinician_confirmation:
+        id: CC-ALGO-PCNSL-2L-3195CE4B8ABC
+        label: "Primary refractory: residual contrast-enhancing lesion ≥4 weeks post-1L"
+        legacy_condition: "Primary refractory: residual contrast-enhancing lesion ≥4 weeks post-1L"
+    - clinician_confirmation:
+        id: CC-ALGO-PCNSL-2L-5063D71AA571
+        label: "Early relapse: <6 months from 1L completion"
+        legacy_condition: "Early relapse: <6 months from 1L completion"
+    - clinician_confirmation:
+        id: CC-ALGO-PCNSL-2L-E071C7D573BE
+        label: "Failure to achieve CR to 1L R-MPV / MATRix"
+        legacy_condition: "Failure to achieve CR to 1L R-MPV / MATRix"
     - red_flag: RF-PCNSL-TRANSFORMATION-PROGRESSION
   if_true:
     result: IND-PCNSL-2L-RMPV-SALVAGE
@@ -31,8 +43,14 @@ decision_tree:
 - step: 3
   evaluate:
     all_of:
-    - condition: Documented CR or PR to 1L HD-MTX-based regimen
-    - condition: 'Late relapse: ≥6 months from 1L completion'
+    - clinician_confirmation:
+        id: CC-ALGO-PCNSL-2L-CDA75E3D7918
+        label: "Documented CR or PR to 1L HD-MTX-based regimen"
+        legacy_condition: "Documented CR or PR to 1L HD-MTX-based regimen"
+    - clinician_confirmation:
+        id: CC-ALGO-PCNSL-2L-CB52522B6A9C
+        label: "Late relapse: ≥6 months from 1L completion"
+        legacy_condition: "Late relapse: ≥6 months from 1L completion"
     - none_of:
       - red_flag: RF-ORGAN-RENAL-IMPAIRED
     - condition: HD-MTX-eligible
@@ -47,7 +65,10 @@ decision_tree:
 - step: 4
   evaluate:
     any_of:
-    - condition: PCNSL relapsed, CD20+, HD-MTX-eligible by default
+    - clinician_confirmation:
+        id: CC-ALGO-PCNSL-2L-5A0FA44E6EE9
+        label: "PCNSL relapsed, CD20+, HD-MTX-eligible by default"
+        legacy_condition: "PCNSL relapsed, CD20+, HD-MTX-eligible by default"
     - red_flag: RF-PCNSL-TRANSFORMATION-PROGRESSION
   if_true:
     result: IND-PCNSL-2L-RMPV-SALVAGE

@@ -23,6 +23,7 @@ from scripts.build_site import (
     CASES,
     GALLERY_EXCLUDED_CASE_IDS,
     GALLERY_FEATURED_CASE_IDS,
+    _public_case_entries,
     _public_example_entries,
     build_site,
     _example_sort_key,
@@ -325,12 +326,13 @@ def test_engine_bundle_excludes_heavy_unused_subtrees(site_dir: Path):
     # ~3.88MB after CIViC pivot + solid-tumor expansion to 65 diseases
     # (2026-04-27 — 1810 entities, +CIViC snapshot data, +ESCAT actionability
     # records, +CSD-5/6/7 redflag-matrix and drug curation). CSD-5B core+per-
-    # disease lazy-load split exists but the monolithic fallback zip is what
-    # this test validates; ceiling bumped to 4MB to absorb ongoing growth.
+    # disease lazy-load split is now canonical. The core reached 4.13 MB after
+    # the 2026-08 structured-drug/source expansion; keep a narrow 4.25 MB
+    # ceiling so further growth must be deliberately sharded.
     # Pyodide first-load (≈10 MB) dominates UX latency, so the ceiling is
     # sized for headroom.
-    assert zip_path.stat().st_size < 4_000_000, (
-        f"engine bundle exceeds 4MB compressed: {zip_path.stat().st_size}"
+    assert zip_path.stat().st_size < 4_250_000, (
+        f"engine bundle exceeds 4.25MB compressed: {zip_path.stat().st_size}"
     )
 
 
@@ -357,6 +359,8 @@ def test_examples_payload_matches_cases(site_dir: Path):
         assert entry.get("quality_label")
         assert entry.get("quality_label_en")
         assert entry.get("quality_class")
+        assert entry.get("scenario_type")
+        assert entry.get("verification_required") is True
         assert "Auto-stub" not in entry.get("label", "")
         assert "Auto-stub" not in entry.get("label_en", "")
         # Engine-required top-level fields exist for non-diagnostic patients
@@ -374,6 +378,12 @@ def test_examples_are_quality_ranked_in_try_picker(site_dir: Path):
     assert "function exampleDisplayLabel(ex)" in try_html
     assert "quality_rank" in try_html
     assert "Curated showcase" in try_html
+    assert "patient_view_available" in try_html
+    assert ".patient.html" in try_html
+    capabilities_html = (site_dir / "capabilities.html").read_text(encoding="utf-8")
+    assert f"{len(_public_example_entries())} public examples" in capabilities_html
+    assert "586 cases" not in capabilities_html
+    assert "verified variant profiles" not in capabilities_html
 
 
 def test_try_examples_are_curated_and_filter_by_disease_id(site_dir: Path):
@@ -399,8 +409,26 @@ def test_try_examples_are_curated_and_filter_by_disease_id(site_dir: Path):
     }
     hosted_disease_ids.discard(None)
 
-    assert hosted_disease_ids <= questionnaire_disease_ids
-    assert example_disease_ids <= questionnaire_disease_ids
+    # A questionnaire is an optional authoring aid, not the definition of
+    # whether a disease or molecular evidence example can be published.
+    # Diagnostic, prevention, and molecular examples without a disease-
+    # specific questionnaire fall back to their supplied JSON profile in the
+    # try page. Treatment scenarios must retain a questionnaire match.
+    no_questionnaire_examples = [
+        entry for entry in examples
+        if entry.get("disease_id") not in questionnaire_disease_ids
+    ]
+    assert no_questionnaire_examples
+    assert all(
+        entry.get("scenario_type") in {"diagnostic", "prevention", "molecular"}
+        for entry in no_questionnaire_examples
+    )
+    assert all(entry.get("questionnaire_available") is False for entry in no_questionnaire_examples)
+    assert all(
+        entry.get("questionnaire_available") is True
+        for entry in examples
+        if entry.get("disease_id") in questionnaire_disease_ids
+    )
     for entry in examples:
         did = entry.get("disease_id")
         if did not in questionnaire_disease_ids:
@@ -445,20 +473,30 @@ def test_try_questionnaire_dropdown_titles_are_public_and_localized(site_dir: Pa
     )
 
 
+def test_questionnaire_bundle_exposes_explicit_clinician_confirmation_gates(site_dir: Path):
+    questionnaires = json.loads((site_dir / "questionnaires.json").read_text(encoding="utf-8"))
+    aml = next(q for q in questionnaires if q["id"] == "QUEST-AML-1L-STUB")
+    confirmation_group = next(
+        group for group in aml["groups"] if group["title"] == "Clinician / MDT confirmations"
+    )
+    assert confirmation_group["questions"]
+    assert all(
+        question["field"].startswith("clinician_confirmations.CC-")
+        and question["type"] == "boolean"
+        and "never inferred" in question["helper"]
+        and "default_value" not in question
+        for question in confirmation_group["questions"]
+    )
+
+
 # ── Per-case files ────────────────────────────────────────────────────────
 
 
 def test_case_files_have_back_link_and_no_auth(site_dir: Path):
     # Root /cases/ now renders EN since the EN-default flip (commit 48eb804e);
     # UA back-link "Назад до галереї" lives at /ukr/cases/<id>.html.
-    for c in CASES:
+    for c in _public_case_entries():
         path = site_dir / "cases" / f"{c.case_id}.html"
-        # Only BROKEN cases skip the case-page build. Gallery-only-hidden
-        # cases still get their HTML so the /try.html example picker can
-        # iframe a real generated plan when the user loads them.
-        if c.case_id in BROKEN_CASE_IDS:
-            assert not path.exists(), f"broken case file leaked: {path.name}"
-            continue
         assert path.exists(), f"case file missing: {path.name}"
         html = path.read_text(encoding="utf-8")
         assert html.startswith("<!DOCTYPE html>")
@@ -466,6 +504,13 @@ def test_case_files_have_back_link_and_no_auth(site_dir: Path):
         assert "openOncoUser" not in html, f"{c.case_id} retains auth gate"
         assert "Back to gallery" in html
         assert "tester-feedback" in html
+        assert "Do not self-treat" in html
+        if c.scenario_type != "diagnostic":
+            assert (site_dir / "cases" / f"{c.case_id}.patient.html").exists()
+
+    for c in CASES:
+        if c.visibility != "public":
+            assert not (site_dir / "cases" / f"{c.case_id}.html").exists()
 
 
 # ── Language switcher + UA mirror ─────────────────────────────────────────
@@ -483,14 +528,13 @@ def test_en_mirror_built_alongside_ua(site_dir: Path):
     assert (site_dir / "ukr").is_dir()
     assert (site_dir / "ukr" / "cases").is_dir()
     # Every EN case has a UA counterpart at /ukr/cases/
-    for c in CASES:
+    for c in _public_case_entries():
         path = site_dir / "ukr" / "cases" / f"{c.case_id}.html"
-        if c.case_id in BROKEN_CASE_IDS:
-            assert not path.exists(), f"broken UA case file leaked: {path.name}"
-            continue
         assert path.exists(), (
             f"missing ukr/cases/{c.case_id}.html"
         )
+        if c.scenario_type != "diagnostic":
+            assert (site_dir / "ukr" / "cases" / f"{c.case_id}.patient.html").exists()
 
 
 def test_lang_switch_present_on_every_top_level_page(site_dir: Path):

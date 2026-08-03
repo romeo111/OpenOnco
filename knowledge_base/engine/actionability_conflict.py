@@ -32,6 +32,7 @@ from typing import Iterable
 from .actionability_types import (
     ActionabilityLayer,
     ActionabilityResult,
+    ActionabilityTherapeuticOption,
     RESISTANCE_LEVELS,
     ResistanceConflict,
 )

@@ -21,7 +21,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "ECOG PS 0-2"
+        - clinician_confirmation:
+            id: CC-ALGO-HNSCC-RM-2L-2819AEB5AB6E
+            label: "ECOG PS 0-2"
+            legacy_condition: "ECOG PS 0-2"
     if_true:
       next_step: 2
     if_false:
@@ -35,7 +38,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "No prior anti-PD-(L)1 therapy (ICI-naive) — received EXTREME or platinum-only 1L without pembrolizumab"
+        - clinician_confirmation:
+            id: CC-ALGO-HNSCC-RM-2L-4F891188814B
+            label: "No prior anti-PD-(L)1 therapy (ICI-naive) — received EXTREME or platinum-only 1L without pembrolizumab"
+            legacy_condition: "No prior anti-PD-(L)1 therapy (ICI-naive) — received EXTREME or platinum-only 1L without pembrolizumab"
     if_true:
       next_step: 3
       notes: >
@@ -62,7 +68,10 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "PD-L1 CPS ≥20 AND pembrolizumab available"
+        - clinician_confirmation:
+            id: CC-ALGO-HNSCC-RM-2L-52FE32E1F2DE
+            label: "PD-L1 CPS ≥20 AND pembrolizumab available"
+            legacy_condition: "PD-L1 CPS ≥20 AND pembrolizumab available"
     if_true:
       result: IND-HNSCC-RM-2L-PEMBROLIZUMAB
       notes: >

@@ -32,11 +32,26 @@ decision_tree:
     # Eligibility gate.
     evaluate:
       any_of:
-        - condition: "Patient has known BRCA1/BRCA2 pathogenic variant"
-        - condition: "Patient has strong family history suggesting HBOC (use pedigree-based model)"
-        - condition: "Patient had prior chest/thoracic radiation"
-        - condition: "Patient has personal history of breast cancer or DCIS / LCIS"
-        - condition: "Patient age <35 or >74 (outside BCSC validation range)"
+        - clinician_confirmation:
+            id: CC-ALGO-BCSC-BREAST-7FC6D759991C
+            label: "Patient has known BRCA1/BRCA2 pathogenic variant"
+            legacy_condition: "Patient has known BRCA1/BRCA2 pathogenic variant"
+        - clinician_confirmation:
+            id: CC-ALGO-BCSC-BREAST-353FC0F24051
+            label: "Patient has strong family history suggesting HBOC (use pedigree-based model)"
+            legacy_condition: "Patient has strong family history suggesting HBOC (use pedigree-based model)"
+        - clinician_confirmation:
+            id: CC-ALGO-BCSC-BREAST-544CCD00F336
+            label: "Patient had prior chest/thoracic radiation"
+            legacy_condition: "Patient had prior chest/thoracic radiation"
+        - clinician_confirmation:
+            id: CC-ALGO-BCSC-BREAST-BF8E27ACB4BF
+            label: "Patient has personal history of breast cancer or DCIS / LCIS"
+            legacy_condition: "Patient has personal history of breast cancer or DCIS / LCIS"
+        - clinician_confirmation:
+            id: CC-ALGO-BCSC-BREAST-87DE64914979
+            label: "Patient age <35 or >74 (outside BCSC validation range)"
+            legacy_condition: "Patient age <35 or >74 (outside BCSC validation range)"
     if_true:
       result: null
       notes: "BCSC not appropriate — apply pedigree-based model (Tyrer-Cuzick v8 / Manchester / BRCAPRO / BOADICEA), or refer for hereditary panel if HBOC suspicion."
@@ -46,7 +61,10 @@ decision_tree:
     # High-risk lifetime threshold (NICE ≥30%; ACS ≥20% for MRI).
     evaluate:
       any_of:
-        - condition: "BCSC 10-year invasive breast cancer risk ≥6% (high-risk threshold approximating lifetime ≥20-30%)"
+        - clinician_confirmation:
+            id: CC-ALGO-BCSC-BREAST-89FB12EE4F49
+            label: "BCSC 10-year invasive breast cancer risk ≥6% (high-risk threshold approximating lifetime ≥20-30%)"
+            legacy_condition: "BCSC 10-year invasive breast cancer risk ≥6% (high-risk threshold approximating lifetime ≥20-30%)"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BCSC 10y ≥6% — enhanced surveillance (annual mammography ± MRI per ACS/NCCN, density-adjusted protocol), chemoprevention discussion."
@@ -57,7 +75,10 @@ decision_tree:
     # mapped to BCSC 5y ≥3%).
     evaluate:
       any_of:
-        - condition: "BCSC 5-year invasive breast cancer risk ≥3.0%"
+        - clinician_confirmation:
+            id: CC-ALGO-BCSC-BREAST-277EC9BA1D99
+            label: "BCSC 5-year invasive breast cancer risk ≥3.0%"
+            legacy_condition: "BCSC 5-year invasive breast cancer risk ≥3.0%"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BCSC 5y ≥3% — moderate-to-elevated risk. Chemoprevention candidacy (tamoxifen / raloxifene / aromatase inhibitor) + density-adjusted screening (supplemental ultrasound or MRI in heterogeneously/extremely dense breasts per state law / clinical judgement)."
@@ -68,8 +89,14 @@ decision_tree:
     # warrant supplemental screening per many state laws + ACR/ACS.
     evaluate:
       all_of:
-        - condition: "BI-RADS density category c (heterogeneously dense) or d (extremely dense)"
-        - condition: "BCSC 5-year invasive breast cancer risk ≥1.66%"
+        - clinician_confirmation:
+            id: CC-ALGO-BCSC-BREAST-9817FCEF2514
+            label: "BI-RADS density category c (heterogeneously dense) or d (extremely dense)"
+            legacy_condition: "BI-RADS density category c (heterogeneously dense) or d (extremely dense)"
+        - clinician_confirmation:
+            id: CC-ALGO-BCSC-BREAST-8E61D6AD5AA5
+            label: "BCSC 5-year invasive breast cancer risk ≥1.66%"
+            legacy_condition: "BCSC 5-year invasive breast cancer risk ≥1.66%"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BI-RADS density c/d + BCSC 5y ≥1.66% — moderate risk amplified by density. Discuss supplemental screening per FDA 2024 mammography density-reporting rule + state-specific notification laws."

@@ -244,10 +244,10 @@
 
     <div class="callout callout-hard">
       <strong>STUB-статус клінічного контенту.</strong>
-      Dual sign-off: <strong>15/806</strong>
+      Dual sign-off: <strong>15/808</strong>
       (CHARTER §6.1 вимагає два Clinical Co-Lead approvals).
       Це proposed-plan: structured data + algorithm + sources на місці, але без dual sign-off.
-      Інструмент підтримки рішень, не медичний пристрій. Стан на <code>2026-05-21 15:47 UTC</code>.
+      Інструмент підтримки рішень, не медичний пристрій. Стан на <code>2026-08-03 08:13 UTC</code>.
     </div>
 
     <nav class="cap-tabs" role="tablist" aria-label="Розділи">
@@ -264,7 +264,7 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — pipeline: JSON-профіль → engine → Plan з двома треками">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">OpenOnco · engine у двох словах</span>
-          <span class="pipeline-version">v0.1.4 · 2026-05-21 15:47 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-08-03 08:13 UTC</span>
         </div>
         <h2 class="pipeline-title">
           Один JSON-профіль → <em>два плани лікування</em> з citation під кожною claim.
@@ -299,7 +299,7 @@
             <ol class="pipeline-stages">
               <li>Resolve algorithm</li>
               <li>Flatten findings</li>
-              <li>Eval 594 RedFlags</li>
+              <li>Eval 596 RedFlags</li>
               <li>Walk decision tree</li>
               <li>Materialize tracks</li>
               <li>Resolve regimens</li>
@@ -338,10 +338,10 @@
         <div class="key-num"><div class="key-num-val">664</div><div class="key-num-lbl">показань (230 1L · 172 2L+)</div></div>
         <div class="key-num"><div class="key-num-val">384</div><div class="key-num-lbl">режимів лікування</div></div>
         <div class="key-num"><div class="key-num-val">298</div><div class="key-num-lbl">препаратів (ATC/RxNorm)</div></div>
-        <div class="key-num"><div class="key-num-val">594</div><div class="key-num-lbl">red flags</div></div>
-        <div class="key-num"><div class="key-num-val">444</div><div class="key-num-lbl">цитованих джерел</div></div>
+        <div class="key-num"><div class="key-num-val">596</div><div class="key-num-lbl">red flags</div></div>
+        <div class="key-num"><div class="key-num-val">515</div><div class="key-num-lbl">цитованих джерел</div></div>
         <div class="key-num"><div class="key-num-val">16</div><div class="key-num-lbl">лікар-скілів (MDT)</div></div>
-        <div class="key-num is-warn"><div class="key-num-val">15/806</div><div class="key-num-lbl">з dual sign-off</div></div>
+        <div class="key-num is-warn"><div class="key-num-val">15/808</div><div class="key-num-lbl">з dual sign-off</div></div>
       </div>
 
       <div class="pillars">
@@ -364,6 +364,21 @@
       </div>
 
       <div class="info-section">
+        <h2>Що є в базі знань</h2>
+        <p class="info-text">Це інвентар опублікованих записів, а не оцінка клінічної повноти. Для кожної нозології покриття й стан перевірки показано окремо в матриці нижче.</p>
+        <div class="num-grid num-grid--rich">
+          <div class="num-card"><div class="num-big">92</div><div class="num-lbl">Хвороби в KB</div><p class="num-text">Нозології з окремими структурованими записами.</p></div>
+          <div class="num-card"><div class="num-big">16</div><div class="num-lbl">Лікарі-скіли</div><p class="num-text">Ролі MDT, які система враховує у маршрутизації.</p></div>
+          <div class="num-card"><div class="num-big">384</div><div class="num-lbl">Режими лікування</div><p class="num-text">Структуровані схеми, а не автоматичні призначення.</p></div>
+          <div class="num-card"><div class="num-big">298</div><div class="num-lbl">Препарати</div><p class="num-text">Записи препаратів з машинозчитуваним контекстом.</p></div>
+          <div class="num-card"><div class="num-big">131</div><div class="num-lbl">Тести</div><p class="num-text">Діагностичні й молекулярні тести в KB.</p></div>
+          <div class="num-card"><div class="num-big">24</div><div class="num-lbl">Workups</div><p class="num-text">Структуровані набори дообстеження.</p></div>
+          <div class="num-card"><div class="num-big">596</div><div class="num-lbl">Red flags</div><p class="num-text">Сигнали для повторної перевірки клініцистом.</p></div>
+          <div class="num-card"><div class="num-big">515</div><div class="num-lbl">Джерела</div><p class="num-text">Цитовані записи джерел, пов'язані з твердженнями.</p></div>
+        </div>
+      </div>
+
+      <div class="info-section">
         <h2>Coverage matrix</h2>
         <p class="info-text">
           Сторінка <a href="/ukr/diseases.html"><code>/ukr/diseases.html</code></a> — per-disease таблиця:
@@ -373,9 +388,9 @@
           <a href="/ukr/diseases.html"><strong>→ Дивитись матрицю</strong></a>
         </p>
         <p class="info-text">
-          <a href="/ukr/gallery.html"><code>/ukr/gallery.html</code></a> — 586 кейсів
-          (159 hand-curated + 362 verified variant profiles + 65 auto-base). Кожен — повний Plan або
-          Diagnostic Brief з усіма citation. Disease-grouped drill-down.
+          <a href="/ukr/gallery.html"><code>/ukr/gallery.html</code></a> — 352 публічні приклади.
+          Кожен містить повний Plan, Diagnostic Brief або молекулярний сценарій з посиланнями на джерела.
+          Приховані QA-профілі не змішуються з бібліотекою для користувача.
           <a href="/ukr/gallery.html"><strong>→ Дивитись приклади</strong></a>
         </p>
       </div>
@@ -404,7 +419,7 @@
           <div class="flow-step">
             <div class="flow-num">Stage 3</div>
             <div class="flow-title">RedFlag eval</div>
-            <div class="flow-desc">594 RF проти findings (<code>any_of</code>/<code>all_of</code>/<code>none_of</code> з threshold-ами).</div>
+            <div class="flow-desc">596 RF проти findings (<code>any_of</code>/<code>all_of</code>/<code>none_of</code> з threshold-ами).</div>
           </div>
           <div class="flow-step">
             <div class="flow-num">Stage 4</div>
@@ -720,7 +735,7 @@
             <tr><td>Радіотерапія</td><td>частково</td><td>RT у мультимодальних Indications; як окрема сутність — не моделюється</td></tr>
             <tr><td>Хірургія</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
             <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Hard-coded на режимах; не auto-refresh</td></tr>
-            <tr><td>Reviewer dual sign-off</td><td><strong>15/806</strong></td><td>Основна bottleneck-метрика — capacity план: 806 → ≥85% verified</td></tr>
+            <tr><td>Reviewer dual sign-off</td><td><strong>15/808</strong></td><td>Основна bottleneck-метрика — capacity план: 808 → ≥85% verified</td></tr>
             <tr><td>Live gap dashboard</td><td><a href="/ukr/clinical-gaps.html">→ link</a></td><td>Build-generated audit (sign-off, solid 2L+, surgery, RT, supportive)</td></tr>
           </tbody>
         </table>
@@ -748,7 +763,7 @@
       <div class="info-section">
         <h2>TaskTorrent — верифікувати алгоритми токенами вашого AI</h2>
         <p class="info-text">
-          Найбільший gap — <strong>15/806</strong> dual-reviewer sign-off.
+          Найбільший gap — <strong>15/808</strong> dual-reviewer sign-off.
           Bottleneck не вирішується новим кодом — він вирішується контрибуторами з AI-tool'ами,
           що беруть structured chunks роботи.
         </p>
@@ -814,7 +829,7 @@
           <li><strong>Multi-phase regimens (PR1-3)</strong> — <code>Regimen.phases</code>, <code>bridging_options</code>, phases-aware render, back-compat auto-wrap.</li>
           <li><strong>Citation guard L3</strong> — render-time перевірка кожної BMA-комірки.</li>
           <li><strong>Coverage matrix</strong> — <a href="/ukr/diseases.html">/ukr/diseases.html</a> per-disease drill-down.</li>
-          <li><strong>586 кейсів у gallery</strong> — Phase 2 chunked feat: ~60 нових hand-curated за 4 дні.</li>
+          <li><strong>352 публічні приклади у gallery</strong> — готові плани, діагностичні briefs і молекулярні сценарії для перегляду та перевірки.</li>
         </ul>
       </div>
     </section>

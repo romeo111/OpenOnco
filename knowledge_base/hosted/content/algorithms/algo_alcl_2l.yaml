@@ -24,8 +24,14 @@ decision_tree:
   - step: 1
     evaluate:
       all_of:
-        - condition: "Status post autoSCT in CR/PR"
-        - condition: "High-risk features present (primary refractory pre-ASCT, relapse <12 months from 1L, ≥2 prior lines, or extranodal at relapse)"
+        - clinician_confirmation:
+            id: CC-ALGO-ALCL-2L-D45468E340B9
+            label: "Status post autoSCT in CR/PR"
+            legacy_condition: "Status post autoSCT in CR/PR"
+        - clinician_confirmation:
+            id: CC-ALGO-ALCL-2L-260787CEA8FC
+            label: "High-risk features present (primary refractory pre-ASCT, relapse <12 months from 1L, ≥2 prior lines, or extranodal at relapse)"
+            legacy_condition: "High-risk features present (primary refractory pre-ASCT, relapse <12 months from 1L, ≥2 prior lines, or extranodal at relapse)"
     if_true:
       result: IND-ALCL-MAINTENANCE-BV-POST-ASCT
     if_false:
@@ -36,8 +42,14 @@ decision_tree:
   - step: 2
     evaluate:
       all_of:
-        - condition: "Brentuximab vedotin not used in prior line"
-        - condition: "No baseline Grade ≥2 peripheral neuropathy"
+        - clinician_confirmation:
+            id: CC-ALGO-ALCL-2L-7CD0689C16FE
+            label: "Brentuximab vedotin not used in prior line"
+            legacy_condition: "Brentuximab vedotin not used in prior line"
+        - clinician_confirmation:
+            id: CC-ALGO-ALCL-2L-96C151CAB960
+            label: "No baseline Grade ≥2 peripheral neuropathy"
+            legacy_condition: "No baseline Grade ≥2 peripheral neuropathy"
     if_true:
       result: IND-ALCL-2L-BRENTUXIMAB-MONO
     if_false:
@@ -49,7 +61,10 @@ decision_tree:
     evaluate:
       all_of:
         - condition: "ALK-positive ALCL"
-        - condition: "Brentuximab vedotin previously administered"
+        - clinician_confirmation:
+            id: CC-ALGO-ALCL-2L-EC1595E3ABFA
+            label: "Brentuximab vedotin previously administered"
+            legacy_condition: "Brentuximab vedotin previously administered"
     if_true:
       result: IND-ALCL-2L-CRIZOTINIB-ALKPOS
     if_false:

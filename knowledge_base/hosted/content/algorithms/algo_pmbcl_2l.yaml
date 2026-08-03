@@ -12,7 +12,10 @@ decision_tree:
     any_of:
     - red_flag: RF-PMBCL-FRAILTY-AGE
     - red_flag: RF-PMBCL-ORGAN-DYSFUNCTION
-    - condition: Age >70 OR ECOG ≥2 OR LVEF <45% OR CrCl <50 (transplant-ineligible)
+    - clinician_confirmation:
+        id: CC-ALGO-PMBCL-2L-C62D721D9F6B
+        label: "Age >70 OR ECOG ≥2 OR LVEF <45% OR CrCl <50 (transplant-ineligible)"
+        legacy_condition: "Age >70 OR ECOG ≥2 OR LVEF <45% OR CrCl <50 (transplant-ineligible)"
   if_true:
     result: IND-PMBCL-2L-RICE-AUTOSCT
   if_false:
@@ -20,8 +23,14 @@ decision_tree:
 - step: 2
   evaluate:
     all_of:
-    - condition: R-ICE x 2 cycles completed
-    - condition: Interim Deauville ≥4 (no metabolic response) — chemorefractory
+    - clinician_confirmation:
+        id: CC-ALGO-PMBCL-2L-CDACBFE352BF
+        label: "R-ICE x 2 cycles completed"
+        legacy_condition: "R-ICE x 2 cycles completed"
+    - clinician_confirmation:
+        id: CC-ALGO-PMBCL-2L-08A4E0DEF089
+        label: "Interim Deauville ≥4 (no metabolic response) — chemorefractory"
+        legacy_condition: "Interim Deauville ≥4 (no metabolic response) — chemorefractory"
   if_true:
     result: IND-PMBCL-2L-RICE-AUTOSCT
   if_false:
@@ -35,9 +44,18 @@ decision_tree:
       - red_flag: RF-ORGAN-RENAL-IMPAIRED
     - none_of:
       - red_flag: RF-ORGAN-CARDIAC-LVEF-LOW
-    - condition: Age ≤65-70, (transplant-eligible)
-    - condition: First relapse OR primary refractory with chemosensitive disease
-    - condition: CD20+ confirmed at relapse biopsy
+    - clinician_confirmation:
+        id: CC-ALGO-PMBCL-2L-8ABFA5319743
+        label: "Age ≤65-70, (transplant-eligible)"
+        legacy_condition: "Age ≤65-70, (transplant-eligible)"
+    - clinician_confirmation:
+        id: CC-ALGO-PMBCL-2L-91827ADE09B2
+        label: "First relapse OR primary refractory with chemosensitive disease"
+        legacy_condition: "First relapse OR primary refractory with chemosensitive disease"
+    - clinician_confirmation:
+        id: CC-ALGO-PMBCL-2L-0E905E408FCD
+        label: "CD20+ confirmed at relapse biopsy"
+        legacy_condition: "CD20+ confirmed at relapse biopsy"
   if_true:
     result: IND-PMBCL-2L-RICE-AUTOSCT
   if_false:
@@ -46,7 +64,10 @@ decision_tree:
 - step: 4
   evaluate:
     any_of:
-    - condition: PMBCL relapsed/refractory, transplant-eligible by default
+    - clinician_confirmation:
+        id: CC-ALGO-PMBCL-2L-5F8DA7F9FDF7
+        label: "PMBCL relapsed/refractory, transplant-eligible by default"
+        legacy_condition: "PMBCL relapsed/refractory, transplant-eligible by default"
     - red_flag: RF-PMBCL-TRANSFORMATION-PROGRESSION
   if_true:
     result: IND-PMBCL-2L-RICE-AUTOSCT

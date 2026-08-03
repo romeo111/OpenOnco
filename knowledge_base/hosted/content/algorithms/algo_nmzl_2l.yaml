@@ -52,9 +52,18 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "Nodal progression / new extranodal sites after 1L"
-        - condition: "B-symptoms or symptomatic cytopenia from marrow involvement"
-        - condition: "CD20+ confirmed at relapse biopsy, adequate marrow + organ function for bendamustine"
+        - clinician_confirmation:
+            id: CC-ALGO-NMZL-2L-F9529BD604E1
+            label: "Nodal progression / new extranodal sites after 1L"
+            legacy_condition: "Nodal progression / new extranodal sites after 1L"
+        - clinician_confirmation:
+            id: CC-ALGO-NMZL-2L-634B57B425B7
+            label: "B-symptoms or symptomatic cytopenia from marrow involvement"
+            legacy_condition: "B-symptoms or symptomatic cytopenia from marrow involvement"
+        - clinician_confirmation:
+            id: CC-ALGO-NMZL-2L-AB911735FB04
+            label: "CD20+ confirmed at relapse biopsy, adequate marrow + organ function for bendamustine"
+            legacy_condition: "CD20+ confirmed at relapse biopsy, adequate marrow + organ function for bendamustine"
         - red_flag: RF-NMZL-ORGAN-DYSFUNCTION
         - red_flag: RF-NMZL-TRANSFORMATION-PROGRESSION
     if_true:

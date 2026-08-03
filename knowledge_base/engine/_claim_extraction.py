@@ -27,6 +27,10 @@ schemas/biomarker_actionability.py):
     - evidence_summary   (1-3 sentence clinical interpretation)
     - notes              (clinical notes)
 
+Any supported entity may additionally own ``clinical_claims[]``. Those are
+field-local, source-addressable statements; their anchor is calculated from
+``clinical_claims[].source_ids`` rather than the entity-wide citation union.
+
 The brief (slice 3 spec) lists `evidence_summary` and `recommendation_rationale`
 on Indication. Those names don't exist on the schema — see commit notes —
 so we map them to the actual schema fields `rationale` and `notes`. The
@@ -56,6 +60,13 @@ CLAIM_BEARING_ENTITIES: tuple[str, ...] = (
     "indications",
     "regimens",
     "biomarker_actionability",
+)
+
+# Algorithms have no legacy prose field in the audit. They may opt into the
+# new explicit `clinical_claims` array, at which point they are extracted.
+STRUCTURED_CLAIM_ENTITY_TYPES: tuple[str, ...] = (
+    "algorithms",
+    *CLAIM_BEARING_ENTITIES,
 )
 
 
@@ -182,6 +193,28 @@ def _extract_bma_fields(data: dict) -> Iterable[tuple[str, str]]:
             yield fname, text
 
 
+def _extract_structured_claims(data: dict) -> Iterable[tuple[str, str, list[str]]]:
+    """Yield structured claims with their field-local source IDs.
+
+    Schema validation owns the shape. This defensive reader still skips a
+    malformed raw entry so an audit can report the rest of a partially broken
+    KB snapshot instead of crashing.
+    """
+    for index, claim in enumerate(data.get("clinical_claims") or []):
+        if not isinstance(claim, dict):
+            continue
+        text = _coerce_text(claim.get("text"))
+        if not text:
+            continue
+        sources = sorted({
+            source_id
+            for source_id in claim.get("source_ids") or []
+            if isinstance(source_id, str) and source_id.startswith("SRC-")
+        })
+        claim_id = str(claim.get("claim_id") or index)
+        yield f"clinical_claims[{claim_id}]", text, sources
+
+
 _EXTRACTORS = {
     "indications": _extract_indication_fields,
     "regimens": _extract_regimen_fields,
@@ -216,17 +249,20 @@ def extract_claims(kb_resolved: dict) -> list[ExtractedClaim]:
     out: list[ExtractedClaim] = []
     for eid, info in entities.items():
         etype = info.get("type")
-        if etype not in CLAIM_BEARING_ENTITIES:
-            continue
         data = info.get("data") or {}
+        has_structured_claims = bool(data.get("clinical_claims")) if isinstance(data, dict) else False
+        if etype not in CLAIM_BEARING_ENTITIES and not (
+            etype in STRUCTURED_CLAIM_ENTITY_TYPES and has_structured_claims
+        ):
+            continue
         path_obj = info.get("path")
         path_str = _path_to_repo_relative(path_obj)
 
         cited = _collect_cited_sources(data)
         has_anchor = bool(cited) and any(s in source_ids for s in cited)
 
-        extractor = _EXTRACTORS[etype]
-        for field_name, text in extractor(data):
+        extractor = _EXTRACTORS.get(etype)
+        for field_name, text in (extractor(data) if extractor else ()):
             out.append(ExtractedClaim(
                 entity_type=etype,
                 entity_id=eid,
@@ -235,6 +271,16 @@ def extract_claims(kb_resolved: dict) -> list[ExtractedClaim]:
                 text=text,
                 cited_sources=cited,
                 has_anchor=has_anchor,
+            ))
+        for field_name, text, sources in _extract_structured_claims(data):
+            out.append(ExtractedClaim(
+                entity_type=etype,
+                entity_id=eid,
+                entity_path=path_str,
+                field=field_name,
+                text=text,
+                cited_sources=sources,
+                has_anchor=bool(sources) and any(source in source_ids for source in sources),
             ))
 
     out.sort(key=lambda c: (c.entity_type, c.entity_id, c.field))
@@ -273,4 +319,9 @@ def _path_to_repo_relative(p: Any) -> str:
         return str(p)
 
 
-__all__ = ["ExtractedClaim", "extract_claims", "CLAIM_BEARING_ENTITIES"]
+__all__ = [
+    "ExtractedClaim",
+    "extract_claims",
+    "CLAIM_BEARING_ENTITIES",
+    "STRUCTURED_CLAIM_ENTITY_TYPES",
+]

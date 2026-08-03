@@ -14,9 +14,18 @@ decision_tree:
   evaluate:
     all_of:
     - red_flag: RF-GASTRIC-HIGH-RISK-BIOLOGY
-    - condition: HER2+ reconfirmed on archival or fresh biopsy (IHC 3+ OR 2+/ISH+)
-    - condition: Prior trastuzumab-containing 1L
-    - condition: ECOG ≤1
+    - clinician_confirmation:
+        id: CC-ALGO-GASTRIC-2L-E5C0F198999F
+        label: "HER2+ reconfirmed on archival or fresh biopsy (IHC 3+ OR 2+/ISH+)"
+        legacy_condition: "HER2+ reconfirmed on archival or fresh biopsy (IHC 3+ OR 2+/ISH+)"
+    - clinician_confirmation:
+        id: CC-ALGO-GASTRIC-2L-B216ACCE9DF4
+        label: "Prior trastuzumab-containing 1L"
+        legacy_condition: "Prior trastuzumab-containing 1L"
+    - clinician_confirmation:
+        id: CC-ALGO-GASTRIC-2L-C2305D336129
+        label: "ECOG ≤1"
+        legacy_condition: "ECOG ≤1"
   if_true:
     result: IND-GASTRIC-METASTATIC-2L-HER2-TDXD
   if_false:
@@ -24,7 +33,10 @@ decision_tree:
 - step: 2
   evaluate:
     all_of:
-    - condition: ≥2 prior systemic regimens (incl. platinum + fluoropyrimidine ± taxane/ramucirumab)
+    - clinician_confirmation:
+        id: CC-ALGO-GASTRIC-2L-7CB77D8AF98A
+        label: "≥2 prior systemic regimens (incl. platinum + fluoropyrimidine ± taxane/ramucirumab)"
+        legacy_condition: "≥2 prior systemic regimens (incl. platinum + fluoropyrimidine ± taxane/ramucirumab)"
     - any_of:
       - red_flag: RF-FITNESS-ECOG-FIT
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
@@ -36,8 +48,14 @@ decision_tree:
 - step: 3
   evaluate:
     all_of:
-    - condition: Disease progression on or after 1L platinum + fluoropyrimidine ± ICI
-    - condition: HER2-negative OR HER2 status unknown / unable to test
+    - clinician_confirmation:
+        id: CC-ALGO-GASTRIC-2L-5F6458062FCC
+        label: "Disease progression on or after 1L platinum + fluoropyrimidine ± ICI"
+        legacy_condition: "Disease progression on or after 1L platinum + fluoropyrimidine ± ICI"
+    - clinician_confirmation:
+        id: CC-ALGO-GASTRIC-2L-9F4E2E6B4C6B
+        label: "HER2-negative OR HER2 status unknown / unable to test"
+        legacy_condition: "HER2-negative OR HER2 status unknown / unable to test"
     - any_of:
       - red_flag: RF-FITNESS-ECOG-FIT
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE

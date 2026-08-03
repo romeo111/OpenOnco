@@ -13,13 +13,19 @@ decision_tree:
 - step: 1
   evaluate:
     all_of:
-    - condition: Age ≤ 70
+    - clinician_confirmation:
+        id: CC-ALGO-NK-T-NASAL-1L-386E2F29C101
+        label: "Age ≤ 70"
+        legacy_condition: "Age ≤ 70"
     - any_of:
       - red_flag: RF-FITNESS-ECOG-FIT
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
     - none_of:
       - red_flag: RF-ORGAN-RENAL-IMPAIRED
-    - condition: L-asparaginase access available
+    - clinician_confirmation:
+        id: CC-ALGO-NK-T-NASAL-1L-324AD3477CB1
+        label: "L-asparaginase access available"
+        legacy_condition: "L-asparaginase access available"
   if_true:
     result: IND-NK-T-NASAL-1L-SMILE
   if_false:

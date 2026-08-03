@@ -21,8 +21,14 @@ decision_tree:
     evaluate:
       any_of:
         - red_flag: RF-PTLD-HIGH-RISK-BIOLOGY  # monomorphic / Burkitt-like / T-cell PTLD
-        - condition: "T-cell or NK-cell PTLD (typically EBV-negative)"
-        - condition: "Failed reduce-IS + rituximab attempt"
+        - clinician_confirmation:
+            id: CC-ALGO-PTLD-1L-D81AF8A7DEB8
+            label: "T-cell or NK-cell PTLD (typically EBV-negative)"
+            legacy_condition: "T-cell or NK-cell PTLD (typically EBV-negative)"
+        - clinician_confirmation:
+            id: CC-ALGO-PTLD-1L-99533547CB61
+            label: "Failed reduce-IS + rituximab attempt"
+            legacy_condition: "Failed reduce-IS + rituximab attempt"
     if_true:
       result: IND-PTLD-1L-RCHOP
     if_false:
@@ -37,8 +43,14 @@ decision_tree:
     evaluate:
       all_of:
         - red_flag: RF-PTLD-INFECTION-SCREENING  # EBV viral load + EBER-ISH status
-        - condition: "EBV-positive on tumor EBER-ISH OR detectable plasma EBV-DNA"
-        - condition: "CD20-positive histology"
+        - clinician_confirmation:
+            id: CC-ALGO-PTLD-1L-5D957B631CF9
+            label: "EBV-positive on tumor EBER-ISH OR detectable plasma EBV-DNA"
+            legacy_condition: "EBV-positive on tumor EBER-ISH OR detectable plasma EBV-DNA"
+        - clinician_confirmation:
+            id: CC-ALGO-PTLD-1L-61A8B665C1A7
+            label: "CD20-positive histology"
+            legacy_condition: "CD20-positive histology"
     if_true:
       result: IND-PTLD-1L-REDUCE-IS
     if_false:
@@ -50,8 +62,14 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "EBV-negative on tumor EBER-ISH AND undetectable plasma EBV-DNA"
-        - condition: "CD20-positive histology"
+        - clinician_confirmation:
+            id: CC-ALGO-PTLD-1L-39B07861900E
+            label: "EBV-negative on tumor EBER-ISH AND undetectable plasma EBV-DNA"
+            legacy_condition: "EBV-negative on tumor EBER-ISH AND undetectable plasma EBV-DNA"
+        - clinician_confirmation:
+            id: CC-ALGO-PTLD-1L-61A8B665C1A7
+            label: "CD20-positive histology"
+            legacy_condition: "CD20-positive histology"
     if_true:
       result: IND-PTLD-1L-REDUCE-IS
     if_false:

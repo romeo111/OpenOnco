@@ -35,7 +35,10 @@ decision_tree:
         - {finding: BIO-RET, value: C634R}
         - {finding: BIO-RET, value: C634W}
         - {finding: BIO-RET, value: C634Y}
-        - condition: "RET mutation positive (somatic M918T OR germline MEN2-associated C634/M918T/other)"
+        - clinician_confirmation:
+            id: CC-ALGO-MTC-1L-AB899EFCC42D
+            label: "RET mutation positive (somatic M918T OR germline MEN2-associated C634/M918T/other)"
+            legacy_condition: "RET mutation positive (somatic M918T OR germline MEN2-associated C634/M918T/other)"
     if_true:
       result: IND-MTC-ADVANCED-1L-SELPERCATINIB
       notes: >
@@ -52,7 +55,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "RET wild-type (RAS-mutant OR unknown OR negative)"
+        - clinician_confirmation:
+            id: CC-ALGO-MTC-1L-B3C46DA8A75C
+            label: "RET wild-type (RAS-mutant OR unknown OR negative)"
+            legacy_condition: "RET wild-type (RAS-mutant OR unknown OR negative)"
     if_true:
       result: IND-MTC-ADVANCED-1L-CABOZANTINIB-RET-WT
     if_false:

@@ -37,10 +37,22 @@ decision_tree:
     # Confirmed-carrier gate — CDKN2A / CDK4 / MITF E318K / POT1.
     evaluate:
       any_of:
-        - condition: "Confirmed CDKN2A germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
-        - condition: "Confirmed CDK4 germline pathogenic / likely-pathogenic variant (codon 24 R24H / R24C — gain-of-function)"
-        - condition: "Confirmed MITF E318K germline variant (modest melanoma + RCC risk)"
-        - condition: "Confirmed POT1 germline pathogenic variant (familial melanoma + glioma)"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-MELANOMA-SURVEILLANCE-E54578A8E798
+            label: "Confirmed CDKN2A germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+            legacy_condition: "Confirmed CDKN2A germline pathogenic / likely-pathogenic (ACMG class 4/5) variant"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-MELANOMA-SURVEILLANCE-C6C7906F6127
+            label: "Confirmed CDK4 germline pathogenic / likely-pathogenic variant (codon 24 R24H / R24C — gain-of-function)"
+            legacy_condition: "Confirmed CDK4 germline pathogenic / likely-pathogenic variant (codon 24 R24H / R24C — gain-of-function)"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-MELANOMA-SURVEILLANCE-F4641907D524
+            label: "Confirmed MITF E318K germline variant (modest melanoma + RCC risk)"
+            legacy_condition: "Confirmed MITF E318K germline variant (modest melanoma + RCC risk)"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-MELANOMA-SURVEILLANCE-A249BAD0DBFA
+            label: "Confirmed POT1 germline pathogenic variant (familial melanoma + glioma)"
+            legacy_condition: "Confirmed POT1 germline pathogenic variant (familial melanoma + glioma)"
     if_true:
       next_step: 2
     if_false:
@@ -53,7 +65,10 @@ decision_tree:
     # onset, lower absolute pediatric risk).
     evaluate:
       all_of:
-        - condition: "Confirmed CDKN2A or CDK4 or MITF or POT1 carrier identified at step 1"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-MELANOMA-SURVEILLANCE-2FAAACB8292B
+            label: "Confirmed CDKN2A or CDK4 or MITF or POT1 carrier identified at step 1"
+            legacy_condition: "Confirmed CDKN2A or CDK4 or MITF or POT1 carrier identified at step 1"
     if_true:
       result: IND-FAMMM-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Familial melanoma carrier surveillance — annual whole-body skin examination by dermatologist + total body photography (digital baseline + annual comparison) + dermoscopy for atypical nevi. CDKN2A / CDK4: entry from age 10-12 (parental-supervised pediatric exam acceptable; family education re: sun-protection, tanning bed prohibition). MITF / POT1: entry from age 18-20. Sun-protection counseling: broad-spectrum SPF 30+ daily, protective clothing, avoidance of peak-UV hours, categorical tanning-bed prohibition. Self-examination education with mirror / partner technique. Lower threshold for excisional biopsy of any changing / atypical lesion. CDKN2A carriers: concurrent pancreatic surveillance per ALGO-NCCN-PANCREATIC-CAPS-SURVEILLANCE from age 40. Indication routes to FAMMM-SUSPICION (most common familial-melanoma syndrome); engine should route MITF / POT1 / CDK4 carriers via RF-* into the syndrome-specific Indication if authored (v0.2 backlog)."
@@ -69,10 +84,22 @@ decision_tree:
     # panel typically negative but ~20% remain genetically unexplained.
     evaluate:
       any_of:
-        - condition: "≥3 confirmed melanoma cases (cutaneous or uveal) in a single family across any generations, including ≥1 with pancreatic adenocarcinoma"
-        - condition: "≥2 first-degree relatives with cutaneous melanoma"
-        - condition: "Proband with ≥3 primary cutaneous melanomas"
-        - condition: "Proband with cutaneous melanoma + pancreatic adenocarcinoma at any age"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-MELANOMA-SURVEILLANCE-44881741CB56
+            label: "≥3 confirmed melanoma cases (cutaneous or uveal) in a single family across any generations, including ≥1 with pancreatic adenocarcinoma"
+            legacy_condition: "≥3 confirmed melanoma cases (cutaneous or uveal) in a single family across any generations, including ≥1 with pancreatic adenocarcinoma"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-MELANOMA-SURVEILLANCE-9619C7EF723D
+            label: "≥2 first-degree relatives with cutaneous melanoma"
+            legacy_condition: "≥2 first-degree relatives with cutaneous melanoma"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-MELANOMA-SURVEILLANCE-8DDBA88C1753
+            label: "Proband with ≥3 primary cutaneous melanomas"
+            legacy_condition: "Proband with ≥3 primary cutaneous melanomas"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-MELANOMA-SURVEILLANCE-6347A4A88FEE
+            label: "Proband with cutaneous melanoma + pancreatic adenocarcinoma at any age"
+            legacy_condition: "Proband with cutaneous melanoma + pancreatic adenocarcinoma at any age"
     if_true:
       result: IND-FAMMM-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Familial melanoma kindred meeting Goldstein criteria — refer for germline panel testing (CDKN2A, CDK4, MITF, POT1, BAP1, TERT-promoter, TERF2IP, ACD; comprehensive hereditary cancer panel may capture more). Enter surveillance even if panel-negative — empirical-surveillance pathway based on family-history risk. Surveillance entry: age 18-20 for proband relatives without confirmed gene; relatives of CDKN2A-confirmed proband can enter pediatric age range pending cascade testing."
@@ -84,8 +111,14 @@ decision_tree:
     # CDKN2A but clinical pattern justifies enhanced surveillance.
     evaluate:
       all_of:
-        - condition: "≥50 atypical / dysplastic nevi on whole-body exam"
-        - condition: "Personal history of cutaneous melanoma OR ≥1 first-degree relative with melanoma"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-MELANOMA-SURVEILLANCE-301895661F46
+            label: "≥50 atypical / dysplastic nevi on whole-body exam"
+            legacy_condition: "≥50 atypical / dysplastic nevi on whole-body exam"
+        - clinician_confirmation:
+            id: CC-ALGO-HEREDITARY-MELANOMA-SURVEILLANCE-8D544B76344D
+            label: "Personal history of cutaneous melanoma OR ≥1 first-degree relative with melanoma"
+            legacy_condition: "Personal history of cutaneous melanoma OR ≥1 first-degree relative with melanoma"
     if_true:
       result: IND-FAMMM-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Atypical-mole syndrome (dysplastic nevus syndrome) phenotype — enhanced empirical surveillance. Annual whole-body skin exam + total body photography + dermoscopy from time of identification (typically adolescence / young adulthood). Familial-melanoma panel testing reasonable but yield variable; clinical surveillance is the priority intervention. Indication routes to FAMMM-SUSPICION as the empirical-surveillance pathway pending v0.2 dedicated IND-DYSPLASTIC-NEVUS-SYNDROME-SURVEILLANCE."

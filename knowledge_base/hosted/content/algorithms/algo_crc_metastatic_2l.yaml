@@ -27,7 +27,10 @@ decision_tree:
   evaluate:
     any_of:
     - red_flag: RF-CRC-MSI-H-ACTIONABILITY
-    - condition: "MSI-H or dMMR confirmed by validated assay AND no prior anti-PD-1 exposure"
+    - clinician_confirmation:
+        id: CC-ALGO-CRC-METASTATIC-2L-BE048F835102
+        label: "MSI-H or dMMR confirmed by validated assay AND no prior anti-PD-1 exposure"
+        legacy_condition: "MSI-H or dMMR confirmed by validated assay AND no prior anti-PD-1 exposure"
   if_true:
     result: IND-CRC-METASTATIC-2L-MSI-H-PEMBRO
   if_false:
@@ -39,7 +42,10 @@ decision_tree:
   evaluate:
     any_of:
     - red_flag: RF-CRC-BRAF-V600E-POOR-PROGNOSIS
-    - condition: "BRAF V600E confirmed by validated assay (NGS or IHC + confirm)"
+    - clinician_confirmation:
+        id: CC-ALGO-CRC-METASTATIC-2L-1303B97C508D
+        label: "BRAF V600E confirmed by validated assay (NGS or IHC + confirm)"
+        legacy_condition: "BRAF V600E confirmed by validated assay (NGS or IHC + confirm)"
   if_true:
     result: IND-CRC-METASTATIC-2L-BRAF-BEACON
   if_false:
@@ -49,8 +55,14 @@ decision_tree:
 - step: 3
   evaluate:
     all_of:
-    - condition: "KRAS G12C confirmed by NGS (tissue OR ctDNA)"
-    - condition: "BRAF V600E excluded (ruled out via step 2)"
+    - clinician_confirmation:
+        id: CC-ALGO-CRC-METASTATIC-2L-23BB9DEFE7F7
+        label: "KRAS G12C confirmed by NGS (tissue OR ctDNA)"
+        legacy_condition: "KRAS G12C confirmed by NGS (tissue OR ctDNA)"
+    - clinician_confirmation:
+        id: CC-ALGO-CRC-METASTATIC-2L-FA8305908CAC
+        label: "BRAF V600E excluded (ruled out via step 2)"
+        legacy_condition: "BRAF V600E excluded (ruled out via step 2)"
   if_true:
     result: IND-CRC-METASTATIC-2L-KRAS-G12C-SOTORASIB-CETUXIMAB
   if_false:
@@ -67,8 +79,14 @@ decision_tree:
     any_of:
     - red_flag: RF-CRC-HER2-AMP-ACTIONABLE
     - all_of:
-      - condition: "HER2 amplified (IHC 3+ OR IHC 2+/ISH+)"
-      - condition: "RAS wild-type (MOUNTAINEER eligibility)"
+      - clinician_confirmation:
+          id: CC-ALGO-CRC-METASTATIC-2L-F7C9E5F24B73
+          label: "HER2 amplified (IHC 3+ OR IHC 2+/ISH+)"
+          legacy_condition: "HER2 amplified (IHC 3+ OR IHC 2+/ISH+)"
+      - clinician_confirmation:
+          id: CC-ALGO-CRC-METASTATIC-2L-DA7F70B48556
+          label: "RAS wild-type (MOUNTAINEER eligibility)"
+          legacy_condition: "RAS wild-type (MOUNTAINEER eligibility)"
   if_true:
     result: IND-CRC-METASTATIC-2L-HER2-AMP-TUCATINIB
   if_false:
@@ -86,10 +104,22 @@ decision_tree:
   evaluate:
     all_of:
     - red_flag: RF-CRC-RAS-WT
-    - condition: "ctDNA RAS-WT at rechallenge timepoint (CHRONOS biomarker selection)"
-    - condition: "Prior anti-EGFR response (PR or better OR SD ≥6 mo) in 1L"
-    - condition: "Intervening anti-EGFR-free 2L line completed (typically bev-based)"
-    - condition: "BRAF V600E excluded (ruled out via step 2)"
+    - clinician_confirmation:
+        id: CC-ALGO-CRC-METASTATIC-2L-F53BA9B99702
+        label: "ctDNA RAS-WT at rechallenge timepoint (CHRONOS biomarker selection)"
+        legacy_condition: "ctDNA RAS-WT at rechallenge timepoint (CHRONOS biomarker selection)"
+    - clinician_confirmation:
+        id: CC-ALGO-CRC-METASTATIC-2L-2EE5827ECA79
+        label: "Prior anti-EGFR response (PR or better OR SD ≥6 mo) in 1L"
+        legacy_condition: "Prior anti-EGFR response (PR or better OR SD ≥6 mo) in 1L"
+    - clinician_confirmation:
+        id: CC-ALGO-CRC-METASTATIC-2L-813599067C7A
+        label: "Intervening anti-EGFR-free 2L line completed (typically bev-based)"
+        legacy_condition: "Intervening anti-EGFR-free 2L line completed (typically bev-based)"
+    - clinician_confirmation:
+        id: CC-ALGO-CRC-METASTATIC-2L-FA8305908CAC
+        label: "BRAF V600E excluded (ruled out via step 2)"
+        legacy_condition: "BRAF V600E excluded (ruled out via step 2)"
   if_true:
     result: IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE
   if_false:
@@ -101,7 +131,10 @@ decision_tree:
 - step: 6
   evaluate:
     any_of:
-    - condition: "First disease progression on 1L FOLFOX-based regimen (FOLFOX, FOLFOX+bev, FOLFOX+cetux)"
+    - clinician_confirmation:
+        id: CC-ALGO-CRC-METASTATIC-2L-E37584D6AC45
+        label: "First disease progression on 1L FOLFOX-based regimen (FOLFOX, FOLFOX+bev, FOLFOX+cetux)"
+        legacy_condition: "First disease progression on 1L FOLFOX-based regimen (FOLFOX, FOLFOX+bev, FOLFOX+cetux)"
     - red_flag: RF-CRC-TRANSFORMATION-PROGRESSION
   if_true:
     result: IND-CRC-METASTATIC-2L-FOLFIRI-BEV
@@ -114,7 +147,10 @@ decision_tree:
 - step: 7
   evaluate:
     any_of:
-    - condition: "Disease progression on standard chemo (FOLFOX, FOLFIRI) + biologic; no driver mutation actionable"
+    - clinician_confirmation:
+        id: CC-ALGO-CRC-METASTATIC-2L-89917416C8A6
+        label: "Disease progression on standard chemo (FOLFOX, FOLFIRI) + biologic; no driver mutation actionable"
+        legacy_condition: "Disease progression on standard chemo (FOLFOX, FOLFIRI) + biologic; no driver mutation actionable"
     - red_flag: RF-CRC-TRANSFORMATION-PROGRESSION
   if_true:
     result: IND-CRC-METASTATIC-3L-TAS102-BEV

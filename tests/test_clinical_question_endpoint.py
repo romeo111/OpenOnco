@@ -17,6 +17,36 @@ def test_server_adapter_does_not_import_openai_sdk():
     assert "from openai" not in src
 
 
+def test_openai_request_disables_server_side_storage(monkeypatch):
+    captured: dict[str, object] = {}
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def read(self):
+            return b'{"output_text":"{}"}'
+
+    def fake_urlopen(request, timeout):
+        captured["body"] = json.loads(request.data.decode("utf-8"))
+        captured["timeout"] = timeout
+        return FakeResponse()
+
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    monkeypatch.setattr(cq.urllib.request, "urlopen", fake_urlopen)
+
+    assert cq.call_openai_json(
+        system="test system",
+        user="test user",
+        schema_name="test_schema",
+        schema={"type": "object"},
+    ) == {}
+    assert captured["body"]["store"] is False
+
+
 def test_empty_case_returns_clarification_without_api_call(monkeypatch):
     def fail_call(*args, **kwargs):  # pragma: no cover - should never run
         raise AssertionError("OpenAI should not be called for an empty case")
@@ -28,6 +58,8 @@ def test_empty_case_returns_clarification_without_api_call(monkeypatch):
     assert out["status"] == "needs_clarification"
     assert out["clarifying_questions"]
     assert "tumor board" in out["safety_note"]
+    assert "самолікування" in out["safety_note"]
+    assert "підтвердити або спростувати" in out["safety_note"]
 
 
 def test_answer_flow_passes_engine_summary_to_presenter(monkeypatch):
@@ -293,23 +325,21 @@ def test_handle_json_request_serializes_errors(monkeypatch):
     )
 
     cq._USAGE_COUNTS.clear()
-    cq._ANSWER_CACHE.clear()
     status, headers, payload = cq.handle_json_request({
         "case_text": "x",
         "locale": "uk",
-        "user_id": "test-error-user",
-    })
+    }, request_meta={"client_ip": "198.51.100.10"})
 
     assert status == 500
     assert headers["Content-Type"].startswith("application/json")
     assert payload["status"] == "error"
-    assert payload["questions_used"] == 0
-    assert "boom" in payload["message"]
+    assert payload["questions_used"] == 1
+    assert "boom" not in payload["message"]
+    assert "trace" not in payload
 
 
 def test_handle_json_request_enforces_three_question_quota(monkeypatch):
     cq._USAGE_COUNTS.clear()
-    cq._ANSWER_CACHE.clear()
 
     monkeypatch.setattr(
         cq,
@@ -321,28 +351,28 @@ def test_handle_json_request_enforces_three_question_quota(monkeypatch):
         },
     )
 
-    body = {"case_text": "case", "locale": "uk", "user_id": "quota-user"}
+    request_meta = {"client_ip": "198.51.100.11"}
     for expected_used in (1, 2, 3):
-        status, _headers, payload = cq.handle_json_request(body)
+        # Changing a browser-supplied user_id must not bypass the quota.
+        body = {"case_text": "case", "locale": "uk", "user_id": f"spoofed-{expected_used}"}
+        status, _headers, payload = cq.handle_json_request(body, request_meta=request_meta)
         assert status == 200
         assert payload["questions_used"] == expected_used
         assert payload["questions_limit"] == 3
 
-    status, _headers, payload = cq.handle_json_request(body)
+    status, _headers, payload = cq.handle_json_request(body, request_meta=request_meta)
 
     assert status == 429
     assert payload["status"] == "quota_exceeded"
     assert payload["questions_used"] == 3
 
 
-def test_handle_json_request_can_audit_ip_and_raw_input(monkeypatch):
+def test_handle_json_request_audit_log_is_metadata_only(monkeypatch):
     audit_path = Path(f"openonco-ask-audit-test-{os.getpid()}.jsonl")
     if audit_path.exists():
         audit_path.unlink()
     monkeypatch.setenv("OPENONCO_ASK_AUDIT_LOG", str(audit_path))
-    monkeypatch.setenv("OPENONCO_ASK_LOG_RAW_INPUT", "1")
     cq._USAGE_COUNTS.clear()
-    cq._ANSWER_CACHE.clear()
 
     monkeypatch.setattr(
         cq,
@@ -364,16 +394,17 @@ def test_handle_json_request_can_audit_ip_and_raw_input(monkeypatch):
     assert status == 200
     assert payload["questions_used"] == 1
     rows = [json.loads(line) for line in audit_path.read_text(encoding="utf-8").splitlines()]
-    assert rows[0]["ip"] == "203.0.113.9"
-    assert rows[0]["user_id"] == "audit-user"
-    assert rows[0]["case_text"] == "GBM, IDH-wildtype"
-    assert rows[0]["disease_id"] == "DIS-GBM"
+    assert rows[0]["case_text_len"] == len("GBM, IDH-wildtype")
+    assert "ip" not in rows[0]
+    assert "user_id" not in rows[0]
+    assert "case_text" not in rows[0]
+    assert "case_text_sha256" not in rows[0]
+    assert "disease_id" not in rows[0]
     audit_path.unlink(missing_ok=True)
 
 
-def test_handle_json_request_reuses_exact_input_cache(monkeypatch):
+def test_handle_json_request_does_not_retain_patient_answer_cache(monkeypatch):
     cq._USAGE_COUNTS.clear()
-    cq._ANSWER_CACHE.clear()
     calls = {"count": 0}
 
     def fake_answer(case_text, locale="uk"):
@@ -397,11 +428,26 @@ def test_handle_json_request_reuses_exact_input_cache(monkeypatch):
 
     assert status == 200
     assert status2 == 200
-    assert calls["count"] == 1
+    assert calls["count"] == 2
     assert first["direct_answer"] == "answer 1"
-    assert second["direct_answer"] == "answer 1"
+    assert second["direct_answer"] == "answer 2"
     assert first["questions_used"] == 1
     assert second["questions_used"] == 2
+
+
+def test_cors_default_and_wildcard_configuration_are_not_public(monkeypatch):
+    monkeypatch.delenv("OPENONCO_ALLOWED_ORIGIN", raising=False)
+    assert cq._cors_headers()["Access-Control-Allow-Origin"] == "https://openonco.info"
+    monkeypatch.setenv("OPENONCO_ALLOWED_ORIGIN", "*")
+    assert cq._cors_headers()["Access-Control-Allow-Origin"] == "https://openonco.info"
+
+
+def test_proxy_headers_require_explicit_trust(monkeypatch):
+    meta = {"headers": {"CF-Connecting-IP": "203.0.113.9"}, "client_ip": "198.51.100.12"}
+    monkeypatch.delenv("OPENONCO_TRUST_PROXY_HEADERS", raising=False)
+    assert cq._quota_principal(meta) == "ip:198.51.100.12"
+    monkeypatch.setenv("OPENONCO_TRUST_PROXY_HEADERS", "1")
+    assert cq._quota_principal(meta) == "ip:203.0.113.9"
 
 
 def test_standard_nsclc_ihc_and_negative_drivers_do_not_block_validation():

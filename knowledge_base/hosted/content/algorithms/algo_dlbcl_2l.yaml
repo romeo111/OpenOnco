@@ -17,7 +17,10 @@ decision_tree:
   evaluate:
     all_of:
     - red_flag: RF-ASCT-ELIGIBLE-COMPOSITE
-    - condition: First relapse, chemosensitive disease (≥PR to salvage)
+    - clinician_confirmation:
+        id: CC-ALGO-DLBCL-2L-7E5A71AF26C3
+        label: "First relapse, chemosensitive disease (≥PR to salvage)"
+        legacy_condition: "First relapse, chemosensitive disease (≥PR to salvage)"
   if_true:
     result: IND-DLBCL-2L-LISOCEL
   if_false:
@@ -26,11 +29,17 @@ decision_tree:
 - step: 2
   evaluate:
     all_of:
-    - condition: ≥2 prior systemic lines failed
+    - clinician_confirmation:
+        id: CC-ALGO-DLBCL-2L-ACFEC49439F8
+        label: "≥2 prior systemic lines failed"
+        legacy_condition: "≥2 prior systemic lines failed"
     - red_flag: RF-FITNESS-ECOG-FIT
     - condition: Age 18-75
     - red_flag: RF-CAR-T-ELIGIBLE
-    - condition: CD19+ disease confirmed
+    - clinician_confirmation:
+        id: CC-ALGO-DLBCL-2L-7A143810CE3F
+        label: "CD19+ disease confirmed"
+        legacy_condition: "CD19+ disease confirmed"
   if_true:
     result: IND-DLBCL-3L-AXICEL-CART
   if_false:
@@ -48,8 +57,14 @@ decision_tree:
 - step: 3
   evaluate:
     any_of:
-    - condition: Transplant-ineligible (age >70 OR comorbidity OR ECOG ≥2)
-    - condition: CAR-T not accessible
+    - clinician_confirmation:
+        id: CC-ALGO-DLBCL-2L-3B93ECBE033C
+        label: "Transplant-ineligible (age >70 OR comorbidity OR ECOG ≥2)"
+        legacy_condition: "Transplant-ineligible (age >70 OR comorbidity OR ECOG ≥2)"
+    - clinician_confirmation:
+        id: CC-ALGO-DLBCL-2L-F22FB17DF887
+        label: "CAR-T not accessible"
+        legacy_condition: "CAR-T not accessible"
     - red_flag: RF-DLBCL-FRAILTY-AGE
   if_true:
     result: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
@@ -63,9 +78,9 @@ last_reviewed: '2026-05-09'
 notes: 'OOS / wiring gaps: (1) IND-DLBCL-2L-RDHAP-AUTOSCT (R-ICE-autoSCT → BEAM) still not modeled as a dedicated indication — step 1 now routes to liso-cel (TRANSFORM preferred) rather than salvage chemo placeholder; R-DHAP-autoSCT remains clinically valid where CAR-T unavailable. (2) Bispecifics (epcoritamab, glofitamab) for ≥3L not modeled. (3) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land.
 
   '
-reviewer_signoffs_v2:
+reviewer_signoffs:
 - reviewer_id: REV-HEME-LEAD-PLACEHOLDER
-  signoff_date: '2026-04-26'
+  timestamp: '2026-04-26T00:00:00Z'
   rationale: DLBCL algorithm decision tree consistent with NCCN B-cell 2025 (sample sign-off)
-  entity_version_at_signoff: '2026-04-26'
+  entity_version: '2026-04-26'
   scope_match: true

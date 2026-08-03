@@ -641,6 +641,39 @@ reviewers: [reviewer-id-1, reviewer-id-2]
 
 ---
 
+### 5.3. DrugIndication (added 2026-08-02)
+
+`Drug.regulatory_status` says whether a product is registered in a broad
+jurisdiction. It cannot answer whether the same drug is on-label for one
+specific disease, biomarker, line, and indication. `DrugIndication` records
+that narrower claim without changing treatment selection or hiding a draft.
+
+```yaml
+# File: knowledge_base/hosted/content/drug_indications/dind_example.yaml
+id: DIND-EXAMPLE
+drug_id: DRUG-EXAMPLE
+indication_id: IND-EXAMPLE
+disease_id: DIS-EXAMPLE
+regimen_ids: [REG-EXAMPLE]
+statuses:
+  - jurisdiction: FDA
+    status: on_label # on_label | off_label_guideline_supported |
+                     # investigational | not_assessed
+    source_ids: [SRC-FDA-EXAMPLE]
+    source_locator: "Indications and Usage"
+  - jurisdiction: Ukraine
+    status: not_assessed
+evidence_sources: [SRC-GUIDELINE-EXAMPLE]
+last_reviewed: "2026-08-02"
+```
+
+Every assessed status must have at least one `Source` ID. `not_assessed` is a
+visible review-queue state, not a claim that a use is off-label or unsupported.
+The loader checks all drug, indication, disease, regimen, and source foreign
+keys and rejects a record whose disease disagrees with the linked indication.
+
+---
+
 ## 6. Entity: Regimen
 
 A treatment regimen — a combination of drugs with a schedule.
@@ -1602,6 +1635,46 @@ Overkill for MVP.
 **Recommendation:** start with 16.1, migrate to 16.2 when the pilot
 diagnosis proves viability (scaling + production reliability).
 
+### 16.4. Release read-model and eventual PostgreSQL migration (added 2026-08-02)
+
+YAML plus Git history remains the canonical authoring store. Every releasable
+snapshot can additionally produce two deterministic, read-only artifacts:
+
+- a **release manifest**: content hash, entity counts, validation state,
+  source metadata coverage, claim-grounding summary, review-metadata
+  inventory, and schema-extension inventory;
+- a **reference graph**: entity nodes and typed `references` / `cites` edges
+  with the source YAML path and per-file hash.
+
+Generate them with:
+
+```powershell
+py -3.12 scripts/build_kb_release_artifacts.py `
+  --manifest-output build/kb-release-manifest.json `
+  --graph-output build/kb-reference-graph.json
+```
+
+Neither artifact accepts patient data or changes engine selection. Review
+metadata is reported for audit; it is not a blanket response-availability
+switch.
+
+PostgreSQL becomes appropriate when either the KB exceeds approximately
+10,000 entities, multiple maintainers need concurrent server-side edits, or
+validated query performance cannot meet production needs. The first database
+is a **read-model**, never a second authoring source:
+
+1. Import each YAML snapshot into immutable `entity_revision` rows, keyed by
+   `(entity_id, content_hash)` and linked to a `release` content hash.
+2. Materialize `reference_edge`, `clinical_claim`, `source`, and
+   `review_event` tables from the release artifacts.
+3. Compare entity counts, content hashes, and every edge against the YAML
+   manifest on every import; a mismatch blocks promotion.
+4. Run database reads in shadow mode, then read-only production mode. YAML
+   remains canonical until an explicit, reviewed ownership decision.
+
+The read-model must not store free-text patient cases, generated patient
+answers, IP addresses, or inferred diagnoses.
+
 ---
 
 ## 17. Validation tooling
@@ -1618,6 +1691,14 @@ What the developer must build from day one:
 - Verifies that all sources exist in `sources/`
 - Verifies that URLs are accessible (periodic check)
 - Verifies that `currency_status` is not `superseded` without `superseded_by`
+
+**Release-artifact checker:**
+- Builds a deterministic content hash and dependency graph from the same
+  validated loader snapshot.
+- Reports fields admitted through `extra="allow"` so schema evolution is
+  deliberate rather than invisible.
+- Reports legacy sign-off counters separately from structured sign-off
+  entries; it does not turn that report into an endpoint block.
 
 **Clinical review enforcer:**
 - Verifies that each Indication has >= 2 reviewers
@@ -1893,6 +1974,15 @@ clinical_context:        # NEW array enum, multi-valued. Default on read:
                          #   tumor_profiling          — current implicit (HER2, KRAS, ...)
                          #   screening_surveillance   — used for asymptomatic monitoring in high-risk subgroups
                          #                              (AFP in cirrhosis, calcitonin in MEN2, ...)
+                         #   screening                — an early-detection screen; pair with
+                         #                              screening_surveillance when it unlocks the
+                         #                              asymptomatic prevention path
+                         #   precursor_lesion         — identifies or follows a premalignant lesion
+                         #   dysplasia_grading        — grades dysplasia in a precursor lesion
+                         #   hereditary_surveillance  — syndrome-specific surveillance after a
+                         #                              hereditary-risk assessment
+                         #   diagnostic_workup        — differentiates a suspected lesion before
+                         #                              a confirmed cancer diagnosis
                          #   prognostic               — affects prognosis of known disease
                          #   predictive               — predicts response to a specific therapy
                          # One marker MAY carry multiple contexts (e.g., MMR/MSI =

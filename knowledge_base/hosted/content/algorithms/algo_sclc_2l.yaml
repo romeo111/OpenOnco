@@ -23,7 +23,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "No available clinical trial OR patient declines trial enrollment"
+        - clinician_confirmation:
+            id: CC-ALGO-SCLC-2L-5B1B6A3F2511
+            label: "No available clinical trial OR patient declines trial enrollment"
+            legacy_condition: "No available clinical trial OR patient declines trial enrollment"
     if_true:
       next_step: 2
     if_false:
@@ -50,7 +53,10 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "DLL3 IHC positive (≥1% tumour cells; any DLL3 expression per DeLLphi-301 eligibility)"
+        - clinician_confirmation:
+            id: CC-ALGO-SCLC-2L-9A9D06959D95
+            label: "DLL3 IHC positive (≥1% tumour cells; any DLL3 expression per DeLLphi-301 eligibility)"
+            legacy_condition: "DLL3 IHC positive (≥1% tumour cells; any DLL3 expression per DeLLphi-301 eligibility)"
     if_true:
       result: IND-SCLC-RR-TARLATAMAB
       notes: >
@@ -71,7 +77,10 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "CTFI ≥ 180 days from end of 1L platinum chemotherapy"
+        - clinician_confirmation:
+            id: CC-ALGO-SCLC-2L-803FEE21C365
+            label: "CTFI ≥ 180 days from end of 1L platinum chemotherapy"
+            legacy_condition: "CTFI ≥ 180 days from end of 1L platinum chemotherapy"
     if_true:
       result: IND-SCLC-PLATINUM-RECHALLENGE
       notes: >
@@ -92,7 +101,10 @@ decision_tree:
   - step: 5
     evaluate:
       any_of:
-        - condition: "CTFI ≥ 30 days from last platinum dose"
+        - clinician_confirmation:
+            id: CC-ALGO-SCLC-2L-94D9F35CA609
+            label: "CTFI ≥ 30 days from last platinum dose"
+            legacy_condition: "CTFI ≥ 30 days from last platinum dose"
     if_true:
       next_step: 6
       notes: "CTFI 30-179 days: lurbinectedin within FDA-label eligibility. Route to step 6 for access gate."
@@ -112,7 +124,10 @@ decision_tree:
   - step: 6
     evaluate:
       all_of:
-        - condition: "Lurbinectedin accessible (registered/reimbursed or international pharmacy available)"
+        - clinician_confirmation:
+            id: CC-ALGO-SCLC-2L-5AABACFD43E0
+            label: "Lurbinectedin accessible (registered/reimbursed or international pharmacy available)"
+            legacy_condition: "Lurbinectedin accessible (registered/reimbursed or international pharmacy available)"
     if_true:
       result: IND-SCLC-RR-LURBINECTEDIN
       notes: >

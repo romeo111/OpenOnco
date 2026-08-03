@@ -25,7 +25,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Radical inguinal orchiectomy completed (or contraindicated by urgency)"
+        - clinician_confirmation:
+            id: CC-ALGO-GCT-METASTATIC-1L-D19351002460
+            label: "Radical inguinal orchiectomy completed (or contraindicated by urgency)"
+            legacy_condition: "Radical inguinal orchiectomy completed (or contraindicated by urgency)"
     if_true:
       next_step: 2
     if_false:
@@ -45,12 +48,27 @@ decision_tree:
   - step: 2
     evaluate:
       all_of:
-        - condition: "Post-orchiectomy serum AFP, beta-hCG, and LDH measured"
-        - condition: "CT CAP completed for staging"
+        - clinician_confirmation:
+            id: CC-ALGO-GCT-METASTATIC-1L-C46E18CE275E
+            label: "Post-orchiectomy serum AFP, beta-hCG, and LDH measured"
+            legacy_condition: "Post-orchiectomy serum AFP, beta-hCG, and LDH measured"
+        - clinician_confirmation:
+            id: CC-ALGO-GCT-METASTATIC-1L-9B61ED68ED37
+            label: "CT CAP completed for staging"
+            legacy_condition: "CT CAP completed for staging"
         - any_of:
-          - condition: "Stage II (retroperitoneal lymph node involvement)"
-          - condition: "Stage III (distant metastases or above-diaphragm nodes)"
-          - condition: "Stage I with rising markers post-orchiectomy"
+          - clinician_confirmation:
+              id: CC-ALGO-GCT-METASTATIC-1L-984C29FC9B8C
+              label: "Stage II (retroperitoneal lymph node involvement)"
+              legacy_condition: "Stage II (retroperitoneal lymph node involvement)"
+          - clinician_confirmation:
+              id: CC-ALGO-GCT-METASTATIC-1L-4C1B176B6D71
+              label: "Stage III (distant metastases or above-diaphragm nodes)"
+              legacy_condition: "Stage III (distant metastases or above-diaphragm nodes)"
+          - clinician_confirmation:
+              id: CC-ALGO-GCT-METASTATIC-1L-9005C6F72CFF
+              label: "Stage I with rising markers post-orchiectomy"
+              legacy_condition: "Stage I with rising markers post-orchiectomy"
     if_true:
       next_step: 3
     if_false:
@@ -68,7 +86,10 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "AFP normal AND histology confirmed as pure seminoma"
+        - clinician_confirmation:
+            id: CC-ALGO-GCT-METASTATIC-1L-6DA9ED4E3E92
+            label: "AFP normal AND histology confirmed as pure seminoma"
+            legacy_condition: "AFP normal AND histology confirmed as pure seminoma"
     if_true:
       next_step: 4
       notes: "Pure seminoma confirmed (normal AFP): IGCCC risk categories for seminoma apply (no 'poor-risk' seminoma)."
@@ -82,7 +103,10 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Baseline DLCO ≥80% predicted AND CrCl ≥50 mL/min"
+        - clinician_confirmation:
+            id: CC-ALGO-GCT-METASTATIC-1L-8C920989AB2B
+            label: "Baseline DLCO ≥80% predicted AND CrCl ≥50 mL/min"
+            legacy_condition: "Baseline DLCO ≥80% predicted AND CrCl ≥50 mL/min"
     if_true:
       result: IND-GCT-METASTATIC-1L-BEP
       notes: >

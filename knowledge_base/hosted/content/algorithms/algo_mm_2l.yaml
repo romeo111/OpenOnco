@@ -12,9 +12,18 @@ decision_tree:
 - step: 1
   evaluate:
     all_of:
-    - condition: Post-ASCT (autoSCT consolidation completed)
-    - condition: 'Disease status: CR, VGPR, or PR'
-    - condition: No active progression
+    - clinician_confirmation:
+        id: CC-ALGO-MM-2L-061972EB5D7A
+        label: "Post-ASCT (autoSCT consolidation completed)"
+        legacy_condition: "Post-ASCT (autoSCT consolidation completed)"
+    - clinician_confirmation:
+        id: CC-ALGO-MM-2L-9FC142C776DB
+        label: "Disease status: CR, VGPR, or PR"
+        legacy_condition: "Disease status: CR, VGPR, or PR"
+    - clinician_confirmation:
+        id: CC-ALGO-MM-2L-E028E9C77459
+        label: "No active progression"
+        legacy_condition: "No active progression"
   if_true:
     result: IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
   if_false:
@@ -23,12 +32,21 @@ decision_tree:
 - step: 2
   evaluate:
     all_of:
-    - condition: ≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38
-    - condition: Triple-class refractory (refractory to last line of each class)
+    - clinician_confirmation:
+        id: CC-ALGO-MM-2L-718FDA14D49D
+        label: "≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38"
+        legacy_condition: "≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38"
+    - clinician_confirmation:
+        id: CC-ALGO-MM-2L-226BCF6D2841
+        label: "Triple-class refractory (refractory to last line of each class)"
+        legacy_condition: "Triple-class refractory (refractory to last line of each class)"
     - any_of:
       - red_flag: RF-FITNESS-ECOG-FIT
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
-    - condition: adequate organ function for bispecific
+    - clinician_confirmation:
+        id: CC-ALGO-MM-2L-4525DBF0A74E
+        label: "adequate organ function for bispecific"
+        legacy_condition: "adequate organ function for bispecific"
   if_true:
     result: IND-MM-4L-TECLISTAMAB
   if_false:
@@ -46,8 +64,14 @@ decision_tree:
 - step: 4
   evaluate:
     any_of:
-    - condition: Post-VRd / VTd progression, transplant-naive or post-ASCT relapse
-    - condition: anti-CD38-naive AND carfilzomib/proteasome-switch eligible
+    - clinician_confirmation:
+        id: CC-ALGO-MM-2L-75C84DD9CC51
+        label: "Post-VRd / VTd progression, transplant-naive or post-ASCT relapse"
+        legacy_condition: "Post-VRd / VTd progression, transplant-naive or post-ASCT relapse"
+    - clinician_confirmation:
+        id: CC-ALGO-MM-2L-F1F99E780324
+        label: "anti-CD38-naive AND carfilzomib/proteasome-switch eligible"
+        legacy_condition: "anti-CD38-naive AND carfilzomib/proteasome-switch eligible"
     - red_flag: RF-MM-TRANSFORMATION-PROGRESSION
   if_true:
     result: IND-MM-2L-DKD

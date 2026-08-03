@@ -43,8 +43,14 @@ decision_tree:
   - step: 1
     evaluate:
       all_of:
-        - condition: "Adenocarcinoma histology (gastric or GEJ Siewert II/III)"
-        - condition: "Resectable cT2-T4 or N+ M0 disease (or locally advanced potentially resectable per MDT)"
+        - clinician_confirmation:
+            id: CC-ALGO-GASTRIC-RESECTABLE-PERIOP-E3F39ED1B4F7
+            label: "Adenocarcinoma histology (gastric or GEJ Siewert II/III)"
+            legacy_condition: "Adenocarcinoma histology (gastric or GEJ Siewert II/III)"
+        - clinician_confirmation:
+            id: CC-ALGO-GASTRIC-RESECTABLE-PERIOP-8AA9C244948B
+            label: "Resectable cT2-T4 or N+ M0 disease (or locally advanced potentially resectable per MDT)"
+            legacy_condition: "Resectable cT2-T4 or N+ M0 disease (or locally advanced potentially resectable per MDT)"
         - any_of:
             - red_flag: RF-FITNESS-ECOG-FIT
             - red_flag: RF-FITNESS-ECOG-INTERMEDIATE

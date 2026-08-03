@@ -33,7 +33,10 @@ decision_tree:
     # is the standard testing threshold per Evans 2017.
     evaluate:
       any_of:
-        - condition: "Manchester combined BRCA1 + BRCA2 score ≥15 points"
+        - clinician_confirmation:
+            id: CC-ALGO-MANCHESTER-BRCA-36884D47A917
+            label: "Manchester combined BRCA1 + BRCA2 score ≥15 points"
+            legacy_condition: "Manchester combined BRCA1 + BRCA2 score ≥15 points"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Manchester ≥15 — refer for genetic counseling + BRCA1/BRCA2 (or multi-gene HBOC panel) germline testing."
@@ -44,11 +47,26 @@ decision_tree:
     # justify testing (NCCN-style bright-line criteria).
     evaluate:
       any_of:
-        - condition: "Triple-negative breast cancer at any age"
-        - condition: "Breast cancer diagnosed at age <46 regardless of family history"
-        - condition: "Male breast cancer at any age"
-        - condition: "Ovarian cancer (epithelial non-mucinous) at any age regardless of family history"
-        - condition: "Ashkenazi Jewish ancestry with breast or ovarian cancer at any age"
+        - clinician_confirmation:
+            id: CC-ALGO-MANCHESTER-BRCA-050AAE20E615
+            label: "Triple-negative breast cancer at any age"
+            legacy_condition: "Triple-negative breast cancer at any age"
+        - clinician_confirmation:
+            id: CC-ALGO-MANCHESTER-BRCA-2C3987919F61
+            label: "Breast cancer diagnosed at age <46 regardless of family history"
+            legacy_condition: "Breast cancer diagnosed at age <46 regardless of family history"
+        - clinician_confirmation:
+            id: CC-ALGO-MANCHESTER-BRCA-342007BC358E
+            label: "Male breast cancer at any age"
+            legacy_condition: "Male breast cancer at any age"
+        - clinician_confirmation:
+            id: CC-ALGO-MANCHESTER-BRCA-74F5B5E6CA9B
+            label: "Ovarian cancer (epithelial non-mucinous) at any age regardless of family history"
+            legacy_condition: "Ovarian cancer (epithelial non-mucinous) at any age regardless of family history"
+        - clinician_confirmation:
+            id: CC-ALGO-MANCHESTER-BRCA-5B1813A0494B
+            label: "Ashkenazi Jewish ancestry with breast or ovarian cancer at any age"
+            legacy_condition: "Ashkenazi Jewish ancestry with breast or ovarian cancer at any age"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "NCCN bright-line testing criterion met (TNBC / breast <46 / male breast / ovarian / Ashkenazi + breast/ovarian) — refer for germline panel testing irrespective of Manchester score."

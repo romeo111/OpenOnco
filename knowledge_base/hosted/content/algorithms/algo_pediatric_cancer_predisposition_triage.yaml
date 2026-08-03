@@ -53,12 +53,30 @@ decision_tree:
     # Highest single-step diagnostic yield.
     evaluate:
       any_of:
-        - condition: "Pediatric adrenocortical carcinoma (ACC) at any age — Chompret C; ~50-80% germline TP53 yield"
-        - condition: "Pediatric choroid plexus carcinoma (CPC) at any age — Chompret C; ~50% germline TP53 yield"
-        - condition: "Pediatric anaplastic rhabdomyosarcoma with embryonal-anaplastic histology — Chompret C; ~10-20% TP53 yield"
-        - condition: "Bilateral or familial retinoblastoma at any age — ~100% germline RB1 yield"
-        - condition: "Pediatric medulloblastoma SHH-subtype with anaplastic histology — germline TP53 (LFS) yield ~10-20%; PTCH1 / SUFU (Gorlin) yield ~5-15%; SMARCA4 / SMARCB1 (CMMRD / rhabdoid) ~10%"
-        - condition: "Pediatric DICER1-spectrum tumor (pleuropulmonary blastoma, ovarian Sertoli-Leydig cell tumor, multinodular goiter / thyroid neoplasms, cystic nephroma, embryonal rhabdomyosarcoma of cervix) — germline DICER1 yield variable but high in pleuropulmonary blastoma (~70%)"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-2EAE52A65FFD
+            label: "Pediatric adrenocortical carcinoma (ACC) at any age — Chompret C; ~50-80% germline TP53 yield"
+            legacy_condition: "Pediatric adrenocortical carcinoma (ACC) at any age — Chompret C; ~50-80% germline TP53 yield"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-86253C9EEDA5
+            label: "Pediatric choroid plexus carcinoma (CPC) at any age — Chompret C; ~50% germline TP53 yield"
+            legacy_condition: "Pediatric choroid plexus carcinoma (CPC) at any age — Chompret C; ~50% germline TP53 yield"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-77770B94190D
+            label: "Pediatric anaplastic rhabdomyosarcoma with embryonal-anaplastic histology — Chompret C; ~10-20% TP53 yield"
+            legacy_condition: "Pediatric anaplastic rhabdomyosarcoma with embryonal-anaplastic histology — Chompret C; ~10-20% TP53 yield"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-25C68F6A1881
+            label: "Bilateral or familial retinoblastoma at any age — ~100% germline RB1 yield"
+            legacy_condition: "Bilateral or familial retinoblastoma at any age — ~100% germline RB1 yield"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-F50678A1CF06
+            label: "Pediatric medulloblastoma SHH-subtype with anaplastic histology — germline TP53 (LFS) yield ~10-20%; PTCH1 / SUFU (Gorlin) yield ~5-15%; SMARCA4 / SMARCB1 (CMMRD / rhabdoid) ~10%"
+            legacy_condition: "Pediatric medulloblastoma SHH-subtype with anaplastic histology — germline TP53 (LFS) yield ~10-20%; PTCH1 / SUFU (Gorlin) yield ~5-15%; SMARCA4 / SMARCB1 (CMMRD / rhabdoid) ~10%"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-E3E58793C57A
+            label: "Pediatric DICER1-spectrum tumor (pleuropulmonary blastoma, ovarian Sertoli-Leydig cell tumor, multinodular goiter / thyroid neoplasms, cystic nephroma, embryonal rhabdomyosarcoma of cervix) — germline DICER1 yield variable but high in pleuropulmonary blastoma (~70%)"
+            legacy_condition: "Pediatric DICER1-spectrum tumor (pleuropulmonary blastoma, ovarian Sertoli-Leydig cell tumor, multinodular goiter / thyroid neoplasms, cystic nephroma, embryonal rhabdomyosarcoma of cervix) — germline DICER1 yield variable but high in pleuropulmonary blastoma (~70%)"
     if_true:
       result: IND-LI-FRAUMENI-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Sentinel pediatric tumor identified — order germline testing irrespective of family history. For ACC / CPC / anaplastic rhabdomyosarcoma: TP53 + comprehensive hereditary cancer panel; LFS surveillance enrollment per Toronto Protocol if positive. For retinoblastoma: RB1 single-gene panel + bilateral / familial mandates germline testing. For DICER1-spectrum tumors: DICER1 + comprehensive panel. For medulloblastoma SHH-anaplastic: TP53 + Gorlin / SMARCA4 / SMARCB1 panel. Indication routes to LI-FRAUMENI-SUSPICION as the highest-yield default; engine should route confirmed-carrier results to syndrome-specific Indication (retinoblastoma → IND-RETINOBLASTOMA-CARRIER-SURVEILLANCE pending v0.2 authoring; DICER1 → IND-DICER1-CARRIER-SURVEILLANCE pending v0.2 authoring; Gorlin → IND-GORLIN-CARRIER-SURVEILLANCE pending v0.2 authoring)."
@@ -69,7 +87,10 @@ decision_tree:
     # primary cancers).
     evaluate:
       all_of:
-        - condition: "Pediatric proband with ≥2 primary cancers at any age — multiple primaries are strongly suggestive of underlying predisposition"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-6E4D03796A71
+            label: "Pediatric proband with ≥2 primary cancers at any age — multiple primaries are strongly suggestive of underlying predisposition"
+            legacy_condition: "Pediatric proband with ≥2 primary cancers at any age — multiple primaries are strongly suggestive of underlying predisposition"
     if_true:
       result: IND-LI-FRAUMENI-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Multiple primary pediatric cancers — comprehensive hereditary cancer panel (TP53, BRCA1/2, MMR, NF1, RB1, DICER1, SDHx, VHL, RET, PTEN, APC, MUTYH, STK11, CDKN2A, etc.). Yield varies but expected ~20-30% germline finding in pediatric multi-primary cohorts. Indication routes to LI-FRAUMENI-SUSPICION as highest-yield single-syndrome default (TP53 carries highest pediatric multi-primary signal); engine should re-route based on panel result."
@@ -81,18 +102,54 @@ decision_tree:
     # instability + RASopathy features.
     evaluate:
       any_of:
-        - condition: "Neurocutaneous features (café-au-lait macules, neurofibromas, optic glioma, Lisch nodules, axillary / inguinal freckling) → suspect NF1"
-        - condition: "Bilateral vestibular schwannomas or meningiomas + skin neurofibromas → suspect NF2"
-        - condition: "Macrocephaly + hemihypertrophy + omphalocele + macroglossia + neonatal hypoglycemia → suspect Beckwith-Wiedemann syndrome"
-        - condition: "Aniridia + GU anomalies + intellectual disability → suspect WAGR syndrome (WT1 deletion)"
-        - condition: "Bone marrow failure + congenital anomalies (radial-ray defects, cafe-au-lait, short stature) → suspect Fanconi anemia"
-        - condition: "Short stature + sun-sensitivity + immunodeficiency → suspect Bloom syndrome"
-        - condition: "Severe photosensitivity + early skin cancers → suspect xeroderma pigmentosum"
-        - condition: "Cerebellar ataxia + immunodeficiency + telangiectasia → suspect ataxia-telangiectasia (ATM biallelic)"
-        - condition: "Marfanoid habitus + mucosal neuromas + ganglioneuromatosis → suspect MEN2B"
-        - condition: "Café-au-lait macules in a child with ≥1 pediatric cancer AND consanguineous parents → suspect Constitutional Mismatch Repair Deficiency (CMMRD — biallelic MMR)"
-        - condition: "Bilateral / multifocal pheochromocytoma + paraganglioma → suspect VHL or SDHx"
-        - condition: "RASopathy features (Noonan, Costello, CFC) in proband with hematologic malignancy → suspect RASopathy-associated JMML"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-DFF67CAC89CC
+            label: "Neurocutaneous features (café-au-lait macules, neurofibromas, optic glioma, Lisch nodules, axillary / inguinal freckling) → suspect NF1"
+            legacy_condition: "Neurocutaneous features (café-au-lait macules, neurofibromas, optic glioma, Lisch nodules, axillary / inguinal freckling) → suspect NF1"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-ABDDEF7FE9AF
+            label: "Bilateral vestibular schwannomas or meningiomas + skin neurofibromas → suspect NF2"
+            legacy_condition: "Bilateral vestibular schwannomas or meningiomas + skin neurofibromas → suspect NF2"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-B6415F00A5AB
+            label: "Macrocephaly + hemihypertrophy + omphalocele + macroglossia + neonatal hypoglycemia → suspect Beckwith-Wiedemann syndrome"
+            legacy_condition: "Macrocephaly + hemihypertrophy + omphalocele + macroglossia + neonatal hypoglycemia → suspect Beckwith-Wiedemann syndrome"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-1AC2953AA15B
+            label: "Aniridia + GU anomalies + intellectual disability → suspect WAGR syndrome (WT1 deletion)"
+            legacy_condition: "Aniridia + GU anomalies + intellectual disability → suspect WAGR syndrome (WT1 deletion)"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-0CFA91CD0931
+            label: "Bone marrow failure + congenital anomalies (radial-ray defects, cafe-au-lait, short stature) → suspect Fanconi anemia"
+            legacy_condition: "Bone marrow failure + congenital anomalies (radial-ray defects, cafe-au-lait, short stature) → suspect Fanconi anemia"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-F7DD0FEE7669
+            label: "Short stature + sun-sensitivity + immunodeficiency → suspect Bloom syndrome"
+            legacy_condition: "Short stature + sun-sensitivity + immunodeficiency → suspect Bloom syndrome"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-80007E63F7F5
+            label: "Severe photosensitivity + early skin cancers → suspect xeroderma pigmentosum"
+            legacy_condition: "Severe photosensitivity + early skin cancers → suspect xeroderma pigmentosum"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-781C0504D130
+            label: "Cerebellar ataxia + immunodeficiency + telangiectasia → suspect ataxia-telangiectasia (ATM biallelic)"
+            legacy_condition: "Cerebellar ataxia + immunodeficiency + telangiectasia → suspect ataxia-telangiectasia (ATM biallelic)"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-AF0977D51AEF
+            label: "Marfanoid habitus + mucosal neuromas + ganglioneuromatosis → suspect MEN2B"
+            legacy_condition: "Marfanoid habitus + mucosal neuromas + ganglioneuromatosis → suspect MEN2B"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-F2A481ED6F68
+            label: "Café-au-lait macules in a child with ≥1 pediatric cancer AND consanguineous parents → suspect Constitutional Mismatch Repair Deficiency (CMMRD — biallelic MMR)"
+            legacy_condition: "Café-au-lait macules in a child with ≥1 pediatric cancer AND consanguineous parents → suspect Constitutional Mismatch Repair Deficiency (CMMRD — biallelic MMR)"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-F53FF0A9A727
+            label: "Bilateral / multifocal pheochromocytoma + paraganglioma → suspect VHL or SDHx"
+            legacy_condition: "Bilateral / multifocal pheochromocytoma + paraganglioma → suspect VHL or SDHx"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-E8C947A9259C
+            label: "RASopathy features (Noonan, Costello, CFC) in proband with hematologic malignancy → suspect RASopathy-associated JMML"
+            legacy_condition: "RASopathy features (Noonan, Costello, CFC) in proband with hematologic malignancy → suspect RASopathy-associated JMML"
     if_true:
       next_step: 4
     if_false:
@@ -101,7 +158,10 @@ decision_tree:
     # Syndromic-features identified — order syndrome-specific panel.
     evaluate:
       all_of:
-        - condition: "Syndromic features identified at step 3 — refer to clinical genetics for syndrome-specific panel"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-DFF80B2C2E44
+            label: "Syndromic features identified at step 3 — refer to clinical genetics for syndrome-specific panel"
+            legacy_condition: "Syndromic features identified at step 3 — refer to clinical genetics for syndrome-specific panel"
     if_true:
       result: IND-LI-FRAUMENI-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Syndromic features identified — route to specific syndrome panel: NF1 (NF1 single-gene); NF2 (NF2 single-gene); Beckwith-Wiedemann (11p15 methylation + CDKN1C sequencing); WAGR (WT1 deletion); Fanconi anemia (FANC genes — 22 known); Bloom (BLM); xeroderma pigmentosum (XPA-XPG, POLH); ataxia-telangiectasia (ATM biallelic); MEN2B (RET M918T); CMMRD (biallelic MLH1 / MSH2 / MSH6 / PMS2 — pediatric panel typically includes); pheochromocytoma-paraganglioma (VHL, RET, NF1, SDHA, SDHB, SDHC, SDHD, SDHAF2, TMEM127, MAX, FH, MDH2); RASopathies (PTPN11, SOS1, RAF1, KRAS, BRAF, NRAS, MAP2K1, MAP2K2). Indication routes to LI-FRAUMENI-SUSPICION as default-routing placeholder; engine should re-route to syndrome-specific Indication once panel result available. Several syndromes lack dedicated Indications in current KB (v0.2 authoring backlog: NF1, NF2, Beckwith-Wiedemann, Fanconi anemia, etc.)."
@@ -113,7 +173,10 @@ decision_tree:
     # young-onset cancer OR ≥2 second-degree relatives with cancer.
     evaluate:
       any_of:
-        - condition: "First-degree relative with cancer diagnosed <50, OR ≥2 second-degree relatives with cancer at any age, OR ≥1 family member with sentinel-LFS-tumor (ACC, CPC, anaplastic rhabdomyosarcoma)"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-22DC4FEE3655
+            label: "First-degree relative with cancer diagnosed <50, OR ≥2 second-degree relatives with cancer at any age, OR ≥1 family member with sentinel-LFS-tumor (ACC, CPC, anaplastic rhabdomyosarcoma)"
+            legacy_condition: "First-degree relative with cancer diagnosed <50, OR ≥2 second-degree relatives with cancer at any age, OR ≥1 family member with sentinel-LFS-tumor (ACC, CPC, anaplastic rhabdomyosarcoma)"
     if_true:
       result: IND-LI-FRAUMENI-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Pediatric proband with family-history-suspicion pattern — order comprehensive hereditary cancer panel (50-80 genes). Modern pediatric oncology recommendations (COG / AACR 2017) increasingly favor comprehensive panel testing for any pediatric cancer proband, given falling cost ($250-500) and yield ~10-15% in unselected pediatric cancer cohorts. Indication routes to LI-FRAUMENI-SUSPICION as default; engine re-routes based on result."
@@ -125,7 +188,10 @@ decision_tree:
     # cancer cohorts is ~8-12% (Zhang 2015 / Gröbner 2018).
     evaluate:
       all_of:
-        - condition: "Pediatric cancer proband without sentinel-tumor + without multi-primary + without syndromic features + without family-history suspicion — consider comprehensive panel per AACR 2017 / COG recommendations"
+        - clinician_confirmation:
+            id: CC-ALGO-PEDIATRIC-CANCER-PREDISPOSITION-TRIAGE-D771EF64C9F7
+            label: "Pediatric cancer proband without sentinel-tumor + without multi-primary + without syndromic features + without family-history suspicion — consider comprehensive panel per AACR 2017 / COG recommendations"
+            legacy_condition: "Pediatric cancer proband without sentinel-tumor + without multi-primary + without syndromic features + without family-history suspicion — consider comprehensive panel per AACR 2017 / COG recommendations"
     if_true:
       result: IND-LI-FRAUMENI-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Pediatric cancer proband without specific risk features — shared-decision discussion with family re: comprehensive germline panel. Yield ~8-12% in unselected cohorts (Zhang 2015 / Gröbner 2018). Pre-test counseling addresses VUS implications + insurance / GINA / EU GDPR concerns + family-system implications. Indication routes to LI-FRAUMENI-SUSPICION as default-routing placeholder; engine should re-route based on panel result. Negative result remains clinically valuable — informs that the proband's tumor is most likely sporadic; cascade testing not indicated."

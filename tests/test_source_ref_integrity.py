@@ -4,9 +4,10 @@ These tests cover the loader's new pass that walks SRC-* citations
 (structural FKs and inline narrative mentions) and reports unresolved
 IDs with categorized hints.
 
-The loader gates this behaviour on ``strict_source_refs``:
-  - default (False) → contract_warnings (does not break ``result.ok``)
-  - strict (True)   → ref_errors (breaks ``result.ok``)
+The loader always rejects unresolved typed source foreign keys. It gates only
+inline narrative mentions on ``strict_source_refs``:
+  - default (False) → narrative mentions are contract_warnings
+  - strict (True)   → narrative mentions are ref_errors
 
 The tests cover both paths plus three categories of unresolved IDs:
   - ``typo``  — Levenshtein ≤ 2 to a known SRC-* ID; "did you mean…?"
@@ -153,7 +154,7 @@ def test_banned_set_includes_oncokb_snomed_meddra():
     not LIVE_KB.exists(),
     reason="live knowledge_base/hosted/content not present",
 )
-def test_live_kb_strict_surfaces_unresolved_src_refs():
+def test_live_kb_strict_has_no_unresolved_src_refs():
     """Run strict mode against the real KB. Assert at least 1 unresolved
     SRC-* citation surfaces — proves the check is wired up.
 
@@ -165,7 +166,7 @@ def test_live_kb_strict_surfaces_unresolved_src_refs():
     src_errs = _unresolved_entries(result.ref_errors)
     # At time of writing PR4: 38 unresolved entries (35 unique IDs:
     # 2 typo / 0 banned / 33 authentic gaps). Lower bound: > 0.
-    assert len(src_errs) > 0, (
+    assert len(src_errs) == 0, (
         "strict-mode load against live KB found 0 unresolved SRC-* refs — "
         "check is unwired or KB has been fully filled"
     )
@@ -183,7 +184,7 @@ def test_live_kb_strict_surfaces_unresolved_src_refs():
     not LIVE_KB.exists(),
     reason="live knowledge_base/hosted/content not present",
 )
-def test_live_kb_default_mode_is_warn_only():
+def test_live_kb_default_mode_has_no_unresolved_src_warnings():
     """Default load (warn-only) must keep result.ok=True even when the
     live KB has unresolved SRC-* citations. Existing test_loader tests
     rely on this back-compat.
@@ -196,7 +197,7 @@ def test_live_kb_default_mode_is_warn_only():
         "default mode leaked SRC-resolution into ref_errors — "
         "back-compat broken"
     )
-    assert len(src_warns) > 0, "default mode should warn on unresolved SRC-* refs"
+    assert len(src_warns) == 0, "clean live KB should have no unresolved SRC-* warnings"
     # Result.ok should still be True (modulo other unrelated contract
     # errors that may exist on master). Specifically: SRC-resolution must
     # NOT have populated ref_errors or contract_errors.
@@ -242,9 +243,8 @@ def test_synthetic_broken_kb_strict_fails_with_one_error(tmp_path: Path):
     assert "source_stub" in msg
 
 
-def test_synthetic_broken_kb_default_warns_only(tmp_path: Path):
-    """Default mode keeps result.ok=True; unresolved SRC-* lands in
-    contract_warnings instead."""
+def test_synthetic_broken_structured_source_fails_in_default_mode(tmp_path: Path):
+    """Typed source foreign keys are safety-critical in every mode."""
     clear_load_cache()
     _write_drug(tmp_path, "DRUG-RITUXIMAB")
     _write_regimen(tmp_path, "REG-Z", sources=["SRC-MISSING"])
@@ -252,9 +252,9 @@ def test_synthetic_broken_kb_default_warns_only(tmp_path: Path):
     result = load_content(tmp_path)  # default warn-only
     src_errs = _unresolved_entries(result.ref_errors)
     src_warns = _unresolved_entries(result.contract_warnings)
-    assert src_errs == [], "default mode must not populate ref_errors"
-    assert len(src_warns) == 1
-    assert "SRC-MISSING" in src_warns[0][1]
+    assert len(src_errs) == 1
+    assert src_warns == []
+    assert "SRC-MISSING" in src_errs[0][1]
 
 
 # ---------------------------------------------------------------------------
@@ -354,17 +354,22 @@ def test_synthetic_kb_notes_field_unresolved_src_is_caught(tmp_path: Path):
 
 def test_cache_key_includes_strict_flag(tmp_path: Path):
     """Toggling strict_source_refs between calls must produce distinct
-    LoadResult instances (different ref_errors/contract_warnings)."""
+    LoadResult instances; narrative diagnostics differ by mode."""
     clear_load_cache()
     _write_drug(tmp_path, "DRUG-RITUXIMAB")
-    _write_regimen(tmp_path, "REG-CACHE", sources=["SRC-MISSING"])
+    regimen = _write_regimen(tmp_path, "REG-CACHE", sources=["SRC-MISSING"])
+    regimen.write_text(
+        regimen.read_text(encoding="utf-8") + "notes: SRC-NARRATIVE-MISSING\n",
+        encoding="utf-8",
+    )
 
     warn = load_content(tmp_path, strict_source_refs=False)
     strict = load_content(tmp_path, strict_source_refs=True)
 
     assert warn is not strict, "cache mistakenly merges strict + warn entries"
-    assert _unresolved_entries(warn.ref_errors) == []
-    assert _unresolved_entries(strict.ref_errors) != []
+    assert any("SRC-MISSING" in msg for _, msg in _unresolved_entries(warn.ref_errors))
+    assert any("SRC-NARRATIVE-MISSING" in msg for _, msg in _unresolved_entries(warn.contract_warnings))
+    assert any("SRC-NARRATIVE-MISSING" in msg for _, msg in _unresolved_entries(strict.ref_errors))
 
 
 # ---------------------------------------------------------------------------

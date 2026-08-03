@@ -17,8 +17,14 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Relapsed/refractory after alemtuzumab IV monotherapy"
-        - condition: "Alemtuzumab-refractory primary disease"
+        - clinician_confirmation:
+            id: CC-ALGO-T-PLL-2L-FB59B6D09D1B
+            label: "Relapsed/refractory after alemtuzumab IV monotherapy"
+            legacy_condition: "Relapsed/refractory after alemtuzumab IV monotherapy"
+        - clinician_confirmation:
+            id: CC-ALGO-T-PLL-2L-A255A00BDEF9
+            label: "Alemtuzumab-refractory primary disease"
+            legacy_condition: "Alemtuzumab-refractory primary disease"
         - red_flag: RF-T-PLL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-T-PLL-2L-VENETOCLAX-ALEMTUZUMAB

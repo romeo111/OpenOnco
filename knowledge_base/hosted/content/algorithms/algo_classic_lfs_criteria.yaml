@@ -32,7 +32,10 @@ decision_tree:
     # Criterion 1: proband with sarcoma diagnosed <45.
     evaluate:
       all_of:
-        - condition: "Proband with sarcoma (soft tissue or bone — STS, osteosarcoma, rhabdomyosarcoma, leiomyosarcoma, etc.) diagnosed at age <45"
+        - clinician_confirmation:
+            id: CC-ALGO-CLASSIC-LFS-CRITERIA-C544D8E849C6
+            label: "Proband with sarcoma (soft tissue or bone — STS, osteosarcoma, rhabdomyosarcoma, leiomyosarcoma, etc.) diagnosed at age <45"
+            legacy_condition: "Proband with sarcoma (soft tissue or bone — STS, osteosarcoma, rhabdomyosarcoma, leiomyosarcoma, etc.) diagnosed at age <45"
     if_true:
       next_step: 2
     if_false:
@@ -42,7 +45,10 @@ decision_tree:
     # Criterion 2: first-degree relative with any cancer <45.
     evaluate:
       all_of:
-        - condition: "First-degree relative (parent, sibling, child) with any cancer diagnosed at age <45"
+        - clinician_confirmation:
+            id: CC-ALGO-CLASSIC-LFS-CRITERIA-B44E33C8A8E3
+            label: "First-degree relative (parent, sibling, child) with any cancer diagnosed at age <45"
+            legacy_condition: "First-degree relative (parent, sibling, child) with any cancer diagnosed at age <45"
     if_true:
       next_step: 3
     if_false:
@@ -53,8 +59,14 @@ decision_tree:
     # same lineage with sarcoma at any age OR any cancer <45.
     evaluate:
       any_of:
-        - condition: "An additional first-degree or second-degree relative in the same lineage with sarcoma at any age"
-        - condition: "An additional first-degree or second-degree relative in the same lineage with any cancer diagnosed at age <45"
+        - clinician_confirmation:
+            id: CC-ALGO-CLASSIC-LFS-CRITERIA-6B3ACEF1EDEF
+            label: "An additional first-degree or second-degree relative in the same lineage with sarcoma at any age"
+            legacy_condition: "An additional first-degree or second-degree relative in the same lineage with sarcoma at any age"
+        - clinician_confirmation:
+            id: CC-ALGO-CLASSIC-LFS-CRITERIA-88D26AF47CBC
+            label: "An additional first-degree or second-degree relative in the same lineage with any cancer diagnosed at age <45"
+            legacy_condition: "An additional first-degree or second-degree relative in the same lineage with any cancer diagnosed at age <45"
     if_true:
       result: IND-LI-FRAUMENI-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Classic LFS criteria FULLY satisfied — refer for germline TP53 testing. Sensitivity ~40% for TP53 carriers, specificity ~99% (Bougeard 2015)."

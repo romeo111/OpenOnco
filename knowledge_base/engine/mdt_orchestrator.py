@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Iterable, Literal, Optional
+from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional
 
 from knowledge_base.validation.loader import load_content
 
@@ -31,6 +31,9 @@ from .provenance import (
     make_event,
     now_iso,
 )
+
+if TYPE_CHECKING:
+    from .diagnostic import DiagnosticPlanResult
 
 
 TriggerType = Literal[

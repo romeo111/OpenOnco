@@ -41,7 +41,10 @@ decision_tree:
     # early-onset breast + ovarian + Ashkenazi ancestry signal.
     evaluate:
       any_of:
-        - condition: "BRCAPRO combined BRCA1 + BRCA2 carrier probability ≥20%"
+        - clinician_confirmation:
+            id: CC-ALGO-BRCAPRO-E5E5A73C50B4
+            label: "BRCAPRO combined BRCA1 + BRCA2 carrier probability ≥20%"
+            legacy_condition: "BRCAPRO combined BRCA1 + BRCA2 carrier probability ≥20%"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BRCAPRO ≥20% — strong indication for germline BRCA1/2 testing + extended HBOC panel (PALB2/CHEK2/ATM/RAD51C/RAD51D/BARD1). Genetic counseling. Diagnostic yield ~30-40% at this threshold."
@@ -51,7 +54,10 @@ decision_tree:
     # NCCN testing-recommendation threshold ≥10%.
     evaluate:
       any_of:
-        - condition: "BRCAPRO combined BRCA1 + BRCA2 carrier probability ≥10%"
+        - clinician_confirmation:
+            id: CC-ALGO-BRCAPRO-86149C23D972
+            label: "BRCAPRO combined BRCA1 + BRCA2 carrier probability ≥10%"
+            legacy_condition: "BRCAPRO combined BRCA1 + BRCA2 carrier probability ≥10%"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BRCAPRO ≥10% — NCCN testing-recommendation threshold met. Refer for genetic counseling + germline BRCA1/2 (or extended HBOC panel) testing. Diagnostic yield ~15-20% at this threshold."
@@ -63,7 +69,10 @@ decision_tree:
     # falling lab costs.
     evaluate:
       any_of:
-        - condition: "BRCAPRO combined BRCA1 + BRCA2 carrier probability ≥2.5%"
+        - clinician_confirmation:
+            id: CC-ALGO-BRCAPRO-07F11F3F0229
+            label: "BRCAPRO combined BRCA1 + BRCA2 carrier probability ≥2.5%"
+            legacy_condition: "BRCAPRO combined BRCA1 + BRCA2 carrier probability ≥2.5%"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "BRCAPRO ≥2.5% — broader testing-suggested threshold (ASCO / ACMG 2018+). Genetic counseling for shared-decision testing. Diagnostic yield ~5-10% at this threshold. Patient preference + cost considerations weigh into shared-decision. Default-route to enhanced empirical-surveillance pathway if testing declined."

@@ -18,8 +18,14 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "R/R aggressive ATLL after CHOEP / mLSG15"
-        - condition: "R/R indolent ATLL after AZT+IFN-α"
+        - clinician_confirmation:
+            id: CC-ALGO-ATLL-2L-9DDC8C8769D7
+            label: "R/R aggressive ATLL after CHOEP / mLSG15"
+            legacy_condition: "R/R aggressive ATLL after CHOEP / mLSG15"
+        - clinician_confirmation:
+            id: CC-ALGO-ATLL-2L-C302D3F6673D
+            label: "R/R indolent ATLL after AZT+IFN-α"
+            legacy_condition: "R/R indolent ATLL after AZT+IFN-α"
         - red_flag: RF-ATLL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-ATLL-2L-MOGAMULIZUMAB

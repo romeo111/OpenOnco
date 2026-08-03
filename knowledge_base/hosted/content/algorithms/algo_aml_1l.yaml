@@ -136,7 +136,10 @@ decision_tree:
   - step: 7
     evaluate:
       any_of:
-        - condition: "Fit for intensive chemotherapy (default if no fitness flags)"
+        - clinician_confirmation:
+            id: CC-ALGO-AML-1L-8E95974085C1
+            label: "Fit for intensive chemotherapy (default if no fitness flags)"
+            legacy_condition: "Fit for intensive chemotherapy (default if no fitness flags)"
     if_true:
       result: IND-AML-1L-7-3
     if_false:

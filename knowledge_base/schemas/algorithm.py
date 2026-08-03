@@ -9,7 +9,7 @@ from typing import Optional, Union
 from pydantic import Field, field_validator
 
 from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
-from .base import Base
+from .base import Base, ClinicalClaim
 
 
 class DecisionStep(Base):
@@ -39,6 +39,7 @@ class Algorithm(Base):
     # CHARTER §6.1: ≥2 sign-offs to publish. Structured form — legacy
     # `reviewer_signoffs: 0` (int) coerced to [] by the validator below.
     reviewer_signoffs: list[ReviewerSignoff] = Field(default_factory=list)
+    clinical_claims: list[ClinicalClaim] = Field(default_factory=list)
     notes: Optional[str] = None
 
     @field_validator("reviewer_signoffs", mode="before")

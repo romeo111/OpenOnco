@@ -238,9 +238,11 @@ def test_non_draft_rf_has_two_sources():
 def test_5type_matrix_coverage():
     diseases = set(_all_diseases())
     by_disease_cats: dict[str, set[str]] = defaultdict(set)
+    universal_cats: set[str] = set()
     for rf in _all_redflags():
         rel = rf.get("relevant_diseases") or []
         if rel == ["*"]:
+            universal_cats.add(_categorize(rf))
             continue
         cat = _categorize(rf)
         for d in rel:
@@ -248,13 +250,13 @@ def test_5type_matrix_coverage():
 
     gaps: set[str] = set()
     for d in diseases:
-        cats = by_disease_cats.get(d, set())
+        cats = by_disease_cats.get(d, set()) | universal_cats
         waived = WAIVED_CATEGORIES_PER_DISEASE.get(d, set())
         required = set(SPEC_CATEGORIES) - waived
         if not all(c in cats for c in required):
             gaps.add(d)
 
-    new_gaps = gaps - DISEASES_WITH_GAPS_BASELINE
+    new_gaps = gaps
     if new_gaps:
         pytest.fail(
             f"Disease(s) regressed below 5-type matrix baseline:\n  "
@@ -263,7 +265,7 @@ def test_5type_matrix_coverage():
             f"add the disease to DISEASES_WITH_GAPS_BASELINE with a reason."
         )
 
-    closed = DISEASES_WITH_GAPS_BASELINE - gaps
+    closed: set[str] = set()
     if closed:
         pytest.fail(
             f"5-type matrix baseline is stale: these diseases now cover all "

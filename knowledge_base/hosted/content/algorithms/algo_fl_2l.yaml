@@ -33,7 +33,10 @@ decision_tree:
 - step: 01
   evaluate:
     any_of:
-    - condition: "Rituximab-refractory (progression on or within 6 months of last rituximab)"
+    - clinician_confirmation:
+        id: CC-ALGO-FL-2L-5046E52CABB9
+        label: "Rituximab-refractory (progression on or within 6 months of last rituximab)"
+        legacy_condition: "Rituximab-refractory (progression on or within 6 months of last rituximab)"
   if_true:
     result: IND-FL-2L-OBG-BENDA
   if_false:
@@ -79,11 +82,17 @@ decision_tree:
 - step: 2
   evaluate:
     all_of:
-    - condition: ≥2 prior systemic lines
+    - clinician_confirmation:
+        id: CC-ALGO-FL-2L-40F8607D555B
+        label: "≥2 prior systemic lines"
+        legacy_condition: "≥2 prior systemic lines"
     - red_flag: RF-FITNESS-ECOG-FIT
     - red_flag: RF-CAR-T-ELIGIBLE
     - condition: Age 18-75
-    - condition: CD19+ disease confirmed
+    - clinician_confirmation:
+        id: CC-ALGO-FL-2L-7A143810CE3F
+        label: "CD19+ disease confirmed"
+        legacy_condition: "CD19+ disease confirmed"
   if_true:
     result: IND-FL-3L-AXICEL-CART
   if_false:
@@ -96,8 +105,14 @@ decision_tree:
 - step: 3
   evaluate:
     any_of:
-    - condition: Transplant-ineligible OR CAR-T inaccessible
-    - condition: EZH2-WT and patient prefers chemo-free off-the-shelf
+    - clinician_confirmation:
+        id: CC-ALGO-FL-2L-DBB57724A86C
+        label: "Transplant-ineligible OR CAR-T inaccessible"
+        legacy_condition: "Transplant-ineligible OR CAR-T inaccessible"
+    - clinician_confirmation:
+        id: CC-ALGO-FL-2L-C2C1E7BDFF45
+        label: "EZH2-WT and patient prefers chemo-free off-the-shelf"
+        legacy_condition: "EZH2-WT and patient prefers chemo-free off-the-shelf"
   if_true:
     result: IND-FL-3L-MOSUNETUZUMAB
   if_false:

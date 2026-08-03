@@ -556,7 +556,7 @@ def _public_case_entries() -> list[CaseEntry]:
     get their case HTML built so the /try.html example picker can iframe
     a real generated plan when the user loads them.
     """
-    return [c for c in CASES if c.case_id not in BROKEN_CASE_IDS]
+    return [c for c in CASES if c.visibility == "public"]
 
 
 def _public_example_entries() -> list[CaseEntry]:
@@ -576,10 +576,7 @@ def _public_example_entries() -> list[CaseEntry]:
 
     return [
         c for c in CASES
-        if c.case_id not in BROKEN_CASE_IDS
-        and c.badge_class != "bdg-stub"
-        and c.badge.lower() not in {"auto-stub", "variant"}
-        and not c.case_id.startswith(("auto-", "variant-"))
+        if c.visibility == "public"
     ]
 
 
@@ -589,8 +586,6 @@ def _case_quality_meta(c: CaseEntry, *, has_case_page: bool) -> dict:
     This does not certify clinical review; it keeps intentionally broad
     starter profiles visually separate from curated showcase/demo plans.
     """
-    cid = c.case_id.lower()
-    filename = c.file.lower()
     if not has_case_page:
         return {
             "quality_rank": 50,
@@ -599,44 +594,21 @@ def _case_quality_meta(c: CaseEntry, *, has_case_page: bool) -> dict:
             "quality_label_en": "Form starter",
             "quality_class": "quality-starter",
         }
-    if cid.startswith("showcase-"):
-        return {
-            "quality_rank": 0,
-            "quality_tier": "showcase",
-            "quality_label": "Кураторський showcase",
-            "quality_label_en": "Curated showcase",
-            "quality_class": "quality-showcase",
-        }
-    if cid.startswith("diagnostic-"):
-        return {
-            "quality_rank": 10,
-            "quality_tier": "diagnostic",
-            "quality_label": "Діагностичний brief",
-            "quality_label_en": "Diagnostic brief",
-            "quality_class": "quality-diagnostic",
-        }
-    if cid.startswith("coverage-") or filename.startswith("patient_coverage_"):
-        return {
-            "quality_rank": 30,
-            "quality_tier": "coverage",
-            "quality_label": "Перевірений coverage-план",
-            "quality_label_en": "Engine-verified coverage plan",
-            "quality_class": "quality-curated",
-        }
-    if cid.startswith("auto-") or cid.startswith("variant-") or filename.startswith(("auto_", "variant_")):
-        return {
-            "quality_rank": 40,
-            "quality_tier": "starter",
-            "quality_label": "Стартовий профіль",
-            "quality_label_en": "Coverage starter",
-            "quality_class": "quality-starter",
-        }
+    tiers = {
+        "showcase": (0, "Кураторський showcase", "Curated showcase", "quality-showcase"),
+        "diagnostic": (10, "Діагностичний brief", "Diagnostic brief", "quality-diagnostic"),
+        "molecular": (15, "Молекулярний сценарій", "Molecular decision example", "quality-curated"),
+        "curated": (20, "Кураторський план", "Curated plan", "quality-curated"),
+        "coverage": (30, "Перевірений coverage-план", "Engine-verified coverage plan", "quality-curated"),
+        "starter": (40, "Стартовий профіль", "Coverage starter", "quality-starter"),
+    }
+    rank, label_ua, label_en, css_class = tiers.get(c.quality_tier, tiers["curated"])
     return {
-        "quality_rank": 20,
-        "quality_tier": "curated",
-        "quality_label": "Кураторський план",
-        "quality_label_en": "Curated plan",
-        "quality_class": "quality-curated",
+        "quality_rank": rank,
+        "quality_tier": c.quality_tier,
+        "quality_label": label_ua,
+        "quality_label_en": label_en,
+        "quality_class": css_class,
     }
 
 
@@ -650,14 +622,9 @@ def _example_display_labels(
     """Return picker labels that are readable to users, not generator names."""
     label_en = c.label_en or c.label_ua
     label_ua = c.label_ua
-    cid = c.case_id.lower()
-    filename = c.file.lower()
     generated = (
         not has_case_page
-        or cid.startswith("auto-")
-        or cid.startswith("variant-")
-        or filename.startswith("auto_")
-        or filename.startswith("variant_")
+        or c.quality_tier == "starter"
         or "auto-stub" in label_en.lower()
         or "auto-stub" in label_ua.lower()
     )
@@ -737,13 +704,10 @@ def _example_sort_key(entry: dict) -> tuple:
 
 
 def _remove_excluded_case_pages(output_dir: Path) -> int:
-    """Delete stale generated pages for broken/auto-stub cases.
-
-    Gallery-only-hidden cases still get their case HTML built (see
-    _public_case_entries), so we must not delete them here.
-    """
+    """Delete stale pages for internal or quarantined scenarios."""
     removed = 0
-    for case_id in sorted(BROKEN_CASE_IDS):
+    non_public_case_ids = {c.case_id for c in CASES if c.visibility != "public"}
+    for case_id in sorted(non_public_case_ids):
         for rel_path in (
             Path("cases") / f"{case_id}.html",
             Path("ukr") / "cases" / f"{case_id}.html",
@@ -769,6 +733,11 @@ def bundle_examples(
     payload = []
     manifest = []
     unique_icd_to_disease_id = _unique_questionnaire_icd_to_disease_id_map()
+    questionnaire_disease_ids = {
+        str(q.get("disease_id")).upper()
+        for q in (questionnaires_manifest or [])
+        if q.get("disease_id")
+    }
 
     def append_case(c: CaseEntry, *, has_case_page: bool) -> str | None:
         p = EXAMPLES / c.file
@@ -795,6 +764,9 @@ def bundle_examples(
             c, ex_json, disease_id, has_case_page=has_case_page
         )
         quality_meta = _case_quality_meta(c, has_case_page=has_case_page)
+        questionnaire_available = bool(
+            disease_id and str(disease_id).upper() in questionnaire_disease_ids
+        )
         payload_entry = {
             "case_id": c.case_id,
             "label": label_ua,
@@ -802,6 +774,10 @@ def bundle_examples(
             "disease_id": disease_id,
             "file": c.file,
             "json": ex_json,
+            "scenario_type": c.scenario_type,
+            "questionnaire_available": questionnaire_available,
+            "patient_view_available": c.scenario_type != "diagnostic",
+            "verification_required": True,
             **quality_meta,
         }
         manifest_entry = {
@@ -810,6 +786,9 @@ def bundle_examples(
             "label_en": label_en,
             "disease_id": disease_id,
             "disease_icd": disease_icd,
+            "scenario_type": c.scenario_type,
+            "questionnaire_available": questionnaire_available,
+            "patient_view_available": c.scenario_type != "diagnostic",
             **quality_meta,
         }
         if not has_case_page:
@@ -967,6 +946,101 @@ def _inject_common_screening(quest: dict) -> dict:
     return {**quest, "groups": groups}
 
 
+_CLINICIAN_CONFIRMATION_GROUP_TITLE = "Clinician / MDT confirmations"
+_CLINICIAN_CONFIRMATION_HELPER = (
+    "Requires confirmation by the treating clinician or MDT. Leave blank when "
+    "it has not been verified; this is never inferred from other answers."
+)
+
+
+def _walk_clinician_confirmations(value):
+    """Yield authored clinician-confirmation payloads from an algorithm."""
+    if isinstance(value, dict):
+        confirmation = value.get("clinician_confirmation")
+        if isinstance(confirmation, dict):
+            yield confirmation
+        for child in value.values():
+            yield from _walk_clinician_confirmations(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from _walk_clinician_confirmations(child)
+
+
+def _clinician_confirmations_by_scope() -> dict[tuple[str, int], list[dict]]:
+    """Collect explicit prose-gate confirmations for the matching form.
+
+    A questionnaire only shows confirmations for its disease and therapy
+    line. This keeps clinical gates visible to a reviewing clinician without
+    cluttering a form with unrelated algorithms or silently inferring them.
+    """
+    import yaml as _yaml
+
+    grouped: dict[tuple[str, int], list[dict]] = {}
+    algorithm_dir = KB_ROOT / "algorithms"
+    for path in sorted(algorithm_dir.glob("*.yaml")):
+        try:
+            algorithm = _yaml.safe_load(path.read_text(encoding="utf-8"))
+        except (OSError, _yaml.YAMLError):
+            continue
+        if not isinstance(algorithm, dict):
+            continue
+        disease_id = algorithm.get("applicable_to_disease")
+        line = algorithm.get("applicable_to_line_of_therapy")
+        if not isinstance(disease_id, str):
+            continue
+        try:
+            scope = (disease_id, int(line))
+        except (TypeError, ValueError):
+            continue
+        seen = {item["id"] for item in grouped.get(scope, []) if item.get("id")}
+        for confirmation in _walk_clinician_confirmations(algorithm):
+            confirmation_id = confirmation.get("id")
+            label = confirmation.get("label")
+            if not isinstance(confirmation_id, str) or not isinstance(label, str):
+                continue
+            if confirmation_id in seen:
+                continue
+            grouped.setdefault(scope, []).append({"id": confirmation_id, "label": label})
+            seen.add(confirmation_id)
+    return grouped
+
+
+def _inject_clinician_confirmations(quest: dict, scoped_confirmations: dict) -> dict:
+    """Append the explicit, optional clinician-confirmation form group."""
+    disease_id = quest.get("disease_id")
+    try:
+        line = int(quest.get("line_of_therapy"))
+    except (TypeError, ValueError):
+        return quest
+    confirmations = scoped_confirmations.get((disease_id, line), [])
+    if not confirmations:
+        return quest
+    groups = list(quest.get("groups") or [])
+    if any(group.get("title") == _CLINICIAN_CONFIRMATION_GROUP_TITLE for group in groups):
+        return quest
+    questions = [
+        {
+            "field": f"clinician_confirmations.{item['id']}",
+            "label": item["label"],
+            "type": "boolean",
+            "impact": "recommended",
+            "helper": _CLINICIAN_CONFIRMATION_HELPER,
+        }
+        for item in confirmations
+    ]
+    groups.append(
+        {
+            "title": _CLINICIAN_CONFIRMATION_GROUP_TITLE,
+            "description": (
+                "These algorithm gates were authored as clinical prose and "
+                "therefore require an explicit review rather than automatic inference."
+            ),
+            "questions": questions,
+        }
+    )
+    return {**quest, "groups": groups}
+
+
 _STUB_TITLE_NOTICE_RE = re.compile(r"\s*\(auto-generated STUB\)\s*", re.IGNORECASE)
 
 
@@ -1019,6 +1093,7 @@ def bundle_questionnaires(output_dir: Path) -> dict:
     manifest = []
     if qsrc.is_dir():
         import yaml as _yaml
+        clinician_confirmations = _clinician_confirmations_by_scope()
         disease_names_by_id = {}
         disease_codes_by_id = {}
         dsrc = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "diseases"
@@ -1036,6 +1111,7 @@ def bundle_questionnaires(output_dir: Path) -> dict:
                 data = _yaml.safe_load(path.read_text(encoding="utf-8"))
                 if isinstance(data, dict):
                     data = _inject_common_screening(data)
+                    data = _inject_clinician_confirmations(data, clinician_confirmations)
                     display_titles = _questionnaire_display_titles(data, disease_names_by_id)
                     disease_codes = disease_codes_by_id.get(data.get("disease_id")) or {}
                     disease_icd = (
@@ -1224,9 +1300,6 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             "that read every guideline at once.",
         )
         primary = "Try the plan builder"
-        secondary = "See a sample plan →"
-        tertiary = "Ask the AI Tumor Board"
-        gallery_href = "/gallery.html"
         diseases_href = "/diseases.html"
         note = "Open-data inputs: CIViC (CC0) for biomarker actionability, ClinicalTrials.gov for trial-aware options, PubMed/PMID/DOI and DailyMed/openFDA for literature and drug-label context. No LLM chooses treatment: plans are rules-first with YAML provenance, so LLM hallucinations are excluded from the plan. The clinician remains the final authority (CHARTER §11)."
         footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
@@ -1388,9 +1461,6 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             "що читає всі гайдлайни одночасно.",
         )
         primary = "Спробувати конструктор плану"
-        secondary = "Подивитися приклад плану →"
-        tertiary = "Запитати AI-туморборд"
-        gallery_href = "/ukr/gallery.html"
         diseases_href = "/ukr/diseases.html"
         note = "Відкриті джерела: CIViC (CC0) для біомаркерної клінічної значущості, ClinicalTrials.gov для trial-aware опцій, PubMed/PMID/DOI та DailyMed/openFDA для літератури й контексту інструкцій до препаратів. LLM не обирає лікування: план збирається rules-first із YAML provenance, тому LLM-галюцинації виключені з плану. Фінальне рішення лишається за лікарем (CHARTER §11)."
         footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
@@ -1641,7 +1711,6 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
       {sub_html}
       <div class="cta-row">
         <a class="btn btn-primary" href="{try_href}">{primary}</a>
-        <a class="btn btn-secondary" href="{gallery_href}">{secondary}</a>
       </div>
     </div>
   </section>
@@ -3347,7 +3416,10 @@ def render_try(
           opt.value = i;
           var base = {'(ex.label_en || ex.label)' if target_lang == 'en' else 'ex.label'};
           var quality = {'(ex.quality_label_en || ex.quality_label)' if target_lang == 'en' else 'ex.quality_label'};
-          opt.textContent = quality ? (base + ' · ' + quality) : base;
+          var profileMode = ex.questionnaire_available === false
+            ? '{' · JSON profile' if target_lang == 'en' else ' · JSON-профіль'}'
+            : '';
+          opt.textContent = (quality ? (base + ' · ' + quality) : base) + profileMode;
           frag2.appendChild(opt);
         }});
         es.innerHTML = '';
@@ -3613,9 +3685,8 @@ let currentResultLang = PAGE_LANG;
 
 // Audience mode for the plan render — 'clinician' (default, full tumor-
 // board brief) or 'patient' (plain-UA simplified report). Per
-// PATIENT_MODE_SPEC §3, patient mode is treatment-plan only; the toggle
-// is disabled for diagnostic-mode results and for example-mode bundles
-// (pre-built /cases/<id>.html files don't have a patient-rendered twin).
+// Patient mode is treatment-plan only.  Public treatment examples have a
+// pre-rendered patient twin, while diagnostic briefs intentionally do not.
 let currentResultMode = 'clinician';
 
 // planSource tracks where the plan currently shown in the modal came from:
@@ -3630,6 +3701,7 @@ let currentResultMode = 'clinician';
 let planSource = null;
 let planDirty = false;
 let activeExampleCaseId = null;
+let activeExamplePatientView = false;
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 function setStatus(msg, kind = 'info', topMode = 'auto') {{
@@ -3772,20 +3844,18 @@ function setLockedTitle(el, locked) {{
 // Patient mode is render-only on top of an already-generated treatment
 // PlanResult. It can't toggle for:
 //   * diagnostic-mode bundles (no `_render_patient_mode` for DiagnosticPlan)
-//   * example-mode (pre-built /cases/*.html — no Pyodide engine running)
 //   * pre-generation (planSource === null)
 function refreshModeButtonAvailability() {{
   const locked = isInteractionLocked();
   const canPatient = (
-    pyodide
-    && planSource === 'generated'
-    && !planDirty
+    (pyodide && planSource === 'generated' && !planDirty)
+    || (planSource === 'example' && activeExamplePatientView)
   );
   modePatientBtn.disabled = locked || !canPatient;
   if (!canPatient) {{
     modePatientBtn.title = (
       planSource === 'example'
-        ? '{ "Patient view is available for plans you generate yourself — not for example bundles yet" if target_lang == "en" else "Пацієнтська версія доступна лише для планів, які ви згенерували — не для прикладів" }'
+        ? '{ "Patient view is not available for diagnostic examples" if target_lang == "en" else "Пацієнтська версія недоступна для діагностичних прикладів" }'
         : '{ "Generate a plan first to enable Patient view" if target_lang == "en" else "Згенеруйте план, щоб увімкнути пацієнтську версію" }'
     );
     if (currentResultMode === 'patient') {{
@@ -3835,6 +3905,19 @@ function downloadPdf() {{
 async function switchResultMode(newMode) {{
   if (newMode === currentResultMode) return;
   if (modePatientBtn.disabled && newMode === 'patient') return;
+  if (planSource === 'example') {{
+    if (!activeExampleCaseId || (newMode === 'patient' && !activeExamplePatientView)) return;
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {{
+      const frameReady = waitForFrameLoad();
+      const suffix = newMode === 'patient' ? '.patient.html' : '.html';
+      resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/')
+        + activeExampleCaseId + suffix;
+      currentResultMode = newMode;
+      highlightModeButtons();
+      await frameReady;
+    }});
+    return;
+  }}
   if (!pyodide || planSource !== 'generated') return;
   await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
     modeClinicianBtn.disabled = true;
@@ -3895,12 +3978,13 @@ function downloadHtml() {{
 async function switchResultLang(newLang) {{
   if (newLang === currentResultLang) return;
   if (planSource === 'example') {{
-    // Pre-built case file: just swap the iframe src to the matching
-    // language variant. EN at /cases/<id>.html, UA at /ukr/cases/<id>.html.
+    // Pre-built case file: swap the iframe to the matching language and
+    // audience variant.
     if (!activeExampleCaseId) return;
     await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {{
       const frameReady = waitForFrameLoad();
-      resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + '.html';
+      const suffix = currentResultMode === 'patient' ? '.patient.html' : '.html';
+      resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + suffix;
       currentResultLang = newLang;
       highlightLangButtons();
       await frameReady;
@@ -3954,21 +4038,20 @@ function waitForFrameLoad(timeoutMs = 12000) {{
   }});
 }}
 
-async function loadExamplePlan(caseId) {{
+async function loadExamplePlan(caseId, patientViewAvailable = true) {{
   // Show the pre-built case HTML for the just-loaded example so the user
   // sees a plan immediately — without spinning up Pyodide and without
   // pretending the engine just ran. Generate stays disabled until the
   // user edits something (which sets planDirty).
   if (!caseId) return;
   activeExampleCaseId = caseId;
+  activeExamplePatientView = patientViewAvailable;
   resultFrame.removeAttribute('srcdoc');
   const frameReady = waitForFrameLoad();
   resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/') + caseId + '.html';
   planSource = 'example';
   planDirty = false;
-  // Example bundles are always rendered as the clinician view (the
-  // pre-built /cases/*.html doesn't have a patient twin yet — see
-  // PATIENT_MODE_SPEC §3 + roadmap).
+  // Public treatment examples ship clinician + patient static twins.
   currentResultMode = 'clinician';
   highlightModeButtons();
   refreshModeButtonAvailability();
@@ -3981,6 +4064,7 @@ function clearPlanState() {{
   planSource = null;
   planDirty = false;
   activeExampleCaseId = null;
+  activeExamplePatientView = false;
   resultFrame.removeAttribute('src');
   resultFrame.removeAttribute('srcdoc');
   viewPlanBtn.disabled = true;
@@ -5023,6 +5107,7 @@ html
       planSource = 'generated';
       planDirty = false;
       activeExampleCaseId = null;
+      activeExamplePatientView = false;
       // Fresh generation always lands on clinician view; user toggles to
       // patient view via the toolbar (PATIENT_MODE_SPEC §3.5).
       currentResultMode = 'clinician';
@@ -5307,7 +5392,10 @@ async function loadAssets() {{
 function exampleDisplayLabel(ex) {{
   const base = {'(ex.label_en || ex.label)' if target_lang == 'en' else 'ex.label'};
   const quality = {'(ex.quality_label_en || ex.quality_label)' if target_lang == 'en' else 'ex.quality_label'};
-  return quality ? `${{base}} · ${{quality}}` : base;
+  const profileMode = ex.questionnaire_available === false
+    ? '{' · JSON profile' if target_lang == 'en' else ' · JSON-профіль'}'
+    : '';
+  return (quality ? `${{base}} · ${{quality}}` : base) + profileMode;
 }}
 
 function repopulateExamples(activeQuestIdx) {{
@@ -5474,7 +5562,7 @@ exampleSelect.addEventListener('change', async () => {{
       // are form-prefill examples only, so they should not iframe a missing
       // /cases/<id>.html page.
       if (ex.case_id && ex.has_case_page !== false) {{
-        await loadExamplePlan(ex.case_id);
+        await loadExamplePlan(ex.case_id, ex.patient_view_available !== false);
         setStatus('{'Example loaded ✓ Plan shown — edit any field to generate your own.' if target_lang == 'en' else 'Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.'}', 'ok');
       }} else {{
         clearPlanState();
@@ -5486,7 +5574,7 @@ exampleSelect.addEventListener('change', async () => {{
       // No questionnaire match: still show the prebuilt plan if a case file
       // exists for this example.
       if (ex.case_id && ex.has_case_page !== false) {{
-        await loadExamplePlan(ex.case_id);
+        await loadExamplePlan(ex.case_id, ex.patient_view_available !== false);
         setStatus('{"Example loaded as JSON (no questionnaire for this disease yet)" if target_lang == "en" else "Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)"}', 'ok');
       }} else {{
         clearPlanState();
@@ -5725,6 +5813,9 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         'font-family:Source Sans 3,sans-serif;font-size:13px;}'
         '.case-bar a{color:#86efac;text-decoration:none;margin-left:14px;}'
         '.case-bar a:hover{text-decoration:underline;}'
+        '.example-verification{background:#fffbeb;border:1px solid #f59e0b;color:#713f12;'
+        'padding:10px 14px;margin:14px auto 0;max-width:1150px;border-radius:6px;'
+        'font:600 14px/1.45 Source Sans 3,sans-serif;}'
         '@media print{.oo-topbar-host,.case-bar{display:none;}}'
         '@media (max-width:700px){'
         '.oo-topbar-host .top-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;'
@@ -5768,6 +5859,13 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
     )
 
     case_label = case.label_en if (target_lang == "en" and getattr(case, "label_en", None)) else case.label_ua
+    verification_note = (
+        "Synthetic educational example. Do not self-treat: a qualified treating physician must verify "
+        "the sources, patient data, contraindications, and final plan."
+        if target_lang == "en"
+        else "Синтетичний навчальний приклад. Не займайтеся самолікуванням: кваліфікований "
+        "лікар має перевірити джерела, дані пацієнта, протипоказання та фінальний план."
+    )
     sub_bar_html = (
         '<div class="case-bar no-print">'
         f'<div>OpenOnco · <strong>{case_label}</strong></div>'
@@ -5788,7 +5886,9 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
 
     out = rendered_html.replace("</head>", head_assets + topbar_style + "</head>", 1)
     out = out.replace('<div class="page">',
-                      topbar_html + sub_bar_html + '<div class="page">', 1)
+                      topbar_html + sub_bar_html
+                      + f'<div class="example-verification no-print">{verification_note}</div>'
+                      + '<div class="page">', 1)
     return out
 
 
@@ -5914,6 +6014,7 @@ def _render_capabilities_uk(stats) -> str:
     n_sources = by_type.get("sources", 0)
     n_drugs = by_type.get("drugs", 0)
     n_skills = stats.skills_planned_roles
+    n_public_examples = len(_public_example_entries())
     cov = _coverage_breakdown()
     n_heme = cov["heme_diseases"]
     n_solid = cov["solid_diseases"]
@@ -6252,6 +6353,21 @@ def _render_capabilities_uk(stats) -> str:
       </div>
 
       <div class="info-section">
+        <h2>Що є в базі знань</h2>
+        <p class="info-text">Це інвентар опублікованих записів, а не оцінка клінічної повноти. Для кожної нозології покриття й стан перевірки показано окремо в матриці нижче.</p>
+        <div class="num-grid num-grid--rich">
+          <div class="num-card"><div class="num-big">{n_diseases}</div><div class="num-lbl">Хвороби в KB</div><p class="num-text">Нозології з окремими структурованими записами.</p></div>
+          <div class="num-card"><div class="num-big">{n_skills}</div><div class="num-lbl">Лікарі-скіли</div><p class="num-text">Ролі MDT, які система враховує у маршрутизації.</p></div>
+          <div class="num-card"><div class="num-big">{n_regimens}</div><div class="num-lbl">Режими лікування</div><p class="num-text">Структуровані схеми, а не автоматичні призначення.</p></div>
+          <div class="num-card"><div class="num-big">{n_drugs}</div><div class="num-lbl">Препарати</div><p class="num-text">Записи препаратів з машинозчитуваним контекстом.</p></div>
+          <div class="num-card"><div class="num-big">{n_tests}</div><div class="num-lbl">Тести</div><p class="num-text">Діагностичні й молекулярні тести в KB.</p></div>
+          <div class="num-card"><div class="num-big">{n_workups}</div><div class="num-lbl">Workups</div><p class="num-text">Структуровані набори дообстеження.</p></div>
+          <div class="num-card"><div class="num-big">{n_redflags}</div><div class="num-lbl">Red flags</div><p class="num-text">Сигнали для повторної перевірки клініцистом.</p></div>
+          <div class="num-card"><div class="num-big">{n_sources}</div><div class="num-lbl">Джерела</div><p class="num-text">Цитовані записи джерел, пов'язані з твердженнями.</p></div>
+        </div>
+      </div>
+
+      <div class="info-section">
         <h2>Coverage matrix</h2>
         <p class="info-text">
           Сторінка <a href="/ukr/diseases.html"><code>/ukr/diseases.html</code></a> — per-disease таблиця:
@@ -6261,9 +6377,9 @@ def _render_capabilities_uk(stats) -> str:
           <a href="/ukr/diseases.html"><strong>→ Дивитись матрицю</strong></a>
         </p>
         <p class="info-text">
-          <a href="/ukr/gallery.html"><code>/ukr/gallery.html</code></a> — 586 кейсів
-          (159 hand-curated + 362 verified variant profiles + 65 auto-base). Кожен — повний Plan або
-          Diagnostic Brief з усіма citation. Disease-grouped drill-down.
+          <a href="/ukr/gallery.html"><code>/ukr/gallery.html</code></a> — {n_public_examples} публічні приклади.
+          Кожен містить повний Plan, Diagnostic Brief або молекулярний сценарій з посиланнями на джерела.
+          Приховані QA-профілі не змішуються з бібліотекою для користувача.
           <a href="/ukr/gallery.html"><strong>→ Дивитись приклади</strong></a>
         </p>
       </div>
@@ -6702,7 +6818,7 @@ def _render_capabilities_uk(stats) -> str:
           <li><strong>Multi-phase regimens (PR1-3)</strong> — <code>Regimen.phases</code>, <code>bridging_options</code>, phases-aware render, back-compat auto-wrap.</li>
           <li><strong>Citation guard L3</strong> — render-time перевірка кожної BMA-комірки.</li>
           <li><strong>Coverage matrix</strong> — <a href="/ukr/diseases.html">/ukr/diseases.html</a> per-disease drill-down.</li>
-          <li><strong>586 кейсів у gallery</strong> — Phase 2 chunked feat: ~60 нових hand-curated за 4 дні.</li>
+          <li><strong>{n_public_examples} публічні приклади у gallery</strong> — готові плани, діагностичні briefs і молекулярні сценарії для перегляду та перевірки.</li>
         </ul>
       </div>
     </section>
@@ -6765,6 +6881,7 @@ def _render_capabilities_en(stats) -> str:
     n_sources = by_type.get("sources", 0)
     n_drugs = by_type.get("drugs", 0)
     n_skills = stats.skills_planned_roles
+    n_public_examples = len(_public_example_entries())
     cov = _coverage_breakdown()
     n_heme = cov["heme_diseases"]
     n_solid = cov["solid_diseases"]
@@ -7103,6 +7220,21 @@ def _render_capabilities_en(stats) -> str:
       </div>
 
       <div class="info-section">
+        <h2>What is in the knowledge base</h2>
+        <p class="info-text">This is an inventory of published records, not a measure of clinical completeness. Disease-level coverage and verification status are shown separately in the matrix below.</p>
+        <div class="num-grid num-grid--rich">
+          <div class="num-card"><div class="num-big">{n_diseases}</div><div class="num-lbl">Diseases in KB</div><p class="num-text">Diseases with dedicated structured records.</p></div>
+          <div class="num-card"><div class="num-big">{n_skills}</div><div class="num-lbl">Clinician skills</div><p class="num-text">MDT roles represented in routing.</p></div>
+          <div class="num-card"><div class="num-big">{n_regimens}</div><div class="num-lbl">Treatment regimens</div><p class="num-text">Structured regimens, not automatic prescriptions.</p></div>
+          <div class="num-card"><div class="num-big">{n_drugs}</div><div class="num-lbl">Drugs</div><p class="num-text">Drug records with machine-readable context.</p></div>
+          <div class="num-card"><div class="num-big">{n_tests}</div><div class="num-lbl">Tests</div><p class="num-text">Diagnostic and molecular tests represented in the KB.</p></div>
+          <div class="num-card"><div class="num-big">{n_workups}</div><div class="num-lbl">Workups</div><p class="num-text">Structured work-up sets.</p></div>
+          <div class="num-card"><div class="num-big">{n_redflags}</div><div class="num-lbl">Red flags</div><p class="num-text">Signals that require a clinician's second look.</p></div>
+          <div class="num-card"><div class="num-big">{n_sources}</div><div class="num-lbl">Sources</div><p class="num-text">Cited source records linked to claims.</p></div>
+        </div>
+      </div>
+
+      <div class="info-section">
         <h2>Coverage matrix</h2>
         <p class="info-text">
           <a href="/diseases.html"><code>/diseases.html</code></a> — per-disease table:
@@ -7112,9 +7244,9 @@ def _render_capabilities_en(stats) -> str:
           <a href="/diseases.html"><strong>→ View matrix</strong></a>
         </p>
         <p class="info-text">
-          <a href="/gallery.html"><code>/gallery.html</code></a> — 586 cases
-          (159 hand-curated + 362 verified variant profiles + 65 auto-base). Each — a full Plan or
-          Diagnostic Brief with all citations. Disease-grouped drill-down.
+          <a href="/gallery.html"><code>/gallery.html</code></a> — {n_public_examples} public examples.
+          Each contains a full Plan, Diagnostic Brief, or molecular scenario with source links.
+          Internal QA profiles do not appear in the user-facing library.
           <a href="/gallery.html"><strong>→ View examples</strong></a>
         </p>
       </div>
@@ -7556,7 +7688,7 @@ def _render_capabilities_en(stats) -> str:
           <li><strong>Multi-phase regimens (PR1-3)</strong> — <code>Regimen.phases</code>, <code>bridging_options</code>, phases-aware render, back-compat auto-wrap.</li>
           <li><strong>Citation guard L3</strong> — render-time check on every BMA cell.</li>
           <li><strong>Coverage matrix</strong> — <a href="/diseases.html">/diseases.html</a> per-disease drill-down.</li>
-          <li><strong>586 cases in gallery</strong> — Phase 2 chunked feat: ~60 new hand-curated in 4 days.</li>
+          <li><strong>{n_public_examples} public examples in the gallery</strong> — ready plans, diagnostic briefs, and molecular scenarios for review and verification.</li>
         </ul>
       </div>
     </section>
@@ -8728,8 +8860,11 @@ def build_one_case(case: CaseEntry, output_dir: Path,
 
     if is_diagnostic_profile(patient):
         result = generate_diagnostic_brief(patient, kb_root=KB_ROOT)
+        if result.diagnostic_plan is None:
+            raise RuntimeError(f"Example {case.case_id} generated no diagnostic brief")
         mdt = orchestrate_mdt(patient, result, kb_root=KB_ROOT)
         html = render_diagnostic_brief_html(result, mdt=mdt, target_lang=target_lang)
+        patient_html = None
     else:
         result = generate_plan(
             patient,
@@ -8737,14 +8872,20 @@ def build_one_case(case: CaseEntry, output_dir: Path,
             experimental_search_fn=search_trials,
             experimental_cache_root=CTGOV_CACHE,
         )
+        if result.plan is None or not result.plan.tracks:
+            raise RuntimeError(f"Example {case.case_id} generated no treatment plan")
         mdt = orchestrate_mdt(patient, result, kb_root=KB_ROOT)
         html = render_plan_html(result, mdt=mdt, target_lang=target_lang)
+        patient_html = render_plan_html(result, mdt=mdt, target_lang=target_lang, mode="patient")
 
     wrapped = _wrap_case_html(html, case, target_lang=target_lang)
     sub = "ukr/cases" if target_lang == "uk" else "cases"
     out_path = output_dir / sub / f"{case.case_id}.html"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(wrapped, encoding="utf-8")
+    if patient_html is not None:
+        patient_path = out_path.with_name(f"{case.case_id}.patient.html")
+        patient_path.write_text(_wrap_case_html(patient_html, case, target_lang=target_lang), encoding="utf-8")
     return out_path
 
 

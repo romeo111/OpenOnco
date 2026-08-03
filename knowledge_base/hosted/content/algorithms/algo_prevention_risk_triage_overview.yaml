@@ -51,7 +51,10 @@ decision_tree:
     # to integrated-risk meta-routing.
     evaluate:
       all_of:
-        - condition: "Patient has ≥2 fired prevention RedFlags spanning ≥2 PreventionRiskCategory buckets (genetic / infectious / chronic_condition / occupational / iatrogenic / lifestyle / reproductive)"
+        - clinician_confirmation:
+            id: CC-ALGO-PREVENTION-RISK-TRIAGE-OVERVIEW-73B890583548
+            label: "Patient has ≥2 fired prevention RedFlags spanning ≥2 PreventionRiskCategory buckets (genetic / infectious / chronic_condition / occupational / iatrogenic / lifestyle / reproductive)"
+            legacy_condition: "Patient has ≥2 fired prevention RedFlags spanning ≥2 PreventionRiskCategory buckets (genetic / infectious / chronic_condition / occupational / iatrogenic / lifestyle / reproductive)"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Multi-bucket prevention RFs fired — delegate to ALGO-INTEGRATED-RISK-FROM-MULTIPLE-RFS meta-routing. Pathway D selected. Engine should invoke integrated-risk algorithm + produce consolidated multi-track prevention plan. Indication route placeholder; final routing determined by integrated-risk output."
@@ -62,7 +65,10 @@ decision_tree:
     # carrier status yet). Family-history + pedigree-suspicion RFs.
     evaluate:
       any_of:
-        - condition: "Family history of hereditary cancer syndrome fires (RF-LYNCH-FAMILY-HISTORY-SUSPICION / RF-BRCA-HBOC-FAMILY-HISTORY-SUSPICION / RF-FAP-FAMILY-HISTORY-SUSPICION / RF-LI-FRAUMENI-FAMILY-HISTORY-SUSPICION / RF-VHL-FAMILY-HISTORY-SUSPICION / RF-HEREDITARY-PEDIGREE-SUSPICION) AND no confirmed-carrier status"
+        - clinician_confirmation:
+            id: CC-ALGO-PREVENTION-RISK-TRIAGE-OVERVIEW-131715F4D6ED
+            label: "Family history of hereditary cancer syndrome fires (RF-LYNCH-FAMILY-HISTORY-SUSPICION / RF-BRCA-HBOC-FAMILY-HISTORY-SUSPICION / RF-FAP-FAMILY-HISTORY-SUSPICION / RF-LI-FRAUMENI-FAMILY-HISTORY-SUSPICION / RF-VHL-FAMILY-HISTORY-SUSPICION / RF-HEREDITARY-PEDIGREE-SUSPICION) AND no confirmed-carrier status"
+            legacy_condition: "Family history of hereditary cancer syndrome fires (RF-LYNCH-FAMILY-HISTORY-SUSPICION / RF-BRCA-HBOC-FAMILY-HISTORY-SUSPICION / RF-FAP-FAMILY-HISTORY-SUSPICION / RF-LI-FRAUMENI-FAMILY-HISTORY-SUSPICION / RF-VHL-FAMILY-HISTORY-SUSPICION / RF-HEREDITARY-PEDIGREE-SUSPICION) AND no confirmed-carrier status"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Pathway A — TESTING. Refer to syndrome-specific carrier-probability algorithm (Manchester / BRCAPRO / BOADICEA v6 for HBOC; PREMM5 / MMRPRO / Amsterdam II / Revised Bethesda for Lynch; classic FAP / AFAP criteria; Chompret / classic LFS criteria; etc.) → if threshold met → germline panel testing + genetic counseling. Algorithm routes to syndrome-suspicion Indication; engine should select the syndrome-specific Indication matching the firing RF."
@@ -75,8 +81,14 @@ decision_tree:
     # cirrhosis, etc.).
     evaluate:
       any_of:
-        - condition: "Confirmed hereditary cancer syndrome carrier fires (RF-LYNCH-CONFIRMED-CARRIER / RF-BRCA-CONFIRMED-CARRIER / RF-FAP-CONFIRMED-CARRIER / RF-LI-FRAUMENI-CONFIRMED-CARRIER / RF-VHL-CONFIRMED-CARRIER / etc.)"
-        - condition: "Confirmed chronic-condition surveillance eligibility fires (RF-BARRETTS-ESOPHAGUS / RF-CHRONIC-ATROPHIC-GASTRITIS / RF-CHRONIC-HBV / RF-CHRONIC-HCV / RF-CIRRHOSIS / RF-IBD-DURATION-RISK / etc.)"
+        - clinician_confirmation:
+            id: CC-ALGO-PREVENTION-RISK-TRIAGE-OVERVIEW-FEB1EDF72FD9
+            label: "Confirmed hereditary cancer syndrome carrier fires (RF-LYNCH-CONFIRMED-CARRIER / RF-BRCA-CONFIRMED-CARRIER / RF-FAP-CONFIRMED-CARRIER / RF-LI-FRAUMENI-CONFIRMED-CARRIER / RF-VHL-CONFIRMED-CARRIER / etc.)"
+            legacy_condition: "Confirmed hereditary cancer syndrome carrier fires (RF-LYNCH-CONFIRMED-CARRIER / RF-BRCA-CONFIRMED-CARRIER / RF-FAP-CONFIRMED-CARRIER / RF-LI-FRAUMENI-CONFIRMED-CARRIER / RF-VHL-CONFIRMED-CARRIER / etc.)"
+        - clinician_confirmation:
+            id: CC-ALGO-PREVENTION-RISK-TRIAGE-OVERVIEW-A6F66FF96583
+            label: "Confirmed chronic-condition surveillance eligibility fires (RF-BARRETTS-ESOPHAGUS / RF-CHRONIC-ATROPHIC-GASTRITIS / RF-CHRONIC-HBV / RF-CHRONIC-HCV / RF-CIRRHOSIS / RF-IBD-DURATION-RISK / etc.)"
+            legacy_condition: "Confirmed chronic-condition surveillance eligibility fires (RF-BARRETTS-ESOPHAGUS / RF-CHRONIC-ATROPHIC-GASTRITIS / RF-CHRONIC-HBV / RF-CHRONIC-HCV / RF-CIRRHOSIS / RF-IBD-DURATION-RISK / etc.)"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Pathway B — SURVEILLANCE. Route to carrier-specific or chronic-condition-specific enhanced-surveillance Indication. For confirmed carriers: trigger ALGO-CARRIER-CASCADE-LYNCH (or analogous syndrome-specific cascade) AND syndrome-specific surveillance schedule. For chronic-condition RFs: route to condition-specific surveillance Indication (e.g., IND-BARRETTS-ESOPHAGUS-PREVENTION-SURVEILLANCE, IND-CHRONIC-HCV-PREVENTION-DAA). Algorithm routes placeholder; engine selects actual Indication."
@@ -87,7 +99,10 @@ decision_tree:
     # condition surveillance — pure lifestyle modification routing.
     evaluate:
       any_of:
-        - condition: "Lifestyle-RF only fires (RF-TOBACCO / RF-OBESITY / RF-ALCOHOL / RF-PHYSICAL-INACTIVITY / RF-LOW-FIBER-DIET / RF-HRT-USE / RF-OCCUPATIONAL-EXPOSURE / RF-IATROGENIC-IMMUNOSUPPRESSION / RF-IATROGENIC-RADIATION-HISTORY / etc.) with no other prevention bucket firing"
+        - clinician_confirmation:
+            id: CC-ALGO-PREVENTION-RISK-TRIAGE-OVERVIEW-C910FEAF6317
+            label: "Lifestyle-RF only fires (RF-TOBACCO / RF-OBESITY / RF-ALCOHOL / RF-PHYSICAL-INACTIVITY / RF-LOW-FIBER-DIET / RF-HRT-USE / RF-OCCUPATIONAL-EXPOSURE / RF-IATROGENIC-IMMUNOSUPPRESSION / RF-IATROGENIC-RADIATION-HISTORY / etc.) with no other prevention bucket firing"
+            legacy_condition: "Lifestyle-RF only fires (RF-TOBACCO / RF-OBESITY / RF-ALCOHOL / RF-PHYSICAL-INACTIVITY / RF-LOW-FIBER-DIET / RF-HRT-USE / RF-OCCUPATIONAL-EXPOSURE / RF-IATROGENIC-IMMUNOSUPPRESSION / RF-IATROGENIC-RADIATION-HISTORY / etc.) with no other prevention bucket firing"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Pathway C — LIFESTYLE / OCCUPATIONAL / IATROGENIC. Route to modifiable-RF-specific Indication: tobacco cessation, weight management + physical activity counseling, alcohol reduction, sun-protection counseling (occupational UV / outdoor work), occupational-exposure removal + medical-surveillance referral, post-radiation late-effects surveillance, post-transplant immunosuppression-driven cancer screening. Lifestyle-only patients receive shorter / less intensive prevention plans than hereditary or chronic-condition patients. Indication route placeholder; engine selects RF-specific Indication. v0.2 dedicated lifestyle Indications pending authoring."

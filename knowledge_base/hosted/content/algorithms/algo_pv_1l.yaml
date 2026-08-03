@@ -44,7 +44,10 @@ decision_tree:
   - step: 3
     evaluate:
       all_of:
-        - condition: "Default low-risk PV"
+        - clinician_confirmation:
+            id: CC-ALGO-PV-1L-EF3FE40FB6DA
+            label: "Default low-risk PV"
+            legacy_condition: "Default low-risk PV"
     if_true:
       result: IND-PV-1L-PHLEBOTOMY-ASA
     if_false:

@@ -43,7 +43,10 @@ decision_tree:
       any_of:
         - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
         - red_flag: RF-NSCLC-EGFR-EX20INS-ACTIONABLE
-        - condition: "EGFR L858R or other classical sensitizing mutation"
+        - clinician_confirmation:
+            id: CC-ALGO-NSCLC-METASTATIC-1L-C9EBEE14998F
+            label: "EGFR L858R or other classical sensitizing mutation"
+            legacy_condition: "EGFR L858R or other classical sensitizing mutation"
     if_true:
       result: IND-NSCLC-EGFR-MUT-MET-1L
       notes: >
@@ -163,7 +166,10 @@ decision_tree:
   - step: 10
     evaluate:
       any_of:
-        - condition: "Nivo+ipi+2-cycle chemo (CheckMate-9LA) accessible and preferred per MDT"
+        - clinician_confirmation:
+            id: CC-ALGO-NSCLC-METASTATIC-1L-B2764F7646F7
+            label: "Nivo+ipi+2-cycle chemo (CheckMate-9LA) accessible and preferred per MDT"
+            legacy_condition: "Nivo+ipi+2-cycle chemo (CheckMate-9LA) accessible and preferred per MDT"
     if_true:
       result: IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO
       notes: >

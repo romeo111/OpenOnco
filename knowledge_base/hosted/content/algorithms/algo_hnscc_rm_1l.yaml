@@ -41,7 +41,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "PD-L1 CPS ≥20 AND no rapid progression / visceral crisis AND ECOG 0-2"
+        - clinician_confirmation:
+            id: CC-ALGO-HNSCC-RM-1L-783E50513CEF
+            label: "PD-L1 CPS ≥20 AND no rapid progression / visceral crisis AND ECOG 0-2"
+            legacy_condition: "PD-L1 CPS ≥20 AND no rapid progression / visceral crisis AND ECOG 0-2"
     if_true:
       result: IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH
     if_false:
@@ -56,7 +59,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "PD-L1 CPS ≥1"
+        - clinician_confirmation:
+            id: CC-ALGO-HNSCC-RM-1L-694A721096FF
+            label: "PD-L1 CPS ≥1"
+            legacy_condition: "PD-L1 CPS ≥1"
     if_true:
       result: IND-HNSCC-RM-1L-PEMBRO-CHEMO
     if_false:

@@ -27,8 +27,14 @@ decision_tree:
     evaluate:
       all_of:
         - red_flag: RF-PRIOR-BV-NAIVE
-        - condition: "ASCT-eligible AND completed BV-based salvage → BEAM-ASCT"
-        - condition: "≥1 high-risk feature: primary refractory OR extranodal involvement at relapse OR <12mo from CR1 to relapse OR ≥2 prior salvage lines"
+        - clinician_confirmation:
+            id: CC-ALGO-CHL-2L-D727B680B115
+            label: "ASCT-eligible AND completed BV-based salvage → BEAM-ASCT"
+            legacy_condition: "ASCT-eligible AND completed BV-based salvage → BEAM-ASCT"
+        - clinician_confirmation:
+            id: CC-ALGO-CHL-2L-DD0240B2A299
+            label: "≥1 high-risk feature: primary refractory OR extranodal involvement at relapse OR <12mo from CR1 to relapse OR ≥2 prior salvage lines"
+            legacy_condition: "≥1 high-risk feature: primary refractory OR extranodal involvement at relapse OR <12mo from CR1 to relapse OR ≥2 prior salvage lines"
     if_true:
       result: IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
     if_false:
@@ -39,9 +45,18 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "Post-ASCT relapse"
-        - condition: "Transplant-ineligible (age >70, comorbidity, ECOG ≥2)"
-        - condition: "Post-BV failure pre-ASCT, salvage required"
+        - clinician_confirmation:
+            id: CC-ALGO-CHL-2L-0D59647AC5DF
+            label: "Post-ASCT relapse"
+            legacy_condition: "Post-ASCT relapse"
+        - clinician_confirmation:
+            id: CC-ALGO-CHL-2L-4127CF64916D
+            label: "Transplant-ineligible (age >70, comorbidity, ECOG ≥2)"
+            legacy_condition: "Transplant-ineligible (age >70, comorbidity, ECOG ≥2)"
+        - clinician_confirmation:
+            id: CC-ALGO-CHL-2L-FCFF593E1B7B
+            label: "Post-BV failure pre-ASCT, salvage required"
+            legacy_condition: "Post-BV failure pre-ASCT, salvage required"
         - red_flag: RF-CHL-FRAILTY-AGE
         - red_flag: RF-CHL-TRANSFORMATION-PROGRESSION
     if_true:
@@ -55,8 +70,14 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "1st relapse, ASCT-eligible, no high-risk feature"
-        - condition: "ASCT not accessible / patient declined"
+        - clinician_confirmation:
+            id: CC-ALGO-CHL-2L-B02CF3681DB2
+            label: "1st relapse, ASCT-eligible, no high-risk feature"
+            legacy_condition: "1st relapse, ASCT-eligible, no high-risk feature"
+        - clinician_confirmation:
+            id: CC-ALGO-CHL-2L-84592B48453A
+            label: "ASCT not accessible / patient declined"
+            legacy_condition: "ASCT not accessible / patient declined"
         - red_flag: RF-CHL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-CHL-2L-PEMBROLIZUMAB

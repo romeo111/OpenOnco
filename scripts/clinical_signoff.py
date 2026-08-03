@@ -4,7 +4,7 @@ Workflow:
   1. Reviewer (Clinical Co-Lead) decides which entities they want to sign off on.
   2. They run `python scripts/clinical_signoff.py approve --reviewer REV-... --pattern ...`.
   3. Each matching entity gets a `ReviewerSignoff` appended to its
-     `reviewer_signoffs_v2` list, plus a row appended to the audit log
+     `reviewer_signoffs` list, plus a row appended to the audit log
      `knowledge_base/hosted/audit/signoffs.jsonl`.
   4. Two distinct reviewers (different REV-* IDs) covering the same
      entity satisfy CHARTER §6.1.
@@ -51,7 +51,7 @@ Exit codes:
   4  no entities matched
   5  scope mismatch under --strict
   6  duplicate sign-off (without --force)
-  7  entity has no reviewer_signoffs_v2 capability
+  7  entity has no reviewer_signoffs capability
   8  unknown entity (for withdraw / list)
 """
 
@@ -409,7 +409,7 @@ def cmd_approve(args: argparse.Namespace) -> int:
                 print(f"  WARN (scope mismatch, proceeding): {eid} — {reason}")
 
         # Duplicate check
-        existing = data.get("reviewer_signoffs_v2") or []
+        existing = data.get("reviewer_signoffs") or []
         if not isinstance(existing, list):
             existing = []
         if any(isinstance(s, dict) and s.get("reviewer_id") == args.reviewer for s in existing):
@@ -420,19 +420,14 @@ def cmd_approve(args: argparse.Namespace) -> int:
 
         signoff_entry = {
             "reviewer_id": args.reviewer,
-            "signoff_date": today,
+            "timestamp": ts,
             "rationale": args.rationale,
-            "entity_version_at_signoff": data.get("last_reviewed") or today,
+            "entity_version": data.get("last_reviewed") or today,
             "scope_match": in_scope,
         }
         existing.append(signoff_entry)
-        data["reviewer_signoffs_v2"] = existing
-        # Also bump the legacy counter so existing render / coverage tooling
-        # that reads `reviewer_signoffs: int` stays in sync.
+        data["reviewer_signoffs"] = existing
         if dir_name == "indications":
-            data["reviewer_signoffs"] = len([
-                s for s in existing if isinstance(s, dict)
-            ])
             data["last_reviewed"] = today
 
         if args.dry_run:
@@ -446,7 +441,7 @@ def cmd_approve(args: argparse.Namespace) -> int:
                 "entity_id": eid,
                 "entity_type": ENTITY_TYPE_LABEL.get(dir_name, dir_name),
                 "rationale": args.rationale,
-                "entity_version_at_signoff": signoff_entry["entity_version_at_signoff"],
+                "entity_version_at_signoff": signoff_entry["entity_version"],
                 "scope_match": in_scope,
             })
             print(f"  APPROVE: {eid}")
@@ -480,7 +475,7 @@ def cmd_withdraw(args: argparse.Namespace) -> int:
 
     data = _read_yaml(path)
     eid = data.get("id") or "?"
-    existing = data.get("reviewer_signoffs_v2") or []
+    existing = data.get("reviewer_signoffs") or []
     if not isinstance(existing, list):
         existing = []
 
@@ -492,9 +487,7 @@ def cmd_withdraw(args: argparse.Namespace) -> int:
         print(f"ERR: no sign-off by {args.reviewer} on {eid} to withdraw", file=sys.stderr)
         return 6
 
-    data["reviewer_signoffs_v2"] = new_list
-    if dir_name == "indications":
-        data["reviewer_signoffs"] = len([s for s in new_list if isinstance(s, dict)])
+    data["reviewer_signoffs"] = new_list
 
     if args.dry_run:
         print(f"DRY-RUN withdraw: {eid} (would remove {args.reviewer} sign-off)")
@@ -526,13 +519,13 @@ def cmd_list(args: argparse.Namespace) -> int:
             return 8
         path, dir_name = hit
         data = _read_yaml(path)
-        signoffs = data.get("reviewer_signoffs_v2") or []
+        signoffs = data.get("reviewer_signoffs") or []
         print(f"{data.get('id')} ({ENTITY_TYPE_LABEL.get(dir_name, dir_name)}) — "
               f"{len(signoffs)} sign-off(s)")
         for s in signoffs:
             if not isinstance(s, dict):
                 continue
-            print(f"  - {s.get('reviewer_id')} on {s.get('signoff_date')} "
+            print(f"  - {s.get('reviewer_id')} on {s.get('timestamp')} "
                   f"(scope_match={s.get('scope_match')}): {s.get('rationale', '')[:80]}")
         return 0
 
@@ -547,9 +540,9 @@ def cmd_list(args: argparse.Namespace) -> int:
                     data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
                 except yaml.YAMLError:
                     continue
-                for s in data.get("reviewer_signoffs_v2") or []:
+                for s in data.get("reviewer_signoffs") or []:
                     if isinstance(s, dict) and s.get("reviewer_id") == args.reviewer:
-                        rows.append((data.get("id"), d, s.get("signoff_date")))
+                        rows.append((data.get("id"), d, s.get("timestamp")))
         print(f"{args.reviewer} — {len(rows)} sign-off(s)")
         for eid, d, date in sorted(rows, key=lambda r: (r[2] or "", r[0] or "")):
             print(f"  - [{date}] {eid} ({ENTITY_TYPE_LABEL.get(d, d)})")

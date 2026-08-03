@@ -31,7 +31,10 @@ decision_tree:
     # High-confidence carrier threshold ≥5% (NCCN higher-yield testing).
     evaluate:
       any_of:
-        - condition: "PREMM5 carrier probability ≥5% (high-confidence testing indication)"
+        - clinician_confirmation:
+            id: CC-ALGO-PREMM5-LYNCH-54EF02ABF3C4
+            label: "PREMM5 carrier probability ≥5% (high-confidence testing indication)"
+            legacy_condition: "PREMM5 carrier probability ≥5% (high-confidence testing indication)"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "PREMM5 ≥5% — strong indication for germline MMR/EPCAM panel testing + genetic counseling. Diagnostic yield ~25-30% at this threshold."
@@ -41,7 +44,10 @@ decision_tree:
     # Standard testing threshold ≥2.5% (Kastrinos 2017 cutoff).
     evaluate:
       any_of:
-        - condition: "PREMM5 carrier probability ≥2.5%"
+        - clinician_confirmation:
+            id: CC-ALGO-PREMM5-LYNCH-C8AE94F386E8
+            label: "PREMM5 carrier probability ≥2.5%"
+            legacy_condition: "PREMM5 carrier probability ≥2.5%"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "PREMM5 ≥2.5% — testing-recommendation threshold met. Refer for genetic counseling + germline MMR/EPCAM panel. Diagnostic yield ~10-15% at this threshold."
@@ -52,7 +58,10 @@ decision_tree:
     # given the low cost and high impact.
     evaluate:
       all_of:
-        - condition: "PREMM5 carrier probability 1.0-2.5% (borderline)"
+        - clinician_confirmation:
+            id: CC-ALGO-PREMM5-LYNCH-4B636BD696F9
+            label: "PREMM5 carrier probability 1.0-2.5% (borderline)"
+            legacy_condition: "PREMM5 carrier probability 1.0-2.5% (borderline)"
     if_true:
       result: IND-LYNCH-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "PREMM5 1.0-2.5% — borderline. Genetic counseling for shared decision; many programs offer testing at this range given falling cost (~$250-500 for multi-gene panel) and high downstream impact. Default to enhanced empirical surveillance pathway if testing declined; route to GENETIC-COUNSELING if patient elects to test."

@@ -20,8 +20,14 @@ decision_tree:
 - step: 1
   evaluate:
     all_of:
-    - condition: "Best response to induction is CR or PR"
-    - condition: "Tolerating systemic therapy"
+    - clinician_confirmation:
+        id: CC-ALGO-MF-SEZARY-2L-F2B9D6A5C59C
+        label: "Best response to induction is CR or PR"
+        legacy_condition: "Best response to induction is CR or PR"
+    - clinician_confirmation:
+        id: CC-ALGO-MF-SEZARY-2L-F281AF60D4BA
+        label: "Tolerating systemic therapy"
+        legacy_condition: "Tolerating systemic therapy"
   if_true:
     result: IND-MF-MAINTENANCE-RETINOID
   if_false:
@@ -33,7 +39,10 @@ decision_tree:
   evaluate:
     all_of:
     - red_flag: RF-TCELL-CD30-POSITIVE
-    - condition: "Brentuximab vedotin not previously administered"
+    - clinician_confirmation:
+        id: CC-ALGO-MF-SEZARY-2L-49CD16C10924
+        label: "Brentuximab vedotin not previously administered"
+        legacy_condition: "Brentuximab vedotin not previously administered"
   if_true:
     result: IND-MF-ADVANCED-1L-BV
   if_false:
@@ -44,7 +53,10 @@ decision_tree:
   evaluate:
     all_of:
     - red_flag: RF-MF-SEZARY-LEUKEMIC
-    - condition: "Mogamulizumab not previously administered"
+    - clinician_confirmation:
+        id: CC-ALGO-MF-SEZARY-2L-79A1C10995CC
+        label: "Mogamulizumab not previously administered"
+        legacy_condition: "Mogamulizumab not previously administered"
   if_true:
     result: IND-MF-ADVANCED-1L-MOGA
   if_false:

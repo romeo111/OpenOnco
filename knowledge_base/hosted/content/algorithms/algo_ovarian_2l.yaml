@@ -68,7 +68,10 @@ decision_tree:
   - step: 4
     evaluate:
       any_of:
-        - condition: "Platinum-sensitive, HRD-negative or unknown — default re-induction chemo+bev"
+        - clinician_confirmation:
+            id: CC-ALGO-OVARIAN-2L-E46CD73B6A5D
+            label: "Platinum-sensitive, HRD-negative or unknown — default re-induction chemo+bev"
+            legacy_condition: "Platinum-sensitive, HRD-negative or unknown — default re-induction chemo+bev"
     if_true:
       result: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV
     if_false:

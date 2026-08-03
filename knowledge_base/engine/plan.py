@@ -24,6 +24,7 @@ Patient profile shape (dict; MVP — we will move to FHIR/mCODE later):
         "biomarkers": {"BIO-HCV-RNA": "positive"},
         "demographics": {"age": 58, "ecog": 1, ...},
         "findings": {"dominant_nodal_mass_cm": 4.0, ...},
+        "clinician_confirmations": {"CC-ALGO-...": True},
     }
 """
 
@@ -225,6 +226,9 @@ def _flatten_findings(patient: dict) -> dict:
         findings.setdefault(k, v)
     for k, v in (patient.get("demographics") or {}).items():
         findings.setdefault(k, v)
+    for k, v in (patient.get("clinician_confirmations") or {}).items():
+        if isinstance(k, str) and k:
+            findings.setdefault(f"clinician_confirmation.{k}", v)
     return findings
 
 
@@ -861,6 +865,12 @@ def generate_plan(
             result.warnings.append(f"schema error in {path.name}: {msg[:120]}")
         for path, msg in load.ref_errors:
             result.warnings.append(f"ref error in {path.name}: {msg}")
+        for path, msg in load.contract_errors:
+            result.warnings.append(f"contract error in {path.name}: {msg}")
+        # A partial KB can silently omit an otherwise relevant entity.  Do
+        # not produce a treatment decision from an invalid snapshot.
+        result.warnings.append("Knowledge base validation failed; treatment plan generation stopped.")
+        return result
 
     entities = load.entities_by_id
     disease_id = _find_disease_id(patient, entities)

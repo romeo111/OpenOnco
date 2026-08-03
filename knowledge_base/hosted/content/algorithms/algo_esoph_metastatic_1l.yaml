@@ -65,7 +65,10 @@ decision_tree:
   - step: 10
     evaluate:
       any_of:
-        - condition: "ESCC CPS >=1 chemo-sparing preference"
+        - clinician_confirmation:
+            id: CC-ALGO-ESOPH-METASTATIC-1L-BE21FD8C83F2
+            label: "ESCC CPS >=1 chemo-sparing preference"
+            legacy_condition: "ESCC CPS >=1 chemo-sparing preference"
         - all_of:
             - any_of:
                 - finding: "histology"
@@ -75,14 +78,29 @@ decision_tree:
                 - finding: "pdl1_cps"
                   threshold: 1
                   comparator: ">="
-                - condition: "PD-L1 CPS >= 1 (22C3 or 28-8 assay)"
-                - condition: "PD-L1 CPS ≥ 1 (22C3 or 28-8 assay)"
-                - condition: "ESCC CPS >=1"
+                - clinician_confirmation:
+                    id: CC-ALGO-ESOPH-METASTATIC-1L-F439F8673D33
+                    label: "PD-L1 CPS >= 1 (22C3 or 28-8 assay)"
+                    legacy_condition: "PD-L1 CPS >= 1 (22C3 or 28-8 assay)"
+                - clinician_confirmation:
+                    id: CC-ALGO-ESOPH-METASTATIC-1L-EA9053909F10
+                    label: "PD-L1 CPS ≥ 1 (22C3 or 28-8 assay)"
+                    legacy_condition: "PD-L1 CPS ≥ 1 (22C3 or 28-8 assay)"
+                - clinician_confirmation:
+                    id: CC-ALGO-ESOPH-METASTATIC-1L-A11C18DAD579
+                    label: "ESCC CPS >=1"
+                    legacy_condition: "ESCC CPS >=1"
             - any_of:
                 - finding: "chemo_spare_preference"
                   value: true
-                - condition: "Chemo-sparing preference"
-                - condition: "Chemo unsuitable but ICI eligible"
+                - clinician_confirmation:
+                    id: CC-ALGO-ESOPH-METASTATIC-1L-878322EC0CD7
+                    label: "Chemo-sparing preference"
+                    legacy_condition: "Chemo-sparing preference"
+                - clinician_confirmation:
+                    id: CC-ALGO-ESOPH-METASTATIC-1L-9912BB0D797F
+                    label: "Chemo unsuitable but ICI eligible"
+                    legacy_condition: "Chemo unsuitable but ICI eligible"
                 - condition: "chemo_sparing_preference"
     if_true:
       result: IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO
@@ -105,14 +123,23 @@ decision_tree:
         - any_of:
             - finding: "histology"
               value: "adeno"
-            - condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
+            - clinician_confirmation:
+                id: CC-ALGO-ESOPH-METASTATIC-1L-20A24E1D968E
+                label: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
+                legacy_condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
             - condition: "histology_adenocarcinoma"
         - any_of:
             - finding: "her2_status"
               value: "positive"
-            - condition: "HER2-positive adenocarcinoma"
+            - clinician_confirmation:
+                id: CC-ALGO-ESOPH-METASTATIC-1L-0566CC4C36ED
+                label: "HER2-positive adenocarcinoma"
+                legacy_condition: "HER2-positive adenocarcinoma"
             - condition: "HER2-positive"
-            - condition: "BIO-HER2-SOLID positive"
+            - clinician_confirmation:
+                id: CC-ALGO-ESOPH-METASTATIC-1L-0509EC099F3B
+                label: "BIO-HER2-SOLID positive"
+                legacy_condition: "BIO-HER2-SOLID positive"
             - condition: "her2_positive"
     if_true:
       result: IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO
@@ -132,7 +159,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Stage IV (metastatic) OR unresectable locally advanced esophageal carcinoma"
+        - clinician_confirmation:
+            id: CC-ALGO-ESOPH-METASTATIC-1L-A22838328328
+            label: "Stage IV (metastatic) OR unresectable locally advanced esophageal carcinoma"
+            legacy_condition: "Stage IV (metastatic) OR unresectable locally advanced esophageal carcinoma"
         - condition: "metastatic_or_unresectable"
     if_true:
       next_step: 2
@@ -146,7 +176,10 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "Squamous-cell carcinoma (ESCC) histology"
+        - clinician_confirmation:
+            id: CC-ALGO-ESOPH-METASTATIC-1L-55E85053C533
+            label: "Squamous-cell carcinoma (ESCC) histology"
+            legacy_condition: "Squamous-cell carcinoma (ESCC) histology"
         - condition: "histology_escc"
     if_true:
       next_step: 3
@@ -160,7 +193,10 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "PD-L1 CPS ≥ 1 (22C3 or 28-8 assay)"
+        - clinician_confirmation:
+            id: CC-ALGO-ESOPH-METASTATIC-1L-EA9053909F10
+            label: "PD-L1 CPS ≥ 1 (22C3 or 28-8 assay)"
+            legacy_condition: "PD-L1 CPS ≥ 1 (22C3 or 28-8 assay)"
     if_true:
       result: IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC
       notes: >
@@ -183,11 +219,20 @@ decision_tree:
     evaluate:
       all_of:
         - any_of:
-            - condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
+            - clinician_confirmation:
+                id: CC-ALGO-ESOPH-METASTATIC-1L-20A24E1D968E
+                label: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
+                legacy_condition: "Adenocarcinoma histology (EAC or GEJ Siewert I)"
             - condition: "histology_adenocarcinoma"
         - any_of:
-            - condition: "PD-L1 CPS >= 10"
-            - condition: "PD-L1 CPS ≥ 10"
+            - clinician_confirmation:
+                id: CC-ALGO-ESOPH-METASTATIC-1L-54DCF59F981A
+                label: "PD-L1 CPS >= 10"
+                legacy_condition: "PD-L1 CPS >= 10"
+            - clinician_confirmation:
+                id: CC-ALGO-ESOPH-METASTATIC-1L-9A6038A96F5C
+                label: "PD-L1 CPS ≥ 10"
+                legacy_condition: "PD-L1 CPS ≥ 10"
     if_true:
       result: IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO
       notes: >

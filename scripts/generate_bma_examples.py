@@ -200,9 +200,10 @@ def _render_case_entry(bma: dict, file: str, category: str, msg: str) -> str:
         f'        file="{file}",\n'
         f'        label_ua="{label_ua}",\n'
         f'        summary_ua="{summary_ua}",\n'
-        f'        badge="BMA", badge_class="bdg-stub", category="{category}",\n'
+        f'        badge="Molecular example", badge_class="bdg-plan", category="{category}",\n'
         f'        label_en="{label_en}",\n'
         f'        summary_en="{summary_en}",\n'
+        f'        quality_tier="molecular", scenario_type="molecular",\n'
         f'    ),'
     )
 
@@ -251,14 +252,21 @@ def main() -> int:
     print(f"Already-covered (disease, biomarker) pairs: {len(covered_pairs)}")
 
     # ── Build target list (deduplicate by (disease, biomarker)) ──
+    #
+    # Existing generated BMA profiles are still publishable molecular
+    # scenarios.  The old implementation only re-registered *new* pairs,
+    # which orphaned valid bma_*.json files whenever a curated patient case
+    # later covered the same disease/biomarker pair.
     seen: set[tuple[str, str]] = set()
     targets: list[dict] = []
     for b in bmas:
         key = (b.get("disease_id", ""), b.get("biomarker_id", ""))
-        if key in covered_pairs or key in seen:
+        if key in seen:
             continue
         seen.add(key)
-        targets.append(b)
+        file = f"bma_{b['id'].lower().replace('-', '_')}.json"
+        if (EXAMPLES_DIR / file).exists() or key not in covered_pairs:
+            targets.append(b)
     print(f"Target (disease, biomarker) pairs to generate: {len(targets)}")
 
     # ── Disease family lookup for category ──
@@ -278,7 +286,10 @@ def main() -> int:
         file = f"bma_{bma_id_lower.replace('-', '_')}.json"
         path = EXAMPLES_DIR / file
 
-        profile = _build_profile(b)
+        if path.exists():
+            profile = json.loads(path.read_text(encoding="utf-8"))
+        else:
+            profile = _build_profile(b)
         ok, msg = _verify(profile)
 
         if not ok:
@@ -286,10 +297,11 @@ def main() -> int:
             print(f"  FAIL {b['id']}: {msg}")
             continue
 
-        path.write_text(
-            json.dumps(profile, indent=2, ensure_ascii=False),
-            encoding="utf-8",
-        )
+        if not path.exists():
+            path.write_text(
+                json.dumps(profile, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
 
         category = _category_for(dis, family_map.get(dis, ""))
         case_entries.append(_render_case_entry(b, file, category, msg))

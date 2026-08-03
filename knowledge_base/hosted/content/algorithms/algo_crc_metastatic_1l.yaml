@@ -73,7 +73,10 @@ decision_tree:
     evaluate:
       all_of:
         - red_flag: RF-CRC-RAS-WT
-        - condition: "Left-sided primary (splenic flexure or distal)"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-METASTATIC-1L-F8C6085C2598
+            label: "Left-sided primary (splenic flexure or distal)"
+            legacy_condition: "Left-sided primary (splenic flexure or distal)"
     if_true:
       result: IND-CRC-METASTATIC-1L-RAS-WT-LEFT
     if_false:
@@ -87,7 +90,10 @@ decision_tree:
     evaluate:
       all_of:
         - red_flag: RF-CRC-BRAF-V600E-POOR-PROGNOSIS
-        - condition: "ECOG PS 0-1 AND age <75"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-METASTATIC-1L-FDD4A77D9B75
+            label: "ECOG PS 0-1 AND age <75"
+            legacy_condition: "ECOG PS 0-1 AND age <75"
     if_true:
       result: IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
       notes: "BRAF V600E + fit: FOLFOXIRI+bev preferred (TRIBE; ESMO 2024). Plan BEACON 2L after progression."
@@ -110,8 +116,14 @@ decision_tree:
   - step: 5
     evaluate:
       all_of:
-        - condition: "ECOG PS 0-1 AND age <75"
-        - condition: "High tumour burden OR liver-limited disease with conversion-to-surgery intent"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-METASTATIC-1L-FDD4A77D9B75
+            label: "ECOG PS 0-1 AND age <75"
+            legacy_condition: "ECOG PS 0-1 AND age <75"
+        - clinician_confirmation:
+            id: CC-ALGO-CRC-METASTATIC-1L-FFF0ECF4AFAD
+            label: "High tumour burden OR liver-limited disease with conversion-to-surgery intent"
+            legacy_condition: "High tumour burden OR liver-limited disease with conversion-to-surgery intent"
     if_true:
       result: IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
       notes: "Fit + high-burden/conversion intent: FOLFOXIRI+bev (TRIBE OS benefit; higher ORR/R0 rate). MDT resectability review before starting."

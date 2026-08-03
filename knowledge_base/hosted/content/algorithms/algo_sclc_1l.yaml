@@ -18,7 +18,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Limited-stage (one hemithorax + tolerable RT field)"
+        - clinician_confirmation:
+            id: CC-ALGO-SCLC-1L-A8FD7FAF0BE3
+            label: "Limited-stage (one hemithorax + tolerable RT field)"
+            legacy_condition: "Limited-stage (one hemithorax + tolerable RT field)"
     if_true:
       next_step: 2
     if_false:
@@ -28,9 +31,18 @@ decision_tree:
   - step: 2
     evaluate:
       all_of:
-        - condition: "Concurrent platinum-based chemoradiotherapy (cCRT) completed"
-        - condition: "No disease progression on or after cCRT"
-        - condition: "Start within 1-42 days of completing last RT fraction (ADRIATIC window)"
+        - clinician_confirmation:
+            id: CC-ALGO-SCLC-1L-18F29327C1BD
+            label: "Concurrent platinum-based chemoradiotherapy (cCRT) completed"
+            legacy_condition: "Concurrent platinum-based chemoradiotherapy (cCRT) completed"
+        - clinician_confirmation:
+            id: CC-ALGO-SCLC-1L-CBC5463BBFE5
+            label: "No disease progression on or after cCRT"
+            legacy_condition: "No disease progression on or after cCRT"
+        - clinician_confirmation:
+            id: CC-ALGO-SCLC-1L-7918CFB039D4
+            label: "Start within 1-42 days of completing last RT fraction (ADRIATIC window)"
+            legacy_condition: "Start within 1-42 days of completing last RT fraction (ADRIATIC window)"
     if_true:
       result: IND-SCLC-LS-CONSOLIDATION-DURVA
       notes: >

@@ -31,7 +31,10 @@ decision_tree:
     # High-risk lifetime threshold (≥30% per NICE; ≥20% per ACS for MRI)
     evaluate:
       any_of:
-        - condition: "Tyrer-Cuzick v8 lifetime breast cancer risk ≥30% (NICE high-risk threshold)"
+        - clinician_confirmation:
+            id: CC-ALGO-TYRER-CUZICK-V8-BREAST-EE65AA830CBA
+            label: "Tyrer-Cuzick v8 lifetime breast cancer risk ≥30% (NICE high-risk threshold)"
+            legacy_condition: "Tyrer-Cuzick v8 lifetime breast cancer risk ≥30% (NICE high-risk threshold)"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Tyrer-Cuzick lifetime ≥30% (NICE high-risk) — annual MRI screening from age 30, annual mammography from 40 (or earlier if BRCA suspected), discussion of chemoprevention (tamoxifen / aromatase inhibitor), referral for HBOC genetic counseling."
@@ -41,7 +44,10 @@ decision_tree:
     # ACS / NCCN moderate-high threshold ≥20% for MRI eligibility
     evaluate:
       any_of:
-        - condition: "Tyrer-Cuzick v8 lifetime breast cancer risk ≥20% (ACS/NCCN MRI-eligibility threshold)"
+        - clinician_confirmation:
+            id: CC-ALGO-TYRER-CUZICK-V8-BREAST-49D1A297DC75
+            label: "Tyrer-Cuzick v8 lifetime breast cancer risk ≥20% (ACS/NCCN MRI-eligibility threshold)"
+            legacy_condition: "Tyrer-Cuzick v8 lifetime breast cancer risk ≥20% (ACS/NCCN MRI-eligibility threshold)"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Tyrer-Cuzick lifetime ≥20% (ACS/NCCN moderate-high) — annual MRI + annual mammography, chemoprevention discussion. Genetic counseling referral if pedigree suggests HBOC features."
@@ -51,7 +57,10 @@ decision_tree:
     # Chemoprevention threshold — Gail 5y ≥1.66% or T-C 10y ≥3% (NCCN BRSK).
     evaluate:
       any_of:
-        - condition: "Tyrer-Cuzick v8 10-year breast cancer risk ≥3% (NCCN BRSK chemoprevention-discussion threshold)"
+        - clinician_confirmation:
+            id: CC-ALGO-TYRER-CUZICK-V8-BREAST-82F51B0AA4E6
+            label: "Tyrer-Cuzick v8 10-year breast cancer risk ≥3% (NCCN BRSK chemoprevention-discussion threshold)"
+            legacy_condition: "Tyrer-Cuzick v8 10-year breast cancer risk ≥3% (NCCN BRSK chemoprevention-discussion threshold)"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Tyrer-Cuzick 10y ≥3% — discussion of risk-reducing tamoxifen / raloxifene / aromatase inhibitor (population-risk chemoprevention indication is v0.2 follow-up; routed to enhanced surveillance pending IND-* authoring)."
@@ -62,7 +71,10 @@ decision_tree:
     # carrier probability ≥10% per Tyrer-Cuzick BRCA-prob output.
     evaluate:
       any_of:
-        - condition: "Tyrer-Cuzick v8 BRCA1/2 carrier probability ≥10%"
+        - clinician_confirmation:
+            id: CC-ALGO-TYRER-CUZICK-V8-BREAST-EFEB4877AB9D
+            label: "Tyrer-Cuzick v8 BRCA1/2 carrier probability ≥10%"
+            legacy_condition: "Tyrer-Cuzick v8 BRCA1/2 carrier probability ≥10%"
     if_true:
       result: IND-BRCA-HBOC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE
       notes: "Tyrer-Cuzick BRCA carrier probability ≥10% — refer for germline BRCA1/2 (or multi-gene HBOC panel) testing."

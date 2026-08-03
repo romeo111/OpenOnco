@@ -25,11 +25,26 @@ decision_tree:
   - step: 1
     evaluate:
       all_of:
-        - condition: "Soft tissue sarcoma confirmed by pathology (histology + IHC)"
-        - condition: "NOT GIST (KIT/PDGFRA — use imatinib algorithm)"
-        - condition: "NOT Ewing sarcoma (EWSR1 fusion — use VDC-IE algorithm)"
-        - condition: "NOT rhabdomyosarcoma (pediatric protocols)"
-        - condition: "NOT bone sarcoma / chondrosarcoma (separate disease entity)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-6BA94BAF598F
+            label: "Soft tissue sarcoma confirmed by pathology (histology + IHC)"
+            legacy_condition: "Soft tissue sarcoma confirmed by pathology (histology + IHC)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-1271A020D4B9
+            label: "NOT GIST (KIT/PDGFRA — use imatinib algorithm)"
+            legacy_condition: "NOT GIST (KIT/PDGFRA — use imatinib algorithm)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-D068649E65AC
+            label: "NOT Ewing sarcoma (EWSR1 fusion — use VDC-IE algorithm)"
+            legacy_condition: "NOT Ewing sarcoma (EWSR1 fusion — use VDC-IE algorithm)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-919B3146DB2F
+            label: "NOT rhabdomyosarcoma (pediatric protocols)"
+            legacy_condition: "NOT rhabdomyosarcoma (pediatric protocols)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-2668B56A1EC5
+            label: "NOT bone sarcoma / chondrosarcoma (separate disease entity)"
+            legacy_condition: "NOT bone sarcoma / chondrosarcoma (separate disease entity)"
     if_true:
       next_step: 2
       notes: "Adult STS confirmed — proceed to treatment intent + PS assessment."
@@ -50,8 +65,14 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
-        - condition: "ECOG PS 0-1"
-        - condition: "ECOG PS 2 (doxorubicin mono consideration only)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-7D8F3BCD92EE
+            label: "ECOG PS 0-1"
+            legacy_condition: "ECOG PS 0-1"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-CB3FB01A4297
+            label: "ECOG PS 2 (doxorubicin mono consideration only)"
+            legacy_condition: "ECOG PS 2 (doxorubicin mono consideration only)"
     if_true:
       next_step: 3
     if_false:
@@ -70,10 +91,22 @@ decision_tree:
   - step: 3
     evaluate:
       any_of:
-        - condition: "Neoadjuvant intent (tumor shrinkage goal for borderline resectable disease)"
-        - condition: "Rapidly progressive disease with visceral threat requiring fast response"
-        - condition: "Synovial sarcoma histology (ifosfamide-sensitive; AI preferred)"
-        - condition: "Young ECOG 0-1 patient requesting most aggressive curative-intent approach"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-B1C8BBB6DE7D
+            label: "Neoadjuvant intent (tumor shrinkage goal for borderline resectable disease)"
+            legacy_condition: "Neoadjuvant intent (tumor shrinkage goal for borderline resectable disease)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-C40054B33D73
+            label: "Rapidly progressive disease with visceral threat requiring fast response"
+            legacy_condition: "Rapidly progressive disease with visceral threat requiring fast response"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-71EAE6602A7C
+            label: "Synovial sarcoma histology (ifosfamide-sensitive; AI preferred)"
+            legacy_condition: "Synovial sarcoma histology (ifosfamide-sensitive; AI preferred)"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-00751AD8F118
+            label: "Young ECOG 0-1 patient requesting most aggressive curative-intent approach"
+            legacy_condition: "Young ECOG 0-1 patient requesting most aggressive curative-intent approach"
     if_true:
       next_step: 4
       notes: "Response rate priority: evaluate for AI combination (dox+ifosfamide)."
@@ -94,9 +127,18 @@ decision_tree:
   - step: 4
     evaluate:
       all_of:
-        - condition: "ECOG PS 0-1"
-        - condition: "CrCl ≥50 mL/min"
-        - condition: "No prior Grade ≥3 ifosfamide encephalopathy or hemorrhagic cystitis"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-7D8F3BCD92EE
+            label: "ECOG PS 0-1"
+            legacy_condition: "ECOG PS 0-1"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-66A760A19FED
+            label: "CrCl ≥50 mL/min"
+            legacy_condition: "CrCl ≥50 mL/min"
+        - clinician_confirmation:
+            id: CC-ALGO-STS-ADVANCED-1L-1FB139A23EA5
+            label: "No prior Grade ≥3 ifosfamide encephalopathy or hemorrhagic cystitis"
+            legacy_condition: "No prior Grade ≥3 ifosfamide encephalopathy or hemorrhagic cystitis"
     if_true:
       result: IND-STS-ADVANCED-1L-AI
       notes: >
