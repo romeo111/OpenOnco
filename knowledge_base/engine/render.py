@@ -3666,6 +3666,163 @@ def _regimen_schedule_ua(regimen_data: Optional[dict]) -> str:
     return ""
 
 
+def _medicine_form_ua(component: dict, drug: dict) -> str:
+    """Return a patient-readable medicine form and administration route.
+
+    The regimen component is authoritative because the same medicine may be
+    available in several formulations while a specific regimen uses only one
+    of them. Drug-level ``route`` / ``formulations`` are fallbacks for older
+    regimen records. Raw English formulation strings never reach visible
+    patient text.
+    """
+    component = component if isinstance(component, dict) else {}
+    drug = drug if isinstance(drug, dict) else {}
+    route_raw = str(component.get("route") or drug.get("route") or "").strip()
+    route_normalized = re.sub(r"[^A-Z]+", " ", route_raw.upper()).split()
+    route_tokens = set(route_normalized)
+    route_lower = route_raw.lower()
+    formulations = " ".join(str(item) for item in (drug.get("formulations") or []))
+    formulations_lower = formulations.lower()
+
+    forms: list[str] = []
+
+    def add(value: str) -> None:
+        if value not in forms:
+            forms.append(value)
+
+    is_oral = "PO" in route_tokens or "oral" in route_lower
+    if is_oral:
+        has_tablet = "tablet" in formulations_lower
+        has_capsule = "capsule" in formulations_lower
+        has_solution = any(
+            marker in formulations_lower
+            for marker in ("oral solution", "oral suspension", "syrup")
+        )
+        if has_tablet and has_capsule:
+            add("таблетки або капсули для прийому через рот")
+        elif has_tablet:
+            add("таблетки для прийому через рот")
+        elif has_capsule:
+            add("капсули для прийому через рот")
+        elif has_solution:
+            add("рідкі ліки для прийому через рот")
+        else:
+            add("ліки для прийому через рот")
+
+    if "IV" in route_tokens or "intravenous" in route_lower:
+        add("внутрішньовенна інфузія (крапельниця) у клініці")
+    if "SC" in route_tokens or "subcutaneous" in route_lower:
+        add("підшкірна ін’єкція")
+    if "IM" in route_tokens or "intramuscular" in route_lower:
+        add("внутрішньом’язова ін’єкція")
+    if "IT" in route_tokens or "intrathecal" in route_lower:
+        add("введення у спинномозковий канал у клініці")
+    if "transdermal" in route_lower or "patch" in formulations_lower:
+        add("лікувальний пластир на шкіру")
+    if "topical" in route_lower:
+        add("крем або гель для нанесення на шкіру")
+
+    # Older drug records sometimes provide formulations but no explicit
+    # route. Infer only the physical form — never dose or schedule.
+    if not forms:
+        if "tablet" in formulations_lower:
+            add("таблетки для прийому через рот")
+        elif "capsule" in formulations_lower:
+            add("капсули для прийому через рот")
+        elif "intravenous" in formulations_lower or re.search(
+            r"\biv\b", formulations_lower
+        ):
+            add("внутрішньовенна інфузія (крапельниця) у клініці")
+        elif "subcutaneous" in formulations_lower or re.search(
+            r"\bsc\b", formulations_lower
+        ):
+            add("підшкірна ін’єкція")
+        elif "injection" in formulations_lower:
+            add("ін’єкція; точний спосіб введення уточніть з лікарем")
+
+    if not forms:
+        return "форму та спосіб введення потрібно уточнити з лікарем"
+    return "; або ".join(forms)
+
+
+def _regimen_tolerability_ua(regimen_data: Optional[dict]) -> tuple[str, str, str]:
+    """Translate a regimen toxicity profile into a patient-facing load class.
+
+    Returns ``(label, explanation, badge_class)``. This is deliberately an
+    orientation label for the whole regimen, not an individual prediction of
+    adverse effects or a treatment-selection signal.
+    """
+    raw = ""
+    if isinstance(regimen_data, dict):
+        raw = str(regimen_data.get("toxicity_profile") or "").strip().lower()
+    normalized = raw.replace("_", "-")
+
+    if not normalized:
+        return (
+            "Ще не вказано",
+            "Для цієї схеми загальний рівень навантаження ще не описаний у даних.",
+            "patient-info",
+        )
+    if normalized == "none":
+        return (
+            "Підтримувальне або мінімальне навантаження",
+            "Схема зазвичай має мінімальне медикаментозне навантаження.",
+            "patient-good",
+        )
+    if normalized == "low":
+        return (
+            "Легше навантаження",
+            "Зазвичай це одна з легших за загальним навантаженням схем.",
+            "patient-good",
+        )
+    if normalized == "low-moderate":
+        return (
+            "Легке–помірне навантаження",
+            "Навантаження зазвичай вище за мінімальне, але нижче за інтенсивні схеми.",
+            "patient-info",
+        )
+    if normalized == "moderate":
+        return (
+            "Помірне навантаження",
+            "Схема може помітно впливати на самопочуття та потребує планового контролю.",
+            "patient-warn",
+        )
+    if normalized in {"moderate-high", "moderate-severe"}:
+        return (
+            "Помірне–високе навантаження",
+            "Схема ближча до інтенсивної та зазвичай потребує уважного контролю.",
+            "patient-warn",
+        )
+    high_profiles = {"high", "severe", "very-high"}
+    if normalized in high_profiles or normalized.startswith("high "):
+        return (
+            "Високе навантаження («важка» схема)",
+            "Це інтенсивна схема, для якої зазвичай потрібні частіший контроль і підтримка.",
+            "patient-emergency",
+        )
+    return (
+        "Індивідуально або залежно від схеми",
+        "Навантаження не вкладається у стандартну категорію — уточніть його з лікарем.",
+        "patient-info",
+    )
+
+
+def _render_regimen_tolerability(regimen_data: Optional[dict]) -> str:
+    label, explanation, badge_class = _regimen_tolerability_ua(regimen_data)
+    raw_profile = ""
+    if isinstance(regimen_data, dict):
+        raw_profile = str(regimen_data.get("toxicity_profile") or "")
+    return (
+        f'<div class="treatment-load" data-toxicity-profile="{_h(raw_profile)}">'
+        '<p class="treatment-load-heading"><strong>Клас очікуваної переносимості:</strong></p>'
+        f'<p class="patient-badge {_h(badge_class)}">{_h(label)}</p>'
+        f'<p class="treatment-load-note">{_h(explanation)} '
+        "Це орієнтовний клас усієї схеми, а не прогноз саме для вас: "
+        "переносимість залежить від стану здоров’я, доз і підтримувального лікування.</p>"
+        "</div>"
+    )
+
+
 def _render_track_drugs(
     plan_result: PlanResult,
     t,
@@ -3699,6 +3856,8 @@ def _render_track_drugs(
         if not lay:
             lay = "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
 
+        medicine_form = _medicine_form_ua(comp, drug)
+
         # NSZU badge — patient-friendly label, render only when we can
         # resolve coverage. Falls back silently when drug entity is
         # missing (don't fabricate a badge).
@@ -3724,6 +3883,8 @@ def _render_track_drugs(
             f'<div class="drug-explanation" data-source-id="{_h(drug_id)}">'
             f"<h3>{_h(label)}</h3>"
             f'<p class="lay-language">{_h(lay)}</p>'
+            f'<p class="medicine-form"><strong>Форма ліків:</strong> '
+            f'{_h(medicine_form)}.</p>'
             f"{badge_html}"
             "</div>"
         )
@@ -3775,6 +3936,7 @@ def _render_tracks_plain(plan_result: PlanResult) -> str:
             f'<p class="regimen-schedule">{schedule_str}</p>'
             if schedule_str else ""
         )
+        tolerability_block = _render_regimen_tolerability(regimen_data)
 
         cards.append(
             f'<article class="track-card track-card--{_h(modifier)}" '
@@ -3782,6 +3944,7 @@ def _render_tracks_plain(plan_result: PlanResult) -> str:
             f'<p class="track-label">{_h(title_ua)}</p>'
             f'{regimen_line}'
             f'{schedule_line}'
+            f'{tolerability_block}'
             f'{signoff_badge}'
             f'{drug_blocks}'
             "</article>"

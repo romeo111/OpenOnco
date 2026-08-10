@@ -45,6 +45,10 @@ from knowledge_base.engine._patient_vocabulary import (
     explain,
     total_term_count,
 )
+from knowledge_base.engine.render import (
+    _medicine_form_ua,
+    _regimen_tolerability_ua,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -239,6 +243,67 @@ def test_patient_html_uses_patient_mode_css(patient_html: str):
     assert ".patient-report" in patient_html, (
         "Patient-mode CSS selector .patient-report missing from <style>"
     )
+
+
+@pytest.mark.parametrize(
+    "component,drug,expected",
+    [
+        ({"route": "PO"}, {"formulations": ["Tablets 100 mg"]}, "таблетки"),
+        ({"route": "PO"}, {"formulations": ["Capsules 50 mg"]}, "капсули"),
+        ({"route": "IV"}, {}, "внутрішньовенна інфузія"),
+        ({"route": "SC"}, {}, "підшкірна ін’єкція"),
+        ({"route": "IM"}, {}, "внутрішньом’язова ін’єкція"),
+        ({"route": "IT"}, {}, "спинномозковий канал"),
+        ({}, {"formulations": ["IV powder 100 mg"]}, "внутрішньовенна інфузія"),
+        ({}, {}, "уточнити з лікарем"),
+    ],
+)
+def test_patient_medicine_form_is_plain_ukrainian(component, drug, expected):
+    rendered = _medicine_form_ua(component, drug)
+    assert expected in rendered
+    assert not re.search(r"\b(?:PO|IV|SC|IM|IT)\b", rendered)
+
+
+@pytest.mark.parametrize(
+    "profile,expected",
+    [
+        ("none", "Підтримувальне або мінімальне"),
+        ("low", "Легше"),
+        ("low_moderate", "Легке–помірне"),
+        ("moderate", "Помірне"),
+        ("moderate-high", "Помірне–високе"),
+        ("severe", "Високе"),
+        ("high (CRS + ICANS)", "Високе"),
+        ("variable", "Індивідуально"),
+        (None, "Ще не вказано"),
+    ],
+)
+def test_patient_tolerability_class_covers_kb_profiles(profile, expected):
+    label, explanation, badge_class = _regimen_tolerability_ua(
+        {"toxicity_profile": profile}
+    )
+    assert expected in label
+    assert explanation
+    assert badge_class.startswith("patient-")
+
+
+def test_patient_plan_shows_form_and_tolerability_for_every_drug_and_track(
+    patient_html: str,
+):
+    drug_count = patient_html.count('<div class="drug-explanation"')
+    form_count = patient_html.count('<p class="medicine-form">')
+    track_count = patient_html.count('<article class="track-card ')
+    tolerability_count = patient_html.count('<div class="treatment-load"')
+
+    assert drug_count > 0
+    assert form_count == drug_count
+    assert track_count > 0
+    assert tolerability_count == track_count
+
+    visible = _visible_text(patient_html)
+    assert "Форма ліків:" in visible
+    assert "Клас очікуваної переносимості:" in visible
+    assert "не прогноз саме для вас" in visible
 
 
 # ── Section D — Emergency RF rendering ───────────────────────────────

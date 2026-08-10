@@ -110,7 +110,7 @@ The patient bundle MUST contain the following anchor sections in this order:
 |---|---|---|
 | 1 | `<header>` | Title, diagnosis (Ukrainian name), date, plan version, cross-link to the clinician version |
 | 2 | `<section class="what-was-found">` | Molecular / laboratory findings in plain language |
-| 3 | `<section class="what-now">` | **Per-track**: recommended drugs, regimen, NSZU coverage, sign-off status |
+| 3 | `<section class="what-now">` | **Per-track**: recommended drugs, medicine form / route, regimen load class, NSZU coverage, sign-off status |
 | 4 | `<section class="why-this-plan">` | **NEW.** Per-track explanation: why this specific option is recommended for you |
 | 5 | `<section class="between-visits">` | **NEW.** What to watch for between visits; when to call the clinic, when to go to hospital |
 | 6 | `<section class="emergency-signals">` | Symptoms requiring immediate emergency contact |
@@ -210,6 +210,8 @@ bundle. Compression is acceptable; silent omission is not.
 |---|---|
 | Track count + track labels | A/B prefix in per-track sections (§3.2) |
 | Regimen schedule (cycle × cycles) | Plain Ukrainian description in `what-now` ("4 cycles of 21 days, each — IV infusion") |
+| Component route + Drug formulations | Per-drug plain-Ukrainian form in `what-now` (tablet, capsule, infusion / drip, subcutaneous or intramuscular injection); regimen route takes precedence over other available formulations |
+| Regimen toxicity profile | Per-track expected-load class: minimal / supportive, lighter, moderate, moderate-high, or high ("heavy" regimen), plus a warning that individual tolerability may differ |
 | Fired RedFlags | Each fired RF surfaces ≥1: emergency banner / rationale / between-visits |
 | CHARTER §6.1 sign-off badge per track | Patient sign-off panel (CSD-3 demo already has this) |
 | NSZU coverage per drug | NSZU patient label badge (already exists) |
