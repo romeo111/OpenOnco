@@ -98,9 +98,16 @@ def test_treatment_plan_renders_mdt_when_provided():
     p = _patient("patient_zero_indolent.json")
     plan = generate_plan(p, kb_root=KB_ROOT)
     mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
+    # render_plan_html defaults to target_lang="uk", so the MDT heading must be
+    # the Ukrainian one; asserting the English string here previously passed only
+    # because _UI_STRINGS leaked "MDT brief" into the "uk" slot.
     html = render_plan_html(plan, mdt=mdt)
-    assert "MDT brief" in html
+    assert "MDT: стислий огляд" in html
+    assert "MDT brief" not in html
     assert "hematologist" in html or "Гематолог" in html
+
+    html_en = render_plan_html(plan, mdt=mdt, target_lang="en")
+    assert "MDT brief" in html_en
 
 
 # ── Pre-treatment "Where to order" column ─────────────────────────────────
