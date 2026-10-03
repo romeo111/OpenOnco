@@ -243,3 +243,55 @@ def test_translation_failure_falls_back_to_original():
     assert "What NOT to do" in html
     do_not_section = html.split("What NOT to do", 1)[1].split("</section>", 1)[0]
     assert "Do not" in do_not_section or "Do NOT" in do_not_section
+
+
+# ── Issue #639: no English UI labels leaking onto Ukrainian plan pages ────
+
+
+def test_uk_ui_strings_have_no_english_leaks():
+    """`_UI_STRINGS` uk slots must carry Ukrainian text.
+
+    Regression test for issue #639: 27 keys previously carried English
+    text in the ``uk`` slot and were fixed with the translations from
+    PR #631. Ten keys intentionally keep ``uk == en`` — five
+    abbreviations (ESCAT/NCT/UA/ID/skill-ID), the em-dash-only
+    ``lab_avail_none``, and four genuine translation gaps left for a
+    follow-up (``pro_aggressive``, ``contra_aggressive``,
+    ``prevention_investigations``, ``matrix_cost_unknown``).
+    """
+    from knowledge_base.engine.render import _UI_STRINGS
+
+    intentional = {
+        "actionability_th_escat",  # ESCAT abbreviation
+        "exp_th_nct",  # NCT abbreviation
+        "exp_th_ua",  # UA abbreviation
+        "th_id",  # ID abbreviation
+        "th_skill_id",  # skill-ID abbreviation
+        "lab_avail_none",  # "—"
+        "pro_aggressive",  # untranslated gap (follow-up)
+        "contra_aggressive",  # untranslated gap (follow-up)
+        "prevention_investigations",  # untranslated gap (follow-up)
+        "matrix_cost_unknown",  # untranslated gap (follow-up)
+    }
+    leaked = sorted(
+        key
+        for key, entry in _UI_STRINGS.items()
+        if entry["uk"] == entry["en"] and key not in intentional
+    )
+    assert not leaked, f"English labels leaking into uk slots: {leaked}"
+
+
+def test_uk_render_uses_translated_section_labels():
+    """Spot-check: previously leaked labels render translated on uk pages."""
+    p = _patient("patient_zero_indolent.json")
+    plan = generate_plan(p, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
+    html = render_plan_html(plan, mdt=mdt, target_lang="uk")
+    for expected in (
+        "MDT: стислий огляд",  # was "MDT brief"
+        "Обстеження перед лікуванням",  # was "Pre-treatment investigations"
+        "Підписання",  # was "Sign-offs"
+        "Востаннє переглянуто",  # was "Last reviewed"
+        "RedFlags — ЗА / ПРОТИ агресивного лікування",  # was "Red flags — PRO / CONTRA aggressive"
+    ):
+        assert expected in html, f"expected translated label {expected!r} in uk render"
