@@ -99,7 +99,10 @@ def test_treatment_plan_renders_mdt_when_provided():
     plan = generate_plan(p, kb_root=KB_ROOT)
     mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
     html = render_plan_html(plan, mdt=mdt)
-    assert "MDT brief" in html
+    # Default render is Ukrainian: the MDT section header must use the
+    # translated label, not the leaked English "MDT brief".
+    assert "MDT: стислий огляд" in html
+    assert "MDT brief" not in html
     assert "hematologist" in html or "Гематолог" in html
 
 
