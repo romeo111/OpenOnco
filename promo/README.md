@@ -1,5 +1,7 @@
 # OpenOnco promotion kit
 
+**Current execution plan (2026-10-10):** [30-day plan, verified channel requirements and launch copy](execution-plan-2026-10.md). Older assets below contain historical numbers and broad privacy claims; recheck them against the live capabilities page and the chosen interface before reuse. The local plan builder and server-backed Tumor Board have different data flows. The MIT license and GitHub topics have already been added.
+
 Ready-to-use, **safety-reviewed** assets for promoting OpenOnco. Every asset was
 drafted against [`00-FACT-SHEET.md`](00-FACT-SHEET.md) (the source of truth) and
 passed an adversarial accuracy/safety review.
