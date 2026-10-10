@@ -104,6 +104,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <style>
+
 .kb-page { padding-top: 34px; }
 .kb-page h1 { font-family: var(--font-display); font-size: 38px; color: var(--green-900); margin-bottom: 10px; }
 .kb-page h2 { font-family: var(--font-display); color: var(--green-900); font-size: 24px; margin: 30px 0 12px; }
@@ -115,12 +116,20 @@
 .kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
 .kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
 .kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
-.kb-search-label { display: block; font-weight: 700; margin-bottom: 7px; }
-.kb-search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: stretch; }
-.kb-search { width: 100%; border: 1px solid var(--gray-200); border-radius: 7px; padding: 13px 14px; font-size: 16px; background: white; }
-.kb-search-btn { min-width: 118px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 7px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+.kb-search-panel { box-sizing: border-box; margin: 22px 0 26px; padding: 26px; background: linear-gradient(120deg, #edf6f0, #f8fbf9); border: 1px solid #b8d4c2; border-top: 4px solid var(--green-700); border-radius: 16px; box-shadow: 0 10px 30px rgba(16, 65, 42, .08); }
+.kb-search-panel * { box-sizing: border-box; }
+.kb-search-label { display: block; color: var(--green-900); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 6px; }
+.kb-search-hint { color: var(--gray-700); font-size: 15px; margin: 0 0 18px; }
+.kb-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+.kb-search-field { position: relative; min-width: 0; }
+.kb-search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 23px; height: 23px; fill: none; stroke: var(--green-700); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.kb-search { width: 100%; min-width: 0; min-height: 60px; border: 2px solid #8cb69d; border-radius: 10px; padding: 16px 16px 16px 52px; font: inherit; font-size: 18px; color: var(--gray-900); background: white; box-shadow: 0 3px 10px rgba(16, 65, 42, .05); }
+.kb-search::placeholder { color: var(--gray-500); opacity: 1; }
+.kb-search:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; border-color: var(--green-700); }
+.kb-search-btn { width: auto; min-width: 130px; min-height: 60px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 10px; padding: 0 24px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
 .kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
-.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 22px; }
+.kb-search-btn:focus-visible, .kb-filter-row button:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
 .kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
 .kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
 .kb-results { display: grid; gap: 8px; }
@@ -148,8 +157,11 @@
 .kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
 .kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
 @media (max-width: 700px) {
+  .kb-search-panel { padding: 20px 16px; margin-top: 16px; }
+  .kb-search-label { font-size: 21px; }
+  .kb-search { font-size: 16px; min-height: 56px; }
   .kb-search-row { grid-template-columns: 1fr; }
-  .kb-search-btn { min-height: 44px; }
+  .kb-search-btn { min-height: 48px; }
   .kb-result { grid-template-columns: 1fr; }
   .kb-result small { grid-column: auto; }
   .kb-pagination { flex-wrap: wrap; }
@@ -211,25 +223,31 @@
   <main class="kb-page">
   <section class="kb-hero">
     <h1>Onco Wiki</h1>
+    <div class="kb-search-panel" role="search" aria-label="Search Onco Wiki">
+      <label class="kb-search-label" for="kbSearch">Search Onco Wiki</label>
+      <p id="kbSearchHint" class="kb-search-hint">Find a disease, drug or biomarker by name, synonym or ID.</p>
+      <div class="kb-search-row">
+        <div class="kb-search-field">
+          <svg class="kb-search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>
+          <input id="kbSearch" class="kb-search" type="search" autocomplete="off" aria-describedby="kbSearchHint" placeholder="Try NSCLC, rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...">
+        </div>
+        <button id="kbSearchBtn" class="kb-search-btn" type="button">Search</button>
+      </div>
+      <div class="kb-filter-row">
+        <button type="button" data-kind-key="">All</button>
+      <button type="button" data-kind-key="diseases">Disease</button>
+      <button type="button" data-kind-key="drugs">Drugs</button>
+      <button type="button" data-kind-key="biomarkers">Biomarkers</button>
+      <button type="button" data-kind-key="redflags">Red flags</button>
+      <button type="button" data-kind-key="biomarker_actionability">Actionability</button>
+      </div>
+    </div>
     <p class="kb-lead">Search diseases, drugs, biomarkers, red flags, and biomarker actionability. Results are generated directly from the YAML knowledge base and the disease coverage matrix, with source IDs and reverse references exposed for audit.</p>
     <div class="kb-info-box" role="note">
       <strong>Source-grounded browser.</strong>
       This page is generated from checked-in YAML entities, not from free-text LLM answers. Open an entity to see source IDs, review status, file provenance, and where it is used.
     </div>
     <div class="kb-counts"><div class="kb-count"><span>103</span>Disease</div><div class="kb-count"><span>321</span>Drugs</div><div class="kb-count"><span>257</span>Biomarkers</div><div class="kb-count"><span>715</span>Red flags</div><div class="kb-count"><span>475</span>Actionability</div></div>
-    <label class="kb-search-label" for="kbSearch">Search Onco Wiki</label>
-    <div class="kb-search-row">
-      <input id="kbSearch" class="kb-search" type="search" autocomplete="off" placeholder="Try NSCLC, rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...">
-      <button id="kbSearchBtn" class="kb-search-btn" type="button">Search</button>
-    </div>
-    <div class="kb-filter-row">
-      <button type="button" data-kind-key="">All</button>
-      <button type="button" data-kind-key="diseases">Disease</button>
-      <button type="button" data-kind-key="drugs">Drugs</button>
-      <button type="button" data-kind-key="biomarkers">Biomarkers</button>
-      <button type="button" data-kind-key="redflags">Red flags</button>
-      <button type="button" data-kind-key="biomarker_actionability">Actionability</button>
-    </div>
   </section>
   <section>
     <div id="kbResults" class="kb-results"></div>

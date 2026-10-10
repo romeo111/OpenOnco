@@ -55,6 +55,7 @@ T = {
             "status, file provenance, and where it is used."
         ),
         "search_label": "Search Onco Wiki",
+        "search_hint": "Find a disease, drug or biomarker by name, synonym or ID.",
         "search_placeholder": "Try NSCLC, rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
         "search_button": "Search",
         "all": "All",
@@ -126,6 +127,7 @@ T = {
             "source ID, статус рев’ю, походження файлу та місця використання."
         ),
         "search_label": "Пошук в Onco Wiki",
+        "search_hint": "Знайдіть хворобу, препарат або біомаркер за назвою, синонімом чи ID.",
         "search_placeholder": "Спробуйте NSCLC, rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...",
         "search_button": "Шукати",
         "all": "Усе",
@@ -992,20 +994,26 @@ def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, loc
     body = f"""<main class="kb-page">
   <section class="kb-hero">
     <h1>{html.escape(t["page_title"])}</h1>
+    <div class="kb-search-panel" role="search" aria-label="{html.escape(t["search_label"])}">
+      <label class="kb-search-label" for="kbSearch">{html.escape(t["search_label"])}</label>
+      <p id="kbSearchHint" class="kb-search-hint">{html.escape(t["search_hint"])}</p>
+      <div class="kb-search-row">
+        <div class="kb-search-field">
+          <svg class="kb-search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>
+          <input id="kbSearch" class="kb-search" type="search" autocomplete="off" aria-describedby="kbSearchHint" placeholder="{html.escape(t["search_placeholder"])}">
+        </div>
+        <button id="kbSearchBtn" class="kb-search-btn" type="button">{html.escape(t["search_button"])}</button>
+      </div>
+      <div class="kb-filter-row">
+        {filter_buttons}
+      </div>
+    </div>
     <p class="kb-lead">{html.escape(t["lead"])}</p>
     <div class="kb-info-box" role="note">
       <strong>{html.escape(t["info_title"])}</strong>
       {html.escape(t["info_body"])}
     </div>
     <div class="kb-counts">{count_cards}</div>
-    <label class="kb-search-label" for="kbSearch">{html.escape(t["search_label"])}</label>
-    <div class="kb-search-row">
-      <input id="kbSearch" class="kb-search" type="search" autocomplete="off" placeholder="{html.escape(t["search_placeholder"])}">
-      <button id="kbSearchBtn" class="kb-search-btn" type="button">{html.escape(t["search_button"])}</button>
-    </div>
-    <div class="kb-filter-row">
-      {filter_buttons}
-    </div>
   </section>
   <section>
     <div id="kbResults" class="kb-results"></div>
@@ -1225,12 +1233,20 @@ KB_CSS = """
 .kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
 .kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
 .kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
-.kb-search-label { display: block; font-weight: 700; margin-bottom: 7px; }
-.kb-search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: stretch; }
-.kb-search { width: 100%; border: 1px solid var(--gray-200); border-radius: 7px; padding: 13px 14px; font-size: 16px; background: white; }
-.kb-search-btn { min-width: 118px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 7px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+.kb-search-panel { box-sizing: border-box; margin: 22px 0 26px; padding: 26px; background: linear-gradient(120deg, #edf6f0, #f8fbf9); border: 1px solid #b8d4c2; border-top: 4px solid var(--green-700); border-radius: 16px; box-shadow: 0 10px 30px rgba(16, 65, 42, .08); }
+.kb-search-panel * { box-sizing: border-box; }
+.kb-search-label { display: block; color: var(--green-900); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 6px; }
+.kb-search-hint { color: var(--gray-700); font-size: 15px; margin: 0 0 18px; }
+.kb-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+.kb-search-field { position: relative; min-width: 0; }
+.kb-search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 23px; height: 23px; fill: none; stroke: var(--green-700); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.kb-search { width: 100%; min-width: 0; min-height: 60px; border: 2px solid #8cb69d; border-radius: 10px; padding: 16px 16px 16px 52px; font: inherit; font-size: 18px; color: var(--gray-900); background: white; box-shadow: 0 3px 10px rgba(16, 65, 42, .05); }
+.kb-search::placeholder { color: var(--gray-500); opacity: 1; }
+.kb-search:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; border-color: var(--green-700); }
+.kb-search-btn { width: auto; min-width: 130px; min-height: 60px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 10px; padding: 0 24px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
 .kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
-.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 22px; }
+.kb-search-btn:focus-visible, .kb-filter-row button:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
 .kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
 .kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
 .kb-results { display: grid; gap: 8px; }
@@ -1258,8 +1274,11 @@ KB_CSS = """
 .kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
 .kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
 @media (max-width: 700px) {
+  .kb-search-panel { padding: 20px 16px; margin-top: 16px; }
+  .kb-search-label { font-size: 21px; }
+  .kb-search { font-size: 16px; min-height: 56px; }
   .kb-search-row { grid-template-columns: 1fr; }
-  .kb-search-btn { min-height: 44px; }
+  .kb-search-btn { min-height: 48px; }
   .kb-result { grid-template-columns: 1fr; }
   .kb-result small { grid-column: auto; }
   .kb-pagination { flex-wrap: wrap; }
