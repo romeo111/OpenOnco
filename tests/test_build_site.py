@@ -741,8 +741,8 @@ def test_lang_switch_present_on_every_top_level_page(site_dir: Path):
         en = (site_dir / page).read_text(encoding="utf-8")
         ua = (site_dir / "ukr" / page).read_text(encoding="utf-8")
         # Toggle markup
-        assert 'class="lang-switch"' in en
-        assert 'class="lang-switch"' in ua
+        assert 'class="language-menu lang-switch"' in en
+        assert 'class="language-menu lang-switch"' in ua
         # EN points to /ukr/<page>
         assert '/ukr/' in en, f"EN {page} missing pointer to /ukr/"
         # UA points back to root (EN)
@@ -842,8 +842,8 @@ def test_top_bar_localizes_visible_and_accessible_labels():
                  'aria-label="Language"'):
         assert text in en
         assert text not in uk
-    assert 'class="lang-other" href="/try.html"' in uk
-    assert 'class="lang-other" href="/ukr/try.html"' in en
+    assert 'href="/try.html" lang="en" hreflang="en"' in uk
+    assert 'href="/ukr/try.html" lang="uk" hreflang="uk"' in en
 
 
 def test_about_localizes_risk_count_and_footer():

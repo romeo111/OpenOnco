@@ -22,6 +22,7 @@ if str(REPO_ROOT) not in sys.path:
 from knowledge_base.validation.loader import HANDBOOK_REVIEW_STALE_DAYS, load_content  # noqa: E402
 
 from scripts.site_nav import render_top_bar, write_header_assets  # noqa: E402
+from scripts.handbook_localization import translate_content, translate_ui  # noqa: E402
 
 DEFAULT_KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "docs"
@@ -293,13 +294,15 @@ def _render_question(question: dict[str, Any], ordinal: int) -> str:
     """
 
 
-def _page_shell(title: str, body: str) -> str:
-    return f"""<!doctype html>
-<html lang="en">
+def _page_shell(title: str, body: str, locale: str = "en", page_path: str = "handbook.html") -> str:
+    handbook_name = "Посібник OpenOnco" if locale == "uk" else "OpenOnco Handbook"
+    translation_note = ("<p class='hb-disclaimer'>Український переклад навчальної чернетки. Клінічне рев’ю перекладу очікується. Назви джерел, ідентифікатори та технічні теги збережено з оригіналу.</p>" if locale == "uk" else "")
+    markup = f"""<!doctype html>
+<html lang="{locale}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{_esc(title)} - OpenOnco Handbook</title>
+  <title>{_esc(title)} - {handbook_name}</title>
   <link rel="stylesheet" href="/style.css?v=header-20261010">
   <style>
     .hb-wrap {{ max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; }}
@@ -377,17 +380,20 @@ def _page_shell(title: str, body: str) -> str:
   </style>
 </head>
 <body>
-  {render_top_bar(active="handbook", lang_switch_href="/ukr/")}
+  {render_top_bar(active="handbook", target_lang=locale, page_path=page_path)}
   <main class="hb-wrap">
-    {body}
+    {translation_note}{body}
   </main>
 </body>
 </html>
 """
+    return "\n".join(line.rstrip() for line in markup.splitlines()) + "\n"
 
 
-def render_handbook_index(load) -> str:
+def render_handbook_index(load, locale: str = "en") -> str:
     chapters = _chapter_cards(load)
+    if locale == "uk":
+        chapters = [translate_content(c) for c in chapters]
     records = [_chapter_index_record(load, chapter) for chapter in chapters]
 
     cards = []
@@ -520,11 +526,16 @@ def render_handbook_index(load) -> str:
       }})();
     </script>
     """
-    return _page_shell("OpenOnco Handbook", body)
+    if locale == "uk":
+        body = translate_ui(body)
+    return _page_shell("Посібник OpenOnco" if locale == "uk" else "OpenOnco Handbook", body, locale)
 
 
-def render_chapter(load, chapter: dict[str, Any]) -> str:
+def render_chapter(load, chapter: dict[str, Any], locale: str = "en") -> str:
     questions = _chapter_questions(load, chapter["id"])
+    if locale == "uk":
+        chapter = translate_content(chapter)
+        questions = [translate_content(q) for q in questions]
     at_a_glance = "".join(f"<li>{_esc(item)}</li>" for item in chapter.get("at_a_glance") or [])
     objectives = "".join(
         f"<li>{_esc(item)}</li>" for item in chapter.get("learning_objectives") or []
@@ -603,7 +614,7 @@ def render_chapter(load, chapter: dict[str, Any]) -> str:
         {status_badge_html}
         {stale_badge_html}
         {_render_badge(chapter.get('audience', 'hcp_learner'))}
-        {_render_badge(chapter.get('language', 'en'))}
+        {_render_badge(locale)}
       </div>
       <p class="hb-lead">Deterministic learning chapter over OpenOnco KB entities,
       synthetic cases, and source records.</p>
@@ -812,7 +823,9 @@ def render_chapter(load, chapter: dict[str, Any]) -> str:
       }})();
     </script>
     """
-    return _page_shell(chapter["title"], body)
+    if locale == "uk":
+        body = translate_ui(body).replace('href="/handbook.html"', 'href="/ukr/handbook.html"').replace('href="/specs.html"', 'href="/ukr/specs.html"')
+    return _page_shell(chapter["title"], body, locale, f"handbook/{_slug(chapter['id'])}.html")
 
 
 def build_handbook(kb_root: Path = DEFAULT_KB_ROOT, output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict:
@@ -846,6 +859,15 @@ def build_handbook(kb_root: Path = DEFAULT_KB_ROOT, output_dir: Path = DEFAULT_O
         json.dumps(payload, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
+    uk_dir = output_dir / "ukr"
+    (uk_dir / "handbook").mkdir(parents=True, exist_ok=True)
+    for chapter in chapters:
+        (uk_dir / "handbook" / f"{_slug(chapter['id'])}.html").write_text(render_chapter(load, chapter, locale="uk"), encoding="utf-8")
+    (uk_dir / "handbook.html").write_text(render_handbook_index(load, locale="uk"), encoding="utf-8")
+    uk_records = [_chapter_index_record(load, translate_content(chapter)) for chapter in chapters]
+    for record in uk_records:
+        record["url"] = "/ukr" + record["url"]
+    (uk_dir / "handbook_index.json").write_text(json.dumps({**payload, "language": "uk", "translation_review_status": "pending", "chapters": uk_records}, indent=2, ensure_ascii=False), encoding="utf-8")
     return payload
 
 

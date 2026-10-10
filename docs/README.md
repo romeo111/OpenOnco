@@ -6,6 +6,7 @@
 | --- | --- |
 | Local development, builds and deployment | [DEVELOPMENT.md](DEVELOPMENT.md) |
 | Search discovery and ownership verification | [SEARCH_INDEXING.md](SEARCH_INDEXING.md) |
+| Website languages, translation scope and maintenance | [LOCALIZATION.md](LOCALIZATION.md) |
 | Contributions and clinical-review boundaries | [CONTRIBUTING.md](../CONTRIBUTING.md) |
 | Security reports | [SECURITY.md](../SECURITY.md) |
 | Governance and schemas | [Specification index](../specs/README.md) and [Charter](../specs/CHARTER.md) |

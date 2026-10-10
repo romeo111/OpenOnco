@@ -1,6 +1,7 @@
 """Shared navigation for public pages and the educational handbook."""
 
 from pathlib import Path
+from scripts.site_locales import COPY, LOCALES, PUBLIC_PAGES, locale_href, split_locale
 
 _NAV_LABELS = {
     "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "План лікування",
@@ -10,55 +11,40 @@ _NAV_LABELS = {
            "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki",
            "prevent": "Prevention", "news": "News"},
 }
+_NAV_LABELS.update(COPY)
 
 
 def render_top_bar(active: str = "", target_lang: str = "en",
-                    lang_switch_href: str = "/ukr/") -> str:
-    """Render the bilingual header with a primary action and native mobile menu."""
+                    lang_switch_href: str = "/ukr/", page_path: str | None = None) -> str:
+    """Render an accessible six-language header; unavailable twins lead home."""
     def cls(name: str) -> str:
         return ' class="active" aria-current="page"' if active == name else ""
 
     labels = _NAV_LABELS.get(target_lang, _NAV_LABELS["en"])
-    home_path = "/ukr/" if target_lang == "uk" else "/"
-    try_path = "/ukr/try.html" if target_lang == "uk" else "/try.html"
-    ask_path = "/ukr/ask.html" if target_lang == "uk" else "/ask.html"
-    about_path = "/ukr/about.html" if target_lang == "uk" else "/about.html"
+    home_path = locale_href("index.html", target_lang)
+    try_path = locale_href("try.html", target_lang)
+    ask_path = locale_href("ask.html", target_lang)
+    about_path = locale_href("about.html", target_lang)
 
     # The Ukrainian project page now folds in the former Capabilities and
     # Limitations material. GitHub, examples and specs stay grouped under
     # About to keep the main nav focused.
     # News is bilingual from day one, so it appears on both navs (unlike
     # Handbook, which is EN-only MVP).
-    extra_links = ""
-    if target_lang == "uk":
-        extra_links = (
-            f'<a href="/ukr/news.html"{cls("news")}>{labels["news"]}</a>'
-        )
-    else:  # target_lang == "en"
-        # Handbook is EN-only MVP — only surfaced on EN nav. When UA chapters
-        # land, mirror this into the UA branch and add the page kind to
-        # _lang_switch_href.
-        extra_links = (
-            f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>'
-            f'<a href="/handbook.html"{cls("handbook")}>Handbook</a>'
-            f'<a href="/news.html"{cls("news")}>{labels["news"]}</a>'
-        )
+    handbook_label = "Посібник" if target_lang == "uk" else labels.get("handbook", "Handbook")
+    extra_links = (
+        (f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>' if target_lang == "en" else "")
+        + f'<a href="{locale_href("handbook.html", target_lang)}"{cls("handbook")}>{handbook_label}</a>'
+        + f'<a href="{locale_href("news.html", target_lang)}"{cls("news")}>{labels["news"]}</a>'
+    )
 
-    # Stable visual order is always [UA · EN] regardless of which language
-    # is current — clicking the toggle must NOT swap pill positions, only
-    # which one is highlighted (CSS .lang-current vs .lang-other).
     is_uk = target_lang == "uk"
-    ua_cls = "lang-current" if is_uk else "lang-other"
-    en_cls = "lang-other" if is_uk else "lang-current"
-    # Tags: <span> for the current pill (no link), <a> for the other.
-    ua_tag, ua_attr = ("span", "") if is_uk else ("a", f' href="{lang_switch_href}"')
-    en_tag, en_attr = ("a", f' href="{lang_switch_href}"') if is_uk else ("span", "")
 
-    kb_href = "/ukr/kb.html" if target_lang == "uk" else "/kb.html"
+    kb_href = locale_href("kb.html", target_lang)
     kb_current = ' aria-current="page"' if active in {"kb", "diseases"} else ""
     ask_current = ' aria-current="page"' if active == "ask" else ""
     try_current = ' aria-current="page"' if active == "try" else ""
-    prevent_href = "/ukr/prevent.html" if target_lang == "uk" else "/prevent.html"
+    prevent_href = locale_href("prevent.html", target_lang)
     prevent_current = ' aria-current="page"' if active == "prevent" else ""
 
     reading_links = f"""
@@ -85,9 +71,30 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     brand_caption = "ВІДКРИТА ОНКОЛОГІЯ" if is_uk else "OPEN ONCOLOGY"
     open_label = "Відкритий код" if is_uk else "Open source"
     language_label = "Мова" if is_uk else "Language"
+    if target_lang in COPY:
+        menu_label, tools_label, brand_caption, open_label, language_label = (
+            labels[k] for k in ("menu", "tools", "brand", "open", "language")
+        )
+    # Existing renderers supply a twin URL. It also identifies the current
+    # page without fragile inference from its active navigation category.
+    _, page = split_locale(page_path or lang_switch_href)
+    if page == "capabilities.html":
+        page = "about.html"
+    language_items = []
+    for code, (_, native_name, abbreviation) in LOCALES.items():
+        available = page in PUBLIC_PAGES or code in {"en", "uk"} and (
+            page.startswith("kb/") or page.startswith("cases/") or page.startswith("handbook/") or page.startswith("news/")
+        )
+        href = locale_href(page if available else "index.html", code)
+        current = ' aria-current="true"' if code == target_lang else ""
+        language_items.append(f'<a href="{href}" lang="{code}" hreflang="{code}"{current}>{native_name} <small>{abbreviation}</small></a>')
+    language_menu = f'''<details class="language-menu lang-switch">
+      <summary aria-label="{language_label}">{LOCALES[target_lang][2]} <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="{language_label}">{"".join(language_items)}</nav>
+    </details>'''
 
     return f"""<header class="top-bar site-header">
-  <link rel="stylesheet" href="/header.css?v=design-20261010">
+  <link rel="stylesheet" href="/header.css?v=languages-20261010">
   <div class="header-shell">
   <div class="header-main">
     <div class="brand-line">
@@ -98,10 +105,7 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     </div>
     <nav class="top-nav">{reading_links}</nav>
     <div class="top-right">
-    <div class="lang-switch" role="group" aria-label="{language_label}">
-      <{ua_tag} class="{ua_cls}"{ua_attr}><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</{ua_tag}>
-      <{en_tag} class="{en_cls}"{en_attr}><span class="lang-flag flag-en" aria-hidden="true"></span>EN</{en_tag}>
-    </div>
+    {language_menu}
     <a href="{try_path}" class="btn-cta-top btn-cta-try"{try_current}><span>{labels['try_cta']}</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
     <details class="mobile-menu">
       <summary aria-label="{menu_label}"><span class="menu-lines" aria-hidden="true"></span></summary>

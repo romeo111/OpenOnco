@@ -13,12 +13,14 @@
       var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
       if(!a)return;
       var href=a.getAttribute('href')||'';
-      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
     },true);
     var ua=navigator.userAgent||'';
     // Bots: leave both language trees crawlable — no auto-redirect.
     if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
     var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
     if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
     var pageLang=UARE.test(path)?'uk':'en';
     // Track first real interaction so a slow async lookup never discards typed
@@ -33,7 +35,9 @@
     }
     function go(lang){
       if(lang===pageLang)return;
-      var target=mirror();
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
       var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
       try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
       location.replace(target);
@@ -41,6 +45,7 @@
     function want(cc){return cc==='UA'?'uk':'en';}
     // 1) explicit choice wins
     var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
     if(pref==='uk'||pref==='en'){go(pref);return;}
     // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
     var cc=null;
@@ -83,8 +88,12 @@
 <meta name="ai-summary" content="OpenOnco — відкрита онкологічна база знань. Пошук Onco Wiki, синтетичні приклади й плани з джерелами для перевірки лікарем.">
 <meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
 <link rel="canonical" href="https://openonco.info/ukr/">
-<link rel="alternate" hreflang="en" href="https://openonco.info/">
 <link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/">
+<link rel="alternate" hreflang="en" href="https://openonco.info/">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/">
 <link rel="alternate" hreflang="x-default" href="https://openonco.info/">
 <meta property="og:site_name" content="OpenOnco">
 <meta property="og:type" content="website">
@@ -96,7 +105,7 @@
 <meta name="twitter:title" content="OpenOnco — безкоштовні варіанти лікування раку з джерелами">
 <meta name="twitter:description" content="OpenOnco — відкрита онкологічна база знань. Пошук Onco Wiki, синтетичні приклади й плани з джерелами для перевірки лікарем.">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco — безкоштовні варіанти лікування раку з джерелами","description":"OpenOnco — відкрита онкологічна база знань. Пошук Onco Wiki, синтетичні приклади й плани з джерелами для перевірки лікарем.","url":"https://openonco.info/ukr/","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/"}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","@id":"https://openonco.info/#website","name":"OpenOnco","url":"https://openonco.info/","inLanguage":["en","uk"],"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","@id":"https://openonco.info/#website","name":"OpenOnco","url":"https://openonco.info/","inLanguage":["uk","en","es","pt","de","fr"],"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]}}</script>
 <!-- openonco-seo:end -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,7 +119,7 @@
 </head>
 <body class="home-page">
 <header class="top-bar site-header">
-  <link rel="stylesheet" href="/header.css?v=design-20261010">
+  <link rel="stylesheet" href="/header.css?v=languages-20261010">
   <div class="header-shell">
   <div class="header-main">
     <div class="brand-line">
@@ -121,21 +130,21 @@
     </div>
     <nav class="top-nav">
     <a href="/ukr/" class="active" aria-current="page">Головна</a>
-    <a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/handbook.html">Посібник</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
     </nav>
     <div class="top-right">
-    <div class="lang-switch" role="group" aria-label="Мова">
-      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
-      <a class="lang-other" href="/"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
-    </div>
+    <details class="language-menu lang-switch">
+      <summary aria-label="Мова">UA <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Мова"><a href="/ukr/" lang="uk" hreflang="uk" aria-current="true">Українська <small>UA</small></a><a href="/" lang="en" hreflang="en">English <small>EN</small></a><a href="/es/" lang="es" hreflang="es">Español <small>ES</small></a><a href="/pt/" lang="pt" hreflang="pt">Português <small>PT</small></a><a href="/de/" lang="de" hreflang="de">Deutsch <small>DE</small></a><a href="/fr/" lang="fr" hreflang="fr">Français <small>FR</small></a></nav>
+    </details>
     <a href="/ukr/try.html" class="btn-cta-top btn-cta-try"><span>План лікування</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
     <details class="mobile-menu">
       <summary aria-label="Меню"><span class="menu-lines" aria-hidden="true"></span></summary>
       <div class="mobile-menu-panel">
         <nav aria-label="Меню">
     <a href="/ukr/" class="active" aria-current="page">Головна</a>
-    <a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/handbook.html">Посібник</a><a href="/ukr/news.html">Новини</a>
     <a href="/ukr/about.html">Про проєкт</a>
     </nav>
         <div class="mobile-tools">
@@ -189,7 +198,7 @@
       </div>
       <div class="promo-stat">
         <div class="promo-stat-num">671</div>
-        <div class="promo-stat-lbl">Red flag</div>
+        <div class="promo-stat-lbl">Тривожні ознаки</div>
       </div>
       <div class="promo-stat">
         <div class="promo-stat-num">542</div>
@@ -202,14 +211,14 @@
     </div>
   </section>
 
-  <section class="home-trust" aria-label="How OpenOnco stays safe">
-    <p class="home-trust-line">Rules-first, а не LLM — жоден препарат чи доза не вигадуються. Дані пацієнта лишаються у вашому браузері. Фінальне рішення завжди за кваліфікованим лікарем.</p>
-    <p class="home-note">Відкриті джерела: CIViC (CC0), ClinicalTrials.gov, PubMed, DailyMed/openFDA і гайдлайни NCCN/ESMO/EHA/BSH. LLM не обирає лікування — план збирається rules-first із YAML provenance (CHARTER §11).</p>
+  <section class="home-trust" aria-label="Безпека OpenOnco">
+    <p class="home-trust-line">Конструктор плану працює за явними правилами у вашому браузері. Туморборд надсилає введений текст на сервер для аналізу. Використовуйте синтетичні приклади; фінальне рішення завжди за лікарем.</p>
+    <p class="home-note">Відкриті джерела: CIViC (CC0), ClinicalTrials.gov, PubMed, DailyMed/openFDA і настанови NCCN/ESMO/EHA/BSH. План збирається за правилами із відстежуваним походженням записів YAML (CHARTER §11).</p>
     <p class="home-explore" aria-label="Дізнатися більше"><a href="/ukr/diseases.html">Переглянути 103 хвороб</a> · <a href="/ukr/kb.html">Онко-вікі</a> · <a href="/ukr/about.html">Про проєкт</a></p>
   </section>
 
   <footer class="page-foot">
-    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    Відкритий код · MIT · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
     <br>
     Інформаційний інструмент, не медичний пристрій (CHARTER §15 + §11).
   </footer>

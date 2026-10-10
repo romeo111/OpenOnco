@@ -136,7 +136,7 @@ def test_build_handbook_writes_index_and_chapter(tmp_path: Path):
 
     index = (tmp_path / "handbook.html").read_text(encoding="utf-8")
     assert (tmp_path / "header.css").exists()
-    assert 'href="/header.css?v=design-20261010"' in index
+    assert 'href="/header.css?v=languages-20261010"' in index
     dlbcl_chapter = (tmp_path / "handbook" / "hb-dlbcl-1l.html").read_text(
         encoding="utf-8"
     )

@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="pt"><head><meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pesquisar na Onco Wiki — OpenOnco</title><!-- openonco-seo:start -->
+<meta name="description" content="Os resultados e as fichas são apresentados em inglês. Pesquise também por nomes internacionais, símbolos de genes ou identificadores.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Os resultados e as fichas são apresentados em inglês. Pesquise também por nomes internacionais, símbolos de genes ou identificadores.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/pt/kb.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pesquisar na Onco Wiki — OpenOnco">
+<meta property="og:description" content="Os resultados e as fichas são apresentados em inglês. Pesquise também por nomes internacionais, símbolos de genes ou identificadores.">
+<meta property="og:url" content="https://openonco.info/pt/kb.html">
+<meta property="og:locale" content="pt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pesquisar na Onco Wiki — OpenOnco">
+<meta name="twitter:description" content="Os resultados e as fichas são apresentados em inglês. Pesquise também por nomes internacionais, símbolos de genes ou identificadores.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Pesquisar na Onco Wiki — OpenOnco","description":"Os resultados e as fichas são apresentados em inglês. Pesquise também por nomes internacionais, símbolos de genes ou identificadores.","url":"https://openonco.info/pt/kb.html","inLanguage":"pt","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/pt/kb.html"}}</script>
+<!-- openonco-seo:end -->
+<meta name="description" content="Os resultados e as fichas são apresentados em inglês. Pesquise também por nomes internacionais, símbolos de genes ou identificadores.">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript><link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/international.css?v=20261010"></head>
+<body class="home-page"><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=languages-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/pt/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGIA ABERTA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/pt/">Início</a>
+    <a href="/pt/handbook.html">Manual</a><a href="/pt/news.html">Notícias</a>
+    <a href="/pt/about.html">O projeto</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Idioma">PT <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Idioma"><a href="/ukr/kb.html" lang="uk" hreflang="uk">Українська <small>UA</small></a><a href="/kb.html" lang="en" hreflang="en">English <small>EN</small></a><a href="/es/kb.html" lang="es" hreflang="es">Español <small>ES</small></a><a href="/pt/kb.html" lang="pt" hreflang="pt" aria-current="true">Português <small>PT</small></a><a href="/de/kb.html" lang="de" hreflang="de">Deutsch <small>DE</small></a><a href="/fr/kb.html" lang="fr" hreflang="fr">Français <small>FR</small></a></nav>
+    </details>
+    <a href="/pt/try.html" class="btn-cta-top btn-cta-try"><span>Criar um plano</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menu"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menu">
+    <a href="/pt/">Início</a>
+    <a href="/pt/handbook.html">Manual</a><a href="/pt/news.html">Notícias</a>
+    <a href="/pt/about.html">O projeto</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/pt/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/pt/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Reunião multidisciplinar</span></a>
+      <a href="/pt/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevenção</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Ferramentas</span>
+    <div class="top-cta-group">
+      <a href="/pt/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/pt/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Reunião multidisciplinar</span></a>
+      <a href="/pt/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevenção</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Código aberto</span>
+  </div>
+  </div>
+</header>
+<main class="international-main"><section class="international-hero"><p class="home-kicker">Gratuito · código aberto · sem registo</p><h1>Pesquisar na Onco Wiki</h1><p class="international-lead">Os resultados e as fichas são apresentados em inglês. Pesquise também por nomes internacionais, símbolos de genes ou identificadores.</p></section>
+<section class="international-search" role="search" aria-label="Pesquisar na Onco Wiki">
+<label for="international-query">Pesquisar na Onco Wiki</label><p id="international-hint">Os resultados e as fichas são apresentados em inglês. Pesquise também por nomes internacionais, símbolos de genes ou identificadores.</p>
+<form id="international-search"><input type="search" id="international-query" name="q" placeholder="Nome, sinónimo ou ID…" aria-describedby="international-hint" autocomplete="off"><button class="btn btn-primary" type="submit">Pesquisar na Onco Wiki</button>
+<label for="international-kind" class="sr-only">Todos</label><select id="international-kind" name="kind"><option value="">Todos</option><option value="diseases">Doenças</option><option value="drugs">Medicamentos</option><option value="biomarkers">Biomarcadores</option><option value="redflags">Sinais de alerta</option><option value="biomarker_actionability">Aplicabilidade clínica</option></select></form></section>
+<p id="international-count" aria-live="polite"></p><div id="international-results" class="international-grid" aria-live="polite"></div>
+<nav class="international-pagination" aria-label="Página"><button id="international-prev" class="btn btn-secondary">Anterior</button><span id="international-page"></span><button id="international-next" class="btn btn-secondary">Seguinte</button></nav>
+<script>
+(() => {
+const COPY = ["Nome, sinónimo ou ID…", "Todos", "A carregar…", "Não foram encontrados resultados.", "Não foi possível carregar o índice. Tente novamente.", "Anterior", "Seguinte", "Resultados", "Página", "Doenças", "Medicamentos", "Biomarcadores", "Sinais de alerta", "Aplicabilidade clínica", "Os resultados e as fichas são apresentados em inglês. Pesquise também por nomes internacionais, símbolos de genes ou identificadores."];
+const query = document.getElementById('international-query'), kind = document.getElementById('international-kind');
+const results = document.getElementById('international-results'), count = document.getElementById('international-count');
+const prev = document.getElementById('international-prev'), next = document.getElementById('international-next'), pageLabel = document.getElementById('international-page');
+let entries = [], loaded = false, failed = false, page = 0;
+const params = new URLSearchParams(location.search); query.value = params.get('q') || ''; kind.value = params.get('kind') || '';
+function render() {
+  results.replaceChildren();
+  if (!loaded) { count.textContent = failed ? COPY[4] : COPY[2]; prev.disabled = next.disabled = true; pageLabel.textContent = ''; return; }
+  const words = query.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const selected = entries.filter(e => (!kind.value || e.kind_key === kind.value) && words.every(w => (e.search_text || e.title || '').toLowerCase().includes(w)));
+  const pages = Math.max(1, Math.ceil(selected.length / 50)); page = Math.max(0, Math.min(page, pages - 1));
+  count.textContent = COPY[7] + ': ' + selected.length; pageLabel.textContent = COPY[8] + ' ' + (page + 1) + ' / ' + pages;
+  prev.disabled = page === 0; next.disabled = page === pages - 1;
+  if (!selected.length) { const p = document.createElement('p'); p.textContent = COPY[3]; results.append(p); }
+  selected.slice(page * 50, (page + 1) * 50).forEach(e => {
+    const card = document.createElement('article'); card.className = 'international-card'; card.lang = 'en';
+    const h = document.createElement('h2'), a = document.createElement('a'); a.textContent = e.title; a.href = e.url; a.hreflang = 'en'; h.append(a); card.append(h);
+    const meta = document.createElement('p'); meta.textContent = e.subtitle || e.id; card.append(meta);
+    const tag = document.createElement('small'); tag.textContent = 'EN · ' + e.id; card.append(tag); results.append(card);
+  });
+}
+function change() { page = 0; const p = new URLSearchParams(); if(query.value.trim()) p.set('q', query.value.trim()); if(kind.value) p.set('kind', kind.value); history.replaceState(null, '', location.pathname + (p.size ? '?' + p : '') + location.hash); render(); }
+document.getElementById('international-search').addEventListener('submit', e => { e.preventDefault(); change(); });
+query.addEventListener('input', change); kind.addEventListener('change', change);
+prev.addEventListener('click', () => { page--; render(); }); next.addEventListener('click', () => { page++; render(); });
+render(); fetch('/kb_search_index.json').then(r => { if(!r.ok) throw new Error(r.status); return r.json(); }).then(data => { entries = data.entries; loaded = true; render(); }).catch(() => { failed = true; render(); });
+})();
+</script>
+<section class="international-note"><h2>Revisão clínica pendente</h2><p>Projeto em desenvolvimento. Os rascunhos educativos e de planeamento não substituem a equipa médica nem autorizam o início, a suspensão ou a alteração de um tratamento.</p></section>
+<footer class="page-foot">Código aberto · Código: MIT · Conteúdo: CC BY 4.0 · <a href="https://github.com/romeo111/OpenOnco">GitHub</a></footer></main></body></html>

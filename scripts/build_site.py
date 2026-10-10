@@ -74,6 +74,7 @@ from scripts.build_handbook import build_handbook
 from scripts.build_clinician_review import build_clinician_review
 from scripts.build_kb_wiki import build_kb_wiki
 from scripts.build_news import build_news
+from scripts.build_international import build_international
 from scripts.site_cases import (
     BROKEN_CASE_IDS,
     CASE_CATEGORIES,
@@ -1500,7 +1501,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
                 "role": "Лікарю",
                 "line": (
                     "Перетворіть кейс на чернетку для туморборду: стандартний і агресивний "
-                    "план поруч, red flags на поверхні, кожен рядок із джерелом."
+                    "план поруч, тривожні ознаки на поверхні, кожен рядок із джерелом."
                 ),
                 "buttons": [
                     ("btn-primary", try_href, "Побудувати план"),
@@ -1533,12 +1534,12 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
                 "icon": "💊",
                 "role": "Фармацевту",
                 "line": (
-                    "Перевірте взаємодії, корекції доз (нирки/печінка) і red flags для "
+                    "Перевірте взаємодії, корекції доз (нирки/печінка) і тривожні ознаки для "
                     "схеми лікування до видачі пацієнту."
                 ),
                 "buttons": [
                     ("btn-primary", ask_href + "?case=" + quote(pharma_q), "Перевірити взаємодію"),
-                    ("btn-secondary", kb_href, "Переглянути red flags і label-и"),
+                    ("btn-secondary", kb_href, "Переглянути тривожні ознаки й інструкції"),
                 ],
             },
         ]
@@ -1547,18 +1548,19 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             "diseases": "Хвороби",
             "indications": "Показання",
             "regimens": "Схеми лікування",
-            "redflags": "Red flag",
+            "redflags": "Тривожні ознаки",
             "sources": "Цитованих джерел",
             "perf": "На профіль",
         }
         trust = (
-            "Rules-first, а не LLM — жоден препарат чи доза не вигадуються. Дані пацієнта "
-            "лишаються у вашому браузері. Фінальне рішення завжди за кваліфікованим лікарем."
+            "Конструктор плану працює за явними правилами у вашому браузері. "
+            "Туморборд надсилає введений текст на сервер для аналізу. "
+            "Використовуйте синтетичні приклади; фінальне рішення завжди за лікарем."
         )
         note = (
             "Відкриті джерела: CIViC (CC0), ClinicalTrials.gov, PubMed, DailyMed/openFDA і "
-            "гайдлайни NCCN/ESMO/EHA/BSH. LLM не обирає лікування — план збирається rules-first "
-            "із YAML provenance (CHARTER §11)."
+            "настанови NCCN/ESMO/EHA/BSH. План збирається за правилами "
+            "із відстежуваним походженням записів YAML (CHARTER §11)."
         )
         explore_label = "Дізнатися більше"
         explore = [
@@ -1674,14 +1676,14 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
     </div>
   </section>
 
-  <section class="home-trust" aria-label="How OpenOnco stays safe">
+  <section class="home-trust" aria-label="{'How OpenOnco stays safe' if is_en else 'Безпека OpenOnco'}">
     <p class="home-trust-line">{trust}</p>
     <p class="home-note">{note}</p>
     <p class="home-explore" aria-label="{explore_label}">{explore_html}</p>
   </section>
 
   <footer class="page-foot">
-    Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
+    {'Open source · MIT' if is_en else 'Відкритий код · MIT'} · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
     <br>
     {footer}
   </footer>
@@ -10659,6 +10661,7 @@ def build_site(output_dir: Path) -> dict:
     if review_payload["summary"]["contracts_passed"] != review_payload["summary"]["contracts_total"]:
         raise RuntimeError("DLBCL synthetic review engineering contracts failed")
     news_payload = build_news(output_dir, top_bar=_render_top_bar)
+    international_payload = build_international(output_dir)
     clinical_gap_payload = write_clinical_gap_outputs(output_dir)
     discovery_payload = finalize_site_discovery(output_dir)
     whitespace_normalized_files = _normalize_generated_text_whitespace(output_dir)
@@ -10681,6 +10684,7 @@ def build_site(output_dir: Path) -> dict:
         "handbook_payload": handbook_payload,
         "review_payload": review_payload["summary"],
         "news_payload": news_payload,
+        "international_payload": international_payload,
         "clinical_gap_payload": clinical_gap_payload,
         "discovery_payload": discovery_payload,
         "landing_assets": landing_assets,

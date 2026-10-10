@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HER2+ метастатичний рак молочної залози: обґрунтування першої лінії - Посібник OpenOnco</title>
+  <!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.">
+<meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
+<link rel="canonical" href="https://openonco.info/ukr/handbook/hb-breast-her2-pos-met-1l.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/handbook/hb-breast-her2-pos-met-1l.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/handbook/hb-breast-her2-pos-met-1l.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/handbook/hb-breast-her2-pos-met-1l.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="HER2+ метастатичний рак молочної залози: обґрунтування першої лінії - Посібник OpenOnco">
+<meta property="og:description" content="OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.">
+<meta property="og:url" content="https://openonco.info/ukr/handbook/hb-breast-her2-pos-met-1l.html">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HER2+ метастатичний рак молочної залози: обґрунтування першої лінії - Посібник OpenOnco">
+<meta name="twitter:description" content="OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"HER2+ метастатичний рак молочної залози: обґрунтування першої лінії - Посібник OpenOnco","description":"OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.","url":"https://openonco.info/ukr/handbook/hb-breast-her2-pos-met-1l.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/handbook/hb-breast-her2-pos-met-1l.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="stylesheet" href="/style.css?v=header-20261010">
+  <style>
+    .hb-wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; }
+    .hb-kicker { color: #4b5563; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+    .hb-hero { display: grid; gap: 14px; border-bottom: 1px solid #d6dee8; padding-bottom: 22px; }
+    .hb-hero h1 { margin: 0; font-size: 34px; line-height: 1.08; }
+    .hb-lead { max-width: 820px; color: #334155; font-size: 17px; line-height: 1.55; }
+    .hb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+    .hb-card, .hb-panel, .hb-question { border: 1px solid #d6dee8; border-radius: 8px; background: #fff; padding: 16px; }
+    .hb-card h2, .hb-panel h2 { margin-top: 0; font-size: 20px; }
+    .hb-card a { color: #0f766e; font-weight: 700; text-decoration: none; }
+    .hb-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .hb-badge { display: inline-flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 999px; padding: 3px 8px; font-size: 12px; background: #f8fafc; color: #334155; }
+    .hb-badge--draft { border-color: #f59e0b; background: #fffbeb; color: #92400e; }
+    .hb-badge--proposed { border-color: #2563eb; background: #eff6ff; color: #1e3a8a; }
+    .hb-badge--reviewed { border-color: #16a34a; background: #f0fdf4; color: #166534; }
+    .hb-badge--stale { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+    .hb-badge--retired { border-color: #6b7280; background: #f3f4f6; color: #374151; }
+    .hb-review-panel dl.hb-review-meta { margin: 0 0 10px; display: grid; grid-template-columns: 110px 1fr; gap: 4px 10px; font-size: 13px; }
+    .hb-review-panel dt { color: #475569; font-weight: 600; }
+    .hb-review-panel dd { margin: 0; color: #0f172a; }
+    .hb-review-panel h3 { margin: 4px 0 6px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.04em; color: #475569; }
+    .hb-signoff-list { margin: 0; padding-left: 18px; font-size: 13px; }
+    .hb-signoff-list li { margin-bottom: 6px; }
+    .hb-signoff-empty { margin: 0; font-size: 13px; color: #64748b; }
+    .hb-review-rules { margin: 12px 0 0; font-size: 12px; color: #64748b; }
+    .hb-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; margin-top: 24px; }
+    .hb-main { display: grid; gap: 18px; }
+    .hb-side { display: grid; gap: 16px; align-content: start; }
+    .hb-chip-grid { display: grid; gap: 8px; }
+    .hb-chip { display: grid; gap: 3px; border: 1px solid #d6dee8; border-radius: 6px; padding: 8px; }
+    .hb-chip small { color: #64748b; }
+    .hb-question { display: grid; gap: 10px; }
+    .hb-question-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .hb-question-id { margin-left: auto; font-size: 12px; color: #64748b; }
+    .hb-question-stem { margin: 0; font-size: 15px; line-height: 1.5; color: #0f172a; }
+    .hb-options { display: grid; gap: 6px; }
+    .hb-option { display: grid; grid-template-columns: auto auto 1fr; gap: 8px; align-items: start; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; transition: border-color .12s, background .12s; }
+    .hb-option:hover { border-color: #99f6e4; background: #f0fdfa; }
+    .hb-option input { margin-top: 3px; }
+    .hb-option-key { font-weight: 700; color: #115e59; }
+    .hb-option--short { grid-template-columns: 1fr; }
+    .hb-option--short input { font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; }
+    .hb-question-buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .hb-question-status { font-size: 13px; color: #475569; }
+    .hb-btn { font: inherit; cursor: pointer; padding: 7px 12px; border-radius: 6px; border: 1px solid #0f766e; background: #0f766e; color: #fff; }
+    .hb-btn--reset, .hb-btn--ghost { background: transparent; color: #0f766e; }
+    .hb-btn--reveal { background: #475569; border-color: #475569; }
+    .hb-result { margin-top: 4px; padding: 12px; border-left: 4px solid #0f766e; border-radius: 6px; background: #f8fafc; color: #1f2937; }
+    .hb-result--correct { border-left-color: #16a34a; background: #f0fdf4; }
+    .hb-result--incorrect { border-left-color: #dc2626; background: #fef2f2; }
+    .hb-result--reveal { border-left-color: #475569; background: #f1f5f9; }
+    .hb-result-headline { margin: 0 0 6px; font-weight: 600; }
+    .hb-result-explanation { margin: 0 0 8px; }
+    .hb-result-sources { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: #475569; }
+    .hb-result-source { background: #fff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; }
+    .hb-result-tags { margin-top: 6px; font-size: 12px; color: #475569; }
+    .hb-result-tag { display: inline-block; background: #e0f2fe; border-radius: 999px; padding: 2px 8px; margin-right: 4px; color: #075985; }
+    .hb-quiz-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+    .hb-quiz-header h2 { margin: 0; }
+    .hb-quiz-tools { display: flex; align-items: center; gap: 10px; }
+    .hb-score { font-size: 13px; color: #0f172a; background: #f1f5f9; padding: 4px 10px; border-radius: 999px; }
+    .hb-quiz-note { margin: 6px 0 12px; font-size: 13px; color: #475569; }
+    .hb-disclaimer { border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px; color: #78350f; }
+    .hb-controls { display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(150px, 1fr)); gap: 10px 14px; align-items: end; margin-top: 22px; padding: 14px; border: 1px solid #d6dee8; border-radius: 8px; background: #f8fafc; }
+    .hb-control { display: grid; gap: 4px; font-size: 12px; color: #475569; }
+    .hb-control span { font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .hb-control input, .hb-control select { font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #0f172a; }
+    .hb-control input:focus, .hb-control select:focus { outline: 2px solid #0f766e; outline-offset: 1px; }
+    .hb-result-count { grid-column: 1 / -1; margin: 4px 0 0; font-size: 13px; color: #475569; }
+    .hb-empty { grid-column: 1 / -1; margin: 0; padding: 12px; border: 1px dashed #cbd5e1; border-radius: 6px; background: #fff; color: #475569; text-align: center; }
+    .hb-tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .hb-tag { display: inline-flex; padding: 2px 8px; font-size: 11px; border-radius: 999px; background: #e0f2f1; color: #115e59; border: 1px solid #99f6e4; }
+    @media (max-width: 860px) { .hb-layout { grid-template-columns: 1fr; } .hb-hero h1 { font-size: 28px; } .hb-controls { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=languages-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/ukr/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ВІДКРИТА ОНКОЛОГІЯ</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/handbook.html" class="active" aria-current="page">Посібник</a><a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Мова">UA <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Мова"><a href="/ukr/handbook/hb-breast-her2-pos-met-1l.html" lang="uk" hreflang="uk" aria-current="true">Українська <small>UA</small></a><a href="/handbook/hb-breast-her2-pos-met-1l.html" lang="en" hreflang="en">English <small>EN</small></a><a href="/es/" lang="es" hreflang="es">Español <small>ES</small></a><a href="/pt/" lang="pt" hreflang="pt">Português <small>PT</small></a><a href="/de/" lang="de" hreflang="de">Deutsch <small>DE</small></a><a href="/fr/" lang="fr" hreflang="fr">Français <small>FR</small></a></nav>
+    </details>
+    <a href="/ukr/try.html" class="btn-cta-top btn-cta-try"><span>План лікування</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Меню"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Меню">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/handbook.html" class="active" aria-current="page">Посібник</a><a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Інструменти</span>
+    <div class="top-cta-group">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Відкритий код</span>
+  </div>
+  </div>
+</header>
+  <main class="hb-wrap">
+    <p class='hb-disclaimer'>Український переклад навчальної чернетки. Клінічне рев’ю перекладу очікується. Назви джерел, ідентифікатори та технічні теги збережено з оригіналу.</p>
+    <section class="hb-hero">
+      <div class="hb-kicker"><a href="/ukr/handbook.html">Посібник OpenOnco</a></div>
+      <h1>HER2+ метастатичний рак молочної залози: обґрунтування першої лінії</h1>
+      <div class="hb-meta">
+        <span class="hb-badge hb-badge--draft">чернетка</span>
+
+        <span class="hb-badge">для медичних фахівців</span>
+        <span class="hb-badge">uk</span>
+      </div>
+      <p class="hb-lead">Навчальний розділ, відтворювано побудований із записів бази знань OpenOnco, синтетичних випадків і джерел.</p>
+    </section>
+    <div class="hb-layout">
+      <div class="hb-main">
+        <section class="hb-panel">
+          <h2>Навчальні цілі</h2>
+          <ol><li>Визначте дослідження HER2 методом ІГХ/FISH, вихідну функцію органів і супутній статус ER/PR, необхідні перед вибором першої лінії лікування HER2+ метастатичного раку молочної залози.</li><li>Поясніть, чому доцетаксел + трастузумаб + пертузумаб (THP) залишаються стандартною основою першої лінії в моделі OpenOnco та яке місце T-DXd, T-DM1 і тукатинібу в подальших лініях.</li><li>Розпізнайте паралельні завдання — вихідну ФВЛШ, МРТ головного мозку за наявності симптомів з боку ЦНС і тестування гермінальних варіантів BRCA — які не змінюють схему першої лінії, але змінюють план безпеки.</li></ol>
+        </section>
+        <section class="hb-panel">
+          <h2>Основні положення</h2>
+          <ul><li>Перед плануванням першої лінії потрібне підтвердження ампліфікації HER2 за ІГХ 3+ або позитивною ISH; категорія HER2-low усе ще належить до розділу HR+.</li><li>Доцетаксел + трастузумаб + пертузумаб (THP) — стандартна основа першої лінії; підтримувальна терапія трастузумабом + пертузумабом триває після завершення хіміотерапії.</li><li>Трастузумаб дерукстекан (T-DXd) моделюється як базовий варіант другої лінії після прогресування на THP (DESTINY-Breast03).</li><li>Активні метастази в ЦНС і гермінальний статус BRCA — паралельні завдання, які не змінюють основу першої лінії, але додають обговорення тукатинібу та інгібіторів PARP до подальшої послідовності лікування.</li><li>Цей розділ — навчальний матеріал авторства OpenOnco, а не офіційний контент ESMO чи діяльність із нарахуванням балів безперервної медичної освіти (CME).</li></ul>
+        </section>
+
+            <section class="hb-panel">
+              <h2>Діагностичний мінімум</h2>
+              <p>HER2-позитивний метастатичний рак молочної залози визначається за ІГХ 3+ або ISH-позитивною ампліфікацією HER2 у метастатичному вогнищі чи, якщо це неможливо, у первинній пухлині з чітким обговоренням ризику розбіжності результатів. Перед планом першої лінії розділ передбачає підтверджену ампліфікацію HER2, супутній статус ER/PR (оскільки після завершення THP обговорюють ендокринну терапію), вихідні ФВЛШ та ЕКГ перед будь-яким антитілом, спрямованим на HER2, тестування гермінальних варіантів BRCA1/2 і візуалізацію головного мозку за симптомів з боку ЦНС, хоча схема не змінюється при безсимптомному ураженні ЦНС.</p>
+              <h3>Пов’язані записи</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-BREAST</code><span>Invasive breast cancer</span><small>diseases</small></span><span class="hb-chip"><code>BIO-HER2-SOLID</code><span>HER2 IHC + ISH</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-ESTROGEN-RECEPTOR</code><span>Estrogen receptor</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-BRCA-GERMLINE</code><span>Germline BRCA1/2 mutation status</span><small>biomarkers</small></span><span class="hb-chip"><code>TEST-HER2-IHC-FISH</code><span>HER2 IHC + reflex FISH on tumor</span><small>tests</small></span><span class="hb-chip"><code>TEST-LVEF-ECHO</code><span>Echocardiogram with LVEF</span><small>tests</small></span><span class="hb-chip"><code>TEST-GERMLINE-BRCA-PANEL</code><span>Germline BRCA1/2 + HRR panel sequencing</span><small>tests</small></span></div>
+              <h3>Джерела розділу</h3>
+              <ul><li><code>SRC-NCCN-BREAST-2025</code> NCCN Clinical Practice Guidelines — Breast Cancer</li><li><code>SRC-ESMO-BREAST-METASTATIC-2024</code> ESMO Clinical Practice Guideline on Metastatic Breast Cancer</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Логіка вибору першої лінії</h2>
+              <p>OpenOnco моделює рішення першої лінії як доцетаксел + трастузумаб + пертузумаб (THP) для HER2-ампліфікованого метастатичного захворювання з продовженням підтримувальної терапії трастузумабом + пертузумабом після завершення таксану (CLEOPATRA). За супутньої HR-позитивності ендокринну терапію додають у підтримувальній фазі, а не замінюють нею HER2-спрямовану основу. Крихкість, дисфункцію органів або кардіологічні протипоказання оцінюють щодо THP до будь-якого рішення про деінтенсифікацію, а активний вісцеральний криз залишається окремим невідкладним маршрутом.</p>
+              <h3>Пов’язані записи</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>ALGO-BREAST-1L</code><span>ALGO-BREAST-1L</span><small>algorithms</small></span><span class="hb-chip"><code>IND-BREAST-HER2-POS-MET-1L-THP</code><span>IND-BREAST-HER2-POS-MET-1L-THP</span><small>indications</small></span><span class="hb-chip"><code>REG-THP-METASTATIC</code><span>THP — docetaxel + trastuzumab + pertuzumab (HER2+ metastatic 1L)</span><small>regimens</small></span><span class="hb-chip"><code>RF-BREAST-HER2-AMP-ACTIONABLE</code><span>HER2 amplification / overexpression in breast cancer (IHC 3+ OR IHC 2+ with ISH amplified) — ~15-20% of invasive breast. Defines HER2-positive treatment track: trastuzumab + pertuzumab + chemo (CLEOPATRA 1L), T-DXd 2L (DESTINY-Breast03 — mPFS 28.8 vs 6.8 mo vs T-DM1).
+</span><small>redflags</small></span></div>
+              <h3>Джерела розділу</h3>
+              <ul><li><code>SRC-CLEOPATRA-SWAIN-2015</code> Pertuzumab, trastuzumab, and docetaxel in HER2-positive metastatic breast cancer (CLEOPATRA): end-of-study results from a double-blind, randomised, placebo-controlled, phase 3 study</li><li><code>SRC-NCCN-BREAST-2025</code> NCCN Clinical Practice Guidelines — Breast Cancer</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Послідовність другої лінії з урахуванням ЦНС</h2>
+              <p>Після прогресування на THP базовим варіантом другої лінії в моделі OpenOnco є трастузумаб дерукстекан (DESTINY-Breast03). За активних метастазів у ЦНС — особливо при прогресуванні після імунотерапії/HER2-спрямованої терапії — до обговорення додають тукатиніб + трастузумаб + капецитабін, оскільки дослідження HER2CLIMB показало активність у ЦНС. Гермінальний статус BRCA1/2 додає обґрунтування інгібіторів PARP до подальшої послідовності, але не витісняє HER2-спрямовану основу в жодній лінії.</p>
+              <h3>Пов’язані записи</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>IND-BREAST-HER2-POS-MET-2L-TDXD</code><span>IND-BREAST-HER2-POS-MET-2L-TDXD</span><small>indications</small></span><span class="hb-chip"><code>IND-BREAST-HER2-POS-3L-TUCATINIB</code><span>IND-BREAST-HER2-POS-3L-TUCATINIB</span><small>indications</small></span><span class="hb-chip"><code>REG-TUCATINIB-TRASTUZUMAB-CAPECITABINE-BREAST</code><span>Tucatinib + trastuzumab + capecitabine (HER2+ metastatic ≥3L, especially with brain metastases)</span><small>regimens</small></span><span class="hb-chip"><code>RF-CNS-METASTASES-ACTIVE</code><span>Radiologically confirmed active brain metastases (parenchymal, enhancing on MRI gadolinium). Triggers parallel CNS-directed therapy (stereotactic radiosurgery for ≤4 lesions, whole-brain RT for diffuse, craniotomy for symptomatic single lesion ≥3 cm) and selection of systemic therapy with CNS-penetrant activity (osimertinib, alectinib, lorlatinib, tucatinib, T-DXd, pembrolizumab, dabrafenib + trametinib).
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-BREAST-BRCA-GERMLINE-ACTIONABLE</code><span>Germline BRCA1 or BRCA2 pathogenic variant in HER2-negative breast cancer (HR+ or TNBC). Olaparib (OlympiAD — mPFS 7.0 vs 4.2 mo vs chemo) and talazoparib (EMBRACA — mPFS 8.6 vs 5.6 mo) are FDA-approved for metastatic gBRCA HER2-negative breast. Adjuvant olaparib (OlympiA) for high-risk HER2-negative gBRCA early breast.
+</span><small>redflags</small></span></div>
+              <h3>Джерела розділу</h3>
+              <ul><li><code>SRC-DESTINY-BREAST03-CORTES-2022</code> Trastuzumab Deruxtecan versus Trastuzumab Emtansine for Breast Cancer</li><li><code>SRC-HER2CLIMB-MURTHY-2019</code> Tucatinib, Trastuzumab, and Capecitabine for HER2-Positive Metastatic Breast Cancer</li><li><code>SRC-OLYMPIAD-ROBSON-2017</code> Olaparib for Metastatic Breast Cancer in Patients with a Germline BRCA Mutation</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Типові помилки</h2>
+              <p>Не вважайте вибір схеми всім завданням. Спостереження за ФВЛШ потрібне протягом усієї HER2-спрямованої терапії, а не лише на початку; планування вагітності й контрацепції потрібне пацієнткам до менопаузи, оскільки антитіла проти HER2 тератогенні; візуалізація ЦНС за симптомами, а не за розкладом, залишається типовим підходом OpenOnco, якщо питання в контексті HER2CLIMB не змінює частоту; статус HER2 слід повторно визначати за біопсією при прогресуванні, оскільки розбіжності між первинними та метастатичними зразками добре описані. Жоден із цих чинників сам по собі не змінює рішення про THP у першій лінії, але їх пропуск змінює план безпеки.</p>
+              <h3>Пов’язані записи</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>RF-LEPTOMENINGEAL-DISEASE</code><span>Leptomeningeal disease (LMD) confirmed by CSF cytology (positive malignant cells), CSF flow cytometry, or imaging (linear/nodular leptomeningeal enhancement on contrast MRI brain/spine). Triggers intrathecal chemotherapy (methotrexate, cytarabine, liposomal cytarabine), CSF-penetrant systemic therapy (HD-MTX, HD-cytarabine, pemetrexed, osimertinib at 160 mg, tucatinib), and consideration of craniospinal RT.
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-CNS-METASTASES-ACTIVE</code><span>Radiologically confirmed active brain metastases (parenchymal, enhancing on MRI gadolinium). Triggers parallel CNS-directed therapy (stereotactic radiosurgery for ≤4 lesions, whole-brain RT for diffuse, craniotomy for symptomatic single lesion ≥3 cm) and selection of systemic therapy with CNS-penetrant activity (osimertinib, alectinib, lorlatinib, tucatinib, T-DXd, pembrolizumab, dabrafenib + trametinib).
+</span><small>redflags</small></span><span class="hb-chip"><code>BIO-HER2-SOLID</code><span>HER2 IHC + ISH</span><small>biomarkers</small></span></div>
+              <h3>Джерела розділу</h3>
+              <ul><li><code>SRC-NCCN-BREAST-2025</code> NCCN Clinical Practice Guidelines — Breast Cancer</li><li><code>SRC-ESMO-BREAST-METASTATIC-2024</code> ESMO Clinical Practice Guideline on Metastatic Breast Cancer</li></ul>
+            </section>
+
+        <section class="hb-panel">
+          <h2>Розібрані синтетичні випадки</h2>
+          <ul><li><code>patient_breast_her2_pos_met_1l_thp</code> HER2+: перша лінія доцетаксел + трастузумаб + пертузумаб - <span>обґрунтування стандартного маршруту, вихідні ФВЛШ та ЕКГ</span> <small>examples/patient_breast_her2_pos_met_1l_thp.json</small></li><li><code>patient_breast_her2_pos_met_2l_tdxd</code> HER2+ після THP: T-DXd у другій лінії - <span>послідовність за DESTINY-Breast03</span> <small>examples/patient_breast_her2_pos_met_2l_tdxd.json</small></li><li><code>patient_breast_her2_pos_2l_brain_mets_tucatinib</code> HER2+ з активними метастазами в головний мозок: трикомпонентна схема з тукатинібом - <span>послідовність з урахуванням ЦНС, контекст HER2CLIMB</span> <small>examples/patient_breast_her2_pos_2l_brain_mets_tucatinib.json</small></li></ul>
+        </section>
+        <section class="hb-panel hb-quiz">
+          <div class="hb-quiz-header">
+            <h2>Практичні запитання</h2>
+            <div class="hb-quiz-tools">
+              <span class="hb-score" id="hb-score" aria-live="polite">0 з 3 відповідей · 0 правильних</span>
+              <button type="button" class="hb-btn hb-btn--ghost" id="hb-quiz-reset">Скинути тест</button>
+            </div>
+          </div>
+          <p class="hb-quiz-note">Відповіді, результат і теми обґрунтування зберігаються лише в сесії браузера та очищуються після закриття вкладки. Для зарахування запитання з кількома відповідями потрібно обрати всі правильні варіанти й жодного зайвого.</p>
+
+      <form class="hb-question"
+            data-question-id="HQ-BREAST-HER2-POS-1L-001"
+            data-question-type="type_a"
+            data-correct-answer="A"
+            data-graded="true"
+            novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Запитання 1</span>
+          <span class="hb-badge">одна правильна відповідь</span>
+          <span class="hb-badge">початковий рівень</span>
+          <span class="hb-question-id"><code>HQ-BREAST-HER2-POS-1L-001</code></span>
+        </div>
+        <p class="hb-question-stem">Функціонально збережена пацієнтка має вперше діагностований HER2-ампліфікований (ІГХ 3+) метастатичний рак молочної залози з HR-негативним статусом, нормальною ФВЛШ і без симптомів ЦНС. Який маршрут є стандартним у навчальній моделі першої лінії OpenOnco?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HER2-POS-1L-001" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Трастузумаб + пертузумаб + доцетаксел (THP)</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HER2-POS-1L-001" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Трастузумаб дерукстекан як монотерапія першої лінії</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HER2-POS-1L-001" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Тукатиніб + трастузумаб + капецитабін, оскільки охоплення ЦНС обов’язкове в першій лінії</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HER2-POS-1L-001" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Лапатиніб + капецитабін</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Перевірити відповідь</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Скинути</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Правильна відповідь:</strong> A</p>
+          <p class="hb-result-explanation">CLEOPATRA обґрунтував THP як стандартну основу першої лінії HER2+ метастатичного захворювання, і OpenOnco залишає його типовим вибором. T-DXd — базовий варіант другої лінії після прогресування на THP (DESTINY-Breast03), терапія з тукатинібом входить у подальші лінії або за активного ураження ЦНС (HER2CLIMB), а лапатиніб + капецитабін не є маршрутом першої лінії в моделі OpenOnco.</p>
+          <div class="hb-result-sources"><span>Джерела:</span> <code class="hb-result-source">SRC-CLEOPATRA-SWAIN-2015</code><code class="hb-result-source">SRC-NCCN-BREAST-2025</code></div>
+          <div class="hb-result-tags">Теми обґрунтування:<span class="hb-result-tag">regimen_selection</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question"
+            data-question-id="HQ-BREAST-HER2-POS-1L-002"
+            data-question-type="type_a"
+            data-correct-answer="A"
+            data-graded="true"
+            novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Запитання 2</span>
+          <span class="hb-badge">одна правильна відповідь</span>
+          <span class="hb-badge">середній рівень</span>
+          <span class="hb-question-id"><code>HQ-BREAST-HER2-POS-1L-002</code></span>
+        </div>
+        <p class="hb-question-stem">Пацієнтка з HER2+ метастатичним раком молочної залози має прогресування після 18 місяців THP (із підтримувальною терапією трастузумабом + пертузумабом). Ураження ЦНС відсутнє, функція органів добра. Яке показання OpenOnco є базовим варіантом другої лінії?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HER2-POS-1L-002" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Трастузумаб дерукстекан (T-DXd)</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HER2-POS-1L-002" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Тукатиніб + трастузумаб + капецитабін</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HER2-POS-1L-002" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Трастузумаб + вінорельбін</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HER2-POS-1L-002" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Продовжити THP без змін, оскільки характер резистентності не встановлений</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Перевірити відповідь</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Скинути</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Правильна відповідь:</strong> A</p>
+          <p class="hb-result-explanation">T-DXd — базовий варіант другої лінії після прогресування на THP в OpenOnco (DESTINY-Breast03). Терапія з тукатинібом призначена для подальших ліній або активного ураження ЦНС (HER2CLIMB). Продовження тієї самої схеми після прогресування не відповідає моделі прогресування OpenOnco.</p>
+          <div class="hb-result-sources"><span>Джерела:</span> <code class="hb-result-source">SRC-DESTINY-BREAST03-CORTES-2022</code><code class="hb-result-source">SRC-NCCN-BREAST-2025</code></div>
+          <div class="hb-result-tags">Теми обґрунтування:<span class="hb-result-tag">regimen_selection</span><span class="hb-result-tag">sequencing</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question"
+            data-question-id="HQ-BREAST-HER2-POS-1L-003"
+            data-question-type="type_k"
+            data-correct-answer="A|B|D"
+            data-graded="true"
+            novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Запитання 3</span>
+          <span class="hb-badge">кілька правильних відповідей</span>
+          <span class="hb-badge">середній рівень</span>
+          <span class="hb-question-id"><code>HQ-BREAST-HER2-POS-1L-003</code></span>
+        </div>
+        <p class="hb-question-stem">Які твердження правильні щодо обґрунтування першої лінії HER2+ метастатичного раку молочної залози в OpenOnco?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-BREAST-HER2-POS-1L-003" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Вихідні ФВЛШ та ЕКГ потрібні перед будь-яким HER2-спрямованим антитілом і повторюються під час терапії.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-BREAST-HER2-POS-1L-003" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Супутня HR-позитивність додає ендокринну підтримувальну терапію після завершення THP, але не замінює HER2-спрямовану основу.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-BREAST-HER2-POS-1L-003" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Безсимптомні метастази в ЦНС вимагають переходу на тукатиніб + трастузумаб + капецитабін у першій лінії.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-BREAST-HER2-POS-1L-003" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Гермінальний статус BRCA1/2 важливий для подальшої послідовності, але не витісняє HER2-спрямовану основу в жодній лінії.</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Перевірити відповідь</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Скинути</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Правильна відповідь:</strong> A, B, D</p>
+          <p class="hb-result-explanation">Спостереження за ФВЛШ, ендокринна підтримувальна терапія за супутньої HR-позитивності та роль гермінального BRCA в послідовності без витіснення HER2-спрямованої терапії — складові моделі OpenOnco. Безсимптомне ураження ЦНС не примушує перейти на тукатиніб у першій лінії; обґрунтування тукатинібу за HER2CLIMB додається при активному або прогресуючому ураженні ЦНС, зазвичай у подальшій лінії.</p>
+          <div class="hb-result-sources"><span>Джерела:</span> <code class="hb-result-source">SRC-NCCN-BREAST-2025</code><code class="hb-result-source">SRC-HER2CLIMB-MURTHY-2019</code><code class="hb-result-source">SRC-OLYMPIAD-ROBSON-2017</code></div>
+          <div class="hb-result-tags">Теми обґрунтування:<span class="hb-result-tag">safety_screening</span><span class="hb-result-tag">sequencing</span><span class="hb-result-tag">legal_boundary</span></div>
+        </div>
+      </form>
+
+        </section>
+      </div>
+      <aside class="hb-side">
+        <section class="hb-panel hb-disclaimer">
+          <strong>Лише для навчання.</strong>
+          <p>Цей розділ авторства OpenOnco не є офіційним матеріалом ESMO, не нараховує балів CME та не є індивідуальною медичною порадою.</p>
+        </section>
+        <section class="hb-panel hb-review-panel">
+          <h2>Статус рев’ю</h2>
+          <dl class="hb-review-meta">
+            <dt>Поточний статус</dt>
+            <dd><span class="hb-badge hb-badge--draft">чернетка</span></dd>
+            <dt>Останнє рев’ю</dt><dd><em>ще не перевірено</em></dd>
+          </dl>
+          <h3>Клінічні підтвердження</h3>
+          <p class='hb-signoff-empty'>Клінічних підтверджень ще не зафіксовано.</p>
+          <p class="hb-review-rules"><a href="/ukr/specs.html">HANDBOOK_MODE_SPEC §4</a>визначає переходи статусів і поріг давності рев’ю в 365 днів.</p>
+        </section>
+        <section class="hb-panel">
+          <h2>Джерела розділу</h2>
+          <ul><li><code>SRC-NCCN-BREAST-2025</code> NCCN Clinical Practice Guidelines — Breast Cancer</li><li><code>SRC-ESMO-BREAST-METASTATIC-2024</code> ESMO Clinical Practice Guideline on Metastatic Breast Cancer</li><li><code>SRC-CLEOPATRA-SWAIN-2015</code> Pertuzumab, trastuzumab, and docetaxel in HER2-positive metastatic breast cancer (CLEOPATRA): end-of-study results from a double-blind, randomised, placebo-controlled, phase 3 study</li><li><code>SRC-DESTINY-BREAST03-CORTES-2022</code> Trastuzumab Deruxtecan versus Trastuzumab Emtansine for Breast Cancer</li><li><code>SRC-HER2CLIMB-MURTHY-2019</code> Tucatinib, Trastuzumab, and Capecitabine for HER2-Positive Metastatic Breast Cancer</li><li><code>SRC-OLYMPIAD-ROBSON-2017</code> Olaparib for Metastatic Breast Cancer in Patients with a Germline BRCA Mutation</li></ul>
+        </section>
+        <section class="hb-panel">
+          <h2>Карта записів</h2>
+          <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-BREAST</code><span>Invasive breast cancer</span><small>diseases</small></span><span class="hb-chip"><code>ALGO-BREAST-1L</code><span>ALGO-BREAST-1L</span><small>algorithms</small></span><span class="hb-chip"><code>IND-BREAST-HER2-POS-MET-1L-THP</code><span>IND-BREAST-HER2-POS-MET-1L-THP</span><small>indications</small></span><span class="hb-chip"><code>IND-BREAST-HER2-POS-MET-2L-TDXD</code><span>IND-BREAST-HER2-POS-MET-2L-TDXD</span><small>indications</small></span><span class="hb-chip"><code>IND-BREAST-HER2-POS-3L-TUCATINIB</code><span>IND-BREAST-HER2-POS-3L-TUCATINIB</span><small>indications</small></span><span class="hb-chip"><code>IND-BREAST-BRCA-MET-TALAZOPARIB</code><span>IND-BREAST-BRCA-MET-TALAZOPARIB</span><small>indications</small></span><span class="hb-chip"><code>REG-THP-METASTATIC</code><span>THP — docetaxel + trastuzumab + pertuzumab (HER2+ metastatic 1L)</span><small>regimens</small></span><span class="hb-chip"><code>REG-TUCATINIB-TRASTUZUMAB-CAPECITABINE-BREAST</code><span>Tucatinib + trastuzumab + capecitabine (HER2+ metastatic ≥3L, especially with brain metastases)</span><small>regimens</small></span><span class="hb-chip"><code>REG-DATO-DXD-BREAST-2L</code><span>Datopotamab deruxtecan (Dato-DXd) monotherapy (HR+/HER2- pre-treated metastatic post-ET + chemo)</span><small>regimens</small></span><span class="hb-chip"><code>REG-OLAPARIB-BREAST</code><span>Olaparib monotherapy (BRCA-mutant HER2- breast: metastatic OR adjuvant high-risk early)</span><small>regimens</small></span><span class="hb-chip"><code>RF-BREAST-STAGE-IV-METASTATIC</code><span>Metastatic (stage IV) breast cancer: presence of distant metastasis (M1 per TNM 8th edition) involving any organ system (bone, liver, lung, brain, peritoneum, other). Stage IV breast cancer is currently incurable with available systemic therapy; treatment intent is disease control, quality of life, and life prolongation.
+Stage IV status is the gating criterion for palliative systemic therapy (CDK4/6i+AI for HR+/HER2-; THP for HER2+; pembro+chemo or PARPi for TNBC) rather than curative-intent neoadjuvant/adjuvant approaches.
+Fires to route ALGO-BREAST-1L step 4 (TNBC branch) from early-stage neoadjuvant (IND-BREAST-TNBC-EARLY-NEOADJUVANT) toward metastatic evaluation (step 6: BRCA mutation gate → PARPi vs pembro+chemo).
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-BREAST-HER2-AMP-ACTIONABLE</code><span>HER2 amplification / overexpression in breast cancer (IHC 3+ OR IHC 2+ with ISH amplified) — ~15-20% of invasive breast. Defines HER2-positive treatment track: trastuzumab + pertuzumab + chemo (CLEOPATRA 1L), T-DXd 2L (DESTINY-Breast03 — mPFS 28.8 vs 6.8 mo vs T-DM1).
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-BREAST-BRCA-GERMLINE-ACTIONABLE</code><span>Germline BRCA1 or BRCA2 pathogenic variant in HER2-negative breast cancer (HR+ or TNBC). Olaparib (OlympiAD — mPFS 7.0 vs 4.2 mo vs chemo) and talazoparib (EMBRACA — mPFS 8.6 vs 5.6 mo) are FDA-approved for metastatic gBRCA HER2-negative breast. Adjuvant olaparib (OlympiA) for high-risk HER2-negative gBRCA early breast.
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-CNS-METASTASES-ACTIVE</code><span>Radiologically confirmed active brain metastases (parenchymal, enhancing on MRI gadolinium). Triggers parallel CNS-directed therapy (stereotactic radiosurgery for ≤4 lesions, whole-brain RT for diffuse, craniotomy for symptomatic single lesion ≥3 cm) and selection of systemic therapy with CNS-penetrant activity (osimertinib, alectinib, lorlatinib, tucatinib, T-DXd, pembrolizumab, dabrafenib + trametinib).
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-LEPTOMENINGEAL-DISEASE</code><span>Leptomeningeal disease (LMD) confirmed by CSF cytology (positive malignant cells), CSF flow cytometry, or imaging (linear/nodular leptomeningeal enhancement on contrast MRI brain/spine). Triggers intrathecal chemotherapy (methotrexate, cytarabine, liposomal cytarabine), CSF-penetrant systemic therapy (HD-MTX, HD-cytarabine, pemetrexed, osimertinib at 160 mg, tucatinib), and consideration of craniospinal RT.
+</span><small>redflags</small></span><span class="hb-chip"><code>BIO-HER2-SOLID</code><span>HER2 IHC + ISH</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-ESTROGEN-RECEPTOR</code><span>Estrogen receptor</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-PROGESTERONE-RECEPTOR</code><span>Progesterone receptor</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-BRCA-GERMLINE</code><span>Germline BRCA1/2 mutation status</span><small>biomarkers</small></span><span class="hb-chip"><code>TEST-HER2-IHC-FISH</code><span>HER2 IHC + reflex FISH on tumor</span><small>tests</small></span><span class="hb-chip"><code>TEST-ER-PR-IHC</code><span>ER + PR immunohistochemistry on tumor</span><small>tests</small></span><span class="hb-chip"><code>TEST-GERMLINE-BRCA-PANEL</code><span>Germline BRCA1/2 + HRR panel sequencing</span><small>tests</small></span><span class="hb-chip"><code>TEST-NGS-COMPREHENSIVE</code><span>Comprehensive NGS tumor panel (DNA + RNA, ≥300 genes)</span><small>tests</small></span><span class="hb-chip"><code>TEST-ECHO</code><span>Echocardiography</span><small>tests</small></span><span class="hb-chip"><code>TEST-LVEF-ECHO</code><span>Echocardiogram with LVEF</span><small>tests</small></span><span class="hb-chip"><code>TEST-CT-CHEST-ABDOMEN-PELVIS</code><span>CT chest + abdomen + pelvis with IV contrast</span><small>tests</small></span><span class="hb-chip"><code>TEST-BRAIN-MRI-CONTRAST</code><span>Brain MRI with contrast</span><small>tests</small></span></div>
+        </section>
+      </aside>
+    </div>
+    <script>
+      (function() {
+        var CHAPTER_ID = "HB-BREAST-HER2-POS-MET-1L";
+        var GRADED_TOTAL = 3;
+        var STORAGE_KEY = 'openonco-handbook-' + CHAPTER_ID + '-quiz';
+        var forms = Array.prototype.slice.call(document.querySelectorAll('.hb-quiz .hb-question'));
+        var scoreEl = document.getElementById('hb-score');
+        var resetAllBtn = document.getElementById('hb-quiz-reset');
+        var storage;
+        try { storage = window.sessionStorage; } catch (e) { storage = null; }
+        var state = {};
+        if (storage) {
+          try { state = JSON.parse(storage.getItem(STORAGE_KEY) || '{}') || {}; } catch (e) { state = {}; }
+        }
+        function persist() {
+          if (!storage) { return; }
+          try { storage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        }
+        function normalize(list) {
+          return (list || []).map(function(k) { return String(k).toUpperCase(); }).slice().sort().join('|');
+        }
+        function updateScore() {
+          var answered = 0;
+          var correct = 0;
+          Object.keys(state).forEach(function(qid) {
+            var entry = state[qid];
+            if (entry && entry.submitted && entry.graded) {
+              answered += 1;
+              if (entry.correct) { correct += 1; }
+            }
+          });
+          if (scoreEl) {
+            scoreEl.textContent = answered + ' з ' + GRADED_TOTAL + ' відповідей · ' + correct + ' правильних';
+          }
+        }
+        forms.forEach(function(form) {
+          var qid = form.getAttribute('data-question-id');
+          var qtype = form.getAttribute('data-question-type');
+          var graded = form.getAttribute('data-graded') === 'true';
+          var correctAttr = form.getAttribute('data-correct-answer') || '';
+          var correctKey = correctAttr.split('|').filter(Boolean).slice().sort().join('|');
+          var resultEl = form.querySelector('.hb-result');
+          var headlineEl = form.querySelector('[data-role="headline"]');
+          var statusEl = form.querySelector('[data-role="status"]');
+          var submitBtn = form.querySelector('[data-action="submit"]');
+          var resetBtn = form.querySelector('[data-action="reset"]');
+          var revealBtn = form.querySelector('[data-action="reveal"]');
+          function selectedKeys() {
+            return Array.prototype.slice.call(
+              form.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked')
+            ).map(function(input) { return input.value; });
+          }
+          function setResultClass(isCorrect) {
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (isCorrect === true) { resultEl.classList.add('hb-result--correct'); }
+            else if (isCorrect === false) { resultEl.classList.add('hb-result--incorrect'); }
+            else { resultEl.classList.add('hb-result--reveal'); }
+          }
+          function showResult(entry) {
+            resultEl.hidden = false;
+            if (graded) {
+              setResultClass(entry.correct);
+              if (statusEl) {
+                statusEl.textContent = entry.correct ? '✓ Правильно' : '✗ Неправильно — дивіться пояснення';
+              }
+            } else {
+              setResultClass(null);
+              if (statusEl) { statusEl.textContent = 'Зразок відповіді відкрито'; }
+            }
+          }
+          function clearResult() {
+            resultEl.hidden = true;
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (statusEl) { statusEl.textContent = ''; }
+          }
+          function rehydrate() {
+            var entry = state[qid];
+            if (!entry) { return; }
+            (entry.selected || []).forEach(function(key) {
+              var input = form.querySelector('input[value="' + key + '"]');
+              if (input) { input.checked = true; }
+            });
+            if (entry.submitted) { showResult(entry); }
+          }
+          function submitGraded(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            var selected = selectedKeys();
+            if (selected.length === 0) {
+              if (statusEl) { statusEl.textContent = 'Спершу оберіть варіант.'; }
+              return;
+            }
+            var selectedKey = normalize(selected);
+            var isCorrect = selectedKey === correctKey;
+            state[qid] = { submitted: true, graded: true, selected: selected, correct: isCorrect };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function revealOnly(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            state[qid] = { submitted: true, graded: false, selected: [], correct: null };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function resetQuestion(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+              if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+              else { input.value = ''; }
+            });
+            delete state[qid];
+            persist();
+            clearResult();
+            updateScore();
+          }
+          if (submitBtn) { submitBtn.addEventListener('click', submitGraded); }
+          if (resetBtn) { resetBtn.addEventListener('click', resetQuestion); }
+          if (revealBtn) { revealBtn.addEventListener('click', revealOnly); }
+          form.addEventListener('submit', function(event) { event.preventDefault(); if (graded) { submitGraded(event); } });
+          rehydrate();
+        });
+        if (resetAllBtn) {
+          resetAllBtn.addEventListener('click', function() {
+            state = {};
+            persist();
+            forms.forEach(function(form) {
+              Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+                if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+                else { input.value = ''; }
+              });
+              var resultEl = form.querySelector('.hb-result');
+              var statusEl = form.querySelector('[data-role="status"]');
+              if (resultEl) {
+                resultEl.hidden = true;
+                resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+              }
+              if (statusEl) { statusEl.textContent = ''; }
+            });
+            updateScore();
+          });
+        }
+        updateScore();
+      })();
+    </script>
+
+  </main>
+</body>
+</html>

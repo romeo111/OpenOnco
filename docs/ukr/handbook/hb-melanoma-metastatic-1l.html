@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Метастатична меланома: BRAF та імунотерапія в першій лінії - Посібник OpenOnco</title>
+  <!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.">
+<meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
+<link rel="canonical" href="https://openonco.info/ukr/handbook/hb-melanoma-metastatic-1l.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/handbook/hb-melanoma-metastatic-1l.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/handbook/hb-melanoma-metastatic-1l.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/handbook/hb-melanoma-metastatic-1l.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Метастатична меланома: BRAF та імунотерапія в першій лінії - Посібник OpenOnco">
+<meta property="og:description" content="OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.">
+<meta property="og:url" content="https://openonco.info/ukr/handbook/hb-melanoma-metastatic-1l.html">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Метастатична меланома: BRAF та імунотерапія в першій лінії - Посібник OpenOnco">
+<meta name="twitter:description" content="OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Метастатична меланома: BRAF та імунотерапія в першій лінії - Посібник OpenOnco","description":"OpenOnco - відкрита онкологічна база знань і браузерна демонстрація підтримки клінічних рішень для лікарів, лабораторій, інвесторів і пацієнтів.","url":"https://openonco.info/ukr/handbook/hb-melanoma-metastatic-1l.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/handbook/hb-melanoma-metastatic-1l.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="stylesheet" href="/style.css?v=header-20261010">
+  <style>
+    .hb-wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; }
+    .hb-kicker { color: #4b5563; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+    .hb-hero { display: grid; gap: 14px; border-bottom: 1px solid #d6dee8; padding-bottom: 22px; }
+    .hb-hero h1 { margin: 0; font-size: 34px; line-height: 1.08; }
+    .hb-lead { max-width: 820px; color: #334155; font-size: 17px; line-height: 1.55; }
+    .hb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+    .hb-card, .hb-panel, .hb-question { border: 1px solid #d6dee8; border-radius: 8px; background: #fff; padding: 16px; }
+    .hb-card h2, .hb-panel h2 { margin-top: 0; font-size: 20px; }
+    .hb-card a { color: #0f766e; font-weight: 700; text-decoration: none; }
+    .hb-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .hb-badge { display: inline-flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 999px; padding: 3px 8px; font-size: 12px; background: #f8fafc; color: #334155; }
+    .hb-badge--draft { border-color: #f59e0b; background: #fffbeb; color: #92400e; }
+    .hb-badge--proposed { border-color: #2563eb; background: #eff6ff; color: #1e3a8a; }
+    .hb-badge--reviewed { border-color: #16a34a; background: #f0fdf4; color: #166534; }
+    .hb-badge--stale { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+    .hb-badge--retired { border-color: #6b7280; background: #f3f4f6; color: #374151; }
+    .hb-review-panel dl.hb-review-meta { margin: 0 0 10px; display: grid; grid-template-columns: 110px 1fr; gap: 4px 10px; font-size: 13px; }
+    .hb-review-panel dt { color: #475569; font-weight: 600; }
+    .hb-review-panel dd { margin: 0; color: #0f172a; }
+    .hb-review-panel h3 { margin: 4px 0 6px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.04em; color: #475569; }
+    .hb-signoff-list { margin: 0; padding-left: 18px; font-size: 13px; }
+    .hb-signoff-list li { margin-bottom: 6px; }
+    .hb-signoff-empty { margin: 0; font-size: 13px; color: #64748b; }
+    .hb-review-rules { margin: 12px 0 0; font-size: 12px; color: #64748b; }
+    .hb-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; margin-top: 24px; }
+    .hb-main { display: grid; gap: 18px; }
+    .hb-side { display: grid; gap: 16px; align-content: start; }
+    .hb-chip-grid { display: grid; gap: 8px; }
+    .hb-chip { display: grid; gap: 3px; border: 1px solid #d6dee8; border-radius: 6px; padding: 8px; }
+    .hb-chip small { color: #64748b; }
+    .hb-question { display: grid; gap: 10px; }
+    .hb-question-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .hb-question-id { margin-left: auto; font-size: 12px; color: #64748b; }
+    .hb-question-stem { margin: 0; font-size: 15px; line-height: 1.5; color: #0f172a; }
+    .hb-options { display: grid; gap: 6px; }
+    .hb-option { display: grid; grid-template-columns: auto auto 1fr; gap: 8px; align-items: start; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; transition: border-color .12s, background .12s; }
+    .hb-option:hover { border-color: #99f6e4; background: #f0fdfa; }
+    .hb-option input { margin-top: 3px; }
+    .hb-option-key { font-weight: 700; color: #115e59; }
+    .hb-option--short { grid-template-columns: 1fr; }
+    .hb-option--short input { font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; }
+    .hb-question-buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .hb-question-status { font-size: 13px; color: #475569; }
+    .hb-btn { font: inherit; cursor: pointer; padding: 7px 12px; border-radius: 6px; border: 1px solid #0f766e; background: #0f766e; color: #fff; }
+    .hb-btn--reset, .hb-btn--ghost { background: transparent; color: #0f766e; }
+    .hb-btn--reveal { background: #475569; border-color: #475569; }
+    .hb-result { margin-top: 4px; padding: 12px; border-left: 4px solid #0f766e; border-radius: 6px; background: #f8fafc; color: #1f2937; }
+    .hb-result--correct { border-left-color: #16a34a; background: #f0fdf4; }
+    .hb-result--incorrect { border-left-color: #dc2626; background: #fef2f2; }
+    .hb-result--reveal { border-left-color: #475569; background: #f1f5f9; }
+    .hb-result-headline { margin: 0 0 6px; font-weight: 600; }
+    .hb-result-explanation { margin: 0 0 8px; }
+    .hb-result-sources { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: #475569; }
+    .hb-result-source { background: #fff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; }
+    .hb-result-tags { margin-top: 6px; font-size: 12px; color: #475569; }
+    .hb-result-tag { display: inline-block; background: #e0f2fe; border-radius: 999px; padding: 2px 8px; margin-right: 4px; color: #075985; }
+    .hb-quiz-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+    .hb-quiz-header h2 { margin: 0; }
+    .hb-quiz-tools { display: flex; align-items: center; gap: 10px; }
+    .hb-score { font-size: 13px; color: #0f172a; background: #f1f5f9; padding: 4px 10px; border-radius: 999px; }
+    .hb-quiz-note { margin: 6px 0 12px; font-size: 13px; color: #475569; }
+    .hb-disclaimer { border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px; color: #78350f; }
+    .hb-controls { display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(150px, 1fr)); gap: 10px 14px; align-items: end; margin-top: 22px; padding: 14px; border: 1px solid #d6dee8; border-radius: 8px; background: #f8fafc; }
+    .hb-control { display: grid; gap: 4px; font-size: 12px; color: #475569; }
+    .hb-control span { font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .hb-control input, .hb-control select { font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #0f172a; }
+    .hb-control input:focus, .hb-control select:focus { outline: 2px solid #0f766e; outline-offset: 1px; }
+    .hb-result-count { grid-column: 1 / -1; margin: 4px 0 0; font-size: 13px; color: #475569; }
+    .hb-empty { grid-column: 1 / -1; margin: 0; padding: 12px; border: 1px dashed #cbd5e1; border-radius: 6px; background: #fff; color: #475569; text-align: center; }
+    .hb-tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .hb-tag { display: inline-flex; padding: 2px 8px; font-size: 11px; border-radius: 999px; background: #e0f2f1; color: #115e59; border: 1px solid #99f6e4; }
+    @media (max-width: 860px) { .hb-layout { grid-template-columns: 1fr; } .hb-hero h1 { font-size: 28px; } .hb-controls { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=languages-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/ukr/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ВІДКРИТА ОНКОЛОГІЯ</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/handbook.html" class="active" aria-current="page">Посібник</a><a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Мова">UA <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Мова"><a href="/ukr/handbook/hb-melanoma-metastatic-1l.html" lang="uk" hreflang="uk" aria-current="true">Українська <small>UA</small></a><a href="/handbook/hb-melanoma-metastatic-1l.html" lang="en" hreflang="en">English <small>EN</small></a><a href="/es/" lang="es" hreflang="es">Español <small>ES</small></a><a href="/pt/" lang="pt" hreflang="pt">Português <small>PT</small></a><a href="/de/" lang="de" hreflang="de">Deutsch <small>DE</small></a><a href="/fr/" lang="fr" hreflang="fr">Français <small>FR</small></a></nav>
+    </details>
+    <a href="/ukr/try.html" class="btn-cta-top btn-cta-try"><span>План лікування</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Меню"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Меню">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/handbook.html" class="active" aria-current="page">Посібник</a><a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Інструменти</span>
+    <div class="top-cta-group">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Відкритий код</span>
+  </div>
+  </div>
+</header>
+  <main class="hb-wrap">
+    <p class='hb-disclaimer'>Український переклад навчальної чернетки. Клінічне рев’ю перекладу очікується. Назви джерел, ідентифікатори та технічні теги збережено з оригіналу.</p>
+    <section class="hb-hero">
+      <div class="hb-kicker"><a href="/ukr/handbook.html">Посібник OpenOnco</a></div>
+      <h1>Метастатична меланома: BRAF та імунотерапія в першій лінії</h1>
+      <div class="hb-meta">
+        <span class="hb-badge hb-badge--draft">чернетка</span>
+
+        <span class="hb-badge">для медичних фахівців</span>
+        <span class="hb-badge">uk</span>
+      </div>
+      <p class="hb-lead">Навчальний розділ, відтворювано побудований із записів бази знань OpenOnco, синтетичних випадків і джерел.</p>
+    </section>
+    <div class="hb-layout">
+      <div class="hb-main">
+        <section class="hb-panel">
+          <h2>Навчальні цілі</h2>
+          <ol><li>Визначте статус BRAF V600, функціональний стан, функцію органів і пухлинне навантаження перед вибором першої лінії метастатичної меланоми.</li><li>Поясніть, чому подвійна блокада контрольних точок (ніволумаб + іпілімумаб) є стандартною основою імунотерапії, коли перевагу надають монотерапії анти-PD-1 та яке місце комбінацій, спрямованих на BRAF.</li><li>Розпізнайте паралельні завдання — автоімунний анамнез, МРТ головного мозку за активного ураження ЦНС, скринінг інфекцій/гепатитів — які не змінюють базове рішення щодо імунотерапії, але змінюють план безпеки.</li></ol>
+        </section>
+        <section class="hb-panel">
+          <h2>Основні положення</h2>
+          <ul><li>Тестування BRAF V600E/K потрібне перед планом першої лінії, оскільки визначає маршрути імунотерапії та таргетних стратегій.</li><li>Ніволумаб + іпілімумаб — базова основа імунотерапії для функціонально збережених пацієнтів без протипоказань; релатлімаб + ніволумаб — альтернативна комбінація подвійної блокади контрольних точок.</li><li>Енкорафеніб + бініметиніб (або дабрафеніб + траметиніб) — базовий BRAF-спрямований маршрут за мутації V600, який зазвичай застосовують при протипоказаннях до імунотерапії або потребі у швидкій відповіді.</li><li>Активні метастази в головний мозок, автоімунні захворювання, супутні стани рівня органної недостатності та статус вагітності — паралельні завдання, які визначають план безпеки навіть без зміни системної схеми.</li><li>Цей розділ — навчальний матеріал авторства OpenOnco, а не офіційний контент ESMO чи діяльність із нарахуванням балів безперервної медичної освіти (CME).</li></ul>
+        </section>
+
+            <section class="hb-panel">
+              <h2>Діагностичний і біомаркерний мінімум</h2>
+              <p>Перед формуванням плану першої лінії метастатичної меланоми розділ передбачає гістологічне підтвердження метастатичного захворювання, тестування BRAF V600E/K у метастатичному вогнищі або, якщо це неможливо, у первинній пухлині з обговоренням ризику розбіжностей, вихідний функціональний стан і функцію органів, LDH та пухлинне навантаження (прогностичний сигнал CheckMate-067), МРТ головного мозку за симптомів з боку ЦНС і перевірку автоімунного анамнезу перед будь-яким інгібітором контрольних точок. Розділ прямо зазначає, що тестування NRAS і KIT корисне для послідовності лікування, але не для вибору між імунотерапією й таргетним лікуванням у першій лінії.</p>
+              <h3>Пов’язані записи</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-MELANOMA</code><span>Cutaneous melanoma</span><small>diseases</small></span><span class="hb-chip"><code>BIO-BRAF-V600E</code><span>BRAF V600E</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-BRAF-V600K</code><span>BRAF V600K</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-PDL1-EXPRESSION</code><span>PD-L1 expression</span><small>biomarkers</small></span><span class="hb-chip"><code>TEST-CT-CHEST-ABDOMEN-PELVIS</code><span>CT chest + abdomen + pelvis with IV contrast</span><small>tests</small></span></div>
+              <h3>Джерела розділу</h3>
+              <ul><li><code>SRC-NCCN-MELANOMA-2025</code> NCCN Cutaneous Melanoma</li><li><code>SRC-ESMO-MELANOMA-2024</code> ESMO Cutaneous Melanoma</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Логіка вибору імунотерапії першої лінії</h2>
+              <p>OpenOnco залишає ніволумаб + іпілімумаб базовою основою імунотерапії першої лінії для функціонально збережених пацієнтів із метастатичною меланомою без абсолютних протипоказань до подвійної блокади контрольних точок (CheckMate-067). Монотерапія пембролізумабом є базовим варіантом, коли пацієнт не може переносити вищий автоімунний ризик подвійної імунотерапії (KEYNOTE-006). Релатлімаб + ніволумаб (анти-LAG-3 + анти-PD-1) — додатковий варіант подвійної блокади з іншим профілем токсичності (RELATIVITY-047). Перед переходом до таргетної терапії розділ передбачає оцінку автоімунного анамнезу, функції органів і темпу захворювання щодо цих трьох варіантів імунотерапії.</p>
+              <h3>Пов’язані записи</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>ALGO-MELANOMA-METASTATIC-1L</code><span>ALGO-MELANOMA-METASTATIC-1L</span><small>algorithms</small></span><span class="hb-chip"><code>IND-MELANOMA-METASTATIC-1L-NIVO-IPI</code><span>IND-MELANOMA-METASTATIC-1L-NIVO-IPI</span><small>indications</small></span><span class="hb-chip"><code>IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO</code><span>IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO</span><small>indications</small></span><span class="hb-chip"><code>IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB</code><span>IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB</span><small>indications</small></span><span class="hb-chip"><code>REG-NIVO-IPI-MELANOMA</code><span>Nivolumab + ipilimumab (melanoma, 1L metastatic)</span><small>regimens</small></span><span class="hb-chip"><code>REG-PEMBRO-MONO-MELANOMA</code><span>Pembrolizumab monotherapy (advanced/metastatic melanoma, 1L; KEYNOTE-006)</span><small>regimens</small></span></div>
+              <h3>Джерела розділу</h3>
+              <ul><li><code>SRC-CHECKMATE-067-LARKIN-2019</code> Five-Year Survival with Combined Nivolumab and Ipilimumab in Advanced Melanoma</li><li><code>SRC-KEYNOTE-006-ROBERT-2015</code> Pembrolizumab versus Ipilimumab in Advanced Melanoma</li><li><code>SRC-RELATIVITY-047-TAWBI-2022</code> Relatlimab and Nivolumab versus Nivolumab in Untreated Advanced Melanoma</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Коли BRAF-спрямована терапія переходить у першу лінію</h2>
+              <p>Захворювання з мутацією BRAF V600E/K додає дабрафеніб + траметиніб або енкорафеніб + бініметиніб до базового обговорення першої лінії. Модель OpenOnco використовує таргетну терапію першою за потреби у швидкій відповіді (велике пухлинне навантаження, симптомне захворювання, прогресування із загрозою органам) або при протипоказаннях до імунотерапії (активне неконтрольоване автоімунне захворювання, нещодавня трансплантація органа, тяжка вихідна імунна дисфункція). Типовим підходом за мутації BRAF без цих ознак залишається імунотерапія першою, оскільки в більшості проспективних даних тривалі відповіді на імунотерапію перевищують тривалість користі таргетної терапії.</p>
+              <h3>Пов’язані записи</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME</code><span>IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME</span><small>indications</small></span><span class="hb-chip"><code>REG-ENCORAFENIB-BINIMETINIB-MELANOMA</code><span>Encorafenib + binimetinib (BRAF V600E/K melanoma)</span><small>regimens</small></span><span class="hb-chip"><code>RF-MELANOMA-BRAF-V600-ACTIONABLE</code><span>BRAF V600E or V600K activating mutation in metastatic / unresectable melanoma — ~40-50% prevalence cutaneous melanoma. Treatment-defining: BRAFi + MEKi doublet (dabrafenib + trametinib, encorafenib + binimetinib — COLUMBUS, vemurafenib + cobimetinib). Sequencing with anti-PD-1 (CheckMate-067, DREAMseq) — IO-first preferred in low-volume disease; BRAF+MEK first in symptomatic / high-LDH disease.
+</span><small>redflags</small></span></div>
+              <h3>Джерела розділу</h3>
+              <ul><li><code>SRC-COMBI-D-LONG-2014</code> Combined BRAF and MEK Inhibition versus BRAF Inhibition Alone in Melanoma</li><li><code>SRC-COMBI-V-ROBERT-2015</code> Improved Overall Survival in Melanoma with Combined Dabrafenib and Trametinib</li><li><code>SRC-COLUMBUS-DUMMETT-2018</code> Encorafenib plus binimetinib versus vemurafenib or encorafenib in patients with BRAF-mutant melanoma (COLUMBUS): a multicentre, open-label, randomised phase 3 trial</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Типові помилки</h2>
+              <p>Не вважайте вибір схеми всім завданням. Автоімунне захворювання середньої або тяжкої вираженості в анамнезі — паралельне завдання, яке може знизити пріоритет подвійної імунотерапії навіть у функціонально збереженого пацієнта з BRAF дикого типу. Активні метастази в головний мозок потребують невідкладного планування й додають обговорення первинної стереотаксичної радіохірургії та дексаметазону; системний вибір імунотерапії може не змінитися, але план безпеки змінюється. Ризик реактивації гепатитів B/C потребує вихідного скринінгу перед будь-яким інгібітором контрольних точок. Жоден із цих чинників сам по собі не змінює базового рішення першої лінії, але їх пропуск змінює перебіг допомоги.</p>
+              <h3>Пов’язані записи</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>RF-MELANOMA-HIGH-RISK-BIOLOGY</code><span>BRAF V600E/K OR NRAS mutation — drives BRAFi+MEKi vs ICI doublet decision.</span><small>redflags</small></span><span class="hb-chip"><code>RF-MELANOMA-IO-RESISTANT</code><span>IO-resistant metastatic melanoma — progression on prior anti-PD-1 (± anti-CTLA-4 or anti-LAG-3) regimen. Treatment shifts to BRAFi+MEKi salvage (if BRAF V600 mutant) OR lifileucel TIL (C-144-01 — ORR 31% post-IO post-BRAFi); ipi-nivo rechallenge in selected cases.
+</span><small>redflags</small></span></div>
+              <h3>Джерела розділу</h3>
+              <ul><li><code>SRC-NCCN-MELANOMA-2025</code> NCCN Cutaneous Melanoma</li><li><code>SRC-ESMO-MELANOMA-2024</code> ESMO Cutaneous Melanoma</li></ul>
+            </section>
+
+        <section class="hb-panel">
+          <h2>Розібрані синтетичні випадки</h2>
+          <ul><li><code>patient_melanoma_braf_v600_nivo_ipi</code> Меланома з мутацією BRAF V600: імунотерапія обрана першою лінією - <span>обґрунтування імунотерапії першою за мутації BRAF</span> <small>examples/patient_melanoma_braf_v600_nivo_ipi.json</small></li><li><code>patient_melanoma_braf_v600_dab_tram</code> Меланома з мутацією BRAF V600: таргетна терапія першою лінією - <span>таргетний маршрут для швидкої відповіді</span> <small>examples/patient_melanoma_braf_v600_dab_tram.json</small></li><li><code>patient_melanoma_braf_wt_pembro_mono</code> Меланома з BRAF дикого типу: монотерапія пембролізумабом - <span>вибір монотерапії імунним препаратом, врахування автоімунного анамнезу</span> <small>examples/patient_melanoma_braf_wt_pembro_mono.json</small></li></ul>
+        </section>
+        <section class="hb-panel hb-quiz">
+          <div class="hb-quiz-header">
+            <h2>Практичні запитання</h2>
+            <div class="hb-quiz-tools">
+              <span class="hb-score" id="hb-score" aria-live="polite">0 з 3 відповідей · 0 правильних</span>
+              <button type="button" class="hb-btn hb-btn--ghost" id="hb-quiz-reset">Скинути тест</button>
+            </div>
+          </div>
+          <p class="hb-quiz-note">Відповіді, результат і теми обґрунтування зберігаються лише в сесії браузера та очищуються після закриття вкладки. Для зарахування запитання з кількома відповідями потрібно обрати всі правильні варіанти й жодного зайвого.</p>
+
+      <form class="hb-question"
+            data-question-id="HQ-MELANOMA-MET-1L-001"
+            data-question-type="type_a"
+            data-correct-answer="A"
+            data-graded="true"
+            novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Запитання 1</span>
+          <span class="hb-badge">одна правильна відповідь</span>
+          <span class="hb-badge">початковий рівень</span>
+          <span class="hb-question-id"><code>HQ-MELANOMA-MET-1L-001</code></span>
+        </div>
+        <p class="hb-question-stem">Функціонально збережений пацієнт має метастатичну меланому з BRAF дикого типу, нормальним LDH, без автоімунного анамнезу й симптомів ЦНС. Який маршрут є базовим у навчальній моделі першої лінії OpenOnco?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-001" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Ніволумаб + іпілімумаб</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-001" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Енкорафеніб + бініметиніб</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-001" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Цитотоксичний дакарбазин</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-001" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Спостереження до прогресування</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Перевірити відповідь</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Скинути</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Правильна відповідь:</strong> A</p>
+          <p class="hb-result-explanation">Подвійна блокада контрольних точок ніволумабом + іпілімумабом — базова основа імунотерапії для функціонально збережених пацієнтів із метастатичною меланомою в моделі OpenOnco (CheckMate-067). BRAF-спрямовані схеми не застосовують за BRAF дикого типу, цитотоксичний дакарбазин не є базовим типовим вибором першої лінії, а спостереження не використовується при активному метастатичному захворюванні.</p>
+          <div class="hb-result-sources"><span>Джерела:</span> <code class="hb-result-source">SRC-CHECKMATE-067-LARKIN-2019</code><code class="hb-result-source">SRC-NCCN-MELANOMA-2025</code></div>
+          <div class="hb-result-tags">Теми обґрунтування:<span class="hb-result-tag">regimen_selection</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question"
+            data-question-id="HQ-MELANOMA-MET-1L-002"
+            data-question-type="type_a"
+            data-correct-answer="A"
+            data-graded="true"
+            novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Запитання 2</span>
+          <span class="hb-badge">одна правильна відповідь</span>
+          <span class="hb-badge">середній рівень</span>
+          <span class="hb-question-id"><code>HQ-MELANOMA-MET-1L-002</code></span>
+        </div>
+        <p class="hb-question-stem">Пацієнт має метастатичну меланому з BRAF V600E, швидко прогресуючим симптомним вісцеральним захворюванням, підвищеним LDH і нещодавнім застосуванням кортикостероїдів через окремий автоімунний стан. Який варіант першої лінії OpenOnco відповідає цьому профілю?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-002" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Енкорафеніб + бініметиніб (BRAF-спрямована терапія) як базовий варіант першої лінії</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-002" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Ніволумаб + іпілімумаб як базовий варіант першої лінії</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-002" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Монотерапія пембролізумабом</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-002" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Спостереження з повторною візуалізацією</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Перевірити відповідь</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Скинути</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Правильна відповідь:</strong> A</p>
+          <p class="hb-result-explanation">BRAF V600 у поєднанні з потребою у швидкій відповіді та протипоказанням до імунотерапії (нещодавні кортикостероїди через активне автоімунне захворювання) — саме ситуація, яку OpenOnco спрямовує до BRAF-таргетної терапії першої лінії (контекст COMBI/COLUMBUS). Подвійна імунотерапія тут протипоказана; монотерапія пембролізумабом також є імунотерапією та має той самий ризик. Спостереження недоречне за симптомного прогресування.</p>
+          <div class="hb-result-sources"><span>Джерела:</span> <code class="hb-result-source">SRC-COMBI-V-ROBERT-2015</code><code class="hb-result-source">SRC-COLUMBUS-DUMMETT-2018</code></div>
+          <div class="hb-result-tags">Теми обґрунтування:<span class="hb-result-tag">biomarker_routing</span><span class="hb-result-tag">safety_screening</span><span class="hb-result-tag">regimen_selection</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question"
+            data-question-id="HQ-MELANOMA-MET-1L-003"
+            data-question-type="type_k"
+            data-correct-answer="A|B|C"
+            data-graded="true"
+            novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Запитання 3</span>
+          <span class="hb-badge">кілька правильних відповідей</span>
+          <span class="hb-badge">середній рівень</span>
+          <span class="hb-question-id"><code>HQ-MELANOMA-MET-1L-003</code></span>
+        </div>
+        <p class="hb-question-stem">Які твердження правильні щодо обґрунтування першої лінії метастатичної меланоми в OpenOnco?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MELANOMA-MET-1L-003" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Тестування BRAF V600E/K потрібне перед формуванням плану першої лінії, оскільки визначає маршрути імунотерапії та таргетних стратегій.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MELANOMA-MET-1L-003" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Монотерапія пембролізумабом є базовим типовим вибором за протипоказань до подвійної імунотерапії через автоімунний анамнез або супутні стани (контекст KEYNOTE-006).</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MELANOMA-MET-1L-003" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Релатлімаб + ніволумаб представлено додатковим варіантом подвійної блокади контрольних точок з іншим профілем токсичності (RELATIVITY-047).</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MELANOMA-MET-1L-003" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Усі пацієнти з BRAF V600 мають отримувати BRAF-таргетну терапію першою, оскільки імунотерапія неефективна за мутації BRAF.</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Перевірити відповідь</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Скинути</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Правильна відповідь:</strong> A, B, C</p>
+          <p class="hb-result-explanation">Тестування BRAF V600 для маршрутизації, монотерапія пембролізумабом за протипоказань до подвійної імунотерапії та релатлімаб + ніволумаб як додатковий варіант подвійної блокади відповідають моделі OpenOnco. Імунотерапія ефективна при меланомі з мутацією BRAF і зазвичай обирається першою, якщо потреба у швидкій відповіді або протипоказання не спрямовують до BRAF-таргетної терапії.</p>
+          <div class="hb-result-sources"><span>Джерела:</span> <code class="hb-result-source">SRC-NCCN-MELANOMA-2025</code><code class="hb-result-source">SRC-KEYNOTE-006-ROBERT-2015</code><code class="hb-result-source">SRC-RELATIVITY-047-TAWBI-2022</code></div>
+          <div class="hb-result-tags">Теми обґрунтування:<span class="hb-result-tag">biomarker_routing</span><span class="hb-result-tag">regimen_selection</span><span class="hb-result-tag">sequencing</span></div>
+        </div>
+      </form>
+
+        </section>
+      </div>
+      <aside class="hb-side">
+        <section class="hb-panel hb-disclaimer">
+          <strong>Лише для навчання.</strong>
+          <p>Цей розділ авторства OpenOnco не є офіційним матеріалом ESMO, не нараховує балів CME та не є індивідуальною медичною порадою.</p>
+        </section>
+        <section class="hb-panel hb-review-panel">
+          <h2>Статус рев’ю</h2>
+          <dl class="hb-review-meta">
+            <dt>Поточний статус</dt>
+            <dd><span class="hb-badge hb-badge--draft">чернетка</span></dd>
+            <dt>Останнє рев’ю</dt><dd><em>ще не перевірено</em></dd>
+          </dl>
+          <h3>Клінічні підтвердження</h3>
+          <p class='hb-signoff-empty'>Клінічних підтверджень ще не зафіксовано.</p>
+          <p class="hb-review-rules"><a href="/ukr/specs.html">HANDBOOK_MODE_SPEC §4</a>визначає переходи статусів і поріг давності рев’ю в 365 днів.</p>
+        </section>
+        <section class="hb-panel">
+          <h2>Джерела розділу</h2>
+          <ul><li><code>SRC-NCCN-MELANOMA-2025</code> NCCN Cutaneous Melanoma</li><li><code>SRC-ESMO-MELANOMA-2024</code> ESMO Cutaneous Melanoma</li><li><code>SRC-CHECKMATE-067-LARKIN-2019</code> Five-Year Survival with Combined Nivolumab and Ipilimumab in Advanced Melanoma</li><li><code>SRC-KEYNOTE-006-ROBERT-2015</code> Pembrolizumab versus Ipilimumab in Advanced Melanoma</li><li><code>SRC-COLUMBUS-DUMMETT-2018</code> Encorafenib plus binimetinib versus vemurafenib or encorafenib in patients with BRAF-mutant melanoma (COLUMBUS): a multicentre, open-label, randomised phase 3 trial</li><li><code>SRC-COMBI-D-LONG-2014</code> Combined BRAF and MEK Inhibition versus BRAF Inhibition Alone in Melanoma</li><li><code>SRC-COMBI-V-ROBERT-2015</code> Improved Overall Survival in Melanoma with Combined Dabrafenib and Trametinib</li><li><code>SRC-RELATIVITY-047-TAWBI-2022</code> Relatlimab and Nivolumab versus Nivolumab in Untreated Advanced Melanoma</li></ul>
+        </section>
+        <section class="hb-panel">
+          <h2>Карта записів</h2>
+          <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-MELANOMA</code><span>Cutaneous melanoma</span><small>diseases</small></span><span class="hb-chip"><code>ALGO-MELANOMA-METASTATIC-1L</code><span>ALGO-MELANOMA-METASTATIC-1L</span><small>algorithms</small></span><span class="hb-chip"><code>IND-MELANOMA-METASTATIC-1L-NIVO-IPI</code><span>IND-MELANOMA-METASTATIC-1L-NIVO-IPI</span><small>indications</small></span><span class="hb-chip"><code>IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO</code><span>IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO</span><small>indications</small></span><span class="hb-chip"><code>IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME</code><span>IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME</span><small>indications</small></span><span class="hb-chip"><code>IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB</code><span>IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB</span><small>indications</small></span><span class="hb-chip"><code>REG-NIVO-IPI-MELANOMA</code><span>Nivolumab + ipilimumab (melanoma, 1L metastatic)</span><small>regimens</small></span><span class="hb-chip"><code>REG-PEMBRO-MONO-MELANOMA</code><span>Pembrolizumab monotherapy (advanced/metastatic melanoma, 1L; KEYNOTE-006)</span><small>regimens</small></span><span class="hb-chip"><code>REG-ENCORAFENIB-BINIMETINIB-MELANOMA</code><span>Encorafenib + binimetinib (BRAF V600E/K melanoma)</span><small>regimens</small></span><span class="hb-chip"><code>REG-RELATLIMAB-NIVOLUMAB-MELANOMA</code><span>Relatlimab + nivolumab (Opdualag, melanoma)</span><small>regimens</small></span><span class="hb-chip"><code>RF-MELANOMA-BRAF-V600-ACTIONABLE</code><span>BRAF V600E or V600K activating mutation in metastatic / unresectable melanoma — ~40-50% prevalence cutaneous melanoma. Treatment-defining: BRAFi + MEKi doublet (dabrafenib + trametinib, encorafenib + binimetinib — COLUMBUS, vemurafenib + cobimetinib). Sequencing with anti-PD-1 (CheckMate-067, DREAMseq) — IO-first preferred in low-volume disease; BRAF+MEK first in symptomatic / high-LDH disease.
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-MELANOMA-IO-RESISTANT</code><span>IO-resistant metastatic melanoma — progression on prior anti-PD-1 (± anti-CTLA-4 or anti-LAG-3) regimen. Treatment shifts to BRAFi+MEKi salvage (if BRAF V600 mutant) OR lifileucel TIL (C-144-01 — ORR 31% post-IO post-BRAFi); ipi-nivo rechallenge in selected cases.
+</span><small>redflags</small></span><span class="hb-chip"><code>RF-MELANOMA-HIGH-RISK-BIOLOGY</code><span>BRAF V600E/K OR NRAS mutation — drives BRAFi+MEKi vs ICI doublet decision.</span><small>redflags</small></span><span class="hb-chip"><code>BIO-BRAF-V600E</code><span>BRAF V600E</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-BRAF-V600K</code><span>BRAF V600K</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-NRAS-Q61R</code><span>NRAS Q61R</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-KIT</code><span>KIT mutation (c-KIT / CD117 gene)</span><small>biomarkers</small></span><span class="hb-chip"><code>BIO-PDL1-EXPRESSION</code><span>PD-L1 expression</span><small>biomarkers</small></span><span class="hb-chip"><code>TEST-CT-CHEST-ABDOMEN-PELVIS</code><span>CT chest + abdomen + pelvis with IV contrast</span><small>tests</small></span></div>
+        </section>
+      </aside>
+    </div>
+    <script>
+      (function() {
+        var CHAPTER_ID = "HB-MELANOMA-METASTATIC-1L";
+        var GRADED_TOTAL = 3;
+        var STORAGE_KEY = 'openonco-handbook-' + CHAPTER_ID + '-quiz';
+        var forms = Array.prototype.slice.call(document.querySelectorAll('.hb-quiz .hb-question'));
+        var scoreEl = document.getElementById('hb-score');
+        var resetAllBtn = document.getElementById('hb-quiz-reset');
+        var storage;
+        try { storage = window.sessionStorage; } catch (e) { storage = null; }
+        var state = {};
+        if (storage) {
+          try { state = JSON.parse(storage.getItem(STORAGE_KEY) || '{}') || {}; } catch (e) { state = {}; }
+        }
+        function persist() {
+          if (!storage) { return; }
+          try { storage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        }
+        function normalize(list) {
+          return (list || []).map(function(k) { return String(k).toUpperCase(); }).slice().sort().join('|');
+        }
+        function updateScore() {
+          var answered = 0;
+          var correct = 0;
+          Object.keys(state).forEach(function(qid) {
+            var entry = state[qid];
+            if (entry && entry.submitted && entry.graded) {
+              answered += 1;
+              if (entry.correct) { correct += 1; }
+            }
+          });
+          if (scoreEl) {
+            scoreEl.textContent = answered + ' з ' + GRADED_TOTAL + ' відповідей · ' + correct + ' правильних';
+          }
+        }
+        forms.forEach(function(form) {
+          var qid = form.getAttribute('data-question-id');
+          var qtype = form.getAttribute('data-question-type');
+          var graded = form.getAttribute('data-graded') === 'true';
+          var correctAttr = form.getAttribute('data-correct-answer') || '';
+          var correctKey = correctAttr.split('|').filter(Boolean).slice().sort().join('|');
+          var resultEl = form.querySelector('.hb-result');
+          var headlineEl = form.querySelector('[data-role="headline"]');
+          var statusEl = form.querySelector('[data-role="status"]');
+          var submitBtn = form.querySelector('[data-action="submit"]');
+          var resetBtn = form.querySelector('[data-action="reset"]');
+          var revealBtn = form.querySelector('[data-action="reveal"]');
+          function selectedKeys() {
+            return Array.prototype.slice.call(
+              form.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked')
+            ).map(function(input) { return input.value; });
+          }
+          function setResultClass(isCorrect) {
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (isCorrect === true) { resultEl.classList.add('hb-result--correct'); }
+            else if (isCorrect === false) { resultEl.classList.add('hb-result--incorrect'); }
+            else { resultEl.classList.add('hb-result--reveal'); }
+          }
+          function showResult(entry) {
+            resultEl.hidden = false;
+            if (graded) {
+              setResultClass(entry.correct);
+              if (statusEl) {
+                statusEl.textContent = entry.correct ? '✓ Правильно' : '✗ Неправильно — дивіться пояснення';
+              }
+            } else {
+              setResultClass(null);
+              if (statusEl) { statusEl.textContent = 'Зразок відповіді відкрито'; }
+            }
+          }
+          function clearResult() {
+            resultEl.hidden = true;
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (statusEl) { statusEl.textContent = ''; }
+          }
+          function rehydrate() {
+            var entry = state[qid];
+            if (!entry) { return; }
+            (entry.selected || []).forEach(function(key) {
+              var input = form.querySelector('input[value="' + key + '"]');
+              if (input) { input.checked = true; }
+            });
+            if (entry.submitted) { showResult(entry); }
+          }
+          function submitGraded(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            var selected = selectedKeys();
+            if (selected.length === 0) {
+              if (statusEl) { statusEl.textContent = 'Спершу оберіть варіант.'; }
+              return;
+            }
+            var selectedKey = normalize(selected);
+            var isCorrect = selectedKey === correctKey;
+            state[qid] = { submitted: true, graded: true, selected: selected, correct: isCorrect };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function revealOnly(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            state[qid] = { submitted: true, graded: false, selected: [], correct: null };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function resetQuestion(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+              if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+              else { input.value = ''; }
+            });
+            delete state[qid];
+            persist();
+            clearResult();
+            updateScore();
+          }
+          if (submitBtn) { submitBtn.addEventListener('click', submitGraded); }
+          if (resetBtn) { resetBtn.addEventListener('click', resetQuestion); }
+          if (revealBtn) { revealBtn.addEventListener('click', revealOnly); }
+          form.addEventListener('submit', function(event) { event.preventDefault(); if (graded) { submitGraded(event); } });
+          rehydrate();
+        });
+        if (resetAllBtn) {
+          resetAllBtn.addEventListener('click', function() {
+            state = {};
+            persist();
+            forms.forEach(function(form) {
+              Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+                if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+                else { input.value = ''; }
+              });
+              var resultEl = form.querySelector('.hb-result');
+              var statusEl = form.querySelector('[data-role="status"]');
+              if (resultEl) {
+                resultEl.hidden = true;
+                resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+              }
+              if (statusEl) { statusEl.textContent = ''; }
+            });
+            updateScore();
+          });
+        }
+        updateScore();
+      })();
+    </script>
+
+  </main>
+</body>
+</html>

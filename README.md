@@ -21,10 +21,12 @@ OpenOnco is an early-stage informational project. Clinical content can be draft,
 | Synthetic examples | [Gallery](https://openonco.info/gallery.html) | [Приклади](https://openonco.info/ukr/gallery.html) | Public, synthetic examples of rendered outputs |
 | Coverage | [Capabilities](https://openonco.info/capabilities.html) | [Про проєкт](https://openonco.info/ukr/about.html) | Counts and limitations; coverage is not clinical readiness |
 | Tumor-board questions | [Ask](https://openonco.info/ask.html) | [Запитати](https://openonco.info/ukr/ask.html) | Server-backed prototype; submitted inputs leave the browser |
-| Handbook | [Read](https://openonco.info/handbook.html) | English MVP | Learning chapters; no ESMO endorsement or CME credit |
+| Handbook | [Read](https://openonco.info/handbook.html) | [Читати](https://openonco.info/ukr/handbook.html) | 9 chapters / 27 questions; Ukrainian translation awaits clinical review; no ESMO endorsement or CME credit |
 | Clinician review | [DLBCL 1L packet](https://openonco.info/review/dlbcl-1l/) | English packet | 26 synthetic scenarios, actual plans, traces and local feedback export |
 
 Use synthetic profiles for public demos and feedback. Do not submit identifiable patient data to the question prototype or GitHub. The browser plan builder processes profiles locally; that privacy property does not apply to server-backed tools.
+
+Public navigation, project pages and Wiki search also have [Español](https://openonco.info/es/), [Português](https://openonco.info/pt/), [Deutsch](https://openonco.info/de/) and [Français](https://openonco.info/fr/) editions. Clinical records retain their source language; interactive tools have localized introductions with explicitly labeled English launch links. See the [localization scope and maintenance guide](docs/LOCALIZATION.md).
 
 ## Current repository snapshot
 

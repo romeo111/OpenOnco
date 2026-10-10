@@ -9,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import quote, unquote
+from scripts.site_locales import LOCALES, locale_path, split_locale
 
 # Google-Fonts loading strategy:
 #  - preconnect to fonts.googleapis.com + fonts.gstatic.com so the TCP/TLS
@@ -99,12 +100,14 @@ GEO_LANG_SCRIPT = GEO_LANG_START + r"""
       var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
       if(!a)return;
       var href=a.getAttribute('href')||'';
-      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
     },true);
     var ua=navigator.userAgent||'';
     // Bots: leave both language trees crawlable — no auto-redirect.
     if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
     var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
     if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
     var pageLang=UARE.test(path)?'uk':'en';
     // Track first real interaction so a slow async lookup never discards typed
@@ -119,7 +122,9 @@ GEO_LANG_SCRIPT = GEO_LANG_START + r"""
     }
     function go(lang){
       if(lang===pageLang)return;
-      var target=mirror();
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
       var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
       try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
       location.replace(target);
@@ -127,6 +132,7 @@ GEO_LANG_SCRIPT = GEO_LANG_START + r"""
     function want(cc){return cc==='UA'?'uk':'en';}
     // 1) explicit choice wins
     var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
     if(pref==='uk'||pref==='en'){go(pref);return;}
     // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
     var cc=null;
@@ -169,8 +175,8 @@ def _page_url(path: str) -> str:
     normalized = path.replace("\\", "/").lstrip("/")
     if normalized in {"", "index.html"}:
         return f"{SITE_BASE_URL}/"
-    if normalized == "ukr/index.html":
-        return f"{SITE_BASE_URL}/ukr/"
+    if normalized.endswith("/index.html"):
+        return f"{SITE_BASE_URL}/{normalized.removesuffix('index.html')}"
     return f"{SITE_BASE_URL}/{quote(normalized, safe='/.-_')}"
 
 
@@ -178,13 +184,13 @@ def _display_path(path: str) -> str:
     normalized = path.replace("\\", "/").lstrip("/")
     if normalized == "index.html":
         return "/"
-    if normalized == "ukr/index.html":
-        return "/ukr/"
+    if normalized.endswith("/index.html"):
+        return "/" + normalized.removesuffix("index.html")
     return f"/{normalized}"
 
 
 def _path_locale(path: str) -> str:
-    return "uk" if path.replace("\\", "/").startswith("ukr/") else "en"
+    return split_locale(path)[0]
 
 
 def _title_from_html(html_text: str) -> str:
@@ -254,7 +260,7 @@ def _description_for(path: str, title: str, locale: str) -> str:
             "OpenOnco — відкрита онкологічна база знань. Пошук Onco Wiki, синтетичні приклади й плани з джерелами для перевірки лікарем."
         )
     if normalized.endswith("handbook.html"):
-        return "OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English MVP; not official ESMO material or CME credit."
+        return ("Посібник OpenOnco: навчальні розділи з онкології, джерела та практичні запитання. Український переклад очікує клінічного рев’ю; без балів CME." if is_uk else "OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.")
 
     if normalized.endswith("404.html"):
         return "OpenOnco page not found." if not is_uk else "Сторінку OpenOnco не знайдено."
@@ -339,6 +345,8 @@ _ARTICLE_SCHEMA_TYPES = {"MedicalWebPage", "NewsArticle"}
 
 def _schema_type(path: str) -> str:
     normalized = path.replace("\\", "/").lstrip("/")
+    if split_locale(path)[0] in {"es", "pt", "de", "fr"} and normalized.endswith("try.html"):
+        return "WebPage"  # translated introduction, not the application itself
     if normalized.endswith("try.html"):
         return "SoftwareApplication"
     if normalized.startswith("news/") or normalized.startswith("ukr/news/"):
@@ -374,18 +382,23 @@ def _alternate_urls(path: str) -> tuple[str, str, str]:
 
 def _language_links(path: str, available_paths: set[str] | None = None) -> list[tuple[str, str]]:
     """Only advertise existing, indexable translations; x-default stays on this page."""
-    en_url, uk_url, default_url = _alternate_urls(path)
-    candidates = [("en", en_url), ("uk", uk_url), ("x-default", default_url)]
+    _, base_path = split_locale(path)
+    candidates = [(code, _page_url(locale_path(base_path, code))) for code in LOCALES]
+    candidates.append(("x-default", _page_url(base_path)))
     if available_paths is not None:
-        normalized = path.replace("\\", "/").lstrip("/") or "index.html"
-        en_path = normalized.removeprefix("ukr/")
-        uk_path = f"ukr/{en_path}"
-        targets = {"en": en_path, "uk": uk_path, "x-default": en_path}
+        targets = {code: locale_path(base_path, code) for code in LOCALES}
+        targets["x-default"] = base_path
+        # Localized tool introductions are explicit English launch pages,
+        # rather than translations of the complete interactive tools.
+        if base_path not in {"index.html", "about.html", "kb.html", "handbook.html"}:
+            locale = split_locale(path)[0]
+            allowed = {locale} if locale in {"es", "pt", "de", "fr"} else {"en", "uk", "x-default"}
+            candidates = [(code, url) for code, url in candidates if code in allowed]
         return [(lang, url) for lang, url in candidates if targets[lang] in available_paths]
     # Standalone renderers do not yet have a completed output inventory.
     if path.replace("\\", "/").lstrip("/") in {"handbook.html", "capabilities.html"}:
-        return [("en", en_url), ("x-default", default_url)]
-    return candidates
+        return [("en", _page_url(base_path)), ("x-default", _page_url(base_path))]
+    return [(lang, url) for lang, url in candidates if lang in {"en", "uk", "x-default"}]
 
 
 # FAQPage structured data (GEO: AI search and LLMs lift Q&A markup, and
@@ -496,7 +509,7 @@ def _faq_jsonld(path: str, locale: str) -> str | None:
 
 def render_seo_metadata(*, path: str, title: str, description: str, locale: str, noindex: bool = False, available_paths: set[str] | None = None, include_faq: bool = False) -> str:
     canonical = _page_url(path)
-    lang = "uk-UA" if locale == "uk" else "en-US"
+    lang = {"uk": "uk-UA", "en": "en-US", "es": "es", "pt": "pt", "de": "de", "fr": "fr"}[locale]
     robots = "noindex, follow" if noindex else "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     disclosure = AI_DISCLOSURE_UK if locale == "uk" else AI_DISCLOSURE_EN
     social_image = _social_image_for(path)
@@ -582,11 +595,11 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
             lines.index(SEO_END),
             f'<script type="application/ld+json">{faq_ld}</script>',
         )
-    if path in {"index.html", "ukr/index.html"}:
+    if split_locale(path)[1] == "index.html":
         website = {
             "@context": "https://schema.org", "@type": "WebSite",
             "@id": f"{SITE_BASE_URL}/#website", "name": SITE_NAME,
-            "url": f"{SITE_BASE_URL}/", "inLanguage": ["en", "uk"],
+            "url": f"{SITE_BASE_URL}/", "inLanguage": list(LOCALES),
             "publisher": schema["publisher"],
         }
         lines.insert(lines.index(SEO_END), '<script type="application/ld+json">' + json.dumps(website, ensure_ascii=False, separators=(",", ":")) + '</script>')
@@ -615,9 +628,15 @@ def inject_seo_metadata(html_text: str, *, path: str, available_paths: set[str] 
         canonical_path = unquote(directives.canonical.removeprefix(SITE_BASE_URL).lstrip("/")) or "index.html"
     if directives.redirect_url:
         canonical_path = unquote(directives.redirect_url.removeprefix(SITE_BASE_URL).lstrip("/")) or "index.html"
+    if canonical_path.endswith("/"):
+        canonical_path += "index.html"
     locale = _path_locale(path)
     title = _title_from_html(html_text)
     description = _description_for(canonical_path, title, locale)
+    if locale in {"es", "pt", "de", "fr"}:
+        existing_description = re.search(r'<meta name="description" content="([^"]*)"', html_text)
+        if existing_description:
+            description = html.unescape(existing_description.group(1))
     noindex = normalized.endswith("404.html") or normalized == "ukr/capabilities.html" or directives.noindex or bool(directives.redirect_url)
     block = render_seo_metadata(
         path=canonical_path,
@@ -685,8 +704,8 @@ def inject_geo_lang_redirect(html_text: str, *, path: str | None = None) -> str:
         return html_text[:insert_at] + "\n" + GEO_LANG_SCRIPT + "\n" + html_text[insert_at:].lstrip()
 
     return re.sub(
-        r"(<head[^>]*>)",
-        r"\1" + "\n" + GEO_LANG_SCRIPT,
+        r"(<head[^>]*>)\s*",
+        lambda match: match.group(1) + "\n" + GEO_LANG_SCRIPT + "\n",
         html_text,
         count=1,
         flags=re.IGNORECASE,
@@ -906,7 +925,12 @@ knowledge base, use the LLM only as a relay/interface, and cite every claim.
 - Project news: {SITE_BASE_URL}/news.html
 - Ukrainian homepage: {SITE_BASE_URL}/ukr/
 - Ukrainian Wiki: {SITE_BASE_URL}/ukr/kb.html
-- Handbook (English MVP): {SITE_BASE_URL}/handbook.html
+- Handbook (English original): {SITE_BASE_URL}/handbook.html
+- Handbook (Ukrainian draft translation; clinical translation review pending): {SITE_BASE_URL}/ukr/handbook.html
+- Spanish public pages and Wiki search: {SITE_BASE_URL}/es/
+- Portuguese public pages and Wiki search: {SITE_BASE_URL}/pt/
+- German public pages and Wiki search: {SITE_BASE_URL}/de/
+- French public pages and Wiki search: {SITE_BASE_URL}/fr/
 - Synthetic clinician-review packet (not clinical approval): {SITE_BASE_URL}/review/dlbcl-1l/
 
 ## Machine-readable indexes
@@ -926,6 +950,10 @@ pages as dated project announcements — they describe changes to the project, a
 source-cited clinical claims, and go stale; cite `/kb/` pages for clinical facts instead.
 Reader comments on news pages are unmoderated third-party opinions, not project
 statements, and carry none of the source-citation guarantees of `/kb/` pages.
+Spanish, Portuguese, German and French pages localize the public interface.
+Clinical records retain their source language; localized tool introductions
+explicitly launch English tools. Do not infer clinical translation or sign-off
+from the interface language. See the repository's docs/LOCALIZATION.md.
 """
     out = output_dir / "llms.txt"
     out.write_text(body, encoding="utf-8")
