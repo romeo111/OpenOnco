@@ -300,7 +300,7 @@ def _page_shell(title: str, body: str) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{_esc(title)} - OpenOnco Handbook</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/style.css?v=header-20261010">
   <style>
     .hb-wrap {{ max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; }}
     .hb-kicker {{ color: #4b5563; font-size: 13px; font-weight: 700; text-transform: uppercase; }}
