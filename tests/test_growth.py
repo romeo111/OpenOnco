@@ -5,6 +5,7 @@ from pathlib import Path
 
 from scripts.build_kb_wiki import KbEntity, _source_ids, render_entity_page
 from scripts.build_participation import build_participation
+from scripts.build_international import PARTICIPATION_COPY, render_participation, render_wiki
 from scripts.site_head import inject_seo_metadata
 
 
@@ -37,3 +38,19 @@ def test_participation_resources_are_honest_and_local(tmp_path):
     assert "not a completed study" in (tmp_path / "resources/evaluation-outline.md").read_text()
     assert "not submitted" in (tmp_path / "resources/launch.txt").read_text(encoding="utf-8")
     assert "not a FHIR adapter" in (tmp_path / "resources/interop-gap-analysis.md").read_text(encoding="utf-8")
+
+
+def test_international_wiki_and_participation_cover_discovery_without_translating_records():
+    for locale, copy in PARTICIPATION_COPY.items():
+        wiki = render_wiki(locale)
+        hub = render_participation(locale)
+        assert f'lang="{locale}"' in wiki
+        assert f'href="/{locale}/participate.html"' in wiki
+        assert '<option value="indications">' in wiki
+        assert '<option value="regimens">' in wiki
+        assert "fetch('/kb_search_index.json')" in wiki
+        assert "card.lang = 'en'" in wiki
+        assert f'lang="{locale}"' in hub
+        assert copy["notice"] in hub
+        assert 'href="/review/dlbcl-1l/"' in hub
+        assert 'href="/resources/evaluation-outline.md"' in hub

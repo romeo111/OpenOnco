@@ -269,7 +269,13 @@ def _description_for(path: str, title: str, locale: str) -> str:
             f"{title_clean}: попередній запис бази OpenOnco з джерелами, статусом рецензування та пов'язаними сутностями. Потрібна перевірка лікаря."
         )
     if normalized.endswith("participate.html"):
-        return ("OpenOnco developer setup, synthetic clinical review, interoperability gaps and participation resources." if not is_uk else "Як долучитися до OpenOnco: локальний запуск, синтетичне клінічне рецензування, стандарти та матеріали участі.")
+        descriptions = {
+            "es": "Cómo participar en OpenOnco: desarrollo, revisión clínica con casos sintéticos y materiales de investigación.",
+            "pt": "Como participar no OpenOnco: desenvolvimento, revisão clínica de casos sintéticos e materiais de investigação.",
+            "de": "Bei OpenOnco mitwirken: Entwicklung, klinische Prüfung synthetischer Fälle und Forschungsmaterialien.",
+            "fr": "Participer à OpenOnco : développement, évaluation clinique de cas synthétiques et documents de recherche.",
+        }
+        return descriptions.get(locale, "Як долучитися до OpenOnco: локальний запуск, синтетичне клінічне рецензування, стандарти та матеріали участі." if is_uk else "OpenOnco developer setup, synthetic clinical review, interoperability gaps and participation resources.")
 
     if normalized.endswith("404.html"):
         return "OpenOnco page not found." if not is_uk else "Сторінку OpenOnco не знайдено."
