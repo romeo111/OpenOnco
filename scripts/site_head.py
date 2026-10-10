@@ -571,6 +571,9 @@ def inject_seo_metadata(html_text: str, *, path: str) -> str:
         return html_text
 
     normalized = path.replace("\\", "/").lstrip("/")
+    # Synthetic review artifacts deliberately have noindex and no language twin.
+    if normalized.startswith("review/"):
+        return html_text
     # The Ukrainian capabilities material moved into the project page. Keep
     # bookmarks working while asking crawlers to index the canonical page only.
     canonical_path = "ukr/about.html" if normalized == "ukr/capabilities.html" else path
@@ -629,7 +632,8 @@ def inject_geo_lang_redirect(html_text: str, *, path: str | None = None) -> str:
         re.search(r'<meta[^>]+http-equiv=["\']?\s*refresh', html_text, flags=re.IGNORECASE)
     )
     is_404 = bool(path and path.replace("\\", "/").lstrip("/").endswith("404.html"))
-    if is_redirect_stub or is_404:
+    is_review = bool(path and path.replace("\\", "/").lstrip("/").startswith("review/"))
+    if is_redirect_stub or is_404 or is_review:
         # Never carry the script here; strip a previously-injected block if present.
         return existing.sub("", html_text, count=1) if existing.search(html_text) else html_text
 
@@ -659,6 +663,7 @@ def write_sitemap(output_dir: Path) -> Path:
         p for p in _html_pages(output_dir)
         if p.name != "404.html"
         and p.relative_to(output_dir).as_posix() != "ukr/capabilities.html"
+        and not p.relative_to(output_dir).as_posix().startswith("review/")
     ]
     today = datetime.now(timezone.utc).date().isoformat()
     urls = []

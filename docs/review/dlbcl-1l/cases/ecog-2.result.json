@@ -1,0 +1,2651 @@
+{
+  "synthetic_only": true,
+  "clinical_review_status": "pending",
+  "result": {
+    "patient_id": "SYNTHETIC-REVIEW-ECOG-2",
+    "disease_id": "DIS-DLBCL-NOS",
+    "algorithm_id": "ALGO-DLBCL-1L",
+    "default_indication_id": "IND-DLBCL-1L-POLA-R-CHP",
+    "alternative_indication_id": "IND-DLBCL-1L-RCHOP",
+    "default_indication": {
+      "id": "IND-DLBCL-1L-POLA-R-CHP",
+      "plan_track": "aggressive",
+      "applicable_to": {
+        "disease_id": "DIS-DLBCL-NOS",
+        "line_of_therapy": 1,
+        "stage_requirements": [],
+        "biomarker_requirements_required": [
+          {
+            "biomarker_id": "BIO-CD20-IHC",
+            "required": true,
+            "value_constraint": "positive (CD20+)"
+          },
+          {
+            "biomarker_id": "BIO-CD79B-IHC",
+            "required": true,
+            "value_constraint": "positive (CD79b is the polatuzumab vedotin target; expressed in nearly all B-cell lymphomas including DLBCL)"
+          },
+          {
+            "biomarker_id": "BIO-DLBCL-IPI",
+            "required": true,
+            "value_constraint": "IPI ≥2 — POLARIX PFS benefit driven by higher-risk IPI subset; IPI 0-1 see R-CHOP standard track"
+          },
+          {
+            "biomarker_id": "BIO-HBV-STATUS",
+            "required": true,
+            "value_constraint": "any value valid (categorical etiology gate; HBsAg+ or anti-HBc+ → entecavir prophylaxis mandatory before first rituximab dose; anti-CD20 reactivation risk not reduced by polatuzumab)"
+          },
+          {
+            "biomarker_id": "BIO-HCV-STATUS",
+            "required": true,
+            "value_constraint": "any value valid (categorical etiology gate; anti-HCV+ → reflex BIO-HCV-RNA; coordinate DAA with hepatology)"
+          },
+          {
+            "biomarker_id": "BIO-HIV-STATUS",
+            "required": true,
+            "value_constraint": "any value valid (categorical etiology gate; HIV+ → cART throughout, PJP/MAC prophylaxis if CD4 < 200, CNS prophylaxis regardless of CNS-IPI)"
+          },
+          {
+            "biomarker_id": "BIO-DLBCL-COO-HANS",
+            "required": false,
+            "value_constraint": "Activated B-cell-like (ABC / non-GCB) showed greater Pola-R-CHP benefit in POLARIX subgroup"
+          },
+          {
+            "biomarker_id": "BIO-BCL2-EXPRESSION-IHC",
+            "required": false,
+            "value_constraint": "Double-expressor (BCL2-IHC + MYC-IHC) phenotype — Pola-R-CHP may particularly benefit DEL subgroup; rule out HGBL-DH"
+          }
+        ],
+        "biomarker_requirements_excluded": [],
+        "demographic_constraints": {
+          "ecog_max": 2
+        }
+      },
+      "recommended_regimen": "REG-POLA-R-CHP",
+      "concurrent_therapy": [],
+      "followed_by": [],
+      "evidence_level": "high",
+      "strength_of_recommendation": "strong",
+      "nccn_category": "1",
+      "expected_outcomes": {
+        "overall_response_rate": "~88% (≥PR after 6 cycles, POLARIX)",
+        "complete_response": "~70%",
+        "progression_free_survival": "2-year PFS ~76.7% (vs 70.2% R-CHOP, HR 0.73)",
+        "overall_survival_5y": "Mature OS data still maturing; trends comparable or favoring Pola-R-CHP"
+      },
+      "hard_contraindications": [
+        "CI-HBV-NO-PROPHYLAXIS",
+        "CI-LVEF-LOW-FOR-ANTHRACYCLINE",
+        "CI-BORTEZOMIB-SEVERE-NEUROPATHY"
+      ],
+      "red_flags_triggering_alternative": [],
+      "required_tests": [
+        "TEST-CBC",
+        "TEST-CMP",
+        "TEST-LFT",
+        "TEST-LDH",
+        "TEST-B2-MICROGLOBULIN",
+        "TEST-HBV-SEROLOGY",
+        "TEST-HCV-ANTIBODY",
+        "TEST-HIV-SEROLOGY",
+        "TEST-CD20-IHC",
+        "TEST-PET-CT",
+        "TEST-ECHO",
+        "TEST-LN-EXCISIONAL-BIOPSY",
+        "TEST-FLOW-CYTOMETRY",
+        "TEST-FISH-PANEL",
+        "TEST-PREGNANCY",
+        "TEST-BM-ASPIRATE",
+        "TEST-BM-TREPHINE"
+      ],
+      "desired_tests": [],
+      "rationale": "Aggressive-track default for newly-diagnosed DLBCL NOS with IPI ≥2 (RF-DLBCL-HIGH-IPI fired). Replaces vincristine in R-CHOP with polatuzumab vedotin (anti-CD79b ADC with MMAE payload). POLARIX trial (NEJM 2022) showed ~6.5% absolute PFS improvement at 2 years vs R-CHOP. Toxicity profile comparable; peripheral neuropathy slightly higher with polatuzumab but vincristine removed. Major access constraint in Ukraine: polatuzumab not НСЗУ-reimbursed. Funding pathway (clinical trial / charitable / out-of-pocket) MUST be verified before plan finalized.\n",
+      "rationale_ua": "Поладо-R-CHP (полатузумаб ведотин (polatuzumab vedotin) + ритуксимаб + циклофосфамід + доксорубіцин + преднізолон) є схемою агресивного треку першої лінії (перша лінія) для вперше діагностованої ДВКЛ NOS з IPI >=2 (RF-DLBCL-HIGH-IPI). Замінює вінкристин у R-CHOP на полатузумаб ведотин (anti-CD79b ADC з MMAE-пейлоадом). Дослідження POLARIX (Tilly et al., NEJM 2022; n=879): Pola-R-CHP vs R-CHOP у пацієнтів з IPI 2-5; медіана 2-річного ВБП 76.7% проти 70.2% (HR 0.73, 95% ДІ 0.57-0.95; p=0.02) - абсолютне покращення ~6.5%. Загальна виживаність (ЗВ) подібна між групами. Профіль токсичності порівнянний з R-CHOP; периферична нейропатія дещо вища при полатузумабі, однак вінкристин виключено. NCCN Категорія 1, переважна схема для IPI >=2. Підгрупи: вищий ефект при ABC/non-GCB та double-expressor (DEL) фенотипах. Злиття (fusion/translocation) MYC+BCL2 (double-hit/HGBL-DH) слід виключити (FISH) - HGBL-DH не є показанням Pola-R-CHP за POLARIX. КРИТИЧНО: полатузумаб ведотин не є НСЗУ-відшкодовуваним - шлях фінансування (клінічне дослідження, благодійний, власним коштом) обов'язково верифікувати до затвердження плану.\n",
+      "ukrainian_review_status": "pending_clinical_signoff",
+      "ukrainian_drafted_by": "claude_extraction",
+      "draft_revision": 2,
+      "sources": [
+        {
+          "source_id": "SRC-POLARIX-TILLY-2022",
+          "position": "supports",
+          "relevant_quote_paraphrase": "Polatuzumab vedotin+R-CHP vs R-CHOP: PFS HR 0.73 (95% CI 0.57–0.95; p=0.02); 2-year PFS 76.7% vs 70.2% (POLARIX)"
+        },
+        {
+          "source_id": "SRC-NCCN-BCELL-2025",
+          "position": "supports",
+          "relevant_quote_paraphrase": "Pola-R-CHP is a Category 1 preferred regimen for newly-diagnosed DLBCL with IPI ≥2 where polatuzumab is accessible"
+        },
+        {
+          "source_id": "SRC-ESMO-LYMPHOMA-2025",
+          "position": "supports",
+          "relevant_quote_paraphrase": "ESMO 2024 codifies R-CHOP × 6 as 1L standard for DLBCL NOS; Pola-R-CHP preferred for IPI ≥3 per POLARIX"
+        }
+      ],
+      "known_controversies": [],
+      "do_not_do": [
+        "Не призначати при відсутності верифікованого funding pathway — daratumumab... вибач, polatuzumab не реімбурсується НСЗУ; пацієнт має бути попереджений ДО запропонування.",
+        "Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ — anti-CD20 reactivation ризик не зменшується від polatuzumab.",
+        "Не призначати без baseline LVEF ≥50% — anthracycline cardiotoxicity те ж саме як R-CHOP.",
+        "Не ігнорувати pre-existing peripheral neuropathy — polatuzumab MMAE викликає neuropathy; Grade ≥2 baseline = absolute CI.",
+        "Не пропускати CNS prophylaxis якщо CNS-IPI ≥4 — той же ризик що при R-CHOP.",
+        "Не використовувати при concomitant strong CYP3A4 inhibitor без monitoring — підвищена neuropathy + myelosuppression."
+      ],
+      "do_not_do_en": [
+        "Do not prescribe without a verified funding pathway — daratumumab... sorry, polatuzumab is not NSZU-reimbursed; the patient must be informed BEFORE being offered.",
+        "Do not start without HBV screening + entecavir prophylaxis if HBsAg+ or anti-HBc+ — anti-CD20 reactivation risk is not reduced by polatuzumab.",
+        "Do not prescribe without baseline LVEF ≥50% — anthracycline cardiotoxicity is the same as with R-CHOP.",
+        "Do not ignore pre-existing peripheral neuropathy — polatuzumab MMAE causes neuropathy; Grade ≥2 baseline = absolute CI.",
+        "Do not skip CNS prophylaxis if CNS-IPI ≥4 — same risk as with R-CHOP.",
+        "Do not use with concomitant strong CYP3A4 inhibitor without monitoring — increased neuropathy + myelosuppression."
+      ],
+      "time_critical": false,
+      "last_reviewed": "2026-04-27",
+      "reviewers": [],
+      "reviewer_signoffs": 0,
+      "notes": "STUB — pending Clinical Co-Lead sign-off. Aggressive counterpart to IND-DLBCL-1L-RCHOP. Activated by RF-DLBCL-HIGH-IPI; engine routes IPI 0-1 patients to R-CHOP standard track.\n"
+    },
+    "alternative_indication": {
+      "id": "IND-DLBCL-1L-RCHOP",
+      "plan_track": "standard",
+      "applicable_to": {
+        "disease_id": "DIS-DLBCL-NOS",
+        "line_of_therapy": 1,
+        "stage_requirements": [],
+        "biomarker_requirements_required": [
+          {
+            "biomarker_id": "BIO-CD20-IHC",
+            "required": true,
+            "value_constraint": "positive (CD20+)"
+          },
+          {
+            "biomarker_id": "BIO-DLBCL-IPI",
+            "required": true,
+            "value_constraint": "IPI 0-5; R-CHOP preferred for IPI 0-1; for IPI ≥2 see Pola-R-CHP"
+          },
+          {
+            "biomarker_id": "BIO-HBV-STATUS",
+            "required": true,
+            "value_constraint": "any value valid (categorical etiology gate; HBsAg+ or anti-HBc+ → entecavir prophylaxis mandatory before first rituximab dose; engine consumes the input to fire RF-UNIVERSAL-HBV-REACTIVATION-RISK)"
+          },
+          {
+            "biomarker_id": "BIO-HCV-STATUS",
+            "required": true,
+            "value_constraint": "any value valid (categorical etiology gate; anti-HCV+ → reflex BIO-HCV-RNA; coordinate DAA with hepatology; does not change R-CHOP regimen choice)"
+          },
+          {
+            "biomarker_id": "BIO-HIV-STATUS",
+            "required": true,
+            "value_constraint": "any value valid (categorical etiology gate; HIV+ → cART throughout, PJP/MAC prophylaxis if CD4 < 200, CNS prophylaxis regardless of CNS-IPI; integrase-inhibitor backbone preferred to avoid ritonavir-vincristine interaction)"
+          },
+          {
+            "biomarker_id": "BIO-DLBCL-COO-HANS",
+            "required": false,
+            "value_constraint": "GCB or non-GCB by Hans algorithm — non-GCB has worse R-CHOP outcomes; some centres consider R-CHOEP for non-GCB"
+          },
+          {
+            "biomarker_id": "BIO-BCL2-EXPRESSION-IHC",
+            "required": false,
+            "value_constraint": "BCL2-IHC ≥50% combined with MYC-IHC ≥40% defines double-expressor (DEL) phenotype — poorer prognosis but not an excluder; HGBL-DH (FISH double-hit) must be ruled out"
+          }
+        ],
+        "biomarker_requirements_excluded": [],
+        "demographic_constraints": {
+          "ecog_max": 3
+        }
+      },
+      "recommended_regimen": "REG-R-CHOP",
+      "concurrent_therapy": [],
+      "followed_by": [],
+      "evidence_level": "high",
+      "strength_of_recommendation": "strong",
+      "nccn_category": "1",
+      "expected_outcomes": {
+        "overall_response_rate": "~85% (≥PR after 6 cycles)",
+        "complete_response": "~65-70%",
+        "progression_free_survival": "Median PFS ~5 years for low-IPI; ~2 years for high-IPI",
+        "overall_survival_5y": "~60% overall (low-IPI ~80%, high-IPI ~55%)"
+      },
+      "hard_contraindications": [
+        "CI-HBV-NO-PROPHYLAXIS",
+        "CI-LVEF-LOW-FOR-ANTHRACYCLINE"
+      ],
+      "red_flags_triggering_alternative": [
+        "RF-DLBCL-HIGH-IPI"
+      ],
+      "required_tests": [
+        "TEST-CBC",
+        "TEST-CMP",
+        "TEST-LFT",
+        "TEST-LDH",
+        "TEST-B2-MICROGLOBULIN",
+        "TEST-HBV-SEROLOGY",
+        "TEST-HCV-ANTIBODY",
+        "TEST-HIV-SEROLOGY",
+        "TEST-CD20-IHC",
+        "TEST-PET-CT",
+        "TEST-ECHO",
+        "TEST-LN-EXCISIONAL-BIOPSY",
+        "TEST-FLOW-CYTOMETRY",
+        "TEST-FISH-PANEL",
+        "TEST-PREGNANCY",
+        "TEST-BM-ASPIRATE",
+        "TEST-BM-TREPHINE"
+      ],
+      "desired_tests": [],
+      "rationale": "Long-standing 1L standard for newly-diagnosed DLBCL NOS, used for the past 20+ years across NCCN, ESMO, EHA. ~60% overall cure rate; outcomes highly dependent on IPI. Replaced PreCHOP regimens after the rituximab era (RCT data from late 1990s/early 2000s). Default for low-IPI (0-1) patients; for IPI ≥2, modern evidence (POLARIX 2022) favors Pola-R-CHP if accessible (see IND-DLBCL-1L-POLA-R-CHP).\n",
+      "rationale_ua": "R-CHOP (ритуксимаб + циклофосфамід + доксорубіцин + вінкристин + преднізолон) є багаторічним стандартом першої лінії (перша лінія) для вперше діагностованої ДВКЛ NOS, що застосовується понад 20 років в рекомендаціях NCCN, ESMO, EHA. Загальний рівень виліковування ~60%; результати суттєво залежать від IPI. Стандарт вибору для IPI 0-1; при IPI >=2 сучасні дані (POLARIX 2022) свідчать на користь Pola-R-CHP за наявності доступу (div. IND-DLBCL-1L-POLA-R-CHP). NCCN Категорія 1. Схема: ритуксимаб 375 mg/m2 + циклофосфамід 750 mg/m2 + доксорубіцин 50 mg/m2 + вінкристин 1.4 mg/m2 (макс. 2 мг) + преднізолон 100 мг (дні 1-5) q21d x 6 циклів. CNS-профілактика (HD-MTX intercalated) при CNS-IPI >=4 або уражених локалізаціях (тестикули, груди, нирки/наднирники, параназальні синуси). Базовий скринінг HBV обов'язковий; ентекавір при HBsAg+ або anti-HBc+. Базовий ЕХОКГ для LVEF >=50% (антрациклінова кардіотоксичність). Вінкристин вводити ВИКЛЮЧНО внутрішньовенно - інтратекальне введення є ФАТАЛЬНИМ. Рецидивний/рефрактерний (relapsed/refractory) ДВКЛ після R-CHOP потребує переходу на 2L (сальвадж хіміотерапія -> аутоТГСК для придатних; CAR-T для р/р).\n",
+      "ukrainian_review_status": "pending_clinical_signoff",
+      "ukrainian_drafted_by": "claude_extraction",
+      "draft_revision": 2,
+      "sources": [
+        {
+          "source_id": "SRC-NCCN-BCELL-2025",
+          "position": "supports",
+          "relevant_quote_paraphrase": "R-CHOP is a Category 1 preferred regimen for newly-diagnosed DLBCL across all IPI groups; Pola-R-CHP is preferred Category 1 for IPI ≥2 where accessible"
+        },
+        {
+          "source_id": "SRC-ESMO-LYMPHOMA-2025",
+          "position": "supports",
+          "relevant_quote_paraphrase": "ESMO 2024 codifies R-CHOP × 6 as 1L standard for DLBCL NOS; Pola-R-CHP preferred for IPI ≥3 per POLARIX"
+        }
+      ],
+      "known_controversies": [
+        {
+          "topic": "R-CHOP vs Pola-R-CHP for IPI ≥2 1L DLBCL",
+          "positions": [
+            {
+              "position": "Pola-R-CHP preferred for IPI ≥2 where accessible (POLARIX evidence)",
+              "sources": [
+                "SRC-NCCN-BCELL-2025"
+              ],
+              "evidence_note": "PFS benefit ~6.5% absolute at 2 years"
+            },
+            {
+              "position": "R-CHOP remains acceptable when polatuzumab not accessible",
+              "sources": [
+                "SRC-NCCN-BCELL-2025"
+              ]
+            }
+          ],
+          "our_default": "R-CHOP for IPI 0-1 OR when polatuzumab not accessible (Ukraine reimbursement gap); Pola-R-CHP for IPI ≥2 with confirmed funding pathway",
+          "rationale": "Polatuzumab not НСЗУ-reimbursed in Ukraine — access is bottleneck. Patient should be informed of trade-off + offered POLARIX-style Pola-R-CHP if funding pathway exists.\n"
+        }
+      ],
+      "do_not_do": [
+        "Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ — ризик фатальної реактивації значно підвищений на anti-CD20.",
+        "Не призначати без baseline LVEF ≥50% — anthracyclines кардіотоксичні; кардіоміопатія часто незворотна.",
+        "Не ігнорувати CNS-IPI — для пацієнтів з ≥4 CNS-IPI або високоризиковими anatomic sites (тестикули, груди, нирки/наднирники, параназальні синуси) додавати CNS prophylaxis (HD-MTX intercalated).",
+        "Не пропускати fertility preservation discussion у репродуктивного віку — циклофосфамід викликає азооспермію + amenorrhea.",
+        "Не вводити вінкристин інтратекально — ФАТАЛЬНО. WHO/FDA вимагають IV mini-bag packaging.",
+        "Не ескалувати дозу при febrile neutropenia без G-CSF — G-CSF prophylaxis для високоризикових пацієнтів (вік >65, prior cytopenia, advanced disease)."
+      ],
+      "do_not_do_en": [
+        "Do not start without HBV screening + entecavir prophylaxis if HBsAg+ or anti-HBc+ — risk of fatal reactivation is significantly elevated on anti-CD20.",
+        "Do not prescribe without baseline LVEF ≥50% — anthracyclines are cardiotoxic; cardiomyopathy is often irreversible.",
+        "Do not ignore CNS-IPI — for patients with CNS-IPI ≥4 or high-risk anatomic sites (testicles, breasts, kidneys/adrenals, paranasal sinuses) add CNS prophylaxis (HD-MTX intercalated).",
+        "Do not skip the fertility preservation discussion in patients of reproductive age — cyclophosphamide causes azoospermia + amenorrhea.",
+        "Do not give vincristine intrathecally — FATAL. WHO/FDA require IV mini-bag packaging.",
+        "Do not escalate dose with febrile neutropenia without G-CSF — G-CSF prophylaxis for high-risk patients (age >65, prior cytopenia, advanced disease)."
+      ],
+      "time_critical": false,
+      "last_reviewed": "2026-04-27",
+      "reviewers": [],
+      "reviewer_signoffs": 0,
+      "notes": "STUB — pending Clinical Co-Lead sign-off. Standard track for DLBCL 1L two-plan output (CHARTER §2). For relapsed/refractory after R-CHOP, treatment moves to 2L pathway (salvage chemo → autoSCT for fit; CAR-T for r/r refractory) — separate Indication entities.\n"
+    },
+    "plan": {
+      "schema_version": null,
+      "id": "PLAN-SYNTHETIC-REVIEW-ECOG-2-V1",
+      "patient_id": "SYNTHETIC-REVIEW-ECOG-2",
+      "version": 1,
+      "generated_at": "2026-10-10T08:23:53.107923+00:00",
+      "supersedes": null,
+      "superseded_by": null,
+      "revision_trigger": null,
+      "patient_snapshot": {
+        "disease": {
+          "icd_o_3_morphology": "9680/3",
+          "id": "DIS-DLBCL-NOS"
+        },
+        "line_of_therapy": 1,
+        "biomarkers": {
+          "BIO-CD20-IHC": "positive",
+          "BIO-CD79B-IHC": "positive",
+          "BIO-HBV-STATUS": "negative",
+          "BIO-HCV-STATUS": "negative",
+          "BIO-HIV-STATUS": "negative"
+        },
+        "demographics": {
+          "age": 67,
+          "sex": "female",
+          "ecog": 2
+        },
+        "findings": {
+          "ipi_score": 4,
+          "cns_ipi_score": 4,
+          "anatomic_cns_risk_site": false,
+          "lvef_percent": 58,
+          "biopsy_confirmed": true,
+          "cd20_ihc_status": "positive",
+          "hbsag": "negative",
+          "anti_hbc_total": "negative",
+          "creatinine_clearance_ml_min": 90,
+          "bilirubin_ratio_to_uln": 1,
+          "dlco_percent": 85
+        },
+        "patient_id": "SYNTHETIC-REVIEW-ECOG-2",
+        "comment": "Synthetic engineering review probe; not a real patient or a prescription."
+      },
+      "algorithm_id": "ALGO-DLBCL-1L",
+      "knowledge_base_state": {
+        "loaded_entities": 4223,
+        "indications_used": [
+          "IND-DLBCL-1L-POLA-R-CHP",
+          "IND-DLBCL-1L-RCHOP"
+        ],
+        "sequencing_indications": [],
+        "algorithm_version": "2026-05-09"
+      },
+      "tracks": [
+        {
+          "schema_version": null,
+          "track_id": "aggressive",
+          "label": "Агресивний план",
+          "label_en": "Aggressive plan",
+          "indication_id": "IND-DLBCL-1L-POLA-R-CHP",
+          "is_default": true,
+          "selection_reason": "Primary current-line option selected by ALGO-DLBCL-1L at step 2; branch-driving red flag: RF-DLBCL-HIGH-IPI.",
+          "indication_data": {
+            "id": "IND-DLBCL-1L-POLA-R-CHP",
+            "plan_track": "aggressive",
+            "applicable_to": {
+              "disease_id": "DIS-DLBCL-NOS",
+              "line_of_therapy": 1,
+              "stage_requirements": [],
+              "biomarker_requirements_required": [
+                {
+                  "biomarker_id": "BIO-CD20-IHC",
+                  "required": true,
+                  "value_constraint": "positive (CD20+)"
+                },
+                {
+                  "biomarker_id": "BIO-CD79B-IHC",
+                  "required": true,
+                  "value_constraint": "positive (CD79b is the polatuzumab vedotin target; expressed in nearly all B-cell lymphomas including DLBCL)"
+                },
+                {
+                  "biomarker_id": "BIO-DLBCL-IPI",
+                  "required": true,
+                  "value_constraint": "IPI ≥2 — POLARIX PFS benefit driven by higher-risk IPI subset; IPI 0-1 see R-CHOP standard track"
+                },
+                {
+                  "biomarker_id": "BIO-HBV-STATUS",
+                  "required": true,
+                  "value_constraint": "any value valid (categorical etiology gate; HBsAg+ or anti-HBc+ → entecavir prophylaxis mandatory before first rituximab dose; anti-CD20 reactivation risk not reduced by polatuzumab)"
+                },
+                {
+                  "biomarker_id": "BIO-HCV-STATUS",
+                  "required": true,
+                  "value_constraint": "any value valid (categorical etiology gate; anti-HCV+ → reflex BIO-HCV-RNA; coordinate DAA with hepatology)"
+                },
+                {
+                  "biomarker_id": "BIO-HIV-STATUS",
+                  "required": true,
+                  "value_constraint": "any value valid (categorical etiology gate; HIV+ → cART throughout, PJP/MAC prophylaxis if CD4 < 200, CNS prophylaxis regardless of CNS-IPI)"
+                },
+                {
+                  "biomarker_id": "BIO-DLBCL-COO-HANS",
+                  "required": false,
+                  "value_constraint": "Activated B-cell-like (ABC / non-GCB) showed greater Pola-R-CHP benefit in POLARIX subgroup"
+                },
+                {
+                  "biomarker_id": "BIO-BCL2-EXPRESSION-IHC",
+                  "required": false,
+                  "value_constraint": "Double-expressor (BCL2-IHC + MYC-IHC) phenotype — Pola-R-CHP may particularly benefit DEL subgroup; rule out HGBL-DH"
+                }
+              ],
+              "biomarker_requirements_excluded": [],
+              "demographic_constraints": {
+                "ecog_max": 2
+              }
+            },
+            "recommended_regimen": "REG-POLA-R-CHP",
+            "concurrent_therapy": [],
+            "followed_by": [],
+            "evidence_level": "high",
+            "strength_of_recommendation": "strong",
+            "nccn_category": "1",
+            "expected_outcomes": {
+              "overall_response_rate": "~88% (≥PR after 6 cycles, POLARIX)",
+              "complete_response": "~70%",
+              "progression_free_survival": "2-year PFS ~76.7% (vs 70.2% R-CHOP, HR 0.73)",
+              "overall_survival_5y": "Mature OS data still maturing; trends comparable or favoring Pola-R-CHP"
+            },
+            "hard_contraindications": [
+              "CI-HBV-NO-PROPHYLAXIS",
+              "CI-LVEF-LOW-FOR-ANTHRACYCLINE",
+              "CI-BORTEZOMIB-SEVERE-NEUROPATHY"
+            ],
+            "red_flags_triggering_alternative": [],
+            "required_tests": [
+              "TEST-CBC",
+              "TEST-CMP",
+              "TEST-LFT",
+              "TEST-LDH",
+              "TEST-B2-MICROGLOBULIN",
+              "TEST-HBV-SEROLOGY",
+              "TEST-HCV-ANTIBODY",
+              "TEST-HIV-SEROLOGY",
+              "TEST-CD20-IHC",
+              "TEST-PET-CT",
+              "TEST-ECHO",
+              "TEST-LN-EXCISIONAL-BIOPSY",
+              "TEST-FLOW-CYTOMETRY",
+              "TEST-FISH-PANEL",
+              "TEST-PREGNANCY",
+              "TEST-BM-ASPIRATE",
+              "TEST-BM-TREPHINE"
+            ],
+            "desired_tests": [],
+            "rationale": "Aggressive-track default for newly-diagnosed DLBCL NOS with IPI ≥2 (RF-DLBCL-HIGH-IPI fired). Replaces vincristine in R-CHOP with polatuzumab vedotin (anti-CD79b ADC with MMAE payload). POLARIX trial (NEJM 2022) showed ~6.5% absolute PFS improvement at 2 years vs R-CHOP. Toxicity profile comparable; peripheral neuropathy slightly higher with polatuzumab but vincristine removed. Major access constraint in Ukraine: polatuzumab not НСЗУ-reimbursed. Funding pathway (clinical trial / charitable / out-of-pocket) MUST be verified before plan finalized.\n",
+            "rationale_ua": "Поладо-R-CHP (полатузумаб ведотин (polatuzumab vedotin) + ритуксимаб + циклофосфамід + доксорубіцин + преднізолон) є схемою агресивного треку першої лінії (перша лінія) для вперше діагностованої ДВКЛ NOS з IPI >=2 (RF-DLBCL-HIGH-IPI). Замінює вінкристин у R-CHOP на полатузумаб ведотин (anti-CD79b ADC з MMAE-пейлоадом). Дослідження POLARIX (Tilly et al., NEJM 2022; n=879): Pola-R-CHP vs R-CHOP у пацієнтів з IPI 2-5; медіана 2-річного ВБП 76.7% проти 70.2% (HR 0.73, 95% ДІ 0.57-0.95; p=0.02) - абсолютне покращення ~6.5%. Загальна виживаність (ЗВ) подібна між групами. Профіль токсичності порівнянний з R-CHOP; периферична нейропатія дещо вища при полатузумабі, однак вінкристин виключено. NCCN Категорія 1, переважна схема для IPI >=2. Підгрупи: вищий ефект при ABC/non-GCB та double-expressor (DEL) фенотипах. Злиття (fusion/translocation) MYC+BCL2 (double-hit/HGBL-DH) слід виключити (FISH) - HGBL-DH не є показанням Pola-R-CHP за POLARIX. КРИТИЧНО: полатузумаб ведотин не є НСЗУ-відшкодовуваним - шлях фінансування (клінічне дослідження, благодійний, власним коштом) обов'язково верифікувати до затвердження плану.\n",
+            "ukrainian_review_status": "pending_clinical_signoff",
+            "ukrainian_drafted_by": "claude_extraction",
+            "draft_revision": 2,
+            "sources": [
+              {
+                "source_id": "SRC-POLARIX-TILLY-2022",
+                "position": "supports",
+                "relevant_quote_paraphrase": "Polatuzumab vedotin+R-CHP vs R-CHOP: PFS HR 0.73 (95% CI 0.57–0.95; p=0.02); 2-year PFS 76.7% vs 70.2% (POLARIX)"
+              },
+              {
+                "source_id": "SRC-NCCN-BCELL-2025",
+                "position": "supports",
+                "relevant_quote_paraphrase": "Pola-R-CHP is a Category 1 preferred regimen for newly-diagnosed DLBCL with IPI ≥2 where polatuzumab is accessible"
+              },
+              {
+                "source_id": "SRC-ESMO-LYMPHOMA-2025",
+                "position": "supports",
+                "relevant_quote_paraphrase": "ESMO 2024 codifies R-CHOP × 6 as 1L standard for DLBCL NOS; Pola-R-CHP preferred for IPI ≥3 per POLARIX"
+              }
+            ],
+            "known_controversies": [],
+            "do_not_do": [
+              "Не призначати при відсутності верифікованого funding pathway — daratumumab... вибач, polatuzumab не реімбурсується НСЗУ; пацієнт має бути попереджений ДО запропонування.",
+              "Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ — anti-CD20 reactivation ризик не зменшується від polatuzumab.",
+              "Не призначати без baseline LVEF ≥50% — anthracycline cardiotoxicity те ж саме як R-CHOP.",
+              "Не ігнорувати pre-existing peripheral neuropathy — polatuzumab MMAE викликає neuropathy; Grade ≥2 baseline = absolute CI.",
+              "Не пропускати CNS prophylaxis якщо CNS-IPI ≥4 — той же ризик що при R-CHOP.",
+              "Не використовувати при concomitant strong CYP3A4 inhibitor без monitoring — підвищена neuropathy + myelosuppression."
+            ],
+            "do_not_do_en": [
+              "Do not prescribe without a verified funding pathway — daratumumab... sorry, polatuzumab is not NSZU-reimbursed; the patient must be informed BEFORE being offered.",
+              "Do not start without HBV screening + entecavir prophylaxis if HBsAg+ or anti-HBc+ — anti-CD20 reactivation risk is not reduced by polatuzumab.",
+              "Do not prescribe without baseline LVEF ≥50% — anthracycline cardiotoxicity is the same as with R-CHOP.",
+              "Do not ignore pre-existing peripheral neuropathy — polatuzumab MMAE causes neuropathy; Grade ≥2 baseline = absolute CI.",
+              "Do not skip CNS prophylaxis if CNS-IPI ≥4 — same risk as with R-CHOP.",
+              "Do not use with concomitant strong CYP3A4 inhibitor without monitoring — increased neuropathy + myelosuppression."
+            ],
+            "time_critical": false,
+            "last_reviewed": "2026-04-27",
+            "reviewers": [],
+            "reviewer_signoffs": 0,
+            "notes": "STUB — pending Clinical Co-Lead sign-off. Aggressive counterpart to IND-DLBCL-1L-RCHOP. Activated by RF-DLBCL-HIGH-IPI; engine routes IPI 0-1 patients to R-CHOP standard track.\n"
+          },
+          "regimen_data": {
+            "id": "REG-POLA-R-CHP",
+            "name": "Polatuzumab vedotin + Rituximab + CHP (Pola-R-CHP), 6 cycles + 2× rituximab",
+            "name_ua": "Полатузумаб ведотин + Ритуксимаб + CHP (Pola-R-CHP), 6 циклів + 2× ритуксимаб",
+            "alternate_names": [
+              "Pola-R-CHP",
+              "POLARIX-style"
+            ],
+            "components": [
+              {
+                "drug_id": "DRUG-POLATUZUMAB-VEDOTIN",
+                "dose": "1.8 mg/kg",
+                "schedule": "IV day 1 of each 21-day cycle, cycles 1-6",
+                "route": "IV"
+              },
+              {
+                "drug_id": "DRUG-RITUXIMAB",
+                "dose": "375 mg/m²",
+                "schedule": "IV day 1 of each 21-day cycle, cycles 1-8 (last 2 cycles rituximab-only)",
+                "route": "IV"
+              },
+              {
+                "drug_id": "DRUG-CYCLOPHOSPHAMIDE",
+                "dose": "750 mg/m²",
+                "schedule": "IV day 1 of each 21-day cycle, cycles 1-6",
+                "route": "IV"
+              },
+              {
+                "drug_id": "DRUG-DOXORUBICIN",
+                "dose": "50 mg/m²",
+                "schedule": "IV day 1 of each 21-day cycle, cycles 1-6",
+                "route": "IV"
+              },
+              {
+                "drug_id": "DRUG-PREDNISONE",
+                "dose": "100 mg",
+                "schedule": "PO days 1-5 of each 21-day cycle, cycles 1-6",
+                "route": "PO"
+              }
+            ],
+            "cycle_length_days": 21,
+            "total_cycles": "6 (Pola-R-CHP) + 2× rituximab consolidation (cycles 7-8)",
+            "toxicity_profile": "moderate-high",
+            "premedication": [
+              "Antihistamine + acetaminophen before polatuzumab (first dose)",
+              "Antihistamine + acetaminophen + IV steroid before rituximab (especially first dose)",
+              "5-HT3 antagonist + dexamethasone before chemotherapy"
+            ],
+            "mandatory_supportive_care": [
+              "SUP-PJP-PROPHYLAXIS",
+              "SUP-TLS-PROPHYLAXIS",
+              "SUP-ANTIEMETIC-PREMED"
+            ],
+            "monitoring_schedule_id": "MON-R-CHOP-REGIMEN",
+            "dose_adjustments": [
+              {
+                "condition": "Grade ≥2 peripheral neuropathy",
+                "modification": "Hold polatuzumab; consider switching to vincristine (R-CHOP)",
+                "rationale": "Polatuzumab carries dose-limiting neuropathy from MMAE payload",
+                "source_refs": [
+                  "SRC-NCCN-BCELL-2025"
+                ]
+              },
+              {
+                "condition": "Cumulative anthracycline >450-500 mg/m²",
+                "modification": "Echo + LVEF check before next dose; consider regimen change",
+                "rationale": "Cardiotoxicity is dose-cumulative",
+                "source_refs": [
+                  "SRC-NCCN-BCELL-2025"
+                ]
+              },
+              {
+                "condition": "Strong CYP3A4 inhibitor concomitant",
+                "modification": "Avoid coadministration if possible; if necessary, monitor for increased neuropathy/myelosuppression",
+                "rationale": "Polatuzumab MMAE is CYP3A4 substrate"
+              }
+            ],
+            "ukraine_availability": {
+              "all_components_registered": false,
+              "all_components_reimbursed": false,
+              "notes": "Polatuzumab vedotin is NOT registered/reimbursed in Ukraine as of 2026-04-25 — clinical trial enrollment, charitable scheme, or out-of-pocket are the only access pathways. This is a meaningful barrier; flag explicitly to patient before regimen offered.\n"
+            },
+            "sources": [
+              "SRC-NCCN-BCELL-2025"
+            ],
+            "between_visit_watchpoints": [
+              {
+                "trigger_ua": "Поколювання або оніміння в кистях/стопах",
+                "action_ua": "Полатузумаб може спричиняти нейропатію (менше, ніж вінкристин) — занотовуйте",
+                "urgency": "log_at_next_visit",
+                "sources": [
+                  "SRC-NCCN-BCELL-2025"
+                ]
+              },
+              {
+                "trigger_ua": "Помірна втома, випадання волосся",
+                "action_ua": "Очікувано — повертається після курсу",
+                "urgency": "log_at_next_visit",
+                "sources": [
+                  "SRC-NCCN-BCELL-2025"
+                ]
+              },
+              {
+                "trigger_ua": "Помірна нудота",
+                "action_ua": "Приймайте призначені протиблювотні",
+                "urgency": "log_at_next_visit",
+                "cycle_day_window": "Day 1-3",
+                "sources": [
+                  "SRC-CTCAE-V5"
+                ]
+              },
+              {
+                "trigger_ua": "Лихоманка вище 38°C",
+                "action_ua": "Подзвоніть у клініку того ж дня — потрібен контроль показників крові",
+                "urgency": "call_clinic_same_day",
+                "cycle_day_window": "Day 7-14",
+                "sources": [
+                  "SRC-NCCN-BCELL-2025",
+                  "SRC-CTCAE-V5"
+                ]
+              },
+              {
+                "trigger_ua": "Поколювання стає сильним болем",
+                "action_ua": "Подзвоніть у клініку того ж дня — потрібна корекція дози полатузумабу",
+                "urgency": "call_clinic_same_day",
+                "sources": [
+                  "SRC-NCCN-BCELL-2025"
+                ]
+              },
+              {
+                "trigger_ua": "Нова задишка, прискорене серцебиття, набряки ніг",
+                "action_ua": "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце",
+                "urgency": "call_clinic_same_day",
+                "sources": [
+                  "SRC-NCCN-BCELL-2025"
+                ]
+              },
+              {
+                "trigger_ua": "Тяжка реакція на інфузію ритуксимабу або полатузумабу",
+                "action_ua": "Інфузія в клініці — медперсонал реагує негайно",
+                "urgency": "er_now",
+                "cycle_day_window": "Day 1 of cycle 1",
+                "sources": [
+                  "SRC-NCCN-BCELL-2025"
+                ]
+              }
+            ],
+            "last_reviewed": "2026-04-25",
+            "notes": "POLARIX trial (NEJM 2022): in IPI ≥2 newly-diagnosed DLBCL, superior 2-year PFS (76.7% vs 70.2% R-CHOP, HR 0.73). Comparable OS (mature data still maturing) and toxicity profile (more PN with polatuzumab but offset by NO vincristine). Becoming the new 1L standard for IPI ≥2 in resourced settings — access in Ukraine is the bottleneck. Vincristine is replaced by polatuzumab (hence \"CHP\" not \"CHOP\").\n",
+            "notes_ua": "POLARIX дослідження (NEJM 2022): in IPI ≥2 newly-diagnosed DLBCL, перевершує 2-year PFS (76.7% проти 70.2% R-CHOP, HR 0.73). співставний OS (mature дані still maturing) and профіль токсичності (more PN with polatuzumab but offset by ні вінкристин). Becoming the new 1L стандарт for IPI ≥2 in resourced settings — access in Ukraine is the bottleneck. вінкристин is replaced by polatuzumab (hence \"CHP\" not \"CHOP\").\n",
+            "ukrainian_review_status": "pending_clinical_signoff",
+            "ukrainian_drafted_by": "claude_extraction"
+          },
+          "monitoring_data": {
+            "id": "MON-R-CHOP-REGIMEN",
+            "linked_to_regimen": "REG-R-CHOP",
+            "phases": [
+              {
+                "name": "baseline",
+                "window": "Within 2 weeks before cycle 1",
+                "window_ua": "Протягом 2 тижнів до циклу 1",
+                "tests": [
+                  "TEST-CBC",
+                  "TEST-CMP",
+                  "TEST-LFT",
+                  "TEST-LDH",
+                  "TEST-B2-MICROGLOBULIN",
+                  "TEST-HBV-SEROLOGY",
+                  "TEST-HCV-ANTIBODY",
+                  "TEST-HIV-SEROLOGY",
+                  "TEST-PET-CT",
+                  "TEST-LN-EXCISIONAL-BIOPSY",
+                  "TEST-FLOW-CYTOMETRY",
+                  "TEST-CD20-IHC",
+                  "TEST-ECHO",
+                  "TEST-PREGNANCY",
+                  "TEST-BM-ASPIRATE",
+                  "TEST-BM-TREPHINE"
+                ],
+                "visits": [
+                  "Treatment planning visit with hematology + cardiology + ID + reproductive counseling"
+                ],
+                "checkpoints": [
+                  "Confirm CD20+ DLBCL histology; rule out double-hit (FISH for MYC/BCL2/BCL6)",
+                  "Confirm HBV status + entecavir prophylaxis plan if HBsAg+ or anti-HBc+",
+                  "Baseline LVEF ≥50% before doxorubicin",
+                  "IPI calculation documented (age, ECOG, LDH, stage, extranodal sites)",
+                  "CNS-IPI calculation if anatomic risk sites or composite score concerning",
+                  "Fertility preservation discussion (sperm banking / oocyte cryo) for childbearing-age"
+                ],
+                "checkpoints_ua": [
+                  "Підтвердити CD20+ DLBCL гістологію; виключити double-hit (FISH на MYC/BCL2/BCL6)",
+                  "Підтвердити статус HBV + план профілактики ентекавіром при HBsAg+ або anti-HBc+",
+                  "Базовий LVEF ≥50% перед доксорубіцином",
+                  "Документувати розрахунок IPI (вік, ECOG, LDH, стадія, екстранодальні локалізації)",
+                  "Розрахунок CNS-IPI при анатомічних зонах ризику або тривожному загальному балі",
+                  "Обговорення збереження фертильності (банкінг сперми / кріоконсервація ооцитів) для пацієнтів дітородного віку"
+                ]
+              },
+              {
+                "name": "on_treatment",
+                "window": "Day 1 of every 21-day cycle",
+                "window_ua": "День 1 кожного 21-денного циклу",
+                "tests": [
+                  "TEST-CBC",
+                  "TEST-CMP",
+                  "TEST-LFT"
+                ],
+                "visits": [
+                  "Pre-cycle clinical assessment + infusion-day labs + neuropathy screen"
+                ],
+                "checkpoints": [
+                  "ANC ≥1500 + platelets ≥100K before each cycle (delay or G-CSF if not)",
+                  "Neuropathy grade documented (CTCAE) — vincristine modification if ≥2",
+                  "LVEF re-check after cumulative doxorubicin ~300 mg/m²"
+                ],
+                "checkpoints_ua": [
+                  "ANC ≥1500 + тромбоцити ≥100 тис. перед кожним циклом (інакше — відстрочка або G-CSF)",
+                  "Ступінь нейропатії документується (CTCAE) — модифікація вінкристину при ≥2",
+                  "Повторна оцінка LVEF після кумулятивної дози доксорубіцину ~300 мг/м²"
+                ]
+              },
+              {
+                "name": "interim_response_assessment",
+                "window": "After cycles 2-4 (interim PET-CT)",
+                "window_ua": "Після циклів 2–4 (проміжне PET-CT)",
+                "tests": [
+                  "TEST-PET-CT",
+                  "TEST-LDH"
+                ],
+                "visits": [
+                  "Restaging visit"
+                ],
+                "checkpoints": [
+                  "Lugano response criteria + Deauville score",
+                  "If Deauville 4-5 with mass progression → consider salvage or trial"
+                ],
+                "checkpoints_ua": [
+                  "Критерії відповіді за Lugano + бал за Deauville",
+                  "При Deauville 4–5 з прогресуванням маси → розглянути salvage-терапію або клінічне дослідження"
+                ]
+              },
+              {
+                "name": "end_of_treatment",
+                "window": "After cycle 6 (within 6-8 weeks)",
+                "window_ua": "Після циклу 6 (протягом 6–8 тижнів)",
+                "tests": [
+                  "TEST-PET-CT",
+                  "TEST-CBC",
+                  "TEST-CMP",
+                  "TEST-LDH"
+                ],
+                "visits": [
+                  "End-of-treatment restaging + survivorship transition"
+                ],
+                "checkpoints": [
+                  "Confirm CR vs PR vs SD vs PD by Lugano/Deauville",
+                  "Begin survivorship plan: cardiac surveillance schedule, vaccination catch-up, second-cancer screening"
+                ],
+                "checkpoints_ua": [
+                  "Підтвердити CR / PR / SD / PD за Lugano/Deauville",
+                  "Початок плану survivorship: графік кардіологічного спостереження, надолуження вакцинації, скринінг другого раку"
+                ]
+              },
+              {
+                "name": "follow_up_short",
+                "window": "Every 3 months × 2 years post-treatment",
+                "window_ua": "Кожні 3 місяці протягом 2 років після лікування",
+                "tests": [
+                  "TEST-CBC",
+                  "TEST-CMP",
+                  "TEST-LFT",
+                  "TEST-LDH"
+                ],
+                "visits": [
+                  "Clinical assessment + labs"
+                ],
+                "checkpoints": [
+                  "Surveillance for relapse (~40% relapse risk by 2 years overall)",
+                  "HBV reactivation monitoring continues for 12 months post anti-CD20"
+                ],
+                "checkpoints_ua": [
+                  "Спостереження щодо рецидиву (загальний ризик рецидиву ~40% протягом 2 років)",
+                  "Моніторинг реактивації HBV триває 12 місяців після anti-CD20"
+                ]
+              },
+              {
+                "name": "follow_up_long",
+                "window": "Every 6 months years 3-5, then annually",
+                "window_ua": "Кожні 6 місяців у роки 3–5, потім щорічно",
+                "tests": [
+                  "TEST-CBC",
+                  "TEST-LFT",
+                  "TEST-ECHO"
+                ],
+                "visits": [
+                  "Clinical + cardiac surveillance"
+                ],
+                "checkpoints": [
+                  "Late cardiomyopathy screening (LVEF) annually if cumulative dox >300",
+                  "Annual second-malignancy screening (skin, breast, etc. age-appropriate)"
+                ],
+                "checkpoints_ua": [
+                  "Щорічний скринінг пізньої кардіоміопатії (LVEF) при кумулятивній дозі доксорубіцину >300",
+                  "Щорічний скринінг другої злоякісної пухлини (шкіра, молочна залоза тощо — відповідно до віку)"
+                ]
+              }
+            ],
+            "sources": [
+              "SRC-NCCN-BCELL-2025"
+            ],
+            "last_reviewed": "2026-04-25",
+            "machine_translated_review_pending": true,
+            "notes": "Shared by REG-R-CHOP and REG-POLA-R-CHP (Pola-R-CHP differs only in cycle composition; monitoring is identical). HBV-DNA quarterly for duration of therapy and 12 months post if anti-CD20 used. UA translations of window / checkpoints added 2026-05-19 under CHARTER §8.3 dev-mode exemption; awaiting Clinical Co-Lead sign-off.\n"
+          },
+          "supportive_care_data": [
+            {
+              "id": "SUP-PJP-PROPHYLAXIS",
+              "intervention_type": "prophylaxis",
+              "name": "Pneumocystis jirovecii prophylaxis",
+              "name_ua": "Профілактика пневмоцистної пневмонії",
+              "standard_intervention": {
+                "drug_id": "DRUG-TMP-SMX",
+                "dose": "160/800 mg PO 3x/week (Mon/Wed/Fri)",
+                "schedule": "Start with first cycle of chemoimmunotherapy; continue ≥6 months after last anti-CD20 dose",
+                "notes": "Alternative: dapsone 100 mg PO daily if sulfa allergy (verify G6PD status first)"
+              },
+              "triggers": {
+                "relevant_regimens": [
+                  "REG-BR-STANDARD"
+                ],
+                "clinical_condition": "Sustained immunosuppression from rituximab + chemotherapy"
+              },
+              "rationale": "Anti-CD20 therapy combined with cytotoxic chemotherapy substantially prolongs B-cell depletion and increases PJP risk for months after completion of treatment.\n",
+              "sources": [
+                "SRC-NCCN-BCELL-2025"
+              ],
+              "last_reviewed": "2026-04-25"
+            },
+            {
+              "id": "SUP-TLS-PROPHYLAXIS",
+              "intervention_type": "prophylaxis",
+              "name": "Tumor lysis syndrome prophylaxis",
+              "name_ua": "Профілактика синдрому лізису пухлини",
+              "standard_intervention": {
+                "drug_id": "DRUG-ALLOPURINOL",
+                "dose": "300 mg PO daily",
+                "schedule": "Start 24-48h before chemotherapy; continue 5-7 days",
+                "notes": "Plus IV hydration 2-3 L/m²/day"
+              },
+              "triggers": {
+                "relevant_regimens": [
+                  "REG-BR-STANDARD"
+                ],
+                "clinical_condition": "High tumor burden: bulky disease (>=7 cm), elevated LDH, or rapid clinical progression"
+              },
+              "rationale": "TLS risk is moderate-to-high in bulky indolent lymphoma starting cytoreductive therapy. Prophylaxis with allopurinol + hydration reduces hyperuricemia and downstream renal injury.\n",
+              "sources": [
+                "SRC-NCCN-BCELL-2025"
+              ],
+              "last_reviewed": "2026-04-25"
+            },
+            {
+              "id": "SUP-ANTIEMETIC-PREMED",
+              "intervention_type": "premedication",
+              "name": "Antiemetic premedication for moderately emetogenic chemotherapy",
+              "name_ua": "Антиеметична премедикація",
+              "standard_intervention": {
+                "drug_id": "DRUG-ONDANSETRON",
+                "dose": "8 mg IV",
+                "schedule": "30 minutes before chemotherapy; then 8 mg PO q8h × 24-48h",
+                "notes": "Add dexamethasone 8-12 mg IV for higher emetogenicity"
+              },
+              "triggers": {
+                "relevant_regimens": [
+                  "REG-BR-STANDARD"
+                ]
+              },
+              "rationale": "Bendamustine is moderately emetogenic; standard 5-HT3 antagonist prevents acute and delayed nausea/vomiting.\n",
+              "sources": [
+                "SRC-NCCN-BCELL-2025"
+              ],
+              "last_reviewed": "2026-04-25"
+            }
+          ],
+          "contraindications_data": [
+            {
+              "id": "CI-HBV-NO-PROPHYLAXIS",
+              "severity": "absolute",
+              "trigger": {
+                "type": "patient_condition",
+                "conditions": [
+                  {
+                    "patient_condition": "HBsAg+ OR anti-HBc+"
+                  },
+                  {
+                    "patient_condition": "no concurrent HBV antiviral prophylaxis prescribed"
+                  }
+                ],
+                "logic": "AND"
+              },
+              "description": "Active or latent HBV without antiviral prophylaxis is an absolute contraindication to starting B-cell-depleting / immunomodulatory monoclonal antibody therapy (anti-CD20, anti-CD30 ADC, anti-CD38). Severe HBV reactivation hepatitis risk including fulminant hepatic failure.",
+              "description_ua": "Активний або латентний HBV без противірусної профілактики — абсолютне протипоказання до моноклональних антитіл, що вичерпують B-клітини або імуномодулюючих (anti-CD20, anti-CD30 ADC, anti-CD38)",
+              "alternative_actions": [
+                "Start entecavir 0.5 mg PO daily (or tenofovir) — SUP-HBV-PROPHYLAXIS — before first dose",
+                "Refer to hepatologist for shared management; HBV-DNA q-cycle monitoring",
+                "Defer therapy until prophylaxis confirmed and first dose of antiviral administered",
+                "Continue antiviral ≥12 months after last dose of immunosuppressive antibody"
+              ],
+              "affects_indications": [],
+              "affects_drugs": [
+                "DRUG-RITUXIMAB",
+                "DRUG-OBINUTUZUMAB",
+                "DRUG-BRENTUXIMAB-VEDOTIN",
+                "DRUG-DARATUMUMAB"
+              ],
+              "affects_regimens": [
+                "REG-BR-STANDARD"
+              ],
+              "sources": [
+                "SRC-NCCN-BCELL-2025",
+                "SRC-EASL-HCV-2023",
+                "SRC-NCCN-MM-2025"
+              ],
+              "last_reviewed": "2026-04-27",
+              "notes": "Triggered by RF-HBV-COINFECTION / RF-UNIVERSAL-HBV-REACTIVATION-RISK; resolved by adding SUP-HBV-PROPHYLAXIS to plan. Extended 2026-04-27 to cover anti-CD30 ADC (brentuximab vedotin) used in CHL A+AVD and anti-CD38 mAbs (daratumumab, isatuximab) used in MM regimens — both classes have documented HBV reactivation risk per their FDA labels and NCCN guidelines.\n"
+            },
+            {
+              "id": "CI-LVEF-LOW-FOR-ANTHRACYCLINE",
+              "severity": "absolute",
+              "trigger": {
+                "type": "lab_result",
+                "conditions": [
+                  {
+                    "patient_condition": "Baseline LVEF <50% by echocardiogram or MUGA"
+                  }
+                ],
+                "logic": "AND"
+              },
+              "description": "Pre-treatment LVEF <50% is an absolute contraindication to anthracycline-containing regimens (R-CHOP, Pola-R-CHP, ABVD, BV-AVD, etc.). Cardiotoxicity from doxorubicin is dose-cumulative and often irreversible; starting with already-impaired function risks acute decompensation.",
+              "description_ua": "LVEF <50% на baseline — абсолютне протипоказання до anthracycline-вмісних регімів (R-CHOP, Pola-R-CHP, ABVD, BV-AVD). Кардіотоксичність доксорубіцину доза-кумулятивна і часто незворотна.",
+              "alternative_actions": [
+                "Cardiology consult — confirm LVEF + assess reversible causes (treat HTN, ischemia, etc.)",
+                "Consider non-anthracycline regimen: R-CEOP (etoposide replaces doxorubicin), R-mini-CHOP for elderly, R-bendamustine for selected patients",
+                "Liposomal doxorubicin in selected cases (lower cardiotoxicity per dose)",
+                "Dexrazoxane cardioprotectant if anthracycline absolutely required"
+              ],
+              "affects_indications": [
+                "IND-DLBCL-1L-RCHOP",
+                "IND-DLBCL-1L-POLA-R-CHP"
+              ],
+              "affects_drugs": [
+                "DRUG-DOXORUBICIN"
+              ],
+              "affects_regimens": [
+                "REG-R-CHOP",
+                "REG-POLA-R-CHP"
+              ],
+              "sources": [
+                "SRC-NCCN-BCELL-2025"
+              ],
+              "last_reviewed": "2026-04-25",
+              "notes": "Cumulative anthracycline lifetime threshold ~450-500 mg/m² doxorubicin. Borderline LVEF (50-55%) — proceed with serial echo monitoring. Trastuzumab + anthracycline combination separately contraindicated (additive cardiotoxicity).\n"
+            },
+            {
+              "id": "CI-BORTEZOMIB-SEVERE-NEUROPATHY",
+              "severity": "absolute",
+              "trigger": {
+                "type": "patient_condition",
+                "conditions": [
+                  {
+                    "patient_condition": "Pre-existing Grade ≥2 peripheral neuropathy with pain OR Grade ≥3 peripheral neuropathy"
+                  }
+                ],
+                "logic": "AND"
+              },
+              "description": "Severe pre-existing peripheral neuropathy is an absolute contraindication to bortezomib — therapy will likely worsen the neuropathy to a disabling and often permanent extent.",
+              "description_ua": "Виражена периферична невропатія до початку терапії — абсолютне протипоказання до бортезомібу. Терапія з високою імовірністю поглибить невропатію до інвалідизуючого та часто стійкого ступеня.",
+              "alternative_actions": [
+                "Consider carfilzomib-based regimen (KRd) — different proteasome inhibitor with lower neuropathy rate",
+                "Consider isatuximab-Rd or daratumumab-Rd quadruplet (anti-CD38 + IMiD without proteasome inhibitor)",
+                "Neurology consult for baseline workup and reversibility assessment",
+                "Document neuropathy grade with NCCN/CTCAE before any decision"
+              ],
+              "affects_indications": [
+                "IND-MM-1L-VRD",
+                "IND-MM-1L-DVRD"
+              ],
+              "affects_drugs": [
+                "DRUG-BORTEZOMIB"
+              ],
+              "affects_regimens": [
+                "REG-VRD",
+                "REG-DARA-VRD"
+              ],
+              "sources": [
+                "SRC-NCCN-MM-2025"
+              ],
+              "last_reviewed": "2026-04-25",
+              "notes": "Mild Grade 1 neuropathy without pain is NOT a contraindication — the SC weekly bortezomib schedule (already standard in REG-VRD and REG-DARA-VRD) has substantially reduced the neuropathy rate vs the older biweekly IV schedule. Document grade carefully — \"neuropathy\" reported by patient history without clinical exam is insufficient.\n"
+            }
+          ]
+        },
+        {
+          "schema_version": null,
+          "track_id": "standard",
+          "label": "Стандартний план",
+          "label_en": "Standard plan",
+          "indication_id": "IND-DLBCL-1L-RCHOP",
+          "is_default": false,
+          "selection_reason": "Current-line alternative presented for HCP consideration",
+          "indication_data": {
+            "id": "IND-DLBCL-1L-RCHOP",
+            "plan_track": "standard",
+            "applicable_to": {
+              "disease_id": "DIS-DLBCL-NOS",
+              "line_of_therapy": 1,
+              "stage_requirements": [],
+              "biomarker_requirements_required": [
+                {
+                  "biomarker_id": "BIO-CD20-IHC",
+                  "required": true,
+                  "value_constraint": "positive (CD20+)"
+                },
+                {
+                  "biomarker_id": "BIO-DLBCL-IPI",
+                  "required": true,
+                  "value_constraint": "IPI 0-5; R-CHOP preferred for IPI 0-1; for IPI ≥2 see Pola-R-CHP"
+                },
+                {
+                  "biomarker_id": "BIO-HBV-STATUS",
+                  "required": true,
+                  "value_constraint": "any value valid (categorical etiology gate; HBsAg+ or anti-HBc+ → entecavir prophylaxis mandatory before first rituximab dose; engine consumes the input to fire RF-UNIVERSAL-HBV-REACTIVATION-RISK)"
+                },
+                {
+                  "biomarker_id": "BIO-HCV-STATUS",
+                  "required": true,
+                  "value_constraint": "any value valid (categorical etiology gate; anti-HCV+ → reflex BIO-HCV-RNA; coordinate DAA with hepatology; does not change R-CHOP regimen choice)"
+                },
+                {
+                  "biomarker_id": "BIO-HIV-STATUS",
+                  "required": true,
+                  "value_constraint": "any value valid (categorical etiology gate; HIV+ → cART throughout, PJP/MAC prophylaxis if CD4 < 200, CNS prophylaxis regardless of CNS-IPI; integrase-inhibitor backbone preferred to avoid ritonavir-vincristine interaction)"
+                },
+                {
+                  "biomarker_id": "BIO-DLBCL-COO-HANS",
+                  "required": false,
+                  "value_constraint": "GCB or non-GCB by Hans algorithm — non-GCB has worse R-CHOP outcomes; some centres consider R-CHOEP for non-GCB"
+                },
+                {
+                  "biomarker_id": "BIO-BCL2-EXPRESSION-IHC",
+                  "required": false,
+                  "value_constraint": "BCL2-IHC ≥50% combined with MYC-IHC ≥40% defines double-expressor (DEL) phenotype — poorer prognosis but not an excluder; HGBL-DH (FISH double-hit) must be ruled out"
+                }
+              ],
+              "biomarker_requirements_excluded": [],
+              "demographic_constraints": {
+                "ecog_max": 3
+              }
+            },
+            "recommended_regimen": "REG-R-CHOP",
+            "concurrent_therapy": [],
+            "followed_by": [],
+            "evidence_level": "high",
+            "strength_of_recommendation": "strong",
+            "nccn_category": "1",
+            "expected_outcomes": {
+              "overall_response_rate": "~85% (≥PR after 6 cycles)",
+              "complete_response": "~65-70%",
+              "progression_free_survival": "Median PFS ~5 years for low-IPI; ~2 years for high-IPI",
+              "overall_survival_5y": "~60% overall (low-IPI ~80%, high-IPI ~55%)"
+            },
+            "hard_contraindications": [
+              "CI-HBV-NO-PROPHYLAXIS",
+              "CI-LVEF-LOW-FOR-ANTHRACYCLINE"
+            ],
+            "red_flags_triggering_alternative": [
+              "RF-DLBCL-HIGH-IPI"
+            ],
+            "required_tests": [
+              "TEST-CBC",
+              "TEST-CMP",
+              "TEST-LFT",
+              "TEST-LDH",
+              "TEST-B2-MICROGLOBULIN",
+              "TEST-HBV-SEROLOGY",
+              "TEST-HCV-ANTIBODY",
+              "TEST-HIV-SEROLOGY",
+              "TEST-CD20-IHC",
+              "TEST-PET-CT",
+              "TEST-ECHO",
+              "TEST-LN-EXCISIONAL-BIOPSY",
+              "TEST-FLOW-CYTOMETRY",
+              "TEST-FISH-PANEL",
+              "TEST-PREGNANCY",
+              "TEST-BM-ASPIRATE",
+              "TEST-BM-TREPHINE"
+            ],
+            "desired_tests": [],
+            "rationale": "Long-standing 1L standard for newly-diagnosed DLBCL NOS, used for the past 20+ years across NCCN, ESMO, EHA. ~60% overall cure rate; outcomes highly dependent on IPI. Replaced PreCHOP regimens after the rituximab era (RCT data from late 1990s/early 2000s). Default for low-IPI (0-1) patients; for IPI ≥2, modern evidence (POLARIX 2022) favors Pola-R-CHP if accessible (see IND-DLBCL-1L-POLA-R-CHP).\n",
+            "rationale_ua": "R-CHOP (ритуксимаб + циклофосфамід + доксорубіцин + вінкристин + преднізолон) є багаторічним стандартом першої лінії (перша лінія) для вперше діагностованої ДВКЛ NOS, що застосовується понад 20 років в рекомендаціях NCCN, ESMO, EHA. Загальний рівень виліковування ~60%; результати суттєво залежать від IPI. Стандарт вибору для IPI 0-1; при IPI >=2 сучасні дані (POLARIX 2022) свідчать на користь Pola-R-CHP за наявності доступу (div. IND-DLBCL-1L-POLA-R-CHP). NCCN Категорія 1. Схема: ритуксимаб 375 mg/m2 + циклофосфамід 750 mg/m2 + доксорубіцин 50 mg/m2 + вінкристин 1.4 mg/m2 (макс. 2 мг) + преднізолон 100 мг (дні 1-5) q21d x 6 циклів. CNS-профілактика (HD-MTX intercalated) при CNS-IPI >=4 або уражених локалізаціях (тестикули, груди, нирки/наднирники, параназальні синуси). Базовий скринінг HBV обов'язковий; ентекавір при HBsAg+ або anti-HBc+. Базовий ЕХОКГ для LVEF >=50% (антрациклінова кардіотоксичність). Вінкристин вводити ВИКЛЮЧНО внутрішньовенно - інтратекальне введення є ФАТАЛЬНИМ. Рецидивний/рефрактерний (relapsed/refractory) ДВКЛ після R-CHOP потребує переходу на 2L (сальвадж хіміотерапія -> аутоТГСК для придатних; CAR-T для р/р).\n",
+            "ukrainian_review_status": "pending_clinical_signoff",
+            "ukrainian_drafted_by": "claude_extraction",
+            "draft_revision": 2,
+            "sources": [
+              {
+                "source_id": "SRC-NCCN-BCELL-2025",
+                "position": "supports",
+                "relevant_quote_paraphrase": "R-CHOP is a Category 1 preferred regimen for newly-diagnosed DLBCL across all IPI groups; Pola-R-CHP is preferred Category 1 for IPI ≥2 where accessible"
+              },
+              {
+                "source_id": "SRC-ESMO-LYMPHOMA-2025",
+                "position": "supports",
+                "relevant_quote_paraphrase": "ESMO 2024 codifies R-CHOP × 6 as 1L standard for DLBCL NOS; Pola-R-CHP preferred for IPI ≥3 per POLARIX"
+              }
+            ],
+            "known_controversies": [
+              {
+                "topic": "R-CHOP vs Pola-R-CHP for IPI ≥2 1L DLBCL",
+                "positions": [
+                  {
+                    "position": "Pola-R-CHP preferred for IPI ≥2 where accessible (POLARIX evidence)",
+                    "sources": [
+                      "SRC-NCCN-BCELL-2025"
+                    ],
+                    "evidence_note": "PFS benefit ~6.5% absolute at 2 years"
+                  },
+                  {
+                    "position": "R-CHOP remains acceptable when polatuzumab not accessible",
+                    "sources": [
+                      "SRC-NCCN-BCELL-2025"
+                    ]
+                  }
+                ],
+                "our_default": "R-CHOP for IPI 0-1 OR when polatuzumab not accessible (Ukraine reimbursement gap); Pola-R-CHP for IPI ≥2 with confirmed funding pathway",
+                "rationale": "Polatuzumab not НСЗУ-reimbursed in Ukraine — access is bottleneck. Patient should be informed of trade-off + offered POLARIX-style Pola-R-CHP if funding pathway exists.\n"
+              }
+            ],
+            "do_not_do": [
+              "Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ — ризик фатальної реактивації значно підвищений на anti-CD20.",
+              "Не призначати без baseline LVEF ≥50% — anthracyclines кардіотоксичні; кардіоміопатія часто незворотна.",
+              "Не ігнорувати CNS-IPI — для пацієнтів з ≥4 CNS-IPI або високоризиковими anatomic sites (тестикули, груди, нирки/наднирники, параназальні синуси) додавати CNS prophylaxis (HD-MTX intercalated).",
+              "Не пропускати fertility preservation discussion у репродуктивного віку — циклофосфамід викликає азооспермію + amenorrhea.",
+              "Не вводити вінкристин інтратекально — ФАТАЛЬНО. WHO/FDA вимагають IV mini-bag packaging.",
+              "Не ескалувати дозу при febrile neutropenia без G-CSF — G-CSF prophylaxis для високоризикових пацієнтів (вік >65, prior cytopenia, advanced disease)."
+            ],
+            "do_not_do_en": [
+              "Do not start without HBV screening + entecavir prophylaxis if HBsAg+ or anti-HBc+ — risk of fatal reactivation is significantly elevated on anti-CD20.",
+              "Do not prescribe without baseline LVEF ≥50% — anthracyclines are cardiotoxic; cardiomyopathy is often irreversible.",
+              "Do not ignore CNS-IPI — for patients with CNS-IPI ≥4 or high-risk anatomic sites (testicles, breasts, kidneys/adrenals, paranasal sinuses) add CNS prophylaxis (HD-MTX intercalated).",
+              "Do not skip the fertility preservation discussion in patients of reproductive age — cyclophosphamide causes azoospermia + amenorrhea.",
+              "Do not give vincristine intrathecally — FATAL. WHO/FDA require IV mini-bag packaging.",
+              "Do not escalate dose with febrile neutropenia without G-CSF — G-CSF prophylaxis for high-risk patients (age >65, prior cytopenia, advanced disease)."
+            ],
+            "time_critical": false,
+            "last_reviewed": "2026-04-27",
+            "reviewers": [],
+            "reviewer_signoffs": 0,
+            "notes": "STUB — pending Clinical Co-Lead sign-off. Standard track for DLBCL 1L two-plan output (CHARTER §2). For relapsed/refractory after R-CHOP, treatment moves to 2L pathway (salvage chemo → autoSCT for fit; CAR-T for r/r refractory) — separate Indication entities.\n"
+          },
+          "regimen_data": {
+            "id": "REG-R-CHOP",
+            "name": "Rituximab + CHOP (R-CHOP), 6 cycles",
+            "name_ua": "Ритуксимаб + CHOP (R-CHOP), 6 циклів",
+            "alternate_names": [
+              "R-CHOP",
+              "R-CHOP-21"
+            ],
+            "components": [
+              {
+                "drug_id": "DRUG-RITUXIMAB",
+                "dose": "375 mg/m²",
+                "schedule": "IV day 1 of each 21-day cycle",
+                "route": "IV"
+              },
+              {
+                "drug_id": "DRUG-CYCLOPHOSPHAMIDE",
+                "dose": "750 mg/m²",
+                "schedule": "IV day 1 of each 21-day cycle",
+                "route": "IV"
+              },
+              {
+                "drug_id": "DRUG-DOXORUBICIN",
+                "dose": "50 mg/m²",
+                "schedule": "IV day 1 of each 21-day cycle",
+                "route": "IV"
+              },
+              {
+                "drug_id": "DRUG-VINCRISTINE",
+                "dose": "1.4 mg/m² (capped at 2 mg total)",
+                "schedule": "IV day 1 of each 21-day cycle",
+                "route": "IV"
+              },
+              {
+                "drug_id": "DRUG-PREDNISONE",
+                "dose": "100 mg",
+                "schedule": "PO days 1-5 of each 21-day cycle",
+                "route": "PO"
+              }
+            ],
+            "cycle_length_days": 21,
+            "total_cycles": "6 (with consideration of 2-month interim PET-CT after cycles 2-4)",
+            "toxicity_profile": "moderate",
+            "premedication": [
+              "Antihistamine + acetaminophen + IV steroid before rituximab (especially first dose)",
+              "5-HT3 antagonist + dexamethasone before doxorubicin/cyclophosphamide"
+            ],
+            "mandatory_supportive_care": [
+              "SUP-PJP-PROPHYLAXIS",
+              "SUP-TLS-PROPHYLAXIS",
+              "SUP-ANTIEMETIC-PREMED"
+            ],
+            "monitoring_schedule_id": "MON-R-CHOP-REGIMEN",
+            "dose_adjustments": [
+              {
+                "condition": "Cumulative anthracycline approaching 450-500 mg/m² lifetime",
+                "modification": "Echo + LVEF check before next dose; consider regimen change if borderline",
+                "rationale": "Cardiotoxicity is dose-cumulative",
+                "source_refs": [
+                  "SRC-NCCN-BCELL-2025"
+                ]
+              },
+              {
+                "condition": "Total bilirubin >3 mg/dL",
+                "modification": "Reduce vincristine + doxorubicin per hepatic-impairment dosing",
+                "rationale": "Both are hepatically cleared",
+                "source_refs": [
+                  "SRC-NCCN-BCELL-2025"
+                ]
+              },
+              {
+                "condition": "Grade ≥2 peripheral neuropathy",
+                "modification": "Hold or reduce vincristine; may convert to non-vincristine regimen",
+                "rationale": "Vincristine neuropathy is dose-cumulative and often permanent"
+              },
+              {
+                "condition": "ANC <1500 or platelets <100K at cycle start",
+                "modification": "Delay cycle ≥7 days; consider G-CSF support",
+                "rationale": "Cumulative myelosuppression"
+              }
+            ],
+            "ukraine_availability": {
+              "all_components_registered": true,
+              "all_components_reimbursed": true,
+              "notes": "All R-CHOP components reimbursed via НСЗУ for B-cell lymphoma indications"
+            },
+            "sources": [
+              "SRC-NCCN-BCELL-2025"
+            ],
+            "between_visit_watchpoints": [
+              {
+                "trigger_ua": "Помірна втома протягом 3-5 днів після інфузії",
+                "action_ua": "Це нормально — занотуйте, і відпочивайте більше у ці дні. Обговоріть на наступному візиті, якщо втома триває довше",
+                "urgency": "log_at_next_visit",
+                "cycle_day_window": "Day 1-5 of each cycle",
+                "sources": [
+                  "SRC-NCCN-BCELL-2025"
+                ]
+              },
+              {
+                "trigger_ua": "Випадання волосся (початок на 2-3 тижні після першого циклу)",
+                "action_ua": "Очікуване від доксорубіцину — занотуйте, обговоріть на візиті. Волосся повертається після завершення курсу",
+                "urgency": "log_at_next_visit",
+                "cycle_day_window": "Day 14-21",
+                "sources": [
+                  "SRC-NCCN-BCELL-2025"
+                ]
+              },
+              {
+                "trigger_ua": "Помірна нудота протягом перших 1-3 днів після циклу",
+                "action_ua": "Приймайте призначені протиблювотні; занотуйте, якщо стають слабшими — обговоріть на наступному візиті",
+                "urgency": "log_at_next_visit",
+                "cycle_day_window": "Day 1-3",
+                "sources": [
+                  "SRC-CTCAE-V5"
+                ]
+              },
+              {
+                "trigger_ua": "Лихоманка вище 38°C — особливо на 7-14 день циклу",
+                "action_ua": "Подзвоніть у клініку того ж дня — це період можливої низької кількості нейтрофілів і ризику інфекції",
+                "urgency": "call_clinic_same_day",
+                "cycle_day_window": "Day 7-14",
+                "sources": [
+                  "SRC-NCCN-BCELL-2025",
+                  "SRC-CTCAE-V5"
+                ]
+              },
+              {
+                "trigger_ua": "Незвичні синці, кровотеча ясен або носа, що довго не спиняється",
+                "action_ua": "Подзвоніть у клініку того ж дня — це може свідчити про знижену кількість тромбоцитів",
+                "urgency": "call_clinic_same_day",
+                "cycle_day_window": "Day 7-14",
+                "sources": [
+                  "SRC-CTCAE-V5"
+                ]
+              },
+              {
+                "trigger_ua": "Нова задишка, прискорене серцебиття або біль у грудях",
+                "action_ua": "Подзвоніть у клініку того ж дня — доксорубіцин може впливати на серце; потрібна оцінка",
+                "urgency": "call_clinic_same_day",
+                "sources": [
+                  "SRC-NCCN-BCELL-2025",
+                  "SRC-CTCAE-V5"
+                ]
+              },
+              {
+                "trigger_ua": "Тяжка реакція на інфузію ритуксимабу (особливо першу): задишка, набряк обличчя, висип, тиск падає",
+                "action_ua": "Інфузія зазвичай проводиться в клініці — повідомте медсестру негайно. Якщо реакція виникла вдома, викликайте швидку",
+                "urgency": "er_now",
+                "cycle_day_window": "Day 1 of cycle 1",
+                "sources": [
+                  "SRC-NCCN-BCELL-2025",
+                  "SRC-CTCAE-V5"
+                ]
+              },
+              {
+                "trigger_ua": "Озноб + лихоманка + сплутаність свідомості",
+                "action_ua": "Звертайтесь у лікарню негайно — це ознаки можливого сепсису на тлі низьких нейтрофілів",
+                "urgency": "er_now",
+                "sources": [
+                  "SRC-CTCAE-V5"
+                ]
+              }
+            ],
+            "last_reviewed": "2026-04-25",
+            "notes": "Standard 1L regimen for newly-diagnosed DLBCL NOS for the past 20+ years. ~60% cure rate overall, ~80% for low-IPI / ~55% for high-IPI. HBV screening + entecavir prophylaxis if HBsAg+ or anti-HBc+ MANDATORY before first rituximab dose. Echocardiogram (LVEF) baseline + after cumulative dose >300 mg/m². Interim PET-CT after cycles 2-4 helpful for response assessment but doesn't routinely change therapy unless PD seen.\n",
+            "notes_ua": "стандарт 1L схема for newly-diagnosed DLBCL NOS for the past 20+ years. ~60% cure rate overall, ~80% for low-IPI / ~55% for high-IPI. HBV screening + entecavir prophylaxis if HBsAg+ or anti-HBc+ обов'язковий before first ритуксимаб доза. Echocardiogram (LVEF) базове + after cumulative доза >300 mg/m². Interim PET-CT after цикли 2-4 helpful for відповідь assessment but doesn't routinely change терапія unless PD seen.\n",
+            "ukrainian_review_status": "pending_clinical_signoff",
+            "ukrainian_drafted_by": "claude_extraction"
+          },
+          "monitoring_data": {
+            "id": "MON-R-CHOP-REGIMEN",
+            "linked_to_regimen": "REG-R-CHOP",
+            "phases": [
+              {
+                "name": "baseline",
+                "window": "Within 2 weeks before cycle 1",
+                "window_ua": "Протягом 2 тижнів до циклу 1",
+                "tests": [
+                  "TEST-CBC",
+                  "TEST-CMP",
+                  "TEST-LFT",
+                  "TEST-LDH",
+                  "TEST-B2-MICROGLOBULIN",
+                  "TEST-HBV-SEROLOGY",
+                  "TEST-HCV-ANTIBODY",
+                  "TEST-HIV-SEROLOGY",
+                  "TEST-PET-CT",
+                  "TEST-LN-EXCISIONAL-BIOPSY",
+                  "TEST-FLOW-CYTOMETRY",
+                  "TEST-CD20-IHC",
+                  "TEST-ECHO",
+                  "TEST-PREGNANCY",
+                  "TEST-BM-ASPIRATE",
+                  "TEST-BM-TREPHINE"
+                ],
+                "visits": [
+                  "Treatment planning visit with hematology + cardiology + ID + reproductive counseling"
+                ],
+                "checkpoints": [
+                  "Confirm CD20+ DLBCL histology; rule out double-hit (FISH for MYC/BCL2/BCL6)",
+                  "Confirm HBV status + entecavir prophylaxis plan if HBsAg+ or anti-HBc+",
+                  "Baseline LVEF ≥50% before doxorubicin",
+                  "IPI calculation documented (age, ECOG, LDH, stage, extranodal sites)",
+                  "CNS-IPI calculation if anatomic risk sites or composite score concerning",
+                  "Fertility preservation discussion (sperm banking / oocyte cryo) for childbearing-age"
+                ],
+                "checkpoints_ua": [
+                  "Підтвердити CD20+ DLBCL гістологію; виключити double-hit (FISH на MYC/BCL2/BCL6)",
+                  "Підтвердити статус HBV + план профілактики ентекавіром при HBsAg+ або anti-HBc+",
+                  "Базовий LVEF ≥50% перед доксорубіцином",
+                  "Документувати розрахунок IPI (вік, ECOG, LDH, стадія, екстранодальні локалізації)",
+                  "Розрахунок CNS-IPI при анатомічних зонах ризику або тривожному загальному балі",
+                  "Обговорення збереження фертильності (банкінг сперми / кріоконсервація ооцитів) для пацієнтів дітородного віку"
+                ]
+              },
+              {
+                "name": "on_treatment",
+                "window": "Day 1 of every 21-day cycle",
+                "window_ua": "День 1 кожного 21-денного циклу",
+                "tests": [
+                  "TEST-CBC",
+                  "TEST-CMP",
+                  "TEST-LFT"
+                ],
+                "visits": [
+                  "Pre-cycle clinical assessment + infusion-day labs + neuropathy screen"
+                ],
+                "checkpoints": [
+                  "ANC ≥1500 + platelets ≥100K before each cycle (delay or G-CSF if not)",
+                  "Neuropathy grade documented (CTCAE) — vincristine modification if ≥2",
+                  "LVEF re-check after cumulative doxorubicin ~300 mg/m²"
+                ],
+                "checkpoints_ua": [
+                  "ANC ≥1500 + тромбоцити ≥100 тис. перед кожним циклом (інакше — відстрочка або G-CSF)",
+                  "Ступінь нейропатії документується (CTCAE) — модифікація вінкристину при ≥2",
+                  "Повторна оцінка LVEF після кумулятивної дози доксорубіцину ~300 мг/м²"
+                ]
+              },
+              {
+                "name": "interim_response_assessment",
+                "window": "After cycles 2-4 (interim PET-CT)",
+                "window_ua": "Після циклів 2–4 (проміжне PET-CT)",
+                "tests": [
+                  "TEST-PET-CT",
+                  "TEST-LDH"
+                ],
+                "visits": [
+                  "Restaging visit"
+                ],
+                "checkpoints": [
+                  "Lugano response criteria + Deauville score",
+                  "If Deauville 4-5 with mass progression → consider salvage or trial"
+                ],
+                "checkpoints_ua": [
+                  "Критерії відповіді за Lugano + бал за Deauville",
+                  "При Deauville 4–5 з прогресуванням маси → розглянути salvage-терапію або клінічне дослідження"
+                ]
+              },
+              {
+                "name": "end_of_treatment",
+                "window": "After cycle 6 (within 6-8 weeks)",
+                "window_ua": "Після циклу 6 (протягом 6–8 тижнів)",
+                "tests": [
+                  "TEST-PET-CT",
+                  "TEST-CBC",
+                  "TEST-CMP",
+                  "TEST-LDH"
+                ],
+                "visits": [
+                  "End-of-treatment restaging + survivorship transition"
+                ],
+                "checkpoints": [
+                  "Confirm CR vs PR vs SD vs PD by Lugano/Deauville",
+                  "Begin survivorship plan: cardiac surveillance schedule, vaccination catch-up, second-cancer screening"
+                ],
+                "checkpoints_ua": [
+                  "Підтвердити CR / PR / SD / PD за Lugano/Deauville",
+                  "Початок плану survivorship: графік кардіологічного спостереження, надолуження вакцинації, скринінг другого раку"
+                ]
+              },
+              {
+                "name": "follow_up_short",
+                "window": "Every 3 months × 2 years post-treatment",
+                "window_ua": "Кожні 3 місяці протягом 2 років після лікування",
+                "tests": [
+                  "TEST-CBC",
+                  "TEST-CMP",
+                  "TEST-LFT",
+                  "TEST-LDH"
+                ],
+                "visits": [
+                  "Clinical assessment + labs"
+                ],
+                "checkpoints": [
+                  "Surveillance for relapse (~40% relapse risk by 2 years overall)",
+                  "HBV reactivation monitoring continues for 12 months post anti-CD20"
+                ],
+                "checkpoints_ua": [
+                  "Спостереження щодо рецидиву (загальний ризик рецидиву ~40% протягом 2 років)",
+                  "Моніторинг реактивації HBV триває 12 місяців після anti-CD20"
+                ]
+              },
+              {
+                "name": "follow_up_long",
+                "window": "Every 6 months years 3-5, then annually",
+                "window_ua": "Кожні 6 місяців у роки 3–5, потім щорічно",
+                "tests": [
+                  "TEST-CBC",
+                  "TEST-LFT",
+                  "TEST-ECHO"
+                ],
+                "visits": [
+                  "Clinical + cardiac surveillance"
+                ],
+                "checkpoints": [
+                  "Late cardiomyopathy screening (LVEF) annually if cumulative dox >300",
+                  "Annual second-malignancy screening (skin, breast, etc. age-appropriate)"
+                ],
+                "checkpoints_ua": [
+                  "Щорічний скринінг пізньої кардіоміопатії (LVEF) при кумулятивній дозі доксорубіцину >300",
+                  "Щорічний скринінг другої злоякісної пухлини (шкіра, молочна залоза тощо — відповідно до віку)"
+                ]
+              }
+            ],
+            "sources": [
+              "SRC-NCCN-BCELL-2025"
+            ],
+            "last_reviewed": "2026-04-25",
+            "machine_translated_review_pending": true,
+            "notes": "Shared by REG-R-CHOP and REG-POLA-R-CHP (Pola-R-CHP differs only in cycle composition; monitoring is identical). HBV-DNA quarterly for duration of therapy and 12 months post if anti-CD20 used. UA translations of window / checkpoints added 2026-05-19 under CHARTER §8.3 dev-mode exemption; awaiting Clinical Co-Lead sign-off.\n"
+          },
+          "supportive_care_data": [
+            {
+              "id": "SUP-PJP-PROPHYLAXIS",
+              "intervention_type": "prophylaxis",
+              "name": "Pneumocystis jirovecii prophylaxis",
+              "name_ua": "Профілактика пневмоцистної пневмонії",
+              "standard_intervention": {
+                "drug_id": "DRUG-TMP-SMX",
+                "dose": "160/800 mg PO 3x/week (Mon/Wed/Fri)",
+                "schedule": "Start with first cycle of chemoimmunotherapy; continue ≥6 months after last anti-CD20 dose",
+                "notes": "Alternative: dapsone 100 mg PO daily if sulfa allergy (verify G6PD status first)"
+              },
+              "triggers": {
+                "relevant_regimens": [
+                  "REG-BR-STANDARD"
+                ],
+                "clinical_condition": "Sustained immunosuppression from rituximab + chemotherapy"
+              },
+              "rationale": "Anti-CD20 therapy combined with cytotoxic chemotherapy substantially prolongs B-cell depletion and increases PJP risk for months after completion of treatment.\n",
+              "sources": [
+                "SRC-NCCN-BCELL-2025"
+              ],
+              "last_reviewed": "2026-04-25"
+            },
+            {
+              "id": "SUP-TLS-PROPHYLAXIS",
+              "intervention_type": "prophylaxis",
+              "name": "Tumor lysis syndrome prophylaxis",
+              "name_ua": "Профілактика синдрому лізису пухлини",
+              "standard_intervention": {
+                "drug_id": "DRUG-ALLOPURINOL",
+                "dose": "300 mg PO daily",
+                "schedule": "Start 24-48h before chemotherapy; continue 5-7 days",
+                "notes": "Plus IV hydration 2-3 L/m²/day"
+              },
+              "triggers": {
+                "relevant_regimens": [
+                  "REG-BR-STANDARD"
+                ],
+                "clinical_condition": "High tumor burden: bulky disease (>=7 cm), elevated LDH, or rapid clinical progression"
+              },
+              "rationale": "TLS risk is moderate-to-high in bulky indolent lymphoma starting cytoreductive therapy. Prophylaxis with allopurinol + hydration reduces hyperuricemia and downstream renal injury.\n",
+              "sources": [
+                "SRC-NCCN-BCELL-2025"
+              ],
+              "last_reviewed": "2026-04-25"
+            },
+            {
+              "id": "SUP-ANTIEMETIC-PREMED",
+              "intervention_type": "premedication",
+              "name": "Antiemetic premedication for moderately emetogenic chemotherapy",
+              "name_ua": "Антиеметична премедикація",
+              "standard_intervention": {
+                "drug_id": "DRUG-ONDANSETRON",
+                "dose": "8 mg IV",
+                "schedule": "30 minutes before chemotherapy; then 8 mg PO q8h × 24-48h",
+                "notes": "Add dexamethasone 8-12 mg IV for higher emetogenicity"
+              },
+              "triggers": {
+                "relevant_regimens": [
+                  "REG-BR-STANDARD"
+                ]
+              },
+              "rationale": "Bendamustine is moderately emetogenic; standard 5-HT3 antagonist prevents acute and delayed nausea/vomiting.\n",
+              "sources": [
+                "SRC-NCCN-BCELL-2025"
+              ],
+              "last_reviewed": "2026-04-25"
+            }
+          ],
+          "contraindications_data": [
+            {
+              "id": "CI-HBV-NO-PROPHYLAXIS",
+              "severity": "absolute",
+              "trigger": {
+                "type": "patient_condition",
+                "conditions": [
+                  {
+                    "patient_condition": "HBsAg+ OR anti-HBc+"
+                  },
+                  {
+                    "patient_condition": "no concurrent HBV antiviral prophylaxis prescribed"
+                  }
+                ],
+                "logic": "AND"
+              },
+              "description": "Active or latent HBV without antiviral prophylaxis is an absolute contraindication to starting B-cell-depleting / immunomodulatory monoclonal antibody therapy (anti-CD20, anti-CD30 ADC, anti-CD38). Severe HBV reactivation hepatitis risk including fulminant hepatic failure.",
+              "description_ua": "Активний або латентний HBV без противірусної профілактики — абсолютне протипоказання до моноклональних антитіл, що вичерпують B-клітини або імуномодулюючих (anti-CD20, anti-CD30 ADC, anti-CD38)",
+              "alternative_actions": [
+                "Start entecavir 0.5 mg PO daily (or tenofovir) — SUP-HBV-PROPHYLAXIS — before first dose",
+                "Refer to hepatologist for shared management; HBV-DNA q-cycle monitoring",
+                "Defer therapy until prophylaxis confirmed and first dose of antiviral administered",
+                "Continue antiviral ≥12 months after last dose of immunosuppressive antibody"
+              ],
+              "affects_indications": [],
+              "affects_drugs": [
+                "DRUG-RITUXIMAB",
+                "DRUG-OBINUTUZUMAB",
+                "DRUG-BRENTUXIMAB-VEDOTIN",
+                "DRUG-DARATUMUMAB"
+              ],
+              "affects_regimens": [
+                "REG-BR-STANDARD"
+              ],
+              "sources": [
+                "SRC-NCCN-BCELL-2025",
+                "SRC-EASL-HCV-2023",
+                "SRC-NCCN-MM-2025"
+              ],
+              "last_reviewed": "2026-04-27",
+              "notes": "Triggered by RF-HBV-COINFECTION / RF-UNIVERSAL-HBV-REACTIVATION-RISK; resolved by adding SUP-HBV-PROPHYLAXIS to plan. Extended 2026-04-27 to cover anti-CD30 ADC (brentuximab vedotin) used in CHL A+AVD and anti-CD38 mAbs (daratumumab, isatuximab) used in MM regimens — both classes have documented HBV reactivation risk per their FDA labels and NCCN guidelines.\n"
+            },
+            {
+              "id": "CI-LVEF-LOW-FOR-ANTHRACYCLINE",
+              "severity": "absolute",
+              "trigger": {
+                "type": "lab_result",
+                "conditions": [
+                  {
+                    "patient_condition": "Baseline LVEF <50% by echocardiogram or MUGA"
+                  }
+                ],
+                "logic": "AND"
+              },
+              "description": "Pre-treatment LVEF <50% is an absolute contraindication to anthracycline-containing regimens (R-CHOP, Pola-R-CHP, ABVD, BV-AVD, etc.). Cardiotoxicity from doxorubicin is dose-cumulative and often irreversible; starting with already-impaired function risks acute decompensation.",
+              "description_ua": "LVEF <50% на baseline — абсолютне протипоказання до anthracycline-вмісних регімів (R-CHOP, Pola-R-CHP, ABVD, BV-AVD). Кардіотоксичність доксорубіцину доза-кумулятивна і часто незворотна.",
+              "alternative_actions": [
+                "Cardiology consult — confirm LVEF + assess reversible causes (treat HTN, ischemia, etc.)",
+                "Consider non-anthracycline regimen: R-CEOP (etoposide replaces doxorubicin), R-mini-CHOP for elderly, R-bendamustine for selected patients",
+                "Liposomal doxorubicin in selected cases (lower cardiotoxicity per dose)",
+                "Dexrazoxane cardioprotectant if anthracycline absolutely required"
+              ],
+              "affects_indications": [
+                "IND-DLBCL-1L-RCHOP",
+                "IND-DLBCL-1L-POLA-R-CHP"
+              ],
+              "affects_drugs": [
+                "DRUG-DOXORUBICIN"
+              ],
+              "affects_regimens": [
+                "REG-R-CHOP",
+                "REG-POLA-R-CHP"
+              ],
+              "sources": [
+                "SRC-NCCN-BCELL-2025"
+              ],
+              "last_reviewed": "2026-04-25",
+              "notes": "Cumulative anthracycline lifetime threshold ~450-500 mg/m² doxorubicin. Borderline LVEF (50-55%) — proceed with serial echo monitoring. Trastuzumab + anthracycline combination separately contraindicated (additive cardiotoxicity).\n"
+            }
+          ]
+        }
+      ],
+      "sequencing_tracks": [],
+      "fda_compliance": {
+        "schema_version": null,
+        "intended_use": "Outpatient oncology treatment planning to support tumor-board discussion. Not a medical device; not for autonomous clinical decision-making.",
+        "hcp_user_specification": "Licensed oncologist or hematologist participating in a multidisciplinary tumor board. Intended user must be qualified to independently review the basis of every recommendation.",
+        "patient_population_match": "Adults with confirmed DIS-DLBCL-NOS diagnosis at line of therapy 1.",
+        "algorithm_summary": "Select default + alternative Indication for first-line newly-diagnosed DLBCL NOS based on IPI risk. Outputs the two-plan pair (R-CHOP standard vs Pola-R-CHP intensified) per CHARTER §2.\n",
+        "data_sources_summary": [
+          "SRC-ESMO-LYMPHOMA-2025: Lymphomas: ESMO Clinical Practice Guideline for diagnosis, treatment and follow-up (2025)",
+          "SRC-NCCN-BCELL-2025: NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas (v.2.2025)",
+          "SRC-POLARIX-TILLY-2022: Polatuzumab Vedotin in Previously Untreated Diffuse Large B-Cell Lymphoma (2022)"
+        ],
+        "data_limitations": [],
+        "automation_bias_warning": "Both treatment options below are presented for review. The engine's selection of a 'recommended' default does not constitute a clinical decision. Final treatment selection requires HCP judgment incorporating information not available to the system.",
+        "time_critical": false
+      },
+      "trace": [
+        {
+          "step": 1,
+          "outcome": false,
+          "branch": {
+            "next_step": 2
+          },
+          "fired_red_flags": [],
+          "winner_red_flag": null
+        },
+        {
+          "step": 2,
+          "outcome": true,
+          "branch": {
+            "result": "IND-DLBCL-1L-POLA-R-CHP"
+          },
+          "fired_red_flags": [
+            "RF-IPI-HIGH",
+            "RF-DLBCL-HIGH-IPI"
+          ],
+          "winner_red_flag": "RF-DLBCL-HIGH-IPI"
+        }
+      ],
+      "warnings": [],
+      "annotations": [],
+      "access_matrix": {
+        "schema_version": null,
+        "rows": [
+          {
+            "schema_version": null,
+            "track_id": "aggressive",
+            "track_label": "Агресивний план",
+            "regimen_id": "REG-POLA-R-CHP",
+            "regimen_name": "Polatuzumab vedotin + Rituximab + CHP (Pola-R-CHP), 6 cycles + 2× rituximab",
+            "drug_ids": [
+              "DRUG-POLATUZUMAB-VEDOTIN",
+              "DRUG-RITUXIMAB",
+              "DRUG-CYCLOPHOSPHAMIDE",
+              "DRUG-DOXORUBICIN",
+              "DRUG-PREDNISONE"
+            ],
+            "registered_in_ua": false,
+            "reimbursed_nszu": false,
+            "cost_self_pay_min": null,
+            "cost_self_pay_max": null,
+            "cost_reimbursed_min": null,
+            "cost_reimbursed_max": null,
+            "cost_per_unit": null,
+            "cost_last_updated": null,
+            "cost_is_stale": false,
+            "primary_pathway_id": null,
+            "pathway_alternative_ids": [],
+            "notes": [
+              "1/5 component drug(s) not registered in Ukraine",
+              "1/5 component drug(s) not on НСЗУ formulary"
+            ]
+          },
+          {
+            "schema_version": null,
+            "track_id": "standard",
+            "track_label": "Стандартний план",
+            "regimen_id": "REG-R-CHOP",
+            "regimen_name": "Rituximab + CHOP (R-CHOP), 6 cycles",
+            "drug_ids": [
+              "DRUG-RITUXIMAB",
+              "DRUG-CYCLOPHOSPHAMIDE",
+              "DRUG-DOXORUBICIN",
+              "DRUG-VINCRISTINE",
+              "DRUG-PREDNISONE"
+            ],
+            "registered_in_ua": true,
+            "reimbursed_nszu": true,
+            "cost_self_pay_min": null,
+            "cost_self_pay_max": null,
+            "cost_reimbursed_min": null,
+            "cost_reimbursed_max": null,
+            "cost_per_unit": null,
+            "cost_last_updated": null,
+            "cost_is_stale": false,
+            "primary_pathway_id": null,
+            "pathway_alternative_ids": [],
+            "notes": []
+          }
+        ],
+        "generated_at": "2026-10-10T08:23:53.157990+00:00",
+        "notes": []
+      },
+      "variant_actionability": []
+    },
+    "trace": [
+      {
+        "step": 1,
+        "outcome": false,
+        "branch": {
+          "next_step": 2
+        },
+        "fired_red_flags": [],
+        "winner_red_flag": null
+      },
+      {
+        "step": 2,
+        "outcome": true,
+        "branch": {
+          "result": "IND-DLBCL-1L-POLA-R-CHP"
+        },
+        "fired_red_flags": [
+          "RF-IPI-HIGH",
+          "RF-DLBCL-HIGH-IPI"
+        ],
+        "winner_red_flag": "RF-DLBCL-HIGH-IPI"
+      }
+    ],
+    "warnings": [],
+    "experimental_options": null
+  },
+  "mdt": {
+    "patient_id": "SYNTHETIC-REVIEW-ECOG-2",
+    "plan_id": "PLAN-SYNTHETIC-REVIEW-ECOG-2-V1",
+    "disease_id": "DIS-DLBCL-NOS",
+    "required_roles": [
+      {
+        "role_id": "hematologist",
+        "role_name": "Гематолог / онкогематолог",
+        "reason": "Лімфомний діагноз — провідна спеціальність для терапевтичного ведення.",
+        "trigger_type": "diagnosis_complexity",
+        "priority": "required",
+        "linked_findings": [
+          "DIS-DLBCL-NOS"
+        ],
+        "linked_questions": [
+          "OQ-LDH-CURRENT"
+        ],
+        "skill": {
+          "skill_id": "hematologist",
+          "name": "Гематолог / онкогематолог",
+          "version": "0.1.0",
+          "last_reviewed": "2026-04-25",
+          "clinical_lead": null,
+          "verified_by": [],
+          "sources": [
+            "SRC-NCCN-BCELL-2025",
+            "SRC-NCCN-AML-2025",
+            "SRC-NCCN-MM-2025",
+            "SRC-NCCN-MPN-2025",
+            "SRC-EHA-WORKUP-2024",
+            "SRC-ESMO-MZL-2024",
+            "SRC-BSH-MZL-2024"
+          ],
+          "domain": "hematology_oncology",
+          "notes": "STUB — required role for any lymphoma/MM/leukemia plan; pending Clinical Co-Lead sign-off per CHARTER §6.1.",
+          "signoffs": 0,
+          "review_status": "stub"
+        }
+      }
+    ],
+    "recommended_roles": [
+      {
+        "role_id": "clinical_pharmacist",
+        "role_name": "Клінічний фармацевт",
+        "reason": "Хіміоімунотерапевтичний схема — drug-drug interactions, dose adjustments, premedication.",
+        "trigger_type": "treatment_domain",
+        "priority": "recommended",
+        "linked_findings": [
+          "aggressive-track"
+        ],
+        "linked_questions": [],
+        "skill": {
+          "skill_id": "clinical_pharmacist",
+          "name": "Клінічний фармацевт",
+          "version": "0.1.0",
+          "last_reviewed": "2026-04-25",
+          "clinical_lead": null,
+          "verified_by": [],
+          "sources": [],
+          "domain": "clinical_pharmacy",
+          "notes": "STUB — drug-drug interactions, dose adjustments, premedication, supportive care.",
+          "signoffs": 0,
+          "review_status": "stub"
+        }
+      },
+      {
+        "role_id": "pathologist",
+        "role_name": "Патолог (загальний)",
+        "reason": "Підтвердження гістології лімфоми + оцінка ризику трансформації (DLBCL/Richter).",
+        "trigger_type": "diagnosis_complexity",
+        "priority": "recommended",
+        "linked_findings": [
+          "histology"
+        ],
+        "linked_questions": [
+          "OQ-BIOMARKER-BCL2-EXPRESSION-IHC",
+          "OQ-BIOMARKER-DLBCL-COO-HANS"
+        ],
+        "skill": {
+          "skill_id": "pathologist",
+          "name": "Патолог (загальний)",
+          "version": "0.1.0",
+          "last_reviewed": "2026-04-25",
+          "clinical_lead": null,
+          "verified_by": [],
+          "sources": [
+            "SRC-NCCN-BCELL-2025",
+            "SRC-EHA-WORKUP-2024"
+          ],
+          "domain": "pathology",
+          "notes": "STUB — generic pathologist for solid-tumor histology. Hematologic neoplasms route to hematopathologist (separate skill) in future rule revision; per CHARTER §15.2 C7 either way.",
+          "signoffs": 0,
+          "review_status": "stub"
+        }
+      }
+    ],
+    "optional_roles": [],
+    "open_questions": [
+      {
+        "id": "OQ-STAGING-COMPLETE",
+        "question": "Чи виконано повне стадіювання (Lugano + PET/CT або CT)?",
+        "owner_role": "radiologist",
+        "blocking": false,
+        "rationale": "Прогноз і вибір треку залежать від stage та tumor burden.",
+        "linked_findings": [
+          "lugano_stage",
+          "pet_ct_date"
+        ]
+      },
+      {
+        "id": "OQ-LDH-CURRENT",
+        "question": "Який актуальний LDH? Маркер пухлинного навантаження і трансформації.",
+        "owner_role": "hematologist",
+        "blocking": false,
+        "rationale": "LDH входить у прогностичні індекси індолентних лімфом.",
+        "linked_findings": [
+          "ldh_ratio_to_uln"
+        ]
+      },
+      {
+        "id": "OQ-BIOMARKER-BCL2-EXPRESSION-IHC",
+        "question": "What is the status of BCL2 expression by IHC (BIO-BCL2-EXPRESSION-IHC)? It is required by track(s): IND-DLBCL-1L-POLA-R-CHP, IND-DLBCL-1L-RCHOP. Expected value: Double-expressor (BCL2-IHC + MYC-IHC) phenotype — Pola-R-CHP may particularly benefit DEL subgroup; rule out HGBL-DH.",
+        "owner_role": "pathologist",
+        "blocking": true,
+        "rationale": "A treatment-track biomarker requirement is missing from the patient profile; the MDT should verify the test result, method, specimen, and date before relying on this option.",
+        "linked_findings": [
+          "BIO-BCL2-EXPRESSION-IHC"
+        ]
+      },
+      {
+        "id": "OQ-BIOMARKER-DLBCL-COO-HANS",
+        "question": "What is the status of Cell-of-origin classification (Hans IHC algorithm) (BIO-DLBCL-COO-HANS)? It is required by track(s): IND-DLBCL-1L-POLA-R-CHP, IND-DLBCL-1L-RCHOP. Expected value: Activated B-cell-like (ABC / non-GCB) showed greater Pola-R-CHP benefit in POLARIX subgroup.",
+        "owner_role": "pathologist",
+        "blocking": true,
+        "rationale": "A treatment-track biomarker requirement is missing from the patient profile; the MDT should verify the test result, method, specimen, and date before relying on this option.",
+        "linked_findings": [
+          "BIO-DLBCL-COO-HANS"
+        ]
+      }
+    ],
+    "talk_tree": [
+      {
+        "step": 1,
+        "owner_role": "pathologist",
+        "topic": "Biomarker status",
+        "action": "What is the status of BCL2 expression by IHC (BIO-BCL2-EXPRESSION-IHC)? It is required by track(s): IND-DLBCL-1L-POLA-R-CHP, IND-DLBCL-1L-RCHOP. Expected value: Double-expressor (BCL2-IHC + MYC-IHC) phenotype — Pola-R-CHP may particularly benefit DEL subgroup; rule out HGBL-DH.",
+        "blocking": true,
+        "linked_questions": [
+          "OQ-BIOMARKER-BCL2-EXPRESSION-IHC"
+        ],
+        "linked_findings": [
+          "BIO-BCL2-EXPRESSION-IHC"
+        ]
+      },
+      {
+        "step": 2,
+        "owner_role": "pathologist",
+        "topic": "Biomarker status",
+        "action": "What is the status of Cell-of-origin classification (Hans IHC algorithm) (BIO-DLBCL-COO-HANS)? It is required by track(s): IND-DLBCL-1L-POLA-R-CHP, IND-DLBCL-1L-RCHOP. Expected value: Activated B-cell-like (ABC / non-GCB) showed greater Pola-R-CHP benefit in POLARIX subgroup.",
+        "blocking": true,
+        "linked_questions": [
+          "OQ-BIOMARKER-DLBCL-COO-HANS"
+        ],
+        "linked_findings": [
+          "BIO-DLBCL-COO-HANS"
+        ]
+      },
+      {
+        "step": 3,
+        "owner_role": "hematologist",
+        "topic": "Staging / disease burden",
+        "action": "Який актуальний LDH? Маркер пухлинного навантаження і трансформації.",
+        "blocking": false,
+        "linked_questions": [
+          "OQ-LDH-CURRENT"
+        ],
+        "linked_findings": [
+          "ldh_ratio_to_uln"
+        ]
+      },
+      {
+        "step": 4,
+        "owner_role": "radiologist",
+        "topic": "Staging / disease burden",
+        "action": "Чи виконано повне стадіювання (Lugano + PET/CT або CT)?",
+        "blocking": false,
+        "linked_questions": [
+          "OQ-STAGING-COMPLETE"
+        ],
+        "linked_findings": [
+          "lugano_stage",
+          "pet_ct_date"
+        ]
+      },
+      {
+        "step": 5,
+        "owner_role": "clinical_pharmacist",
+        "topic": "Specialist review",
+        "action": "Хіміоімунотерапевтичний схема — drug-drug interactions, dose adjustments, premedication.",
+        "blocking": false,
+        "linked_questions": [],
+        "linked_findings": [
+          "aggressive-track"
+        ]
+      }
+    ],
+    "data_quality_summary": {
+      "status": "incomplete_for_default_track",
+      "doctor_summary": "Default-track review is incomplete until required biomarker gaps are resolved.",
+      "missing_critical_fields": [
+        "lugano_stage"
+      ],
+      "missing_recommended_fields": [
+        "ldh_ratio_to_uln",
+        "fib4_index",
+        "pet_ct_date"
+      ],
+      "missing_field_details": [
+        {
+          "field": "lugano_stage",
+          "label": "Lugano stage",
+          "label_uk": "Стадія Lugano",
+          "severity": "critical",
+          "owner_role": "radiologist",
+          "why_it_matters": "Defines lymphoma extent and supports tumor-burden and response-assessment decisions.",
+          "why_it_matters_uk": "Визначає поширеність лімфоми та підтримує оцінку пухлинного навантаження і відповіді.",
+          "doctor_action": "Document Lugano stage from PET/CT or contrast CT staging.",
+          "doctor_action_uk": "Задокументувати стадію Lugano за PET/CT або контрастним CT.",
+          "blocked_red_flags": []
+        },
+        {
+          "field": "ldh_ratio_to_uln",
+          "label": "LDH ratio to ULN",
+          "label_uk": "LDH відносно ВМН",
+          "severity": "recommended",
+          "owner_role": "medical_oncologist",
+          "why_it_matters": "Supports prognostic scoring and aggressive-biology flags.",
+          "why_it_matters_uk": "Потрібно для прогностичних індексів і прапорців агресивної біології.",
+          "doctor_action": "Enter LDH with local upper limit of normal.",
+          "doctor_action_uk": "Внести LDH разом із локальною верхньою межею норми.",
+          "blocked_red_flags": []
+        },
+        {
+          "field": "fib4_index",
+          "label": "FIB-4 liver fibrosis index",
+          "label_uk": "Індекс фіброзу печінки FIB-4",
+          "severity": "recommended",
+          "owner_role": "infectious_disease_hepatology",
+          "why_it_matters": "Screens hepatic fibrosis risk before hepatotoxic therapy or antiviral coordination.",
+          "why_it_matters_uk": "Скринінгує ризик фіброзу печінки перед гепатотоксичною терапією або координацією противірусного лікування.",
+          "doctor_action": "Calculate FIB-4 from age, AST, ALT, and platelet count.",
+          "doctor_action_uk": "Розрахувати FIB-4 за віком, AST, ALT і кількістю тромбоцитів.",
+          "blocked_red_flags": []
+        },
+        {
+          "field": "pet_ct_date",
+          "label": "PET/CT date",
+          "label_uk": "Дата PET/CT",
+          "severity": "recommended",
+          "owner_role": "radiologist",
+          "why_it_matters": "Shows whether baseline staging is recent enough for treatment planning and later response comparison.",
+          "why_it_matters_uk": "Показує, чи базове стадіювання достатньо актуальне для планування лікування і подальшого порівняння відповіді.",
+          "doctor_action": "Document baseline PET/CT date or explain alternative staging modality.",
+          "doctor_action_uk": "Задокументувати дату базового PET/CT або пояснити альтернативний метод стадіювання.",
+          "blocked_red_flags": []
+        }
+      ],
+      "ambiguous_findings": [],
+      "unevaluated_red_flags": [
+        "RF-AAIPI-HIGH",
+        "RF-CHRONIC-HIV-MALIGNANCY-PREVENTION",
+        "RF-DLBCL-CART-INELIGIBLE-POST-2L",
+        "RF-DLBCL-CD20-POS-EPCORITAMAB-CANDIDATE",
+        "RF-DLBCL-CD20-POS-GLOFITAMAB-CANDIDATE",
+        "RF-DLBCL-CD79B-MUT-MCD-CANDIDATE",
+        "RF-DLBCL-CNS-RISK",
+        "RF-DLBCL-FRAILTY-AGE",
+        "RF-DLBCL-HIGH-IPI",
+        "RF-DLBCL-HIGH-RISK-BIOLOGY",
+        "RF-DLBCL-INFECTION-SCREENING",
+        "RF-DLBCL-TRANSFORMATION-PROGRESSION",
+        "RF-IATROGENIC-ANTI-TNF-LYMPHOMA-PREVENTION",
+        "RF-IATROGENIC-AZATHIOPRINE-LONGTERM-PREVENTION",
+        "RF-IATROGENIC-METHOTREXATE-LONGTERM-LYMPHOMA-PREVENTION",
+        "RF-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-LONGTERM-PREVENTION",
+        "RF-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-PREVENTION",
+        "RF-IPI-HIGH",
+        "RF-IPI-INTERMEDIATE",
+        "RF-IPI-LOW",
+        "RF-OCC-GLYPHOSATE-PREVENTION",
+        "RF-OCC-PCB-PREVENTION"
+      ],
+      "field_unlocks": {},
+      "biomarker_coverage": {
+        "required_total": 8,
+        "required_known": 6,
+        "required_missing": 2,
+        "coverage_percent": 75,
+        "known": [
+          {
+            "biomarker_id": "BIO-CD20-IHC",
+            "label": "CD20 expression by immunohistochemistry",
+            "value_constraint": "positive (CD20+)",
+            "owner_role": "pathologist",
+            "tracks": [
+              "IND-DLBCL-1L-POLA-R-CHP",
+              "IND-DLBCL-1L-RCHOP"
+            ],
+            "default_track": true,
+            "known": true,
+            "matched_field": "BIO-CD20-IHC"
+          },
+          {
+            "biomarker_id": "BIO-CD79B-IHC",
+            "label": "CD79b expression by IHC (target of polatuzumab vedotin)",
+            "value_constraint": "positive (CD79b is the polatuzumab vedotin target; expressed in nearly all B-cell lymphomas including DLBCL)",
+            "owner_role": "pathologist",
+            "tracks": [
+              "IND-DLBCL-1L-POLA-R-CHP"
+            ],
+            "default_track": true,
+            "known": true,
+            "matched_field": "BIO-CD79B-IHC"
+          },
+          {
+            "biomarker_id": "BIO-DLBCL-IPI",
+            "label": "International Prognostic Index (IPI) for DLBCL",
+            "value_constraint": "IPI ≥2 — POLARIX PFS benefit driven by higher-risk IPI subset; IPI 0-1 see R-CHOP standard track",
+            "owner_role": "medical_oncologist",
+            "tracks": [
+              "IND-DLBCL-1L-POLA-R-CHP",
+              "IND-DLBCL-1L-RCHOP"
+            ],
+            "default_track": true,
+            "known": true,
+            "matched_field": "ipi_score"
+          },
+          {
+            "biomarker_id": "BIO-HBV-STATUS",
+            "label": "HBV status (HBsAg + anti-HBc serology)",
+            "value_constraint": "any value valid (categorical etiology gate; HBsAg+ or anti-HBc+ → entecavir prophylaxis mandatory before first rituximab dose; anti-CD20 reactivation risk not reduced by polatuzumab)",
+            "owner_role": "medical_oncologist",
+            "tracks": [
+              "IND-DLBCL-1L-POLA-R-CHP",
+              "IND-DLBCL-1L-RCHOP"
+            ],
+            "default_track": true,
+            "known": true,
+            "matched_field": "BIO-HBV-STATUS"
+          },
+          {
+            "biomarker_id": "BIO-HCV-STATUS",
+            "label": "HCV status (anti-HCV antibody screening)",
+            "value_constraint": "any value valid (categorical etiology gate; anti-HCV+ → reflex BIO-HCV-RNA; coordinate DAA with hepatology)",
+            "owner_role": "medical_oncologist",
+            "tracks": [
+              "IND-DLBCL-1L-POLA-R-CHP",
+              "IND-DLBCL-1L-RCHOP"
+            ],
+            "default_track": true,
+            "known": true,
+            "matched_field": "BIO-HCV-STATUS"
+          },
+          {
+            "biomarker_id": "BIO-HIV-STATUS",
+            "label": "HIV status (4th-gen Ag/Ab combo screening)",
+            "value_constraint": "any value valid (categorical etiology gate; HIV+ → cART throughout, PJP/MAC prophylaxis if CD4 < 200, CNS prophylaxis regardless of CNS-IPI)",
+            "owner_role": "medical_oncologist",
+            "tracks": [
+              "IND-DLBCL-1L-POLA-R-CHP",
+              "IND-DLBCL-1L-RCHOP"
+            ],
+            "default_track": true,
+            "known": true,
+            "matched_field": "BIO-HIV-STATUS"
+          }
+        ],
+        "missing": [
+          {
+            "biomarker_id": "BIO-BCL2-EXPRESSION-IHC",
+            "label": "BCL2 expression by IHC",
+            "value_constraint": "Double-expressor (BCL2-IHC + MYC-IHC) phenotype — Pola-R-CHP may particularly benefit DEL subgroup; rule out HGBL-DH",
+            "owner_role": "pathologist",
+            "tracks": [
+              "IND-DLBCL-1L-POLA-R-CHP",
+              "IND-DLBCL-1L-RCHOP"
+            ],
+            "default_track": true,
+            "known": false,
+            "matched_field": null
+          },
+          {
+            "biomarker_id": "BIO-DLBCL-COO-HANS",
+            "label": "Cell-of-origin classification (Hans IHC algorithm)",
+            "value_constraint": "Activated B-cell-like (ABC / non-GCB) showed greater Pola-R-CHP benefit in POLARIX subgroup",
+            "owner_role": "pathologist",
+            "tracks": [
+              "IND-DLBCL-1L-POLA-R-CHP",
+              "IND-DLBCL-1L-RCHOP"
+            ],
+            "default_track": true,
+            "known": false,
+            "matched_field": null
+          }
+        ]
+      },
+      "missing_default_biomarkers": 2,
+      "fields_present_count": 19,
+      "fields_expected_count": 8
+    },
+    "aggregation_summary": {
+      "kb_entities_loaded": 4223,
+      "kb_sources_cited": [
+        "SRC-ESMO-LYMPHOMA-2025",
+        "SRC-NCCN-BCELL-2025",
+        "SRC-POLARIX-TILLY-2022"
+      ],
+      "indications_evaluated": 2,
+      "biomarkers_referenced": [
+        "BIO-BCL2-EXPRESSION-IHC",
+        "BIO-CD20-IHC",
+        "BIO-CD79B-IHC",
+        "BIO-DLBCL-COO-HANS",
+        "BIO-DLBCL-IPI",
+        "BIO-HBV-STATUS",
+        "BIO-HCV-STATUS",
+        "BIO-HIV-STATUS"
+      ],
+      "red_flags_total_in_kb": 715,
+      "red_flags_fired": [
+        "RF-IPI-HIGH",
+        "RF-DLBCL-HIGH-IPI"
+      ],
+      "open_questions_raised": 4,
+      "live_api_clients_available": [
+        "SRC-CTGOV-REGISTRY",
+        "SRC-PUBMED",
+        "SRC-DAILYMED",
+        "SRC-OPENFDA"
+      ],
+      "live_api_clients_invoked": []
+    },
+    "warnings": [],
+    "provenance": {
+      "nodes": [
+        {
+          "id": "DIS-DLBCL-NOS",
+          "type": "diagnosis",
+          "label": "DIS-DLBCL-NOS"
+        },
+        {
+          "id": "IND-DLBCL-1L-POLA-R-CHP",
+          "type": "plan_section",
+          "label": "Агресивний план"
+        },
+        {
+          "id": "IND-DLBCL-1L-RCHOP",
+          "type": "plan_section",
+          "label": "Стандартний план"
+        }
+      ],
+      "edges": [
+        {
+          "from": "DIS-DLBCL-NOS",
+          "to": "IND-DLBCL-1L-POLA-R-CHP",
+          "kind": "candidate"
+        },
+        {
+          "from": "DIS-DLBCL-NOS",
+          "to": "IND-DLBCL-1L-RCHOP",
+          "kind": "candidate"
+        }
+      ],
+      "events": [
+        {
+          "event_id": "EV-PLAN-SYNTHETIC-REVIEW-ECOG-2-V1-001",
+          "timestamp": "2026-10-10T08:23:53.168079+00:00",
+          "actor_role": "engine",
+          "actor_id": null,
+          "event_type": "confirmed",
+          "target_type": "plan_section",
+          "target_id": "PLAN-SYNTHETIC-REVIEW-ECOG-2-V1",
+          "summary": "Engine згенерував план PLAN-SYNTHETIC-REVIEW-ECOG-2-V1 (версія 1).",
+          "evidence_refs": []
+        },
+        {
+          "event_id": "EV-PLAN-SYNTHETIC-REVIEW-ECOG-2-V1-002",
+          "timestamp": "2026-10-10T08:23:53.168079+00:00",
+          "actor_role": "engine",
+          "actor_id": null,
+          "event_type": "requested_data",
+          "target_type": "plan_section",
+          "target_id": "hematologist",
+          "summary": "Запрошено роль 'Гематолог / онкогематолог' (priority=required): Лімфомний діагноз — провідна спеціальність для терапевтичного ведення.",
+          "evidence_refs": []
+        },
+        {
+          "event_id": "EV-PLAN-SYNTHETIC-REVIEW-ECOG-2-V1-003",
+          "timestamp": "2026-10-10T08:23:53.168079+00:00",
+          "actor_role": "engine",
+          "actor_id": null,
+          "event_type": "requested_data",
+          "target_type": "plan_section",
+          "target_id": "clinical_pharmacist",
+          "summary": "Запрошено роль 'Клінічний фармацевт' (priority=recommended): Хіміоімунотерапевтичний схема — drug-drug interactions, dose adjustments, premedication.",
+          "evidence_refs": []
+        },
+        {
+          "event_id": "EV-PLAN-SYNTHETIC-REVIEW-ECOG-2-V1-004",
+          "timestamp": "2026-10-10T08:23:53.168079+00:00",
+          "actor_role": "engine",
+          "actor_id": null,
+          "event_type": "requested_data",
+          "target_type": "plan_section",
+          "target_id": "pathologist",
+          "summary": "Запрошено роль 'Патолог (загальний)' (priority=recommended): Підтвердження гістології лімфоми + оцінка ризику трансформації (DLBCL/Richter).",
+          "evidence_refs": []
+        },
+        {
+          "event_id": "EV-PLAN-SYNTHETIC-REVIEW-ECOG-2-V1-005",
+          "timestamp": "2026-10-10T08:23:53.168079+00:00",
+          "actor_role": "engine",
+          "actor_id": null,
+          "event_type": "added_question",
+          "target_type": "plan_section",
+          "target_id": "OQ-STAGING-COMPLETE",
+          "summary": "Підняте питання для radiologist (blocking=False): Чи виконано повне стадіювання (Lugano + PET/CT або CT)?",
+          "evidence_refs": []
+        },
+        {
+          "event_id": "EV-PLAN-SYNTHETIC-REVIEW-ECOG-2-V1-006",
+          "timestamp": "2026-10-10T08:23:53.168079+00:00",
+          "actor_role": "engine",
+          "actor_id": null,
+          "event_type": "added_question",
+          "target_type": "plan_section",
+          "target_id": "OQ-LDH-CURRENT",
+          "summary": "Підняте питання для hematologist (blocking=False): Який актуальний LDH? Маркер пухлинного навантаження і трансформації.",
+          "evidence_refs": []
+        },
+        {
+          "event_id": "EV-PLAN-SYNTHETIC-REVIEW-ECOG-2-V1-007",
+          "timestamp": "2026-10-10T08:23:53.168079+00:00",
+          "actor_role": "engine",
+          "actor_id": null,
+          "event_type": "added_question",
+          "target_type": "plan_section",
+          "target_id": "OQ-BIOMARKER-BCL2-EXPRESSION-IHC",
+          "summary": "Підняте питання для pathologist (blocking=True): What is the status of BCL2 expression by IHC (BIO-BCL2-EXPRESSION-IHC)? It is required by track(s): IND-DLBCL-1L-POLA-R-CHP, IND-DLBCL-1L-RCHOP. Expected value: Double-expressor (BCL2-IHC + MYC-IHC) phenotype — Pola-R-CHP may particularly benefit DEL subgroup; rule out HGBL-DH.",
+          "evidence_refs": []
+        },
+        {
+          "event_id": "EV-PLAN-SYNTHETIC-REVIEW-ECOG-2-V1-008",
+          "timestamp": "2026-10-10T08:23:53.168079+00:00",
+          "actor_role": "engine",
+          "actor_id": null,
+          "event_type": "added_question",
+          "target_type": "plan_section",
+          "target_id": "OQ-BIOMARKER-DLBCL-COO-HANS",
+          "summary": "Підняте питання для pathologist (blocking=True): What is the status of Cell-of-origin classification (Hans IHC algorithm) (BIO-DLBCL-COO-HANS)? It is required by track(s): IND-DLBCL-1L-POLA-R-CHP, IND-DLBCL-1L-RCHOP. Expected value: Activated B-cell-like (ABC / non-GCB) showed greater Pola-R-CHP benefit in POLARIX subgroup.",
+          "evidence_refs": []
+        },
+        {
+          "event_id": "EV-PLAN-SYNTHETIC-REVIEW-ECOG-2-V1-009",
+          "timestamp": "2026-10-10T08:23:53.168079+00:00",
+          "actor_role": "engine",
+          "actor_id": null,
+          "event_type": "flagged_risk",
+          "target_type": "red_flag",
+          "target_id": "RF-IPI-HIGH",
+          "summary": "RedFlag RF-IPI-HIGH спрацював на step 2 алгоритму ALGO-DLBCL-1L.",
+          "evidence_refs": []
+        },
+        {
+          "event_id": "EV-PLAN-SYNTHETIC-REVIEW-ECOG-2-V1-010",
+          "timestamp": "2026-10-10T08:23:53.168079+00:00",
+          "actor_role": "engine",
+          "actor_id": null,
+          "event_type": "flagged_risk",
+          "target_type": "red_flag",
+          "target_id": "RF-DLBCL-HIGH-IPI",
+          "summary": "RedFlag RF-DLBCL-HIGH-IPI спрацював на step 2 алгоритму ALGO-DLBCL-1L.",
+          "evidence_refs": []
+        }
+      ],
+      "plan_version": 1
+    },
+    "activated_skills": [
+      {
+        "skill_id": "hematologist",
+        "name": "Гематолог / онкогематолог",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [
+          "SRC-NCCN-BCELL-2025",
+          "SRC-NCCN-AML-2025",
+          "SRC-NCCN-MM-2025",
+          "SRC-NCCN-MPN-2025",
+          "SRC-EHA-WORKUP-2024",
+          "SRC-ESMO-MZL-2024",
+          "SRC-BSH-MZL-2024"
+        ],
+        "domain": "hematology_oncology",
+        "notes": "STUB — required role for any lymphoma/MM/leukemia plan; pending Clinical Co-Lead sign-off per CHARTER §6.1.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "clinical_pharmacist",
+        "name": "Клінічний фармацевт",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [],
+        "domain": "clinical_pharmacy",
+        "notes": "STUB — drug-drug interactions, dose adjustments, premedication, supportive care.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "pathologist",
+        "name": "Патолог (загальний)",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [
+          "SRC-NCCN-BCELL-2025",
+          "SRC-EHA-WORKUP-2024"
+        ],
+        "domain": "pathology",
+        "notes": "STUB — generic pathologist for solid-tumor histology. Hematologic neoplasms route to hematopathologist (separate skill) in future rule revision; per CHARTER §15.2 C7 either way.",
+        "signoffs": 0,
+        "review_status": "stub"
+      }
+    ],
+    "skill_catalog": [
+      {
+        "skill_id": "cellular_therapy_specialist",
+        "name": "Спеціаліст з клітинної терапії (CAR-T)",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [
+          "SRC-NCCN-BCELL-2025"
+        ],
+        "domain": "cellular_therapy",
+        "notes": "STUB — CAR-T product selection (axi-cel, tisa-cel, liso-cel, brexu-cel) + bridging therapy + CRS/ICANS management. Modern standard for refractory/relapsed DLBCL/MCL/CLL after 2nd line. Triggers: line_of_therapy ≥ 2 + aggressive_b_cell_lymphoma + fit_for_cellular_therapy. Funding pathway flag mandatory (not НСЗУ-reimbursed in UA — clinical trial / charitable).",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "clinical_pharmacist",
+        "name": "Клінічний фармацевт",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [],
+        "domain": "clinical_pharmacy",
+        "notes": "STUB — drug-drug interactions, dose adjustments, premedication, supportive care.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "hematologist",
+        "name": "Гематолог / онкогематолог",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [
+          "SRC-NCCN-BCELL-2025",
+          "SRC-NCCN-AML-2025",
+          "SRC-NCCN-MM-2025",
+          "SRC-NCCN-MPN-2025",
+          "SRC-EHA-WORKUP-2024",
+          "SRC-ESMO-MZL-2024",
+          "SRC-BSH-MZL-2024"
+        ],
+        "domain": "hematology_oncology",
+        "notes": "STUB — required role for any lymphoma/MM/leukemia plan; pending Clinical Co-Lead sign-off per CHARTER §6.1.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "hematopathologist",
+        "name": "Гематопатолог (специфічно для лімфом / лейкозів / мієломи)",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [
+          "SRC-NCCN-BCELL-2025",
+          "SRC-NCCN-AML-2025",
+          "SRC-NCCN-MM-2025",
+          "SRC-EHA-WORKUP-2024"
+        ],
+        "domain": "hematopathology",
+        "notes": "STUB — subspecialized pathologist for lymphoid + myeloid neoplasms. Owns: WHO 5th-ed classification mapping, IHC panel design (CD20/CD3/CD5/CD10/CD23/BCL2/BCL6/MYC/Ki67), flow cytometry interpretation, FISH (MYC/BCL2/BCL6 break-apart), Hans algorithm (ABC vs GCB DLBCL), gene-rearrangement studies. Critical for differentiating lymphoma subtypes — without rich hematopathology, you can't pick the right Tier 1 algorithm.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "infectious_disease_hepatology",
+        "name": "Інфекціоніст / гепатолог",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [
+          "SRC-EASL-HCV-2023",
+          "SRC-NCCN-BCELL-2025"
+        ],
+        "domain": "infectious_diseases",
+        "notes": "STUB — escalates on viral etiology (HCV/HBV/HIV) or anti-CD20 with HBV reactivation risk.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "medical_oncologist",
+        "name": "Медичний онколог (хіміотерапевт солідних пухлин)",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [],
+        "domain": "solid_oncology",
+        "notes": "STUB — placeholder for solid-tumor cases; rules minimal until first solid-tumor disease lands in KB.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "molecular_geneticist",
+        "name": "Молекулярний генетик / молекулярний онколог",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [
+          "SRC-NCCN-MM-2025"
+        ],
+        "domain": "molecular_oncology",
+        "notes": "STUB — escalates on actionable genomic biomarkers per R9 (_ACTIONABLE_GENOMIC_TYPES set).",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "palliative_care",
+        "name": "Паліативна допомога",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [],
+        "domain": "palliative_care",
+        "notes": "STUB — advanced-disease symptom management and goals-of-care.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "pathologist",
+        "name": "Патолог (загальний)",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [
+          "SRC-NCCN-BCELL-2025",
+          "SRC-EHA-WORKUP-2024"
+        ],
+        "domain": "pathology",
+        "notes": "STUB — generic pathologist for solid-tumor histology. Hematologic neoplasms route to hematopathologist (separate skill) in future rule revision; per CHARTER §15.2 C7 either way.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "primary_care",
+        "name": "Сімейний лікар / терапевт",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [],
+        "domain": "primary_care",
+        "notes": "STUB — comorbidity management, vaccinations, post-treatment long-term follow-up.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "psychologist",
+        "name": "Психолог / онкопсихолог",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [],
+        "domain": "psychosocial",
+        "notes": "STUB — supportive role for distress, anxiety, treatment decision support.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "radiation_oncologist",
+        "name": "Радіотерапевт (променева терапія)",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [
+          "SRC-ESMO-MZL-2024"
+        ],
+        "domain": "radiation_oncology",
+        "notes": "STUB — extranodal MALT lymphomas often eligible for localized radiotherapy.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "radiologist",
+        "name": "Лікар-радіолог",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [
+          "SRC-NCCN-BCELL-2025"
+        ],
+        "domain": "diagnostic_imaging",
+        "notes": "STUB — staging/restaging via CECT/PET-CT/MRI; reads bulky-disease and mass-mapping findings.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "social_worker_case_manager",
+        "name": "Соціальний працівник / кейс-менеджер",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [],
+        "domain": "psychosocial",
+        "notes": "STUB — coordinates НСЗУ reimbursement pathway, drug access, transportation, financial counseling.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "surgical_oncologist",
+        "name": "Хірург-онколог",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [],
+        "domain": "surgical_oncology",
+        "notes": "STUB — placeholder; rules minimal until first solid-tumor disease lands in KB. Episodic role for hematologic: splenectomy in splenic MZL with hypersplenism, GI surgery for selected GI lymphomas.",
+        "signoffs": 0,
+        "review_status": "stub"
+      },
+      {
+        "skill_id": "transplant_specialist",
+        "name": "Спеціаліст з трансплантації (BMT)",
+        "version": "0.1.0",
+        "last_reviewed": "2026-04-25",
+        "clinical_lead": null,
+        "verified_by": [],
+        "sources": [
+          "SRC-NCCN-BCELL-2025",
+          "SRC-NCCN-MM-2025",
+          "SRC-EHA-WORKUP-2024"
+        ],
+        "domain": "cellular_therapy",
+        "notes": "STUB — autoSCT/alloSCT decision-making. Activates for: first-line consolidation in transplant-eligible MCL + high-risk DLBCL; salvage transplant for relapsed/refractory aggressive lymphomas; alloSCT for relapsed CLL/T-cell. Triggers: fit_for_transplant + ECOG ≤ 2 + age ≤ 70-75 (relative).",
+        "signoffs": 0,
+        "review_status": "stub"
+      }
+    ]
+  }
+}

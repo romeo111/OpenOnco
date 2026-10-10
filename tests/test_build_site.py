@@ -53,6 +53,7 @@ def test_static_assets_present(site_dir: Path):
               "ukr/prevent.html",
               "ukr/kb.html", "ukr/kb_search_index.json",
               "clinical-gaps.html", "ukr/clinical-gaps.html",
+              "review/dlbcl-1l/index.html", "review/dlbcl-1l/report.json",
               "audits/clinical_gap_audit.md", "audits/clinical_gap_audit.json"):
         assert (site_dir / f).exists(), f"missing {f}"
 

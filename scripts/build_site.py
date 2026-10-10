@@ -71,6 +71,7 @@ from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
 from knowledge_base.stats import collect_stats
 from scripts.audit_clinical_gaps import write_outputs as write_clinical_gap_outputs
 from scripts.build_handbook import build_handbook
+from scripts.build_clinician_review import build_clinician_review
 from scripts.build_kb_wiki import build_kb_wiki
 from scripts.build_news import build_news
 from scripts.site_cases import (
@@ -10647,6 +10648,9 @@ def build_site(output_dir: Path) -> dict:
     disease_coverage_payload = bundle_disease_coverage(output_dir)
     kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
     handbook_payload = build_handbook(KB_ROOT, output_dir)
+    review_payload = build_clinician_review(KB_ROOT, output_dir / "review" / "dlbcl-1l")
+    if review_payload["summary"]["contracts_passed"] != review_payload["summary"]["contracts_total"]:
+        raise RuntimeError("DLBCL synthetic review engineering contracts failed")
     news_payload = build_news(output_dir, top_bar=_render_top_bar)
     clinical_gap_payload = write_clinical_gap_outputs(output_dir)
     discovery_payload = finalize_site_discovery(output_dir)
@@ -10668,6 +10672,7 @@ def build_site(output_dir: Path) -> dict:
         "disease_coverage_payload": disease_coverage_payload,
         "kb_wiki_payload": kb_wiki_payload,
         "handbook_payload": handbook_payload,
+        "review_payload": review_payload["summary"],
         "news_payload": news_payload,
         "clinical_gap_payload": clinical_gap_payload,
         "discovery_payload": discovery_payload,

@@ -53,6 +53,10 @@ jobs:
         run: |
           python -m scripts.audit_algorithm_conditions
 
+      - name: Verify synthetic DLBCL review contracts (not clinical approval)
+        run: |
+          python -m scripts.build_clinician_review --check --output-dir /tmp/dlbcl-review
+
       - name: Run tests
         run: |
           python -m pytest \
@@ -64,6 +68,8 @@ jobs:
             tests/test_esophageal_1l_algorithm.py \
             tests/test_clinical_question_endpoint.py \
             tests/test_engine_validation_fail_closed.py \
+            tests/test_clinician_review.py \
+            tests/test_dlbcl_engine.py \
             tests/test_source_ref_integrity.py \
             tests/test_build_site.py::test_static_assets_present \
             tests/test_build_site.py::test_try_page_wires_pyodide_and_form \
