@@ -10,7 +10,7 @@ from __future__ import annotations
 import html
 import json
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -285,6 +285,8 @@ class KbEntity:
 
 
 def _kind_label(kind: str, locale: str = "en") -> str:
+    if kind == "diseases":
+        return DISEASE_KIND_LABELS[locale]
     labels = ENTITY_DIRS.get(kind)
     if isinstance(labels, dict):
         return labels.get(locale, labels["en"])
@@ -544,13 +546,9 @@ def _entity_link(
     locale: str = "en",
 ) -> str:
     entity = entities.get(entity_id)
-    if entity and entity.kind in SEARCH_KINDS:
+    if entity and entity.kind in SEARCH_KINDS | {"diseases"}:
         return f'<a href="{root_prefix}{html.escape(_entity_url(entity, locale))}"><code>{html.escape(entity_id)}</code></a>'
-    # Diseases don't have a per-entity wiki page (kept out of SEARCH_KINDS
-    # because the disease coverage page already lists every DIS-*), but
-    # `/diseases.html` and `/ukr/diseases.html` carry `id="DIS-..."`
-    # anchors, so link chips there so a clinician clicking DIS-CRC on a
-    # drug page lands on the disease summary instead of plain code text.
+    # Preserve coverage anchors for unresolved disease IDs.
     if entity_id.startswith("DIS-"):
         diseases_path = "ukr/diseases.html" if locale == "uk" else "diseases.html"
         return (
@@ -802,7 +800,7 @@ def _reverse_ref_section(entity: KbEntity, reverse_refs: dict[str, list[KbEntity
     parts = [f"<h2>{html.escape(labels['used_by_heading'])}</h2>"]
     for kind, items in sorted(by_kind.items()):
         rows = "".join(
-            f'<li><code>{html.escape(item.id)}</code> - {html.escape(item.title)}</li>'
+            f'<li>{_entity_link(item.id, {item.id: item}, locale=locale)} - {html.escape(item.title)}</li>'
             for item in items[:40]
         )
         more = f'<li class="kb-muted">... {len(items) - 40} {html.escape(labels["more"])}</li>' if len(items) > 40 else ""
@@ -817,7 +815,24 @@ def render_entity_page(
     *,
     locale: str = "en",
 ) -> str:
-    if entity.kind == "drugs":
+    if entity.kind == "diseases":
+        names = entity.data.get("names") or {}
+        if locale == "uk" and names.get("ukrainian"):
+            entity = replace(entity, title=str(names["ukrainian"]))
+        codes = entity.data.get("codes") or {}
+        code_rows = [(key, html.escape(_text(value))) for key, value in codes.items()]
+        disclaimer = (
+            "Інформаційний інструмент, не медичний виріб. Усі рекомендації має перевірити кваліфікований онколог. Клінічний вміст є попереднім до завершення перевірки двома рецензентами."
+            if locale == "uk" else
+            "Informational tool, not a medical device. All recommendations must be verified by a qualified oncologist. Clinical content is provisional until two-reviewer sign-off."
+        )
+        specifics = (
+            f'<p class="kb-info-box">{html.escape(disclaimer)}</p>'
+            f'<table class="kb-facts">{_rows(code_rows)}</table>'
+            f'<p><a href="{T[locale]["diseases_href"]}#{html.escape(entity.id)}">'
+            f'{html.escape(T[locale]["capabilities"])}</a></p>'
+        )
+    elif entity.kind == "drugs":
         specifics = _drug_sections(entity, locale=locale)
     elif entity.kind == "biomarkers":
         specifics = _biomarker_sections(entity, entities, locale=locale)
@@ -902,7 +917,7 @@ def _disease_search_entries(kb_root: Path, *, locale: str = "en") -> list[dict[s
 
     rows = per_disease_metrics(kb_root)
     kind = DISEASE_KIND_LABELS[locale]
-    url_prefix = "/ukr/diseases.html" if locale == "uk" else "/diseases.html"
+    url_prefix = "/ukr/kb/diseases" if locale == "uk" else "/kb/diseases"
     entries: list[dict[str, Any]] = []
     for row in rows:
         disease_id = str(row["id"])
@@ -945,7 +960,7 @@ def _disease_search_entries(kb_root: Path, *, locale: str = "en") -> list[dict[s
                 "kind": kind,
                 "kind_key": "diseases",
                 "title": name,
-                "url": f"{url_prefix}#{disease_id}",
+                "url": f"{url_prefix}/{slugify(disease_id)}.html",
                 "subtitle": " | ".join(part for part in subtitle_parts if part),
                 "sources": [],
                 "diseases": [disease_id],
@@ -1146,9 +1161,10 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
     reverse_refs = build_reverse_refs(entities)
     searchable = [e for e in entities.values() if e.kind in SEARCH_KINDS]
     searchable.sort(key=lambda e: (e.kind, e.title.lower(), e.id))
+    published = searchable + [e for e in entities.values() if e.kind == "diseases"]
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    for kind in SEARCH_KINDS:
+    for kind in SEARCH_KINDS | {"diseases"}:
         (output_dir / "kb" / kind).mkdir(parents=True, exist_ok=True)
         (output_dir / "ukr" / "kb" / kind).mkdir(parents=True, exist_ok=True)
 
@@ -1197,7 +1213,7 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
         json.dumps(payloads["uk"], ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    for entity in searchable:
+    for entity in published:
         out_path = output_dir / entity.url
         out_path.write_text(_clean_html(render_entity_page(entity, entities, reverse_refs, locale="en")), encoding="utf-8")
         uk_out_path = output_dir / "ukr" / entity.url

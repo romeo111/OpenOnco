@@ -16,9 +16,11 @@
 > picks regimens** ([CHARTER §8.3](specs/CHARTER.md)).
 
 **Live demo:** **[openonco.info](https://openonco.info)** — try it in the browser, no install needed.
-**Knowledge base:** 92 diseases · 664 indications · 444 cited sources across hematologic + solid-tumor oncology (growing). Most content is draft/STUB pending two-reviewer clinical sign-off.
+**Knowledge base:** See the [live capabilities page](https://openonco.info/capabilities.html) for current disease, indication, regimen, source, and review counts. Most content is draft/STUB pending two-reviewer clinical sign-off; coverage does not imply clinical validation.
 **FDA non-device CDS positioning** per [CHARTER §15](specs/CHARTER.md) — informational support tool, not a medical device.
 **License:** Code MIT · Content / specs CC BY 4.0.
+
+**Early-stage informational tool.** All recommendations must be verified by a qualified oncologist. No formal clinical validation is claimed. Privacy depends on the interface: the browser plan builder runs locally; the optional server-backed Tumor Board sends submitted text to a server. Use synthetic examples when trying public tooling.
 
 ---
 
