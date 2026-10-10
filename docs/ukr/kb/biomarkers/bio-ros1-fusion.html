@@ -120,12 +120,20 @@
 .kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
 .kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
 .kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
-.kb-search-label { display: block; font-weight: 700; margin-bottom: 7px; }
-.kb-search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: stretch; }
-.kb-search { width: 100%; border: 1px solid var(--gray-200); border-radius: 7px; padding: 13px 14px; font-size: 16px; background: white; }
-.kb-search-btn { min-width: 118px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 7px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+.kb-search-panel { box-sizing: border-box; margin: 22px 0 26px; padding: 26px; background: linear-gradient(120deg, #edf6f0, #f8fbf9); border: 1px solid #b8d4c2; border-top: 4px solid var(--green-700); border-radius: 16px; box-shadow: 0 10px 30px rgba(16, 65, 42, .08); }
+.kb-search-panel * { box-sizing: border-box; }
+.kb-search-label { display: block; color: var(--green-900); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 6px; }
+.kb-search-hint { color: var(--gray-700); font-size: 15px; margin: 0 0 18px; }
+.kb-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+.kb-search-field { position: relative; min-width: 0; }
+.kb-search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 23px; height: 23px; fill: none; stroke: var(--green-700); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.kb-search { width: 100%; min-width: 0; min-height: 60px; border: 2px solid #8cb69d; border-radius: 10px; padding: 16px 16px 16px 52px; font: inherit; font-size: 18px; color: var(--gray-900); background: white; box-shadow: 0 3px 10px rgba(16, 65, 42, .05); }
+.kb-search::placeholder { color: var(--gray-500); opacity: 1; }
+.kb-search:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; border-color: var(--green-700); }
+.kb-search-btn { width: auto; min-width: 130px; min-height: 60px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 10px; padding: 0 24px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
 .kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
-.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 22px; }
+.kb-search-btn:focus-visible, .kb-filter-row button:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
 .kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
 .kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
 .kb-results { display: grid; gap: 8px; }
@@ -153,8 +161,11 @@
 .kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
 .kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
 @media (max-width: 700px) {
+  .kb-search-panel { padding: 20px 16px; margin-top: 16px; }
+  .kb-search-label { font-size: 21px; }
+  .kb-search { font-size: 16px; min-height: 56px; }
   .kb-search-row { grid-template-columns: 1fr; }
-  .kb-search-btn { min-height: 44px; }
+  .kb-search-btn { min-height: 48px; }
   .kb-result { grid-template-columns: 1fr; }
   .kb-result small { grid-column: auto; }
   .kb-pagination { flex-wrap: wrap; }
@@ -229,13 +240,13 @@
 <tr><th>Пов’язані біомаркери</th><td><span class="kb-muted">Не вказано</span></td></tr></table>
   <h2>Нотатки</h2><p>Як правило, тестується разом з ALK у рамках однієї NGS-панелі.</p>
   <h2>Де використовується</h2>
-<h3>Diseases</h3><ul><li><code>DIS-IMT</code> - Inflammatory myofibroblastic tumor (IMT)</li></ul>
 <h3>Indications</h3><ul><li><code>IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL</code> - IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL</li><li><code>IND-NSCLC-2L-ROS1-POST-CRIZ-ENTRECTINIB</code> - IND-NSCLC-2L-ROS1-POST-CRIZ-ENTRECTINIB</li><li><code>IND-NSCLC-2L-ROS1-REPOTRECTINIB</code> - IND-NSCLC-2L-ROS1-REPOTRECTINIB</li><li><code>IND-NSCLC-ROS1-1L-REPOTRECTINIB</code> - IND-NSCLC-ROS1-1L-REPOTRECTINIB</li></ul>
 <h3>Questionnaires</h3><ul><li><code>QUEST-NSCLC-1L-STUB</code> - Non-small cell lung cancer — first line</li></ul>
 <h3>Tests</h3><ul><li><code>TEST-NSCLC-NGS-PANEL</code> - NSCLC comprehensive NGS panel (DNA + RNA fusion)</li></ul>
-<h3>Біомаркер</h3><ul><li><code>BIO-ROS1-G2032R</code> - ROS1 G2032R resistance mutation</li></ul>
-<h3>Клінічна застосовність</h3><ul><li><code>BMA-ROS1-CD74-NSCLC</code> - CD74-ROS1 is the most common ROS1 fusion partner in NSCLC (~40-50% of ROS1+ cases) and as...</li><li><code>BMA-ROS1-EZR-NSCLC</code> - EZR-ROS1 (~15% of ROS1+ NSCLC) treated identically to other ROS1 fusions. Standard 1L: en...</li><li><code>BMA-ROS1-FUSION-NSCLC</code> - ROS1 rearrangement in advanced NSCLC: entrectinib (CNS-active) and crizotinib have establ...</li><li><code>BMA-ROS1-G2032R-NSCLC</code> - ROS1 G2032R is the dominant solvent-front resistance mutation after crizotinib or entrect...</li><li><code>BMA-ROS1-SLC34A2-NSCLC</code> - SLC34A2-ROS1 fusion (~10% of ROS1+ NSCLC) responds to standard ROS1-TKI therapy identical...</li></ul>
-<h3>Тривожна ознака</h3><ul><li><code>RF-IMT-HIGH-RISK-BIOLOGY</code> - Inflammatory myofibroblastic tumor with actionable fusion driver: ALK fusion (TPM3-ALK, T...</li><li><code>RF-NSCLC-HIGH-RISK-BIOLOGY</code> - Actionable molecular driver detected (EGFR / ALK / ROS1 / KRAS G12C / BRAF V600E / MET ex...</li></ul>
+<h3>Біомаркер</h3><ul><li><a href="/ukr/kb/biomarkers/bio-ros1-g2032r.html"><code>BIO-ROS1-G2032R</code></a> - ROS1 G2032R resistance mutation</li></ul>
+<h3>Клінічна застосовність</h3><ul><li><a href="/ukr/kb/biomarker_actionability/bma-ros1-cd74-nsclc.html"><code>BMA-ROS1-CD74-NSCLC</code></a> - CD74-ROS1 is the most common ROS1 fusion partner in NSCLC (~40-50% of ROS1+ cases) and as...</li><li><a href="/ukr/kb/biomarker_actionability/bma-ros1-ezr-nsclc.html"><code>BMA-ROS1-EZR-NSCLC</code></a> - EZR-ROS1 (~15% of ROS1+ NSCLC) treated identically to other ROS1 fusions. Standard 1L: en...</li><li><a href="/ukr/kb/biomarker_actionability/bma-ros1-fusion-nsclc.html"><code>BMA-ROS1-FUSION-NSCLC</code></a> - ROS1 rearrangement in advanced NSCLC: entrectinib (CNS-active) and crizotinib have establ...</li><li><a href="/ukr/kb/biomarker_actionability/bma-ros1-g2032r-nsclc.html"><code>BMA-ROS1-G2032R-NSCLC</code></a> - ROS1 G2032R is the dominant solvent-front resistance mutation after crizotinib or entrect...</li><li><a href="/ukr/kb/biomarker_actionability/bma-ros1-slc34a2-nsclc.html"><code>BMA-ROS1-SLC34A2-NSCLC</code></a> - SLC34A2-ROS1 fusion (~10% of ROS1+ NSCLC) responds to standard ROS1-TKI therapy identical...</li></ul>
+<h3>Тривожна ознака</h3><ul><li><a href="/ukr/kb/redflags/rf-imt-high-risk-biology.html"><code>RF-IMT-HIGH-RISK-BIOLOGY</code></a> - Inflammatory myofibroblastic tumor with actionable fusion driver: ALK fusion (TPM3-ALK, T...</li><li><a href="/ukr/kb/redflags/rf-nsclc-high-risk-biology.html"><code>RF-NSCLC-HIGH-RISK-BIOLOGY</code></a> - Actionable molecular driver detected (EGFR / ALK / ROS1 / KRAS G12C / BRAF V600E / MET ex...</li></ul>
+<h3>Хвороба</h3><ul><li><a href="/ukr/kb/diseases/dis-imt.html"><code>DIS-IMT</code></a> - Inflammatory myofibroblastic tumor (IMT)</li></ul>
 </main>
 </body>
 </html>

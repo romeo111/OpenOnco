@@ -120,12 +120,20 @@
 .kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
 .kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
 .kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
-.kb-search-label { display: block; font-weight: 700; margin-bottom: 7px; }
-.kb-search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: stretch; }
-.kb-search { width: 100%; border: 1px solid var(--gray-200); border-radius: 7px; padding: 13px 14px; font-size: 16px; background: white; }
-.kb-search-btn { min-width: 118px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 7px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+.kb-search-panel { box-sizing: border-box; margin: 22px 0 26px; padding: 26px; background: linear-gradient(120deg, #edf6f0, #f8fbf9); border: 1px solid #b8d4c2; border-top: 4px solid var(--green-700); border-radius: 16px; box-shadow: 0 10px 30px rgba(16, 65, 42, .08); }
+.kb-search-panel * { box-sizing: border-box; }
+.kb-search-label { display: block; color: var(--green-900); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 6px; }
+.kb-search-hint { color: var(--gray-700); font-size: 15px; margin: 0 0 18px; }
+.kb-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+.kb-search-field { position: relative; min-width: 0; }
+.kb-search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 23px; height: 23px; fill: none; stroke: var(--green-700); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.kb-search { width: 100%; min-width: 0; min-height: 60px; border: 2px solid #8cb69d; border-radius: 10px; padding: 16px 16px 16px 52px; font: inherit; font-size: 18px; color: var(--gray-900); background: white; box-shadow: 0 3px 10px rgba(16, 65, 42, .05); }
+.kb-search::placeholder { color: var(--gray-500); opacity: 1; }
+.kb-search:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; border-color: var(--green-700); }
+.kb-search-btn { width: auto; min-width: 130px; min-height: 60px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 10px; padding: 0 24px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
 .kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
-.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 22px; }
+.kb-search-btn:focus-visible, .kb-filter-row button:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
 .kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
 .kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
 .kb-results { display: grid; gap: 8px; }
@@ -153,8 +161,11 @@
 .kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
 .kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
 @media (max-width: 700px) {
+  .kb-search-panel { padding: 20px 16px; margin-top: 16px; }
+  .kb-search-label { font-size: 21px; }
+  .kb-search { font-size: 16px; min-height: 56px; }
   .kb-search-row { grid-template-columns: 1fr; }
-  .kb-search-btn { min-height: 44px; }
+  .kb-search-btn { min-height: 48px; }
   .kb-result { grid-template-columns: 1fr; }
   .kb-result small { grid-column: auto; }
   .kb-pagination { flex-wrap: wrap; }
@@ -230,13 +241,13 @@
   <h2>Нотатки</h2><p>GIST: KIT мутація ~75–80%; PDGFRA ~10%; wild-type / SDH-deficient ~10–15%. Exon-генотип guides терапія (exon 11 → іматиніб 400; exon 9 → іматиніб 800 or сунитиніб; D842V → avapritinib only). поширений systemic mastocytosis: D816V drives the хвороба; іматиніб is протипоказаний in D816V (kinase-domain steric clash); мідостаурин (D-RIVE), avapritinib (PATHFINDER / EXPLORER), and ripretinib (selected) are active. Mucosal / acral меланома: ~15–20% KIT мутація — іматиніб responses in exon 11 / 13 mutants.</p>
   <h2>Де використовується</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-ADVSM-1L</code> - ALGO-ADVSM-1L</li><li><code>ALGO-GIST-1L</code> - ALGO-GIST-1L</li></ul>
-<h3>Diseases</h3><ul><li><code>DIS-GIST</code> - Gastrointestinal stromal tumor (GIST)</li><li><code>DIS-MASTOCYTOSIS</code> - Advanced systemic mastocytosis (AdvSM)</li></ul>
 <h3>Handbook Chapters</h3><ul><li><code>HB-MELANOMA-METASTATIC-1L</code> - Metastatic melanoma: BRAF / IO first-line reasoning</li></ul>
 <h3>Indications</h3><ul><li><code>IND-ADVSM-1L-AVAPRITINIB</code> - IND-ADVSM-1L-AVAPRITINIB</li><li><code>IND-GIST-1L-IMATINIB</code> - IND-GIST-1L-IMATINIB</li><li><code>IND-GIST-4L-RIPRETINIB</code> - IND-GIST-4L-RIPRETINIB</li><li><code>IND-MELANOMA-2L-KIT-IMATINIB</code> - IND-MELANOMA-2L-KIT-IMATINIB</li></ul>
 <h3>Questionnaires</h3><ul><li><code>QUEST-GIST-1L-STUB</code> - Gastrointestinal stromal tumor — first line</li><li><code>QUEST-MASTOCYTOSIS-1L-STUB</code> - Advanced systemic mastocytosis — first line</li><li><code>QUEST-MELANOMA-1L-STUB</code> - Cutaneous melanoma — first line</li></ul>
-<h3>Біомаркер</h3><ul><li><code>BIO-KIT-D816V</code> - KIT D816V mutation</li><li><code>BIO-PDGFRA</code> - PDGFRA mutation</li></ul>
-<h3>Клінічна застосовність</h3><ul><li><code>BMA-KIT-D816V-GIST</code> - KIT D816V in GIST is rare as primary mutation (more typical of systemic mastocytosis) but...</li><li><code>BMA-KIT-D816V-MASTOCYTOSIS</code> - KIT D816V in advanced systemic mastocytosis (AdvSM — aggressive SM, SM-AHN, mast cell leu...</li><li><code>BMA-KIT-EXON11-GIST</code> - KIT exon 11 mutation in GIST: imatinib 400 mg/day is standard 1L (B2222, Demetri NEJM 200...</li><li><code>BMA-KIT-EXON13-17-GIST</code> - Secondary KIT mutations after imatinib failure cluster in exon 13/14 (ATP-binding pocket...</li><li><code>BMA-KIT-EXON9-GIST</code> - KIT exon 9 GIST has shorter PFS on imatinib 400 mg vs exon 11. Imatinib 800 mg/day (split...</li><li><code>BMA-KIT-MUTATION-AML</code> - KIT mutation in core-binding-factor (CBF) AML (t(8;21) / inv(16)) is enriched (~25-30%) a...</li><li><code>BMA-KIT-MUTATION-MELANOMA</code> - KIT mutation in mucosal / acral / chronic-sun-damaged melanoma (~15-20% of these subtypes...</li></ul>
-<h3>Тривожна ознака</h3><ul><li><code>RF-ADVSM-KIT-D816V</code> - KIT D816V activating point mutation (exon 17, activation loop) in advanced systemic masto...</li><li><code>RF-GIST-HIGH-RISK-BIOLOGY</code> - Adverse genotype or anatomic risk in GIST: PDGFRA D842V (imatinib-resistant — avapritinib...</li></ul>
+<h3>Біомаркер</h3><ul><li><a href="/ukr/kb/biomarkers/bio-kit-d816v.html"><code>BIO-KIT-D816V</code></a> - KIT D816V mutation</li><li><a href="/ukr/kb/biomarkers/bio-pdgfra.html"><code>BIO-PDGFRA</code></a> - PDGFRA mutation</li></ul>
+<h3>Клінічна застосовність</h3><ul><li><a href="/ukr/kb/biomarker_actionability/bma-kit-d816v-gist.html"><code>BMA-KIT-D816V-GIST</code></a> - KIT D816V in GIST is rare as primary mutation (more typical of systemic mastocytosis) but...</li><li><a href="/ukr/kb/biomarker_actionability/bma-kit-d816v-mastocytosis.html"><code>BMA-KIT-D816V-MASTOCYTOSIS</code></a> - KIT D816V in advanced systemic mastocytosis (AdvSM — aggressive SM, SM-AHN, mast cell leu...</li><li><a href="/ukr/kb/biomarker_actionability/bma-kit-exon11-gist.html"><code>BMA-KIT-EXON11-GIST</code></a> - KIT exon 11 mutation in GIST: imatinib 400 mg/day is standard 1L (B2222, Demetri NEJM 200...</li><li><a href="/ukr/kb/biomarker_actionability/bma-kit-exon13-17-gist.html"><code>BMA-KIT-EXON13-17-GIST</code></a> - Secondary KIT mutations after imatinib failure cluster in exon 13/14 (ATP-binding pocket...</li><li><a href="/ukr/kb/biomarker_actionability/bma-kit-exon9-gist.html"><code>BMA-KIT-EXON9-GIST</code></a> - KIT exon 9 GIST has shorter PFS on imatinib 400 mg vs exon 11. Imatinib 800 mg/day (split...</li><li><a href="/ukr/kb/biomarker_actionability/bma-kit-mutation-aml.html"><code>BMA-KIT-MUTATION-AML</code></a> - KIT mutation in core-binding-factor (CBF) AML (t(8;21) / inv(16)) is enriched (~25-30%) a...</li><li><a href="/ukr/kb/biomarker_actionability/bma-kit-mutation-melanoma.html"><code>BMA-KIT-MUTATION-MELANOMA</code></a> - KIT mutation in mucosal / acral / chronic-sun-damaged melanoma (~15-20% of these subtypes...</li></ul>
+<h3>Тривожна ознака</h3><ul><li><a href="/ukr/kb/redflags/rf-advsm-kit-d816v.html"><code>RF-ADVSM-KIT-D816V</code></a> - KIT D816V activating point mutation (exon 17, activation loop) in advanced systemic masto...</li><li><a href="/ukr/kb/redflags/rf-gist-high-risk-biology.html"><code>RF-GIST-HIGH-RISK-BIOLOGY</code></a> - Adverse genotype or anatomic risk in GIST: PDGFRA D842V (imatinib-resistant — avapritinib...</li></ul>
+<h3>Хвороба</h3><ul><li><a href="/ukr/kb/diseases/dis-gist.html"><code>DIS-GIST</code></a> - Gastrointestinal stromal tumor (GIST)</li><li><a href="/ukr/kb/diseases/dis-mastocytosis.html"><code>DIS-MASTOCYTOSIS</code></a> - Advanced systemic mastocytosis (AdvSM)</li></ul>
 </main>
 </body>
 </html>

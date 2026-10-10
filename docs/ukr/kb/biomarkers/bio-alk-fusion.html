@@ -120,12 +120,20 @@
 .kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
 .kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
 .kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
-.kb-search-label { display: block; font-weight: 700; margin-bottom: 7px; }
-.kb-search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: stretch; }
-.kb-search { width: 100%; border: 1px solid var(--gray-200); border-radius: 7px; padding: 13px 14px; font-size: 16px; background: white; }
-.kb-search-btn { min-width: 118px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 7px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+.kb-search-panel { box-sizing: border-box; margin: 22px 0 26px; padding: 26px; background: linear-gradient(120deg, #edf6f0, #f8fbf9); border: 1px solid #b8d4c2; border-top: 4px solid var(--green-700); border-radius: 16px; box-shadow: 0 10px 30px rgba(16, 65, 42, .08); }
+.kb-search-panel * { box-sizing: border-box; }
+.kb-search-label { display: block; color: var(--green-900); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 6px; }
+.kb-search-hint { color: var(--gray-700); font-size: 15px; margin: 0 0 18px; }
+.kb-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+.kb-search-field { position: relative; min-width: 0; }
+.kb-search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 23px; height: 23px; fill: none; stroke: var(--green-700); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.kb-search { width: 100%; min-width: 0; min-height: 60px; border: 2px solid #8cb69d; border-radius: 10px; padding: 16px 16px 16px 52px; font: inherit; font-size: 18px; color: var(--gray-900); background: white; box-shadow: 0 3px 10px rgba(16, 65, 42, .05); }
+.kb-search::placeholder { color: var(--gray-500); opacity: 1; }
+.kb-search:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; border-color: var(--green-700); }
+.kb-search-btn { width: auto; min-width: 130px; min-height: 60px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 10px; padding: 0 24px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
 .kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
-.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 22px; }
+.kb-search-btn:focus-visible, .kb-filter-row button:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
 .kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
 .kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
 .kb-results { display: grid; gap: 8px; }
@@ -153,8 +161,11 @@
 .kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
 .kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
 @media (max-width: 700px) {
+  .kb-search-panel { padding: 20px 16px; margin-top: 16px; }
+  .kb-search-label { font-size: 21px; }
+  .kb-search { font-size: 16px; min-height: 56px; }
   .kb-search-row { grid-template-columns: 1fr; }
-  .kb-search-btn { min-height: 44px; }
+  .kb-search-btn { min-height: 48px; }
   .kb-result { grid-template-columns: 1fr; }
   .kb-result small { grid-column: auto; }
   .kb-pagination { flex-wrap: wrap; }
@@ -230,14 +241,14 @@
   <h2>Нотатки</h2><p>Застосовується схема: IHC-скринінг (антитіло D5F3) → підтверджувальний FISH або NGS. Сучасні NGS-панелі на основі РНК виявляють злиття ALK безпосередньо і є методом вибору завдяки вищій чутливості до рідкісних партнерів злиття. ALEX / CROWN: алектиніб (alectinib) / лорлатиніб (lorlatinib) перевершують кризотиніб (crizotinib) у першій лінії. ALINA: дворічна ад&#x27;ювантна терапія алектинібом після резекції НМРЛ з перебудовою ALK.</p>
   <h2>Де використовується</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-IMT-1L</code> - ALGO-IMT-1L</li></ul>
-<h3>Diseases</h3><ul><li><code>DIS-IMT</code> - Inflammatory myofibroblastic tumor (IMT)</li></ul>
 <h3>Handbook Chapters</h3><ul><li><code>HB-NSCLC-METASTATIC-1L</code> - Metastatic NSCLC: driver-first treatment reasoning</li></ul>
 <h3>Indications</h3><ul><li><code>IND-IMT-ALK-CRIZOTINIB</code> - IND-IMT-ALK-CRIZOTINIB</li><li><code>IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB</code> - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB</li><li><code>IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL</code> - IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL</li><li><code>IND-NSCLC-ADJUVANT-ATEZO-PDL1POS</code> - IND-NSCLC-ADJUVANT-ATEZO-PDL1POS</li><li><code>IND-NSCLC-ALK-1L-ENSARTINIB</code> - IND-NSCLC-ALK-1L-ENSARTINIB</li><li><code>IND-NSCLC-ALK-2L-LORLATINIB</code> - IND-NSCLC-ALK-2L-LORLATINIB</li><li><code>IND-NSCLC-ALK-MAINT-ALECTINIB</code> - IND-NSCLC-ALK-MAINT-ALECTINIB</li><li><code>IND-NSCLC-ALK-MET-1L</code> - IND-NSCLC-ALK-MET-1L</li><li><code>IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO</code> - IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO</li><li><code>IND-NSCLC-ELDERLY-CARBO-PEM-MOD</code> - IND-NSCLC-ELDERLY-CARBO-PEM-MOD</li><li><code>IND-NSCLC-PERIOPERATIVE-PEMBRO</code> - IND-NSCLC-PERIOPERATIVE-PEMBRO</li><li><code>IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO</code> - IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO</li></ul>
 <h3>Questionnaires</h3><ul><li><code>QUEST-NSCLC-1L-STUB</code> - Non-small cell lung cancer — first line</li></ul>
 <h3>Tests</h3><ul><li><code>TEST-NSCLC-NGS-PANEL</code> - NSCLC comprehensive NGS panel (DNA + RNA fusion)</li></ul>
-<h3>Біомаркер</h3><ul><li><code>BIO-ALK-G1202R</code> - ALK G1202R resistance mutation</li><li><code>BIO-ALK-L1196M</code> - ALK L1196M gatekeeper resistance mutation</li><li><code>BIO-NRG1-FUSION</code> - NRG1 fusion (gene rearrangement)</li></ul>
-<h3>Клінічна застосовність</h3><ul><li><code>BMA-ALK-EML4-V1-NSCLC</code> - EML4-ALK variant 1 (E13;A20) is a stable fusion isoform with longer PFS on 2nd-gen ALK-TK...</li><li><code>BMA-ALK-EML4-V3-NSCLC</code> - EML4-ALK variant 3 is associated with shorter PFS on 2nd-gen ALK-TKIs (crizotinib/alectin...</li><li><code>BMA-ALK-FUSION-ALCL</code> - ALK-positive ALCL (typically NPM1-ALK t(2;5)) is generally cured by CHOP-based regimens w...</li><li><code>BMA-ALK-FUSION-NSCLC</code> - ALK rearrangement in advanced NSCLC: alectinib (ALEX, Peters 2017) and lorlatinib (CROWN,...</li><li><code>BMA-ALK-G1202R-NSCLC</code> - ALK G1202R is a solvent-front mutation conferring resistance to 1st/2nd-gen ALK-TKIs (cri...</li><li><code>BMA-ALK-L1196M-NSCLC</code> - ALK L1196M is the gatekeeper mutation conferring resistance to crizotinib but retaining s...</li></ul>
-<h3>Тривожна ознака</h3><ul><li><code>RF-IMT-HIGH-RISK-BIOLOGY</code> - Inflammatory myofibroblastic tumor with actionable fusion driver: ALK fusion (TPM3-ALK, T...</li><li><code>RF-NSCLC-HIGH-RISK-BIOLOGY</code> - Actionable molecular driver detected (EGFR / ALK / ROS1 / KRAS G12C / BRAF V600E / MET ex...</li><li><code>RF-THYROID-ANAPLASTIC-HIGH-RISK-BIOLOGY</code> - Anaplastic thyroid carcinoma with actionable driver mutation: BRAF V600E (~25-40% ATC; da...</li><li><code>RF-THYROID-PAPILLARY-HIGH-RISK-BIOLOGY</code> - Papillary thyroid carcinoma with adverse molecular / clinical features: BRAF V600E (~60%...</li></ul>
+<h3>Біомаркер</h3><ul><li><a href="/ukr/kb/biomarkers/bio-alk-g1202r.html"><code>BIO-ALK-G1202R</code></a> - ALK G1202R resistance mutation</li><li><a href="/ukr/kb/biomarkers/bio-alk-l1196m.html"><code>BIO-ALK-L1196M</code></a> - ALK L1196M gatekeeper resistance mutation</li><li><a href="/ukr/kb/biomarkers/bio-nrg1-fusion.html"><code>BIO-NRG1-FUSION</code></a> - NRG1 fusion (gene rearrangement)</li></ul>
+<h3>Клінічна застосовність</h3><ul><li><a href="/ukr/kb/biomarker_actionability/bma-alk-eml4-v1-nsclc.html"><code>BMA-ALK-EML4-V1-NSCLC</code></a> - EML4-ALK variant 1 (E13;A20) is a stable fusion isoform with longer PFS on 2nd-gen ALK-TK...</li><li><a href="/ukr/kb/biomarker_actionability/bma-alk-eml4-v3-nsclc.html"><code>BMA-ALK-EML4-V3-NSCLC</code></a> - EML4-ALK variant 3 is associated with shorter PFS on 2nd-gen ALK-TKIs (crizotinib/alectin...</li><li><a href="/ukr/kb/biomarker_actionability/bma-alk-fusion-alcl.html"><code>BMA-ALK-FUSION-ALCL</code></a> - ALK-positive ALCL (typically NPM1-ALK t(2;5)) is generally cured by CHOP-based regimens w...</li><li><a href="/ukr/kb/biomarker_actionability/bma-alk-fusion-nsclc.html"><code>BMA-ALK-FUSION-NSCLC</code></a> - ALK rearrangement in advanced NSCLC: alectinib (ALEX, Peters 2017) and lorlatinib (CROWN,...</li><li><a href="/ukr/kb/biomarker_actionability/bma-alk-g1202r-nsclc.html"><code>BMA-ALK-G1202R-NSCLC</code></a> - ALK G1202R is a solvent-front mutation conferring resistance to 1st/2nd-gen ALK-TKIs (cri...</li><li><a href="/ukr/kb/biomarker_actionability/bma-alk-l1196m-nsclc.html"><code>BMA-ALK-L1196M-NSCLC</code></a> - ALK L1196M is the gatekeeper mutation conferring resistance to crizotinib but retaining s...</li></ul>
+<h3>Тривожна ознака</h3><ul><li><a href="/ukr/kb/redflags/rf-imt-high-risk-biology.html"><code>RF-IMT-HIGH-RISK-BIOLOGY</code></a> - Inflammatory myofibroblastic tumor with actionable fusion driver: ALK fusion (TPM3-ALK, T...</li><li><a href="/ukr/kb/redflags/rf-nsclc-high-risk-biology.html"><code>RF-NSCLC-HIGH-RISK-BIOLOGY</code></a> - Actionable molecular driver detected (EGFR / ALK / ROS1 / KRAS G12C / BRAF V600E / MET ex...</li><li><a href="/ukr/kb/redflags/rf-thyroid-anaplastic-high-risk-biology.html"><code>RF-THYROID-ANAPLASTIC-HIGH-RISK-BIOLOGY</code></a> - Anaplastic thyroid carcinoma with actionable driver mutation: BRAF V600E (~25-40% ATC; da...</li><li><a href="/ukr/kb/redflags/rf-thyroid-papillary-high-risk-biology.html"><code>RF-THYROID-PAPILLARY-HIGH-RISK-BIOLOGY</code></a> - Papillary thyroid carcinoma with adverse molecular / clinical features: BRAF V600E (~60%...</li></ul>
+<h3>Хвороба</h3><ul><li><a href="/ukr/kb/diseases/dis-imt.html"><code>DIS-IMT</code></a> - Inflammatory myofibroblastic tumor (IMT)</li></ul>
 </main>
 </body>
 </html>

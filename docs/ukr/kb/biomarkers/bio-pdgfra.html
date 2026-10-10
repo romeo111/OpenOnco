@@ -120,12 +120,20 @@
 .kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
 .kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
 .kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
-.kb-search-label { display: block; font-weight: 700; margin-bottom: 7px; }
-.kb-search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: stretch; }
-.kb-search { width: 100%; border: 1px solid var(--gray-200); border-radius: 7px; padding: 13px 14px; font-size: 16px; background: white; }
-.kb-search-btn { min-width: 118px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 7px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+.kb-search-panel { box-sizing: border-box; margin: 22px 0 26px; padding: 26px; background: linear-gradient(120deg, #edf6f0, #f8fbf9); border: 1px solid #b8d4c2; border-top: 4px solid var(--green-700); border-radius: 16px; box-shadow: 0 10px 30px rgba(16, 65, 42, .08); }
+.kb-search-panel * { box-sizing: border-box; }
+.kb-search-label { display: block; color: var(--green-900); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 6px; }
+.kb-search-hint { color: var(--gray-700); font-size: 15px; margin: 0 0 18px; }
+.kb-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+.kb-search-field { position: relative; min-width: 0; }
+.kb-search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 23px; height: 23px; fill: none; stroke: var(--green-700); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.kb-search { width: 100%; min-width: 0; min-height: 60px; border: 2px solid #8cb69d; border-radius: 10px; padding: 16px 16px 16px 52px; font: inherit; font-size: 18px; color: var(--gray-900); background: white; box-shadow: 0 3px 10px rgba(16, 65, 42, .05); }
+.kb-search::placeholder { color: var(--gray-500); opacity: 1; }
+.kb-search:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; border-color: var(--green-700); }
+.kb-search-btn { width: auto; min-width: 130px; min-height: 60px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 10px; padding: 0 24px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
 .kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
-.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 22px; }
+.kb-search-btn:focus-visible, .kb-filter-row button:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
 .kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
 .kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
 .kb-results { display: grid; gap: 8px; }
@@ -153,8 +161,11 @@
 .kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
 .kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
 @media (max-width: 700px) {
+  .kb-search-panel { padding: 20px 16px; margin-top: 16px; }
+  .kb-search-label { font-size: 21px; }
+  .kb-search { font-size: 16px; min-height: 56px; }
   .kb-search-row { grid-template-columns: 1fr; }
-  .kb-search-btn { min-height: 44px; }
+  .kb-search-btn { min-height: 48px; }
   .kb-result { grid-template-columns: 1fr; }
   .kb-result small { grid-column: auto; }
   .kb-pagination { flex-wrap: wrap; }
@@ -230,12 +241,12 @@
   <h2>Нотатки</h2><p>Частота ~10% ГІСП загалом; ~80% ГІСП шлунку (порівняно з тонкокишковими). D842V (домінантний варіант) є РЕЗИСТЕНТНИМ до іматинібу та історично становить підтип ГІСП з найгіршим прогнозом. Авапритиніб (avapritinib; NAVIGATOR / VOYAGER) змінив парадигму — схвалений FDA для нерезектабельного / метастатичного ГІСП з мутацією PDGFRA D842V у першій лінії; ORR ~88% проти ~0% при іматинібі. Мутації не-D842V екзону 18 та екзону 12 зберігають чутливість до іматинібу. Еозинофільні розлади (мієлоїдні новоутворення зі злиттям PDGFRA та FIP1L1 тощо) є окремою нозологією та лікуються іматинібом 100 mg / день.</p>
   <h2>Де використовується</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-GIST-1L</code> - ALGO-GIST-1L</li></ul>
-<h3>Diseases</h3><ul><li><code>DIS-GIST</code> - Gastrointestinal stromal tumor (GIST)</li></ul>
 <h3>Indications</h3><ul><li><code>IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V</code> - IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V</li><li><code>IND-GIST-1L-IMATINIB</code> - IND-GIST-1L-IMATINIB</li><li><code>IND-GIST-2L-SUNITINIB</code> - IND-GIST-2L-SUNITINIB</li><li><code>IND-GIST-4L-RIPRETINIB</code> - IND-GIST-4L-RIPRETINIB</li></ul>
 <h3>Questionnaires</h3><ul><li><code>QUEST-GIST-1L-STUB</code> - Gastrointestinal stromal tumor — first line</li></ul>
-<h3>Біомаркер</h3><ul><li><code>BIO-KDR</code> - KDR (VEGFR2) mutation / amplification — vascular endothelial growth factor receptor 2</li><li><code>BIO-KIT</code> - KIT mutation</li></ul>
-<h3>Клінічна застосовність</h3><ul><li><code>BMA-PDGFRA-D842V-GIST</code> - PDGFRA D842V in GIST is imatinib-RESISTANT (distinct from imatinib-sensitive PDGFRA non-D...</li><li><code>BMA-PDGFRA-EXON12-GIST</code> - PDGFRA exon 12 mutations in GIST are imatinib-sensitive. Imatinib 400 mg/day is standard...</li><li><code>BMA-PDGFRA-EXON14-GIST</code> - PDGFRA exon 14 mutations in GIST are very rare and are imatinib- sensitive. Treatment is...</li><li><code>BMA-PDGFRA-EXON18-NON-D842-GIST</code> - PDGFRA non-D842V exon 18 mutations in GIST are imatinib-SENSITIVE (distinct from D842V)....</li></ul>
-<h3>Тривожна ознака</h3><ul><li><code>RF-GIST-HIGH-RISK-BIOLOGY</code> - Adverse genotype or anatomic risk in GIST: PDGFRA D842V (imatinib-resistant — avapritinib...</li><li><code>RF-GIST-PDGFRA-D842V</code> - PDGFRA D842V substitution mutation in advanced or metastatic GIST. The PDGFRA D842V varia...</li></ul>
+<h3>Біомаркер</h3><ul><li><a href="/ukr/kb/biomarkers/bio-kdr.html"><code>BIO-KDR</code></a> - KDR (VEGFR2) mutation / amplification — vascular endothelial growth factor receptor 2</li><li><a href="/ukr/kb/biomarkers/bio-kit.html"><code>BIO-KIT</code></a> - KIT mutation</li></ul>
+<h3>Клінічна застосовність</h3><ul><li><a href="/ukr/kb/biomarker_actionability/bma-pdgfra-d842v-gist.html"><code>BMA-PDGFRA-D842V-GIST</code></a> - PDGFRA D842V in GIST is imatinib-RESISTANT (distinct from imatinib-sensitive PDGFRA non-D...</li><li><a href="/ukr/kb/biomarker_actionability/bma-pdgfra-exon12-gist.html"><code>BMA-PDGFRA-EXON12-GIST</code></a> - PDGFRA exon 12 mutations in GIST are imatinib-sensitive. Imatinib 400 mg/day is standard...</li><li><a href="/ukr/kb/biomarker_actionability/bma-pdgfra-exon14-gist.html"><code>BMA-PDGFRA-EXON14-GIST</code></a> - PDGFRA exon 14 mutations in GIST are very rare and are imatinib- sensitive. Treatment is...</li><li><a href="/ukr/kb/biomarker_actionability/bma-pdgfra-exon18-non-d842-gist.html"><code>BMA-PDGFRA-EXON18-NON-D842-GIST</code></a> - PDGFRA non-D842V exon 18 mutations in GIST are imatinib-SENSITIVE (distinct from D842V)....</li></ul>
+<h3>Тривожна ознака</h3><ul><li><a href="/ukr/kb/redflags/rf-gist-high-risk-biology.html"><code>RF-GIST-HIGH-RISK-BIOLOGY</code></a> - Adverse genotype or anatomic risk in GIST: PDGFRA D842V (imatinib-resistant — avapritinib...</li><li><a href="/ukr/kb/redflags/rf-gist-pdgfra-d842v.html"><code>RF-GIST-PDGFRA-D842V</code></a> - PDGFRA D842V substitution mutation in advanced or metastatic GIST. The PDGFRA D842V varia...</li></ul>
+<h3>Хвороба</h3><ul><li><a href="/ukr/kb/diseases/dis-gist.html"><code>DIS-GIST</code></a> - Gastrointestinal stromal tumor (GIST)</li></ul>
 </main>
 </body>
 </html>

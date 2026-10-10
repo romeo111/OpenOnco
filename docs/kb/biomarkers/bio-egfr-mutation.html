@@ -120,12 +120,20 @@
 .kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
 .kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
 .kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
-.kb-search-label { display: block; font-weight: 700; margin-bottom: 7px; }
-.kb-search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: stretch; }
-.kb-search { width: 100%; border: 1px solid var(--gray-200); border-radius: 7px; padding: 13px 14px; font-size: 16px; background: white; }
-.kb-search-btn { min-width: 118px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 7px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+.kb-search-panel { box-sizing: border-box; margin: 22px 0 26px; padding: 26px; background: linear-gradient(120deg, #edf6f0, #f8fbf9); border: 1px solid #b8d4c2; border-top: 4px solid var(--green-700); border-radius: 16px; box-shadow: 0 10px 30px rgba(16, 65, 42, .08); }
+.kb-search-panel * { box-sizing: border-box; }
+.kb-search-label { display: block; color: var(--green-900); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 6px; }
+.kb-search-hint { color: var(--gray-700); font-size: 15px; margin: 0 0 18px; }
+.kb-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+.kb-search-field { position: relative; min-width: 0; }
+.kb-search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 23px; height: 23px; fill: none; stroke: var(--green-700); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.kb-search { width: 100%; min-width: 0; min-height: 60px; border: 2px solid #8cb69d; border-radius: 10px; padding: 16px 16px 16px 52px; font: inherit; font-size: 18px; color: var(--gray-900); background: white; box-shadow: 0 3px 10px rgba(16, 65, 42, .05); }
+.kb-search::placeholder { color: var(--gray-500); opacity: 1; }
+.kb-search:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; border-color: var(--green-700); }
+.kb-search-btn { width: auto; min-width: 130px; min-height: 60px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 10px; padding: 0 24px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
 .kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
-.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 22px; }
+.kb-search-btn:focus-visible, .kb-filter-row button:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
 .kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
 .kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
 .kb-results { display: grid; gap: 8px; }
@@ -153,8 +161,11 @@
 .kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
 .kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
 @media (max-width: 700px) {
+  .kb-search-panel { padding: 20px 16px; margin-top: 16px; }
+  .kb-search-label { font-size: 21px; }
+  .kb-search { font-size: 16px; min-height: 56px; }
   .kb-search-row { grid-template-columns: 1fr; }
-  .kb-search-btn { min-height: 44px; }
+  .kb-search-btn { min-height: 48px; }
   .kb-result { grid-template-columns: 1fr; }
   .kb-result small { grid-column: auto; }
   .kb-pagination { flex-wrap: wrap; }
@@ -229,14 +240,14 @@
 <tr><th>Related biomarkers</th><td><span class="kb-muted">None declared</span></td></tr></table>
   <h2>Notes</h2><p>NCCN 2025 mandates universal EGFR testing for advanced non-squamous NSCLC.</p>
   <h2>Used By</h2>
-<h3>Actionability</h3><ul><li><code>BMA-EGFR-C797S-NSCLC</code> - EGFR C797S is the principal acquired resistance mutation to osimertinib. Cis-configuratio...</li><li><code>BMA-EGFR-EX19DEL-NSCLC</code> - EGFR exon 19 deletion in advanced NSCLC: osimertinib 1L improves OS vs first-generation E...</li><li><code>BMA-EGFR-EX20INS-NSCLC</code> - EGFR exon 20 insertions (excluding A763_Y764insFQEA) are insensitive to classical EGFR-TK...</li><li><code>BMA-EGFR-G719X-NSCLC</code> - EGFR exon 18 G719X (G719A/C/S) is an &quot;uncommon&quot; sensitizing mutation (~3% of EGFR-mut NSC...</li><li><code>BMA-EGFR-L858R-NSCLC</code> - EGFR L858R in advanced NSCLC: osimertinib 1L is standard (FLAURA); L858R historically sho...</li><li><code>BMA-EGFR-MUTATION-GBM</code> - EGFR amplification (~40%) and EGFRvIII variant (~25%) are common in glioblastoma but no t...</li><li><code>BMA-EGFR-T790M-NSCLC</code> - EGFR T790M is the dominant acquired-resistance mechanism after 1st/2nd-gen EGFR-TKI (gefi...</li></ul>
+<h3>Actionability</h3><ul><li><a href="/kb/biomarker_actionability/bma-egfr-c797s-nsclc.html"><code>BMA-EGFR-C797S-NSCLC</code></a> - EGFR C797S is the principal acquired resistance mutation to osimertinib. Cis-configuratio...</li><li><a href="/kb/biomarker_actionability/bma-egfr-ex19del-nsclc.html"><code>BMA-EGFR-EX19DEL-NSCLC</code></a> - EGFR exon 19 deletion in advanced NSCLC: osimertinib 1L improves OS vs first-generation E...</li><li><a href="/kb/biomarker_actionability/bma-egfr-ex20ins-nsclc.html"><code>BMA-EGFR-EX20INS-NSCLC</code></a> - EGFR exon 20 insertions (excluding A763_Y764insFQEA) are insensitive to classical EGFR-TK...</li><li><a href="/kb/biomarker_actionability/bma-egfr-g719x-nsclc.html"><code>BMA-EGFR-G719X-NSCLC</code></a> - EGFR exon 18 G719X (G719A/C/S) is an &quot;uncommon&quot; sensitizing mutation (~3% of EGFR-mut NSC...</li><li><a href="/kb/biomarker_actionability/bma-egfr-l858r-nsclc.html"><code>BMA-EGFR-L858R-NSCLC</code></a> - EGFR L858R in advanced NSCLC: osimertinib 1L is standard (FLAURA); L858R historically sho...</li><li><a href="/kb/biomarker_actionability/bma-egfr-mutation-gbm.html"><code>BMA-EGFR-MUTATION-GBM</code></a> - EGFR amplification (~40%) and EGFRvIII variant (~25%) are common in glioblastoma but no t...</li><li><a href="/kb/biomarker_actionability/bma-egfr-t790m-nsclc.html"><code>BMA-EGFR-T790M-NSCLC</code></a> - EGFR T790M is the dominant acquired-resistance mechanism after 1st/2nd-gen EGFR-TKI (gefi...</li></ul>
 <h3>Algorithms</h3><ul><li><code>ALGO-NSCLC-METASTATIC-2L</code> - ALGO-NSCLC-METASTATIC-2L</li></ul>
-<h3>Biomarker</h3><ul><li><code>BIO-EGFR-C797S</code> - EGFR C797S resistance mutation</li><li><code>BIO-EGFR-EXON19-DELETION</code> - EGFR Exon 19 deletion</li><li><code>BIO-EGFR-EXON20-INSERTION</code> - EGFR Exon 20 insertion</li><li><code>BIO-EGFR-L858R</code> - EGFR L858R mutation</li><li><code>BIO-EGFR-T790M</code> - EGFR T790M (acquired resistance / gatekeeper)</li><li><code>BIO-MET</code> - MET alterations (exon 14 skipping or amplification)</li><li><code>BIO-MET-AMPLIFICATION</code> - MET amplification (high-level copy-number gain)</li></ul>
-<h3>Diseases</h3><ul><li><code>DIS-HNSCC</code> - Head and neck squamous cell carcinoma (HNSCC)</li></ul>
+<h3>Biomarker</h3><ul><li><a href="/kb/biomarkers/bio-egfr-c797s.html"><code>BIO-EGFR-C797S</code></a> - EGFR C797S resistance mutation</li><li><a href="/kb/biomarkers/bio-egfr-exon19-deletion.html"><code>BIO-EGFR-EXON19-DELETION</code></a> - EGFR Exon 19 deletion</li><li><a href="/kb/biomarkers/bio-egfr-exon20-insertion.html"><code>BIO-EGFR-EXON20-INSERTION</code></a> - EGFR Exon 20 insertion</li><li><a href="/kb/biomarkers/bio-egfr-l858r.html"><code>BIO-EGFR-L858R</code></a> - EGFR L858R mutation</li><li><a href="/kb/biomarkers/bio-egfr-t790m.html"><code>BIO-EGFR-T790M</code></a> - EGFR T790M (acquired resistance / gatekeeper)</li><li><a href="/kb/biomarkers/bio-met.html"><code>BIO-MET</code></a> - MET alterations (exon 14 skipping or amplification)</li><li><a href="/kb/biomarkers/bio-met-amplification.html"><code>BIO-MET-AMPLIFICATION</code></a> - MET amplification (high-level copy-number gain)</li></ul>
+<h3>Disease</h3><ul><li><a href="/kb/diseases/dis-hnscc.html"><code>DIS-HNSCC</code></a> - Head and neck squamous cell carcinoma (HNSCC)</li></ul>
 <h3>Handbook Chapters</h3><ul><li><code>HB-NSCLC-METASTATIC-1L</code> - Metastatic NSCLC: driver-first treatment reasoning</li></ul>
 <h3>Indications</h3><ul><li><code>IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB</code> - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB</li><li><code>IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB</code> - IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB</li><li><code>IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ</code> - IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ</li><li><code>IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL</code> - IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL</li><li><code>IND-NSCLC-3L-OSI-FAILURE-AMI</code> - IND-NSCLC-3L-OSI-FAILURE-AMI</li><li><code>IND-NSCLC-ADJUVANT-ATEZO-PDL1POS</code> - IND-NSCLC-ADJUVANT-ATEZO-PDL1POS</li><li><code>IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO</code> - IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO</li><li><code>IND-NSCLC-EGFR-1L-AMI-LAZ</code> - IND-NSCLC-EGFR-1L-AMI-LAZ</li><li><code>IND-NSCLC-EGFR-1L-OSI-CHEMO</code> - IND-NSCLC-EGFR-1L-OSI-CHEMO</li><li><code>IND-NSCLC-EGFR-MAINT-OSIMERTINIB</code> - IND-NSCLC-EGFR-MAINT-OSIMERTINIB</li><li><code>IND-NSCLC-EGFR-MUT-MET-1L</code> - IND-NSCLC-EGFR-MUT-MET-1L</li><li><code>IND-NSCLC-ELDERLY-CARBO-PEM-MOD</code> - IND-NSCLC-ELDERLY-CARBO-PEM-MOD</li><li><code>IND-NSCLC-PERIOPERATIVE-PEMBRO</code> - IND-NSCLC-PERIOPERATIVE-PEMBRO</li><li><code>IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO</code> - IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO</li></ul>
 <h3>Questionnaires</h3><ul><li><code>QUEST-NSCLC-1L-STUB</code> - Non-small cell lung cancer — first line</li></ul>
-<h3>Red flag</h3><ul><li><code>RF-NSCLC-HIGH-RISK-BIOLOGY</code> - Actionable molecular driver detected (EGFR / ALK / ROS1 / KRAS G12C / BRAF V600E / MET ex...</li></ul>
+<h3>Red flag</h3><ul><li><a href="/kb/redflags/rf-nsclc-high-risk-biology.html"><code>RF-NSCLC-HIGH-RISK-BIOLOGY</code></a> - Actionable molecular driver detected (EGFR / ALK / ROS1 / KRAS G12C / BRAF V600E / MET ex...</li></ul>
 <h3>Sources</h3><ul><li><code>SRC-NCIT</code> - NCI Thesaurus — controlled cancer vocabulary</li></ul>
 <h3>Tests</h3><ul><li><code>TEST-NSCLC-NGS-PANEL</code> - NSCLC comprehensive NGS panel (DNA + RNA fusion)</li></ul>
 </main>
