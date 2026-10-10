@@ -405,7 +405,7 @@ def _language_links(path: str, available_paths: set[str] | None = None) -> list[
         targets["x-default"] = base_path
         # Localized tool introductions are explicit English launch pages,
         # rather than translations of the complete interactive tools.
-        if base_path not in {"index.html", "about.html", "kb.html", "handbook.html"}:
+        if base_path not in {"index.html", "about.html", "kb.html", "participate.html", "handbook.html"}:
             locale = split_locale(path)[0]
             allowed = {locale} if locale in {"es", "pt", "de", "fr"} else {"en", "uk", "x-default"}
             candidates = [(code, url) for code, url in candidates if code in allowed]
