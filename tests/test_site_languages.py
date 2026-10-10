@@ -61,13 +61,13 @@ def test_international_build_and_reciprocal_discovery(tmp_path, handbook_load):
     (tmp_path / "kb_search_index.json").write_text(json.dumps({"entries": entries, "counts": {"Disease": 103, "Drugs": 321, "Biomarkers": 257}}), encoding="utf-8")
     chapters = [_chapter_index_record(handbook_load, e["data"]) for e in handbook_load.entities_by_id.values() if e["type"] == "handbook_chapters"]
     (tmp_path / "handbook_index.json").write_text(json.dumps({"chapters": chapters}), encoding="utf-8")
-    for name in ("index.html", "about.html", "kb.html", "handbook.html"):
+    for name in ("index.html", "about.html", "kb.html", "participate.html", "handbook.html"):
         for code in ("en", "uk"):
             path = tmp_path / locale_path(name, code)
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text('<html><head><title>OpenOnco</title></head><body></body></html>', encoding="utf-8")
     payload = build_international(tmp_path)
-    assert len(payload["pages"]) == 44
+    assert len(payload["pages"]) == 48
     for code, t in COPY.items():
         home = (tmp_path / code / "index.html").read_text(encoding="utf-8")
         assert f'<html lang="{code}">' in home and t["title"] in home
@@ -76,6 +76,8 @@ def test_international_build_and_reciprocal_discovery(tmp_path, handbook_load):
         assert SEARCH_COPY[code][14] in wiki
         assert 'e.search_text' in wiki and "fetch('/kb_search_index.json')" in wiki
         assert 'card.lang = \'en\'' in wiki and 'p.set(\'q\'' in wiki
+        assert '<option value="indications">' in wiki and '<option value="regimens">' in wiki
+        assert (tmp_path / code / "participate.html").is_file()
         assert t["english_note"] in (tmp_path / code / "try.html").read_text(encoding="utf-8")
         handbook = (tmp_path / code / "handbook.html").read_text(encoding="utf-8")
         assert f'<code>{t["draft"]}</code>' in handbook
@@ -83,7 +85,7 @@ def test_international_build_and_reciprocal_discovery(tmp_path, handbook_load):
     finalize_site_discovery(tmp_path, stats={})
     ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9", "x": "http://www.w3.org/1999/xhtml"}
     for node in ET.parse(tmp_path / "sitemap.xml").getroot().findall("s:url", ns):
-        if node.find("s:loc", ns).text.endswith(("/", "about.html", "kb.html", "handbook.html")):
+        if node.find("s:loc", ns).text.endswith(("/", "about.html", "kb.html", "participate.html", "handbook.html")):
             assert {n.get("hreflang") for n in node.findall("x:link", ns)} == set(LOCALES) | {"x-default"}
     es = (tmp_path / "es/index.html").read_text(encoding="utf-8")
     assert '"inLanguage":"es"' in es

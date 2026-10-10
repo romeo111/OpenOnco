@@ -269,7 +269,13 @@ def _description_for(path: str, title: str, locale: str) -> str:
             f"{title_clean}: попередній запис бази OpenOnco з джерелами, статусом рецензування та пов'язаними сутностями. Потрібна перевірка лікаря."
         )
     if normalized.endswith("participate.html"):
-        return ("OpenOnco developer setup, synthetic clinical review, interoperability gaps and participation resources." if not is_uk else "Як долучитися до OpenOnco: локальний запуск, синтетичне клінічне рецензування, стандарти та матеріали участі.")
+        descriptions = {
+            "es": "Cómo participar en OpenOnco: desarrollo, revisión clínica con casos sintéticos y materiales de investigación.",
+            "pt": "Como participar no OpenOnco: desenvolvimento, revisão clínica de casos sintéticos e materiais de investigação.",
+            "de": "Bei OpenOnco mitwirken: Entwicklung, klinische Prüfung synthetischer Fälle und Forschungsmaterialien.",
+            "fr": "Participer à OpenOnco : développement, évaluation clinique de cas synthétiques et documents de recherche.",
+        }
+        return descriptions.get(locale, "Як долучитися до OpenOnco: локальний запуск, синтетичне клінічне рецензування, стандарти та матеріали участі." if is_uk else "OpenOnco developer setup, synthetic clinical review, interoperability gaps and participation resources.")
 
     if normalized.endswith("404.html"):
         return "OpenOnco page not found." if not is_uk else "Сторінку OpenOnco не знайдено."
@@ -399,7 +405,7 @@ def _language_links(path: str, available_paths: set[str] | None = None) -> list[
         targets["x-default"] = base_path
         # Localized tool introductions are explicit English launch pages,
         # rather than translations of the complete interactive tools.
-        if base_path not in {"index.html", "about.html", "kb.html", "handbook.html"}:
+        if base_path not in {"index.html", "about.html", "kb.html", "participate.html", "handbook.html"}:
             locale = split_locale(path)[0]
             allowed = {locale} if locale in {"es", "pt", "de", "fr"} else {"en", "uk", "x-default"}
             candidates = [(code, url) for code, url in candidates if code in allowed]

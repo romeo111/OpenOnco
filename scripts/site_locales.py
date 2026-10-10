@@ -10,7 +10,7 @@ LOCALES = {
     "de": ("de", "Deutsch", "DE"),
     "fr": ("fr", "Français", "FR"),
 }
-PUBLIC_PAGES = {"index.html", "about.html", "kb.html", "handbook.html", "try.html", "ask.html", "prevent.html", "gallery.html", "diseases.html", "specs.html", "news.html"}
+PUBLIC_PAGES = {"index.html", "about.html", "kb.html", "participate.html", "handbook.html", "try.html", "ask.html", "prevent.html", "gallery.html", "diseases.html", "specs.html", "news.html"}
 
 
 def split_locale(path: str) -> tuple[str, str]:
