@@ -14,6 +14,19 @@ _NAV_LABELS = {
 _NAV_LABELS.update(COPY)
 
 
+def _language_flag(locale: str) -> str:
+    """Inline vectors render consistently, including on Windows without flag emoji."""
+    artwork = {
+        "en": '<path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/>',
+        "uk": '<path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/>',
+        "es": '<path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/>',
+        "pt": '<path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/>',
+        "de": '<path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/>',
+        "fr": '<path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/>',
+    }
+    return f'<svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false">{artwork[locale]}</svg>'
+
+
 def render_top_bar(active: str = "", target_lang: str = "en",
                     lang_switch_href: str = "/ukr/", page_path: str | None = None) -> str:
     """Render an accessible six-language header; unavailable twins lead home."""
@@ -87,14 +100,14 @@ def render_top_bar(active: str = "", target_lang: str = "en",
         )
         href = locale_href(page if available else "index.html", code)
         current = ' aria-current="true"' if code == target_lang else ""
-        language_items.append(f'<a href="{href}" lang="{code}" hreflang="{code}"{current}>{native_name} <small>{abbreviation}</small></a>')
+        language_items.append(f'<a href="{href}" lang="{code}" hreflang="{code}"{current}>{_language_flag(code)}<span>{native_name}</span><small>{abbreviation}</small></a>')
     language_menu = f'''<details class="language-menu lang-switch">
-      <summary aria-label="{language_label}">{LOCALES[target_lang][2]} <span aria-hidden="true">⌄</span></summary>
+      <summary aria-label="{language_label}">{_language_flag(target_lang)}{LOCALES[target_lang][2]} <span aria-hidden="true">⌄</span></summary>
       <nav aria-label="{language_label}">{"".join(language_items)}</nav>
     </details>'''
 
     return f"""<header class="top-bar site-header">
-  <link rel="stylesheet" href="/header.css?v=languages-20261010b">
+  <link rel="stylesheet" href="/header.css?v=flags-20261010">
   <div class="header-shell">
   <div class="header-main">
     <div class="brand-line">

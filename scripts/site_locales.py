@@ -3,8 +3,8 @@
 from pathlib import PurePosixPath
 
 LOCALES = {
-    "uk": ("ukr", "Українська", "UA"),
     "en": ("", "English", "EN"),
+    "uk": ("ukr", "Українська", "UA"),
     "es": ("es", "Español", "ES"),
     "pt": ("pt", "Português", "PT"),
     "de": ("de", "Deutsch", "DE"),
