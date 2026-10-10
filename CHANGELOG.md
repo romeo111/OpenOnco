@@ -8,6 +8,16 @@ versioning per CHARTER §5 (KB content cadence).
 
 ## [Unreleased]
 
+### Website and documentation — 2026-10-10
+
+- Shared responsive header across generated English/Ukrainian public pages; fixed the Handbook header and refreshed UI translations.
+- Onco Wiki search moved directly below the page title, with a prominent panel, accessible hint, focus styles and mobile layout.
+- Published a DLBCL first-line clinician-review packet with 26 synthetic scenarios, plans, traces and local feedback export. Engineering contracts are not clinical approval.
+- Refreshed English/Ukrainian README, development/discovery documentation, contribution/security policies and GitHub issue/PR templates. Repository counts are dated snapshots, not clinical readiness.
+- Search discovery now excludes redirects, noncanonical and noindex artifacts from the sitemap, advertises real language counterparts, omits invented daily freshness, and emits homepage WebSite identity without invisible FAQ markup.
+
+The integration notes below are historical records; they do not by themselves establish current deployment or clinical review status.
+
 ### OncoKB integration — Phases 0 (mock) / 1a / 2 / 3a / 3b / 4 / 4.1 + 4 follow-ups
 
 **Status:** code-complete to `master`; **production deploy gated** on

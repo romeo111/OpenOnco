@@ -1,21 +1,15 @@
-# Security Policy
+# Security policy
 
-## Supported Versions
+Security fixes target current `master`. Older alpha tags are historical snapshots without a separate maintenance commitment. Follow [releases](https://github.com/romeo111/OpenOnco/releases) and [advisories](https://github.com/romeo111/OpenOnco/security/advisories).
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+## Report privately
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+Use [GitHub private vulnerability reporting](https://github.com/romeo111/OpenOnco/security/advisories/new). Include the affected commit, component, impact, reproduction steps and a minimal synthetic example. Do not include patient data, live credentials or third-party confidential material.
 
-## Reporting a Vulnerability
+Do not publish exploit details in an issue before assessment. If private reporting is unavailable, open a minimal issue requesting a private channel without disclosing the vulnerability. No response-time guarantee or bounty is offered.
 
-Use this section to tell people how to report a vulnerability.
+## Scope and privacy
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Report unintended data transmission, secrets exposure, unsafe rendering, dependency vulnerabilities and failures of documented validation boundaries. The browser plan builder processes profiles locally; the optional server-backed question prototype sends input to its configured service. Not every interface is offline.
+
+Clinical/source discrepancies belong in the clinical-feedback template with synthetic data. Clinical review and software security review are separate. OpenOnco is not intended for urgent decisions or as a replacement for a qualified clinician.

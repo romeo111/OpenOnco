@@ -4,10 +4,9 @@ Active specifications for OpenOnco. **Specifications are the source of
 truth** — when this README, `CLAUDE.md`, `README.md`, or any code
 disagrees with `specs/`, the spec wins.
 
-Documents are written in **Ukrainian** with English technical terms
-inline (entity names, license names, code conventions). The language
-choice is intentional, not accidental — see [`CHARTER §1`](CHARTER.md)
-for the language policy.
+English specifications in this directory are canonical. Ukrainian originals
+are preserved under [`uk/`](uk/); technical identifiers and license names remain
+unchanged. Read the current [`CHARTER`](CHARTER.md) for governance and scope.
 
 ## Read this first
 

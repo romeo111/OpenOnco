@@ -18,14 +18,14 @@ from scripts.site_head import render_seo_metadata
 _LD = re.compile(r'<script type="application/ld\+json">(.*?)</script>', re.DOTALL)
 
 
-def _blocks(path: str, locale: str) -> list[dict]:
-    html = render_seo_metadata(path=path, title="OpenOnco", description="x", locale=locale)
+def _blocks(path: str, locale: str, *, include_faq: bool = False) -> list[dict]:
+    html = render_seo_metadata(path=path, title="OpenOnco", description="x", locale=locale, include_faq=include_faq)
     return [json.loads(m) for m in _LD.findall(html)]  # raises if any block is invalid JSON
 
 
 @pytest.mark.parametrize("path,locale", [("index.html", "en"), ("ukr/index.html", "uk")])
 def test_homepage_has_faqpage(path, locale):
-    blocks = _blocks(path, locale)
+    blocks = _blocks(path, locale, include_faq=True)
     faqs = [b for b in blocks if b.get("@type") == "FAQPage"]
     assert len(faqs) == 1, "homepage should carry exactly one FAQPage block"
     questions = faqs[0]["mainEntity"]
@@ -41,8 +41,15 @@ def test_non_homepage_has_no_faqpage(path):
 
 
 def test_faq_answers_keep_safety_framing():
-    faq = [b for b in _blocks("index.html", "en") if b.get("@type") == "FAQPage"][0]
+    faq = [b for b in _blocks("index.html", "en", include_faq=True) if b.get("@type") == "FAQPage"][0]
     text = " ".join(q["acceptedAnswer"]["text"] for q in faq["mainEntity"]).lower()
     assert "not a medical device" in text
     assert "verified by a qualified oncologist" in text
     assert "no large language model picks" in text  # the core safety differentiator
+
+
+def test_homepage_does_not_advertise_invisible_faq():
+    assert not [b for b in _blocks("index.html", "en") if b.get("@type") == "FAQPage"]
+    website = [b for b in _blocks("index.html", "en") if b.get("@type") == "WebSite"][0]
+    assert website["name"] == "OpenOnco"
+    assert website["url"] == "https://openonco.info/"

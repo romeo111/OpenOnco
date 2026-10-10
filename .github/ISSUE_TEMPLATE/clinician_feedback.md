@@ -6,10 +6,9 @@ labels: clinician-feedback
 assignees: ''
 ---
 
-Thank you — a clinician's eye on a real case is the single most valuable thing
-for OpenOnco right now. **Do not paste identifiable patient data** (use a
-de-identified or synthetic case; the demo runs locally and nothing leaves your
-browser).
+Review a synthetic case and its source provenance. **Do not paste patient data.**
+The plan builder runs locally; server-backed question tools send submitted input
+to their configured service. GitHub issues are public.
 
 > Reminder: OpenOnco is informational decision *support*, **not a medical
 > device**, and most content is early-stage/STUB ("proposed, not approved").
@@ -19,7 +18,7 @@ browser).
 <!-- e.g. medical oncologist, hematologist, clinical pharmacist, trainee; country/setting -->
 
 ## The case you ran
-<!-- Disease, line of therapy, key biomarkers/findings — de-identified or synthetic. -->
+<!-- Disease, line of therapy, key biomarkers/findings — synthetic only. -->
 
 ## What the engine got right
 

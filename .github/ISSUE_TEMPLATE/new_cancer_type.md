@@ -1,39 +1,25 @@
 ---
-name: New Cancer Type Request
-about: Request benchmark cases and research reports for a cancer type not yet in the database
-title: "[NEW CANCER TYPE] "
+name: New disease coverage proposal
+about: Propose a disease for the versioned oncology knowledge base
+title: "[DISEASE] "
 labels: new-cancer-type, help-wanted
 assignees: ''
 ---
 
-## Cancer Type
+Use synthetic examples and public sources only. Do not include patient data or ask for a personal treatment decision.
 
-**Name:** <!-- e.g. Gastric adenocarcinoma -->
-**Category:** <!-- carcinomas / sarcomas / leukemias / lymphomas / myelomas / cns_tumors -->
-**Folder:** <!-- e.g. research_db/carcinomas/gastric/ -->
-**Case ID prefix:** <!-- e.g. GAS-001 — see SCHEMA_REFERENCE.md for naming convention -->
+## Disease and proposed scope
 
-## Why This Cancer Type Matters
+<!-- Name, ICD code if known, existing coverage overlap, adult scope and proposed line of therapy. -->
 
-<!-- What molecular subtypes, targeted therapies, or clinical questions does this enable? -->
+## Why this gap matters
 
-## Suggested Benchmark Cases
+## Source references and licensing
 
-<!-- Sketch 3+ representative cases (stage, molecular markers, what clinical question each tests) -->
+## Synthetic scenarios for review
 
-| # | Cancer subtype | Stage | Key markers | Clinical question |
-|---|---|---|---|---|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
+<!-- State the behavior to inspect, uncertainty and missing input. Do not invent treatment rules. -->
 
-## Resources / Starting Points
+## Available reviewers or contribution
 
-<!-- Links to NCCN guidelines, key trials, ESMO guidelines, etc. -->
-
-## How you can contribute
-
-- [ ] I can write `benchmark_cases.json` for this type
-- [ ] I can run the research (API access or local LLM)
-- [ ] I can review the reports for clinical accuracy
-- [ ] I need help — looking for a contributor to pick this up
+<!-- Clinical content remains provisional until the Charter's review requirements are met. -->

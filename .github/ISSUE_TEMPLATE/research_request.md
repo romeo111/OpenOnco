@@ -1,48 +1,25 @@
 ---
-name: Research Request
-about: Request AI-generated research for a specific cancer type or patient scenario
-title: "[RESEARCH REQUEST] "
+name: Knowledge-base coverage request
+about: Propose source-grounded coverage or a documentation gap
+title: "[COVERAGE] "
 labels: research-request, help-wanted
 assignees: ''
 ---
 
-## What cancer do you need researched?
+This is a project coverage proposal, not a request for personal treatment advice or LLM-generated recommendations. Use synthetic examples; no patient information.
 
-**Cancer type:** <!-- Be specific: e.g. "Glioblastoma, IDH-wildtype, MGMT-methylated" not just "brain cancer" -->
-**Stage:** <!-- e.g. WHO Grade 4 / Stage IIIB / Metastatic -->
-**Key molecular markers:** <!-- e.g. EGFR L858R, PD-L1 TPS 60%, BRCA2 germline, etc. -->
+## Disease/entity and missing coverage
 
-## Patient context (optional — helps calibrate the research)
+<!-- Existing DIS-* identifier or disease name, stage/line of therapy when relevant. -->
 
-- **Age / sex:**
-- **Performance status:** <!-- ECOG 0 / 1 / 2 / 3 -->
-- **Prior treatments:** <!-- None / post-surgery / relapsed after... -->
-- **Comorbidities:**
+## Public sources and licensing
 
-## What clinical question does this research need to answer?
+<!-- URLs, dates and relevant source IDs. -->
 
-<!-- Examples:
-- What is the best first-line treatment for this specific molecular profile?
-- Are there active clinical trials for this patient profile?
-- What are the options after first-line treatment failure?
-- Is de-escalated therapy appropriate for this stage/subtype?
--->
+## Expected project behavior
 
-## Why this matters
+<!-- A source record, educational clarification, reproducible engine boundary, etc. -->
 
-<!-- Who needs this? Is this a common scenario, an underserved patient population,
-     a rare cancer with few resources, etc.? -->
+## How could this be verified?
 
-## Anything else
-
-<!-- Links to relevant guidelines, trials you know about, specific drugs to evaluate, etc. -->
-
----
-
-**What happens next:**
-1. A maintainer will create a benchmark case from your request
-2. A contributor with compute access will run the research
-3. The scored report will be added to `research_db/` and linked here
-4. You can query the results: `python database_api.py ask "..."`
-
-*Average turnaround depends on contributor availability. Star the repo to follow along.*
+<!-- Technical checks and clinical-review requirements are separate. Maintainers assess scope and reviewer availability before implementation. -->

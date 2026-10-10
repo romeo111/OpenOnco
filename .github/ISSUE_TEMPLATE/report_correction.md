@@ -1,40 +1,23 @@
 ---
-name: Report Correction
-about: Flag a clinical inaccuracy, outdated data, or scoring error in an existing report
+name: Source or content correction
+about: Report a source discrepancy, outdated entity or incorrect rendered fact
 title: "[CORRECTION] "
 labels: correction, clinical-review
 assignees: ''
 ---
 
-## Report
+Use public source material and synthetic examples only. Do not include patient data.
 
-**File:** `research_db/.../reports/CASE_ID_report.json`
-**Case ID:** <!-- e.g. HN-001 -->
+## Affected page or entity
 
-## What is wrong
+<!-- URL, DIS-/DRUG-/BIO-/RF-/BMA-/SRC- identifier, YAML path under knowledge_base/hosted/content/, and commit if known. -->
 
-<!-- Describe the specific error — wrong OS data, wrong biomarker requirement, missing treatment, etc. -->
+## What is wrong and expected information
 
-## Correct information
+## Supporting source
 
-<!-- What should it say? Include citation if possible -->
+<!-- Source ID, publication/date, PMID/DOI/URL and relevant section. Do not redistribute restricted guideline text. -->
 
-**Source:**
-- Study / trial name:
-- Journal:
-- Year:
-- PMID or URL:
+## Impact and suggested correction
 
-## Severity
-
-- [ ] Critical — treatment recommendation is wrong or dangerous
-- [ ] Significant — key data point is wrong (OS, HR, p-value)
-- [ ] Minor — typo, formatting, or non-clinical detail
-- [ ] Outdated — newer data supersedes this (specify new trial/approval)
-
-## Suggested fix
-
-<!-- Optional: paste the corrected JSON fragment -->
-```json
-
-```
+<!-- Explain uncertainty. A report does not authorize clinical sign-off. -->

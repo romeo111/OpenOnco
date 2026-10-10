@@ -11,9 +11,12 @@ patient profile → receives two alternative treatment plans (standard +
 aggressive) with full source citations. Plans refresh as new data arrives
 (new labs, doctor decisions, updated guidelines).
 
-**Status:** v0.1 draft. KB expansion waves GI-2, GI-3, PUL, HEME-1 complete
-(2026-05-09). CIViC-primary actionability pivot phases 2-5 still pending.
-Rule engine + render in progress.
+**Documentation snapshot: 2026-10-10.** Latest tagged software release: v0.1.3;
+the deployed website also includes later `master` changes. Browser engine,
+Onco Wiki, Handbook (English MVP), bilingual site navigation and a synthetic
+DLBCL review packet are available. Clinical content remains provisional according
+to entity review status. See `README.md`, `docs/DEVELOPMENT.md` and
+`docs/SEARCH_INDEXING.md` for current usage and delivery details.
 
 ## Source of truth hierarchy
 
@@ -230,7 +233,7 @@ worktree merge conflict at integration time.
   files you don't fully understand) to "make a problem go away" — diagnose
   the root cause, ask the user when uncertain.
 
-## Current state (as of 2026-05-09)
+## Historical state (as of 2026-05-09)
 
 - All six specs drafted at v0.1. Specs naming locked: OpenOnco.
 - KB scale: **78 diseases, 438 biomarker_actionability, 173 biomarkers, 383
