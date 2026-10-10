@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Myelodysplastische Syndrome — höheres Risiko (IPSS-R hoch/sehr hoch; einschließlich MDS-EB) - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/de/kb/diseases/dis-mds-hr.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-mds-hr.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-mds-hr.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/diseases/dis-mds-hr.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/diseases/dis-mds-hr.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/diseases/dis-mds-hr.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/diseases/dis-mds-hr.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-mds-hr.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Myelodysplastische Syndrome — höheres Risiko (IPSS-R hoch/sehr hoch; einschließlich MDS-EB) - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/de/kb/diseases/dis-mds-hr.html">
+<meta property="og:locale" content="de">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Myelodysplastische Syndrome — höheres Risiko (IPSS-R hoch/sehr hoch; einschließlich MDS-EB) - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Myelodysplastische Syndrome — höheres Risiko (IPSS-R hoch/sehr hoch; einschließlich MDS-EB) - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/de/kb/diseases/dis-mds-hr.html","inLanguage":"de","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/de/kb/diseases/dis-mds-hr.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="9c11dfbb1c7e674e4691467f21e98e802d3441f4a2faf81e5a18bccec3b2795e"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/de/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">OFFENE ONKOLOGIE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Sprache"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg>DE <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Sprache"><a href="/kb/diseases/dis-mds-hr.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/diseases/dis-mds-hr.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/diseases/dis-mds-hr.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/diseases/dis-mds-hr.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/diseases/dis-mds-hr.html" lang="de" hreflang="de" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/diseases/dis-mds-hr.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/de/try.html" class="btn-cta-top btn-cta-try"><span>Plan erstellen</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menü"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menü">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Werkzeuge</span>
+    <div class="top-cta-group">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Open Source</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Vorläufige Übersetzung: klinische Prüfung ausstehend.</strong> <a href="/kb/diseases/dis-mds-hr.html" lang="en" hreflang="en" data-original-source>Englisches Original ansehen</a></aside>
+  <p class="kb-breadcrumb"><a href="/de/kb.html">Onco Wiki</a> / Krankheit</p>
+  <h1>Myelodysplastische Syndrome — höheres Risiko (IPSS-R hoch/sehr hoch; einschließlich MDS-EB)</h1>
+  <p class="kb-lead">Deterministische Ansicht der Quelle YAML Entität. Klinische Autorität bleibt mit den zitierten Quell-IDs und Rezensenten Sign-off Zustand.</p>
+
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-MDS-HR</code></td></tr>
+<tr><th>Art</th><td>Erkrankung</td></tr>
+<tr><th>Aliase</th><td><div class="kb-alias-list"><span class="kb-alias">HR-MDS</span><span class="kb-alias">MDS mit höherem Risiko</span><span class="kb-alias">MDS mit Überschallausstoß</span><span class="kb-alias">MDS-EB</span><span class="kb-alias">MDS-HR</span><span class="kb-alias">Myelodysplastische Syndrome — höheres Risiko</span><span class="kb-alias">RAEB (Vermächtnis-FAB)</span><span class="kb-alias">Мієлодиспластичні синдроми, високий ризик (IPSS-R високий / дуже високий; включає MDS-EB)</span></div></td></tr>
+<tr><th>Status</th><td>überprüft 2026-04-25-- ausstehende_klinische_signoff</td></tr>
+<tr><th>Erkrankungen</th><td><span class="kb-muted">None declared</span></td></tr>
+<tr><th>Quellen</th><td><span class="kb-chip" title="Myelodysplastische Syndrome: ESMO Klinische Praxisrichtlinien für Diagnose, Behandlung und..."><a href="https://www.annalsofoncology.org/article/S0923-7534(20)43156-7/fulltext" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-MDS-2021</code></a></span> <span class="kb-chip" title="Molekulares internationales Prognostisches Scoring-System für myelodysplastische Syndrome"><a href="https://evidence.nejm.org/doi/full/10.1056/EVIDoa2200008" target="_blank" rel="noopener noreferrer"><code>SRC-IPSS-M-BERNARD-2022</code></a></span> <span class="kb-chip" title="NCCN-Leitlinien für klinische Praxis in der Onkologie: Akute Myeloide Leukämie"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1411" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-AML-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Informationstool, kein medizinisches Gerät. Alle Empfehlungen müssen von einem qualifizierten Onkologen überprüft werden. Klinischer Inhalt ist vorläufig bis zwei-Reviewer-Auszeichnung.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/mds_hr.yaml">Quelle: YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morphologie</th><td>9983/3</td></tr>
+<tr><th>icd_o_3_topographie</th><td>["C42.1"]</td></tr>
+<tr><th>icd_10</th><td>D46.2</td></tr>
+<tr><th>who_classification</th><td>Myelodysplastische Neoplasmen mit erhöhter Blastenbelastung (MDS-IB1, MDS-IM2 pro WHO 5. ed.) — Untergruppe mit höherem Risiko</td></tr></table><p><a href="/de/diseases.html#DIS-MDS-HR">Fähigkeiten</a></p>
+  <h2>Anmerkungen</h2><p>Getrennt von MDS-LR, da die therapeutische Absicht (Krankheitsänderung + Transplantationsbrücke) von der Zytopenie-Management unterscheidet. WHO 5. ed. ord. classifiziert die ältere "MDS-EB" / "RAEB" Terminologie in MDS -IB1 (5-9% Blasten) und MDS –IB2 (10-19% Blasten). TP53-mutierte MDS ist eine eigene WHO-Einheit mit schlechten HMA + AlloHCT-Ergebnissen (aktive Forschungsfrage; kein Konsens bestes Regime). STUB — erfordert klinische Co-Lead Signoff vor der Veröffentlichung. Myeloid Expansion (heme).</p>
+  <h2>Verwendet von</h2>
+<h3>Therapeutische Relevanz</h3><ul><li><a href="/de/kb/biomarker_actionability/bma-idh1-r132h-mds-hr.html"><code>BMA-IDH1-R132H-MDS-HR</code></a> - IDH1 R132 in MDS — Ivosidenib Monotherapie aktiv (DiNardo et al. JCO 2021 — ORR 75% MDS,...</li><li><a href="/de/kb/biomarker_actionability/bma-idh2-r140q-mds-hr.html"><code>BMA-IDH2-R140Q-MDS-HR</code></a> - IDH2 R140Q in MDS - enasidenib Monotherapie aktiv in MDS (NCT01915498, DiNardo et al. Blo...</li><li><a href="/de/kb/biomarker_actionability/bma-idh2-r172k-mds-hr.html"><code>BMA-IDH2-R172K-MDS-HR</code></a> - IDH2 R172K in MDS - gleiche enasidenib-Richtung wie R140Q.</li><li><a href="/de/kb/biomarker_actionability/bma-nras-g12-mds-hr.html"><code>BMA-NRAS-G12-MDS-HR</code></a> - NRAS G12 im MDS-HR — widrige Markierung. Azacitidine + venetoclax / AlloSCT.</li><li><a href="/de/kb/biomarker_actionability/bma-nras-g13-mds-hr.html"><code>BMA-NRAS-G13-MDS-HR</code></a> - NRAS G13 im MDS-HR — widrige Markierung. Azacitidine + venetoclax / AlloSCT.</li><li><a href="/de/kb/biomarker_actionability/bma-nras-q61r-mds-hr.html"><code>BMA-NRAS-Q61R-MDS-HR</code></a> - NRAS in höherriskantem MDS — Nebenmarker; HMA + Venetoclax berücksichtigt, AlloSCT bevorzugt.</li><li><a href="/de/kb/biomarker_actionability/bma-tp53-mut-mds-hr.html"><code>BMA-TP53-MUT-MDS-HR</code></a> - TP53-mut-Höchstrisiko-MDS — dismale Prognose mit HMA-Monotherapie (mediane OS ~6-10 Mo).</li><li><a href="/de/kb/biomarker_actionability/bma-tp53-r175h-mds-hr.html"><code>BMA-TP53-R175H-MDS-HR</code></a> - TP53-Hotspot R175H bei höherriskanter MDS – düstere Prognose. Biallelic vs. monoallelic per IP...</li><li><a href="/de/kb/biomarker_actionability/bma-tp53-r248q-mds-hr.html"><code>BMA-TP53-R248Q-MDS-HR</code></a> - TP53-Hotspot R248Q bei höherriskanter MDS – düstere Prognose. Biallelic vs monoallelic per IP...</li><li><a href="/de/kb/biomarker_actionability/bma-tp53-r273h-mds-hr.html"><code>BMA-TP53-R273H-MDS-HR</code></a> - TP53-Hotspot R273H bei höherriskanter MDS — düstere Prognose. Biallelic vs. monoallelic per IP...</li><li><a href="/de/kb/biomarker_actionability/bma-tp53-r282w-mds-hr.html"><code>BMA-TP53-R282W-MDS-HR</code></a> - TP53-Hotspot R282W bei höherriskantem MDS — düstere Prognose. Biallelic vs monoallelic per IP...</li></ul>
+<h3>Algorithmen</h3><ul><li><code>ALGO-MDS-HR-1L</code> - ALGO-MDS-HR-1L</li><li><code>ALGO-MDS-HR-2L</code> - ALGO-MDS-HR-2L</li></ul>
+<h3>Erkrankung</h3><ul><li><a href="/de/kb/diseases/dis-aml.html"><code>DIS-AML</code></a> - Acute Myeloid Leukemia (non-APL)</li><li><a href="/de/kb/diseases/dis-mds-lr.html"><code>DIS-MDS-LR</code></a> - Myelodysplastische Syndrome — Untere Risikozone (IPSS-R sehr niedrig / niedrig / mittel)</li><li><a href="/de/kb/diseases/dis-pmf.html"><code>DIS-PMF</code></a> - Primäre Myelofibrosis (DIPSS-Plus geschichtet)</li></ul>
+<h3>Anwendungsgebiet</h3><ul><li><a href="/de/kb/indications/ind-ankrd26-carrier-intensified.html"><code>IND-ANKRD26-CARRIER-INTENSIFIED</code></a> - IND-ANKRD26-CARRIER-INTENSIFIED</li><li><a href="/de/kb/indications/ind-ankrd26-carrier-surveillance.html"><code>IND-ANKRD26-CARRIER-SURVEILLANCE</code></a> - IND-ANKRD26-CARRIER-SURVEILLANCE</li><li><a href="/de/kb/indications/ind-ddx41-carrier-intensified.html"><code>IND-DDX41-CARRIER-INTENSIFIED</code></a> - IND-DDX41-CARRIER-INTENSIFIED</li><li><a href="/de/kb/indications/ind-ddx41-carrier-surveillance.html"><code>IND-DDX41-CARRIER-SURVEILLANCE</code></a> - IND-DDX41-CARRIER-SURVEILLANCE</li><li><a href="/de/kb/indications/ind-mds-hr-1l-aza.html"><code>IND-MDS-HR-1L-AZA</code></a> - IND-MDS-HR-1L-AZA</li><li><a href="/de/kb/indications/ind-mds-hr-1l-ven-aza.html"><code>IND-MDS-HR-1L-VEN-AZA</code></a> - IND-MDS-HR-1L-VEN-AZA</li><li><a href="/de/kb/indications/ind-mds-hr-allohct.html"><code>IND-MDS-HR-ALLOHCT</code></a> - IND-MDS-HR-ALLOHCT</li><li><a href="/de/kb/indications/ind-occ-benzene-prevention-intensified-surveillance.html"><code>IND-OCC-BENZENE-PREVENTION-INTENSIFIED-SURVEILLANCE</code></a> - IND-OCC-BENZENE-PREVENTION-INTENSIFIED-SURVEILLANCE</li></ul>
+<h3>Fragebogen</h3><ul><li><code>QUEST-MDS-HR-1L-STUB</code> - Myelodysplastische Syndrome — höheres Risiko — erste Zeile</li></ul>
+<h3>Warnhinweis</h3><ul><li><a href="/de/kb/redflags/rf-ankrd26-confirmed-carrier.html"><code>RF-ANKRD26-CONFIRMED-CARRIER</code></a> - Bestätigte keimbahnpathogene / wahrscheinlich-pathogene Variante in ANKRD26 (Thrombozytopenie 2,...</li><li><a href="/de/kb/redflags/rf-ddx41-confirmed-carrier.html"><code>RF-DDX41-CONFIRMED-CARRIER</code></a> - Bestätigte keimlinien-pathogene / wahrscheinlich-pathogene Variante in DDX41 — am häufigsten die p....</li><li><a href="/de/kb/redflags/rf-etv6-confirmed-carrier.html"><code>RF-ETV6-CONFIRMED-CARRIER</code></a> - Bestätigte keimlinienpathogene / wahrscheinlich-pathogene Variante in ETV6 (Thrombozytopenie 5, TH...</li><li><a href="/de/kb/redflags/rf-iatrogenic-asct-secondary-mds-aml-prevention.html"><code>RF-IATROGENIC-ASCT-SECONDARY-MDS-AML-PREVENTION</code></a> - Geschichte der autologen Stammzelltransplantation (ASCT) als Konsolidierung oder Rettung Therapie...</li><li><a href="/de/kb/redflags/rf-ipss-m-high.html"><code>RF-IPSS-M-HIGH</code></a> - MDS mit IPSS-M hohem oder sehr hohem Risiko (2022 molekulare Aktualisierung mit 31 Gen mutat...</li><li><a href="/de/kb/redflags/rf-ipss-r-very-high.html"><code>RF-IPSS-R-VERY-HIGH</code></a> - MDS mit höherem Risiko mit IPSS-R sehr hoher Kategorie (Score &gt;6) — AlloHCT primärer Heilweg...</li><li><a href="/de/kb/redflags/rf-mds-frailty-age.html"><code>RF-MDS-FRAILTY-AGE</code></a> - MDS-Patienten älter oder schwach (Alter ≥ 80, ECOG ≥ 3, Lebenserwartung &lt; 2 Jahre, multiple Komorb...</li><li><a href="/de/kb/redflags/rf-mds-high-risk-ipss.html"><code>RF-MDS-HIGH-RISK-IPSS</code></a> - MDS eskaliert von der Einstufung mit geringerem Risiko bis zur Einstufung mit höherem Risiko nach IPSS-R (hoch / sehr hoch,...</li><li><a href="/de/kb/redflags/rf-mds-infection-screening.html"><code>RF-MDS-INFECTION-SCREENING</code></a> - MDS-Patienten mit positiver HBV / HCV / HIV-Serologie, latenter TB oder aktiver unkontrollierter Inf...</li><li><a href="/de/kb/redflags/rf-mds-organ-dysfunction.html"><code>RF-MDS-ORGAN-DYSFUNCTION</code></a> - MDS-Patienten mit Organdysfunktionsbegrenzungstherapie: ECOG ≥ 3, schwere Nierenfunktionsstörung (Cr...</li><li><a href="/de/kb/redflags/rf-mds-tp53-mutation.html"><code>RF-MDS-TP53-MUTATION</code></a> - MDS mit TP53 Mutation (mono- oder biallelic) — deutlich WHO 5th-ed Entity mit armen Outcom...</li><li><a href="/de/kb/redflags/rf-mds-transformation-progression.html"><code>RF-MDS-TRANSFORMATION-PROGRESSION</code></a> - MDS-Fortschritte zu AML (≥20% Blasten) oder beschleunigte MDS-IB2 mit rascher Progression unter HMA...</li><li><a href="/de/kb/redflags/rf-mds-transplant-eligible.html"><code>RF-MDS-TRANSPLANT-ELIGIBLE</code></a> - MDS-HR-Patienten transplantierbar: Alter &lt; 70-75 (je nach lokaler Praxis), HCT-CI ≤ 4, ausreichend...</li><li><a href="/de/kb/redflags/rf-occ-benzene-malignancy-prevention.html"><code>RF-OCC-BENZENE-MALIGNANCY-PREVENTION</code></a> - dokumentierte historische berufliche Exposition gegenüber Benzol in einer Person ohne Strom...</li><li><a href="/de/kb/redflags/rf-runx1-confirmed-carrier.html"><code>RF-RUNX1-CONFIRMED-CARRIER</code></a> - Bestätigte keimlinien-pathogene / wahrscheinlich-pathogene Variante in RUNX1 (Familie Platelet Dis...</li></ul>
+<h3>Quellen</h3><ul><li><code>SRC-ESMO-MDS-2021</code> - Myelodysplastische Syndrome: ESMO Klinische Praxis Richtlinien für Diagnose, Behandlung und...</li><li><code>SRC-IPSS-M-BERNARD-2022</code> - Molecular International Prognostic Scoring System für myelodysplastische Syndrome</li></ul>
+</main>
+</body>
+</html>

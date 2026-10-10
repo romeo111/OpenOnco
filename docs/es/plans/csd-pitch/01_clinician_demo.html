@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OpenOnco · Demo de CSD-1 · BRAF V600E mCRC</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/es/plans/csd-pitch/01_clinician_demo.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/plans/csd-pitch/01_clinician_demo.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/plans/csd-pitch/01_clinician_demo.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/plans/csd-pitch/01_clinician_demo.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/plans/csd-pitch/01_clinician_demo.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/plans/csd-pitch/01_clinician_demo.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/plans/csd-pitch/01_clinician_demo.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco · Demo de CSD-1 · BRAF V600E mCRC">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/es/plans/csd-pitch/01_clinician_demo.html">
+<meta property="og:locale" content="es">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Demo de CSD-1 · BRAF V600E mCRC">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Demo de CSD-1 · BRAF V600E mCRC","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/es/plans/csd-pitch/01_clinician_demo.html","inLanguage":"es","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/es/plans/csd-pitch/01_clinician_demo.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="icon" type="image/svg+xml" href="/plans/favicon.svg">
+  <link rel="stylesheet" href="/clinical-styles/615d41270b0fb3d5b2a2d1a96f372df167db5f7c3de7ed4ca15f4dda7fe67f3a.css">
+  <link rel="stylesheet" href="/clinical-styles/c94b015d2b330bc8982dea464ea8569e96a8056ac931b0695e7ab911ff2dec40.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="87caee1eb813d80f0611d93e1af41d60799e4fe82d9993eb6df05c203800d67b"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/es/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGÍA ABIERTA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Idioma"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg>ES <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Idioma"><a href="/plans/csd-pitch/01_clinician_demo.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/plans/csd-pitch/01_clinician_demo.html" lang="es" hreflang="es" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/plans/csd-pitch/01_clinician_demo.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/plans/csd-pitch/01_clinician_demo.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/plans/csd-pitch/01_clinician_demo.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/es/try.html" class="btn-cta-top btn-cta-try" aria-current="page"><span>Crear un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menú"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menú">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Herramientas</span>
+    <div class="top-cta-group">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Código abierto</span>
+  </div>
+  </div>
+</header><aside class="translation-notice" role="note"><strong>Traducción preliminar: revisión clínica pendiente.</strong> <a href="/plans/csd-pitch/01_clinician_demo.html" lang="en" hreflang="en" data-original-source>Consultar el original en inglés</a></aside>
+  <div class="page">
+    <header class="csd-header">
+      <div class="brand-block">
+        <div class="brand-mark" aria-hidden="true">⚕</div>
+        <div class="brand-text">
+          <div class="brand-name">OpenOnco</div>
+          <div class="brand-tagline">Apoyo de decisión clínica de código abierto para oncología</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-row"><span class="meta-label">Звіт згенеровано</span><span class="meta-value">2026-04-27 09:30 EEST (оновлено з NSZU-context)</span></div>
+        <div class="meta-row"><span class="meta-label">Демонстрація</span><span class="meta-value">Laboratorio de CSD × OpenOnco · CSD-1</span></div>
+        <div class="lang-toggle">
+          <span class="lang-current">UA</span>
+          <a class="lang-other" href="/plans/csd-pitch/csd_1_demo_report_en.html" title="Versión EN a seguir — enlace de marcador de posición">EN ↗</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="ngs-panel">
+      <div class="ngs-panel-head">
+        <div class="ngs-lab">
+          <div class="ngs-lab-name">Laboratorio del DCV en Ucrania</div>
+          <div class="ngs-lab-sub">PanCancer MyAction · 524-gene NGS · código M367</div>
+        </div>
+        <div class="ngs-mock-badge" title="Datos demo sintéticos — no es un informe real de los DCV">MOCK · DEMO</div>
+      </div>
+
+      <div class="ngs-grid">
+        <div><span class="kv-label">Identificación del paciente</span><span class="kv-value mono">PT-2026-0427-DEMO</span></div>
+        <div><span class="kv-label">Дата звіту</span><span class="kv-value">2026-04-25</span></div>
+        <div><span class="kv-label">Зразок</span><span class="kv-value">Biopsia colorrectal de FFPE, lugar primario (rectosigmoide)</span></div>
+        <div><span class="kv-label">Клітинність пухлини</span><span class="kv-value">70%</span></div>
+        <div><span class="kv-label">TMB</span><span class="kv-value">8 mut/Mb · intermedio</span></div>
+        <div><span class="kv-label">MSI</span><span class="kv-value">Establecimiento de la estructura de la base de datos (MSS)</span></div>
+      </div>
+
+      <h3 class="ngs-subhead">Виявлені варіанти</h3>
+      <table class="ngs-table"><thead><tr><th>Ген</th><th>HGVS.c</th><th>La Comisión ha adoptado una decisión sobre la aplicación de la presente Decisión.</th><th>VAF</th><th>Класифікація</th></tr></thead><tbody><tr><td class="gene-cell"><span class="gene">BRAF</span></td><td class="mono">c.1799T&gt;A</td><td class="mono">p.V600E</td><td class="num">42%</td><td><span class="var-class v-path">patógeno</span></td></tr><tr><td class="gene-cell"><span class="gene">APC</span></td><td class="mono">c.4348C&gt;T</td><td class="mono">p.R1450*</td><td class="num">38%</td><td><span class="var-class v-path">patógeno</span></td></tr><tr><td class="gene-cell"><span class="gene">TP53</span></td><td class="mono">c.524G&gt;A</td><td class="mono">p.R175H</td><td class="num">41%</td><td><span class="var-class v-path">patógeno</span></td></tr><tr><td class="gene-cell"><span class="gene">SMAD4</span></td><td class="mono">c.1051G&gt;A</td><td class="mono">p.D351N</td><td class="num">22%</td><td><span class="var-class v-vus">VUS</span></td></tr></tbody></table>
+    </section>
+
+    <section class="callout patient-context">
+      <h3>Клінічний контекст пацієнта</h3>
+      <ul class="ctx-list">
+        <li><b>64 р.</b>, hombre, ECOG 1</li>
+        <li>Stage IV mCRC при первинній презентації, первинна локалізація — rectosigmoid</li>
+        <li>Печінково-домінантне метастазування (3 вогнища, найбільше 4.2 см)</li>
+        <li>CEA 412 ng/ml</li>
+        <li>1L: FOLFOX × 8 циклів → прогресування на PD at 5 mo</li>
+        <li>Поточно: розгляд 2-ї лінії терапії</li>
+      </ul>
+    </section>
+
+    <section class="variant-actionability engine-section">
+      <div class="engine-tag">Salida del motor OpenOnco · en vivo</div>
+      <h2>Клінічна значущість мутацій (ESCAT / OncoKB)</h2>
+      <div class="section-sub">
+        Контекст для тумор-борду — інженер не використовує ці тіри для вибору треку
+        (CHARTER §8.3). Збіги з клітинами BiomarkerActionability у базі знань.
+      </div>
+      <table class="actionability-table">
+        <thead><tr>
+          <th>Біомаркер</th><th>Варіант</th><th>ESCAT</th><th>Encuadernación</th>
+          <th>Клінічна значущість</th><th>Препарати</th><th>Джерела</th>
+        </tr></thead>
+        <tbody><tr><td><span class="gene">BIO-BRAF-V600E</span></td><td><span class="variant">V600E</span></td><td><span class="tier-badge escat-IB">IB</span></td><td><span class="tier-badge oncokb-1">1</span></td><td class="summary">BRAF V600E en el CRC metastásico: encorafenib + cetuximab (con o sin binimetinib) mejora la SG vs cetuximab+irinotecan en 2L+ (BEACON-CRC, Kopetz et al. 2019). La monoterapia con BRAFi es ineficaz en el CRC debido a la reactivación de la retroalimentación mediada por el EGFR, distinta del melanoma en el que funciona solo BRAFi.</td><td class="combos">encorafenib + cetuximab<br>encorafenib + cetuximab + binimetinib (triplet fuera de la etiqueta)</td><td><ul class="src-list"><li>SRC-NCCN-COLON-2025</li><li>SRC-ESMO-COLON-2024</li></ul></td></tr><tr><td><span class="gene">BIO-TP53-MUTATION</span></td><td><span class="variant">cualquier patógeno</span></td><td><span class="tier-badge escat-IIIB">IIIB</span></td><td><span class="tier-badge oncokb-4">4</span></td><td class="summary">Mutación TP53 en CRC — común, pronóstico adverso; no directamente dirigido. Por algoritmo habitual.</td><td class="combos"><span style="color:var(--gray-500)">—</span></td><td><ul class="src-list"><li>SRC-NCCN-COLON-2025</li></ul></td></tr></tbody>
+      </table>
+      <div class="section-foot">
+        Без збігу для цього профілю: APC p.R1450* (гено-рівень — patogenic, без таргетної дії
+        у CRC), SMAD4 p.D351N (VUS), MSS, TMB intermediate.
+      </div>
+    </section>
+
+    <section class="plans engine-section">
+      <div class="engine-tag">Potencia del motor OpenOnco · ALGO-CRC-METASTATIC-2L</div>
+      <h2>Рекомендовані плани лікування — два альтернативні треки</h2>
+      <div class="section-sub"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">
+        Обидва треки представлені одним документом (CHARTER §2). Інженер не ранжує
+        треки за допомогою LLM — вибір default-треку походить з декларативної
+        Algorithm + RedFlag eval (CHARTER §8.3). Фінальне рішення — за лікуючим онкологом.
+      </span></div>
+      <div class="track-grid">
+
+    <section class="plan-track plan-track--standard">
+      <div class="track-head">
+        <div class="track-name">Plan A — Стандартний трек (2L)</div>
+        <span class="track-default-badge">★ DEFAULT</span>
+      </div>
+      <div class="plan-body">
+        <dl class="plan-dl">
+          <dt>Indicación</dt>
+          <dd class="mono indication-line">
+            <span class="indication-id">IND-CRC-METASTATIC-2L-BRAF-BEACON</span>
+            <span class="signoff-badge signoff-pending" title="STUB — клінічний контент очікує дворазового підпису перед production-use">⚠ Очікує підпису Clinical Co-Lead</span>
+          </dd>
+
+          <dt>Регімен</dt>
+          <dd>
+            <b>Encorafenib + Cetuximab</b> (BEACON CRC doblet · REG-ENCORAFENIB-CETUXIMAB)
+            <ul class="drug-list"><li class="drug-row drug-item"><span class="drug-name">Encorafenib</span><span class="nszu-badge nszu-oop" title="STUB — Fase GI-1 de promoción. BEACON CRC: encorafenib + cetuximab vs control — mOS 9,3 vs 5,9 mo en BRAF V600E mCRC 2L+. Brazo triplet (enco + cetux + binimetinib) tenía una ORR numéricamente más alta, pero no había beneficio de SG vs doblet — doblet es actual...">⚠ Поза НСЗУ — за свій кошт</span><span class="drug-dose">300 mg PO una vez al día</span></li><li class="drug-row drug-item"><span class="drug-name">Cetuximab</span><span class="nszu-badge nszu-covered" title="Збіг показання: Метастатичний колоректальний рак (RAS-WT, лівобічний — у комбінації з FOLFOX/FOLFIRI) · Mandatory pre-treatment testing in mCRC: extended RAS panel (KRAS exons 2-4 + NRAS exons 2-4) + BRAF V600E + tumor sidedness. Left- sided RAS-WT BRAF-WT → strong cetuximab benefit; right-sided WT → bevacizumab preferred (CALGB-80405). Rash…">✓ НСЗУ покриває</span><span class="drug-dose">400 mg/m² IV loading → 250 mg/m² IV щотижня</span></li></ul>
+            <span class="muted">Цикл 28 діб; до прогресування або непереносної токсичності.</span>
+          </dd>
+
+          <dt>Очікувані результати</dt>
+          <dd>
+            ORR ~20% · mPFS ~4.3 міс · mOS 9.3 vs 5.9 міс (control)
+            <span class="muted">— BEACON CRC, Kopetz y otros NEJM 2019.</span>
+          </dd>
+
+          <dt>Моніторинг + AE prophylaxis</dt>
+          <dd>
+            <ul class="bullets">
+              <li>Премедикація cetuximab: H1 + H2 блокатори + дексаметазон 8 мг IV за 30 хв</li>
+              <li>Дерматологічний нагляд кожні 4–8 тижнів (BRAFi class effect — нові SCC, меланома)</li>
+              <li>QTcF baseline + кожні 4 тижні; hold encorafenib при QTcF &gt;500 мс</li>
+              <li>Erupción acneiforme → tetracycline + clindamicina topica</li>
+              <li>Re-staging CT chest/abdomen/pelvis q8 тижнів</li>
+            </ul>
+          </dd>
+
+          <dt>UA доступність</dt>
+          <dd>
+            <span class="muted"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Обидва компоненти зареєстровані в Україні. Автоматичний NSZU-lookup
+            (CSD-2 Wave 1) — бейджі біля кожного препарату вище. Cetuximab — НСЗУ-покриття
+            для CRC; encorafenib — out-of-pocket (НСЗУ-меланоми треком, не CRC).
+            Деталі див. </span><i>«Що означають NSZU позначки»</i> нижче.</span>
+          </dd>
+
+          <dt>Цитати</dt>
+          <dd>
+            <ul class="src-list inline">
+              <li>SRC-NCCN-COLON-2025 (NCCN cat 1)</li>
+              <li>SRC-ESMO-COLON-2024 (strong recommendation)</li>
+              <li>PMID 31566309 — Kopetz S et al. <i>NEJM</i> 2019;381:1632. BEACON CRC.</li>
+            </ul>
+          </dd>
+        </dl>
+      </div>
+    </section>
+
+
+    <section class="plan-track plan-track--aggressive">
+      <div class="track-head">
+        <div class="track-name">Plan B — Агресивний трек (BEACON triplet)</div>
+        <span class="track-alt-badge">ALTERNATIVE</span>
+      </div>
+      <div class="plan-body">
+        <dl class="plan-dl">
+          <dt>Indicación</dt>
+          <dd class="mono indication-line">
+            <span class="indication-id">IND-CRC-METASTATIC-2L-BRAF-BEACON</span>
+            <span class="signoff-badge signoff-pending" title="STUB — клінічний контент очікує дворазового підпису перед production-use">⚠ Очікує підпису Clinical Co-Lead</span>
+          </dd>
+
+          <dt>Регімен</dt>
+          <dd>
+            <b>Encorafenib + Cetuximab + Binimetinib</b> (BEACON CRC triplicado)
+            <ul class="drug-list"><li class="drug-row drug-item"><span class="drug-name">Encorafenib</span><span class="nszu-badge nszu-oop" title="STUB — Fase GI-1 de promoción. BEACON CRC: encorafenib + cetuximab vs control — mOS 9,3 vs 5,9 mo en BRAF V600E mCRC 2L+. Brazo triplet (enco + cetux + binimetinib) tenía una ORR numéricamente más alta, pero no había beneficio de SG vs doblet — doblet es actual...">⚠ Поза НСЗУ — за свій кошт</span><span class="drug-dose">300 mg PO una vez al día</span></li><li class="drug-row drug-item"><span class="drug-name">Cetuximab</span><span class="nszu-badge nszu-covered" title="Збіг показання: Метастатичний колоректальний рак (RAS-WT, лівобічний — у комбінації з FOLFOX/FOLFIRI) · Mandatory pre-treatment testing in mCRC: extended RAS panel (KRAS exons 2-4 + NRAS exons 2-4) + BRAF V600E + tumor sidedness. Left- sided RAS-WT BRAF-WT → strong cetuximab benefit; right-sided WT → bevacizumab preferred (CALGB-80405). Rash…">✓ НСЗУ покриває</span><span class="drug-dose">400 mg/m² IV loading → 250 mg/m² IV щотижня</span></li><li class="drug-row drug-item"><span class="drug-name">Binimetinib</span><span class="nszu-badge nszu-not-registered" title="STUB — Fase de promoción de la CSD-4. Necesita curación completa incluyendo dosis-adj para la insuficiencia hepática, perfil de EA completo (en particular, oclusión venosa retiniana / hallazgos parecidos a la RSE), interacciones medicamentosas, programa de monitorización (LFTs, eco, ofto).">✗ Не зареєстровано в UA</span><span class="drug-dose">45 mg PO 2× на день</span></li></ul>
+          </dd>
+
+          <dt>Профіль</dt>
+          <dd><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">
+            Тривала PFS-advantage не була підтверджена vs doublet у фінальному
+            BEACON-аналізі — OS-бенефіт triplet vs doublet не доведений; токсичність
+            (МЕК-related — серозна ретинопатія, дерматит, GI) суттєво вища.
+            Обирається як off-label опція у пацієнтів з високим тягарем хвороби та
+            готовністю до триплетної токсичності.
+          </span></dd>
+
+          <dt>Коли розглядати</dt>
+          <dd>
+            ECOG 0–1 · висока вісцеральна тяга (печінкові метастази &gt;5 cm
+            або &gt;3 вогнища) · готовність пацієнта до AE-моніторингу;
+            <b>обовʼязково — офтальмологічна базальна оцінка</b> + повторне сітківкове
+            обстеження кожні 4 тижні протягом перших 4 місяців.
+          </dd>
+
+          <dt>Цитати</dt>
+          <dd>
+            <ul class="src-list inline">
+              <li>SRC-NCCN-COLON-2025 (cat 2A для triplet)</li>
+              <li>PMID 31566309 — Kopetz S y otros NEJM 2019. BEACON CRC (triplet vs doblet).</li>
+            </ul>
+          </dd>
+        </dl>
+      </div>
+    </section>
+
+      </div>
+    </section>
+
+    <aside class="signoff-explainer">
+      <h3>Що означають позначки клінічного підпису</h3>
+      <ul>
+        <li><span class="signoff-badge signoff-complete">✓ Клінічно затверджено</span> — підпис ≥2 Clinical Co-Leads (CHARTER §6.1)</li>
+        <li><span class="signoff-badge signoff-partial">🟡 Підписано: 1 з 2</span> — один підпис, очікується другий</li>
+        <li><span class="signoff-badge signoff-pending">⚠ Очікує підпису</span> — клінічний контент в обробці; ще не для production-use</li>
+      </ul>
+      <p class="signoff-explainer-foot">
+        Жодний рекомендований препарат не призначається без підтвердження вашого онколога.
+        Ви можете відстежувати поточний sign-off статус у dashboard'і.
+      </p>
+    </aside>
+
+    <aside class="nszu-explainer">
+      <h3>Що означають NSZU позначки</h3>
+      <ul>
+        <li><span class="nszu-badge nszu-covered">✓ НСЗУ покриває</span> — препарат входить у Програму медичних гарантій 2026, для цього показання, безкоштовно для пацієнта</li>
+        <li><span class="nszu-badge nszu-partial">⚠ НСЗУ — не для цього показання</span> — препарат покривається NSZU, але для іншого показання (для цього — пацієнт сплачує сам)</li>
+        <li><span class="nszu-badge nszu-oop">⚠ Поза НСЗУ — за свій кошт</span> — препарат зареєстрований в UA, але не реімбурсується (приблизно 2200–15000 UAH/цикл OOP)</li>
+        <li><span class="nszu-badge nszu-not-registered">✗ Не зареєстровано в UA</span> — препарат не доступний легально в UA; шлях через named-patient import / EAP / cross-border EU</li>
+      </ul>
+      <p class="nszu-explainer-foot">
+        Дані оновлено: 2026-04-27. Джерело: НСЗУ Програма медичних гарантій 2026 + Держреєстр ЛЗ.
+        Для верифікації live status — переглянути drug entity в JSON output.
+      </p>
+    </aside>
+
+    <section class="trials">
+      <h2>Активні клінічні випробування на цей профіль (Q3 2026)</h2>
+      <div class="section-sub">
+        Інтеграція з ClinicalTrials.gov заплановано на CSD-1.7 — поки що список вручну.
+      </div>
+      <ul class="trial-list">
+        <li>
+          <b>BREAKWATER</b> — <span class="mono">NCT04607421</span><br>
+          Encorafenib + cetuximab ± mFOLFOX6 у 1L mCRC BRAF V600E.
+          Фаза III · набирає (recruiting) · EU sites включно з UA-сусідніми країнами.
+          <span class="muted">Релевантно для 1L-пацієнтів; для нашого 2L-демо-кейсу — context only.</span>
+        </li>
+        <li>
+          <b>Plumb-in de agua de seguridad</b> — <span class="mono">NCT04607421</span> (subprotocolo)<br>
+          Доповнення з даними по triplet-arm безпеки. Релевантно для Plan B-обговорення.
+        </li>
+      </ul>
+    </section>
+
+    <section class="disclaimer-block">
+      <h2>Обмеження та застереження</h2>
+      <ul>
+        <li>
+          <b>Медичний дисклеймер (CHARTER §11):</b> Цей документ — інформаційний
+          ресурс для підтримки обговорення в тумор-борді. <b>Не є медичним
+          пристроєм.</b> Не призначений для автономного клінічного рішення.
+          Усі рекомендації потребують перевірки лікуючим лікарем.
+        </li>
+        <li>
+          <b>Двореферентний sign-off (CHARTER §6.1):</b><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación"> клінічний контент 2L-треків
+          у цьому демо-документі очікує підтвердження двома з трьох Clinical Co-Leads
+          перед використанням у production-розгортанні. BMA-клітини
+          (BMA-BRAF-V600E-CRC, BMA-TP53-MUT-CRC) уже пройшли v0.1 sign-off.
+        </span></li>
+        <li>
+          <b>Версії джерел:</b> NCCN Colon 2025 v3 · ESMO Colon Living Guidelines
+          (станом на 2024-Q4). OncoKB snapshot v3.20-2026-04. ESCAT tier — ESMO
+          Translational Research Group living matrix.
+        </li>
+        <li>
+          <b>FDA non-device CDS positioning (CHARTER §15):</b><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación"> обидва варіанти
+          представлені для перегляду; алгоритм базується на правилах + явних
+          цитатах джерел; критерій 4 виконано (intended use, HCP user, patient
+          population, algorithm summary, data limitations усі в полі рендеру).
+        </span></li>
+        <li>
+          <b>Про цей демо-артефакт:</b> синтетичний пацієнт; NGS-звіт фабрикований
+          для демонстрації; жодних PHI не задіяно. Реальна валідація з CSD Lab
+          планована на CSD-2 (live NGS-ingest pipeline).
+        </li>
+      </ul>
+    </section>
+
+    <details class="engineering-metrics">
+      <summary>Інженерні метрики (для технічної аудиторії)</summary>
+      <ul>
+        <li>Grupo de motores: división de carga perezosa — núcleo 1,4 MB + módulo por enfermedad ~38 KB max (CSD-5B)</li>
+        <li>Initial /try.html load: ~3-5 сек (Pyodide + core bundle)</li>
+        <li>Módulo de búsqueda de enfermedades: &lt; 100 ms (cama de navegador después de la primera visita)</li>
+        <li>KB snapshot: 1899 entities (50% growth у CSD-1..4)</li>
+        <li>Sign-off coverage: див. <a href="/plans/csd-pitch/signoff_status_2026-04-27.md">tablero</a></li>
+      </ul>
+    </details>
+
+    <footer class="csd-footer">
+      <div class="foot-line">
+        OpenOnco · <a href="https://openonco.info">openonco.info</a> · Uso al estilo del MIT · <a href="https://github.com/romeo111/OpenOnco">github.com/romeo111/OpenOnco</a>
+      </div>
+      <div class="foot-line muted">
+        Rendered using the OpenOnco rule engine (Pyodide-compatible · no PHI server-side).
+        Кожна рекомендація — citation-traceable у базу знань.
+      </div>
+      <div class="foot-line muted small">
+        Згенеровано build_csd_1_demo.py · KB snapshot 2026-04-27 · 1682 entities ·
+        167 drugs з verified UA registration · BMA-BRAF-V600E-CRC matched live.
+      </div>
+    </footer>
+    </div>
+</body>
+</html>

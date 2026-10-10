@@ -88,8 +88,12 @@
 <meta name="ai-summary" content="OpenOnco question intake for oncology decision-support feedback and structured clinical questions.">
 <meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
 <link rel="canonical" href="https://openonco.info/ask.html">
-<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/ask.html">
 <link rel="alternate" hreflang="en" href="https://openonco.info/ask.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/ask.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/ask.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/ask.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/ask.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/ask.html">
 <link rel="alternate" hreflang="x-default" href="https://openonco.info/ask.html">
 <meta property="og:site_name" content="OpenOnco">
 <meta property="og:type" content="website">
@@ -159,7 +163,7 @@
 </head>
 <body>
 <header class="top-bar site-header">
-  <link rel="stylesheet" href="/header.css?v=flags-20261010">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
   <div class="header-shell">
   <div class="header-main">
     <div class="brand-line">
@@ -420,26 +424,35 @@
   }
 
   function renderPayload(payload) {
+    const labels = {
+      en: ['Options:', 'Rationale:', 'Clarifying questions:', 'Engine limitations:'],
+      uk: ['Варіанти:', 'Обґрунтування:', 'Уточнювальні запитання:', 'Обмеження рушія:'],
+      es: ['Opciones:', 'Justificación:', 'Preguntas aclaratorias:', 'Limitaciones del motor:'],
+      pt: ['Opções:', 'Fundamentação:', 'Perguntas de esclarecimento:', 'Limitações do motor:'],
+      de: ['Optionen:', 'Begründung:', 'Rückfragen:', 'Einschränkungen der Engine:'],
+      fr: ['Options :', 'Justification :', 'Questions de clarification :', 'Limites du moteur :']
+    };
+    const headings = labels[document.documentElement.lang] || labels.en;
     const lines = [];
     if (payload.direct_answer) lines.push(payload.direct_answer);
     if (payload.selected_options && payload.selected_options.length) {
       lines.push('');
-      lines.push('Options:');
+      lines.push(headings[0]);
       payload.selected_options.forEach(o => lines.push('- ' + (o.label ? o.label + '. ' : '') + o.text));
     }
     if (payload.rationale && payload.rationale.length) {
       lines.push('');
-      lines.push('Rationale:');
+      lines.push(headings[1]);
       payload.rationale.forEach(x => lines.push('- ' + x));
     }
     if (payload.clarifying_questions && payload.clarifying_questions.length) {
       lines.push('');
-      lines.push('Clarifying questions:');
+      lines.push(headings[2]);
       payload.clarifying_questions.forEach(x => lines.push('- ' + x));
     }
     if (payload.engine_limitations && payload.engine_limitations.length) {
       lines.push('');
-      lines.push('Engine limitations:');
+      lines.push(headings[3]);
       payload.engine_limitations.forEach(x => lines.push('- ' + x));
     }
     if (payload.safety_note) {

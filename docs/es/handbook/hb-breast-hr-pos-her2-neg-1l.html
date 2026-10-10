@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HR+/HER2- cáncer de mama metastásico: razonamiento de primera línea - Manual de OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/es/handbook/hb-breast-hr-pos-her2-neg-1l.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/handbook/hb-breast-hr-pos-her2-neg-1l.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/handbook/hb-breast-hr-pos-her2-neg-1l.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/handbook/hb-breast-hr-pos-her2-neg-1l.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/handbook/hb-breast-hr-pos-her2-neg-1l.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/handbook/hb-breast-hr-pos-her2-neg-1l.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/handbook/hb-breast-hr-pos-her2-neg-1l.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/handbook/hb-breast-hr-pos-her2-neg-1l.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="HR+/HER2- cáncer de mama metastásico: razonamiento de primera línea - Manual de OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/es/handbook/hb-breast-hr-pos-her2-neg-1l.html">
+<meta property="og:locale" content="es">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HR+/HER2- cáncer de mama metastásico: razonamiento de primera línea - Manual de OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"HR+/HER2- cáncer de mama metastásico: razonamiento de primera línea - Manual de OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/es/handbook/hb-breast-hr-pos-her2-neg-1l.html","inLanguage":"es","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/es/handbook/hb-breast-hr-pos-her2-neg-1l.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="stylesheet" href="/style.css?v=header-20261010">
+  <link rel="stylesheet" href="/clinical-styles/694eea648296658d7f1088903440ed90c39a7c0c4eb28f733482b4d43b06083a.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="b9a8e17458739f3447c9fd881053eeb71b7dea35453301f796326d7bd4b4d0c4"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/es/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGÍA ABIERTA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html" class="active" aria-current="page">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Idioma"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg>ES <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Idioma"><a href="/handbook/hb-breast-hr-pos-her2-neg-1l.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/handbook/hb-breast-hr-pos-her2-neg-1l.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/handbook/hb-breast-hr-pos-her2-neg-1l.html" lang="es" hreflang="es" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/handbook/hb-breast-hr-pos-her2-neg-1l.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/handbook/hb-breast-hr-pos-her2-neg-1l.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/handbook/hb-breast-hr-pos-her2-neg-1l.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/es/try.html" class="btn-cta-top btn-cta-try"><span>Crear un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menú"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menú">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html" class="active" aria-current="page">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Herramientas</span>
+    <div class="top-cta-group">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Código abierto</span>
+  </div>
+  </div>
+</header>
+
+  <main class="hb-wrap"><aside class="translation-notice" role="note"><strong>Traducción preliminar: revisión clínica pendiente.</strong> <a href="/handbook/hb-breast-hr-pos-her2-neg-1l.html" lang="en" hreflang="en" data-original-source>Consultar el original en inglés</a></aside>
+
+    <section class="hb-hero">
+      <div class="hb-kicker"><a href="/es/handbook.html">Manual de OpenOnco</a></div>
+      <h1>HR+/HER2- cáncer de mama metastásico: razonamiento de primera línea</h1>
+      <div class="hb-meta">
+        <span class="hb-badge hb-badge--draft">proyecto</span>
+
+        <span class="hb-badge">_Llearner</span>
+        <span class="hb-badge">en</span>
+      </div>
+      <p class="hb-lead">Capitulo de aprendizaje determinista sobre las entidades de KB de OpenOnco, casos sintéticos y registros de origen.</p>
+    </section>
+    <div class="hb-layout">
+      <div class="hb-main">
+        <section class="hb-panel">
+          <h2>Objetivos didácticos</h2>
+          <ol><li>Prioritize ER/PR, HER2 (including HER2-low), germline BRCA, PIK3CA, ESR1, and AKT1 status before first-line HR+/HER2- metastatic breast cancer treatment selection.</li><li>Explicar por qué un inhibidor de la aromatasa más un inhibitor de CDK4/6 es la columna vertebral estándar de primera línea, y reconocer dónde la exposición previa a CDK4/6i o crisis visceral cambia la conversación.</li><li>Reconocer las banderas rojas que no cambian el régimen de primera línea, sino que cambian las obligaciones paralelas (base basal de la cardiopatía, anticoncepción, análisis de los niveles de SNC, cuidados de apoyo).</li></ol>
+        </section>
+        <section class="hb-panel">
+          <h2>De un vistazo</h2>
+          <ul><li>Histología + ER/PR + HER2 (con HER 2-bajo capturado) + pruebas de la línea germinal BRCA son necesarias antes de la planificación del tratamiento de primera línea.</li><li>El inhibidor de la aromatasa + inhibidor de CDK4/6 es la columna vertebral estándar de primera línea para la enfermedad sensible a la endocrina en el modelo de primera línea de OpenOnco.</li><li>Inavolisib + palbociclib + fulvestrant se modela como la vía intensificada cuando la coalteración PIK3CA está presente y permite el acceso.</li><li>Visceral crisis, leptomeningeal disease, and active CNS mets are parallel obligations — they shape supportive care and MDT discussion even when the systemic regimen is unchanged.</li><li>This chapter is an OpenOnco-authored learning aid, not official ESMO content or a CME-credit activity.</li></ul>
+        </section>
+
+            <section class="hb-panel">
+              <h2>Mínimo diagnóstico</h2>
+              <p>El camino de aprendizaje comienza después de la histología confirma el carcinoma mamario invasivo con enfermedad metastásica. Antes de que se redacte un plan de primera línea, el capítulo espera un resultado completo de ER/PR, un resultado HER2 que captura la banda baja HER 2 (IHC 1+ o 2+ ISH-negativo) para las opciones posteriores 2L, la prueba de germenline BRCA1/2, un resumen de ECOG/fitness, FEVE basal y ECG antes de cualquier medicamento con riesgo cardíaco, e imágenes cerebrales cuando los síntomas del SNC están presentes. NGS integral (PIK3CA, ESR1, AKT1, ERBB2) se convierte en tratamiento-definición en la progresión y se puede ordenar de entrada cuando el acceso lo permita.</p>
+              <h3>Entidades vinculadas</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-BREAST</code><span>Cáncer de mama invasivo</span><small>enfermedades</small></span><span class="hb-chip"><code>BIO-ESTROGEN-RECEPTOR</code><span>Receptor de estrógenos</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-HER2-SOLID</code><span>HER2 IHC + ISH</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-HER2-LOW</code><span>HER2-pecho bajo</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-BRCA-GERMLINE</code><span>Estado de la mutación Germline BRCA1/2</span><small>biomarcadores</small></span><span class="hb-chip"><code>TEST-ER-PR-IHC</code><span>ER + PR inmunohistoquímica en tumor</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-HER2-IHC-FISH</code><span>HER2 IHC + reflejo FISH en el tumor</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-GERMLINE-BRCA-PANEL</code><span>Germline BRCA1/2 + secuenciación de paneles HRR</span><small>pruebas</small></span></div>
+              <h3>Fuentes de las secciones</h3>
+              <ul><li><code>SRC-NCCN-BREAST-2025</code> NCCN Directrices de Práctica Clínica - Cáncer de Seno</li><li><code>SRC-ESMO-BREAST-METASTATIC-2024</code> ESMO Guía de Práctica Clínica sobre Cáncer de Seno Metástico</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Lógica de decisión de primera línea</h2>
+              <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">OpenOnco models the first-line decision as an aromatase inhibitor plus a CDK4/6 inhibitor (palbociclib, ribociclib, or abemaciclib) for endocrine-sensitive metastatic disease. The intensified track is inavolisib + palbociclib + fulvestrant when the patient has a PIK3CA co-alteration in the inavolisib-eligible setting and access conditions are addressed. Germline BRCA1/2 mutation pulls a parallel option (talazoparib monotherapy or olaparib post-endocrine progression) into the discussion. Visceral crisis or imminent organ failure is an explicit gate that may push the learner toward chemotherapy even in endocrine-sensitive disease.</span></p>
+              <h3>Entidades vinculadas</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>ALGO-BREAST-1L</code><span>ALGO-BREAST-1L</span><small>algoritmos</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-MET-1L-CDKI</code><span>IND-BREAST-HR-POS-MET-1L-CDKI</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-1L-INAVOLISIB</code><span>IND-BREAST-HR-POS-1L-INAVOLISIB</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-BRCA-MET-TALAZOPARIB</code><span>IND-BREAST-BRCA-MET-TALAZOPARIB</span><small>Indicaciones</small></span><span class="hb-chip"><code>RF-BREAST-STAGE-IV-METASTATIC</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Metastatic (stage IV) breast cancer: presence of distant metastasis (M1 per TNM 8th edition) involving any organ system (bone, liver, lung, brain, peritoneum, other). Stage IV breast cancer is currently incurable with available systemic therapy; treatment intent is disease control, quality of life, and life prolongation.
+Stage IV status is the gating criterion for palliative systemic therapy (CDK4/6i+AI for HR+/HER2-; THP for HER2+; pembro+chemo or PARPi for TNBC) rather than curative-intent neoadjuvant/adjuvant approaches.
+Fires to route ALGO-BREAST-1L step 4 (TNBC branch) from early-stage neoadjuvant (IND-BREAST-TNBC-EARLY-NEOADJUVANT) toward metastatic evaluation (step 6: BRCA mutation gate → PARPi vs pembro+chemo).
+</span></span><small>enrojecimientos</small></span></div>
+              <h3>Fuentes de las secciones</h3>
+              <ul><li><code>SRC-NCCN-BREAST-2025</code> NCCN Directrices de Práctica Clínica - Cáncer de Seno</li><li><code>SRC-ESMO-BREAST-METASTATIC-2024</code> ESMO Guía de Práctica Clínica sobre Cáncer de Seno Metástico</li><li><code>SRC-MONALEESA-2-HORTOBAGYI-2016</code> Ribociclib como terapia de primera línea para el cáncer de mama avanzado y positivo en la FC</li><li><code>SRC-PALOMA-2-FINN-2016</code> Palbociclib and Letrozole in Advanced Breast Cancer (PALOMA-2)</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Triaje de biomarcadores post-CDK4/6i</h2>
+              <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">When the patient has already progressed on a CDK4/6 inhibitor, the chapter expects the learner to test for PIK3CA (alpelisib + fulvestrant), AKT1 E17K (capivasertib + fulvestrant), ESR1 (elacestrant), and HER2-low (T-DXd as a 2L option) before defaulting to fulvestrant ± everolimus. The order of these biomarker checks matters because access, toxicity profile, and overlap with prior endocrine exposure differ. The chapter explicitly maps each biomarker to its OpenOnco indication so the learner sees the same routing the engine uses at progression.</span></p>
+              <h3>Entidades vinculadas</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>RF-PRIOR-CDK46I-PROGRESSION</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Progression on prior CDK4/6 inhibitor + endocrine therapy (palbociclib, ribociclib, abemaciclib + AI/fulvestrant) in HR+/HER2- metastatic breast cancer. Triggers second-line selection per resistance mechanism: ESR1mut → elacestrant; PIK3CA → alpelisib + fulvestrant; AKT1/PTEN → capivasertib + fulvestrant; BRCA1/2 → PARPi; HER2-low → T-DXd; chemotherapy if endocrine-resistant biology.
+</span></span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-BREAST-PIK3CA-MUT-ACTIONABLE</code><span>Los puntos de contacto de PIK3CA que activan la mutación (E542K, E545K, H1047R/L) en el cáncer de mama metastásico de HR+/HER2- se presentan en ~40% de los casos. Después de progresión en el endocrino ± CDK4/6i, alpelisib + fulvestrant (SOLAR-1 — mPFS 11,0 vs 5,7 mo) o capivasertib + Fulvestrent (CAPItello-291 — mPFS 7,3 vs 3,1 mo) son opciones dirigidas a 2L+.
+</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-BREAST-AKT1-E17K-ACTIONABLE</code><span>AKT1 E17K activando la mutación en HR+/HER2- cáncer de mama metastásico — prevalencia ~3-6%. Capivasertib + fulvestrant (CAPItello-291) está aprobado por la FDA para HR+/HER2- avanzado que alberga la mama PIK3CA / AKT1 / PTEN alteración después de la progresión endocrina ± CDK4/6i.
+</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-BREAST-ESR1-MUT-ACTIONABLE</code><span>Mutación del dominio de enlace-ESR1 (D538G, Y537S/N/C, L536H, E380Q) adquirida en ~30-40% de los cánceres de mama metastásicos HR+/HER2- progresando en inhibidores de aromatasa. Predictivo para el elacestrant (SERD oral; EMERALD — mPFS 3,8 vs 1,9 mo en subgrupo de ESR1-mut) post-AI.
+</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-BREAST-HER2-LOW-ACTIONABLE</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">HER2-low breast cancer (IHC 1+ OR IHC 2+ with non-amplified ISH) — ~50-55% of HER2-non-positive breast cancers. T-DXd 2L+ approved in HR+ and TNBC HER2-low post-chemo (DESTINY-Breast04 — mPFS 9.9 vs 5.1 mo, OS 23.4 vs 16.8 mo).
+</span></span><small>enrojecimientos</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB</code><span>IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB</code><span>IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT</code><span>IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW</code><span>IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW</span><small>Indicaciones</small></span></div>
+              <h3>Fuentes de las secciones</h3>
+              <ul><li><code>SRC-SOLAR1-ANDRE-2019</code> Alpelisib for PIK3CA-Mutated, Hormone Receptor-Positive Advanced Breast Cancer</li><li><code>SRC-CAPITELLO291-TURNER-2023</code> Capivasertib in Hormone Receptor-Positive Advanced Breast Cancer</li><li><code>SRC-EMERALD-BIDARD-2022</code><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación"> Elacestrant (Oral Selective Estrogen Receptor Degrader) Versus Standard Endocrine Therapy for Estrogen Receptor-Positive, HER2-Negative Advanced Breast Cancer: Results from the Randomized Phase III EMERALD Trial</span></li><li><code>SRC-OLYMPIAD-ROBSON-2017</code> Olaparib para el cáncer de mama metastásico en pacientes con mutación de la BRCA Germlina</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Encuadernaciones comunes</h2>
+              <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Do not treat regimen selection as the whole task. Baseline LVEF and ECG must precede CDK4/6i exposure when cardiac risk is unclear; contraception and pregnancy planning are required for premenopausal patients on endocrine therapy; CNS metastases or leptomeningeal disease change supportive care and surveillance even when the systemic regimen is unchanged; and HER2-low must be re-checked at progression because results can shift between primary and metastatic samples. None of these change the first-line CDK4/6i call by themselves, but missing them changes the safety plan.</span></p>
+              <h3>Entidades vinculadas</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>RF-CNS-METASTASES-ACTIVE</code><span>Metástasis cerebrales activas confirmadas radiológicamente (parenquima, mejora en gadolinio RMN).Triggers para la terapia paralela dirigida por el SNC (radiocirugía estereotáctica para lesiones ≤4, RT cerebral completa para lesiones difusas, craniotomía para lesión única sintomática ≥3 cm) y selección de la terapia sistémica con actividad penetrante del SNC(osimertinib, alectinib; lorlatinib: tucatinib. T-DXd: pembrolizumab, dabrafenib + trametinib).
+</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-BREAST-HER2-LOW-ACTIONABLE</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">HER2-low breast cancer (IHC 1+ OR IHC 2+ with non-amplified ISH) — ~50-55% of HER2-non-positive breast cancers. T-DXd 2L+ approved in HR+ and TNBC HER2-low post-chemo (DESTINY-Breast04 — mPFS 9.9 vs 5.1 mo, OS 23.4 vs 16.8 mo).
+</span></span><small>enrojecimientos</small></span><span class="hb-chip"><code>BIO-HER2-LOW</code><span>HER2-pecho bajo</span><small>biomarcadores</small></span></div>
+              <h3>Fuentes de las secciones</h3>
+              <ul><li><code>SRC-NCCN-BREAST-2025</code> NCCN Directrices de Práctica Clínica - Cáncer de Seno</li><li><code>SRC-ESMO-BREAST-METASTATIC-2024</code> ESMO Guía de Práctica Clínica sobre Cáncer de Seno Metástico</li></ul>
+            </section>
+
+        <section class="hb-panel">
+          <h2>Casos sintéticos trabajados</h2>
+          <ul><li><code>patient_breast_hr_pos_her2_neg_met_1l_cdk46i</code> HR+/HER2- 1L sobre inhibidor de aromatasa + CDK4/6i - <span>razonamiento estándar, análisis cardíaco y endocrino basal</span> <small>ejemplos/paciente_mayor_hr_pos_her2_neg_met_1l_cdk46i.json</small></li><li><code>patient_breast_hr_pos_post_cdk46i_pik3ca_alpelisib</code> Post-CDK4/6i PIK3CA-mut: alpelisib + fulvestrant - <span>triaje de biomarcadores post-progreso, intensificación definida por PIK3CA</span> <small>ejemplos/paciente_mate_hr_pos_post_cdk46i_pik3ca_alpelisib.json</small></li><li><code>patient_breast_brca_germline_met_olaparib</code> Germline BRCA: Razonamiento de los inhibidores del PARP - <span>Track alternativo basado en la gérmena</span> <small>ejemplos/paciente_material_brca_germline_met_olaparib.json</small></li></ul>
+        </section>
+        <section class="hb-panel hb-quiz">
+          <div class="hb-quiz-header">
+            <h2>Preguntas de práctica</h2>
+            <div class="hb-quiz-tools">
+              <span class="hb-score" id="hb-score" aria-live="polite">0 de 3 respuestas · 0 correcto</span>
+              <button type="button" class="hb-btn hb-btn--ghost" id="hb-quiz-reset">Restablecer el cuestionario</button>
+            </div>
+          </div>
+          <p class="hb-quiz-note">Las respuestas, la puntuación y las etiquetas de razonamiento se guardan sólo en la sesión de su navegador y se aclaran cuando cierra esta pestaña. Las preguntas multi-seleccionadas requieren cada opción correcta (y sin extras) para un crédito.</p>
+
+      <form class="hb-question" data-question-id="HQ-BREAST-HR-POS-1L-001" data-question-type="type_a" data-correct-answer="B" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Pregunta 1</span>
+          <span class="hb-badge">tipo_a</span>
+          <span class="hb-badge">introducción</span>
+          <span class="hb-question-id"><code>HQ-BREAST-HR-POS-1L-001</code></span>
+        </div>
+        <p class="hb-question-stem">Un paciente postmenopáusico ha diagnosticado recientemente HR+/HER2- cáncer de mama metastásico con enfermedad predominante ósea, ECOG 1, FEVE normal, y sin crisis visceral. En el modelo de aprendizaje de primera línea de OpenOnco, ¿qué pista es el estándar por defecto?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HR-POS-1L-001" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Single-agent capecitabine</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HR-POS-1L-001" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Inhibidor de la aromatasa + inhibidor de CDK4/6</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HR-POS-1L-001" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">T-DXd porque la mayoría de los tumores HR+/HER2- son HER2 bajos</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HR-POS-1L-001" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Olaparib como tratamiento de primera línea biomarcador-agnóstico</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Presentar la respuesta</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Restablecer</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Respuesta correcta:</strong> B</p>
+          <p class="hb-result-explanation">El algoritmo de primera línea HR+/HER2- mantiene un inhibidor de la aromatasa más un inhibitor CDK4/6 como el estándar predeterminado para la enfermedad metastática sensible a la endocrina sin crisis visceral. T-DXd está reservado para HER2 bajo a 2L, la quimioterapia con un agente único es para la endocrina resistente o la crisis viscérmica, y los inhibidores PARP requieren la selección de la BRCA germinal.</p>
+          <div class="hb-result-sources"><span>Fuentes:</span> <code class="hb-result-source">SRC-NCCN-BREAST-2025</code><code class="hb-result-source">SRC-ESMO-BREAST-METASTATIC-2024</code><code class="hb-result-source">SRC-MONALEESA-2-HORTOBAGYI-2016</code></div>
+          <div class="hb-result-tags">Razonamiento de las etiquetas: <span class="hb-result-tag">_selección de régimen</span><span class="hb-result-tag">_estratificación de riesgo</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question" data-question-id="HQ-BREAST-HR-POS-1L-002" data-question-type="type_a" data-correct-answer="A" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Pregunta 2</span>
+          <span class="hb-badge">tipo_a</span>
+          <span class="hb-badge">intermedio</span>
+          <span class="hb-question-id"><code>HQ-BREAST-HR-POS-1L-002</code></span>
+        </div>
+        <p class="hb-question-stem"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">A patient with HR+/HER2- metastatic breast cancer has progressed after 24 months on letrozole + palbociclib. Comprehensive NGS shows a PIK3CA H1047R mutation and no ESR1 or AKT1 alterations. Which OpenOnco indication is the canonical biomarker-defined 2L option?</span></p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HR-POS-1L-002" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Alpelisib + fulvestrant</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HR-POS-1L-002" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Capivasertib + fulvestrant</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HR-POS-1L-002" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Elacestrant en monoterapia</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-BREAST-HR-POS-1L-002" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">T-DM1 porque el estado HER2 se convierte después de la exposición a CDK4/6i</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Presentar la respuesta</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Restablecer</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Respuesta correcta:</strong> A</p>
+          <p class="hb-result-explanation">Enfermedad mutante PIK3CA después de las vías de progresión de CDK4/6i a alpelisib + fulvestrant en el modelo OpenOnco (SOLAR-1). Capivasertib es la opción canónica para las alteraciones de AKT1 E17K, el elacestrant es la rama definida por ESR1 (EMERALD), y el estado HER2 no está impulsado por la exposición a CDK4/6i.</p>
+          <div class="hb-result-sources"><span>Fuentes:</span> <code class="hb-result-source">SRC-SOLAR1-ANDRE-2019</code><code class="hb-result-source">SRC-NCCN-BREAST-2025</code></div>
+          <div class="hb-result-tags">Razonamiento de las etiquetas: <span class="hb-result-tag">biomarcador_derrotamiento</span><span class="hb-result-tag">_selección de régimen</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question" data-question-id="HQ-BREAST-HR-POS-1L-003" data-question-type="type_k" data-correct-answer="A|B|D" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Pregunta 3</span>
+          <span class="hb-badge">tipo_k</span>
+          <span class="hb-badge">intermedio</span>
+          <span class="hb-question-id"><code>HQ-BREAST-HR-POS-1L-003</code></span>
+        </div>
+        <p class="hb-question-stem">¿Qué afirmaciones son válidas para el razonamiento de OpenOnco de primera línea HR+/HER2- metástatico del cáncer de mama?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-BREAST-HR-POS-1L-003" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">HER2-estado bajo (IHC 1+ o 2+ ISH-negativo) se captura en el principio porque envía decisiones futuras de 2L a T-DXd.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-BREAST-HR-POS-1L-003" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">La prueba de Germline BRCA1/2 se trata como una obligación paralela que no retrasa el tratamiento de primera línea, pero puede llevar a la conversación a la monoterapia con talazoparib.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-BREAST-HR-POS-1L-003" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">All HR+/HER2- metastatic patients should bypass CDK4/6 inhibitors and start with a PARP inhibitor.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-BREAST-HR-POS-1L-003" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Baseline LVEF and ECG are recommended before starting a CDK4/6 inhibitor in patients with unclear cardiac risk.</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Presentar la respuesta</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Restablecer</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Respuesta correcta:</strong> A, B, D</p>
+          <p class="hb-result-explanation">Los inhibidores de la LCR de la línea germinal HER2-baja capturados en la parte frontal, como una obligación paralela de seguridad/roteo, y la evaluación cardíaca basal antes de un inhibidor CDK4/6 son todos parte del modelo de primera línea OpenOnco. Los inhibitores de la PCR son una alternativa definida por la línea germinal, no un defecto universal.</p>
+          <div class="hb-result-sources"><span>Fuentes:</span> <code class="hb-result-source">SRC-NCCN-BREAST-2025</code><code class="hb-result-source">SRC-ESMO-BREAST-METASTATIC-2024</code><code class="hb-result-source">SRC-OLYMPIAD-ROBSON-2017</code></div>
+          <div class="hb-result-tags">Razonamiento de las etiquetas: <span class="hb-result-tag">biomarcador_derrotamiento</span><span class="hb-result-tag">control de seguridad</span><span class="hb-result-tag">legal_frontera</span></div>
+        </div>
+      </form>
+
+        </section>
+      </div>
+      <aside class="hb-side">
+        <section class="hb-panel hb-disclaimer">
+          <strong>Sólo para el uso educativo.</strong>
+          <p>Este capítulo de OpenOnco-autor no es material oficial de ESMO, no es una actividad de crédito CME, y no asesoramiento médico específico para el paciente.</p>
+        </section>
+        <section class="hb-panel hb-review-panel">
+          <h2>Estado de revisión</h2>
+          <dl class="hb-review-meta">
+            <dt>Situación actual</dt>
+            <dd><span class="hb-badge hb-badge--draft">proyecto</span></dd>
+            <dt>Última revisión</dt><dd><em>no se ha examinado aún</em></dd>
+          </dl>
+          <h3>Aprobaciones clínicas</h3>
+          <p class="hb-signoff-empty">Todavía no se ha registrado ninguna aprobación clínica.</p>
+          <p class="hb-review-rules"><a href="/specs.html">HANDBOOK_MODE_SPEC §4</a>
+          gobierna las transiciones de estado y el umbral de estancamiento de 365 días.</p>
+        </section>
+        <section class="hb-panel">
+          <h2>Fuentes de los capítulos</h2>
+          <ul><li><code>SRC-NCCN-BREAST-2025</code> NCCN Directrices de Práctica Clínica - Cáncer de Seno</li><li><code>SRC-ESMO-BREAST-METASTATIC-2024</code> ESMO Guía de Práctica Clínica sobre Cáncer de Seno Metástico</li><li><code>SRC-MONALEESA-2-HORTOBAGYI-2016</code> Ribociclib como terapia de primera línea para el cáncer de mama avanzado y positivo en la FC</li><li><code>SRC-MONARCH-3-GOETZ-2017</code> MONARCO 3: Abemaciclib como terapia inicial para el cáncer de mama avanzado</li><li><code>SRC-PALOMA-2-FINN-2016</code> Palbociclib and Letrozole in Advanced Breast Cancer (PALOMA-2)</li><li><code>SRC-SOLAR1-ANDRE-2019</code> Alpelisib for PIK3CA-Mutated, Hormone Receptor-Positive Advanced Breast Cancer</li><li><code>SRC-EMERALD-BIDARD-2022</code><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación"> Elacestrant (Oral Selective Estrogen Receptor Degrader) Versus Standard Endocrine Therapy for Estrogen Receptor-Positive, HER2-Negative Advanced Breast Cancer: Results from the Randomized Phase III EMERALD Trial</span></li><li><code>SRC-CAPITELLO291-TURNER-2023</code> Capivasertib in Hormone Receptor-Positive Advanced Breast Cancer</li><li><code>SRC-OLYMPIAD-ROBSON-2017</code> Olaparib para el cáncer de mama metastásico en pacientes con mutación de la BRCA Germlina</li></ul>
+        </section>
+        <section class="hb-panel">
+          <h2>Mapa de la entidad</h2>
+          <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-BREAST</code><span>Cáncer de mama invasivo</span><small>enfermedades</small></span><span class="hb-chip"><code>ALGO-BREAST-1L</code><span>ALGO-BREAST-1L</span><small>algoritmos</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-MET-1L-CDKI</code><span>IND-BREAST-HR-POS-MET-1L-CDKI</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-1L-INAVOLISIB</code><span>IND-BREAST-HR-POS-1L-INAVOLISIB</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB</code><span>IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB</code><span>IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT</code><span>IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS</code><span>IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW</code><span>IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-BREAST-BRCA-MET-TALAZOPARIB</code><span>IND-BREAST-BRCA-MET-TALAZOPARIB</span><small>Indicaciones</small></span><span class="hb-chip"><code>REG-AI-PALBOCICLIB</code><span>AI + palbociclib (HR+/HER2- metastatic 1L)</span><small>tratamientos</small></span><span class="hb-chip"><code>REG-AI-RIBOCICLIB</code><span>AI + ribociclib (HR+/HER2- metastatic 1L; OS-validated)</span><small>tratamientos</small></span><span class="hb-chip"><code>REG-ALPELISIB-FULVESTRANT-BREAST</code><span>Alpelisib + fulvestrant (HR+/HER2- PIK3CA-mutant metastatic post-AI/CDK4/6i)</span><small>tratamientos</small></span><span class="hb-chip"><code>REG-CAPIVASERTIB-FULVESTRANT-BREAST</code><span>Capivasertib + fulvestrant (HR+/HER2- PIK3CA/AKT1/PTEN-altered metastatic post-AI/CDK4/6i)</span><small>tratamientos</small></span><span class="hb-chip"><code>REG-ELACESTRANT-BREAST</code><span>Monoterapia con elacestrant (HR+/HER2- mutante ESR1- metastásico post-AI/CDK4/6i)</span><small>tratamientos</small></span><span class="hb-chip"><code>REG-EVEROLIMUS-EXEMESTANE</code><span>Everolimus + Exemestane (HR+/HER2- breast 3L+, post CDK4/6i and PI3Ki/AKTi)</span><small>tratamientos</small></span><span class="hb-chip"><code>REG-OLAPARIB-BREAST</code><span>Olaparib en monoterapia (BRCA-mutante HER2- mama: metastásico OR adjuvante de alto riesgo temprano)</span><small>tratamientos</small></span><span class="hb-chip"><code>REG-TALAZOPARIB-MONO-BREAST</code><span>Talazoparib en monoterapia (gBRCA- mutante HER2- mama localmente avanzada o metastásica)</span><small>tratamientos</small></span><span class="hb-chip"><code>RF-BREAST-STAGE-IV-METASTATIC</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Metastatic (stage IV) breast cancer: presence of distant metastasis (M1 per TNM 8th edition) involving any organ system (bone, liver, lung, brain, peritoneum, other). Stage IV breast cancer is currently incurable with available systemic therapy; treatment intent is disease control, quality of life, and life prolongation.
+Stage IV status is the gating criterion for palliative systemic therapy (CDK4/6i+AI for HR+/HER2-; THP for HER2+; pembro+chemo or PARPi for TNBC) rather than curative-intent neoadjuvant/adjuvant approaches.
+Fires to route ALGO-BREAST-1L step 4 (TNBC branch) from early-stage neoadjuvant (IND-BREAST-TNBC-EARLY-NEOADJUVANT) toward metastatic evaluation (step 6: BRCA mutation gate → PARPi vs pembro+chemo).
+</span></span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-BREAST-HER2-LOW-ACTIONABLE</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">HER2-low breast cancer (IHC 1+ OR IHC 2+ with non-amplified ISH) — ~50-55% of HER2-non-positive breast cancers. T-DXd 2L+ approved in HR+ and TNBC HER2-low post-chemo (DESTINY-Breast04 — mPFS 9.9 vs 5.1 mo, OS 23.4 vs 16.8 mo).
+</span></span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-BREAST-ESR1-MUT-ACTIONABLE</code><span>Mutación del dominio de enlace-ESR1 (D538G, Y537S/N/C, L536H, E380Q) adquirida en ~30-40% de los cánceres de mama metastásicos HR+/HER2- progresando en inhibidores de aromatasa. Predictivo para el elacestrant (SERD oral; EMERALD — mPFS 3,8 vs 1,9 mo en subgrupo de ESR1-mut) post-AI.
+</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-BREAST-PIK3CA-MUT-ACTIONABLE</code><span>Los puntos de contacto de PIK3CA que activan la mutación (E542K, E545K, H1047R/L) en el cáncer de mama metastásico de HR+/HER2- se presentan en ~40% de los casos. Después de progresión en el endocrino ± CDK4/6i, alpelisib + fulvestrant (SOLAR-1 — mPFS 11,0 vs 5,7 mo) o capivasertib + Fulvestrent (CAPItello-291 — mPFS 7,3 vs 3,1 mo) son opciones dirigidas a 2L+.
+</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-BREAST-AKT1-E17K-ACTIONABLE</code><span>AKT1 E17K activando la mutación en HR+/HER2- cáncer de mama metastásico — prevalencia ~3-6%. Capivasertib + fulvestrant (CAPItello-291) está aprobado por la FDA para HR+/HER2- avanzado que alberga la mama PIK3CA / AKT1 / PTEN alteración después de la progresión endocrina ± CDK4/6i.
+</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-BREAST-BRCA-GERMLINE-ACTIONABLE</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Germline BRCA1 or BRCA2 pathogenic variant in HER2-negative breast cancer (HR+ or TNBC). Olaparib (OlympiAD — mPFS 7.0 vs 4.2 mo vs chemo) and talazoparib (EMBRACA — mPFS 8.6 vs 5.6 mo) are FDA-approved for metastatic gBRCA HER2-negative breast. Adjuvant olaparib (OlympiA) for high-risk HER2-negative gBRCA early breast.
+</span></span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-PRIOR-CDK46I-PROGRESSION</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Progression on prior CDK4/6 inhibitor + endocrine therapy (palbociclib, ribociclib, abemaciclib + AI/fulvestrant) in HR+/HER2- metastatic breast cancer. Triggers second-line selection per resistance mechanism: ESR1mut → elacestrant; PIK3CA → alpelisib + fulvestrant; AKT1/PTEN → capivasertib + fulvestrant; BRCA1/2 → PARPi; HER2-low → T-DXd; chemotherapy if endocrine-resistant biology.
+</span></span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-CNS-METASTASES-ACTIVE</code><span>Metástasis cerebrales activas confirmadas radiológicamente (parenquima, mejora en gadolinio RMN).Triggers para la terapia paralela dirigida por el SNC (radiocirugía estereotáctica para lesiones ≤4, RT cerebral completa para lesiones difusas, craniotomía para lesión única sintomática ≥3 cm) y selección de la terapia sistémica con actividad penetrante del SNC(osimertinib, alectinib; lorlatinib: tucatinib. T-DXd: pembrolizumab, dabrafenib + trametinib).
+</span><small>enrojecimientos</small></span><span class="hb-chip"><code>BIO-ESTROGEN-RECEPTOR</code><span>Receptor de estrógenos</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-PROGESTERONE-RECEPTOR</code><span>Receptor de progesterona</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-HER2-SOLID</code><span>HER2 IHC + ISH</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-HER2-LOW</code><span>HER2-pecho bajo</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-ESR1</code><span>Mutación de la DLB ESR1</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-PIK3CA-MUTATION</code><span>Mutación del punto de atención de PIK3CA</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-AKT1</code><span>AKT1 E17K</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-BRCA-GERMLINE</code><span>Estado de la mutación Germline BRCA1/2</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-HRD-STATUS</code><span>HRD status</span><small>biomarcadores</small></span><span class="hb-chip"><code>TEST-ER-PR-IHC</code><span>ER + PR inmunohistoquímica en tumor</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-HER2-IHC-FISH</code><span>HER2 IHC + reflejo FISH en el tumor</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-PIK3CA-NGS</code><span>Prueba de mutación PIK3CA (tumor o ADNct)</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-GERMLINE-BRCA-PANEL</code><span>Germline BRCA1/2 + secuenciación de paneles HRR</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-NGS-COMPREHENSIVE</code><span>Panel de tumores completos del NGS (ADN + ARN, ≥300 genes)</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-ECHO</code><span>Ecocardiografía</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-LVEF-ECHO</code><span>Ecocardiograma con FEVI</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-ECG-BASELINE</code><span>Electrocardiograma basal</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-CT-CHEST-ABDOMEN-PELVIS</code><span>TC tórax + abdomen + pelvis con contraste IV</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-BRAIN-MRI-CONTRAST</code><span>Resonancia magnética cerebral con contraste</span><small>pruebas</small></span></div>
+        </section>
+      </aside>
+    </div>
+    <script>
+      (function() {
+        var CHAPTER_ID = "HB-BREAST-HR-POS-HER2-NEG-1L";
+        var GRADED_TOTAL = 3;
+        var STORAGE_KEY = 'openonco-handbook-' + CHAPTER_ID + '-quiz';
+        var forms = Array.prototype.slice.call(document.querySelectorAll('.hb-quiz .hb-question'));
+        var scoreEl = document.getElementById('hb-score');
+        var resetAllBtn = document.getElementById('hb-quiz-reset');
+        var storage;
+        try { storage = window.sessionStorage; } catch (e) { storage = null; }
+        var state = {};
+        if (storage) {
+          try { state = JSON.parse(storage.getItem(STORAGE_KEY) || '{}') || {}; } catch (e) { state = {}; }
+        }
+        function persist() {
+          if (!storage) { return; }
+          try { storage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        }
+        function normalize(list) {
+          return (list || []).map(function(k) { return String(k).toUpperCase(); }).slice().sort().join('|');
+        }
+        function updateScore() {
+          var answered = 0;
+          var correct = 0;
+          Object.keys(state).forEach(function(qid) {
+            var entry = state[qid];
+            if (entry && entry.submitted && entry.graded) {
+              answered += 1;
+              if (entry.correct) { correct += 1; }
+            }
+          });
+          if (scoreEl) {
+            scoreEl.textContent = answered + ' of ' + GRADED_TOTAL + ' answered · ' + correct + ' correct';
+          }
+        }
+        forms.forEach(function(form) {
+          var qid = form.getAttribute('data-question-id');
+          var qtype = form.getAttribute('data-question-type');
+          var graded = form.getAttribute('data-graded') === 'true';
+          var correctAttr = form.getAttribute('data-correct-answer') || '';
+          var correctKey = correctAttr.split('|').filter(Boolean).slice().sort().join('|');
+          var resultEl = form.querySelector('.hb-result');
+          var headlineEl = form.querySelector('[data-role="headline"]');
+          var statusEl = form.querySelector('[data-role="status"]');
+          var submitBtn = form.querySelector('[data-action="submit"]');
+          var resetBtn = form.querySelector('[data-action="reset"]');
+          var revealBtn = form.querySelector('[data-action="reveal"]');
+          function selectedKeys() {
+            return Array.prototype.slice.call(
+              form.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked')
+            ).map(function(input) { return input.value; });
+          }
+          function setResultClass(isCorrect) {
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (isCorrect === true) { resultEl.classList.add('hb-result--correct'); }
+            else if (isCorrect === false) { resultEl.classList.add('hb-result--incorrect'); }
+            else { resultEl.classList.add('hb-result--reveal'); }
+          }
+          function showResult(entry) {
+            resultEl.hidden = false;
+            if (graded) {
+              setResultClass(entry.correct);
+              if (statusEl) {
+                statusEl.textContent = entry.correct ? '✓ Correct' : '✗ Not yet — see explanation';
+              }
+            } else {
+              setResultClass(null);
+              if (statusEl) { statusEl.textContent = 'Model answer revealed'; }
+            }
+          }
+          function clearResult() {
+            resultEl.hidden = true;
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (statusEl) { statusEl.textContent = ''; }
+          }
+          function rehydrate() {
+            var entry = state[qid];
+            if (!entry) { return; }
+            (entry.selected || []).forEach(function(key) {
+              var input = form.querySelector('input[value="' + key + '"]');
+              if (input) { input.checked = true; }
+            });
+            if (entry.submitted) { showResult(entry); }
+          }
+          function submitGraded(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            var selected = selectedKeys();
+            if (selected.length === 0) {
+              if (statusEl) { statusEl.textContent = 'Pick an option first.'; }
+              return;
+            }
+            var selectedKey = normalize(selected);
+            var isCorrect = selectedKey === correctKey;
+            state[qid] = { submitted: true, graded: true, selected: selected, correct: isCorrect };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function revealOnly(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            state[qid] = { submitted: true, graded: false, selected: [], correct: null };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function resetQuestion(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+              if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+              else { input.value = ''; }
+            });
+            delete state[qid];
+            persist();
+            clearResult();
+            updateScore();
+          }
+          if (submitBtn) { submitBtn.addEventListener('click', submitGraded); }
+          if (resetBtn) { resetBtn.addEventListener('click', resetQuestion); }
+          if (revealBtn) { revealBtn.addEventListener('click', revealOnly); }
+          form.addEventListener('submit', function(event) { event.preventDefault(); if (graded) { submitGraded(event); } });
+          rehydrate();
+        });
+        if (resetAllBtn) {
+          resetAllBtn.addEventListener('click', function() {
+            state = {};
+            persist();
+            forms.forEach(function(form) {
+              Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+                if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+                else { input.value = ''; }
+              });
+              var resultEl = form.querySelector('.hb-result');
+              var statusEl = form.querySelector('[data-role="status"]');
+              if (resultEl) {
+                resultEl.hidden = true;
+                resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+              }
+              if (statusEl) { statusEl.textContent = ''; }
+            });
+            updateScore();
+          });
+        }
+        updateScore();
+      })();
+    </script>
+
+  </main>
+<script src="/clinical-localization.js?v=20261010-2" data-locale="es" data-catalog="/es/clinical-ui-translations.json" defer></script></body>
+</html>

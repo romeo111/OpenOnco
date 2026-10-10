@@ -358,9 +358,13 @@ page — these also drive `og:type=article`."""
 _ARTICLE_SCHEMA_TYPES = {"MedicalWebPage", "NewsArticle"}
 
 
-def _schema_type(path: str) -> str:
+def _schema_type(path: str, available_paths: set[str] | None = None) -> str:
     normalized = path.replace("\\", "/").lstrip("/")
-    if split_locale(path)[0] in {"es", "pt", "de", "fr"} and normalized.endswith("try.html"):
+    _, base_path = split_locale(path)
+    from scripts.site_locales import CLINICAL_LOCALES
+    locale = split_locale(path)[0]
+    complete = locale in CLINICAL_LOCALES if available_paths is None else locale_path('handbook/hb-dlbcl-1l.html', locale) in available_paths
+    if locale in {"es", "pt", "de", "fr"} and not complete and normalized.endswith("try.html"):
         return "WebPage"  # translated introduction, not the application itself
     if normalized.endswith("try.html"):
         return "SoftwareApplication"
@@ -368,10 +372,8 @@ def _schema_type(path: str) -> str:
         return "NewsArticle"
     if (
         normalized.endswith("kb.html")
-        or normalized.startswith("kb/")
-        or normalized.startswith("ukr/kb/")
-        or normalized.startswith("cases/")
-        or normalized.startswith("ukr/cases/")
+        or base_path.startswith("kb/")
+        or base_path.startswith("cases/")
     ):
         return "MedicalWebPage"
     return "WebPage"
@@ -405,9 +407,12 @@ def _language_links(path: str, available_paths: set[str] | None = None) -> list[
         targets["x-default"] = base_path
         # Localized tool introductions are explicit English launch pages,
         # rather than translations of the complete interactive tools.
+        completed = {code for code in LOCALES if locale_path('handbook/hb-dlbcl-1l.html', code) in available_paths}
         if base_path not in {"index.html", "about.html", "kb.html", "participate.html", "handbook.html"}:
             locale = split_locale(path)[0]
-            allowed = {locale} if locale in {"es", "pt", "de", "fr"} else {"en", "uk", "x-default"}
+            allowed = {'en', 'uk', 'x-default'} | completed
+            if locale in {'es', 'pt', 'de', 'fr'} and locale not in completed:
+                allowed = {locale}
             candidates = [(code, url) for code, url in candidates if code in allowed]
         return [(lang, url) for lang, url in candidates if targets[lang] in available_paths]
     # Standalone renderers do not yet have a completed output inventory.
@@ -530,7 +535,7 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
     social_image = _social_image_for(path)
     schema = {
         "@context": "https://schema.org",
-        "@type": _schema_type(path),
+        "@type": _schema_type(path, available_paths),
         "name": title,
         "description": description,
         "url": canonical,
@@ -568,7 +573,7 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
             "target": canonical,
         },
     }
-    if medical_condition and _schema_type(path) == "MedicalWebPage":
+    if medical_condition and _schema_type(path, available_paths) == "MedicalWebPage":
         schema["mainEntity"] = {
             "@type": "MedicalCondition",
             "@id": canonical + "#condition",
@@ -577,7 +582,7 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
         }
         schema["about"] = {"@id": canonical + "#condition"}
 
-    if _schema_type(path) == "SoftwareApplication":
+    if _schema_type(path, available_paths) == "SoftwareApplication":
         schema["applicationCategory"] = "MedicalApplication"
         schema["operatingSystem"] = "Web browser"
         schema["codeRepository"] = GITHUB_URL
@@ -589,7 +594,7 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
         schema["author"] = {"@type": "Organization", "name": SITE_NAME, "url": SITE_BASE_URL}
 
     json_ld = json.dumps(schema, ensure_ascii=False, separators=(",", ":")).replace("<", "\u003c")
-    og_type = "article" if _schema_type(path) in _ARTICLE_SCHEMA_TYPES else "website"
+    og_type = "article" if _schema_type(path, available_paths) in _ARTICLE_SCHEMA_TYPES else "website"
     lines = [
         SEO_START,
         f'<meta name="description" content="{_escape(description)}">',
@@ -980,10 +985,12 @@ pages as dated project announcements — they describe changes to the project, a
 source-cited clinical claims, and go stale; cite `/kb/` pages for clinical facts instead.
 Reader comments on news pages are unmoderated third-party opinions, not project
 statements, and carry none of the source-citation guarantees of `/kb/` pages.
-Spanish, Portuguese, German and French pages localize the public interface.
-Clinical records retain their source language; localized tool introductions
-explicitly launch English tools. Do not infer clinical translation or sign-off
-from the interface language. See the repository's docs/LOCALIZATION.md.
+Spanish, Portuguese, German and French editions provide draft translations of
+Onco Wiki records, Handbook chapters/questions, tools and result displays.
+Clinical translation review is pending. Read the translation notice and use
+the linked English original to verify wording. Clinical identifiers, values,
+answer keys and engine decisions remain unchanged. Technical documentation and
+news retain their original language. See the repository's docs/LOCALIZATION.md.
 """
     out = output_dir / "llms.txt"
     out.write_text(body, encoding="utf-8")
@@ -1104,18 +1111,26 @@ picture and discussed by a multidisciplinary team (CHARTER §11 + §15).
 def finalize_site_discovery(
     output_dir: Path, stats: dict | None = None
 ) -> dict[str, str | int]:
+    from scripts.site_nav import render_top_bar
+    pages = _html_pages(output_dir)
+    physical_paths = {page.relative_to(output_dir).as_posix() for page in pages}
+    header_re = re.compile(r'<header class="top-bar site-header">.*?</header>', re.S)
     available_paths = _indexable_paths(output_dir)
     def enrich_page(page):
         rel = page.relative_to(output_dir).as_posix()
         original = page.read_text(encoding="utf-8")
-        updated = inject_geo_lang_redirect(inject_seo_metadata(original, path=rel, available_paths=available_paths), path=rel)
+        locale, base = split_locale(rel)
+        active = base.split('/')[0].removesuffix('.html')
+        active = {'index': 'home', 'cases': 'gallery', 'disease': 'diseases', 'plans': 'try'}.get(active, active)
+        navigation = header_re.sub(lambda _: render_top_bar(active, locale, page_path=base, available_paths=physical_paths), original)
+        updated = inject_geo_lang_redirect(inject_seo_metadata(navigation, path=rel, available_paths=available_paths), path=rel)
         if updated != original:
             page.write_text(updated, encoding="utf-8")
             return 1
         return 0
 
     with ThreadPoolExecutor(max_workers=16) as pool:
-        changed = sum(pool.map(enrich_page, _html_pages(output_dir)))
+        changed = sum(pool.map(enrich_page, pages))
 
     if stats is None:
         stats = _auto_stats()

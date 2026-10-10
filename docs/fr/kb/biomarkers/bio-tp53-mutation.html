@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TP53 mutation / del(17p) - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/fr/kb/biomarkers/bio-tp53-mutation.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/biomarkers/bio-tp53-mutation.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/biomarkers/bio-tp53-mutation.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/biomarkers/bio-tp53-mutation.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/biomarkers/bio-tp53-mutation.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/biomarkers/bio-tp53-mutation.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/biomarkers/bio-tp53-mutation.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/biomarkers/bio-tp53-mutation.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TP53 mutation / del(17p) - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/fr/kb/biomarkers/bio-tp53-mutation.html">
+<meta property="og:locale" content="fr">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TP53 mutation / del(17p) - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"TP53 mutation / del(17p) - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/fr/kb/biomarkers/bio-tp53-mutation.html","inLanguage":"fr","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/fr/kb/biomarkers/bio-tp53-mutation.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="4a95b53a810bea48ba24c047c0e2575254cef4f5c93bd90e843de79b3902fdb1"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/fr/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGIE OUVERTE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/fr/">Accueil</a>
+    <a href="/fr/handbook.html">Manuel</a><a href="/fr/news.html">Actualités</a>
+    <a href="/fr/about.html">Le projet</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Langue"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg>FR <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Langue"><a href="/kb/biomarkers/bio-tp53-mutation.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/biomarkers/bio-tp53-mutation.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/biomarkers/bio-tp53-mutation.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/biomarkers/bio-tp53-mutation.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/biomarkers/bio-tp53-mutation.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/biomarkers/bio-tp53-mutation.html" lang="fr" hreflang="fr" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/fr/try.html" class="btn-cta-top btn-cta-try"><span>Créer un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menu"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menu">
+    <a href="/fr/">Accueil</a>
+    <a href="/fr/handbook.html">Manuel</a><a href="/fr/news.html">Actualités</a>
+    <a href="/fr/about.html">Le projet</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/fr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Réunion de concertation</span></a>
+      <a href="/fr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prévention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Outils</span>
+    <div class="top-cta-group">
+      <a href="/fr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Réunion de concertation</span></a>
+      <a href="/fr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prévention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Code ouvert</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Traduction provisoire : vérification clinique en attente.</strong> <a href="/kb/biomarkers/bio-tp53-mutation.html" lang="en" hreflang="en" data-original-source>Consulter l’original en anglais</a></aside>
+  <p class="kb-breadcrumb"><a href="/fr/kb.html">Onco Wiki</a> / Biomarqueur</p>
+  <h1>mutation TP53 / del(17p)</h1>
+  <p class="kb-lead">Vue déterministe de l'entité source de la LJAM. L'autorité clinique demeure avec les ID de la source cités et l'état d'approbation de l ́examinateur.</p>
+  <table class="kb-facts"><tr><th>ID</th><td><code>BIO-TP53-MUTATION</code></td></tr>
+<tr><th>Type</th><td>Biomarqueur</td></tr>
+<tr><th>Alias</th><td><div class="kb-alias-list"><span class="kb-alias">Suppression 17p</span><span class="kb-alias">TP53</span><span class="kb-alias">du 17e siècle</span><span class="kb-alias">mutation p53</span><span class="kb-alias">Мутація TP53 / del(17p)</span></div></td></tr>
+<tr><th>État</th><td>reviewed 2026-04-25 | pending_clinical_signoff</td></tr>
+<tr><th>Maladies</th><td><span class="kb-chip"><a href="/fr/kb/diseases/dis-aml.html"><code>DIS-AML</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-breast.html"><code>DIS-BREAST</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-cervical.html"><code>DIS-CERVICAL</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-cll.html"><code>DIS-CLL</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-crc.html"><code>DIS-CRC</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-dlbcl-nos.html"><code>DIS-DLBCL-NOS</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-endometrial.html"><code>DIS-ENDOMETRIAL</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-esophageal.html"><code>DIS-ESOPHAGEAL</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-gastric.html"><code>DIS-GASTRIC</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-gbm.html"><code>DIS-GBM</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-hcc.html"><code>DIS-HCC</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-mcl.html"><code>DIS-MCL</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-mds-hr.html"><code>DIS-MDS-HR</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-melanoma.html"><code>DIS-MELANOMA</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-mm.html"><code>DIS-MM</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-mpnst.html"><code>DIS-MPNST</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-nsclc.html"><code>DIS-NSCLC</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-ovarian.html"><code>DIS-OVARIAN</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-pdac.html"><code>DIS-PDAC</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-prostate.html"><code>DIS-PROSTATE</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-rcc.html"><code>DIS-RCC</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-sclc.html"><code>DIS-SCLC</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-thyroid-papillary.html"><code>DIS-THYROID-PAPILLARY</code></a></span> <span class="kb-chip"><a href="/fr/kb/diseases/dis-urothelial.html"><code>DIS-UROTHELIAL</code></a></span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="NCCN Guides de pratique clinique en oncologie : Leucémie myéloïdique aiguë"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1411" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-AML-2025</code></a></span> <span class="kb-chip" title="Lignes directrices de pratique clinique du NCCN en oncologie : lymphomes de cellules B"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BCELL-2025</code></a></span> <span class="kb-chip" title="NCCN Lignes directrices cliniques en oncologie : Myélome multiple"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1445" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-MM-2025</code></a></span></td></tr></table>
+  <h2>Données biomarqueurs</h2><table class="kb-facts"><tr><th>Type de biomarqueur</th><td>gène_mutation</td></tr>
+<tr><th>Détails de la mutation</th><td>{"functional_impact": "perte_de_fonction (supresseur de tumeurs)", "gene":"TP53", "gene_hugo_id": «11998", "variant_type": „missense / absurdité / changement de cadre / effiloché / suppression 17p"}</td></tr>
+<tr><th>Mesure</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Méthode</span><span>Panneau NGS (PCR + séquençage) pour les mutations ponctuelles + FISH pour del(17p13.1) sur les cellules tumorales</span></div><div class="kb-kv-item"><span class="kb-kv-key">Unités</span><span>catégorique (positif) négatif; positif = mutation OU del(17p) OU les deux</span></div></div></td></tr>
+<tr><th>Biomarqueurs connexes</th><td><span class="kb-chip"><a href="/fr/kb/biomarkers/bio-cll-high-risk-genetics.html"><code>BIO-CLL-HIGH-RISK-GENETICS</code></a></span> <span class="kb-chip"><a href="/fr/kb/biomarkers/bio-mm-cytogenetics-hr.html"><code>BIO-MM-CYTOGENETICS-HR</code></a></span></td></tr></table>
+  <h2>Notes</h2><p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original anglais conservé pour vérification">Universal adverse marker across most hematologic + solid malignancies — predicts poor response to chemo + chemoimmuno; selects for novel- agent regimens / targeted therapies / cellular therapy / alloSCT. **Cross-disease decision impact in our KB (current scope):** - **CLL/SLL**: TP53-mut OR del(17p) → contraindicates chemoimmuno (FCR/BR); favors fixed-duration VenO (CLL14) over BTKi continuous in some guidelines. Captured in composite BIO-CLL-HIGH-RISK-GENETICS + RF-CLL-HIGH-RISK. - **MCL**: TP53-mut → predicts chemoimmuno failure (intensive R-CHOP/R-DHAP+autoSCT outcomes substantially worse); routes to BTKi-based 1L (acalabrutinib+R) regardless of fitness. Captured in RF-MCL-BLASTOID-OR-TP53. - **MM**: del(17p) part of high-risk cytogenetics composite — drives quadruplet (D-VRd) over triplet (VRd). Captured in BIO-MM-CYTOGENETICS-HR + RF-MM-HIGH-RISK-CYTOGENETICS. - **DLBCL** (future scope): predicts R-CHOP failure; flag for early CAR-T pathway consideration at 2L+. Not yet driving 1L algorithm. - **AML** (future scope, not in KB yet): TP53-mut AML has dismal chemo outcomes — currently routes directly to alloSCT consideration + venetoclax-azacitidine for unfit + clinical trials....</span></p>
+  <h2>Utilisé par</h2>
+<h3>Pertinence thérapeutique</h3><ul><li><a href="/fr/kb/biomarker_actionability/bma-tp53-ihc-endometrial.html"><code>BMA-TP53-IHC-ENDOMETRIAL</code></a> - le carcinome endométrial p53-aberrant (p53-abn) définit le sous-groupe moléculaire à plus haut risque...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-aml.html"><code>BMA-TP53-MUT-AML</code></a> - TP53-Mut AML — résultats chimio-résistants et délicats (CR ~20% avec 7+3, OS ~6 - C'est le cas. Decitabine...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-breast.html"><code>BMA-TP53-MUT-BREAST</code></a> - TP53 mutations in breast — common in TNBC and basal-like; adverse prognostic. Not directl...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-cervical.html"><code>BMA-TP53-MUT-CERVICAL</code></a> - mutation TP53 dans CERVICAL — courant, pronostic indésirable; pas directement ciblé....</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-cll.html"><code>BMA-TP53-MUT-CLL</code></a> - TP53-mut CLL contraindicates chemoimmunotherapy (FCR/BR). BTKi (acalabrutinib, zanubrutin...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-crc.html"><code>BMA-TP53-MUT-CRC</code></a> - mutation TP53 dans le CRC - courant, pronostic indésirable; pas directement ciblé....</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-dlbcl-nos.html"><code>BMA-TP53-MUT-DLBCL-NOS</code></a> - TP53-mut DLBCL — prédit l'échec R-CHOP; drapeau pour la prise en compte précoce de la voie CAR-T à 2...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-endometrial.html"><code>BMA-TP53-MUT-ENDOMETRIAL</code></a> - mutation TP53 dans l'ENDOMÉTRIAL — commune, pronostic indésirable; pas directement ciblée.</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-esophageal.html"><code>BMA-TP53-MUT-ESOPHAGEAL</code></a> - mutation TP53 dans l'ESOPHAGEAL — commun, pronostic indésirable; pas directement ciblé...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-gastric.html"><code>BMA-TP53-MUT-GASTRIC</code></a> - mutation TP53 dans le GASTRIC — courant, pronostic indésirable; pas directement ciblé....</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-gbm.html"><code>BMA-TP53-MUT-GBM</code></a> - mutation TP53 dans la GBM - commune, pronostic indésirable; pas directement ciblée....</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-hcc.html"><code>BMA-TP53-MUT-HCC</code></a> - TP53 mutations in HCC (~30%) — adverse prognostic; not directly targeted.</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-mcl.html"><code>BMA-TP53-MUT-MCL</code></a> - TP53-mut MCL — prédit l'échec chimio-immuno. Acalabrutinib + rituximab (TRIANGLE / ECHO)...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-mds-hr.html"><code>BMA-TP53-MUT-MDS-HR</code></a> - MDS à risque élevé TP53-mut — pronostic malsain avec HMA en monothérapie (SG médian ~6-10 mo).</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-melanoma.html"><code>BMA-TP53-MUT-MELANOMA</code></a> - mutation TP53 dans MÉLANOMA — courant, pronostic indésirable; pas directement ciblé....</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-mm.html"><code>BMA-TP53-MUT-MM</code></a> - TP53-mut / del(17p) myélome — composite cytogénétique à haut risque; quadruplet (D-VRD; PERSEU...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-nsclc.html"><code>BMA-TP53-MUT-NSCLC</code></a> - TP53 mutations in NSCLC (~50%) — adverse prognostic; modulate ICI response (TP53+KRAS may...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-ovarian.html"><code>BMA-TP53-MUT-OVARIAN</code></a> - TP53 mutation is near-universal in high-grade serous ovarian (~96%). Not actionable per s...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-pdac.html"><code>BMA-TP53-MUT-PDAC</code></a> - mutation TP53 dans PDAC - courant, pronostic indésirable; pas directement ciblé....</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-prostate.html"><code>BMA-TP53-MUT-PROSTATE</code></a> - mutation TP53 dans PROSTATE — courant, pronostic indésirable; pas directement ciblé....</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-rcc.html"><code>BMA-TP53-MUT-RCC</code></a> - mutation TP53 dans le RCC — courant, pronostic indésirable; pas directement ciblé....</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-sclc.html"><code>BMA-TP53-MUT-SCLC</code></a> - mutation TP53 dans le SCLC — courant, pronostic indésirable; pas directement ciblé....</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-urothelial.html"><code>BMA-TP53-MUT-UROTHELIAL</code></a> - mutation TP53 dans l'UROTHELIAL — courant, pronostic indésirable; pas directement ciblé...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r175h-aml.html"><code>BMA-TP53-R175H-AML</code></a> - Hotspot TP53 dans AML — patron chimio-résistant; venetoclax + HMA palliatif; alloSCT...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r175h-breast.html"><code>BMA-TP53-R175H-BREAST</code></a> - TP53 hotspot dans TNBC / luminal — pronostic adverse; pas directement ciblé. Hotspot R175H...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r175h-cll.html"><code>BMA-TP53-R175H-CLL</code></a> - TP53 hotspot R175H dans CLL — variante dominante négative du domaine de liaison ADN.</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r175h-dlbcl-nos.html"><code>BMA-TP53-R175H-DLBCL-NOS</code></a> - Hotspot TP53 dans DLBCL — prédit l'échec R-CHOP; drapeau pour le CAR-T tôt. Hotspot R175H est...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r175h-mcl.html"><code>BMA-TP53-R175H-MCL</code></a> - Hotspot TP53 dans MCL — prédicteur d'échec chimioimmuno; 1L à base d'acalabrutinib préféré.</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r175h-mds-hr.html"><code>BMA-TP53-R175H-MDS-HR</code></a> - TP53 hotspot R175H dans les MDS à risque plus élevé — pronostic démeu...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r175h-mm.html"><code>BMA-TP53-R175H-MM</code></a> - mutation TP53 hotspot dans MM — caractéristique génétique à haut risque; quadruplet (D-VRD) préférée; CA...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r175h-nsclc.html"><code>BMA-TP53-R175H-NSCLC</code></a> - Hotspot TP53 dans NSCLC — pronostic indésirable; module la réponse ICI....</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r175h-ovarian.html"><code>BMA-TP53-R175H-OVARIAN</code></a> - TP53 hotspot dans HGSOC - caractéristique de la maladie presque universelle; pas directement ciblé. Hotspot R1...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r248q-aml.html"><code>BMA-TP53-R248Q-AML</code></a> - Hotspot TP53 dans AML — patron chimio-résistant; venetoclax + HMA palliatif; alloSCT...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r248q-breast.html"><code>BMA-TP53-R248Q-BREAST</code></a> - Hotspot TP53 dans TNBC / luminal — pronostic adverse; pas directement ciblé. Hotspot R248Q...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r248q-cll.html"><code>BMA-TP53-R248Q-CLL</code></a> - Hotspot TP53 R248Q dans CLL — variante dominante négative du domaine de liaison ADN.</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r248q-dlbcl-nos.html"><code>BMA-TP53-R248Q-DLBCL-NOS</code></a> - TP53 hotspot dans DLBCL — prédit l'échec R-CHOP; drapeau pour le CAR-T tôt. Hotspot R248Q est un...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r248q-mcl.html"><code>BMA-TP53-R248Q-MCL</code></a> - Hotspot TP53 dans MCL — prédicteur d'échec chimioimmuno; 1L à base d'acalabrutinib préféré.</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r248q-mds-hr.html"><code>BMA-TP53-R248Q-MDS-HR</code></a> - Hotspot TP53 R248Q dans MDS à risque plus élevé — pronostic délicat. Biallelic vs monoallelic...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r248q-mm.html"><code>BMA-TP53-R248Q-MM</code></a> - mutation TP53 hotspot dans MM — caractéristique génétique à haut risque; quadruplet (D-VRD) préférée; CA...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r248q-nsclc.html"><code>BMA-TP53-R248Q-NSCLC</code></a> - Hotspot TP53 dans NSCLC — pronostic indésirable; module la réponse ICI....</li><li class="kb-muted">... 19 de plus</li></ul>
+<h3>Biomarqueur</h3><ul><li><a href="/fr/kb/biomarkers/bio-aml-tp53-adverse.html"><code>BIO-AML-TP53-ADVERSE</code></a> - TP53-mutated AML (adverse risk)</li><li><a href="/fr/kb/biomarkers/bio-cdkn2a.html"><code>BIO-CDKN2A</code></a> - Perte de CDKN2A (élimination homozygote ou inactivation bialléique)</li><li><a href="/fr/kb/biomarkers/bio-cll-high-risk-genetics.html"><code>BIO-CLL-HIGH-RISK-GENETICS</code></a> - CLL high-risk genetics (TP53 / del(17p) / IGHV-unmutated / complex karyotype)</li><li><a href="/fr/kb/biomarkers/bio-mds-del-5q.html"><code>BIO-MDS-DEL-5Q</code></a> - MDS avec anomalie cytogénétique del(5q)</li><li><a href="/fr/kb/biomarkers/bio-mm-cytogenetics-hr.html"><code>BIO-MM-CYTOGENETICS-HR</code></a> - Cytogénétique à haut risque dans le myélome multiple (FISH)</li><li><a href="/fr/kb/biomarkers/bio-p53-ihc-dysplasia.html"><code>BIO-P53-IHC-DYSPLASIA</code></a> - p53 IHC pour la DHG / dysplasie de Barrett (expression aberrante)</li><li><a href="/fr/kb/biomarkers/bio-tp53-ihc.html"><code>BIO-TP53-IHC</code></a> - TP53 IHC (modèle d'expression aberrant p53)</li><li><a href="/fr/kb/biomarkers/bio-tp53-r175h.html"><code>BIO-TP53-R175H</code></a> - TP53 R175H point de prise de fonction</li><li><a href="/fr/kb/biomarkers/bio-tp53-r248q.html"><code>BIO-TP53-R248Q</code></a> - TP53 R248Q Hotspot de contact ADN</li><li><a href="/fr/kb/biomarkers/bio-tp53-r273h.html"><code>BIO-TP53-R273H</code></a> - TP53 R273H point de contact avec l'ADN</li><li><a href="/fr/kb/biomarkers/bio-tp53-r282w.html"><code>BIO-TP53-R282W</code></a> - TP53 R282W point de perte partielle de fonctionnement</li></ul>
+<h3>Maladie</h3><ul><li><a href="/fr/kb/diseases/dis-adrenocortical-carcinoma.html"><code>DIS-ADRENOCORTICAL-CARCINOMA</code></a> - Carcinome adrénocortical (CAC)</li><li><a href="/fr/kb/diseases/dis-choroid-plexus-carcinoma.html"><code>DIS-CHOROID-PLEXUS-CARCINOMA</code></a> - Carcinome du plexus choroïde</li><li><a href="/fr/kb/diseases/dis-glioma-low-grade.html"><code>DIS-GLIOMA-LOW-GRADE</code></a> - Low-grade glioma (LGG, WHO grade 2 — IDH-mutant)</li><li><a href="/fr/kb/diseases/dis-leiomyosarcoma.html"><code>DIS-LEIOMYOSARCOMA</code></a> - Leiomyosarcome (LMS)</li><li><a href="/fr/kb/diseases/dis-mpnst.html"><code>DIS-MPNST</code></a> - Tumeur maligne de la gaine nerveuse périphérique (MPNST)</li><li><a href="/fr/kb/diseases/dis-osteosarcoma.html"><code>DIS-OSTEOSARCOMA</code></a> - Ostéosarcome</li><li><a href="/fr/kb/diseases/dis-thyroid-anaplastic.html"><code>DIS-THYROID-ANAPLASTIC</code></a> - Carcinome thyroïdien anaplasique (ATC)</li></ul>
+<h3>Chapitres du manuel</h3><ul><li><code>HB-MM-1L</code> - Myélome multiple : raisonnement de risque et d'aptitude en première ligne</li></ul>
+<h3>Indications</h3><ul><li><code>IND-AML-1L-7-3-GO-CBF</code> - IND-AML-1L-7-3-GO-CBF</li><li><code>IND-CLL-ELDERLY-O-CHL</code> - IND-CLL-ELDERLY-O-CHL</li></ul>
+<h3>Signal d’alerte</h3><ul><li><a href="/fr/kb/redflags/rf-cll-high-risk.html"><code>RF-CLL-HIGH-RISK</code></a> - CLL avec génétique à haut risque : mutation TP53 OR del(17p) OR IGHV non muté OR complexe caryo...</li><li><a href="/fr/kb/redflags/rf-cll-tp53-deletion-actionable.html"><code>RF-CLL-TP53-DELETION-ACTIONABLE</code></a> - CLL avec del(17p) par mutation FISH ET/OU TP53 par NGS — ~5-10% au moment du diagnostic, atteignant ~3...</li><li><a href="/fr/kb/redflags/rf-mcl-blastoid-or-tp53.html"><code>RF-MCL-BLASTOID-OR-TP53</code></a> - Lymphome à cellules mantelles avec morphologie blastoïdique / pléomorphique OU mutation TP53 OU del(17p)...</li><li><a href="/fr/kb/redflags/rf-mpnst-high-risk-biology.html"><code>RF-MPNST-HIGH-RISK-BIOLOGY</code></a> - MPNST avec des caractéristiques moléculaires / cliniques défavorables : perte de CDKN2A/B biallélique (&gt;80%...</li><li><a href="/fr/kb/redflags/rf-thyroid-papillary-high-risk-biology.html"><code>RF-THYROID-PAPILLARY-HIGH-RISK-BIOLOGY</code></a> - Carcinome thyroïdien papillaire présentant des caractéristiques moléculaires / cliniques défavorables: BRAF V600E (~60%...</li></ul>
+</main>
+</body>
+</html>

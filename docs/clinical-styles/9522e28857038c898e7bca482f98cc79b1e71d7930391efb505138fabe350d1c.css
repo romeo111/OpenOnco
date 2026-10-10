@@ -1,0 +1,311 @@
+
+    /* Demo-only chrome: header, lab letter, QR panel, footer. */
+
+:root {
+  --green-700: #166534;
+  --green-600: #16a34a;
+  --green-500: #22c55e;
+  --green-100: #dcfce7;
+  --green-50:  #f0fdf4;
+  --gray-900:  #1f2937;
+  --gray-700:  #374151;
+  --gray-500:  #6b7280;
+  --gray-200:  #e5e7eb;
+  --gray-100:  #f3f4f6;
+  --gray-50:   #f9fafb;
+  --blue-700:  #1d4ed8;
+  --blue-50:   #eff6ff;
+}
+
+body {
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  background: #f4f7f6;
+  margin: 0;
+  color: var(--gray-900);
+}
+
+.demo-page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 24px;
+  background: white;
+  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  border-radius: 8px;
+}
+@media (max-width: 720px) {
+  .demo-page { padding: 14px; border-radius: 0; box-shadow: none; }
+}
+
+/* Header */
+.demo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  border-bottom: 3px solid var(--green-600);
+  padding-bottom: 16px;
+  margin-bottom: 22px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-mark {
+  width: 52px; height: 52px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--green-700) 0%, var(--green-500) 100%);
+  color: white;
+  font-size: 30px;
+  line-height: 52px;
+  text-align: center;
+  font-family: Georgia, serif;
+  font-weight: bold;
+}
+.brand h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #14532d;
+  margin: 0;
+  line-height: 1.15;
+}
+.tagline {
+  font-size: 14px;
+  color: var(--gray-700);
+  margin: 2px 0 0;
+}
+.toggle-link {
+  display: inline-block;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--gray-100);
+  color: var(--gray-700);
+  padding: 8px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  border: 1px solid var(--gray-200);
+  white-space: nowrap;
+  align-self: center;
+}
+.toggle-link:hover {
+  background: var(--green-50);
+  color: var(--green-700);
+  border-color: var(--green-600);
+}
+
+/* Lab "letter" intro */
+.lab-letter {
+  background: var(--blue-50);
+  border-left: 4px solid var(--blue-700);
+  padding: 16px 20px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 22px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: #1e3a8a;
+}
+.lab-letter p { margin: 0 0 8px; }
+.lab-letter p:last-child { margin-bottom: 0; }
+.lab-attribution {
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #475569;
+  margin-top: 8px !important;
+}
+
+/* QR code panel */
+.qr-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 22px 18px;
+  margin: 0 auto 28px;
+  max-width: 440px;
+}
+.qr-panel img.qr-img {
+  width: 200px;
+  height: 200px;
+  background: white;
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  image-rendering: pixelated;
+}
+.qr-caption {
+  font-size: 14px;
+  color: var(--gray-700);
+  margin: 14px 0 6px;
+  line-height: 1.5;
+  max-width: 340px;
+}
+.qr-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--gray-500);
+  word-break: break-all;
+  margin-top: 4px;
+  padding: 4px 10px;
+  background: white;
+  border-radius: 4px;
+  border: 1px dashed var(--gray-200);
+}
+.qr-fallback {
+  background: #fef3c7;
+  border: 1px dashed #d97706;
+  color: #78350f;
+  padding: 16px 20px;
+  border-radius: 6px;
+  margin: 0 auto 28px;
+  max-width: 440px;
+  text-align: center;
+  font-size: 13px;
+}
+
+/* The patient-plan body is rendered by render_plan_html(mode="patient")
+   and styled by PATIENT_MODE_CSS. We just give it a bit of separation. */
+.patient-plan {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--gray-100);
+}
+.patient-plan .patient-report {
+  /* The engine wrapper supplies its own padding; flatten here so the
+     demo-page chrome doesn't double-indent the patient body. */
+  padding: 0 !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+/* Patient sign-off panel — friendly per-track confirmation status */
+.patient-signoff-panel {
+  background: var(--green-50);
+  border-left: 4px solid var(--green-600);
+  border-radius: 0 6px 6px 0;
+  padding: 16px 20px;
+  margin: 0 0 22px;
+}
+.patient-signoff-panel h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  color: #14532d;
+  margin: 0 0 6px;
+}
+.signoff-intro {
+  font-size: 14px;
+  color: var(--gray-700);
+  margin: 0 0 12px;
+  line-height: 1.55;
+}
+.signoff-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.signoff-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--gray-200);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.signoff-track {
+  font-weight: 600;
+  color: var(--gray-900);
+  font-size: 14px;
+}
+.signoff-pill {
+  display: inline-block;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.signoff-pill--complete {
+  background: var(--green-100);
+  color: #14532d;
+  border: 1px solid var(--green-600);
+}
+.signoff-pill--partial {
+  background: #fef3c7;
+  color: #78350f;
+  border: 1px solid #d97706;
+}
+.signoff-pill--pending {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #dc2626;
+}
+
+/* Engineering metrics — collapsible technical block above main disclaimer */
+.engineering-metrics {
+  margin: 22px 0 12px;
+  padding: 10px 14px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  font-size: 12px;
+  text-align: left;
+}
+.engineering-metrics summary {
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  color: var(--gray-700);
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 2px 0;
+}
+.engineering-metrics summary:hover { color: var(--green-700); }
+.engineering-metrics ul {
+  list-style: none; padding: 0; margin: 8px 0 0;
+}
+.engineering-metrics li {
+  padding: 3px 0;
+  line-height: 1.5;
+  color: var(--gray-700);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  border-top: 1px dashed var(--gray-200);
+}
+.engineering-metrics li:first-child { border-top: none; }
+.engineering-metrics a { color: var(--green-700); text-decoration: none; }
+.engineering-metrics a:hover { text-decoration: underline; }
+
+/* Demo footer */
+.demo-footer {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gray-200);
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--gray-500);
+}
+.demo-footer p { margin: 4px 0; }
+.demo-footer a { color: var(--green-700); text-decoration: none; }
+.demo-footer a:hover { text-decoration: underline; }
+
+/* Print: A4 */
+@media print {
+  body { background: white; }
+  .demo-page { box-shadow: none; max-width: 100%; padding: 0; border-radius: 0; }
+  .toggle-link { display: none; }
+  .qr-panel { break-inside: avoid; }
+  .lab-letter { break-inside: avoid; }
+  .qr-panel img.qr-img { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+@page { size: A4; margin: 16mm 14mm; }
+
+  

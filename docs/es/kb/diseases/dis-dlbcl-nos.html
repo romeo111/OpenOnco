@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Linfoma grande de células B, NOS - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/es/kb/diseases/dis-dlbcl-nos.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-dlbcl-nos.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-dlbcl-nos.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/diseases/dis-dlbcl-nos.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/diseases/dis-dlbcl-nos.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/diseases/dis-dlbcl-nos.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/diseases/dis-dlbcl-nos.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-dlbcl-nos.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linfoma grande de células B, NOS - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/es/kb/diseases/dis-dlbcl-nos.html">
+<meta property="og:locale" content="es">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linfoma grande de células B, NOS - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Linfoma grande de células B, NOS - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/es/kb/diseases/dis-dlbcl-nos.html","inLanguage":"es","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/es/kb/diseases/dis-dlbcl-nos.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="838896622c2fd12bdb83602ae8719aede48651bb806163d1ee9019f80b4e90e9"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/es/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGÍA ABIERTA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Idioma"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg>ES <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Idioma"><a href="/kb/diseases/dis-dlbcl-nos.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/diseases/dis-dlbcl-nos.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/diseases/dis-dlbcl-nos.html" lang="es" hreflang="es" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/diseases/dis-dlbcl-nos.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/diseases/dis-dlbcl-nos.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/diseases/dis-dlbcl-nos.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/es/try.html" class="btn-cta-top btn-cta-try"><span>Crear un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menú"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menú">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Herramientas</span>
+    <div class="top-cta-group">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Código abierto</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Traducción preliminar: revisión clínica pendiente.</strong> <a href="/kb/diseases/dis-dlbcl-nos.html" lang="en" hreflang="en" data-original-source>Consultar el original en inglés</a></aside>
+  <p class="kb-breadcrumb"><a href="/es/kb.html">Onco Wiki</a> / Enfermedad</p>
+  <h1>Linfoma B-Cell grande difuso, NOS</h1>
+  <p class="kb-lead">Vista determinista de la entidad fuente YAML. La autoridad clínica sigue con los ID de fuente citados y estado de firma del revisor.</p>
+
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-DLBCL-NOS</code></td></tr>
+<tr><th>Tipo</th><td>Enfermedad</td></tr>
+<tr><th>Aliaces</th><td><div class="kb-alias-list"><span class="kb-alias">DLBCL</span><span class="kb-alias">DLBCL NOS</span><span class="kb-alias">Linfoma difuso de células B grandes, sin otra especificación</span><span class="kb-alias">Дифузна B-великоклітинна лімфома, неуточнена (DLBCL NOS)</span><span class="kb-alias">Дифузна великоклітинна B-клітинна лімфома</span></div></td></tr>
+<tr><th>Situación</th><td>revisado 2026-04-25 pendance_clinical_signoff</td></tr>
+<tr><th>Enfermedades</th><td><span class="kb-muted">Ninguna declarada</span></td></tr>
+<tr><th>Fuentes</th><td><span class="kb-chip" title="EHA Directrices prácticas sobre el diagnóstico de trastornos hematológicos"><a href="https://ehaweb.org/research/eha-guidelines-and-recommendations/" target="_blank" rel="noopener noreferrer"><code>SRC-EHA-WORKUP-2024</code></a></span> <span class="kb-chip" title="NCCN Guías de Práctica Clínica en Oncología: Linfomas de Célula B"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BCELL-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Herramienta informativa, no un dispositivo médico. Todas las recomendaciones deben ser verificadas por un oncólogo cualificado. El contenido clínico es provisional hasta que el examen de dos firma.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/dlbcl_nos.yaml">Fuente YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morfología</th><td>9680/3</td></tr>
+<tr><th>Icd_o_3_topografía</th><td>[]</td></tr>
+<tr><th>Icd_10</th><td>C83.3</td></tr>
+<tr><th>Quién _clasificación</th><td>Aggressive B-cell lymphomas — Diffuse large B-cell lymphoma, NOS (DLBCL, NOS) per WHO Classification of Tumours of Haematolymphoid Tumours, 5th ed.</td></tr></table><p><a href="/es/diseases.html#DIS-DLBCL-NOS">Capacidades</a></p>
+  <h2>Notas</h2><p>El riesgo estratificado por IPI (edad, ECOG, LDH, estadio, sitios extranodales) y por celda de origen (GCB vs ABC a través del algoritmo Hans IHC). Mediastinal primario (PMBCL), SNC primario (PCNSL), transformado de indolente, y doble golpe (HGBL) son entidades biológicamente distintas - tratadas por separado en nuestro alcance de nivel 1.</p>
+  <h2>Utilizado por</h2>
+<h3>Relevancia terapéutica</h3><ul><li><a href="/es/kb/biomarker_actionability/bma-bcl2-expression-dlbcl-nos.html"><code>BMA-BCL2-EXPRESSION-DLBCL-NOS</code></a> - Alta expresión BCL2 IHC en DLBCL — común en los subconjuntos GCB y ABC. 'Expressor doble' (BCL2...</li><li><a href="/es/kb/biomarker_actionability/bma-bcl2-rearrangement-dlbcl-nos.html"><code>BMA-BCL2-REARRANGEMENT-DLBCL-NOS</code></a> - Redistribución aislada de la BCL2 en DLBCL (sin socio MYC) - común en GCB-DLBCL transformado f...</li><li><a href="/es/kb/biomarker_actionability/bma-braf-v600e-dlbcl-nos.html"><code>BMA-BRAF-V600E-DLBCL-NOS</code></a> - BRAF V600E en DLBCL es excepcional. El dabrafenib agnóstico de tejidos + trametinib podría ser contra...</li><li><a href="/es/kb/biomarker_actionability/bma-idh1-r132h-dlbcl-nos.html"><code>BMA-IDH1-R132H-DLBCL-NOS</code></a> - La IDH1 R132H en la DLBCL es excepcional (&lt;1%). No hay tratamiento específico en esta indicación; por...</li><li><a href="/es/kb/biomarker_actionability/bma-idh2-r140q-dlbcl-nos.html"><code>BMA-IDH2-R140Q-DLBCL-NOS</code></a> - IDH2 R140Q en DLBCL es excepcional (&lt;1%). No hay terapia dirigida en esta indica...</li><li><a href="/es/kb/biomarker_actionability/bma-myc-rearrangement-dlbcl-nos.html"><code>BMA-MYC-REARRANGEMENT-DLBCL-NOS</code></a> - Redistribución aislada de MYC en DLBCL (sin BCL2/BCL6) — pronóstico adverso pero no...</li><li><a href="/es/kb/biomarker_actionability/bma-myd88-l265p-dlbcl-nos.html"><code>BMA-MYD88-L265P-DLBCL-NOS</code></a> - MYD88 L265P en DLBCL marca el subtipo molecular ABC/MCD (Schmitz et al. NEJM 2018; Wrigh...</li><li><a href="/es/kb/biomarker_actionability/bma-notch1-activating-dlbcl-nos.html"><code>BMA-NOTCH1-ACTIVATING-DLBCL-NOS</code></a> - NOTCH1 mutations in DLBCL — uncommon; not therapy-selecting.</li><li><a href="/es/kb/biomarker_actionability/bma-tp53-mut-dlbcl-nos.html"><code>BMA-TP53-MUT-DLBCL-NOS</code></a> - TP53-mut DLBCL — predice fallo R-CHOP; bandera para la consideración temprana de la vía CAR-T a 2...</li><li><a href="/es/kb/biomarker_actionability/bma-tp53-r175h-dlbcl-nos.html"><code>BMA-TP53-R175H-DLBCL-NOS</code></a> - TP53 hotspot en DLBCL — predice fallo R-CHOP; bandera para CAR-T temprano. Hotspot R175H es un...</li><li><a href="/es/kb/biomarker_actionability/bma-tp53-r248q-dlbcl-nos.html"><code>BMA-TP53-R248Q-DLBCL-NOS</code></a> - TP53 hotspot en DLBCL — predice fallo de R-CHOP; bandera para CAR-T temprano. Hotspot R248Q es un...</li><li><a href="/es/kb/biomarker_actionability/bma-tp53-r273h-dlbcl-nos.html"><code>BMA-TP53-R273H-DLBCL-NOS</code></a> - TP53 hotspot en DLBCL — predice fallo R-CHOP; bandera para CAR-T temprano. Hotspot R273H es un...</li><li><a href="/es/kb/biomarker_actionability/bma-tp53-r282w-dlbcl-nos.html"><code>BMA-TP53-R282W-DLBCL-NOS</code></a> - TP53 hotspot en DLBCL — predice fallo de R-CHOP; bandera para CAR-T temprano. Hotspot R282W es un...</li></ul>
+<h3>Algoritmos</h3><ul><li><code>ALGO-DLBCL-1L</code> - ALGO-DLBCL-1L</li><li><code>ALGO-DLBCL-2L</code> - ALGO-DLBCL-2L</li><li><code>ALGO-DLBCL-3L</code> - ALGO-DLBCL-3L</li></ul>
+<h3>Enfermedad</h3><ul><li><a href="/es/kb/diseases/dis-b-all.html"><code>DIS-B-ALL</code></a> - Leucemia B-Linfoblástica / Linfoma</li><li><a href="/es/kb/diseases/dis-burkitt.html"><code>DIS-BURKITT</code></a> - Linfoma de Burkitt</li><li><a href="/es/kb/diseases/dis-cll.html"><code>DIS-CLL</code></a> - Leucemia linfocítica crónica / Linfoma linfocítico pequeño</li><li><a href="/es/kb/diseases/dis-fl.html"><code>DIS-FL</code></a> - Linfoma folicular</li><li><a href="/es/kb/diseases/dis-hgbl-dh.html"><code>DIS-HGBL-DH</code></a> - Linfoma B-Cell de alta calidad con MYC y BCL2 y/o rearreglos BCL6 (doble golpe / triple golpe)</li><li><a href="/es/kb/diseases/dis-nlpbl.html"><code>DIS-NLPBL</code></a> - Linfoma de células B predominante en linfocitos nodulares (anteriormente NLPHL)</li><li><a href="/es/kb/diseases/dis-pcnsl.html"><code>DIS-PCNSL</code></a> - Difusa primaria Linfoma B-Cell grande del SNC</li><li><a href="/es/kb/diseases/dis-pmbcl.html"><code>DIS-PMBCL</code></a> - Linfoma primario (tímico) de células B de gran tamaño</li><li><a href="/es/kb/diseases/dis-ptld.html"><code>DIS-PTLD</code></a> - Trastorno linfoproliferativo post-transplante</li></ul>
+<h3>Capítulos del Manual</h3><ul><li><code>HB-DLBCL-1L</code> - Difuso linfoma de células B grandes: razonamiento de primera línea</li></ul>
+<h3>Indicación</h3><ul><li><a href="/es/kb/indications/ind-chronic-hiv-prevention-art.html"><code>IND-CHRONIC-HIV-PREVENTION-ART</code></a> - IND-CHRONIC-HIV-PREVENTION-ART</li><li><a href="/es/kb/indications/ind-chronic-hiv-prevention-observation.html"><code>IND-CHRONIC-HIV-PREVENTION-OBSERVATION</code></a> - IND-CHRONIC-HIV-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-dlbcl-1l-pola-r-chp.html"><code>IND-DLBCL-1L-POLA-R-CHP</code></a> - IND-DLBCL-1L-POLA-R-CHP</li><li><a href="/es/kb/indications/ind-dlbcl-1l-rchop.html"><code>IND-DLBCL-1L-RCHOP</code></a> - IND-DLBCL-1L-RCHOP</li><li><a href="/es/kb/indications/ind-dlbcl-1l-rchop-isrt-early.html"><code>IND-DLBCL-1L-RCHOP-ISRT-EARLY</code></a> - IND-DLBCL-1L-RCHOP-ISRT-EARLY</li><li><a href="/es/kb/indications/ind-dlbcl-2l-lisocel.html"><code>IND-DLBCL-2L-LISOCEL</code></a> - IND-DLBCL-2L-LISOCEL</li><li><a href="/es/kb/indications/ind-dlbcl-2l-pola-r-bendamustine.html"><code>IND-DLBCL-2L-POLA-R-BENDAMUSTINE</code></a> - IND-DLBCL-2L-POLA-R-BENDAMUSTINE</li><li><a href="/es/kb/indications/ind-dlbcl-3l-axicel-cart.html"><code>IND-DLBCL-3L-AXICEL-CART</code></a> - IND-DLBCL-3L-AXICEL-CART</li><li><a href="/es/kb/indications/ind-dlbcl-3l-epcoritamab.html"><code>IND-DLBCL-3L-EPCORITAMAB</code></a> - IND-DLBCL-3L-EPCORITAMAB</li><li><a href="/es/kb/indications/ind-dlbcl-3l-glofitamab.html"><code>IND-DLBCL-3L-GLOFITAMAB</code></a> - IND-DLBCL-3L-GLOFITAMAB</li><li><a href="/es/kb/indications/ind-dlbcl-3l-liso-cel-cart.html"><code>IND-DLBCL-3L-LISO-CEL-CART</code></a> - IND-DLBCL-3L-LISO-CEL-CART</li><li><a href="/es/kb/indications/ind-dlbcl-3l-loncastuximab.html"><code>IND-DLBCL-3L-LONCASTUXIMAB</code></a> - IND-DLBCL-3L-LONCASTUXIMAB</li><li><a href="/es/kb/indications/ind-dlbcl-renal-failure-mod-rchop.html"><code>IND-DLBCL-RENAL-FAILURE-MOD-RCHOP</code></a> - IND-DLBCL-RENAL-FAILURE-MOD-RCHOP</li><li><a href="/es/kb/indications/ind-emerg-infusion-reaction-irr.html"><code>IND-EMERG-INFUSION-REACTION-IRR</code></a> - IND-EMERG-INFUSION-REACTION-IRR</li><li><a href="/es/kb/indications/ind-iatrogenic-anti-tnf-lymphoma-prevention-observation.html"><code>IND-IATROGENIC-ANTI-TNF-LYMPHOMA-PREVENTION-OBSERVATION</code></a> - IND-IATROGENIC-ANTI-TNF-LYMPHOMA-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-iatrogenic-anti-tnf-lymphoma-prevention-surveillance.html"><code>IND-IATROGENIC-ANTI-TNF-LYMPHOMA-PREVENTION-SURVEILLANCE</code></a> - IND-IATROGENIC-ANTI-TNF-LYMPHOMA-PREVENTION-SURVEILLANCE</li><li><a href="/es/kb/indications/ind-iatrogenic-azathioprine-longterm-prevention-observation.html"><code>IND-IATROGENIC-AZATHIOPRINE-LONGTERM-PREVENTION-OBSERVATION</code></a> - IND-IATROGENIC-AZATHIOPRINE-LONGTERM-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-iatrogenic-azathioprine-longterm-prevention-surveillance.html"><code>IND-IATROGENIC-AZATHIOPRINE-LONGTERM-PREVENTION-SURVEILLANCE</code></a> - IND-IATROGENIC-AZATHIOPRINE-LONGTERM-PREVENTION-SURVEILLANCE</li><li><a href="/es/kb/indications/ind-iatrogenic-methotrexate-longterm-lymphoma-prevention-observation.html"><code>IND-IATROGENIC-METHOTREXATE-LONGTERM-LYMPHOMA-PREVENTION-OBSERVATION</code></a> - IND-IATROGENIC-METHOTREXATE-LONGTERM-LYMPHOMA-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-iatrogenic-methotrexate-longterm-lymphoma-prevention-surveillance.html"><code>IND-IATROGENIC-METHOTREXATE-LONGTERM-LYMPHOMA-PREVENTION-SURVEILLANCE</code></a> - IND-IATROGENIC-METHOTREXATE-LONGTERM-LYMPHOMA-PREVENTION-SURVEILLANCE</li><li><a href="/es/kb/indications/ind-iatrogenic-transplant-immunosuppression-longterm-prevention-observation.html"><code>IND-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-LONGTERM-PREVENTION-OBSERVATION</code></a> - IND-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-LONGTERM-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-iatrogenic-transplant-immunosuppression-longterm-prevention-surveillance.html"><code>IND-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-LONGTERM-PREVENTION-SURVEILLANCE</code></a> - IND-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-LONGTERM-PREVENTION-SURVEILLANCE</li><li><a href="/es/kb/indications/ind-occ-glyphosate-prevention-intensified-surveillance.html"><code>IND-OCC-GLYPHOSATE-PREVENTION-INTENSIFIED-SURVEILLANCE</code></a> - IND-OCC-GLYPHOSATE-PREVENTION-INTENSIFIED-SURVEILLANCE</li><li><a href="/es/kb/indications/ind-occ-glyphosate-prevention-observation.html"><code>IND-OCC-GLYPHOSATE-PREVENTION-OBSERVATION</code></a> - IND-OCC-GLYPHOSATE-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-occ-pcb-prevention-intensified-surveillance.html"><code>IND-OCC-PCB-PREVENTION-INTENSIFIED-SURVEILLANCE</code></a> - IND-OCC-PCB-PREVENTION-INTENSIFIED-SURVEILLANCE</li><li><a href="/es/kb/indications/ind-occ-pcb-prevention-observation.html"><code>IND-OCC-PCB-PREVENTION-OBSERVATION</code></a> - IND-OCC-PCB-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-universal-immunocompromised-prevention-stratified-screening.html"><code>IND-UNIVERSAL-IMMUNOCOMPROMISED-PREVENTION-STRATIFIED-SCREENING</code></a> - IND-UNIVERSAL-IMMUNOCOMPROMISED-PREVENTION-STRATIFIED-SCREENING</li></ul>
+<h3>Cuestionarios</h3><ul><li><code>QUEST-DLBCL-NOS-1L-STUB</code> - Linfoma grande de células B difusas, no especificado de otro modo — primera línea</li></ul>
+<h3>Señal de alerta</h3><ul><li><a href="/es/kb/redflags/rf-aaipi-high.html"><code>RF-AAIPI-HIGH</code></a> - IPI ajustado en función de la edad ≥2 en el paciente &lt; 60 años de edad — DLBCL joven de alto riesgo; soportes DA-EPOCH-R...</li><li><a href="/es/kb/redflags/rf-chronic-hiv-malignancy-prevention.html"><code>RF-CHRONIC-HIV-MALIGNANCY-PREVENTION</code></a> - Infección por VIH (serología positiva) en un individuo sin una definición actual del sida o VIH...</li><li><a href="/es/kb/redflags/rf-dlbcl-cart-ineligible-post-2l.html"><code>RF-DLBCL-CART-INELIGIBLE-POST-2L</code></a> - Relapsed/refractory DLBCL post ≥2 prior systemic therapies, NOT a candidate for anti-CD19...</li><li><a href="/es/kb/redflags/rf-dlbcl-cd20-pos-epcoritamab-candidate.html"><code>RF-DLBCL-CD20-POS-EPCORITAMAB-CANDIDATE</code></a> - Relapsed/refractory DLBCL with confirmed CD20 expression on malignant B-cells, post ≥2 pr...</li><li><a href="/es/kb/redflags/rf-dlbcl-cd20-pos-glofitamab-candidate.html"><code>RF-DLBCL-CD20-POS-GLOFITAMAB-CANDIDATE</code></a> - Relapsed/refractory DLBCL with confirmed CD20 expression on malignant B-cells, post ≥2 pr...</li><li><a href="/es/kb/redflags/rf-dlbcl-cd79b-mut-mcd-candidate.html"><code>RF-DLBCL-CD79B-MUT-MCD-CANDIDATE</code></a> - mutación CD79B (más comúnmente Y196 hotspot en el dominio ITAM) en DLBCL, a menudo co-ocurren w ...</li><li><a href="/es/kb/redflags/rf-dlbcl-cns-risk.html"><code>RF-DLBCL-CNS-RISK</code></a> - DLBCL with high CNS-IPI risk (CNS-IPI ≥4) OR specific anatomic sites (testicular, breast,...</li><li><a href="/es/kb/redflags/rf-dlbcl-frailty-age.html"><code>RF-DLBCL-FRAILTY-AGE</code></a> - Perfil de fragilidad que excluye la dosis completa de R-CHOP: ECOG ≥3, OR (nivel ≥80 con ≥1 grado 2 comorbi...</li><li><a href="/es/kb/redflags/rf-dlbcl-high-ipi.html"><code>RF-DLBCL-HIGH-IPI</code></a> - DLBCL con índice de pronóstico internacional ≥2 - selecciona intensificado Pola-R-CHP sobre R-CHOP...</li><li><a href="/es/kb/redflags/rf-dlbcl-high-risk-biology.html"><code>RF-DLBCL-HIGH-RISK-BIOLOGY</code></a> - Biología de alto riesgo en DLBCL NOS: doble expresión (MYC + BCL2 por IHC, sin reorganización), T...</li><li><a href="/es/kb/redflags/rf-dlbcl-infection-screening.html"><code>RF-DLBCL-INFECTION-SCREENING</code></a> - Infección activa o latente que requiera resolución / profilaxis antes de iniciar la R-CHOP-cl...</li><li><a href="/es/kb/redflags/rf-dlbcl-organ-dysfunction.html"><code>RF-DLBCL-ORGAN-DYSFUNCTION</code></a> - Disfunción de los órganos basales que excluyen las dosis estándar de R-CHOP: FEVI &lt;50% (antraciclina con...</li><li><a href="/es/kb/redflags/rf-dlbcl-transformation-progression.html"><code>RF-DLBCL-TRANSFORMATION-PROGRESSION</code></a> - DLBCL refrataria o progresiva después de ≥1 línea de inmunoquimioterapia estándar: ...</li><li><a href="/es/kb/redflags/rf-iatrogenic-anti-tnf-lymphoma-prevention.html"><code>RF-IATROGENIC-ANTI-TNF-LYMPHOMA-PREVENTION</code></a> - Exposición biológica crónica anti-TNF ≥3 años en pacientes pediátricos, adolescentes o adultos jóvenes</li><li><a href="/es/kb/redflags/rf-iatrogenic-azathioprine-longterm-prevention.html"><code>RF-IATROGENIC-AZATHIOPRINE-LONGTERM-PREVENTION</code></a> - Exposición a largo plazo a tiopurina ≥3-5 años — azatioprina o su metabolito activo 6-mercap...</li><li><a href="/es/kb/redflags/rf-iatrogenic-methotrexate-longterm-lymphoma-prevention.html"><code>RF-IATROGENIC-METHOTREXATE-LONGTERM-LYMPHOMA-PREVENTION</code></a> - Dosis bajas a largo plazo methotrexate exposición (≥1-2 años, ≥15 mg/week acumulativo o PO 7.5-25...</li><li><a href="/es/kb/redflags/rf-iatrogenic-transplant-immunosuppression-longterm-prevention.html"><code>RF-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-LONGTERM-PREVENTION</code></a> - Receptor de trasplante de órganos sólidos con inmunosupresión crónica ≥ 3 años después del trasplante, b...</li><li><a href="/es/kb/redflags/rf-iatrogenic-transplant-immunosuppression-prevention.html"><code>RF-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-PREVENTION</code></a> - Inmunosupresión crónica para trasplante de órganos sólidos o HSCT post-aloge...</li><li><a href="/es/kb/redflags/rf-ipi-high.html"><code>RF-IPI-HIGH</code></a> - DLBCL con índice de pronóstico internacional 4-5 (alto riesgo) - apoya Pola-R-CHP...</li><li><a href="/es/kb/redflags/rf-ipi-intermediate.html"><code>RF-IPI-INTERMEDIATE</code></a> - DLBCL con índice de pronóstico internacional 2-3 (riesgo intermedio) - abre la discusión MDT...</li><li><a href="/es/kb/redflags/rf-ipi-low.html"><code>RF-IPI-LOW</code></a> - DLBCL con índice de pronóstico internacional 0-1 (riesgo bajo) - soporta R-CHOP estándar backb...</li><li><a href="/es/kb/redflags/rf-occ-glyphosate-prevention.html"><code>RF-OCC-GLYPHOSATE-PREVENTION</code></a> - Exposición laboral histórica documentada a herbicidas a base de glifosato (en particular...</li><li><a href="/es/kb/redflags/rf-occ-pcb-prevention.html"><code>RF-OCC-PCB-PREVENTION</code></a> - Exposición laboral histórica documentada a bifenilos policlorados (PCB)...</li><li><a href="/es/kb/redflags/rf-universal-immunocompromised-cancer-risk.html"><code>RF-UNIVERSAL-IMMUNOCOMPROMISED-CANCER-RISK</code></a> - Chronic immunosuppression ≥1 year — any of: (a) untreated or treated HIV with CD4 nadir &lt;...</li></ul>
+<h3>Fuentes</h3><ul><li><code>SRC-BEAUGERIE-CESAME-2013</code> - Riesgo de cáncer nuevo o recurrente en pacientes con enfermedad inflamatoria intestinal y...</li><li><code>SRC-EPCORE-NHL-1-THIEBLEMONT-2023</code> - Epcoritamab, un nuevo CD3xCD20 subcutáneo biespecífico anticuerpo de encendido de células T, en re...</li><li><code>SRC-ESMO-DLBCL-2024</code> - Orientación de práctica clínica de ESMO sobre linfoma difuso grande de células B</li><li><code>SRC-ESMO-LYMPHOMA-2025</code> - Linfomas: Guía de Práctica Clínica ESMO para el diagnóstico, tratamiento y seguimiento</li><li><code>SRC-IDSA-EBV-2019</code> - Trastornos linfoproliferativos post-transplante, infección por el virus Epstein-Barr y enfermedades...</li><li><code>SRC-MOZ-UA-LYMPH-2013</code> - Уніфікований клінічний протокол первинної, вторинної (спеціалізованої) медичної допомоги:...</li><li><code>SRC-NP30179-DICKINSON-2022</code> - Glofitamab para linfoma recidivante o refractario de gran linfoma de células B</li><li><code>SRC-POLARIX-TILLY-2022</code> - Polatuzumab Vedotin in Previously Untreated Diffuse Large B-Cell Lymphoma</li><li><code>SRC-TRANSFORM-KAMDAR-2022</code> - Lisocabtagene maraleucel versus tratamiento estándar con quimioterapia de salvamento seguido de...</li></ul>
+</main>
+</body>
+</html>

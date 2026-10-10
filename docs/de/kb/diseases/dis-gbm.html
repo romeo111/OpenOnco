@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glioblastom (IDH-WT, WHO-Grad 4) - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/de/kb/diseases/dis-gbm.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-gbm.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-gbm.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/diseases/dis-gbm.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/diseases/dis-gbm.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/diseases/dis-gbm.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/diseases/dis-gbm.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-gbm.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Glioblastom (IDH-WT, WHO-Grad 4) - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/de/kb/diseases/dis-gbm.html">
+<meta property="og:locale" content="de">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Glioblastom (IDH-WT, WHO-Grad 4) - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Glioblastom (IDH-WT, WHO-Grad 4) - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/de/kb/diseases/dis-gbm.html","inLanguage":"de","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/de/kb/diseases/dis-gbm.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="ec3b98051305ed3e9b83a88a1660ac5c66ce541d4505dd52328897d80b57c533"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/de/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">OFFENE ONKOLOGIE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Sprache"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg>DE <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Sprache"><a href="/kb/diseases/dis-gbm.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/diseases/dis-gbm.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/diseases/dis-gbm.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/diseases/dis-gbm.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/diseases/dis-gbm.html" lang="de" hreflang="de" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/diseases/dis-gbm.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/de/try.html" class="btn-cta-top btn-cta-try"><span>Plan erstellen</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menü"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menü">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Werkzeuge</span>
+    <div class="top-cta-group">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Open Source</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Vorläufige Übersetzung: klinische Prüfung ausstehend.</strong> <a href="/kb/diseases/dis-gbm.html" lang="en" hreflang="en" data-original-source>Englisches Original ansehen</a></aside>
+  <p class="kb-breadcrumb"><a href="/de/kb.html">Onco Wiki</a> / Krankheit</p>
+  <h1>Glioblastom (IDH-WT, WHO-Grad 4)</h1>
+  <p class="kb-lead">Deterministische Ansicht der Quelle YAML Entität. Klinische Autorität bleibt mit den zitierten Quell-IDs und Rezensenten Sign-off Zustand.</p>
+
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-GBM</code></td></tr>
+<tr><th>Art</th><td>Erkrankung</td></tr>
+<tr><th>Aliase</th><td><div class="kb-alias-list"><span class="kb-alias">GBM</span><span class="kb-alias">Glioblastom</span><span class="kb-alias">Glioblastoma multiforme (Legacy-Begriff)</span><span class="kb-alias">Гліобластома (IDH-WT, WHO grade 4)</span></div></td></tr>
+<tr><th>Status</th><td>überprüft 2026-04-26-- ausstehende_klinische_signoff</td></tr>
+<tr><th>Erkrankungen</th><td><span class="kb-muted">None declared</span></td></tr>
+<tr><th>Quellen</th><td><span class="kb-chip" title="EANO Leitlinien zur Diagnose und Behandlung von diffuse Gliome der Erwachsenenalter"><a href="https://www.eano.eu/guidelines/" target="_blank" rel="noopener noreferrer"><code>SRC-EANO-GBM-2024</code></a></span> <span class="kb-chip" title="NCCN Central Nervous System Cancers"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1425" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-CNS-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Informationstool, kein medizinisches Gerät. Alle Empfehlungen müssen von einem qualifizierten Onkologen überprüft werden. Klinischer Inhalt ist vorläufig bis zwei-Reviewer-Auszeichnung.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/gbm.yaml">Quelle: YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morphologie</th><td>9440/3</td></tr>
+<tr><th>icd_o_3_topographie</th><td>["C71"]</td></tr>
+<tr><th>icd_10</th><td>C71</td></tr>
+<tr><th>who_classification</th><td>WHO-ZNS-Tumors 5. ed (2021): Glioblastom, IDH-Wildtyp, Grad 4 (das IDH -mutante Grad-4 Astrozytom ist eine eigenständige Einheit)</td></tr></table><p><a href="/de/diseases.html#DIS-GBM">Fähigkeiten</a></p>
+  <h2>Anmerkungen</h2><p>Gerüstt für Charge #2: 4 RFs (Intrakranialdruck-Notfall, MGMT-Aktivität, Gebrechlichkeit/Alter — ältere Stupp-modifiziert, Biopsie-only vs. maximal-sicherer MDT-Trigger). 1 Regime (TMZ Stupp gleichzeitig + adjuvant). 2 Indikationen (Stupp voll für fit; TMZ-ony für ältere unmethylierte Untauglichkeit). 1 Algorithmus. Linearitätswert `Karzinom` ist suboptimal – neuroepithelial wäre genauer. Schemas Linienfeld ist freitextlich optional; mit `Karzinom` für jetzt, um andere Festkörpereinträge zu treffen; klinische Autoren können `glioma` / `neuroepithelial` Enum Wert in Zukunft hinzufügen wollen. RT 60 Gy / 30 Fraktionen, die mit TMZ 75 mg/m2/d während RT zusammentreffen, ist die kanonischen Stupp gleichzeitige Phase. RT NICHT modellierbar pro PROPOSAL §17 — behandelt als Freitext in Indication.notes für jetzt.</p>
+  <h2>Verwendet von</h2>
+<h3>Therapeutische Relevanz</h3><ul><li><a href="/de/kb/biomarker_actionability/bma-braf-v600e-gbm.html"><code>BMA-BRAF-V600E-GBM</code></a> - BRAF V600E bei erwachsenen Glioblastomen ist selten (~1-3%), aber häufiger bei Epithelioid GBM...</li><li><a href="/de/kb/biomarker_actionability/bma-egfr-mutation-gbm.html"><code>BMA-EGFR-MUTATION-GBM</code></a> - EGFR Verstärkung (~40%) und EGFRvIII Variante (~25%) sind häufig im Glioblastom, aber keine...</li><li><a href="/de/kb/biomarker_actionability/bma-idh1-r132c-gbm.html"><code>BMA-IDH1-R132C-GBM</code></a> - IDH1 R132C in glioma — non-canonical; same therapeutic implications as R132H (vorasidenib...</li><li><a href="/de/kb/biomarker_actionability/bma-idh1-r132g-gbm.html"><code>BMA-IDH1-R132G-GBM</code></a> - IDH1 R132G — mit dem Etikett IDH-mut glioma vorasidenib abgedeckt.</li><li><a href="/de/kb/biomarker_actionability/bma-idh1-r132h-gbm.html"><code>BMA-IDH1-R132H-GBM</code></a> - IDH1 R132H — definiert IDH-mutantes Astrozytom (WHO 2021 Grad 2-4) und Oligodendrogliom (w...</li><li><a href="/de/kb/biomarker_actionability/bma-idh1-r132l-gbm.html"><code>BMA-IDH1-R132L-GBM</code></a> - IDH1 R132L — abgedeckt durch Vorasidenib.</li><li><a href="/de/kb/biomarker_actionability/bma-idh1-r132s-gbm.html"><code>BMA-IDH1-R132S-GBM</code></a> - IDH1 R132S — abgedeckt durch Vorasidenib.</li><li><a href="/de/kb/biomarker_actionability/bma-mgmt-methylation-gbm.html"><code>BMA-MGMT-METHYLATION-GBM</code></a> - MGMT-Promotor-Methylierung im IDH-WT-Glioblastom ist der stärkste validierte Prädiktor...</li><li><a href="/de/kb/biomarker_actionability/bma-sufu-germline-medulloblastoma.html"><code>BMA-SUFU-GERMLINE-MEDULLOBLASTOMA</code></a> - SUFU keimlinien-pathogene Varianten verursachen eine Gorlin-Syndrom-ähnliche Prädisposition mit viel h...</li><li><a href="/de/kb/biomarker_actionability/bma-tert-glioma.html"><code>BMA-TERT-GLIOMA</code></a> - TERT-Promotormutationen stehen im Mittelpunkt der Tumorklassifikation des WHO-ZNS (2021 5. Auflage): (...</li><li><a href="/de/kb/biomarker_actionability/bma-tp53-mut-gbm.html"><code>BMA-TP53-MUT-GBM</code></a> - TP53 mutation in GBM — common, adverse prognostic; not directly targeted. Per usual algor...</li></ul>
+<h3>Algorithmen</h3><ul><li><code>ALGO-CASCADE-LFS-CARRIER-FAMILY-TESTING</code> - ALGO-CASCADE-LFS-CARRIER-FAMILY-TESTING</li><li><code>ALGO-GBM-NEWLY-DIAGNOSED-1L</code> - ALGO-GBM-NEWLY-DIAGNOSED-1L</li><li><code>ALGO-GBM-RECURRENT</code> - ALGO-GBM-RECURRENT</li></ul>
+<h3>Erkrankung</h3><ul><li><a href="/de/kb/diseases/dis-glioma-low-grade.html"><code>DIS-GLIOMA-LOW-GRADE</code></a> - Niedriggradiges Gliom (LGG, WHO Grad 2 — IDH-mutant)</li></ul>
+<h3>Anwendungsgebiet</h3><ul><li><a href="/de/kb/indications/ind-gbm-newly-diagnosed-elderly-hyport.html"><code>IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT</code></a> - IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT</li><li><a href="/de/kb/indications/ind-gbm-newly-diagnosed-elderly-tmz.html"><code>IND-GBM-NEWLY-DIAGNOSED-ELDERLY-TMZ</code></a> - IND-GBM-NEWLY-DIAGNOSED-ELDERLY-TMZ</li><li><a href="/de/kb/indications/ind-gbm-newly-diagnosed-stupp.html"><code>IND-GBM-NEWLY-DIAGNOSED-STUPP</code></a> - IND-GBM-NEWLY-DIAGNOSED-STUPP</li><li><a href="/de/kb/indications/ind-gbm-recurrent-bevacizumab.html"><code>IND-GBM-RECURRENT-BEVACIZUMAB</code></a> - IND-GBM-RECURRENT-BEVACIZUMAB</li><li><a href="/de/kb/indications/ind-iatrogenic-cranial-rt-late-prevention-observation.html"><code>IND-IATROGENIC-CRANIAL-RT-LATE-PREVENTION-OBSERVATION</code></a> - IND-IATROGENIC-CRANIAL-RT-LATE-PREVENTION-OBSERVATION</li><li><a href="/de/kb/indications/ind-iatrogenic-cranial-rt-late-prevention-surveillance.html"><code>IND-IATROGENIC-CRANIAL-RT-LATE-PREVENTION-SURVEILLANCE</code></a> - IND-IATROGENIC-CRANIAL-RT-LATE-PREVENTION-SURVEILLANCE</li></ul>
+<h3>Fragebogen</h3><ul><li><code>QUEST-GBM-1L-STUB</code> - Glioblastom — erste Zeile</li></ul>
+<h3>Warnhinweis</h3><ul><li><a href="/de/kb/redflags/rf-cascade-lfs-fdr-positive.html"><code>RF-CASCADE-LFS-FDR-POSITIVE</code></a> - Ein Erst-Grad-Verwandter des Patienten (Eltern, Geschwister oder Kind) hat eine...</li><li><a href="/de/kb/redflags/rf-gbm-frailty-age.html"><code>RF-GBM-FRAILTY-AGE</code></a> - Gebrechlichkeitsprofil, das Standard 6-wöchige TMZ-Chemoradiation im Glioblastom vorschreibt: KPS &lt;70, E...</li><li><a href="/de/kb/redflags/rf-gbm-high-risk-biology.html"><code>RF-GBM-HIGH-RISK-BIOLOGY</code></a> - Glioblastom mit unerwünschter Molekularbiologie unter der WHO-CNS5-Klassifikation: MGMT-Promotor...</li><li><a href="/de/kb/redflags/rf-gbm-infection-screening.html"><code>RF-GBM-INFECTION-SCREENING</code></a> - Active or unmanaged infection requiring resolution before initiating temozolomide (TMZ) c...</li><li><a href="/de/kb/redflags/rf-gbm-intracranial-pressure-emergency.html"><code>RF-GBM-INTRACRANIAL-PRESSURE-EMERGENCY</code></a> - Symptomatische erhöhte intrakranielle Druck / Masse-Effekt im Glioblastom: abnehmende GCS, ne...</li><li><a href="/de/kb/redflags/rf-gbm-transformation-progression.html"><code>RF-GBM-TRANSFORMATION-PROGRESSION</code></a> - Glioblastom Progression auf oder nach First-Line-Stupp-Regime: MRT-Evidenz für wahre Progr...</li><li><a href="/de/kb/redflags/rf-glioma-low-grade-high-risk-biology.html"><code>RF-GLIOMA-LOW-GRADE-HIGH-RISK-BIOLOGY</code></a> - Niedriggradiges Gliom mit hochrisikoreichen molekularen Eigenschaften: IDH-Wildtyp (pro WHO 5. ed., reklas...</li><li><a href="/de/kb/redflags/rf-iatrogenic-cranial-rt-late-prevention.html"><code>RF-IATROGENIC-CRANIAL-RT-LATE-PREVENTION</code></a> - Krebsüberlebende ≥ 5 Jahre nach der Vervollständigung der kurativ-intent...</li><li><a href="/de/kb/redflags/rf-li-fraumeni-family-history-suspicion.html"><code>RF-LI-FRAUMENI-FAMILY-HISTORY-SUSPICION</code></a> - Familien-Ahnentafel oder persönliche Geschichte-Ereignis-Kriterien, die auf das Li-Fraumeni-Syndrom...</li></ul>
+<h3>Quellen</h3><ul><li><code>SRC-CCTG-CE6-PERRY-2017</code> - Kurzstreckenstrahlung plus Temozolomide bei älteren Patienten mit Glioblastom</li><li><code>SRC-EANO-GBM-2024</code> - EANO Leitlinien zur Diagnose und Behandlung von diffuse Gliome der Erwachsenenalter</li><li><code>SRC-EF14-STUPP-2015</code> - Pflegetherapie mit Tumor-Treating-Feldern plus Temozolomide gegen Temozolomide Alleine für...</li><li><code>SRC-NCCN-CNS-2025</code> - Krebse des zentralen Nervensystems des NCCN</li><li><code>SRC-NORDIC-GBM-MALMSTROM-2012</code> - Temozolomide versus Standard 6-Wochen-Radiotherapie gegen hypofraktäre Radiotherapie in...</li></ul>
+</main>
+</body>
+</html>

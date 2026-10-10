@@ -1,7 +1,7 @@
 """Shared navigation for public pages and the educational handbook."""
 
 from pathlib import Path
-from scripts.site_locales import COPY, LOCALES, PUBLIC_PAGES, locale_href, split_locale
+from scripts.site_locales import CLINICAL_LOCALES, COPY, LOCALES, PUBLIC_PAGES, locale_href, locale_path, split_locale
 
 _NAV_LABELS = {
     "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "План лікування",
@@ -28,7 +28,8 @@ def _language_flag(locale: str) -> str:
 
 
 def render_top_bar(active: str = "", target_lang: str = "en",
-                    lang_switch_href: str = "/ukr/", page_path: str | None = None) -> str:
+                    lang_switch_href: str = "/ukr/", page_path: str | None = None,
+                    available_paths: set[str] | None = None) -> str:
     """Render an accessible six-language header; unavailable twins lead home."""
     def cls(name: str) -> str:
         return ' class="active" aria-current="page"' if active == name else ""
@@ -42,8 +43,7 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     # The Ukrainian project page now folds in the former Capabilities and
     # Limitations material. GitHub, examples and specs stay grouped under
     # About to keep the main nav focused.
-    # News is bilingual from day one, so it appears on both navs (unlike
-    # Handbook, which is EN-only MVP).
+    # News and Handbook stay available in the reading menu of each edition.
     handbook_label = "Посібник" if target_lang == "uk" else labels.get("handbook", "Handbook")
     extra_links = (
         (f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>' if target_lang == "en" else "")
@@ -95,9 +95,12 @@ def render_top_bar(active: str = "", target_lang: str = "en",
         page = "about.html"
     language_items = []
     for code, (_, native_name, abbreviation) in LOCALES.items():
-        available = page in PUBLIC_PAGES or code in {"en", "uk"} and (
-            page == "participate.html" or page.startswith("kb/") or page.startswith("cases/") or page.startswith("handbook/") or page.startswith("news/")
+        available = page in PUBLIC_PAGES or code in {"en", "uk"} | CLINICAL_LOCALES and (
+            page.startswith(("kb/", "cases/", "handbook/", "plans/", "disease/"))
+            or code in {"en", "uk"} and (page == "participate.html" or page.startswith("news/"))
         )
+        if available_paths is not None:
+            available = locale_path(page, code) in available_paths
         href = locale_href(page if available else "index.html", code)
         current = ' aria-current="true"' if code == target_lang else ""
         language_items.append(f'<a href="{href}" lang="{code}" hreflang="{code}"{current}>{_language_flag(code)}<span>{native_name}</span><small>{abbreviation}</small></a>')
@@ -107,7 +110,7 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     </details>'''
 
     return f"""<header class="top-bar site-header">
-  <link rel="stylesheet" href="/header.css?v=flags-20261010">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
   <div class="header-shell">
   <div class="header-main">
     <div class="brand-line">

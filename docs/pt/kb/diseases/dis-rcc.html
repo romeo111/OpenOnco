@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carcinoma de células renais - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/pt/kb/diseases/dis-rcc.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-rcc.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-rcc.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/diseases/dis-rcc.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/diseases/dis-rcc.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/diseases/dis-rcc.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/diseases/dis-rcc.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-rcc.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Carcinoma de células renais - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/pt/kb/diseases/dis-rcc.html">
+<meta property="og:locale" content="pt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Carcinoma de células renais - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Carcinoma de células renais - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/pt/kb/diseases/dis-rcc.html","inLanguage":"pt","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/pt/kb/diseases/dis-rcc.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="817446a3316635ed41db3e1a591421f4a35936b955a6ff4ed3f2dfe73a21e229"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/pt/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGIA ABERTA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/pt/">Início</a>
+    <a href="/pt/handbook.html">Manual</a><a href="/pt/news.html">Notícias</a>
+    <a href="/pt/about.html">O projeto</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Idioma"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg>PT <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Idioma"><a href="/kb/diseases/dis-rcc.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/diseases/dis-rcc.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/diseases/dis-rcc.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/diseases/dis-rcc.html" lang="pt" hreflang="pt" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/diseases/dis-rcc.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/diseases/dis-rcc.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/pt/try.html" class="btn-cta-top btn-cta-try"><span>Criar um plano</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menu"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menu">
+    <a href="/pt/">Início</a>
+    <a href="/pt/handbook.html">Manual</a><a href="/pt/news.html">Notícias</a>
+    <a href="/pt/about.html">O projeto</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/pt/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/pt/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Reunião multidisciplinar</span></a>
+      <a href="/pt/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevenção</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Ferramentas</span>
+    <div class="top-cta-group">
+      <a href="/pt/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/pt/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Reunião multidisciplinar</span></a>
+      <a href="/pt/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevenção</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Código aberto</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Tradução preliminar: revisão clínica pendente.</strong> <a href="/kb/diseases/dis-rcc.html" lang="en" hreflang="en" data-original-source>Consultar o original em inglês</a></aside>
+  <p class="kb-breadcrumb"><a href="/pt/kb.html">Onco Wiki</a> / Doença</p>
+  <h1>Carcinoma de células renais</h1>
+  <p class="kb-lead">Visão determinística da entidade fonte YAML. A autoridade clínica permanece com os IDs de fonte citados e estado de assinatura do revisor.</p>
+
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-RCC</code></td></tr>
+<tr><th>Tipo</th><td>Doença</td></tr>
+<tr><th>Alegais</th><td><div class="kb-alias-list"><span class="kb-alias">Hipernefroma</span><span class="kb-alias">RCC</span><span class="kb-alias">Нирково-клітинна карцинома</span></div></td></tr>
+<tr><th>Estado</th><td>pending_clinical_signoff</td></tr>
+<tr><th>Doenças</th><td><span class="kb-muted">Nenhuma declaração</span></td></tr>
+<tr><th>Fontes</th><td><span class="kb-chip" title="Carcinoma de células renais da ESMO"><a href="https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-renal-cell-carcinoma" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-RCC-2024</code></a></span> <span class="kb-chip" title="NCCN Câncer renal"><a href="https://www.nccn.org/professionals/physician_gls/pdf/kidney.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-KIDNEY-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Ferramenta de informação, não um dispositivo médico. Todas as recomendações devem ser verificadas por um oncologista qualificado. O conteúdo clínico é provisório até a assinatura de dois revisores.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/rcc.yaml">Fonte YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morfologia</th><td>8312/3</td></tr>
+<tr><th>Icd_o_3_topografia</th><td>["C64.9"]</td></tr>
+<tr><th>icd_10</th><td>C64</td></tr>
+<tr><th>who_classification</th><td>Renal cell carcinoma — clear-cell / papillary / chromophobe (WHO 5th 2022)</td></tr></table><p><a href="/pt/diseases.html#DIS-RCC">Capacidades</a></p>
+  <h2>Notas</h2><p>biomarker_driven — histologia + seleção de unidades de risco IMDC. Adjuvant pembrolizumab aprovado por KEYNOTE-564.</p>
+  <h2>Usado por</h2>
+<h3>Relevância terapêutica</h3><ul><li><a href="/pt/kb/biomarker_actionability/bma-bap1-mut-rcc-prognostic.html"><code>BMA-BAP1-MUT-RCC-PROGNOSTIC</code></a> - BMA-BAP1-MUT-RCC-PROGnóSTICO</li><li><a href="/pt/kb/biomarker_actionability/bma-met-amp-rcc-papillary.html"><code>BMA-MET-AMP-RCC-PAPILLARY</code></a> - CCR papilar do tipo 1 impulsionado pelo MET: cabozantinib superior ao sunitinib na CCRp impulsionada pelo MET (P...</li><li><a href="/pt/kb/biomarker_actionability/bma-pik3ca-hotspot-rcc.html"><code>BMA-PIK3CA-HOTSPOT-RCC</code></a> - Mutações PIK3CA raras em RCC; mTORi (everolimus, temsirolimus) aprovado 2L+ independentemente de...</li><li><a href="/pt/kb/biomarker_actionability/bma-tp53-mut-rcc.html"><code>BMA-TP53-MUT-RCC</code></a> - mutação TP53 em RCC - comum, prognóstico adverso; não direcionado diretamente. Por...</li><li><a href="/pt/kb/biomarker_actionability/bma-tsc1-germline-tuberous-sclerosis.html"><code>BMA-TSC1-GERMLINE-TUBEROUS-SCLEROSIS</code></a> - As variantes patogênicas da linha germinal TSC1 impulsionam o Complexo de Esclerose Tuberosa (TSC) — um mTOR-pathwa...</li><li><a href="/pt/kb/biomarker_actionability/bma-tsc1-tsc-renal-aml.html"><code>BMA-TSC1-TSC-RENAL-AML</code></a> - Everolimus (mTOR inhibitor) is FDA-approved (2012) for renal angiomyolipoma (AML) associa...</li><li><a href="/pt/kb/biomarker_actionability/bma-tsc2-germline-tuberous-sclerosis.html"><code>BMA-TSC2-GERMLINE-TUBEROUS-SCLEROSIS</code></a> - TSC2 germline variantes patogênicas impulsionam Tuberous Sclerosis Complex (TSC) — mais clini...</li></ul>
+<h3>Algoritmos</h3><ul><li><code>ALGO-COWDEN-CARRIER-SURVEILLANCE</code> - ALGO-COWDEN-CARRIER-SURVEILLANCE</li><li><code>ALGO-HEREDITARY-MELANOMA-SURVEILLANCE</code> - ALGO-HEREDITARY-MELANOMA-SURVEILLANCE</li><li><code>ALGO-RCC-METASTATIC-1L</code> - ALGO-RCC-METASTATIC-1L</li><li><code>ALGO-RCC-METASTATIC-2L</code> - ALGO-RCC-METASTATIC-2L</li><li><code>ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE</code> - ALGO-VHL-CARRIER-SURVEILLANCE-VHL-ALLIANCE</li></ul>
+<h3>Doença</h3><ul><li><a href="/pt/kb/diseases/dis-leiomyosarcoma.html"><code>DIS-LEIOMYOSARCOMA</code></a> - Leiomiosarcoma (LMS)</li><li><a href="/pt/kb/diseases/dis-paraganglioma.html"><code>DIS-PARAGANGLIOMA</code></a> - Paraganglioma (PGL)</li><li><a href="/pt/kb/diseases/dis-pheochromocytoma.html"><code>DIS-PHEOCHROMOCYTOMA</code></a> - Feocromocitoma e paraganglioma (PPGL)</li><li><a href="/pt/kb/diseases/dis-wilms.html"><code>DIS-WILMS</code></a> - Tumor de Wilms (nefroblastoma)</li></ul>
+<h3>Indicação</h3><ul><li><a href="/pt/kb/indications/ind-bap1-suspicion-prevention-enhanced-surveillance.html"><code>IND-BAP1-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE</code></a> - IND-BAP1-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE</li><li><a href="/pt/kb/indications/ind-bap1-suspicion-prevention-genetic-counseling.html"><code>IND-BAP1-SUSPICION-PREVENTION-GENETIC-COUNSELING</code></a> - IND-BAP1-SUSPICION-PREVENTION-GENETIC-COUNSELING</li><li><a href="/pt/kb/indications/ind-bhd-flcn-carrier-observation.html"><code>IND-BHD-FLCN-CARRIER-OBSERVATION</code></a> - IND-BHD-FLCN-CARRIER-OBSERVATION</li><li><a href="/pt/kb/indications/ind-bhd-flcn-carrier-surveillance.html"><code>IND-BHD-FLCN-CARRIER-SURVEILLANCE</code></a> - IND-BHD-FLCN-CARRIER-SURVEILLANCE</li><li><a href="/pt/kb/indications/ind-cascade-vhl-fdr-positive-surveillance.html"><code>IND-CASCADE-VHL-FDR-POSITIVE-SURVEILLANCE</code></a> - IND-CASCADE-VHL-FDR-POSITIVE-SURVEILLANCE</li><li><a href="/pt/kb/indications/ind-cascade-vhl-fdr-positive-testing.html"><code>IND-CASCADE-VHL-FDR-POSITIVE-TESTING</code></a> - IND-CASCADE-VHL-FDR-POSITIVE-TESTING</li><li><a href="/pt/kb/indications/ind-hlrcc-carrier-intensified.html"><code>IND-HLRCC-CARRIER-INTENSIFIED</code></a> - IND-HLRCC-CARRIER-INTENSIFIED</li><li><a href="/pt/kb/indications/ind-hlrcc-carrier-surveillance.html"><code>IND-HLRCC-CARRIER-SURVEILLANCE</code></a> - IND-HLRCC-CARRIER-SURVEILLANCE</li><li><a href="/pt/kb/indications/ind-hlrcc-suspicion-prevention-enhanced-surveillance.html"><code>IND-HLRCC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE</code></a> - IND-HLRCC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE</li><li><a href="/pt/kb/indications/ind-hlrcc-suspicion-prevention-genetic-counseling.html"><code>IND-HLRCC-SUSPICION-PREVENTION-GENETIC-COUNSELING</code></a> - IND-HLRCC-SUSPICION-PREVENTION-GENETIC-COUNSELING</li><li><a href="/pt/kb/indications/ind-hprc-carrier-intensified.html"><code>IND-HPRC-CARRIER-INTENSIFIED</code></a> - IND-HPRC-CARRIER-INTENSIFIED</li><li><a href="/pt/kb/indications/ind-hprc-carrier-surveillance.html"><code>IND-HPRC-CARRIER-SURVEILLANCE</code></a> - IND-HPRC-CARRIER-SURVEILLANCE</li><li><a href="/pt/kb/indications/ind-hprc-suspicion-prevention-enhanced-surveillance.html"><code>IND-HPRC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE</code></a> - IND-HPRC-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE</li><li><a href="/pt/kb/indications/ind-hprc-suspicion-prevention-genetic-counseling.html"><code>IND-HPRC-SUSPICION-PREVENTION-GENETIC-COUNSELING</code></a> - IND-HPRC-SUSPICION-PREVENTION-GENETIC-COUNSELING</li><li><a href="/pt/kb/indications/ind-rcc-adjuvant-pembro.html"><code>IND-RCC-ADJUVANT-PEMBRO</code></a> - IND-RCC-ADJUVANT-PEMBRO</li><li><a href="/pt/kb/indications/ind-rcc-metastatic-1l-lenv-pembro.html"><code>IND-RCC-METASTATIC-1L-LENV-PEMBRO</code></a> - IND-RCC-METASTATIC-1L-LENV-PEMBRO</li><li><a href="/pt/kb/indications/ind-rcc-metastatic-1l-nivo-cabo.html"><code>IND-RCC-METASTATIC-1L-NIVO-CABO</code></a> - IND-RCC-METASTATIC-1L-NIVO-CABO</li><li><a href="/pt/kb/indications/ind-rcc-metastatic-1l-nivo-ipi.html"><code>IND-RCC-METASTATIC-1L-NIVO-IPI</code></a> - IND-RCC-METASTATIC-1L-NIVO-IPI</li><li><a href="/pt/kb/indications/ind-rcc-metastatic-1l-pembro-axi.html"><code>IND-RCC-METASTATIC-1L-PEMBRO-AXI</code></a> - IND-RCC-METASTATIC-1L-PEMBRO-AXI</li><li><a href="/pt/kb/indications/ind-rcc-metastatic-2l-belzutifan.html"><code>IND-RCC-METASTATIC-2L-BELZUTIFAN</code></a> - IND-RCC-METASTATIC-2L-BELZUTIFAN</li><li><a href="/pt/kb/indications/ind-rcc-metastatic-2l-cabozantinib.html"><code>IND-RCC-METASTATIC-2L-CABOZANTINIB</code></a> - IND-RCC-METASTATIC-2L-CABOZANTINIB</li><li><a href="/pt/kb/indications/ind-rcc-non-clear-cell-1l-cabozantinib.html"><code>IND-RCC-NON-CLEAR-CELL-1L-CABOZANTINIB</code></a> - IND-RCC-NON-CLEAR-CELL-1L-CABOZANTINIB</li><li><a href="/pt/kb/indications/ind-rcc-vhl-disease-belzutifan.html"><code>IND-RCC-VHL-DISEASE-BELZUTIFAN</code></a> - IND-RCC-VHL-DISEASE-BELZUTIFAN</li><li><a href="/pt/kb/indications/ind-tsc-carrier-intensified.html"><code>IND-TSC-CARRIER-INTENSIFIED</code></a> - IND-TSC-CARRIER-INTENSIFIED</li><li><a href="/pt/kb/indications/ind-tsc-carrier-surveillance.html"><code>IND-TSC-CARRIER-SURVEILLANCE</code></a> - IND-TSC-CARRIER-SURVEILLANCE</li><li><a href="/pt/kb/indications/ind-vhl-suspicion-prevention-enhanced-surveillance.html"><code>IND-VHL-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE</code></a> - IND-VHL-SUSPICION-PREVENTION-ENHANCED-SURVEILLANCE</li><li><a href="/pt/kb/indications/ind-vhl-suspicion-prevention-genetic-counseling.html"><code>IND-VHL-SUSPICION-PREVENTION-GENETIC-COUNSELING</code></a> - IND-VHL-SUSPICION-PREVENTION-GENETIC-COUNSELING</li></ul>
+<h3>Procedimentos</h3><ul><li><code>PROC-NEPHRON-SPARING-PARTIAL-NEPHRECTOMY-VHL</code> - Nefrectomia parcial poupadora de nefronos para VHL lesão renal (≥3 cm Limiar)</li></ul>
+<h3>Questionários</h3><ul><li><code>QUEST-RCC-1L-STUB</code> - Carcinoma de células renais — primeira linha</li></ul>
+<h3>Sinal de alerta</h3><ul><li><a href="/pt/kb/redflags/rf-active-autoimmune-disease-ici-risk.html"><code>RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK</code></a> - Doente com dificuldades autoimunes ou inflamatórias pré-existentes ativas ou incompletamente controladas...</li><li><a href="/pt/kb/redflags/rf-bap1-confirmed-carrier.html"><code>RF-BAP1-CONFIRMED-CARRIER</code></a> - Confirmada variante patogênica germinal / provável patogênica no gene BAP1 — tumor BAP1 p...</li><li><a href="/pt/kb/redflags/rf-bap1-family-history-suspicion.html"><code>RF-BAP1-FAMILY-HISTORY-SUSPICION</code></a> - Pedigree familiar sugestivo da síndrome de predisposição tumoral BAP1 — confirmação da linhagem germinativa BAP...</li><li><a href="/pt/kb/redflags/rf-bhd-flcn-confirmed-carrier.html"><code>RF-BHD-FLCN-CONFIRMED-CARRIER</code></a> - Variante patogênica confirmada da linhagem germinal / provável patogênica em FLCN (folliculina) — Birt-Hog...</li><li><a href="/pt/kb/redflags/rf-cascade-vhl-fdr-positive.html"><code>RF-CASCADE-VHL-FDR-POSITIVE</code></a> - Um parente de primeiro grau do paciente (pais, irmãos ou filhos) tem uma posição documentada...</li><li><a href="/pt/kb/redflags/rf-cowden-confirmed-carrier.html"><code>RF-COWDEN-CONFIRMED-CARRIER</code></a> - Variante patogênica / patogênica provável confirmada da linha germinal no gene PTEN (Cowden syndro...</li><li><a href="/pt/kb/redflags/rf-cowden-family-history-suspicion.html"><code>RF-COWDEN-FAMILY-HISTORY-SUSPICION</code></a> - Pedigree familiar sugestivo de Síndrome de Cowden / Síndrome tumoral de hamartoma PTEN (PHTS): qualquer...</li><li><a href="/pt/kb/redflags/rf-hlrcc-confirmed-carrier.html"><code>RF-HLRCC-CONFIRMED-CARRIER</code></a> - O paciente tem uma variante patogênica confirmada da linhagem germinal FH (fumarato hidratase) (Heredetário L...</li><li><a href="/pt/kb/redflags/rf-hlrcc-family-history-suspicion.html"><code>RF-HLRCC-FAMILY-HISTORY-SUSPICION</code></a> - Pedigree familiar sugestivo de leiomiomatose hereditária e câncer de células renais (HLRCC) sin...</li><li><a href="/pt/kb/redflags/rf-hprc-confirmed-carrier.html"><code>RF-HPRC-CONFIRMED-CARRIER</code></a> - Variante patogênica / patogênica provável confirmada da linha germinal no proto-oncogene MET — Sua...</li><li><a href="/pt/kb/redflags/rf-hprc-family-history-suspicion.html"><code>RF-HPRC-FAMILY-HISTORY-SUSPICION</code></a> - Pedigree familiar sugestivo de HPRC (Câncer Renal Papilar Hereditário) — tipo de MET...</li><li><a href="/pt/kb/redflags/rf-lifestyle-obesity-cancer-prevention.html"><code>RF-LIFESTYLE-OBESITY-CANCER-PREVENTION</code></a> - Obesity — BMI ≥30 kg/m² (per WHO definition) — OR class 2/3 obesity with BMI ≥35 / ≥40. I...</li><li><a href="/pt/kb/redflags/rf-rcc-frailty-age.html"><code>RF-RCC-FRAILTY-AGE</code></a> - Idade ≥80 + ECOG ≥2 + comorbidade — toxicidade ICI duplat proibitiva.</li><li><a href="/pt/kb/redflags/rf-rcc-frailty-ecog2.html"><code>RF-RCC-FRAILTY-ECOG2</code></a> - Fragilidade ou status ECOG 2 que podem favorecer uma abordagem de tratamento RCC menos intensiva.</li><li><a href="/pt/kb/redflags/rf-rcc-high-risk-biology.html"><code>RF-RCC-HIGH-RISK-BIOLOGY</code></a> - Sarcomatoid features OR rapid TKI progression — predicts ICI-doublet benefit; non-clear-c...</li><li><a href="/pt/kb/redflags/rf-rcc-imdc-intermediate-poor-risk.html"><code>RF-RCC-IMDC-INTERMEDIATE-POOR-RISK</code></a> - IMDC (Consórcio Internacional de Base de Dados RCC Metástatico) pontuação de risco intermédio ou ruim i...</li><li><a href="/pt/kb/redflags/rf-rcc-infection-screening.html"><code>RF-RCC-INFECTION-SCREENING</code></a> - Infecção ativa ou latente que requer resolução / profilaxia antes de iniciar a dobl...</li><li><a href="/pt/kb/redflags/rf-rcc-organ-dysfunction.html"><code>RF-RCC-ORGAN-DYSFUNCTION</code></a> - Solitary kidney OR baseline CrCl &lt;50 mL/min — limits cisplatin alternatives + impacts sur...</li><li><a href="/pt/kb/redflags/rf-rcc-transformation-progression.html"><code>RF-RCC-TRANSFORMATION-PROGRESSION</code></a> - Metástases do SNC — O duplote ICI retém a atividade intracraniana; cabozantinib + nivolumab também...</li><li><a href="/pt/kb/redflags/rf-sdh-confirmed-carrier.html"><code>RF-SDH-CONFIRMED-CARRIER</code></a> - Variante patogênica / patogênica provável confirmada da linha germinal em um dos genes SDHx — SDHB...</li><li><a href="/pt/kb/redflags/rf-sdh-family-history-suspicion.html"><code>RF-SDH-FAMILY-HISTORY-SUSPICION</code></a> - Pedigree familiar sugestivo de síndrome de deficiência de SDH (sucinato desidrogenase) - confirmar...</li><li><a href="/pt/kb/redflags/rf-tsc-confirmed-carrier.html"><code>RF-TSC-CONFIRMED-CARRIER</code></a> - Variância patogênica / patogênica provável confirmada da linha germinal em TSC1 (hamartin) ou TSC2 (tub...</li><li><a href="/pt/kb/redflags/rf-vhl-confirmed-carrier.html"><code>RF-VHL-CONFIRMED-CARRIER</code></a> - Patient has a confirmed germline VHL pathogenic variant (positive germline test result, d...</li><li><a href="/pt/kb/redflags/rf-vhl-family-history-suspicion.html"><code>RF-VHL-FAMILY-HISTORY-SUSPICION</code></a> - Pedigree familiar sugestivo da doença de Von Hippel-Lindau (VHL): qualquer um dos membros da família...</li></ul>
+<h3>Fontes</h3><ul><li><code>SRC-CHECKMATE-214-MOTZER-2018</code> - Nivolumab mais Ipilimumab versus Sunitinib no carcinoma renal-celular avançado</li><li><code>SRC-CHECKMATE-9ER-CHOUEIRI-2021</code> - Nivolumab mais Cabozantinib versus Sunitinib para Carcinoma Renal-Célular Avançado</li><li><code>SRC-CLEAR-MOTZER-2021</code> - Lenvatinib mais Pembrolizumab ou Everolimus para carcinoma de células renais avançadas</li><li><code>SRC-COMPARZ-MOTZER-2013</code> - Pazopanib versus sunitinib em carcinoma de células renais metastáticas</li><li><code>SRC-ESMO-RCC-2024</code> - Carcinoma de células renais da ESMO</li><li><code>SRC-KEYNOTE-426-RINI-2019</code> - Pembrolizumab mais Axitinib versus Sunitinib para carcinoma renal-celular avançado</li><li><code>SRC-KEYNOTE-564-CHOUEIRI-2021</code> - Adjuvante Pembrolizumab após Nefrectomia em Carcinoma Renal-Celular</li><li><code>SRC-METEOR-CHOUEIRI-2016</code> - Cabozantinib versus Everolimus no carcinoma renal-celular avançado</li><li><code>SRC-NCCN-KIDNEY-2025</code> - NCCN Câncer de rins</li><li><code>SRC-VEG105192-STERNBERG-2010</code> - Pazopanib em carcinoma de células renais localmente avançado ou metastático: resultados de um...</li></ul>
+</main>
+</body>
+</html>

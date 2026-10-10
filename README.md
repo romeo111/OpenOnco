@@ -26,7 +26,7 @@ OpenOnco is an early-stage informational project. Clinical content can be draft,
 
 Use synthetic profiles for public demos and feedback. Do not submit identifiable patient data to the question prototype or GitHub. The browser plan builder processes profiles locally; that privacy property does not apply to server-backed tools.
 
-Public navigation, project pages and Wiki search also have [Español](https://openonco.info/es/), [Português](https://openonco.info/pt/), [Deutsch](https://openonco.info/de/) and [Français](https://openonco.info/fr/) editions. Clinical records retain their source language; interactive tools have localized introductions with explicitly labeled English launch links. See the [localization scope and maintenance guide](docs/LOCALIZATION.md).
+Onco Wiki records, Handbook chapters and quizzes, interactive tools and result displays also have draft [Español](https://openonco.info/es/), [Português](https://openonco.info/pt/), [Deutsch](https://openonco.info/de/) and [Français](https://openonco.info/fr/) translations. Clinical translation review is pending. Original English pages remain accessible; identifiers, questionnaire values, answer keys and engine decisions stay unchanged. See the [localization scope and maintenance guide](docs/LOCALIZATION.md).
 
 ## Current repository snapshot
 

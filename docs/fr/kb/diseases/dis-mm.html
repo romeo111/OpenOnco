@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Myélome multiple - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/fr/kb/diseases/dis-mm.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-mm.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-mm.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/diseases/dis-mm.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/diseases/dis-mm.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/diseases/dis-mm.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/diseases/dis-mm.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-mm.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Myélome multiple - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/fr/kb/diseases/dis-mm.html">
+<meta property="og:locale" content="fr">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Myélome multiple - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Myélome multiple - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/fr/kb/diseases/dis-mm.html","inLanguage":"fr","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/fr/kb/diseases/dis-mm.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="7094ccdcf9ffec257b92e6ad77a94ee993197b856e0d7c9e71e280bf4dcc6e1d"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/fr/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGIE OUVERTE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/fr/">Accueil</a>
+    <a href="/fr/handbook.html">Manuel</a><a href="/fr/news.html">Actualités</a>
+    <a href="/fr/about.html">Le projet</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Langue"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg>FR <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Langue"><a href="/kb/diseases/dis-mm.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/diseases/dis-mm.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/diseases/dis-mm.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/diseases/dis-mm.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/diseases/dis-mm.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/diseases/dis-mm.html" lang="fr" hreflang="fr" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/fr/try.html" class="btn-cta-top btn-cta-try"><span>Créer un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menu"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menu">
+    <a href="/fr/">Accueil</a>
+    <a href="/fr/handbook.html">Manuel</a><a href="/fr/news.html">Actualités</a>
+    <a href="/fr/about.html">Le projet</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/fr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Réunion de concertation</span></a>
+      <a href="/fr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prévention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Outils</span>
+    <div class="top-cta-group">
+      <a href="/fr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Réunion de concertation</span></a>
+      <a href="/fr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prévention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Code ouvert</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Traduction provisoire : vérification clinique en attente.</strong> <a href="/kb/diseases/dis-mm.html" lang="en" hreflang="en" data-original-source>Consulter l’original en anglais</a></aside>
+  <p class="kb-breadcrumb"><a href="/fr/kb.html">Onco Wiki</a> / Maladie</p>
+  <h1>Myélome multiple</h1>
+  <p class="kb-lead">Vue déterministe de l'entité source de la LJAM. L'autorité clinique demeure avec les ID de la source cités et l'état d'approbation de l ́examinateur.</p>
+
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-MM</code></td></tr>
+<tr><th>Type</th><td>Maladie</td></tr>
+<tr><th>Alias</th><td><div class="kb-alias-list"><span class="kb-alias">MM</span><span class="kb-alias">Myélome des cellules plasmatiques</span><span class="kb-alias">Множинна мієлома</span><span class="kb-alias">Мієломна хвороба</span><span class="kb-alias">Хвороба Рустицького-Калера</span></div></td></tr>
+<tr><th>État</th><td>reviewed 2026-04-25 | pending_clinical_signoff</td></tr>
+<tr><th>Maladies</th><td><span class="kb-muted">Aucune déclaration</span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="EHA Directives pratiques sur le diagnostic des troubles hématologiques"><a href="https://ehaweb.org/research/eha-guidelines-and-recommendations/" target="_blank" rel="noopener noreferrer"><code>SRC-EHA-WORKUP-2024</code></a></span> <span class="kb-chip" title="NCCN Lignes directrices cliniques en oncologie : Myélome multiple"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1445" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-MM-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Informational tool, not a medical device. All recommendations must be verified by a qualified oncologist. Clinical content is provisional until two-reviewer sign-off.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/multiple_myeloma.yaml">Source YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morphologie</th><td>9732/3</td></tr>
+<tr><th>icd_o_3_topographie</th><td>["C42.1"]</td></tr>
+<tr><th>icd_10</th><td>C90.0</td></tr>
+<tr><th>who_classification</th><td>Tumeurs des cellules plasmatiques — Myélome des cellules Plasmatiques (myélomes multiples)</td></tr></table><p><a href="/fr/diseases.html#DIS-MM">Capacités</a></p>
+  <h2>Notes</h2><p>Archétype stratifié par le risque — intensité du traitement (triplet vs quadruplet, greffe vs pas de greffe) est façonné par le stade R-ISS, la catégorie de risque cytogénétique et l'admissibilité à la greffe. Deuxième maladie de bout en bout après le VHC-MZL; valide que le schéma généralise au-delà de l'archétype étiologiquement_drivé (REFERENCE_CASE_SPECIFICATION §7.1 étape M6).</p>
+  <h2>Utilisé par</h2>
+<h3>Pertinence thérapeutique</h3><ul><li><a href="/fr/kb/biomarker_actionability/bma-braf-v600e-mm.html"><code>BMA-BRAF-V600E-MM</code></a> - Le BRAF V600E est présent dans environ 4% des myélomes multiples au moment du diagnostic (plus dans l...</li><li><a href="/fr/kb/biomarker_actionability/bma-ccnd1-ihc-mm.html"><code>BMA-CCND1-IHC-MM</code></a> - CCND1 (cycline D1) surexpression dans MM fortement corrélée avec t(11;14) et BCL2 dépend...</li><li><a href="/fr/kb/biomarker_actionability/bma-ccnd1-t1114-mm.html"><code>BMA-CCND1-T1114-MM</code></a> - t(11;14) myélome (~15-20%) — biologie distincte avec un niveau élevé BCL2/MCL1 Rapport entre le rapport et le rapport. Venetoclax Monot...</li><li><a href="/fr/kb/biomarker_actionability/bma-fgfr3-mutation-mm.html"><code>BMA-FGFR3-MUTATION-MM</code></a> - Dans le myélome multiple, t(4;14) place la translocation MMSET/FGFR3 sous contrôle IgH; ~30%...</li><li><a href="/fr/kb/biomarker_actionability/bma-kras-g12c-mm.html"><code>BMA-KRAS-G12C-MM</code></a> - KRAS G12C in myeloma — rare; tissue-agnostic G12Ci (sotorasib/adagrasib) not approved in...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-mut-mm.html"><code>BMA-TP53-MUT-MM</code></a> - TP53-mut / del(17p) myélome — composite cytogénétique à haut risque; quadruplet (D-VRD; PERSEU...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r175h-mm.html"><code>BMA-TP53-R175H-MM</code></a> - mutation TP53 hotspot dans MM — caractéristique génétique à haut risque; quadruplet (D-VRD) préférée; CA...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r248q-mm.html"><code>BMA-TP53-R248Q-MM</code></a> - mutation TP53 hotspot dans MM — caractéristique génétique à haut risque; quadruplet (D-VRD) préférée; CA...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r273h-mm.html"><code>BMA-TP53-R273H-MM</code></a> - mutation TP53 hotspot dans MM — caractéristique génétique à haut risque; quadruplet (D-VRD) préférée; CA...</li><li><a href="/fr/kb/biomarker_actionability/bma-tp53-r282w-mm.html"><code>BMA-TP53-R282W-MM</code></a> - mutation TP53 hotspot dans MM — caractéristique génétique à haut risque; quadruplet (D-VRD) préférée; CA...</li></ul>
+<h3>Algorithmes</h3><ul><li><code>ALGO-MM-1L</code> - ALGO-MM-1L</li><li><code>ALGO-MM-2L</code> - ALGO-MM-2L</li><li><code>ALGO-MM-3L</code> - ALGO-MM-3L</li></ul>
+<h3>Maladie</h3><ul><li><a href="/fr/kb/diseases/dis-kaposi.html"><code>DIS-KAPOSI</code></a> - Sarcome Kaposi</li></ul>
+<h3>Chapitres du manuel</h3><ul><li><code>HB-MM-1L</code> - Myélome multiple : raisonnement de risque et d'aptitude en première ligne</li></ul>
+<h3>Indication</h3><ul><li><a href="/fr/kb/indications/ind-mm-1l-dara-rd.html"><code>IND-MM-1L-DARA-RD</code></a> - IND-MM-1L-DARA-RD</li><li><a href="/fr/kb/indications/ind-mm-1l-dvrd.html"><code>IND-MM-1L-DVRD</code></a> - IND-MM-1L-DVRD</li><li><a href="/fr/kb/indications/ind-mm-1l-rd.html"><code>IND-MM-1L-RD</code></a> - IND-MM-1L-RD</li><li><a href="/fr/kb/indications/ind-mm-1l-vrd.html"><code>IND-MM-1L-VRD</code></a> - IND-MM-1L-VRD</li><li><a href="/fr/kb/indications/ind-mm-2l-dkd.html"><code>IND-MM-2L-DKD</code></a> - IND-MM-2L-DKD</li><li><a href="/fr/kb/indications/ind-mm-3l-isa-kd.html"><code>IND-MM-3L-ISA-KD</code></a> - IND-MM-3L-ISA-KD</li><li><a href="/fr/kb/indications/ind-mm-4l-ciltacel-cart.html"><code>IND-MM-4L-CILTACEL-CART</code></a> - IND-MM-4L-CILTACEL-CART</li><li><a href="/fr/kb/indications/ind-mm-4l-teclistamab.html"><code>IND-MM-4L-TECLISTAMAB</code></a> - IND-MM-4L-TECLISTAMAB</li><li><a href="/fr/kb/indications/ind-mm-elderly-frail-vrd-light.html"><code>IND-MM-ELDERLY-FRAIL-VRD-LIGHT</code></a> - IND-MM-ELDERLY-FRAIL-VRD-LIGHT</li><li><a href="/fr/kb/indications/ind-mm-post-asct-lenalidomide-maintenance.html"><code>IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE</code></a> - IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE</li><li><a href="/fr/kb/indications/ind-mm-rr-2l-ciltacel.html"><code>IND-MM-RR-2L-CILTACEL</code></a> - IND-MM-RR-2L-CILTACEL</li><li><a href="/fr/kb/indications/ind-mm-rr-3l-ciltacel.html"><code>IND-MM-RR-3L-CILTACEL</code></a> - IND-MM-RR-3L-CILTACEL</li><li><a href="/fr/kb/indications/ind-mm-rr-3l-elranatamab.html"><code>IND-MM-RR-3L-ELRANATAMAB</code></a> - IND-MM-RR-3L-ELRANATAMAB</li><li><a href="/fr/kb/indications/ind-mm-rr-3l-idecel.html"><code>IND-MM-RR-3L-IDECEL</code></a> - IND-MM-RR-3L-IDECEL</li><li><a href="/fr/kb/indications/ind-mm-rr-3l-talquetamab.html"><code>IND-MM-RR-3L-TALQUETAMAB</code></a> - IND-MM-RR-3L-TALQUETAMAB</li><li><a href="/fr/kb/indications/ind-mm-rr-3l-teclistamab.html"><code>IND-MM-RR-3L-TECLISTAMAB</code></a> - IND-MM-RR-3L-TECLISTAMAB</li></ul>
+<h3>Procédures</h3><ul><li><code>SUR-ASCT-AUTOLOGOUS</code> - Transplantation autologue de cellules souches (HDM/ASCT)</li></ul>
+<h3>Questionnaires</h3><ul><li><code>QUEST-MM-1L</code> - Myélome multiple - nouvellement diagnostiqué (1L)</li></ul>
+<h3>Signal d’alerte</h3><ul><li><a href="/fr/kb/redflags/rf-iss-1.html"><code>RF-ISS-1</code></a> - Myélome multiple avec ISS stade 1 — β2-microglobuline &lt;3,5 mg/L ET albumine ≥3,5 g/dL — s...</li><li><a href="/fr/kb/redflags/rf-iss-3.html"><code>RF-ISS-3</code></a> - Myélome multiple avec ISS stade 3 — β2-microglobuline ≥5,5 mg/L — présentation à risque élevé;...</li><li><a href="/fr/kb/redflags/rf-mm-bcma-expression-pos.html"><code>RF-MM-BCMA-EXPRESSION-POS</code></a> - L'expression de BCMA (antigène de maturation des cellules B, TNFRSF17) sur les cellules plasmatiques dans les cellules rechutées/réfractées...</li><li><a href="/fr/kb/redflags/rf-mm-cd38-expression-dara-candidate.html"><code>RF-MM-CD38-EXPRESSION-DARA-CANDIDATE</code></a> - L'expression CD38 sur les cellules plasmatiques dans le myélo multiple nouvellement diagnostiqué ou rechuté/ réfractaire...</li><li><a href="/fr/kb/redflags/rf-mm-cord-compression.html"><code>RF-MM-CORD-COMPRESSION</code></a> - Myélome multiple avec compression épidurale maligne de la moelle épidurale : nouveau déficit moteur, sens...</li><li><a href="/fr/kb/redflags/rf-mm-frailty-age.html"><code>RF-MM-FRAILTY-AGE</code></a> - Profil de fragilité excluant l'induction de dose standard VRd / D-VRd dans MM: score de fragilité IMWG...</li><li><a href="/fr/kb/redflags/rf-mm-high-risk-cytogenetics.html"><code>RF-MM-HIGH-RISK-CYTOGENETICS</code></a> - Myélome multiple cytogénétique à risque élevé: n'importe lequel des types t(4;14), t(14;16), t(14;20), del(17p)/TP5...</li><li><a href="/fr/kb/redflags/rf-mm-hypercalcemia.html"><code>RF-MM-HYPERCALCEMIA</code></a> - Myélome multiple avec hypercalcémie (calcium sérique corrigé ≥11 mg/dL ou symptomatique) :</li><li><a href="/fr/kb/redflags/rf-mm-hyperviscosity.html"><code>RF-MM-HYPERVISCOSITY</code></a> - Myélome multiple avec syndrome d'hyperviscosité - peu fréquent mais classique dans IgA-MM (M-spike &gt;...</li><li><a href="/fr/kb/redflags/rf-mm-infection-screening.html"><code>RF-MM-INFECTION-SCREENING</code></a> - Infection active ou latente nécessitant résolution / prophylaxie avant d'amorcer l'induction de MM...</li><li><a href="/fr/kb/redflags/rf-mm-renal-dysfunction.html"><code>RF-MM-RENAL-DYSFUNCTION</code></a> - Myélome multiple avec dysfonctionnement rénal significatif: CrCl &lt;60 mL/min ou créatinine sérique...</li><li><a href="/fr/kb/redflags/rf-mm-t11-14-actionable.html"><code>RF-MM-T11-14-ACTIONABLE</code></a> - t(11;14)(q13;q32) translocation IGH/CCND1 dans le myélome multiple — prévalence ~15-20%, BCL-2...</li><li><a href="/fr/kb/redflags/rf-mm-transformation-progression.html"><code>RF-MM-TRANSFORMATION-PROGRESSION</code></a> - Biologie agressive des cellules plasmatiques indiquant la nécessité d'une induction accrue du MM : cellules plasmatiques...</li><li><a href="/fr/kb/redflags/rf-r-iss-3-high-risk.html"><code>RF-R-ISS-3-HIGH-RISK</code></a> - Myélome multiple avec R-ISS phase 3 — ISS-3 (β2M ≥5.5) PLUS LDH au-dessus de ULN PLUS à haut risque...</li></ul>
+<h3>Sources</h3><ul><li><code>SRC-ALCYONE-MATEOS-2018</code> - Daratumumab plus Bortezomib, Melphalan et Prednisone pour le myélome non traité</li><li><code>SRC-CARTITUDE-1-BERDEJA-2021</code> - Ciltacabtagene autoleucel, un récepteur d'antigène chimérique dirigé par des cellules B...</li><li><code>SRC-CARTITUDE-4-SAN-MIGUEL-2023</code> - Cilta-cel ou soins standard en Lenalidomide- Myélome multiple réfractaire</li><li><code>SRC-CASTOR-PALUMBO-2016</code> - Daratumumab, Bortezomib et Dexamethasone pour le myélome multiple</li><li><code>SRC-EHA-EMN-MM-2025</code> - Lignes directrices EHA-EMN fondées sur des données probantes pour le diagnostic, le traitement et le suivi des patients...</li><li><code>SRC-ELOQUENT-3-DIMOPOULOS-2018</code> - Elotuzumab plus Pomalidomide et Dexamethasone pour le myélome multiple</li><li><code>SRC-ESMO-MM-2023</code> - Ligne directrice de pratique clinique de l'ESMO sur le myélome multiple</li><li><code>SRC-FDA-ISATUXIMAB-2020</code> - Approbation par la FDA de Sarclisa (isatuximab-irfc) pour le myélome multiple — BLA 761113</li><li><code>SRC-GRIFFIN-VOORHEES-2020</code> - Daratumumab, lenalidomide, bortezomib, et dexamethasone pour transplantation-éligible nouvellement di...</li><li><code>SRC-ICARIA-ATTAL-2019</code> - Isatuximab plus pomalidomide et faible dose dexamethasone versus pomalidomide et faible dose...</li><li><code>SRC-IKEMA-MOREAU-2021</code> - Isatuximab, carfilzomib, et dexamethasone chez des myélomes multiples rechutés (IKEMA) : un multic...</li><li><code>SRC-IMROZ-FACON-2024</code> - Isatuximab, Bortezomib, Lenalidomide, et Dexamethasone pour le myélome multiple</li><li><code>SRC-KARMMA-MUNSHI-2021</code> - Idecabtagene Vicleucel dans le myélome multiple rechuté et réfractaire</li><li><code>SRC-MAGNETISMM-3-LESOKHIN-2023</code> - Elranatamab dans le myélome multiple rechuté ou réfractaire : Magnétis de phase 2MM-3 Résultats de l'essai</li><li><code>SRC-MAIA-FACON-2019</code> - Daratumumab plus Lenalidomide et Dexamethasone pour Myélome non traité</li><li><code>SRC-MAJESTEC-1-MOREAU-2022</code> - Teclistamab dans le myélome multiple rechuté ou réfractaire</li><li><code>SRC-MONUMENTAL-1-CHARI-2022</code> - Talquetamab, un anticorps bispécifique GPRC5D rédirecteur de cellules T pour le myélome multiple</li><li><code>SRC-PERSEUS-SONNEVELD-2024</code> - Daratumumab, Bortezomib, Lenalidomide, et Dexamethasone pour le myélome multiple</li><li><code>SRC-POLLUX-DIMOPOULOS-2016</code> - Daratumumab, Lenalidomide, et Dexamethasone pour le myélome multiple</li><li><code>SRC-TOURMALINE-MM1-MOREAU-2016</code> - Ixazomib oral, Lenalidomide, et Dexamethasone pour le myélome multiple</li></ul>
+</main>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mélanome métastatique : raisonnement BRAF / IO de première ligne - OpenOnco Handbook</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/fr/handbook/hb-melanoma-metastatic-1l.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/handbook/hb-melanoma-metastatic-1l.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/handbook/hb-melanoma-metastatic-1l.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/handbook/hb-melanoma-metastatic-1l.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/handbook/hb-melanoma-metastatic-1l.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/handbook/hb-melanoma-metastatic-1l.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/handbook/hb-melanoma-metastatic-1l.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/handbook/hb-melanoma-metastatic-1l.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mélanome métastatique : raisonnement BRAF / IO de première ligne - OpenOnco Handbook">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/fr/handbook/hb-melanoma-metastatic-1l.html">
+<meta property="og:locale" content="fr">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mélanome métastatique : raisonnement BRAF / IO de première ligne - OpenOnco Handbook">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Mélanome métastatique : raisonnement BRAF / IO de première ligne - OpenOnco Handbook","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/fr/handbook/hb-melanoma-metastatic-1l.html","inLanguage":"fr","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/fr/handbook/hb-melanoma-metastatic-1l.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="stylesheet" href="/style.css?v=header-20261010">
+  <link rel="stylesheet" href="/clinical-styles/694eea648296658d7f1088903440ed90c39a7c0c4eb28f733482b4d43b06083a.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="7ba5a3bbb875573c80bd90604829399f63c332b3eb006788feef970321ddb130"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/fr/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGIE OUVERTE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/fr/">Accueil</a>
+    <a href="/fr/handbook.html" class="active" aria-current="page">Manuel</a><a href="/fr/news.html">Actualités</a>
+    <a href="/fr/about.html">Le projet</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Langue"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg>FR <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Langue"><a href="/handbook/hb-melanoma-metastatic-1l.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/handbook/hb-melanoma-metastatic-1l.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/handbook/hb-melanoma-metastatic-1l.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/handbook/hb-melanoma-metastatic-1l.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/handbook/hb-melanoma-metastatic-1l.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/handbook/hb-melanoma-metastatic-1l.html" lang="fr" hreflang="fr" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/fr/try.html" class="btn-cta-top btn-cta-try"><span>Créer un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menu"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menu">
+    <a href="/fr/">Accueil</a>
+    <a href="/fr/handbook.html" class="active" aria-current="page">Manuel</a><a href="/fr/news.html">Actualités</a>
+    <a href="/fr/about.html">Le projet</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/fr/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Réunion de concertation</span></a>
+      <a href="/fr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prévention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Outils</span>
+    <div class="top-cta-group">
+      <a href="/fr/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Réunion de concertation</span></a>
+      <a href="/fr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prévention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Code ouvert</span>
+  </div>
+  </div>
+</header>
+
+  <main class="hb-wrap"><aside class="translation-notice" role="note"><strong>Traduction provisoire : vérification clinique en attente.</strong> <a href="/handbook/hb-melanoma-metastatic-1l.html" lang="en" hreflang="en" data-original-source>Consulter l’original en anglais</a></aside>
+
+    <section class="hb-hero">
+      <div class="hb-kicker"><a href="/fr/handbook.html">Manuel OpenOnco</a></div>
+      <h1>Mélanome métastatique: raisonnement BRAF / IO de première ligne</h1>
+      <div class="hb-meta">
+        <span class="hb-badge hb-badge--draft">projet</span>
+
+        <span class="hb-badge">_L'hcp_learner</span>
+        <span class="hb-badge">en</span>
+      </div>
+      <p class="hb-lead">Chapitre d'apprentissage déterministe sur les entités KB d'OpenOnco, les cas synthétiques et les dossiers sources.</p>
+    </section>
+    <div class="hb-layout">
+      <div class="hb-main">
+        <section class="hb-panel">
+          <h2>Objectifs d'apprentissage</h2>
+          <ol><li>Identifier le statut BRAF V600, le rendement, la fonction organe et les apports de charge de maladie nécessaires avant la sélection du traitement de première ligne du mélanome métastatique.</li><li>Expliquez pourquoi l'inhibition du double point de contrôle (nivolumab + ipilimumab) est la colonne vertébrale standard de l'immunothérapie, lorsque l'on préfère l'anti-PD-1 mono-agent et où les combinaisons ciblées par BRAF s'adaptent.</li><li>Reconnaître les obligations parallèles — antécédents autoimmuns, IRM cérébrale pour la maladie active du SNC, dépistage des infections/hépatites — qui ne modifient pas l'appel d'IO canonique mais modifient le plan de sécurité.</li></ol>
+        </section>
+        <section class="hb-panel">
+          <h2>En un coup d'oeil</h2>
+          <ul><li>Le test BRAF V600E/K est nécessaire avant le plan de première ligne, car il permet d'acheminer les patients entre les OI et les stratégies ciblées.</li><li>Nivolumab + ipilimumab is the canonical IO backbone for fit patients without contraindications; relatlimab + nivolumab is an alternative dual checkpoint combination.</li><li><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original anglais conservé pour vérification">Encorafenib + binimetinib (or dabrafenib + trametinib) is the canonical BRAF-targeted track for V600-mutant disease — typically used when IO is contraindicated or rapid response is needed.</span></li><li>Les métastases cérébrales actives, les maladies auto-immunes, les comorbidités de niveau organique et le statut de grossesse sont des obligations parallèles qui façonnent le plan de sécurité même lorsque le schéma systémique est inchangé.</li><li>This chapter is an OpenOnco-authored learning aid, not official ESMO content or a CME-credit activity.</li></ul>
+        </section>
+
+            <section class="hb-panel">
+              <h2>Diagnostic et biomarqueur minimum</h2>
+              <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original anglais conservé pour vérification">Before drafting the first-line plan in metastatic melanoma the chapter expects confirmed metastatic histology, BRAF V600E/K testing on the metastatic lesion or, when not feasible, on the primary tumor with discussion of discordance risk, baseline performance status and organ function, LDH and disease-burden inputs (CheckMate-067 prognostic signal), brain MRI when CNS symptoms are present, and an autoimmune-history review before any checkpoint inhibitor. The chapter is explicit that NRAS and KIT testing are useful for sequencing but not for routing the first-line IO-versus-targeted decision.</span></p>
+              <h3>Entités liées</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-MELANOMA</code><span>Mélanome cutané</span><small>maladies</small></span><span class="hb-chip"><code>BIO-BRAF-V600E</code><span>BRAF V600E</span><small>biomarqueurs</small></span><span class="hb-chip"><code>BIO-BRAF-V600K</code><span>BRAF V600K</span><small>biomarqueurs</small></span><span class="hb-chip"><code>BIO-PDL1-EXPRESSION</code><span>expression PD-L1</span><small>biomarqueurs</small></span><span class="hb-chip"><code>TEST-CT-CHEST-ABDOMEN-PELVIS</code><span>CT thoracique + abdomen + pelvis avec contraste IV</span><small>essais</small></span></div>
+              <h3>Sources des sections</h3>
+              <ul><li><code>SRC-NCCN-MELANOMA-2025</code> Mélanome cutané NCCN</li><li><code>SRC-ESMO-MELANOMA-2024</code> ESMO Cutaneous Melanoma</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Logique de décision des OI de première ligne</h2>
+              <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original anglais conservé pour vérification">OpenOnco keeps nivolumab + ipilimumab as the canonical first-line IO backbone for fit metastatic melanoma patients without absolute contraindications to dual checkpoint inhibition (CheckMate-067). Single-agent pembrolizumab is the canonical default when the patient cannot tolerate the higher autoimmune risk of dual IO (KEYNOTE-006). Relatlimab + nivolumab (anti-LAG-3 + anti-PD-1) is an additional dual-checkpoint option with a different toxicity profile (RELATIVITY-047). The chapter expects the learner to weigh autoimmune history, organ function, and disease tempo against these three IO options before reaching for targeted therapy.</span></p>
+              <h3>Entités liées</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>ALGO-MELANOMA-METASTATIC-1L</code><span>ALGO-MELANOMA-METASTATIC-1L</span><small>algorithmes</small></span><span class="hb-chip"><code>IND-MELANOMA-METASTATIC-1L-NIVO-IPI</code><span>IND-MELANOMA-METASTATIC-1L-NIVO-IPI</span><small>Indications</small></span><span class="hb-chip"><code>IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO</code><span>IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO</span><small>Indications</small></span><span class="hb-chip"><code>IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB</code><span>IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB</span><small>Indications</small></span><span class="hb-chip"><code>REG-NIVO-IPI-MELANOMA</code><span>Nivolumab + ipilimumab (mélanome, 1L métastatique)</span><small>schémas</small></span><span class="hb-chip"><code>REG-PEMBRO-MONO-MELANOMA</code><span>Pembrolizumab en monothérapie (mélanome avancé/métastatique, 1L; KEYNOTE-006)</span><small>schémas</small></span></div>
+              <h3>Sources des sections</h3>
+              <ul><li><code>SRC-CHECKMATE-067-LARKIN-2019</code> Survie quinquennale avec Nivolumab et Ipilimumab combinés dans le mélanome avancé</li><li><code>SRC-KEYNOTE-006-ROBERT-2015</code> Pembrolizumab versus Ipilimumab chez le mélanome avancé</li><li><code>SRC-RELATIVITY-047-TAWBI-2022</code> Relatlimab and Nivolumab versus Nivolumab in Untreated Advanced Melanoma</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Quand le traitement ciblé par BRAF passe à la première ligne</h2>
+              <p>La maladie BRAF V600E/K mutant attire le dabrafenib + trametinib ou encorafenib + binimetinib dans la conversation canonique de première ligne. Le modèle OpenOnco utilise d'abord un traitement ciblé lorsqu'une réponse rapide est nécessaire (charge tumorale élevée, maladie symptomatique, progression mettant en danger les organes) ou lorsque l'IO est contre-indiqué (maladie auto-immune non contrôlée active, transplantation récente d'organes, dysfonctionnement immunitaire sévère au départ). Le défaut dans la maladie de mutant BRAF sans ces caractéristiques reste IO d'abord parce que les réponses IO durables surpassent la durée de la thérapie ciblée bénéfice dans la plupart des preuves prospectives.</p>
+              <h3>Entités liées</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME</code><span>IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME</span><small>Indications</small></span><span class="hb-chip"><code>REG-ENCORAFENIB-BINIMETINIB-MELANOMA</code><span>Encorafenib + binimetinib (mélanome BRAF V600E/K)</span><small>schémas</small></span><span class="hb-chip"><code>RF-MELANOMA-BRAF-V600-ACTIONABLE</code><span>BRAF V600E ou V600K activant la mutation dans le mélanome métastatique/irrésectable — prévalence ~40-50% du mélanome cutané. Définition du traitement: BRAFi + MEKi doublet (dabrafenib + trametinib, encorafenib + binimetinib — COLOMBUS, vemurafenib + cobimetinib). Séquençage par anti-PD-1 (CheckMate-067, DREAMseq) — IO-premier préféré dans la maladie à faible volume; BRAF+MEK en premier dans la maladie symptomatique / à forte LDH.
+</span><small>Flags rouges</small></span></div>
+              <h3>Sources des sections</h3>
+              <ul><li><code>SRC-COMBI-D-LONG-2014</code> Inhibition combinée du BRAF et du MEK contre Inhibtion du BRaf seule dans le mélanome</li><li><code>SRC-COMBI-V-ROBERT-2015</code> Amélioration de la survie globale du mélanome avec Dabrafenib et Trametinib combinés</li><li><code>SRC-COLUMBUS-DUMMETT-2018</code> Encorafenib plus binimetinib versus vemurafenib or encorafenib in patients with BRAF-mutant melanoma (COLUMBUS): a multicentre, open-label, randomised phase 3 trial</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Trappes communes</h2>
+              <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original anglais conservé pour vérification">Do not treat regimen selection as the whole task. A history of moderate or severe autoimmune disease is a parallel obligation that may move dual IO down the list even in a fit BRAF-wild-type patient. Active brain metastases are a treatment-planning emergency that pulls upfront stereotactic radiosurgery and dexamethasone planning into the conversation; the systemic IO choice may not change but the safety plan does. Hepatitis B/C reactivation risk requires baseline screening before any checkpoint inhibitor. None of these alter the canonical first-line call by themselves but missing them changes the trajectory of care.</span></p>
+              <h3>Entités liées</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>RF-MELANOMA-HIGH-RISK-BIOLOGY</code><span>La mutation BRAF V600E/K OU NRAS — commande la décision de doublet BRAFi+MEKi vs ICI.</span><small>Flags rouges</small></span><span class="hb-chip"><code>RF-MELANOMA-IO-RESISTANT</code><span>Mélanoma métastatique résistant à l'IO — progression sur un traitement antérieur anti-PD-1 (± anti-CTLA-4 ou anti-LAG-3). Le traitement passe à la récupération de BRAF+MEKi (si mutant BRAF V600) OU au traitement par lifileucel TIL (C-144-01 — ORR 31% post-IO post-BRAFi); ipi-nivo réchauffe dans certains cas.
+</span><small>Flags rouges</small></span></div>
+              <h3>Sources des sections</h3>
+              <ul><li><code>SRC-NCCN-MELANOMA-2025</code> Mélanome cutané NCCN</li><li><code>SRC-ESMO-MELANOMA-2024</code> ESMO Cutaneous Melanoma</li></ul>
+            </section>
+
+        <section class="hb-panel">
+          <h2>Cas synthétiques travaillés</h2>
+          <ul><li><code>patient_melanoma_braf_v600_nivo_ipi</code> Mélanome mutant BRAF V600: IO choisi comme 1L - <span>IO-premier raisonnement dans la maladie mutante BRAF</span> <small>exemples/pazient_melanome_braf_v600_nivo_ipi.json</small></li><li><code>patient_melanoma_braf_v600_dab_tram</code> BRAF V600 mélanome mutant: traitement ciblé sous forme de 1L - <span>itinéraire ciblé à réaction rapide</span> <small>Examples/pazient_melanoma_braf_v600_dab_tram.json</small></li><li><code>patient_melanoma_braf_wt_pembro_mono</code> BRAF mélanome sauvage: pembrolizumab mono-agent - <span>sélection d'IO monoagent, pondération auto-immune-histoire</span> <small>examples/pazient_melanome_braf_wt_pembro_mono.json</small></li></ul>
+        </section>
+        <section class="hb-panel hb-quiz">
+          <div class="hb-quiz-header">
+            <h2>Questions d’entraînement</h2>
+            <div class="hb-quiz-tools">
+              <span class="hb-score" id="hb-score" aria-live="polite">0 sur 3 répondus · 0 correct</span>
+              <button type="button" class="hb-btn hb-btn--ghost" id="hb-quiz-reset">Restaurer le questionnaire</button>
+            </div>
+          </div>
+          <p class="hb-quiz-note">Les étiquettes de réponses, de score et de raisonnement sont conservées uniquement dans votre session de navigateur et sont claires lorsque vous fermez cet onglet. Les questions multi-sélection nécessitent chaque option correcte (et pas d'extras) pour un crédit.</p>
+
+      <form class="hb-question" data-question-id="HQ-MELANOMA-MET-1L-001" data-question-type="type_a" data-correct-answer="A" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Question 1</span>
+          <span class="hb-badge">type_a</span>
+          <span class="hb-badge">intro</span>
+          <span class="hb-question-id"><code>HQ-MELANOMA-MET-1L-001</code></span>
+        </div>
+        <p class="hb-question-stem"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original anglais conservé pour vérification">A fit patient has BRAF wild-type metastatic melanoma with normal LDH, no autoimmune history, and no CNS symptoms. In the OpenOnco first-line learning model, which track is the canonical default?</span></p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-001" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Nivolumab + ipilimumab</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-001" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Encorafenib + binimetinib</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-001" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Cytotoxique dacarbazine</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-001" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Observation jusqu'à progression</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Soumettre une réponse</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Réinitialiser</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Réponse correcte :</strong> A</p>
+          <p class="hb-result-explanation">L'inhibition du double point de contrôle avec nivolumab + ipilimumab est la colonne vertébrale de l'IO canonique pour les patients atteints de mélanoma métastatique dans le modèle OpenOnco (CheckMate-067). Les régimes ciblés par BRAF ne sont pas utilisés pour une maladie sauvage de type BRAF, la dacarbazine cytotoxique n'est pas une première ligne canonique par défaut et l'observation n' est pas utilisée dans une maladie métastatique active.</p>
+          <div class="hb-result-sources"><span>Sources :</span> <code class="hb-result-source">SRC-CHECKMATE-067-LARKIN-2019</code><code class="hb-result-source">SRC-NCCN-MELANOMA-2025</code></div>
+          <div class="hb-result-tags">Étiquettes de raisonnement: <span class="hb-result-tag">_sélection du régime</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question" data-question-id="HQ-MELANOMA-MET-1L-002" data-question-type="type_a" data-correct-answer="A" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Question 2</span>
+          <span class="hb-badge">type_a</span>
+          <span class="hb-badge">intermédiaire</span>
+          <span class="hb-question-id"><code>HQ-MELANOMA-MET-1L-002</code></span>
+        </div>
+        <p class="hb-question-stem"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original anglais conservé pour vérification">A patient has BRAF V600E-mutant metastatic melanoma with rapidly progressive symptomatic visceral disease, elevated LDH, and recent corticosteroid use for an unrelated autoimmune condition. Which OpenOnco first-line option is consistent with this profile?</span></p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-002" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Encorafenib + binimetinib (ciblé par BRAF) comme option canonique de première ligne</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-002" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Nivolumab + ipilimumab comme l'option canonique de première ligne</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-002" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Pembrolizumab en monothérapie</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MELANOMA-MET-1L-002" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Observation avec imagerie en série</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Soumettre une réponse</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Réinitialiser</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Réponse correcte :</strong> A</p>
+          <p class="hb-result-explanation"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original anglais conservé pour vérification">BRAF V600 disease combined with rapid-response need and an IO contraindication (recent corticosteroid use for active autoimmune disease) is exactly the scenario OpenOnco routes to BRAF-targeted therapy at first line (COMBI / COLUMBUS context). Dual IO is contraindicated here; single-agent pembrolizumab is also IO and carries the same risk. Observation is not appropriate for symptomatic progression.</span></p>
+          <div class="hb-result-sources"><span>Sources :</span> <code class="hb-result-source">SRC-COMBI-V-ROBERT-2015</code><code class="hb-result-source">SRC-COLUMBUS-DUMMETT-2018</code></div>
+          <div class="hb-result-tags">Étiquettes de raisonnement: <span class="hb-result-tag">biomarqueur_routage</span><span class="hb-result-tag">Screening de sécurité</span><span class="hb-result-tag">_sélection du régime</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question" data-question-id="HQ-MELANOMA-MET-1L-003" data-question-type="type_k" data-correct-answer="A|B|C" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Question 3</span>
+          <span class="hb-badge">type_k</span>
+          <span class="hb-badge">intermédiaire</span>
+          <span class="hb-question-id"><code>HQ-MELANOMA-MET-1L-003</code></span>
+        </div>
+        <p class="hb-question-stem">Quelles sont les déclarations vraies pour OpenOnco raisonnement métastatique de première ligne du mélanoma ?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MELANOMA-MET-1L-003" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Avant d'élaborer le plan de première ligne, il est nécessaire d'effectuer des tests BRAF V600E/K parce qu'il permet d'acheminer les patients entre les OI et les stratégies ciblées.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MELANOMA-MET-1L-003" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Le pembrolizumab mono-agent est le défaut canonique lorsque l'IO double est contre-indiqué par l'historique auto-immun ou la comorbidité (contexte KEYNOTE-006).</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MELANOMA-MET-1L-003" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Relatlimab + nivolumab is presented as an additional dual-checkpoint option with a different toxicity profile (RELATIVITY-047).</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MELANOMA-MET-1L-003" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Tous les patients ayant un mutant BRAF V600 doivent d'abord recevoir un traitement ciblé par BRAF, car l'IO est inefficace dans la maladie du mutant BRAF.</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Soumettre une réponse</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Réinitialiser</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Réponse correcte :</strong> A, B, C</p>
+          <p class="hb-result-explanation"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original anglais conservé pour vérification">BRAF V600 testing as routing input, single-agent pembrolizumab when dual IO is contraindicated, and relatlimab + nivolumab as an additional dual-checkpoint option are all consistent with the OpenOnco model. IO is effective in BRAF-mutant melanoma and is typically chosen first when no rapid-response or contraindication signal pushes the learner toward BRAF-targeted therapy.</span></p>
+          <div class="hb-result-sources"><span>Sources :</span> <code class="hb-result-source">SRC-NCCN-MELANOMA-2025</code><code class="hb-result-source">SRC-KEYNOTE-006-ROBERT-2015</code><code class="hb-result-source">SRC-RELATIVITY-047-TAWBI-2022</code></div>
+          <div class="hb-result-tags">Étiquettes de raisonnement: <span class="hb-result-tag">biomarqueur_routage</span><span class="hb-result-tag">_sélection du régime</span><span class="hb-result-tag">séquençage</span></div>
+        </div>
+      </form>
+
+        </section>
+      </div>
+      <aside class="hb-side">
+        <section class="hb-panel hb-disclaimer">
+          <strong>Utilisation éducative seulement.</strong>
+          <p>Ce chapitre publié par OpenOnco n'est pas un matériel officiel de l'ESMO, pas une activité de crédit CME, et pas des conseils médicaux spécifiques aux patients.</p>
+        </section>
+        <section class="hb-panel hb-review-panel">
+          <h2>Statut de révision</h2>
+          <dl class="hb-review-meta">
+            <dt>Situation actuelle</dt>
+            <dd><span class="hb-badge hb-badge--draft">projet</span></dd>
+            <dt>Dernier examen</dt><dd><em>not yet reviewed</em></dd>
+          </dl>
+          <h3>Validations cliniques</h3>
+          <p class="hb-signoff-empty">Aucune validation clinique n’a encore été enregistrée.</p>
+          <p class="hb-review-rules"><a href="/specs.html">HANDBOOK_MODE_SPEC §4</a>
+          régit les transitions de statut et le seuil d'impasse de 365 jours.</p>
+        </section>
+        <section class="hb-panel">
+          <h2>Sources des chapitres</h2>
+          <ul><li><code>SRC-NCCN-MELANOMA-2025</code> Mélanome cutané NCCN</li><li><code>SRC-ESMO-MELANOMA-2024</code> ESMO Cutaneous Melanoma</li><li><code>SRC-CHECKMATE-067-LARKIN-2019</code> Survie quinquennale avec Nivolumab et Ipilimumab combinés dans le mélanome avancé</li><li><code>SRC-KEYNOTE-006-ROBERT-2015</code> Pembrolizumab versus Ipilimumab chez le mélanome avancé</li><li><code>SRC-COLUMBUS-DUMMETT-2018</code> Encorafenib plus binimetinib versus vemurafenib or encorafenib in patients with BRAF-mutant melanoma (COLUMBUS): a multicentre, open-label, randomised phase 3 trial</li><li><code>SRC-COMBI-D-LONG-2014</code> Inhibition combinée du BRAF et du MEK contre Inhibtion du BRaf seule dans le mélanome</li><li><code>SRC-COMBI-V-ROBERT-2015</code> Amélioration de la survie globale du mélanome avec Dabrafenib et Trametinib combinés</li><li><code>SRC-RELATIVITY-047-TAWBI-2022</code> Relatlimab and Nivolumab versus Nivolumab in Untreated Advanced Melanoma</li></ul>
+        </section>
+        <section class="hb-panel">
+          <h2>Carte des entités</h2>
+          <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-MELANOMA</code><span>Mélanome cutané</span><small>maladies</small></span><span class="hb-chip"><code>ALGO-MELANOMA-METASTATIC-1L</code><span>ALGO-MELANOMA-METASTATIC-1L</span><small>algorithmes</small></span><span class="hb-chip"><code>IND-MELANOMA-METASTATIC-1L-NIVO-IPI</code><span>IND-MELANOMA-METASTATIC-1L-NIVO-IPI</span><small>Indications</small></span><span class="hb-chip"><code>IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO</code><span>IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO</span><small>Indications</small></span><span class="hb-chip"><code>IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME</code><span>IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME</span><small>Indications</small></span><span class="hb-chip"><code>IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB</code><span>IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB</span><small>Indications</small></span><span class="hb-chip"><code>REG-NIVO-IPI-MELANOMA</code><span>Nivolumab + ipilimumab (mélanome, 1L métastatique)</span><small>schémas</small></span><span class="hb-chip"><code>REG-PEMBRO-MONO-MELANOMA</code><span>Pembrolizumab en monothérapie (mélanome avancé/métastatique, 1L; KEYNOTE-006)</span><small>schémas</small></span><span class="hb-chip"><code>REG-ENCORAFENIB-BINIMETINIB-MELANOMA</code><span>Encorafenib + binimetinib (mélanome BRAF V600E/K)</span><small>schémas</small></span><span class="hb-chip"><code>REG-RELATLIMAB-NIVOLUMAB-MELANOMA</code><span>Relatlimab + nivolumab (Opdualag, melanoma)</span><small>schémas</small></span><span class="hb-chip"><code>RF-MELANOMA-BRAF-V600-ACTIONABLE</code><span>BRAF V600E ou V600K activant la mutation dans le mélanome métastatique/irrésectable — prévalence ~40-50% du mélanome cutané. Définition du traitement: BRAFi + MEKi doublet (dabrafenib + trametinib, encorafenib + binimetinib — COLOMBUS, vemurafenib + cobimetinib). Séquençage par anti-PD-1 (CheckMate-067, DREAMseq) — IO-premier préféré dans la maladie à faible volume; BRAF+MEK en premier dans la maladie symptomatique / à forte LDH.
+</span><small>Flags rouges</small></span><span class="hb-chip"><code>RF-MELANOMA-IO-RESISTANT</code><span>Mélanoma métastatique résistant à l'IO — progression sur un traitement antérieur anti-PD-1 (± anti-CTLA-4 ou anti-LAG-3). Le traitement passe à la récupération de BRAF+MEKi (si mutant BRAF V600) OU au traitement par lifileucel TIL (C-144-01 — ORR 31% post-IO post-BRAFi); ipi-nivo réchauffe dans certains cas.
+</span><small>Flags rouges</small></span><span class="hb-chip"><code>RF-MELANOMA-HIGH-RISK-BIOLOGY</code><span>La mutation BRAF V600E/K OU NRAS — commande la décision de doublet BRAFi+MEKi vs ICI.</span><small>Flags rouges</small></span><span class="hb-chip"><code>BIO-BRAF-V600E</code><span>BRAF V600E</span><small>biomarqueurs</small></span><span class="hb-chip"><code>BIO-BRAF-V600K</code><span>BRAF V600K</span><small>biomarqueurs</small></span><span class="hb-chip"><code>BIO-NRAS-Q61R</code><span>NRAS Q61R</span><small>biomarqueurs</small></span><span class="hb-chip"><code>BIO-KIT</code><span>mutation du KIT (gène c-KIT / CD117)</span><small>biomarqueurs</small></span><span class="hb-chip"><code>BIO-PDL1-EXPRESSION</code><span>expression PD-L1</span><small>biomarqueurs</small></span><span class="hb-chip"><code>TEST-CT-CHEST-ABDOMEN-PELVIS</code><span>CT thoracique + abdomen + pelvis avec contraste IV</span><small>essais</small></span></div>
+        </section>
+      </aside>
+    </div>
+    <script>
+      (function() {
+        var CHAPTER_ID = "HB-MELANOMA-METASTATIC-1L";
+        var GRADED_TOTAL = 3;
+        var STORAGE_KEY = 'openonco-handbook-' + CHAPTER_ID + '-quiz';
+        var forms = Array.prototype.slice.call(document.querySelectorAll('.hb-quiz .hb-question'));
+        var scoreEl = document.getElementById('hb-score');
+        var resetAllBtn = document.getElementById('hb-quiz-reset');
+        var storage;
+        try { storage = window.sessionStorage; } catch (e) { storage = null; }
+        var state = {};
+        if (storage) {
+          try { state = JSON.parse(storage.getItem(STORAGE_KEY) || '{}') || {}; } catch (e) { state = {}; }
+        }
+        function persist() {
+          if (!storage) { return; }
+          try { storage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        }
+        function normalize(list) {
+          return (list || []).map(function(k) { return String(k).toUpperCase(); }).slice().sort().join('|');
+        }
+        function updateScore() {
+          var answered = 0;
+          var correct = 0;
+          Object.keys(state).forEach(function(qid) {
+            var entry = state[qid];
+            if (entry && entry.submitted && entry.graded) {
+              answered += 1;
+              if (entry.correct) { correct += 1; }
+            }
+          });
+          if (scoreEl) {
+            scoreEl.textContent = answered + ' of ' + GRADED_TOTAL + ' answered · ' + correct + ' correct';
+          }
+        }
+        forms.forEach(function(form) {
+          var qid = form.getAttribute('data-question-id');
+          var qtype = form.getAttribute('data-question-type');
+          var graded = form.getAttribute('data-graded') === 'true';
+          var correctAttr = form.getAttribute('data-correct-answer') || '';
+          var correctKey = correctAttr.split('|').filter(Boolean).slice().sort().join('|');
+          var resultEl = form.querySelector('.hb-result');
+          var headlineEl = form.querySelector('[data-role="headline"]');
+          var statusEl = form.querySelector('[data-role="status"]');
+          var submitBtn = form.querySelector('[data-action="submit"]');
+          var resetBtn = form.querySelector('[data-action="reset"]');
+          var revealBtn = form.querySelector('[data-action="reveal"]');
+          function selectedKeys() {
+            return Array.prototype.slice.call(
+              form.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked')
+            ).map(function(input) { return input.value; });
+          }
+          function setResultClass(isCorrect) {
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (isCorrect === true) { resultEl.classList.add('hb-result--correct'); }
+            else if (isCorrect === false) { resultEl.classList.add('hb-result--incorrect'); }
+            else { resultEl.classList.add('hb-result--reveal'); }
+          }
+          function showResult(entry) {
+            resultEl.hidden = false;
+            if (graded) {
+              setResultClass(entry.correct);
+              if (statusEl) {
+                statusEl.textContent = entry.correct ? '✓ Correct' : '✗ Not yet — see explanation';
+              }
+            } else {
+              setResultClass(null);
+              if (statusEl) { statusEl.textContent = 'Model answer revealed'; }
+            }
+          }
+          function clearResult() {
+            resultEl.hidden = true;
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (statusEl) { statusEl.textContent = ''; }
+          }
+          function rehydrate() {
+            var entry = state[qid];
+            if (!entry) { return; }
+            (entry.selected || []).forEach(function(key) {
+              var input = form.querySelector('input[value="' + key + '"]');
+              if (input) { input.checked = true; }
+            });
+            if (entry.submitted) { showResult(entry); }
+          }
+          function submitGraded(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            var selected = selectedKeys();
+            if (selected.length === 0) {
+              if (statusEl) { statusEl.textContent = 'Pick an option first.'; }
+              return;
+            }
+            var selectedKey = normalize(selected);
+            var isCorrect = selectedKey === correctKey;
+            state[qid] = { submitted: true, graded: true, selected: selected, correct: isCorrect };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function revealOnly(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            state[qid] = { submitted: true, graded: false, selected: [], correct: null };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function resetQuestion(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+              if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+              else { input.value = ''; }
+            });
+            delete state[qid];
+            persist();
+            clearResult();
+            updateScore();
+          }
+          if (submitBtn) { submitBtn.addEventListener('click', submitGraded); }
+          if (resetBtn) { resetBtn.addEventListener('click', resetQuestion); }
+          if (revealBtn) { revealBtn.addEventListener('click', revealOnly); }
+          form.addEventListener('submit', function(event) { event.preventDefault(); if (graded) { submitGraded(event); } });
+          rehydrate();
+        });
+        if (resetAllBtn) {
+          resetAllBtn.addEventListener('click', function() {
+            state = {};
+            persist();
+            forms.forEach(function(form) {
+              Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+                if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+                else { input.value = ''; }
+              });
+              var resultEl = form.querySelector('.hb-result');
+              var statusEl = form.querySelector('[data-role="status"]');
+              if (resultEl) {
+                resultEl.hidden = true;
+                resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+              }
+              if (statusEl) { statusEl.textContent = ''; }
+            });
+            updateScore();
+          });
+        }
+        updateScore();
+      })();
+    </script>
+
+  </main>
+<script src="/clinical-localization.js?v=20261010-2" data-locale="fr" data-catalog="/fr/clinical-ui-translations.json" defer></script></body>
+</html>

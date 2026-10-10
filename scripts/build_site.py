@@ -76,6 +76,7 @@ from scripts.build_kb_wiki import build_kb_wiki
 from scripts.build_participation import build_participation
 from scripts.build_news import build_news
 from scripts.build_international import build_international
+from scripts.build_clinical_locales import build_clinical_locales
 from scripts.site_cases import (
     BROKEN_CASE_IDS,
     CASE_CATEGORIES,
@@ -440,7 +441,7 @@ const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html
   '/style.css', '/news.html', '/ukr/news.html'];
 // Per-article news pages are matched by prefix rather than listed, since slugs
 // are added by content authors without touching this file.
-const SWR_PREFIXES = ['/news/', '/ukr/news/'];
+const SWR_PREFIXES = ['/news/', '/ukr/news/', '/clinical-styles/'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -501,7 +502,9 @@ self.addEventListener('fetch', (event) => {
   }
 
   // SWR for the small interactive shell (HTML + CSS).
-  if (SWR_PATHS.indexOf(url.pathname) !== -1 ||
+  if (url.pathname === '/clinical-localization.js' ||
+      /^\\/(es|pt|de|fr)\\/(clinical-(ui-)?translations|kb_search_index)\\.json$/.test(url.pathname) ||
+      SWR_PATHS.indexOf(url.pathname) !== -1 ||
       SWR_PREFIXES.some((p) => url.pathname.startsWith(p))) {
     return staleWhileRevalidate(event);
   }
@@ -4335,26 +4338,35 @@ def render_ask(*, target_lang: str = "en") -> str:
   }}
 
   function renderPayload(payload) {{
+    const labels = {{
+      en: ['Options:', 'Rationale:', 'Clarifying questions:', 'Engine limitations:'],
+      uk: ['Варіанти:', 'Обґрунтування:', 'Уточнювальні запитання:', 'Обмеження рушія:'],
+      es: ['Opciones:', 'Justificación:', 'Preguntas aclaratorias:', 'Limitaciones del motor:'],
+      pt: ['Opções:', 'Fundamentação:', 'Perguntas de esclarecimento:', 'Limitações do motor:'],
+      de: ['Optionen:', 'Begründung:', 'Rückfragen:', 'Einschränkungen der Engine:'],
+      fr: ['Options :', 'Justification :', 'Questions de clarification :', 'Limites du moteur :']
+    }};
+    const headings = labels[document.documentElement.lang] || labels.en;
     const lines = [];
     if (payload.direct_answer) lines.push(payload.direct_answer);
     if (payload.selected_options && payload.selected_options.length) {{
       lines.push('');
-      lines.push('Options:');
+      lines.push(headings[0]);
       payload.selected_options.forEach(o => lines.push('- ' + (o.label ? o.label + '. ' : '') + o.text));
     }}
     if (payload.rationale && payload.rationale.length) {{
       lines.push('');
-      lines.push('Rationale:');
+      lines.push(headings[1]);
       payload.rationale.forEach(x => lines.push('- ' + x));
     }}
     if (payload.clarifying_questions && payload.clarifying_questions.length) {{
       lines.push('');
-      lines.push('Clarifying questions:');
+      lines.push(headings[2]);
       payload.clarifying_questions.forEach(x => lines.push('- ' + x));
     }}
     if (payload.engine_limitations && payload.engine_limitations.length) {{
       lines.push('');
-      lines.push('Engine limitations:');
+      lines.push(headings[3]);
       payload.engine_limitations.forEach(x => lines.push('- ' + x));
     }}
     if (payload.safety_note) {{
@@ -5110,8 +5122,8 @@ async function refreshBuildPanel(diseaseId = null) {{
 
 // ── Plan modal + lang switcher ────────────────────────────────────────────
 function highlightLangButtons() {{
-  langUaBtn.classList.toggle('is-active', currentResultLang === 'uk');
-  langEnBtn.classList.toggle('is-active', currentResultLang === 'en');
+  langUaBtn.classList.toggle('is-active', !window.OPENONCO_REPORT_LOCALE && currentResultLang === 'uk');
+  langEnBtn.classList.toggle('is-active', !window.OPENONCO_REPORT_LOCALE && currentResultLang === 'en');
 }}
 
 function highlightModeButtons() {{
@@ -5248,7 +5260,11 @@ html
 function downloadHtml() {{
   if (uiBusy || generating) return;
   if (planSource == null) return;
-  let html = resultFrame.srcdoc;
+  const displayedDocument = resultFrame.contentDocument;
+  const translatedDisplay = displayedDocument && displayedDocument.documentElement.dataset.translationLocale;
+  let html = translatedDisplay
+    ? '<!DOCTYPE html>\\n' + displayedDocument.documentElement.outerHTML
+    : resultFrame.srcdoc;
   if (!html) {{
     try {{
       html = '<!DOCTYPE html>\\n' + resultFrame.contentDocument.documentElement.outerHTML;
@@ -5265,7 +5281,7 @@ function downloadHtml() {{
   const stamp = new Date().toISOString().slice(0, 10);
   const modePart = (planSource === 'generated' ? '.' + currentResultMode : '');
   a.href = url;
-  a.download = `openonco-plan${{modePart}}.${{currentResultLang}}.${{stamp}}.html`;
+  a.download = `openonco-plan${{modePart}}.${{translatedDisplay || currentResultLang}}.${{stamp}}.html`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -6631,6 +6647,7 @@ function diseaseSearchHaystack(q) {{
   if (!q) return '';
   const did = String(q.disease_id || '');
   return [
+    typeof window.OPENONCO_DISPLAY_LABEL === 'function' ? window.OPENONCO_DISPLAY_LABEL(questionnaireDisplayTitle(q)) : '',
     q.title_en || q.title || '',
     q.title_uk || '',
     did,
@@ -6763,6 +6780,7 @@ function exampleDisplayLabel(ex) {{
 // truly spans all public examples.
 function exampleSearchBlob(ex) {{
   const parts = [
+    typeof window.OPENONCO_DISPLAY_LABEL === 'function' ? window.OPENONCO_DISPLAY_LABEL(exampleDisplayLabel(ex)) : '',
     ex.label || '', ex.label_en || '', ex.summary || '', ex.summary_en || '',
     ex.disease_id || '', ex.disease_icd || '',
     ex.disease_name_en || '', ex.disease_name_ua || '',
@@ -10664,6 +10682,7 @@ def build_site(output_dir: Path) -> dict:
         raise RuntimeError("DLBCL synthetic review engineering contracts failed")
     news_payload = build_news(output_dir, top_bar=_render_top_bar)
     international_payload = build_international(output_dir)
+    clinical_locales_payload = build_clinical_locales(output_dir)
     clinical_gap_payload = write_clinical_gap_outputs(output_dir)
     discovery_payload = finalize_site_discovery(output_dir)
     whitespace_normalized_files = _normalize_generated_text_whitespace(output_dir)
@@ -10687,6 +10706,7 @@ def build_site(output_dir: Path) -> dict:
         "review_payload": review_payload["summary"],
         "news_payload": news_payload,
         "international_payload": international_payload,
+        "clinical_locales_payload": clinical_locales_payload,
         "clinical_gap_payload": clinical_gap_payload,
         "discovery_payload": discovery_payload,
         "landing_assets": landing_assets,

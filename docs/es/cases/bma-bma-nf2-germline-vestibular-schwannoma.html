@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan de tratamiento — Meningioma</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/es/cases/bma-bma-nf2-germline-vestibular-schwannoma.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/cases/bma-bma-nf2-germline-vestibular-schwannoma.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/cases/bma-bma-nf2-germline-vestibular-schwannoma.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/cases/bma-bma-nf2-germline-vestibular-schwannoma.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/cases/bma-bma-nf2-germline-vestibular-schwannoma.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/cases/bma-bma-nf2-germline-vestibular-schwannoma.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/cases/bma-bma-nf2-germline-vestibular-schwannoma.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/cases/bma-bma-nf2-germline-vestibular-schwannoma.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Plan de tratamiento — Meningioma">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/es/cases/bma-bma-nf2-germline-vestibular-schwannoma.html">
+<meta property="og:locale" content="es">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Plan de tratamiento — Meningioma">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Plan de tratamiento — Meningioma","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/es/cases/bma-bma-nf2-germline-vestibular-schwannoma.html","inLanguage":"es","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/es/cases/bma-bma-nf2-germline-vestibular-schwannoma.html"}}</script>
+<!-- openonco-seo:end -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/clinical-styles/46a80e9314fb5c473de882c0ea142f68dae9776b1b58da99a3e32678c03e5fc7.css">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/clinical-styles/3f0fe13916348089255309c0c4de9eef32abbc421322d9df74e10a8539433420.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="aae44991401eb86a0f9c75d55e55df5c4e5f191d26a37ea8b09ccf2816d9d592"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/es/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGÍA ABIERTA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Idioma"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg>ES <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Idioma"><a href="/cases/bma-bma-nf2-germline-vestibular-schwannoma.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/cases/bma-bma-nf2-germline-vestibular-schwannoma.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/cases/bma-bma-nf2-germline-vestibular-schwannoma.html" lang="es" hreflang="es" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/cases/bma-bma-nf2-germline-vestibular-schwannoma.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/cases/bma-bma-nf2-germline-vestibular-schwannoma.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/cases/bma-bma-nf2-germline-vestibular-schwannoma.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/es/try.html" class="btn-cta-top btn-cta-try"><span>Crear un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menú"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menú">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Herramientas</span>
+    <div class="top-cta-group">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Código abierto</span>
+  </div>
+  </div>
+</header><aside class="translation-notice" role="note"><strong>Traducción preliminar: revisión clínica pendiente.</strong> <a href="/cases/bma-bma-nf2-germline-vestibular-schwannoma.html" lang="en" hreflang="en" data-original-source>Consultar el original en inglés</a></aside>
+<div class="oo-topbar-host no-print"></div>
+<div class="case-bar no-print"><div>OpenOnco · <strong>DIS-MENINGIOMA · BIO-NF2-GERMLINE (ESCAT IIA)</strong></div><div><a href="/es/gallery.html">← Volver a la galería</a><a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+bma-bma-nf2-germline-vestibular-schwannoma&amp;labels=tester-feedback" target="_blank" rel="noopener">Comentarios sobre este caso</a></div></div>
+<div class="example-verification no-print">Synthetic educational example. Do not self-treat: a qualified treating physician must verify the sources, patient data, contraindications, and final plan.</div><div class="page"><div class="doc-header"><div class="doc-label">OpenOnco · Plan de tratamiento</div><div class="doc-title">Plan de tratamiento — Meningioma</div><div class="doc-sub">PLAN-BMA-NF2_GERMLINE_VESTIBULAR_SCHW-V1 · v1 · 2026-10-10</div></div><div class="patient-strip"><div class="label">Paciente</div><div class="value">BMA-NF2_GERMLINE_VESTIBULAR_SCHW · Algoritmo: ALGO-MENINGIOMA-1L</div><div class="patient-meta-grid"><div class="patient-meta-item"><span class="meta-label">Diagnóstico</span><span class="meta-value">Meningioma</span></div><div class="patient-meta-item"><span class="meta-label">MS/CID-10</span><span class="meta-value">D32</span></div><div class="patient-meta-item"><span class="meta-label">ICD-O-3</span><span class="meta-value">9530/0; C70</span></div></div></div><section class="variant-actionability"><h2>Significación clínica de las mutaciones (ESCAT)</h2><div class="section-sub">Contexto de tabla de tumores — el motor no utiliza estos niveles para clasificar las pistas</div><table class="actionability-table"><thead><tr><th>Biomarcador</th><th>Variante</th><th>ESCAT</th><th>Evidencia</th><th>Significación clínica</th><th>Fármacos</th><th>Fuentes</th></tr></thead><tbody><tr><td><span class="actionability-review-badge">ESCAT: revisión clínica pendiente</span><span class="gene">BIO-NF2-GERMLINE</span></td><td><span class="variant">Pérdida de la función de la línea germinal NF2 (merlina/schwannomin)</span></td><td><span class="tier-badge escat-IIA">IIA</span></td><td class="evidence"><ul class="evidence-sources evidence-sources--fallback"><li class="evidence-fallback">SRC-NCCN-CNS-2025</li></ul><div class="evidence-fallback-note">Evidencia citada en las directrices clínicas; niveles de evidencia por fuente no estructurados aún. Véase Fase-2 del pivote CIViC para la hoja de ruta de recitación.</div></td><td class="summary"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">NF2 germline pathogenic variants drive Neurofibromatosis Type 2 (NF2 / NF2- related schwannomatosis) — characterized by bilateral vestibular schwannomas, meningiomas (often multiple), spinal schwannomas, ependymomas, and juvenile posterior subcapsular cataract. Confirmed-carrier surveillance protocol (per NCCN CNS / Manchester NF2 Consensus): brain MRI with contrast (thin slices through IAC) starting at age 10-12 (earlier if symptomatic) q1-2y for vestibular schwannoma and intracranial meningioma, whole-spine MRI q2-3y for spinal schwannomas and meningiomas, annual neurological exam, annual audiology (pure-tone + speech discrimination + ABR), ophthalmology exam q1-2y. Bevacizumab is active for growing or symptomatic vestibular schwannoma (hearing preservation / volume reduction in ~40-60% per Plotkin et al.) — surveillance-triggered, not prophylactic. Surgery + radiosurgery remain mainstays for accessible lesions; radiosurgery use is cautious due to malignant transformation risk in NF2. ESCAT IIA.</span></td><td class="combos">bevacizumab 5-7,5 mg/kg q2-3w — escwannoma vestibular en crecimiento o sintomático en NF2 (fuera de la etiqueta, con pruebas apoyadas por Plotkin et al. 2012)<br>Radiocirugía estereotáctica — escollomas vestibulares seleccionados, prudentes (riesgo de transformación maligno en NF2)<br>Resección microquirúrgica — sintomática / comprimidora de tronco encéfalo schwannomas, meningiomas<br>clínica multidisciplinar de NF2 (otología, neurocirugía, neurooncología, genética)</td><td><ul class="src-list"><li>SRC-NCCN-CNS-2025</li></ul></td></tr><tr><td><span class="actionability-review-badge">ESCAT: revisión clínica pendiente</span><span class="gene">BIO-NF2</span></td><td><span class="variant">Pérdida de función NF2 (somática biallélica en meningioma esporádico ~50%; línea germinativa en síndrome NF2); pérdida de merlina por sustituto aceptable IHC</span></td><td><span class="tier-badge escat-IIIA">IIIA</span></td><td class="evidence"><div class="evidence-lane evidence-lane--standard_care"><div class="evidence-lane-title">Atención estándar</div><ul class="evidence-sources"><li>SRC-NCCN-CNS-2025: Level Category 2B <span class="evidence-meta">(Apoyo, sensibilidad/respuesta)</span></li></ul></div><div class="evidence-lane evidence-lane--resistance_or_avoidance_signal"><div class="evidence-lane-title">Resistance or avoidance signal</div><ul class="evidence-sources"><li>SRC-EANO-MENINGIOMA-2024: Level B <span class="evidence-resistance" title="Pruebas de resistencia">ї Resistencia</span></li></ul></div></td><td class="summary"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">NF2 loss is the most common molecular driver in meningioma (~50% of grade I; higher proportion in grade II/III). Despite its frequency, no FDA/EMA-approved targeted therapy exists specifically for NF2-mutant meningioma as of 2026. Standard treatment is maximal safe surgical resection ± radiotherapy (SRS for small residual, fractionated RT for larger/grade II-III). Systemic therapy evidence for progressive/recurrent meningioma: Selumetinib (MEK inhibitor; FDA-approved for NF1 pediatric plexiform neurofibroma): investigated in NF2-related vestibular schwannomas (ACTR-4 trial) and NF2-related meningiomas — limited hearing preservation benefit; single-agent activity modest. Bevacizumab (anti-VEGF): off-label use in progressive grade II-III meningioma or NF2-related schwannomas — radiologic responses in 40–50% in retrospective series, PFS benefit uncertain. AKT1 E17K-mutant meningioma (~10% of grade I): AKT inhibitors (capivasertib, ipatasertib) in phase II trials — not NF2-specific but relevant for co-occurring pathway alterations. SMO-mutant (~5% of meningioma): vismodegib case reports show activity. ESCAT IIB: NF2 loss is molecularly relevant but no validated targeted therapy with prospective trial data.</span></td><td class="combos">bevacizumab 7.5–10 mg/kg IV q3w — off-label for progressive grade II-III meningioma or NF2 syndrome-related tumors; radiologic responses in ~40–50% retrospective series<br>selumetinib 25 mg/m2 PO BID — investigacional para schwannomas relacionados con el NF2 (regimen ACTR-4); no estándar para el meningioma</td><td><ul class="src-list"><li>SRC-EANO-MENINGIOMA-2024</li><li>SRC-NCCN-CNS-2025</li></ul></td></tr></tbody></table></section><section><h2>Opción de línea corriente primaria</h2><div class="tracks"><div class="track track--local_therapy"><div class="track-head"><div class="track-name">Plan de terapia local</div><span class="track-default-badge">★ DEFAULT</span></div><dl><dt>Indicación</dt><dd>IND-MENINGIOMA-1L-RESECTION-RT</dd><dt>Esquema terapéutico</dt><dd>—</dd><dt>Motivo</dt><dd>Opción primaria de línea corriente seleccionada por ALGO-MENINGIOMA-1L en el paso 1.</dd></dl></div></div></section><section><h2>Investigación previa al tratamiento</h2><div class="section-sub">Investigaciones antes de iniciar el tratamiento · crítico / estándar / deseado · fusionado entre vías</div><table class="tbl"><thead><tr><th>ID</th><th>Nombre</th><th>Prioridad</th><th>Categoría</th><th>Dónde pedir</th><th>- Necesitado para</th></tr></thead><tbody><tr><td>TEST-CBC</td><td>Conteo completo de sangre con diferencial</td><td><span class="badge badge--required">Critical</span></td><td>laboratorio</td><td class="lab-avail-cell">—</td><td>todas las pistas</td></tr><tr><td>TEST-CMP</td><td>Panel Metabólico Integral</td><td><span class="badge badge--required">Critical</span></td><td>laboratorio</td><td class="lab-avail-cell">—</td><td>todas las pistas</td></tr><tr><td>TEST-LFT</td><td>Pruebas de función hepática (ALT, AST, bilirrubina, ALP, GGT, albumina)</td><td><span class="badge badge--required">Critical</span></td><td>laboratorio</td><td class="lab-avail-cell">—</td><td>todas las pistas</td></tr><tr><td>TEST-BRAIN-MRI-CONTRAST</td><td>Resonancia magnética cerebral con contraste</td><td><span class="badge badge--recommended">Norma</span></td><td>—</td><td class="lab-avail-cell">—</td><td>todas las pistas</td></tr></tbody></table></section><section><h2>Qué NO hacer</h2><div class="section-sub">Explicit prohibitive rules, each grounded in a regimen / supportive care / contraindication entity</div><div class="do-not"><div class="track-name">Local therapy plan (IND-MENINGIOMA-1L-RESECTION-RT)</div><ul><li>No ofrezca terapia sistémica como tratamiento de primera línea por defecto para el meningioma resecable o manejable por radiación.</li><li>No se debe realizar una resección total bruta a costa de una morbilidad neurológica inaceptable; la reseccion máxima segura es el objetivo.</li><li>No omita el grado de patología postoperatoria, la evaluación de la invasión cerebral y la RMN de enfermedad residual antes de decidir la RT adyuvante.</li></ul></div></section><section><h2>Encuesta sobre el tratamiento de los residuos</h2><div class="mdt"><h3>Calidad de los datos</h3><div class="section-sub"><strong>Con seguridad.</strong> No se encontró ninguna brecha crítica en la vía por defecto, pero el MDT debería revisar las advertencias listadas antes de la firma final.</div><ul><li>Cobertura del biomarcador: 0/0 conocido (100%), 0 falta, 0 vacíos de la pista predeterminada</li><li>Alertas no evaluadas: RF-WERNER-CONFIRMED-CARRIER</li></ul><details class="skill-catalog"><summary>Metada de habilidad técnica MDT (0/16 activado en este plan)</summary><div class="section-sub">Todos los especialistas virtuales registrados. ✓ — activado para este caso; ї — no activado (disponible para otros escenarios clínicos).</div><table><thead><tr><th>Especialista</th><th>hability_id</th><th>Versión</th><th>Última revisión</th><th>Aprobaciones</th><th>Dominio</th></tr></thead><tbody><tr class="dormant"><td>Especialista en terapia celular (CAR-T)</td><td><code>cellular_therapy_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>_terapia celular</td></tr><tr class="dormant"><td>Farmacéutico clínico</td><td><code>clinical_pharmacist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>clínica_farmacia</td></tr><tr class="dormant"><td>Hematologista / oncohematologistas</td><td><code>hematologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematología_oncología</td></tr><tr class="dormant"><td>Hematopatólogo (linfoma / leucemia / mieloma)</td><td><code>hematopathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematopatología</td></tr><tr class="dormant"><td>Enfermedades infecciosas / hepatología</td><td><code>infectious_disease_hepatology</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>Enfermedades infecciosas</td></tr><tr class="dormant"><td>Oncólogo médico (quimioterapeuta de tumores sólidos)</td><td><code>medical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>solid_oncología</td></tr><tr class="dormant"><td>Genetista molecular / oncólogo molecular</td><td><code>molecular_geneticist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>molecular_oncología</td></tr><tr class="dormant"><td>Atención paliativa</td><td><code>palliative_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>Cuidados paliativos</td></tr><tr class="dormant"><td>Patólogo (general)</td><td><code>pathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>patología</td></tr><tr class="dormant"><td>Atención primaria / médico de familia</td><td><code>primary_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>atención primaria</td></tr><tr class="dormant"><td>Psicooncólogo</td><td><code>psychologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psicosociales</td></tr><tr class="dormant"><td>Oncólogo de radiación</td><td><code>radiation_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>radiografía_oncología</td></tr><tr class="dormant"><td>Radiologista</td><td><code>radiologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>Diagnóstico_imagen</td></tr><tr class="dormant"><td>Asistente social / administrador de casos</td><td><code>social_worker_case_manager</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psicosociales</td></tr><tr class="dormant"><td>Oncólogo quirúrgico</td><td><code>surgical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cronología quirúrgica</td></tr><tr class="dormant"><td>Especialista en trasplantes (BMT)</td><td><code>transplant_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>_terapia celular</td></tr></tbody></table></details></div></section><section><h2>Fuentes citadas</h2><ul class="sources"><li>SRC-EANO-MENINGIOMA-2024: EANO Guidelines on Diagnosis and Treatment of Meningiomas (2024 update) ()</li><li>SRC-NCCN-CNS-2025: NCCN Central Nervous System Cancers (v.3.2025)</li></ul></section><section class="experimental-track experimental-track--empty"><h2>Opciones experimentales (ensayos clínicos)</h2><div class="section-sub">Última sincronización: 2026-10-10 · ctgov.</div><p class="empty-state">No active trials matched this scenario in ctgov.</p></section><section class="access-matrix"><details><summary><h2>Disponibilidad de opciones en Ucrania</h2><span class="section-sub">Registro UA por pista · NSZU · costo · vía de acceso. Metada de entrega de tiempo; la selección del motor no depende de estos campos (CARTER §8.3).</span></summary><table class="access-matrix-table"><thead><tr><th>Opción</th><th>Registro de la UA</th><th>NSZU</th><th>Orientación de los costos</th><th>Vía de acceso</th></tr></thead><tbody><tr class="track-local_therapy"><td class="track-cell"><strong>Plan de terapia local</strong><div class="regimen-name">—</div><div class="notes">No hay componentes de régimen en esta pista — disponibilidad desconocida</div></td><td><span class="badge badge--unknown">— desconocido</span></td><td><span class="badge badge--unknown">— desconocido</span></td><td class="cost-cell"><span class="cost-unknown">. - ¿Vaya la vía?</span></td><td class="pathway-cell"><em>no registrado</em></td></tr></tbody></table><p class="matrix-disclaimer">La información de costos es orientación. Verificar con una farmacia específica / fundación / sitio de ensayo. Estado actualizado: 2026-10-10.</p></details></section><div class="doc-footer"><div class="version-chain">Plan_id: PLAN-BMA-NF2_GERMLINE_VESTIBULAR_SCHW-V1 . Versión: 1 . generado: 2026-10-10T13:53:31.087974+00:00</div><div class="fda-disclosure"><strong>Per FDA non-device CDS positioning (CHARTER §15):</strong> Planeamiento de tratamiento oncológico ambulatorio para apoyar la discusión de la tabla tumoral. No es un dispositivo médico; no es para la toma de decisiones clínicas autónomas.</div><div class="fda-disclosure"><strong>Per FDA non-device CDS positioning (CHARTER §15):</strong> Ambas opciones de tratamiento a continuación se presentan para revisión. La selección del motor de un defecto "recomendado" no constituye una decisión clínica. La selección final del tratamiento requiere juicio HCP incorporando información no disponible para el sistema.</div><div class="medical-disclaimer">Este documento es un recurso informativo que apoya la discusión del tablero tumoral (por CARTA §11). No es un sistema que toma decisiones clínicas. Cada recomendación debe ser verificada por el médico que lo trata.</div></div></div>
+</body>
+</html>

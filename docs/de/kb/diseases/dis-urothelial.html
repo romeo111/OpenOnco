@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Urothelkarzinom (Blasen + oberer Trakt) - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/de/kb/diseases/dis-urothelial.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-urothelial.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-urothelial.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/diseases/dis-urothelial.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/diseases/dis-urothelial.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/diseases/dis-urothelial.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/diseases/dis-urothelial.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-urothelial.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Urothelkarzinom (Blasen + oberer Trakt) - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/de/kb/diseases/dis-urothelial.html">
+<meta property="og:locale" content="de">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Urothelkarzinom (Blasen + oberer Trakt) - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Urothelkarzinom (Blasen + oberer Trakt) - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/de/kb/diseases/dis-urothelial.html","inLanguage":"de","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/de/kb/diseases/dis-urothelial.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="e877d63118d0aa5336b2c246ffa4806509b1b1083b839e13f5b9dbedb6c800ef"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/de/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">OFFENE ONKOLOGIE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Sprache"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg>DE <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Sprache"><a href="/kb/diseases/dis-urothelial.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/diseases/dis-urothelial.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/diseases/dis-urothelial.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/diseases/dis-urothelial.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/diseases/dis-urothelial.html" lang="de" hreflang="de" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/diseases/dis-urothelial.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/de/try.html" class="btn-cta-top btn-cta-try"><span>Plan erstellen</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menü"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menü">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Werkzeuge</span>
+    <div class="top-cta-group">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Open Source</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Vorläufige Übersetzung: klinische Prüfung ausstehend.</strong> <a href="/kb/diseases/dis-urothelial.html" lang="en" hreflang="en" data-original-source>Englisches Original ansehen</a></aside>
+  <p class="kb-breadcrumb"><a href="/de/kb.html">Onco Wiki</a> / Krankheit</p>
+  <h1>Urothelkarzinom (Blasen + oberer Trakt)</h1>
+  <p class="kb-lead">Deterministische Ansicht der Quelle YAML Entität. Klinische Autorität bleibt mit den zitierten Quell-IDs und Rezensenten Sign-off Zustand.</p>
+
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-UROTHELIAL</code></td></tr>
+<tr><th>Art</th><td>Erkrankung</td></tr>
+<tr><th>Aliase</th><td><div class="kb-alias-list"><span class="kb-alias">Blasenkrebs</span><span class="kb-alias">TCC</span><span class="kb-alias">Urothelkarzinom</span><span class="kb-alias">Уротеліальна карцинома</span></div></td></tr>
+<tr><th>Status</th><td>ausstehende_klinische_Abmeldung</td></tr>
+<tr><th>Erkrankungen</th><td><span class="kb-muted">None declared</span></td></tr>
+<tr><th>Quellen</th><td><span class="kb-chip" title="EAU-Muskel-invasive Blase"><a href="https://uroweb.org/guidelines/muscle-invasive-and-metastatic-bladder-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-EAU-BLADDER-2024</code></a></span> <span class="kb-chip" title="NCCN-Blasenkrebs"><a href="https://www.nccn.org/professionals/physician_gls/pdf/bladder.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BLADDER-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Informationstool, kein medizinisches Gerät. Alle Empfehlungen müssen von einem qualifizierten Onkologen überprüft werden. Klinischer Inhalt ist vorläufig bis zwei-Reviewer-Auszeichnung.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/urothelial.yaml">Quelle: YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morphologie</th><td>8120/3</td></tr>
+<tr><th>icd_o_3_topographie</th><td>["C67.9", "C65.9", "C66.9"]</td></tr>
+<tr><th>icd_10</th><td>C67</td></tr>
+<tr><th>who_classification</th><td>Urothelkarzinom (5. WHO 2022)</td></tr></table><p><a href="/de/diseases.html#DIS-UROTHELIAL">Fähigkeiten</a></p>
+  <h2>Anmerkungen</h2><p>line_of_therapy_sequential — Krankheitszustand dominante Gabel. Cisplatin-Eligibilität kritische vor-EV-Ära.</p>
+  <h2>Verwendet von</h2>
+<h3>Therapeutische Relevanz</h3><ul><li><a href="/de/kb/biomarker_actionability/bma-fgfr2-mutation-urothelial.html"><code>BMA-FGFR2-MUTATION-UROTHELIAL</code></a> - FGFR2-Fusion / aktivierende Mutation im metastasierenden Urothelkarzinom: Erdafitinib (BLC20...</li><li><a href="/de/kb/biomarker_actionability/bma-fgfr3-r248c-urothelial.html"><code>BMA-FGFR3-R248C-UROTHELIAL</code></a> - FGFR3 R248C ist eine extrazellulär-domain-aktivierende Mutation, die in der Erdafitinib...</li><li><a href="/de/kb/biomarker_actionability/bma-fgfr3-s249c-urothelial.html"><code>BMA-FGFR3-S249C-UROTHELIAL</code></a> - FGFR3 S249C ist die häufigste aktivierende FGFR3-Mutation im Urothelkarzinom.</li><li><a href="/de/kb/biomarker_actionability/bma-fgfr3-tacc3-urothelial.html"><code>BMA-FGFR3-TACC3-UROTHELIAL</code></a> - Die Fusion FGFR3-TACC3 ist eine aktivierende Neuordnung des Urothelkarzinoms (~2-3%).</li><li><a href="/de/kb/biomarker_actionability/bma-fgfr3-y373c-urothelial.html"><code>BMA-FGFR3-Y373C-UROTHELIAL</code></a> - FGFR3 Y373C ist eine transmembran-domain-aktivierende Mutation im Urothelkarzinom, einschließlich...</li><li><a href="/de/kb/biomarker_actionability/bma-mlh1-germline-urothelial.html"><code>BMA-MLH1-GERMLINE-UROTHELIAL</code></a> - MLH1 Keimlinien-Funktionsverlust im Urothel erzeugt dMMR/MSI-H Phänotyp. Pan-Tumor MSI...</li><li><a href="/de/kb/biomarker_actionability/bma-mlh1-somatic-urothelial.html"><code>BMA-MLH1-SOMATIC-UROTHELIAL</code></a> - MLH1 somatischer Funktionsverlust im Urothel erzeugt dMMR/MSI-H Phänotyp. Pan-Tumor MSI-...</li><li><a href="/de/kb/biomarker_actionability/bma-msh2-germline-urothelial.html"><code>BMA-MSH2-GERMLINE-UROTHELIAL</code></a> - MSH2 Keimlinien-Funktionsverlust im Urothel erzeugt dMMR/MSI-H Phänotyp. Pan-Tumor MSI...</li><li><a href="/de/kb/biomarker_actionability/bma-msh2-somatic-urothelial.html"><code>BMA-MSH2-SOMATIC-UROTHELIAL</code></a> - MSH2 somatischer Funktionsverlust im Urothel erzeugt dMMR/MSI-H Phänotyp. Pan-Tumor MSI-...</li><li><a href="/de/kb/biomarker_actionability/bma-msh6-germline-urothelial.html"><code>BMA-MSH6-GERMLINE-UROTHELIAL</code></a> - MSH6 keimlinien-Funktionsverlust im Urothel erzeugt dMMR/MSI-H Phänotyp. Pan-Tumor MSI...</li><li><a href="/de/kb/biomarker_actionability/bma-msh6-somatic-urothelial.html"><code>BMA-MSH6-SOMATIC-UROTHELIAL</code></a> - MSH6 somatischer Funktionsverlust im Urothel erzeugt dMMR/MSI-H Phänotyp. Pan-Tumor MSI-...</li><li><a href="/de/kb/biomarker_actionability/bma-pik3ca-hotspot-urothelial.html"><code>BMA-PIK3CA-HOTSPOT-UROTHELIAL</code></a> - PIK3CA-Mutationen in ~20% der muskelinvasiven Blase. Keine PI3Ki-Zulassung; FGFR3-getrieben (erd...</li><li><a href="/de/kb/biomarker_actionability/bma-pms2-germline-urothelial.html"><code>BMA-PMS2-GERMLINE-UROTHELIAL</code></a> - PMS2 Keimlinien-Funktionsverlust im Urothel erzeugt dMMR/MSI-H Phänotyp. Pan-Tumor MSI...</li><li><a href="/de/kb/biomarker_actionability/bma-pms2-somatic-urothelial.html"><code>BMA-PMS2-SOMATIC-UROTHELIAL</code></a> - PMS2 somatischer Funktionsverlust im Urothel erzeugt dMMR/MSI-H Phänotyp. Pan-Tumor MSI-...</li><li><a href="/de/kb/biomarker_actionability/bma-rb1-urothelial.html"><code>BMA-RB1-UROTHELIAL</code></a> - RB1-Änderungen (Lösung, Mutation) treten bei ~30% des muskelinvasiven Blasenkrebses (MIB...</li><li><a href="/de/kb/biomarker_actionability/bma-tp53-mut-urothelial.html"><code>BMA-TP53-MUT-UROTHELIAL</code></a> - TP53 mutation in UROTHELIAL — common, adverse prognostic; not directly targeted. Per usua...</li></ul>
+<h3>Algorithmen</h3><ul><li><code>ALGO-AMSTERDAM-II-LYNCH</code> - ALGO-AMSTERDAM-II-LYNCH</li><li><code>ALGO-PREMM5-LYNCH</code> - ALGO-PREMM5-LYNCH</li><li><code>ALGO-UROTHELIAL-METASTATIC-1L</code> - ALGO-UROTHELIAL-METASTATIC-1L</li><li><code>ALGO-UROTHELIAL-METASTATIC-2L</code> - ALGO-UROTHELIAL-METASTATIC-2L</li></ul>
+<h3>Anwendungsgebiet</h3><ul><li><a href="/de/kb/indications/ind-environmental-arsenic-water-prevention-exposure-elimination.html"><code>IND-ENVIRONMENTAL-ARSENIC-WATER-PREVENTION-EXPOSURE-ELIMINATION</code></a> - IND-ENVIRONMENTAL-ARSENIC-WATER-PREVENTION-EXPOSURE-ELIMINATION</li><li><a href="/de/kb/indications/ind-environmental-arsenic-water-prevention-observation.html"><code>IND-ENVIRONMENTAL-ARSENIC-WATER-PREVENTION-OBSERVATION</code></a> - IND-ENVIRONMENTAL-ARSENIC-WATER-PREVENTION-OBSERVATION</li><li><a href="/de/kb/indications/ind-iatrogenic-cyclophosphamide-late-prevention-observation.html"><code>IND-IATROGENIC-CYCLOPHOSPHAMIDE-LATE-PREVENTION-OBSERVATION</code></a> - IND-IATROGENIC-CYCLOPHOSPHAMIDE-LATE-PREVENTION-OBSERVATION</li><li><a href="/de/kb/indications/ind-iatrogenic-cyclophosphamide-late-prevention-surveillance.html"><code>IND-IATROGENIC-CYCLOPHOSPHAMIDE-LATE-PREVENTION-SURVEILLANCE</code></a> - IND-IATROGENIC-CYCLOPHOSPHAMIDE-LATE-PREVENTION-SURVEILLANCE</li><li><a href="/de/kb/indications/ind-iatrogenic-pediatric-pelvic-rt-prevention-observation.html"><code>IND-IATROGENIC-PEDIATRIC-PELVIC-RT-PREVENTION-OBSERVATION</code></a> - IND-IATROGENIC-PEDIATRIC-PELVIC-RT-PREVENTION-OBSERVATION</li><li><a href="/de/kb/indications/ind-iatrogenic-pediatric-pelvic-rt-prevention-surveillance.html"><code>IND-IATROGENIC-PEDIATRIC-PELVIC-RT-PREVENTION-SURVEILLANCE</code></a> - IND-IATROGENIC-PEDIATRIC-PELVIC-RT-PREVENTION-SURVEILLANCE</li><li><a href="/de/kb/indications/ind-occ-aromatic-amines-prevention-observation.html"><code>IND-OCC-AROMATIC-AMINES-PREVENTION-OBSERVATION</code></a> - IND-OCC-AROMATIC-AMINES-PREVENTION-OBSERVATION</li><li><a href="/de/kb/indications/ind-occ-aromatic-amines-prevention-surveillance.html"><code>IND-OCC-AROMATIC-AMINES-PREVENTION-SURVEILLANCE</code></a> - IND-OCC-AROMATIC-AMINES-PREVENTION-SURVEILLANCE</li><li><a href="/de/kb/indications/ind-penile-scc-metastatic-1l-msi-h-pembro.html"><code>IND-PENILE-SCC-METASTATIC-1L-MSI-H-PEMBRO</code></a> - IND-PENILE-SCC-METASTATIC-1L-MSI-H-PEMBRO</li><li><a href="/de/kb/indications/ind-schistosoma-haematobium-prevention-observation.html"><code>IND-SCHISTOSOMA-HAEMATOBIUM-PREVENTION-OBSERVATION</code></a> - IND-SCHISTOSOMA-HAEMATOBIUM-PREVENTION-OBSERVATION</li><li><a href="/de/kb/indications/ind-schistosoma-haematobium-prevention-treatment.html"><code>IND-SCHISTOSOMA-HAEMATOBIUM-PREVENTION-TREATMENT</code></a> - IND-SCHISTOSOMA-HAEMATOBIUM-PREVENTION-TREATMENT</li><li><a href="/de/kb/indications/ind-urothelial-2l-erdafitinib.html"><code>IND-UROTHELIAL-2L-ERDAFITINIB</code></a> - IND-UROTHELIAL-2L-ERDAFITINIB</li><li><a href="/de/kb/indications/ind-urothelial-2l-ev.html"><code>IND-UROTHELIAL-2L-EV</code></a> - IND-UROTHELIAL-2L-EV</li><li><a href="/de/kb/indications/ind-urothelial-2l-pembrolizumab.html"><code>IND-UROTHELIAL-2L-PEMBROLIZUMAB</code></a> - IND-UROTHELIAL-2L-PEMBROLIZUMAB</li><li><a href="/de/kb/indications/ind-urothelial-2l-platinum-chemo.html"><code>IND-UROTHELIAL-2L-PLATINUM-CHEMO</code></a> - IND-UROTHELIAL-2L-PLATINUM-CHEMO</li><li><a href="/de/kb/indications/ind-urothelial-metastatic-1l-ev-pembro.html"><code>IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO</code></a> - IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO</li><li><a href="/de/kb/indications/ind-urothelial-metastatic-1l-platinum-chemo-avelumab.html"><code>IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB</code></a> - IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB</li></ul>
+<h3>Fragebogen</h3><ul><li><code>QUEST-UROTHELIAL-1L-STUB</code> - Urothelialkarzinom — erste Zeile</li></ul>
+<h3>Warnhinweis</h3><ul><li><a href="/de/kb/redflags/rf-active-autoimmune-disease-ici-risk.html"><code>RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK</code></a> - Patient mit aktiven oder unvollständig kontrollierten vorbestehenden Autoimmun- oder Entzündungs...</li><li><a href="/de/kb/redflags/rf-cascade-lynch-fdr-positive.html"><code>RF-CASCADE-LYNCH-FDR-POSITIVE</code></a> - Ein Erst-Grad-Verwandter des Patienten (Eltern, Geschwister oder Kind) hat eine...</li><li><a href="/de/kb/redflags/rf-environmental-arsenic-water-prevention.html"><code>RF-ENVIRONMENTAL-ARSENIC-WATER-PREVENTION</code></a> - Chronische Einnahme von Arsen-kontaminiertem Trinkwasser mit anorganischem Arsen &gt; 10 μg/L...</li><li><a href="/de/kb/redflags/rf-iatrogenic-cyclophosphamide-late-prevention.html"><code>RF-IATROGENIC-CYCLOPHOSPHAMIDE-LATE-PREVENTION</code></a> - Krebsüberlebende mit vorheriger kumulativer cyclophosphamide Exposition ≥7 g/m² (oder ≥30 g Lebende...</li><li><a href="/de/kb/redflags/rf-iatrogenic-pediatric-pelvic-rt-prevention.html"><code>RF-IATROGENIC-PEDIATRIC-PELVIC-RT-PREVENTION</code></a> - Krebsüberlebende ≥ 5 Jahre nach der Vervollständigung der kurativ-intent...</li><li><a href="/de/kb/redflags/rf-lifestyle-tobacco-cancer-prevention.html"><code>RF-LIFESTYLE-TOBACCO-CANCER-PREVENTION</code></a> - Aktives Tabakrauchen (aktueller Raucher oder Einstellung &lt; 15 Jahre) ODER rauchloser Tabakgebrauch</li><li><a href="/de/kb/redflags/rf-lynch-confirmed-carrier.html"><code>RF-LYNCH-CONFIRMED-CARRIER</code></a> - Bestätigte keimlinienpathogene / wahrscheinlich-pathogene Variante in einem Lynch-Syndrom (MMR / EPCA...</li><li><a href="/de/kb/redflags/rf-lynch-family-history-suspicion.html"><code>RF-LYNCH-FAMILY-HISTORY-SUSPICION</code></a> - Familienahnen-Ereignis-Kriterien, die auf erblichen Nonpolypose-Farbektalkrebs hindeuten...</li><li><a href="/de/kb/redflags/rf-occ-aromatic-amines-malignancy-prevention.html"><code>RF-OCC-AROMATIC-AMINES-MALIGNANCY-PREVENTION</code></a> - dokumentierte berufliche aromatisch-amin-Exposition — Benzidin, 2-Naphthylamin, 4-Aminobiphen...</li><li><a href="/de/kb/redflags/rf-occ-diesel-exhaust-prevention.html"><code>RF-OCC-DIESEL-EXHAUST-PREVENTION</code></a> - dokumentierte historische berufliche Exposition gegenüber Diesel-Motor-Abgas (DEE) —...</li><li><a href="/de/kb/redflags/rf-occ-firefighter-prevention.html"><code>RF-OCC-FIREFIGHTER-PREVENTION</code></a> - dokumentierte historische berufliche Exposition als Berufsfeuerwehrer (≥10 Jahre aktiv...</li><li><a href="/de/kb/redflags/rf-occ-pah-prevention.html"><code>RF-OCC-PAH-PREVENTION</code></a> - dokumentierte historische berufliche Exposition gegenüber polyzyklischen aromatischen Kohlenwasserstoffen (PAK) —...</li><li><a href="/de/kb/redflags/rf-occ-painters-prevention.html"><code>RF-OCC-PAINTERS-PREVENTION</code></a> - Dokumentierte historische berufliche Exposition als Maler - typische Hochrisiko-Rollen enthalten...</li><li><a href="/de/kb/redflags/rf-schistosoma-haematobium-bladder-prevention.html"><code>RF-SCHISTOSOMA-HAEMATOBIUM-BLADDER-PREVENTION</code></a> - Geschichte von Schistosoma Hämatobium-Infektion (positive Eizellen im Urin, positive Serologie, ...</li><li><a href="/de/kb/redflags/rf-urothelial-ev-contraindicated.html"><code>RF-UROTHELIAL-EV-CONTRAINDICATED</code></a> - Enfortumab vedotin (EV) contraindication in urothelial carcinoma — MMAE-related toxicity...</li><li><a href="/de/kb/redflags/rf-urothelial-frailty-age.html"><code>RF-UROTHELIAL-FRAILTY-AGE</code></a> - Urothelial-Krebs-Patienten Cisplatin-inligible nach Galsky Kriterien: ECOG ≥ 2, ODER CrCl &lt; 60 m...</li><li><a href="/de/kb/redflags/rf-urothelial-high-risk-biology.html"><code>RF-UROTHELIAL-HIGH-RISK-BIOLOGY</code></a> - FGFR3-Mutation/Fusion - eröffnet Erdafitinib (THOR)-Weg.</li><li><a href="/de/kb/redflags/rf-urothelial-infection-screening.html"><code>RF-UROTHELIAL-INFECTION-SCREENING</code></a> - Aktive oder latente Infektion erfordert Auflösung / Prophylaxe vor Beginn der ICI (Pemb...</li><li><a href="/de/kb/redflags/rf-urothelial-organ-dysfunction.html"><code>RF-UROTHELIAL-ORGAN-DYSFUNCTION</code></a> - Cisplatin-Invalidität nach Galsky-Kriterien — Antriebe EV+Pembro 1L ODER Carbo-Doublet.</li><li><a href="/de/kb/redflags/rf-urothelial-transformation-progression.html"><code>RF-UROTHELIAL-TRANSFORMATION-PROGRESSION</code></a> - Hydronephrose ODER Harnwegsobstruktion — urologische Intervention vor systemischer...</li></ul>
+<h3>Therapieschema</h3><ul><li><a href="/de/kb/regimens/reg-ev-mono-urothelial.html"><code>REG-EV-MONO-UROTHELIAL</code></a> - Enfortumab Vedotin Monotherapie (urothelisches Karzinom)</li><li><a href="/de/kb/regimens/reg-gem-carbo-urothelial.html"><code>REG-GEM-CARBO-UROTHELIAL</code></a> - Gemcitabine + carboplatin (urothelial carcinoma, cisplatin-ineligible)</li></ul>
+<h3>Quellen</h3><ul><li><code>SRC-BLC2001-LORIOT-2019</code> - Erdafitinib bei lokal fortgeschrittenem oder metastasierendem Urothelkarzinom</li><li><code>SRC-EAU-BLADDER-2024</code> - EAU-Muskel-invasive Blase</li><li><code>SRC-EV301-POWLES-2021</code> - Enfortumab Vedotin bei vorbehandeltem fortgeschrittenem Urothelkarzinom</li><li><code>SRC-EV302-POWLES-2024</code> - Enfortumab Vedotin und Pembrolizumab bei unbehandeltem fortgeschrittenen Urothelkrebs</li><li><code>SRC-JAVELIN-BLADDER100-POWLES-2020</code> - Avelumab First-Line-Wartung für fortgeschrittenes Urothelkarzinom</li><li><code>SRC-KEYNOTE-045-BELLMUNT-2017</code> - Pembrolizumab als Zweitlinientherapie für fortgeschrittenes Urothelkarzinom</li><li><code>SRC-NCCN-BLADDER-2025</code> - NCCN-Blasenkrebs</li><li><code>SRC-THOR-LORIOT-2023</code> - Erdafitinib oder Chemotherapie bei fortgeschrittenem oder metastasierendem Urothelkarzinom</li></ul>
+</main>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenOnco · Ваш персональний план (пацієнтська версія)</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/de/plans/archive/csd_3_patient_demo.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/plans/archive/csd_3_patient_demo.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/plans/archive/csd_3_patient_demo.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/plans/archive/csd_3_patient_demo.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/plans/archive/csd_3_patient_demo.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/plans/archive/csd_3_patient_demo.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/plans/archive/csd_3_patient_demo.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco · Ваш персональний план (пацієнтська версія)">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/de/plans/archive/csd_3_patient_demo.html">
+<meta property="og:locale" content="de">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Ваш персональний план (пацієнтська версія)">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Ваш персональний план (пацієнтська версія)","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/de/plans/archive/csd_3_patient_demo.html","inLanguage":"de","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/de/plans/archive/csd_3_patient_demo.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="icon" type="image/svg+xml" href="/plans/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&amp;family=Source+Sans+3:wght@300;400;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/clinical-styles/6885b9916e13e85bc84b9a69e5726c21a2e1d990126077814fa784a3a1f117fc.css">
+  <link rel="stylesheet" href="/clinical-styles/9522e28857038c898e7bca482f98cc79b1e71d7930391efb505138fabe350d1c.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="21f450d3804105f9462257dbfa873ec3149d461e494c737831ab42cb66c67bb6"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/de/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">OFFENE ONKOLOGIE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Sprache"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg>DE <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Sprache"><a href="/plans/archive/csd_3_patient_demo.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/plans/archive/csd_3_patient_demo.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/plans/archive/csd_3_patient_demo.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/plans/archive/csd_3_patient_demo.html" lang="de" hreflang="de" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/plans/archive/csd_3_patient_demo.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/de/try.html" class="btn-cta-top btn-cta-try" aria-current="page"><span>Plan erstellen</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menü"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menü">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Werkzeuge</span>
+    <div class="top-cta-group">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Open Source</span>
+  </div>
+  </div>
+</header><aside class="translation-notice" role="note"><strong>Vorläufige Übersetzung: klinische Prüfung ausstehend.</strong> <a href="/plans/archive/csd_3_patient_demo.html" lang="en" hreflang="en" data-original-source>Englisches Original ansehen</a></aside>
+  <div class="demo-page">
+    <header class="demo-header">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">⚕</div>
+        <div>
+          <h1>OpenOnco</h1>
+          <p class="tagline">Ваш персональний онкологічний план — пояснений мовою, зрозумілою всім</p>
+        </div>
+      </div>
+      <a href="/de/plans/archive/csd_1_demo_report.html" class="toggle-link" title="Технічна версія для лікаря">Технічна версія для лікаря →</a>
+    </header>
+
+    <aside class="lab-letter">
+      <p>Шановний пацієнте,</p>
+      <p>Ваш генетичний аналіз готовий. Цей звіт пояснює прості висновки на основі результатів. Не замінює консультацію з лікарем — це додатковий інструмент розуміння.</p>
+      <p class="lab-attribution">Лабораторія CSD · MyAction PanCancer 524-gene NGS · код M367 · 2026-04-27 · демо-приклад 1-ї лінії</p>
+    </aside>
+
+    <div class="qr-panel"><img class="qr-img" src="data:image/png;base64,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" alt="QR-код для відкриття звіту на телефоні"><p class="qr-caption">Скануйте, щоб відкрити цей звіт на телефоні / поділитися з родиною / показати другому лікарю.</p><div class="qr-url" title="https://openonco.info/try.html#p=H4sIAKWB7mkC_41UYW_aMBD9K5Y_tVNCSQil48MkBu1WqRRE0mnSNkXGOYK12I5sw4Yq_vvOhm6jnbR-S-6d7717d_YjXQotmfkOxtLhIx3Nx3RIW-bWugYlOI3o-9tZPM1v47wYFQ85otaxZQNHpJi-p8Mr_F6MbhD7dNntXiOUT0eTzP_jiYgW837vtOw-olxLCcphPN8ptwYnOBnnE3LHlqRlximUtBYtqUBqDDiByeTrJu0mGZHjxZj8EG5NPC8JrB2St8AF1iSt0SvRALF6YzhUZGW0JIys2NIIzhxGprsRd0IrMmdqzBQHQ876aRajOiD3H_JzYqDVxnXI_azAowZY8ySiQx6sL6oNQdlec5y8VPyxmN4R5kilub1oG6bsBbdVmZQeLY_V1042HTTIx2rD2rXgYQysBjq8zCIKXNd0mETUwk90SjI0Hr2rhAVmwaeKCuOT2zxGSzy0EqoSqg5lOLBS1aVs6DBL0og2zNRgXdmAxd5LLjHe8XGxBfM7qjd-Kr2ISnAMh42DKa1wgCW_HFLpt4i2RuDe7AKCCgxwp62opUZBAdVYUahw6pEuPa0B22rlZdP5ApP4jjcev_IKFIQ-9cbhYoSUibevT6TGVAO1nyyGb2Z3N7PPdI8SUFsNpdjSoTMb2B-qlHpV4ljQzF0oiFYc3faONGyJNZ7W7OG7YZ4YW7Xi92aTs2men_smmAK0jv53WUJu2I0yjGNexGk3vYy7WTqIJ9fTWejAaygrFuw6wnHaR8ge99Z3dzO_Jlw32vuJK4e3s7W7iBzdJt5tcva32Z7ceXe5rnzlae9y4ENyWfKGWbSXCuXASKiE5z5AcuPKFmcul8F-t5E4Lg5Ns8EdEW7nQR5u56Ab0S3GmHKHUYaqYuUvEnry_LXwnmAsPAcRXddbW3L8551k8PZt8W70FGz9wc7Tc7Flqz-MWbqPXknjn6sTlqyXXY3fFacsiyTrd988p-ldvZomvF8nPDj-D8-bWSSD_scXzST_ZDm8i8fyh8fy1K1uP3lBMOn1k_vnBGm6_7Z_xf6Fy4LY7Se6_wU3-ojW9gUAAA">https://openonco.info/try.html#p=H4sIAKWB7mkC_41UYW_aMBD…jW9gUAAA</div></div>
+
+    <aside class="patient-signoff-panel"><h2>Хто перевірив цю рекомендацію</h2><p class="signoff-intro">Ми позначаємо кожну рекомендацію статусом перевірки лікарями. Будь-яка терапія, яка ще не отримала зеленої позначки, потребує обов'язкового обговорення з вашим онкологом.</p><ul class="signoff-list"><li class="signoff-row"><span class="signoff-track">Альтернативний варіант</span><span class="signoff-pill signoff-pill--pending">🔴 Лікарі ще перевіряють цю рекомендацію</span></li><li class="signoff-row"><span class="signoff-track">Альтернативний варіант</span><span class="signoff-pill signoff-pill--pending">🔴 Лікарі ще перевіряють цю рекомендацію</span></li><li class="signoff-row"><span class="signoff-track">Стандартний варіант</span><span class="signoff-pill signoff-pill--pending">🔴 Лікарі ще перевіряють цю рекомендацію</span></li></ul></aside>
+
+    <article class="patient-plan">
+      <div class="patient-report"><header><h1>Ваш персональний план</h1><p class="patient-subhead">Що показав аналіз і що це означає для вас</p><p><strong>Діагноз:</strong> Колоректальний рак</p></header><section class="what-was-found"><h2>Що знайдено в результаті</h2><ul class="findings-list"><li><strong>BRAF V600E</strong> — конкретна заміна валіну на глутамат у позиції 600 BRAF — найчастіша 'driver' мутація. <span class="patient-badge patient-info">Дуже високий — у комбінації</span></li><li><strong>TP53 pathogen</strong>. <span class="patient-badge patient-info">Цільовий препарат для іншого типу — trial-only</span></li></ul></section><section class="what-now"><h2>Що це означає для лікування</h2><div class="drug-explanation"><h3>Оксаліплатин</h3><p class="lay-language">препарат для лікування вашого захворювання — деталі обговоріть з лікарем</p><div class="patient-nszu patient-nszu-covered" data-nszu-status="covered">Безкоштовно за програмою НСЗУ</div></div><div class="drug-explanation"><h3>Лейковорин (Фолінова кислота)</h3><p class="lay-language">препарат для лікування вашого захворювання — деталі обговоріть з лікарем</p><div class="patient-nszu patient-nszu-covered" data-nszu-status="covered">Безкоштовно за програмою НСЗУ</div></div><div class="drug-explanation"><h3>5-Фторурацил</h3><p class="lay-language">препарат для лікування вашого захворювання — деталі обговоріть з лікарем</p><div class="patient-nszu patient-nszu-covered" data-nszu-status="covered">Безкоштовно за програмою НСЗУ</div></div><div class="drug-explanation"><h3>Бевацизумаб</h3><p class="lay-language">препарат для лікування вашого захворювання — деталі обговоріть з лікарем</p><div class="patient-nszu patient-nszu-covered" data-nszu-status="covered">Безкоштовно за програмою НСЗУ</div></div><div class="drug-explanation"><h3>Пембролізумаб</h3><p class="lay-language">препарат для лікування вашого захворювання — деталі обговоріть з лікарем</p><div class="patient-nszu patient-nszu-partial" data-nszu-status="partial">НСЗУ покриває препарат, але не для цього діагнозу</div></div><div class="drug-explanation"><h3>Цетуксимаб</h3><p class="lay-language">препарат для лікування вашого захворювання — деталі обговоріть з лікарем</p><div class="patient-nszu patient-nszu-covered" data-nszu-status="covered">Безкоштовно за програмою НСЗУ</div></div></section><section class="emergency-signals"><h2>Сигнали, що вимагають негайної уваги</h2><p>Якщо у вас з'явилися ці симптоми — зверніться у лікарню негайно, не чекайте планового візиту:</p><ul class="emergency-list"><li data-rf-id="RF-CRC-MSI-H-ACTIONABILITY">🚨 MSI-high / dMMR метастатичний КРР — лікування-визначальний маркер</li></ul></section><div class="ask-doctor"><h2>Про що варто запитати лікаря</h2><ul><li>Чи варто отримати другу думку молекулярного онколога перед початком лікування?</li><li>Скільки циклів триватиме лікування? Як ми зрозуміємо, що воно працює?</li><li>Які побічні ефекти найбільш імовірні саме для мене? Які я можу запобігти?</li><li>Чи є групи підтримки або психолог для онкологічних пацієнтів, які я можу відвідувати?</li><li>Чи є клінічні випробування, у яких я міг би взяти участь?</li><li>Чому ви рекомендуєте саме цей план, а не альтернативний?</li></ul></div><footer class="patient-disclaimer"><p><span class="translation-original-fragment" lang="en" data-original-source data-label="Englischer Originaltext zur Überprüfung beibehalten">Цей звіт — інформаційний інструмент, не медичний прилад. Усі рішення про лікування приймає ваш онколог. Звіт оновлюється, коли з'являються нові аналізи. Не змінюйте призначене лікування на основі лише цього звіту.</span></p><p>Якщо у вас виникли термінові симптоми, перелічені вище — звертайтесь у лікарню негайно, не чекайте планового візиту.</p><p>Питання про сам інструмент: <a href="https://github.com/romeo111/OpenOnco/issues">github.com/romeo111/OpenOnco</a></p></footer></div>
+    </article>
+
+
+    <details class="engineering-metrics">
+      <summary>Інженерні метрики (для технічної аудиторії)</summary>
+      <ul>
+        <li>Motorbündel: Faullastsplit — Kern 1.4 MB + Pro-Krankheitsmodul ~38 KB max (CSD-5B)</li>
+        <li>Initial /try.html load: ~3-5 сек (Pyodide + core bundle)</li>
+        <li>Pro-Disease-Modul holen: &lt;100 ms (Browser-Cache nach dem ersten Besuch)</li>
+        <li>KB snapshot: 1899 entities (50% growth у CSD-1..4)</li>
+        <li>Sign-off coverage: див. <a href="/plans/archive/signoff_status_2026-04-27.md">Dashboard</a></li>
+      </ul>
+    </details>
+
+
+    <footer class="demo-footer">
+      <p>OpenOnco · <a href="https://openonco.info">openonco.info</a> · MIT-Verwendung · <a href="https://github.com/romeo111/OpenOnco">github.com/romeo111/OpenOnco</a></p>
+      <p>Цей звіт згенеровано Pyodide rule-engine — без надсилання даних на сервер. Ваші відомості зберігаються лише у вашому браузері.</p>
+      <p>Цей документ — інформаційний ресурс, не медичний пристрій. Усі рекомендації потребують перевірки лікуючим онкологом (CHARTER §11).</p>
+    </footer>
+  </div>
+</body>
+</html>

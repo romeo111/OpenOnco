@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Adenocarcinoma gastrico / GEJ - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/es/kb/diseases/dis-gastric.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-gastric.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-gastric.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/diseases/dis-gastric.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/diseases/dis-gastric.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/diseases/dis-gastric.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/diseases/dis-gastric.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-gastric.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Adenocarcinoma gastrico / GEJ - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/es/kb/diseases/dis-gastric.html">
+<meta property="og:locale" content="es">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Adenocarcinoma gastrico / GEJ - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Adenocarcinoma gastrico / GEJ - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/es/kb/diseases/dis-gastric.html","inLanguage":"es","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/es/kb/diseases/dis-gastric.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="699e4680d3582ac342bc036150a2a1b2ad47e976c76ea8f33313f3febd56ceba"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/es/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGÍA ABIERTA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Idioma"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg>ES <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Idioma"><a href="/kb/diseases/dis-gastric.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/diseases/dis-gastric.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/diseases/dis-gastric.html" lang="es" hreflang="es" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/diseases/dis-gastric.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/diseases/dis-gastric.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/diseases/dis-gastric.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/es/try.html" class="btn-cta-top btn-cta-try"><span>Crear un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menú"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menú">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Herramientas</span>
+    <div class="top-cta-group">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Código abierto</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Traducción preliminar: revisión clínica pendiente.</strong> <a href="/kb/diseases/dis-gastric.html" lang="en" hreflang="en" data-original-source>Consultar el original en inglés</a></aside>
+  <p class="kb-breadcrumb"><a href="/es/kb.html">Onco Wiki</a> / Enfermedad</p>
+  <h1>Gastrámico / GEJ adenocarcinoma</h1>
+  <p class="kb-lead">Vista determinista de la entidad fuente YAML. La autoridad clínica sigue con los ID de fuente citados y estado de firma del revisor.</p>
+
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-GASTRIC</code></td></tr>
+<tr><th>Tipo</th><td>Enfermedad</td></tr>
+<tr><th>Aliaces</th><td><div class="kb-alias-list"><span class="kb-alias">Adenocarcinoma GEJ</span><span class="kb-alias">Adenocarcinoma de unión gastrica y gastroesofágica</span><span class="kb-alias">Cáncer de estómago (adeno)</span><span class="kb-alias">Аденокарцинома шлунка / GEJ</span></div></td></tr>
+<tr><th>Situación</th><td>revisado 2026-04-26 pendance_clinical_signoff</td></tr>
+<tr><th>Enfermedades</th><td><span class="kb-muted">Ninguna declarada</span></td></tr>
+<tr><th>Fuentes</th><td><span class="kb-chip" title="Cáncer gástrico ESMO"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-gastric-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-GASTRIC-2024</code></a></span> <span class="kb-chip" title="NCCN Cáncer gástrico"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1434" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-GASTRIC-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Herramienta informativa, no un dispositivo médico. Todas las recomendaciones deben ser verificadas por un oncólogo cualificado. El contenido clínico es provisional hasta que el examen de dos firma.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/gastric.yaml">Fuente YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morfología</th><td>8140/3</td></tr>
+<tr><th>Icd_o_3_topografía</th><td>["C16"]</td></tr>
+<tr><th>Icd_10</th><td>C16</td></tr>
+<tr><th>Quién _clasificación</th><td>WHO Digestive System Tumours 5th ed: Gastric adenocarcinoma + GEJ adenocarcinoma</td></tr></table><p><a href="/es/diseases.html#DIS-GASTRIC">Capacidades</a></p>
+  <h2>Notas</h2><p>Escafagueado para la fase GI-1: 1 RF (sangreo de emergencia GI/obstrucción), 1 indicación (1L FOLFOX+nivo metastásico como la opción más aplicable), 1 algoritmo. La cobertura completa (periopo FLOT, T-DXd HER2+ 2L, biomarcador estratificado 1L por CPS / HER2, CLDN18.2 / cascada MSI) espera la ratificación de la propuesta + la creación clínica. Biomarcadores requeridos por NCCN gástrico v3.2025 §pretratamiento de cualquier metastático: HER2 IHC + reflejo ISH, PD-L1 CPS (22C3), MSI/dMMR, CLDN18.2 (si existe tratamiento), EBER si sospecha de subtipo de VEB.</p>
+  <h2>Utilizado por</h2>
+<h3>Relevancia terapéutica</h3><ul><li><a href="/es/kb/biomarker_actionability/bma-cldn18-2-gastric.html"><code>BMA-CLDN18-2-GASTRIC</code></a> - Zolbetuximab (anti-CLDN18.2 quimérico IgG1 mAb) + quimioterapia está aprobado por la FDA (Oct 2024)...</li><li><a href="/es/kb/biomarker_actionability/bma-ebv-positive-gastric.html"><code>BMA-EBV-POSITIVE-GASTRIC</code></a> - El adenocarcinoma gástrico positivo a la VEB es un subtipo molecular definido por TCGA (~9% de a...</li><li><a href="/es/kb/biomarker_actionability/bma-fgfr2-amp-gastric.html"><code>BMA-FGFR2-AMP-GASTRIC</code></a> - Amplificación de FGFR2 en adenocarcinoma gástrico/GEJ (~5-7% de alto nivel): bemarituzumab (anticarcinoma...</li><li><a href="/es/kb/biomarker_actionability/bma-fgfr2b-membrane-gastric.html"><code>BMA-FGFR2B-MEMBRANE-GASTRIC</code></a> - La sobreexpresión de la proteína FGFR2b (IHC 2+/3+ membranosa en ≥10% de las células tumorales) identifica una...</li><li><a href="/es/kb/biomarker_actionability/bma-her2-amp-gastric.html"><code>BMA-HER2-AMP-GASTRIC</code></a> - Adenocarcinoma gástrico HER2 positivo/GEJ (~15-20%): trastuzumab + quimioterapia es...</li><li><a href="/es/kb/biomarker_actionability/bma-kras-g12c-gastric.html"><code>BMA-KRAS-G12C-GASTRIC</code></a> - KRAS G12C en adenocarcinoma gástrico/GEJ es poco frecuente. Sotorasib canasta de datos limitados;...</li><li><a href="/es/kb/biomarker_actionability/bma-kras-g12d-gastric.html"><code>BMA-KRAS-G12D-GASTRIC</code></a> - KRAS G12D en el estómago, no se ha aprobado un tratamiento dirigido.</li><li><a href="/es/kb/biomarker_actionability/bma-met-amp-gastric.html"><code>BMA-MET-AMP-GASTRIC</code></a> - Amplificación de MET en adenocarcinoma gástrico/GEJ (~5%): lógica preclínica fuerte, pero...</li><li><a href="/es/kb/biomarker_actionability/bma-mlh1-germline-gastric.html"><code>BMA-MLH1-GERMLINE-GASTRIC</code></a> - MLH1 germline loss-of-function in gastric produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/es/kb/biomarker_actionability/bma-mlh1-somatic-gastric.html"><code>BMA-MLH1-SOMATIC-GASTRIC</code></a> - MLH1 pérdida somática de función en el gástrico produce fenótipo dMMR/MSI-H. Pan- tumor MSI-H...</li><li><a href="/es/kb/biomarker_actionability/bma-msh2-germline-gastric.html"><code>BMA-MSH2-GERMLINE-GASTRIC</code></a> - MSH2 germline loss-of-function in gastric produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/es/kb/biomarker_actionability/bma-msh2-somatic-gastric.html"><code>BMA-MSH2-SOMATIC-GASTRIC</code></a> - MSH2 pérdida somática de función en el gástrico produce fenótipo dMMR/MSI-H. Pan- tumor MSI-H...</li><li><a href="/es/kb/biomarker_actionability/bma-msh6-germline-gastric.html"><code>BMA-MSH6-GERMLINE-GASTRIC</code></a> - MSH6 germline loss-of-function in gastric produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/es/kb/biomarker_actionability/bma-msh6-somatic-gastric.html"><code>BMA-MSH6-SOMATIC-GASTRIC</code></a> - MSH6 somatic loss-of-function in gastric produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/es/kb/biomarker_actionability/bma-msi-status-gastric.html"><code>BMA-MSI-STATUS-GASTRIC</code></a> - El adenocarcinoma gástrico MSI-H/GEJ (~5-10% de los casos) se asocia con una mejor respuesta...</li><li><a href="/es/kb/biomarker_actionability/bma-pdl1-cps-gastric.html"><code>BMA-PDL1-CPS-GASTRIC</code></a> - PD-L1 CPS es una puntuación IHC continua utilizada como umbral de elegibilidad para ICI que contiene r...</li><li><a href="/es/kb/biomarker_actionability/bma-pik3ca-hotspot-gastric.html"><code>BMA-PIK3CA-HOTSPOT-GASTRIC</code></a> - Mutaciones PIK3CA en ~10% de adenocarcinoma gástrico/GEJ. Sin aprobación PI3Ki/AKTi; trastuzum...</li><li><a href="/es/kb/biomarker_actionability/bma-pms2-germline-gastric.html"><code>BMA-PMS2-GERMLINE-GASTRIC</code></a> - PMS2 la pérdida de función germinal en el gástrico produce fenótipo dMMR/MSI-H. Pan- tumor MSI-H...</li><li><a href="/es/kb/biomarker_actionability/bma-pms2-somatic-gastric.html"><code>BMA-PMS2-SOMATIC-GASTRIC</code></a> - PMS2 somatic loss-of-function in gastric produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/es/kb/biomarker_actionability/bma-tp53-mut-gastric.html"><code>BMA-TP53-MUT-GASTRIC</code></a> - mutación TP53 en GASTRIC — común, pronóstico adverso; no directamente...</li></ul>
+<h3>Algoritmos</h3><ul><li><code>ALGO-AMSTERDAM-II-LYNCH</code> - ALGO-AMSTERDAM-II-LYNCH</li><li><code>ALGO-ESOPH-2L</code> - ALGO-ESOPH-2L</li><li><code>ALGO-GASTRIC-2L</code> - ALGO-GASTRIC-2L</li><li><code>ALGO-GASTRIC-METASTATIC-1L</code> - ALGO-GASTRIC-METASTATIC-1L</li><li><code>ALGO-GASTRIC-RESECTABLE-PERIOP</code> - ALGO-GASTRIC-RESECTABLE-PERIOP</li><li><code>ALGO-PEUTZ-JEGHERS-CARRIER-SURVEILLANCE</code> - ALGO-PEUTZ-JEGHERS-CARRIER-SURVEILLANCE</li><li><code>ALGO-PREMM5-LYNCH</code> - ALGO-PREMM5-LYNCH</li></ul>
+<h3>Enfermedad</h3><ul><li><a href="/es/kb/diseases/dis-esophageal.html"><code>DIS-ESOPHAGEAL</code></a> - Carcinoma esofágico (escumoso + adeno)</li></ul>
+<h3>Indicación</h3><ul><li><a href="/es/kb/indications/ind-chronic-atrophic-gastritis-prevention-observation.html"><code>IND-CHRONIC-ATROPHIC-GASTRITIS-PREVENTION-OBSERVATION</code></a> - IND-CHRONIC-ATROPHIC-GASTRITIS-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-chronic-atrophic-gastritis-prevention-surveillance.html"><code>IND-CHRONIC-ATROPHIC-GASTRITIS-PREVENTION-SURVEILLANCE</code></a> - IND-CHRONIC-ATROPHIC-GASTRITIS-PREVENTION-SURVEILLANCE</li><li><a href="/es/kb/indications/ind-gastric-metastatic-1l-cldn18-2-zolbetuximab.html"><code>IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB</code></a> - IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB</li><li><a href="/es/kb/indications/ind-gastric-metastatic-1l-fgfr2b-bemarituzumab.html"><code>IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB</code></a> - IND-GASTRIC-METASTATIC-1L-FGFR2B-BEMARITUZUMAB</li><li><a href="/es/kb/indications/ind-gastric-metastatic-1l-her2-toga.html"><code>IND-GASTRIC-METASTATIC-1L-HER2-TOGA</code></a> - IND-GASTRIC-METASTATIC-1L-HER2-TOGA</li><li><a href="/es/kb/indications/ind-gastric-metastatic-1l-pdl1-chemo-ici.html"><code>IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI</code></a> - IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI</li><li><a href="/es/kb/indications/ind-gastric-metastatic-2l-her2-tdxd.html"><code>IND-GASTRIC-METASTATIC-2L-HER2-TDXD</code></a> - IND-GASTRIC-METASTATIC-2L-HER2-TDXD</li><li><a href="/es/kb/indications/ind-gastric-metastatic-2l-ramucirumab-paclitaxel.html"><code>IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL</code></a> - IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL</li><li><a href="/es/kb/indications/ind-gastric-metastatic-3l-tas102.html"><code>IND-GASTRIC-METASTATIC-3L-TAS102</code></a> - IND-GASTRIC-METASTATIC-3L-TAS102</li><li><a href="/es/kb/indications/ind-gastric-oligomet-systemic-plus-local.html"><code>IND-GASTRIC-OLIGOMET-SYSTEMIC-PLUS-LOCAL</code></a> - IND-GASTRIC-OLIGOMET-SYSTEMIC-PLUS-LOCAL</li><li><a href="/es/kb/indications/ind-gastric-periop-flot4.html"><code>IND-GASTRIC-PERIOP-FLOT4</code></a> - IND-GASTRIC-PERIOP-FLOT4</li><li><a href="/es/kb/indications/ind-h-pylori-prevention-eradication.html"><code>IND-H-PYLORI-PREVENTION-ERADICATION</code></a> - IND-H-PYLORI-PREVENTION-ERADICATION</li><li><a href="/es/kb/indications/ind-h-pylori-prevention-observation.html"><code>IND-H-PYLORI-PREVENTION-OBSERVATION</code></a> - IND-H-PYLORI-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-hdgc-cdh1-carrier-prevention-observation.html"><code>IND-HDGC-CDH1-CARRIER-PREVENTION-OBSERVATION</code></a> - IND-HDGC-CDH1-CARRIER-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-hdgc-cdh1-carrier-prevention-surveillance.html"><code>IND-HDGC-CDH1-CARRIER-PREVENTION-SURVEILLANCE</code></a> - IND-HDGC-CDH1-CARRIER-PREVENTION-SURVEILLANCE</li><li><a href="/es/kb/indications/ind-iatrogenic-long-term-ppi-gastric-net-prevention-observation.html"><code>IND-IATROGENIC-LONG-TERM-PPI-GASTRIC-NET-PREVENTION-OBSERVATION</code></a> - IND-IATROGENIC-LONG-TERM-PPI-GASTRIC-NET-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-iatrogenic-long-term-ppi-gastric-net-prevention-surveillance.html"><code>IND-IATROGENIC-LONG-TERM-PPI-GASTRIC-NET-PREVENTION-SURVEILLANCE</code></a> - IND-IATROGENIC-LONG-TERM-PPI-GASTRIC-NET-PREVENTION-SURVEILLANCE</li><li><a href="/es/kb/indications/ind-lifestyle-salty-pickled-diet-gastric-prevention-observation.html"><code>IND-LIFESTYLE-SALTY-PICKLED-DIET-GASTRIC-PREVENTION-OBSERVATION</code></a> - IND-LIFESTYLE-SALTY-PICKLED-DIET-GASTRIC-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-lifestyle-salty-pickled-diet-gastric-prevention-surveillance.html"><code>IND-LIFESTYLE-SALTY-PICKLED-DIET-GASTRIC-PREVENTION-SURVEILLANCE</code></a> - IND-LIFESTYLE-SALTY-PICKLED-DIET-GASTRIC-PREVENTION-SURVEILLANCE</li></ul>
+<h3>Procedimientos</h3><ul><li><code>SUR-D2-LYMPHADENECTOMY</code> - Gastrectomía con linfadenectomía D2</li></ul>
+<h3>Cuestionarios</h3><ul><li><code>QUEST-GASTRIC-1L-STUB</code> - Adenocarcinoma de unión gastroesofágica y gastroesofágica - primera línea</li></ul>
+<h3>Señal de alerta</h3><ul><li><a href="/es/kb/redflags/rf-active-autoimmune-disease-ici-risk.html"><code>RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK</code></a> - Paciente con pre-inmunes o inflamatorias preexistentes activas o incompletas...</li><li><a href="/es/kb/redflags/rf-breast-cdh1-lobular-candidate.html"><code>RF-BREAST-CDH1-LOBULAR-CANDIDATE</code></a> - Germlina CDH1 (E-cadherin) variante patógena en carcinoma lobular de mama invasivo — INFO...</li><li><a href="/es/kb/redflags/rf-cascade-fap-fdr-positive.html"><code>RF-CASCADE-FAP-FDR-POSITIVE</code></a> - Un pariente de primer grado del paciente (padre, hermano o hijo) tiene una posición documentada...</li><li><a href="/es/kb/redflags/rf-cascade-lynch-fdr-positive.html"><code>RF-CASCADE-LYNCH-FDR-POSITIVE</code></a> - Un pariente de primer grado del paciente (padre, hermano o hijo) tiene una posición documentada...</li><li><a href="/es/kb/redflags/rf-chronic-atrophic-gastritis-prevention.html"><code>RF-CHRONIC-ATROPHIC-GASTRITIS-PREVENTION</code></a> - Gastritis atrófica crónica (GAC) — pérdida histológicamente confirmada de oxíntesis y/o antral...</li><li><a href="/es/kb/redflags/rf-chronic-h-pylori-malignancy-prevention.html"><code>RF-CHRONIC-H-PYLORI-MALIGNANCY-PREVENTION</code></a> - Infección crónica por Helicobacter pylori (prueba positiva de la urea, antígeno heces,...</li><li><a href="/es/kb/redflags/rf-cronkhite-canada-confirmed.html"><code>RF-CRONKHITE-CANADA-CONFIRMED</code></a> - Cronkhite-Canada syndrome — acquired non-Mendelian polyposis- ectodermal syndrome. Rare (...</li><li><a href="/es/kb/redflags/rf-fap-confirmed-carrier.html"><code>RF-FAP-CONFIRMED-CARRIER</code></a> - El paciente tiene una variante patógena confirmada de la línea germinal APC. Mandatos colorectales estructurados +...</li><li><a href="/es/kb/redflags/rf-fap-family-history-suspicion.html"><code>RF-FAP-FAMILY-HISTORY-SUSPICION</code></a> - Pedigree familiar sugestivo de la Poliposis Adenomatosa Familiar (FAP) o la FAP atenuada...</li><li><a href="/es/kb/redflags/rf-gastric-cldn18-2-actionable.html"><code>RF-GASTRIC-CLDN18-2-ACTIONABLE</code></a> - CLDN18.2 expresión positiva (≥75% de las células tumorales con 2+/3+ tinción membranosa en VENTA...</li><li><a href="/es/kb/redflags/rf-gastric-emergency-bleed-obstruction.html"><code>RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION</code></a> - Urgencia quirúrgica/endoscópica en adenocarcinoma gástrico/GEJ: requir...</li><li><a href="/es/kb/redflags/rf-gastric-frailty-age.html"><code>RF-GASTRIC-FRAILTY-AGE</code></a> - Perfil de fragilidad que excluye el estándar FOLFOX+nivo / FLOT en cáncer gástrico: ECOG ≥3, OR (ag...</li><li><a href="/es/kb/redflags/rf-gastric-high-risk-biology.html"><code>RF-GASTRIC-HIGH-RISK-BIOLOGY</code></a> - Biomarcadores que definen el tratamiento en adenocarcinoma gástrico metastásico/GEJ: HER2+ (IHC 3+ OR...</li><li><a href="/es/kb/redflags/rf-gastric-infection-screening.html"><code>RF-GASTRIC-INFECTION-SCREENING</code></a> - Puerta de detección de infecciones antes de la terapia sistémica con adenocarcinoma gástrico/GEJ metastásico:</li><li><a href="/es/kb/redflags/rf-gastric-pdl1-cps-1-plus.html"><code>RF-GASTRIC-PDL1-CPS-1-PLUS</code></a> - Advanced/metastatic gastric or GE-junction adenocarcinoma with PD-L1 combined positive sc...</li><li><a href="/es/kb/redflags/rf-gastric-transformation-progression.html"><code>RF-GASTRIC-TRANSFORMATION-PROGRESSION</code></a> - Evolución agresiva del adenocarcinoma gástrico/GEJ: linitis plastica (dif...</li><li><a href="/es/kb/redflags/rf-hdgc-cdh1-confirmed-carrier.html"><code>RF-HDGC-CDH1-CONFIRMED-CARRIER</code></a> - Variante patógena de la línea germinal confirmada / patógena probable en CDH1 (E-cadherin) - Heredita...</li><li><a href="/es/kb/redflags/rf-iatrogenic-long-term-ppi-gastric-net-prevention.html"><code>RF-IATROGENIC-LONG-TERM-PPI-GASTRIC-NET-PREVENTION</code></a> - Inhibidor crónico de la bomba de protones (PPI) exposición ≥10 años (omeprazole, esomeprazol, pantopr...</li><li><a href="/es/kb/redflags/rf-jps-confirmed-carrier.html"><code>RF-JPS-CONFIRMED-CARRIER</code></a> - Variante patógena / patogénica probable confirmada de la línea germinal en SMAD4 o BMPR1A — Juvenil P...</li><li><a href="/es/kb/redflags/rf-lifestyle-salty-pickled-diet-gastric-prevention.html"><code>RF-LIFESTYLE-SALTY-PICKLED-DIET-GASTRIC-PREVENTION</code></a> - Ingesta habitualmente alta de alimentos conservados en sal, verduras en conserva y platos de alta sal (&gt;...</li><li><a href="/es/kb/redflags/rf-lynch-confirmed-carrier.html"><code>RF-LYNCH-CONFIRMED-CARRIER</code></a> - Variante patógena de la línea germinal confirmada / patogénica probable en un síndrome de Lynch (MMR / EPCA...</li><li><a href="/es/kb/redflags/rf-lynch-family-history-suspicion.html"><code>RF-LYNCH-FAMILY-HISTORY-SUSPICION</code></a> - Family pedigree meeting criteria suggestive of hereditary nonpolyposis colorectal cancer...</li><li><a href="/es/kb/redflags/rf-oligomet-definition.html"><code>RF-OLIGOMET-DEFINITION</code></a> - Adenocarcinoma esofagogástrico oligometástico por OMEC-1 (OligoMetastático...</li><li><a href="/es/kb/redflags/rf-peutz-jeghers-confirmed-carrier.html"><code>RF-PEUTZ-JEGHERS-CONFIRMED-CARRIER</code></a> - Variante patógena de la línea germinal confirmada / patógena probable en el gen STK11 (LKB1):...</li><li><a href="/es/kb/redflags/rf-peutz-jeghers-family-history-suspicion.html"><code>RF-PEUTZ-JEGHERS-FAMILY-HISTORY-SUSPICION</code></a> - Pedigree familiar sugestivo del síndrome de Peutz-Jeghers (PJS): cualquiera de (a) un miembro de la familia...</li></ul>
+<h3>Fuentes</h3><ul><li><code>SRC-CHECKMATE-577-KELLY-2021</code> - Nivolumab adjuvante en cáncer de junta esofágica o gastroesofágica</li><li><code>SRC-CHECKMATE-649-JANJIGIAN-2022</code> - Nivolumab de primera línea más quimioterapia versus quimioterapia solo para el...</li><li><code>SRC-DESTINY-GASTRIC01-SHITARA-2020</code> - Trastuzumab Deruxtecan en Cáncer Gástrico Positivo HER2</li><li><code>SRC-DESTINY-GASTRIC04-SHITARA-2025</code> - Trastuzumab Deruxtecan o Ramucirumab más Paclitaxel en Cáncer Gástrico</li><li><code>SRC-ESMO-GASTRIC-2024</code> - ESMO Cáncer gástrico</li><li><code>SRC-FLOT4-AL-BATRAN-2019</code> - Perioperative chemotherapy with fluorouracil plus leucovorin, oxaliplatin, and docetaxel...</li><li><code>SRC-FORTITUDE-101</code> - Bemarituzumab (BEMA) más quimioterapia para FGFR2b avanzado o metastásico sobreexpres...</li><li><code>SRC-GLOW</code> - Zolbetuximab más CAPOX en la unión gástrica o gastroesofágica CLDN18.2 positiva...</li><li><code>SRC-KEYNOTE-061-SHITARA-2018</code> - Pembrolizumab versus paclitaxel para el tratamiento previo, gástrico avanzado o gastroesof...</li><li><code>SRC-KEYNOTE-859-RHA-2023</code> - Pembrolizumab más quimioterapia versus placebo más quimioterapia para HER2-negativo advanc...</li><li><code>SRC-KIM-PEMBRO-EBV-NATMED-2018</code> - Caracterización molecular integral de las respuestas clínicas a la inhibición de la PD-1 en meta...</li><li><code>SRC-NCCN-GASTRIC-2025</code> - NCCN Cáncer gástrico</li><li><code>SRC-OMEC-1-KROESE-2023</code> - Definición, diagnóstico y tratamiento del cáncer esofagogástrico oligometásico: A Delphi...</li><li><code>SRC-RAINBOW-WILKE-2014</code> - Ramucirumab más paclitaxel versus placebo más paclitaxel en pacientes con rc...</li><li><code>SRC-RENAISSANCE-AIO-FLOT5</code> - El ensayo RENAISSANCE (AIO-FLOT5): el efecto de la quimioterapia sola vs. quimioterapia siguió...</li><li><code>SRC-SPOTLIGHT-SHITARA-2023</code> - Zolbetuximab plus mFOLFOX6 in patients with CLDN18.2-positive, HER2-negative, untreated,...</li><li><code>SRC-TCGA-GASTRIC-BASS-2014</code> - Caracterización molecular integral del adenocarcinoma gástrico</li><li><code>SRC-TOGA-BANG-2010</code> - Trastuzumab en combinación con quimioterapia versus quimioterapia sola para el tratamiento de H...</li></ul>
+</main>
+</body>
+</html>

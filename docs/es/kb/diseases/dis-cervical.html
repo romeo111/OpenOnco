@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carcinoma cervical (predominante escamoso + adeno) - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/es/kb/diseases/dis-cervical.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-cervical.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-cervical.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/diseases/dis-cervical.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/diseases/dis-cervical.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/diseases/dis-cervical.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/diseases/dis-cervical.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-cervical.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Carcinoma cervical (predominante escamoso + adeno) - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/es/kb/diseases/dis-cervical.html">
+<meta property="og:locale" content="es">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Carcinoma cervical (predominante escamoso + adeno) - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Carcinoma cervical (predominante escamoso + adeno) - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/es/kb/diseases/dis-cervical.html","inLanguage":"es","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/es/kb/diseases/dis-cervical.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="26af5ffc7c468f21436a5645a855fce185470eb05abea971236caf6a52b41355"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/es/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGÍA ABIERTA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Idioma"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg>ES <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Idioma"><a href="/kb/diseases/dis-cervical.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/diseases/dis-cervical.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/diseases/dis-cervical.html" lang="es" hreflang="es" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/diseases/dis-cervical.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/diseases/dis-cervical.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/diseases/dis-cervical.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/es/try.html" class="btn-cta-top btn-cta-try"><span>Crear un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menú"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menú">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Herramientas</span>
+    <div class="top-cta-group">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Código abierto</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Traducción preliminar: revisión clínica pendiente.</strong> <a href="/kb/diseases/dis-cervical.html" lang="en" hreflang="en" data-original-source>Consultar el original en inglés</a></aside>
+  <p class="kb-breadcrumb"><a href="/es/kb.html">Onco Wiki</a> / Enfermedad</p>
+  <h1>Carcinoma cervical (predominante escamoso + adeno)</h1>
+  <p class="kb-lead">Vista determinista de la entidad fuente YAML. La autoridad clínica sigue con los ID de fuente citados y estado de firma del revisor.</p>
+
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-CERVICAL</code></td></tr>
+<tr><th>Tipo</th><td>Enfermedad</td></tr>
+<tr><th>Aliaces</th><td><div class="kb-alias-list"><span class="kb-alias">Carcinoma cervical</span><span class="kb-alias">Carcinoma de utero del útero del cérvix</span><span class="kb-alias">Карцинома шийки матки</span></div></td></tr>
+<tr><th>Situación</th><td>revisado 2026-04-26 pendance_clinical_signoff</td></tr>
+<tr><th>Enfermedades</th><td><span class="kb-muted">Ninguna declarada</span></td></tr>
+<tr><th>Fuentes</th><td><span class="kb-chip" title="ESMO Guía de Práctica Clínica sobre Cáncer Cervical"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-cervical-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-CERVICAL-2024</code></a></span> <span class="kb-chip" title="NCCN Cáncer cervical"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1426" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-CERVICAL-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Herramienta informativa, no un dispositivo médico. Todas las recomendaciones deben ser verificadas por un oncólogo cualificado. El contenido clínico es provisional hasta que el examen de dos firma.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/cervical.yaml">Fuente YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morfología</th><td>8070/3</td></tr>
+<tr><th>Icd_o_3_topografía</th><td>["C53"]</td></tr>
+<tr><th>Icd_10</th><td>C53</td></tr>
+<tr><th>Quién _clasificación</th><td>WHO Female Genital Tumours 5th ed (2020): Cervical squamous cell carcinoma + cervical adenocarcinoma</td></tr></table><p><a href="/es/diseases.html#DIS-CERVICAL">Capacidades</a></p>
+  <h2>Notas</h2><p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Scaffolded for batch #2: focus on locally-advanced (FIGO IB3-IVA) CRT and metastatic 1L systemic. Cervical is the second etiologically_driven disease in KB (after HCV-MZL); HPV is the near-universal causal agent. 4 RFs: hydronephrosis-from-pelvic-mass (organ-dysfunction emergency), HIV-coinfection (infection-screening + prognostic), bulky-disease (high-risk biology), frailty/age. Regimens: cisplatin-radiosensitization (concurrent CRT), pembro+chemo+bev (KEYNOTE-826 metastatic), tisotumab vedotin (innovaTV-301 2L+). Out-of-scope this commit: early-stage IA1-IB2 conservative surgery (cone, simple/modified-radical hysterectomy) — Surgery entity per PROPOSAL §17 needed; brachytherapy as separate modality.</span></p>
+  <h2>Utilizado por</h2>
+<h3>Relevancia terapéutica</h3><ul><li><a href="/es/kb/biomarker_actionability/bma-pdl1-cps-cervical.html"><code>BMA-PDL1-CPS-CERVICAL</code></a> - Se requiere PD-L1 CPS ≥1 para pembrolizumab en la cacería cervical persistente/recurrente/metástica...</li><li><a href="/es/kb/biomarker_actionability/bma-pik3ca-hotspot-cervical.html"><code>BMA-PIK3CA-HOTSPOT-CERVICAL</code></a> - Las mutaciones PIK3CA ocurren en ~30% de los cánceres cervicales escamosos. No hay aprobación PI3Ki/AKTi en...</li><li><a href="/es/kb/biomarker_actionability/bma-tp53-mut-cervical.html"><code>BMA-TP53-MUT-CERVICAL</code></a> - mutación TP53 en CERVICAL — común, pronóstico adverso; no directamente...</li></ul>
+<h3>Algoritmos</h3><ul><li><code>ALGO-CERVICAL-LOCALLY-ADVANCED-1L</code> - ALGO-CERVICAL-LOCALLY-ADVANCED-1L</li><li><code>ALGO-CERVICAL-METASTATIC-1L</code> - ALGO-CERVICAL-METASTATIC-1L</li></ul>
+<h3>Enfermedad</h3><ul><li><a href="/es/kb/diseases/dis-vulvar-vaginal-scc.html"><code>DIS-VULVAR-VAGINAL-SCC</code></a> - Carcinoma de células escamosas vaginales y vulvares</li></ul>
+<h3>Indicación</h3><ul><li><a href="/es/kb/indications/ind-cervical-2l-tisotumab-vedotin.html"><code>IND-CERVICAL-2L-TISOTUMAB-VEDOTIN</code></a> - IND-CERVICAL-2L-TISOTUMAB-VEDOTINA</li><li><a href="/es/kb/indications/ind-cervical-locally-advanced-crt.html"><code>IND-CERVICAL-LOCALLY-ADVANCED-CRT</code></a> - IND-CERVICAL-LOCALLY-ADVANCED-CRT</li><li><a href="/es/kb/indications/ind-cervical-metastatic-1l-pembro-chemo-bev.html"><code>IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV</code></a> - IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV</li><li><a href="/es/kb/indications/ind-chronic-hpv-prevention-observation.html"><code>IND-CHRONIC-HPV-PREVENTION-OBSERVATION</code></a> - IND-CHRONIC-HPV-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-chronic-hpv-prevention-vaccination-screening.html"><code>IND-CHRONIC-HPV-PREVENTION-VACCINATION-SCREENING</code></a> - IND-CHRONIC-HPV-PREVENTION-VACCINATION-SCREENING</li><li><a href="/es/kb/indications/ind-reproductive-des-exposure-prevention-observation.html"><code>IND-REPRODUCTIVE-DES-EXPOSURE-PREVENTION-OBSERVATION</code></a> - IND-REPRODUCTIVE-DES-EXPOSURE-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-reproductive-des-exposure-prevention-surveillance.html"><code>IND-REPRODUCTIVE-DES-EXPOSURE-PREVENTION-SURVEILLANCE</code></a> - IND-REPRODUCTIVE-DES-EXPOSURE-PREVENTION-SURVEILLANCE</li><li><a href="/es/kb/indications/ind-reproductive-high-parity-cervical-prevention-observation.html"><code>IND-REPRODUCTIVE-HIGH-PARITY-CERVICAL-PREVENTION-OBSERVATION</code></a> - IND-REPRODUCTIVE-HIGH-PARITY-CERVICAL-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-reproductive-high-parity-cervical-prevention-surveillance.html"><code>IND-REPRODUCTIVE-HIGH-PARITY-CERVICAL-PREVENTION-SURVEILLANCE</code></a> - IND-REPRODUCTIVE-HIGH-PARITY-CERVICAL-PREVENTION-SURVEILLANCE</li></ul>
+<h3>Cuestionarios</h3><ul><li><code>QUEST-CERVICAL-1L-STUB</code> - Carcinoma cervical — primera línea</li></ul>
+<h3>Señal de alerta</h3><ul><li><a href="/es/kb/redflags/rf-active-autoimmune-disease-ici-risk.html"><code>RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK</code></a> - Paciente con pre-inmunes o inflamatorias preexistentes activas o incompletas...</li><li><a href="/es/kb/redflags/rf-cervical-frailty-age.html"><code>RF-CERVICAL-FRAILTY-AGE</code></a> - Frailty profile precluding standard cisplatin-based chemoradiation in cervical cancer: EC...</li><li><a href="/es/kb/redflags/rf-cervical-high-risk-biology.html"><code>RF-CERVICAL-HIGH-RISK-BIOLOGY</code></a> - Cáncer cervical con biología adversa / características localmente avanzadas prediciendo CRT pobre...</li><li><a href="/es/kb/redflags/rf-cervical-hydronephrosis-pelvic-obstruction.html"><code>RF-CERVICAL-HYDRONEPHROSIS-PELVIC-OBSTRUCTION</code></a> - Hidronefrosis u obstrucción uretérica inducida por la masa pélvica en el cáncer de cuello uterino (FIGO IIIB...</li><li><a href="/es/kb/redflags/rf-cervical-infection-screening.html"><code>RF-CERVICAL-INFECTION-SCREENING</code></a> - Active or unmanaged infection requiring resolution before initiating cisplatin-based chem...</li><li><a href="/es/kb/redflags/rf-cervical-pdl1-cps-1-plus.html"><code>RF-CERVICAL-PDL1-CPS-1-PLUS</code></a> - Cáncer cervical persistente, recurrente o metastásico con PD-L1 CPS ≥1 por 22C3 IHC.</li><li><a href="/es/kb/redflags/rf-cervical-transformation-progression.html"><code>RF-CERVICAL-TRANSFORMATION-PROGRESSION</code></a> - Recurrencia o progresión del cáncer de cuello uterino después de la quimioradiación definitiva: local...</li><li><a href="/es/kb/redflags/rf-chronic-hpv-malignancy-prevention.html"><code>RF-CHRONIC-HPV-MALIGNANCY-PREVENTION</code></a> - Infección persistente por VPH de alto riesgo (HPV-16, 18, 31, 33, 45, 52, 58 detectada en la c...</li><li><a href="/es/kb/redflags/rf-iatrogenic-des-exposure-prevention.html"><code>RF-IATROGENIC-DES-EXPOSURE-PREVENTION</code></a> - In-utero exposure to diethylstilbestrol (DES), a synthetic non- steroidal estrogen prescr...</li><li><a href="/es/kb/redflags/rf-iatrogenic-long-term-hrmnl-contraception-prevention.html"><code>RF-IATROGENIC-LONG-TERM-HRMNL-CONTRACEPTION-PREVENTION</code></a> - Uso acumulado de anticonceptivos hormonales que contienen estrógenos o combinados (combinación de c...</li><li><a href="/es/kb/redflags/rf-iatrogenic-transplant-immunosuppression-longterm-prevention.html"><code>RF-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-LONGTERM-PREVENTION</code></a> - Receptor de trasplante de órganos sólidos con inmunosupresión crónica ≥ 3 años después del trasplante, b...</li><li><a href="/es/kb/redflags/rf-iatrogenic-transplant-immunosuppression-prevention.html"><code>RF-IATROGENIC-TRANSPLANT-IMMUNOSUPPRESSION-PREVENTION</code></a> - Inmunosupresión crónica para trasplante de órganos sólidos o HSCT post-aloge...</li><li><a href="/es/kb/redflags/rf-peutz-jeghers-confirmed-carrier.html"><code>RF-PEUTZ-JEGHERS-CONFIRMED-CARRIER</code></a> - Variante patógena de la línea germinal confirmada / patógena probable en el gen STK11 (LKB1):...</li><li><a href="/es/kb/redflags/rf-peutz-jeghers-family-history-suspicion.html"><code>RF-PEUTZ-JEGHERS-FAMILY-HISTORY-SUSPICION</code></a> - Pedigree familiar sugestivo del síndrome de Peutz-Jeghers (PJS): cualquiera de (a) un miembro de la familia...</li><li><a href="/es/kb/redflags/rf-reproductive-des-in-utero-exposure-prevention.html"><code>RF-REPRODUCTIVE-DES-IN-UTERO-EXPOSURE-PREVENTION</code></a> - In-utero exposure to diethylstilbestrol (DES) — synthetic non-steroidal estrogen prescrib...</li><li><a href="/es/kb/redflags/rf-reproductive-high-parity-cervical-prevention.html"><code>RF-REPRODUCTIVE-HIGH-PARITY-CERVICAL-PREVENTION</code></a> - Alta paridad (≥5 embarazos a plazo completo) actuando sinérgicamente con la infección por VPH para...</li><li><a href="/es/kb/redflags/rf-reproductive-ocp-long-term.html"><code>RF-REPRODUCTIVE-OCP-LONG-TERM</code></a> - Uso combinado de anticonceptivos orales a largo plazo (≥10 años acumulados).</li></ul>
+<h3>Fuentes</h3><ul><li><code>SRC-ESMO-CERVICAL-2024</code> - Orientación de Práctica Clínica sobre Cáncer Cervical del Clínico ESMO</li><li><code>SRC-GOG240-TEWARI-2014</code> - Incorporación de Bevacizumab en el Tratamiento del Cáncer Cervical Recurrente y Metástatico</li><li><code>SRC-INNOVATV-204</code> - Eficacia y seguridad de tisotumab vedotin en los casos de ce...</li><li><code>SRC-KEYNOTE-826-COLOMBO-2021</code> - Pembrolizumab para cáncer cervical persistente, recurrente o metastásico (KEYNOTE-826)</li><li><code>SRC-NCCN-CERVICAL-2025</code> - NCCN Cáncer cervical</li></ul>
+</main>
+</body>
+</html>

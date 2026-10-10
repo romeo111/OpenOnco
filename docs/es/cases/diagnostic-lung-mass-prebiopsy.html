@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Resumen de trabajo</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/es/cases/diagnostic-lung-mass-prebiopsy.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/cases/diagnostic-lung-mass-prebiopsy.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/cases/diagnostic-lung-mass-prebiopsy.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/cases/diagnostic-lung-mass-prebiopsy.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/cases/diagnostic-lung-mass-prebiopsy.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/cases/diagnostic-lung-mass-prebiopsy.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/cases/diagnostic-lung-mass-prebiopsy.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/cases/diagnostic-lung-mass-prebiopsy.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenOnco · Resumen de trabajo">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/es/cases/diagnostic-lung-mass-prebiopsy.html">
+<meta property="og:locale" content="es">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Resumen de trabajo">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"OpenOnco · Resumen de trabajo","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/es/cases/diagnostic-lung-mass-prebiopsy.html","inLanguage":"es","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/es/cases/diagnostic-lung-mass-prebiopsy.html"}}</script>
+<!-- openonco-seo:end -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/clinical-styles/46a80e9314fb5c473de882c0ea142f68dae9776b1b58da99a3e32678c03e5fc7.css">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/clinical-styles/3f0fe13916348089255309c0c4de9eef32abbc421322d9df74e10a8539433420.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="19f68390b8a2c99f67cb91281dfe86751b05608063c0e9b3c6fdaaee75125b30"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/es/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGÍA ABIERTA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Idioma"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg>ES <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Idioma"><a href="/cases/diagnostic-lung-mass-prebiopsy.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/cases/diagnostic-lung-mass-prebiopsy.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/cases/diagnostic-lung-mass-prebiopsy.html" lang="es" hreflang="es" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/cases/diagnostic-lung-mass-prebiopsy.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/cases/diagnostic-lung-mass-prebiopsy.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/cases/diagnostic-lung-mass-prebiopsy.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/es/try.html" class="btn-cta-top btn-cta-try"><span>Crear un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menú"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menú">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Herramientas</span>
+    <div class="top-cta-group">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Código abierto</span>
+  </div>
+  </div>
+</header><aside class="translation-notice" role="note"><strong>Traducción preliminar: revisión clínica pendiente.</strong> <a href="/cases/diagnostic-lung-mass-prebiopsy.html" lang="en" hreflang="en" data-original-source>Consultar el original en inglés</a></aside>
+<div class="oo-topbar-host no-print"></div>
+<div class="case-bar no-print"><div>OpenOnco · <strong>Diagnóstico · Suspecto de masa pulmonar · Pre-biopsia del fumador hx</strong></div><div><a href="/es/gallery.html">← Volver a la galería</a><a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+diagnostic-lung-mass-prebiopsy&amp;labels=tester-feedback" target="_blank" rel="noopener">Comentarios sobre este caso</a></div></div>
+<div class="example-verification no-print">Synthetic educational example. Do not self-treat: a qualified treating physician must verify the sources, patient data, contraindications, and final plan.</div><div class="page"><div class="doc-header"><div class="doc-label">OpenOnco · Breve sesión de trabajo · FASE DIAGnóSTICA</div><div class="doc-title">Reseña de trabajo previa al embalaje de tumores</div><div class="doc-sub">DPLAN-PZ-DIAG-LUNG-001-V1 · v1 · 2026-10-10</div></div><div class="banner banner--diagnostic"><strong>‡ FASE DIAGnóSTICA — PLAN DE TRATAMIENTO NO APLICABLE</strong>FASE DIAGnóSTICA: PLAN DE TRATAMIENTO NO APLICABLE AUN. Históloga necesaria antes de cualquier discusión de terapia (CARTER §15.2 C7).</div><div class="patient-strip"><div class="label">Paciente</div><div class="value">PZ-DIAG-LUNG-001 · Linaje de sospecha: non_small_cell_lung_carcinoma</div><div class="value" style="margin-top:6px;font-size:13px;color:var(--gray-700);">Tejidos: pulmón, hilar_linf_nodos, mediastinal_lmp_nodes · Hipótesis: DIS-NSCLC</div><div class="value" style="margin-top:6px;font-size:13px;color:var(--gray-700);">67M, 30 pack-year fumator (quit 2 years ago), accidentalmente encontrado pulmón_masa 3,2 cm en el lóbulo superior derecho en tomografía torácica tomografía compuesta por tos persistente x 8 semanas. Sin hemoptise. Reportes inexplicables_peso_loss_with_lung_filling (5 kg / 3 meses). Sin paraneoplastico_síndrome en revisión. Sin new_clubbing. Linfadenopatía hilar derecha 1,5 cm eje corto en tomografía computarizada; estaciones mediastinales 4R bordeline 1,1 cm. Sin malign_pleural_effusion.</div></div><div class="banner banner--info"><strong>Elaboración combinada:</strong> WORKUP-SUSPECTED-NSCLC · <strong>Очікуваний термін:</strong> ~ дnoв</div><section><h2>Etapas de trabajo (6)</h2><ul class="steps"><li><span class="step-num">1</span><span class="step-name"><span class="badge badge--imaging">imagen</span> CT de contraste reforzada pecho/abdomen/pelvis</span><div class="step-rationale"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Initial staging imaging для більшості hematologic malignancies — лімфаденопатія mapping, organomegaly, extranodal involvement. Часто replaced by PET-CT для definitive lymphoma staging, але CECT доступnoша для початкового workup.</span></div></li><li><span class="step-num">2</span><span class="step-name"><span class="badge badge--lab">laboratorio</span> Conteo completo de sangre con diferencial</span><div class="step-rationale">Evaluación basal de citopenia y monitorización continua de mielosupresión.</div></li><li><span class="step-num">3</span><span class="step-name"><span class="badge badge--lab">laboratorio</span> Panel Metabólico Integral</span><div class="step-rationale"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Електроліти (Na, K, Cl, HCO3), креатиnoн + BUN (renal function), глюкоза, кальцій, альбумін, total protein. Базова метаболічна оцінка перед будь-якою терапією + основа TLS risk + dosing adjustments.</span></div></li><li><span class="step-num">4</span><span class="step-name"><span class="badge badge--lab">laboratorio</span> Pruebas de función hepática</span><div class="step-rationale">Evaluar la función hepática — basal + durante los ciclos BR + tratamiento con DAA + monitorización de la reactivación del VHB.</div></li><li><span class="step-num">5</span><span class="step-name"><span class="badge badge--histology">histología</span> Broncoscopia flexible con EBUS-TBNA</span><div class="step-rationale">Tissue sampling of central lung lesions and mediastinal lymph nodes for both diagnosis and N-staging in NSCLC and SCLC. Preferred for central tumors and N1/N2 nodes.
+</div></li><li><span class="step-num">6</span><span class="step-name"><span class="badge badge--imaging">imagen</span> FDG PET/CT</span><div class="step-rationale">Estadificación en el diagnóstico + evaluación de la respuesta después de la quimioinmunoterapia o antiviral. Detecta hotspots de transformación.</div></li></ul></section><section><h2>Encuesta sobre el tratamiento de los residuos</h2><div class="mdt"><h3>MDT talk tree (3 pasos)</h3><table class="tbl"><thead><tr><th>#</th><th>Propietario</th><th>Tema</th><th>Acción</th></tr></thead><tbody><tr><td class="mono">1</td><td>patólogo</td><td>Examen especializado </td><td>Cualquier sospecha requiere biopsia: el patólogo planea la selección del sitio, panel IHC, pruebas auxiliares.</td></tr><tr><td class="mono">2</td><td>radiólogo</td><td>Examen especializado </td><td>Etapa / readaptación de imágenes + guía de biopsia — radiólogo.</td></tr><tr><td class="mono">3</td><td>cronólogo quirúrgico</td><td>Examen especializado </td><td>Sospechoso tumor sólido: evaluación de la resecabilidad, enfoque de biopsia.</td></tr></tbody></table><h3>Competencia (necesaria) — especialistas virtuales obligatorios (2)</h3><ul class="role-list"><li><span class="role-name">Patólogo (general)</span> <span class="badge badge--required">requerido</span><div class="role-reason">Cualquier sospecha requiere biopsia: el patólogo planea la selección del sitio, panel IHC, pruebas auxiliares.</div></li><li><span class="role-name">Radiologista</span> <span class="badge badge--required">requerido</span><div class="role-reason">Etapa / readaptación de imágenes + guía de biopsia — radiólogo.</div></li></ul><h3>Competencias (recomendadas) — para su consideración (1)</h3><ul class="role-list"><li><span class="role-name">Oncólogo quirúrgico</span> <span class="badge badge--recommended">recomendado</span><div class="role-reason">Sospechoso tumor sólido: evaluación de la resecabilidad, enfoque de biopsia.</div></li></ul><details class="skill-catalog"><summary>Metada de habilidad técnica MDT (3/16 activado en este plan)</summary><div class="section-sub">Todos los especialistas virtuales registrados. ✓ — activado para este caso; ї — no activado (disponible para otros escenarios clínicos).</div><table><thead><tr><th>Especialista</th><th>hability_id</th><th>Versión</th><th>Última revisión</th><th>Aprobaciones</th><th>Dominio</th></tr></thead><tbody><tr class="dormant"><td>Especialista en terapia celular (CAR-T)</td><td><code>cellular_therapy_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>_terapia celular</td></tr><tr class="dormant"><td>Farmacéutico clínico</td><td><code>clinical_pharmacist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>clínica_farmacia</td></tr><tr class="dormant"><td>Hematologista / oncohematologistas</td><td><code>hematologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematología_oncología</td></tr><tr class="dormant"><td>Hematopatólogo (linfoma / leucemia / mieloma)</td><td><code>hematopathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematopatología</td></tr><tr class="dormant"><td>Enfermedades infecciosas / hepatología</td><td><code>infectious_disease_hepatology</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>Enfermedades infecciosas</td></tr><tr class="dormant"><td>Oncólogo médico (quimioterapeuta de tumores sólidos)</td><td><code>medical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>solid_oncología</td></tr><tr class="dormant"><td>Genetista molecular / oncólogo molecular</td><td><code>molecular_geneticist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>molecular_oncología</td></tr><tr class="dormant"><td>Atención paliativa</td><td><code>palliative_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>Cuidados paliativos</td></tr><tr class="activated"><td>Patólogo (general)</td><td><code>pathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>patología</td></tr><tr class="dormant"><td>Atención primaria / médico de familia</td><td><code>primary_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>atención primaria</td></tr><tr class="dormant"><td>Psicooncólogo</td><td><code>psychologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psicosociales</td></tr><tr class="dormant"><td>Oncólogo de radiación</td><td><code>radiation_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>radiografía_oncología</td></tr><tr class="activated"><td>Radiologista</td><td><code>radiologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>Diagnóstico_imagen</td></tr><tr class="dormant"><td>Asistente social / administrador de casos</td><td><code>social_worker_case_manager</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psicosociales</td></tr><tr class="activated"><td>Oncólogo quirúrgico</td><td><code>surgical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cronología quirúrgica</td></tr><tr class="dormant"><td>Especialista en trasplantes (BMT)</td><td><code>transplant_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>_terapia celular</td></tr></tbody></table></details></div></section><div class="doc-footer"><div class="version-chain">Plan_id: DPLAN-PZ-DIAG-LUNG-001-V1 . Versión: 1 . Generado: 2026-10-10T13:53:30.230479+00:00</div><div class="fda-disclosure"><strong>Per FDA non-device CDS positioning (CHARTER §15):</strong> Diagnostic-phase MDT support: structure the workup, identify the team, surface unresolved questions. Not a medical device; not a treatment plan.</div><div class="fda-disclosure"><strong>Per FDA non-device CDS positioning (CHARTER §15):</strong> FASE DIAGnóSTICA — esta salida describe el diagnóstico sólo. La generación de plan de tratamiento está bloqueada hasta que se confirme la histología (CARTER §15.2 C7). No tratar bajo sospecha.</div><div class="medical-disclaimer">Este documento es un recurso informativo que apoya la discusión del tablero tumoral (por CARTA §11). No es un sistema que toma decisiones clínicas. Cada recomendación debe ser verificada por el médico que lo trata.</div></div></div>
+</body>
+</html>

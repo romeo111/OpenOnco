@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Melanoma cutáneo - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/es/kb/diseases/dis-melanoma.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-melanoma.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-melanoma.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/diseases/dis-melanoma.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/diseases/dis-melanoma.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/diseases/dis-melanoma.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/diseases/dis-melanoma.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-melanoma.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Melanoma cutáneo - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/es/kb/diseases/dis-melanoma.html">
+<meta property="og:locale" content="es">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Melanoma cutáneo - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Melanoma cutáneo - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/es/kb/diseases/dis-melanoma.html","inLanguage":"es","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/es/kb/diseases/dis-melanoma.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="645a28d64aec3e336c845b3d00128f82011402ff8ded4d81b89d439a77a07ae3"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/es/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGÍA ABIERTA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Idioma"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg>ES <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Idioma"><a href="/kb/diseases/dis-melanoma.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/diseases/dis-melanoma.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/diseases/dis-melanoma.html" lang="es" hreflang="es" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/diseases/dis-melanoma.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/diseases/dis-melanoma.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/diseases/dis-melanoma.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/es/try.html" class="btn-cta-top btn-cta-try"><span>Crear un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menú"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menú">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Herramientas</span>
+    <div class="top-cta-group">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Código abierto</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Traducción preliminar: revisión clínica pendiente.</strong> <a href="/kb/diseases/dis-melanoma.html" lang="en" hreflang="en" data-original-source>Consultar el original en inglés</a></aside>
+  <p class="kb-breadcrumb"><a href="/es/kb.html">Onco Wiki</a> / Enfermedad</p>
+  <h1>Melanoma cutáneo</h1>
+  <p class="kb-lead">Vista determinista de la entidad fuente YAML. La autoridad clínica sigue con los ID de fuente citados y estado de firma del revisor.</p>
+
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-MELANOMA</code></td></tr>
+<tr><th>Tipo</th><td>Enfermedad</td></tr>
+<tr><th>Aliaces</th><td><div class="kb-alias-list"><span class="kb-alias">Melanoma</span><span class="kb-alias">Шкірна меланома</span></div></td></tr>
+<tr><th>Situación</th><td>en espera_clinico_signoff</td></tr>
+<tr><th>Enfermedades</th><td><span class="kb-muted">Ninguna declarada</span></td></tr>
+<tr><th>Fuentes</th><td><span class="kb-chip" title="Melanoma cutáneo ESMO"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-cutaneous-melanoma" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-MELANOMA-2024</code></a></span> <span class="kb-chip" title="Melanoma cutáneo NCCN"><a href="https://www.nccn.org/professionals/physician_gls/pdf/cutaneous_melanoma.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-MELANOMA-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Herramienta informativa, no un dispositivo médico. Todas las recomendaciones deben ser verificadas por un oncólogo cualificado. El contenido clínico es provisional hasta que el examen de dos firma.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/melanoma.yaml">Fuente YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morfología</th><td>8720/3</td></tr>
+<tr><th>Icd_o_3_topografía</th><td>["C44.9"]</td></tr>
+<tr><th>Icd_10</th><td>C43</td></tr>
+<tr><th>Quién _clasificación</th><td>Malignant melanoma of skin (WHO 5th 2023)</td></tr></table><p><a href="/es/diseases.html#DIS-MELANOMA">Capacidades</a></p>
+  <h2>Notas</h2><p>biomarker_driven — BRAF determina el objetivo-vs-ICI. ICI doblet preferido para el cerebro mets.</p>
+  <h2>Utilizado por</h2>
+<h3>Relevancia terapéutica</h3><ul><li><a href="/es/kb/biomarker_actionability/bma-braf-v600e-melanoma.html"><code>BMA-BRAF-V600E-MELANOMA</code></a> - BRAF V600E (y V600K) en melanoma cutáneo es el controlador prototípico: combinación de BRAF...</li><li><a href="/es/kb/biomarker_actionability/bma-braf-v600k-melanoma.html"><code>BMA-BRAF-V600K-MELANOMA</code></a> - BRAF V600K (~10-20% de melanomas mutantes BRAF) comparte todas las aprobaciones BRAF/MEKi con V600E.</li><li><a href="/es/kb/biomarker_actionability/bma-brca2-germline-melanoma.html"><code>BMA-BRCA2-GERMLINE-MELANOMA</code></a> - La línea germinal de BRCA2 confiere un riesgo de melanoma cutáneo elevado ~2-3× y uveal-melano...</li><li><a href="/es/kb/biomarker_actionability/bma-brca2-somatic-melanoma.html"><code>BMA-BRCA2-SOMATIC-MELANOMA</code></a> - Pérdida somática BRCA2 en el melanoma: no hay indicación de PARPi; justificación biológica...</li><li><a href="/es/kb/biomarker_actionability/bma-kit-mutation-melanoma.html"><code>BMA-KIT-MUTATION-MELANOMA</code></a> - mutación de KIT en melanoma mucoso/acral/dañado por el sol crónico (~15-20% de estos subtipos...</li><li><a href="/es/kb/biomarker_actionability/bma-kras-q61-melanoma.html"><code>BMA-KRAS-Q61-MELANOMA</code></a> - KRAS Q61 (raro en melanoma; el NRAS Q61 es más común) - MEKi actividad modesta en monoterapia (...</li><li><a href="/es/kb/biomarker_actionability/bma-nras-g12-melanoma.html"><code>BMA-NRAS-G12-MELANOMA</code></a> - NRAS G12/G13 — más rara que las mutaciones Q61 en el melanoma. Igual justificación MEKi/ICI extrapolada.</li><li><a href="/es/kb/biomarker_actionability/bma-nras-g13-melanoma.html"><code>BMA-NRAS-G13-MELANOMA</code></a> - NRAS G13 en melanoma — datos limitados; tratar por algoritmo NRAS-mut.</li><li><a href="/es/kb/biomarker_actionability/bma-nras-q61k-melanoma.html"><code>BMA-NRAS-Q61K-MELANOMA</code></a> - NRAS Q61K — misma justificación terapéutica que Q61R. IC 1L; subgrupo binimetinib NEMO.</li><li><a href="/es/kb/biomarker_actionability/bma-nras-q61r-melanoma.html"><code>BMA-NRAS-Q61R-MELANOMA</code></a> - El NRAS Q61R es el punto más común del NRAS en el melanoma (~20% de los melanomas cutáneos).</li><li><a href="/es/kb/biomarker_actionability/bma-tp53-mut-melanoma.html"><code>BMA-TP53-MUT-MELANOMA</code></a> - mutación TP53 en MELANOMA - común, pronóstico adverso; no directamente...</li></ul>
+<h3>Algoritmos</h3><ul><li><code>ALGO-COWDEN-CARRIER-SURVEILLANCE</code> - ALGO-COWDEN-CARRIER-SURVEILLANCE</li><li><code>ALGO-HEREDITARY-MELANOMA-SURVEILLANCE</code> - ALGO-HEREDITARY-MELANOMA-SURVEILLANCE</li><li><code>ALGO-MELANOMA-ADJUVANT-1L</code> - ALGO-MELANOMA-ADJUVANT-1L</li><li><code>ALGO-MELANOMA-METASTATIC-1L</code> - ALGO-MELANOMA-METASTATIC-1L</li><li><code>ALGO-MELANOMA-METASTATIC-2L</code> - ALGO-MELANOMA-METASTATIC-2L</li></ul>
+<h3>Enfermedad</h3><ul><li><a href="/es/kb/diseases/dis-bcc.html"><code>DIS-BCC</code></a> - Carcinoma de células basales (BCC)</li><li><a href="/es/kb/diseases/dis-choroid-plexus-carcinoma.html"><code>DIS-CHOROID-PLEXUS-CARCINOMA</code></a> - Carcinoma de plexo coróide</li><li><a href="/es/kb/diseases/dis-retinoblastoma.html"><code>DIS-RETINOBLASTOMA</code></a> - Retinoblastoma</li></ul>
+<h3>Capítulos del Manual</h3><ul><li><code>HB-MELANOMA-METASTATIC-1L</code> - Melanoma metastásico: razonamiento BRAF / IO de primera línea</li></ul>
+<h3>Indicación</h3><ul><li><a href="/es/kb/indications/ind-fammm-carrier-intensified.html"><code>IND-FAMMM-CARRIER-INTENSIFIED</code></a> - IND-FAMMM-CARRIER-INTENSIFIED</li><li><a href="/es/kb/indications/ind-fammm-carrier-surveillance.html"><code>IND-FAMMM-CARRIER-SURVEILLANCE</code></a> - IND-FAMMM-CARRIER-SURVEILLANCE</li><li><a href="/es/kb/indications/ind-lifestyle-uv-exposure-prevention-observation.html"><code>IND-LIFESTYLE-UV-EXPOSURE-PREVENTION-OBSERVATION</code></a> - IND-LIFESTYLE-UV-EXPOSURE-PREVENTION-OBSERVATION</li><li><a href="/es/kb/indications/ind-lifestyle-uv-exposure-prevention-protection.html"><code>IND-LIFESTYLE-UV-EXPOSURE-PREVENTION-PROTECTION</code></a> - IND-LIFESTYLE-UV-EXPOSURE-PREVENTION-PROTECTION</li><li><a href="/es/kb/indications/ind-melanoma-2l-kit-imatinib.html"><code>IND-MELANOMA-2L-KIT-IMATINIB</code></a> - IND-MELANOMA-2L-KIT-IMATINIB</li><li><a href="/es/kb/indications/ind-melanoma-2l-post-brafi-ipi-nivo.html"><code>IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO</code></a> - IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO</li><li><a href="/es/kb/indications/ind-melanoma-2l-post-io-brafi-meki.html"><code>IND-MELANOMA-2L-POST-IO-BRAFI-MEKI</code></a> - IND-MELANOMA-2L-POST-IO-BRAFI-MEKI</li><li><a href="/es/kb/indications/ind-melanoma-2l-relatlimab-nivolumab.html"><code>IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB</code></a> - IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB</li><li><a href="/es/kb/indications/ind-melanoma-3l-lifileucel.html"><code>IND-MELANOMA-3L-LIFILEUCEL</code></a> - IND-MELANOMA-3L-LIFILEUCEL</li><li><a href="/es/kb/indications/ind-melanoma-3l-post-lifileucel.html"><code>IND-MELANOMA-3L-POST-LIFILEUCEL</code></a> - IND-MELANOMA-3L-POST-LIFILEUCEL</li><li><a href="/es/kb/indications/ind-melanoma-adjuvant-pembro-stage-iii.html"><code>IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III</code></a> - IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III</li><li><a href="/es/kb/indications/ind-melanoma-braf-metastatic-1l-dabra-trame.html"><code>IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME</code></a> - IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME</li><li><a href="/es/kb/indications/ind-melanoma-metastatic-1l-nivo-ipi.html"><code>IND-MELANOMA-METASTATIC-1L-NIVO-IPI</code></a> - IND-MELANOMA-METASTATIC-1L-NIVO-IPI</li><li><a href="/es/kb/indications/ind-melanoma-metastatic-1l-pembro-mono.html"><code>IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO</code></a> - IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO</li><li><a href="/es/kb/indications/ind-melanoma-nivo-maint.html"><code>IND-MELANOMA-NIVO-MAINT</code></a> - IND-MELANOMA-NIVO-MAINT</li></ul>
+<h3>Cuestionarios</h3><ul><li><code>QUEST-MELANOMA-1L-STUB</code> - Melanoma cutáneo - primera línea</li></ul>
+<h3>Señal de alerta</h3><ul><li><a href="/es/kb/redflags/rf-active-autoimmune-disease-ici-risk.html"><code>RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK</code></a> - Paciente con pre-inmunes o inflamatorias preexistentes activas o incompletas...</li><li><a href="/es/kb/redflags/rf-bap1-confirmed-carrier.html"><code>RF-BAP1-CONFIRMED-CARRIER</code></a> - Confirmada variante patógena de la línea germinal / patógeno probable en el gen BAP1 — tumor BAP1 p...</li><li><a href="/es/kb/redflags/rf-cdkn2a-specific-pdac-carrier.html"><code>RF-CDKN2A-SPECIFIC-PDAC-CARRIER</code></a> - Variante patógena de la línea germinal confirmada / patógena probable en CDKN2A (p16/INK4a) — gen-sp...</li><li><a href="/es/kb/redflags/rf-environmental-outdoor-uv-skin-prevention.html"><code>RF-ENVIRONMENTAL-OUTDOOR-UV-SKIN-PREVENTION</code></a> - Chronic high cumulative occupational outdoor UV exposure (≥10 years outdoor work in high-...</li><li><a href="/es/kb/redflags/rf-fammm-confirmed-carrier.html"><code>RF-FAMMM-CONFIRMED-CARRIER</code></a> - Variante patógena de la línea germinal confirmada / patógena probable en el gen CDKN2A (p16-INK4a)...</li><li><a href="/es/kb/redflags/rf-lifestyle-uv-exposure-prevention.html"><code>RF-LIFESTYLE-UV-EXPOSURE-PREVENTION</code></a> - Alta exposición acumulada a la radiación ultravioleta — incluyendo cr...</li><li><a href="/es/kb/redflags/rf-melanoma-braf-v600-actionable.html"><code>RF-MELANOMA-BRAF-V600-ACTIONABLE</code></a> - BRAF V600E o V600K activando la mutación en melanoma metastático / irresecable — ~40-50% p...</li><li><a href="/es/kb/redflags/rf-melanoma-frailty-age.html"><code>RF-MELANOMA-FRAILTY-AGE</code></a> - Edad ≥80 + ECOG ≥2 — nivo+ipi prohibitivo; nivo+rela o pembro mono.</li><li><a href="/es/kb/redflags/rf-melanoma-high-risk-biology.html"><code>RF-MELANOMA-HIGH-RISK-BIOLOGY</code></a> - mutación BRAF V600E/K O NRAS — impulsa la decisión de doblete BRAFI+MEKi vs ICI.</li><li><a href="/es/kb/redflags/rf-melanoma-infection-screening.html"><code>RF-MELANOMA-INFECTION-SCREENING</code></a> - Infección activa o latente que requiere resolución / profilaxis antes de iniciar el ICI (anti-</li><li><a href="/es/kb/redflags/rf-melanoma-io-resistant.html"><code>RF-MELANOMA-IO-RESISTANT</code></a> - Melanoma metastásico resistente a IO: progresión en el anterior anti-PD-1 (± anti-CTLA-4 o anti-...</li><li><a href="/es/kb/redflags/rf-melanoma-kit-mut-actionable.html"><code>RF-MELANOMA-KIT-MUT-ACTIONABLE</code></a> - mutación activadora del KIT (exón 11 / 13) en el subtipo de mucosa o melanoma acral — ~15-20% pre...</li><li><a href="/es/kb/redflags/rf-melanoma-nf1-mut-candidate.html"><code>RF-MELANOMA-NF1-MUT-CANDIDATE</code></a> - Melanoma cutáneo con mutación somática de pérdida de función NF1 (cambio de marco / tonterías / ...</li><li><a href="/es/kb/redflags/rf-melanoma-organ-dysfunction.html"><code>RF-MELANOMA-ORGAN-DYSFUNCTION</code></a> - LDH &gt; 2x LSN O disfunción hepática grave — predictor de desenlaces inferiores de la IC.</li><li><a href="/es/kb/redflags/rf-melanoma-stage-iii-resected.html"><code>RF-MELANOMA-STAGE-III-RESECTED</code></a> - Melanoma cutáneo de estadio III resecado — biología adjuvante-elegible (limpo centinela positivo...</li><li><a href="/es/kb/redflags/rf-melanoma-transformation-progression.html"><code>RF-MELANOMA-TRANSFORMATION-PROGRESSION</code></a> - Metástasis sintomáticas del SNC — dobleta ICI (nivo+ipi) activas por vía intracraneal; BRAFi+MEKi para...</li><li><a href="/es/kb/redflags/rf-occ-firefighter-prevention.html"><code>RF-OCC-FIREFIGHTER-PREVENTION</code></a> - Exposición profesional histórica documentada como bombero profesional (≥10 años en activo...</li><li><a href="/es/kb/redflags/rf-uveal-melanoma-bap1-mut-candidate.html"><code>RF-UVEAL-MELANOMA-BAP1-MUT-CANDIDATE</code></a> - Melanoma uveal (intraocular, coroidal, ciliar, iris) con somática BAP1 Perdedores de aire...</li><li><a href="/es/kb/redflags/rf-werner-confirmed-carrier.html"><code>RF-WERNER-CONFIRMED-CARRIER</code></a> - Variantes patogénicas / patogénicas probables biallélicas confirmadas en WRN (RECQL2; Wern...</li></ul>
+<h3>Fuentes</h3><ul><li><code>SRC-BREAK-3-HAUSCHILD-2012</code> - Dabrafenib en melanoma metastásico mutado por BRAF: multicéntrico, abierto, fase 3 aleatorio...</li><li><code>SRC-BRIM-3-CHAPMAN-2011</code> - Mejor supervivencia con vemurafenib en melanoma con mutación BRAF V600E</li><li><code>SRC-C14401-CHESNEY-2024</code> - Eficacia y seguridad del lifileucel, un linfocito que se infiltra en tumores autólogos (T...</li><li><code>SRC-CARVAJAL-KIT-MELANOMA-2013</code> - KIT como objetivo terapéutico en el melanoma metastásico</li><li><code>SRC-CHECKMATE-067-LARKIN-2019</code> - Supervivencia quinquenal con Nivolumab e Ipilimumab combinados en Melanoma Avanzado</li><li><code>SRC-CHECKMATE-238-WEBER-2017</code> - Nivolumab adjuvante versus Ipilimumab en melanoma en estadio III o IV</li><li><code>SRC-COBRIM-LARKIN-2014</code> - Vemurafenib y Cobimetinib combinados en melanoma mutado BRAF</li><li><code>SRC-COLUMBUS-DUMMETT-2018</code> - Encorafenib plus binimetinib versus vemurafenib or encorafenib in patients with BRAF-muta...</li><li><code>SRC-COMBI-AD-LONG-2017</code> - Adjuvante Dabrafenib más Trametinib en el melanoma con mutación BRAF en estadio III</li><li><code>SRC-COMBI-D-LONG-2014</code> - Inhibición combinada BRAF y MEK frente a la inhibición BRAF sola en melanoma</li><li><code>SRC-COMBI-V-ROBERT-2015</code> - Mejora de la supervivencia global en melanoma con Dabrafenib combinado y Trametinib</li><li><code>SRC-ESMO-MELANOMA-2024</code> - Melanoma cutáneo ESMO</li><li><code>SRC-KEYNOTE-006-ROBERT-2015</code> - Pembrolizumab versus Ipilimumab en Melanoma Avanzado</li><li><code>SRC-KEYNOTE-022-ASCIERTO-2019</code> - Dabrafenib, trametinib y pembrolizumab o placebo en melanoma mutante BRAF (KEYNOTE-022)</li><li><code>SRC-KEYNOTE-054-EGGERMONT-2018</code> - Adyuvante Pembrolizumab versus Placebo en el melanoma en estadio III</li><li><code>SRC-NCCN-MELANOMA-2025</code> - Melanoma cutáneo NCCN</li><li><code>SRC-RELATIVITY-047-TAWBI-2022</code> - Relatlimab and Nivolumab versus Nivolumab in Untreated Advanced Melanoma</li></ul>
+</main>
+</body>
+</html>

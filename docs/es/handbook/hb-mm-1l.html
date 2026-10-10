@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mieloma múltiple: Razonamiento de riesgo y fitness de primera línea - OpenOnco Handbook</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/es/handbook/hb-mm-1l.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/handbook/hb-mm-1l.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/handbook/hb-mm-1l.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/handbook/hb-mm-1l.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/handbook/hb-mm-1l.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/handbook/hb-mm-1l.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/handbook/hb-mm-1l.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/handbook/hb-mm-1l.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mieloma múltiple: Razonamiento de riesgo y fitness de primera línea - OpenOnco Handbook">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/es/handbook/hb-mm-1l.html">
+<meta property="og:locale" content="es">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mieloma múltiple: Razonamiento de riesgo y fitness de primera línea - OpenOnco Handbook">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Mieloma múltiple: Razonamiento de riesgo y fitness de primera línea - OpenOnco Handbook","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/es/handbook/hb-mm-1l.html","inLanguage":"es","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/es/handbook/hb-mm-1l.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="stylesheet" href="/style.css?v=header-20261010">
+  <link rel="stylesheet" href="/clinical-styles/694eea648296658d7f1088903440ed90c39a7c0c4eb28f733482b4d43b06083a.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="5c60211d9ba781bd3cf651fd80ec4b28cfb02eca9cef6212f2078711b6590d8a"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/es/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGÍA ABIERTA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html" class="active" aria-current="page">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Idioma"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg>ES <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Idioma"><a href="/handbook/hb-mm-1l.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/handbook/hb-mm-1l.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/handbook/hb-mm-1l.html" lang="es" hreflang="es" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/handbook/hb-mm-1l.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/handbook/hb-mm-1l.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/handbook/hb-mm-1l.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/es/try.html" class="btn-cta-top btn-cta-try"><span>Crear un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menú"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menú">
+    <a href="/es/">Inicio</a>
+    <a href="/es/handbook.html" class="active" aria-current="page">Manual</a><a href="/es/news.html">Noticias</a>
+    <a href="/es/about.html">El proyecto</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Herramientas</span>
+    <div class="top-cta-group">
+      <a href="/es/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/es/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Comité de tumores</span></a>
+      <a href="/es/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevención</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Código abierto</span>
+  </div>
+  </div>
+</header>
+
+  <main class="hb-wrap"><aside class="translation-notice" role="note"><strong>Traducción preliminar: revisión clínica pendiente.</strong> <a href="/handbook/hb-mm-1l.html" lang="en" hreflang="en" data-original-source>Consultar el original en inglés</a></aside>
+
+    <section class="hb-hero">
+      <div class="hb-kicker"><a href="/es/handbook.html">Manual de OpenOnco</a></div>
+      <h1>mieloma múltiple: Razonamiento de riesgo y aptidão de primera línea</h1>
+      <div class="hb-meta">
+        <span class="hb-badge hb-badge--draft">proyecto</span>
+
+        <span class="hb-badge">_Llearner</span>
+        <span class="hb-badge">en</span>
+      </div>
+      <p class="hb-lead">Capitulo de aprendizaje determinista sobre las entidades de KB de OpenOnco, casos sintéticos y registros de origen.</p>
+    </section>
+    <div class="hb-layout">
+      <div class="hb-main">
+        <section class="hb-panel">
+          <h2>Objetivos didácticos</h2>
+          <ol><li>Utilice el riesgo citogenético, las características de ISS/R-ISS, la función renal, la fragilidad y la elegibilidad del trasplante como ejes de razonamiento MM de primera línea separados.</li><li>Explíquese por qué VRd y D-VRd aparecen como pistas de primera línea estándar y alternativas en el modelo OpenOnco.</li><li>Reconocer las emergencias de mieloma y las obligaciones de atención de apoyo que se ejecutan junto a la selección de inducción.</li></ol>
+        </section>
+        <section class="hb-panel">
+          <h2>De un vistazo</h2>
+          <ul><li>First-line MM reasoning is risk-stratified rather than purely stage-driven.</li><li>Citogenética de alto riesgo y ruta biológica agresiva hacia D-RVd en el modelo OpenOnco.</li><li>La fragilidad y la disfunción renal a menudo afectan a la planificación de la dosis y la seguridad en lugar de simplemente cambiar la indicación de la enfermedad.</li><li>La enfermedad ósea, la hipercalcemia, la insuficiencia renal, el riesgo de infección y la compresión del cordón son controles de seguridad básicos.</li><li>El capítulo es contenido educativo de OpenOnco-autor, no material oficial ESMO o CME.</li></ul>
+        </section>
+
+            <section class="hb-panel">
+              <h2>Inducción estratificada por riesgo</h2>
+              <p>El capítulo de primera línea MM separa la elección de inducción de las decisiones de trasplante y mantenimiento. La citogenética de alto riesgo y la biología agresiva mueven al aprendiz hacia la pista D-VRd en el modelo OpenOnco.</p>
+              <h3>Entidades vinculadas</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>ALGO-MM-1L</code><span>ALGO-MM-1L</span><small>algoritmos</small></span><span class="hb-chip"><code>RF-MM-HIGH-RISK-CYTOGENETICS</code><span>Citogenética de alto riesgo de mieloma múltiple: cualquiera de t(4;14), t(14;16), t( 14;20), del(17p)/TP53 pérdida, ganancia o amplificación de 1q21 por FISH interfase en células plasmáticas CD138 enriquecidas</span><small>enrojecimientos</small></span><span class="hb-chip"><code>IND-MM-1L-DVRD</code><span>IND-MM-1L-DVRD</span><small>Indicaciones</small></span></div>
+              <h3>Fuentes de las secciones</h3>
+              <ul><li><code>SRC-NCCN-MM-2025</code> NCCN Guías de Práctica Clínica en Oncología: Mieloma Múltiple</li><li><code>SRC-ESMO-MM-2023</code> Guía de práctica clínica de ESMO sobre mieloma múltiple</li><li><code>SRC-PERSEUS-SONNEVELD-2024</code> Daratumumab, Bortezomib, Lenalidomide, and Dexamethasone for Multiple Myeloma</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Razonamiento estándar de riesgo y de acceso consciente</h2>
+              <p>VRd sigue siendo la pista estándar en OpenOnco cuando los disparadores de alto riesgo están ausentes o cuando el acceso cuadrupleto no es factible. El manual enmarca esto como razonamiento educativo, no como una prescripción específica para el paciente.</p>
+              <h3>Entidades vinculadas</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>IND-MM-1L-VRD</code><span>IND-MM-1L-VRD</span><small>Indicaciones</small></span><span class="hb-chip"><code>REG-VRD</code><span>Bortezomib + Lenalidomide + Dexamethasone (VRd), 4-6 induction cycles</span><small>tratamientos</small></span></div>
+              <h3>Fuentes de las secciones</h3>
+              <ul><li><code>SRC-NCCN-MM-2025</code> NCCN Guías de Práctica Clínica en Oncología: Mieloma Múltiple</li><li><code>SRC-ESMO-MM-2023</code> Guía de práctica clínica de ESMO sobre mieloma múltiple</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Encuadernaciones comunes</h2>
+              <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Renal dysfunction, hypercalcemia, cord compression, infection screening, pregnancy prevention for lenalidomide, and severe neuropathy risk are parallel obligations. They may change dosing, sequencing, urgency, or supportive care.</span></p>
+              <h3>Entidades vinculadas</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>RF-MM-RENAL-DYSFUNCTION</code><span>Mieloma múltiple con disfunción renal significativa: Clr &lt; 60 ml/min o creatinina sérica &gt; 177 μmol/L (&gt; 2 mg/dL) atribuible al mieloma renal</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-MM-HYPERCALCEMIA</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Multiple myeloma with hypercalcemia (corrected serum calcium ≥11 mg/dL or symptomatic): part of CRAB criteria; emergency when ≥14 mg/dL or symptomatic (altered mentation, AKI, arrhythmia)</span></span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-MM-CORD-COMPRESSION</code><span>mieloma múltiple con compresión epidural maligna de la médula espinal: nuevo déficit motor, nivel sensorial, dolor de espalda intenso con plasmacitoma vertebral / lesión lítica + invasión de canal — MM es una causa hematológica líder de MESCC</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-MM-INFECTION-SCREENING</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Active or latent infection requiring resolution / prophylaxis before initiating MM induction (VRd, D-VRd): HBsAg+ or anti-HBc+ (HBV reactivation risk on dexamethasone + anti-CD38 in D-VRd; reactivation rate ≈8-15% on daratumumab without prophylaxis), HIV+, or active TB.
+</span></span><small>enrojecimientos</small></span></div>
+              <h3>Fuentes de las secciones</h3>
+              <ul><li><code>SRC-NCCN-MM-2025</code> NCCN Guías de Práctica Clínica en Oncología: Mieloma Múltiple</li><li><code>SRC-ESMO-MM-2023</code> Guía de práctica clínica de ESMO sobre mieloma múltiple</li></ul>
+            </section>
+
+        <section class="hb-panel">
+          <h2>Casos sintéticos trabajados</h2>
+          <ul><li><code>patient_mm_standard_risk</code> Mieloma de riesgo estándar de nuevo diagnóstico - <span>Track estándar VRd, estratificación de riesgos</span> <small>ejemplos/paciente_mm_standard_risk.json</small></li><li><code>patient_mm_high_risk</code> Mieloma de alto riesgo recién diagnosticado - <span>Track alternativo D-VRd, citogenética de alto riesgo</span> <small>ejemplos/paciente_mm_alto_riesgo.json</small></li></ul>
+        </section>
+        <section class="hb-panel hb-quiz">
+          <div class="hb-quiz-header">
+            <h2>Preguntas de práctica</h2>
+            <div class="hb-quiz-tools">
+              <span class="hb-score" id="hb-score" aria-live="polite">0 de 3 respuestas · 0 correcto</span>
+              <button type="button" class="hb-btn hb-btn--ghost" id="hb-quiz-reset">Restablecer el cuestionario</button>
+            </div>
+          </div>
+          <p class="hb-quiz-note">Las respuestas, la puntuación y las etiquetas de razonamiento se guardan sólo en la sesión de su navegador y se aclaran cuando cierra esta pestaña. Las preguntas multi-seleccionadas requieren cada opción correcta (y sin extras) para un crédito.</p>
+
+      <form class="hb-question" data-question-id="HQ-MM-1L-001" data-question-type="type_a" data-correct-answer="A" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Pregunta 1</span>
+          <span class="hb-badge">tipo_a</span>
+          <span class="hb-badge">introducción</span>
+          <span class="hb-question-id"><code>HQ-MM-1L-001</code></span>
+        </div>
+        <p class="hb-question-stem">En el modelo de aprendizaje de mieloma de primera línea OpenOnco, ¿qué factor empuja más directamente hacia el razonamiento D-VRD?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MM-1L-001" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Citogenética de alto riesgo o biología agresiva</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MM-1L-001" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">No hay trastornos de las células plasmáticas</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MM-1L-001" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Untested disease with no marrow confirmation</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MM-1L-001" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Color del cabello</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Presentar la respuesta</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Restablecer</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Respuesta correcta:</strong> A</p>
+          <p class="hb-result-explanation">El algoritmo MM de primera línea envía señales de biología citogenética o agresiva de alto riesgo hacia el razonamiento D-VRd en el modelo OpenOnco.</p>
+          <div class="hb-result-sources"><span>Fuentes:</span> <code class="hb-result-source">SRC-NCCN-MM-2025</code><code class="hb-result-source">SRC-ESMO-MM-2023</code><code class="hb-result-source">SRC-PERSEUS-SONNEVELD-2024</code></div>
+          <div class="hb-result-tags">Razonamiento de las etiquetas: <span class="hb-result-tag">_estratificación de riesgo</span><span class="hb-result-tag">_selección de régimen</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question" data-question-id="HQ-MM-1L-002" data-question-type="type_a" data-correct-answer="A" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Pregunta 2</span>
+          <span class="hb-badge">tipo_a</span>
+          <span class="hb-badge">intermedio</span>
+          <span class="hb-question-id"><code>HQ-MM-1L-002</code></span>
+        </div>
+        <p class="hb-question-stem">¿Cuál es un problema paralelo urgente/de seguridad en mieloma recién diagnosticado en lugar de sólo una preferencia rutinaria de regímen de inducción?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MM-1L-002" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Compresión de cables</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MM-1L-002" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Elegir un logotipo de la clínica</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MM-1L-002" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Omitir la revisión de la función renal</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-MM-1L-002" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Hipercalcemia ignorante</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Presentar la respuesta</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Restablecer</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Respuesta correcta:</strong> A</p>
+          <p class="hb-result-explanation">La compresión de la cuerda es una señal roja de mieloma urgente que cambia la urgencia inmediata de la realización y el manejo. La disfunción renal y la hipercalcemia también son problemas de seguridad, pero entre las opciones más claras es la compresión del cable.</p>
+          <div class="hb-result-sources"><span>Fuentes:</span> <code class="hb-result-source">SRC-NCCN-MM-2025</code><code class="hb-result-source">SRC-ESMO-MM-2023</code></div>
+          <div class="hb-result-tags">Razonamiento de las etiquetas: <span class="hb-result-tag">redflag_recognition</span><span class="hb-result-tag">control de seguridad</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question" data-question-id="HQ-MM-1L-003" data-question-type="type_k" data-correct-answer="A|B|C" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Pregunta 3</span>
+          <span class="hb-badge">tipo_k</span>
+          <span class="hb-badge">intermedio</span>
+          <span class="hb-question-id"><code>HQ-MM-1L-003</code></span>
+        </div>
+        <p class="hb-question-stem">¿Qué afirmaciones son válidas para el capítulo de MM de primera línea de OpenOnco?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MM-1L-003" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">El riesgo citogenético y la aptitud son ejes de razonamiento separados.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MM-1L-003" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">VRd is modeled as the standard track where high-risk triggers are absent or quadruplet access is not feasible.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MM-1L-003" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">La disfunción renal puede afectar a la planificación de la administración y de la seguridad.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-MM-1L-003" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Las banderas rojas de atención de apoyo y de emergencia son irrelevantes una vez que se selecciona la inducción.</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Presentar la respuesta</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Restablecer</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Respuesta correcta:</strong> A, B, C</p>
+          <p class="hb-result-explanation">El capítulo separa el riesgo citogenético, la aptitud, el contexto de trasplante/acceso, la dosificación y los cuidados de apoyo.</p>
+          <div class="hb-result-sources"><span>Fuentes:</span> <code class="hb-result-source">SRC-NCCN-MM-2025</code><code class="hb-result-source">SRC-ESMO-MM-2023</code><code class="hb-result-source">SRC-GRIFFIN-VOORHEES-2020</code></div>
+          <div class="hb-result-tags">Razonamiento de las etiquetas: <span class="hb-result-tag">_estratificación de riesgo</span><span class="hb-result-tag">cuidado de apoyo</span></div>
+        </div>
+      </form>
+
+        </section>
+      </div>
+      <aside class="hb-side">
+        <section class="hb-panel hb-disclaimer">
+          <strong>Sólo para el uso educativo.</strong>
+          <p>Este capítulo de OpenOnco-autor no es material oficial de ESMO, no es una actividad de crédito CME, y no asesoramiento médico específico para el paciente.</p>
+        </section>
+        <section class="hb-panel hb-review-panel">
+          <h2>Estado de revisión</h2>
+          <dl class="hb-review-meta">
+            <dt>Situación actual</dt>
+            <dd><span class="hb-badge hb-badge--draft">proyecto</span></dd>
+            <dt>Última revisión</dt><dd><em>no se ha examinado aún</em></dd>
+          </dl>
+          <h3>Aprobaciones clínicas</h3>
+          <p class="hb-signoff-empty">Todavía no se ha registrado ninguna aprobación clínica.</p>
+          <p class="hb-review-rules"><a href="/specs.html">HANDBOOK_MODE_SPEC §4</a>
+          gobierna las transiciones de estado y el umbral de estancamiento de 365 días.</p>
+        </section>
+        <section class="hb-panel">
+          <h2>Fuentes de los capítulos</h2>
+          <ul><li><code>SRC-NCCN-MM-2025</code> NCCN Guías de Práctica Clínica en Oncología: Mieloma Múltiple</li><li><code>SRC-ESMO-MM-2023</code> Guía de práctica clínica de ESMO sobre mieloma múltiple</li><li><code>SRC-PERSEUS-SONNEVELD-2024</code> Daratumumab, Bortezomib, Lenalidomide, and Dexamethasone for Multiple Myeloma</li><li><code>SRC-GRIFFIN-VOORHEES-2020</code> Daratumumab, lenalidomide, bortezomib, and dexamethasone for transplant-eligible newly diagnosed multiple myeloma (GRIFFIN)</li></ul>
+        </section>
+        <section class="hb-panel">
+          <h2>Mapa de la entidad</h2>
+          <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-MM</code><span>Mieloma múltiple</span><small>enfermedades</small></span><span class="hb-chip"><code>ALGO-MM-1L</code><span>ALGO-MM-1L</span><small>algoritmos</small></span><span class="hb-chip"><code>IND-MM-1L-VRD</code><span>IND-MM-1L-VRD</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-MM-1L-DVRD</code><span>IND-MM-1L-DVRD</span><small>Indicaciones</small></span><span class="hb-chip"><code>IND-MM-ELDERLY-FRAIL-VRD-LIGHT</code><span>IND-MM-ELDERLY-FRAIL-VRD-LIGHT</span><small>Indicaciones</small></span><span class="hb-chip"><code>REG-VRD</code><span>Bortezomib + Lenalidomide + Dexamethasone (VRd), 4-6 induction cycles</span><small>tratamientos</small></span><span class="hb-chip"><code>REG-DARA-VRD</code><span>Daratumumab + Bortezomib + Lenalidomide + Dexamethasone (D-VRd), 4-6 induction cycles</span><small>tratamientos</small></span><span class="hb-chip"><code>REG-VRD-LITE</code><span>VRd-lite (Bortezomib + Lenalidomide + Dexamethasone, attenuated for elderly/frail MM)</span><small>tratamientos</small></span><span class="hb-chip"><code>RF-MM-HIGH-RISK-CYTOGENETICS</code><span>Citogenética de alto riesgo de mieloma múltiple: cualquiera de t(4;14), t(14;16), t( 14;20), del(17p)/TP53 pérdida, ganancia o amplificación de 1q21 por FISH interfase en células plasmáticas CD138 enriquecidas</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-MM-RENAL-DYSFUNCTION</code><span>Mieloma múltiple con disfunción renal significativa: Clr &lt; 60 ml/min o creatinina sérica &gt; 177 μmol/L (&gt; 2 mg/dL) atribuible al mieloma renal</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-MM-HYPERCALCEMIA</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Multiple myeloma with hypercalcemia (corrected serum calcium ≥11 mg/dL or symptomatic): part of CRAB criteria; emergency when ≥14 mg/dL or symptomatic (altered mentation, AKI, arrhythmia)</span></span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-MM-CORD-COMPRESSION</code><span>mieloma múltiple con compresión epidural maligna de la médula espinal: nuevo déficit motor, nivel sensorial, dolor de espalda intenso con plasmacitoma vertebral / lesión lítica + invasión de canal — MM es una causa hematológica líder de MESCC</span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-MM-FRAILTY-AGE</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Frailty profile precluding standard-dose VRd / D-VRd induction in MM: IMWG frailty score ≥2 (defined by age ≥80 OR age 75-79 + Charlson ≥2 OR ECOG ≥2 + albumin &lt;3.5), OR age ≥75 with ≥1 grade-2 cardiac/pulmonary comorbidity. Impacts dose schedule (Vd-Rd weekly vs twice-weekly, reduced lenalidomide, reduced dexamethasone), not regimen choice.
+</span></span><small>enrojecimientos</small></span><span class="hb-chip"><code>RF-MM-INFECTION-SCREENING</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original en inglés conservado para verificación">Active or latent infection requiring resolution / prophylaxis before initiating MM induction (VRd, D-VRd): HBsAg+ or anti-HBc+ (HBV reactivation risk on dexamethasone + anti-CD38 in D-VRd; reactivation rate ≈8-15% on daratumumab without prophylaxis), HIV+, or active TB.
+</span></span><small>enrojecimientos</small></span><span class="hb-chip"><code>BIO-MM-CYTOGENETICS-HR</code><span>Citogenética de alto riesgo en mieloma múltiple por FISH interfase</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-CD38-EXPRESSION</code><span>Expresión de CD38</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-BCMA-EXPRESSION</code><span>Expresión de BCMA</span><small>biomarcadores</small></span><span class="hb-chip"><code>BIO-TP53-MUTATION</code><span>Mutación TP53 / del(17p)</span><small>biomarcadores</small></span><span class="hb-chip"><code>TEST-SPEP-UPEP</code><span>ESPAÑOL / UPEP con IFE</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-BONE-SCAN</code><span>Cintilografía ósea de Tc-99m de cuerpo entero</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-CBC</code><span>Conteo completo de sangre con diferencial</span><small>pruebas</small></span><span class="hb-chip"><code>TEST-CMP</code><span>Panel Metabólico Integral</span><small>pruebas</small></span></div>
+        </section>
+      </aside>
+    </div>
+    <script>
+      (function() {
+        var CHAPTER_ID = "HB-MM-1L";
+        var GRADED_TOTAL = 3;
+        var STORAGE_KEY = 'openonco-handbook-' + CHAPTER_ID + '-quiz';
+        var forms = Array.prototype.slice.call(document.querySelectorAll('.hb-quiz .hb-question'));
+        var scoreEl = document.getElementById('hb-score');
+        var resetAllBtn = document.getElementById('hb-quiz-reset');
+        var storage;
+        try { storage = window.sessionStorage; } catch (e) { storage = null; }
+        var state = {};
+        if (storage) {
+          try { state = JSON.parse(storage.getItem(STORAGE_KEY) || '{}') || {}; } catch (e) { state = {}; }
+        }
+        function persist() {
+          if (!storage) { return; }
+          try { storage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        }
+        function normalize(list) {
+          return (list || []).map(function(k) { return String(k).toUpperCase(); }).slice().sort().join('|');
+        }
+        function updateScore() {
+          var answered = 0;
+          var correct = 0;
+          Object.keys(state).forEach(function(qid) {
+            var entry = state[qid];
+            if (entry && entry.submitted && entry.graded) {
+              answered += 1;
+              if (entry.correct) { correct += 1; }
+            }
+          });
+          if (scoreEl) {
+            scoreEl.textContent = answered + ' of ' + GRADED_TOTAL + ' answered · ' + correct + ' correct';
+          }
+        }
+        forms.forEach(function(form) {
+          var qid = form.getAttribute('data-question-id');
+          var qtype = form.getAttribute('data-question-type');
+          var graded = form.getAttribute('data-graded') === 'true';
+          var correctAttr = form.getAttribute('data-correct-answer') || '';
+          var correctKey = correctAttr.split('|').filter(Boolean).slice().sort().join('|');
+          var resultEl = form.querySelector('.hb-result');
+          var headlineEl = form.querySelector('[data-role="headline"]');
+          var statusEl = form.querySelector('[data-role="status"]');
+          var submitBtn = form.querySelector('[data-action="submit"]');
+          var resetBtn = form.querySelector('[data-action="reset"]');
+          var revealBtn = form.querySelector('[data-action="reveal"]');
+          function selectedKeys() {
+            return Array.prototype.slice.call(
+              form.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked')
+            ).map(function(input) { return input.value; });
+          }
+          function setResultClass(isCorrect) {
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (isCorrect === true) { resultEl.classList.add('hb-result--correct'); }
+            else if (isCorrect === false) { resultEl.classList.add('hb-result--incorrect'); }
+            else { resultEl.classList.add('hb-result--reveal'); }
+          }
+          function showResult(entry) {
+            resultEl.hidden = false;
+            if (graded) {
+              setResultClass(entry.correct);
+              if (statusEl) {
+                statusEl.textContent = entry.correct ? '✓ Correct' : '✗ Not yet — see explanation';
+              }
+            } else {
+              setResultClass(null);
+              if (statusEl) { statusEl.textContent = 'Model answer revealed'; }
+            }
+          }
+          function clearResult() {
+            resultEl.hidden = true;
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (statusEl) { statusEl.textContent = ''; }
+          }
+          function rehydrate() {
+            var entry = state[qid];
+            if (!entry) { return; }
+            (entry.selected || []).forEach(function(key) {
+              var input = form.querySelector('input[value="' + key + '"]');
+              if (input) { input.checked = true; }
+            });
+            if (entry.submitted) { showResult(entry); }
+          }
+          function submitGraded(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            var selected = selectedKeys();
+            if (selected.length === 0) {
+              if (statusEl) { statusEl.textContent = 'Pick an option first.'; }
+              return;
+            }
+            var selectedKey = normalize(selected);
+            var isCorrect = selectedKey === correctKey;
+            state[qid] = { submitted: true, graded: true, selected: selected, correct: isCorrect };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function revealOnly(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            state[qid] = { submitted: true, graded: false, selected: [], correct: null };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function resetQuestion(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+              if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+              else { input.value = ''; }
+            });
+            delete state[qid];
+            persist();
+            clearResult();
+            updateScore();
+          }
+          if (submitBtn) { submitBtn.addEventListener('click', submitGraded); }
+          if (resetBtn) { resetBtn.addEventListener('click', resetQuestion); }
+          if (revealBtn) { revealBtn.addEventListener('click', revealOnly); }
+          form.addEventListener('submit', function(event) { event.preventDefault(); if (graded) { submitGraded(event); } });
+          rehydrate();
+        });
+        if (resetAllBtn) {
+          resetAllBtn.addEventListener('click', function() {
+            state = {};
+            persist();
+            forms.forEach(function(form) {
+              Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+                if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+                else { input.value = ''; }
+              });
+              var resultEl = form.querySelector('.hb-result');
+              var statusEl = form.querySelector('[data-role="status"]');
+              if (resultEl) {
+                resultEl.hidden = true;
+                resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+              }
+              if (statusEl) { statusEl.textContent = ''; }
+            });
+            updateScore();
+          });
+        }
+        updateScore();
+      })();
+    </script>
+
+  </main>
+<script src="/clinical-localization.js?v=20261010-2" data-locale="es" data-catalog="/es/clinical-ui-translations.json" defer></script></body>
+</html>

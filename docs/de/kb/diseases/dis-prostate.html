@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Adenokarzinom der Prostata - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/de/kb/diseases/dis-prostate.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-prostate.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-prostate.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/diseases/dis-prostate.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/diseases/dis-prostate.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/diseases/dis-prostate.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/diseases/dis-prostate.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-prostate.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Adenokarzinom der Prostata - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/de/kb/diseases/dis-prostate.html">
+<meta property="og:locale" content="de">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Adenokarzinom der Prostata - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Adenokarzinom der Prostata - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/de/kb/diseases/dis-prostate.html","inLanguage":"de","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/de/kb/diseases/dis-prostate.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="a02f39449bb4dda8dc17572ee60b1ad9ae963fd9a9a90bccc7119fa8afb74863"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/de/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">OFFENE ONKOLOGIE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Sprache"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg>DE <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Sprache"><a href="/kb/diseases/dis-prostate.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/diseases/dis-prostate.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/diseases/dis-prostate.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/diseases/dis-prostate.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/diseases/dis-prostate.html" lang="de" hreflang="de" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/diseases/dis-prostate.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/de/try.html" class="btn-cta-top btn-cta-try"><span>Plan erstellen</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menü"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menü">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Werkzeuge</span>
+    <div class="top-cta-group">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Open Source</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Vorläufige Übersetzung: klinische Prüfung ausstehend.</strong> <a href="/kb/diseases/dis-prostate.html" lang="en" hreflang="en" data-original-source>Englisches Original ansehen</a></aside>
+  <p class="kb-breadcrumb"><a href="/de/kb.html">Onco Wiki</a> / Krankheit</p>
+  <h1>Adenokarzinom der Prostata</h1>
+  <p class="kb-lead">Deterministische Ansicht der Quelle YAML Entität. Klinische Autorität bleibt mit den zitierten Quell-IDs und Rezensenten Sign-off Zustand.</p>
+
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-PROSTATE</code></td></tr>
+<tr><th>Art</th><td>Erkrankung</td></tr>
+<tr><th>Aliase</th><td><div class="kb-alias-list"><span class="kb-alias">PCa</span><span class="kb-alias">Prostatakrebs</span><span class="kb-alias">Аденокарцинома передміхурової залози</span><span class="kb-alias">РПЗ</span></div></td></tr>
+<tr><th>Status</th><td>ausstehende_klinische_Abmeldung</td></tr>
+<tr><th>Erkrankungen</th><td><span class="kb-muted">None declared</span></td></tr>
+<tr><th>Quellen</th><td><span class="kb-chip" title="EAU - EANM - ESTRO - ESUR - ISUP - SIOG Leitlinien für Prostatakrebs"><a href="https://uroweb.org/guidelines/prostate-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-EAU-PROSTATE-2024</code></a></span> <span class="kb-chip" title="ESMO-Leitfaden für klinische Praxis auf Prostatakrebs"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-prostate-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-PROSTATE-2024</code></a></span> <span class="kb-chip" title="Leitlinien für die klinische Praxis des NCCN — Prostatakrebs"><a href="https://www.nccn.org/professionals/physician_gls/pdf/prostate.pdf" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-PROSTATE-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Informationstool, kein medizinisches Gerät. Alle Empfehlungen müssen von einem qualifizierten Onkologen überprüft werden. Klinischer Inhalt ist vorläufig bis zwei-Reviewer-Auszeichnung.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/prostate_cancer.yaml">Quelle: YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morphologie</th><td>8140/3</td></tr>
+<tr><th>icd_o_3_topographie</th><td>["C61.9"]</td></tr>
+<tr><th>icd_10</th><td>C61</td></tr>
+<tr><th>who_classification</th><td>Adenokarzinom der Prostata (WHO 5.)</td></tr></table><p><a href="/de/diseases.html#DIS-PROSTATE">Fähigkeiten</a></p>
+  <h2>Anmerkungen</h2><p>Erfassungsbereich MVP: fortgeschrittene Krankheit (mHSPC + mCRPC + nmCRPC). Lokalisierte Krankheit (aktive Überwachung, RP, endgültige RT, Brachytherapie) absichtlich außerhalb des Anwendungsbereichs – würde eine urologische Workflow-Modellierung über die aktuelle Architektur hinaus erfordern.</p>
+  <h2>Verwendet von</h2>
+<h3>Therapeutische Relevanz</h3><ul><li><a href="/de/kb/biomarker_actionability/bma-atm-germline-prostate.html"><code>BMA-ATM-GERMLINE-PROSTATE</code></a> - ATM-Keimlinien-pathogen in mCRPC: Olaparib zugelassen pro PROfound (Cohort A enthalten ATM);...</li><li><a href="/de/kb/biomarker_actionability/bma-atm-somatic-prostate.html"><code>BMA-ATM-SOMATIC-PROSTATE</code></a> - Somatischer ATM-Funktionsverlust in mCRPC: PROfound registriert sowohl Keimlinie und somatische ATM in...</li><li><a href="/de/kb/biomarker_actionability/bma-brca1-germline-prostate.html"><code>BMA-BRCA1-GERMLINE-PROSTATE</code></a> - BRCA1 Keimlinie pathogen in mCRPC: Olaparib verbessert rPFS und OS nach NHA (PROfound Coho...</li><li><a href="/de/kb/biomarker_actionability/bma-brca1-somatic-prostate.html"><code>BMA-BRCA1-SOMATIC-PROSTATE</code></a> - Somatische BRCA1 Funktionsverlust in mCRPC: PROfound registriert sowohl keim-und somatische; ola...</li><li><a href="/de/kb/biomarker_actionability/bma-brca2-germline-prostate.html"><code>BMA-BRCA2-GERMLINE-PROSTATE</code></a> - BRCA2 Keimlinie pathogen in mCRPC: größte PARPi Nutzen im HRR-Weg (PROfound Cohort...</li><li><a href="/de/kb/biomarker_actionability/bma-brca2-somatic-prostate.html"><code>BMA-BRCA2-SOMATIC-PROSTATE</code></a> - Somatischer BRCA2-Funktionsverlust in mCRPC: PROfound enthalten sBRCA; olaparib Nutzen equiva...</li><li><a href="/de/kb/biomarker_actionability/bma-chek1-somatic-prostate.html"><code>BMA-CHEK1-SOMATIC-PROSTATE</code></a> - Somatische CHEK1-Funktionsverlust in mCRPC: selten; PROfound enthalten CHEK1 in Cohort B aber sm...</li><li><a href="/de/kb/biomarker_actionability/bma-chek2-germline-prostate.html"><code>BMA-CHEK2-GERMLINE-PROSTATE</code></a> - CHEK2 Keimlinie pathogen in mCRPC: in PROfound Cohort B enthalten; olaparib FDA HRR-Etikett...</li><li><a href="/de/kb/biomarker_actionability/bma-chek2-somatic-prostate.html"><code>BMA-CHEK2-SOMATIC-PROSTATE</code></a> - Somatische CHEK2 in mCRPC: PROfound registriert beide g/s; FDA olaparib HRR-Label enthält CHEK2...</li><li><a href="/de/kb/biomarker_actionability/bma-hrd-status-prostate.html"><code>BMA-HRD-STATUS-PROSTATE</code></a> - Homologe Genveränderungen in metastasierter Kastrationsresistenz (HRR)</li><li><a href="/de/kb/biomarker_actionability/bma-mlh1-germline-prostate.html"><code>BMA-MLH1-GERMLINE-PROSTATE</code></a> - MLH1 Keimlinien-Funktionsverlust in Prostata produziert dMMR/MSI-H Phänotyp. Pan- Tumor MSI-...</li><li><a href="/de/kb/biomarker_actionability/bma-mlh1-somatic-prostate.html"><code>BMA-MLH1-SOMATIC-PROSTATE</code></a> - MLH1 somatischer Funktionsverlust in der Prostata produziert dMMR/MSI-H Phänotyp. Pan- Tumor MSI-H...</li><li><a href="/de/kb/biomarker_actionability/bma-msh2-germline-prostate.html"><code>BMA-MSH2-GERMLINE-PROSTATE</code></a> - MSH2 Keimlinien-Funktionsverlust in der Prostata produziert dMMR/MSI-H Phänotyp. Pan- Tumor MSI-...</li><li><a href="/de/kb/biomarker_actionability/bma-msh2-somatic-prostate.html"><code>BMA-MSH2-SOMATIC-PROSTATE</code></a> - MSH2 somatischer Funktionsverlust in der Prostata produziert dMMR/MSI-H Phänotyp. Pan- Tumor MSI-H...</li><li><a href="/de/kb/biomarker_actionability/bma-msh6-germline-prostate.html"><code>BMA-MSH6-GERMLINE-PROSTATE</code></a> - MSH6 Keimlinien-Funktionsverlust in Prostata produziert dMMR/MSI-H Phänotyp. Pan- Tumor MSI-...</li><li><a href="/de/kb/biomarker_actionability/bma-msh6-somatic-prostate.html"><code>BMA-MSH6-SOMATIC-PROSTATE</code></a> - MSH6 somatischer Funktionsverlust in der Prostata produziert dMMR/MSI-H Phänotyp. Pan- Tumor MSI-H...</li><li><a href="/de/kb/biomarker_actionability/bma-pik3ca-hotspot-prostate.html"><code>BMA-PIK3CA-HOTSPOT-PROSTATE</code></a> - PIK3CA-Mutationen, selten in Prostata (~5%); PI3K/AKT/mTOR-Weg oft über PTEN l...</li><li><a href="/de/kb/biomarker_actionability/bma-pms2-germline-prostate.html"><code>BMA-PMS2-GERMLINE-PROSTATE</code></a> - PMS2 Keimlinien-Funktionsverlust in der Prostata produziert dMMR/MSI-H Phänotyp. Pan- Tumor MSI-...</li><li><a href="/de/kb/biomarker_actionability/bma-pms2-somatic-prostate.html"><code>BMA-PMS2-SOMATIC-PROSTATE</code></a> - PMS2 somatischen Funktionsverlust in der Prostata produziert dMMR/MSI-H Phänotyp. Pan- Tumor MSI-H...</li><li><a href="/de/kb/biomarker_actionability/bma-psa-prostate-uspstf-shared-decision.html"><code>BMA-PSA-PROSTATE-USPSTF-SHARED-DECISION</code></a> - PSA-Screening auf Prostatakrebs trägt eine USPSTF Grade C Empfehlung für Männer im Alter von 55...</li><li><a href="/de/kb/biomarker_actionability/bma-tp53-mut-prostate.html"><code>BMA-TP53-MUT-PROSTATE</code></a> - TP53 Mutation in PROSTATE — häufig, unerwünschte prognostisch; nicht direkt gezielt. Pro...</li></ul>
+<h3>Algorithmen</h3><ul><li><code>ALGO-AMSTERDAM-II-LYNCH</code> - ALGO-AMSTERDAM-II-LYNCH</li><li><code>ALGO-BOADICEA-V6-BREAST-OVARIAN</code> - ALGO-BOADICEA-V6-BREAST-OVARIAN</li><li><code>ALGO-BRCAPRO</code> - ALGO-BRCAPRO</li><li><code>ALGO-HEREDITARY-PROSTATE-CANCER-RISK</code> - ALGO-HEREDITARY-PROSTATE-CANCER-RISK</li><li><code>ALGO-MANCHESTER-BRCA</code> - ALGO-MANCHESTER-BRCA</li><li><code>ALGO-PREMM5-LYNCH</code> - ALGO-PREMM5-LYNCH</li><li><code>ALGO-PROSTATE-MCRPC-1L</code> - ALGO-PROSTATE-MCRPC-1L</li><li><code>ALGO-PROSTATE-MCRPC-2L</code> - ALGO-PROSTATE-MCRPC-2L</li><li><code>ALGO-PROSTATE-MHSPC-1L</code> - ALGO-PROSTATE-MHSPC-1L</li></ul>
+<h3>Kapitel des Handbuchs</h3><ul><li><code>HB-PROSTATE-MCRPC-1L</code> - Metastatischer kastrationsresistenter Prostatakrebs: Biomarker und Sequenzierungs-Reinigung</li></ul>
+<h3>Anwendungsgebiet</h3><ul><li><a href="/de/kb/indications/ind-prostate-mcrpc-1l-arpi.html"><code>IND-PROSTATE-MCRPC-1L-ARPI</code></a> - IND-PROSTATE-MCRPC-1L-ARPI</li><li><a href="/de/kb/indications/ind-prostate-mcrpc-1l-parpi.html"><code>IND-PROSTATE-MCRPC-1L-PARPI</code></a> - IND-PROSTATE-MCRPC-1L-PARPI</li><li><a href="/de/kb/indications/ind-prostate-mcrpc-2l-cabazitaxel.html"><code>IND-PROSTATE-MCRPC-2L-CABAZITAXEL</code></a> - IND-PROSTATE-MCRPC-2L-CABAZITAXEL</li><li><a href="/de/kb/indications/ind-prostate-mcrpc-2l-docetaxel.html"><code>IND-PROSTATE-MCRPC-2L-DOCETAXEL</code></a> - IND-PROSTATE-MCRPC-2L-DOCETAXEL</li><li><a href="/de/kb/indications/ind-prostate-mcrpc-2l-lu-psma.html"><code>IND-PROSTATE-MCRPC-2L-LU-PSMA</code></a> - IND-PROSTATE-MCRPC-2L-LU-PSMA</li><li><a href="/de/kb/indications/ind-prostate-mcrpc-2l-parpi.html"><code>IND-PROSTATE-MCRPC-2L-PARPI</code></a> - IND-PROSTATE-MCRPC-2L-PARPI</li><li><a href="/de/kb/indications/ind-prostate-mcrpc-2l-radium223.html"><code>IND-PROSTATE-MCRPC-2L-RADIUM223</code></a> - IND-PROSTATE-MCRPC-2L-RADIUM223</li><li><a href="/de/kb/indications/ind-prostate-mhspc-1l-arpi-doublet.html"><code>IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET</code></a> - IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET</li><li><a href="/de/kb/indications/ind-prostate-mhspc-1l-triplet.html"><code>IND-PROSTATE-MHSPC-1L-TRIPLET</code></a> - IND-PROSTATE-MHSPC-1L-TRIPLET</li></ul>
+<h3>Fragebogen</h3><ul><li><code>QUEST-PROSTATE-1L-STUB</code> - Prostata Adenokarzinom — erste Zeile</li></ul>
+<h3>Warnhinweis</h3><ul><li><a href="/de/kb/redflags/rf-atm-confirmed-carrier.html"><code>RF-ATM-CONFIRMED-CARRIER</code></a> - Bestätigte keimlinien-pathogene / wahrscheinlich-pathogene monoallelic Variante in ATM (Heterozygou...</li><li><a href="/de/kb/redflags/rf-atm-family-history-suspicion.html"><code>RF-ATM-FAMILY-HISTORY-SUSPICION</code></a> - Familie Stammbaum Muster suggestive der Keimlinie ATM heterozygot Trägerzustand in einem asymp...</li><li><a href="/de/kb/redflags/rf-brca-confirmed-carrier.html"><code>RF-BRCA-CONFIRMED-CARRIER</code></a> - Bestätigte keimlinien-pathogene / wahrscheinlich-pathogene Variante in BRCA1 oder BRCA2 - die kanonische...</li><li><a href="/de/kb/redflags/rf-brca-hboc-family-history-suspicion.html"><code>RF-BRCA-HBOC-FAMILY-HISTORY-SUSPICION</code></a> - Familien-Pedigree-Meeting-Kriterien, die auf erbliche Brust und Eierstockkrebs (HBOC...</li><li><a href="/de/kb/redflags/rf-cascade-brca-fdr-positive.html"><code>RF-CASCADE-BRCA-FDR-POSITIVE</code></a> - Ein Erst-Grad-Verwandter des Patienten (Eltern, Geschwister oder Kind) hat eine...</li><li><a href="/de/kb/redflags/rf-cascade-fap-fdr-positive.html"><code>RF-CASCADE-FAP-FDR-POSITIVE</code></a> - Ein Erst-Grad-Verwandter des Patienten (Eltern, Geschwister oder Kind) hat eine...</li><li><a href="/de/kb/redflags/rf-cascade-lynch-fdr-positive.html"><code>RF-CASCADE-LYNCH-FDR-POSITIVE</code></a> - Ein Erst-Grad-Verwandter des Patienten (Eltern, Geschwister oder Kind) hat eine...</li><li><a href="/de/kb/redflags/rf-chaarted-high-volume-mhspc.html"><code>RF-CHAARTED-HIGH-VOLUME-MHSPC</code></a> - Metastatische Hormon-sensitive Prostatakrebs erfüllen CHAARTED High-Volume-Kriterien - V...</li><li><a href="/de/kb/redflags/rf-chek2-confirmed-carrier.html"><code>RF-CHEK2-CONFIRMED-CARRIER</code></a> - Bestätigte keimlinien-pathogene / wahrscheinlich-pathogene monoallelic Variante in CHEK2. Die meisten...</li><li><a href="/de/kb/redflags/rf-chek2-family-history-suspicion.html"><code>RF-CHEK2-FAMILY-HISTORY-SUSPICION</code></a> - Familie Stammbaum Muster suggestive der Keimlinie CHEK2 heterozygot Trägerzustand in einem...</li><li><a href="/de/kb/redflags/rf-fap-family-history-suspicion.html"><code>RF-FAP-FAMILY-HISTORY-SUSPICION</code></a> - Familie Stammbaum suggestive der familiären Adenomatous Polyposis (FAP) oder die abgeschwächte FAP...</li><li><a href="/de/kb/redflags/rf-latitude-high-risk-mhspc.html"><code>RF-LATITUDE-HIGH-RISK-MHSPC</code></a> - Metastatische Hormon-sensitive Prostatakrebs erfüllen LATITUDE Hochrisiko-Kriterien - ≥ 2 von...</li><li><a href="/de/kb/redflags/rf-lynch-confirmed-carrier.html"><code>RF-LYNCH-CONFIRMED-CARRIER</code></a> - Bestätigte keimlinienpathogene / wahrscheinlich-pathogene Variante in einem Lynch-Syndrom (MMR / EPCA...</li><li><a href="/de/kb/redflags/rf-lynch-family-history-suspicion.html"><code>RF-LYNCH-FAMILY-HISTORY-SUSPICION</code></a> - Familienahnen-Ereignis-Kriterien, die auf erblichen Nonpolypose-Farbektalkrebs hindeuten...</li><li><a href="/de/kb/redflags/rf-pan-atm-chek2-cdk12-parpi-candidate.html"><code>RF-PAN-ATM-CHEK2-CDK12-PARPI-CANDIDATE</code></a> - Keimbahn-pathogene Variante in ATM, CHEK2, oder CDK12 (komposite HRR-pathway RF).</li><li><a href="/de/kb/redflags/rf-pan-brca-somatic-parpi-candidate.html"><code>RF-PAN-BRCA-SOMATIC-PARPI-CANDIDATE</code></a> - Somatische (Tumor-nur) BRCA1 oder BRCA2 pathogene Variante auf Tumor NGS identifiziert — Pan-Tumor...</li><li><a href="/de/kb/redflags/rf-pan-palb2-parpi-candidate.html"><code>RF-PAN-PALB2-PARPI-CANDIDATE</code></a> - Germline PALB2 pathogene Variante — BRCA2 Rekrutierung Partner; biallelic LOF produziert eine...</li><li><a href="/de/kb/redflags/rf-prostate-ar-amp-arsi-resistance.html"><code>RF-PROSTATE-AR-AMP-ARSI-RESISTANCE</code></a> - AR (Androgenrezeptor) Genverstärkung auf Tumor oder ctDNA NGS in mCRPC nachgewiesen — INFOR...</li><li><a href="/de/kb/redflags/rf-prostate-ar-v7-arsi-resistance.html"><code>RF-PROSTATE-AR-V7-ARSI-RESISTANCE</code></a> - AR-V7 (Androgenrezeptor-Splice-Variante 7) in CTCs / ctDNA in mCRPC nachgewiesen — prädiktive...</li><li><a href="/de/kb/redflags/rf-prostate-cord-compression.html"><code>RF-PROSTATE-CORD-COMPRESSION</code></a> - Metastatischer Prostatakrebs mit maligner epiduraler Rückenmarkskompression (MESCC): neue...</li><li><a href="/de/kb/redflags/rf-prostate-frailty-age.html"><code>RF-PROSTATE-FRAILTY-AGE</code></a> - Alter ≥ 80 ODER ECOG ≥ 3 mit signifikanter Komorbidität — Docetaxel schlecht vertragen; ARPI-Monothe...</li><li><a href="/de/kb/redflags/rf-prostate-high-risk-biology.html"><code>RF-PROSTATE-HIGH-RISK-BIOLOGY</code></a> - Keimbahn- oder somatische BRCA1/2-Mutation ODER breitere HRR-Wegveränderung (ATM, CDK12, PALB2...</li><li><a href="/de/kb/redflags/rf-prostate-infection-screening.html"><code>RF-PROSTATE-INFECTION-SCREENING</code></a> - Vorbehandlung HBV/HCV/HIV-Serologie + zahnärztliche Beurteilung (Denosumab/Z Zoledronat-ONJ-Risiko; l...</li><li><a href="/de/kb/redflags/rf-prostate-organ-dysfunction.html"><code>RF-PROSTATE-ORGAN-DYSFUNCTION</code></a> - Nierenfunktionsstörungen (CrCl &lt; 50 ml/min) oder schwere Leberfunktionsstörungen (Child-Pugh C) — Grenzwerte...</li><li><a href="/de/kb/redflags/rf-prostate-psa-progression.html"><code>RF-PROSTATE-PSA-PROGRESSION</code></a> - PCWG3-definierte PSA-Progression bei systemischer Prostata-Krebs-Therapie: ≥ 25% Anstieg von Nadir +...</li><li><a href="/de/kb/redflags/rf-prostate-tmprss2-erg-prognostic.html"><code>RF-PROSTATE-TMPRSS2-ERG-PROGNOSTIC</code></a> - TMPRSS2-ERG Fusion auf Tumor-RNA / FISH / IHC für ERG in lokalisierten oder metastas...</li><li><a href="/de/kb/redflags/rf-prostate-transformation-progression.html"><code>RF-PROSTATE-TRANSFORMATION-PROGRESSION</code></a> - Verdichtung der Rückenmarkskompression ODER schnelle Verdoppelung der PSA (&lt; 3 Monate) ODER neue viszerale Metastasen...</li></ul>
+<h3>Therapieschema</h3><ul><li><a href="/de/kb/regimens/reg-cabazitaxel-mcrpc.html"><code>REG-CABAZITAXEL-MCRPC</code></a> - Cabazitaxel (mCRPC, 2L)</li><li><a href="/de/kb/regimens/reg-docetaxel-mcrpc.html"><code>REG-DOCETAXEL-MCRPC</code></a> - Docetaxel (mCRPC)</li><li><a href="/de/kb/regimens/reg-radium223-mcrpc.html"><code>REG-RADIUM223-MCRPC</code></a> - Radium-223 (mCRPC, Knochenmetastasen)</li></ul>
+<h3>Quellen</h3><ul><li><code>SRC-ARASENS-SMITH-2022</code> - Darolutamide und Überleben bei metastasierendem, hormonsensitivem Prostatakrebs</li><li><code>SRC-CHAARTED-SWEENEY-2015</code> - Chemohormonale Therapie bei metastasierendem Hormon- sensitivem Prostatakrebs</li><li><code>SRC-EAU-PROSTATE-2024</code> - EAU - EANM - ESTRO - ESUR - ISUP - SIOG Leitlinien für Prostatakrebs</li><li><code>SRC-ENZAMET-DAVIS-2019</code> - Enzalutamide mit Standard-Erstlinientherapie bei Metastasenprostate-Krebs</li><li><code>SRC-ESMO-PROSTATE-2024</code> - ESMO-Leitfaden für klinische Praxis auf Prostatakrebs</li><li><code>SRC-LATITUDE-FIZAZI-2017</code> - Abirateron plus Prednison bei Metastatischem, kastrationsempfindlichem Prostatakrebs</li><li><code>SRC-NCCN-PROSTATE-2025</code> - NCCN-Leitlinien für klinische Praxis — Prostatakrebs</li><li><code>SRC-PCPT-FINASTERIDE-2003</code> - Der Einfluss von Finasterid auf die Entwicklung von Prostatakrebs (Prostate Cancer Preve ...</li><li><code>SRC-PROFOUND-DEBONO-2020</code> - Olaparib für Metastatischen Castrations-Resistent Prostatakrebs</li><li><code>SRC-REDUCE-DUTASTERIDE-2010</code> - Wirkung von Dutasterid auf das Risiko von Prostatakrebs (REDUCE — Reduktion durch Dutasterid ...</li><li><code>SRC-TALAPRO2-AGARWAL-2023</code> - Talazoparib zuzüglich Enzalutamide bei Männern mit First-Line Metastatic Castration-Resistent Pros...</li><li><code>SRC-TAX327-TANNOCK-2004</code> - Docetaxel plus Prednison oder Mitoxantron plus Prednison für fortgeschrittenen Prostatakrebs</li><li><code>SRC-VISION-PSMA-SARTOR-2021</code> - Lutetium-177-PSMA-617 für Metastatische Castration-resistent Prostatakrebs</li><li><code>SRC-VITAL-VITAMIN-D-OMEGA3-2019</code> - Vitamin D-Ergänzungen und Prävention von Krebs und Herz-Kreislauf-Erkrankungen (VITAL - Vitami...</li></ul>
+</main>
+</body>
+</html>

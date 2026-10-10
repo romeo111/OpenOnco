@@ -88,8 +88,12 @@
 <meta name="ai-summary" content="Запустіть браузерну демонстрацію OpenOnco на синтетичних онкологічних профілях.">
 <meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
 <link rel="canonical" href="https://openonco.info/ukr/try.html">
-<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/try.html">
 <link rel="alternate" hreflang="en" href="https://openonco.info/try.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/try.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/try.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/try.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/try.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/try.html">
 <link rel="alternate" hreflang="x-default" href="https://openonco.info/try.html">
 <meta property="og:site_name" content="OpenOnco">
 <meta property="og:type" content="website">
@@ -118,7 +122,7 @@
 </head>
 <body>
 <header class="top-bar site-header">
-  <link rel="stylesheet" href="/header.css?v=flags-20261010">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
   <div class="header-shell">
   <div class="header-main">
     <div class="brand-line">
@@ -706,8 +710,8 @@ async function refreshBuildPanel(diseaseId = null) {
 
 // ── Plan modal + lang switcher ────────────────────────────────────────────
 function highlightLangButtons() {
-  langUaBtn.classList.toggle('is-active', currentResultLang === 'uk');
-  langEnBtn.classList.toggle('is-active', currentResultLang === 'en');
+  langUaBtn.classList.toggle('is-active', !window.OPENONCO_REPORT_LOCALE && currentResultLang === 'uk');
+  langEnBtn.classList.toggle('is-active', !window.OPENONCO_REPORT_LOCALE && currentResultLang === 'en');
 }
 
 function highlightModeButtons() {
@@ -844,7 +848,11 @@ html
 function downloadHtml() {
   if (uiBusy || generating) return;
   if (planSource == null) return;
-  let html = resultFrame.srcdoc;
+  const displayedDocument = resultFrame.contentDocument;
+  const translatedDisplay = displayedDocument && displayedDocument.documentElement.dataset.translationLocale;
+  let html = translatedDisplay
+    ? '<!DOCTYPE html>\n' + displayedDocument.documentElement.outerHTML
+    : resultFrame.srcdoc;
   if (!html) {
     try {
       html = '<!DOCTYPE html>\n' + resultFrame.contentDocument.documentElement.outerHTML;
@@ -861,7 +869,7 @@ function downloadHtml() {
   const stamp = new Date().toISOString().slice(0, 10);
   const modePart = (planSource === 'generated' ? '.' + currentResultMode : '');
   a.href = url;
-  a.download = `openonco-plan${modePart}.${currentResultLang}.${stamp}.html`;
+  a.download = `openonco-plan${modePart}.${translatedDisplay || currentResultLang}.${stamp}.html`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -2227,6 +2235,7 @@ function diseaseSearchHaystack(q) {
   if (!q) return '';
   const did = String(q.disease_id || '');
   return [
+    typeof window.OPENONCO_DISPLAY_LABEL === 'function' ? window.OPENONCO_DISPLAY_LABEL(questionnaireDisplayTitle(q)) : '',
     q.title_en || q.title || '',
     q.title_uk || '',
     did,
@@ -2359,6 +2368,7 @@ function exampleDisplayLabel(ex) {
 // truly spans all public examples.
 function exampleSearchBlob(ex) {
   const parts = [
+    typeof window.OPENONCO_DISPLAY_LABEL === 'function' ? window.OPENONCO_DISPLAY_LABEL(exampleDisplayLabel(ex)) : '',
     ex.label || '', ex.label_en || '', ex.summary || '', ex.summary_en || '',
     ex.disease_id || '', ex.disease_icd || '',
     ex.disease_name_en || '', ex.disease_name_ua || '',

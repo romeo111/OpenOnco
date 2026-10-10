@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Homologe Rekombinationsreparatur (HRR) Genpanel Status - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/de/kb/biomarkers/bio-hrr-panel.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/biomarkers/bio-hrr-panel.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/biomarkers/bio-hrr-panel.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb/biomarkers/bio-hrr-panel.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/biomarkers/bio-hrr-panel.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/biomarkers/bio-hrr-panel.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/biomarkers/bio-hrr-panel.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/biomarkers/bio-hrr-panel.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Homologe Rekombinationsreparatur (HRR) Genpanel Status - OpenOnco">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/de/kb/biomarkers/bio-hrr-panel.html">
+<meta property="og:locale" content="de">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Homologe Rekombinationsreparatur (HRR) Genpanel Status - OpenOnco">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Homologe Rekombinationsreparatur (HRR) Genpanel Status - OpenOnco","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/de/kb/biomarkers/bio-hrr-panel.html","inLanguage":"de","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/de/kb/biomarkers/bio-hrr-panel.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="8b91515d1cc3c61e55d9a977d5e10ab7820851aade5556715720f4d27fa703c0"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/de/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">OFFENE ONKOLOGIE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Sprache"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg>DE <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Sprache"><a href="/kb/biomarkers/bio-hrr-panel.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/biomarkers/bio-hrr-panel.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/biomarkers/bio-hrr-panel.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/biomarkers/bio-hrr-panel.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/biomarkers/bio-hrr-panel.html" lang="de" hreflang="de" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/biomarkers/bio-hrr-panel.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/de/try.html" class="btn-cta-top btn-cta-try"><span>Plan erstellen</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menü"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menü">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Werkzeuge</span>
+    <div class="top-cta-group">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Open Source</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Vorläufige Übersetzung: klinische Prüfung ausstehend.</strong> <a href="/kb/biomarkers/bio-hrr-panel.html" lang="en" hreflang="en" data-original-source>Englisches Original ansehen</a></aside>
+  <p class="kb-breadcrumb"><a href="/de/kb.html">Onco Wiki</a> / Biomarker</p>
+  <h1>Status der homologen Rekombinationsreparatur (HRR)-Genpanels</h1>
+  <p class="kb-lead">Deterministische Ansicht der Quelle YAML Entität. Klinische Autorität bleibt mit den zitierten Quell-IDs und Rezensenten Sign-off Zustand.</p>
+  <table class="kb-facts"><tr><th>ID</th><td><code>BIO-HRR-PANEL</code></td></tr>
+<tr><th>Art</th><td>Biomarker</td></tr>
+<tr><th>Aliase</th><td><div class="kb-alias-list"><span class="kb-alias">Status des Genpanels HRR</span><span class="kb-alias">Панель генів гомологічної рекомбінаційної репарації (HRR)</span></div></td></tr>
+<tr><th>Status</th><td>ausstehende_klinische_Abmeldung</td></tr>
+<tr><th>Erkrankungen</th><td><span class="kb-chip"><a href="/de/kb/diseases/dis-breast.html"><code>DIS-BREAST</code></a></span> <span class="kb-chip"><a href="/de/kb/diseases/dis-cll.html"><code>DIS-CLL</code></a></span> <span class="kb-chip"><a href="/de/kb/diseases/dis-mcl.html"><code>DIS-MCL</code></a></span> <span class="kb-chip"><a href="/de/kb/diseases/dis-melanoma.html"><code>DIS-MELANOMA</code></a></span> <span class="kb-chip"><a href="/de/kb/diseases/dis-ovarian.html"><code>DIS-OVARIAN</code></a></span> <span class="kb-chip"><a href="/de/kb/diseases/dis-pdac.html"><code>DIS-PDAC</code></a></span> <span class="kb-chip"><a href="/de/kb/diseases/dis-prostate.html"><code>DIS-PROSTATE</code></a></span></td></tr>
+<tr><th>Quellen</th><td><span class="kb-muted">None declared</span></td></tr></table>
+  <h2>Biomarker-Fakten</h2><table class="kb-facts"><tr><th>Biomarker-Typ</th><td>Gen_mutation</td></tr>
+<tr><th>Angaben zur Mutation</th><td><span class="translation-original-fragment" lang="en" data-original-source data-label="Englischer Originaltext zur Überprüfung beibehalten">{"genes": ["BRCA1", "BRCA2", "ATM", "BARD1", "BRIP1", "CDK12", "CHEK1", "CHEK2", "FANCL", "PALB2", "RAD51B", "RAD51C", "RAD51D", "RAD54L"], "inheritance": "germline OR somatic", "type": "loss-of-function variants"}</span></td></tr>
+<tr><th>Messung</th><td><div class="kb-kv-list"><div class="kb-kv-item"><span class="kb-kv-key">Verfahren</span><span>Tumor-Gewebe NGS-Panel (somatisch) ODER ctDNA ODER keimlinien NGS</span></div><div class="kb-kv-item"><span class="kb-kv-key">Sensitivitätsanforderung</span><span>VAF-Erkennungsschwelle ≥ 5% empfohlen für ctDNA</span></div></div></td></tr>
+<tr><th>Verwandte Biomarker</th><td><span class="kb-chip"><a href="/de/kb/biomarkers/bio-brca-germline.html"><code>BIO-BRCA-GERMLINE</code></a></span></td></tr></table>
+  <h2>Anmerkungen</h2><p>Kombinierte Keimlinie + somatische Tests ergeben ~25 % HRR-Positivität in mCRPC. PARPi profitieren am meisten in BRCA1/2 (höhere rPFS HR). Testinfrastruktur in UA großen Engpass – für Kliniker Überprüfung markiert.</p>
+  <h2>Verwendet von</h2>
+<h3>Therapeutische Relevanz</h3><ul><li><a href="/de/kb/biomarker_actionability/bma-atm-germline-breast.html"><code>BMA-ATM-GERMLINE-BREAST</code></a> - ATM keimlinienpathogenen verleiht ~2× lebenslange Brustkrebs-Risiko; keine PARPi-Indikation (TBC...</li><li><a href="/de/kb/biomarker_actionability/bma-atm-germline-pdac.html"><code>BMA-ATM-GERMLINE-PDAC</code></a> - ATM keimlinienpathogen verleiht ~5-10× Pankreas-Krebs-Risiko; PARPi-Aktivität in ATM-Muta...</li><li><a href="/de/kb/biomarker_actionability/bma-atm-germline-prostate.html"><code>BMA-ATM-GERMLINE-PROSTATE</code></a> - ATM-Keimlinien-pathogen in mCRPC: Olaparib zugelassen pro PROfound (Cohort A enthalten ATM);...</li><li><a href="/de/kb/biomarker_actionability/bma-atm-loss-cll.html"><code>BMA-ATM-LOSS-CLL</code></a> - ATM loss in CLL (del(11q) or somatic mutation): historically poor-prognostic with chemoim...</li><li><a href="/de/kb/biomarker_actionability/bma-atm-loss-mcl.html"><code>BMA-ATM-LOSS-MCL</code></a> - ATM ist die häufigste somatische Mutation in MCL (~40-50%). Nicht direkt Therapie-Auswahl;...</li><li><a href="/de/kb/biomarker_actionability/bma-atm-somatic-breast.html"><code>BMA-ATM-SOMATIC-BREAST</code></a> - Somatische ATM-Funktionsverlust in der Brust: minimale PARPi-Aktivität in ATM-nur Korb Arme; t...</li><li><a href="/de/kb/biomarker_actionability/bma-atm-somatic-pdac.html"><code>BMA-ATM-SOMATIC-PDAC</code></a> - Somatische ATM-Funktionsverlust in PDAC: begrenzte Beweise; Platin Empfindlichkeit kann Enhan sein...</li><li><a href="/de/kb/biomarker_actionability/bma-atm-somatic-prostate.html"><code>BMA-ATM-SOMATIC-PROSTATE</code></a> - Somatischer ATM-Funktionsverlust in mCRPC: PROfound registriert sowohl Keimlinie und somatische ATM in...</li><li><a href="/de/kb/biomarker_actionability/bma-bard1-germline-breast.html"><code>BMA-BARD1-GERMLINE-BREAST</code></a> - BARD1 keimlinienpathogenen verleiht moderate Brustkrebs-Risiko (~2-3×). BARD1 bildet hetero...</li><li><a href="/de/kb/biomarker_actionability/bma-bard1-germline-ovarian.html"><code>BMA-BARD1-GERMLINE-OVARIAN</code></a> - BARD1 keimbahnpathogen im EOC: selten; in HRR-Panels enthalten; PARPi Nutzen extrapolieren...</li><li><a href="/de/kb/biomarker_actionability/bma-bard1-somatic-breast.html"><code>BMA-BARD1-SOMATIC-BREAST</code></a> - Somatische BARD1 in der Brust: selten; nur biologische HRR-Richtung. ESCAT IIIA / OncoKB Level 3...</li><li><a href="/de/kb/biomarker_actionability/bma-bard1-somatic-ovarian.html"><code>BMA-BARD1-SOMATIC-OVARIAN</code></a> - Somatische BARD1 im EOC: HRR-Panel-Einschlussvariable; PARPi Off-Label-Betrachtung in HRD-...</li><li><a href="/de/kb/biomarker_actionability/bma-brca1-somatic-breast.html"><code>BMA-BRCA1-SOMATIC-BREAST</code></a> - Somatischer BRCA1-Funktionsverlust in der HER2-negativen metastasierenden Brust: TBCRC-048 (Tung 2020)...</li><li><a href="/de/kb/biomarker_actionability/bma-brca1-somatic-ovarian.html"><code>BMA-BRCA1-SOMATIC-OVARIAN</code></a> - Somatische BRCA1-Funktionsverlust-Varianten in fortgeschrittenen EOC verleihen PARPi-Equivale...</li><li><a href="/de/kb/biomarker_actionability/bma-brca1-somatic-pdac.html"><code>BMA-BRCA1-SOMATIC-PDAC</code></a> - Somatische BRCA1-Funktionsverlust im metastasierenden PDAC: POLO-Studie beschränkt auf Keimlinie; som...</li><li><a href="/de/kb/biomarker_actionability/bma-brca1-somatic-prostate.html"><code>BMA-BRCA1-SOMATIC-PROSTATE</code></a> - Somatische BRCA1 Funktionsverlust in mCRPC: PROfound registriert sowohl keim-und somatische; ola...</li><li><a href="/de/kb/biomarker_actionability/bma-brca2-somatic-breast.html"><code>BMA-BRCA2-SOMATIC-BREAST</code></a> - Somatischer BRCA2-Funktionsverlust in HER2-neg metastasierender Brust: TBCRC-048 zeigte...</li><li><a href="/de/kb/biomarker_actionability/bma-brca2-somatic-melanoma.html"><code>BMA-BRCA2-SOMATIC-MELANOMA</code></a> - Somatische BRCA2-Funktionsverlust im Melanom: keine PARPi-Indikation; biologische...</li><li><a href="/de/kb/biomarker_actionability/bma-brca2-somatic-ovarian.html"><code>BMA-BRCA2-SOMATIC-OVARIAN</code></a> - Somatischer BRCA2-Funktionsverlust im fortgeschrittenen EOC: PARPi (Olaparib, Niraparib, Rucaparib) ap...</li><li><a href="/de/kb/biomarker_actionability/bma-brca2-somatic-pdac.html"><code>BMA-BRCA2-SOMATIC-PDAC</code></a> - Somatische BRCA2-Funktionsverlust im metastasierenden PDAC: POLO keimlinien-only; somatische Serie...</li><li><a href="/de/kb/biomarker_actionability/bma-brca2-somatic-prostate.html"><code>BMA-BRCA2-SOMATIC-PROSTATE</code></a> - Somatischer BRCA2-Funktionsverlust in mCRPC: PROfound enthalten sBRCA; olaparib Nutzen equiva...</li><li><a href="/de/kb/biomarker_actionability/bma-brip1-germline-breast.html"><code>BMA-BRIP1-GERMLINE-BREAST</code></a> - BRIP1 Keimbahn pathogen und Brustkrebs: schwache/unsichere Risiko-Assoziation (NCCN doesn...</li><li><a href="/de/kb/biomarker_actionability/bma-brip1-germline-ovarian.html"><code>BMA-BRIP1-GERMLINE-OVARIAN</code></a> - BRIP1 (FANCJ) keimlinienpathogen im EOC: etabliertes mittel-Risiko-Gen (~RR 3-5); einschl.</li><li><a href="/de/kb/biomarker_actionability/bma-brip1-somatic-breast.html"><code>BMA-BRIP1-SOMATIC-BREAST</code></a> - Somatischer BRIP1 in der Brust: selten; keine praktikable Indikation. ESCAT IV / OncoKB Level 4.</li><li><a href="/de/kb/biomarker_actionability/bma-brip1-somatic-ovarian.html"><code>BMA-BRIP1-SOMATIC-OVARIAN</code></a> - Somatische BRIP1 im EOC: HRR-Panel-Einschluss; PARPi-Überlegung im HRD-positiven Kontext. E...</li><li><a href="/de/kb/biomarker_actionability/bma-chek1-somatic-ovarian.html"><code>BMA-CHEK1-SOMATIC-OVARIAN</code></a> - Somatischer CHEK1-Funktionsverlust im EOC: selten (&lt; 1 %); in einigen HRR-Panel-Definitionen enthalten...</li><li><a href="/de/kb/biomarker_actionability/bma-chek1-somatic-prostate.html"><code>BMA-CHEK1-SOMATIC-PROSTATE</code></a> - Somatische CHEK1-Funktionsverlust in mCRPC: selten; PROfound enthalten CHEK1 in Cohort B aber sm...</li><li><a href="/de/kb/biomarker_actionability/bma-chek2-germline-breast.html"><code>BMA-CHEK2-GERMLINE-BREAST</code></a> - CHEK2 keimlinienpathogen (z.B. 1100delC) bergen ~2× Brustkrebsrisiko; kein PARPi-Aktivi...</li><li><a href="/de/kb/biomarker_actionability/bma-chek2-germline-prostate.html"><code>BMA-CHEK2-GERMLINE-PROSTATE</code></a> - CHEK2 Keimlinie pathogen in mCRPC: in PROfound Cohort B enthalten; olaparib FDA HRR-Etikett...</li><li><a href="/de/kb/biomarker_actionability/bma-chek2-somatic-breast.html"><code>BMA-CHEK2-SOMATIC-BREAST</code></a> - Somatic CHEK2 in breast: minimal PARPi activity; standard subtype-directed therapy. ESCAT...</li><li><a href="/de/kb/biomarker_actionability/bma-chek2-somatic-prostate.html"><code>BMA-CHEK2-SOMATIC-PROSTATE</code></a> - Somatische CHEK2 in mCRPC: PROfound registriert beide g/s; FDA olaparib HRR-Label enthält CHEK2...</li><li><a href="/de/kb/biomarker_actionability/bma-fanca-germline-ovarian.html"><code>BMA-FANCA-GERMLINE-OVARIAN</code></a> - FANCA-Keimlinie (heterozygot) im EOC: Fanconi-Anemia-pathway-Gen; biallelic Verlust = Fanco...</li><li><a href="/de/kb/biomarker_actionability/bma-fancl-germline-ovarian.html"><code>BMA-FANCL-GERMLINE-OVARIAN</code></a> - FANCL keimlinie (heterozygot) im EOC: Fanconi-Anämie-Pfad-Gen; biallelic Verlust = Fanco...</li><li><a href="/de/kb/biomarker_actionability/bma-palb2-germline-breast.html"><code>BMA-PALB2-GERMLINE-BREAST</code></a> - PALB2 keimlinienpathogen verleiht BRCA-wie Brustrisiko (~50% (Lebensdauer). Olaparib Aktiv...</li><li><a href="/de/kb/biomarker_actionability/bma-palb2-germline-ovarian.html"><code>BMA-PALB2-GERMLINE-OVARIAN</code></a> - PALB2 Keimlinien-pathogen im EOC: selten (~1%; biologisch HR-Mangel. Niraparib NOVA n...</li><li><a href="/de/kb/biomarker_actionability/bma-palb2-germline-pdac.html"><code>BMA-PALB2-GERMLINE-PDAC</code></a> - PALB2 keimlinienpathogen im metastasierenden PDAC: verhält sich BRCA-ähnlich; Gehäuseserie unterstützt...</li><li><a href="/de/kb/biomarker_actionability/bma-palb2-somatic-breast.html"><code>BMA-PALB2-SOMATIC-BREAST</code></a> - Somatische PALB2-Funktionsverlust in der Brust: kleine TBCRC-048 Kohorte beinhaltete sPALB2 mit PAR...</li><li><a href="/de/kb/biomarker_actionability/bma-palb2-somatic-ovarian.html"><code>BMA-PALB2-SOMATIC-OVARIAN</code></a> - Somatische PALB2 im EOC: in HRD-positive Populationen von Niraparib/Rucaparib Studien eingeschlossen....</li><li><a href="/de/kb/biomarker_actionability/bma-palb2-somatic-pdac.html"><code>BMA-PALB2-SOMATIC-PDAC</code></a> - Somatische PALB2 in PDAC: selten; Off-Label-PARPi nach Platin-Ansprechen pro NCCN HRR-mutierte...</li><li><a href="/de/kb/biomarker_actionability/bma-psa-prostate-uspstf-shared-decision.html"><code>BMA-PSA-PROSTATE-USPSTF-SHARED-DECISION</code></a> - PSA-Screening auf Prostatakrebs trägt eine USPSTF Grade C Empfehlung für Männer im Alter von 55...</li><li class="kb-muted">... 16 mehr</li></ul>
+<h3>Biomarker</h3><ul><li><a href="/de/kb/biomarkers/bio-brca-germline.html"><code>BIO-BRCA-GERMLINE</code></a> - Mutationsstatus von Germline BRCA1/2</li></ul>
+<h3>Kapitel des Handbuchs</h3><ul><li><code>HB-PROSTATE-MCRPC-1L</code> - Metastatischer kastrationsresistenter Prostatakrebs: Biomarker und Sequenzierungs-Reinigung</li></ul>
+<h3>Handbuchfragen</h3><ul><li><code>HQ-PROSTATE-MCRPC-1L-003</code> - HQ-PROSTATE-MCRPC-1L-003</li></ul>
+<h3>Anwendungsgebiete</h3><ul><li><code>IND-PROSTATE-MCRPC-1L-ARPI</code> - IND-PROSTATE-MCRPC-1L-ARPI</li><li><code>IND-PROSTATE-MCRPC-1L-PARPI</code> - IND-PROSTATE-MCRPC-1L-PARPI</li><li><code>IND-PROSTATE-MCRPC-2L-PARPI</code> - IND-PROSTATE-MCRPC-2L-PARPI</li></ul>
+<h3>Fragebogen</h3><ul><li><code>QUEST-PROSTATE-1L-STUB</code> - Prostata Adenokarzinom — erste Zeile</li></ul>
+<h3>Warnhinweis</h3><ul><li><a href="/de/kb/redflags/rf-prostate-high-risk-biology.html"><code>RF-PROSTATE-HIGH-RISK-BIOLOGY</code></a> - Keimbahn- oder somatische BRCA1/2-Mutation ODER breitere HRR-Wegveränderung (ATM, CDK12, PALB2...</li></ul>
+<h3>Prüfungen</h3><ul><li><code>TEST-GERMLINE-BRCA-PANEL</code> - Germline BRCA1/2 + HRR-Panelsequenzierung</li><li><code>TEST-SOMATIC-HRR-PANEL</code> - Tumor-Gewebe (oder ctDNA) HRR-Pfad-NGS-Panel</li></ul>
+</main>
+</body>
+</html>

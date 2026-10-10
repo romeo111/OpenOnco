@@ -103,6 +103,7 @@ def test_language_menu_maps_pages_and_deep_fallbacks(locale):
     for code in LOCALES:
         assert f'href="/{locale_path("kb.html", code)}" lang="{code}" hreflang="{code}"' in header
     entity = render_top_bar("kb", locale, page_path="kb/drugs/rituximab.html")
+    from scripts.site_locales import CLINICAL_LOCALES
     for code in COPY:
-        assert f'href="/{code}/" lang="{code}"' in entity
-        assert f'/{code}/kb/drugs/' not in entity
+        target = f'/{code}/kb/drugs/rituximab.html' if code in CLINICAL_LOCALES else f'/{code}/'
+        assert f'href="{target}" lang="{code}"' in entity

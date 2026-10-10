@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fortgeschrittener Eierstockkrebs: HRD/BRCA First-Line-Wartungs-Hintergrund - OpenOnco Handbuch</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/de/handbook/hb-ovarian-maintenance-1l.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/handbook/hb-ovarian-maintenance-1l.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/handbook/hb-ovarian-maintenance-1l.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/handbook/hb-ovarian-maintenance-1l.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/handbook/hb-ovarian-maintenance-1l.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/handbook/hb-ovarian-maintenance-1l.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/handbook/hb-ovarian-maintenance-1l.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/handbook/hb-ovarian-maintenance-1l.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fortgeschrittener Eierstockkrebs: HRD/BRCA First-Line-Wartungs-Hintergrund - OpenOnco Handbuch">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/de/handbook/hb-ovarian-maintenance-1l.html">
+<meta property="og:locale" content="de">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Fortgeschrittener Eierstockkrebs: HRD/BRCA First-Line-Wartungs-Hintergrund - OpenOnco Handbuch">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Fortgeschrittener Eierstockkrebs: HRD/BRCA First-Line-Wartungs-Hintergrund - OpenOnco Handbuch","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/de/handbook/hb-ovarian-maintenance-1l.html","inLanguage":"de","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/de/handbook/hb-ovarian-maintenance-1l.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="stylesheet" href="/style.css?v=header-20261010">
+  <link rel="stylesheet" href="/clinical-styles/694eea648296658d7f1088903440ed90c39a7c0c4eb28f733482b4d43b06083a.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="56faa3db750b5985564b4d736e3352f3b46964989ccc98aaa1cb913662543513"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/de/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">OFFENE ONKOLOGIE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html" class="active" aria-current="page">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Sprache"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg>DE <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Sprache"><a href="/handbook/hb-ovarian-maintenance-1l.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/handbook/hb-ovarian-maintenance-1l.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/handbook/hb-ovarian-maintenance-1l.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/handbook/hb-ovarian-maintenance-1l.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/handbook/hb-ovarian-maintenance-1l.html" lang="de" hreflang="de" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/handbook/hb-ovarian-maintenance-1l.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/de/try.html" class="btn-cta-top btn-cta-try"><span>Plan erstellen</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menü"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menü">
+    <a href="/de/">Start</a>
+    <a href="/de/handbook.html" class="active" aria-current="page">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Werkzeuge</span>
+    <div class="top-cta-group">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Open Source</span>
+  </div>
+  </div>
+</header>
+
+  <main class="hb-wrap"><aside class="translation-notice" role="note"><strong>Vorläufige Übersetzung: klinische Prüfung ausstehend.</strong> <a href="/handbook/hb-ovarian-maintenance-1l.html" lang="en" hreflang="en" data-original-source>Englisches Original ansehen</a></aside>
+
+    <section class="hb-hero">
+      <div class="hb-kicker"><a href="/de/handbook.html">Handbuch zu OpenOnco</a></div>
+      <h1>fortgeschrittener Eierstockkrebs: HRD/BRCA-Erstlinien-Wartungshygienische</h1>
+      <div class="hb-meta">
+        <span class="hb-badge hb-badge--draft">Entwurf</span>
+
+        <span class="hb-badge">hcp_learner</span>
+        <span class="hb-badge">en</span>
+      </div>
+      <p class="hb-lead">Deterministisches Lernkapitel über OpenOnco KB Entitäten, synthetische Fälle und Quellaufzeichnungen.</p>
+    </section>
+    <div class="hb-layout">
+      <div class="hb-main">
+        <section class="hb-panel">
+          <h2>Lernziele</h2>
+          <ol><li>Identifizieren Sie die Histologie, Keimlinie/Tumor BRCA, HRD-Status und Platin-Response-Eingänge, die vor der Erstlinien-Ovarial-Krebs-Wartungsauswahl benötigt werden.</li><li>Erklären Sie, warum Platin-basierte Induktion das universelle First-Line-Backbone ist und wie BRCA / HRD-Status die Wartungswahl zwischen Olaparib, Niraparib, Bevacizumab und Beobachtung führt.</li><li>Erkennen Sie parallele Verpflichtungen – die die Qualität der chirurgischen Abschüttung, das Infektionsscreening, das VTE-Risiko und die Exposition vor dem PARP verändern – an, die den Wartungsplan ändern, ohne das zytotoxische Rückgrat zu verändern.</li></ol>
+        </section>
+        <section class="hb-panel">
+          <h2>Auf einen Blick</h2>
+          <ul><li>Eine hochgradige seröse Histologie, Keimlinie + Tumor BRCA1/2, und der HRD-Assay-Status sind vor jedem First-Line-Wartungsplan erforderlich.</li><li>Carboplatin + Paclitaxel ist das universelle zytotoxische Rückgrat; die Erhaltungsentscheidung liegt auf der Platinantwort.</li><li><span class="translation-original-fragment" lang="en" data-original-source data-label="Englischer Originaltext zur Überprüfung beibehalten">BRCA-mutant disease routes to olaparib maintenance (SOLO-1) as the canonical first option; HRD-positive non-BRCA disease pulls niraparib / olaparib combinations into the conversation.</span></li><li>Suboptimale Debulking, vorherige PARP-Inhibitor-Exposition und aktiver Platin-Widerstand verändern das Gespräch mehr als nur HRD-Score.</li><li>Dieses Kapitel ist eine OpenOnco-autorisierte Lernhilfe, nicht offizielle ESMO-Inhalte oder eine CME-Kreditaktivität.</li></ul>
+        </section>
+
+            <section class="hb-panel">
+              <h2>Mindestanforderungen an Diagnose und Biomarker</h2>
+              <p>Vor jedem First-Line-Plan bei fortgeschrittenem Eierstockkrebs erwartet das Kapitel eine bestätigte hochgradige seröse (oder sonst platinempfindliche) Histologie, vollständige keimlinien-BRCA1/2-Testung, Tumor-BRCA1/2-Testung, bei der das keimlinien-Ergebnis negativ ist, ein HRD-Assay-Ergebnis, das neben dem Assay-Probe interpretiert wird (verschiedene Anbieter, unterschiedliche Cut-offs), ein dokumentiertes Debulking-Ergebnis (R0 vs. R1 vs. R2 / Intervall) und eine Ausgangsorganfunktion. Das Kapitel ist explizit, dass der HRD-Status ohne BRCA-Kontext unvollständig ist, da die Routing-Funktion von Olaparib, Niraparib und Bevacizumab von der Kombination abhängt.</p>
+              <h3>Verbundene Einrichtungen</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-OVARIAN</code><span>Ovarialkarzinom</span><small>Krankheiten</small></span><span class="hb-chip"><code>BIO-BRCA1-BRCA2-GERMLINE</code><span>Keimbahn BRCA1/BRCA2-Mutation</span><small>Biomarker</small></span><span class="hb-chip"><code>BIO-HRD-STATUS</code><span>Status der HRD</span><small>Biomarker</small></span><span class="hb-chip"><code>TEST-GERMLINE-BRCA-PANEL</code><span>Germline BRCA1/2 + HRR-Panelsequenzierung</span><small>Prüfungen</small></span><span class="hb-chip"><code>RF-BREAST-OVARIAN-HRD-ASSAY-DISTINCTION</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Englischer Originaltext zur Überprüfung beibehalten">HRD assay platform mismatch in breast or ovarian cancer: HRD-positive call by Myriad myChoice CDx (composite Genomic Instability Score GIS = LOH + TAI + LST, threshold ≥42) is NOT interchangeable with HRD-positive by FoundationOne CDx HRD (LOH-high ≥16% genomic LOH + BRCA1/2 status, no TAI / LST). The two FDA-approved companion diagnostics use different scoring systems and have ~10-15% discordance in head-to-head series; clinical-trial regimen approvals are platform-locked: olaparib + bevacizumab maintenance in advanced ovarian (PAOLA-1, Ray-Coquard NEJM 2019) is FDA-indicated only on Myriad GIS-based HRD; niraparib monotherapy maintenance (PRIMA, González-Martín NEJM 2019) is also Myriad-validated. F1CDx HRD-high has no companion-diagnostic indication in ovarian PARPi maintenance — using F1CDx LOH-high to indicate olaparib + bev or niraparib is off-label / extrapolated. Action: when an HRD result is reported, identify the assay platform; if F1CDx is the only HRD source and ovarian PARPi-maintenance is being considered, recommend Myriad myChoice reflex (or BRCA1/2 germline+somatic confirmation as fall-back).
+</span></span><small>Rotflügelchen</small></span></div>
+              <h3>Quellen des Abschnitts</h3>
+              <ul><li><code>SRC-NCCN-OVARIAN-2025</code> NCCN-Ovarialkrebs</li><li><code>SRC-ESMO-OVARIAN-2024</code> Leitlinie für die klinische Praxis der ESMO-Krebs-Ovarien</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Induktion und das Platin-Response-Fenster</h2>
+              <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Englischer Originaltext zur Überprüfung beibehalten">Carboplatin + paclitaxel remains the universal cytotoxic backbone for first-line advanced ovarian cancer in the OpenOnco model. The maintenance decision is made when the patient completes induction and the platinum response is established. Patients who do not respond to platinum re-enter a different algorithm and do not benefit from PARP-inhibitor maintenance in the canonical first-line model. Bevacizumab can begin during induction and continue into maintenance — the chapter is explicit that bevacizumab and PARP inhibitors are not mutually exclusive, particularly for HRD-positive non-BRCA disease.</span></p>
+              <h3>Verbundene Einrichtungen</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>ALGO-OVARIAN-ADVANCED-1L</code><span>ALGO-OVARIAN-ADVANCED-1L</span><small>Algorithmen</small></span><span class="hb-chip"><code>IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG</code><span>IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG</span><small>Anwendungsgebiete</small></span><span class="hb-chip"><code>IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP</code><span>IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP</span><small>Anwendungsgebiete</small></span><span class="hb-chip"><code>REG-CARBO-PACLI-OVARIAN</code><span>Carboplatin + Paclitaxel (Ovarial 3-wöchentlich)</span><small>Regime</small></span><span class="hb-chip"><code>REG-BEV-MAINTENANCE-OVARIAN</code><span>Erhaltung von Bevacizumab (post 1L Platin, ovariell/fallopisch/primär peritoneal)</span><small>Regime</small></span></div>
+              <h3>Quellen des Abschnitts</h3>
+              <ul><li><code>SRC-NCCN-OVARIAN-2025</code> NCCN-Ovarialkrebs</li><li><code>SRC-PRIMA-GONZALEZ-MARTIN-2019</code> Niraparib bei Patienten mit neu diagnostiziertem fortgeschrittenem Ovarialkrebs</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Wartungsrouting durch BRCA + HRD</h2>
+              <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Englischer Originaltext zur Überprüfung beibehalten">After response to platinum, OpenOnco routes maintenance choices by combined BRCA / HRD status. BRCA-mutant disease (germline or somatic) routes to olaparib maintenance as the canonical first option (SOLO-1). HRD-positive non-BRCA disease pulls niraparib (PRIMA) and olaparib combinations into the conversation, often with bevacizumab continued from induction. HRD-negative disease without BRCA mutation typically relies on bevacizumab maintenance or observation; the chapter is explicit that adding a PARP inhibitor to HRD-negative non-BRCA disease is not the canonical default.</span></p>
+              <h3>Verbundene Einrichtungen</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>IND-OVARIAN-MAINT-PARPI-BRCAM-OLAPARIB</code><span>IND-OVARIAN-MAINT-PARPI-BRCAM-OLAPARIB</span><small>Anwendungsgebiete</small></span><span class="hb-chip"><code>IND-OVARIAN-MAINT-PARPI-HRD-NIRAPARIB</code><span>IND-OVARIAN-MAINT-PARPI-HRD-NIRAPARIB</span><small>Anwendungsgebiete</small></span><span class="hb-chip"><code>IND-OVARIAN-MAINT-BEV</code><span>IND-OVARIAN-MAINT-BEV</span><small>Anwendungsgebiete</small></span><span class="hb-chip"><code>REG-OLAPARIB-MAINT-OVARIAN</code><span>Erhaltung der Olaparib-Therapie (HRD+ ovarielles Post-Platin-Ansprechen)</span><small>Regime</small></span><span class="hb-chip"><code>REG-NIRAPARIB-MAINT-OVARIAN</code><span>Niraparib-Wartung (HRD+ rezidivierend platinempfindliche Ovarialzellen, NOVA / PRIMA)</span><small>Regime</small></span><span class="hb-chip"><code>RF-OVARIAN-BRCA-MUT-ACTIONABLE</code><span>BRCA1 oder BRCA2 pathogene Variante (germline OR somatic) bei hochgradigem serösen Ovarialkarzinom — ~20-25% Prävalenz (15% Keimlinie + ~7% Somatic). Olaparib-Wartung nach platinbasiertem 1L (SOLO-1 — mPFS 56.0 vs. 13,8 mo BRCA-mut) ist behandlungsdefinierend; Rucaparib + Niraparib-Alternativen. SOLO-2 — 2L+ Rezidiv-Wartung.
+</span><small>Rotflügelchen</small></span><span class="hb-chip"><code>RF-OVARIAN-HRD-POSITIVE-ACTIONABLE</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Englischer Originaltext zur Überprüfung beibehalten">Homologous Recombination Deficiency (HRD)-positive high-grade serous ovarian carcinoma (BRCA1/2 mutation OR Genomic Instability Score ≥42). PARPi maintenance after platinum-based induction is treatment-defining: niraparib (PRIMA — mPFS 21.9 vs 10.4 mo HRD-pos), olaparib + bevacizumab (PAOLA-1 — mPFS 37.2 vs 17.7 mo HRD-pos).
+</span></span><small>Rotflügelchen</small></span></div>
+              <h3>Quellen des Abschnitts</h3>
+              <ul><li><code>SRC-SOLO1-MOORE-2018</code> Maintenance Olaparib in Patients with Newly Diagnosed Advanced Ovarian Cancer</li><li><code>SRC-PRIMA-GONZALEZ-MARTIN-2019</code> Niraparib bei Patienten mit neu diagnostiziertem fortgeschrittenem Ovarialkrebs</li></ul>
+            </section>
+
+            <section class="hb-panel">
+              <h2>Häufige Fallen</h2>
+              <p>Nicht als einziger Biomarker-Aufruf behandeln. HRD-Assay-Herstellerunterschiede und Cut-off-Schwellen ändern, welche Patienten auf jede Seite der Linie fallen – das Kapitel erwartet, dass der Lernende den Test erfasst und den Bericht ganzheitlich liest. Suboptimale Debulking-Änderungen der Prognose, aber nicht von selbst eine PARP-Hemmung-Option entfernt. Vorherige PARP Inhibitor-Exposition (selten in der ersten Zeile, häufig beim Wiederauftreten) formt die Wartungsdiskussion komplett neu. VTE-Risiko und Infektionsscreening liegen neben der Wahl des Regimes und dürfen nicht übersprungen werden.</p>
+              <h3>Verbundene Einrichtungen</h3>
+              <div class="hb-chip-grid"><span class="hb-chip"><code>RF-OVARIAN-SUBOPTIMAL-DEBULKING</code><span>Suboptimale primäre zytoreduktive Chirurgie (Residualerkrankung ≥ 1 cm) oder unresezierbare bei der Präsentation in fortgeschrittenen (FIGO III-IV) Ovarialkarzinom. MDT-Trigger für neoadjuvante Chemo (NACT) → Intervalldebulking Operation (IDS) Pfad pro CHORUS / EORTC55971 Studien, anstatt primäre Debulking.
+</span><small>Rotflügelchen</small></span><span class="hb-chip"><code>RF-OVARIAN-HRD-ACTIONABILITY</code><span>HRD-positiv (BRCA1/2 Mutation oder Genomischer Instabilitäts-Score ≥42) hochwertige seröses Ovarialkarzinom. Behandlungsdefinierung für die PARPI-Wartung nach Platin-basierter Induktion. Olaparib (nur SOLO-1 BRCA, PAOLA-1 mit Bev) + Niraparib (PRIMA All-comer) verbessern die PFS-Werte in HRD positivem Teilsatz erheblich.
+</span><small>Rotflügelchen</small></span><span class="hb-chip"><code>RF-BREAST-OVARIAN-HRD-ASSAY-DISTINCTION</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Englischer Originaltext zur Überprüfung beibehalten">HRD assay platform mismatch in breast or ovarian cancer: HRD-positive call by Myriad myChoice CDx (composite Genomic Instability Score GIS = LOH + TAI + LST, threshold ≥42) is NOT interchangeable with HRD-positive by FoundationOne CDx HRD (LOH-high ≥16% genomic LOH + BRCA1/2 status, no TAI / LST). The two FDA-approved companion diagnostics use different scoring systems and have ~10-15% discordance in head-to-head series; clinical-trial regimen approvals are platform-locked: olaparib + bevacizumab maintenance in advanced ovarian (PAOLA-1, Ray-Coquard NEJM 2019) is FDA-indicated only on Myriad GIS-based HRD; niraparib monotherapy maintenance (PRIMA, González-Martín NEJM 2019) is also Myriad-validated. F1CDx HRD-high has no companion-diagnostic indication in ovarian PARPi maintenance — using F1CDx LOH-high to indicate olaparib + bev or niraparib is off-label / extrapolated. Action: when an HRD result is reported, identify the assay platform; if F1CDx is the only HRD source and ovarian PARPi-maintenance is being considered, recommend Myriad myChoice reflex (or BRCA1/2 germline+somatic confirmation as fall-back).
+</span></span><small>Rotflügelchen</small></span></div>
+              <h3>Quellen des Abschnitts</h3>
+              <ul><li><code>SRC-NCCN-OVARIAN-2025</code> NCCN-Ovarialkrebs</li><li><code>SRC-ESMO-OVARIAN-2024</code> Leitlinie für die klinische Praxis der ESMO-Krebs-Ovarien</li></ul>
+            </section>
+
+        <section class="hb-panel">
+          <h2>Bearbeitete synthetische Fälle</h2>
+          <ul><li><code>patient_ovarian_advanced_hrd</code> Fortgeschrittener HRD-positiver Ovarialkarzinom: Begründung zur Wartung - <span>HRD-gesteuerte Wartungsführung, Platin-Response-Gating</span> <small>Beispiele/Patienten_ovarial_advanced_hrd.json</small></li><li><code>patient_ovarian_hrd_neg_carbo_pacli_no_parpi</code> HRD-negative Eierstockkrebs: Induktion ohne PARP-Wartung - <span>negative-HRD-Strecke, Bevacizumab-nur oder Beobachtung</span> <small>Beispiele/Patienten_ovarial_hrd_neg_carbo_pacli_no_parpi.json</small></li></ul>
+        </section>
+        <section class="hb-panel hb-quiz">
+          <div class="hb-quiz-header">
+            <h2>Übungsfragen</h2>
+            <div class="hb-quiz-tools">
+              <span class="hb-score" id="hb-score" aria-live="polite">0 von 3 beantwortet · 0 korrekt</span>
+              <button type="button" class="hb-btn hb-btn--ghost" id="hb-quiz-reset">Quiz zurücksetzen</button>
+            </div>
+          </div>
+          <p class="hb-quiz-note">Antworten, Punkte und Argumentation Tags werden in Ihrer Browser-Sitzung nur gehalten und klar, wenn Sie diese Registerkarte schließen. Mehr selektieren Fragen erfordern jede richtige Option (und keine Extras) für einen Kredit.</p>
+
+      <form class="hb-question" data-question-id="HQ-OVARIAN-MAINTENANCE-1L-001" data-question-type="type_a" data-correct-answer="A" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Frage 1</span>
+          <span class="hb-badge">Typ_a</span>
+          <span class="hb-badge">Einleitung</span>
+          <span class="hb-question-id"><code>HQ-OVARIAN-MAINTENANCE-1L-001</code></span>
+        </div>
+        <p class="hb-question-stem">Eine Patientin hat neu diagnostizierten hochgradigen serösen Eierstockkrebs mit einer schäbigen BRCA2-Mutation. Sie schließt Carboplatin + Paclitaxel-Induktion mit einer vollständigen Reaktion ab. Im OpenOnco First-Line-Wartungsmodell, welches ist die kanonische erste Option?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-001" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Erhaltung der Olaparib-Krankheit</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-001" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Beobachtung allein, weil keimhaltige BRCA2-Träger nicht von der Wartung profitieren</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-001" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Mirvetuximab soravtansine</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-001" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Topotecan-Wartung</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Antwort senden</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Zurücksetzen</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Richtige Antwort:</strong> A</p>
+          <p class="hb-result-explanation">BRCA-mutant fortgeschrittenen Eierstockkrebs nach Platin-Ansprechweg zu olaparib Wartung als die kanonische erste Option im OpenOnco-Modell (SOLO-1). Beobachtung, Mirvetuximab und Topotecan sind keine First-Line-Wartungsoptionen in diesem Szenario.</p>
+          <div class="hb-result-sources"><span>Quellen</span> <code class="hb-result-source">SRC-SOLO1-MOORE-2018</code><code class="hb-result-source">SRC-NCCN-OVARIAN-2025</code></div>
+          <div class="hb-result-tags">Begründungsschilder: <span class="hb-result-tag">biomarker_routing</span><span class="hb-result-tag">Regime_Auswahl</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question" data-question-id="HQ-OVARIAN-MAINTENANCE-1L-002" data-question-type="type_a" data-correct-answer="A" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Frage 2</span>
+          <span class="hb-badge">Typ_a</span>
+          <span class="hb-badge">Zwischenprodukt</span>
+          <span class="hb-question-id"><code>HQ-OVARIAN-MAINTENANCE-1L-002</code></span>
+        </div>
+        <p class="hb-question-stem">Eine Patientin mit fortgeschrittenem Eierstockkrebs hat einen Wildtyp BRCA1/2 und ein HRD-positives Assay-Ergebnis. Sie schließt Platin-basierte Induktion mit einem partiellen Ansprechen ab und wurde mit Bevacizumab während der Induktion begonnen. Im OpenOnco-Modell, welche kanonischen Wartungsoption passt zu diesem Profil?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-002" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Niraparib maintenance (HRD-positive non-BRCA route)</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-002" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Stop all therapy because HRD-positive disease cannot be maintained</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-002" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Umschalten auf Cabazitaxel</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="radio" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-002" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Carboplatin + Paclitaxel bis zur Progression als Erhaltungstherapie wiederholen</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Antwort senden</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Zurücksetzen</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Richtige Antwort:</strong> A</p>
+          <p class="hb-result-explanation"><span class="translation-original-fragment" lang="en" data-original-source data-label="Englischer Originaltext zur Überprüfung beibehalten">HRD-positive non-BRCA disease routes to niraparib maintenance as the canonical option in the OpenOnco model (PRIMA). Bevacizumab continuation alongside niraparib is allowed where it was used in induction. Stopping therapy, switching to cabazitaxel, or repeating the cytotoxic backbone is not maintenance per the canonical algorithm.</span></p>
+          <div class="hb-result-sources"><span>Quellen</span> <code class="hb-result-source">SRC-PRIMA-GONZALEZ-MARTIN-2019</code><code class="hb-result-source">SRC-NCCN-OVARIAN-2025</code></div>
+          <div class="hb-result-tags">Begründungsschilder: <span class="hb-result-tag">biomarker_routing</span><span class="hb-result-tag">Regime_Auswahl</span></div>
+        </div>
+      </form>
+
+      <form class="hb-question" data-question-id="HQ-OVARIAN-MAINTENANCE-1L-003" data-question-type="type_k" data-correct-answer="A|B|D" data-graded="true" novalidate>
+        <div class="hb-question-top">
+          <span class="hb-question-ord">Frage 3</span>
+          <span class="hb-badge">Typ_k</span>
+          <span class="hb-badge">Zwischenprodukt</span>
+          <span class="hb-question-id"><code>HQ-OVARIAN-MAINTENANCE-1L-003</code></span>
+        </div>
+        <p class="hb-question-stem">Welche Aussagen gelten für OpenOnco First-line Ovarial-Krebs-Wartungs-Resultate?</p>
+        <div class="hb-options">
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-003" value="A">
+                  <span class="hb-option-key">A.</span>
+                  <span class="hb-option-text">Germline plus Tumor BRCA-Tests werden vor der Wartung erfasst, und eine negative Keimlinie BRCA schließt eine somatische BRCA Mutation nicht aus.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-003" value="B">
+                  <span class="hb-option-key">B.</span>
+                  <span class="hb-option-text">Die Ergebnisse der HRD-Tests müssen mit dem Assay-Hersteller gelesen und Cut-off-Daten aufgezeichnet werden; die Unterschiede der Assays sind in OpenOnco eine anerkannte rote Flagge.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-003" value="C">
+                  <span class="hb-option-key">C.</span>
+                  <span class="hb-option-text">Patienten, die nicht auf Platin-basierte Induktion ansprechen, profitieren weiterhin von der PARP-Hemmer-Wartung im kanonischen First-Line-Modell.</span>
+                </label>
+
+                <label class="hb-option">
+                  <input type="checkbox" name="hb-answer-HQ-OVARIAN-MAINTENANCE-1L-003" value="D">
+                  <span class="hb-option-key">D.</span>
+                  <span class="hb-option-text">Suboptimal debulking Änderungen Prognose, aber nicht von selbst entfernen eine PARP-Inhibitor Option.</span>
+                </label>
+                </div>
+        <div class="hb-question-buttons">
+
+          <button type="submit" class="hb-btn hb-btn--submit" data-action="submit">Antwort senden</button>
+          <button type="button" class="hb-btn hb-btn--reset" data-action="reset">Zurücksetzen</button>
+
+          <span class="hb-question-status" data-role="status" aria-live="polite"></span>
+        </div>
+        <div class="hb-result" hidden>
+          <p class="hb-result-headline" data-role="headline"><strong>Richtige Antwort:</strong> A, B, D</p>
+          <p class="hb-result-explanation">Germline + Tumor BRCA, HRD-Assay-Hinterlassen, und die Rolle der Debulking als Prognose-nicht-Eligibilität sind alle Teil des OpenOnco-Modells. Patienten, die nicht auf Platininduktion reagieren, nicht in den kanonischen PARP-Wartungsweg eintreten – sie treten in einen anderen platinrefraktären Algorithmus ein.</p>
+          <div class="hb-result-sources"><span>Quellen</span> <code class="hb-result-source">SRC-NCCN-OVARIAN-2025</code><code class="hb-result-source">SRC-ESMO-OVARIAN-2024</code><code class="hb-result-source">SRC-SOLO1-MOORE-2018</code></div>
+          <div class="hb-result-tags">Begründungsschilder: <span class="hb-result-tag">biomarker_routing</span><span class="hb-result-tag">Sicherheit_Abschirmung</span><span class="hb-result-tag">legal_boundary</span></div>
+        </div>
+      </form>
+
+        </section>
+      </div>
+      <aside class="hb-side">
+        <section class="hb-panel hb-disclaimer">
+          <strong>Nur für den Bildungsbereich.</strong>
+          <p>Dieses OpenOnco-autorisierte Kapitel ist kein offizielles ESMO-Material, keine CME-Kreditaktivität und keine patientenspezifische medizinische Beratung.</p>
+        </section>
+        <section class="hb-panel hb-review-panel">
+          <h2>Prüfstatus</h2>
+          <dl class="hb-review-meta">
+            <dt>Gegenwärtiger Stand</dt>
+            <dd><span class="hb-badge hb-badge--draft">Entwurf</span></dd>
+            <dt>Zuletzt überprüft</dt><dd><em>noch nicht überprüft</em></dd>
+          </dl>
+          <h3>Klinische Freigaben</h3>
+          <p class="hb-signoff-empty">Es sind noch keine klinischen Freigaben dokumentiert.</p>
+          <p class="hb-review-rules"><a href="/specs.html">HANDBUCH_MODE_SPEZIFISCHES §4</a>
+          regelt Statusübergänge und die 365-Tage-Stabilitätsschwelle.</p>
+        </section>
+        <section class="hb-panel">
+          <h2>Kapitelquellen</h2>
+          <ul><li><code>SRC-NCCN-OVARIAN-2025</code> NCCN-Ovarialkrebs</li><li><code>SRC-ESMO-OVARIAN-2024</code> Leitlinie für die klinische Praxis der ESMO-Krebs-Ovarien</li><li><code>SRC-SOLO1-MOORE-2018</code> Maintenance Olaparib in Patients with Newly Diagnosed Advanced Ovarian Cancer</li><li><code>SRC-PRIMA-GONZALEZ-MARTIN-2019</code> Niraparib bei Patienten mit neu diagnostiziertem fortgeschrittenem Ovarialkrebs</li></ul>
+        </section>
+        <section class="hb-panel">
+          <h2>Karte der Einrichtung</h2>
+          <div class="hb-chip-grid"><span class="hb-chip"><code>DIS-OVARIAN</code><span>Ovarialkarzinom</span><small>Krankheiten</small></span><span class="hb-chip"><code>ALGO-OVARIAN-ADVANCED-1L</code><span>ALGO-OVARIAN-ADVANCED-1L</span><small>Algorithmen</small></span><span class="hb-chip"><code>IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG</code><span>IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG</span><small>Anwendungsgebiete</small></span><span class="hb-chip"><code>IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP</code><span>IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP</span><small>Anwendungsgebiete</small></span><span class="hb-chip"><code>IND-OVARIAN-MAINT-PARPI-BRCAM-OLAPARIB</code><span>IND-OVARIAN-MAINT-PARPI-BRCAM-OLAPARIB</span><small>Anwendungsgebiete</small></span><span class="hb-chip"><code>IND-OVARIAN-MAINT-PARPI-HRD-NIRAPARIB</code><span>IND-OVARIAN-MAINT-PARPI-HRD-NIRAPARIB</span><small>Anwendungsgebiete</small></span><span class="hb-chip"><code>IND-OVARIAN-MAINT-BEV</code><span>IND-OVARIAN-MAINT-BEV</span><small>Anwendungsgebiete</small></span><span class="hb-chip"><code>IND-OVARIAN-MAINTENANCE-OLAPARIB</code><span>IND-OVARIAN-MAINTENANCE-OLAPARIB</span><small>Anwendungsgebiete</small></span><span class="hb-chip"><code>REG-CARBO-PACLI-OVARIAN</code><span>Carboplatin + Paclitaxel (Ovarial 3-wöchentlich)</span><small>Regime</small></span><span class="hb-chip"><code>REG-OLAPARIB-MAINT-OVARIAN</code><span>Erhaltung der Olaparib-Therapie (HRD+ ovarielles Post-Platin-Ansprechen)</span><small>Regime</small></span><span class="hb-chip"><code>REG-NIRAPARIB-MAINT-OVARIAN</code><span>Niraparib-Wartung (HRD+ rezidivierend platinempfindliche Ovarialzellen, NOVA / PRIMA)</span><small>Regime</small></span><span class="hb-chip"><code>REG-BEV-MAINTENANCE-OVARIAN</code><span>Erhaltung von Bevacizumab (post 1L Platin, ovariell/fallopisch/primär peritoneal)</span><small>Regime</small></span><span class="hb-chip"><code>REG-OLAPARIB-MONO</code><span>Monotherapie mit Olaparib (mCRPC, HRR-mutant)</span><small>Regime</small></span><span class="hb-chip"><code>RF-OVARIAN-BRCA-MUT-ACTIONABLE</code><span>BRCA1 oder BRCA2 pathogene Variante (germline OR somatic) bei hochgradigem serösen Ovarialkarzinom — ~20-25% Prävalenz (15% Keimlinie + ~7% Somatic). Olaparib-Wartung nach platinbasiertem 1L (SOLO-1 — mPFS 56.0 vs. 13,8 mo BRCA-mut) ist behandlungsdefinierend; Rucaparib + Niraparib-Alternativen. SOLO-2 — 2L+ Rezidiv-Wartung.
+</span><small>Rotflügelchen</small></span><span class="hb-chip"><code>RF-OVARIAN-HRD-POSITIVE-ACTIONABLE</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Englischer Originaltext zur Überprüfung beibehalten">Homologous Recombination Deficiency (HRD)-positive high-grade serous ovarian carcinoma (BRCA1/2 mutation OR Genomic Instability Score ≥42). PARPi maintenance after platinum-based induction is treatment-defining: niraparib (PRIMA — mPFS 21.9 vs 10.4 mo HRD-pos), olaparib + bevacizumab (PAOLA-1 — mPFS 37.2 vs 17.7 mo HRD-pos).
+</span></span><small>Rotflügelchen</small></span><span class="hb-chip"><code>RF-OVARIAN-HRD-ACTIONABILITY</code><span>HRD-positiv (BRCA1/2 Mutation oder Genomischer Instabilitäts-Score ≥42) hochwertige seröses Ovarialkarzinom. Behandlungsdefinierung für die PARPI-Wartung nach Platin-basierter Induktion. Olaparib (nur SOLO-1 BRCA, PAOLA-1 mit Bev) + Niraparib (PRIMA All-comer) verbessern die PFS-Werte in HRD positivem Teilsatz erheblich.
+</span><small>Rotflügelchen</small></span><span class="hb-chip"><code>RF-OVARIAN-SUBOPTIMAL-DEBULKING</code><span>Suboptimale primäre zytoreduktive Chirurgie (Residualerkrankung ≥ 1 cm) oder unresezierbare bei der Präsentation in fortgeschrittenen (FIGO III-IV) Ovarialkarzinom. MDT-Trigger für neoadjuvante Chemo (NACT) → Intervalldebulking Operation (IDS) Pfad pro CHORUS / EORTC55971 Studien, anstatt primäre Debulking.
+</span><small>Rotflügelchen</small></span><span class="hb-chip"><code>RF-BREAST-OVARIAN-HRD-ASSAY-DISTINCTION</code><span><span class="translation-original-fragment" lang="en" data-original-source data-label="Englischer Originaltext zur Überprüfung beibehalten">HRD assay platform mismatch in breast or ovarian cancer: HRD-positive call by Myriad myChoice CDx (composite Genomic Instability Score GIS = LOH + TAI + LST, threshold ≥42) is NOT interchangeable with HRD-positive by FoundationOne CDx HRD (LOH-high ≥16% genomic LOH + BRCA1/2 status, no TAI / LST). The two FDA-approved companion diagnostics use different scoring systems and have ~10-15% discordance in head-to-head series; clinical-trial regimen approvals are platform-locked: olaparib + bevacizumab maintenance in advanced ovarian (PAOLA-1, Ray-Coquard NEJM 2019) is FDA-indicated only on Myriad GIS-based HRD; niraparib monotherapy maintenance (PRIMA, González-Martín NEJM 2019) is also Myriad-validated. F1CDx HRD-high has no companion-diagnostic indication in ovarian PARPi maintenance — using F1CDx LOH-high to indicate olaparib + bev or niraparib is off-label / extrapolated. Action: when an HRD result is reported, identify the assay platform; if F1CDx is the only HRD source and ovarian PARPi-maintenance is being considered, recommend Myriad myChoice reflex (or BRCA1/2 germline+somatic confirmation as fall-back).
+</span></span><small>Rotflügelchen</small></span><span class="hb-chip"><code>RF-PAN-BRCA-SOMATIC-PARPI-CANDIDATE</code><span>Somatische (Tumor-only) BRCA1 oder BRCA2 pathogene Variante, die bei Tumor NGS — Pantumor PARPi-Kandidat-Signal identifiziert wird. Krankheitstragbarkeit variiert: Ovarial (PAOLA-1, SOLO-1 — somatische BRCA mit Keimlinie in HRD-positiver Erhaltungsanzeige gepoolt), mCRPC (PROfound Kohorte-A — Olaparib mPFS 7.4 vs. 3.6 mo, HR 0.34, somatisch + Keimlinie gepoolte), Pankreas-PDAC (POLO-Label nur keimlinienfrei — somatic BRCA fällt auf Off-Label / NCCN "überlegen" Ebene), Brust (OlympiAD / EMBRACA / OlympiA Etiketten sind Nur keimlinienartig — somatische BRCA-Brust bleibt in der Untersuchung). Bestätigung des somatischen vs. kemmlinienstatus durch gekoppelte kemlinienartige NGS vor kaskadentestenden Entscheidungen (~40% der nur "BRCA"-Aufrufe sind in der Tat keemlinienweise pro ASCO/CAP-Anleitung).
+</span><small>Rotflügelchen</small></span><span class="hb-chip"><code>BIO-BRCA1-BRCA2-GERMLINE</code><span>Keimbahn BRCA1/BRCA2-Mutation</span><small>Biomarker</small></span><span class="hb-chip"><code>BIO-BRCA-GERMLINE</code><span>Status der Mutation der Keimbahn BRCA1/2</span><small>Biomarker</small></span><span class="hb-chip"><code>BIO-BRCA-SOMATIC</code><span>Somatische BRCA1/BRCA2-Mutation (nur Tumor)</span><small>Biomarker</small></span><span class="hb-chip"><code>BIO-HRD-STATUS</code><span>Status der HRD</span><small>Biomarker</small></span><span class="hb-chip"><code>TEST-GERMLINE-BRCA-PANEL</code><span>Germline BRCA1/2 + HRR-Panelsequenzierung</span><small>Prüfungen</small></span></div>
+        </section>
+      </aside>
+    </div>
+    <script>
+      (function() {
+        var CHAPTER_ID = "HB-OVARIAN-MAINTENANCE-1L";
+        var GRADED_TOTAL = 3;
+        var STORAGE_KEY = 'openonco-handbook-' + CHAPTER_ID + '-quiz';
+        var forms = Array.prototype.slice.call(document.querySelectorAll('.hb-quiz .hb-question'));
+        var scoreEl = document.getElementById('hb-score');
+        var resetAllBtn = document.getElementById('hb-quiz-reset');
+        var storage;
+        try { storage = window.sessionStorage; } catch (e) { storage = null; }
+        var state = {};
+        if (storage) {
+          try { state = JSON.parse(storage.getItem(STORAGE_KEY) || '{}') || {}; } catch (e) { state = {}; }
+        }
+        function persist() {
+          if (!storage) { return; }
+          try { storage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        }
+        function normalize(list) {
+          return (list || []).map(function(k) { return String(k).toUpperCase(); }).slice().sort().join('|');
+        }
+        function updateScore() {
+          var answered = 0;
+          var correct = 0;
+          Object.keys(state).forEach(function(qid) {
+            var entry = state[qid];
+            if (entry && entry.submitted && entry.graded) {
+              answered += 1;
+              if (entry.correct) { correct += 1; }
+            }
+          });
+          if (scoreEl) {
+            scoreEl.textContent = answered + ' of ' + GRADED_TOTAL + ' answered · ' + correct + ' correct';
+          }
+        }
+        forms.forEach(function(form) {
+          var qid = form.getAttribute('data-question-id');
+          var qtype = form.getAttribute('data-question-type');
+          var graded = form.getAttribute('data-graded') === 'true';
+          var correctAttr = form.getAttribute('data-correct-answer') || '';
+          var correctKey = correctAttr.split('|').filter(Boolean).slice().sort().join('|');
+          var resultEl = form.querySelector('.hb-result');
+          var headlineEl = form.querySelector('[data-role="headline"]');
+          var statusEl = form.querySelector('[data-role="status"]');
+          var submitBtn = form.querySelector('[data-action="submit"]');
+          var resetBtn = form.querySelector('[data-action="reset"]');
+          var revealBtn = form.querySelector('[data-action="reveal"]');
+          function selectedKeys() {
+            return Array.prototype.slice.call(
+              form.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked')
+            ).map(function(input) { return input.value; });
+          }
+          function setResultClass(isCorrect) {
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (isCorrect === true) { resultEl.classList.add('hb-result--correct'); }
+            else if (isCorrect === false) { resultEl.classList.add('hb-result--incorrect'); }
+            else { resultEl.classList.add('hb-result--reveal'); }
+          }
+          function showResult(entry) {
+            resultEl.hidden = false;
+            if (graded) {
+              setResultClass(entry.correct);
+              if (statusEl) {
+                statusEl.textContent = entry.correct ? '✓ Correct' : '✗ Not yet — see explanation';
+              }
+            } else {
+              setResultClass(null);
+              if (statusEl) { statusEl.textContent = 'Model answer revealed'; }
+            }
+          }
+          function clearResult() {
+            resultEl.hidden = true;
+            resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+            if (statusEl) { statusEl.textContent = ''; }
+          }
+          function rehydrate() {
+            var entry = state[qid];
+            if (!entry) { return; }
+            (entry.selected || []).forEach(function(key) {
+              var input = form.querySelector('input[value="' + key + '"]');
+              if (input) { input.checked = true; }
+            });
+            if (entry.submitted) { showResult(entry); }
+          }
+          function submitGraded(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            var selected = selectedKeys();
+            if (selected.length === 0) {
+              if (statusEl) { statusEl.textContent = 'Pick an option first.'; }
+              return;
+            }
+            var selectedKey = normalize(selected);
+            var isCorrect = selectedKey === correctKey;
+            state[qid] = { submitted: true, graded: true, selected: selected, correct: isCorrect };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function revealOnly(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            state[qid] = { submitted: true, graded: false, selected: [], correct: null };
+            persist();
+            showResult(state[qid]);
+            updateScore();
+          }
+          function resetQuestion(event) {
+            if (event && event.preventDefault) { event.preventDefault(); }
+            Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+              if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+              else { input.value = ''; }
+            });
+            delete state[qid];
+            persist();
+            clearResult();
+            updateScore();
+          }
+          if (submitBtn) { submitBtn.addEventListener('click', submitGraded); }
+          if (resetBtn) { resetBtn.addEventListener('click', resetQuestion); }
+          if (revealBtn) { revealBtn.addEventListener('click', revealOnly); }
+          form.addEventListener('submit', function(event) { event.preventDefault(); if (graded) { submitGraded(event); } });
+          rehydrate();
+        });
+        if (resetAllBtn) {
+          resetAllBtn.addEventListener('click', function() {
+            state = {};
+            persist();
+            forms.forEach(function(form) {
+              Array.prototype.slice.call(form.querySelectorAll('input')).forEach(function(input) {
+                if (input.type === 'radio' || input.type === 'checkbox') { input.checked = false; }
+                else { input.value = ''; }
+              });
+              var resultEl = form.querySelector('.hb-result');
+              var statusEl = form.querySelector('[data-role="status"]');
+              if (resultEl) {
+                resultEl.hidden = true;
+                resultEl.classList.remove('hb-result--correct', 'hb-result--incorrect', 'hb-result--reveal');
+              }
+              if (statusEl) { statusEl.textContent = ''; }
+            });
+            updateScore();
+          });
+        }
+        updateScore();
+      })();
+    </script>
+
+  </main>
+<script src="/clinical-localization.js?v=20261010-2" data-locale="de" data-catalog="/de/clinical-ui-translations.json" defer></script></body>
+</html>

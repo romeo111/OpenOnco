@@ -1,6 +1,7 @@
 """Checked-in public-site translations. No translation API runs on page visits."""
 
 from pathlib import PurePosixPath
+from pathlib import Path
 
 LOCALES = {
     "en": ("", "English", "EN"),
@@ -11,6 +12,8 @@ LOCALES = {
     "fr": ("fr", "Français", "FR"),
 }
 PUBLIC_PAGES = {"index.html", "about.html", "kb.html", "participate.html", "handbook.html", "try.html", "ask.html", "prevent.html", "gallery.html", "diseases.html", "specs.html", "news.html"}
+
+CLINICAL_LOCALES = {"es", "pt", "de", "fr"} if (Path(__file__).with_name('locales') / 'clinical_manifest.json').exists() else set()
 
 
 def split_locale(path: str) -> tuple[str, str]:
@@ -29,11 +32,11 @@ def locale_path(path: str, locale: str) -> str:
 
 def locale_href(path: str, locale: str) -> str:
     mapped = locale_path(path, locale)
-    return "/" + mapped.removesuffix("index.html") if mapped.endswith("index.html") else "/" + mapped
+    is_directory_index = mapped == 'index.html' or mapped.endswith('/index.html')
+    return "/" + mapped.removesuffix("index.html") if is_directory_index else "/" + mapped
 
 
-# New languages localize the public interface. Clinical records, original
-# source titles and engine output retain their declared source language.
+# Public copy is curated separately from the clinical draft catalogs.
 COPY = {
     "es": {
         "home": "Inicio", "about": "El proyecto", "try_cta": "Crear un plan", "diseases": "Enfermedades", "ask": "Comité de tumores", "kb": "Onco Wiki", "prevent": "Prevención", "news": "Noticias", "handbook": "Manual", "capabilities": "Funciones", "menu": "Menú", "tools": "Herramientas", "brand": "ONCOLOGÍA ABIERTA", "open": "Código abierto", "language": "Idioma",
@@ -124,3 +127,19 @@ COPY = {
         "chapter_en": "Chapitre en anglais", "chapter_uk": "Chapitre en ukrainien", "questions": "Questions", "draft": "Brouillon", "footer": "Code ouvert · Code : MIT · Contenu : CC BY 4.0",
     },
 }
+
+if CLINICAL_LOCALES:
+    for code, text in {
+        'es': 'Las fichas de Onco Wiki, el manual, las herramientas y la visualización de resultados tienen traducciones preliminares al español. La revisión clínica está pendiente. Los identificadores y valores del motor se conservan; el original en inglés sigue disponible.',
+        'pt': 'As fichas da Onco Wiki, o manual, as ferramentas e a apresentação dos resultados têm traduções preliminares em português. A revisão clínica está pendente. Os identificadores e valores do motor são preservados; o original em inglês continua disponível.',
+        'de': 'Onco-Wiki-Einträge, Handbuch, Werkzeuge und Ergebnisanzeigen sind als vorläufige deutsche Übersetzungen verfügbar. Die klinische Prüfung steht aus. Kennungen und Werte der Engine bleiben erhalten; das englische Original ist weiterhin zugänglich.',
+        'fr': 'Les fiches Onco Wiki, le manuel, les outils et l’affichage des résultats disposent de traductions provisoires en français. La vérification clinique est en attente. Les identifiants et valeurs du moteur sont conservés ; l’original anglais reste accessible.',
+    }.items():
+        COPY[code]['status'] = text
+    for code, text in {
+        'es': 'Nueve capítulos educativos con fuentes, casos sintéticos y preguntas de práctica. Traducción preliminar al español, pendiente de revisión clínica.',
+        'pt': 'Nove capítulos educativos com fontes, casos sintéticos e perguntas de prática. Tradução preliminar em português, com revisão clínica pendente.',
+        'de': 'Neun Lernkapitel mit Quellen, synthetischen Fällen und Übungsfragen. Vorläufige deutsche Übersetzung; klinische Prüfung ausstehend.',
+        'fr': 'Neuf chapitres pédagogiques avec sources, cas synthétiques et questions d’entraînement. Traduction provisoire en français, en attente de vérification clinique.',
+    }.items():
+        COPY[code]['handbook_body'] = text

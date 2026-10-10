@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan de traitement — Fibrosarcome infantile</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/fr/cases/showcase-ifs-ntrk-fusion.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/cases/showcase-ifs-ntrk-fusion.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/cases/showcase-ifs-ntrk-fusion.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/cases/showcase-ifs-ntrk-fusion.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/cases/showcase-ifs-ntrk-fusion.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/cases/showcase-ifs-ntrk-fusion.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/cases/showcase-ifs-ntrk-fusion.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/cases/showcase-ifs-ntrk-fusion.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Plan de traitement — Fibrosarcome infantile">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/fr/cases/showcase-ifs-ntrk-fusion.html">
+<meta property="og:locale" content="fr">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Plan de traitement — Fibrosarcome infantile">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Plan de traitement — Fibrosarcome infantile","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/fr/cases/showcase-ifs-ntrk-fusion.html","inLanguage":"fr","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/fr/cases/showcase-ifs-ntrk-fusion.html"}}</script>
+<!-- openonco-seo:end -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/clinical-styles/46a80e9314fb5c473de882c0ea142f68dae9776b1b58da99a3e32678c03e5fc7.css">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/clinical-styles/3f0fe13916348089255309c0c4de9eef32abbc421322d9df74e10a8539433420.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="2fc28926fb0c309f468891670a4bbec02ba11b28d72f18309a577955c7c7e4e0"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/fr/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ONCOLOGIE OUVERTE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/fr/">Accueil</a>
+    <a href="/fr/handbook.html">Manuel</a><a href="/fr/news.html">Actualités</a>
+    <a href="/fr/about.html">Le projet</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Langue"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg>FR <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Langue"><a href="/cases/showcase-ifs-ntrk-fusion.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/cases/showcase-ifs-ntrk-fusion.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/cases/showcase-ifs-ntrk-fusion.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/cases/showcase-ifs-ntrk-fusion.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/cases/showcase-ifs-ntrk-fusion.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/cases/showcase-ifs-ntrk-fusion.html" lang="fr" hreflang="fr" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/fr/try.html" class="btn-cta-top btn-cta-try"><span>Créer un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menu"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menu">
+    <a href="/fr/">Accueil</a>
+    <a href="/fr/handbook.html">Manuel</a><a href="/fr/news.html">Actualités</a>
+    <a href="/fr/about.html">Le projet</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/fr/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Réunion de concertation</span></a>
+      <a href="/fr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prévention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Outils</span>
+    <div class="top-cta-group">
+      <a href="/fr/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Réunion de concertation</span></a>
+      <a href="/fr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prévention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Code ouvert</span>
+  </div>
+  </div>
+</header><aside class="translation-notice" role="note"><strong>Traduction provisoire : vérification clinique en attente.</strong> <a href="/cases/showcase-ifs-ntrk-fusion.html" lang="en" hreflang="en" data-original-source>Consulter l’original en anglais</a></aside>
+<div class="oo-topbar-host no-print"></div>
+<div class="case-bar no-print"><div>OpenOnco · <strong>Fibrosarcome infantile - fusion NTRK - cible dans une tumeur rare</strong></div><div><a href="/fr/gallery.html">← Retour à la galerie</a><a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+showcase-ifs-ntrk-fusion&amp;labels=tester-feedback" target="_blank" rel="noopener">Commentaires sur cette affaire</a></div></div>
+<div class="example-verification no-print">Synthetic educational example. Do not self-treat: a qualified treating physician must verify the sources, patient data, contraindications, and final plan.</div><div class="page"><div class="doc-header"><div class="doc-label">OpenOnco · Plan de traitement</div><div class="doc-title">Plan de traitement — Fibrosarcome infantile</div><div class="doc-sub">PLAN-COUP-IFS-NTRK-001-V1 · v1 · 2026-10-10</div></div><div class="patient-strip"><div class="label">Patient</div><div class="value">SHOWCASE-IFS-NTRK-001 · Algorithm: ALGO-IFS-1L</div><div class="patient-meta-grid"><div class="patient-meta-item"><span class="meta-label">Diagnostic</span><span class="meta-value">Fibrosarcome infantile</span></div><div class="patient-meta-item"><span class="meta-label">MS/CIM-10</span><span class="meta-value">C49</span></div><div class="patient-meta-item"><span class="meta-label">ICD-O-3</span><span class="meta-value">8814/3; C49</span></div><div class="patient-meta-item"><span class="meta-label">Stade</span><span class="meta-value">_avancée localement</span></div></div></div><section class="variant-actionability"><h2>Signification clinique des mutations (ESCAT)</h2><div class="section-sub">Contexte de plan de tumeur — le moteur n'utilise pas ces niveaux pour classer les traces</div><table class="actionability-table"><thead><tr><th>Biomarqueur</th><th>Variante</th><th>ESCAT</th><th>Données probantes</th><th>Signification clinique</th><th>Médicaments</th><th>Sources</th></tr></thead><tbody><tr><td><span class="actionability-review-badge">ESCAT : vérification clinique en attente</span><span class="gene">BIO-NTRK-FUSION</span></td><td><span class="variant">Fusion ETV6-NTRK3 (lésion définitive)</span></td><td><span class="tier-badge escat-IA">IA</span></td><td class="evidence"><div class="evidence-lane evidence-lane--molecular_evidence_option"><div class="evidence-lane-title">Option de preuve moléculaire</div><ul class="evidence-sources"><li><a href="https://civicdb.org/links/evidence_items/6099" target="_blank" rel="noopener">SRC-CIVIC</a>: Niveau A <span class="evidence-meta">(Appui, sensibilité/réponse)</span></li><li><a href="https://civicdb.org/links/evidence_items/11276" target="_blank" rel="noopener">SRC-CIVIC</a>: Niveau B <span class="evidence-meta">(Appuis, positif)</span></li></ul></div><div class="evidence-lane evidence-lane--trial_research_option"><div class="evidence-lane-title">Option d'essai ou de recherche</div><ul class="evidence-sources"><li><a href="https://civicdb.org/links/evidence_items/6473" target="_blank" rel="noopener">SRC-CIVIC</a>Niveau C <span class="evidence-meta">(Appui, sensibilité/réponse)</span></li></ul></div></td><td class="summary"><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original anglais conservé pour vérification">Infantile fibrosarcoma (IFS) is defined by ETV6-NTRK3 fusion (&gt;90%). Larotrectinib has transformative activity (SCOUT pediatric trial, Laetsch Lancet Oncol 2018 — ORR 93% in IFS), enabling organ-sparing surgery and avoiding mutilating resection or intensive chemotherapy. Tumor-agnostic FDA approval since 2018; SCOUT data drove pediatric label.</span></td><td class="combos">larotrectinib en monothérapie (1L pour IFS non réssecable / métastatique — chimiothérapie par épargne)<br>entrectinib monotherapy</td><td><ul class="src-list"><li>SRC-FDA-CDS-2026</li></ul></td></tr></tbody></table></section><section><h2>Option de ligne courante primaire</h2><div class="tracks"><div class="track track--standard"><div class="track-head"><div class="track-name">Plan type</div><span class="track-default-badge">★ DÉFAUT</span></div><dl><dt>Indication</dt><dd>IND-IFS-NTRK-LAROTRECTINIB</dd><dt>Protocole thérapeutique</dt><dd>Larotrectinib en monothérapie (fibrosarcome infantile NTRK-positif à la perfusion)</dd><dt>Médicaments + USNZ</dt><dd><section class="phase-block" data-phase="main"><ul class="drug-list"><li class="drug-row"><span class="drug-name">Larotrectinib</span> <span class="drug-id">(DRUG-LAROTRECTINIB)</span> <span class="drug-dose">100 mg/m2 PO BID (enfants) / 100 mg PO BID (adultes), continu · Par schéma thérapeutique · IV</span> <span class="nszu-badge nszu-oop" title="Indication tumorale-agnostique de la maladie croisée. Test NTRK universel dans les panneaux NSCLC NGS.">‡ Hors-pocket</span></li></ul></section></dd><dt>Motif</dt><dd>Option principale de la ligne courante sélectionnée par ALGO-IFS-1L sur le chemin de repli.</dd></dl></div></div></section><section><h2>Échéance</h2><div class="section-sub">Délai de traitement — dérivé du schéma + calendrier de surveillance</div><h3>Plan type</h3><div class="timeline"><div class="tl-phase tl-phase--induction"><div class="name">Induction · Larotrectinib en monothérapie (fibrosarcome infantile NTRK-positif à la perfusion)</div><div class="window">21 jours de cycle × 6 cycles ou jusqu'à progression / toxicité</div></div></div></section><section><h2>Mémoire sur le traitement des données à caractère personnel</h2><div class="mdt"><h3>Arbre de discussion MDT (2 étapes)</h3><table class="tbl"><thead><tr><th>#</th><th>Propriétaire</th><th>Sujet</th><th>Décision</th></tr></thead><tbody><tr><td class="mono">1</td><td>molecular_geneticist</td><td>Examen par des spécialistes </td><td>L'indication renvoie à un biomarqueur génomique réalisable — interprétation nécessaire de mutation/cible/actionnabilité.</td></tr><tr><td class="mono">2</td><td>social_worker_case_manager</td><td>Examen par des spécialistes </td><td>Le régime comprend des médicaments sans remboursement de l'USZN — la voie d'accès des patients doit être évaluée.</td></tr></tbody></table><h3>Compétences (recommandées) — à examiner (2)</h3><ul class="role-list"><li><span class="role-name">Génétique moléculaire / oncologue moléculaire</span> <span class="badge badge--recommended">recommandé</span><div class="role-reason">L'indication renvoie à un biomarqueur génomique réalisable — interprétation nécessaire de mutation/cible/actionnabilité.</div></li><li><span class="role-name">Travailleur social/gestionnaire de cas</span> <span class="badge badge--recommended">recommandé</span><div class="role-reason">Le régime comprend des médicaments sans remboursement de l'USZN — la voie d'accès des patients doit être évaluée.</div></li></ul><h3>Qualité des données</h3><div class="section-sub"><strong>Utilisable avec des mises en garde.</strong> No critical default-track gap was found, but the MDT should review the listed caveats before final sign-off.</div><ul><li>Couverture du biomarqueur : 1/1 connu (100%), 0 manquant, 0 lacunes par défaut</li><li>Alertes non évaluées : RF-IFS-FRAILTY-AGE, RF-IFS-INFECTION-SCREENING, RF-IFS-ORGAN-DYSFUNCTION, RF-IFS-TRANSFORMATION-PROGRESSION</li></ul><details class="skill-catalog"><summary>Métadonnées techniques de compétences MDT (2/16 activées dans ce plan)</summary><div class="section-sub">All registered virtual specialists. ✓ — activated for this case; ○ — not activated (available for other clinical scenarios).</div><table><thead><tr><th>Spécialiste</th><th>habileté_id</th><th>Version</th><th>Dernier examen</th><th>Signatures</th><th>Domaine</th></tr></thead><tbody><tr class="dormant"><td>Spécialiste en thérapie cellulaire (CAR-T)</td><td><code>cellular_therapy_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellulaire_thérapie</td></tr><tr class="dormant"><td>Pharmacien clinique</td><td><code>clinical_pharmacist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>clinique_pharmaceutique</td></tr><tr class="dormant"><td>Hématologue / oncohématologue</td><td><code>hematologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hématologie_oncologie</td></tr><tr class="dormant"><td>Hématopathologiste (lymphome / leucémie / myélome)</td><td><code>hematopathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hématopathologie</td></tr><tr class="dormant"><td>Maladie infectieuse / hépatologie</td><td><code>infectious_disease_hepatology</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>maladies infectieuses</td></tr><tr class="dormant"><td>Oncologue médical (chimiothérapeute à tumoir solide)</td><td><code>medical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>solide_oncologie</td></tr><tr class="activated"><td>Génétique moléculaire / oncologue moléculaire</td><td><code>molecular_geneticist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>_oncologie moléculaire</td></tr><tr class="dormant"><td>Soins palliatifs</td><td><code>palliative_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>soins palliatifs</td></tr><tr class="dormant"><td>Pathologue (général)</td><td><code>pathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>pathologie</td></tr><tr class="dormant"><td>Soins primaires / médecin de famille</td><td><code>primary_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>soins primaires</td></tr><tr class="dormant"><td>Psycho-oncologue</td><td><code>psychologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosocial</td></tr><tr class="dormant"><td>Oncologue radiologique</td><td><code>radiation_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>radiologie_oncologie</td></tr><tr class="dormant"><td>Radiologue</td><td><code>radiologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>diagnostique_imagerie</td></tr><tr class="activated"><td>Travailleur social/gestionnaire de cas</td><td><code>social_worker_case_manager</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosocial</td></tr><tr class="dormant"><td>Oncologue chirurgical</td><td><code>surgical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>c_oncologie chirurgicale</td></tr><tr class="dormant"><td>Spécialiste des transplantations (BMT)</td><td><code>transplant_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellulaire_thérapie</td></tr></tbody></table></details></div></section><section><h2>Sources citées</h2><ul class="sources"><li>SRC-NAVIGATE-DRILON-2018: Efficacy of Larotrectinib in TRK Fusion-Positive Cancers in Adults and Children (NAVIGATE / SCOUT pooled) (2018)</li></ul></section><section class="experimental-track"><h2>Options expérimentales (essais cliniques)</h2><div class="section-sub">Troisième piste de plan — essais d'inscription en ouvert de ClinicalTrials.gov. Métadonnées à temps de rendu; la sélection du moteur n'est pas affectée par ce bloc (CHARTER §8.3). Dernière synchronisation: 2026-10-10.</div><table class="trials-table"><thead><tr><th>NCT</th><th>Titre</th><th>Phase</th><th>État</th><th>Parrain</th><th>UA</th><th>Signaux</th><th>Éligibilité (extrait)</th></tr></thead><tbody><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT04094610" target="_blank" rel="noopener">NCT04094610</a></td><td class="trial-title">Une étude sur Repotrectinib dans les sujets pédiatriques et jeunes adultes ALK, ROS1, OR NTRK1-3 Modifications</td><td class="trial-phase">FASE1 / FASE2</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Tournant point Therapeutics, Inc.</td><td class="trial-ua">—</td><td class="trial-outlook"><span class="badge badge--strat-enriched" title="critères d&#x27;inclusion référence fusion ntrk">Biomarqueur: enrichi</span> <span class="badge badge--design-flag" title="le paramètre primaire est un substitut (PFS/ORR), sans SG">Endpoint de substitution uniquement</span></td><td class="trial-elig"></td></tr></tbody></table><p class="trial-disclaimer">Vérifier le statut de recrutement directement avec le site d'essai. Les données ctgov peuvent être inférieures au statut actuel du site UA.</p></section><section class="access-matrix"><details open><summary><h2>Disponibilité des options en Ukraine</h2><span class="section-sub">Enregistrement UA par piste · NSZU · coût · voie d'accès. Métadonnées de temps de rendu; la sélection du moteur ne dépend pas de ces champs (CHARTER §8.3).</span></summary><table class="access-matrix-table"><thead><tr><th>Option</th><th>Enregistrement UA</th><th>NSZU</th><th>Orientation des coûts</th><th>Voie d'accès</th></tr></thead><tbody><tr class="track-standard"><td class="track-cell"><strong>Plan type</strong><div class="regimen-name"><strong>Larotrectinib en monothérapie (fibrosarcome infantile NTRK-positif à la perfusion)</strong> <span class="regimen-id">(REG-LAROTRECTINIB-IFS)</span></div><div class="notes">1/1 component drug(s) not on NSZU formulary</div></td><td><span class="badge badge--ok">✓ Enregistré</span></td><td><span class="badge badge--no">‡ hors-papier</span></td><td class="cost-cell"><span class="cost-unknown">.-? — vérifier la voie</span></td><td class="pathway-cell"><em>not recorded</em></td></tr><tr class="track-trial"><td class="track-cell"><strong>Essai · NCT04094610</strong><div class="regimen-name">Une étude sur Repotrectinib dans les sujets pédiatriques et jeunes adultes ALK, ROS1, OR NTRK1-3 Modifications</div><div class="notes">No UA site listed — international referral required</div></td><td><span class="badge badge--unknown">— inconnu</span></td><td><span class="badge badge--unknown">— inconnu</span></td><td class="cost-cell"><div class="cost-row"><span class="cost-label">le paiement de l'auto-rémunération:</span> .0/cours</div></td><td class="pathway-cell">Parrain d'essai</td></tr></tbody></table><p class="matrix-disclaimer">Les informations sur les coûts sont d'orientation. Vérifier avec une pharmacie spécifique / fondation / site d'essai. État mis à jour: 2026-10-10.</p></details></section><div class="doc-footer"><div class="version-chain">Plan_id: PLAN-SHOWCASE-IFS-NTRK-001-V1 . version: 1 . générée: 2026-10-10T13:53:28.394869+00:00</div><div class="fda-disclosure"><strong>Par positionnement de CDS non-dispositif de la FDA (CHARTER §15):</strong> Planification du traitement en oncologie externe pour soutenir la discussion sur le tableau tumoral. Pas un dispositif médical; pas pour la prise de décisions cliniques autonomes.</div><div class="fda-disclosure"><strong>Par positionnement de CDS non-dispositif de la FDA (CHARTER §15):</strong><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original anglais conservé pour vérification"> Both treatment options below are presented for review. The engine's selection of a 'recommended' default does not constitute a clinical decision. Final treatment selection requires HCP judgment incorporating information not available to the system.</span></div><div class="medical-disclaimer">Ce document est une ressource d'information qui soutient la discussion sur le tableau tumoral (par CHARTER §11). Il n'est pas un système qui prend des décisions cliniques. Chaque recommandation doit être vérifiée par le médecin traitant.</div></div></div>
+</body>
+</html>

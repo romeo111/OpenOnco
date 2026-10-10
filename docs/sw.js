@@ -24,7 +24,7 @@ const SWR_PATHS = ['/try.html', '/ukr/try.html', '/about.html', '/ukr/about.html
   '/style.css', '/news.html', '/ukr/news.html'];
 // Per-article news pages are matched by prefix rather than listed, since slugs
 // are added by content authors without touching this file.
-const SWR_PREFIXES = ['/news/', '/ukr/news/'];
+const SWR_PREFIXES = ['/news/', '/ukr/news/', '/clinical-styles/'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -85,7 +85,9 @@ self.addEventListener('fetch', (event) => {
   }
 
   // SWR for the small interactive shell (HTML + CSS).
-  if (SWR_PATHS.indexOf(url.pathname) !== -1 ||
+  if (url.pathname === '/clinical-localization.js' ||
+      /^\/(es|pt|de|fr)\/(clinical-(ui-)?translations|kb_search_index)\.json$/.test(url.pathname) ||
+      SWR_PATHS.indexOf(url.pathname) !== -1 ||
       SWR_PREFIXES.some((p) => url.pathname.startsWith(p))) {
     return staleWhileRevalidate(event);
   }
