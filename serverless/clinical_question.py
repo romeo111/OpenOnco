@@ -30,6 +30,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from serverless.clinical_locale_messages import localize_response
+
 from knowledge_base.engine import (
     generate_diagnostic_brief,
     generate_plan,
@@ -63,6 +65,13 @@ DISCLAIMER_EN = (
     "autonomous clinical decision. Do not self-medicate: show this response "
     "to your clinician, who must confirm or reject it for your specific case."
 )
+DISCLAIMER_TRANSLATIONS = {
+    "es": "OpenOnco genera un borrador para el comité de tumores. No es asesoramiento médico ni una decisión clínica autónoma. No se automedique: muestre esta respuesta a su médico, quien debe confirmarla o rechazarla para su caso concreto.",
+    "pt": "O OpenOnco produz um rascunho para a reunião multidisciplinar. Não constitui aconselhamento médico nem uma decisão clínica autónoma. Não se automedique: mostre esta resposta ao seu médico, que deve confirmá-la ou rejeitá-la para o seu caso concreto.",
+    "de": "OpenOnco erstellt einen Entwurf für das Tumorboard. Dies ist keine medizinische Beratung und keine eigenständige klinische Entscheidung. Behandeln Sie sich nicht selbst: Zeigen Sie diese Antwort Ihrer Ärztin oder Ihrem Arzt, die oder der sie für Ihren konkreten Fall bestätigen oder verwerfen muss.",
+    "fr": "OpenOnco produit un brouillon pour la réunion de concertation. Il ne s’agit ni d’un avis médical ni d’une décision clinique autonome. Ne vous traitez pas vous-même : présentez cette réponse à votre médecin, qui doit la confirmer ou la rejeter pour votre cas précis.",
+}
+ANSWER_LANGUAGES = {"en": "English", "uk": "Ukrainian", "es": "Spanish", "pt": "European Portuguese", "de": "German", "fr": "French"}
 
 
 EXTRACTION_SCHEMA: dict[str, Any] = {
@@ -212,7 +221,10 @@ class InputValidation:
 
 
 def _disclaimer(locale: str) -> str:
-    return DISCLAIMER_UK if locale.lower().startswith("uk") else DISCLAIMER_EN
+    code = locale.lower().split("-")[0]
+    if code == "uk":
+        return DISCLAIMER_UK
+    return DISCLAIMER_TRANSLATIONS.get(code, DISCLAIMER_EN)
 
 
 def _normalize_term(text: Any) -> str:
@@ -689,6 +701,9 @@ _PROMPT_INJECTION_MARKERS = (
 )
 
 _ONCOLOGY_MARKERS = (
+    "krebs", "karzinom", "leukäm", "cancro", "cáncer", "leucém",
+    "leucem", "métastas", "metástas", "quimioter", "chimioth",
+    "onkolog", "oncolog",
     "cancer",
     "carcinoma",
     "adenocarcinoma",
@@ -724,7 +739,7 @@ _ONCOLOGY_MARKERS = (
 
 def _looks_like_oncology(text: str) -> bool:
     norm = _normalize_term(text)
-    if any(marker in norm for marker in _ONCOLOGY_MARKERS):
+    if any(_normalize_term(marker) in norm for marker in _ONCOLOGY_MARKERS):
         return True
     compact = _compact_term(text)
     vocab = _clinical_vocabulary()
@@ -1290,6 +1305,8 @@ def compose_answer(
         "diagnostic, toxicity, or supportive-care oriented; otherwise ask targeted "
         "clarifying questions. Keep the answer concise and tumor-board oriented."
     )
+    language = ANSWER_LANGUAGES.get(locale.lower().split("-")[0], "English")
+    system += f" Write all user-facing prose in {language}. Preserve biomarker identifiers, treatment names, doses, numeric values and source identifiers exactly."
     user = json.dumps(
         {
             "locale": locale,
@@ -1309,7 +1326,7 @@ def compose_answer(
     )
 
 
-def answer_clinical_question(case_text: str, *, locale: str = "uk") -> dict[str, Any]:
+def _answer_clinical_question(case_text: str, *, locale: str = "uk") -> dict[str, Any]:
     if not case_text or not case_text.strip():
         return {
             "status": "needs_clarification",
@@ -1361,6 +1378,10 @@ def answer_clinical_question(case_text: str, *, locale: str = "uk") -> dict[str,
     }
     answer["input_validation"] = {"ok": True, "warnings": list(validation.warnings)}
     return answer
+
+
+def answer_clinical_question(case_text: str, *, locale: str = "uk") -> dict[str, Any]:
+    return localize_response(_answer_clinical_question(case_text, locale=locale), locale)
 
 
 def _request_header(meta: dict[str, Any] | None, name: str) -> str:
