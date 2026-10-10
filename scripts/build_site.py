@@ -73,6 +73,7 @@ from scripts.audit_clinical_gaps import write_outputs as write_clinical_gap_outp
 from scripts.build_handbook import build_handbook
 from scripts.build_clinician_review import build_clinician_review
 from scripts.build_kb_wiki import build_kb_wiki
+from scripts.build_participation import build_participation
 from scripts.build_news import build_news
 from scripts.build_international import build_international
 from scripts.site_cases import (
@@ -4642,7 +4643,7 @@ def render_try(
     </button>
     <button id="pdfBtn" class="btn btn-primary" type="button" disabled
             title="{'Save as PDF via your browser print dialog' if target_lang == 'en' else 'Зберегти як PDF через діалог друку браузера'}">
-      {'Download PDF' if target_lang == 'en' else 'Скачати PDF'}
+      {'Share with your doctor · PDF' if target_lang == 'en' else 'Для лікаря · PDF'}
     </button>
   </div>
 
@@ -10656,6 +10657,7 @@ def build_site(output_dir: Path) -> dict:
     )
     disease_coverage_payload = bundle_disease_coverage(output_dir)
     kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
+    build_participation(output_dir)
     handbook_payload = build_handbook(KB_ROOT, output_dir)
     review_payload = build_clinician_review(KB_ROOT, output_dir / "review" / "dlbcl-1l")
     if review_payload["summary"]["contracts_passed"] != review_payload["summary"]["contracts_total"]:

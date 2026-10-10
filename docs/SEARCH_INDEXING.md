@@ -22,7 +22,7 @@ These require access to the owner's search-engine account; GitHub access alone d
 3. Add the site to [Bing Webmaster Tools](https://www.bing.com/webmasters/), verify ownership or import the verified Google property, and submit the same sitemap.
 4. Monitor canonical selection, crawl failures, excluded URLs and impressions after recrawling. A sitemap does not guarantee that every page is indexed.
 
-No Google/Bing verification token or IndexNow key is currently supplied in this repository. Keep account ownership and DNS changes explicit; do not publish placeholder verification files.
+No Google/Bing account verification token is currently supplied. A generated IndexNow ownership file is hosted at the site root; it is an ownership proof, not an account credential. Keep account ownership and DNS changes explicit; do not publish placeholder verification files.
 
 ## Checks and references
 
@@ -31,3 +31,19 @@ python -m pytest tests/test_site_head_faq.py tests/test_site_discovery.py -q
 ```
 
 Validate live structured data with [Rich Results Test](https://search.google.com/test/rich-results) and inspect indexed pages in Search Console. Follow Google's [sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), [localized URL guidance](https://developers.google.com/search/docs/specialty/international/localized-versions) and [structured-data policies](https://developers.google.com/search/docs/appearance/structured-data/sd-policies).
+
+
+## IndexNow delivery
+
+After GitHub Pages has deployed the hosted key file, run:
+
+```bash
+python -m scripts.submit_indexnow --dry-run
+python -m scripts.submit_indexnow
+```
+
+The command validates sitemap host and URL count, checks the live ownership
+file, then submits canonical URLs to the official IndexNow API. HTTP 200 means
+received; 202 means received with key validation pending. Neither proves
+indexing. Search Console ownership and measurement remain separate tasks.
+Reference: https://www.indexnow.org/documentation

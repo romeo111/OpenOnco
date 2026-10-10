@@ -18,6 +18,8 @@ import yaml
 
 
 ENTITY_DIRS = {
+    "indications": {"en": "Indication", "uk": "Показання"},
+    "regimens": {"en": "Regimen", "uk": "Схема лікування"},
     "drugs": {"en": "Drug", "uk": "Препарат"},
     "biomarkers": {"en": "Biomarker", "uk": "Біомаркер"},
     "redflags": {"en": "Red flag", "uk": "Тривожна ознака"},
@@ -43,7 +45,7 @@ T = {
         "try_it": "Try it",
         "page_title": "Onco Wiki",
         "lead": (
-            "Search diseases, drugs, biomarkers, red flags, and biomarker "
+            "Search diseases, indications, regimens, drugs, biomarkers, red flags, and biomarker "
             "actionability. Results are generated directly from the YAML "
             "knowledge base and the disease coverage matrix, with source IDs "
             "and reverse references exposed for audit."
@@ -325,6 +327,16 @@ def _text(value: Any, *, limit: int | None = None) -> str:
     return text
 
 
+def _safe_notes(value: Any, locale: str = "en") -> Any:
+    if "src-oncokb" not in _text(value).lower():
+        return value
+    return (
+        "Історичні нотатки містять посилання на вилучене джерело. Перевірте оригінальний YAML для аудиту."
+        if locale == "uk" else
+        "Historical notes contain a retired source reference. Consult the original YAML for audit history."
+    )
+
+
 def _localized(d: dict, base_key: str, locale: str) -> Any:
     """Return the UA twin of `base_key` (e.g. `definition_ua` for
     `definition`) when locale=="uk" and it carries content, else fall
@@ -427,10 +439,14 @@ def _source_ids(data: dict[str, Any]) -> list[str]:
         for item in _as_list(data.get(key)):
             if isinstance(item, str) and item.startswith("SRC-"):
                 ids.add(item)
+            elif isinstance(item, dict):
+                source_id = item.get("source_id") or item.get("source")
+                if isinstance(source_id, str) and source_id.startswith("SRC-"):
+                    ids.add(source_id)
     for item in _as_list(data.get("evidence_sources")):
         if isinstance(item, dict) and str(item.get("source", "")).startswith("SRC-"):
             ids.add(str(item["source"]))
-    return sorted(ids)
+    return sorted(source_id for source_id in ids if not source_id.startswith("SRC-ONCOKB"))
 
 
 def _disease_ids(data: dict[str, Any]) -> list[str]:
@@ -810,6 +826,23 @@ def _reverse_ref_section(entity: KbEntity, reverse_refs: dict[str, list[KbEntity
     return "\n".join(parts)
 
 
+def _record_title(entity: KbEntity, entities: dict[str, KbEntity], locale: str) -> str:
+    if entity.kind == "regimens":
+        return str(_localized(entity.data, "name", locale) or entity.title)
+    if entity.kind != "indications":
+        return entity.title
+    applicable = entity.data.get("applicable_to") or {}
+    disease = entities.get(str(applicable.get("disease_id", "")))
+    regimen = entities.get(str(entity.data.get("recommended_regimen", "")))
+    disease_name = disease.title if disease else str(applicable.get("disease_id", ""))
+    if locale == "uk" and disease:
+        disease_name = str((disease.data.get("names") or {}).get("ukrainian") or disease_name)
+    regimen_name = str(_localized(regimen.data, "name", locale) or regimen.title) if regimen else str(entity.data.get("recommended_regimen", ""))
+    line = applicable.get("line_of_therapy")
+    line_label = f" · {'лінія' if locale == 'uk' else 'line'} {line}" if line is not None else ""
+    return f"{disease_name}{line_label} · {regimen_name}" if disease_name or regimen_name else entity.title
+
+
 def render_entity_page(
     entity: KbEntity,
     entities: dict[str, KbEntity],
@@ -817,6 +850,8 @@ def render_entity_page(
     *,
     locale: str = "en",
 ) -> str:
+    if entity.kind in {"indications", "regimens"}:
+        entity = replace(entity, title=_record_title(entity, entities, locale))
     if entity.kind == "diseases":
         names = entity.data.get("names") or {}
         if locale == "uk" and names.get("ukrainian"):
@@ -836,6 +871,29 @@ def render_entity_page(
             f'<p><a href="{T[locale]["diseases_href"]}#{html.escape(entity.id)}">'
             f'{html.escape(T[locale]["capabilities"])}</a></p>'
         )
+    elif entity.kind in {"indications", "regimens"}:
+        notice = (
+            "Аудит запису бази знань. Попередній клінічний вміст: це не призначення. Онколог має перевірити джерела, застосовність і статус рецензування. Повні правила та обмеження доступні в YAML."
+            if locale == "uk" else
+            "Knowledge-base record for audit. Provisional clinical content: this is not a prescription. An oncologist must verify original sources, applicability and review status. Full rules and constraints are in the YAML."
+        )
+        rows = []
+        if entity.kind == "indications":
+            applicable = entity.data.get("applicable_to") or {}
+            rows = [
+                ("Лінія терапії" if locale == "uk" else "Line of therapy", html.escape(_text(applicable.get("line_of_therapy")))),
+                ("Трек" if locale == "uk" else "Track", html.escape(_text(entity.data.get("plan_track")))),
+                ("Пов'язана схема" if locale == "uk" else "Linked regimen", _entity_link(str(entity.data.get("recommended_regimen", "")), entities, locale=locale)),
+            ]
+        else:
+            drugs = [str(c["drug_id"]) for c in _as_list(entity.data.get("components")) if isinstance(c, dict) and c.get("drug_id")]
+            rows = [("Компоненти" if locale == "uk" else "Components", _chips(drugs, entities, locale=locale))]
+        specifics = (
+            f'<p class="kb-info-box" role="note">{html.escape(notice)}</p>'
+            f'<p><a href="https://github.com/romeo111/OpenOnco/blob/master/{html.escape(entity.rel_path)}">'
+            f'{"Джерельний YAML: повний запис" if locale == "uk" else "Source YAML: complete record"}</a></p>'
+            f'<table class="kb-facts">{_rows(rows)}</table>'
+        )
     elif entity.kind == "drugs":
         specifics = _drug_sections(entity, locale=locale)
     elif entity.kind == "biomarkers":
@@ -853,6 +911,7 @@ def render_entity_page(
         _localized(entity.data, "notes", locale)
         or _localized(entity.data, "evidence_summary", locale)
     )
+    notes = _safe_notes(notes, locale)
     notes_html = (
         f"<h2>{html.escape(labels['notes'])}</h2><p>{html.escape(_text(notes, limit=1200))}</p>"
         if notes
@@ -862,8 +921,9 @@ def render_entity_page(
   <p class="kb-breadcrumb"><a href="{t["kb_href"]}">{html.escape(t["kb_search"])}</a> / {html.escape(_kind_label(entity.kind, locale))}</p>
   <h1>{html.escape(entity.title)}</h1>
   <p class="kb-lead">{html.escape(t["entity_lead"])}</p>
+  {specifics if entity.kind in {"indications", "regimens"} else ""}
   {_frontmatter(entity, entities, reverse_refs, locale=locale)}
-  {specifics}
+  {specifics if entity.kind not in {"indications", "regimens"} else ""}
   {notes_html}
   {_reverse_ref_section(entity, reverse_refs, locale=locale)}
 </main>"""
@@ -876,7 +936,9 @@ def render_entity_page(
     )
 
 
-def _search_entry(entity: KbEntity, reverse_refs: dict[str, list[KbEntity]], *, locale: str = "en") -> dict[str, Any]:
+def _search_entry(entity: KbEntity, reverse_refs: dict[str, list[KbEntity]], *, locale: str = "en", entities: dict[str, KbEntity] | None = None) -> dict[str, Any]:
+    if entities is not None:
+        entity = replace(entity, title=_record_title(entity, entities, locale))
     d = entity.data
     sources = _source_ids(d)
     diseases = _disease_ids(d)
@@ -899,7 +961,7 @@ def _search_entry(entity: KbEntity, reverse_refs: dict[str, list[KbEntity]], *, 
             _text(d.get("definition")),
             _text(d.get("mechanism")),
             _text(d.get("evidence_summary")),
-            _text(d.get("notes")),
+            _text(_safe_notes(d.get("notes"))),
         ]
     )
     return {
@@ -996,7 +1058,7 @@ def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, loc
         label: key
         for label, key in zip(
             counts,
-            ("diseases", "drugs", "biomarkers", "redflags", "biomarker_actionability"),
+            ("diseases", "drugs", "biomarkers", "redflags", "biomarker_actionability", "indications", "regimens"),
         )
     }
     filter_buttons = "\n      ".join(
@@ -1009,6 +1071,7 @@ def render_kb_home(entries: list[dict[str, Any]], counts: dict[str, int], *, loc
         ]
     )
     body = f"""<main class="kb-page">
+  <p><a href="{'/ukr/participate.html' if locale == 'uk' else '/participate.html'}">{'Долучитися: розробники, клінічні рецензенти та партнери' if locale == 'uk' else 'Participate: developers, clinical reviewers and partners'}</a></p>
   <section class="kb-hero">
     <h1>{html.escape(t["page_title"])}</h1>
     <div class="kb-search-panel" role="search" aria-label="{html.escape(t["search_label"])}">
@@ -1170,7 +1233,7 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
     entities = load_entities(kb_root)
     reverse_refs = build_reverse_refs(entities)
     searchable = [e for e in entities.values() if e.kind in SEARCH_KINDS]
-    searchable.sort(key=lambda e: (e.kind, e.title.lower(), e.id))
+    searchable.sort(key=lambda e: (e.kind in {"indications", "regimens"}, e.kind, e.title.lower(), e.id))
     published = searchable + [e for e in entities.values() if e.kind == "diseases"]
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1180,11 +1243,13 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
 
     payloads: dict[str, dict[str, Any]] = {}
     for locale in ("en", "uk"):
-        entity_entries = [_search_entry(e, reverse_refs, locale=locale) for e in searchable]
+        entity_entries = [_search_entry(e, reverse_refs, locale=locale, entities=entities) for e in searchable]
         disease_entries = _disease_search_entries(kb_root, locale=locale)
         entries = [*disease_entries, *entity_entries]
         count_labels = (
             {
+                "indications": "Indications",
+                "regimens": "Regimens",
                 "drugs": "Drugs",
                 "biomarkers": "Biomarkers",
                 "redflags": "Red flags",
@@ -1192,6 +1257,8 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
             }
             if locale == "en"
             else {
+                "indications": "Показання",
+                "regimens": "Схеми лікування",
                 "drugs": "Препарати",
                 "biomarkers": "Біомаркери",
                 "redflags": "Тривожні ознаки",
@@ -1204,6 +1271,8 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
             count_labels["biomarkers"]: sum(1 for e in searchable if e.kind == "biomarkers"),
             count_labels["redflags"]: sum(1 for e in searchable if e.kind == "redflags"),
             count_labels["biomarker_actionability"]: sum(1 for e in searchable if e.kind == "biomarker_actionability"),
+            count_labels["indications"]: sum(1 for e in searchable if e.kind == "indications"),
+            count_labels["regimens"]: sum(1 for e in searchable if e.kind == "regimens"),
         }
         payloads[locale] = {"entries": entries, "counts": counts}
 

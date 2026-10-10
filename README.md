@@ -99,3 +99,5 @@ Read the [Charter](specs/CHARTER.md) first. English specifications are canonical
 ## License and citation
 
 Code: [MIT](LICENSE). Specifications and generated project content: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Cited sources retain their own licenses and are not relicensed or redistributed. See [CITATION.cff](CITATION.cff) for software citation. OpenOnco is not an emergency service or a substitute for a qualified oncologist.
+
+Developer setup, synthetic clinical review, interoperability gaps and launch materials are collected in the [participation hub](https://openonco.info/participate.html).

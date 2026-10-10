@@ -96,7 +96,7 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     language_items = []
     for code, (_, native_name, abbreviation) in LOCALES.items():
         available = page in PUBLIC_PAGES or code in {"en", "uk"} and (
-            page.startswith("kb/") or page.startswith("cases/") or page.startswith("handbook/") or page.startswith("news/")
+            page == "participate.html" or page.startswith("kb/") or page.startswith("cases/") or page.startswith("handbook/") or page.startswith("news/")
         )
         href = locale_href(page if available else "index.html", code)
         current = ' aria-current="true"' if code == target_lang else ""

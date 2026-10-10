@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Множинна мієлома · лінія 1 · Даратумумаб + Бортезоміб + Леналідомід + Дексаметазон (D-VRd), 4-6 циклів індукції - OpenOnco</title>
+  <!-- openonco-seo:start -->
+<meta name="description" content="Множинна мієлома · лінія 1 · Даратумумаб + Бортезоміб + Леналідомід + Дексаметазон (D-VRd), 4-6 циклів індукції: попередній запис бази OpenOnco з джерелами, статусом рецензування та пов&#x27;язаними сутностями. Потрібна перевірка лікаря.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Множинна мієлома · лінія 1 · Даратумумаб + Бортезоміб + Леналідомід + Дексаметазон (D-VRd), 4-6 циклів індукції: попередній запис бази OpenOnco з джерелами, статусом рецензування та пов&#x27;язаними сутностями. Потрібна перевірка лікаря.">
+<meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
+<link rel="canonical" href="https://openonco.info/ukr/kb/indications/ind-mm-1l-dvrd.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/indications/ind-mm-1l-dvrd.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/indications/ind-mm-1l-dvrd.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/indications/ind-mm-1l-dvrd.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Множинна мієлома · лінія 1 · Даратумумаб + Бортезоміб + Леналідомід + Дексаметазон (D-VRd), 4-6 циклів індукції - OpenOnco">
+<meta property="og:description" content="Множинна мієлома · лінія 1 · Даратумумаб + Бортезоміб + Леналідомід + Дексаметазон (D-VRd), 4-6 циклів індукції: попередній запис бази OpenOnco з джерелами, статусом рецензування та пов&#x27;язаними сутностями. Потрібна перевірка лікаря.">
+<meta property="og:url" content="https://openonco.info/ukr/kb/indications/ind-mm-1l-dvrd.html">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Множинна мієлома · лінія 1 · Даратумумаб + Бортезоміб + Леналідомід + Дексаметазон (D-VRd), 4-6 циклів індукції - OpenOnco">
+<meta name="twitter:description" content="Множинна мієлома · лінія 1 · Даратумумаб + Бортезоміб + Леналідомід + Дексаметазон (D-VRd), 4-6 циклів індукції: попередній запис бази OpenOnco з джерелами, статусом рецензування та пов&#x27;язаними сутностями. Потрібна перевірка лікаря.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Множинна мієлома · лінія 1 · Даратумумаб + Бортезоміб + Леналідомід + Дексаметазон (D-VRd), 4-6 циклів індукції - OpenOnco","description":"Множинна мієлома · лінія 1 · Даратумумаб + Бортезоміб + Леналідомід + Дексаметазон (D-VRd), 4-6 циклів індукції: попередній запис бази OpenOnco з джерелами, статусом рецензування та пов'язаними сутностями. Потрібна перевірка лікаря.","url":"https://openonco.info/ukr/kb/indications/ind-mm-1l-dvrd.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/indications/ind-mm-1l-dvrd.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+.kb-page { padding-top: 34px; }
+.kb-page h1 { font-family: var(--font-display); font-size: 38px; color: var(--green-900); margin-bottom: 10px; }
+.kb-page h2 { font-family: var(--font-display); color: var(--green-900); font-size: 24px; margin: 30px 0 12px; }
+.kb-page h3 { color: var(--green-900); font-size: 17px; margin: 18px 0 8px; }
+.kb-lead { color: var(--gray-700); font-size: 16px; max-width: 880px; margin-bottom: 22px; }
+.kb-breadcrumb { font-size: 13px; margin-bottom: 12px; color: var(--gray-500); }
+.kb-info-box { background: white; border: 1px solid var(--green-100); border-left: 5px solid var(--green-700); border-radius: 7px; padding: 13px 15px; color: var(--gray-700); margin: 18px 0 20px; max-width: 920px; }
+.kb-info-box strong { color: var(--green-900); }
+.kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
+.kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
+.kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
+.kb-search-panel { box-sizing: border-box; margin: 22px 0 26px; padding: 26px; background: linear-gradient(120deg, #edf6f0, #f8fbf9); border: 1px solid #b8d4c2; border-top: 4px solid var(--green-700); border-radius: 16px; box-shadow: 0 10px 30px rgba(16, 65, 42, .08); }
+.kb-search-panel * { box-sizing: border-box; }
+.kb-search-label { display: block; color: var(--green-900); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 6px; }
+.kb-search-hint { color: var(--gray-700); font-size: 15px; margin: 0 0 18px; }
+.kb-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+.kb-search-field { position: relative; min-width: 0; }
+.kb-search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 23px; height: 23px; fill: none; stroke: var(--green-700); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.kb-search { width: 100%; min-width: 0; min-height: 60px; border: 2px solid #8cb69d; border-radius: 10px; padding: 16px 16px 16px 52px; font: inherit; font-size: 18px; color: var(--gray-900); background: white; box-shadow: 0 3px 10px rgba(16, 65, 42, .05); }
+.kb-search::placeholder { color: var(--gray-500); opacity: 1; }
+.kb-search:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; border-color: var(--green-700); }
+.kb-search-btn { width: auto; min-width: 130px; min-height: 60px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 10px; padding: 0 24px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
+.kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
+.kb-search-btn:focus-visible, .kb-filter-row button:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+.kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
+.kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
+.kb-results { display: grid; gap: 8px; }
+.kb-result { display: grid; grid-template-columns: 105px 1fr auto; gap: 10px; align-items: baseline; background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 12px; text-decoration: none; color: var(--gray-900); }
+.kb-result:hover { border-color: var(--green-600); }
+.kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
+.kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px 0 4px; color: var(--gray-700); }
+.kb-pagination button { border: 1px solid var(--gray-200); background: white; color: var(--green-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; font-weight: 700; }
+.kb-pagination button:disabled { color: var(--gray-500); cursor: not-allowed; opacity: .65; }
+.kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
+.kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
+.kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
+.kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
+.kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
+.kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
+.kb-muted { color: var(--gray-500); }
+.kb-entity ul { padding-left: 22px; }
+.kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
+.kb-faq { margin-top: 36px; }
+.kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
+.kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
+@media (max-width: 700px) {
+  .kb-search-panel { padding: 20px 16px; margin-top: 16px; }
+  .kb-search-label { font-size: 21px; }
+  .kb-search { font-size: 16px; min-height: 56px; }
+  .kb-search-row { grid-template-columns: 1fr; }
+  .kb-search-btn { min-height: 48px; }
+  .kb-result { grid-template-columns: 1fr; }
+  .kb-result small { grid-column: auto; }
+  .kb-pagination { flex-wrap: wrap; }
+  .kb-facts th { width: auto; display: block; border-bottom: 0; }
+  .kb-facts td { display: block; }
+}
+</style>
+</head>
+<body>
+  <header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=languages-20261010b">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/ukr/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ВІДКРИТА ОНКОЛОГІЯ</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/handbook.html">Посібник</a><a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Мова">UA <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Мова"><a href="/ukr/kb/indications/ind-mm-1l-dvrd.html" lang="uk" hreflang="uk" aria-current="true">Українська <small>UA</small></a><a href="/kb/indications/ind-mm-1l-dvrd.html" lang="en" hreflang="en">English <small>EN</small></a><a href="/es/" lang="es" hreflang="es">Español <small>ES</small></a><a href="/pt/" lang="pt" hreflang="pt">Português <small>PT</small></a><a href="/de/" lang="de" hreflang="de">Deutsch <small>DE</small></a><a href="/fr/" lang="fr" hreflang="fr">Français <small>FR</small></a></nav>
+    </details>
+    <a href="/ukr/try.html" class="btn-cta-top btn-cta-try"><span>План лікування</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Меню"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Меню">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/handbook.html">Посібник</a><a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Інструменти</span>
+    <div class="top-cta-group">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Відкритий код</span>
+  </div>
+  </div>
+</header>
+  <main class="kb-page kb-entity">
+  <p class="kb-breadcrumb"><a href="/ukr/kb.html">Onco Wiki</a> / Показання</p>
+  <h1>Множинна мієлома · лінія 1 · Даратумумаб + Бортезоміб + Леналідомід + Дексаметазон (D-VRd), 4-6 циклів індукції</h1>
+  <p class="kb-lead">Детермінований перегляд YAML-сутності з джерельної бази. Клінічний авторитет лишається за вказаними source ID та статусом клінічного sign-off.</p>
+  <p class="kb-info-box" role="note">Аудит запису бази знань. Попередній клінічний вміст: це не призначення. Онколог має перевірити джерела, застосовність і статус рецензування. Повні правила та обмеження доступні в YAML.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/indications/ind_mm_1l_dvrd.yaml">Джерельний YAML: повний запис</a></p><table class="kb-facts"><tr><th>Лінія терапії</th><td>1</td></tr>
+<tr><th>Трек</th><td>aggressive</td></tr>
+<tr><th>Пов&#x27;язана схема</th><td><a href="/ukr/kb/regimens/reg-dara-vrd.html"><code>REG-DARA-VRD</code></a></td></tr></table>
+  <table class="kb-facts"><tr><th>ID</th><td><code>IND-MM-1L-DVRD</code></td></tr>
+<tr><th>Тип</th><td>Показання</td></tr>
+<tr><th>Статус</th><td>переглянуто 2026-05-09 | очікує клінічного підпису</td></tr>
+<tr><th>Хвороби</th><td><span class="kb-chip"><a href="/ukr/kb/diseases/dis-mm.html"><code>DIS-MM</code></a></span></td></tr>
+<tr><th>Джерела</th><td><span class="kb-chip" title="Daratumumab, lenalidomide, bortezomib, and dexamethasone for transplant-eligible newly di..."><a href="https://pubmed.ncbi.nlm.nih.gov/32479594" target="_blank" rel="noopener noreferrer"><code>SRC-GRIFFIN-VOORHEES-2020</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: Multiple Myeloma"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1445" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-MM-2025</code></a></span> <span class="kb-chip" title="Daratumumab, Bortezomib, Lenalidomide, and Dexamethasone for Multiple Myeloma"><a href="https://pubmed.ncbi.nlm.nih.gov/38084760" target="_blank" rel="noopener noreferrer"><code>SRC-PERSEUS-SONNEVELD-2024</code></a></span></td></tr></table>
+
+  <h2>Нотатки</h2><p>STUB — requires clinical co-lead signoff before publication. Aggressive counterpart to IND-MM-1L-VRD for two-plan output (CHARTER §2). Major access constraint in Ukraine: daratumumab is not currently НСЗУ- reimbursed — funding pathway must be confirmed BEFORE this Plan is finalized. Red-cell phenotyping (type and screen) BEFORE first daratumumab dose is mandatory due to anti-CD38 interference with crossmatching. Phases wired 2026-05-09 per PERSEUS protocol (§17 IndicationPhase schema): D-VRd × 4 induction → ASCT (SUR-ASCT-AUTOLOGOUS) → D-VRd × 2 consolidation → daratumumab-lenalidomide maintenance (REG-DARA-LEN-MAINTENANCE) until progression. Scoped to transplant-eligible patients (fit_for_transplant: true). TRANSPLANT-INELIGIBLE GAP: D-Rd (MAIA trial, Facon NEJM 2019; daratumumab + lenalidomide + dex until progression) or D-VRd × 6 cycles (GRIFFIN-style without ASCT) for non-transplant-eligible NDMM — not yet modeled as a separate indication entity; flag for next HEME backlog wave.</p>
+  <h2>Де використовується</h2>
+<h3>Algorithms</h3><ul><li><code>ALGO-MM-1L</code> - ALGO-MM-1L</li></ul>
+<h3>Contraindications</h3><ul><li><code>CI-BORTEZOMIB-SEVERE-NEUROPATHY</code> - CI-BORTEZOMIB-SEVERE-NEUROPATHY</li><li><code>CI-LENALIDOMIDE-PREGNANCY</code> - CI-LENALIDOMIDE-PREGNANCY</li></ul>
+<h3>Handbook Chapters</h3><ul><li><code>HB-MM-1L</code> - Multiple myeloma: first-line risk and fitness reasoning</li></ul>
+<h3>Handbook Questions</h3><ul><li><code>HQ-MM-1L-001</code> - HQ-MM-1L-001</li></ul>
+<h3>Questionnaires</h3><ul><li><code>QUEST-MM-1L</code> - Multiple Myeloma — newly diagnosed (1L)</li></ul>
+<h3>Показання</h3><ul><li><a href="/ukr/kb/indications/ind-mm-1l-dara-rd.html"><code>IND-MM-1L-DARA-RD</code></a> - IND-MM-1L-DARA-RD</li></ul>
+</main>
+</body>
+</html>

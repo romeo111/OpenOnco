@@ -65,3 +65,23 @@ Journal submission, conference abstracts, Product Hunt launch and broad advocacy
 - README now points to current metrics rather than embedding stale counts and distinguishes local browser processing from the optional server-backed interface.
 - Existing dirty generated files are excluded from this request's commit. Fresh generated disease pages and discovery changes must be built from the isolated delivery checkout before production publication.
 - Publication/account work, clinician recruitment and external responses remain pending. No recurring job was created.
+
+
+## Second delivery — 2026-10-10
+
+Implemented for the next site deployment:
+- EN/UA audit landing pages for all 831 indications and 404 regimens,
+  descriptive titles, MedicalWebPage metadata, source YAML links and search filters.
+- Nested indication source_id references are indexed; legacy OncoKB source
+  references remain excluded from the public source list under project policy.
+- Wiki participation link, bilingual participation hub, developer/MCP links,
+  synthetic reviewer template, evaluation/manuscript outline, Show HN copy
+  and a concrete field-level mCODE/FHIR interoperability gap analysis.
+- Existing browser PDF action is explicitly labeled for sharing with a doctor;
+  public instructions explain Save as PDF and clinician verification.
+
+Remaining external dependencies: authenticated HN/Product Hunt publishing,
+Google/Bing site-owner verification, independent clinical reviewers, academic
+authors/results/ethics determination and a suitable directory's acceptance.
+Prepared materials do not imply submission, endorsement, adoption or validation.
+No clinical KB recommendation was changed by this delivery.

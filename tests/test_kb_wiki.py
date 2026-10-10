@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -67,7 +68,7 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     assert 'id="kbSearchBtn"' in kb_home
     assert 'id="kbPagination"' in kb_home
     assert 'class="brand-mini"' in kb_home
-    assert 'class="lang-switch"' in kb_home
+    assert re.search(r'class="[^" ]*(?: [^" ]*)*lang-switch[^" ]*(?: [^" ]*)*"', kb_home)
     assert "<h1>Onco Wiki</h1>" in kb_home
     assert 'href="/diseases.html">Diseases</a>' not in kb_home
     assert 'href="/ask.html"' in kb_home  # Tumor Board CTA link
@@ -86,7 +87,7 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     assert 'lang="uk"' in uk_kb_home
     assert 'id="kbPagination"' in uk_kb_home
     assert 'class="brand-mini"' in uk_kb_home
-    assert 'class="lang-switch"' in uk_kb_home
+    assert re.search(r'class="[^" ]*(?: [^" ]*)*lang-switch[^" ]*(?: [^" ]*)*"', uk_kb_home)
     assert "<h1>Onco Wiki</h1>" in uk_kb_home
     assert 'href="/ukr/diseases.html">Хвороби</a>' not in uk_kb_home
     assert 'href="/ukr/ask.html"' in uk_kb_home  # Туморборд CTA link
@@ -160,3 +161,16 @@ def test_redflag_page_shows_origin_logic_and_usage(wiki_dir: Path):
     assert "Походження тривожної ознаки" in uk_page
     assert "Логіка спрацьовування" in uk_page
     assert "Де використовується" in uk_page
+
+
+def test_all_clinical_record_entries_resolve_in_both_languages(wiki_dir, wiki_payload):
+    entries = [e for e in wiki_payload["entries"] if e["kind_key"] in {"indications", "regimens"}]
+    assert len(entries) == wiki_payload["counts"]["Indications"] + wiki_payload["counts"]["Regimens"]
+    assert len(entries) > 1000
+    for entry in entries:
+        for prefix in ("", "ukr/"):
+            path = wiki_dir / prefix / entry["url"].lstrip("/")
+            page = path.read_text(encoding="utf-8")
+            assert entry["id"] in page
+            assert "github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/" in page
+            assert "kb-info-box" in page
