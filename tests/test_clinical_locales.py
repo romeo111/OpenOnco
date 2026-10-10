@@ -105,6 +105,8 @@ def test_digit_check_keeps_exponents_and_inequalities():
     assert not acceptable_draft('CA-19-9 normal.', 'CA-19-9 No es normal.', 'es')
     assert not acceptable_draft('HER2 positive', 'HER2 negativo', 'es')
     assert not acceptable_draft('EGFR positive', 'EGF positivo', 'es')
+    assert not acceptable_draft('MSI/MMR; MSI-H/dMMR', 'IMS/RMR ; MSI-H/dMRR', 'fr')
+    assert not acceptable_draft('Actionable driver testing', 'Tests de conducteurs réalisables', 'fr')
     assert not acceptable_draft('EGFR T790M', 'EGFR T790L', 'fr')
     assert not acceptable_draft('VHL disease', 'Maladie de la LVH', 'fr')
     assert not acceptable_draft('CDH1 mutation', 'Mutation HDC1', 'fr')

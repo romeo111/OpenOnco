@@ -160,4 +160,11 @@ def messages_for(locale):
     for source, values in DISEASE_TITLES.items():
         catalog[source] = values[index]
         catalog[source + ' - OpenOnco'] = values[index] + ' - OpenOnco'
+    if locale == 'fr':
+        catalog.update({
+            'Diffuse large B-cell lymphoma: first-line reasoning': 'Lymphome diffus à grandes cellules B : raisonnement en première ligne',
+            'Metastatic NSCLC: driver-first treatment reasoning': 'NSCLC métastatique : raisonnement thérapeutique fondé d’abord sur les altérations moléculaires',
+            'Multiple myeloma: first-line risk and fitness reasoning': 'Myélome multiple : risque et état général en première ligne',
+            'Advanced ovarian cancer: HRD/BRCA first-line maintenance reasoning': 'Cancer de l’ovaire avancé : raisonnement sur le traitement d’entretien HRD/BRCA en première ligne',
+        })
     return catalog

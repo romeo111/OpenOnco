@@ -43,6 +43,12 @@ def acceptable_draft(source, translated, locale, drug_pattern=None):
         return False
     if any(symbol.casefold() not in translated.casefold() for symbol in SYMBOLS.findall(source)):
         return False
+    # Each occurrence matters: a correct MSI-H later in a paragraph must not
+    # hide an earlier MSI/MMR mistranslated as IMS/RMR.
+    for symbol in set(SYMBOLS.findall(source)):
+        pattern = r'(?<!\w)' + re.escape(symbol) + r'(?!\w)'
+        if len(re.findall(pattern, source, re.I)) != len(re.findall(pattern, translated, re.I)):
+            return False
     if any(variant.casefold() not in translated.casefold() for variant in VARIANTS.findall(source)):
         return False
     if any(not re.search(r'(?<!\w)' + re.escape(token) + r'(?!\w)', translated, re.I) for token in ABBREVIATIONS.findall(source)):
@@ -74,6 +80,9 @@ def acceptable_draft(source, translated, locale, drug_pattern=None):
             'ESCAT': r'[eé]vacuations',
             'high-grade': r'haute qualit[eé]',
             'low-grade': r'(?:faible|basse) qualit[eé]',
+            'driver': r'conducteur',
+            'backbone': r'[eé]pine',
+            'fitness': r'conditionnement physique',
         }
         if any(term.casefold() in source.casefold() and re.search(pattern, translated, re.I) for term, pattern in bad_terms.items()):
             return False
