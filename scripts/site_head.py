@@ -262,6 +262,15 @@ def _description_for(path: str, title: str, locale: str) -> str:
     if normalized.endswith("handbook.html"):
         return ("Посібник OpenOnco: навчальні розділи з онкології, джерела та практичні запитання. Український переклад очікує клінічного рев’ю; без балів CME." if is_uk else "OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.")
 
+    if re.match(r"(?:ukr/)?kb/(?:indications|regimens)/[^/]+\.html$", normalized):
+        return (
+            f"{title_clean}: source-linked provisional OpenOnco knowledge-base record with review status and related entities. Requires clinician verification."
+            if not is_uk else
+            f"{title_clean}: попередній запис бази OpenOnco з джерелами, статусом рецензування та пов'язаними сутностями. Потрібна перевірка лікаря."
+        )
+    if normalized.endswith("participate.html"):
+        return ("OpenOnco developer setup, synthetic clinical review, interoperability gaps and participation resources." if not is_uk else "Як долучитися до OpenOnco: локальний запуск, синтетичне клінічне рецензування, стандарти та матеріали участі.")
+
     if normalized.endswith("404.html"):
         return "OpenOnco page not found." if not is_uk else "Сторінку OpenOnco не знайдено."
     if normalized.endswith("about.html"):
