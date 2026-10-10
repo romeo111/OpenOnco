@@ -10313,6 +10313,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
 <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="{style_href}" rel="stylesheet">
+<style>.about-action .btn-secondary {{ background: transparent; }}</style>
 </head>
 <body>
 {_render_top_bar(active="about", target_lang=target_lang, lang_switch_href=_lang_switch_href("about", target_lang))}
