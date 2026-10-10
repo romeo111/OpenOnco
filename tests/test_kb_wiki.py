@@ -40,6 +40,7 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     assert "qualified oncologist" in disease_page
     assert "two-reviewer sign-off" in disease_page
     assert "SRC-" in disease_page
+    assert "github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/nsclc.yaml" in disease_page
     assert 'href="/ukr/kb/diseases/dis-nsclc.html"' in disease_page
     uk_disease_page = (wiki_dir / "ukr/kb/diseases/dis-nsclc.html").read_text(encoding="utf-8")
     assert "<h1>Недрібноклітинний рак легені</h1>" in uk_disease_page

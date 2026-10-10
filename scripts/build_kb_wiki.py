@@ -828,6 +828,8 @@ def render_entity_page(
         )
         specifics = (
             f'<p class="kb-info-box">{html.escape(disclaimer)}</p>'
+            f'<p><a href="https://github.com/romeo111/OpenOnco/blob/master/{html.escape(entity.rel_path)}">'
+            f'{"Джерельний YAML" if locale == "uk" else "Source YAML"}</a></p>'
             f'<table class="kb-facts">{_rows(code_rows)}</table>'
             f'<p><a href="{T[locale]["diseases_href"]}#{html.escape(entity.id)}">'
             f'{html.escape(T[locale]["capabilities"])}</a></p>'
