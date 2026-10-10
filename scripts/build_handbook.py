@@ -21,6 +21,8 @@ if str(REPO_ROOT) not in sys.path:
 
 from knowledge_base.validation.loader import HANDBOOK_REVIEW_STALE_DAYS, load_content  # noqa: E402
 
+from scripts.site_nav import render_top_bar  # noqa: E402
+
 DEFAULT_KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "docs"
 
@@ -375,6 +377,7 @@ def _page_shell(title: str, body: str) -> str:
   </style>
 </head>
 <body>
+  {render_top_bar(active="handbook", lang_switch_href="/ukr/")}
   <main class="hb-wrap">
     {body}
   </main>

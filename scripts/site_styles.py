@@ -55,7 +55,8 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   background: white;
   color: var(--gray-900);
   padding: 13px 24px;
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: space-between; align-items: center;
   border-bottom: 1px solid var(--gray-200);
   width: 100%;
   max-width: 100%;
@@ -94,7 +95,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 }
 
 /* New top-bar layout: brand · nav · right-cluster (lang switch + try CTA) */
-.top-nav { display: flex; align-items: center; flex: 1; margin: 0 24px 0 16px; gap: 4px; }
+.top-nav { display: flex; flex-wrap: wrap; align-items: center; flex: 1 1 auto; min-width: 0; margin: 0 24px 0 16px; gap: 4px; }
 .top-nav a {
   color: var(--gray-700); padding: 6px 10px; text-decoration: none;
   font-size: 14.5px; font-weight: 700; border-radius: 4px;
@@ -105,7 +106,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   box-shadow: inset 0 -2px 0 var(--green-700);
 }
 
-.top-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+.top-right { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; flex-shrink: 0; max-width: 100%; margin-left: auto; }
 .top-cta-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 
 /* Language switch — compact UA / EN toggle. Fixed-width halves so the
