@@ -46,7 +46,7 @@ def site_dir(tmp_path_factory) -> Path:
 
 def test_static_assets_present(site_dir: Path):
     # CSD-9C dropped monolithic openonco-engine.zip — replaced by core + per-disease + index.
-    for f in (".nojekyll", "CNAME", "style.css", "index.html", "gallery.html",
+    for f in (".nojekyll", "CNAME", "style.css", "header.css", "index.html", "gallery.html",
               "try.html", "prevent.html", "ask.html",
               "openonco-engine-core.zip", "openonco-engine-index.json",
               "examples.json", "manifest.webmanifest", "kb.html", "kb_search_index.json",

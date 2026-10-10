@@ -83,7 +83,7 @@ from scripts.site_cases import (
     CaseEntry,
 )
 from scripts.site_head import SITE_FAVICON_LINK, SITE_FONT_LINK, finalize_site_discovery
-from scripts.site_nav import render_top_bar as _render_top_bar
+from scripts.site_nav import render_top_bar as _render_top_bar, write_header_assets
 from scripts.site_styles import STYLESHEET as _STYLE_CSS
 
 
@@ -10556,6 +10556,7 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
     (output_dir / "CNAME").write_text(CUSTOM_DOMAIN + "\n", encoding="utf-8")
     (output_dir / "style.css").write_text(_STYLE_CSS, encoding="utf-8")
+    write_header_assets(output_dir)
     landing_assets = _copy_landing_assets(output_dir)
     excluded_case_pages_removed = _remove_excluded_case_pages(output_dir)
 

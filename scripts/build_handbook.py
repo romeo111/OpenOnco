@@ -21,7 +21,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from knowledge_base.validation.loader import HANDBOOK_REVIEW_STALE_DAYS, load_content  # noqa: E402
 
-from scripts.site_nav import render_top_bar  # noqa: E402
+from scripts.site_nav import render_top_bar, write_header_assets  # noqa: E402
 
 DEFAULT_KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "docs"
@@ -825,6 +825,7 @@ def build_handbook(kb_root: Path = DEFAULT_KB_ROOT, output_dir: Path = DEFAULT_O
         )
 
     output_dir.mkdir(parents=True, exist_ok=True)
+    write_header_assets(output_dir)
     chapter_dir = output_dir / "handbook"
     chapter_dir.mkdir(parents=True, exist_ok=True)
 
