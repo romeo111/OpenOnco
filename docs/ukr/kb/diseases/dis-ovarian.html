@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Карцинома яєчників (переважно high-grade серозна) - OpenOnco</title>
+  <!-- openonco-seo:start -->
+<meta name="description" content="Карцинома яєчників (переважно high-grade серозна): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Карцинома яєчників (переважно high-grade серозна): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
+<meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
+<link rel="canonical" href="https://openonco.info/ukr/kb/diseases/dis-ovarian.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-ovarian.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-ovarian.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-ovarian.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Карцинома яєчників (переважно high-grade серозна) - OpenOnco">
+<meta property="og:description" content="Карцинома яєчників (переважно high-grade серозна): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
+<meta property="og:url" content="https://openonco.info/ukr/kb/diseases/dis-ovarian.html">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Карцинома яєчників (переважно high-grade серозна) - OpenOnco">
+<meta name="twitter:description" content="Карцинома яєчників (переважно high-grade серозна): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Карцинома яєчників (переважно high-grade серозна) - OpenOnco","description":"Карцинома яєчників (переважно high-grade серозна): сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/diseases/dis-ovarian.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":{"@id":"https://openonco.info/ukr/kb/diseases/dis-ovarian.html#condition"},"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/diseases/dis-ovarian.html"},"mainEntity":{"@type":"MedicalCondition","@id":"https://openonco.info/ukr/kb/diseases/dis-ovarian.html#condition","name":"Карцинома яєчників (переважно high-grade серозна)","url":"https://openonco.info/ukr/kb/diseases/dis-ovarian.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+.kb-page { padding-top: 34px; }
+.kb-page h1 { font-family: var(--font-display); font-size: 38px; color: var(--green-900); margin-bottom: 10px; }
+.kb-page h2 { font-family: var(--font-display); color: var(--green-900); font-size: 24px; margin: 30px 0 12px; }
+.kb-page h3 { color: var(--green-900); font-size: 17px; margin: 18px 0 8px; }
+.kb-lead { color: var(--gray-700); font-size: 16px; max-width: 880px; margin-bottom: 22px; }
+.kb-breadcrumb { font-size: 13px; margin-bottom: 12px; color: var(--gray-500); }
+.kb-info-box { background: white; border: 1px solid var(--green-100); border-left: 5px solid var(--green-700); border-radius: 7px; padding: 13px 15px; color: var(--gray-700); margin: 18px 0 20px; max-width: 920px; }
+.kb-info-box strong { color: var(--green-900); }
+.kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
+.kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
+.kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
+.kb-search-panel { box-sizing: border-box; margin: 22px 0 26px; padding: 26px; background: linear-gradient(120deg, #edf6f0, #f8fbf9); border: 1px solid #b8d4c2; border-top: 4px solid var(--green-700); border-radius: 16px; box-shadow: 0 10px 30px rgba(16, 65, 42, .08); }
+.kb-search-panel * { box-sizing: border-box; }
+.kb-search-label { display: block; color: var(--green-900); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 6px; }
+.kb-search-hint { color: var(--gray-700); font-size: 15px; margin: 0 0 18px; }
+.kb-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+.kb-search-field { position: relative; min-width: 0; }
+.kb-search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 23px; height: 23px; fill: none; stroke: var(--green-700); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.kb-search { width: 100%; min-width: 0; min-height: 60px; border: 2px solid #8cb69d; border-radius: 10px; padding: 16px 16px 16px 52px; font: inherit; font-size: 18px; color: var(--gray-900); background: white; box-shadow: 0 3px 10px rgba(16, 65, 42, .05); }
+.kb-search::placeholder { color: var(--gray-500); opacity: 1; }
+.kb-search:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; border-color: var(--green-700); }
+.kb-search-btn { width: auto; min-width: 130px; min-height: 60px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 10px; padding: 0 24px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
+.kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
+.kb-search-btn:focus-visible, .kb-filter-row button:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+.kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
+.kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
+.kb-results { display: grid; gap: 8px; }
+.kb-result { display: grid; grid-template-columns: 105px 1fr auto; gap: 10px; align-items: baseline; background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 12px; text-decoration: none; color: var(--gray-900); }
+.kb-result:hover { border-color: var(--green-600); }
+.kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
+.kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px 0 4px; color: var(--gray-700); }
+.kb-pagination button { border: 1px solid var(--gray-200); background: white; color: var(--green-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; font-weight: 700; }
+.kb-pagination button:disabled { color: var(--gray-500); cursor: not-allowed; opacity: .65; }
+.kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
+.kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
+.kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
+.kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
+.kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
+.kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
+.kb-muted { color: var(--gray-500); }
+.kb-entity ul { padding-left: 22px; }
+.kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
+.kb-faq { margin-top: 36px; }
+.kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
+.kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
+@media (max-width: 700px) {
+  .kb-search-panel { padding: 20px 16px; margin-top: 16px; }
+  .kb-search-label { font-size: 21px; }
+  .kb-search { font-size: 16px; min-height: 56px; }
+  .kb-search-row { grid-template-columns: 1fr; }
+  .kb-search-btn { min-height: 48px; }
+  .kb-result { grid-template-columns: 1fr; }
+  .kb-result small { grid-column: auto; }
+  .kb-pagination { flex-wrap: wrap; }
+  .kb-facts th { width: auto; display: block; border-bottom: 0; }
+  .kb-facts td { display: block; }
+}
+</style>
+</head>
+<body>
+  <header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=design-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/ukr/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ВІДКРИТА ОНКОЛОГІЯ</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+    <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Мова">
+      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
+      <a class="lang-other" href="/kb/diseases/dis-ovarian.html"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
+    </div>
+    <a href="/ukr/try.html" class="btn-cta-top btn-cta-try"><span>План лікування</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Меню"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Меню">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Інструменти</span>
+    <div class="top-cta-group">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Відкритий код</span>
+  </div>
+  </div>
+</header>
+  <main class="kb-page kb-entity">
+  <p class="kb-breadcrumb"><a href="/ukr/kb.html">Onco Wiki</a> / Хвороба</p>
+  <h1>Карцинома яєчників (переважно high-grade серозна)</h1>
+  <p class="kb-lead">Детермінований перегляд YAML-сутності з джерельної бази. Клінічний авторитет лишається за вказаними source ID та статусом клінічного sign-off.</p>
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-OVARIAN</code></td></tr>
+<tr><th>Тип</th><td>Хвороба</td></tr>
+<tr><th>Синоніми</th><td><div class="kb-alias-list"><span class="kb-alias">Epithelial ovarian cancer</span><span class="kb-alias">Ovarian carcinoma</span><span class="kb-alias">Tubo-ovarian cancer (incl. fallopian tube + primary peritoneal)</span><span class="kb-alias">Карцинома яєчників (переважно high-grade серозна)</span></div></td></tr>
+<tr><th>Статус</th><td>переглянуто 2026-04-26 | очікує клінічного підпису</td></tr>
+<tr><th>Хвороби</th><td><span class="kb-muted">Не вказано</span></td></tr>
+<tr><th>Джерела</th><td><span class="kb-chip" title="ESMO Ovarian Cancer Clinical Practice Guideline"><a href="https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-epithelial-ovarian-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-OVARIAN-2024</code></a></span> <span class="kb-chip" title="NCCN Ovarian Cancer"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1453" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-OVARIAN-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Інформаційний інструмент, не медичний виріб. Усі рекомендації має перевірити кваліфікований онколог. Клінічний вміст є попереднім до завершення перевірки двома рецензентами.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/ovarian.yaml">Джерельний YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morphology</th><td>8441/3</td></tr>
+<tr><th>icd_o_3_topography</th><td>[&quot;C56&quot;, &quot;C57.0&quot;, &quot;C48.1&quot;]</td></tr>
+<tr><th>icd_10</th><td>C56</td></tr>
+<tr><th>who_classification</th><td>WHO Female Genital Tumours 5th ed (2020): High-grade serous carcinoma of tubo-ovarian / peritoneal origin</td></tr></table><p><a href="/ukr/diseases.html#DIS-OVARIAN">Можливості</a></p>
+  <h2>Нотатки</h2><p>Скафолд для партії #2: фокус на поширених стадіях (FIGO III-IV) high-grade серозної карциноми (HGSC) — перша лінія системної терапії та підтримуюча терапія. Включено 4 червоні прапори: статус debulking як тригер обговорення в MDT, актиабельність HRD, похилий вік / стареча астенія, периопераційний ризик VTE. Схеми лікування: основа карбоплатин (carboplatin) + паклітаксел (paclitaxel) ± бевацизумаб (bevacizumab); олапариб (olaparib) у підтримці при HRD+; нірапариб (niraparib) — all-comer підтримка; бевацизумаб у підтримці згідно PAOLA-1. Поза межами цього комміту: рідкісні гістологічні підтипи (світлоклітинна, ендометріоїдна, муцинозна, low-grade серозна — мають окремі парадигми); алгоритми ≥2L при рецидивному платиночутливому vs платинорезистентному перебігу; пограничні пухлини. Тестування HRD (BIO-HRD-STATUS) — центральний біомаркер, що визначає виграш від підтримуючої PARPi-терапії. Виявлення герміногенних та соматичних варіантів BIO BRCA1/2 — через рефлекторне тестування.</p>
+  <h2>Де використовується</h2>
+<h3>Algorithms</h3><ul><li><code>ALGO-AMSTERDAM-II-LYNCH</code> - ALGO-AMSTERDAM-II-LYNCH</li><li><code>ALGO-BOADICEA-V6-BREAST-OVARIAN</code> - ALGO-BOADICEA-V6-BREAST-OVARIAN</li><li><code>ALGO-BRCAPRO</code> - ALGO-BRCAPRO</li><li><code>ALGO-MANCHESTER-BRCA</code> - ALGO-MANCHESTER-BRCA</li><li><code>ALGO-OVARIAN-2L</code> - ALGO-OVARIAN-2L</li><li><code>ALGO-OVARIAN-ADVANCED-1L</code> - ALGO-OVARIAN-ADVANCED-1L</li><li><code>ALGO-PEUTZ-JEGHERS-CARRIER-SURVEILLANCE</code> - ALGO-PEUTZ-JEGHERS-CARRIER-SURVEILLANCE</li><li><code>ALGO-PREMM5-LYNCH</code> - ALGO-PREMM5-LYNCH</li><li><code>ALGO-TYRER-CUZICK-V8-BREAST</code> - ALGO-TYRER-CUZICK-V8-BREAST</li></ul>
+<h3>Handbook Chapters</h3><ul><li><code>HB-OVARIAN-MAINTENANCE-1L</code> - Advanced ovarian cancer: HRD/BRCA first-line maintenance reasoning</li></ul>
+<h3>Indications</h3><ul><li><code>IND-BRIP1-CARRIER-PREVENTION-OBSERVATION</code> - IND-BRIP1-CARRIER-PREVENTION-OBSERVATION</li><li><code>IND-BRIP1-CARRIER-PREVENTION-SURVEILLANCE</code> - IND-BRIP1-CARRIER-PREVENTION-SURVEILLANCE</li><li><code>IND-BRIP1-SUSPICION-PREVENTION-EMPIRICAL-SURVEILLANCE</code> - IND-BRIP1-SUSPICION-PREVENTION-EMPIRICAL-SURVEILLANCE</li><li><code>IND-BRIP1-SUSPICION-PREVENTION-TESTING</code> - IND-BRIP1-SUSPICION-PREVENTION-TESTING</li><li><code>IND-OVARIAN-2L-PLAT-RES-MIRVETUXIMAB</code> - IND-OVARIAN-2L-PLAT-RES-MIRVETUXIMAB</li><li><code>IND-OVARIAN-2L-PLAT-RES-PLD-BEV</code> - IND-OVARIAN-2L-PLAT-RES-PLD-BEV</li><li><code>IND-OVARIAN-2L-PLAT-RES-TOPOTECAN</code> - IND-OVARIAN-2L-PLAT-RES-TOPOTECAN</li><li><code>IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV</code> - IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV</li><li><code>IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV</code> - IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV</li><li><code>IND-OVARIAN-2L-PLAT-SENS-CARBO-PLD-BEV</code> - IND-OVARIAN-2L-PLAT-SENS-CARBO-PLD-BEV</li><li><code>IND-OVARIAN-3L-POST-PARPi-POST-MIRVE</code> - IND-OVARIAN-3L-POST-PARPi-POST-MIRVE</li><li><code>IND-OVARIAN-3L-TRABECTEDIN-PLD</code> - IND-OVARIAN-3L-TRABECTEDIN-PLD</li><li><code>IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG</code> - IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG</li><li><code>IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP</code> - IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP</li><li><code>IND-OVARIAN-MAINT-BEV</code> - IND-OVARIAN-MAINT-BEV</li><li><code>IND-OVARIAN-MAINT-PARPI-BRCAM-OLAPARIB</code> - IND-OVARIAN-MAINT-PARPI-BRCAM-OLAPARIB</li><li><code>IND-OVARIAN-MAINT-PARPI-HRD-NIRAPARIB</code> - IND-OVARIAN-MAINT-PARPI-HRD-NIRAPARIB</li><li><code>IND-OVARIAN-MAINT-PARPI-RUCAPARIB</code> - IND-OVARIAN-MAINT-PARPI-RUCAPARIB</li><li><code>IND-OVARIAN-MAINTENANCE-OLAPARIB</code> - IND-OVARIAN-MAINTENANCE-OLAPARIB</li><li><code>IND-RAD51C-D-CARRIER-PREVENTION-OBSERVATION</code> - IND-RAD51C-D-CARRIER-PREVENTION-OBSERVATION</li><li><code>IND-RAD51C-D-CARRIER-PREVENTION-SURVEILLANCE</code> - IND-RAD51C-D-CARRIER-PREVENTION-SURVEILLANCE</li><li><code>IND-RAD51C-D-SUSPICION-PREVENTION-EMPIRICAL-SURVEILLANCE</code> - IND-RAD51C-D-SUSPICION-PREVENTION-EMPIRICAL-SURVEILLANCE</li><li><code>IND-RAD51C-D-SUSPICION-PREVENTION-TESTING</code> - IND-RAD51C-D-SUSPICION-PREVENTION-TESTING</li><li><code>IND-REPRODUCTIVE-ENDOMETRIOSIS-OVARIAN-PREVENTION-OBSERVATION</code> - IND-REPRODUCTIVE-ENDOMETRIOSIS-OVARIAN-PREVENTION-OBSERVATION</li><li><code>IND-REPRODUCTIVE-ENDOMETRIOSIS-OVARIAN-PREVENTION-SURVEILLANCE</code> - IND-REPRODUCTIVE-ENDOMETRIOSIS-OVARIAN-PREVENTION-SURVEILLANCE</li></ul>
+<h3>Procedures</h3><ul><li><code>PROC-GENETIC-COUNSELING-PRE-TEST</code> - Pre-test genetic counseling encounter for germline cancer-susceptibility testing</li><li><code>PROC-PROPHYLACTIC-BSO-BRCA</code> - Risk-reducing bilateral salpingo-oophorectomy in BRCA1/2 carriers</li><li><code>PROC-PROPHYLACTIC-HYSTERECTOMY-LYNCH</code> - Risk-reducing hysterectomy with or without BSO in Lynch syndrome carriers</li></ul>
+<h3>Questionnaires</h3><ul><li><code>QUEST-OVARIAN-1L-STUB</code> - Ovarian carcinoma — first line</li></ul>
+<h3>Sources</h3><ul><li><code>SRC-ARIEL3-COLEMAN-2017</code> - Rucaparib maintenance treatment for recurrent ovarian carcinoma after response to platinu...</li><li><code>SRC-AURELIA-PUJADE-LAURAINE-2014</code> - Bevacizumab combined with chemotherapy for platinum-resistant recurrent ovarian cancer: T...</li><li><code>SRC-BERRY-BRCAPRO-1997</code> - Probability of carrying a mutation of breast-ovarian cancer gene BRCA1 based on family hi...</li><li><code>SRC-ESMO-OVARIAN-2024</code> - ESMO Ovarian Cancer Clinical Practice Guideline</li><li><code>SRC-EVANS-MANCHESTER-BRCA-2017</code> - The Manchester scoring system for predicting BRCA1 / BRCA2 mutation likelihood — refined...</li><li><code>SRC-GOG0213-COLEMAN-2017</code> - Bevacizumab and paclitaxel-carboplatin chemotherapy and secondary cytoreduction in recurr...</li><li><code>SRC-LEE-BOADICEA-V6-2019</code> - BOADICEA — a comprehensive breast cancer risk-prediction model incorporating genetic and...</li><li><code>SRC-MIRASOL-MOORE-2024</code> - Mirvetuximab Soravtansine in FRα-Positive, Platinum-Resistant Ovarian Cancer</li><li><code>SRC-NCCN-OVARIAN-2025</code> - NCCN Ovarian Cancer</li><li><code>SRC-NOVA-MIRZA-2016</code> - Niraparib Maintenance Therapy in Platinum-Sensitive, Recurrent Ovarian Cancer</li><li><code>SRC-OCEANS-AGHAJANIAN-2012</code> - OCEANS: a randomized, double-blind, placebo-controlled phase III trial of chemotherapy wi...</li><li><code>SRC-OVA-301-MONK-2010</code> - Trabectedin plus pegylated liposomal Doxorubicin in recurrent ovarian cancer</li><li><code>SRC-PAOLA1-RAY-COQUARD-2019</code> - Olaparib plus Bevacizumab as First-Line Maintenance in Ovarian Cancer</li><li><code>SRC-PRIMA-GONZALEZ-MARTIN-2019</code> - Niraparib in Patients with Newly Diagnosed Advanced Ovarian Cancer</li><li><code>SRC-SCHULTZ-DICER1-2018</code> - DICER1 and Associated Conditions: Identification of At-Risk Individuals and Recommended S...</li><li><code>SRC-SOLO1-MOORE-2018</code> - Maintenance Olaparib in Patients with Newly Diagnosed Advanced Ovarian Cancer</li><li><code>SRC-SOLO2-PUJADE-LAURAINE-2017</code> - Olaparib tablets as maintenance therapy in patients with platinum-sensitive, relapsed ova...</li><li><code>SRC-STEWART-DICER1-REVIEW-2019</code> - Neoplasm Risk Among Individuals With a Pathogenic Germline Variant in DICER1</li></ul>
+<h3>Клінічна застосовність</h3><ul><li><a href="/ukr/kb/biomarker_actionability/bma-amh-ovarian-reserve-bso-timing.html"><code>BMA-AMH-OVARIAN-RESERVE-BSO-TIMING</code></a> - Anti-Müllerian Hormone (AMH) reflects primordial follicle pool size and is the best singl...</li><li><a href="/ukr/kb/biomarker_actionability/bma-bard1-germline-ovarian.html"><code>BMA-BARD1-GERMLINE-OVARIAN</code></a> - BARD1 germline pathogenic in EOC: rare; included in HRR panels; PARPi benefit extrapolate...</li><li><a href="/ukr/kb/biomarker_actionability/bma-bard1-somatic-ovarian.html"><code>BMA-BARD1-SOMATIC-OVARIAN</code></a> - Somatic BARD1 in EOC: HRR panel inclusion variable; PARPi off-label consideration in HRD-...</li><li><a href="/ukr/kb/biomarker_actionability/bma-braf-v600e-ovarian.html"><code>BMA-BRAF-V600E-OVARIAN</code></a> - BRAF V600E is a recurrent driver in low-grade serous ovarian carcinoma (LGSOC) — ~30% of...</li><li><a href="/ukr/kb/biomarker_actionability/bma-brca1-germline-ovarian.html"><code>BMA-BRCA1-GERMLINE-OVARIAN</code></a> - BRCA1 germline pathogenic variants in advanced epithelial ovarian carcinoma (incl. fallop...</li><li><a href="/ukr/kb/biomarker_actionability/bma-brca1-somatic-ovarian.html"><code>BMA-BRCA1-SOMATIC-OVARIAN</code></a> - Somatic BRCA1 loss-of-function variants in advanced EOC confer PARPi sensitivity equivale...</li><li><a href="/ukr/kb/biomarker_actionability/bma-brca2-germline-ovarian.html"><code>BMA-BRCA2-GERMLINE-OVARIAN</code></a> - BRCA2 germline pathogenic in advanced EOC: olaparib 1L maintenance (SOLO1) → median PFS n...</li><li><a href="/ukr/kb/biomarker_actionability/bma-brca2-somatic-ovarian.html"><code>BMA-BRCA2-SOMATIC-OVARIAN</code></a> - Somatic BRCA2 loss-of-function in advanced EOC: PARPi (olaparib, niraparib, rucaparib) ap...</li><li><a href="/ukr/kb/biomarker_actionability/bma-brip1-germline-ovarian.html"><code>BMA-BRIP1-GERMLINE-OVARIAN</code></a> - BRIP1 (FANCJ) germline pathogenic in EOC: established moderate-risk gene (~RR 3-5); inclu...</li><li><a href="/ukr/kb/biomarker_actionability/bma-brip1-somatic-ovarian.html"><code>BMA-BRIP1-SOMATIC-OVARIAN</code></a> - Somatic BRIP1 in EOC: HRR panel inclusion; PARPi consideration in HRD-positive context. E...</li><li><a href="/ukr/kb/biomarker_actionability/bma-chek1-somatic-ovarian.html"><code>BMA-CHEK1-SOMATIC-OVARIAN</code></a> - Somatic CHEK1 loss-of-function in EOC: rare (&lt;1%); included in some HRR panel definitions...</li><li><a href="/ukr/kb/biomarker_actionability/bma-dicer1-germline-pleuropulmonary-blastoma.html"><code>BMA-DICER1-GERMLINE-PLEUROPULMONARY-BLASTOMA</code></a> - DICER1 germline pathogenic variants cause DICER1 tumor predisposition syndrome — broad sp...</li><li><a href="/ukr/kb/biomarker_actionability/bma-fanca-germline-ovarian.html"><code>BMA-FANCA-GERMLINE-OVARIAN</code></a> - FANCA germline (heterozygous) in EOC: Fanconi-anemia-pathway gene; biallelic loss = Fanco...</li><li><a href="/ukr/kb/biomarker_actionability/bma-fancl-germline-ovarian.html"><code>BMA-FANCL-GERMLINE-OVARIAN</code></a> - FANCL germline (heterozygous) in EOC: Fanconi-anemia-pathway gene; biallelic loss = Fanco...</li><li><a href="/ukr/kb/biomarker_actionability/bma-hrd-status-ovarian.html"><code>BMA-HRD-STATUS-OVARIAN</code></a> - HRD-positive high-grade serous ovarian carcinoma (~50% — encompassing BRCA1/2-mutated and...</li><li><a href="/ukr/kb/biomarker_actionability/bma-kras-g12c-ovarian.html"><code>BMA-KRAS-G12C-OVARIAN</code></a> - KRAS G12C in ovarian (mostly low-grade serous) is rare. Tissue- agnostic basket data (Cod...</li><li><a href="/ukr/kb/biomarker_actionability/bma-kras-g12d-ovarian.html"><code>BMA-KRAS-G12D-OVARIAN</code></a> - KRAS G12D in mucinous/low-grade serous ovarian — no approved drug; trial-only (MRTX1133).</li><li><a href="/ukr/kb/biomarker_actionability/bma-kras-g12v-ovarian.html"><code>BMA-KRAS-G12V-OVARIAN</code></a> - KRAS G12V in low-grade serous / mucinous ovarian — no approved targeted therapy.</li><li><a href="/ukr/kb/biomarker_actionability/bma-mlh1-germline-ovarian.html"><code>BMA-MLH1-GERMLINE-OVARIAN</code></a> - MLH1 germline loss-of-function in ovarian produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/ukr/kb/biomarker_actionability/bma-mlh1-somatic-ovarian.html"><code>BMA-MLH1-SOMATIC-OVARIAN</code></a> - MLH1 somatic loss-of-function in ovarian produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/ukr/kb/biomarker_actionability/bma-msh2-germline-ovarian.html"><code>BMA-MSH2-GERMLINE-OVARIAN</code></a> - MSH2 germline loss-of-function in ovarian produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/ukr/kb/biomarker_actionability/bma-msh2-somatic-ovarian.html"><code>BMA-MSH2-SOMATIC-OVARIAN</code></a> - MSH2 somatic loss-of-function in ovarian produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/ukr/kb/biomarker_actionability/bma-msh6-germline-ovarian.html"><code>BMA-MSH6-GERMLINE-OVARIAN</code></a> - MSH6 germline loss-of-function in ovarian produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/ukr/kb/biomarker_actionability/bma-msh6-somatic-ovarian.html"><code>BMA-MSH6-SOMATIC-OVARIAN</code></a> - MSH6 somatic loss-of-function in ovarian produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/ukr/kb/biomarker_actionability/bma-palb2-germline-ovarian.html"><code>BMA-PALB2-GERMLINE-OVARIAN</code></a> - PALB2 germline pathogenic in EOC: rare (~1%); biologically HR-deficient. Niraparib NOVA n...</li><li><a href="/ukr/kb/biomarker_actionability/bma-palb2-somatic-ovarian.html"><code>BMA-PALB2-SOMATIC-OVARIAN</code></a> - Somatic PALB2 in EOC: included in HRD-positive populations of niraparib/rucaparib trials....</li><li><a href="/ukr/kb/biomarker_actionability/bma-pms2-germline-ovarian.html"><code>BMA-PMS2-GERMLINE-OVARIAN</code></a> - PMS2 germline loss-of-function in ovarian produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/ukr/kb/biomarker_actionability/bma-pms2-somatic-ovarian.html"><code>BMA-PMS2-SOMATIC-OVARIAN</code></a> - PMS2 somatic loss-of-function in ovarian produces dMMR/MSI-H phenotype. Pan- tumor MSI-H...</li><li><a href="/ukr/kb/biomarker_actionability/bma-rad51b-germline-ovarian.html"><code>BMA-RAD51B-GERMLINE-OVARIAN</code></a> - RAD51B germline pathogenic in EOC: confers HR deficiency. RAD51C and RAD51D have establis...</li><li><a href="/ukr/kb/biomarker_actionability/bma-rad51b-somatic-ovarian.html"><code>BMA-RAD51B-SOMATIC-OVARIAN</code></a> - Somatic RAD51B loss-of-function in EOC: HRR panel inclusion (varies); PARPi consideration...</li><li><a href="/ukr/kb/biomarker_actionability/bma-rad51c-germline-ovarian.html"><code>BMA-RAD51C-GERMLINE-OVARIAN</code></a> - RAD51C germline pathogenic in EOC: confers HR deficiency. RAD51C and RAD51D have establis...</li><li><a href="/ukr/kb/biomarker_actionability/bma-rad51c-somatic-ovarian.html"><code>BMA-RAD51C-SOMATIC-OVARIAN</code></a> - Somatic RAD51C loss-of-function in EOC: HRR panel inclusion (varies); PARPi consideration...</li><li><a href="/ukr/kb/biomarker_actionability/bma-rad51d-germline-ovarian.html"><code>BMA-RAD51D-GERMLINE-OVARIAN</code></a> - RAD51D germline pathogenic in EOC: confers HR deficiency. RAD51C and RAD51D have establis...</li><li><a href="/ukr/kb/biomarker_actionability/bma-rad51d-somatic-ovarian.html"><code>BMA-RAD51D-SOMATIC-OVARIAN</code></a> - Somatic RAD51D loss-of-function in EOC: HRR panel inclusion (varies); PARPi consideration...</li><li><a href="/ukr/kb/biomarker_actionability/bma-rad54l-germline-ovarian.html"><code>BMA-RAD54L-GERMLINE-OVARIAN</code></a> - RAD54L germline variants: rare; HR-pathway gene with limited clinical evidence. Included...</li><li><a href="/ukr/kb/biomarker_actionability/bma-rad54l-somatic-ovarian.html"><code>BMA-RAD54L-SOMATIC-OVARIAN</code></a> - Somatic RAD54L: very rare; biological HRR rationale only. ESCAT IV / OncoKB Level 4.</li><li><a href="/ukr/kb/biomarker_actionability/bma-tp53-mut-ovarian.html"><code>BMA-TP53-MUT-OVARIAN</code></a> - TP53 mutation is near-universal in high-grade serous ovarian (~96%). Not actionable per s...</li><li><a href="/ukr/kb/biomarker_actionability/bma-tp53-r175h-ovarian.html"><code>BMA-TP53-R175H-OVARIAN</code></a> - TP53 hotspot in HGSOC — near-universal disease feature; not directly targeted. Hotspot R1...</li><li><a href="/ukr/kb/biomarker_actionability/bma-tp53-r248q-ovarian.html"><code>BMA-TP53-R248Q-OVARIAN</code></a> - TP53 hotspot in HGSOC — near-universal disease feature; not directly targeted. Hotspot R2...</li><li><a href="/ukr/kb/biomarker_actionability/bma-tp53-r273h-ovarian.html"><code>BMA-TP53-R273H-OVARIAN</code></a> - TP53 hotspot in HGSOC — near-universal disease feature; not directly targeted. Hotspot R2...</li><li class="kb-muted">... 1 ще</li></ul>
+<h3>Тривожна ознака</h3><ul><li><a href="/ukr/kb/redflags/rf-bard1-confirmed-carrier.html"><code>RF-BARD1-CONFIRMED-CARRIER</code></a> - Confirmed germline pathogenic / likely-pathogenic variant in BARD1 (BRCA1-associated RING...</li><li><a href="/ukr/kb/redflags/rf-bard1-family-history-suspicion.html"><code>RF-BARD1-FAMILY-HISTORY-SUSPICION</code></a> - Family pedigree pattern suggestive of germline BARD1 heterozygous carrier state in an asy...</li><li><a href="/ukr/kb/redflags/rf-brca-confirmed-carrier.html"><code>RF-BRCA-CONFIRMED-CARRIER</code></a> - Confirmed germline pathogenic / likely-pathogenic variant in BRCA1 or BRCA2 — the canonic...</li><li><a href="/ukr/kb/redflags/rf-brca-hboc-family-history-suspicion.html"><code>RF-BRCA-HBOC-FAMILY-HISTORY-SUSPICION</code></a> - Family pedigree meeting criteria suggestive of Hereditary Breast and Ovarian Cancer (HBOC...</li><li><a href="/ukr/kb/redflags/rf-breast-ovarian-hrd-assay-distinction.html"><code>RF-BREAST-OVARIAN-HRD-ASSAY-DISTINCTION</code></a> - HRD assay platform mismatch in breast or ovarian cancer: HRD-positive call by Myriad myCh...</li><li><a href="/ukr/kb/redflags/rf-brip1-confirmed-carrier.html"><code>RF-BRIP1-CONFIRMED-CARRIER</code></a> - Confirmed germline pathogenic / likely-pathogenic variant in BRIP1 (BRCA1-interacting pro...</li><li><a href="/ukr/kb/redflags/rf-brip1-family-history-suspicion.html"><code>RF-BRIP1-FAMILY-HISTORY-SUSPICION</code></a> - Family pedigree pattern suggestive of germline BRIP1 heterozygous carrier state in an asy...</li><li><a href="/ukr/kb/redflags/rf-cascade-brca-fdr-positive.html"><code>RF-CASCADE-BRCA-FDR-POSITIVE</code></a> - A first-degree relative of the patient (parent, sibling, or child) has a documented posit...</li><li><a href="/ukr/kb/redflags/rf-cascade-lynch-fdr-positive.html"><code>RF-CASCADE-LYNCH-FDR-POSITIVE</code></a> - A first-degree relative of the patient (parent, sibling, or child) has a documented posit...</li><li><a href="/ukr/kb/redflags/rf-dicer1-confirmed-carrier.html"><code>RF-DICER1-CONFIRMED-CARRIER</code></a> - Confirmed germline pathogenic / likely-pathogenic variant in DICER1 (RNase III endonuclea...</li><li><a href="/ukr/kb/redflags/rf-lynch-confirmed-carrier.html"><code>RF-LYNCH-CONFIRMED-CARRIER</code></a> - Confirmed germline pathogenic / likely-pathogenic variant in a Lynch syndrome (MMR / EPCA...</li><li><a href="/ukr/kb/redflags/rf-lynch-family-history-suspicion.html"><code>RF-LYNCH-FAMILY-HISTORY-SUSPICION</code></a> - Family pedigree meeting criteria suggestive of hereditary nonpolyposis colorectal cancer...</li><li><a href="/ukr/kb/redflags/rf-occ-asbestos-malignancy-prevention.html"><code>RF-OCC-ASBESTOS-MALIGNANCY-PREVENTION</code></a> - Documented historical occupational exposure to asbestos fibres (chrysotile, amosite, croc...</li><li><a href="/ukr/kb/redflags/rf-ovarian-brca-mut-actionable.html"><code>RF-OVARIAN-BRCA-MUT-ACTIONABLE</code></a> - BRCA1 or BRCA2 pathogenic variant (germline OR somatic) in high-grade serous ovarian carc...</li><li><a href="/ukr/kb/redflags/rf-ovarian-fra-high-actionable.html"><code>RF-OVARIAN-FRA-HIGH-ACTIONABLE</code></a> - Folate receptor alpha (FRα) high expression (≥75% of viable tumor cells with ≥2+ membrane...</li><li><a href="/ukr/kb/redflags/rf-ovarian-frailty-age.html"><code>RF-OVARIAN-FRAILTY-AGE</code></a> - Frailty profile precluding standard carbo+pacli + bev intensified induction in ovarian: E...</li><li><a href="/ukr/kb/redflags/rf-ovarian-hrd-actionability.html"><code>RF-OVARIAN-HRD-ACTIONABILITY</code></a> - HRD-positive (BRCA1/2 mutation OR Genomic Instability Score ≥42) high-grade serous ovaria...</li><li><a href="/ukr/kb/redflags/rf-ovarian-hrd-positive-actionable.html"><code>RF-OVARIAN-HRD-POSITIVE-ACTIONABLE</code></a> - Homologous Recombination Deficiency (HRD)-positive high-grade serous ovarian carcinoma (B...</li><li><a href="/ukr/kb/redflags/rf-ovarian-infection-screening.html"><code>RF-OVARIAN-INFECTION-SCREENING</code></a> - Active or latent infection requiring resolution / prophylaxis before initiating carbo+pac...</li><li><a href="/ukr/kb/redflags/rf-ovarian-perioperative-vte.html"><code>RF-OVARIAN-PERIOPERATIVE-VTE</code></a> - High perioperative VTE risk in ovarian cancer: ascites + bulky pelvic mass + immobilizati...</li><li><a href="/ukr/kb/redflags/rf-ovarian-platinum-resistant.html"><code>RF-OVARIAN-PLATINUM-RESISTANT</code></a> - Platinum-resistant ovarian relapse — Platinum-Free Interval (PFI) &lt;6 months from last pla...</li><li><a href="/ukr/kb/redflags/rf-ovarian-platinum-sensitive.html"><code>RF-OVARIAN-PLATINUM-SENSITIVE</code></a> - Platinum-sensitive ovarian relapse — Platinum-Free Interval (PFI) &gt;6 months from last pla...</li><li><a href="/ukr/kb/redflags/rf-ovarian-suboptimal-debulking.html"><code>RF-OVARIAN-SUBOPTIMAL-DEBULKING</code></a> - Suboptimal primary cytoreductive surgery (residual disease ≥1 cm) or unresectable at pres...</li><li><a href="/ukr/kb/redflags/rf-ovarian-transformation-progression.html"><code>RF-OVARIAN-TRANSFORMATION-PROGRESSION</code></a> - Platinum-resistant or platinum-refractory ovarian cancer: progression during platinum-bas...</li><li><a href="/ukr/kb/redflags/rf-palb2-confirmed-carrier.html"><code>RF-PALB2-CONFIRMED-CARRIER</code></a> - Confirmed germline pathogenic / likely-pathogenic monoallelic variant in PALB2 (heterozyg...</li><li><a href="/ukr/kb/redflags/rf-palb2-family-history-suspicion.html"><code>RF-PALB2-FAMILY-HISTORY-SUSPICION</code></a> - Family pedigree pattern suggestive of germline PALB2 heterozygous carrier state in an asy...</li><li><a href="/ukr/kb/redflags/rf-pan-brca-somatic-parpi-candidate.html"><code>RF-PAN-BRCA-SOMATIC-PARPI-CANDIDATE</code></a> - Somatic (tumor-only) BRCA1 or BRCA2 pathogenic variant identified on tumor NGS — pan-tumo...</li><li><a href="/ukr/kb/redflags/rf-peutz-jeghers-confirmed-carrier.html"><code>RF-PEUTZ-JEGHERS-CONFIRMED-CARRIER</code></a> - Confirmed germline pathogenic / likely-pathogenic variant in the STK11 (LKB1) gene — Peut...</li><li><a href="/ukr/kb/redflags/rf-peutz-jeghers-family-history-suspicion.html"><code>RF-PEUTZ-JEGHERS-FAMILY-HISTORY-SUSPICION</code></a> - Family pedigree suggestive of Peutz-Jeghers syndrome (PJS): any of (a) a family member wi...</li><li><a href="/ukr/kb/redflags/rf-rad51c-d-confirmed-carrier.html"><code>RF-RAD51C-D-CONFIRMED-CARRIER</code></a> - Confirmed germline pathogenic / likely-pathogenic variant in RAD51C OR RAD51D — RAD51 par...</li><li><a href="/ukr/kb/redflags/rf-rad51c-d-family-history-suspicion.html"><code>RF-RAD51C-D-FAMILY-HISTORY-SUSPICION</code></a> - Family pedigree pattern suggestive of germline RAD51C or RAD51D heterozygous carrier stat...</li><li><a href="/ukr/kb/redflags/rf-reproductive-breast-endometrial-prevention.html"><code>RF-REPRODUCTIVE-BREAST-ENDOMETRIAL-PREVENTION</code></a> - Reproductive-history risk factors for hormone-driven cancers (breast + endometrial + ovar...</li><li><a href="/ukr/kb/redflags/rf-reproductive-endometriosis-ovarian-prevention.html"><code>RF-REPRODUCTIVE-ENDOMETRIOSIS-OVARIAN-PREVENTION</code></a> - Long-standing endometriosis (especially endometrioma + deep infiltrating forms, duration...</li><li><a href="/ukr/kb/redflags/rf-reproductive-ocp-long-term.html"><code>RF-REPRODUCTIVE-OCP-LONG-TERM</code></a> - Long-term combined oral contraceptive use (≥10 cumulative years). Mixed cancer risk profi...</li></ul>
+<h3>Хвороба</h3><ul><li><a href="/ukr/kb/diseases/dis-granulosa-cell.html"><code>DIS-GRANULOSA-CELL</code></a> - Adult granulosa cell tumor of the ovary</li><li><a href="/ukr/kb/diseases/dis-sertoli-leydig-ovarian.html"><code>DIS-SERTOLI-LEYDIG-OVARIAN</code></a> - Sertoli-Leydig cell tumor of the ovary</li></ul>
+</main>
+</body>
+</html>

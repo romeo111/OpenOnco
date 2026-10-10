@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mantle Cell Lymphoma - OpenOnco</title>
+  <!-- openonco-seo:start -->
+<meta name="description" content="Mantle Cell Lymphoma: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Mantle Cell Lymphoma: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/kb/diseases/dis-mcl.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-mcl.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-mcl.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-mcl.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mantle Cell Lymphoma - OpenOnco">
+<meta property="og:description" content="Mantle Cell Lymphoma: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
+<meta property="og:url" content="https://openonco.info/kb/diseases/dis-mcl.html">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mantle Cell Lymphoma - OpenOnco">
+<meta name="twitter:description" content="Mantle Cell Lymphoma: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Mantle Cell Lymphoma - OpenOnco","description":"Mantle Cell Lymphoma: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/kb/diseases/dis-mcl.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":{"@id":"https://openonco.info/kb/diseases/dis-mcl.html#condition"},"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/kb/diseases/dis-mcl.html"},"mainEntity":{"@type":"MedicalCondition","@id":"https://openonco.info/kb/diseases/dis-mcl.html#condition","name":"Mantle Cell Lymphoma","url":"https://openonco.info/kb/diseases/dis-mcl.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+.kb-page { padding-top: 34px; }
+.kb-page h1 { font-family: var(--font-display); font-size: 38px; color: var(--green-900); margin-bottom: 10px; }
+.kb-page h2 { font-family: var(--font-display); color: var(--green-900); font-size: 24px; margin: 30px 0 12px; }
+.kb-page h3 { color: var(--green-900); font-size: 17px; margin: 18px 0 8px; }
+.kb-lead { color: var(--gray-700); font-size: 16px; max-width: 880px; margin-bottom: 22px; }
+.kb-breadcrumb { font-size: 13px; margin-bottom: 12px; color: var(--gray-500); }
+.kb-info-box { background: white; border: 1px solid var(--green-100); border-left: 5px solid var(--green-700); border-radius: 7px; padding: 13px 15px; color: var(--gray-700); margin: 18px 0 20px; max-width: 920px; }
+.kb-info-box strong { color: var(--green-900); }
+.kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
+.kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
+.kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
+.kb-search-panel { box-sizing: border-box; margin: 22px 0 26px; padding: 26px; background: linear-gradient(120deg, #edf6f0, #f8fbf9); border: 1px solid #b8d4c2; border-top: 4px solid var(--green-700); border-radius: 16px; box-shadow: 0 10px 30px rgba(16, 65, 42, .08); }
+.kb-search-panel * { box-sizing: border-box; }
+.kb-search-label { display: block; color: var(--green-900); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 6px; }
+.kb-search-hint { color: var(--gray-700); font-size: 15px; margin: 0 0 18px; }
+.kb-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+.kb-search-field { position: relative; min-width: 0; }
+.kb-search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 23px; height: 23px; fill: none; stroke: var(--green-700); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.kb-search { width: 100%; min-width: 0; min-height: 60px; border: 2px solid #8cb69d; border-radius: 10px; padding: 16px 16px 16px 52px; font: inherit; font-size: 18px; color: var(--gray-900); background: white; box-shadow: 0 3px 10px rgba(16, 65, 42, .05); }
+.kb-search::placeholder { color: var(--gray-500); opacity: 1; }
+.kb-search:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; border-color: var(--green-700); }
+.kb-search-btn { width: auto; min-width: 130px; min-height: 60px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 10px; padding: 0 24px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
+.kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
+.kb-search-btn:focus-visible, .kb-filter-row button:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+.kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
+.kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
+.kb-results { display: grid; gap: 8px; }
+.kb-result { display: grid; grid-template-columns: 105px 1fr auto; gap: 10px; align-items: baseline; background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 12px; text-decoration: none; color: var(--gray-900); }
+.kb-result:hover { border-color: var(--green-600); }
+.kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
+.kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px 0 4px; color: var(--gray-700); }
+.kb-pagination button { border: 1px solid var(--gray-200); background: white; color: var(--green-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; font-weight: 700; }
+.kb-pagination button:disabled { color: var(--gray-500); cursor: not-allowed; opacity: .65; }
+.kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
+.kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
+.kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
+.kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
+.kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
+.kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
+.kb-muted { color: var(--gray-500); }
+.kb-entity ul { padding-left: 22px; }
+.kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
+.kb-faq { margin-top: 36px; }
+.kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
+.kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
+@media (max-width: 700px) {
+  .kb-search-panel { padding: 20px 16px; margin-top: 16px; }
+  .kb-search-label { font-size: 21px; }
+  .kb-search { font-size: 16px; min-height: 56px; }
+  .kb-search-row { grid-template-columns: 1fr; }
+  .kb-search-btn { min-height: 48px; }
+  .kb-result { grid-template-columns: 1fr; }
+  .kb-result small { grid-column: auto; }
+  .kb-pagination { flex-wrap: wrap; }
+  .kb-facts th { width: auto; display: block; border-bottom: 0; }
+  .kb-facts td { display: block; }
+}
+</style>
+</head>
+<body>
+  <header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=design-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">OPEN ONCOLOGY</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/">Home</a>
+    <a href="/capabilities.html">Capabilities</a><a href="/handbook.html">Handbook</a><a href="/news.html">News</a>
+    <a href="/about.html">About</a>
+    </nav>
+    <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <a class="lang-other" href="/ukr/kb/diseases/dis-mcl.html"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
+      <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
+    </div>
+    <a href="/try.html" class="btn-cta-top btn-cta-try"><span>Plan Builder</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menu"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Menu">
+    <a href="/">Home</a>
+    <a href="/capabilities.html">Capabilities</a><a href="/handbook.html">Handbook</a><a href="/news.html">News</a>
+    <a href="/about.html">About</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumor Board</span></a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Workspace</span>
+    <div class="top-cta-group">
+      <a href="/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumor Board</span></a>
+      <a href="/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prevention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Open source</span>
+  </div>
+  </div>
+</header>
+  <main class="kb-page kb-entity">
+  <p class="kb-breadcrumb"><a href="/kb.html">Onco Wiki</a> / Disease</p>
+  <h1>Mantle Cell Lymphoma</h1>
+  <p class="kb-lead">Deterministic view of the source YAML entity. Clinical authority remains with the cited source IDs and reviewer sign-off state.</p>
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-MCL</code></td></tr>
+<tr><th>Type</th><td>Disease</td></tr>
+<tr><th>Aliases</th><td><div class="kb-alias-list"><span class="kb-alias">MCL</span><span class="kb-alias">Лімфома з клітин зони мантії</span></div></td></tr>
+<tr><th>Status</th><td>reviewed 2026-04-25 | pending_clinical_signoff</td></tr>
+<tr><th>Diseases</th><td><span class="kb-muted">None declared</span></td></tr>
+<tr><th>Sources</th><td><span class="kb-chip" title="EHA Practical Guidelines on Diagnostic Workup of Hematologic Disorders"><a href="https://ehaweb.org/research/eha-guidelines-and-recommendations/" target="_blank" rel="noopener noreferrer"><code>SRC-EHA-WORKUP-2024</code></a></span> <span class="kb-chip" title="NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-BCELL-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Informational tool, not a medical device. All recommendations must be verified by a qualified oncologist. Clinical content is provisional until two-reviewer sign-off.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/mantle_cell_lymphoma.yaml">Source YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morphology</th><td>9673/3</td></tr>
+<tr><th>icd_10</th><td>C83.1</td></tr>
+<tr><th>who_classification</th><td>Mature B-cell neoplasms — Mantle cell lymphoma per WHO 5th ed.</td></tr></table><p><a href="/diseases.html#DIS-MCL">Capabilities</a></p>
+  <h2>Notes</h2><p>CD5+ CD20+ CD23- cyclin D1+ SOX11+ classic phenotype. Strong overlap with CLL on flow (both CD5+ B-cell) — IHC + FISH t(11;14) distinguish. Treatment paradigm: fitness-based — fit/transplant-eligible get intensive chemoimmuno + autoSCT; unfit get BTKi-based (acalabrutinib, zanubrutinib) +- rituximab. TP53-mutant: poor response to chemoimmuno; go directly BTKi-based.</p>
+  <h2>Used By</h2>
+<h3>Actionability</h3><ul><li><a href="/kb/biomarker_actionability/bma-atm-loss-mcl.html"><code>BMA-ATM-LOSS-MCL</code></a> - ATM is the most common somatic mutation in MCL (~40-50%). Not directly therapy-selecting;...</li><li><a href="/kb/biomarker_actionability/bma-bcl2-expression-mcl.html"><code>BMA-BCL2-EXPRESSION-MCL</code></a> - High BCL2 in MCL universal (cyclin D1-driven survival pathway). Venetoclax + ibrutinib (A...</li><li><a href="/kb/biomarker_actionability/bma-bcl2-rearrangement-mcl.html"><code>BMA-BCL2-REARRANGEMENT-MCL</code></a> - BCL2 rearrangement in MCL is very rare and usually denotes composite lymphoma or transfor...</li><li><a href="/kb/biomarker_actionability/bma-ccnd1-ihc-mcl.html"><code>BMA-CCND1-IHC-MCL</code></a> - Cyclin D1 IHC is a defining diagnostic marker of MCL (positive in &gt;95%; SOX11 used in cyc...</li><li><a href="/kb/biomarker_actionability/bma-ccnd1-t1114-mcl.html"><code>BMA-CCND1-T1114-MCL</code></a> - t(11;14) IGH/CCND1 is the defining genetic lesion of MCL — drives cyclin D1 overexpressio...</li><li><a href="/kb/biomarker_actionability/bma-notch1-activating-mcl.html"><code>BMA-NOTCH1-ACTIVATING-MCL</code></a> - NOTCH1 mutations in ~10-15% of MCL — adverse prognostic; not directly targeted. BTKi-base...</li><li><a href="/kb/biomarker_actionability/bma-tp53-mut-mcl.html"><code>BMA-TP53-MUT-MCL</code></a> - TP53-mut MCL — predicts chemoimmuno failure. Acalabrutinib + rituximab (TRIANGLE / ECHO)...</li><li><a href="/kb/biomarker_actionability/bma-tp53-r175h-mcl.html"><code>BMA-TP53-R175H-MCL</code></a> - TP53 hotspot in MCL — chemoimmuno failure predictor; acalabrutinib-based 1L preferred. Ho...</li><li><a href="/kb/biomarker_actionability/bma-tp53-r248q-mcl.html"><code>BMA-TP53-R248Q-MCL</code></a> - TP53 hotspot in MCL — chemoimmuno failure predictor; acalabrutinib-based 1L preferred. Ho...</li><li><a href="/kb/biomarker_actionability/bma-tp53-r273h-mcl.html"><code>BMA-TP53-R273H-MCL</code></a> - TP53 hotspot in MCL — chemoimmuno failure predictor; acalabrutinib-based 1L preferred. Ho...</li><li><a href="/kb/biomarker_actionability/bma-tp53-r282w-mcl.html"><code>BMA-TP53-R282W-MCL</code></a> - TP53 hotspot in MCL — chemoimmuno failure predictor; acalabrutinib-based 1L preferred. Ho...</li></ul>
+<h3>Algorithms</h3><ul><li><code>ALGO-MCL-1L</code> - ALGO-MCL-1L</li><li><code>ALGO-MCL-2L</code> - ALGO-MCL-2L</li><li><code>ALGO-MCL-3L</code> - ALGO-MCL-3L</li></ul>
+<h3>Disease</h3><ul><li><a href="/kb/diseases/dis-fl.html"><code>DIS-FL</code></a> - Follicular Lymphoma</li></ul>
+<h3>Indications</h3><ul><li><code>IND-MCL-1L-BTKI-R</code> - IND-MCL-1L-BTKI-R</li><li><code>IND-MCL-1L-INTENSIVE</code> - IND-MCL-1L-INTENSIVE</li><li><code>IND-MCL-2L-ACALABRUTINIB</code> - IND-MCL-2L-ACALABRUTINIB</li><li><code>IND-MCL-3L-BREXUCEL-CART</code> - IND-MCL-3L-BREXUCEL-CART</li><li><code>IND-MCL-3L-LISOCEL</code> - IND-MCL-3L-LISOCEL</li><li><code>IND-MCL-3L-PIRTOBRUTINIB</code> - IND-MCL-3L-PIRTOBRUTINIB</li><li><code>IND-MCL-POST-INDUCTION-RITUXIMAB-MAINTENANCE</code> - IND-MCL-POST-INDUCTION-RITUXIMAB-MAINTENANCE</li></ul>
+<h3>Questionnaires</h3><ul><li><code>QUEST-MCL-1L-STUB</code> - Mantle Cell Lymphoma — first line</li></ul>
+<h3>Red flag</h3><ul><li><a href="/kb/redflags/rf-mcl-blastoid-or-tp53.html"><code>RF-MCL-BLASTOID-OR-TP53</code></a> - Mantle cell lymphoma with blastoid / pleomorphic morphology OR TP53 mutation OR del(17p)...</li><li><a href="/kb/redflags/rf-mcl-blastoid-variant.html"><code>RF-MCL-BLASTOID-VARIANT</code></a> - Blastoid or pleomorphic histologic variant of mantle cell lymphoma — ~10-15% of MCL at di...</li><li><a href="/kb/redflags/rf-mcl-frailty-age.html"><code>RF-MCL-FRAILTY-AGE</code></a> - Frailty profile precluding intensive MCL induction (Nordic R-MaxiCHOP/AraC, R-DHAP) or au...</li><li><a href="/kb/redflags/rf-mcl-infection-screening.html"><code>RF-MCL-INFECTION-SCREENING</code></a> - Active or latent infection requiring resolution / prophylaxis before initiating any anti-...</li><li><a href="/kb/redflags/rf-mcl-organ-dysfunction.html"><code>RF-MCL-ORGAN-DYSFUNCTION</code></a> - Baseline organ dysfunction precluding standard MCL induction (Nordic R-MaxiCHOP/AraC, R-D...</li><li><a href="/kb/redflags/rf-mcl-post-btki-c481-actionable.html"><code>RF-MCL-POST-BTKI-C481-ACTIONABLE</code></a> - MCL with acquired BTK C481S (rarely C481R/F/Y) mutation after progression on covalent BTK...</li><li><a href="/kb/redflags/rf-mcl-transformation-progression.html"><code>RF-MCL-TRANSFORMATION-PROGRESSION</code></a> - MCL with morphologic progression to blastoid or pleomorphic variant (often with TP53 acqu...</li><li><a href="/kb/redflags/rf-mipi-high.html"><code>RF-MIPI-HIGH</code></a> - Mantle cell lymphoma with MIPI high risk (MIPI ≥6.2 / simplified ≥6 points) — aggressive...</li><li><a href="/kb/redflags/rf-mipi-low.html"><code>RF-MIPI-LOW</code></a> - Mantle cell lymphoma with MIPI low risk (MIPI &lt;5.7 / 0-3 simplified points) — supports st...</li></ul>
+<h3>Sources</h3><ul><li><code>SRC-BRUIN-MATO-2021</code> - Pirtobrutinib in relapsed or refractory B-cell malignancies (BRUIN): a phase 1/2 study</li><li><code>SRC-ESMO-LYMPHOMA-2025</code> - Lymphomas: ESMO Clinical Practice Guideline for diagnosis, treatment and follow-up</li><li><code>SRC-ESMO-MCL-2024</code> - ESMO Clinical Practice Guideline on Mantle Cell Lymphoma</li><li><code>SRC-MOZ-UA-LYMPH-2013</code> - Уніфікований клінічний протокол первинної, вторинної (спеціалізованої) медичної допомоги:...</li><li><code>SRC-ZUMA-2-WANG-2020</code> - KTE-X19 CAR T-Cell Therapy in Relapsed or Refractory Mantle-Cell Lymphoma</li></ul>
+</main>
+</body>
+</html>

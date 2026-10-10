@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      try{localStorage.setItem('oo_lang',UARE.test(href)?'uk':'en');}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var target=mirror();
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Карцинома стравоходу (плоскоклітинна + аденокарцинома) - OpenOnco</title>
+  <!-- openonco-seo:start -->
+<meta name="description" content="Карцинома стравоходу (плоскоклітинна + аденокарцинома): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Карцинома стравоходу (плоскоклітинна + аденокарцинома): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
+<meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
+<link rel="canonical" href="https://openonco.info/ukr/kb/diseases/dis-esophageal.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb/diseases/dis-esophageal.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb/diseases/dis-esophageal.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/diseases/dis-esophageal.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Карцинома стравоходу (плоскоклітинна + аденокарцинома) - OpenOnco">
+<meta property="og:description" content="Карцинома стравоходу (плоскоклітинна + аденокарцинома): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
+<meta property="og:url" content="https://openonco.info/ukr/kb/diseases/dis-esophageal.html">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Карцинома стравоходу (плоскоклітинна + аденокарцинома) - OpenOnco">
+<meta name="twitter:description" content="Карцинома стравоходу (плоскоклітинна + аденокарцинома): сторінка OpenOnco Onco Wiki з прив&#x27;язаними джерелами для клінічного пошуку.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Карцинома стравоходу (плоскоклітинна + аденокарцинома) - OpenOnco","description":"Карцинома стравоходу (плоскоклітинна + аденокарцинома): сторінка OpenOnco Onco Wiki з прив'язаними джерелами для клінічного пошуку.","url":"https://openonco.info/ukr/kb/diseases/dis-esophageal.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":{"@id":"https://openonco.info/ukr/kb/diseases/dis-esophageal.html#condition"},"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/kb/diseases/dis-esophageal.html"},"mainEntity":{"@type":"MedicalCondition","@id":"https://openonco.info/ukr/kb/diseases/dis-esophageal.html#condition","name":"Карцинома стравоходу (плоскоклітинна + аденокарцинома)","url":"https://openonco.info/ukr/kb/diseases/dis-esophageal.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+.kb-page { padding-top: 34px; }
+.kb-page h1 { font-family: var(--font-display); font-size: 38px; color: var(--green-900); margin-bottom: 10px; }
+.kb-page h2 { font-family: var(--font-display); color: var(--green-900); font-size: 24px; margin: 30px 0 12px; }
+.kb-page h3 { color: var(--green-900); font-size: 17px; margin: 18px 0 8px; }
+.kb-lead { color: var(--gray-700); font-size: 16px; max-width: 880px; margin-bottom: 22px; }
+.kb-breadcrumb { font-size: 13px; margin-bottom: 12px; color: var(--gray-500); }
+.kb-info-box { background: white; border: 1px solid var(--green-100); border-left: 5px solid var(--green-700); border-radius: 7px; padding: 13px 15px; color: var(--gray-700); margin: 18px 0 20px; max-width: 920px; }
+.kb-info-box strong { color: var(--green-900); }
+.kb-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 20px 0 24px; }
+.kb-count { border: 1px solid var(--gray-200); background: white; border-radius: 7px; padding: 12px; color: var(--gray-700); }
+.kb-count span { display: block; color: var(--green-700); font-size: 28px; font-weight: 700; line-height: 1; }
+.kb-search-panel { box-sizing: border-box; margin: 22px 0 26px; padding: 26px; background: linear-gradient(120deg, #edf6f0, #f8fbf9); border: 1px solid #b8d4c2; border-top: 4px solid var(--green-700); border-radius: 16px; box-shadow: 0 10px 30px rgba(16, 65, 42, .08); }
+.kb-search-panel * { box-sizing: border-box; }
+.kb-search-label { display: block; color: var(--green-900); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 6px; }
+.kb-search-hint { color: var(--gray-700); font-size: 15px; margin: 0 0 18px; }
+.kb-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+.kb-search-field { position: relative; min-width: 0; }
+.kb-search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 23px; height: 23px; fill: none; stroke: var(--green-700); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.kb-search { width: 100%; min-width: 0; min-height: 60px; border: 2px solid #8cb69d; border-radius: 10px; padding: 16px 16px 16px 52px; font: inherit; font-size: 18px; color: var(--gray-900); background: white; box-shadow: 0 3px 10px rgba(16, 65, 42, .05); }
+.kb-search::placeholder { color: var(--gray-500); opacity: 1; }
+.kb-search:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; border-color: var(--green-700); }
+.kb-search-btn { width: auto; min-width: 130px; min-height: 60px; border: 1px solid var(--green-700); background: var(--green-700); color: white; border-radius: 10px; padding: 0 24px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
+.kb-search-btn:hover { background: var(--green-600); border-color: var(--green-600); }
+.kb-search-btn:focus-visible, .kb-filter-row button:focus-visible { outline: 3px solid var(--green-700); outline-offset: 3px; }
+.kb-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+.kb-filter-row button { border: 1px solid var(--gray-200); background: white; color: var(--gray-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; }
+.kb-filter-row button.active { background: var(--green-700); color: white; border-color: var(--green-700); }
+.kb-results { display: grid; gap: 8px; }
+.kb-result { display: grid; grid-template-columns: 105px 1fr auto; gap: 10px; align-items: baseline; background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 12px; text-decoration: none; color: var(--gray-900); }
+.kb-result:hover { border-color: var(--green-600); }
+.kb-result small { grid-column: 2 / -1; color: var(--gray-500); }
+.kb-kind { font-family: var(--font-mono); font-size: 11px; color: var(--green-700); text-transform: uppercase; }
+.kb-pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px 0 4px; color: var(--gray-700); }
+.kb-pagination button { border: 1px solid var(--gray-200); background: white; color: var(--green-700); border-radius: 5px; padding: 7px 11px; cursor: pointer; font-weight: 700; }
+.kb-pagination button:disabled { color: var(--gray-500); cursor: not-allowed; opacity: .65; }
+.kb-facts { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--gray-200); border-radius: 7px; overflow: hidden; }
+.kb-facts th, .kb-facts td { border-bottom: 1px solid var(--gray-200); padding: 10px 12px; vertical-align: top; text-align: left; }
+.kb-facts th { width: 190px; color: var(--gray-700); background: var(--gray-50); }
+.kb-chip { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; border-radius: 4px; background: var(--green-50); border: 1px solid var(--green-100); }
+.kb-alias-list { display: flex; flex-wrap: wrap; gap: 6px; max-height: 260px; overflow: auto; padding: 2px 0; }
+.kb-alias { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 7px; border-radius: 4px; background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-800); font-size: 12px; line-height: 1.2; }
+.kb-kv-list { display: grid; gap: 7px; }
+.kb-kv-item { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 10px; align-items: baseline; }
+.kb-kv-key { font-weight: 700; color: var(--gray-700); }
+.kb-inline-list { margin: 0; padding-left: 18px; }
+.kb-muted { color: var(--gray-500); }
+.kb-entity ul { padding-left: 22px; }
+.kb-entity pre { background: var(--gray-900); color: white; border-radius: 7px; padding: 14px; overflow: auto; font-size: 12px; }
+.kb-faq { margin-top: 36px; }
+.kb-faq details { background: white; border: 1px solid var(--gray-200); border-radius: 7px; padding: 11px 13px; margin-bottom: 8px; }
+.kb-faq summary { cursor: pointer; font-weight: 700; color: var(--green-900); }
+@media (max-width: 700px) {
+  .kb-search-panel { padding: 20px 16px; margin-top: 16px; }
+  .kb-search-label { font-size: 21px; }
+  .kb-search { font-size: 16px; min-height: 56px; }
+  .kb-search-row { grid-template-columns: 1fr; }
+  .kb-search-btn { min-height: 48px; }
+  .kb-result { grid-template-columns: 1fr; }
+  .kb-result small { grid-column: auto; }
+  .kb-pagination { flex-wrap: wrap; }
+  .kb-facts th { width: auto; display: block; border-bottom: 0; }
+  .kb-facts td { display: block; }
+}
+</style>
+</head>
+<body>
+  <header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=design-20261010">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/ukr/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ВІДКРИТА ОНКОЛОГІЯ</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+    <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Мова">
+      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
+      <a class="lang-other" href="/kb/diseases/dis-esophageal.html"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
+    </div>
+    <a href="/ukr/try.html" class="btn-cta-top btn-cta-try"><span>План лікування</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Меню"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <nav aria-label="Меню">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/news.html">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Інструменти</span>
+    <div class="top-cta-group">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Відкритий код</span>
+  </div>
+  </div>
+</header>
+  <main class="kb-page kb-entity">
+  <p class="kb-breadcrumb"><a href="/ukr/kb.html">Onco Wiki</a> / Хвороба</p>
+  <h1>Карцинома стравоходу (плоскоклітинна + аденокарцинома)</h1>
+  <p class="kb-lead">Детермінований перегляд YAML-сутності з джерельної бази. Клінічний авторитет лишається за вказаними source ID та статусом клінічного sign-off.</p>
+  <table class="kb-facts"><tr><th>ID</th><td><code>DIS-ESOPHAGEAL</code></td></tr>
+<tr><th>Тип</th><td>Хвороба</td></tr>
+<tr><th>Синоніми</th><td><div class="kb-alias-list"><span class="kb-alias">Esophageal SCC + adenocarcinoma</span><span class="kb-alias">Esophageal cancer</span><span class="kb-alias">Esophageal carcinoma</span><span class="kb-alias">Карцинома стравоходу (плоскоклітинна + аденокарцинома)</span></div></td></tr>
+<tr><th>Статус</th><td>переглянуто 2026-04-26 | очікує клінічного підпису</td></tr>
+<tr><th>Хвороби</th><td><span class="kb-muted">Не вказано</span></td></tr>
+<tr><th>Джерела</th><td><span class="kb-chip" title="ESMO Esophageal Cancer"><a href="https://www.esmo.org/guidelines/guidelines-by-topic/esmo-clinical-practice-guidelines-gastrointestinal-cancers/clinical-practice-guideline-oesophageal-cancer" target="_blank" rel="noopener noreferrer"><code>SRC-ESMO-ESOPHAGEAL-2024</code></a></span> <span class="kb-chip" title="NCCN Esophageal and EGJ Cancers"><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1433" target="_blank" rel="noopener noreferrer"><code>SRC-NCCN-ESOPHAGEAL-2025</code></a></span></td></tr></table>
+  <p class="kb-info-box">Інформаційний інструмент, не медичний виріб. Усі рекомендації має перевірити кваліфікований онколог. Клінічний вміст є попереднім до завершення перевірки двома рецензентами.</p><p><a href="https://github.com/romeo111/OpenOnco/blob/master/knowledge_base/hosted/content/diseases/esophageal.yaml">Джерельний YAML</a></p><table class="kb-facts"><tr><th>icd_o_3_morphology</th><td>8070/3</td></tr>
+<tr><th>icd_o_3_topography</th><td>[&quot;C15&quot;]</td></tr>
+<tr><th>icd_10</th><td>C15</td></tr>
+<tr><th>who_classification</th><td>WHO Digestive System Tumours 5th ed: Esophageal squamous cell carcinoma + esophageal adenocarcinoma</td></tr></table><p><a href="/ukr/diseases.html#DIS-ESOPHAGEAL">Можливості</a></p>
+  <h2>Нотатки</h2><p>Скафолд для Phase GI-1: один червоний прапор (дисфагія / аспірація високого ступеня — найчастіша гостра форма звернення), одне показання (скафолд CROSS-типу зі застереженням, що променева терапія не моделюється), один алгоритм. Повний гістологія-стратифікований алгоритм (плоскоклітинний рак: дефінітивна хіміопроменева терапія для нерезектабельних, CROSS для резектабельних; аденокарцинома: FLOT як препаратний вибір для резектабельних, CROSS як альтернатива) + ад&#x27;ювантний ніволумаб (nivolumab) після CROSS без досягнення pCR + біомаркер-стратифіковані комбінації імунотерапії та хіміотерапії для метастатичної форми очікують ратифікації пропозиції та клінічного авторства. Гістологічне розгалуження є критичним — плоскоклітинна та аденокарциномна гілки мають значною мірою паралельні, але частково розбіжні парадигми лікування. Допускається окреме викладення в одному YAML захворювання з полем гістології на рівні застосовності Indication.</p>
+  <h2>Де використовується</h2>
+<h3>Algorithms</h3><ul><li><code>ALGO-ESOPH-2L</code> - ALGO-ESOPH-2L</li><li><code>ALGO-ESOPH-DEFINITIVE-1L</code> - ALGO-ESOPH-DEFINITIVE-1L</li><li><code>ALGO-ESOPH-METASTATIC-1L</code> - ALGO-ESOPH-METASTATIC-1L</li><li><code>ALGO-ESOPH-RESECTABLE-1L</code> - ALGO-ESOPH-RESECTABLE-1L</li><li><code>ALGO-ESOPHAGEAL-ADJUVANT-1L</code> - ALGO-ESOPHAGEAL-ADJUVANT-1L</li></ul>
+<h3>Indications</h3><ul><li><code>IND-ACHALASIA-ESOPHAGEAL-PREVENTION-OBSERVATION</code> - IND-ACHALASIA-ESOPHAGEAL-PREVENTION-OBSERVATION</li><li><code>IND-ACHALASIA-ESOPHAGEAL-PREVENTION-SURVEILLANCE</code> - IND-ACHALASIA-ESOPHAGEAL-PREVENTION-SURVEILLANCE</li><li><code>IND-BARRETTS-ESOPHAGUS-PREVENTION-OBSERVATION</code> - IND-BARRETTS-ESOPHAGUS-PREVENTION-OBSERVATION</li><li><code>IND-BARRETTS-ESOPHAGUS-PREVENTION-SURVEILLANCE</code> - IND-BARRETTS-ESOPHAGUS-PREVENTION-SURVEILLANCE</li><li><code>IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS</code> - IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS</li><li><code>IND-ESOPH-DEFINITIVE-CRT-SCC</code> - IND-ESOPH-DEFINITIVE-CRT-SCC</li><li><code>IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO</code> - IND-ESOPH-METASTATIC-1L-HER2-TRASTUZUMAB-CHEMO</li><li><code>IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC</code> - IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC</li><li><code>IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO</code> - IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO</li><li><code>IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO</code> - IND-ESOPH-METASTATIC-1L-SCC-IPI-NIVO</li><li><code>IND-ESOPH-METASTATIC-2L-HER2-POSITIVE-T-DXD</code> - IND-ESOPH-METASTATIC-2L-HER2-POSITIVE-T-DXD</li><li><code>IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS</code> - IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS</li><li><code>IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10</code> - IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10</li><li><code>IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL</code> - IND-ESOPH-OLIGOMET-SYSTEMIC-PLUS-LOCAL</li><li><code>IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT</code> - IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT</li><li><code>IND-LIFESTYLE-HOT-BEVERAGES-PREVENTION-COOLING</code> - IND-LIFESTYLE-HOT-BEVERAGES-PREVENTION-COOLING</li><li><code>IND-LIFESTYLE-HOT-BEVERAGES-PREVENTION-OBSERVATION</code> - IND-LIFESTYLE-HOT-BEVERAGES-PREVENTION-OBSERVATION</li><li><code>IND-LIFESTYLE-HOT-MATE-ESOPHAGEAL-PREVENTION-INTENSIFIED-SURVEILLANCE</code> - IND-LIFESTYLE-HOT-MATE-ESOPHAGEAL-PREVENTION-INTENSIFIED-SURVEILLANCE</li><li><code>IND-LIFESTYLE-HOT-MATE-ESOPHAGEAL-PREVENTION-OBSERVATION</code> - IND-LIFESTYLE-HOT-MATE-ESOPHAGEAL-PREVENTION-OBSERVATION</li></ul>
+<h3>Procedures</h3><ul><li><code>SUR-ESOPHAGECTOMY-MIE</code> - Minimally invasive esophagectomy (MIE)</li><li><code>SUR-ESOPHAGECTOMY-OPEN</code> - Open esophagectomy (Ivor-Lewis or McKeown)</li><li><code>SUR-ESOPHAGECTOMY-RAMIE</code> - Robot-assisted minimally invasive esophagectomy (RAMIE)</li></ul>
+<h3>Questionnaires</h3><ul><li><code>QUEST-ESOPHAGEAL-1L-STUB</code> - Esophageal carcinoma — first line</li></ul>
+<h3>Sources</h3><ul><li><code>SRC-CHECKMATE-577-KELLY-2021</code> - Adjuvant Nivolumab in Resected Esophageal or Gastroesophageal Junction Cancer</li><li><code>SRC-CHECKMATE-648-DOKI-2022</code> - Nivolumab plus Chemotherapy or Ipilimumab in Esophageal Squamous-Cell Carcinoma</li><li><code>SRC-CHECKMATE-649-JANJIGIAN-2022</code> - First-line nivolumab plus chemotherapy versus chemotherapy alone for advanced gastric, ga...</li><li><code>SRC-CROSS-VAN-HAGEN-2012</code> - Preoperative chemoradiotherapy for esophageal or junctional cancer</li><li><code>SRC-ESMO-ESOPHAGEAL-2024</code> - ESMO Esophageal Cancer</li><li><code>SRC-ESMO-GASTRIC-2024</code> - ESMO Gastric Cancer</li><li><code>SRC-FORTITUDE-101</code> - Bemarituzumab (BEMA) plus chemotherapy for advanced or metastatic FGFR2b-overexpressing g...</li><li><code>SRC-KEYNOTE-590-SUN-2021</code> - Pembrolizumab plus Chemotherapy versus Chemotherapy Alone for First-Line Treatment of Adv...</li><li><code>SRC-NCCN-ESOPHAGEAL-2025</code> - NCCN Esophageal and EGJ Cancers</li><li><code>SRC-OMEC-1-KROESE-2023</code> - Definition, diagnosis and treatment of oligometastatic oesophagogastric cancer: A Delphi...</li><li><code>SRC-ROBOT-VAN-DER-SLUIS-2019</code> - Robot-assisted Minimally Invasive Thoracolaparoscopic Esophagectomy Versus Open Transthor...</li><li><code>SRC-RTOG-8501-HERSKOVIC-1992</code> - Combined chemotherapy and radiotherapy compared with radiotherapy alone in patients with...</li><li><code>SRC-TIME-BIERE-2012</code> - Minimally invasive versus open oesophagectomy for patients with oesophageal cancer: a mul...</li></ul>
+<h3>Клінічна застосовність</h3><ul><li><a href="/ukr/kb/biomarker_actionability/bma-her2-amp-esophageal.html"><code>BMA-HER2-AMP-ESOPHAGEAL</code></a> - HER2-positive esophageal/GEJ adenocarcinoma scored by gastric criteria: trastuzumab + che...</li><li><a href="/ukr/kb/biomarker_actionability/bma-pdl1-cps-esophageal.html"><code>BMA-PDL1-CPS-ESOPHAGEAL</code></a> - PD-L1 CPS used as eligibility threshold for ICI in metastatic esophageal cancer. Esophage...</li><li><a href="/ukr/kb/biomarker_actionability/bma-pik3ca-hotspot-esophageal.html"><code>BMA-PIK3CA-HOTSPOT-ESOPHAGEAL</code></a> - PIK3CA mutations in ~10% of esophageal SCC/AC. No PI3Ki approval; CRT or chemo/ICI per us...</li><li><a href="/ukr/kb/biomarker_actionability/bma-tp53-mut-esophageal.html"><code>BMA-TP53-MUT-ESOPHAGEAL</code></a> - TP53 mutation in ESOPHAGEAL — common, adverse prognostic; not directly targeted. Per usua...</li></ul>
+<h3>Тривожна ознака</h3><ul><li><a href="/ukr/kb/redflags/rf-achalasia-esophageal-prevention.html"><code>RF-ACHALASIA-ESOPHAGEAL-PREVENTION</code></a> - Achalasia (primary esophageal motor disorder with impaired LES relaxation and loss of eso...</li><li><a href="/ukr/kb/redflags/rf-active-autoimmune-disease-ici-risk.html"><code>RF-ACTIVE-AUTOIMMUNE-DISEASE-ICI-RISK</code></a> - Patient with active or incompletely controlled pre-existing autoimmune or inflammatory di...</li><li><a href="/ukr/kb/redflags/rf-barretts-esophagus-prevention.html"><code>RF-BARRETTS-ESOPHAGUS-PREVENTION</code></a> - Barrett&#x27;s esophagus (intestinal metaplasia of the distal esophagus with goblet cells on b...</li><li><a href="/ukr/kb/redflags/rf-esoph-frailty-age.html"><code>RF-ESOPH-FRAILTY-AGE</code></a> - Frailty profile precluding CROSS / FLOT / definitive CRT in esophageal: ECOG ≥3, OR (age...</li><li><a href="/ukr/kb/redflags/rf-esoph-high-risk-biology.html"><code>RF-ESOPH-HIGH-RISK-BIOLOGY</code></a> - Treatment-defining biomarkers in esophageal/EGJ cancer: HER2+ (adeno only — TOGA-style ga...</li><li><a href="/ukr/kb/redflags/rf-esoph-infection-screening.html"><code>RF-ESOPH-INFECTION-SCREENING</code></a> - Infection-screening gate before esophageal cancer systemic therapy: HBsAg+ / anti-HBc+ (H...</li><li><a href="/ukr/kb/redflags/rf-esoph-severe-dysphagia-aspiration.html"><code>RF-ESOPH-SEVERE-DYSPHAGIA-ASPIRATION</code></a> - Severe dysphagia with weight loss / aspiration risk in esophageal cancer: inability to sw...</li><li><a href="/ukr/kb/redflags/rf-esoph-transformation-progression.html"><code>RF-ESOPH-TRANSFORMATION-PROGRESSION</code></a> - Aggressive progression in esophageal cancer: residual disease post-CROSS (ypT+ or ypN+ at...</li><li><a href="/ukr/kb/redflags/rf-esophageal-post-cross-non-pcr.html"><code>RF-ESOPHAGEAL-POST-CROSS-NON-PCR</code></a> - Post-CROSS-CRT-then-esophagectomy with residual disease — pathology shows ypT+ and/or ypN...</li><li><a href="/ukr/kb/redflags/rf-lifestyle-alcohol-cancer-prevention.html"><code>RF-LIFESTYLE-ALCOHOL-CANCER-PREVENTION</code></a> - Heavy alcohol consumption — defined as &gt;14 drinks/week (women) or &gt;21 drinks/week (men) p...</li><li><a href="/ukr/kb/redflags/rf-lifestyle-hot-beverages-prevention.html"><code>RF-LIFESTYLE-HOT-BEVERAGES-PREVENTION</code></a> - Regular consumption of very hot beverages (≥65°C / 149°F) per IARC Monograph 116 (2016) —...</li><li><a href="/ukr/kb/redflags/rf-lifestyle-hot-mate-esophageal-prevention.html"><code>RF-LIFESTYLE-HOT-MATE-ESOPHAGEAL-PREVENTION</code></a> - Regular consumption of maté (Ilex paraguariensis infusion) prepared and drunk at very hig...</li><li><a href="/ukr/kb/redflags/rf-lifestyle-obesity-cancer-prevention.html"><code>RF-LIFESTYLE-OBESITY-CANCER-PREVENTION</code></a> - Obesity — BMI ≥30 kg/m² (per WHO definition) — OR class 2/3 obesity with BMI ≥35 / ≥40. I...</li><li><a href="/ukr/kb/redflags/rf-lifestyle-smokeless-tobacco-prevention.html"><code>RF-LIFESTYLE-SMOKELESS-TOBACCO-PREVENTION</code></a> - Habitual use of smokeless tobacco products — chewing tobacco, snus (oral nicotine pouch w...</li><li><a href="/ukr/kb/redflags/rf-oligomet-definition.html"><code>RF-OLIGOMET-DEFINITION</code></a> - Oligometastatic esophagogastric adenocarcinoma per OMEC-1 (OligoMetastatic Esophagogastri...</li></ul>
+<h3>Хвороба</h3><ul><li><a href="/ukr/kb/diseases/dis-gastric.html"><code>DIS-GASTRIC</code></a> - Gastric / GEJ adenocarcinoma</li><li><a href="/ukr/kb/diseases/dis-laryngeal.html"><code>DIS-LARYNGEAL</code></a> - Laryngeal squamous cell carcinoma</li></ul>
+</main>
+</body>
+</html>
