@@ -7180,7 +7180,7 @@ def _render_capabilities_en(stats) -> str:
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="/style.css" rel="stylesheet">
+<link href="/style.css?v=header-20261010" rel="stylesheet">
 <style>
   /* Tabs */
   .cap-tabs {{
