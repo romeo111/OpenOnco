@@ -94,7 +94,7 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     </details>'''
 
     return f"""<header class="top-bar site-header">
-  <link rel="stylesheet" href="/header.css?v=languages-20261010">
+  <link rel="stylesheet" href="/header.css?v=languages-20261010b">
   <div class="header-shell">
   <div class="header-main">
     <div class="brand-line">
