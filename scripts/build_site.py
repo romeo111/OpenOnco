@@ -10299,6 +10299,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
         "Open-source · MIT-style usage" if is_en
         else "Відкритий код · використання за моделлю MIT"
     )
+    style_href = "/style.css" if is_en else "/style.css?v=translations-20261010"
 
     return f"""<!DOCTYPE html>
 <html lang="{'en' if is_en else 'uk'}">
@@ -10311,7 +10312,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="/style.css" rel="stylesheet">
+<link href="{style_href}" rel="stylesheet">
 </head>
 <body>
 {_render_top_bar(active="about", target_lang=target_lang, lang_switch_href=_lang_switch_href("about", target_lang))}

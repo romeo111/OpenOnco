@@ -824,6 +824,7 @@ body.home-page .home-carousel {
 .about-action .about-eyebrow { color: #a7f3d0; }
 .about-action-links { display: flex; flex-wrap: wrap; gap: 10px; flex: 0 0 auto; }
 .about-action .btn-secondary {
+  background: transparent;
   border-color: rgba(255,255,255,.55);
   color: white;
 }
