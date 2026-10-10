@@ -327,6 +327,16 @@ def _text(value: Any, *, limit: int | None = None) -> str:
     return text
 
 
+def _safe_notes(value: Any, locale: str = "en") -> Any:
+    if "src-oncokb" not in _text(value).lower():
+        return value
+    return (
+        "Історичні нотатки містять посилання на вилучене джерело. Перевірте оригінальний YAML для аудиту."
+        if locale == "uk" else
+        "Historical notes contain a retired source reference. Consult the original YAML for audit history."
+    )
+
+
 def _localized(d: dict, base_key: str, locale: str) -> Any:
     """Return the UA twin of `base_key` (e.g. `definition_ua` for
     `definition`) when locale=="uk" and it carries content, else fall
@@ -901,6 +911,7 @@ def render_entity_page(
         _localized(entity.data, "notes", locale)
         or _localized(entity.data, "evidence_summary", locale)
     )
+    notes = _safe_notes(notes, locale)
     notes_html = (
         f"<h2>{html.escape(labels['notes'])}</h2><p>{html.escape(_text(notes, limit=1200))}</p>"
         if notes
@@ -950,7 +961,7 @@ def _search_entry(entity: KbEntity, reverse_refs: dict[str, list[KbEntity]], *, 
             _text(d.get("definition")),
             _text(d.get("mechanism")),
             _text(d.get("evidence_summary")),
-            _text(d.get("notes")),
+            _text(_safe_notes(d.get("notes"))),
         ]
     )
     return {
@@ -1222,7 +1233,7 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
     entities = load_entities(kb_root)
     reverse_refs = build_reverse_refs(entities)
     searchable = [e for e in entities.values() if e.kind in SEARCH_KINDS]
-    searchable.sort(key=lambda e: (e.kind, e.title.lower(), e.id))
+    searchable.sort(key=lambda e: (e.kind in {"indications", "regimens"}, e.kind, e.title.lower(), e.id))
     published = searchable + [e for e in entities.values() if e.kind == "diseases"]
 
     output_dir.mkdir(parents=True, exist_ok=True)
