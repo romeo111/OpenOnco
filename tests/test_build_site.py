@@ -828,6 +828,38 @@ def test_top_nav_uses_single_onco_wiki_entry():
         assert 'href="/ukr/diseases.html"' not in nav
 
 
+def test_top_bar_localizes_visible_and_accessible_labels():
+    uk = _render_top_bar(target_lang="uk", lang_switch_href="/try.html")
+    en = _render_top_bar(target_lang="en", lang_switch_href="/ukr/try.html")
+    for text in ("Головна", "Про проєкт", "Новини", "План лікування",
+                 "Онко-вікі", "Туморборд", "Профілактика", "Інструменти",
+                 "ВІДКРИТА ОНКОЛОГІЯ", "Відкритий код", 'aria-label="Меню"',
+                 'aria-label="Мова"'):
+        assert text in uk
+        assert text not in en
+    for text in ("Plan Builder", "Tumor Board", "Prevention", "Workspace",
+                 "OPEN ONCOLOGY", "Open source", 'aria-label="Menu"',
+                 'aria-label="Language"'):
+        assert text in en
+        assert text not in uk
+    assert 'class="lang-other" href="/try.html"' in uk
+    assert 'class="lang-other" href="/ukr/try.html"' in en
+
+
+def test_about_localizes_risk_count_and_footer():
+    from types import SimpleNamespace
+    from scripts.build_site import render_about
+
+    stats = SimpleNamespace(entities=[])
+    uk = render_about(stats, target_lang="uk")
+    en = render_about(stats, target_lang="en")
+    assert "<span>сигналів ризику</span>" in uk
+    assert "Відкритий код · використання за моделлю MIT" in uk
+    assert "MIT-style usage" not in uk
+    assert "<span>red flags</span>" in en
+    assert "Open-source · MIT-style usage" in en
+
+
 def test_en_pages_load_stylesheet_via_root_relative_path(site_dir: Path):
     """Regression: a non-root page that links to relative `style.css`
     resolves to a sibling-relative path and renders unstyled. Every page

@@ -84,6 +84,7 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     tools_label = "Інструменти" if is_uk else "Workspace"
     brand_caption = "ВІДКРИТА ОНКОЛОГІЯ" if is_uk else "OPEN ONCOLOGY"
     open_label = "Відкритий код" if is_uk else "Open source"
+    language_label = "Мова" if is_uk else "Language"
 
     return f"""<header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=design-20261010">
@@ -97,7 +98,7 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     </div>
     <nav class="top-nav">{reading_links}</nav>
     <div class="top-right">
-    <div class="lang-switch" role="group" aria-label="Language">
+    <div class="lang-switch" role="group" aria-label="{language_label}">
       <{ua_tag} class="{ua_cls}"{ua_attr}><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</{ua_tag}>
       <{en_tag} class="{en_cls}"{en_attr}><span class="lang-flag flag-en" aria-hidden="true"></span>EN</{en_tag}>
     </div>

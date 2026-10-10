@@ -10198,7 +10198,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
         footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
         stat_labels = {
             "diseases": "хвороб",
-            "redflags": "red flags",
+            "redflags": "сигналів ризику",
             "indications": "індикацій",
             "regimens": "схем лікування",
             "algorithms": "алгоритмів",
@@ -10295,6 +10295,10 @@ def render_about(stats, *, target_lang: str = "en") -> str:
         f'        <div class="about-stat"><strong>{counts[key]}</strong><span>{label}</span></div>'
         for key, label in stat_labels.items()
     )
+    footer_meta = (
+        "Open-source · MIT-style usage" if is_en
+        else "Відкритий код · використання за моделлю MIT"
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="{'en' if is_en else 'uk'}">
@@ -10344,7 +10348,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
 {cta_html}
 
   <footer class="page-foot">
-    Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
+    {footer_meta} · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
     <br>
     {footer}
   </footer>
