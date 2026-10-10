@@ -77,6 +77,9 @@ def test_international_build_and_reciprocal_discovery(tmp_path, handbook_load):
         assert 'e.search_text' in wiki and "fetch('/kb_search_index.json')" in wiki
         assert 'card.lang = \'en\'' in wiki and 'p.set(\'q\'' in wiki
         assert t["english_note"] in (tmp_path / code / "try.html").read_text(encoding="utf-8")
+        handbook = (tmp_path / code / "handbook.html").read_text(encoding="utf-8")
+        assert f'<code>{t["draft"]}</code>' in handbook
+        assert '<code>draft</code>' not in handbook
     finalize_site_discovery(tmp_path, stats={})
     ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9", "x": "http://www.w3.org/1999/xhtml"}
     for node in ET.parse(tmp_path / "sitemap.xml").getroot().findall("s:url", ns):

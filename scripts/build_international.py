@@ -103,7 +103,7 @@ def build_international(output_dir: Path) -> dict:
         directory = output_dir / locale
         directory.mkdir(parents=True, exist_ok=True)
         title_map = dict(zip(CHAPTER_IDS, CHAPTER_TITLES[locale], strict=True))
-        chapter_cards = ''.join(f'<article class="international-card"><h2>{esc(title_map.get(c["id"], c["title"]))}</h2><p>{esc(t["questions"])}: {c["question_count"]} · <code>{esc(c["review_status"])}</code></p>{_button(c["url"], t["chapter_en"])} {_button("/ukr" + c["url"], t["chapter_uk"], True)}</article>' for c in chapters)
+        chapter_cards = ''.join(f'<article class="international-card"><h2>{esc(title_map.get(c["id"], c["title"]))}</h2><p>{esc(t["questions"])}: {c["question_count"]} · <code>{esc(t.get(c["review_status"], c["review_status"]))}</code></p>{_button(c["url"], t["chapter_en"])} {_button("/ukr" + c["url"], t["chapter_uk"], True)}</article>' for c in chapters)
         cards = ''.join(f'<article class="international-card"><h2><a href="{locale_href(p, locale)}">{esc(t[k])}</a></h2><p>{esc(t[b])}</p></article>' for p, k, b in [("kb.html", "kb", "lead"), ("handbook.html", "handbook", "handbook_body"), ("try.html", "try_cta", "try_body"), ("ask.html", "ask", "ask_body")])
         count_values = [stats.get("Disease", 0), stats.get("Drugs", 0), stats.get("Biomarkers", 0)]
         counts = ''.join(f'<div><strong>{n}</strong><span>{esc(label)}</span></div>' for n, label in zip(count_values, SEARCH_COPY[locale][9:12]))
