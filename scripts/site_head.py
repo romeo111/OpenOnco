@@ -494,7 +494,7 @@ def _faq_jsonld(path: str, locale: str) -> str | None:
     return json.dumps(schema, ensure_ascii=False, separators=(",", ":"))
 
 
-def render_seo_metadata(*, path: str, title: str, description: str, locale: str, noindex: bool = False, available_paths: set[str] | None = None, include_faq: bool = False) -> str:
+def render_seo_metadata(*, path: str, title: str, description: str, locale: str, noindex: bool = False, available_paths: set[str] | None = None, include_faq: bool = False, medical_condition: str | None = None) -> str:
     canonical = _page_url(path)
     lang = "uk-UA" if locale == "uk" else "en-US"
     robots = "noindex, follow" if noindex else "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
@@ -540,6 +540,15 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
             "target": canonical,
         },
     }
+    if medical_condition and _schema_type(path) == "MedicalWebPage":
+        schema["mainEntity"] = {
+            "@type": "MedicalCondition",
+            "@id": canonical + "#condition",
+            "name": medical_condition,
+            "url": canonical,
+        }
+        schema["about"] = {"@id": canonical + "#condition"}
+
     if _schema_type(path) == "SoftwareApplication":
         schema["applicationCategory"] = "MedicalApplication"
         schema["operatingSystem"] = "Web browser"
@@ -551,7 +560,7 @@ def render_seo_metadata(*, path: str, title: str, description: str, locale: str,
         schema["datePublished"], schema["dateModified"] = news_dates
         schema["author"] = {"@type": "Organization", "name": SITE_NAME, "url": SITE_BASE_URL}
 
-    json_ld = json.dumps(schema, ensure_ascii=False, separators=(",", ":"))
+    json_ld = json.dumps(schema, ensure_ascii=False, separators=(",", ":")).replace("<", "\u003c")
     og_type = "article" if _schema_type(path) in _ARTICLE_SCHEMA_TYPES else "website"
     lines = [
         SEO_START,
@@ -619,6 +628,11 @@ def inject_seo_metadata(html_text: str, *, path: str, available_paths: set[str] 
     title = _title_from_html(html_text)
     description = _description_for(canonical_path, title, locale)
     noindex = normalized.endswith("404.html") or normalized == "ukr/capabilities.html" or directives.noindex or bool(directives.redirect_url)
+    medical_condition = None
+    if re.fullmatch(r"(?:ukr/)?kb/diseases/[^/]+\.html", normalized):
+        heading = re.search(r"<h1\b[^>]*>(.*?)</h1>", html_text, re.IGNORECASE | re.DOTALL)
+        if heading:
+            medical_condition = html.unescape(re.sub(r"<[^>]+>", "", heading.group(1))).strip()
     block = render_seo_metadata(
         path=canonical_path,
         title=title,
@@ -626,6 +640,7 @@ def inject_seo_metadata(html_text: str, *, path: str, available_paths: set[str] 
         locale=locale,
         noindex=noindex,
         available_paths=available_paths,
+        medical_condition=medical_condition,
     )
 
     existing = re.compile(
@@ -633,10 +648,10 @@ def inject_seo_metadata(html_text: str, *, path: str, available_paths: set[str] 
         flags=re.IGNORECASE | re.DOTALL,
     )
     if existing.search(html_text):
-        return existing.sub(block + "\n", html_text, count=1)
+        return existing.sub(lambda _: block + "\n", html_text, count=1)
     return re.sub(
         r"(</title>\s*)",
-        r"\1" + block + "\n",
+        lambda match: match.group(1) + block + "\n",
         html_text,
         count=1,
         flags=re.IGNORECASE,

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import shutil
 from pathlib import Path
 
 import pytest
@@ -10,17 +9,13 @@ from scripts.build_kb_wiki import build_kb_wiki
 
 
 KB_ROOT = Path("knowledge_base/hosted/content")
-OUT_ROOT = Path("build/test-kb-wiki")
 
 
 @pytest.fixture(scope="module")
-def wiki_dir() -> Path:
-    shutil.rmtree(OUT_ROOT, ignore_errors=True)
-    build_kb_wiki(KB_ROOT, OUT_ROOT)
-    try:
-        yield OUT_ROOT
-    finally:
-        shutil.rmtree(OUT_ROOT, ignore_errors=True)
+def wiki_dir(tmp_path_factory) -> Path:
+    output = tmp_path_factory.mktemp("kb-wiki")
+    build_kb_wiki(KB_ROOT, output)
+    return output
 
 
 @pytest.fixture(scope="module")
@@ -39,6 +34,15 @@ def test_kb_wiki_builds_search_index_and_entity_pages(wiki_dir: Path, wiki_paylo
     assert counts["Actionability"] >= 400
 
     assert (wiki_dir / "kb.html").exists()
+    disease_page = (wiki_dir / "kb/diseases/dis-nsclc.html").read_text(encoding="utf-8")
+    assert "Non-small cell lung cancer" in disease_page
+    assert "not a medical device" in disease_page
+    assert "qualified oncologist" in disease_page
+    assert "two-reviewer sign-off" in disease_page
+    assert "SRC-" in disease_page
+    assert 'href="/ukr/kb/diseases/dis-nsclc.html"' in disease_page
+    uk_disease_page = (wiki_dir / "ukr/kb/diseases/dis-nsclc.html").read_text(encoding="utf-8")
+    assert "<h1>Недрібноклітинний рак легені</h1>" in uk_disease_page
     assert (wiki_dir / "ukr" / "kb.html").exists()
     assert (wiki_dir / "kb_search_index.json").exists()
     assert (wiki_dir / "ukr" / "kb_search_index.json").exists()
@@ -98,7 +102,7 @@ def test_kb_search_index_exposes_provenance_and_reverse_refs(wiki_payload: dict)
     nsclc = entries["DIS-NSCLC"]
     assert nsclc["kind"] == "Disease"
     assert nsclc["kind_key"] == "diseases"
-    assert nsclc["url"] == "/diseases.html#DIS-NSCLC"
+    assert nsclc["url"] == "/kb/diseases/dis-nsclc.html"
     assert "non-small cell lung cancer" in nsclc["search_text"]
     assert "regimen" in nsclc["search_text"]
     assert "verified" in nsclc["subtitle"]
