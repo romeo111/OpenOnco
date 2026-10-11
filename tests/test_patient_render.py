@@ -394,6 +394,12 @@ def test_emergency_label_fallback_when_definition_missing():
     assert "лікар" in label.lower()
 
 
+def test_emergency_label_preserves_authored_decimals_and_units():
+    label = patient_emergency_label({'definition_ua': 'Тестовий поріг 38.5°C та 0.5 mg/L. Друге речення.'})
+    assert '38.5°C' in label and '0.5 mg/L' in label
+    assert 'Друге речення' not in label
+
+
 def test_filter_emergency_rfs_preserves_order():
     rfs = [
         {"id": "A", "severity": "routine"},
@@ -414,7 +420,8 @@ def test_emergency_section_renders_when_no_rfs():
     result.kb_resolved["red_flags"] = {}
     html = render_plan_html(result, mode="patient")
     assert '<section class="emergency-signals">' in html
-    assert "Наразі немає термінових сигналів" in html
+    assert "Це не виключає невідкладних станів" in html
+    assert "продовжуйте планові візити" not in html
     assert "🚨" not in html
 
 
@@ -433,11 +440,48 @@ def test_emergency_section_renders_when_rfs_present():
         ),
         "definition": "Severe febrile neutropenia — go to the ER immediately.",
     }
+    result.trace.append({'fired_red_flags': ['RF-TEST-EMERGENCY']})
     html = render_plan_html(result, mode="patient")
     assert '<ul class="emergency-list">' in html
     # At least one <li> with the siren prefix.
     li_with_siren = re.findall(r"<li[^>]*>[^<]*🚨", html)
     assert li_with_siren, "Emergency banner should contain ≥1 <li> with 🚨"
+
+
+def test_resolved_emergency_record_is_not_a_personal_finding_without_fired_trace():
+    from knowledge_base.engine.render import _render_emergency_section
+
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    result.kb_resolved['red_flags'] = {
+        'RF-UNFIRED': {'id': 'RF-UNFIRED', 'severity': 'critical', 'definition_ua': 'Непідтверджений тестовий стан.'},
+    }
+    result.trace = [{'fired_red_flags': []}]
+    html = _render_emergency_section(result)
+    assert 'RF-UNFIRED' not in html
+    assert 'Непідтверджений тестовий стан' not in html
+    assert 'не виключає невідкладних станів' in html
+    assert 'patient-good' not in html
+
+
+def test_emergency_findings_follow_fired_trace_and_do_not_change_engine_output():
+    import copy
+    from knowledge_base.engine.render import _render_emergency_section
+
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    result.kb_resolved['red_flags'] = {
+        rf_id: {'id': rf_id, 'severity': 'critical', 'definition_ua': label}
+        for rf_id, label in [('RF-A', 'Перший тестовий стан'), ('RF-B', 'Другий тестовий стан'), ('RF-UNFIRED', 'Не спрацював')]
+    }
+    result.trace = [{'fired_red_flags': ['RF-B', 'RF-A', 'RF-B', 'RF-MISSING']}]
+    trace = copy.deepcopy(result.trace)
+    plan = result.plan.model_dump()
+    html = _render_emergency_section(result)
+    assert html.index('RF-B') < html.index('RF-A')
+    assert html.count('data-rf-id="RF-B"') == 1
+    assert 'RF-UNFIRED' not in html
+    assert 'позначені алгоритмом за введеними даними' in html
+    assert result.trace == trace
+    assert result.plan.model_dump() == plan
 
 
 # ── Section E — Ask-doctor section ───────────────────────────────────
@@ -991,7 +1035,8 @@ def test_between_visits_section_renders_authored_watchpoints():
     assert 'bv-urgency-group bv-call' in html
 
 
-def test_between_visits_dedupe_with_emergency_banner():
+@pytest.mark.parametrize('fired', [True, False])
+def test_between_visits_dedupe_with_emergency_banner(fired):
     """An `er_now` watchpoint whose `trigger_ua` first-sentence matches
     an emergency RF gets dropped from `between-visits` (it surfaces in
     the emergency banner instead). Per PATIENT_MODE_SPEC §3.4."""
@@ -999,12 +1044,14 @@ def test_between_visits_dedupe_with_emergency_banner():
     if result.plan is None or not result.plan.tracks:
         pytest.skip("Synthetic mCRC plan should produce at least 1 track")
     # Inject a critical RF whose first-sentence matches a watchpoint.
-    rf_text = "Тяжка фебрильна нейтропенія потребує негайного звернення"
+    rf_text = "Тестовий поріг 38.5°C потребує негайного звернення"
     result.kb_resolved.setdefault("red_flags", {})["RF-DEDUPE-TEST"] = {
         "id": "RF-DEDUPE-TEST",
         "severity": "critical",
         "definition_ua": rf_text + ". Подальше — деталі.",
     }
+    if fired:
+        result.trace.append({'fired_red_flags': ['RF-DEDUPE-TEST']})
     # Watchpoint with matching trigger should be dropped, non-matching kept.
     t = result.plan.tracks[0]
     if not isinstance(t.regimen_data, dict):
@@ -1031,13 +1078,14 @@ def test_between_visits_dedupe_with_emergency_banner():
     # Non-matching `er_now` item still in between-visits.
     assert "Поява нової задишки" in bv_block
     # Matching item dropped from between-visits (still allowed elsewhere).
-    assert rf_text not in bv_block
+    assert (rf_text not in bv_block) if fired else (rf_text in bv_block)
     # But does surface in the emergency banner.
     em_match = re.search(
         r'<section class="emergency-signals">.*?</section>',
         html, flags=re.DOTALL,
     )
-    assert em_match and rf_text in em_match.group(0)
+    assert em_match
+    assert (rf_text in em_match.group(0)) if fired else (rf_text not in em_match.group(0))
 
 
 def test_between_visits_per_track_when_two_tracks():

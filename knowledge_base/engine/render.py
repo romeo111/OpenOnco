@@ -45,11 +45,12 @@ from ._citation_guard import (
 )
 from ._emergency_rf import (
     filter_emergency_rfs,
-    is_emergency_rf,
     patient_emergency_label,
 )
 from ._nszu import lookup_nszu_status, nszu_label
 from ._patient_rationale import build_track_rationale_html as _build_track_rationale_html
+from ._patient_rationale import _fired_rf_ids_from_trace as _patient_fired_rf_ids
+from ._patient_rationale import _first_sentence_ua as _patient_first_sentence
 from ._patient_vocabulary import (
     NSZU_PATIENT_LABEL,
     ESCAT_TIER_PATIENT_LABEL,
@@ -4071,24 +4072,28 @@ _BV_FALLBACK_HTML = (
 )
 
 
+def _patient_emergency_findings(plan_result: PlanResult) -> list[dict]:
+    """Classify only RFs recorded as fired; resolved records alone are not findings."""
+    lookup = (plan_result.kb_resolved or {}).get("red_flags") or {}
+    if not isinstance(lookup, dict):
+        return []
+    return filter_emergency_rfs([
+        lookup[rf_id] for rf_id in _patient_fired_rf_ids(plan_result.trace)
+        if rf_id in lookup
+    ])
+
+
 def _emergency_trigger_keys(plan_result: PlanResult) -> set[str]:
     """Return the lowercase first-sentence text of each emergency-tier
     RedFlag definition. PATIENT_MODE_SPEC §3.4 dedupe rule: an `er_now`
     watchpoint whose `trigger_ua` matches any emergency RF text is
     suppressed so the patient doesn't see the same call-to-action in
     both `between-visits` and `emergency-signals`."""
-    rf_lookup = (plan_result.kb_resolved or {}).get("red_flags") or {}
     keys: set[str] = set()
-    if not isinstance(rf_lookup, dict):
-        return keys
-    for rf in rf_lookup.values():
-        if not isinstance(rf, dict):
-            continue
-        if not is_emergency_rf(rf):
-            continue
+    for rf in _patient_emergency_findings(plan_result):
         text = (rf.get("definition_ua") or rf.get("definition") or "")
         # Match patient_emergency_label() truncation — first sentence only.
-        first = str(text).split(".")[0].strip().lower()
+        first = _patient_first_sentence(str(text)).lower()
         if first:
             keys.add(first)
     return keys
@@ -4135,7 +4140,7 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
             if not isinstance(w, dict):
                 continue
             if (w.get("urgency") or "") == "er_now":
-                trig = (w.get("trigger_ua") or "").split(".")[0].strip().lower()
+                trig = _patient_first_sentence(w.get("trigger_ua") or "").lower()
                 if trig and trig in emergency_keys:
                     continue
             kept.append(w)
@@ -4208,14 +4213,14 @@ def _render_emergency_section(plan_result: PlanResult) -> str:
     Renders an empty-state placeholder when no emergency RFs apply, so
     the section is always present in the bundle (assertable structural
     contract for downstream tests)."""
-    rf_lookup = (plan_result.kb_resolved or {}).get("red_flags") or {}
-    emergencies = filter_emergency_rfs(list(rf_lookup.values()))
+    emergencies = _patient_emergency_findings(plan_result)
     if not emergencies:
         return (
             '<section class="emergency-signals">'
             "<h2>Сигнали, що вимагають негайної уваги</h2>"
-            '<p class="patient-badge patient-good">'
-            "Наразі немає термінових сигналів — продовжуйте планові візити."
+            '<p class="patient-badge patient-info">'
+            "У журналі цього звіту немає спрацьованих термінових сигналів. "
+            "Це не виключає невідкладних станів і не є оцінкою ваших поточних симптомів."
             "</p>"
             "</section>"
         )
@@ -4232,8 +4237,9 @@ def _render_emergency_section(plan_result: PlanResult) -> str:
     return (
         '<section class="emergency-signals">'
         "<h2>Сигнали, що вимагають негайної уваги</h2>"
-        '<p>Якщо у вас з\'явилися ці симптоми — зверніться у лікарню '
-        "негайно, не чекайте планового візиту:</p>"
+        '<p>Наведені умови позначені алгоритмом за введеними даними. '
+        'Це не підтверджений діагноз; перевірте їх з лікарем.</p>'
+        '<p>Описи сигналів із бази знань:</p>'
         f'<ul class="emergency-list">{"".join(items)}</ul>'
         "</section>"
     )

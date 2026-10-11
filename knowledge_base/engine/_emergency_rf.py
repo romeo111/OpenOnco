@@ -16,14 +16,15 @@ Three orthogonal signals identify a red flag as emergency-tier:
      RFs that author the danger in prose rather than via severity flag
      (e.g. universal infusion-reaction or HBV-reactivation RFs).
 
-Lenient by design: a false positive surfaces an extra emergency line in
-the patient banner — no clinical risk. A false negative could drop a real
-emergency from the banner — much worse.
+This classifies authored records, not patient-specific applicability.
+The renderer must separately establish applicability from the algorithm
+trace. Classification alone does not prove that a condition is present.
 """
 
 from __future__ import annotations
 
 from typing import Iterable
+from ._patient_rationale import _first_sentence_ua
 
 
 # Keywords (Ukrainian + canonical English clinical terms) that signal an
@@ -86,8 +87,8 @@ def patient_emergency_label(rf_dict: dict) -> str:
     text = text.strip()
     if not text:
         return "🚨 Зверніться до лікаря негайно"
-    # Take first sentence (split on period); trim trailing whitespace.
-    first_sentence = text.split(".")[0].strip()
+    # A decimal point is part of the authored value, not a sentence boundary.
+    first_sentence = _first_sentence_ua(text)
     # Don't keep an empty fragment if the text starts with a period.
     if not first_sentence:
         first_sentence = text
