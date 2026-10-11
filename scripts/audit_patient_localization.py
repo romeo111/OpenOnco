@@ -29,7 +29,7 @@ def dynamic_inventory(root: Path) -> dict:
 
     entries = []
     content = root / 'knowledge_base/hosted/content'
-    fields = {'definition_ua', 'trigger_ua', 'action_ua'}
+    fields = {'definition_ua', 'trigger_ua', 'action_ua', 'notes_patient'}
 
     def visit(value, path, filename, entity_id):
         if isinstance(value, dict):
@@ -57,9 +57,39 @@ def dynamic_inventory(root: Path) -> dict:
             visit(record, [], file.relative_to(root).as_posix(), entity_id)
     return {
         'status': 'inventory_only_not_clinical_review',
-        'scope': 'Candidate YAML names, red-flag definitions and watchpoints; not displayed coverage',
+        'scope': 'Candidate YAML names, authored patient notes, red-flag definitions and watchpoints; not displayed coverage',
         'entry_count': len(entries),
         'unique_source_count': len({entry['source'] for entry in entries}),
+        'entries': entries,
+    }
+
+
+def drug_class_inventory(root: Path) -> dict:
+    """Record lookup readiness, not rendered coverage or clinical signoff."""
+    import yaml
+    from knowledge_base.engine._patient_vocabulary import explain_drug_class
+
+    entries = []
+    loader = getattr(yaml, 'CSafeLoader', yaml.SafeLoader)
+    for file in sorted((root / 'knowledge_base/hosted/content/drugs').glob('*.yaml')):
+        record = yaml.load(file.read_text(encoding='utf-8'), Loader=loader)
+        if not isinstance(record, dict):
+            continue
+        label = record.get('drug_class') or ''
+        entries.append({
+            'file': str(file.relative_to(root)).replace('\\', '/'),
+            'entity_id': record.get('id'), 'drug_class': label,
+            'uk_class_explanation': bool(explain_drug_class(label)),
+            'en_class_explanation_draft': bool(explain_drug_class(label, target_lang='en')),
+            'has_authored_patient_note': bool((record.get('notes_patient') or '').strip()),
+        })
+    return {
+        'status': 'lookup_inventory_not_clinical_review',
+        'scope': 'Drug-class lookup readiness only; authored-note translation and displayed report coverage are not proven',
+        'record_count': len(entries),
+        'uk_class_explanation_count': sum(item['uk_class_explanation'] for item in entries),
+        'en_class_explanation_draft_count': sum(item['en_class_explanation_draft'] for item in entries),
+        'authored_patient_note_count': sum(item['has_authored_patient_note'] for item in entries),
         'entries': entries,
     }
 
@@ -112,16 +142,20 @@ def main() -> None:
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--output', type=Path, help='Optional JSON review inventory; clinical inputs are untouched')
     parser.add_argument('--include-dynamic', action='store_true', help='Include a separate candidate YAML text inventory')
+    parser.add_argument('--include-drug-classes', action='store_true', help='Include drug-class lookup readiness and authored-note presence')
     args = parser.parse_args()
     result = inventory(args.root)
     if args.include_dynamic:
         result['dynamic_content'] = dynamic_inventory(args.root)
+    if args.include_drug_classes:
+        result['drug_classes'] = drug_class_inventory(args.root)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     summary = {key: value for key, value in result.items() if key != 'entries'}
-    if 'dynamic_content' in summary:
-        summary['dynamic_content'] = {key: value for key, value in summary['dynamic_content'].items() if key != 'entries'}
+    for section in ('dynamic_content', 'drug_classes'):
+        if section in summary:
+            summary[section] = {key: value for key, value in summary[section].items() if key != 'entries'}
     print(json.dumps(summary, indent=2))
 
 
