@@ -5,10 +5,11 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.build_public_locales import build_public_locales, localize_public_page, STYLE_VERSION
+from scripts.build_public_locales import build_public_locales, localize_public_page, safe_public_translation, STYLE_VERSION
 from scripts.build_site import render_about
 from scripts.site_nav import render_top_bar
 from scripts.site_locales import locale_href
+from scripts.public_curated_copy import messages_for as public_copy
 
 
 class Components(HTMLParser):
@@ -59,6 +60,26 @@ def test_project_story_has_same_sections_in_both_source_languages():
     for name in ('purpose', 'work', 'effort', 'action'):
         assert f'class="about-{name}"' in en
     assert not re.search(r'[\u0400-\u04ff]', en.split('<main>', 1)[1])
+
+
+def test_public_builder_rejects_corrupted_tokens_and_uses_curated_drug_terms(tmp_path):
+    source = ('<html lang="en"><head></head><body><main>'
+              '<p>oo_geo</p><p>/diseases.html</p><p>Drugs</p>'
+              '<p>Drug records with machine-readable context.</p>'
+              '</main></body></html>')
+    (tmp_path / 'index.html').write_text(source, encoding='utf-8')
+    build_public_locales(tmp_path)
+    for locale in ('es', 'pt', 'de', 'fr'):
+        page = (tmp_path / locale / 'index.html').read_text(encoding='utf-8')
+        copy = public_copy(locale)
+        assert '<p>oo_geo</p>' in page
+        assert '<p>/diseases.html</p>' in page
+        assert f'<p>{copy["Drugs"]}</p>' in page
+        assert f'<p>{copy["Drug records with machine-readable context."]}</p>' in page
+
+
+def test_public_translation_preserves_route_literals():
+    assert safe_public_translation('/new-disease.html', '/neue-krankheit.html', 'de') == '/new-disease.html'
 
 
 def test_public_builder_uses_the_real_source_template(tmp_path):

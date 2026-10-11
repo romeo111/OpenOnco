@@ -477,7 +477,7 @@
           <div class="num-card"><div class="num-big">103</div><div class="num-lbl">Doenças em KB</div><p class="num-text">Doenças com registros estruturados dedicados.</p></div>
           <div class="num-card"><div class="num-big">16</div><div class="num-lbl">Aptidões de Clínica</div><p class="num-text">Papéis de MDT representados no encaminhamento.</p></div>
           <div class="num-card"><div class="num-big">404</div><div class="num-lbl">Regimes de tratamento</div><p class="num-text">Regimes estruturados, não prescrições automáticas.</p></div>
-          <div class="num-card"><div class="num-big">321</div><div class="num-lbl">Fármacos</div><p class="num-text">Registros de drogas com contexto líquido por máquina.</p></div>
+          <div class="num-card"><div class="num-big">321</div><div class="num-lbl">Medicamentos</div><p class="num-text">Registos de medicamentos com contexto legível por máquina.</p></div>
           <div class="num-card"><div class="num-big">131</div><div class="num-lbl">Ensaios</div><p class="num-text">Testes diagnósticos e moleculares representados no KB.</p></div>
           <div class="num-card"><div class="num-big">24</div><div class="num-lbl">Apreciação</div><p class="num-text">Conjuntos de trabalho estruturados.</p></div>
           <div class="num-card"><div class="num-big">671</div><div class="num-lbl">Sinais de alerta</div><p class="num-text">Sinais que requerem o segundo olhar de um médico.</p></div>
@@ -526,7 +526,7 @@
           <div class="flow-step">
             <div class="flow-num">Fase 4</div>
             <div class="flow-title">Algoritmo caminhando</div>
-            <div class="flow-desc">Árvore de decisão passo a passo. Trace recordes disparados_red_flags em cada nó.</div>
+            <div class="flow-desc">Árvore de decisão passo a passo. O registo documenta fired_red_flags em cada nó.</div>
           </div>
           <div class="flow-step">
             <div class="flow-num">Fase 5</div>
@@ -552,7 +552,7 @@
         <h2>Regimes multifásicos</h2>
         <p class="info-text">
           <code>Regimen.phases</code> é uma lista ordenada de blocos nomeados (indução → consolidação → manutenção), cada um com seu próprio cronograma de ciclo e gatilho de transição. Protocolos do mundo real (R-CHOP × 6 → manutenção, AML 7+3 → consolidações HiDAC, ponte axi-cel → infusão).
-          <code>bridging_options</code> — regimes de ponte entre fases (para o CAR-T). <code>auto_wrap_legacy_components()</code>.
+          <code>bridging_options</code> — bridging regimens between phases (for CAR-T). Legacy single-phase YAMLs auto-wrap into one-phase form via <code>auto_wrap_legacy_components()</code>.
         </p>
       </div>
 
@@ -662,12 +662,12 @@
           <thead><tr><th>Campo</th><th>Índice</th></tr></thead>
           <tbody>
             <tr><td><code>tracks[]</code></td><td>≥2 alternative tracks (default first): indication + regimen (+ phases) + monitoring + supportive_care + contraindications</td></tr>
-            <tr><td><code>access_matrix</code></td><td>agregado por faixa: registos, reembolso, intervalos de custos, <code>AccessPathway</code>. Alerta de custo de estalada &gt; 180 dias.</td></tr>
+            <tr><td><code>access_matrix</code></td><td>agregado por faixa: registos, reembolso, intervalos de custos, <code>AccessPathway</code>. Aviso se a antiguidade dos dados de custos for &gt; 180 dias.</td></tr>
             <tr><td><code>experimental_options</code></td><td>terceiro caminho — <code>enumerate_experimental_options()</code> consultas ClinicalTrials.gov v2. cache TTL de 7 dias.</td></tr>
             <tr><td><code>actionability_hits</code></td><td>CIViC matches with ESCAT-primary + variant, evidence rating, clinical significance, source citations</td></tr>
-            <tr><td><code>fda_compliance</code></td><td>Critério da FDA 4 campos: intencional, patient_population_match, algoritm_summary, automatização_bias_alarme</td></tr>
+            <tr><td><code>fda_compliance</code></td><td>Campos do critério 4 da FDA: intended_use, patient_population_match, algorithm_summary, automation_bias_warning</td></tr>
             <tr><td><code>trace</code></td><td>Passo a passo histórico walk_algorithm: passo / resultado / ramo / fired_red_flags</td></tr>
-            <tr><td><code>warnings</code></td><td>erros de esquema/ref, desqualificações de tempo_críticas, dicas de dados faltantes, avisos de guarda-citação</td></tr>
+            <tr><td><code>warnings</code></td><td>schema/ref errors, time_critical disqualifications, missing data hints, citation-guard warnings</td></tr>
             <tr><td><code>supersedes</code> / <code>superseded_by</code></td><td>cadeia de versão entre planos para o mesmo paciente</td></tr>
           </tbody>
         </table>
@@ -715,7 +715,7 @@
             <tr><td><strong>Q4</strong></td><td>Biomarcador ausente</td><td>«Estado da mutação IGHV + FISH del(17p) necessário para confirmar a recomendação 1L»</td></tr>
             <tr><td><strong>Q5</strong></td><td>Situação de desempenho em falta</td><td>«ECOG necessário para avaliação da elegibilidade para transplante»; recua ao padrão conservador</td></tr>
             <tr><td><strong>Q6</strong></td><td>Medicamento não reembolsado</td><td>«D-VRD: daratumumab não reembolsado atualmente; verificar a via de financiamento»</td></tr>
-            <tr><td><strong>DQ1-4</strong></td><td>Modo diagnóstico: tecido / linhagem / apresentação / hipóteses faltando</td><td>menor workup corresponde confiança; linhage_hint + tecido domina</td></tr>
+            <tr><td><strong>DQ1-4</strong></td><td>Modo diagnóstico: tecido / linhagem / apresentação / hipóteses faltando</td><td>reduz a confiança na correspondência da avaliação diagnóstica; predominam lineage_hint e o tecido</td></tr>
           </tbody>
         </table>
         <div class="callout">
@@ -801,7 +801,7 @@
         <div class="gap-grid">
           <div class="gap-card gap-hard"><div class="gap-tag">Nunca</div><h3>Esconder a pista alternativa</h3><p>As duas recomendações são sempre apresentadas. A IU não tem um padrão «expansivo para ver alternativa».</p></div>
           <div class="gap-card gap-hard"><div class="gap-tag">Nunca</div><h3>Gerar a Indicação através de LLM</h3><p>Everything from the curated KB. No matching Indication → warning, not «creative invention».</p></div>
-          <div class="gap-card gap-hard"><div class="gap-tag">Nunca</div><h3>Modificar as doses</h3><p>As doses vêm da NCCN/ESMO padrão. Ajustes apenas através de um <code>dose_modification_rules</code>.</p></div>
+          <div class="gap-card gap-hard"><div class="gap-tag">Nunca</div><h3>Modificar as doses</h3><p>As doses provêm das diretrizes NCCN/ESMO. Os ajustes só são feitos por regras explícitas <code>dose_modification_rules</code>.</p></div>
           <div class="gap-card gap-hard"><div class="gap-tag">Nunca</div><h3>Juiz «que é melhor»</h3><p>The algorithm picks a default but doesn't claim it's superior. The clinician has full autonomy — automation_bias_warning.</p></div>
           <div class="gap-card gap-hard"><div class="gap-tag">Nunca</div><h3>Interpretação de imagens</h3><p>A «doença bullicia» chega como campo estruturado, não a partir da análise de imagens.</p></div>
           <div class="gap-card gap-hard"><div class="gap-tag">Nunca</div><h3>Coorte de correspondência</h3><p>«N pacientes escolheram X em M% dos casos» — requer um registro de pacientes persistido + revisão de privacidade. Ainda não.</p></div>
@@ -899,7 +899,7 @@
           <li><strong>Pivot CIViC</strong> — motor + 29 BIO + 399 YAMLs BMA migraram fora do esquema OncoKB; instantâneo mensal atualizar IC.</li>
           <li><strong>Regimes multifásicos (PR1-3)</strong> — <code>Regimen.phases</code>, <code>bridging_options</code>, renderização de fases-conhecido, back-compat auto-embalagem.</li>
           <li><strong>Proteção de citação L3</strong> — verificação do tempo de renderização em cada célula BMA.</li>
-          <li><strong>Matriz de cobertura</strong> — <a href="/pt/diseases.html">/doenças.html</a> Perfuração por doença.</li>
+          <li><strong>Matriz de cobertura</strong> — <a href="/pt/diseases.html">/diseases.html</a> detalhamento por doença.</li>
           <li><strong>446 exemplos públicos na galeria</strong> — planos prontos, relatórios de diagnóstico e cenários moleculares para revisão e verificação.</li>
         </ul>
       </div>
