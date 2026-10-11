@@ -14,6 +14,7 @@ checks on:
 
 from __future__ import annotations
 
+import json
 import zipfile
 from pathlib import Path
 
@@ -21,6 +22,7 @@ import pytest
 import yaml
 
 from scripts.build_site import bundle_engine
+from knowledge_base.engine import generate_plan
 from knowledge_base.engine.lazy_loader import (
     apply_disease_module,
     lazy_load_disease,
@@ -284,6 +286,33 @@ def test_lazy_load_disease_merges_with_core(
         (content_root / "indications").glob("ind_dlbcl_*.yaml")
     )
     assert dlbcl_files, "no DLBCL indication YAMLs found post-merge"
+
+
+def test_lazy_loaded_dlbcl_generates_same_plan_as_full_kb(
+    bundle_out: dict, tmp_path: Path
+) -> None:
+    """A valid archive must produce a treatment plan, not just pass loader checks."""
+    profile = json.loads(
+        (REPO_ROOT / "examples" / "auto_dlbcl_nos.json").read_text(encoding="utf-8")
+    )
+    full = generate_plan(profile, kb_root=KB_CONTENT)
+    assert full.plan is not None and full.plan.tracks
+
+    out_dir = Path(bundle_out["_dir"])
+    target = tmp_path / "kb_root"
+    target.mkdir()
+    _unpack(out_dir / "openonco-engine-core.zip", target)
+    _unpack(out_dir / "disease" / "openonco-dis-dlbcl-nos.zip", target)
+    clear_load_cache()
+    partial = generate_plan(
+        profile, kb_root=target / "knowledge_base" / "hosted" / "content"
+    )
+
+    assert partial.plan is not None and partial.plan.tracks, partial.warnings[:5]
+    assert partial.default_indication_id == full.default_indication_id
+    assert [track.indication_id for track in partial.plan.tracks] == [
+        track.indication_id for track in full.plan.tracks
+    ]
 
 
 # Section C (back-compat for monolithic bundle) was removed 2026-04-30:
