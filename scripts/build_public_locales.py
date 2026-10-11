@@ -10,9 +10,17 @@ from scripts.site_nav import render_top_bar
 from scripts.site_translation_catalog import LANGUAGES, load_catalog, normalize
 from scripts.clinical_curated_copy import messages_for as clinical_copy
 from scripts.public_curated_copy import messages_for as public_copy
+from scripts.clinical_translation_checks import acceptable_draft
 
 PAGES = ('index.html', 'about.html', 'capabilities.html', 'specs.html', 'news.html', 'participate.html')
 STYLE_VERSION = '/style.css?v=layout-20261011'
+
+
+def safe_public_translation(source, translated, locale):
+    """Keep route literals and corrupted drafts in their English source form."""
+    if source.startswith('/') and not any(char.isspace() for char in source):
+        return source
+    return translated if acceptable_draft(source, translated, locale) else source
 
 
 class PublicHTML(LocalizedHTML):
@@ -63,7 +71,11 @@ def build_public_locales(root: Path):
         catalog = load_catalog(locale)
         copy_path = Path(__file__).with_name('locales') / f'public.{locale}.json'
         if copy_path.exists():
-            catalog.update(json.loads(copy_path.read_text(encoding='utf-8')))
+            draft = json.loads(copy_path.read_text(encoding='utf-8'))
+            catalog.update({
+                source: safe_public_translation(source, translated, locale)
+                for source, translated in draft.items()
+            })
         catalog.update(clinical_copy(locale))
         catalog.update(public_copy(locale))
         for page in PAGES:
