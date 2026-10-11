@@ -6275,13 +6275,23 @@ async function loadCoreBundle() {{
 // localStorage keyed by disease_id + version so subsequent visits skip
 // the fetch entirely. Quota is ~5-10 MB; we only cache one disease at a
 // time per slot and drop silently on quota errors.
+async function validateDiseaseModule() {{
+  const valid = await pyodide.runPythonAsync(
+    "from knowledge_base.engine import apply_disease_module\\n" +
+    "from pathlib import Path\\n" +
+    "_module_validation = apply_disease_module(Path('knowledge_base/hosted/content'))\\n" +
+    "bool(_module_validation.get('ok'))\\n"
+  );
+  if (valid !== true) throw new Error('Knowledge base validation failed after loading the disease module.');
+}}
+
 async function loadDiseaseModule(diseaseId) {{
   if (!diseaseId) return;
   if (loadedDiseases.has(diseaseId)) {{
     refreshBuildPanel(diseaseId).catch(() => {{}});
     return;
   }}
-  if (!bundleIndex || !bundleIndex.diseases) return;
+  if (!bundleIndex || !bundleIndex.diseases) throw new Error('Disease bundle index unavailable.');
   const relUrl = bundleIndex.diseases[diseaseId];
   if (!relUrl) {{
     // Disease has no per-disease bundle — its content is fully in core.
@@ -6300,6 +6310,7 @@ async function loadDiseaseModule(diseaseId) {{
       const u8 = new Uint8Array(bin.length);
       for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
       pyodide.unpackArchive(u8.buffer, 'zip');
+      await validateDiseaseModule();
       loadedDiseases.add(diseaseId);
       refreshBuildPanel(diseaseId).catch(() => {{}});
       console.log('[OO] disease module ' + diseaseId + ' loaded from localStorage cache');
@@ -6318,21 +6329,9 @@ async function loadDiseaseModule(diseaseId) {{
   const buf = await r.arrayBuffer();
   await yieldToBrowser();
   pyodide.unpackArchive(buf, 'zip');
+  await validateDiseaseModule();
   loadedDiseases.add(diseaseId);
   refreshBuildPanel(diseaseId).catch(() => {{}});
-
-  // Re-validate after merge so the next generate_plan() sees the new YAMLs.
-  // apply_disease_module() drops the loader cache; cheap enough to run on
-  // every disease swap.
-  try {{
-    await pyodide.runPythonAsync(
-      "from knowledge_base.engine import apply_disease_module\\n" +
-      "from pathlib import Path\\n" +
-      "apply_disease_module(Path('knowledge_base/hosted/content'))\\n"
-    );
-  }} catch (e) {{
-    console.warn('[OpenOnco] apply_disease_module failed (continuing):', e);
-  }}
 
   // Cache for next visit. Skip silently on quota or encoding errors.
   try {{
@@ -6420,17 +6419,21 @@ else:
     _summary = " | ".join(_parts)
 _summary
 `);
+    if (validationSummary !== 'ok') {{
+      throw new Error('Knowledge base validation failed: ' + validationSummary);
+    }}
     initStageDone(stage);
     enginReady = true;
     setLoadingProgress(100);
     if (validationSummary === 'ok') {{
       setStatus('{"Engine ready ✓" if target_lang == "en" else "Двигун готовий ✓"}', 'ok');
-    }} else {{
-      console.warn('[OpenOnco] KB validation did not pass — engine loaded anyway for testing.\\n' + validationSummary);
-      setStatus('{"Engine ready ⚠ KB not verified (details in console)" if target_lang == "en" else "Двигун готовий ⚠ KB неверифіковано (деталі в консолі)"}', 'warn');
     }}
     return pyodide;
   }} catch (e) {{
+    enginReady = false;
+    coreBundleLoaded = false;
+    loadedDiseases.clear();
+    pyodide = null;
     if (stage) initStageError(stage, e && e.message);
     throw e;
   }}
@@ -6483,13 +6486,14 @@ async function runEngine() {{
     }}
     // CSD-6E: lazy-fetch the per-disease module before generate. No-op
     // when the disease has no per-disease bundle (its content is in
-    // core). Failures are surfaced but non-fatal — generate_plan()
-    // will fall back to whatever's already loaded.
+    // core). A failed or invalid module must stop generation.
     try {{
       const did = resolveDiseaseId(profile);
       if (did) await loadDiseaseModule(did);
     }} catch (e) {{
-      console.warn('[OpenOnco] disease module load failed (continuing):', e);
+      setError('{"The disease module failed to load: " if target_lang == "en" else "Не вдалося завантажити модуль хвороби: "}' + (e.message || e));
+      setStatus('');
+      return;
     }}
     initStageStart('generate');
     setStatus('{"Building a personalised plan…" if target_lang == "en" else "Будую персональний план…"}');

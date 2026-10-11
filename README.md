@@ -8,7 +8,7 @@
 
 **Free, open-source oncology knowledge base and tools for source-cited clinical discussion.** A deterministic Python rule engine drafts alternative plans from versioned YAML. An LLM does not select regimens or doses.
 
-[Live website](https://openonco.info/) · [Українською](README.uk.md) · [Documentation](docs/README.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+[Live website](https://openonco.info/) · [Українською](README.uk.md) · [Documentation](docs/README.md) · [Roadmap](DEVELOPMENT_ROADMAP.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 OpenOnco is an early-stage informational project. Clinical content can be draft, incomplete or awaiting review. Technical tests and source citations do not constitute clinical approval. A qualified clinician must verify outputs against original sources and the full clinical context. Patient-facing material supports education and preparation of questions for an oncologist.
 

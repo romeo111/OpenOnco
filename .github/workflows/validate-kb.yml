@@ -58,6 +58,11 @@ jobs:
           python -m scripts.build_clinician_review --check --output-dir /tmp/dlbcl-review
 
       - name: Run tests
+        # Failure injection against the JavaScript served to users, without
+        # downloading Pyodide or sending a clinical profile to a server.
+        run: node tests/browser_engine_loading.cjs
+
+      - name: Run Python tests
         run: |
           python -m pytest \
             tests/test_audit_validator_contracts.py \
