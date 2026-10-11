@@ -23,6 +23,47 @@ FILES = (
 CYRILLIC = re.compile(r'[\u0400-\u04ff]')
 
 
+def dynamic_inventory(root: Path) -> dict:
+    """Candidate patient-facing KB text; not proof that every field is displayed."""
+    import yaml
+
+    entries = []
+    content = root / 'knowledge_base/hosted/content'
+    fields = {'definition_ua', 'trigger_ua', 'action_ua'}
+
+    def visit(value, path, filename, entity_id):
+        if isinstance(value, dict):
+            for key, child in value.items():
+                child_path = [*path, str(key)]
+                selected = key in fields or (
+                    key == 'ukrainian' and path and path[-1] == 'names'
+                )
+                if selected and isinstance(child, str) and child.strip():
+                    entries.append({
+                        'file': filename, 'entity_id': entity_id,
+                        'field_path': child_path, 'source': child,
+                    })
+                else:
+                    visit(child, child_path, filename, entity_id)
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                visit(child, [*path, str(index)], filename, entity_id)
+
+    loader = getattr(yaml, 'CSafeLoader', yaml.SafeLoader)
+    for category in ('diseases', 'drugs', 'redflags', 'regimens'):
+        for file in sorted((content / category).glob('*.yaml')):
+            record = yaml.load(file.read_text(encoding='utf-8'), Loader=loader)
+            entity_id = record.get('id') if isinstance(record, dict) else None
+            visit(record, [], file.relative_to(root).as_posix(), entity_id)
+    return {
+        'status': 'inventory_only_not_clinical_review',
+        'scope': 'Candidate YAML names, red-flag definitions and watchpoints; not displayed coverage',
+        'entry_count': len(entries),
+        'unique_source_count': len({entry['source'] for entry in entries}),
+        'entries': entries,
+    }
+
+
 def inventory(root: Path) -> dict:
     entries = []
     for filename in FILES:
@@ -70,12 +111,18 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--output', type=Path, help='Optional JSON review inventory; clinical inputs are untouched')
+    parser.add_argument('--include-dynamic', action='store_true', help='Include a separate candidate YAML text inventory')
     args = parser.parse_args()
     result = inventory(args.root)
+    if args.include_dynamic:
+        result['dynamic_content'] = dynamic_inventory(args.root)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    print(json.dumps({key: value for key, value in result.items() if key != 'entries'}, indent=2))
+    summary = {key: value for key, value in result.items() if key != 'entries'}
+    if 'dynamic_content' in summary:
+        summary['dynamic_content'] = {key: value for key, value in summary['dynamic_content'].items() if key != 'entries'}
+    print(json.dumps(summary, indent=2))
 
 
 if __name__ == '__main__':
