@@ -4207,20 +4207,28 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
     )
 
 
-def _render_emergency_section(plan_result: PlanResult) -> str:
+def _render_emergency_section(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Filter the plan's red flags and render emergency-tier ones as a
     `<section class="emergency-signals">` with one banner item per RF.
     Renders an empty-state placeholder when no emergency RFs apply, so
     the section is always present in the bundle (assertable structural
     contract for downstream tests)."""
+    english = target_lang == "en"
+    heading = "Signals requiring immediate attention" if english else "Сигнали, що вимагають негайної уваги"
+    empty_message = (
+        "No urgent signals were recorded as triggered in this report's trace. "
+        "This does not rule out emergencies and is not an assessment of your current symptoms."
+        if english else
+        "У журналі цього звіту немає спрацьованих термінових сигналів. "
+        "Це не виключає невідкладних станів і не є оцінкою ваших поточних симптомів."
+    )
     emergencies = _patient_emergency_findings(plan_result)
     if not emergencies:
         return (
             '<section class="emergency-signals">'
-            "<h2>Сигнали, що вимагають негайної уваги</h2>"
+            f"<h2>{heading}</h2>"
             '<p class="patient-badge patient-info">'
-            "У журналі цього звіту немає спрацьованих термінових сигналів. "
-            "Це не виключає невідкладних станів і не є оцінкою ваших поточних симптомів."
+            f"{_h(empty_message)}"
             "</p>"
             "</section>"
         )
@@ -4230,16 +4238,23 @@ def _render_emergency_section(plan_result: PlanResult) -> str:
         # tests, but the visible text is generated solely from the
         # patient_emergency_label() output.
         rf_id = (rf.get("id") or "") if isinstance(rf, dict) else ""
-        label = patient_emergency_label(rf)
+        label = patient_emergency_label(rf, target_lang=target_lang)
         items.append(
             f'<li data-rf-id="{_h(rf_id)}">{_h(label)}</li>'
         )
+    explanation = (
+        "The algorithm flagged these conditions based on the data entered. "
+        "This is not a confirmed diagnosis; check them with your doctor."
+        if english else
+        "Наведені умови позначені алгоритмом за введеними даними. "
+        "Це не підтверджений діагноз; перевірте їх з лікарем."
+    )
+    descriptions = "Signal descriptions from the knowledge base:" if english else "Описи сигналів із бази знань:"
     return (
         '<section class="emergency-signals">'
-        "<h2>Сигнали, що вимагають негайної уваги</h2>"
-        '<p>Наведені умови позначені алгоритмом за введеними даними. '
-        'Це не підтверджений діагноз; перевірте їх з лікарем.</p>'
-        '<p>Описи сигналів із бази знань:</p>'
+        f"<h2>{heading}</h2>"
+        f'<p>{_h(explanation)}</p>'
+        f'<p>{descriptions}</p>'
         f'<ul class="emergency-list">{"".join(items)}</ul>'
         "</section>"
     )

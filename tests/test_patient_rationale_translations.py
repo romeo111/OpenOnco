@@ -4,6 +4,7 @@ from types import SimpleNamespace
 from knowledge_base.engine._patient_rationale import (
     RATIONALE_TRANSLATION_STATUS, build_track_rationale, build_track_rationale_html,
 )
+from knowledge_base.engine.render import _render_emergency_section
 
 
 def test_english_rationale_preserves_findings_thresholds_and_input():
@@ -35,3 +36,30 @@ def test_no_fired_flags_is_not_a_claim_of_absent_clinical_risk():
     track = SimpleNamespace(is_default=True)
     assert 'does not rule out risks' in build_track_rationale(result, track, target_lang='en')[0]
     assert 'не виключає ризиків' in build_track_rationale(result, track)[0]
+
+
+def test_english_emergency_section_uses_only_fired_records_and_preserves_values():
+    result = SimpleNamespace(trace=[{'fired_red_flags': ['RF-TEST']}], kb_resolved={'red_flags': {
+        'RF-TEST': {'id': 'RF-TEST', 'severity': 'critical', 'definition': 'Value <0.5 mg/L. More detail.', 'definition_ua': 'Показник <0.5 mg/L.'},
+        'RF-OTHER': {'id': 'RF-OTHER', 'severity': 'critical', 'definition': 'Unfired condition'},
+    }})
+    before = deepcopy(result.__dict__)
+    output = _render_emergency_section(result, target_lang='en')
+    assert 'Signals requiring immediate attention' in output
+    assert 'not a confirmed diagnosis' in output
+    assert 'Value &lt;0.5 mg/L' in output
+    assert 'Unfired condition' not in output
+    assert 'More detail' not in output
+    assert 'data-rf-id="RF-TEST"' in output
+    assert result.__dict__ == before
+    result.trace = []
+    assert 'does not rule out emergencies' in _render_emergency_section(result, target_lang='en')
+
+
+def test_english_emergency_section_marks_missing_translation():
+    result = SimpleNamespace(trace=[{'fired_red_flags': ['RF-TEST']}], kb_resolved={'red_flags': {
+        'RF-TEST': {'id': 'RF-TEST', 'severity': 'critical', 'definition_ua': 'Не чекати.'},
+    }})
+    output = _render_emergency_section(result, target_lang='en')
+    assert 'Original Ukrainian text; translation unavailable' in output
+    assert 'Не чекати' in output
