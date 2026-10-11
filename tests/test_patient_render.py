@@ -70,6 +70,25 @@ def _visible_text(html: str) -> str:
     return _TAG_PATTERN.sub(" ", no_script)
 
 
+def _visible_patient_explanations(html: str) -> str:
+    """Original publication titles retain their authored language, outside explanatory prose."""
+    without_bibliography = re.sub(
+        r'<details class="patient-sources" data-original-source>.*?</details>',
+        '', html, flags=re.DOTALL,
+    )
+    return _visible_text(without_bibliography)
+
+
+def test_original_publication_titles_do_not_disable_plain_language_checks():
+    html = (
+        '<p>untranslated explanation</p>'
+        '<details class="patient-sources" data-original-source>'
+        '<a href="https://example.org">Original publication title</a></details>'
+    )
+    assert 'untranslated explanation' in _visible_patient_explanations(html)
+    assert 'Original publication title' not in _visible_patient_explanations(html)
+
+
 def _build_synthetic_braf_v600e_mcrc_plan():
     """Synthetic 1L mCRC + BRAF V600E patient through the full pipeline.
 
@@ -1116,7 +1135,7 @@ def test_patient_html_no_latin_abbreviations_in_visible_text(label, builder):
     if result.plan is None:
         pytest.skip(f"{label!r}: builder produced no plan")
     html = render_plan_html(result, mode="patient")
-    visible = _visible_text(html)
+    visible = _visible_patient_explanations(html)
     leaks = _flag_unallowed_acronyms(visible)
     assert not leaks, (
         f"[{label}] Unallowed uppercase abbreviations leaked into the patient body:\n"
@@ -1138,7 +1157,7 @@ def test_patient_html_no_bare_latin_words(label, builder):
     if result.plan is None:
         pytest.skip(f"{label!r}: builder produced no plan")
     html = render_plan_html(result, mode="patient")
-    visible = _visible_text(html)
+    visible = _visible_patient_explanations(html)
     leaks = _flag_unallowed_latin_words(visible)
     assert not leaks, (
         f"[{label}] Unallowed Latin words leaked into the patient body:\n"

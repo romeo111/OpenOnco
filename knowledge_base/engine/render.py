@@ -3074,14 +3074,15 @@ def _render_variant_actionability(
 # ── Citation-presence guard helpers (PR5) ───────────────────────────────────
 
 
-def _render_cited_sources(metadata, target_lang: str) -> str:
+def _render_cited_sources(metadata, target_lang: str, *, patient_view: bool = False) -> str:
     """Keep source labels intact and link only recorded web publication URLs."""
     if not metadata.data_sources_summary:
         return ""
     items = []
     for summary in metadata.data_sources_summary:
         source_id = summary.partition(":")[0].strip()
-        label = _h(summary)
+        _, separator, title = summary.partition(":")
+        label = _h(title.strip() if patient_view and separator else summary)
         url = metadata.source_links.get(source_id, "")
         try:
             parsed = urlsplit(url)
@@ -3096,7 +3097,8 @@ def _render_cited_sources(metadata, target_lang: str) -> str:
             safe = False
         if safe:
             label = f'<a href="{_h(url)}" target="_blank" rel="noopener noreferrer">{label}</a>'
-        items.append(f"<li>{label}</li>")
+        source_attribute = f' data-source-id="{_h(source_id)}"' if patient_view else ""
+        items.append(f"<li{source_attribute}>{label}</li>")
     return f"<section><h2>{_h(_t('sources_cited', target_lang))}</h2><ul class='sources'>{''.join(items)}</ul></section>"
 
 
@@ -3561,6 +3563,12 @@ def _patient_drug_label(drug_dict: dict, drug_id: str) -> str:
     return raw.replace("-", " ").replace("_", " ").lower() or "препарат"
 
 
+_PATIENT_VARIANT_LABELS_UA = {
+    "Quantitative HCV RNA — viral-load monitoring during DAA therapy":
+        "кількісний аналіз РНК HCV — контроль вірусного навантаження під час лікування противірусними препаратами прямої дії",
+}
+
+
 def _render_findings_plain(plan_result: PlanResult) -> str:
     """Plain-UA rendering of the variant_actionability hits.
 
@@ -3617,7 +3625,8 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
         # together (e.g. "BRAF V600E") because that's biology a patient
         # can search for; ESCAT tier is wrapped in a friendly label.
         gene_variant = f"{gene} {variant}".strip() if variant else gene
-        bits = [f"<li><strong>{_h(gene_variant)}</strong>"]
+        gene_variant = _PATIENT_VARIANT_LABELS_UA.get(variant, gene_variant)
+        bits = [f'<li><strong data-variant-original="{_h(variant)}">{_h(gene_variant)}</strong>']
         if v_expl:
             bits.append(f" — {_h(v_expl)}")
         if tier_label:
@@ -4407,6 +4416,17 @@ def _render_patient_mode(
 
     body_parts.append(_render_emergency_section(plan_result))
     body_parts.append(_render_ask_doctor_section(plan_result))
+    sources = _render_cited_sources(plan.fda_compliance, "uk", patient_view=True)
+    patient_sources = ""
+    if sources:
+        patient_sources = (
+            '<details class="patient-sources" data-original-source><summary>Джерела, на яких ґрунтується звіт</summary>'
+            '<p>Тут наведені публікації та настанови, зазначені у звіті. '
+            'Обговоріть з лікарем, як вони стосуються саме вашої ситуації.</p>'
+            f'{sources}</details>'
+        )
+        # Expand abbreviations in explanations, while preserving publication titles verbatim.
+        body_parts.append('<!-- patient-source-citations -->')
 
     disclaimer_html = (
         _PATIENT_DISCLAIMER_PREVENTION_HTML
@@ -4422,12 +4442,13 @@ def _render_patient_mode(
         if is_prevention_plan
         else "Ваш персональний онкологічний план"
     )
-    return _expand_first_use(
+    rendered = _expand_first_use(
         _patient_doc_shell(
             doc_title,
             "".join(body_parts),
         )
     )
+    return rendered.replace('<!-- patient-source-citations -->', patient_sources)
 
 
 # ── Diagnostic Brief render ───────────────────────────────────────────────
