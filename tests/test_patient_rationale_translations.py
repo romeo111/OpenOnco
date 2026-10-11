@@ -180,8 +180,18 @@ def test_drug_class_aliases_are_explicit_and_do_not_match_combination_products()
     ('venetoclax', 'BCL-2i'),
     ('azacitidine', 'HMA'),
     ('midostaurin', 'multi-kinase inhibitor'),
+    ('alemtuzumab', 'anti-CD52 mAb'),
+    ('mogamulizumab', 'anti-CCR4 mAb'),
+    ('axicabtagene_ciloleucel', 'CAR-T'),
+    ('blinatumomab', 'bispecific antibody'),
+    ('brentuximab_vedotin', 'ADC'),
+    ('inotuzumab_ozogamicin', 'ADC'),
+    ('loncastuximab_tesirine', 'ADC'),
+    ('daratumumab', 'anti-CD38 mAb'),
+    ('rituximab', 'anti-CD20 mAb'),
 ])
 def test_actual_drug_class_renders_explanation_without_changing_record(filename, canonical):
+    from html import escape
     from pathlib import Path
     import yaml
     path = Path(__file__).resolve().parents[1] / 'knowledge_base/hosted/content/drugs' / (filename + '.yaml')
@@ -196,7 +206,7 @@ def test_actual_drug_class_renders_explanation_without_changing_record(filename,
             from html import escape
             assert escape(note) in html
         if language == 'en' or not note:
-            assert explain(canonical, target_lang=language) in html
+            assert escape(explain(canonical, target_lang=language)) in html
         assert 'medicine for your condition' not in html
         assert 'препарат для лікування вашого захворювання' not in html
     assert drug == before

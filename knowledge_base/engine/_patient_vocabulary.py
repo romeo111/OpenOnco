@@ -106,9 +106,9 @@ DRUG_CLASS_PLAIN_UA: dict[str, str] = {
     "CAR-T": "ваші Т-клітини генетично модифіковані лабораторно, щоб знищувати пухлину",
     "TCR-T": "ваші Т-клітини отримують новий рецептор для розпізнавання конкретного антигена",
     "TIL": "tumor-infiltrating lymphocytes — лімфоцити витягують з пухлини, розмножують і повертають",
-    "bispecific antibody": "білок з двома руками — одна тримає Т-клітину, друга — пухлинну",
+    "bispecific antibody": "антитіло з двома різними мішенями; деякі такі препарати зближують Т-клітини з пухлинними клітинами",
     "BiTE": "bispecific T-cell engager — підкатегорія bispecifics (blinatumomab)",
-    "ADC": "antibody-drug conjugate — антитіло, що несе хіміо-молекулу прямо до пухлини",
+    "ADC": "кон'югат антитіла з препаратом: антитіло доставляє речовину, що пошкоджує клітини, до клітин із відповідною мішенню",
     "radioligand": "радіоактивна молекула, що йде до пухлини за рецепторним сигналом (lutetium-PSMA, lutetium-DOTATATE)",
     "oncolytic virus": "вірус, що інфікує переважно пухлинні клітини й руйнує їх (T-VEC)",
     "vaccine therapy": "вакцина, що тренує ваш імунітет розпізнавати пухлинні білки",
@@ -522,6 +522,11 @@ _ALL_TABLES: tuple[dict[str, str], ...] = (
 
 
 PATIENT_VOCABULARY_EN_DRAFT: dict[str, str] = {
+    "anti-CD52 mAb": "an antibody targeting lymphocytes; it strongly suppresses the immune system",
+    "anti-CCR4 mAb": "an antibody targeting CCR4; used for some T-cell lymphomas (mogamulizumab)",
+    "CAR-T": "your T cells are genetically modified in a laboratory to recognise and attack cancer cells",
+    "bispecific antibody": "an antibody with two different targets; some such medicines bring T cells close to cancer cells",
+    "ADC": "an antibody-drug conjugate: an antibody carries a cell-damaging drug to cells with the corresponding target",
     "HMA": "a medicine that reduces certain chemical marks on DNA (methylation) and may change gene activity; used for some myeloid diseases",
     "multi-kinase inhibitor": "a medicine that blocks several enzymes acting as switches for cell signals; the specific targets depend on the medicine",
     "G-CSF": "stimulates granulocyte production; supports blood cell recovery during chemotherapy",
@@ -621,6 +626,23 @@ def explain(term: str, *, target_lang: str = "uk") -> Optional[str]:
 # Explicit display aliases for authored class labels. No substring matching:
 # combination products and unrecognised classes must retain the fallback.
 DRUG_CLASS_PATIENT_ALIASES = {
+    "monoclonal_antibody — anti-cd52 humanized igg1κ": "anti-CD52 mAb",
+    "defucosylated humanized anti-ccr4 monoclonal antibody (enhanced adcc)": "anti-CCR4 mAb",
+    "anti-cd19 cd28-costimulated car-t cell therapy (autologous)": "CAR-T",
+    "anti-cd19 cd28-costimulated car-t cell therapy (autologous; t-cell selection by cd4/cd8 + cd19 depletion process step)": "CAR-T",
+    "cd19-directed autologous car-t cell therapy (4-1bb costimulation; defined cd4:cd8 1:1 composition)": "CAR-T",
+    "cd19-directed autologous car-t cell therapy (4-1bb costimulation)": "CAR-T",
+    "bispecific t-cell engager (bite) — anti-cd19 × anti-cd3": "bispecific antibody",
+    "cd20 × cd3 bispecific t-cell engager (humanized igg1, duobody platform; sc administration)": "bispecific antibody",
+    "cd20 × cd3 bispecific t-cell engager (humanized igg1; 2:1 cd20-bivalent / cd3-monovalent format; iv; time-limited)": "bispecific antibody",
+    "cd20×cd3 bispecific t-cell engager (full-length humanized igg1)": "bispecific antibody",
+    "anti-cd30 antibody-drug conjugate (mmae payload)": "ADC",
+    "anti-cd22 humanized igg4 monoclonal antibody-drug conjugate (calicheamicin payload)": "ADC",
+    "anti-cd19 antibody-drug conjugate (adc) with pyrrolobenzodiazepine (pbd) dimer payload": "ADC",
+    "monoclonal_antibody — anti-cd38 igg1κ (fully human)": "anti-CD38 mAb",
+    "monoclonal_antibody — anti-cd38 igg1κ (chimeric, mouse-human)": "anti-CD38 mAb",
+    "anti-cd20 monoclonal antibody (glycoengineered type ii)": "anti-CD20 mAb",
+    "monoclonal_antibody — anti-cd20 chimeric igg1κ": "anti-CD20 mAb",
     "taxane antineoplastic agent": "taxane",
     "taxane (microtubule stabilizer; albumin-bound nanoparticle formulation)": "taxane",
     "oral fluoropyrimidine prodrug": "fluoropyrimidine",
