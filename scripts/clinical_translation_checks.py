@@ -17,6 +17,67 @@ VARIANTS = re.compile(r'\b(?:p\.)?[A-Z]\d{1,5}[A-Z*]\b')
 ABBREVIATIONS = re.compile(r'\b(?:OpenOnco|CIViC|[Hh]edgehog|MYC|BCL2|BCL6|ATM|CHEK2|PALB2|PTEN|ESMO|NCCN|FDA|EMA|WHO|ESCAT|TKI|PARPi|IHC|ISH|TNM|ECOG|BID|TID|QD|PO|IV|SC|NSCLC|SCLC|AML|ALL|APL|CLL|CML|DLBCL|HRR|PDAC|GIST|[BT](?=-[Cc]ell))\b')
 STATES = re.compile(r'\b[A-Za-z][A-Za-z0-9]*(?:/[A-Za-z0-9]+)*[+-](?!\w)')
 RISK_SYSTEMS = re.compile(r'\b(?:ELN|IPSS-R|IPSS-M|IPSS|IPI|AAIPI|R-ISS|ISS|IGCCCG|IMDC|INRG|INSS|AJCC|FIGO|BCLC)\b', re.I)
+DAILY_EN = re.compile(r'\b(?:once daily|every day|daily)\b', re.I)
+WEEKLY_EN = re.compile(r'\b(?:once weekly|every week|weekly)\b', re.I)
+WEEKLY_TRANSLATION = {
+    'es': re.compile(r'\b(?:una|1)\s+vez\s+por\s+semana\b|\bsemanal(?:mente)?\b', re.I),
+    'pt': re.compile(r'\b(?:uma|1)\s+vez\s+por\s+semana\b|\bsemanal(?:mente)?\b', re.I),
+    'de': re.compile(r'\bwöchentlich\b|\beinmal\s+pro\s+woche\b', re.I),
+    'fr': re.compile(r'\b(?:une|1)\s+(?:seule\s+)?fois\s+par\s+semaine\b|\bhebdomadaire\b', re.I),
+    'it': re.compile(r'\b(?:settimana|settimanale|settimanalmente)\b', re.I),
+    'da': re.compile(r'\b(?:ugentlig\w*|hver uge)\b', re.I),
+    'sv': re.compile(r'\b(?:veckovis|varje vecka|en gång i veckan)\b', re.I),
+    'nb': re.compile(r'\b(?:ukentlig\w*|hver uke)\b', re.I),
+    'fi': re.compile(r'\b(?:viikoittain|kerran viikossa|joka viikko)\b', re.I),
+}
+ADDITIONAL_DAILY_TRANSLATION = {
+    'it': re.compile(r'\b(?:ogni giorno|al giorno|quotidianamente|giornalier\w*)\b', re.I),
+    'da': re.compile(r'\b(?:daglig\w*|hver dag)\b', re.I),
+    'sv': re.compile(r'\b(?:daglig\w*|varje dag)\b', re.I),
+    'nb': re.compile(r'\b(?:daglig\w*|hver dag)\b', re.I),
+    'fi': re.compile(r'\b(?:päivittäin|kerran päivässä|joka päivä)\b', re.I),
+}
+ALTERNATE_INJECTION_SITE = re.compile(r'\bAlternate (?:flanks/buttocks|sides|injection sites)\b', re.I)
+ALTERNATION_TRANSLATION = {
+    'es': re.compile(r'\baltern\w*\b', re.I),
+    'pt': re.compile(r'\baltern\w*\b', re.I),
+    'de': re.compile(r'\bwechsel\w*\b', re.I),
+    'fr': re.compile(r'\baltern\w*\b', re.I),
+}
+# A translated sentence must retain explicit safety and treatment-duration
+# clauses. These narrow source triggers avoid inferring clinical meaning from
+# general sentence length, which differs substantially by language.
+CRITICAL_CLAUSES = (
+    (re.compile(r'Active bleeding is an absolute hold on systemic therapy until controlled', re.I), {
+        'es': re.compile(r'\b(?:suspend|deten|interrump|aplaz|contraindic)\w*\b', re.I),
+        'pt': re.compile(r'\b(?:suspend|interromp|adi|contraindic)\w*\b', re.I),
+        'de': re.compile(r'\b(?:halt|stopp|unterbrech|aussetz)\w*\b', re.I),
+        'fr': re.compile(r'\b(?:arrêt|suspend|interromp|contre.indic)\w*\b', re.I),
+    }),
+    (re.compile(r'Triggers carbo-mono OR weekly-dose-dense-pacli', re.I), {
+        locale: re.compile(r'(?=.*carbo.mono)(?=.*pacli)(?=.*' + weekly + r')', re.I | re.S)
+        for locale, weekly in {
+            'es': r'semanal|weekly', 'pt': r'semanal|weekly',
+            'de': r'wöch|weekly', 'fr': r'hebdomadaire|weekly',
+        }.items()
+    }),
+    (re.compile(r'Continuous until progression or unacceptable toxicity', re.I), {
+        'es': re.compile(r'progresi[oó]n.{0,50}toxicidad|toxicidad.{0,50}progresi[oó]n', re.I),
+        'pt': re.compile(r'progress[aã]o.{0,50}toxicidade|toxicidade.{0,50}progress[aã]o', re.I),
+        'de': re.compile(r'(?:progression|fortschreit\w*).{0,50}toxizit[aä]t|toxizit[aä]t.{0,50}(?:progression|fortschreit\w*)', re.I),
+        'fr': re.compile(r'progression.{0,50}toxicit[eé]|toxicit[eé].{0,50}progression', re.I),
+    }),
+    (re.compile(r'Cornerstone of every APL induction regimen', re.I), {
+        'es': re.compile(r'induc\w*', re.I),
+        'pt': re.compile(r'indu[cç][aã]o', re.I),
+        'de': re.compile(r'induktion', re.I),
+        'fr': re.compile(r'induction', re.I),
+    }),
+    (re.compile(r'Edema dominant AE', re.I), {
+        locale: re.compile(r'\b(?:edema|[oö]dem|œd[eè]me)\b', re.I)
+        for locale in ('es', 'pt', 'de', 'fr')
+    }),
+)
 
 
 @lru_cache(maxsize=1)
@@ -41,6 +102,25 @@ def acceptable_draft(source, translated, locale, drug_pattern=None):
     if not translated or numeric_tokens(source) != numeric_tokens(translated):
         return False
     if quantity_tokens(source) != quantity_tokens(translated):
+        return False
+    # Numbers alone cannot distinguish a daily dose from a weekly dose.
+    # Likewise, an injection-site rotation instruction must not disappear.
+    weekly_form = WEEKLY_TRANSLATION.get(locale)
+    if DAILY_EN.search(source) and not WEEKLY_EN.search(source):
+        if weekly_form is None or weekly_form.search(translated):
+            return False
+        daily_form = ADDITIONAL_DAILY_TRANSLATION.get(locale)
+        if daily_form is not None and not daily_form.search(translated):
+            return False
+    if locale in ADDITIONAL_DAILY_TRANSLATION and WEEKLY_EN.search(source):
+        if weekly_form is None or not weekly_form.search(translated):
+            return False
+    alternation_form = ALTERNATION_TRANSLATION.get(locale)
+    if ALTERNATE_INJECTION_SITE.search(source) and (alternation_form is None or not alternation_form.search(translated)):
+        return False
+    # Unmapped critical clinical clauses retain their complete original text.
+    if any(source_pattern.search(source) and (locale not in translations or not translations[locale].search(translated))
+           for source_pattern, translations in CRITICAL_CLAUSES):
         return False
     # Alternatives and machine-readable identifiers cannot be silently
     # collapsed into a shorter, seemingly fluent clinical statement.

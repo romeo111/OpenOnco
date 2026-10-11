@@ -37,6 +37,33 @@ def test_added_language_guards_do_not_accept_lost_negation_or_changed_dose(local
     assert acceptable_draft('EGFR 20 mg', 'EGFR 20 mg', locale)
 
 
+@pytest.mark.parametrize('locale,weekly', [
+    ('it', '100 mg una volta alla settimana'), ('da', '100 mg ugentligt'),
+    ('sv', '100 mg varje vecka'), ('nb', '100 mg ukentlig'), ('fi', '100 mg viikoittain'),
+])
+def test_added_language_cannot_turn_daily_dose_into_weekly(locale, weekly):
+    source = '100 mg once daily'
+    assert not acceptable_draft(source, weekly, locale)
+    assert not acceptable_draft(source, '100 mg', locale)
+    assert acceptable_draft(source, source, locale)
+
+
+@pytest.mark.parametrize('locale,daily', [
+    ('it', '100 mg al giorno'), ('da', '100 mg dagligt'),
+    ('sv', '100 mg dagligen'), ('nb', '100 mg daglig'), ('fi', '100 mg päivittäin'),
+])
+def test_added_language_dosing_schedule_is_retained_when_translated(locale, daily):
+    assert acceptable_draft('100 mg once daily', daily, locale)
+    assert not acceptable_draft('100 mg once weekly', daily, locale)
+
+
+@pytest.mark.parametrize('locale', ADDITIONAL_LANGUAGES)
+def test_unmapped_critical_clause_falls_back_to_the_complete_original(locale):
+    source = 'Continuous until progression or unacceptable toxicity.'
+    assert not acceptable_draft(source, 'Continue until progression.', locale)
+    assert acceptable_draft(source, source, locale)
+
+
 @pytest.mark.parametrize('locale', ADDITIONAL_LANGUAGES)
 def test_shared_readers_preserve_source_and_fit_the_free_hosting_budget(locale):
     source = '<html lang="en"><head><title>Synthetic report</title></head><body><main>' + ('<p>SRC-EXAMPLE: 20 mg</p>' * 5000) + '</main></body></html>'

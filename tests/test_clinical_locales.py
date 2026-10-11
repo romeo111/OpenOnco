@@ -9,7 +9,7 @@ import pytest
 
 from scripts.build_clinical_locales import build_clinical_locales, localize_page
 from scripts.site_translation_catalog import numeric_tokens, quantity_tokens
-from scripts.clinical_translation_checks import acceptable_draft
+from scripts.clinical_translation_checks import CRITICAL_CLAUSES, acceptable_draft
 from serverless import clinical_question as cq
 
 
@@ -184,6 +184,78 @@ def test_catalog_tampering_blocks_publication_before_writing_pages(tmp_path):
     assert list(output.iterdir()) == []
 
 
+@pytest.mark.parametrize('mutation,error', [
+    ('counts', 'coverage mismatch: es'),
+    ('review', 'review status needs evidence: es'),
+])
+def test_catalog_coverage_and_review_claims_block_publication(tmp_path, mutation, error):
+    catalogs = tmp_path / 'catalogs'
+    catalogs.mkdir()
+    inventory = {}
+    for locale in ('es', 'pt', 'de', 'fr'):
+        path = catalogs / f'clinical.{locale}.json'
+        path.write_text('{"Clinical draft":"Draft"}', encoding='utf-8')
+        inventory[locale] = {
+            'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+            'strings': 1, 'translated_strings': 1, 'original_strings': 0,
+            'review': 'pending_clinical_review',
+        }
+    if mutation == 'counts':
+        inventory['es']['translated_strings'] = 2
+    else:
+        inventory['es']['review'] = 'reviewed'
+    (catalogs / 'clinical_manifest.json').write_text(json.dumps({'languages': inventory}), encoding='utf-8')
+    output = tmp_path / 'site'
+    output.mkdir()
+    with pytest.raises(ValueError, match=error):
+        build_clinical_locales(output, catalogs)
+    assert list(output.iterdir()) == []
+
+
+def test_committed_catalog_manifest_reports_actual_coverage_and_pending_review():
+    root = Path(__file__).resolve().parents[1] / 'scripts/locales'
+    manifest = json.loads((root / 'clinical_manifest.json').read_text(encoding='utf-8'))
+    for locale in ('es', 'pt', 'de', 'fr'):
+        path = root / f'clinical.{locale}.json'
+        catalog = json.loads(path.read_text(encoding='utf-8'))
+        claims = manifest['languages'][locale]
+        assert claims['sha256'] == hashlib.sha256(path.read_bytes()).hexdigest()
+        assert claims['strings'] == len(catalog)
+        assert claims['translated_strings'] == sum(source != translated for source, translated in catalog.items())
+        assert claims['original_strings'] == sum(source == translated for source, translated in catalog.items())
+        assert claims['review'] == 'pending_clinical_review'
+
+
+@pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
+def test_committed_clinical_drafts_preserve_critical_clauses(locale):
+    root = Path(__file__).resolve().parents[1]
+    catalog = json.loads((root / 'scripts/locales' / f'clinical.{locale}.json').read_text(encoding='utf-8'))
+    runtime = json.loads((root / 'docs' / locale / 'clinical-translations.json').read_text(encoding='utf-8'))
+    for source, translated in catalog.items():
+        if not any(pattern.search(source) for pattern, _ in CRITICAL_CLAUSES):
+            continue
+        assert runtime[source] == translated
+        assert translated == source or all(
+            not pattern.search(source) or forms[locale].search(translated)
+            for pattern, forms in CRITICAL_CLAUSES
+        ), (locale, source, translated)
+
+
+@pytest.mark.parametrize('source,translated,locale', [
+    ('Active bleeding is an absolute hold on systemic therapy until controlled.',
+     'Hemorragia activa hasta controlada.', 'es'),
+    ('Triggers carbo-mono OR weekly-dose-dense-pacli.',
+     'Excluye carbo+pacli estándar.', 'es'),
+    ('Continuous until progression or unacceptable toxicity.',
+     'Continue jusqu’à progression.', 'fr'),
+    ('Cornerstone of every APL induction regimen.',
+     'Fundamental para APL.', 'pt'),
+    ('Edema dominant AE.', 'Wichtige Nebenwirkung.', 'de'),
+])
+def test_missing_critical_clause_rejects_draft(source, translated, locale):
+    assert not acceptable_draft(source, translated, locale)
+
+
 def test_generated_page_write_retries_transient_windows_error(monkeypatch):
     from scripts.build_clinical_locales import write_generated_text
 
@@ -221,6 +293,16 @@ def test_digit_check_keeps_exponents_and_inequalities():
     assert not acceptable_draft('7+3 induction', 'Induction 7-3', 'fr')
     assert not acceptable_draft('OpenOnco', 'OuvreOnco', 'fr')
     assert not acceptable_draft('Clinical staging', 'Mise en scène clinique', 'fr')
+    assert not acceptable_draft('Take 250 mg once daily.', 'Prendre 250 mg une seule fois par semaine.', 'fr')
+    assert acceptable_draft('Take 250 mg once daily.', 'Prendre 250 mg une fois par jour.', 'fr')
+    assert not acceptable_draft(
+        'Inject 120 mg SC. Alternate sides.',
+        'Injecter 120 mg SC.', 'fr',
+    )
+    assert acceptable_draft(
+        'Inject 120 mg SC. Alternate sides.',
+        'Injecter 120 mg SC. Alterner les côtés.', 'fr',
+    )
     assert not acceptable_draft('midostaurin', 'midostaurina', 'pt', re.compile(r'\bmidostaurin\b', re.I))
     assert not acceptable_draft('TEST-CBC, TEST-LFT, TEST-ECHO', 'ESC, ESC', 'pt')
     assert not acceptable_draft('PLAN-AML-SECONDARY-CPX351-1L-001-V1', 'PLAN-AML-SECUNDARIO-CPX351-1L-001-V1', 'es')
@@ -421,3 +503,27 @@ def test_generated_locale_html_uses_fidelity_fallback_for_structured_status():
     page = (repository / 'docs/es/kb/diseases/dis-aml.html').read_text(encoding='utf-8')
     assert 'reviewed 2026-04-25 | pending_clinical_signoff' in page
     assert 'pendance_clinical_signoff' not in page
+
+
+@pytest.mark.parametrize('locale,source_start,source_clause,page', [
+    ('es', '120 mg SC deep subcutaneous injection every 4 weeks', 'Alternate flanks/buttocks.', 'kb/drugs/drug-lanreotide.html'),
+    ('pt', '120 mg SC deep subcutaneous injection every 4 weeks', 'Alternate flanks/buttocks.', 'kb/drugs/drug-lanreotide.html'),
+    ('pt', 'PO: 500 mg once daily × 1-2 weeks', '250 mg once daily', 'kb/drugs/drug-disulfiram.html'),
+    ('de', 'PO: 500 mg once daily × 1-2 weeks', '250 mg once daily', 'kb/drugs/drug-disulfiram.html'),
+    ('fr', '120 mg SC deep subcutaneous injection every 4 weeks', 'Alternate flanks/buttocks.', 'kb/drugs/drug-lanreotide.html'),
+    ('fr', '120 mg SC deep subcutaneous injection · Every 4 weeks', 'Alternate sides.', 'cases/coverage-gi-net-lanreotide-1l.html'),
+    ('fr', 'PO: 500 mg once daily × 1-2 weeks', '250 mg once daily', 'kb/drugs/drug-disulfiram.html'),
+])
+def test_high_risk_dosing_fallback_is_consistent_across_catalog_runtime_and_page(locale, source_start, source_clause, page):
+    from html import escape
+
+    repository = Path(__file__).resolve().parents[1]
+    catalog = json.loads((repository / f'scripts/locales/clinical.{locale}.json').read_text(encoding='utf-8'))
+    source = next(key for key in catalog if key.startswith(source_start) and source_clause in key)
+    runtime = json.loads((repository / f'docs/{locale}/clinical-translations.json').read_text(encoding='utf-8'))
+    published = (repository / f'docs/{locale}/{page}').read_text(encoding='utf-8')
+
+    assert catalog[source] == source
+    assert runtime[source] == source
+    assert f'data-original-source' in published
+    assert escape(source, quote=False) in published

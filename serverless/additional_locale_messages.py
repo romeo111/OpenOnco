@@ -1,7 +1,7 @@
 """Locally authored display drafts; not clinical validation."""
 MESSAGES = {'da': {'. They were not found in the OpenOnco KB vocabulary.': 'De blev ikke fundet i OpenOnco '
                                                                 'KB-ordforrådet.',
-        'Acute Myeloid Leukemia': 'Akut myeloid leukemi',
+        'Acute Myeloid Leukemia': 'Acute Myeloid Leukemia',
         'Check answer': 'Tjek svar',
         'Clarify or correct biomarker(s):': 'Klargør eller korrekt(e) biomarkør(er):',
         'Clarify or correct drug(s):': 'Klargør eller korrekt(e):',
@@ -97,7 +97,7 @@ MESSAGES = {'da': {'. They were not found in the OpenOnco KB vocabulary.': 'De b
         '✓ Correct': '############## Korrekt'},
  'fi': {'. They were not found in the OpenOnco KB vocabulary.': 'Niitä ei löytynyt OpenOnco KB '
                                                                 '-sanastosta.',
-        'Acute Myeloid Leukemia': 'Akuutti myelooinen leukemia',
+        'Acute Myeloid Leukemia': 'Acute Myeloid Leukemia',
         'Check answer': 'Tarkista vastaus',
         'Clarify or correct biomarker(s):': 'Selkeys tai oikea biomerkki (-merkit):',
         'Clarify or correct drug(s):': 'Selkeys tai oikeat lääkkeet:',
@@ -185,7 +185,7 @@ MESSAGES = {'da': {'. They were not found in the OpenOnco KB vocabulary.': 'De b
         '✓ Correct': 'â € €'},
  'it': {'. They were not found in the OpenOnco KB vocabulary.': '. Non sono stati trovati nel '
                                                                 'vocabolario OpenOnco KB.',
-        'Acute Myeloid Leukemia': 'Leucemia mieloide acuta',
+        'Acute Myeloid Leukemia': 'Acute Myeloid Leukemia',
         'Check answer': 'Controllare la risposta',
         'Clarify or correct biomarker(s):': 'Chiarire o correggere i biomarcatori:',
         'Clarify or correct drug(s):': 'Chiari o corretto farmaco:',
@@ -288,7 +288,7 @@ MESSAGES = {'da': {'. They were not found in the OpenOnco KB vocabulary.': 'De b
         '✓ Correct': '✓ Esatto'},
  'nb': {'. They were not found in the OpenOnco KB vocabulary.': '. De ble ikke funnet i OpenOnco '
                                                                 'KB ordlista.',
-        'Acute Myeloid Leukemia': 'Akutt myeloid leukemi',
+        'Acute Myeloid Leukemia': 'Acute Myeloid Leukemia',
         'Check answer': 'Sjekk svar',
         'Clarify or correct biomarker(s):': 'Klarne eller rette biomarkør(er):',
         'Clarify or correct drug(s):': 'Klar eller korrekt stoff(er):',
@@ -384,7 +384,7 @@ MESSAGES = {'da': {'. They were not found in the OpenOnco KB vocabulary.': 'De b
         '✓ Correct': '############## Korreksjon'},
  'sv': {'. They were not found in the OpenOnco KB vocabulary.': '. De hittades inte i OpenOnco '
                                                                 'KB-ordförrådet.',
-        'Acute Myeloid Leukemia': 'Akut myeloidleukemi',
+        'Acute Myeloid Leukemia': 'Acute Myeloid Leukemia',
         'Check answer': 'Kontrollera svar',
         'Clarify or correct biomarker(s):': 'Klargör eller korrekt biomarkerare:',
         'Clarify or correct drug(s):': 'Klargör eller korrigera läkemedel:',
