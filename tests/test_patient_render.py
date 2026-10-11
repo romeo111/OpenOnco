@@ -1240,6 +1240,23 @@ def test_english_patient_sections_preserve_watchpoints_and_question_selection():
     assert result.plan.model_dump() == before
 
 
+def test_english_findings_preserve_variants_and_mark_untranslated_explanations():
+    from knowledge_base.engine.render import _render_findings_plain, _patient_disease_label, _patient_drug_label
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    before = result.plan.model_dump()
+    rendered = _render_findings_plain(result, target_lang='en')
+    assert 'BRAF V600E' in rendered
+    assert 'data-variant-original="V600E"' in rendered
+    assert 'Original Ukrainian explanation; translation unavailable' in rendered
+    assert 'FDA схвалив' not in rendered
+    assert result.plan.model_dump() == before
+    result.kb_resolved['disease'] = {'names': {'english': 'Example disease', 'ukrainian': 'Приклад'}}
+    assert _patient_disease_label(result, target_lang='en') == 'Example disease'
+    assert _patient_disease_label(result) == 'Приклад'
+    assert _patient_drug_label({'names': {'english': 'Medicine', 'ukrainian': 'Ліки'}}, 'DRUG-TEST', target_lang='en') == 'Medicine'
+    assert 'original Ukrainian name' in _patient_drug_label({'names': {'ukrainian': 'Ліки'}}, 'DRUG-TEST', target_lang='en')
+
+
 def test_first_use_expansion_inserts_gloss_for_escat():
     """When the patient body mentions ESCAT, the first occurrence is
     expanded to include the parenthesized gloss."""

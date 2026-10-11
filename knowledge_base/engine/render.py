@@ -54,6 +54,7 @@ from ._patient_rationale import _first_sentence_ua as _patient_first_sentence
 from ._patient_vocabulary import (
     NSZU_PATIENT_LABEL,
     ESCAT_TIER_PATIENT_LABEL,
+    ESCAT_TIER_PATIENT_LABEL_EN,
     expand_first_use as _expand_first_use,
     explain as _explain_patient,
 )
@@ -3531,28 +3532,28 @@ def _patient_doc_shell(title: str, body: str) -> str:
     )
 
 
-def _patient_disease_label(plan_result: PlanResult) -> str:
+def _patient_disease_label(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Plain-UA disease label, never the DIS- ID. Falls back to a generic
     label so user-visible text never contains a technical ID."""
     disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
     names = disease_data.get("names") if isinstance(disease_data, dict) else None
     if isinstance(names, dict):
-        for key in ("ukrainian", "preferred", "english"):
+        for key in (("english", "preferred", "ukrainian") if target_lang == 'en' else ("ukrainian", "preferred", "english")):
             v = names.get(key)
             if v:
-                return str(v)
-    return "ваш діагноз"
+                return f"{v} (original Ukrainian name)" if target_lang == 'en' and key == 'ukrainian' else str(v)
+    return "your diagnosis" if target_lang == 'en' else "ваш діагноз"
 
 
-def _patient_drug_label(drug_dict: dict, drug_id: str) -> str:
+def _patient_drug_label(drug_dict: dict, drug_id: str, *, target_lang: str = "uk") -> str:
     """Plain-UA drug label, never the DRUG- ID."""
     if isinstance(drug_dict, dict):
         names = drug_dict.get("names") or {}
         if isinstance(names, dict):
-            for key in ("ukrainian", "preferred", "english"):
+            for key in (("english", "preferred", "ukrainian") if target_lang == 'en' else ("ukrainian", "preferred", "english")):
                 v = names.get(key)
                 if v:
-                    return str(v)
+                    return f"{v} (original Ukrainian name)" if target_lang == 'en' and key == 'ukrainian' else str(v)
         nm = drug_dict.get("name")
         if nm:
             return str(nm)
@@ -3561,7 +3562,7 @@ def _patient_drug_label(drug_dict: dict, drug_id: str) -> str:
     raw = (drug_id or "").strip()
     if raw.upper().startswith("DRUG-"):
         raw = raw[5:]
-    return raw.replace("-", " ").replace("_", " ").lower() or "препарат"
+    return raw.replace("-", " ").replace("_", " ").lower() or ("medicine" if target_lang == 'en' else "препарат")
 
 
 _PATIENT_VARIANT_LABELS_UA = {
@@ -3570,7 +3571,7 @@ _PATIENT_VARIANT_LABELS_UA = {
 }
 
 
-def _render_findings_plain(plan_result: PlanResult) -> str:
+def _render_findings_plain(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Plain-UA rendering of the variant_actionability hits.
 
     Each hit becomes a friendly statement: 'У вас знайдено [variant
@@ -3578,6 +3579,7 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
     IDs (BMA-*, BIO-*) are stripped — only gene + variant fragment
     survive (e.g. "BRAF V600E"), which is patient-facing biology, not
     a KB ID."""
+    english = target_lang == 'en'
     plan = plan_result.plan
     hits = list((plan and plan.variant_actionability) or [])
     if not hits:
@@ -3591,6 +3593,14 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
             and (plan is None or plan.algorithm_id is None)
         )
         if is_prevention_shape:
+            if english:
+                return (
+                    '<p>The data entered identify the risk factor shown above. '
+                    'This places you in a group at increased risk of certain cancers. '
+                    'The plan below describes surveillance, recommended tests and doctor visits. '
+                    'This is not a diagnosis and does not mean that you have cancer; '
+                    'it is information about risk and reducing it or detecting a problem early.</p>'
+                )
             return (
                 '<p>За результатами заповнених даних значущих ризик-факторів '
                 "виявлено саме той, що вказано вище. Це означає, що ви "
@@ -3600,6 +3610,12 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
                 "візитів до лікаря. Це не діагноз і не означає, що ви "
                 "хворієте — це інформація про ризик і про те, як його "
                 "зменшити або вчасно виявити проблему.</p>"
+            )
+        if english:
+            return (
+                '<p>No significant molecular targets have yet been identified in the available test results. '
+                'This does not mean that treatment is impossible; standard treatment remains an option. '
+                'If your tumour has not undergone molecular testing, discuss this with your doctor.</p>'
             )
         return (
             '<p>За результатами наявних аналізів значущих молекулярних мішеней '
@@ -3621,15 +3637,17 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
         # string when vocabulary has no entry.
         v_expl = _explain_patient(variant) or _explain_patient(gene) or ""
         tier = (h.escat_tier or "").strip().upper()
-        tier_label = ESCAT_TIER_PATIENT_LABEL.get(tier, "")
+        tier_label = (ESCAT_TIER_PATIENT_LABEL_EN if english else ESCAT_TIER_PATIENT_LABEL).get(tier, "")
         # Compose a short human paragraph. We render gene + variant
         # together (e.g. "BRAF V600E") because that's biology a patient
         # can search for; ESCAT tier is wrapped in a friendly label.
         gene_variant = f"{gene} {variant}".strip() if variant else gene
-        gene_variant = _PATIENT_VARIANT_LABELS_UA.get(variant, gene_variant)
+        if not english:
+            gene_variant = _PATIENT_VARIANT_LABELS_UA.get(variant, gene_variant)
         bits = [f'<li><strong data-variant-original="{_h(variant)}">{_h(gene_variant)}</strong>']
         if v_expl:
-            bits.append(f" — {_h(v_expl)}")
+            qualifier = 'Original Ukrainian explanation; translation unavailable: ' if english else ''
+            bits.append(f" — {_h(qualifier + v_expl)}")
         if tier_label:
             bits.append(f'. <span class="patient-badge patient-info">{_h(tier_label)}</span>')
         else:
