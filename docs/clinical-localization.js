@@ -142,7 +142,7 @@
         attach();
       }
     };
-    const patientAvailabilityNotices = {"es": "El informe para pacientes está disponible actualmente solo en ucraniano. Para consultar otra lengua, seleccione la vista para profesionales sanitarios.", "pt": "O relatório para pacientes está atualmente disponível apenas em ucraniano. Para consultar outro idioma, selecione a vista para profissionais de saúde.", "de": "Der Patientenbericht ist derzeit nur auf Ukrainisch verfügbar. Für eine andere Sprache wählen Sie die Ansicht für medizinisches Fachpersonal.", "fr": "Le rapport destiné aux patients est actuellement disponible uniquement en ukrainien. Pour consulter une autre langue, choisissez la vue pour les professionnels de santé."};
+    const patientAvailabilityNotices = {"es": "Está viendo el original ucraniano. Seleccione EN para el borrador inglés, todavía incompleto y pendiente de revisión.", "pt": "Está a ver o original ucraniano. Selecione EN para o rascunho inglês, ainda incompleto e pendente de revisão.", "de": "Sie sehen das ukrainische Original. Wählen Sie EN für den englischen Entwurf, der noch unvollständig ist und geprüft werden muss.", "fr": "Vous consultez l’original ukrainien. Sélectionnez EN pour le brouillon anglais, encore incomplet et en attente de vérification."};
     const documents = new WeakSet();
     const attachDocument = doc => {
       if (documents.has(doc)) return;

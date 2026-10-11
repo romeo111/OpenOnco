@@ -3184,6 +3184,8 @@ def render_plan_html(
     target post-cleanup; WARN is the current-state default for KB
     drift visibility (PR5)."""
     if (mode or "").lower() == "patient":
+        if target_lang == 'en':
+            return render_patient_english_draft(plan_result)
         return _render_patient_mode(plan_result, target_lang, sibling_link=sibling_link)
 
     plan = plan_result.plan
@@ -4503,8 +4505,8 @@ def render_patient_english_draft(plan_result: PlanResult) -> str:
     document = (
         '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
-        f'<title>{_h(title)} — translation review draft</title><style>{_PATIENT_CSS}</style>'
-        f'</head><body>{body}</body></html>'
+        f'<title>{_h(title)} — translation review draft</title><style>{_CSS}{_PATIENT_CSS}</style>'
+        f'</head><body><div class="patient-report">{body}</div></body></html>'
     )
     return _expand_first_use(document, target_lang='en')
 

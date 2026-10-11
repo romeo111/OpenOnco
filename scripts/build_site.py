@@ -4879,7 +4879,7 @@ def render_try(
                   title="{'Full tumor-board brief — for clinicians' if target_lang == 'en' else 'Повний tumor-board brief — для лікаря'}">{'Clinician' if target_lang == 'en' else 'Лікар'}</button>
           <button id="modePatientBtn" class="rt-lang-btn" type="button"
                   data-mode="patient"
-                  title="{'Plain-Ukrainian simplified report — for patients' if target_lang == 'en' else 'Спрощений звіт зрозумілою мовою — для пацієнта'}">{'Patient' if target_lang == 'en' else 'Пацієнт'}</button>
+                  title="{'Simplified patient report — English translation draft or Ukrainian original' if target_lang == 'en' else 'Спрощений звіт зрозумілою мовою — для пацієнта'}">{'Patient' if target_lang == 'en' else 'Пацієнт'}</button>
         </div>
         <div class="plan-modal-actions">
           <button id="modalHtmlBtn" class="rt-btn" type="button" disabled
@@ -5257,7 +5257,7 @@ function refreshModeButtonAvailability() {{
       highlightModeButtons();
     }}
   }} else {{
-    modePatientBtn.title = '{ "Plain-Ukrainian simplified report — for patients" if target_lang == "en" else "Спрощений звіт зрозумілою мовою — для пацієнта" }';
+    modePatientBtn.title = '{ "Simplified patient report — English translation draft or Ukrainian original" if target_lang == "en" else "Спрощений звіт зрозумілою мовою — для пацієнта" }';
   }}
   modeClinicianBtn.disabled = locked || (planSource === null);
   if (locked) {{

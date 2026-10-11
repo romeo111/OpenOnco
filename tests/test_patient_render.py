@@ -1278,7 +1278,9 @@ def test_assembled_english_review_draft_preserves_sections_options_and_sources()
     before = result.plan.model_dump()
     original = render_plan_html(result, mode='patient')
     draft = render_patient_english_draft(result)
+    assert render_plan_html(result, mode='patient', target_lang='en') == draft
     assert '<html lang="en">' in draft
+    assert '<div class="patient-report">' in draft
     assert 'data-translation-status="draft-partial"' in draft
     assert 'incomplete and awaiting clinical/language review' in draft
     for section in ('what-was-found', 'what-now', 'why-this-plan', 'between-visits', 'emergency-signals'):
