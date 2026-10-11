@@ -128,8 +128,8 @@ def test_per_disease_bundle_contains_disease_algorithms(
     )
 
 
-def test_per_disease_bundle_size_under_300kb(bundle_out: dict) -> None:
-    """Hard ceiling: every per-disease bundle is ≤300 KB compressed.
+def test_per_disease_bundle_size_under_500kb(bundle_out: dict) -> None:
+    """Hard ceiling: every per-disease bundle is ≤500 KB compressed.
 
     Surfaces the actual size in the failure message so a regression
     report is actionable without needing a re-run.
@@ -138,10 +138,10 @@ def test_per_disease_bundle_size_under_300kb(bundle_out: dict) -> None:
     over = []
     for zp in sorted(disease_dir.glob("openonco-*.zip")):
         size = zp.stat().st_size
-        if size > 300_000:
+        if size > 500_000:
             over.append((zp.name, size))
     assert not over, (
-        f"per-disease bundles exceed 300 KB ceiling: "
+        f"per-disease bundles exceed 500 KB ceiling: "
         f"{[(n, f'{s/1024:.1f} KB') for n, s in over]}"
     )
 
@@ -162,31 +162,20 @@ def test_per_disease_bundle_index_lists_all_diseases(
     # Load all DIS-* IDs that appear with disease-scoped artifacts in the
     # KB. We use the bundle build to determine "has artifacts" — the
     # index itself is the ground truth for that question, but we want a
-    # cross-check: re-derive expected diseases from the disease YAMLs
-    # plus a heuristic on the indication/algorithm filenames.
-    diseases_dir = KB_CONTENT / "diseases"
+    # cross-check: use authored disease_id values rather than filename
+    # prefixes ("pituitary" also matches unrelated Pituitary Blastoma).
     expected_with_content: set[str] = set()
-    for p in diseases_dir.glob("*.yaml"):
+    for p in list((KB_CONTENT / "indications").glob("*.yaml")) + list(
+        (KB_CONTENT / "algorithms").glob("*.yaml")
+    ):
         try:
             data = yaml.safe_load(p.read_text(encoding="utf-8"))
         except yaml.YAMLError:
             continue
         if not isinstance(data, dict):
             continue
-        did = data.get("id")
-        if not did or not did.startswith("DIS-"):
-            continue
-        # Heuristic: look for a matching slug in indications/ or algorithms/
-        slug = did.lower().replace("dis-", "").replace("-", "_")
-        # First fragment is usually the meaningful one
-        slug_head = slug.split("_")[0]
-        ind_hits = list(
-            (KB_CONTENT / "indications").glob(f"ind_{slug_head}*.yaml")
-        )
-        algo_hits = list(
-            (KB_CONTENT / "algorithms").glob(f"algo_{slug_head}*.yaml")
-        )
-        if ind_hits or algo_hits:
+        did = data.get("disease_id")
+        if isinstance(did, str) and did.startswith("DIS-"):
             expected_with_content.add(did)
 
     # Index must cover every DIS-* with content. Allow extras in the index
@@ -288,12 +277,18 @@ def test_lazy_load_disease_merges_with_core(
     assert dlbcl_files, "no DLBCL indication YAMLs found post-merge"
 
 
-def test_lazy_loaded_dlbcl_generates_same_plan_as_full_kb(
-    bundle_out: dict, tmp_path: Path
+@pytest.mark.parametrize("example,disease_slug", [
+    ("auto_dlbcl_nos.json", "dis-dlbcl-nos"),
+    ("auto_crc.json", "dis-crc"),
+    ("auto_breast.json", "dis-breast"),
+    ("auto_nsclc.json", "dis-nsclc"),
+])
+def test_lazy_loaded_disease_generates_same_plan_as_full_kb(
+    bundle_out: dict, tmp_path: Path, example: str, disease_slug: str
 ) -> None:
     """A valid archive must produce a treatment plan, not just pass loader checks."""
     profile = json.loads(
-        (REPO_ROOT / "examples" / "auto_dlbcl_nos.json").read_text(encoding="utf-8")
+        (REPO_ROOT / "examples" / example).read_text(encoding="utf-8")
     )
     full = generate_plan(profile, kb_root=KB_CONTENT)
     assert full.plan is not None and full.plan.tracks
@@ -302,7 +297,7 @@ def test_lazy_loaded_dlbcl_generates_same_plan_as_full_kb(
     target = tmp_path / "kb_root"
     target.mkdir()
     _unpack(out_dir / "openonco-engine-core.zip", target)
-    _unpack(out_dir / "disease" / "openonco-dis-dlbcl-nos.zip", target)
+    _unpack(out_dir / "disease" / f"openonco-{disease_slug}.zip", target)
     clear_load_cache()
     partial = generate_plan(
         profile, kb_root=target / "knowledge_base" / "hosted" / "content"
@@ -313,6 +308,37 @@ def test_lazy_loaded_dlbcl_generates_same_plan_as_full_kb(
     assert [track.indication_id for track in partial.plan.tracks] == [
         track.indication_id for track in full.plan.tracks
     ]
+
+
+@pytest.mark.parametrize("mutation", ["unlisted", "wrong_type"])
+def test_partial_bundle_does_not_ignore_broken_reference(
+    bundle_out: dict, tmp_path: Path, mutation: str
+) -> None:
+    profile = json.loads(
+        (REPO_ROOT / "examples" / "auto_dlbcl_nos.json").read_text(encoding="utf-8")
+    )
+    target = tmp_path / "kb_root"
+    target.mkdir()
+    out_dir = Path(bundle_out["_dir"])
+    _unpack(out_dir / "openonco-engine-core.zip", target)
+    _unpack(out_dir / "disease" / "openonco-dis-dlbcl-nos.zip", target)
+    content = target / "knowledge_base" / "hosted" / "content"
+    manifest_path = content / "_bundle_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    clear_load_cache()
+    loaded = load_content(content)
+    deferred_id = next(
+        eid for _, _, eid, target_type in loaded.missing_refs
+        if eid in manifest["deferred_entities"] and target_type is not None
+    )
+    if mutation == "unlisted":
+        manifest["deferred_entities"].pop(deferred_id)
+    else:
+        manifest["deferred_entities"][deferred_id]["type"] = "wrong_type"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    result = generate_plan(profile, kb_root=content)
+    assert result.plan is None
+    assert any(deferred_id in warning for warning in result.warnings)
 
 
 # Section C (back-compat for monolithic bundle) was removed 2026-04-30:

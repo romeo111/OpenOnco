@@ -345,25 +345,35 @@ def bundle_engine(output_dir: Path) -> dict:
         else:
             by_disease.setdefault(disease, []).append((path, arcname))
 
-    # Shared entities and disease modules can reference entities assigned to
-    # another module. Ship their transitive dependencies as well; strict KB
-    # validation must succeed without downloading every unrelated disease.
-    import re
+    # Traverse exact YAML scalar IDs. Prose mentions do not pull entire
+    # disease modules into core. The manifest below identifies foreign keys
+    # intentionally deferred until another disease module is loaded.
     entity_files = {}
-    texts = {}
+    documents = {}
+    attributed_by_name = {arcname: disease for _, arcname, disease in entries}
     for path, arcname, _ in entries:
         if path.suffix == ".yaml":
-            text = path.read_text(encoding="utf-8")
-            texts[arcname] = text
-            match = re.search(r"^id:\s*['\"]?([A-Z][A-Z0-9_-]+)", text, re.MULTILINE)
-            if match:
-                entity_files[match.group(1)] = (path, arcname)
+            document = yaml.safe_load(path.read_text(encoding="utf-8"))
+            documents[arcname] = document
+            if isinstance(document, dict) and isinstance(document.get("id"), str):
+                entity_files[document["id"]] = (path, arcname)
+
+    def referenced_ids(value):
+        if isinstance(value, dict):
+            for child in value.values():
+                yield from referenced_ids(child)
+        elif isinstance(value, list):
+            for child in value:
+                yield from referenced_ids(child)
+        elif isinstance(value, str) and value in entity_files:
+            yield value
+
     dependencies = {
-        name: {entity_files[token] for token in re.findall(r"\b[A-Z][A-Z0-9]*(?:-[A-Z0-9_]+)+\b", text) if token in entity_files}
-        for name, text in texts.items()
+        name: {entity_files[eid] for eid in referenced_ids(document)}
+        for name, document in documents.items()
     }
 
-    def with_dependencies(items, available=()):
+    def with_dependencies(items, available=(), *, shared_only=False):
         seen = set(available)
         pending = list(items)
         result = []
@@ -373,11 +383,27 @@ def bundle_engine(output_dir: Path) -> dict:
                 continue
             seen.add(item)
             result.append(item)
-            pending.extend(dependencies.get(item[1], ()))
+            pending.extend(
+                dep for dep in dependencies.get(item[1], ())
+                if not shared_only or attributed_by_name[dep[1]] is None
+            )
         return sorted(result, key=lambda item: item[1])
 
-    core_entries = with_dependencies(core_entries)
+    core_entries = with_dependencies(core_entries, shared_only=True)
     by_disease = {disease: with_dependencies(items, core_entries) for disease, items in by_disease.items()}
+    core_names = {name for _, name in core_entries}
+    deferred_entities = {
+        eid: {
+            "disease_id": attributed_by_name[item[1]],
+            "type": item[1].split("/content/", 1)[1].split("/", 1)[0],
+        }
+        for eid, item in sorted(entity_files.items())
+        if item[1] not in core_names and attributed_by_name[item[1]] is not None
+    }
+    manifest_name = "knowledge_base/hosted/content/_bundle_manifest.json"
+    manifest_bytes = json.dumps(
+        {"deferred_entities": deferred_entities}, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
 
     # 1. Core bundle.
     core_files = 0
@@ -387,6 +413,9 @@ def bundle_engine(output_dir: Path) -> dict:
             zf.write(path, arcname)
             core_files += 1
             core_uncompressed += path.stat().st_size
+        zf.writestr(manifest_name, manifest_bytes)
+        core_files += 1
+        core_uncompressed += len(manifest_bytes)
     core_bytes = core_zip.read_bytes()
     core_version = hashlib.sha256(core_bytes).hexdigest()[:12]
 
@@ -405,6 +434,10 @@ def bundle_engine(output_dir: Path) -> dict:
                     info.mode = 0o644
                     import io
                     archive.addfile(info, io.BytesIO(data))
+                info = tarfile.TarInfo(manifest_name)
+                info.size = len(manifest_bytes)
+                info.mode = 0o644
+                archive.addfile(info, io.BytesIO(manifest_bytes))
     core_stream_version = hashlib.sha256(core_stream.read_bytes()).hexdigest()[:12]
 
     # 2. Per-disease bundles. Wipe stale ones first so disease renames

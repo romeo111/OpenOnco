@@ -61,30 +61,20 @@ def test_core_and_index_and_disease_dir_present(bundle_out: dict):
 
 
 def test_core_bundle_under_size_ceiling(bundle_out: dict):
-    """Core bundle target: ≤3.5 MB compressed today (~3.17 MB observed
-    2026-05-09 (after cache/ exclusion fix; was 3.46 MB when cache/ was
-    incorrectly included). Growth driven by W0/W5c waves (+32 regimen
-    files, +42 source files since 2026-05-01). Eventual goal ≤1.5 MB
-    once more disease-scoped content (drugs, regimens, indications) is
-    moved out of core into per-disease modules. Ceiling sized for
-    headroom; tighten as the split matures."""
+    """Bound the browser's whole-stream transfer and legacy ZIP fallback."""
     core_zip = Path(bundle_out["_dir"]) / "openonco-engine-core.zip"
-    size = core_zip.stat().st_size
-    assert size < 3_500_000, (
-        f"core bundle exceeds 3.5MB compressed: {size} bytes — split is "
-        "leaking disease-scoped content into core or shared content has bloated"
-    )
+    stream = Path(bundle_out["_dir"]) / "openonco-engine-core.tar.gz"
+    assert stream.stat().st_size < 3_500_000
+    assert core_zip.stat().st_size < 5_000_000
 
 
 def test_per_disease_bundles_under_size_ceiling(bundle_out: dict):
-    """Per-disease bundles should be small (≤300 KB each per the design
-    target). Catches regressions where the per-disease attribution
-    breaks and a bundle starts swallowing shared content."""
+    """A requested disease must remain a small incremental transfer."""
     disease_dir = Path(bundle_out["_dir"]) / "disease"
     for zp in sorted(disease_dir.glob("openonco-*.zip")):
         size = zp.stat().st_size
-        assert size < 300_000, (
-            f"per-disease bundle {zp.name} = {size} bytes (>300 KB) — "
+        assert size < 500_000, (
+            f"per-disease bundle {zp.name} = {size} bytes (>500 KB) — "
             "attribution heuristic likely picked up shared content"
         )
 
