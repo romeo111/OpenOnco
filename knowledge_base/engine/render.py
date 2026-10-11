@@ -3679,7 +3679,7 @@ def _track_label_ua(track_index: int, track_count: int, t, *, target_lang: str =
     return base, modifier
 
 
-def _regimen_schedule_ua(regimen_data: Optional[dict]) -> str:
+def _regimen_schedule_ua(regimen_data: Optional[dict], *, target_lang: str = "uk") -> str:
     """One-line plain-UA schedule summary for a regimen, or empty string.
 
     Composes from `cycle_length_days` × `total_cycles` when both are
@@ -3693,6 +3693,8 @@ def _regimen_schedule_ua(regimen_data: Optional[dict]) -> str:
     if cycle is None and total is None:
         return ""
     if isinstance(total, str) and total.strip():
+        if target_lang == 'en':
+            return f"Duration (original source text): {_h(total)}; cycle — {_h(cycle)} days" if cycle else f"Duration (original source text): {_h(total)}"
         return f"Тривалість: {_h(total)}; цикл — {_h(cycle)} днів" if cycle else f"Тривалість: {_h(total)}"
     try:
         c = int(cycle) if cycle is not None else None
@@ -3700,15 +3702,21 @@ def _regimen_schedule_ua(regimen_data: Optional[dict]) -> str:
     except (TypeError, ValueError):
         return ""
     if c and t_int:
+        if target_lang == 'en':
+            return f"{t_int} cycle(s) of {c} days"
         return f"{t_int} цикл(и) по {c} днів"
     if c:
+        if target_lang == 'en':
+            return f"Cycle — {c} days"
         return f"Цикл — {c} днів"
     if t_int:
+        if target_lang == 'en':
+            return f"{t_int} cycle(s)"
         return f"{t_int} цикл(и)"
     return ""
 
 
-def _medicine_form_ua(component: dict, drug: dict) -> str:
+def _medicine_form_ua(component: dict, drug: dict, *, target_lang: str = "uk") -> str:
     """Return a patient-readable medicine form and administration route.
 
     The regimen component is authoritative because the same medicine may be
@@ -3727,8 +3735,24 @@ def _medicine_form_ua(component: dict, drug: dict) -> str:
     formulations_lower = formulations.lower()
 
     forms: list[str] = []
+    english_forms = {
+        "таблетки або капсули для прийому через рот": "tablets or capsules taken by mouth",
+        "таблетки для прийому через рот": "tablets taken by mouth",
+        "капсули для прийому через рот": "capsules taken by mouth",
+        "рідкі ліки для прийому через рот": "liquid medicine taken by mouth",
+        "ліки для прийому через рот": "medicine taken by mouth",
+        "внутрішньовенна інфузія (крапельниця) у клініці": "intravenous infusion (a drip) at the clinic",
+        "підшкірна ін’єкція": "injection under the skin",
+        "внутрішньом’язова ін’єкція": "injection into a muscle",
+        "введення у спинномозковий канал у клініці": "administration into the spinal canal at the clinic",
+        "лікувальний пластир на шкіру": "a medicated patch applied to the skin",
+        "крем або гель для нанесення на шкіру": "cream or gel applied to the skin",
+        "ін’єкція; точний спосіб введення уточніть з лікарем": "injection; confirm the exact route with your doctor",
+    }
 
     def add(value: str) -> None:
+        if target_lang == 'en':
+            value = english_forms[value]
         if value not in forms:
             forms.append(value)
 
@@ -3783,8 +3807,10 @@ def _medicine_form_ua(component: dict, drug: dict) -> str:
             add("ін’єкція; точний спосіб введення уточніть з лікарем")
 
     if not forms:
+        if target_lang == 'en':
+            return "confirm the formulation and route of administration with your doctor"
         return "форму та спосіб введення потрібно уточнити з лікарем"
-    return "; або ".join(forms)
+    return ("; or " if target_lang == 'en' else "; або ").join(forms)
 
 
 def _regimen_tolerability_ua(regimen_data: Optional[dict]) -> tuple[str, str, str]:

@@ -5,6 +5,8 @@ from knowledge_base.engine._patient_rationale import (
     RATIONALE_TRANSLATION_STATUS, build_track_rationale, build_track_rationale_html,
 )
 from knowledge_base.engine.render import _render_emergency_section
+from knowledge_base.engine.render import _medicine_form_ua, _regimen_schedule_ua
+import pytest
 
 
 def test_english_rationale_preserves_findings_thresholds_and_input():
@@ -63,3 +65,25 @@ def test_english_emergency_section_marks_missing_translation():
     output = _render_emergency_section(result, target_lang='en')
     assert 'Original Ukrainian text; translation unavailable' in output
     assert 'Не чекати' in output
+
+
+@pytest.mark.parametrize('route,expected', [
+    ('PO', 'taken by mouth'), ('IV', 'intravenous infusion'),
+    ('SC', 'under the skin'), ('IM', 'into a muscle'),
+    ('IT', 'spinal canal'), ('topical', 'cream or gel'),
+])
+def test_english_route_labels_keep_component_route_authoritative(route, expected):
+    component = {'route': route, 'dose': '0.5 mg/kg'}
+    drug = {'route': 'IV', 'formulations': ['tablet']}
+    before = deepcopy((component, drug))
+    assert expected in _medicine_form_ua(component, drug, target_lang='en')
+    assert (component, drug) == before
+
+
+def test_english_schedule_preserves_counts_and_freeform_source():
+    assert _regimen_schedule_ua({'cycle_length_days': 28, 'total_cycles': 6}, target_lang='en') == '6 cycle(s) of 28 days'
+    assert _regimen_schedule_ua({}, target_lang='en') == ''
+    result = _regimen_schedule_ua({'cycle_length_days': 28, 'total_cycles': 'Не припиняти <умова>'}, target_lang='en')
+    assert 'original source text' in result
+    assert 'Не припиняти &lt;умова&gt;' in result
+    assert '28 days' in result
