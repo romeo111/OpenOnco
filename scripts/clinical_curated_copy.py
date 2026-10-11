@@ -30,6 +30,52 @@ TERMINOLOGY_SOURCES = {
     'fr': 'https://www.cancer.fr/personnes-malades/les-cancers/poumon/comprendre-la-maladie/l-essentiel',
 }
 
+# Safety notices are compared sentence by sentence with their English source.
+# They remain labeled pending clinical review on localized pages.
+SAFETY_NOTICES = {
+    'Outpatient oncology treatment planning to support tumor-board discussion. Not a medical device; not for autonomous clinical decision-making.': (
+        'Planificación del tratamiento oncológico ambulatorio para apoyar la deliberación del comité de tumores. No es un dispositivo médico; no está destinado a tomar decisiones clínicas de forma autónoma.',
+        'Planeamento do tratamento oncológico em ambulatório para apoiar a discussão na reunião multidisciplinar de oncologia. Não é um dispositivo médico; não se destina à tomada autónoma de decisões clínicas.',
+        'Planung ambulanter onkologischer Behandlungen zur Unterstützung der Tumorkonferenz. Kein Medizinprodukt; nicht für autonome klinische Entscheidungen bestimmt.',
+        'Planification des traitements oncologiques ambulatoires pour soutenir la discussion en réunion de concertation pluridisciplinaire. Ce n’est pas un dispositif médical ; il n’est pas destiné à prendre des décisions cliniques de manière autonome.',
+    ),
+    'Diagnostic-phase MDT support: structure the workup, identify the team, surface unresolved questions. Not a medical device; not a treatment plan.': (
+        'Apoyo al equipo multidisciplinar durante la fase diagnóstica: estructurar el estudio, identificar al equipo y señalar las cuestiones pendientes. No es un dispositivo médico; no es un plan de tratamiento.',
+        'Apoio à equipa multidisciplinar na fase de diagnóstico: estruturar a avaliação, identificar a equipa e assinalar as questões por resolver. Não é um dispositivo médico; não é um plano de tratamento.',
+        'Unterstützung des multidisziplinären Teams in der Diagnostikphase: Abklärung strukturieren, Team benennen und offene Fragen aufzeigen. Kein Medizinprodukt; kein Behandlungsplan.',
+        'Soutien à l’équipe pluridisciplinaire pendant la phase diagnostique : structurer le bilan, identifier l’équipe et signaler les questions en suspens. Ce n’est pas un dispositif médical ; ce n’est pas un plan de traitement.',
+    ),
+    'Synthetic educational example. Do not self-treat: a qualified treating physician must verify the sources, patient data, contraindications, and final plan.': (
+        'Ejemplo educativo sintético. No se trate por su cuenta: un médico tratante cualificado debe verificar las fuentes, los datos del paciente, las contraindicaciones y el plan final.',
+        'Exemplo educativo sintético. Não se trate por conta própria: um médico assistente qualificado deve verificar as fontes, os dados do doente, as contraindicações e o plano final.',
+        'Synthetisches Lehrbeispiel. Nicht selbst behandeln: Eine qualifizierte behandelnde Ärztin oder ein qualifizierter behandelnder Arzt muss die Quellen, Patientendaten, Gegenanzeigen und den endgültigen Plan prüfen.',
+        'Exemple pédagogique synthétique. Ne vous traitez pas vous-même : un médecin traitant qualifié doit vérifier les sources, les données du patient, les contre-indications et le plan final.',
+    ),
+    'Informational tool, not a medical device. All recommendations must be verified by a qualified oncologist. Clinical content is provisional until two-reviewer sign-off.': (
+        'Herramienta informativa, no un dispositivo médico. Un oncólogo cualificado debe verificar todas las recomendaciones. El contenido clínico es provisional hasta que lo aprueben dos revisores.',
+        'Ferramenta informativa, não um dispositivo médico. Todas as recomendações devem ser verificadas por um oncologista qualificado. O conteúdo clínico é provisório até à aprovação por dois revisores.',
+        'Informationsangebot, kein Medizinprodukt. Alle Empfehlungen müssen von einer qualifizierten Onkologin oder einem qualifizierten Onkologen geprüft werden. Die klinischen Inhalte bleiben bis zur Freigabe durch zwei Prüfende vorläufig.',
+        'Outil d’information, pas un dispositif médical. Toutes les recommandations doivent être vérifiées par un oncologue qualifié. Le contenu clinique reste provisoire jusqu’à sa validation par deux évaluateurs.',
+    ),
+    'This document is an informational resource supporting tumor-board discussion (per CHARTER §11). It is not a system that makes clinical decisions. Every recommendation must be verified by the treating physician.': (
+        'Este documento es un recurso informativo para apoyar la deliberación del comité de tumores (según CHARTER §11). No es un sistema que tome decisiones clínicas. El médico tratante debe verificar todas las recomendaciones.',
+        'Este documento é um recurso informativo para apoiar a discussão na reunião multidisciplinar de oncologia (conforme CHARTER §11). Não é um sistema que toma decisões clínicas. O médico assistente deve verificar todas as recomendações.',
+        'Dieses Dokument ist eine Informationsquelle zur Unterstützung der Tumorkonferenz (gemäß CHARTER §11). Es ist kein System, das klinische Entscheidungen trifft. Jede Empfehlung muss von der behandelnden Ärztin oder dem behandelnden Arzt überprüft werden.',
+        'Ce document est une ressource d’information destinée à soutenir la discussion en réunion de concertation pluridisciplinaire (conformément à CHARTER §11). Ce n’est pas un système qui prend des décisions cliniques. Chaque recommandation doit être vérifiée par le médecin traitant.',
+    ),
+    'HCP-mediated prevention / early-diagnosis counseling for at-risk asymptomatic individuals (CHARTER §3 amendment 2026-05-18, Path A). Not a medical device; not for autonomous clinical decision-making; not for patient-direct deployment.': (
+        'Orientación sobre prevención y diagnóstico precoz, mediada por profesionales sanitarios (HCP), para personas asintomáticas en riesgo (enmienda de CHARTER §3 del 2026-05-18, vía A). No es un dispositivo médico; no está destinada a tomar decisiones clínicas de forma autónoma; no está destinada a su uso directo por pacientes.',
+        'Aconselhamento em prevenção e diagnóstico precoce, mediado por profissionais de saúde (HCP), para pessoas assintomáticas em risco (adenda à CHARTER §3 de 2026-05-18, Via A). Não é um dispositivo médico; não se destina à tomada autónoma de decisões clínicas; não se destina à disponibilização direta aos doentes.',
+        'Durch medizinisches Fachpersonal (HCP) vermittelte Beratung zu Prävention und Früherkennung für asymptomatische Risikopersonen (Änderung von CHARTER §3 vom 2026-05-18, Pfad A). Kein Medizinprodukt; nicht für autonome klinische Entscheidungen bestimmt; nicht zur direkten Bereitstellung an Patientinnen und Patienten bestimmt.',
+        'Conseil en prévention et diagnostic précoce assuré par un professionnel de santé (HCP) pour les personnes asymptomatiques à risque (amendement à CHARTER §3 du 2026-05-18, voie A). Ce n’est pas un dispositif médical ; il n’est pas destiné à la prise de décisions cliniques autonomes ; il n’est pas destiné à un déploiement direct auprès des patients.',
+    ),
+}
+
+
+def safety_notices_for(locale):
+    index = ('es', 'pt', 'de', 'fr').index(locale)
+    return {source: translations[index] for source, translations in SAFETY_NOTICES.items()}
+
 UI_MESSAGES = {
     'Regimen': ('Esquema terapéutico', 'Esquema terapêutico', 'Therapieschema', 'Protocole thérapeutique'),
     'Regimens': ('Esquemas terapéuticos', 'Esquemas terapêuticos', 'Therapieschemata', 'Protocoles thérapeutiques'),
@@ -156,6 +202,7 @@ def messages_for(locale):
     }
     index = ('es', 'pt', 'de', 'fr').index(locale)
     catalog.update({source: values[index] for source, values in UI_MESSAGES.items()})
+    catalog.update(safety_notices_for(locale))
     catalog.update({source: values[index] for source, values in SHOWCASE_TITLES.items()})
     for source, values in DISEASE_TITLES.items():
         catalog[source] = values[index]

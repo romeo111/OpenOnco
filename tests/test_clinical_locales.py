@@ -228,6 +228,39 @@ def test_recheck_restores_corrupted_identifiers_without_clinical_approval(tmp_pa
         assert updated['languages'][locale]['fidelity_fallbacks'] == 1
 
 
+def test_curated_safety_notices_preserve_english_negations_and_identifiers():
+    from scripts.clinical_curated_copy import safety_notices_for
+    for locale in ('es', 'pt', 'de', 'fr'):
+        notices = safety_notices_for(locale)
+        assert len(notices) == 6
+        assert all(acceptable_draft(source, translated, locale) for source, translated in notices.items())
+        assert all('CHARTER' in translated for source, translated in notices.items() if 'CHARTER' in source)
+
+
+def test_curated_safety_notice_application_checksums_and_is_idempotent(tmp_path):
+    from scripts.apply_curated_safety_notices import apply_notices
+    from scripts.clinical_curated_copy import safety_notices_for
+    catalogs = tmp_path / 'scripts' / 'locales'
+    catalogs.mkdir(parents=True)
+    languages = {}
+    for locale in ('es', 'pt', 'de', 'fr'):
+        source = next(iter(safety_notices_for(locale)))
+        path = catalogs / f'clinical.{locale}.json'
+        path.write_text(json.dumps({source: source}), encoding='utf-8')
+        languages[locale] = {'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+    manifest = catalogs / 'clinical_manifest.json'
+    manifest.write_text(json.dumps({'languages': languages}), encoding='utf-8')
+    assert apply_notices(catalogs) == dict.fromkeys(languages, 1)
+    assert apply_notices(catalogs, apply=True) == dict.fromkeys(languages, 1)
+    assert apply_notices(catalogs) == dict.fromkeys(languages, 0)
+    updated = json.loads(manifest.read_text(encoding='utf-8'))
+    for locale in languages:
+        source, translated = next(iter(safety_notices_for(locale).items()))
+        path = catalogs / f'clinical.{locale}.json'
+        assert json.loads(path.read_text(encoding='utf-8'))[source] == translated
+        assert updated['languages'][locale]['sha256'] == hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 @pytest.mark.parametrize('locale,language', [('es','Spanish'),('pt','European Portuguese'),('de','German'),('fr','French')])
 def test_presenter_requests_native_language_without_changing_engine_payload(monkeypatch, locale, language):
     captured = {}
