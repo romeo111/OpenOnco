@@ -83,6 +83,12 @@ def safety_notices_for(locale):
     return {source: translations[index] for source, translations in SAFETY_NOTICES.items()}
 
 UI_MESSAGES = {
+    'Interpretation requires clinical review': (
+        'La interpretación requiere revisión clínica',
+        'A interpretação requer revisão clínica',
+        'Die Interpretation erfordert eine klinische Prüfung',
+        'L’interprétation nécessite une vérification clinique',
+    ),
     'Regimen': ('Esquema terapéutico', 'Esquema terapêutico', 'Therapieschema', 'Protocole thérapeutique'),
     'Regimens': ('Esquemas terapéuticos', 'Esquemas terapêuticos', 'Therapieschemata', 'Protocoles thérapeutiques'),
     'Red flag': ('Señal de alerta', 'Sinal de alerta', 'Warnhinweis', 'Signal d’alerte'),
@@ -208,6 +214,7 @@ def messages_for(locale):
     }
     index = ('es', 'pt', 'de', 'fr').index(locale)
     catalog.update({source: values[index] for source, values in UI_MESSAGES.items()})
+    catalog['Інтерпретація потребує клінічного перегляду'] = catalog['Interpretation requires clinical review']
     catalog.update(safety_notices_for(locale))
     # Static patient examples retain a Ukrainian source body; dynamic
     # English reports use the canonical safety notice above.

@@ -1292,6 +1292,38 @@ def test_missing_actionability_does_not_imply_negative_molecular_tests(target_la
     assert result.plan.model_dump() == before
 
 
+@pytest.mark.parametrize('target_lang', ['uk', 'en'])
+def test_patient_findings_show_review_readiness_per_hit_without_changing_plan(target_lang):
+    from knowledge_base.engine.render import _render_findings_plain
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    original = result.plan.variant_actionability[0]
+    pending = original.model_copy(update={'clinical_use_ready': False})
+    ready = original.model_copy(update={'clinical_use_ready': True})
+    result.plan.variant_actionability = [pending, ready]
+    before = result.plan.model_dump()
+    rendered = _render_findings_plain(result, target_lang=target_lang)
+    items = re.findall(r'<li>.*?</li>', rendered)
+    assert len(items) == 2
+    assert 'data-clinical-review="pending"' in items[0]
+    assert 'data-clinical-review=' not in items[1]
+    label = ('Interpretation requires clinical review' if target_lang == 'en'
+             else 'Інтерпретація потребує клінічного перегляду')
+    assert label in items[0]
+    assert rendered.count('data-variant-original="V600E"') == 2
+    assert result.plan.model_dump() == before
+
+
+def test_legacy_patient_hit_without_readiness_is_pending():
+    from types import SimpleNamespace
+    from knowledge_base.engine.render import _render_findings_plain
+    hit = SimpleNamespace(biomarker_id='BIO-BRAF', variant_qualifier='V600E', escat_tier='IA')
+    result = SimpleNamespace(plan=SimpleNamespace(variant_actionability=[hit]))
+    rendered = _render_findings_plain(result, target_lang='en')
+    assert 'data-clinical-review="pending"' in rendered
+    assert 'Interpretation requires clinical review' in rendered
+    assert not hasattr(hit, 'clinical_use_ready')
+
+
 def test_english_findings_preserve_variants_and_mark_untranslated_explanations():
     from knowledge_base.engine.render import _render_findings_plain, _patient_disease_label, _patient_drug_label
     result = _build_synthetic_braf_v600e_mcrc_plan()

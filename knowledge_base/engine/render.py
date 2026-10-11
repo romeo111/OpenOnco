@@ -3661,6 +3661,13 @@ def _render_findings_plain(plan_result: PlanResult, *, target_lang: str = "uk") 
             bits.append(f'. <span class="patient-badge patient-info">{_h(tier_label)}</span>')
         else:
             bits.append(".")
+        if not getattr(h, 'clinical_use_ready', False):
+            review_label = ('Interpretation requires clinical review' if english
+                            else 'Інтерпретація потребує клінічного перегляду')
+            bits.append(
+                '<span class="patient-badge patient-warn" data-clinical-review="pending">'
+                f'{_h(review_label)}</span>'
+            )
         bits.append("</li>")
         parts.append("".join(bits))
     parts.append("</ul>")

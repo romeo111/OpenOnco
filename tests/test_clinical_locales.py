@@ -14,6 +14,21 @@ from serverless import clinical_question as cq
 
 
 @pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
+@pytest.mark.parametrize('language', ['uk', 'en'])
+def test_patient_findings_review_label_is_translated_and_preserves_variant(locale, language):
+    from scripts.clinical_curated_copy import messages_for
+    catalog = messages_for(locale)
+    label = ('Interpretation requires clinical review' if language == 'en'
+             else 'Інтерпретація потребує клінічного перегляду')
+    source = f'<html lang="{language}"><head><title>Test</title></head><body><main><ul class="findings-list"><li><strong data-variant-original="V600E">BRAF V600E</strong><span class="patient-badge patient-warn" data-clinical-review="pending">{label}</span></li></ul></main></body></html>'
+    rendered = localize_page(source, locale, 'cases/test.patient.html', set(), catalog)
+    assert catalog[label] in rendered
+    assert 'data-clinical-review="pending"' in rendered
+    assert 'data-variant-original="V600E">BRAF V600E' in rendered
+    assert 'content="pending_clinical_review"' in rendered
+
+
+@pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
 def test_original_fragments_honor_nested_language_and_restore_parent_language(locale):
     original = 'Оригінальні дані збережено для перевірки без зміни клінічних значень. ' * 4
     source = '<html lang="en"><body><main><section lang="uk"><div><p>' + original + '</p></div></section><p>' + original + '</p></main></body></html>'
