@@ -37,3 +37,17 @@ def test_english_first_use_glossary_is_complete_and_keeps_source_markup():
 def test_unavailable_glossary_language_is_not_silently_ukrainian():
     with pytest.raises(ValueError, match='only in Ukrainian'):
         expand_first_use('<p>FDA</p>', target_lang='fr')
+
+
+@pytest.mark.parametrize('language,glossary', [('uk', ABBREVIATION_FIRST_USE_UA), ('en', ABBREVIATION_FIRST_USE_EN)])
+def test_infection_glosses_preserve_identifiers_sources_and_negative_results(language, glossary):
+    source = '<details data-original-source><a href="https://example.org/EBV">EBV original publication</a></details>'
+    content = '<p data-source-id="RF-HIV">HIV negative; EBV not detected; CMV &lt;0.5.</p><p>HIV, EBV and CMV again.</p>'
+    output = expand_first_use(source + content, target_lang=language)
+    assert output.startswith(source)
+    assert 'data-source-id="RF-HIV"' in output
+    assert glossary['HIV'] + ' negative' in output
+    assert glossary['EBV'] + ' not detected' in output
+    assert glossary['CMV'] + ' &lt;0.5' in output
+    assert '<p>HIV, EBV and CMV again.</p>' in output
+    assert expand_first_use(output, target_lang=language) == output

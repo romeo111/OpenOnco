@@ -645,6 +645,9 @@ ABBREVIATION_FIRST_USE_UA: dict[str, str] = {
     "PD-1": "PD-1 (білок-перемикач імунної системи)",
     "HCV": "HCV (вірус гепатиту C)",
     "HBV": "HBV (вірус гепатиту B)",
+    "HIV": "HIV (вірус імунодефіциту людини)",
+    "EBV": "EBV (вірус Епштейна—Барр)",
+    "CMV": "CMV (цитомегаловірус)",
     "CAR-T": "CAR-T (терапія модифікованими T-клітинами пацієнта)",
 }
 
@@ -660,6 +663,9 @@ ABBREVIATION_FIRST_USE_EN: dict[str, str] = {
     "PD-1": "PD-1 (an immune-system switch protein)",
     "HCV": "HCV (hepatitis C virus)",
     "HBV": "HBV (hepatitis B virus)",
+    "HIV": "HIV (human immunodeficiency virus)",
+    "EBV": "EBV (Epstein–Barr virus)",
+    "CMV": "CMV (cytomegalovirus)",
     "CAR-T": "CAR-T (treatment using the patient's modified T cells)",
 }
 ABBREVIATION_TRANSLATION_STATUS = {"en": "draft_pending_review"}
