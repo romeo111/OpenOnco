@@ -110,7 +110,7 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     </details>'''
 
     return f"""<header class="top-bar site-header">
-  <link rel="stylesheet" href="/header.css?v=clinical-20261010">
+  <link rel="stylesheet" href="/header.css?v=mobile-20261011">
   <div class="header-shell">
   <div class="header-main">
     <div class="brand-line">
@@ -126,6 +126,7 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     <details class="mobile-menu">
       <summary aria-label="{menu_label}"><span class="menu-lines" aria-hidden="true"></span></summary>
       <div class="mobile-menu-panel">
+        <a href="{try_path}" class="btn-cta-top btn-cta-try mobile-plan-link"{try_current}><span>{labels['try_cta']}</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
         <nav aria-label="{menu_label}">{reading_links}</nav>
         <div class="mobile-tools">{tools}</div>
       </div>
