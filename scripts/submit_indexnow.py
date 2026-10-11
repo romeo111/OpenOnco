@@ -15,6 +15,7 @@ from xml.etree import ElementTree as ET
 HOST = "openonco.info"
 BASE = f"https://{HOST}/"
 ENDPOINT = "https://api.indexnow.org/indexnow"
+MAX_URLS_PER_POST = 10_000
 
 
 def payload_for(site: Path) -> dict:
@@ -26,9 +27,16 @@ def payload_for(site: Path) -> dict:
     if key != key_file.stem:
         raise ValueError("IndexNow key filename and content must match")
     urls = sorted({e.text for e in ET.parse(site / "sitemap.xml").findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")})
-    if not urls or len(urls) > 10000 or any(not u.startswith(BASE) for u in urls):
-        raise ValueError("Expected 1–10000 canonical URLs on openonco.info")
+    if not urls or any(not u.startswith(BASE) for u in urls):
+        raise ValueError("Expected canonical URLs on openonco.info")
     return {"host": HOST, "key": key, "keyLocation": BASE + key_file.name, "urlList": urls}
+
+
+def batches(payload: dict):
+    """IndexNow permits at most 10,000 URLs in each POST."""
+    urls = payload["urlList"]
+    for start in range(0, len(urls), MAX_URLS_PER_POST):
+        yield {**payload, "urlList": urls[start:start + MAX_URLS_PER_POST]}
 
 
 def submit(payload: dict) -> int:
@@ -48,10 +56,14 @@ def main() -> None:
     args = parser.parse_args()
     payload = payload_for(args.site)
     if args.dry_run:
-        print(json.dumps({"urls": len(payload["urlList"]), "submitted": False}))
+        print(json.dumps({"urls": len(payload["urlList"]), "batches": len(list(batches(payload))), "submitted": False}))
         return
-    status = submit(payload)
-    print(json.dumps({"urls": len(payload["urlList"]), "http_status": status, "received": status in (200, 202), "indexing_confirmed": False}))
+    statuses = []
+    for number, batch in enumerate(batches(payload), start=1):
+        status = submit(batch)
+        statuses.append(status)
+        print(json.dumps({"batch": number, "urls": len(batch["urlList"]), "http_status": status}))
+    print(json.dumps({"urls": len(payload["urlList"]), "batches": len(statuses), "received": all(status in (200, 202) for status in statuses), "indexing_confirmed": False}))
 
 
 if __name__ == "__main__":
