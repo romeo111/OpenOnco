@@ -32,7 +32,7 @@ Patient reports show recorded data-completeness checks before treatment options 
 
 Retained original excerpts in translation drafts carry source-language tags and are protected from automatic translation and abbreviation expansion. Field contracts determine the language; free-form snippets with no declared language use `und` (unknown). Provenance captions are translated separately from the retained text.
 
-Patient rationale distinguishes a record's evidence tier from its clinical review readiness. A missing or false readiness flag produces an explicit pending-review notice and does not present that record as a reviewed reason to choose treatment. This display does not change engine decisions.
+Patient rationale distinguishes a record's evidence tier from its clinical review readiness. A missing or false readiness flag produces an explicit pending-review notice and does not present that record as a reviewed reason to choose treatment. This display does not change engine decisions. Report-wide biomarker context is shown separately from track explanations. Only a recorded algorithm result matching that exact indication can substantiate its path explanation; unlinked or provisional options remain explicitly unexplained. Evidence tiers do not explain treatment selection. All recorded signals remain available as separate report-wide context, including when no treatment branch was selected. Their original field language and source IDs are retained.
 
 
 ## Current repository snapshot
