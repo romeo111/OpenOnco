@@ -25,6 +25,7 @@ concurrency:
 
 permissions:
   contents: write  # need push back to master
+  pages: write  # explicitly request the existing branch-based Pages build
 
 jobs:
   refresh:
@@ -143,6 +144,15 @@ jobs:
           )"
           git push origin HEAD:master
 
+      # GITHUB_TOKEN pushes do not trigger branch-based Pages automatically.
+      # Request the existing master:/docs build only after checks and push pass.
+      - name: Request GitHub Pages build for refreshed docs
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"
+
       - name: Summary
         if: always()
         env:
@@ -151,7 +161,7 @@ jobs:
           if [ "$REFRESH_JOB_STATUS" != "success" ]; then
             echo "Refresh did not complete successfully; inspect the failed or cancelled step."
           elif [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
-            echo "✓ Site refreshed: ${{ steps.stats.outputs.sources }} sources, ${{ steps.stats.outputs.refs }}+ refs, ${{ steps.stats.outputs.pages }} pages."
+            echo "✓ Source updated and Pages build requested: ${{ steps.stats.outputs.sources }} sources, ${{ steps.stats.outputs.refs }}+ refs, ${{ steps.stats.outputs.pages }} pages. Check the Pages build for deployment completion."
           else
             echo "✓ No changes — site already in sync with KB."
           fi

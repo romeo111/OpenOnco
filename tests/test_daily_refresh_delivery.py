@@ -30,4 +30,18 @@ def test_daily_refresh_includes_new_files_and_reports_failure_honestly():
     assert 'git status --porcelain --untracked-files=all -- docs/' in detection['run']
     summary = next(step for step in steps if step.get('name') == 'Summary')
     assert summary['env']['REFRESH_JOB_STATUS'] == '${{ job.status }}'
-    assert summary['run'].index('!= "success"') < summary['run'].index('✓ Site refreshed')
+    assert summary['run'].index('!= "success"') < summary['run'].index('✓ Source updated')
+
+
+def test_bot_push_requests_existing_pages_build_with_limited_permissions():
+    root = Path(__file__).resolve().parents[1]
+    workflow = yaml.safe_load((root / '.github/workflows/daily-site-refresh.yml').read_text(encoding='utf-8'))
+    assert workflow['permissions'] == {'contents': 'write', 'pages': 'write'}
+    steps = workflow['jobs']['refresh']['steps']
+    push = next(i for i, step in enumerate(steps) if 'git push origin HEAD:master' in step.get('run', ''))
+    request = next(i for i, step in enumerate(steps) if 'gh api --method POST' in step.get('run', ''))
+    assert push < request
+    assert steps[request]['if'] == "steps.diff.outputs.changed == 'true'"
+    assert steps[request]['env']['GH_TOKEN'] == '${{ secrets.GITHUB_TOKEN }}'
+    assert 'repos/${GITHUB_REPOSITORY}/pages/builds' in steps[request]['run']
+    assert not steps[request].get('continue-on-error')
