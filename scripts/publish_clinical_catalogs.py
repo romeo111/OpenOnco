@@ -6,6 +6,7 @@ import shutil
 from pathlib import Path
 
 from scripts.clinical_translation_checks import acceptable_draft
+from scripts.clinical_curated_copy import safety_notices_for
 from scripts.site_translation_catalog import LANGUAGES
 
 
@@ -33,6 +34,12 @@ def publish(staging=Path('.tmp/clinical-next'), corpus=Path('.tmp/clinical-sourc
         # or biomarker fragment. The staged version itself remains untouched.
         for source in failures:
             catalog[source] = source
+        for source, translation in safety_notices_for(locale).items():
+            if source not in catalog:
+                continue
+            if not acceptable_draft(source, translation, locale, pattern):
+                raise ValueError(f'{locale}: invalid curated safety notice: {source}')
+            catalog[source] = translation
         assert all(acceptable_draft(source, value, locale, pattern) for source, value in catalog.items())
         payload = (json.dumps(catalog, ensure_ascii=False, indent=2, sort_keys=True) + '\n').encode('utf-8')
         verified[locale] = (path, payload)
