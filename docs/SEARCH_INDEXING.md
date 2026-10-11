@@ -43,7 +43,8 @@ python -m scripts.submit_indexnow
 ```
 
 The command validates sitemap host and URL count, checks the live ownership
-file, then submits canonical URLs to the official IndexNow API. HTTP 200 means
+file, then submits canonical URLs to the official IndexNow API in batches of at
+most 10,000 URLs. HTTP 200 means
 received; 202 means received with key validation pending. Neither proves
 indexing. Search Console ownership and measurement remain separate tasks.
 Reference: https://www.indexnow.org/documentation
