@@ -3185,7 +3185,7 @@ def render_plan_html(
     drift visibility (PR5)."""
     if (mode or "").lower() == "patient":
         if target_lang == 'en':
-            return render_patient_english_draft(plan_result)
+            return render_patient_english_draft(plan_result, sibling_link=sibling_link)
         return _render_patient_mode(plan_result, target_lang, sibling_link=sibling_link)
 
     plan = plan_result.plan
@@ -4469,11 +4469,11 @@ _PATIENT_DISCLAIMER_PREVENTION_HTML = (
 )
 
 
-def render_patient_english_draft(plan_result: PlanResult) -> str:
+def render_patient_english_draft(plan_result: PlanResult, *, sibling_link: Optional[str] = None) -> str:
     """Review candidate only; untranslated authored text remains visibly marked.
 
-    Kept separate from the production patient renderer until complete coverage
-    and review. This never changes the underlying clinical plan.
+    Used for English patient reports with an explicit partial-draft notice.
+    This never changes the underlying clinical plan.
     """
     plan = plan_result.plan
     prevention = plan_result.disease_id is None and (plan is None or plan.algorithm_id is None)
@@ -4491,7 +4491,8 @@ def render_patient_english_draft(plan_result: PlanResult) -> str:
         meaning = 'What this means for prevention' if prevention else 'What this means for treatment'
         body = (
             notice + f'<header><h1>{title}</h1><p><strong>{label}</strong> '
-            f'{_h(_patient_disease_label(plan_result, target_lang="en"))}</p></header>'
+            f'{_h(_patient_disease_label(plan_result, target_lang="en"))}</p>'
+            + _render_mode_toggle(sibling_link, 'Technical version for your doctor →') + '</header>'
             '<section class="what-was-found"><h2>What was found</h2>'
             + _render_findings_plain(plan_result, target_lang='en') + '</section>'
             + f'<section class="what-now"><h2>{meaning}</h2>'
@@ -4503,15 +4504,24 @@ def render_patient_english_draft(plan_result: PlanResult) -> str:
         )
         sources = _render_cited_sources(plan.fda_compliance, 'en', patient_view=True)
         if sources:
-            body += '<details class="patient-sources" data-original-source><summary>Original sources for this report</summary>' + sources + '</details>'
+            body += ('<details class="patient-sources" data-original-source><summary>Original sources for this report</summary>'
+                     '<p>These are the publications and guidelines cited in the report. Discuss with your doctor how they apply to your situation.</p>'
+                     + sources + '</details>')
         decision = (
-            'Decisions about prevention and surveillance are made by your doctor.'
-            if prevention else 'Treatment decisions are made by your oncologist.'
+            'Decisions about your prevention and surveillance programme are made by your doctor '
+            '(usually your primary care doctor, genetic counsellor or relevant specialist, depending on the identified risk factor). '
+            'The report is updated when new information becomes available. Do not change prescribed surveillance based only on this report.'
+            if prevention else 'All treatment decisions are made by your oncologist. The report is updated when new test results become available. '
+            'Do not change prescribed treatment based only on this report.'
+        )
+        symptoms = (
+            'If you develop symptoms that need attention, contact your doctor; do not wait for a planned visit.'
+            if prevention else 'If you develop the urgent symptoms listed above, seek hospital care immediately; do not wait for a planned visit.'
         )
         body += (
-            '<footer class="patient-disclaimer"><p>This report is an information tool. '
-            + decision + ' Do not change prescribed treatment or surveillance based only on this report.</p>'
-            '<p>If you develop the urgent symptoms listed above, seek hospital care immediately; do not wait for a planned visit.</p></footer>'
+            '<footer class="patient-disclaimer"><p>This report is an information tool, not a medical device. '
+            + decision + '</p><p>' + symptoms + '</p>'
+            '<p>Questions about the tool itself: <a href="https://github.com/romeo111/OpenOnco/issues">github.com/romeo111/OpenOnco</a></p></footer>'
         )
     document = (
         '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'

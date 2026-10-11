@@ -797,6 +797,38 @@ def test_patient_html_no_cross_link_when_sibling_none():
     assert '<a class="mode-toggle"' not in html
 
 
+def test_english_patient_report_preserves_clinician_link_and_footer_context():
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    before = result.plan.model_dump()
+    html = render_plan_html(result, mode='patient', target_lang='en', sibling_link='plan.html?view=doctor&draft=1')
+    assert 'href="plan.html?view=doctor&amp;draft=1"' in html
+    assert 'Technical version for your doctor' in html
+    assert 'not a medical device' in html
+    assert 'new test results become available' in html
+    assert 'Do not change prescribed treatment based only on this report' in html
+    assert 'seek hospital care immediately' in html
+    assert 'https://github.com/romeo111/OpenOnco/issues' in html
+    assert 'Discuss with your doctor how they apply to your situation' in html
+    assert result.plan.model_dump() == before
+    assert '<a class="mode-toggle"' not in render_plan_html(result, mode='patient', target_lang='en')
+
+
+def test_english_prevention_footer_preserves_distinct_care_context():
+    from dataclasses import replace
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    result = replace(result, disease_id=None, plan=result.plan.model_copy(update={'algorithm_id': None}))
+    before = result.plan.model_dump()
+    html = render_plan_html(result, mode='patient', target_lang='en')
+    assert 'Your prevention plan' in html
+    assert 'primary care doctor, genetic counsellor or relevant specialist' in html
+    assert 'new information becomes available' in html
+    assert 'Do not change prescribed surveillance based only on this report' in html
+    assert 'symptoms that need attention, contact your doctor' in html
+    assert 'seek hospital care immediately' not in html
+    assert 'https://github.com/romeo111/OpenOnco/issues' in html
+    assert result.plan.model_dump() == before
+
+
 def test_clinician_html_has_patient_cross_link():
     """Mirror: clinician bundle exposes a chip pointing at the patient
     version when `sibling_link` is set."""
