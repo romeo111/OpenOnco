@@ -725,27 +725,76 @@ def expand_first_use(html: str) -> str:
     bare. Idempotent — a sentinel HTML comment marks expanded bundles
     so re-renders (mode toggle, language switch) don't double-expand."""
     import re as _re
+    from html import escape
+    from html.parser import HTMLParser
 
     sentinel = "<!-- abbrev-expanded -->"
     if sentinel in html:
         return html
 
-    out = html
-    for key, expansion in ABBREVIATION_FIRST_USE_UA.items():
+    patterns = {}
+    for key in ABBREVIATION_FIRST_USE_UA:
         # `\b` plus a negative-lookbehind/ahead that excludes Latin
         # letters, Cyrillic letters, dashes, and digits — so `PD-1`
         # doesn't match inside `BCR-PD-1` and `MSI` doesn't match
         # inside `MSIH`.
-        pattern = _re.compile(
+        patterns[key] = _re.compile(
             r"(?<![A-Za-zА-Яа-яЇїІіЄєҐґ\-])"
             + _re.escape(key)
             + r"(?![A-Za-zА-Яа-яЇїІіЄєҐґ0-9])"
         )
-        m = pattern.search(out)
-        if not m:
-            continue
-        # Replace only the first occurrence.
-        out = out[:m.start()] + expansion + out[m.end():]
+
+    # Record prose spans without reserializing HTML. Attributes, URLs, comments,
+    # scripts, styles and original publication text must stay byte-for-byte intact.
+    line_starts = [0]
+    for match in _re.finditer("\n", html):
+        line_starts.append(match.end())
+    replacements = []
+    seen = set()
+
+    class ProseParser(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=False)
+            self.stack = []
+
+        def handle_starttag(self, tag, attrs):
+            blocked = (bool(self.stack and self.stack[-1][1]) or
+                       tag in {'head', 'script', 'style', 'code', 'pre'} or
+                       any(key == 'data-original-source' for key, _ in attrs))
+            if tag not in {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'}:
+                self.stack.append((tag, blocked))
+
+        def handle_startendtag(self, tag, attrs):
+            pass
+
+        def handle_endtag(self, tag):
+            for index in range(len(self.stack) - 1, -1, -1):
+                if self.stack[index][0] == tag:
+                    del self.stack[index:]
+                    break
+
+        def handle_data(self, data):
+            if self.stack and self.stack[-1][1]:
+                return
+            rendered = data
+            for key, pattern in patterns.items():
+                if key in seen:
+                    continue
+                match = pattern.search(rendered)
+                if match:
+                    rendered = (rendered[:match.start()] + escape(ABBREVIATION_FIRST_USE_UA[key]) + rendered[match.end():])
+                    seen.add(key)
+            if rendered != data:
+                line, column = self.getpos()
+                start = line_starts[line - 1] + column
+                replacements.append((start, start + len(data), rendered))
+
+    parser = ProseParser()
+    parser.feed(html)
+    parser.close()
+    out = html
+    for start, end, replacement in reversed(replacements):
+        out = out[:start] + replacement + out[end:]
     return out + sentinel
 
 
