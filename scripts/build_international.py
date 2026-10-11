@@ -226,4 +226,7 @@ def build_international(output_dir: Path) -> dict:
             (directory / page).write_text(markup, encoding="utf-8")
             pages.append(f"{locale}/{page}")
     (output_dir / "international.css").write_text(Path(__file__).with_name("site_international.css").read_text(encoding="utf-8"), encoding="utf-8")
-    return {"locales": list(COPY), "pages": pages}
+    from scripts.build_public_locales import build_public_locales
+    shared = build_public_locales(output_dir)
+    pages.extend(page for page in shared['shared_public_pages'] if page not in pages)
+    return {"locales": list(COPY), "pages": pages, **shared}

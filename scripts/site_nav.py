@@ -4,10 +4,10 @@ from pathlib import Path
 from scripts.site_locales import CLINICAL_LOCALES, COPY, LOCALES, PUBLIC_PAGES, locale_href, locale_path, split_locale
 
 _NAV_LABELS = {
-    "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "План лікування",
+    "uk": {"home": "Головна", "about": "Про проєкт", "try_cta": "План лікування", "capabilities": "Можливості",
            "diseases": "Хвороби", "ask": "Туморборд", "kb": "Онко-вікі",
            "prevent": "Профілактика", "news": "Новини"},
-    "en": {"home": "Home", "about": "About", "try_cta": "Plan Builder",
+    "en": {"home": "Home", "about": "About", "try_cta": "Plan Builder", "capabilities": "Capabilities",
            "diseases": "Diseases", "ask": "Tumor Board", "kb": "Onco Wiki",
            "prevent": "Prevention", "news": "News"},
 }
@@ -40,13 +40,12 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     ask_path = locale_href("ask.html", target_lang)
     about_path = locale_href("about.html", target_lang)
 
-    # The Ukrainian project page now folds in the former Capabilities and
-    # Limitations material. GitHub, examples and specs stay grouped under
-    # About to keep the main nav focused.
+    # Every edition exposes the same sections. GitHub, examples and specs
+    # stay grouped under About to keep the main nav focused.
     # News and Handbook stay available in the reading menu of each edition.
     handbook_label = "Посібник" if target_lang == "uk" else labels.get("handbook", "Handbook")
     extra_links = (
-        (f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>' if target_lang == "en" else "")
+        f'<a href="{locale_href("capabilities.html", target_lang)}"{cls("capabilities")}>{labels["capabilities"]}</a>'
         + f'<a href="{locale_href("handbook.html", target_lang)}"{cls("handbook")}>{handbook_label}</a>'
         + f'<a href="{locale_href("news.html", target_lang)}"{cls("news")}>{labels["news"]}</a>'
     )
@@ -91,8 +90,6 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     # Existing renderers supply a twin URL. It also identifies the current
     # page without fragile inference from its active navigation category.
     _, page = split_locale(page_path or lang_switch_href)
-    if page == "capabilities.html":
-        page = "about.html"
     language_items = []
     for code, (_, native_name, abbreviation) in LOCALES.items():
         available = page in PUBLIC_PAGES or code in {"en", "uk"} | CLINICAL_LOCALES and (
@@ -110,7 +107,7 @@ def render_top_bar(active: str = "", target_lang: str = "en",
     </details>'''
 
     return f"""<header class="top-bar site-header">
-  <link rel="stylesheet" href="/header.css?v=mobile-20261011">
+  <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
   <div class="header-main">
     <div class="brand-line">

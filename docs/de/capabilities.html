@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Fähigkeiten</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/de/capabilities.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/capabilities.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/capabilities.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/capabilities.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/capabilities.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/capabilities.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/capabilities.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco · Fähigkeiten">
+<meta property="og:description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
+<meta property="og:url" content="https://openonco.info/de/capabilities.html">
+<meta property="og:locale" content="de">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Fähigkeiten">
+<meta name="twitter:description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Fähigkeiten","description":"OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.","url":"https://openonco.info/de/capabilities.html","inLanguage":"de","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/de/capabilities.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css?v=layout-20261011" rel="stylesheet">
+<style>
+  /* Tabs */
+  .cap-tabs {
+    display: flex; gap: 2px; flex-wrap: wrap;
+    border-bottom: 2px solid var(--bg-strong, #e5e7eb);
+    margin: 28px 0 0; position: sticky; top: 0;
+    background: white; z-index: 20; padding-top: 6px;
+  }
+  .cap-tab {
+    padding: 12px 18px; background: transparent; border: 0;
+    border-bottom: 3px solid transparent; cursor: pointer;
+    font: 500 14px/1 'Source Sans 3', system-ui, sans-serif;
+    color: var(--gray-600, #4b5563); transition: color .15s, border-color .15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .cap-tab:hover { color: var(--gray-900, #111); }
+  .cap-tab.is-active {
+    color: var(--green-700, #15803d);
+    border-bottom-color: var(--green-700, #15803d);
+    font-weight: 600;
+  }
+  .cap-tab .cap-tab-num {
+    font: 600 11px/1 'JetBrains Mono', monospace;
+    background: var(--gray-100, #f3f4f6); color: var(--gray-600, #4b5563);
+    padding: 3px 6px; border-radius: 3px;
+  }
+  .cap-tab.is-active .cap-tab-num {
+    background: var(--green-50, #f0fdf4); color: var(--green-700, #15803d);
+  }
+  .cap-panel { display: none; padding-top: 24px; }
+  .cap-panel.is-active { display: block; animation: capFade .25s ease; }
+  @keyframes capFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
+
+  /* Pipeline */
+  .pipeline {
+    margin: 24px 0 36px;
+    border-radius: 14px; overflow: hidden;
+    background: linear-gradient(135deg, #0f3729 0%, #134e3c 50%, #1a6e54 100%);
+    color: #ecfdf5; padding: 28px 28px 24px;
+    position: relative;
+  }
+  .pipeline::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(circle at 20% 0%, rgba(94,234,212,0.18), transparent 50%);
+    pointer-events: none;
+  }
+  .pipeline > * { position: relative; }
+  .pipeline-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    flex-wrap: wrap; gap: 8px; margin-bottom: 6px;
+  }
+  .pipeline-eyebrow {
+    font: 600 11px/1 'JetBrains Mono', monospace;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: #5eead4;
+  }
+  .pipeline-version { font: 400 11px/1 'JetBrains Mono', monospace; color: #99f6e4; opacity: 0.7; }
+  .pipeline-title {
+    font: 700 24px/1.25 'Playfair Display', Georgia, serif;
+    color: white; margin: 0 0 4px;
+  }
+  .pipeline-title em { color: #5eead4; font-style: italic; font-weight: 700; }
+  .pipeline-sub {
+    font-size: 13.5px; color: #a7f3d0; margin: 0 0 22px; max-width: 720px; line-height: 1.55;
+  }
+  .pipeline-grid {
+    display: grid; grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 14px; align-items: stretch;
+  }
+  .pipeline-col {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(94,234,212,0.18);
+    border-radius: 10px; padding: 14px 16px;
+    display: flex; flex-direction: column;
+  }
+  .pipeline-col.is-out { border-color: rgba(94,234,212,0.35); background: rgba(94,234,212,0.07); }
+  .pipeline-col-tag {
+    font: 600 10px/1 'JetBrains Mono', monospace;
+    color: #5eead4; letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .pipeline-col-title { font-size: 13.5px; font-weight: 600; color: white; margin-bottom: 8px; }
+  .pipeline-code {
+    font: 400 11.5px/1.55 'JetBrains Mono', monospace;
+    color: #d1fae5; white-space: pre; overflow-x: auto;
+    background: rgba(0,0,0,0.18); border-radius: 6px;
+    padding: 8px 10px; margin: 0; flex: 1;
+  }
+  .pipeline-code .pl-k { color: #fcd34d; }
+  .pipeline-code .pl-s { color: #a5f3fc; }
+  .pipeline-code .pl-c { color: #94a3b8; font-style: italic; }
+  .pipeline-stages { list-style: none; padding: 0; margin: 0; font-size: 12px; counter-reset: stage; }
+  .pipeline-stages li {
+    padding: 4px 0 4px 22px; color: #d1fae5; position: relative;
+    border-bottom: 1px dashed rgba(94,234,212,0.18);
+  }
+  .pipeline-stages li:last-child { border-bottom: 0; }
+  .pipeline-stages li::before {
+    content: counter(stage); counter-increment: stage;
+    position: absolute; left: 0; top: 4px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: rgba(94,234,212,0.18); color: #5eead4;
+    font: 700 10px/16px 'JetBrains Mono', monospace; text-align: center;
+  }
+  .pipeline-track {
+    border-left: 3px solid #5eead4; padding: 4px 0 4px 10px;
+    margin-bottom: 8px;
+  }
+  .pipeline-track.is-alt { border-left-color: #fcd34d; opacity: 0.92; }
+  .pipeline-track-label {
+    font: 600 9.5px/1 'JetBrains Mono', monospace; letter-spacing: 0.1em;
+    color: #5eead4; text-transform: uppercase; display: block; margin-bottom: 4px;
+  }
+  .pipeline-track.is-alt .pipeline-track-label { color: #fcd34d; }
+  .pipeline-track-body { font-size: 12.5px; color: white; font-weight: 500; line-height: 1.4; }
+  .pipeline-track-meta { font-size: 11px; color: #a7f3d0; margin-top: 2px; }
+  .pipeline-arrow {
+    display: flex; align-items: center; justify-content: center;
+    color: #5eead4; font-size: 22px; font-weight: 700;
+  }
+  .pipeline-foot {
+    margin-top: 14px; padding: 10px 14px;
+    background: rgba(0,0,0,0.22); border-radius: 8px;
+    font-size: 12px; color: #d1fae5; line-height: 1.5;
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .pipeline-foot span { display: inline-flex; align-items: center; gap: 6px; }
+  .pipeline-foot strong { color: white; font-weight: 600; }
+  .pipeline-foot .pip-dot { width: 6px; height: 6px; border-radius: 50%; background: #5eead4; display: inline-block; }
+
+  /* Key numbers */
+  .key-nums {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px; margin: 20px 0 32px;
+  }
+  .key-num {
+    background: white; border: 1px solid var(--gray-200, #e5e7eb);
+    border-top: 3px solid var(--teal, #14b8a6);
+    border-radius: 8px; padding: 14px 14px 12px;
+  }
+  .key-num-val {
+    font: 700 26px/1 'Playfair Display', Georgia, serif;
+    color: var(--gray-900, #111); margin-bottom: 4px;
+  }
+  .key-num-lbl {
+    font-size: 11.5px; color: var(--gray-600, #4b5563); line-height: 1.35;
+  }
+  .key-num.is-warn { border-top-color: var(--amber, #d97706); }
+  .key-num.is-warn .key-num-val { color: var(--amber, #d97706); }
+
+  /* Pillars */
+  .pillars {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px; margin: 24px 0 8px;
+  }
+  .pillar {
+    background: var(--gray-50, #f9fafb);
+    border-left: 3px solid var(--green-600, #16a34a);
+    border-radius: 0 8px 8px 0; padding: 12px 14px;
+  }
+  .pillar-title {
+    font-size: 13px; font-weight: 600; color: var(--gray-900, #111);
+    margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
+  }
+  .pillar-title .pillar-ic {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--green-100, #dcfce7); color: var(--green-700, #15803d);
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 700 11px/1 'JetBrains Mono', monospace;
+  }
+  .pillar-text { font-size: 12.5px; color: var(--gray-600, #4b5563); line-height: 1.5; }
+
+  /* Mobile */
+  @media (max-width: 880px) {
+    .pipeline-grid { grid-template-columns: 1fr; }
+    .pipeline-arrow { transform: rotate(90deg); padding: 4px 0; }
+    .cap-tabs { gap: 0; }
+    .cap-tab { padding: 10px 12px; font-size: 13px; }
+  }
+</style>
+<meta name="translation-review" content="pending_language_review"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=layout-20261011">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/de/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">OFFENE ONKOLOGIE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/de/">Start</a>
+    <a href="/de/capabilities.html" class="active" aria-current="page">Funktionen</a><a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Sprache"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg>DE <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Sprache"><a href="/capabilities.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/capabilities.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/capabilities.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/capabilities.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/capabilities.html" lang="de" hreflang="de" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/capabilities.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+    </details>
+    <a href="/de/try.html" class="btn-cta-top btn-cta-try"><span>Plan erstellen</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menü"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <a href="/de/try.html" class="btn-cta-top btn-cta-try mobile-plan-link"><span>Plan erstellen</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+        <nav aria-label="Menü">
+    <a href="/de/">Start</a>
+    <a href="/de/capabilities.html" class="active" aria-current="page">Funktionen</a><a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Werkzeuge</span>
+    <div class="top-cta-group">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Open Source</span>
+  </div>
+  </div>
+</header>
+
+
+<main>
+  <section class="info-page">
+    <h1>Funktionen</h1>
+    <p class="lead">
+      Eine deklarative Regelmaschine für Onkologie-Empfehlungen. JSON-Profil in
+      <strong>Plan</strong> mit zwei alternativen Tracks (Standard + aggressiv) aus, jeder Claim Versand mit einem Zitat an seine Quelle.
+    </p>
+
+    <div class="callout callout-hard">
+      <strong>STUB-Status über alle klinischen Inhalte hinweg.</strong>
+      Doppel-Auszeichnung: <strong>15/1063</strong>
+      (CHARTER §6.1 erfordert zwei klinische Ko-Lead-Zulassungen). Dies ist ein Plan vorgeschlagen: strukturierte Daten + Algorithmus + Quellen sind vorhanden, aber ohne doppelte Abmeldung. Entscheidungs-Unterstützung-Tool, kein medizinisches Gerät. Zustand ab von <code>2026-10-10 13:52 UTC</code>.
+    </div>
+
+    <nav class="cap-tabs" role="tablist" aria-label="Abschnitt">
+      <button class="cap-tab is-active" role="tab" data-tab="overview" aria-selected="true"><span class="cap-tab-num">01</span>Überblick</button>
+      <button class="cap-tab" role="tab" data-tab="engine" aria-selected="false"><span class="cap-tab-num">02</span>Motor</button>
+      <button class="cap-tab" role="tab" data-tab="data" aria-selected="false"><span class="cap-tab-num">03</span>Patientendaten</button>
+      <button class="cap-tab" role="tab" data-tab="limits" aria-selected="false"><span class="cap-tab-num">04</span>Grenzwerte</button>
+      <button class="cap-tab" role="tab" data-tab="contribute" aria-selected="false"><span class="cap-tab-num">05</span>Beitrag</button>
+    </nav>
+
+    <!-- TAB 1: OVERVIEW -->
+    <section class="cap-panel is-active" id="panel-overview" role="tabpanel">
+
+      <div class="pipeline" role="img" aria-label="OpenOnco — Pipeline: JSON-Profil → Motor → Planen Sie mit zwei Gleisen">
+        <div class="pipeline-head">
+          <span class="pipeline-eyebrow">OpenOnco · Motor in zwei Worten</span>
+          <span class="pipeline-version">v0.1.4 · 2026-10-10 13:52 UTC</span>
+        </div>
+        <h2 class="pipeline-title">
+          Ein JSON-Profil → <em>zwei Behandlungspläne</em>, jeder zitierte Anspruch.
+        </h2>
+        <p class="pipeline-sub">
+          Kein LLM in der klinischen Entscheidung. Kein Server. Patient JSON bleibt auf der Maschine. Per-Profil-Verarbeitung: 50-200 ms.
+        </p>
+
+        <div class="pipeline-grid">
+          <div class="pipeline-col">
+            <div class="pipeline-col-tag">Eingabe</div>
+            <div class="pipeline-col-title">Profil (FHIR/mCODE)</div>
+<pre class="pipeline-code"><span class="pl-c"># example: DLBCL</span>
+<span class="pl-k">disease</span>: DLBCL-NOS
+<span class="pl-k">line_of_therapy</span>: <span class="pl-s">1L</span>
+<span class="pl-k">biomarkers</span>:
+  CD79B_mut: <span class="pl-s">true</span>
+  MYC_rearr: <span class="pl-s">false</span>
+  COO: <span class="pl-s">ABC</span>
+<span class="pl-k">findings</span>:
+  ipi: <span class="pl-s">3</span>
+  ecog: <span class="pl-s">1</span>
+  ldh_ratio: <span class="pl-s">1.8</span></pre>
+          </div>
+
+          <div class="pipeline-arrow" aria-hidden="true">→</div>
+
+          <div class="pipeline-col">
+            <div class="pipeline-col-tag">Motor · 6 Stufen</div>
+            <div class="pipeline-col-title">Algorithmus-Wanderung + RedFlags + CIViC</div>
+            <ol class="pipeline-stages">
+              <li>Algorithmus auflösen</li>
+              <li>Geflachte Ergebnisse</li>
+              <li>Eval 671 RedFlags</li>
+              <li>Entscheidungsbaum gehen</li>
+              <li>Materialisieren von Gleisen</li>
+              <li>Lösungsschemata</li>
+            </ol>
+          </div>
+
+          <div class="pipeline-arrow" aria-hidden="true">→</div>
+
+          <div class="pipeline-col is-out">
+            <div class="pipeline-col-tag">Ausgabe</div>
+            <div class="pipeline-col-title">Planen mit ≥2 Gleisen + Spur</div>
+            <div class="pipeline-track">
+              <span class="pipeline-track-label">A · Standardspur</span>
+              <div class="pipeline-track-body">R-CHOP × 6</div>
+              <div class="pipeline-track-meta">NCCN BCEL-D · ESMO 2024</div>
+            </div>
+            <div class="pipeline-track is-alt">
+              <span class="pipeline-track-label">Gleis B · Alternative</span>
+              <div class="pipeline-track-body">Pola-R-KWK × 6</div>
+              <div class="pipeline-track-meta">POLARIX 2022 (CD79B+, ABC)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-foot">
+          <span><span class="pip-dot"></span> Schritt für Schritt</span>
+          <span><span class="pip-dot"></span> Quelle Zitation zu jedem Anspruch</span>
+          <span><span class="pip-dot"></span> ZugriffMatrix</span>
+          <span><span class="pip-dot"></span> Offene Fragen</span>
+          <span><span class="pip-dot"></span> <strong>~200 ms</strong> pro Profil</span>
+        </div>
+      </div>
+
+      <div class="key-nums">
+        <div class="key-num"><div class="key-num-val">103</div><div class="key-num-lbl">Erkrankungen in KB</div></div>
+        <div class="key-num"><div class="key-num-val">831</div><div class="key-num-lbl">Indikationen (262 1L · 175 2L+)</div></div>
+        <div class="key-num"><div class="key-num-val">404</div><div class="key-num-lbl">Behandlungsschemata</div></div>
+        <div class="key-num"><div class="key-num-val">321</div><div class="key-num-lbl">Arzneimittel (ATC/RxNorm)</div></div>
+        <div class="key-num"><div class="key-num-val">671</div><div class="key-num-lbl">rote Flaggen</div></div>
+        <div class="key-num"><div class="key-num-val">542</div><div class="key-num-lbl">zitierte Quellen</div></div>
+        <div class="key-num"><div class="key-num-val">16</div><div class="key-num-lbl">Klinikerkenntnisse (MDT)</div></div>
+        <div class="key-num is-warn"><div class="key-num-val">15/1063</div><div class="key-num-lbl">mit doppelter Ausschilderung</div></div>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-title"><span class="pillar-ic">01</span>Keine schwarze Box</div>
+          <div class="pillar-text">Every algorithm step in the trace. LLM doesn't make clinical decisions (CHARTER §8.3).</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-title"><span class="pillar-ic">02</span>Jeder Anspruch mit einer Entgegenhaltung</div>
+          <div class="pillar-text">source_id + Position + paraphrasiertes Zitat + Seite/Abschnitt. Renderzeit-Bewachung.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-title"><span class="pillar-ic">03</span>Privatsphäre nach Gestaltung</div>
+          <div class="pillar-text">CLI / Pyodide / Python Import. Kein Server. Patient JSON verlässt nie die Maschine.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-title"><span class="pillar-ic">04</span>Plan bleibt am Leben</div>
+          <div class="pillar-text"><code>revise_plan()</code> aktualisiert die Empfehlung, wenn neue Biomarker oder Erkenntnisse eintreffen.</div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Was in der Wissensbasis ist</h2>
+        <p class="info-text">Dies ist ein Inventar veröffentlichter Aufzeichnungen, kein Maß für die klinische Vollständigkeit. Die Erfassung der Krankheitsebene und der Prüfstatus werden in der untenstehenden Matrix separat dargestellt.</p>
+        <div class="num-grid num-grid--rich">
+          <div class="num-card"><div class="num-big">103</div><div class="num-lbl">Krankheiten in KB</div><p class="num-text">Krankheiten mit speziellen strukturierten Aufzeichnungen.</p></div>
+          <div class="num-card"><div class="num-big">16</div><div class="num-lbl">Klinikerkenntnisse</div><p class="num-text">MDT-Rollen im Routing dargestellt.</p></div>
+          <div class="num-card"><div class="num-big">404</div><div class="num-lbl">Behandlungsschemata</div><p class="num-text">Strukturierte Regime, keine automatischen Rezepte.</p></div>
+          <div class="num-card"><div class="num-big">321</div><div class="num-lbl">Arzneimittel</div><p class="num-text">Drogenakten mit maschinenlesbarem Kontext.</p></div>
+          <div class="num-card"><div class="num-big">131</div><div class="num-lbl">Prüfungen</div><p class="num-text">Diagnostische und molekulare Tests in der KB vertreten.</p></div>
+          <div class="num-card"><div class="num-big">24</div><div class="num-lbl">Arbeitsbeschaffung</div><p class="num-text">Strukturierte Arbeitssätze.</p></div>
+          <div class="num-card"><div class="num-big">671</div><div class="num-lbl">Warnhinweise</div><p class="num-text">Signale, die den zweiten Blick eines Arztes erfordern.</p></div>
+          <div class="num-card"><div class="num-big">542</div><div class="num-lbl">Quellen</div><p class="num-text">Angebliche Quellenaufzeichnungen, die mit Forderungen verknüpft sind.</p></div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Erfassungsmatrix</h2>
+        <p class="info-text">
+          <a href="/de/diseases.html"><code>/diseases.html</code></a> — pro Krankheitstabelle: Anzahl der Biomarker / Medikamente / Indikationen / rote Flaggen, 1L+2L-Prüfzeichen, Füllen% und verifiziert%. Gegruppiert nach Lymphoid + myeloische Hämatologie und solide Tumoren. Canonical UI für
+          <code>/disease_coverage.json</code>.
+          <a href="/de/diseases.html"><strong>→ Ansichtsmatrix</strong></a>
+        </p>
+        <p class="info-text">
+          <a href="/de/gallery.html"><code>/gallery.html</code></a> — 446 öffentliche Beispiele. Jedes enthält einen vollständigen Plan, Diagnosebrief oder molekulares Szenario mit Quelllinks. Interne QA-Profile erscheinen nicht in der bedienerorientierten Bibliothek.
+          <a href="/de/gallery.html"><strong>→ Beispiele anzeigen</strong></a>
+        </p>
+      </div>
+    </section>
+
+    <!-- TAB 2: ENGINE -->
+    <section class="cap-panel" id="panel-engine" role="tabpanel">
+
+      <div class="info-section">
+        <h2>6-stufige Bearbeitung von Anfragen</h2>
+        <p class="info-text">
+          Der Kliniker füttert den Motor mit einem JSON-Profil. Der Motor läuft 6 Sequenzstufen und gibt einen Plan mit ≥2 Gleisen zurück (CHARTER §15.2 C6 — Alternative nie versteckt).
+        </p>
+        <div class="flow-strip">
+          <div class="flow-step">
+            <div class="flow-num">Stufe 1</div>
+            <div class="flow-title">Krankheit + Algorithmus-Abbruch</div>
+            <div class="flow-desc"><code>disease.id</code> + <code>line_of_therapy</code> + <code>disease_state</code> → Algorithmen entity.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">Stufe 2</div>
+            <div class="flow-title">Ergebnisse abgeflacht</div>
+            <div class="flow-desc">Zusammenführen von Demographie + Biomarker + Erkenntnisse in einem flachen Dikt.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">Stufe 3</div>
+            <div class="flow-title">RedFlag eval</div>
+            <div class="flow-desc">671 RF gegen Befunde (<code>any_of</code>/<code>all_of</code>/<code>none_of</code> (in % der Gesamtbevölkerung)</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">Stufe 4</div>
+            <div class="flow-title">Algorithmus-Spaziergang</div>
+            <div class="flow-desc">Entscheidungsbaum Schritt für Schritt. Protokolliert found_red_flags an jedem Knoten.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">Stufe 5</div>
+            <div class="flow-title">Spuren materialisieren</div>
+            <div class="flow-desc">Anzeige → Spuren (Standard / aggressiv / Überwachung) mit Biomarkerfilter.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">Stufe 6</div>
+            <div class="flow-title">Pro-Track-Auflösung</div>
+            <div class="flow-desc">Indikation → Regimen (mit Phasen) + Monitoring + SupportiveCare + AccessMatrix.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>CIVIC-Aktivität</h2>
+        <p class="info-text">
+          Actionability data used to come from OncoKB — but their ToS blocked non-commercial public derivatives (conflict with CHARTER §2). We migrated to <strong>CIVIC (CC0)</strong> (WashU) Die Engine liest einen lokalen Nacht-YAML-Snapshot (<code>knowledge_base/hosted/civic/&lt;date&gt;/</code>) — deterministisch + offline. Der Fusions-bewusste Matcher behandelt sowohl Punktmutationen (BRAF V600E) als auch Fusionen (BCR::ABL1). Render: ESCAT-Ebene – primäre, CIViC-Evidenz-Rating – im Detail. Monatlicher Refresh CI öffnet eine PR mit dem Diff.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2>Mehrphasen-Regelungen</h2>
+        <p class="info-text">
+          <code>Regimen.phases</code> ist eine geordnete Liste der genannten Blöcke (Induktion → Konsolidierung → Wartung), jeweils mit eigenem Zyklus-Schema und Übergangstrigger. Real-Welt-Protokolle (R-CHOP × 6 → Wartung, AML 7+3 → HiDAC-Konsolidierung, Axi-cel-Bridging → Infusion).
+          <code>bridging_options</code> — Überbrückung von Regimen zwischen Phasen (für CAR-T). <code>auto_wrap_legacy_components()</code>.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2>Zitierschutz — 3 Schichten</h2>
+        <p class="info-text">
+          Ein dreilagiges Verifikationssystem — drei Orte, an denen wir unsourced Claims erfassen:
+        </p>
+        <table class="kv-table">
+          <thead><tr><th>Ebene</th><th>Dabei</th><th>Was ist?</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>L1</strong> · Ladegerät</td>
+              <td>YAML-Last (Pydantik)</td>
+              <td>SRC-* referential integrity. Unknown SRC-ID → load fail.</td>
+            </tr>
+            <tr>
+              <td><strong>L2</strong> · Prüfer</td>
+              <td>Beitragende PR (CI)</td>
+              <td>Dreischichtiger Erdung: Quelle existiert, Paraphrase geerdet, Anker im Abschnitt.</td>
+            </tr>
+            <tr>
+              <td><strong>L3</strong> · Render</td>
+              <td>HTML-Ausgabe</td>
+              <td>Keine Angabe → Warn-Badge (Lenient) oder überspringen Zelle (<code>strict_citation_guard=True</code>).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-section">
+        <h2>Drei Möglichkeiten zu laufen</h2>
+        <div class="num-grid num-grid--rich">
+          <div class="num-card">
+            <div class="num-big">CLI</div>
+            <div class="num-lbl">Örtlich</div>
+            <p class="num-text">
+              <code>python -m knowledge_base.engine.cli --patient profile.json --render plan.html</code>- Offline.
+            </p>
+          </div>
+          <div class="num-card num-card--accent">
+            <div class="num-big">Pyodid</div>
+            <div class="num-lbl">Im Browser (try.html)</div>
+            <p class="num-text">
+              Python WASM + Micropip + Motorbündel (~2.4 MB). Erst 8-15 s laden, dann wie ein lokaler CLI. Servicearbeiter für offline.
+            </p>
+          </div>
+          <div class="num-card">
+            <div class="num-big">Bibliothek</div>
+            <div class="num-lbl">Python-Import</div>
+            <p class="num-text">
+              <code>from knowledge_base.engine import generate_plan, revise_plan</code> — EHR / CSV / Chargenprüfung. Staatenlos, deterministisch.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: DATA -->
+    <section class="cap-panel" id="panel-data" role="tabpanel">
+
+      <div class="info-section">
+        <h2>Was der Motor aus einem Profil liest</h2>
+        <p class="info-text">
+          Nur strukturierte Felder mit expliziter Semantik. Unbekannte Felder werden ignoriert — keine versteckten Effekte.
+        </p>
+        <table class="kv-table">
+          <thead><tr><th>Kategorie</th><th>Felder</th><th>Wie wir es verwenden</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Krankheit (Eingangspunkt)</td>
+              <td><code>disease.id</code> · <code>icd_o_3_morphology</code> · <code>line_of_therapy</code> · <code>disease_state</code></td>
+              <td>bestimmt, welche Algorithmen ausgeführt werden sollen</td>
+            </tr>
+            <tr>
+              <td>Diagnosemodus</td>
+              <td><code>suspicion.lineage_hint</code> · <code>tissue_locations</code> · <code>presentation</code></td>
+              <td>aktiviert DiagnosticPlan statt Plan</td>
+            </tr>
+            <tr>
+              <td>Demographie</td>
+              <td><code>age</code> · <code>ecog</code> · <code>fit_for_transplant</code> · <code>decompensated_cirrhosis</code> · <code>pregnancy_status</code></td>
+              <td>Filter einschalten <code>Indication.applicable_to.demographic_constraints</code></td>
+            </tr>
+            <tr>
+              <td>Biomarker</td>
+              <td>any <code>BIO-X</code> von KB: <code>BIO-CLL-HIGH-RISK-GENETICS</code>, <code>BIO-HCV-RNA</code>, …</td>
+              <td>RedFlags auslösen, Filter Anzeigen, CIViC-Karte</td>
+            </tr>
+            <tr>
+              <td>Ergebnisse</td>
+              <td>Hunderte von strukturierten Bereichen — <code>dominant_nodal_mass_cm</code>, <code>ldh_ratio_to_uln</code>, <code>tp53_mutation</code>, …</td>
+              <td>Schwellenwerte in RedFlag Triggern</td>
+            </tr>
+            <tr>
+              <td>Vorabprüfungen</td>
+              <td><code>prior_tests_completed: [TEST-IDs]</code></td>
+              <td>schließt bereits abgeschlossene Tests von workup_steps aus</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-section">
+        <h2>Was der Motor zurückbringt — Plan</h2>
+        <table class="kv-table">
+          <thead><tr><th>Feld</th><th>Inhalt</th></tr></thead>
+          <tbody>
+            <tr><td><code>tracks[]</code></td><td>≥2 alternative tracks (default first): indication + regimen (+ phases) + monitoring + supportive_care + contraindications</td></tr>
+            <tr><td><code>access_matrix</code></td><td>pro-Track-Aggregat: Registrierungen, Erstattung, Kostenspannen, <code>AccessPathway</code>. Warnung über die Kosten &gt; 180 Tage.</td></tr>
+            <tr><td><code>experimental_options</code></td><td>Dritte Strecke — <code>enumerate_experimental_options()</code> Abfragen ClinicalTrials.gov v2. 7-Tage-TTL-Cache.</td></tr>
+            <tr><td><code>actionability_hits</code></td><td>CIViC-Matches mit ESCAT-primär + Variante, Evidenz-Rating, klinische Bedeutung, Quellenzitaten</td></tr>
+            <tr><td><code>fda_compliance</code></td><td>FDA-Kriterium 4 Felder: used_use, patient_population_match, algorithmus_summary, automation_bias_warning</td></tr>
+            <tr><td><code>trace</code></td><td>Schritt für Schritt walk_algorithm history: step / result / branch / foat_red_flags</td></tr>
+            <tr><td><code>warnings</code></td><td>Schema/ref-Fehler, zeitkritische Disqualifikationen, fehlende Datenhinweise, Zitations-Wach-Warnungen</td></tr>
+            <tr><td><code>supersedes</code> / <code>superseded_by</code></td><td>Versionskette zwischen Plänen für den gleichen Patienten</td></tr>
+          </tbody>
+        </table>
+        <p class="info-text">
+          Optional aktiviert: <strong>Kurzbericht</strong> — <code>orchestrate_mdt()</code> fügt erforderliche/empfohlene/optionale Rollen von 16 virtuellen Spezialisten hinzu + offene Fragen + Provenienzdiagramm.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2>Aktualisierungen des Plans — <code>revise_plan()</code></h2>
+        <p class="info-text">
+          Drei gesetzliche Übergänge + eins verboten. Der vorherige Plan wird nicht mutiert — eine tiefe Kopie wird zurückgegeben mit <code>superseded_by</code> set. Pro CHARTER §10.2, bestehen alte Versionen auf unbestimmte Zeit.
+        </p>
+        <table class="kv-table">
+          <thead><tr><th>Von</th><th>Veränderung</th><th>Übergang</th><th>Ergebnis</th></tr></thead>
+          <tbody>
+            <tr><td>Diagnoseplan vN</td><td>nur Verdacht</td><td>Diagnose → Diagnose</td><td>Diagnoseplan v(N+1)</td></tr>
+            <tr><td>Diagnoseplan vN</td><td>Histologie bestätigt</td><td>Diagnose → Behandlung <strong>(Förderung)</strong></td><td>Plan v1</td></tr>
+            <tr><td>Plan vN</td><td>Aktualisierung mit Histologie</td><td>Behandlung → Behandlung</td><td>Plan v(N+1)</td></tr>
+            <tr><td>Plan vN</td><td>Histologie entfernt</td><td colspan="2"><span style="color:var(--red);font-weight:600;">ILLEGAL — Wertberichtigung, CHARTA §15.2 C7</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-good">
+        <strong>Privatsphäre.</strong> Patient JSON verlässt nie die Maschine des Benutzers. Keine Protokolle, keine DB. Reproduzierbarkeit:
+        <code>Plan.knowledge_base_state.algorithm_version</code> zeichnet die KB-Version → gleiche Eingabe + gleiche KB = gleiche Ausgabe auf.
+      </div>
+    </section>
+
+    <!-- TAB 4: LIMITS -->
+    <section class="cap-panel" id="panel-limits" role="tabpanel">
+
+      <div class="info-section">
+        <h2>Offene Fragen — Motor weigert sich, ohne Daten zu entscheiden</h2>
+        <p class="info-text">
+          Statt einer stillen Voreinstellung markiert der Motor explizit, welche Felder fehlen und welche Test- oder Report-Werte benötigt werden (MDT_ORCHESTRATOR_SPEC §3). Wird als separater Abschnitt in den Plan eingereiht, nie ausgeblendet.
+        </p>
+        <table class="kv-table">
+          <thead><tr><th>ANHANG</th><th>Auslöser</th><th>Was der Motor ausgibt</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Q1</strong></td><td>Histologie nicht bestätigt</td><td>«Nur gegen ICD-O-3 Code erstellter Behandlungsplan; primäre Histologie vor Therapiezeit bestätigen»</td></tr>
+            <tr><td><strong>Q2</strong></td><td>Stufe fehlt</td><td>«Lugano/Ann Arbor-Stufe für eine sichere Risiko-Schichtung erforderlich»</td></tr>
+            <tr><td><strong>Q3</strong></td><td>RF-Klausel unvollständig</td><td>«Zytogenetische Panel unvollständig; Hochrisikostatus mit Teildaten bewertet»</td></tr>
+            <tr><td><strong>Q4</strong></td><td>Biomarker fehlt</td><td>«IGHV-Mutationsstatus + FISH del(17p) zur Bestätigung der Empfehlung 1L erforderlich»</td></tr>
+            <tr><td><strong>Q5</strong></td><td>Leistungsstatus fehlt</td><td>«ECOG für die Bewertung der Transplantationsfähigkeit erforderlich»; zurück auf konservativen Standard</td></tr>
+            <tr><td><strong>Q6</strong></td><td>Keine Erstattung</td><td>«D-VRd: Daratumumab derzeit nicht erstattet; Finanzierungspfad überprüfen»</td></tr>
+            <tr><td><strong>DQ1-4</strong></td><td>Diagnose-Modus: Gewebe / Linie / Präsentation / Hypothesen fehlen</td><td>senkt das Workup-Match-Konfidenz; Lineage_Hint + Gewebe dominieren</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>Warum kein stiller Standard:</strong> CHARTER §15.2 C6 (anti automation-bias) — the engine cannot pretend to know when it doesn't.
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Personalisierungslücken — bewusst</h2>
+        <p class="info-text">
+          «Personalisierung» in OpenOnco ist eine regelbasierte Auswahl aus einem festen Katalog, nicht aus der AI-Generation. Bedachte architektonische Wahl (CHARTER §8.3).
+        </p>
+        <div class="gap-grid">
+          <div class="gap-card">
+            <div class="gap-tag">Lücke 1</div>
+            <h3>Keine Berechnung der Dosis pro Patient</h3>
+            <p>Lagerhaltung von Regimen <strong>die Standarddosis</strong> (bortezomib 1.3 mg/m²), not multiplied by patient BSA, not adjusted automatically for CrCl 30. By design — to avoid FDA device classification.</p>
+          </div>
+          <div class="gap-card">
+            <div class="gap-tag">Lücke 2</div>
+            <h3>Keine ansprechangepassten Zyklen</h3>
+            <p>Steuerstifte <code>total_cycles: 6 + 2 maintenance</code>. Nicht automatisch durch Ansprechen (PR vs. CR nach PET2) angepasst. <code>revise_plan</code>.</p>
+          </div>
+          <div class="gap-card">
+            <div class="gap-tag">Lücke 3</div>
+            <h3>Genomic Matching beschränkt auf CIViC</h3>
+            <p>Außerhalb von CIViC (seltene, neuartige Varianten) gibt eine Warnung «keine Beweisbarkeit», ohne kreative Interpretationen.</p>
+          </div>
+          <div class="gap-card">
+            <div class="gap-tag">Lücke 4</div>
+            <h3>SupportiveCare identisch über die Kohorte</h3>
+            <p>PJP prophylaxis attached to D-VRd for everyone — the engine doesn't know alternatives (dapsone instead of bactrim). The clinician substitutes.</p>
+          </div>
+          <div class="gap-card">
+            <div class="gap-tag">Lücke 5</div>
+            <h3>Keine kumulative Toxizitätsverfolgung</h3>
+            <p>2L plan for a patient who got bortezomib in 1L with grade 2 neuropathy — the profile doesn't carry <code>prior_treatment_history</code> als strukturiertes Feld; der Kliniker interpretiert manuell.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>CHARTER - Einschränkungen werden sich nicht ändern</h2>
+        <p class="info-text">
+          Prinzipierte architektonische Entscheidungen, die Tor FDA / klinische Sicherheit.
+        </p>
+        <div class="gap-grid">
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§8.3</div>
+            <h3>LLM doesn't decide clinically</h3>
+            <p>LLM nur: Kesselplatte, Doc-Entwürfe, Extraktion (mit menschlicher Verifizierung), Übersetzung mit klinischer Überprüfung. <strong>Nicht</strong>: Wahl des Regimes, Dosierung, Biomarker-Interpretation.</p>
+          </div>
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§15.2 C7</div>
+            <h3>Keine Histologie — kein Plan</h3>
+            <p>Behandlungsplan nur, wenn <code>disease.id</code> ist bestätigt. Ansonsten DiagnosticPlan Modus. <code>revise_plan</code> Behandlung → Diagnose ist <strong>verboten</strong>.</p>
+          </div>
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§15.2 C5</div>
+            <h3>Keine Zeit-kritische</h3>
+            <p>Nicht für die Notfallonkologie (onkologische Notfälle) bestimmt. <code>time_critical: true</code> → Warnung vor der Disqualifikation.</p>
+          </div>
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§6.1</div>
+            <h3>Zwei-Reviewer-Zusammenführung</h3>
+            <p>Jede Änderung des klinischen Inhalts benötigt 2 von 3 klinischen Co-Lead-Zulassungen. Ohne das — STUB.</p>
+          </div>
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§15.2 C6</div>
+            <h3>Anti-Automatisierung-bias</h3>
+            <p>Immer ≥2 Spuren nebeneinander. Alternative ist nie begraben, nie «klicken, um zu erweitern». Der Kliniker sieht eine Wahl, nicht eine Direktive.</p>
+          </div>
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§9.3</div>
+            <h3>Patientendaten nie in Repo</h3>
+            <p><code>patient_plans/</code> gitignored. Site zeigt nur synthetische Beispiele. Telemetrie ohne ausdrückliche Zustimmung verboten.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Nie Liste — was der Motor nie tut</h2>
+        <div class="gap-grid">
+          <div class="gap-card gap-hard"><div class="gap-tag">Never</div><h3>Alternativspur ausblenden</h3><p>Beide Empfehlungen werden immer gezeigt. Die Benutzeroberfläche hat kein «Ausbauen, um alternatives» Muster zu sehen.</p></div>
+          <div class="gap-card gap-hard"><div class="gap-tag">Never</div><h3>Indikation über LLM generieren</h3><p>Alles aus der kuratierten KB. Keine passende Indikation → Warnung, nicht «kreative Erfindung».</p></div>
+          <div class="gap-card gap-hard"><div class="gap-tag">Never</div><h3>Dosierung ändern</h3><p>Die Dosierungen stammen aus dem Standard NCCN/ESMO. Anpassungen erfolgen nur über explizite <code>dose_modification_rules</code>.</p></div>
+          <div class="gap-card gap-hard"><div class="gap-tag">Never</div><h3>Richter «was besser ist»</h3><p>The algorithm picks a default but doesn't claim it's superior. The clinician has full autonomy — automation_bias_warning.</p></div>
+          <div class="gap-card gap-hard"><div class="gap-tag">Never</div><h3>Bildgebung von Dolmetschen</h3><p>«Bulky Disease» kommt als strukturiertes Feld, nicht aus der Bildanalyse. Bildanalyse = Geräteklassifizierung.</p></div>
+          <div class="gap-card gap-hard"><div class="gap-tag">Never</div><h3>Kohortenanpassung</h3><p>«N-Patienten wählten X in M% der Fälle» — erfordert eine persistente Patientenregistrierung + Datenschutzüberprüfung. Noch nicht.</p></div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Derzeitige Abdeckung — STUB-Status und Lücken</h2>
+        <table class="kv-table">
+          <thead><tr><th>Kategorie</th><th>Mitgliedstaat</th><th>Bedeutung</th></tr></thead>
+          <tbody>
+            <tr><td>Krankheiten mit voller Kette</td><td>86 / 103</td><td>Der Rest ist teilweise modelliert</td></tr>
+            <tr><td>Anwendungsgebiete 1L</td><td>262</td><td>Erste Zeile für alle 103 Krankheiten</td></tr>
+            <tr><td>Anwendungsgebiete 2L+</td><td>175</td><td>34 Häm + 21 Fest. Sonstige feste 2L+ Teil.</td></tr>
+            <tr><td>Kinder Onkologie</td><td>0</td><td>Aus dem MVP-Scope — getrennte Strecke</td></tr>
+            <tr><td>Strahlentherapie</td><td>teilweise</td><td>RT in multimodalen Indikationen; nicht als eigenständige Einheit modelliert</td></tr>
+            <tr><td>Chirurgie</td><td>nicht modelliert</td><td>Chirurgische Onkologie-Indikationen fehlen</td></tr>
+            <tr><td>Formeln lebend</td><td>statische Flagge</td><td>Hartkodiert auf Regimen; nicht automatisch erfrischt</td></tr>
+            <tr><td>Bewertungs-Duale-Auszeichnung</td><td><strong>15/1063</strong></td><td>Primäre Engpass-Metrik — Kapazitätsplan: 1063 → ≥ 85 % geprüft</td></tr>
+            <tr><td>Dashboard für Live-Lücke</td><td><a href="/de/clinical-gaps.html">→ Link</a></td><td>Baugenerierte Audits (Abzeichen, solide 2L+, Chirurgie, RT, unterstützende Versorgung)</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>Was STUB NICHT bedeutet:</strong> structured data + algorithm + sources are already in place. What STUB means: didn't pass Clinical Co-Lead dual sign-off. «Proposed plan», not «approved plan».
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Medizinischer Workflow</h2>
+        <p class="info-text">
+          Der Motor bereitet sich auf eine Tumortafel vor, er ersetzt nicht einen.
+          <strong>1)</strong> überprüft Quellen (jeder zitierte Anspruch, Wache bereits fallen gelassen unzitierte Zellen) →
+          <strong>2)</strong> Offene Fragen schließen (Bestellungstests, Anrufe) <code>revise_plan</code>) →
+          <strong>3)</strong> passt sich dem Patienten an (Dosen, unterstützende Versorgung, regionale Verfügbarkeit) →
+          <strong>4)</strong> diskutiert an der Tumortafel (MDT-Kurzbericht — strukturierte Tagesordnung). Motor: Entwurf. Kliniker: endgültig.
+        </p>
+      </div>
+    </section>
+
+    <!-- TAB 5: CONTRIBUTE -->
+    <section class="cap-panel" id="panel-contribute" role="tabpanel">
+
+      <div class="info-section">
+        <h2>TaskTorrent — Prüfen Sie Algorithmen mit den Token Ihrer KI</h2>
+        <p class="info-text">
+          Die größte Lücke — <strong>15/1063</strong> dual-reviewer sign-off. The bottleneck doesn't dissolve with new code — it dissolves through contributors with AI tools who pick up structured chunks of work.
+        </p>
+        <div class="num-grid num-grid--rich">
+          <div class="num-card num-card--accent">
+            <div class="num-big">1</div>
+            <div class="num-lbl">Was es ist</div>
+            <p class="num-text">
+              Ein Betreuer veröffentlicht einen «Cunk» – eine eigenständige Aufgabe (~100k–300k Token): «verifizieren BMA-Beweise für DLBCL × 17 Entities» oder «zurückfill Source-Lizenz für 8 Quellen». Ein Beitragender behauptet, dass der Chunk, AI executed, PR geöffnet wird.
+            </p>
+          </div>
+          <div class="num-card">
+            <div class="num-big">2</div>
+            <div class="num-lbl">Was Sie brauchen</div>
+            <p class="num-text">
+              Ein KI-Tool mit einem Token-Budget (Claude Code Pro+, Codex, Cursor, ChatGPT mit Web). <code>gh</code> CLI. Python 3.10+. ~1-3 Stunden Ihrer Zeit. <strong>Keine klinische Expertise erforderlich</strong> — Sie lösen eine strukturierte Abfassung aus; die klinischen Ko-Leads unterzeichnen.
+            </p>
+          </div>
+          <div class="num-card">
+            <div class="num-big">3</div>
+            <div class="num-lbl">8-Linien-Stiefelband</div>
+            <p class="num-text">
+              Kopieren Sie die 8-Zeilen-Prompt aus
+              <a href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><code>CONTRIBUTOR_QUICKSTART.md</code></a>
+              Es findet einen verfügbaren Brocken, behauptet, es führt die Arbeit, führt den Validator, öffnet eine PR.
+            </p>
+          </div>
+          <div class="num-card num-card--accent">
+            <div class="num-big">4</div>
+            <div class="num-lbl">Was mit der PR passiert</div>
+            <p class="num-text">
+              Der Betreuer überprüft das mechanische Teil (Validator, Schema). Eine klinische Co-Lead erstellt eine Probeprüfung des semantischen Teils (CHARTER §6.1). Zusammenführen → Seitenwagenlandung → in gehostete KB → Rendern. Attribution aufgezeichnet in <code>_contribution_meta.yaml</code>.
+            </p>
+          </div>
+        </div>
+        <div class="cta-row" style="margin-top:24px;">
+          <a class="btn btn-primary" href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart →</a>
+          <a class="btn btn-secondary" href="https://github.com/romeo111/OpenOnco/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active" target="_blank" rel="noopener">Aktive Stücke →</a>
+        </div>
+        <div class="callout callout-good" style="margin-top:18px;">
+          <strong>Aufprall.</strong> Jeder verifizierte BMA ist ein Handlungsanspruch, den wir als «zugelassen» anstelle von «STUB» abstellen können. Ein Mitwirkender mit Pro+ Tokens am Abend kann 10-20 BMAs durch Signoff-Vorbereitung schieben – etwa eine Woche Arbeit für eine Person unter jedem anderen Modell.
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Letzte Aktivität</h2>
+        <p class="info-text">
+          In den letzten 4 Tagen sah TaskTorrent <strong>7 Wellen</strong>, Dutzende von Brocken, ~73 BMA-Kandidaten, 23 BMA Entwürfe bereit für klinische Signoff, 53 Quellenstuben, 1.251 UA-Sprachenfelder erstellt.
+        </p>
+        <ul style="font-size:14px; line-height:1.65; color:var(--gray-700);">
+          <li><strong>CIViC-Pivot</strong> — Motor + 29 BIO + 399 BMA YAMLs migrierten aus dem OncoKB-Schema; monatliche Snapshot-Refresh CI.</li>
+          <li><strong>Mehrphasen-Regime (PR1-3)</strong> — <code>Regimen.phases</code>, <code>bridging_options</code>, Phasen-aware Render, Back-Compat Auto-Wrap.</li>
+          <li><strong>Zitierschutz L3</strong> — Überprüfung der Renderzeit auf jeder BMA-Zelle.</li>
+          <li><strong>Erfassungsmatrix</strong> — <a href="/de/diseases.html">/Krankheiten.html</a> pro Krankheit Drill-down.</li>
+          <li><strong>446 öffentliche Beispiele in der Galerie</strong> — fertige Pläne, Diagnoseslips und molekulare Szenarien für die Überprüfung und Überprüfung.</li>
+        </ul>
+      </div>
+    </section>
+
+  </section>
+
+  <footer class="page-foot">
+    Open-Source · MIT-Stil-Nutzung · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Keine echten Patientendaten · CHARTER §9.3. Informationswerkzeug für Kliniker, kein medizinisches Gerät (CHARTER§15 + §11).
+  </footer>
+</main>
+
+<script>
+  (function() {
+    var tabs = document.querySelectorAll('.cap-tab');
+    var panels = document.querySelectorAll('.cap-panel');
+
+    function activate(name) {
+      tabs.forEach(function(t) {
+        var on = t.dataset.tab === name;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      panels.forEach(function(p) {
+        p.classList.toggle('is-active', p.id === 'panel-' + name);
+      });
+    }
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var name = tab.dataset.tab;
+        activate(name);
+        if (history.replaceState) {
+          history.replaceState(null, '', '#' + name);
+        }
+      });
+    });
+
+    var hash = (window.location.hash || '').replace('#', '');
+    if (hash && document.getElementById('panel-' + hash)) {
+      activate(hash);
+    }
+  })();
+</script>
+</body>
+</html>

@@ -11,7 +11,7 @@ LOCALES = {
     "de": ("de", "Deutsch", "DE"),
     "fr": ("fr", "Français", "FR"),
 }
-PUBLIC_PAGES = {"index.html", "about.html", "kb.html", "participate.html", "handbook.html", "try.html", "ask.html", "prevent.html", "gallery.html", "diseases.html", "specs.html", "news.html"}
+PUBLIC_PAGES = {"index.html", "about.html", "capabilities.html", "kb.html", "participate.html", "handbook.html", "try.html", "ask.html", "prevent.html", "gallery.html", "diseases.html", "specs.html", "news.html"}
 
 CLINICAL_LOCALES = {"es", "pt", "de", "fr"} if (Path(__file__).with_name('locales') / 'clinical_manifest.json').exists() else set()
 

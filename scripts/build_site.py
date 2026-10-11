@@ -7458,21 +7458,8 @@ def render_capabilities(stats, *, target_lang: str = "en") -> str:
 
 
 def _render_capabilities_uk(stats) -> str:
-    """Keep the former Ukrainian URL usable after moving its content to About."""
-    return """<!DOCTYPE html>
-<html lang="uk">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · Про проєкт</title>
-<meta http-equiv="refresh" content="0; url=/ukr/about.html">
-<script>window.location.replace("/ukr/about.html" + (window.location.search || "") + (window.location.hash || ""));</script>
-</head>
-<body>
-<p>Сторінка <a href="/ukr/about.html">переїхала до розділу «Про проєкт»</a>.</p>
-</body>
-</html>
-"""
+    """Use the complete capabilities page in every language edition."""
+    return _render_capabilities_uk_legacy(stats)
 
 
 def _render_capabilities_uk_legacy(stats) -> str:
@@ -10297,6 +10284,10 @@ def render_about(stats, *, target_lang: str = "en") -> str:
   </section>
 """
 
+    if is_en:
+        from scripts.about_story import english_sections
+        story_html, cta_html = english_sections(render_about(stats, target_lang="uk"))
+
     cards_html = "\n".join(
         f"""        <a class="about-link-card" href="{href}"{' target="_blank" rel="noopener"' if href.startswith('https://') else ''}>
           <span>{title}</span>
@@ -10683,6 +10674,8 @@ def build_site(output_dir: Path) -> dict:
     news_payload = build_news(output_dir, top_bar=_render_top_bar)
     international_payload = build_international(output_dir)
     clinical_locales_payload = build_clinical_locales(output_dir)
+    from scripts.build_public_locales import synchronize_public_styles
+    synchronize_public_styles(output_dir)
     clinical_gap_payload = write_clinical_gap_outputs(output_dir)
     discovery_payload = finalize_site_discovery(output_dir)
     whitespace_normalized_files = _normalize_generated_text_whitespace(output_dir)

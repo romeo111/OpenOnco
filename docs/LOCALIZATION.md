@@ -62,8 +62,21 @@ Generation writes separate staging catalogs. Publication checks completeness, pr
 
 ## Verification
 
+Public pages use the English component templates through `build_public_locales.py`,
+with display copy in `scripts/locales/public.{es,pt,de,fr}.json`. The layout,
+inline styles, controls and executable scripts remain the same. The English
+and Ukrainian project pages share the extended project-story sections; all
+six editions expose the same navigation destinations and shared stylesheet
+version. Longer translations may wrap naturally on narrow screens.
+
+Public copy is a language draft, generated with the same optional offline
+models documented above and marked `pending_language_review`. News articles
+and linked source documents keep their original language. Clinical translation
+notices and explicit English fallback labels remain visible where applicable.
+
 ```bash
 python -m pytest tests/test_clinical_locales.py tests/test_site_languages.py tests/test_clinical_question_endpoint.py tests/test_site_discovery.py tests/test_site_head_faq.py
+python -m pytest tests/test_public_layout_parity.py
 node --check scripts/clinical-localization.js
 python -m scripts.build_site
 ```
