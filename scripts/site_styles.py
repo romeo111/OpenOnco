@@ -64,7 +64,10 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 }
 .brand-line { display: flex; align-items: center; gap: 12px; margin-right: 30px; }
 .brand-logo {
-  display: none;
+  display: block;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
 }
 .brand-mini {
   display: inline-flex; align-items: center; gap: 9px;
