@@ -1,9 +1,11 @@
 """Publish source-linked draft translations without changing clinical data or JS."""
-import html
+import errno
 import hashlib
+import html
 import json
 import posixpath
 import re
+import time
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
@@ -25,6 +27,18 @@ ORIGINAL_LABELS = {
     'de': 'Englischer Originaltext zur Überprüfung beibehalten',
     'fr': 'Texte original anglais conservé pour vérification',
 }
+
+
+def write_generated_text(path: Path, value: str) -> None:
+    """Retry a transient Windows EINVAL while writing many generated pages."""
+    for attempt in range(5):
+        try:
+            path.write_text(value, encoding='utf-8')
+            return
+        except OSError as exc:
+            if exc.errno != errno.EINVAL or attempt == 4:
+                raise
+            time.sleep(0.2 * (attempt + 1))
 
 class LocalizedHTML(HTMLParser):
     def __init__(self, catalog, locale, source_path, available, style_assets=None):
@@ -179,16 +193,16 @@ def build_clinical_locales(output_dir: Path, catalog_dir: Path | None = None):
         runtime_catalog.update({value: value for value in curated.values()})
         runtime_catalog[normalize(DISCLAIMER_EN)] = normalize(DISCLAIMER_TRANSLATIONS[locale])
         runtime_catalog[normalize(DISCLAIMER_TRANSLATIONS[locale])] = normalize(DISCLAIMER_TRANSLATIONS[locale])
-        (root / 'clinical-translations.json').write_text(json.dumps(runtime_catalog, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+        write_generated_text(root / 'clinical-translations.json', json.dumps(runtime_catalog, ensure_ascii=False, separators=(',', ':')))
         ui_catalog = {key: value for key, value in runtime_catalog.items() if key in ui_sources}
         ui_catalog.update(curated)
         ui_catalog.update({value: value for value in curated.values()})
-        (root / 'clinical-ui-translations.json').write_text(json.dumps(ui_catalog, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+        write_generated_text(root / 'clinical-ui-translations.json', json.dumps(ui_catalog, ensure_ascii=False, separators=(',', ':')))
         for path in pages:
             relative = path.relative_to(output_dir).as_posix()
             target = root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text(localize_page(path.read_text(encoding='utf-8'), locale, relative, available, catalog, style_assets=style_assets), encoding='utf-8')
+            write_generated_text(target, localize_page(path.read_text(encoding='utf-8'), locale, relative, available, catalog, style_assets=style_assets))
             published.append(f'{locale}/{relative}')
         index = json.loads((output_dir / 'kb_search_index.json').read_text(encoding='utf-8'))
         for entry in index['entries']:
@@ -198,7 +212,7 @@ def build_clinical_locales(output_dir: Path, catalog_dir: Path | None = None):
             if entry.get('url'):
                 entry['url'] = locale_href(entry['url'], locale)
             entry['search_text'] = entry.get('search_text', '') + ' ' + ' '.join(str(entry.get(k, '')) for k in ('title', 'summary', 'subtitle', 'kind')).lower()
-        (root / 'kb_search_index.json').write_text(json.dumps(index, ensure_ascii=False), encoding='utf-8')
+        write_generated_text(root / 'kb_search_index.json', json.dumps(index, ensure_ascii=False))
     if published:
         (output_dir / 'clinical-localization.js').write_text(Path(__file__).with_name('clinical-localization.js').read_text(encoding='utf-8'), encoding='utf-8')
         styles_root = output_dir / 'clinical-styles'
