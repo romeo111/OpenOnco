@@ -14,6 +14,27 @@ from serverless import clinical_question as cq
 
 
 @pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
+def test_original_source_blocks_preserve_text_attributes_and_links(locale):
+    original = '<span lang="uk" data-original-source title="Original label"><b>Не перекладати ECOG &lt;0.5</b><a href="/cases/source.html" title="Original label">Original label</a></span>'
+    source = '<html lang="en"><body><main>' + original + '<p>Translate this</p></main></body></html>'
+    catalog = {'Не перекладати ECOG <0.5': 'INCORRECT', 'Original label': 'INCORRECT', 'Translate this': 'NATIVE COPY'}
+    output = localize_page(source, locale, 'cases/test.html', {'cases/source.html'}, catalog)
+    assert original in output
+    assert 'INCORRECT' not in output
+    assert '<p>NATIVE COPY</p>' in output
+    assert f'<html lang="{locale}">' in output
+
+
+def test_original_scope_ends_at_self_closing_and_nested_elements():
+    source = '<html lang="en"><body><input data-original-source title="Original label"/><p>Translate this</p><div data-original-source><span><b>Original label</b></span></div><p>Translate this</p></body></html>'
+    output = localize_page(source, 'fr', 'try.html', set(), {'Original label': 'INCORRECT', 'Translate this': 'NATIVE COPY'})
+    assert 'title="Original label"' in output
+    assert '<b>Original label</b>' in output
+    assert 'INCORRECT' not in output
+    assert output.count('<p>NATIVE COPY</p>') == 2
+
+
+@pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
 @pytest.mark.parametrize('language', ['uk', 'en'])
 def test_patient_findings_review_label_is_translated_and_preserves_variant(locale, language):
     from scripts.clinical_curated_copy import messages_for

@@ -61,8 +61,11 @@ class LocalizedHTML(HTMLParser):
         self.shared_style_start = None
         self.source_language = 'und'
         self.language_stack = []
+        self.original_stack = []
         self.source_language_seen = False
     def text(self, value):
+        if self.original_stack and self.original_stack[-1]:
+            return html.escape(value, quote=False)
         stripped = normalize(html.unescape(value))
         replacement = self.catalog.get(stripped)
         if (replacement is None or replacement == stripped) and len(stripped) > 180 and not any(t in {'head', 'title', 'option'} for t in self.stack):
@@ -87,6 +90,7 @@ class LocalizedHTML(HTMLParser):
         return urlunsplit(('', '', path, url.query, url.fragment))
     def handle_starttag(self, tag, attrs):
         original_attrs = dict(attrs)
+        original = bool(self.original_stack and self.original_stack[-1]) or 'data-original-source' in original_attrs
         if tag == 'html' and not self.source_language_seen:
             declared = (original_attrs.get('lang') or '').lower()
             self.source_language = declared if re.fullmatch(r'[a-z]{2,3}(?:-[a-z0-9]{2,8})*', declared) else 'und'
@@ -99,6 +103,8 @@ class LocalizedHTML(HTMLParser):
         for key, value in attrs:
             if tag == 'html' and key == 'lang':
                 value = self.locale
+            elif original:
+                pass
             elif key in {'title', 'aria-label', 'placeholder', 'alt', 'data-step-label'} and value:
                 value = self.catalog.get(normalize(value), value)
             elif tag == 'meta' and key == 'content' and original_attrs.get('name') == 'description':
@@ -118,6 +124,7 @@ class LocalizedHTML(HTMLParser):
                 declared = (original_attrs.get('lang') or '').lower()
                 language = declared if re.fullmatch(r'[a-z]{2,3}(?:-[a-z0-9]{2,8})*', declared) else 'und'
             self.language_stack.append(language)
+            self.original_stack.append(original)
             self.stack.append(tag)
     def handle_startendtag(self, tag, attrs):
         self.handle_starttag(tag, attrs)
@@ -125,6 +132,7 @@ class LocalizedHTML(HTMLParser):
         if tag not in VOID_TAGS:
             self.stack.pop()
             self.language_stack.pop()
+            self.original_stack.pop()
     def handle_endtag(self, tag):
         if tag == 'style' and self.shared_style_start is not None:
             css = ''.join(self.parts[self.shared_style_start + 1:])
@@ -137,6 +145,7 @@ class LocalizedHTML(HTMLParser):
         if tag in self.stack:
             self.stack = self.stack[:len(self.stack)-1-self.stack[::-1].index(tag)]
             self.language_stack = self.language_stack[:len(self.stack)]
+            self.original_stack = self.original_stack[:len(self.stack)]
     def handle_data(self, data):
         if any(t in {'script', 'style'} for t in self.stack):
             self.parts.append(data)

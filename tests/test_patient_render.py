@@ -1319,6 +1319,9 @@ def test_legacy_patient_hit_without_readiness_is_pending():
     hit = SimpleNamespace(biomarker_id='BIO-BRAF', variant_qualifier='V600E', escat_tier='IA')
     result = SimpleNamespace(plan=SimpleNamespace(variant_actionability=[hit]))
     rendered = _render_findings_plain(result, target_lang='en')
+    from html import escape
+    original = explain('V600E')
+    assert f'<span lang="uk" data-original-source>{escape(original)}</span>' in rendered
     assert 'data-clinical-review="pending"' in rendered
     assert 'Interpretation requires clinical review' in rendered
     assert not hasattr(hit, 'clinical_use_ready')
@@ -1353,6 +1356,20 @@ def test_english_track_cards_preserve_all_options_and_drug_source_anchors():
     assert 'Medicine form:' in en
     assert 'not a prediction for you personally' in en
     assert 'Awaiting review by doctors' in en
+    assert result.plan.model_dump() == before
+
+
+def test_english_watchpoints_keep_source_language_and_original_content():
+    from knowledge_base.engine.render import _render_between_visits_section
+    result = _build_hcv_mzl_two_track_plan()
+    before = result.plan.model_dump()
+    uk = _render_between_visits_section(result)
+    en = _render_between_visits_section(result, target_lang='en')
+    original_triggers = re.findall(r'<span class="bv-trigger">(.*?)</span>', uk)
+    retained_triggers = re.findall(r'<span class="bv-trigger" lang="uk" data-original-source>(.*?)</span>', en)
+    assert original_triggers and retained_triggers == original_triggers
+    original_actions = re.findall(r'<span class="bv-action">(.*?)</span>', uk)
+    assert re.findall(r'<span class="bv-action" lang="uk" data-original-source>(.*?)</span>', en) == original_actions
     assert result.plan.model_dump() == before
 
 

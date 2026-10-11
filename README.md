@@ -30,6 +30,8 @@ Onco Wiki records, Handbook chapters and quizzes, interactive tools and result d
 
 Patient reports show recorded data-completeness checks before treatment options when an MDT summary is available. Missing profile information does not mean a test was not performed. Completed technical checks do not establish clinical approval; without a summary, completeness is explicitly unassessed. English patient reports and the additional-language versions remain incomplete translation drafts.
 
+Retained original excerpts in translation drafts carry source-language tags and are protected from automatic translation and abbreviation expansion. Field contracts determine the language; free-form snippets with no declared language use `und` (unknown). Provenance captions are translated separately from the retained text.
+
 ## Current repository snapshot
 
 Measured on **2026-10-10** with `python -m knowledge_base.stats --format json`:

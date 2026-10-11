@@ -17,6 +17,42 @@ from knowledge_base.engine._patient_vocabulary import (
 )
 
 
+def test_retained_ukrainian_drug_note_is_protected_from_english_expansion():
+    from html import escape
+    from knowledge_base.engine._patient_vocabulary import expand_first_use
+    note = 'Не перекладати: ECOG, 0.5 mg/kg, <38.5°C; FDA.'
+    drug = {'id': 'DRUG-TEST', 'notes_patient': note}
+    track = SimpleNamespace(regimen_data={'components': [{'drug_id': 'DRUG-TEST', 'route': 'IV'}]})
+    result = SimpleNamespace(disease_id='DIS-TEST')
+    before = deepcopy((drug, track.__dict__))
+    rendered = _render_track_drugs(result, track, {'DRUG-TEST': drug}, None, target_lang='en')
+    protected = f'<span lang="uk" data-original-source>{escape(note)}</span>'
+    assert protected in rendered
+    expanded = expand_first_use(rendered + '<p>ECOG</p>', target_lang='en')
+    assert protected in expanded
+    assert 'daily activities' in expanded
+    assert (drug, track.__dict__) == before
+
+
+@pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
+def test_native_notice_translates_while_retained_drug_note_does_not(locale):
+    from html import escape
+    from scripts.build_clinical_locales import localize_page
+    from scripts.clinical_curated_copy import messages_for
+    note = 'Синтетичний текст: ECOG <0.5; FDA.'
+    drug = {'id': 'DRUG-TEST', 'notes_patient': note}
+    track = SimpleNamespace(regimen_data={'components': [{'drug_id': 'DRUG-TEST', 'route': 'IV'}]})
+    result = SimpleNamespace(disease_id='DIS-TEST')
+    rendered = _render_track_drugs(result, track, {'DRUG-TEST': drug}, None, target_lang='en')
+    catalog = messages_for(locale)
+    catalog[note] = 'INCORRECT REPLACEMENT'
+    output = localize_page('<html lang="en"><body>' + rendered + '</body></html>', locale, 'cases/test.patient.html', set(), catalog)
+    assert catalog['Original source explanation; translation unavailable:'] in output
+    assert f'<span lang="uk" data-original-source>{escape(note)}</span>' in output
+    assert 'INCORRECT REPLACEMENT' not in output
+    assert 'data-source-id="DRUG-TEST"' in output
+
+
 def test_english_rationale_preserves_findings_thresholds_and_input():
     result = SimpleNamespace(
         plan=SimpleNamespace(variant_actionability=[{'biomarker_id': 'BIO-BRAF', 'variant_qualifier': 'V600E', 'escat_tier': 'IA'}]),
@@ -39,6 +75,8 @@ def test_missing_english_definition_explicitly_retains_original():
     bullets = build_track_rationale(result, SimpleNamespace(is_default=True), target_lang='en')
     assert 'original Ukrainian text; translation unavailable' in bullets[0]
     assert 'Не чекати' in bullets[0]
+    rendered = build_track_rationale_html(result, SimpleNamespace(is_default=True), target_lang='en')
+    assert '<span lang="uk" data-original-source>Не чекати.</span>' in rendered
 
 
 def test_no_fired_flags_is_not_a_claim_of_absent_clinical_risk():
@@ -73,6 +111,7 @@ def test_english_emergency_section_marks_missing_translation():
     output = _render_emergency_section(result, target_lang='en')
     assert 'Original Ukrainian text; translation unavailable' in output
     assert 'Не чекати' in output
+    assert '<span lang="uk" data-original-source>Не чекати</span>' in output
 
 
 @pytest.mark.parametrize('route,expected', [
@@ -95,6 +134,7 @@ def test_english_schedule_preserves_counts_and_freeform_source():
     assert 'original source text' in result
     assert 'Не припиняти &lt;умова&gt;' in result
     assert '28 days' in result
+    assert '<span lang="und" data-original-source>Не припиняти &lt;умова&gt;</span>' in result
 
 
 @pytest.mark.parametrize('profile', ['', 'none', 'low', 'low_moderate', 'moderate', 'moderate-high', 'moderate-severe', 'high', 'severe', 'very-high', 'high special', 'unknown'])

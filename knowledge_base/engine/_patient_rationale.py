@@ -268,8 +268,17 @@ def build_track_rationale_html(plan_result: Any, track: Any, *, target_lang: str
     if not bullets:
         fallback = _FALLBACK_NO_TRACE_EN if target_lang == "en" else _FALLBACK_NO_TRACE_UA
         return f'<p class="why-fallback">{html.escape(fallback)}</p>'
-    items = "".join(f"<li>{html.escape(b)}</li>" for b in bullets)
-    return f"<ul>{items}</ul>"
+    items = []
+    # This prefix is emitted only for a missing English definition and a
+    # retained definition_ua field. It identifies provenance, not a language guess.
+    original_prefix = 'The algorithm recorded (original Ukrainian text; translation unavailable): '
+    for bullet in bullets:
+        content = html.escape(bullet)
+        if target_lang == 'en' and bullet.startswith(original_prefix):
+            content = (html.escape(original_prefix)
+                       + f'<span lang="uk" data-original-source>{html.escape(bullet[len(original_prefix):])}</span>')
+        items.append(f'<li>{content}</li>')
+    return f'<ul>{"".join(items)}</ul>'
 
 
 __all__ = [

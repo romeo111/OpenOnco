@@ -3656,7 +3656,11 @@ def _render_findings_plain(plan_result: PlanResult, *, target_lang: str = "uk") 
         bits = [f'<li><strong data-variant-original="{_h(variant)}">{_h(gene_variant)}</strong>']
         if v_expl:
             qualifier = 'Original Ukrainian explanation; translation unavailable: ' if english and not explanation_translated else ''
-            bits.append(f" — {_h(qualifier + v_expl)}")
+            explanation_html = _h(v_expl)
+            if qualifier:
+                explanation_html = f'<span lang="uk" data-original-source>{explanation_html}</span>'
+            qualifier_html = f'<span class="translation-fallback">{_h(qualifier)}</span>' if qualifier else ''
+            bits.append(f" — {qualifier_html}{explanation_html}")
         if tier_label:
             bits.append(f'. <span class="patient-badge patient-info">{_h(tier_label)}</span>')
         else:
@@ -3728,7 +3732,8 @@ def _regimen_schedule_ua(regimen_data: Optional[dict], *, target_lang: str = "uk
         return ""
     if isinstance(total, str) and total.strip():
         if target_lang == 'en':
-            return f"Duration (original source text): {_h(total)}; cycle — {_h(cycle)} days" if cycle else f"Duration (original source text): {_h(total)}"
+            original = f'<span lang="und" data-original-source>{_h(total)}</span>'
+            return f"Duration (original source text): {original}; cycle — {_h(cycle)} days" if cycle else f"Duration (original source text): {original}"
         return f"Тривалість: {_h(total)}; цикл — {_h(cycle)} днів" if cycle else f"Тривалість: {_h(total)}"
     try:
         c = int(cycle) if cycle is not None else None
@@ -3976,6 +3981,8 @@ def _render_track_drugs(
         if isinstance(drug, dict):
             lay = (drug.get("notes_patient") or "").strip()
         authored_note = bool(lay)
+        original_lay = None
+        translated_prefix = ''
         if not lay and drug_class:
             lay = _explain_patient_drug_class(drug_class) or ""
         if not lay:
@@ -3988,7 +3995,16 @@ def _render_track_drugs(
             elif translated_class and not authored_note:
                 lay = translated_class
             else:
-                lay = (translated_class + '. ' if translated_class else '') + 'Original source explanation; translation unavailable: ' + lay
+                original_lay = lay
+                translated_prefix = translated_class + '. ' if translated_class else ''
+
+        lay_html = _h(lay)
+        if original_lay is not None:
+            # notes_patient and the fallback vocabulary are explicitly Ukrainian.
+            # Protect retained authored prose from translation and first-use expansion.
+            lay_html = (_h(translated_prefix)
+                        + '<span class="translation-fallback">Original source explanation; translation unavailable: </span>'
+                        + f'<span lang="uk" data-original-source>{_h(original_lay)}</span>')
 
         medicine_form = _medicine_form_ua(comp, drug, target_lang=target_lang)
 
@@ -4023,7 +4039,7 @@ def _render_track_drugs(
         blocks.append(
             f'<div class="drug-explanation" data-source-id="{_h(drug_id)}">'
             f"<h3>{_h(label)}</h3>"
-            f'<p class="lay-language">{_h(lay)}</p>'
+            f'<p class="lay-language">{lay_html}</p>'
             f'<p class="medicine-form"><strong>{"Medicine form:" if target_lang == "en" else "Форма ліків:"}</strong> '
             f'{_h(medicine_form)}.</p>'
             f"{badge_html}"
@@ -4295,18 +4311,20 @@ def _render_between_visits_section(plan_result: PlanResult, *, target_lang: str 
             heading = urgency_headings[urg]
             li_parts: list[str] = []
             for w in items:
+                original_attrs = ' lang="uk" data-original-source' if english else ''
+                window_attrs = ' lang="und" data-original-source' if english else ''
                 trigger = _h(w.get("trigger_ua") or "")
                 action = _h(w.get("action_ua") or "")
                 window = w.get("cycle_day_window") or ""
                 window_html = (
-                    f' <span class="bv-window">({_h(window)})</span>'
+                    f' <span class="bv-window"{window_attrs}>({_h(window)})</span>'
                     if window else ""
                 )
                 li_parts.append(
                     "<li>" +
                     ('<span class="translation-fallback">Original Ukrainian text; translation unavailable: </span>' if english else '') +
-                    f'<span class="bv-trigger">{trigger}</span>{window_html}'
-                    f' — <span class="bv-action">{action}</span>'
+                    f'<span class="bv-trigger"{original_attrs}>{trigger}</span>{window_html}'
+                    f' — <span class="bv-action"{original_attrs}>{action}</span>'
                     "</li>"
                 )
             groups_html.append(
@@ -4363,8 +4381,13 @@ def _render_emergency_section(plan_result: PlanResult, *, target_lang: str = "uk
         # patient_emergency_label() output.
         rf_id = (rf.get("id") or "") if isinstance(rf, dict) else ""
         label = patient_emergency_label(rf, target_lang=target_lang)
+        label_html = _h(label)
+        original_prefix = '🚨 Original Ukrainian text; translation unavailable: '
+        if english and not rf.get('definition') and rf.get('definition_ua') and label.startswith(original_prefix):
+            label_html = (_h(original_prefix)
+                          + f'<span lang="uk" data-original-source>{_h(label[len(original_prefix):])}</span>')
         items.append(
-            f'<li data-rf-id="{_h(rf_id)}">{_h(label)}</li>'
+            f'<li data-rf-id="{_h(rf_id)}">{label_html}</li>'
         )
     explanation = (
         "The algorithm flagged these conditions based on the data entered. "
@@ -4533,7 +4556,8 @@ def _render_patient_data_quality(mdt: Optional[MDTOrchestrationResult], target_l
             labels.append(label)
     if labels:
         label = 'Missing information recorded in the profile' if en else 'Дані, відсутні у профілі'
-        items.append(f'<li><span>{label}</span>: {_h(", ".join(labels))}</li>')
+        language = 'en' if en else 'uk'
+        items.append(f'<li><span>{label}</span>: <span lang="{language}" data-original-source>{_h(", ".join(labels))}</span></li>')
     listing = '<ul>' + ''.join(items) + '</ul>' if items else ''
     return (
         f'<section class="patient-data-quality" data-data-quality-status="{_h(status)}">'
