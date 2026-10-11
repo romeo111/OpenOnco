@@ -10620,6 +10620,7 @@ def _build_one_case_worker(args: tuple) -> dict:
 
 def _build_all_cases_parallel(
     output_dir: Path,
+    *, progress: bool = False,
 ) -> tuple[list[dict], list[dict], list[dict]]:
     """Render every CASE × {uk, en, patient} in a process pool.
 
@@ -10658,17 +10659,28 @@ def _build_all_cases_parallel(
     else:
         n_workers = min(os.cpu_count() or 4, 8)
 
+    def collect(iterator):
+        results = []
+        interval = max(1, len(tasks) // 20)
+        for result in iterator:
+            results.append(result)
+            if progress and (len(results) % interval == 0 or len(results) == len(tasks)):
+                print(f"[build] Rendered case tasks: {len(results)}/{len(tasks)}", file=sys.stderr, flush=True)
+        return results
+
     if n_workers <= 1 or len(tasks) <= 2:
-        results = [_build_one_case_worker(t) for t in tasks]
+        results = collect(_build_one_case_worker(t) for t in tasks)
     else:
         try:
             with ProcessPoolExecutor(max_workers=n_workers) as ex:
-                results = list(ex.map(_build_one_case_worker, tasks, chunksize=4))
+                results = collect(ex.map(_build_one_case_worker, tasks, chunksize=4))
         except (OSError, PermissionError):
             # Some sandboxed Windows runners forbid multiprocessing pipe
             # creation. Serial rendering is slower but keeps the static build
             # deterministic and usable in restricted environments.
-            results = [_build_one_case_worker(t) for t in tasks]
+            if progress:
+                print("[build] Process pool unavailable; restarting case tasks serially", file=sys.stderr, flush=True)
+            results = collect(_build_one_case_worker(t) for t in tasks)
 
     uk = [r for r in results if r["lang"] == "uk"]
     en = [r for r in results if r["lang"] == "en"]
@@ -10783,7 +10795,7 @@ def _copy_landing_assets(output_dir: Path) -> list[str]:
     return copied
 
 
-def build_site(output_dir: Path) -> dict:
+def build_site(output_dir: Path, *, progress: bool = False) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "cases").mkdir(parents=True, exist_ok=True)
     (output_dir / "ukr").mkdir(parents=True, exist_ok=True)
@@ -10879,25 +10891,35 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / "ukr" / "ask.html").write_text(
         render_ask(target_lang="uk"), encoding="utf-8")
 
+    def stage(name):
+        if progress:
+            print(f"[build] {name}", file=sys.stderr, flush=True)
+
+    stage("Rendering public examples")
     case_paths_uk, case_paths_en, case_paths_patient = (
-        _build_all_cases_parallel(output_dir)
+        _build_all_cases_parallel(output_dir, progress=progress)
     )
     disease_coverage_payload = bundle_disease_coverage(output_dir)
+    stage("Building knowledge wiki")
     kb_wiki_payload = build_kb_wiki(KB_ROOT, output_dir)
     build_participation(output_dir)
+    stage("Building handbook and review packet")
     handbook_payload = build_handbook(KB_ROOT, output_dir)
     review_payload = build_clinician_review(KB_ROOT, output_dir / "review" / "dlbcl-1l")
     if review_payload["summary"]["contracts_passed"] != review_payload["summary"]["contracts_total"]:
         raise RuntimeError("DLBCL synthetic review engineering contracts failed")
+    stage("Building news and language editions")
     news_payload = build_news(output_dir, top_bar=_render_top_bar)
     international_payload = build_international(output_dir)
     clinical_locales_payload = build_clinical_locales(output_dir)
     from scripts.build_public_locales import synchronize_public_styles
     synchronize_public_styles(output_dir)
     clinical_gap_payload = write_clinical_gap_outputs(output_dir)
+    stage("Finalizing search discovery and generated whitespace")
     discovery_payload = finalize_site_discovery(output_dir)
     whitespace_normalized_files = _normalize_generated_text_whitespace(output_dir)
 
+    stage("Site generation completed")
     return {
         "output_dir": str(output_dir),
         "cases_built": (
@@ -10947,7 +10969,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.clean and output_dir.exists():
         shutil.rmtree(output_dir)
 
-    report = build_site(output_dir)
+    report = build_site(output_dir, progress=True)
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
 
