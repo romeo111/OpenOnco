@@ -808,11 +808,12 @@ def _normalize_generated_text_whitespace(output_dir: Path) -> int:
     return normalized_files
 
 
-def _build_searchable_indexes() -> tuple[dict, dict]:
+def _build_searchable_indexes() -> tuple[dict, dict, dict]:
     """Load disease + regimen indexes used to enrich the examples manifest
     with searchable text (disease name, regimen short name)."""
     disease_index: dict[str, dict] = {}
     regimen_index: dict[str, dict] = {}
+    indication_index: dict[str, dict] = {}
     dis_dir = KB_ROOT / "diseases"
     reg_dir = KB_ROOT / "regimens"
     try:
@@ -823,7 +824,7 @@ def _build_searchable_indexes() -> tuple[dict, dict]:
                 names = d.get("names") or {}
                 disease_index[did] = {
                     "name_en": names.get("english") or names.get("preferred") or did,
-                    "name_ua": names.get("ua") or names.get("preferred") or did,
+                    "name_ua": names.get("ukrainian") or names.get("ua") or names.get("preferred") or did,
                 }
     except Exception:
         pass
@@ -839,7 +840,11 @@ def _build_searchable_indexes() -> tuple[dict, dict]:
                 }
     except Exception:
         pass
-    return disease_index, regimen_index
+    for p in (KB_ROOT / "indications").glob("*.yaml"):
+        d = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        if d.get("id"):
+            indication_index[d["id"]] = d
+    return disease_index, regimen_index, indication_index
 
 
 def _searchable_example_meta(case: "CaseEntry", ex_json: dict, disease_id: str | None,
@@ -892,6 +897,7 @@ def bundle_examples(
     """
     payload = []
     manifest = []
+    disease_index, regimen_index, indication_index = _build_searchable_indexes()
     unique_icd_to_disease_id = _unique_questionnaire_icd_to_disease_id_map()
     questionnaire_disease_ids = {
         str(q.get("disease_id")).upper()
@@ -931,6 +937,9 @@ def bundle_examples(
             c, ex_json, disease_id, has_case_page=has_case_page
         )
         quality_meta = _case_quality_meta(c, has_case_page=has_case_page)
+        search_meta = _searchable_example_meta(
+            c, ex_json, disease_id, disease_index, regimen_index, indication_index
+        )
         questionnaire_available = bool(
             disease_id and str(disease_id).upper() in questionnaire_disease_ids
         )
@@ -944,6 +953,8 @@ def bundle_examples(
             "scenario_type": c.scenario_type,
             "questionnaire_available": questionnaire_available,
             "patient_view_available": c.scenario_type != "diagnostic",
+            "has_patient_mode": has_patient_mode,
+            **search_meta,
             "verification_required": True,
             **quality_meta,
         }
@@ -958,6 +969,8 @@ def bundle_examples(
             "scenario_type": c.scenario_type,
             "questionnaire_available": questionnaire_available,
             "patient_view_available": c.scenario_type != "diagnostic",
+            "has_patient_mode": has_patient_mode,
+            **search_meta,
             **quality_meta,
         }
         if not has_case_page:
