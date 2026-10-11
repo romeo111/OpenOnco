@@ -626,6 +626,14 @@ def explain(term: str, *, target_lang: str = "uk") -> Optional[str]:
 # Explicit display aliases for authored class labels. No substring matching:
 # combination products and unrecognised classes must retain the fallback.
 DRUG_CLASS_PATIENT_ALIASES = {
+    "bcma-directed autologous car-t cell therapy (4-1bb costimulation; dual-epitope binder)": "CAR-T",
+    "bcma-directed autologous car-t cell therapy (4-1bb costimulation; murine scfv binder)": "CAR-T",
+    "dll3 × cd3 bispecific t-cell engager (bite)": "bispecific antibody",
+    "bcma × cd3 bispecific t-cell engager (humanized igg2a)": "bispecific antibody",
+    "gprc5d × cd3 bispecific t-cell engager (humanized igg4)": "bispecific antibody",
+    "bcma × cd3 bispecific t-cell engager (bite-class igg)": "bispecific antibody",
+    "egfr x met bispecific monoclonal antibody": "bispecific antibody",
+    "her2 × her3 bispecific antibody (nrg1-fusion-targeted)": "bispecific antibody",
     "monoclonal_antibody — anti-cd52 humanized igg1κ": "anti-CD52 mAb",
     "defucosylated humanized anti-ccr4 monoclonal antibody (enhanced adcc)": "anti-CCR4 mAb",
     "anti-cd19 cd28-costimulated car-t cell therapy (autologous)": "CAR-T",

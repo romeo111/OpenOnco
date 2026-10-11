@@ -189,6 +189,14 @@ def test_drug_class_aliases_are_explicit_and_do_not_match_combination_products()
     ('loncastuximab_tesirine', 'ADC'),
     ('daratumumab', 'anti-CD38 mAb'),
     ('rituximab', 'anti-CD20 mAb'),
+    ('ciltacabtagene_autoleucel', 'CAR-T'),
+    ('idecabtagene_vicleucel', 'CAR-T'),
+    ('drug_tarlatamab', 'bispecific antibody'),
+    ('elranatamab', 'bispecific antibody'),
+    ('talquetamab', 'bispecific antibody'),
+    ('teclistamab', 'bispecific antibody'),
+    ('amivantamab', 'bispecific antibody'),
+    ('zenocutuzumab', 'bispecific antibody'),
 ])
 def test_actual_drug_class_renders_explanation_without_changing_record(filename, canonical):
     from html import escape
