@@ -1,10 +1,11 @@
 # OpenOnco promotion kit
 
-**Current execution plan (2026-10-10):** [30-day plan, verified channel requirements and launch copy](execution-plan-2026-10.md). Older assets below contain historical numbers and broad privacy claims; recheck them against the live capabilities page and the chosen interface before reuse. The local plan builder and server-backed Tumor Board have different data flows. The MIT license and GitHub topics have already been added.
+**Current basis:** [dated fact sheet](00-FACT-SHEET.md) and [30-day execution plan](execution-plan-2026-10.md). Older assets below are archival drafts with historical counts and broad privacy claims. Recheck and rewrite them against the live capabilities page and the chosen interface before any external use. The local Plan Builder and server-backed Tumor Board have different data flows.
 
-Ready-to-use, **safety-reviewed** assets for promoting OpenOnco. Every asset was
-drafted against [`00-FACT-SHEET.md`](00-FACT-SHEET.md) (the source of truth) and
-passed an adversarial accuracy/safety review.
+This directory contains draft outreach copy, not preapproved launch material.
+The [current fact sheet](00-FACT-SHEET.md) supersedes the old counts and
+unqualified claims in individual drafts; publication still needs a fresh
+feature, link and clinical-claim review.
 
 ## ⚠️ Non-negotiable rules for any public post
 
@@ -14,14 +15,14 @@ OpenOnco is a **medical** tool. Before publishing anything from this kit:
    **informational decision-support tool, not a medical device**, and that every
    recommendation must be **verified by a qualified oncologist**.
 2. **Stay honest about maturity.** It is an **early-stage (v0.1) project** —
-   only **15 of 806** clinical entities have two-reviewer sign-off; the rest are
+   only **15 of 1063** clinical entities had two-reviewer sign-off on 2026-10-11; the rest are
    STUB (structured + sourced, *not* clinically approved). Never imply it is
    clinically validated, FDA-cleared, or production-ready.
 3. **Never claim** it diagnoses cancer, treats patients, replaces an oncologist,
    is for patient self-use, or that an LLM picks the regimen. See the
    `forbidden_claims` in the fact sheet.
-4. **Numbers:** use the capabilities-page figures (92 diseases · 664 indications
-   · 384 regimens · 444 sources, as of 2026-06-17), not the README's older ones.
+4. **Numbers:** the capabilities page reported 103 diseases · 831 indications
+   · 404 regimens · 542 sources on 2026-10-11. Recheck live counts before posting.
 
 ## Contents
 
