@@ -130,12 +130,10 @@ def test_landing_drops_watson_comparison(site_dir: Path):
 
 
 def test_landing_problem_block_is_single_prose(site_dir: Path):
-    """Landing v3 (role-router redesign): the old 'why this is needed' prose
-    (`how-lead`) and 2-column problem-grid stay gone. The canonical non-hero
-    sections are now the role doors (`home-doors`) plus the how-it-works steps;
-    the old source-band prose was folded into the trust line."""
+    """The public landing retains its safety explanation without old grids."""
     html = (site_dir / "index.html").read_text(encoding="utf-8")
-    assert 'class="home-doors"' in html
+    assert 'class="home-trust"' in html
+    assert 'class="home-trust-line"' in html
     assert 'class="problem-grid"' not in html
     assert 'class="how-lead"' not in html
 
@@ -802,20 +800,13 @@ def test_try_cta_is_separate_action_button(site_dir: Path):
 
 
 def test_home_hero_avoids_duplicate_top_actions(site_dir: Path):
-    """Role-router redesign: the top bar owns the product actions and the hero
-    is copy-only — the role doors immediately below it carry the primary next
-    steps, so the hero never duplicates the top-bar actions."""
+    """The hero offers one localized primary action, without a tool menu."""
     html = (site_dir / "ukr" / "index.html").read_text(encoding="utf-8")
     hero = html.split('<section class="home-hero">', 1)[1].split("</section>", 1)[0]
-    # Hero carries no inline CTAs of its own; the doors section owns them.
-    assert hero.count('class="btn ') == 0
-    assert 'href="/ukr/try.html"' not in hero
+    assert hero.count('class="btn ') == 1
+    assert 'class="btn btn-primary" href="/ukr/try.html"' in hero
     assert 'href="/ukr/kb.html"' not in hero
     assert 'href="/ukr/ask.html"' not in hero
-    # The role doors are the canonical primary-action surface.
-    assert 'class="home-doors"' in html
-    assert 'door-card--doctor' in html
-    assert 'door-card--patient' in html
 
 
 def test_top_bar_wraps_before_tablet_width(site_dir: Path):
@@ -891,9 +882,29 @@ def test_en_pages_load_stylesheet_via_root_relative_path(site_dir: Path):
     that lives at non-root depth must use a root-relative `/style.css` link.
 
     The non-root tier is now /ukr/ (commit 48eb804e flipped EN to root)."""
+    from html.parser import HTMLParser
+    from urllib.parse import urlsplit
+
+    class Stylesheets(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.hrefs = []
+
+        def handle_starttag(self, tag, attrs):
+            attributes = dict(attrs)
+            if tag == "link" and attributes.get("rel") == "stylesheet":
+                self.hrefs.append(attributes.get("href", ""))
+
     for page in ("ukr/index.html", "ukr/gallery.html", "ukr/try.html"):
         html = (site_dir / page).read_text(encoding="utf-8")
-        assert 'href="/style.css"' in html, (
+        stylesheets = Stylesheets()
+        stylesheets.feed(html)
+        assert any(
+            urlsplit(href).path == "/style.css"
+            and not urlsplit(href).scheme
+            and not urlsplit(href).netloc
+            for href in stylesheets.hrefs
+        ), (
             f"{page} must load /style.css via root-relative path"
         )
         # The broken pattern (relative without leading slash) must not appear
@@ -904,19 +915,18 @@ def test_en_pages_load_stylesheet_via_root_relative_path(site_dir: Path):
 
 
 def test_lang_switch_shows_flag_for_active_mode(site_dir: Path):
-    """User direction: small flag indicates the active language. Uses
-    CSS-painted mini flags (Windows doesn't render flag emoji, so emoji
-    would fall back to letter pairs 'UA'/'GB' next to the labels).
-
-    Root index is EN since commit 48eb804e; UA mirror at /ukr/index.html."""
+    """Inline SVG flags render on Windows; English precedes Ukrainian."""
     en = (site_dir / "index.html").read_text(encoding="utf-8")
     ua = (site_dir / "ukr" / "index.html").read_text(encoding="utf-8")
-    # Both flag classes must appear on every top-level page (one current,
-    # one in the toggle target)
-    for page_html, name in ((en, "EN index"), (ua, "UA index")):
-        assert "flag-ua" in page_html, f"{name} missing flag-ua class"
-        assert "flag-en" in page_html, f"{name} missing flag-en class"
-        assert 'class="lang-flag' in page_html, f"{name} missing lang-flag wrapper"
+    for page_html, active in ((en, "en"), (ua, "uk")):
+        menu = page_html.split('<details class="language-menu lang-switch">', 1)[1].split("</details>", 1)[0]
+        summary = menu.split("</summary>", 1)[0]
+        assert '<svg class="language-flag"' in summary
+        assert f'lang="{active}" hreflang="{active}" aria-current="true"' in menu
+        languages = ("en", "uk", "es", "pt", "de", "fr")
+        positions = [menu.index(f'lang="{language}" hreflang="{language}"') for language in languages]
+        assert positions == sorted(positions)
+        assert menu.count('<svg class="language-flag"') == 7
 
 
 def test_en_landing_links_use_en_paths(site_dir: Path):
