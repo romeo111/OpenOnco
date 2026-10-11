@@ -42,7 +42,8 @@ def audit_core_transport(site: Path) -> dict:
             raise ValueError("Empty core archive")
         for member in members:
             path = member.name
-            if not member.isfile() or not path.startswith("knowledge_base/") or ".." in path.split("/") or "\\" in path:
+            if (not member.isfile() or not path.startswith("knowledge_base/")
+                    or any(part in {"", ".", ".."} for part in path.split("/")) or "\\" in path):
                 raise ValueError(f"Unsafe archive member: {path}")
             with stream.extractfile(member) as source:
                 if source.read() != legacy.read(path):
