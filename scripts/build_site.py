@@ -7107,7 +7107,9 @@ function findQuestionnaireForProfile(profile) {{
   if (diseaseId.startsWith('DIS-')) {{
     const normalized = diseaseId.toUpperCase();
     const byId = QUESTIONNAIRES_MANIFEST.findIndex(q => q.disease_id === normalized);
-    if (byId >= 0) return byId;
+    // An explicit disease ID must not fall through to morphology: ICD-O
+    // codes are shared across diseases and could select the wrong form.
+    return byId;
   }}
   const code = disease.icd_o_3_morphology;
   if (!code) return -1;

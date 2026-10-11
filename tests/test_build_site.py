@@ -12,6 +12,7 @@ Builds the full site into a tmp dir and asserts the structural contract:
 from __future__ import annotations
 
 import json
+import subprocess
 import zipfile
 from pathlib import Path
 
@@ -30,6 +31,7 @@ from scripts.build_site import (
     _example_sort_key,
     _render_top_bar,
     render_diseases,
+    render_try,
 )
 from knowledge_base.engine import is_diagnostic_profile
 
@@ -609,19 +611,17 @@ def test_try_examples_are_curated_and_filter_by_disease_id(site_dir: Path):
 
     # A questionnaire is an optional authoring aid, not the definition of
     # whether a disease or molecular evidence example can be published.
-    # Diagnostic, prevention, and molecular examples without a disease-
-    # specific questionnaire fall back to their supplied JSON profile in the
-    # try page. Treatment scenarios must retain a questionnaire match.
+    # Examples without a disease-specific questionnaire, including treatment
+    # examples, fall back to their supplied JSON profile in the try page.
     no_questionnaire_examples = [
         entry for entry in examples
         if entry.get("disease_id") not in questionnaire_disease_ids
     ]
     assert no_questionnaire_examples
-    assert all(
-        entry.get("scenario_type") in {"diagnostic", "prevention", "molecular"}
-        for entry in no_questionnaire_examples
-    )
     assert all(entry.get("questionnaire_available") is False for entry in no_questionnaire_examples)
+    for entry in no_questionnaire_examples:
+        assert isinstance(entry.get("json"), dict), entry["case_id"]
+        assert (site_dir / "cases" / f"{entry['case_id']}.html").exists(), entry["case_id"]
     assert all(
         entry.get("questionnaire_available") is True
         for entry in examples
@@ -642,6 +642,31 @@ def test_try_examples_are_curated_and_filter_by_disease_id(site_dir: Path):
     assert '"disease_id":' in html
     assert "return ex.disease_id === wantDiseaseId" in html
     assert "ICD-O morphology is not unique enough" in html
+    assert "An explicit disease ID must not fall through to morphology" in html
+    assert "return byId;" in html
+
+
+def test_example_questionnaire_matching_never_uses_another_diseases_form():
+    html = render_try()
+    start = html.index("function findQuestionnaireForProfile(profile)")
+    end = html.index("function getByPath(obj, dotted)", start)
+    source = html[start:end]
+    script = """
+const fs = require('fs');
+const source = fs.readFileSync(0, 'utf8');
+const manifest = [{disease_id: 'DIS-CERVICAL', disease_icd: '8070/3'}];
+const find = new Function('QUESTIONNAIRES_MANIFEST', source + '; return findQuestionnaireForProfile;')(manifest);
+console.log(JSON.stringify([
+  find({disease: {id: 'DIS-ESOPHAGEAL', icd_o_3_morphology: '8070/3'}}),
+  find({disease: {id: 'DIS-CERVICAL', icd_o_3_morphology: '8070/3'}}),
+  find({disease: {icd_o_3_morphology: '8070/3'}})
+]));
+"""
+    result = subprocess.run(
+        ["node", "-e", script], input=source, text=True, encoding="utf-8",
+        capture_output=True, check=True, timeout=10,
+    )
+    assert json.loads(result.stdout) == [-1, 0, 0]
 
 
 def test_try_questionnaire_dropdown_titles_are_public_and_localized(site_dir: Path):
