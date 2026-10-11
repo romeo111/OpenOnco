@@ -32,6 +32,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+import json
 from pathlib import Path
 from typing import Any, Optional
 
@@ -876,11 +877,51 @@ def generate_plan(
         algorithm_id=None,
     )
 
-    load = load_content(Path(kb_root))
-    if not load.ok:
+    content_root = Path(kb_root)
+    load = load_content(content_root)
+    blocking_refs = load.ref_errors
+    manifest_path = content_root / "_bundle_manifest.json"
+    if manifest_path.is_file():
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            deferred = manifest["deferred_entities"]
+            if not isinstance(deferred, dict) or not all(
+                isinstance(eid, str) and isinstance(meta, dict)
+                and isinstance(meta.get("disease_id"), str)
+                and meta["disease_id"].startswith("DIS-")
+                and isinstance(meta.get("type"), str)
+                for eid, meta in deferred.items()
+            ):
+                raise ValueError("invalid deferred entity map")
+            active_disease = _find_disease_id(patient, load.entities_by_id)
+            # Only a confirmed active disease can grant a deferral. Source
+            # references, active-module references, and unlisted IDs still
+            # fail closed. A full KB has no manifest and remains strictly
+            # validated.
+            if active_disease:
+                missing = {
+                    (path, msg): (eid, target)
+                    for path, msg, eid, target in load.missing_refs
+                }
+                blocking_refs = [
+                    (path, msg) for path, msg in load.ref_errors
+                    if (path, msg) not in missing
+                    or missing[(path, msg)][1] == "sources"
+                    or missing[(path, msg)][0] not in deferred
+                    or deferred[missing[(path, msg)][0]]["disease_id"] == active_disease
+                    or (
+                        missing[(path, msg)][1] is not None
+                        and deferred[missing[(path, msg)][0]]["type"] != missing[(path, msg)][1]
+                    )
+                ]
+        except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
+            # A damaged manifest is itself unsafe, even if the loaded
+            # content happens to have no dangling references.
+            blocking_refs = load.ref_errors + [(manifest_path, "invalid bundle manifest")]
+    if load.schema_errors or blocking_refs or load.contract_errors:
         for path, msg in load.schema_errors:
             result.warnings.append(f"schema error in {path.name}: {msg[:120]}")
-        for path, msg in load.ref_errors:
+        for path, msg in blocking_refs:
             result.warnings.append(f"ref error in {path.name}: {msg}")
         for path, msg in load.contract_errors:
             result.warnings.append(f"contract error in {path.name}: {msg}")
