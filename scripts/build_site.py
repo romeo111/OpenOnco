@@ -390,6 +390,23 @@ def bundle_engine(output_dir: Path) -> dict:
     core_bytes = core_zip.read_bytes()
     core_version = hashlib.sha256(core_bytes).hexdigest()[:12]
 
+    # Whole-stream compression retains every dependency, while avoiding
+    # per-file ZIP compression overhead. Keep ZIP metadata for older clients.
+    import gzip
+    import tarfile
+    core_stream = output_dir / "openonco-engine-core.tar.gz"
+    with core_stream.open("wb") as raw:
+        with gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0, compresslevel=9) as compressed:
+            with tarfile.open(fileobj=compressed, mode="w|", format=tarfile.USTAR_FORMAT) as archive:
+                for path, arcname in core_entries:
+                    data = path.read_bytes()
+                    info = tarfile.TarInfo(arcname)
+                    info.size = len(data)
+                    info.mode = 0o644
+                    import io
+                    archive.addfile(info, io.BytesIO(data))
+    core_stream_version = hashlib.sha256(core_stream.read_bytes()).hexdigest()[:12]
+
     # 2. Per-disease bundles. Wipe stale ones first so disease renames
     # don't leave orphans under docs/disease/.
     for stale in disease_dir.glob("openonco-*.zip"):
@@ -415,6 +432,8 @@ def bundle_engine(output_dir: Path) -> dict:
     index_payload = {
         "core": "openonco-engine-core.zip",
         "core_version": core_version,
+        "core_compressed": core_stream.name,
+        "core_compressed_version": core_stream_version,
         "diseases": {
             did: meta["url"] for did, meta in sorted(disease_meta.items())
         },
@@ -433,6 +452,9 @@ def bundle_engine(output_dir: Path) -> dict:
 
     return {
         "core_zip": str(core_zip.relative_to(output_dir)),
+        "core_stream": core_stream.name,
+        "core_stream_bytes": core_stream.stat().st_size,
+        "core_stream_version": core_stream_version,
         "core_files": core_files,
         "core_uncompressed_bytes": core_uncompressed,
         "core_compressed_bytes": core_zip.stat().st_size,
@@ -446,7 +468,7 @@ def bundle_engine(output_dir: Path) -> dict:
     }
 
 
-def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
+def write_service_worker(output_dir: Path, *, core_version: str = "", core_stream_version: str = "") -> dict:
     """Write `docs/sw.js` — a tiny cache-first service worker for the
     bundle artifacts. Stores responses in a versioned `CacheStorage`
     bucket keyed by `core_version`, so a KB push (which rotates the
@@ -467,12 +489,13 @@ def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
 // Cache name is stamped with the core bundle's SHA-256 prefix so a KB
 // push automatically rotates the cache key.
 const CACHE_NAME = '__CACHE_NAME__';
+const CORE_STREAM_VERSION = '__CORE_STREAM_VERSION__';
 const PRECACHE = [
   '/manifest.webmanifest',
   '/logo.svg',
   '/favicon.svg',
   '/openonco-engine-index.json',
-  '/openonco-engine-core.zip',
+  '/openonco-engine-core.tar.gz',
   '/try.html',
   '/ukr/try.html',
   '/style.css',
@@ -554,6 +577,9 @@ async function cachedVersionedBundle(cache, request) {
   if (url.pathname === '/openonco-engine-core.zip' && version && CACHE_NAME.endsWith('-' + version)) {
     return cache.match(url.pathname, { ignoreSearch: false });
   }
+  if (url.pathname === '/openonco-engine-core.tar.gz' && version && version === CORE_STREAM_VERSION) {
+    return cache.match(url.pathname, { ignoreSearch: false });
+  }
 }
 
 self.addEventListener('fetch', (event) => {
@@ -584,6 +610,7 @@ self.addEventListener('fetch', (event) => {
   // Cache-first for the heavy engine bundles.
   const cacheFirstMatch =
     url.pathname.endsWith('/openonco-engine-core.zip') ||
+    url.pathname.endsWith('/openonco-engine-core.tar.gz') ||
     url.pathname.startsWith('/disease/openonco-');
   if (!cacheFirstMatch) return;
   event.respondWith(
@@ -600,7 +627,7 @@ self.addEventListener('fetch', (event) => {
     )
   );
 });
-""".replace("__CACHE_NAME__", cache_name)
+""".replace("__CACHE_NAME__", cache_name).replace("__CORE_STREAM_VERSION__", core_stream_version)
     out = output_dir / "sw.js"
     out.write_text(sw_js, encoding="utf-8")
     return {"path": "sw.js", "cache_name": cache_name}
@@ -5194,7 +5221,7 @@ async function refreshBuildPanel(diseaseId = null) {{
     : '{"Browser" if target_lang == "en" else "Браузер"}');
 
   if (bundleIndex) {{
-    setText(coreVersionEl, 'v' + (bundleIndex.core_version || '{bundle_version or "unknown"}'));
+    setText(coreVersionEl, 'v' + (coreBundleMetadata().version || '{bundle_version or "unknown"}'));
     if (offlineCacheTotal <= 0) {{
       const total = offlineBundleUrls().length;
       setOfflineCacheProgress(0, total, 0);
@@ -6239,12 +6266,23 @@ async function loadBundleIndex() {{
   return bundleIndexPromise;
 }}
 
+function coreBundleMetadata() {{
+  if (bundleIndex && ('core_compressed' in bundleIndex || 'core_compressed_version' in bundleIndex)) {{
+    if (bundleIndex.core_compressed !== 'openonco-engine-core.tar.gz' ||
+        !/^[a-f0-9]{{12}}$/.test(bundleIndex.core_compressed_version || '')) {{
+      throw new Error('Invalid compressed core metadata.');
+    }}
+    return {{ path: bundleIndex.core_compressed, version: bundleIndex.core_compressed_version, format: 'gztar' }};
+  }}
+  return {{ path: bundleIndex.core, version: bundleIndex.core_version || '', format: 'zip' }};
+}}
+
 function offlineBundleUrls() {{
   if (!bundleIndex) return [];
   const urls = [];
   if (bundleIndex.core) {{
-    const ver = bundleIndex.core_version || '';
-    urls.push('/' + bundleIndex.core + (ver ? '?v=' + ver : ''));
+    const core = coreBundleMetadata();
+    urls.push('/' + core.path + (core.version ? '?v=' + core.version : ''));
   }}
   const diseases = bundleIndex.diseases || {{}};
   const versions = bundleIndex.disease_versions || {{}};
@@ -6348,16 +6386,17 @@ async function loadCoreBundle() {{
   if (!bundleIndex || !bundleIndex.core) {{
     throw new Error('Bundle index missing core entry — cannot load engine');
   }}
-  setStatus('{"Loading the engine core (~1.4 MB)…" if target_lang == "en" else "Завантажую ядро двигуна (~1.4 МБ)…"}');
+  setStatus('{"Loading the engine core…" if target_lang == "en" else "Завантажую ядро двигуна…"}');
   setLoadingProgress(62);
-  const ver = bundleIndex.core_version || '';
-  const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
+  const core = coreBundleMetadata();
+  const ver = core.version;
+  const url = '/' + core.path + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
   if (!r.ok) throw new Error('Core bundle fetch HTTP ' + r.status);
   let buf = await r.arrayBuffer();
   await yieldToBrowser();
   buf = await recoverBundleVersion(buf, url, ver, 'Engine bundle');
-  pyodide.unpackArchive(buf, 'zip');
+  pyodide.unpackArchive(buf, core.format);
   coreBundleLoaded = true;
 }}
 
@@ -10766,6 +10805,7 @@ def build_site(output_dir: Path) -> dict:
     bundle_version = engine_bundle.get("version", "")
     sw_payload = write_service_worker(
         output_dir, core_version=engine_bundle.get("core_version", ""),
+        core_stream_version=engine_bundle.get("core_stream_version", ""),
     )
     manifest_payload = write_web_manifest(output_dir)
 

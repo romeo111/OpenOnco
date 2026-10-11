@@ -699,7 +699,7 @@ async function refreshBuildPanel(diseaseId = null) {
     : 'Browser');
 
   if (bundleIndex) {
-    setText(coreVersionEl, 'v' + (bundleIndex.core_version || 'a293c31dcd99'));
+    setText(coreVersionEl, 'v' + (coreBundleMetadata().version || 'a293c31dcd99'));
     if (offlineCacheTotal <= 0) {
       const total = offlineBundleUrls().length;
       setOfflineCacheProgress(0, total, 0);
@@ -1744,12 +1744,23 @@ async function loadBundleIndex() {
   return bundleIndexPromise;
 }
 
+function coreBundleMetadata() {
+  if (bundleIndex && ('core_compressed' in bundleIndex || 'core_compressed_version' in bundleIndex)) {
+    if (bundleIndex.core_compressed !== 'openonco-engine-core.tar.gz' ||
+        !/^[a-f0-9]{12}$/.test(bundleIndex.core_compressed_version || '')) {
+      throw new Error('Invalid compressed core metadata.');
+    }
+    return { path: bundleIndex.core_compressed, version: bundleIndex.core_compressed_version, format: 'gztar' };
+  }
+  return { path: bundleIndex.core, version: bundleIndex.core_version || '', format: 'zip' };
+}
+
 function offlineBundleUrls() {
   if (!bundleIndex) return [];
   const urls = [];
   if (bundleIndex.core) {
-    const ver = bundleIndex.core_version || '';
-    urls.push('/' + bundleIndex.core + (ver ? '?v=' + ver : ''));
+    const core = coreBundleMetadata();
+    urls.push('/' + core.path + (core.version ? '?v=' + core.version : ''));
   }
   const diseases = bundleIndex.diseases || {};
   const versions = bundleIndex.disease_versions || {};
@@ -1853,16 +1864,17 @@ async function loadCoreBundle() {
   if (!bundleIndex || !bundleIndex.core) {
     throw new Error('Bundle index missing core entry — cannot load engine');
   }
-  setStatus('Loading the engine core (~1.4 MB)…');
+  setStatus('Loading the engine core…');
   setLoadingProgress(62);
-  const ver = bundleIndex.core_version || '';
-  const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
+  const core = coreBundleMetadata();
+  const ver = core.version;
+  const url = '/' + core.path + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
   if (!r.ok) throw new Error('Core bundle fetch HTTP ' + r.status);
   let buf = await r.arrayBuffer();
   await yieldToBrowser();
   buf = await recoverBundleVersion(buf, url, ver, 'Engine bundle');
-  pyodide.unpackArchive(buf, 'zip');
+  pyodide.unpackArchive(buf, core.format);
   coreBundleLoaded = true;
 }
 

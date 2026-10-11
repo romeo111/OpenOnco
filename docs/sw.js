@@ -8,12 +8,13 @@
 // Cache name is stamped with the core bundle's SHA-256 prefix so a KB
 // push automatically rotates the cache key.
 const CACHE_NAME = 'openonco-bundle-l4-a22a42338fb0';
+const CORE_STREAM_VERSION = 'a12fe9179c37';
 const PRECACHE = [
   '/manifest.webmanifest',
   '/logo.svg',
   '/favicon.svg',
   '/openonco-engine-index.json',
-  '/openonco-engine-core.zip',
+  '/openonco-engine-core.tar.gz',
   '/try.html',
   '/ukr/try.html',
   '/style.css',
@@ -95,6 +96,9 @@ async function cachedVersionedBundle(cache, request) {
   if (url.pathname === '/openonco-engine-core.zip' && version && CACHE_NAME.endsWith('-' + version)) {
     return cache.match(url.pathname, { ignoreSearch: false });
   }
+  if (url.pathname === '/openonco-engine-core.tar.gz' && version && version === CORE_STREAM_VERSION) {
+    return cache.match(url.pathname, { ignoreSearch: false });
+  }
 }
 
 self.addEventListener('fetch', (event) => {
@@ -125,6 +129,7 @@ self.addEventListener('fetch', (event) => {
   // Cache-first for the heavy engine bundles.
   const cacheFirstMatch =
     url.pathname.endsWith('/openonco-engine-core.zip') ||
+    url.pathname.endsWith('/openonco-engine-core.tar.gz') ||
     url.pathname.startsWith('/disease/openonco-');
   if (!cacheFirstMatch) return;
   event.respondWith(

@@ -1,6 +1,8 @@
 """Read-only audit: python -m scripts.profile_engine_bundle --output report.json.
 
-Uses the current core archive. Never rebuilds, extracts or changes clinical data.
+Analyses ZIP composition, including the legacy compatibility core archive.
+The preferred tar.gz transport is recorded separately in the bundle index.
+Never rebuilds, extracts or changes clinical data.
 Packaging attribution is not clinical validation or permission to remove files.
 """
 from __future__ import annotations

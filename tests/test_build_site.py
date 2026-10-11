@@ -50,7 +50,7 @@ def test_static_assets_present(site_dir: Path):
     # CSD-9C dropped monolithic openonco-engine.zip — replaced by core + per-disease + index.
     for f in (".nojekyll", "CNAME", "style.css", "header.css", "index.html", "gallery.html",
               "try.html", "prevent.html", "ask.html",
-              "openonco-engine-core.zip", "openonco-engine-index.json",
+              "openonco-engine-core.zip", "openonco-engine-core.tar.gz", "openonco-engine-index.json",
               "examples.json", "manifest.webmanifest", "kb.html", "kb_search_index.json",
               "ukr/prevent.html",
               "ukr/kb.html", "ukr/kb_search_index.json",
@@ -374,11 +374,15 @@ def test_engine_bundle_excludes_heavy_unused_subtrees(site_dir: Path):
     # records, +CSD-5/6/7 redflag-matrix and drug curation). CSD-5B core+per-
     # disease lazy-load split is now canonical. The core reached 4.13 MB after
     # the 2026-08 structured-drug/source expansion; keep a narrow 4.25 MB
-    # ceiling so further growth must be deliberately sharded.
+    # ceiling for the preferred transport; the compatibility ZIP remains
+    # available for older clients. Whole-stream gzip now retains the same
+    # files with less overhead and repeated-text cost.
     # Pyodide first-load (≈10 MB) dominates UX latency, so the ceiling is
     # sized for headroom.
-    assert zip_path.stat().st_size < 4_250_000, (
-        f"engine bundle exceeds 4.25MB compressed: {zip_path.stat().st_size}"
+    index = json.loads((site_dir / "openonco-engine-index.json").read_text(encoding="utf-8"))
+    transferred_core = site_dir / index.get("core_compressed", index["core"])
+    assert transferred_core.stat().st_size < 4_250_000, (
+        f"transferred engine core exceeds 4.25MB compressed: {transferred_core.stat().st_size}"
     )
 
 

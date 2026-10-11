@@ -1,6 +1,9 @@
 """The treatment runtime must not load unrelated Handbook references."""
 
 from pathlib import Path
+import json
+import hashlib
+import tarfile
 import zipfile
 
 from scripts import build_site
@@ -57,3 +60,13 @@ def test_runtime_packages_include_transitive_cross_disease_dependencies(tmp_path
         module = set(archive.namelist())
     assert any(name.endswith("/cross.yaml") and "/indications/" in name for name in module)
     assert any(name.endswith("/cross.yaml") and "/regimens/" in name for name in module)
+    index = json.loads((output / "openonco-engine-index.json").read_text())
+    stream = output / index["core_compressed"]
+    assert hashlib.sha256(stream.read_bytes()).hexdigest()[:12] == index["core_compressed_version"]
+    with zipfile.ZipFile(output / index["core"]) as legacy, tarfile.open(stream, "r:gz") as compressed:
+        assert set(legacy.namelist()) == set(compressed.getnames())
+        for name in legacy.namelist():
+            assert legacy.read(name) == compressed.extractfile(name).read()
+    original = stream.read_bytes()
+    build_site.bundle_engine(output)
+    assert stream.read_bytes() == original

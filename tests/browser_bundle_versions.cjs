@@ -22,7 +22,7 @@ const context = vm.createContext({
   setStatus() {}, setLoadingProgress() {}, pyodide: { unpackArchive() { state.unpacked++; } },
 });
 vm.runInContext('let bundleIndex=null,bundleIndexPromise=null,coreBundleLoaded=false;' +
-  ['loadBundleIndex', 'verifyBundleVersion', 'recoverBundleVersion', 'loadCoreBundle'].map(name => fn(page, name)).join('\n'), context);
+  ['loadBundleIndex', 'verifyBundleVersion', 'recoverBundleVersion', 'coreBundleMetadata', 'loadCoreBundle'].map(name => fn(page, name)).join('\n'), context);
 const run = source => vm.runInContext(source, context);
 function swFixture({ online = true, ok = true, hit = true } = {}) {
   const calls = { fetches: 0, puts: 0, matches: [] };
@@ -31,7 +31,7 @@ function swFixture({ online = true, ok = true, hit = true } = {}) {
     match: async (request, options) => { calls.matches.push([typeof request === 'string' ? request : request.url, options]); return hit ? cached : undefined; },
     put: async () => { calls.puts++; },
   };
-  const c = vm.createContext({ URL, CACHE_NAME: 'openonco-bundle-l4-' + version,
+  const c = vm.createContext({ URL, CACHE_NAME: 'openonco-bundle-l4-' + version, CORE_STREAM_VERSION: version,
     caches: { open: async () => cache },
     fetch: async (_request, options) => { calls.fetches++; assert.equal(options.cache, 'no-store'); if (!online) throw Error('offline'); return fresh; },
   });
@@ -44,6 +44,16 @@ function swFixture({ online = true, ok = true, hit = true } = {}) {
   await Promise.all([run('loadBundleIndex()'), run('loadBundleIndex()')]);
   assert.equal(state.fetches, 1, 'Concurrent index loading shares one request');
   await run('loadCoreBundle()'); assert.equal(state.unpacked, 1);
+  run('coreBundleLoaded=false; bundleIndex={...index, core_compressed:"openonco-engine-core.tar.gz",core_compressed_version:index.core_version}');
+  const unpackLegacy = context.pyodide.unpackArchive;
+  context.pyodide.unpackArchive = (_bytes, format) => { assert.equal(format, 'gztar'); };
+  await run('loadCoreBundle()');
+  run('coreBundleLoaded=false; bundleIndex={...index, core_compressed:"openonco-engine-core.tar.gz",core_compressed_version:"invalid"}');
+  const beforeBadMetadata = state.fetches;
+  await assert.rejects(run('loadCoreBundle()'), /Invalid compressed core metadata/);
+  assert.equal(state.fetches, beforeBadMetadata, 'Invalid compressed metadata cannot trigger fetch or unpack');
+  context.pyodide.unpackArchive = unpackLegacy;
+  run('bundleIndex=index');
   run('coreBundleLoaded=false');
   const normalFetch = context.fetch;
   let recoveryRequests = 0;
@@ -90,8 +100,12 @@ function swFixture({ online = true, ok = true, hit = true } = {}) {
   assert.equal(await vm.runInContext('cachedVersionedBundle(cache,request)', Object.assign(f.c, { cache: f.cache })), f.cached);
   f.c.request.url = 'https://openonco.info/openonco-engine-core.zip?v=000000000000';
   assert.equal(await vm.runInContext('cachedVersionedBundle(cache,request)', f.c), undefined);
+  f.c.request.url = 'https://openonco.info/openonco-engine-core.tar.gz?v=' + version;
+  assert.equal(await vm.runInContext('cachedVersionedBundle(cache,request)', f.c), f.cached);
+  f.c.request.url = 'https://openonco.info/openonco-engine-core.tar.gz?v=000000000000';
+  assert.equal(await vm.runInContext('cachedVersionedBundle(cache,request)', f.c), undefined);
   const manifest = JSON.parse(fs.readFileSync('docs/openonco-engine-index.json', 'utf8'));
-  const artifacts = [[manifest.core, manifest.core_version], ...Object.entries(manifest.diseases).map(([id, path]) => [path, manifest.disease_versions[id]])];
+  const artifacts = [[manifest.core, manifest.core_version], [manifest.core_compressed, manifest.core_compressed_version], ...Object.entries(manifest.diseases).map(([id, path]) => [path, manifest.disease_versions[id]])];
   for (const [path, expected] of artifacts) {
     assert.equal(createHash('sha256').update(fs.readFileSync('docs/' + path)).digest('hex').slice(0, 12), expected, path);
   }
@@ -110,17 +124,21 @@ function swFixture({ online = true, ok = true, hit = true } = {}) {
       setOfflineCacheProgress: (...values) => calls.progress.push(values), index,
     });
     vm.runInContext("let offlineCacheStarted=false,uiBusy=false,generating=false;const bundleIndex=index;" +
-      ['verifyBundleVersion', 'offlineBundleUrls', 'cacheAllBundlesForOffline'].map(name => fn(page, name)).join('\n'), c);
+      ['verifyBundleVersion', 'coreBundleMetadata', 'offlineBundleUrls', 'cacheAllBundlesForOffline'].map(name => fn(page, name)).join('\n'), c);
     await vm.runInContext('cacheAllBundlesForOffline()', c);
     return calls;
   }
   let warm = await warmup(); assert.equal(warm.puts, 1); assert.deepEqual(warm.progress.at(-1), [1, 1, 0]);
   warm = await warmup({ invalidNetwork: true }); assert.equal(warm.puts, 0); assert.deepEqual(warm.progress.at(-1), [1, 1, 1]);
   warm = await warmup({ invalidCached: true }); assert.equal(warm.deleted, 1); assert.equal(warm.puts, 1);
+  index.core_compressed = 'openonco-engine-core.tar.gz'; index.core_compressed_version = version;
+  warm = await warmup(); assert.equal(warm.puts, 1); assert.deepEqual(warm.progress.at(-1), [1, 1, 0]);
+  delete index.core_compressed; delete index.core_compressed_version;
   for (const locale of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/']) {
     const html = fs.readFileSync(`docs/${locale}try.html`, 'utf8');
     assert.equal((html.match(/await verifyBundleVersion\(/g) || []).length, 5);
     assert.equal(fn(html, 'recoverBundleVersion'), fn(page, 'recoverBundleVersion'));
+    assert.equal(fn(html, 'coreBundleMetadata'), fn(page, 'coreBundleMetadata'));
     const withoutStatusCopy = code => code.replace(/setStatus\('[^']*'\);/, 'setStatus(LOCALIZED_COPY);');
     assert.equal(withoutStatusCopy(fn(html, 'loadCoreBundle')), withoutStatusCopy(fn(page, 'loadCoreBundle')));
     assert(html.includes('<dd id="coreVersion">—</dd>'));
