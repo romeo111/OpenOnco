@@ -1257,6 +1257,21 @@ def test_english_findings_preserve_variants_and_mark_untranslated_explanations()
     assert 'original Ukrainian name' in _patient_drug_label({'names': {'ukrainian': 'Ліки'}}, 'DRUG-TEST', target_lang='en')
 
 
+def test_english_track_cards_preserve_all_options_and_drug_source_anchors():
+    from knowledge_base.engine.render import _render_tracks_plain
+    result = _build_hcv_mzl_two_track_plan()
+    before = result.plan.model_dump()
+    ua = _render_tracks_plain(result)
+    en = _render_tracks_plain(result, target_lang='en')
+    assert en.count('<article') == ua.count('<article') == len(result.plan.tracks)
+    assert en.count('class="drug-explanation"') == ua.count('class="drug-explanation"')
+    assert re.findall(r'data-source-id="([^"]*)"', en) == re.findall(r'data-source-id="([^"]*)"', ua)
+    assert 'Medicine form:' in en
+    assert 'not a prediction for you personally' in en
+    assert 'Awaiting review by doctors' in en
+    assert result.plan.model_dump() == before
+
+
 def test_first_use_expansion_inserts_gloss_for_escat():
     """When the patient body mentions ESCAT, the first occurrence is
     expanded to include the parenthesized gloss."""

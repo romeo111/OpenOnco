@@ -216,7 +216,7 @@ def _render_signoff_badge(entity_data: Optional[dict]) -> str:
     )
 
 
-def _render_signoff_badge_patient(entity_data: Optional[dict]) -> str:
+def _render_signoff_badge_patient(entity_data: Optional[dict], *, target_lang: str = "uk") -> str:
     """Patient-mode sign-off — simpler vocabulary, no reviewer names."""
     if not isinstance(entity_data, dict):
         return ""
@@ -225,16 +225,16 @@ def _render_signoff_badge_patient(entity_data: Optional[dict]) -> str:
     if n >= 2:
         return (
             '<span class="patient-badge patient-good signoff-complete">'
-            'Затверджено лікарями</span>'
+            + ('Reviewed by doctors' if target_lang == 'en' else 'Затверджено лікарями') + '</span>'
         )
     if n == 1:
         return (
             '<span class="patient-badge patient-warn signoff-partial">'
-            'Очікує перевірки лікарями (1 з 2)</span>'
+            + ('Awaiting review by doctors (1 of 2)' if target_lang == 'en' else 'Очікує перевірки лікарями (1 з 2)') + '</span>'
         )
     return (
         '<span class="patient-badge patient-emergency signoff-pending">'
-        'Очікує перевірки лікарями</span>'
+        + ('Awaiting review by doctors' if target_lang == 'en' else 'Очікує перевірки лікарями') + '</span>'
     )
 
 
@@ -3935,6 +3935,7 @@ def _render_track_drugs(
     t,
     drugs_lookup: dict,
     disease_names: Optional[dict],
+    *, target_lang: str = "uk",
 ) -> str:
     """Render the drug-explanation blocks for a single track.
 
@@ -3950,7 +3951,7 @@ def _render_track_drugs(
         seen_drug_ids.add(drug_id)
 
         drug = drugs_lookup.get(drug_id) or {}
-        label = _patient_drug_label(drug, drug_id)
+        label = _patient_drug_label(drug, drug_id, target_lang=target_lang)
         drug_class = (drug.get("drug_class") or "") if isinstance(drug, dict) else ""
 
         # Lay-language explanation: prefer notes_patient (drug-author'd
@@ -3961,9 +3962,11 @@ def _render_track_drugs(
         if not lay and drug_class:
             lay = _explain_patient(drug_class) or ""
         if not lay:
-            lay = "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
+            lay = "medicine for your condition — discuss the details with your doctor" if target_lang == 'en' else "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
+        elif target_lang == 'en':
+            lay = 'Original source explanation; translation unavailable: ' + lay
 
-        medicine_form = _medicine_form_ua(comp, drug)
+        medicine_form = _medicine_form_ua(comp, drug, target_lang=target_lang)
 
         # NSZU badge — patient-friendly label, render only when we can
         # resolve coverage. Falls back silently when drug entity is
@@ -3977,6 +3980,13 @@ def _render_track_drugs(
                     disease_names=disease_names if isinstance(disease_names, dict) else None,
                 )
                 p_label = NSZU_PATIENT_LABEL.get(badge.status, "")
+                if target_lang == 'en':
+                    p_label = {
+                        'covered': 'Free under the Ukrainian NHSU programme',
+                        'partial': 'NHSU covers this medicine, but not for this diagnosis',
+                        'oop': 'Paid out of pocket',
+                        'not-registered': 'Not registered in Ukraine',
+                    }.get(badge.status, '')
                 if p_label:
                     cls = f"patient-nszu patient-nszu-{badge.status}"
                     badge_html = (
@@ -3990,7 +4000,7 @@ def _render_track_drugs(
             f'<div class="drug-explanation" data-source-id="{_h(drug_id)}">'
             f"<h3>{_h(label)}</h3>"
             f'<p class="lay-language">{_h(lay)}</p>'
-            f'<p class="medicine-form"><strong>Форма ліків:</strong> '
+            f'<p class="medicine-form"><strong>{"Medicine form:" if target_lang == "en" else "Форма ліків:"}</strong> '
             f'{_h(medicine_form)}.</p>'
             f"{badge_html}"
             "</div>"
@@ -3998,7 +4008,7 @@ def _render_track_drugs(
     return "".join(blocks)
 
 
-def _render_tracks_plain(plan_result: PlanResult) -> str:
+def _render_tracks_plain(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Plain-UA per-track rendering for the `what-now` section.
 
     Each track becomes a `<article class="track-card track-card--{mod}">`
@@ -4008,6 +4018,8 @@ def _render_tracks_plain(plan_result: PlanResult) -> str:
     card (regimen ID) and each drug-explanation block (drug ID)."""
     plan = plan_result.plan
     if plan is None or not plan.tracks:
+        if target_lang == 'en':
+            return '<p>Your doctor will prepare the specific medicine list after reviewing all your test results.</p>'
         return (
             "<p>Конкретний список препаратів буде сформовано лікарем "
             "після перегляду усіх ваших аналізів.</p>"
@@ -4020,17 +4032,17 @@ def _render_tracks_plain(plan_result: PlanResult) -> str:
 
     cards: list[str] = []
     for idx, t in enumerate(plan.tracks):
-        title_ua, modifier = _track_label_ua(idx, track_count, t)
+        title_ua, modifier = _track_label_ua(idx, track_count, t, target_lang=target_lang)
         regimen_data = t.regimen_data or {}
         regimen_id = regimen_data.get("id", "") if isinstance(regimen_data, dict) else ""
         regimen_name = (
             regimen_data.get("name", "") if isinstance(regimen_data, dict) else ""
         )
-        schedule_str = _regimen_schedule_ua(regimen_data)
-        signoff_badge = _render_signoff_badge_patient(t.indication_data)
-        drug_blocks = _render_track_drugs(plan_result, t, drugs_lookup, disease_names)
+        schedule_str = _regimen_schedule_ua(regimen_data, target_lang=target_lang)
+        signoff_badge = _render_signoff_badge_patient(t.indication_data, target_lang=target_lang)
+        drug_blocks = _render_track_drugs(plan_result, t, drugs_lookup, disease_names, target_lang=target_lang)
         if not drug_blocks:
-            drug_blocks = (
+            drug_blocks = '<p>Your doctor will confirm the specific medicine list for this option.</p>' if target_lang == 'en' else (
                 "<p>Конкретний список препаратів для цього варіанту буде "
                 "уточнений лікарем.</p>"
             )
@@ -4043,7 +4055,7 @@ def _render_tracks_plain(plan_result: PlanResult) -> str:
             f'<p class="regimen-schedule">{schedule_str}</p>'
             if schedule_str else ""
         )
-        tolerability_block = _render_regimen_tolerability(regimen_data)
+        tolerability_block = _render_regimen_tolerability(regimen_data, target_lang=target_lang)
 
         cards.append(
             f'<article class="track-card track-card--{_h(modifier)}" '
