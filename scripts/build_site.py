@@ -6198,6 +6198,7 @@ async function cacheAllBundlesForOffline() {{
   let done = 0;
   let failed = 0;
   for (const url of urls) {{
+    while (uiBusy || generating) await yieldToBrowser(250);
     try {{
       const cached = await cache.match(url, {{ ignoreSearch: true }});
       if (!cached) {{
@@ -6352,7 +6353,19 @@ async function loadDiseaseModule(diseaseId) {{
 // 4 setup stages (pyodide / pydeps / bundle / validate) with explicit
 // yields between each so the browser can repaint and process input
 // (F12, scroll, keyboard) instead of locking up for 10–20 s straight.
+let engineLoadPromise = null;
 async function ensureEngine() {{
+  if (enginReady) return pyodide;
+  if (!engineLoadPromise) {{
+    engineLoadPromise = initializeEngine().catch(error => {{
+      engineLoadPromise = null;
+      throw error;
+    }});
+  }}
+  return engineLoadPromise;
+}}
+
+async function initializeEngine() {{
   if (enginReady) return pyodide;
   let stage = null;
   try {{
@@ -6370,12 +6383,7 @@ async function ensureEngine() {{
     setStatus('{"Installing pydantic + pyyaml…" if target_lang == "en" else "Встановлюю pydantic + pyyaml…"}');
     setLoadingProgress(36);
     await yieldToBrowser(50);
-    await pyodide.loadPackage(['micropip']);
-    await yieldToBrowser();
-    await pyodide.runPythonAsync(`
-import micropip
-await micropip.install(['pydantic', 'pyyaml'])
-`);
+    await pyodide.loadPackage(['pydantic', 'pyyaml']);
     initStageDone(stage);
 
     stage = 'bundle';
@@ -6547,6 +6555,7 @@ html
     // fades — purely cosmetic confirmation that all stages succeeded.
     setTimeout(initHide, 600);
     updateRunBtnEnabled();
+    if (enginReady && planSource === 'generated') scheduleOfflineCacheWarmup();
   }}
 }}
 
@@ -7199,7 +7208,7 @@ window.addEventListener('hashchange', loadFromUrlHash);
 // it's tiny (~5 KB) and lets resolveDiseaseId() pre-resolve from
 // ICD-O-3 codes before the user clicks Generate. Best-effort, never
 // blocks UI.
-loadBundleIndex().then(() => scheduleOfflineCacheWarmup()).catch(() => {{}});
+loadBundleIndex().catch(() => {{}});
 refreshBuildPanel().catch(() => {{}});
 window.addEventListener('online', () => refreshBuildPanel().catch(() => {{}}));
 window.addEventListener('offline', () => refreshBuildPanel().catch(() => {{}}));

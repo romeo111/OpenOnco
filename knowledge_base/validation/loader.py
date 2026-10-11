@@ -16,6 +16,10 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
+# LibYAML implements the same safe YAML constructors with a compiled parser.
+# Keep the portable safe loader for environments without the extension.
+_SAFE_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
 from knowledge_base.schemas import ENTITY_BY_DIR
 from knowledge_base.schemas.biomarker_actionability import (
     normalize_legacy_biomarker_actionability_payload,
@@ -344,7 +348,7 @@ def _load_content_impl(
         # (e.g., redflags/universal/) for organizing cross-disease flags.
         for path in sorted(d.rglob("*.yaml")):
             try:
-                raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+                raw = yaml.load(path.read_text(encoding="utf-8"), Loader=_SAFE_YAML_LOADER)
             except yaml.YAMLError as e:
                 result.schema_errors.append((path, f"YAML parse error: {e}"))
                 continue
