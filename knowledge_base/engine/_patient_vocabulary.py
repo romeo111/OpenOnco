@@ -521,6 +521,18 @@ _ALL_TABLES: tuple[dict[str, str], ...] = (
 
 
 PATIENT_VOCABULARY_EN_DRAFT: dict[str, str] = {
+    "alkylating agent": "conventional chemotherapy that damages tumour DNA",
+    "anthracycline": "conventional chemotherapy (doxorubicin, daunorubicin); effective, but toxic to the heart",
+    "platinum agent": "conventional chemotherapy (cisplatin, carboplatin, oxaliplatin)",
+    "antimetabolite": "blocks tumour DNA synthesis (5-FU, methotrexate, gemcitabine)",
+    "topoisomerase inhibitor": "blocks DNA untangling (irinotecan, etoposide)",
+    "vinca alkaloid": "blocks cell microtubules (vincristine, vinblastine)",
+    "taxane": "blocks microtubules in a different way (paclitaxel, docetaxel)",
+    "fluoropyrimidine": "the 5-FU/capecitabine class; a treatment foundation for colorectal, stomach and breast cancer",
+    "nitrosourea": "an alkylating-agent subgroup that penetrates the brain (lomustine, carmustine)",
+    "epothilone": "related to taxanes; bypasses some resistance mechanisms",
+    "purine analog": "fludarabine, cladribine; used for chronic lymphocytic leukaemia and hairy cell leukaemia",
+    "proteasome inhibitor": "blocks cellular waste disposal; a treatment foundation for multiple myeloma (bortezomib, carfilzomib)",
     "MSI-H": "a high level of changes in short repeated DNA regions in the tumour; it may help your doctor select immunotherapy, but does not guarantee a treatment response",
     "MSI-L": "a low level of changes in short repeated DNA regions; this is not MSI-H, and your doctor assesses its treatment relevance together with other information",
     "MSS": "the test did not detect instability in short repeated DNA regions; this result alone does not determine all immunotherapy options — tumour type and other findings matter",

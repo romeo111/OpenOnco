@@ -177,3 +177,28 @@ def test_english_drug_class_explanation_retains_authored_patient_note():
     rendered = _render_track_drugs(result, track, {'DRUG-TEST': drug}, None, target_lang='en')
     assert 'blocks FLT3' in rendered
     assert 'translation unavailable' not in rendered
+
+
+@pytest.mark.parametrize('drug_class,expected', [
+    ('alkylating agent', 'damages tumour DNA'),
+    ('anthracycline', 'toxic to the heart'),
+    ('platinum agent', 'cisplatin, carboplatin, oxaliplatin'),
+    ('antimetabolite', '5-FU, methotrexate, gemcitabine'),
+    ('topoisomerase inhibitor', 'irinotecan, etoposide'),
+    ('vinca alkaloid', 'vincristine, vinblastine'),
+    ('taxane', 'paclitaxel, docetaxel'),
+    ('fluoropyrimidine', '5-FU/capecitabine'),
+    ('nitrosourea', 'lomustine, carmustine'),
+    ('epothilone', 'some resistance mechanisms'),
+    ('purine analog', 'hairy cell leukaemia'),
+    ('proteasome inhibitor', 'bortezomib, carfilzomib'),
+])
+def test_english_chemotherapy_card_gloss_preserves_examples_and_plan_input(drug_class, expected):
+    result = SimpleNamespace(disease_id='DIS-AML')
+    track = SimpleNamespace(regimen_data={'components': [{'drug_id': 'DRUG-TEST', 'route': 'IV'}]})
+    drug = {'names': {'english': 'Test medicine'}, 'drug_class': drug_class}
+    before = deepcopy(drug)
+    html = _render_track_drugs(result, track, {'DRUG-TEST': drug}, None, target_lang='en')
+    assert expected in html
+    assert 'translation unavailable' not in html
+    assert drug == before
