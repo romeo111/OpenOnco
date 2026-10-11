@@ -3967,12 +3967,17 @@ def _render_track_drugs(
         lay = ""
         if isinstance(drug, dict):
             lay = (drug.get("notes_patient") or "").strip()
+        authored_note = bool(lay)
         if not lay and drug_class:
             lay = _explain_patient(drug_class) or ""
         if not lay:
             lay = "medicine for your condition — discuss the details with your doctor" if target_lang == 'en' else "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
         elif target_lang == 'en':
-            lay = 'Original source explanation; translation unavailable: ' + lay
+            translated_class = _explain_patient(drug_class, target_lang='en') if drug_class else None
+            if translated_class and not authored_note:
+                lay = translated_class
+            else:
+                lay = (translated_class + '. ' if translated_class else '') + 'Original source explanation; translation unavailable: ' + lay
 
         medicine_form = _medicine_form_ua(comp, drug, target_lang=target_lang)
 

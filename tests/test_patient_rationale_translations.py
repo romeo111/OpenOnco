@@ -7,6 +7,7 @@ from knowledge_base.engine._patient_rationale import (
 from knowledge_base.engine.render import _render_emergency_section
 from knowledge_base.engine.render import _medicine_form_ua, _regimen_schedule_ua
 from knowledge_base.engine.render import _regimen_tolerability_ua, _render_regimen_tolerability
+from knowledge_base.engine.render import _render_track_drugs
 import pytest
 from knowledge_base.engine._patient_vocabulary import (
     ESCAT_PLAIN_UA, ESCAT_TIER_PATIENT_LABEL, ESCAT_TIER_PATIENT_LABEL_EN,
@@ -137,3 +138,19 @@ def test_vaf_explanation_distinguishes_read_fraction_from_cell_fraction():
     assert 'DNA reads' in en
     assert '50% does not automatically mean' in en
     assert 'gene copy number' in en
+
+
+def test_english_drug_class_explanation_retains_authored_patient_note():
+    result = SimpleNamespace(disease_id='DIS-AML')
+    track = SimpleNamespace(regimen_data={'components': [{'drug_id': 'DRUG-TEST', 'route': 'PO'}]})
+    drug = {'names': {'english': 'Test medicine'}, 'drug_class': 'FLT3i', 'notes_patient': 'Не змінюйте дозу 0.5 mg.'}
+    before = deepcopy(drug)
+    rendered = _render_track_drugs(result, track, {'DRUG-TEST': drug}, None, target_lang='en')
+    assert 'blocks FLT3' in rendered
+    assert 'Не змінюйте дозу 0.5 mg.' in rendered
+    assert 'Original source explanation; translation unavailable' in rendered
+    assert drug == before
+    del drug['notes_patient']
+    rendered = _render_track_drugs(result, track, {'DRUG-TEST': drug}, None, target_lang='en')
+    assert 'blocks FLT3' in rendered
+    assert 'translation unavailable' not in rendered
