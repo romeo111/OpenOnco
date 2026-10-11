@@ -28,6 +28,8 @@ Use synthetic profiles for public demos and feedback. Do not submit identifiable
 
 Onco Wiki records, Handbook chapters and quizzes, interactive tools and result displays also have draft [Español](https://openonco.info/es/), [Português](https://openonco.info/pt/), [Deutsch](https://openonco.info/de/) and [Français](https://openonco.info/fr/) translations. Clinical translation review is pending. Original English pages remain accessible; identifiers, questionnaire values, answer keys and engine decisions stay unchanged. See the [localization scope and maintenance guide](docs/LOCALIZATION.md).
 
+Patient reports show recorded data-completeness checks before treatment options when an MDT summary is available. Missing profile information does not mean a test was not performed. Completed technical checks do not establish clinical approval; without a summary, completeness is explicitly unassessed. English patient reports and the additional-language versions remain incomplete translation drafts.
+
 ## Current repository snapshot
 
 Measured on **2026-10-10** with `python -m knowledge_base.stats --format json`:

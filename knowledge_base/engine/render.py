@@ -3187,8 +3187,8 @@ def render_plan_html(
     drift visibility (PR5)."""
     if (mode or "").lower() == "patient":
         if target_lang == 'en':
-            return render_patient_english_draft(plan_result, sibling_link=sibling_link)
-        return _render_patient_mode(plan_result, target_lang, sibling_link=sibling_link)
+            return render_patient_english_draft(plan_result, sibling_link=sibling_link, mdt=mdt)
+        return _render_patient_mode(plan_result, target_lang, sibling_link=sibling_link, mdt=mdt)
 
     plan = plan_result.plan
     if plan is None:
@@ -4480,7 +4480,69 @@ _PATIENT_DISCLAIMER_PREVENTION_HTML = (
 )
 
 
-def render_patient_english_draft(plan_result: PlanResult, *, sibling_link: Optional[str] = None) -> str:
+def _render_patient_data_quality(mdt: Optional[MDTOrchestrationResult], target_lang: str) -> str:
+    """Expose existing input checks without making a clinical-readiness decision."""
+    en = target_lang == 'en'
+    dq = mdt.data_quality_summary if mdt is not None else {}
+    status = dq.get('status') or 'not_assessed'
+    summaries = {
+        'complete_for_mdt_review': (
+            'The recorded data checks are complete. This does not mean that treatment has been approved.',
+            'Перевірки внесених даних завершено. Це не означає, що лікування схвалено.'),
+        'usable_with_caveats': (
+            'Some data or checks need clarification before your doctor reviews this report.',
+            'Деякі дані або перевірки потребують уточнення перед розглядом звіту лікарем.'),
+        'incomplete_for_mdt_review': (
+            'Important information is missing from the profile. Your doctor needs to clarify it when reviewing this report.',
+            'У профілі бракує важливих даних. Лікар має уточнити їх під час розгляду цього звіту.'),
+        'incomplete_for_default_track': (
+            'Required biomarker information is missing from the profile. Review of the standard option is incomplete.',
+            'У профілі бракує необхідних даних про біомаркери. Розгляд стандартного варіанта неповний.'),
+    }
+    summary = summaries.get(status, (
+        'Data completeness has not been assessed in this report.',
+        'Повноту даних у цьому звіті не оцінено.'))[0 if en else 1]
+    heading = 'Information to clarify with your doctor' if en else 'Що потрібно уточнити з лікарем'
+    explanation = (
+        'Missing from the profile does not mean a test was not performed. Ask your doctor which results to add or verify. Do not change treatment based only on this report.'
+        if en else 'Відсутність даних у профілі не означає, що обстеження не проводили. Обговоріть з лікарем, які результати додати або перевірити. Не змінюйте лікування лише на підставі цього звіту.'
+    )
+    counts = (
+        ('missing_critical_fields', 'Important clinical information missing', 'Відсутні важливі клінічні дані'),
+        ('missing_recommended_fields', 'Additional information to clarify', 'Додаткові дані для уточнення'),
+        ('unevaluated_red_flags', 'Conditions the system could not evaluate', 'Умови, які система не змогла перевірити'),
+    )
+    items = []
+    for key, label_en, label_uk in counts:
+        count = len(dq.get(key) or [])
+        if count:
+            items.append(f'<li><span>{label_en if en else label_uk}</span>: {count}</li>')
+    missing = (dq.get('biomarker_coverage') or {}).get('required_missing', 0)
+    if missing:
+        label = 'Required biomarker results missing' if en else 'Відсутні необхідні результати біомаркерів'
+        items.append(f'<li><span>{label}</span>: {_h(missing)}</li>')
+    default_missing = dq.get('missing_default_biomarkers', 0)
+    if default_missing:
+        label = 'Biomarker gaps for the standard option' if en else 'Прогалини даних біомаркерів для стандартного варіанта'
+        items.append(f'<li><span>{label}</span>: {_h(default_missing)}</li>')
+    # Reuse recorded labels, never clinician-only actions or raw field IDs.
+    labels = []
+    for detail in dq.get('missing_field_details') or []:
+        label = detail.get('label' if en else 'label_uk')
+        if label and label != detail.get('field') and label not in labels:
+            labels.append(label)
+    if labels:
+        label = 'Missing information recorded in the profile' if en else 'Дані, відсутні у профілі'
+        items.append(f'<li><span>{label}</span>: {_h(", ".join(labels))}</li>')
+    listing = '<ul>' + ''.join(items) + '</ul>' if items else ''
+    return (
+        f'<section class="patient-data-quality" data-data-quality-status="{_h(status)}">'
+        f'<h2>{heading}</h2><p><strong>{summary}</strong></p>{listing}<p>{explanation}</p></section>'
+    )
+
+
+def render_patient_english_draft(plan_result: PlanResult, *, sibling_link: Optional[str] = None,
+                                 mdt: Optional[MDTOrchestrationResult] = None) -> str:
     """Review candidate only; untranslated authored text remains visibly marked.
 
     Used for English patient reports with an explicit partial-draft notice.
@@ -4506,6 +4568,7 @@ def render_patient_english_draft(plan_result: PlanResult, *, sibling_link: Optio
             + _render_mode_toggle(sibling_link, 'Technical version for your doctor →') + '</header>'
             '<section class="what-was-found"><h2>What was found</h2>'
             + _render_findings_plain(plan_result, target_lang='en') + '</section>'
+            + _render_patient_data_quality(mdt, 'en')
             + f'<section class="what-now"><h2>{meaning}</h2>'
             + _render_tracks_plain(plan_result, target_lang='en') + '</section>'
             + _render_why_section(plan_result, target_lang='en')
@@ -4548,6 +4611,7 @@ def _render_patient_mode(
     target_lang: str,
     *,
     sibling_link: Optional[str] = None,
+    mdt: Optional[MDTOrchestrationResult] = None,
 ) -> str:
     """Render a Plan as a plain-Ukrainian patient-facing single-file HTML.
 
@@ -4609,6 +4673,8 @@ def _render_patient_mode(
         f"{_render_findings_plain(plan_result)}"
         "</section>"
     )
+
+    body_parts.append(_render_patient_data_quality(mdt, 'uk'))
 
     if is_prevention_plan:
         means_h2 = "Що це означає для вашої профілактики"
