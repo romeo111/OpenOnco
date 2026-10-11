@@ -3655,7 +3655,7 @@ def _render_mode_toggle(sibling_link: Optional[str], label_ua: str) -> str:
     return f'<a class="mode-toggle" href="{_h(href)}">{_h(label_ua)}</a>'
 
 
-def _track_label_ua(track_index: int, track_count: int, t) -> tuple[str, str]:
+def _track_label_ua(track_index: int, track_count: int, t, *, target_lang: str = "uk") -> tuple[str, str]:
     """Return (display_label, css_modifier) for a patient-mode track card.
 
     Single-track plans get a bare label without the А/Б prefix; multi-
@@ -3669,6 +3669,13 @@ def _track_label_ua(track_index: int, track_count: int, t) -> tuple[str, str]:
         suffix = "Стандартний варіант" if getattr(t, "is_default", False) else "Альтернативний варіант"
         base = f"{prefix}) {suffix}"
     modifier = "default" if getattr(t, "is_default", False) else "alternative"
+    if target_lang == "en":
+        if track_count <= 1:
+            base = "Recommended plan"
+        else:
+            prefix = "A" if track_index == 0 else "B"
+            suffix = "Standard option" if getattr(t, "is_default", False) else "Alternative option"
+            base = f"{prefix}) {suffix}"
     return base, modifier
 
 
@@ -4099,7 +4106,7 @@ def _emergency_trigger_keys(plan_result: PlanResult) -> set[str]:
     return keys
 
 
-def _render_between_visits_section(plan_result: PlanResult) -> str:
+def _render_between_visits_section(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Per-track 'на що звертати увагу між візитами' section.
 
     Source: `track.regimen_data['between_visit_watchpoints']` (list of
@@ -4111,12 +4118,25 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
     `trigger_ua` first-sentence matches any emergency RF is dropped
     here (it surfaces in the emergency banner instead). Per §3.4.
     """
+    english = target_lang == "en"
+    section_heading = "What to watch for between visits" if english else "На що звернути увагу між візитами"
+    urgency_headings = {
+        "log_at_next_visit": "Make a note and discuss it at your next visit",
+        "call_clinic_same_day": "Call the clinic the same day",
+        "er_now": "Go to hospital immediately",
+    } if english else _BV_URGENCY_HEADING_UA
+    fallback = (
+        '<p class="bv-fallback">The clinical team has not yet agreed a list of symptoms '
+        'to watch for between visits for this treatment. Ask your doctor at your next '
+        'visit which symptoms to record and which should prompt a call to the clinic.</p>'
+        if english else _BV_FALLBACK_HTML
+    )
     plan = plan_result.plan
     if plan is None or not plan.tracks:
         return (
             '<section class="between-visits">'
-            "<h2>На що звернути увагу між візитами</h2>"
-            f"{_BV_FALLBACK_HTML}"
+            f"<h2>{section_heading}</h2>"
+            f"{fallback}"
             "</section>"
         )
 
@@ -4145,12 +4165,12 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
                     continue
             kept.append(w)
 
-        title_ua, modifier = _track_label_ua(idx, track_count, t)
+        title_ua, modifier = _track_label_ua(idx, track_count, t, target_lang=target_lang)
         if not kept:
             track_blocks.append(
                 f'<div class="bv-track" data-source-id="{_h(regimen_id)}">'
                 f'<p class="track-label">{_h(title_ua)}</p>'
-                f"{_BV_FALLBACK_HTML}"
+                f"{fallback}"
                 "</div>"
             )
             continue
@@ -4169,7 +4189,7 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
             if not items:
                 continue
             cls = _BV_URGENCY_CSS_CLASS[urg]
-            heading = _BV_URGENCY_HEADING_UA[urg]
+            heading = urgency_headings[urg]
             li_parts: list[str] = []
             for w in items:
                 trigger = _h(w.get("trigger_ua") or "")
@@ -4180,7 +4200,8 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
                     if window else ""
                 )
                 li_parts.append(
-                    "<li>"
+                    "<li>" +
+                    ('<span class="translation-fallback">Original Ukrainian text; translation unavailable: </span>' if english else '') +
                     f'<span class="bv-trigger">{trigger}</span>{window_html}'
                     f' — <span class="bv-action">{action}</span>'
                     "</li>"
@@ -4201,7 +4222,7 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
 
     return (
         '<section class="between-visits">'
-        "<h2>На що звернути увагу між візитами</h2>"
+        f"<h2>{section_heading}</h2>"
         f'{"".join(track_blocks)}'
         "</section>"
     )
@@ -4260,7 +4281,7 @@ def _render_emergency_section(plan_result: PlanResult, *, target_lang: str = "uk
     )
 
 
-def _render_ask_doctor_section(plan_result: PlanResult) -> str:
+def _render_ask_doctor_section(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Build the 'про що варто запитати лікаря' block.
 
     Pulls a plan dict (model_dump) and decorates it with derived flags
@@ -4315,10 +4336,12 @@ def _render_ask_doctor_section(plan_result: PlanResult) -> str:
     questions = _select_ask_doctor_questions(plan_dict, target_count=6)
     if not questions:
         return ""
-    items = "".join(f"<li>{_h(q['question_ua'])}</li>" for q in questions)
+    field = 'question_en' if target_lang == 'en' else 'question_ua'
+    items = "".join(f"<li>{_h(q[field])}</li>" for q in questions)
+    heading = "What to ask your doctor" if target_lang == 'en' else "Про що варто запитати лікаря"
     return (
         '<div class="ask-doctor">'
-        "<h2>Про що варто запитати лікаря</h2>"
+        f"<h2>{heading}</h2>"
         f"<ul>{items}</ul>"
         "</div>"
     )

@@ -1217,6 +1217,29 @@ def test_patient_html_no_bare_latin_words(label, builder):
     )
 
 
+def test_english_patient_sections_preserve_watchpoints_and_question_selection():
+    from knowledge_base.engine.render import _render_between_visits_section, _render_ask_doctor_section
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    result.plan.tracks[0].regimen_data['between_visit_watchpoints'] = [
+        {'trigger_ua': 'Показник <38.5°C', 'action_ua': 'Не чекати', 'urgency': 'er_now', 'cycle_day_window': 'D1–D7'},
+        {'trigger_ua': 'Занотувати симптом', 'action_ua': 'Обговорити', 'urgency': 'log_at_next_visit'},
+    ]
+    before = result.plan.model_dump()
+    section = _render_between_visits_section(result, target_lang='en')
+    assert 'Go to hospital immediately' in section
+    assert 'Make a note and discuss it at your next visit' in section
+    assert 'Original Ukrainian text; translation unavailable' in section
+    assert 'Показник &lt;38.5°C' in section
+    assert 'Не чекати' in section
+    assert 'D1–D7' in section
+    en_questions = _render_ask_doctor_section(result, target_lang='en')
+    ua_questions = _render_ask_doctor_section(result)
+    assert 'What to ask your doctor' in en_questions
+    assert 'How many treatment cycles' in en_questions
+    assert en_questions.count('<li>') == ua_questions.count('<li>')
+    assert result.plan.model_dump() == before
+
+
 def test_first_use_expansion_inserts_gloss_for_escat():
     """When the patient body mentions ESCAT, the first occurrence is
     expanded to include the parenthesized gloss."""
