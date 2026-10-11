@@ -220,11 +220,11 @@ VARIANT_TYPE_PLAIN_UA: dict[str, str] = {
     "VAF": "частка прочитаних фрагментів ДНК у цій позиції, що містять варіант; 50% не означає автоматично, що половина клітин має мутацію — на результат впливають склад зразка та кількість копій гена",
     "TMB-high": "пухлина має багато мутацій — частіше відповідає на імунотерапію",
     "TMB-low": "пухлина має мало мутацій — імунотерапія працює гірше",
-    "MSI-H": "пухлина не може лагодити неспівпадіння в ДНК → багато мутацій → ICI eligibility",
-    "MSI-L": "проміжний стан між MSI-H і MSS — рідко actionable",
-    "MSS": "стабільні мікросателіти — імунотерапія зазвичай не працює",
-    "dMMR": "deficient mismatch repair — фактично те саме, що MSI-H",
-    "pMMR": "proficient mismatch repair — інтактна система виправлення помилок",
+    "MSI-H": "високий рівень змін у коротких повторюваних ділянках ДНК пухлини; може допомогти лікарю обрати імунотерапію, але не гарантує відповіді на лікування",
+    "MSI-L": "низький рівень змін у коротких повторюваних ділянках ДНК; це не MSI-H, а значення результату для лікування оцінює лікар разом з іншими даними",
+    "MSS": "у тесті не виявлено нестабільності коротких повторюваних ділянок ДНК; сам цей результат не визначає всі можливості імунотерапії — важливі тип пухлини та інші показники",
+    "dMMR": "порушена система виправлення помилок під час копіювання ДНК; часто пов'язана з MSI-H, але це різні показники й результати тестів можуть не збігатися — їх оцінює лікар",
+    "pMMR": "за результатом тесту система виправлення помилок під час копіювання ДНК збережена; це не означає, що в пухлині немає інших змін ДНК",
     "HRD-positive": "пухлина не може лагодити double-strand breaks → чутлива до PARPi + платинових",
     "HRD-negative": "система репарації працює — PARPi працюватиме гірше",
     "PD-L1 high": "пухлина демонструє багато PD-L1 — частіше відповідає на anti-PD-1",
@@ -521,6 +521,11 @@ _ALL_TABLES: tuple[dict[str, str], ...] = (
 
 
 PATIENT_VOCABULARY_EN_DRAFT: dict[str, str] = {
+    "MSI-H": "a high level of changes in short repeated DNA regions in the tumour; it may help your doctor select immunotherapy, but does not guarantee a treatment response",
+    "MSI-L": "a low level of changes in short repeated DNA regions; this is not MSI-H, and your doctor assesses its treatment relevance together with other information",
+    "MSS": "the test did not detect instability in short repeated DNA regions; this result alone does not determine all immunotherapy options — tumour type and other findings matter",
+    "dMMR": "the system that repairs errors during DNA copying is impaired; often associated with MSI-H, but these are different findings and test results may disagree — your doctor assesses them",
+    "pMMR": "the test indicates that the system repairing errors during DNA copying is preserved; this does not mean there are no other DNA changes in the tumour",
     "germline": "a variant in reproductive cells (egg or sperm) that can be passed on to children; it may be inherited or arise for the first time, so it does not necessarily come from a parent",
     "somatic": "a variant that arose in body cells outside the reproductive cells; it may occur in tumour cells or other cells and is not passed on to children",
     "BTKi": "blocks B-cell receptor signalling; a treatment foundation for chronic lymphocytic leukaemia and mantle cell lymphoma",

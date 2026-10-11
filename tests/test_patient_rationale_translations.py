@@ -150,6 +150,19 @@ def test_variant_origin_explanations_do_not_assume_parental_or_tumour_only_origi
     assert 'is not passed on to children' in explain('somatic', target_lang='en')
 
 
+def test_mismatch_repair_glosses_keep_distinct_test_meanings_and_response_uncertainty():
+    assert 'не гарантує відповіді' in explain('MSI-H')
+    assert 'does not guarantee a treatment response' in explain('MSI-H', target_lang='en')
+    assert 'це не MSI-H' in explain('MSI-L')
+    assert 'this is not MSI-H' in explain('MSI-L', target_lang='en')
+    assert 'сам цей результат не визначає всі можливості' in explain('MSS')
+    assert 'does not determine all immunotherapy options' in explain('MSS', target_lang='en')
+    assert 'результати тестів можуть не збігатися' in explain('dMMR')
+    assert 'test results may disagree' in explain('dMMR', target_lang='en')
+    assert 'не означає, що в пухлині немає інших змін ДНК' in explain('pMMR')
+    assert 'does not mean there are no other DNA changes' in explain('pMMR', target_lang='en')
+
+
 def test_english_drug_class_explanation_retains_authored_patient_note():
     result = SimpleNamespace(disease_id='DIS-AML')
     track = SimpleNamespace(regimen_data={'components': [{'drug_id': 'DRUG-TEST', 'route': 'PO'}]})
