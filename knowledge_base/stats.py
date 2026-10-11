@@ -31,18 +31,7 @@ from typing import Any
 import yaml
 
 
-def _signoff_count(value: Any) -> int:
-    """Count reviewer sign-offs across legacy + structured shapes.
-
-    The legacy YAML shape was `reviewer_signoffs: <int>` (just a counter);
-    the structured form (CSD-5A) is `reviewer_signoffs: [{reviewer_id: ...}, ...]`.
-    Mixed YAML on disk is normal during the migration window.
-    """
-    if isinstance(value, list):
-        return len(value)
-    if isinstance(value, int):
-        return value
-    return 0
+from .review_metrics import REVIEW_TYPES, current_review_count, historical_review_counts
 
 
 # ── Layout ────────────────────────────────────────────────────────────────
@@ -62,6 +51,7 @@ _ENTITY_DIRS: list[tuple[str, str]] = [
     ("regimens", "Режими"),
     ("algorithms", "Алгоритми"),
     ("biomarkers", "Біомаркери / гени"),
+    ("biomarker_actionability", "Дії за біомаркерами"),
     ("drugs", "Препарати"),
     ("tests", "Тести / процедури"),
     ("workups", "Workups (триаж)"),
@@ -98,13 +88,15 @@ class DiseaseCoverage:
     red_flags: int
     workups: int
     reviewer_signoffs_max: int
+    clinical_records_total: int = 0
+    clinical_records_reviewed: int = 0
 
     @property
     def coverage_status(self) -> str:
         # Full chain = disease + ≥1 indication + ≥1 regimen + algorithm.
         # CHARTER §6.1: two Co-Lead sign-offs required to leave STUB state.
         if self.indications >= 1 and self.regimens >= 1 and self.has_algorithm:
-            if self.reviewer_signoffs_max >= 2:
+            if self.clinical_records_total > 0 and self.clinical_records_reviewed == self.clinical_records_total:
                 return "reviewed"
             return "stub_full_chain"
         if self.indications >= 1:
@@ -131,18 +123,19 @@ class Stats:
     corpus_pages_total: int = 0
     corpus_references_total: int = 0
     sources_with_corpus_data: int = 0
+    historical_structured_reviews: int = 0
+    legacy_review_counter_total: int = 0
 
 
 # ── Loaders ───────────────────────────────────────────────────────────────
 
 
 def _load_yaml(path: Path) -> dict[str, Any]:
-    try:
-        with path.open(encoding="utf-8") as fh:
-            data = yaml.safe_load(fh)
-        return data if isinstance(data, dict) else {}
-    except Exception:
-        return {}
+    with path.open(encoding="utf-8") as fh:
+        data = yaml.load(fh, Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader))
+    if not isinstance(data, dict):
+        raise ValueError(f"Expected a mapping in public statistics input: {path.name}")
+    return data
 
 
 def _list_yaml(dir_path: Path) -> list[Path]:
@@ -169,7 +162,11 @@ def _build_coverage(
     indications: list[dict[str, Any]],
     algorithms: list[dict[str, Any]],
     workups: list[dict[str, Any]],
+    review_counts: dict[str, int] | None = None,
+    clinical_records: dict[str, dict[str, Any]] | None = None,
 ) -> list[DiseaseCoverage]:
+    review_counts = review_counts or {}
+    clinical_records = clinical_records or {}
     by_disease_inds: dict[str, list[dict[str, Any]]] = {}
     for ind in indications:
         did = ((ind.get("applicable_to") or {}).get("disease_id")) or ""
@@ -213,8 +210,20 @@ def _build_coverage(
                 workup_count += 1
 
         signoffs_max = max(
-            (_signoff_count(ind.get("reviewer_signoffs")) for ind in d_inds),
+            (review_counts.get(ind.get("id"), 0) for ind in d_inds),
             default=0,
+        )
+        # A reviewed indication cannot certify the entire disease chain.
+        required_ids = {ind.get("id") for ind in d_inds} | regs | rfs
+        required_ids.update(a.get("id") for a in algorithms if a.get("applicable_to_disease") == did)
+        required_ids.update(
+            entity_id for entity_id, record in clinical_records.items()
+            if record.get("disease_id") == did or did in (record.get("relevant_diseases") or [])
+        )
+        required_ids.discard(None)
+        reviewed_records = sum(
+            entity_id in clinical_records and review_counts.get(entity_id, 0) >= 2
+            for entity_id in required_ids
         )
         out.append(
             DiseaseCoverage(
@@ -226,6 +235,8 @@ def _build_coverage(
                 red_flags=len(rfs),
                 workups=workup_count,
                 reviewer_signoffs_max=signoffs_max,
+                clinical_records_total=len(required_ids),
+                clinical_records_reviewed=reviewed_records,
             )
         )
     return out
@@ -244,6 +255,12 @@ def collect_stats() -> Stats:
 
     reviewer_total = 0
     reviewer_reviewed = 0
+    structured_history = 0
+    legacy_counters = 0
+    clinical_records = {}
+    review_counts = {}
+    reviewers = {d["id"]: d for p in _list_yaml(_KB_CONTENT / "reviewers") if (d := _load_yaml(p)).get("id")}
+    disease_context = {d["id"]: d for p in _list_yaml(_KB_CONTENT / "diseases") if (d := _load_yaml(p)).get("id")}
 
     corpus_pages = 0
     corpus_refs = 0
@@ -255,10 +272,16 @@ def collect_stats() -> Stats:
         entities.append(EntityCount(type=dir_name, label=label, count=len(files)))
         total += len(files)
         for d in loaded:
-            if "reviewer_signoffs" in d:
+            if dir_name in REVIEW_TYPES:
                 reviewer_total += 1
-                if _signoff_count(d.get("reviewer_signoffs")) >= 2:
-                    reviewer_reviewed += 1
+                count = current_review_count(d, dir_name, reviewers, disease_context)
+                reviewer_reviewed += count >= 2
+                if d.get("id"):
+                    clinical_records[d["id"]] = d
+                    review_counts[d["id"]] = count
+                structured, legacy = historical_review_counts(d)
+                structured_history += structured
+                legacy_counters += legacy
         if dir_name == "diseases":
             diseases_yaml = loaded
         elif dir_name == "indications":
@@ -292,7 +315,7 @@ def collect_stats() -> Stats:
     planned_roles = len(_role_catalog())
 
     coverage = _build_coverage(
-        diseases_yaml, indications_yaml, algorithms_yaml, workups_yaml
+        diseases_yaml, indications_yaml, algorithms_yaml, workups_yaml, review_counts, clinical_records
     )
 
     return Stats(
@@ -309,6 +332,8 @@ def collect_stats() -> Stats:
         corpus_pages_total=corpus_pages,
         corpus_references_total=corpus_refs,
         sources_with_corpus_data=sources_with_corpus,
+        historical_structured_reviews=structured_history,
+        legacy_review_counter_total=legacy_counters,
     )
 
 
@@ -350,12 +375,14 @@ def format_text(s: Stats) -> str:
         f"{s.sources_with_corpus_data} / {sources_total}"
     )
     lines.append("")
-    lines.append("Clinical safety (CHARTER §6.1):")
+    lines.append("Optional content-review audit (not a solo-project release gate):")
     lines.append(
         f"  Reviewer sign-offs ≥ 2           "
         f"{s.reviewer_signoffs_reviewed} / {s.reviewer_signoffs_total} "
-        f"(інші — STUB)"
+        f"(описовий показник; не умова релізу)"
     )
+    lines.append("  Лише актуальні, незалежні й уповноважені перегляди змісту; не схвалення лікування.")
+    lines.append(f"  Історичні структуровані записи: {s.historical_structured_reviews}; старі лічильники: {s.legacy_review_counter_total} (не підтвердження).")
     lines.append("")
     lines.append("Покриття по хворобах:")
     if not s.diseases:
@@ -512,12 +539,11 @@ def format_html_widget(s: Stats, *, embed_style: bool = True) -> str:
             f"</div>"
         )
 
-    if s.reviewer_signoffs_reviewed == 0 and s.reviewer_signoffs_total > 0:
-        out.append(
-            '<div class="oo-warn">⚠️ Жоден клінічний контент ще не пройшов '
-            "два sign-off Clinical Co-Lead — увесь контент позначено як STUB. "
-            "Це інструмент підтримки рішень, не медичний пристрій.</div>"
-        )
+    out.append(
+        '<div class="oo-meta">Солопроєкт: зовнішній клінічний перегляд є додатковим '
+        'і не є умовою розробки чи публікації. Технічні перевірки та простежувані '
+        'джерела не є схваленням лікування.</div>'
+    )
 
     out.append(
         "<table><thead><tr>"

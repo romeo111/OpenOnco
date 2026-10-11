@@ -1,5 +1,8 @@
 # OpenOnco — Press Kit / One-Pager
 
+> Solo-project clarification, 2026-10-12: external clinical review is optional, not a development or publication requirement. Multi-review counts below are descriptive audit data, not a release quota. Review-count correction: 0/2,570 records have two eligible current content reviews. Historical counters do not establish current authority, scope, revision or reviewer independence. This is not individual treatment approval and does not deny historical clinician feedback. Other dated figures and feature claims in this draft still require verification against [the current fact sheet](00-FACT-SHEET.md) before publication.
+
+
 > *Informational clinical decision support for oncology professionals. Not a medical device. All recommendations must be verified by a qualified oncologist.*
 
 ---
@@ -48,7 +51,7 @@ Tumor-board planning is information-dense and time-pressured: clinicians must re
 
 **Coverage** spans lymphoid + myeloid hematology and solid tumors — e.g. DLBCL, FL, CLL/SLL, MCL, MZL, MM, gastric, esophageal, PDAC, cholangiocarcinoma, CRC, NSCLC, SCLC, mesothelioma.
 
-**Maturity — read this honestly:** the clinical content is mostly **STUB** — meaning the structured data, algorithm, and sources are in place, but the entity has *not* yet passed two-Clinical-Co-Lead sign-off (CHARTER §6.1). Only **15 of 806** clinical entities are dual-signed-off; the rest are "proposed plan, not approved plan." There has been **no formal clinical validation study and no real-world deployment validation** (CHARTER §13). This is a **v0.1 draft** actively seeking clinician feedback — not a validated or production-ready product.
+**Maturity — read this honestly:** the clinical content is mostly **STUB** — meaning the structured data, algorithm, and sources are in place, but the entity has *not* yet passed two-Clinical-Co-Lead sign-off (CHARTER §6.1). Only **0 of 2,570** clinical entities are dual-signed-off; the rest are "proposed plan, not approved plan." There has been **no formal clinical validation study and no real-world deployment validation** (CHARTER §13). This is a **v0.1 draft** actively seeking clinician feedback — not a validated or production-ready product.
 
 **Licensing:** code is **MIT**; specifications and generated content are **CC BY 4.0**. Original source guidelines (NCCN, ESMO, EHA, BSH, EASL, Ukraine MoH/NSZU, etc.) are *referenced, not redistributed*.
 
@@ -101,7 +104,7 @@ Tumor-board planning is information-dense and time-pressured: clinicians must re
 OpenOnco is early-stage and open — the most valuable contribution right now is honest clinical feedback.
 
 - **Clinician feedback (most valuable).** Try the in-browser demo on a case you know and tell us what's wrong: https://openonco.info/try.html
-- **Clinical Co-Leads / reviewers.** Help move entities from STUB to dual-signed-off (CHARTER §6.1) — only 15 of 806 are signed off today. Oncologists, hematologists, and clinical pharmacologists especially welcome.
+- **Clinical Co-Leads / reviewers.** Help move entities from STUB to dual-signed-off (CHARTER §6.1) — only 0 of 2,570 are signed off today. Oncologists, hematologists, and clinical pharmacologists especially welcome.
 - **Contributors (no clinical expertise required to start).** Draft structured sidecars and open PRs via the TaskTorrent "chunk" workflow; all clinical content is reviewed by Clinical Co-Leads before merge.
 - **Builders of safety-critical CDS.** Fork the engine + MCP pattern, kick the tires, and tell us where the rules-first design breaks.
 
@@ -122,4 +125,4 @@ OpenOnco is early-stage and open — the most valuable contribution right now is
 
 ### Disclaimer footer
 
-*OpenOnco is an informational clinical decision support resource for healthcare professionals — it is **not a medical device**, is not FDA-approved, FDA-cleared, or CE-marked, and is **not clinically validated**. It does not diagnose, screen for, or detect cancer; it does not prescribe drugs or calculate patient-specific doses; and it does not replace or substitute for an oncologist or a tumor board. It is intended for adult, outpatient, non-time-critical planning by qualified healthcare professionals only — not for direct patient use and not for emergency or time-critical decisions. All outputs are drafts that **must be verified by a qualified oncologist** (CHARTER §11, §15). This is an early-stage v0.1 open-source project; most clinical content is STUB (only 15 of 806 entities dual-reviewer signed off) and no formal clinical validation study has been performed. All examples use synthetic data; nothing shown represents a real patient or guarantees any clinical outcome.*
+*OpenOnco is an informational clinical decision support resource for healthcare professionals — it is **not a medical device**, is not FDA-approved, FDA-cleared, or CE-marked, and is **not clinically validated**. It does not diagnose, screen for, or detect cancer; it does not prescribe drugs or calculate patient-specific doses; and it does not replace or substitute for an oncologist or a tumor board. It is intended for adult, outpatient, non-time-critical planning by qualified healthcare professionals only — not for direct patient use and not for emergency or time-critical decisions. All outputs are drafts that **must be verified by a qualified oncologist** (CHARTER §11, §15). This is an early-stage v0.1 open-source project; most clinical content is STUB (only 0 of 2,570 entities dual-reviewer signed off) and no formal clinical validation study has been performed. All examples use synthetic data; nothing shown represents a real patient or guarantees any clinical outcome.*

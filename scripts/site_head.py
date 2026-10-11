@@ -107,7 +107,7 @@ GEO_LANG_SCRIPT = GEO_LANG_START + r"""
     // Bots: leave both language trees crawlable — no auto-redirect.
     if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
     var path=location.pathname||'/';
-    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
     if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
     var pageLang=UARE.test(path)?'uk':'en';
     // Track first real interaction so a slow async lookup never discards typed
@@ -132,7 +132,7 @@ GEO_LANG_SCRIPT = GEO_LANG_START + r"""
     function want(cc){return cc==='UA'?'uk':'en';}
     // 1) explicit choice wins
     var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
-    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
     if(pref==='uk'||pref==='en'){go(pref);return;}
     // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
     var cc=null;
@@ -529,7 +529,7 @@ def _faq_jsonld(path: str, locale: str) -> str | None:
 
 def render_seo_metadata(*, path: str, title: str, description: str, locale: str, noindex: bool = False, available_paths: set[str] | None = None, include_faq: bool = False, medical_condition: str | None = None) -> str:
     canonical = _page_url(path)
-    lang = {"uk": "uk-UA", "en": "en-US", "es": "es", "pt": "pt", "de": "de", "fr": "fr"}[locale]
+    lang = {"uk": "uk-UA", "en": "en-US"}.get(locale, locale)
     robots = "noindex, follow" if noindex else "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     disclosure = AI_DISCLOSURE_UK if locale == "uk" else AI_DISCLOSURE_EN
     social_image = _social_image_for(path)

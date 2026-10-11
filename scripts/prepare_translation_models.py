@@ -8,6 +8,8 @@ from ctranslate2.converters import TransformersConverter
 models = {
     'romance': ('Helsinki-NLP/opus-mt-en-ROMANCE', 'f8f3a28e8b6272d0ccc0290b832f699e154ae431'),
     'de': ('Helsinki-NLP/opus-mt-en-de', '6183067f769a302e3861815543b9f312c71b0ca4'),
+    'gmq': ('Helsinki-NLP/opus-mt-en-gmq', '1011a691a63e61b4beb68d47332790e072f685f0'),
+    'fi': ('Helsinki-NLP/opus-mt-en-fi', '2f68f12519005b50f9e1afe6fd57b13add55e156'),
 }
 for name, (repo, revision) in models.items():
     target = Path('.tmp/translation-models') / name

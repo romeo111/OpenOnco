@@ -1,5 +1,17 @@
 # Website languages
 
+## Additional interface editions (2026-10-12)
+
+Italian `/it/`, Danish `/da/`, Swedish `/sv/`, Norwegian Bokmål `/nb/` and Finnish `/fi/` extend the menu to eleven languages, retaining English first and Ukrainian second. These are interface-first language drafts; broader clinical catalogs are authored locally in separate staging. Do not describe them as complete or clinically validated translations.
+
+Public and interactive pages use the shared templates. Deep clinical documents use small same-origin readers with the same source presentation and saved display catalogs. The previous six-language inventory was 786,113,461 bytes; five fully duplicated clinical trees would exceed the published GitHub Pages 1 GB limit. Original documents remain accessible without JavaScript. Canonical diagnosis names retain their source wording after an observed literal model error; numbers, medication names, source IDs and engine inputs are protected.
+
+`scripts/prepare_additional_locales.py` authors interface drafts; `scripts/publish_additional_locale_drafts.py` validates all five before changing source catalogs. `scripts/shared_clinical_reader.py` and `scripts/shared-clinical-reader.js` provide the readers. This solo project has no clinical-team or reviewer quota for publication; actual expert feedback is separate from technical and language checks.
+
+Nordic authoring uses `Helsinki-NLP/opus-mt-en-gmq` at `1011a691a63e61b4beb68d47332790e072f685f0`; Finnish uses `Helsinki-NLP/opus-mt-en-fi` at `2f68f12519005b50f9e1afe6fd57b13add55e156`. Italian uses the existing pinned Romance model. Weights remain in the optional local authoring environment; no model or translation API runs on page visits. The clinical-question API retains its separate existing provider costs.
+
+## Earlier editions and maintenance
+
 English (`/`), Ukrainian (`/ukr/`), Spanish (`/es/`), Portuguese (`/pt/`), German (`/de/`) and French (`/fr/`) share the same clinical engine. English is first in the flag menu; Ukrainian is second.
 
 ## Published scope

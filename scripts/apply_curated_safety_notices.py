@@ -16,6 +16,8 @@ def apply_notices(catalog_dir: Path, *, apply: bool = False) -> dict[str, int]:
     updates = {}
     changed = {}
     for locale in LANGUAGES:
+        if locale not in manifest['languages']:
+            continue
         path = catalog_dir / f'clinical.{locale}.json'
         if hashlib.sha256(path.read_bytes()).hexdigest() != manifest['languages'][locale]['sha256']:
             raise ValueError(f'Catalog checksum mismatch: {locale}')

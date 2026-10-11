@@ -14,7 +14,7 @@ from scripts.clinical_translation_checks import acceptable_draft
 from scripts.clinical_curated_copy import diagnostic_display
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('locale', choices=('es', 'pt', 'de', 'fr'))
+parser.add_argument('locale', choices=('es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi'))
 parser.add_argument('corpus', type=Path)
 parser.add_argument('--output-dir', type=Path, default=Path('.tmp/clinical-next'))
 args = parser.parse_args()
@@ -25,7 +25,8 @@ from transformers import MarianTokenizer
 
 sources = json.loads(args.corpus.read_text(encoding='utf-8'))
 locale = args.locale
-model = Path('.tmp/translation-models') / ('de' if locale == 'de' else 'romance')
+model_name = 'gmq' if locale in ('da', 'sv', 'nb') else locale if locale in ('de', 'fi') else 'romance'
+model = Path('.tmp/translation-models') / model_name
 tokenizer = MarianTokenizer.from_pretrained((model / 'tokenizer-path.txt').read_text(encoding='utf-8'))
 translator = ctranslate2.Translator(str(model), device='cpu', compute_type='int8', inter_threads=1, intra_threads=1)
 index = json.loads(Path('docs/kb_search_index.json').read_text(encoding='utf-8'))
@@ -44,7 +45,7 @@ for source in sources:
     if diagnostic is not None:
         catalog[source] = diagnostic
 pending = [s for s in sources if s not in catalog]
-prefix = '' if locale == 'de' else f'>>{locale}<< '
+prefix = {'da': '>>dan<< ', 'sv': '>>swe<< ', 'nb': '>>nob<< '}.get(locale, '' if locale in ('de', 'fi') else f'>>{locale}<< ')
 print(locale, 'pending', len(pending), 'staging', target, flush=True)
 
 def translate_batch(strings):

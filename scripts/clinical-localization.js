@@ -4,7 +4,7 @@
   const locale = document.currentScript.dataset.locale;
   const catalogURL = document.currentScript.dataset.catalog || `/${locale}/clinical-translations.json`;
   const normalize = text => text.replace(/\s+/g, ' ').trim();
-  const skip = 'script,style,code,pre,textarea,.lang-switch,[data-original-source]';
+  const skip = 'script,style,code,pre,textarea,.lang-switch,.brand-mini,.brand-wordmark,[data-original-source]';
   const observed = new WeakSet();
   let displayTranslatedReport = true;
   const notices = {
@@ -25,6 +25,18 @@
     de: ['$1 von $2 angezeigt', 'Seite $1 / $2', '$1 Kapitel', 'Fragenlimit erreicht: $1 pro Stunde.'],
     fr: ['$1 résultats sur $2', 'Page $1 / $2', '$1 chapitres', 'Limite de questions atteinte : $1 par heure.']
   };
+  const extraCopy = {
+    it: {notice: 'Traduzione preliminare: revisione clinica in attesa.', original: 'Testo originale conservato per la verifica', counters: ['$1 di $2 visualizzati', 'Pagina $1 / $2', '$1 capitoli', 'Limite di domande raggiunto: $1 all’ora.'], diagnostic: 'Segnali di allarme non valutati: ', score: '$1 di $2 risposte · $3 corrette', matches: '— risultati per', pages: 'Pagina $1 di $2 · $3 risultati', chapters: '$1 di $2 capitoli', patient: 'Stai visualizzando l’originale ucraino. Seleziona EN per la bozza inglese, ancora incompleta e in attesa di verifica.'},
+    da: {notice: 'Foreløbig oversættelse: klinisk gennemgang afventer.', original: 'Originaltekst bevaret til kontrol', counters: ['Viser $1 af $2', 'Side $1 / $2', '$1 kapitler', 'Spørgsmålsgrænsen er nået: $1 i timen.'], diagnostic: 'Ikke-vurderede advarselstegn: ', score: '$1 af $2 besvaret · $3 korrekte', matches: '— resultater for', pages: 'Side $1 af $2 · $3 resultater', chapters: '$1 af $2 kapitler', patient: 'Du ser den ukrainske original. Vælg EN for det engelske udkast, som stadig er ufuldstændigt og afventer kontrol.'},
+    sv: {notice: 'Preliminär översättning: klinisk granskning väntar.', original: 'Originaltext bevarad för kontroll', counters: ['Visar $1 av $2', 'Sida $1 / $2', '$1 kapitel', 'Frågegränsen har nåtts: $1 per timme.'], diagnostic: 'Ej bedömda varningssignaler: ', score: '$1 av $2 besvarade · $3 rätt', matches: '— träffar för', pages: 'Sida $1 av $2 · $3 resultat', chapters: '$1 av $2 kapitel', patient: 'Du ser det ukrainska originalet. Välj EN för det engelska utkastet, som fortfarande är ofullständigt och väntar på granskning.'},
+    nb: {notice: 'Foreløpig oversettelse: klinisk gjennomgang gjenstår.', original: 'Originaltekst bevart for kontroll', counters: ['Viser $1 av $2', 'Side $1 / $2', '$1 kapitler', 'Spørsmålsgrensen er nådd: $1 per time.'], diagnostic: 'Ikke-vurderte varselsignaler: ', score: '$1 av $2 besvart · $3 riktige', matches: '— treff for', pages: 'Side $1 av $2 · $3 resultater', chapters: '$1 av $2 kapitler', patient: 'Du ser den ukrainske originalen. Velg EN for det engelske utkastet, som fortsatt er ufullstendig og venter på gjennomgang.'},
+    fi: {notice: 'Alustava käännös: kliininen tarkistus on kesken.', original: 'Alkuperäisteksti säilytetty tarkistusta varten', counters: ['Näytetään $1 / $2', 'Sivu $1 / $2', '$1 lukua', 'Kysymysraja saavutettu: $1 tunnissa.'], diagnostic: 'Arvioimattomat varoitusmerkit: ', score: '$1 / $2 vastattu · $3 oikein', matches: '— tulokset haulle', pages: 'Sivu $1 / $2 · $3 tulosta', chapters: '$1 / $2 lukua', patient: 'Näet ukrainankielisen alkuperäistekstin. Valitse EN nähdäksesi englanninkielisen luonnoksen, joka on vielä puutteellinen ja odottaa tarkistusta.'}
+  };
+  for (const [code, copy] of Object.entries(extraCopy)) {
+    notices[code] = copy.notice;
+    originalLabels[code] = copy.original;
+    counters[code] = copy.counters;
+  }
   fetch(catalogURL).then(response => {
     if (!response.ok) throw new Error('Translation catalog unavailable');
     return response.json();
@@ -40,27 +52,27 @@
       const diagnostic = key.match(/^Unevaluated RedFlags: (RF-[A-Z0-9_-]+(?:, RF-[A-Z0-9_-]+)*)$/);
       if (diagnostic) {
         const labels = {es: 'Alertas no evaluadas: ', pt: 'Alertas não avaliados: ', de: 'Nicht ausgewertete Warnhinweise: ', fr: 'Alertes non évaluées : '};
-        return labels[locale] + diagnostic[1];
+        return (labels[locale] || extraCopy[locale].diagnostic) + diagnostic[1];
       }
       const score = key.match(/^(\d+) of (\d+) answered · (\d+) correct$/);
       if (score) {
         const labels = {es: '$1 de $2 respondidas · $3 correctas', pt: '$1 de $2 respondidas · $3 corretas', de: '$1 von $2 beantwortet · $3 richtig', fr: '$1 réponses sur $2 · $3 correctes'};
-        return labels[locale].replace(/\$(\d)/g, (_, index) => score[Number(index)]);
+        return (labels[locale] || extraCopy[locale].score).replace(/\$(\d)/g, (_, index) => score[Number(index)]);
       }
       const matches = key.match(/^— matches for "(.*)" —$/);
       if (matches) {
         const labels = {es: '— coincidencias para', pt: '— resultados para', de: '— Treffer für', fr: '— résultats pour'};
-        return `${labels[locale]} "${matches[1]}" —`;
+        return `${labels[locale] || extraCopy[locale].matches} "${matches[1]}" —`;
       }
       const pages = key.match(/^Page (\d+) of (\d+) · (\d+) results$/);
       if (pages) {
         const labels = {es: 'Página $1 de $2 · $3 resultados', pt: 'Página $1 de $2 · $3 resultados', de: 'Seite $1 von $2 · $3 Ergebnisse', fr: 'Page $1 sur $2 · $3 résultats'};
-        return labels[locale].replace(/\$(\d)/g, (_, index) => pages[Number(index)]);
+        return (labels[locale] || extraCopy[locale].pages).replace(/\$(\d)/g, (_, index) => pages[Number(index)]);
       }
       const chapters = key.match(/^(\d+) of (\d+) chapters?$/);
       if (chapters) {
         const labels = {es: '$1 de $2 capítulos', pt: '$1 de $2 capítulos', de: '$1 von $2 Kapiteln', fr: '$1 chapitres sur $2'};
-        return labels[locale].replace(/\$(\d)/g, (_, index) => chapters[Number(index)]);
+        return (labels[locale] || extraCopy[locale].chapters).replace(/\$(\d)/g, (_, index) => chapters[Number(index)]);
       }
       if (Object.prototype.hasOwnProperty.call(catalog, key)) {
         return text.slice(0, text.indexOf(text.trimStart())) + catalog[key] + (text.match(/\s*$/) || [''])[0];
@@ -147,6 +159,7 @@
     };
     const patientAvailabilityNotices = {"es": "Está viendo el original ucraniano. Seleccione EN para el borrador inglés, todavía incompleto y pendiente de revisión.", "pt": "Está a ver o original ucraniano. Selecione EN para o rascunho inglês, ainda incompleto e pendente de revisão.", "de": "Sie sehen das ukrainische Original. Wählen Sie EN für den englischen Entwurf, der noch unvollständig ist und geprüft werden muss.", "fr": "Vous consultez l’original ukrainien. Sélectionnez EN pour le brouillon anglais, encore incomplet et en attente de vérification."};
     const documents = new WeakSet();
+    for (const [code, copy] of Object.entries(extraCopy)) patientAvailabilityNotices[code] = copy.patient;
     const attachDocument = doc => {
       if (documents.has(doc)) return;
       documents.add(doc);

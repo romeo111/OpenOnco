@@ -134,7 +134,7 @@ function swFixture({ online = true, ok = true, hit = true } = {}) {
   index.core_compressed = 'openonco-engine-core.tar.gz'; index.core_compressed_version = version;
   warm = await warmup(); assert.equal(warm.puts, 1); assert.deepEqual(warm.progress.at(-1), [1, 1, 0]);
   delete index.core_compressed; delete index.core_compressed_version;
-  for (const locale of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/']) {
+  for (const locale of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/', 'it/', 'da/', 'sv/', 'nb/', 'fi/']) {
     const html = fs.readFileSync(`docs/${locale}try.html`, 'utf8');
     assert.equal((html.match(/await verifyBundleVersion\(/g) || []).length, 5);
     assert.equal(fn(html, 'recoverBundleVersion'), fn(page, 'recoverBundleVersion'));

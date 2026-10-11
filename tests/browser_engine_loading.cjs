@@ -78,11 +78,11 @@ function fixture({ cached = null, valid = true, httpOk = true, coreValid = true 
   f = fixture();
   await Promise.all([f.run('ensureEngine()'), f.run('ensureEngine()')]);
   assert.equal(f.calls.initializations, 1);
-  for (const prefix of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/']) {
+  for (const prefix of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/', 'it/', 'da/', 'sv/', 'nb/', 'fi/']) {
     const page = fs.readFileSync('docs/' + prefix + 'try.html', 'utf8');
     assert.equal((page.match(/await validateDiseaseModule\(\);/g) || []).length, 2);
     assert(page.includes("if (validationSummary !== 'ok')"));
     assert(!page.includes('failed (continuing)'));
   }
-  console.log('PASS: cache validation, invalid-cache fallback, invalid-network rejection, generation blocked on download failure, invalid core rejection and retry; six language clients guarded');
+  console.log('PASS: cache validation, invalid-cache fallback, invalid-network rejection, generation blocked on download failure, invalid core rejection and retry; eleven language clients guarded');
 })().catch(error => { console.error(error); process.exitCode = 1; });

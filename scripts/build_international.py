@@ -9,6 +9,11 @@ from scripts.site_nav import render_top_bar
 from scripts.site_head import SITE_FONT_LINK, SITE_FAVICON_LINK
 
 SEARCH_COPY = {
+    'it': ['Nome, sinonimo o ID…', 'Tutti', 'Caricamento…', 'Nessun risultato.', 'Impossibile caricare l’indice. Riprova.', 'Precedente', 'Successivo', 'Risultati', 'Pagina', 'Malattie', 'Farmaci', 'Biomarcatori', 'Segnali di allarme', 'Applicabilità clinica', 'Cerca anche nomi internazionali, simboli dei geni o identificatori. I testi originali possono essere conservati per la verifica.'],
+    'da': ['Navn, synonym eller ID…', 'Alle', 'Indlæser…', 'Ingen resultater.', 'Indekset kunne ikke indlæses. Prøv igen.', 'Forrige', 'Næste', 'Resultater', 'Side', 'Sygdomme', 'Lægemidler', 'Biomarkører', 'Advarselstegn', 'Klinisk anvendelighed', 'Søg også efter internationale navne, gensymboler eller identifikatorer. Originaltekster kan være bevaret til kontrol.'],
+    'sv': ['Namn, synonym eller ID…', 'Alla', 'Läser in…', 'Inga resultat.', 'Indexet kunde inte läsas in. Försök igen.', 'Föregående', 'Nästa', 'Resultat', 'Sida', 'Sjukdomar', 'Läkemedel', 'Biomarkörer', 'Varningssignaler', 'Klinisk tillämplighet', 'Sök även efter internationella namn, gensymboler eller identifierare. Originaltexter kan vara bevarade för kontroll.'],
+    'nb': ['Navn, synonym eller ID…', 'Alle', 'Laster…', 'Ingen treff.', 'Indeksen kunne ikke lastes. Prøv igjen.', 'Forrige', 'Neste', 'Resultater', 'Side', 'Sykdommer', 'Legemidler', 'Biomarkører', 'Varselsignaler', 'Klinisk anvendelighet', 'Søk også etter internasjonale navn, gensymboler eller identifikatorer. Originaltekster kan være bevart for kontroll.'],
+    'fi': ['Nimi, synonyymi tai ID…', 'Kaikki', 'Ladataan…', 'Ei tuloksia.', 'Hakemistoa ei voitu ladata. Yritä uudelleen.', 'Edellinen', 'Seuraava', 'Tulokset', 'Sivu', 'Sairaudet', 'Lääkkeet', 'Biomarkkerit', 'Varoitusmerkit', 'Kliininen sovellettavuus', 'Hae myös kansainvälisillä nimillä, geenisymboleilla tai tunnisteilla. Alkuperäistekstit voidaan säilyttää tarkistusta varten.'],
     "es": ["Nombre, sinónimo o ID…", "Todos", "Cargando…", "No se encontraron resultados.", "No se pudo cargar el índice. Vuelve a intentarlo.", "Anterior", "Siguiente", "Resultados", "Página", "Enfermedades", "Medicamentos", "Biomarcadores", "Señales de alarma", "Aplicabilidad clínica", "Los resultados y las fichas se muestran en inglés. Busca también con nombres internacionales, símbolos de genes o identificadores."],
     "pt": ["Nome, sinónimo ou ID…", "Todos", "A carregar…", "Não foram encontrados resultados.", "Não foi possível carregar o índice. Tente novamente.", "Anterior", "Seguinte", "Resultados", "Página", "Doenças", "Medicamentos", "Biomarcadores", "Sinais de alerta", "Aplicabilidade clínica", "Os resultados e as fichas são apresentados em inglês. Pesquise também por nomes internacionais, símbolos de genes ou identificadores."],
     "de": ["Name, Synonym oder ID…", "Alle", "Wird geladen…", "Keine Ergebnisse gefunden.", "Der Index konnte nicht geladen werden. Versuchen Sie es erneut.", "Zurück", "Weiter", "Ergebnisse", "Seite", "Erkrankungen", "Arzneimittel", "Biomarker", "Warnsignale", "Klinische Anwendbarkeit", "Ergebnisse und Datensätze werden auf Englisch angezeigt. Suchen Sie auch nach internationalen Namen, Gensymbolen oder Kennungen."],
@@ -170,6 +175,29 @@ PARTICIPATION_COPY = {
 }
 
 
+from scripts.additional_locale_copy import ADDITIONAL_LANGUAGES
+_ADDITIONAL_FILTERS = {
+    'it': ['Indicazioni', 'Schemi di trattamento'],
+    'da': ['Indikationer', 'Behandlingsregimer'],
+    'sv': ['Indikationer', 'Behandlingsregimer'],
+    'nb': ['Indikasjoner', 'Behandlingsregimer'],
+    'fi': ['Käyttöaiheet', 'Hoito-ohjelmat'],
+}
+for _code in ADDITIONAL_LANGUAGES:
+    _copy = COPY[_code]
+    PARTICIPATION_COPY[_code] = {
+        'title': _copy['contribute'], 'lead': _copy['about_body'], 'notice': _copy['clinical'],
+        'developers': _copy['open'], 'developers_body': _copy['try_body'],
+        'reviewers': _copy['clinical_title'], 'reviewers_body': _copy['about_body'],
+        'partners': _copy['about_title'], 'partners_body': _copy['privacy'],
+        'publication': _copy['news'], 'publication_body': _copy['status'],
+        'demo': _copy['try_cta'], 'packet': _copy['english'], 'report': _copy['english'],
+        'issue': _copy['contribute'], 'resources': _copy['documentation'],
+        'development': _copy['documentation'], 'launch': _copy['english'],
+        'source_note': _copy['english_note'], 'wiki_filters': _ADDITIONAL_FILTERS[_code],
+    }
+
+
 def render_participation(locale):
     t = PARTICIPATION_COPY[locale]
     sections = [
@@ -205,7 +233,9 @@ def build_international(output_dir: Path) -> dict:
     for locale, t in COPY.items():
         directory = output_dir / locale
         directory.mkdir(parents=True, exist_ok=True)
-        title_map = dict(zip(CHAPTER_IDS, CHAPTER_TITLES[locale], strict=True))
+        # Interface-first editions keep original chapter titles until a
+        # terminology draft is supplied, rather than guessing clinical names.
+        title_map = dict(zip(CHAPTER_IDS, CHAPTER_TITLES[locale], strict=True)) if locale in CHAPTER_TITLES else {chapter['id']: chapter['title'] for chapter in chapters}
         chapter_cards = ''.join(f'<article class="international-card"><h2>{esc(title_map.get(c["id"], c["title"]))}</h2><p>{esc(t["questions"])}: {c["question_count"]} · <code>{esc(t.get(c["review_status"], c["review_status"]))}</code></p>{_button(c["url"], t["chapter_en"])} {_button("/ukr" + c["url"], t["chapter_uk"], True)}</article>' for c in chapters)
         cards = ''.join(f'<article class="international-card"><h2><a href="{locale_href(p, locale)}">{esc(t[k])}</a></h2><p>{esc(t[b])}</p></article>' for p, k, b in [("kb.html", "kb", "lead"), ("handbook.html", "handbook", "handbook_body"), ("try.html", "try_cta", "try_body"), ("ask.html", "ask", "ask_body")])
         count_values = [stats.get("Disease", 0), stats.get("Drugs", 0), stats.get("Biomarkers", 0)]

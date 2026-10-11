@@ -15,8 +15,9 @@ OpenOnco is a **medical** tool. Before publishing anything from this kit:
    **informational decision-support tool, not a medical device**, and that every
    recommendation must be **verified by a qualified oncologist**.
 2. **Stay honest about maturity.** It is an **early-stage (v0.1) project** —
-   only **15 of 1063** clinical entities had two-reviewer sign-off on 2026-10-11; the rest are
-   STUB (structured + sourced, *not* clinically approved). Never imply it is
+   **0 of 2,570** clinical records have two eligible current content reviews in the
+   2026-10-12 source audit. Legacy counters and historical feedback are not proof of
+   current review coverage or treatment approval. Never imply it is
    clinically validated, FDA-cleared, or production-ready.
 3. **Never claim** it diagnoses cancer, treats patients, replaces an oncologist,
    is for patient self-use, or that an LLM picks the regimen. See the

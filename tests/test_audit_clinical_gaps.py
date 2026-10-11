@@ -1,6 +1,14 @@
 from scripts.audit_clinical_gaps import KB_ROOT, audit
 
 
+def test_external_clinical_review_is_optional_for_solo_delivery():
+    report = audit(KB_ROOT)
+    metric = next(item for item in report["gaps"] if item["id"] == "clinical_signoff")
+    assert metric["status"] == "informational"
+    assert "not a development or publication blocker" in metric["blocker"]
+    assert "no reviewer quota" in metric["target"]
+
+
 def test_drug_indication_gap_reports_modelled_and_unmodelled_pairs():
     report = audit(KB_ROOT)
     metric = next(item for item in report["gaps"] if item["id"] == "drug_indication_tracking")

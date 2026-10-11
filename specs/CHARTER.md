@@ -5,6 +5,28 @@
 **Date:** [publication date]
 **Status:** Draft for public comment
 
+## Current operating model — solo project (2026-10-12)
+
+OpenOnco is maintained by one person. The earlier three-physician governance
+proposal below is a future collaboration model, not an existing team or a
+requirement to develop, merge or publish the informational service. This
+amendment supersedes its mandatory two-reviewer, quorum and reviewer-capacity
+release gates, including the temporary bootstrap expiry rule in §6.1.
+
+The maintainer may deliver source-traceable content, software and translations
+with schema/reference checks, relevant tests, versioned changes, deployment
+verification and honest limitations. Technical verification is not clinical
+approval. External clinical reviews are welcome but optional; record only
+actual reviews with provenance, never fictional people or approvals. Historical
+multi-review benchmarks may remain in internal audits as descriptive evidence,
+but are not release requirements or the project's primary success metric.
+
+Clinical content and language drafts retain their actual review status. The
+service does not claim independent clinical validation, individual treatment
+approval or demonstrated survival benefit. A treating clinician remains
+responsible for decisions about an individual patient. No treatment-selection,
+source, privacy or citation safeguards are waived by the solo operating model.
+
 ---
 
 ## 1. Project purpose
@@ -77,36 +99,24 @@ The project is an **information resource to support tumor board discussion**, no
 
 ## 4. Team and roles
 
-### 4.1. Permanent roles
+### 4.1. Current responsibility
 
-**Project Initiator / Coordinator:** [name]
-Coordinates team work, manages communication, responsible for public representation. Has no authority to approve clinical content.
+OpenOnco is a solo project. One maintainer coordinates development, verifies
+changes, publishes releases and communicates their actual limitations. Coding
+tools assist with implementation; they do not represent additional human team
+members or establish medical authority.
 
-**Clinical Co-Leads:** [name 1], [name 2], [name 3]
-Three practicing oncologists (at least one must be a hematologic oncologist for the relevant domain). Each approves clinical content in their domain. Simultaneous agreement from two of three is required to merge clinical changes.
+### 4.2. Optional external feedback
 
-**Technical Implementation:**
-- Coding Agent A: [name/version, e.g., Claude Code]
-- Coding Agent B: [name/version]
-- LLM models for auxiliary tasks: [list of models]
+Clinicians, translators and other contributors may provide additional reviews.
+No fixed team size, two-of-three vote or reviewer quorum is required for
+development or publication. Record only actual contributions and declared
+review scope. A maintainer's technical check is not independent clinical review.
 
-Detailed rules for working with AI tools — section 8.
+### 4.3. Future collaboration
 
-### 4.2. What "three physicians" means
-
-At the MVP stage, clinical governance rests on three people. This is a deliberate constraint, which implies:
-
-- At least two of three must approve every clinical change
-- Disagreement → a one-week pause for reconciliation; if needed, an external clinician is brought in for consultation
-- If one person is unavailable — clinical merges are suspended until a minimum of two active reviewers are restored
-- Escalation for complex disagreements: consultation with a relevant professional society (ESMO, EHA, ASCO) or an expert at a partner institution
-
-### 4.3. What we are looking for going forward
-
-The project is explicitly seeking to expand Clinical Co-Leads to 5–7 people through:
-- Academic partnership with a medical institution
-- Engagement of oncologist-residents and fellows as associate contributors
-- International advisory (Ukrainian clinicians in the EU/USA)
+Future advisers or partnerships may be added when they actually exist. Do not
+describe planned people, partnerships, endorsements or approvals as established.
 
 ---
 
@@ -170,46 +180,22 @@ The project is explicitly seeking to expand Clinical Co-Leads to 5–7 people th
 
 ## 6. Clinical change process
 
-### 6.1. Standard workflow
+### 6.1. Solo-maintainer workflow
 
-> **⚠ Temporary dev mode (from 2026-04-26):** the project is in the v0.1
-> phase (specs-first / KB-bootstrap). Clinical Co-Leads have not yet been
-> appointed, so two-reviewer signoff at the PR level is **temporarily
-> considered "OK"** for merge under the following conditions: (a) the
-> content has ≥1 cited primary source, (b) all Indication / Regimen /
-> RedFlag entities remain marked as `STUB` (`reviewer_signoffs: 0`),
-> (c) no Plan built from this KB is published to patients outside
-> synthetic / demo mode.
-> This exemption is in effect until Clinical Co-Leads are appointed or
-> until the first production deployment for real HCP users — whichever
-> comes first.
-> Tracker: roadmap → "Operations → Reviewer signoff workflow".
+1. Describe the change, rationale, source references and effects on existing
+   outputs. Preserve source attribution and versioned content.
+2. The maintainer checks source traceability, schema/reference integrity,
+   executable behavior, relevant regression tests and translation limitations.
+3. Record actual technical verification and unresolved content limitations.
+   Do not fabricate reviewers or clinical approvals.
+4. Commit, publish and verify the deployed informational result. No external
+   reviewer quota or quorum is a prerequisite.
+5. If an expert later supplies a clinical review, record its actual scope,
+   content revision and provenance separately. That review does not approve
+   an individual patient's treatment plan.
 
-1. **Proposal:** Contributor creates a PR with a clinical change.
-   Required fields: description, rationale, sources (minimum 1 primary),
-   evidence level, impact on existing recommendations.
-
-2. **Triage:** One of the Clinical Co-Leads (rotating) assigns two
-   reviewers within 7 days.
-
-3. **Medical review:** Two independent clinicians within 14 days.
-   Standardized checklist: accuracy of citations, consistency with
-   current guidelines, contradictions, evidence level, completeness.
-
-4. **Reconciliation:** If reviewers agree — merge. If they disagree —
-   discussion; if needed, a third clinician or public disclosure of
-   both positions with a "controversy" label (analogous to NCCN category 2B).
-
-5. **Technical review:** Verification of format, schema validity, test coverage.
-
-6. **Automated tests:** Against a test patient cohort (synthetic + de-identified
-   real cases).
-
-7. **Merge + changelog:** Public record with authors, reviewers, sources,
-   version.
-
-8. **Post-merge flag:** First 30 days — status "recent", priority on
-   bug reports.
+Clinical recommendation labels remain truthful; technical checks alone do not
+make content clinically validated. LLMs do not choose regimens or doses (§8.3).
 
 ### 6.2. Emergency pathway
 

@@ -1,5 +1,12 @@
 # OpenOnco
 
+Additional interface editions: [Italiano](https://openonco.info/it/), [Dansk](https://openonco.info/da/), [Svenska](https://openonco.info/sv/), [Norsk bokmål](https://openonco.info/nb/) and [Suomi](https://openonco.info/fi/). Their clinical readers share the original documents and apply saved display catalogs; medical passages and canonical diagnosis names may retain their source language. Broader clinical translations are in preparation. See [localization scope](docs/LOCALIZATION.md).
+
+OpenOnco is a solo project. One maintainer delivers updates with automated
+checks and source traceability. External clinical review is optional and is
+recorded separately; it is not a prerequisite for development or publication.
+Technical checks do not constitute clinical validation or individual treatment approval.
+
 [![Validate Knowledge Base](https://github.com/romeo111/OpenOnco/actions/workflows/validate-kb.yml/badge.svg)](https://github.com/romeo111/OpenOnco/actions/workflows/validate-kb.yml)
 [![Code: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](LICENSE)
 [![Content: CC BY 4.0](https://img.shields.io/badge/content-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)

@@ -1,5 +1,8 @@
 # Completeness critique of the promotion kit
 
+> Solo-project clarification, 2026-10-12: external clinical review is optional, not a development or publication requirement. Multi-review counts below are descriptive audit data, not a release quota. Review-count correction: 0/2,570 records have two eligible current content reviews. Historical counters do not establish current authority, scope, revision or reviewer independence. This is not individual treatment approval and does not deny historical clinician feedback. Other dated figures and feature claims in this draft still require verification against [the current fact sheet](00-FACT-SHEET.md) before publication.
+
+
 The promotion kit asset files (press-kit.md, etc.) do not exist on disk in this worktree or elsewhere in the repo — `find` returned no matches. They are described only in the brief. My job as completeness critic is to assess the kit at the spec/coverage level using the fact sheet and the kit manifest provided in the brief, which I have in full. I don't need the file bodies to assess channel/audience coverage, cross-asset consistency risks, and next actions — that analysis works off the asset list, the fact sheet's audiences/claims/safety rules, and what a complete launch kit should contain.
 
 I have everything needed. Here is the assessment.
@@ -18,7 +21,7 @@ The 8 asset files named in the brief are not present on disk in this worktree (c
 **High-leverage gaps:**
 1. **Clinician / academic channels — the primary audience is underserved.** The kit leans developer/social. Missing: a one-page **clinician-facing PDF flyer / tumor-board handout**, and an outreach track to **oncology societies, residency programs, and hem/onc Twitter(X) KOLs**. The #1 user (oncologists running tumor boards) has no asset in their native format. This is the biggest gap.
 2. **No demo media.** No **short screencast/GIF/Loom** of the in-browser `try.html` demo. Every channel (HN, Reddit, X, README) converts far better with a 30–60s demo. Single highest-ROI missing artifact.
-3. **No email / direct-outreach templates** for the `partner-outreach` motion — cold emails to clinical advisors (recruiting Co-Leads is the actual bottleneck, given 15/806 sign-off) and to potential institutional pilots.
+3. **No email / direct-outreach templates** for the `partner-outreach` motion — cold emails to clinical advisors (recruiting Co-Leads is the actual bottleneck, given 0/2,570 sign-off) and to potential institutional pilots.
 4. **No `llms.txt` / AI-discoverability asset treatment** despite it being a canonical link — worth a dedicated "be cited by LLMs" angle given the MCP differentiator.
 5. **No FAQ / objection-handling doc** ("is this a medical device?", "how is this not just an LLM?", "STUB — so is it safe?"). This will be asked on HN/Reddit and should have canonical answers to keep messaging consistent.
 6. **Contributor onboarding (TaskTorrent chunk workflow)** is named as an audience but has no standalone "how to contribute" recruitment asset beyond community-outreach.
@@ -42,7 +45,7 @@ The fact sheet enforces this well (v0.1, "seeking feedback", no validation, STUB
 2. **[DRAFT-READY] Fix README number drift + establish a single source of truth for KB counts.** Resolve the one `all_clear=false` asset; make counts reference capabilities-page figures (state 2026-06-17) and add a note/script so future daily refreshes don't re-introduce drift. *Blocks credible launch; fully draftable now.*
 3. **[DRAFT-READY] Create a clinician one-pager + FAQ/objection-handling doc.** PDF tumor-board handout (clinician-native format) plus canonical Q&A ("medical device?", "just an LLM?", "STUB safety?") to keep messaging consistent across HN/Reddit/press. Closes the primary-audience and consistency gaps together. *Draftable from fact sheet.*
 4. **[DRAFT-READY] Add a disclaimer + STUB-caveat + early-stage compliance checklist and run every asset through it.** A short gate doc: each asset must carry not-a-medical-device + verify-with-oncologist + early-stage frame + STUB caveat on any number. Catches the safety/honesty omissions that short-form assets invite. *Pure drafting.*
-5. **[OUTWARD] Draft + send clinical-advisor / Co-Lead recruitment outreach.** Email templates targeting oncology societies, residency programs, and hem/onc KOLs — the 15/806 sign-off bottleneck is the real maturity constraint, so recruiting reviewers is more leveraged than top-of-funnel reach. Templates are draftable; sending and target selection need the maintainer. *Use the `partner-outreach` skill to draft.*
+5. **[OUTWARD] Draft + send clinical-advisor / Co-Lead recruitment outreach.** Email templates targeting oncology societies, residency programs, and hem/onc KOLs — the 0/2,570 sign-off bottleneck is the real maturity constraint, so recruiting reviewers is more leveraged than top-of-funnel reach. Templates are draftable; sending and target selection need the maintainer. *Use the `partner-outreach` skill to draft.*
 
 ---
 **Note:** If you want me to actually critique the rendered copy (disclaimer presence per asset, exact number drift, claim-by-claim compliance), point me at the directory where the 8 `.md` files live — they are not in `C:\Users\805\cancer-autoresearch` or its worktrees.

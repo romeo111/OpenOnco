@@ -43,6 +43,9 @@ MESSAGES = {
 
 def messages_for(locale):
     code = locale.lower().split('-')[0]
+    if code in ('it', 'da', 'sv', 'nb', 'fi'):
+        from serverless.additional_locale_messages import MESSAGES as additional
+        return dict(additional[code])
     return {source: values[LANGUAGES.index(code)] for source, values in MESSAGES.items()} if code in LANGUAGES else {}
 
 

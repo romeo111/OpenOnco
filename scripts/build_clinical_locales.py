@@ -13,6 +13,8 @@ from urllib.parse import urlsplit, urlunsplit
 from scripts.site_locales import locale_href
 from scripts.site_nav import render_top_bar
 from scripts.site_translation_catalog import LANGUAGES, PAGES, ProseCollector, load_catalog, normalize, source_pages
+from scripts.additional_locale_copy import ADDITIONAL_LANGUAGES
+from scripts.shared_clinical_reader import render_shared_reader, write_reader_assets
 
 NOTICES = {
     'es': ('Traducción preliminar: revisión clínica pendiente.', 'Consultar el original en inglés'),
@@ -39,6 +41,12 @@ UNSPECIFIED_ORIGINAL_LINKS = {
     'de': 'Originalfassung ansehen',
     'fr': 'Consulter la version originale',
 }
+
+from scripts.additional_locale_copy import NOTICES as ADDITIONAL_NOTICES
+NOTICES.update({code: values[:2] for code, values in ADDITIONAL_NOTICES.items()})
+ORIGINAL_LABELS.update({code: values[2] for code, values in ADDITIONAL_NOTICES.items()})
+UKRAINIAN_ORIGINAL_LINKS.update({code: values[3] for code, values in ADDITIONAL_NOTICES.items()})
+UNSPECIFIED_ORIGINAL_LINKS.update({code: values[4] for code, values in ADDITIONAL_NOTICES.items()})
 
 
 def write_generated_text(path: Path, value: str) -> None:
@@ -200,7 +208,8 @@ def build_clinical_locales(output_dir: Path, catalog_dir: Path | None = None):
     if not manifest.exists():
         return {'clinical_localized_pages': 0, 'pages': []}
     inventory = json.loads(manifest.read_text(encoding='utf-8'))['languages']
-    for locale in LANGUAGES:
+    active_languages = [locale for locale in LANGUAGES if locale in inventory]
+    for locale in active_languages:
         catalog_path = manifest.parent / f'clinical.{locale}.json'
         if hashlib.sha256(catalog_path.read_bytes()).hexdigest() != inventory[locale]['sha256']:
             raise ValueError(f'Clinical catalog checksum mismatch: {locale}')
@@ -218,12 +227,14 @@ def build_clinical_locales(output_dir: Path, catalog_dir: Path | None = None):
     from serverless.clinical_locale_messages import messages_for
     from scripts.clinical_curated_copy import messages_for as clinical_titles
     from serverless.clinical_question import DISCLAIMER_EN, DISCLAIMER_TRANSLATIONS
-    for locale in LANGUAGES:
+    for locale in active_languages:
         catalog = load_catalog(locale, catalog_dir)
         if not catalog:
             raise ValueError(f'Missing completed clinical translation catalog: {locale}')
         root = output_dir / locale
         root.mkdir(exist_ok=True)
+        if locale in ADDITIONAL_LANGUAGES:
+            write_reader_assets(output_dir, locale)
         # A generated plan can use any current clinical record. Keep the full
         # checked display catalog there; small interactive surfaces need only
         # their own script literals and curated UI messages.
@@ -243,7 +254,15 @@ def build_clinical_locales(output_dir: Path, catalog_dir: Path | None = None):
             relative = path.relative_to(output_dir).as_posix()
             target = root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
-            write_generated_text(target, localize_page(path.read_text(encoding='utf-8'), locale, relative, available, catalog, style_assets=style_assets))
+            source = path.read_text(encoding='utf-8')
+            if locale in ADDITIONAL_LANGUAGES and relative not in PAGES:
+                match = re.search(r'<title>(.*?)</title>', source, re.S)
+                source_title = html.unescape(match[1]) if match else 'OpenOnco'
+                title = catalog.get(normalize(source_title), source_title)
+                rendered = render_shared_reader(source, locale, relative, title)
+            else:
+                rendered = localize_page(source, locale, relative, available, catalog, style_assets=style_assets)
+            write_generated_text(target, rendered)
             published.append(f'{locale}/{relative}')
         index = json.loads((output_dir / 'kb_search_index.json').read_text(encoding='utf-8'))
         for entry in index['entries']:

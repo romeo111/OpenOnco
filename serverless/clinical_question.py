@@ -66,12 +66,18 @@ DISCLAIMER_EN = (
     "to your clinician, who must confirm or reject it for your specific case."
 )
 DISCLAIMER_TRANSLATIONS = {
+    'it': 'OpenOnco restituisce una bozza per il gruppo multidisciplinare. Non è un parere medico né una decisione clinica autonoma. Non curarti da solo: mostra questa risposta al tuo medico, che deve confermarla o respingerla per il tuo caso specifico.',
+    'da': 'OpenOnco giver et udkast til en tværfaglig konference. Det er ikke lægelig rådgivning eller en selvstændig klinisk beslutning. Du må ikke behandle dig selv: vis svaret til din læge, som skal bekræfte eller afvise det for dit konkrete tilfælde.',
+    'sv': 'OpenOnco ger ett utkast för en multidisciplinär konferens. Det är inte medicinsk rådgivning eller ett självständigt kliniskt beslut. Behandla inte dig själv: visa svaret för din läkare, som måste bekräfta eller avvisa det för ditt specifika fall.',
+    'nb': 'OpenOnco gir et utkast til et tverrfaglig møte. Det er ikke medisinsk rådgivning eller en selvstendig klinisk beslutning. Ikke behandle deg selv: vis svaret til legen din, som må bekrefte eller avvise det for ditt konkrete tilfelle.',
+    'fi': 'OpenOnco tuottaa luonnoksen moniammatillista kokousta varten. Se ei ole lääketieteellinen neuvo eikä itsenäinen kliininen päätös. Älä hoida itseäsi tämän vastauksen perusteella: näytä se lääkärillesi, jonka on vahvistettava tai hylättävä se juuri sinun tapauksessasi.',
     "es": "OpenOnco genera un borrador para el comité de tumores. No es asesoramiento médico ni una decisión clínica autónoma. No se automedique: muestre esta respuesta a su médico, quien debe confirmarla o rechazarla para su caso concreto.",
     "pt": "O OpenOnco produz um rascunho para a reunião multidisciplinar. Não constitui aconselhamento médico nem uma decisão clínica autónoma. Não se automedique: mostre esta resposta ao seu médico, que deve confirmá-la ou rejeitá-la para o seu caso concreto.",
     "de": "OpenOnco erstellt einen Entwurf für das Tumorboard. Dies ist keine medizinische Beratung und keine eigenständige klinische Entscheidung. Behandeln Sie sich nicht selbst: Zeigen Sie diese Antwort Ihrer Ärztin oder Ihrem Arzt, die oder der sie für Ihren konkreten Fall bestätigen oder verwerfen muss.",
     "fr": "OpenOnco produit un brouillon pour la réunion de concertation. Il ne s’agit ni d’un avis médical ni d’une décision clinique autonome. Ne vous traitez pas vous-même : présentez cette réponse à votre médecin, qui doit la confirmer ou la rejeter pour votre cas précis.",
 }
 ANSWER_LANGUAGES = {"en": "English", "uk": "Ukrainian", "es": "Spanish", "pt": "European Portuguese", "de": "German", "fr": "French"}
+ANSWER_LANGUAGES.update({'it': 'Italian', 'da': 'Danish', 'sv': 'Swedish', 'nb': 'Norwegian Bokmål', 'fi': 'Finnish'})
 
 
 EXTRACTION_SCHEMA: dict[str, Any] = {
@@ -701,6 +707,7 @@ _PROMPT_INJECTION_MARKERS = (
 )
 
 _ONCOLOGY_MARKERS = (
+    "kræft", "kreft", "syöpä", "karsinoom", "lymfom", "leukemi", "kasvain", "svulst",
     "krebs", "karzinom", "leukäm", "cancro", "cáncer", "leucém",
     "leucem", "métastas", "metástas", "quimioter", "chimioth",
     "onkolog", "oncolog",

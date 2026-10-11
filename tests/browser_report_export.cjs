@@ -80,11 +80,11 @@ const run = value => vm.runInContext(value, context);
     vm.runInContext('staleWhileRevalidate(event)', sw); await response;
   }
   assert.deepEqual(cacheOptions, [false, true], 'Translation script versions must remain distinct in cache');
-  for (const locale of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/']) {
+  for (const locale of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/', 'it/', 'da/', 'sv/', 'nb/', 'fi/']) {
     const page = fs.readFileSync(`docs/${locale}try.html`, 'utf8');
     assert(page.includes('const planFresh = reportReady && planSource !== null && !planDirty;'));
     assert(page.includes('if (planSource == null || !reportReady) return;'));
     assert(page.includes('if (!planSource || !reportReady || isInteractionLocked()) return;'));
   }
-  console.log('Report export readiness, failure recovery, displayed language and six clients passed');
+  console.log('Report export readiness, failure recovery, displayed language and eleven clients passed');
 })().catch(error => { console.error(error); process.exitCode = 1; });

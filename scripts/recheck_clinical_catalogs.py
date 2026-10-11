@@ -23,6 +23,8 @@ def recheck(catalog_dir: Path, index_path: Path, *, apply: bool = False) -> dict
     repaired = {}
     inventory = {}
     for locale in LANGUAGES:
+        if locale not in manifest['languages']:
+            continue
         path = catalog_dir / f'clinical.{locale}.json'
         if hashlib.sha256(path.read_bytes()).hexdigest() != manifest['languages'][locale]['sha256']:
             raise ValueError(f'Catalog checksum mismatch: {locale}')

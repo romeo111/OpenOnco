@@ -1,5 +1,8 @@
 # OpenOnco — Digital Public Goods (DPG) submission draft
 
+> Solo-project clarification, 2026-10-12: external clinical review is optional, not a development or publication requirement. Multi-review counts below are descriptive audit data, not a release quota. Review-count correction: 0/2,570 records have two eligible current content reviews. Historical counters do not establish current authority, scope, revision or reviewer independence. This is not individual treatment approval and does not deny historical clinician feedback. Other dated figures and feature claims in this draft still require verification against [the current fact sheet](00-FACT-SHEET.md) before publication.
+
+
 Draft answers to the [DPG Standard](https://digitalpublicgoods.net/standard/) 9
 indicators, for submission at <https://app.digitalpublicgoods.net/signup>. DPG
 recognition is the **single biggest distribution lever for LMIC government/NGO
@@ -73,7 +76,7 @@ ICD-O-3, RxNorm, CTCAE v5**. Open development practices: public repo, tests
 - **Anti-automation-bias:** always presents ≥2 alternative tracks side by side,
   never a single binding directive (`CHARTER §15.2 C6`).
 - **Honest maturity:** most content is **STUB ("proposed, not approved")** — only
-  15 of 806 entities have two-reviewer sign-off; no formal clinical validation
+  0 of 2,570 entities have two-reviewer sign-off; no formal clinical validation
   yet. This is disclosed everywhere.
 - **Data protection:** local-only processing; no PHI collection; synthetic public
   data. **Not for patient self-use**; HCP-facing, adults, non-emergency.

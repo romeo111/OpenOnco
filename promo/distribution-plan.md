@@ -1,5 +1,8 @@
 # OpenOnco Launch & Distribution Plan
 
+> Solo-project clarification, 2026-10-12: external clinical review is optional, not a development or publication requirement. Multi-review counts below are descriptive audit data, not a release quota. Review-count correction: 0/2,570 records have two eligible current content reviews. Historical counters do not establish current authority, scope, revision or reviewer independence. This is not individual treatment approval and does not deny historical clinician feedback. Other dated figures and feature claims in this draft still require verification against [the current fact sheet](00-FACT-SHEET.md) before publication.
+
+
 **Asset type:** Prioritized, sequenced launch/distribution plan
 **Project status:** v0.1 draft, early-stage open-source, actively seeking clinician feedback
 **Canonical date for all numbers:** state 2026-06-17 (capabilities page)
@@ -11,7 +14,7 @@
 > the not-a-medical-device disclaimer and the "all recommendations must be
 > verified by a qualified oncologist" line. No LLM picks the regimen or dose —
 > say so, accurately, in every channel. Most clinical content is **STUB** (only
-> 15 of 806 entities are dual-signed-off); pair every coverage/number claim with
+> 0 of 2,570 entities are dual-signed-off); pair every coverage/number claim with
 > that maturity caveat. Use only the five canonical links below.
 
 ---
@@ -96,7 +99,7 @@ a one-shot launch-day blast.
      defer to the capabilities page so no asset quotes stale numbers.
    - Confirm top-of-README carries: one-liner, no-LLM-decides guarantee,
      not-a-medical-device + verify-with-oncologist disclaimer, "v0.1 draft,
-     seeking clinician feedback," STUB maturity note (15/806 dual-signed-off),
+     seeking clinician feedback," STUB maturity note (0/2,570 dual-signed-off),
      and the demo link.
    - **Fix overclaim in `mcp_server/README.md`.** It currently describes the
      knowledge base as "peer-reviewed clinical content." That overstates maturity
@@ -171,7 +174,7 @@ These are low-risk, compounding, and seed inbound traffic before any spiky post.
 - **Body must include, honestly:** what it is (HCP-only CDS, two cited tracks),
   the deterministic/no-LLM-decides differentiator, 3-layer citation guard,
   local/in-browser privacy model, MIT + CC BY 4.0, the demo link, **and** the
-  honest maturity statement: v0.1 draft, only 15/806 dual-signed-off (most
+  honest maturity statement: v0.1 draft, only 0/2,570 dual-signed-off (most
   content STUB), no formal clinical validation study, seeking clinician feedback.
 - **Forbidden in the post:** "validated," "FDA-cleared/approved," "diagnoses,"
   "replaces an oncologist," "for patients," "prescribes/calculates doses,"
@@ -273,7 +276,7 @@ Track against the project's actual goal — clinician feedback first, reach seco
 - [ ] "Verified by a qualified oncologist" line present.
 - [ ] HCP / tumor-board framing — not patients, not caregivers.
 - [ ] "v0.1 draft, seeking clinician feedback" stated or clearly implied.
-- [ ] Any coverage/number paired with the STUB caveat (15/806 dual-signed-off).
+- [ ] Any coverage/number paired with the STUB caveat (0/2,570 dual-signed-off).
 - [ ] Numbers match the 2026-06-17 capabilities figures.
 - [ ] "No LLM picks the regimen/dose; deterministic + cited" stated accurately.
 - [ ] Any visual uses synthetic data and is not labeled as a real patient.

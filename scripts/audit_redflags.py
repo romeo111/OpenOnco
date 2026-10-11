@@ -34,6 +34,11 @@ from pathlib import Path
 import yaml
 
 REPO_ROOT = Path(__file__).parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from knowledge_base.review_metrics import current_review_count
+
 RF_DIR = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "redflags"
 RULE_DIRS = [
     REPO_ROOT / "knowledge_base" / "hosted" / "content" / "indications",
@@ -305,14 +310,6 @@ def _is_draft(data: dict) -> bool:
     return bool(data.get("draft"))
 
 
-def _signoff_count(data: dict) -> int:
-    val = data.get("reviewer_signoffs", 0)
-    try:
-        return int(val or 0)
-    except (TypeError, ValueError):
-        return 0
-
-
 def _shifts_count(data: dict) -> int:
     return len(data.get("shifts_algorithm") or [])
 
@@ -349,6 +346,8 @@ def _render_markdown(
     naming_pairs: list[tuple[str, str]],
     coverage: dict[str, set[str]],
     incomplete_diseases: list[tuple[str, list[str]]],
+    reviewers: dict | None = None,
+    diseases: dict | None = None,
 ) -> str:
     all_ids = sorted(set(defined) | set(refs))
     lines: list[str] = []
@@ -376,7 +375,8 @@ def _render_markdown(
     n_missing = sum(1 for r in refs if r not in defined)
     n_drafts = sum(1 for r in defined.values() if _is_draft(r))
     n_no_sources = sum(1 for r in defined.values() if not _has_sources(r))
-    n_signed_off = sum(1 for r in defined.values() if _signoff_count(r) >= 2)
+    n_signed_off = sum(1 for r in defined.values()
+                       if current_review_count(r, "redflags", reviewers or {}, diseases or {}) >= 2)
     cat_counts: Counter = Counter(_category_label(r) for r in defined.values())
 
     lines.append("## Summary")
@@ -389,7 +389,7 @@ def _render_markdown(
     lines.append(f"- **Referenced + missing (❌):** {n_missing}")
     lines.append(f"- **Drafts:** {n_drafts}")
     lines.append(f"- **Without source citation:** {n_no_sources}")
-    lines.append(f"- **With ≥2 reviewer signoffs (CHARTER §6.1):** "
+    lines.append(f"- **With ≥2 eligible current content reviews (CHARTER §6.1):** "
                  f"{n_signed_off}")
     lines.append("")
     lines.append("By category:")
@@ -612,8 +612,13 @@ def main() -> int:
     naming_pairs = _detect_naming_mismatches(defined, refs)
     coverage, incomplete = _matrix_coverage(defined, disease_names)
 
+    def context(directory):
+        records = [_load_yaml(path) for path in _walk_yaml(directory)]
+        return {row["id"]: row for row in records if isinstance(row, dict) and row.get("id")}
+
     md = _render_markdown(
         defined, refs, disease_names, naming_pairs, coverage, incomplete,
+        context(RF_DIR.parent / "reviewers"), context(DISEASE_DIR),
     )
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(md, encoding="utf-8")

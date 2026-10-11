@@ -23,6 +23,11 @@ def _language_flag(locale: str) -> str:
         "pt": '<path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/>',
         "de": '<path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/>',
         "fr": '<path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/>',
+        "it": '<path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/>',
+        "da": '<path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/>',
+        "sv": '<path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/>',
+        "nb": '<path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/>',
+        "fi": '<path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/>',
     }
     return f'<svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false">{artwork[locale]}</svg>'
 
@@ -30,7 +35,7 @@ def _language_flag(locale: str) -> str:
 def render_top_bar(active: str = "", target_lang: str = "en",
                     lang_switch_href: str = "/ukr/", page_path: str | None = None,
                     available_paths: set[str] | None = None) -> str:
-    """Render an accessible six-language header; unavailable twins lead home."""
+    """Render accessible navigation for registered languages; unavailable twins lead home."""
     def cls(name: str) -> str:
         return ' class="active" aria-current="page"' if active == name else ""
 

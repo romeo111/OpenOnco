@@ -1,5 +1,8 @@
 # OpenOnco — Social Promotion Asset
 
+> Solo-project clarification, 2026-10-12: external clinical review is optional, not a development or publication requirement. Multi-review counts below are descriptive audit data, not a release quota. Review-count correction: 0/2,570 records have two eligible current content reviews. Historical counters do not establish current authority, scope, revision or reviewer independence. This is not individual treatment approval and does not deny historical clinician feedback. Other dated figures and feature claims in this draft still require verification against [the current fact sheet](00-FACT-SHEET.md) before publication.
+
+
 > **Posting note (read before publishing):** Every post below must keep its disclaimer line. OpenOnco is informational clinical decision support for healthcare professionals — not a medical device, not for patients, not for emergencies. All engine output is a draft to be verified by a qualified oncologist. Use only the five canonical links. Numbers reflect the capabilities page, state 2026-06-17.
 
 ---
@@ -38,7 +41,7 @@ The engine is deterministic and runs locally — CLI, in-browser via Pyodide (Py
 **6/**
 Honest scope: this is a v0.1 draft.
 
-The engine + a 92-disease, 444-source cited KB are live, but only 15 of 806 clinical entities have two-reviewer sign-off — the rest are STUB (data + algorithm + sources, not yet dual-signed). It's a proposed plan, not an approved one.
+The engine + a 92-disease, 444-source cited KB are live, but only 0 of 2,570 clinical entities have two-reviewer sign-off — the rest are STUB (data + algorithm + sources, not yet dual-signed). It's a proposed plan, not an approved one.
 
 **7/**
 You can even route an oncology question through it from your LLM: an MCP server exposes the deterministic engine to Claude Desktop, Cursor, etc. The model relays cited engine output instead of answering from memory.
@@ -98,7 +101,7 @@ A few things that make it different:
 
 🔹 **Composable.** An MCP server exposes the engine to any Model Context Protocol client (Claude Desktop, Cursor, etc.), so a model can relay cited engine output instead of answering from memory.
 
-**Where it stands — honestly:** OpenOnco is a v0.1 draft. The engine and a 92-disease knowledge base (664 indications, 384 regimens, 298 drugs, 594 red flags, 444 cited sources) are live across hematologic and solid-tumor oncology. But only 15 of 806 clinical entities have completed two-Clinical-Co-Lead sign-off — the rest are STUB: structured data, algorithm, and sources in place, but not yet dual-reviewed. There has been no formal clinical validation study. This is a proposed-plan tool actively seeking clinician feedback, not a validated product.
+**Where it stands — honestly:** OpenOnco is a v0.1 draft. The engine and a 92-disease knowledge base (664 indications, 384 regimens, 298 drugs, 594 red flags, 444 cited sources) are live across hematologic and solid-tumor oncology. But only 0 of 2,570 clinical entities have completed two-Clinical-Co-Lead sign-off — the rest are STUB: structured data, algorithm, and sources in place, but not yet dual-reviewed. There has been no formal clinical validation study. This is a proposed-plan tool actively seeking clinician feedback, not a validated product.
 
 If you run or sit on tumor boards — or you build safety-critical, rules-first decision-support systems — try the in-browser demo on a case you know and tell us what's wrong. That feedback is the most valuable contribution right now. The code is MIT and the content is CC BY 4.0, so it's also a forkable pattern for any safety-critical domain.
 

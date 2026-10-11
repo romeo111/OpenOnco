@@ -10,7 +10,7 @@ from scripts.clinical_curated_copy import safety_notices_for
 from scripts.site_translation_catalog import LANGUAGES
 
 
-def publish(staging=Path('.tmp/clinical-next'), corpus=Path('.tmp/clinical-source-strings.json')):
+def publish(staging=Path('.tmp/clinical-next'), corpus=Path('.tmp/clinical-source-strings.json'), locales=None):
     sources = json.loads(corpus.read_text(encoding='utf-8'))
     destination = Path('scripts/locales')
     index = json.loads(Path('docs/kb_search_index.json').read_text(encoding='utf-8'))
@@ -18,7 +18,10 @@ def publish(staging=Path('.tmp/clinical-next'), corpus=Path('.tmp/clinical-sourc
     pattern = re.compile(r'(?<!\w)(?:' + '|'.join(re.escape(name) for name in sorted(drugs, key=len, reverse=True)) + r')(?!\w)', re.I)
     verified = {}
     inventory = {}
-    for locale in LANGUAGES:
+    active_languages = list(locales) if locales is not None else [locale for locale in LANGUAGES if (destination / f'clinical.{locale}.json').exists()]
+    if not active_languages or any(locale not in LANGUAGES for locale in active_languages):
+        raise ValueError('Select existing supported translation catalogs')
+    for locale in active_languages:
         path = staging / f'clinical.{locale}.json'
         summary = json.loads(path.with_suffix('.summary.json').read_text(encoding='utf-8'))
         catalog = json.loads(path.read_text(encoding='utf-8'))
@@ -61,15 +64,17 @@ def publish(staging=Path('.tmp/clinical-next'), corpus=Path('.tmp/clinical-sourc
             digest = hashlib.sha256(previous.read_bytes()).hexdigest()
             shutil.copy2(previous, backup / f'{previous.stem}.{digest}.json')
         previous.write_bytes(payload)
+    manifest_path = destination / 'clinical_manifest.json'
+    previous_manifest = json.loads(manifest_path.read_text(encoding='utf-8')) if manifest_path.exists() else {}
     manifest = {
         'source_sha256': hashlib.sha256(corpus.read_bytes()).hexdigest(),
-        'languages': inventory,
+        'languages': {**previous_manifest.get('languages', {}), **inventory},
         'models': {
             'es/pt/fr': {'name': 'Helsinki-NLP/opus-mt-en-ROMANCE', 'revision': 'f8f3a28e8b6272d0ccc0290b832f699e154ae431', 'license': 'Apache-2.0'},
             'de': {'name': 'Helsinki-NLP/opus-mt-en-de', 'revision': '6183067f769a302e3861815543b9f312c71b0ca4', 'license': 'CC-BY-4.0'},
         },
     }
-    (destination / 'clinical_manifest.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+    manifest_path.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(inventory, indent=2))
 
 

@@ -12,6 +12,11 @@ def diagnostic_display(source, locale):
         'pt': 'Alertas não avaliados: ',
         'de': 'Nicht ausgewertete Warnhinweise: ',
         'fr': 'Alertes non évaluées : ',
+        'it': 'Segnali di allarme non valutati: ',
+        'da': 'Ikke-vurderede advarselstegn: ',
+        'sv': 'Ej bedömda varningssignaler: ',
+        'nb': 'Ikke-vurderte varselsignaler: ',
+        'fi': 'Arvioimattomat varoitusmerkit: ',
     }[locale]
     return label + match[1]
 
@@ -79,10 +84,31 @@ SAFETY_NOTICES = {
 
 
 def safety_notices_for(locale):
+    if locale in ('it', 'da', 'sv', 'nb', 'fi'):
+        catalog = messages_for(locale)
+        return {source: catalog.get(source, source) for source in SAFETY_NOTICES}
     index = ('es', 'pt', 'de', 'fr').index(locale)
     return {source: translations[index] for source, translations in SAFETY_NOTICES.items()}
 
 UI_MESSAGES = {
+    'Solo project. One maintainer delivers updates with automated checks and source traceability. External clinical review is optional and is recorded separately.': (
+        'Proyecto individual. Una persona responsable publica las actualizaciones con comprobaciones automáticas y trazabilidad de las fuentes. La revisión clínica externa es opcional y se registra por separado.',
+        'Projeto individual. Uma pessoa responsável publica as atualizações com verificações automáticas e rastreabilidade das fontes. A revisão clínica externa é opcional e registada separadamente.',
+        'Einzelprojekt. Eine verantwortliche Person veröffentlicht Aktualisierungen mit automatisierten Prüfungen und nachvollziehbaren Quellen. Externe klinische Prüfungen sind optional und werden gesondert dokumentiert.',
+        'Projet individuel. Une personne responsable publie les mises à jour avec des contrôles automatisés et des sources traçables. La relecture clinique externe est facultative et consignée séparément.',
+    ),
+    'Clinical content is informational; technical checks are not treatment approval.': (
+        'El contenido clínico es informativo; las comprobaciones técnicas no constituyen una aprobación del tratamiento.',
+        'O conteúdo clínico é informativo; as verificações técnicas não constituem uma aprovação do tratamento.',
+        'Klinische Inhalte dienen der Information; technische Prüfungen sind keine Freigabe einer Behandlung.',
+        'Le contenu clinique est informatif ; les contrôles techniques ne constituent pas une approbation du traitement.',
+    ),
+    "Only current independent content reviews by authorized reviewers are counted; this is not approval of a patient's treatment.": (
+        'Solo se cuentan las revisiones actuales e independientes del contenido realizadas por revisores autorizados; esto no constituye la aprobación del tratamiento de un paciente.',
+        'Só são contabilizadas as revisões atuais e independentes do conteúdo por revisores autorizados; isto não constitui a aprovação do tratamento de um doente.',
+        'Gezählt werden nur aktuelle, unabhängige Inhaltsprüfungen durch autorisierte Prüfende; dies ist keine Freigabe der Behandlung eines Patienten.',
+        'Seules les relectures actuelles et indépendantes du contenu par des relecteurs autorisés sont comptées ; cela ne constitue pas une approbation du traitement d’un patient.',
+    ),
     'Clinical content review pending': ('Revisión del contenido clínico pendiente', 'Revisão do conteúdo clínico pendente', 'Prüfung des klinischen Inhalts ausstehend', 'Vérification du contenu clinique en attente'),
     'Clinical content review pending (1 of 2 eligible reviews recorded)': ('Revisión del contenido clínico pendiente (1 de 2 revisiones admisibles registrada)', 'Revisão do conteúdo clínico pendente (1 de 2 revisões admissíveis registada)', 'Prüfung des klinischen Inhalts ausstehend (1 von 2 zulässigen Prüfungen dokumentiert)', 'Vérification du contenu clinique en attente (1 des 2 relectures recevables enregistrée)'),
     'Required clinical-content reviews recorded': ('Revisiones requeridas del contenido clínico registradas', 'Revisões necessárias do conteúdo clínico registadas', 'Erforderliche Prüfungen des klinischen Inhalts dokumentiert', 'Relectures requises du contenu clinique enregistrées'),
@@ -285,6 +311,18 @@ SHOWCASE_TITLES = {
 
 
 def messages_for(locale):
+    if locale in ('it', 'da', 'sv', 'nb', 'fi'):
+        import json
+        from pathlib import Path
+        path = Path(__file__).with_name('locales') / f'curated.{locale}.json'
+        catalog = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+        # An observed literal Nordic model error corrupted "Colorectal
+        # carcinoma". Keep canonical diagnosis names in their source language
+        # until an explicit terminology draft is supplied.
+        protected = Path(__file__).with_name('locales') / 'additional-diagnosis-originals.json'
+        if protected.exists():
+            catalog.update({name: name for name in json.loads(protected.read_text(encoding='utf-8'))})
+        return catalog
     title = NSCLC[locale]
     status = {
         'es': ['Respuesta preparada', 'Se necesita una aclaración', 'Preparado'],
@@ -303,6 +341,9 @@ def messages_for(locale):
     index = ('es', 'pt', 'de', 'fr').index(locale)
     catalog.update({source: values[index] for source, values in UI_MESSAGES.items()})
     review_aliases = {
+        'Солопроєкт. Один власник доставляє оновлення з автоматичними перевірками та простежуваними джерелами. Зовнішній клінічний перегляд є додатковим і записується окремо.': 'Solo project. One maintainer delivers updates with automated checks and source traceability. External clinical review is optional and is recorded separately.',
+        'Клінічний зміст має інформаційний характер; технічні перевірки не є схваленням лікування.': 'Clinical content is informational; technical checks are not treatment approval.',
+        'Рахуються лише актуальні незалежні перегляди змісту від уповноважених рецензентів; це не схвалення лікування пацієнта.': "Only current independent content reviews by authorized reviewers are counted; this is not approval of a patient's treatment.",
         'Перегляд клінічного змісту очікується': 'Clinical content review pending',
         'Перегляд клінічного змісту очікується (записано 1 із 2 допустимих переглядів)': 'Clinical content review pending (1 of 2 eligible reviews recorded)',
         'Записано необхідні перегляди клінічного змісту': 'Required clinical-content reviews recorded',

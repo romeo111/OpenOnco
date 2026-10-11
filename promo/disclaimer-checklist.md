@@ -1,5 +1,8 @@
 # Pre-publish safety checklist (gate)
 
+> Solo-project clarification, 2026-10-12: external clinical review is optional, not a development or publication requirement. Multi-review counts below are descriptive audit data, not a release quota. Review-count correction: 0/2,570 records have two eligible current content reviews. Historical counters do not establish current authority, scope, revision or reviewer independence. This is not individual treatment approval and does not deny historical clinician feedback. Other dated figures and feature claims in this draft still require verification against [the current fact sheet](00-FACT-SHEET.md) before publication.
+
+
 Run **every** public-facing OpenOnco asset through this before it ships — including
 short-form ones (tweets, badges, registry blurbs) where caveats are most often
 dropped for length.
@@ -13,7 +16,7 @@ dropped for length.
       feedback") — not implied as finished.
 - [ ] **STUB caveat sits next to any coverage number.** If the asset cites "92
       diseases / 664 indications / 444 sources", it must also note that most
-      content is STUB ("proposed, not approved"; 15/806 dual-signed-off).
+      content is STUB ("proposed, not approved"; 0/2,570 dual-signed-off).
 - [ ] **Numbers are the canonical ones** (capabilities page, state 2026-06-17):
       92 diseases · 664 indications · 384 regimens · 298 drugs · 594 red flags ·
       444 sources · 16 MDT skills. **Not** the README's stale figures.

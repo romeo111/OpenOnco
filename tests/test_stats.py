@@ -78,13 +78,12 @@ def test_html_widget_well_formed():
         assert d.disease_id in html
 
 
-def test_html_widget_stub_warning_present_when_no_reviews():
+def test_html_widget_review_absence_does_not_block_solo_publication():
     s = collect_stats()
     html = format_html_widget(s)
-    # As of today no content has 2 sign-offs → warning must show
-    if s.reviewer_signoffs_reviewed == 0 and s.reviewer_signoffs_total > 0:
-        assert "STUB" in html
-        assert "Co-Lead" in html
+    assert "Солопроєкт" in html
+    assert "не є умовою розробки чи публікації" in html
+    assert 'class="oo-warn"' not in html
 
 
 def test_html_widget_no_style_flag():

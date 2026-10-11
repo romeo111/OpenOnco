@@ -1,5 +1,8 @@
 # OpenOnco — MCP Registry & Directory Listings
 
+> Solo-project clarification, 2026-10-12: external clinical review is optional, not a development or publication requirement. Multi-review counts below are descriptive audit data, not a release quota. Review-count correction: 0/2,570 records have two eligible current content reviews. Historical counters do not establish current authority, scope, revision or reviewer independence. This is not individual treatment approval and does not deny historical clinician feedback. Other dated figures and feature claims in this draft still require verification against [the current fact sheet](00-FACT-SHEET.md) before publication.
+
+
 **Asset:** `mcp-registries`
 **Purpose:** Get the OpenOnco MCP server listed in the major public Model Context Protocol directories.
 **Server path:** `https://github.com/romeo111/OpenOnco/tree/main/mcp_server`
@@ -28,7 +31,7 @@ These are pre-cleared against the fact sheet's `approved_claims`, `forbidden_cla
 >
 > Covers 92 diseases across hematologic and solid-tumor oncology with 444 cited sources (state 2026-06-17). Code is MIT; specs and generated content are CC BY 4.0.
 >
-> **This is an early-stage v0.1 draft, actively seeking clinician feedback. It is informational support for healthcare professionals — not a medical device, not FDA-cleared/approved, not clinically validated, and not for direct patient use or time-critical decisions. Most clinical content is STUB (only 15 of 806 entities have two-reviewer sign-off). Every output must be verified by a qualified oncologist.**
+> **This is an early-stage v0.1 draft, actively seeking clinician feedback. It is informational support for healthcare professionals — not a medical device, not FDA-cleared/approved, not clinically validated, and not for direct patient use or time-critical decisions. Most clinical content is STUB (only 0 of 2,570 entities have two-reviewer sign-off). Every output must be verified by a qualified oncologist.**
 
 **Categories / tags (reuse across registries that accept them):**
 `healthcare` · `clinical-decision-support` · `oncology` · `medical` · `knowledge-base` · `deterministic` · `rules-engine` · `research`

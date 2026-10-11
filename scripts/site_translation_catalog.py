@@ -6,7 +6,7 @@ import unicodedata
 from html.parser import HTMLParser
 from pathlib import Path
 
-LANGUAGES = ('es', 'pt', 'de', 'fr')
+LANGUAGES = ('es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi')
 PAGES = ('try.html', 'ask.html', 'prevent.html', 'diseases.html', 'gallery.html', 'handbook.html', 'kb.html')
 CATALOG_DIR = Path(__file__).with_name('locales')
 
@@ -111,6 +111,11 @@ def polarity_tokens(text, locale='en'):
         'pt': r'\b(?:nao|nunca|sem|evit\w*|contraindic\w*)\b',
         'de': r'\b(?:nicht|nie|kein\w*|ohne|vermeid\w*|kontraindiz\w*|gegenanzeig\w*)\b',
         'fr': r'\b(?:pas|jamais|sans|evit\w*|contre-indic\w*|contre-indiqu\w*)\b',
+        'it': r'\b(?:non|mai|senza|evit\w*|controindic\w*)\b',
+        'da': r'\b(?:ikke|aldrig|uden|undga\w*|kontraindic\w*)\b',
+        'sv': r'\b(?:inte|ej|aldrig|utan|undvik\w*|kontraindic\w*)\b',
+        'nb': r'\b(?:ikke|aldri|uten|unnga\w*|kontraindis\w*)\b',
+        'fi': r'\b(?:ei|eivat|ala|alkaa|ilman|valt\w*|vasta-aihe\w*)\b',
     }
     return (len(re.findall(patterns[locale], plain)), len(re.findall(r'\b(?:positiv\w*|positif\w*|positivity)\b', plain)), len(re.findall(r'\b(?:negativ\w*|negatif\w*|negativity)\b', plain)))
 

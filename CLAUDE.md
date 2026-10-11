@@ -76,9 +76,11 @@ not stage, do not move without explicit user instruction.
   from clinical documents (with human verification), translation with
   clinical review. Not: choosing regimens, generating dosing, interpreting
   biomarkers for treatment selection.
-- **Two-reviewer merge for clinical content** (CHARTER §6.1). Any change
-  under `knowledge_base/hosted/content/` that affects clinical recommendations
-  needs two of three Clinical Co-Leads to approve.
+- **Solo maintainer delivery** (CHARTER solo-project amendment, 2026-10-12).
+  Two-reviewer approval is not a prerequisite to development, merging or
+  publication of this informational service. Require source traceability,
+  relevant automated verification and honest content/language status.
+  External clinical review is additional evidence, not a release quota.
   Runtime review coverage requires explicit current authorization, distinct
   human identity keys, current-revision timestamps and affirmative scope.
   Placeholder/pending/revoked profiles confer no coverage. Do not create human

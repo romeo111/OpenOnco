@@ -1,5 +1,8 @@
 # Show HN: OpenOnco
 
+> Solo-project clarification, 2026-10-12: external clinical review is optional, not a development or publication requirement. Multi-review counts below are descriptive audit data, not a release quota. Review-count correction: 0/2,570 records have two eligible current content reviews. Historical counters do not establish current authority, scope, revision or reviewer independence. This is not individual treatment approval and does not deny historical clinician feedback. Other dated figures and feature claims in this draft still require verification against [the current fact sheet](00-FACT-SHEET.md) before publication.
+
+
 ## Title
 
 ```
@@ -58,7 +61,7 @@ and myeloid hematology plus solid tumors, 664 indications, 384 regimens, 298 dru
 skills. 77 of 92 diseases have a full modeled chain.
 
 Honest about maturity: this is a v0.1 draft. The big caveat is clinical sign-off —
-only 15 of 806 clinical entities have passed two-Clinical-Co-Lead review. The rest
+only 0 of 2,570 clinical entities have passed two-Clinical-Co-Lead review. The rest
 are STUB: structured data, algorithm, and sources are in place, but they are
 "proposed plan, not approved plan." There has been no formal clinical validation
 study and no real-world deployment validation.
@@ -110,7 +113,7 @@ refusal to emit a plan when histology isn't confirmed.
 I want to be very plain about what this is NOT, because HN will (rightly) push on it:
 it is not validated, not a medical device, not FDA-cleared, and not a replacement
 for an oncologist or a tumor board. It does not diagnose or screen. Most of the
-knowledge base is still STUB — only 15 of 806 clinical entities have two-reviewer
+knowledge base is still STUB — only 0 of 2,570 clinical entities have two-reviewer
 sign-off, so please read everything else as "proposed, not approved." There has been
 no formal clinical validation study.
 

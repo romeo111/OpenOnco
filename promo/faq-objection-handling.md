@@ -1,5 +1,8 @@
 # OpenOnco — FAQ / objection handling
 
+> Solo-project clarification, 2026-10-12: external clinical review is optional, not a development or publication requirement. Multi-review counts below are descriptive audit data, not a release quota. Review-count correction: 0/2,570 records have two eligible current content reviews. Historical counters do not establish current authority, scope, revision or reviewer independence. This is not individual treatment approval and does not deny historical clinician feedback. Other dated figures and feature claims in this draft still require verification against [the current fact sheet](00-FACT-SHEET.md) before publication.
+
+
 Canonical answers so messaging stays consistent across HN, Reddit, press, and
 outreach. Keep answers honest; never soften the maturity caveats.
 
@@ -20,7 +23,7 @@ plausible fabrication. (Via the MCP server, an LLM can even *route through* the
 engine instead of guessing.)
 
 ### Most of the knowledge base is "STUB" — is it safe to use?
-Be clear-eyed: only **15 of 806** clinical entities have two-Clinical-Co-Lead
+Be clear-eyed: only **0 of 2,570** clinical entities have two-Clinical-Co-Lead
 sign-off. The rest are **STUB** — structured data, algorithm, and sources are in
 place, but they are **"proposed, not approved."** Treat every output as a *draft to
 verify*, never as an approved plan. This is exactly why the project is asking for

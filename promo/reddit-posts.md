@@ -1,5 +1,8 @@
 # OpenOnco — Reddit Promotion Asset
 
+> Solo-project clarification, 2026-10-12: external clinical review is optional, not a development or publication requirement. Multi-review counts below are descriptive audit data, not a release quota. Review-count correction: 0/2,570 records have two eligible current content reviews. Historical counters do not establish current authority, scope, revision or reviewer independence. This is not individual treatment approval and does not deny historical clinician feedback. Other dated figures and feature claims in this draft still require verification against [the current fact sheet](00-FACT-SHEET.md) before publication.
+
+
 > **Usage note for the poster:** Reddit self-promotion rules are strict and culture varies sharply by subreddit. Post to **one subreddit at a time**, space posts out by several days, and **read each subreddit's rules + recent mod posts before submitting**. Reply to comments in good faith — these are framed as feedback requests, not launches, and should stay that way. Every post below carries the not-a-medical-device disclaimer and the "verify with a qualified oncologist" statement, per project safety rules. Do not edit those out.
 
 ---
@@ -24,7 +27,7 @@ The design decision I most want feedback on: **no LLM ever picks the regimen or 
 Honest about maturity — this is the important part:
 - It's **v0.1 draft.** No formal clinical validation study has been done. No real-world deployment.
 - Knowledge base today: 92 diseases, 384 regimens, 664 indications, 298 drugs, 594 red flags, 444 cited sources (state 2026-06-17).
-- **But most of that content is STUB:** structured data + algorithm + sources are in place, but only **15 of 806 clinical entities** have passed the required two-Clinical-Co-Lead sign-off. STUB = "proposed plan, not approved plan." I am not claiming this content is reviewed or safe to use as-is.
+- **But most of that content is STUB:** structured data + algorithm + sources are in place, but only **0 of 2,570 clinical entities** have passed the required two-Clinical-Co-Lead sign-off. STUB = "proposed plan, not approved plan." I am not claiming this content is reviewed or safe to use as-is.
 - Actionability evidence is from CIViC (CC0). Source guidelines (NCCN, ESMO, EHA, BSH, EASL, Ukraine MoH/NSZU, etc.) are referenced, not redistributed.
 
 It is positioned explicitly as an FDA **non-device** CDS tool: informational support, **not a medical device**, HCP-only, adults only, outpatient/non-time-critical planning. Not for emergencies. Not for direct patient use. **Every output is a draft that must be verified by the treating oncologist.**
@@ -61,7 +64,7 @@ Coverage spans lymphoid + myeloid heme and solid tumors — examples in the gall
 
 The honest caveats, because they matter clinically:
 - **v0.1 draft. No formal clinical validation study. No real-world deployment.**
-- **Most content is STUB** — data + algorithm + sources exist, but only **15 of 806 entities** have two-reviewer clinical sign-off. Treat everything as a proposed draft, not an approved plan.
+- **Most content is STUB** — data + algorithm + sources exist, but only **0 of 2,570 entities** have two-reviewer clinical sign-off. Treat everything as a proposed draft, not an approved plan.
 - HCP-only, adults only, outpatient/non-time-critical. Not for emergencies. Not for patient self-use.
 
 What I'd love: run a synthetic case you know well in the demo and tell me where the regimen logic, the citations, or the red flags are wrong, dated, or missing.
@@ -95,7 +98,7 @@ If you've ever watched an LLM confidently invent a cancer drug or a dose, this i
 
 Input is structured FHIR/mCODE-shaped JSON; output is one Plan with two alternative tracks (standard + aggressive) side by side, each with a step-by-step decision trace. No confirmed histology → it returns a diagnostic brief instead of a plan.
 
-Maturity, straight: it's **v0.1**. KB is 92 diseases / 384 regimens / 444 cited sources, but **most entities are STUB** — only 15 of 806 have full two-reviewer clinical sign-off — and there's been **no formal clinical validation.** It's a working pattern and a forkable architecture, not a finished product. Honestly the "engine, not the LLM, owns the decision + MCP-as-relay" pattern is reusable for any safety-critical rules-first domain, which is partly why it's open source.
+Maturity, straight: it's **v0.1**. KB is 92 diseases / 384 regimens / 444 cited sources, but **most entities are STUB** — only 0 of 2,570 have full two-reviewer clinical sign-off — and there's been **no formal clinical validation.** It's a working pattern and a forkable architecture, not a finished product. Honestly the "engine, not the LLM, owns the decision + MCP-as-relay" pattern is reusable for any safety-critical rules-first domain, which is partly why it's open source.
 
 - MCP server: https://github.com/romeo111/OpenOnco/tree/main/mcp_server
 - Repo: https://github.com/romeo111/OpenOnco
@@ -131,7 +134,7 @@ Why it's a decent MCP case study:
 - Runs locally — engine is offline-capable, patient data never leaves the machine, no backend.
 - Open source: code MIT, content CC BY 4.0. Forkable as a pattern for other rules-first, safety-critical domains.
 
-Honest status: **v0.1 draft.** The KB covers 92 diseases with 444 cited sources, but **most clinical entities are STUB** (only 15 of 806 have two-reviewer sign-off) and there's been **no formal clinical validation.** Use the synthetic demo cases to kick the tires; don't point it at a real patient and trust the output.
+Honest status: **v0.1 draft.** The KB covers 92 diseases with 444 cited sources, but **most clinical entities are STUB** (only 0 of 2,570 have two-reviewer sign-off) and there's been **no formal clinical validation.** Use the synthetic demo cases to kick the tires; don't point it at a real patient and trust the output.
 
 - MCP server: https://github.com/romeo111/OpenOnco/tree/main/mcp_server
 - Repo: https://github.com/romeo111/OpenOnco

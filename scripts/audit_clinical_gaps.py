@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Any
 
 from knowledge_base.validation.loader import load_content
+from knowledge_base.review_metrics import current_review_count, historical_review_counts
 from scripts.site_head import SITE_FONT_LINK
 
 
@@ -88,14 +89,6 @@ class GapMetric:
             "next_action": self.next_action,
             "details": self.details,
         }
-
-
-def _signoff_count(value: Any) -> int:
-    if isinstance(value, list):
-        return len(value)
-    if isinstance(value, int):
-        return value
-    return 0
 
 
 def _name(entity: dict[str, Any]) -> str:
@@ -182,6 +175,8 @@ def _regimen_drugs(regimen: dict[str, Any]) -> set[str]:
 
 def audit(root: Path = KB_ROOT) -> dict[str, Any]:
     result = load_content(root)
+    if not result.ok:
+        raise ValueError("Cannot publish clinical gap metrics from an invalid knowledge base")
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     entities = result.entities_by_id
@@ -198,17 +193,22 @@ def audit(root: Path = KB_ROOT) -> dict[str, Any]:
     radiation_courses = _entity_type(result, "radiation_courses")
     regimen_by_id = _entity_map(result, "regimens")
 
-    # 1. Clinical sign-off.
+    reviewers = _entity_map(result, "reviewers")
+    disease_context = _entity_map(result, "diseases")
+
+    # 1. Current content-review coverage; historical counts are not approvals.
     signoff_total = 0
     signoff_reviewed = 0
     signoff_by_type: dict[str, dict[str, int]] = {}
     for etype in SIGNOFF_TYPES:
         rows = _entity_type(result, etype)
         total = len(rows)
-        reviewed = sum(1 for row in rows if _signoff_count(row.get("reviewer_signoffs")) >= 2)
+        reviewed = sum(1 for row in rows if current_review_count(row, etype, reviewers, disease_context) >= 2)
         signoff_total += total
         signoff_reviewed += reviewed
-        signoff_by_type[etype] = {"total": total, "reviewed": reviewed, "gap": total - reviewed}
+        signoff_by_type[etype] = {"total": total, "reviewed": reviewed, "gap": total - reviewed,
+                                 "historical_structured_reviews": sum(historical_review_counts(row)[0] for row in rows),
+                                 "legacy_review_counter_total": sum(historical_review_counts(row)[1] for row in rows)}
     signoff_pct = round(100 * signoff_reviewed / max(1, signoff_total), 1)
 
     # 2. Solid tumor 2L+ coverage.
@@ -303,12 +303,12 @@ def audit(root: Path = KB_ROOT) -> dict[str, Any]:
     gaps = [
         GapMetric(
             id="clinical_signoff",
-            title="Clinical sign-off",
+            title="Optional external clinical review",
             current=f"{signoff_reviewed}/{signoff_total} signoff-eligible entities reviewed ({signoff_pct}%)",
-            target=">=85% reviewed before public guideline-grade claims",
-            status="blocked_on_reviewers",
-            blocker="Cannot be fixed by code; requires qualified Clinical Co-Lead review.",
-            next_action="Batch the largest STUB queues by entity type and assign reviewer owners.",
+            target="Record actual additional reviews when available; no reviewer quota for solo-project releases.",
+            status="informational",
+            blocker="External clinical review is optional and is not a development or publication blocker.",
+            next_action="Prioritize source traceability, automated checks and transparent limitations; record additional expert feedback separately.",
             details={"by_type": signoff_by_type},
         ),
         GapMetric(

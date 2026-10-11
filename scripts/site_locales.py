@@ -2,6 +2,7 @@
 
 from pathlib import PurePosixPath
 from pathlib import Path
+import json
 
 LOCALES = {
     "en": ("", "English", "EN"),
@@ -10,10 +11,16 @@ LOCALES = {
     "pt": ("pt", "Português", "PT"),
     "de": ("de", "Deutsch", "DE"),
     "fr": ("fr", "Français", "FR"),
+    "it": ("it", "Italiano", "IT"),
+    "da": ("da", "Dansk", "DA"),
+    "sv": ("sv", "Svenska", "SV"),
+    "nb": ("nb", "Norsk bokmål", "NO"),
+    "fi": ("fi", "Suomi", "FI"),
 }
 PUBLIC_PAGES = {"index.html", "about.html", "capabilities.html", "kb.html", "participate.html", "handbook.html", "try.html", "ask.html", "prevent.html", "gallery.html", "diseases.html", "specs.html", "news.html"}
 
-CLINICAL_LOCALES = {"es", "pt", "de", "fr"} if (Path(__file__).with_name('locales') / 'clinical_manifest.json').exists() else set()
+_CLINICAL_MANIFEST = Path(__file__).with_name('locales') / 'clinical_manifest.json'
+CLINICAL_LOCALES = set(json.loads(_CLINICAL_MANIFEST.read_text(encoding='utf-8'))['languages']) if _CLINICAL_MANIFEST.exists() else set()
 
 
 def split_locale(path: str) -> tuple[str, str]:
@@ -143,3 +150,10 @@ if CLINICAL_LOCALES:
         'fr': 'Neuf chapitres pédagogiques avec sources, cas synthétiques et questions d’entraînement. Traduction provisoire en français, en attente de vérification clinique.',
     }.items():
         COPY[code]['handbook_body'] = text
+
+# Additional catalogs are authored offline and checked in before publication.
+from scripts.additional_locale_copy import ENGLISH_COPY, NAVIGATION, NAVIGATION_KEYS
+for code, labels in NAVIGATION.items():
+    copy_path = Path(__file__).with_name('locales') / f'site.{code}.json'
+    translated = json.loads(copy_path.read_text(encoding='utf-8')) if copy_path.exists() else {}
+    COPY[code] = {**ENGLISH_COPY, **translated, **dict(zip(NAVIGATION_KEYS, labels))}

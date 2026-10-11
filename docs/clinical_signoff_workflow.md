@@ -1,6 +1,6 @@
 # Clinical content review workflow
 
-CHARTER §6.1 requires two of three Clinical Co-Leads to approve changes to clinical content. This workflow records content reviews; it does not approve an individual patient's treatment plan. Software validates declared provenance, not medical credentials or the clinical truth of a review.
+OpenOnco is a solo project under the 2026-10-12 CHARTER amendment. External clinical review is optional and is not a prerequisite for development, merging or publishing the informational service. The older two-of-three team proposal is not the current operating model. This workflow records actual additional content reviews; it does not approve an individual patient's treatment plan. Software validates declared provenance, not medical credentials or the clinical truth of a review. Automated checks and source verification must be described separately from clinical review.
 
 ## Human authorization comes first
 

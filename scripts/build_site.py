@@ -1982,12 +1982,12 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
              "tumours. Same data also exposed as <code>disease_coverage.json</code> for "
              "machine consumption. No «trust us, it's in there» — see the matrix."),
             ("Verify our algorithms with your AI tokens",
-             "The remaining bottleneck isn't code — it's two-reviewer sign-off on each "
-             "Indication. <strong>TaskTorrent</strong> is our distributed-AI contribution "
+             "OpenOnco is a solo project; focus on reliable software and traceable sources. "
+             "<strong>TaskTorrent</strong> is our distributed-AI contribution "
              "shelf: maintainer publishes structured chunks (~100k–300k tokens of work each), "
              "your AI agent (Claude Code, Codex, Cursor, ChatGPT) takes one and opens a PR "
              "in 1–3 hours. No clinical expertise needed — you trigger structured drafting; "
-             f"clinical co-leads sign off. <a href=\"https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md\" target=\"_blank\" rel=\"noopener\"><strong>How to start →</strong></a>"),
+             f"the maintainer verifies the change; expert feedback is optional. <a href=\"https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md\" target=\"_blank\" rel=\"noopener\"><strong>How to start →</strong></a>"),
         ]
         why_today_foot = (
             "Every missed biomarker can cost a life. Every hour of manual cross-checking "
@@ -2124,12 +2124,12 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
              "гематологією і солідними пухлинами. Ті ж дані доступні машинно як "
              "<code>disease_coverage.json</code>. Без «там же є щось» — є матриця."),
             ("Верифікувати наші алгоритми токенами вашого AI",
-             "Залишковий bottleneck — не код, а two-reviewer sign-off на кожній Indication. "
+             "OpenOnco — солопроєкт із пріоритетом надійного функціоналу й простежуваних джерел. "
              "<strong>TaskTorrent</strong> — наша полка розподілених AI-контрибуцій: "
              "maintainer публікує structured chunks (~100k–300k токенів роботи кожен), "
              "ваш AI-агент (Claude Code, Codex, Cursor, ChatGPT) бере один і відкриває PR "
              "за 1-3 години. Клінічна експертиза не потрібна — ви тригерите structured "
-             "drafting; clinical co-leads потім signoff'ять. "
+             "drafting; власник перевіряє зміни, а відгук фахівця є додатковим. "
              f"<a href=\"https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md\" target=\"_blank\" rel=\"noopener\"><strong>Як почати →</strong></a>"),
         ]
         why_today_foot = (
@@ -7942,11 +7942,8 @@ def _render_capabilities_uk_legacy(stats) -> str:
     </p>
 
     <div class="callout callout-hard">
-      <strong>STUB-статус клінічного контенту.</strong>
-      Dual sign-off: <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong>
-      (CHARTER §6.1 вимагає два Clinical Co-Lead approvals).
-      Це proposed-plan: structured data + algorithm + sources на місці, але без dual sign-off.
-      Інструмент підтримки рішень, не медичний пристрій. Стан на <code>{stats.generated_at_utc}</code>.
+      <strong>Солопроєкт. Один власник доставляє оновлення з автоматичними перевірками та простежуваними джерелами. Зовнішній клінічний перегляд є додатковим і записується окремо.</strong>
+      <p>Клінічний зміст має інформаційний характер; технічні перевірки не є схваленням лікування.</p>
     </div>
 
     <nav class="cap-tabs" role="tablist" aria-label="Розділи">
@@ -8040,7 +8037,7 @@ def _render_capabilities_uk_legacy(stats) -> str:
         <div class="key-num"><div class="key-num-val">{n_redflags}</div><div class="key-num-lbl">red flags</div></div>
         <div class="key-num"><div class="key-num-val">{n_sources}</div><div class="key-num-lbl">цитованих джерел</div></div>
         <div class="key-num"><div class="key-num-val">{n_skills}</div><div class="key-num-lbl">лікар-скілів (MDT)</div></div>
-        <div class="key-num is-warn"><div class="key-num-val">{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</div><div class="key-num-lbl">з dual sign-off</div></div>
+        <div class="key-num"><div class="key-num-val">Соло</div><div class="key-num-lbl">Один власник</div></div>
       </div>
 
       <div class="pillars">
@@ -8395,7 +8392,7 @@ def _render_capabilities_uk_legacy(stats) -> str:
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
             <h3>Two-reviewer merge</h3>
-            <p>Будь-яка зміна clinical content потребує 2 з 3 Clinical Co-Lead approvals. Без цього — STUB.</p>
+            <p>Солопроєкт. Один власник доставляє оновлення з автоматичними перевірками та простежуваними джерелами. Зовнішній клінічний перегляд є додатковим і записується окремо.</p>
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§15.2 C6</div>
@@ -8434,13 +8431,13 @@ def _render_capabilities_uk_legacy(stats) -> str:
             <tr><td>Радіотерапія</td><td>частково</td><td>RT у мультимодальних Indications; як окрема сутність — не моделюється</td></tr>
             <tr><td>Хірургія</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
             <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Hard-coded на схемах лікування; не auto-refresh</td></tr>
-            <tr><td>Reviewer dual sign-off</td><td><strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong></td><td>Основна bottleneck-метрика — capacity план: {stats.reviewer_signoffs_total} → ≥85% verified</td></tr>
+            <tr><td>Зовнішній клінічний перегляд</td><td>Додатковий</td><td>Записується окремо; не є умовою розробки чи публікації.</td></tr>
             <tr><td>Live gap dashboard</td><td><a href="/ukr/clinical-gaps.html">→ link</a></td><td>Build-generated audit (sign-off, solid 2L+, surgery, RT, supportive)</td></tr>
           </tbody>
         </table>
         <div class="callout">
           <strong>Що НЕ означає STUB:</strong> structured data + algorithm + sources вже є.
-          STUB означає: не пройшло dual sign-off. «Proposed plan», не «approved plan».
+          STUB — позначка стану змісту, не блокування релізу солопроєкту й не схвалення лікування.
         </div>
       </div>
 
@@ -8462,9 +8459,7 @@ def _render_capabilities_uk_legacy(stats) -> str:
       <div class="info-section">
         <h2>TaskTorrent — верифікувати алгоритми токенами вашого AI</h2>
         <p class="info-text">
-          Найбільший gap — <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong> dual-reviewer sign-off.
-          Bottleneck не вирішується новим кодом — він вирішується контрибуторами з AI-tool'ами,
-          що беруть structured chunks роботи.
+          Солопроєкт. Один власник доставляє оновлення з автоматичними перевірками та простежуваними джерелами. Зовнішній клінічний перегляд є додатковим і записується окремо.
         </p>
         <div class="num-grid num-grid--rich">
           <div class="num-card num-card--accent">
@@ -8498,8 +8493,7 @@ def _render_capabilities_uk_legacy(stats) -> str:
             <div class="num-big">4</div>
             <div class="num-lbl">Що буде з PR</div>
             <p class="num-text">
-              Maintainer перевіряє mechanical (валідатор, schema). Clinical Co-Lead — sample review semantic
-              (CHARTER §6.1). Merge → sidecar landing → upsert у hosted KB → render. Атрибуція у
+              Власник перевіряє джерела, тести й схеми. Зовнішній перегляд є додатковим. Merge → sidecar landing → upsert у hosted KB → render. Атрибуція у
               <code>_contribution_meta.yaml</code>.
             </p>
           </div>
@@ -8812,11 +8806,8 @@ def _render_capabilities_en(stats) -> str:
     </p>
 
     <div class="callout callout-hard">
-      <strong>STUB status across all clinical content.</strong>
-      Dual sign-off: <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong>
-      (CHARTER §6.1 requires two Clinical Co-Lead approvals).
-      This is a proposed plan: structured data + algorithm + sources are in place, but without dual sign-off.
-      Decision-support tool, not a medical device. State as of <code>{stats.generated_at_utc}</code>.
+      <strong>Solo project. One maintainer delivers updates with automated checks and source traceability. External clinical review is optional and is recorded separately.</strong>
+      <p>Clinical content is informational; technical checks are not treatment approval.</p>
     </div>
 
     <nav class="cap-tabs" role="tablist" aria-label="Sections">
@@ -8910,7 +8901,7 @@ def _render_capabilities_en(stats) -> str:
         <div class="key-num"><div class="key-num-val">{n_redflags}</div><div class="key-num-lbl">red flags</div></div>
         <div class="key-num"><div class="key-num-val">{n_sources}</div><div class="key-num-lbl">cited sources</div></div>
         <div class="key-num"><div class="key-num-val">{n_skills}</div><div class="key-num-lbl">clinician skills (MDT)</div></div>
-        <div class="key-num is-warn"><div class="key-num-val">{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</div><div class="key-num-lbl">with dual sign-off</div></div>
+        <div class="key-num"><div class="key-num-val">Solo</div><div class="key-num-lbl">One maintainer</div></div>
       </div>
 
       <div class="pillars">
@@ -9268,7 +9259,7 @@ def _render_capabilities_en(stats) -> str:
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
             <h3>Two-reviewer merge</h3>
-            <p>Any change to clinical content needs 2 of 3 Clinical Co-Lead approvals. Without that — STUB.</p>
+            <p>Solo project. One maintainer delivers updates with automated checks and source traceability. External clinical review is optional and is recorded separately.</p>
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§15.2 C6</div>
@@ -9307,13 +9298,13 @@ def _render_capabilities_en(stats) -> str:
             <tr><td>Radiation therapy</td><td>partial</td><td>RT in multimodal Indications; not modeled as a standalone entity</td></tr>
             <tr><td>Surgery</td><td>not modeled</td><td>Surgical oncology indications absent</td></tr>
             <tr><td>Formulary live-feed</td><td>static flag</td><td>Hard-coded on regimens; not auto-refreshed</td></tr>
-            <tr><td>Reviewer dual sign-off</td><td><strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong></td><td>Primary bottleneck metric — capacity plan: {stats.reviewer_signoffs_total} → ≥85% verified</td></tr>
+            <tr><td>External clinical review</td><td>Optional</td><td>Recorded separately; not a development or publication gate.</td></tr>
             <tr><td>Live gap dashboard</td><td><a href="/clinical-gaps.html">→ link</a></td><td>Build-generated audit (sign-off, solid 2L+, surgery, RT, supportive care)</td></tr>
           </tbody>
         </table>
         <div class="callout">
           <strong>What STUB does NOT mean:</strong> structured data + algorithm + sources are already in place.
-          What STUB means: didn't pass Clinical Co-Lead dual sign-off. «Proposed plan», not «approved plan».
+          STUB describes content maturity; it is not a solo-project release gate or treatment approval.
         </div>
       </div>
 
@@ -9336,9 +9327,7 @@ def _render_capabilities_en(stats) -> str:
       <div class="info-section">
         <h2>TaskTorrent — verify algorithms with your AI's tokens</h2>
         <p class="info-text">
-          The biggest gap — <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong> dual-reviewer sign-off.
-          The bottleneck doesn't dissolve with new code — it dissolves through contributors with AI tools
-          who pick up structured chunks of work.
+          Solo project. One maintainer delivers updates with automated checks and source traceability. External clinical review is optional and is recorded separately.
         </p>
         <div class="num-grid num-grid--rich">
           <div class="num-card num-card--accent">
@@ -9356,7 +9345,7 @@ def _render_capabilities_en(stats) -> str:
             <p class="num-text">
               An AI tool with a token budget (Claude Code Pro+, Codex, Cursor, ChatGPT with web). GitHub + <code>gh</code> CLI.
               Python 3.10+. ~1-3 hours of your time. <strong>No clinical expertise required</strong> —
-              you trigger structured drafting; the clinical co-leads sign off.
+              you trigger structured drafting; the the maintainer verifies the change; expert feedback is optional.
             </p>
           </div>
           <div class="num-card">
@@ -9372,8 +9361,7 @@ def _render_capabilities_en(stats) -> str:
             <div class="num-big">4</div>
             <div class="num-lbl">What happens to the PR</div>
             <p class="num-text">
-              The maintainer checks the mechanical part (validator, schema). A Clinical Co-Lead does a
-              sample review of the semantic part (CHARTER §6.1). Merge → sidecar landing → upsert into
+              The maintainer checks sources, tests and schemas. External review is optional. Merge → sidecar landing → upsert into
               hosted KB → render. Attribution recorded in <code>_contribution_meta.yaml</code>.
             </p>
           </div>
@@ -9505,7 +9493,7 @@ _DISEASES_PAGE_LABELS = {
         "lead": (
             "OpenOnco coverage across {n} oncology diagnoses: biomarkers, "
             "drugs, indications/regimens/RedFlags, algorithm and questionnaire "
-            "presence, % fill and % Clinical Co-Lead verification."
+            "presence, fill and optional recorded content-review evidence."
         ),
         "sum_diseases": "Total diseases",
         "sum_avg_fill": "Avg fill",
@@ -9537,9 +9525,7 @@ _DISEASES_PAGE_LABELS = {
             "<b>Ver %</b> — % of this disease's indications with reviewer_signoffs ≥ 2 (CHARTER §6.1)",
         ],
         "verified_note": (
-            "<b>Ver % is mostly 0%</b> — dev-mode signoff exemption "
-            "(<code>project_charter_dev_mode_exemptions</code>) is in effect "
-            "until Clinical Co-Leads are appointed. This is intentional, not a bug."
+            'Solo project. One maintainer delivers updates with automated checks and source traceability. External clinical review is optional and is recorded separately.'
         ),
         "table_title": "Disease coverage",
         "avg_label": "avg",
@@ -9894,14 +9880,14 @@ _SPECS_CATALOG: list[dict] = [
         "title_en": "Charter & Governance",
         "summary_uk": (
             "Управління проектом, scope (що проект робить і чого не робить), "
-            "FDA non-device CDS positioning (§15 з constraints C1-C7), two-reviewer rule "
+            "FDA non-device CDS positioning (§15 з constraints C1-C7), solo-maintainer workflow "
             "для clinical content (§6.1), patient-data privacy (§9.3), forbidden prompt "
             "patterns для LLM (§8.3 — LLM не приймає клінічні рішення)."
         ),
         "summary_en": (
             "Project governance, scope (what it does and what it explicitly does not), "
-            "FDA non-device CDS positioning (§15 with constraints C1-C7), the two-reviewer "
-            "rule for clinical content (§6.1), patient-data privacy (§9.3), forbidden "
+            "FDA non-device CDS positioning (§15 with constraints C1-C7), the solo-maintainer "
+            "workflow for source-traceable content (§6.1), patient-data privacy (§9.3), forbidden "
             "prompt patterns for LLMs (§8.3 — LLMs do not make clinical decisions)."
         ),
     },
@@ -10157,14 +10143,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
         )
         regulatory_link = "View PDF on GitHub →"
         process_h = "How we update the specifications"
-        process_p1 = (
-            "Any change under <code>specs/</code> or <code>knowledge_base/hosted/content/</code> "
-            "that affects clinical recommendations requires a <strong>two-reviewer merge</strong> "
-            "(CHARTER §6.1) — two of three Clinical Co-Lead approvals. This is the hard rule "
-            "that gates clinical-content quality. Technical specs (schemas, engine, ingestion) "
-            "can merge with a single reviewer to keep development moving, but clinical content "
-            "always needs dual sign-off."
-        )
+        process_p1 = 'Solo project. One maintainer delivers updates with automated checks and source traceability. External clinical review is optional and is recorded separately.'
         process_p2 = (
             "All specifications are written Ukrainian-first (the interface and the clinical "
             "reviewers are UA), but technical terms and license names stay in English inline. "
@@ -10178,8 +10157,8 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
              "OpenOnco is designed for the §520(o)(1)(E) carve-out — not a medical device. Constraints C1-C7 are hard-enforced."),
             ("No patient data", "CHARTER.md §9.3",
              "<code>patient_plans/</code> and any patient HTML are gitignored. All examples are synthetic."),
-            ("Two-reviewer merge", "CHARTER.md §6.1",
-             "Clinical content needs 2 of 3 Clinical Co-Lead approvals; otherwise the Indication stays STUB."),
+            ("Solo maintainer delivery", "CHARTER.md §6.1",
+             "The maintainer verifies sources and tests; external clinical review is optional."),
             ("No LLM clinical judgment", "CHARTER.md §8.3",
              "LLMs do not pick regimens, do not generate doses, and do not interpret biomarkers for therapy selection."),
             ("No treatment without histology", "CHARTER.md §15.2 C7",
@@ -10227,14 +10206,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
         )
         regulatory_link = "View PDF on GitHub →"
         process_h = "Як ми оновлюємо специфікації"
-        process_p1 = (
-            "Кожна зміна під <code>specs/</code> або <code>knowledge_base/hosted/content/</code> "
-            "що affects clinical recommendations потребує <strong>two-reviewer merge</strong> "
-            "(CHARTER §6.1) — два з трьох Clinical Co-Lead approvals. Це жорстке правило "
-            "gатекіпить якість клінічного контенту. Технічні специфікації (схеми, engine, "
-            "ingestion) можуть merge'итися single-reviewer для прискорення розробки, але "
-            "clinical content — завжди dual sign-off."
-        )
+        process_p1 = 'Солопроєкт. Один власник доставляє оновлення з автоматичними перевірками та простежуваними джерелами. Зовнішній клінічний перегляд є додатковим і записується окремо.'
         process_p2 = (
             "Усі специфікації Ukrainian-first (мова інтерфейсу + клінічних reviewers UA), "
             "але technical terms та license names залишаються English inline. Версіонування "
@@ -10248,8 +10220,8 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
              "OpenOnco проектується під §520(o)(1)(E) carve-out — не медичний пристрій. Constraints C1-C7 hard-enforced."),
             ("No patient data", "CHARTER.md §9.3",
              "<code>patient_plans/</code> + будь-які patient HTML gitignored. Усі examples — synthetic."),
-            ("Two-reviewer merge", "CHARTER.md §6.1",
-             "Clinical content потребує 2 з 3 Clinical Co-Lead approvals; інакше Indication залишається STUB."),
+            ("Публікація солопроєкту", "CHARTER.md §6.1",
+             "Власник перевіряє джерела й тести; зовнішній клінічний перегляд є додатковим."),
             ("No LLM clinical judgment", "CHARTER.md §8.3",
              "LLM не вибирає схеми лікування, не генерує дози, не інтерпретує biomarkers для therapy selection."),
             ("No treatment without histology", "CHARTER.md §15.2 C7",

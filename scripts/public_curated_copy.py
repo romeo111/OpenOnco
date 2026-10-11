@@ -70,6 +70,8 @@ TECHNICAL_LITERALS = (
 
 
 def messages_for(locale):
+    if locale in ('it', 'da', 'sv', 'nb', 'fi'):
+        return {literal: literal for literal in TECHNICAL_LITERALS}
     index = ('es', 'pt', 'de', 'fr').index(locale)
     return {
         **{source: values[index] for source, values in COPY.items()},

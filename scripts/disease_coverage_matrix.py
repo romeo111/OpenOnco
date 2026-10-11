@@ -33,15 +33,8 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 
-def _signoff_count(value) -> int:
-    """Count reviewer sign-offs across legacy int + structured list shapes."""
-    if isinstance(value, list):
-        return len(value)
-    if isinstance(value, int):
-        return value
-    return 0
-
 from knowledge_base.validation.loader import load_content  # noqa: E402
+from knowledge_base.review_metrics import current_review_count  # noqa: E402
 
 
 # ── Disease family tagging ────────────────────────────────────────────────
@@ -244,6 +237,10 @@ def _outcomes_cited_pct_map() -> dict[str, float] | None:
 
 def per_disease_metrics(load_root: Path) -> list[dict]:
     load = load_content(load_root)
+    if not load.ok:
+        raise ValueError("Cannot publish coverage metrics from an invalid knowledge base")
+    reviewers = {eid: info["data"] for eid, info in load.entities_by_id.items() if info["type"] == "reviewers"}
+    diseases = {eid: info["data"] for eid, info in load.entities_by_id.items() if info["type"] == "diseases"}
     coll = _collect_biomarkers_and_drugs(load.entities_by_id)
     curated_counts = _count_curated_cases(REPO_ROOT / "examples")
     outcomes_pct = _outcomes_cited_pct_map() or {}
@@ -306,7 +303,7 @@ def per_disease_metrics(load_root: Path) -> list[dict]:
         if inds:
             verified = sum(
                 1 for ind in inds
-                if _signoff_count(ind.get("reviewer_signoffs")) >= 2
+                if current_review_count(ind, "indications", reviewers, diseases) >= 2
             )
             verified_pct = round(100 * verified / len(inds))
         else:
@@ -473,7 +470,7 @@ def render_markdown_table(rows: list[dict]) -> str:
     out.append("- **Quest** — `✓` hand-authored questionnaire / `STUB` auto-generated / `—` відсутній")
     out.append("- **#Curated** — кількість curated chunk patient-кейсів `examples/patient_<prefix>_*.json` (включно з pre-biopsy `diagnostic_*` файлами для відповідної хвороби); auto/variant виключені — у них інший test contract")
     out.append("- **Fill%** = composite з 8 ентити-типів: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup")
-    out.append("- **Ver%** = % indications цієї хвороби з `reviewer_signoffs ≥ 2` (CHARTER §6.1)")
+    out.append("- **Ver%** = частка показань із двома актуальними незалежними переглядами змісту від уповноважених рецензентів (CHARTER §6.1); історичні лічильники не враховуються")
     out.append(
         "- **Outcomes-Cited%** = loose %-cited over populated `expected_outcomes` "
         "fields per `scripts/audit_expected_outcomes.disease_outcomes_cited_pct` "
@@ -481,8 +478,8 @@ def render_markdown_table(rows: list[dict]) -> str:
         "v1.0 target ≥90%."
     )
     out.append("")
-    out.append("> **Verified взагалі = 0** для всіх — діє dev-mode signoff exemption (`project_charter_dev_mode_exemptions`)")
-    out.append("> до призначення Clinical Co-Leads. Це навмисно, не bug.")
+    out.append("> Показник стосується поточного перегляду змісту, а не схвалення лікування конкретного пацієнта.")
+    out.append("> Історичні відгуки лікарів зберігаються окремо й не замінюють актуальну авторизацію, відповідність сфері та версії змісту.")
 
     return "\n".join(out)
 

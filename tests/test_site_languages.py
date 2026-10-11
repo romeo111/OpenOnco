@@ -1,5 +1,6 @@
 """Localization must preserve source provenance, quiz grading and real URLs."""
 import json
+from html import unescape
 import re
 from pathlib import Path
 from types import SimpleNamespace
@@ -67,7 +68,8 @@ def test_international_build_and_reciprocal_discovery(tmp_path, handbook_load):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text('<html><head><title>OpenOnco</title></head><body></body></html>', encoding="utf-8")
     payload = build_international(tmp_path)
-    assert len(payload["pages"]) == 48
+    assert len(payload["pages"]) == 12 * len(COPY)
+    assert {page.split("/", 1)[0] for page in payload["pages"]} == set(COPY)
     for code, t in COPY.items():
         home = (tmp_path / code / "index.html").read_text(encoding="utf-8")
         assert f'<html lang="{code}">' in home and t["title"] in home
@@ -78,7 +80,7 @@ def test_international_build_and_reciprocal_discovery(tmp_path, handbook_load):
         assert 'card.lang = \'en\'' in wiki and 'p.set(\'q\'' in wiki
         assert '<option value="indications">' in wiki and '<option value="regimens">' in wiki
         assert (tmp_path / code / "participate.html").is_file()
-        assert t["english_note"] in (tmp_path / code / "try.html").read_text(encoding="utf-8")
+        assert t["english_note"] in unescape((tmp_path / code / "try.html").read_text(encoding="utf-8"))
         handbook = (tmp_path / code / "handbook.html").read_text(encoding="utf-8")
         assert f'<code>{t["draft"]}</code>' in handbook
         assert '<code>draft</code>' not in handbook
