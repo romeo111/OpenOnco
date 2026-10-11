@@ -86,6 +86,7 @@ function networkFirstBundleIndex(event) {
 }
 
 async function cachedVersionedBundle(cache, request) {
+  if (request.cache === 'reload') return undefined;
   const exact = await cache.match(request, { ignoreSearch: false });
   if (exact) return exact;
   const url = new URL(request.url);

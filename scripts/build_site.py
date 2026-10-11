@@ -545,6 +545,7 @@ function networkFirstBundleIndex(event) {
 }
 
 async function cachedVersionedBundle(cache, request) {
+  if (request.cache === 'reload') return undefined;
   const exact = await cache.match(request, { ignoreSearch: false });
   if (exact) return exact;
   const url = new URL(request.url);
@@ -6353,9 +6354,9 @@ async function loadCoreBundle() {{
   const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
   if (!r.ok) throw new Error('Core bundle fetch HTTP ' + r.status);
-  const buf = await r.arrayBuffer();
+  let buf = await r.arrayBuffer();
   await yieldToBrowser();
-  await verifyBundleVersion(buf, ver, 'Engine bundle');
+  buf = await recoverBundleVersion(buf, url, ver, 'Engine bundle');
   pyodide.unpackArchive(buf, 'zip');
   coreBundleLoaded = true;
 }}
@@ -6365,11 +6366,30 @@ async function loadCoreBundle() {{
 // localStorage keyed by disease_id + version so subsequent visits skip
 // the fetch entirely. Quota is ~5-10 MB; we only cache one disease at a
 // time per slot and drop silently on quota errors.
+async function recoverBundleVersion(buffer, url, version, label) {{
+  try {{
+    await verifyBundleVersion(buffer, version, label);
+    return buffer;
+  }} catch (error) {{
+    if (error.name !== 'BundleVersionMismatch') throw error;
+    // One network reload bypasses both HTTP and service-worker cache hits.
+    const response = await fetch(url, {{ cache: 'reload' }});
+    if (!response.ok) throw new Error(label + ' retry HTTP ' + response.status);
+    const fresh = await response.arrayBuffer();
+    await verifyBundleVersion(fresh, version, label);
+    return fresh;
+  }}
+}}
+
 async function verifyBundleVersion(buffer, version, label) {{
   if (!/^[a-f0-9]{{12}}$/.test(version || '')) throw new Error(label + ' version missing or invalid. Reload this page.');
   const digest = await crypto.subtle.digest('SHA-256', buffer);
   const actual = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('').slice(0, 12);
-  if (actual !== version) throw new Error(label + ' changed during a site update. Reload this page before generating a plan.');
+  if (actual !== version) {{
+    const error = new Error(label + ' changed during a site update. Reload this page before generating a plan.');
+    error.name = 'BundleVersionMismatch';
+    throw error;
+  }}
 }}
 
 async function validateDiseaseModule() {{
@@ -6424,9 +6444,9 @@ async function loadDiseaseModule(diseaseId) {{
   const url = '/' + relUrl + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
   if (!r.ok) throw new Error('Disease module fetch HTTP ' + r.status + ' for ' + diseaseId);
-  const buf = await r.arrayBuffer();
+  let buf = await r.arrayBuffer();
   await yieldToBrowser();
-  await verifyBundleVersion(buf, ver, 'Engine bundle');
+  buf = await recoverBundleVersion(buf, url, ver, 'Engine bundle');
   pyodide.unpackArchive(buf, 'zip');
   await validateDiseaseModule();
   loadedDiseases.add(diseaseId);

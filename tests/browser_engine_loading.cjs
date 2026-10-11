@@ -11,7 +11,7 @@ function section(start, end) {
   assert(stop > index);
   return html.slice(index, stop);
 }
-const moduleCode = section('async function verifyBundleVersion(', '// ── Pyodide loader');
+const moduleCode = section('async function recoverBundleVersion(', '// ── Pyodide loader');
 const initializationCode = section('let engineLoadPromise = null;', '// ── Generate full plan');
 const generationCode = section('async function runEngine()', 'function setGeneratingUI');
 function fixture({ cached = null, valid = true, httpOk = true, coreValid = true } = {}) {
