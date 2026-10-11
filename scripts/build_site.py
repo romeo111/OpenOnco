@@ -253,6 +253,14 @@ def _gather_engine_entries() -> list[tuple[Path, str, str | None]]:
             rel = str(path.relative_to(src)).replace("\\", "/")
             if rel.startswith("hosted/content/cache/"):
                 continue
+            # Learning chapters and quizzes are served by the static Handbook.
+            # Their cross-disease references cannot resolve in a lazy-loaded
+            # treatment runtime and are not inputs to the planning engine.
+            if rel.startswith((
+                "hosted/content/handbook_chapters/",
+                "hosted/content/handbook_questions/",
+            )):
+                continue
             arcname = "knowledge_base/" + rel
 
             attributed: str | None = None
@@ -336,6 +344,40 @@ def bundle_engine(output_dir: Path) -> dict:
             core_entries.append((path, arcname))
         else:
             by_disease.setdefault(disease, []).append((path, arcname))
+
+    # Shared entities and disease modules can reference entities assigned to
+    # another module. Ship their transitive dependencies as well; strict KB
+    # validation must succeed without downloading every unrelated disease.
+    import re
+    entity_files = {}
+    texts = {}
+    for path, arcname, _ in entries:
+        if path.suffix == ".yaml":
+            text = path.read_text(encoding="utf-8")
+            texts[arcname] = text
+            match = re.search(r"^id:\s*['\"]?([A-Z][A-Z0-9_-]+)", text, re.MULTILINE)
+            if match:
+                entity_files[match.group(1)] = (path, arcname)
+    dependencies = {
+        name: {entity_files[token] for token in re.findall(r"\b[A-Z][A-Z0-9]*(?:-[A-Z0-9_]+)+\b", text) if token in entity_files}
+        for name, text in texts.items()
+    }
+
+    def with_dependencies(items, available=()):
+        seen = set(available)
+        pending = list(items)
+        result = []
+        while pending:
+            item = pending.pop()
+            if item in seen:
+                continue
+            seen.add(item)
+            result.append(item)
+            pending.extend(dependencies.get(item[1], ()))
+        return sorted(result, key=lambda item: item[1])
+
+    core_entries = with_dependencies(core_entries)
+    by_disease = {disease: with_dependencies(items, core_entries) for disease, items in by_disease.items()}
 
     # 1. Core bundle.
     core_files = 0
