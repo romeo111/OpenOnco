@@ -3698,23 +3698,23 @@ def _render_mode_toggle(sibling_link: Optional[str], label_ua: str) -> str:
 def _track_label_ua(track_index: int, track_count: int, t, *, target_lang: str = "uk") -> tuple[str, str]:
     """Return (display_label, css_modifier) for a patient-mode track card.
 
-    Single-track plans get a bare label without the А/Б prefix; multi-
-    track plans use Cyrillic enumeration so no Latin leaks into visible
-    text. `is_default` drives the CSS modifier so the default track gets
-    the green border and the alternative gets indigo (per §3.2)."""
+    Labels describe report roles, never clinical recommendation or guideline
+    endorsement. A default can be provisional or promoted after filtering.
+    Single-track plans omit the А/Б prefix; multi-track plans retain the
+    existing enumeration and CSS modifiers (per §3.2)."""
     if track_count <= 1:
-        base = "Рекомендований план"
+        base = "Варіант у звіті"
     else:
         prefix = "А" if track_index == 0 else "Б"
-        suffix = "Стандартний варіант" if getattr(t, "is_default", False) else "Альтернативний варіант"
+        suffix = "Основний варіант у звіті" if getattr(t, "is_default", False) else "Альтернативний варіант у звіті"
         base = f"{prefix}) {suffix}"
     modifier = "default" if getattr(t, "is_default", False) else "alternative"
     if target_lang == "en":
         if track_count <= 1:
-            base = "Recommended plan"
+            base = "Option in this report"
         else:
             prefix = "A" if track_index == 0 else "B"
-            suffix = "Standard option" if getattr(t, "is_default", False) else "Alternative option"
+            suffix = "Main option in this report" if getattr(t, "is_default", False) else "Alternative option in this report"
             base = f"{prefix}) {suffix}"
     return base, modifier
 
@@ -4506,8 +4506,8 @@ def _render_patient_data_quality(mdt: Optional[MDTOrchestrationResult], target_l
             'Important information is missing from the profile. Your doctor needs to clarify it when reviewing this report.',
             'У профілі бракує важливих даних. Лікар має уточнити їх під час розгляду цього звіту.'),
         'incomplete_for_default_track': (
-            'Required biomarker information is missing from the profile. Review of the standard option is incomplete.',
-            'У профілі бракує необхідних даних про біомаркери. Розгляд стандартного варіанта неповний.'),
+            'Required biomarker information is missing from the profile. Review of the main option in this report is incomplete.',
+            'У профілі бракує необхідних даних про біомаркери. Розгляд основного варіанта у звіті неповний.'),
     }
     summary = summaries.get(status, (
         'Data completeness has not been assessed in this report.',
@@ -4533,7 +4533,7 @@ def _render_patient_data_quality(mdt: Optional[MDTOrchestrationResult], target_l
         items.append(f'<li><span>{label}</span>: {_h(missing)}</li>')
     default_missing = dq.get('missing_default_biomarkers', 0)
     if default_missing:
-        label = 'Biomarker gaps for the standard option' if en else 'Прогалини даних біомаркерів для стандартного варіанта'
+        label = 'Biomarker gaps for the main option in this report' if en else 'Прогалини даних біомаркерів для основного варіанта у звіті'
         items.append(f'<li><span>{label}</span>: {_h(default_missing)}</li>')
     # Reuse recorded labels, never clinician-only actions or raw field IDs.
     labels = []

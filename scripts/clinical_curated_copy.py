@@ -83,6 +83,13 @@ def safety_notices_for(locale):
     return {source: translations[index] for source, translations in SAFETY_NOTICES.items()}
 
 UI_MESSAGES = {
+    'Required biomarker information is missing from the profile. Review of the main option in this report is incomplete.': ('Falta información necesaria sobre biomarcadores en el perfil. La revisión de la opción principal en este informe está incompleta.', 'Falta informação necessária sobre biomarcadores no perfil. A análise da opção principal neste relatório está incompleta.', 'Im Profil fehlen erforderliche Informationen zu Biomarkern. Die Beurteilung der Hauptoption in diesem Bericht ist unvollständig.', 'Des informations nécessaires sur les biomarqueurs manquent dans le profil. L’examen de l’option principale dans ce rapport est incomplet.'),
+    'Biomarker gaps for the main option in this report': ('Datos de biomarcadores que faltan para la opción principal en este informe', 'Dados de biomarcadores em falta para a opção principal neste relatório', 'Fehlende Biomarker-Daten für die Hauptoption in diesem Bericht', 'Données de biomarqueurs manquantes pour l’option principale dans ce rapport'),
+    'Option in this report': ('Opción en este informe', 'Opção neste relatório', 'Option in diesem Bericht', 'Option dans ce rapport'),
+    'A) Main option in this report': ('A) Opción principal en este informe', 'A) Opção principal neste relatório', 'A) Hauptoption in diesem Bericht', 'A) Option principale dans ce rapport'),
+    'B) Main option in this report': ('B) Opción principal en este informe', 'B) Opção principal neste relatório', 'B) Hauptoption in diesem Bericht', 'B) Option principale dans ce rapport'),
+    'A) Alternative option in this report': ('A) Opción alternativa en este informe', 'A) Opção alternativa neste relatório', 'A) Alternative Option in diesem Bericht', 'A) Autre option dans ce rapport'),
+    'B) Alternative option in this report': ('B) Opción alternativa en este informe', 'B) Opção alternativa neste relatório', 'B) Alternative Option in diesem Bericht', 'B) Autre option dans ce rapport'),
     'Signals recorded in this report — not reasons for selecting every option.': (
         'Señales registradas en este informe; no son motivos para seleccionar todas las opciones.',
         'Sinais registados neste relatório; não são motivos para selecionar todas as opções.',

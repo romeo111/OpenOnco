@@ -70,8 +70,9 @@ def test_native_quality_copy_preserves_status_and_counts(aitl, locale):
     output = localize_page(source, locale, 'cases/test.patient.html', set(), catalog)
     block = re.search(r'<section class="patient-data-quality".*?</section>', output, re.S).group()
     for key in ('Information to clarify with your doctor',
-                'Required biomarker information is missing from the profile. Review of the standard option is incomplete.',
+                'Required biomarker information is missing from the profile. Review of the main option in this report is incomplete.',
                 'Important clinical information missing',
+                'Biomarker gaps for the main option in this report',
                 'Missing from the profile does not mean a test was not performed. Ask your doctor which results to add or verify. Do not change treatment based only on this report.'):
         assert catalog[key] in block
         assert key not in block
@@ -80,21 +81,38 @@ def test_native_quality_copy_preserves_status_and_counts(aitl, locale):
 
 
 def test_generated_patient_quality_is_consistent_across_all_languages():
+    from html import unescape
+    from scripts.clinical_curated_copy import messages_for
+    english_labels = ('Option in this report', 'A) Main option in this report',
+                      'B) Main option in this report', 'A) Alternative option in this report',
+                      'B) Alternative option in this report')
+    ukrainian_labels = ('Варіант у звіті', 'А) Основний варіант у звіті',
+                        'Б) Основний варіант у звіті', 'А) Альтернативний варіант у звіті',
+                        'Б) Альтернативний варіант у звіті')
     reference = None
     for prefix in ('', 'ukr', 'es', 'pt', 'de', 'fr'):
+        translated_labels = (ukrainian_labels if prefix == 'ukr' else
+                             tuple(messages_for(prefix)[label] for label in english_labels)
+                             if prefix else english_labels)
+        canonical_roles = dict(zip(translated_labels, english_labels))
         inventory = {}
         for path in (ROOT / 'docs' / prefix / 'cases').glob('*.patient.html'):
             document = path.read_text(encoding='utf-8')
+            labels = tuple(unescape(label) for label in re.findall(r'<p class="track-label">(.*?)</p>', document, re.S))
+            unknown = [label for label in labels if label not in canonical_roles]
+            assert not unknown, (path, unknown)
+            roles = tuple(canonical_roles[label] for label in labels)
             block = re.search(r'<section class="patient-data-quality".*?</section>', document, re.S)
             if '<section class="what-now">' in document:
                 assert block, path
+                assert labels, path
                 assert block.start() < document.index('<section class="what-now">'), path
             if block:
                 status = re.search(r'data-data-quality-status="([^"]+)"', block.group())[1]
                 counts = tuple(re.findall(r'</span>: (\d+)</li>', block.group()))
-                inventory[path.name] = (status, counts)
+                inventory[path.name] = (status, counts, roles)
             else:
-                inventory[path.name] = ('no-plan', ())
+                inventory[path.name] = ('no-plan', (), roles)
         assert inventory, prefix
         if reference is None:
             reference = inventory

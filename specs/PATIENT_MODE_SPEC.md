@@ -110,8 +110,8 @@ The patient bundle MUST contain the following anchor sections in this order:
 |---|---|---|
 | 1 | `<header>` | Title, diagnosis (Ukrainian name), date, plan version, cross-link to the clinician version |
 | 2 | `<section class="what-was-found">` | Molecular / laboratory findings in plain language |
-| 3 | `<section class="what-now">` | **Per-track**: recommended drugs, medicine form / route, regimen load class, NSZU coverage, sign-off status |
-| 4 | `<section class="why-this-plan">` | **NEW.** Per-track explanation: why this specific option is recommended for you |
+| 3 | `<section class="what-now">` | **Per-track**: recorded drugs, medicine form / route, regimen load class, NSZU coverage, sign-off status |
+| 4 | `<section class="why-this-plan">` | Report-wide findings/signals and recorded per-track algorithm context; no assertion of clinical suitability |
 | 5 | `<section class="between-visits">` | **NEW.** What to watch for between visits; when to call the clinic, when to go to hospital |
 | 6 | `<section class="emergency-signals">` | Symptoms requiring immediate emergency contact |
 | 7 | `<div class="ask-doctor">` | 5-7 questions to ask the doctor at the next visit |
@@ -126,12 +126,13 @@ When `len(plan.tracks) > 1`:
 - `what-now`, `why-this-plan`, `between-visits` are rendered **once per track**.
 - Tracks are marked `track-card track-card--default` /
   `track-card track-card--alternative` (CSS reuse from clinician).
-- Visible prefix: "A) Standard option" / "B) Alternative option".
-  Ukrainian letter prefix, not Latin.
+- Visible labels describe report roles: "A) Main option in this report" / "B) Alternative option in this report" in English, and "А) Основний варіант у звіті" / "Б) Альтернативний варіант у звіті" in Ukrainian.
+  Retain the existing A/B (А/Б in Ukrainian) enumeration. The prefix follows position; the role follows `is_default`, including filtered/promoted defaults. A report role does not establish guideline endorsement or suitability for the patient.
+- Data-completeness captions must likewise refer to the main option in the report, rather than treating a default flag as standard treatment. Preserve the original assessment status and missing-data counts.
 
 When `len(plan.tracks) == 1`:
 
-- The same block without the A/B prefix.
+- The same block without the A/B prefix, labeled "Option in this report" / "Варіант у звіті", regardless of `is_default`.
 - `why-this-plan` is still rendered (the single track has its own "why").
 
 ### 3.3. Why-this-plan: rationale from trace
@@ -141,17 +142,12 @@ Source: `PlanResult.trace` + `PlanResult.kb_resolved["red_flags"]` +
 
 Renderer (`_patient_rationale.py`):
 
-- Walk the algorithm trace for each track.
-- Per fired clause, produce 2-4 lines of plain Ukrainian explanation:
-  - "Because **BRAF V600E** was found in your results" — biomarker-driven clause.
-  - "The standard option is recommended because your condition is stable (ECOG 1)"
-    — no aggressive RF fired.
-  - "The alternative option **is not recommended as the standard**, because you have
-    active hepatitis B without prophylaxis" — aggressive RF fired.
-- Cap: ≤4 bullets per track. Longer logic falls back to "Details — in
-  the technical version of the report".
-- Empty trace fallback: "This option was proposed based on NCCN/ESMO standards
-  for your diagnosis. Details — in the technical version of the report."
+- Show any summarized biomarker finding once as report-wide context, with its recorded evidence tier and pending review status. Evidence tiers do not explain selection of a treatment option.
+- Preserve all distinct recorded fired-signal IDs in a separate report-wide block, including when the final algorithm result is null. Preserve original field language and report unavailable explanations explicitly.
+- Per-track explanation requires an exact match between the track's indication ID and the final recorded algorithm result. It describes that recorded path and explicitly states that it does not establish suitability for the patient.
+- Cap track context at four bullets, including at most two recorded signal snippets. The complete recorded signal inventory remains available in the report-wide block.
+- An empty, legacy, null-result or nonmatching trace produces an explicit no-recorded-selection notice and directs the patient to review the technical report with their doctor. Neither a default flag nor lack of triggered red flags establishes guideline endorsement, suitability or absence of risks.
+- English and ES/PT/DE/FR patient copy remains a translation draft pending clinical and linguistic review. Authored report-role labels must have explicit native catalog entries; original clinical source excerpts stay protected.
 
 ### 3.4. Between-visits: source rule
 

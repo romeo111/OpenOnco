@@ -275,3 +275,14 @@ signoff.
 
 Research/support tool, not a medical device. All recommendations must be
 verified by a qualified oncologist. See CHARTER §11.
+
+## Patient report presentation
+
+Follow `specs/PATIENT_MODE_SPEC.md` and its Ukrainian counterpart. Patient
+option labels describe roles in the report, not clinical endorsement:
+`is_default` may represent a provisional or promoted option. A single option
+must not be called a recommended plan. Keep report-wide findings/signals
+separate from exact recorded indication-path context; absent traces do not
+justify guideline or risk-absence claims. Preserve engine choices, source
+IDs, clinical source language and draft translation/review status when
+changing this presentation.

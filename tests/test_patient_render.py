@@ -758,20 +758,39 @@ def test_patient_html_two_track_plan_shows_both_tracks():
     assert '<div class="tracks-grid' in html
 
 
-def test_patient_html_single_track_plan_no_a_b_prefix():
-    """Single-track plans render a bare 'Рекомендований план' label,
-    without А/Б enumeration."""
+@pytest.mark.parametrize('target_lang', ['uk', 'en'])
+@pytest.mark.parametrize('is_default', [False, True])
+def test_patient_html_single_track_plan_no_a_b_prefix(target_lang, is_default):
+    """A single report option must not imply a clinical recommendation."""
+    from dataclasses import replace
     result = _build_synthetic_braf_v600e_mcrc_plan()
     assert result.plan is not None
-    if len(result.plan.tracks) > 1:
-        pytest.skip("Synthetic mCRC fixture unexpectedly produced ≥2 tracks")
-    html = render_plan_html(result, mode="patient")
-    visible = _visible_text(html)
-    # Must not include А/Б enumeration.
-    assert "А)" not in visible, "Single-track plan must not emit 'А)' prefix"
-    assert "Б)" not in visible, "Single-track plan must not emit 'Б)' prefix"
-    # Should render the bare track label.
-    assert "Рекомендований план" in visible
+    before = result.plan.model_dump()
+    track = result.plan.tracks[0].model_copy(update={'is_default': is_default})
+    single = replace(result, plan=result.plan.model_copy(update={'tracks': [track]}))
+    single_before = single.plan.model_dump()
+    html = render_plan_html(single, mode="patient", target_lang=target_lang)
+    labels = re.findall(r'<p class="track-label">(.*?)</p>', html, re.S)
+    expected = 'Option in this report' if target_lang == 'en' else 'Варіант у звіті'
+    assert labels and set(labels) == {expected}
+    assert single.plan.model_dump() == single_before
+    assert result.plan.model_dump() == before
+
+
+@pytest.mark.parametrize('target_lang', ['uk', 'en'])
+def test_patient_provisional_default_labels_do_not_claim_standard_treatment(target_lang):
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    assert result.plan is not None and len(result.plan.tracks) > 1
+    assert result.trace[-1]['branch']['result'] is None
+    assert result.plan.tracks[0].is_default
+    before = result.plan.model_dump()
+    html = render_plan_html(result, mode='patient', target_lang=target_lang)
+    labels = re.findall(r'<p class="track-label">(.*?)</p>', html, re.S)
+    expected = ({'A) Main option in this report', 'B) Alternative option in this report'}
+                if target_lang == 'en' else
+                {'А) Основний варіант у звіті', 'Б) Альтернативний варіант у звіті'})
+    assert set(labels) == expected
+    assert result.plan.model_dump() == before
 
 
 def test_patient_html_has_clinician_cross_link():

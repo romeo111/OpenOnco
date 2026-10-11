@@ -18,6 +18,42 @@ from knowledge_base.engine._patient_vocabulary import (
 )
 
 
+@pytest.mark.parametrize('target_lang', ['uk', 'en'])
+@pytest.mark.parametrize('track_index', [0, 1])
+@pytest.mark.parametrize('is_default', [False, True])
+def test_patient_label_role_is_independent_of_position_and_clinical_reason(target_lang, track_index, is_default):
+    from knowledge_base.engine.render import _track_label_ua
+    track = SimpleNamespace(is_default=is_default, indication_id='IND-TEST',
+                            selection_reason='Provisional option; no branch selected')
+    before = deepcopy(track.__dict__)
+    label, modifier = _track_label_ua(track_index, 2, track, target_lang=target_lang)
+    expected_role = ('Main option in this report' if is_default else 'Alternative option in this report') if target_lang == 'en' else ('Основний варіант у звіті' if is_default else 'Альтернативний варіант у звіті')
+    assert label.endswith(expected_role)
+    assert modifier == ('default' if is_default else 'alternative')
+    assert track.__dict__ == before
+
+
+@pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
+@pytest.mark.parametrize('track_index,track_count,is_default', [(0, 1, True), (0, 2, True), (1, 2, True), (0, 2, False), (1, 2, False)])
+def test_native_patient_labels_translate_report_role_without_changing_track(locale, track_index, track_count, is_default):
+    from scripts.build_clinical_locales import localize_page
+    from scripts.clinical_curated_copy import messages_for
+    from knowledge_base.engine.render import _track_label_ua
+    track = SimpleNamespace(is_default=is_default, indication_id='IND-TEST')
+    before = deepcopy(track.__dict__)
+    label, modifier = _track_label_ua(track_index, track_count, track, target_lang='en')
+    catalog = messages_for(locale)
+    source = (f'<html lang="en"><body><div class="track-card track-card--{modifier}" data-source-id="REG-TEST">'
+              f'<p class="track-label">{label}</p><span lang="und" data-original-source>Original source value: &lt;0.5</span></div></body></html>')
+    localized = localize_page(source, locale, 'cases/test.patient.html', set(), catalog)
+    assert f'<p class="track-label">{catalog[label]}</p>' in localized
+    assert label not in localized
+    assert f'class="track-card track-card--{modifier}"' in localized
+    assert 'data-source-id="REG-TEST"' in localized
+    assert 'Original source value: &lt;0.5' in localized
+    assert track.__dict__ == before
+
+
 def test_retained_ukrainian_drug_note_is_protected_from_english_expansion():
     from html import escape
     from knowledge_base.engine._patient_vocabulary import expand_first_use
