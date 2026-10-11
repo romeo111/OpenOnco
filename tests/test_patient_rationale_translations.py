@@ -174,17 +174,28 @@ def test_drug_class_aliases_are_explicit_and_do_not_match_combination_products()
     assert explain_drug_class(None) is None
 
 
-def test_actual_daunorubicin_class_renders_explanation_without_changing_record():
+@pytest.mark.parametrize('filename,canonical', [
+    ('daunorubicin', 'anthracycline'),
+    ('venetoclax', 'BCL-2i'),
+    ('azacitidine', 'HMA'),
+    ('midostaurin', 'multi-kinase inhibitor'),
+])
+def test_actual_drug_class_renders_explanation_without_changing_record(filename, canonical):
     from pathlib import Path
     import yaml
-    path = Path(__file__).resolve().parents[1] / 'knowledge_base/hosted/content/drugs/daunorubicin.yaml'
+    path = Path(__file__).resolve().parents[1] / 'knowledge_base/hosted/content/drugs' / (filename + '.yaml')
     drug = yaml.load(path.read_text(encoding='utf-8'), Loader=getattr(yaml, 'CSafeLoader', yaml.SafeLoader))
     before = deepcopy(drug)
     track = SimpleNamespace(regimen_data={'components': [{'drug_id': drug['id'], 'route': 'IV'}]})
     result = SimpleNamespace(disease_id='DIS-AML')
     for language in ('uk', 'en'):
         html = _render_track_drugs(result, track, {drug['id']: drug}, None, target_lang=language)
-        assert explain('anthracycline', target_lang=language) in html
+        note = (drug.get('notes_patient') or '').strip()
+        if note:
+            from html import escape
+            assert escape(note) in html
+        if language == 'en' or not note:
+            assert explain(canonical, target_lang=language) in html
         assert 'medicine for your condition' not in html
         assert 'препарат для лікування вашого захворювання' not in html
     assert drug == before

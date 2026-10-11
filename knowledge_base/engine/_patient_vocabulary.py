@@ -139,7 +139,8 @@ DRUG_CLASS_PLAIN_UA: dict[str, str] = {
     "progestin": "прогестини як hormonal-маневр у деяких ендометріальних та breast HR+",
 
     # Other targeted / immunomodulatory drugs and supportive care
-    "HMA": "hypomethylating agent — 'reset' епігенетики у мієлоїдних пухлинах",
+    "HMA": "препарат, що зменшує певні хімічні мітки на ДНК (метилювання) і може змінювати активність генів; застосовується при деяких мієлоїдних захворюваннях",
+    "multi-kinase inhibitor": "препарат, що блокує кілька ферментів-перемикачів клітинних сигналів; конкретні мішені залежать від препарату",
     "IMiD": "immunomodulator — для multiple myeloma та MDS-LR (lenalidomide, pomalidomide)",
     "bisphosphonate": "захищає кістки від руйнування метастазами (zoledronate, pamidronate)",
     "G-CSF": "стимулятор гранулоцитопоезу — підтримка крові під час хіміотерапії",
@@ -521,6 +522,8 @@ _ALL_TABLES: tuple[dict[str, str], ...] = (
 
 
 PATIENT_VOCABULARY_EN_DRAFT: dict[str, str] = {
+    "HMA": "a medicine that reduces certain chemical marks on DNA (methylation) and may change gene activity; used for some myeloid diseases",
+    "multi-kinase inhibitor": "a medicine that blocks several enzymes acting as switches for cell signals; the specific targets depend on the medicine",
     "G-CSF": "stimulates granulocyte production; supports blood cell recovery during chemotherapy",
     "ESA": "stimulates red blood cell production; used to treat anaemia caused by chemotherapy",
     "antiemetic": "helps against nausea and vomiting (ondansetron, aprepitant, palonosetron)",
@@ -618,6 +621,9 @@ def explain(term: str, *, target_lang: str = "uk") -> Optional[str]:
 # Explicit display aliases for authored class labels. No substring matching:
 # combination products and unrecognised classes must retain the fallback.
 DRUG_CLASS_PATIENT_ALIASES = {
+    "selective bcl-2 inhibitor (bh3 mimetic)": "BCL-2i",
+    "hypomethylating agent (cytidine analog)": "HMA",
+    "multi-kinase inhibitor (flt3, kit, pdgfr, vegfr, pkc)": "multi-kinase inhibitor",
     "anthracycline (topoisomerase ii inhibitor + dna intercalator)": "anthracycline",
     "taxane (microtubule stabilizer)": "taxane",
     "platinum alkylating agent (first-generation)": "platinum agent",
