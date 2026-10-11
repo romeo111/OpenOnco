@@ -1,5 +1,6 @@
 // OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
-// Two strategies in one SW:
+// Cache strategies:
+//   0. Network-first index with offline fallback, so releases refresh metadata.
 //   1. Cache-first for engine bundle artifacts (large, infrequent).
 //   2. Stale-while-revalidate for try.html + style.css — repeat visits
 //      paint instantly from cache while a fresh copy fetches in the
@@ -69,6 +70,32 @@ function networkFirstNavigation(event) {
   );
 }
 
+function networkFirstBundleIndex(event) {
+  event.respondWith(caches.open(CACHE_NAME).then(async cache => {
+    try {
+      const response = await fetch(event.request, { cache: 'no-store' });
+      if (!response.ok) throw new Error('Bundle index HTTP ' + response.status);
+      await cache.put('/openonco-engine-index.json', response.clone()).catch(() => {});
+      return response;
+    } catch (error) {
+      const cached = await cache.match('/openonco-engine-index.json');
+      if (cached) return cached;
+      throw error;
+    }
+  }));
+}
+
+async function cachedVersionedBundle(cache, request) {
+  const exact = await cache.match(request, { ignoreSearch: false });
+  if (exact) return exact;
+  const url = new URL(request.url);
+  const version = url.searchParams.get('v');
+  // The unversioned precached core belongs to this worker's hash bucket.
+  if (url.pathname === '/openonco-engine-core.zip' && version && CACHE_NAME.endsWith('-' + version)) {
+    return cache.match(url.pathname, { ignoreSearch: false });
+  }
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
@@ -84,6 +111,8 @@ self.addEventListener('fetch', (event) => {
     return networkFirstNavigation(event);
   }
 
+  if (url.pathname === '/openonco-engine-index.json') return networkFirstBundleIndex(event);
+
   // SWR for the small interactive shell (HTML + CSS).
   if (url.pathname === '/clinical-localization.js' ||
       /^\/(es|pt|de|fr)\/(clinical-(ui-)?translations|kb_search_index)\.json$/.test(url.pathname) ||
@@ -95,12 +124,11 @@ self.addEventListener('fetch', (event) => {
   // Cache-first for the heavy engine bundles.
   const cacheFirstMatch =
     url.pathname.endsWith('/openonco-engine-core.zip') ||
-    url.pathname.endsWith('/openonco-engine-index.json') ||
     url.pathname.startsWith('/disease/openonco-');
   if (!cacheFirstMatch) return;
   event.respondWith(
     caches.open(CACHE_NAME).then((cache) =>
-      cache.match(event.request, { ignoreSearch: true }).then((hit) =>
+      cachedVersionedBundle(cache, event.request).then((hit) =>
         hit || fetch(event.request).then((resp) => {
           if (resp && resp.ok) {
             const clone = resp.clone();

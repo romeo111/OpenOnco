@@ -2,6 +2,7 @@
 const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
+const { webcrypto } = require('node:crypto');
 const html = fs.readFileSync('docs/try.html', 'utf8');
 function section(start, end) {
   const index = html.indexOf(start);
@@ -10,13 +11,13 @@ function section(start, end) {
   assert(stop > index);
   return html.slice(index, stop);
 }
-const moduleCode = section('async function validateDiseaseModule()', '// ── Pyodide loader');
+const moduleCode = section('async function verifyBundleVersion(', '// ── Pyodide loader');
 const initializationCode = section('let engineLoadPromise = null;', '// ── Generate full plan');
 const generationCode = section('async function runEngine()', 'function setGeneratingUI');
 function fixture({ cached = null, valid = true, httpOk = true, coreValid = true } = {}) {
   const calls = { initializations: 0, validations: 0, fetches: 0, removed: 0, unpacked: 0, errors: [], generated: 0 };
   const context = vm.createContext({
-    console: { warn() {}, log() {} }, Uint8Array, ArrayBuffer,
+    console: { warn() {}, log() {} }, Uint8Array, ArrayBuffer, crypto: webcrypto,
     atob: value => Buffer.from(value, 'base64').toString('binary'),
     btoa: value => Buffer.from(value, 'binary').toString('base64'),
     localStorage: { getItem: () => cached, removeItem() { calls.removed++; cached = null; }, setItem() {} },
@@ -35,7 +36,7 @@ function fixture({ cached = null, valid = true, httpOk = true, coreValid = true 
     updateWorkflowControls() {}, initStagesReset() {},
   });
   vm.runInContext(`let pyodide=fake, enginReady=false, coreBundleLoaded=true;
-    const loadedDiseases=new Set(); const bundleIndex={diseases:{'DIS-ONE':'disease/one.zip'},disease_versions:{}};
+    const loadedDiseases=new Set(); const bundleIndex={diseases:{'DIS-ONE':'disease/one.zip'},disease_versions:{'DIS-ONE':'6e340b9cffb3'}};
     let uiBusy=false,generating=false,planSource=null;
     let evalDebounceTimer=null,whatIfDebounceTimer=null,previewToken=0,whatIfToken=0;
     const runBtn={disabled:false}; const mainTryEl={inert:false};`, context);
@@ -47,6 +48,15 @@ function fixture({ cached = null, valid = true, httpOk = true, coreValid = true 
   await f.run("loadDiseaseModule('DIS-ONE')");
   assert.equal(f.calls.validations, 1); assert.equal(f.calls.fetches, 0);
   assert.equal(f.run("loadedDiseases.has('DIS-ONE')"), true);
+  f = fixture({ cached: '/w==' });
+  await f.run("loadDiseaseModule('DIS-ONE')");
+  assert.equal(f.calls.removed, 1, 'Wrong-version cached bytes must be discarded');
+  assert.equal(f.calls.unpacked, 1, 'Only verified network bytes may be unpacked');
+  f = fixture();
+  f.run("bundleIndex.disease_versions['DIS-ONE']='000000000000'");
+  await assert.rejects(f.run("loadDiseaseModule('DIS-ONE')"), /changed during a site update/);
+  assert.equal(f.calls.unpacked, 0); assert.equal(f.calls.validations, 0);
+  assert.equal(f.run("loadedDiseases.has('DIS-ONE')"), false);
   f = fixture({ cached: 'AA==', valid: false });
   await assert.rejects(f.run("loadDiseaseModule('DIS-ONE')"), /validation failed/);
   assert.equal(f.calls.removed, 1); assert.equal(f.calls.validations, 2);

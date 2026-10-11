@@ -458,7 +458,8 @@ def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
     # service worker/cache after a landing-page redesign.
     cache_name = "openonco-bundle-l4-" + (core_version or "v1")
     sw_js = """// OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
-// Two strategies in one SW:
+// Cache strategies:
+//   0. Network-first index with offline fallback, so releases refresh metadata.
 //   1. Cache-first for engine bundle artifacts (large, infrequent).
 //   2. Stale-while-revalidate for try.html + style.css — repeat visits
 //      paint instantly from cache while a fresh copy fetches in the
@@ -528,6 +529,32 @@ function networkFirstNavigation(event) {
   );
 }
 
+function networkFirstBundleIndex(event) {
+  event.respondWith(caches.open(CACHE_NAME).then(async cache => {
+    try {
+      const response = await fetch(event.request, { cache: 'no-store' });
+      if (!response.ok) throw new Error('Bundle index HTTP ' + response.status);
+      await cache.put('/openonco-engine-index.json', response.clone()).catch(() => {});
+      return response;
+    } catch (error) {
+      const cached = await cache.match('/openonco-engine-index.json');
+      if (cached) return cached;
+      throw error;
+    }
+  }));
+}
+
+async function cachedVersionedBundle(cache, request) {
+  const exact = await cache.match(request, { ignoreSearch: false });
+  if (exact) return exact;
+  const url = new URL(request.url);
+  const version = url.searchParams.get('v');
+  // The unversioned precached core belongs to this worker's hash bucket.
+  if (url.pathname === '/openonco-engine-core.zip' && version && CACHE_NAME.endsWith('-' + version)) {
+    return cache.match(url.pathname, { ignoreSearch: false });
+  }
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
@@ -543,6 +570,8 @@ self.addEventListener('fetch', (event) => {
     return networkFirstNavigation(event);
   }
 
+  if (url.pathname === '/openonco-engine-index.json') return networkFirstBundleIndex(event);
+
   // SWR for the small interactive shell (HTML + CSS).
   if (url.pathname === '/clinical-localization.js' ||
       /^\\/(es|pt|de|fr)\\/(clinical-(ui-)?translations|kb_search_index)\\.json$/.test(url.pathname) ||
@@ -554,12 +583,11 @@ self.addEventListener('fetch', (event) => {
   // Cache-first for the heavy engine bundles.
   const cacheFirstMatch =
     url.pathname.endsWith('/openonco-engine-core.zip') ||
-    url.pathname.endsWith('/openonco-engine-index.json') ||
     url.pathname.startsWith('/disease/openonco-');
   if (!cacheFirstMatch) return;
   event.respondWith(
     caches.open(CACHE_NAME).then((cache) =>
-      cache.match(event.request, { ignoreSearch: true }).then((hit) =>
+      cachedVersionedBundle(cache, event.request).then((hit) =>
         hit || fetch(event.request).then((resp) => {
           if (resp && resp.ok) {
             const clone = resp.clone();
@@ -4816,7 +4844,7 @@ def render_try(
           <span id="pwaInstallState" class="build-state">{'Browser' if target_lang == 'en' else 'Браузер'}</span>
         </div>
         <dl class="build-meta">
-          <div><dt>Core</dt><dd id="coreVersion">v{bundle_version or 'pending'}</dd></div>
+          <div><dt>Core</dt><dd id="coreVersion">—</dd></div>
           <div><dt>{'Disease' if target_lang == 'en' else 'Хвороба'}</dt><dd id="diseaseVersion">—</dd></div>
           <div><dt>{'Cache' if target_lang == 'en' else 'Кеш'}</dt><dd id="cacheState">{'Checking…' if target_lang == 'en' else 'Перевіряю…'}</dd></div>
           <div><dt>{'Offline' if target_lang == 'en' else 'Offline'}</dt><dd id="offlineState">{'Network required for first launch' if target_lang == 'en' else 'Мережа потрібна для першого запуску'}</dd></div>
@@ -4980,6 +5008,7 @@ let enginReady = false;
 // disease don't re-fetch. The legacy monolithic fallback was retired in
 // CSD-9C — lazy-load is the only path now.
 const BUNDLE_INDEX_URL = '/openonco-engine-index.json';
+let bundleIndexPromise = null;
 const CORE_BUNDLE_URL = '/openonco-engine-core.zip';
 let bundleIndex = null;
 let coreBundleLoaded = false;
@@ -6177,13 +6206,19 @@ function updateImpactPanel(result) {{
 
 async function loadBundleIndex() {{
   if (bundleIndex !== null) return bundleIndex;
+  if (bundleIndexPromise) return bundleIndexPromise;
+  bundleIndexPromise = (async () => {{
   // One retry to absorb a transient CDN hiccup before failing the load.
   let lastErr = null;
   for (let attempt = 0; attempt < 2; attempt++) {{
     try {{
-      const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now());
+      const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now(), {{ cache: 'no-store' }});
       if (!r.ok) throw new Error('Index fetch HTTP ' + r.status);
-      bundleIndex = await r.json();
+      const candidate = await r.json();
+      if (!candidate || typeof candidate.core !== 'string' || !/^[a-f0-9]{{12}}$/.test(candidate.core_version || '')) {{
+        throw new Error('Invalid bundle index metadata.');
+      }}
+      bundleIndex = candidate;
       refreshBuildPanel().catch(() => {{}});
       return bundleIndex;
     }} catch (e) {{
@@ -6196,6 +6231,11 @@ async function loadBundleIndex() {{
   }}
   console.error('[OpenOnco] bundle index unavailable after retry:', lastErr);
   throw new Error('Bundle index unavailable: ' + (lastErr && lastErr.message || lastErr));
+  }})().catch(error => {{
+    bundleIndexPromise = null;
+    throw error;
+  }});
+  return bundleIndexPromise;
 }}
 
 function offlineBundleUrls() {{
@@ -6232,17 +6272,27 @@ async function cacheAllBundlesForOffline() {{
     return;
   }}
 
-  const cacheName = 'openonco-bundle-l3-' + (bundleIndex.core_version || 'v1');
+  const cacheName = 'openonco-bundle-l4-' + (bundleIndex.core_version || 'v1');
   const cache = await caches.open(cacheName);
   let done = 0;
   let failed = 0;
   for (const url of urls) {{
     while (uiBusy || generating) await yieldToBrowser(250);
     try {{
-      const cached = await cache.match(url, {{ ignoreSearch: true }});
+      let cached = await cache.match(url, {{ ignoreSearch: false }});
+      const version = new URL(url, location.origin).searchParams.get('v');
+      if (cached) {{
+        try {{
+          await verifyBundleVersion(await cached.clone().arrayBuffer(), version, 'Offline bundle');
+        }} catch (_) {{
+          await cache.delete(url);
+          cached = null;
+        }}
+      }}
       if (!cached) {{
         const resp = await fetch(url);
         if (!resp || !resp.ok) throw new Error('HTTP ' + (resp && resp.status));
+        await verifyBundleVersion(await resp.clone().arrayBuffer(), version, 'Offline bundle');
         await cache.put(url, resp.clone());
       }}
     }} catch (e) {{
@@ -6305,6 +6355,7 @@ async function loadCoreBundle() {{
   if (!r.ok) throw new Error('Core bundle fetch HTTP ' + r.status);
   const buf = await r.arrayBuffer();
   await yieldToBrowser();
+  await verifyBundleVersion(buf, ver, 'Engine bundle');
   pyodide.unpackArchive(buf, 'zip');
   coreBundleLoaded = true;
 }}
@@ -6314,6 +6365,13 @@ async function loadCoreBundle() {{
 // localStorage keyed by disease_id + version so subsequent visits skip
 // the fetch entirely. Quota is ~5-10 MB; we only cache one disease at a
 // time per slot and drop silently on quota errors.
+async function verifyBundleVersion(buffer, version, label) {{
+  if (!/^[a-f0-9]{{12}}$/.test(version || '')) throw new Error(label + ' version missing or invalid. Reload this page.');
+  const digest = await crypto.subtle.digest('SHA-256', buffer);
+  const actual = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('').slice(0, 12);
+  if (actual !== version) throw new Error(label + ' changed during a site update. Reload this page before generating a plan.');
+}}
+
 async function validateDiseaseModule() {{
   const valid = await pyodide.runPythonAsync(
     "from knowledge_base.engine import apply_disease_module\\n" +
@@ -6348,6 +6406,7 @@ async function loadDiseaseModule(diseaseId) {{
       const bin = atob(cached);
       const u8 = new Uint8Array(bin.length);
       for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      await verifyBundleVersion(u8.buffer, ver, 'Disease bundle');
       pyodide.unpackArchive(u8.buffer, 'zip');
       await validateDiseaseModule();
       loadedDiseases.add(diseaseId);
@@ -6367,6 +6426,7 @@ async function loadDiseaseModule(diseaseId) {{
   if (!r.ok) throw new Error('Disease module fetch HTTP ' + r.status + ' for ' + diseaseId);
   const buf = await r.arrayBuffer();
   await yieldToBrowser();
+  await verifyBundleVersion(buf, ver, 'Engine bundle');
   pyodide.unpackArchive(buf, 'zip');
   await validateDiseaseModule();
   loadedDiseases.add(diseaseId);
