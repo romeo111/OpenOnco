@@ -1,0 +1,116 @@
+from copy import deepcopy
+from types import SimpleNamespace
+
+from knowledge_base.engine._patient_rationale import (
+    RATIONALE_TRANSLATION_STATUS, build_track_rationale, build_track_rationale_html,
+)
+from knowledge_base.engine.render import _render_emergency_section
+from knowledge_base.engine.render import _medicine_form_ua, _regimen_schedule_ua
+from knowledge_base.engine.render import _regimen_tolerability_ua, _render_regimen_tolerability
+import pytest
+from knowledge_base.engine._patient_vocabulary import (
+    ESCAT_PLAIN_UA, ESCAT_TIER_PATIENT_LABEL, ESCAT_TIER_PATIENT_LABEL_EN,
+)
+
+
+def test_english_rationale_preserves_findings_thresholds_and_input():
+    result = SimpleNamespace(
+        plan=SimpleNamespace(variant_actionability=[{'biomarker_id': 'BIO-BRAF', 'variant_qualifier': 'V600E', 'escat_tier': 'IA'}]),
+        trace=[{'fired_red_flags': ['RF-TEST']}],
+        kb_resolved={'red_flags': {'RF-TEST': {'definition': 'Value <0.5 mg/L. Second sentence.', 'definition_ua': 'Показник <0.5 mg/L.'}}},
+    )
+    before = deepcopy(result.__dict__)
+    bullets = build_track_rationale(result, SimpleNamespace(is_default=True), target_lang='en')
+    assert 'BRAF V600E' in bullets[0]
+    assert '<0.5 mg/L' in bullets[1]
+    assert 'Second sentence' not in bullets[1]
+    assert result.__dict__ == before
+    rendered = build_track_rationale_html(result, SimpleNamespace(is_default=True), target_lang='en')
+    assert '&lt;0.5 mg/L' in rendered
+    assert RATIONALE_TRANSLATION_STATUS['en'] == 'draft_pending_review'
+
+
+def test_missing_english_definition_explicitly_retains_original():
+    result = SimpleNamespace(plan=None, trace=[{'fired_red_flags': ['RF-TEST']}], kb_resolved={'red_flags': {'RF-TEST': {'definition_ua': 'Не чекати.'}}})
+    bullets = build_track_rationale(result, SimpleNamespace(is_default=True), target_lang='en')
+    assert 'original Ukrainian text; translation unavailable' in bullets[0]
+    assert 'Не чекати' in bullets[0]
+
+
+def test_no_fired_flags_is_not_a_claim_of_absent_clinical_risk():
+    result = SimpleNamespace(plan=None, trace=[], kb_resolved={})
+    track = SimpleNamespace(is_default=True)
+    assert 'does not rule out risks' in build_track_rationale(result, track, target_lang='en')[0]
+    assert 'не виключає ризиків' in build_track_rationale(result, track)[0]
+
+
+def test_english_emergency_section_uses_only_fired_records_and_preserves_values():
+    result = SimpleNamespace(trace=[{'fired_red_flags': ['RF-TEST']}], kb_resolved={'red_flags': {
+        'RF-TEST': {'id': 'RF-TEST', 'severity': 'critical', 'definition': 'Value <0.5 mg/L. More detail.', 'definition_ua': 'Показник <0.5 mg/L.'},
+        'RF-OTHER': {'id': 'RF-OTHER', 'severity': 'critical', 'definition': 'Unfired condition'},
+    }})
+    before = deepcopy(result.__dict__)
+    output = _render_emergency_section(result, target_lang='en')
+    assert 'Signals requiring immediate attention' in output
+    assert 'not a confirmed diagnosis' in output
+    assert 'Value &lt;0.5 mg/L' in output
+    assert 'Unfired condition' not in output
+    assert 'More detail' not in output
+    assert 'data-rf-id="RF-TEST"' in output
+    assert result.__dict__ == before
+    result.trace = []
+    assert 'does not rule out emergencies' in _render_emergency_section(result, target_lang='en')
+
+
+def test_english_emergency_section_marks_missing_translation():
+    result = SimpleNamespace(trace=[{'fired_red_flags': ['RF-TEST']}], kb_resolved={'red_flags': {
+        'RF-TEST': {'id': 'RF-TEST', 'severity': 'critical', 'definition_ua': 'Не чекати.'},
+    }})
+    output = _render_emergency_section(result, target_lang='en')
+    assert 'Original Ukrainian text; translation unavailable' in output
+    assert 'Не чекати' in output
+
+
+@pytest.mark.parametrize('route,expected', [
+    ('PO', 'taken by mouth'), ('IV', 'intravenous infusion'),
+    ('SC', 'under the skin'), ('IM', 'into a muscle'),
+    ('IT', 'spinal canal'), ('topical', 'cream or gel'),
+])
+def test_english_route_labels_keep_component_route_authoritative(route, expected):
+    component = {'route': route, 'dose': '0.5 mg/kg'}
+    drug = {'route': 'IV', 'formulations': ['tablet']}
+    before = deepcopy((component, drug))
+    assert expected in _medicine_form_ua(component, drug, target_lang='en')
+    assert (component, drug) == before
+
+
+def test_english_schedule_preserves_counts_and_freeform_source():
+    assert _regimen_schedule_ua({'cycle_length_days': 28, 'total_cycles': 6}, target_lang='en') == '6 cycle(s) of 28 days'
+    assert _regimen_schedule_ua({}, target_lang='en') == ''
+    result = _regimen_schedule_ua({'cycle_length_days': 28, 'total_cycles': 'Не припиняти <умова>'}, target_lang='en')
+    assert 'original source text' in result
+    assert 'Не припиняти &lt;умова&gt;' in result
+    assert '28 days' in result
+
+
+@pytest.mark.parametrize('profile', ['', 'none', 'low', 'low_moderate', 'moderate', 'moderate-high', 'moderate-severe', 'high', 'severe', 'very-high', 'high special', 'unknown'])
+def test_english_tolerability_keeps_category_and_personal_prediction_caveat(profile):
+    data = {'toxicity_profile': profile}
+    original = deepcopy(data)
+    ua = _regimen_tolerability_ua(data)
+    en = _regimen_tolerability_ua(data, target_lang='en')
+    assert en[2] == ua[2]
+    assert en[0] != ua[0]
+    rendered = _render_regimen_tolerability(data, target_lang='en')
+    assert 'not a prediction for you personally' in rendered
+    assert f'data-toxicity-profile="{profile}"' in rendered
+    assert data == original
+
+
+def test_patient_escat_labels_do_not_claim_personal_regulatory_approval():
+    assert ESCAT_TIER_PATIENT_LABEL_EN.keys() == ESCAT_TIER_PATIENT_LABEL.keys()
+    assert 'FDA' not in ESCAT_TIER_PATIENT_LABEL['IA']
+    assert 'FDA' not in ESCAT_PLAIN_UA['IA']
+    assert 'рандомізованими' in ESCAT_TIER_PATIENT_LABEL['IA']
+    assert 'нерандомізованими' in ESCAT_TIER_PATIENT_LABEL['IB']
+    assert 'non-randomised' in ESCAT_TIER_PATIENT_LABEL_EN['IB']

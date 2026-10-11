@@ -54,6 +54,7 @@ from ._patient_rationale import _first_sentence_ua as _patient_first_sentence
 from ._patient_vocabulary import (
     NSZU_PATIENT_LABEL,
     ESCAT_TIER_PATIENT_LABEL,
+    ESCAT_TIER_PATIENT_LABEL_EN,
     expand_first_use as _expand_first_use,
     explain as _explain_patient,
 )
@@ -215,7 +216,7 @@ def _render_signoff_badge(entity_data: Optional[dict]) -> str:
     )
 
 
-def _render_signoff_badge_patient(entity_data: Optional[dict]) -> str:
+def _render_signoff_badge_patient(entity_data: Optional[dict], *, target_lang: str = "uk") -> str:
     """Patient-mode sign-off — simpler vocabulary, no reviewer names."""
     if not isinstance(entity_data, dict):
         return ""
@@ -224,16 +225,16 @@ def _render_signoff_badge_patient(entity_data: Optional[dict]) -> str:
     if n >= 2:
         return (
             '<span class="patient-badge patient-good signoff-complete">'
-            'Затверджено лікарями</span>'
+            + ('Reviewed by doctors' if target_lang == 'en' else 'Затверджено лікарями') + '</span>'
         )
     if n == 1:
         return (
             '<span class="patient-badge patient-warn signoff-partial">'
-            'Очікує перевірки лікарями (1 з 2)</span>'
+            + ('Awaiting review by doctors (1 of 2)' if target_lang == 'en' else 'Очікує перевірки лікарями (1 з 2)') + '</span>'
         )
     return (
         '<span class="patient-badge patient-emergency signoff-pending">'
-        'Очікує перевірки лікарями</span>'
+        + ('Awaiting review by doctors' if target_lang == 'en' else 'Очікує перевірки лікарями') + '</span>'
     )
 
 
@@ -3531,28 +3532,28 @@ def _patient_doc_shell(title: str, body: str) -> str:
     )
 
 
-def _patient_disease_label(plan_result: PlanResult) -> str:
+def _patient_disease_label(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Plain-UA disease label, never the DIS- ID. Falls back to a generic
     label so user-visible text never contains a technical ID."""
     disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
     names = disease_data.get("names") if isinstance(disease_data, dict) else None
     if isinstance(names, dict):
-        for key in ("ukrainian", "preferred", "english"):
+        for key in (("english", "preferred", "ukrainian") if target_lang == 'en' else ("ukrainian", "preferred", "english")):
             v = names.get(key)
             if v:
-                return str(v)
-    return "ваш діагноз"
+                return f"{v} (original Ukrainian name)" if target_lang == 'en' and key == 'ukrainian' else str(v)
+    return "your diagnosis" if target_lang == 'en' else "ваш діагноз"
 
 
-def _patient_drug_label(drug_dict: dict, drug_id: str) -> str:
+def _patient_drug_label(drug_dict: dict, drug_id: str, *, target_lang: str = "uk") -> str:
     """Plain-UA drug label, never the DRUG- ID."""
     if isinstance(drug_dict, dict):
         names = drug_dict.get("names") or {}
         if isinstance(names, dict):
-            for key in ("ukrainian", "preferred", "english"):
+            for key in (("english", "preferred", "ukrainian") if target_lang == 'en' else ("ukrainian", "preferred", "english")):
                 v = names.get(key)
                 if v:
-                    return str(v)
+                    return f"{v} (original Ukrainian name)" if target_lang == 'en' and key == 'ukrainian' else str(v)
         nm = drug_dict.get("name")
         if nm:
             return str(nm)
@@ -3561,7 +3562,7 @@ def _patient_drug_label(drug_dict: dict, drug_id: str) -> str:
     raw = (drug_id or "").strip()
     if raw.upper().startswith("DRUG-"):
         raw = raw[5:]
-    return raw.replace("-", " ").replace("_", " ").lower() or "препарат"
+    return raw.replace("-", " ").replace("_", " ").lower() or ("medicine" if target_lang == 'en' else "препарат")
 
 
 _PATIENT_VARIANT_LABELS_UA = {
@@ -3570,7 +3571,7 @@ _PATIENT_VARIANT_LABELS_UA = {
 }
 
 
-def _render_findings_plain(plan_result: PlanResult) -> str:
+def _render_findings_plain(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Plain-UA rendering of the variant_actionability hits.
 
     Each hit becomes a friendly statement: 'У вас знайдено [variant
@@ -3578,6 +3579,7 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
     IDs (BMA-*, BIO-*) are stripped — only gene + variant fragment
     survive (e.g. "BRAF V600E"), which is patient-facing biology, not
     a KB ID."""
+    english = target_lang == 'en'
     plan = plan_result.plan
     hits = list((plan and plan.variant_actionability) or [])
     if not hits:
@@ -3591,6 +3593,14 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
             and (plan is None or plan.algorithm_id is None)
         )
         if is_prevention_shape:
+            if english:
+                return (
+                    '<p>The data entered identify the risk factor shown above. '
+                    'This places you in a group at increased risk of certain cancers. '
+                    'The plan below describes surveillance, recommended tests and doctor visits. '
+                    'This is not a diagnosis and does not mean that you have cancer; '
+                    'it is information about risk and reducing it or detecting a problem early.</p>'
+                )
             return (
                 '<p>За результатами заповнених даних значущих ризик-факторів '
                 "виявлено саме той, що вказано вище. Це означає, що ви "
@@ -3600,6 +3610,12 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
                 "візитів до лікаря. Це не діагноз і не означає, що ви "
                 "хворієте — це інформація про ризик і про те, як його "
                 "зменшити або вчасно виявити проблему.</p>"
+            )
+        if english:
+            return (
+                '<p>No significant molecular targets have yet been identified in the available test results. '
+                'This does not mean that treatment is impossible; standard treatment remains an option. '
+                'If your tumour has not undergone molecular testing, discuss this with your doctor.</p>'
             )
         return (
             '<p>За результатами наявних аналізів значущих молекулярних мішеней '
@@ -3621,15 +3637,17 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
         # string when vocabulary has no entry.
         v_expl = _explain_patient(variant) or _explain_patient(gene) or ""
         tier = (h.escat_tier or "").strip().upper()
-        tier_label = ESCAT_TIER_PATIENT_LABEL.get(tier, "")
+        tier_label = (ESCAT_TIER_PATIENT_LABEL_EN if english else ESCAT_TIER_PATIENT_LABEL).get(tier, "")
         # Compose a short human paragraph. We render gene + variant
         # together (e.g. "BRAF V600E") because that's biology a patient
         # can search for; ESCAT tier is wrapped in a friendly label.
         gene_variant = f"{gene} {variant}".strip() if variant else gene
-        gene_variant = _PATIENT_VARIANT_LABELS_UA.get(variant, gene_variant)
+        if not english:
+            gene_variant = _PATIENT_VARIANT_LABELS_UA.get(variant, gene_variant)
         bits = [f'<li><strong data-variant-original="{_h(variant)}">{_h(gene_variant)}</strong>']
         if v_expl:
-            bits.append(f" — {_h(v_expl)}")
+            qualifier = 'Original Ukrainian explanation; translation unavailable: ' if english else ''
+            bits.append(f" — {_h(qualifier + v_expl)}")
         if tier_label:
             bits.append(f'. <span class="patient-badge patient-info">{_h(tier_label)}</span>')
         else:
@@ -3655,7 +3673,7 @@ def _render_mode_toggle(sibling_link: Optional[str], label_ua: str) -> str:
     return f'<a class="mode-toggle" href="{_h(href)}">{_h(label_ua)}</a>'
 
 
-def _track_label_ua(track_index: int, track_count: int, t) -> tuple[str, str]:
+def _track_label_ua(track_index: int, track_count: int, t, *, target_lang: str = "uk") -> tuple[str, str]:
     """Return (display_label, css_modifier) for a patient-mode track card.
 
     Single-track plans get a bare label without the А/Б prefix; multi-
@@ -3669,10 +3687,17 @@ def _track_label_ua(track_index: int, track_count: int, t) -> tuple[str, str]:
         suffix = "Стандартний варіант" if getattr(t, "is_default", False) else "Альтернативний варіант"
         base = f"{prefix}) {suffix}"
     modifier = "default" if getattr(t, "is_default", False) else "alternative"
+    if target_lang == "en":
+        if track_count <= 1:
+            base = "Recommended plan"
+        else:
+            prefix = "A" if track_index == 0 else "B"
+            suffix = "Standard option" if getattr(t, "is_default", False) else "Alternative option"
+            base = f"{prefix}) {suffix}"
     return base, modifier
 
 
-def _regimen_schedule_ua(regimen_data: Optional[dict]) -> str:
+def _regimen_schedule_ua(regimen_data: Optional[dict], *, target_lang: str = "uk") -> str:
     """One-line plain-UA schedule summary for a regimen, or empty string.
 
     Composes from `cycle_length_days` × `total_cycles` when both are
@@ -3686,6 +3711,8 @@ def _regimen_schedule_ua(regimen_data: Optional[dict]) -> str:
     if cycle is None and total is None:
         return ""
     if isinstance(total, str) and total.strip():
+        if target_lang == 'en':
+            return f"Duration (original source text): {_h(total)}; cycle — {_h(cycle)} days" if cycle else f"Duration (original source text): {_h(total)}"
         return f"Тривалість: {_h(total)}; цикл — {_h(cycle)} днів" if cycle else f"Тривалість: {_h(total)}"
     try:
         c = int(cycle) if cycle is not None else None
@@ -3693,15 +3720,21 @@ def _regimen_schedule_ua(regimen_data: Optional[dict]) -> str:
     except (TypeError, ValueError):
         return ""
     if c and t_int:
+        if target_lang == 'en':
+            return f"{t_int} cycle(s) of {c} days"
         return f"{t_int} цикл(и) по {c} днів"
     if c:
+        if target_lang == 'en':
+            return f"Cycle — {c} days"
         return f"Цикл — {c} днів"
     if t_int:
+        if target_lang == 'en':
+            return f"{t_int} cycle(s)"
         return f"{t_int} цикл(и)"
     return ""
 
 
-def _medicine_form_ua(component: dict, drug: dict) -> str:
+def _medicine_form_ua(component: dict, drug: dict, *, target_lang: str = "uk") -> str:
     """Return a patient-readable medicine form and administration route.
 
     The regimen component is authoritative because the same medicine may be
@@ -3720,8 +3753,24 @@ def _medicine_form_ua(component: dict, drug: dict) -> str:
     formulations_lower = formulations.lower()
 
     forms: list[str] = []
+    english_forms = {
+        "таблетки або капсули для прийому через рот": "tablets or capsules taken by mouth",
+        "таблетки для прийому через рот": "tablets taken by mouth",
+        "капсули для прийому через рот": "capsules taken by mouth",
+        "рідкі ліки для прийому через рот": "liquid medicine taken by mouth",
+        "ліки для прийому через рот": "medicine taken by mouth",
+        "внутрішньовенна інфузія (крапельниця) у клініці": "intravenous infusion (a drip) at the clinic",
+        "підшкірна ін’єкція": "injection under the skin",
+        "внутрішньом’язова ін’єкція": "injection into a muscle",
+        "введення у спинномозковий канал у клініці": "administration into the spinal canal at the clinic",
+        "лікувальний пластир на шкіру": "a medicated patch applied to the skin",
+        "крем або гель для нанесення на шкіру": "cream or gel applied to the skin",
+        "ін’єкція; точний спосіб введення уточніть з лікарем": "injection; confirm the exact route with your doctor",
+    }
 
     def add(value: str) -> None:
+        if target_lang == 'en':
+            value = english_forms[value]
         if value not in forms:
             forms.append(value)
 
@@ -3776,17 +3825,33 @@ def _medicine_form_ua(component: dict, drug: dict) -> str:
             add("ін’єкція; точний спосіб введення уточніть з лікарем")
 
     if not forms:
+        if target_lang == 'en':
+            return "confirm the formulation and route of administration with your doctor"
         return "форму та спосіб введення потрібно уточнити з лікарем"
-    return "; або ".join(forms)
+    return ("; or " if target_lang == 'en' else "; або ").join(forms)
 
 
-def _regimen_tolerability_ua(regimen_data: Optional[dict]) -> tuple[str, str, str]:
+def _regimen_tolerability_ua(regimen_data: Optional[dict], *, target_lang: str = "uk") -> tuple[str, str, str]:
     """Translate a regimen toxicity profile into a patient-facing load class.
 
     Returns ``(label, explanation, badge_class)``. This is deliberately an
     orientation label for the whole regimen, not an individual prediction of
     adverse effects or a treatment-selection signal.
     """
+    if target_lang == 'en':
+        label, _, badge = _regimen_tolerability_ua(regimen_data)
+        translations = {
+            "Ще не вказано": ("Not yet specified", "The overall treatment burden for this regimen has not yet been described in the data."),
+            "Підтримувальне або мінімальне навантаження": ("Supportive or minimal burden", "This regimen usually has a minimal medicine-related burden."),
+            "Легше навантаження": ("Lower burden", "This is usually one of the regimens with a lower overall treatment burden."),
+            "Легке–помірне навантаження": ("Low to moderate burden", "The burden is usually higher than minimal but lower than that of intensive regimens."),
+            "Помірне навантаження": ("Moderate burden", "This regimen can noticeably affect how you feel and requires planned monitoring."),
+            "Помірне–високе навантаження": ("Moderate to high burden", "This regimen is closer to intensive treatment and usually requires careful monitoring."),
+            "Високе навантаження («важка» схема)": ("High burden (an intensive regimen)", "This is an intensive regimen that usually requires more frequent monitoring and support."),
+            "Індивідуально або залежно від схеми": ("Individual or regimen-dependent", "The burden does not fit a standard category; discuss it with your doctor."),
+        }
+        translated_label, explanation = translations[label]
+        return translated_label, explanation, badge
     raw = ""
     if isinstance(regimen_data, dict):
         raw = str(regimen_data.get("toxicity_profile") or "").strip().lower()
@@ -3842,18 +3907,25 @@ def _regimen_tolerability_ua(regimen_data: Optional[dict]) -> tuple[str, str, st
     )
 
 
-def _render_regimen_tolerability(regimen_data: Optional[dict]) -> str:
-    label, explanation, badge_class = _regimen_tolerability_ua(regimen_data)
+def _render_regimen_tolerability(regimen_data: Optional[dict], *, target_lang: str = "uk") -> str:
+    label, explanation, badge_class = _regimen_tolerability_ua(regimen_data, target_lang=target_lang)
+    heading = 'Expected tolerability class:' if target_lang == 'en' else 'Клас очікуваної переносимості:'
+    caveat = (
+        'This is an approximate class for the whole regimen, not a prediction for you personally: '
+        'tolerability depends on your health, doses and supportive treatment.'
+        if target_lang == 'en' else
+        'Це орієнтовний клас усієї схеми, а не прогноз саме для вас: '
+        'переносимість залежить від стану здоров’я, доз і підтримувального лікування.'
+    )
     raw_profile = ""
     if isinstance(regimen_data, dict):
         raw_profile = str(regimen_data.get("toxicity_profile") or "")
     return (
         f'<div class="treatment-load" data-toxicity-profile="{_h(raw_profile)}">'
-        '<p class="treatment-load-heading"><strong>Клас очікуваної переносимості:</strong></p>'
+        f'<p class="treatment-load-heading"><strong>{heading}</strong></p>'
         f'<p class="patient-badge {_h(badge_class)}">{_h(label)}</p>'
         f'<p class="treatment-load-note">{_h(explanation)} '
-        "Це орієнтовний клас усієї схеми, а не прогноз саме для вас: "
-        "переносимість залежить від стану здоров’я, доз і підтримувального лікування.</p>"
+        f"{caveat}</p>"
         "</div>"
     )
 
@@ -3863,6 +3935,7 @@ def _render_track_drugs(
     t,
     drugs_lookup: dict,
     disease_names: Optional[dict],
+    *, target_lang: str = "uk",
 ) -> str:
     """Render the drug-explanation blocks for a single track.
 
@@ -3878,7 +3951,7 @@ def _render_track_drugs(
         seen_drug_ids.add(drug_id)
 
         drug = drugs_lookup.get(drug_id) or {}
-        label = _patient_drug_label(drug, drug_id)
+        label = _patient_drug_label(drug, drug_id, target_lang=target_lang)
         drug_class = (drug.get("drug_class") or "") if isinstance(drug, dict) else ""
 
         # Lay-language explanation: prefer notes_patient (drug-author'd
@@ -3889,9 +3962,11 @@ def _render_track_drugs(
         if not lay and drug_class:
             lay = _explain_patient(drug_class) or ""
         if not lay:
-            lay = "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
+            lay = "medicine for your condition — discuss the details with your doctor" if target_lang == 'en' else "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
+        elif target_lang == 'en':
+            lay = 'Original source explanation; translation unavailable: ' + lay
 
-        medicine_form = _medicine_form_ua(comp, drug)
+        medicine_form = _medicine_form_ua(comp, drug, target_lang=target_lang)
 
         # NSZU badge — patient-friendly label, render only when we can
         # resolve coverage. Falls back silently when drug entity is
@@ -3905,6 +3980,13 @@ def _render_track_drugs(
                     disease_names=disease_names if isinstance(disease_names, dict) else None,
                 )
                 p_label = NSZU_PATIENT_LABEL.get(badge.status, "")
+                if target_lang == 'en':
+                    p_label = {
+                        'covered': 'Free under the Ukrainian NHSU programme',
+                        'partial': 'NHSU covers this medicine, but not for this diagnosis',
+                        'oop': 'Paid out of pocket',
+                        'not-registered': 'Not registered in Ukraine',
+                    }.get(badge.status, '')
                 if p_label:
                     cls = f"patient-nszu patient-nszu-{badge.status}"
                     badge_html = (
@@ -3918,7 +4000,7 @@ def _render_track_drugs(
             f'<div class="drug-explanation" data-source-id="{_h(drug_id)}">'
             f"<h3>{_h(label)}</h3>"
             f'<p class="lay-language">{_h(lay)}</p>'
-            f'<p class="medicine-form"><strong>Форма ліків:</strong> '
+            f'<p class="medicine-form"><strong>{"Medicine form:" if target_lang == "en" else "Форма ліків:"}</strong> '
             f'{_h(medicine_form)}.</p>'
             f"{badge_html}"
             "</div>"
@@ -3926,7 +4008,7 @@ def _render_track_drugs(
     return "".join(blocks)
 
 
-def _render_tracks_plain(plan_result: PlanResult) -> str:
+def _render_tracks_plain(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Plain-UA per-track rendering for the `what-now` section.
 
     Each track becomes a `<article class="track-card track-card--{mod}">`
@@ -3936,6 +4018,8 @@ def _render_tracks_plain(plan_result: PlanResult) -> str:
     card (regimen ID) and each drug-explanation block (drug ID)."""
     plan = plan_result.plan
     if plan is None or not plan.tracks:
+        if target_lang == 'en':
+            return '<p>Your doctor will prepare the specific medicine list after reviewing all your test results.</p>'
         return (
             "<p>Конкретний список препаратів буде сформовано лікарем "
             "після перегляду усіх ваших аналізів.</p>"
@@ -3948,17 +4032,17 @@ def _render_tracks_plain(plan_result: PlanResult) -> str:
 
     cards: list[str] = []
     for idx, t in enumerate(plan.tracks):
-        title_ua, modifier = _track_label_ua(idx, track_count, t)
+        title_ua, modifier = _track_label_ua(idx, track_count, t, target_lang=target_lang)
         regimen_data = t.regimen_data or {}
         regimen_id = regimen_data.get("id", "") if isinstance(regimen_data, dict) else ""
         regimen_name = (
             regimen_data.get("name", "") if isinstance(regimen_data, dict) else ""
         )
-        schedule_str = _regimen_schedule_ua(regimen_data)
-        signoff_badge = _render_signoff_badge_patient(t.indication_data)
-        drug_blocks = _render_track_drugs(plan_result, t, drugs_lookup, disease_names)
+        schedule_str = _regimen_schedule_ua(regimen_data, target_lang=target_lang)
+        signoff_badge = _render_signoff_badge_patient(t.indication_data, target_lang=target_lang)
+        drug_blocks = _render_track_drugs(plan_result, t, drugs_lookup, disease_names, target_lang=target_lang)
         if not drug_blocks:
-            drug_blocks = (
+            drug_blocks = '<p>Your doctor will confirm the specific medicine list for this option.</p>' if target_lang == 'en' else (
                 "<p>Конкретний список препаратів для цього варіанту буде "
                 "уточнений лікарем.</p>"
             )
@@ -3971,7 +4055,7 @@ def _render_tracks_plain(plan_result: PlanResult) -> str:
             f'<p class="regimen-schedule">{schedule_str}</p>'
             if schedule_str else ""
         )
-        tolerability_block = _render_regimen_tolerability(regimen_data)
+        tolerability_block = _render_regimen_tolerability(regimen_data, target_lang=target_lang)
 
         cards.append(
             f'<article class="track-card track-card--{_h(modifier)}" '
@@ -3989,7 +4073,7 @@ def _render_tracks_plain(plan_result: PlanResult) -> str:
     return f'<div class="{grid_class}">{"".join(cards)}</div>'
 
 
-def _render_why_section(plan_result: PlanResult) -> str:
+def _render_why_section(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Per-track 'why this for you' section.
 
     Phase 2 emits a placeholder shell so structural anchors exist for
@@ -3997,22 +4081,24 @@ def _render_why_section(plan_result: PlanResult) -> str:
     fills in the bullets from `PlanResult.trace`. The shell still
     surfaces the section heading + per-track cards so the bundle layout
     is stable across phases."""
+    heading = 'Why this plan' if target_lang == 'en' else 'Чому саме цей план'
+    fallback = 'See the technical report for details.' if target_lang == 'en' else 'Деталі — у технічній версії звіту.'
     plan = plan_result.plan
     if plan is None or not plan.tracks:
         return (
             '<section class="why-this-plan">'
-            "<h2>Чому саме цей план</h2>"
-            '<p class="why-fallback">Деталі — у технічній версії звіту.</p>'
+            f"<h2>{heading}</h2>"
+            f'<p class="why-fallback">{fallback}</p>'
             "</section>"
         )
 
     track_count = len(plan.tracks)
     track_blocks: list[str] = []
     for idx, t in enumerate(plan.tracks):
-        title_ua, modifier = _track_label_ua(idx, track_count, t)
+        title_ua, modifier = _track_label_ua(idx, track_count, t, target_lang=target_lang)
         regimen_data = t.regimen_data or {}
         regimen_id = regimen_data.get("id", "") if isinstance(regimen_data, dict) else ""
-        bullets_html = _build_why_bullets_html(plan_result, t)
+        bullets_html = _build_why_bullets_html(plan_result, t, target_lang=target_lang)
         track_blocks.append(
             f'<div class="why-track" data-source-id="{_h(regimen_id)}">'
             f'<p class="track-label">{_h(title_ua)}</p>'
@@ -4022,13 +4108,13 @@ def _render_why_section(plan_result: PlanResult) -> str:
 
     return (
         '<section class="why-this-plan">'
-        "<h2>Чому саме цей план</h2>"
+        f"<h2>{heading}</h2>"
         f'{"".join(track_blocks)}'
         "</section>"
     )
 
 
-def _build_why_bullets_html(plan_result: PlanResult, track) -> str:
+def _build_why_bullets_html(plan_result: PlanResult, track, *, target_lang: str = "uk") -> str:
     """Phase 3: rationale bullets from `PlanResult.trace`.
 
     Delegates to `_patient_rationale.build_track_rationale_html`, which
@@ -4041,7 +4127,7 @@ def _build_why_bullets_html(plan_result: PlanResult, track) -> str:
 
     HTML escaping is handled inside the rationale builder so KB content
     with markup-sensitive characters cannot break the document."""
-    return _build_track_rationale_html(plan_result, track)
+    return _build_track_rationale_html(plan_result, track, target_lang=target_lang)
 
 
 # Urgency tiers from Regimen.between_visit_watchpoints, mapped to the
@@ -4099,7 +4185,7 @@ def _emergency_trigger_keys(plan_result: PlanResult) -> set[str]:
     return keys
 
 
-def _render_between_visits_section(plan_result: PlanResult) -> str:
+def _render_between_visits_section(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Per-track 'на що звертати увагу між візитами' section.
 
     Source: `track.regimen_data['between_visit_watchpoints']` (list of
@@ -4111,12 +4197,25 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
     `trigger_ua` first-sentence matches any emergency RF is dropped
     here (it surfaces in the emergency banner instead). Per §3.4.
     """
+    english = target_lang == "en"
+    section_heading = "What to watch for between visits" if english else "На що звернути увагу між візитами"
+    urgency_headings = {
+        "log_at_next_visit": "Make a note and discuss it at your next visit",
+        "call_clinic_same_day": "Call the clinic the same day",
+        "er_now": "Go to hospital immediately",
+    } if english else _BV_URGENCY_HEADING_UA
+    fallback = (
+        '<p class="bv-fallback">The clinical team has not yet agreed a list of symptoms '
+        'to watch for between visits for this treatment. Ask your doctor at your next '
+        'visit which symptoms to record and which should prompt a call to the clinic.</p>'
+        if english else _BV_FALLBACK_HTML
+    )
     plan = plan_result.plan
     if plan is None or not plan.tracks:
         return (
             '<section class="between-visits">'
-            "<h2>На що звернути увагу між візитами</h2>"
-            f"{_BV_FALLBACK_HTML}"
+            f"<h2>{section_heading}</h2>"
+            f"{fallback}"
             "</section>"
         )
 
@@ -4145,12 +4244,12 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
                     continue
             kept.append(w)
 
-        title_ua, modifier = _track_label_ua(idx, track_count, t)
+        title_ua, modifier = _track_label_ua(idx, track_count, t, target_lang=target_lang)
         if not kept:
             track_blocks.append(
                 f'<div class="bv-track" data-source-id="{_h(regimen_id)}">'
                 f'<p class="track-label">{_h(title_ua)}</p>'
-                f"{_BV_FALLBACK_HTML}"
+                f"{fallback}"
                 "</div>"
             )
             continue
@@ -4169,7 +4268,7 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
             if not items:
                 continue
             cls = _BV_URGENCY_CSS_CLASS[urg]
-            heading = _BV_URGENCY_HEADING_UA[urg]
+            heading = urgency_headings[urg]
             li_parts: list[str] = []
             for w in items:
                 trigger = _h(w.get("trigger_ua") or "")
@@ -4180,7 +4279,8 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
                     if window else ""
                 )
                 li_parts.append(
-                    "<li>"
+                    "<li>" +
+                    ('<span class="translation-fallback">Original Ukrainian text; translation unavailable: </span>' if english else '') +
                     f'<span class="bv-trigger">{trigger}</span>{window_html}'
                     f' — <span class="bv-action">{action}</span>'
                     "</li>"
@@ -4201,26 +4301,34 @@ def _render_between_visits_section(plan_result: PlanResult) -> str:
 
     return (
         '<section class="between-visits">'
-        "<h2>На що звернути увагу між візитами</h2>"
+        f"<h2>{section_heading}</h2>"
         f'{"".join(track_blocks)}'
         "</section>"
     )
 
 
-def _render_emergency_section(plan_result: PlanResult) -> str:
+def _render_emergency_section(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Filter the plan's red flags and render emergency-tier ones as a
     `<section class="emergency-signals">` with one banner item per RF.
     Renders an empty-state placeholder when no emergency RFs apply, so
     the section is always present in the bundle (assertable structural
     contract for downstream tests)."""
+    english = target_lang == "en"
+    heading = "Signals requiring immediate attention" if english else "Сигнали, що вимагають негайної уваги"
+    empty_message = (
+        "No urgent signals were recorded as triggered in this report's trace. "
+        "This does not rule out emergencies and is not an assessment of your current symptoms."
+        if english else
+        "У журналі цього звіту немає спрацьованих термінових сигналів. "
+        "Це не виключає невідкладних станів і не є оцінкою ваших поточних симптомів."
+    )
     emergencies = _patient_emergency_findings(plan_result)
     if not emergencies:
         return (
             '<section class="emergency-signals">'
-            "<h2>Сигнали, що вимагають негайної уваги</h2>"
+            f"<h2>{heading}</h2>"
             '<p class="patient-badge patient-info">'
-            "У журналі цього звіту немає спрацьованих термінових сигналів. "
-            "Це не виключає невідкладних станів і не є оцінкою ваших поточних симптомів."
+            f"{_h(empty_message)}"
             "</p>"
             "</section>"
         )
@@ -4230,22 +4338,29 @@ def _render_emergency_section(plan_result: PlanResult) -> str:
         # tests, but the visible text is generated solely from the
         # patient_emergency_label() output.
         rf_id = (rf.get("id") or "") if isinstance(rf, dict) else ""
-        label = patient_emergency_label(rf)
+        label = patient_emergency_label(rf, target_lang=target_lang)
         items.append(
             f'<li data-rf-id="{_h(rf_id)}">{_h(label)}</li>'
         )
+    explanation = (
+        "The algorithm flagged these conditions based on the data entered. "
+        "This is not a confirmed diagnosis; check them with your doctor."
+        if english else
+        "Наведені умови позначені алгоритмом за введеними даними. "
+        "Це не підтверджений діагноз; перевірте їх з лікарем."
+    )
+    descriptions = "Signal descriptions from the knowledge base:" if english else "Описи сигналів із бази знань:"
     return (
         '<section class="emergency-signals">'
-        "<h2>Сигнали, що вимагають негайної уваги</h2>"
-        '<p>Наведені умови позначені алгоритмом за введеними даними. '
-        'Це не підтверджений діагноз; перевірте їх з лікарем.</p>'
-        '<p>Описи сигналів із бази знань:</p>'
+        f"<h2>{heading}</h2>"
+        f'<p>{_h(explanation)}</p>'
+        f'<p>{descriptions}</p>'
         f'<ul class="emergency-list">{"".join(items)}</ul>'
         "</section>"
     )
 
 
-def _render_ask_doctor_section(plan_result: PlanResult) -> str:
+def _render_ask_doctor_section(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Build the 'про що варто запитати лікаря' block.
 
     Pulls a plan dict (model_dump) and decorates it with derived flags
@@ -4300,10 +4415,12 @@ def _render_ask_doctor_section(plan_result: PlanResult) -> str:
     questions = _select_ask_doctor_questions(plan_dict, target_count=6)
     if not questions:
         return ""
-    items = "".join(f"<li>{_h(q['question_ua'])}</li>" for q in questions)
+    field = 'question_en' if target_lang == 'en' else 'question_ua'
+    items = "".join(f"<li>{_h(q[field])}</li>" for q in questions)
+    heading = "What to ask your doctor" if target_lang == 'en' else "Про що варто запитати лікаря"
     return (
         '<div class="ask-doctor">'
-        "<h2>Про що варто запитати лікаря</h2>"
+        f"<h2>{heading}</h2>"
         f"<ul>{items}</ul>"
         "</div>"
     )
@@ -4337,6 +4454,59 @@ _PATIENT_DISCLAIMER_PREVENTION_HTML = (
     "<p>Питання про сам інструмент: "
     '<a href="https://github.com/romeo111/OpenOnco/issues">github.com/romeo111/OpenOnco</a></p>'
 )
+
+
+def render_patient_english_draft(plan_result: PlanResult) -> str:
+    """Review candidate only; untranslated authored text remains visibly marked.
+
+    Kept separate from the production patient renderer until complete coverage
+    and review. This never changes the underlying clinical plan.
+    """
+    plan = plan_result.plan
+    prevention = plan_result.disease_id is None and (plan is None or plan.algorithm_id is None)
+    title = 'Your prevention plan' if prevention else 'Your oncology plan'
+    notice = (
+        '<aside class="patient-badge patient-warn" data-translation-status="draft-partial">'
+        'English translation draft — incomplete and awaiting clinical/language review. '
+        'Some explanations remain in their original language and are marked. '
+        'Consult the original report and your doctor.</aside>'
+    )
+    if plan is None:
+        body = notice + '<p>There is not yet enough information to build a plan. Ask your doctor to clarify the missing information.</p>'
+    else:
+        label = 'Identified risk factor:' if prevention else 'Diagnosis:'
+        meaning = 'What this means for prevention' if prevention else 'What this means for treatment'
+        body = (
+            notice + f'<header><h1>{title}</h1><p><strong>{label}</strong> '
+            f'{_h(_patient_disease_label(plan_result, target_lang="en"))}</p></header>'
+            '<section class="what-was-found"><h2>What was found</h2>'
+            + _render_findings_plain(plan_result, target_lang='en') + '</section>'
+            + f'<section class="what-now"><h2>{meaning}</h2>'
+            + _render_tracks_plain(plan_result, target_lang='en') + '</section>'
+            + _render_why_section(plan_result, target_lang='en')
+            + _render_between_visits_section(plan_result, target_lang='en')
+            + _render_emergency_section(plan_result, target_lang='en')
+            + _render_ask_doctor_section(plan_result, target_lang='en')
+        )
+        sources = _render_cited_sources(plan.fda_compliance, 'en', patient_view=True)
+        if sources:
+            body += '<details class="patient-sources" data-original-source><summary>Original sources for this report</summary>' + sources + '</details>'
+        decision = (
+            'Decisions about prevention and surveillance are made by your doctor.'
+            if prevention else 'Treatment decisions are made by your oncologist.'
+        )
+        body += (
+            '<footer class="patient-disclaimer"><p>This report is an information tool. '
+            + decision + ' Do not change prescribed treatment or surveillance based only on this report.</p>'
+            '<p>If you develop the urgent symptoms listed above, seek hospital care immediately; do not wait for a planned visit.</p></footer>'
+        )
+    document = (
+        '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        f'<title>{_h(title)} — translation review draft</title><style>{_PATIENT_CSS}</style>'
+        f'</head><body>{body}</body></html>'
+    )
+    return _expand_first_use(document, target_lang='en')
 
 
 def _render_patient_mode(

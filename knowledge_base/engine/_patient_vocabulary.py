@@ -275,8 +275,8 @@ VARIANT_TYPE_PLAIN_UA: dict[str, str] = {
 # tier explanations. Plain-UA wording for the actionability panel.
 
 ESCAT_PLAIN_UA: dict[str, str] = {
-    "IA": "найвищий рівень — препарат FDA/EMA-схвалений саме для вашого варіанту й типу пухлини, з randomized clinical trial доказами",
-    "IB": "дуже високий рівень — препарат працює, часто вимагається комбінація",
+    "IA": "клінічна користь для цієї молекулярної мішені підтверджена рандомізованими дослідженнями; придатність лікування й регуляторний статус перевіряє лікар",
+    "IB": "клінічна користь для цієї молекулярної мішені показана проспективними нерандомізованими дослідженнями; придатність лікування перевіряє лікар",
     "IIA": "помірний рівень — ретроспективні дані показують клінічну користь у вашому типі пухлини",
     "IIB": "обмежений рівень — попередні дані обнадійливі, але треба більше доказів",
     "IIIA": "цільовий препарат існує для іншого типу пухлини — basket-trial показує користь і у вас; обговорити з лікарем",
@@ -550,14 +550,29 @@ def explain(term: str) -> Optional[str]:
 # explanations live in the tooltip / detail block).
 
 ESCAT_TIER_PATIENT_LABEL: dict[str, str] = {
-    "IA": "Найвищий рівень доказів — FDA схвалив саме для вас",
-    "IB": "Дуже високий — у комбінації",
+    "IA": "Клінічна користь підтверджена рандомізованими дослідженнями",
+    "IB": "Клінічна користь показана проспективними нерандомізованими дослідженнями",
     "IIA": "Помірний — ретроспективні дані",
     "IIB": "Обмежений — попередні дані обнадійливі",
     "IIIA": "Цільовий препарат існує — обговорити",
     "IIIB": "Цільовий препарат для іншого типу — trial-only",
     "IV": "Поки тільки лабораторні моделі",
     "X": "Поки даних немає",
+}
+
+
+# Draft patient wording based on Mateo et al., ESCAT (2018):
+# https://pubmed.ncbi.nlm.nih.gov/30137196/
+# The tier is evidence for a target, not an individual FDA approval.
+ESCAT_TIER_PATIENT_LABEL_EN: dict[str, str] = {
+    "IA": "Clinical benefit supported by randomised studies",
+    "IB": "Clinical benefit shown in prospective non-randomised studies",
+    "IIA": "Investigational target; additional evidence is needed",
+    "IIB": "Investigational target; additional evidence is needed",
+    "IIIA": "Evidence comes from other tumour types or similar molecular targets",
+    "IIIB": "Evidence comes from other tumour types or similar molecular targets",
+    "IV": "Evidence from laboratory models only",
+    "X": "No evidence of actionability",
 }
 
 
@@ -591,6 +606,20 @@ ABBREVIATION_FIRST_USE_UA: dict[str, str] = {
 
 
 # ── Allowlist for the no-Latin / no-abbreviation render gate ─────────
+ABBREVIATION_FIRST_USE_EN: dict[str, str] = {
+    "ESCAT": "ESCAT (level of evidence — how strongly it has been shown that a medicine works)",
+    "FDA": "FDA (the US Food and Drug Administration)",
+    "MDT": "MDT (a team of doctors from different specialties)",
+    "ECOG": "ECOG (a scale describing a patient's ability to carry out daily activities)",
+    "MSI": "MSI (microsatellite instability in the tumour)",
+    "PD-L1": "PD-L1 (a protein on tumour cells that blocks an immune attack)",
+    "PD-1": "PD-1 (an immune-system switch protein)",
+    "HCV": "HCV (hepatitis C virus)",
+    "HBV": "HBV (hepatitis B virus)",
+    "CAR-T": "CAR-T (treatment using the patient's modified T cells)",
+}
+ABBREVIATION_TRANSLATION_STATUS = {"en": "draft_pending_review"}
+
 #
 # PATIENT_MODE_SPEC §5.3 + §5.4. Tokens here may appear in the rendered
 # patient body without triggering the test gate.
@@ -716,7 +745,7 @@ def is_allowlisted_latin_word(token: str) -> bool:
     return bool(token) and token.lower() in PATIENT_ALLOWLIST_LATIN_WORDS
 
 
-def expand_first_use(html: str) -> str:
+def expand_first_use(html: str, *, target_lang: str = "uk") -> str:
     """Inject first-use expansions for `ABBREVIATION_FIRST_USE_UA` keys
     into a rendered patient HTML.
 
@@ -725,27 +754,80 @@ def expand_first_use(html: str) -> str:
     bare. Idempotent — a sentinel HTML comment marks expanded bundles
     so re-renders (mode toggle, language switch) don't double-expand."""
     import re as _re
+    from html import escape
+    from html.parser import HTMLParser
 
     sentinel = "<!-- abbrev-expanded -->"
     if sentinel in html:
         return html
 
-    out = html
-    for key, expansion in ABBREVIATION_FIRST_USE_UA.items():
+    if target_lang not in {"uk", "en"}:
+        raise ValueError("First-use explanations are available only in Ukrainian and draft English")
+    expansions = ABBREVIATION_FIRST_USE_EN if target_lang == "en" else ABBREVIATION_FIRST_USE_UA
+
+    patterns = {}
+    for key in expansions:
         # `\b` plus a negative-lookbehind/ahead that excludes Latin
         # letters, Cyrillic letters, dashes, and digits — so `PD-1`
         # doesn't match inside `BCR-PD-1` and `MSI` doesn't match
         # inside `MSIH`.
-        pattern = _re.compile(
+        patterns[key] = _re.compile(
             r"(?<![A-Za-zА-Яа-яЇїІіЄєҐґ\-])"
             + _re.escape(key)
             + r"(?![A-Za-zА-Яа-яЇїІіЄєҐґ0-9])"
         )
-        m = pattern.search(out)
-        if not m:
-            continue
-        # Replace only the first occurrence.
-        out = out[:m.start()] + expansion + out[m.end():]
+
+    # Record prose spans without reserializing HTML. Attributes, URLs, comments,
+    # scripts, styles and original publication text must stay byte-for-byte intact.
+    line_starts = [0]
+    for match in _re.finditer("\n", html):
+        line_starts.append(match.end())
+    replacements = []
+    seen = set()
+
+    class ProseParser(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=False)
+            self.stack = []
+
+        def handle_starttag(self, tag, attrs):
+            blocked = (bool(self.stack and self.stack[-1][1]) or
+                       tag in {'head', 'script', 'style', 'code', 'pre'} or
+                       any(key == 'data-original-source' for key, _ in attrs))
+            if tag not in {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'}:
+                self.stack.append((tag, blocked))
+
+        def handle_startendtag(self, tag, attrs):
+            pass
+
+        def handle_endtag(self, tag):
+            for index in range(len(self.stack) - 1, -1, -1):
+                if self.stack[index][0] == tag:
+                    del self.stack[index:]
+                    break
+
+        def handle_data(self, data):
+            if self.stack and self.stack[-1][1]:
+                return
+            rendered = data
+            for key, pattern in patterns.items():
+                if key in seen:
+                    continue
+                match = pattern.search(rendered)
+                if match:
+                    rendered = (rendered[:match.start()] + escape(expansions[key]) + rendered[match.end():])
+                    seen.add(key)
+            if rendered != data:
+                line, column = self.getpos()
+                start = line_starts[line - 1] + column
+                replacements.append((start, start + len(data), rendered))
+
+    parser = ProseParser()
+    parser.feed(html)
+    parser.close()
+    out = html
+    for start, end, replacement in reversed(replacements):
+        out = out[:start] + replacement + out[end:]
     return out + sentinel
 
 
@@ -768,6 +850,7 @@ __all__ = [
     "ESCAT_TIER_PATIENT_LABEL",
     "NSZU_PATIENT_LABEL",
     "ABBREVIATION_FIRST_USE_UA",
+    "ABBREVIATION_FIRST_USE_EN",
     "PATIENT_ALLOWLIST_ACRONYMS",
     "PATIENT_ALLOWLIST_LATIN_WORDS",
     "PATIENT_ALLOWLIST_TRIAL_PREFIXES",

@@ -1217,6 +1217,79 @@ def test_patient_html_no_bare_latin_words(label, builder):
     )
 
 
+def test_english_patient_sections_preserve_watchpoints_and_question_selection():
+    from knowledge_base.engine.render import _render_between_visits_section, _render_ask_doctor_section
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    result.plan.tracks[0].regimen_data['between_visit_watchpoints'] = [
+        {'trigger_ua': 'Показник <38.5°C', 'action_ua': 'Не чекати', 'urgency': 'er_now', 'cycle_day_window': 'D1–D7'},
+        {'trigger_ua': 'Занотувати симптом', 'action_ua': 'Обговорити', 'urgency': 'log_at_next_visit'},
+    ]
+    before = result.plan.model_dump()
+    section = _render_between_visits_section(result, target_lang='en')
+    assert 'Go to hospital immediately' in section
+    assert 'Make a note and discuss it at your next visit' in section
+    assert 'Original Ukrainian text; translation unavailable' in section
+    assert 'Показник &lt;38.5°C' in section
+    assert 'Не чекати' in section
+    assert 'D1–D7' in section
+    en_questions = _render_ask_doctor_section(result, target_lang='en')
+    ua_questions = _render_ask_doctor_section(result)
+    assert 'What to ask your doctor' in en_questions
+    assert 'How many treatment cycles' in en_questions
+    assert en_questions.count('<li>') == ua_questions.count('<li>')
+    assert result.plan.model_dump() == before
+
+
+def test_english_findings_preserve_variants_and_mark_untranslated_explanations():
+    from knowledge_base.engine.render import _render_findings_plain, _patient_disease_label, _patient_drug_label
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    before = result.plan.model_dump()
+    rendered = _render_findings_plain(result, target_lang='en')
+    assert 'BRAF V600E' in rendered
+    assert 'data-variant-original="V600E"' in rendered
+    assert 'Original Ukrainian explanation; translation unavailable' in rendered
+    assert 'FDA схвалив' not in rendered
+    assert result.plan.model_dump() == before
+    result.kb_resolved['disease'] = {'names': {'english': 'Example disease', 'ukrainian': 'Приклад'}}
+    assert _patient_disease_label(result, target_lang='en') == 'Example disease'
+    assert _patient_disease_label(result) == 'Приклад'
+    assert _patient_drug_label({'names': {'english': 'Medicine', 'ukrainian': 'Ліки'}}, 'DRUG-TEST', target_lang='en') == 'Medicine'
+    assert 'original Ukrainian name' in _patient_drug_label({'names': {'ukrainian': 'Ліки'}}, 'DRUG-TEST', target_lang='en')
+
+
+def test_english_track_cards_preserve_all_options_and_drug_source_anchors():
+    from knowledge_base.engine.render import _render_tracks_plain
+    result = _build_hcv_mzl_two_track_plan()
+    before = result.plan.model_dump()
+    ua = _render_tracks_plain(result)
+    en = _render_tracks_plain(result, target_lang='en')
+    assert en.count('<article') == ua.count('<article') == len(result.plan.tracks)
+    assert en.count('class="drug-explanation"') == ua.count('class="drug-explanation"')
+    assert re.findall(r'data-source-id="([^"]*)"', en) == re.findall(r'data-source-id="([^"]*)"', ua)
+    assert 'Medicine form:' in en
+    assert 'not a prediction for you personally' in en
+    assert 'Awaiting review by doctors' in en
+    assert result.plan.model_dump() == before
+
+
+def test_assembled_english_review_draft_preserves_sections_options_and_sources():
+    from knowledge_base.engine.render import render_patient_english_draft
+    result = _build_hcv_mzl_two_track_plan()
+    before = result.plan.model_dump()
+    original = render_plan_html(result, mode='patient')
+    draft = render_patient_english_draft(result)
+    assert '<html lang="en">' in draft
+    assert 'data-translation-status="draft-partial"' in draft
+    assert 'incomplete and awaiting clinical/language review' in draft
+    for section in ('what-was-found', 'what-now', 'why-this-plan', 'between-visits', 'emergency-signals'):
+        assert f'class="{section}"' in draft
+    assert draft.count('<article') == original.count('<article')
+    assert re.findall(r'data-source-id="([^"]*)"', draft) == re.findall(r'data-source-id="([^"]*)"', original)
+    assert 'What to ask your doctor' in draft
+    assert 'Do not change prescribed treatment' in draft
+    assert result.plan.model_dump() == before
+
+
 def test_first_use_expansion_inserts_gloss_for_escat():
     """When the patient body mentions ESCAT, the first occurrence is
     expanded to include the parenthesized gloss."""

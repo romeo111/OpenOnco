@@ -37,6 +37,7 @@ class QuestionTemplate(TypedDict):
     id: str
     predicate: Callable[[dict], bool]
     question_ua: str
+    question_en: str
 
 
 def _drugs(plan: dict) -> list[dict]:
@@ -107,61 +108,76 @@ QUESTION_TEMPLATES: list[QuestionTemplate] = [
         "id": "second_opinion",
         "predicate": lambda plan: True,
         "question_ua": "Чи варто отримати другу думку молекулярного онколога перед початком лікування?",
+        "question_en": "Should I get a second opinion from a molecular oncologist before starting treatment?",
     },
     {
         "id": "regional_access",
         "predicate": lambda plan: _has_oop_drug(plan),
         "question_ua": "Чи доступний цей препарат у моєму регіоні? Якщо ні — як можна його отримати?",
+        "question_en": "Is this medicine available in my region? If not, how can I obtain it?",
     },
     {
         "id": "duration",
         "predicate": lambda plan: True,
         "question_ua": "Скільки циклів триватиме лікування? Як ми зрозуміємо, що воно працює?",
+        "question_en": "How many treatment cycles will I need? How will we know whether treatment is working?",
     },
     {
         "id": "side_effects",
         "predicate": lambda plan: True,
         "question_ua": "Які побічні ефекти найбільш імовірні саме для мене? Які я можу запобігти?",
+        "question_en": "Which side effects are most likely for me? Which ones can I prevent?",
     },
     {
         "id": "dose_reduction",
         "predicate": lambda plan: _has_high_tox_drug(plan),
         "question_ua": "Чи можна почати з нижчої дози і поступово підвищувати?",
+        "question_en": "Could I start with a lower dose and increase it gradually?",
     },
     {
         "id": "trials",
         "predicate": lambda plan: _has_basket_eligible_variant(plan),
         "question_ua": "Чи є клінічні випробування, у яких я міг би взяти участь?",
+        "question_en": "Are there clinical trials I could take part in?",
     },
     {
         "id": "fertility",
         "predicate": lambda plan: _patient_under_50(plan),
         "question_ua": "Як це лікування вплине на мою фертильність? Чи треба заморозити репродуктивні клітини?",
+        "question_en": "How will this treatment affect my fertility? Should I have reproductive cells frozen?",
     },
     {
         "id": "insurance",
         "predicate": lambda plan: _has_strict_oop_drug(plan),
         "question_ua": "Чи покриває моя страховка частину витрат? Чи є благодійні фонди для допомоги?",
+        "question_en": "Will my insurance cover some of the costs? Are there charities that can help?",
     },
     {
         "id": "second_track",
         "predicate": lambda plan: _multiple_tracks(plan),
         "question_ua": "Чому ви рекомендуєте саме цей план, а не альтернативний?",
+        "question_en": "Why do you recommend this plan rather than the alternative?",
     },
     {
         "id": "support",
         "predicate": lambda plan: True,
         "question_ua": "Чи є групи підтримки або психолог для онкологічних пацієнтів, які я можу відвідувати?",
+        "question_en": "Are there support groups or a psychologist for people with cancer that I could see?",
     },
     {
         "id": "family_screening",
         "predicate": lambda plan: _has_germline_variant(plan),
         "question_ua": "Якщо мутація успадкована (germline), чи треба перевірити моїх дітей/братів/сестер?",
+        "question_en": "If the mutation is inherited (germline), should my children, brothers or sisters be tested?",
     },
 ]
 
 
 _MUST_INCLUDE_IDS = {"second_opinion", "duration", "side_effects", "support"}
+
+# English patient copy is a draft pending clinical/language review.
+# This does not enable or claim a complete English patient report.
+QUESTION_TRANSLATION_STATUS = {"en": "draft_pending_review"}
 
 
 def select_questions(plan: Any, target_count: int = 6) -> list[dict]:

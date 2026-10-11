@@ -74,7 +74,7 @@ def filter_emergency_rfs(rf_findings: Iterable[dict]) -> list[dict]:
     return [rf for rf in (rf_findings or []) if is_emergency_rf(rf)]
 
 
-def patient_emergency_label(rf_dict: dict) -> str:
+def patient_emergency_label(rf_dict: dict, *, target_lang: str = "uk") -> str:
     """One-line patient-readable emergency action statement.
 
     Uses `definition_ua` (Ukrainian) when set, else falls back to
@@ -82,17 +82,23 @@ def patient_emergency_label(rf_dict: dict) -> str:
     a siren emoji so the banner reads as an action prompt rather than a
     technical RF dump."""
     text = ""
+    original = False
     if isinstance(rf_dict, dict):
-        text = str(rf_dict.get("definition_ua") or rf_dict.get("definition") or "")
+        if target_lang == "en":
+            text = str(rf_dict.get("definition") or rf_dict.get("definition_ua") or "")
+            original = bool(text and not rf_dict.get("definition"))
+        else:
+            text = str(rf_dict.get("definition_ua") or rf_dict.get("definition") or "")
     text = text.strip()
     if not text:
-        return "🚨 Зверніться до лікаря негайно"
+        return "🚨 Contact a doctor immediately" if target_lang == "en" else "🚨 Зверніться до лікаря негайно"
     # A decimal point is part of the authored value, not a sentence boundary.
     first_sentence = _first_sentence_ua(text)
     # Don't keep an empty fragment if the text starts with a period.
     if not first_sentence:
         first_sentence = text
-    return f"🚨 {first_sentence}"
+    qualifier = "Original Ukrainian text; translation unavailable: " if original else ""
+    return f"🚨 {qualifier}{first_sentence}"
 
 
 __all__ = [
