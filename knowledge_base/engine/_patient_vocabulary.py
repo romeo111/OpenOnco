@@ -208,8 +208,8 @@ VARIANT_TYPE_PLAIN_UA: dict[str, str] = {
     "biallelic loss": "обидві копії гена пошкоджені — пухлина повністю втратила цю функцію",
 
     # Origin / zygosity
-    "germline": "мутація успадкована від батьків; присутня у всіх клітинах тіла; впливає на родичів",
-    "somatic": "мутація з'явилася лише в пухлині; не передається дітям",
+    "germline": "варіант у статевих клітинах (яйцеклітині або сперматозоїді), який може передаватися дітям; він може бути успадкованим або виникнути вперше, тому не обов'язково походить від батьків",
+    "somatic": "варіант, що виник у клітинах тіла поза статевими клітинами; він може бути в пухлинних або інших клітинах і не передається дітям",
     "heterozygous": "одна копія гена змінена, інша нормальна",
     "homozygous": "обидві копії гена однакові (часто обидві пошкоджені)",
     "mosaic": "мутація присутня лише в частині клітин організму",
@@ -521,6 +521,8 @@ _ALL_TABLES: tuple[dict[str, str], ...] = (
 
 
 PATIENT_VOCABULARY_EN_DRAFT: dict[str, str] = {
+    "germline": "a variant in reproductive cells (egg or sperm) that can be passed on to children; it may be inherited or arise for the first time, so it does not necessarily come from a parent",
+    "somatic": "a variant that arose in body cells outside the reproductive cells; it may occur in tumour cells or other cells and is not passed on to children",
     "BTKi": "blocks B-cell receptor signalling; a treatment foundation for chronic lymphocytic leukaemia and mantle cell lymphoma",
     "BCL-2i": "removes protection against programmed cell death in tumour cells, allowing the cells to die",
     "CDK4/6i": "stops cell division; used with hormone treatment for hormone-receptor-positive breast cancer",

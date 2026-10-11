@@ -140,6 +140,16 @@ def test_vaf_explanation_distinguishes_read_fraction_from_cell_fraction():
     assert 'gene copy number' in en
 
 
+def test_variant_origin_explanations_do_not_assume_parental_or_tumour_only_origin():
+    assert 'виникнути вперше' in explain('germline')
+    assert "не обов'язково походить від батьків" in explain('germline')
+    assert 'can be passed on to children' in explain('germline', target_lang='en')
+    assert 'does not necessarily come from a parent' in explain('germline', target_lang='en')
+    assert 'пухлинних або інших клітинах' in explain('somatic')
+    assert 'tumour cells or other cells' in explain('somatic', target_lang='en')
+    assert 'is not passed on to children' in explain('somatic', target_lang='en')
+
+
 def test_english_drug_class_explanation_retains_authored_patient_note():
     result = SimpleNamespace(disease_id='DIS-AML')
     track = SimpleNamespace(regimen_data={'components': [{'drug_id': 'DRUG-TEST', 'route': 'PO'}]})
