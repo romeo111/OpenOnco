@@ -1,6 +1,7 @@
 """Translated display must preserve treatment inputs and quiz grading."""
-import json
+import errno
 import hashlib
+import json
 import re
 from pathlib import Path
 
@@ -96,6 +97,24 @@ def test_catalog_tampering_blocks_publication_before_writing_pages(tmp_path):
     assert list(output.iterdir()) == []
 
 
+def test_generated_page_write_retries_transient_windows_error(monkeypatch):
+    from scripts.build_clinical_locales import write_generated_text
+
+    class FlakyPath:
+        calls = 0
+
+        def write_text(self, value, encoding):
+            self.calls += 1
+            if self.calls == 1:
+                raise OSError(errno.EINVAL, 'transient write failure')
+            assert value == 'localized' and encoding == 'utf-8'
+
+    monkeypatch.setattr('scripts.build_clinical_locales.time.sleep', lambda _: None)
+    path = FlakyPath()
+    write_generated_text(path, 'localized')
+    assert path.calls == 2
+
+
 def test_digit_check_keeps_exponents_and_inequalities():
     assert numeric_tokens('ANC <1.0 × 10⁹/L; 20 mg/m²') == numeric_tokens('ANC <1,0 × 10⁹/L ; 20 mg/m²')
     assert numeric_tokens('10 mg') != numeric_tokens('100 mg')
@@ -116,6 +135,20 @@ def test_digit_check_keeps_exponents_and_inequalities():
     assert not acceptable_draft('OpenOnco', 'OuvreOnco', 'fr')
     assert not acceptable_draft('Clinical staging', 'Mise en scène clinique', 'fr')
     assert not acceptable_draft('midostaurin', 'midostaurina', 'pt', re.compile(r'\bmidostaurin\b', re.I))
+    assert not acceptable_draft('TEST-CBC, TEST-LFT, TEST-ECHO', 'ESC, ESC', 'pt')
+    assert not acceptable_draft('PLAN-AML-SECONDARY-CPX351-1L-001-V1', 'PLAN-AML-SECUNDARIO-CPX351-1L-001-V1', 'es')
+    assert not acceptable_draft('clinician_confirmations.CC-ALGO-TEST-1L', 'C-ALGO-TEST-1L', 'fr')
+    assert not acceptable_draft('findings.peripheral_neuropathy_grade', 'a.détermination.', 'fr')
+    assert not acceptable_draft('showcase-endometrial-dmmr-msh2-1l', 'dmmr-msh2-1l', 'fr')
+    assert not acceptable_draft('Refractory lymphoma', 'Feuerfestes Lymphom', 'de')
+    assert not acceptable_draft('Primary Refractory lymphoma', 'Primärfeuerfestes Lymphom', 'de')
+    assert not acceptable_draft('Drugs + NSZU', 'Drogen + NSZU', 'de')
+    assert not acceptable_draft('Drug Facts', 'Drogenakten', 'de')
+    assert not acceptable_draft('categorical (mutated | wild-type)', 'categórico (mutado en el tipo salvaje)', 'es')
+    assert not acceptable_draft(
+        'POLE POLE germline exonuclease-domain pathogenic (PPAP — polymerase proofreading–associated polyposis)',
+        'Polipropileno (pole)', 'es',
+    )
 
 
 def test_technical_code_list_translates_only_its_label():
@@ -167,6 +200,65 @@ def test_incomplete_language_blocks_all_catalog_replacement(monkeypatch, tmp_pat
     with pytest.raises(ValueError, match='completion summary mismatch'):
         publish()
     assert before == {path.name: path.read_bytes() for path in baseline.iterdir()}
+
+
+def test_recheck_restores_corrupted_identifiers_without_clinical_approval(tmp_path):
+    from scripts.recheck_clinical_catalogs import recheck
+    catalogs = tmp_path / 'scripts' / 'locales'
+    catalogs.mkdir(parents=True)
+    index = tmp_path / 'index.json'
+    index.write_text('{"entries": []}', encoding='utf-8')
+    source = 'TEST-CBC, TEST-LFT, TEST-ECHO'
+    languages = {}
+    for locale in ('es', 'pt', 'de', 'fr'):
+        path = catalogs / f'clinical.{locale}.json'
+        path.write_text(json.dumps({source: 'ESC, ESC'}), encoding='utf-8')
+        languages[locale] = {'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+    manifest = catalogs / 'clinical_manifest.json'
+    manifest.write_text(json.dumps({'languages': languages}), encoding='utf-8')
+    before = {path.name: path.read_bytes() for path in catalogs.iterdir()}
+    assert recheck(catalogs, index) == dict.fromkeys(languages, 1)
+    assert before == {path.name: path.read_bytes() for path in catalogs.iterdir()}
+    assert recheck(catalogs, index, apply=True) == dict.fromkeys(languages, 1)
+    updated = json.loads(manifest.read_text(encoding='utf-8'))
+    for locale in languages:
+        path = catalogs / f'clinical.{locale}.json'
+        assert json.loads(path.read_text(encoding='utf-8'))[source] == source
+        assert updated['languages'][locale]['sha256'] == hashlib.sha256(path.read_bytes()).hexdigest()
+        assert updated['languages'][locale]['fidelity_fallbacks'] == 1
+
+
+def test_curated_safety_notices_preserve_english_negations_and_identifiers():
+    from scripts.clinical_curated_copy import safety_notices_for
+    for locale in ('es', 'pt', 'de', 'fr'):
+        notices = safety_notices_for(locale)
+        assert len(notices) == 6
+        assert all(acceptable_draft(source, translated, locale) for source, translated in notices.items())
+        assert all('CHARTER' in translated for source, translated in notices.items() if 'CHARTER' in source)
+
+
+def test_curated_safety_notice_application_checksums_and_is_idempotent(tmp_path):
+    from scripts.apply_curated_safety_notices import apply_notices
+    from scripts.clinical_curated_copy import safety_notices_for
+    catalogs = tmp_path / 'scripts' / 'locales'
+    catalogs.mkdir(parents=True)
+    languages = {}
+    for locale in ('es', 'pt', 'de', 'fr'):
+        source = next(iter(safety_notices_for(locale)))
+        path = catalogs / f'clinical.{locale}.json'
+        path.write_text(json.dumps({source: source}), encoding='utf-8')
+        languages[locale] = {'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+    manifest = catalogs / 'clinical_manifest.json'
+    manifest.write_text(json.dumps({'languages': languages}), encoding='utf-8')
+    assert apply_notices(catalogs) == dict.fromkeys(languages, 1)
+    assert apply_notices(catalogs, apply=True) == dict.fromkeys(languages, 1)
+    assert apply_notices(catalogs) == dict.fromkeys(languages, 0)
+    updated = json.loads(manifest.read_text(encoding='utf-8'))
+    for locale in languages:
+        source, translated = next(iter(safety_notices_for(locale).items()))
+        path = catalogs / f'clinical.{locale}.json'
+        assert json.loads(path.read_text(encoding='utf-8'))[source] == translated
+        assert updated['languages'][locale]['sha256'] == hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 @pytest.mark.parametrize('locale,language', [('es','Spanish'),('pt','European Portuguese'),('de','German'),('fr','French')])
@@ -233,3 +325,10 @@ def test_committed_catalogs_preserve_numeric_claims():
             assert numeric_tokens(source) == numeric_tokens(translated), (locale, source, translated)
             for identifier in re.findall(r'\b(?:SRC|DIS|BIO|DRUG|REG|ALGO|RF|IND|HQ|HB)-[A-Z0-9_-]+\b', source):
                 assert identifier in translated, (locale, source, identifier)
+
+
+def test_generated_locale_html_uses_fidelity_fallback_for_structured_status():
+    repository = Path(__file__).resolve().parents[1]
+    page = (repository / 'docs/es/kb/diseases/dis-aml.html').read_text(encoding='utf-8')
+    assert 'reviewed 2026-04-25 | pending_clinical_signoff' in page
+    assert 'pendance_clinical_signoff' not in page

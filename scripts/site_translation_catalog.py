@@ -1,5 +1,4 @@
 """Exact public prose catalogs; source data and executable code stay unchanged."""
-import html
 import ast
 import json
 import re
@@ -108,10 +107,10 @@ def polarity_tokens(text, locale='en'):
     plain = ''.join(c for c in unicodedata.normalize('NFKD', text.casefold()) if not unicodedata.combining(c))
     patterns = {
         'en': r'\b(?:no|not|never|without|avoid\w*|contraindicat\w*)\b',
-        'es': r'\b(?:no|nunca|sin|evit\w*|contraindicad\w*)\b',
-        'pt': r'\b(?:nao|nunca|sem|evit\w*|contraindicad\w*)\b',
-        'de': r'\b(?:nicht|nie|kein\w*|ohne|vermeid\w*|kontraindiz\w*)\b',
-        'fr': r'\b(?:pas|jamais|sans|evit\w*|contre-indiqu\w*)\b',
+        'es': r'\b(?:no|nunca|sin|evit\w*|contraindic\w*)\b',
+        'pt': r'\b(?:nao|nunca|sem|evit\w*|contraindic\w*)\b',
+        'de': r'\b(?:nicht|nie|kein\w*|ohne|vermeid\w*|kontraindiz\w*|gegenanzeig\w*)\b',
+        'fr': r'\b(?:pas|jamais|sans|evit\w*|contre-indic\w*|contre-indiqu\w*)\b',
     }
     return (len(re.findall(patterns[locale], plain)), len(re.findall(r'\b(?:positiv\w*|positif\w*|positivity)\b', plain)), len(re.findall(r'\b(?:negativ\w*|negatif\w*|negativity)\b', plain)))
 

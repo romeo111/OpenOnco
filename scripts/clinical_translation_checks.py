@@ -8,7 +8,10 @@ import yaml
 from scripts.site_translation_catalog import numeric_tokens, polarity_tokens, quantity_tokens
 from scripts.clinical_curated_copy import diagnostic_display
 
-IDENTIFIERS = re.compile(r'\b(?:SRC|DIS|BIO|DRUG|REG|ALGO|RF|IND|HQ|HB)-[A-Z0-9_-]+\b')
+IDENTIFIERS = re.compile(
+    r'\b(?:SRC|DIS|BIO|DRUG|REG|ALGO|RF|IND|HQ|HB|PLAN|TEST|SUP|WORKUP|OQ|CI|CC|BMA|COVERAGE|VERIFIED|KEYNOTE|FIGHT|LIBRETTO)-[A-Z0-9_-]+\b'
+)
+STRUCTURED_TOKENS = re.compile(r'\b[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)+\b|\b(?:findings|clinician_confirmations)\.[A-Za-z0-9_.-]+\b')
 SYMBOLS = re.compile(r'\b(?:ALK|BRAF|BRCA1|BRCA2|CD19|CD20|CD22|CD30|CD33|CD38|CD52|CD79B|EGFR|ERBB2|ESR1|FGFR1|FGFR2|FGFR3|FLT3|HER2|HRD|IDH1|IDH2|JAK2|KIT|KRAS|MET|MSI|NPM1|NRAS|NTRK1|NTRK2|NTRK3|PD-L1|PIK3CA|RET|ROS1|TP53|TMB)(?:-[A-Z0-9]+)?\b')
 VARIANTS = re.compile(r'\b(?:p\.)?[A-Z]\d{1,5}[A-Z*]\b')
 ABBREVIATIONS = re.compile(r'\b(?:OpenOnco|CIViC|[Hh]edgehog|MYC|BCL2|BCL6|ATM|CHEK2|PALB2|PTEN|ESMO|NCCN|FDA|EMA|WHO|ESCAT|TKI|PARPi|IHC|ISH|TNM|ECOG|BID|TID|QD|PO|IV|SC|NSCLC|SCLC|AML|ALL|APL|CLL|CML|DLBCL|HRR|PDAC|GIST|[BT](?=-[Cc]ell))\b')
@@ -39,7 +42,15 @@ def acceptable_draft(source, translated, locale, drug_pattern=None):
         return False
     if quantity_tokens(source) != quantity_tokens(translated):
         return False
+    # Alternatives and machine-readable identifiers cannot be silently
+    # collapsed into a shorter, seemingly fluent clinical statement.
+    if source.count('|') > translated.count('|'):
+        return False
+    if source.startswith(r'\b') or (re.fullmatch(r'[A-Za-z0-9_./-]+', source) and sum(source.count(mark) for mark in '-_.') >= 2):
+        return False
     if any(identifier not in translated for identifier in IDENTIFIERS.findall(source)):
+        return False
+    if any(token not in translated for token in STRUCTURED_TOKENS.findall(source)):
         return False
     if any(symbol.casefold() not in translated.casefold() for symbol in SYMBOLS.findall(source)):
         return False
@@ -65,7 +76,7 @@ def acceptable_draft(source, translated, locale, drug_pattern=None):
         return False
     if polarity_tokens(source) != polarity_tokens(translated, locale):
         return False
-    if len(source) > 180 and len(translated) < len(source) * 0.65:
+    if len(source) >= 60 and len(translated) < len(source) * 0.65:
         return False
     # Known out-of-domain decoder hallucination on unfamiliar unit fragments.
     if 'regulation' not in source.casefold() and re.search(r'(?:presente reglamento|diario oficial|journal officiel|uniao europeia)', translated, re.I):
@@ -86,4 +97,8 @@ def acceptable_draft(source, translated, locale, drug_pattern=None):
         }
         if any(term.casefold() in source.casefold() and re.search(pattern, translated, re.I) for term, pattern in bad_terms.items()):
             return False
+    if locale == 'de' and re.search(r'\brefractor\w*\b', source, re.I) and 'feuerfest' in translated.casefold():
+        return False
+    if locale == 'de' and re.search(r'\bdrug\w*\b', source, re.I) and 'drogen' in translated.casefold():
+        return False
     return True
