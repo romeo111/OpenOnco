@@ -192,8 +192,18 @@ def test_english_drug_class_explanation_retains_authored_patient_note():
     ('epothilone', 'some resistance mechanisms'),
     ('purine analog', 'hairy cell leukaemia'),
     ('proteasome inhibitor', 'bortezomib, carfilzomib'),
+    ('G-CSF', 'granulocyte production'),
+    ('ESA', 'red blood cell production'),
+    ('antiemetic', 'ondansetron, aprepitant, palonosetron'),
+    ('steroid', 'dexamethasone, prednisone'),
+    ('anti-fungal prophylaxis', 'very low neutrophil counts'),
+    ('antiviral prophylaxis', 'entecavir, acyclovir, valacyclovir'),
+    ('PCP prophylaxis', 'trimethoprim/sulfamethoxazole'),
+    ('growth factor', 'erythropoietin'),
+    ('TPO-mimetic', 'eltrombopag, romiplostim'),
+    ('iron chelator', 'deferasirox'),
 ])
-def test_english_chemotherapy_card_gloss_preserves_examples_and_plan_input(drug_class, expected):
+def test_english_drug_card_gloss_preserves_examples_and_plan_input(drug_class, expected):
     result = SimpleNamespace(disease_id='DIS-AML')
     track = SimpleNamespace(regimen_data={'components': [{'drug_id': 'DRUG-TEST', 'route': 'IV'}]})
     drug = {'names': {'english': 'Test medicine'}, 'drug_class': drug_class}

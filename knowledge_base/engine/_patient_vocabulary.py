@@ -521,6 +521,16 @@ _ALL_TABLES: tuple[dict[str, str], ...] = (
 
 
 PATIENT_VOCABULARY_EN_DRAFT: dict[str, str] = {
+    "G-CSF": "stimulates granulocyte production; supports blood cell recovery during chemotherapy",
+    "ESA": "stimulates red blood cell production; used to treat anaemia caused by chemotherapy",
+    "antiemetic": "helps against nausea and vomiting (ondansetron, aprepitant, palonosetron)",
+    "steroid": "a corticosteroid (dexamethasone, prednisone); used as part of a regimen and for adverse reactions",
+    "anti-fungal prophylaxis": "prevention of fungal infections during profound neutropenia (very low neutrophil counts)",
+    "antiviral prophylaxis": "prevention of reactivation of hepatitis B, herpes simplex or varicella-zoster viruses (entecavir, acyclovir, valacyclovir)",
+    "PCP prophylaxis": "prevention of Pneumocystis pneumonia; trimethoprim/sulfamethoxazole during intensive immune suppression",
+    "growth factor": "a general term for G-CSF, GM-CSF, erythropoietin and medicines that mimic thrombopoietin",
+    "TPO-mimetic": "stimulates platelet production (eltrombopag, romiplostim)",
+    "iron chelator": "removes excess iron after repeated transfusions (deferasirox)",
     "alkylating agent": "conventional chemotherapy that damages tumour DNA",
     "anthracycline": "conventional chemotherapy (doxorubicin, daunorubicin); effective, but toxic to the heart",
     "platinum agent": "conventional chemotherapy (cisplatin, carboplatin, oxaliplatin)",
