@@ -273,9 +273,11 @@ def test_presenter_requests_native_language_without_changing_engine_payload(monk
 
 
 def test_html_export_uses_visible_translated_document():
-    source = (Path(__file__).resolve().parents[1] / 'scripts/build_site.py').read_text(encoding='utf-8')
-    assert 'displayedDocument.documentElement.outerHTML' in source
-    assert 'translatedDisplay || currentResultLang' in source
+    import subprocess
+
+    root = Path(__file__).resolve().parents[1]
+    # Execute export behavior, including native translation and actual Ukrainian fallback.
+    subprocess.run(['node', 'tests/browser_report_export.cjs'], cwd=root, check=True, timeout=30)
 
 
 def test_completed_clinical_inventory_advertises_real_tool_counterparts():
