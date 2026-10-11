@@ -25,6 +25,8 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
+from knowledge_base.schemas._review_readiness import eligible_signoffs  # noqa: E402
+
 KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 REVIEWERS_DIR = KB_ROOT / "reviewers"
 AUDIT_LOG = REPO_ROOT / "knowledge_base" / "hosted" / "audit" / "signoffs.jsonl"
@@ -81,6 +83,12 @@ def _entity_disease_id(data: dict, dir_name: str) -> Optional[str]:
 def _walk_entities() -> list[dict]:
     """Return list of {id, dir, signoffs (list), disease_id}."""
     out: list[dict] = []
+    reviewers = _load_reviewers()
+    lineages = {}
+    for path in sorted((KB_ROOT / "diseases").glob("*.yaml")):
+        disease = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        if isinstance(disease, dict) and disease.get("id"):
+            lineages[disease["id"]] = disease.get("lineage")
     for d in SIGNOFF_ELIGIBLE_DIRS:
         root = KB_ROOT / d
         if not root.is_dir():
@@ -98,7 +106,13 @@ def _walk_entities() -> list[dict]:
             out.append({
                 "id": data.get("id"),
                 "dir": d,
-                "signoffs": [s for s in signoffs if isinstance(s, dict)],
+                "raw_signoffs": [s for s in signoffs if isinstance(s, dict)],
+                "signoffs": eligible_signoffs(
+                    data, reviewers,
+                    revision_field="last_verified" if d == "biomarker_actionability" else "last_reviewed",
+                    entity_type=ENTITY_TYPE_LABEL[d],
+                    disease_lineage=lineages.get(_entity_disease_id(data, d)),
+                ),
                 "disease_id": _entity_disease_id(data, d),
             })
     return out
@@ -205,10 +219,13 @@ def build_dashboard() -> str:
     md.append(f"# Clinical Sign-off Status — {today}")
     md.append("")
     md.append("CHARTER §6.1: any clinical-content change needs ≥2 of three Clinical Co-Lead sign-offs.")
+    md.append("Coverage below counts only current, in-scope reviews by distinct explicitly authorized human identities. It is content-review coverage, not approval of a patient's plan or an authentication of credentials.")
+    md.append("Audit activity remains historical; recorded events do not establish current coverage.")
     md.append("")
     md.append("## Summary")
     md.append("")
     md.append(f"- Total entities requiring sign-off: **{total}**")
+    md.append(f"- Raw structured review records retained: **{sum(len(e['raw_signoffs']) for e in entities)}**")
     pct_1 = f"{(with_1/total*100):.1f}" if total else "0.0"
     pct_2 = f"{(with_2/total*100):.1f}" if total else "0.0"
     md.append(f"- Entities with ≥1 sign-off: **{with_1}** ({pct_1}%)")

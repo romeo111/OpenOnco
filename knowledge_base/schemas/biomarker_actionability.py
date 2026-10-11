@@ -29,6 +29,7 @@ from typing import Any, Literal, Mapping, Optional
 from pydantic import Field, field_validator, model_validator
 
 from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
+from ._review_readiness import eligible_signoffs
 from .base import Base, ClinicalClaim
 
 
@@ -116,7 +117,11 @@ class ActionabilityReleaseReadiness:
     reasons: tuple[str, ...]
 
 
-def actionability_release_readiness(data: Mapping[str, Any]) -> ActionabilityReleaseReadiness:
+def actionability_release_readiness(
+    data: Mapping[str, Any], *,
+    reviewer_profiles: Mapping[str, Mapping[str, Any]] | None = None,
+    disease_lineage: str | None = None,
+) -> ActionabilityReleaseReadiness:
     """Return whether a BMA can be shown as clinically reviewed ESCAT context.
 
     Passing requires an explicitly applicable therapeutic-predictive claim,
@@ -144,18 +149,15 @@ def actionability_release_readiness(data: Mapping[str, Any]) -> ActionabilityRel
     # to the BMA's current verification revision. The sign-off CLI writes
     # this version for BMAs; changing `last_verified` invalidates earlier
     # approvals until the evidence is re-reviewed.
-    current_version = str(data.get("last_verified") or "").strip()
-    reviewer_ids: set[str] = set()
-    raw_signoffs = data.get("reviewer_signoffs") or []
-    if isinstance(raw_signoffs, list):
-        for signoff in raw_signoffs:
-            if not isinstance(signoff, Mapping) or signoff.get("scope_match") is False:
-                continue
-            reviewer_id = str(signoff.get("reviewer_id") or "").strip()
-            if reviewer_id and str(signoff.get("entity_version") or "").strip() == current_version:
-                reviewer_ids.add(reviewer_id)
-    if len(reviewer_ids) < 2:
-        reasons.append("fewer than two current, in-scope reviewer sign-offs")
+    review_rejections: list[str] = []
+    signoffs = eligible_signoffs(
+        data, reviewer_profiles, revision_field="last_verified",
+        entity_type="BiomarkerActionability", disease_lineage=disease_lineage,
+        rejection_reasons=review_rejections,
+    )
+    if len(signoffs) < 2:
+        reasons.append("fewer than two current, in-scope authorized reviewer sign-offs")
+        reasons.extend(review_rejections)
 
     return ActionabilityReleaseReadiness(ready=not reasons, reasons=tuple(reasons))
 

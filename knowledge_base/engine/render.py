@@ -34,6 +34,7 @@ from typing import Optional, Union
 from urllib.parse import urlsplit
 
 import yaml
+from knowledge_base.schemas._review_readiness import eligible_signoffs
 
 from ._actionability import _biomarker_keys_match, _extract_variant
 from ._ask_doctor import select_questions as _select_ask_doctor_questions
@@ -147,31 +148,26 @@ def _load_reviewer_labels() -> dict[str, str]:
     return out
 
 
-def _signoff_label(reviewer_id: str) -> str:
+def _signoff_label(reviewer_id: str, reviewer_profiles: Optional[dict] = None) -> str:
+    if reviewer_profiles is not None:
+        profile = reviewer_profiles.get(reviewer_id) or {}
+        name = profile.get("name") or {}
+        return str(name.get("preferred") or reviewer_id) if isinstance(name, dict) else reviewer_id
     return _load_reviewer_labels().get(reviewer_id, reviewer_id)
 
 
-def _usable_signoffs(entity_data: dict) -> list[dict]:
-    """Return distinct, in-scope structured sign-offs for display.
+def _usable_signoffs(entity_data: dict, reviewer_profiles: Optional[dict] = None,
+                     *, disease_lineage: Optional[str] = None) -> list[dict]:
+    """Return current in-scope reviews by distinct authorized human identities.
 
     `reviewer_signoffs` is the schema-owned field. The obsolete
     `reviewer_signoffs_v2` spelling is deliberately ignored: accepting it in
     the renderer would make unvalidated legacy metadata look like approval.
     """
-    raw = entity_data.get("reviewer_signoffs") or []
-    if not isinstance(raw, list):
-        return []
-    seen: set[str] = set()
-    out: list[dict] = []
-    for signoff in raw:
-        if not isinstance(signoff, dict):
-            continue
-        reviewer_id = str(signoff.get("reviewer_id") or "").strip()
-        if not reviewer_id or reviewer_id in seen or signoff.get("scope_match") is False:
-            continue
-        seen.add(reviewer_id)
-        out.append(signoff)
-    return out
+    return eligible_signoffs(
+        entity_data, reviewer_profiles, revision_field="last_reviewed",
+        entity_type="Indication", disease_lineage=disease_lineage,
+    )
 
 
 @functools.lru_cache(maxsize=1)
@@ -192,11 +188,12 @@ def _load_defined_bio_ids() -> frozenset:
     return frozenset(ids)
 
 
-def _render_signoff_badge(entity_data: Optional[dict]) -> str:
+def _render_signoff_badge(entity_data: Optional[dict], *, reviewer_profiles: Optional[dict] = None,
+                          disease_lineage: Optional[str] = None) -> str:
     """Render a clinician-mode sign-off badge. 0/1/≥2 sign-offs."""
     if not isinstance(entity_data, dict):
         return ""
-    sigs = _usable_signoffs(entity_data)
+    sigs = _usable_signoffs(entity_data, reviewer_profiles, disease_lineage=disease_lineage)
     n = len(sigs)
     if n == 0:
         return (
@@ -207,38 +204,40 @@ def _render_signoff_badge(entity_data: Optional[dict]) -> str:
         rid = sigs[0]["reviewer_id"]
         return (
             '<span class="signoff-badge signoff-partial">'
-            f'🟡 Підписано (1/2): {_h(_signoff_label(rid))}'
+            f'🟡 Підписано (1/2): {_h(_signoff_label(rid, reviewer_profiles))}'
             '</span>'
         )
-    names = ", ".join(_signoff_label(s["reviewer_id"]) for s in sigs[:3])
+    names = ", ".join(_signoff_label(s["reviewer_id"], reviewer_profiles) for s in sigs[:3])
     if n > 3:
         names += f" + {n - 3}"
     return (
         '<span class="signoff-badge signoff-complete">'
-        f'✓ Клінічно затверджено: {_h(names)}'
+        f'✓ Записано необхідні перегляди клінічного змісту: {_h(names)}'
         '</span>'
     )
 
 
-def _render_signoff_badge_patient(entity_data: Optional[dict], *, target_lang: str = "uk") -> str:
+def _render_signoff_badge_patient(entity_data: Optional[dict], *, target_lang: str = "uk",
+                                 reviewer_profiles: Optional[dict] = None,
+                                 disease_lineage: Optional[str] = None) -> str:
     """Patient-mode sign-off — simpler vocabulary, no reviewer names."""
     if not isinstance(entity_data, dict):
         return ""
-    sigs = _usable_signoffs(entity_data)
+    sigs = _usable_signoffs(entity_data, reviewer_profiles, disease_lineage=disease_lineage)
     n = len(sigs)
     if n >= 2:
         return (
-            '<span class="patient-badge patient-good signoff-complete">'
-            + ('Reviewed by doctors' if target_lang == 'en' else 'Затверджено лікарями') + '</span>'
+            f'<span class="patient-badge patient-good signoff-complete" data-review-scope="clinical-content" data-review-count="{n}">'
+            + ('Required clinical-content reviews recorded' if target_lang == 'en' else 'Записано необхідні перегляди клінічного змісту') + '</span>'
         )
     if n == 1:
         return (
-            '<span class="patient-badge patient-warn signoff-partial">'
-            + ('Awaiting review by doctors (1 of 2)' if target_lang == 'en' else 'Очікує перевірки лікарями (1 з 2)') + '</span>'
+            '<span class="patient-badge patient-warn signoff-partial" data-review-scope="clinical-content" data-review-count="1">'
+            + ('Clinical content review pending (1 of 2 eligible reviews recorded)' if target_lang == 'en' else 'Перегляд клінічного змісту очікується (записано 1 із 2 допустимих переглядів)') + '</span>'
         )
     return (
-        '<span class="patient-badge patient-emergency signoff-pending">'
-        + ('Awaiting review by doctors' if target_lang == 'en' else 'Очікує перевірки лікарями') + '</span>'
+        '<span class="patient-badge patient-emergency signoff-pending" data-review-scope="clinical-content" data-review-count="0">'
+        + ('Clinical content review pending' if target_lang == 'en' else 'Перегляд клінічного змісту очікується') + '</span>'
     )
 
 
@@ -4081,7 +4080,12 @@ def _render_tracks_plain(plan_result: PlanResult, *, target_lang: str = "uk") ->
             regimen_data.get("name", "") if isinstance(regimen_data, dict) else ""
         )
         schedule_str = _regimen_schedule_ua(regimen_data, target_lang=target_lang)
-        signoff_badge = _render_signoff_badge_patient(t.indication_data, target_lang=target_lang)
+        resolved = plan_result.kb_resolved or {}
+        signoff_badge = _render_signoff_badge_patient(
+            t.indication_data, target_lang=target_lang,
+            reviewer_profiles=resolved.get('reviewers'),
+            disease_lineage=(resolved.get('disease') or {}).get('lineage'),
+        )
         drug_blocks = _render_track_drugs(plan_result, t, drugs_lookup, disease_names, target_lang=target_lang)
         if not drug_blocks:
             drug_blocks = '<p>Your doctor will confirm the specific medicine list for this option.</p>' if target_lang == 'en' else (
@@ -4112,7 +4116,10 @@ def _render_tracks_plain(plan_result: PlanResult, *, target_lang: str = "uk") ->
         )
 
     grid_class = "tracks-grid tracks-grid--two" if track_count == 2 else "tracks-grid"
-    return f'<div class="{grid_class}">{"".join(cards)}</div>'
+    review_note = ('This status describes reviews of the knowledge-base content, not approval of a plan for you.'
+                   if target_lang == 'en' else 'Цей статус описує перегляди змісту бази знань, а не схвалення плану для вас.')
+    return (f'<p class="patient-signoff-note" data-review-scope="clinical-content">{_h(review_note)}</p>'
+            f'<div class="{grid_class}">{"".join(cards)}</div>')
 
 
 def _render_why_section(plan_result: PlanResult, *, target_lang: str = "uk") -> str:

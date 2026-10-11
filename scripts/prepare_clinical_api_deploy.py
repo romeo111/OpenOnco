@@ -21,6 +21,11 @@ def prepare(destination):
     config = json.loads((ROOT / 'vercel.json').read_text(encoding='utf-8'))
     config['functions'] = {'api/*.py': {'includeFiles': 'knowledge_base/**'}}
     (destination / 'vercel.json').write_text(json.dumps(config, indent=2)+'\n', encoding='utf-8')
+    # A reused linked directory can contain pulled environment files and
+    # local Python caches. Keep them local; do not upload them as source.
+    (destination / '.vercelignore').write_text(
+        '.env*\n**/.env*\n.vercel/**\n**/__pycache__/**\n**/*.pyc\n', encoding='utf-8',
+    )
     return destination
 
 

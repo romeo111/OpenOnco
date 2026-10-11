@@ -308,6 +308,8 @@ def test_lazy_loaded_disease_generates_same_plan_as_full_kb(
     assert [track.indication_id for track in partial.plan.tracks] == [
         track.indication_id for track in full.plan.tracks
     ]
+    assert partial.kb_resolved.get("reviewers") == full.kb_resolved.get("reviewers")
+    assert partial.plan.variant_actionability == full.plan.variant_actionability
 
 
 @pytest.mark.parametrize("mutation", ["unlisted", "wrong_type"])

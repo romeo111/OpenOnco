@@ -13,6 +13,7 @@ from knowledge_base.schemas.biomarker_actionability import (
     actionability_release_readiness,
 )
 from scripts.audit_escat_readiness import audit_escat_readiness
+from tests.review_provenance_fixtures import authorized_profiles
 
 
 def _ready_bma() -> dict:
@@ -65,11 +66,13 @@ def test_not_applicable_record_cannot_keep_a_tier():
 
 def test_release_gate_requires_current_distinct_signoffs():
     data = _ready_bma()
-    assert actionability_release_readiness(data).ready is True
+    profiles = authorized_profiles("REV-ONE", "REV-TWO")
+    assert actionability_release_readiness(data, reviewer_profiles=profiles).ready is True
     data["reviewer_signoffs"][1]["entity_version"] = "2026-08-02"
-    result = actionability_release_readiness(data)
+    result = actionability_release_readiness(data, reviewer_profiles=profiles)
     assert result.ready is False
-    assert "fewer than two current" in result.reasons[-1]
+    assert any("fewer than two current" in reason for reason in result.reasons)
+    assert "review is not pinned to the current content revision" in result.reasons
 
 
 def test_variant_matching_exposes_unready_status_without_selecting_tracks():

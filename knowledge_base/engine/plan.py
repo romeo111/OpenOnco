@@ -119,7 +119,7 @@ class PlanResult:
 
     # Runtime KB resolutions for the render layer — NOT persisted with Plan.
     # Holds: 'disease' (dict), 'tests' (dict[id, dict]), 'red_flags' (dict[id, dict]),
-    # 'algorithm' (dict). Populated by generate_plan; render gracefully degrades
+    # 'algorithm' (dict), 'reviewers' (dict[id, dict]). Populated by generate_plan; render gracefully degrades
     # if absent. Persistence (save_result) ignores this field entirely — the
     # rendered Plan dict is the source of truth on disk.
     kb_resolved: dict = field(default_factory=dict)
@@ -605,6 +605,7 @@ def _try_generate_prevention_plan(
                 drug_ids.add(did)
     result.kb_resolved = {
         "disease": _resolve(entities, primary_target_id) if primary_target_id else None,
+        "reviewers": {eid: info["data"] for eid, info in entities.items() if info["type"] == "reviewers"},
         "algorithm": None,
         "tests": {tid: _resolve(entities, tid) for tid in test_ids if _resolve(entities, tid)},
         "red_flags": {rid: _resolve(entities, rid) for rid in redflag_ids if _resolve(entities, rid)},
@@ -1145,6 +1146,7 @@ def generate_plan(
 
     result.kb_resolved = {
         "disease": _resolve(entities, disease_id),
+        "reviewers": {eid: info["data"] for eid, info in entities.items() if info["type"] == "reviewers"},
         "algorithm": algo,
         "tests": {tid: _resolve(entities, tid) for tid in test_ids if _resolve(entities, tid)},
         "red_flags": {rid: _resolve(entities, rid) for rid in redflag_ids if _resolve(entities, rid)},

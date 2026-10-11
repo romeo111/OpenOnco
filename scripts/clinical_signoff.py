@@ -6,53 +6,54 @@ Workflow:
   3. Each matching entity gets a `ReviewerSignoff` appended to its
      `reviewer_signoffs` list, plus a row appended to the audit log
      `knowledge_base/hosted/audit/signoffs.jsonl`.
-  4. Two distinct reviewers (different REV-* IDs) covering the same
-     entity satisfy CHARTER §6.1.
+  4. Two currently authorized human identities, in scope and pinned to the
+     current content revision, provide the recorded content-review coverage.
+     This does not approve a patient's plan or authenticate credentials.
 
 Sub-commands:
   approve    Add a sign-off to one or many entities.
   withdraw   Remove a sign-off (and append a withdraw row to the audit log).
   list       Show sign-offs for an entity OR by reviewer.
 
-Usage examples:
+Usage examples (replace illustrative IDs with your human-authorized registered profile):
     # Approve all DLBCL indications by hematology lead
     py scripts/clinical_signoff.py approve \\
-        --reviewer REV-HEME-LEAD-PLACEHOLDER \\
+        --reviewer REV-YOUR-AUTHORIZED-HEME-ID \\
         --pattern "indications/ind_dlbcl_*.yaml" \\
         --rationale "NCCN-aligned, evidence reviewed"
 
     # Approve a specific entity by ID
     py scripts/clinical_signoff.py approve \\
-        --reviewer REV-SOLID-LEAD-PLACEHOLDER \\
+        --reviewer REV-YOUR-AUTHORIZED-SOLID-ID \\
         --entity-id IND-CRC-METASTATIC-2L-BRAF-BEACON \\
         --rationale "BEACON-CRC validated; UA NSZU coverage flagged"
 
     # Dry-run (show what would be approved without writing)
     py scripts/clinical_signoff.py approve \\
-        --reviewer REV-HEME-LEAD-PLACEHOLDER \\
+        --reviewer REV-YOUR-AUTHORIZED-HEME-ID \\
         --pattern "indications/ind_aml_*.yaml" \\
         --rationale "ELN-2022 aligned" \\
         --dry-run
 
     # Withdraw a sign-off (revoke approval)
     py scripts/clinical_signoff.py withdraw \\
-        --reviewer REV-HEME-LEAD-PLACEHOLDER \\
+        --reviewer REV-YOUR-AUTHORIZED-HEME-ID \\
         --entity-id IND-AML-1L-7-3 \\
         --rationale "Reconsider after IDH1+ subgroup data"
 
     # List sign-offs for an entity or reviewer
     py scripts/clinical_signoff.py list --entity-id IND-DLBCL-1L-RCHOP
-    py scripts/clinical_signoff.py list --reviewer REV-HEME-LEAD-PLACEHOLDER
+    py scripts/clinical_signoff.py list --reviewer REV-YOUR-AUTHORIZED-HEME-ID
 
 Exit codes:
   0  success
   2  argparse / arg error
   3  unknown reviewer
   4  no entities matched
-  5  scope mismatch under --strict
+  5  scope or current-revision mismatch
   6  duplicate sign-off (without --force)
   7  entity has no reviewer_signoffs capability
-  8  unknown entity (for withdraw / list)
+  8  unknown entity (withdraw / list), or unauthorized reviewer (approve)
 """
 
 from __future__ import annotations
@@ -60,7 +61,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -70,6 +71,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from knowledge_base.schemas.reviewer_profile import ReviewerProfile  # noqa: E402
+from knowledge_base.schemas._review_readiness import authorized_reviewer_identity  # noqa: E402
+from knowledge_base.schemas._review_scope import entity_disease_ids, reviewer_scope_matches  # noqa: E402
 
 KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 REVIEWERS_DIR = KB_ROOT / "reviewers"
@@ -92,87 +95,6 @@ ENTITY_TYPE_LABEL = {
     "redflags": "RedFlag",
     "biomarker_actionability": "BiomarkerActionability",
 }
-
-
-# ── Disease-category inference ────────────────────────────────────────────
-#
-# Disease YAMLs don't carry a `category` field today, so the CLI infers it
-# from the disease lineage / ID. This is a best-effort scope check; if the
-# inference is wrong, the operator can pass `--no-strict` (default) to
-# proceed with a warning.
-
-HEME_LINEAGE_PREFIXES = (
-    "b_cell", "t_cell", "myeloid", "plasma_cell", "lymphoid", "nk_cell",
-    "histiocytic",
-)
-HEME_DISEASE_TOKENS = (
-    "DLBCL", "FL", "CLL", "AML", "APL", "MM", "MCL", "CHL", "NLPBL",
-    "ALCL", "AITL", "PTCL", "ATLL", "B-ALL", "T-ALL", "PMBCL", "PCNSL",
-    "BURKITT", "HCL", "MZL", "SMZL", "NMZL", "WM", "MF", "SEZARY",
-    "ET", "MDS", "CML", "MPN", "ADVSM", "HGBL", "TFL", "PTLD",
-    "RICHTER", "PV", "PMF",
-)
-SOLID_DISEASE_TOKENS = (
-    "BRCA", "CRC", "NSCLC", "SCLC", "LUNG", "PROSTATE", "BLADDER",
-    "OVARIAN", "ENDOMETRIAL", "CERVICAL", "GASTRIC", "ESOPH", "PANC",
-    "HCC", "CHOLANGIO", "MELANOMA", "HNSCC", "MTC", "GIST", "SARCOMA",
-    "RENAL", "GLIOMA", "MENINGIOMA", "TESTICULAR", "BREAST",
-    "CHONDROSARCOMA", "OSTEOSARCOMA",
-)
-
-
-def _infer_disease_category(disease_id: Optional[str], disease_lineage: Optional[str]) -> set[str]:
-    """Return tags like {'hematologic', 'lymphoid'} or {'solid', 'breast'}.
-
-    Prefers `lineage` field when present (Disease.lineage); falls back to
-    token match on the DIS-* ID. Empty set when unknown."""
-    tags: set[str] = set()
-    lin = (disease_lineage or "").lower()
-    did = (disease_id or "").upper().replace("DIS-", "")
-
-    if any(lin.startswith(p) for p in HEME_LINEAGE_PREFIXES):
-        tags.add("hematologic")
-        if "lymph" in lin or "b_cell" in lin or "t_cell" in lin:
-            tags.add("lymphoid")
-        if "myeloid" in lin:
-            tags.add("myeloid")
-        if "plasma" in lin:
-            tags.add("plasma-cell")
-
-    for tok in HEME_DISEASE_TOKENS:
-        if tok in did.split("-"):
-            tags.add("hematologic")
-            if tok in ("AML", "APL", "MDS", "CML", "MPN", "PV", "PMF", "ET"):
-                tags.add("myeloid")
-            elif tok in ("MM", "WM"):
-                tags.add("plasma-cell")
-            else:
-                tags.add("lymphoid")
-            break
-
-    for tok in SOLID_DISEASE_TOKENS:
-        if tok in did:
-            tags.add("solid")
-            if tok in ("CRC", "GASTRIC", "ESOPH", "PANC", "HCC", "CHOLANGIO", "GIST"):
-                tags.add("gastrointestinal")
-            elif tok in ("BREAST", "BRCA"):
-                tags.add("breast")
-            elif tok in ("PROSTATE", "BLADDER", "TESTICULAR", "RENAL"):
-                tags.add("gu")
-            elif tok in ("OVARIAN", "ENDOMETRIAL", "CERVICAL"):
-                tags.add("gyn")
-            elif tok in ("NSCLC", "SCLC", "LUNG"):
-                tags.add("thoracic")
-            elif tok in ("GLIOMA", "MENINGIOMA"):
-                tags.add("cns")
-            elif tok in ("HNSCC", "MTC"):
-                tags.add("hnscc")
-            elif "SARCOMA" in tok:
-                tags.add("sarcoma")
-            elif tok == "MELANOMA":
-                tags.add("melanoma")
-            break
-    return tags
 
 
 # ── Reviewer + entity loaders ─────────────────────────────────────────────
@@ -265,61 +187,22 @@ def _load_disease(disease_id: Optional[str]) -> Optional[dict]:
     return None
 
 
-def _entity_disease_id(data: dict, dir_name: str) -> Optional[str]:
-    """Best-effort extract of the disease ID an entity targets."""
-    if dir_name == "indications":
-        a = data.get("applicable_to") or {}
-        return a.get("disease_id") if isinstance(a, dict) else None
-    if dir_name == "algorithms":
-        return data.get("applicable_to_disease")
-    if dir_name == "regimens":
-        # Regimens are disease-agnostic in schema; defer to N/A.
-        return None
-    if dir_name == "redflags":
-        rd = data.get("relevant_diseases") or []
-        if isinstance(rd, list) and rd and isinstance(rd[0], str) and rd[0] != "*":
-            return rd[0]
-        return None
-    if dir_name == "biomarker_actionability":
-        return data.get("disease_id")
-    return None
-
-
 # ── Scope check ───────────────────────────────────────────────────────────
 
 
 def _scope_match(reviewer: ReviewerProfile, entity_data: dict, dir_name: str) -> tuple[bool, str]:
     """Return (in_scope, reason). Reason explains the verdict."""
-    scope = reviewer.sign_off_scope
-
-    # Entity-type gate
-    if scope.entity_types and dir_name not in scope.entity_types:
-        return False, f"reviewer scope excludes entity_type '{dir_name}'"
-
-    # Disease ID exact-match shortcut
-    disease_id = _entity_disease_id(entity_data, dir_name)
-    if scope.disease_ids:
-        if disease_id and disease_id in scope.disease_ids:
-            return True, f"disease_id '{disease_id}' on explicit allow-list"
-        return False, f"disease_id '{disease_id}' not on reviewer's explicit allow-list"
-
-    # Disease-category check
-    if scope.disease_categories:
-        disease_data = _load_disease(disease_id) or {}
+    for disease_id in entity_disease_ids(entity_data, dir_name):
+        disease_data = _load_disease(disease_id) if disease_id else None
+        if disease_id and disease_data is None:
+            return False, 'entity disease is absent from the knowledge base'
         lineage = disease_data.get("lineage") if isinstance(disease_data, dict) else None
-        inferred = _infer_disease_category(disease_id, lineage)
-        if not inferred:
-            return False, f"could not infer disease category for '{disease_id}'"
-        overlap = inferred & set(scope.disease_categories)
-        if overlap:
-            return True, f"category match: {sorted(overlap)}"
-        return False, (
-            f"reviewer covers {sorted(scope.disease_categories)} "
-            f"but entity disease '{disease_id}' is {sorted(inferred)}"
+        matches, reason = reviewer_scope_matches(
+            reviewer.sign_off_scope.model_dump(mode="json"), dir_name, disease_id, lineage,
         )
-
-    # No restriction → in-scope
-    return True, "reviewer has no disease-category restriction"
+        if not matches:
+            return False, reason
+    return True, 'all declared entity disease contexts are within scope'
 
 
 # ── YAML round-trip preserving comments where possible ────────────────────
@@ -348,16 +231,15 @@ def _now_iso_z() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _today_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
-
-
-def _approval_entity_version(data: dict, dir_name: str, fallback: str) -> str:
+def _approval_entity_version(data: dict, dir_name: str) -> str:
     """Return the review revision to which a sign-off must be pinned."""
-
-    if dir_name == "biomarker_actionability":
-        return data.get("last_verified") or fallback
-    return data.get("last_reviewed") or fallback
+    field = "last_verified" if dir_name == "biomarker_actionability" else "last_reviewed"
+    revision = str(data.get(field) or "").strip()
+    try:
+        revision_date = date.fromisoformat(revision)
+    except ValueError:
+        return ""
+    return revision if revision_date <= datetime.now(timezone.utc).date() else ""
 
 
 def _append_audit(row: dict) -> None:
@@ -375,6 +257,9 @@ def cmd_approve(args: argparse.Namespace) -> int:
     if reviewer is None:
         print(f"ERR: reviewer '{args.reviewer}' not found in {REVIEWERS_DIR}", file=sys.stderr)
         return 3
+    if authorized_reviewer_identity(reviewer.model_dump(mode="json"), args.reviewer) is None:
+        print(f"ERR: reviewer '{args.reviewer}' has no eligible current authorization", file=sys.stderr)
+        return 8
 
     targets: list[tuple[Path, str]] = []
     if args.entity_id:
@@ -394,7 +279,6 @@ def cmd_approve(args: argparse.Namespace) -> int:
     skipped_dup = 0
     skipped_scope = 0
     skipped_ineligible = 0
-    today = _today_iso()
     ts = _now_iso_z()
 
     for path, dir_name in targets:
@@ -409,18 +293,19 @@ def cmd_approve(args: argparse.Namespace) -> int:
         # Scope check
         in_scope, reason = _scope_match(reviewer, data, dir_name)
         if not in_scope:
-            if args.strict:
-                print(f"  REFUSE (scope, --strict): {eid} — {reason}", file=sys.stderr)
-                skipped_scope += 1
-                continue
-            else:
-                print(f"  WARN (scope mismatch, proceeding): {eid} — {reason}")
+            print(f"  REFUSE (scope): {eid} — {reason}", file=sys.stderr)
+            skipped_scope += 1
+            continue
 
         # BMA approvals are pinned to ``last_verified`` because that field
         # names the evidence revision. A reviewer may therefore sign a newer
         # BMA revision without using ``--force``; only a duplicate approval
         # for the same current revision is rejected.
-        entity_version = _approval_entity_version(data, dir_name, today)
+        entity_version = _approval_entity_version(data, dir_name)
+        if not entity_version:
+            print(f"  REFUSE (missing current entity revision): {eid}", file=sys.stderr)
+            skipped_scope += 1
+            continue
 
         # Duplicate check
         existing = data.get("reviewer_signoffs") or []
@@ -429,10 +314,7 @@ def cmd_approve(args: argparse.Namespace) -> int:
         is_duplicate = any(
             isinstance(s, dict)
             and s.get("reviewer_id") == args.reviewer
-            and (
-                dir_name != "biomarker_actionability"
-                or s.get("entity_version") == entity_version
-            )
+            and s.get("entity_version") == entity_version
             for s in existing
         )
         if is_duplicate:
@@ -450,8 +332,6 @@ def cmd_approve(args: argparse.Namespace) -> int:
         }
         existing.append(signoff_entry)
         data["reviewer_signoffs"] = existing
-        if dir_name == "indications":
-            data["last_reviewed"] = today
 
         if args.dry_run:
             print(f"  DRY-RUN approve: {eid} ({path.relative_to(REPO_ROOT)})")
@@ -473,12 +353,12 @@ def cmd_approve(args: argparse.Namespace) -> int:
     print(
         f"\nDone: {approved} approved, "
         f"{skipped_dup} skipped (duplicate), "
-        f"{skipped_scope} refused (scope+strict), "
+        f"{skipped_scope} refused (scope or revision), "
         f"{skipped_ineligible} skipped (ineligible type)."
     )
     if args.dry_run:
         print("(dry-run — nothing written)")
-    return 0
+    return 5 if skipped_scope and not approved else 0
 
 
 # ── Withdraw ──────────────────────────────────────────────────────────────
@@ -524,7 +404,7 @@ def cmd_withdraw(args: argparse.Namespace) -> int:
         "entity_id": eid,
         "entity_type": ENTITY_TYPE_LABEL.get(dir_name, dir_name),
         "rationale": args.rationale or "",
-        "entity_version_at_signoff": _approval_entity_version(data, dir_name, _today_iso()),
+        "entity_version_at_signoff": _approval_entity_version(data, dir_name),
         "scope_match": True,  # withdraw never blocked by scope
     })
     print(f"WITHDRAW: {eid} — {args.reviewer}")
@@ -592,7 +472,7 @@ def _build_parser() -> argparse.ArgumentParser:
     a.add_argument("--pattern", help="Glob relative to KB content root, e.g. 'indications/ind_dlbcl_*.yaml'")
     a.add_argument("--rationale", required=True, help="Clinical rationale (free text, mandatory)")
     a.add_argument("--dry-run", action="store_true", help="Print what would change without writing")
-    a.add_argument("--strict", action="store_true", help="Refuse to proceed on scope mismatch (default: warn)")
+    a.add_argument("--strict", action="store_true", help="Compatibility flag; scope mismatches are always refused")
     a.add_argument("--force", action="store_true", help="Allow duplicate sign-off (re-affirm)")
     a.set_defaults(func=cmd_approve)
 

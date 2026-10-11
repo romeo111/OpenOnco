@@ -124,6 +124,7 @@ def audit_escat_readiness(
     manifest: Path | None = DEFAULT_MANIFEST,
     as_of: date | None = None,
     max_snapshot_age_days: int = 45,
+    reviewers_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Build an audit report without mutating KB content.
 
@@ -133,6 +134,16 @@ def audit_escat_readiness(
     """
 
     as_of = as_of or date.today()
+    reviewer_profiles = {}
+    disease_lineages = {}
+    for disease_path in sorted((bma_dir.parent / "diseases").glob("*.yaml")):
+        disease = load_yaml(disease_path)
+        if disease and disease.get("id"):
+            disease_lineages[disease["id"]] = disease.get("lineage")
+    for profile_path in sorted((reviewers_dir or bma_dir.parent / "reviewers").glob("*.yaml")):
+        profile = load_yaml(profile_path)
+        if profile and profile.get("id"):
+            reviewer_profiles[profile["id"]] = profile
     issues: list[dict[str, str]] = []
     bmas: list[dict[str, Any]] = []
     for path in sorted(bma_dir.rglob("*.yaml")):
@@ -160,7 +171,10 @@ def audit_escat_readiness(
     for bma in bmas:
         bma_id = str(bma["id"])
         tier = str(bma.get("escat_tier") or "").upper()
-        readiness = actionability_release_readiness(bma)
+        readiness = actionability_release_readiness(
+            bma, reviewer_profiles=reviewer_profiles,
+            disease_lineage=disease_lineages.get(bma.get("disease_id")),
+        )
         if not readiness.ready:
             severity = "critical" if tier in STRONG_TIERS else "major"
             _issue(issues, severity, "release_not_ready", bma_id, "; ".join(readiness.reasons))
@@ -249,7 +263,10 @@ def audit_escat_readiness(
         "max_snapshot_age_days": max_snapshot_age_days,
         "manifest_path": str(manifest) if manifest else None,
         "manifest_count": len(manifest_ids),
-        "release_ready_count": sum(actionability_release_readiness(bma).ready for bma in bmas),
+        "release_ready_count": sum(actionability_release_readiness(
+            bma, reviewer_profiles=reviewer_profiles,
+            disease_lineage=disease_lineages.get(bma.get("disease_id")),
+        ).ready for bma in bmas),
         "issues_by_severity": dict(sorted(issue_by_severity.items())),
         "issues_by_code": dict(sorted(issue_by_code.items())),
         "strong_tier_missing_evidence": sum(
@@ -315,6 +332,7 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--bma-dir", type=Path, default=DEFAULT_BMA_DIR)
     parser.add_argument("--biomarker-dir", type=Path, default=DEFAULT_BIOMARKER_DIR)
+    parser.add_argument("--reviewers-dir", type=Path, help="Reviewer registry; defaults to the supplied KB's sibling reviewers directory")
     parser.add_argument("--civic-root", type=Path, default=DEFAULT_CIVIC_ROOT)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--as-of", type=date.fromisoformat, default=date.today())
@@ -330,6 +348,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     report = audit_escat_readiness(
         bma_dir=args.bma_dir,
         biomarker_dir=args.biomarker_dir,
+        reviewers_dir=args.reviewers_dir,
         civic_root=args.civic_root,
         manifest=args.manifest,
         as_of=args.as_of,

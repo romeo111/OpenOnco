@@ -1372,7 +1372,12 @@ def test_english_track_cards_preserve_all_options_and_drug_source_anchors():
     assert re.findall(r'data-source-id="([^"]*)"', en) == re.findall(r'data-source-id="([^"]*)"', ua)
     assert 'Medicine form:' in en
     assert 'not a prediction for you personally' in en
-    assert 'Awaiting review by doctors' in en
+    assert 'Clinical content review pending' in en
+    assert en.count('class="patient-signoff-note"') == 1
+    assert en.index('class="patient-signoff-note"') < en.index('<article')
+    assert 'not approval of a plan for you' in en
+    assert ua.count('class="patient-signoff-note"') == 1
+    assert 'а не схвалення плану для вас' in ua
     assert result.plan.model_dump() == before
 
 

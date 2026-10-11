@@ -530,6 +530,22 @@ distinct in-scope reviewer sign-offs pinned to `last_verified`. Failing
 records may remain visible as review context but have a pending-review
 marker; they never take part in treatment-track selection.
 
+Review provenance is fail-closed. A sign-off counts only with `scope_match: true`,
+a nonempty current entity revision, a matching `entity_version`, and a valid
+timestamp. Its `reviewer_id` must resolve to a registered profile with explicit
+current authorization. A profile name or qualification list alone is insufficient.
+Missing or revoked authorization and placeholder profiles never establish readiness.
+
+Reviewer profiles may record an `authorization` object with `status`
+(`pending`, `approved`, `revoked`), `verified_on` (ISO date), `decision_reference`
+(auditable governance decision), and `identity_key` (stable non-sensitive reviewer
+identity for deduplication). Missing authorization defaults to pending eligibility.
+An approved record requires a current, non-future verification date and nonempty
+decision and identity references; two aliases for one identity count once.
+These fields record human authorization decisions; software and LLMs must never
+populate real approvals or infer qualifications. Existing profiles remain unchanged.
+This engineering gate does not approve clinical content or patient-specific plans.
+
 #### 4.4.4. Legacy fields and ToS restrictions
 
 The fields `oncokb_level` and `oncokb_snapshot_version` that existed in

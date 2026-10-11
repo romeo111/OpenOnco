@@ -110,7 +110,11 @@ def test_generated_patient_quality_is_consistent_across_all_languages():
             if block:
                 status = re.search(r'data-data-quality-status="([^"]+)"', block.group())[1]
                 counts = tuple(re.findall(r'</span>: (\d+)</li>', block.group()))
-                inventory[path.name] = (status, counts, roles)
+                review_counts = tuple(re.findall(r'data-review-count="(\d+)"', document))
+                assert review_counts, path
+                assert document.count('class="patient-signoff-note"') == 1, path
+                assert document.index('class="patient-signoff-note"') < document.index('<section class="what-now">'), path
+                inventory[path.name] = (status, counts, roles, review_counts)
             else:
                 inventory[path.name] = ('no-plan', (), roles)
         assert inventory, prefix

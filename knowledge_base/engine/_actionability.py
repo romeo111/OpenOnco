@@ -173,6 +173,10 @@ def find_matching_actionability(
     if not bma_cells:
         return []
 
+    reviewer_profiles = {eid: info.get("data") or {} for eid, info in entities_by_id.items()
+                         if info.get("type") == "reviewers"}
+    disease_lineage = ((entities_by_id.get(disease_id) or {}).get("data") or {}).get("lineage")
+
     hits: dict[str, dict] = {}  # dedup by bma_id
     for patient_key, raw_value in patient_biomarkers.items():
         patient_variant = _extract_variant(raw_value)
@@ -191,7 +195,9 @@ def find_matching_actionability(
             # attestations. Default empty for back-compat with legacy
             # YAML still using `oncokb_level`; Phase 1.5 migrates the
             # latter into `evidence_sources` entries.
-            readiness = actionability_release_readiness(cell)
+            readiness = actionability_release_readiness(
+                cell, reviewer_profiles=reviewer_profiles, disease_lineage=disease_lineage,
+            )
             hits[bma_id] = {
                 "bma_id": bma_id,
                 "biomarker_id": cell_bid,

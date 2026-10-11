@@ -79,6 +79,10 @@ not stage, do not move without explicit user instruction.
 - **Two-reviewer merge for clinical content** (CHARTER §6.1). Any change
   under `knowledge_base/hosted/content/` that affects clinical recommendations
   needs two of three Clinical Co-Leads to approve.
+  Runtime review coverage requires explicit current authorization, distinct
+  human identity keys, current-revision timestamps and affirmative scope.
+  Placeholder/pending/revoked profiles confer no coverage. Do not create human
+  approvals with automation; these records do not approve a patient's plan.
 - **No destructive action on patient data.** Two HTML files at repo root
   + any future patient artifacts must not leak into git history or public
   artifacts. CHARTER §9.3 requires informed consent + de-identification +

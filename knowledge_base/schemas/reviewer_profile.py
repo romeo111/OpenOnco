@@ -5,13 +5,15 @@ on KB entries within a declared scope (disease categories + entity types,
 optionally narrowed to specific DIS-* IDs). Sign-offs reference profiles
 by `id` so the audit trail survives reviewer-roster changes.
 
-Three placeholder profiles ship under `hosted/content/reviewers/` so the
-publish-gate machinery can be exercised before real clinicians are seated.
+Three placeholder profiles ship under `hosted/content/reviewers/` as roster
+templates, not eligible approvals. Positive gate tests use synthetic profiles
+only inside isolated test fixtures.
 Per CHARTER §6.1, two of three Co-Leads must approve clinical content;
-the placeholders satisfy the *machinery*, not the policy.
+the placeholders satisfy neither runtime review coverage nor the policy.
 """
 
-from typing import Optional
+from datetime import date
+from typing import Literal, Optional
 
 from pydantic import Field
 
@@ -35,6 +37,20 @@ class SignOffScope(Base):
     diseases_explicit: list[str] = Field(default_factory=list)
 
 
+class ReviewerAuthorization(Base):
+    """Human-recorded governance provenance; never inferred from a profile name.
+
+    Pending is the safe default. Approval eligibility additionally requires
+    a dated decision reference and stable identity key in the release gate.
+    A schema-valid record alone does not authenticate clinical credentials.
+    """
+
+    status: Literal["pending", "approved", "revoked"] = "pending"
+    verified_on: Optional[date] = None
+    decision_reference: Optional[str] = None
+    identity_key: Optional[str] = None
+
+
 class ReviewerProfile(Base):
     """A clinical co-lead authorized to sign off on KB entries.
 
@@ -49,6 +65,7 @@ class ReviewerProfile(Base):
     sign_off_scope: SignOffScope = Field(default_factory=SignOffScope)
     last_active: str  # ISO date (YYYY-MM-DD)
     notes: Optional[str] = None
+    authorization: Optional[ReviewerAuthorization] = None
 
 
-__all__ = ["ReviewerProfile", "SignOffScope"]
+__all__ = ["ReviewerProfile", "ReviewerAuthorization", "SignOffScope"]

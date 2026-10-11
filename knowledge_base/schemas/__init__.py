@@ -62,7 +62,7 @@ from .radiation_course import RadiationCourse, RadiationIntent
 from ._reviewer_signoff import ReviewerSignoff
 from .red_flag import RedFlag
 from .regimen import Regimen, RegimenComponent, RegimenPhase
-from .reviewer_profile import ReviewerProfile, SignOffScope
+from .reviewer_profile import ReviewerAuthorization, ReviewerProfile, SignOffScope
 from .source import Source
 from .supportive_care import SupportiveCare
 from .surgery import Surgery, SurgeryComplication, SurgeryIntent

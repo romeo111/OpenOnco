@@ -24,6 +24,7 @@ import yaml
 
 import scripts.clinical_signoff as cli
 import scripts.build_signoff_dashboard as dashboard
+from tests.review_provenance_fixtures import authorized_profiles
 from knowledge_base.engine.render import (
     _render_signoff_badge,
     _render_signoff_badge_patient,
@@ -55,33 +56,31 @@ def _make_temp_kb(tmp_path: Path) -> dict:
     kb_root = tmp_path / "content"
     audit_log = tmp_path / "audit" / "signoffs.jsonl"
 
-    # Reviewers — leave entity_types empty so the scope check is purely
-    # category-based (the live placeholders use the human-readable
-    # "Indication" form which the CLI's dir-name check then flags as a
-    # warn-only mismatch; that's a separate CLI quirk we don't probe here).
+    # Explicitly authorized synthetic actors. Real placeholder profiles
+    # never confer approval; every write below stays inside a temporary KB.
     _write_yaml(kb_root / "reviewers" / "rev_heme.yaml", {
-        "id": "REV-HEME-LEAD-PLACEHOLDER",
+        "id": "REV-TEST-HEME",
+        "authorization": authorized_profiles("REV-TEST-HEME", verified_on="2026-04-27")["REV-TEST-HEME"]["authorization"],
         "name": {"preferred": "Heme Lead"},
         "specialty": "Hematology",
         "qualifications": ["board"],
         "sign_off_scope": {
             "disease_categories": ["hematologic", "lymphoid"],
-            "entity_types": [],
+            "entity_types": ["Indication", "BiomarkerActionability"],
             "diseases_explicit": [],
-            "disease_ids": [],
         },
         "last_active": "2026-04-27",
     })
     _write_yaml(kb_root / "reviewers" / "rev_solid.yaml", {
-        "id": "REV-SOLID-LEAD-PLACEHOLDER",
+        "id": "REV-TEST-SOLID",
+        "authorization": authorized_profiles("REV-TEST-SOLID", verified_on="2026-04-27")["REV-TEST-SOLID"]["authorization"],
         "name": {"preferred": "Solid Lead"},
         "specialty": "Solid Tumors",
         "qualifications": ["board"],
         "sign_off_scope": {
             "disease_categories": ["solid", "gastrointestinal"],
-            "entity_types": [],
+            "entity_types": ["Indication", "BiomarkerActionability"],
             "diseases_explicit": [],
-            "disease_ids": [],
         },
         "last_active": "2026-04-27",
     })
@@ -182,7 +181,7 @@ def _read_yaml(p: Path) -> dict:
 def test_approve_single_entity_writes_signoff(temp_kb: dict) -> None:
     rc = cli.main([
         "approve",
-        "--reviewer", "REV-HEME-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-HEME",
         "--entity-id", "IND-DLBCL-TEST",
         "--rationale", "NCCN-aligned, evidence reviewed",
     ])
@@ -192,16 +191,18 @@ def test_approve_single_entity_writes_signoff(temp_kb: dict) -> None:
     sigs = data.get("reviewer_signoffs") or []
     assert len(sigs) == 1
     s = sigs[0]
-    assert s["reviewer_id"] == "REV-HEME-LEAD-PLACEHOLDER"
+    assert s["reviewer_id"] == "REV-TEST-HEME"
     assert s["rationale"] == "NCCN-aligned, evidence reviewed"
     assert "timestamp" in s
     assert s.get("scope_match") is True
+    assert data["last_reviewed"] == "2026-04-27"
+    assert s["entity_version"] == data["last_reviewed"]
 
 
 def test_approve_writes_audit_log_entry(temp_kb: dict) -> None:
     rc = cli.main([
         "approve",
-        "--reviewer", "REV-HEME-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-HEME",
         "--entity-id", "IND-DLBCL-TEST",
         "--rationale", "audit-log probe",
     ])
@@ -213,7 +214,7 @@ def test_approve_writes_audit_log_entry(temp_kb: dict) -> None:
     assert len(lines) == 1
     row = json.loads(lines[0])
     assert row["action"] == "approve"
-    assert row["reviewer_id"] == "REV-HEME-LEAD-PLACEHOLDER"
+    assert row["reviewer_id"] == "REV-TEST-HEME"
     assert row["entity_id"] == "IND-DLBCL-TEST"
     assert row["entity_type"] == "Indication"
 
@@ -221,7 +222,7 @@ def test_approve_writes_audit_log_entry(temp_kb: dict) -> None:
 def test_approve_bma_pins_signoff_to_last_verified(temp_kb: dict) -> None:
     rc = cli.main([
         "approve",
-        "--reviewer", "REV-SOLID-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-SOLID",
         "--entity-id", "BMA-CRC-TEST",
         "--rationale", "Evidence revision reviewed",
     ])
@@ -233,7 +234,7 @@ def test_approve_bma_pins_signoff_to_last_verified(temp_kb: dict) -> None:
 def test_approve_bma_allows_same_reviewer_after_evidence_revision(temp_kb: dict) -> None:
     data = _read_yaml(temp_kb["bma_path"])
     data["reviewer_signoffs"] = [{
-        "reviewer_id": "REV-SOLID-LEAD-PLACEHOLDER",
+        "reviewer_id": "REV-TEST-SOLID",
         "timestamp": "2026-07-01T00:00:00Z",
         "entity_version": "2026-07-01",
         "scope_match": True,
@@ -242,7 +243,7 @@ def test_approve_bma_allows_same_reviewer_after_evidence_revision(temp_kb: dict)
 
     rc = cli.main([
         "approve",
-        "--reviewer", "REV-SOLID-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-SOLID",
         "--entity-id", "BMA-CRC-TEST",
         "--rationale", "New evidence revision reviewed",
     ])
@@ -254,7 +255,7 @@ def test_approve_bma_allows_same_reviewer_after_evidence_revision(temp_kb: dict)
 def test_approve_dry_run_no_writes(temp_kb: dict) -> None:
     rc = cli.main([
         "approve",
-        "--reviewer", "REV-HEME-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-HEME",
         "--entity-id", "IND-DLBCL-TEST",
         "--rationale", "dry run",
         "--dry-run",
@@ -275,7 +276,7 @@ def test_withdraw_removes_signoff_keeps_audit(temp_kb: dict) -> None:
     # 1. Approve
     rc1 = cli.main([
         "approve",
-        "--reviewer", "REV-HEME-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-HEME",
         "--entity-id", "IND-DLBCL-TEST",
         "--rationale", "first",
     ])
@@ -284,7 +285,7 @@ def test_withdraw_removes_signoff_keeps_audit(temp_kb: dict) -> None:
     # 2. Withdraw
     rc2 = cli.main([
         "withdraw",
-        "--reviewer", "REV-HEME-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-HEME",
         "--entity-id", "IND-DLBCL-TEST",
         "--rationale", "reconsider",
     ])
@@ -310,7 +311,7 @@ def test_approve_duplicate_refused_without_force(temp_kb: dict) -> None:
     # First approve succeeds and writes
     rc1 = cli.main([
         "approve",
-        "--reviewer", "REV-HEME-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-HEME",
         "--entity-id", "IND-DLBCL-TEST",
         "--rationale", "first",
     ])
@@ -321,7 +322,7 @@ def test_approve_duplicate_refused_without_force(temp_kb: dict) -> None:
     # Second approve by same reviewer is skipped (no second entry written)
     rc2 = cli.main([
         "approve",
-        "--reviewer", "REV-HEME-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-HEME",
         "--entity-id", "IND-DLBCL-TEST",
         "--rationale", "second attempt without force",
     ])
@@ -336,7 +337,7 @@ def test_approve_duplicate_refused_without_force(temp_kb: dict) -> None:
     # With --force, a second entry is appended
     rc3 = cli.main([
         "approve",
-        "--reviewer", "REV-HEME-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-HEME",
         "--entity-id", "IND-DLBCL-TEST",
         "--rationale", "force re-affirm",
         "--force",
@@ -370,34 +371,59 @@ def test_approve_strict_scope_mismatch_refused(temp_kb: dict) -> None:
     """Heme reviewer + solid-tumor entity + --strict must refuse."""
     rc = cli.main([
         "approve",
-        "--reviewer", "REV-HEME-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-HEME",
         "--entity-id", "IND-CRC-TEST",
         "--rationale", "heme reviewer should not sign solid",
         "--strict",
     ])
-    # CLI returns 0 with `0 approved` in strict-skip mode; the contract we
-    # care about is that the YAML stayed clean.
+    assert rc == 5
     data = _read_yaml(temp_kb["solid_ind_path"])
     assert not data.get("reviewer_signoffs"), (
         "scope-mismatched approval must not be persisted under --strict"
     )
 
 
-def test_approve_strict_scope_mismatch_warning_default(temp_kb: dict) -> None:
-    """Same heme-on-solid call WITHOUT --strict must proceed (warn-only)."""
+def test_approve_scope_mismatch_refused_without_strict_flag(temp_kb: dict) -> None:
+    """Default approval also refuses a reviewer outside the declared scope."""
     rc = cli.main([
         "approve",
-        "--reviewer", "REV-HEME-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-HEME",
         "--entity-id", "IND-CRC-TEST",
         "--rationale", "warn-only path",
     ])
-    assert rc == 0
+    assert rc == 5
     data = _read_yaml(temp_kb["solid_ind_path"])
-    sigs = data.get("reviewer_signoffs") or []
-    assert len(sigs) == 1, "warn-only mode should still write the sign-off"
-    assert sigs[0]["scope_match"] is False, (
-        "scope_match flag must surface as False on a warn-only mismatch"
-    )
+    assert not data.get("reviewer_signoffs"), "default mode must not persist out-of-scope approval"
+
+
+@pytest.mark.parametrize("status", ["pending", "revoked"])
+def test_unauthorized_reviewer_cannot_write_even_with_force(temp_kb: dict, status: str) -> None:
+    profile_path = temp_kb["reviewers_dir"] / "rev_heme.yaml"
+    profile = _read_yaml(profile_path)
+    profile["authorization"]["status"] = status
+    _write_yaml(profile_path, profile)
+    before = temp_kb["heme_ind_path"].read_bytes()
+    assert cli.main([
+        "approve", "--reviewer", "REV-TEST-HEME", "--entity-id", "IND-DLBCL-TEST",
+        "--rationale", "synthetic refusal probe", "--force",
+    ]) == 8
+    assert temp_kb["heme_ind_path"].read_bytes() == before
+    assert not temp_kb["audit_log"].exists()
+
+
+@pytest.mark.parametrize("revision", ["", "invalid", "2099-01-01"])
+def test_invalid_current_revision_cannot_be_approved(temp_kb: dict, revision: str) -> None:
+    path = temp_kb["heme_ind_path"]
+    data = _read_yaml(path)
+    data["last_reviewed"] = revision
+    _write_yaml(path, data)
+    before = path.read_bytes()
+    assert cli.main([
+        "approve", "--reviewer", "REV-TEST-HEME", "--entity-id", "IND-DLBCL-TEST",
+        "--rationale", "synthetic invalid-revision probe", "--force",
+    ]) == 5
+    assert path.read_bytes() == before
+    assert not temp_kb["audit_log"].exists()
 
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -409,13 +435,13 @@ def _seed_audit_and_signoffs(temp_kb: dict) -> None:
     """Drive a few approvals so the dashboard has something to summarise."""
     cli.main([
         "approve",
-        "--reviewer", "REV-HEME-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-HEME",
         "--entity-id", "IND-DLBCL-TEST",
         "--rationale", "seed-1",
     ])
     cli.main([
         "approve",
-        "--reviewer", "REV-SOLID-LEAD-PLACEHOLDER",
+        "--reviewer", "REV-TEST-SOLID",
         "--entity-id", "IND-CRC-TEST",
         "--rationale", "seed-2",
     ])
@@ -432,6 +458,21 @@ def test_dashboard_generated_from_audit_log(
     text = out.read_text(encoding="utf-8")
     assert "# Clinical Sign-off Status" in text
     assert "## Summary" in text
+
+
+def test_dashboard_revocation_removes_coverage_but_preserves_activity(temp_kb: dict) -> None:
+    _seed_audit_and_signoffs(temp_kb)
+    before = dashboard.build_dashboard()
+    assert "Entities with ≥1 sign-off: **2**" in before
+    path = temp_kb["reviewers_dir"] / "rev_heme.yaml"
+    profile = _read_yaml(path)
+    profile["authorization"]["status"] = "revoked"
+    _write_yaml(path, profile)
+    after = dashboard.build_dashboard()
+    assert "Entities with ≥1 sign-off: **1**" in after
+    assert "Raw structured review records retained: **2**" in after
+    assert "REV-TEST-HEME" in after
+    assert len(temp_kb["audit_log"].read_text(encoding="utf-8").splitlines()) == 2
 
 
 def test_dashboard_includes_per_entity_type_breakdown(
@@ -457,7 +498,7 @@ def test_dashboard_includes_per_reviewer_activity(
     assert rc == 0
     text = out.read_text(encoding="utf-8")
     assert "## Per reviewer" in text
-    assert "REV-HEME-LEAD-PLACEHOLDER" in text, (
+    assert "REV-TEST-HEME" in text, (
         "dashboard must mention the heme reviewer"
     )
     # Approvals column for heme reviewer should show ≥1
@@ -465,7 +506,7 @@ def test_dashboard_includes_per_reviewer_activity(
     # a non-zero approval somewhere in its line)
     heme_rows = [
         ln for ln in text.splitlines()
-        if "REV-HEME-LEAD-PLACEHOLDER" in ln and "|" in ln
+        if "REV-TEST-HEME" in ln and "|" in ln
     ]
     assert heme_rows, "no heme-reviewer table row found"
     assert any(" 1 " in ln or "| 1 |" in ln for ln in heme_rows), (
@@ -492,13 +533,16 @@ def test_render_signoff_badge_pending_for_zero_signoffs() -> None:
 def test_render_signoff_badge_complete_for_two_plus_signoffs() -> None:
     html = _render_signoff_badge({
         "id": "IND-X",
+        "applicable_to": {"disease_id": "DIS-CRC"},
+        "last_reviewed": "2026-04-27",
         "reviewer_signoffs": [
-            {"reviewer_id": "REV-HEME-LEAD-PLACEHOLDER",
-             "timestamp": "2026-04-27T00:00:00Z"},
-            {"reviewer_id": "REV-SOLID-LEAD-PLACEHOLDER",
-             "timestamp": "2026-04-27T00:00:00Z"},
+            {"reviewer_id": "REV-TEST-HEME",
+             "timestamp": "2026-08-03T00:00:00Z", "entity_version": "2026-04-27", "scope_match": True},
+            {"reviewer_id": "REV-TEST-SOLID",
+             "timestamp": "2026-08-03T00:00:00Z", "entity_version": "2026-04-27", "scope_match": True},
         ],
-    })
+    }, reviewer_profiles=authorized_profiles("REV-TEST-HEME", "REV-TEST-SOLID"))
     assert "signoff-complete" in html
-    assert "Клінічно затверджено" in html
+    assert "перегляди клінічного змісту" in html
+    assert "Клінічно затверджено" not in html
     assert "signoff-pending" not in html

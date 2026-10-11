@@ -101,6 +101,9 @@ Read the [Charter](specs/CHARTER.md) first. English specifications are canonical
 ## Help improve OpenOnco
 
 - Review the [DLBCL packet](https://openonco.info/review/dlbcl-1l/): inspect plans, traces and sources; export feedback locally. Engineering checks are not clinical sign-off.
+  Report review badges describe current knowledge-base content reviews by
+  explicitly authorized, distinct reviewers; they do not approve a patient's
+  treatment plan. Placeholder and unverified profiles cannot confer coverage.
 - Report reproducible bugs or source discrepancies through [Issues](https://github.com/romeo111/OpenOnco/issues/new/choose), using synthetic data.
 - Follow [CONTRIBUTING.md](CONTRIBUTING.md) for code, translations and clinical changes. Do not independently mark content reviewed.
 - For vulnerabilities, use [private reporting](https://github.com/romeo111/OpenOnco/security/advisories/new), not a public issue containing exploit details or secrets.

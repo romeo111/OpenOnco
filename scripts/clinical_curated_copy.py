@@ -83,6 +83,10 @@ def safety_notices_for(locale):
     return {source: translations[index] for source, translations in SAFETY_NOTICES.items()}
 
 UI_MESSAGES = {
+    'Clinical content review pending': ('Revisión del contenido clínico pendiente', 'Revisão do conteúdo clínico pendente', 'Prüfung des klinischen Inhalts ausstehend', 'Vérification du contenu clinique en attente'),
+    'Clinical content review pending (1 of 2 eligible reviews recorded)': ('Revisión del contenido clínico pendiente (1 de 2 revisiones admisibles registrada)', 'Revisão do conteúdo clínico pendente (1 de 2 revisões admissíveis registada)', 'Prüfung des klinischen Inhalts ausstehend (1 von 2 zulässigen Prüfungen dokumentiert)', 'Vérification du contenu clinique en attente (1 des 2 relectures recevables enregistrée)'),
+    'Required clinical-content reviews recorded': ('Revisiones requeridas del contenido clínico registradas', 'Revisões necessárias do conteúdo clínico registadas', 'Erforderliche Prüfungen des klinischen Inhalts dokumentiert', 'Relectures requises du contenu clinique enregistrées'),
+    'This status describes reviews of the knowledge-base content, not approval of a plan for you.': ('Este estado describe revisiones del contenido de la base de conocimientos, no la aprobación de un plan para usted.', 'Este estado descreve revisões do conteúdo da base de conhecimento, não a aprovação de um plano para si.', 'Dieser Status beschreibt Prüfungen des Inhalts der Wissensbasis, keine Freigabe eines Plans für Sie.', 'Ce statut décrit les relectures du contenu de la base de connaissances, pas l’approbation d’un plan pour vous.'),
     'Required biomarker information is missing from the profile. Review of the main option in this report is incomplete.': ('Falta información necesaria sobre biomarcadores en el perfil. La revisión de la opción principal en este informe está incompleta.', 'Falta informação necessária sobre biomarcadores no perfil. A análise da opção principal neste relatório está incompleta.', 'Im Profil fehlen erforderliche Informationen zu Biomarkern. Die Beurteilung der Hauptoption in diesem Bericht ist unvollständig.', 'Des informations nécessaires sur les biomarqueurs manquent dans le profil. L’examen de l’option principale dans ce rapport est incomplet.'),
     'Biomarker gaps for the main option in this report': ('Datos de biomarcadores que faltan para la opción principal en este informe', 'Dados de biomarcadores em falta para a opção principal neste relatório', 'Fehlende Biomarker-Daten für die Hauptoption in diesem Bericht', 'Données de biomarqueurs manquantes pour l’option principale dans ce rapport'),
     'Option in this report': ('Opción en este informe', 'Opção neste relatório', 'Option in diesem Bericht', 'Option dans ce rapport'),
@@ -298,6 +302,13 @@ def messages_for(locale):
     }
     index = ('es', 'pt', 'de', 'fr').index(locale)
     catalog.update({source: values[index] for source, values in UI_MESSAGES.items()})
+    review_aliases = {
+        'Перегляд клінічного змісту очікується': 'Clinical content review pending',
+        'Перегляд клінічного змісту очікується (записано 1 із 2 допустимих переглядів)': 'Clinical content review pending (1 of 2 eligible reviews recorded)',
+        'Записано необхідні перегляди клінічного змісту': 'Required clinical-content reviews recorded',
+        'Цей статус описує перегляди змісту бази знань, а не схвалення плану для вас.': 'This status describes reviews of the knowledge-base content, not approval of a plan for you.',
+    }
+    catalog.update({source: catalog[english] for source, english in review_aliases.items()})
     catalog['Інтерпретація потребує клінічного перегляду'] = catalog['Interpretation requires clinical review']
     catalog.update(safety_notices_for(locale))
     # Static patient examples retain a Ukrainian source body; dynamic

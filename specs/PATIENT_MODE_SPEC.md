@@ -300,6 +300,15 @@ Phase 5 deliverable. Test gates:
 
 Patient mode touches clinical content in two places:
 
+Review badges describe recorded knowledge-base content review, not approval of
+a patient's treatment plan. Count only current-revision, explicitly in-scope,
+time-stamped reviews from registered profiles with affirmative human-governance
+authorization. Distinct profile IDs sharing one `authorization.identity_key`
+count once. Missing, pending, revoked or placeholder authority cannot establish
+review coverage. Software checks declared provenance, not medical credentials.
+Show this distinction once before the options; patient status captions require
+explicit EN/UK and ES/PT/DE/FR draft translations.
+
 | Content | Two-reviewer required? |
 |---|---|
 | `Regimen.between_visit_watchpoints` (Phase 4) | YES — this is a new clinical assertion |
