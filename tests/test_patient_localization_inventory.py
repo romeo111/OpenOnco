@@ -48,3 +48,30 @@ notes_patient: Не змінюйте дозу 0.5 mg.
     assert notes['entries'][0]['field_path'] == ['notes_patient']
     assert notes['entries'][0]['source'] == 'Не змінюйте дозу 0.5 mg.'
     assert file.read_text(encoding='utf-8') == source
+
+
+def test_note_inventory_distinguishes_stale_translation_from_missing_translation(tmp_path):
+    from knowledge_base.engine._patient_note_translations import PATIENT_NOTE_EN_DRAFT
+    folder = tmp_path / 'knowledge_base/hosted/content/drugs'
+    folder.mkdir(parents=True)
+    (folder / 'changed.yaml').write_text('id: DRUG-CYTARABINE\nnotes_patient: Не змінюйте дозу 0.5 mg.\n', encoding='utf-8')
+    (folder / 'untranslated.yaml').write_text('id: DRUG-UNKNOWN\nnotes_patient: Без перекладу\n', encoding='utf-8')
+    result = drug_class_inventory(tmp_path)
+    assert result['en_stale_note_draft_count'] == 1
+    assert result['entries'][0]['en_stale_note_draft'] is True
+    assert result['entries'][1]['en_stale_note_draft'] is False
+    assert result['en_current_source_note_draft_count'] == 0
+    assert set(result['orphan_note_draft_ids']) == set(PATIENT_NOTE_EN_DRAFT) - {'DRUG-CYTARABINE'}
+
+
+def test_note_draft_check_rejects_stale_source(tmp_path, monkeypatch):
+    import sys
+    import pytest
+    from scripts import audit_patient_localization as audit
+    folder = tmp_path / 'knowledge_base/hosted/content/drugs'
+    folder.mkdir(parents=True)
+    (folder / 'changed.yaml').write_text('id: DRUG-CYTARABINE\nnotes_patient: Новий текст\n', encoding='utf-8')
+    monkeypatch.setattr(audit, 'inventory', lambda root: {'entries': []})
+    monkeypatch.setattr(sys, 'argv', ['audit', '--root', str(tmp_path), '--check-note-drafts'])
+    with pytest.raises(SystemExit, match='need review'):
+        audit.main()

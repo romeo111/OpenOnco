@@ -68,7 +68,7 @@ def drug_class_inventory(root: Path) -> dict:
     """Record lookup readiness, not rendered coverage or clinical signoff."""
     import yaml
     from knowledge_base.engine._patient_vocabulary import explain_drug_class
-    from knowledge_base.engine._patient_note_translations import translate_patient_note
+    from knowledge_base.engine._patient_note_translations import PATIENT_NOTE_EN_DRAFT, translate_patient_note
 
     entries = []
     loader = getattr(yaml, 'CSafeLoader', yaml.SafeLoader)
@@ -84,6 +84,7 @@ def drug_class_inventory(root: Path) -> dict:
             'en_class_explanation_draft': bool(explain_drug_class(label, target_lang='en')),
             'has_authored_patient_note': bool((record.get('notes_patient') or '').strip()),
             'en_current_source_note_draft': bool(translate_patient_note(record.get('id'), record.get('notes_patient') or '')),
+            'en_stale_note_draft': record.get('id') in PATIENT_NOTE_EN_DRAFT and not bool(translate_patient_note(record.get('id'), record.get('notes_patient') or '')),
         })
     return {
         'status': 'lookup_inventory_not_clinical_review',
@@ -93,6 +94,8 @@ def drug_class_inventory(root: Path) -> dict:
         'en_class_explanation_draft_count': sum(item['en_class_explanation_draft'] for item in entries),
         'authored_patient_note_count': sum(item['has_authored_patient_note'] for item in entries),
         'en_current_source_note_draft_count': sum(item['en_current_source_note_draft'] for item in entries),
+        'en_stale_note_draft_count': sum(item['en_stale_note_draft'] for item in entries),
+        'orphan_note_draft_ids': sorted(set(PATIENT_NOTE_EN_DRAFT) - {item['entity_id'] for item in entries}),
         'entries': entries,
     }
 
@@ -146,11 +149,12 @@ def main() -> None:
     parser.add_argument('--output', type=Path, help='Optional JSON review inventory; clinical inputs are untouched')
     parser.add_argument('--include-dynamic', action='store_true', help='Include a separate candidate YAML text inventory')
     parser.add_argument('--include-drug-classes', action='store_true', help='Include drug-class lookup readiness and authored-note presence')
+    parser.add_argument('--check-note-drafts', action='store_true', help='Exit nonzero for stale source-bound notes or drafts whose drug record is missing')
     args = parser.parse_args()
     result = inventory(args.root)
     if args.include_dynamic:
         result['dynamic_content'] = dynamic_inventory(args.root)
-    if args.include_drug_classes:
+    if args.include_drug_classes or args.check_note_drafts:
         result['drug_classes'] = drug_class_inventory(args.root)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -160,6 +164,10 @@ def main() -> None:
         if section in summary:
             summary[section] = {key: value for key, value in summary[section].items() if key != 'entries'}
     print(json.dumps(summary, indent=2))
+    if args.check_note_drafts:
+        notes = result['drug_classes']
+        if notes['en_stale_note_draft_count'] or notes['orphan_note_draft_ids']:
+            raise SystemExit('Patient-note drafts need review: an authored source changed or its drug record is missing')
 
 
 if __name__ == '__main__':
