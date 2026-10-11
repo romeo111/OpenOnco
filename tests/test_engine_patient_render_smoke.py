@@ -96,9 +96,7 @@ def test_patient_mode_smoke_braf_v600e_mcrc():
 
 
 def test_patient_mode_emergency_banner_when_critical_rf_present():
-    """When the kb_resolved red_flags map contains a critical RF, the
-    emergency banner should render with a 🚨 marker (not the empty
-    placeholder)."""
+    """Only a critical RF fired by the algorithm gets an emergency banner."""
     patient = {
         "patient_id": "TEST-PATIENT-MODE-EMER-001",
         "disease": {"id": "DIS-CRC"},
@@ -108,9 +106,8 @@ def test_patient_mode_emergency_banner_when_critical_rf_present():
     result = generate_plan(patient, kb_root=KB_ROOT)
     assert result.plan is not None
 
-    # Synthesize a critical RF on the resolved KB snapshot — the patient
-    # renderer reads result.kb_resolved['red_flags'], which is a render-
-    # time scratchpad and not persisted on disk.
+    # A resolved KB record alone is not evidence that this patient's
+    # algorithm fired the signal.
     result.kb_resolved.setdefault("red_flags", {})["RF-TEST-EMERGENCY"] = {
         "id": "RF-TEST-EMERGENCY",
         "severity": "critical",
@@ -119,6 +116,8 @@ def test_patient_mode_emergency_banner_when_critical_rf_present():
         "definition": "Severe febrile neutropenia — go to the ER immediately",
     }
 
+    assert "🚨" not in render_plan_html(result, mode="patient")
+    result.trace.append({"fired_red_flags": ["RF-TEST-EMERGENCY"]})
     html = render_plan_html(result, mode="patient")
     assert "🚨" in html, "Emergency banner must contain the 🚨 marker"
     # The visible text should carry the patient-friendly first sentence
