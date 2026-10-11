@@ -215,7 +215,9 @@ VARIANT_TYPE_PLAIN_UA: dict[str, str] = {
     "mosaic": "мутація присутня лише в частині клітин організму",
 
     # Quantitative biomarkers
-    "VAF": "процент клітин пухлини з цією мутацією — 50% означає, що половина клітин має її",
+    # VAF measures variant-supporting reads, not the percentage of tumour cells.
+    # Primary source: https://pmc.ncbi.nlm.nih.gov/articles/PMC10925087/
+    "VAF": "частка прочитаних фрагментів ДНК у цій позиції, що містять варіант; 50% не означає автоматично, що половина клітин має мутацію — на результат впливають склад зразка та кількість копій гена",
     "TMB-high": "пухлина має багато мутацій — частіше відповідає на імунотерапію",
     "TMB-low": "пухлина має мало мутацій — імунотерапія працює гірше",
     "MSI-H": "пухлина не може лагодити неспівпадіння в ДНК → багато мутацій → ICI eligibility",
@@ -519,6 +521,7 @@ _ALL_TABLES: tuple[dict[str, str], ...] = (
 
 
 PATIENT_VOCABULARY_EN_DRAFT: dict[str, str] = {
+    "VAF": "the fraction of DNA reads at this position that contain the variant; 50% does not automatically mean that half the cells carry the mutation — sample composition and gene copy number affect the result",
     "inversion": "a DNA segment is reversed; this can also create a gene fusion",
     "deletion": "a DNA segment is removed; this often causes loss of function",
     "insertion": "extra nucleotides are inserted into a gene, disrupting protein function",

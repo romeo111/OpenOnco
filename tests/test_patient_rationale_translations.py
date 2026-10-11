@@ -127,3 +127,13 @@ def test_english_vocabulary_lookup_never_silently_returns_ukrainian():
     assert explain('missense', target_lang='fr') is None
     assert 'may be preserved or disrupted' in explain('missense', target_lang='en')
     assert 'both copies' in explain('biallelic loss', target_lang='en')
+
+
+def test_vaf_explanation_distinguishes_read_fraction_from_cell_fraction():
+    ua = explain('VAF')
+    en = explain('VAF', target_lang='en')
+    assert 'прочитаних фрагментів ДНК' in ua
+    assert '50% не означає автоматично' in ua
+    assert 'DNA reads' in en
+    assert '50% does not automatically mean' in en
+    assert 'gene copy number' in en
