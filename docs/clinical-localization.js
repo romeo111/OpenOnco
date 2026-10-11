@@ -182,28 +182,22 @@
       nativeButton.setAttribute('aria-label', locale.toUpperCase());
       englishButton.after(nativeButton);
       englishButton.classList.remove('is-active');
-      const reloadReport = () => {
-        if (reportFrame.srcdoc) reportFrame.srcdoc = reportFrame.srcdoc;
-        else if (reportFrame.src) reportFrame.src = reportFrame.src;
-      };
       for (const button of [englishButton, ukrainianButton]) {
         button.addEventListener('click', () => {
           displayTranslatedReport = false;
           window.OPENONCO_REPORT_LOCALE = null;
           nativeButton.classList.remove('is-active');
           button.classList.add('is-active');
-          reloadReport();
         }, true);
       }
-      nativeButton.addEventListener('click', () => {
+      nativeButton.addEventListener('click', async () => {
         if (englishButton.disabled || ukrainianButton.disabled || (typeof isInteractionLocked === 'function' && isInteractionLocked())) return;
         displayTranslatedReport = true;
         window.OPENONCO_REPORT_LOCALE = locale;
-        if (typeof switchResultLang === 'function') switchResultLang('en');
+        if (typeof switchResultLang === 'function') await switchResultLang('en');
         englishButton.classList.remove('is-active');
         ukrainianButton.classList.remove('is-active');
         nativeButton.classList.add('is-active');
-        reloadReport();
       });
     }
     attachDocument(document);

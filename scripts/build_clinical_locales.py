@@ -147,7 +147,7 @@ def localize_page(source, locale, path, available, catalog, *, style_assets=None
         page = page.replace('"/kb_search_index.json"', f'"/{locale}/kb_search_index.json"')
     if path in PAGES or path.startswith('handbook/'):
         catalog_file = 'clinical-translations.json' if path == 'try.html' else 'clinical-ui-translations.json'
-        runtime = f'<script src="/clinical-localization.js?v=20261010-2" data-locale="{locale}" data-catalog="/{locale}/{catalog_file}" defer></script>'
+        runtime = f'<script src="/clinical-localization.js?v=20261011-report-ready" data-locale="{locale}" data-catalog="/{locale}/{catalog_file}" defer></script>'
         page = page.replace('</body>', runtime + '</body>')
     digest = hashlib.sha256(source.encode('utf-8')).hexdigest()
     page = page.replace('</head>', f'<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="{digest}"></head>')

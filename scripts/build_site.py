@@ -509,7 +509,7 @@ self.addEventListener('activate', (event) => {
 function staleWhileRevalidate(event) {
   event.respondWith(
     caches.open(CACHE_NAME).then((cache) =>
-      cache.match(event.request, { ignoreSearch: true }).then((hit) => {
+      cache.match(event.request, { ignoreSearch: new URL(event.request.url).pathname !== '/clinical-localization.js' }).then((hit) => {
         const network = fetch(event.request).then((resp) => {
           if (resp && resp.ok) cache.put(event.request, resp.clone());
           return resp;
@@ -5347,7 +5347,16 @@ function downloadHtml() {{
 }}
 
 async function switchResultLang(newLang) {{
-  if (newLang === currentResultLang) return;
+  if (newLang === currentResultLang) {{
+    if (!planSource || !reportReady || isInteractionLocked()) return;
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
+      const frameReady = waitForFrameLoad();
+      if (resultFrame.srcdoc) resultFrame.srcdoc = resultFrame.srcdoc;
+      else resultFrame.src = resultFrame.src;
+      await frameReady;
+    }});
+    return;
+  }}
   if (planSource === 'example') {{
     // Pre-built case file: swap the iframe to the matching language and
     // audience variant.

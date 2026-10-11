@@ -47,3 +47,5 @@ Do not add paid dependencies to core access, purchase advertising, contact peopl
 - Next: verify the complete deployed synthetic workflow and actual exports, then measure fresh-device startup.
 
 - 2026-10-11: Production verification of 51868619c0: Pages deployed successfully. French synthetic AML report generated with core baac4fb46f23 in 13.653 s (10.383 s engine initialization, 3.269 s Python; existing browser caches). Downloaded HTML verified for displayed French locale, PLAN-VIRTUAL-AML-001-V1, REG-VEN-AZA-AML, primary VIALE-A URL and review wording. PDF button interaction timed out in the embedded browser; actual saved PDF content remains unverified. Do not treat print-invocation tests as PDF-content verification.
+
+- 2026-10-11: Unified report language reloads: translation overlay delegates to the guarded builder, including switching between native translation and the same English source. Export remains unavailable until the reload finishes; duplicate iframe reloads removed. Regression test covers the same-source path across six clients.

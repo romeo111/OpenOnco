@@ -865,7 +865,16 @@ function downloadHtml() {
 }
 
 async function switchResultLang(newLang) {
-  if (newLang === currentResultLang) return;
+  if (newLang === currentResultLang) {
+    if (!planSource || !reportReady || isInteractionLocked()) return;
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {
+      const frameReady = waitForFrameLoad();
+      if (resultFrame.srcdoc) resultFrame.srcdoc = resultFrame.srcdoc;
+      else resultFrame.src = resultFrame.src;
+      await frameReady;
+    });
+    return;
+  }
   if (planSource === 'example') {
     // Pre-built case file: swap the iframe to the matching language and
     // audience variant.
@@ -2786,5 +2795,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<script src="/clinical-localization.js?v=20261010-2" data-locale="fr" data-catalog="/fr/clinical-translations.json" defer></script></body>
+<script src="/clinical-localization.js?v=20261011-report-ready" data-locale="fr" data-catalog="/fr/clinical-translations.json" defer></script></body>
 </html>
