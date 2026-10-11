@@ -42,6 +42,7 @@ notes_patient: Не змінюйте дозу 0.5 mg.
     assert classes['record_count'] == 2
     assert classes['en_class_explanation_draft_count'] == 1
     assert classes['authored_patient_note_count'] == 1
+    assert classes['en_current_source_note_draft_count'] == 0
     assert classes['entries'][1]['en_class_explanation_draft'] is False
     notes = dynamic_inventory(tmp_path)
     assert notes['entries'][0]['field_path'] == ['notes_patient']

@@ -68,6 +68,7 @@ def drug_class_inventory(root: Path) -> dict:
     """Record lookup readiness, not rendered coverage or clinical signoff."""
     import yaml
     from knowledge_base.engine._patient_vocabulary import explain_drug_class
+    from knowledge_base.engine._patient_note_translations import translate_patient_note
 
     entries = []
     loader = getattr(yaml, 'CSafeLoader', yaml.SafeLoader)
@@ -82,6 +83,7 @@ def drug_class_inventory(root: Path) -> dict:
             'uk_class_explanation': bool(explain_drug_class(label)),
             'en_class_explanation_draft': bool(explain_drug_class(label, target_lang='en')),
             'has_authored_patient_note': bool((record.get('notes_patient') or '').strip()),
+            'en_current_source_note_draft': bool(translate_patient_note(record.get('id'), record.get('notes_patient') or '')),
         })
     return {
         'status': 'lookup_inventory_not_clinical_review',
@@ -90,6 +92,7 @@ def drug_class_inventory(root: Path) -> dict:
         'uk_class_explanation_count': sum(item['uk_class_explanation'] for item in entries),
         'en_class_explanation_draft_count': sum(item['en_class_explanation_draft'] for item in entries),
         'authored_patient_note_count': sum(item['has_authored_patient_note'] for item in entries),
+        'en_current_source_note_draft_count': sum(item['en_current_source_note_draft'] for item in entries),
         'entries': entries,
     }
 

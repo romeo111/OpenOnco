@@ -51,6 +51,7 @@ from ._nszu import lookup_nszu_status, nszu_label
 from ._patient_rationale import build_track_rationale_html as _build_track_rationale_html
 from ._patient_rationale import _fired_rf_ids_from_trace as _patient_fired_rf_ids
 from ._patient_rationale import _first_sentence_ua as _patient_first_sentence
+from ._patient_note_translations import translate_patient_note
 from ._patient_vocabulary import (
     NSZU_PATIENT_LABEL,
     ESCAT_TIER_PATIENT_LABEL,
@@ -3975,7 +3976,10 @@ def _render_track_drugs(
             lay = "medicine for your condition — discuss the details with your doctor" if target_lang == 'en' else "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
         elif target_lang == 'en':
             translated_class = _explain_patient_drug_class(drug_class, target_lang='en') if drug_class else None
-            if translated_class and not authored_note:
+            translated_note = translate_patient_note(drug_id, lay) if authored_note else None
+            if translated_note:
+                lay = translated_note
+            elif translated_class and not authored_note:
                 lay = translated_class
             else:
                 lay = (translated_class + '. ' if translated_class else '') + 'Original source explanation; translation unavailable: ' + lay

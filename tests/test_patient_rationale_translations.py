@@ -9,6 +9,7 @@ from knowledge_base.engine.render import _medicine_form_ua, _regimen_schedule_ua
 from knowledge_base.engine.render import _regimen_tolerability_ua, _render_regimen_tolerability
 from knowledge_base.engine.render import _render_track_drugs
 import pytest
+from knowledge_base.engine._patient_note_translations import PATIENT_NOTE_EN_DRAFT, translate_patient_note
 from knowledge_base.engine._patient_vocabulary import (
     ESCAT_PLAIN_UA, ESCAT_TIER_PATIENT_LABEL, ESCAT_TIER_PATIENT_LABEL_EN,
     PATIENT_VOCABULARY_EN_DRAFT, PATIENT_VOCABULARY_TRANSLATION_STATUS, explain,
@@ -199,6 +200,30 @@ def test_actual_drug_class_renders_explanation_without_changing_record(filename,
         assert 'medicine for your condition' not in html
         assert 'препарат для лікування вашого захворювання' not in html
     assert drug == before
+
+
+@pytest.mark.parametrize('filename', ['cytarabine', 'capecitabine', 'doxorubicin'])
+def test_authored_note_translation_requires_current_source_and_retains_changed_original(filename):
+    from pathlib import Path
+    from html import escape
+    import yaml
+    path = Path(__file__).resolve().parents[1] / 'knowledge_base/hosted/content/drugs' / (filename + '.yaml')
+    drug = yaml.load(path.read_text(encoding='utf-8'), Loader=getattr(yaml, 'CSafeLoader', yaml.SafeLoader))
+    before = deepcopy(drug)
+    translated = translate_patient_note(drug['id'], drug['notes_patient'])
+    assert translated == PATIENT_NOTE_EN_DRAFT[drug['id']][1]
+    assert translate_patient_note(drug['id'], drug['notes_patient'], target_lang='fr') is None
+    track = SimpleNamespace(regimen_data={'components': [{'drug_id': drug['id'], 'route': 'IV'}]})
+    result = SimpleNamespace(disease_id='DIS-AML')
+    html = _render_track_drugs(result, track, {drug['id']: drug}, None, target_lang='en')
+    assert escape(translated) in html
+    assert 'Original source explanation; translation unavailable' not in html
+    assert drug == before
+    drug['notes_patient'] += ' Не змінюйте дозу 0.5 mg.'
+    assert translate_patient_note(drug['id'], drug['notes_patient']) is None
+    html = _render_track_drugs(result, track, {drug['id']: drug}, None, target_lang='en')
+    assert escape(drug['notes_patient'].strip()) in html
+    assert 'Original source explanation; translation unavailable' in html
 
 
 def test_english_drug_class_explanation_retains_authored_patient_note():
