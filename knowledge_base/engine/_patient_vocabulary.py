@@ -518,7 +518,25 @@ _ALL_TABLES: tuple[dict[str, str], ...] = (
 )
 
 
-def explain(term: str) -> Optional[str]:
+PATIENT_VOCABULARY_EN_DRAFT: dict[str, str] = {
+    "inversion": "a DNA segment is reversed; this can also create a gene fusion",
+    "deletion": "a DNA segment is removed; this often causes loss of function",
+    "insertion": "extra nucleotides are inserted into a gene, disrupting protein function",
+    "missense": "one amino acid is replaced by another; protein function may be preserved or disrupted",
+    "nonsense": "a stop signal appears within the gene, causing the protein to end early",
+    "frameshift": "an insertion or deletion shifts the reading frame, changing the resulting protein",
+    "splice site": "a change at an exon–intron boundary disrupts correct protein assembly",
+    "loss-of-function": "the gene does not work; this often affects tumour-suppressor genes such as TP53, PTEN or ATM",
+    "gain-of-function": "the protein is more active than normal; this is typical of oncogenes",
+    "biallelic loss": "both copies of the gene are damaged; the tumour has completely lost this function",
+    "heterozygous": "one copy of the gene is altered and the other is normal",
+    "homozygous": "both copies of the gene are the same; often both are damaged",
+    "mosaic": "the mutation is present in only some cells in the body",
+}
+PATIENT_VOCABULARY_TRANSLATION_STATUS = {"en": "draft_pending_review"}
+
+
+def explain(term: str, *, target_lang: str = "uk") -> Optional[str]:
     """Return plain-UA explanation for a clinical/molecular term, or None.
 
     Lookup order:
@@ -531,13 +549,14 @@ def explain(term: str) -> Optional[str]:
     raw clinician label rather than dropping the term silently."""
     if not term:
         return None
-    for table in _ALL_TABLES:
+    tables = (PATIENT_VOCABULARY_EN_DRAFT,) if target_lang == 'en' else _ALL_TABLES if target_lang == 'uk' else ()
+    for table in tables:
         if term in table:
             return table[term]
     norm = term.strip().lower()
     if not norm:
         return None
-    for table in _ALL_TABLES:
+    for table in tables:
         for k, v in table.items():
             if k.lower() == norm:
                 return v

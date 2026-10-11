@@ -10,6 +10,7 @@ from knowledge_base.engine.render import _regimen_tolerability_ua, _render_regim
 import pytest
 from knowledge_base.engine._patient_vocabulary import (
     ESCAT_PLAIN_UA, ESCAT_TIER_PATIENT_LABEL, ESCAT_TIER_PATIENT_LABEL_EN,
+    PATIENT_VOCABULARY_EN_DRAFT, PATIENT_VOCABULARY_TRANSLATION_STATUS, explain,
 )
 
 
@@ -114,3 +115,15 @@ def test_patient_escat_labels_do_not_claim_personal_regulatory_approval():
     assert 'рандомізованими' in ESCAT_TIER_PATIENT_LABEL['IA']
     assert 'нерандомізованими' in ESCAT_TIER_PATIENT_LABEL['IB']
     assert 'non-randomised' in ESCAT_TIER_PATIENT_LABEL_EN['IB']
+
+
+def test_english_vocabulary_lookup_never_silently_returns_ukrainian():
+    assert PATIENT_VOCABULARY_TRANSLATION_STATUS['en'] == 'draft_pending_review'
+    for term, text in PATIENT_VOCABULARY_EN_DRAFT.items():
+        assert explain(term, target_lang='en') == text
+        assert explain(' ' + term.upper() + ' ', target_lang='en') == text
+        assert explain(term) is not None
+    assert explain('V600E', target_lang='en') is None
+    assert explain('missense', target_lang='fr') is None
+    assert 'may be preserved or disrupted' in explain('missense', target_lang='en')
+    assert 'both copies' in explain('biallelic loss', target_lang='en')

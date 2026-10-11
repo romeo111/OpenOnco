@@ -3638,6 +3638,12 @@ def _render_findings_plain(plan_result: PlanResult, *, target_lang: str = "uk") 
         # заміна валіну на глутамат…"). Falls back to the literal variant
         # string when vocabulary has no entry.
         v_expl = _explain_patient(variant) or _explain_patient(gene) or ""
+        explanation_translated = False
+        if english:
+            translated = _explain_patient(variant, target_lang='en') or _explain_patient(gene, target_lang='en')
+            if translated:
+                v_expl = translated
+                explanation_translated = True
         tier = (h.escat_tier or "").strip().upper()
         tier_label = (ESCAT_TIER_PATIENT_LABEL_EN if english else ESCAT_TIER_PATIENT_LABEL).get(tier, "")
         # Compose a short human paragraph. We render gene + variant
@@ -3648,7 +3654,7 @@ def _render_findings_plain(plan_result: PlanResult, *, target_lang: str = "uk") 
             gene_variant = _PATIENT_VARIANT_LABELS_UA.get(variant, gene_variant)
         bits = [f'<li><strong data-variant-original="{_h(variant)}">{_h(gene_variant)}</strong>']
         if v_expl:
-            qualifier = 'Original Ukrainian explanation; translation unavailable: ' if english else ''
+            qualifier = 'Original Ukrainian explanation; translation unavailable: ' if english and not explanation_translated else ''
             bits.append(f" — {_h(qualifier + v_expl)}")
         if tier_label:
             bits.append(f'. <span class="patient-badge patient-info">{_h(tier_label)}</span>')
