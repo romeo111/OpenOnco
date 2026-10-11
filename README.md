@@ -32,6 +32,9 @@ Patient reports show recorded data-completeness checks before treatment options 
 
 Retained original excerpts in translation drafts carry source-language tags and are protected from automatic translation and abbreviation expansion. Field contracts determine the language; free-form snippets with no declared language use `und` (unknown). Provenance captions are translated separately from the retained text.
 
+Patient rationale distinguishes a record's evidence tier from its clinical review readiness. A missing or false readiness flag produces an explicit pending-review notice and does not present that record as a reviewed reason to choose treatment. This display does not change engine decisions.
+
+
 ## Current repository snapshot
 
 Measured on **2026-10-10** with `python -m knowledge_base.stats --format json`:

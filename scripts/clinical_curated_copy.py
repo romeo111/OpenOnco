@@ -83,6 +83,12 @@ def safety_notices_for(locale):
     return {source: translations[index] for source, translations in SAFETY_NOTICES.items()}
 
 UI_MESSAGES = {
+    'Clinical review of this biomarker record is pending.': (
+        'La revisión clínica de este registro de biomarcador está pendiente.',
+        'A revisão clínica deste registo de biomarcador está pendente.',
+        'Die klinische Prüfung dieses Biomarker-Eintrags steht noch aus.',
+        'La vérification clinique de cette entrée de biomarqueur est en attente.',
+    ),
     'Original Ukrainian explanation; translation unavailable:': ('Explicación original en ucraniano; traducción no disponible:', 'Explicação original em ucraniano; tradução indisponível:', 'Ukrainische Originalerläuterung; Übersetzung nicht verfügbar:', 'Explication originale en ukrainien ; traduction indisponible :'),
     'Original source explanation; translation unavailable:': ('Explicación de la fuente original; traducción no disponible:', 'Explicação da fonte original; tradução indisponível:', 'Erläuterung aus der Originalquelle; Übersetzung nicht verfügbar:', 'Explication de la source originale ; traduction indisponible :'),
     'Original Ukrainian text; translation unavailable:': ('Texto original en ucraniano; traducción no disponible:', 'Texto original em ucraniano; tradução indisponível:', 'Ukrainischer Originaltext; Übersetzung nicht verfügbar:', 'Texte original en ukrainien ; traduction indisponible :'),

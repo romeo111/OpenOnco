@@ -333,3 +333,47 @@ def test_english_drug_card_gloss_preserves_examples_and_plan_input(drug_class, e
     assert expected in html
     assert 'translation unavailable' not in html
     assert drug == before
+
+
+@pytest.mark.parametrize("lang", ["en", "uk"])
+@pytest.mark.parametrize("tier", ["IA", "IB", "IIA", "IIB"])
+@pytest.mark.parametrize("representation", ["dict", "object"])
+@pytest.mark.parametrize("ready", [True, False, None])
+def test_rationale_uses_selected_hit_review_status(lang, tier, representation, ready):
+    selected = {"biomarker_id": "BIO-BRAF", "variant_qualifier": "V600E", "escat_tier": tier}
+    if ready is not None:
+        selected["clinical_use_ready"] = ready
+    other = {"biomarker_id": "BIO-KRAS", "escat_tier": tier, "clinical_use_ready": not ready}
+    if representation == "object":
+        selected, other = SimpleNamespace(**selected), SimpleNamespace(**other)
+    result = SimpleNamespace(plan=SimpleNamespace(variant_actionability=[selected, other]), trace=[], kb_resolved={})
+    before = deepcopy(result.__dict__)
+    track = SimpleNamespace(is_default=False)
+    bullets = build_track_rationale(result, track, target_lang=lang)
+    output = build_track_rationale_html(result, track, target_lang=lang)
+    assert "BRAF V600E" in bullets[0]
+    assert "KRAS" not in bullets[0]
+    assert ('data-biomarker-review="pending"' in output) == (ready is not True)
+    if ready is not True:
+        assert ("pending" if lang == "en" else "не завершена") in bullets[0]
+        assert "for choosing this treatment" not in bullets[0]
+        assert "користь цього варіанту" not in bullets[0]
+    elif lang == "en":
+        assert ("strong evidence" if tier in {"IA", "IB"} else "moderate evidence") in bullets[0]
+    assert result.__dict__ == before
+
+
+@pytest.mark.parametrize("locale", ["es", "pt", "de", "fr"])
+def test_native_rationale_preserves_hit_and_translates_review_notice(locale):
+    from scripts.build_clinical_locales import localize_page
+    from scripts.clinical_curated_copy import messages_for
+    result = SimpleNamespace(plan=SimpleNamespace(variant_actionability=[
+        {"biomarker_id": "BIO-BRAF", "variant_qualifier": "V600E", "escat_tier": "IA", "clinical_use_ready": False}
+    ]), trace=[], kb_resolved={})
+    output = build_track_rationale_html(result, SimpleNamespace(is_default=False), target_lang="en")
+    catalog = messages_for(locale)
+    localized = localize_page('<html lang="en"><body>' + output + '</body></html>', locale, 'cases/test.patient.html', set(), catalog)
+    assert catalog['Clinical review of this biomarker record is pending.'] in localized
+    assert 'data-biomarker-review="pending"' in localized
+    assert 'BRAF V600E' in localized
+    assert 'tier IA' in localized

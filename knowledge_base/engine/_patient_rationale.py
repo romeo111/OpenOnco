@@ -41,6 +41,9 @@ from typing import Any
 _STRONG_TIERS: frozenset[str] = frozenset({"IA", "IB"})
 _MID_TIERS: frozenset[str] = frozenset({"IIA", "IIB"})
 
+_REVIEW_PENDING_EN = "Clinical review of this biomarker record is pending. "
+_REVIEW_PENDING_UK = "Клінічна перевірка цього запису біомаркера ще не завершена. "
+
 
 _FALLBACK_DEFAULT_UA = (
     "Цей варіант рекомендовано як стандарт для вашого діагнозу на "
@@ -194,7 +197,17 @@ def build_track_rationale(plan_result: Any, track: Any, *, target_lang: str = "u
         label = _gene_variant_label(strong_hit)
         tier = _hit_tier(strong_hit)
         if label:
-            if tier in _STRONG_TIERS:
+            ready = (strong_hit.get("clinical_use_ready", False)
+                     if isinstance(strong_hit, dict)
+                     else getattr(strong_hit, "clinical_use_ready", False))
+            if not ready:
+                bullets.append(
+                    (_REVIEW_PENDING_EN + f"The report records {label} with evidence tier {tier}. "
+                     "This unreviewed record does not establish that this treatment is appropriate for you."
+                     if english else _REVIEW_PENDING_UK + f"У звіті записано {label} з рівнем доказів {tier}. "
+                     "Неперевірений запис не підтверджує, що це лікування підходить саме вам.")
+                )
+            elif tier in _STRONG_TIERS:
                 bullets.append(
                     (f"Because {label} was found, it provides strong evidence for choosing this treatment."
                      if english else f"Бо у вас знайдено {label} — це сильний доказовий "
@@ -277,6 +290,11 @@ def build_track_rationale_html(plan_result: Any, track: Any, *, target_lang: str
         if target_lang == 'en' and bullet.startswith(original_prefix):
             content = (html.escape(original_prefix)
                        + f'<span lang="uk" data-original-source>{html.escape(bullet[len(original_prefix):])}</span>')
+        pending_prefix = _REVIEW_PENDING_EN if target_lang == "en" else _REVIEW_PENDING_UK
+        if bullet.startswith(pending_prefix):
+            content = (f'<span class="translation-fallback" data-biomarker-review="pending">'
+                       f'{html.escape(pending_prefix.strip())}</span> '
+                       + html.escape(bullet[len(pending_prefix):]))
         items.append(f'<li>{content}</li>')
     return f'<ul>{"".join(items)}</ul>'
 

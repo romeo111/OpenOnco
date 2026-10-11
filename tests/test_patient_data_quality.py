@@ -100,3 +100,20 @@ def test_generated_patient_quality_is_consistent_across_all_languages():
             reference = inventory
         else:
             assert inventory == reference, prefix
+
+
+def test_generated_rationale_review_notices_match_across_languages():
+    reference = None
+    for prefix in ('', 'ukr', 'es', 'pt', 'de', 'fr'):
+        inventory = {}
+        for path in (ROOT / 'docs' / prefix / 'cases').glob('*.patient.html'):
+            document = path.read_text(encoding='utf-8')
+            inventory[path.name] = document.count('data-biomarker-review="pending"')
+            if inventory[path.name]:
+                assert 'data-clinical-review="pending"' in document, path
+        assert inventory, prefix
+        assert any(inventory.values()), prefix
+        if reference is None:
+            reference = inventory
+        else:
+            assert inventory == reference, prefix
