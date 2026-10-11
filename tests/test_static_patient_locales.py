@@ -8,6 +8,46 @@ from scripts.build_clinical_locales import localize_page
 from scripts.clinical_curated_copy import messages_for
 
 
+def test_excluded_scenarios_are_removed_in_both_modes_and_all_languages(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    monkeypatch.setattr(site, 'CASES', [
+        SimpleNamespace(case_id='public', visibility='public'),
+        SimpleNamespace(case_id='internal', visibility='internal'),
+        SimpleNamespace(case_id='quarantined', visibility='quarantined'),
+    ])
+    preserved = []
+    for prefix in ('', 'ukr', 'es', 'pt', 'de', 'fr'):
+        directory = tmp_path / prefix / 'cases'
+        directory.mkdir(parents=True)
+        for case in ('public', 'internal', 'quarantined'):
+            for suffix in ('.html', '.patient.html'):
+                path = directory / (case + suffix)
+                path.write_text('synthetic ' + case, encoding='utf-8')
+                if case == 'public':
+                    preserved.append(path)
+        unrelated = directory / 'internal-followup.html'
+        unrelated.write_text('unrelated', encoding='utf-8')
+        preserved.append(unrelated)
+    assert site._remove_excluded_case_pages(tmp_path) == 24
+    assert site._remove_excluded_case_pages(tmp_path) == 0
+    assert set(tmp_path.rglob('*.html')) == set(preserved)
+    assert all(p.read_text(encoding='utf-8') in {'synthetic public', 'unrelated'} for p in preserved)
+
+
+def test_published_artifacts_have_no_internal_or_quarantined_case_twins():
+    excluded = {c.case_id for c in site.CASES if c.visibility != 'public'}
+    assert excluded
+    sitemap = (site.REPO_ROOT / 'docs/sitemap.xml').read_text(encoding='utf-8')
+    for case_id in excluded:
+        for suffix in ('.html', '.patient.html'):
+            assert f'/cases/{case_id}{suffix}' not in sitemap
+    for prefix in ('', 'ukr', 'es', 'pt', 'de', 'fr'):
+        for case_id in excluded:
+            for suffix in ('.html', '.patient.html'):
+                path = site.REPO_ROOT / 'docs' / prefix / 'cases' / (case_id + suffix)
+                assert not path.exists(), path
+
+
 def test_root_patient_twin_uses_english_draft_and_site_navigation(tmp_path, monkeypatch):
     case = next(c for c in site.CASES if c.case_id == 'aitl-cd30-negative')
     profile = site.EXAMPLES / case.file

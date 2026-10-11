@@ -826,20 +826,16 @@ def _example_sort_key(entry: dict) -> tuple:
 
 def _remove_excluded_case_pages(output_dir: Path) -> int:
     """Delete stale pages for internal or quarantined scenarios."""
+    from scripts.site_locales import LOCALES
     removed = 0
     non_public_case_ids = {c.case_id for c in CASES if c.visibility != "public"}
     for case_id in sorted(non_public_case_ids):
-        for rel_path in (
-            Path("cases") / f"{case_id}.html",
-            Path("ukr") / "cases" / f"{case_id}.html",
-            # PATIENT_MODE_SPEC §3 — patient twin shares the /cases/
-            # directory but uses a `.patient.html` suffix.
-            Path("cases") / f"{case_id}.patient.html",
-        ):
-            path = output_dir / rel_path
-            if path.exists():
-                path.unlink()
-                removed += 1
+        for prefix, _, _ in LOCALES.values():
+            for suffix in ('.html', '.patient.html'):
+                path = output_dir / prefix / 'cases' / f'{case_id}{suffix}'
+                if path.exists():
+                    path.unlink()
+                    removed += 1
     return removed
 
 
