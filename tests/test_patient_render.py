@@ -1272,6 +1272,26 @@ def test_english_patient_sections_preserve_watchpoints_and_question_selection():
     assert result.plan.model_dump() == before
 
 
+@pytest.mark.parametrize('target_lang', ['uk', 'en'])
+def test_missing_actionability_does_not_imply_negative_molecular_tests(target_lang):
+    from knowledge_base.engine.render import _render_findings_plain
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    result.plan.variant_actionability = []
+    before = result.plan.model_dump()
+    rendered = _render_findings_plain(result, target_lang=target_lang)
+    if target_lang == 'en':
+        assert 'does not establish that molecular test results are negative' in rendered
+        assert 'review the original results' in rendered
+        assert 'No significant molecular targets' not in rendered
+        assert 'standard treatment remains an option' not in rendered
+    else:
+        assert 'не підтверджує, що результати молекулярних аналізів негативні' in rendered
+        assert 'оригінали результатів' in rendered
+        assert 'поки не виявлено' not in rendered
+        assert 'залишається повністю чинною' not in rendered
+    assert result.plan.model_dump() == before
+
+
 def test_english_findings_preserve_variants_and_mark_untranslated_explanations():
     from knowledge_base.engine.render import _render_findings_plain, _patient_disease_label, _patient_drug_label
     result = _build_synthetic_braf_v600e_mcrc_plan()

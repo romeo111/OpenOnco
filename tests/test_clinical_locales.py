@@ -14,6 +14,26 @@ from serverless import clinical_question as cq
 
 
 @pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
+@pytest.mark.parametrize('source_lang', ['uk', 'en'])
+def test_missing_molecular_interpretation_notice_is_localized_without_changing_data(locale, source_lang):
+    from types import SimpleNamespace
+    from knowledge_base.engine.render import _render_findings_plain
+    from scripts.site_translation_catalog import load_catalog
+    result = SimpleNamespace(disease_id='DIS-SYNTHETIC', plan=SimpleNamespace(variant_actionability=[]))
+    paragraph = _render_findings_plain(result, target_lang=source_lang)
+    source_text = paragraph.removeprefix('<p>').removesuffix('</p>')
+    catalog = load_catalog(locale)
+    source = '<html lang="en"><head><title>Test</title></head><body><main>' + paragraph + '<input value="positive" data-biomarker-id="BIO-SYNTHETIC"></main></body></html>'
+    output = localize_page(source, locale, 'cases/synthetic.patient.html', set(), catalog)
+    assert catalog[source_text] != source_text
+    assert catalog[source_text] in output
+    assert source_text not in output
+    assert 'value="positive"' in output
+    assert 'data-biomarker-id="BIO-SYNTHETIC"' in output
+    assert 'pending_clinical_review' in output
+
+
+@pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
 def test_overlay_preserves_executable_values_and_source_ids(locale):
     source = '''<!doctype html><html lang="en"><head><title>Clinical draft</title></head>
 <body><main><h1>Clinical draft</h1><p>Use 10 mg/m²; SRC-EXAMPLE-2026.</p>
@@ -232,7 +252,7 @@ def test_curated_safety_notices_preserve_english_negations_and_identifiers():
     from scripts.clinical_curated_copy import safety_notices_for
     for locale in ('es', 'pt', 'de', 'fr'):
         notices = safety_notices_for(locale)
-        assert len(notices) == 6
+        assert len(notices) == 7
         assert all(acceptable_draft(source, translated, locale) for source, translated in notices.items())
         assert all('CHARTER' in translated for source, translated in notices.items() if 'CHARTER' in source)
 

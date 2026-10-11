@@ -3617,15 +3617,14 @@ def _render_findings_plain(plan_result: PlanResult, *, target_lang: str = "uk") 
             )
         if english:
             return (
-                '<p>No significant molecular targets have yet been identified in the available test results. '
-                'This does not mean that treatment is impossible; standard treatment remains an option. '
-                'If your tumour has not undergone molecular testing, discuss this with your doctor.</p>'
+                '<p>This report contains no molecular-target interpretation linked to treatment. '
+                'This does not establish that molecular test results are negative or that no targets exist. '
+                'Ask your doctor to review the original results and whether further testing is appropriate.</p>'
             )
         return (
-            '<p>За результатами наявних аналізів значущих молекулярних мішеней '
-            "поки не виявлено. Це не означає, що лікування неможливе — стандартна терапія "
-            "залишається повністю чинною. Якщо у вас ще не було молекулярного тестування "
-            "пухлини, обговоріть це з лікарем.</p>"
+            '<p>У цьому звіті немає інтерпретації молекулярних мішеней, пов’язаної з лікуванням. '
+            'Це не підтверджує, що результати молекулярних аналізів негативні або що мішеней немає. '
+            'Обговоріть із лікарем оригінали результатів і те, чи потрібне додаткове тестування.</p>'
         )
 
     parts: list[str] = ['<ul class="findings-list">']

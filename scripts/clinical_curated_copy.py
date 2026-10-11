@@ -33,6 +33,12 @@ TERMINOLOGY_SOURCES = {
 # Safety notices are compared sentence by sentence with their English source.
 # They remain labeled pending clinical review on localized pages.
 SAFETY_NOTICES = {
+    'This report contains no molecular-target interpretation linked to treatment. This does not establish that molecular test results are negative or that no targets exist. Ask your doctor to review the original results and whether further testing is appropriate.': (
+        'Este informe no contiene una interpretación de las dianas moleculares vinculada al tratamiento. Esto no demuestra que los resultados de las pruebas moleculares sean negativos ni que no existan dianas. Pida a su médico que revise los resultados originales y valore si son adecuadas otras pruebas.',
+        'Este relatório não contém uma interpretação de alvos moleculares relacionada com o tratamento. Isto não demonstra que os resultados dos testes moleculares sejam negativos ou que não existam alvos. Peça ao seu médico que reveja os resultados originais e avalie se são apropriados testes adicionais.',
+        'Dieser Bericht enthält keine Interpretation molekularer Zielstrukturen im Hinblick auf die Behandlung. Daraus lässt sich nicht ableiten, dass molekulare Testergebnisse negativ sind oder keine Zielstrukturen vorhanden sind. Bitten Sie Ihre Ärztin oder Ihren Arzt, die Originalbefunde zu prüfen und zu beurteilen, ob weitere Tests sinnvoll sind.',
+        'Ce rapport ne présente pas d’interprétation des cibles moléculaires en lien avec le traitement. Cela ne permet pas de conclure que les résultats des analyses moléculaires sont négatifs ou qu’il n’existe pas de cible. Demandez à votre médecin d’examiner les résultats originaux et de déterminer si des analyses supplémentaires sont appropriées.',
+    ),
     'Outpatient oncology treatment planning to support tumor-board discussion. Not a medical device; not for autonomous clinical decision-making.': (
         'Planificación del tratamiento oncológico ambulatorio para apoyar la deliberación del comité de tumores. No es un dispositivo médico; no está destinado a tomar decisiones clínicas de forma autónoma.',
         'Planeamento do tratamento oncológico em ambulatório para apoiar a discussão na reunião multidisciplinar de oncologia. Não é um dispositivo médico; não se destina à tomada autónoma de decisões clínicas.',
@@ -203,6 +209,9 @@ def messages_for(locale):
     index = ('es', 'pt', 'de', 'fr').index(locale)
     catalog.update({source: values[index] for source, values in UI_MESSAGES.items()})
     catalog.update(safety_notices_for(locale))
+    # Static patient examples retain a Ukrainian source body; dynamic
+    # English reports use the canonical safety notice above.
+    catalog['У цьому звіті немає інтерпретації молекулярних мішеней, пов’язаної з лікуванням. Це не підтверджує, що результати молекулярних аналізів негативні або що мішеней немає. Обговоріть із лікарем оригінали результатів і те, чи потрібне додаткове тестування.'] = catalog['This report contains no molecular-target interpretation linked to treatment. This does not establish that molecular test results are negative or that no targets exist. Ask your doctor to review the original results and whether further testing is appropriate.']
     catalog.update({source: values[index] for source, values in SHOWCASE_TITLES.items()})
     for source, values in DISEASE_TITLES.items():
         catalog[source] = values[index]
