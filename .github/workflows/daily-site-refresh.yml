@@ -53,6 +53,7 @@ jobs:
       - name: Validate knowledge base before publication
         run: |
           python scripts/audit_validator.py --human
+          python -m scripts.audit_patient_localization --check-note-drafts
 
       # Per-NCT ctgov cache for the cited-trials status section (PR #595,
       # #596). Caches `knowledge_base/hosted/content/cache/ctgov_studies/`
@@ -82,10 +83,17 @@ jobs:
         run: |
           python -m scripts.build_site
 
+      - name: Verify generated transport and browser behavior before publication
+        run: |
+          python -m scripts.audit_core_transport
+          node tests/browser_bundle_versions.cjs
+          node tests/browser_engine_loading.cjs
+          node tests/browser_report_export.cjs
+
       - name: Check whether docs/ actually changed
         id: diff
         run: |
-          if git diff --quiet docs/; then
+          if [ -z "$(git status --porcelain --untracked-files=all -- docs/)" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No changes — KB unchanged since yesterday's build."
           else
@@ -137,8 +145,12 @@ jobs:
 
       - name: Summary
         if: always()
+        env:
+          REFRESH_JOB_STATUS: ${{ job.status }}
         run: |
-          if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
+          if [ "$REFRESH_JOB_STATUS" != "success" ]; then
+            echo "Refresh did not complete successfully; inspect the failed or cancelled step."
+          elif [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
             echo "✓ Site refreshed: ${{ steps.stats.outputs.sources }} sources, ${{ steps.stats.outputs.refs }}+ refs, ${{ steps.stats.outputs.pages }} pages."
           else
             echo "✓ No changes — site already in sync with KB."
