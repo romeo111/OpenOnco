@@ -498,8 +498,7 @@ def test_examples_payload_flags_patient_mode(site_dir: Path):
 
 def test_curated_treatment_examples_have_patient_twin(site_dir: Path):
     """Every treatment-shape curated example has a patient twin built at
-    /cases/<id>.patient.html (UA-only per PATIENT_MODE_SPEC §3 — a single
-    file serves both EN and UA visitors)."""
+    /cases/<id>.patient.html in English, with a Ukrainian sibling."""
     payload = json.loads((site_dir / "examples.json").read_text(encoding="utf-8"))
     treatment_ids = [
         e["case_id"] for e in payload if e.get("has_patient_mode")
@@ -545,9 +544,12 @@ def test_patient_twin_has_required_anchors(site_dir: Path):
         'class="patient-disclaimer"',
     ):
         assert anchor in body, f"Patient twin missing anchor: {anchor}"
-    # Sibling chip back to the UA clinician twin so deep-linked patient
-    # pages round-trip to the doctor view
-    assert "/ukr/cases/aitl-cd30-negative.html" in body
+    assert '<html lang="en">' in body
+    assert 'data-translation-status="draft-partial"' in body
+    assert '/cases/aitl-cd30-negative.html' in body
+    ukrainian = (site_dir / 'ukr/cases/aitl-cd30-negative.patient.html').read_text(encoding='utf-8')
+    assert '<html lang="uk">' in ukrainian
+    assert 'Ваш персональний план' in ukrainian
 
 
 def test_try_html_wires_patient_mode_for_examples(site_dir: Path):

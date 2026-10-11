@@ -83,6 +83,16 @@ def safety_notices_for(locale):
     return {source: translations[index] for source, translations in SAFETY_NOTICES.items()}
 
 UI_MESSAGES = {
+    'Your oncology plan': ('Su plan oncológico', 'O seu plano oncológico', 'Ihr onkologischer Plan', 'Votre plan oncologique'),
+    'What was found': ('Qué se ha encontrado', 'O que foi encontrado', 'Was festgestellt wurde', 'Ce qui a été trouvé'),
+    'What this means for treatment': ('Qué significa esto para el tratamiento', 'O que isto significa para o tratamento', 'Was dies für die Behandlung bedeutet', 'Ce que cela signifie pour le traitement'),
+    'Technical version for your doctor →': ('Versión técnica para su médico →', 'Versão técnica para o seu médico →', 'Fachliche Version für Ihre Ärztin oder Ihren Arzt →', 'Version technique pour votre médecin →'),
+    'English translation draft — incomplete and awaiting clinical/language review. Some explanations remain in their original language and are marked. Consult the original report and your doctor.': (
+        'Borrador de traducción al inglés: incompleto y pendiente de revisión clínica y lingüística. Algunas explicaciones se conservan en su idioma original y están marcadas. Consulte el informe original y a su médico.',
+        'Tradução preliminar para inglês: incompleta e a aguardar revisão clínica e linguística. Algumas explicações permanecem no idioma original e estão assinaladas. Consulte o relatório original e o seu médico.',
+        'Englischer Übersetzungsentwurf: unvollständig und noch klinisch und sprachlich zu prüfen. Einige Erläuterungen bleiben in ihrer Originalsprache und sind gekennzeichnet. Lesen Sie den Originalbericht und sprechen Sie mit Ihrer Ärztin oder Ihrem Arzt.',
+        'Traduction provisoire en anglais : incomplète et en attente de vérification clinique et linguistique. Certaines explications restent dans leur langue d’origine et sont signalées. Consultez le rapport original et votre médecin.',
+    ),
     'Interpretation requires clinical review': (
         'La interpretación requiere revisión clínica',
         'A interpretação requer revisão clínica',

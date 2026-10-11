@@ -7556,10 +7556,12 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         head_assets += SITE_FAVICON_LINK + "\n"
 
     out = rendered_html.replace("</head>", head_assets + topbar_style + "</head>", 1)
-    out = out.replace('<div class="page">',
+    container = ('<div class="page">' if '<div class="page">' in out
+                 else '<div class="patient-report">')
+    out = out.replace(container,
                       topbar_html + sub_bar_html
                       + f'<div class="example-verification no-print">{verification_note}</div>'
-                      + '<div class="page">', 1)
+                      + container, 1)
     return out
 
 
@@ -10629,8 +10631,8 @@ def _build_all_cases_parallel(
     the import cost across ~50 cases per worker. On Windows (spawn) this
     cuts the 99×2-case build from ~12 min serial to ~2 min on 4 cores.
 
-    Patient twins are UA-only (one file per case) per PATIENT_MODE_SPEC §3
-    ("plain-Ukrainian simplified report"). Diagnostic profiles are skipped
+    Root patient twins use the English review-draft renderer; Ukrainian
+    twins are emitted by the Ukrainian case pass. Diagnostic profiles are skipped
     in the patient pass — the worker emits path=None and the result is
     filtered out of the returned list.
     """
@@ -10673,7 +10675,13 @@ def _build_all_cases_parallel(
     else:
         try:
             with ProcessPoolExecutor(max_workers=n_workers) as ex:
-                results = collect(ex.map(_build_one_case_worker, tasks, chunksize=4))
+                def phased_results():
+                    # The English clinician pass also writes patient twins.
+                    # Finish it before the curated patient pass adds sibling
+                    # links, so two workers cannot overwrite the same file.
+                    for batch in (tasks[:2 * len(public_cases)], tasks[2 * len(public_cases):]):
+                        yield from ex.map(_build_one_case_worker, batch, chunksize=4)
+                results = collect(phased_results())
         except (OSError, PermissionError):
             # Some sandboxed Windows runners forbid multiprocessing pipe
             # creation. Serial rendering is slower but keeps the static build
@@ -10731,16 +10739,11 @@ def build_one_case(case: CaseEntry, output_dir: Path,
 def build_one_case_patient(
     case: CaseEntry, output_dir: Path,
 ) -> Path | None:
-    """Render the patient-mode twin for one treatment-shape case.
+    """Render the root English review-draft twin for a treatment case.
 
-    Patient mode is treatment-only per PATIENT_MODE_SPEC §3; diagnostic
-    profiles return None (caller skips them). Output is UA-text — a
-    single file at ``cases/<id>.patient.html`` serves both EN and UA
-    visitors because the patient bundle is defined as "plain Ukrainian
-    simplified report" in PATIENT_MODE_SPEC §3 (not a translation of
-    the clinician brief into the visitor's UI language). The sibling
-    chip rendered into the HTML body points to the UA clinician twin
-    so a deep-linked patient page round-trips to the UA doctor view.
+    Diagnostic profiles return None. Ukrainian patient twins live under
+    ukr/cases; the root English twin links to the matching English doctor
+    view. Untranslated authored content remains explicitly marked.
     """
     patient_path = EXAMPLES / case.file
     patient = json.loads(patient_path.read_text(encoding="utf-8"))
@@ -10756,13 +10759,11 @@ def build_one_case_patient(
     html = render_plan_html(
         result,
         mdt=mdt,
-        target_lang="uk",
+        target_lang="en",
         mode="patient",
-        sibling_link=f"/ukr/cases/{case.case_id}.html",
+        sibling_link=f"/cases/{case.case_id}.html",
     )
-    # UA wrapper around the UA body so the surrounding chrome (top-bar,
-    # case-bar) matches the language of the patient report itself.
-    wrapped = _wrap_case_html(html, case, target_lang="uk")
+    wrapped = _wrap_case_html(html, case, target_lang="en")
     out_path = output_dir / "cases" / f"{case.case_id}.patient.html"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(wrapped, encoding="utf-8")
