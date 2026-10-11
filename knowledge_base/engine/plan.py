@@ -374,9 +374,12 @@ def _build_prevention_fda_compliance(
                 source_ids.add(sid)
 
     sources_summary: list[str] = []
+    source_links: dict[str, str] = {}
     for sid in sorted(source_ids):
         srec = _resolve(entities, sid)
         if srec:
+            if isinstance(srec.get("url"), str):
+                source_links[sid] = srec["url"]
             sources_summary.append(
                 f"{sid}: {srec.get('title', '')} ({srec.get('version', '')})"
             )
@@ -436,6 +439,7 @@ def _build_prevention_fda_compliance(
             "presented for HCP review (KSS §20.2)."
         ),
         data_sources_summary=sources_summary,
+        source_links=source_links,
         data_limitations=limitations,
         automation_bias_warning=(
             "Both prevention options below are presented for review. The "
@@ -778,9 +782,12 @@ def _build_fda_compliance(
                 source_ids.add(s)
 
     sources_summary: list[str] = []
+    source_links: dict[str, str] = {}
     for sid in sorted(source_ids):
         srec = _resolve(entities, sid)
         if srec:
+            if isinstance(srec.get("url"), str):
+                source_links[sid] = srec["url"]
             sources_summary.append(f"{sid}: {srec.get('title', '')} ({srec.get('version', '')})")
         else:
             sources_summary.append(f"{sid}: (not in KB)")
@@ -819,6 +826,7 @@ def _build_fda_compliance(
             "set authored by clinical reviewers."
         ),
         data_sources_summary=sources_summary,
+        source_links=source_links,
         data_limitations=limitations,
         automation_bias_warning=(
             "Both treatment options below are presented for review. The "

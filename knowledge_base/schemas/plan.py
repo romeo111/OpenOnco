@@ -75,6 +75,7 @@ class FDAComplianceMetadata(Base):
     patient_population_match: str
     algorithm_summary: str
     data_sources_summary: list[str] = Field(default_factory=list)
+    source_links: dict[str, str] = Field(default_factory=dict)
     data_limitations: list[str] = Field(default_factory=list)
     automation_bias_warning: Optional[str] = None
     time_critical: bool = False  # if true, falls outside non-device CDS carve-out

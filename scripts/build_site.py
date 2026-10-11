@@ -5045,6 +5045,7 @@ let currentResultMode = 'clinician';
 // after a plan has been shown, which re-enables Generate so the user can
 // recompute against the modified profile.
 let planSource = null;
+let reportReady = false;
 let planDirty = false;
 let activeExampleCaseId = null;
 let activeExampleHasPatient = false;
@@ -5240,7 +5241,7 @@ function downloadPdf() {{
   // The render layer ships A4-print-friendly CSS (@page + @media print)
   // so the iframe content paginates cleanly without any extra deps.
   if (uiBusy || generating) return;
-  if (planSource == null) return;
+  if (planSource == null || !reportReady) return;
   // Modal must be visible so iframe contentWindow is fully laid out and
   // print() picks up the right document.
   const wasHidden = planModal && planModal.hidden;
@@ -5288,7 +5289,9 @@ else:
 html
 `);
       resultFrame.removeAttribute('src');
+      const frameReady = waitForFrameLoad();
       resultFrame.srcdoc = html;
+      await frameReady;
       currentResultMode = newMode;
       highlightModeButtons();
     }} catch (e) {{
@@ -5301,7 +5304,7 @@ html
 
 function downloadHtml() {{
   if (uiBusy || generating) return;
-  if (planSource == null) return;
+  if (planSource == null || !reportReady) return;
   const displayedDocument = resultFrame.contentDocument;
   const translatedDisplay = displayedDocument && displayedDocument.documentElement.dataset.translationLocale;
   let html = translatedDisplay
@@ -5364,7 +5367,9 @@ else:
 html
 `);
       resultFrame.removeAttribute('src');
+      const frameReady = waitForFrameLoad();
       resultFrame.srcdoc = html;
+      await frameReady;
       currentResultLang = newLang;
       highlightLangButtons();
     }} catch (e) {{
@@ -5377,19 +5382,29 @@ html
 }}
 
 function waitForFrameLoad(timeoutMs = 12000) {{
-  if (!resultFrame) return Promise.resolve();
-  return new Promise(resolve => {{
+  reportReady = false;
+  updateWorkflowControls();
+  if (!resultFrame) return Promise.reject(new Error('Report frame unavailable.'));
+  return new Promise((resolve, reject) => {{
     let done = false;
-    const finish = () => {{
+    const finish = error => {{
       if (done) return;
       done = true;
-      resultFrame.removeEventListener('load', finish);
-      resultFrame.removeEventListener('error', finish);
-      resolve();
+      clearTimeout(timer);
+      resultFrame.removeEventListener('load', loaded);
+      resultFrame.removeEventListener('error', failed);
+      reportReady = !error;
+      updateWorkflowControls();
+      if (error) {{
+        setError(error.message);
+        reject(error);
+      }} else resolve();
     }};
-    resultFrame.addEventListener('load', finish);
-    resultFrame.addEventListener('error', finish);
-    setTimeout(finish, timeoutMs);
+    const loaded = () => finish(null);
+    const failed = () => finish(new Error('Report failed to load. Please try again.'));
+    resultFrame.addEventListener('load', loaded);
+    resultFrame.addEventListener('error', failed);
+    const timer = setTimeout(() => finish(new Error('Report loading timed out. Please try again.')), timeoutMs);
   }});
 }}
 
@@ -5419,6 +5434,7 @@ async function loadExamplePlan(caseId, patientViewAvailable = true) {{
 
 function clearPlanState() {{
   planSource = null;
+  reportReady = false;
   planDirty = false;
   activeExampleCaseId = null;
   activeExampleHasPatient = false;
@@ -5508,8 +5524,8 @@ function updateWorkflowControls() {{
   let hasInput = false;
   if (mode === 'form') hasInput = !!activeQuest;
   else hasInput = textarea.value.trim().length > 0;
-  const planFresh = planSource !== null && !planDirty;
-  const hasPlan = planSource !== null;
+  const planFresh = reportReady && planSource !== null && !planDirty;
+  const hasPlan = planSource !== null && reportReady;
 
   runBtn.disabled = locked || !hasInput || planFresh;
   viewPlanBtn.disabled = locked || !hasPlan;
@@ -6531,7 +6547,9 @@ html
 `);
       initStageDone('generate');
       resultFrame.removeAttribute('src');
+      const frameReady = waitForFrameLoad();
       resultFrame.srcdoc = html;
+      await frameReady;
       planSource = 'generated';
       planDirty = false;
       activeExampleCaseId = null;

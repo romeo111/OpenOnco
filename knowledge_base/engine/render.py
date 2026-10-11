@@ -31,6 +31,7 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, Union
+from urllib.parse import urlsplit
 
 import yaml
 
@@ -3073,6 +3074,32 @@ def _render_variant_actionability(
 # ── Citation-presence guard helpers (PR5) ───────────────────────────────────
 
 
+def _render_cited_sources(metadata, target_lang: str) -> str:
+    """Keep source labels intact and link only recorded web publication URLs."""
+    if not metadata.data_sources_summary:
+        return ""
+    items = []
+    for summary in metadata.data_sources_summary:
+        source_id = summary.partition(":")[0].strip()
+        label = _h(summary)
+        url = metadata.source_links.get(source_id, "")
+        try:
+            parsed = urlsplit(url)
+            safe = (
+                parsed.scheme in {"http", "https"}
+                and bool(parsed.hostname)
+                and parsed.username is None
+                and parsed.password is None
+                and not any(ord(char) < 32 for char in url)
+            )
+        except ValueError:
+            safe = False
+        if safe:
+            label = f'<a href="{_h(url)}" target="_blank" rel="noopener noreferrer">{label}</a>'
+        items.append(f"<li>{label}</li>")
+    return f"<section><h2>{_h(_t('sources_cited', target_lang))}</h2><ul class='sources'>{''.join(items)}</ul></section>"
+
+
 def _track_citation_dd(
     indication_id: str,
     regimen_label: str,
@@ -3437,9 +3464,7 @@ def render_plan_html(
     body.append(_render_mdt_section(mdt, target_lang))
 
     # Sources
-    if fda.data_sources_summary:
-        items = "".join(f"<li>{_h(s)}</li>" for s in fda.data_sources_summary)
-        body.append(f"<section><h2>Sources cited</h2><ul class='sources'>{items}</ul></section>")
+    body.append(_render_cited_sources(fda, target_lang))
 
     # Cited trials — live status decoration for cited pivotal NCT IDs.
     # Scans the in-progress body for `NCT\d{8}` occurrences and looks up
