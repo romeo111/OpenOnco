@@ -204,6 +204,16 @@ def build_clinical_locales(output_dir: Path, catalog_dir: Path | None = None):
         catalog_path = manifest.parent / f'clinical.{locale}.json'
         if hashlib.sha256(catalog_path.read_bytes()).hexdigest() != inventory[locale]['sha256']:
             raise ValueError(f'Clinical catalog checksum mismatch: {locale}')
+        catalog = json.loads(catalog_path.read_text(encoding='utf-8'))
+        counts = inventory[locale]
+        if (
+            counts.get('strings') != len(catalog)
+            or counts.get('translated_strings') != sum(source != translated for source, translated in catalog.items())
+            or counts.get('original_strings') != sum(source == translated for source, translated in catalog.items())
+        ):
+            raise ValueError(f'Clinical catalog coverage mismatch: {locale}')
+        if counts.get('review') != 'pending_clinical_review':
+            raise ValueError(f'Clinical catalog review status needs evidence: {locale}')
     pages = source_pages(output_dir)
     available = {p.relative_to(output_dir).as_posix() for p in pages}
     published = []

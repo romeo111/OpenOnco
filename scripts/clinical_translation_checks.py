@@ -17,6 +17,21 @@ VARIANTS = re.compile(r'\b(?:p\.)?[A-Z]\d{1,5}[A-Z*]\b')
 ABBREVIATIONS = re.compile(r'\b(?:OpenOnco|CIViC|[Hh]edgehog|MYC|BCL2|BCL6|ATM|CHEK2|PALB2|PTEN|ESMO|NCCN|FDA|EMA|WHO|ESCAT|TKI|PARPi|IHC|ISH|TNM|ECOG|BID|TID|QD|PO|IV|SC|NSCLC|SCLC|AML|ALL|APL|CLL|CML|DLBCL|HRR|PDAC|GIST|[BT](?=-[Cc]ell))\b')
 STATES = re.compile(r'\b[A-Za-z][A-Za-z0-9]*(?:/[A-Za-z0-9]+)*[+-](?!\w)')
 RISK_SYSTEMS = re.compile(r'\b(?:ELN|IPSS-R|IPSS-M|IPSS|IPI|AAIPI|R-ISS|ISS|IGCCCG|IMDC|INRG|INSS|AJCC|FIGO|BCLC)\b', re.I)
+DAILY_EN = re.compile(r'\b(?:once daily|every day|daily)\b', re.I)
+WEEKLY_EN = re.compile(r'\b(?:once weekly|every week|weekly)\b', re.I)
+WEEKLY_TRANSLATION = {
+    'es': re.compile(r'\b(?:una|1)\s+vez\s+por\s+semana\b|\bsemanal(?:mente)?\b', re.I),
+    'pt': re.compile(r'\b(?:uma|1)\s+vez\s+por\s+semana\b|\bsemanal(?:mente)?\b', re.I),
+    'de': re.compile(r'\bwöchentlich\b|\beinmal\s+pro\s+woche\b', re.I),
+    'fr': re.compile(r'\b(?:une|1)\s+(?:seule\s+)?fois\s+par\s+semaine\b|\bhebdomadaire\b', re.I),
+}
+ALTERNATE_INJECTION_SITE = re.compile(r'\bAlternate (?:flanks/buttocks|sides|injection sites)\b', re.I)
+ALTERNATION_TRANSLATION = {
+    'es': re.compile(r'\baltern\w*\b', re.I),
+    'pt': re.compile(r'\baltern\w*\b', re.I),
+    'de': re.compile(r'\bwechsel\w*\b', re.I),
+    'fr': re.compile(r'\baltern\w*\b', re.I),
+}
 
 
 @lru_cache(maxsize=1)
@@ -41,6 +56,12 @@ def acceptable_draft(source, translated, locale, drug_pattern=None):
     if not translated or numeric_tokens(source) != numeric_tokens(translated):
         return False
     if quantity_tokens(source) != quantity_tokens(translated):
+        return False
+    # Numbers alone cannot distinguish a daily dose from a weekly dose.
+    # Likewise, an injection-site rotation instruction must not disappear.
+    if DAILY_EN.search(source) and not WEEKLY_EN.search(source) and WEEKLY_TRANSLATION[locale].search(translated):
+        return False
+    if ALTERNATE_INJECTION_SITE.search(source) and not ALTERNATION_TRANSLATION[locale].search(translated):
         return False
     # Alternatives and machine-readable identifiers cannot be silently
     # collapsed into a shorter, seemingly fluent clinical statement.
