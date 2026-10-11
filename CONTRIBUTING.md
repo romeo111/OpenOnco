@@ -9,6 +9,8 @@ Start with the [README](README.md), [Charter](specs/CHARTER.md) and [development
 3. Run relevant tests and correctness lint; run the KB validator when applicable. Inspect desktop and mobile rendering for visual changes.
 4. Submit a PR describing the problem, resulting behavior and exact verification. Stage only relevant files.
 
+For browser bundle changes, run `python -m scripts.audit_core_transport` against the shipped `docs/` artifacts (or pass `--site-dir <built-site>`). This read-only CI gate requires valid index hashes, identical ZIP/tar.gz member contents, safe regular-file paths, and the preferred compressed core below 4,250,000 bytes. The ZIP remains a compatibility artifact; `scripts.profile_engine_bundle` reports its composition, while the transport audit checks the preferred download. Run the Node bundle/loading/export suites as well. Archive consistency and byte budgets do not prove clinical validity, cold-device speed or offline generation.
+
 See [DEVELOPMENT.md](docs/DEVELOPMENT.md) for commands and deployment. Do not commit credentials, patient artifacts, caches or unrelated generated files. `legacy/` is historical, not the current architecture.
 
 ## Clinical content and translations

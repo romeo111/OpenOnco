@@ -65,6 +65,9 @@ jobs:
           node tests/browser_report_export.cjs
           node tests/browser_bundle_versions.cjs
 
+      - name: Verify preferred core transfer budget and identical clinical content
+        run: python -m scripts.audit_core_transport
+
       - name: Run Python tests
         run: |
           python -m pytest \
@@ -87,6 +90,7 @@ jobs:
             tests/test_public_layout_parity.py \
             tests/test_browser_runtime_content.py \
             tests/test_profile_engine_bundle.py \
+            tests/test_audit_core_transport.py \
             tests/test_safe_yaml_runtime.py \
             tests/test_plan_source_links.py \
             tests/test_patient_render.py \
@@ -101,6 +105,7 @@ jobs:
 
       - name: Check source-bound patient note drafts
         run: python -m scripts.audit_patient_localization --check-note-drafts
+
 
       - name: Lint (blocking critical correctness rules)
         run: |
