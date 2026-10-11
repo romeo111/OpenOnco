@@ -7,8 +7,8 @@
 //      background, so the dropdowns aren't gated on the HTML download.
 // Cache name is stamped with the core bundle's SHA-256 prefix so a KB
 // push automatically rotates the cache key.
-const CACHE_NAME = 'openonco-bundle-l4-7bf13e295094';
-const CORE_STREAM_VERSION = '3a57abb431f1';
+const CACHE_NAME = 'openonco-bundle-l4-634cfa0ff1c9';
+const CORE_STREAM_VERSION = 'adaf1ec8ce7b';
 const PRECACHE = [
   '/manifest.webmanifest',
   '/logo.svg',
