@@ -55,6 +55,18 @@ _FALLBACK_NO_TRACE_UA = (
     "рекомендацій для вашого діагнозу. Деталі — у технічній версії звіту."
 )
 
+_FALLBACK_DEFAULT_EN = (
+    "This option is recommended as a standard for your diagnosis based on clinical guidelines."
+)
+_FALLBACK_ALTERNATIVE_EN = (
+    "This is an alternative option. Discuss with your doctor whether it is suitable for you."
+)
+_FALLBACK_NO_TRACE_EN = (
+    "This option is proposed based on clinical guidelines for your diagnosis. "
+    "See the technical report for details."
+)
+RATIONALE_TRANSLATION_STATUS = {"en": "draft_pending_review"}
+
 
 def _first_sentence_ua(text: str) -> str:
     """Return the first sentence of `text` (split on `. `), trimmed.
@@ -137,7 +149,7 @@ def _rf_definition_ua(rf_dict: Any) -> str:
     return _first_sentence_ua(str(text))
 
 
-def build_track_rationale(plan_result: Any, track: Any) -> list[str]:
+def build_track_rationale(plan_result: Any, track: Any, *, target_lang: str = "uk") -> list[str]:
     """Return up to 4 plain-UA rationale bullets for one track.
 
     Inputs:
@@ -167,6 +179,7 @@ def build_track_rationale(plan_result: Any, track: Any) -> list[str]:
     appropriate fallback. The renderer should ALWAYS get a non-empty
     list back."""
     plan = getattr(plan_result, "plan", None)
+    english = target_lang == "en"
     bullets: list[str] = []
     is_default = bool(getattr(track, "is_default", False))
 
@@ -183,13 +196,15 @@ def build_track_rationale(plan_result: Any, track: Any) -> list[str]:
         if label:
             if tier in _STRONG_TIERS:
                 bullets.append(
-                    f"Бо у вас знайдено {label} — це сильний доказовий "
-                    f"маркер для вибору саме цього лікування."
+                    (f"Because {label} was found, it provides strong evidence for choosing this treatment."
+                     if english else f"Бо у вас знайдено {label} — це сильний доказовий "
+                     f"маркер для вибору саме цього лікування.")
                 )
             else:
                 bullets.append(
-                    f"Бо у вас знайдено {label} — є помірні докази на "
-                    f"користь цього варіанту."
+                    (f"Because {label} was found, there is moderate evidence in favour of this option."
+                     if english else f"Бо у вас знайдено {label} — є помірні докази на "
+                     f"користь цього варіанту.")
                 )
 
     # ── 2. Default-track stable-state line ──────────────────────────
@@ -198,8 +213,11 @@ def build_track_rationale(plan_result: Any, track: Any) -> list[str]:
     )
     if is_default and not fired_rf_ids and len(bullets) < 4:
         bullets.append(
-            "Стандартний варіант рекомендовано, бо немає клінічних "
-            "сигналів-тривоги, що вимагали б іншого підходу."
+            "The algorithm proposed the standard option; no red flags were recorded as triggered in its trace. "
+            "This does not rule out risks or replace assessment by your doctor."
+            if english else
+            "Алгоритм запропонував стандартний варіант; у його журналі немає спрацьованих сигналів-тривоги. "
+            "Це не виключає ризиків і не замінює оцінки лікаря."
         )
 
     # ── 3. Fired-RF lines ───────────────────────────────────────────
@@ -214,20 +232,31 @@ def build_track_rationale(plan_result: Any, track: Any) -> list[str]:
             break
         rf_dict = rf_lookup.get(rf_id) if isinstance(rf_lookup, dict) else None
         text = _rf_definition_ua(rf_dict)
+        original = False
+        if english and isinstance(rf_dict, dict):
+            translated = rf_dict.get("definition")
+            if translated:
+                text = _first_sentence_ua(str(translated))
+            else:
+                original = True
         if text:
-            bullets.append(f"У вас зафіксовано: {text}.")
+            if english:
+                qualifier = " (original Ukrainian text; translation unavailable)" if original else ""
+                bullets.append(f"The algorithm recorded{qualifier}: {text}.")
+            else:
+                bullets.append(f"У вас зафіксовано: {text}.")
             rf_lines_added += 1
 
     # ── 4. Alternative-track fallback ───────────────────────────────
     if not is_default and len(bullets) == 0:
-        bullets.append(_FALLBACK_ALTERNATIVE_UA)
+        bullets.append(_FALLBACK_ALTERNATIVE_EN if english else _FALLBACK_ALTERNATIVE_UA)
     elif not bullets:
-        bullets.append(_FALLBACK_DEFAULT_UA)
+        bullets.append(_FALLBACK_DEFAULT_EN if english else _FALLBACK_DEFAULT_UA)
 
     return bullets[:4]
 
 
-def build_track_rationale_html(plan_result: Any, track: Any) -> str:
+def build_track_rationale_html(plan_result: Any, track: Any, *, target_lang: str = "uk") -> str:
     """Render `build_track_rationale` output as a `<ul>` of `<li>`
     bullets. When the rationale is empty (defensive — should never
     happen), emits the no-trace fallback paragraph instead.
@@ -235,9 +264,10 @@ def build_track_rationale_html(plan_result: Any, track: Any) -> str:
     HTML escapes each bullet so KB content with `<` / `&` / `"` cannot
     break the document or smuggle markup. Renderer composes this output
     directly into the patient bundle."""
-    bullets = build_track_rationale(plan_result, track)
+    bullets = build_track_rationale(plan_result, track, target_lang=target_lang)
     if not bullets:
-        return f'<p class="why-fallback">{html.escape(_FALLBACK_NO_TRACE_UA)}</p>'
+        fallback = _FALLBACK_NO_TRACE_EN if target_lang == "en" else _FALLBACK_NO_TRACE_UA
+        return f'<p class="why-fallback">{html.escape(fallback)}</p>'
     items = "".join(f"<li>{html.escape(b)}</li>" for b in bullets)
     return f"<ul>{items}</ul>"
 
