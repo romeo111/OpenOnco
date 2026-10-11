@@ -854,7 +854,8 @@ function downloadHtml() {
   if (planSource == null || !reportReady) return;
   const displayedDocument = resultFrame.contentDocument;
   const translatedDisplay = displayedDocument && displayedDocument.documentElement.dataset.translationLocale;
-  let html = translatedDisplay
+  const displayedLanguage = translatedDisplay || (displayedDocument && displayedDocument.documentElement.lang) || currentResultLang;
+  let html = displayedDocument
     ? '<!DOCTYPE html>\n' + displayedDocument.documentElement.outerHTML
     : resultFrame.srcdoc;
   if (!html) {
@@ -873,7 +874,7 @@ function downloadHtml() {
   const stamp = new Date().toISOString().slice(0, 10);
   const modePart = (planSource === 'generated' ? '.' + currentResultMode : '');
   a.href = url;
-  a.download = `openonco-plan${modePart}.${translatedDisplay || currentResultLang}.${stamp}.html`;
+  a.download = `openonco-plan${modePart}.${displayedLanguage}.${stamp}.html`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

@@ -142,10 +142,19 @@
         attach();
       }
     };
+    const patientAvailabilityNotices = {"es": "El informe para pacientes está disponible actualmente solo en ucraniano. Para consultar otra lengua, seleccione la vista para profesionales sanitarios.", "pt": "O relatório para pacientes está atualmente disponível apenas em ucraniano. Para consultar outro idioma, selecione a vista para profissionais de saúde.", "de": "Der Patientenbericht ist derzeit nur auf Ukrainisch verfügbar. Für eine andere Sprache wählen Sie die Ansicht für medizinisches Fachpersonal.", "fr": "Le rapport destiné aux patients est actuellement disponible uniquement en ukrainien. Pour consulter une autre langue, choisissez la vue pour les professionnels de santé."};
     const documents = new WeakSet();
     const attachDocument = doc => {
       if (documents.has(doc)) return;
       documents.add(doc);
+      if (doc !== document && doc.documentElement.lang === 'uk' && doc.querySelector('.patient-report')) {
+        const notice = doc.createElement('aside');
+        notice.className = 'patient-language-availability';
+        notice.lang = locale;
+        notice.textContent = patientAvailabilityNotices[locale];
+        notice.style.cssText = 'padding:12px 16px;background:#fff7df;border-left:3px solid #c89032;font:14px/1.5 sans-serif;';
+        doc.body.prepend(notice);
+      }
       if (doc !== document && (!displayTranslatedReport || doc.documentElement.lang === 'uk')) return;
       doc.documentElement.lang = locale;
       doc.documentElement.dataset.translationLocale = locale;
