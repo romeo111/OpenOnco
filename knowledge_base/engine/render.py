@@ -4073,7 +4073,7 @@ def _render_tracks_plain(plan_result: PlanResult, *, target_lang: str = "uk") ->
     return f'<div class="{grid_class}">{"".join(cards)}</div>'
 
 
-def _render_why_section(plan_result: PlanResult) -> str:
+def _render_why_section(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
     """Per-track 'why this for you' section.
 
     Phase 2 emits a placeholder shell so structural anchors exist for
@@ -4081,22 +4081,24 @@ def _render_why_section(plan_result: PlanResult) -> str:
     fills in the bullets from `PlanResult.trace`. The shell still
     surfaces the section heading + per-track cards so the bundle layout
     is stable across phases."""
+    heading = 'Why this plan' if target_lang == 'en' else 'Чому саме цей план'
+    fallback = 'See the technical report for details.' if target_lang == 'en' else 'Деталі — у технічній версії звіту.'
     plan = plan_result.plan
     if plan is None or not plan.tracks:
         return (
             '<section class="why-this-plan">'
-            "<h2>Чому саме цей план</h2>"
-            '<p class="why-fallback">Деталі — у технічній версії звіту.</p>'
+            f"<h2>{heading}</h2>"
+            f'<p class="why-fallback">{fallback}</p>'
             "</section>"
         )
 
     track_count = len(plan.tracks)
     track_blocks: list[str] = []
     for idx, t in enumerate(plan.tracks):
-        title_ua, modifier = _track_label_ua(idx, track_count, t)
+        title_ua, modifier = _track_label_ua(idx, track_count, t, target_lang=target_lang)
         regimen_data = t.regimen_data or {}
         regimen_id = regimen_data.get("id", "") if isinstance(regimen_data, dict) else ""
-        bullets_html = _build_why_bullets_html(plan_result, t)
+        bullets_html = _build_why_bullets_html(plan_result, t, target_lang=target_lang)
         track_blocks.append(
             f'<div class="why-track" data-source-id="{_h(regimen_id)}">'
             f'<p class="track-label">{_h(title_ua)}</p>'
@@ -4106,13 +4108,13 @@ def _render_why_section(plan_result: PlanResult) -> str:
 
     return (
         '<section class="why-this-plan">'
-        "<h2>Чому саме цей план</h2>"
+        f"<h2>{heading}</h2>"
         f'{"".join(track_blocks)}'
         "</section>"
     )
 
 
-def _build_why_bullets_html(plan_result: PlanResult, track) -> str:
+def _build_why_bullets_html(plan_result: PlanResult, track, *, target_lang: str = "uk") -> str:
     """Phase 3: rationale bullets from `PlanResult.trace`.
 
     Delegates to `_patient_rationale.build_track_rationale_html`, which
@@ -4125,7 +4127,7 @@ def _build_why_bullets_html(plan_result: PlanResult, track) -> str:
 
     HTML escaping is handled inside the rationale builder so KB content
     with markup-sensitive characters cannot break the document."""
-    return _build_track_rationale_html(plan_result, track)
+    return _build_track_rationale_html(plan_result, track, target_lang=target_lang)
 
 
 # Urgency tiers from Regimen.between_visit_watchpoints, mapped to the
@@ -4452,6 +4454,59 @@ _PATIENT_DISCLAIMER_PREVENTION_HTML = (
     "<p>Питання про сам інструмент: "
     '<a href="https://github.com/romeo111/OpenOnco/issues">github.com/romeo111/OpenOnco</a></p>'
 )
+
+
+def render_patient_english_draft(plan_result: PlanResult) -> str:
+    """Review candidate only; untranslated authored text remains visibly marked.
+
+    Kept separate from the production patient renderer until complete coverage
+    and review. This never changes the underlying clinical plan.
+    """
+    plan = plan_result.plan
+    prevention = plan_result.disease_id is None and (plan is None or plan.algorithm_id is None)
+    title = 'Your prevention plan' if prevention else 'Your oncology plan'
+    notice = (
+        '<aside class="patient-badge patient-warn" data-translation-status="draft-partial">'
+        'English translation draft — incomplete and awaiting clinical/language review. '
+        'Some explanations remain in their original language and are marked. '
+        'Consult the original report and your doctor.</aside>'
+    )
+    if plan is None:
+        body = notice + '<p>There is not yet enough information to build a plan. Ask your doctor to clarify the missing information.</p>'
+    else:
+        label = 'Identified risk factor:' if prevention else 'Diagnosis:'
+        meaning = 'What this means for prevention' if prevention else 'What this means for treatment'
+        body = (
+            notice + f'<header><h1>{title}</h1><p><strong>{label}</strong> '
+            f'{_h(_patient_disease_label(plan_result, target_lang="en"))}</p></header>'
+            '<section class="what-was-found"><h2>What was found</h2>'
+            + _render_findings_plain(plan_result, target_lang='en') + '</section>'
+            + f'<section class="what-now"><h2>{meaning}</h2>'
+            + _render_tracks_plain(plan_result, target_lang='en') + '</section>'
+            + _render_why_section(plan_result, target_lang='en')
+            + _render_between_visits_section(plan_result, target_lang='en')
+            + _render_emergency_section(plan_result, target_lang='en')
+            + _render_ask_doctor_section(plan_result, target_lang='en')
+        )
+        sources = _render_cited_sources(plan.fda_compliance, 'en', patient_view=True)
+        if sources:
+            body += '<details class="patient-sources" data-original-source><summary>Original sources for this report</summary>' + sources + '</details>'
+        decision = (
+            'Decisions about prevention and surveillance are made by your doctor.'
+            if prevention else 'Treatment decisions are made by your oncologist.'
+        )
+        body += (
+            '<footer class="patient-disclaimer"><p>This report is an information tool. '
+            + decision + ' Do not change prescribed treatment or surveillance based only on this report.</p>'
+            '<p>If you develop the urgent symptoms listed above, seek hospital care immediately; do not wait for a planned visit.</p></footer>'
+        )
+    document = (
+        '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        f'<title>{_h(title)} — translation review draft</title><style>{_PATIENT_CSS}</style>'
+        f'</head><body>{body}</body></html>'
+    )
+    return _expand_first_use(document, target_lang='en')
 
 
 def _render_patient_mode(

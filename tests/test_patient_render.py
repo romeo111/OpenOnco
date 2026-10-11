@@ -1272,6 +1272,24 @@ def test_english_track_cards_preserve_all_options_and_drug_source_anchors():
     assert result.plan.model_dump() == before
 
 
+def test_assembled_english_review_draft_preserves_sections_options_and_sources():
+    from knowledge_base.engine.render import render_patient_english_draft
+    result = _build_hcv_mzl_two_track_plan()
+    before = result.plan.model_dump()
+    original = render_plan_html(result, mode='patient')
+    draft = render_patient_english_draft(result)
+    assert '<html lang="en">' in draft
+    assert 'data-translation-status="draft-partial"' in draft
+    assert 'incomplete and awaiting clinical/language review' in draft
+    for section in ('what-was-found', 'what-now', 'why-this-plan', 'between-visits', 'emergency-signals'):
+        assert f'class="{section}"' in draft
+    assert draft.count('<article') == original.count('<article')
+    assert re.findall(r'data-source-id="([^"]*)"', draft) == re.findall(r'data-source-id="([^"]*)"', original)
+    assert 'What to ask your doctor' in draft
+    assert 'Do not change prescribed treatment' in draft
+    assert result.plan.model_dump() == before
+
+
 def test_first_use_expansion_inserts_gloss_for_escat():
     """When the patient body mentions ESCAT, the first occurrence is
     expanded to include the parenthesized gloss."""
