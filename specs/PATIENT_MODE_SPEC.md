@@ -390,6 +390,8 @@ python -m knowledge_base.engine.cli patient.json --render out.html --render-mode
 
 ## 10. Open questions
 
+**Implementation update (2026-10-11):** The v0.1 exclusions above describe the original scope. The production renderer now exposes an English patient draft with an explicit incomplete/pending-review notice; Ukrainian remains the original. Untranslated authored text is marked. Drug-note translations are bound to the exact source text and revert to the original after a source edit; CI checks stale or missing-source drafts. This partial implementation does not establish clinical/language approval, complete English coverage, complete ES/PT/DE/FR patient reports or verified offline generation. Browser printing remains the PDF path.
+
 1. **`Regimen.between_visit_watchpoints` schema** — what is the spectrum of urgency
    tiers? Proposed: `log_at_next_visit`, `call_clinic_same_day`,
    `er_now`. Acceptable?

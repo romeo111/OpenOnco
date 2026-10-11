@@ -75,3 +75,24 @@ def test_note_draft_check_rejects_stale_source(tmp_path, monkeypatch):
     monkeypatch.setattr(sys, 'argv', ['audit', '--root', str(tmp_path), '--check-note-drafts'])
     with pytest.raises(SystemExit, match='need review'):
         audit.main()
+
+
+def test_direct_audit_uses_its_checkout_instead_of_competing_installation(tmp_path):
+    import json
+    import os
+    from pathlib import Path
+    import subprocess
+    import sys
+    shadow = tmp_path / 'shadow' / 'knowledge_base'
+    shadow.mkdir(parents=True)
+    (shadow / '__init__.py').write_text("raise RuntimeError('wrong checkout imported')\n", encoding='utf-8')
+    root = Path(__file__).resolve().parents[1]
+    environment = dict(os.environ, PYTHONPATH=str(shadow.parent))
+    result = subprocess.run(
+        [sys.executable, '-X', 'utf8', str(root / 'scripts/audit_patient_localization.py'), '--check-note-drafts'],
+        cwd=tmp_path, env=environment, capture_output=True, text=True, encoding='utf-8', timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    summary = json.loads(result.stdout)['drug_classes']
+    assert summary['en_stale_note_draft_count'] == 0
+    assert summary['orphan_note_draft_ids'] == []

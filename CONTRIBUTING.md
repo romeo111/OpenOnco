@@ -17,6 +17,8 @@ Follow [content standards](specs/CLINICAL_CONTENT_STANDARDS.md), [source ingesti
 
 Check interface translations, accessible labels, links and missing language counterparts. Clinical translations require clinical review. English specs and README are canonical; Ukrainian originals/translations are retained separately.
 
+Patient reports currently offer the Ukrainian original and an incomplete English draft. Keep the draft notice and marked fallback for untranslated text. Source-bound drug-note drafts live in `knowledge_base/engine/_patient_note_translations.py`: compare each full translation with the current `notes_patient`, including negations, numbers, routes and warnings. Update its source fingerprint only after reviewing the changed text; never refresh a fingerprint merely to make CI pass. Run `python -m scripts.audit_patient_localization --check-note-drafts` and the patient rendering/translation tests. For the remaining work list, run `python -m scripts.audit_patient_localization --include-dynamic --include-drug-classes --output <review-file.json>`. These checks confirm source consistency, not clinical approval; class lookup counts do not prove complete report translation.
+
 ## Review and conduct
 
 The [DLBCL packet](https://openonco.info/review/dlbcl-1l/) contains synthetic scenarios and exports feedback locally. Passing engineering contracts is not clinical approval. Follow the [Code of Conduct](CODE_OF_CONDUCT.md). Vulnerabilities use the [private channel](SECURITY.md).

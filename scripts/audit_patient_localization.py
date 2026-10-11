@@ -10,7 +10,13 @@ import argparse
 import ast
 import json
 import re
+import sys
 from pathlib import Path
+
+# Direct invocation must audit this checkout's renderer, not another editable
+# installation of OpenOnco on the machine. Module invocation already does so.
+if not __package__:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 
 FILES = (
