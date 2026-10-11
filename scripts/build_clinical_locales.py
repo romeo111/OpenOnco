@@ -22,10 +22,22 @@ NOTICES = {
 }
 VOID_TAGS = {'img', 'input', 'br', 'hr', 'meta', 'link', 'source', 'area', 'wbr'}
 ORIGINAL_LABELS = {
-    'es': 'Texto original en inglés conservado para verificación',
-    'pt': 'Texto original em inglês preservado para verificação',
-    'de': 'Englischer Originaltext zur Überprüfung beibehalten',
-    'fr': 'Texte original anglais conservé pour vérification',
+    'es': 'Texto original conservado para verificación',
+    'pt': 'Texto original preservado para verificação',
+    'de': 'Originaltext zur Überprüfung beibehalten',
+    'fr': 'Texte original conservé pour vérification',
+}
+UKRAINIAN_ORIGINAL_LINKS = {
+    'es': 'Consultar el original en ucraniano',
+    'pt': 'Consultar o original em ucraniano',
+    'de': 'Ukrainisches Original ansehen',
+    'fr': 'Consulter l’original en ukrainien',
+}
+UNSPECIFIED_ORIGINAL_LINKS = {
+    'es': 'Consultar la versión original',
+    'pt': 'Consultar a versão original',
+    'de': 'Originalfassung ansehen',
+    'fr': 'Consulter la version originale',
 }
 
 
@@ -47,11 +59,15 @@ class LocalizedHTML(HTMLParser):
         self.parts, self.stack = [], []
         self.style_assets = style_assets
         self.shared_style_start = None
+        self.source_language = 'und'
+        self.language_stack = []
+        self.source_language_seen = False
     def text(self, value):
         stripped = normalize(html.unescape(value))
         replacement = self.catalog.get(stripped)
         if (replacement is None or replacement == stripped) and len(stripped) > 180 and not any(t in {'head', 'title', 'option'} for t in self.stack):
-            return f'<span class="translation-original-fragment" lang="en" data-original-source data-label="{html.escape(ORIGINAL_LABELS[self.locale], quote=True)}">{html.escape(value, quote=False)}</span>'
+            language = self.language_stack[-1] if self.language_stack else self.source_language
+            return f'<span class="translation-original-fragment" lang="{language}" data-original-source data-label="{html.escape(ORIGINAL_LABELS[self.locale], quote=True)}">{html.escape(value, quote=False)}</span>'
         if replacement is None:
             return html.escape(value, quote=False)
         left = re.match(r'^\s*', value).group()
@@ -71,6 +87,10 @@ class LocalizedHTML(HTMLParser):
         return urlunsplit(('', '', path, url.query, url.fragment))
     def handle_starttag(self, tag, attrs):
         original_attrs = dict(attrs)
+        if tag == 'html' and not self.source_language_seen:
+            declared = (original_attrs.get('lang') or '').lower()
+            self.source_language = declared if re.fullmatch(r'[a-z]{2,3}(?:-[a-z0-9]{2,8})*', declared) else 'und'
+            self.source_language_seen = True
         if tag == 'style' and self.style_assets is not None and (not attrs or original_attrs == {'type': 'text/css'}):
             self.shared_style_start = len(self.parts)
         if tag == 'html' and 'lang' not in original_attrs:
@@ -93,12 +113,18 @@ class LocalizedHTML(HTMLParser):
             changed.append(key if value is None else f'{key}="{html.escape(value, quote=True)}"')
         self.parts.append('<' + tag + (' ' + ' '.join(changed) if changed else '') + '>')
         if tag not in VOID_TAGS:
+            language = self.language_stack[-1] if self.language_stack else self.source_language
+            if 'lang' in original_attrs:
+                declared = (original_attrs.get('lang') or '').lower()
+                language = declared if re.fullmatch(r'[a-z]{2,3}(?:-[a-z0-9]{2,8})*', declared) else 'und'
+            self.language_stack.append(language)
             self.stack.append(tag)
     def handle_startendtag(self, tag, attrs):
         self.handle_starttag(tag, attrs)
         self.parts[-1] = self.parts[-1][:-1] + '/>'
         if tag not in VOID_TAGS:
             self.stack.pop()
+            self.language_stack.pop()
     def handle_endtag(self, tag):
         if tag == 'style' and self.shared_style_start is not None:
             css = ''.join(self.parts[self.shared_style_start + 1:])
@@ -110,6 +136,7 @@ class LocalizedHTML(HTMLParser):
             self.parts.append(f'</{tag}>')
         if tag in self.stack:
             self.stack = self.stack[:len(self.stack)-1-self.stack[::-1].index(tag)]
+            self.language_stack = self.language_stack[:len(self.stack)]
     def handle_data(self, data):
         if any(t in {'script', 'style'} for t in self.stack):
             self.parts.append(data)
@@ -137,7 +164,12 @@ def localize_page(source, locale, path, available, catalog, *, style_assets=None
     active = {'cases': 'gallery', 'disease': 'diseases', 'plans': 'try'}.get(active, active)
     page = re.sub(r'(<body\b[^>]*>)', lambda m: m.group() + render_top_bar(active, locale, page_path=path), page, count=1)
     note, original = NOTICES[locale]
-    banner = f'<aside class="translation-notice" role="note"><strong>{html.escape(note)}</strong> <a href="/{path}" lang="en" hreflang="en" data-original-source>{html.escape(original)}</a></aside>'
+    source_language = parser.source_language
+    if source_language.split('-')[0] == 'uk':
+        original = UKRAINIAN_ORIGINAL_LINKS[locale]
+    elif source_language.split('-')[0] != 'en':
+        original = UNSPECIFIED_ORIGINAL_LINKS[locale]
+    banner = f'<aside class="translation-notice" role="note"><strong>{html.escape(note)}</strong> <a href="/{path}" lang="{source_language}" hreflang="{source_language}" data-original-source>{html.escape(original)}</a></aside>'
     page = re.sub(r'(<main\b[^>]*>)', lambda m: m.group() + banner, page, count=1)
     if '<main' not in page:
         page = re.sub(r'(</header>)', lambda m: m.group() + banner, page, count=1)
@@ -147,7 +179,7 @@ def localize_page(source, locale, path, available, catalog, *, style_assets=None
         page = page.replace('"/kb_search_index.json"', f'"/{locale}/kb_search_index.json"')
     if path in PAGES or path.startswith('handbook/'):
         catalog_file = 'clinical-translations.json' if path == 'try.html' else 'clinical-ui-translations.json'
-        runtime = f'<script src="/clinical-localization.js?v=20261011-patient-english-draft" data-locale="{locale}" data-catalog="/{locale}/{catalog_file}" defer></script>'
+        runtime = f'<script src="/clinical-localization.js?v=20261011-source-language" data-locale="{locale}" data-catalog="/{locale}/{catalog_file}" defer></script>'
         page = page.replace('</body>', runtime + '</body>')
     digest = hashlib.sha256(source.encode('utf-8')).hexdigest()
     page = page.replace('</head>', f'<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="{digest}"></head>')

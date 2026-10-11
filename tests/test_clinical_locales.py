@@ -14,6 +14,37 @@ from serverless import clinical_question as cq
 
 
 @pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
+def test_original_fragments_honor_nested_language_and_restore_parent_language(locale):
+    original = 'Оригінальні дані збережено для перевірки без зміни клінічних значень. ' * 4
+    source = '<html lang="en"><body><main><section lang="uk"><div><p>' + original + '</p></div></section><p>' + original + '</p></main></body></html>'
+    output = localize_page(source, locale, 'cases/test.html', set(), {})
+    assert output.count('class="translation-original-fragment" lang="uk"') == 1
+    assert output.count('class="translation-original-fragment" lang="en"') == 1
+    assert output.count(original) == 2
+    assert 'lang="en" hreflang="en" data-original-source' in output
+
+
+@pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
+@pytest.mark.parametrize('declared,expected', [('en', 'en'), ('uk', 'uk'), ('uk-UA', 'uk-ua'), (None, 'und')])
+def test_original_attribution_uses_declared_source_language_without_guessing(locale, declared, expected):
+    from scripts.build_clinical_locales import ORIGINAL_LABELS, NOTICES, UKRAINIAN_ORIGINAL_LINKS, UNSPECIFIED_ORIGINAL_LINKS
+    paragraph = 'Оригінальний текст із результатами дослідження збережено для перевірки. ' * 4
+    language = f' lang="{declared}"' if declared else ''
+    source = f'<html{language}><head><title>Test</title></head><body><main><p>{paragraph}</p><input value="positive"><script>const original = "uk";</script></main></body></html>'
+    output = localize_page(source, locale, 'try.html', set(), {})
+    assert f'class="translation-original-fragment" lang="{expected}"' in output
+    assert f'data-label="{ORIGINAL_LABELS[locale]}"' in output
+    assert paragraph in output
+    assert f'lang="{expected}" hreflang="{expected}" data-original-source' in output
+    expected_link = UKRAINIAN_ORIGINAL_LINKS[locale] if expected.startswith('uk') else NOTICES[locale][1] if expected == 'en' else UNSPECIFIED_ORIGINAL_LINKS[locale]
+    assert expected_link in output
+    assert 'value="positive"' in output
+    assert '<script>const original = "uk";</script>' in output
+    assert 'clinical-localization.js?v=20261011-source-language' in output
+    assert hashlib.sha256(source.encode('utf-8')).hexdigest() in output
+
+
+@pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
 @pytest.mark.parametrize('source_lang', ['uk', 'en'])
 def test_missing_molecular_interpretation_notice_is_localized_without_changing_data(locale, source_lang):
     from types import SimpleNamespace

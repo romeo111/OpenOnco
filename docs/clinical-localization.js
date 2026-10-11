@@ -14,10 +14,10 @@
     fr: 'Traduction provisoire : vérification clinique en attente.'
   };
   const originalLabels = {
-    es: 'Texto original en inglés conservado para verificación',
-    pt: 'Texto original em inglês preservado para verificação',
-    de: 'Englischer Originaltext zur Überprüfung beibehalten',
-    fr: 'Texte original anglais conservé pour vérification'
+    es: 'Texto original conservado para verificación',
+    pt: 'Texto original preservado para verificação',
+    de: 'Originaltext zur Überprüfung beibehalten',
+    fr: 'Texte original conservé pour vérification'
   };
   const counters = {
     es: ['Mostrando $1 de $2', 'Página $1 / $2', '$1 capítulos', 'Límite de preguntas alcanzado: $1 por hora.'],
@@ -30,8 +30,9 @@
     return response.json();
   }).then(catalog => {
     window.OPENONCO_REPORT_LOCALE = locale;
-    // Native curated text is an identity entry too; only English source prose
-    // should receive an English-original label.
+    // Native curated text is an identity entry too. Retained source prose
+    // receives a neutral original-text label. Catalog keys can contain
+    // mixed-language source text, so do not guess a fragment's language.
     const nativeValues = new Set(Object.entries(catalog).filter(([key, value]) => key !== value).map(([, value]) => value));
     const translate = text => {
       const key = normalize(text);
@@ -105,7 +106,9 @@
       for (const original of retained) {
         const span = doc.createElement('span');
         span.className = 'translation-original-fragment';
-        span.lang = 'en';
+        const declared = original.parentElement.closest('[lang]');
+        const language = declared && declared !== doc.documentElement ? declared.getAttribute('lang').toLowerCase() : '';
+        span.lang = /^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/.test(language) ? language : 'und';
         span.dataset.originalSource = '';
         span.dataset.label = originalLabels[locale];
         original.replaceWith(span);
