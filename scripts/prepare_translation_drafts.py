@@ -6,6 +6,7 @@ gitignored and must not be published until qualified language/clinical review.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import os
@@ -44,13 +45,43 @@ def prepare_drafts(
     *,
     locale: str,
     kind: str,
-    client: Translator,
+    client: Translator | None,
     limit: int,
+    manual_csv: Path | None = None,
 ) -> int:
     if locale not in LOCALES or kind not in KINDS or limit < 1:
         raise ValueError("Specify a supported locale, kind, and positive limit")
+    if (client is None) == (manual_csv is None):
+        raise ValueError("Specify exactly one of a translation client or a manual CSV")
     entries = json.loads(index_path.read_text(encoding="utf-8"))["entries"]
     source_paths = _source_paths(kb_root, kind)
+    manual = {}
+    if manual_csv is not None:
+        eligible = {entry["id"]: entry for entry in entries if entry.get("kind_key") == kind}
+        with manual_csv.open(encoding="utf-8-sig", newline="") as source:
+            rows = csv.DictReader(source)
+            if not {"id", "en", locale, "source_sha256"}.issubset(rows.fieldnames or []):
+                raise ValueError("Manual CSV needs id, en, target locale, and source_sha256 columns")
+            for row in rows:
+                entity_id = row["id"]
+                if entity_id in manual or entity_id not in eligible:
+                    raise ValueError(f"Duplicate or unknown {kind} ID: {entity_id}")
+                path = source_paths.get(entity_id)
+                if path is None:
+                    raise ValueError(f"Missing YAML source for {entity_id}")
+                if row["en"] != eligible[entity_id]["title"].strip():
+                    raise ValueError(f"English title changed for {entity_id}")
+                if row["source_sha256"] != hashlib.sha256(path.read_bytes()).hexdigest():
+                    raise ValueError(f"English YAML changed for {entity_id}")
+                expected_path = path.relative_to(ROOT).as_posix() if path.is_relative_to(ROOT) else path.as_posix()
+                if row.get("source_yaml") and row["source_yaml"] != expected_path:
+                    raise ValueError(f"English YAML path changed for {entity_id}")
+                translated = (row[locale] or "").strip()
+                if not translated:
+                    raise ValueError(f"Empty translation for {entity_id}")
+                manual[entity_id] = translated
+        if not manual:
+            raise ValueError("Manual CSV contains no drafts")
     existing = {}
     if output_path.exists():
         for line in output_path.read_text(encoding="utf-8").splitlines():
@@ -64,6 +95,8 @@ def prepare_drafts(
             if entry.get("kind_key") != kind:
                 continue
             entity_id = entry["id"]
+            if manual_csv is not None and entity_id not in manual:
+                continue
             path = source_paths.get(entity_id)
             if path is None:
                 raise ValueError(f"Missing YAML source for {entity_id}")
@@ -72,10 +105,17 @@ def prepare_drafts(
                 raise ValueError(f"Missing English title for {entity_id}")
             source_hash = hashlib.sha256(path.read_bytes()).hexdigest()
             previous = existing.get(entity_id)
-            if previous and previous["source_sha256"] == source_hash and previous["en"] == title:
+            if previous and previous["source_sha256"] == source_hash and previous["en"] == title and (
+                manual_csv is None or (
+                    previous.get(locale) == manual[entity_id] and previous.get("translation_method") == "offline_csv"
+                )
+            ):
                 continue
-            translated = client.translate(title, locale, source_lang="en").strip()
-            if not translated or translated == title:
+            if manual_csv is not None:
+                translated = manual[entity_id]
+            else:
+                translated = client.translate(title, locale, source_lang="en").strip()
+            if not translated or (manual_csv is None and translated == title):
                 raise ValueError(f"Empty or unchanged translation for {entity_id}")
             tokens = set(PROTECTED.findall(title))
             missing_tokens = sorted(token for token in tokens if token not in translated)
@@ -89,9 +129,11 @@ def prepare_drafts(
                 "source_yaml": path.relative_to(ROOT).as_posix() if path.is_relative_to(ROOT) else path.as_posix(),
                 "source_sha256": source_hash,
                 "machine_translated": True,
+                "translation_method": "offline_csv" if manual_csv is not None else "translation_client",
                 "clinical_review": "required",
                 "publication": "blocked",
-                "review_flags": [f"protected term missing: {token}" for token in missing_tokens],
+                "review_flags": [f"protected term missing: {token}" for token in missing_tokens]
+                + (["unchanged from English; verify language-neutral terminology"] if translated == title else []),
             }
             out.write(json.dumps(record, ensure_ascii=False) + "\n")
             written += 1
@@ -105,12 +147,13 @@ def main() -> int:
     parser.add_argument("--locale", required=True, choices=LOCALES)
     parser.add_argument("--kind", required=True, choices=KINDS)
     parser.add_argument("--limit", required=True, type=int)
+    parser.add_argument("--manual-csv", type=Path, help="Offline EN-source review CSV; no translation service needed")
     args = parser.parse_args()
     if args.limit < 1:
         parser.error("--limit must be positive")
-    if not (os.environ.get("DEEPL_API_KEY") or os.environ.get("LIBRETRANSLATE_URL")):
+    if args.manual_csv is None and not (os.environ.get("DEEPL_API_KEY") or os.environ.get("LIBRETRANSLATE_URL")):
         parser.error("Configure DEEPL_API_KEY or LIBRETRANSLATE_URL locally; no service is configured")
-    client = build_full_stack(cache_dir=DRAFT_DIR / "cache")
+    client = None if args.manual_csv is not None else build_full_stack(cache_dir=DRAFT_DIR / "cache")
     output = DRAFT_DIR / f"wiki-{args.kind}-{args.locale}.jsonl"
     count = prepare_drafts(
         ROOT / "docs" / "kb_search_index.json",
@@ -120,8 +163,9 @@ def main() -> int:
         kind=args.kind,
         client=client,
         limit=args.limit,
+        manual_csv=args.manual_csv,
     )
-    print(f"Wrote {count} unreviewed EN→{args.locale} drafts to {output}")
+    print(f"Wrote {count} unreviewed EN-to-{args.locale} drafts to {output}")
     return 0
 
 
