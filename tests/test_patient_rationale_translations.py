@@ -3,6 +3,7 @@ from types import SimpleNamespace
 
 from knowledge_base.engine._patient_rationale import (
     RATIONALE_TRANSLATION_STATUS, build_track_rationale, build_track_rationale_html,
+    build_plan_findings_context, build_plan_findings_context_html,
 )
 from knowledge_base.engine.render import _render_emergency_section
 from knowledge_base.engine.render import _medicine_form_ua, _regimen_schedule_ua
@@ -56,38 +57,38 @@ def test_native_notice_translates_while_retained_drug_note_does_not(locale):
 def test_english_rationale_preserves_findings_thresholds_and_input():
     result = SimpleNamespace(
         plan=SimpleNamespace(variant_actionability=[{'biomarker_id': 'BIO-BRAF', 'variant_qualifier': 'V600E', 'escat_tier': 'IA'}]),
-        trace=[{'fired_red_flags': ['RF-TEST']}],
+        trace=[{'fired_red_flags': ['RF-TEST'], 'branch': {'result': 'IND-TEST'}}],
         kb_resolved={'red_flags': {'RF-TEST': {'definition': 'Value <0.5 mg/L. Second sentence.', 'definition_ua': 'Показник <0.5 mg/L.'}}},
     )
     before = deepcopy(result.__dict__)
-    bullets = build_track_rationale(result, SimpleNamespace(is_default=True), target_lang='en')
-    assert 'BRAF V600E' in bullets[0]
+    bullets = build_track_rationale(result, SimpleNamespace(is_default=True, indication_id='IND-TEST'), target_lang='en')
+    assert 'BRAF V600E' in build_plan_findings_context(result, target_lang='en')[0]
     assert '<0.5 mg/L' in bullets[1]
     assert 'Second sentence' not in bullets[1]
     assert result.__dict__ == before
-    rendered = build_track_rationale_html(result, SimpleNamespace(is_default=True), target_lang='en')
+    rendered = build_track_rationale_html(result, SimpleNamespace(is_default=True, indication_id='IND-TEST'), target_lang='en')
     assert '&lt;0.5 mg/L' in rendered
     assert RATIONALE_TRANSLATION_STATUS['en'] == 'draft_pending_review'
 
 
 def test_missing_english_definition_explicitly_retains_original():
-    result = SimpleNamespace(plan=None, trace=[{'fired_red_flags': ['RF-TEST']}], kb_resolved={'red_flags': {'RF-TEST': {'definition_ua': 'Не чекати.'}}})
-    bullets = build_track_rationale(result, SimpleNamespace(is_default=True), target_lang='en')
-    assert 'original Ukrainian text; translation unavailable' in bullets[0]
-    assert 'Не чекати' in bullets[0]
-    rendered = build_track_rationale_html(result, SimpleNamespace(is_default=True), target_lang='en')
+    result = SimpleNamespace(plan=None, trace=[{'fired_red_flags': ['RF-TEST'], 'branch': {'result': 'IND-TEST'}}], kb_resolved={'red_flags': {'RF-TEST': {'definition_ua': 'Не чекати.'}}})
+    bullets = build_track_rationale(result, SimpleNamespace(is_default=True, indication_id='IND-TEST'), target_lang='en')
+    assert 'original Ukrainian text; translation unavailable' in bullets[1]
+    assert 'Не чекати' in bullets[1]
+    rendered = build_track_rationale_html(result, SimpleNamespace(is_default=True, indication_id='IND-TEST'), target_lang='en')
     assert '<span lang="uk" data-original-source>Не чекати.</span>' in rendered
 
 
 def test_no_fired_flags_is_not_a_claim_of_absent_clinical_risk():
-    result = SimpleNamespace(plan=None, trace=[], kb_resolved={})
-    track = SimpleNamespace(is_default=True)
-    assert 'does not rule out risks' in build_track_rationale(result, track, target_lang='en')[0]
-    assert 'не виключає ризиків' in build_track_rationale(result, track)[0]
+    result = SimpleNamespace(plan=None, trace=[{'result':'IND-TEST','fired_red_flags':[]}], kb_resolved={})
+    track = SimpleNamespace(is_default=True, indication_id='IND-TEST')
+    assert 'does not rule out risks' in build_track_rationale(result, track, target_lang='en')[1]
+    assert 'не виключає ризиків' in build_track_rationale(result, track)[1]
 
 
 def test_english_emergency_section_uses_only_fired_records_and_preserves_values():
-    result = SimpleNamespace(trace=[{'fired_red_flags': ['RF-TEST']}], kb_resolved={'red_flags': {
+    result = SimpleNamespace(trace=[{'fired_red_flags': ['RF-TEST'], 'branch': {'result': 'IND-TEST'}}], kb_resolved={'red_flags': {
         'RF-TEST': {'id': 'RF-TEST', 'severity': 'critical', 'definition': 'Value <0.5 mg/L. More detail.', 'definition_ua': 'Показник <0.5 mg/L.'},
         'RF-OTHER': {'id': 'RF-OTHER', 'severity': 'critical', 'definition': 'Unfired condition'},
     }})
@@ -105,7 +106,7 @@ def test_english_emergency_section_uses_only_fired_records_and_preserves_values(
 
 
 def test_english_emergency_section_marks_missing_translation():
-    result = SimpleNamespace(trace=[{'fired_red_flags': ['RF-TEST']}], kb_resolved={'red_flags': {
+    result = SimpleNamespace(trace=[{'fired_red_flags': ['RF-TEST'], 'branch': {'result': 'IND-TEST'}}], kb_resolved={'red_flags': {
         'RF-TEST': {'id': 'RF-TEST', 'severity': 'critical', 'definition_ua': 'Не чекати.'},
     }})
     output = _render_emergency_section(result, target_lang='en')
@@ -339,7 +340,7 @@ def test_english_drug_card_gloss_preserves_examples_and_plan_input(drug_class, e
 @pytest.mark.parametrize("tier", ["IA", "IB", "IIA", "IIB"])
 @pytest.mark.parametrize("representation", ["dict", "object"])
 @pytest.mark.parametrize("ready", [True, False, None])
-def test_rationale_uses_selected_hit_review_status(lang, tier, representation, ready):
+def test_report_context_uses_selected_hit_review_status(lang, tier, representation, ready):
     selected = {"biomarker_id": "BIO-BRAF", "variant_qualifier": "V600E", "escat_tier": tier}
     if ready is not None:
         selected["clinical_use_ready"] = ready
@@ -349,8 +350,8 @@ def test_rationale_uses_selected_hit_review_status(lang, tier, representation, r
     result = SimpleNamespace(plan=SimpleNamespace(variant_actionability=[selected, other]), trace=[], kb_resolved={})
     before = deepcopy(result.__dict__)
     track = SimpleNamespace(is_default=False)
-    bullets = build_track_rationale(result, track, target_lang=lang)
-    output = build_track_rationale_html(result, track, target_lang=lang)
+    bullets = build_plan_findings_context(result, target_lang=lang)
+    output = build_plan_findings_context_html(result, target_lang=lang)
     assert "BRAF V600E" in bullets[0]
     assert "KRAS" not in bullets[0]
     assert ('data-biomarker-review="pending"' in output) == (ready is not True)
@@ -359,21 +360,146 @@ def test_rationale_uses_selected_hit_review_status(lang, tier, representation, r
         assert "for choosing this treatment" not in bullets[0]
         assert "користь цього варіанту" not in bullets[0]
     elif lang == "en":
-        assert ("strong evidence" if tier in {"IA", "IB"} else "moderate evidence") in bullets[0]
+        assert f"tier {tier}" in bullets[0]
+        assert "choosing this treatment" not in bullets[0]
     assert result.__dict__ == before
 
 
 @pytest.mark.parametrize("locale", ["es", "pt", "de", "fr"])
-def test_native_rationale_preserves_hit_and_translates_review_notice(locale):
+def test_native_context_preserves_hit_and_translates_review_notice(locale):
     from scripts.build_clinical_locales import localize_page
     from scripts.clinical_curated_copy import messages_for
     result = SimpleNamespace(plan=SimpleNamespace(variant_actionability=[
         {"biomarker_id": "BIO-BRAF", "variant_qualifier": "V600E", "escat_tier": "IA", "clinical_use_ready": False}
     ]), trace=[], kb_resolved={})
-    output = build_track_rationale_html(result, SimpleNamespace(is_default=False), target_lang="en")
+    output = build_plan_findings_context_html(result, target_lang="en")
     catalog = messages_for(locale)
     localized = localize_page('<html lang="en"><body>' + output + '</body></html>', locale, 'cases/test.patient.html', set(), catalog)
     assert catalog['Clinical review of this biomarker record is pending.'] in localized
     assert 'data-biomarker-review="pending"' in localized
     assert 'BRAF V600E' in localized
     assert 'tier IA' in localized
+
+
+@pytest.mark.parametrize("lang", ["en", "uk"])
+@pytest.mark.parametrize("default", [True, False])
+@pytest.mark.parametrize("terminal", ["branch", "fallback"])
+def test_recorded_path_is_bound_to_exact_indication(lang, default, terminal):
+    trace = [{"fired_red_flags": ["RF-SYNTHETIC"], "branch": {"next_step": 2}}]
+    trace.append({"branch": {"result": "IND-SELECTED"}} if terminal == "branch" else {"result": "IND-SELECTED"})
+    result = SimpleNamespace(plan=SimpleNamespace(variant_actionability=[
+        {"biomarker_id": "BIO-BRAF", "variant_qualifier": "V600E", "escat_tier": "IA", "clinical_use_ready": True}
+    ]), trace=trace, kb_resolved={"red_flags": {"RF-SYNTHETIC": {"definition": "Recorded threshold <0.5 mg/L.", "definition_ua": "Записаний поріг <0.5 mg/L."}}})
+    before = deepcopy(result.__dict__)
+    selected = SimpleNamespace(indication_id="IND-SELECTED", is_default=default)
+    other = SimpleNamespace(indication_id="IND-OTHER", is_default=not default)
+    selected_html = build_track_rationale_html(result, selected, target_lang=lang)
+    other_html = build_track_rationale_html(result, other, target_lang=lang)
+    assert "&lt;0.5 mg/L" in selected_html
+    assert "0.5" not in other_html
+    assert "BRAF" not in selected_html + other_html
+    assert ("does not record" if lang == "en" else "не записано шлях") in other_html
+    assert result.__dict__ == before
+
+
+@pytest.mark.parametrize("trace", [[], [{"fired_red_flags": ["RF-X"]}],
+    [{"branch": {"result": "IND-SELECTED"}}, {"branch": {"result": None}}],
+    [{"branch": "legacy"}], [{"result": "IND-OTHER"}]])
+def test_unlinked_and_legacy_paths_do_not_invent_reasons(trace):
+    result = SimpleNamespace(plan=None, trace=trace, kb_resolved={"red_flags": {"RF-X": {"definition": "Must not appear."}}})
+    output = build_track_rationale_html(result, SimpleNamespace(indication_id="IND-SELECTED", is_default=True), target_lang="en")
+    assert "does not record an algorithm path selecting this option" in output
+    assert "Must not appear" not in output
+    assert "based on clinical guidelines" not in output
+
+
+def test_real_showcase_context_is_outside_all_track_explanations():
+    import json,re
+    from pathlib import Path
+    from knowledge_base.engine import generate_plan
+    from knowledge_base.engine.render import render_plan_html
+    root=Path(__file__).resolve().parents[1]
+    profile=json.loads((root/'examples/patient_showcase_crc_braf_v600e_2l.json').read_text(encoding='utf-8'))
+    result=generate_plan(profile,kb_root=root/'knowledge_base/hosted/content')
+    before=deepcopy(result.plan.model_dump())
+    document=render_plan_html(result,mode='patient',target_lang='en')
+    context=re.search(r'<div class="why-findings-context".*?</div>',document,re.S).group()
+    assert "BRAF V600E" in context
+    assert context.count('data-biomarker-review="pending"')==1
+    blocks=re.findall(r'<div class="why-track".*?</div>',document,re.S)
+    assert len(blocks)==len(result.plan.tracks)
+    for track,block in zip(result.plan.tracks,blocks):
+        assert 'data-biomarker-review=' not in block
+        if not track.is_default:
+            assert "BRAF" not in block
+            assert "does not record an algorithm path" in block
+    assert result.plan.model_dump()==before
+
+
+@pytest.mark.parametrize("locale", ["es", "pt", "de", "fr"])
+@pytest.mark.parametrize("linked", [True, False])
+def test_native_track_path_notices_translate_without_changing_association(locale, linked):
+    from scripts.build_clinical_locales import localize_page
+    from scripts.clinical_curated_copy import messages_for
+    result=SimpleNamespace(plan=None, trace=[{"result":"IND-SELECTED","fired_red_flags":[]}], kb_resolved={})
+    track=SimpleNamespace(indication_id="IND-SELECTED" if linked else "IND-OTHER",is_default=True)
+    output=build_track_rationale_html(result,track,target_lang="en")
+    catalog=messages_for(locale)
+    localized=localize_page('<html lang="en"><body>'+output+'</body></html>',locale,'cases/test.patient.html',set(),catalog)
+    expected=("The recorded algorithm path selected this option. This does not establish its suitability for you."
+              if linked else "This report does not record an algorithm path selecting this option. Ask your doctor to review the technical report and its suitability for you.")
+    assert catalog[expected] in localized
+    assert expected not in localized
+    if linked:
+        assert catalog['No red flags were recorded as triggered on that path. This does not rule out risks or replace assessment by your doctor.'] in localized
+
+
+def test_unselected_path_keeps_all_recorded_signals_outside_tracks():
+    from knowledge_base.engine.render import _render_why_section
+    track=SimpleNamespace(indication_id="IND-UNSELECTED",is_default=True,regimen_data={"id":"REG-SYNTHETIC"},label="")
+    result=SimpleNamespace(plan=SimpleNamespace(tracks=[track],variant_actionability=[]),
+        trace=[{"branch":{"result":None},"fired_red_flags":["RF-ONE","RF-TWO","RF-THREE"]}],
+        kb_resolved={"red_flags":{f"RF-{name}":{"definition_ua":f"Синтетичний сигнал {name}: <0.5 mg/L."} for name in ("ONE","TWO","THREE")}})
+    before=deepcopy(result.__dict__)
+    document=_render_why_section(result,target_lang="en")
+    assert 'data-rationale-scope="plan-signals"' in document
+    for name in ("ONE","TWO","THREE"):
+        assert f'data-source-id="RF-{name}"' in document
+        assert f'Синтетичний сигнал {name}: &lt;0.5 mg/L.' in document
+    track_block=document[document.index('<div class="why-track"'):]
+    assert "Синтетичний" not in track_block
+    assert result.__dict__==before
+
+
+@pytest.mark.parametrize("lang,field,expected_lang", [("en","definition","en"),("en","definition_ua","uk"),("uk","definition","en"),("uk","definition_ua","uk")])
+def test_signal_context_retains_declared_original_language_and_escaping(lang,field,expected_lang):
+    from knowledge_base.engine._patient_rationale import build_plan_signal_context_html
+    from knowledge_base.engine._patient_vocabulary import expand_first_use
+    source='Original <0.5 mg/L; ECOG & <script>.'
+    result=SimpleNamespace(trace=[{"fired_red_flags":["RF-SYNTHETIC"]}],kb_resolved={"red_flags":{"RF-SYNTHETIC":{field:source}}})
+    output=build_plan_signal_context_html(result,target_lang=lang)
+    expected=f'<span lang="{expected_lang}" data-original-source>Original &lt;0.5 mg/L; ECOG &amp; &lt;script&gt;.</span>'
+    assert expected in output
+    assert expected in expand_first_use(output,target_lang=lang)
+    assert '<script>' not in output
+
+
+@pytest.mark.parametrize("locale", ["es","pt","de","fr"])
+def test_native_signal_context_translates_ui_and_preserves_all_originals(locale):
+    from scripts.build_clinical_locales import localize_page
+    from scripts.clinical_curated_copy import messages_for
+    from knowledge_base.engine._patient_rationale import build_plan_signal_context_html
+    source='Source <0.5 mg/L; ECOG.'
+    result=SimpleNamespace(trace=[{"fired_red_flags":["RF-SOURCE","RF-MISSING","RF-SOURCE"]}],
+        kb_resolved={"red_flags":{"RF-SOURCE":{"definition":source}}})
+    output=build_plan_signal_context_html(result,target_lang="en")
+    catalog=messages_for(locale);catalog[source]='INCORRECT REPLACEMENT'
+    localized=localize_page('<html lang="en"><body>'+output+'</body></html>',locale,'cases/test.patient.html',set(),catalog)
+    for key in ('Signals recorded in this report — not reasons for selecting every option.',
+                'Recorded signal (original source text):',
+                'A signal was recorded, but its explanation is unavailable. See the technical report.'):
+        assert catalog[key] in localized
+    assert '<span lang="en" data-original-source>Source &lt;0.5 mg/L; ECOG.</span>' in localized
+    assert 'INCORRECT REPLACEMENT' not in localized
+    assert localized.count('data-source-id="RF-SOURCE"')==1
+    assert 'data-source-id="RF-MISSING"' in localized

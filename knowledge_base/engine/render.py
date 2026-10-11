@@ -49,6 +49,8 @@ from ._emergency_rf import (
 )
 from ._nszu import lookup_nszu_status, nszu_label
 from ._patient_rationale import build_track_rationale_html as _build_track_rationale_html
+from ._patient_rationale import build_plan_findings_context_html as _build_plan_findings_context_html
+from ._patient_rationale import build_plan_signal_context_html as _build_plan_signal_context_html
 from ._patient_rationale import _fired_rf_ids_from_trace as _patient_fired_rf_ids
 from ._patient_rationale import _first_sentence_ua as _patient_first_sentence
 from ._patient_note_translations import translate_patient_note
@@ -4114,13 +4116,7 @@ def _render_tracks_plain(plan_result: PlanResult, *, target_lang: str = "uk") ->
 
 
 def _render_why_section(plan_result: PlanResult, *, target_lang: str = "uk") -> str:
-    """Per-track 'why this for you' section.
-
-    Phase 2 emits a placeholder shell so structural anchors exist for
-    tests + downstream consumers. Phase 3 (`_patient_rationale.py`)
-    fills in the bullets from `PlanResult.trace`. The shell still
-    surfaces the section heading + per-track cards so the bundle layout
-    is stable across phases."""
+    """Separate report-wide findings from path-linked track explanations."""
     heading = 'Why this plan' if target_lang == 'en' else 'Чому саме цей план'
     fallback = 'See the technical report for details.' if target_lang == 'en' else 'Деталі — у технічній версії звіту.'
     plan = plan_result.plan
@@ -4149,24 +4145,15 @@ def _render_why_section(plan_result: PlanResult, *, target_lang: str = "uk") -> 
     return (
         '<section class="why-this-plan">'
         f"<h2>{heading}</h2>"
+        f'{_build_plan_findings_context_html(plan_result, target_lang=target_lang)}'
+        f'{_build_plan_signal_context_html(plan_result, target_lang=target_lang)}'
         f'{"".join(track_blocks)}'
         "</section>"
     )
 
 
 def _build_why_bullets_html(plan_result: PlanResult, track, *, target_lang: str = "uk") -> str:
-    """Phase 3: rationale bullets from `PlanResult.trace`.
-
-    Delegates to `_patient_rationale.build_track_rationale_html`, which
-    composes 1-4 plain-UA bullets per track based on:
-
-      * Variant actionability hits (ESCAT IA/IB → strong-tier wording).
-      * Default vs alternative track distinction.
-      * Up to 2 fired RedFlag definitions (first-sentence Ukrainian).
-      * Fallback strings when none of the above produce a signal.
-
-    HTML escaping is handled inside the rationale builder so KB content
-    with markup-sensitive characters cannot break the document."""
+    """Render explanations only from a recorded path to this indication."""
     return _build_track_rationale_html(plan_result, track, target_lang=target_lang)
 
 

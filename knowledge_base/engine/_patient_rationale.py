@@ -1,33 +1,10 @@
-"""Build per-track plain-UA rationale bullets from `PlanResult.trace`.
+"""Patient explanations from recorded algorithm paths.
 
-Render-time only. Engine MUST NOT consult these bullets as a treatment-
-selection signal (CHARTER §8.3 invariant — same contract as
-`_patient_vocabulary.py`, `_emergency_rf.py`, `_ask_doctor.py`).
-
-The track-selection happens in `algorithm_eval.walk_algorithm`, which
-records each fired clause + RedFlag in `PlanResult.trace`. This module
-re-reads that trace and composes 2-4 plain-UA bullets per track that
-explain to the patient why this branch was reached. Sources of bullets:
-
-  1. **Variant actionability** — when the plan has a strong-tier
-     biomarker hit (ESCAT IA/IB), surface it as a "бо у вас знайдено
-     {gene} {variant}" line. This is the primary biomarker-driven
-     rationale.
-  2. **Fired RedFlags** — for each RF whose `id` appears in the trace,
-     surface the first sentence of `definition_ua` (already plain UA per
-     REDFLAG_AUTHORING_GUIDE).
-  3. **Track-default fallback** — when no biomarker / RF rationale is
-     available, surface a generic "стандарт для вашого діагнозу" line.
-  4. **Track-alternative fallback** — when alternative track has no
-     specific reason in trace, surface a "це альтернативний варіант,
-     обговорити з лікарем" line.
-
-Cap: ≤4 bullets per track. Empty rationale → fallback line.
-
-CHARTER §8.3 boundary: this module reads `trace`, `red_flags`,
-`variant_actionability`. It does NOT vote on track selection. The
-renderer surfaces whatever bullets this module produces; the engine has
-already chosen the tracks and ordered them.
+Render-time only; never an input to treatment selection (CHARTER §8.3).
+Plan-wide biomarker records are informational context outside track
+explanations. A track receives fired-signal context only when the final
+recorded algorithm result identifies that exact indication. Missing or
+unlinked paths remain explicitly unassessed. The clinical plan is immutable.
 """
 
 from __future__ import annotations
@@ -36,8 +13,7 @@ import html
 from typing import Any
 
 
-# Strong-tier ESCAT labels — these get a more confident bullet wording
-# ("найвищий рівень доказів") than mid-tier hits.
+# Evidence tiers used to summarize report-wide findings, never selection.
 _STRONG_TIERS: frozenset[str] = frozenset({"IA", "IB"})
 _MID_TIERS: frozenset[str] = frozenset({"IIA", "IIB"})
 
@@ -45,28 +21,12 @@ _REVIEW_PENDING_EN = "Clinical review of this biomarker record is pending. "
 _REVIEW_PENDING_UK = "Клінічна перевірка цього запису біомаркера ще не завершена. "
 
 
-_FALLBACK_DEFAULT_UA = (
-    "Цей варіант рекомендовано як стандарт для вашого діагнозу на "
-    "основі клінічних рекомендацій."
-)
-_FALLBACK_ALTERNATIVE_UA = (
-    "Це альтернативний варіант — обговоріть з лікарем, чи підходить "
-    "він для вас."
-)
 _FALLBACK_NO_TRACE_UA = (
-    "Цей варіант запропоновано на основі стандартів клінічних "
-    "рекомендацій для вашого діагнозу. Деталі — у технічній версії звіту."
+    "У звіті не записано обґрунтування цього варіанта. Попросіть лікаря перевірити технічний звіт."
 )
 
-_FALLBACK_DEFAULT_EN = (
-    "This option is recommended as a standard for your diagnosis based on clinical guidelines."
-)
-_FALLBACK_ALTERNATIVE_EN = (
-    "This is an alternative option. Discuss with your doctor whether it is suitable for you."
-)
 _FALLBACK_NO_TRACE_EN = (
-    "This option is proposed based on clinical guidelines for your diagnosis. "
-    "See the technical report for details."
+    "The report does not record an explanation for this option. Ask your doctor to review the technical report."
 )
 RATIONALE_TRANSLATION_STATUS = {"en": "draft_pending_review"}
 
@@ -152,85 +112,115 @@ def _rf_definition_ua(rf_dict: Any) -> str:
     return _first_sentence_ua(str(text))
 
 
-def build_track_rationale(plan_result: Any, track: Any, *, target_lang: str = "uk") -> list[str]:
-    """Return up to 4 plain-UA rationale bullets for one track.
-
-    Inputs:
-      * `plan_result` — duck-typed `PlanResult`. Reads `.plan`,
-        `.kb_resolved`, `.trace` (and tolerates absences).
-      * `track` — a `PlanTrack` (or duck-typed equivalent). Reads
-        `.is_default`, `.indication_data`, `.regimen_data`.
-
-    Output: list of plain-UA strings (≤4 bullets). When no signal is
-    available, returns a single-element list with the
-    `_FALLBACK_NO_TRACE_UA` line so the renderer always has something
-    to display.
-
-    Order of consideration (each adds at most one bullet, capped at 4):
-
-      1. Strong-tier biomarker hit (ESCAT IA/IB) — biomarker-driven
-         tracks usually anchor on this.
-      2. Default-track stable-state line — when the track is default and
-         no aggressive RF fired.
-      3. Up to 2 fired-RF lines — pulled from `_first_sentence_ua` of
-         `definition_ua`.
-      4. Alternative-track fallback — when the track is alternative and
-         no other rationale fits.
-
-    The function is tolerant of partial state: missing `kb_resolved`,
-    empty `trace`, `None` indication_data — all fall through to the
-    appropriate fallback. The renderer should ALWAYS get a non-empty
-    list back."""
+def build_plan_findings_context(plan_result: Any, *, target_lang: str = "uk") -> list[str]:
+    """Informational biomarker context, never a track-selection rationale."""
     plan = getattr(plan_result, "plan", None)
+    hits = list(getattr(plan, "variant_actionability", None) or []) if plan else []
+    hit = next((h for h in hits if _hit_tier(h) in _STRONG_TIERS), None)
+    if hit is None:
+        hit = next((h for h in hits if _hit_tier(h) in _MID_TIERS), None)
+    if hit is None or not _gene_variant_label(hit):
+        return []
+    ready = hit.get("clinical_use_ready", False) if isinstance(hit, dict) else getattr(hit, "clinical_use_ready", False)
+    label, tier = _gene_variant_label(hit), _hit_tier(hit)
+    if target_lang == "en":
+        return [("" if ready else _REVIEW_PENDING_EN)
+                + f"The report records {label} with evidence tier {tier}."]
+    return [("" if ready else _REVIEW_PENDING_UK)
+            + f"У звіті записано {label} з рівнем доказів {tier}."]
+
+
+def build_plan_findings_context_html(plan_result: Any, *, target_lang: str = "uk") -> str:
+    bullets = build_plan_findings_context(plan_result, target_lang=target_lang)
+    if not bullets:
+        return ""
+    heading = ("Report-wide finding — not a reason for selecting an option."
+               if target_lang == "en" else "Загальна знахідка у звіті — не причина вибору окремого варіанта.")
+    prefix = _REVIEW_PENDING_EN if target_lang == "en" else _REVIEW_PENDING_UK
+    items = []
+    for bullet in bullets:
+        content = html.escape(bullet)
+        if bullet.startswith(prefix):
+            content = (f'<span class="translation-fallback" data-biomarker-review="pending">'
+                       f'{html.escape(prefix.strip())}</span> ' + html.escape(bullet[len(prefix):]))
+        items.append(f"<li>{content}</li>")
+    return ('<div class="why-findings-context" data-rationale-scope="plan-findings">'
+            f'<p>{html.escape(heading)}</p><ul>{"".join(items)}</ul></div>')
+
+
+def build_plan_signal_context_html(plan_result: Any, *, target_lang: str = "uk") -> str:
+    """Keep all recorded signal observations accessible outside track reasons.
+
+    Retain original field text and its declared language. This is not a
+    severity filter, a treatment-selection input or a clinical endorsement.
+    """
+    ids = _fired_rf_ids_from_trace(getattr(plan_result, "trace", None))
+    if not ids:
+        return ""
+    resolved = getattr(plan_result, "kb_resolved", None) or {}
+    lookup = resolved.get("red_flags", {}) if isinstance(resolved, dict) else {}
+    english = target_lang == "en"
+    heading = ("Signals recorded in this report — not reasons for selecting every option."
+               if english else "Сигнали, записані у звіті, — не причини вибору кожного варіанта.")
+    caption = "Recorded signal (original source text):" if english else "Записаний сигнал (оригінальний текст джерела):"
+    missing = ("A signal was recorded, but its explanation is unavailable. See the technical report."
+               if english else "Сигнал записано, але його пояснення недоступне. Дивіться технічний звіт.")
+    items = []
+    for rf_id in ids:
+        record = lookup.get(rf_id) if isinstance(lookup, dict) else None
+        text, language = "", "und"
+        if isinstance(record, dict):
+            fields = (("definition", "en"), ("definition_ua", "uk")) if english else (("definition_ua", "uk"), ("definition", "en"))
+            for field, declared in fields:
+                if record.get(field):
+                    text, language = _first_sentence_ua(str(record[field])) + ".", declared
+                    break
+        content = (html.escape(caption) + " "
+                   + f'<span lang="{language}" data-original-source>{html.escape(text)}</span>'
+                   if text else html.escape(missing))
+        items.append(f'<li data-source-id="{html.escape(str(rf_id), quote=True)}">{content}</li>')
+    return ('<div class="why-signals-context" data-rationale-scope="plan-signals">'
+            f'<p>{html.escape(heading)}</p><ul>{"".join(items)}</ul></div>')
+
+
+def build_track_rationale(plan_result: Any, track: Any, *, target_lang: str = "uk") -> list[str]:
+    """Return at most four escaped-later bullets for a recorded track path.
+
+    No gene, evidence tier, default flag or medicine-name matching is used
+    to infer selection. Legacy traces without a selected indication cannot
+    substantiate a track-specific explanation.
+    """
     english = target_lang == "en"
     bullets: list[str] = []
-    is_default = bool(getattr(track, "is_default", False))
 
-    # ── 1. Strong-tier biomarker hit ────────────────────────────────
-    hits = []
-    if plan is not None:
-        hits = list(getattr(plan, "variant_actionability", None) or [])
-    strong_hit = next((h for h in hits if _hit_tier(h) in _STRONG_TIERS), None)
-    if strong_hit is None:
-        strong_hit = next((h for h in hits if _hit_tier(h) in _MID_TIERS), None)
-    if strong_hit is not None:
-        label = _gene_variant_label(strong_hit)
-        tier = _hit_tier(strong_hit)
-        if label:
-            ready = (strong_hit.get("clinical_use_ready", False)
-                     if isinstance(strong_hit, dict)
-                     else getattr(strong_hit, "clinical_use_ready", False))
-            if not ready:
-                bullets.append(
-                    (_REVIEW_PENDING_EN + f"The report records {label} with evidence tier {tier}. "
-                     "This unreviewed record does not establish that this treatment is appropriate for you."
-                     if english else _REVIEW_PENDING_UK + f"У звіті записано {label} з рівнем доказів {tier}. "
-                     "Неперевірений запис не підтверджує, що це лікування підходить саме вам.")
-                )
-            elif tier in _STRONG_TIERS:
-                bullets.append(
-                    (f"Because {label} was found, it provides strong evidence for choosing this treatment."
-                     if english else f"Бо у вас знайдено {label} — це сильний доказовий "
-                     f"маркер для вибору саме цього лікування.")
-                )
-            else:
-                bullets.append(
-                    (f"Because {label} was found, there is moderate evidence in favour of this option."
-                     if english else f"Бо у вас знайдено {label} — є помірні докази на "
-                     f"користь цього варіанту.")
-                )
+    # A plan-wide biomarker record is not evidence of why any track was
+    # selected. It is rendered once, outside per-track explanations.
+    trace = getattr(plan_result, "trace", None) or []
+    indication_id = getattr(track, "indication_id", None)
+    last = trace[-1] if isinstance(trace, list) and trace else None
+    branch = last.get("branch") if isinstance(last, dict) else None
+    selected = (branch.get("result") if isinstance(branch, dict) and "result" in branch
+                else last.get("result") if isinstance(last, dict) else None)
+    linked = bool(indication_id and selected == indication_id)
+    if not linked:
+        notice = ("This report does not record an algorithm path selecting this option. "
+                  "Ask your doctor to review the technical report and its suitability for you."
+                  if english else
+                  "У цьому звіті не записано шлях алгоритму, що обрав цей варіант. "
+                  "Попросіть лікаря перевірити технічний звіт і відповідність цього варіанта вашій ситуації.")
+        return [notice]
 
-    # ── 2. Default-track stable-state line ──────────────────────────
-    fired_rf_ids = _fired_rf_ids_from_trace(
-        getattr(plan_result, "trace", None)
+    bullets.append(
+        "The recorded algorithm path selected this option. This does not establish its suitability for you."
+        if english else
+        "Записаний шлях алгоритму обрав цей варіант. Це не підтверджує, що він підходить саме вам."
     )
-    if is_default and not fired_rf_ids and len(bullets) < 4:
+    fired_rf_ids = _fired_rf_ids_from_trace(trace)
+    if not fired_rf_ids:
         bullets.append(
-            "The algorithm proposed the standard option; no red flags were recorded as triggered in its trace. "
-            "This does not rule out risks or replace assessment by your doctor."
+            "No red flags were recorded as triggered on that path. This does not rule out risks or replace assessment by your doctor."
             if english else
-            "Алгоритм запропонував стандартний варіант; у його журналі немає спрацьованих сигналів-тривоги. "
-            "Це не виключає ризиків і не замінює оцінки лікаря."
+            "На цьому шляху не записано спрацьованих сигналів-тривоги. Це не виключає ризиків і не замінює оцінки лікаря."
         )
 
     # ── 3. Fired-RF lines ───────────────────────────────────────────
@@ -260,12 +250,6 @@ def build_track_rationale(plan_result: Any, track: Any, *, target_lang: str = "u
                 bullets.append(f"У вас зафіксовано: {text}.")
             rf_lines_added += 1
 
-    # ── 4. Alternative-track fallback ───────────────────────────────
-    if not is_default and len(bullets) == 0:
-        bullets.append(_FALLBACK_ALTERNATIVE_EN if english else _FALLBACK_ALTERNATIVE_UA)
-    elif not bullets:
-        bullets.append(_FALLBACK_DEFAULT_EN if english else _FALLBACK_DEFAULT_UA)
-
     return bullets[:4]
 
 
@@ -290,16 +274,14 @@ def build_track_rationale_html(plan_result: Any, track: Any, *, target_lang: str
         if target_lang == 'en' and bullet.startswith(original_prefix):
             content = (html.escape(original_prefix)
                        + f'<span lang="uk" data-original-source>{html.escape(bullet[len(original_prefix):])}</span>')
-        pending_prefix = _REVIEW_PENDING_EN if target_lang == "en" else _REVIEW_PENDING_UK
-        if bullet.startswith(pending_prefix):
-            content = (f'<span class="translation-fallback" data-biomarker-review="pending">'
-                       f'{html.escape(pending_prefix.strip())}</span> '
-                       + html.escape(bullet[len(pending_prefix):]))
         items.append(f'<li>{content}</li>')
     return f'<ul>{"".join(items)}</ul>'
 
 
 __all__ = [
+    "build_plan_findings_context",
+    "build_plan_findings_context_html",
+    "build_plan_signal_context_html",
     "build_track_rationale",
     "build_track_rationale_html",
 ]

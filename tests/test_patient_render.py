@@ -854,24 +854,19 @@ def test_patient_html_has_why_section():
 # ── Section I — Phase 3: rationale from PlanResult.trace ─────────────
 
 
-def test_patient_rationale_braf_v600e_mcrc_mentions_braf():
-    """The synthetic BRAF V600E mCRC patient should have a rationale
-    bullet that names the BRAF V600E hit. Tier handling: the engine
-    populates `variant_actionability` with whichever ESCAT cell matched
-    (typically IB for BRAF V600E in CRC); both strong-tier and mid-tier
-    wordings should mention the gene+variant."""
-    from knowledge_base.engine._patient_rationale import build_track_rationale
-
+def test_braf_report_context_does_not_invent_a_track_selection():
+    from knowledge_base.engine._patient_rationale import build_plan_findings_context, build_track_rationale
     result = _build_synthetic_braf_v600e_mcrc_plan()
-    if result.plan is None or not result.plan.tracks:
-        pytest.skip("Synthetic mCRC plan should produce at least 1 track")
-    if not result.plan.variant_actionability:
-        pytest.skip("Plan didn't surface a BRAF V600E hit (KB drift?)")
-    bullets = build_track_rationale(result, result.plan.tracks[0])
-    joined = " ".join(bullets)
-    assert "BRAF" in joined, (
-        f"Rationale should name BRAF; got: {bullets!r}"
-    )
+    assert result.plan and result.plan.variant_actionability
+    assert "BRAF" in " ".join(build_plan_findings_context(result))
+    # This incomplete profile takes a null-result branch and yields a
+    # provisional default. The renderer must not turn it into clinical support.
+    assert result.trace[-1]["branch"]["result"] is None
+    for track in result.plan.tracks:
+        bullets = build_track_rationale(result, track)
+        assert "не записано шлях" in bullets[0]
+        assert "BRAF" not in " ".join(bullets)
+
 
 
 def test_patient_rationale_renders_in_why_section():
@@ -901,6 +896,7 @@ def test_patient_rationale_no_trace_fallback():
     from knowledge_base.engine._patient_rationale import build_track_rationale
 
     class _FakeTrack:
+        indication_id = "IND-FAKE"
         is_default = True
         indication_data = None
         regimen_data = None
@@ -912,7 +908,7 @@ def test_patient_rationale_no_trace_fallback():
 
     bullets = build_track_rationale(_FakeResult(), _FakeTrack())
     assert bullets, "Empty plan should still produce at least one fallback bullet"
-    assert any("стандарт" in b.lower() or "альтернативн" in b.lower() for b in bullets)
+    assert any("не записано шлях" in b.lower() for b in bullets)
 
 
 def test_patient_rationale_fired_rf_surfaces_in_bullets():
@@ -921,6 +917,7 @@ def test_patient_rationale_fired_rf_surfaces_in_bullets():
     from knowledge_base.engine._patient_rationale import build_track_rationale
 
     class _FakeTrack:
+        indication_id = "IND-FAKE"
         is_default = False
         indication_data = None
         regimen_data = None
@@ -942,7 +939,7 @@ def test_patient_rationale_fired_rf_surfaces_in_bullets():
             {
                 "step": "step_1",
                 "outcome": "REG-FOO",
-                "branch": "default",
+                "branch": {"result": "IND-FAKE"},
                 "fired_red_flags": ["RF-FAKE-HBV"],
             }
         ]
@@ -960,6 +957,7 @@ def test_patient_rationale_caps_at_4_bullets():
     from knowledge_base.engine._patient_rationale import build_track_rationale
 
     class _FakeTrack:
+        indication_id = "IND-FAKE"
         is_default = True
         indication_data = None
         regimen_data = None
@@ -979,7 +977,7 @@ def test_patient_rationale_caps_at_4_bullets():
             {
                 "step": f"step_{i}",
                 "outcome": "REG-FOO",
-                "branch": "default",
+                "branch": {"result": "IND-FAKE"},
                 "fired_red_flags": [f"RF-{i}"],
             }
             for i in range(10)

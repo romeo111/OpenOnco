@@ -108,11 +108,19 @@ def test_generated_rationale_review_notices_match_across_languages():
         inventory = {}
         for path in (ROOT / 'docs' / prefix / 'cases').glob('*.patient.html'):
             document = path.read_text(encoding='utf-8')
-            inventory[path.name] = document.count('data-biomarker-review="pending"')
-            if inventory[path.name]:
+            pending_count = document.count('data-biomarker-review="pending"')
+            signals = re.search(r'<div class="why-signals-context".*?</div>', document, re.S)
+            signal_ids = tuple(re.findall(r'data-source-id="([^"]+)"', signals.group())) if signals else ()
+            assert len(signal_ids) == len(set(signal_ids)), path
+            inventory[path.name] = (pending_count, signal_ids)
+            assert pending_count <= 1, path
+            blocks = re.findall(r'<div class="why-track".*?</div>', document, re.S)
+            assert all('data-biomarker-review=' not in block for block in blocks), path
+            if pending_count:
+                assert 'data-rationale-scope="plan-findings"' in document, path
                 assert 'data-clinical-review="pending"' in document, path
         assert inventory, prefix
-        assert any(inventory.values()), prefix
+        assert any(count for count, ids in inventory.values()), prefix
         if reference is None:
             reference = inventory
         else:

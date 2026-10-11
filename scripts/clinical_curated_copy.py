@@ -83,6 +83,48 @@ def safety_notices_for(locale):
     return {source: translations[index] for source, translations in SAFETY_NOTICES.items()}
 
 UI_MESSAGES = {
+    'Signals recorded in this report — not reasons for selecting every option.': (
+        'Señales registradas en este informe; no son motivos para seleccionar todas las opciones.',
+        'Sinais registados neste relatório; não são motivos para selecionar todas as opções.',
+        'In diesem Bericht aufgezeichnete Signale; keine Gründe für die Auswahl jeder Option.',
+        'Signaux enregistrés dans ce rapport ; ce ne sont pas des motifs de sélection de chaque option.',
+    ),
+    'Recorded signal (original source text):': (
+        'Señal registrada (texto original de la fuente):',
+        'Sinal registado (texto original da fonte):',
+        'Aufgezeichnetes Signal (Originaltext der Quelle):',
+        'Signal enregistré (texte original de la source) :',
+    ),
+    'A signal was recorded, but its explanation is unavailable. See the technical report.': (
+        'Se registró una señal, pero su explicación no está disponible. Consulte el informe técnico.',
+        'Foi registado um sinal, mas a sua explicação não está disponível. Consulte o relatório técnico.',
+        'Ein Signal wurde aufgezeichnet, aber seine Erklärung ist nicht verfügbar. Siehe den technischen Bericht.',
+        'Un signal a été enregistré, mais son explication est indisponible. Consultez le rapport technique.',
+    ),
+    'Report-wide finding — not a reason for selecting an option.': (
+        'Hallazgo general del informe; no es un motivo para seleccionar una opción.',
+        'Achado geral do relatório; não é um motivo para selecionar uma opção.',
+        'Befund des gesamten Berichts; kein Grund für die Auswahl einer Option.',
+        'Constat général du rapport ; ce n’est pas un motif de sélection d’une option.',
+    ),
+    'This report does not record an algorithm path selecting this option. Ask your doctor to review the technical report and its suitability for you.': (
+        'Este informe no registra una ruta del algoritmo que seleccione esta opción. Pida a su médico que revise el informe técnico y si esta opción es adecuada para usted.',
+        'Este relatório não regista um percurso do algoritmo que selecione esta opção. Peça ao seu médico que reveja o relatório técnico e se esta opção é adequada para si.',
+        'Dieser Bericht enthält keinen aufgezeichneten Algorithmuspfad, der diese Option auswählt. Bitten Sie Ihre Ärztin oder Ihren Arzt, den technischen Bericht zu prüfen und zu beurteilen, ob diese Option für Sie geeignet ist.',
+        'Ce rapport ne contient pas de parcours enregistré de l’algorithme sélectionnant cette option. Demandez à votre médecin d’examiner le rapport technique et si cette option vous convient.',
+    ),
+    'The recorded algorithm path selected this option. This does not establish its suitability for you.': (
+        'La ruta registrada del algoritmo seleccionó esta opción. Esto no demuestra que sea adecuada para usted.',
+        'O percurso registado do algoritmo selecionou esta opção. Isto não demonstra que seja adequada para si.',
+        'Der aufgezeichnete Algorithmuspfad hat diese Option ausgewählt. Dies bestätigt nicht, dass sie für Sie geeignet ist.',
+        'Le parcours enregistré de l’algorithme a sélectionné cette option. Cela ne confirme pas qu’elle vous convient.',
+    ),
+    'No red flags were recorded as triggered on that path. This does not rule out risks or replace assessment by your doctor.': (
+        'No se registraron señales de alarma activadas en esa ruta. Esto no descarta riesgos ni sustituye la evaluación de su médico.',
+        'Não foram registados sinais de alerta ativados nesse percurso. Isto não exclui riscos nem substitui a avaliação pelo seu médico.',
+        'Auf diesem Pfad wurden keine ausgelösten Warnsignale aufgezeichnet. Dies schließt Risiken nicht aus und ersetzt keine ärztliche Beurteilung.',
+        'Aucun signal d’alerte déclenché n’a été enregistré sur ce parcours. Cela n’exclut pas les risques et ne remplace pas l’évaluation par votre médecin.',
+    ),
     'Clinical review of this biomarker record is pending.': (
         'La revisión clínica de este registro de biomarcador está pendiente.',
         'A revisão clínica deste registo de biomarcador está pendente.',
