@@ -6,6 +6,7 @@ from knowledge_base.engine._patient_rationale import (
 )
 from knowledge_base.engine.render import _render_emergency_section
 from knowledge_base.engine.render import _medicine_form_ua, _regimen_schedule_ua
+from knowledge_base.engine.render import _regimen_tolerability_ua, _render_regimen_tolerability
 import pytest
 
 
@@ -87,3 +88,17 @@ def test_english_schedule_preserves_counts_and_freeform_source():
     assert 'original source text' in result
     assert 'Не припиняти &lt;умова&gt;' in result
     assert '28 days' in result
+
+
+@pytest.mark.parametrize('profile', ['', 'none', 'low', 'low_moderate', 'moderate', 'moderate-high', 'moderate-severe', 'high', 'severe', 'very-high', 'high special', 'unknown'])
+def test_english_tolerability_keeps_category_and_personal_prediction_caveat(profile):
+    data = {'toxicity_profile': profile}
+    original = deepcopy(data)
+    ua = _regimen_tolerability_ua(data)
+    en = _regimen_tolerability_ua(data, target_lang='en')
+    assert en[2] == ua[2]
+    assert en[0] != ua[0]
+    rendered = _render_regimen_tolerability(data, target_lang='en')
+    assert 'not a prediction for you personally' in rendered
+    assert f'data-toxicity-profile="{profile}"' in rendered
+    assert data == original

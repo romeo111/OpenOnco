@@ -3813,13 +3813,27 @@ def _medicine_form_ua(component: dict, drug: dict, *, target_lang: str = "uk") -
     return ("; or " if target_lang == 'en' else "; або ").join(forms)
 
 
-def _regimen_tolerability_ua(regimen_data: Optional[dict]) -> tuple[str, str, str]:
+def _regimen_tolerability_ua(regimen_data: Optional[dict], *, target_lang: str = "uk") -> tuple[str, str, str]:
     """Translate a regimen toxicity profile into a patient-facing load class.
 
     Returns ``(label, explanation, badge_class)``. This is deliberately an
     orientation label for the whole regimen, not an individual prediction of
     adverse effects or a treatment-selection signal.
     """
+    if target_lang == 'en':
+        label, _, badge = _regimen_tolerability_ua(regimen_data)
+        translations = {
+            "Ще не вказано": ("Not yet specified", "The overall treatment burden for this regimen has not yet been described in the data."),
+            "Підтримувальне або мінімальне навантаження": ("Supportive or minimal burden", "This regimen usually has a minimal medicine-related burden."),
+            "Легше навантаження": ("Lower burden", "This is usually one of the regimens with a lower overall treatment burden."),
+            "Легке–помірне навантаження": ("Low to moderate burden", "The burden is usually higher than minimal but lower than that of intensive regimens."),
+            "Помірне навантаження": ("Moderate burden", "This regimen can noticeably affect how you feel and requires planned monitoring."),
+            "Помірне–високе навантаження": ("Moderate to high burden", "This regimen is closer to intensive treatment and usually requires careful monitoring."),
+            "Високе навантаження («важка» схема)": ("High burden (an intensive regimen)", "This is an intensive regimen that usually requires more frequent monitoring and support."),
+            "Індивідуально або залежно від схеми": ("Individual or regimen-dependent", "The burden does not fit a standard category; discuss it with your doctor."),
+        }
+        translated_label, explanation = translations[label]
+        return translated_label, explanation, badge
     raw = ""
     if isinstance(regimen_data, dict):
         raw = str(regimen_data.get("toxicity_profile") or "").strip().lower()
@@ -3875,18 +3889,25 @@ def _regimen_tolerability_ua(regimen_data: Optional[dict]) -> tuple[str, str, st
     )
 
 
-def _render_regimen_tolerability(regimen_data: Optional[dict]) -> str:
-    label, explanation, badge_class = _regimen_tolerability_ua(regimen_data)
+def _render_regimen_tolerability(regimen_data: Optional[dict], *, target_lang: str = "uk") -> str:
+    label, explanation, badge_class = _regimen_tolerability_ua(regimen_data, target_lang=target_lang)
+    heading = 'Expected tolerability class:' if target_lang == 'en' else 'Клас очікуваної переносимості:'
+    caveat = (
+        'This is an approximate class for the whole regimen, not a prediction for you personally: '
+        'tolerability depends on your health, doses and supportive treatment.'
+        if target_lang == 'en' else
+        'Це орієнтовний клас усієї схеми, а не прогноз саме для вас: '
+        'переносимість залежить від стану здоров’я, доз і підтримувального лікування.'
+    )
     raw_profile = ""
     if isinstance(regimen_data, dict):
         raw_profile = str(regimen_data.get("toxicity_profile") or "")
     return (
         f'<div class="treatment-load" data-toxicity-profile="{_h(raw_profile)}">'
-        '<p class="treatment-load-heading"><strong>Клас очікуваної переносимості:</strong></p>'
+        f'<p class="treatment-load-heading"><strong>{heading}</strong></p>'
         f'<p class="patient-badge {_h(badge_class)}">{_h(label)}</p>'
         f'<p class="treatment-load-note">{_h(explanation)} '
-        "Це орієнтовний клас усієї схеми, а не прогноз саме для вас: "
-        "переносимість залежить від стану здоров’я, доз і підтримувального лікування.</p>"
+        f"{caveat}</p>"
         "</div>"
     )
 
