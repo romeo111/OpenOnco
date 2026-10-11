@@ -57,6 +57,7 @@ from ._patient_vocabulary import (
     ESCAT_TIER_PATIENT_LABEL_EN,
     expand_first_use as _expand_first_use,
     explain as _explain_patient,
+    explain_drug_class as _explain_patient_drug_class,
 )
 from .diagnostic import _DIAGNOSTIC_BANNER, DiagnosticPlanResult
 from .mdt_orchestrator import MDTOrchestrationResult
@@ -3969,11 +3970,11 @@ def _render_track_drugs(
             lay = (drug.get("notes_patient") or "").strip()
         authored_note = bool(lay)
         if not lay and drug_class:
-            lay = _explain_patient(drug_class) or ""
+            lay = _explain_patient_drug_class(drug_class) or ""
         if not lay:
             lay = "medicine for your condition — discuss the details with your doctor" if target_lang == 'en' else "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
         elif target_lang == 'en':
-            translated_class = _explain_patient(drug_class, target_lang='en') if drug_class else None
+            translated_class = _explain_patient_drug_class(drug_class, target_lang='en') if drug_class else None
             if translated_class and not authored_note:
                 lay = translated_class
             else:

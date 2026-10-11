@@ -615,6 +615,32 @@ def explain(term: str, *, target_lang: str = "uk") -> Optional[str]:
     return None
 
 
+# Explicit display aliases for authored class labels. No substring matching:
+# combination products and unrecognised classes must retain the fallback.
+DRUG_CLASS_PATIENT_ALIASES = {
+    "anthracycline (topoisomerase ii inhibitor + dna intercalator)": "anthracycline",
+    "taxane (microtubule stabilizer)": "taxane",
+    "platinum alkylating agent (first-generation)": "platinum agent",
+    "platinum alkylating agent (second-generation)": "platinum agent",
+    "purine analogue (deoxyadenosine analogue)": "purine analog",
+    "vinca alkaloid (microtubule inhibitor)": "vinca alkaloid",
+    "antineoplastic — vinca alkaloid (microtubule inhibitor)": "vinca alkaloid",
+    "topoisomerase i inhibitor (semisynthetic camptothecin)": "topoisomerase inhibitor",
+    "second-generation irreversible proteasome inhibitor (epoxyketone)": "proteasome inhibitor",
+}
+
+
+def explain_drug_class(term: str, *, target_lang: str = "uk") -> Optional[str]:
+    """Resolve only known drug classes and explicit display aliases."""
+    if not isinstance(term, str):
+        return None
+    normal = term.strip().lower()
+    canonical = DRUG_CLASS_PATIENT_ALIASES.get(normal)
+    if canonical is None:
+        canonical = next((key for key in DRUG_CLASS_PLAIN_UA if key.lower() == normal), None)
+    return explain(canonical, target_lang=target_lang) if canonical else None
+
+
 # ── Patient-mode tier badge labels ───────────────────────────────────
 #
 # Shorter labels for the on-page badge itself (the long ESCAT_PLAIN_UA

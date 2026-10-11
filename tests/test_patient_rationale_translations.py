@@ -12,6 +12,7 @@ import pytest
 from knowledge_base.engine._patient_vocabulary import (
     ESCAT_PLAIN_UA, ESCAT_TIER_PATIENT_LABEL, ESCAT_TIER_PATIENT_LABEL_EN,
     PATIENT_VOCABULARY_EN_DRAFT, PATIENT_VOCABULARY_TRANSLATION_STATUS, explain,
+    DRUG_CLASS_PATIENT_ALIASES, explain_drug_class,
 )
 
 
@@ -161,6 +162,32 @@ def test_mismatch_repair_glosses_keep_distinct_test_meanings_and_response_uncert
     assert 'test results may disagree' in explain('dMMR', target_lang='en')
     assert 'не означає, що в пухлині немає інших змін ДНК' in explain('pMMR')
     assert 'does not mean there are no other DNA changes' in explain('pMMR', target_lang='en')
+
+
+def test_drug_class_aliases_are_explicit_and_do_not_match_combination_products():
+    for alias, canonical in DRUG_CLASS_PATIENT_ALIASES.items():
+        for language in ('uk', 'en'):
+            assert explain_drug_class(' ' + alias.upper() + ' ', target_lang=language) == explain(canonical, target_lang=language)
+    assert explain_drug_class('Anthracycline plus unknown investigational medicine') is None
+    assert explain_drug_class('Liposomal-encapsulated cytarabine + daunorubicin (5:1 molar ratio)') is None
+    assert explain_drug_class('MSI-H') is None
+    assert explain_drug_class(None) is None
+
+
+def test_actual_daunorubicin_class_renders_explanation_without_changing_record():
+    from pathlib import Path
+    import yaml
+    path = Path(__file__).resolve().parents[1] / 'knowledge_base/hosted/content/drugs/daunorubicin.yaml'
+    drug = yaml.load(path.read_text(encoding='utf-8'), Loader=getattr(yaml, 'CSafeLoader', yaml.SafeLoader))
+    before = deepcopy(drug)
+    track = SimpleNamespace(regimen_data={'components': [{'drug_id': drug['id'], 'route': 'IV'}]})
+    result = SimpleNamespace(disease_id='DIS-AML')
+    for language in ('uk', 'en'):
+        html = _render_track_drugs(result, track, {drug['id']: drug}, None, target_lang=language)
+        assert explain('anthracycline', target_lang=language) in html
+        assert 'medicine for your condition' not in html
+        assert 'препарат для лікування вашого захворювання' not in html
+    assert drug == before
 
 
 def test_english_drug_class_explanation_retains_authored_patient_note():
