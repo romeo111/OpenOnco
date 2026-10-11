@@ -275,8 +275,8 @@ VARIANT_TYPE_PLAIN_UA: dict[str, str] = {
 # tier explanations. Plain-UA wording for the actionability panel.
 
 ESCAT_PLAIN_UA: dict[str, str] = {
-    "IA": "найвищий рівень — препарат FDA/EMA-схвалений саме для вашого варіанту й типу пухлини, з randomized clinical trial доказами",
-    "IB": "дуже високий рівень — препарат працює, часто вимагається комбінація",
+    "IA": "клінічна користь для цієї молекулярної мішені підтверджена рандомізованими дослідженнями; придатність лікування й регуляторний статус перевіряє лікар",
+    "IB": "клінічна користь для цієї молекулярної мішені показана проспективними нерандомізованими дослідженнями; придатність лікування перевіряє лікар",
     "IIA": "помірний рівень — ретроспективні дані показують клінічну користь у вашому типі пухлини",
     "IIB": "обмежений рівень — попередні дані обнадійливі, але треба більше доказів",
     "IIIA": "цільовий препарат існує для іншого типу пухлини — basket-trial показує користь і у вас; обговорити з лікарем",
@@ -550,14 +550,29 @@ def explain(term: str) -> Optional[str]:
 # explanations live in the tooltip / detail block).
 
 ESCAT_TIER_PATIENT_LABEL: dict[str, str] = {
-    "IA": "Найвищий рівень доказів — FDA схвалив саме для вас",
-    "IB": "Дуже високий — у комбінації",
+    "IA": "Клінічна користь підтверджена рандомізованими дослідженнями",
+    "IB": "Клінічна користь показана проспективними нерандомізованими дослідженнями",
     "IIA": "Помірний — ретроспективні дані",
     "IIB": "Обмежений — попередні дані обнадійливі",
     "IIIA": "Цільовий препарат існує — обговорити",
     "IIIB": "Цільовий препарат для іншого типу — trial-only",
     "IV": "Поки тільки лабораторні моделі",
     "X": "Поки даних немає",
+}
+
+
+# Draft patient wording based on Mateo et al., ESCAT (2018):
+# https://pubmed.ncbi.nlm.nih.gov/30137196/
+# The tier is evidence for a target, not an individual FDA approval.
+ESCAT_TIER_PATIENT_LABEL_EN: dict[str, str] = {
+    "IA": "Clinical benefit supported by randomised studies",
+    "IB": "Clinical benefit shown in prospective non-randomised studies",
+    "IIA": "Investigational target; additional evidence is needed",
+    "IIB": "Investigational target; additional evidence is needed",
+    "IIIA": "Evidence comes from other tumour types or similar molecular targets",
+    "IIIB": "Evidence comes from other tumour types or similar molecular targets",
+    "IV": "Evidence from laboratory models only",
+    "X": "No evidence of actionability",
 }
 
 

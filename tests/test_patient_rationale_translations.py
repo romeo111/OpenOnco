@@ -8,6 +8,9 @@ from knowledge_base.engine.render import _render_emergency_section
 from knowledge_base.engine.render import _medicine_form_ua, _regimen_schedule_ua
 from knowledge_base.engine.render import _regimen_tolerability_ua, _render_regimen_tolerability
 import pytest
+from knowledge_base.engine._patient_vocabulary import (
+    ESCAT_PLAIN_UA, ESCAT_TIER_PATIENT_LABEL, ESCAT_TIER_PATIENT_LABEL_EN,
+)
 
 
 def test_english_rationale_preserves_findings_thresholds_and_input():
@@ -102,3 +105,12 @@ def test_english_tolerability_keeps_category_and_personal_prediction_caveat(prof
     assert 'not a prediction for you personally' in rendered
     assert f'data-toxicity-profile="{profile}"' in rendered
     assert data == original
+
+
+def test_patient_escat_labels_do_not_claim_personal_regulatory_approval():
+    assert ESCAT_TIER_PATIENT_LABEL_EN.keys() == ESCAT_TIER_PATIENT_LABEL.keys()
+    assert 'FDA' not in ESCAT_TIER_PATIENT_LABEL['IA']
+    assert 'FDA' not in ESCAT_PLAIN_UA['IA']
+    assert 'рандомізованими' in ESCAT_TIER_PATIENT_LABEL['IA']
+    assert 'нерандомізованими' in ESCAT_TIER_PATIENT_LABEL['IB']
+    assert 'non-randomised' in ESCAT_TIER_PATIENT_LABEL_EN['IB']
