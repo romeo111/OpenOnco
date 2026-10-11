@@ -53,8 +53,19 @@ def test_runtime_packages_include_transitive_cross_disease_dependencies(tmp_path
     build_site.bundle_engine(output)
     with zipfile.ZipFile(output / "openonco-engine-core.zip") as archive:
         core = set(archive.namelist())
-    assert any(name.endswith("/other.yaml") and "/indications/" in name for name in core)
-    assert any(name.endswith("/other.yaml") and "/regimens/" in name for name in core)
+    assert not any(name.endswith("/other.yaml") for name in core)
+    with zipfile.ZipFile(output / "openonco-engine-core.zip") as archive:
+        manifest = json.loads(archive.read("knowledge_base/hosted/content/_bundle_manifest.json"))
+    assert manifest["deferred_entities"]["IND-OTHER"] == {
+        "disease_id": "DIS-OTHER", "type": "indications"
+    }
+    assert manifest["deferred_entities"]["REG-OTHER"] == {
+        "disease_id": "DIS-OTHER", "type": "regimens"
+    }
+    with zipfile.ZipFile(output / "disease/openonco-dis-other.zip") as archive:
+        other_module = set(archive.namelist())
+    assert any(name.endswith("/other.yaml") and "/indications/" in name for name in other_module)
+    assert any(name.endswith("/other.yaml") and "/regimens/" in name for name in other_module)
     assert not any(name.endswith("/aml.yaml") for name in core)
     with zipfile.ZipFile(output / "disease/openonco-dis-aml.zip") as archive:
         module = set(archive.namelist())

@@ -227,6 +227,9 @@ class LoadResult:
     # id -> {"type": "diseases", "data": {...raw yaml...}, "path": Path}
     schema_errors: list[tuple[Path, str]] = field(default_factory=list)
     ref_errors: list[tuple[Path, str]] = field(default_factory=list)
+    # Exact missing foreign keys, kept separately so a packaged, partially
+    # loaded KB can distinguish deferred modules from broken references.
+    missing_refs: list[tuple[Path, str, str, str | None]] = field(default_factory=list)
     contract_errors: list[tuple[Path, str]] = field(default_factory=list)
     contract_warnings: list[tuple[Path, str]] = field(default_factory=list)
 
@@ -420,9 +423,9 @@ def _load_content_impl(
                 # and must always make the KB invalid.
                 result.ref_errors.append((path, msg))
                 return
-            result.ref_errors.append(
-                (path, f"{field_label}: '{ref_id}' not found in any loaded entity")
-            )
+            msg = f"{field_label}: '{ref_id}' not found in any loaded entity"
+            result.ref_errors.append((path, msg))
+            result.missing_refs.append((path, msg, str(ref_id), target_type))
             return
         actual_type = result.entities_by_id[ref_id]["type"]
         if actual_type != target_type:
@@ -435,9 +438,9 @@ def _load_content_impl(
         if ref_id is None or ref_id == "":
             return
         if ref_id not in result.entities_by_id:
-            result.ref_errors.append(
-                (path, f"{field_label}: '{ref_id}' not found in any loaded entity")
-            )
+            msg = f"{field_label}: '{ref_id}' not found in any loaded entity"
+            result.ref_errors.append((path, msg))
+            result.missing_refs.append((path, msg, str(ref_id), None))
 
     for eid, info in result.entities_by_id.items():
         etype = info["type"]
