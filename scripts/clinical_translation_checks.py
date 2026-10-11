@@ -32,6 +32,40 @@ ALTERNATION_TRANSLATION = {
     'de': re.compile(r'\bwechsel\w*\b', re.I),
     'fr': re.compile(r'\baltern\w*\b', re.I),
 }
+# A translated sentence must retain explicit safety and treatment-duration
+# clauses. These narrow source triggers avoid inferring clinical meaning from
+# general sentence length, which differs substantially by language.
+CRITICAL_CLAUSES = (
+    (re.compile(r'Active bleeding is an absolute hold on systemic therapy until controlled', re.I), {
+        'es': re.compile(r'\b(?:suspend|deten|interrump|aplaz|contraindic)\w*\b', re.I),
+        'pt': re.compile(r'\b(?:suspend|interromp|adi|contraindic)\w*\b', re.I),
+        'de': re.compile(r'\b(?:halt|stopp|unterbrech|aussetz)\w*\b', re.I),
+        'fr': re.compile(r'\b(?:arrêt|suspend|interromp|contre.indic)\w*\b', re.I),
+    }),
+    (re.compile(r'Triggers carbo-mono OR weekly-dose-dense-pacli', re.I), {
+        locale: re.compile(r'(?=.*carbo.mono)(?=.*pacli)(?=.*' + weekly + r')', re.I | re.S)
+        for locale, weekly in {
+            'es': r'semanal|weekly', 'pt': r'semanal|weekly',
+            'de': r'wöch|weekly', 'fr': r'hebdomadaire|weekly',
+        }.items()
+    }),
+    (re.compile(r'Continuous until progression or unacceptable toxicity', re.I), {
+        'es': re.compile(r'progresi[oó]n.{0,50}toxicidad|toxicidad.{0,50}progresi[oó]n', re.I),
+        'pt': re.compile(r'progress[aã]o.{0,50}toxicidade|toxicidade.{0,50}progress[aã]o', re.I),
+        'de': re.compile(r'(?:progression|fortschreit\w*).{0,50}toxizit[aä]t|toxizit[aä]t.{0,50}(?:progression|fortschreit\w*)', re.I),
+        'fr': re.compile(r'progression.{0,50}toxicit[eé]|toxicit[eé].{0,50}progression', re.I),
+    }),
+    (re.compile(r'Cornerstone of every APL induction regimen', re.I), {
+        'es': re.compile(r'induc\w*', re.I),
+        'pt': re.compile(r'indu[cç][aã]o', re.I),
+        'de': re.compile(r'induktion', re.I),
+        'fr': re.compile(r'induction', re.I),
+    }),
+    (re.compile(r'Edema dominant AE', re.I), {
+        locale: re.compile(r'\b(?:edema|[oö]dem|œd[eè]me)\b', re.I)
+        for locale in ('es', 'pt', 'de', 'fr')
+    }),
+)
 
 
 @lru_cache(maxsize=1)
@@ -62,6 +96,9 @@ def acceptable_draft(source, translated, locale, drug_pattern=None):
     if DAILY_EN.search(source) and not WEEKLY_EN.search(source) and WEEKLY_TRANSLATION[locale].search(translated):
         return False
     if ALTERNATE_INJECTION_SITE.search(source) and not ALTERNATION_TRANSLATION[locale].search(translated):
+        return False
+    if any(source_pattern.search(source) and not translations[locale].search(translated)
+           for source_pattern, translations in CRITICAL_CLAUSES):
         return False
     # Alternatives and machine-readable identifiers cannot be silently
     # collapsed into a shorter, seemingly fluent clinical statement.

@@ -9,7 +9,7 @@ import pytest
 
 from scripts.build_clinical_locales import build_clinical_locales, localize_page
 from scripts.site_translation_catalog import numeric_tokens, quantity_tokens
-from scripts.clinical_translation_checks import acceptable_draft
+from scripts.clinical_translation_checks import CRITICAL_CLAUSES, acceptable_draft
 from serverless import clinical_question as cq
 
 
@@ -224,6 +224,36 @@ def test_committed_catalog_manifest_reports_actual_coverage_and_pending_review()
         assert claims['translated_strings'] == sum(source != translated for source, translated in catalog.items())
         assert claims['original_strings'] == sum(source == translated for source, translated in catalog.items())
         assert claims['review'] == 'pending_clinical_review'
+
+
+@pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
+def test_committed_clinical_drafts_preserve_critical_clauses(locale):
+    root = Path(__file__).resolve().parents[1]
+    catalog = json.loads((root / 'scripts/locales' / f'clinical.{locale}.json').read_text(encoding='utf-8'))
+    runtime = json.loads((root / 'docs' / locale / 'clinical-translations.json').read_text(encoding='utf-8'))
+    for source, translated in catalog.items():
+        if not any(pattern.search(source) for pattern, _ in CRITICAL_CLAUSES):
+            continue
+        assert runtime[source] == translated
+        assert translated == source or all(
+            not pattern.search(source) or forms[locale].search(translated)
+            for pattern, forms in CRITICAL_CLAUSES
+        ), (locale, source, translated)
+
+
+@pytest.mark.parametrize('source,translated,locale', [
+    ('Active bleeding is an absolute hold on systemic therapy until controlled.',
+     'Hemorragia activa hasta controlada.', 'es'),
+    ('Triggers carbo-mono OR weekly-dose-dense-pacli.',
+     'Excluye carbo+pacli estándar.', 'es'),
+    ('Continuous until progression or unacceptable toxicity.',
+     'Continue jusqu’à progression.', 'fr'),
+    ('Cornerstone of every APL induction regimen.',
+     'Fundamental para APL.', 'pt'),
+    ('Edema dominant AE.', 'Wichtige Nebenwirkung.', 'de'),
+])
+def test_missing_critical_clause_rejects_draft(source, translated, locale):
+    assert not acceptable_draft(source, translated, locale)
 
 
 def test_generated_page_write_retries_transient_windows_error(monkeypatch):
