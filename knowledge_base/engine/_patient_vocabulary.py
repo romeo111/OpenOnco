@@ -621,6 +621,23 @@ def explain(term: str, *, target_lang: str = "uk") -> Optional[str]:
 # Explicit display aliases for authored class labels. No substring matching:
 # combination products and unrecognised classes must retain the fallback.
 DRUG_CLASS_PATIENT_ALIASES = {
+    "cdk4/6 inhibitor": "CDK4/6i",
+    "cdk4/6 inhibitor (continuous dosing)": "CDK4/6i",
+    "second-generation btk inhibitor (selective)": "BTKi",
+    "second-generation btk inhibitor (highly selective)": "BTKi",
+    "bruton's tyrosine kinase (btk) inhibitor": "BTKi",
+    "non-covalent (reversible) btk inhibitor": "BTKi",
+    "pan-hdac inhibitor (hydroxamic acid)": "HDACi",
+    "hdac inhibitor (cyclic peptide; hdac1/2 selective)": "HDACi",
+    "selective idh2 (mutant) enzyme inhibitor": "IDHi",
+    "mutant-selective idh1 inhibitor (small-molecule, oral)": "IDHi",
+    "selective oral mutant idh1 (r132) inhibitor": "IDHi",
+    "jak2 inhibitor (selective for jak2 over jak1)": "JAKi",
+    "jak1/jak2 inhibitor": "JAKi",
+    "psma-targeted radioligand (β-emitter)": "PSMAi",
+    "type-ii selective flt3-itd tyrosine kinase inhibitor": "FLT3i",
+    "hedgehog pathway inhibitor (smo antagonist)": "SMOi",
+    "ezh2 inhibitor (oral, selective)": "EZH2i",
     "selective bcl-2 inhibitor (bh3 mimetic)": "BCL-2i",
     "hypomethylating agent (cytidine analog)": "HMA",
     "multi-kinase inhibitor (flt3, kit, pdgfr, vegfr, pkc)": "multi-kinase inhibitor",
