@@ -591,6 +591,20 @@ ABBREVIATION_FIRST_USE_UA: dict[str, str] = {
 
 
 # ── Allowlist for the no-Latin / no-abbreviation render gate ─────────
+ABBREVIATION_FIRST_USE_EN: dict[str, str] = {
+    "ESCAT": "ESCAT (level of evidence — how strongly it has been shown that a medicine works)",
+    "FDA": "FDA (the US Food and Drug Administration)",
+    "MDT": "MDT (a team of doctors from different specialties)",
+    "ECOG": "ECOG (a scale describing a patient's ability to carry out daily activities)",
+    "MSI": "MSI (microsatellite instability in the tumour)",
+    "PD-L1": "PD-L1 (a protein on tumour cells that blocks an immune attack)",
+    "PD-1": "PD-1 (an immune-system switch protein)",
+    "HCV": "HCV (hepatitis C virus)",
+    "HBV": "HBV (hepatitis B virus)",
+    "CAR-T": "CAR-T (treatment using the patient's modified T cells)",
+}
+ABBREVIATION_TRANSLATION_STATUS = {"en": "draft_pending_review"}
+
 #
 # PATIENT_MODE_SPEC §5.3 + §5.4. Tokens here may appear in the rendered
 # patient body without triggering the test gate.
@@ -716,7 +730,7 @@ def is_allowlisted_latin_word(token: str) -> bool:
     return bool(token) and token.lower() in PATIENT_ALLOWLIST_LATIN_WORDS
 
 
-def expand_first_use(html: str) -> str:
+def expand_first_use(html: str, *, target_lang: str = "uk") -> str:
     """Inject first-use expansions for `ABBREVIATION_FIRST_USE_UA` keys
     into a rendered patient HTML.
 
@@ -732,8 +746,12 @@ def expand_first_use(html: str) -> str:
     if sentinel in html:
         return html
 
+    if target_lang not in {"uk", "en"}:
+        raise ValueError("First-use explanations are available only in Ukrainian and draft English")
+    expansions = ABBREVIATION_FIRST_USE_EN if target_lang == "en" else ABBREVIATION_FIRST_USE_UA
+
     patterns = {}
-    for key in ABBREVIATION_FIRST_USE_UA:
+    for key in expansions:
         # `\b` plus a negative-lookbehind/ahead that excludes Latin
         # letters, Cyrillic letters, dashes, and digits — so `PD-1`
         # doesn't match inside `BCR-PD-1` and `MSI` doesn't match
@@ -782,7 +800,7 @@ def expand_first_use(html: str) -> str:
                     continue
                 match = pattern.search(rendered)
                 if match:
-                    rendered = (rendered[:match.start()] + escape(ABBREVIATION_FIRST_USE_UA[key]) + rendered[match.end():])
+                    rendered = (rendered[:match.start()] + escape(expansions[key]) + rendered[match.end():])
                     seen.add(key)
             if rendered != data:
                 line, column = self.getpos()
@@ -817,6 +835,7 @@ __all__ = [
     "ESCAT_TIER_PATIENT_LABEL",
     "NSZU_PATIENT_LABEL",
     "ABBREVIATION_FIRST_USE_UA",
+    "ABBREVIATION_FIRST_USE_EN",
     "PATIENT_ALLOWLIST_ACRONYMS",
     "PATIENT_ALLOWLIST_LATIN_WORDS",
     "PATIENT_ALLOWLIST_TRIAL_PREFIXES",
