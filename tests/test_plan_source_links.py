@@ -1,6 +1,7 @@
 """Reports expose recorded publications without inventing citation links."""
 
 import json
+from html import escape
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -52,3 +53,27 @@ def test_synthetic_plan_links_match_original_source_records():
     report = render_plan_html(result, target_lang='en')
     assert '<ul class=\'sources\'>' in report
     assert any(url.replace('&', '&amp;') in report for url in links.values())
+    original_plan = result.plan.model_dump()
+    patient_report = render_plan_html(result, mode='patient')
+    assert 'class="patient-sources" data-original-source' in patient_report
+    assert any(url.replace('&', '&amp;') in patient_report for url in links.values())
+    assert result.plan.model_dump() == original_plan
+    assert '<!-- patient-source-citations -->' not in patient_report
+    for source in result.plan.fda_compliance.data_sources_summary:
+        assert escape(source.partition(':')[2].strip()) in patient_report
+
+
+def test_patient_source_labels_are_readable_and_source_ids_remain_auditable():
+    metadata = SimpleNamespace(
+        data_sources_summary=['SRC-ONE: Publication <title> (2026)', 'SRC-MISSING: Missing URL'],
+        source_links={'SRC-ONE': 'https://publisher.example/paper'},
+    )
+    report = _render_cited_sources(metadata, 'uk', patient_view=True)
+    assert '<li data-source-id="SRC-ONE"><a ' in report
+    assert 'Publication &lt;title&gt; (2026)</a>' in report
+    assert 'SRC-ONE: Publication' not in report
+    assert '<li data-source-id="SRC-MISSING">Missing URL</li>' in report
+
+
+def test_patient_sources_are_absent_when_no_citations_are_recorded():
+    assert _render_cited_sources(SimpleNamespace(data_sources_summary=[]), 'uk', patient_view=True) == ''

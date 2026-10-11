@@ -13,7 +13,7 @@ Deliver small, verified changes through the repository's normal commit, push and
 - Browser plan generation works on the built-in synthetic AML example. The latest observed first engine initialization in a test tab took 12.1 seconds with existing browser caches; this is not a fresh-device cold-load benchmark.
 - Compiled safe YAML parsing reduced a local load-and-validation measurement from 39.3 to 2.4 seconds with identical entities and validation results. A portable safe parser remains available.
 - Source-linked clinical translations remain drafts. Technical verification does not provide clinical or linguistic sign-off.
-- The engine refuses clinical output from invalid knowledge bases. Browser loading and cached disease-module validation need equally strict behavior.
+- The engine refuses clinical output from invalid knowledge bases. Browser core initialization and cached/network disease-module loading now also reject validation failures, with failure-injection tests in CI. Offline workflows still need end-to-end production verification.
 - Marketing must distinguish coverage, technical verification and clinician-reviewed readiness.
 
 ## Ordered backlog and acceptance criteria
@@ -21,6 +21,7 @@ Deliver small, verified changes through the repository's normal commit, push and
 | Priority | Work | Evidence required before completion |
 | --- | --- | --- |
 | P0 | Stop browser generation on failed core validation or disease-module download/validation; validate cache hits too | Failure-injection tests for cached and network paths, successful retry, successful synthetic plan on production |
+| P0 | Localize the complete patient report: English renderer first, then ES/PT/DE/FR draft catalogs | Inventory Python-authored text and dynamic YAML labels separately; preserve doses, source titles, IDs, negation and selection; inspect generated reports; clinical translation review remains explicit |
 | P0 | Exercise complete browser workflows in CI | Synthetic example → validated plan → source links → HTML/PDF export; invalid KB and offline failures explicitly blocked |
 | P1 | Measure startup on an empty-cache device, ordinary mobile network and repeat visit | Reproducible timings and payload sizes; separate network, Python initialization, validation and generation |
 | P1 | Improve dependency-complete bundle efficiency | Every supported disease module validates with core alone; no clinical inputs removed; compare generated plan contracts |
@@ -49,3 +50,10 @@ Do not add paid dependencies to core access, purchase advertising, contact peopl
 - 2026-10-11: Production verification of 51868619c0: Pages deployed successfully. French synthetic AML report generated with core baac4fb46f23 in 13.653 s (10.383 s engine initialization, 3.269 s Python; existing browser caches). Downloaded HTML verified for displayed French locale, PLAN-VIRTUAL-AML-001-V1, REG-VEN-AZA-AML, primary VIALE-A URL and review wording. PDF button interaction timed out in the embedded browser; actual saved PDF content remains unverified. Do not treat print-invocation tests as PDF-content verification.
 
 - 2026-10-11: Unified report language reloads: translation overlay delegates to the guarded builder, including switching between native translation and the same English source. Export remains unavailable until the reload finishes; duplicate iframe reloads removed. Regression test covers the same-source path across six clients.
+
+- 2026-10-11: Production EN → FR reloads and HTML exports verified after 744c9d744c; exported languages, synthetic plan/regimen IDs and publication URLs match the displayed report. Patient renderer is Ukrainian-only despite language selection: full English patient rendering and subsequent reviewed ES/PT/DE/FR catalogs are now P0. Interim integrity fix preserves actual report language in filenames and makes the Ukrainian fallback explicit; this does not complete patient localization.
+
+- 2026-10-11: Patient reports now include original publication links in a readable, expandable bibliography. Titles remain verbatim and internal source IDs remain auditable in attributes. Source rendering leaves the clinical plan unchanged. A render-only Ukrainian label fixes a raw English HCV monitoring qualifier while preserving the original in an attribute. Patient/render/source tests: 96 passed, one skipped.
+- Patient translation inventory: python scripts/audit_patient_localization.py --output .tmp/patient-localization-inventory.json identifies 513 Python-authored literals/templates (504 unique); dynamic disease/drug names, red-flag definitions and watchpoints from YAML are outside this count. This is an inventory, not evidence of translated or clinically reviewed coverage. English patient rendering remains unfinished.
+
+- 2026-10-11: Production patient bibliography verified after 05ba808246: synthetic AML patient view shows readable publication titles and original URLs, including ELN 2022 and VIALE-A. First post-deploy tab showed old baac4fb46f23 index badge while rendering the new bibliography; next reliability work must keep bundle-index metadata and loaded package version consistent through service-worker updates. A stale Python source-expression test failed on 4b33babf07; e84878be5f replaces it with executed export behavior, and all 38 localization tests pass locally. Latest full CI remains to be checked.
