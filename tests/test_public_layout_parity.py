@@ -88,8 +88,9 @@ def test_public_builder_uses_the_real_source_template(tmp_path):
     (tmp_path / 'ukr').mkdir()
     (tmp_path / 'ukr/index.html').write_text(source.replace('lang="en"', 'lang="uk"'), encoding='utf-8')
     result = build_public_locales(tmp_path)
-    assert len(result['shared_public_pages']) == 4
-    for locale in ('es', 'pt', 'de', 'fr'):
+    from scripts.site_translation_catalog import LANGUAGES
+    assert len(result['shared_public_pages']) == len(LANGUAGES)
+    for locale in LANGUAGES:
         page = (tmp_path / locale / 'index.html').read_text(encoding='utf-8')
         assert components(page) == components(source)
         assert '<h1>About OpenOnco</h1>' not in page

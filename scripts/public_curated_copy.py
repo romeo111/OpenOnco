@@ -68,10 +68,39 @@ TECHNICAL_LITERALS = (
     '.lang-switch a, a.lang-other, a.lang-current',
 )
 
+ADDITIONAL_COPY = {
+    'About OpenOnco': ('Informazioni su OpenOnco', 'Om OpenOnco', 'Om OpenOnco', 'Om OpenOnco', 'Tietoa OpenOnco-hankkeesta'),
+    'A second opinion on cancer treatment — free, cited, and open.': (
+        'Un secondo parere sul trattamento del cancro — gratuito, con fonti e aperto.',
+        'En anden vurdering af kræftbehandling — gratis, med kildehenvisninger og åben.',
+        'En andra bedömning av cancerbehandling — kostnadsfri, med källhänvisningar och öppen.',
+        'En ny vurdering av kreftbehandling — gratis, med kildehenvisninger og åpen.',
+        'Toinen näkökulma syövän hoitoon – maksuton, lähteisiin perustuva ja avoin.',
+    ),
+    'OpenOnco — free, cited cancer treatment options': (
+        'OpenOnco — opzioni gratuite per il trattamento del cancro, con fonti',
+        'OpenOnco — gratis kræftbehandlingsmuligheder med kildehenvisninger',
+        'OpenOnco — kostnadsfria alternativ för cancerbehandling med källhänvisningar',
+        'OpenOnco — gratis alternativer for kreftbehandling med kildehenvisninger',
+        'OpenOnco — maksuttomia syövän hoitovaihtoehtoja lähdeviitteillä',
+    ),
+    'Cited sources': ('Fonti citate', 'Kildehenvisninger', 'Källhänvisningar', 'Kildehenvisninger', 'Lähdeviitteet'),
+    'Regimens': ('Schemi terapeutici', 'Behandlingsregimer', 'Behandlingsregimer', 'Behandlingsregimer', 'Hoito-ohjelmat'),
+    'Informational tool, not a medical device (CHARTER §15 + §11).': (
+        'Strumento informativo, non un dispositivo medico (CHARTER §15 + §11).',
+        'Informationsværktøj, ikke medicinsk udstyr (CHARTER §15 + §11).',
+        'Informationsverktyg, inte en medicinteknisk produkt (CHARTER §15 + §11).',
+        'Informasjonsverktøy, ikke medisinsk utstyr (CHARTER §15 + §11).',
+        'Informatiivinen työkalu, ei lääkinnällinen laite (CHARTER §15 + §11).',
+    ),
+}
+
 
 def messages_for(locale):
     if locale in ('it', 'da', 'sv', 'nb', 'fi'):
-        return {literal: literal for literal in TECHNICAL_LITERALS}
+        index = ('it', 'da', 'sv', 'nb', 'fi').index(locale)
+        return {**{source: values[index] for source, values in ADDITIONAL_COPY.items()},
+                **{literal: literal for literal in TECHNICAL_LITERALS}}
     index = ('es', 'pt', 'de', 'fr').index(locale)
     return {
         **{source: values[index] for source, values in COPY.items()},
