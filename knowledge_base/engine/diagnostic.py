@@ -28,7 +28,6 @@ from knowledge_base.schemas import (
     SuspicionSnapshot,
     WorkupStep,
 )
-from knowledge_base.validation.loader import load_content
 
 
 _DIAGNOSTIC_BANNER = (
@@ -252,7 +251,9 @@ def generate_diagnostic_brief(
         )
         return result
 
-    load = load_content(Path(kb_root))
+    from knowledge_base.validation.bundle import load_packaged_content
+    # Pre-histology workups live in core; no treatment disease is selected.
+    load = load_packaged_content(Path(kb_root), core_only=True)
     entities = load.entities_by_id
     for path, msg in load.schema_errors:
         result.warnings.append(f"schema error in {path.name}: {msg[:120]}")

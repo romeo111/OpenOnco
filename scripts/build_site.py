@@ -6457,11 +6457,11 @@ async function verifyBundleVersion(buffer, version, label) {{
   }}
 }}
 
-async function validateDiseaseModule() {{
+async function validateDiseaseModule(diseaseId) {{
   const valid = await pyodide.runPythonAsync(
     "from knowledge_base.engine import apply_disease_module\\n" +
     "from pathlib import Path\\n" +
-    "_module_validation = apply_disease_module(Path('knowledge_base/hosted/content'))\\n" +
+    "_module_validation = apply_disease_module(Path('knowledge_base/hosted/content'), disease_id=" + JSON.stringify(diseaseId) + ")\\n" +
     "bool(_module_validation.get('ok'))\\n"
   );
   if (valid !== true) throw new Error('Knowledge base validation failed after loading the disease module.');
@@ -6493,7 +6493,7 @@ async function loadDiseaseModule(diseaseId) {{
       for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
       await verifyBundleVersion(u8.buffer, ver, 'Disease bundle');
       pyodide.unpackArchive(u8.buffer, 'zip');
-      await validateDiseaseModule();
+      await validateDiseaseModule(diseaseId);
       loadedDiseases.add(diseaseId);
       refreshBuildPanel(diseaseId).catch(() => {{}});
       console.log('[OO] disease module ' + diseaseId + ' loaded from localStorage cache');
@@ -6513,7 +6513,7 @@ async function loadDiseaseModule(diseaseId) {{
   await yieldToBrowser();
   buf = await recoverBundleVersion(buf, url, ver, 'Engine bundle');
   pyodide.unpackArchive(buf, 'zip');
-  await validateDiseaseModule();
+  await validateDiseaseModule(diseaseId);
   loadedDiseases.add(diseaseId);
   refreshBuildPanel(diseaseId).catch(() => {{}});
 
@@ -6588,8 +6588,8 @@ async function initializeEngine() {{
     await yieldToBrowser(50);
     const validationSummary = await pyodide.runPythonAsync(`
 from pathlib import Path
-from knowledge_base.validation.loader import load_content
-_r = load_content(Path('knowledge_base/hosted/content'))
+from knowledge_base.validation.bundle import load_packaged_content
+_r = load_packaged_content(Path('knowledge_base/hosted/content'), core_only=True)
 if _r.ok:
     _summary = "ok"
 else:

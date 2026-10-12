@@ -1700,7 +1700,8 @@ def orchestrate_mdt(
     plan_result: PlanResult = plan_or_diagnostic
     findings = _flatten_findings(patient)
 
-    load = load_content(Path(kb_root))
+    from knowledge_base.validation.bundle import load_packaged_content
+    load = load_packaged_content(Path(kb_root), active_disease=plan_result.disease_id)
     entities = load.entities_by_id
     warnings: list[str] = []
     for path, msg in load.schema_errors:
@@ -1785,7 +1786,8 @@ def _orchestrate_mdt_diagnostic(
     from .diagnostic import DiagnosticPlanResult  # for type hint only
 
     findings = _flatten_findings(patient)
-    load = load_content(Path(kb_root))
+    from knowledge_base.validation.bundle import load_packaged_content
+    load = load_packaged_content(Path(kb_root), core_only=True)
     entities = load.entities_by_id
     warnings: list[str] = []
     for path, msg in load.schema_errors:

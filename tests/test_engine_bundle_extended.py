@@ -22,7 +22,7 @@ import pytest
 import yaml
 
 from scripts.build_site import bundle_engine
-from knowledge_base.engine import generate_plan
+from knowledge_base.engine import generate_plan, generate_diagnostic_brief
 from knowledge_base.engine.lazy_loader import (
     apply_disease_module,
     lazy_load_disease,
@@ -207,6 +207,7 @@ def test_lazy_load_disease_returns_entity_dict(
     result = lazy_load_disease(
         "DIS-DLBCL-NOS", bundle_dir=out_dir, kb_root=target
     )
+    assert result['summary']['ok'], result['summary']
     assert isinstance(result, dict)
     assert result.get("disease_id") == "DIS-DLBCL-NOS"
     assert isinstance(result.get("extracted"), list)
@@ -341,6 +342,69 @@ def test_partial_bundle_does_not_ignore_broken_reference(
     result = generate_plan(profile, kb_root=content)
     assert result.plan is None
     assert any(deferred_id in warning for warning in result.warnings)
+
+
+def test_real_core_startup_defers_only_manifest_modules(bundle_out, tmp_path):
+    from knowledge_base.validation.bundle import load_packaged_content
+
+    target = tmp_path / 'core_startup'
+    target.mkdir()
+    _unpack(Path(bundle_out['_dir']) / 'openonco-engine-core.zip', target)
+    content = target / 'knowledge_base/hosted/content'
+    clear_load_cache()
+    raw = load_content(content)
+    assert raw.ref_errors, 'Fixture must exercise deferred references, not an already complete KB'
+    startup = load_packaged_content(content, core_only=True)
+    assert startup.ok, startup.ref_errors[:5]
+    assert raw.ref_errors, 'Packaged validation must not mutate the strict loader cache'
+    manifest = json.loads((content / '_bundle_manifest.json').read_text(encoding='utf-8'))
+    _, _, missing_id, _ = next(item for item in raw.missing_refs if item[2] in manifest['deferred_entities'])
+    active_disease = manifest['deferred_entities'][missing_id]['disease_id']
+    incomplete = load_packaged_content(content, active_disease=active_disease)
+    assert not incomplete.ok
+    assert any(missing_id in message for _, message in incomplete.ref_errors)
+
+
+@pytest.mark.parametrize('mutation', ['unlisted', 'wrong_type', 'malformed'])
+def test_real_core_startup_rejects_damaged_manifest(bundle_out, tmp_path, mutation):
+    from knowledge_base.validation.bundle import load_packaged_content
+
+    target = tmp_path / 'damaged_core'
+    target.mkdir()
+    _unpack(Path(bundle_out['_dir']) / 'openonco-engine-core.zip', target)
+    content = target / 'knowledge_base/hosted/content'
+    clear_load_cache()
+    raw = load_content(content)
+    path = content / '_bundle_manifest.json'
+    manifest = json.loads(path.read_text(encoding='utf-8'))
+    missing_id = next(eid for _, _, eid, target_type in raw.missing_refs if eid in manifest['deferred_entities'] and target_type)
+    if mutation == 'unlisted':
+        manifest['deferred_entities'].pop(missing_id)
+    elif mutation == 'wrong_type':
+        manifest['deferred_entities'][missing_id]['type'] = 'sources'
+    else:
+        manifest['deferred_entities'] = []
+    path.write_text(json.dumps(manifest), encoding='utf-8')
+    assert not load_packaged_content(content, core_only=True).ok
+
+
+@pytest.mark.parametrize('example', [
+    'patient_diagnostic_lymphoma_suspect.json',
+    'patient_diagnostic_lung_mass_smoker_prebiopsy.json',
+])
+def test_core_only_diagnostic_brief_matches_full_kb(bundle_out, tmp_path, example):
+    patient = json.loads((REPO_ROOT / 'examples' / example).read_text(encoding='utf-8'))
+    full = generate_diagnostic_brief(patient, kb_root=KB_CONTENT)
+    assert full.diagnostic_plan is not None
+    target = tmp_path / 'diagnostic_core'
+    target.mkdir()
+    _unpack(Path(bundle_out['_dir']) / 'openonco-engine-core.zip', target)
+    clear_load_cache()
+    partial = generate_diagnostic_brief(patient, kb_root=target / 'knowledge_base/hosted/content')
+    assert partial.diagnostic_plan is not None, partial.warnings
+    assert partial.matched_workup_id == full.matched_workup_id
+    assert partial.diagnostic_plan.workup_steps == full.diagnostic_plan.workup_steps
+    assert partial.diagnostic_plan.mandatory_questions == full.diagnostic_plan.mandatory_questions
 
 
 # Section C (back-compat for monolithic bundle) was removed 2026-04-30:

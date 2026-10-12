@@ -39,7 +39,6 @@ from pathlib import Path
 
 from knowledge_base.validation.loader import (
     clear_load_cache,
-    load_content,
 )
 
 
@@ -116,7 +115,7 @@ def load_disease_module(
     return extracted
 
 
-def apply_disease_module(content_root: Path | str) -> dict:
+def apply_disease_module(content_root: Path | str, *, disease_id: str | None = None) -> dict:
     """Drop the load cache and re-run `load_content()` against the
     given hosted/content/ root. Returns the resulting LoadResult as a
     dict-of-dicts summary suitable for printing back to the JS layer
@@ -124,9 +123,13 @@ def apply_disease_module(content_root: Path | str) -> dict:
 
     Call this after every per-disease module extraction so the next
     `generate_plan()` sees the new entities.
+    Pass the selected disease ID to require its references to resolve while
+    other manifest-listed modules remain deferred. Without it, validation
+    remains strict.
     """
     clear_load_cache()
-    result = load_content(Path(content_root))
+    from knowledge_base.validation.bundle import load_packaged_content
+    result = load_packaged_content(Path(content_root), active_disease=disease_id)
     by_type: dict[str, int] = {}
     for info in result.entities_by_id.values():
         by_type[info["type"]] = by_type.get(info["type"], 0) + 1
@@ -145,6 +148,7 @@ def merge_disease_module(
     *,
     kb_root: Path | str,
     content_subpath: str = "knowledge_base/hosted/content",
+    disease_id: str | None = None,
 ) -> dict:
     """Convenience: extract a per-disease bundle AND invalidate the load
     cache in one call. Returns a `{extracted: [...paths], summary: {...}}`
@@ -156,7 +160,7 @@ def merge_disease_module(
     so we pass `<kb_root>/<content_subpath>` to the validator afterwards.
     """
     extracted = load_disease_module(bundle, kb_root=kb_root)
-    summary = apply_disease_module(Path(kb_root) / content_subpath)
+    summary = apply_disease_module(Path(kb_root) / content_subpath, disease_id=disease_id)
     return {
         "extracted": [str(p) for p in extracted],
         "summary": summary,
@@ -203,6 +207,7 @@ def lazy_load_disease(
         bundle_path,
         kb_root=kb_root,
         content_subpath=content_subpath,
+        disease_id=disease_id,
     )
     out["disease_id"] = disease_id
     return out

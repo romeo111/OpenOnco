@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="303bd1a1b73ef68cdbf6e2f8c84c9ceba966134a30c46a50cf14fe18a5ce3cf8"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="72cca68736e5064386fe460dd22a518d8525d463adfa86a9139eb437f3f1f784"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -688,7 +688,7 @@ async function refreshBuildPanel(diseaseId = null) {
     : 'Browser');
 
   if (bundleIndex) {
-    setText(coreVersionEl, 'v' + (coreBundleMetadata().version || 'f3c7b3ecec54'));
+    setText(coreVersionEl, 'v' + (coreBundleMetadata().version || 'e693dc4bad7c'));
     if (offlineCacheTotal <= 0) {
       const total = offlineBundleUrls().length;
       setOfflineCacheProgress(0, total, 0);
@@ -1901,11 +1901,11 @@ async function verifyBundleVersion(buffer, version, label) {
   }
 }
 
-async function validateDiseaseModule() {
+async function validateDiseaseModule(diseaseId) {
   const valid = await pyodide.runPythonAsync(
     "from knowledge_base.engine import apply_disease_module\n" +
     "from pathlib import Path\n" +
-    "_module_validation = apply_disease_module(Path('knowledge_base/hosted/content'))\n" +
+    "_module_validation = apply_disease_module(Path('knowledge_base/hosted/content'), disease_id=" + JSON.stringify(diseaseId) + ")\n" +
     "bool(_module_validation.get('ok'))\n"
   );
   if (valid !== true) throw new Error('Knowledge base validation failed after loading the disease module.');
@@ -1937,7 +1937,7 @@ async function loadDiseaseModule(diseaseId) {
       for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
       await verifyBundleVersion(u8.buffer, ver, 'Disease bundle');
       pyodide.unpackArchive(u8.buffer, 'zip');
-      await validateDiseaseModule();
+      await validateDiseaseModule(diseaseId);
       loadedDiseases.add(diseaseId);
       refreshBuildPanel(diseaseId).catch(() => {});
       console.log('[OO] disease module ' + diseaseId + ' loaded from localStorage cache');
@@ -1957,7 +1957,7 @@ async function loadDiseaseModule(diseaseId) {
   await yieldToBrowser();
   buf = await recoverBundleVersion(buf, url, ver, 'Engine bundle');
   pyodide.unpackArchive(buf, 'zip');
-  await validateDiseaseModule();
+  await validateDiseaseModule(diseaseId);
   loadedDiseases.add(diseaseId);
   refreshBuildPanel(diseaseId).catch(() => {});
 
@@ -2032,8 +2032,8 @@ async function initializeEngine() {
     await yieldToBrowser(50);
     const validationSummary = await pyodide.runPythonAsync(`
 from pathlib import Path
-from knowledge_base.validation.loader import load_content
-_r = load_content(Path('knowledge_base/hosted/content'))
+from knowledge_base.validation.bundle import load_packaged_content
+_r = load_packaged_content(Path('knowledge_base/hosted/content'), core_only=True)
 if _r.ok:
     _summary = "ok"
 else:

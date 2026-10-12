@@ -80,7 +80,9 @@ function fixture({ cached = null, valid = true, httpOk = true, coreValid = true 
   assert.equal(f.calls.initializations, 1);
   for (const prefix of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/', 'it/', 'da/', 'sv/', 'nb/', 'fi/']) {
     const page = fs.readFileSync('docs/' + prefix + 'try.html', 'utf8');
-    assert.equal((page.match(/await validateDiseaseModule\(\);/g) || []).length, 2);
+    assert.equal((page.match(/await validateDiseaseModule\(diseaseId\);/g) || []).length, 2);
+    assert(page.includes("core_only=True"));
+    assert(page.includes('disease_id=" + JSON.stringify(diseaseId)'));
     assert(page.includes("if (validationSummary !== 'ok')"));
     assert(!page.includes('failed (continuing)'));
   }
