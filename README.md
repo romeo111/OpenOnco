@@ -113,6 +113,13 @@ is `node tests/browser_workspace_cache.cjs`. Complete offline plan generation
 still needs a separate browser test of the runtime and disease-module loading;
 catalog caching alone does not verify that whole workflow.
 
+Visited Plan Builder pages in all eleven languages are also retained. A first
+visit requests a public-page copy after worker activation; it sends only the
+page path, never the populated form or profile. Online navigation refreshes
+the saved shell, with fallback on network/server failure. The worker caches
+only the explicit Plan Builder URL allowlist and excludes query-bearing
+navigation from new cache writes. Check with `node tests/browser_plan_navigation.cjs`.
+
 ## Help improve OpenOnco
 
 - Review the [DLBCL packet](https://openonco.info/review/dlbcl-1l/): inspect plans, traces and sources; export feedback locally. Engineering checks are not clinical sign-off.

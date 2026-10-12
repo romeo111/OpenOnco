@@ -514,6 +514,9 @@ def write_service_worker(output_dir: Path, *, core_version: str = "", core_strea
     # 'l4' = same-origin guard + news routes. Bumping the layout prefix forces
     # a hard cache invalidation for users whose browser still has an old
     # service worker/cache after a landing-page redesign.
+    from scripts.site_locales import LOCALES
+    plan_paths = [f'/{prefix}/try.html' if prefix else '/try.html'
+                  for prefix, _, _ in LOCALES.values()]
     cache_name = "openonco-bundle-l4-" + (core_version or "v1")
     sw_js = """// OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
 // Cache strategies:
@@ -527,6 +530,7 @@ def write_service_worker(output_dir: Path, *, core_version: str = "", core_strea
 const CACHE_NAME = '__CACHE_NAME__';
 const CORE_STREAM_VERSION = '__CORE_STREAM_VERSION__';
 const WORKSPACE_DATA_PATHS = ['/questionnaires.json', '/examples.json'];
+const PLAN_PAGE_PATHS = __PLAN_PAGE_PATHS__;
 const PRECACHE = [
   '/manifest.webmanifest',
   '/logo.svg',
@@ -587,12 +591,49 @@ function staleWhileRevalidate(event) {
 }
 
 function networkFirstNavigation(event) {
+  const url = new URL(event.request.url);
+  if (PLAN_PAGE_PATHS.includes(url.pathname) && !url.search) {
+    event.respondWith(planNavigationResponse(event.request));
+    return;
+  }
   event.respondWith(
     fetch(event.request, { cache: 'no-store' }).catch(() =>
       caches.match(event.request, { ignoreSearch: true })
     )
   );
 }
+
+async function planNavigationResponse(request) {
+  const path = new URL(request.url).pathname;
+  const cache = await caches.open(CACHE_NAME).catch(() => null);
+  const retained = async () => {
+    const hit = cache && await cache.match(path).catch(() => null);
+    return hit && hit.ok && (hit.headers.get('Content-Type') || '').includes('text/html') ? hit : null;
+  };
+  try {
+    const response = await fetch(request, { cache: 'no-store' });
+    if (response.ok && (response.headers.get('Content-Type') || '').includes('text/html')) {
+      if (cache) await cache.put(path, response.clone()).catch(() => {});
+      return response;
+    }
+    return (await retained()) || response;
+  } catch (error) {
+    const cached = await retained();
+    if (cached) return cached;
+    throw error;
+  }
+}
+
+self.addEventListener('message', (event) => {
+  const data = event.data;
+  if (!data || data.type !== 'CACHE_PLAN_PAGE' || !PLAN_PAGE_PATHS.includes(data.path)) return;
+  try {
+    const source = new URL(event.source.url);
+    if (source.origin !== self.location.origin || source.search) return;
+  } catch (_) { return; }
+  // Fetch only a known public page; never persist a supplied DOM or profile.
+  event.waitUntil(planNavigationResponse(new Request(self.location.origin + data.path)).catch(() => {}));
+});
 
 function networkFirstBundleIndex(event) {
   event.respondWith(caches.open(CACHE_NAME).then(async cache => {
@@ -702,7 +743,7 @@ self.addEventListener('fetch', (event) => {
     )
   );
 });
-""".replace("__CACHE_NAME__", cache_name).replace("__CORE_STREAM_VERSION__", core_stream_version)
+""".replace("__CACHE_NAME__", cache_name).replace("__CORE_STREAM_VERSION__", core_stream_version).replace("__PLAN_PAGE_PATHS__", json.dumps(plan_paths))
     out = output_dir / "sw.js"
     out.write_text(sw_js, encoding="utf-8")
     return {"path": "sw.js", "cache_name": cache_name}
@@ -7483,11 +7524,23 @@ window.addEventListener('hashchange', loadFromUrlHash);
 // ICD-O-3 codes before the user clicks Generate. Best-effort, never
 // blocks UI.
 loadBundleIndex().catch(() => {{}});
+let retainedPlanWorker = null;
+function retainCurrentPlanPage() {{
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.ready.then(registration => {{
+    if (registration.active && registration.active !== retainedPlanWorker) {{
+      retainedPlanWorker = registration.active;
+      registration.active.postMessage({{ type: 'CACHE_PLAN_PAGE', path: location.pathname }});
+    }}
+  }}).catch(() => {{}});
+}}
+
 refreshBuildPanel().catch(() => {{}});
 window.addEventListener('online', () => refreshBuildPanel().catch(() => {{}}));
 window.addEventListener('offline', () => refreshBuildPanel().catch(() => {{}}));
 if (navigator.serviceWorker) {{
   navigator.serviceWorker.addEventListener('controllerchange', () => {{
+    retainCurrentPlanPage();
     refreshBuildPanel().catch(() => {{}});
   }});
 }}
@@ -7499,7 +7552,10 @@ if (navigator.serviceWorker) {{
 if ('serviceWorker' in navigator) {{
   window.addEventListener('load', () => {{
     navigator.serviceWorker.register('/sw.js')
-      .then(() => refreshBuildPanel().catch(() => {{}}))
+      .then(() => {{
+        retainCurrentPlanPage();
+        return refreshBuildPanel().catch(() => {{}});
+      }})
       .catch((e) => {{
         console.warn('[OpenOnco] service worker registration failed:', e);
         refreshBuildPanel().catch(() => {{}});

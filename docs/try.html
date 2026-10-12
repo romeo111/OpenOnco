@@ -2895,11 +2895,23 @@ window.addEventListener('hashchange', loadFromUrlHash);
 // ICD-O-3 codes before the user clicks Generate. Best-effort, never
 // blocks UI.
 loadBundleIndex().catch(() => {});
+let retainedPlanWorker = null;
+function retainCurrentPlanPage() {
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.ready.then(registration => {
+    if (registration.active && registration.active !== retainedPlanWorker) {
+      retainedPlanWorker = registration.active;
+      registration.active.postMessage({ type: 'CACHE_PLAN_PAGE', path: location.pathname });
+    }
+  }).catch(() => {});
+}
+
 refreshBuildPanel().catch(() => {});
 window.addEventListener('online', () => refreshBuildPanel().catch(() => {}));
 window.addEventListener('offline', () => refreshBuildPanel().catch(() => {}));
 if (navigator.serviceWorker) {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
+    retainCurrentPlanPage();
     refreshBuildPanel().catch(() => {});
   });
 }
@@ -2911,7 +2923,10 @@ if (navigator.serviceWorker) {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
-      .then(() => refreshBuildPanel().catch(() => {}))
+      .then(() => {
+        retainCurrentPlanPage();
+        return refreshBuildPanel().catch(() => {});
+      })
       .catch((e) => {
         console.warn('[OpenOnco] service worker registration failed:', e);
         refreshBuildPanel().catch(() => {});

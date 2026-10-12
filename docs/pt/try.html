@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="c79feeced7962028b65dd7a096c660c8c3fbaf02a57f0cc926ed8138f57648c4"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="7bf4fa4b7cc063bea5c21d91527001700a3018d4effc3c01a1245679122b728f"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -2879,11 +2879,23 @@ window.addEventListener('hashchange', loadFromUrlHash);
 // ICD-O-3 codes before the user clicks Generate. Best-effort, never
 // blocks UI.
 loadBundleIndex().catch(() => {});
+let retainedPlanWorker = null;
+function retainCurrentPlanPage() {
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.ready.then(registration => {
+    if (registration.active && registration.active !== retainedPlanWorker) {
+      retainedPlanWorker = registration.active;
+      registration.active.postMessage({ type: 'CACHE_PLAN_PAGE', path: location.pathname });
+    }
+  }).catch(() => {});
+}
+
 refreshBuildPanel().catch(() => {});
 window.addEventListener('online', () => refreshBuildPanel().catch(() => {}));
 window.addEventListener('offline', () => refreshBuildPanel().catch(() => {}));
 if (navigator.serviceWorker) {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
+    retainCurrentPlanPage();
     refreshBuildPanel().catch(() => {});
   });
 }
@@ -2895,7 +2907,10 @@ if (navigator.serviceWorker) {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
-      .then(() => refreshBuildPanel().catch(() => {}))
+      .then(() => {
+        retainCurrentPlanPage();
+        return refreshBuildPanel().catch(() => {});
+      })
       .catch((e) => {
         console.warn('[OpenOnco] service worker registration failed:', e);
         refreshBuildPanel().catch(() => {});
