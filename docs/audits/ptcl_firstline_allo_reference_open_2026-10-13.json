@@ -1,0 +1,116 @@
+{
+  "status": "open_source_contradiction_and_historical_monitor_defects",
+  "clinical_approval": false,
+  "baseline": "d4fe29f521",
+  "source_sha256": {
+    "knowledge_base/hosted/content/indications/ind_ptcl_1l_choep_allosct.yaml": "760c1e4b9a7728017d3d4570507cefd8edd7604caff6ab3d813f048c4847e021",
+    "knowledge_base/hosted/content/regimens/reg_choep_allosct_consolidation.yaml": "dbd96510c7d97850a3f5252266601cf3123387ca994239c0c03ba50514bcd3c0",
+    "knowledge_base/hosted/content/algorithms/algo_ptcl_1l.yaml": "842fff5343f7e4a62772ebf6c1ab9c5ee98300a5bd720e483e8ebffbb015be8c"
+  },
+  "runtime_baseline": [
+    {
+      "case_id": "ptcl-cd30-negative",
+      "default": "IND-TCELL-1L-CHOEP",
+      "tracks": [
+        {
+          "ind": "IND-TCELL-1L-CHOEP",
+          "reg": "REG-CHOEP",
+          "monitor": "MON-CHOEP-REGIMEN"
+        },
+        {
+          "ind": "IND-TCELL-1L-CHP-BV",
+          "reg": "REG-CHP-BV",
+          "monitor": "MON-CHP-BV-REGIMEN"
+        }
+      ]
+    },
+    {
+      "case_id": "ptcl-cd30-positive",
+      "default": "IND-TCELL-1L-CHP-BV",
+      "tracks": [
+        {
+          "ind": "IND-TCELL-1L-CHP-BV",
+          "reg": "REG-CHP-BV",
+          "monitor": "MON-CHP-BV-REGIMEN"
+        },
+        {
+          "ind": "IND-TCELL-1L-CHOEP",
+          "reg": "REG-CHOEP",
+          "monitor": "MON-CHOEP-REGIMEN"
+        }
+      ]
+    },
+    {
+      "case_id": "ptcl-relapsed",
+      "default": "IND-PTCL-2L-ROMIDEPSIN",
+      "tracks": [
+        {
+          "ind": "IND-PTCL-2L-ROMIDEPSIN",
+          "reg": "REG-ROMIDEPSIN-PTCL",
+          "monitor": null
+        },
+        {
+          "ind": "IND-PTCL-2L-PRALATREXATE",
+          "reg": "REG-PRALATREXATE-PTCL",
+          "monitor": null
+        }
+      ]
+    }
+  ],
+  "current_scope": "Three existing public PTCL synthetic cases checked. Twelve first-line synthetic variations of age 18/45/65 and ECOG 0/1 across CD30-negative/positive profiles are now protected by mandatory CI regression. This is not a complete PTCL treatment-source or all-patient audit.",
+  "primary_guideline": {
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12059256/",
+    "doi": "10.1002/hem3.70128",
+    "publication": "2025 ESMO-EHA PTCL guideline",
+    "locators": [
+      "Consolidative auto-HSCT in the first response",
+      "Recommendations / PTCL-NOS and TFHL"
+    ],
+    "paraphrase": "The guideline permits consideration of autologous consolidation for responding high-risk limited-stage or advanced PTCL-NOS/TFHL. Its randomized-study summary describes similar EFS/OS, lower relapse with allo-HSCT but higher transplant-related mortality. It does not substantiate a routine allo-CR1 preference or general auto-HSCT inferiority. Do not extrapolate recommendations for ATLL, HSTCL or relapsed disease to newly diagnosed PTCL-NOS."
+  },
+  "trial_retrieval_limit": {
+    "citation": "Schmitz et al., Blood 2021; DOI 10.1182/blood.2020008825; PMID 33512419",
+    "source_of_findings": "Guideline summary and reference list only",
+    "full_text_directly_verified": false,
+    "reason": "PMC returned recaptcha; publisher and PubMed retrieval did not provide full trial content. No claim of direct trial schedule/population reconciliation."
+  },
+  "findings": [
+    {
+      "id": "routine_allo_superiority",
+      "files": [
+        "knowledge_base/hosted/content/indications/ind_ptcl_1l_choep_allosct.yaml",
+        "knowledge_base/hosted/content/regimens/reg_choep_allosct_consolidation.yaml"
+      ],
+      "problem": "Indication and regimen assert routine allo-SCT in CR1 and general superiority over auto-SCT without a traceable supporting trial/cohort. Strong recommendation and five-year comparative outcome estimates are not supported by the reviewed source."
+    },
+    {
+      "id": "operative_transplant_steps",
+      "problem": "Conditioning and allo-HCT phases are mandatory, with fixed age-based pathways/donor hierarchy, while the primary basis for this first-line pathway is disputed. These require broader pathway review, not just monitor substitution."
+    },
+    {
+      "id": "b_cell_monitor_inheritance",
+      "problem": "Historical allo record inherits MON-R-CHOP-REGIMEN, including B-cell/CD20/DLBCL/double-hit/IPI/CNS-IPI checkpoints. Ordinary PTCL routes use their distinct CHOEP/BV-CHP monitors."
+    },
+    {
+      "id": "patient_advice_unreviewed",
+      "problem": "Historical transplant watchpoints include same-day fever above 38 degrees C and cycle-day-7-to-14 restriction. Patient advice, conditioning, donor rules and availability claims remain unreviewed."
+    }
+  ],
+  "verification": {
+    "source_and_runtime_regressions": 16,
+    "new_firstline_variants": 12,
+    "critical_lint": "passed",
+    "ordinary_firstline_auto_allo_tracks_seen": 0,
+    "clinical_records_changed": false,
+    "patient_data": "Synthetic only; original profile files preserved"
+  },
+  "required_followup": [
+    "Correct or quarantine the misleading historical indication/regimen together with source provenance and public reference copy",
+    "Do not invent an automatic auto-HSCT replacement or individual transplant eligibility",
+    "Ensure forced/historical selection cannot bypass source restrictions before enabling a clinical route",
+    "Only then author induction monitoring and specialist transplant handoff; do not claim R-CHOP monitor substitution validates transplantation",
+    "Review direct trial/current transplant recommendations and subtype-specific context",
+    "Refresh affected Wiki/source archives and translations when clinical records change; no protected HTML reads",
+    "Production remains pending explicit approval after prior automatic master-push rejection"
+  ]
+}
