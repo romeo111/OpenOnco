@@ -626,7 +626,7 @@ def render_news_index(entries: list[dict[str, Any]], *, target_lang: str,
         )
         empty = "No posts yet."
         read_more = "Read"
-        footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
+        footer = "Informational tool for clinicians, requiring qualified clinician review (CHARTER §11 + §15)."
         count_word = "posts"
     else:
         lead = (
@@ -635,7 +635,7 @@ def render_news_index(entries: list[dict[str, Any]], *, target_lang: str,
         )
         empty = "Дописів поки немає."
         read_more = "Читати"
-        footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
+        footer = "Це інформаційний інструмент для лікаря, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15)."
         count_word = "дописів"
 
     if entries:
@@ -694,11 +694,11 @@ def render_news_article(entry: dict[str, Any], *, target_lang: str,
     if is_en:
         back = "← All news"
         by_line = "by"
-        footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
+        footer = "Informational tool for clinicians, requiring qualified clinician review (CHARTER §11 + §15)."
     else:
         back = "← Усі новини"
         by_line = "—"
-        footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
+        footer = "Це інформаційний інструмент для лікаря, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15)."
 
     dateline = _format_date(entry["date"], target_lang)
     tags_html = _render_tags(entry["tags"])

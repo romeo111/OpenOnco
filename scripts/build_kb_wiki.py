@@ -859,9 +859,9 @@ def render_entity_page(
         codes = entity.data.get("codes") or {}
         code_rows = [(key, html.escape(_text(value))) for key, value in codes.items()]
         disclaimer = (
-            "Інформаційний інструмент, не медичний виріб. Усі рекомендації має перевірити кваліфікований онколог. Клінічний вміст є попереднім до завершення перевірки двома рецензентами."
+            "Інформаційна підтримка. Усі рекомендації має перевірити кваліфікований онколог. Технічні перевірки не є клінічною валідацією чи схваленням лікування."
             if locale == "uk" else
-            "Informational tool, not a medical device. All recommendations must be verified by a qualified oncologist. Clinical content is provisional until two-reviewer sign-off."
+            "Informational support. All recommendations must be verified by a qualified oncologist. Engineering checks are not clinical validation or treatment approval."
         )
         specifics = (
             f'<p class="kb-info-box">{html.escape(disclaimer)}</p>'

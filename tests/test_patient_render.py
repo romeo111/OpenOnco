@@ -243,13 +243,11 @@ def test_patient_html_has_required_sections(patient_html: str):
 
 
 def test_patient_html_has_disclaimer(patient_html: str):
-    """Footer disclaimer must include the regulatory boilerplate:
-    'Цей звіт' (this report), 'не медичний прилад' (not a medical
-    device), 'лікар' (doctor)."""
+    """The footer identifies the report and preserves clinician discussion."""
     visible = _visible_text(patient_html)
     assert "Цей звіт" in visible, "Disclaimer missing 'Цей звіт' boilerplate"
-    assert "не медичний прилад" in visible, (
-        "Disclaimer missing 'не медичний прилад' boilerplate"
+    assert "для обговорення з лікарем" in visible, (
+        "Disclaimer must keep clinician discussion without asserting regulatory status"
     )
     assert "лікар" in visible, "Disclaimer missing 'лікар' reference"
 
@@ -822,7 +820,8 @@ def test_english_patient_report_preserves_clinician_link_and_footer_context():
     html = render_plan_html(result, mode='patient', target_lang='en', sibling_link='plan.html?view=doctor&draft=1')
     assert 'href="plan.html?view=doctor&amp;draft=1"' in html
     assert 'Technical version for your doctor' in html
-    assert 'not a medical device' in html
+    assert 'for discussion with a qualified clinician' in html
+    assert 'not a medical device' not in html
     assert 'new test results become available' in html
     assert 'Do not change prescribed treatment based only on this report' in html
     assert 'seek hospital care immediately' in html

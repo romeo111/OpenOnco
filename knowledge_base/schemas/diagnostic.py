@@ -125,7 +125,7 @@ class DiagnosticPlan(Base):
     # but with diagnostic-mode wording. Surfaced in the rendered brief.
     intended_use: str = (
         "Diagnostic-phase MDT support: structure the workup, identify the team, "
-        "surface unresolved questions. Not a medical device; not a treatment plan."
+        "surface unresolved questions. Informational support; not a treatment plan."
     )
     hcp_user_specification: str = (
         "Licensed oncologist/hematologist/pathologist participating in initial "

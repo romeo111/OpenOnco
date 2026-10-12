@@ -203,9 +203,11 @@ def test_html_includes_disclaimer(html):
 
 
 def test_html_includes_fda_disclosure(html):
-    """§1.3 critical: FDA non-device CDS positioning surfaced."""
+    """Intended-use and clinician-review context stays visible."""
     assert "fda-disclosure" in html
-    assert "CHARTER §15" in html
+    assert "§15" in html
+    assert "Project intended-use limits" in html or "Межі призначення проєкту" in html
+    assert "Per FDA non-device" not in html
 
 
 def test_html_includes_version_chain(html, plan_result):

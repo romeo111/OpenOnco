@@ -639,8 +639,8 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
               "discussion (per CHARTER §11). It is not a system that makes clinical "
               "decisions. Every recommendation must be verified by the treating physician.",
     },
-    "fda_disclosure_label":        {"uk": "Відповідно до позиціонування FDA як non-device CDS (CHARTER §15):",
-                                    "en": "Per FDA non-device CDS positioning (CHARTER §15):"},
+    "fda_disclosure_label":        {"uk": "Межі призначення проєкту (CHARTER §11 + §15):",
+                                    "en": "Project intended-use limits (CHARTER §11 + §15):"},
     # Variant actionability (ESCAT)
     "actionability_heading":       {"uk": "Клінічна значущість мутацій (ESCAT)",
                                     "en": "Clinical significance of mutations (ESCAT)"},
@@ -1350,10 +1350,10 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
     )
 
 
-def _render_fda_disclosure(text: str) -> str:
+def _render_fda_disclosure(text: str, target_lang: str = 'en') -> str:
     return (
         f'<div class="fda-disclosure">'
-        f"<strong>Per FDA non-device CDS positioning (CHARTER §15):</strong> "
+        f"<strong>{_h(_t('fda_disclosure_label', target_lang))}</strong> "
         f"{_h(text)}"
         f"</div>"
     )
@@ -3493,9 +3493,9 @@ def render_plan_html(
     body.append(_render_version_chain(
         plan.id, plan.version, plan.supersedes, plan.superseded_by, plan.generated_at,
     ))
-    body.append(_render_fda_disclosure(fda.intended_use))
+    body.append(_render_fda_disclosure(fda.intended_use, target_lang))
     if fda.automation_bias_warning:
-        body.append(_render_fda_disclosure(fda.automation_bias_warning))
+        body.append(_render_fda_disclosure(fda.automation_bias_warning, target_lang))
     body.append(f'<div class="medical-disclaimer">{_h(_MEDICAL_DISCLAIMER)}</div>')
     body.append('</div>')
 
@@ -4468,7 +4468,7 @@ def _render_ask_doctor_section(plan_result: PlanResult, *, target_lang: str = "u
 
 
 _PATIENT_DISCLAIMER_HTML = (
-    "<p>Цей звіт — інформаційний інструмент, не медичний прилад. Усі рішення "
+    "<p>Цей звіт — інформаційний інструмент, для обговорення з лікарем. Усі рішення "
     "про лікування приймає ваш онколог. Звіт оновлюється, коли з'являються "
     "нові аналізи. Не змінюйте призначене лікування на основі лише цього звіту.</p>"
     "<p>Якщо у вас виникли термінові симптоми, перелічені вище — звертайтесь у "
@@ -4484,7 +4484,7 @@ _PATIENT_DISCLAIMER_HTML = (
 # on the syndrome, rather than naming "your oncologist" as the sole
 # decision-maker.
 _PATIENT_DISCLAIMER_PREVENTION_HTML = (
-    "<p>Цей звіт — інформаційний інструмент, не медичний прилад. "
+    "<p>Цей звіт — інформаційний інструмент, для обговорення з лікарем. "
     "Усі рішення щодо вашої програми профілактики і спостереження ухвалює "
     "ваш лікар (зазвичай це сімейний лікар, генетичний консультант або "
     "профільний спеціаліст залежно від виявленого ризик-фактора). Звіт "
@@ -4611,7 +4611,7 @@ def render_patient_english_draft(plan_result: PlanResult, *, sibling_link: Optio
             if prevention else 'If you develop the urgent symptoms listed above, seek hospital care immediately; do not wait for a planned visit.'
         )
         body += (
-            '<footer class="patient-disclaimer"><p>This report is an information tool, not a medical device. '
+            '<footer class="patient-disclaimer"><p>This report is an information tool, for discussion with a qualified clinician. '
             + decision + '</p><p>' + symptoms + '</p>'
             '<p>Questions about the tool itself: <a href="https://github.com/romeo111/OpenOnco/issues">github.com/romeo111/OpenOnco</a></p></footer>'
         )
@@ -4865,8 +4865,8 @@ def render_diagnostic_brief_html(
     body.append(_render_version_chain(
         dp.id, dp.version, dp.supersedes, dp.superseded_by, dp.generated_at,
     ))
-    body.append(_render_fda_disclosure(dp.intended_use))
-    body.append(_render_fda_disclosure(dp.automation_bias_warning))
+    body.append(_render_fda_disclosure(dp.intended_use, target_lang))
+    body.append(_render_fda_disclosure(dp.automation_bias_warning, target_lang))
     body.append(f'<div class="medical-disclaimer">{_h(_MEDICAL_DISCLAIMER)}</div>')
     body.append('</div>')
 

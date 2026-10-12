@@ -10,6 +10,10 @@ Public and interactive pages use the shared templates. Deep clinical documents u
 
 Nordic authoring uses `Helsinki-NLP/opus-mt-en-gmq` at `1011a691a63e61b4beb68d47332790e072f685f0`; Finnish uses `Helsinki-NLP/opus-mt-en-fi` at `2f68f12519005b50f9e1afe6fd57b13add55e156`. Italian uses the existing pinned Romance model. Weights remain in the optional local authoring environment; no model or translation API runs on page visits. The clinical-question API retains its separate existing provider costs.
 
+## Intended-use copy (2026-10-12)
+
+All eleven editions use shared intended-use limits requiring qualified clinician review. The project Charter does not establish a regulatory classification or clinical validation. `scripts/regulatory_copy.py` overlays exact source aliases and curated labels without changing clinical rules, source identifiers or input values. Revised scope metadata may retain English until reviewed; existing clinical translation notices remain in place.
+
 ## Earlier editions and maintenance
 
 The five new catalogs each contain 36,858 display strings. Native draft counts are IT 21,154; DA 19,658; SV 19,847; NB 19,260; FI 15,404. Remaining entries retain originals, including protected diagnosis names. These counts describe display strings, not medically approved records.

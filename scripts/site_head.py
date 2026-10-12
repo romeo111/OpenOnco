@@ -435,14 +435,14 @@ _FAQ_EN = [
         "oncology tumor boards. A deterministic rule engine over a versioned, "
         "source-cited knowledge base drafts two alternative treatment plans "
         "(standard and aggressive) for the treating oncologist to verify. It is "
-        "informational support for healthcare professionals, not a medical device.",
+        "informational support requiring qualified clinician review; the Charter does not establish regulatory classification.",
     ),
     (
         "How is OpenOnco different from asking ChatGPT for a cancer treatment?",
         "No large language model picks the regimen or dose in OpenOnco. All "
-        "clinical logic is a deterministic rule engine over a peer-reviewed "
+        "clinical logic is a deterministic rule engine over a versioned, source-cited "
         "knowledge base, and every recommendation carries a source citation, so it "
-        "cannot hallucinate a drug or a dose.",
+        "requires clinical verification of inputs, sources and outputs.",
     ),
     (
         "Can I use OpenOnco from ChatGPT, Claude, or Cursor?",
@@ -470,14 +470,14 @@ _FAQ_UK = [
         "онкології. Детермінований engine на основі версіонованої бази знань із "
         "джерелами формує два альтернативні плани лікування (стандартний і "
         "агресивний) для перевірки лікарем-онкологом. Це інформаційна підтримка "
-        "для медичних працівників, а не медичний виріб.",
+        "для перегляду кваліфікованим лікарем; Хартія не визначає регуляторної класифікації.",
     ),
     (
         "Чим OpenOnco відрізняється від запиту лікування до ChatGPT?",
         "Жодна велика мовна модель не обирає схему чи дозу в OpenOnco. Уся клінічна "
-        "логіка - це детермінований engine правил над рецензованою базою знань, і "
-        "кожна рекомендація має посилання на джерело, тож система не може "
-        "«вигадати» препарат чи дозу.",
+        "логіка - це детермінований engine правил над версіонованою базою знань із джерелами, і "
+        "кожна рекомендація має посилання на джерело, а вхідні дані, джерела та результати потребують "
+        "клінічної перевірки.",
     ),
     (
         "Чи можу я використовувати OpenOnco з ChatGPT, Claude або Cursor?",
@@ -1145,7 +1145,7 @@ Read the repository `README.md`, the `specs/` folder (CHARTER first), and copy
 ## Disclaimer
 
 OpenOnco is an informational resource to support tumor-board discussion. It is
-not a medical device and not for use without a qualified oncologist. Every
+for review with a qualified oncologist. Every
 recommendation must be verified by the treating physician with the full clinical
 picture and discussed by a multidisciplinary team (CHARTER §11 + §15).
 """

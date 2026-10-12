@@ -17,7 +17,7 @@ The Plan Builder runs the Python engine through Pyodide in the browser.
 The separate Tumor Board service can send submitted information to its
 server; review that page's data notice before entering information.
 Code is MIT; project content is CC BY 4.0; upstream sources retain their
-own licenses. This is an informational resource, not a medical device.
+own licenses. This is an informational resource for qualified clinician review.
 
 Feedback requested: reproducible setup failures, missing provenance and
 rule/source mismatches on synthetic profiles. Do not post patient data.

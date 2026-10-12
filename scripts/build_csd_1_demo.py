@@ -644,7 +644,7 @@ def render_disclaimer() -> str:
           Translational Research Group living matrix.
         </li>
         <li>
-          <b>FDA non-device CDS positioning (CHARTER §15):</b> обидва варіанти
+          <b>Project intended-use limits (CHARTER §11 + §15):</b> обидва варіанти
           представлені для перегляду; алгоритм базується на правилах + явних
           цитатах джерел; критерій 4 виконано (intended use, HCP user, patient
           population, algorithm summary, data limitations усі в полі рендеру).

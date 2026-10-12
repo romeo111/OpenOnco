@@ -90,7 +90,8 @@ def test_treatment_plan_includes_fda_disclosure():
     plan = generate_plan(p, kb_root=KB_ROOT)
     html = render_plan_html(plan, mdt=None)
     assert "fda-disclosure" in html
-    assert "CHARTER §15" in html
+    assert "§15" in html
+    assert "Project intended-use limits" in html or "Межі призначення проєкту" in html
     assert "medical-disclaimer" in html
 
 

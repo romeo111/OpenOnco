@@ -327,6 +327,7 @@ SHOWCASE_TITLES = {
 
 
 def messages_for(locale):
+    from scripts.regulatory_copy import messages_for as regulatory_messages
     from scripts.offline_ui_copy import messages_for as offline_messages
     from scripts.privacy_copy import messages_for as privacy_messages
     if locale in ('it', 'da', 'sv', 'nb', 'fi'):
@@ -344,6 +345,7 @@ def messages_for(locale):
         catalog.update(STAGING_LABELS[locale])
         catalog.update(privacy_messages(locale))
         catalog.update(offline_messages(locale))
+        catalog.update(regulatory_messages(locale))
         return catalog
     title = NSCLC[locale]
     status = {
@@ -390,4 +392,5 @@ def messages_for(locale):
         })
     catalog['✗ Not registered in UA'] = AVAILABILITY_LABELS[locale]
     catalog.update(privacy_messages(locale))
+    catalog.update(regulatory_messages(locale))
     return catalog

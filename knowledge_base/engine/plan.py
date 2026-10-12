@@ -10,7 +10,7 @@ in **one document**. The data-model guarantee for this comes from
 `Algorithm.output_indications` (≥2 candidates) plus `default_indication`
 + `alternative_indication` markers.
 
-FDA non-device CDS positioning (CHARTER §15) requires every Plan to surface
+The project transparency design (CHARTER §15) requires every Plan to surface
 the four Criterion-4 elements (intended use, HCP user, patient population,
 algorithm summary, data limitations). Engine populates these from Algorithm
 and Indication metadata.
@@ -401,7 +401,7 @@ def _build_prevention_fda_compliance(
     if time_critical:
         limitations.append(
             "WARNING: Prevention plan includes time-critical Indications — "
-            "falls OUTSIDE FDA non-device CDS carve-out per §520(o)(1)(E)."
+            "falls OUTSIDE the project intended-use limits; requires a separate scope assessment."
         )
     if len(tracks) < 2:
         limitations.append(
@@ -414,7 +414,7 @@ def _build_prevention_fda_compliance(
         intended_use=(
             "HCP-mediated prevention / early-diagnosis counseling for "
             "at-risk asymptomatic individuals (CHARTER §3 amendment "
-            "2026-05-18, Path A). Not a medical device; not for autonomous "
+            "2026-05-18, Path A). For independent clinician review; not for autonomous "
             "clinical decision-making; not for patient-direct deployment."
         ),
         hcp_user_specification=(
@@ -801,13 +801,13 @@ def _build_fda_compliance(
     if time_critical:
         limitations.append(
             "WARNING: This plan includes time-critical Indications — falls "
-            "OUTSIDE FDA non-device CDS carve-out per §520(o)(1)(E) Criterion 4."
+            "OUTSIDE the project intended-use limits; requires a separate scope assessment."
         )
 
     return FDAComplianceMetadata(
         intended_use=(
             "Outpatient oncology treatment planning to support tumor-board "
-            "discussion. Not a medical device; not for autonomous clinical "
+            "discussion. For independent clinician review; not for autonomous clinical "
             "decision-making."
         ),
         hcp_user_specification=(

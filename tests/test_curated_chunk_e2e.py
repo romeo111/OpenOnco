@@ -270,7 +270,7 @@ def test_curated_case_e2e(case_filename: str, kb_validator):
         f"{case_filename}: rendered HTML only {len(html)} bytes "
         f"(< {MIN_RENDER_BYTES})"
     )
-    assert "FDA" in html, (
-        f"{case_filename}: rendered HTML missing 'FDA' "
-        f"(CHARTER §15 non-device CDS disclosure)"
+    assert 'fda-disclosure' in html, (
+        f"{case_filename}: rendered HTML missing intended-use disclosure "
+        f"(CHARTER §11 + §15)"
     )

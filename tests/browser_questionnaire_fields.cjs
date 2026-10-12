@@ -23,6 +23,6 @@ for (const original of cached) {
 for (const prefix of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/', 'it/', 'da/', 'sv/', 'nb/', 'fi/']) {
   const page = fs.readFileSync('docs/'+prefix+'try.html','utf8');
   assert(page.includes('quest = normalizeQuestionnaire(quest);'));
-  assert.equal(page.match(/^function normalizeQuestionnaire\([^\n]*\{[\s\S]*?^\}/m)[0], code);
+  assert.equal(page.match(/^function normalizeQuestionnaire\([^\n]*\{[\s\S]*?^\}/m)[0].replace(/\r\n/g,'\n'), code.replace(/\r\n/g,'\n'));
 }
 console.log('All 78 legacy cached forms match corrected data; authored values preserved; eleven clients normalize before rendering');

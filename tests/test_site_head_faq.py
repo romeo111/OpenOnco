@@ -3,7 +3,7 @@
 FAQPage markup is a GEO lever (AI search / LLMs lift Q&A and cite declarative
 answers). These tests lock: it appears on the homepage only (no duplicate-markup
 penalty), every emitted JSON-LD block is valid JSON, and the answers keep the
-not-a-medical-device safety framing.
+qualified-clinician review framing without a regulatory-status assertion.
 """
 
 from __future__ import annotations
@@ -43,7 +43,10 @@ def test_non_homepage_has_no_faqpage(path):
 def test_faq_answers_keep_safety_framing():
     faq = [b for b in _blocks("index.html", "en", include_faq=True) if b.get("@type") == "FAQPage"][0]
     text = " ".join(q["acceptedAnswer"]["text"] for q in faq["mainEntity"]).lower()
-    assert "not a medical device" in text
+    assert "requiring qualified clinician review" in text
+    assert "not a medical device" not in text
+    assert "regulatory classification" in text
+    assert "cannot hallucinate" not in text
     assert "verified by a qualified oncologist" in text
     assert "no large language model picks" in text  # the core safety differentiator
 

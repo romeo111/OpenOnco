@@ -615,7 +615,7 @@ def build_page(patient_inner_html: str, engine_styles: str,
     <footer class="demo-footer">
       <p>OpenOnco · <a href="https://openonco.info">openonco.info</a> · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">github.com/romeo111/OpenOnco</a></p>
       <p>Цей звіт згенеровано Pyodide rule-engine — без надсилання даних на сервер. Ваші відомості зберігаються лише у вашому браузері.</p>
-      <p>Цей документ — інформаційний ресурс, не медичний пристрій. Усі рекомендації потребують перевірки лікуючим онкологом (CHARTER §11).</p>
+      <p>Цей документ — інформаційний ресурс для обговорення з лікарем. Усі рекомендації потребують перевірки лікуючим онкологом (CHARTER §11).</p>
     </footer>
   </div>
 </body>

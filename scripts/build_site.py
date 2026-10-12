@@ -1580,7 +1580,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
         primary = "Try the plan builder"
         diseases_href = "/diseases.html"
         note = "Open-data inputs: CIViC (CC0) for biomarker actionability, ClinicalTrials.gov for trial-aware options, PubMed/PMID/DOI and DailyMed/openFDA for literature and drug-label context. No LLM chooses treatment: plans are rules-first with YAML provenance, so LLM hallucinations are excluded from the plan. The clinician remains the final authority (CHARTER §11)."
-        footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
+        footer = "Informational tool for clinicians, requiring qualified clinician review (CHARTER §11 + §15)."
         try_href = "/try.html"
         gallery_href = "/gallery.html"
         kb_href = "/kb.html"
@@ -1641,7 +1641,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
                     ("btn-secondary", gallery_href, "See an example plan"),
                 ],
                 "disclaimer": (
-                    "OpenOnco is an information tool — not a medical device and not medical "
+                    "OpenOnco is an information tool — for clinician review and not medical "
                     "advice. It does not replace your oncologist. Never start, stop, or "
                     "change any treatment based on this site; decide together with your "
                     "treating oncologist."
@@ -1683,7 +1683,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             (kb_href, "Onco Wiki"),
             (about_href, "About the project"),
         ]
-        footer = "Informational tool, not a medical device (CHARTER §15 + §11)."
+        footer = "Informational tool, requiring qualified clinician review (CHARTER §11 + §15)."
         perf_value = "~200"
         perf_unit = "ms"
     else:
@@ -1700,7 +1700,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
         primary = "Спробувати конструктор плану"
         diseases_href = "/ukr/diseases.html"
         note = "Відкриті джерела: CIViC (CC0) для біомаркерної клінічної значущості, ClinicalTrials.gov для trial-aware опцій, PubMed/PMID/DOI та DailyMed/openFDA для літератури й контексту інструкцій до препаратів. LLM не обирає лікування: план збирається rules-first із YAML provenance, тому LLM-галюцинації виключені з плану. Фінальне рішення лишається за лікарем (CHARTER §11)."
-        footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
+        footer = "Це інформаційний інструмент для лікаря, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15)."
         try_href = "/ukr/try.html"
         gallery_href = "/ukr/gallery.html"
         kb_href = "/ukr/kb.html"
@@ -1759,7 +1759,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
                     ("btn-secondary", gallery_href, "Подивитися приклад плану"),
                 ],
                 "disclaimer": (
-                    "OpenOnco — інформаційний інструмент, а не медичний виріб і не медична "
+                    "OpenOnco — інформаційний інструмент, для перегляду лікарем, а не медична "
                     "порада. Він не замінює вашого онколога. Ніколи не починайте, не "
                     "припиняйте і не змінюйте лікування на основі цього сайту — рішення "
                     "приймайте разом зі своїм лікарем-онкологом."
@@ -1801,7 +1801,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             (kb_href, "Онко-вікі"),
             (about_href, "Про проєкт"),
         ]
-        footer = "Інформаційний інструмент, не медичний пристрій (CHARTER §15 + §11)."
+        footer = "Інформаційний інструмент, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15)."
         perf_value = "~200"
         perf_unit = "мс"
 
@@ -2360,7 +2360,7 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
   <footer class="page-foot">
     Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
     <br>
-    {'No real patient data · CHARTER §9.3. Informational tool for clinicians, not a medical device (CHARTER §15 + §11).' if target_lang == 'en' else 'Жодних реальних пацієнтських даних · CHARTER §9.3. Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).'}
+    {'No real patient data · CHARTER §9.3. Informational tool for clinicians, requiring qualified clinician review (CHARTER §11 + §15).' if target_lang == 'en' else 'Жодних реальних пацієнтських даних · CHARTER §9.3. Це інформаційний інструмент для лікаря, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15).'}
   </footer>
 </main>
 </body>
@@ -8668,7 +8668,7 @@ def _render_capabilities_uk_legacy(stats) -> str:
     Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
     <br>
     Жодних реальних пацієнтських даних · CHARTER §9.3.
-    Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
+    Це інформаційний інструмент для лікаря, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15).
   </footer>
 </main>
 
@@ -9535,7 +9535,7 @@ def _render_capabilities_en(stats) -> str:
     Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
     <br>
     No real patient data · CHARTER §9.3.
-    Information tool for clinicians, not a medical device (CHARTER §15 + §11).
+    Information tool for clinicians, requiring qualified clinician review (CHARTER §11 + §15).
   </footer>
 </main>
 
@@ -10015,13 +10015,13 @@ _SPECS_CATALOG: list[dict] = [
         "title_en": "Charter & Governance",
         "summary_uk": (
             "Управління проектом, scope (що проект робить і чого не робить), "
-            "FDA non-device CDS positioning (§15 з constraints C1-C7), solo-maintainer workflow "
+            "intended-use design constraints (§15 з constraints C1-C7), solo-maintainer workflow "
             "для clinical content (§6.1), patient-data privacy (§9.3), forbidden prompt "
             "patterns для LLM (§8.3 — LLM не приймає клінічні рішення)."
         ),
         "summary_en": (
             "Project governance, scope (what it does and what it explicitly does not), "
-            "FDA non-device CDS positioning (§15 with constraints C1-C7), the solo-maintainer "
+            "intended-use design constraints (§15 with constraints C1-C7), the solo-maintainer "
             "workflow for source-traceable content (§6.1), patient-data privacy (§9.3), forbidden "
             "prompt patterns for LLMs (§8.3 — LLMs do not make clinical decisions)."
         ),
@@ -10256,7 +10256,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
             f"OpenOnco is a specifications-first project. Every architectural, clinical, "
             f"and governance detail is pinned in a markdown document under <code>specs/</code> "
             f"that is versioned and open to public review. {n_specs} active specifications "
-            f"cover everything from FDA non-device CDS positioning to the shape of every "
+            f"cover everything from intended-use design constraints to the shape of every "
             f"YAML entity in the KB. The full text lives at "
             f"<a href=\"https://github.com/{GH_REPO}/tree/master/specs\" target=\"_blank\" "
             f"rel=\"noopener\">github.com/{GH_REPO}/specs</a>."
@@ -10289,7 +10289,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
         compliance_th = ("Guarantee", "Specification", "What it means")
         compliance_rows = [
             ("FDA non-device CDS", "CHARTER.md §15",
-             "OpenOnco is designed for the §520(o)(1)(E) carve-out — not a medical device. Constraints C1-C7 are hard-enforced."),
+             "CHARTER §15 records project design constraints; it does not establish regulatory classification or clinical validation."),
             ("No patient data", "CHARTER.md §9.3",
              "<code>patient_plans/</code> and any patient HTML are gitignored. All examples are synthetic."),
             ("Solo maintainer delivery", "CHARTER.md §6.1",
@@ -10313,7 +10313,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
              "IP addresses; English everywhere else. By using the site you consent to this country lookup — to avoid it, pick a language "
              "manually and your choice is remembered."),
         ]
-        footer_disclaimer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
+        footer_disclaimer = "Informational tool for clinicians, requiring qualified clinician review (CHARTER §11 + §15)."
     else:
         page_title = "Специфікації"
         h1 = "Специфікації"
@@ -10321,7 +10321,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
             f"OpenOnco — це specifications-first проект. Кожна архітектурна, клінічна, або "
             f"governance деталь зафіксована у markdown-документі під <code>specs/</code>, "
             f"який підлягає версіонуванню та public review. {n_specs} активних специфікацій "
-            f"описують все: від FDA non-device CDS positioning до структури кожної YAML "
+            f"описують все: від обмежень призначення до структури кожної YAML "
             f"entity у KB. Усі тексти живуть у <a href=\"https://github.com/{GH_REPO}/tree/master/specs\" "
             f"target=\"_blank\" rel=\"noopener\">github.com/{GH_REPO}/specs</a>."
         )
@@ -10352,7 +10352,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
         compliance_th = ("Гарантія", "Specification", "Що це означає")
         compliance_rows = [
             ("FDA non-device CDS", "CHARTER.md §15",
-             "OpenOnco проектується під §520(o)(1)(E) carve-out — не медичний пристрій. Constraints C1-C7 hard-enforced."),
+             "CHARTER §15 описує обмеження дизайну проєкту, а не регуляторну класифікацію чи клінічну валідацію."),
             ("No patient data", "CHARTER.md §9.3",
              "<code>patient_plans/</code> + будь-які patient HTML gitignored. Усі examples — synthetic."),
             ("Публікація солопроєкту", "CHARTER.md §6.1",
@@ -10376,7 +10376,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
              "українських IP-адрес; в усіх інших випадках — англійська. Користуючись сайтом, ви погоджуєтесь на це визначення країни — "
              "щоб його уникнути, оберіть мову вручну, і ваш вибір запам'ятається."),
         ]
-        footer_disclaimer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
+        footer_disclaimer = "Це інформаційний інструмент для лікаря, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15)."
 
     compliance_rows_html = "\n".join(
         f"          <tr>\n"
@@ -10511,7 +10511,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
         ]
         stats_h = "Current public corpus"
         release_note = f"Current public build: v{OPENONCO_VERSION}, released {OPENONCO_RELEASE_DATE}."
-        footer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
+        footer = "Informational tool for clinicians, requiring qualified clinician review (CHARTER §11 + §15)."
         stat_labels = {
             "diseases": "diseases",
             "redflags": "red flags",
@@ -10558,7 +10558,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
         ]
         stats_h = "Результат, який уже можна перевірити"
         release_note = f"Поточна публічна збірка: v{OPENONCO_VERSION}. Дані та правила версіонуються; дата релізу — {OPENONCO_RELEASE_DATE}."
-        footer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
+        footer = "Це інформаційний інструмент для лікаря, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15)."
         stat_labels = {
             "diseases": "хвороб",
             "redflags": "сигналів ризику",

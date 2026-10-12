@@ -15,8 +15,8 @@ version is retained (immutable), linked via supersedes/superseded_by.
 `patient_plans/<patient_id>/v<N>.yaml`, gitignored. Only the schema (this
 file) and templates are in the public repo.
 
-**FDA non-device CDS positioning** (CHARTER §15): the Plan output structure
-is what makes OpenOnco satisfy §520(o)(1)(E) Criterion 4 — every Plan
+**Project transparency design** (CHARTER §15): the Plan output structure
+records intended-use context, without determining regulatory status. A Plan
 surfaces the intended use, HCP user, patient population, algorithm summary,
 data limitations, and per-track rationale + sources, so the HCP can
 independently review the basis.
@@ -78,7 +78,7 @@ class FDAComplianceMetadata(Base):
     source_links: dict[str, str] = Field(default_factory=dict)
     data_limitations: list[str] = Field(default_factory=list)
     automation_bias_warning: Optional[str] = None
-    time_critical: bool = False  # if true, falls outside non-device CDS carve-out
+    time_critical: bool = False  # flags a scope limitation, not a regulatory determination
 
 
 class AccessMatrixRow(Base):

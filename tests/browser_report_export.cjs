@@ -133,7 +133,7 @@ const run = value => vm.runInContext(value, context);
     assert(page.includes('const planFresh = reportReady && planSource !== null && !planDirty;'));
     assert(page.includes('if (planSource == null || !reportReady || planDirty) return;'));
     assert(page.includes('if (!planSource || !reportReady || isInteractionLocked()) return;'));
-    assert.equal(page.match(/^function reportHtmlForDownload\([^\n]*\{[\s\S]*?^\}/m)[0], html.match(/^function reportHtmlForDownload\([^\n]*\{[\s\S]*?^\}/m)[0]);
+    assert.equal(page.match(/^function reportHtmlForDownload\([^\n]*\{[\s\S]*?^\}/m)[0].replace(/\r\n/g,'\n'), html.match(/^function reportHtmlForDownload\([^\n]*\{[\s\S]*?^\}/m)[0].replace(/\r\n/g,'\n'));
   }
   for (const locale of ['en', 'uk', 'es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi']) {
     context.document.documentElement.lang = locale;

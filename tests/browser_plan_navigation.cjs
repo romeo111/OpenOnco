@@ -84,7 +84,7 @@ function retain(url,source=origin+url+'#p=TEST-DO-NOT-STORE'){
   assert.equal(messages.length,2,'New active worker must retain the page on upgrade');
   for(const prefix of prefixes){
     const localized=fs.readFileSync('docs/'+prefix+'try.html','utf8');
-    assert.equal(localized.match(/^function retainCurrentPlanPage\([^\n]*\{[\s\S]*?^\}/m)[0],retainCode);
+    assert.equal(localized.match(/^function retainCurrentPlanPage\([^\n]*\{[\s\S]*?^\}/m)[0].replace(/\r\n/g,'\n'),retainCode.replace(/\r\n/g,'\n'));
   }
   console.log('All eleven visited Plan Builder shells: fresh online, retained offline, invalid-response recovery, quota/storage tolerance; query/private/API/POST/cross-origin writes excluded');
 })().catch(error=>{console.error(error);process.exitCode=1;});
