@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="ec2c28a4e74277c119038382c254316965207143d1ecd4ac0a9729acff72df78"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="bb4ab218f56fbeaf60e470aa315642babbf36ef17a496825b2960ada3f961063"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -1356,16 +1356,17 @@ function pauseEvalForToolbar() {
 }
 
 // ── Mode switch ───────────────────────────────────────────────────────────
-function setMode(newMode) {
+function setMode(newMode, { syncFromForm = false } = {}) {
+  // Capture form values before buildProfile switches to reading the JSON pane.
+  // Draft/example/QR loaders supply their own JSON and must retain it verbatim.
+  const formJson = newMode === 'json' && syncFromForm && mode === 'form' && activeQuest
+    ? JSON.stringify(buildProfile(), null, 2) : null;
   mode = newMode;
   modeFormBtn.classList.toggle('active', mode === 'form');
   modeJsonBtn.classList.toggle('active', mode === 'json');
   formPane.hidden = mode !== 'form';
   jsonPane.hidden = mode !== 'json';
-  if (mode === 'json' && activeQuest) {
-    // Sync form → JSON
-    textarea.value = JSON.stringify(buildProfile(), null, 2);
-  }
+  if (formJson !== null) textarea.value = formJson;
   saveDraft();
   updateRunBtnEnabled();
 }
@@ -2832,7 +2833,7 @@ personalizeBtn && personalizeBtn.addEventListener('click', () => {
 });
 
 modeFormBtn.addEventListener('click', () => { if (!isInteractionLocked()) setMode('form'); });
-modeJsonBtn.addEventListener('click', () => { if (!isInteractionLocked()) setMode('json'); });
+modeJsonBtn.addEventListener('click', () => { if (!isInteractionLocked()) setMode('json', { syncFromForm: true }); });
 formatBtn && formatBtn.addEventListener('click', () => {
   if (isInteractionLocked()) return;
   setError(null);

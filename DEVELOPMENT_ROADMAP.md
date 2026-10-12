@@ -307,3 +307,26 @@ Do not add paid dependencies to core access, purchase advertising, contact peopl
   Actual new status indication after deployment remains pending at this commit.
   Browser automation has no advertised network-emulation capability; full
   browser offline reopening/generation and PDF printing remain unproven.
+
+- 2026-10-12: Actual browser verification after 0031fdd564 confirmed native
+  EN/UK retained-runtime status (10/10), guarded by worker byte checks. Saved
+  proof images are local QA artifacts. Full offline browser regeneration and
+  PDF printing remain unproven.
+- 2026-10-12: Fixed form-to-JSON profile loss: setMode changed the input source
+  before buildProfile, so a user clicked Raw JSON and got the old JSON pane
+  rather than current answers. User-triggered conversion now snapshots the
+  form before switching. Draft/example/QR loaders retain their supplied JSON
+  verbatim; repeated JSON clicks preserve even unfinished raw edits. Numeric
+  zero, boolean false and decimals survive, fixed questionnaire data is not
+  mutated, and all eleven clients share the behavior. The new shipped-code
+  regression is included in CI; language/layout tests passed (28), existing
+  loading/export/form/cache/version suites and critical lint passed. Actual
+  deployed user flow remains pending at this commit. No medical data, clinical
+  rule, dose, source or engine bundle changed.
+- Open input-boundary risks identified in source: integer readValue uses
+  parseInt and can silently truncate a fractional entry; native numeric range
+  and step validity are not checked by generation gating. Form readiness only
+  counts presence, not clinical adequacy. JSON-to-form reconstruction/unknown
+  field preservation also needs a separate audit. Address input validity and
+  unsupported safe-default claims without treating unknown values as negative
+  findings or altering authored clinical rules.

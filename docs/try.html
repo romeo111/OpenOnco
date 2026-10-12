@@ -1372,16 +1372,17 @@ function pauseEvalForToolbar() {
 }
 
 // ── Mode switch ───────────────────────────────────────────────────────────
-function setMode(newMode) {
+function setMode(newMode, { syncFromForm = false } = {}) {
+  // Capture form values before buildProfile switches to reading the JSON pane.
+  // Draft/example/QR loaders supply their own JSON and must retain it verbatim.
+  const formJson = newMode === 'json' && syncFromForm && mode === 'form' && activeQuest
+    ? JSON.stringify(buildProfile(), null, 2) : null;
   mode = newMode;
   modeFormBtn.classList.toggle('active', mode === 'form');
   modeJsonBtn.classList.toggle('active', mode === 'json');
   formPane.hidden = mode !== 'form';
   jsonPane.hidden = mode !== 'json';
-  if (mode === 'json' && activeQuest) {
-    // Sync form → JSON
-    textarea.value = JSON.stringify(buildProfile(), null, 2);
-  }
+  if (formJson !== null) textarea.value = formJson;
   saveDraft();
   updateRunBtnEnabled();
 }
@@ -2848,7 +2849,7 @@ personalizeBtn && personalizeBtn.addEventListener('click', () => {
 });
 
 modeFormBtn.addEventListener('click', () => { if (!isInteractionLocked()) setMode('form'); });
-modeJsonBtn.addEventListener('click', () => { if (!isInteractionLocked()) setMode('json'); });
+modeJsonBtn.addEventListener('click', () => { if (!isInteractionLocked()) setMode('json', { syncFromForm: true }); });
 formatBtn && formatBtn.addEventListener('click', () => {
   if (isInteractionLocked()) return;
   setError(null);
