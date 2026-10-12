@@ -2,7 +2,7 @@
 
 **Project:** OpenOnco
 **Version:** v0.1 (draft)
-**Date:** [publication date]
+**Last updated:** 2026-10-12
 **Status:** Draft for public comment
 
 ## Current operating model — solo project (2026-10-12)
@@ -52,8 +52,8 @@ The project is an **information resource to support tumor board discussion**, no
 - Replace the physician's clinical decision
 - Claim to provide recommendations for rare or exceptional cases
 - Work with pediatric patients (scope — adults)
-- Constitute a medical device in the regulatory sense (per §15)
-- **Is not intended for patients / caregivers directly** — HCP only (oncologist/hematologist in a clinical context). Direct-to-patient deployment would require re-classification as a medical device — outside CHARTER scope (per §15). *(Scoped exception ratified 2026-07-08: a patient-facing education / question-preparation layer — "understand your plan, prepare questions for your oncologist," no verdicts, no treatment recommendations to the patient. A full direct-to-patient clinical service remains parked. See §15 CHANGELOG + `docs/plans/patient_facing_tumorboard_scope_2026-07-08.md`.)*
+- Claim a regulatory classification on the basis of this Charter (see §15)
+- **Is not intended for patients / caregivers directly** — HCP only (oncologist/hematologist in a clinical context). Patient-facing clinical deployment would require a separate scope assessment — outside CHARTER scope (per §15). *(Scoped exception ratified 2026-07-08: a patient-facing education / question-preparation layer — "understand your plan, prepare questions for your oncologist," no verdicts, no treatment recommendations to the patient. A full direct-to-patient clinical service remains parked. See §15 CHANGELOG + `docs/plans/patient_facing_tumorboard_scope_2026-07-08.md`.)*
 - **Is not intended for time-critical/urgent decisions** — outpatient planning only. Acute conditions (active TLS management, neutropenic fever, spinal cord compression) — outside scope (per §15).
 
 ---
@@ -398,7 +398,7 @@ The text is standardized and is not negotiated on a per-case basis.
 > Tracker: roadmap → "Operations → Reviewer signoff workflow". Synchronized
 > with §6.1 / §7.3 dev-mode boxes.
 
-- Changes to this document — by consensus of all three Clinical Co-Leads
+- The solo maintainer records Charter amendments with rationale and version history; external feedback is optional under §4 and §6.1
   + Project Coordinator (suspended in dev mode per box above)
 - 7-day public comment period before a final decision
 - Changes are recorded in the CHANGELOG of this document
@@ -451,25 +451,22 @@ The text is standardized and is not negotiated on a per-case basis.
 
 ## 13. Current status and limitations
 
-**What we know at this point:**
-- Governance is exclusively for the MVP stage (1–2 diagnoses, team up to 10 people)
-- Scaling will require formalization into a foundation-style structure
-- Regulatory status for now — information resource, not a medical device
-- The project has not undergone a formal clinical validation study
+OpenOnco currently operates as a solo-maintainer informational project.
+Engineering delivery does not require a clinical committee or reviewer quorum.
+Optional external content reviews are recorded separately; individual care
+still requires a qualified treating clinician.
 
-**What is planned as we grow:**
-- Expansion of the Clinical Editorial Board to 7+ people
-- Domain Working Groups for each clinical area
-- Formal legal structure (non-profit foundation)
-- Clinical validation studies with peer-reviewed publications
-- Regulatory strategy (educational resource → research →
-  medical device, if relevant)
+- Content coverage and clinical readiness vary by record. Technical checks
+  are not clinical validation or treatment approval.
+- The project has not undergone a formal clinical validation study.
+- The Charter states intended use and engineering goals; it does not establish
+  medical-device classification, clearance or exemption in any jurisdiction.
+- Maintainer capacity, source freshness, translation fidelity and evidence gaps
+  remain open risks.
 
-**Known limitations:**
-- Dependence on three clinicians at the start — single points of failure
-- Limited range of diagnoses covered
-- Absence of real-world deployment validation
-- Ukraine-specific regulatory situation not fully addressed
+Further collaboration, clinical validation studies and legal structure should
+be evaluated against actual project needs. A larger editorial board is a
+possible collaboration model, not an existing team or a release condition.
 
 ---
 
@@ -482,18 +479,23 @@ The text is standardized and is not negotiated on a per-case basis.
 
 ---
 
-## 15. FDA Non-Device CDS Positioning
+<a id="15-fda-non-device-cds-positioning"></a>
 
-OpenOnco is deliberately designed to **meet all four criteria of §520(o)(1)(E)
-of the FD&C Act** (carve-out of the 21st Century Cures Act 2016, FDA
-interpretation — `specs/Guidance-Clinical-Decision-Software_5.pdf`,
-Source `SRC-FDA-CDS-2026`). Software that satisfies all four criteria **is
-not a medical device** and is not subject to FDA premarket review.
+## 15. Intended-use design reference: FDA CDS guidance
 
-This section is an engineering best-effort positioning statement, not legal
-advice. A formal regulatory review is required before US deployment.
+OpenOnco uses the [FDA Clinical Decision Support Software guidance](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/clinical-decision-support-software)
+as an engineering reference for transparency and independent clinician review.
+The [FDA FAQ](https://www.fda.gov/medical-devices/software-medical-device-samd/clinical-decision-support-software-frequently-asked-questions-faqs)
+explains that CDS functions can have different regulatory outcomes and that
+this guidance is not the sole reference for classification.
 
-### 15.1. The four criteria and how OpenOnco addresses them
+This Charter describes project design intentions, not a product-specific
+regulatory determination, clearance, exemption or clinical validation. Internal
+names such as `Plan.fda_compliance` identify transparency metadata; they are
+not evidence of FDA approval. Assessment must address actual functions,
+intended users, deployment context and applicable jurisdiction.
+
+### 15.1. Four criteria used as design considerations
 
 **Criterion 1 — NOT image / IVD signal / signal-pattern processor.**
 - OpenOnco accepts **extracts** (radiology report text, lab results as numbers
@@ -505,23 +507,22 @@ advice. A formal regulatory review is required before US deployment.
 
 **Criterion 2 — display/analyze/print medical information.**
 - Patient profile (mCODE / FHIR per `DATA_STANDARDS`)
-- We cite guidelines (NCCN, ESMO, EASL, Ministry of Health protocols), drug labels
-  (FDA, EMA), peer-reviewed RCTs, government recommendations — all of this is
-  explicitly "medical information" per FDA Guidance §IV(2)
+- Guidelines, drug labels and published evidence are displayed as medical
+  information for independent review; this does not determine classification.
 
 **Criterion 3 — recommendations to HCP about prevention/diagnosis/treatment.**
 - Output: `Plan` with several `tracks` (≥2: standard + aggressive) — this is
-  a **list / prioritized list of treatment options**, exactly the
-  non-device pattern in FDA Examples V.A.9, V.A.10, V.B.2
-- HCP-only by design (§2). **Direct-to-patient deployment = device.**
+  a **list / prioritized list of treatment options** for independent HCP
+  review. This design choice does not establish a regulatory outcome.
+- HCP-only by design (§2). **Patient-facing clinical deployment requires a separate scope assessment.**
   Permanent constraint.
 - No "specific directive" — `Plan.tracks[].is_default` marks the
   engine's selection, but `automation_bias_warning` explicitly reminds
   that both tracks are presented for HCP review
 
 **Criterion 4 — HCP can independently review the basis.**
-- `Plan.fda_compliance` block (FDA Criterion 4 metadata) is mandatory
-  surfaced in every render: `intended_use`, `hcp_user_specification`,
+- The reporting design uses the internal `Plan.fda_compliance` block for
+  intended-use and transparency fields: `intended_use`, `hcp_user_specification`,
   `patient_population_match`, `algorithm_summary`, `data_sources_summary`,
   `data_limitations`, `automation_bias_warning`, `time_critical`
 - Rule engine — transparent YAML, not opaque ML; `Plan.trace` records
@@ -529,19 +530,19 @@ advice. A formal regulatory review is required before US deployment.
 - Each Indication has `rationale` + `sources[]` Citations with PMID/DOI/URL
 - Versioning ([§10.2](#10-versioning)) provides reproducibility
 
-### 15.2. Critical constraints (violation = loss of non-device status)
+### 15.2. Project design constraints and scope review
 
-| # | Constraint | What becomes a device |
+| # | Constraint | Scope change requiring assessment |
 |---|---|---|
-| C1 | HCP-only, never patient-facing (scoped education/question-prep patient layer ratified 2026-07-08 — see CHANGELOG; full direct-to-patient clinical service still parked) | Direct-to-patient **clinical service** → device |
-| C2 | Outpatient/non-time-critical only (`Indication.time_critical: false`) | Acute/emergency modules → device |
-| C3 | No raw image / signal / NGS read input | Adding such → device |
-| C4 | Always ≥2 tracks, never single binding directive | "System prescribes X" UX → device |
-| C5 | Sources must be **established / well-understood** (NCCN/ESMO/RCT/regulatory labels) | Novel biomarker discovery without published evidence → device |
-| C6 | Render UI must avoid automation-bias patterns | Pre-selected "accept", buried alternatives, missing rationale → device |
-| C7 | No treatment recommendations without confirmed histology — diagnostic-phase MDT may suggest workup steps and team composition, but treatment Plan generation is mechanically blocked when `patient.disease.id` / `icd_o_3_morphology` absent (per `specs/DIAGNOSTIC_MDT_SPEC.md` §1.2) | Bypassing histology gate to produce treatment tracks → device + clinical-safety risk |
+| C1 | HCP-only, never patient-facing (scoped education/question-prep patient layer ratified 2026-07-08 — see CHANGELOG; full direct-to-patient clinical service still parked) | Scope change; reassessment required |
+| C2 | Outpatient/non-time-critical only (`Indication.time_critical: false`) | Scope change; reassessment required |
+| C3 | No raw image / signal / NGS read input | Scope change; reassessment required |
+| C4 | Always ≥2 tracks, never single binding directive | Scope change; reassessment required |
+| C5 | Sources must be **established / well-understood** (NCCN/ESMO/RCT/regulatory labels) | Scope change; reassessment required |
+| C6 | Render UI must avoid automation-bias patterns | Scope change; reassessment required |
+| C7 | No treatment recommendations without confirmed histology — diagnostic-phase MDT may suggest workup steps and team composition, but treatment Plan generation is mechanically blocked when `patient.disease.id` / `icd_o_3_morphology` absent (per `specs/DIAGNOSTIC_MDT_SPEC.md` §1.2) | Scope change; reassessment required |
 
-### 15.3. Changes that trigger re-classification
+### 15.3. Changes requiring a new scope assessment
 
 Any of the following changes must pass a governance review (§6) **before**
 implementation:
@@ -557,16 +558,12 @@ implementation:
 
 ### 15.4. Other jurisdictions
 
-This section is written with **US FDA** as the global gold standard.
-- **Ukraine:** Ministry of Health regulation is less formalized for CDS;
-  the "decision-support ≠ decision-making" principle applies.
-- **EU:** MDR (Medical Device Regulation) has a similar carve-out for CDS,
-  but interpretation is stricter — a separate review is needed for an EU launch.
-- **UK:** MHRA is broadly aligned with the FDA on CDS positioning.
+US guidance does not determine classification or requirements in Ukraine,
+the EU, the UK or other jurisdictions. Each deployment needs an assessment
+of its actual functions, users and local requirements. This project does not
+rank jurisdictions as easier to clear or claim that meeting a transparency
+criterion establishes compliance elsewhere.
 
-OpenOnco's design satisfies the **strictest** common denominator (FDA
-Criterion 4 transparency requirements); other jurisdictions should be
-strictly easier to clear.
 
 ---
 

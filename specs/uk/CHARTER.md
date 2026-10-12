@@ -2,7 +2,7 @@
 
 **Проєкт:** OpenOnco
 **Версія:** v0.1 (draft)
-**Дата:** [дата публікації]
+**Оновлено:** 2026-10-12
 **Статус:** Draft для публічного обговорення
 
 ## Поточна модель роботи — солопроєкт (2026-10-12)
@@ -62,10 +62,10 @@ OpenOnco підтримує одна людина. Описана нижче м�
 - Не замінює клінічне рішення лікаря
 - Не претендує на рекомендації для рідкісних/ексальних випадків
 - Не працює з педіатричними пацієнтами (scope — дорослі)
-- Не є медичним виробом у регуляторному сенсі (per §15)
+- Не заявляє регуляторну класифікацію на підставі цієї Хартії (див. §15)
 - **Не призначений для пацієнтів / опікунів напряму** — тільки HCP
   (онколог/гематолог у клінічному контексті). Direct-to-patient
-  розгортання вимагало б re-classification як medical device — поза
+  клінічне розгортання потребує окремої оцінки призначення — поза
   scope CHARTER (per §15).
 - **Не призначений для time-critical/urgent рішень** — outpatient
   планування. Гострі стани (TLS active management, neutropenic fever,
@@ -372,7 +372,7 @@ Semantic versioning по нозологіям:
 
 ## 12. Governance змін самого Governance
 
-- Зміни у цьому документі — через consensus усіх трьох Clinical Co-Leads
+- Власник солопроєкту записує зміни Хартії з обґрунтуванням і версіями; зовнішній відгук є додатковим відповідно до §4 і §6.1
   + Project Coordinator
 - 7 днів public comment period перед фінальним рішенням
 - Зміна фіксується у CHANGELOG цього документу
@@ -381,25 +381,22 @@ Semantic versioning по нозологіям:
 
 ## 13. Поточний статус і обмеження
 
-**Що ми знаємо на цей момент:**
-- Governance виключно для MVP-стадії (1-2 нозології, команда до 10 людей)
-- Масштабування потребуватиме формалізації у foundation-style структуру
-- Регуляторний статус поки — інформаційний ресурс, не медичний виріб
-- Проєкт не пройшов формальне clinical validation study
+OpenOnco зараз працює як інформаційний солопроєкт з одним власником.
+Доставка технічних змін не потребує клінічного комітету чи кворуму рецензентів.
+Додаткові зовнішні перегляди змісту записуються окремо; рішення щодо
+конкретного пацієнта залишаються відповідальністю кваліфікованого лікаря.
 
-**Що планується в міру зростання:**
-- Розширення Clinical Editorial Board до 7+ людей
-- Domain Working Groups для кожної клінічної області
-- Формальна юридична структура (non-profit foundation)
-- Clinical validation studies з peer-reviewed публікаціями
-- Регуляторна стратегія (educational resource → дослідження →
-  медичний виріб, якщо релевантно)
+- Покриття та клінічна готовність відрізняються між записами. Технічні
+  перевірки не є клінічною валідацією чи схваленням лікування.
+- Проєкт не пройшов формального дослідження клінічної валідації.
+- Хартія описує призначення та інженерні цілі; вона не встановлює
+  регуляторної класифікації, дозволу чи звільнення від вимог у будь-якій країні.
+- Обмеження ресурсів власника, актуальність джерел, точність перекладів
+  і прогалини доказовості залишаються відкритими ризиками.
 
-**Відомі обмеження:**
-- Залежність від трьох клініцистів на старті — single points of failure
-- Обмежений обсяг нозологій
-- Відсутність real-world deployment validation
-- Українська-специфічна регуляторна ситуація не повністю опрацьована
+Подальшу співпрацю, дослідження валідації та юридичну структуру слід
+оцінювати за фактичними потребами проєкту. Розширена редакційна рада —
+можливий формат співпраці, а не чинна команда чи умова релізу.
 
 ---
 
@@ -412,18 +409,23 @@ Semantic versioning по нозологіям:
 
 ---
 
-## 15. FDA Non-Device CDS Positioning
+<a id="15-fda-non-device-cds-positioning"></a>
 
-OpenOnco свідомо спроектований так, щоб **відповідати чотирьом
-критеріям §520(o)(1)(E) FD&C Act** (carve-out 21st Century Cures Act
-2016, інтерпретація FDA — `specs/Guidance-Clinical-Decision-Software_5.pdf`,
-Source `SRC-FDA-CDS-2026`). Software, що відповідає всім чотирьом, **не
-є medical device** і не підлягає FDA premarket review.
+## 15. Дизайн призначення: FDA CDS guidance як джерело
 
-Цей розділ — engineering best-effort positioning, не юридична
-консультація. Перед US-deployment потрібен формальний regulatory ревю.
+OpenOnco використовує [керівництво FDA щодо Clinical Decision Support Software](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/clinical-decision-support-software)
+як інженерне джерело для прозорості та незалежного перегляду лікарем.
+[FAQ FDA](https://www.fda.gov/medical-devices/software-medical-device-samd/clinical-decision-support-software-frequently-asked-questions-faqs)
+пояснює, що різні функції CDS можуть мати різний регуляторний статус,
+а це керівництво не є єдиним джерелом для класифікації.
 
-### 15.1. Чотири критерії і як OpenOnco до них підходить
+Хартія описує наміри дизайну проєкту, а не окреме регуляторне рішення,
+дозвіл, звільнення від вимог чи клінічну валідацію. Внутрішні назви на
+кшталт `Plan.fda_compliance` позначають метадані прозорості, а не доказ
+схвалення FDA. Оцінка має враховувати фактичні функції, користувачів,
+контекст розгортання та відповідну юрисдикцію.
+
+### 15.1. Чотири критерії як орієнтири дизайну
 
 **Criterion 1 — NOT image / IVD signal / signal-pattern processor.**
 - OpenOnco приймає **витяги** (radiology report text, lab results як
@@ -435,23 +437,22 @@ Source `SRC-FDA-CDS-2026`). Software, що відповідає всім чот�
 
 **Criterion 2 — display/analyze/print medical information.**
 - Patient profile (mCODE / FHIR per `DATA_STANDARDS`)
-- Цитуємо guidelines (NCCN, ESMO, EASL, МОЗ протоколи), drug labels
-  (FDA, EMA), peer-reviewed RCT, government recommendations — все це
-  явно "medical information" per FDA Guidance §IV(2)
+- Керівництва, інструкції препаратів і опубліковані дослідження показуються
+  як медична інформація для незалежного перегляду; це не визначає класифікацію.
 
 **Criterion 3 — recommendations to HCP about prevention/diagnosis/treatment.**
 - Output: `Plan` з кількома `tracks` (≥2: standard + aggressive) — це
-  **list / prioritized list of treatment options**, exactly the
-  non-device pattern in FDA Examples V.A.9, V.A.10, V.B.2
-- HCP-only за дизайном (§2). **Direct-to-patient deployment = device.**
+  **list / prioritized list of treatment options** для незалежного перегляду
+  лікарем. Такий дизайн не встановлює регуляторний статус.
+- HCP-only за дизайном (§2). **Patient-facing clinical deployment requires a separate scope assessment.**
   Permanent constraint.
 - Жодного "specific directive" — `Plan.tracks[].is_default` маркує
   engine's selection, але `automation_bias_warning` явно нагадує що
   обидва треки представлені для HCP review
 
 **Criterion 4 — HCP can independently review the basis.**
-- `Plan.fda_compliance` блок (FDA Criterion 4 metadata) обов'язково
-  surfaced у кожному рендері: `intended_use`, `hcp_user_specification`,
+- Дизайн звітів використовує внутрішній блок `Plan.fda_compliance` для полів
+  призначення та прозорості: `intended_use`, `hcp_user_specification`,
   `patient_population_match`, `algorithm_summary`, `data_sources_summary`,
   `data_limitations`, `automation_bias_warning`, `time_critical`
 - Rule engine — transparent YAML, не opaque ML; `Plan.trace` записує
@@ -459,19 +460,19 @@ Source `SRC-FDA-CDS-2026`). Software, що відповідає всім чот�
 - Кожна Indication має `rationale` + `sources[]` Citations з PMID/DOI/URL
 - Версіонування ([§10.2](#10-версіонування)) дає reproducibility
 
-### 15.2. Critical constraints (порушення = втрата non-device status)
+### 15.2. Обмеження дизайну проєкту та перегляд призначення
 
-| # | Constraint | Що стає device |
+| # | Constraint | Зміна призначення, що потребує оцінки |
 |---|---|---|
-| C1 | HCP-only, never patient-facing | Direct-to-patient → device |
-| C2 | Outpatient/non-time-critical only (`Indication.time_critical: false`) | Acute/emergency modules → device |
-| C3 | No raw image / signal / NGS read input | Adding such → device |
-| C4 | Always ≥2 tracks, never single binding directive | "System prescribes X" UX → device |
-| C5 | Sources must be **established / well-understood** (NCCN/ESMO/RCT/regulatory labels) | Novel biomarker discovery without published evidence → device |
-| C6 | Render UI must avoid automation-bias patterns | Pre-selected "accept", buried alternatives, missing rationale → device |
-| C7 | No treatment recommendations without confirmed histology — diagnostic-phase MDT may suggest workup steps and team composition, but treatment Plan generation is mechanically blocked when `patient.disease.id` / `icd_o_3_morphology` absent (per `specs/DIAGNOSTIC_MDT_SPEC.md` §1.2) | Bypassing histology gate to produce treatment tracks → device + clinical-safety risk |
+| C1 | HCP-only, never patient-facing | Зміна призначення; потрібна нова оцінка |
+| C2 | Outpatient/non-time-critical only (`Indication.time_critical: false`) | Зміна призначення; потрібна нова оцінка |
+| C3 | No raw image / signal / NGS read input | Зміна призначення; потрібна нова оцінка |
+| C4 | Always ≥2 tracks, never single binding directive | Зміна призначення; потрібна нова оцінка |
+| C5 | Sources must be **established / well-understood** (NCCN/ESMO/RCT/regulatory labels) | Зміна призначення; потрібна нова оцінка |
+| C6 | Render UI must avoid automation-bias patterns | Зміна призначення; потрібна нова оцінка |
+| C7 | No treatment recommendations without confirmed histology — diagnostic-phase MDT may suggest workup steps and team composition, but treatment Plan generation is mechanically blocked when `patient.disease.id` / `icd_o_3_morphology` absent (per `specs/DIAGNOSTIC_MDT_SPEC.md` §1.2) | Зміна призначення; потрібна нова оцінка |
 
-### 15.3. Зміна, яка triggers re-classification
+### 15.3. Зміни, що потребують нової оцінки призначення
 
 Будь-яка з наступних змін має пройти governance review (§6) **перед**
 implementation:
@@ -487,16 +488,12 @@ implementation:
 
 ### 15.4. Інші юрисдикції
 
-Цей розділ написаний з орієнтацією на **US FDA** як global gold standard.
-- **Україна:** МОЗ regulation менш формалізована для CDS; принцип
-  "decision-support ≠ decision-making" застосовний.
-- **EU:** MDR (Medical Device Regulation) має схожий carve-out для CDS,
-  але інтерпретація стрімкіша — separate review needed якщо EU launch.
-- **UK:** MHRA загалом узгоджений з FDA по CDS позиції.
+Керівництво США не визначає класифікацію чи вимоги в Україні, ЄС,
+Великій Британії та інших юрисдикціях. Кожне розгортання потребує оцінки
+фактичних функцій, користувачів та місцевих вимог. Проєкт не називає
+окремі юрисдикції простішими для дозволу та не стверджує, що виконання
+критерію прозорості доводить відповідність вимогам інших країн.
 
-OpenOnco's design satisfies the **strictest** common denominator (FDA
-Criterion 4 transparency requirements); інші юрисдикції повинні бути
-strictly easier to clear.
 
 ---
 

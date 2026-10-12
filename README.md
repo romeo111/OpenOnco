@@ -105,6 +105,11 @@ legacy/                         Historical implementation; not authoritative
 
 Read the [Charter](specs/CHARTER.md) first. English specifications are canonical; Ukrainian originals are retained under [specs/uk/](specs/uk/). Sources are referenced under their upstream licensing terms.
 
+The Charter describes project ownership, intended use and engineering
+constraints. It does not establish regulatory classification, clearance or
+clinical validation. FDA CDS guidance is a design reference; internal names
+such as `Plan.fda_compliance` denote transparency metadata, not agency approval.
+
 Plan Builder's service worker stores the public questionnaire and example
 catalogs for later offline opening. Online requests fetch fresh data; failed
 requests can reuse a valid retained copy. This cache excludes submitted
