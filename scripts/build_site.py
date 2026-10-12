@@ -5446,7 +5446,7 @@ function refreshModeButtonAvailability() {{
 }}
 
 function openPlanModal(options = {{}}) {{
-  if (!planModal) return;
+  if (!planModal || !reportReady) return;
   if (!options.force && (isInteractionLocked() || planSource === null)) return;
   planModal.hidden = false;
   highlightLangButtons();
@@ -5480,7 +5480,7 @@ async function switchResultMode(newMode) {{
   if (modePatientBtn.disabled && newMode === 'patient') return;
   if (planSource === 'example') {{
     if (!activeExampleCaseId || (newMode === 'patient' && !activeExampleHasPatient)) return;
-    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {{
+    await withReportUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {{
       const frameReady = waitForFrameLoad();
       const suffix = newMode === 'patient' ? '.patient.html' : '.html';
       resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/')
@@ -5492,7 +5492,7 @@ async function switchResultMode(newMode) {{
     return;
   }}
   if (!pyodide || planSource !== 'generated') return;
-  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
+  await withReportUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
     modeClinicianBtn.disabled = true;
     modePatientBtn.disabled = true;
     try {{
@@ -5580,7 +5580,7 @@ function downloadHtml() {{
 async function switchResultLang(newLang) {{
   if (newLang === currentResultLang) {{
     if (!planSource || !reportReady || isInteractionLocked()) return;
-    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
+    await withReportUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
       const frameReady = waitForFrameLoad();
       if (resultFrame.srcdoc) resultFrame.srcdoc = resultFrame.srcdoc;
       else resultFrame.src = resultFrame.src;
@@ -5592,7 +5592,7 @@ async function switchResultLang(newLang) {{
     // Pre-built case file: swap the iframe to the matching language and
     // audience variant.
     if (!activeExampleCaseId) return;
-    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {{
+    await withReportUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {{
       const frameReady = waitForFrameLoad();
       const suffix = currentResultMode === 'patient' ? '.patient.html' : '.html';
       resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + suffix;
@@ -5603,7 +5603,7 @@ async function switchResultLang(newLang) {{
     return;
   }}
   if (!pyodide) return;
-  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
+  await withReportUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {{
     // Disable buttons during re-render so user can't double-click
     langUaBtn.disabled = true;
     langEnBtn.disabled = true;
@@ -5634,6 +5634,23 @@ html
   }});
 }}
 
+async function withReportUiLock(title, lead, hint, action) {{
+  try {{
+    await withUiLock(title, lead, hint, action);
+  }} catch (error) {{
+    setError(error.message || profileInputCopy.reportInvalid);
+  }}
+}}
+
+function loadedReportError() {{
+  try {{
+    const doc = resultFrame && resultFrame.contentDocument;
+    const heading = doc && doc.querySelector('.page .doc-header .doc-title, .patient-report h1');
+    if (heading && heading.textContent.trim()) return '';
+  }} catch (error) {{ /* unreadable/cross-origin document is not a ready report */ }}
+  return profileInputCopy.reportInvalid;
+}}
+
 function waitForFrameLoad(timeoutMs = 12000) {{
   reportReady = false;
   updateWorkflowControls();
@@ -5653,7 +5670,10 @@ function waitForFrameLoad(timeoutMs = 12000) {{
         reject(error);
       }} else resolve();
     }};
-    const loaded = () => finish(null);
+    const loaded = () => {{
+      const error = loadedReportError();
+      finish(error ? new Error(error) : null);
+    }};
     const failed = () => finish(new Error('Report failed to load. Please try again.'));
     resultFrame.addEventListener('load', loaded);
     resultFrame.addEventListener('error', failed);

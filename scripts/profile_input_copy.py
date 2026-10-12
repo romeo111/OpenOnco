@@ -78,3 +78,19 @@ EXAMPLE_LOAD = {
 }
 for locale, messages in EXAMPLE_LOAD.items():
     COPY[locale].update(zip(('exampleUnavailable', 'exampleFailed', 'exampleReportFailed', 'exampleLoaded'), messages))
+
+REPORT_INVALID = {
+'en': 'The loaded page is not a readable OpenOnco report. Try generating the report again.',
+'uk': 'Завантажена сторінка не є доступним для читання звітом OpenOnco. Спробуйте створити звіт заново.',
+'es': 'La página cargada no es un informe legible de OpenOnco. Intente generar el informe de nuevo.',
+'pt': 'A página carregada não é um relatório legível do OpenOnco. Tente gerar o relatório novamente.',
+'de': 'Die geladene Seite ist kein lesbarer OpenOnco-Bericht. Versuchen Sie, den Bericht erneut zu erstellen.',
+'fr': 'La page chargée n’est pas un rapport OpenOnco lisible. Essayez de générer le rapport à nouveau.',
+'it': 'La pagina caricata non è un rapporto OpenOnco leggibile. Prova a generare nuovamente il rapporto.',
+'da': 'Den indlæste side er ikke en læsbar OpenOnco-rapport. Prøv at oprette rapporten igen.',
+'sv': 'Den inlästa sidan är inte en läsbar OpenOnco-rapport. Försök skapa rapporten igen.',
+'nb': 'Den innlastede siden er ikke en lesbar OpenOnco-rapport. Prøv å lage rapporten på nytt.',
+'fi': 'Ladattu sivu ei ole luettava OpenOnco-raportti. Yritä luoda raportti uudelleen.',
+}
+for locale, message in REPORT_INVALID.items():
+    COPY[locale]['reportInvalid'] = message

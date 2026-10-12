@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const html = fs.readFileSync('docs/try.html', 'utf8');
-const names = ['waitForFrameLoad', 'downloadHtml', 'reportHtmlForDownload', 'reportExportError', 'downloadPdf', 'updateWorkflowControls', 'switchResultLang'];
+const names = ['loadedReportError', 'withReportUiLock', 'waitForFrameLoad', 'downloadHtml', 'reportHtmlForDownload', 'reportExportError', 'downloadPdf', 'updateWorkflowControls', 'switchResultLang'];
 const code = names.map(name => {
   const match = html.match(new RegExp(`^(?:async )?function ${name}\\([^\\n]*\\{[\\s\\S]*?^\\}`, 'm'));
   assert(match, name); return match[0];
@@ -25,7 +25,7 @@ function reportRoot(outerHTML, dataset = {}, lang = 'en') {
 }
 const frame = {
   srcdoc: '<html>Previous report</html>',
-  contentDocument: {baseURI:'https://openonco.info/try.html', documentElement: reportRoot('<html lang="fr"><a href="https://example.org/source">Source</a><p>DIS-AML 100 mg</p></html>',{translationLocale:'fr'},'fr') },
+  contentDocument: {querySelector:()=>({textContent:'VIRTUAL OpenOnco report'}),baseURI:'https://openonco.info/try.html', documentElement: reportRoot('<html lang="fr"><a href="https://example.org/source">Source</a><p>DIS-AML 100 mg</p></html>',{translationLocale:'fr'},'fr') },
   contentWindow: { focus() {}, print() { prints++; } },
   addEventListener: (type, fn) => events.set(type, fn),
   removeEventListener: type => events.delete(type),
@@ -33,6 +33,7 @@ const frame = {
 const context = vm.createContext({
     validateNumericInputs: () => true,
   resultFrame: frame, Blob, Date,
+  profileInputCopy: JSON.parse(html.match(/^const profileInputCopy = (.*);$/m)[1]),
   setTimeout: fn => { const id = ++nextTimer; timers.set(id, fn); return id; },
   clearTimeout: id => timers.delete(id), setError: error => { if (error) errors.push(error); },
   URL: class extends URL { static createObjectURL(value) { blob = value; return 'blob:test'; } static revokeObjectURL(url) { revoked.push(url); } },

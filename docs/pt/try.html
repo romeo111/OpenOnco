@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="bde5e530e884c845ab6e4b8cd19fc869b7ce3a6f601bb7c2ea8e04d60e2f7eb6"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="d664b0837666eff479f0ae106210a01b87dac86eb351cd8d82d3af95b4f59a7c"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -469,7 +469,7 @@ const formPane = document.getElementById('formPane');
 const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {"number": "Introduza um número válido.", "integer": "Introduza um número inteiro.", "range": "Use um valor dentro destes limites:", "summary": "Corrija os campos numéricos destacados antes de gerar ou abrir JSON.", "sync": "Introduza novamente este número para o confirmar."};
 const numericInputErrors = new Map();
-const profileInputCopy = {"json": "Introduza JSON válido.", "object": "O perfil deve ser um objeto JSON.", "finite": "O perfil contém um número não finito.", "section": "Esta secção do perfil deve ser um objeto ou null:", "transfer": "Mantenha este perfil no modo JSON: selecione o formulário da doença correspondente e valores compatíveis com os campos. O seu JSON foi preservado.", "restored": "Rascunho JSON restaurado. Reveja-o antes de gerar um relatório.", "restoreLimited": "Rascunho JSON restaurado; não foi possível carregar o questionário. Pode continuar no modo JSON.", "questionnaireUnavailable": "O questionário selecionado está indisponível ou não corresponde a esta doença.", "switchFailed": "Não foi possível carregar o formulário selecionado. O formulário, as respostas e o relatório anteriores foram preservados. Tente novamente.", "exampleUnavailable": "O exemplo selecionado está indisponível ou o seu perfil não corresponde à doença selecionada.", "exampleFailed": "Não foi possível carregar o exemplo. Os dados e o relatório atuais foram preservados. Tente novamente.", "exampleReportFailed": "O perfil do exemplo foi carregado, mas o relatório está indisponível. Pode gerar um novo relatório.", "exampleLoaded": "Perfil de exemplo carregado. Reveja os dados e as fontes antes de o utilizar."};
+const profileInputCopy = {"json": "Introduza JSON válido.", "object": "O perfil deve ser um objeto JSON.", "finite": "O perfil contém um número não finito.", "section": "Esta secção do perfil deve ser um objeto ou null:", "transfer": "Mantenha este perfil no modo JSON: selecione o formulário da doença correspondente e valores compatíveis com os campos. O seu JSON foi preservado.", "restored": "Rascunho JSON restaurado. Reveja-o antes de gerar um relatório.", "restoreLimited": "Rascunho JSON restaurado; não foi possível carregar o questionário. Pode continuar no modo JSON.", "questionnaireUnavailable": "O questionário selecionado está indisponível ou não corresponde a esta doença.", "switchFailed": "Não foi possível carregar o formulário selecionado. O formulário, as respostas e o relatório anteriores foram preservados. Tente novamente.", "exampleUnavailable": "O exemplo selecionado está indisponível ou o seu perfil não corresponde à doença selecionada.", "exampleFailed": "Não foi possível carregar o exemplo. Os dados e o relatório atuais foram preservados. Tente novamente.", "exampleReportFailed": "O perfil do exemplo foi carregado, mas o relatório está indisponível. Pode gerar um novo relatório.", "exampleLoaded": "Perfil de exemplo carregado. Reveja os dados e as fontes antes de o utilizar.", "reportInvalid": "A página carregada não é um relatório legível do OpenOnco. Tente gerar o relatório novamente."};
 const questionnaireNoticeCopy = {"defaults": "Introduza a informação conhecida. Os dados em falta continuam desconhecidos e podem limitar o relatório.", "starter": "Formulário inicial gerado automaticamente: pode faltar informação importante. Verifique os valores, os dados em falta e as fontes com um profissional clínico qualificado antes de decisões assistenciais.", "unknown": "Os campos de rastreio por preencher continuam desconhecidos. Algumas verificações de segurança podem não ser avaliadas; a completude do formulário não estabelece a sua suficiência clínica."};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
@@ -777,7 +777,7 @@ function refreshModeButtonAvailability() {
 }
 
 function openPlanModal(options = {}) {
-  if (!planModal) return;
+  if (!planModal || !reportReady) return;
   if (!options.force && (isInteractionLocked() || planSource === null)) return;
   planModal.hidden = false;
   highlightLangButtons();
@@ -811,7 +811,7 @@ async function switchResultMode(newMode) {
   if (modePatientBtn.disabled && newMode === 'patient') return;
   if (planSource === 'example') {
     if (!activeExampleCaseId || (newMode === 'patient' && !activeExampleHasPatient)) return;
-    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {
+    await withReportUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {
       const frameReady = waitForFrameLoad();
       const suffix = newMode === 'patient' ? '.patient.html' : '.html';
       resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/')
@@ -823,7 +823,7 @@ async function switchResultMode(newMode) {
     return;
   }
   if (!pyodide || planSource !== 'generated') return;
-  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {
+  await withReportUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {
     modeClinicianBtn.disabled = true;
     modePatientBtn.disabled = true;
     try {
@@ -911,7 +911,7 @@ function downloadHtml() {
 async function switchResultLang(newLang) {
   if (newLang === currentResultLang) {
     if (!planSource || !reportReady || isInteractionLocked()) return;
-    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {
+    await withReportUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {
       const frameReady = waitForFrameLoad();
       if (resultFrame.srcdoc) resultFrame.srcdoc = resultFrame.srcdoc;
       else resultFrame.src = resultFrame.src;
@@ -923,7 +923,7 @@ async function switchResultLang(newLang) {
     // Pre-built case file: swap the iframe to the matching language and
     // audience variant.
     if (!activeExampleCaseId) return;
-    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {
+    await withReportUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.planHint, async () => {
       const frameReady = waitForFrameLoad();
       const suffix = currentResultMode === 'patient' ? '.patient.html' : '.html';
       resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + suffix;
@@ -934,7 +934,7 @@ async function switchResultLang(newLang) {
     return;
   }
   if (!pyodide) return;
-  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {
+  await withReportUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.renderHint, async () => {
     // Disable buttons during re-render so user can't double-click
     langUaBtn.disabled = true;
     langEnBtn.disabled = true;
@@ -965,6 +965,23 @@ html
   });
 }
 
+async function withReportUiLock(title, lead, hint, action) {
+  try {
+    await withUiLock(title, lead, hint, action);
+  } catch (error) {
+    setError(error.message || profileInputCopy.reportInvalid);
+  }
+}
+
+function loadedReportError() {
+  try {
+    const doc = resultFrame && resultFrame.contentDocument;
+    const heading = doc && doc.querySelector('.page .doc-header .doc-title, .patient-report h1');
+    if (heading && heading.textContent.trim()) return '';
+  } catch (error) { /* unreadable/cross-origin document is not a ready report */ }
+  return profileInputCopy.reportInvalid;
+}
+
 function waitForFrameLoad(timeoutMs = 12000) {
   reportReady = false;
   updateWorkflowControls();
@@ -984,7 +1001,10 @@ function waitForFrameLoad(timeoutMs = 12000) {
         reject(error);
       } else resolve();
     };
-    const loaded = () => finish(null);
+    const loaded = () => {
+      const error = loadedReportError();
+      finish(error ? new Error(error) : null);
+    };
     const failed = () => finish(new Error('Report failed to load. Please try again.'));
     resultFrame.addEventListener('load', loaded);
     resultFrame.addEventListener('error', failed);
